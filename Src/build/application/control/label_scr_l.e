@@ -53,7 +53,8 @@ feature -- Creation
 			list_make (a_name, a_parent);
 			add_button_press_action (3, Current, set_show_action);
 			add_button_press_action (3, Current, set_label_action);
-			initialize_transport
+			initialize_transport;
+			set_visible_item_count (7);
 		end; 
 
 feature

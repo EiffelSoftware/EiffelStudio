@@ -27,6 +27,8 @@ feature
 				command_catalog.clear;
 				command_catalog.initial_pages;
 				app_editor.clear;
+				history_window.wipe_out;
+				main_panel.unset_project_initialized;
 			end;
 			!!cmd;
 			if selected_file.empty then

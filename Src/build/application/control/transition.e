@@ -97,7 +97,7 @@ feature
 			from
 				graph.start
 			until
-				graph.over
+				graph.off
 			loop
 				source := graph.key_for_iteration;
 				remove_transition (source, element);
@@ -116,7 +116,7 @@ feature
 				from
 					temp_trans.start
 				until
-					temp_trans.over
+					temp_trans.off
 				loop
 					element := temp_trans.item_for_iteration;
 					if
@@ -171,7 +171,7 @@ feature
 					temp_tran.start;
 					!!Result.make (5);
 				until
-					temp_tran.over
+					temp_tran.off
 				loop
 					if
 						dest= temp_tran.item_for_iteration
@@ -193,13 +193,13 @@ feature
 			from
 				graph.start
 			until
-				graph.over
+				graph.off
 			loop
 				temp_trans := graph.item_for_iteration;
 				from
 					temp_trans.start
 				until
-					temp_trans.over
+					temp_trans.off
 				loop
 					element := temp_trans.item_for_iteration;
 					if
@@ -244,6 +244,6 @@ feature
 		end; -- update
 
 	invariant
-		not_void_graph: (graph = Void)
+		not_void_graph: (graph /= Void)
 
 end

@@ -42,7 +42,7 @@ feature
 			from 
 				start
 			until
-				over or else
+				off or else
 				(Result /= Void)		
 			loop
 				s ?= key_for_iteration;
@@ -65,11 +65,11 @@ feature
 				!!Result.make;
 				start
 			until
-				over	
+				off	
 			loop
 				s ?= key_for_iteration;
 				if not (s = Void) then
-					Result.add_right (s.label);
+					Result.put_right (s.label);
 					Result.forth;
 				end;
 				forth
@@ -85,11 +85,11 @@ feature
 				!!Result.make;
 				start
 			until
-				over	
+				off	
 			loop
 				s ?= key_for_iteration;
 				if not (s = Void) then
-					Result.add_right (s);
+					Result.put_right (s);
 					Result.forth;
 				end;
 				forth
@@ -109,14 +109,14 @@ feature
 			from
 				start
 			until
-				over
+				off
 			loop
 				transitions := item (key_for_iteration);
 				org_element := key_for_iteration;
 				from
 					transitions.start
 				until
-					transitions.over
+					transitions.off
 				loop
 					label := transitions.key_for_iteration;
 					dest_element := transitions.item (transitions.key_for_iteration);
@@ -170,7 +170,7 @@ feature -- Debugging purposes
 					io.new_line;
 				end
 			until
-				over
+				off
 			loop
 				trace_element (key_for_iteration, item (key_for_iteration));
 				forth
@@ -199,7 +199,7 @@ feature -- Debugging purposes
 			from
 				t.start
 			until
-				t.over
+				t.off
 			loop
 				io.putstring ("%T");
 				io.putstring (t.key_for_iteration);

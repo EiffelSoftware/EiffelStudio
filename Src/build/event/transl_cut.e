@@ -36,7 +36,7 @@ feature
 		do
 			if not translation_list.empty then
 				translation_list.go_i_th (index - 1);
-				translation_list.add_right (translation);
+				translation_list.put_right (translation);
 			else
 				translation_list.extend (translation)
 			end;

@@ -5,7 +5,7 @@ inherit
 
 	ROW_COLUMN
 		rename
-			make as make_box,
+			make as make_row_col,
 			cursor as row_column_cursor,
 			show as row_show,
 			hide as row_hide
@@ -15,7 +15,7 @@ inherit
 
 	ROW_COLUMN
 		rename 
-			make as make_box,
+			make as make_row_col,
 			cursor as row_column_cursor
 		redefine
 			show, hide
@@ -51,6 +51,18 @@ inherit
 		end
 	
 feature -- List operations
+
+	make_box (a_name: STRING; a_parent: COMPOSITE) is
+		do
+			if first_element = Void then
+				linked_list_make;
+			end;
+			if icons = Void then
+				!!icons.make
+			end;
+			make_row_col(a_name, a_parent);
+	end;
+			
 
 	go_i_th (i: INTEGER) is
 			-- Go to i position in Current and
@@ -211,7 +223,7 @@ feature -- Other features
 			until
 				after
 			loop
-				if icons.item.realized then
+				if not icons.after and then icons.item.realized then
 					icons.item.hide;
 				end;
 				forth;
@@ -285,11 +297,10 @@ feature {NONE}
 		local
 			i: INTEGER
 		do
-			!!icons.make;
 			from
 				i := 1
 			until
-				i > Initial_count
+				i > Initial_count and i > count
 			loop
 				create_new_icon;	
 				new_icon.set_label ("dummy");

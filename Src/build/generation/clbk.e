@@ -46,7 +46,7 @@ feature {NONE}
 			from
 				start
 			until
-				over
+				off
 			loop
 				Result.append (item (current_event).eiffel_declaration);
 				forth
@@ -67,7 +67,7 @@ feature {NONE}
 			from
 				start
 			until
-				over
+				off
 			loop
 				Result.append (item (current_event).eiffel_association);
 				Result.append ("%T%T%T");

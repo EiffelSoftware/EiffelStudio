@@ -89,9 +89,9 @@ feature
 			-- displayed).
 --		require
 --			ed_exits_in_manager: state_editors_list.has (ed) 
---										or context_editors_list.has (ed)
---										or cmd_inst_editors_list.has (ed)
---										or cmd_editors_list.has (ed)
+--			or context_editors_list.has (ed)
+--			or cmd_inst_editors_list.has (ed)
+--			or cmd_editors_list.has (ed)
 		do
 			if
 				ed.realized

@@ -62,7 +62,7 @@ feature
 				until
 					sublist.after
 				loop
-					Result.add_right (sublist.item);
+					Result.put_right (sublist.item);
 					sublist.forth
 				end;
 				forth

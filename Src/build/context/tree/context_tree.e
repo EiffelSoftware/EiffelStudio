@@ -215,7 +215,7 @@ feature
 					until
 						i > window_list.count
 					loop
-						positions.add_right (current_position);
+						positions.put_right (current_position);
 						i := i + 1;
 					end;
 				end;
@@ -305,7 +305,7 @@ feature {NONE}
 						a_context.set_grouped (False);
 					elseif a_group.empty or else a_context.parent = a_group.first.parent then
 						a_group.finish;
-						a_group.add_right (a_context);
+						a_group.put_right (a_context);
 						a_context.set_grouped (True);
 					end;
 					display (a_context);

@@ -15,7 +15,8 @@ inherit
 		rename
 			copy_attributes as button_copy_attributes,
 			reset_modified_flags as button_reset_modified_flags,
-			eiffel_color as old_eiffel_color
+			eiffel_color as old_eiffel_color,
+			set_modified_flags as button_set_modified_flags
 		redefine
 			stored_node, option_list, widget
 		end;
@@ -23,9 +24,10 @@ inherit
 	BUTTON_C
 		redefine
 			stored_node, reset_modified_flags, copy_attributes, 
-			eiffel_color, option_list, widget
+			eiffel_color, option_list, widget, set_modified_flags
 		select
-			copy_attributes, reset_modified_flags, eiffel_color
+			copy_attributes, reset_modified_flags, eiffel_color,
+			set_modified_flags
 		end
 	
 feature 
@@ -87,6 +89,15 @@ feature {NONE}
         end;
  
 feature 
+
+	set_modified_flags is
+		do
+			button_set_modified_flags;
+			if pixmap_name /= Void and then not pixmap_name.empty then
+				pixmap_name_modified := True;
+			end;
+		end;
+
 
 	pixmap_name_modified: BOOLEAN;
 

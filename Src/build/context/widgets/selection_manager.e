@@ -284,7 +284,7 @@ feature {NONE}
 					group_modified := True;
 					context.set_grouped (True);
 					group.finish;
-					group.add_right (context);
+					group.put_right (context);
 				end;
 			elseif width > 0 and height > 0 then
 				-- wipe out list
@@ -311,7 +311,7 @@ feature {NONE}
 						-- grouped contexts
 						child.set_grouped (true);
 						group_modified := True;
-						group.add_right (child);
+						group.put_right (child);
 					end;
 					if is_a_group then
 						a_list.forth;

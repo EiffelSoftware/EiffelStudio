@@ -107,6 +107,12 @@ feature -- Namable
 			update_tree_element;
 		end;
 
+	reset_name is
+		do
+			namer.reset
+			integer_generator.reset;
+		end;
+
 feature -- Removable
 
 	remove_yourself is
@@ -559,7 +565,7 @@ feature
 	set_x_y (new_x, new_y: INTEGER) is
 			-- Set new position of widget
 		local
-			eb_bulletin: EB_BULLETIN
+			eb_bulletin: SCALABLE;
 		do
 			position_modified := True;
 			if parent.is_bulletin then
@@ -578,7 +584,7 @@ feature
 	set_size (new_w, new_h: INTEGER) is
 			-- Set new size of widget
 		local
-			eb_bulletin: EB_BULLETIN
+			eb_bulletin: SCALABLE;
 		do
 			size_modified := True;
 			if parent.is_bulletin then
@@ -885,7 +891,7 @@ feature
 				set_grouped (False)
 			end;
 			cut;
-			Result.add_right (Current);
+			Result.put_right (Current);
 			from
 				a_child := first_child;
 			until
@@ -967,6 +973,36 @@ feature
 				child_offright
 			loop
 				child.reset_modified_flags;
+				child_forth
+			end;
+		end;
+
+
+	set_modified_flags is
+			-- set all the flags to true
+			-- in a recursive way
+			-- Useful for the code generation (groups) after ungrouping
+		do
+			position_modified := True;
+			size_modified := True;
+			if fg_color_name /= Void and then not fg_color_name.empty then
+				fg_color_modified := True;
+			end;
+			if bg_color_name /= Void and then not bg_color_name.empty then
+				bg_color_modified := True;
+			end;
+			if bg_pixmap_name /= Void and then not bg_pixmap_name.empty then
+				bg_pixmap_modified := True;
+			end;
+			if font_name /= Void and then not font_name.empty then
+				font_name_modified := True;
+			end;
+			from
+				child_start
+			until
+				child_offright
+			loop
+				child.set_modified_flags;
 				child_forth
 			end;
 		end;
@@ -1075,8 +1111,20 @@ feature {CONTEXT}
 	intermediate_name: STRING is
 			-- Intermediate name redefined for the elements
 			-- of a group
+		local
+			mc: MENU_PULL_C;
+			opc: OPT_PULL_C;
+			bul: BULLETIN_C;
 		do
-			Result := parent.full_name
+			mc ?= parent;
+			opc ?= parent;
+			bul ?= parent;
+			if mc /= Void or else opc /= Void 
+			    or else bul /= Void then
+				Result := parent.intermediate_name;
+			else
+				Result := parent.full_name;
+			end;
 		end;
 
 	

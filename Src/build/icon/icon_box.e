@@ -52,7 +52,7 @@ feature
 				then
 					update_number_of_icons
 				end;
-				list_add_right (elt);
+				list_put_right (elt);
 				forth;
 				icons.go_i_th (index);
 				update_display
@@ -68,7 +68,7 @@ feature
 		do
 			list_extend (elt);
 			finish;
-			if not (icons = Void) then
+			if is_visible then
 				if count > icons.count then
 					update_number_of_icons;
 				end;
@@ -87,6 +87,14 @@ feature
 			make_box (a_name, a_parent);
 			make_box_visible
 		end; -- Create
+
+
+feature {CATALOG, CMD_CAT_BUTTON}
+
+	is_visible: BOOLEAN is
+		do
+			Result :=  (implementation /= Void)
+		end
 
 	
 feature {NONE}

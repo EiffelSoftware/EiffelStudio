@@ -54,7 +54,10 @@ feature
 					if not info_file.end_of_file then
 						info_file.readline;
 						if not info_file.end_of_file then
-							over_ride_time := clone (info_file.laststring).to_integer;
+							info_file.readline;
+							if not info_file.end_of_file then
+								over_ride_time := clone (info_file.laststring).to_integer;
+							end;
 						end; 
 					end;
 				end;
@@ -194,11 +197,9 @@ feature
 				answer := limalive;
 				if answer = -1 then
 					is_alive := false;
-					handle_error ("License is lost for");
 					daemon_alive := True;
 					unregister;
 				elseif answer = 1 then
-					handle_error ("Daemon dead for");
 					is_alive := False;
 					daemon_alive := False;
 				else

@@ -17,8 +17,7 @@ inherit
 			option_list as old_list,
 			copy_attributes as old_copy_attributes,
 			reset_modified_flags as old_reset_modified_flags,
-			add_widget_callbacks as window_add_widget_callbacks,
-			set_x_y as window_set_x_y
+			add_widget_callbacks as window_add_widget_callbacks
 		redefine
 			creation_procedure_text, stored_node,
 			context_initialization, widget
@@ -29,11 +28,11 @@ inherit
 			reset_modified_flags, copy_attributes, 
 			context_initialization, option_list, 
 			widget, undo_cut, cut, add_widget_callbacks,
-			set_x_y, remove_yourself
+			remove_yourself
 		select
 			cut, undo_cut, option_list, copy_attributes, 
 			reset_modified_flags, add_widget_callbacks,
-			set_x_y, remove_yourself
+			 remove_yourself
 		end
 
 feature 
@@ -53,23 +52,10 @@ feature
 			widget_set_title (entity_name);
 			title := entity_name;
 			set_size (400, 500);
-			widget.parent.set_action ("<Configure>", Current, Current);
+			widget.top_shell.set_action ("<Configure>", Current, Fourth);
 			set_default_pixmap;
 			!!contin_command;
 			widget.top_shell.set_delete_command (contin_command);
-		end;
-
-	old_x, old_y: INTEGER;
-
-	set_x_y (new_x, new_y: INTEGER) is
-		do
-			window_set_x_y (new_x, new_y);
-			if old_x = 0 then
-				old_x := x
-			end;
-			if old_y = 0 then
-				old_x := y
-			end;
 		end;
 
 	
@@ -180,9 +166,31 @@ feature
 			widget.set_icon_name (a_name);
 		end;
 
+
+	set_icon_pixmap (a_name: STRING) is
+		local
+			a_pixmap: PIXMAP;
+		do
+			icon_pixmap_name := a_name;
+			icon_pixmap_modified := True;
+			if icon_pixmap_name /= Void then
+				!!a_pixmap.make;
+				a_pixmap.read_from_file (a_name);
+				if a_pixmap.is_valid then
+					widget.set_icon_pixmap (a_pixmap);
+					icon_pixmap_modified := True;
+				end;
+			end
+		end;
+
+
 	icon_name_modified: BOOLEAN;
 
 	icon_name: STRING;
+
+	icon_pixmap_name: STRING;
+
+	icon_pixmap_modified: BOOLEAN;
 
 	set_iconic_state (flag: BOOLEAN) is
 		do
@@ -202,6 +210,8 @@ feature
 			old_reset_modified_flags;
 			icon_name_modified := False;
 			iconic_state_modified := False;
+			start_hidden_modified := False;
+			start_hidden := False;
 		end;
 
 	
@@ -221,6 +231,12 @@ feature {NONE}
 			if iconic_state_modified then
 				other_context.set_iconic_state (is_iconic_state)
 			end;
+			if icon_pixmap_modified then
+				other_context.set_icon_pixmap (icon_pixmap_name);
+			end;
+			if start_hidden_modified then
+				other_context.set_start_hidden (start_hidden)
+			end;
 			old_copy_attributes (other_context);
 		end;
 
@@ -239,8 +255,11 @@ feature {CONTEXT}
 			if icon_name_modified then
 				function_string_to_string (Result, context_name, "set_icon_name", icon_name)
 			end;
+			if icon_pixmap_modified then
+				function_string_to_string (Result, context_name, "set_icon_pixmap_by_name", icon_pixmap_name)
+			end;
 			if iconic_state_modified then
-				cond_f_to_string (Result, is_iconic_state, context_name, "set_iconic-state", "set_normal_state")
+				function_bool_to_string (Result, context_name, "set_iconic_state", is_iconic_state)
 			end;
 		end;
 
@@ -268,7 +287,7 @@ feature {NONE}
 	
 feature 
 
-	stored_node: S_PERM_WIND is
+	stored_node: S_PERM_WIND_R1 is
 		do
 			!!Result.make (Current);
 		end;

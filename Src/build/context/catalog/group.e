@@ -83,7 +83,7 @@ feature
 				until
 					a_context.child_offright
 				loop
-					context_list.add_right (a_context.child);
+					context_list.put_right (a_context.child);
 					context_list.forth;
 					a_context.child_forth;
 				end;
@@ -125,7 +125,7 @@ feature
 			end;
 			trim;
 			group_list.finish;
-			group_list.add_right (Current);
+			group_list.put_right (Current);
 	
 				-- Creation of the first instance
 				-- to replace the grouped contexts
@@ -190,7 +190,6 @@ feature {NONE}
 		local
 			con_group: GROUP_C;
 			context_list: LINKED_LIST [CONTEXT];
-			a_context: CONTEXT;
 		do
 			if context_table.has (a_context.identifier) then
 				context_table.remove (a_context.identifier);
@@ -330,7 +329,7 @@ feature
 				identifier := integer_generator.value;
 				Result := identifier;
 				group_list.finish;
-				group_list.add_right (Current);
+				group_list.put_right (Current);
 			end;
 		end;
 

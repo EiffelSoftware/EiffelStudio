@@ -40,6 +40,26 @@ feature {NONE}
 	
 feature 
 
+	context_width: INTEGER is
+		do
+			Result := text_field_width.int_value;
+		end;
+
+	context_height: INTEGER is
+		do
+			Result := text_field_height.int_value;
+		end;
+
+	context_x: INTEGER is
+		do
+			Result := text_field_x.int_value;
+		end;
+
+	context_y: INTEGER is
+		do
+			Result := text_field_y.int_value;
+		end;
+
 	make (a_parent: CONTEXT_EDITOR) is
 		do
 			a_parent.form_list.put (Current, geometry_form_number);

@@ -91,7 +91,7 @@ feature {FUNC_EDITOR, FUNC_COMMAND} -- Function Editor
 			until
 				input_list.before
 			loop
-				il.add_right (input_list.item);
+				il.put_right (input_list.item);
 				input_list.back
 			end;
 			input_list := il;
@@ -101,7 +101,7 @@ feature {FUNC_EDITOR, FUNC_COMMAND} -- Function Editor
 			until
 				output_list.before
 			loop
-				ol.add_right (output_list.item);
+				ol.put_right (output_list.item);
 				output_list.back
 			end;
 			output_list := ol
@@ -337,8 +337,8 @@ feature -- List operations
 			Consistency: not has_input (i);
 			list_have_same_index: input_list.index = output_list.index
 		do
-			input_list.add_right (i);
-			output_list.add_right (o);
+			input_list.put_right (i);
+			output_list.put_right (o);
 		end;
 
 	empty: BOOLEAN is

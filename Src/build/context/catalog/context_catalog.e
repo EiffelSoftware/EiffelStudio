@@ -66,12 +66,12 @@ feature
 			top_shell_create (C_ontextcatalog, eb_screen);
 			set_size (240, 260);
 			!!top_form.make (F_orm, Current);
-			!!window_page;
-			!!primitive_page;
-			!!menu_page;
-			!!group_page;
-			!!set_page;
-			!!scroll_page;
+			--!!window_page;
+			--!!primitive_page;
+			--!!menu_page;
+			--!!group_page;
+			--!!set_page;
+			--!!scroll_page;
 
 			!!first_separator.make (S_eparator, top_form);
 			first_separator.set_horizontal (true);
@@ -83,12 +83,12 @@ feature
 
 			!!edit_hole.make (P_Cbutton, top_form);
 
-			window_page.make (W_indows, Windows_pixmap);
-			primitive_page.make (P_rimitives, Primitives_pixmap);
-			menu_page.make (M_enus, Menus_pixmap);
-			group_page.make (G_roups, Groups_pixmap);
-			set_page.make (S_ets, Sets_pixmap);
-			scroll_page.make (S_crolled_items, Scrolled_w_pixmap);
+			!!window_page.make (W_indows, Windows_pixmap);
+			!!primitive_page.make (P_rimitives, Primitives_pixmap);
+			!!menu_page.make (M_enus, Menus_pixmap);
+			!!group_page.make (G_roups, Groups_pixmap);
+			!!set_page.make (S_ets, Sets_pixmap);
+			!!scroll_page.make (S_crolled_items, Scrolled_w_pixmap);
 
 			!!page_label.make (L_abel, top_form);
 
@@ -181,6 +181,17 @@ feature
 			Result := scroll_page.text_type
 		end;
 
+	scroll_list_type: CONTEXT_TYPE is
+		do
+			Result := scroll_page.scroll_list_type
+		end;
+
+
+	drawing_area_type: CONTEXT_TYPE is
+		do
+			Result := scroll_page.drawing_area_type
+		end;
+
 	label_type: CONTEXT_TYPE is
 		do
 			Result := primitive_page.label_type
@@ -206,6 +217,54 @@ feature
 			Result := menu_page.submenu_type
 		end;
 
+	separator_type: CONTEXT_TYPE is
+		do
+			Result := primitive_page.separator_type
+		end;
+
+	scale_type: CONTEXT_TYPE is
+		do
+			Result := primitive_page.scale_type
+		end;
+
+	pict_color_b_type: CONTEXT_TYPE is
+		do
+			Result := primitive_page.pict_color_b_type
+		end;
+
+	arrow_b_type: CONTEXT_TYPE is
+		do
+			Result := primitive_page.arrow_b_type
+		end;
+
+	bar_type: CONTEXT_TYPE is
+		do
+			Result := menu_page.bar_type
+		end;
+
+	option_btn_type: CONTEXT_TYPE is
+		do
+			Result := menu_page.option_btn_type
+		end;
+
+	bulletin_type: CONTEXT_TYPE is
+		do
+			Result := set_page.bulletin_type
+		end;
+
+	radio_box_type: CONTEXT_TYPE is
+		do
+			Result := set_page.radio_box_type
+		end;
+
+	check_box_type: CONTEXT_TYPE is
+		do
+			Result := set_page.check_box_type
+		end;
+
+
+
+
 	-- *******************
 	-- * Group managment *
 	-- *******************
@@ -230,7 +289,7 @@ feature
 	append_group_type (a_context_group: CONTEXT_GROUP_TYPE) is
 		do
 			context_group_types.finish;
-			context_group_types.add_right (a_context_group);
+			context_group_types.put_right (a_context_group);
 			group_page.icon_box.extend (a_context_group);
 		end;
 
@@ -342,6 +401,26 @@ feature
 			group_page.clear;	
 			translation_list.wipe_out;
 			update_translation_page;
+			perm_wind_type.reset;
+			temp_wind_type.reset;
+			toggle_b_type.reset;
+			text_type.reset;
+			label_type.reset;
+			push_b_type.reset;
+			text_field_type.reset;
+			menu_entry_type.reset;
+			submenu_type.reset;
+			separator_type.reset;
+			scale_type.reset;
+			pict_color_b_type.reset;
+			arrow_b_type.reset;
+			bar_type.reset;
+			option_btn_type.reset;
+			bulletin_type.reset;
+			radio_box_type.reset;
+			check_box_type.reset;
+			scroll_list_type.reset;
+			drawing_area_type.reset;
 		end;
 
 	update_translation_page is

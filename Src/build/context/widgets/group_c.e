@@ -29,7 +29,8 @@ inherit
 			full_name, intermediate_name, create_context, 
 			show_tree_elements, hide_tree_elements, tree_element, 
 			is_bulletin, is_in_a_group, is_a_group, save_widget, 
-			reset_callbacks, remove_callbacks, stored_node, widget
+			reset_callbacks, remove_callbacks, stored_node, widget,
+			set_modified_flags
 		end;
 
 	COMPOSITE_C
@@ -40,7 +41,8 @@ inherit
 			full_name, intermediate_name, reset_modified_flags, create_context, 
 			show_tree_elements, hide_tree_elements, undo_cut, cut, tree_element, 
 			recursive_cut, is_bulletin, is_in_a_group, is_a_group, save_widget, 
-			reset_callbacks, remove_callbacks, stored_node, widget
+			reset_callbacks, remove_callbacks, stored_node, widget,
+			set_modified_flags
 		select
 			reset_modified_flags, recursive_cut, cut, 
 			undo_cut, eiffel_callback_calls
@@ -137,6 +139,34 @@ feature
 			subtree := a_list;
 		end;
 
+	set_modified_flags is
+			-- set all the flags to true
+			-- in a recursive way
+			-- Useful for the code generation (groups) after ungrouping
+		do
+			position_modified := True;
+			size_modified := True;
+			if fg_color_name /= Void and then not fg_color_name.empty then
+				fg_color_modified := True;
+			end;
+			if bg_color_name /= Void and then not bg_color_name.empty then
+				bg_color_modified := True;
+			end;
+			if bg_pixmap_name /= Void and then not bg_pixmap_name.empty then
+				bg_pixmap_modified := True;
+			end;
+			if font_name /= Void and then not font_name.empty then
+				font_name_modified := True;
+			end;
+			from
+				subtree.start
+			until
+				subtree.after
+			loop
+				subtree.item.reset_modified_flags;
+				subtree.forth
+			end;
+		end;
 	
 feature {NONE}
 
@@ -201,7 +231,7 @@ feature
 	add_group_child (a_child: CONTEXT) is
 		do
 			subtree.finish;
-			subtree.add_right (a_child);
+			subtree.put_right (a_child);
 		end;
 
 	is_a_group: BOOLEAN is

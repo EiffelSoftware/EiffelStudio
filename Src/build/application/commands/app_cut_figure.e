@@ -117,7 +117,7 @@ feature {NONE}
 						(lines.line.source = circle)
 						or (lines.line.destination = circle)
 					then
-						temp_lines.add_right (lines.line)
+						temp_lines.put_right (lines.line)
 					end;
 					lines.forth
 				end;
@@ -130,7 +130,7 @@ feature {NONE}
 					!!cut_line_command;
 					cut_line_command.set_for_macro;
 					cut_line_command.execute (temp_lines.item);
-					lines_cut.add_right (cut_line_command);
+					lines_cut.put_right (cut_line_command);
 					temp_lines.forth
 				end;
 				sel_figure := app_editor.selected_figure;

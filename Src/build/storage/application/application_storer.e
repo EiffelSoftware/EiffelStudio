@@ -113,7 +113,7 @@ feature {NONE}
 			from
 				graph.start
 			until
-				graph.over	
+				graph.off	
 			loop
 				s ?= graph.key_for_iteration;
 				subtab := graph.item_for_iteration;
@@ -122,7 +122,7 @@ feature {NONE}
 				from
 					subtab.start
 				until
-					subtab.over
+					subtab.off
 				loop
 					g := subtab.item_for_iteration;
 					if (g = Void) then
@@ -189,7 +189,7 @@ feature
 			from
 				stored_graph.start
 			until
-				stored_graph.over
+				stored_graph.off
 			loop
 				subtab := stored_graph.item_for_iteration;
 				!!new_table.make (subtab.count);
@@ -197,7 +197,7 @@ feature
 				from
 					subtab.start
 				until
-					subtab.over
+					subtab.off
 				loop
 					subtab_item := subtab.item_for_iteration;
 					if (subtab_item = Return_transition) then

@@ -83,7 +83,9 @@ feature
 					end;
 				else
 					!!msg.make (0);
-					msg.append ("Project directory not an Eiffel build project. %N");
+					msg.append ("Project directory :%N' ");
+					msg.append (bpdir.path_name);
+					msg.append (" '%N is not an Eiffel build project. %N");
 					handle_error (msg);
 				end;
 			else
@@ -139,9 +141,9 @@ feature {NONE}
 				handle_error (msg)
 			end
 		--rescue
-		--	mp.restore;
-		--	rescued := True;
-		--	retry
+			--mp.restore;
+			--rescued := True;
+			--retry
 		end;
 
 	retrieve_project (dir: STRING) is
@@ -161,7 +163,8 @@ feature {NONE}
 				mp.set_watch_shape;
 				init_session;
 				storer.retrieve (dir);
-				if not main_panel.project_initialized then
+				if not main_panel.project_initialized 
+				then
 					display_init_windows;
 				end;
 				storer.display_retrieved_windows;
@@ -175,10 +178,10 @@ feature {NONE}
 				handle_error (msg)
 			end;
 		--rescue
-		--	main_panel.set_title ("EiffelBuild");
-		--	mp.restore;
-		--	rescued := True;
-		--	retry
+			--main_panel.set_title ("EiffelBuild");
+			--mp.restore;
+			--rescued := True;
+			--retry
 		end;
 
 	handle_error (arg: STRING) is

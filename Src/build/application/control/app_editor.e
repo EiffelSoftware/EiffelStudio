@@ -50,10 +50,12 @@ feature -- Drawing area
 
 	clear is
 		do
+			--initial_state_circle.original_stone.reset_namer;
 			figures.wipe_out;
 			lines.wipe_out;
 			graph.clear_all;
 			drawing_area.clear
+			--create_initial_state;
 		end;
 
 	disable_drawing is
@@ -349,7 +351,8 @@ feature {NONE}
 			loop
 				circle ?= figures.figure;
 				if
-					not (circle = Void)
+					not (circle = Void) and then 
+					not Result.has (circle.text)
 				then	
 					Result.extend (circle.text)
 				end;
@@ -523,7 +526,7 @@ feature
 
 	invariant
 
-		figures /= Void;
-		lines /= Void;
+		valid_fig: drawing_area /= Void implies figures /= Void;
+		valid_lines: drawing_area /= Void implies lines /= Void;
 
 end 

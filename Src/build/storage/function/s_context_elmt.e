@@ -57,7 +57,7 @@ feature
 			from
 				context_table.start
 			until
-				context_table.over or found
+				context_table.off or found
 			loop
 				Result := context_table.item_for_iteration;
 				if full_name.is_equal (Result.full_name) then

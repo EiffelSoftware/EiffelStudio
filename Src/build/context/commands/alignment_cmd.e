@@ -54,7 +54,7 @@ feature
 					!!cmd;
 						-- work does not put the command in the history
 					cmd.work (list.item.original_stone);
-					cmd_list.add_right (cmd);
+					cmd_list.put_right (cmd);
 					list.forth;
 				end;
 				editor.current_form.apply;

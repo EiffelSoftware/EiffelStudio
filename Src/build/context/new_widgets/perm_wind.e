@@ -8,15 +8,13 @@ inherit
 			make as eb_bulletin_create
 		redefine
 			show, hide,
-			managed, 
 			x, y, set_x_y,
 			set_x, set_y,
 			width, height, set_size,
 			set_width, set_height,
 			real_x, real_y,
-			realize, set_managed,
-			unrealize, realized,
-			manage, unmanage
+			realize,
+			unrealize, realized
 		end
 
 
@@ -79,6 +77,30 @@ feature
 			end;
 		end;
 
+	set_icon_pixmap (a_pixmap: PIXMAP) is
+		do
+			top_shell.set_icon_pixmap (a_pixmap);
+		end;
+
+	set_icon_pixmap_by_name (a_pixmap_name: STRING) is
+			-- Draw `a_pixmap_name' into the picture_button.
+		require
+			a_pixmap_name_exist: not (a_pixmap_name = Void)
+		local
+			a_pixmap: PIXMAP;
+		do
+			!!a_pixmap.make;
+			a_pixmap.read_from_file (a_pixmap_name);
+			set_icon_pixmap (a_pixmap);
+		end
+
+
+	icon_pixmap: PIXMAP is
+		do
+			Result := top_shell.icon_pixmap;
+		end;
+
+
 	show is
 		do
 			top_shell.show
@@ -87,27 +109,6 @@ feature
 	hide is
 		do
 			top_shell.hide
-		end;
-
-	set_managed (flag: BOOLEAN) is
-		do
-			top_shell.set_managed (flag)
-		end;
-
-	managed: BOOLEAN is
-		do
-			Result := top_shell.managed
-		end;
-
-
-	unmanage is
-		do
-			top_shell.unmanage;
-		end;
-
-	manage is
-		do
-			top_shell.manage;
 		end;
 
 

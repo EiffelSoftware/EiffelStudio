@@ -170,7 +170,7 @@ feature {NONE}
 					a_context.import_oui_widget (group_table);
 					a_context.realize;
 					window_list.finish;
-					window_list.add_right (a_context);
+					window_list.put_right (a_context);
 					retrieved_contexts.forth
 				end;
 				tree.enable_drawing;

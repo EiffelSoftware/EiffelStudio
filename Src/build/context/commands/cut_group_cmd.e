@@ -60,7 +60,7 @@ feature
 		do
 			context_catalog.append_group_type (group_type);
 			group_list.finish;
-			group_list.add_right (group_type.group);
+			group_list.put_right (group_type.group);
 		end;
 
 	redo is

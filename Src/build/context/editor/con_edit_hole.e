@@ -29,6 +29,8 @@ inherit
 		
 		export
 			{NONE} all
+		redefine
+			transportable
 		end;
 	
 	
@@ -110,6 +112,11 @@ feature
 		do
 			set_label (context_label);
 		end;
+
+	transportable: BOOLEAN is
+		do
+			Result := original_stone /= Void;
+	end;
 
 	stone: CONTEXT_STONE;
 

@@ -8,7 +8,8 @@ inherit
 
 	CMD
 		redefine
-			set_editor, original_stone
+			set_editor, original_stone,
+			set_eiffel_text
 		end;
 	PIXMAPS
 		export
@@ -119,7 +120,7 @@ feature -- Namable
 			from
 				graph.start
 			until
-				graph.over
+				graph.off
 			loop
 				s ?= graph.key_for_iteration;
 				if not (s = Void) then
@@ -253,6 +254,12 @@ feature -- Naming
 			end;
 		end;
 
+	reset_name is
+		do
+			namer.reset;
+			int_generator.reset;
+		end;
+
 feature {NONE} -- Naming
 
 	arg_entity_namer: LOCAL_NAMER is
@@ -329,7 +336,10 @@ feature -- Editing
 		require
 			Editing: edited
 		do
-			eiffel_text := clone (command_editor.eiffel_text);
+			if not eiffel_text.is_equal (command_editor.eiffel_text) then
+				eiffel_text := clone (command_editor.eiffel_text);
+				command_editor.set_unsaved_application;
+			end;
 		end;
 
 	set_arguments (args: like arguments) is
@@ -579,13 +589,22 @@ feature -- labels {CMD_EDITOR}
 		end;
 
 	label_exist (l: STRING): BOOLEAN is
+		require
+			lable_not_void: l /= Void;
+		local
+			temp_label: STRING;
+			exist_label: STRING;
 		do
+			temp_label := clone (l);
+			temp_label.to_lower;
 			from 
 				labels.start
 			until
 				labels.after
 			loop
-				Result := l.is_equal (labels.item.label);
+				exist_label := clone (labels.item.label);
+				exist_label.to_lower;
+				Result := temp_label.is_equal (exist_label);
 				if Result then
 					labels.finish;
 				end;

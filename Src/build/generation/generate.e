@@ -91,10 +91,10 @@ feature
 				msg.append (Generated_directory);
 				error_box.popup (Current, msg)
 			end
-		--rescue
-			--mp.restore;
-			--rescued := True;
-			--retry
+		rescue
+			mp.restore;
+			rescued := True;
+			retry
 		end;
 
 	generate_files is
@@ -174,12 +174,18 @@ feature
 					!!doc;
 					doc.set_directory_name (Command_directory);
 					doc.set_document_name (cmd.eiffel_type);
-					temp := cmd.eiffel_text;
+					temp := clone (cmd.eiffel_text);
+					if temp.item (1) /= '-' and cmd.label /= Void 
+					  and then not cmd.label.empty then
+						temp.prepend ("%N");
+						temp.prepend (cmd.label);
+						temp.prepend ("-- ");
+					end;
 					doc.update (temp);
 					doc := Void;
 					cmd_list.forth
 				end;
-				user_cmds.forth
+				user_cmds.forth;
 			end;
 				
 				-- =========================
@@ -232,7 +238,8 @@ feature {NONE}
 
 	states_text: STRING is
 		local
-			state_list: LINKED_LIST [STATE]
+			state_list: LINKED_LIST [STATE];
+			counter: INTEGER;
 		do
 			!!Result.make (0);
 			Result.append ("class STATES%N%Nfeature%N");
@@ -240,19 +247,23 @@ feature {NONE}
 			Result.append ("%N%TReturn_to_previous: INTEGER is -1;%N");
 			from
 				state_list := graph.states;
-				state_list.start
+				state_list.start;
+				counter := 1;
 			until
 				state_list.after
 			loop
 				Result.append ("%N%T");
 				Result.append (state_list.item.label);
-				Result.append (": INTEGER is unique;");
+				Result.append (": INTEGER is ");
+				Result.append (counter.out);
+				Result.append (";");
 				if not (state_list.item.visual_name = Void) then
 					Result.append ("%T-- ");
 					Result.append (state_list.item.visual_name);
 				end;
 				Result.append ("%N");		
-				state_list.forth
+				state_list.forth;
+				counter := counter + 1;
 			end;
 			Result.append ("%Nend%N");
 		end;
@@ -262,6 +273,7 @@ feature {NONE}
 			class_name: STRING;
 			old_pos: INTEGER;
 			temp_w_context: TEMP_WIND_C;
+			window_context: WINDOW_C;
 		do
 			!!Result.make (3000);	
 			Result.append ("class WINDOWS%N%N");
@@ -278,9 +290,16 @@ feature {NONE}
 			until
 				window_list.after
 			loop
-				Result.append ("%T%T%T");
-				Result.append (window_list.item.entity_name);
-				Result.append (".realize;%N");
+				window_context ?= window_list.item;
+				if window_context = Void then
+					Result.append ("%T%T%T");
+					Result.append (window_list.item.entity_name);
+					Result.append (".realize;%N");
+				elseif  not window_context.start_hidden then
+					Result.append ("%T%T%T");
+					Result.append (window_list.item.entity_name);
+					Result.append (".realize;%N");
+				end;
 				window_list.forth;
 			end;
 			window_list.go_i_th (old_pos);

@@ -62,7 +62,7 @@ feature {NONE}
 		do
 			!!cmd;
 			cmd.work (a_context);
-			cmd_list.add_right (cmd);
+			cmd_list.put_right (cmd);
 		end;
 
 end

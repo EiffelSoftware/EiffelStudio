@@ -51,7 +51,7 @@ feature
 			if
 				not after
 			then
-				list_add_right (elt);
+				list_put_right (elt);
 				forth;	
 				icons.go_i_th (relative_position);
 				update_page;
@@ -156,7 +156,7 @@ feature
 	page_number: INTEGER is
 			-- Current page number (according to position)
 		do
-			Result := ((index - 1) // Page_size) + 1
+			Result := ((index - 1) // page_size) + 1
 		end; -- page_number
 
 	

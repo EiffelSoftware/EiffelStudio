@@ -110,7 +110,8 @@ feature
 				until
 					inst_editors.after
 				loop
-					if (inst_editors.item.command_instance.associated_command = c)
+					if (inst_editors.item.command_instance /= Void) and then 
+						(inst_editors.item.command_instance.associated_command = c)
 					then
 						inst_editors.item.clear
 					end;

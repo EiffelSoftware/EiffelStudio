@@ -75,7 +75,7 @@ feature -- Editing
 			until
 				arguments.after
 			loop
-				args.add_right (arguments.item);
+				args.put_right (arguments.item);
 				arguments.item.reset;
 				arguments.forth;
 				args.forth

@@ -12,7 +12,7 @@ inherit
 
 	STONE
 		redefine
-			original_stone
+			original_stone, transportable
 		
 		end
 
@@ -57,6 +57,11 @@ feature
 	original_stone:	CMD_INSTANCE is
 		deferred
 		end;
+
+	transportable: BOOLEAN is
+		do
+			Result := original_stone /= Void;
+	end;
 
 	arguments: LINKED_LIST [ARG_INSTANCE] is
 			-- Arguments of command

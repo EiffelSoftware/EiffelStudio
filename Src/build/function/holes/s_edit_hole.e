@@ -38,7 +38,10 @@ inherit
 			{NONE} all
 		end;
 
-	STATE_STONE;
+	STATE_STONE
+		redefine
+			transportable
+		end;
 	
 
 creation
@@ -65,6 +68,11 @@ feature
 		end;
 			
 	original_stone: STATE;
+
+	transportable: BOOLEAN is
+		do
+			Result := original_stone /= Void;
+	end;
 
 	identifier: INTEGER is
 		do

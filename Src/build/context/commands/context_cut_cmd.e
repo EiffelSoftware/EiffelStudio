@@ -35,17 +35,21 @@ inherit
 feature {NONE}
 
 	dispose is
+		require else
+			deleted_context_not_void: deleted_contexts /= Void;
 		do
-			from
-				deleted_contexts.start
-			until
-				deleted_contexts.after
-			loop
-				if deleted_contexts.item.widget /= void then
-					deleted_contexts.item.widget.destroy;
-					deleted_contexts.forth;
+			if not group_uncreated then
+				from
+					deleted_contexts.start
+				until
+					deleted_contexts.after
+				loop
+					if deleted_contexts.item.widget /= void then
+						deleted_contexts.item.widget.destroy;
+						deleted_contexts.forth;
+					end;
 				end;
-			end;
+			end
 		end;
 
 	associated_form: INTEGER is
@@ -53,7 +57,15 @@ feature {NONE}
 			Result := geometry_form_number
 		end;
 
+	group_uncreated: BOOLEAN;
+
 	
+feature {GROUP_CMD}
+	
+	set_group_uncreated (flag: BOOLEAN) is
+		do
+			group_uncreated := flag;
+		end;
 feature 
 
 	context_list: LINKED_LIST [CONTEXT];

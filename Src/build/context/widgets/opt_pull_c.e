@@ -65,6 +65,7 @@ feature
 		do
 			!!widget.make (entity_name, a_parent);
 			widget.set_text (label);
+			widget.set_caption ("");
 			if widget.button.realized then
 				widget.button.show;
 			end;
@@ -128,7 +129,7 @@ feature
 	set_x_y (new_x, new_y: INTEGER) is
 			-- Set new position of widget
 		local
-			eb_bulletin: EB_BULLETIN
+			eb_bulletin: SCALABLE;
 		do
 			position_modified := True;
 			if parent.is_bulletin then
@@ -143,13 +144,13 @@ feature
 	set_size (new_w, new_h: INTEGER) is
 			-- Set new size of widget
 		local
-			eb_bulletin: EB_BULLETIN
+			eb_bulletin: SCALABLE;
 		do
 			size_modified := True;
 			if parent.is_bulletin then
 				widget.set_size (new_w, new_h);
 				eb_bulletin ?= parent.widget;
-				eb_bulletin.update_ratios (widget.option_button);
+				eb_bulletin.update_ratios (widget.button);
 			else
 				widget.set_size (new_w, new_h);
 			end;

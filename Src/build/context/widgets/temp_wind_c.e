@@ -50,11 +50,10 @@ feature
 		do
 			!!widget.make (entity_name, main_panel.base);
 			widget.set_default_position (False);
-			--popdown;
 			disable_resize_policy (False);
 			widget_set_title (entity_name);
 			set_size (300, 300);
-			widget.parent.set_action ("<Configure>", Current, Current);
+			widget.parent.set_action ("<Configure>", Current, Fourth);
 			set_default_pixmap;
 		end;
 
@@ -175,6 +174,8 @@ feature
 	eiffel_type: STRING is "TEMP_WIND";
 
 	cut is 
+		require else
+			no_parent: True;
 		do
 			widget.hide;
 			old_cut;
@@ -254,7 +255,6 @@ feature {NONE}
 			if position_modified then
 				function_int_int_to_string (Result, "", "set_x_y", x, y);
 			end;
-			Result.append ("%T%T%Tpopdown;%N");
 			if size_modified then
 				function_int_int_to_string (Result, "", "set_size", width, height);
 			end;
@@ -267,7 +267,7 @@ feature {NONE}
 	
 feature 
 
-	stored_node: S_TEMP_WIND is
+	stored_node: S_TEMP_WIND_R1 is
 		do
 			!!Result.make (Current);
 		end;

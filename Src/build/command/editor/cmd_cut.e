@@ -32,7 +32,7 @@ feature
 				list.extend (element)
 			else
 				list.go_i_th (index - 1);
-				list.add_right (element);
+				list.put_right (element);
 			end;
 			edited_command.update_text
 		end; -- undo

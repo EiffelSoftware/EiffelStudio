@@ -56,6 +56,12 @@ feature
 		do 		
 			project_initialized := True 
 		end;
+
+	unset_project_initialized is 
+			-- Set project_initialized to True.
+		do 		
+			project_initialized := False; 
+		end;
 	
 feature {NONE}
 

@@ -24,7 +24,7 @@ feature
 			add_ok_action (Current, First);
 			add_cancel_action (Current, Second);
 			set_exclusive_grab;
-			set_file_sel_mask (1);
+			set_directory_selection;
 			hide_file_selection_list;
 			hide_file_selection_label;
 		end;

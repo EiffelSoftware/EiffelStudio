@@ -76,7 +76,7 @@ feature {NONE}
 			com_is ?= stone;
 			new_command ?= stone;
 			if
-				not (com_is = Void)
+				(com_is /= Void)
 			then
 				if
 					page /= com_is.page
@@ -90,7 +90,9 @@ feature {NONE}
 					then
 						p2.remove;
 						page.extend (temp_cmd);
-						page.hide;
+						if page.is_visible and then page.realized then
+							page.hide;
+						end
 					end
 				end
 			elseif
@@ -100,6 +102,11 @@ feature {NONE}
 				cmd.set_internal_name ("");
 				cmd.set_eiffel_text (cmd.template);
 				command_catalog.add_to_page (cmd, page);
+				if command_catalog.current_page /= page then
+					if page.is_visible and then page.realized then
+						page.hide
+					end
+				end
 			end
 		end;
 

@@ -82,7 +82,7 @@ feature {NONE}
 			!!button
 		end;
 
-feature {CATALOG}
+feature {CATALOG, CMD_CAT_BUTTON}
 
 	add_button_callback is
 			-- Add an activate_action callback to the button to 
@@ -92,10 +92,5 @@ feature {CATALOG}
 		do
 			button.add_activate_action (associated_catalog, Current)
 		end; -- add_button_callback
-
-	is_visible: BOOLEAN is
-		do
-			Result := not (implementation = Void)
-		end;
 
 end -- class CAT_PAGE 

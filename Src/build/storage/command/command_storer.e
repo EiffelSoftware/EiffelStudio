@@ -98,7 +98,7 @@ feature
 					sc := sc_list.item;
 					cmd := sc.command;
 					command_table.put (cmd, sc.identifier);
-					cmd_list.add_right (cmd);
+					cmd_list.put_right (cmd);
 					cmd_list.forth;
 					sc_list.forth
 				end;
@@ -120,7 +120,7 @@ feature
 				loop
 					sc := sc_list.item;
 					cmd := cmd_list.item;
-					sc.update (cmd);
+					sc.update (cmd, file_name);
 					cmd_list.forth;
 					sc_list.forth
 				end;

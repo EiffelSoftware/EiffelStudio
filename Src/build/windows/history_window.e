@@ -82,6 +82,12 @@ feature
 	saved_application: BOOLEAN;
 			-- Has the application been saved?
 
+	set_unsaved_application is
+		do
+			saved_application := False;
+			last_command_saved := Void;
+		end;
+
 	set_saved_application is
 			-- Set saved_application to True.
 		do
@@ -175,7 +181,7 @@ feature
 			-- and highlight the corresponding
 			-- item. Remove all commands bellow.
 		do
-			history_list.add_right (cmd);
+			history_list.put_right (cmd);
 			history_list.forth;
 			if cmd.n_ame /= Void then
 				list.add_right (cmd.n_ame);
@@ -243,7 +249,7 @@ feature
 			until
 				history_list.after
 			loop
-				temp_list.add_right (history_list.item.n_ame);
+				temp_list.put_right (history_list.item.n_ame);
 				temp_list.forth;
 				history_list.forth
 			end;

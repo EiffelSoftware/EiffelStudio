@@ -32,8 +32,8 @@ feature
 			loop
 				!!stored_input.make (b.input);
 				!!stored_output.make (b.output);
-				input_list.add_right (stored_input);
-				output_list.add_right (stored_output);
+				input_list.put_right (stored_input);
+				output_list.put_right (stored_output);
 				input_list.forth;
 				output_list.forth;
 				b.forth

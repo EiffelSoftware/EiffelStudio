@@ -87,6 +87,32 @@ feature
 			eb_document_system ($temp);
 		end;
 
+	updated_text: STRING is
+		local
+			class_file_name: STRING;
+			file: UNIX_FILE;	
+		do
+
+			class_file_name := clone (directory_name);
+			class_file_name.append ("/");
+			class_file_name.append (document_name);
+			class_file_name.append (".e");
+			!!file.make_open_read (class_file_name);
+			!!Result.make (0);
+			from
+				file.readline;
+			until
+				file.end_of_file
+			loop
+				Result.append (file.laststring);
+				Result.append ("%N");
+				file.readline;
+			end;
+			file.close;
+
+	end;
+
+
 feature {NONE} -- External features
 
 	eb_document_system (cmd: ANY) is

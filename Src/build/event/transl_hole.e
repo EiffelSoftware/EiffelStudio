@@ -14,7 +14,7 @@ inherit
 		redefine
 			stone, compatible, make_visible
 		select
-			make_visible
+			make_visible, button, identifier, same
 		end;
 
 	PIXMAPS;
@@ -28,7 +28,7 @@ inherit
 			same,
 			init_toolkit
 		redefine
-			original_stone
+			original_stone, transportable
 		end;
 
 creation
@@ -38,6 +38,11 @@ creation
 feature 
 
 	original_stone: TRANSLATION;
+
+	transportable: BOOLEAN is
+		do
+			Result := original_stone /= Void;
+		end;
 
 	reset is 
 		do

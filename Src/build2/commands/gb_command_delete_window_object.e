@@ -66,6 +66,7 @@ feature {NONE} -- Initialization
 		local
 			parent_item: EV_TREE_ITEM
 		do
+			History.cut_off_at_current_position
 			parent_item ?= window.window_selector_item.parent
 			if parent_item /= Void then
 					-- If held in a directory, store the directory name.

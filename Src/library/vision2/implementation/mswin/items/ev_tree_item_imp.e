@@ -10,7 +10,10 @@ class
 inherit
 	EV_TREE_ITEM_I
 
-	EV_ITEM_IMP
+	EV_SIMPLE_ITEM_IMP
+		redefine
+			set_text
+		end
 
 	EV_TREE_ITEM_HOLDER_IMP
 		rename
@@ -146,7 +149,7 @@ feature -- Element change
 	set_text (txt: STRING) is
 			-- Make `txt' the new label of the item.
 		do
-			text := txt
+			{EV_SIMPLE_ITEM_IMP} Precursor (txt)
 			wel_set_text (txt)
 		end
 
@@ -179,6 +182,20 @@ feature -- Element change
 
 feature -- Event : command association
 
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is activated.
+		do
+			add_command (Cmd_item_activate, cmd, arg)			
+		end	
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is unactivated.
+		do
+			add_command (Cmd_item_deactivate, cmd, arg)		
+		end
+
 	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the selection subtree is expanded or collapsed.
@@ -186,13 +203,43 @@ feature -- Event : command association
 			add_command (Cmd_item_subtree, cmd, arg)
 		end
 
+	add_right_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the user select the item with the right button
+			-- of the mouse.
+		do
+			add_command (Cmd_item_right_selection, cmd, arg)
+		end
+
 feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is activated.
+		do
+			remove_command (Cmd_item_activate)			
+		end	
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is deactivated.
+		do
+			remove_command (Cmd_item_deactivate)		
+		end
 
 	remove_subtree_commands is
 			-- Empty the list of commands to be executed when
 			-- the selection subtree is expanded or collapsed.
 		do
 			remove_command (Cmd_item_subtree)
+		end
+
+	remove_right_selection_commands is
+			-- Empty the list of commands to be executed when
+			-- the user select the item with the right button
+			-- of the mouse.
+		do
+			remove_command (Cmd_item_right_selection)
 		end
 
 end -- class EV_TREE_ITEM_IMP

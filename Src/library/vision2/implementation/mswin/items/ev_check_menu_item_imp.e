@@ -48,6 +48,24 @@ feature -- Status setting
 			set_state (not state)
 		end
 
+feature -- Event : command association
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is unactivated.
+		do
+			add_command (Cmd_item_deactivate, cmd, arg)		
+		end
+
+feature -- Event -- removing command association
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is deactivated.
+		do
+			remove_command (Cmd_item_deactivate)		
+		end
+
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 
 	on_activate is

@@ -64,12 +64,6 @@ feature -- Compilation
 			exit: BOOLEAN;
 			file: PLAIN_TEXT_FILE;
 		do
-			file_name := "Ace";
-			!!file.make (file_name);
-			if file.exists then
-				Lace.set_file_name (file_name);
-				check_ace_file (file_name);
-			end;
 			from
 			until
 				exit
@@ -82,14 +76,10 @@ feature -- Compilation
 				io.readline;
 				cmd := io.laststring;
 				exit := True;
-				if cmd.empty then
-					option := '%N';
+				if cmd.empty or else cmd.count > 1 then
+					option := ' ';
 				else
-					if cmd.count > 1 then
-						option := ' '
-					else
-						option := cmd.item (1).lower
-					end;
+					option := cmd.item (1).lower
 				end;
 				inspect
 					option
@@ -102,7 +92,17 @@ feature -- Compilation
 					if not file_name.empty then
 						Lace.set_file_name (clone(file_name));
 					else
-						Lace.set_file_name ("Ace");
+						!!file.make ("Ace.ace");
+						if file.exists then
+							Lace.set_file_name ("Ace.ace");
+						else
+							!!file.make ("Ace")
+							if file.exists then
+								Lace.set_file_name ("Ace")
+							else
+								Lace.set_file_name ("Ace.ace");
+							end
+						end
 					end;
 					check_ace_file (Lace.file_name);
 				when 't' then
@@ -122,8 +122,6 @@ feature -- Compilation
 						Lace.set_file_name (clone(file_name));
 						edit (Lace.file_name);
 					end;
---				when 'd', '%N' then
---					Lace.set_file_name ("Ace");
 				else
 					io.putstring ("Invalid choice%N%N");
 					exit := False;

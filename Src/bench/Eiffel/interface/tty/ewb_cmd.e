@@ -43,7 +43,7 @@ feature -- Initialization
 
 	Ace_name: STRING;
 			-- Name of the Ace file.
-			-- ("Ace" by default)
+			-- ("Ace.ace" or "Ace" by default)
 
 	project_is_new: BOOLEAN;
 			-- Is it a new project?
@@ -229,6 +229,7 @@ end
 		local
 			workb: WORKBENCH_I;
 			init_work: INIT_WORKBENCH;
+			file: PLAIN_TEXT_FILE
 		do
 
 	-- Do not do anything if already initialized.
@@ -239,7 +240,17 @@ if not initialized.item then
 			!!init_work.make (workb);
 			workb.make;
 			if Ace_name = Void then
-				Ace_name := "Ace"
+				!!file.make ("Ace.ace")
+				if file.exists then
+					Ace_name := "Ace.ace"
+				else
+					!!file.make ("Ace");
+					if file.exists then
+						Ace_name := "Ace"
+					else
+						Ace_name := "Ace.ace"
+					end
+				end
 			end;
 			check_ace_file (Ace_name);
 			Workbench.lace.set_file_name (Ace_name);
@@ -514,7 +525,6 @@ feature {NONE} -- Check Ace file
 			end
 		end;
 
-			
 feature -- Execution
 
 	work (pn, an: STRING) is

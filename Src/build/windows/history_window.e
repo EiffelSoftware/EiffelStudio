@@ -293,31 +293,24 @@ feature -- Interface
 	make (a_screen: SCREEN) is
 			-- Create history window.
 		local
-			close_b: CLOSE_WINDOW_BUTTON
 			del_com: DELETE_WINDOW
-			top_form, form: FORM
+			form: FORM
 		do
 				-----------------
 				-- Create widgets
 				-----------------
 			shell_make (Widget_names.history_window, a_screen)
 			!! form.make (Widget_names.form, Current)
-			!! top_form.make (Widget_names.form1, form)
 			!! list.make (Widget_names.list, form)
 --			initialize_list
 			!! row_column.make (Widget_names.row_column, form)
 			!! undo_button.make (Widget_names.undo_label, row_column)
 			!! redo_button.make (Widget_names.redo_label, row_column)
-			!! close_b.make (Current, top_form)
 
 				----------------------
 				-- Perform attachments
 				----------------------
-			top_form.attach_right (close_b, 0)
-			top_form.attach_bottom (close_b, 0)
-			form.attach_left (top_form, 0)
-			form.attach_right (top_form, 0)
-			form.attach_top_widget (top_form, list, 2)
+			form.attach_top (list, 0)
 			form.attach_left (list, 0)
 			form.attach_right (list, 0)
 			form.attach_bottom (row_column, 0)

@@ -86,6 +86,9 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	int trace_call_level_cx;
 	struct stack *prof_stack_cx;
 
+		/* storable.c from EiffelNet */
+	int socket_fides_cx;
+
 } eif_global_context_t;
 
 
@@ -169,6 +172,8 @@ rt_private eif_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) 
 
 #define trace_call_level	(eif_globals->trace_call_level_cx)
 #define prof_stack			(eif_globals->prof_stack_cx)
+
+#define socket_fides		(eif_globals->socket_fides_cx)
 
 RT_LNK EIF_TSD_TYPE eif_global_key;
 

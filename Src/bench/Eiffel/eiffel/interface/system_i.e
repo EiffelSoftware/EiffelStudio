@@ -1931,6 +1931,7 @@ end
 
 			deg_output.display_degree_output (degree_message, 9, 10)
 			generate_skeletons
+			generate_expanded_structures 
 
 			deg_output.display_degree_output (degree_message, 8, 10)
 			generate_parent_tables
@@ -2655,6 +2656,7 @@ feature -- Generation
 				-- Generation of the skeletons
 			deg_output.display_degree_output (degree_message, 6, 10)
 			generate_skeletons
+			generate_expanded_structures 
 
 				-- Generation of the parent table
 			deg_output.display_degree_output (degree_message, 5, 10)
@@ -2970,7 +2972,7 @@ end
 			end
 			buffer.put_string ("%N};%N")
 
-			create reference_file.make_c_code_file (final_file_name (Eref, Dot_c, 1));
+			create reference_file.make_c_code_file (final_file_name (eref, dot_c, 1));
 			buffer.put_in_file (reference_file)
 			reference_file.close
 		end
@@ -3255,6 +3257,65 @@ end
 			skeleton_file.close
 		end
 
+	generate_expanded_structures is
+			-- Generate structures for expanded class types
+		local
+			i, nb: INTEGER
+			cl_type: CLASS_TYPE
+			final_mode: BOOLEAN
+			structure_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
+		do
+			nb := Type_id_counter.value
+			final_mode := byte_context.final_mode
+
+			if in_final_mode then
+				create structure_file.make_c_code_file (final_file_name (estructure, Dot_x, 1));
+			else
+				create structure_file.make_c_code_file (workbench_file_name (estructure, Dot_h, 1));
+			end
+
+			buffer := generation_buffer
+			buffer.clear_all
+
+			buffer.put_string ("#ifndef _estructure_h_%N#define _estructure_h_%N%N")
+			buffer.put_string ("#include %"eif_eiffel.h%"%N")
+
+			buffer.start_c_specific_code
+
+			from
+				nb := Type_id_counter.value
+				i := 1
+			until
+				i > nb
+			loop
+				cl_type := class_types.item (i)
+					-- Classes could be removed
+				if cl_type /= Void then
+					if final_mode then
+						if
+							not cl_type.associated_class.is_precompiled or else
+							cl_type.associated_class.is_in_system
+						then
+							cl_type.generate_expanded_structure_definition (buffer)
+						end
+					else
+						cl_type.generate_expanded_structure_definition (buffer)
+					end
+				end
+				i := i + 1
+			end
+
+			buffer.end_c_specific_code
+
+				-- Close header file protection
+			buffer.put_string ("#endif%N")
+			
+				-- Generate file to disk
+			buffer.put_in_file (structure_file)
+			structure_file.close
+		end
+
 	generate_cecil is
 			-- Generate Cecil structures
 		local
@@ -3441,7 +3502,10 @@ end
 				class_type := class_types.item (i)
 				if class_type /= Void then
 					l_class := class_type.associated_class
-					if l_class.is_used_as_expanded and l_class.creation_feature /= Void then
+					if
+						(l_class.is_used_as_expanded and l_class.creation_feature /= Void) and then
+						(l_class.creation_feature.is_external or else not l_class.creation_feature.is_empty)
+					then
 						create rout_entry
 						rout_entry.set_type_id (i)
 						rout_entry.set_type (l_void)

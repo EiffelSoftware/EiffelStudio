@@ -84,7 +84,7 @@ feature -- Properties
 	value: INTEGER is
 			-- Integer value if `size' is 32 bits.
 		require
-			valid_size: size = 32
+			valid_size: size <= 32
 		do
 			Result := lower
 		end

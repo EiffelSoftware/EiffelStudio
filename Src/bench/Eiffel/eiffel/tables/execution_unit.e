@@ -112,7 +112,7 @@ feature -- Access
 	real_pattern_id: INTEGER is
 			-- Pattern id associated with Current execution unit
 		local
-			written_type: CL_TYPE_I
+			written_type: CLASS_TYPE
 			written_class: CLASS_C
 		do
 			written_class := System.class_of_id (written_in)
@@ -123,7 +123,7 @@ feature -- Access
 	is_valid: BOOLEAN is
 			-- Is the execution unit still valid ?
 		local
-			written_type: CL_TYPE_I
+			written_type: CLASS_TYPE
 			written_class: CLASS_C
 			f: FEATURE_AS
 		do
@@ -132,35 +132,31 @@ feature -- Access
 				System.class_type_of_id (type_id) /= Void
 			then
 				written_type :=	class_type.written_type (written_class)
-				if written_type /= Void then
+				if written_type.is_precompiled then
+					Result := True
+				else
+						-- Feature may have disappeared from system and
+						-- we need to detect it.
+					Result := Body_server.has (body_index)
 					if
-						written_type.associated_class_type.is_precompiled
+						Result and then
+						System.execution_table.has_dead_function (body_index)
 					then
-						Result := True
-					else
-							-- Feature may have disappeared from system and
-							-- we need to detect it.
-						Result := Body_server.has (body_index)
-						if
-							Result and then
-							System.execution_table.has_dead_function (body_index)
-						then
-							if is_encapsulated then
-									-- If this was a unit for keeping access to
-									-- an encapsulated feature, we need to check if
-									-- encapsulation is still needed.
-								Result := is_encapsulation_needed
-							else
-								f := Body_server.item (body_index)
+						if is_encapsulated then
+								-- If this was a unit for keeping access to
+								-- an encapsulated feature, we need to check if
+								-- encapsulation is still needed.
+							Result := is_encapsulation_needed
+						else
+							f := Body_server.item (body_index)
 
-									-- This is an attribute that was a function before, so
-									-- it is not a valid `execution_unit' anymore if after
-									-- all recompilation it is still an attribute.
-									--
-									-- Or if it is a deferred feature that was not
-									-- deferred before
-								Result := not f.is_attribute and then not f.is_deferred
-							end
+								-- This is an attribute that was a function before, so
+								-- it is not a valid `execution_unit' anymore if after
+								-- all recompilation it is still an attribute.
+								--
+								-- Or if it is a deferred feature that was not
+								-- deferred before
+							Result := not f.is_attribute and then not f.is_deferred
 						end
 					end
 				end

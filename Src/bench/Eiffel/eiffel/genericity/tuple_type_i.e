@@ -56,7 +56,7 @@ feature
 	il_type_name: STRING is
 			-- Class name of current type.
 		do
-			Result := clone (base_class.external_class_name)
+			Result := clone (base_class.name)
 		end
 
 feature -- Generic conformance

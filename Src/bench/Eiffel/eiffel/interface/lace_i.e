@@ -357,6 +357,7 @@ feature -- Status setting
 			Parser.parse_file (file_name, False)
 			Result ?= Parser.ast
 			if Result /= Void then
+				update_ace_for_eweasel_on_dotnet (Result)
 				Result.set_comment_list (Parser.comment_list)
 			end
 		end
@@ -596,6 +597,90 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
+		end
+
+	update_ace_for_eweasel_on_dotnet (a_root: ACE_SD) is
+			-- Update `a_root' with data required to compile a .NET system
+			-- with eweasel. Mostly it will add .NET missing option and clusters.
+		require
+			a_root_not_void: a_root /= Void
+		local
+			l_shared: SHARED_CONFIGURE_RESOURCES
+			l_defaults: LACE_LIST [D_OPTION_SD]
+			l_factory: LACE_AST_FACTORY
+			l_option: D_OPTION_SD
+			l_assemblies: LACE_LIST [ASSEMBLY_SD]
+			l_assembly: ASSEMBLY_SD
+			l_assembly_version: STRING
+			l_runtime_version: STRING
+		do
+			create l_shared
+			if
+				l_shared.configure_resources.get_boolean ("eweasel_for_dotnet", False)
+			then
+				l_runtime_version :=
+					l_shared.configure_resources.get_string ("clr_version", "v1.1.4322")
+				l_assembly_version :=
+					l_shared.configure_resources.get_string ("assembly_version", "1.0.5000.0")
+				
+				l_defaults := a_root.defaults
+				if l_defaults = Void then
+					create l_defaults.make (1)
+					a_root.set_defaults (l_defaults)
+				end
+				
+				create l_factory
+				l_option := l_factory.new_special_option_sd (
+					feature {FREE_OPTION_SD}.msil_generation, Void, True)
+				l_defaults.extend (l_option)
+				if compilation_modes.is_precompiling then
+					l_option := l_factory.new_special_option_sd (
+						feature {FREE_OPTION_SD}.msil_generation_type, "dll", True)
+				else				
+					l_option := l_factory.new_special_option_sd (
+						feature {FREE_OPTION_SD}.msil_generation_type, "exe", True)
+				end
+				l_defaults.extend (l_option)
+				l_option := l_factory.new_special_option_sd (
+					feature {FREE_OPTION_SD}.msil_clr_version, l_runtime_version, True)
+				l_defaults.extend (l_option)
+
+				l_option := l_factory.new_special_option_sd (
+					feature {FREE_OPTION_SD}.console_application, Void, True)
+				l_defaults.extend (l_option)
+				
+				l_assemblies := a_root.assemblies
+				if l_assemblies = Void then
+					create l_assemblies.make (3)
+					a_root.set_assemblies (l_assemblies)
+				end
+				create l_assembly.initialize (
+					l_factory.new_id_sd ("mscorlib", True),
+					l_factory.new_id_sd ("mscorlib", True),
+					Void,
+					l_factory.new_id_sd (l_assembly_version, True),
+					l_factory.new_id_sd ("neutral", True),
+					l_factory.new_id_sd ("b77a5c561934e089", True))
+				l_assemblies.extend (l_assembly)
+
+				create l_assembly.initialize (
+					l_factory.new_id_sd ("system", True),
+					l_factory.new_id_sd ("System", True),
+					l_factory.new_id_sd ("system_dll_", False),
+					l_factory.new_id_sd (l_assembly_version, True),
+					l_factory.new_id_sd ("neutral", True),
+					l_factory.new_id_sd ("b77a5c561934e089", True))
+				l_assemblies.extend (l_assembly)
+
+				create l_assembly.initialize (
+					l_factory.new_id_sd ("system_xml", True),
+					l_factory.new_id_sd ("System.Xml", True),
+					l_factory.new_id_sd ("system_xml_", False),
+					l_factory.new_id_sd (l_assembly_version, True),
+					l_factory.new_id_sd ("neutral", True),
+					l_factory.new_id_sd ("b77a5c561934e089", True))
+				l_assemblies.extend (l_assembly)
+			end
 		end
 
 invariant

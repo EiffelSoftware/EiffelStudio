@@ -212,6 +212,38 @@ feature -- Access
 			end
 		end
 
+	parent_type_with_homonym: CODE_TYPE_REFERENCE
+			-- Type with homonym feature
+			-- Set by `hierarchy_has_name'.
+
+	unique_name: STRING is
+			-- Unique feature name in type built from current feature name
+		require
+			is_generated: Resolver.is_generated (implementing_type)
+		local
+			i: INTEGER
+			l_type: CODE_GENERATED_TYPE
+		do
+			Resolver.search (implementing_type)
+			check
+				was_found: Resolver.found
+			end
+			l_type := Resolver.found_type
+			from
+				Result := eiffel_name.twin
+				Result.append ("_2")
+				i := 3
+			until
+				not l_type.features.has (Result) and not hierarchy_has_name (Result)
+			loop
+				Result.keep_head (Result.last_index_of ('_', Result.count))
+				Result.append (i.out)
+				i := i + 1
+			end
+		ensure
+			non_void_name: Result /= Void
+		end
+		
 feature -- Status Report
 
 	hierarchy_has_name (a_name: STRING): BOOLEAN is
@@ -233,6 +265,9 @@ feature -- Status Report
 				if l_type /= Void then
 					if l_type.base_type /= Void then
 						Result := dotnet_hierarchy_has_feature (a_name, l_type.base_type)
+						if Result then
+							parent_type_with_homonym := Type_reference_factory.Type_reference_from_type (l_type.base_type)
+						end
 					end
 					if not Result then
 						l_interfaces := l_type.get_interfaces
@@ -243,12 +278,17 @@ feature -- Status Report
 								i = l_count or Result
 							loop
 								Result := dotnet_hierarchy_has_feature (a_name, l_interfaces.item (i))
+								if Result then
+									parent_type_with_homonym := Type_reference_factory.Type_reference_from_type (l_interfaces.item (i))
+								end
 								i := i + 1
 							end
 						end
 					end
 				end
 			end
+		ensure
+			parent_type_with_homonym_set: (parent_type_with_homonym /= Void) = Result
 		end
 
 	has_arguments (a_arguments: LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): BOOLEAN is
@@ -330,29 +370,39 @@ feature {NONE} -- Implementation
 			l_type: CODE_GENERATED_TYPE
 			l_features: HASH_TABLE [CODE_FEATURE, STRING]
 			l_dotnet_type: TYPE
+			l_parent_type: CODE_TYPE_REFERENCE
 		do
 			from
 				a_parents.start
 			until
 				a_parents.after or Result
 			loop
-				Resolver.search (a_parents.item_for_iteration.type)
+				l_parent_type := a_parents.item_for_iteration.type
+				Resolver.search (l_parent_type)
 				if Resolver.found then
 					l_type := Resolver.found_type
 					l_features := l_type.features
 					l_features.search (a_name)
 					Result := l_features.found
+					if Result then
+						parent_type_with_homonym := l_parent_type
+					end
 					if not Result then
 						Result := parents_have_feature (a_name, l_type.parents)
 					end
 				else
-					l_dotnet_type := a_parents.item_for_iteration.type.dotnet_type
+					l_dotnet_type := l_parent_type.dotnet_type
 					if l_dotnet_type /= Void then
 						Result := dotnet_hierarchy_has_feature (a_name, l_dotnet_type)
+						if Result then
+							parent_type_with_homonym := l_parent_type
+						end
 					end
 				end
 				a_parents.forth
 			end
+		ensure
+			parent_type_with_homonym_set: (parent_type_with_homonym /= Void) = Result
 		end
 	
 	dotnet_hierarchy_has_feature (a_name: STRING; a_type: TYPE): BOOLEAN is

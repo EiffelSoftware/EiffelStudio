@@ -24,6 +24,7 @@ feature -- Initialization
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
+			h1: EV_HORIZONTAL_SEPARATOR
 		once
 			{ANY_TAB} Precursor (Void)
 		
@@ -35,11 +36,14 @@ feature -- Initialization
 
 			create iTrue.make_with_text (f1.combo, "True")
 			create iFalse.make_with_text (f1.combo, "False")
+			create h1.make (Current)
+			set_child_position (h1, 0, 0, 1, 3)
 
 
 			create cmd1.make (~toggle_button)
 			create b1.make_with_text(Current,"Toggle")
 			b1.add_click_command(cmd1, Void)
+			set_child_position (b1, 2, 1, 3, 2)
 			b1.set_vertical_resize(False)
 	
 			-- Creates the objects and their commands

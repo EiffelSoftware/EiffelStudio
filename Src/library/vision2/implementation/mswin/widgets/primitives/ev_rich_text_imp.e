@@ -461,41 +461,35 @@ feature -- Status report
 			end
 			enable_redraw
 		end
-
-	paragraph_format_contiguous (start_line, end_line: INTEGER): BOOLEAN is
-			-- Is paragraph formatting from line `start_line' to `end_line' contiguous?
+		
+	paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
+			-- Is paragraph formatting from caret_position `start_position' to `end_position' contiguous?
 		local
+			current_selection: WEL_CHARACTER_RANGE
+			range_already_selected: BOOLEAN
 			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
 			mask: INTEGER
-			already_selected: BOOLEAN
-			first_position_on_start, last_position_on_start, first_position_on_last, last_position_on_last: INTEGER
 		do
-			first_position_on_start := first_position_from_line_number (start_line)
-			last_position_on_start := last_position_from_line_number (start_line)
-			first_position_on_last := first_position_from_line_number (end_line)
-			last_position_on_last := last_position_from_line_number (end_line)
-			if selection_start >= first_position_on_start and
-				selection_start <= last_position_on_start and
-				selection_end >= first_position_on_last and
-				selection_end <= last_position_on_last then
-				already_selected := True
+			disable_redraw
+			current_selection := selection
+			if current_selection.minimum /= current_selection.maximum and
+				start_position = current_selection.minimum + 1 and
+				end_position = current_selection.maximum + 1
+			then
+				range_already_selected := True
 			else
-				disable_redraw
 				safe_store_caret
-				set_selection (first_position_on_start, last_position_on_last)
+				set_selection (start_position, end_position - 1)
 			end
-			
-			
 			create wel_paragraph_format.make
 			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
 			mask := wel_paragraph_format.mask
-			Result := flag_set (mask, Pfm_alignment)
-
-			if not already_selected then
+			Result := flag_set (mask, Pfm_alignment | pfm_startindent| pfm_rightindent | pfm_spacebefore | pfm_spaceafter)
+			if not range_already_selected then
 				safe_restore_caret
-				enable_redraw
 			end
-		end		
+			enable_redraw
+		end
 		
 	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
 			-- Formatting range information from caret position `start_index' to `end_index'.
@@ -556,34 +550,29 @@ feature -- Status report
 			end
 		end
 		
-	paragraph_format_range_information (start_line, end_line: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
-			-- Formatting range information from lines `start_line' to `end_line'.
-			-- All attributes in `Result' are set to `True' if they remain consistent from `start_line' to
-			--`end_line' and `False' otherwise.
+	paragraph_format_range_information (start_position, end_position: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from caret position `start_position' to `end_position'.
+			-- All attributes in `Result' are set to `True' if they remain consitent from `start_position' to
+			--`end_position' and `False' otherwise.
 			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
 			-- are subsequently changed.
 		local
+			current_selection: WEL_CHARACTER_RANGE
+			range_already_selected: BOOLEAN
 			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
-			mask: INTEGER
-			already_selected: BOOLEAN
-			first_position_on_start, last_position_on_start, first_position_on_last, last_position_on_last: INTEGER
-			flags: INTEGER
+			flags, mask: INTEGER
 		do
-			first_position_on_start := first_position_from_line_number (start_line)
-			last_position_on_start := last_position_from_line_number (start_line)
-			first_position_on_last := first_position_from_line_number (end_line)
-			last_position_on_last := last_position_from_line_number (end_line)
-			if selection_start >= first_position_on_start and
-				selection_start <= last_position_on_start and
-				selection_end >= first_position_on_last and
-				selection_end <= last_position_on_last then
-				already_selected := True
+			disable_redraw
+			current_selection := selection
+			if current_selection.minimum /= current_selection.maximum and
+				start_position = current_selection.minimum + 1 and
+				end_position = current_selection.maximum + 1
+			then
+				range_already_selected := True
 			else
-				disable_redraw
 				safe_store_caret
-				set_selection (first_position_on_start, last_position_on_last)
+				set_selection (start_position, end_position - 1)
 			end
-			
 			create wel_paragraph_format.make
 			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
 			
@@ -603,13 +592,11 @@ feature -- Status report
 			if flag_set (mask, pfm_spaceafter) then
 				flags := flags | feature {EV_PARAGRAPH_CONSTANTS}.bottom_spacing
 			end
-
 			create Result.make_with_flags (flags)
-
-			if not already_selected then
+			if not range_already_selected then
 				safe_restore_caret
-				enable_redraw
 			end
+			enable_redraw
 		end
 
 	index_from_position (an_x_position, a_y_position: INTEGER): INTEGER is
@@ -747,16 +734,25 @@ feature -- Status setting
 		do
 			format_paragraph_internal (start_line, end_line, format, pfm_alignment | pfm_startindent | pfm_rightindent | pfm_spacebefore | pfm_spaceafter | pfm_linespacing)
 		end
-
-	format_paragraph_internal (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; mask: INTEGER) is
-			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive, only
-			-- modifying attributes specified in `mask'.
+		
+	cformat_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+			-- Apply paragraph formatting `format' to character positions `start_position', `end_position' inclusive.
+			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
+			-- `end_position' fall on.
+		do
+			format_paragraph_internal (start_position, end_position, format, pfm_alignment | pfm_startindent | pfm_rightindent | pfm_spacebefore | pfm_spaceafter | pfm_linespacing)
+		end
+		
+	format_paragraph_internal (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; mask: INTEGER) is
+			-- Apply paragraph formatting `format' to character positions `start_position', `end_position' inclusive, only
+			-- modifying attributes specified in `mask'. Formatting applies to complete lines as seperated by new line
+			-- characters that `start_position' and `end_position' fall on.
 		local
 			paragraph: WEL_PARAGRAPH_FORMAT2
 		do
 			disable_redraw
 			safe_store_caret
-			set_selection (first_position_from_line_number (start_line), last_position_from_line_number (end_line))
+			set_selection (start_position - 1, end_position - 1)
 			paragraph ?= format.implementation
 			paragraph.set_mask (mask)
 			set_paragraph_format (paragraph)
@@ -812,9 +808,10 @@ feature -- Status setting
 			enable_redraw
 		end
 		
-	modify_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
-			-- Modify paragraph formatting from lines `start_line' to `end_line' applying all attributes of `format' that are set to
-			-- `True' within `applicable_attributes', ignoring others.
+	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+			-- Modify paragraph formatting from lines `start_position' to `end_position' applying all attributes of `format' that are set to
+			-- `True' within `applicable_attributes', ignoring others. Modification applies to complete lines as seperated by
+			-- new line characters that `start_position' and `end_position' fall on.
 		local
 			mask: INTEGER
 		do
@@ -833,7 +830,7 @@ feature -- Status setting
 			if applicable_attributes.bottom_spacing then
 				mask := mask | pfm_spaceafter
 			end
-			format_paragraph_internal (start_line, end_line, format, mask)
+			format_paragraph_internal (start_position, end_position, format, mask)
 		end
 		
 	buffered_format (start_pos, end_pos: INTEGER; format: EV_CHARACTER_FORMAT) is

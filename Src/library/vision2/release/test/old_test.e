@@ -14,6 +14,17 @@ feature
 			create Result
 		end
 
+	test_cb is
+		do
+			if EV_TREE_OBJECT.selected_item /= Void then
+				print (EV_TREE_OBJECT.selected_item.text +"%N")
+			else
+				print ("Selected item is void")
+			end
+		end
+
+			EV_TREE_OBJECT: EV_TREE
+
 	prepare is
 		local
 			main_split: EV_VERTICAL_SPLIT_AREA
@@ -33,7 +44,7 @@ feature
 			wnotebook: EV_NOTEBOOK
 			box: EV_HORIZONTAL_BOX
 			proc_box: EV_VERTICAL_BOX
-			ev_proc: EV_PROCEDURE_WIDGET [TEST, TUPLE [EV_LABEL, EV_WIDGET]]
+			ev_proc: EV_PROCEDURE_WIDGET [OLD_TEST, TUPLE [EV_LABEL, EV_WIDGET]]
 
 			EV_GDK_FONT_OBJECT: EV_GDK_FONT
 			ASSIGN_ATTEMPT_OBJECT: ASSIGN_ATTEMPT [REAL]
@@ -51,8 +62,8 @@ feature
 			EV_GTK_WIDGETS_EXTERNALS_OBJECT: EV_GTK_WIDGETS_EXTERNALS
 			EV_RADIO_GROUP_OBJECT: EV_RADIO_GROUP
 			EV_PND_ACTION_SEQUENCE_OBJECT: EV_PND_ACTION_SEQUENCE
-			EV_ANGLE_OBJECT: EV_ANGLE
-			EV_ANGLE_ROUTINES_OBJECT: EV_ANGLE_ROUTINES
+
+	
 			EV_FIGURE_ARC_OBJECT: EV_FIGURE_ARC
 			EV_FIGURE_DOT_OBJECT: EV_FIGURE_DOT
 			EV_FIGURE_DRAWER_OBJECT: EV_FIGURE_DRAWER
@@ -127,7 +138,7 @@ feature
 			EV_HORIZONTAL_SEPARATOR_OBJECT: EV_HORIZONTAL_SEPARATOR
 			EV_LABEL_OBJECT: EV_LABEL
 			EV_LIST_OBJECT: EV_LIST
-			EV_OPTION_BUTTON_OBJECT: EV_OPTION_BUTTON
+			--EV_OPTION_BUTTON_OBJECT: EV_OPTION_BUTTON
 			EV_SPIN_BUTTON_OBJECT: EV_SPIN_BUTTON
 			EV_TEXT_FIELD_OBJECT: EV_TEXT_FIELD
 			EV_TOGGLE_BUTTON_OBJECT: EV_TOGGLE_BUTTON
@@ -158,15 +169,26 @@ feature
 			EV_ITEM_SELECT_ACTION_SEQUENCE_OBJECT: EV_ITEM_SELECT_ACTION_SEQUENCE
 			EV_FOCUS_ACTION_SEQUENCE_OBJECT: EV_FOCUS_ACTION_SEQUENCE
 			pixfile: RAW_FILE
-			cbox: EV_COMBO_BOX
+			EV_COMBO_BOX_OBJECT: EV_COMBO_BOX
 			counter: INTEGER
+			EV_MULTI_COLUMN_LIST_OBJECT: EV_MULTI_COLUMN_LIST
+			EV_MULTI_COLUMN_LIST_ROW_OBJECT: EV_MULTI_COLUMN_LIST_ROW
+			EV_TREE_ITEM_OBJECT: EV_TREE_ITEM
+			EV_TREE_ITEM_OBJECT2: EV_TREE_ITEM
+
 		do
 			create main_split
 			first_window.extend (main_split)
 
+			create EV_SCROLLABLE_AREA_OBJECT
+			EV_SCROLLABLE_AREA_OBJECT.set_vertical_step (50)
+			EV_SCROLLABLE_AREA_OBJECT.set_horizontal_step (50)
+			print ("Vertical step = " + EV_SCROLLABLE_AREA_OBJECT.vertical_step.out+"%N")
 			create frame
 			frame.set_text ("Eiffel Vision Widgets")
-			main_split.extend (frame)
+
+			EV_SCROLLABLE_AREA_OBJECT.extend (frame)
+			main_split.extend (EV_SCROLLABLE_AREA_OBJECT)
 
 			create wnotebook
 			frame.extend  (wnotebook)
@@ -238,7 +260,83 @@ feature
 				create pixfile.make_open_read ("/var/sw/Eiffel46/bench/bitmaps/xpm/open.xpm")
 				EV_PIXMAP_OBJECT.set_with_file (pixfile)
 				widgets.extend (EV_PIXMAP_OBJECT)
+
+
 	
+			create EV_TREE_OBJECT
+
+			create EV_TREE_ITEM_OBJECT
+			EV_TREE_ITEM_OBJECT.set_text ("Tree item 1")
+			EV_TREE_ITEM_OBJECT.set_pixmap (EV_PIXMAP_OBJECT)
+			EV_TREE_OBJECT.extend (EV_TREE_ITEM_OBJECT)
+			
+			EV_TREE_OBJECT.start
+			EV_TREE_OBJECT.item.expand_actions.extend (~print ("Item expanded%N"))
+			
+			from counter := 1
+			EV_TREE_OBJECT.start
+			until counter > 10
+			loop
+				create EV_TREE_ITEM_OBJECT
+				EV_TREE_ITEM_OBJECT.set_text ("Sub Tree item "+counter.out)
+				EV_TREE_ITEM_OBJECT.set_pixmap (EV_PIXMAP_OBJECT)
+				EV_TREE_OBJECT.item.extend (EV_TREE_ITEM_OBJECT)
+				counter := counter + 1
+			end
+			
+			create EV_TREE_ITEM_OBJECT
+			EV_TREE_ITEM_OBJECT.set_text ("IEK")
+			EV_TREE_OBJECT.extend (EV_TREE_ITEM_OBJECT)
+			create EV_TREE_ITEM_OBJECT2
+			EV_TREE_ITEM_OBJECT2.set_text ("IEK Sub item")
+			EV_TREE_ITEM_OBJECT.extend (EV_TREE_ITEM_OBJECT2)
+			EV_TREE_ITEM_OBJECT.expand
+	
+			widgets.extend (EV_TREE_OBJECT)
+
+
+			create EV_MULTI_COLUMN_LIST_OBJECT
+				widgets.extend (EV_MULTI_COLUMN_LIST_OBJECT)
+
+			from
+				counter := 1
+			until
+				counter > 100
+			loop
+				create EV_MULTI_COLUMN_LIST_ROW_OBJECT
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.select_actions.extend (~test_cb)
+EV_MULTI_COLUMN_LIST_ROW_OBJECT.deselect_actions.extend (~print ("Item "+counter.out+ " deselected%N"))
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.set_columns (10)
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.set_cell_pixmap (1, EV_PIXMAP_OBJECT)
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.set_cell_text (1, counter.out +" Multi")
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.set_cell_text (2, "Column")
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.set_cell_text (3, "List")
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.set_cell_text (4, "appears")
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.set_cell_text (5, "to")
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.set_cell_text (6, "be")
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.set_cell_text (7, "bloody")
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.set_cell_text (8, "working")
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.set_cell_text (9, "at")
+				EV_MULTI_COLUMN_LIST_ROW_OBJECT.set_cell_text (10, "last")
+				EV_MULTI_COLUMN_LIST_OBJECT.extend (EV_MULTI_COLUMN_LIST_ROW_OBJECT)
+				counter := counter + 1
+			end
+
+			from EV_MULTI_COLUMN_LIST_OBJECT.start
+			until EV_MULTI_COLUMN_LIST_OBJECT.after
+			loop
+				EV_MULTI_COLUMN_LIST_OBJECT.item.set_cell_text (7, "nearly")
+				EV_MULTI_COLUMN_LIST_OBJECT.forth
+			end
+
+			from counter := 1
+			until counter > 10
+			loop
+				EV_MULTI_COLUMN_LIST_OBJECT.set_column_title (("Column "+counter.out), counter)
+				counter := counter + 1
+			end
+
+			EV_MULTI_COLUMN_LIST_OBJECT.column_click_actions.extend (~print ("Column clicked%N"))
 
 			create EV_STATUS_BAR_OBJECT
 			first_window.set_status_bar (EV_STATUS_BAR_OBJECT)
@@ -269,8 +367,8 @@ feature
 			create EV_GTK_WIDGETS_EXTERNALS_OBJECT
 --FIMXE			create EV_RADIO_GROUP_OBJECT
 			create EV_PND_ACTION_SEQUENCE_OBJECT
-			create EV_ANGLE_OBJECT
-			create EV_ANGLE_ROUTINES_OBJECT
+
+
 			create EV_FIGURE_ARC_OBJECT
 			create EV_FIGURE_DOT_OBJECT
 --FIMXE			create EV_FIGURE_DRAWER_OBJECT
@@ -296,8 +394,11 @@ feature
 			create EV_MENU_SEPARATOR_OBJECT
 
 			create EV_TOOL_BAR_OBJECT
-				widgets.extend (EV_TOOL_BAR_OBJECT)
-
+				--widgets.extend (EV_TOOL_BAR_OBJECT)
+			create EV_SCROLLABLE_AREA_OBJECT
+				EV_SCROLLABLE_AREA_OBJECT.extend (EV_TOOL_BAR_OBJECT)
+				EV_SCROLLABLE_AREA_OBJECT.hide_vertical_scrollbar
+			widgets.extend (EV_SCROLLABLE_AREA_OBJECT)
 
 			create EV_TOOL_BAR_BUTTON_OBJECT
 			EV_TOOL_BAR_BUTTON_OBJECT.set_text ("TOOL BAR%NBUTTON")
@@ -318,7 +419,7 @@ feature
 			EV_TOOL_BAR_OBJECT.extend (EV_TOOL_BAR_RADIO_BUTTON_OBJECT1)
 			
 			create EV_TOOL_BAR_RADIO_BUTTON_OBJECT2
-			EV_TOOL_BAR_RADIO_BUTTON_OBJECT1.set_peer (EV_TOOL_BAR_RADIO_BUTTON_OBJECT2)
+			--EV_TOOL_BAR_RADIO_BUTTON_OBJECT1.set_peer (EV_TOOL_BAR_RADIO_BUTTON_OBJECT2)
 			EV_TOOL_BAR_OBJECT.extend (EV_TOOL_BAR_RADIO_BUTTON_OBJECT2)
 			EV_TOOL_BAR_RADIO_BUTTON_OBJECT2.set_text ("TOOL BAR%NRADIO%NBUTTON")
 			EV_TOOL_BAR_RADIO_BUTTON_OBJECT2.set_pixmap (EV_PIXMAP_OBJECT)
@@ -360,8 +461,10 @@ feature
 						"EV_DIALOG", EV_DIALOG_OBJECT~show ))
 			create EV_CELL_OBJECT
 				widgets.extend (EV_CELL_OBJECT)
-			create cbox
-				widgets.extend (cbox)
+			create EV_COMBO_BOX_OBJECT
+				widgets.extend (EV_COMBO_BOX_OBJECT)
+				EV_COMBO_BOX_OBJECT.return_actions.extend (~print ("Item selected" + "%N"))
+				EV_COMBO_BOX_OBJECT.change_actions.extend (~print ("Text changed" + "%N"))
 
 			from
 				counter := 1
@@ -370,10 +473,20 @@ feature
 			loop
 				create EV_LIST_ITEM_OBJECT
 				EV_LIST_ITEM_OBJECT.set_text ("Combo box list item " + counter.out)
+				EV_LIST_ITEM_OBJECT.align_text_left
 				EV_LIST_ITEM_OBJECT.set_pixmap (EV_PIXMAP_OBJECT)
-				cbox.extend (EV_LIST_ITEM_OBJECT)
+				EV_COMBO_BOX_OBJECT.extend (EV_LIST_ITEM_OBJECT)
+				EV_LIST_ITEM_OBJECT.select_actions.extend (~print (EV_LIST_ITEM_OBJECT.text.out+" selected%N"))
+				EV_LIST_ITEM_OBJECT.deselect_actions.extend (~print (EV_LIST_ITEM_OBJECT.text.out+" deselected%N"))
 				counter := counter + 1
 			end
+
+--| FIXME IEK Replace fails on post-condition
+
+	--		create EV_LIST_ITEM_OBJECT
+	--		EV_LIST_ITEM_OBJECT.set_text ("Replaced at 1")
+	--		EV_COMBO_BOX_OBJECT.start
+	--		EV_COMBO_BOX_OBJECT.replace (EV_LIST_ITEM_OBJECT)
 
 			create EV_FRAME_OBJECT
 				widgets.extend (EV_FRAME_OBJECT)
@@ -383,13 +496,11 @@ feature
 				widgets.extend (EV_HORIZONTAL_SPLIT_AREA_OBJECT)
 			create EV_NOTEBOOK_OBJECT
 				widgets.extend (EV_NOTEBOOK_OBJECT)
---FIXME			create EV_SCROLLABLE_AREA_OBJECT
 			create EV_TITLED_WINDOW_OBJECT
 			create EV_VERTICAL_BOX_OBJECT
 				widgets.extend (EV_VERTICAL_BOX_OBJECT)
 			create EV_VERTICAL_SPLIT_AREA_OBJECT
 				widgets.extend (EV_VERTICAL_SPLIT_AREA_OBJECT)
---FIXME			create EV_VIEWPORT_OBJECT
 --FIXME			create EV_WIDGET_LIST_CURSOR_OBJECT
 			create EV_WINDOW_OBJECT
 			create EV_BUTTON_OBJECT
@@ -442,7 +553,7 @@ feature
 			create EV_VERTICAL_SEPARATOR_OBJECT
 				widgets.extend (EV_VERTICAL_SEPARATOR_OBJECT)
 			create EV_MENU_BAR_OBJECT
-				first_window.set_menu_bar (ev_menu_bar_OBJECT)
+				--first_window.set_menu_bar (ev_menu_bar_OBJECT)
 			create EV_MENU_OBJECT
 				ev_menu_bar_OBJECT.extend (EV_MENU_OBJECT)
 				ev_menu_OBJECT.set_text ("Menu 1")

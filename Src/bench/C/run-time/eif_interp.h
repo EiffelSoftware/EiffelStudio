@@ -200,6 +200,12 @@ extern void idump(FILE *fd, char *start);
 #define BC_REF_TO_PTR		(char) 132
 #define BC_RCREATE		(char) 133
 
+/* Byte code for the creation of a generic parameter */
+#define BC_GEN_PARAM_CREATE	(char) 134
+
+/* Byte code for expression creation */
+#define BC_CREATE_EXP		(char) 135
+
 #ifdef CONCURRENT_EIFFEL
 /* Instructions for Concurrent Eiffel */
 #define BC_SEP_SET			(char) 150

@@ -4,9 +4,7 @@
 
 #include "mel.h"
 
-EIF_INTEGER x_query_x_pointer (display_pointer, screen_pointer)
-EIF_POINTER display_pointer;
-EIF_POINTER screen_pointer;
+EIF_INTEGER x_query_x_pointer (EIF_POINTER display_pointer, EIF_POINTER screen_pointer)
 {
 	/* Get x coordonnate of pointer	 
 	 * relative to root window		 
@@ -23,9 +21,7 @@ EIF_POINTER screen_pointer;
 	return (EIF_INTEGER) root_x;
 }
 
-EIF_INTEGER x_query_y_pointer (display_pointer, screen_pointer)
-EIF_POINTER display_pointer;
-EIF_POINTER screen_pointer;
+EIF_INTEGER x_query_y_pointer (EIF_POINTER display_pointer, EIF_POINTER screen_pointer)
 {
 
 	/* Get y coordonnate of pointer	 
@@ -43,9 +39,7 @@ EIF_POINTER screen_pointer;
 	return root_y;
 }
 
-EIF_POINTER x_query_window_pointer (display_pointer, window)
-EIF_POINTER display_pointer;
-EIF_POINTER window;
+EIF_POINTER x_query_window_pointer (EIF_POINTER display_pointer, EIF_POINTER window)
 {
 	/* Get the window currently pointed  
 	 */	
@@ -60,9 +54,7 @@ EIF_POINTER window;
 	return (EIF_POINTER) child;
 }
 
-EIF_BOOLEAN x_query_button_pointer (display_pointer, button)
-EIF_POINTER display_pointer;
-EIF_INTEGER button;
+EIF_BOOLEAN x_query_button_pointer (EIF_POINTER display_pointer, EIF_INTEGER button)
 {
 	/*  Get button state of pointer	  
 	 *  relative to root window		 

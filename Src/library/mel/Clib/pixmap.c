@@ -1,12 +1,8 @@
 #include "mel.h"
 
-EIF_POINTER x_read_bitmap_from_file (a_screen, filename, a_status,
-		a_width, a_height, x1, y1)
-EIF_POINTER a_screen;
-EIF_INTEGER *a_status;
-EIF_INTEGER *a_width, *a_height;
-EIF_INTEGER *x1, *y1;
-char *filename;
+EIF_POINTER x_read_bitmap_from_file (EIF_POINTER a_screen, char *filename, 
+	EIF_INTEGER *a_status, EIF_INTEGER *a_width, EIF_INTEGER *a_height, 
+	EIF_INTEGER *x1, EIF_INTEGER *y1)
 {
 	/*
 	 * Read the bitmap from `file_name'

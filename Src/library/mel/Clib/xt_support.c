@@ -10,8 +10,7 @@ XEvent global_xevent; /* Global variable for Event processing */
  *
  */
 
-EIF_REFERENCE c_get_argv (w)
-EIF_POINTER w;
+EIF_REFERENCE c_get_argv (EIF_POINTER w)
 {
 	String *temp;
 
@@ -23,9 +22,7 @@ EIF_POINTER w;
 		return NULL;
 }
 
-EIF_INTEGER c_get_int (w, res)
-EIF_POINTER w;
-char *res;
+EIF_INTEGER c_get_int (EIF_POINTER w, char *res)
 {
 	int temp;
 
@@ -33,17 +30,12 @@ char *res;
 	return (EIF_INTEGER) temp;
 }
 
-void c_set_int (w, res, an_int)
-EIF_POINTER w;
-char *res;
-EIF_INTEGER an_int;
+void c_set_int (EIF_POINTER w, char *res, EIF_INTEGER an_int)
 {
 	XtVaSetValues ((Widget) w, (String) res, (int) an_int, NULL);
 }
 
-EIF_INTEGER c_get_cardinal (w, res)
-EIF_POINTER w;
-char *res;
+EIF_INTEGER c_get_cardinal (EIF_POINTER w, char *res)
 {
 	Cardinal temp;
 
@@ -51,17 +43,12 @@ char *res;
 	return (EIF_INTEGER) temp;
 }
 
-void c_set_cardinal (w, res, a_card)
-EIF_POINTER w;
-char *res;
-EIF_INTEGER a_card;
+void c_set_cardinal (EIF_POINTER w, char *res, EIF_INTEGER a_card)
 {
 	XtVaSetValues ((Widget) w, (String) res, (Cardinal) a_card, NULL);
 }
 
-EIF_BOOLEAN c_get_boolean (w, res)
-EIF_POINTER w;
-char *res;
+EIF_BOOLEAN c_get_boolean (EIF_POINTER w, char *res)
 {
 	Boolean temp;
 
@@ -69,17 +56,12 @@ char *res;
 	return (EIF_BOOLEAN) (temp != 0);
 }
 
-void c_set_boolean (w, res, a_boolean)
-EIF_POINTER w;
-char *res;
-EIF_BOOLEAN a_boolean;
+void c_set_boolean (EIF_POINTER w, char *res, EIF_BOOLEAN a_boolean)
 {
 	XtVaSetValues ((Widget) w, (String) res, (Boolean) (a_boolean != 0), NULL);
 }
 
-EIF_INTEGER c_get_unsigned_char (w, res)
-EIF_POINTER w;
-char *res;
+EIF_INTEGER c_get_unsigned_char (EIF_POINTER w, char *res)
 {
 	unsigned char temp;
 
@@ -87,17 +69,12 @@ char *res;
 	return (EIF_INTEGER) temp;
 }
 
-void c_set_unsigned_char (w, res, an_unsigned_char)
-EIF_POINTER w;
-char *res;
-EIF_INTEGER an_unsigned_char;
+void c_set_unsigned_char (EIF_POINTER w, char *res, EIF_INTEGER an_unsigned_char)
 {
 	XtVaSetValues ((Widget) w, (String) res, (unsigned char) an_unsigned_char, NULL);
 }
 
-EIF_POINTER c_get_pixmap (w, res)
-EIF_POINTER w;
-char *res;
+EIF_POINTER c_get_pixmap (EIF_POINTER w, char *res)
 {
 	Pixmap temp;
 
@@ -105,17 +82,12 @@ char *res;
 	return (EIF_POINTER) temp;
 }
 
-void c_set_pixmap (w, res, a_pixmap)
-EIF_POINTER w;
-char *res;
-EIF_POINTER a_pixmap;
+void c_set_pixmap (EIF_POINTER w, char *res, EIF_POINTER a_pixmap)
 {
 	XtVaSetValues ((Widget) w, (String) res, (Pixmap) a_pixmap, NULL);
 }
 
-EIF_CHARACTER c_get_keysym (w, res)
-EIF_POINTER w;
-char *res;
+EIF_CHARACTER c_get_keysym (EIF_POINTER w, char *res)
 {
 	KeySym temp;
 
@@ -126,17 +98,12 @@ char *res;
 		return (EIF_CHARACTER) temp;
 }
 
-void c_set_keysym (w, res, a_widget)
-EIF_POINTER w;
-char *res;
-EIF_CHARACTER a_widget;
+void c_set_keysym (EIF_POINTER w, char *res, EIF_CHARACTER a_widget)
 {
 	XtVaSetValues ((Widget) w, (String) res, (KeySym) a_widget, NULL);
 }
 
-EIF_POINTER c_get_widget (w, res)
-EIF_POINTER w;
-char *res;
+EIF_POINTER c_get_widget (EIF_POINTER w, char *res)
 {
 	Widget temp;
 
@@ -144,24 +111,17 @@ char *res;
 	return (EIF_POINTER) temp;
 }
 
-void c_set_widget (w, res, a_widget)
-EIF_POINTER w;
-char *res;
-EIF_POINTER a_widget;
+void c_set_widget (EIF_POINTER w, char *res, EIF_POINTER a_widget)
 {
 	XtVaSetValues ((Widget) w, (String) res, (Widget) a_widget, NULL);
 }
 
-EIF_POINTER c_get_i_th_widget_child (w, index)
-EIF_POINTER w;
-EIF_INTEGER index;
+EIF_POINTER c_get_i_th_widget_child (EIF_POINTER w, EIF_INTEGER index)
 {
 	return (EIF_POINTER) ((WidgetList) w)[(int) index - 1];
 }
 
-EIF_POINTER c_get_children (w, res)
-EIF_POINTER w;
-char *res;
+EIF_POINTER c_get_children (EIF_POINTER w, char *res)
 {
 	WidgetList temp;
 
@@ -169,9 +129,7 @@ char *res;
 	return (EIF_POINTER) temp;
 }
 
-EIF_INTEGER c_get_dimension (w, res)
-EIF_POINTER w;
-char *res;
+EIF_INTEGER c_get_dimension (EIF_POINTER w, char *res)
 {
 	Dimension temp;
 
@@ -179,17 +137,12 @@ char *res;
 	return (EIF_INTEGER) temp;
 }
 
-void c_set_dimension (w, res, a_dimension)
-EIF_POINTER w;
-char *res;
-EIF_INTEGER a_dimension;
+void c_set_dimension (EIF_POINTER w, char *res, EIF_INTEGER a_dimension)
 {
 	XtVaSetValues ((Widget) w, (String) res, (Dimension) a_dimension, NULL);
 }
 
-EIF_POINTER c_get_pixel (w, res)
-EIF_POINTER w;
-char *res;
+EIF_POINTER c_get_pixel (EIF_POINTER w, char *res)
 {
 	Pixel temp;
 
@@ -197,17 +150,12 @@ char *res;
 	return (EIF_POINTER) temp;
 }
 
-void c_set_pixel (w, res, a_pixel)
-EIF_POINTER w;
-char *res;
-EIF_POINTER a_pixel;
+void c_set_pixel (EIF_POINTER w, char *res, EIF_POINTER a_pixel)
 {
 	XtVaSetValues ((Widget) w, (String) res, (Pixel) a_pixel, NULL);
 }
 
-EIF_INTEGER c_get_position (w, res)
-EIF_POINTER w;
-char *res;
+EIF_INTEGER c_get_position (EIF_POINTER w, char *res)
 {
 	Position temp;
 
@@ -215,34 +163,24 @@ char *res;
 	return (EIF_INTEGER) temp;
 }
 
-void c_set_position (w, res, a_position)
-EIF_POINTER w;
-char *res;
-EIF_INTEGER a_position;
+void c_set_position (EIF_POINTER w, char *res, EIF_INTEGER a_position)
 {
 	XtVaSetValues ((Widget) w, (String) res, (Position) a_position, NULL);
 }
 
-EIF_POINTER c_get_font_list (w, res)
-EIF_POINTER w;
-char *res;
+EIF_POINTER c_get_font_list (EIF_POINTER w, char *res)
 {
 	XmFontList font_list;
 	XtVaGetValues ((Widget) w, (String) res, &font_list, NULL);
 	return (EIF_POINTER) font_list;
 }
 
-void c_set_font_list (w, res, a_font_list)
-EIF_POINTER w;
-char *res;
-EIF_POINTER a_font_list;
+void c_set_font_list (EIF_POINTER w, char *res, EIF_POINTER a_font_list)
 {
 	XtVaSetValues ((Widget) w, (String) res, (XmFontList) a_font_list, NULL);
 }
 
-EIF_REFERENCE c_get_string_no_free (w, res)
-EIF_POINTER w;
-char *res;
+EIF_REFERENCE c_get_string_no_free (EIF_POINTER w, char *res)
 {
 	String  temp;
 	EIF_REFERENCE an_object;
@@ -252,9 +190,7 @@ char *res;
 	return an_object;
 }
 
-EIF_REFERENCE c_get_string (w, res)
-EIF_POINTER w;
-char *res;
+EIF_REFERENCE c_get_string (EIF_POINTER w, char *res)
 {
 	String  temp;
 	EIF_REFERENCE an_object;
@@ -266,10 +202,7 @@ char *res;
 }
 
 
-void c_set_allocated_string (w, res, a_string)
-EIF_POINTER w;
-char *res;
-char *a_string;
+void c_set_allocated_string (EIF_POINTER w, char *res, char *a_string)
 {
 	char *c_string;
 	
@@ -277,17 +210,12 @@ char *a_string;
 	XtVaSetValues ((Widget) w, (String) res, (String) c_string, NULL);
 }
 
-void c_set_string (w, res, a_string)
-EIF_POINTER w;
-char *res;
-char *a_string;
+void c_set_string (EIF_POINTER w, char *res, char *a_string)
 {
 	XtVaSetValues ((Widget) w, (String) res, (String) a_string, NULL);
 }
 
-EIF_INTEGER c_get_short (w, res)
-EIF_POINTER w;
-char *res;
+EIF_INTEGER c_get_short (EIF_POINTER w, char *res)
 {
 	short temp;
 
@@ -295,17 +223,12 @@ char *res;
 	return (EIF_INTEGER) temp;
 }
 
-void c_set_short (w, res, a_short)
-EIF_POINTER w;
-char *res;
-EIF_INTEGER a_short;
+void c_set_short (EIF_POINTER w, char *res, EIF_INTEGER a_short)
 {
 	XtVaSetValues ((Widget) w, (String) res, (short) a_short, NULL);
 }
 
-EIF_POINTER c_get_string_table (w, res)
-EIF_POINTER w;
-char *res;
+EIF_POINTER c_get_string_table (EIF_POINTER w, char *res)
 {
 	XmStringTable temp;
 
@@ -313,17 +236,12 @@ char *res;
 	return (EIF_POINTER) temp;
 }
 
-void c_set_string_table (w, res, table)
-EIF_POINTER w;
-char *res;
-EIF_POINTER table;
+void c_set_string_table (EIF_POINTER w, char *res, EIF_POINTER table)
 {
 	XtVaSetValues ((Widget) w, (String) res, (XmStringTable) table, NULL);
 }
 
-EIF_INTEGER c_get_string_direction (w, res)
-EIF_POINTER w;
-char *res;
+EIF_INTEGER c_get_string_direction (EIF_POINTER w, char *res)
 {
 	XmStringDirection temp;
 
@@ -331,17 +249,12 @@ char *res;
 	return (EIF_INTEGER) temp;
 }
 
-void c_set_string_direction (w, res, dir)
-EIF_POINTER w;
-char *res;
-EIF_INTEGER dir;
+void c_set_string_direction (EIF_POINTER w, char *res, EIF_INTEGER dir)
 {
 	XtVaSetValues ((Widget) w, (String) res, (XmStringDirection) dir, NULL);
 }
 
-EIF_POINTER c_get_xmstring (w, res)
-EIF_POINTER w;
-char *res;
+EIF_POINTER c_get_xmstring (EIF_POINTER w, char *res)
 {
 	XmString a_string;
 
@@ -349,17 +262,12 @@ char *res;
 	return (EIF_POINTER) a_string;
 }
 
-void c_set_xmstring (w, res, cmpnd_str)
-EIF_POINTER w;
-char *res;
-EIF_POINTER cmpnd_str;
+void c_set_xmstring (EIF_POINTER w, char *res, EIF_POINTER cmpnd_str)
 {
 	XtVaSetValues ((Widget) w,(String) res, (XmString) cmpnd_str, NULL);
 }
 
-EIF_POINTER get_i_widget_child (w, index)
-EIF_POINTER w;
-EIF_INTEGER index;
+EIF_POINTER get_i_widget_child (EIF_POINTER w, EIF_INTEGER index)
 {
 	return (EIF_POINTER) ((WidgetList) w)[(int) index];
 }
@@ -376,8 +284,7 @@ String * fallback_list = (String *) 0;
 
 /* Xt utility functions */
 
-EIF_INTEGER xt_real_x (a_widget)
-EIF_POINTER a_widget;
+EIF_INTEGER xt_real_x (EIF_POINTER a_widget)
 {
 	/*  X screen-relative coordinates of a widget */
 	Position root_x, root_y;
@@ -386,8 +293,7 @@ EIF_POINTER a_widget;
 	return (EIF_INTEGER) root_x;
 }
 
-EIF_INTEGER xt_real_y (a_widget)
-EIF_POINTER a_widget;
+EIF_INTEGER xt_real_y (EIF_POINTER a_widget)
 {
 	/* Y screen-relative coordinates of a widget */
 	Position root_x, root_y;
@@ -396,8 +302,7 @@ EIF_POINTER a_widget;
 	return (EIF_INTEGER) root_y;
 }
 
-EIF_BOOLEAN xt_is_visible (a_widget)
-EIF_POINTER	a_widget;
+EIF_BOOLEAN xt_is_visible (EIF_POINTER a_widget)
 {
 	/* Map state */
 	XWindowAttributes window_attributes;
@@ -408,9 +313,7 @@ EIF_POINTER	a_widget;
 	return (EIF_BOOLEAN) (window_attributes.map_state == IsViewable);
 }
 
-void x_propagate_event (a_widget, choice)
-EIF_POINTER a_widget;
-EIF_BOOLEAN choice;
+void x_propagate_event (EIF_POINTER a_widget, EIF_BOOLEAN choice)
 {
 	/* Specify if `a_widget' propagates event
 	 * to its ancestor or not
@@ -433,10 +336,7 @@ EIF_BOOLEAN choice;
 						valuemask, &set_window_attributes);
 }
 
-void set_fallback_res (w, res, count)
-EIF_POINTER w;
-EIF_OBJ res;
-EIF_INTEGER count;
+void set_fallback_res (EIF_POINTER w, EIF_OBJ res, EIF_INTEGER count)
 {
 	int counter = 0;
 
@@ -485,9 +385,7 @@ EIF_POINTER xt_init ()
 	return (EIF_POINTER) gAppContext;
 }
 
-EIF_BOOLEAN compare_masks (mask1, mask2)
-EIF_INTEGER mask1;
-EIF_INTEGER mask2;
+EIF_BOOLEAN compare_masks (EIF_INTEGER mask1, EIF_INTEGER mask2)
 {
 		/* 
 		 * Compare masks `mask1' and `mask2'
@@ -495,8 +393,7 @@ EIF_INTEGER mask2;
 	return (EIF_BOOLEAN) (((unsigned int) mask1 & (unsigned int) mask2) != 0);
 }
 
-EIF_REFERENCE c_event_string (event_pointer)
-EIF_POINTER event_pointer;
+EIF_REFERENCE c_event_string (EIF_POINTER event_pointer)
 {
 	/* Ignore modifiers and simply return the string value */
 	/* E.g. ctrlg returns g.*/
@@ -511,8 +408,7 @@ EIF_POINTER event_pointer;
 	return (EIF_REFERENCE) makestr (result, strlen (result));
 }
 
-EIF_INTEGER c_event_keysym (event_pointer)
-EIF_INTEGER event_pointer;
+EIF_INTEGER c_event_keysym (EIF_INTEGER event_pointer)
 {
 	/* Return the keysym value */
 	char result [100];
@@ -523,9 +419,7 @@ EIF_INTEGER event_pointer;
 	return (EIF_INTEGER) keysym;
 }
 
-void xt_grab_pointer (widget, cursor)
-EIF_POINTER widget;
-EIF_POINTER cursor;
+void xt_grab_pointer (EIF_POINTER widget, EIF_POINTER cursor)
 {
 	/* Grab the pointer and the
 	 * keyboard
@@ -541,23 +435,18 @@ EIF_POINTER cursor;
 			GrabModeAsync, GrabModeSync, None, None, CurrentTime);
 }
 
-EIF_POINTER c_create_xpoints (number)
-EIF_INTEGER number;
+EIF_POINTER c_create_xpoints (EIF_INTEGER number)
 {
 	return ((EIF_POINTER) cmalloc (number*sizeof (XPoint)));
 }
 
-void c_put_xpoint (array, position, x, y)
-EIF_POINTER array;
-EIF_INTEGER position;
-EIF_INTEGER x, y;
+void c_put_xpoint (EIF_POINTER array, EIF_INTEGER position, EIF_INTEGER x, EIF_INTEGER y)
 {
 	((XPoint *) array) [(int) position].x = (short) x;
 	((XPoint *) array) [(int) position].y = (short) y;
 }
 
-void c_free_xpoints (array)
-EIF_POINTER array;
+void c_free_xpoints (EIF_POINTER array)
 {
 	xfree ((XPoint *) array);
 }

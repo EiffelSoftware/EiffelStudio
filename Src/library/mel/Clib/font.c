@@ -1,7 +1,6 @@
 #include "font.h"
 
-EIF_POINTER xm_font_list_init_font_context (a_font_list)
-EIF_POINTER a_font_list;
+EIF_POINTER xm_font_list_init_font_context (EIF_POINTER a_font_list)
 {
 		/* 
 		 * Initialize the font context from `a_font_list'

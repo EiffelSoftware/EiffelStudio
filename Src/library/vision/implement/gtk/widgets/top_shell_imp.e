@@ -28,7 +28,8 @@ feature {NONE} -- Initialization
 		local
 			x_display: MEL_DISPLAY;
 		do
-			widget := gtk_window_new (GTK_WINDOW_POPUP)
+			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
+			set_managed (True)
 		ensure
 			widget /= default_pointer
 		end

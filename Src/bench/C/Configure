@@ -20,7 +20,7 @@
 
 # $Id$
 #
-# Generated on Wed Jan 11 09:30:40 PST 1995 [metaconfig 3.0 PL48]
+# Generated on Thu Jan 26 17:45:09 PST 1995 [metaconfig 3.0 PL48]
 
 cat >/tmp/c1$$ <<EOF
 ARGGGHHHH!!!!!
@@ -285,6 +285,7 @@ d_time=''
 timetype=''
 clocktype=''
 d_times=''
+d_unlink=''
 d_usleep=''
 d_utime=''
 d_voidsig=''
@@ -4380,6 +4381,10 @@ else
 	clocktype='int'
 fi
 
+: see if unlink exists
+set unlink d_unlink
+eval $inlibc
+
 : see if usleep exists
 set usleep d_usleep
 eval $inlibc
@@ -6585,6 +6590,7 @@ d_time='$d_time'
 timetype='$timetype'
 clocktype='$clocktype'
 d_times='$d_times'
+d_unlink='$d_unlink'
 d_usleep='$d_usleep'
 d_utime='$d_utime'
 d_voidsig='$d_voidsig'

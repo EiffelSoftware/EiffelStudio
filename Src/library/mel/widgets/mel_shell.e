@@ -12,36 +12,38 @@ class
 
 inherit
 
-	MEL_XT_SHELL_FUNCTIONS;
-
 	MEL_SHELL_RESOURCES
 		export
 			{NONE} all
 		end;
 
 	MEL_COMPOSITE
+		rename
+			destroy as comp_destroy
+		export
+			{NONE} comp_destroy
 		redefine
-			real_x, real_y,
-			make_from_existing,
-			manage, unmanage, managed,
+			real_x, real_y, make_from_existing,
 			clean_up_callbacks
 		end
 
-feature {NONE} -- Initialization
+	MEL_COMPOSITE
+		redefine
+			real_x, real_y, make_from_existing, 
+			clean_up_callbacks, destroy
+		select
+			destroy
+		end
 
-	make_from_existing (a_screen_object: POINTER) is
-			-- Create a motif widget from an existing one.
+feature -- Initialization
+
+	make_from_existing (a_screen_object: POINTER; a_parent: MEL_COMPOSITE) is
+			-- Create a mel widget from existing widget `a_screen_object'.
 		do
 			screen_object := a_screen_object;
-			check
-				parent_exists: Mel_widgets.item (xt_parent (screen_object)) /= Void
-			end;
-			parent ?= Mel_widgets.item (xt_parent (screen_object));
-			Mel_widgets.put (Current, screen_object)
-				-- In fact, we should retrieve the screen pointer of the widget
-				-- then retrieve the Eiffel screen according to that pointer.
-				-- But this function is only useful with compound dialogs
-				-- and they appear on the default_screen.
+			parent := a_parent;
+			Mel_widgets.add_popup_shell (Current);
+			set_default
 		end;
 
 feature -- Status report
@@ -54,20 +56,12 @@ feature -- Status report
 			Result := get_xt_boolean (screen_object, XmNallowShellResize)
 		end;
 
-	create_popup_child_proc is
-			-- A procedure that creates a child widget.
-			-- The procedure is only when the shell is poped up.
-		require
-			exists: not is_destroyed
-		do
-		end;
-
 	geometry: STRING is
 			-- Geometry
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_string (screen_object, XmNgeometry)
+			Result := get_xt_string_no_free (screen_object, XmNgeometry)
 		end;
 
 	is_override_redirect: BOOLEAN is
@@ -106,10 +100,6 @@ feature -- Status report
 			Result := y
 		end;
 
-	managed: BOOLEAN is True;
-			-- Is managed?
-			-- (Always true)
-
 feature -- Status setting
 
 	set_allow_shell_resize (b: BOOLEAN) is
@@ -120,22 +110,33 @@ feature -- Status setting
 			set: allow_shell_resize = b
 		end;
 
-	set_create_popup_child_proc is
-			-- Set `create_popup_child_proc'.
-		require
-			exists: not is_destroyed
-		do
-		end;
-
 	set_geometry (a_string: STRING) is
 			-- Set `geometry' to `a_string'.
 		require
 			exists: not is_destroyed;
 			a_string_not_void: a_string /= Void
 		do
-			set_xt_string (screen_object, XmNgeometry, a_string)
+			set_xt_allocated_string (screen_object, XmNgeometry, a_string)
 		ensure
 			geometry_set: geometry.is_equal (a_string)
+		end;
+
+	set_geometry_position (new_x, new_y: INTEGER) is
+			-- Set the geometry position to `new_x' and
+			-- `new_y'.
+		local
+			geo: STRING
+		do
+			!! geo.make (8);
+			if new_x >= 0 then
+				geo.extend ('+')
+			end;
+			geo.append_integer (new_x);
+			if new_y >= 0 then
+				geo.extend ('+')
+			end;
+			geo.append_integer (new_y);
+			set_geometry (geo)
 		end;
 
 	set_override_redirect (b: BOOLEAN) is
@@ -164,16 +165,6 @@ feature -- Status setting
 			exists: not is_destroyed
 		do
 		ensure
-		end;
-
-	manage is
-			-- Manage all children.
-		do
-		end;
-
-	unmanage is
-			-- Unmanage all children.
-		do
 		end;
 
 feature -- Display
@@ -288,6 +279,15 @@ feature -- Removal
 					(screen_object, atom, a_callback_exec);
 		end;
 
+	destroy is
+			-- Destroy the associated screen object.
+		do
+			comp_destroy;
+			if parent /= Void then -- Not a top or application shell
+				parent.remove_popup_child (Current)
+			end
+		end;
+
 feature {NONE} -- Implementation
 
 	clean_up_callbacks is
@@ -301,6 +301,41 @@ feature {NONE} -- External features
 	xm_add_wm_protocol (w: POINTER; atom: POINTER) is
 		external
 			"C"
+		end;
+
+	xt_popup (a_popup_shell: POINTER; grab_kind: INTEGER) is
+		external
+			"C [macro <X11/Intrinsic.h>] (Widget, XtGrabKind)"
+		alias
+			"XtPopup"
+		end;
+
+	xt_popdown (a_popup_shell: POINTER) is
+		external
+			"C [macro <X11/Intrinsic.h>] (Widget)"
+		alias
+			"XtPopdown"
+		end;
+
+	XtGrabNone: INTEGER is
+		external
+			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
+		alias
+			"XtGrabNone"
+		end;
+
+	XtGrabNonexclusive: INTEGER is
+		external
+			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
+		alias
+			"XtGrabNonexclusive"
+		end;
+
+	XtGrabExclusive: INTEGER is
+		external
+			"C [macro <X11/Intrinsic.h>]: EIF_INTEGER"
+		alias
+			"XtGrabExclusive"
 		end;
 
 end -- class MEL_SHELL

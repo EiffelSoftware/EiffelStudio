@@ -1,85 +1,61 @@
+indexing
+	description: "Representation of an integer constant"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class INT_CONST_VAL_B 
+class
+	INT_CONST_VAL_B 
 
 inherit
 	INT_VAL_B
 		rename
 			make as old_make
 		redefine
-			generation_value, make_byte_code
-		end
-
-	SHARED_BYTE_CONTEXT
-		export
-			{NONE} all
-		end
-
-	SHARED_WORKBENCH
-		export
-			{NONE} all
+			generation_value
 		end
 
 creation
 	make
 	
-feature
+feature {NONE} -- Initialization
 
-	rout_id: INTEGER;
+	make (context_class: CLASS_C; i: INTEGER; c: CONSTANT_I) is
+			-- Creare a new constant access value for constant `c'
+			-- written in `context_class'.
+		require
+			context_class_not_void: context_class /= Void
+			c_not_void: c /= Void
+		do
+			value := i
+			rout_id := c.rout_id_set.first
+			feature_id := c.feature_id
+			written_in := context_class.class_id
+		end
+
+feature -- Access
+
+	rout_id: INTEGER
 			-- Routine id of the constant
 
-	feature_id: INTEGER;
+	feature_id: INTEGER
 			-- Feature id of the constant
 
 	written_in: INTEGER
 			-- Class id where constant is used.
 
-feature 
-
-	make (context_class: CLASS_C; i: INTEGER; c: CONSTANT_I) is
-		do
-			value := i;
-			rout_id := c.rout_id_set.first;
-			feature_id := c.feature_id;
-			written_in := context_class.class_id
-		end;
+feature -- Code generation
 
 	generation_value: INTEGER is
 			-- Value to generate
 		local
-			constant_i: CONSTANT_I;
-			integer_value: INTEGER_CONSTANT;
-			current_feature_table: FEATURE_TABLE;
+			constant_i: CONSTANT_I
+			integer_value: INTEGER_CONSTANT
+			current_feature_table: FEATURE_TABLE
 		do
-			current_feature_table := System.class_of_id (written_in).feature_table;
-			constant_i ?= current_feature_table.origin_table.item (rout_id);
-			integer_value ?= constant_i.value;
-			Result := integer_value.value;
-		end;
-
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a constant in an interval
-		local
-			cl_type: CL_TYPE_I;
-			base_class: CLASS_C;
-			rout_info: ROUT_INFO
-		do
-			ba.append (Bc_current);
-			cl_type := context.current_type;
-			base_class := cl_type.base_class;
-			if base_class.is_precompiled then
-				rout_info := System.rout_info_table.item (rout_id);
-				ba.append (Bc_pfeature);
-				ba.append_integer (rout_info.origin);
-				ba.append_integer (rout_info.offset)
-				ba.append_short_integer (-1);
-			else
-				ba.append (Bc_feature);
-				ba.append_integer (feature_id);
-				ba.append_short_integer (cl_type.associated_class_type.static_type_id - 1)
-				ba.append_short_integer (-1);
-			end
-		end;
+			current_feature_table := System.class_of_id (written_in).feature_table
+			constant_i ?= current_feature_table.origin_table.item (rout_id)
+			integer_value ?= constant_i.value
+			Result := integer_value.value
+		end
 
 end

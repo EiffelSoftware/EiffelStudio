@@ -58,12 +58,7 @@ feature -- Basic operation
 			
 				-- Perform special processing of `layout_item' children
 				-- as locked instances must not show their children.
-			if system_status.loading_project then
-				if not is_instance_of_top_level_object then
-					layout_item.go_i_th (position)
-					layout_item.put_left (an_object.layout_item)	
-				end			
-			elseif layout_item.data = Void then
+			if layout_item.data = Void then
 				layout_item.go_i_th (position)
 				layout_item.put_left (an_object.layout_item)
 			end

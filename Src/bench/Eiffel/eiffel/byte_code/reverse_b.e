@@ -57,7 +57,13 @@ feature -- IL code generation
 			il_generator.branch_on_true (success_label)
 
 			il_generator.pop
-			il_generator.put_default_value (target_type)
+			if target_type.is_expanded then
+					-- Assignment attempt failed, we simply load previous
+					-- value of `target'.
+				target.generate_il
+			else			
+				il_generator.put_default_value (target_type)
+			end
 
 			failure_label := il_label_factory.new_label
 			il_generator.branch_to (failure_label)

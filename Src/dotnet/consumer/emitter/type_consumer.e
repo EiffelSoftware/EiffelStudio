@@ -293,6 +293,7 @@ feature -- Basic Operation
 						l_functions.extend (l_other_functions.item)
 						l_other_functions.forth
 					end
+					l_functions.extend (infix_and_feature (internal_referenced_type))
 					l_functions.extend (infix_or_feature (internal_referenced_type))
 					l_functions.extend (from_integer_feature (internal_referenced_type))
 					l_functions.extend (to_integer_feature (internal_referenced_type))
@@ -847,8 +848,11 @@ feature {NONE} -- Status Setting.
 		do
 			Result := info.name.length > 3 and then
 						info.is_special_name and then
-						info.name.starts_with (Operator_name_prefix.to_cil) and then
-						info.get_parameters.item (0).parameter_type.equals_type (info.reflected_type)
+						info.name.starts_with (Operator_name_prefix) and then
+						info.get_parameters.count = 2 and then
+						info.get_parameters.item (0).parameter_type.equals_type (info.reflected_type) and then
+						not info.name.equals (Op_implicit) and then
+						not info.name.equals (Op_explicit)
 		end
 
 	is_prefix (info: METHOD_INFO): BOOLEAN is
@@ -858,8 +862,11 @@ feature {NONE} -- Status Setting.
 		do
 			Result := info.name.length > 3 and then
 						info.is_special_name and then
-						info.name.starts_with (Operator_name_prefix.to_cil) and then
-						info.get_parameters.count = 1
+						info.name.starts_with (Operator_name_prefix) and then
+						info.get_parameters.count = 1 and then
+						info.get_parameters.item (0).parameter_type.equals_type (info.reflected_type) and then
+						not info.name.equals (Op_implicit) and then
+						not info.name.equals (Op_explicit)
 		end
 
 	is_function (info: METHOD_INFO): BOOLEAN is
@@ -874,7 +881,9 @@ feature {NONE} -- Status Setting.
 			Result := feature {TYPE}.get_type_string (("System.Void").to_cil)
 		end
 
-	Operator_name_prefix: STRING is "op_"
+	Operator_name_prefix: SYSTEM_STRING is "op_"
+	Op_implicit: SYSTEM_STRING is "op_implicit"
+	Op_explicit: SYSTEM_STRING is "op_Explicit"
 			-- Special prefix for .NET operators
 
 --	internal_is_prefix_set: BOOLEAN
@@ -1076,8 +1085,8 @@ feature {NONE} -- Added features for ENUM types.
 	Additional_enum_features: INTEGER is 3
 			-- Number of additional features for enum types.
 
-	infix_or_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
-			-- Create instance of CONSUMED_FUNCTION for`|' in enum type `t'.
+	infix_and_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+			-- Create instance of CONSUMED_FUNCTION for `&' in enum type `t'.
 		require
 			enum_type_not_void: enum_type /= Void
 		local
@@ -1086,7 +1095,31 @@ feature {NONE} -- Added features for ENUM types.
 		do
 			create l_arg.make ("other", "other", enum_type, False)
 			l_args := <<l_arg>>
-			create Result.make ("infix %"|%"", "|", l_args, enum_type,
+			create Result.make ("&", "&", l_args, enum_type,
+				True,	-- is_frozen
+				False,	-- is_static
+				False,	-- is_deferred
+				True,	-- is_infix
+				False,	-- is_prefix
+				True,	-- is_public
+				False,  -- is_new_slot
+				True,	-- is_virtual
+				False,	-- is_property_or_event
+				enum_type)
+			Result.set_is_artificially_added (True)				
+		end
+
+	infix_or_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
+			-- Create instance of CONSUMED_FUNCTION for `|' in enum type `t'.
+		require
+			enum_type_not_void: enum_type /= Void
+		local
+			l_args: ARRAY [CONSUMED_ARGUMENT]
+			l_arg: CONSUMED_ARGUMENT
+		do
+			create l_arg.make ("other", "other", enum_type, False)
+			l_args := <<l_arg>>
+			create Result.make ("|", "|", l_args, enum_type,
 				True,	-- is_frozen
 				False,	-- is_static
 				False,	-- is_deferred
@@ -1114,7 +1147,7 @@ feature {NONE} -- Added features for ENUM types.
 				True,	-- is_frozen
 				False,	-- is_static
 				False,	-- is_deferred
-				True,	-- is_infix
+				False,	-- is_infix
 				False,	-- is_prefix
 				True,	-- is_public,
 				False,	-- is_new_slot
@@ -1136,7 +1169,7 @@ feature {NONE} -- Added features for ENUM types.
 				True,	-- is_frozen
 				False,	-- is_static
 				False,	-- is_deferred
-				True,	-- is_infix
+				False,	-- is_infix
 				False,	-- is_prefix
 				True,	-- is_public,
 				False,	-- is_new_slot

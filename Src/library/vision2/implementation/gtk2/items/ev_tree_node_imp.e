@@ -443,6 +443,7 @@ feature {EV_TREE_IMP} -- Implementation
 					par_t_imp.update_pnd_connection (True)
 				end	
 			end
+				-- Resume expansion status from last node removal
 			if count = 1 and then par_t_imp /= Void then
 				if expand_actions_internal /= Void then
 					expand_actions_internal.block

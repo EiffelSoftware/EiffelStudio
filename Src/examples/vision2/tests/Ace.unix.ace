@@ -6,39 +6,42 @@
 --!----------------------------------------------------------------
 
 system
-	scroll -- Your executable.
+	fig -- Your executable.
 
 root
-	SCROLL_TEST (root_cluster): "make_and_launch"
+	EV_DYNAMIC_LIST_TEST: "make_and_launch"
 
 default
-	assertion (require)
-	assertion (all)
+	assertion (ensure)
 
 cluster
 
-	root_cluster:				"."
-	devel:					"/home/brendel/local"
-	all base (devel):			"$/bbase/base"
+	root_cluster: "."
+	devel:					"/home/brendel/local/library"
+	all base (devel):			"$/base"
 		exclude
 			"table_eiffel3"
 		end
 
-	all gel (devel):			"$/gel_remote"
+	all gel (devel):			"$/gel"
 	new_event (devel):			"$/event"
 
-	all vision2 (devel):			"/home/brendel/hack-fig/vision2"
+	all vision2 (devel):			"$/vision2"
 		exclude 
 			"mswin"
+			"release"
+			"EIFGEN"
+			"obsolete"
 		end
 
 external
 	include_path:
-		"/home/brendel/hack-fig/vision2/implementation/gtk/Clib",
-		"`gtk-config --cflags`";
+		"/home/brendel/local/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
+		"/home/brendel/local/library/vision2/spec/include"
 	object:
-		"/home/brendel/hack-fig/vision2/implementation/gtk/Clib/gtk_eiffel.o",
-		"`gtk-config --libs`"
+		"/home/brendel/local/library/vision2/implementation/gtk/Clib/gtk_eiffel.o -lpng -lz -lXtst",
+		"`gtk-config --libs`",
+		"/home/brendel/local/library/vision2/Clib/load_pixmap.o"
 
 end
 

@@ -23,6 +23,10 @@ EIF_REFERENCE generize (EIF_OBJECT g_item)
 	return eif_access (g_item);
 }
 
+#ifdef EIF_IL_DLL
+rt_public int debug_mode = 0;	/* Assume not in debug mode */
+#endif
+
 #ifndef EIF_THREADS
 	EIF_WNDPROC wel_wndproc = NULL;
 	/* Address of the Eiffel routine `window_procedure' (class WEL_DISPATCHER) */
@@ -45,7 +49,9 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 
 	if (dispatcher)
 		return (LRESULT) ((wel_wndproc) (
+#ifndef EIF_IL_DLL
 			(EIF_OBJECT) eif_access (dispatcher),
+#endif
 			(EIF_POINTER) hwnd,
 			(EIF_INTEGER) msg,
 			(EIF_INTEGER) wparam,
@@ -53,6 +59,8 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 	else
 		switch (msg) {
 			case WM_DESTROY:
+#ifndef EIF_IL_DLL
+	/* FIXME: It should be done in IL generation too */
 				{
 				  		/* Object is destroyed during call to `dispose' we need
 						 * to call `eif_object_id_free' to reset entry in GC, otherwise
@@ -63,6 +71,7 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 						eif_object_id_free (object_id);
 					}
 				}
+#endif
 			default:
 				return DefWindowProc (hwnd, msg, wparam, lparam);
 		}
@@ -82,7 +91,9 @@ BOOL CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 		LONG dialog_result;
 
 		dialog_result = (LONG) ((wel_dlgproc) (
+#ifndef EIF_IL_DLL
 			(EIF_OBJECT) eif_access (dispatcher),
+#endif
 			(EIF_POINTER) hwnd,
 			(EIF_INTEGER) msg,
 			(EIF_INTEGER) wparam,

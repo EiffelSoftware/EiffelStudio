@@ -623,7 +623,7 @@ feature {LINKED_LIST} -- Implementation
 	active: like first_element
 			-- Element at cursor position
 
-	first_element: LINKABLE [G]
+	first_element: LINKABLE [like item]
 			-- Head of list
 
 	last_element: like first_element is

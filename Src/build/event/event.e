@@ -8,6 +8,12 @@ inherit
 	SHARED_STORAGE_INFO;
 	EB_HASHABLE;
 	SHARED_APPLICATION
+	SHARED_MODE
+		rename
+			current_mode as editing_or_executing_mode
+		end
+	MODE_CONSTANTS
+	SHARED_INSTANTIATOR
 	
 feature {NONE}
 
@@ -110,4 +116,69 @@ feature
 			Result := True
 		end;
 
+feature -- Interface Command
+
+	associated_command_creation_arg: COMMAND_CREATION_ARGUMENT
+			-- Arguments needed to instanciate the associated command.
+
+	command_name: STRING
+			-- Name of associated command.
+
+	add_interface_command (a_context: CONTEXT; a_command: COMMAND) is
+			-- Add `a_command' to the widget corresponding to `a_context'
+			-- according to the kind of event.
+		do
+			specific_add (a_context.widget, a_command)
+		end
+
+	specific_add (a_widget: WIDGET; a_command: COMMAND) is
+			-- Add	`a_command' to `a_widget' according to the 
+			-- kind of event.
+		require else
+			widget_not_void: a_widget /= Void
+			command_not_void: a_command /= Void
+		deferred
+		end
+
+	remove_interface_command (a_context: CONTEXT; a_command: COMMAND) is
+			-- Remove `a_command' to the widget corresponding to `a_context'
+			-- according to the kind of event.
+		do
+			specific_remove (a_context.widget, a_command)
+		end
+
+	specific_remove (a_widget: WIDGET; a_command: COMMAND	) is
+			-- Remove `a_command' from `a_widget' according to the
+			-- kind of event.
+		require else
+			widget_not_void: a_widget /= Void
+			command_not_void: a_command /= Void
+		deferred
+		end
+
+	convert (associated_command: CMD_INSTANCE) is
+			-- Separate the data of `associated_command' into `command_name'
+			-- and `associated_command_creation_arg'.
+		require
+			associated_command_not_void: associated_command /= Void
+		local
+			argument_instance: ARG_INSTANCE
+		do
+			command_name := associated_command.eiffel_type
+			!! associated_command_creation_arg.make
+			from 
+				associated_command.arguments.start
+			until
+				associated_command.arguments.after
+			loop
+				argument_instance := associated_command.arguments.item
+				if argument_instance.instantiated then
+					associated_command_creation_arg.extend (argument_instance.context.widget)
+				else
+					associated_command_creation_arg.extend (Void)
+				end
+				associated_command.arguments.forth
+			end
+		end	
+				
 end

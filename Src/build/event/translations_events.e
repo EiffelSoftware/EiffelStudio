@@ -13,16 +13,16 @@ inherit
 	EVENT_PAGE 
 		rename
 			make_button_visible as page_make_button_visible
-			-- added by samik
-		undefine
-			init_toolkit
-			-- end of samik     
+		-- added by samik
+        undefine
+            init_toolkit
+		-- end of samik     
 		end;
 	EVENT_PAGE
 		-- added by samik
-		undefine
-			init_toolkit
-		-- end of samik     
+        undefine
+            init_toolkit
+        -- end of samik     
 		redefine
 			make_button_visible
 		select

@@ -67,6 +67,9 @@ feature {NONE}
 		do
 			page_make (cat);
 			append_mouse_events
+			-- added by samik
+	--		set_focus_string (Focus_labels.mouse_label)
+			-- end of samik
 		end
 
 end -- class MOUSE_EVENTS   

@@ -4,6 +4,8 @@ class TRANSLATION
 inherit
 
 	EVENT
+		rename
+			specific_add as event_specific_add
 		redefine
 			label, data, make,
 			internal_name
@@ -121,7 +123,16 @@ feature -- Translation names
 			Result.append (text);
 			Result.append ("%", ");
 		end;
+
+	event_specific_add (a_widget: WIDGET; a_command: COMMAND) is
+			-- Useless.
+		do
+		end
 	
+	specific_remove (a_widget: WIDGET; a_command: COMMAND	) is
+			-- Useless.
+		do
+		end
 invariant
 	
 	text_not_void: text /= Void

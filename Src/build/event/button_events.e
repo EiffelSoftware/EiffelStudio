@@ -35,6 +35,9 @@ feature {NONE}
 		do
 			page_create (cat);
 			button_type := not_set;
+			-- added by samik
+	--		set_focus_string (Focus_labels.button_label)
+			-- end of samik
 		end;
 
 feature {NONE}

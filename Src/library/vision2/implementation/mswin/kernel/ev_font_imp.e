@@ -36,24 +36,27 @@ create
 
 feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 
+	--|----------------------------------------------------------------
 	--| Note on implementation. VB 10 jan 2000
+	--|----------------------------------------------------------------
 	--| All information is stored in wel_log_font, although
 	--| wel_font is the actual font object. Every time there is
 	--| is an update on wel_log_font, the wel_font has to be created
 	--| again by: wel_font.set_indirect (wel_log_font). In the creation
 	--| procedure, first the wel_font is created, because wel_log_font
 	--| cannot be instantiated without arguments.
+	--|----------------------------------------------------------------
 
 	make (an_interface: like interface) is
 			-- Create a font.
 		do
 			base_make (an_interface)
-			create wel_font.make_indirect (wel_log_font)
+			create wel_font.make_indirect (default_wel_log_font)
 
 				-- Retrieve shape, weight and family from
 				-- the default font returned by Windows.
-			shape := convert_font_shape(wel_log_font.italic)
-			weight := convert_font_weight(wel_log_font.weight)
+			shape := convert_font_shape(default_wel_log_font.italic)
+			weight := convert_font_weight(default_wel_log_font.weight)
 			family := Ev_font_family_screen
 		end
 
@@ -61,19 +64,6 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 	initialize is
 		do
 			is_initialized := True
-		end
-
-	wel_log_font: WEL_LOG_FONT is
-			-- Structure used to specify font characteristics.
-		local
-			gui_font: WEL_FONT
-		once
-			create {WEL_DEFAULT_GUI_FONT} gui_font.make
-			create Result.make_by_font (gui_font)
-				
-				-- retrieve the family associated to Screen fonts.
-			wel_screen_font_family := Result.family
-			wel_screen_font_pitch := Result.pitch
 		end
 
 feature -- Access
@@ -326,6 +316,28 @@ feature {EV_FONTABLE_IMP} -- Access
 		end
 
 feature {NONE} -- Implementation
+
+	wel_log_font: WEL_LOG_FONT is
+			-- Structure used to specify font characteristics.
+		once
+			create Result.make_by_font (gui_font)
+		end
+
+	default_wel_log_font: WEL_LOG_FONT is
+			-- Structure used to initialize fonts.
+		once
+			create Result.make_by_font (gui_font)
+				
+				-- set the WEL family associated to Vision2 Screen fonts.
+			wel_screen_font_family := Result.family
+			wel_screen_font_pitch := Result.pitch
+		end
+
+	gui_font: WEL_DEFAULT_GUI_FONT is
+		-- Default screen (WEL) font
+		once
+			create Result.make
+		end
 
 	destroy is
 			-- Destroy WEL font.
@@ -662,6 +674,11 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/02/24 05:00:32  pichery
+--| Fixed a bug: The default creation procedure created a new font using the
+--| characteristics of the last font used instead of creating a fresh new font
+--| with the default values.
+--|
 --| Revision 1.23  2000/02/23 02:31:10  pichery
 --| Removed a useless local variable. No big deal !
 --|

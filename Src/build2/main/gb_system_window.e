@@ -27,6 +27,11 @@ inherit
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
+	
+	GB_WIDGET_UTILITIES
+		undefine
+			default_create, copy, is_equal
+		end
 
 feature {NONE} -- Initialization
 
@@ -157,11 +162,11 @@ feature {NONE} -- Initialization
 
 				-- Create Ok button
 			create button.make_with_text_and_action (b_OK, agent ok_action)
-			extend_button (vbox, button)
+			extend_no_expand (vbox, button)
 
 				-- Create Cancel button
 			create button.make_with_text_and_action (b_Cancel, agent cancel_action)
-			extend_button (vbox, button)
+			extend_no_expand (vbox, button)
 
 				-- Cosmetics
 			vbox.extend (create {EV_CELL})
@@ -186,13 +191,6 @@ feature {NONE} -- Initialization
 			if notebook.minimum_width < 200 and notebook.minimum_height < 200 then
 				notebook.set_minimum_size (200, 200)	
 			end
-		end
-		
-	extend_button (b: EV_BOX; but: EV_BUTTON) is
-			--
-		do
-			b.extend (but)
-			b.disable_item_expand (but)
 		end
 
 feature {NONE} -- Implementation

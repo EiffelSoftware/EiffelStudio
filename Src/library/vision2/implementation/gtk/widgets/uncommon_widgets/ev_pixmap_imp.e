@@ -72,14 +72,16 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (gtk_pixmap)
 
 				-- Initialize the Graphical Context
-			gc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap))
+				
+			drawable := feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap)
+			gc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
 			feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, feature {EV_GTK_EXTERNALS}.GDK_COPY_ENUM)
 			initialize_graphical_context
 			init_default_values
 		end
 		
 	draw_full_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP; x_src, y_src, src_width, src_height: INTEGER) is
-			-- 
+			-- Draw `a_pixmap' on to `Current' using given coordinates and dimensions.
 		do
 			Precursor {EV_DRAWABLE_IMP} (x, y, a_pixmap, x_src, y_src, src_width, src_height)
 			flush	

@@ -120,7 +120,7 @@ feature -- Access
 			if is_true_expanded then
 				!! exp
 				is_true_expanded := False
-				exp.set_class_type (base_class.types.conservative_search_item (Current))
+				exp.set_class_type (base_class.types.search_item (Current))
 				is_true_expanded := True
 				exp.set_type_i (Current)
 				Result := exp
@@ -156,14 +156,14 @@ feature -- Access
 		do
 			if is_true_expanded then
 				is_true_expanded := False
-				Result := base_class.types.conservative_search_item (Current)
+				Result := base_class.types.search_item (Current)
 				is_true_expanded := True
 			elseif is_separate then
 				is_separate := False
-				Result := base_class.types.conservative_search_item (Current)
+				Result := base_class.types.search_item (Current)
 				is_separate := True
 			else
-				Result := base_class.types.conservative_search_item (Current)
+				Result := base_class.types.search_item (Current)
 			end
 		end
 
@@ -177,7 +177,7 @@ feature -- Access
 			-- Type id of the corresponding expanded class type
 		do
 			is_true_expanded := False
-			Result := base_class.types.conservative_search_item (Current).type_id
+			Result := base_class.types.search_item (Current).type_id
 			is_true_expanded := True
 		end
 

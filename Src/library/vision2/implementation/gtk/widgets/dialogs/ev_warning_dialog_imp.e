@@ -14,6 +14,9 @@ inherit
 	EV_WARNING_DIALOG_I
 
 	EV_MESSAGE_DIALOG_IMP
+		redefine
+			icon_build
+		end
 
 creation
 	make,

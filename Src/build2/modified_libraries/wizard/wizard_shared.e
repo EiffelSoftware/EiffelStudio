@@ -62,12 +62,8 @@ feature -- Access
 		local
 			visual_studio_information: VISUAL_STUDIO_INFORMATION
 		do
-			if is_modify_wizard then
-				create visual_studio_information
-				Result := visual_studio_information.wizard_installation_path + "\wizards\build"
-			else
-				Result := argument (1)
-			end
+			create visual_studio_information
+			Result := visual_studio_information.wizard_installation_path + "\wizards\build"
 		ensure
 			exists: Result /= Void
 		end

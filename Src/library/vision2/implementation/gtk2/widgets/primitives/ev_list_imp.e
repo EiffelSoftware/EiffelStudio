@@ -50,7 +50,7 @@ feature -- Initialize
 			a_selection: POINTER
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP}
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, tree_store)				
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_model (tree_view, list_store)				
 			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
 				scrollable_area,
 				feature {EV_GTK_EXTERNALS}.GTK_POLICY_AUTOMATIC_ENUM,
@@ -64,23 +64,26 @@ feature -- Initialize
 			
 			a_column := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
+
+			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, True)				
+			create a_gtk_c_str.make ("text")
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 1)
 			
 			
 			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_end (a_column, a_cell_renderer, False)
 			create a_gtk_c_str.make ("pixbuf")
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
 			
-			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, True)				
-			create a_gtk_c_str.make ("text")
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 1)
+
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, 1)
 			
 			previous_selection := selected_items
 			
 			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
 			real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+			initialize_pixmaps
 		end
 
 feature -- Access
@@ -157,15 +160,13 @@ feature -- Status setting
 	ensure_item_visible (an_item: EV_LIST_ITEM) is
 			-- Ensure item `an_index' is visible in `Current'.
 		local
-			an_item_index: INTEGER
-			item_imp: EV_LIST_ITEM_IMP
-		do
---			an_item_index := index_of (an_item, 1)
---			item_imp ?= an_item.implementation
---			
---				-- Show the item at position `item_index'
---			feature {EV_GTK_EXTERNALS}.gtk_adjustment_set_value (vertical_adjustment_struct, (an_item_index - 1) * (App_implementation.default_font_ascent + App_implementation.default_font_descent + 2))
---			--| FIXME IEK This needs to be properly implement
+			list_item_imp: EV_LIST_ITEM_IMP
+			a_path: POINTER
+		do	
+			list_item_imp ?= an_item.implementation
+			a_path := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_path (list_store, list_item_imp.list_iter.item)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_scroll_to_cell (tree_view, a_path, NULL, False, 0, 0)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_path)
 		end
 
 	enable_multiple_selection is

@@ -6,7 +6,7 @@ indexing
 
 class
 	EV_COMPARABLE_TREE_ITEM
-
+	
 inherit
 	EV_TREE_ITEM
 	
@@ -14,6 +14,11 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
+
+create
+	default_create,
+	make_with_text
+
 
 feature -- Implementation
 	

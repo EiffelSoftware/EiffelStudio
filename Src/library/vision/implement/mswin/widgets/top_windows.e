@@ -69,6 +69,7 @@ feature -- Status setting
 					set_main_window
 				end
 				realizing_children := True
+				shown := True
 				realize_children
 				realizing_children := False
 				set_enclosing_size

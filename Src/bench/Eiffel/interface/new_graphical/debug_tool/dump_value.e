@@ -565,10 +565,8 @@ feature {DUMP_VALUE} -- string_representation Implementation
 		require
 			is_valid_eiffel_type: dynamic_class /= Void and then not dynamic_class.is_true_external
 		local
-			l_cl: CLASS_C
 			l_feat: FEATURE_I
 			l_final_result_value: DUMP_VALUE
-			l_rout_id: INTEGER
 		do
 			if generating_type_evaluation_enabled then
 				if application.is_dotnet then

@@ -19,6 +19,9 @@ inherit
 			popup
 		end;
 	SHARED_LICENSE
+		rename
+			raise as raise_exception
+		end
 
 creation
 

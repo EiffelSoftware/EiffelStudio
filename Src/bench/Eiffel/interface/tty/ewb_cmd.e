@@ -19,7 +19,10 @@ inherit
 		undefine
 			is_equal
 		end;
-	SHARED_LICENSE;
+	SHARED_LICENSE
+		rename
+			class_name as except_class_name
+		end;
 	SHARED_EXEC_ENVIRONMENT
 
 

@@ -44,7 +44,8 @@ inherit
 			selection_start,
 			selection_end,
 			on_erase_background,
-			line_number_from_position
+			line_number_from_position,
+			enable_redraw
 		select
 			wel_line_index,
 			wel_current_line_number,
@@ -141,7 +142,8 @@ inherit
 			text_stream_in,
 			insert_rtf_stream_in,
 			rtf_stream_in,
-			on_erase_background
+			on_erase_background,
+			enable_redraw
 		end
 		
 	WEL_CFM_CONSTANTS
@@ -383,7 +385,6 @@ feature -- Status report
 			-- Is paragraph formatting from line `start_line' to `end_line' contiguous?
 		local
 			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
-			alignment: INTEGER
 			mask: INTEGER
 			already_selected: BOOLEAN
 			first_position_on_start, last_position_on_start, first_position_on_last, last_position_on_last: INTEGER
@@ -578,9 +579,12 @@ feature -- Status setting
 			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
 		local
 			paragraph: WEL_PARAGRAPH_FORMAT2
-			temp: INTEGER
-			sel_start, sel_end: INTEGER
+			screen_dc: WEL_SCREEN_DC
 		do
+				-- Create a screen DC for access to metrics
+			create screen_dc
+			screen_dc.get
+			
 			create paragraph.make
 			paragraph.set_mask (pfm_alignment)
 			if format.is_left_aligned then
@@ -592,6 +596,16 @@ feature -- Status setting
 			elseif format.is_justified then
 				paragraph.set_alignment (pfa_justify)
 			end
+			
+				-- Now handle paragraph margins.
+				-- Note that there are 20 Twips per point, hence the multiplcation by 20.
+			paragraph.set_start_indent (pixel_to_point (screen_dc, format.left_margin) * 20)
+			paragraph.set_right_indent (pixel_to_point (screen_dc, format.right_margin) * 20)
+			paragraph.set_space_before (pixel_to_point (screen_dc, format.top_spacing) * 20)
+			paragraph.set_space_after (pixel_to_point (screen_dc, format.bottom_spacing) * 20)
+
+
+			screen_dc.release
 			disable_redraw
 			safe_store_caret
 			set_selection (first_position_from_line_number (start_line), last_position_from_line_number (end_line))
@@ -1409,6 +1423,13 @@ feature {NONE} -- Implementation
 			-- Do nothing here. Redefined version from WEL_WINDOW as
 			-- it redrew the background, causing flicker. We should do
 			-- nothing, as Windows does this for us.
+		end
+		
+	enable_redraw is
+			-- Ensure `Current' is redrawn as required.
+		do
+			cwin_send_message (wel_item, wm_setredraw, 1, 0)	
+			invalidate_without_background
 		end
 
 feature {EV_ANY_I} -- Implementation

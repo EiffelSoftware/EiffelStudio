@@ -37,22 +37,22 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Set up the callback marshal and initialize GTK+.
 		local
-			temp_font: EV_FONT
-			temp_font_imp: EV_FONT_IMP
-			a_style: POINTER
-			temp_string: STRING
-			empty_str_array: ANY
+			temp_string, previous_gtk_rc_files: STRING
 			temp_int: INTEGER
 		do
 			base_make (an_interface)
 			create C
-			
+	
 			-- Set Debug mode from environment variable.
 			temp_string := get ("ISE_GTK_DEBUG")
 			if temp_string /= Void then
 				temp_int := temp_string.to_integer
 			end
 			if temp_int = 1 or temp_int = 2 then
+				print (
+					"Gtk version = " +
+					gtk_maj_ver.out + "." + gtk_min_ver.out + "."+ gtk_mic_ver.out + "%N"
+				)
 				(create {EV_C_UTIL}).enable_ev_gtk_log (temp_int)
 				C.gdk_set_show_events (True)	
 			else
@@ -61,14 +61,13 @@ feature {NONE} -- Initialization
 			end
 
 			temp_string := get ("ISE_EIFFEL")
-			
-			put (temp_string + "/eifinit/bench/spec/gtk/studiorc", "GTK_RC_FILES")
-		--	temp_string := ""
-		--	empty_str_array := temp_string.to_c
-			--C.gtk_rc_set_default_files ($empty_str_array)
-			
+			previous_gtk_rc_files := get ("GTK_RC_FILES")
+			put (temp_string + "/eifinit/bench/spec/gtk/studiorc", "GTK_RC_FILES")			
 			
 			C.gtk_rc_parse (eiffel_to_c ("studiorc"));
+			if previous_gtk_rc_files /= Void then
+				put (previous_gtk_rc_files, "GTK_RC_FILES")
+			end
 			gtk_init
 			C.gdk_rgb_init			
 			c_ev_gtk_callback_marshal_init (Current, $marshal)
@@ -154,7 +153,7 @@ feature -- Access
 				window_oids.after
 			loop
 				w ?= id.id_object (window_oids.item)
-				if w = Void then
+				if w = Void or else w.is_destroyed then
 					window_oids.prune_all (window_oids.item)
 				else
 					l.extend (w.interface)
@@ -447,6 +446,28 @@ feature -- External implementation
 		alias
     		"gtk_init (&eif_argc, &eif_argv)"
 		end
+		
+	gtk_maj_ver: INTEGER is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"gtk_major_version"
+		end
+
+	gtk_min_ver: INTEGER is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"gtk_minor_version"
+		end
+		
+	gtk_mic_ver: INTEGER is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"gtk_micro_version"
+		end
+		
 
 invariant
 	window_oids_not_void: is_usable implies window_oids /= void
@@ -477,6 +498,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2001/06/21 22:32:00  king
+--| Added version externals
+--|
 --| Revision 1.35  2001/06/19 16:54:20  king
 --| Added extra debug functionality
 --|

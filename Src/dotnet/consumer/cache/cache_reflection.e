@@ -20,28 +20,34 @@ feature -- Redefined
 
 	consumed_type (t: SYSTEM_TYPE): CONSUMED_TYPE is
 			-- Consumed type corresponding to `t'.
+		local
+			l_cache: like types_cache
 		do
-			Types_cache.search (t.full_name)
-			if types_cache.found then
-				Result := types_cache.found_item
+			l_cache := types_cache
+			l_cache.search (t.full_name)
+			if l_cache.found then
+				Result := l_cache.found_item
 			else
 				Result := Precursor {CACHE_READER} (t)
 				if Result /= Void then
-					types_cache.put (Result, t.full_name)
+					l_cache.put (Result, t.full_name)
 				end
 			end
 		end
 
 	assembly_types (a_assembly: CONSUMED_ASSEMBLY): CONSUMED_ASSEMBLY_TYPES is
 			-- Assembly information from EAC
+		local
+			l_cache: like assembly_types_cache
 		do
-			assembly_types_cache.search (a_assembly.gac_path)
-			if assembly_types_cache.found then
-				Result := assembly_types_cache.found_item
+			l_cache := assembly_types_cache
+			l_cache.search (a_assembly.gac_path)
+			if l_cache.found then
+				Result := l_cache.found_item
 			else
 				Result := Precursor {CACHE_READER} (a_assembly)
 				if Result /= Void then
-					assembly_types_cache.put (Result, a_assembly.gac_path)
+					l_cache.put (Result, a_assembly.gac_path)
 				end
 			end
 		end
@@ -57,20 +63,22 @@ feature -- Initialization
 		local
 			l_raw_file: RAW_FILE
 			l_consumed_types: LINKED_LIST [CONSUMED_TYPE]
+			l_cache: like types_cache
 		do
 			if feature {SYSTEM_FILE}.exists (a_path.to_cil) then
 				create l_raw_file.make (a_path)
 				l_raw_file.open_read
 				l_consumed_types ?= l_raw_file.retrieved
+				l_cache := types_cache
 				if l_consumed_types /= Void then
 					from
 						l_consumed_types.start
 					until
 						l_consumed_types.after
 					loop
-						Types_cache.search (l_consumed_types.item.dotnet_name)
-						if not Types_cache.found then
-							Types_cache.put (l_consumed_types.item, l_consumed_types.item.dotnet_name)
+						l_cache.search (l_consumed_types.item.dotnet_name)
+						if not l_cache.found then
+							l_cache.put (l_consumed_types.item, l_consumed_types.item.dotnet_name)
 						end
 						l_consumed_types.forth
 					end
@@ -268,13 +276,16 @@ feature -- Access
  		require
  			non_void_assembly: a_assembly /= Void
 			valid_assembly: is_assembly_in_cache (a_assembly.gac_path, True)
+		local
+			l_cache: like assemblies_mappings_cache
  		do
-			assemblies_mappings_cache.search (a_assembly.gac_path)
-			if assemblies_mappings_cache.found then
-				Result := assemblies_mappings_cache.found_item
+ 			l_cache := assemblies_mappings_cache
+			l_cache.search (a_assembly.gac_path)
+			if l_cache.found then
+				Result := l_cache.found_item
 			else
 				Result := assembly_mapping_from_consumed_assembly (a_assembly).assemblies
-				assemblies_mappings_cache.put (Result, a_assembly.gac_path)
+				l_cache.put (Result, a_assembly.gac_path)
 			end
   		end
 
@@ -332,16 +343,18 @@ feature -- Access
 			functions: ARRAY [CONSUMED_FUNCTION]
 			constructors: ARRAY [CONSUMED_CONSTRUCTOR]
 			i: INTEGER
+			l_cache: like types_cache
 		do
 			create {ARRAYED_LIST [CONSUMED_ENTITY]} Result.make (24)
 
-			Types_cache.search (t.full_name)
-			if Types_cache.found then
-				ct := types_cache.found_item
+			l_cache := types_cache
+			l_cache.search (t.full_name)
+			if l_cache.found then
+				ct := l_cache.found_item
 			else
 				ct := consumed_type (t)
 				if ct /= Void then
-					types_cache.put (ct, t.full_name)
+					l_cache.put (ct, t.full_name)
 				end
 			end
 			if ct /= Void then
@@ -407,13 +420,13 @@ feature -- Access
 
 feature -- Implementation
 
-	Types_cache: CACHE [CONSUMED_TYPE, STRING] is
+	types_cache: CACHE [CONSUMED_TYPE, STRING] is
 			-- Cache for loaded types
 		once
 			create Result.make (Max_cache_items)
 		end
 
-	Assembly_types_cache: CACHE [CONSUMED_ASSEMBLY_TYPES, STRING] is
+	assembly_types_cache: CACHE [CONSUMED_ASSEMBLY_TYPES, STRING] is
 			-- Cache of assembly types
 		once
 			create Result.make (15)
@@ -421,15 +434,15 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	Constructor_name: STRING is ".ctor"
+	constructor_name: STRING is ".ctor"
 
 	assemblies_mappings_cache: CACHE [ARRAY [CONSUMED_ASSEMBLY], STRING] is
 			-- Cache for assemblies ids mappings
 		once
-			create Result.make (Max_cache_items)
+			create Result.make (max_cache_items)
 		end
 
-	Max_cache_items: INTEGER is 40
+	max_cache_items: INTEGER is 40
 			-- Maximum number of types stored in local cache
 
 end -- class CACHE_REFLECTION

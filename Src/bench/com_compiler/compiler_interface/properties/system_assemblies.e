@@ -196,7 +196,7 @@ feature -- Access
 					create assembly.make (ass_sd.cluster_name, ass_sd.assembly_name, ass_sd.prefix_name, ass_sd.version, ass_sd.culture, ass_sd.public_key_token)	
 				else
 					-- assembly is declated using path
-					create assembly.make_local (ass_sd.cluster_name, ass_sd.assembly_name, ass_sd.prefix_name, ass_sd.version, ass_sd.culture)
+					create assembly.make_local (ass_sd.cluster_name, ass_sd.assembly_name, ass_sd.prefix_name)
 				end
 				assems_array_list.extend (assembly)
 				assemblies_impl.forth

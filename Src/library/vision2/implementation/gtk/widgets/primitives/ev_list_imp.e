@@ -43,7 +43,11 @@ feature {NONE} -- Initialization
 			-- We do this to allow the scrolling.
 
 			-- Creating the gtk scrolled window.
-			set_c_object (C.gtk_scrolled_window_new (Default_pointer, Default_pointer))
+			set_c_object (C.gtk_scrolled_window_new (
+					Default_pointer,
+					Default_pointer
+					)
+					)
 			C.gtk_scrolled_window_set_policy (
 				c_object,
 				C.GTK_POLICY_AUTOMATIC_ENUM,
@@ -104,7 +108,10 @@ feature -- Status setting
 			-- by clicking on several choices.
 			-- For constants, see EV_GTK_CONSTANTS
 		do
-			C.gtk_list_set_selection_mode (list_widget, C.GTK_SELECTION_MULTIPLE_ENUM)
+			C.gtk_list_set_selection_mode (
+				list_widget,
+				C.GTK_SELECTION_MULTIPLE_ENUM
+			)	
 		end
 
 	disable_multiple_selection is
@@ -112,7 +119,10 @@ feature -- Status setting
 			-- default status of the list.
 			-- For constants, see EV_GTK_CONSTANTS
 		do
-			C.gtk_list_set_selection_mode (list_widget, C.GTK_SELECTION_SINGLE_ENUM)
+			C.gtk_list_set_selection_mode (
+				list_widget,
+				C.GTK_SELECTION_SINGLE_ENUM
+			)
 		end
 
 feature {EV_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
@@ -157,6 +167,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/03 23:55:07  king
+--| Indented c externals
+--|
 --| Revision 1.28  2000/03/02 17:49:05  king
 --| Removed redundant features from old implementation
 --|
@@ -200,7 +213,9 @@ end -- class EV_LIST_IMP
 --| fixed indexing bug in selected_item
 --|
 --| Revision 1.21.6.8  2000/01/15 00:53:19  oconnor
---| renamed is_multiple_selection -> multiple_selection_enabled, set_multiple_selection -> enable_multiple_selection & set_single_selection -> disable_multiple_selection
+--| renamed is_multiple_selection -> multiple_selection_enabled, 
+--| set_multiple_selection -> enable_multiple_selection & 
+--| set_single_selection -> disable_multiple_selection
 --|
 --| Revision 1.21.6.7  1999/12/13 20:02:50  oconnor
 --| commented out old command stuff

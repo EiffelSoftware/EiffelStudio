@@ -105,9 +105,10 @@ rt_shared struct s_stack sig_stk;
 #endif /* EIF_THREADS */
 
 /* Routine declarations */
+rt_shared Signal_t ehandler(int sig);
+rt_shared Signal_t exfpe(int sig);
+rt_private Signal_t eiffel_signal_handler(int sig, int is_fpe);
 rt_public char *signame(int sig);				/* Give English description of a signal */
-rt_public Signal_t ehandlr(EIF_CONTEXT register int sig);			/* Eiffel main signal handler */
-rt_public Signal_t exfpe(int sig);			/* Floating point exception handler */
 rt_private int dangerous(int sig);			/* Is a given signal dangerous for us? */
 rt_shared void esdpch(EIF_CONTEXT_NOARG);				/* Dispatch queued signals */
 rt_shared void initsig(void);				/* Run-time initialization for trapping */
@@ -125,31 +126,65 @@ rt_private int spop(void);					/* Extract signals from queued stack */
  * Signal handler routines.
  */
 
-rt_public Signal_t ehandlr(EIF_CONTEXT register int sig)
+/*
+doc:	<routine name="eiffel_signal_handler" export="private">
+doc:		<summary>Catch all the signals that can be caught. If we are in a critical section we record the signal and it will be raised later. Otherwise we raise an exception corresponding to the signal. If `is_fpe' we handle it as if it was a floating point exception.</summary>
+doc:		<param name="sig" type="int">Signal number being caught.</param>
+doc:		<param name="is_fpe" type="int">Are we handling a floating point exception signal?</param>
+doc:		<thread_safety>???</thread_safety>
+doc:		<synchronization>???</synchronization>
+doc:	</routine>
+*/
+
+rt_private Signal_t eiffel_signal_handler(int sig, int is_fpe)
 {
-	/* Eiffel signal handler -- all the signals that can be caught let the
-	 * process jump to this routine, which is in charge of dispatching the
-	 * signal or simply ignoring it.
-	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	Signal_t (*handler)(int);			/* The Eiffel signal handler routine */
+	char *signal_name = NULL;
+
+	if (esigdefined(sig)) {
+		signal_name = signame(sig);
+	}
+
+		/* On BSD systems (those with sigvec() facilities), we have to clear
+		 * the signal mask for the signal received. That way, it is possible
+		 * to use _setjmp and _longjmp for exception handling. If we did not
+		 * reset the signal, either we would have to use setjmp/longjmp or
+		 * we could only receive one occurrence of a signal--RAM.
+		 */
+
+#ifdef HAS_SIGSETMASK
+	{
+		int oldmask;	/* To get old signal mask */ /* %%ss moved from above */
+		oldmask = sigsetmask(0xffffffff);	/* Fetch old signal mask */
+		oldmask &= ~sigmask(sig);			/* Unblock signal */
+		(void) sigsetmask(oldmask);			/* Resynchronize signal mask */
+	}
+#endif
+
 
 #ifndef SIGNALS_KEPT
-	void (*old_handler)(int);
+	{
+		Signal_t (*old_handler)(int);
 
-	/* Assume disposition of signal is SIG_DFL.
-	   Reset disposition of signal to call
-	   ISE's interrupt handler */
+		/* Assume disposition of signal is SIG_DFL.
+		   Reset disposition of signal to call
+		   ISE's interrupt handler */
 
-	old_handler = signal(sig, ehandlr);
+		if (is_fpe) {
+			old_handler = signal(sig, exfpe);
+		} else {
+			old_handler = signal(sig, ehandler);
+		}
 
-	if (old_handler != SIG_DFL) {
-		/* Oops - someone called `sigaction' to override
-		   ISE's handler.  Their handler is still
-		   the one to use, so restore it.
-		 */
-		signal(sig, old_handler);
+		if (old_handler != SIG_DFL) {
+			/* Oops - someone called `sigaction' to override
+			   ISE's handler.  Their handler is still
+			   the one to use, so restore it.
+			 */
+			signal(sig, old_handler);
+		}
 	}
 #endif
 
@@ -157,8 +192,23 @@ rt_public Signal_t ehandlr(EIF_CONTEXT register int sig)
 		return;						/* Nothing to be done */
 
 	if (esigblk) {					/* Signals are blocked */
-		if (dangerous(sig))			/* Harmful signal in critical section */
-			eif_panic(MTC "unexpected harmful signal");
+		if (dangerous(sig)) {		/* Harmful signal in critical section */
+			char panic_msg[1024] = "";
+			memset(panic_msg, 0, 1024);
+			strcat (panic_msg, "Unexpected harmful signal (");
+			if (signal_name) {
+					/* Check that we do not do a buffer overflow on `panic_msg'.
+					 * We use 900 as value to avoid computing the above string
+					 * length wich is clearly less than 124 wide. */
+				if (strlen (signal_name) < 900) {
+					strcat (panic_msg, signal_name);
+				}
+			} else {
+				strcat (panic_msg, "Unknown signal");
+			}
+			strcat (panic_msg, ")");
+			eif_panic(panic_msg);
+		}
 		spush(sig);					/* Record sig on FIFO stack */
 		return;						/* That's all for now */
 	}
@@ -175,69 +225,41 @@ rt_public Signal_t ehandlr(EIF_CONTEXT register int sig)
 		exhdlr(MTC handler, sig);		/* Call handler */
 		esigblk--;					/* Restore signal handling */
 	} else {						/* Signal not caught -- raise exception */
-
-		/* On BSD systems (those with sigvec() facilities), we have to clear
-		 * the signal mask for the signal received. That way, it is possible
-		 * to use _setjmp and _longjmp for exception handling. If we did not
-		 * reset the signal, either we would have to use setjmp/longjmp or
-		 * we could only receive one occurrence of a signal--RAM.
-		 */
-
-#ifdef HAS_SIGSETMASK
-		int oldmask;	/* To get old signal mask */ /* %%ss moved from above */
-		oldmask = sigsetmask(0xffffffff);	/* Fetch old signal mask */
-		oldmask &= ~sigmask(sig);			/* Unblock signal */
-		(void) sigsetmask(oldmask);			/* Resynchronize signal mask */
-#endif
-
 		echsig = sig;				/* Signal's number */
-		xraise(EN_SIG);				/* Operating system signal */
+		if (is_fpe) {
+			eraise(signal_name, EN_FLOAT);		/* Raise a floating point exception */
+		} else {
+			eraise(signal_name, EN_SIG);			/* Operating system signal */
+		}
 	}
 }
 
-rt_public Signal_t exfpe(int sig)
-{
-	/* Raise a floating point exception */
+/*
+doc:	<routine name="ehandler" export="private">
+doc:		<summary>Small wrapper around `eiffel_signal_handler' to catch all signals but floating point exception.</summary>
+doc:		<param name="sig" type="int">Signal number being caught.</param>
+doc:		<thread_safety>???</thread_safety>
+doc:		<synchronization>???</synchronization>
+doc:	</routine>
+*/
 
-	/* The following is really important. It is a small part of the code, but
-	 * it will make the difference on BSD systems, allowing us to use the
-	 * _longjmp and _setjmp routines which do not do any system call.
-	 */
+rt_shared Signal_t ehandler(int sig) {
+		/* Handle all signals but floating point exception. */
+	eiffel_signal_handler (sig, 0);
+}
 
-	RT_GET_CONTEXT
+/*
+doc:	<routine name="exfpe" export="private">
+doc:		<summary>Small wrapper around `eiffel_signal_handler' to only catch floating point exception.</summary>
+doc:		<param name="sig" type="int">Signal number being caught.</param>
+doc:		<thread_safety>???</thread_safety>
+doc:		<synchronization>???</synchronization>
+doc:	</routine>
+*/
 
-#ifdef HAS_SIGSETMASK
-	int oldmask;	/* Signal mask value */ /* %%ss moved from above */
-
-		oldmask = sigsetmask(0xffffffff);	/* Fetch old signal mask */
-		oldmask &= ~sigmask(sig);			/* Unblock signal */
-		(void) sigsetmask(oldmask);			/* Resynchronize signal mask */
-#endif
-
-#ifndef SIGNALS_KEPT
-	{
-		void (*old_handler)(int);
-
-		/* Assume disposition of signal is SIG_DFL.
-		   Reset disposition of signal to call
-		   ISE's interrupt handler */
-
-		old_handler = signal(sig, exfpe);
-
-		if (old_handler != SIG_DFL) {
-			/* Oops - someone called `sigaction' to override
-			   ISE's handler.  Their handler is still
-			   the one to use, so restore it.
-			 */
-			signal(sig, old_handler);
-		}
-	}
-#endif
-
-	if (sig_ign[sig])				/* If signal is to be ignored */
-		return;						/* Nothing to be done */
-
-	xraise(EN_FLOAT);		/* Raise a floating point exception */
+rt_shared Signal_t exfpe(int sig) {
+		/* Handle signals related to floating point exception */
+	eiffel_signal_handler (sig, 1);
 }
 
 rt_shared void trapsig(Signal_t (*handler) (int))
@@ -340,19 +362,39 @@ rt_private int dangerous(int sig)
 	 * or data segment.
 	 */
 
-	if (sig == 0)						/* Dummy to enable 'else if' tests */
+	if (sig == 0) {						/* Dummy to enable 'else if' tests */
 		return 0;
 #ifdef SIGILL
-	else if (sig == SIGILL)				/* Illegal instruction */
+	} else if (sig == SIGILL) {			/* Illegal instruction */
 		return 1;
 #endif
 #ifdef SIGBUS
-	else if (sig == SIGBUS)				/* Bus error */
+	} else if (sig == SIGBUS) {			/* Bus error */
 		return 1;
 #endif
 #ifdef SIGSEGV
-	else if (sig == SIGSEGV)			/* Segmentation violation */
+	} else if (sig == SIGSEGV) {		/* Segmentation violation */
 		return 1;
+#endif
+#ifdef EIF_SGI
+	/* Per man page documentation of `signal' on SGI:
+	 * Signals raised by any instruction in the instruction stream, including
+     * SIGFPE, SIGILL, SIGEMT, SIGBUS, and SIGSEGV, will cause infinite loops if
+     * their handler returns.
+	 *
+	 * As a consequence we need to mark them dangerous. In addition to that we found out
+	 * that `SIGTRAP' was also dangerous since it is used to catch division by zero and will
+	 * also do an infinite loop.
+	 *
+	 * Note: we do not handle SIGBUS here because already done above for non-SGI case.
+	 */
+	} else if (
+		(sig == SIGFPE) || (sig == SIGILL) || (sig == SIGEMT) ||
+		(sig == SIGSEGV) || (sig == SIGTRAP)
+	) {
+		return 1;
+	}
+		
 #endif
 
 	return 0;			/* Signal is not dangerous for us */
@@ -386,7 +428,11 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG)
 			esigblk--;				/* Restore signal handling */
 		} else {					/* Signal not caught -- raise exception */
 			echsig = sig;			/* Signal's number */
-			xraise(EN_SIG);			/* Operating system signal */
+			if (esigdefined(sig)) {
+				eraise(signame(sig), EN_SIG);			/* Operating system signal */
+			} else {
+				eraise(NULL, EN_SIG);			/* Operating system signal */
+			}
 		}
 	}
 }
@@ -481,7 +527,7 @@ rt_public int esigvec(int sig, struct sigvec *vec, struct sigvec *ovec)
 
 	if (vec != (struct sigvec *) 0) {
 		oldfunc = esignal(sig, vec->sv_handler);	/* Record new handler */
-		vec->sv_handler = ehandlr;					/* Force wrapper handler */
+		vec->sv_handler = ehandler;					/* Force wrapper handler */
 	} else {
 		if (sig_ign[sig])
 			oldfunc = SIG_IGN;
@@ -601,14 +647,14 @@ rt_shared void initsig(void)
 
 		default:
 			if (esigdefined (sig) == (char) 1) 
-				old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
+				old = signal(sig, ehandler);		/* Ignore EINVAL errors */
 	}			
 #else
 		if (esigdefined (sig) == (char) 1) 
 #ifdef SIGPROF
 			if (sig != SIGPROF)
 #endif
-				old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
+				old = signal(sig, ehandler);		/* Ignore EINVAL errors */
 #endif	/* EIF_THREADS */
 		if (old == SIG_IGN)
 			sig_ign[sig] = 1;			/* Signal was ignored by default */
@@ -674,13 +720,10 @@ rt_shared void initsig(void)
 #ifdef SIGTRAP
 	sig_ign[SIGTRAP] = 0;	/* Do not ignore Trap signal */
 #	ifdef EIF_SGI
-		/* On some platforms (sgi), SIGTRAP is used as a
-		 * Integer-Division-By-Zero signal
-		 */
-		(void) signal(SIGTRAP, ehandlr);	
+			/* On sgi, SIGTRAP is used as a Integer-Division-By-Zero signal */
+		(void) signal(SIGTRAP, exfpe);	
 #	else
 		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
-		
 #	endif /* EIF_SGI */
 #endif
 
@@ -847,7 +890,6 @@ rt_private struct sig_desc sig_name[] = {
 #	else
 	{ 5, SIGTRAP, "Trace trap" },
 #	endif	/* EIF_SGI */
-	
 #endif
 #ifdef SIGABRT
 	{ 6, SIGABRT, "Abort" },
@@ -1052,11 +1094,10 @@ rt_public void esigcatch(long int sig)
 #ifdef SIGTRAP
 	if (sig == SIGTRAP) {
 #	ifdef EIF_SGI
-		(void) signal(SIGTRAP, ehandlr); 	/* Integer-Division-by-Zero on sgi */
+		(void) signal(SIGTRAP, exfpe); 	/* Integer-Division-by-Zero on sgi */
 #	else
 		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
-#	endif 	/* EIF_SGI */
-
+#	endif
 		return;
 	}
 #endif
@@ -1114,7 +1155,6 @@ rt_public void esigignore(long int sig)
 	}
 #endif
 #ifdef SIGTRAP
-	/* Not necessary on SGI since it is handled by ehandlr by default */
 	if (sig == SIGTRAP) {
 		(void) signal(SIGTRAP, SIG_IGN);
 		return;
@@ -1185,11 +1225,10 @@ void esigresall(void)
 #endif
 #ifdef SIGTRAP
 #	ifdef EIF_SGI
-		(void) signal(SIGTRAP, ehandlr);
+		(void) signal(SIGTRAP, exfpe);
 #	else
 		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
 #	endif /* EIF_SGI */
-		
 #endif
 #ifdef SIGFPE
 	(void) signal(SIGFPE, exfpe);	/* Raise an Eiffel exception when caught */
@@ -1242,11 +1281,10 @@ void esigresdef(long int sig)
 #ifdef SIGTRAP
 	if (sig == SIGTRAP) {
 #	ifdef EIF_SGI
-		(void) signal(SIGTRAP, ehandlr);	/* Restore default behaviour */
+		(void) signal(SIGTRAP, exfpe);	/* Restore default behaviour */
 #	else
 		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
 #	endif /* EIF_SGI */
-		
 		return;
 	}
 #endif

@@ -23,7 +23,7 @@ feature -- Event handling
 
 
 	select_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE is
-			-- Actions to be performed 
+			-- Actions to be performed when a row is selected.
 		do
 			Result := implementation.select_actions
 		ensure
@@ -32,7 +32,7 @@ feature -- Event handling
 
 
 	deselect_actions: EV_MULTI_COLUMN_LIST_ROW_SELECT_ACTION_SEQUENCE is
-			-- Actions to be performed 
+			-- Actions to be performed when a row is deselected.
 		do
 			Result := implementation.deselect_actions
 		ensure
@@ -41,7 +41,7 @@ feature -- Event handling
 
 
 	column_title_click_actions: EV_COLUMN_ACTION_SEQUENCE is
-			-- Actions to be performed 
+			-- Actions to be performed when a column title is clicked.
 		do
 			Result := implementation.column_title_click_actions
 		ensure
@@ -50,7 +50,7 @@ feature -- Event handling
 
 
 	column_resize_actions: EV_COLUMN_ACTION_SEQUENCE is
-			-- Actions to be performed 
+			-- Actions to be performed when a column is resized.
 		do
 			Result := implementation.column_resize_actions
 		ensure

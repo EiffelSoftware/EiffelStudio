@@ -43,7 +43,7 @@ feature -- Access
 	name (a_display: MEL_DISPLAY): STRING is
 			-- Name of the atom from `a_display'
 		require
-			valid_a_display: a_display /= Void and then a_display.is_valid
+			valid_display: a_display /= Void and then a_display.is_valid
 		local
 			p: POINTER
 		do

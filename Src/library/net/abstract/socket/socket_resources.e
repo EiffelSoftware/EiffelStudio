@@ -196,8 +196,7 @@ feature -- Status report
 			Result := (error_number = no_option)
 		end
 
-feature -- Externals
-			-- Flags for send, sendto recv and recvfrom socket calls
+feature -- Externals: flags for send, sendto recv and recvfrom socket calls
 
 	c_oobmsg: INTEGER is
 			-- Out of bound message 
@@ -217,9 +216,7 @@ feature -- Externals
 			"C"
 		end
 
-feature {NONE} -- Externals
-
-				-- Socket option levels
+feature {NONE} -- Externals: socket option levels
 
 	level_sol_socket: INTEGER is
 			-- SOL_SOCKET level of options
@@ -257,7 +254,8 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-				-- Socket option names
+
+feature {NONE} -- Externals: socket option names
 
 	ipoptions: INTEGER is
 			-- IP_OPTIONS option name
@@ -421,9 +419,7 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-feature {NONE} -- Externals 
-
-			-- Error messages
+feature {NONE} -- Externals: error messages
 
 	c_errorno: INTEGER is
 			-- C error number
@@ -551,9 +547,7 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-feature	{NONE} -- External
-
-			-- Socket types
+feature	{NONE} -- Externals: socket types
 
 	sock_raw: INTEGER is
 			-- Raw socket
@@ -573,8 +567,7 @@ feature	{NONE} -- External
 			"C"
 		end
 
-feature {NONE} -- External
-			-- socket families
+feature {NONE} -- Externals: socket families
 
 	af_ns: INTEGER is
 			-- Xerox Network System socket family.
@@ -594,9 +587,7 @@ feature {NONE} -- External
 			"C"
 		end
 
-feature {NONE} -- Externals
-
-			-- Constants for fcnlt calls
+feature {NONE} -- Externals: constants for fcnlt calls
 
 	c_fgetown: INTEGER is
 			-- C constant FGETOWN

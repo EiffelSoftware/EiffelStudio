@@ -46,7 +46,7 @@ feature -- Initialization
 			recursive_do_all (agent strip_leading_ev (?))
 		end
 
-feature {GB_LAYOUT_NODE, GB_OBJECT} -- Basic operations
+feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM} -- Basic operations
 
 	update_drop_actions_for_all_children  (an_object: GB_OBJECT) is
 			-- Generate correct drop_actions for every child in `Current' when
@@ -67,12 +67,24 @@ feature {GB_LAYOUT_NODE, GB_OBJECT} -- Basic operations
 	set_up_drop_actions (an_object: GB_OBJECT; an_item: EV_TREE_ITEM) is
 			-- Generate correct drop actions for `an_item' when `a_node'
 			-- is the type to be transported.
+			-- If `an_object' object is void, then we must have picked from
+			-- a GB_TYPE_SELECTOR_ITEM, so in this case we simply wipe
+			-- out the drop actions on `selector_item' as you cannot
+			-- drop a type on a type.
 		local
 			selector_item: GB_TYPE_SELECTOR_ITEM
 		do
 			selector_item ?= an_item
+				-- We check that the selctor item is not void, as not
+				-- all items in the selector tree are of type
+				-- GB_SELECTOR_ITEM. For example, "widgets" is just a basic
+				-- tree item, as you can do nothing with it.
 			if selector_item /= Void then
-				selector_item.generate_drop_actions (an_object)
+				if an_object.object /= Void then
+					selector_item.generate_drop_actions (an_object)	
+				else
+					selector_item.drop_actions.wipe_out
+				end
 			end
 		end		
 
@@ -105,9 +117,5 @@ feature {NONE} -- Implementation
 				tree_item.set_text (tree_item.text.substring (4, tree_item.text.count))
 			end
 		end
-		
-
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class GB_WIDGET_SELECTOR

@@ -19,7 +19,7 @@ inherit
 
 	EV_TEXT_FIELD_IMP
 		undefine
-			pebble_over_widget
+			pointer_over_widget
 		redefine
 			initialize,
 			make,
@@ -218,6 +218,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/31 19:10:57  king
+--| Accounted for rename of pebble_over_widget
+--|
 --| Revision 1.28  2000/03/22 22:01:30  king
 --| Undefined pebble_over_widget from text_field
 --|

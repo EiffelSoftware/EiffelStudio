@@ -551,9 +551,14 @@ feature {NONE} -- WEL Implementation
 			-- Left mouse button has been double clicked.
 			--| This has been redefined so that if you double click
 			--| on a radio button, we can stop Windows altering the
-			--| buttons state. 
+			--| buttons state.
+		local
+			it: EV_TOOL_BAR_RADIO_BUTTON_IMP
 		do
-			disable_default_processing
+			it ?= find_item_at_position (x_pos, y_pos)  
+			if it /= Void then 
+				disable_default_processing
+			end
 		end
 
 feature {EV_TOOL_BAR_IMP} -- Implementation
@@ -712,9 +717,8 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.56  2000/04/25 18:52:21  rogers
---| Redefined on_left_button_double_click to fix bug with double
---| clicks unselecting radio buttons.
+--| Revision 1.57  2000/04/25 20:31:06  rogers
+--| On_left_button_double_click only disables default processing for radio buttons.
 --|
 --| Revision 1.55  2000/04/24 22:26:47  rogers
 --| Removed redundent code.

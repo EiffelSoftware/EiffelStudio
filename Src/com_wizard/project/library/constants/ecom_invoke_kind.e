@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	Invoke_func: INTEGER is
+	frozen Invoke_func: INTEGER is
 			-- Member is called using normal function invocation syntax
 		external
 			"C [macro <oaidl.h>]"
@@ -20,7 +20,7 @@ feature -- Access
 			"INVOKE_FUNC"
 		end
 		
-	Invoke_propertyget: INTEGER is
+	frozen Invoke_propertyget: INTEGER is
 			-- Function is invoked using normal property-access syntax
 		external
 			"C [macro <oaidl.h>]"
@@ -28,7 +28,7 @@ feature -- Access
 			"INVOKE_PROPERTYGET"
 		end
 		
-	Invoke_propertyput: INTEGER is
+	frozen Invoke_propertyput: INTEGER is
 			-- Function is invoked using a property value assignment syntax
 		external
 			"C [macro <oaidl.h>]"
@@ -36,7 +36,7 @@ feature -- Access
 			"INVOKE_PROPERTYPUT"
 		end	
 		
-	Invoke_propertyputref: INTEGER is
+	frozen Invoke_propertyputref: INTEGER is
 			-- Function is invoked using property reference assignment syntax
 		external
 			"C [macro <oaidl.h>]"

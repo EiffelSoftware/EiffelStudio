@@ -40,29 +40,21 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	red: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_palette_entry_get_red (item)
 		end
 
 	green: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_palette_entry_get_green (item)
 		end
 
 	blue: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_palette_entry_get_blue (item)
 		end
 
 	flags: INTEGER is
-		require
-			exists: exists
 		do
 			Result := cwel_palette_entry_get_flags (item)
 		end
@@ -70,8 +62,6 @@ feature -- Access
 feature -- Element change
 
 	set_red (a_red: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_palette_entry_set_red (item, a_red)
 		ensure
@@ -79,8 +69,6 @@ feature -- Element change
 		end
 
 	set_green (a_green: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_palette_entry_set_green (item, a_green)
 		ensure
@@ -88,8 +76,6 @@ feature -- Element change
 		end
 
 	set_blue (a_blue: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_palette_entry_set_blue (item, a_blue)
 		ensure
@@ -97,8 +83,6 @@ feature -- Element change
 		end
 
 	set_flags (a_flags: INTEGER) is
-		require
-			exists: exists
 		do
 			cwel_palette_entry_set_flags (item, a_flags)
 		ensure

@@ -10,8 +10,18 @@ class
 
 inherit
 	GB_TIP_OF_THE_DAY_DIALOG_IMP
+		undefine
+			png_location
+		end
 	
 	GB_SHARED_PREFERENCES
+		undefine
+			default_create, copy
+		end
+		
+	GB_SHARED_PIXMAPS
+		rename
+			implementation as shared_pixmaps_implementation
 		undefine
 			default_create, copy
 		end

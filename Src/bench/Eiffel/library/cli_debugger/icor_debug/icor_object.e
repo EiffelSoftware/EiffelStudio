@@ -52,7 +52,7 @@ feature {ICOR_OBJECTS_MANAGER} -- Special feature for ICOR_OBJECTS_MANAGER
 	update_item (p: POINTER) is
 		require
 			p_valid: p /= Default_pointer
-			item_previously_removed: p = Default_pointer
+			item_previously_removed: item = Default_pointer
 		do
 			item := p
 		ensure

@@ -31,6 +31,13 @@ feature -- Access
 			"IDC_HELP"
 		end
 
+	Idc_hand: POINTER is
+		external
+			"C [macro %"wel.h%"]: EIF_POINTER"
+		alias
+			"MAKEINTRESOURCE(32649)"
+		end
+
 	Idc_ibeam: POINTER is
 		external
 			"C [macro %"wel.h%"]: EIF_POINTER"

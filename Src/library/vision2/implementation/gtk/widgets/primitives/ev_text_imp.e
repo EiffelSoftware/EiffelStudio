@@ -94,6 +94,12 @@ feature -- Access
 			feature {EV_GTK_EXTERNALS}.g_free (p)
 		end
 
+	line_number_from_position (i: INTEGER): INTEGER is
+			-- Line containing caret position `i'.
+		do
+			--| Added for gtk2 implementation
+		end
+
 feature -- Status report
 
 	line_count: INTEGER is

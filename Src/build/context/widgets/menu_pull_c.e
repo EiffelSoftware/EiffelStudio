@@ -9,17 +9,16 @@ inherit
 			create_context as old_create_context,
 			full_name as pulldown_full_name
 		redefine
-			reset_widget_callbacks, 
-			add_widget_callbacks, stored_node, initialize_transport,
-			is_selectionnable, widget
+			stored_node, is_selectionable, widget,
+			add_widget_callbacks, is_valid_parent,
+			is_able_to_be_grouped
 		end;
 
 	PULLDOWN_C
 		redefine
-			reset_widget_callbacks, 
-			add_widget_callbacks, initialize_transport, 
 			stored_node, create_context, full_name,
-			is_selectionnable, widget
+			is_selectionable, widget, add_widget_callbacks,
+			is_valid_parent, is_able_to_be_grouped
 		select
 			create_context, full_name
 		end
@@ -35,28 +34,31 @@ feature
 		do
 			Result := Pixmaps.menu_pull_pixmap
 		end;
-	
-feature {NONE}
 
 	add_widget_callbacks is
-		do 
+		do
 			add_common_callbacks (widget.button);
 			initialize_transport;
 			if (parent = Void) or else not parent.is_group_composite then
 				widget.button.add_enter_action (eb_selection_mgr, parent);
 			end;
 		end;
-	
-	initialize_transport is
+
+	is_valid_parent (parent_context: COMPOSITE_C): BOOLEAN is
+			-- Is `parent_context' a valid parent?
+			--| Valid if parent is not MENU_C
+		local
+			menu_c: MENU_C
 		do
-			widget.button.add_button_press_action (3, transport_command, Current);
+			menu_c ?= parent_context;
+			Result :=  menu_c /= Void
 		end;
 
-	reset_widget_callbacks is 
-		do 
-		end;
+	is_able_to_be_grouped: BOOLEAN is
+		do
+			Result := False
+		end
 
-	
 feature 
 
 	create_oui_widget (a_parent: MENU) is
@@ -66,7 +68,7 @@ feature
 
 	widget: MENU_PULL;
 
-	is_selectionnable: BOOLEAN is
+	is_selectionable: BOOLEAN is
 			-- Is current context selectionnable
 		do
 		end;

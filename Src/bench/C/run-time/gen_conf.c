@@ -3009,10 +3009,10 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 {
 	int16 outtab [256], *outtable, *intable, nulltab[]={TERMINATOR};
-	int16 min_low, max_low, min_high, max_high, pftype, dtype, *ptypes;
+	int16 min_low, max_low, min_high, max_high, pftype, dtype, *ptypes = NULL;
 	int i, count, offset, pcount;
 	unsigned char *src, *dest, *src_comp, *dest_comp, mask;
-	char is_expanded, cachable;
+	char is_expanded, cachable, is_generic;
 	struct eif_par_types *pt;
 	EIF_CONF_TAB *ctab, *pctab;
 	EIF_GEN_DER *gdp;
@@ -3023,6 +3023,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 	pt = par_info (RTUD_INV(dtype));
 
+	is_generic = pt->nb_generics > 0;
 	is_expanded = pt->is_expanded;
 
 	/* Compute the ranges of the bit tables */
@@ -3084,30 +3085,32 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 	eif_conf_tab [dftype] = ctab;
 
-	/* Create table of parent types */
+	/* Create generic derivation of Current type,
+	 * only if Current type is generic */
+	if (is_generic) {
+		gdp = eif_derivations [dftype];
 
-	gdp = eif_derivations [dftype];
+		if (gdp == (EIF_GEN_DER *) 0)
+		{
+			gdp = eif_new_gen_der ((long)0, (int16*) 0, (int16) RTUD_INV(dtype), (char) 0, (char) 0, (int16) 0);
 
-	if (gdp == (EIF_GEN_DER *) 0)
-	{
-		gdp = eif_new_gen_der ((long)0, (int16*) 0, (int16) RTUD_INV(dtype), (char) 0, (char) 0, (int16) 0);
+			eif_derivations [dftype] = gdp;
+		}
 
-		eif_derivations [dftype] = gdp;
-	}
+		if (pcount <= 8)
+		{
+			/* Use small table */
+			gdp->ptypes = ptypes = gdp->sptypes;
+		}
+		else
+		{
+			ptypes = (int16 *) eif_malloc (sizeof (int16)*pcount);
 
-	if (pcount <= 8)
-	{
-		/* Use small table */
-		gdp->ptypes = ptypes = gdp->sptypes;
-	}
-	else
-	{
-		ptypes = (int16 *) eif_malloc (sizeof (int16)*pcount);
+			if (ptypes == (int16 *) 0)
+				enomem ();
 
-		if (ptypes == (int16 *) 0)
-			enomem ();
-
-		gdp->ptypes = ptypes;
+			gdp->ptypes = ptypes;
+		}
 	}
 
 	/* Fill bit tables */
@@ -3125,7 +3128,8 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 		/* Register parent type */
 
-		*(ptypes++) = pftype;
+		if (is_generic)
+			*(ptypes++) = pftype;
 
 		if ((min_low <= max_low) && (pctab->min_low_id <= pctab->max_low_id))
 		{
@@ -3185,7 +3189,8 @@ rt_private void eif_compute_ctab (int16 dftype)
 		}
 	}
 
-	*ptypes = TERMINATOR;
+	if (is_generic)
+		*ptypes = TERMINATOR;
 
 	/* Put own type in table if it's not expanded */
 

@@ -28,7 +28,7 @@ feature {NONE}
 			a_op_env: OPERATING_ENVIRONMENT
 		do
 			create a_op_env
-			local_cache_path := a_path.clone (a_path)
+			local_cache_path := a_path.twin
 			clr_version := a_clr_version
 			-- Add trailing directory separator if needed.
 			if not (local_cache_path.item (local_cache_path.count) = a_op_env.Directory_separator) then

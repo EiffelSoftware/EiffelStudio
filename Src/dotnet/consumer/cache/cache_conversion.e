@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 		require
 			non_void_path: path /= Void
 		do
-			cache_path := clone (path)
+			cache_path := path.twin
 			if cache_path.item (cache_path.count) /= '\' then
 				cache_path.append ("\")
 			end

@@ -89,7 +89,7 @@ feature -- Access
 		do
 			ct := consumed_type (t)
 			if ct /= Void then
-				Result := clone (ct.eiffel_name)
+				Result := ct.eiffel_name.twin
 			end
 		end	
 

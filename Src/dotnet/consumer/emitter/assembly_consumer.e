@@ -70,8 +70,8 @@ feature -- Basic Operations
 			assembly_file_timestamp: INTEGER
 			consumed_folder: DIRECTORY
 		do
-			consumed_path := apath.clone (apath)
-			
+			consumed_path := apath.twin
+
 			-- Set the default value for all conditions where the assembly date cannot be compared
 			Result := False
 				

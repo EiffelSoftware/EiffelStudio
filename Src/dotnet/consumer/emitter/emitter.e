@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 		do
 			if switch.is_equal (Dest_path_switch) or switch.is_equal (Dest_path_short) then
 				if (create {DIRECTORY}.make (switch_value)).exists then
-					destination_path := switch_value.clone (switch_value)
+					destination_path := switch_value.twin
 					destination_path.prune_all_trailing ('\')
 				else
 					set_error (Invalid_destination_path, switch_value)
@@ -424,13 +424,13 @@ feature {NONE} -- Implementation
 			local_info_path: STRING
 		do
 			reconsume := True
-			local_info_path := destination_path.clone (destination_path)
+			local_info_path := destination_path.twin
 			if local_info_path.item (local_info_path.count) /= '\' then
 				local_info_path.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
 			end
 			local_info_path.append (info_path)
 			
-			output_destination_path := destination_path.clone (destination_path)
+			output_destination_path := destination_path.twin
 			if output_destination_path.item (output_destination_path.count) /= '\' then
 				output_destination_path.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
 			end

@@ -73,12 +73,12 @@ feature -- Access
 				Result.remove_head (4)
 			elseif is_conversion_operator then
 				if internal_method.get_parameters.item (0).parameter_type.equals_type (internal_method.reflected_type) then
-					Result := clone (to_conversion_name)
+					Result := to_conversion_name.twin
 					Result.append (
 						formatted_variable_type_name (referenced_type_from_type (
 							internal_method.return_type).name))
 				else
-					Result := clone (from_conversion_name)
+					Result := from_conversion_name.twin
 					Result.append (
 						formatted_variable_type_name (referenced_type_from_type (
 							internal_method.get_parameters.item (0).parameter_type).name))

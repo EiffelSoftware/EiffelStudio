@@ -332,27 +332,28 @@ feature -- Basic operations
 			p := horizontal_page
 			min := minimal_horizontal_position
 			max := maximal_horizontal_position
-			if scroll_code = Sb_pagedown then
+			inspect scroll_code
+			when Sb_pagedown then
 				inc := p
 				new_pos := old_pos + inc
-			elseif scroll_code = Sb_pageup then
+			when Sb_pageup then
 				inc := -p
 				new_pos := old_pos + inc
-			elseif scroll_code = Sb_linedown then
+			when Sb_linedown then
 				inc := horizontal_line
 				new_pos := old_pos + inc
-			elseif scroll_code = Sb_lineup then
+			when Sb_lineup then
 				inc := -horizontal_line
 				new_pos := old_pos + inc
-			elseif scroll_code = Sb_thumbposition then
+			when Sb_thumbposition then
 				inc := pos - old_pos
 				new_pos := pos
-			elseif scroll_code = Sb_thumbtrack then
+			when Sb_thumbtrack then
 				inc := pos - old_pos
 				new_pos := pos
-			elseif scroll_code = Sb_top then
+			when Sb_top then
 				new_pos := min
-			elseif scroll_code = Sb_bottom then
+			when Sb_bottom then
 				new_pos := max - p + 1
 			else
 				check
@@ -387,27 +388,28 @@ feature -- Basic operations
 			p := vertical_page
 			min := minimal_vertical_position
 			max := maximal_vertical_position
-			if scroll_code = Sb_pagedown then
+			inspect scroll_code
+			when Sb_pagedown then
 				inc := p
 				new_pos := old_pos + inc
-			elseif scroll_code = Sb_pageup then
+			when Sb_pageup then
 				inc := -p
 				new_pos := old_pos + inc
-			elseif scroll_code = Sb_linedown then
+			when Sb_linedown then
 				inc := vertical_line
 				new_pos := old_pos + inc
-			elseif scroll_code = Sb_lineup then
+			when Sb_lineup then
 				inc := -vertical_line
 				new_pos := old_pos + inc
-			elseif scroll_code = Sb_thumbposition then
+			when Sb_thumbposition then
 				inc := pos - old_pos
 				new_pos := pos
-			elseif scroll_code = Sb_thumbtrack then
+			when Sb_thumbtrack then
 				inc := pos - old_pos
 				new_pos := pos
-			elseif scroll_code = Sb_top then
+			when Sb_top then
 				new_pos := min
-			elseif scroll_code = Sb_bottom then
+			when Sb_bottom then
 				new_pos := max - p + 1
 			else
 				check

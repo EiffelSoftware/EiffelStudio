@@ -85,10 +85,16 @@ inherit
 			on_lvn_itemchanged,
 			on_size,
 			default_style,
+			default_ex_style,
 			process_message
 		end
 
 	WEL_LVHT_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_LVS_EX_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -115,6 +121,11 @@ feature {NONE} -- Initialization
 			{EV_MULTI_COLUMN_LIST_I} Precursor
 			{EV_ITEM_LIST_IMP} Precursor
 			add_column
+			create image_list.make (16, 16, Ilc_color24, True)
+				-- Create image list with all images 16 by 16 pixels
+			set_image_list(image_list)
+				-- Associate the image list with the tree.
+			create current_image_list_info.make (4)
 		end
 
 feature -- Access
@@ -265,26 +276,31 @@ feature -- Status setting
 				set_column_format (a_column - 1, Lvcfmt_center)
 			else
 				set_column_format (a_column - 1, Lvcfmt_right)
-			end	
-		end
-
-feature -- Element change
-
-	set_row_height (a_height: INTEGER) is
-			-- Assign `a_height' to ??.
-		do
-			row_height := a_height
-			--| FIXME TBI
+			end
 		end
 
 feature {NONE} -- Implementation
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
 			-- Set row `a_row' pixmap to `a_pixmap'.
+		local
+			p_imp: EV_PIXMAP_IMP
+			item_value: INTEGER
+			temp_row: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			check
-				to_be_implemented: False
+			p_imp ?= a_pixmap.implementation
+			if p_imp.icon /= Void then
+				item_value := cwel_pointer_to_integer (p_imp.icon.item)
+					-- Assign `icon.item' to `item_value'
+				if not current_image_list_info.has (item_value) then
+					image_list.add_icon (p_imp.icon)
+					current_image_list_info.extend ([1, 1], item_value)
+				end
 			end
+			--|FIXME I think we should now tell the list view that an item has ben updated.
+			--| How do we do this?
+			temp_row ?= i_th (a_row).implementation
+			temp_row.set_image (1)
 		end
 
 	set_text_on_position (a_x, a_y: INTEGER; a_text: STRING) is
@@ -567,7 +583,7 @@ feature {NONE} -- WEL Implementation
 				end
 			if mcl_row /= Void then 
 				offsets := mcl_row.relative_position
-				mcl_row.interface.pointer_button_press_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
+				mcl_row.interface.pointer_button_press_actions.call ([x_pos,
 				y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end 
 		end 
@@ -590,7 +606,13 @@ feature {NONE} -- WEL Implementation
 		do
 			Result := Ws_child + Ws_visible + Ws_group 
 				+ Ws_tabstop + Ws_border + Ws_clipchildren
-				+ Lvs_report + Lvs_showselalways
+				+ Lvs_report
+		end
+
+	default_ex_style: INTEGER is
+			-- Extended style of the list view.
+		do
+			Result := Lvs_ex_fullrowselect
 		end
 
 	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is
@@ -656,20 +678,13 @@ feature {NONE} -- WEL Implementation
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
-	child_y (child: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
-			-- `Result' is relative ycoor of row to `parent_imp'
-		local
-			a, b: INTEGER
-		do
-			a := top_index
-			b := internal_get_index (child)
-			if not title_shown then
-				Result := (internal_get_index (child) - top_index - 1) * 14
-			else
-				Result := (internal_get_index (child) - top_index) * 14 + window_frame_height - 1
-			end
-			a := window_frame_height
-		end
+	image_list: WEL_IMAGE_LIST
+			-- WEL image list to store all images required by items.
+
+	current_image_list_info: HASH_TABLE [TUPLE [INTEGER, INTEGER], INTEGER]
+			-- A list of all items in the image list and their positions.
+			-- [[position in image list, number of items pointing to this
+			-- image], windows pointer].
 
 	child_x: INTEGER is
 			-- `Result' is relative xcoor of row to `parent_imp'
@@ -751,6 +766,11 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.86  2000/04/21 16:30:33  rogers
+--| Now inherits WEL_LVS_EX_CONSTANTS. Added and connected an image
+--| list. Removed set_row_height and child_y. Partially implemented
+--| set_pixmap.
+--|
 --| Revision 1.85  2000/04/20 22:23:35  king
 --| Implemented column_alignment_changed, removed other alignement features.
 --|

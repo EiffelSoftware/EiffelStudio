@@ -161,11 +161,12 @@ feature {NONE} -- Initialization
 			exception.disable_edit
 			box.extend (stack_list)
 			stack_list.set_column_titles (
-				  <<Interface_names.t_Feature,
+				  << "", -- Icon's column
+				  	Interface_names.t_Feature,
 					Interface_names.t_Dynamic_type,
 					Interface_names.t_Static_type>>)
 --| FIXME XR: Use preferences to store/restore column widths
-			stack_list.set_column_widths (<<100, 100, 100>>)
+			stack_list.set_column_widths (<<20, 100, 100, 100>>)
 			stack_list.drop_actions.extend (agent on_element_drop)
 			stack_list.key_press_actions.extend (agent key_pressed)
 			create_update_on_idle_agent
@@ -390,7 +391,7 @@ feature {NONE} -- Implementation
 						l_tooltipable_row.extend ("Unable to get call stack data")
 						l_tooltipable_row.set_tooltip ("Double click to refresh call stack")
 						l_tooltipable_row.set_pixmap (Pixmaps.warning_pixmap)
-						l_tooltipable_row.pointer_double_press_actions.force_extend (agent update)
+						l_tooltipable_row.pointer_double_press_actions.force_extend (update_on_idle_agent)
 						stack_list.extend (l_tooltipable_row)
 					end
 				else
@@ -631,10 +632,10 @@ feature {NONE} -- Implementation
 			Result.set_tooltip (l_tooltip)
 			
 				--| Fill columns
+				
+			Result.extend ("") -- Icon column
 			Result.extend (l_feature_info)
 			Result.extend (l_class_info)
---			Result.extend (elem.break_index.out)
---			Result.extend (elem.object_address)
 			Result.extend (l_orig_class_info)
 
 				--| Set GUI behavior			

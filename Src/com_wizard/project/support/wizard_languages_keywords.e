@@ -41,6 +41,8 @@ feature -- Eiffel keywords
 	
 	Class_keyword: STRING is "class"
 	
+	Convert_keyword: STRING is "convert"
+
 	Inherit_keyword: STRING is "inherit"
 
 	Rename_keyword: STRING is "rename"

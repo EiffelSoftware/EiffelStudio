@@ -10,21 +10,23 @@ class
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent
+			is_equivalent, location
 		end
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (t: like tag; i: like index_list) is
+	initialize (t: like tag; i: like index_list; l: location) is
 			-- Create a new INDEX AST node.
 		require
 			i_not_void: i /= Void
 		do
 			tag := t
 			index_list := i
+			location := l
 		ensure
 			tag_set: tag = t
 			index_list_set: index_list = i
+			location_set: location = l
 		end
 
 feature -- Visitor
@@ -42,6 +44,9 @@ feature -- Attributes
 
 	index_list: EIFFEL_LIST [ATOMIC_AS];
 			-- Indexes
+
+	location: TOKEN_LOCATION
+			-- Location where clause starts
 
 feature -- Comparison
 

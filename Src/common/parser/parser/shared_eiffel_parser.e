@@ -24,6 +24,12 @@ feature -- Access
 		do
 			Result := il_parsing_cell.item
 		end
+		
+	entity_declaration_parser: EIFFEL_PARSER is
+			-- Entity declaration parser.
+		once
+			create Result.make_entity_declaration_parser
+		end
 
 	Type_parser: EIFFEL_PARSER is
 			-- Type parser.

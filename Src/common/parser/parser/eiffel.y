@@ -212,7 +212,7 @@ Eiffel_parser:
 				if not entity_declaration_parser or type_parser or expression_parser or indexing_parser then
 					raise_error
 				end
-				local_node := $2
+				entity_declaration_node := $2
 			}
 	;
 

@@ -192,6 +192,9 @@ feature -- Window Messages
 	Wm_getdlgcode: INTEGER is 135
 			-- Declared in Windows as WM_GETDLGCODE
 
+	Wm_syncpaint: INTEGER is 136
+			-- Declared in Windows as WM_SYNCPAINT
+
 	Wm_ncmousemove: INTEGER is 160
 			-- Declared in Windows as WM_NCMOUSEMOVE
 
@@ -284,6 +287,27 @@ feature -- Window Messages
 
 	Wm_enteridle: INTEGER is 289
 			-- Declared in Windows as WM_ENTERIDLE
+
+	Wm_ctlcolormsgbox: INTEGER is 306
+			-- Declared in Windows as WM_CTLCOLORMSGBOX
+
+	Wm_ctlcoloredit: INTEGER is 307
+			-- Declared in Windows as WM_CTLCOLOREDIT
+
+	Wm_ctlcolorlistbox: INTEGER is 308
+			-- Declared in Windows as WM_CTLCOLORLISTBOX
+
+	Wm_ctlcolorbtn: INTEGER is 309
+			-- Declared in Windows as WM_CTLCOLORBTN
+
+	Wm_ctlcolordlg: INTEGER is 310
+			-- Declared in Windows as WM_CTLCOLORDLG
+
+	Wm_ctlcolorscrollbar: INTEGER is 311
+			-- Declared in Windows as WM_CTLCOLORSCROLLBAR
+
+	Wm_ctlcolorstatic: INTEGER is 312
+			-- Declared in Windows as WM_CTLCOLORSTATIC
 
 	Wm_mousemove: INTEGER is 512
 			-- Declared in Windows as WM_MOUSEMOVE
@@ -664,6 +688,41 @@ feature -- Show Window (SW) constants
 
 	Sw_otherunzoom: INTEGER is 4
 			-- Declared in Windows as SW_OTHERUNZOOM
+
+feature -- Show Window Position (SWP) constants
+
+	Swp_nosize: INTEGER is 1
+			-- Declared in Windows as SWP_NOSIZE
+
+	Swp_nomove: INTEGER is 2
+			-- Declared in Windows as SWP_NOMOVE
+
+	Swp_nozorder: INTEGER is 4
+			-- Declared in Windows as SWP_NOZORDER
+
+	Swp_noredraw: INTEGER is 8
+			-- Declared in Windows as SWP_NOREDRAW
+
+	Swp_noactivate: INTEGER is 16
+			-- Declared in Windows as SWP_NOACTIVATE
+
+	Swp_framechanged, Swp_drawframe: INTEGER is 32
+			-- Declared in Windows as SWP_FRAMECHANGED
+
+	Swp_showwindow: INTEGER is 64
+			-- Declared in Windows as SWP_SHOWWINDOW
+
+	Swp_hidewindow: INTEGER is 128
+			-- Declared in Windows as SWP_HIDEWINDOW
+
+	Swp_nocopybits: INTEGER is 256
+			-- Declared in Windows as SWP_NOCOPYBITS
+
+	Swp_noownerzorder, Swp_noreposition: INTEGER is 512
+			-- Declared in Windows as SWP_NOOWNERZORDER
+
+	Swp_nosendchanging: INTEGER is 1024
+			-- Declared in Windows as SWP_NOSENDCHANGING
 
 feature -- Window Activate Mode
 

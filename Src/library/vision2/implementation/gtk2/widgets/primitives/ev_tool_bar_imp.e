@@ -17,7 +17,8 @@ inherit
 		redefine
 			interface,
 			initialize,
-			visual_widget
+			visual_widget,
+			needs_event_box
 		end
 
 	EV_ITEM_LIST_IMP [EV_TOOL_BAR_ITEM]
@@ -29,8 +30,7 @@ inherit
 			add_to_container,
 			insert_i_th,
 			list_widget,
-			initialize,
-			visual_widget
+			initialize
 		end
 
 create
@@ -38,12 +38,15 @@ create
 
 feature {NONE} -- Implementation
 
+	needs_event_box: BOOLEAN is True
+
 	make (an_interface: like interface) is
 			-- Create the tool-bar.
 		do
 			base_make (an_interface)
-			list_widget := feature {EV_GTK_EXTERNALS}.gtk_toolbar_new
-			set_c_object (list_widget)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_toolbar_new)
+			--set_c_object (feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 2))
+			--feature {EV_GTK_EXTERNALS}.gtk_event_box_set_above_child (c_object, True)
 		end
 		
 	initialize is
@@ -52,13 +55,13 @@ feature {NONE} -- Implementation
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_show_arrow (list_widget, False)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_tooltips (list_widget, False)
+		--	feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_set_tooltips (list_widget, False)
 		end
 		
-	visual_widget: POINTER is
+	list_widget: POINTER is
 			-- 
 		do
-			Result := list_widget
+			Result := visual_widget
 		end
 		
 feature -- Status report
@@ -68,7 +71,7 @@ feature -- Status report
 			-- all buttons contained in `Current'? If `False', then
 			-- the `pixmap' is displayed to left of `text'.
 		do
-			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_get_style (list_widget) /= feature {EV_GTK_EXTERNALS}.gtk_toolbar_both_horiz_enum
+		--	Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_toolbar_get_style (list_widget) /= feature {EV_GTK_EXTERNALS}.gtk_toolbar_both_horiz_enum
 		end
 		
 feature -- Status setting
@@ -76,13 +79,13 @@ feature -- Status setting
 	enable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `True'.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_toolbar_unset_style (visual_widget)
+		--	feature {EV_GTK_EXTERNALS}.gtk_toolbar_unset_style (visual_widget)
 		end
 		
 	disable_vertical_button_style is
 			-- Ensure `has_vertical_button_style' is `False'.
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_toolbar_set_style (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_toolbar_both_horiz_enum)
+		--	feature {EV_GTK_EXTERNALS}.gtk_toolbar_set_style (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_toolbar_both_horiz_enum)
 		end
 		
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
@@ -123,6 +126,7 @@ feature -- Implementation
 		do
 			v_imp ?= v.implementation
 			v_imp.set_item_parent_imp (Current)
+			--feature {EV_GTK_EXTERNALS}.gtk_container_add (list_widget, v_imp.c_object)
 			feature {EV_GTK_EXTERNALS}.gtk_toolbar_insert (visual_widget, v_imp.c_object, i - 1)
 			if count = 0 then
 				a_pixmapable ?= v_imp
@@ -185,9 +189,6 @@ feature {EV_TOOL_BAR_RADIO_BUTTON_IMP} -- Implementation
 		-- GSList containing the radio peers held within `Current'
 
 feature {EV_ANY_I} -- Implementation
-
-	list_widget: POINTER
-			-- Pointer to the gtkhbox (toolbar) as c_object is event box.
 
 	interface: EV_TOOL_BAR
 

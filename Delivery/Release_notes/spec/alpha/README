@@ -1,4 +1,4 @@
-RELEASE NOTES for DEC ALPHA (ISE EIFFEL4.3)
+RELEASE NOTES for DEC ALPHA (ISE EIFFEL5.3)
 --------------------------------------------
 
 EiffelBench
@@ -10,7 +10,7 @@ PLATFORM:
 
 Also, add to your LD_LIBRARY_PATH the path to the Eiffel run-time shared libraries.
 
-> setenv LD_LIBRARY_PATH $EIFFEL4/bench/spec/$PLATFORM/lib:$LD_LIBRARY_PATH
+> setenv LD_LIBRARY_PATH $EIFFEL5/bench/spec/$PLATFORM/lib:$LD_LIBRARY_PATH
 
 You need to have at least a Digital Unix system version 4.0 or higher.
 The C configuration file uses cc as default compiler. 

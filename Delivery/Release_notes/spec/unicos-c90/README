@@ -4,9 +4,9 @@ Please your PLATFORM environment variable to unicos-c90 if you
 are running on CRAY unicos-c90. 
 
 This version of ISE Eiffel provides only the run-times located
-$EIFFEL4/bench/spec/unicos-c90/lib/. . You will also found
+$EIFFEL5/bench/spec/unicos-c90/lib/. . You will also found
 the binary `finish_freezing' to compile the generated C-code in
-	$EIFFEL4/bench/spec/unicos-c90/bin/.
+	$EIFFEL5/bench/spec/unicos-c90/bin/.
 
 To run an Eiffel program on CRAY you need to compile the
 Eiffel code on another platform. Then, you will be able to compile

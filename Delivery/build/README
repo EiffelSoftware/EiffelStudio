@@ -4,9 +4,9 @@ EiffelBuild 4.2
 Installation
 ------------
 
-- Set environment variable EIFFEL4
+- Set environment variable EIFFEL5
 
-for example, setenv EIFFEL4 /usr/local/Eiffel4
+for example, setenv EIFFEL5 /usr/local/Eiffel4
 
 
 - Set environment variable PLATFORM according to your platform.
@@ -14,13 +14,13 @@ for example, setenv EIFFEL4 /usr/local/Eiffel4
 for example, setenv PLATFORM linux-elf
 
 
-- Untar or copy the files into EIFFEL4 directory.
+- Untar or copy the files into EIFFEL5 directory.
 
-cd $EIFFEL4
+cd $EIFFEL5
 gunzip -c eiffelbuild-4.2.tar.gz | tar xvf -
 
 
-- Add directory $EIFFEL4/build/spec/$PLATFORM/bin into your path
+- Add directory $EIFFEL5/build/spec/$PLATFORM/bin into your path
 
 
 - Run EiffelBuild

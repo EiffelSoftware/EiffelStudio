@@ -3,7 +3,7 @@ static char * icotool_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "16 16 257 2",
 /* colors */
-"   	c #D6D6D6",
+"   	c #ffffff",
 " .	c #000000",
 " +	c #c07e78",
 " @	c #008000",

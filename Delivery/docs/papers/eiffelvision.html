@@ -192,9 +192,9 @@ you must follow these steps:<br>
    initialization from MOTIF to OBSOLETE_MOTIF (for windows, change&nbsp;<br>
    the declaration from MS_WINDOWS to OBSOLETE_MS_WINDOWS)<br>
 2. Include the following clusters into your Ace file:<br>
-   obsolete_oui:    "$EIFFEL4/library/vision/obsolete/oui";<br>
-   obsolete_toolkit:"$EIFFEL4/library/vision/obsolete/toolkit";<br>
-   obsolete_motif:  "$EIFFEL4/library/vision/obsolete/motif";</p>
+   obsolete_oui:    "$EIFFEL5/library/vision/obsolete/oui";<br>
+   obsolete_toolkit:"$EIFFEL5/library/vision/obsolete/toolkit";<br>
+   obsolete_motif:  "$EIFFEL5/library/vision/obsolete/motif";</p>
 <h1><a name="How to configure your Ace file">How to configure your Ace file</a></h1>
 <p>In order to use EiffelVision in an Eiffel Project, you have to include in your
 project, the right clusters and the right external files. Thus, you need to
@@ -206,7 +206,7 @@ EiffelVision, as the compilation of this library is pretty long.</p>
 following clusters. :</p>
 <p><font color="#FF0000">-- EiffelVision<br>
 </font><br>
-<b>        vision:                 	"$EIFFEL4/library/vision";<br>
+<b>        vision:                 	"$EIFFEL5/library/vision";<br>
 	vision_kernel (vision):         "$/oui/kernel";<br>
 	vision_widgets (vision):        "$/oui/widgets";<br>
 	vision_context_data (vision):	"$/oui/context_data";<br>
@@ -231,9 +231,9 @@ following clusters. :</p>
         vision_imp_x_kernel (vision_imp_x):  	"$/kernel";<br>
         vision_imp_x_support (vision_imp_x):    "$/support";</b></p>
 <p>If you want to use MEL library you can include in your Ace file :</p>
-<p><b>all mel: &quot;$EIFFEL4/library/mel/&quot;;</b></p>
+<p><b>all mel: &quot;$EIFFEL5/library/mel/&quot;;</b></p>
 <p>If you want to use WEL library, you can include in your Ace file :</p>
-<p><b>all wel: &quot;$EIFFEL4/library/wel/&quot;;</b></p>
+<p><b>all wel: &quot;$EIFFEL5/library/wel/&quot;;</b></p>
 <p>Then, you need to include some internals to use EiffelVision:</p>
 <ul>
   <li><b><u>For Windows</u></b></li>
@@ -242,11 +242,11 @@ following clusters. :</p>
 </p>
 <p>&nbsp;&nbsp;&nbsp; <b>include_path:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)\library\wel\spec\windows\include&quot;;<br>
+&quot;$(EIFFEL5)\library\wel\spec\windows\include&quot;;<br>
 <br>
 &nbsp;&nbsp;&nbsp; object:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib&quot;;</b><br>
+&quot;$(EIFFEL5)\library\wel\spec\$(COMPILER)\lib\wel.lib&quot;;</b><br>
 </p>
 <ul>
   <li><b><u>For Unix</u></b></li>
@@ -255,13 +255,13 @@ following clusters. :</p>
 <br>
 &nbsp;&nbsp;<b>&nbsp; include_path:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)/library/mel/Clib&quot;;<br>
+&quot;$(EIFFEL5)/library/mel/Clib&quot;;<br>
 <br>
 &nbsp;&nbsp;&nbsp; object:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a&quot;,<br>
+&quot;$(EIFFEL5)/library/mel/spec/$(PLATFORM)/lib/libMel.a&quot;,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libXpm.a&quot;,<br>
+&quot;$(EIFFEL5)/library/mel/spec/$(PLATFORM)/lib/libXpm.a&quot;,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &quot;-lXm -lXt -lX11 -lXext -lXp"</b></p>
 <p>To see some Working Example of Ace file, you can check our <a href="#Some working examples">Examples</a>.&nbsp;</p>
@@ -269,8 +269,8 @@ following clusters. :</p>
 <h1><a name="Some working examples">Some working examples</a></h1>
 <p>We developed a few examples using EiffelVision that you can try to see how to
 use this library.</p>
-<p>They are located in <b>&quot;$EIFFEL4/examples/vision&quot;</b></p>
-<p>You can especially check the example : test_all_widgets, located in <b>&quot;$EIFFEL4/examples/vision/test_all_widgets&quot;</b></p>
+<p>They are located in <b>&quot;$EIFFEL5/examples/vision&quot;</b></p>
+<p>You can especially check the example : test_all_widgets, located in <b>&quot;$EIFFEL5/examples/vision/test_all_widgets&quot;</b></p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 &nbsp;

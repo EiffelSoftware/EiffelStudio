@@ -13,11 +13,11 @@ In particular it does not apply to the Solaris version.
 I receive an error message like the following, when I link after I've executed
 finish_freezing: 
 
-cc -o driver -O -DWORKBENCH -I $EIFFEL4/bench/spec/$PLATFORM/include  
+cc -o driver -O -DWORKBENCH -I $EIFFEL5/bench/spec/$PLATFORM/include  
 F1/Fobj1.o D1/Dobj1.o C1/Cobj1.o E1/Eobj1.o  E1/emain.o
-$EIFFEL4/bench/spec/$PLATFORM/lib/libwkbench.a -lm
+$EIFFEL5/bench/spec/$PLATFORM/lib/libwkbench.a -lm
 
-ld: $EIFFEL4/bench/spec/$PLATFORM/lib/libwkbench.a: warning: table of 
+ld: $EIFFEL5/bench/spec/$PLATFORM/lib/libwkbench.a: warning: table of 
 contents for archive is out of date; rerun ranlib(1)
 
 ld: Undefined symbol
@@ -38,22 +38,22 @@ Fix
 
 Please execute the following commands: 
 
-ranlib $EIFFEL4/bench/spec/$PLATFORM/lib/libwkbench.a
-ranlib $EIFFEL4/bench/spec/$PLATFORM/lib/libruntime.a
+ranlib $EIFFEL5/bench/spec/$PLATFORM/lib/libwkbench.a
+ranlib $EIFFEL5/bench/spec/$PLATFORM/lib/libruntime.a
 
 and execute a ranlib on the following files as well (depending on your
 installation): 
 
 EiffelVision 
-$EIFFEL4/library/vision/spec/$PLATFORM/lib/Xt.a
-$EIFFEL4/library/vision/spec/$PLATFORM/lib/motif_Clib.a 
+$EIFFEL5/library/vision/spec/$PLATFORM/lib/Xt.a
+$EIFFEL5/library/vision/spec/$PLATFORM/lib/motif_Clib.a 
 
 EiffelLex 
-$EIFFEL4/library/lex/spec/$PLATFORM/lib/lex.a 
+$EIFFEL5/library/lex/spec/$PLATFORM/lib/lex.a 
 
 EiffelNet 
-$EIFFEL4/library/net/spec/$PLATFORM/lib/libnet.a
-$EIFFEL4/library/net/spec/$PLATFORM/lib/libwnet.a 
+$EIFFEL5/library/net/spec/$PLATFORM/lib/libnet.a
+$EIFFEL5/library/net/spec/$PLATFORM/lib/libwnet.a 
 
 Discussion 
 

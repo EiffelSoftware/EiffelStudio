@@ -420,7 +420,7 @@ wrote.
 compilation of the generated C-code plus those, which are relevant to your
 own C-code.
 <P>Typically, you will compile your flags as below:
-<P><B>gcc -c -O -I$EIFFEL4/bench/spec/$PLATFORM/include -I&lt;SOME_INCLUDE_PATH>
+<P><B>gcc -c -O -I$EIFFEL5/bench/spec/$PLATFORM/include -I&lt;SOME_INCLUDE_PATH>
 -D&lt;SOME_FLAGS> your_file.c</B>
 <BR>(if your are compiling with gcc on a Solaris).
 <P>or
@@ -431,7 +431,7 @@ installation directory of your Eiffel delivery: <B>C:\Eiffel4</B>, for
 example).
 <P>For instance, if you want to use the multithreaded facilities of Eiffel,
 you should define the EIFFEL MT flags.
-<P><B>gcc -c -O -I$EIFFEL4/bench/spec/$PLATFORM/include -DEIF_THREADS -DSOLARIS_THREADS
+<P><B>gcc -c -O -I$EIFFEL5/bench/spec/$PLATFORM/include -DEIF_THREADS -DSOLARIS_THREADS
 -D_REENTRANT your_file.c</B>
 <P>or
 <P><B>cl -c -nologo -DEIF_THREADS -MT -Ox -I&lt;INSTALLATION_DIR>\bench\spec\windows\include
@@ -619,7 +619,7 @@ C types:
 = '\0') </I>.
           </ul>
 These are the current correspondances but they may change.The definition
-of each Eiffel&nbsp; types is located in&nbsp; $EIFFEL4/bench/spec/$PLATFORM/include/eif_portable.h.
+of each Eiffel&nbsp; types is located in&nbsp; $EIFFEL5/bench/spec/$PLATFORM/include/eif_portable.h.
 <P><FONT SIZE=+0><A HREF="#Index">Back to index</A></FONT>
         </ul>
 
@@ -680,7 +680,7 @@ who uses CECIL, has to be aware that all Eiffel objects can be moved or
 collected asynchronously&nbsp; by the Garbage Collector (GC).
 <P>The cecil library provides the user with numorous macros and functions,
 which relieves the programmer from these kinds of low-level considerations
-(most of them are declared in $EIFFEL4/bench/spec/$PLATFORM/include/eif_cecil.h).
+(most of them are declared in $EIFFEL5/bench/spec/$PLATFORM/include/eif_cecil.h).
         </ul>
 <P><A HREF="#Index">Back to index</A>
 <H3>
@@ -1475,7 +1475,7 @@ references (e.g an Eiffel object, which is not an instance of a basic type)
 <P>These typedefs do not perform&nbsp; the type checking of the arguments.
 The typedefs only cast the result of the Eiffel routine (void if it is
 an Eiffel procedure). For more information on the previous definitions,
-see their definitions in $EIFFEL4/bench/spec/$PLATFORM/include/eif_cecil.h.
+see their definitions in $EIFFEL5/bench/spec/$PLATFORM/include/eif_cecil.h.
 <P>CECIL can not generate relevant typedefs for every type of routine that
 is exported to C through CECIL. Consequently, you must define manually
 the typedefs to properly cast the pointer type to the Eiffel routine. This
@@ -1655,7 +1655,7 @@ export it to CECIL in the Ace file.
 Some new macros have been incorrectly set in v4.3. 
 In the file
                 <ul>
-              <B>$EIFFEL4/bench/spec/$PLATFORM/include/eif_cecil.h </B>(unix) 
+              <B>$EIFFEL5/bench/spec/$PLATFORM/include/eif_cecil.h </B>(unix) 
 <BR>
                 </ul>
             or

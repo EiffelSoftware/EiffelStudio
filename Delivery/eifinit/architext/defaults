@@ -17,10 +17,10 @@ font: No default value
 word_wrap: false
 	-- Is word wrap enabled in the text windows?
 
-bitmaps_directory: "$EIFFEL4/architext/bitmaps"
+bitmaps_directory: "$EIFFEL5/architext/bitmaps"
 	-- Directory for user-defined bitmaps
 
-dog_filename: "$EIFFEL4/architext/defaults/default.dog"
+dog_filename: "$EIFFEL5/architext/defaults/default.dog"
 	-- Full pathname of the Description Of Grammars file
 
 --***********

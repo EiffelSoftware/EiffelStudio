@@ -10,7 +10,7 @@ New functionalities:
 	It will link your program with a ".DLL" version of the run-time on windows
 	(and a ".so" version on UNIX). It will make the code of the executable smaller.
 
-	To make it works copy all the "*.dll" files in $EIFFEL4\bench\spec\windows\lib\msc
+	To make it works copy all the "*.dll" files in $EIFFEL5\bench\spec\windows\lib\msc
 	into the Windows directory so that the operating system will find them at execution
 	time.
 

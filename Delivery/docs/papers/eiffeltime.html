@@ -43,7 +43,7 @@ Time in your projects.</p>
   <li>Finally EiffelTime has the notion of duration, which is the length of an interval (the meeting will take 2:15). The notion of absolute is
     linked with duration by the use of an origin.</li>
 </ul>
-<p>The library is located in <b>$EIFFEL4/library/time</b>.</p>
+<p>The library is located in <b>$EIFFEL5/library/time</b>.</p>
 <p>You can find a detailed description of EiffelTime here.</p>
 <p>You need EiffelTime to use <a href="eiffelstore.html">EiffelStore</a>
 library.</p>
@@ -55,13 +55,13 @@ comnpilation, use the following instructions to recreate them:</p>
 <ul>
   <li><u><b>On</b></u><u><b> Windows</b></u></li>
 </ul>
-<p>To install EiffelTime, you need to go to the directory $EIFFEL4\library\time\Clib and run
+<p>To install EiffelTime, you need to go to the directory $EIFFEL5\library\time\Clib and run
 <b> make_msc.bat</b> if your C compiler is Microsoft or <b> make_bcc</b> if Borland.&nbsp;</p>
 <ul>
   <li><b><u>On unix</u></b></li>
 </ul>
 <p>Just launch <b>finish_freezing - library</b> in the directory
-$EIFFEL4\library\time\Clib.</p>
+$EIFFEL5\library\time\Clib.</p>
 <h1><a name="HowtoAcefile">How to configure your Ace file</a></h1>
 <p>In order to use EiffelTime in an Eiffel Project, you have to include in your
 project, the correct clusters and external files. Thus, you need to
@@ -70,19 +70,19 @@ configure your Ace file.</p>
 You can get all the information about Ace files <a href="lace.html">here</a>.</p>
 <p>To include the EiffelTime cluster you need to include in your ace file :</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>eiffel_time:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$EIFFEL4/library/time&quot;;<br>
+&quot;$EIFFEL5/library/time&quot;;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 format:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$EIFFEL4/library/time/format&quot;;<br>
+&quot;$EIFFEL5/library/time/format&quot;;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; english:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$EIFFEL4/library/time/format/english&quot;;</b></p>
+&quot;$EIFFEL5/library/time/format/english&quot;;</b></p>
 <p>You also need to include the external object <b>datetime.lib</b> (under
 windows) or <b>libdatetime.a</b> (under unix):</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>object:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib</b> (for
+&quot;$(EIFFEL5)/library/time/spec/$(COMPILER)/lib/datetime.lib</b> (for
 Windows)</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <b>object:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)/library/time/spec/$(PLATFORM)/lib/libdatetime.</b><b>a</b> (for
+&quot;$(EIFFEL5)/library/time/spec/$(PLATFORM)/lib/libdatetime.</b><b>a</b> (for
 Unix)</p>
 <p>You can check the Ace file of our example to see a working Ace file
 using EiffelTime.</p>
@@ -211,7 +211,7 @@ using EiffelTime.</p>
 <p>&nbsp;</p>
 <h1><a name="Example">A working Example</a></h1>
 <p>We developed an example that you can try to see how to use EiffelTime.</p>
-<p>It is located in the directory: <b>$EIFFEL4/examples/time/calculator</b>.</p>
+<p>It is located in the directory: <b>$EIFFEL5/examples/time/calculator</b>.</p>
 <p>To run this example, launch eiffel_time_calendar once you have compiled it.</p>
 <p>Then on the prompt, you can enter : </p>
 <ul>

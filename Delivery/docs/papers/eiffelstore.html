@@ -58,25 +58,25 @@ an Eiffel project.</p>
 <ol>
   <li>A set of general purpose classes designed regardless of any data management system used,
     found in directory
-: $EIFFEL4/library/store/interface, and that you always need in your universe</li>
+: $EIFFEL5/library/store/interface, and that you always need in your universe</li>
   <li>Specific classes, referred to by the interface classes, bridging the application to selected data management systems called
 &quot;handles''.</li>
 </ol>
 <p>&nbsp;<br>
   The set of handles may be found:</p>
 <ul>
-  <li>in directory $EIFFEL4/library/store/dbms</li>
-  <li>in directory $EIFFEL4/library/store/dbms/rdbms/{server_name}&nbsp;<br>
+  <li>in directory $EIFFEL5/library/store/dbms</li>
+  <li>in directory $EIFFEL5/library/store/dbms/rdbms/{server_name}&nbsp;<br>
     where {server_name} correspond to a selected relational database&nbsp;<br>
    management system.</li>
 </ul>
 <p>   Additional support classes are also needed in your universe regardless of the selected handle. They are located in:</p>
 <ul>
-  <li>directory $EIFFEL4/library/store/support and $EIFFEL4/library/store/dbms/support</li>
+  <li>directory $EIFFEL5/library/store/support and $EIFFEL5/library/store/dbms/support</li>
 </ul>
 <p>Example classes are located in:</p>
 <ul>
-  <li>&nbsp;$EIFFEL4/examples/store</li>
+  <li>&nbsp;$EIFFEL5/examples/store</li>
 </ul>
 <p>You can find the user's manual of our previous version of EiffelStore (mostly
 up-to-date) in pdf format by clicking here. (This manual is more useful more experiments
@@ -96,12 +96,12 @@ platforms, due essentially to insufficient number of users.</p>
 library.</p>
 <p>&nbsp;</p>
 <h1><a name="GetStart">Getting Started</a></h1>
-<p>We provide you the necessary files to compile an EiffelStore project. They should be located in the directory $EIFFEL4\library\store\spec\$PLATFORM\lib (for Unix) and $EIFFEL4\library\store\spec\$COMPILER\lib two C libraries objects.</p>
+<p>We provide you the necessary files to compile an EiffelStore project. They should be located in the directory $EIFFEL5\library\store\spec\$PLATFORM\lib (for Unix) and $EIFFEL5\library\store\spec\$COMPILER\lib two C libraries objects.</p>
 
 <p>If the required files are not installed, please the following steps:</p>
 <p>Before starting the compilation of the C libraries:</p>
 <ul>
-  <li>Make sure the environment variables EIFFEL4 and PLATFORM are set.</li>
+  <li>Make sure the environment variables EIFFEL5 and PLATFORM are set.</li>
   <li>Make sure that the Database you have chosen is installed</li>
   <li>Install the C library for the EiffelTime library, click <a href="eiffeltime.html#GetStart">here</a>
     to have the instructions on how to build it.</li>
@@ -113,8 +113,8 @@ for both Windows and Unix:</p>
     (Depending which C compiler you are using msc for
     Microsoft, bcc for Borland) in the following directories:
     <ul>
-      <li>$EIFFEL4/library/store/Clib</li>
-      <li>$EIFFEL4/library/store/dbms/rdbms/(<i>your_Database</i>)/Clib</li>
+      <li>$EIFFEL5/library/store/Clib</li>
+      <li>$EIFFEL5/library/store/dbms/rdbms/(<i>your_Database</i>)/Clib</li>
     </ul>
 <p>Where <i>your_Database</i> is the database you have chosen (Oracle, ODBC,
 Sybase or Ingres)</p>
@@ -125,8 +125,8 @@ Sybase or Ingres)</p>
   <li>On Unix: type &quot;<b>finish_freezing</b> -library&quot; in the following
     directories:</li>
     <ul>
-      <li>$EIFFEL4/library/store/Clib</li>
-      <li>$EIFFEL4/library/store/dbms/rdbms/(<i>your_Database</i>)/Clib&nbsp;</li>
+      <li>$EIFFEL5/library/store/Clib</li>
+      <li>$EIFFEL5/library/store/dbms/rdbms/(<i>your_Database</i>)/Clib&nbsp;</li>
 
 <p>Where <i>your_Database</i> is the database you have chosen (Oracle, ODBC,
 Sybase or Ingres)</p>
@@ -145,20 +145,20 @@ You can get all the information about Ace files <a href="lace.html">here</a>.</p
 <p>To include the EiffelStore cluster you have to :</p>
 <ul>
   <li>Include&nbsp; these clusters one by one:&nbsp;<b><br>
-    estore_support: &quot;$EIFFEL4\library\store\support&quot;;<br>
-    estore_interface: &quot;$EIFFEL4\library\store\interface&quot;;<br>
-    estore_db_support: &quot;$EIFFEL4\library\store\dbms\support&quot;;
+    estore_support: &quot;$EIFFEL5\library\store\support&quot;;<br>
+    estore_interface: &quot;$EIFFEL5\library\store\interface&quot;;<br>
+    estore_db_support: &quot;$EIFFEL5\library\store\dbms\support&quot;;
     </b></li>
 </ul>
 <p>THEN</p>
 <p>You have to include the cluster referring to your database:</p>
 <ul>
-  <li>For Oracle : <b>estore_oracle: &quot;$EIFFEL4\library\store\dbms\rdbms\oracle&quot;;</b></li>
-  <li>For ODBC: <b>estore_odbc: &quot;$EIFFEL4\library\store\dbms\rdbms\odbc&quot;;</b></li>
+  <li>For Oracle : <b>estore_oracle: &quot;$EIFFEL5\library\store\dbms\rdbms\oracle&quot;;</b></li>
+  <li>For ODBC: <b>estore_odbc: &quot;$EIFFEL5\library\store\dbms\rdbms\odbc&quot;;</b></li>
 </ul>
 <p>In order to work with EiffelStore you need the <a href="eiffeltime.html">EiffelTime</a>
 library installed. And so, you need to include its cluster in your Ace file:</p>
-<p><b>time: &quot;$EIFFEL4\library\time&quot;;<br>
+<p><b>time: &quot;$EIFFEL5\library\time&quot;;<br>
 time_format(time): &quot;$\format&quot;;<br>
 english_format(time_format): &quot;$\english&quot;;</b></p>
 <p>You now have to include all the external files.</p>
@@ -168,16 +168,16 @@ english_format(time_format): &quot;$\english&quot;;</b></p>
 <p>You have to include the oci libraries and the C EiffelStore Files. :&nbsp;<br>
 <b>include_path: &quot;$(ORACLE_HOME)\OCI\Include&quot;,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$EIFFEL4\library\store\dbms\rdbms\oracle\Clib&quot;;</b></p>
+&quot;$EIFFEL5\library\store\dbms\rdbms\oracle\Clib&quot;;</b></p>
 <p>And to include the Oci.lib,oracle_store.lib, datetime.lib and support.lib
 objects:<br>
 <b>objects: &quot;$(ORACLE_HOME)\OCI\lib\msvc\oci.lib&quot;,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\oracle_store.lib&quot;,<br>
+&quot;$(EIFFEL5)\library\store\spec\$(COMPILER)\lib\oracle_store.lib&quot;,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\datetime.lib&quot;,<br>
+&quot;$(EIFFEL5)\library\store\spec\$(COMPILER)\lib\datetime.lib&quot;,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\support.lib&quot;;</b></p>
+&quot;$(EIFFEL5)\library\store\spec\$(COMPILER)\lib\support.lib&quot;;</b></p>
 <p><u>Remark:</u> This description is valid only under Windows, if you use Unix, the objects are
 : <b>libsupport.a, liboracle.a, libdatetime.a</b> .<br>
 Moreover, the first command which include the OCI C library should be : <b>&quot;-L$(ORACLE_HOME)/lib
@@ -187,15 +187,15 @@ Moreover, the first command which include the OCI C library should be : <b>&quot
 </ul>
 <p>You only need to include the odbc32.lib,odbc_store.lib, datetime.lib,
 support.lib objects and the C EiffelStore files.<br>
-<b>include_path: &quot;$EIFFEL4\library\store\dbms\rdbms\oracle\Clib&quot;;<br>
+<b>include_path: &quot;$EIFFEL5\library\store\dbms\rdbms\oracle\Clib&quot;;<br>
 </b><br>
 <b>objects: &quot;<i>your_path</i>\odbc32.lib&quot;,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\odbc_store.lib&quot;<br>
+&quot;$(EIFFEL5)\library\store\spec\$(COMPILER)\lib\odbc_store.lib&quot;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\datetime.lib&quot;,<br>
+&quot;$(EIFFEL5)\library\store\spec\$(COMPILER)\lib\datetime.lib&quot;,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&quot;$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\support.lib&quot;;</b></p>
+&quot;$(EIFFEL5)\library\store\spec\$(COMPILER)\lib\support.lib&quot;;</b></p>
 <p>Now your Ace file should be configured. However here you can see the Ace file
 of the Insert example, working with Oracle under Windows. (Check the Ace of the examples if
 you need to see other Ace file).</p>
@@ -211,38 +211,38 @@ you need to see other Ace file).</p>
 <pre align="left"><b>default</b>
 	<b>assertion</b> (all)
 	<b>console_application</b> (yes)
-	<b>precompiled</b> (&quot;$EIFFEL4\precomp\spec\$PLATFORM\base&quot;)
+	<b>precompiled</b> (&quot;$EIFFEL5\precomp\spec\$PLATFORM\base&quot;)
 
 <b>cluster</b>
-	root_cluster: &quot;$EIFFEL4\examples\store\insert&quot;;
-	estore_examples_objects:&quot;$EIFFEL4\examples\store\Utilities&quot;;
-	oracle_handle: &quot;$EIFFEL4\examples\store\Utilities\oracle&quot;;
+	root_cluster: &quot;$EIFFEL5\examples\store\insert&quot;;
+	estore_examples_objects:&quot;$EIFFEL5\examples\store\Utilities&quot;;
+	oracle_handle: &quot;$EIFFEL5\examples\store\Utilities\oracle&quot;;
 
 		<font color="#FF0000">-- EiffelBase</font>
-	<b>all</b> base: &quot;$EIFFEL4/library/base&quot;
+	<b>all</b> base: &quot;$EIFFEL5/library/base&quot;
 		<b>exclude</b>
 			&quot;desc&quot;;&quot;table_eiffel3&quot;
 		<b>end
 
 </b>		<font color="#FF0000">-- EiffelStore
-</font>	estore_support: &quot;$EIFFEL4\library\store\support&quot;;
-	estore_interface: &quot;$EIFFEL4\library\store\interface&quot;;
-	estore_db_support: &quot;$EIFFEL4\library\store\dbms\support&quot;;
-	estore_oracle: &quot;$EIFFEL4\library\store\dbms\rdbms\oracle&quot;;
+</font>	estore_support: &quot;$EIFFEL5\library\store\support&quot;;
+	estore_interface: &quot;$EIFFEL5\library\store\interface&quot;;
+	estore_db_support: &quot;$EIFFEL5\library\store\dbms\support&quot;;
+	estore_oracle: &quot;$EIFFEL5\library\store\dbms\rdbms\oracle&quot;;
 
 <font color="#FF0000">		-- EiffelTime
-</font>	time: &quot;$EIFFEL4\library\time&quot;;
+</font>	time: &quot;$EIFFEL5\library\time&quot;;
 	time_format(time): &quot;$\format&quot;;
 	english_format(time_format): &quot;$\english&quot;;
 
 <b>external</b>
 
-	<b>include_path</b>:&nbsp;&nbsp; 	&quot;$(EIFFEL4)\library\store\dbms\rdbms\oracle\Clib&quot;,
+	<b>include_path</b>:&nbsp;&nbsp; 	&quot;$(EIFFEL5)\library\store\dbms\rdbms\oracle\Clib&quot;,
 			&quot;$(ORACLE_HOME)\OCI\include&quot;
 	<b>object</b>:
-			&quot;$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\support.lib&quot;,
-			&quot;$(EIFFEL4)\library\time\spec\$(COMPILER)\lib\datetime.lib&quot;,
-			&quot;$(EIFFEL4)\library\store\spec\$(COMPILER)\lib\oracle_store.lib&quot;,
+			&quot;$(EIFFEL5)\library\store\spec\$(COMPILER)\lib\support.lib&quot;,
+			&quot;$(EIFFEL5)\library\time\spec\$(COMPILER)\lib\datetime.lib&quot;,
+			&quot;$(EIFFEL5)\library\store\spec\$(COMPILER)\lib\oracle_store.lib&quot;,
 			&quot;$(ORACLE_HOME)\OCI\lib\msvc\oci.lib&quot;
 <b>end</b></pre>
 </td>
@@ -368,7 +368,7 @@ the <a href="#Select"> Select example</a>.</p>
 in this example). Then you can follow all the steps of this example.</p>
 <h1><a name="Examples">Some Working Examples</a></h1>
 <p>We developed 7 Examples that you can try to understand EiffelStore.</p>
-<p>They are in the directory : &quot;$EIFFEL4\examples\store&quot;</p>
+<p>They are in the directory : &quot;$EIFFEL5\examples\store&quot;</p>
 <p>We recommend you to try the examples in the following order:</p>
 <ul>
   <li><a href="#Esql">Esql</a><br>

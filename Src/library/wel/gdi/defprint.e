@@ -18,6 +18,8 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Make a dc associated to the default printer.
+			-- If there is no default printer connected, `exists'
+			-- is equal to False.
 		local
 			loc_driver, loc_device, loc_output: ANY
 		do
@@ -82,13 +84,24 @@ feature -- Basic operations
 			printer.head (cwin_get_profile_string ($windows,
 				$a_device, $options, $a_printer,
 				Max_printer_name))
-			device := printer.substring (1,
-				printer.index_of (Comma_const, 1) - 1)
-			device_count := device.count
-			driver := printer.substring (device_count + 2,
-				printer.index_of (Comma_const, device_count + 2) - 1)
-			output := printer.substring (device_count + driver.count + 3,
-				printer.count)
+			if printer.is_equal (Options_const) then
+				-- There is no default printer connected.
+				-- Let's create empty strings.
+				!! device.make (0)
+				!! driver.make (0)
+				!! output.make (0)
+			else
+				-- There is a default printer connected.
+				-- Let's parse the string and find the device,
+				-- driver and output fields.
+				device := printer.substring (1,
+					printer.index_of (Comma_const, 1) - 1)
+				device_count := device.count
+				driver := printer.substring (device_count + 2,
+					printer.index_of (Comma_const, device_count + 2) - 1)
+				output := printer.substring (device_count + driver.count + 3,
+					printer.count)
+			end
 		end
 
 feature -- Access
@@ -106,8 +119,7 @@ feature {NONE} -- Implementation
 
 	destroy_item is
 		do
-			cwin_delete_dc (item)
-			item := default_pointer
+			delete
 		end
 
 	Windows_const: STRING is "windows"

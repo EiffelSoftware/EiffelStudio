@@ -80,54 +80,38 @@ feature {NONE} -- Initialization
 		local
 			main_running: BOOLEAN
 			gdk_event: POINTER
+			post_launch_actions_called: BOOLEAN
 		do
-			is_in_gtk_main := True
 			from
 			until 
 				is_destroyed
 			loop
 				gdk_event := feature {EV_GTK_EXTERNALS}.gdk_event_get
-				if gdk_event /= default_pointer then
-					-- Insert debugging information regarding gdk event structs.
-					--print ("Gdk event type = " + feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event).out + "%N")
-					feature {EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+				if gdk_event /= default_pointer or else feature {EV_GTK_EXTERNALS}.gtk_events_pending > 0 then
+					if gdk_event /= default_pointer then
+						--print ("Gdk event type = " + feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event).out + "%N")
+						feature {EV_GTK_EXTERNALS}.gtk_main_do_event (gdk_event)
+					else
+						main_running := feature {EV_GTK_EXTERNALS}.g_main_iteration (False)
+					end
 				else
-					if feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0 then
 							-- There are no more events to handle so we must be in an idle state, therefore call idle actions.
 							-- All pending resizing has been performed at this point.
-						call_idle_actions
-					end
-						-- Block loop by running a gmain loop iteration with blocking enabled.
-					main_running := feature {EV_GTK_EXTERNALS}.g_main_iteration (True)
-				end
+						if not post_launch_actions_called and then feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0 then
+							interface.post_launch_actions.call (Void)
+							post_launch_actions_called := True
+						end
+						if not internal_idle_actions.is_empty then
+							internal_idle_actions.call (Void)
+						elseif idle_actions_internal /= Void and then not idle_actions_internal.is_empty then
+							idle_actions_internal.call (Void)
+						else
+								-- Block loop by running a gmain loop iteration with blocking enabled.
+							main_running := feature {EV_GTK_EXTERNALS}.g_main_iteration (True)
+						end			
+				end				
 			end
-			is_in_gtk_main := False
 		end
-		
-	call_idle_actions is
-			-- Call idle actions sequences
-		do
-				-- We do not want nested idle actions called.
-			if not idle_actions_being_called then
-				if not post_launch_actions_called then
-					interface.post_launch_actions.call (Void)
-					post_launch_actions_called := True
-				end
-				idle_actions_being_called := True
-				if not internal_idle_actions.is_empty then
-					internal_idle_actions.call (Void)
-				elseif idle_actions_internal /= Void and then not idle_actions_internal.is_empty then
-					idle_actions_internal.call (Void)
-				end
-				idle_actions_being_called := False
-			end	
-		end
-		
-	idle_actions_being_called: BOOLEAN
-		-- Are the idle_actions in the process of being called?
-		
-	post_launch_actions_called: BOOLEAN
-		-- Have the post launch actions been called?
 		
 feature {EV_ANY_IMP} -- Access
 		
@@ -380,9 +364,6 @@ feature -- Implementation
 		do
 			is_in_docking := False
 		end
-
-	is_in_gtk_main: BOOLEAN
-			-- Is execution currently in gtk_main?
 
 	keyboard_modifier_mask: INTEGER is
 			-- Mask representing current keyboard modifiers state.

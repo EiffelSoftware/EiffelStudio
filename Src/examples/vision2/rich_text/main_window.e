@@ -109,10 +109,20 @@ feature {NONE} -- Initialization
 			accelerator.actions.extend (agent random_test)
 			
 				-- Initialize a test that checks the contents of each line.
-			create timer.make_with_interval (2000)
-			timer.actions.extend (agent check_line_positions)
+		--	create timer.make_with_interval (2000)
+		--	timer.actions.extend (agent check_line_positions)
 			show_actions.extend (agent window_shown)
+			
+			rich_text.vertical_scroll_actions.force_extend (agent show_position)
+			rich_text.horizontal_scroll_actions.force_extend (agent show_position)
 		end
+		
+	show_position is
+			--
+		do
+			general_label.set_text (rich_text.x_offset.out + " " + rich_text.y_offset.out)
+		end
+		
 		
 	window_shown is
 			-- `Current' has been shown. Perform necessary processing.
@@ -138,7 +148,7 @@ feature {NONE} -- Event handling
 					font.set_weight ((create {EV_FONT_CONSTANTS}).weight_regular)
 				end	
 				format.set_font (font)
-				create char_info.make_with_values (False, True, False, False, False, False, False, False, False)
+				create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -166,7 +176,7 @@ feature {NONE} -- Event handling
 				font.preferred_families.wipe_out
 				font.preferred_families.extend (font_selection.selected_item.text)
 				format.set_font (font)
-				create char_info.make_with_values (True, False, False, False, False, False, False, False, False)
+				create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -197,7 +207,7 @@ feature {NONE} -- Event handling
 						font := format.font
 						font.set_height (size)
 						format.set_font (font)
-						create char_info.make_with_values (False, False, False, True, False, False, False, False, False)
+						create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height)
 						rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 					end
 				end
@@ -234,7 +244,7 @@ feature {NONE} -- Event handling
 					font.set_shape (feature {EV_FONT_CONSTANTS}.shape_regular)
 				end
 				format.set_font (font)
-				create char_info.make_with_values (False, False, True, False, False, False, False, False, False)
+				create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -266,7 +276,7 @@ feature {NONE} -- Event handling
 				format := rich_text.character_format (rich_text.selection_start)
 				if color_dialog.selected_button.is_equal ("OK") then
 					format.set_color (color_dialog.color)
-					create char_info.make_with_values (False, False, False, False, True, False, False, False, False)
+					create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.color)
 					rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 				end
 			else
@@ -294,7 +304,7 @@ feature {NONE} -- Event handling
 				format := rich_text.character_format (rich_text.selection_start)
 				if color_dialog.selected_button.is_equal ("OK") then
 					format.set_background_color (color_dialog.color)
-					create char_info.make_with_values (False, False, False, False, False, True, False, False, False)
+					create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.background_color)
 					rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 				end
 			else
@@ -311,20 +321,18 @@ feature {NONE} -- Event handling
 		local
 			format: EV_CHARACTER_FORMAT
 			char_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
-			underlined: BOOLEAN
 			effects: EV_CHARACTER_FORMAT_EFFECTS
 		do
 			if rich_text.has_selection then
 				format := rich_text.character_format (rich_text.selection_start)
 				effects := format.effects
-				underlined := effects.is_underlined
 				if underlined_button.is_selected then
 					effects.enable_underlined
 				else	
 					effects.disable_underlined
 				end
 				format.set_effects (effects)
-				create char_info.make_with_values (False, False, False, False, False, False, False, True, False)
+				create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -357,7 +365,7 @@ feature {NONE} -- Event handling
 					effects.disable_striked_out
 				end
 				format.set_effects (effects)
-				create char_info.make_with_values (False, False, False, False, False, False, True, False, False)
+				create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -414,7 +422,7 @@ feature {NONE} -- Event handling
 			paragraph := rich_text.paragraph_format (rich_text.caret_position)
 			paragraph.enable_left_alignment
 			if rich_text.has_selection then
-				create paragraph_info.make_with_values (True, False, False, False, False)
+				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
 				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
 					rich_text.line_number_from_position (rich_text.selection_end),
 					paragraph,
@@ -440,7 +448,7 @@ feature {NONE} -- Event handling
 			paragraph := rich_text.paragraph_format (rich_text.caret_position)
 			paragraph.enable_center_alignment
 			if rich_text.has_selection then
-				create paragraph_info.make_with_values (True, False, False, False, False)
+				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
 				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
 					rich_text.line_number_from_position (rich_text.selection_end),
 					paragraph,
@@ -466,7 +474,7 @@ feature {NONE} -- Event handling
 			paragraph := rich_text.paragraph_format (rich_text.caret_position)
 			paragraph.enable_right_alignment
 			if rich_text.has_selection then
-				create paragraph_info.make_with_values (True, False, False, False, False)
+				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
 				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
 					rich_text.line_number_from_position (rich_text.selection_end),
 					paragraph,
@@ -492,7 +500,7 @@ feature {NONE} -- Event handling
 			paragraph := rich_text.paragraph_format (rich_text.caret_position)
 			paragraph.enable_justification
 			if rich_text.has_selection then
-				create paragraph_info.make_with_values (True, False, False, False, False)
+				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
 				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
 					rich_text.line_number_from_position (rich_text.selection_end),
 					paragraph,
@@ -614,22 +622,18 @@ feature {NONE} -- Implementation
 				if paragraph_format.is_left_aligned then
 					left_alignment_button.select_actions.block
 					unselect_all_buttons_except (left_alignment_button)
-					general_label.set_text ("Paragraph formatting left aligned")
 					left_alignment_button.select_actions.resume
 				elseif paragraph_format.is_center_aligned then
 					center_alignment_button.select_actions.block
 					unselect_all_buttons_except (center_alignment_button)
-					general_label.set_text ("Paragraph formatting center aligned")
 					center_alignment_button.select_actions.resume
 				elseif paragraph_format.is_right_aligned then
 					right_alignment_button.select_actions.block
 					unselect_all_buttons_except (right_alignment_button)
-					general_label.set_text ("Paragraph formatting right aligned")
 					right_alignment_button.select_actions.resume
 				elseif paragraph_format.is_justified then
 					right_alignment_button.select_actions.resume
 					unselect_all_buttons_except (justified_button)
-					general_label.set_text ("Paragraph formatting justified")
 					right_alignment_button.select_actions.resume
 				end
 				left_margin.change_actions.block
@@ -832,10 +836,6 @@ feature {NONE} -- Implementation
 			-- Update color displayed in color tool bar button based on `a_color'.
 		require
 			color_not_void: a_color /= Void
-		local
-			pixmap: EV_PIXMAP
-			text_size: TUPLE [INTEGER, INTEGER]
-			text_width, text_height: INTEGER
 		do
 			redraw_button (color_button, a_color, False, "Color")
 			last_displayed_color := a_color
@@ -846,10 +846,6 @@ feature {NONE} -- Implementation
 			-- Update color displayed in background color tool bar button based on `a_color'.
 		require
 			color_not_void: a_color /= Void
-		local
-			pixmap: EV_PIXMAP
-			text_size: TUPLE [INTEGER, INTEGER]
-			text_width, text_height: INTEGER
 		do
 			redraw_button (background_color_button, a_color, False, "B Color")
 			last_displayed_background_color := a_color
@@ -884,10 +880,6 @@ feature {NONE} -- Implementation
 
 	update_color_as_undefined is
 			-- Update color to display in color tool bar button as undefined
-		local
-			pixmap: EV_PIXMAP
-			text_size: TUPLE [INTEGER, INTEGER]
-			text_width, text_height: INTEGER
 		do
 			redraw_button (color_button, Void, True, "Color")
 			color_undefined := True
@@ -895,10 +887,6 @@ feature {NONE} -- Implementation
 		
 	update_background_color_as_undefined is
 			-- Update color to display in background color tool bar button as undefined.
-		local
-			pixmap: EV_PIXMAP
-			text_size: TUPLE [INTEGER, INTEGER]
-			text_width, text_height: INTEGER
 		do
 			redraw_button (background_color_button, Void, True, "B Color")
 			background_color_undefined := True
@@ -995,7 +983,7 @@ feature {NONE} -- Implementation
 			if rich_text.has_selection then
 				create paragraph
 				paragraph.set_left_margin (a_value)
-				create paragraph_info.make_with_values (False, True, False, False, False)
+				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.left_margin)
 				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
 						rich_text.line_number_from_position (rich_text.selection_end),
 						paragraph,
@@ -1019,7 +1007,7 @@ feature {NONE} -- Implementation
 			if rich_text.has_selection then
 				create paragraph
 				paragraph.set_right_margin (a_value)
-				create paragraph_info.make_with_values (False, False, True, False, False)
+				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.right_margin)
 				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
 						rich_text.line_number_from_position (rich_text.selection_end),
 						paragraph,
@@ -1042,7 +1030,7 @@ feature {NONE} -- Implementation
 			if rich_text.has_selection then
 				create paragraph
 				paragraph.set_top_spacing (a_value)
-				create paragraph_info.make_with_values (False, False, False, True, False)
+				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.top_spacing)
 				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
 						rich_text.line_number_from_position (rich_text.selection_end),
 						paragraph,
@@ -1065,7 +1053,7 @@ feature {NONE} -- Implementation
 			if rich_text.has_selection then
 				create paragraph
 				paragraph.set_top_spacing (a_value)
-				create paragraph_info.make_with_values (False, False, False, False, True)
+				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.bottom_spacing)
 				rich_text.modify_paragraph (rich_text.line_number_from_position (rich_text.selection_start),
 						rich_text.line_number_from_position (rich_text.selection_end),
 						paragraph,
@@ -1090,7 +1078,7 @@ feature {NONE} -- Implementation
 				effects := format.effects
 				effects.set_vertical_offset (a_value)
 				format.set_effects (effects)
-				create char_info.make_with_values (False, False, False, False, False, False, False, False, True)
+				create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -1174,31 +1162,45 @@ feature {NONE} -- To be removed
 
 	random_test is
 			-- A feature connected to an accelerator for testing purposes.
-		local
-			char: EV_CHARACTER_FORMAT
-			format: EV_PARAGRAPH_FORMAT
-			counter: INTEGER
 		do
-			--| FIXME remove this.
-			--rich_text.select_region (5, 8)
-			--char := rich_text.character_format (1)
---			from
---				counter := 1
---			until
---				counter > 100
---			loop
---				create format
---				if counter \\ 2 = 1 then
---					format.enable_left_alignment
---				else
---					format.enable_center_alignment
---				end
---				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), format)
---				(create {EV_ENVIRONMENT}).application.process_events
---				counter := counter + 1
---			end
-			format := rich_text.paragraph_format (10)
+			rich_text.perform_something
+			create timeout.make_with_interval (10)
+			timeout.actions.extend (agent scroll_area)
+--			--| FIXME remove this.
+--			--rich_text.select_region (5, 8)
+--			--char := rich_text.character_format (1)
+----			from
+----				counter := 1
+----			until
+----				counter > 100
+----			loop
+----				create format
+----				if counter \\ 2 = 1 then
+----					format.enable_left_alignment
+----				else
+----					format.enable_center_alignment
+----				end
+----				rich_text.format_paragraph (rich_text.line_number_from_position (rich_text.selection_start), rich_text.line_number_from_position (rich_text.selection_end), format)
+----				(create {EV_ENVIRONMENT}).application.process_events
+----				counter := counter + 1
+----			end
+--		--	format := rich_text.paragraph_format (10)
 		end
+		
+	scroll_area is
+			--
+		do
+			rich_text.set_y_offset (offset)
+			offset := offset + 5
+			if offset > 500 then
+				offset := 0
+				timeout.destroy
+			end
+		end
+	
+	offset: INTEGER
+	
+			timeout: EV_TIMEOUT
 		
 	accelerator: EV_ACCELERATOR
 

@@ -6,6 +6,9 @@ indexing
 deferred class
 	CONSUMED_ENTITY
 
+inherit
+	COMPARABLE
+
 feature {NONE} -- Initialization
 
 	make (en: STRING; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE) is
@@ -112,6 +115,19 @@ feature -- Access
 	is_prefix: BOOLEAN is
 			-- Is function a prefix feature?
 		do
+		end
+		
+	is_constructor: BOOLEAN is
+			-- Is constructor feature?
+		do
+		end
+
+feature -- Comparison
+
+	infix "<" (other: like Current): BOOLEAN is
+			-- Is current object less than `other'?
+		do
+			Result := eiffel_name < other.eiffel_name
 		end
 		
 feature -- ConsumerWrapper functions

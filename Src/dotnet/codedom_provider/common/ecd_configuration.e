@@ -4,21 +4,25 @@ indexing
 					File content should look like:
 
 					<?xml version="1.0"?>
-					<general>
-						<crash_on_error>False</crash_on_error>
-						<log_level>1</log_level>
-						<log_source_name>Eiffel CodeDom Provider</log_source_name>
-						<log_server_name>localhost</log_server_name>
-						<log_name>Application</log_name>
-					</general>
-					<compiler>
-						<default_root_class>ANY</default_root_class>
-						<default_system_name>generated</default_system_name>
-						<precompile></precompile>
-					</compiler>
+					<configuration>
+						<general>
+							<crash_on_error>False</crash_on_error>
+							<log_level>1</log_level>
+							<log_source_name>Eiffel CodeDom Provider</log_source_name>
+							<log_server_name>localhost</log_server_name>
+							<log_name>Eiffel CodeDom Provider</log_name>
+						</general>
+						<compiler>
+							<default_root_class>ANY</default_root_class>
+							<precompile></precompile>
+						</compiler>
+					</configuration>
 					]"
 	date: "$Date$"
 	revision: "$Revision$"
+	note: "Class ECDM_CONFIGURATION from the Eiffel Codedom Provider Manager application%
+			%inherits from this class. Any changes made to the schema of the configuration%
+			%file needs to be propagated to ECDM_CONFIGURATION."
 
 class
 	ECD_CONFIGURATION
@@ -34,11 +38,6 @@ inherit
 			{NONE} all
 		end
 
-	ECD_REGISTRY_KEYS
-		export
-			{NONE} all
-		end
-
 create
 	reload
 	
@@ -48,44 +47,12 @@ feature {NONE} -- Initialization
 			-- Try reading settings from config file, use default values if
 			-- config file is not found or reading fails.
 		local
-			l_retried: BOOLEAN
-			l_xml_reader: XML_XML_TEXT_READER
-			l_value_name, l_path: STRING
-			l_key: REGISTRY_KEY
+			l_path: STRING
 		do
-			if not l_retried then
-				l_key := feature {REGISTRY}.local_machine.open_sub_key (Configurations_key, False)
-				if l_key = Void then
-					(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_configs, [])
-				else
-					l_path ?= l_key.get_value (feature {SYSTEM_DLL_PROCESS}.get_current_process.process_name)
-					if l_path = Void then
-						(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_config, [feature {SYSTEM_DLL_PROCESS}.get_current_process.process_name])
-						l_path ?= l_key.get_value (Void)
-						if l_path = Void then
-							(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Missing_default_config, [feature {SYSTEM_DLL_PROCESS}.get_current_process.process_name])
-						end
-					end
-					if l_path /= Void then
-						create l_xml_reader.make_from_url (l_path)
-						from
-						until
-							not l_xml_reader.read					
-						loop
-							if l_xml_reader.node_type = feature {XML_XML_NODE_TYPE}.Element then
-								l_value_name := l_xml_reader.name
-							elseif l_xml_reader.node_type = feature {XML_XML_NODE_TYPE}.Text then
-								config_values.force (l_xml_reader.value, l_value_name)
-							end
-						end
-						l_xml_reader.close
-					end
-				end
+			l_path := (create {ECD_REGISTRY_SETTINGS}).current_process_config_path
+			if l_path /= Void and then (create {RAW_FILE}.make (l_path)).exists then
+				load (l_path)
 			end
-		rescue
-			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
-			l_retried := True
-			retry
 		end
 	
 feature -- Access
@@ -130,14 +97,6 @@ feature -- Access
 			non_void_log_name: Result /= Void
 		end
 
-	default_system_name: STRING is
-			-- Default output assembly name
-		do
-			Result := config_values.item ("default_system_name")
-		ensure
-			non_void_default_output_assembly: Result /= Void
-		end
-
 	precompile: STRING is
 			-- Precompile path if any
 		do
@@ -148,31 +107,72 @@ feature -- Access
 			-- Default root class name
 		do
 			Result := config_values.item ("default_root_class")
-		ensure
-			non_void_default_root_class: Result /= Void
 		end
-		
+
+feature -- Basic Operations
+
+	load (a_config_file: STRING) is
+			-- Load configuration file `a_config_file'.
+		require
+			non_void_config_file: a_config_file /= Void
+			valid_config_file: (create {RAW_FILE}.make (a_config_file)).exists
+		local
+			l_xml_reader: XML_XML_TEXT_READER
+			l_value_name: STRING
+			l_retried: BOOLEAN
+		do
+			if not l_retried then
+				create l_xml_reader.make_from_url (a_config_file)
+				from
+				until
+					not l_xml_reader.read					
+				loop
+					if l_xml_reader.node_type = feature {XML_XML_NODE_TYPE}.Element then
+						l_value_name := l_xml_reader.name
+					elseif l_xml_reader.node_type = feature {XML_XML_NODE_TYPE}.Text then
+						config_values.force (l_xml_reader.value, l_value_name)
+					end
+				end
+				l_xml_reader.close
+			end
+		rescue
+			(create {ECD_EVENT_MANAGER}).raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			l_retried := True
+			retry
+		end
+
 feature {NONE} -- Implementation
 
 	config_values: HASH_TABLE [STRING, STRING] is
 			-- Configuration values
-		once
-			create Result.make (10)
-			Result.extend ("False", "crash_on_error")
-			Result.extend ("1", "log_level")
-			Result.extend ("Eiffel CodeDom Provider", "log_source_name")
-			Result.extend ("localhost", "log_server_name")
-			Result.extend ("Application", "log_name")
-			Result.extend ("generated", "default_system_name")
-			Result.extend ("NONE", "default_root_class")
-			reload
+		do
+			if internal_config_values = Void then
+				initialize_default_values
+				reload
+			end
+			Result := internal_config_values
 		end
+
+	initialize_default_values is
+			-- Initialize fields to default values.
+		do
+			create internal_config_values.make (10)
+			internal_config_values.extend ("False", "crash_on_error")
+			internal_config_values.extend ("1", "log_level")
+			internal_config_values.extend ("Application", "log_source_name")
+			internal_config_values.extend ("localhost", "log_server_name")
+			internal_config_values.extend ("Application", "log_name")
+			internal_config_values.extend ("generated", "default_system_name")
+			internal_config_values.extend ("NONE", "default_root_class")
+		end
+		
+	internal_config_values: HASH_TABLE [STRING, STRING]
+			-- Internal object for once per object implementation
 
 invariant
 	has_log_source_name: log_source_name /= Void
 	has_log_server_name: log_server_name /= Void
 	has_log_name: log_name /= Void
-	has_default_system_name: default_system_name /= Void
 
 end -- class ECD_SHARED_CONFIG
 

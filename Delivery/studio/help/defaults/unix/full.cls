@@ -6,10 +6,8 @@ indexing
 
 $class_typeclass
 	$classname
-$inheritance_clause$creation_clause
-feature -- Initialization
 
-feature -- Access
+$inheritance_clause$creation_clause$initialization_clausefeature -- Access
 
 feature -- Measurement
 

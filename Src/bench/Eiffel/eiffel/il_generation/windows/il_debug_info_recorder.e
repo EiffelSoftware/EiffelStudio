@@ -574,7 +574,6 @@ feature {NONE} -- Record processing
 			a_feat_not_void: a_feature /= Void
 			token_positive: a_class_token > 0 and then a_feature_token > 0
 		local
-			l_module_key_name: STRING
 			l_info_from_module: IL_DEBUG_INFO_FROM_MODULE
 			l_info_from_class_type: IL_DEBUG_INFO_FROM_CLASS_TYPE
 		do

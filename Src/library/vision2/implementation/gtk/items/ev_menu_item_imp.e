@@ -15,34 +15,25 @@ inherit
 
 	EV_ITEM_IMP
 		undefine
-			set_label_widget,
-			label_widget
+			pixmap_size_ok
 		redefine
-			add_activate_command
+			add_activate_command,
+			add_pixmap
 		end
 
 	EV_MENU_ITEM_CONTAINER_IMP
-		rename
-			make as old_make,
-			interface as widget_interface,
-			set_interface as set_widget_interface
-		end
 
-	EV_PIXMAPABLE_IMP
-		rename
-			make as old_make,
-			interface as widget_interface,
-			set_interface as set_widget_interface
-		undefine
-			pixmap_size_ok
-		redefine
-			add_pixmap
-		end
-	
 creation
+	make,
 	make_with_text
 
 feature {NONE} -- Initialization
+
+	make (par: EV_MENU_ITEM_CONTAINER) is
+			-- Create menu item
+		do
+			make_with_text (par, "")
+		end		
 	
 	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
 			-- Create menu item
@@ -66,7 +57,7 @@ feature {NONE} -- Initialization
 feature -- Event : command association
 
 	add_activate_command ( command: EV_COMMAND; 
-			       arguments: EV_ARGUMENTS) is
+			       arguments: EV_ARGUMENT) is
 			-- Add 'command' to the list of commands to be
 			-- executed when the menu item is activated
 			-- The toggle event doesn't work on gtk, then

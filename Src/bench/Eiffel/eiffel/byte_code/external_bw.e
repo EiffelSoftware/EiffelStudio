@@ -85,7 +85,10 @@ feature -- Code generation
 			buf := buffer
 
 			if is_static_call then
-				l_typ := static_class_type
+				l_typ ?= real_type (static_class_type)
+				check
+					l_typ_not_void: l_typ /= Void
+				end
 			else
 				l_typ := typ
 			end
@@ -119,7 +122,7 @@ feature -- Code generation
 			buf.putstring (gc_comma)
 			if not is_nested then
 				if is_static_call then
-					buf.putint (System.class_of_id (written_in).types.first.type_id - 1)
+					buf.putint (l_typ.associated_class_type.type_id - 1)
 				else
 					context.generate_current_dtype
 				end

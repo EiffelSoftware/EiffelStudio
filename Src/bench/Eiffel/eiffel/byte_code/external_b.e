@@ -523,9 +523,12 @@ feature -- Byte code generation
 
 	make_static_call_byte_code (ba: BYTE_ARRAY) is
 			-- Add dynamic type of parent.
+		local
+			l_typ: like static_class_type
 		do
 			if is_static_call then
-				ba.append_short_integer (static_class_type.associated_class_type.static_type_id - 1)
+				l_typ ?= real_type (static_class_type)
+				ba.append_short_integer (l_typ.associated_class_type.static_type_id - 1)
 			else
 				ba.append_short_integer (-1)
 			end
@@ -535,12 +538,15 @@ feature -- Byte code generation
 			-- Generate byte code for a feature call. If not `flag', generate
 			-- an invariant check before the call.
 			-- Doesn't process the parameters
+		local
+			l_typ: like static_class_type
 		do
 			if is_static_call then
 					-- Push a fake Object on execution stack.
 				ba.append (bc_current)
+				l_typ ?= real_type (static_class_type)
 				make_end_byte_code (ba, flag,
-					real_feature_id, static_class_type.associated_class_type.static_type_id - 1)
+					real_feature_id, l_typ.associated_class_type.static_type_id - 1)
 			else
 				Precursor {CALL_ACCESS_B} (ba, flag)
 			end
@@ -654,7 +660,11 @@ feature -- Inlining
 				parent := nested_b;
 
 				Result := nested_b;
-			end 
+			end
+			type := real_type (type)
+			if static_class_type /= Void then
+				static_class_type ?= real_type (static_class_type)
+			end
 			if parameters /= Void then
 				parameters := parameters.pre_inlined_code
 			end
@@ -663,6 +673,10 @@ feature -- Inlining
 	inlined_byte_code: like Current is
 		do
 			Result := Current
+			type := real_type (type)
+			if static_class_type /= Void then
+				static_class_type ?= real_type (static_class_type)
+			end
 			if parameters /= Void then
 				parameters := parameters.inlined_byte_code
 			end

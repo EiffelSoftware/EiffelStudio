@@ -106,18 +106,20 @@ extern int fcount;
  *	RTAUP(cast,x,y,val,i) puts `val' at position `i' from `x' of type `cast' (unsafe version)
  */
 
-#define RTADTYPE(x) int CAT2(x,_dtype)
+#define RTADTYPE(x) int CAT2(x,_dtype) = 0
 
-#define RTADOFFSETS(x) long CAT2(x,_area_offset); long CAT2(x,_lower_offset)
+#define RTADOFFSETS(x) long CAT2(x,_area_offset) = 0; long CAT2(x,_lower_offset) = 0
 
 #define RTAD(x) char CAT2(x,_freeze) = 0; char* CAT2(x,_area)
 
 #define RTAITYPE(x,y) CAT2(x,_dtype) = Dtype(y)
 
 #define RTAIOFFSETS(x,y) \
-	RTAITYPE(x,y); \
-	CAT2(x,_area_offset) = (eif_area_table) [CAT2(x,_dtype)]; \
-	CAT2(x,_lower_offset) = (eif_lower_table) [CAT2(x,_dtype)]
+	if (y) { \
+		RTAITYPE(x,y); \
+		CAT2(x,_area_offset) = (eif_area_table) [CAT2(x,_dtype)]; \
+		CAT2(x,_lower_offset) = (eif_lower_table) [CAT2(x,_dtype)]; \
+	}
 
 #define RTAUA(cast,x,y,i) \
 	*(cast*)(*(char**)(y+CAT2(x,_area_offset))+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(cast))
@@ -126,7 +128,7 @@ extern int fcount;
 	*(cast*)(*(char**)(y+CAT2(x,_area_offset))+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(cast)) = val
 
 #define RTAI(cast,x,y) \
-	{ \
+	if (y) { \
 		RTAITYPE(x,y); \
 		CAT2(x,_area) = *(char**) ((y)+ (eif_area_table) [CAT2(x,_dtype)]); \
 		if (!(HEADER(CAT2(x,_area))->ov_size & B_C)) { \
@@ -137,7 +139,7 @@ extern int fcount;
 	}
 
 #define RTAIOFF(cast,x,y) \
-	{ \
+	if (y) { \
 		RTAITYPE(x,y); \
 		CAT2(x,_area) = *(char**) ((y)+CAT2(x,_area_offset)); \
 		if (!(HEADER(CAT2(x,_area))->ov_size & B_C)) { \

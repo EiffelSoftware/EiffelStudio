@@ -12,7 +12,7 @@ inherit
 
 	EV_PRIMITIVE_IMP
 
-	EV_TREE_ITEM_CONTAINER_IMP
+	EV_TREE_ITEM_HOLDER_IMP
 
 creation
 	make

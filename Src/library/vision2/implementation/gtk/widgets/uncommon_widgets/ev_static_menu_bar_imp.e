@@ -13,7 +13,7 @@ inherit
 			parent_imp
 		end
 
-	EV_MENU_CONTAINER_IMP
+	EV_MENU_HOLDER_IMP
 		rename
 			make as old_make
 		redefine

@@ -631,12 +631,16 @@ feature -- Access
 						if l_lines.item.count >= ensure_desc.count and then l_lines.item.substring (1, ensure_desc.count).is_equal (ensure_desc) then
 							l_stop := True
 						else
-							l_lines.item.prune_all_leading (' ')
-							Result.append (l_lines.item)
-							l_lines.forth
-							if not l_lines.after and then l_lines.item.item (l_lines.item.count) = ' ' then
-								Result.append_character ('%N')	
+							if l_lines.item.count >= require_else_desc.count and then l_lines.item.substring (1, require_else_desc.count).is_equal (require_else_desc) then
+								Result.append ("%N- require else -%N")
+							else
+								l_lines.item.prune_all_leading (' ')
+								Result.append (l_lines.item)
+								if not l_lines.islast then
+									Result.append_character ('%N')	
+								end
 							end
+							l_lines.forth
 						end
 					elseif not l_stop then
 						if Result = Void and then l_lines.item.count >= require_desc.count and then l_lines.item.substring (1, require_desc.count).is_equal (require_desc) then
@@ -671,12 +675,16 @@ feature -- Access
 					l_lines.after
 				loop
 					if Result /= Void then
-						l_lines.item.prune_all_leading (' ')
-						Result.append (l_lines.item)
-						l_lines.forth
-						if not l_lines.after and then l_lines.item.item (l_lines.item.count) = ' ' then
-							Result.append_character ('%N')	
+						if l_lines.item.count >= ensure_then_desc.count and then l_lines.item.substring (1, ensure_then_desc.count).is_equal (ensure_then_desc) then
+							Result.append ("%N- ensure then -%N")
+						else
+							l_lines.item.prune_all_leading (' ')
+							Result.append (l_lines.item)
+							if not l_lines.islast then
+								Result.append_character ('%N')	
+							end
 						end
+						l_lines.forth
 					elseif l_lines.item.count >= ensure_desc.count and then l_lines.item.substring (1, ensure_desc.count).is_equal (ensure_desc) then
 						create Result.make (350)
 						l_lines.forth
@@ -795,9 +803,15 @@ feature {NONE} -- Implementation
 
 	require_desc: STRING is "  require"
 			-- require part of description to parse
+
+	require_else_desc: STRING is "  require else"
+			-- require part of description to parse
 		
 	ensure_desc: STRING is "  ensure"
 			-- ensure part of description to parse
+
+	ensure_then_desc: STRING is "  ensure then"
+			-- ensure then part of description to parse
 			
 	internal_description: like description
 			-- cached description

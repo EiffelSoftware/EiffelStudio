@@ -92,11 +92,6 @@ feature {NONE} -- Recording information for eiffelcase
 				parents.forth
 			end
 
-debug ("CASE")
-	io.error.putstring ("%T%T%TParent: ");
-	io.error.putstring (System.class_of_id (no_repeated_parents.item).name);
-	io.error.new_line;
-end
 			if not p_l.empty then
 				s_class_data.set_heir_links (p_l);
 			end
@@ -164,22 +159,6 @@ end
 							temp.append (renaming.key_for_iteration);
 							rename_data.set_free_form_text (renaming.key_for_iteration);
 						end;
-debug ("CASE")
-	io.error.putstring ("%T%TRenamed feature: old - ");
-	io.error.putstring (renaming.key_for_iteration);
-	io.error.putstring (" new - ");
-	io.error.putstring (renaming.item_for_iteration);
-	if origin_feature = Void then
-		io.error.putstring (".NOT Found.");
-	else
-		io.error.putstring (".Found.");
-	end
-	if found then
-		io.error.putstring ("Redefined");
-		io.error.putstring ("Not Redefined");
-	end
-	io.error.new_line;
-end;
 						if not found then
 								-- This means that the feature is not redefined.
 							!! temp.make (0);
@@ -201,11 +180,11 @@ end;
 						end;
 						feature_data.set_rename_clause (rename_data);
 						renaming.forth
-					end;
-				end;
+					end
+				end
 				parents.forth
-			end;
-		end;
+			end
+		end
 
 	record_redefinitions (parents: PARENT_LIST) is
 			-- Record redefinitions for class `classc' into `s_class_data'.
@@ -247,11 +226,6 @@ end;
 							-- the user modified the class the Current AST structure
 							-- may not match the compiler structures
 							feature_data.set_is_redefined
-debug ("CASE")
-	io.error.putstring ("%T%TRedefine feature: ");
-	io.error.putstring (feature_data.name);
-	io.error.new_line;
-end;
 						end;
 						redefining.forth
 					end;

@@ -45,6 +45,18 @@ feature -- Status report
 			Result := c_gtk_table_columns (widget)
 		end
 
+	row_spacing: INTEGER is
+			-- Spacing between two rows
+		do
+			Result := c_gtk_table_row_spacing (widget)
+		end
+	
+	column_spacing: INTEGER is
+			-- Spacing between two columns
+		do
+			Result := c_gtk_table_column_spacing (widget)
+		end
+
 feature -- Status settings
 
 	set_homogeneous (flag: BOOLEAN) is

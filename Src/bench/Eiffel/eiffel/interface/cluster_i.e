@@ -1133,8 +1133,7 @@ end;
 			a_class, ov_class: CLASS_I;
 			ovcc: like classes
 		do
-				-- Precompiled classes cannot be overriden.
-			if not is_precompiled and then ovc.classes /= Void then
+			if ovc.classes /= Void then
 				from
 					ovcc := ovc.classes
 					ovcc.start
@@ -1146,13 +1145,17 @@ end;
 							-- Class is overridden; remove it and keep track of
 							-- its previous location
 						a_class := classes.found_item
-						classes.remove (a_class.name);
-						ov_class.set_old_location_info (Current, a_class.base_name)
-						ov_class.reset_class_c_information (a_class.compiled_class)
-						if a_class.is_compiled then
-								-- Add class to system only if it was already part
-								-- of system before.
-							Workbench.change_class (ov_class)
+							-- We only process precompiled clusters only if they contain
+							-- a non-compiled class.
+						if not is_precompiled or else not a_class.is_compiled then
+							classes.remove (a_class.name);
+							ov_class.set_old_location_info (Current, a_class.base_name)
+							ov_class.reset_class_c_information (a_class.compiled_class)
+							if a_class.is_compiled then
+									-- Add class to system only if it was already part
+									-- of system before.
+								Workbench.change_class (ov_class)
+							end
 						end
 					end
 					ovcc.forth;

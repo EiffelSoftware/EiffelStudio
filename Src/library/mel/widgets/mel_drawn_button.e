@@ -21,12 +21,13 @@ inherit
 			make, create_callback_struct
 		end
 
-	--MEL_DRAWING_FUNCTIONS
+	MEL_DRAWING
 
 creation
-	make
+	make,
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif draw button widget.
@@ -36,7 +37,7 @@ feature {NONE} -- Initialization
 			parent := a_parent;	
 			widget_name := a_name.to_c;
 			screen_object := xm_create_drawn_button (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage

@@ -299,7 +299,6 @@ feature {EV_ANY_I} -- Implementation
 			a: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE]
 			widget_x, widget_y: INTEGER
 		do
-			
 			rpt := real_pointed_target
 			Result := rpt
 			widget_target ?= rpt

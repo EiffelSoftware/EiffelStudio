@@ -1,6 +1,7 @@
 indexing
-	description: "Multi-column lists that allow in-place editing of list row items.  By default ALL%
-		%columns are editable."
+	description: "[Multi-column lists that allow in-place editing of list row items.  By default ALL%
+		%columns are editable.  Only one single column item is editable at any time and the widget type%
+		%which can be edited must conform to EV_TEXTABLE."
 	author: ""
 	date: "6/17/02"
 	revision: "1.0"
@@ -17,7 +18,7 @@ create
 feature -- Initialization
 
 	make (a_window: EV_WINDOW) is
-			-- Create list with all column editable and with relative 'a_window'
+			-- Create list with all columns editable and with relative 'a_window'.
 		require
 			window_not_void: a_window /= Void
 		do
@@ -33,7 +34,7 @@ feature -- Initialization
 feature -- Status report
 		
 	is_all_editable: BOOLEAN
-			-- Are all columns in Current editable?
+			-- Are all columns in the list editable?
 			
 	column_editable (i: INTEGER): BOOLEAN is
 			-- Is column at index 'i' allowed to be edited?
@@ -44,14 +45,14 @@ feature -- Status report
 feature -- Status setting		
 
 	set_field is
-			-- Set field at row index 'widget_row' and column index 'widget_column'
+			-- Set field at row index 'widget_row' and column index 'widget_column'..
 		do
 			go_i_th (widget_row)
 			item.put_i_th (saved_text, widget_column)
 		end
 
 	set_unique_column_values (a_flag: BOOLEAN) is
-			-- Set column value uniqueness to 'a_flag'
+			-- Set column value uniqueness to 'a_flag'.
 		require
 			valid_flag: a_flag /= Void
 		do
@@ -59,7 +60,7 @@ feature -- Status setting
 		end
 		
 	set_non_empty_column_values (a_flag: BOOLEAN) is
-			-- Set so edited column values are not allowed to be empty
+			-- Set so edited column values are not allowed to be empty.
 		require
 			valid_flag: a_flag /= Void
 		do
@@ -67,7 +68,7 @@ feature -- Status setting
 		end
 		
 	set_editable (i: INTEGER) is
-			-- Make column at index 'i' editable
+			-- Make column at index 'i' editable.
 		do
 			if editable_columns.has (i) then
 			else
@@ -76,7 +77,7 @@ feature -- Status setting
 		end
 		
 	set_non_editable (i: INTEGER) is
-			-- Make column at index 'i' not editable
+			-- Make column at index 'i' not editable.
 		do
 			from 
 				editable_columns.start
@@ -91,7 +92,7 @@ feature -- Status setting
 		end
 
 	set_all_editable is
-			-- Make every column editable
+			-- Make every column editable.
 		require
 			has_columns: column_count > 0
 		local
@@ -109,7 +110,7 @@ feature -- Status setting
 		end
 		
 	change_widget_type (i: INTEGER; a_widget: EV_TEXTABLE) is
-			-- Set widget to be displayed at column with index 'i' to a_widget
+			-- Set widget to be displayed at column index 'i' with index 'i' to a_widget.
 		require
 			editable_column: column_editable (i)
 		do
@@ -124,7 +125,7 @@ feature -- Status setting
 feature -- Removal
 
 	remove_selected_item is
-			-- Remove the currently selected item from the list
+			-- Remove the currently selected item from the list.
 		local
 			removed: BOOLEAN
 		do
@@ -144,7 +145,7 @@ feature -- Removal
 feature -- Basic operations
 
 	edit_row (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- User has double clicked list row so set up dialogs for in-place editing
+			-- User has double clicked list row so set up dialogs for in-place editing.
 		do
 			calculate_offsets (x, y)
 			generate_edit_dialog (column_index (x, y))
@@ -153,14 +154,14 @@ feature -- Basic operations
 feature {NONE} -- Status report
 
 	unique_column_values: BOOLEAN
-			-- Should column values be unique for each row?	No by default	
+			-- Should column values be unique for each row?	No by default.	
 			
 	empty_column_values: BOOLEAN
-			-- Are edited column values allowed to empty?  No by default
+			-- Are edited column values allowed to empty?  No by default.
 			
 	is_hideable: BOOLEAN is
 			-- Is current editable row able to be hidden (i.e. no change dialogs have
-			-- the keyboard focus)
+			-- the keyboard focus).
 		do
 			from
 				Result := True
@@ -176,7 +177,7 @@ feature {NONE} -- Status report
 		end
 		
 	column_index (x, y: INTEGER): INTEGER is
-			-- The index of the column which was clicked by the user
+			-- The index of the column which was clicked by the user.
 		local
 			i, low_x_bound, high_x_bound: INTEGER
 		do
@@ -199,7 +200,7 @@ feature {NONE} -- Actions
 
 	on_change_widget_deselected is
 			-- Clear any in-place editing dialogs since row has lost focus and also
-			-- set row data to reflect newly entered text
+			-- set row data to reflect newly entered text.
 		do
 			if is_hideable then
 				from 
@@ -216,7 +217,7 @@ feature {NONE} -- Actions
 		end
 	
 	on_key_release (key: EV_KEY) is
-			-- Actions to check if user has press the return key
+			-- Actions to check if user has press the return key.
 		do
 			if key.code = feature {EV_KEY_CONSTANTS}.key_enter then
 				--update_actions
@@ -225,7 +226,7 @@ feature {NONE} -- Actions
 	
 	update_actions is
 			-- Actions to be performed when change widget is updated, redefine for custom 
-			-- behaviour 
+			-- behaviour.
 		do
 			if selected_item /= Void then
 				if unique_column_values then
@@ -248,25 +249,26 @@ feature {NONE} -- Actions
 feature {NONE} -- Widget Editing
 
 	widget: EV_TEXTABLE
-			-- The widget with the Current keyboard focus
+			-- The widget with the Current keyboard focus.
 			
 	widget_column: INTEGER
-			-- The column index that 'widget' belongs to
+			-- The column index that 'widget' belongs to.
 			
 	widget_row: INTEGER
-			-- The row index that 'widget' belongs to
+			-- The row index that 'widget' belongs to.
 			
 	saved_text: STRING
-			-- Saved text of 'widget'
+			-- Saved text of 'widget'.  Used to reset text in case non-unique 
+			-- value entered and 'unique_column_values' in true.
 	
 	calculate_offsets (x, y: INTEGER) is
-			-- Determine the appropriate x and y values for 'widget'
+			-- Determine the appropriate x and y values for 'widget'.
 		do
 			calculate_y_offset (y)
 		end		
 		
 	calculate_y_offset (y: INTEGER) is
-			-- Calculate the y axis vlue required to correctly position edit dialog in
+			-- Calculate the y axis value required to correctly position edit dialog in
 			-- list.  WORK AROUND SINCE VISION DOES NOT MAKE AVAILABLE COLUMN TITLE HEIGHT.
 		local
 		 	actual_index: INTEGER
@@ -277,25 +279,35 @@ feature {NONE} -- Widget Editing
 
 	y_offset: INTEGER
 			-- Where 'widget' should be positioned on the y-axis
+			
+	calculate_x_offset (x: INTEGER) is
+			-- Calculate the y axis value required to correctly position edit dialog in
+			-- list.
+		do
+			-- N.B. TO DO ONCE VISION PROVIDES SUPPORT FOR DETERMINING SCROLL OFFSETS.
+		end
+
+	x_offset: INTEGER
+			-- Where 'widget' should be positioned on the x-axis.
 
 feature {NONE} -- Implementation
 
 	relative_window: EV_WINDOW
-			-- Window to which editable dialogs are to be shown relative to
+			-- Window to which editable dialogs are to be shown relative to.
 			
 	editable_columns: ARRAYED_LIST [INTEGER]
-			-- Indices of all editable columns in row
+			-- Indices of all editable columns in row.
 			
 	edit_dialogs: ARRAYED_LIST [EV_UNTITLED_DIALOG]
-			-- List of dialogs used for editing Current row
+			-- List of dialogs used for editing Current row.
 			
 	change_widgets: HASH_TABLE [EV_TEXTABLE, INTEGER]
 			-- List of textable widgets associated by column.  Used to determine
-			-- widget type for each column
+			-- widget type for each column.
 
 	generate_edit_dialog (a_index: INTEGER) is
 			-- Generate new edit dialog for row editing in column at index 'i', a text 
-			-- field dialog unless otherwise previously specified by 'change_widget_type'
+			-- field dialog unless otherwise previously specified by 'change_widget_type'.
 		local
 			change_dialog: EV_UNTITLED_DIALOG
 			change_widget: EV_WIDGET
@@ -345,7 +357,7 @@ feature {NONE} -- Implementation
 		end
 
 	is_valid_text (a_string: STRING; c, r: INTEGER): BOOLEAN is
-			-- Is the string 'a_string' at row 'r' and column 'c' unique to column 'c'?
+			-- Is the string 'a_string' at row 'r' and column 'c' unique to column 'c'?.
 		do
 			from
 				Result := True
@@ -366,7 +378,7 @@ feature {NONE} -- Implementation
 		end
 		
 	error_dialog: EV_INFORMATION_DIALOG
-			-- Error dialog indicating name clash
+			-- Error dialog indicating name clash.
 	
 invariant
 	has_relative_window: relative_window /= Void

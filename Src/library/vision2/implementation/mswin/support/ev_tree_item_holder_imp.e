@@ -39,28 +39,30 @@ feature -- element_change
 
 Feature -- Status report
 
-	find_item_recursively_by_data (data: ANY): EV_TREE_ITEM is
-			-- If `data' contained in a tree item at any level then
-			-- assign this item to `Result'.
-		local
-			list: ARRAYED_LIST [EV_ITEM_IMP]
-			litem: EV_TREE_ITEM_IMP
-		do
-			from
-				list := ev_children
-				list.start
-			until
-				list.after or Result/= Void
-			loop
-				litem ?= list.item
-				if equal (data, litem.interface.data) then
-					Result ?= litem
-				else
-					Result ?= litem.find_item_recursively_by_data (data)
-				end
-				list.forth
-			end
-		end
+
+	--|FIXME This is redundent. This whole class is now redundent though.
+	--find_item_recursively_by_data (data: ANY): EV_TREE_ITEM is
+	--		-- If `data' contained in a tree item at any level then
+	--		-- assign this item to `Result'.
+	--	local
+	--		list: ARRAYED_LIST [EV_ITEM_IMP]
+	--		litem: EV_TREE_ITEM_IMP
+	--	do
+	--		from
+	--			list := ev_children
+	--			list.start
+	--		until
+	--			list.after or Result/= Void
+	--		loop
+	--			litem ?= list.item
+	--			if equal (data, litem.interface.data) then
+	--				Result ?= litem
+	--			else
+	--				Result ?= litem.find_item_recursively_by_data (data)
+	--			end
+	--			list.forth
+	--		end
+	--	end
 
 
 feature {NONE} -- Implementatin
@@ -96,6 +98,9 @@ end -- class EV_TREE_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/07 17:45:32  rogers
+--| Commented out find_item_recursively_by_data. This class is no longer required by Vision2.
+--|
 --| Revision 1.9  2000/03/07 00:27:26  rogers
 --| Removed --|FIXME Not for release.
 --|

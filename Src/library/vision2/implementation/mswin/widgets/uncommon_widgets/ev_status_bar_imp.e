@@ -11,11 +11,10 @@ inherit
 	EV_STATUS_BAR_I
 
 	EV_PRIMITIVE_IMP
-		undefine
-			on_key_down
 		redefine
 			parent_imp,
-			set_parent
+			set_parent,
+			on_key_down
 		end
 
 	EV_ITEM_HOLDER_IMP
@@ -23,6 +22,7 @@ inherit
 	WEL_STATUS_WINDOW
 		rename
 			make as wel_make,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
 			set_minimum_height as wel_set_minimum_height,
@@ -39,7 +39,7 @@ inherit
 			on_left_button_double_click,
 			on_right_button_double_click,
 			on_mouse_move,
-			on_char,
+			on_key_down,
 			on_key_up,
 			on_set_focus,
 			on_kill_focus
@@ -196,6 +196,21 @@ feature -- Implementation
 			end
 			if number_of_parts > count then
 				set_text_part (number_of_parts - 1, "")
+			end
+		end
+
+feature {NONE} -- WEL Implementation
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Executed when a key is pressed.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
+		local
+			data: EV_KEY_EVENT_DATA
+		do
+			if has_command (Cmd_key_press) then
+				data := get_key_data (virtual_key, key_data)
+				execute_command (Cmd_key_press, data)
 			end
 		end
 

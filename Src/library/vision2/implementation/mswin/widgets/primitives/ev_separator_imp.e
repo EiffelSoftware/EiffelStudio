@@ -13,7 +13,8 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			set_default_options,
+			set_default_options
+		redefine
 			on_key_down
 		end
 
@@ -22,6 +23,7 @@ inherit
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy
 		undefine
@@ -35,14 +37,14 @@ inherit
 			on_right_button_up,
 			on_left_button_double_click,
 			on_right_button_double_click,
-			on_char,
 			on_key_up,
 			on_set_focus,
 			on_kill_focus,
 			on_paint
 		redefine
 			default_style,
-			background_brush
+			background_brush,
+			on_key_down
 		end
 
 feature {NONE} -- Initialization
@@ -53,7 +55,7 @@ feature {NONE} -- Initialization
 			wel_make (default_parent.item, "EV_SEPARATOR")
  		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- WEL Implementation
 
 	background_brush: WEL_BRUSH is
 			-- Current window background color used to refresh the window when
@@ -68,6 +70,19 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 		do
 			Result := Ws_child + Ws_visible
+		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Executed when a key is pressed.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
+		local
+			data: EV_KEY_EVENT_DATA
+		do
+			if has_command (Cmd_key_press) then
+				data := get_key_data (virtual_key, key_data)
+				execute_command (Cmd_key_press, data)
+			end
 		end
 
 feature {NONE} -- Inapplicable

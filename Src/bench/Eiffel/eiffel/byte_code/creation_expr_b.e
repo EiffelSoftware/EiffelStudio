@@ -48,8 +48,10 @@ feature -- Analyze
 			-- Analyze creation node
 		local
 			l_call: like call
+			l_type: like type
 		do
-			if not type.is_basic then
+			l_type := real_type (type)
+			if not l_type.is_basic then
 				info.analyze
 				get_register
 				l_call := call
@@ -68,7 +70,7 @@ feature -- Analyze
 					end
 				end
 			else
-				create {REGISTER} register.make (type.c_type)
+				create {REGISTER} register.make (l_type.c_type)
 			end
 		end
 
@@ -77,7 +79,7 @@ feature -- Analyze
 		local
 			l_call: like call
 		do
-			if not type.is_basic then
+			if not real_type (type).is_basic then
 				Precursor {ACCESS_B}
 				l_call := call
 				if l_call /= Void then
@@ -205,13 +207,17 @@ feature -- IL code generation
 
 				call.set_parent (Void)
 			else
-					-- Standard creation call
-				info.generate_il
-				if call /= Void then
-					il_generator.duplicate_top
-					call.set_parent (nested_b)
-					call.generate_il_call (False)
-					call.set_parent (Void)
+				if real_type (type).is_basic then
+					il_generator.put_default_value (real_type (type))
+				else
+						-- Standard creation call
+					info.generate_il
+					if call /= Void then
+						il_generator.duplicate_top
+						call.set_parent (nested_b)
+						call.generate_il_call (False)
+						call.set_parent (Void)
+					end
 				end
 			end
 		end
@@ -226,7 +232,7 @@ feature -- Byte code generation
 			l_class_type: SPECIAL_CLASS_TYPE
 			l_call: like call
 		do
-			l_basic_type ?= type
+			l_basic_type ?= real_type (type)
 			if l_basic_type /= Void then
 					-- Special cases for basic types where nothing needs to be created, we
 					-- simply need to push a default value as their creation procedure
@@ -303,7 +309,7 @@ feature -- Generation
 			buf := buffer
 			generate_line_info
 
-			l_basic_type ?= type
+			l_basic_type ?= real_type (type)
 			l_call := call
 			l_special_creation := l_basic_type = Void and then
 				l_call /= Void and then l_call.routine_id = system.special_make_id

@@ -308,19 +308,40 @@ printf("Generic #%d recognized\n", i);
 	}
 
 	if (0 == strcmp(s,"character"))
-		return create_node(CHAR_TYPE_AS);
+		if (generics)
+			(*syntax8)(Error_handler);
+		else
+			return create_node(CHAR_TYPE_AS);
 	else if (0 == strcmp(s,"boolean"))
-		return create_node(BOOL_TYPE_AS);
+		if (generics)
+			(*syntax8)(Error_handler);
+		else
+			return create_node(BOOL_TYPE_AS);
 	else if (0 == strcmp(s,"integer"))
-		return create_node(INT_TYPE_AS);
+		if (generics)
+			(*syntax8)(Error_handler);
+		else
+			return create_node(INT_TYPE_AS);
 	else if (0 == strcmp(s,"real"))
-		return create_node(REAL_TYPE_AS);
+		if (generics)
+			(*syntax8)(Error_handler);
+		else
+			return create_node(REAL_TYPE_AS);
 	else if (0 == strcmp(s,"double"))
-		return create_node(DOUBLE_TYPE_AS);
+		if (generics)
+			(*syntax8)(Error_handler);
+		else
+			return create_node(DOUBLE_TYPE_AS);
 	else if (0 == strcmp(s,"none"))
-		return create_node(NONE_TYPE_AS);
+		if (generics)
+			(*syntax8)(Error_handler);
+		else
+			return create_node(NONE_TYPE_AS);
 	else if (0 == strcmp(s,"pointer"))
-		return create_node(POINTER_TYPE_AS);
+		if (generics)
+			(*syntax8)(Error_handler);
+		else
+			return create_node(POINTER_TYPE_AS);
 	else {
 		/* It is a common class type */
 

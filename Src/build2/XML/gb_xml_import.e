@@ -162,6 +162,9 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			-- directory `directory_name'. if `directory_name' is
 			-- empty, the window will be built into the root of the
 			-- window selector.
+		require
+			window_not_void: window /= Void
+			parent_node_list_not_void: parent_node_list /= Void
 		local
 			current_element, root_window_element: XM_ELEMENT
 			gb_ev_any: GB_EV_ANY
@@ -263,6 +266,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 	process_names (element: XM_ELEMENT) is
 			-- Update name stored in `element', if any, and only if
 			-- name has changed.
+		require
+			element_not_void: element /= Void
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			current_name: STRING
@@ -308,6 +313,9 @@ feature {NONE} -- Implementation
 		
 	modify_from_xml (element: XM_ELEMENT; object: GB_OBJECT) is
 			-- Update properties of `object' based on information in `element'.
+		require
+			element_not_void: element /= Void
+			object_not_void: object /= Void
 		local
 			current_element: XM_ELEMENT
 			gb_ev_any: GB_EV_ANY
@@ -756,7 +764,9 @@ feature {NONE} -- Implementation
 		end
 
 	parse_for_names (element: XM_ELEMENT) is
-			--
+			-- Parse `element' recursively to find all names which are inserted in `all_names_post_import'.
+		require
+			element_not_void: element /= Void
 		local
 			current_element: XM_ELEMENT
 			current_name : STRING
@@ -842,6 +852,8 @@ feature {NONE} -- Implementation
 			-- Create unique callback pipe.
 		once
 			create Result.make
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	initialize_load_output is

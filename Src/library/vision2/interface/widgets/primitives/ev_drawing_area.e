@@ -24,6 +24,11 @@ inherit
 			implementation
 		end
 
+	EV_PIXMAP_CONTAINER
+		redefine
+			implementation
+		end
+
 creation
 	make
 

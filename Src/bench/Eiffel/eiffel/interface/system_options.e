@@ -85,6 +85,9 @@ feature -- Access: IL code generation
 	clr_runtime_version: STRING
 			-- Version of IL runtime available.
 
+	metadata_cache_path: STRING
+			-- Alternative EAC metadata path
+
 	msil_generation_type: STRING
 			-- Type of IL generation?
 
@@ -195,8 +198,21 @@ feature -- Update
 				clr_runtime_version = version
 		end
 		
+	set_metadata_cache_path (s: STRING) is
+			-- Set `metadata_cache_path' to `s'
+		require
+			s_not_void: s /= Void
+			s_not_empty: not s.is_empty
+		do
+			if not (create {SHARED_WORKBENCH}).Workbench.is_already_compiled then
+				metadata_cache_path := s
+			end
+		ensure
+			metadata_cache_path_set: (create {SHARED_WORKBENCH}).Workbench.has_compilation_started or else s.is_equal (metadata_cache_path)
+		end
+		
 	set_msil_generation_type (s: STRING) is
-			-- Set `msil_generation_type' to `b'
+			-- Set `msil_generation_type' to `s'
 		require
 			s_not_void: s /= Void
 			s_equal_exe_or_dll: s.is_equal ("exe") or s.is_equal ("dll")

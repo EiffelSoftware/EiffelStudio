@@ -59,8 +59,8 @@ feature -- Access
 			v_cos, v_sin: REAL
 			half_width, half_height: INTEGER
 		do
-			v_cos := cos (orientation)
-			v_sin := sin (orientation)
+			v_cos := orientation.cosine
+			v_sin := orientation.sine
 			half_width := width // 2
 			half_height := height // 2
 			create Result.set (upper_left.x + (half_width *

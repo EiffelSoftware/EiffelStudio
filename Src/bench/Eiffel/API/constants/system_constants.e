@@ -172,9 +172,9 @@ feature {NONE}
 feature {NONE} -- Versioning
 
 	Precompilation_id_tag: STRING is "precompilation_id"
-	Version_number: STRING is "4.1 a"
+	Version_number: STRING is "4.1 b"
 	Version_number_tag: STRING is "eiffelbench_version_number"
-	Storable_version_number: STRING is "4.1 a"
+	Storable_version_number: STRING is "4.1 b"
 	Storable_version_number_tag: STRING is "storable_version_number"
 
 feature {NONE}
@@ -188,7 +188,7 @@ feature {NONE}
 
 	Platform_constants: PLATFORM_CONSTANTS is
 		once
-			!!Result
+			!! Result
 		end;
 
 end -- class SYSTEM_CONSTANTS

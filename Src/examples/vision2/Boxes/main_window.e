@@ -15,8 +15,6 @@ inherit
 			make_top_level
 		end
 
-	EV_COMMAND
-
 creation
 	make_top_level
 
@@ -27,7 +25,6 @@ feature --Access
 	
 	but: EV_BUTTON
 	lab: EV_LABEL
-	tex: EV_TEXT_FIELD
 
 feature -- Initialization
 	
@@ -45,20 +42,19 @@ feature -- Initialization
 
 			!! but.make (box)
 			but.set_text ("A button")
-			but.set_expand (False)
+			box.set_child_expandable (but, False)
 
 			!! box3.make (box)		-- horizontal
 			box3.set_spacing (5)
 			box3.set_homogeneous (False)
 			!! but.make (box)
 			but.set_text ("Another button")
-			but.set_expand (False)
+			box.set_child_expandable (but, False)
 
 			set_one (box2)
 			set_two (box3)
 			!! box1.make (box2)
 			set_three (box1)
---			set_size (minimum_width, minimum_height)
 	end
 	
 feature -- Status setting
@@ -67,11 +63,9 @@ feature -- Status setting
 			-- Create four button
 		do
 			!! but.make_with_text (par, "Hello World")
---			but.hide
 			!! but.make_with_text (par, "Bonjour monde")
 			!! but.make_with_text (par, "Ola o mundo")
 			!! but.make_with_text (par, "Hola el mundo")
-			but.add_Click_command (Current, Void)
 		end
 
 	set_two (par: EV_CONTAINER) is
@@ -90,13 +84,6 @@ feature -- Status setting
 			!! lab.make_with_text (par, "Salut mon pote")
 			!! lab.make_with_text (par, "Ola o meu amigo")
 			!! lab.make_with_text (par, "Hola amigo")
-		end
-
-feature -- Command execution
-
-	execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
-			-- Just to have a natural stop point
-		do
 		end
 
 end -- class MAIN_WINDOW

@@ -82,9 +82,15 @@ feature -- Access
 
 	text: STRING is
 			-- Text of the item
+		local
+			p, q: POINTER
 		do
 			create Result.make (0)
-			Result.from_c (cwel_lv_item_get_psztext (item))
+			p := cwel_lv_item_get_psztext (item)
+				-- Initialize string only if something to read.
+			if p /= q then
+				Result.from_c (p)
+			end
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 		require
 			non_void_assembly_description_filename: an_assembly_description_filename /= Void
 			not_empty_assembly_description_filename: an_assembly_description_filename.get_length > 0
-			valid_assembly_description_filename: is_valid_filename (an_assembly_description_filename)
 		local
 			support: ISE_REFLECTION_CODEGENERATIONSUPPORT
 		do
@@ -55,10 +54,6 @@ feature {NONE} -- Initialization
 		require
 			non_void_assembly_description_filename: an_assembly_description_filename /= Void
 			not_empty_assembly_description_filename: an_assembly_description_filename.get_length > 0
-			valid_assembly_description_filename: is_valid_filename (an_assembly_description_filename)
-			non_void_path: new_path /= Void
-			not_empty_path: new_path.get_length > 0
-			valid_path: is_valid_directory_path (new_path)
 		local
 			support: ISE_REFLECTION_CODEGENERATIONSUPPORT
 		do
@@ -89,34 +84,6 @@ feature -- Access
 			description: "Eiffel code generator"
 			external_name: "EiffelCodeGenerator"
 		end
-
-feature -- Status Report
-	
-	is_valid_filename (a_filename: STRING): BOOLEAN is
-		indexing
-			description: "Is `a_filename' a valid filename?"
-			external_name: "IsValidFilename"
-		require
-			non_void_filename: a_filename /= Void
-			not_empty_filename: a_filename.get_length > 0
-		local
-			file: SYSTEM_IO_FILE
-		do
-			Result := file.exists (a_filename)
-		end
-
-	is_valid_directory_path (a_folder_name: STRING): BOOLEAN is
-		indexing
-			description: "Is `a_folder_name' a valid directory path"
-			external_name: "IsValidDirectoryPath"
-		require
-			non_void_folder_name: a_folder_name /= Void
-			not_empty_folder_name: a_folder_name.get_length > 0
-		local
-			dir: SYSTEM_IO_DIRECTORY
-		do
-			Result := dir.exists (a_folder_name)
-		end
 		
 feature -- Basic Operations
 	
@@ -128,7 +95,6 @@ feature -- Basic Operations
 		require
 			non_void_type_description_filename: type_description_filename /= Void
 			not_empty_type_description_filename: type_description_filename.get_length > 0
-			valid_type_description_filename: is_valid_filename (type_description_filename)
 		do
 			eiffel_code_generator.generate_eiffel_class (eiffel_class_from_xml (type_description_filename))
 		end	
@@ -142,9 +108,6 @@ feature -- Basic Operations
 			non_void_assembly: eiffel_assembly /= Void
 			non_void_type_description_filename: type_description_filename /= Void
 			not_empty_type_description_filename: type_description_filename.get_length > 0
-			valid_type_description_filename: is_valid_filename (type_description_filename)
-			non_void_path: a_path /= Void
-			not_empty_path: a_path.get_length > 0
 		do
 			eiffel_code_generator.generate_eiffel_class_from_path (eiffel_class_from_xml (type_description_filename), a_path)
 		end	
@@ -158,7 +121,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_type_description_filename: type_description_filename /= Void
 			not_empty_type_description_filename: type_description_filename.get_length > 0
-			valid_type_description_filename: is_valid_filename (type_description_filename)
 		local
 			support: ISE_REFLECTION_CODEGENERATIONSUPPORT
 			eiffel_class: ISE_REFLECTION_EIFFELCLASS
@@ -177,7 +139,6 @@ feature {NONE} -- Implementation
 			non_void_new_path: new_path /= Void
 			not_empty_new_path: new_path.get_length > 0
 			non_void_eiffel_assembly: eiffel_assembly /= Void
-			valid_path: is_valid_directory_path (new_path)
 		local
 			assembly_cache_handler: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT

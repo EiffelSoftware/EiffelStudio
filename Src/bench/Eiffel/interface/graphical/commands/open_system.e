@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 			else
 				-- First click on open
 				if text_window.changed then
-					warner (popup_parent).call (Current, Interface_names.w_File_changed)
+					warner (popup_parent).call (Current, w_File_changed)
 				else
 					chooser := name_chooser (popup_parent);
 					last_name_chooser.call (Current) 

@@ -129,6 +129,11 @@ feature {NONE}
 			Result := pixmap_file_content ("dshowdversions.bm");
 		end;
 
+	bm_Dark_showexported: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowexported.bm");
+		end;
+
 	bm_Dark_showexternals: PIXMAP is
 		do
 			Result := pixmap_file_content ("dshowexternals.bm");
@@ -449,6 +454,11 @@ feature {NONE}
 			Result := pixmap_file_content ("showdescendants.bm");
 		end;
 
+	bm_Showexported: PIXMAP is
+		do
+			Result := pixmap_file_content ("showexported.bm");
+		end;
+
 	bm_Showexternals: PIXMAP is
 		do
 			Result := pixmap_file_content ("showexternals.bm");
@@ -502,6 +512,11 @@ feature {NONE}
 	bm_Showtext: PIXMAP is
 		do
 			Result := pixmap_file_content ("showtext.bm");
+		end;
+
+	bm_Slice: PIXMAP is
+		do
+			Result := pixmap_file_content ("slice.bm")
 		end;
 
 	bm_Step: PIXMAP is

@@ -49,8 +49,41 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_DOCKABLE_SOURCE_IMP
+		redefine
+			interface,
+			enable_drag
+		end
 
 feature {NONE} -- Initialization
+		
+	internal_enable_drag is
+			-- Activate drag mechanism.
+ 		do
+--			check
+--				button_release_not_connected: button_release_connection_id = 0
+--			end
+--			if button_press_connection_id > 0 then
+--				signal_disconnect (button_press_connection_id)
+--			end
+			real_signal_connect (
+				c_object,
+				"button-press-event",
+				agent gtk_marshal.start_drag_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
+				default_translate
+			)
+			--button_press_connection_id := last_signal_connection_id
+			is_dragable := True
+		ensure then
+			press_connection_successful: button_press_connection_id > 0
+		end
+		
+	internal_disable_drag is
+			-- 
+		do
+			
+		end
 
 	Gdk_events_mask: INTEGER is
 			-- Mask of all the gdk events the gdkwindow shall receive.
@@ -251,35 +284,71 @@ feature -- Access
 	popup_menu: EV_MENU
 			-- Menu popped up when button 3 is pressed on widget.
 
+--	screen_x: INTEGER is
+--			-- Horizontal offset relative to screen.
+--		local
+--			wind: EV_WINDOW_IMP
+--		do 
+--			if parent_imp /= Void then
+--				wind ?= parent_imp
+--				if wind /= Void then
+--					Result := wind.inner_screen_x
+--				else
+--					Result := parent_imp.screen_x
+--				end
+--				Result := Result + x_position
+--			end
+--		end
+--
+--	screen_y: INTEGER is
+--			-- Vertical offset relative to screen. 
+--		local 
+--			wind: EV_WINDOW_IMP 
+--		do 
+--			if parent_imp /= Void then
+--				wind ?= parent_imp
+--				if wind /= Void then
+--					Result := wind.inner_screen_y
+--				else
+--					Result := parent_imp.screen_y
+--				end
+--				Result := Result + y_position
+--			end
+--		end
+
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
 		local
-			wind: EV_WINDOW_IMP
-		do 
-			if parent_imp /= Void then
-				wind ?= parent_imp
-				if wind /= Void then
-					Result := wind.inner_screen_x
-				else
-					Result := parent_imp.screen_x
-				end
-				Result := Result + x_position
+			useless_y: INTEGER 
+			success: BOOLEAN
+			gdk_window: POINTER
+		do
+				--|FIXME: redefined to quickly solve a problem that appeared in EiffelStudio (screen_x wrong after resizing)			
+			gdk_window := C.gtk_widget_struct_window (c_object)
+			if gdk_window /= NULL then
+				success := C.gdk_window_get_deskrelative_origin (
+					gdk_window,
+					$Result,
+					$useless_y
+					)
 			end
 		end
 
 	screen_y: INTEGER is
 			-- Vertical offset relative to screen. 
-		local 
-			wind: EV_WINDOW_IMP 
-		do 
-			if parent_imp /= Void then
-				wind ?= parent_imp
-				if wind /= Void then
-					Result := wind.inner_screen_y
-				else
-					Result := parent_imp.screen_y
-				end
-				Result := Result + y_position
+		local
+			useless_x: INTEGER
+			success: BOOLEAN
+			gdk_window: POINTER
+		do
+				--|FIXME: redefined to quickly solve a problem that appeared in EiffelStudio (screen_y wrong after resizing)			
+			gdk_window := C.gtk_widget_struct_window (c_object)
+			if gdk_window /= NULL then
+				success := C.gdk_window_get_deskrelative_origin (
+					gdk_window,
+					$useless_x,
+					$Result
+					)				
 			end
 		end
 	
@@ -627,16 +696,6 @@ feature {EV_ANY_IMP} -- Implementation
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
 
-	top_level_window_imp: EV_WINDOW_IMP is
-		local
-			wind_ptr: POINTER
-		do
-			wind_ptr := C.gtk_widget_get_toplevel (c_object)
-			if wind_ptr /= NULL then
-				Result ?= eif_object_from_c (wind_ptr)
-			end
-		end
-
 	aux_info_struct: POINTER is
 		local
 			a_gs: GEL_STRING
@@ -646,6 +705,18 @@ feature {EV_ANY_IMP} -- Implementation
 				c_object,
 				a_gs.item
 			)
+		end
+		
+feature {EV_DOCKABLE_SOURCE_I} -- Implementation
+		
+	top_level_window_imp: EV_WINDOW_IMP is
+		local
+			wind_ptr: POINTER
+		do
+			wind_ptr := C.gtk_widget_get_toplevel (c_object)
+			if wind_ptr /= NULL then
+				Result ?= eif_object_from_c (wind_ptr)
+			end
 		end
 
 feature {NONE} -- Agent functions.

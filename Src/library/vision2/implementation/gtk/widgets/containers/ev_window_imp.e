@@ -171,6 +171,12 @@ feature  -- Access
 				Result := C.gtk_window_struct_modal (c_object) = 1
 			end
 		end
+		
+	blocking_window: EV_WINDOW is
+			-- Window this dialog is a transient for.
+		do
+			Result := internal_blocking_window
+		end
 
 feature -- Status setting
 
@@ -419,6 +425,22 @@ feature -- Element change
 			menu_bar := Void
 		end
 		
+	set_blocking_window (a_window: EV_WINDOW) is
+			-- Set as transient for `a_window'.
+		local
+			win_imp: EV_WINDOW_IMP
+		do
+			internal_blocking_window := a_window
+			if a_window /= Void then
+				win_imp ?= a_window.implementation
+				C.gtk_window_set_transient_for (c_object, win_imp.c_object)
+			else
+				if not is_destroyed then
+					C.gtk_window_set_transient_for (c_object, NULL)
+				end		
+			end
+		end
+		
 feature {EV_WIDGET_IMP} -- Position retrieval
 
 	inner_screen_x: INTEGER is
@@ -468,6 +490,9 @@ feature {EV_ANY_IMP} -- Implementation
 
 	focus_widget: EV_WIDGET_IMP
 			-- Widget that has the focus.
+			
+	internal_blocking_window: EV_WINDOW
+			-- Window that `Current' is relative to.
 
 feature {NONE} -- Implementation
 

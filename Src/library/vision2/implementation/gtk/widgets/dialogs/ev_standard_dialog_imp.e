@@ -65,9 +65,6 @@ feature -- Access
 			create Result.make_from_c (C.gtk_window_struct_title (c_object))
 		end
 
-	blocking_window: EV_WINDOW
-			-- Window this dialog is a transient for.
-
 feature -- Status report
 
 	selected_button: STRING
@@ -131,20 +128,6 @@ feature -- Status setting
 		do
 			create a_gs.make (a_title)
 			C.gtk_window_set_title (c_object, a_gs.item)
-		end
-
-	set_blocking_window (a_window: EV_WINDOW) is
-			-- Set as transient for `a_window'.
-		local
-			win_imp: EV_WINDOW_IMP
-		do
-			blocking_window := a_window
-			if a_window /= Void then
-				win_imp ?= a_window.implementation
-				C.gtk_window_set_transient_for (c_object, win_imp.c_object)
-			else
-				C.gtk_window_set_transient_for (c_object, NULL)
-			end
 		end
 
 feature {NONE} -- Implementation

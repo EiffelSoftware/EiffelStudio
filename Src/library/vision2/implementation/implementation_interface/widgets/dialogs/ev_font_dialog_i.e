@@ -5,12 +5,12 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_FONT_SELECTION_DIALOG_I
+	EV_FONT_DIALOG_I
 
 inherit
 	EV_SELECTION_DIALOG_I
 
-end -- class EV_FONT_SELECTION_DIALOG_I
+end -- class EV_FONT_DIALOG_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

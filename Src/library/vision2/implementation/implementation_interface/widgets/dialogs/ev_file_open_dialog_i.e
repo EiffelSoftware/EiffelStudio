@@ -8,7 +8,7 @@ deferred class
 	EV_FILE_OPEN_DIALOG_I
 
 inherit
-	EV_FILE_SELECTION_DIALOG_I
+	EV_FILE_DIALOG_I
 
 end -- class EV_FILE_OPEN_DIALOG_I
 

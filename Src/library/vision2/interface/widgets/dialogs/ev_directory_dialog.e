@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_DIRECTORY_SELECTION_DIALOG
+	EV_DIRECTORY_DIALOG
 
 inherit
 	EV_SELECTION_DIALOG
@@ -23,14 +23,14 @@ feature {NONE} -- Initialization
 			-- Create a directory selection dialog with `par' as
 			-- parent.
 		do
-			!EV_DIRECTORY_SELECTION_DIALOG_IMP! implementation.make (par)
+			!EV_DIRECTORY_DIALOG_IMP! implementation.make (par)
 		end
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Create a directory selection dialog with `par' as
 			-- parent and `txt' as title.
 		do
-			!EV_DIRECTORY_SELECTION_DIALOG_IMP! implementation.make_with_text (par, txt)
+			!EV_DIRECTORY_DIALOG_IMP! implementation.make_with_text (par, txt)
 		end
 
 feature -- Access
@@ -76,9 +76,9 @@ feature -- Element change
 
 feature -- Implementation
 
-	implementation: EV_DIRECTORY_SELECTION_DIALOG_I
+	implementation: EV_DIRECTORY_DIALOG_I
 
-end -- class EV_DIRECTORY_SELECTION_DIALOG
+end -- class EV_DIRECTORY_DIALOG
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

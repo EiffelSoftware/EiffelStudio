@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_COLOR_SELECTION_DIALOG
+	EV_COLOR_DIALOG
 
 inherit
 	EV_SELECTION_DIALOG
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Create a directory selection dialog with `par' as
 			-- parent.
 		do
-			!EV_COLOR_SELECTION_DIALOG_IMP! implementation.make (par)
+			!EV_COLOR_DIALOG_IMP! implementation.make (par)
 			implementation.set_interface (Current)
 		end
 
@@ -71,9 +71,9 @@ feature -- Event -- removing command association
 
 feature -- Implementation
 
-	implementation: EV_COLOR_SELECTION_DIALOG_I
+	implementation: EV_COLOR_DIALOG_I
 
-end -- class EV_COLOR_SELECTION_DIALOG
+end -- class EV_COLOR_DIALOG
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

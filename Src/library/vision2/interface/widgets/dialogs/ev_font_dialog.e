@@ -5,12 +5,30 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_FONT_SELECTION_DIALOG
+	EV_FONT_DIALOG
 
---inherit
---	EV_DIALOG
+inherit
+	EV_SELECTION_DIALOG
+		redefine
+			implementation
+		end
 
-end -- class EV_FONT_SELECTION_DIALOG
+creation
+	make
+
+feature {NONE} -- Initialization
+
+	make (par: EV_WINDOW) is
+			-- Create a window with a parent.
+		do
+			!EV_FONT_DIALOG_IMP! implementation.make (par)
+		end
+
+feature {NONE} -- Implementation
+
+	implementation: EV_FONT_DIALOG_I
+
+end -- class EV_FONT_DIALOG
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

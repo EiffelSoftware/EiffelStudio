@@ -49,17 +49,12 @@ feature -- Initialization
 		deferred
 		end
 
-	set_with_default (pixmap_name: STRING) is
-			-- Initialized the pixmap with the default
-			-- image named `pixmap_name'.
-		require
-			valid_pixmap_name: 
-				pixmap_name.is_equal("Information") or
-				pixmap_name.is_equal("Error") or
-				pixmap_name.is_equal("Question") or
-				pixmap_name.is_equal("Vision2") or
-				pixmap_name.is_equal("Warning")
-		do
+	set_with_default is
+			-- Initialize the pixmap with the default
+			-- pixmap (Vision2 logo)
+			--
+			-- Exceptions "Unable to retrieve icon information"
+		deferred
 		end
 
 	set_size (a_x, a_y: INTEGER) is
@@ -111,6 +106,9 @@ end -- class EV_PIXMAP_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/05/03 04:33:10  pichery
+--| Changed feature `set_with_default'
+--|
 --| Revision 1.20  2000/05/03 00:30:19  pichery
 --| Added default window icon pixmap
 --|

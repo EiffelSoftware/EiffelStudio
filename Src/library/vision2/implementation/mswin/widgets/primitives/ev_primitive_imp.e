@@ -103,10 +103,10 @@ feature -- Basic operations
 			-- widget. Need to be called in the feature on_key_down when the
 			-- control needs to process this kind of keys.
 		do
-			if virtual_key = Wel_vk_constants.Vk_tab and then 
-				flag_set (style, Wel_ws_constants.Ws_tabstop)
+			if virtual_key = Wel_input_constants.Vk_tab and then 
+				flag_set (style, Wel_window_constants.Ws_tabstop)
 			then
-				if key_down (Vk_shift) then
+				if key_down (Wel_input_constants.Vk_shift) then
 					tab_action (False)
 				else
 					tab_action (True)
@@ -119,15 +119,15 @@ feature -- Basic operations
 			-- widget. Need to be called in the feature on_key_down when the
 			-- control need to process this kind of keys.
 		do
-			if virtual_key = Vk_tab then
-				if key_down (Vk_shift) then
+			if virtual_key = Wel_input_constants.Vk_tab then
+				if key_down (Wel_input_constants.Vk_shift) then
 					tab_action (False)
 				else
 					tab_action (True)
 				end
-			elseif virtual_key = Vk_down then
+			elseif virtual_key = Wel_input_constants.Vk_down then
 				arrow_action (True)
-			elseif virtual_key = Vk_up then
+			elseif virtual_key = Wel_input_constants.Vk_up then
 				arrow_action (False)
 			end
 		end
@@ -188,6 +188,9 @@ end -- class EV_PRIMITIVE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/05/03 00:35:57  pichery
+--| Changed constants retrieval
+--|
 --| Revision 1.28  2000/05/01 19:36:59  pichery
 --| Added feature `is_control_in_window' used
 --| to determine if a certain control is contained

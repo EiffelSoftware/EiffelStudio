@@ -46,7 +46,11 @@ feature -- making
 				-- Recompute `end_position' to get rid of 
 				-- unwanted white spaces.
 			temp := normal_origin_text;
-			if temp.count >= end_position and start_position < end_position then
+			if 
+				temp /= Void and then
+				temp.count >= end_position and 
+				start_position < end_position 
+			then
 				temp := temp.substring (start_position + 1, end_position);
 				temp.right_adjust;
 				end_position := start_position + temp.count
@@ -203,7 +207,11 @@ feature -- dragging
 				-- Recompute `end_position' to get rid of 
 				-- unwanted white spaces.
 			temp := normal_origin_text;
-			if temp.count >= end_position and start_position < end_position then
+			if 
+				temp /= Void and then
+				temp.count >= end_position and 
+				start_position < end_position 
+			then
 				temp := temp.substring (start_position + 1, end_position);
 				temp.right_adjust;
 				end_position := start_position + temp.count

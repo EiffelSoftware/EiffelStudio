@@ -435,7 +435,7 @@ feature -- Plug and Makefile file
 			arr_make_name, set_rout_disp_name: STRING
 			special_cl: SPECIAL_B
 			cl_type: CLASS_TYPE
-			final_mode: BOOLEAN
+			has_dispose, final_mode: BOOLEAN
 			plug_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
 
@@ -539,14 +539,18 @@ feature -- Plug and Makefile file
 
 			if final_mode then
 				init_name := clone (Encoder.table_name (system.routine_id_counter.initialization_rout_id))
-				dispose_name := clone (Encoder.table_name (system.routine_id_counter.dispose_rout_id))
 
 				buffer.putstring ("extern char *(*")
 				buffer.putstring (init_name)
-				buffer.putstring ("[])();%N%
-									%extern char *(*")
-				buffer.putstring (dispose_name)
-				buffer.putstring ("[])();%N%N")
+				buffer.putstring ("[])();%N")
+				
+				has_dispose := System.memory_class /= Void
+				if has_dispose then
+					dispose_name := clone (Encoder.table_name (system.routine_id_counter.dispose_rout_id))
+					buffer.putstring ("extern char *(*")
+					buffer.putstring (dispose_name)
+					buffer.putstring ("[])();%N%N")
+				end
 			end
 
 			if system.has_separate then
@@ -602,7 +606,7 @@ feature -- Plug and Makefile file
 
 				-- Dispose routine id from class MEMORY (if compiled) 
 			buffer.putstring ("%Tegc_disp_rout_id = ")
-			if System.memory_class /= Void then
+			if has_dispose then
 				buffer.putint (System.memory_dispose_id)
 			else
 				buffer.putstring ("-1")
@@ -656,11 +660,13 @@ feature -- Plug and Makefile file
 				buffer.putstring (init_name)
 				buffer.putstring (";%N")
 
-					-- Dispose routines
-				buffer.putstring ("%Tegc_edispose = ")
-				buffer.putstring ("(void (**)(void)) ")
-				buffer.putstring (dispose_name)
-				buffer.putstring (";%N")
+				if has_dispose then
+						-- Dispose routines
+					buffer.putstring ("%Tegc_edispose = ")
+					buffer.putstring ("(void (**)(void)) ")
+					buffer.putstring (dispose_name)
+					buffer.putstring (";%N")
+				end
 
 				buffer.putstring ("%Tegc_ce_rname = egc_ce_rname_init;%N")
 				buffer.putstring ("%Tegc_fnbref = egc_fnbref_init;%N")

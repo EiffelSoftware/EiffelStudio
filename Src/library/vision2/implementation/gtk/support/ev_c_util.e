@@ -45,14 +45,6 @@ feature -- Measurement
 
 feature -- Conversion
 
-	pointer_array_i_th (pointer_array: POINTER; index: INTEGER): POINTER is
-			-- void * pointer_array_i_th (void ** pointer_array, int index) {
-			--     return pointer_array [index];
-			-- }
-		external
-			"C | %"ev_c_util.h%""
-		end
-
 	double_array_i_th (double_array: POINTER; index: INTEGER): REAL is
 			-- EIF_DOUBLE double_array_i_th (double *double_array, int index) {
 			--	return double_array [index];
@@ -129,12 +121,12 @@ feature -- Conversion
 			end
 		end
 
-	gslist_to_eiffel (gslist: POINTER): LINKED_LIST [POINTER] is
+	gslist_to_eiffel (gslist: POINTER): ARRAYED_LIST [POINTER] is
 			-- Convert `gslist' to Eiffel structure.
 		local
 			cur: POINTER
 		do
-			create Result.make
+			create Result.make (10)
 			from
 				cur := gslist
 			until

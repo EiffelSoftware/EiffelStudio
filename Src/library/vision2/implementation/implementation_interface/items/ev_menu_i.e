@@ -18,6 +18,19 @@ inherit
 			interface
 		end
 
+feature -- Standard operations
+
+	show is
+			-- Pop up on the current pointer position.
+		deferred
+		end
+
+	show_at (a_widget: EV_WIDGET; a_x, a_y: INTEGER) is
+			-- Pop up on `a_x', `a_y' relative to the top-left corner
+			-- of `a_widget'.
+		deferred
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MENU	
@@ -45,6 +58,9 @@ end -- class EV_MENU_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/22 22:52:00  brendel
+--| Added show and show_at.
+--|
 --| Revision 1.19  2000/02/22 18:39:45  oconnor
 --| updated copyright date and formatting
 --|

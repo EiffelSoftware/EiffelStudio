@@ -1,7 +1,7 @@
 # ecom_runtime.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -MT -DEIF_THREADS -c -Zi -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
+CFLAGS = -MT -DEIF_THREADS -c -Zi -I..\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include
 
 OBJ = ecom_runtime_c_e.obj ecom_runtime_ce_arrays.obj ecom_runtime_e_c.obj
 

@@ -8,7 +8,6 @@ class SHARED_JNI_ENVIRONMENT
 
 feature
 
-
 	jni: JNI_ENVIRONMENT is
 			-- returns the standard JNI enviroment. It uses the value of
 			-- CLASS_PATH environment variable to initialize the JVM
@@ -18,8 +17,8 @@ feature
 			jvm: JAVA_VM
 			ex: EXCEPTIONS
 		once
-			-- First obtain the value of the CLASSPATH environment 
-			-- variable
+				-- First obtain the value of the CLASSPATH environment 
+				-- variable
 			cpp := getenv ($(("CLASSPATH").to_c))
 			if cpp = default_pointer then
 				!!ex
@@ -32,13 +31,9 @@ feature
 				io.putstring (class_path)
 				io.new_line
 			end
-			-- Next create the JVM and get the JNI environment
+
+				-- Next create the JVM and get the JNI environment
 			!!jvm.make
-
-			io.putstring ("#############################%N")
-			io.putstring ("# Access to a once feature%N")
-			io.putstring ("#############################%N")
-
 			Result := jvm.create_vm (class_path)
 		ensure
 			Result /= Void

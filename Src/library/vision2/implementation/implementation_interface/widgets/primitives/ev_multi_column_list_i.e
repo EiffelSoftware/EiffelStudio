@@ -335,7 +335,7 @@ feature {EV_ANY_I} -- Implementation
 		local
 			cur: CURSOR
 			txt: STRING
-			list: LINKED_LIST [STRING]
+			list: EV_MULTI_COLUMN_LIST_ROW
 		do
 			list := child.interface
 			cur := list.cursor
@@ -344,6 +344,9 @@ feature {EV_ANY_I} -- Implementation
 			until
 				list.after
 			loop
+				if list.isfirst and then list.pixmap /= Void then
+					set_row_pixmap (a_row, list.pixmap)
+				end
 				txt := list.item
 				if txt = Void then
 					txt := ""
@@ -366,6 +369,15 @@ feature {EV_ANY_I} -- Implementation
 			a_column_not_greater_than_column_count: a_column <= column_count
 			a_row_not_greater_than_count: a_row <= count
 			a_text_not_void: a_text /= Void
+		deferred
+		end
+
+	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
+			-- Set row `a_row' pixmap to `a_pixmap'.
+		require
+			a_row_positive: a_row > 0
+			a_row_not_greater_than_count: a_row <= count
+			a_pixmap_not_void: a_pixmap /= Void
 		deferred
 		end
 
@@ -436,6 +448,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/03/29 01:43:41  king
+--| Added pixmapping functionality
+--|
 --| Revision 1.44  2000/03/29 01:20:50  brendel
 --| Fixed to take ARRAY's with lower not 1 in account.
 --|

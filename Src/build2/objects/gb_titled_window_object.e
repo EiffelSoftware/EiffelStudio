@@ -278,7 +278,7 @@ feature -- Access
 		
 feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER} -- Basic operation
 		
-	generate_xml (element: XML_ELEMENT) is
+	generate_xml (element: XM_ELEMENT) is
 			-- Generate an XML representation of specific attributes of `Current'
 			-- in `element'. For now, only a name needs to be stored.
 			-- (export status {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER})
@@ -289,7 +289,7 @@ feature {GB_XML_STORE, GB_XML_LOAD, GB_XML_OBJECT_BUILDER} -- Basic operation
 			end
 		end
 		
-	modify_from_xml (element: XML_ELEMENT) is
+	modify_from_xml (element: XM_ELEMENT) is
 			-- Update `Current' based on information held in `element'.
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]

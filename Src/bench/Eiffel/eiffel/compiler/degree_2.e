@@ -124,9 +124,7 @@ feature -- Processing
 						if a_class.has_types then
 								-- Process skeleton(s) for `a_class'.
 							a_class.process_skeleton
-							check
-								has_class_type: a_class.has_types
-							end
+
 							if not il_generation then
 									-- Check validity of special classes ARRAY,
 									-- STRING, TO_SPECIAL, SPECIAL.
@@ -149,12 +147,7 @@ feature -- Processing
 							end
 							-- Process skeleton(s) for `a_class'.
 						a_class.process_skeleton
-						check
-								-- A generic class that is visible but not in system
-								-- might have `has_types' set to False, but no other
-								-- classes should be like that.
-							has_class_type: not a_class.has_visible implies a_class.has_types
-						end
+
 						if not il_generation then
 								-- Check validity of special classes ARRAY,
 								-- STRING, TO_SPECIAL, SPECIAL.

@@ -19,6 +19,15 @@ inherit
 		end
 
 	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			default_create, is_equal, copy
 		end
@@ -239,9 +248,7 @@ feature -- Actions
 			create l_exec
 			l_dir := l_exec.current_working_directory
 			create fd
-			fd.filters.extend (["*.dll", ".NET Library (*.dll)"])
-			fd.filters.extend (["*.exe", ".NET Application (*.exe)"])
-			fd.filters.extend (["*.exe;*.dll", "All Assemblies (*.exe; *.dll)"])
+			set_dialog_filters (fd, <<dll_files_filter, exe_files_filter, all_assemblies_filter>>)
 			fd.set_title ("Select an assembly")
 			fd.show_modal_to_window (system_window.window)
 			l_exec.change_working_directory (l_dir)

@@ -22,6 +22,13 @@ inherit
 		undefine
 			default_create, is_equal, copy
 		end
+		
+	EB_FILE_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		end
 
 create
 	make
@@ -98,7 +105,7 @@ feature -- Actions
 		do
 			create fd
 			fd.save_actions.extend (agent generate_and_save_key (fd))
-			fd.set_filter ("*.snk")
+			set_dialog_filters_and_add_all (fd, <<strong_name_key_files_filter>>)
 			fd.set_title ("Save key file as...")
 			fd.show_modal_to_window (system_window.window)
 		end

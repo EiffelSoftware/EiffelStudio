@@ -89,6 +89,9 @@ feature -- Status
 	has_debug_info: BOOLEAN
 			-- Does current have some debug info?
 
+	has_strong_name: BOOLEAN
+			-- Does current have a strong name signature?
+
 feature -- Access
 
 	pe_header: CLI_PE_FILE_HEADER
@@ -107,6 +110,11 @@ feature -- Access
 	debug_directory: CLI_DEBUG_DIRECTORY
 	debug_info: MANAGED_POINTER
 			-- Data for storing debug information in PE files.
+
+	strong_name_directory: CLI_DIRECTORY
+	strong_name_info: MANAGED_POINTER
+	public_key: MD_PUBLIC_KEY
+			-- Hold data for strong name signature.
 
 	cli_header: CLI_HEADER
 			-- Header for `meta_data'.
@@ -155,7 +163,9 @@ feature -- Settings
 			cli_header.set_entry_point_token (token)
 		end
 
-	set_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY; a_debug_info: MANAGED_POINTER) is
+	set_debug_information (a_cli_debug_directory: CLI_DEBUG_DIRECTORY;
+			a_debug_info: MANAGED_POINTER)
+		is
 			-- Set `debug_directory' to `a_cli_debug_directory' and `debug_info'
 			-- to `a_debug_info'.
 		require
@@ -169,7 +179,24 @@ feature -- Settings
 			debug_directory_set: debug_directory = a_cli_debug_directory
 			debug_info_set: debug_info = a_debug_info
 		end
-		
+	
+	set_public_key (a_key: like public_key) is
+			-- Set `public_key' to `a_key'.
+		require
+			key_not_void: a_key /= Void
+			key_valid: a_key.item.count > 0
+		do
+			public_key := a_key
+			has_strong_name := True
+			cli_header.set_flags (feature {CLI_HEADER}.il_only |
+				feature {CLI_HEADER}.strong_name_signed)
+		ensure
+			public_key_set: public_key = a_key
+			has_strong_name_set: has_strong_name
+			cli_header_flags_set: cli_header.flags = 
+				feature {CLI_HEADER}.il_only | feature {CLI_HEADER}.strong_name_signed
+		end
+
 feature -- Saving
 
 	save is
@@ -177,6 +204,9 @@ feature -- Saving
 		local
 			l_pe_file: RAW_FILE
 			l_padding: MANAGED_POINTER
+			l_ptr: POINTER
+			l_strong_name_location, l_result, l_size: INTEGER
+			l_uni_string: UNI_STRING
 		do
 				-- First compute size of PE file headers and sections.
 			compute_sizes
@@ -215,6 +245,12 @@ feature -- Saving
 				create l_padding.make (padding (debug_directory.count + debug_info.count, 16))
 				l_pe_file.put_data (l_padding.item, l_padding.count)
 			end
+
+			if has_strong_name then
+				l_strong_name_location := l_pe_file.count
+				create l_padding.make (strong_name_size)
+				l_pe_file.put_data (l_padding.item, l_padding.count)
+			end
 			
 			l_pe_file.put_data (emitter.assembly_memory.item, meta_data_size)
 			
@@ -232,12 +268,33 @@ feature -- Saving
 				-- Store .reloc section
 			l_pe_file.put_data (reloc_section.item, reloc_section.count)
 			
-				-- Add padding to end of file/
+				-- Add padding to end of file
 			create l_padding.make (padding (reloc_size, file_alignment))
 			l_pe_file.put_data (l_padding.item, l_padding.count)
 			
 			l_pe_file.close
 			is_valid := False
+			
+			if has_strong_name then
+				create l_pe_file.make_open_read (file_name)
+				create l_padding.make (l_pe_file.count)
+				l_pe_file.read_data (l_padding.item, l_padding.count)
+				l_pe_file.close
+				
+				create l_uni_string.make (file_name)
+				l_result := feature {MD_STRONG_NAME}.strong_name_signature_generation (
+					l_uni_string.item, default_pointer, public_key.key_pair.item,
+					public_key.key_pair.count, $l_ptr, $l_size)
+					
+				(l_padding.item + l_strong_name_location).memory_copy (l_ptr, l_size)
+				
+				create l_pe_file.make_open_write (file_name)
+				l_pe_file.put_data (l_padding.item, l_padding.count)
+				l_pe_file.close
+
+				feature {MD_STRONG_NAME}.strong_name_free_buffer (l_ptr)
+			end
+			
 		ensure
 			not_is_valid: not is_valid
 		end
@@ -247,16 +304,31 @@ feature {NONE} -- Saving
 	compute_sizes is
 			-- Compute sizes and basic locations of headers and sections,
 			-- both real, on disk and in memory.
+		local
+			l_size: INTEGER
+			l_result: INTEGER
 		do
 				-- Size of meta data and code.
 			meta_data_size := emitter.save_size
 
 			if method_writer /= Void then
 				code_size := method_writer.count
+			else
+				code_size := 0
 			end
 
 			if has_debug_info then
 				debug_size := pad_up (debug_directory.count + debug_info.count, 16)
+			else
+				debug_size := 0
+			end
+
+			if has_strong_name then
+				l_result := feature {MD_STRONG_NAME}.strong_name_signature_size (
+					public_key.item.item, public_key.item.count, $l_size)
+				strong_name_size := l_size
+			else
+				strong_name_size := 0
 			end
 
 				-- Real size of all components
@@ -265,10 +337,12 @@ feature {NONE} -- Saving
 				reloc_section_header.count
 			
 			import_table_padding := pad_up (iat.count + cli_header.count + code_size +
-				debug_size + meta_data_size, 16) -
-				(iat.count + cli_header.count + code_size + debug_size + meta_data_size)
+				debug_size + strong_name_size + meta_data_size, 16) -
+				(iat.count + cli_header.count + code_size + debug_size +
+				strong_name_size + meta_data_size)
 
-			text_size := iat.count + cli_header.count + code_size + debug_size + meta_data_size +
+			text_size := iat.count + cli_header.count + code_size + debug_size +
+				strong_name_size + meta_data_size +
 				import_table_padding + import_table.count + entry_data.count
 				
 			reloc_size := reloc_section.count
@@ -284,7 +358,7 @@ feature {NONE} -- Saving
 			code_rva := text_rva + iat.count + cli_header.count
 
 			import_directory_rva := text_rva + iat.count + cli_header.count + code_size + 
-				debug_size + meta_data_size + import_table_padding
+				debug_size + strong_name_size + meta_data_size + import_table_padding
 		end
 
 	update_rvas is
@@ -297,7 +371,8 @@ feature {NONE} -- Saving
 			optional_header.set_code_size (text_size_on_disk)
 			optional_header.set_reloc_size (reloc_size_on_disk)
 			optional_header.set_entry_point_rva (text_rva + iat.count +
-				cli_header.count + code_size + debug_size + meta_data_size + import_table_padding +
+				cli_header.count + code_size + debug_size + strong_name_size +
+				meta_data_size + import_table_padding +
 				import_table.count + entry_data.start_position)
 			optional_header.set_base_of_code (text_rva)
 			optional_header.set_base_of_reloc (reloc_rva)
@@ -357,22 +432,27 @@ feature {NONE} -- Saving
 				feature {CLI_SECTION_CONSTANTS}.read)
 			
 				-- CLI header.
+			if has_strong_name then
+				cli_header.strong_name_directory.set_rva_and_size (text_rva + iat.count +
+					cli_header.count + code_size + debug_size, strong_name_size)
+			end
 			cli_header.meta_data_directory.set_rva_and_size (text_rva + iat.count +
-				cli_header.count + code_size + debug_size, meta_data_size)
+				cli_header.count + code_size + debug_size + strong_name_size, meta_data_size)
 			
 				-- Setting of import table.
 			iat.set_import_by_name_rva (text_rva + iat.count + cli_header.count + code_size +
-				+ debug_size + meta_data_size + import_table_padding +
+				+ debug_size + strong_name_size + meta_data_size + import_table_padding +
 				import_table.Size_to_import_by_name)
 			import_table.set_rvas (text_rva, text_rva + iat.count + cli_header.count +
-				code_size + debug_size + meta_data_size + import_table_padding)
+				code_size + debug_size + strong_name_size + meta_data_size + import_table_padding)
 			
 				-- Entry point setting
 			entry_data.set_iat_rva (text_rva)
 			
 				-- Reloc section
 			reloc_section.set_data (text_rva + iat.count + cli_header.count + code_size +
-				debug_size + meta_data_size + import_table_padding + import_table.count +
+				debug_size + strong_name_size + meta_data_size +
+				import_table_padding + import_table.count +
 				entry_data.jump_size)
 				
 				-- Set method RVAs now.
@@ -412,7 +492,7 @@ feature {NONE} -- Implementation
 	text_rva, code_rva, reloc_rva: INTEGER
 			-- Size information about current PE.
 
-	debug_size, meta_data_size, code_size: INTEGER
+	debug_size, strong_name_size, meta_data_size, code_size: INTEGER
 
 	import_table_padding: INTEGER
 			-- Padding added before `import_table' so that it is aligned on 16 bytes boundaries.
@@ -424,5 +504,6 @@ invariant
 	file_name_not_void: is_valid implies file_name /= Void
 	file_name_not_empty: is_valid implies not file_name.is_empty
 	dos_header_not_void: is_valid implies dos_header /= Void
+	public_key_not_void: (is_valid and has_strong_name) implies public_key /= Void
 	
 end -- class CLI_PE_FILE

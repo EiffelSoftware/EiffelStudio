@@ -19,6 +19,15 @@ inherit
 	TOE_TREE_FACTORY
 	
 	GB_SHARED_TOOLS
+	
+feature -- Access
+
+	components_loaded: BOOLEAN is
+			-- Are components loaded?
+		do
+			Result := component_document /= Void
+		end
+		
 		
 feature -- Basic operations
 

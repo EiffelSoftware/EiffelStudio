@@ -14,6 +14,7 @@
 
 #include "eif_config.h"
 #include "eif_portable.h"	/* must come before <errno.h> for VMS */
+#include "eif_path_name.h"	/* for eifrt_vms_directory_file_name */
 
 #ifdef I_STRING
 #include <string.h>
@@ -899,7 +900,7 @@ rt_public void file_stat (char *path, struct stat *buf)
 		}
 		break;
 	}
-#ifdef EIF_VMS
+#if defined EIF_VMS && defined _VMS_V6_SOURCE
 	buf->st_uid &= 0x0000FFFF ;		/* VMS: mask out group id */
 #endif
 }
@@ -1181,8 +1182,11 @@ rt_public void file_mkdir(char *path)
 
 	int status;			/* System call status */
 #ifdef EIF_VMS
-	char duplicate[PATH_MAX + 1];
+	char vms_path [PATH_MAX +1];
+#ifdef EIF_VMS_V6_ONLY
+	char duplicate[PATH_MAX];
 	strcpy(duplicate,path);
+#endif
 #endif
 	
 	for (;;) {
@@ -1200,16 +1204,29 @@ rt_public void file_mkdir(char *path)
 			else
 				esys();		/* Raise exception */
 		}
+
 #ifdef EIF_VMS
 		/* Under VMS, mkdir will not grant delete privelege by default
 		 * on directory just created. However if no delete priv then
-		 * then VMS thinks the project isn't writable. This is one
-		 * of those brain-dead clashes btwn VMS & U*ix.
+		 * then VMS access() thinks the project isn't writable. 
+		 * For now (till we fix the writability check that uses access)
 		 * Now set delete protection on dir file */
+#ifdef EIF_VMS_V6_ONLY
 		status = chmod(dir_dot_dir(duplicate),0777);
+		err = errno;
 		if (status == -1) {
 			esys();
 		}
+#else
+		err = (errno == EVMSERR ? vaxc$errno : errno);
+		status = chmod (path, 0777);
+		err = (errno == EVMSERR ? vaxc$errno : errno);
+		if (eifrt_vms_directory_file_name (path, vms_path)) {
+		    status = chmod (vms_path, 0777);
+		    err = (errno == EVMSERR ? vaxc$errno : errno);
+		}
+
+#endif
 #endif	/* vms */
 		break;
 	}
@@ -1488,7 +1505,7 @@ rt_public EIF_BOOLEAN file_creatable(char *path)
 	 */
 
 	struct stat buf;			/* Buffer to get parent directory statistics */
-	char temp [PATH_MAX + 1];
+	char temp [PATH_MAX];
 	char *ptr;
 
 #ifdef EIF_VMS

@@ -15,8 +15,9 @@
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_lmalloc.h"	/* for eif_malloc, eif_free */
+#include "eif_path_name.h"	/* for eifrt_vms_directory_file_name */
 
-#ifdef EIF_VMS
+#ifdef EIF_VMS_V6_ONLY
  /* define these routines in upr case, cause that's how they are in the lib */
 #define lib$find_file LIB$FIND_FILE
 #define sys$getmsg SYS$GETMSG
@@ -62,9 +63,12 @@
 #define INCL_DOSFILEMGR   /* File Manager values */
 #define INCL_DOSERRORS	  /* DOS error values */
 #include <os2.h>
+#ifndef MAX_PATH
+#define MAX_PATH 255
+#endif
 
 typedef struct tagEIF_OS2_DIRENT {
-	char	name [PATH_MAX + 1];
+	char	name [MAX_PATH];
 	int 	first;
 	HDIR	handle;
 } EIF_OS2_DIRENT;
@@ -73,6 +77,8 @@ typedef struct tagEIF_OS2_DIRENT {
 #ifndef HAS_READDIR
 	Sorry! You have to find a PD implementation of readdir()...
 #endif
+
+#define ST_MODE     0x0fff      /* Keep only permission mode */
 
 /*
  * Opening and closing a directory.
@@ -367,7 +373,15 @@ rt_public char *dir_next(DIR *dirp)
 	if (dp == (DIRENTRY *) 0)
 		return (char *) 0;
 
-#ifdef DIRNAMLEN
+#ifdef EIF_VMS
+	/* strip any trailing version number from the returned string */
+	{
+	    char *verp = strrchr(dp->d_name, ';');
+	    if (verp)
+		return makestr (dp->d_name, verp - dp->d_name);
+	    else return makestr (dp->d_name, strlen(dp->d_name));
+	}
+#elif defined DIRNAMLEN
 	return makestr(dp->d_name, dp->d_namlen);
 #else
 	return makestr(dp->d_name, strlen(dp->d_name));
@@ -395,6 +409,7 @@ rt_public EIF_CHARACTER eif_dir_separator (void)
 #if defined EIF_WIN32 || defined EIF_OS2
 	return '\\';
 #elif defined EIF_VMS
+	/* This is a gross oversimplification! */
 	return '.';
 #else
 	return '/';
@@ -411,7 +426,7 @@ rt_public EIF_INTEGER eif_chdir (EIF_OBJECT path)
 
 rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 {
-#ifdef EIF_VMS
+#ifdef EIF_VMS_V6_ONLY
 	/* Need to check if directory is passed as simple name
 	** such as "subdir", or as Unix-like (subdir/ or /top/subdir),
 	** or as VMS style ([.subdir] or [top.subdir] or subdir.dir).
@@ -424,15 +439,15 @@ rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 	** Now using lib$find_file, which will accept a file or dir.
 	*/
 	int		status;
-	char		buff[PATH_MAX + 1];
-	char		namecopy[PATH_MAX + 1];
+	char		buff[PATH_MAX];
+	char		namecopy[PATH_MAX];
 	int		i;
 	int		len;
 	struct dsc$descriptor_s	pat;
 	struct dsc$descriptor_s	res;
 	unsigned int		context=0;
 	int			flags = 0xf;
-	char			mesg[PATH_MAX + 1];
+	char			mesg[PATH_MAX];
 	/* $DESCRIPTOR(message_text,mesg);	this generates warning */
 	struct dsc$descriptor_s message_text;
 	unsigned short		mesglen;
@@ -497,35 +512,42 @@ rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 
 /*	return (EIF_BOOLEAN) (access(name,0) != -1 ); /* Removed: Does not check if not dir -ET */
 
-#else
+#else	/* Unix, Win32, VMS (V7 or later), et. al. */
 
     /* Test whether file exists or not by checking the return from the stat()
      * system call, hence letting the kernel run all the tests. Return true
      * if the file exists.
      * Stat is called directly, because failure is allowed here obviously.
-	 * Test to see if it is really a directory and not a plain text file.
+     * Test to see if it is really a directory and not a plain text file.
      */
 
-    struct stat buf;            /* Buffer to get file statistics */
+	struct stat buf;            /* Buffer to get file statistics */
 
 	if (stat(name, &buf) == -1)	/* Attempt to stat file */
 		return (EIF_BOOLEAN) '\0';
 	else
 		return (EIF_BOOLEAN) ((buf.st_mode & S_IFDIR) ? '\1' : '\0');
-#endif	/* else not vms */
+#endif	/* else (platform) */
 }
 
 rt_public EIF_BOOLEAN eif_dir_is_readable(char *name)
 {
 	/* Is directory readable */
 
-#ifdef EIF_VMS
-	char	copy[PATH_MAX + 1];
+#ifdef EIF_VMS_V6_ONLY	/* and hence no unix filespec support */
+	char	copy[PATH_MAX];
 	strcpy(copy,name);
 	if ( -1 == access(dir_dot_dir(copy),R_OK) )
 		return (EIF_BOOLEAN) FALSE;
-	else
-		return (EIF_BOOLEAN) TRUE;
+	else	return (EIF_BOOLEAN) TRUE;
+
+#elif defined EIF_VMS
+	/* Here is a major stupid: stat accepts unix directory paths, access does not! */
+	/* return (EIF_BOOLEAN) (access(name, R_OK) != -1);           wont work!     */
+	char vms_path [PATH_MAX +1];
+	int dbg = access((name), R_OK);
+	int result = access(eifrt_vms_directory_file_name (name, vms_path), R_OK);
+	return (EIF_BOOLEAN) (result != -1);
 
 #elif defined EIF_WIN32
 
@@ -546,8 +568,6 @@ rt_public EIF_BOOLEAN eif_dir_is_readable(char *name)
 	int uid, gid;				/* File owner and group */
 	int euid, egid;				/* Effective user and group */
 #endif
-
-#define ST_MODE     0x0fff      /* Keep only permission mode */
 
 	int mode;					/* Current mode */
 	struct stat buf;            /* Buffer to get file statistics */
@@ -583,13 +603,21 @@ rt_public EIF_BOOLEAN eif_dir_is_writable(char *name)
 {
 	/* Is directory writable */
 
-#ifdef EIF_VMS
-	char	copy[PATH_MAX + 1];
+#ifdef EIF_VMS_V6_ONLY
+	char	copy[PATH_MAX];
 	strcpy(copy,name);
 	if ( -1 == access(dir_dot_dir(copy),W_OK) )
 		return (EIF_BOOLEAN) FALSE;
-	else
-		return (EIF_BOOLEAN) TRUE;
+	else	return (EIF_BOOLEAN) TRUE;
+
+#elif defined EIF_VMS
+
+	/* This requies write and delete access on the directory to be true. */
+	char vms_path [PATH_MAX +1];
+	int dbg = access((name), W_OK);
+	int result = access(eifrt_vms_directory_file_name (name, vms_path), W_OK);
+	return (EIF_BOOLEAN) (result != -1);
+
 #elif defined EIF_WIN32
 
 	return (EIF_BOOLEAN) (access (name, 02) != -1);
@@ -622,6 +650,9 @@ rt_public EIF_BOOLEAN eif_dir_is_writable(char *name)
 
 	euid = geteuid();
 	egid = getegid();
+#if defined EIF_VMS && defined _VMS_V6_SOURCE
+	euid |= egid << 16;		/* VMS: mask in group id */
+#endif
 
 	if (euid == 0)
 		return (EIF_BOOLEAN) '\01';
@@ -643,13 +674,20 @@ rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 {
 	/* Is directory executable */
 
-#ifdef EIF_VMS
-	char	copy[PATH_MAX + 1];
+#ifdef EIF_VMS_V6_ONLY
+	char	copy[PATH_MAX];
 	strcpy(copy,name);
 	if ( -1 == access(dir_dot_dir(copy),X_OK) )
 		return (EIF_BOOLEAN) FALSE;
 	else
 		return (EIF_BOOLEAN) TRUE;
+
+#elif defined EIF_VMS
+	char vms_path [PATH_MAX +1];
+	int dbg = access((name), X_OK);
+	int result = access(eifrt_vms_directory_file_name (name, vms_path), X_OK);
+	return (EIF_BOOLEAN) (result != -1);
+
 #elif defined EIF_WIN32
 	return (EIF_BOOLEAN) (access (name, 0) != -1);
 
@@ -680,6 +718,9 @@ rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 
 	euid = geteuid();
 	egid = getegid();
+#if defined EIF_VMS && defined _VMS_V6_SOURCE
+	euid |= egid << 16;		/* VMS: mask in group id */
+#endif
 
 	if (euid == 0)
 		return (EIF_BOOLEAN) '\01';
@@ -696,6 +737,18 @@ rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 		return (EIF_BOOLEAN) ((mode & S_IXOTH) ? '\01' : '\0');
 #endif	/* not vms */
 }
+
+rt_public EIF_BOOLEAN eif_dir_is_deletable(char *name)
+{
+	/* Is directory deletable */
+
+#ifdef EIF_VMS
+	return (EIF_BOOLEAN) TRUE;  /* ***VMS FIXME:*** */
+#else
+    return eif_dir_is_writable (name);
+#endif
+}
+
 
 rt_public void eif_dir_delete(char *name)
 {
@@ -725,7 +778,19 @@ rt_public void eif_dir_delete(char *name)
 }
 
 #ifdef EIF_VMS
-char *	dir_dot_dir ( char *	duplicate )
+/* given a path, return the directory file name. 
+** path is returned in buf (must be at least PATH_MAX +1 bytes).
+*/
+rt_public char * eifrt_vms_dir_filename (const char* path, char* buf)
+{
+    if (!path || !buf) return NULL;
+    /* ***VMS_FIXME***    ***tbs***  */
+    return NULL;
+}
+#endif /* EIF_VMS */
+
+#ifdef EIF_VMS_V6_ONLY
+char * dir_dot_dir (char * duplicate)
 {
 /*	For a given directory path, return the name of the directory file.
  *	For example, given DKA200:[DIR1.SUBDIR], return this:
@@ -741,7 +806,7 @@ char *	dir_dot_dir ( char *	duplicate )
 	if (orig_strlen == 2 && duplicate[0] == '[') {
 		/* [] means current directory */
 		/* have to get full directory name */
-		getcwd(duplicate,PATH_MAX);
+		getcwd(duplicate,PATH_MAX - 1);
 		orig_strlen = strlen(duplicate);
 	}	/* current directory */
 	/* first locate the last . in the path by stepping backwards */
@@ -993,4 +1058,4 @@ main()
     exit(0);
 }
 #endif	/* TEST */
-#endif	/* VMS */
+#endif	/* EIF_VMS_V6_ONLY */

@@ -1,5 +1,5 @@
 <document output="studio" title="Lexical analysis: the Lex library">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<heading>
 			<size>2</size>OVERVIEW
@@ -250,9 +250,9 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 				<italic>eiffel_regular</italic> grammar file in the examples directory provides an extensive example.
 			</paragraph>
 			<paragraph>Each regular expression denotes a set of tokens. For example, the first regular expression seen above,
-				<line_break/>
+				<line_break></line_break>
 				<code_block>	'0'..'9'</code_block>
-				<line_break/> denotes a set of ten tokens, each consisting of a single digit.
+				<line_break></line_break> denotes a set of ten tokens, each consisting of a single digit.
 			</paragraph>
 			<heading>
 				<size>3</size>Basic expressions
@@ -275,7 +275,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 						<cell>'\xx'</cell>
 						<cell>Character given by its two-digit hexadecimal code
 							<italic>xx</italic>.
-							<line_break/>(Both lower- and upper-case may be used for letters in
+							<line_break></line_break>(Both lower- and upper-case may be used for letters in
 							<italic>xx</italic>.)
 						</cell>
 					</row>
@@ -376,7 +376,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 					<paragraph>Concatenations may be inconvenient when the concatenated elements are simply characters, as in 
 						<italic>'A' ' ' 'T' 'e' 'x' 't'</italic>. In this case you may use a 
 						<bold>string</bold> in double quotes, as in
-						<line_break/>
+						<line_break></line_break>
 						<code_block>	<string>"A Text"</string></code_block>
 					</paragraph>
 					<paragraph>More generally, a string is written"a
@@ -509,7 +509,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 						<italic>-&gt;"*/"</italic>
 					</cell>
 					<cell>Any string up to and including an occurrence of */
-						<line_break/>(the closing symbol of a PL/I or C comment).
+						<line_break></line_break>(the closing symbol of a PL/I or C comment).
 					</cell>
 				</row>
 				<row>
@@ -545,10 +545,10 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 				<paragraph>
 					<italic>Class</italic>
 					<bold>'c' 'l' 'a' 's' 's'</bold>
-					<line_break/>
+					<line_break></line_break>
 					<italic>Then</italic>
 					<bold>'t' 'h' 'e' 'n'</bold>
-					<line_break/> ...
+					<line_break></line_break> ...
 				</paragraph>
 				<paragraph>This would be inconvenient. To simplify the task of language description, and also to improve the efficiency of the lexical analysis process, it is usually preferable to treat keywords as a separate category.</paragraph>
 				<paragraph>If you are using class SCANNING and hence a lexical grammar file, the list of keywords, if any, must appear at the end of the file, one per line, preceded by a line that simply reads</paragraph>
@@ -698,15 +698,15 @@ BOOLEAN
 	<feature_name>Identifier</feature_name>, <feature_name>Letter</feature_name>, <feature_name>Digit</feature_name>, <feature_name>Underlined</feature_name>, <feature_name>Suffix</feature_name>, <feature_name>Suffix_list</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>
 
 	<feature_name>build_identifier</feature_name> <keyword>is</keyword>
-	      <keyword>do</keyword>
-	            <feature_name>interval</feature_name> <symbol>(</symbol><symbol>'</symbol><character>a</character><symbol>'</symbol>,  <symbol>'</symbol><character>z</character><symbol>'</symbol><symbol>)</symbol>; <feature_name>Letter </feature_name><symbol>:</symbol><symbol>=</symbol> <feature_name>last_created_tool</feature_name>
-	            <feature_name>interval</feature_name> <symbol>(</symbol><symbol>'</symbol><character>0</character><symbol>'</symbol>,  <symbol>'</symbol><character>9</character><symbol>'</symbol><symbol>)</symbol>; <feature_name>Digit </feature_name><symbol>:</symbol><symbol>=</symbol> <feature_name>last_created_tool</feature_name>
-	            <feature_name>interval</feature_name> <symbol>(</symbol><symbol>'</symbol>_<symbol>'</symbol>, <symbol>'</symbol>_<symbol>'</symbol><symbol>)</symbol>; <feature_name>Underlined </feature_name><symbol>:</symbol><symbol>=</symbol> <feature_name>last_created_tool</feature_name>
-	            <feature_name>union</feature_name> <symbol>(</symbol><feature_name>Digit</feature_name>, <feature_name>Underlined</feature_name><symbol>)</symbol>;
-				<feature_name>Suffix </feature_name><symbol>:</symbol><symbol>=</symbol> <feature_name>last_created_tool</feature_name><feature_name>iteration</feature_name> <symbol>(</symbol><feature_name>Suffix</feature_name><symbol>)</symbol>;
-				<feature_name>Suffix_list</feature_name> <symbol>:</symbol><symbol>=</symbol><feature_name> last_created_tool</feature_name><feature_name>append</feature_name> <symbol>(</symbol><feature_name>Letter,</feature_name> <feature_name>Suffix_list</feature_name><symbol>)</symbol>; 
-	            <feature_name>Identifier </feature_name><symbol>:</symbol><symbol>=</symbol><feature_name> last_created_tool</feature_name>
-	      <keyword>end</keyword>
+		<keyword>do</keyword>
+			<feature_name>interval</feature_name> <symbol>(</symbol><symbol>'</symbol><character>a</character><symbol>'</symbol>,  <symbol>'</symbol><character>z</character><symbol>'</symbol><symbol>)</symbol>; <feature_name>Letter </feature_name><symbol>:</symbol><symbol>=</symbol> <feature_name>last_created_tool</feature_name>
+			<feature_name>interval</feature_name> <symbol>(</symbol><symbol>'</symbol><character>0</character><symbol>'</symbol>,  <symbol>'</symbol><character>9</character><symbol>'</symbol><symbol>)</symbol>; <feature_name>Digit </feature_name><symbol>:</symbol><symbol>=</symbol> <feature_name>last_created_tool</feature_name>
+			<feature_name>interval</feature_name> <symbol>(</symbol><symbol>'</symbol>_<symbol>'</symbol>, <symbol>'</symbol>_<symbol>'</symbol><symbol>)</symbol>; <feature_name>Underlined </feature_name><symbol>:</symbol><symbol>=</symbol> <feature_name>last_created_tool</feature_name>
+			<feature_name>union</feature_name> <symbol>(</symbol><feature_name>Digit</feature_name>, <feature_name>Underlined</feature_name><symbol>)</symbol>;
+			<feature_name>Suffix </feature_name><symbol>:</symbol><symbol>=</symbol> <feature_name>last_created_tool</feature_name><feature_name>iteration</feature_name> <symbol>(</symbol><feature_name>Suffix</feature_name><symbol>)</symbol>;
+			<feature_name>Suffix_list</feature_name> <symbol>:</symbol><symbol>=</symbol><feature_name> last_created_tool</feature_name><feature_name>append</feature_name> <symbol>(</symbol><feature_name>Letter,</feature_name> <feature_name>Suffix_list</feature_name><symbol>)</symbol>; 
+			<feature_name>Identifier </feature_name><symbol>:</symbol><symbol>=</symbol><feature_name> last_created_tool</feature_name>
+		<keyword>end</keyword>
 </code_block>
 								<paragraph>Each token type is characterized by a number in the tool_list. Each tool has a name, recorded in <code><feature_name>tool_names</feature_name></code>, which gives a readable form of the corresponding regular expression. You can use it to check that you are building the right tool.
 									<heading>

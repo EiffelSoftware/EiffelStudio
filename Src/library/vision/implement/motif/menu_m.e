@@ -6,11 +6,21 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MENU_M 
+class 
+	MENU_M 
 
 inherit
 
 	MANAGER_M
+
+feature -- Access
+
+	children_has_accelerators: BOOLEAN is
+			-- Can children have accelerators
+			-- (Default is True)
+		do
+			Result := True
+		end;
 
 feature -- Status report
 

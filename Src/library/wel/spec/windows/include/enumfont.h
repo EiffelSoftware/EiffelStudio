@@ -32,12 +32,12 @@ int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT *, NEWTEXTMETRIC *, int, 
 #	define cwel_set_enum_font_fam_procedure_address(_addr_)  (wel_set_enum_font_fam_procedure_address(_addr_))
 		/* Set `wel_enum_font_fam_procedure' with `addr' */
 	
-		extern void wel_set_font_family_enumerator_object(EIF_POINTER _addr_);
+	extern void wel_set_font_family_enumerator_object(EIF_POINTER _addr_);
 #	define cwel_set_font_family_enumerator_object(_addr_)  (wel_set_font_family_enumerator_object(_addr_))
 		/* Set `font_family_enumerator' with `addr' */
 		
-			extern EIF_OBJ wel_release_font_family_enumerator_object() ;
-#	define cwel_release_font_family_enumerator_object (eif_wean (font_family_enumerator)) (wel_release_font_family_enumerator_object (eif_wean (font_family_enumerator)))
+	extern EIF_OBJ wel_release_font_family_enumerator_object() ;
+#	define cwel_release_font_family_enumerator_object (wel_release_font_family_enumerator_object ())
 		/* Release `font_family_enumerator' with `addr' */
 		
 #else

@@ -277,7 +277,6 @@ feature {NONE}
 
 	expose_data (widget_oui: WIDGET): EXPOSE_DATA is
 			--
-		
 		local
 			clip: CLIP;
 			coord: COORD_XY;

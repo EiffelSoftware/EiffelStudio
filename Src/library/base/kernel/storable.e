@@ -38,10 +38,10 @@ feature -- Access
 			-- Retrieve object structure, from external
 			-- representation previously stored in a file
 			-- called `file_name'.
-            -- To access resulting object under correct type,
-            -- use assignment attempt.
-            -- Will raise an exception (code `Retrieve_exception')
-            -- if file content is not a `STORABLE' structure.
+			-- To access resulting object under correct type,
+			-- use assignment attempt.
+			-- Will raise an exception (code `Retrieve_exception')
+			-- if file content is not a `STORABLE' structure.
 			-- Will return Void if the file does not exist or
 			-- is not readable.
 		require
@@ -108,8 +108,8 @@ feature -- Element change
 			-- Produce on file called `file_name' an external
 			-- representation of the entire object structure 
 			-- reachable from current object.
-            -- Retrievable from other systems for same platform
-            -- (machine architecture).
+			-- Retrievable from other systems for same platform
+			-- (machine architecture).
 		require
 			file_name_not_void: file_name /= Void
 			file_name_meaningful: not file_name.empty
@@ -119,7 +119,7 @@ feature -- Element change
 		do
 			!!file.make (file_name)
 			if (file.exists and then file.is_writable) or else
-			   (file.is_creatable) then
+				(file.is_creatable) then
 				file.open_write 
 				c_general_store (file.descriptor, $Current)
 				file.close

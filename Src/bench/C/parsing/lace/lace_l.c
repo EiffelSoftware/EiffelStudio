@@ -594,7 +594,7 @@ char *xxtext_ptr;
 
 #include "config.h"
 #include "lace_y.h"
-#include "limits.h"
+#include "rtlimits.h"
 #include "err_msg.h"
 #include <ctype.h>
 

@@ -13,7 +13,7 @@
 #include "macros.h"
 #include "struct.h"
 #include "typenode.h"
-#include "limits.h"
+#include "rtlimits.h"
 
 /*
  * Eiffel object (Abstract Systac Nodes0 creation

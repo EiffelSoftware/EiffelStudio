@@ -23,7 +23,7 @@
 #include "bits.h"
 #include "run_idr.h"
 #include "error.h"
-#include "../parsing/shared/limits.h"
+#include "rtlimits.h"
 #include "traverse.h"
 
 #include <ctype.h>					/* For isspace() */

@@ -34,7 +34,7 @@ feature {NONE} -- Inititalization
 		do 
 			!! app_context.make;
  			application_context_cell.put (app_context)
-			if application_class /= Void then
+			if application_class = Void then
 				application_class_cell.put (clone (app_class))
 			end
 		end;

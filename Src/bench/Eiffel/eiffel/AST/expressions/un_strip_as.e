@@ -100,12 +100,10 @@ feature -- Type check, byte code and dead code removal
 			any_type: CL_TYPE_A
 		once
 			create generics.make (1,1)
-			create any_type
-			any_type.set_base_class_id (System.any_id)
+			create any_type.make (System.any_id)
 			generics.put (any_type, 1)
 
-			create Result.make (generics)
-			Result.set_base_class_id (System.array_id)
+			create Result.make (System.array_id, generics)
 		end
 
 	byte_node: STRIP_B is

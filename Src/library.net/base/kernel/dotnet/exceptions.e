@@ -246,8 +246,17 @@ feature -- Status setting
 		local
 			fle: EIFFEL_EXCEPTION
 		do
---			create fle.make (Developer_exception, name)
-			feature {EXCEPTION_MANAGER}.raise (create {APPLICATION_EXCEPTION}.make)
+			create fle.make (Developer_exception, name)
+			feature {EXCEPTION_MANAGER}.raise (fle)
+		end
+
+	raise_retrieval_exception (name: STRING) is
+			-- Raise a retrieval exception of name `name'.
+		local
+			fle: EIFFEL_EXCEPTION
+		do
+			create fle.make (Retrieve_exception, name)
+			feature {EXCEPTION_MANAGER}.raise (fle)
 		end
 
 	die (code: INTEGER) is

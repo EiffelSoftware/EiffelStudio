@@ -217,14 +217,15 @@ feature -- Generation
 		local
 			feature_table: FEATURE_TABLE
 			current_class: CLASS_C
-			body_id: BODY_ID
 			feature_i: FEATURE_I
+			external_i: EXTERNAL_I
 			file, extern_decl_file: INDENT_FILE
 			inv_byte_code: INVARIANT_B
 			final_mode: BOOLEAN
 			generate_c_code: BOOLEAN
 			once_count:INTEGER
 			buffer, header_buffer: GENERATION_BUFFER
+			has_cpp_externals: BOOLEAN
 		do
 			final_mode := byte_context.final_mode
 
@@ -320,7 +321,18 @@ feature -- Generation
 									buffer.putstring ("static int EIF_oidx_off = 0;%N")
 								end
 							end
+							
+								-- Generate the C code of `feature_i'
 							generate_feature (feature_i, buffer)
+
+								-- If it is a C++ external, we need to set `has_cpp_externals'
+								-- for the generation of the file name.
+							if not has_cpp_externals then
+								external_i ?= feature_i
+								if external_i /= Void then
+									has_cpp_externals := external_i.is_cpp
+								end
+							end
 						end
 						feature_table.forth
 					end
@@ -353,7 +365,7 @@ feature -- Generation
 					end
 					buffer.close_c
 
-					file := open_generation_file
+					file := open_generation_file (has_cpp_externals)
 					file.put_string (buffer)
 					file.close
 
@@ -376,7 +388,7 @@ feature -- Generation
 			f.generate (Current, buffer)
 		end
 
-	open_generation_file: INDENT_FILE is
+	open_generation_file (has_cpp_externals: BOOLEAN): INDENT_FILE is
 			-- Open in write mode a file for generating class code
 			-- of the current class type
 		local
@@ -384,13 +396,13 @@ feature -- Generation
 		do
 			file_name := full_file_name (Class_suffix)
 			if byte_context.final_mode then
-				if class_has_cpp_externals then
+				if has_cpp_externals then
 					file_name.append (Dot_xpp)
 				else
 					file_name.append (Dot_x)
 				end
 			else
-				if class_has_cpp_externals then
+				if has_cpp_externals then
 					file_name.append (Dot_cpp)
 				else
 					file_name.append (Dot_c)
@@ -617,8 +629,7 @@ feature -- Generation
 				creation_feature := 
 						class_type.associated_class.creation_feature
 				if creation_feature /= Void then
-					creat_name := 
-						creation_feature.body_id.feature_name (class_type.id)
+					creat_name := creation_feature.body_id.feature_name (class_type.id)
 					buffer.putstring (creat_name)
 					buffer.putstring ("(l[0]")
 					skeleton.generate(buffer, False)
@@ -1070,41 +1081,6 @@ feature -- Cecil generation
 				buffer.putchar ('}')
 			else
 				buffer.putstring ("{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
-			end
-		end
-
-	class_has_cpp_externals: BOOLEAN is
-			-- Are there any external C++ features in this class?
-		local
-			current_class: CLASS_C
-			external_i: EXTERNAL_I
-			feature_i: FEATURE_I
-			feature_table: FEATURE_TABLE
-		do
-			current_class := associated_class
-				--| The search on `types' is changing types' cursor position
-				--| Keep this in Mind
-				--| ES
-			if current_class.types.search_item (type) = Current then
-				feature_table := current_class.feature_table
-				from
-					feature_table.start
-				until
-					feature_table.after or else Result
-				loop
-					feature_i := feature_table.item_for_iteration
-					if
-						(byte_context.final_mode
-						and then feature_i.to_generate_in (current_class))
-						or else is_modifiable
-					then
-						external_i ?= feature_i
-						if external_i /= Void then
-							Result := external_i.is_cpp
-						end
-					end
-					feature_table.forth
-				end
 			end
 		end
 

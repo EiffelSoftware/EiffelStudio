@@ -8,7 +8,7 @@ class
 	CODE_HTML_FILTER
 
 inherit
-	CODE_HTML_CONSTANTS
+	TEMPLATE_CONSTANTS
 	
 	UTILITY_FUNCTIONS
 
@@ -128,7 +128,7 @@ feature {NONE} -- Commands
 								l_dir_name.extend (l_title)
 								l_dir_name.add_extension ("html")
 								create l_target_file.make_create_read_write (l_dir_name.string)
-								l_text := clone (Template_text)
+								l_text := clone (template_text (code_template_file_name))
 								l_html := generated_html (l_file)
 								replace_token (l_text, Html_content_token, l_html)
 								l_stylesheet := stylesheet_path (l_file.name, True)	

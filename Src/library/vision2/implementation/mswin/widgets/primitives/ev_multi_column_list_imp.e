@@ -14,6 +14,8 @@ inherit
 
 	EV_PRIMITIVE_IMP
 
+	EV_ITEM_HOLDER_IMP
+
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 		rename
 			command_count as item_command_count

@@ -24,6 +24,19 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature -- Target of generation
+
+	set_for_interfaces is
+			-- Set generation mode for `interfaces'.
+		do
+		end
+
+	set_for_implementations is
+			-- Set generation mode for `implementations'.
+		do
+		end
+
+
 feature -- Generation Structure
 
 	generate_key is
@@ -61,9 +74,26 @@ feature -- Generation Structure
 		do
 		end
 
+feature -- Generation type
+
+	set_console_application is
+			-- Current generated application is a CONSOLE application.
+		do
+		end
+
+	set_window_application is
+			-- Current generated application is a WINDOW application.
+		do
+		end
+
+	set_dll is
+			-- Current generated application is a DLL.
+		do
+		end
+
 feature -- Class info
 
-	generate_class_mappings (class_name: STRING; id: INTEGER; filename: STRING) is
+	generate_class_mappings (class_name: STRING; id, interface_id: INTEGER; filename, element_type_name: STRING) is
 			-- Create a correspondance table between `id' and `class_name'.
 		do
 		end
@@ -78,7 +108,7 @@ feature -- Class info
 		do
 		end
 
-	generate_class_header (is_interface, is_deferred, is_expanded, is_external: BOOLEAN; type_id: INTEGER) is
+	generate_class_header (is_interface, is_deferred, is_frozen, is_expanded, is_external: BOOLEAN; type_id: INTEGER) is
 			-- Generate class name and its specifier.
 		do
 		end
@@ -95,6 +125,11 @@ feature -- Class info
 
 	add_to_parents_list (type_id: INTEGER) is
 			-- Add class `name' into list of parents of current type.
+		do
+		end
+
+	add_interface (type_id: INTEGER) is
+			-- Add interface of `type_id' into list of parents of current type.
 		do
 		end
 
@@ -140,7 +175,14 @@ feature -- Features info
 		do
 		end
 
-	generate_feature_identification (name: STRING; feature_id: INTEGER; routine_ids: ARRAY [INTEGER]; in_current_class: BOOLEAN; written_type_id: INTEGER) is
+	generate_interface_feature_identification (name: STRING; feature_id: INTEGER; is_attribute: BOOLEAN) is
+			-- Generate feature name.
+		do
+		end
+
+	generate_feature_identification (name: STRING; feature_id: INTEGER;
+			is_redefined, is_deferred, is_frozen, is_attribute, is_c_external, is_static: BOOLEAN)
+		is
 			-- Generate feature name.
 		do
 		end
@@ -275,8 +317,21 @@ feature -- IL Generation
 		do
 		end
 
-	generate_feature_il (feature_id: INTEGER) is
+	generate_feature_il (feature_id, type_id, code_feature_id: INTEGER) is
 			-- Start il generation for feature `feature_id' of class `class_id'.
+		do
+		end
+
+	generate_implementation_feature_il (feature_id: INTEGER) is
+		do
+		end
+
+	generate_method_impl (feature_id, parent_type_id, parent_feature_id: INTEGER) is
+			-- Generate a MethodImpl from `parent_type_id' and `parent_feature_id'
+		do
+		end
+
+	generate_feature_internal_clone (feature_id: INTEGER) is
 		do
 		end
 
@@ -359,6 +414,12 @@ feature -- Variables access
 		do
 		end
 
+	generate_precursor_feature_access (type_id, feature_id: INTEGER) is
+			-- Generate access to feature of `feature_id' in `type_id'.
+		do
+		end
+
+
 	generate_argument (n: INTEGER) is
 			-- Generate access to `n'-th variable arguments of current feature.
 		do
@@ -428,7 +489,7 @@ feature -- Assignments
 		do
 		end	
 	
-	generate_attribute_assignment (feature_id: INTEGER) is
+	generate_attribute_assignment (type_id, feature_id: INTEGER) is
 			-- Generate assignment to attribute of `feature_id' in current class.
 		do
 		end
@@ -440,6 +501,22 @@ feature -- Assignments
 
 	generate_result_assignment is
 			-- Generate assignment to Result variable of current feature.
+		do
+		end
+
+feature -- Conversion
+
+	convert_to_native_int,
+	convert_to_integer8,
+	convert_to_integer16,
+	convert_to_integer32,
+	convert_to_integer64,
+	convert_to_double,
+	convert_to_real,
+	convert_to_boolean,
+	convert_to_character
+		is
+			-- Convert top of stack into an appropriate type.
 		do
 		end
 
@@ -574,11 +651,19 @@ feature -- Constants generation
 		do
 		end
 
-	put_integer32_constant (i: INTEGER) is
-			-- Put `i' on IL stack.
+	put_integer8_constant,
+	put_integer16_constant,
+	put_integer32_constant,
+	put_integer64_constant (i: INTEGER) is
+			-- Put `i' as INTEGER_8, INTEGER_16, INTEGER or INTEGER_64 on IL stack
 		do
 		end
-
+		
+	put_real_constant (r: REAL) is
+			-- put `r' on IL stack.
+		do
+		end
+		
 	put_double_constant (d: DOUBLE) is
 			-- Put `d' on IL stack.
 		do
@@ -737,6 +822,34 @@ feature -- Unary operator generation
 		do
 		end
 
+
+	generate_bitwise_not is
+			-- Generate `bitwise not' operator
+		do
+		end
+
+feature -- Basic feature
+
+	generate_max (type_id: INTEGER) is
+			-- Generate `max' on basic types.
+		do
+		end
+
+	generate_min (type_id: INTEGER) is
+			-- Generate `min' on basic types.
+		do
+		end
+
+	generate_abs (type_id: INTEGER) is
+			-- Generate `abs' on basic types.
+		do
+		end
+
+	generate_to_string is
+			-- Generate call on `ToString'.
+		do
+		end
+	
 feature -- Line Info for debugging
 
 	put_line_info (n: INTEGER) is

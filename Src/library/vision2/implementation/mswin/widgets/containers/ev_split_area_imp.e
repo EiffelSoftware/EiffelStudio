@@ -444,35 +444,33 @@ feature {NONE} -- Implementation
 
 	splitter_brush: WEL_BRUSH is
 			-- Create the brush used to draw the invert splitter.
-			-- For this, it creates a bitmap :	black / white
-			--                                  white / black
-			-- In the following code, `hexa_number' and `string_bitmap'
-			-- are hexadecimal representations of the bitmap. 
-			-- Here follows the representation of the picture:
-			-- binary: 0 / 1     hexa : 40 / 00     decimal : 128 / 0
-			--         1 / 0            80 / 00                64 / 0
 		local
 			bitmap: WEL_BITMAP
-			log: WEL_LOG_BITMAP
 			string_bitmap: STRING
-			hexa_number: INTEGER
-			c: ANY
+			i: INTEGER
 		once
-			string_bitmap := ""
-				-- First line of the bitmap
-			hexa_number := 128
-			string_bitmap.append_character (hexa_number.ascii_char)
-			hexa_number := 0
-			string_bitmap.append_character (hexa_number.ascii_char)
-				-- Second line of the bitmap
-			hexa_number := 64
-			string_bitmap.append_character (hexa_number.ascii_char)
-			hexa_number := 0
-			string_bitmap.append_character (hexa_number.ascii_char)
-			c := string_bitmap.to_c
+				-- We create a bitmap 8x8 which follows the pattern:
+				-- black / white / black... on one line
+				-- and white / black / white... on the other.
+				-- The hexa number 0xAA correspond to the first line
+				-- and the 0x55 to the other line. Since Windows expects
+				-- value aligned on DWORD, we have gap in our strings.
+
+				-- Creating data of bitmaps
+			create string_bitmap.make (16)
+			string_bitmap.fill_blank
+			from
+				i := 1
+			until
+				i > 16
+			loop	
+				string_bitmap.put ((0xAA).ascii_char, i)
+				string_bitmap.put ((0x55).ascii_char, i + 2)
+				i := i + 4
+			end
+
 				-- Then, we create the brush
-			create log.make (2, 2, 2, 1, 1, $c)
-			create bitmap.make_indirect (log)
+			create bitmap.make_direct (8, 8, 1, 1, string_bitmap)
 			create Result.make_by_pattern (bitmap)
 		end
 

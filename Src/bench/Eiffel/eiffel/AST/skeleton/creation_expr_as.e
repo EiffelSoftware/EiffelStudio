@@ -32,20 +32,10 @@ feature {NONE} -- Initialization
 		require
 			t_not_void: t /= Void
 			l_not_void: l /= Void
-		local
-			dcr_id : ID_AS
 		do
 			type := t
 			call := c
 			location := l.twin
-
-				-- If there's no call create 'default_call'
-			if call = Void then
-					-- Create id. True name set later.
-				create dcr_id.make (0)
-				create default_call
-				default_call.set_feature_name (dcr_id)
-			end
 		ensure
 			type_set: type = t
 			call_set: call = c
@@ -120,22 +110,17 @@ feature -- Access
 			-- only procedure and functions are valid and no export validation
 			-- is made.
 
-	default_call : ACCESS_INV_AS
-			-- Call to default create.
-
 feature -- Type check
 
 	type_check is
 			-- Type check an access to a creation feature.
 		local
 			new_creation_type, creation_type: TYPE_A
-			gen_type: GEN_TYPE_A
 			creation_class: CLASS_C
 			a_feature: FEATURE_I
 			export_status, context_export: EXPORT_I
 			create_type: CREATE_INFO
 			creators: HASH_TABLE [EXPORT_I, STRING]
-			depend_unit: DEPEND_UNIT
 			feature_name: STRING
 			vgcc1: VGCC1
 			vgcc11: VGCC11
@@ -152,7 +137,7 @@ feature -- Type check
 			formal_dec: FORMAL_DEC_AS
 			is_formal_creation, is_default_creation: BOOLEAN
 			dcr_feat: FEATURE_I
-			the_call: like call
+			the_call: ACCESS_INV_AS
 		do
 				-- We need to remove from the stack the first element, since it
 				-- has been added by EXPR_CALL_AS and it does not correspond to
@@ -230,10 +215,7 @@ feature -- Type check
 					vtcg3.set_error_list (new_creation_type.constraint_error_list)
 					Error_handler.insert_error (vtcg3)
 				else
-					gen_type ?= new_creation_type
-					if gen_type /= Void then
-						Instantiator.dispatch (gen_type, context.current_class)
-					end
+					Instantiator.dispatch (new_creation_type, context.current_class)
 						-- We do not update type stack now, since the call to
 						-- `call.type_check' will change the information, we will
 						-- do it when `call.type_check' will be done.
@@ -260,22 +242,18 @@ feature -- Type check
 				(is_formal_creation and then formal_dec.has_default_create))
 			then
 					-- Use default create
-				if not is_formal_creation then
-					dcr_feat := creation_class.default_create_feature
-				else
-					dcr_feat := creation_class.feature_table.feature_of_rout_id (
-						System.default_create_id)
+				dcr_feat := creation_class.default_create_feature
+
+					-- Use default_create
+				create {ACCESS_INV_AS} the_call
+				the_call.set_feature_name (create {ID_AS}.initialize (dcr_feat.feature_name))
+				if is_formal_creation or else not dcr_feat.is_empty then
+						-- We want to generate a call only when needed:
+						-- 1 - In a formal generic creation call
+						-- 2 - When body of `default_create' is not empty
+					call := the_call
 				end
 				is_default_creation := True
-				if is_formal_creation or else not dcr_feat.is_empty then
-					default_call.feature_name.load (dcr_feat.feature_name)
-					the_call := default_call
-				else
-						-- We insert creation without call to creation procedure
-						-- in list of dependences of current feature.
-					create depend_unit.make_emtpy_creation_unit (creation_class.class_id, dcr_feat)
-					context.supplier_ids.extend (depend_unit)
-				end
 			else
 				the_call := call
 			end
@@ -287,13 +265,18 @@ feature -- Type check
 
 					-- Inform the next type checking that we are handling
 					-- a creation expression and that this is not needed
-					-- to check the VAPE validity of `the_call' if Current
+					-- to check the VAPE validity of `call' if Current
 					-- is used in a precondition clause statement.
 				context.set_is_in_creation_expression (True)
 
 					-- Type check the call: note that the creation type is on
 					-- the type stack.
 				the_call.type_check	
+				if call = Void then
+						-- Remove last access since `default_create' will
+						-- not be used for code generation.
+					context.access_line.remove
+				end
 				feature_name := the_call.feature_name
 
 					-- But since a creation routine is a feature its TYPE_A is of type
@@ -379,8 +362,14 @@ feature -- Type check
 				-- Check for errors
 			Error_handler.checksum
 
-				-- Compute creation information
-			create_type := creation_type.create_info
+			if new_creation_type.is_expanded then
+					-- Even if there is an anchor, once a type is expanded it
+					-- cannot change.
+				create {CREATE_TYPE} create_type.make (new_creation_type.type_i)
+			else
+					-- Compute creation information
+				create_type := creation_type.create_info
+			end
 
 			context.creation_infos.insert (create_type)
 			context.creation_types.insert (new_creation_type.type_i)
@@ -393,19 +382,12 @@ feature
 		local
 			create_type: CREATE_INFO
 			call_access: CALL_ACCESS_B
-			the_call: like call
 			l_type: TYPE_I
 		do
 			create Result
 
-			if default_call = Void or else default_call.feature_name.is_empty then
-				the_call := call
-			else
-				the_call := default_call
-			end
-
-			if the_call /= Void then
-				call_access ?= the_call.byte_node
+			if call /= Void then
+				call_access ?= call.byte_node
 				check
 					has_valid_call: call_access /= Void
 				end

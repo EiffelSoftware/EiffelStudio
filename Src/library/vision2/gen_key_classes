@@ -31,7 +31,11 @@ while (<>) {
 
 		# Separate comma separated fields.
 		# Ignore commas preceded by %.
-		@fields = split (/,[ 	]*/,$_);
+		s/%,/THIS_IS_A_COMMA/g;
+		s/,/SEPARATOR/g;
+		s/THIS_IS_A_COMMA/,/g;
+		
+		@fields = split (/SEPARATOR[ 	]*/,$_);
 		
 		# Put the fields in separate named strings.
 		$comment = shift (@fields);
@@ -43,6 +47,7 @@ while (<>) {
 		$gtk_code = shift (@fields);
 		$wel_code = shift (@fields);
 
+		# Append to the big strings.
 		$eif_statement = "Result.put ($identifier, $wel_code)";
 		$v2_to_wel_array = "$v2_to_wel_array\t\t\t$eif_statement\n";
 
@@ -64,13 +69,13 @@ while (<>) {
 }
 
 open (OH, ">" . "ev_key_constants.e");
-
 print OH <<EOT;
 indexing
 	description:
 		"Eiffel Vision key constants. Each constant defined here %N%
 		%corresponds to a possible value of {EV_KEY}.code"
 	status: "See notice at end of class"
+	keywords: "key, code, constant"
 	date: "generated"
 	revision: "generated"
 
@@ -80,7 +85,7 @@ class
 feature -- Contract support
 
 	valid_key_code (a_code: INTEGER): BOOLEAN is
-			-- Is `a_code' a valid key code?
+			-- Is ``a_code'' a valid key code?
 		do
 			Result := a_code >= Key_0 and then a_code <= Key_z
 		end
@@ -113,17 +118,156 @@ end -- class EV_KEY_CONSTANTS
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
 EOT
-
 close (OH);
 
+open (OH, ">" . "ev_wel_key_conversion.e");
+print OH <<EOT;
+indexing
+	description: "Eiffel Vision WEL key conversion. Provides a function%N%
+		%for WEL to vision2 conversion and for vision2 to WEL conversion."
+	status: "See notice at end of class"
+	date: "generated"
+	revision: "generated"
+
+class
+	EV_WEL_KEY_CONVERSION
+
+inherit
+	WEL_VK_CONSTANTS
+
+	EV_KEY_CONSTANTS
+
+feature -- Conversion
+
+	key_code_to_wel (a_key_code: INTEGER): INTEGER is
+			-- Corresponding WEL code for ``a_key_code''.
+		require
+			a_key_code_valid: valid_key_code (a_key_code)
+		do
+			Result := v2_to_wel_table @ a_key_code
+		end
+
+	key_code_from_wel (a_wel_code: INTEGER): INTEGER is
+			-- Corresponding key code for ``a_wel_code''.
+		require
+				a_wel_code_valid: True --| FIXME
+		do
+			Result := wel_to_v2_table @ a_wel_code
+		end
+
+feature {NONE} -- Implementation
+
+	v2_to_wel_table: ARRAY [INTEGER] is
+			-- WEL keycodes indexed by Vision2 key code.
+		once
+			create Result.make (Key_0, Key_z)
+$v2_to_wel_array		end
+
+	wel_to_v2_table: ARRAY [INTEGER] is
+			-- Vision2 keycodes indexed by WEL key code.
+		once
+			create Result.make (0, 999) --| FIXME
+$wel_to_v2_array		end
+
+end -- class EV_WEL_KEY_CONVERSION
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info\@eiffel.com>
+--! Customer support e-mail <support\@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+EOT
+close (OH);
+
+open (OH, ">" . "ev_gtk_key_conversion.e");
+print OH <<EOT;
+indexing
+	description: "Eiffel Vision GTK key conversion. Provides a function%N%
+		%for GTK to vision2 conversion and for vision2 to GTK conversion."
+	status: "See notice at end of class"
+	date: "generated"
+	revision: "generated"
+
+class
+	EV_GTK_KEY_CONVERSION
+
+inherit
+	EV_KEY_CONSTANTS
+
+feature -- Conversion
+
+	key_code_to_gtk (a_key_code: INTEGER): INTEGER is
+			-- Corresponding WEL code for ``a_key_code''.
+		require
+			a_key_code_valid: valid_key_code (a_key_code)
+		do
+			Result := v2_to_gtk_table @ a_key_code
+		end
+
+	key_code_from_gtk (a_gtk_code: INTEGER): INTEGER is
+			-- Corresponding key code for ``a_gtk_code''.
+		require
+				a_gtk_code_valid: gtk_to_v2_table.has (a_gtk_code)
+		do
+			Result := gtk_to_v2_table.item (a_gtk_code)
+		end
+
+feature {NONE} -- Implementation
+
+	C: EV_C_EXTERNALS is
+		once
+			create Result
+		end
+
+	v2_to_gtk_table: ARRAY [INTEGER] is
+			-- GTK keycodes indexed by Vision2 key code.
+		once
+			create Result.make (Key_0, Key_z)
+$v2_to_gtk_array		end
+
+	gtk_to_v2_table: HASH_TABLE [INTEGER, INTEGER] is
+			-- Vision2 keycodes indexed by GTK key code.
+		once
+		create Result.make (10)
+$gtk_to_v2_array		end
+
+end -- class EV_GTK_KEY_CONVERSION
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info\@eiffel.com>
+--! Customer support e-mail <support\@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+EOT
+close (OH);
 
 #===============================================================================
 # CVS log
 #===============================================================================
 #
 # $Log$
-# Revision 1.1  2000/03/17 01:27:31  brendel
-# Initial.
+# Revision 1.2  2000/03/17 02:06:38  brendel
+# Now generates all 3 classes.
 #
 #
 #===============================================================================

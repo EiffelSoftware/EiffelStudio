@@ -82,8 +82,8 @@ feature -- Attribute
 			tmp_dur: like Current
 			i: INTEGER
 		do
-			tmp := clone (origin_date)
-			tmp_dur := clone (Current)
+			tmp := origin_date.twin
+			tmp_dur := twin
 			tmp_dur := tmp_dur.to_canonical (origin_date)
 			if is_positive then
 				from
@@ -291,7 +291,11 @@ feature -- Basic operations
 		do
 			create Result.make (year + other.year, month + other.month, 
 				day + other.day)
-			Result.set_origin_date (clone (origin_date))
+			if origin_date /= Void then
+				Result.set_origin_date (origin_date.twin)
+			else
+				Result.set_origin_date (Void)
+			end
 		ensure then
 			origin_equal: equal (origin_date, Result.origin_date)
 		end
@@ -300,7 +304,11 @@ feature -- Basic operations
 			-- Unary minus
 		do
 			create Result.make (-year, -month, -day)
-			Result.set_origin_date (clone (origin_date))
+			if origin_date /= Void then
+				Result.set_origin_date (origin_date.twin)
+			else
+				Result.set_origin_date (Void)
+			end
 		ensure then
 			origin_equal: equal (origin_date, Result.origin_date)
 		end
@@ -310,6 +318,8 @@ feature -- Conversion
 	to_canonical (start_date: DATE): like Current is 
 			-- A new duration, equivalent to current one 
 			-- and canonical for `date' 
+		require
+			start_date_not_void: start_date /= Void
 		local 
 			date_tmp, final_date: DATE
 			d1: INTEGER 
@@ -320,7 +330,7 @@ feature -- Conversion
 				final_date := start_date + Current; 
 				d1 := (final_date.year - start_date.year) * Months_in_year + 
 					final_date.month - start_date.month
-				date_tmp := clone (start_date)
+				date_tmp := start_date.twin
 				date_tmp.month_add (d1)
 				if final_date >= start_date then
 					if date_tmp <= final_date then

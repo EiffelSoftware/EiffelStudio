@@ -377,6 +377,10 @@ feature -- Status settings
 				area_clear_excluding_widget (v, a_column, a_row, item_column_span (v), item_row_span (v))
 		do
 			implementation.set_item_position (v, a_column, a_row)
+		ensure
+			position_set: item_column_position (v) = a_column and item_row_position (v) = a_row
+			span_unchanged: item_column_span (v) = old item_column_span (v) and
+				item_row_span (v) = old item_row_span (v)
 		end
 		
 	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
@@ -392,6 +396,10 @@ feature -- Status settings
 				area_clear_excluding_widget (v, item_column_position (v), item_row_position (v), column_span, row_span)
 			do
 				implementation.set_item_span (v, column_span, row_span)
+			ensure
+				span_set: item_column_span (v) = column_span and item_row_span (v) = row_span
+				position_unchanged: item_column_position (v) = old item_column_position (v) and
+					item_row_position (v) = old item_row_position (v)
 			end
 		
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
@@ -411,6 +419,9 @@ feature -- Status settings
 				area_clear_excluding_widget (v, a_column, a_row, column_span, row_span)
 			do
 				implementation.set_item_position_and_span (v, a_column, a_row, column_span, row_span)
+			ensure
+				position_set: item_column_position (v) = a_column and item_row_position (v) = a_row
+				span_set: item_column_span (v) = column_span and item_row_span (v) = row_span
 			end
 
 feature -- Element change
@@ -448,7 +459,7 @@ feature -- Element change
 		ensure
 			item_inserted: has (v)
 			count_increased : count = old count + 1
-			position_assigned: item_at_position (a_column, a_row) = v
+			position_assigned: item_column_position (v) = a_column and item_row_position (v) = a_row
 			span_assigned: item_column_span (v) = column_span and item_row_span (v) = row_span
 		end
 		

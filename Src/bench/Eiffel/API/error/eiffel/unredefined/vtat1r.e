@@ -17,7 +17,7 @@ feature -- Output
 		do
 			st.add_string ("Anchor name: Result")
 			st.add_new_line
-			{VTAT1} precursor (st)
+			precursor {VTAT1} (st)
 		end;
 
 end -- class VTAT1R

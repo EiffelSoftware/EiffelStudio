@@ -281,7 +281,7 @@ feature -- Basic Operations
 			set_borderstyle (Border_style)
 			a_size.set_Width (Window_width)
 			a_size.set_Height (Window_height)
-			set_size (a_size)	
+			set_minimumsize (a_size)	
 
 				-- `Selected assembly: '
 			create assembly_label.make_label
@@ -320,7 +320,7 @@ feature -- Basic Operations
 			type_list_view.set_checkboxes (False)
 			type_list_view.set_fullrowselect (True)
 			type_list_view.set_gridlines (True)
-			type_list_view.set_multiselect (True)
+			type_list_view.set_multiselect (False)
 			type_list_view.set_sorting (0)
 			type_list_view.set_view (3)
 			type_list_view.set_activation (0)

@@ -422,9 +422,6 @@ feature -- Basic Operations
 				a_point.set_Y (6 * Top_margin + 5 * Label_height)
 			end
 			ok_button.set_location (a_point)
-			--a_size.set_Width (Button_width)
-			--a_size.set_Height (Button_height)
-			--ok_button.set_size (a_size)
 			ok_button.set_text (Ok_button_label)
 			type := type_factory.GetType_String (System_event_handler_type)
 			on_ok_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnOkEventHandler")
@@ -439,9 +436,6 @@ feature -- Basic Operations
 				a_point.set_Y (6 * Top_margin + 5 * Label_height)
 			end
 			cancel_button.set_location (a_point)
-			--a_size.set_Width (Button_width)
-			--a_size.set_Height (Button_height)
-			--cancel_button.set_size (a_size)
 			cancel_button.set_text (Cancel_button_label)
 			on_cancel_event_handler_delegate ?= delegate_factory.CreateDelegate_Type_Object (type, Current, "OnCancelEventHandler")
 			cancel_button.add_Click (on_cancel_event_handler_delegate)

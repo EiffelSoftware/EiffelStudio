@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 					-- true, update `parent_type' so that it contains the nested type
 					-- enclosing type.
 				parent_name := t.full_name
-				parent_name := parent_name.substring_integer_integer (0,
+				parent_name := parent_name.substring (0,
 					parent_name.index_of_character ('+'))
 				parent_type := t.assembly.get_type_string (parent_name)
 				l_is_nested := parent_type /= Void and then parent_type.is_public

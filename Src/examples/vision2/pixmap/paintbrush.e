@@ -36,16 +36,12 @@ feature -- Initialization
 			a_menu_item: EV_MENU_ITEM
 			a_menu_separator: EV_MENU_SEPARATOR
 			a_toolbar_button: EV_TOOL_BAR_BUTTON
+			a_toolbar_separator: EV_TOOL_BAR_SEPARATOR
 			a_icon: EV_PIXMAP
 			a_gray_icon: EV_PIXMAP
 			dib: WEL_DIB
 			file: RAW_FILE
 		do
-			create file.make_open_read("c:\cross.bmp")
-			create dib.make_by_file(file)
-
-
-
 				-- Create the container
 			create my_container
 
@@ -70,19 +66,22 @@ feature -- Initialization
 			create my_toolbar
 
 			create a_icon
-			a_icon.set_with_named_file("c:\magenta.png")
+			a_icon.set_with_named_file("magenta.png")
 			create a_gray_icon
-			a_gray_icon.set_with_named_file("c:\gray.png")
+			a_gray_icon.set_with_named_file("gray.png")
 			create a_toolbar_button
 			a_toolbar_button.set_pixmap(a_icon)
 			a_toolbar_button.set_gray_pixmap(a_gray_icon)
 			a_toolbar_button.set_text("PNG")
 			my_toolbar.extend(a_toolbar_button)
 
+			create a_toolbar_separator
+			my_toolbar.extend(a_toolbar_separator)
+			
 			create a_icon
-			a_icon.set_with_named_file("c:\green.ico")
+			a_icon.set_with_named_file("green.ico")
 			create a_gray_icon
-			a_gray_icon.set_with_named_file("c:\gray.ico")
+			a_gray_icon.set_with_named_file("gray.ico")
 			create a_toolbar_button
 			a_toolbar_button.set_pixmap(a_icon)
 			a_toolbar_button.set_gray_pixmap(a_gray_icon)
@@ -90,7 +89,7 @@ feature -- Initialization
 			my_toolbar.extend(a_toolbar_button)
 
 			my_container.extend(my_toolbar)
-			my_container.disable_child_expand(my_toolbar)
+			my_container.disable_item_expand(my_toolbar)
 
 				-- Create the pixmap
 			new_bitmap
@@ -151,17 +150,15 @@ feature -- Process Vision2 events
 		end
 	
 	on_menu_file_close is
-			-- Feature executed when the user select file/load
-			-- in the menu. Open the dialog box and let the
-			-- user choose its file to load.
+			-- Feature executed when the user select file/close
+			-- in the menu.
 		do
 			new_bitmap
 		end
 	
 	on_menu_file_exit is
-			-- Feature executed when the user select file/load
-			-- in the menu. Open the dialog box and let the
-			-- user choose its file to load.
+			-- Feature executed when the user select file/exit
+			-- in the menu.
 		do
 			first_window.destroy
 		end

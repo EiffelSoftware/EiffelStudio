@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			-- Create a list item with an empty name.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_list_item_new)	
+			set_c_object (C.gtk_list_item_new)
 		end
 
 	initialize is
@@ -183,6 +183,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2001/06/29 19:59:12  king
+--| Cosmetics
+--|
 --| Revision 1.37  2001/06/14 21:16:40  etienne
 --| Hacked code to ensure proper selection.
 --|

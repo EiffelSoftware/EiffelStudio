@@ -46,7 +46,6 @@ inherit
 			remove_pixmap
 		end
 
-
 create
 	make
 
@@ -454,6 +453,9 @@ end -- class EV_TREE_NODE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2001/06/29 20:00:04  king
+--| Cosmetics
+--|
 --| Revision 1.5  2001/06/21 23:44:20  king
 --| Removed unused local
 --|

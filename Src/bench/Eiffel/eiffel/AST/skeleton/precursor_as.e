@@ -321,7 +321,8 @@ feature -- Type check, byte code and dead code removal
 			end
 			Result := Result.conformance_type
 			context.pop (count)
-			Result := Result.instantiation_in (last_type, last_id).actual_type
+			current_item := context.actual_class_type
+			Result := Result.instantiation_in (current_item, current_item.associated_class.id).actual_type
 
 			if
 				a_feature.is_obsolete
@@ -485,6 +486,8 @@ feature {NONE}  -- precursor table
 			p_list: HASH_TABLE [CL_TYPE_A, STRING]
 			i, rc: INTEGER
 			pair: PAIR [CL_TYPE_A, ROUTINE_ID]
+			couple: PAIR [ROUTINE_ID, CLASS_ID]
+			check_written_in: LINKED_LIST [PAIR [ROUTINE_ID, CLASS_ID]]
 			r_class_i: CLASS_I
 			a_cluster: CLUSTER_I
 		do
@@ -509,8 +512,10 @@ feature {NONE}  -- precursor table
 
 			from
 				parents := context.a_class.parents
-				!! Result.make
-				!! p_list.make (parents.count)
+				create Result.make
+				create check_written_in.make
+				check_written_in.compare_objects
+				create p_list.make (parents.count)
 				parents.start
 			until
 				parents.after
@@ -518,13 +523,14 @@ feature {NONE}  -- precursor table
 				a_parent := parents.item.associated_class
 				p_name := a_parent.name_in_upper
 
-				-- Don't check the same parent twice.
-				-- If construct is qualified, check
-				-- specified parent only.
-
-				if not (p_list.has (p_name) and then p_list.found_item.is_equivalent (parents.item)) and then
-					(spec_p_name = Void or else spec_p_name.is_equal (p_name)) then
-
+					-- Don't check the same parent twice.
+					-- If construct is qualified, check
+					-- specified parent only.
+				if
+					not (p_list.has (p_name) and then
+					p_list.found_item.is_equivalent (parents.item)) and then
+					(spec_p_name = Void or else spec_p_name.is_equal (p_name))
+				then
 						-- Check if parent has an effective precursor
 					from
 						i := 1
@@ -534,12 +540,24 @@ feature {NONE}  -- precursor table
 						rout_id   := rout_id_set.item (i)
 						a_feature := a_parent.feature_with_rout_id (rout_id)
 						   
-						if a_feature /= Void and then not a_feature.is_deferred then
+						if a_feature /= Void and then not a_feature.is_deferred  then
 								-- Ok, add parent.
-							!! pair
+							create pair
 							pair.set_first (parents.item)
 							pair.set_second (rout_id)
-							Result.extend (pair)
+
+							create couple
+							couple.set_first (rout_id)
+							couple.set_second (a_feature.written_in)
+
+								-- Before entering the new info in `Result' we
+								-- need to make sure that we do not have the same
+								-- item, because if we were adding it, it will
+								-- cause a VUPR3 error when it is not needed.
+							if not special_has (check_written_in, couple) then
+								Result.extend (pair)
+								check_written_in.extend (couple)
+							end
 
 								-- Register parent
 							p_list.put (parents.item, p_name)
@@ -592,6 +610,30 @@ feature {COMPILER_EXPORTER} -- Replication {PRECURSOR_AS, USER_CMD, CMD}
 	set_parameters (p: like parameters) is
 		do
 			parameters := p
+		end
+
+feature {NONE} -- Implementation
+
+	special_has (l: LINKED_LIST [PAIR [ROUTINE_ID, CLASS_ID]]; p: PAIR [ROUTINE_ID, CLASS_ID]): BOOLEAN is
+			-- Does `l' contain `p'?
+		require
+			valid_pair: p /= Void
+			valid_pair_first: p.first /= Void
+			valid_pair_second: p.second /= Void
+		local
+			l_item: PAIR [ROUTINE_ID, CLASS_ID]
+		do
+			from
+				l.start
+				Result := False
+			until
+				l.after or Result
+			loop
+				l_item := l.item
+				Result := l_item.first.is_equal (p.first) and then
+								l_item.second.is_equal (p.second)
+				l.forth
+			end
 		end
 
 end -- class PRECURSOR_AS

@@ -15,7 +15,8 @@ feature -- High level
 			l_result: INTEGER
 		once
 --			l_result := com_initialize
-			l_result := com_initialize_multithreaded
+--			l_result := com_initialize_multithreaded
+			l_result := com_initialize_apartmentthreaded
 			check
 				call_succeed: l_result = com_S_OK or else l_result = com_S_FALSE
 			end
@@ -40,12 +41,19 @@ feature {NONE} -- Initialization
 			"CoInitialize(NULL)"
 		end
 
-	com_initialize_multithreaded: INTEGER is
+	frozen com_initialize_multithreaded: INTEGER is
 		external
 			"C++ inline use %"objbase.h%""
 		alias
 			"CoInitializeEx(NULL, COINIT_MULTITHREADED)"
 		end
+
+	frozen com_initialize_apartmentthreaded: INTEGER is
+		external
+			"C++ inline use %"objbase.h%""
+		alias
+			"CoInitializeEx(NULL, COINIT_APARTMENTTHREADED)"
+		end	
 
 	frozen com_S_OK: INTEGER is
 		external

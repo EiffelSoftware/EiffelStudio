@@ -124,8 +124,13 @@ feature -- Basic Operations
 		require
 			non_void_an_assembly_name: an_assembly_name /= Void
 			not_empty_an_assembly_name: not an_assembly_name.is_empty
+		local
+			l_file_name: FILE_NAME
 		do
-			create Result.make_from_string ((create {EAC_COMMON_PATH}).dotnet_framework_path + an_assembly_name + ".xml")
+			create l_file_name.make_from_string ((create {IL_ENVIRONMENT}).dotnet_framework_path)
+			l_file_name.set_file_name (an_assembly_name)
+			l_file_name.add_extension ("xml")
+			Result := l_file_name
 		ensure
 			non_void_result: Result /= Void
 		end

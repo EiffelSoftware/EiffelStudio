@@ -140,15 +140,15 @@ feature -- Other cursor
 	open_hand_cursor: EV_CURSOR is
 		once
 			Result := cursor_file_content ("open_hand")
-			Result.set_x_hotspot (8)
-			Result.set_y_hotspot (8)
+			Result.set_x_hotspot (Result.width // 2)
+			Result.set_y_hotspot (Result.height // 2)
 		end
 		
 	closed_hand_cursor: EV_CURSOR is
 		once
 			Result := cursor_file_content ("closed_hand")
-			Result.set_x_hotspot (8)
-			Result.set_y_hotspot (8)
+			Result.set_x_hotspot (Result.width // 2)
+			Result.set_y_hotspot (Result.height // 2)
 		end
 
 feature {NONE} -- Implementation

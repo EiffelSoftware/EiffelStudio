@@ -83,8 +83,8 @@ feature -- Initialization
 	realize is
 			-- Realize current widget
 		local
+			f: FONT
 			wc: WEL_COMPOSITE_WINDOW
-			fw: FONT_WINDOWS
 		do
 			if not realized then 
 				if width = 0 then 
@@ -96,9 +96,13 @@ feature -- Initialization
 				if private_font /= Void then
 					set_font (private_font)
 				end
-				if height = 0 then 
-					fw ?= font.implementation
-					set_height (fw.string_height (Current, "I") * 7 // 4)
+				if height = 0 then
+					if private_font /= Void then
+						f := private_font
+					else
+						f := font
+					end
+					set_height (((private_text.occurrences ('%N') + 1) * (f.font_ascent + f.font_descent)).max (21))
 				end
 				set_text (private_text)
 				if maximum_size > 0 then

@@ -37,21 +37,21 @@ feature {NONE} -- Initialization
 			-- Initialize. 
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_viewport_new (NULL, NULL))
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_viewport_new (NULL, NULL))
 			viewport := c_object
-			C.gtk_viewport_set_shadow_type (c_object, (App_implementation.gtk_marshal).Gtk_shadow_none_enum)
-			C.gtk_widget_set_usize (c_object, 1, 1) -- Hack needed to prevent viewport resize on item resize.
+			feature {EV_GTK_EXTERNALS}.gtk_viewport_set_shadow_type (c_object, (App_implementation.gtk_marshal).Gtk_shadow_none_enum)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 1, 1) -- Hack needed to prevent viewport resize on item resize.
 		end
 		
 	initialize is
 			-- Add a fixed to the viewport to get rid of default blackness.
 		do
-			fixed_widget := C.gtk_fixed_new
-			C.gtk_widget_show (fixed_widget)
-			container_widget := C.gtk_vbox_new (False, 0)
-			C.gtk_container_add (viewport, fixed_widget)
-			C.gtk_widget_show (container_widget)
-			C.gtk_container_add (fixed_widget, container_widget)
+			fixed_widget := feature {EV_GTK_EXTERNALS}.gtk_fixed_new
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (fixed_widget)
+			container_widget := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (viewport, fixed_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (fixed_widget, container_widget)
 			Precursor {EV_CELL_IMP}
 		end
 
@@ -69,16 +69,16 @@ feature {NONE} -- Initialization
 	fixed_width: INTEGER is
 			-- Fixed Horizontal size measured in pixels.
 		do
-			Result := C.gtk_allocation_struct_width (
-				C.gtk_widget_struct_allocation (fixed_widget)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_width (
+				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (fixed_widget)
 			).max (0)
 		end
 
 	fixed_height: INTEGER is
 			-- Fixed Vertical size measured in pixels.
 		do
-			Result := C.gtk_allocation_struct_height (
-				C.gtk_widget_struct_allocation (fixed_widget)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_allocation_struct_height (
+				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_allocation (fixed_widget)
 			).max (0)
 		end
 
@@ -146,10 +146,10 @@ feature -- Element change
 		do
 			block_resize_actions
 			if a_x < 0 then
-				C.gtk_widget_set_uposition (container_widget, -a_x, -1)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, -a_x, -1)
 				internal_set_value_from_adjustment (horizontal_adjustment, 0)
 			else
-				C.gtk_widget_set_uposition (container_widget, 0, -1)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, 0, -1)
 				internal_set_value_from_adjustment (horizontal_adjustment, a_x)
 			end
 			internal_x_offset := a_x
@@ -161,10 +161,10 @@ feature -- Element change
 		do
 			block_resize_actions
 			if a_y < 0 then
-				C.gtk_widget_set_uposition (container_widget, -1, -a_y)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, -1, -a_y)
 				internal_set_value_from_adjustment (vertical_adjustment, 0)
 			else	
-				C.gtk_widget_set_uposition (container_widget, -1, 0)
+				feature {EV_GTK_EXTERNALS}.gtk_widget_set_uposition (container_widget, -1, 0)
 				internal_set_value_from_adjustment (vertical_adjustment, a_y)
 			end
 			internal_y_offset := a_y
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			w_imp ?= item.implementation
 			w_imp.store_minimum_size
 			--| FIXME IEK This needs to be thought out some more.
-			--C.gtk_widget_set_usize (container_widget, temp_width, temp_height)
+			--feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, temp_width, temp_height)
 		end
 
 	on_removed_item (an_item: EV_WIDGET) is
@@ -220,12 +220,12 @@ feature {NONE} -- Implementation
 
 	horizontal_adjustment: POINTER is
 		do
-			Result := C.gtk_viewport_get_hadjustment (viewport)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_viewport_get_hadjustment (viewport)
 		end
 
 	vertical_adjustment: POINTER is
 		do
-			Result := C.gtk_viewport_get_vadjustment (viewport)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_viewport_get_vadjustment (viewport)
 		end
 
 	internal_set_value_from_adjustment (l_adj: POINTER; a_value: INTEGER) is
@@ -233,16 +233,16 @@ feature {NONE} -- Implementation
 		require
 			l_adj_not_null: l_adj /= default_pointer
 		do
-			if C.gtk_adjustment_struct_lower (l_adj) > a_value then
-				C.set_gtk_adjustment_struct_lower (l_adj, a_value)
-				C.gtk_adjustment_changed (l_adj)
-			elseif C.gtk_adjustment_struct_upper (l_adj) < a_value then
-				C.set_gtk_adjustment_struct_upper (l_adj, a_value)
-				C.gtk_adjustment_changed (l_adj)				
+			if feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_lower (l_adj) > a_value then
+				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_lower (l_adj, a_value)
+				feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (l_adj)
+			elseif feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (l_adj) < a_value then
+				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (l_adj, a_value)
+				feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (l_adj)				
 			end
-			C.gtk_adjustment_set_value (l_adj, a_value)
+			feature {EV_GTK_EXTERNALS}.gtk_adjustment_set_value (l_adj, a_value)
 		ensure
-			value_set: C.gtk_adjustment_struct_value (l_adj) = a_value
+			value_set: feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (l_adj) = a_value
 		end
 
 	viewport: POINTER

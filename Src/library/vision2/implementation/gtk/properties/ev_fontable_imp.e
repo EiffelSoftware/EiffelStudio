@@ -42,12 +42,12 @@ feature -- Status setting
 		do
 			private_font := clone (a_font)
 			font_imp ?= private_font.implementation
-			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (fontable_widget))
-			font_ptr := C.gdk_font_ref (font_imp.c_object)
+			a_style := feature {EV_GTK_EXTERNALS}.gtk_style_copy (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (fontable_widget))
+			font_ptr := feature {EV_GTK_EXTERNALS}.gdk_font_ref (font_imp.c_object)
 			font_imp.set_font_object (font_ptr)
-			C.gtk_style_set_font (a_style, font_ptr)
-			C.gtk_widget_set_style (fontable_widget, a_style)
-			C.gtk_style_unref (a_style)
+			feature {EV_GTK_EXTERNALS}.gtk_style_set_font (a_style, font_ptr)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_style (fontable_widget, a_style)
+			feature {EV_GTK_EXTERNALS}.gtk_style_unref (a_style)
 		end
 
 feature {NONE} -- Implementation

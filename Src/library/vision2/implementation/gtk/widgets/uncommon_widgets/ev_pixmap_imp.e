@@ -264,7 +264,7 @@ feature -- Access
 				n_character := n_character + 1
 				array_offset := array_offset + 1
 			end
-			feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_free (a_color)
+			a_color.memory_free
 			feature {EV_GTK_EXTERNALS}.gdk_image_destroy (a_gdkimage)
 		end
 
@@ -311,7 +311,7 @@ feature -- Access
 				array_area.put (temp_alpha, array_offset + 3)
 				array_offset := array_offset + 4
 			end
-			feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_free (a_color)
+			a_color.memory_free
 			feature {EV_GTK_EXTERNALS}.gdk_image_destroy (a_gdkimage)
 		end
 
@@ -410,7 +410,7 @@ feature {NONE} -- Implementation
 				color_has_been_allocated: allocated = True
 			end
 			feature {EV_GTK_EXTERNALS}.gdk_gc_set_foreground (gc, fg)
-			feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_free (fg)
+			fg.memory_free
 		end
 
 	update_fields (

@@ -27,9 +27,9 @@ feature {NONE} -- Initialization
 			a_gs: GEL_STRING
 		do
 			create a_gs.make ("")
-			text_label := C.gtk_label_new (a_gs.item)
-			C.gtk_widget_show (text_label)
-			C.gtk_misc_set_alignment (text_label, 0.0, 0.5)
+			text_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
+			feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)
 		end
 
 feature -- Access
@@ -39,7 +39,7 @@ feature -- Access
 		local
 			p: POINTER
 		do
-			C.gtk_label_get (text_label, $p)
+			feature {EV_GTK_EXTERNALS}.gtk_label_get (text_label, $p)
 			check
 				p_not_null: p /= NULL
 			end
@@ -51,12 +51,12 @@ feature -- Access
 		local
 			an_alignment_code: INTEGER
 		do
-			an_alignment_code := C.gtk_label_struct_jtype (text_label)
-			if an_alignment_code = C.Gtk_justify_center_enum then
+			an_alignment_code := feature {EV_GTK_EXTERNALS}.gtk_label_struct_jtype (text_label)
+			if an_alignment_code = feature {EV_GTK_EXTERNALS}.gtk_justify_center_enum then
 				Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_center
-			elseif an_alignment_code = C.Gtk_justify_left_enum then
+			elseif an_alignment_code = feature {EV_GTK_EXTERNALS}.gtk_justify_left_enum then
 				Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_left
-			elseif an_alignment_code = C.Gtk_justify_right_enum then
+			elseif an_alignment_code = feature {EV_GTK_EXTERNALS}.gtk_justify_right_enum then
 				Result := feature {EV_TEXT_ALIGNMENT_CONSTANTS}.Ev_text_alignment_right
 			else
 				check alignment_code_not_set: False end
@@ -68,22 +68,22 @@ feature -- Status setting
 	align_text_center is
 			-- Display `text' centered.
 		do
-			C.gtk_misc_set_alignment (text_label, 0.5, 0.5)
-			C.gtk_label_set_justify (text_label, C.Gtk_justify_center_enum)
+			feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.5, 0.5)
+			feature {EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, feature {EV_GTK_EXTERNALS}.gtk_justify_center_enum)
 		end
 
 	align_text_left is
 			-- Display `text' left aligned.
 		do
-			C.gtk_misc_set_alignment (text_label, 0, 0.5)
-			C.gtk_label_set_justify (text_label, C.Gtk_justify_left_enum)
+			feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0, 0.5)
+			feature {EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, feature {EV_GTK_EXTERNALS}.gtk_justify_left_enum)
 		end
 
 	align_text_right is
 			-- Display `text' right aligned.
 		do
-			C.gtk_misc_set_alignment (text_label, 1, 0.5)
-			C.gtk_label_set_justify (text_label, C.Gtk_justify_right_enum)
+			feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 1, 0.5)
+			feature {EV_GTK_EXTERNALS}.gtk_label_set_justify (text_label, feature {EV_GTK_EXTERNALS}.gtk_justify_right_enum)
 		end
 	
 feature -- Element change	
@@ -94,8 +94,8 @@ feature -- Element change
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (a_text)
-			C.gtk_label_set_text (text_label, a_gs.item)
-			C.gtk_widget_show (text_label)
+			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 		end
 
 	remove_text is
@@ -104,8 +104,8 @@ feature -- Element change
 			a_gs: GEL_STRING
 		do
 			create a_gs.make ("")
-			C.gtk_label_set_text (text_label, a_gs.item)
-			C.gtk_widget_hide (text_label)
+			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)
 		end
 	
 feature {EV_ANY_IMP} -- Implementation

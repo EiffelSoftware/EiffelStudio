@@ -38,11 +38,11 @@ feature {NONE} -- Initialization
 			-- Create a fixed widget. 
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_notebook_new ())
-			C.gtk_notebook_set_tab_border (c_object, 1)
-			C.gtk_notebook_set_show_border (c_object, False)
-			C.gtk_notebook_set_tab_hborder (c_object, 0)
-			C.gtk_notebook_set_tab_vborder (c_object, 0)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_notebook_new ())
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_border (c_object, 1)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_show_border (c_object, False)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_hborder (c_object, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_vborder (c_object, 0)
 			real_signal_connect (c_object, "switch-page", agent (App_implementation.gtk_marshal).on_notebook_page_switch_intermediary (c_object, ?), agent (App_implementation.gtk_marshal).page_switch_translate)
 		end
 
@@ -64,8 +64,8 @@ feature -- Access
 			check
                 		an_item_has_implementation: item_imp /= Void
 			end
-			create Result.make_from_c (C.gtk_label_struct_label (
-				C.gtk_notebook_get_tab_label (
+			create Result.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_label_struct_label (
+				feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (
 					c_object,
 					item_imp.c_object
 				)
@@ -83,7 +83,7 @@ feature -- Status report
 		do
 			if count > 0 then
 				pn := selected_item_index_internal - 1
-				p := C.gtk_notebook_get_nth_page (
+				p := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_nth_page (
 					c_object,
 					pn
 				)
@@ -116,7 +116,7 @@ feature -- Status report
  		local
  			gtk_pos: INTEGER
  		do
- 			gtk_pos := C.gtk_notebook_struct_tab_pos (c_object)
+ 			gtk_pos := feature {EV_GTK_EXTERNALS}.gtk_notebook_struct_tab_pos (c_object)
  			inspect
  				gtk_pos
  			when 0 then
@@ -146,7 +146,7 @@ feature -- Status setting
 			elseif a_tab_position = interface.Tab_bottom then
 				gtk_pos := 3
 			end
-			C.gtk_notebook_set_tab_pos (c_object, gtk_pos)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_pos (c_object, gtk_pos)
 		end
 
 	select_item (an_item: like item) is
@@ -158,9 +158,9 @@ feature -- Status setting
 			check
 				an_item_has_implementation: item_imp /= Void
 			end
-			C.gtk_notebook_set_page (
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_page (
 				c_object,
-				C.gtk_notebook_page_num (c_object, item_imp.c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_notebook_page_num (c_object, item_imp.c_object)
 			)
 		end	
 	
@@ -171,7 +171,7 @@ feature -- Element change
 		do
 			Precursor {EV_WIDGET_LIST_IMP} (i)
 			if count > 0 then
-				selected_item_index_internal := C.gtk_notebook_get_current_page (c_object) + 1
+				selected_item_index_internal := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_current_page (c_object) + 1
 			else
 				selected_item_index_internal := 0
 			end
@@ -182,10 +182,10 @@ feature -- Element change
 		local
 			i: INTEGER
 		do
-			i := C.gtk_notebook_get_current_page (c_object)
+			i := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_current_page (c_object)
 			remove_i_th (index)
 			insert_i_th (v, index)
-			C.gtk_notebook_set_page (c_object, i)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_page (c_object, i)
 		end
 
 	set_item_text (an_item: like item; a_text: STRING) is
@@ -199,7 +199,7 @@ feature -- Element change
 				an_item_has_implementation: item_imp /= Void
 			end
 			create a_gs.make (a_text)
-			C.gtk_notebook_set_tab_label_text (
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label_text (
 				c_object,
 				item_imp.c_object,
 				a_gs.item
@@ -237,7 +237,7 @@ feature {EV_ANY_I} -- Implementation
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
-			C.gtk_notebook_reorder_child (a_container, a_child, a_position)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_reorder_child (a_container, a_child, a_position)
 		end
 
 	interface: EV_NOTEBOOK

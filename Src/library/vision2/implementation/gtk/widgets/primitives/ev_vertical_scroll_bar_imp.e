@@ -30,11 +30,11 @@ feature {NONE} -- Initialization
 			vs: POINTER
 		do
 			base_make (an_interface)
-			adjustment := C.gtk_adjustment_new (0, 0, 100 + 10, 1, 10, 10)
-			vs := C.gtk_vscrollbar_new (adjustment)
-			C.gtk_widget_show (vs)
-			set_c_object (C.gtk_event_box_new)
-			C.gtk_container_add (c_object, vs)
+			adjustment := feature {EV_GTK_EXTERNALS}.gtk_adjustment_new (0, 0, 100 + 10, 1, 10, 10)
+			vs := feature {EV_GTK_EXTERNALS}.gtk_vscrollbar_new (adjustment)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (vs)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, vs)
 		end
 
 feature {EV_ANY_I} -- Implementation

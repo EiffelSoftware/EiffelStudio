@@ -67,10 +67,10 @@ feature {NONE} -- Initialization
 			Precursor {EV_ITEM_LIST_IMP}
 			if not is_in_final_collect then
 				if gdk_pixmap /= NULL then
-					C.gdk_pixmap_unref (gdk_pixmap)
+					feature {EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdk_pixmap)
 				end
 				if gdk_mask /= NULL then
-					C.gdk_pixmap_unref (gdk_mask)
+					feature {EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdk_mask)
 				end				
 			end
 		end
@@ -96,7 +96,7 @@ feature -- Status setting
 	enable_select is
 			-- Select `Current' in its parent.
 		do
-			C.gtk_ctree_select (
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_select (
 				parent_tree_imp.list_widget,
 				tree_node_ptr
 			)		
@@ -105,7 +105,7 @@ feature -- Status setting
 	disable_select is
 			-- Disable selection of `Current' in its parent.
 		do
-			C.gtk_ctree_unselect (
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_unselect (
 				parent_tree_imp.list_widget,
 				tree_node_ptr
 			)
@@ -116,12 +116,12 @@ feature -- Status setting
 		do
 			is_expanded := a_flag
 			if a_flag then
-				C.gtk_ctree_expand (
+				feature {EV_GTK_EXTERNALS}.gtk_ctree_expand (
 					parent_tree_imp.list_widget,
 					tree_node_ptr
 				)
 			else
-				C.gtk_ctree_collapse (
+				feature {EV_GTK_EXTERNALS}.gtk_ctree_collapse (
 					parent_tree_imp.list_widget,
 					tree_node_ptr
 				)
@@ -306,9 +306,9 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			create a_gs.make (text)
 			if parent_tree_imp /= Void then
 				if pix_height > parent_tree_imp.row_height then
-					C.gtk_clist_set_row_height (parent_tree_imp.list_widget, pix_height)
+					feature {EV_GTK_EXTERNALS}.gtk_clist_set_row_height (parent_tree_imp.list_widget, pix_height)
 				end
-				C.gtk_ctree_set_node_info (
+				feature {EV_GTK_EXTERNALS}.gtk_ctree_set_node_info (
 					parent_tree_imp.list_widget,
 					tree_node_ptr,
 					a_gs.item,-- text,
@@ -355,9 +355,9 @@ feature {EV_APPLICATION_IMP} -- Implementation
 		do
 			par_tree_imp := parent_tree_imp
 			if par_tree_imp /= Void then
-				gdkwin_parent := C.gdk_window_get_parent (a_gdk_window)
-				clist_parent := C.gdk_window_get_parent (
-					C.gtk_clist_struct_clist_window (par_tree_imp.list_widget)
+				gdkwin_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (a_gdk_window)
+				clist_parent := feature {EV_GTK_EXTERNALS}.gdk_window_get_parent (
+					feature {EV_GTK_EXTERNALS}.gtk_clist_struct_clist_window (par_tree_imp.list_widget)
 				)
 				if gdkwin_parent = clist_parent then
 					if par_tree_imp.row_from_y_coord (a_y) = Current then
@@ -437,9 +437,9 @@ feature {EV_TREE_IMP} -- Implementation
 			--| FIXME An intelligent image list needs to be implemented instead of
 			--| just retaining a pointer to passed pixmap.
 			a_pix_imp ?= a_pixmap.implementation
-			gdk_pixmap := C.gdk_pixmap_ref (a_pix_imp.drawable)
+			gdk_pixmap := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (a_pix_imp.drawable)
 			if a_pix_imp.mask /= NULL then
-				gdk_mask := C.gdk_bitmap_ref (a_pix_imp.mask)
+				gdk_mask := feature {EV_GTK_EXTERNALS}.gdk_bitmap_ref (a_pix_imp.mask)
 			end
 			pix_width := a_pix_imp.width
 			pix_height := a_pix_imp.height
@@ -547,7 +547,7 @@ feature {EV_TREE_IMP} -- Implementation
 					a_timeout_imp.interface.actions.extend (agent remove_dummy_node)
 					a_timeout_imp.set_interval_kamikaze (0)
 				else
-					C.gtk_ctree_remove_node (par_tree_imp.list_widget, item_imp.tree_node_ptr)
+					feature {EV_GTK_EXTERNALS}.gtk_ctree_remove_node (par_tree_imp.list_widget, item_imp.tree_node_ptr)
 				end
 				item_imp.set_item_and_children (NULL)
 				-- This resets item and all children
@@ -580,7 +580,7 @@ feature {EV_TREE_IMP} -- Implementation
 			a_d_node := remove_on_expand_node
 			if remove_on_expand_node /= NULL then
 				remove_on_expand_node := NULL
-				C.gtk_ctree_remove_node (parent_tree_imp.list_widget, a_d_node)		
+				feature {EV_GTK_EXTERNALS}.gtk_ctree_remove_node (parent_tree_imp.list_widget, a_d_node)		
 			end
 		end
 

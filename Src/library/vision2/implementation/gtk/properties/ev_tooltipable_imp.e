@@ -27,9 +27,9 @@ feature -- Initialization
 		local
 			tip_ptr: POINTER
 		do
-			tip_ptr := C.gtk_tooltips_data_get (visual_widget)
+			tip_ptr := feature {EV_GTK_EXTERNALS}.gtk_tooltips_data_get (visual_widget)
 			if tip_ptr /= NULL then
-				create Result.make_from_c (C.gtk_tooltips_data_struct_tip_text (tip_ptr))
+				create Result.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_tooltips_data_struct_tip_text (tip_ptr))
 			else
 				Result := ""
 			end
@@ -43,7 +43,7 @@ feature -- Element change
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (a_text)
-			C.gtk_tooltips_set_tip (
+			feature {EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
 				app_implementation.tooltips,
 				visual_widget,
 				a_gs.item,
@@ -54,7 +54,7 @@ feature -- Element change
 	remove_tooltip is
 			-- Set `tooltip' to `Void'.
 	    do
-			C.gtk_tooltips_set_tip (
+			feature {EV_GTK_EXTERNALS}.gtk_tooltips_set_tip (
 				app_implementation.tooltips,
 				visual_widget,
 				NULL,

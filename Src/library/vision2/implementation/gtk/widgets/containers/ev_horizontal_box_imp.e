@@ -33,10 +33,10 @@ feature {NONE} -- Initialization
 			-- Create a GTK horizontal box.
 		do	
 			base_make (an_interface)
-			set_c_object (C.gtk_event_box_new)
-			container_widget := C.gtk_hbox_new (Default_homogeneous, Default_spacing)
-			C.gtk_container_add (c_object, container_widget)
-			C.gtk_widget_show (container_widget)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
+			container_widget := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (Default_homogeneous, Default_spacing)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, container_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
 		end
 
 feature {EV_ANY_I} -- Implementation

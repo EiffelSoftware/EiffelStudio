@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 			initialize_pixmap_box
 			{EV_ITEM_IMP} Precursor
-			C.gtk_widget_set_usize (c_object, 10, -1)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 10, -1)
 			is_initialized := True
 		end
 
@@ -76,9 +76,9 @@ feature {NONE} -- Initialization
 		local
 			box: POINTER
 		do
-			box := C.gtk_hbox_new (False, 0)
-			C.gtk_widget_hide (box)
-			C.gtk_box_pack_start (box, pixmap_box, True, True, 0)
+			box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (box)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end
 
 feature {EV_ANY_I} -- Implementation

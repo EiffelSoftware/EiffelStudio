@@ -50,9 +50,9 @@ feature {NONE} -- Initialization
 
 	initialize is
 		do
-			list_widget := C.gtk_menu_new
-			C.gtk_widget_show (list_widget)
-			C.gtk_menu_item_set_submenu (
+			list_widget := feature {EV_GTK_EXTERNALS}.gtk_menu_new
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_menu_item_set_submenu (
 				c_object, list_widget
 			)
 			{EV_MENU_ITEM_LIST_IMP} Precursor
@@ -68,9 +68,9 @@ feature -- Element change
 		do
 			real_text := clone (a_text)
 			create a_gs.make (u_lined_filter (real_text))
-			key := C.gtk_label_parse_uline (text_label,
+			key := feature {EV_GTK_EXTERNALS}.gtk_label_parse_uline (text_label,
 				a_gs.item)
-			C.gtk_widget_show (text_label)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 		end
 
 feature -- Basic operations
@@ -82,9 +82,9 @@ feature -- Basic operations
 			bw: INTEGER
 		do
 			pc := (create {EV_SCREEN}).pointer_position
-			bw := C.gtk_container_struct_border_width (list_widget)
+			bw := feature {EV_GTK_EXTERNALS}.gtk_container_struct_border_width (list_widget)
 			if not interface.is_empty then
-				C.c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw)
+				feature {EV_GTK_EXTERNALS}.c_gtk_menu_popup (list_widget, pc.x + bw, pc.y + bw)
 			end
 		end
 
@@ -93,7 +93,7 @@ feature -- Basic operations
 			-- of `a_widget'.
 		do
 			if not interface.is_empty then
-				C.c_gtk_menu_popup (list_widget,
+				feature {EV_GTK_EXTERNALS}.c_gtk_menu_popup (list_widget,
 					a_widget.screen_x + a_x,
 					a_widget.screen_y + a_y)
 			end
@@ -111,12 +111,12 @@ feature {NONE} -- Implementation
 			Precursor {EV_MENU_ITEM_LIST_IMP} (an_item_imp, pos)
 			if an_item_imp.key /= 0 then
 				if accel_group = NULL then
-					accel_group := C.gtk_menu_get_accel_group (list_widget)
+					accel_group := feature {EV_GTK_EXTERNALS}.gtk_menu_get_accel_group (list_widget)
 				end
 				menu_imp ?= an_item_imp
 				if menu_imp = Void then
 					create a_gs.make ("activate")
-					C.gtk_widget_add_accelerator (an_item_imp.c_object,
+					feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (an_item_imp.c_object,
 						a_gs.item,
 						accel_group,
 						an_item_imp.key,
@@ -124,7 +124,7 @@ feature {NONE} -- Implementation
 						0)
 				else
 					create a_gs.make ("activate_item")
-					C.gtk_widget_add_accelerator (menu_imp.c_object,
+					feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (menu_imp.c_object,
 						a_gs.item,
 						accel_group,
 						menu_imp.key,

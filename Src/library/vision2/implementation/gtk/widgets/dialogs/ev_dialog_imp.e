@@ -33,9 +33,9 @@ feature {NONE} -- Initialization
 			-- Create empty dialog box.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_window_new (C.Gtk_window_dialog_enum))
-			C.gtk_widget_realize (c_object)
-			C.gtk_window_set_policy (c_object, 0, 0, 1) -- allow_shrink = False, allow_grow = False, auto_shrink = True
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.gtk_window_dialog_enum))
+			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 1) -- allow_shrink = False, allow_grow = False, auto_shrink = True
 			enable_closeable
 		end
 		
@@ -50,7 +50,7 @@ feature -- Status Report
 	is_relative: BOOLEAN is
 			-- Is `Current' shown relative to another window?
 		do
-			Result := not is_modal and C.gtk_window_struct_transient_parent (c_object) /= default_pointer
+			Result := not is_modal and feature {EV_GTK_EXTERNALS}.gtk_window_struct_transient_parent (c_object) /= default_pointer
 				and is_show_requested
 		end
 		
@@ -150,11 +150,11 @@ feature {NONE} -- Implementation
 			close_fct: INTEGER
 		do
 			if new_status then
-				close_fct := C.GDK_FUNC_CLOSE_ENUM
+				close_fct := feature {EV_GTK_EXTERNALS}.gDK_FUNC_CLOSE_ENUM
 			end
-			C.gdk_window_set_functions (
-				C.gtk_widget_struct_window (c_object),
-				C.GDK_FUNC_MOVE_ENUM.bit_or (close_fct)
+			feature {EV_GTK_EXTERNALS}.gdk_window_set_functions (
+				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+				feature {EV_GTK_EXTERNALS}.gDK_FUNC_MOVE_ENUM.bit_or (close_fct)
 			)
 			is_dialog_closeable := new_status
 		end

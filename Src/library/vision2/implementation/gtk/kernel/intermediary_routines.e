@@ -468,7 +468,7 @@ feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 		do
 			create a_gs.make (signal)
 			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_pick_and_dropable_imp.c.signal_emit_stop_by_name (a_c_object, a_gs.item)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_gs.item)
 		end
 
 	add_grab_cb_intermediary (a_c_object: POINTER) is

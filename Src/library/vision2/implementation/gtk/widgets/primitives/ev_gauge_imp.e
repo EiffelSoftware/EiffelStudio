@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Create the horizontal scroll bar.
 		do
 			base_make (an_interface)
-			adjustment := C.gtk_adjustment_new (0, 0, 100, 1, 10, 0)
+			adjustment := feature {EV_GTK_EXTERNALS}.gtk_adjustment_new (0, 0, 100, 1, 10, 0)
 		end
 
 	initialize is
@@ -57,13 +57,13 @@ feature -- Access
 	value: INTEGER is
 			-- Current value of the gauge.
 		do
-			Result := C.gtk_adjustment_struct_value (adjustment).rounded
+			Result := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_value (adjustment).rounded
 		end
 
 	step: INTEGER is
 			-- Value by which `value' is increased after `step_forward'.
 		do
-			Result := C.gtk_adjustment_struct_step_increment (
+			Result := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_step_increment (
 				adjustment
 			).rounded
 		end
@@ -71,7 +71,7 @@ feature -- Access
 	leap: INTEGER is
 			-- Value by which `value' is increased after `leap_forward'.
 		do
-			Result := C.gtk_adjustment_struct_page_increment (
+			Result := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_increment (
 				adjustment
 			).rounded
 		end
@@ -81,7 +81,7 @@ feature -- Access
 			--| We define it here to add to the internal maximum. 
 			--| Value should be zero for ranges but not for scrollbars.
 		do
-			Result := C.gtk_adjustment_struct_page_size (adjustment).rounded
+			Result := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_page_size (adjustment).rounded
 		end
 
 feature -- Status setting
@@ -116,7 +116,7 @@ feature -- Element change
 			-- Set `value' to `a_value'.
 		do
 			if value /= a_value then
-				C.gtk_adjustment_set_value (adjustment, a_value)
+				feature {EV_GTK_EXTERNALS}.gtk_adjustment_set_value (adjustment, a_value)
 			end
 		ensure then
 			step_same: step = old step
@@ -128,8 +128,8 @@ feature -- Element change
 			-- Set `step' to `a_step'.
 		do
 			if step /= a_step then
-				C.set_gtk_adjustment_struct_step_increment (adjustment, a_step)
-				C.gtk_adjustment_changed (adjustment)
+				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_step_increment (adjustment, a_step)
+				feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
 			end
 		ensure then
 			value_same: value = old value
@@ -141,9 +141,9 @@ feature -- Element change
 			-- Set `leap' to `a_leap'.
 		do
 			if leap /= a_leap then
-				C.set_gtk_adjustment_struct_upper (adjustment, value_range.upper + a_leap)
-				C.set_gtk_adjustment_struct_page_increment (adjustment, a_leap)
-				C.gtk_adjustment_changed (adjustment)
+				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (adjustment, value_range.upper + a_leap)
+				feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_page_increment (adjustment, a_leap)
+				feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
 			end
 		end
 
@@ -159,18 +159,18 @@ feature -- Element change
 			elseif temp_value < value_range.lower then
 				temp_value := value_range.lower
 			end
-			C.set_gtk_adjustment_struct_lower (adjustment, value_range.lower)
-			C.set_gtk_adjustment_struct_upper (
+			feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_lower (adjustment, value_range.lower)
+			feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (
 				adjustment,
 				value_range.upper + page_size
 			)
-			C.gtk_adjustment_changed (adjustment)
+			feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
 			set_value (temp_value)
 		ensure
 			value_range_upper_consistent: value_range.upper =
-				C.gtk_adjustment_struct_upper (adjustment).rounded - page_size
+				feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (adjustment).rounded - page_size
 			value_range_lower_consistent: value_range.lower =
-				C.gtk_adjustment_struct_lower (adjustment).rounded
+				feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_lower (adjustment).rounded
 		end
 
 feature {NONE} -- Implementation

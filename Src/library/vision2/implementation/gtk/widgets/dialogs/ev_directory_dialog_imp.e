@@ -32,25 +32,25 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			create a_gs.make ("Select directory")
 			set_c_object (
-				C.gtk_file_selection_new (
+				feature {EV_GTK_EXTERNALS}.gtk_file_selection_new (
 					a_gs.item
 				)
 			)
-			C.gtk_widget_hide (
-				C.gtk_widget_struct_parent (
-					C.gtk_file_selection_struct_file_list (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (
+				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (
+					feature {EV_GTK_EXTERNALS}.gtk_file_selection_struct_file_list (c_object)
 				)
 			)
-			C.gtk_widget_hide (
-				C.gtk_file_selection_struct_fileop_del_file (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (
+				feature {EV_GTK_EXTERNALS}.gtk_file_selection_struct_fileop_del_file (c_object)
 			)
-			C.gtk_widget_hide (
-				C.gtk_file_selection_struct_fileop_ren_file (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (
+				feature {EV_GTK_EXTERNALS}.gtk_file_selection_struct_fileop_ren_file (c_object)
 			)
-			C.gtk_widget_realize (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
 			create start_directory.make (0)
 			start_directory.from_c (
-				C.gtk_file_selection_get_filename (c_object)
+				feature {EV_GTK_EXTERNALS}.gtk_file_selection_get_filename (c_object)
 			)
 		end
 
@@ -60,13 +60,13 @@ feature {NONE} -- Initialization
 			Precursor {EV_STANDARD_DIALOG_IMP}
 			is_initialized := False
 			real_signal_connect (
-				C.gtk_file_selection_struct_ok_button (c_object),
+				feature {EV_GTK_EXTERNALS}.gtk_file_selection_struct_ok_button (c_object),
 				"pressed",
 				agent (App_implementation.gtk_marshal).directory_dialog_on_ok_intermediary (c_object),
 				Void
 			)
 			real_signal_connect (
-				C.gtk_file_selection_struct_cancel_button (c_object),
+				feature {EV_GTK_EXTERNALS}.gtk_file_selection_struct_cancel_button (c_object),
 				"pressed",
 				agent (App_implementation.gtk_marshal).directory_dialog_on_cancel_intermediary (c_object),
 				Void
@@ -84,7 +84,7 @@ feature -- Access
 				selected_button /= Void and then selected_button.is_equal (internal_accept)
 			then
 				create Result.make (0)
-				Result.from_c (C.gtk_file_selection_get_filename (c_object))
+				Result.from_c (feature {EV_GTK_EXTERNALS}.gtk_file_selection_get_filename (c_object))
 				if Result.item (Result.count) /= '/' then
 					Result.append ("/")
 				end
@@ -109,7 +109,7 @@ feature -- Element change
 				start_directory.append ("/")
 			end
 			create a_gs.make (start_directory)
-			C.gtk_file_selection_set_filename (
+			feature {EV_GTK_EXTERNALS}.gtk_file_selection_set_filename (
 				c_object,
 				a_gs.item
 			)

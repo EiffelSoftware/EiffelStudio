@@ -44,10 +44,10 @@ feature {NONE} -- Implementation
 			-- Create the spin button.
 		do
 			{EV_GAUGE_IMP} Precursor (an_interface)
-			set_c_object (C.gtk_vbox_new (False, 0))
-			entry_widget := C.gtk_spin_button_new (adjustment, 0, 0)
-			C.gtk_widget_show (entry_widget)
-			C.gtk_box_pack_start (c_object, entry_widget, False, False, 0)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0))
+			entry_widget := feature {EV_GTK_EXTERNALS}.gtk_spin_button_new (adjustment, 0, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (c_object, entry_widget, False, False, 0)
 		end
 
 	initialize is

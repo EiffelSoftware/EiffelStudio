@@ -60,9 +60,9 @@ feature -- Access
 				c_object /= NULL
 			end
 			check
-				C.gtk_window_struct_title (c_object) /= NULL
+				feature {EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object) /= NULL
 			end
-			create Result.make_from_c (C.gtk_window_struct_title (c_object))
+			create Result.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_window_struct_title (c_object))
 		end
 
 feature -- Status report
@@ -126,7 +126,7 @@ feature -- Status setting
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (a_title)
-			C.gtk_window_set_title (c_object, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_gs.item)
 		end
 
 feature {NONE} -- Implementation
@@ -154,16 +154,16 @@ feature {NONE} -- Implementation
 			until
 				is_destroyed or else selected_button /= Void
 			loop
-				dummy := C.gtk_main_iteration_do (False)
+				dummy := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (False)
 			end
 		end
 
 	enable_closeable is
 			-- Set the window to be closeable by the user
 		do
-			C.gdk_window_set_functions (
-				C.gtk_widget_struct_window (c_object),
-				C.GDK_FUNC_CLOSE_ENUM + C.GDK_FUNC_MOVE_ENUM
+			feature {EV_GTK_EXTERNALS}.gdk_window_set_functions (
+				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+				feature {EV_GTK_EXTERNALS}.gDK_FUNC_CLOSE_ENUM + feature {EV_GTK_EXTERNALS}.gDK_FUNC_MOVE_ENUM
 			)
 		end
 		
@@ -185,14 +185,14 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implmentation
 		do
 			user_clicked_ok := True
 			selected_button := internal_accept
-			C.gtk_widget_hide (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 		end
 
 	on_cancel is
 			-- Close window and call action sequence.
 		do
 			selected_button := ev_cancel
-			C.gtk_widget_hide (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (c_object)
 		end
 
 end -- class EV_STANDARD_DIALOG_IMP

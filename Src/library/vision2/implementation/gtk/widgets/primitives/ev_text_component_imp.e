@@ -35,20 +35,21 @@ feature -- Status report
 	is_editable: BOOLEAN is
 			-- Is the text editable.
 		do
-			Result := C.gtk_editable_get_editable (entry_widget)
+			--| FIXME This should be removed when gtk1 imp is made obsolete
+			Result := (create {EV_GTK_DEPENDENT_EXTERNALS}).gtk_editable_get_editable (entry_widget)
 		end
 
 	position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := C.gtk_editable_get_position (entry_widget) + 1
+			Result := feature {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
 		end
 
 	has_selection: BOOLEAN is
 			-- Is something selected?
 		do
-			Result := C.gtk_editable_struct_selection_start (entry_widget) /= 
-				C.gtk_editable_struct_selection_end (entry_widget)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget) /= 
+				feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)
 		end
 
 	selection_start: INTEGER is
@@ -56,8 +57,8 @@ feature -- Status report
 		local
 			a_start: INTEGER
 		do
-			a_start := C.gtk_editable_struct_selection_start (entry_widget)
-			Result := a_start.min (C.gtk_editable_struct_selection_end (entry_widget)) + 1
+			a_start := feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget)
+			Result := a_start.min (feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget)) + 1
 		end
 
 	selection_end: INTEGER is
@@ -65,8 +66,8 @@ feature -- Status report
 		local
 			a_start: INTEGER
 		do
-			a_start := C.gtk_editable_struct_selection_start (entry_widget)
-			Result := a_start.max (C.gtk_editable_struct_selection_end (entry_widget))
+			a_start := feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_start (entry_widget)
+			Result := a_start.max (feature {EV_GTK_EXTERNALS}.gtk_editable_struct_selection_end (entry_widget))
 		end
 
 	maximum_character_width: INTEGER is
@@ -86,13 +87,13 @@ feature -- status settings
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.
 		do
-			C.gtk_editable_set_editable (entry_widget, flag)
+			feature {EV_GTK_EXTERNALS}.gtk_editable_set_editable (entry_widget, flag)
 		end
 
 	set_position (pos: INTEGER) is
 			-- Set current insertion position.
 		do
-			C.gtk_editable_set_position (entry_widget, pos - 1)
+			feature {EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 
 	set_caret_position (pos: INTEGER) is
@@ -104,7 +105,7 @@ feature -- status settings
 	internal_set_caret_position (pos: INTEGER) is
 			-- Set the position of the caret to `pos'.
 		do
-			C.gtk_editable_set_position (entry_widget, pos - 1)
+			feature {EV_GTK_EXTERNALS}.gtk_editable_set_position (entry_widget, pos - 1)
 		end
 
 feature -- Resizing
@@ -125,7 +126,7 @@ feature -- Basic operation
 		do
 			pos := caret_position - 1
 			create a_gs.make (txt)
-			C.gtk_editable_insert_text (
+			feature {EV_GTK_EXTERNALS}.gtk_editable_insert_text (
 				entry_widget,
 				a_gs.item,
 				txt.count,
@@ -148,19 +149,19 @@ feature -- Basic operation
 	select_region_internal (start_pos, end_pos: INTEGER) is
 			-- Select region
 		do
-			C.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
+			feature {EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, start_pos.min (end_pos) - 1, end_pos.max (start_pos))
 		end
 
 	deselect_all is
 			-- Unselect the current selection.
 		do
-			C.gtk_editable_select_region (entry_widget, 0, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_editable_select_region (entry_widget, 0, 0)
 		end
 
 	delete_selection is
 			-- Delete the current selection.
 		do
-			C.gtk_editable_delete_selection (entry_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_editable_delete_selection (entry_widget)
 		end
 
 	cut_selection is
@@ -170,7 +171,7 @@ feature -- Basic operation
 			-- If the `selected_region' is empty, it does
 			-- nothing.
 		do
-			C.gtk_editable_cut_clipboard (entry_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_editable_cut_clipboard (entry_widget)
 		end
 
 	copy_selection is
@@ -179,7 +180,7 @@ feature -- Basic operation
 			-- If the `selected_region' is empty, it does
 			-- nothing.
 		do
-			C.gtk_editable_copy_clipboard (entry_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_editable_copy_clipboard (entry_widget)
 		end
 
 	paste (index: INTEGER) is
@@ -202,9 +203,9 @@ feature {NONE} -- Implementation
 			-- 
 		do
 			{EV_PRIMITIVE_IMP} Precursor (a_cursor_ptr)
-			--C.gtk_widget_realize (entry_widget)
-			--C.gtk_widget_realize (C.gtk_entry_struct_text_area (entry_widget))
-			C.gdk_window_set_cursor (C.gtk_widget_struct_window (C.gtk_entry_struct_text_area (entry_widget)), a_cursor_ptr)
+			--feature {EV_GTK_EXTERNALS}.gtk_widget_realize (entry_widget)
+			--feature {EV_GTK_EXTERNALS}.gtk_widget_realize (feature {EV_GTK_EXTERNALS}.gtk_entry_struct_text_area (entry_widget))
+			feature {EV_GTK_EXTERNALS}.gdk_window_set_cursor (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (feature {EV_GTK_EXTERNALS}.gtk_entry_struct_text_area (entry_widget)), a_cursor_ptr)
 		end
 
 	internal_timeout_imp: EV_TIMEOUT_IMP

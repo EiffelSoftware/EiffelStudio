@@ -34,13 +34,13 @@ feature {NONE} -- Implementation
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (full_name)
-			c_object := C.gdk_font_load (a_gs.item)
+			c_object := feature {EV_GTK_EXTERNALS}.gdk_font_load (a_gs.item)
 		end
 
 	destroy is
 			-- Unreference font.
 		do
-			C.gdk_font_unref (c_object)
+			feature {EV_GTK_EXTERNALS}.gdk_font_unref (c_object)
 		end
 
 feature -- Access

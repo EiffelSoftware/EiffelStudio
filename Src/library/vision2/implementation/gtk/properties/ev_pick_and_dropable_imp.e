@@ -474,7 +474,7 @@ feature -- Implementation
 			feature {EV_GTK_EXTERNALS}.gdk_gc_set_foreground (Result, col)
 			feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (Result, feature {EV_GTK_EXTERNALS}.Gdk_invert_enum)
 			feature {EV_GTK_EXTERNALS}.gdk_gc_set_subwindow (Result, feature {EV_GTK_EXTERNALS}.Gdk_include_inferiors_enum)
-			feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_free (col)
+			col.memory_free
 		end
 
 	real_pointed_target: EV_PICK_AND_DROPABLE is

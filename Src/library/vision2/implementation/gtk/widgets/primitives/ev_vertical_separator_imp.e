@@ -30,11 +30,11 @@ feature {NONE} -- Initialization
 			p: POINTER
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_event_box_new)
-			p := C.gtk_vseparator_new
-			C.gtk_widget_show (p)
-			C.gtk_container_add (c_object, p)
-			C.gtk_widget_set_usize (c_object, 3, -1)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
+			p := feature {EV_GTK_EXTERNALS}.gtk_vseparator_new
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (p)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, p)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 3, -1)
 		end
 
 feature {EV_ANY_I} -- Implementation

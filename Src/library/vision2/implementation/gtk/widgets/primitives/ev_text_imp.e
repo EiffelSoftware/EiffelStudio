@@ -40,11 +40,11 @@ feature {NONE} -- Initialization
 			-- Create a gtk label.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
-			C.gtk_scrolled_window_set_policy (c_object, C.GTK_POLICY_AUTOMATIC_ENUM, C.GTK_POLICY_AUTOMATIC_ENUM)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
+			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (c_object, C.GTK_POLICY_AUTOMATIC_ENUM, C.GTK_POLICY_AUTOMATIC_ENUM)
 			entry_widget := gtk_text_new (NULL, NULL)
-			C.gtk_widget_show (entry_widget)
-			C.gtk_container_add (c_object, entry_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, entry_widget)
 			gtk_text_set_editable (entry_widget, True)
 		end
 
@@ -54,9 +54,9 @@ feature -- Access
 		local
 			p: POINTER
 		do
-			p := C.gtk_editable_get_chars (entry_widget, 0, -1)
+			p := feature {EV_GTK_EXTERNALS}.gtk_editable_get_chars (entry_widget, 0, -1)
 			create Result.make_from_c (p)
-			C.g_free (p)
+			feature {EV_GTK_EXTERNALS}.g_free (p)
 		end
 
 	line (i: INTEGER): STRING is
@@ -89,9 +89,9 @@ feature -- Access
 				-- The `+ 1' is due to GTK function `gtk_editable_get_chars'. 
 			end
 
-			p := C.gtk_editable_get_chars (entry_widget, line_begin_pos - 1, line_end_pos - 1)
+			p := feature {EV_GTK_EXTERNALS}.gtk_editable_get_chars (entry_widget, line_begin_pos - 1, line_end_pos - 1)
 			create Result.make_from_c (p)
-			C.g_free (p)
+			feature {EV_GTK_EXTERNALS}.g_free (p)
 		end
 
 feature -- Status report
@@ -101,7 +101,7 @@ feature -- Status report
 		local
 			temp_text: STRING
 		do
-				Result := C.gtk_adjustment_struct_upper (vertical_adjustment_struct).rounded // line_height
+				Result := feature {EV_GTK_EXTERNALS}.gtk_adjustment_struct_upper (vertical_adjustment_struct).rounded // line_height
 				temp_text := text
 				if temp_text /= Void then
 					Result := Result.max (temp_text.occurrences ('%N') + 1)
@@ -119,9 +119,9 @@ feature -- Status report
 			if is_displayed then
 				Result := (gtk_text_struct_cursor_pos_y (entry_widget) + gtk_text_struct_first_onscreen_ver_pixel (entry_widget)) // line_height
 			else
-				p := C.gtk_editable_get_chars (entry_widget, 0, gtk_text_get_point (entry_widget))
+				p := feature {EV_GTK_EXTERNALS}.gtk_editable_get_chars (entry_widget, 0, gtk_text_get_point (entry_widget))
 				create temp_string.make_from_c (p)
-				C.g_free (p)
+				feature {EV_GTK_EXTERNALS}.g_free (p)
 				Result := temp_string.occurrences ('%N') + 1
 			end
 		end
@@ -213,7 +213,7 @@ feature -- Status setting
 	
 	set_text (txt: STRING) is
 		do
-			C.gtk_editable_delete_text (entry_widget, 0, -1)
+			feature {EV_GTK_EXTERNALS}.gtk_editable_delete_text (entry_widget, 0, -1)
 			insert_text (txt)
 		end
 	
@@ -243,7 +243,7 @@ feature -- Status setting
 			-- Delete the text between `start' and `finish' index
 			-- both sides include.
 		do
-			C.gtk_editable_delete_text (entry_widget, start + 1, finish + 1)
+			feature {EV_GTK_EXTERNALS}.gtk_editable_delete_text (entry_widget, start + 1, finish + 1)
 		end
 
 	freeze is
@@ -281,7 +281,7 @@ feature -- Basic operation
 	scroll_to_line (i: INTEGER) is
 		do
 			freeze
-			C.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
+			feature {EV_GTK_EXTERNALS}.gtk_adjustment_set_value (vertical_adjustment_struct, (i - 1) * line_height)
 			thaw
 		end
 
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 	vertical_adjustment_struct: POINTER is
 			-- Pointer to vertical adjustment struct use in the scrollbar.
 		do
-			Result := C.gtk_range_struct_adjustment (C.gtk_scrolled_window_struct_vscrollbar (c_object))
+			Result := feature {EV_GTK_EXTERNALS}.gtk_range_struct_adjustment (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_struct_vscrollbar (c_object))
 		end
 
 	line_height: INTEGER is

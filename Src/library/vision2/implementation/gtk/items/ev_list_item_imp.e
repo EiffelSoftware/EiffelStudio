@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			-- Create a list item with an empty name.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_list_item_new)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_list_item_new)
 		end
 
 	initialize is
@@ -65,29 +65,29 @@ feature {NONE} -- Initialization
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			checkable_imp_initialize
-			item_box := C.gtk_hbox_new (False, 0)
-			C.gtk_container_add (c_object, item_box)
-			C.gtk_widget_show (item_box)
+			item_box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, item_box)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (item_box)
 				-- Add the pixmap box to the item but hide it so it
 				-- takes up no space in the item.
 				
-			C.gtk_box_pack_start (item_box, check_box, False, False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, check_box, False, False, 0)
 				-- The check box is only shown in an EV_CHECKABLE_LIST
 			real_signal_connect (check_box, "toggled", agent (App_implementation.gtk_marshal).list_item_check_intermediary (c_object), Void)
 
-			C.gtk_box_pack_start (item_box, pixmap_box, False, False, 2)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, pixmap_box, False, False, 2)
 				-- Padding of 2 pixels used for pixmap
-			C.gtk_box_pack_start (item_box, text_label, True, True, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (item_box, text_label, True, True, 0)
 
-			--C.gtk_widget_hide (pixmap_box)	
+			--feature {EV_GTK_EXTERNALS}.gtk_widget_hide (pixmap_box)	
 			is_initialized := True
 		end
 		
 	checkable_imp_initialize is
 			-- 
 		do
-			check_box := C.gtk_check_button_new
-			gtk_widget_unset_flags (check_box, C.GTK_CAN_FOCUS_ENUM)
+			check_box := feature {EV_GTK_EXTERNALS}.gtk_check_button_new
+			gtk_widget_unset_flags (check_box, feature {EV_GTK_EXTERNALS}.gTK_CAN_FOCUS_ENUM)
 		end
 		
 	set_parent_imp (a_container: EV_CONTAINER_IMP) is
@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_ITEM_IMP} (a_container)
 			if a_container = Void then
-				C.gtk_widget_hide (check_box) 				
+				feature {EV_GTK_EXTERNALS}.gtk_widget_hide (check_box) 				
 			end
 		end
 		
@@ -137,7 +137,7 @@ feature -- Access
 		do
 			par := parent_imp.list_widget
 			if par /= NULL then
-				Result := 1 + C.gtk_list_child_position (par, c_object)
+				Result := 1 + feature {EV_GTK_EXTERNALS}.gtk_list_child_position (par, c_object)
 			end
 		end
 
@@ -150,8 +150,8 @@ feature -- Status report
 		do
 			par := parent_imp.list_widget
 			if par /= NULL then
-				Result := C.g_list_find (
-					C.gtk_list_struct_selection (par),
+				Result := feature {EV_GTK_EXTERNALS}.g_list_find (
+					feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (par),
 					c_object
 				) /= NULL
 			end
@@ -167,15 +167,15 @@ feature -- Status setting
 			if not is_selected then
 				par := parent_imp.list_widget
 				if par /= NULL then
-					C.gtk_list_select_child (par, c_object);
+					feature {EV_GTK_EXTERNALS}.gtk_list_select_child (par, c_object);
 	--| FIXME hack to ensure the element is selected.				
 					if
-						C.g_list_find (
-							C.gtk_list_struct_selection (par),
+						feature {EV_GTK_EXTERNALS}.g_list_find (
+							feature {EV_GTK_EXTERNALS}.gtk_list_struct_selection (par),
 							c_object
 						) = NULL
 					then
-						C.gtk_list_select_child (par, c_object);
+						feature {EV_GTK_EXTERNALS}.gtk_list_select_child (par, c_object);
 					end
 				end				
 			end
@@ -189,7 +189,7 @@ feature -- Status setting
 			if is_selected then
 				par := parent_imp.list_widget
 				if par /= NULL then
-					C.gtk_list_unselect_child (par, c_object);
+					feature {EV_GTK_EXTERNALS}.gtk_list_unselect_child (par, c_object);
 				end				
 			end
 
@@ -216,7 +216,7 @@ feature -- Element change
 			-- the gtk part if the parent is a combo_box
 			combo_par ?= parent_imp
 			if (combo_par /= Void) then
-				C.gtk_combo_set_item_string (
+				feature {EV_GTK_EXTERNALS}.gtk_combo_set_item_string (
 					combo_par.container_widget,
 					c_object, a_gs.item
 				)

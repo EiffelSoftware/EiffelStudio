@@ -43,12 +43,12 @@ feature {NONE} -- Initialization
 			-- Create a gtk entry.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_vbox_new (False, 0))
-			entry_widget := C.gtk_entry_new
-			C.gtk_widget_show (entry_widget)
-			C.gtk_widget_set_usize (entry_widget, 40, -1)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0))
+			entry_widget := feature {EV_GTK_EXTERNALS}.gtk_entry_new
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (entry_widget, 40, -1)
 			--| Minimum sizes need to be similar on both platforms
-			C.gtk_box_pack_start (c_object, entry_widget, False, False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (c_object, entry_widget, False, False, 0)
 			set_text ("")
 		end
 
@@ -57,7 +57,7 @@ feature -- Access
 	text: STRING is
 			-- Text displayed in field.
 		do
-			create Result.make_from_c (C.gtk_entry_get_text (entry_widget))
+			create Result.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_entry_get_text (entry_widget))
 		end
 
 feature -- Status setting
@@ -68,7 +68,7 @@ feature -- Status setting
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (a_text)
-			C.gtk_entry_set_text (entry_widget, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_gs.item)
 		end
 
 	append_text (txt: STRING) is
@@ -79,7 +79,7 @@ feature -- Status setting
 		do
 			temp_caret_pos := caret_position
 			create a_gs.make (txt)
-			C.gtk_entry_append_text (entry_widget, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_gs.item)
 			set_caret_position (temp_caret_pos)
 		end
 	
@@ -91,20 +91,20 @@ feature -- Status setting
 		do
 			temp_caret_pos := caret_position
 			create a_gs.make (txt)
-			C.gtk_entry_prepend_text (entry_widget, a_gs.item)
+			feature {EV_GTK_EXTERNALS}.gtk_entry_prepend_text (entry_widget, a_gs.item)
 			set_caret_position (temp_caret_pos)
 		end
 		
 	set_capacity (len: INTEGER) is
 		do
-			C.gtk_entry_set_max_length (entry_widget, len)
+			feature {EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
 	
 	capacity: INTEGER is
 			-- Return the maximum number of characters that the
 			-- user may enter.
 		do
-			Result := C.gtk_entry_struct_text_max_length (entry_widget)
+			Result := feature {EV_GTK_EXTERNALS}.gtk_entry_struct_text_max_length (entry_widget)
 		end
 
 feature -- Status Report
@@ -113,9 +113,9 @@ feature -- Status Report
 			-- Current position of the caret.
 		do
 			if in_change_action and not last_key_backspace then
-				Result := C.gtk_editable_get_position (entry_widget) + 2
+				Result := feature {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 2
 			else
-				Result := C.gtk_editable_get_position (entry_widget) + 1	
+				Result := feature {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1	
 			end
 		end
 	

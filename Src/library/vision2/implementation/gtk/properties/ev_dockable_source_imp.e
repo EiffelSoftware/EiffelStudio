@@ -25,15 +25,15 @@ feature -- Status setting
 			a_x, a_y: INTEGER
 			gdkwin, gtkwid: POINTER
 		do
-			gdkwin := C.gdk_window_at_pointer ($a_x, $a_y)
+			gdkwin := feature {EV_GTK_EXTERNALS}.gdk_window_at_pointer ($a_x, $a_y)
 			if gdkwin /= NULL then				
 				from
-					C.gdk_window_get_user_data (gdkwin, $gtkwid)
+					feature {EV_GTK_EXTERNALS}.gdk_window_get_user_data (gdkwin, $gtkwid)
 				until
 					Result /= Void or else gtkwid = NULL
 				loop
 					Result ?= eif_object_from_c (gtkwid)
-					gtkwid := C.gtk_widget_struct_parent (gtkwid)
+					gtkwid := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (gtkwid)
 				end
 			end
 		end
@@ -46,7 +46,7 @@ feature -- Status setting
 			is
 				-- Filter out double click events.
 			do
-				if a_type = C.Gdk_button_press_enum then
+				if a_type = feature {EV_GTK_EXTERNALS}.gdk_button_press_enum then
 					if a_button = 1 and not dawaiting_movement and not App_implementation.is_in_docking then
 							orig_cursor := pointer_style
 							enable_capture

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			Precursor
-			C.gtk_progress_bar_set_orientation (gtk_progress_bar, C.Gtk_progress_bottom_to_top_enum)
+			feature {EV_GTK_EXTERNALS}.gtk_progress_bar_set_orientation (gtk_progress_bar, feature {EV_GTK_EXTERNALS}.gtk_progress_bottom_to_top_enum)
 		end
 			
 feature {EV_ANY_I} -- Implementation

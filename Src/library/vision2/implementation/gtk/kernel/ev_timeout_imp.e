@@ -28,7 +28,7 @@ feature -- Initialization
 			-- Call base make only.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_label_new (NULL))
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_label_new (NULL))
 		end
 
 	initialize is 
@@ -48,7 +48,7 @@ feature -- Access
 			-- Zero disables.
 		do
 			if timeout_connection_id > 0 then
-				C.gtk_timeout_remove (timeout_connection_id)
+				feature {EV_GTK_EXTERNALS}.gtk_timeout_remove (timeout_connection_id)
 				timeout_connection_id := 0
 			end
 

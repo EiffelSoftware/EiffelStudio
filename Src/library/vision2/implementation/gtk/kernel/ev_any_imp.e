@@ -185,9 +185,6 @@ feature {NONE} -- Implementation
 	dispose is
 			-- Called by the Eiffel GC when `Current' is destroyed.
 			-- Destroy `c_object'.
-			--| Use the localy gtk_object_unref defined below to avoid making
-			--| a dot call to C.gtk_object_unref which is not allowed here.
-			--| Same for gtk_signal_disconnect_by_data.
 		do
 			-- FIXME this may not be safe!
 			debug ("EV_GTK_DISPOSE")
@@ -245,7 +242,6 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 invariant
 	c_object_coupled: c_object /= NULL implies
 		eif_object_from_c (c_object) = Current
-	c_externals_object_not_void: C /= Void
 
 indexing
 	description: "[

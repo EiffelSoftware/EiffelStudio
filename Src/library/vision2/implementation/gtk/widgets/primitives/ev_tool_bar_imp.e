@@ -40,10 +40,10 @@ feature {NONE} -- Implementation
 			-- Create the tool-bar.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_event_box_new)
-			list_widget := C.gtk_hbox_new (False, 0)
-			C.gtk_container_add (c_object, list_widget)
-			C.gtk_widget_show (list_widget)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
+			list_widget := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
 		end
 		
 	initialize is
@@ -117,7 +117,7 @@ feature -- Implementation
 			old_expand, fill, pad, pack_type: INTEGER
 		do
 			Precursor (v, v_imp)
-			C.gtk_box_query_child_packing (
+			feature {EV_GTK_EXTERNALS}.gtk_box_query_child_packing (
 				list_widget,
 				v_imp.c_object,
 				$old_expand,
@@ -125,7 +125,7 @@ feature -- Implementation
 				$pad,
 				$pack_type
 			)
-			C.gtk_box_set_child_packing (
+			feature {EV_GTK_EXTERNALS}.gtk_box_set_child_packing (
 				list_widget,
 				v_imp.c_object,
 				False,
@@ -139,7 +139,7 @@ feature -- Implementation
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
-			C.gtk_box_reorder_child (a_container, a_child, a_position)
+			feature {EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_container, a_child, a_position)
 		end
 
 	add_radio_button (w: like item) is
@@ -154,7 +154,7 @@ feature -- Implementation
 				if radio_group /= NULL then
 					r.disable_select
 				end
-				radio_group := C.g_slist_append (radio_group, r.c_object)
+				radio_group := feature {EV_GTK_EXTERNALS}.g_slist_append (radio_group, r.c_object)
 			end
 		end
 
@@ -169,14 +169,14 @@ feature -- Implementation
 			r ?= w.implementation
 			if r /= Void then
 				if r.is_selected then
-					radio_group := C.g_slist_remove (radio_group, r.c_object)
+					radio_group := feature {EV_GTK_EXTERNALS}.g_slist_remove (radio_group, r.c_object)
 					if radio_group /= NULL then
-						C.gtk_toggle_button_set_active (
-							C.gslist_struct_data (radio_group), True
+						feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (
+							feature {EV_GTK_EXTERNALS}.gslist_struct_data (radio_group), True
 						)
 					end
 				else
-					C.gtk_toggle_button_set_active (r.c_object, True)
+					feature {EV_GTK_EXTERNALS}.gtk_toggle_button_set_active (r.c_object, True)
 				end
 			end
 		end

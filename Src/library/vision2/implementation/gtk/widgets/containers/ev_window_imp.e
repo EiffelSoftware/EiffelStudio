@@ -307,7 +307,7 @@ feature -- Element change
 			feature {EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_width (a_geometry, max_width)
 			feature {EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_height (a_geometry, maximum_height)
 			feature {EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, a_geometry, feature {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum)
-			feature {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_free (a_geometry)
+			a_geometry.memory_free
 			maximum_width := max_width
 		end 
 
@@ -320,7 +320,7 @@ feature -- Element change
 			feature {EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_width (a_geometry, maximum_width)
 			feature {EV_GTK_EXTERNALS}.set_gdk_geometry_struct_max_height (a_geometry, max_height)
 			feature {EV_GTK_EXTERNALS}.gtk_window_set_geometry_hints (c_object, NULL, a_geometry, feature {EV_GTK_EXTERNALS}.Gdk_hint_max_size_enum)
-			feature {EV_GTK_EXTERNALS}.c_gdk_geometry_struct_free (a_geometry)
+			a_geometry.memory_free
 			maximum_height := max_height
 		end 
 

@@ -1,4 +1,3 @@
---| FIXME Not for release
 indexing 
 	description:
 		"Eiffel Vision file dialog. Mswindows implementation."
@@ -35,7 +34,8 @@ feature -- Access
 	file_name: STRING is
 			-- Full name of currently selected file including path.
 		do
-			if selected_button /= Void and then selected_button.is_equal ("OK") then
+			if selected_button /= Void
+					and then selected_button.is_equal ("OK") then
 				Result := wel_file_name
 			end
 		end
@@ -63,7 +63,8 @@ feature -- Status report
 		do
 			if file_name /= Void then
 				Result := clone (file_name)
-				Result.head (Result.count - Result.mirrored.index_of ('\', 1) + 1)
+				Result.head (Result.count -
+					Result.mirrored.index_of ('\', 1) + 1)
 			end
 		end
 
@@ -143,6 +144,9 @@ end -- class EV_FILE_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/07 01:53:25  brendel
+--| Released
+--|
 --| Revision 1.6  2000/02/14 11:40:42  oconnor
 --| merged changes from prerelease_20000214
 --|

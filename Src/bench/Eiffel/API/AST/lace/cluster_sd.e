@@ -392,7 +392,7 @@ end;
 				(Environ.interpreted_string (directory_name));
 		local
 			cluster: CLUSTER_I;
-			classes: EXTEND_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING]
 		do
 			if not belongs_to_all and then cluster_properties /= Void then 
 				cluster := Universe.cluster_of_path
@@ -417,7 +417,7 @@ end;
 				(Environ.interpreted_string (directory_name));
 		local
 			cluster: CLUSTER_I
-			classes: EXTEND_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING]
 		do
 			if not belongs_to_all and then cluster_properties /= Void then
 				cluster := Universe.cluster_of_path
@@ -442,7 +442,7 @@ end;
 				(Environ.interpreted_string (directory_name));
 		local
 			cluster: CLUSTER_I
-			classes: EXTEND_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING]
 		do
 			if not belongs_to_all and then cluster_properties /= Void then
 				cluster := Universe.cluster_of_path

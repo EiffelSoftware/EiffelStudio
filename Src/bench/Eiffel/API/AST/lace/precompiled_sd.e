@@ -26,7 +26,7 @@ feature -- Status report
 
 feature {COMPILER_EXPORTER}
 
-	adapt (value: OPT_VAL_SD; classes: EXTEND_TABLE [CLASS_I, STRING];
+	adapt (value: OPT_VAL_SD; classes: HASH_TABLE [CLASS_I, STRING];
 			list: LACE_LIST [ID_SD]) is
 		do
 		end

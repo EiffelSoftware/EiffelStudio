@@ -20,7 +20,7 @@ feature -- Properties
 feature {COMPILER_EXPORTER}
 
 	adapt ( value: OPT_VAL_SD;
-			classes:EXTEND_TABLE [CLASS_I, STRING];
+			classes:HASH_TABLE [CLASS_I, STRING];
 			list: LACE_LIST [ID_SD]) is
 			-- Adapt dynamic option
 		require else

@@ -25,7 +25,7 @@ feature -- Properties
 feature {COMPILER_EXPORTER} -- Update
 
 	adapt ( value: OPT_VAL_SD;
-			classes:EXTEND_TABLE [CLASS_I, STRING];
+			classes:HASH_TABLE [CLASS_I, STRING];
 			list: LACE_LIST [ID_SD]) is
 		local
 			error_raised: BOOLEAN

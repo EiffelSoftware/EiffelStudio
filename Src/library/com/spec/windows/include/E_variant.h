@@ -97,8 +97,8 @@
 #define ccom_set_variant_date_byref(_ptr_,a_value) (V_VT(_ptr_) = VT_DATE|VT_BYREF, V_DATEREF(_ptr_) = (DATE *) (rt_ec.ccom_ec_pointed_date (a_value, NULL)))
 
 // scode/ HRESULT
-#define ccom_variant_error(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_hresult ((HRESULT)V_ERROR(_ptr_), NULL))
-#define ccom_variant_error_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_pointed_hresult ((HRESULT *)V_ERRORREF(_ptr_), NULL))
+#define ccom_variant_error(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_hresult ((HRESULT)V_ERROR(_ptr_)))
+#define ccom_variant_error_byref(_ptr_) ((EIF_REFERENCE) rt_ce.ccom_ce_hresult (*(HRESULT *)V_ERRORREF(_ptr_)))
 
 #define ccom_set_variant_error(_ptr_,a_value) (V_VT(_ptr_) = VT_ERROR, V_ERROR(_ptr_) = (SCODE)a_value)
 #define ccom_set_variant_error_byref(_ptr_,a_value) (V_VT(_ptr_) = VT_ERROR|VT_BYREF, V_ERRORREF(_ptr_) = (SCODE *)&(a_value))

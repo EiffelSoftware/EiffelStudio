@@ -10,10 +10,15 @@ class
 	EV_CHECK_MENU_ITEM
 
 inherit
-	EV_SELECT_MENU_ITEM
+	EV_MENU_ITEM
 		redefine
 			implementation,
 			create_implementation
+		end
+
+	EV_DESELECTABLE
+		redefine
+			implementation
 		end
 	
 create
@@ -21,14 +26,6 @@ create
 	make_with_text
 
 feature -- Status setting
-
-	disable_select is
-			-- Set `is_selected' `False'.
-		do
-			implementation.disable_select
-		ensure
-			not_is_selected: not is_selected
-		end
 
 	toggle is
 			-- Change `is_selected'.
@@ -73,6 +70,15 @@ end -- class EV_CHECK_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/06/07 17:28:04  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.11.4.2  2000/05/09 21:46:47  king
+--| Intergrated selectable/deselectable
+--|
+--| Revision 1.11.4.1  2000/05/03 19:09:57  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.17  2000/03/22 23:49:53  oconnor
 --| comments
 --|

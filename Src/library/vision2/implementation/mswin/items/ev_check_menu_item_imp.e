@@ -16,7 +16,7 @@ inherit
 			interface
 		end
 
-	EV_SELECT_MENU_ITEM_IMP
+	EV_MENU_ITEM_IMP
 		redefine
 			on_activate,
 			interface,
@@ -35,7 +35,21 @@ feature {NONE} -- Initialization
 			is_selected := False
 		end
 
+feature -- Status report
+
+	is_selected: BOOLEAN
+			-- Is this menu item checked?
+
 feature -- Status setting
+
+	enable_select is
+			-- Select this menu item.
+		do
+			is_selected := True
+			if has_parent then
+				parent_imp.check_item (id)
+			end
+		end
 
 	disable_select is
 		do
@@ -89,6 +103,15 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/06/07 17:27:52  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.8.4.2  2000/05/09 21:51:33  king
+--| Implemented to new selectable abstract class
+--|
+--| Revision 1.8.4.1  2000/05/03 19:09:10  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.16  2000/02/25 20:27:57  brendel
 --| Default state: is_selected.
 --| In disable_select, the call to parent_imp is now protected with

@@ -6,6 +6,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
+	--| FIXME (David Solal)
+	--| When selecting text using shift and page down, on the last page, the
+	--| cursor does not move to the last position.
+
 class
 	EV_TEXT_IMP
 
@@ -402,6 +406,14 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.31.2.3  2000/05/08 22:14:29  brendel
+--| Added FIXME.
+--|
+--| Revision 1.31.2.2  2000/05/03 22:35:05  brendel
+--|
 --| Revision 1.37  2000/05/03 20:13:27  brendel
 --| Fixed resize_actions.
 --|

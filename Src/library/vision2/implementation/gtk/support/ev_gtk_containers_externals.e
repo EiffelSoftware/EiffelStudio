@@ -8,69 +8,6 @@ indexing
 class
 	EV_GTK_CONTAINERS_EXTERNALS
 
-
-feature  -- GTK C functions for general containers
-
-	c_gtk_container_border_width (container: POINTER): INTEGER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-feature  -- GTK C functions for tables
-
-	c_gtk_table_row_spacing (table: POINTER): INTEGER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-	c_gtk_table_column_spacing (table: POINTER): INTEGER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-feature  -- GTK C functions for boxes
-
-	c_gtk_box_homogeneous (box: POINTER): INTEGER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-	c_gtk_box_spacing (box: POINTER): INTEGER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-feature  -- GTK C functions for notebooks
-
-	c_gtk_notebook_tab_position (notebook: POINTER): INTEGER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-feature  -- GTK C functions for split area
-
-	c_gtk_paned_child1 (paned: POINTER): POINTER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-	c_gtk_paned_child2 (paned: POINTER): POINTER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-	c_gtk_paned_child1_size (paned: POINTER): INTEGER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-feature  -- GTK C functions for frames
-
-	c_gtk_frame_text (frame: POINTER): POINTER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
 end -- class EV_GTK_CONTAINERS_EXTERNALS
 
 --!-----------------------------------------------------------------------------
@@ -94,6 +31,15 @@ end -- class EV_GTK_CONTAINERS_EXTERNALS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/06/07 17:27:34  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.22.2.3  2000/05/25 00:31:32  king
+--| Removed redundant externals
+--|
+--| Revision 1.22.2.2  2000/05/03 19:08:43  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.24  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

@@ -83,7 +83,7 @@ X   complete but found to have bugs
     properties/ev_drawable.e                            *    *     *     .
     properties/ev_drawable_constants.e                  *    *     *     .
     properties/ev_fontable.e                            *    *     o     .
-    properties/ev_pick_and_dropable.e                   *    o 2   o 1   .
+    properties/ev_pick_and_dropable.e                   o    o 2   o 1   .
     properties/ev_pixmapable.e                          *    *     *     .
     properties/ev_textable.e                            *    *     *     .
     support/ev_dynamic_list.e                           *    *     *     .
@@ -96,7 +96,7 @@ X   complete but found to have bugs
     
   Support:
     support/ev_default_colors.e                         o    *     *     .
-    kernel/ev_accelerator.e                             *    o 4   *     .
+    kernel/ev_accelerator.e                             *    *     *     .
     kernel/keys.def                                     o    -     -     .
     kernel/ev_color.e                                   *    *     *     .
     kernel/ev_coordinates.e                             *    -     -     .
@@ -111,7 +111,7 @@ X   complete but found to have bugs
   System:
     kernel/ev_application.e                             o    o .5  *     .
     kernel/ev_environment.e                             *    *     *     .
-    widgets/uncommon_widgets/ev_screen.e                *    *     o     .
+    widgets/uncommon_widgets/ev_screen.e                .    *     .     .
 
   Buttons:
     widgets/primitives/ev_button.e                      *    *     *     .
@@ -162,7 +162,7 @@ X   complete but found to have bugs
     widgets/containers/ev_container.e                   *    *     o     .
     widgets/containers/ev_cell.e                        *    *     *     .
     widgets/containers/ev_aggregate_cell.e              o    *     *     .
-    widgets/containers/ev_frame.e                       *    o 1   *     .
+    widgets/containers/ev_frame.e                       *    *     *     .
     widgets/containers/ev_window.e                      *    o 2   o     .
     widgets/containers/ev_dialog.e                      o    *     *     .
     widgets/containers/ev_titled_window.e               o    *     o     .
@@ -211,8 +211,8 @@ X   complete but found to have bugs
     items/ev_list_item.e                                *    *     *     .
 
   Multi column list:
-    widgets/primitives/ev_multi_column_list.e           *    o 2   o     .
-    items/ev_multi_column_list_row.e                    *    o 1   o     .
+    widgets/primitives/ev_multi_column_list.e           *    *     o     .
+    items/ev_multi_column_list_row.e                    *    *     o     .
 
-                                                 totals        33
+                                                 totals        17
 

@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			ev_wel_control_container_make
-			!! ev_children.make (2)
+			create ev_children.make (2)
 			is_homogeneous := Default_homogeneous
 			padding := Default_spacing
 			border_width := Default_border_width
@@ -104,7 +104,7 @@ feature -- Access
 
 feature -- Status report
 
-	is_child_expanded (child: EV_WIDGET): BOOLEAN is
+	is_item_expanded (child: EV_WIDGET): BOOLEAN is
 			-- Is the child corresponding to `index' expandable. ie: does it
 			-- accept the parent to resize or move it.
 		local
@@ -204,7 +204,7 @@ feature -- Element change
 			-- Add a child to the box.
 		do
 			ev_children.extend (child_imp)
-			notify_change (Nc_minsize)
+			notify_change (Nc_minsize, Current)
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is
@@ -227,7 +227,7 @@ feature -- Element change
 			child_imp.set_parent (Void)
 	--		ev_children.prune_all (child_imp)
 			if not ev_children.empty then
-				notify_change (Nc_minsize)
+				notify_change (Nc_minsize, Current)
 			end
 		end
 
@@ -247,7 +247,6 @@ feature {NONE} -- Basic operation
 	update_non_expandable_children (index_value: INTEGER) is
 		local 
 			value: INTEGER
-			i: INTEGER
 		do
 		if index_value <= non_expandable_children.count then
 			from
@@ -380,6 +379,26 @@ end -- class EV_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/06/07 17:27:59  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.26.2.6  2000/06/05 21:08:04  manus
+--| Updated call to `notify_parent' because it requires now an extra parameter which is
+--| tells the parent which children did request the change. Usefull in case of NOTEBOOK
+--| for performance reasons (See EV_NOTEBOOK_IMP log for more details)
+--|
+--| Revision 1.26.2.5  2000/05/30 16:21:28  rogers
+--| Removed unreferenced local variables.
+--|
+--| Revision 1.26.2.4  2000/05/15 23:00:19  king
+--| is_child_expanded -> is_item_expanded
+--|
+--| Revision 1.26.2.3  2000/05/08 16:59:56  rogers
+--| Changed !! to create.
+--|
+--| Revision 1.26.2.2  2000/05/03 19:09:24  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.33  2000/04/05 21:16:12  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

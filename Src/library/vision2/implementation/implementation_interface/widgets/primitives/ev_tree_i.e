@@ -14,7 +14,7 @@ inherit
 			interface
 		end
 	
-	EV_TREE_ITEM_LIST_I
+	EV_TREE_NODE_LIST_I
 		redefine
 			interface
 		end
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	selected_item: EV_TREE_ITEM is
+	selected_item: EV_TREE_NODE is
 			-- Tree item which is currently selected
 		deferred
 		end
@@ -97,6 +97,15 @@ end -- class EV_TREE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/06/07 17:27:50  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.13.4.2  2000/05/16 16:56:34  oconnor
+--| updated for EV_TREE_NODE
+--|
+--| Revision 1.13.4.1  2000/05/03 19:09:08  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.23  2000/04/26 00:02:44  pichery
 --| Slight redesign of the pixmap handling in
 --| trees and multi-column lists.

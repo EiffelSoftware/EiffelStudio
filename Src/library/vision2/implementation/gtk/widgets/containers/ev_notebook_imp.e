@@ -105,7 +105,7 @@ feature -- Status report
  		local
  			gtk_pos: INTEGER
  		do
- 			gtk_pos := C.c_gtk_notebook_tab_position (c_object)
+ 			gtk_pos := C.gtk_notebook_struct_tab_pos (c_object)
  			inspect
  				gtk_pos
  			when 0 then
@@ -248,6 +248,15 @@ end -- class EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/06/07 17:27:38  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.17.4.2  2000/06/01 00:03:35  king
+--| Implemented external in Eiffel
+--|
+--| Revision 1.17.4.1  2000/05/03 19:08:48  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.22  2000/05/02 18:55:28  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

@@ -47,6 +47,7 @@ inherit
 			destroy as wel_destroy,
 			shown as is_displayed,
 			set_parent as wel_set_parent,
+			set_background_color as wel_set_background_color,
 			font as wel_font,
 			set_font as wel_set_font,
 			move as wel_move,
@@ -85,7 +86,8 @@ inherit
 			on_lvn_itemchanged,
 			on_size,
 			default_ex_style,
-			default_style
+			default_style,
+			process_message
 		end
 
 creation
@@ -221,7 +223,7 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 				if it /= Void and it.is_transport_enabled and not
-						parent_is_pnd_source then
+					parent_is_pnd_source then
 					it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				elseif pnd_item_source /= Void then 
 					pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
@@ -237,10 +239,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
 			-- Insert `item_imp' at `an_index'.
 		local
-			list: LINKED_LIST [STRING]
 			litem: WEL_LIST_VIEW_ITEM
-			rw: INTEGER
-			first_string: STRING
 		do
 			create litem.make
 			litem.set_text (item_imp.text)
@@ -278,7 +277,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 	internal_select_item (item_imp: EV_LIST_ITEM_IMP) is
 			-- Select `item_imp' in the list.
 		local
-			i, flags: INTEGER
+			i: INTEGER
 			litem: WEL_LIST_VIEW_ITEM
 		do
 			i := ev_children.index_of (item_imp, 1) - 1
@@ -292,7 +291,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 	internal_deselect_item (item_imp: EV_LIST_ITEM_IMP) is
 			-- Deselect `item_imp' in the list.
 		local
-			i, flags: INTEGER
+			i: INTEGER
 			litem: WEL_LIST_VIEW_ITEM
 		do
 			i := ev_children.index_of (item_imp, 1) - 1
@@ -350,9 +349,6 @@ feature {EV_ANY_I} -- Implementation
 			-- Default extended style of the list.
 		do
 			Result := Ws_ex_clientedge
-			if comctl32_version >= version_470 then
-				Result := Result + Lvs_ex_fullrowselect
-			end
 		end
 
 	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW) is
@@ -404,7 +400,6 @@ feature {EV_ANY_I} -- Implementation
 		local
 			it: EV_LIST_ITEM_IMP
 			pt: WEL_POINT
-			offets: TUPLE [INTEGER, INTEGER]
 		do
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
@@ -416,7 +411,121 @@ feature {EV_ANY_I} -- Implementation
 				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
-		end 
+		end
+
+	process_message (hwnd: POINTER; msg,
+			wparam, lparam: INTEGER): INTEGER is
+			-- Call the routine `on_*' corresponding to the
+			-- message `msg'.
+		local
+			wel_window_pos: WEL_WINDOW_POS
+			paint_dc: WEL_PAINT_DC
+		do
+			inspect msg
+			when Wm_erasebkgnd then
+				create paint_dc.make_by_pointer
+					(Current, cwel_integer_to_pointer(wparam))
+				on_erase_background (paint_dc, client_rect)
+			when Wm_windowposchanging then
+				create wel_window_pos.make_by_pointer (
+					cwel_integer_to_pointer(lparam)
+					)
+				on_wm_windowposchanging (wel_window_pos)
+			when Wm_windowposchanged then
+				create wel_window_pos.make_by_pointer (
+					cwel_integer_to_pointer(lparam)
+					)
+				on_wm_windowposchanged (wel_window_pos)
+			else
+				Result := Precursor (hwnd, msg, wparam, lparam)
+			end
+		end
+
+	column_widths_fill_client_area: BOOLEAN
+		-- Have the column widths been successfully recomputed?
+
+	on_wm_windowposchanging (window_pos: WEL_WINDOW_POS) is
+			-- The WM_WINDOWPOSCHANGING message is sent to a 
+			-- window whose size, position, or place in the 
+			-- Z order is about to change as a result of a 
+			-- call to the SetWindowPos function or another 
+			-- window-management function.
+			--
+			-- Arnaud: We handle here the resize event before
+			-- it actually occurs. We only recompute the
+			-- column widths if the size is decreasing. If the
+			-- size is increasing, recomputing the last column
+			-- width with the future size would cause the 
+			-- appearance of an horizontal scrollbar because
+			-- the window has not yet its future size.
+			-- Increasing size width is handled in 
+			-- `on_wm_windowposchanged'.
+		do
+			if is_displayed then
+				if window_pos.width - wel_width < 0 then
+					column_widths_fill_client_area := True
+					set_column_width (client_rect.right - client_rect.left, 0)
+				end
+			end
+		end
+
+	on_wm_windowposchanged (window_pos: WEL_WINDOW_POS) is
+			-- The WM_WINDOWPOSCHANGED message is sent to 
+			-- a window whose size, position, or place in 
+			-- the Z order has changed as a result of a call 
+			-- to the SetWindowPos function or another 
+			-- window-management function.
+			--
+			-- Called to avoid the appearance of an horizontal
+			-- scrollbar. See `on_wm_windowposchanging' for more
+			-- details.
+		do
+			if is_displayed then
+				column_widths_fill_client_area := True
+				set_column_width (client_rect.right - client_rect.left, 0)
+			end
+		end
+
+
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
+			--| `Current' no longer re-draws the background and draws the
+			--| items on top. We must now calculate the area which will not be
+			--|re-drawn by the items and now draw that ourseleves first.
+		require
+			paint_dc_not_void: paint_dc /= Void
+			paint_dc_exists: paint_dc.exists
+			invalid_rect_not_void: invalid_rect /= Void
+		local
+			brush: WEL_BRUSH
+			rect1, rect2: WEL_RECT
+		do
+			if column_widths_fill_client_area then
+					-- If `Current' is not empty then.
+				if ev_children.count /= 0 then
+					create brush.make_solid (get_background_color)
+							-- Fill in bottom of `paint_dc' if not filled by
+							-- children.
+					if top_index + visible_count + 1 > ev_children.count then
+						rect1 := get_item_rect (ev_children.count - 1)
+						create rect2.make (0, rect1.bottom, client_rect.right,
+							client_rect.bottom)
+						paint_dc.fill_rect (rect2, brush)
+					end
+						
+						-- Fill in right side of `paint_dc'.
+					create rect2.make (client_rect.left, client_rect.top,
+						client_rect.left + 2, client_rect.bottom)
+					paint_dc.fill_rect (rect2, brush)
+					disable_default_processing
+					set_message_return_value (1)
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -553,7 +662,32 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.80  2000/05/03 20:13:27  brendel
+--| Revision 1.81  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.35.4.8  2000/05/30 15:59:50  rogers
+--| Removed unreferenced variables.
+--|
+--| Revision 1.35.4.7  2000/05/22 16:42:24  rogers
+--| Fixed on_erase_background as it would crash when attempting to re-draw
+--| the background around the children, when there were no children.
+--|
+--| Revision 1.35.4.6  2000/05/17 18:53:05  rogers
+--| Added column_widths_fill_client_area to fix bug in on_erase_background
+--| which would not re-draw the control properly before the column widths had
+--| been computed to fill the client rectangle.
+--|
+--| Revision 1.35.4.5  2000/05/16 23:42:07  rogers
+--| Added on_erase_background, on_wm_window_pos_changing and
+--| on_wm_window_pos_changed. Flickering on resize has been drastically
+--| reduced by never clearing the background, but filling in the space
+--| surrounding the items during on_erase_background.
+--| ---------------------------------------------------------------------------
+--|
+--| Revision 1.35.4.3  2000/05/09 17:28:09  rogers
+--| ev_multi_column_list_imp.e
+--|
+--| Revision 1.35.4.2  2000/05/03 22:35:04  brendel
 --| Fixed resize_actions.
 --|
 --| Revision 1.79  2000/04/27 23:22:49  rogers

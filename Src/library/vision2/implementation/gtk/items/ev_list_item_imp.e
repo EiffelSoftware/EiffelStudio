@@ -30,6 +30,11 @@ inherit
 			set_text
 		end
 
+	EV_TOOLTIPABLE_IMP
+		redefine
+			interface
+		end
+
 create
 	make
 
@@ -155,7 +160,7 @@ feature -- Assertion
 			Result := parent_imp /= void
 		end
 
-feature {EV_LIST_ITEM_IMP, EV_LIST_I} -- Implementation
+feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_LIST_I} -- Implementation
 
 	interface: EV_LIST_ITEM
 
@@ -182,6 +187,18 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/06/07 17:27:29  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.23.4.3  2000/05/10 23:43:42  king
+--| Made tooltipable
+--|
+--| Revision 1.23.4.2  2000/05/10 18:50:34  king
+--| Integrated ev_list_item_list
+--|
+--| Revision 1.23.4.1  2000/05/03 19:08:35  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.34  2000/04/18 19:14:17  oconnor
 --| Removed reliance on externals
 --|

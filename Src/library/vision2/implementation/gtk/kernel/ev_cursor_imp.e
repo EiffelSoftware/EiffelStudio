@@ -7,6 +7,9 @@ indexing
 class
 	EV_CURSOR_IMP
 
+obsolete
+	"Don't use it. EV_CURSOR now inherit from EV_PIXMAP."
+
 inherit
 	EV_CURSOR_I
 		redefine
@@ -133,6 +136,15 @@ end -- class EV_CURSOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/06/07 17:27:30  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.5.2.3  2000/05/04 19:26:40  king
+--| Made obsolete
+--|
+--| Revision 1.5.2.2  2000/05/03 19:08:38  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.10  2000/05/02 18:55:21  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

@@ -24,7 +24,8 @@ inherit
 			default_ex_style,
 			interface,
 			on_get_min_max_info,
-			on_wm_close
+			on_wm_close,
+			show
 		end
 
 create
@@ -34,8 +35,6 @@ feature {NONE} -- Initialization
 
 	--| FIXME replace destroy agent with "cancel" result agent.
 	--| FIXME Default is_modal
-
-feature -- Basic operations
 
 feature {NONE} -- Externals
 
@@ -75,6 +74,15 @@ feature -- Status Report
 			-- pressing ALT-F4)
 
 feature -- Status Setting
+
+	show is
+			-- Request that `Current' be displayed when its parent is.
+		do
+				-- Before displaying current dialog we force a size computation
+				-- that way the dialog displays at first with correct size.
+			compute_minimum_size
+			Precursor {EV_TITLED_WINDOW_IMP}
+		end
 	
 	enable_closeable is
 			-- Set the window to be closeable by the user
@@ -147,8 +155,18 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/06/07 17:27:59  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.16  2000/05/13 01:10:36  pichery
 --| Fixed bugs.
+--|
+--| Revision 1.6.8.2  2000/05/07 03:51:02  manus
+--| Added `show' redefinition in context of dialog to force a computation of
+--| minimum size before displaying it.
+--|
+--| Revision 1.6.8.1  2000/05/03 19:09:28  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.15  2000/05/01 19:52:09  pichery
 --| Removed feature `block' (now implemented in

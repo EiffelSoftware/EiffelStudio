@@ -6,7 +6,7 @@ indexing
 		%|  |%N%
 		%|  |%N%
 		%|  |%N%
-		%|25%%%N%
+		%|25|%N%
 		%|  |%N%
 		%|##|%N%
 		%|##|%N%
@@ -67,6 +67,15 @@ end -- class EV_VERTICAL_PROGRESS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/07 17:28:13  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.3.4.2  2000/05/16 18:06:00  oconnor
+--| asthetics
+--|
+--| Revision 1.3.4.1  2000/05/03 19:10:11  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/03/21 19:10:39  oconnor
 --| comments, formatting
 --|

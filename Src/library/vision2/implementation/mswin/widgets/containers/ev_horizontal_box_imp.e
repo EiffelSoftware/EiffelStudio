@@ -43,21 +43,21 @@ feature -- Status setting
 			-- Need to be resized
 		do
 			is_homogeneous := flag
-			notify_change (Nc_minwidth)
+			notify_change (Nc_minwidth, Current)
 		end
 
 	set_padding (value: INTEGER) is
 			-- Make `value' the new spacing of the box.
 		do
 			padding := value
-			notify_change (Nc_minwidth)
+			notify_change (Nc_minwidth, Current)
 		end
 
 	set_border_width (value: INTEGER) is
 			-- Make `value' the new border width.
 		do
 			border_width := value
-			notify_change (Nc_minsize)
+			notify_change (Nc_minsize, Current)
 		end
 
 	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
@@ -65,7 +65,7 @@ feature -- Status setting
 			-- not expandable otherwise.
 		do
 			{EV_BOX_IMP} Precursor (child, flag)
-			notify_change (Nc_minwidth)
+			notify_change (Nc_minwidth, Current)
 		end
 
 feature {NONE} -- Basic operation
@@ -75,7 +75,6 @@ feature {NONE} -- Basic operation
 		local
 			lchild: ARRAYED_LIST [EV_WIDGET_IMP]
 			litem: EV_WIDGET_IMP
-			temp_height: INTEGER
 			cur: CURSOR
 		do
 			lchild := ev_children
@@ -368,6 +367,25 @@ end -- class EV_HORIZONTAL_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/06/07 17:27:59  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.30.2.4  2000/06/05 21:08:04  manus
+--| Updated call to `notify_parent' because it requires now an extra parameter which is
+--| tells the parent which children did request the change. Usefull in case of NOTEBOOK
+--| for performance reasons (See EV_NOTEBOOK_IMP log for more details)
+--|
+--| Revision 1.30.2.3  2000/05/30 15:55:18  rogers
+--| Removed unreferenced variables from set_children_height.
+--|
+--| Revision 1.30.2.2  2000/05/03 22:16:27  pichery
+--| - Cosmetics / Optimization with local variables
+--| - Replaced calls to `width' to calls to `wel_width'
+--|   and same for `height'.
+--|
+--| Revision 1.30.2.1  2000/05/03 19:09:31  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.33  2000/03/14 03:02:55  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

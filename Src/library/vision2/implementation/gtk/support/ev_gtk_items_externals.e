@@ -11,16 +11,6 @@ class
 
 feature {NONE} -- GTK C functions for general items
 
-	c_gtk_statusbar_item_label (statusbar: POINTER): POINTER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-	c_gtk_statusbar_item_frame (statusbar: POINTER): POINTER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
 end -- class EV_GTK_ITEMS_EXTERNALS
 
 --!-----------------------------------------------------------------------------
@@ -44,6 +34,15 @@ end -- class EV_GTK_ITEMS_EXTERNALS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/06/07 17:27:34  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.12.4.2  2000/05/25 00:33:30  king
+--| Removed redundant externals
+--|
+--| Revision 1.12.4.1  2000/05/03 19:08:43  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.14  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

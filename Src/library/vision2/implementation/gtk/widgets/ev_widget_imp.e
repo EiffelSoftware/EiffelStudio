@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-        EV_WIDGET_IMP 
+	EV_WIDGET_IMP 
         
 inherit
 	EV_WIDGET_I
@@ -21,6 +21,16 @@ inherit
 		end
 
 	EV_ANY_IMP
+		redefine
+			interface
+		end
+
+	EV_SENSITIVE_IMP
+		redefine
+			interface
+		end
+
+	EV_COLORIZABLE_IMP
 		redefine
 			interface
 		end
@@ -53,8 +63,7 @@ feature {NONE} -- Initialization
 			["focus-in-event",       interface.focus_in_actions],
 			["focus-out-event",      interface.focus_out_actions],
 			["key-press-event",      interface.key_press_actions],
-			["key-release-event",    interface.key_release_actions],
-			["configure-event",      interface.resize_actions]
+			["key-release-event",    interface.key_release_actions]
 			>>
 			from
 				i := signal_map.lower
@@ -71,6 +80,22 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 
+				--| "configure-event" only happens for windows,
+				--| so we connect to the "size-allocate" function.
+
+			if C.gtk_is_window (c_object) then
+				signal_connect (
+					"configure-event",
+					~on_size_allocate,
+					Default_translate
+				)
+			else
+				signal_connect (
+					"size-allocate",
+					~on_size_allocate,
+					~size_allocate_translate
+				)
+			end
 				--| "button-press-event" is a special case, see below.
 			interface.pointer_button_press_actions.not_empty_actions.extend (
 				~connect_button_press_switch
@@ -104,17 +129,17 @@ feature {NONE} -- Initialization
 			--| sequence.
 		require
 			button_or_2button_event:
-				a_type = C.Gdk_button_press_enum or
-				a_type = C.Gdk_2button_press_enum
+				a_type = C.GDK_BUTTON_PRESS_ENUM or
+				a_type = C.GDK_2BUTTON_PRESS_ENUM
 		local
 			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
 				INTEGER, INTEGER]
 		do
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
-			if a_type = C.Gdk_button_press_enum then
+			if a_type = C.GDK_BUTTON_PRESS_ENUM then
 				interface.pointer_button_press_actions.call (t)
-			else -- a_type = C.Gdk_2button_press_enum
+			else -- a_type = C.GDK_2BUTTON_PRESS_ENUM
 				interface.pointer_double_press_actions.call (t)
 			end
         end
@@ -188,50 +213,6 @@ feature -- Access
 	pointer_style: EV_CURSOR
 			-- Cursor displayed when the pointer is over this widget.
 
-	background_color: EV_COLOR is
-			-- Color of face.
-		local
-			color: POINTER
-		do
-			check
-				normal_color_at_head_of_array: C.Gtk_state_normal_enum = 0 
-					--| GtkStyle has GdkColor bg[5] with 5 background colors
-					--| for the 5 gtk states, since normal state is at the 
-					--| front we just treat is as: GdkColor* bg_state_normal
-			end
-			color := C.gtk_style_struct_bg (
-				C.gtk_widget_struct_style (c_object)
-			)
-			create Result
-			Result.set_rgb_with_16_bit (
-				C.gdk_color_struct_red (color),
-				C.gdk_color_struct_green (color),
-				C.gdk_color_struct_blue (color)
-			)
-		end
-
-	foreground_color: EV_COLOR is
-			-- Color of foreground features like text.
-		local
-			color: POINTER
-		do
-			check
-				normal_color_at_head_of_array: C.Gtk_state_normal_enum = 0 
-					--| See `background_color'
-			end
-			color := C.gtk_style_struct_fg (
-				C.gtk_widget_struct_style (c_object)
-			)
-			create Result
-			Result.set_rgb_with_16_bit (
-				C.gdk_color_struct_red (color),
-				C.gdk_color_struct_green (color),
-				C.gdk_color_struct_blue (color)
-			)
-		end
-
-	tooltip: STRING
-			-- Text displayed when user moves mouse over widget.
 
 	popup_menu: EV_MENU
 			-- Menu popped up when button 3 is pressed on widget.
@@ -264,16 +245,6 @@ feature -- Access
 	
 feature -- Status report
 
-	is_sensitive: BOOLEAN is
-			-- Does `Current' respond to user input events.
-		do
-			--| Shift to put bit in least significant place then take mod 2.
-			Result := (
-				(C.gtk_object_struct_flags (c_object)
-				// C.Gtk_sensitive_enum) \\ 2
-			) = 1
-		end
-
 	is_show_requested: BOOLEAN is
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
@@ -281,7 +252,7 @@ feature -- Status report
 			--| Shift to put bit in least significant place then take mod 2.
 			Result := (
 				(C.gtk_object_struct_flags (c_object)
-				// C.Gtk_visible_enum) \\ 2
+				// C.GTK_VISIBLE_ENUM) \\ 2
 			) = 1
 		end
 
@@ -291,7 +262,7 @@ feature -- Status report
 			--| Shift to put bit in least significant place then take mod 2.
 			Result := (
 				(C.gtk_object_struct_flags (c_object)
-				// C.Gtk_mapped_enum) \\ 2
+				// C.GTK_MAPPED_ENUM) \\ 2
 			) = 1
 		end
 
@@ -301,7 +272,7 @@ feature -- Status report
 			--| Shift to put bit in least significant place then take mod 2.
 			Result := (
 				(C.gtk_object_struct_flags (c_object)
-				// C.Gtk_has_focus_enum) \\ 2
+				// C.GTK_HAS_FOCUS_ENUM) \\ 2
 			) = 1
 		end
 
@@ -325,18 +296,6 @@ feature -- Status setting
 			C.gtk_widget_grab_focus (c_object)
 		end
 
-	enable_sensitive is
-			-- Enable sensitivity to user input events.
-		do
-			C.gtk_widget_set_sensitive (c_object, True)
-		end
-
-	disable_sensitive is
-			-- Disable sensitivity to user input events.
-		do
-			C.gtk_widget_set_sensitive (c_object, False)
-		end
-
 	enable_capture is
 			-- Grab all the mouse and keyboard events.
 			--| Used by pick and drop.
@@ -347,11 +306,11 @@ feature -- Status setting
 			i := C.gdk_pointer_grab (
 				C.gtk_widget_struct_window (c_object),
 				1,                                    -- gint owner_events
-				C.Gdk_button_release_mask_enum +
-				C.Gdk_button_press_mask_enum +
-				C.Gdk_button_motion_mask_enum +
-				C.Gdk_pointer_motion_hint_mask_enum +
-				C.Gdk_pointer_motion_mask_enum,
+				C.GDK_BUTTON_RELEASE_MASK_ENUM +
+				C.GDK_BUTTON_PRESS_MASK_ENUM +
+				C.GDK_BUTTON_MOTION_MASK_ENUM +
+				C.GDK_POINTER_MOTION_HINT_MASK_ENUM +
+				C.GDK_POINTER_MOTION_MASK_ENUM,
 				NULL,                      -- GdkWindow* confine_to 
 				NULL,                      -- GdkCursor *cursor
 				0)                                    -- guint32 time
@@ -371,168 +330,27 @@ feature -- Element change
 
 	set_pointer_style (a_cursor: like pointer_style) is
 			-- Assign `a_cursor' to `pointer_style'.
-		local
-			cursor_imp: EV_CURSOR_IMP
 		do
-			pointer_style := a_cursor
-			if ((C.gtk_object_struct_flags (c_object)
-					// C.Gtk_realized_enum) \\ 2
-				) = 0
-			then
-				C.gtk_widget_realize (c_object)
-			end
-			cursor_imp ?= a_cursor.implementation
-			C.gdk_window_set_cursor (
-				C.gtk_widget_struct_window (c_object),
-				cursor_imp.c_object
-			)
+			--| FIXME Implement me now!!!!!!
+			--pointer_style := a_cursor
+			--if ((C.gtk_object_struct_flags (c_object)
+			--		// C.GTK_REALIZED_ENUM) \\ 2
+			--	) = 0
+			--then
+			--	C.gtk_widget_realize (c_object)
+			--end
+			--cursor_imp ?= a_cursor.implementation
+			--C.gdk_window_set_cursor (
+			--	C.gtk_widget_struct_window (c_object),
+			--	cursor_imp.c_object
+			--)
 
-			if cursor_imp.code /= 0 then
-				create pointer_style.make_with_code (cursor_imp.code)
-			else
-				create pointer_style.make_with_pixmap (cursor_imp.pixmap)
-			end
-		end
-
-	set_background_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `foreground_color'
-		do
-			real_set_background_color (c_object, a_color)
-		end
-
-	real_set_background_color (a_c_object: POINTER; a_color: EV_COLOR) is
-			-- Implementation of `set_background_color'
-			-- Used also by classes that inherit EV_WIDGET_IMP but not
-			-- EV_WIDGET. (eg EV_PIXMAPABLE_IMP)
-			--| Check that the color is not already set.
-			--| Copy the existing GtkStyle, modifiy it	
-			--| and set it back into the widget.
-			--| (See gtk/docs/styles.txt)
-		local
-			style: POINTER
-			color: POINTER
-			r, g, b, nr, ng, nb, m: INTEGER
-		do
-			style := C.gtk_widget_struct_style (a_c_object)
-			color := C.gtk_style_struct_bg (a_c_object)
-			r := a_color.red_16_bit
-			g := a_color.green_16_bit
-			b := a_color.blue_16_bit
-			if
-				C.gdk_color_struct_red (color) /= r or else
-				C.gdk_color_struct_green (color) /= g or else
-				C.gdk_color_struct_blue (color) /= b
-			then
-				m := a_color.Max_16_bit
-				style := C.gtk_style_copy (style)
-					--| Set normal state color.
-				color := C.gtk_style_struct_bg (style)
-					 + (C.Gtk_state_normal_enum * C.c_gdk_color_struct_size)
-				C.set_gdk_color_struct_red (color, r)
-				C.set_gdk_color_struct_green (color, g)
-				C.set_gdk_color_struct_blue (color, b)
-					--| Set active state color.
-				color := C.gtk_style_struct_bg (style)
-					 + (C.Gtk_state_active_enum * C.c_gdk_color_struct_size)
-				nr := (r * Highlight_scale).rounded
-				ng := (g * Highlight_scale).rounded
-				nb := (b * Highlight_scale).rounded
-				if nr < 0 then nr := 0 end
-				if ng < 0 then ng := 0 end
-				if nb < 0 then nb := 0 end
-				C.set_gdk_color_struct_red (color, nr)
-				C.set_gdk_color_struct_green (color, ng)
-				C.set_gdk_color_struct_blue (color, nb)
-					--| Set prelight state color.
-				color := C.gtk_style_struct_bg (style)
-					 + (C.Gtk_state_prelight_enum * C.c_gdk_color_struct_size)
-				nr := (r * Prelight_scale).rounded
-				ng := (g * Prelight_scale).rounded
-				nb := (b * Prelight_scale).rounded
-				if nr > m then nr := m end
-				if ng > m then ng := m end
-				if nb > m then nb := m end
-				C.set_gdk_color_struct_red (color, nr)
-				C.set_gdk_color_struct_green (color, ng)
-				C.set_gdk_color_struct_blue (color, nb)
-					--| Set selected state color to reverse.
-				color := C.gtk_style_struct_bg (style)
-					 + (C.Gtk_state_selected_enum * C.c_gdk_color_struct_size)
-				nr := m - r;
-				ng := m - g;
-				nb := m - b//2;
-				C.set_gdk_color_struct_red (color, nr)
-				C.set_gdk_color_struct_green (color, ng)
-				C.set_gdk_color_struct_blue (color, nb)
-					--| Don't touch insensitive state color
-					--| (C.Gtk_state_insensitive_enum)
-
-				C.gtk_widget_set_style (a_c_object, style)
-				C.gtk_style_unref (style)
-			end
-		end
-
-	set_foreground_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `foreground_color'
-		do
-			real_set_foreground_color (c_object, a_color)
-		end
-
-	real_set_foreground_color (a_c_object: POINTER; a_color: EV_COLOR) is
-			-- Implementation of `set_background_color'
-			-- Used also by classes that inherit EV_WIDGET_IMP but not
-			-- EV_WIDGET. (eg EV_PIXMAPABLE_IMP)
-			--| Check that the color is not already set.
-			--| Copy the existing GtkStyle, modifiy it	
-			--| and set it back into the widget.
-			--| (See gtk/docs/styles.txt)
-		local
-			style: POINTER
-			color: POINTER
-			r, g, b, m: INTEGER
-		do
-			style := C.gtk_widget_struct_style (a_c_object)
-			color := C.gtk_style_struct_fg (a_c_object)
-			r := a_color.red_16_bit
-			g := a_color.green_16_bit
-			b := a_color.blue_16_bit
-			if
-				C.gdk_color_struct_red (color) /= r or else
-				C.gdk_color_struct_green (color) /= g or else
-				C.gdk_color_struct_blue (color) /= b
-			then
-				m := a_color.Max_16_bit
-				style := C.gtk_style_copy (style)
-					--| Set normal state color.
-				color := C.gtk_style_struct_fg (style)
-					 + (C.Gtk_state_normal_enum * C.c_gdk_color_struct_size)
-				C.set_gdk_color_struct_red (color, r)
-				C.set_gdk_color_struct_green (color, g)
-				C.set_gdk_color_struct_blue (color, b)
-					--| Set active state color.
-				color := C.gtk_style_struct_fg (style)
-					 + (C.Gtk_state_active_enum * C.c_gdk_color_struct_size)
-				C.set_gdk_color_struct_red (color, r)
-				C.set_gdk_color_struct_green (color, g)
-				C.set_gdk_color_struct_blue (color, b)
-					--| Set prelight state color.
-				color := C.gtk_style_struct_fg (style)
-					 + (C.Gtk_state_prelight_enum * C.c_gdk_color_struct_size)
-				C.set_gdk_color_struct_red (color, r)
-				C.set_gdk_color_struct_green (color, g)
-				C.set_gdk_color_struct_blue (color, b)
-					--| Set selected state color to reverse.
-				color := C.gtk_style_struct_fg (style)
-					 + (C.Gtk_state_selected_enum * C.c_gdk_color_struct_size)
-				C.set_gdk_color_struct_red (color, m - r)
-				C.set_gdk_color_struct_green (color, m - g)
-				C.set_gdk_color_struct_blue (color, m - b)
-					--| Don't touch insensitive state color
-					--| (Gtk_state_insensitive_enum)
-
-				C.gtk_widget_set_style (a_c_object, style)
-				C.gtk_style_unref (style)
-			end
+			--if cursor_imp.code /= 0 then
+				--| FIXME
+			--	create pointer_style--.make_with_code (cursor_imp.code)
+			--else
+			--	create pointer_style--.make_with_pixmap (cursor_imp.pixmap)
+			--end
 		end
 
 	set_minimum_width (a_minimum_width: INTEGER) is
@@ -552,28 +370,6 @@ feature -- Element change
 			-- Set the minimum vertical size to `a_minimum_height'.
 		do
 			C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
-		end
-	
-	set_tooltip (a_text: STRING) is
-			-- Set `tooltip' to `a_text'.
-		local
-			app_imp: EV_APPLICATION_IMP
-	        do
-			tooltip := clone (a_text)
-			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-			C.gtk_tooltips_set_tip (app_imp.tooltips, c_object,
-				eiffel_to_c (a_text), NULL)
-		end
-
-	remove_tooltip is
-			-- Set `tooltip' to `Void'.
-		local
-			app_imp: EV_APPLICATION_IMP
-	        do
-			tooltip := Void
-			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-			C.gtk_tooltips_set_tip (app_imp.tooltips, c_object,
-				NULL, NULL)
 		end
 
 	set_popup_menu (a_menu: EV_MENU) is
@@ -667,13 +463,44 @@ feature {NONE} -- Implementation
 	cursor_signal_tag: INTEGER
 		-- Tag returned from Gtk used to disconnect `enter-notify' signal
 
-	Prelight_scale: REAL is 1.0909488
-		-- Prelight color is this much lighter than `background_color'.
-
-	Highlight_scale: REAL is 0.90912397
-		-- Highlight color is this much darker than `background_color'.
-
 feature {NONE} -- Implementation
+
+	size_allocate_translate (n: INTEGER; p: POINTER): TUPLE is
+			-- Convert GtkAllocation to tuple.
+		local
+			gtk_alloc: POINTER
+		do
+			gtk_alloc := gtk_value_pointer (p)
+			Result := [
+				C.gtk_allocation_struct_x (gtk_alloc),
+				C.gtk_allocation_struct_y (gtk_alloc),
+				C.gtk_allocation_struct_width (gtk_alloc),
+				C.gtk_allocation_struct_height (gtk_alloc)
+			]
+		end
+
+	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Gtk_Widget."size-allocate" happened.
+		do
+			--| FIXME VB 05/11/2000
+			--| Temporary implementation.
+			
+			if not in_resize_event then
+				in_resize_event := True
+				if last_width /= a_width or else last_height /= a_height then
+					interface.resize_actions.call ([a_x, a_y, a_width, a_height])
+					last_width := a_width
+					last_height := a_height
+				end
+				in_resize_event := False
+			end
+		end
+
+	last_width, last_height: INTEGER
+			-- Dimenions during last "size-allocate".
+
+	in_resize_event: BOOLEAN
+			-- Is `interface.resize_actions' being executed?
 
 	set_bounds (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Set horizontal offset relative to parent `x_position'.
@@ -710,147 +537,6 @@ feature {EV_ANY_I} -- Implementation
 			"C (GtkWidget *) | %"gtk_eiffel.h%""
 		end
 
-feature -- Obsolete
-
-	--| FIXME This is more like a strange-features-graveyard than
-	--| a real obsolete feature classification, but most of it can
-	--| really be removed whenever convenient.
-
-	parent_imp: EV_CONTAINER_IMP is
-		obsolete
-			"use parent.implementation"
-		local
-			p: EV_CONTAINER
-		do	
-			p ?= parent
-			if p /= Void then
-				Result ?= p.implementation
-			end
-		end
-
-	set_insensitive (flag: BOOLEAN) is obsolete "use disable_sensitive"
-			-- Set current widget in insensitive mode if
-			-- `flag'. This means that any events with an
-			-- event type of KeyPress, KeyRelease,
-			-- ButtonPress, ButtonRelease, MotionNotify,
-			-- EnterNotify, LeaveNotify, FocusIn or
-			-- FocusOut will not be dispatched to current
-			-- widget and to all its children.  Set it to
-			-- sensitive mode otherwise.
-		do
-			C.gtk_widget_set_sensitive (c_object, not flag)
-		end
-
-	set_horizontal_resize (flag: BOOLEAN) is
-			-- Adapt `resize_type' to `flag'.
-		obsolete
-			"dont use it"
-		do
-		--	if flag then
-		--		if vertical_resizable then
-		--			resize_type := 3
-		--		else
-		--			resize_type := 1
-		--		end
-		--	else
-		--		if vertical_resizable then
-		--			resize_type := 2
-		--		else
-		--			resize_type := 0
-		--		end				
-		--	end
-		--	if parent.implementation /= Void then
-		--		--FIXME parent_imp.child_packing_changed (Current)
-		--	end
-		end
-
-	set_vertical_resize (flag: BOOLEAN) is
-			-- Adapt `resize_type' to `flag'.
-		obsolete
-			"dont use it"
-		do
-		--	if flag then
-		--		if horizontal_resizable then
-		--			resize_type := 3
-		--	else
-		--			resize_type := 2
-		--		end
-		--	else
-		--		if horizontal_resizable then
-		--			resize_type := 1
-		--		else
-		--			resize_type := 0
-		--		end				
-		--	end
-		--	if parent.implementation /= Void then
-		--		--FIXME parent_imp.child_packing_changed (Current)
-		--	end
-		end
-
-	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
-		-- Check if the dimensions of the widget are set to 
-		-- the values given or the minimum values possible 
-		-- for that widget.
-	
-		obsolete "dont use it"
-		do
---       Result := (width = new_width or else wid
---th = minimum_width or else (not shown and width = 1)) and then
---               (height = new_height or else height = mini
---mum_height or else (not shown and height = 1))
---      Result := True
-		end		
-
-	minimum_dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-			-- On gtk, when the widget is not shown, the result is 0
-		obsolete "dont use it"
-		do 
-		--	Result := (c_gtk_widget_minimum_size_set (
-		--c_object, new_width, new_height) = 1) or else
-		--		(not shown and then (minimum_width = 0 and minimum_height = 0))
-		end		
-
-	position_set (new_x, new_y: INTEGER): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
- 			-- On gtk, when the widget is not shown, the result is -1
-		obsolete "dont use it"
-		do
-		--	Result := (c_gtk_widget_position_set (c_obj
-		--ect, new_x, new_y) = 1) or else
-		--		(not shown and then (x_position = - 1 and y_position = - 1))
-		end
--- Now in EV_WINDOW_IMP:
-
---	set_position (a_x, a_y: INTEGER) is
---			-- Set horizontal offset to parent to `a_x'.
---			-- Set vertical offset to parent to `a_y'.
---		do
---			gtk_widget_set_uposition (c_object, a_x, a_y)
---		end
-
---	set_size (a_width, a_height: INTEGER) is
---			-- Set the horizontal size to `a_width'.
---			-- Set the vertical size to `a_height'.
---		do
---			c_gtk_widget_set_size (c_object, a_width, a_height)
---		end
-
-	resize_type: INTEGER is
-			-- How the widget resize itself in the cell
-			-- 0 : no resizing, the widget move
-			-- 1 : only the width changes
-			-- 2 : only the height changes
-			-- 3 : both width and height change
-		obsolete "dont use it"
-		do
-			check false end
-		end	
-
 end -- class EV_WIDGET_IMP
 
 --!-----------------------------------------------------------------------------
@@ -874,6 +560,59 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.68  2000/06/07 17:27:35  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.54.2.20  2000/05/25 00:34:40  king
+--| Removed reference to cursor code
+--|
+--| Revision 1.54.2.19  2000/05/17 19:30:39  king
+--| Corrected signal connection for window resizing in initialize
+--|
+--| Revision 1.54.2.18  2000/05/17 18:16:08  brendel
+--| Corrected configure-event connection for windows.
+--|
+--| Revision 1.54.2.17  2000/05/17 18:10:47  king
+--| Corrected on_size_allocate
+--|
+--| Revision 1.54.2.16  2000/05/17 18:06:02  king
+--| Commented out pointer style setting, connecting configure event for window
+--|
+--| Revision 1.54.2.15  2000/05/15 22:12:54  king
+--| Made enums uppercase
+--|
+--| Revision 1.54.2.14  2000/05/13 00:04:10  king
+--| Converted to new EV_CONTAINABLE class
+--|
+--| Revision 1.54.2.13  2000/05/12 19:03:26  king
+--| Now inheriting EV_COLORIZABLE_IMP
+--|
+--| Revision 1.54.2.12  2000/05/11 19:33:25  king
+--| Integrated ev_sensitive
+--|
+--| Revision 1.54.2.11  2000/05/11 15:45:08  brendel
+--| Replaced size-allocate implementation with improved, but still not
+--| final implementation.
+--|
+--| Revision 1.54.2.10  2000/05/10 23:02:58  king
+--| Integrated inital tooltipable changes
+--|
+--| Revision 1.54.2.9  2000/05/09 19:11:01  brendel
+--| Attempt to connect to resize actions. Succeeded, but calls that change
+--| sizes in handler cause stack overflows.
+--|
+--| Revision 1.54.2.8  2000/05/07 03:51:42  manus
+--| Cosmetics (replaced spaces by a tabulation)
+--|
+--| Revision 1.54.2.7  2000/05/04 18:34:47  king
+--| Made compilable with new cursor changes
+--|
+--| Revision 1.54.2.6  2000/05/03 22:12:18  pichery
+--| Removed some obsolete features
+--|
+--| Revision 1.54.2.5  2000/05/03 19:08:44  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.67  2000/05/02 18:55:26  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

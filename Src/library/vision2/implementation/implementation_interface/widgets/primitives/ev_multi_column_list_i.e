@@ -536,6 +536,7 @@ feature {EV_ANY_I} -- Implementation
 	column_title_changed (a_title: STRING; a_column: INTEGER) is
 			-- Replace title of `a_column' with `a_title' if column present.
 			-- If `a_title' is Void, remove it.
+			-- Called when a title has been altered.
 		require
 			a_column_positive: a_column > 0
 		deferred
@@ -543,6 +544,7 @@ feature {EV_ANY_I} -- Implementation
 
 	column_width_changed (a_width, a_column: INTEGER) is
 			-- Replace width of `a_column' with `a_width' if column present.
+			-- Called when a column width has been changed.
 		require
 			a_column_positive: a_column > 0
 			a_width_positive: a_width > 0
@@ -553,6 +555,7 @@ feature {EV_ANY_I} -- Implementation
 	a_column: INTEGER) is
 			-- Set alignment of `a_column' to
 			-- corresponding `alignment_code'.
+			-- Called when an alignment has been changed.
 		require
 			a_column_positive: a_column > 0
 			an_alignment_not_void: an_alignment /= Void
@@ -616,6 +619,15 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/06/07 17:27:50  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.23.4.2  2000/05/09 20:30:09  king
+--| Added comments to _changed features
+--|
+--| Revision 1.23.4.1  2000/05/03 19:09:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.54  2000/05/02 18:34:11  king
 --| Corrected set_column_titles, changed s_c_widths/alignments to fit specifications
 --|

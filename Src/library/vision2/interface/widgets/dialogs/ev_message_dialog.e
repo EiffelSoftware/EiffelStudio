@@ -54,8 +54,8 @@ feature {NONE} -- Initialization
 			set_pixmap (Default_pixmaps.Information_pixmap)
 			
 			set_buttons (<<"OK", "Cancel">>)
-			set_default_push_button(button ("OK"))
-			set_default_cancel_button(button ("Cancel"))
+			set_default_push_button (button ("OK"))
+			set_default_cancel_button (button ("Cancel"))
 		end
 
 	make_with_text (a_text: STRING) is
@@ -97,8 +97,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP
+	pixmap: EV_PIXMAP is
 			-- Icon displayed by dialog.
+		do
+			if pixmap_box.item /= Void then
+				Result ?= pixmap_box.item
+				check
+					Result_not_void: Result /= Void
+				end
+			end
+		end
 
 	text: STRING is
 			-- Message displayed by dialog.
@@ -110,24 +118,51 @@ feature -- Status setting
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set icon associated with dialog.
+		require
+			a_pixmap_not_void: a_pixmap /= Void
+			pixmap_void: pixmap = Void
 		do
-			pixmap := a_pixmap
-			pixmap_box.put (a_pixmap)
+			pixmap_box.extend (a_pixmap)
 			pixmap_box.set_minimum_size (a_pixmap.width, a_pixmap.height)
+		ensure
+			pixmap_assigned: pixmap = a_pixmap
+		end
+
+	remove_pixmap is
+			-- Set `pixmap' `Void'.
+		require
+			has_pixmap: pixmap /= Void
+		do
+			pixmap_box.wipe_out
+		ensure
+			pixmap_void: pixmap = Void
 		end
 
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
+			a_text_not_empty: not a_text.empty
 		do
 			label.set_text (a_text)
 		ensure
 			assigned: text.is_equal (a_text)
 		end
 
+	remove_text is
+			-- Set `text' `Void'.
+		require
+			text_not_void: text /= Void
+		do
+			label.remove_text
+		ensure
+			text_void: text = Void
+		end
+
 	set_buttons (button_labels: ARRAY [STRING]) is
 			-- Assign new buttons with `button_labels' to `buttons'.
+		require
+			button_labels_not_void: button_labels /= Void
 		local
 			i: INTEGER
 		do
@@ -148,7 +183,6 @@ feature -- Status setting
 			-- Assign new buttons with `button_labels' to `buttons'.
 		local
 			i: INTEGER
-			c: CURSOR
 		do
 			clean_buttons
 			button_box.extend (create {EV_CELL})
@@ -185,10 +219,6 @@ feature -- Status report
 
 feature {NONE} -- Implementation
 
-	buttons: HASH_TABLE [EV_BUTTON, STRING]
-			-- Lookup-table for the buttons on the dialog based on
-			-- their captions.
-
 	button_box: EV_HORIZONTAL_BOX
 			-- Bar with all buttons of the dialog.
 
@@ -197,6 +227,10 @@ feature {NONE} -- Implementation
 
 	pixmap_box: EV_CELL
 			-- Container to display pixmap in.
+
+	buttons: HASH_TABLE [EV_BUTTON, STRING]
+			-- Lookup-table for the buttons on the dialog based on
+			-- their captions.
 
 	clean_buttons is
 			-- Remove all buttons from the dialog
@@ -252,13 +286,6 @@ feature -- Status report
 	selected_button: STRING
 			-- Label of the last clicked button.
 
-feature {EV_MESSAGE_DIALOG} -- Constants
-
-	Default_pixmaps: EV_DEFAULT_PIXMAPS is
-		once
-			create Result
-		end
-
 end -- class EV_MESSAGE_DIALOG
 
 --!-----------------------------------------------------------------------------
@@ -282,6 +309,29 @@ end -- class EV_MESSAGE_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/06/07 17:28:11  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.11.4.6  2000/05/30 16:12:04  rogers
+--| Removed unreferenced variables.
+--|
+--| Revision 1.11.4.5  2000/05/13 03:30:53  pichery
+--| Back to protected controls.
+--|
+--| Revision 1.11.4.4  2000/05/09 19:25:34  pichery
+--| Label is now visible.
+--|
+--| Revision 1.11.4.3  2000/05/04 17:28:56  brendel
+--| Added remove_pixmap, remove_text.
+--| Added contracts.
+--|
+--| Revision 1.11.4.2  2000/05/04 04:15:31  pichery
+--| Removed constants Default_pixmaps, now
+--| defined in EV_WIDGET
+--|
+--| Revision 1.11.4.1  2000/05/03 19:10:06  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.23  2000/04/29 03:37:24  pichery
 --| Changed Dialogs. Added default & cancel
 --| buttons, Default pixmaps, ...

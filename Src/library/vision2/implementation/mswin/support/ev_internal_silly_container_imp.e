@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 				p := cwin_get_wm_vscroll_hwnd (wparam, lparam)
 				if p /= default_pointer then
 					-- The message comes from a spin button
-					up_down ?= windows.item (p)
+					up_down ?= window_of_item (p)
 					gauge ?= up_down.buddy_window
 					if gauge /= Void then
 						check
@@ -98,6 +98,17 @@ end -- class EV_INTERNAL_SILLY_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/06/07 17:27:57  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.2.8.2  2000/05/09 00:49:41  manus
+--| Update with recent WEL changes:
+--| - replace `register_window (Current)' by `register_current_window'
+--| - replace `windows.item (p)' by `window_of_item (p)'
+--|
+--| Revision 1.2.8.1  2000/05/03 19:09:17  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.4  2000/02/19 05:45:00  oconnor
 --| released
 --|

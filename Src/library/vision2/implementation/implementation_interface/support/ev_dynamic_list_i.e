@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class 
-	EV_DYNAMIC_LIST_I [G -> EV_ANY]
+	EV_DYNAMIC_LIST_I [G -> EV_CONTAINABLE]
 
 inherit
 	EV_ANY_I
@@ -49,6 +49,28 @@ feature -- Access
 		deferred
 		ensure
 			not_void: Result /= Void
+		end
+
+	index_of (v: like item; i: INTEGER): INTEGER is
+			-- Index of i_th item `v', if present.
+			-- As dynamic list descendants are all sets,
+			-- Result will be zero for all values of `i'
+			-- that are not equal to one
+		local
+			an_index: INTEGER
+		do
+			if i = 1 then
+				from
+					an_index := 1
+				until
+					Result > 0 or else an_index > count
+				loop
+					if i_th (an_index) = v then
+						Result := an_index
+					end
+					an_index := an_index + 1
+				end
+			end
 		end
 
 feature -- Measurement
@@ -142,14 +164,12 @@ feature -- Cursor movement
 			elseif dlc.before then
 				index := 0
 			else
-				index := interface.sequential_index_of (dlc.item, 1)
+				index := index_of (dlc.item, 1)
 			end
 		end
 
 	move (i: INTEGER) is
 			-- Move cursor `i' positions.
-		local
-			new_pos: INTEGER
 		do
 			index := index + i
 			if index < 0 then
@@ -276,7 +296,7 @@ feature -- Removal
 			old_index, item_index: INTEGER
 		do
 			old_index := index
-			item_index := interface.sequential_index_of (v, 1)
+			item_index := index_of (v, 1)
 			if item_index > 0 then
 				remove_i_th (item_index)
 			end
@@ -385,6 +405,21 @@ end -- class EV_DYNAMIC_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/07 17:27:46  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.8.2.4  2000/05/27 01:53:24  pichery
+--| Cosmetics
+--|
+--| Revision 1.8.2.3  2000/05/13 00:04:13  king
+--| Converted to new EV_CONTAINABLE class
+--|
+--| Revision 1.8.2.2  2000/05/05 22:21:21  king
+--| Implemented index_of
+--|
+--| Revision 1.8.2.1  2000/05/03 19:09:00  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/04/07 23:59:36  brendel
 --| Added put_left.
 --|

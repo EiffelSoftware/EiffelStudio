@@ -16,7 +16,7 @@ inherit
 			interface
 		end
 
-	EV_TOOL_BAR_SELECT_BUTTON_IMP
+	EV_TOOL_BAR_BUTTON_IMP
 		redefine
 			parent_imp,
 			make,
@@ -38,7 +38,9 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Make a radio button with a default of selected.
 		do
-			Precursor (an_interface)
+			base_make (an_interface)
+			set_c_object (C.gtk_toggle_button_new)
+			C.gtk_button_set_relief (c_object, C.gtk_relief_none_enum)
 			avoid_reselection := True
 				-- Needed to prevent calling of action sequence.
 			enable_select
@@ -50,6 +52,20 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			align_text_left
+		end
+
+feature -- Status setting
+
+	enable_select is
+		do
+			C.gtk_toggle_button_set_active (c_object, True)
+		end
+
+feature -- Status report
+
+	is_selected: BOOLEAN is
+		do
+			Result := C.gtk_toggle_button_get_active (c_object)
 		end
 
 feature {NONE} -- Implementation
@@ -144,6 +160,18 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/06/07 17:27:29  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.7.2.3  2000/05/10 00:01:41  king
+--| Corrected make to make toggle button instead of button
+--|
+--| Revision 1.7.2.2  2000/05/09 21:12:40  king
+--| Integrated changes to selectable/deselectable
+--|
+--| Revision 1.7.2.1  2000/05/03 19:08:36  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.23  2000/05/03 18:19:42  king
 --| made text left aligned
 --|

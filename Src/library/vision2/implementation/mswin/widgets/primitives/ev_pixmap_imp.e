@@ -19,6 +19,9 @@ inherit
 		end
 
 	EV_PIXMAP_IMP_STATE
+		redefine
+			interface
+		end
 
 	EXCEPTIONS
 		rename
@@ -69,6 +72,29 @@ feature -- Loading/Saving
 				-- Keep the WEL_ICON handle, and retrieve the
 				-- corresponding `bitmap' and `mask_bitmap'.
 			icon := a_icon
+			cursor := Void -- remove the cursor if any
+			retrieve_icon_information
+
+				-- Update the width & height attributes
+			width := bitmap.width
+			height := bitmap.height
+
+			is_initialized := True -- Turn constract back on
+		end
+
+	set_with_cursor (a_cursor: WEL_CURSOR) is
+			-- Initialize the pixmap with the content of `a_cursor'
+			--
+			-- Exceptions "Unable to retrieve icon information"
+		require
+			valid_icon: a_cursor /= Void
+		do
+			is_initialized := False -- Turn contracts off
+
+				-- Keep the WEL_CURSOR handle, and retrieve the
+				-- corresponding `bitmap' and `mask_bitmap'.
+			cursor := a_cursor
+			icon := Void -- remove the icon if any
 			retrieve_icon_information
 
 				-- Update the width & height attributes
@@ -249,11 +275,6 @@ feature -- Status setting
 	stretch (new_width, new_height: INTEGER) is
 			-- Stretch the image to fit in size 
 			-- `new_width' by `new_height'.
-		local
-			new_bitmap			: WEL_BITMAP
-			new_mask			: WEL_BITMAP
-			wel_rect			: WEL_RECT
-			info_icon			: WEL_ICON_INFO
 		do
 				-- Stretch the bitmap
 			bitmap := stretch_wel_bitmap (
@@ -304,8 +325,6 @@ feature -- Delegated features
 			-- Resize the current bitmap. If the new size
 			-- is smaller than the old one, the bitmap is
 			-- clipped.
-		local
-			old_interface: like interface
 		do
 			promote_to_drawable
 			interface.implementation.set_size (new_width, new_height)
@@ -888,23 +907,6 @@ feature -- Delegated features
 			Result := interface.implementation.pointer_style
 		end
 
-	position_set (
-			new_x: INTEGER
-			new_y: INTEGER
-		): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-			-- When the widget is not shown, the result is -1
-		obsolete "don't use it"
-		do
-			promote_to_widget
-			Result := interface.implementation.position_set (
-				new_x,
-				new_y
-				)
-		end
-
 	remove_tooltip is
 			-- Set `tooltip' to `Void'.
 		do
@@ -1051,6 +1053,7 @@ feature {EV_PIXMAP_I, EV_PIXMAP_IMP_STATE} -- Duplication
 			simple_pixmap ?= other
 			if simple_pixmap /= Void then
 				icon := simple_pixmap.icon
+				cursor := simple_pixmap.cursor
 			end
 			transparent_color := other.transparent_color
 
@@ -1151,17 +1154,90 @@ feature {NONE} -- Implementation
 
 	retrieve_icon_information is
 			-- Retrieve the bitmap and the mask bitmap from the
-			-- icon handle.
+			-- icon handle or the cursor handle.
+		require
+			icon_or_cursor_defined:
+				icon /= Void or cursor /= Void
 		local
 			icon_info: WEL_ICON_INFO
+			mem1_dc: WEL_MEMORY_DC
+			mem2_dc: WEL_MEMORY_DC
+			s_dc: WEL_SCREEN_DC
+			new_width : INTEGER
+			new_height: INTEGER
+			icon_mask_bitmap: WEL_BITMAP
 		do
-				-- retrieve the bitmap from the icon.
-			icon_info := icon.get_icon_info
-			if icon_info /= Void then
+				-- Retrieve the information from the icon/cursor
+			if icon /= Void then
+				icon_info := icon.get_icon_info
+			else
+				icon_info := cursor.get_icon_info
+			end
+
+				-- Ensure that we successfully retrieved the information.
+			if icon_info = Void then
+				exception_raise ("Unable to retrieve icon information")
+			end
+
+				-- Get rid of the current bitmap & mask bitmap
+			bitmap.delete
+			if has_mask then
+				mask_bitmap.delete
+			end
+
+				-- Retrieve the new `bitmap' and `mask_bitmap' from
+				-- the icon information.
+			if not icon_info.has_color_bitmap then
+				-- We have here a black & white icon (Fuck...we have to
+				-- convert)
+				--
+				-- `mask_bitmap' is formatted so that the upper half is the 
+				-- icon AND bitmask and the lower half is the icon XOR 
+				-- bitmask. Under this condition, the height should be 
+				-- an even multiple of two.
+				icon_mask_bitmap := icon_info.mask_bitmap
+				new_width := icon_mask_bitmap.width
+				new_height := icon_mask_bitmap.height // 2
+
+					-- Get a screen dc to create our temporary DCs
+				create s_dc
+				s_dc.get
+
+					-- Associate `mem1_dc' with `icon_mask_bitmap'.
+				create mem1_dc.make_by_dc (s_dc)
+				mem1_dc.select_bitmap (icon_mask_bitmap)
+
+					-- Associate `mem2_dc' with `bitmap'.
+				create mem2_dc.make_by_dc (s_dc)
+				create bitmap.make_compatible (mem2_dc, new_width, new_height)
+				mem2_dc.select_bitmap (bitmap)
+
+					-- Copy the second half of `icon_mask_bitmap' into
+					-- `bitmap'			
+				mem2_dc.bit_blt (0, 0, new_width, new_height, 
+					mem1_dc, 0, new_height, Raster_operations_constants.Srccopy)
+				
+				mem2_dc.unselect_bitmap
+
+					-- Associate `mem2_dc' with `mask_bitmap'.
+				create mask_bitmap.make_compatible (mem2_dc, new_width, new_height)
+				mem2_dc.select_bitmap (mask_bitmap)
+
+					-- Copy the first half of `icon_mask_bitmap' into
+					-- `masks_bitmap'			
+				mem2_dc.bit_blt (0, 0, new_width, new_height, 
+					mem1_dc, 0, 0, Raster_operations_constants.Srccopy)
+
+					-- Free memory				
+				mem1_dc.unselect_bitmap
+				mem1_dc.delete
+				mem2_dc.unselect_bitmap
+				mem2_dc.delete
+				s_dc.release
+			else
+				-- Everything went ok, replace the bitmaps
 				bitmap := icon_info.color_bitmap
 				mask_bitmap := icon_info.mask_bitmap
-			else
-				exception_raise ("Unable to retrieve icon information")
 			end
 		end
 
@@ -1229,6 +1305,9 @@ invariant
 		(has_mask implies mask_bitmap /= Void) and
 		(mask_bitmap /= Void implies has_mask)
 
+	not_both_icon_and_cursor: 
+		not (icon /= Void and cursor /= Void)
+
 end -- class EV_PIXMAP_IMP
 
 --!-----------------------------------------------------------------------------
@@ -1252,6 +1331,30 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/06/07 17:28:02  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.12.4.6  2000/05/30 16:06:46  rogers
+--| Removed unreferenced variables.
+--|
+--| Revision 1.12.4.5  2000/05/13 00:51:28  king
+--| Integrated with change to EV_DYNAMIC_LIST
+--|
+--| Revision 1.12.4.4  2000/05/05 22:33:24  pichery
+--| Improved the retrieval of icon bitmaps
+--| for B&W icons.
+--|
+--| Revision 1.12.4.3  2000/05/04 04:22:30  pichery
+--| Added feature `set_with_cursor'. Adapting
+--| inheritance since EV_PIXMAP_IMP_STATE now
+--| define `interface'.
+--|
+--| Revision 1.12.4.2  2000/05/03 22:13:40  pichery
+--| Removed some obsolete features
+--|
+--| Revision 1.12.4.1  2000/05/03 19:09:52  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.36  2000/05/03 04:36:39  pichery
 --| Removed parameter in feature `set_with_default'.
 --|

@@ -13,7 +13,7 @@ inherit
 			interface
 		end
 
-	EV_SELECT_BUTTON_IMP
+	EV_BUTTON_IMP
 		undefine
 			--| FIXME Get back to this.
 			wel_make,
@@ -42,7 +42,10 @@ inherit
 			move as wel_move,
 			resize as wel_resize,
 			text as wel_text,
-			set_text as wel_set_text
+			set_text as wel_set_text,
+			set_checked as enable_select,
+			set_unchecked as disable_select,
+			checked as is_selected
 		undefine
 			window_process_message,
 			remove_command,
@@ -72,19 +75,13 @@ create
 
 feature -- Status setting
 
-	disable_select is
-			-- Set `is_selected' `False'.
-		do
-			set_unchecked
-		end
-
 	toggle is
 			-- Invert the value of `is_selected'.
 		do
-			if checked then
-				set_unchecked
+			if is_selected then
+				enable_select
 			else
-				set_checked
+				disable_select
 			end
 		end
 
@@ -115,6 +112,15 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.14.2.2  2000/05/09 20:48:28  king
+--| Implemented to fit in with new selectable abstract classes
+--|
+--| Revision 1.14.2.1  2000/05/03 19:09:51  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.29  2000/05/01 17:04:44  manus
 --| Use of `wel_parent' directly without the hack of renaming into `wel_window_parent'.
 --|

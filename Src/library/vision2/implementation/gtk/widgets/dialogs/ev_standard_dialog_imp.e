@@ -23,6 +23,12 @@ feature -- Access
 	title: STRING is
 			-- Title of dialog shown in title bar.
 		do
+			check
+				c_object /= Void
+			end
+			check
+				C.gtk_window_struct_title (c_object) /= Void
+			end
 			create Result.make_from_c (C.gtk_window_struct_title (c_object))
 		end
 
@@ -42,10 +48,12 @@ feature -- Status setting
 			selected_button := Void
 			C.gtk_widget_show (c_object)
 			block
-			if selected_button.is_equal ("OK") then
-				interface.ok_actions.call ([])
-			elseif selected_button.is_equal ("Cancel") then
-				interface.cancel_actions.call ([])
+			if selected_button /= Void then
+				if selected_button.is_equal ("OK") then
+					interface.ok_actions.call ([])
+				elseif selected_button.is_equal ("Cancel") then
+					interface.cancel_actions.call ([])
+				end
 			end
 		end
 
@@ -74,7 +82,7 @@ feature {NONE} -- Implementation
 		do
 			from
 			until
-				selected_button /= Void
+				is_destroyed or else selected_button /= Void
 			loop
 				dummy := C.gtk_main_iteration_do (True)
 			end
@@ -119,6 +127,18 @@ end -- class EV_STANDARD_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/06/07 17:27:36  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.7.4.3  2000/06/05 23:50:13  oconnor
+--| dont try to access void selected_button
+--|
+--| Revision 1.7.4.2  2000/05/05 20:41:11  brendel
+--| Fixed bug in `block'.
+--|
+--| Revision 1.7.4.1  2000/05/03 19:08:46  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.11  2000/03/01 00:08:38  brendel
 --| Improved implementation of `title'.
 --| Removed set and unset of modal in show_modal, since standard dialogs are

@@ -19,7 +19,8 @@ inherit
 		redefine
 			interface,
 			initialize,
-			make
+			make,
+			pointer_over_widget
 		end
  
 	EV_PIXMAPABLE_IMP
@@ -81,6 +82,9 @@ feature {NONE} -- Initialization
 			C.gtk_widget_hide (text_label)
 			C.gtk_box_pack_end (box, pixmap_box, True, False, padding)
 			C.gtk_widget_hide (pixmap_box)
+			--| FIXME IEK Remove magic numbers, have some standard for
+			--| default minimum sizes of buttons.
+			C.gtk_widget_set_usize (box, 0, 20)
 		ensure
 			button_box /= NULL
 		end
@@ -150,7 +154,7 @@ feature -- Element change
 					C.Gtk_pack_end_enum
 				)
 			end
-			{EV_TEXTABLE_IMP} Precursor(a_text)
+			{EV_TEXTABLE_IMP} Precursor (a_text)
 		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
@@ -181,6 +185,24 @@ feature -- Element change
 			C.gtk_widget_hide (pixmap_box)
 			align_text_center
 		end
+
+feature {EV_APPLICATION_IMP} -- Implementation
+
+	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
+			-- Comparison of gdk window and widget position to determine
+			-- if mouse pointer is over widget.
+		local
+			a_gtk_pix: POINTER
+		do
+			Result := Precursor (a_gdkwin, a_x, a_y)
+			if not Result then
+				a_gtk_pix := gtk_pixmap
+				if a_gtk_pix /= NULL then
+					-- No struct member call if gtk_pix is a NULL pointer.
+					Result := a_gdkwin = C.gtk_widget_struct_window (a_gtk_pix)
+				end
+			end
+		end
 	
 feature {NONE} -- implementation
 
@@ -201,6 +223,36 @@ feature {NONE} -- implementation
 			-- and `disable_default_push_button' to be executed
 			-- without raising zillions of assertion violations.
 			--| FIXME implement cited function, then remove me.
+
+feature {NONE} -- Externals
+
+	gtk_widget_can_default (a_widget: POINTER): BOOLEAN is
+		external
+			"C [macro <gtk/gtk.h>]: EIF_BOOLEAN"
+		alias
+			"GTK_WIDGET_CAN_DEFAULT"
+		end
+
+	gtk_widget_has_default (a_widget: POINTER): BOOLEAN is
+		external
+			"C [macro <gtk/gtk.h>]: EIF_BOOLEAN"
+		alias
+			"GTK_WIDGET_HAS_DEFAULT"
+		end
+
+	gtk_widget_set_flags (a_widget: POINTER; a_flag: INTEGER) is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_SET_FLAGS"
+		end
+
+	gtk_widget_unset_flags (a_widget: POINTER; a_flag: INTEGER) is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_WIDGET_UNSET_FLAGS"
+		end
 
 feature {EV_ANY_I} -- implementation
 
@@ -234,6 +286,24 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/06/07 17:27:39  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.26.4.6  2000/06/01 22:04:32  king
+--| Implemented pointer_over_widget to deal with pixmap
+--|
+--| Revision 1.26.4.5  2000/05/05 23:21:59  king
+--| Added feature clause to default push button externals
+--|
+--| Revision 1.26.4.4  2000/05/04 18:34:07  king
+--| Setting min size for vbox for default style
+--|
+--| Revision 1.26.4.3  2000/05/04 00:16:48  king
+--| Implemented enable_can_default
+--|
+--| Revision 1.26.4.2  2000/05/03 22:22:55  king
+--| Merged with devel branch from head
+--|
 --| Revision 1.35  2000/05/03 18:19:07  king
 --| Added push button style implementation
 --|

@@ -34,48 +34,13 @@ inherit
 			default_create
 		end
 
+	EV_DESELECTABLE
+		redefine
+			implementation
+		end
+
 create
 	default_create
-
-feature -- Status report
-
-	is_selected: BOOLEAN is
-			-- Is the item selected?
-		require
-			has_parent: parent /= Void
-		do
-			Result := implementation.is_selected
-		end
-
-feature -- Status setting
-
-	enable_select is
-			-- Set `is_selected' `True'.
-		require
-			has_parent: parent /= Void
-		do
-			implementation.enable_select
-		ensure
-			selected: is_selected
-		end
-
-	disable_select is
-			-- Set `is_selected' `False'.
-		require
-			has_parent: parent /= Void
-		do
-			implementation.disable_select
-		ensure
-			not_selected: not is_selected
-		end
-		
-	toggle is
-			-- Change `is_selected'.
-		require
-			has_parent: parent /= Void
-		do
-			implementation.toggle
-		end
 
 feature -- Event handling
 
@@ -163,6 +128,15 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/06/07 17:28:05  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.18.4.2  2000/05/09 23:12:27  king
+--| Made mcl inheirt from deselectable
+--|
+--| Revision 1.18.4.1  2000/05/03 19:09:58  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.35  2000/03/24 03:10:22  oconnor
 --| formatting and comments
 --|

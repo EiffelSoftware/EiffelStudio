@@ -26,6 +26,11 @@ inherit
 			interface
 		end
 
+	EV_TOOLTIPABLE_I
+		redefine
+			interface
+		end
+
 feature -- Access
 
 	parent: EV_TOOL_BAR is
@@ -111,6 +116,15 @@ end -- class EV_TOOL_BAR_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/06/07 17:27:41  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.10.4.2  2000/05/10 23:03:00  king
+--| Integrated inital tooltipable changes
+--|
+--| Revision 1.10.4.1  2000/05/03 19:08:54  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.15  2000/04/07 22:09:23  brendel
 --| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
 --|

@@ -10,16 +10,19 @@ deferred class
 	EV_TOOL_BAR_TOGGLE_BUTTON_I
 
 inherit
-	EV_TOOL_BAR_SELECT_BUTTON_I
-
-feature -- Status setting
-
-	disable_select is
-			-- Unselect the current button.
-		deferred
-		ensure
-			unselected: not is_selected
+	EV_TOOL_BAR_BUTTON_I
+		redefine
+			interface
 		end
+
+	EV_DESELECTABLE_I
+		redefine
+			interface
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TOOL_BAR_TOGGLE_BUTTON
 
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON_I
 
@@ -44,6 +47,15 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/06/07 17:27:41  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.6.2.2  2000/05/09 21:12:42  king
+--| Integrated changes to selectable/deselectable
+--|
+--| Revision 1.6.2.1  2000/05/03 19:08:54  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.9  2000/04/04 17:08:59  rogers
 --| Now inherits EV_TOOL_BAR_sELECT_BUTTON_I. Removed is_selected and
 --| enable_select.

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			-- Create the textable and agging `a_text' to `text'
 		require
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
+			a_text_not_empty: not a_text.empty
 			default_create_not_already_called: not default_create_called
 		do
 			default_create
@@ -80,7 +80,7 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
+			a_text_not_empty: not a_text.empty
 		do
 			implementation.set_text (a_text)
 		ensure
@@ -171,6 +171,15 @@ end -- class EV_TEXTABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/06/07 17:28:07  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.12.4.2  2000/05/10 23:02:13  king
+--| Change precond to use empty
+--|
+--| Revision 1.12.4.1  2000/05/03 19:10:03  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.21  2000/04/28 00:41:00  brendel
 --| Added make_for_test that sets all aligments.
 --|

@@ -7,11 +7,9 @@ indexing
 	revision: "$Revision$"
 	
 deferred class
-	
 	EV_PIXMAPABLE_IMP
 	
 inherit
-	
 	EV_PIXMAPABLE_I
 		redefine
 			interface
@@ -32,7 +30,6 @@ feature -- Initialization
 		end
 
 feature -- Access
-
 
 	pixmap: EV_PIXMAP is
 			-- Pixmap that has been set.
@@ -127,6 +124,15 @@ end -- EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/06/07 17:27:33  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.13.4.2  2000/06/05 16:44:57  manus
+--| Cosmetics on new lines
+--|
+--| Revision 1.13.4.1  2000/05/03 19:08:41  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.24  2000/05/02 18:55:23  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

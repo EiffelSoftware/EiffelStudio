@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class 
-	EV_DYNAMIC_LIST_IMP [G -> EV_ANY]
+	EV_DYNAMIC_LIST_IMP [G -> EV_CONTAINABLE]
 
 inherit
 	EV_DYNAMIC_LIST_I [G]
@@ -129,6 +129,15 @@ end -- class EV_DYNAMIC_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/07 17:27:37  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.8.2.2  2000/05/13 00:04:12  king
+--| Converted to new EV_CONTAINABLE class
+--|
+--| Revision 1.8.2.1  2000/05/03 19:08:48  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/05/02 18:55:28  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

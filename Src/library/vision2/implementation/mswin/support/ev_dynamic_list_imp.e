@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class 
-	EV_DYNAMIC_LIST_IMP [G -> EV_ANY, G_IMP -> EV_ANY_I]
+	EV_DYNAMIC_LIST_IMP [G -> EV_CONTAINABLE, G_IMP -> EV_ANY_I]
 
 inherit
 	EV_DYNAMIC_LIST_I [G]
@@ -92,6 +92,15 @@ end -- class EV_DYNAMIC_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/06/07 17:27:57  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.3.2.2  2000/05/13 00:51:26  king
+--| Integrated with change to EV_DYNAMIC_LIST
+--|
+--| Revision 1.3.2.1  2000/05/03 19:09:17  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.3  2000/04/05 21:16:11  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

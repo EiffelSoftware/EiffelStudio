@@ -32,6 +32,7 @@ inherit
 			compute_minimum_width,
 			compute_minimum_height,
 			compute_minimum_size,
+			notify_change,
 			on_key_down,
 			notebook_parent,
 			interface,
@@ -131,7 +132,8 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize notebook
 		do
-			{EV_WIDGET_LIST_IMP} precursor
+			Precursor {EV_WIDGET_LIST_IMP}
+			create ev_children.make (2)
 			check_notebook_assertions := True
 		end
 
@@ -194,11 +196,14 @@ feature -- Status setting
 	
 	set_tab_position (pos: INTEGER) is
 			-- set position of tabs (left, right, top or bottom)
+		local
+			ww: EV_WIDGET_IMP
 		do
  			tab_pos := pos
  			set_style (basic_style)
 			set_font (font)
-			notify_change (1 + 2) 
+			ww ?= selected_window
+			notify_change (1 + 2, ww)
 		end
 
 	set_current_page (an_index: INTEGER) is
@@ -212,7 +217,6 @@ feature -- Status setting
    			-- `flag'.
 		local
 			counter: INTEGER
-			child_item: WEL_TAB_CONTROL_ITEM
 			child_imp: EV_WIDGET_IMP
 		do
 			if not is_sensitive /= flag then
@@ -221,8 +225,7 @@ feature -- Status setting
 				until
 					counter = count
 				loop
-					child_item := get_item (counter)
-					child_imp ?= child_item.window
+					child_imp ?= get_item (counter).window
 					check
 						child_imp_not_void: child_imp /= Void
 					end
@@ -264,21 +267,19 @@ feature -- Element change
 			insert_item (an_index - 1, a_wel_item)
 		end
 	
-	append_page (child_imp: EV_WIDGET_I; label: STRING) is
+	append_page (child_imp: EV_WIDGET_IMP; label: STRING) is
 		-- Add a new page for notebook containing 'child_imp' with tab 
 		-- label `label'.
 		local
 			a_wel_item: WEL_TAB_CONTROL_ITEM
 			ww: WEL_WINDOW
-			widget_imp: EV_WIDGET_IMP
 		do
 			ww ?= child_imp
 			!! a_wel_item.make
 			a_wel_item.set_text (label)
 			a_wel_item.set_window (ww)
 			insert_item (count, a_wel_item)
-			widget_imp ?= child_imp
-			notify_change (2 + 1)
+			notify_change (2 + 1, child_imp)
 		end
 
 	set_font (f: EV_FONT) is
@@ -308,7 +309,6 @@ feature -- Element change
 			-- of the widget.
 		local
 			counter: INTEGER
-			child_item: WEL_TAB_CONTROL_ITEM
 			child_imp: EV_WIDGET_IMP
 		do
 			top_level_window_imp := a_window
@@ -317,8 +317,7 @@ feature -- Element change
 			until
 				counter = count
 			loop
-				child_item := get_item (counter)
-				child_imp ?= child_item.window
+				child_imp ?= get_item (counter).window
 				check
 					child_imp_not_void: child_imp /= Void
 				end
@@ -335,22 +334,26 @@ feature -- Basic operation
 			valid_child: is_child (a_child)
 		local
 			test: BOOLEAN
-			child_item: WEL_TAB_CONTROL_ITEM
 			child_imp: EV_WIDGET_IMP
-			ww: WEL_WINDOW
+			nb: INTEGER
 		do
 			from
 				Result := 0
+				nb := count
 			until
-				Result = count or test
+				test or else Result = nb
 			loop
-				child_item := get_item (Result)
-				ww := child_item.window
-				child_imp ?= child_item.window
-				if a_child.is_equal (child_imp) then
-					test := True
-				end
+				child_imp ?= get_item (Result).window
+				test := a_child.is_equal (child_imp)
 				Result := Result + 1
+			end
+		end
+
+	notify_change (type: INTEGER; child: EV_WIDGET_IMP) is
+			-- Size notification
+		do
+			if get_child_index (child) = current_page then
+				Precursor {EV_WIDGET_LIST_IMP} (type, child)
 			end
 		end
 
@@ -371,7 +374,6 @@ feature -- Assertion features
 			-- its parent.
 		local
 			counter: INTEGER
-			child_item: WEL_TAB_CONTROL_ITEM
 			child_imp: EV_WIDGET_IMP
 		do
 			from
@@ -379,8 +381,7 @@ feature -- Assertion features
 			until
 				(counter = count) or Result
 			loop
-				child_item := get_item (counter)
-				child_imp ?= child_item.window
+				child_imp ?= get_item (counter).window
 				Result := a_child.is_equal (child_imp)
 				counter := counter + 1
 			end
@@ -403,7 +404,7 @@ feature {NONE} -- Implementation
 			window: WEL_WINDOW
 		do
 			hwnd := next_dlgtabitem (wel_item, default_pointer, direction)
-			window := windows.item (hwnd)
+			window := window_of_item (hwnd)
 			window.set_focus
 		end
 
@@ -415,9 +416,6 @@ feature {NONE} -- Implementation
 		local
 			tab_control: WEL_TAB_CONTROL_ITEM
 			window: WEL_WINDOW
-			window2: WEL_WINDOW
-			found: BOOLEAN
-			hwnd: POINTER
 		do
 			if virtual_key = Vk_tab then
 				if key_down (Vk_shift) then
@@ -434,7 +432,6 @@ feature {NONE} -- Implementation
 			-- Recompute the minimum_width of the object.
 		local
 			counter: INTEGER
-			child_item: WEL_TAB_CONTROL_ITEM
 			child_imp: EV_WIDGET_IMP
 			rect: WEL_RECT
 			value: INTEGER
@@ -446,8 +443,7 @@ feature {NONE} -- Implementation
 			until
 				counter = count
 			loop
-				child_item := get_item (counter)
-				child_imp ?= child_item.window
+				child_imp ?= get_item (counter).window
 				check
 					valid_cast: child_imp /= Void
 				end
@@ -458,11 +454,11 @@ feature {NONE} -- Implementation
 			end
 
 			-- We found the biggest child
-			if tab_pos = interface.Tab_top
-					or else tab_pos = interface.Tab_bottom then
-				internal_set_minimum_width (value + 6)
-			else
+			if tab_pos = interface.Tab_right
+					or else tab_pos = interface.Tab_left then
 				internal_set_minimum_width (value + tab_height + 2)
+			else
+				internal_set_minimum_width (value + 6)
 			end
 		end
 
@@ -470,7 +466,6 @@ feature {NONE} -- Implementation
 			-- Recompute the minimum_width of the object.
 		local
 			counter: INTEGER
-			child_item: WEL_TAB_CONTROL_ITEM
 			child_imp: EV_WIDGET_IMP
 			rect: WEL_RECT
 			value: INTEGER
@@ -482,8 +477,7 @@ feature {NONE} -- Implementation
 			until
 				counter = count
 			loop
-				child_item := get_item (counter)
-				child_imp ?= child_item.window
+				child_imp ?= get_item (counter).window
 				check
 					valid_cast: child_imp /= Void
 				end
@@ -493,9 +487,9 @@ feature {NONE} -- Implementation
 				counter := counter + 1
 			end
 
-			-- We found the biggest child
-			if tab_pos = interface.Tab_left
-					or else tab_pos = interface.Tab_right then
+				-- We found the biggest child
+			if tab_pos = interface.Tab_top
+					or else tab_pos = interface.Tab_bottom then
 				internal_set_minimum_height (value + tab_height + 2)
 			else
 				internal_set_minimum_height (value + 6)
@@ -564,7 +558,6 @@ feature {NONE} -- WEL Implementation
 			-- to the current size.
 		local
 			counter: INTEGER
-			child_item: WEL_TAB_CONTROL_ITEM
 			child_imp: EV_WIDGET_IMP
 			rect: WEL_RECT
 		do
@@ -574,8 +567,7 @@ feature {NONE} -- WEL Implementation
 			until
 				counter = count
 			loop
-				child_item := get_item (counter)
-				child_imp ?= child_item.window
+				child_imp ?= get_item (counter).window
 				check
 					child_imp_not_void: child_imp /= Void
 				end
@@ -640,7 +632,7 @@ feature {NONE} -- WEL Implementation
 		local
 			ww: EV_WIDGET_IMP
 		do
-			ww ?= (get_item (current_selection)).window
+			ww ?= selected_window
 			if ww /= Void and then ww.exists then
 				ww.show_window (ww.wel_item, Sw_hide)
 			end
@@ -653,23 +645,22 @@ feature {NONE} -- WEL Implementation
 			-- child, it should be reset directly on the child.
 		local
 			ww: EV_WIDGET_IMP
-			rect: WEL_RECT
 		do
-			ww ?= (get_item (current_selection)).window
+			ww ?= selected_window
 			if ww /= Void and then ww.exists then
 				ww.show_window (ww.wel_item, Sw_show)
-				rect := sheet_rect
-				ww.wel_move_and_resize (rect.left, rect.top, rect.width,
-					height, True)
 			end
 		end
 
 	on_tcn_selchange is
 			-- Selection has changed.
 			-- Shows the current selected page by default.
+		local
+			ww: EV_WIDGET_IMP
 		do
 			show_current_selection
-			notify_change (2 + 1)
+			ww ?= selected_window
+			notify_change (2 + 1, ww)
 			interface.selection_actions.call ([])			
 		end
 
@@ -772,7 +763,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 		end
 
 	enable_notebook_assertions is
-			-- Effectively turn of assertions in EV_NOTEBOOK_I
+			-- Effectively turn on assertions in EV_NOTEBOOK_I
 		do
 			check_notebook_assertions := True
 		end
@@ -819,6 +810,8 @@ feature {NONE} -- Implementation
 			check
 				v_imp_not_void: v_imp /= Void
 			end
+			ev_children.go_i_th (i)
+			ev_children.put_left (v_imp)
 			wel_win ?= v_imp
 			check
 				wel_win_not_void: wel_win /= Void
@@ -828,8 +821,7 @@ feature {NONE} -- Implementation
 			insert_item (i - 1, wel_tci)
 			v_imp.wel_set_parent (Current)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
-			v_imp.hide
-			notify_change (2 + 1)
+			notify_change (2 + 1, v_imp)
 		end
 
 	remove_i_th (i: INTEGER) is
@@ -846,6 +838,8 @@ feature {NONE} -- Implementation
 			check
 				wel_win_not_void: wel_win /= Void
 			end
+			ev_children.go_i_th (i)
+			ev_children.remove
 			disable_notebook_assertions
 			if selected_item_index = i then
 				if selected_item_index > 1 then
@@ -857,14 +851,14 @@ feature {NONE} -- Implementation
 			delete_item (i - 1)
 			v_imp.wel_set_parent (Default_parent)
 			enable_notebook_assertions
-			notify_change (2 + 1)
+			notify_change (2 + 1, v_imp)
 		end
 
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite. In this container, `child' is the
 			-- child of the container whose page is currently selected.
 		do
-			child_imp.hide
+			--|FIXME Julian Why is this needed?
 		end
 
 	remove_child (a_child: EV_WIDGET_IMP) is
@@ -872,11 +866,13 @@ feature {NONE} -- Implementation
 			-- the container.
 		local
 			an_index: INTEGER
+			ww: EV_WIDGET_IMP
 		do
 			an_index := get_child_index (a_child)
 			delete_item (an_index - 1)
 			a_child.set_parent (Void)
-			notify_change (2 + 1)
+			ww ?= selected_window
+			notify_change (2 + 1, ww)
 		end
 
 feature {NONE} -- Implementation
@@ -929,11 +925,9 @@ feature {NONE} -- Implementation
 	selected_item: like item is
 			-- Page displayed topmost.
 		local
-			child_item: WEL_TAB_CONTROL_ITEM
 			child_imp: EV_WIDGET_IMP
 		do
-			child_item := get_item (current_page - 1)
-			child_imp ?= child_item.window
+			child_imp ?= get_item (current_selection).window
 			if child_imp /= Void then
 				Result := child_imp.interface
 			end
@@ -962,7 +956,45 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.56  2000/05/03 20:13:25  brendel
+--| Revision 1.57  2000/06/07 17:27:59  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.41.4.8  2000/06/05 17:36:48  manus
+--| Fixed a small typo in conformance of `selected_window' with second parameter of
+--| `notify_change'.
+--|
+--| Revision 1.41.4.7  2000/06/05 17:24:10  manus
+--| 1 - New ìmplementation of `notify_change' that takes an extra parameter: the child that
+--| requested the size change notification. In the case of a NOTEBOOK, we will take into
+--| the account the `notify_change' action only if the child that requested it is the child
+--| whose tab is selected. Otherwise we do nothing.
+--|
+--| 2 - Updated all call to `notify_change' to conform the new signature by passing the correct
+--| child.
+--|
+--| 3 - Improved use of `get_item' and use new `selected_window' coming from WEL_TAB_CONTROL
+--| whenever possible.
+--|
+--| 4 - `show_current_selection' does not resize its content anymore because we make the
+--| assumption that the size won't change from one window to another. This improves performance
+--| but it also fixes a bug where `sheet_rect' was not returning a correct sized rectangle.
+--|
+--| Revision 1.41.4.6  2000/05/30 16:03:35  rogers
+--| Removed unreferenced variables.
+--|
+--| Revision 1.41.4.5  2000/05/23 20:17:46  rogers
+--| Insert_i_th no longer hides the widget being added. This fixes the problem
+--| with a tab's widget not being shown without clicking on that tab.
+--|
+--| Revision 1.41.4.4  2000/05/09 00:53:30  manus
+--| Update with WEL changes:
+--| - replace `windows.item (hwnd)' by `window_of_item (hwnd)'.
+--|
+--| Revision 1.41.4.3  2000/05/08 16:58:29  rogers
+--| Ev_children is now updated in insert_i_th and remove.
+--|
+--| Revision 1.41.4.2  2000/05/03 22:35:02  brendel
+--|
 --| Fixed resize_actions.
 --|
 --| Revision 1.55  2000/04/28 21:53:45  rogers

@@ -9,6 +9,9 @@ indexing
 class
 	EV_CURSOR_CODE
 
+obsolete
+	"Don't use it. Use EV_DEFAULT_PIXMAPS instead"
+
 inherit
 	ANY
 		redefine
@@ -122,6 +125,18 @@ end -- class EV_CURSOR_CODE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/06/07 17:28:06  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.4.4.3  2000/05/04 17:41:08  brendel
+--| Moved obsolete clause.
+--|
+--| Revision 1.4.4.2  2000/05/04 04:16:09  pichery
+--| This class is now Obsolete and marked as it.
+--|
+--| Revision 1.4.4.1  2000/05/03 19:10:00  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/03/15 22:48:35  king
 --| Removed make procedure, now using default_create
 --|

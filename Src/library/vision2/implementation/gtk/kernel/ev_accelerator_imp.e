@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 			-- Connect interface.
 		do
 			base_make (an_interface)
+			-- dummy c_object
 			set_c_object (C.gtk_button_new)
 			create key
 		end
@@ -81,13 +82,13 @@ feature {NONE} -- Implementation
 			-- The mask consisting of alt, shift and control keys.
 		do
 			if control_key then
-				Result := Result + C.Gdk_control_mask_enum
+				Result := C.GDK_CONTROL_MASK_ENUM
 			end
 			if alt_key then
-				Result := Result + C.Gdk_mod1_mask_enum
+				Result := Result + C.GDK_MOD1_MASK_ENUM
 			end
 			if shift_key then
-				Result := Result + C.Gdk_shift_mask_enum
+				Result := Result + C.GDK_SHIFT_MASK_ENUM
 			end
 		end
 
@@ -196,6 +197,15 @@ end -- class EV_ACCELERATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/06/07 17:27:30  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.10.2.2  2000/05/24 00:48:28  king
+--| Made enumeration calls uppercase
+--|
+--| Revision 1.10.2.1  2000/05/03 19:08:37  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.10  2000/05/02 18:55:21  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

@@ -43,9 +43,8 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				adjustment,
 				"value-changed",
-				--(interface.change_actions)~call)
 				~value_changed_handler,
-				default_translate
+				Void
 			)
 		end
 
@@ -281,6 +280,15 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/06/07 17:27:39  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.5.2.2  2000/06/06 22:56:23  king
+--| Fixed adjustment signal connection
+--|
+--| Revision 1.5.2.1  2000/05/03 19:08:50  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.14  2000/05/02 18:55:30  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

@@ -1,68 +1,290 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"Dynamically expandable tree items"
+		"Dynamically expandable tree item."
 	status: "See notice at end of file"
-	author: "Mark Howard"
+	keywords: "tree, item, dynamic"
 	date: "11/4/1999"
 	revision: "$Revision$"
 
 class
-	EV_DYNAMIC_TREE_ITEM [G]
+	EV_DYNAMIC_TREE_ITEM
 
 inherit
-	EV_TREE_ITEM
+	EV_TREE_NODE
 		redefine
-			data
+			initialize,
+			implementation
 		end
 		
 creation
-	default_create
+	default_create,
+	make_with_function
 
 feature -- Initialization
 
-	set_dynamic (a_expand: like expand_agent; a_data: G) is
-			-- Initialize the item to call `a_expand' on expand.
-		local
-			t_item: EV_TREE_ITEM
+	make_with_function (a_subtree_function: like subtree_function) is
+			-- Create with `a_subtree_function'.
 		do
-			expand_agent := a_expand
-			if expand_agent /= Void then
-				create t_item
-				t_item.set_text ("to_be_expanded")
-				extend (t_item)
-				expand_actions.extend (~expand_node)
-			end
-			data := a_data
+			default_create
+			set_subtree_function (a_subtree_function)
+		end
+
+	initialize is
+			-- Set up expand action.
+		do
+			{EV_TREE_NODE} Precursor
+			expand_actions.extend (~fill_from_subtree_function)
+			implementation.extend (create {EV_TREE_ITEM})
+			set_subtree_function_timeout (default_subtree_function_timeout)
 		end
 
 feature -- Access
 
-	data: G
+	item: EV_TREE_NODE is
+			-- Item at current position
+		local
+			linear: LINEAR [EV_TREE_NODE]
+			chain: CHAIN [EV_TREE_NODE]
+			cs: CURSOR_STRUCTURE [EV_TREE_NODE]
+			c: CURSOR
+			i: INTEGER
+		do
+			check
+				subtree_function_not_void: subtree_function /= void 
+			end
+			subtree_function_call
+			linear := subtree_function.last_result
+			chain ?= linear
+			if chain /= Void then
+				Result := chain.i_th (index)
+			else
+				cs ?= linear
+				if cs /= Void then
+					c := cs.cursor
+				end
+				from
+					linear.start
+					i := 1
+				variant
+					index - i
+				until
+					i = index
+				loop
+					linear.forth
+					i := i + 1
+				end
+				if cs /= Void then
+					cs.go_to (c)
+				end
+				Result := linear.item
+			end
+		end
+
+	subtree_function: FUNCTION [ANY, TUPLE [], LINEAR [EV_TREE_NODE]]
+			-- Tree items contained.
+
+	set_subtree_function (a_subtree_function: like subtree_function) is
+			-- Assign `a_subtree_function' to `subtree_function'.
+		do
+			subtree_function := a_subtree_function
+		end
+
+	subtree_function_timeout: INTEGER
+			-- Time in milliseconds, after `subtree_function'.call, when
+			-- `subtree_function'.last_result is considered to have expired.
+			-- There is no gaurentee that `subtree_function' will be recalled
+			-- after this timeout, but Vision will not call it twice within
+			-- one timeout period.
+			-- Default is 1 second.
+
+	default_subtree_function_timeout: INTEGER is 1000
+			-- 1 second.
+
+	set_subtree_function_timeout (a_timeout: like subtree_function_timeout) is
+			-- Assign `a_timeout' to `subtree_function_timeout'.
+		do
+			subtree_function_timeout := a_timeout
+		end
+
+	subtree_function_call is
+			-- Call `subtree_function' if it has not been called in the last
+			-- `subtree_function_timeout' milliseconds.
+		local
+			now: INTEGER
+		do
+			now := time_msec
+			check
+				linear_time: now > last_subtree_function_call_time
+			end
+			if
+				now - last_subtree_function_call_time
+				>= subtree_function_timeout
+				or
+				last_subtree_function_call_time = 0
+			then
+				subtree_function.call ([])
+				last_subtree_function_call_time := now
+			end
+		end
+
+	index: INTEGER
+			-- Index of current position.
+
+feature -- Status report
+
+	after: BOOLEAN is
+			-- Is there no valid position to the right of current one?
+		local
+			linear: LINEAR [EV_TREE_NODE]
+			finite: FINITE [EV_TREE_NODE]
+			cs: CURSOR_STRUCTURE [EV_TREE_NODE]
+			c: CURSOR
+			i: INTEGER
+		do
+			if subtree_function /= Void then
+				subtree_function_call
+				linear := subtree_function.last_result
+				finite ?= linear
+				if finite /= Void then
+					Result := index = finite.count + 1
+				else
+					cs ?= linear
+					if cs /= Void then
+						c := cs.cursor
+					end
+					from
+						linear.start
+						i := 1
+					variant
+						index - i
+					until
+						i = index or linear.after
+					loop
+						linear.forth
+						i := i + 1
+					end
+					if cs /= Void then
+						cs.go_to (c)
+					end
+					Result := linear.after
+				end
+			end
+		end
+
+	empty: BOOLEAN is
+			-- Is there no element?
+		do
+			Result := True
+			if subtree_function /= Void then
+				subtree_function_call
+				if subtree_function.last_result /= Void then
+					Result := subtree_function.last_result.empty
+				end
+			end
+		end
+
+feature -- Cursor movement
+
+	start is
+			-- Move to first position if any.
+		do
+			index := 1
+		end
+	
+	finish is
+			-- Move to last position.
+		local
+			linear: LINEAR [EV_TREE_NODE]
+			finite: FINITE [EV_TREE_NODE]
+			cs: CURSOR_STRUCTURE [EV_TREE_NODE]
+			c: CURSOR
+			i: INTEGER
+		do
+			if
+				subtree_function /= void
+			then
+				subtree_function_call
+				linear := subtree_function.last_result
+				finite ?= linear
+				if finite /= Void then
+					index := finite.count
+				else
+					cs ?= linear
+					if cs /= Void then
+						c := cs.cursor
+					end
+					from
+						linear.start
+						i := 1
+					until
+						linear.after
+					loop
+						linear.forth
+						i := i + 1
+					end
+					if cs /= Void then
+						cs.go_to (c)
+					end
+				end
+			end
+		end
+	
+	forth is
+			-- Move to next position; if no next position,
+			-- ensure that `exhausted' will be true.
+		do
+			index := index + 1
+		end
 
 feature {NONE} -- Implementation
 
-	expand_agent: PROCEDURE [ANY, TUPLE [like Current]]
-		-- Agent used to create create child items.
+	last_subtree_function_call_time: INTEGER
+			-- Time in milliseconds at which `subtree_function' was last called.
 
-	expand_node is
+	fill_from_subtree_function is
+			-- Put elements from `subtree_function' into tree.
 		local
-			a_counter: INTEGER
-			temp_count: INTEGER
+			linear: LINEAR [EV_TREE_NODE]
+			cs: CURSOR_STRUCTURE [EV_TREE_NODE]
+			c: CURSOR
 		do
-			--| FIXME IEK Add wipe_out when bug is fixed.
-			--wipe_out
-			from
-				start
-			until
-				count = 1 or off
-			loop
-				remove
+			from until implementation.count = 1 loop
+				implementation.start
+				implementation.remove
 			end
-			expand_agent.call ([Current])
-			start
-			remove
+			subtree_function_call
+			linear := subtree_function.last_result
+			cs ?= linear
+			if cs /= Void then
+				c := cs.cursor
+			end
+			from
+				linear.start
+			until
+				linear.after
+			loop
+				implementation.extend (linear.item)
+				linear.forth
+			end
+			if cs /= Void then
+				cs.go_to (c)
+			end
+			implementation.start
+			implementation.remove
+		end
+
+	implementation: EV_TREE_NODE_I
+			-- Responsible for interaction with the native graphics toolkit.
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_TREE_NODE_IMP} implementation.make (Current)
+		end
+
+	time_msec: INTEGER is
+		external
+			"C (): unsigned long | %"load_pixmap.h%""
 		end
 
 end -- class EV_DYNAMIC_TREE_ITEM
@@ -82,3 +304,19 @@ end -- class EV_DYNAMIC_TREE_ITEM
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/06/07 17:28:04  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.4.4.2  2000/05/16 17:02:29  oconnor
+--| Revised in line with talks with mark.
+--| Now has subtree_function that returns LINEAR [EV_TREE_NODE]
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

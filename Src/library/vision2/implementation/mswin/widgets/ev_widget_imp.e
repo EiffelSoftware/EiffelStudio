@@ -10,7 +10,6 @@ indexing
 		% implemented directly by the heirs thanks to inheritance%
 		% from a heir of wel_window."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -99,11 +98,7 @@ feature -- Access
 	pointer_style: EV_CURSOR is
 			-- Pointer displayed when the pointing device is over `Current'.
 		do
-			if cursor_imp = Void then
-				Result := Void
-			else
-				Result ?= cursor_imp.interface
-			end
+			Result := cursor_pixmap
 		end
 
 	background_color: EV_COLOR is
@@ -126,15 +121,7 @@ feature -- Access
 			end
 		end
 
-	tooltip: STRING is
-			-- Text displayed when user moves pointing device over `Current'.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
-	top_level_window: EV_TITLED_WINDOW is
+	top_level_window: EV_WINDOW is
 			-- Top level window that contains `Current'.
 		do
 			Result ?= top_level_window_imp.interface
@@ -208,7 +195,8 @@ feature -- Access
 			--|See assertions on EV_WIDGET and EV_WIDGET_I
 			--|Needs to be changed so the user can never return a minimum height
 			--|Less than the height
-			Result := wel_width
+
+			Result := wel_width.max (minimum_width)
 		end
 
 	wel_height: INTEGER is
@@ -225,9 +213,9 @@ feature -- Access
 			--|See assertions on EV_WIDGET and EV_WIDGET_I
 			--|Needs to be changed so the user can never return a minimum height
 			--|Less than the height
-			Result := wel_height
-		end
 
+			Result := wel_height.max (minimum_height)
+		end
 
 	screen_x: INTEGER is
 			-- Horizontal offset of `Current' relative to screen
@@ -293,7 +281,7 @@ feature -- Status setting
 		do
 			show_window (wel_item, Wel_window_constants.Sw_show)
 			if parent_imp /= Void then
-				parent_imp.notify_change (1 + 2)
+				parent_imp.notify_change (1 + 2, Current)
 			end
 		end
 
@@ -302,7 +290,7 @@ feature -- Status setting
 		do
 			show_window (wel_item, Wel_window_constants.Sw_hide)
 			if parent_imp /= Void then
-				parent_imp.notify_change (1 + 2)
+				parent_imp.notify_change (1 + 2, Current)
 			end
 		end
 
@@ -362,22 +350,6 @@ feature -- Element change
 			end
 		end
 
-	set_tooltip (a_text: STRING) is
-			-- Set `tooltip' to `a_text'.
-	    do
-			check
-				to_be_implemented: False
-			end
-		end
-
-	remove_tooltip is
-			-- Set `tooltip' to `Void'.
-	    do
-			check
-				to_be_implemented: False
-			end
-		end
-
 feature -- Implementation
 
 	background_color_imp: EV_COLOR_IMP
@@ -426,7 +398,6 @@ feature {NONE} -- Implementation, mouse button events
 		local
 			pt: WEL_POINT
 		do
-			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0,
@@ -519,11 +490,13 @@ feature {NONE} -- Implementation, mouse move, enter and leave events
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse move.
 		local
-			wid: EV_WIDGET
 			pt: WEL_POINT
 		do
 			pt := client_to_screen (x_pos, y_pos)
-			pnd_motion (x_pos, y_pos, pt.x, pt.y)
+			if (is_transport_enabled and mode_is_drag_and_drop) or
+				mode_is_pick_and_drop then
+				pnd_motion (x_pos, y_pos, pt.x, pt.y)
+			end
 			if cursor_on_widget.item /= Current then
 				if cursor_on_widget.item /= Void then
 					cursor_on_widget.item.on_mouse_leave
@@ -594,7 +567,14 @@ feature {NONE} -- Implementation, focus event
 		local
 			notebooks: ARRAY[EV_NOTEBOOK_IMP]
 			counter: INTEGER
+			env: EV_ENVIRONMENT
+			app: EV_APPLICATION
+			app_imp: EV_APPLICATION_IMP
 		do
+			create env
+			app := env.application
+			app_imp ?= app.implementation
+			app_imp.set_window_with_focus (top_level_window)
 				focus_on_widget.put (Current)
 				interface.focus_in_actions.call ([])
 				notebooks := notebook_parent
@@ -637,9 +617,17 @@ feature {NONE} -- Implementation, cursor of the widget
 	on_set_cursor (hit_code: INTEGER) is
 			-- Called when a `Wm_setcursor' message is recieved.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
+		local
+			wel_cursor: WEL_CURSOR
+			cursor_imp: EV_PIXMAP_IMP_STATE
 		do
-			if cursor_imp /= Void then
-				cursor_imp.set
+			if cursor_pixmap /= Void then
+				cursor_imp ?= cursor_pixmap.implementation
+				wel_cursor := cursor_imp.cursor
+				if wel_cursor = Void then	
+					wel_cursor := cursor_imp.build_cursor
+				end
+				wel_cursor.set
 				set_message_return_value (1)
 				disable_default_processing
 			end
@@ -743,11 +731,6 @@ feature -- Deferred features
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
 			-- Is the control of handle `hwnd_control'
 			-- located inside the current window?
-		deferred
-		end
-
-	top_level_window_imp: EV_WINDOW_IMP is
-			-- Top level window that contains `Current'.
 		deferred
 		end
 
@@ -914,10 +897,55 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.76  2000/06/07 17:27:58  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.75  2000/05/12 19:28:33  pichery
 --| Protected `wel_destroy' with test on `exists'
 --|
 --| Revision 1.74  2000/05/03 20:13:24  brendel
+--|
+--| Revision 1.49.4.16  2000/06/05 21:08:03  manus
+--| Updated call to `notify_parent' because it requires now an extra parameter which is
+--| tells the parent which children did request the change. Usefull in case of NOTEBOOK
+--| for performance reasons (See EV_NOTEBOOK_IMP log for more details)
+--|
+--| Revision 1.49.4.15  2000/05/30 16:46:53  rogers
+--| Removed debugging io.putstrings from on_key_up and on_key_down.
+--|
+--| Revision 1.49.4.14  2000/05/30 16:20:33  rogers
+--| Removed unreferenced local variables.
+--|
+--| Revision 1.49.4.13  2000/05/22 18:58:41  rogers
+--| changed top_level_window: EV_TITLED_WINDOW to EV_WINDOW to fix bug in
+--| creation of EV_WINDOW with the setting of the focus to that window.
+--|
+--| Revision 1.49.4.12  2000/05/20 00:25:03  rogers
+--| Removed debuggging io.putstrings.
+--|
+--| Revision 1.49.4.10  2000/05/15 21:59:51  rogers
+--| On_mouse_move now only calls pnd_motion if the transport is enabled
+--| unless `Current' has drag and drop.
+--|
+--| Revision 1.49.4.9  2000/05/10 23:10:01  king
+--| Integrated tooltipable changes
+--|
+--| Revision 1.49.4.8  2000/05/09 18:40:03  brendel
+--| Whoops! Once again, we need HEIGHT->INTEGER and WIDTH->INTEGER!!!
+--|
+--| Revision 1.49.4.7  2000/05/08 22:13:17  brendel
+--| Changed width and height again while waiting for a size specification.
+--|
+--| Revision 1.49.4.6  2000/05/05 22:30:39  pichery
+--| Removed useless comment
+--|
+--| Revision 1.49.4.5  2000/05/04 17:34:07  brendel
+--| Changed `width' and `height' back. Size can be less than minimum size.
+--|
+--| Revision 1.49.4.4  2000/05/04 04:25:39  pichery
+--| Adaptation to the new EV_CURSOR class.
+--|
+--| Revision 1.49.4.3  2000/05/03 22:35:01  brendel
 --| Fixed resize_actions.
 --|
 --| Revision 1.73  2000/05/03 16:57:04  rogers

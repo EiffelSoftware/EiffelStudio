@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 				v_imp_not_void: v /= Void
 			end
 			Precursor (v, i)
-			v_imp.set_parent (interface)
+			v_imp.set_parent_imp (Current)
 			insert_item (v_imp, i)
 			v_imp.on_parented
 			new_item_actions.call ([v_imp.interface])
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 			v_imp.on_orphaned
 			remove_item_actions.call ([v_imp.interface])
 			remove_item (v_imp)
-			v_imp.set_parent (Void)
+			v_imp.set_parent_imp (Void)
 			Precursor (i)
 		end
 
@@ -134,6 +134,15 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/06/07 17:27:57  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.16.4.2  2000/05/18 23:05:20  rogers
+--| Insert_i_th and remove_i_th now call set_parent_imp instead of set_parent.
+--|
+--| Revision 1.16.4.1  2000/05/03 19:09:17  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.29  2000/05/02 22:56:23  rogers
 --| Removed FIXME NOT_REVIEWED. Comments. Formatting.
 --|

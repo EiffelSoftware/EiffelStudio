@@ -13,7 +13,7 @@ inherit
 			interface
 		end
 
-	EV_SELECT_MENU_ITEM_IMP
+	EV_MENU_ITEM_IMP
 		redefine
 			make,
 			interface
@@ -33,7 +33,21 @@ feature {NONE} -- Initialization
 			C.gtk_check_menu_item_set_active (c_object, False)
 		end
 
+feature -- Status report
+
+	is_selected: BOOLEAN is
+			-- Is this menu item checked?
+		do
+			Result := C.gtk_check_menu_item_struct_active (c_object).to_boolean
+		end
+
 feature -- Status setting
+
+	enable_select is
+			-- Select this menu item.
+		do
+			C.gtk_check_menu_item_set_active (c_object, True)
+		end
 
 	disable_select is
 			-- Deselect this menu item.
@@ -74,6 +88,15 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/06/07 17:27:29  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.13.4.2  2000/05/09 21:46:45  king
+--| Intergrated selectable/deselectable
+--|
+--| Revision 1.13.4.1  2000/05/03 19:08:35  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.18  2000/02/25 01:57:00  brendel
 --| Removed imp of `enable_select' and `selected' since it now inherits
 --| EV_SELECT_MENU_ITEM_IMP.

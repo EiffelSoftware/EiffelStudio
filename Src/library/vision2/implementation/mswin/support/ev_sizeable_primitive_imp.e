@@ -31,15 +31,13 @@ feature -- Access
 			-- Make `value' the new `minimum_width'.
 			-- Should check if the user didn't set the minimum width
 			-- before to set the new value.
-		local
-			changed: BOOLEAN
 		do
 			if not is_minwidth_locked then
 				if internal_minimum_width /= value then
 					internal_minimum_width := value
 					if managed then 
 						if parent_imp /= Void then
-							parent_imp.notify_change (Nc_minwidth)
+							parent_imp.notify_change (Nc_minwidth, Current)
 						end
 					else
 						wel_move_and_resize (x_position, y_position, width.max (value), height, True)
@@ -52,15 +50,13 @@ feature -- Access
 			-- Make `value' the new `minimum_height'.
 			-- Should check if the user didn't set the minimum width
 			-- before to set the new value.
-		local
-			changed: BOOLEAN
 		do
 			if not is_minheight_locked then
 				if internal_minimum_height /= value then
 					internal_minimum_height := value
 					if managed then 
 						if parent_imp /= Void then
-							parent_imp.notify_change (Nc_minheight)
+							parent_imp.notify_change (Nc_minheight, Current)
 						end
 					else
 						wel_move_and_resize (x_position, y_position, width, height.max (value), True)
@@ -77,7 +73,6 @@ feature -- Access
 		local
 			w_cd, h_cd: BOOLEAN
 			w_ok, h_ok: BOOLEAN
-			w_ns, h_ns: BOOLEAN
 		do
  			w_ok := not is_minwidth_locked
 			h_ok := not is_minheight_locked
@@ -90,11 +85,11 @@ feature -- Access
 				if managed then
 					if parent_imp /= Void then
 						if w_cd and h_cd then
-							parent_imp.notify_change (Nc_minsize)
+							parent_imp.notify_change (Nc_minsize, Current)
 						elseif w_cd then
-							parent_imp.notify_change (Nc_minwidth)
+							parent_imp.notify_change (Nc_minwidth, Current)
 						elseif h_cd then
-							parent_imp.notify_change (Nc_minheight)
+							parent_imp.notify_change (Nc_minheight, Current)
 						end
 					end
 				else
@@ -106,7 +101,7 @@ feature -- Access
 					internal_minimum_width := mw
 					if managed then
 						if parent_imp /= Void then
-							parent_imp.notify_change (Nc_minwidth)
+							parent_imp.notify_change (Nc_minwidth, Current)
 						end
 					else
 						wel_move_and_resize (x_position, y_position, width.max (mw), height, True)
@@ -118,7 +113,7 @@ feature -- Access
 					internal_minimum_height := mh
 					if managed then
 						if parent_imp /= Void then
-							parent_imp.notify_change (Nc_minheight)
+							parent_imp.notify_change (Nc_minheight, Current)
 						end
 					else
 						wel_move_and_resize (x_position, y_position, width, height.max (mh), True)
@@ -159,6 +154,22 @@ end -- EV_SIZEABLE_PRIMITIVE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/06/07 17:27:57  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.2.4.3  2000/06/06 00:08:39  manus
+--| `compute_minimum_size' will compute something only if a window is visible, and will just
+--| notify the parent otherwise.
+--| New signature for `notify_change' that takes `child' which request the change as 2 parameter.
+--| The rational is that it is used only for EV_NOTEBOOK_IMP where we do not want to resize a
+--| page if it is not visible. This largely improves the resizing performance.
+--|
+--| Revision 1.2.4.2  2000/05/27 01:54:23  pichery
+--| Cosmetics
+--|
+--| Revision 1.2.4.1  2000/05/03 19:09:18  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.2  2000/03/14 03:02:54  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

@@ -22,24 +22,19 @@ inherit
 			-- Inheriting from widget,
 			-- because items are widget in gtk
 		rename
-			parent_imp as widget_parent_imp,
 			parent_set as widget_parent_set,
 			interface as widget_interface,
 			parent as widget_parent,
 			initialize as widget_initialize
 		export {NONE}
-			widget_parent_imp,
 			widget_parent_set,
 			widget_interface,
 			widget_parent,
 			widget_initialize
 		undefine
 			has_parent
-		end
-
-	EV_PICK_AND_DROPABLE_IMP
 		redefine
-			interface
+			button_press_switch
 		end
 
 	EV_PIXMAPABLE_IMP
@@ -58,14 +53,41 @@ feature {NONE} -- Initialization
 
 			-- FIXME this probably should call precursor {EV_WIDGET_IMP}
 			set_default_colors
-			connect_signal_to_actions (
-				"button-press-event",
-				interface.pointer_button_press_actions,
-				default_translate
+				--| "button-press-event" is a special case, see below.
+			interface.pointer_button_press_actions.not_empty_actions.extend (
+				~connect_button_press_switch
 			)
+			interface.pointer_double_press_actions.not_empty_actions.extend (
+				~connect_button_press_switch
+			)
+			if not interface.pointer_button_press_actions.empty or
+				not interface.pointer_double_press_actions.empty then
+				connect_button_press_switch
+			end
 			is_initialized := True
 		end
 
+	button_press_switch (
+			a_type: INTEGER;
+			a_x, a_y, a_button: INTEGER;
+			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+			a_screen_x, a_screen_y: INTEGER)
+		is
+			-- Call pointer_button_press_actions or pointer_double_press_actions
+			-- depending on event type in first position of `event_data'.
+		local
+			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
+				INTEGER, INTEGER]
+		do
+			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
+				a_screen_x, a_screen_y]
+			if a_type = C.GDK_BUTTON_PRESS_ENUM then
+				interface.pointer_button_press_actions.call (t)
+			else -- a_type = C.GDK_2BUTTON_PRESS_ENUM
+				interface.pointer_double_press_actions.call (t)
+			end
+        end
+		
 feature -- Access
 
 	parent_widget: EV_WIDGET is
@@ -147,6 +169,21 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/06/07 17:27:29  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.17.4.4  2000/06/05 23:47:40  oconnor
+--| support double click
+--|
+--| Revision 1.17.4.3  2000/06/01 22:02:10  king
+--| Removed direct inheritence from EV_PND as we have it from EV_WIDGET_IMP
+--|
+--| Revision 1.17.4.2  2000/05/13 00:04:09  king
+--| Converted to new EV_CONTAINABLE class
+--|
+--| Revision 1.17.4.1  2000/05/03 19:08:35  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.29  2000/05/02 18:55:19  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

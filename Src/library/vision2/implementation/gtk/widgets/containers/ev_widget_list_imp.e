@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 				v_imp_not_void: v_imp /= Void
 			end
 			C.gtk_container_add (list_widget, v_imp.c_object)
-			if i <= count then
+			if i < count then
 				gtk_reorder_child (list_widget, v_imp.c_object, i - 1)
 			end
 			new_item_actions.call ([v])
@@ -97,6 +97,15 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/06/07 17:27:38  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.17.2.2  2000/05/04 19:00:56  brendel
+--| Correction.
+--|
+--| Revision 1.17.2.1  2000/05/03 19:08:48  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.17  2000/05/02 18:55:28  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

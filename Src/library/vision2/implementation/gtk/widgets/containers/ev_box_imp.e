@@ -25,24 +25,33 @@ feature -- Access
 	is_homogeneous: BOOLEAN is
 			-- Are all children restriced to be the same size.
 		do
-			Result := C.c_gtk_box_homogeneous (c_object) /= 0
+			Result := C.gtk_box_struct_homogeneous (c_object) /= 0
 		end
 
 	border_width: INTEGER is
 			-- Width of border around container in pixels.
 		do
-			Result := C.c_gtk_container_border_width (c_object)
+			Result := C.gtk_container_struct_border_width (
+					C.gtk_box_struct_container (c_object)
+				)
+		end
+
+	gtk_container_struct_border_width (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkContainer): EIF_INTEGER"
+		alias
+			"border_width"
 		end
 
 	padding: INTEGER is
 			-- Space between children in pixels.		
 		do
-			Result := C.c_gtk_box_spacing (c_object)
+			Result := C.gtk_box_struct_spacing (c_object)
 		end
 	
 feature -- Status report
 
-	is_child_expanded (child: EV_WIDGET): BOOLEAN is
+	is_item_expanded (child: EV_WIDGET): BOOLEAN is
 			-- Is `child' expanded to occupy avalible spare space.
 		local
 			fill: INTEGER
@@ -106,45 +115,6 @@ feature -- Status settings
 			)
 		end
 
-feature {EV_CONTAINER_IMP, EV_WIDGET_IMP} -- Implementation
-
--- FIXME probably obsolete (Sam 19991215)
-	child_packing_changed (the_child: EV_WIDGET_IMP) is
-			-- changed the settings of his child `the_child'.
-			-- Redefined because there is an `is_child_expandable' option.
-		local
-			child_interface: EV_WIDGET
-		do
-			child_interface ?= the_child.interface
-	--		inspect
-	--			the_child.resize_type
-	--		when 0 then
-				-- 0 : no horizontal nor vertical resizing, the widget moves
---				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, is_child_expandable(child_interface), False)
---					-- To forbid vertical resizing
---				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, False)
---					-- To forbid horizontal resizing
-	--		when 1 then
---				-- 1 : only the width changes
---				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, is_child_expandable(child_interface), False)
---					-- To forbid vertical resizing
---				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, True)
---					-- To allow horizontal resizing
-	--		when 2 then
---				-- 2 : only the height changes
---				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, is_child_expandable(child_interface), True)
---					-- To allow vertical resizing
---				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, False)
---					-- To forbid horizontal resizing
-	--		when 3 then
---				-- 3 : both width and height change
---				c_gtk_box_set_child_options (the_child.vbox_widget, the_child.hbox_widget, is_child_expandable(child_interface), True)
---					-- To allow vertical resizing
---				c_gtk_box_set_child_options (the_child.hbox_widget, the_child.widget, True, True)
---					-- To allow horizontal resizing
-	--		end
-		end
-		
 feature {EV_ANY_I} -- Implementation
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
@@ -180,6 +150,18 @@ end -- class EV_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/06/07 17:27:37  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.21.4.3  2000/05/25 00:35:25  king
+--| Implemented external calls in Eiffel
+--|
+--| Revision 1.21.4.2  2000/05/15 22:53:17  king
+--| set_child_expand->set_item_expand
+--|
+--| Revision 1.21.4.1  2000/05/03 19:08:47  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.24  2000/04/12 17:39:48  oconnor
 --| Changed BOOLEAN whos address was passed to GTK to INTEGER.
 --| gboolean is int whereas EIF_BOOLEAN is char, this caused the stack to

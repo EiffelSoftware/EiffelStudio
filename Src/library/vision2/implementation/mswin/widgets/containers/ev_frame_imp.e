@@ -123,7 +123,7 @@ feature -- Element change
 			text_width := t.integer_item (1)
 			text_height := t.integer_item (2)
 			Precursor (a_text)
-			invalidate
+			notify_change (2 + 1, Current)
 		end
 
 	remove_text is
@@ -187,11 +187,12 @@ feature {NONE} -- Implementation for automatic size compute.
 				minwidth := item_imp.minimum_width
 			end
 			minwidth := minwidth + client_x + Border_width
+			minwidth := minwidth.max (text_width + 2 * Text_padding)
 			internal_set_minimum_width (minwidth)
 		end
 
 	compute_minimum_height is
-			-- Recompute the minimum_width of the object.
+			-- Recompute the minimum_height of `Current'.
 		local
 			minheight: INTEGER
 		do
@@ -199,7 +200,6 @@ feature {NONE} -- Implementation for automatic size compute.
 				minheight := item_imp.minimum_height
 			end
 			minheight := minheight + client_y + Border_width
-			minheight := minheight.max (text_width + 2 * Text_padding)
 			internal_set_minimum_height (minheight)
 		end
 
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation for automatic size compute.
 			end
 			minwidth := minwidth + client_x + Border_width
 			minheight := minheight + client_y + Border_width
-			minheight := minheight.max (text_width + 2 * Text_padding)
+			minwidth := minwidth.max (text_width + 2 * Text_padding)
 			internal_set_minimum_size (minwidth, minheight)
 		end
 
@@ -249,7 +249,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 	Text_padding: INTEGER is 4
-			-- Number of pixels left and right to `text'.
+			-- Number of pixels left and right of `text'.
 
 	text_height: INTEGER
 			-- Height of `text' displayed at top.
@@ -270,6 +270,12 @@ feature {NONE} -- WEL Implementation
 			text_pos: INTEGER
 			font_imp: EV_FONT_IMP
 		do
+				-- Cache value of `wel_width' and `wel_height' for
+				-- faster access
+			cur_width := wel_width
+			cur_height := wel_height
+
+				-- Determine the Edge style of the frame
 			inspect frame_style
 				when Ev_frame_lowered then wel_style := Bdr_sunkenouter
 				when Ev_frame_raised then wel_style := Bdr_raisedouter
@@ -324,7 +330,7 @@ end -- class EV_FRAME_IMP
 
 --|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
@@ -343,6 +349,39 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/06/07 17:27:59  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.20.8.7  2000/06/05 21:08:04  manus
+--| Updated call to `notify_parent' because it requires now an extra parameter which is
+--| tells the parent which children did request the change. Usefull in case of NOTEBOOK
+--| for performance reasons (See EV_NOTEBOOK_IMP log for more details)
+--|
+--| Revision 1.20.8.6  2000/06/02 16:19:14  rogers
+--| FIxed bug in computation of minimum sizes for `Current'. The length of the
+--| text was previously being used as a minimum height for `Current' where it
+--| should have affected the minimam width.
+--|
+--| Revision 1.20.8.5  2000/05/30 22:02:26  rogers
+--| Minor comment change.
+--|
+--| Revision 1.20.8.4  2000/05/24 23:12:22  rogers
+--| Set_text now calls notify_change (2 + 1) instead of invalidate. This
+--| fixes the bug that was visible in EV_TEST, with the scroll bar seemingly
+--| unable to scroll to the bottom of the widgets page. Basically setting a
+--| text, did not cause the frame to recompute it's dimensions previously.
+--|
+--| Revision 1.20.8.3  2000/05/04 18:49:11  brendel
+--| Corrected misake due to overenthusiastic copying and pasting.
+--|
+--| Revision 1.20.8.2  2000/05/03 22:15:38  pichery
+--| - Cosmetics / Optimization with local variables
+--| - Replaced calls to `width' to calls to `wel_width'
+--|   and same for `height'.
+--|
+--| Revision 1.20.8.1  2000/05/03 19:09:29  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.35  2000/05/03 16:18:16  rogers
 --| Comments, formatting.
 --|

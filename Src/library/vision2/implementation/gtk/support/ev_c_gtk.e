@@ -145,23 +145,8 @@ feature -- Externals
 	c_gtk_widget_set_all_events (a_w: POINTER) is
 		 external " C | %"gtk_eiffel.h%"" end
 
-	c_gtk_window_x (a_w: POINTER): INTEGER is 
-		external " C | %"gtk_eiffel.h%"" end
-
-	c_gtk_window_y (a_w: POINTER): INTEGER is 
-		external " C | %"gtk_eiffel.h%"" end
-
 	c_gtk_window_set_modal (a_window: POINTER; a_modal: BOOLEAN) is 
 		external " C | %"gtk_eiffel.h%"" end
-
-	c_gtk_window_title (a_window: POINTER): POINTER is 
-		external " C | %"gtk_eiffel.h%"" end
-
-   c_gtk_window_maximum_height (a_w: POINTER): INTEGER is
-        external " C | %"gtk_eiffel.h%"" end
-
-    c_gtk_window_maximum_width (a_w: POINTER): INTEGER is
-        external " C | %"gtk_eiffel.h%"" end
 
 end -- class EV_C_GTK
 

@@ -25,48 +25,18 @@ inherit
 			interface
 		end
 
+	EV_DESELECTABLE_I
+		redefine
+			interface,
+			is_selectable
+		end
+
 feature -- Status report
 
-	is_selected: BOOLEAN is
-			-- Is the item selected
-		require
-			has_parent: parent /= Void
-		deferred
-		end
-
-feature -- Status setting
-
-	enable_select is
-			-- Select Current.
-			-- Must be in a multi column list.
-		require
-			has_parent: parent /= Void
-		deferred
-		ensure
-			selected: is_selected
-		end
-
-	disable_select is
-			-- Deselect Current.
-			-- Must be in a multi column list.
-		require
-			has_parent: parent /= Void
-		deferred
-		ensure
-			not_selected: not is_selected
-		end
-		
-	toggle is
-			-- Change the state of selection of the item.
-			-- Must be in a multi column list.
-		require
-			has_parent: parent /= Void
+	is_selectable: BOOLEAN is
+			-- May the tree item be selected
 		do
-			if is_selected then
-				disable_select
-			else
-				enable_select
-			end
+			Result := parent /= Void
 		end
 
 feature -- Element Change
@@ -74,8 +44,7 @@ feature -- Element Change
 	set_pixmap (a_pix: EV_PIXMAP) is
 			-- Set the rows `pixmap' to `a_pix'.
 		do
-			create pixmap
-			pixmap.copy (a_pix)
+			pixmap := interface.ev_clone (a_pix)
 			update
 		end
 
@@ -155,6 +124,21 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/06/07 17:27:41  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.25.4.4  2000/05/09 23:22:41  king
+--| Redefined is_selectable
+--|
+--| Revision 1.25.4.3  2000/05/09 23:12:26  king
+--| Made mcl inheirt from deselectable
+--|
+--| Revision 1.25.4.2  2000/05/05 22:28:38  pichery
+--| Replaced (Create + Copy) with `ev_clone'
+--|
+--| Revision 1.25.4.1  2000/05/03 19:08:54  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.38  2000/03/29 01:42:33  king
 --| Redefined pixmapping functions to call update
 --|
@@ -204,7 +188,8 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --| added --| FIXME Not for release
 --|
 --| Revision 1.25.6.2  1999/12/17 19:06:48  rogers
---| redefined interface to be a a more refined type. EV_PICK_AND_DROPABLE_I replaces EV_PND_SOURCE and EV_PND_TARGET.
+--| redefined interface to be a a more refined type. EV_PICK_AND_DROPABLE_I
+--|  replaces EV_PND_SOURCE and EV_PND_TARGET.
 --|
 --| Revision 1.25.6.1  1999/11/24 17:30:02  oconnor
 --| merged with DEVEL branch

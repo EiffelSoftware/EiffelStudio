@@ -36,20 +36,6 @@ feature -- Access
 
 feature -- Contract support
 
-	parent_void (v: like item): BOOLEAN is
-			-- Is `v' not in an Eiffel Vision container yet?
-		do
-			Result := v.parent = Void
-		end
-
-	is_parent_of (v: like item): BOOLEAN is
-			-- Is `Current' parent of `v'.
-		do
-			Result := v.parent = Current
-		end
-
-feature -- Contract support
-
 	parent_of_items_is_current: BOOLEAN is
 			-- Do all items have parent `Current'?
 		local
@@ -166,6 +152,15 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/06/07 17:28:08  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.15.2.2  2000/05/13 00:04:17  king
+--| Converted to new EV_CONTAINABLE class
+--|
+--| Revision 1.15.2.1  2000/05/03 19:10:05  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.15  2000/04/19 01:36:39  pichery
 --| Modified `lists_equal' to take into account
 --| ARRAYED_LIST.

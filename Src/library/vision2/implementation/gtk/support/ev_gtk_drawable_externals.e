@@ -11,18 +11,6 @@ class
 
 feature {NONE} -- GTK C functions for general drawables
 
---	gdk_draw_line
---	gdk_draw_rectangle
---	gdk_draw_arc
---	gdk_draw_polygon
---	gdk_draw_string
---	gdk_draw_text
---	gdk_draw_bitmap	
---	gdk_draw_pixmap
---	gdk_draw_image
---	gdk_draw_segments
---	gdk_draw_point (drawable: POINTER, 
-
 end -- class EV_GTK_DRAWABLE_EXTERNALS
 
 --!-----------------------------------------------------------------------------
@@ -46,6 +34,15 @@ end -- class EV_GTK_DRAWABLE_EXTERNALS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/07 17:27:34  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.6.4.2  2000/05/25 00:32:12  king
+--| Class should be removed
+--|
+--| Revision 1.6.4.1  2000/05/03 19:08:43  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

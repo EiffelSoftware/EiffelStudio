@@ -38,40 +38,25 @@ feature -- Initialization
    			-- to satisfy the `is_initialized' invariant.
    			-- Descendants may redefine initialize to perform
    			-- additional setup tasks.
-		local
-			default_pixmaps: EV_DEFAULT_PIXMAPS
 		do
-			create default_pixmaps
 			set_icon_pixmap (default_pixmaps.Default_window_icon)
+			accelerators.add_actions.extend
+			(implementation~connect_accelerator (?))
+			accelerators.remove_actions.extend
+			(implementation~disconnect_accelerator (?))
 			Precursor
 		end
 
 
 feature -- Access
 
-	--| FIXME Segmentation violation on both platforms when extending this
-	--| list when calling rout_obj_call_procedure. Run-time bug?
-	--Disabled pending investigation of possible compiler bug.
-	--accelerators: ACTIVE_LIST [EV_ACCELERATOR]
-			-- Key combination shortcuts associated with this window.
 		--| FIXME The same key combination can be added to this list.
 		--| GTK takes only the latest one set. Object-comparison is turned on
 		--| for this list, so that the user can check whether a specific
 		--| accelerator is already installed using `has'.
 
-	connect_accelerator (an_accel: EV_ACCELERATOR) is
-			-- Associate `an_accel' with this window.
-			-- May be replaced by ACTIVE_LIST [EV_ACCELERATOR].
-		do
-			implementation.connect_accelerator (an_accel)
-		end
-
-	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
-			-- Remove `an_accel' from this window.
-			-- May be replaced by ACTIVE_LIST [EV_ACCELERATOR].
-		do
-			implementation.disconnect_accelerator (an_accel)
-		end
+	accelerators: EV_ACCELERATOR_LIST
+		-- Key combination shortcuts associated with this window.
 
 	icon_name: STRING is
 			-- Alternative name, displayed when window is minimised.
@@ -187,16 +172,12 @@ feature {NONE} -- Implementation
 				-- See `{EV_ANY}.create_action_sequences'.
 		do   
 			Precursor
-		--| FIXME See top.
-		--|	create accelerators
-		--|	accelerators.compare_objects
-		--|	accelerators.add_actions.extend (implementation~connect_accelerator (?))
-		--|	accelerators.remove_actions.extend
-		--|		(implementation~disconnect_accelerator (?))
+			create accelerators
+			accelerators.compare_objects
 		end
 
---|invariant
---|	accelerators_not_void: accelerators /= Void
+invariant
+	accelerators_not_void: is_useable implies accelerators /= Void
 		
 end -- class EV_TITLED_WINDOW
 
@@ -221,6 +202,24 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/06/07 17:28:12  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.16.2.4  2000/05/25 00:43:20  king
+--| Tidied up code, reinstated accelerators invariant
+--|
+--| Revision 1.16.2.3  2000/05/19 22:01:43  rogers
+--| Removed connect_accelerator and disconnect_accelerator. Added accelerators
+--| which is of type EV_ACCELERATOR_LIST. Modifying this list automatically
+--| connects and disconnects the accelerators from the window.
+--|
+--| Revision 1.16.2.2  2000/05/04 04:17:58  pichery
+--| Removed local variable `default_pixmap'. Is it
+--| now a once function.
+--|
+--| Revision 1.16.2.1  2000/05/03 19:10:08  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.16  2000/05/03 00:24:36  pichery
 --| Added default window pixmap loading.
 --|

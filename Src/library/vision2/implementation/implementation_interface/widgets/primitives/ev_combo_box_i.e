@@ -15,10 +15,7 @@ inherit
 			interface
 		end
 
-	EV_LIST_I
-		export
-			{NONE} enable_multiple_selection, multiple_selection_enabled
-			{NONE} selected_items
+	EV_LIST_ITEM_LIST_I
 		undefine
 			set_default_colors
 		redefine
@@ -34,24 +31,6 @@ feature -- Access
 		deferred
 		end
 
-feature -- Status Report
-
-	multiple_selection_enabled: BOOLEAN is
-			-- Combo box does not allow multiple selection
-		do
-			Result := False
-		end
-
-feature -- Status setting
-
-	disable_multiple_selection is
-			-- Do nothing, combo box is always single selection
-		do
-			check
-				Inapplicable: True
-			end
-		end
-
 feature -- Element change
 
 	set_extended_height (value: INTEGER) is
@@ -59,16 +38,6 @@ feature -- Element change
 		require
 			valid_value: value >= 0
 		deferred
-		end
-
-feature {NONE} -- Inapplicable
-
-	enable_multiple_selection is
-			-- Not allowed for a combo box
-		do
-			check
-				Inapplicable: False
-			end
 		end
 
 feature {EV_COMBO_BOX_I} -- Implementation
@@ -98,6 +67,15 @@ end -- class EV_COMBO_BOX_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/06/07 17:27:50  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.22.4.2  2000/05/10 18:50:37  king
+--| Integrated ev_list_item_list
+--|
+--| Revision 1.22.4.1  2000/05/03 19:09:06  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.26  2000/04/20 21:05:41  king
 --| Removed redundant make_with_text
 --|

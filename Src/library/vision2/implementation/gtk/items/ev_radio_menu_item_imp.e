@@ -13,8 +13,9 @@ inherit
 			interface
 		end
 
-	EV_SELECT_MENU_ITEM_IMP
+	EV_MENU_ITEM_IMP
 		redefine
+			on_activate,
 			interface,
 			make
 		end
@@ -38,7 +39,30 @@ feature {NONE} -- Initialization
 			C.gtk_check_menu_item_set_active (c_object, True)
 		end
 
+feature -- Status report
+
+	is_selected: BOOLEAN is
+			-- Is this menu item checked?
+		do
+			Result := C.gtk_check_menu_item_struct_active (c_object).to_boolean
+		end
+
+feature -- Status setting
+
+	enable_select is
+			-- Select this menu item.
+		do
+			C.gtk_check_menu_item_set_active (c_object, True)
+		end
+
 feature {EV_ANY_I} -- Implementation
+
+	on_activate is
+		do
+			if is_selected then
+				Precursor
+			end
+		end
 
 	set_radio_group (a_gslist: POINTER) is
 			-- Make current a member of `a_gslist' radio group.
@@ -76,6 +100,18 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/06/07 17:27:29  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.11.4.3  2000/06/02 21:05:27  king
+--| Added select_actions bug fix
+--|
+--| Revision 1.11.4.2  2000/05/09 21:46:45  king
+--| Intergrated selectable/deselectable
+--|
+--| Revision 1.11.4.1  2000/05/03 19:08:36  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.19  2000/05/02 18:55:19  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

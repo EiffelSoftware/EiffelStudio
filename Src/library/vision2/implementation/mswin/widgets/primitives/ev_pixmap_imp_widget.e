@@ -228,8 +228,6 @@ feature -- Clearing and drawing operations
 	clear_rectangle (x1, y1, x2, y2: INTEGER) is
 			-- Erase rectangle (`x1, `y1) - (`x2', `y2') 
 			-- with `background_color'.
-		local
-			a_rect: WEL_RECT
 		do
 			Precursor (x1, y1, x2, y2)
 			update_display
@@ -712,7 +710,7 @@ feature {NONE} -- Private Implementation
  		end
 
  	interface: EV_PIXMAP
- 			-- Interface for the bridge pattern.
+			-- Interface for the bridge pattern.
 
 feature {NONE} -- Feature that should be directly implemented by externals
 
@@ -786,6 +784,18 @@ end -- class EV_PIXMAP_IMP_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/06/07 17:28:02  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.6.2.5  2000/05/30 16:26:49  rogers
+--| Removed unreferenced local variables.
+--|
+--| Revision 1.6.2.4  2000/05/04 04:23:07  pichery
+--| Adapted inheritance clause since
+--| EV_PIXMAP_IMP_STATE now
+--| define `interface'.
+--|
+--| Revision 1.6.2.3  2000/05/03 22:35:06  brendel
 --| Revision 1.7  2000/05/03 20:13:29  brendel
 --| Fixed resize_actions.
 --|

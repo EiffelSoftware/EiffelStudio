@@ -13,7 +13,7 @@ inherit
 			interface
 		end
 
-	EV_TOOL_BAR_SELECT_BUTTON_IMP
+	EV_TOOL_BAR_BUTTON_IMP
 		redefine
 			interface
 		end
@@ -32,6 +32,20 @@ feature -- Status setting
 			end
 		end
 
+	disable_select is
+			-- Deselect `Current'
+		do
+			is_selected := False
+			if parent_imp /= Void then
+				parent_imp.uncheck_button (id)
+			end
+		end
+
+feature -- Status report
+	
+	is_selected: BOOLEAN
+			-- Is `Current selected'?
+	
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_TOGGLE_BUTTON
@@ -59,6 +73,15 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/06/07 17:27:52  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.5.2.2  2000/05/09 21:23:41  king
+--| Implemented to fit in with new selectable abstract class
+--|
+--| Revision 1.5.2.1  2000/05/03 19:09:11  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.18  2000/04/26 22:19:37  rogers
 --| Removed type as now redundent.
 --|

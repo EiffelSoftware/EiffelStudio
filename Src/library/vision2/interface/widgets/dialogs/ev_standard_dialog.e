@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 	implementation: EV_STANDARD_DIALOG_I
 
 invariant
-	title_not_void: title /= Void
+	title_not_void: is_useable implies title /= Void
 
 end -- class EV_STANDARD_DIALOG
 
@@ -128,6 +128,15 @@ end -- class EV_STANDARD_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/06/07 17:28:11  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.7.4.2  2000/06/05 23:48:59  oconnor
+--| added is useable guard to title_not_void invariant
+--|
+--| Revision 1.7.4.1  2000/05/03 19:10:06  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.11  2000/03/21 23:07:28  brendel
 --| Added make_with_title for consistency with EV_WINDOW.
 --|

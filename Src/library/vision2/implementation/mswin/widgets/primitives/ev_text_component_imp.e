@@ -48,6 +48,25 @@ feature {NONE} -- Initialization
 				)
 		end
 
+	total_vertical_padding: INTEGER is 8
+		-- Number of pixels to be added to height of font used internally,
+		-- to give us the minimum height of `Current'.
+
+	internal_font_height: INTEGER is
+			-- `Result' is height of font used by `Current'.
+		local
+			screen_dc: WEL_SCREEN_DC
+			extent: WEL_SIZE
+		do
+			create screen_dc
+			screen_dc.get
+			screen_dc.select_font (create {WEL_DEFAULT_GUI_FONT}.make)
+			extent := screen_dc.string_size ("X")
+			screen_dc.unselect_font 
+			screen_dc.quick_release
+			Result := extent.height
+		end
+
 feature -- Status report
 
 	is_editable: BOOLEAN is
@@ -298,6 +317,20 @@ end -- class EV_TEXT_COMPONENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.25.2.3  2000/05/30 16:23:40  rogers
+--| Removed unreferenced local variables.
+--|
+--| Revision 1.25.2.2  2000/05/03 22:04:11  rogers
+--| Adedd total_vertical_padding and internal_font_height.
+--| Fixed set_default_minimum_size height. Removed old command
+--| association.
+--|
+--| Revision 1.25.2.1  2000/05/03 19:09:51  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.31  2000/04/27 23:18:02  pichery
 --| Changed the default font for EV_TEXT_COMPONENT
 --| and its descendants.

@@ -21,43 +21,22 @@ inherit
 			implementation
 		end
 
+	EV_DESELECTABLE
+		-- These features may only be called when list item is in parent.
+		redefine
+			implementation
+		end
+
+	EV_TOOLTIPABLE
+		redefine
+			implementation
+		end
+
 create
 	default_create,
 	make_with_text
 
-feature -- Status report
-
-	is_selected: BOOLEAN is
-			-- Is `Current' selected in `parent'?
-		require
-			parent_not_void: parent /= Void
-		do
-			Result := implementation.is_selected
-		ensure
-			bridge_ok: Result = implementation.is_selected
-		end
-
 feature -- Status setting
-
-	enable_select is
-			-- Set `is_selected' `True'.
-		require
-			parent_not_void: parent /= Void
-		do
-			implementation.enable_select
-		ensure
-			is_selected: is_selected
-		end
-
-	disable_select is
-			-- Set `is_selected' `False'.
-		require
-			parent_not_void: parent /= Void
-		do
-			implementation.disable_select
-		ensure
-			not_selected: not is_selected
-		end
 
 	toggle is
 			-- Change `is_selected'.
@@ -145,6 +124,18 @@ end -- class EV_LIST_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/06/07 17:28:04  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.23.4.3  2000/05/10 23:43:44  king
+--| Made tooltipable
+--|
+--| Revision 1.23.4.2  2000/05/09 22:37:32  king
+--| Integrated selectable, is_selectable for list items
+--|
+--| Revision 1.23.4.1  2000/05/03 19:09:57  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.32  2000/04/07 22:28:19  brendel
 --| EV_SIMPLE_ITEM -> EV_ITEM.
 --|

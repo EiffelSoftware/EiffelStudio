@@ -28,6 +28,11 @@ inherit
 			interface
 		end
 
+	EV_TOOLTIPABLE_IMP
+		redefine
+			interface
+		end
+
 	WEL_LVM_CONSTANTS
 		export
 			{NONE} all
@@ -66,6 +71,12 @@ feature -- Access
 			Result := clone (internal_text)
 		end
 
+	text_length: INTEGER is
+			-- Number of characters of `item'.
+		do
+			Result := internal_text.count
+		end
+
 feature -- Status report
 
 	is_selected: BOOLEAN is
@@ -99,11 +110,11 @@ feature {EV_ANY_I} -- Access
 	parent_imp: EV_LIST_ITEM_LIST_IMP
 		-- Parent of `Current'
 	
-	set_parent (par: like parent) is
-			-- Assign `a_parent' to `parent'.
+	set_parent_imp (par_imp: like parent_imp) is
+			-- Assign 'par_imp' to `parent_imp'.
 		do
-			if par /= Void then
-				parent_imp ?= par.implementation
+			if par_imp /= Void then
+				parent_imp := par_imp
 			else
 				parent_imp := Void
 			end
@@ -115,8 +126,6 @@ feature {EV_LIST_IMP, EV_COMBO_BOX_IMP} -- Implementation.
 			-- `Result' is relative y coordinate in pixels to parent.
 		require
 			parent_not_void: parent_imp /= Void
-		local
-			wel_point: WEL_POINT
 		do
 			Result := parent_imp.get_item_position (index - 1).y
 		end
@@ -183,6 +192,26 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/06/07 17:27:52  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.24.4.5  2000/06/05 16:50:39  manus
+--| Added `text_length' in `EV_TEXTABLE_IMP' to improve the performance of its
+--| counterpart `text' in order to reduce creation of useless empty strings.
+--|
+--| Revision 1.24.4.4  2000/05/30 15:52:18  rogers
+--| Removed unreferenced variables from relative_y.
+--|
+--| Revision 1.24.4.3  2000/05/18 23:11:38  rogers
+--| Set_parent renamed to set_parent_imp and now takes a parameter of type
+--| parent_imp.
+--|
+--| Revision 1.24.4.2  2000/05/10 23:45:57  king
+--| Made tooltipable
+--|
+--| Revision 1.24.4.1  2000/05/03 19:09:10  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.52  2000/04/21 22:27:10  rogers
 --| Removed redefined pnd_press.
 --|

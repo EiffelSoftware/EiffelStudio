@@ -9,7 +9,15 @@ deferred class
 	EV_LIST_ITEM_LIST_IMP
 
 inherit
+	EV_LIST_ITEM_LIST_I
+		redefine
+			interface
+		end
+
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
+		redefine
+			interface
+		end
 
 feature {EV_ANY_I} -- Access
 
@@ -100,6 +108,10 @@ feature {EV_LIST_ITEM_IMP} -- Pick & Drop
 		deferred
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_LIST_ITEM_LIST
+
 end -- class EV_LIST_ITEM_LIST_IMP
 
 --!-----------------------------------------------------------------------------
@@ -123,6 +135,15 @@ end -- class EV_LIST_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/06/07 17:27:57  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.6.2.2  2000/05/10 20:01:02  king
+--| Integrated interface
+--|
+--| Revision 1.6.2.1  2000/05/03 19:09:18  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/04/20 01:11:18  pichery
 --| Complete Refactoring.
 --|

@@ -101,11 +101,11 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (a_parent: like parent) is
-			-- Make `a_parent' the parent of the menu-item.
+	set_parent_imp (a_parent_imp: like parent_imp) is
+			-- Make `a_parent_imp' the parent of `Current'.
 		do
-			if a_parent /= Void then
-				parent_imp ?= a_parent.implementation
+			if a_parent_imp /= Void then
+				parent_imp := a_parent_imp
 			else
 				parent_imp := Void
 			end
@@ -120,8 +120,9 @@ feature {NONE} -- Implementation
 			--| Does not return internal toolkit string because it is possible
 			--| to set the string without parent.
 		do
-			Result := clone (real_text)
-			if Result = Void then
+			if real_text /= Void then
+				Result := clone (real_text)
+			else
 				Result := ""
 			end
 		end
@@ -134,6 +135,14 @@ feature {NONE} -- Implementation
 			real_text := clone (a_text)
 			if has_parent then
 				parent_imp.modify_string (a_text, id)
+			end
+		end
+
+	text_length: INTEGER is
+			-- Length of text'.
+		do
+			if real_text /= Void then
+				Result := real_text.count
 			end
 		end
 
@@ -247,6 +256,20 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/06/07 17:27:52  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.24.4.3  2000/06/05 16:50:39  manus
+--| Added `text_length' in `EV_TEXTABLE_IMP' to improve the performance of its
+--| counterpart `text' in order to reduce creation of useless empty strings.
+--|
+--| Revision 1.24.4.2  2000/05/18 23:10:31  rogers
+--| Set_parent renamed to set_parent_imp and now takes a parameter of type
+--| parent_imp.
+--|
+--| Revision 1.24.4.1  2000/05/03 19:09:10  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.37  2000/04/21 22:07:40  rogers
 --| Redefined set_capture, release_capture, set_heavy_capture,
 --| release_heavy_capture. Improved comments on these features.

@@ -30,35 +30,14 @@ inherit
 			implementation
 		end
 
+	EV_SENSITIVE
+		redefine
+			implementation
+		end
+
 create
 	default_create,
 	make_with_text
-
-feature -- Status report
-
-	is_sensitive: BOOLEAN is
-			-- Is `Current' sensitive to user actions?
-		do
-			Result := implementation.is_sensitive
-		end
-
-feature -- Status setting
-
-	enable_sensitive is
-   			-- Set `is_sensitive' `True'.
-   		do
- 			implementation.enable_sensitive
- 		ensure
-   			is_sensitive: is_sensitive
-   		end
-
-	disable_sensitive is
-   			-- Set `is_sensitive' `False'.
-   		do
- 			implementation.disable_sensitive
- 		ensure
-   			not_is_sensitive: not is_sensitive
-   		end
 
 feature -- Event handling
 
@@ -120,6 +99,15 @@ end -- class EV_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/06/07 17:28:05  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.29.4.2  2000/05/11 21:18:41  king
+--| Inheriting from EV_SENSITIVE
+--|
+--| Revision 1.29.4.1  2000/05/03 19:09:58  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.36  2000/04/07 22:15:40  brendel
 --| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
 --|

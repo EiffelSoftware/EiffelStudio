@@ -55,22 +55,20 @@ feature -- Element change
 			-- Set `a_widget.width' to `a_width'.
 		require
 			has_a_widget: has (a_widget)
-			a_width_non_negative: a_width >= 0
+			a_width_not_smaller_than_minimum_width:
+				a_width >= a_widget.minimum_width
 		do
 			set_item_size (a_widget, a_width, a_widget.height)
-		ensure
-			a_widget_width_assigned: a_widget.width = a_width
 		end
 
 	set_item_height (a_widget: EV_WIDGET; a_height: INTEGER) is
 			-- Set `a_widget.height' to `a_height'.
 		require
 			has_a_widget: has (a_widget)
-			a_height_non_negative: a_height >= 0
+			a_height_not_smaller_than_minimum_height:
+				a_height >= a_widget.minimum_height
 		do
 			set_item_size (a_widget, a_widget.width, height)
-		ensure
-			a_widget_height_assigned: a_widget.height = a_height
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
@@ -78,12 +76,11 @@ feature -- Element change
 			-- Set `a_widget.height' to `a_height'.
 		require
 			has_a_widget: has (a_widget)
-			a_width_non_negative: a_width >= 0
-			a_height_non_negative: a_height >= 0
+			a_width_not_smaller_than_minimum_width:
+				a_width >= a_widget.minimum_width
+			a_height_not_smaller_than_minimum_height:
+				a_height >= a_widget.minimum_height
 		deferred
-		ensure
-			a_widget_width_assigned: a_widget.width = a_width
-			a_widget_height_assigned: a_widget.height = a_height
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -115,6 +112,22 @@ end -- class EV_FIXED_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/06/07 17:27:48  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.3.4.3  2000/05/05 23:37:23  brendel
+--| Strengthened preconditions.
+--|
+--| Revision 1.3.4.2  2000/05/04 19:01:37  brendel
+--| Removed impossible postconditions.
+--|
+--| Revision 1.3.4.1  2000/05/03 19:09:05  oconnor
+--| mergred from HEAD
+--|
+--| $Log$
+--| Revision 1.8  2000/06/07 17:27:48  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.7  2000/05/02 00:40:26  brendel
 --| Reintroduced EV_FIXED.
 --| Complete revision.

@@ -11,6 +11,7 @@
 #include "eif_portable.h"
 #include "eif_malloc.h"
 #include <stdio.h>
+
 #ifdef EIF_WIN32
 #include <windows.h>
 #include "png.h"
@@ -18,6 +19,8 @@
 #include <stdlib.h>
 #include <png.h>
 #endif
+
+#include <sys/timeb.h>
 #include "load_pixmap.h"
 
 /* Classic constants */
@@ -1019,3 +1022,16 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	/* that's it */
 	return;
 	}
+
+//<HACK>
+//FIXME this puts milliseconds into 32 bit, it doesn't last long.
+unsigned long time_msec (void)
+{
+	struct timeb tb;
+	static time_t begining = 0;
+	if (!begining) begining = time (NULL);
+	ftime (&tb);
+	return (((tb.time - begining) * 1000) + tb.millitm);
+}
+
+//</HACK>

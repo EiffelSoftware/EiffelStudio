@@ -36,7 +36,7 @@ inherit
 			initialize
 		end
 
-	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
+	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_NODE]
 		undefine
 			item_by_data
 		redefine
@@ -128,13 +128,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	all_ev_children: HASH_TABLE [EV_TREE_ITEM_IMP, POINTER]
+	all_ev_children: HASH_TABLE [EV_TREE_NODE_IMP, POINTER]
 			-- Children of the tree Classified by their h_item
 
-	ev_children: ARRAYED_LIST [EV_TREE_ITEM_IMP]
+	ev_children: ARRAYED_LIST [EV_TREE_NODE_IMP]
 			-- List of the direct children of the tree.
 
-	selected_item: EV_TREE_ITEM is
+	selected_item: EV_TREE_NODE is
 			-- Currently selected item.
 		local
 			handle: POINTER
@@ -150,15 +150,13 @@ feature -- Access
 
 feature -- Basic operations
 
-	general_insert_item (item_imp: EV_TREE_ITEM_IMP; par, after: POINTER; 
+	general_insert_item (item_imp: EV_TREE_NODE_IMP; par, after: POINTER; 
 		an_index: INTEGER) is
 			-- Add `item_imp' to the tree with `par' as parent.
 			-- if `par' is the default_pointer, the parent is the tree.
 		local
 			struct: WEL_TREE_VIEW_INSERT_STRUCT
-			c: ARRAYED_LIST [EV_TREE_ITEM_IMP]
-			ci: EV_TREE_ITEM_IMP
-			bool: BOOLEAN
+			c: ARRAYED_LIST [EV_TREE_NODE_IMP]
 		do
 				-- First, we add the item
 			create struct.make
@@ -191,12 +189,11 @@ feature -- Basic operations
 			invalidate
 		end
 
-	general_remove_item (item_imp: EV_TREE_ITEM_IMP) is
+	general_remove_item (item_imp: EV_TREE_NODE_IMP) is
 			-- Remove the given item, if it has any children, it store them in
 			-- the item.
 		local
-			c: ARRAYED_LIST [EV_TREE_ITEM_IMP]
-			ci: EV_TREE_ITEM_IMP
+			c: ARRAYED_LIST [EV_TREE_NODE_IMP]
 		do
 			if item_imp.is_parent then
 				from
@@ -217,8 +214,8 @@ feature -- Basic operations
 			invalidate
 		end
 
-	get_children (item_imp: EV_TREE_ITEM_IMP): 
-	ARRAYED_LIST [EV_TREE_ITEM_IMP] is
+	get_children (item_imp: EV_TREE_NODE_IMP): 
+	ARRAYED_LIST [EV_TREE_NODE_IMP] is
 			-- List of the direct children of the tree-item.
 			-- If the item is Void, it returns the children of the tree.
 		local
@@ -247,9 +244,9 @@ feature -- Basic operations
 			end
 		end
 
-feature {EV_TREE_ITEM_I} -- Implementation
+feature {EV_TREE_NODE_I} -- Implementation
 
-	insert_item (item_imp: EV_TREE_ITEM_IMP; an_index: INTEGER) is
+	insert_item (item_imp: EV_TREE_NODE_IMP; an_index: INTEGER) is
 			-- Insert `item_imp' at the `an_index' position.
 		do
 			if an_index = 1 then
@@ -261,7 +258,7 @@ feature {EV_TREE_ITEM_I} -- Implementation
 			end
 		end
 
-	remove_item (item_imp: EV_TREE_ITEM_IMP) is
+	remove_item (item_imp: EV_TREE_NODE_IMP) is
 			-- Remove `item_imp' from the children.
 		do
 			general_remove_item (item_imp)
@@ -269,7 +266,7 @@ feature {EV_TREE_ITEM_I} -- Implementation
 			invalidate
 		end
 
-	notify_item_info (item_imp: EV_TREE_ITEM_IMP) is
+	notify_item_info (item_imp: EV_TREE_NODE_IMP) is
 			-- Notify the system of the changes of the item.
 			-- The item must have all the necessary flags and
 			-- informations to notify.
@@ -308,7 +305,7 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_ITEM_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_NODE_IMP is
 			-- Find the item at the given position.
 			-- Position is relative to the toolbar.
 		local
@@ -367,7 +364,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item
 			-- event.
 		local
-			it: EV_TREE_ITEM_IMP
+			it: EV_TREE_NODE_IMP
 			pt: WEL_POINT
 			offsets: TUPLE [INTEGER, INTEGER]
 		do
@@ -375,9 +372,9 @@ feature {EV_ANY_I} -- WEL Implementation
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void and it.is_transport_enabled and
 				not parent_is_pnd_source then
-				it.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+				it.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 			elseif pnd_item_source /= Void then 
-				pnd_item_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+				pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 			end
 
 			if it /= Void then
@@ -401,9 +398,9 @@ feature {EV_ANY_I} -- WEL Implementation
 	on_tvn_selchanged (info: WEL_NM_TREE_VIEW) is
 			-- selection has changed from one item to another.
 		local
-			clist: HASH_TABLE [EV_TREE_ITEM_IMP, POINTER]
+			clist: HASH_TABLE [EV_TREE_NODE_IMP, POINTER]
 			p: POINTER
-			elem: EV_TREE_ITEM_IMP
+			elem: EV_TREE_NODE_IMP
 		do
 			clist := all_ev_children
 			p := info.old_item.h_item
@@ -458,7 +455,7 @@ feature {EV_ANY_I} -- WEL Implementation
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
 			-- Executed when the mouse move.
 		local
-			it: EV_TREE_ITEM_IMP
+			it: EV_TREE_NODE_IMP
 			pt: WEL_POINT
 			offsets: TUPLE [INTEGER, INTEGER]
 		do
@@ -551,6 +548,21 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.70  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.32.4.5  2000/05/27 01:55:52  pichery
+--| Cosmetics
+--|
+--| Revision 1.32.4.4  2000/05/16 20:19:46  king
+--| Converted to new tree item structure
+--|
+--| Revision 1.32.4.3  2000/05/04 18:35:31  rogers
+--| Internal_propagate_pointer_press now passes the correct button to
+--| the child when a child is clicked on. This fixes a bug where all
+--| presses acted as a right click.
+--|
+--| Revision 1.32.4.2  2000/05/03 22:35:05  brendel
 --| Revision 1.69  2000/05/03 20:13:28  brendel
 --| Fixed resize_actions.
 --|

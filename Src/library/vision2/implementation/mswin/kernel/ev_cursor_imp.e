@@ -9,6 +9,9 @@ indexing
 class
 	EV_CURSOR_IMP
 
+obsolete
+	"Don't use it. EV_CURSOR now inherit from EV_PIXMAP."
+
 inherit
 	EV_CURSOR_I
 		redefine
@@ -115,6 +118,18 @@ end -- class EV_CURSOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/07 17:27:53  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.4.8.3  2000/05/04 17:37:14  brendel
+--| Moved obsolete clause.
+--|
+--| Revision 1.4.8.2  2000/05/04 04:24:27  pichery
+--| This class is now obsolete and marked as it.
+--|
+--| Revision 1.4.8.1  2000/05/03 19:09:12  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/03/16 17:13:33  brendel
 --| Fixed creation.
 --|

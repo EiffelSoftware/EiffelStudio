@@ -11,10 +11,15 @@ class
 	EV_TOOL_BAR_TOGGLE_BUTTON
 
 inherit
-	EV_TOOL_BAR_SELECT_BUTTON
+	EV_TOOL_BAR_BUTTON
 		redefine
 			implementation,
 			create_implementation
+		end
+
+	EV_DESELECTABLE
+		redefine
+			implementation
 		end
 
 create
@@ -22,14 +27,6 @@ create
 	make_with_text
 
 feature -- Status setting
-
-	disable_select is
-			-- Set `is_selected' `False'.
-		do
-			implementation.disable_select
-		ensure
-			unselected: not is_selected
-		end
 
 	toggle is
 			-- Change `is_selected'.
@@ -43,11 +40,6 @@ feature -- Status setting
 			toggled: is_selected /= old is_selected
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_TOOL_BAR_TOGGLE_BUTTON_I
-			-- Responsible for interaction with the native graphics toolkit.
-
 feature {NONE} -- Implementation
 
 	create_implementation is
@@ -55,6 +47,11 @@ feature {NONE} -- Implementation
 		do
 			create {EV_TOOL_BAR_TOGGLE_BUTTON_IMP} implementation.make (Current)
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_TOOL_BAR_TOGGLE_BUTTON_I
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_TOOL_BAR_TOGGLE_BUTTON
 
@@ -79,6 +76,15 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/06/07 17:28:05  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.4.2.2  2000/05/09 21:12:43  king
+--| Integrated changes to selectable/deselectable
+--|
+--| Revision 1.4.2.1  2000/05/03 19:09:58  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.9  2000/04/04 17:00:09  rogers
 --| Now inherits EV_TOOL_BAR_SELECT_BUTTON. Removed is_selected and
 --| enable_select.

@@ -33,6 +33,8 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
+	--|FIXME All these features to be implemented are required by PND.
+
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 		do
@@ -100,6 +102,11 @@ feature {NONE} -- Implementation
 				False
 			end
 		end
+		
+	top_level_window_imp: EV_WINDOW_IMP is
+		do
+			--|FIXME Implement
+		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -128,6 +135,15 @@ end -- class EV_MENU_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/06/07 17:28:02  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.5.8.2  2000/05/15 22:03:54  rogers
+--| Added top_level_window_imp.
+--|
+--| Revision 1.5.8.1  2000/05/03 19:09:52  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.9  2000/04/11 16:55:15  rogers
 --| Added features required by EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
 --|

@@ -30,6 +30,11 @@ inherit
 			interface
 		end
 
+	EV_TOOLTIPABLE_IMP
+		redefine
+			interface
+		end
+
 	EV_ID_IMP
 
 creation
@@ -62,6 +67,12 @@ feature -- Access
 			Result := clone (real_text)
 		end
 
+	text_length: INTEGER is
+			-- Number of characters of `real_text'.
+		do
+			Result := real_text.count
+		end
+
 	real_text: STRING
 			-- Internal `text'. Not to be returned directly. Use clone.
 
@@ -71,12 +82,12 @@ feature -- Access
 			Result := parent_imp.internal_get_index (Current) + 1
 		end
 
-	set_parent (a_parent: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
+	set_parent_imp (a_parent_imp: like parent_imp) is
+			-- Make `a_parent_imp' the new parent of `Current'.
+			-- `a_parent_imp' can be Void then the parent is the screen.
 		do
-			if a_parent /= Void then
-				parent_imp ?= a_parent.implementation
+			if a_parent_imp /= Void then
+				parent_imp := a_parent_imp
 				parent_imp.auto_size
 			else
 				parent_imp := Void
@@ -147,9 +158,7 @@ feature -- Element change
 			-- at a time.
 		do
  			remove_gray_pixmap
- 			create gray_pixmap
- 			gray_pixmap.copy (pix)
-
+			gray_pixmap := pix.ev_clone(pix)
 			if parent_imp /= Void then
 				parent_imp.internal_reset_button (Current)
 			end
@@ -196,6 +205,26 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/06/07 17:27:52  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.9.4.5  2000/06/05 16:50:39  manus
+--| Added `text_length' in `EV_TEXTABLE_IMP' to improve the performance of its
+--| counterpart `text' in order to reduce creation of useless empty strings.
+--|
+--| Revision 1.9.4.4  2000/05/18 23:08:23  rogers
+--| Set_parent renamed to set_parent_imp and now takes a paramenter of type
+--| parent_imp.
+--|
+--| Revision 1.9.4.3  2000/05/10 23:09:59  king
+--| Integrated tooltipable changes
+--|
+--| Revision 1.9.4.2  2000/05/05 22:29:06  pichery
+--| Replaced (Create + Copy) with `ev_clone'
+--|
+--| Revision 1.9.4.1  2000/05/03 19:09:11  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.27  2000/04/26 22:20:36  rogers
 --| Removed type as now redundent.
 --|

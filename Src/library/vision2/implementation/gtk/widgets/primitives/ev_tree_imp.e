@@ -19,15 +19,15 @@ inherit
 		redefine
 			interface,
 			destroy,
-			initialize
+			initialize,
+			colorizable_object
 		end
 
-	EV_ITEM_LIST_IMP [EV_TREE_ITEM]
+	EV_ITEM_LIST_IMP [EV_TREE_NODE]
 		redefine
 			interface,
-			add_to_container,
+			insert_i_th,
 			remove_i_th,
-			reorder_child,
 			list_widget
 		end
 
@@ -43,22 +43,19 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_event_box_new)
-
-			scroll_window := 
-				C.gtk_scrolled_window_new (NULL, NULL)
-			
+			scroll_window := C.gtk_scrolled_window_new (NULL, NULL)
 			C.gtk_widget_show (scroll_window)
 			C.gtk_container_add (c_object, scroll_window)
 			C.gtk_scrolled_window_set_policy (
 				scroll_window, 
-				C.Gtk_policy_automatic_enum,
-				C.Gtk_policy_automatic_enum
+				C.GTK_POLICY_AUTOMATIC_ENUM,
+				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
 
 			list_widget := C.gtk_tree_new
 			C.gtk_tree_set_selection_mode (
 				list_widget,
-				C.Gtk_selection_single_enum
+				C.GTK_SELECTION_SINGLE_ENUM
 			)
 			C.gtk_widget_show (list_widget)
 			C.gtk_scrolled_window_add_with_viewport (scroll_window, list_widget)
@@ -82,12 +79,12 @@ feature {NONE} -- Initialization
 			-- is fired on mouse press regardless.
 		end
 
-feature {EV_TREE_ITEM_IMP} -- Implementation
+feature {EV_TREE_NODE_IMP} -- Implementation
 
 	select_callback (a_tree_item: POINTER) is
 			-- Called when a tree item is selected
 		local
-			t_item: EV_TREE_ITEM_IMP
+			t_item: EV_TREE_NODE_IMP
 		do
 		 	t_item ?= eif_object_from_c (a_tree_item)
 
@@ -109,7 +106,7 @@ feature {EV_TREE_ITEM_IMP} -- Implementation
 
 feature -- Status report
 
-	selected_item: EV_TREE_ITEM is
+	selected_item: EV_TREE_NODE is
 			-- Item which is currently selected
 		local
 			p: POINTER
@@ -121,6 +118,7 @@ feature -- Status report
 				if p /= NULL then
 					o := eif_object_from_c (p)
 					Result ?= o.interface
+					check Result_not_void: Result /= Void end
 				end
 			end
 		end
@@ -136,11 +134,6 @@ feature -- Status report
 			end
 		end
 
-
-feature {EV_ANY_I} -- Implementation
-
-	interface: EV_TREE
-
 feature {NONE} -- External  FIXME IEK Remove when macros are in gel.
 
 	gtk_tree_selection (a_tree: POINTER): POINTER is
@@ -153,30 +146,33 @@ feature {NONE} -- External  FIXME IEK Remove when macros are in gel.
 
 feature {NONE} -- Implementation
 
-	previous_selected_item: EV_TREE_ITEM
+	previous_selected_item: EV_TREE_NODE
 		-- Item that was selected previously.
 
-	add_to_container (v: like item) is
-			-- Add `v' to tree.
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Add `v' to tree at position `i'.
 		local
-			item_imp: EV_TREE_ITEM_IMP
+			item_imp: EV_TREE_NODE_IMP
 		do
 			item_imp ?= v.implementation
 			C.gtk_widget_show (item_imp.c_object)
-			C.gtk_tree_append (list_widget, item_imp.c_object)
+			C.gtk_widget_ref (item_imp.c_object)
+			C.gtk_tree_insert (list_widget, item_imp.c_object, i - 1)
 			if item_imp.dummy_list_widget /= NULL then
+				C.gtk_widget_ref (item_imp.dummy_list_widget)
 				C.gtk_tree_item_set_subtree (
 					item_imp.c_object,
 					item_imp.dummy_list_widget
 				)
 				item_imp.set_dummy_list_widget (NULL)
+				C.gtk_widget_unref (item_imp.list_widget)
 			end
 		end
 
 	remove_i_th (a_position: INTEGER) is
 			-- Remove item at `a_position'
 		local
-			item_imp: EV_TREE_ITEM_IMP
+			item_imp: EV_TREE_NODE_IMP
 		do
 			item_imp ?= interface.i_th (a_position).implementation
 			item_imp.set_dummy_list_widget (item_imp.list_widget)
@@ -188,25 +184,25 @@ feature {NONE} -- Implementation
 				-- Precursor unrefs list widget.
 		end
 
-	reorder_child (v: like item; a_position: INTEGER) is
-			-- Move `v' to `a_position' in container.
-		local
-			imp: EV_TREE_ITEM_IMP
-		do
-			imp ?= v.implementation
-			C.gtk_widget_ref (imp.c_object)
-			C.gtk_tree_remove_item (list_widget, imp.c_object)
-			C.gtk_widget_unref (imp.c_object)
-			C.gtk_tree_insert (list_widget, imp.c_object, a_position - 1)
-		end
-
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
 			check  do_not_call: False end
 		end
 
+	colorizable_object: POINTER is
+		do
+			Result := list_widget
+		end
+
+feature {EV_TREE_NODE_IMP} -- Implementation
+
 	list_widget: POINTER
+		-- Pointer to the gtktree widget.
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TREE
 
 end -- class EV_TREE_IMP
 
@@ -231,6 +227,30 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/06/07 17:27:39  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.17.4.9  2000/05/18 20:53:29  king
+--| Add result check
+--|
+--| Revision 1.17.4.8  2000/05/16 21:15:57  king
+--| Changed EV_TREE_ITEM->EV_TREE_NODE
+--|
+--| Revision 1.17.4.7  2000/05/16 16:56:20  oconnor
+--| updated for EV_TREE_NODE
+--|
+--| Revision 1.17.4.6  2000/05/16 00:29:01  king
+--| Redefined colorize object to return list_widget
+--|
+--| Revision 1.17.4.5  2000/05/08 23:04:56  king
+--| Made c enumeration calls UPPERCASE
+--|
+--| Revision 1.17.4.2  2000/05/05 22:19:18  king
+--| Implemented to use insert_i_th
+--|
+--| Revision 1.17.4.1  2000/05/03 19:08:51  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.42  2000/05/02 18:55:30  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

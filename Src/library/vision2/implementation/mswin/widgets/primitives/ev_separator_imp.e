@@ -75,6 +75,27 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, "EV_SEPARATOR")
  		end
 
+feature -- Access
+
+	is_raised: BOOLEAN
+			-- Does `Current' appear raised?
+
+feature -- Status setting
+
+	enable_raised is
+			-- Set `is_raised' `True'.
+		do
+			is_raised := True
+			invalidate
+		end
+
+	disable_raised is
+			-- Set `is_raised' `False'.
+		do
+			is_raised := False
+			invalidate
+		end
+
 feature {NONE} -- WEL Implementation
 
 	background_brush: WEL_BRUSH is
@@ -164,6 +185,14 @@ end -- class EV_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.12.8.3  2000/05/05 23:34:02  brendel
+--| Added is_raised, enable_raised and disable_raised.
+--|
+--| Revision 1.12.8.2  2000/05/03 22:35:05  brendel
+--|
 --| Revision 1.17  2000/05/03 20:13:27  brendel
 --| Fixed resize_actions.
 --|

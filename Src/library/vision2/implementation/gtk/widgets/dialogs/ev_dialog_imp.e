@@ -81,7 +81,7 @@ feature -- Basic operations
 			end
 			show
 			block
-			if not was_modal then
+			if not is_destroyed and then not was_modal then
 				disable_modal
 			end
 		end
@@ -122,6 +122,15 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/06/07 17:27:37  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.7.2.2  2000/05/09 16:39:02  brendel
+--| Added not is_destroyed when disabling modal again.
+--|
+--| Revision 1.7.2.1  2000/05/03 19:08:47  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.13  2000/05/03 02:26:27  bonnard
 --| Fixed "closable" features so they do not trigger assertion violations.
 --| Features still have to be implemented.

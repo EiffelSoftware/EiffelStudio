@@ -101,9 +101,16 @@ end -- class EV_DEFAULT_COLORS_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/07 17:27:57  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.8  2000/05/12 19:27:45  pichery
 --| Added colors `Color_3d_face', `Color_3d_highlight',
 --| `Color_3d_shadow'.
+--|
+--| Revision 1.4.8.2  2000/05/13 03:27:24  pichery
+--| Added new colors, refactoring: replaced
+--| inheritance with once.
 --|
 --| Revision 1.4.8.1  2000/05/03 19:09:17  oconnor
 --| mergred from HEAD

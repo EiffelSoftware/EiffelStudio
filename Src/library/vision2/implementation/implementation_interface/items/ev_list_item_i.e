@@ -20,34 +20,26 @@ inherit
 			interface
 		end
 
+	EV_DESELECTABLE_I
+		redefine
+			interface,
+			is_selectable
+		end
+
+	EV_TOOLTIPABLE_I
+		redefine
+			interface
+		end
+
 feature -- Status report
 
-	is_selected: BOOLEAN is
-			-- Is `Current' selected in `parent'?
-		require
-			parent_not_void: parent /= Void
-		deferred
+	is_selectable: BOOLEAN is
+			-- May the object be selected.
+		do
+			Result := parent /= Void
 		end
 
 feature -- Status setting
-
-	enable_select is
-			-- Set `is_selected' `True'.
-		require
-			parent_not_void: parent /= Void
-		deferred
-		ensure
-			is_selected: is_selected
-		end
-
-	disable_select is
-			-- Set `is_selected' `False'.
-		require
-			parent_not_void: parent /= Void
-		deferred
-		ensure
-			not_selected: not is_selected
-		end
 
 	toggle is
 			-- Change `is_selected'.
@@ -105,6 +97,18 @@ end -- class EV_LIST_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/06/07 17:27:41  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.26.4.3  2000/05/10 23:43:43  king
+--| Made tooltipable
+--|
+--| Revision 1.26.4.2  2000/05/09 22:37:30  king
+--| Integrated selectable, is_selectable for list items
+--|
+--| Revision 1.26.4.1  2000/05/03 19:08:54  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.32  2000/04/07 20:48:56  brendel
 --| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
 --|

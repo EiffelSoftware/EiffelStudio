@@ -19,7 +19,10 @@ feature -- Access
 		end
 
 	icon: WEL_ICON
-		-- Current icon used. Void if none.
+		-- Current pixmap in HICON format. Void if none.
+
+	cursor: WEL_CURSOR
+		-- Current pixmap in HCURSOR format. Void if none.
 
 	has_mask: BOOLEAN is
 			-- Has the current pixmap a mask?
@@ -54,8 +57,51 @@ feature -- Misc.
 			raster_operations: WEL_RASTER_OPERATIONS_CONSTANTS
 		do
 			create icon_info.make
-			icon_info.set_fIcon (True)
+			icon_info.set_is_icon (True)
 			icon_info.set_color_bitmap (bitmap)
+			if mask_bitmap /= Void then
+				icon_info.set_mask_bitmap (mask_bitmap)
+				create Result.make_by_icon_info (icon_info)
+			else
+				-- create an empty mask
+				create mem_dc.make
+				create empty_mask_bitmap.make_compatible (
+					mem_dc,
+					width,
+					height
+					)
+				mem_dc.select_bitmap (empty_mask_bitmap)
+				create raster_operations
+				mem_dc.pat_blt (0, 0, width, height, 
+					raster_operations.blackness)
+				mem_dc.unselect_bitmap
+				mem_dc.delete
+				icon_info.set_mask_bitmap (empty_mask_bitmap)
+				create Result.make_by_icon_info (icon_info)
+				empty_mask_bitmap.delete
+			end
+		end
+
+	build_cursor: WEL_CURSOR is
+			-- Build a WEL_CURSOR from `bitmap' and `mask_bitmap'.
+		local
+			icon_info: WEL_ICON_INFO
+			mem_dc: WEL_MEMORY_DC
+			empty_mask_bitmap: WEL_BITMAP
+			raster_operations: WEL_RASTER_OPERATIONS_CONSTANTS
+			ev_cursor_interface: EV_CURSOR
+		do
+			create icon_info.make
+			icon_info.set_is_icon (False)
+			icon_info.set_color_bitmap (bitmap)
+
+			ev_cursor_interface ?= interface
+			if ev_cursor_interface /= Void then
+				-- This is a cursor, so set the hotspot
+				icon_info.set_x_hotspot (ev_cursor_interface.x_hotspot)
+				icon_info.set_y_hotspot (ev_cursor_interface.y_hotspot)
+			end
+
 			if mask_bitmap /= Void then
 				icon_info.set_mask_bitmap (mask_bitmap)
 				create Result.make_by_icon_info (icon_info)
@@ -91,6 +137,14 @@ feature -- Measurement
 		deferred
 		end
 
+feature {
+		EV_PIXMAP_IMP, 
+		EV_PIXMAP_IMP_DRAWABLE,
+		EV_PIXMAP_IMP_WIDGET
+		} -- Implementation
+
+	interface: EV_PIXMAP
+
 end -- class EV_PIXMAP_IMP_STATE
 
 --|----------------------------------------------------------------
@@ -114,6 +168,16 @@ end -- class EV_PIXMAP_IMP_STATE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/06/07 17:28:02  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.5.2.2  2000/05/04 04:23:59  pichery
+--| Added feature `build_cursor' and added
+--| `interface'.
+--|
+--| Revision 1.5.2.1  2000/05/03 19:09:53  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.5  2000/05/03 04:36:40  pichery
 --| Removed parameter in feature `set_with_default'.
 --|

@@ -28,10 +28,7 @@ inherit
 			pointer_over_widget,
 			interface,
 			destroy,
-			set_foreground_color,
-			set_background_color,
-			foreground_color,
-			background_color
+			colorizable_object
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -57,11 +54,7 @@ feature {NONE} -- Initialization
 			-- By default, a list allow only one selection.
 		do
 			base_make (an_interface)
-
-			-- Creating the gtk scrolled window
-
 			set_c_object (C.gtk_event_box_new)
-
 			scroll_window := (
 				C.gtk_scrolled_window_new (
 					NULL, 
@@ -77,7 +70,6 @@ feature {NONE} -- Initialization
 			C.gtk_container_add (c_object, scroll_window)
 			create ev_children.make (0)
 			set_row_height (15)
-
 				-- create a list with one column
 			create_list (1)
 		end
@@ -139,12 +131,14 @@ feature {NONE} -- Initialization
 				else
 					temp_title := ""
 				end
-				if column_widths /= Void and then column_widths.valid_index (i) then
+				if column_widths /= Void and then 
+								column_widths.valid_index (i) then
 					temp_width := column_widths.i_th (i)
 				else
 					temp_width := Default_column_width
 				end
-				if column_alignments /= Void and then column_alignments.valid_index (i) then
+				if column_alignments /= Void and then 
+							column_alignments.valid_index (i) then
 					-- Create alignment from alignment code.
 					temp_alignment_code := column_alignments.i_th (i)
 					create temp_alignment
@@ -235,8 +229,15 @@ feature -- Access
 			-- Number of columns in the list.
 		do
 			if list_widget /= NULL then
-				Result := C.c_gtk_clist_columns (list_widget)
+				Result := C.gtk_clist_struct_columns (list_widget)
 			end
+		end
+
+	gtk_clist_struct_columns (a_clist: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkCList): EIF_POINTER"
+		alias
+			"columns"
 		end
 
 	rows, count: INTEGER is
@@ -309,26 +310,6 @@ feature -- Access
 				Result.force (row)
 				i := i + 1
 			end
-		end
-
-	background_color: EV_COLOR is
-			-- Color used for the background of the widget.
-			-- This feature might change if we give the
-			-- possibility to set colors on the rows.
-		--| FIXME IEK Redefine to return list widget color.
-
-		do
-			Result := {EV_PRIMITIVE_IMP} Precursor
-		end
-
-	foreground_color: EV_COLOR is
-			-- Color used for the foreground of the widget,
-			-- usually the text.
-			-- This feature might change if we give the
-			-- possibility to set colors on the rows.
-		--| FIXME IEK FG Redefine to return list widget color.
-		do
-			Result := {EV_PRIMITIVE_IMP} Precursor
 		end
 
 feature -- Status report
@@ -488,27 +469,6 @@ feature -- Element change
 			end
 		end
 
-	set_background_color (a_color: EV_COLOR) is
-			-- Make `a_color' the new `background_color' of every rows.
-		local
-			children_array: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
-			row: EV_MULTI_COLUMN_LIST_ROW_IMP
-		do
-			--| FIXME IEK BG color not applicable for rows at present.
-			{EV_PRIMITIVE_IMP} Precursor (a_color)
-			
-		end
-
-	set_foreground_color (a_color: EV_COLOR) is
-			-- Make `a_color' the new `foreground_color' of every rows.
-		local
-			children_array: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
-			row: EV_MULTI_COLUMN_LIST_ROW_IMP
-		do
-			--| FIXME FG color not applicable for rows at present.
-			{EV_PRIMITIVE_IMP} Precursor (a_color)
-		end
-
 feature {EV_APPLICATION_IMP} -- Implementation
 
 	pointer_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
@@ -628,7 +588,6 @@ feature -- Implementation
 		local
 			env: EV_ENVIRONMENT
 			app_imp: EV_APPLICATION_IMP
-			curs_code: EV_CURSOR_CODE
 		do
 			create env
 			app_imp ?= env.application.implementation
@@ -654,8 +613,6 @@ feature -- Implementation
 
 			app_imp.on_pick (pebble)
 
-			create curs_code
-
 			if pnd_row_imp /= Void then
 				pnd_row_imp.interface.pick_actions.call ([a_x, a_y])
 				accept_cursor := pnd_row_imp.accept_cursor
@@ -665,10 +622,11 @@ feature -- Implementation
 			end
 
 			if accept_cursor = Void then
-				create accept_cursor.make_with_code (curs_code.standard)
+				--| FIXME IEK
+				create accept_cursor--.make_with_code (curs_code.standard)
 			end
 			if deny_cursor = Void then
-				create deny_cursor.make_with_code (curs_code.no)
+				create deny_cursor--.make_with_code (curs_code.no)
 			end
 
 			pointer_x := a_screen_x
@@ -757,20 +715,8 @@ feature {NONE} -- Implementation
 					a_column - 1,
 					eiffel_to_c (a_text),
 					0,
-					C.gtk_pixmap_struct_pixmap (pixmap_imp.c_object),
-					NULL
-					--C.gtk_cell_pixmap_struct_mask (
-					--	pointer_array_i_th (
-					--		C.gtk_clist_row_struct_cell (
-					--			C.g_list_nth_data (
-					--				C.gtk_clist_struct_row_list (list_widget),
-					--				a_row - 1
-					--			)
-					--		),
-					--		a_column - 1
-					--	)
-					--)
-					--| FIXME IEK Mask retrieval causes seg fault.
+					C.gtk_pixmap_struct_pixmap (pixmap_imp.gtk_pixmap),
+					C.gtk_pixmap_struct_mask (pixmap_imp.gtk_pixmap)
 				)
 			else 
 				C.gtk_clist_set_text (
@@ -873,6 +819,7 @@ feature {NONE} -- Implementation
 			until
 				a_counter = count
 				-- The child to be reordered is always at i_th (count)
+				-- Ie: We are reordering and truncating.
 			loop
 				temp_list.extend (ev_children.i_th (a_counter))
 				a_counter := a_counter + 1
@@ -894,6 +841,11 @@ feature {NONE} -- Implementation
 
 	scroll_window: POINTER
 		-- Pointer to the scrollable window tree is in.
+
+	colorizable_object: POINTER is
+		do
+			Result := list_widget
+		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -924,6 +876,39 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.72  2000/06/07 17:27:39  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.20.4.10  2000/05/30 22:24:30  king
+--| Added reordering comment
+--|
+--| Revision 1.20.4.9  2000/05/25 17:01:24  king
+--| Corrected struct member call external
+--|
+--| Revision 1.20.4.8  2000/05/25 01:14:11  king
+--| Using external struct call for column count
+--|
+--| Revision 1.20.4.7  2000/05/25 01:11:35  king
+--| Removed reference to cursor code, implemented external in Eiffel
+--|
+--| Revision 1.20.4.6  2000/05/16 00:29:01  king
+--| Redefined colorize object to return list_widget
+--|
+--| Revision 1.20.4.5  2000/05/12 19:02:40  king
+--| removed background setting functionality, to be implemented later
+--|
+--| Revision 1.20.4.4  2000/05/08 23:04:13  king
+--| Corrected cell pxmap setting
+--|
+--| Revision 1.20.4.3  2000/05/04 18:52:07  king
+--| Tidied up code
+--|
+--| Revision 1.20.4.2  2000/05/04 18:34:48  king
+--| Made compilable with new cursor changes
+--|
+--| Revision 1.20.4.1  2000/05/03 19:08:50  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.71  2000/05/02 18:55:30  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

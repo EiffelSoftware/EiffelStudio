@@ -21,6 +21,11 @@ inherit
 			interface
 		end
 
+	EV_TOOLTIPABLE_IMP
+		redefine
+			interface
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PRIMITIVE
@@ -48,6 +53,15 @@ end -- class EV_PRIMITIVE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/07 17:27:39  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.6.4.2  2000/05/10 23:02:59  king
+--| Integrated inital tooltipable changes
+--|
+--| Revision 1.6.4.1  2000/05/03 19:08:50  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

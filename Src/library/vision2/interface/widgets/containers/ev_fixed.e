@@ -48,7 +48,6 @@ feature {NONE} -- Initialization
 	make_for_test is
 			-- Create for testing purposes.
 		local
-			swap_timer: EV_TIMEOUT
 			rotate_timer: EV_TIMEOUT
 		do
 			Precursor
@@ -112,22 +111,20 @@ feature -- Element change
 			-- Set `a_widget.width' to `a_width'.
 		require
 			has_a_widget: has (a_widget)
-			a_width_non_negative: a_width >= 0
+			a_width_not_smaller_than_minimum_width:
+				a_width >= a_widget.minimum_width
 		do
 			implementation.set_item_width (a_widget, a_width)
-		ensure
-			a_widget_width_assigned: a_widget.width = a_width
 		end
 
 	set_item_height (a_widget: EV_WIDGET; a_height: INTEGER) is
 			-- Set `a_widget.height' to `a_height'.
 		require
 			has_a_widget: has (a_widget)
-			a_height_non_negative: a_height >= 0
+			a_height_not_smaller_than_minimum_height:
+				a_height >= a_widget.minimum_height
 		do
 			implementation.set_item_height (a_widget, a_height)
-		ensure
-			a_widget_height_assigned: a_widget.height = a_height
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
@@ -135,13 +132,12 @@ feature -- Element change
 			-- Set `a_widget.height' to `a_height'.
 		require
 			has_a_widget: has (a_widget)
-			a_width_non_negative: a_width >= 0
-			a_height_non_negative: a_height >= 0
+			a_width_not_smaller_than_minimum_width:
+				a_width >= a_widget.minimum_width
+			a_height_not_smaller_than_minimum_height:
+				a_height >= a_widget.minimum_height
 		do
 			implementation.set_item_size (a_widget, a_width, a_height)
-		ensure
-			a_widget_width_assigned: a_widget.width = a_width
-			a_widget_height_assigned: a_widget.height = a_height
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -172,6 +168,18 @@ end -- class EV_FIXED
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/06/07 17:28:12  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.9.4.3  2000/05/05 22:10:48  brendel
+--| Improved contracts.
+--|
+--| Revision 1.9.4.2  2000/05/04 19:02:11  brendel
+--| Removed impossible postconditions.
+--|
+--| Revision 1.9.4.1  2000/05/03 19:10:08  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.15  2000/05/02 17:58:11  brendel
 --| Cleanup.
 --|

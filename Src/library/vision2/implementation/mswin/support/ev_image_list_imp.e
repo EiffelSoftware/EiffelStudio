@@ -18,7 +18,7 @@ inherit
 create
 	make_with_size
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make_with_size (a_width, a_height: INTEGER) is
 			-- Create image list with all images 
@@ -29,12 +29,6 @@ feature -- Initialization
 			create image_list_info.make (4)
 		end
 
-feature -- Access
-
-	last_position: INTEGER
-
-feature -- Element change
-		
 	add_transparent_pixmap is
 			-- Add `a_pixmap_imp' to the image list.
 			-- The pixmap is resized if needed to fit into the 
@@ -60,7 +54,7 @@ feature -- Element change
 			create icon_info.make
 			icon_info.set_color_bitmap (empty_bitmap)
 			icon_info.set_mask_bitmap (empty_mask)
-			icon_info.set_fIcon (True)
+			icon_info.set_is_icon (True)
 			create icon.make_by_icon_info (icon_info)
 			add_icon (icon)
 			check
@@ -68,8 +62,14 @@ feature -- Element change
 			end
 		end
 
+feature -- Access
+
+	last_position: INTEGER
+
+feature -- Element change
+		
 	add_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Add `a_pixmap_imp' to the image list.
+			-- Add `a_pixmap' to the image list.
 			-- The pixmap is resized if needed to fit into the 
 			-- image list.
 			--
@@ -78,27 +78,33 @@ feature -- Element change
 		require
 			a_pixmap_not_void: a_pixmap /= Void
 		local
-			item_value	: INTEGER
-			mask_bitmap	: WEL_BITMAP
-			bitmap		: WEL_BITMAP
-			icon		: WEL_ICON
-			loc_tuple	: TUPLE [INTEGER, INTEGER]
-			info		: like image_list_info
-			wel_row		: WEL_LIST_VIEW_ITEM
-			resized_pixmap: EV_PIXMAP
-			pixmap_imp	: EV_PIXMAP_IMP_STATE
+			item_value		: INTEGER
+			mask_bitmap		: WEL_BITMAP
+			bitmap			: WEL_BITMAP
+			graphres		: WEL_GRAPHICAL_RESOURCE
+			loc_tuple		: TUPLE [INTEGER, INTEGER]
+			info			: like image_list_info
+			resized_pixmap	: EV_PIXMAP
+			pixmap_imp		: EV_PIXMAP_IMP_STATE
 		do
 			pixmap_imp ?= a_pixmap.implementation
 			info := image_list_info
-			icon := pixmap_imp.icon
 
-			if icon /= Void then
+				-- Try to get the icon
+			graphres := pixmap_imp.icon
+				
+				-- If there is no icon, try a cursor
+			if graphres = Void then
+				graphres := pixmap_imp.cursor
+			end
+
+			if graphres /= Void then
 					-- Assign `icon.item' to `item_value'
-				item_value := cwel_pointer_to_integer (icon.item)
+				item_value := cwel_pointer_to_integer (graphres.item)
 
 				if not info.has (item_value) then
 						-- Add the icon to image_list and set image_index.
-					add_icon (icon)
+					add_icon (graphres)
 					last_position := wel_last_position
 					info.put ([last_position, 1], item_value)
 				else
@@ -111,8 +117,8 @@ feature -- Element change
 				if (pixmap_imp.height /= bitmaps_height) or 
 				   (pixmap_imp.width /= bitmaps_width)
 				then
-					create resized_pixmap
-					resized_pixmap.copy (a_pixmap)
+						-- We use a_pixmap as interface to access `ev_clone'
+					resized_pixmap := a_pixmap.ev_clone (a_pixmap)
 					resized_pixmap.stretch (
 						bitmaps_width,
 						bitmaps_height

@@ -8,19 +8,17 @@ deferred class
 	EV_CHECK_MENU_ITEM_I
 
 inherit
-	EV_SELECT_MENU_ITEM_I
+	EV_MENU_ITEM_I
+		redefine
+			interface
+		end
+
+	EV_DESELECTABLE_I
 		redefine
 			interface
 		end
 	
 feature -- Status setting
-
-	disable_select is
-			-- Deselect this menu item.
-		deferred
-		ensure
-			not_is_selected: not is_selected
-		end
 
 	toggle is
 			-- Invert the value of `is_selected'.
@@ -56,6 +54,15 @@ end -- class EV_CHECK_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/06/07 17:27:41  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.6.4.2  2000/05/09 21:46:46  king
+--| Intergrated selectable/deselectable
+--|
+--| Revision 1.6.4.1  2000/05/03 19:08:54  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.11  2000/02/24 20:33:49  brendel
 --| Removed features `is_selected' and `enable_select', since they are now
 --| defined in EV_SELECT_MENU_ITEM_I.

@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Abstarction for objects that have a pixmap property."
+		"Abstraction for objects that have a pixmap property."
 	status: "See notice at end of class"
 	keywords: "pixmap, bitmap, icon, graphic, image"
 	date: "$Date$"
@@ -45,7 +45,7 @@ feature -- Element change
 		do
 			implementation.remove_pixmap
 		ensure
-			pixmap_remove: pixmap = Void
+			pixmap_removed: pixmap = Void
 		end
 
 feature {EV_PIXMAPABLE_I} -- Implementation
@@ -76,6 +76,15 @@ end -- class EV_PIXMAPABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/06/07 17:28:07  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.12.4.2  2000/05/09 20:29:37  king
+--| Spelling corrections
+--|
+--| Revision 1.12.4.1  2000/05/03 19:10:03  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.17  2000/03/17 01:23:34  oconnor
 --| formatting and layout
 --|

@@ -17,8 +17,9 @@ inherit
 	EV_WIDGET_LIST_IMP
 		redefine
 			interface,
-			insert_i_th,
-			remove_i_th
+			compute_minimum_height,
+			compute_minimum_width,
+			compute_minimum_size
 		end
 
 	EV_WEL_CONTROL_CONTAINER_IMP
@@ -26,7 +27,8 @@ inherit
 			make as ev_wel_control_container_make
 		redefine
 			top_level_window_imp,
-			default_style
+			default_style,
+			wel_move_and_resize
 		end
 		
 create
@@ -40,7 +42,6 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			ev_wel_control_container_make
 			create ev_children.make (2)
-			invalidate_agent := ~invalidate
 		end
 
 feature -- Status setting
@@ -49,47 +50,43 @@ feature -- Status setting
 			-- Set `a_widget.x_position' to `an_x'.
 			-- Set `a_widget.y_position' to `a_y'.
 		local
-			wel_win: WEL_WINDOW
+			wel_win: EV_WIDGET_IMP
 		do
 			wel_win ?= a_widget.implementation
 			check
 				wel_win_not_void: wel_win /= Void
 			end
-			wel_win.move (an_x, a_y)
-			widget_changed (a_widget)
+			wel_win.child_cell.move (an_x, a_y)
+			wel_win.wel_move (an_x, a_y)
+			wel_win.invalidate
+			if
+				an_x + wel_win.width > width or else
+				a_y + wel_win.height > height
+			then
+				notify_change (Nc_minsize, wel_win)
+			end
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
-			wel_win: WEL_WINDOW
+			wel_win: EV_WIDGET_IMP
 		do
 			wel_win ?= a_widget.implementation
 			check
 				wel_win_not_void: wel_win /= Void
 			end
-			wel_win.resize (a_width, a_height)
-			widget_changed (a_widget)
+			wel_win.parent_ask_resize (a_width, a_height)
+			if
+				wel_win.x_position + wel_win.width > width or else
+				wel_win.y_position + wel_win.height > height
+			then
+				notify_change (Nc_minsize, wel_win)
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
-
-	widget_changed (a_widget: EV_WIDGET) is
-			-- Geometry of `a_widget' has just been modified.
-			-- Repaint container and resize if necessary.
-		do
-			if a_widget.x_position + a_widget.width > minimum_width then
-				internal_set_minimum_width (
-					a_widget.x_position + a_widget.width)
-			end
-			if a_widget.y_position + a_widget.height > minimum_height then
-				internal_set_minimum_height (
-					a_widget.y_position + a_widget.height)
-			end
-			(create {EV_ENVIRONMENT}).application.implementation.
-				do_once_on_idle (invalidate_agent)
-		end
 
 	invalidate_agent: PROCEDURE [ANY, TUPLE []]
 			-- Called after a change has occurred.
@@ -126,19 +123,68 @@ feature {EV_ANY_I} -- Implementation
 
 feature {NONE} -- Implementation
 
-	insert_i_th (v: like item; i: INTEGER) is
-			-- Insert `v' at position `i'.
+	compute_minimum_width is
+			-- Compute both to avoid duplicate code.
+		local
+			v_imp: EV_WIDGET_IMP
+			new_min_width: INTEGER
+			cur: INTEGER
 		do
-			Precursor (v, i)
-			set_item_size (v, v.minimum_width, v.minimum_height)
+			cur := ev_children.index
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				v_imp := ev_children.item
+				new_min_width := new_min_width.max (v_imp.x_position + v_imp.wel_width)
+				ev_children.forth
+			end
+			ev_children.go_i_th (cur)
+			internal_set_minimum_width (new_min_width)
 		end
 
-	remove_i_th (i: INTEGER) is
-			-- Remove item at `i'-th position.
+	compute_minimum_height is
+			-- Compute both to avoid duplicate code.
+		local
+			v_imp: EV_WIDGET_IMP
+			new_min_height: INTEGER
+			cur: INTEGER
 		do
-			Precursor (i)
-			(create {EV_ENVIRONMENT}).application.implementation.
-				do_once_on_idle (invalidate_agent)
+			cur := ev_children.index
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				v_imp := ev_children.item
+				new_min_height := new_min_height.max (v_imp.y_position + v_imp.wel_height)
+				ev_children.forth
+			end
+			ev_children.go_i_th (cur)
+			internal_set_minimum_height (new_min_height)
+		end
+
+	compute_minimum_size is
+			-- Recompute the minimum size of the object.
+		local
+			v_imp: EV_WIDGET_IMP
+			new_min_width, new_min_height: INTEGER
+			cur: INTEGER
+		do
+			cur := ev_children.index
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				v_imp := ev_children.item
+				new_min_width := new_min_width.max (v_imp.x_position + v_imp.wel_width)
+				new_min_height := new_min_height.max (v_imp.y_position + v_imp.wel_height)
+				ev_children.forth
+			end
+			ev_children.go_i_th (cur)
+			internal_set_minimum_size (new_min_width, new_min_height)
 		end
 
 feature -- Obsolete
@@ -147,14 +193,14 @@ feature -- Obsolete
 		obsolete
 			"Call notify_change."
 		do
-			notify_change (2 + 1)
+			notify_change (2 + 1, Current)
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is
 		obsolete
 			"Call notify_change."
 		do
-			notify_change (2 + 1)
+			notify_change (2 + 1, Current)
 		end
 
 	add_child_ok: BOOLEAN is
@@ -169,6 +215,31 @@ feature -- Obsolete
 			"Do: ?? = item.implementation"
 		do
 			Result := a_child = item.implementation
+		end
+
+feature {NONE} -- WEL Implementation
+
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			-- Move the window to `a_x', `a_y' position and
+			-- resize it with `a_width', `a_height'.
+			-- And we reajust size of all children.
+		local
+			v_imp: EV_WIDGET_IMP
+			cur: INTEGER
+		do
+			cwin_move_window (wel_item, a_x, a_y, a_width, a_height, repaint)
+			cur := ev_children.index
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				v_imp := ev_children.item
+				cwin_move_window (v_imp.wel_item, v_imp.x_position,
+						v_imp.y_position, v_imp.width, v_imp.height, repaint)
+				ev_children.forth
+			end
+			ev_children.go_i_th (cur)
 		end
 
 end -- class EV_FIXED_IMP
@@ -194,6 +265,30 @@ end -- class EV_FIXED_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/06/07 17:27:59  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.12.8.5  2000/06/05 23:57:06  manus
+--| Added redefinition of `wel_move_and_resize' that performs sizing operations on itself
+--| and its children. Needed with new way of doing computation of `minimum_size'.
+--| In `set_item_position' and `set_item_size' we call `notify_change' only when current
+--| child is out of EV_FIXED, if it is still inside we do not do anything.
+--|
+--| Revision 1.12.8.4  2000/06/05 21:08:04  manus
+--| Updated call to `notify_parent' because it requires now an extra parameter which is
+--| tells the parent which children did request the change. Usefull in case of NOTEBOOK
+--| for performance reasons (See EV_NOTEBOOK_IMP log for more details)
+--|
+--| Revision 1.12.8.3  2000/05/08 22:11:59  brendel
+--| Improved compute_minimum_*.
+--| Removed widget_changed.
+--|
+--| Revision 1.12.8.2  2000/05/05 00:05:07  brendel
+--| Fixed using compute_minimum_size, parent_ask_resize and notify_change.
+--|
+--| Revision 1.12.8.1  2000/05/03 19:09:29  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.17  2000/05/02 18:33:19  brendel
 --| Completed implementation.
 --|

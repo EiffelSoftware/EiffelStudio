@@ -37,6 +37,7 @@ feature -- Initialization
 		do
 			create {EV_VERTICAL_BOX} split_box
 			create {EV_HORIZONTAL_SEPARATOR} sep
+			sep.set_pointer_style (Default_pixmaps.Sizens_cursor)
 			Precursor
 		end
 
@@ -84,8 +85,20 @@ end -- class EV_VERTICAL_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/06/07 17:28:12  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.15  2000/05/03 21:44:10  brendel
 --| Reverted to old version not using EV_FIXED.
+--|
+--| Revision 1.4.4.3  2000/05/05 23:39:39  brendel
+--| Normal separator again.
+--|
+--| Revision 1.4.4.2  2000/05/05 22:16:52  brendel
+--| Uses split mouse cursor.
+--|
+--| Revision 1.4.4.1  2000/05/03 19:10:08  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.14  2000/05/02 22:02:14  brendel
 --| Removed redundent features.

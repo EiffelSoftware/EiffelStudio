@@ -21,6 +21,11 @@ inherit
 			implementation
 		end
 
+	EV_CONTAINABLE
+		redefine
+			implementation
+		end
+
 feature {NONE} -- Initialization
 
 	create_action_sequences is
@@ -28,6 +33,7 @@ feature {NONE} -- Initialization
 		do
 			{EV_PICK_AND_DROPABLE} Precursor
 			create pointer_button_press_actions
+			create pointer_double_press_actions
 			create pointer_motion_actions
 		end
 
@@ -37,7 +43,7 @@ feature -- Access
 			-- Item list containing `Current'.
 		do
 			Result := implementation.parent
-		ensure
+		ensure then
 			bridge_ok: Result = implementation.parent
 		end
 
@@ -61,6 +67,9 @@ feature -- Event handling
 
 	pointer_button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 			-- Actions to be performed when screen pointer button is pressed.
+
+	pointer_double_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
+			-- Actions to be performed when screen pointer is double clicked.
 
 feature {EV_ANY_I} -- Implementation
 
@@ -90,6 +99,18 @@ end -- class EV_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/06/07 17:28:04  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.7.4.3  2000/06/05 23:48:02  oconnor
+--| support double click
+--|
+--| Revision 1.7.4.2  2000/05/13 00:04:16  king
+--| Converted to new EV_CONTAINABLE class
+--|
+--| Revision 1.7.4.1  2000/05/03 19:09:57  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.14  2000/04/07 22:15:40  brendel
 --| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
 --|

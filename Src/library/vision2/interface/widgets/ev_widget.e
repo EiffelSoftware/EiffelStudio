@@ -18,13 +18,28 @@ inherit
 			implementation
 		end
 
+	EV_SENSITIVE
+		redefine
+			implementation
+		end
+
+	EV_COLORIZABLE
+		redefine
+			implementation
+		end
+
+	EV_CONTAINABLE
+		redefine
+			implementation
+		end
+
 feature -- Access
 
 	parent: EV_CONTAINER is
 			-- Contains `Current'.
 		do
 			Result := implementation.parent
-		ensure
+		ensure then
 			bridge_ok: Result = implementation.parent
 		end
 
@@ -48,56 +63,15 @@ feature -- Access
 
 	pointer_style: EV_CURSOR is
 			-- Cursor displayed when pointer is over this widget.
-		local
-			cursor_code: EV_CURSOR_CODE
 		do
 			Result := implementation.pointer_style
 			if Result = Void then
-				create cursor_code
-				create Result.make_with_code (cursor_code.standard)
+				Result := Default_pixmaps.Standard_cursor
 			end
-		end
-
-	foreground_color: EV_COLOR is
-			-- Color of foreground features like text.
-		do
-			Result := implementation.foreground_color
-		ensure
-			bridge_ok: Result = implementation.foreground_color
-		end
-
-	background_color: EV_COLOR is
-			-- Color displayed behind foreground features.
-		do
-			Result := implementation.background_color
-		ensure
-			bridge_ok: Result = implementation.background_color
-		end
-
-	tooltip: STRING is
-			-- Text displayed when user moves mouse over widget.
-			--| FIXME Can tooltip be implmented for all widgets?
-			--| Would it be more appropriate to have somthing like
-			--| EV_TOOLTIPABLE ? (set_tooltip, remove_tooltip)
-			--| That could be inherited by items as well?
-			--| Sam 20000308
-		do
-			Result := implementation.tooltip
-		ensure
-			bridge_ok: Result /= Void implies
-				Result.is_equal (implementation.tooltip)
 		end
 
 feature -- Status report
 
-	is_sensitive: BOOLEAN is
-			-- Does `Current' respond to user input events.
-		do
-			Result := implementation.is_sensitive
-		ensure
-			bridge_ok: Result = implementation.is_sensitive
-		end
-			
 	is_show_requested: BOOLEAN is
 			-- Will `Current' be displayed when its parent is?
 			-- See also `is_displayed'.
@@ -175,31 +149,6 @@ feature -- Status setting
 			--has_no_capture: not has_capture
 		end
 
-	enable_sensitive is
-			-- Set `is_sensitive' `True'.
-		do
-			implementation.enable_sensitive
-		ensure
-			is_sensitive: is_sensitive
-		end
-
-	disable_sensitive is
-			-- Set `is_sensitive' `False'.
-		do
-			implementation.disable_sensitive
-		ensure
-			not_is_sensitive: not is_sensitive
-		end
-
-	set_default_colors is
-			-- Set foreground and background color to their default values.
-		do
-			implementation.set_default_colors
-		ensure
-			--| Descendants of EV_WIDGET_I may redefine this to use
-			--| different colors so there is no postcondition.
-		end
-
 	center_pointer is
 			-- Position screen pointer over center of `Current'.
 		do
@@ -219,26 +168,6 @@ feature -- Element change
 			implementation.set_pointer_style (a_cursor)
 		ensure
 			pointer_style_assigned: pointer_style.is_equal (a_cursor)
-		end
-
-	set_background_color (a_color: like background_color) is
-			-- Assign `a_color' to `background_color'.
-		require
-			a_color_not_void: a_color /= Void
-		do
-			implementation.set_background_color (a_color)
-		ensure
-			background_color_assigned: background_color.is_equal (a_color)
-		end
-
-	set_foreground_color (a_color: like foreground_color) is
-			-- Assign `a_color' to `foreground_color'
-		require
-			a_color_not_void: a_color /= Void
-		do
-			implementation.set_foreground_color (a_color)
-		ensure
-			foreground_color_assigned: foreground_color.is_equal (a_color)
 		end
 
 	set_minimum_width (a_minimum_width: INTEGER) is
@@ -286,26 +215,6 @@ feature -- Element change
 			minimum_height_assigned: minimum_height = a_minimum_height
 		end
 
-	set_tooltip (a_text: STRING) is
-			-- Assign `a_tooltop' to `tooltip'.
-			--| FIXME see `tooltip' above.
-		require
-			a_text_not_void: a_text /= Void
-		do
-			implementation.set_tooltip (a_text)
-		ensure
-			assigned: tooltip.is_equal (a_text)
-		end
-
-	remove_tooltip is
-			-- Set `tooltip' to `Void'.
-			--| FIXME see `tooltip' above.
-		do
-			implementation.remove_tooltip
-		ensure
-			void: tooltip = Void
-		end
-
 feature -- Measurement 
 	
 	x_position: INTEGER is
@@ -347,10 +256,6 @@ feature -- Measurement
 			Result := implementation.width
 		ensure
 			bridge_ok: Result = implementation.width
-			not_less_than_minimum_width: Result >= minimum_width
-			--| FIXME Does not hold for EV_PIXMAP
-			--|minimum_width_when_not_displayed:
-			--|	not is_displayed implies Result = minimum_width
 		end
 
 	height: INTEGER is
@@ -360,10 +265,6 @@ feature -- Measurement
 			Result := implementation.height
 		ensure
 			bridge_ok: Result = implementation.height
-			not_less_than_minimum_height: Result >= minimum_height
-			--| FIXME Does not hold for EV_PIXMAP
-			--|minimum_height_when_not_displayed: not is_displayed
-			--|	implies Result = minimum_height
 		end 
 
 	minimum_width: INTEGER is
@@ -500,7 +401,9 @@ feature {EV_ANY} -- Contract support
 					i := i + 1
 				end
 			end
+debug ("make_for_test")
 			create_test_actions
+end
 		end
 
 	create_test_actions is
@@ -573,19 +476,6 @@ feature -- Obsolete
 		do
 			Result := False
 		end
-
---	set_expand (flag: BOOLEAN) is
---			-- Make `flag' the new expand option.
-----		obsolete
---			"Use set_child_expandable of EV_BOX"
---		local
---			box: EV_BOX
---		do
---			box ?= parent
---			if box /= Void then
---				box.set_child_expandable (Current, flag)
---			end
---		end
 
 	set_parent (par: like parent) is
 			-- Make `par' the new parent of the widget.
@@ -749,27 +639,24 @@ feature -- Obsolete
 			end
 		end
 
+feature {NONE} -- Constants
+
+	Default_pixmaps: EV_DEFAULT_PIXMAPS is
+			-- Default pixmaps and cursors.
+		once
+			create Result
+		end
+
 invariant
 	pointer_position_not_void: is_useable and is_show_requested implies
 		pointer_position /= Void
 
-	background_color_not_void: is_useable implies background_color /= void
-	foreground_color_not_void: is_useable implies foreground_color /= void
-
-
-	--| FIXME IEK The minimum dimension size should be greater than 0
-	--| This does not hold for containers though
 	minimum_width_not_negative: is_useable implies minimum_width >= 0
 	minimum_height_not_negative: is_useable implies minimum_height >= 0
 
-	--|FIXME These two assertions have been commented out due to problems with
-	--|The windows implementation. The problem is due to the fact that until the widgets
-	--| have been re-sized then the width, which is returned by wel will by 0. However,
-	--| the minimum width of the widget will be greater than 0.
-	--| This violates these pre-conditions and needs to be fixed.
-	--|width_not_less_than_minimum_width: is_useable implies width >= minimum_width
-	--|height_not_less_than_minimum_height:
-	--|	is_useable implies height >= minimum_height
+	--| VB size can be less than minimum size, if parent is smaller.
+	width_non_negative: is_useable implies width >= 0
+	height_non_negative: is_useable implies height >= 0
 
 	is_displayed_implies_show_requested:
 		is_useable and is_displayed implies is_show_requested
@@ -816,6 +703,39 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.82  2000/06/07 17:28:09  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.64.2.10  2000/06/05 17:42:51  manus
+--| Added debug ("make_for_test") around `create_test_actions' in order to avoid too many
+--| outputs. If one wants them, it simply has to add `debug ("make_for_test")' in his Ace file.
+--|
+--| Revision 1.64.2.9  2000/05/15 22:14:39  king
+--| Removed commented out obsolete set_expand
+--|
+--| Revision 1.64.2.8  2000/05/13 00:04:18  king
+--| Converted to new EV_CONTAINABLE class
+--|
+--| Revision 1.64.2.7  2000/05/12 17:35:01  king
+--| Integrated ev_colorize
+--|
+--| Revision 1.64.2.6  2000/05/11 19:33:28  king
+--| Integrated ev_sensitive
+--|
+--| Revision 1.64.2.5  2000/05/10 23:03:06  king
+--| Integrated inital tooltipable changes
+--|
+--| Revision 1.64.2.4  2000/05/04 17:33:05  brendel
+--| Corrected contracts about sizes: size can be less than minimum size,
+--| if the parent is smaller than the minimum size of the widget.
+--|
+--| Revision 1.64.2.3  2000/05/04 04:14:41  pichery
+--| Replaced call to EV_CURSOR_CODE with calls
+--| to EV_DEFAULT_PIXMAPS
+--|
+--| Revision 1.64.2.2  2000/05/03 19:04:19  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.81  2000/05/03 18:05:42  brendel
 --| Added precondition to pointer_position: is_show_requested.
 --|

@@ -42,17 +42,26 @@ feature -- Initialization
 
 feature {EV_COLOR} -- Access
 
-	red: REAL
+	red: REAL is
 			-- Intensity of red component.
 			-- Range: [0,1]
+		do
+			Result := red_8_bit / 255.0
+		end
 
-	green: REAL
+	green: REAL is
 			-- Intensity of green component.
 			-- Range: [0,1]
+		do
+			Result := green_8_bit / 255.0
+		end
 	
-	blue: REAL 
+	blue: REAL is
 			-- Intensity of blue component.
 			-- Range: [0,1]
+		do
+			Result := blue_8_bit / 255.0
+		end
 
 	name: STRING
 			-- A textual description.
@@ -62,22 +71,19 @@ feature {EV_COLOR} -- Element change
 	set_red (a_red: REAL) is
 			-- Assign `a_red' to `red'.
 		do
-			set_red_with_8_bit ((a_red * 255).rounded)
-			red := a_red
+			wel_set_red ((a_red * 255).rounded)
 		end
 
 	set_green (a_green: REAL) is
 			-- Assign `a_green' to `green'.
 		do
-			set_green_with_8_bit ((a_green * 255).rounded)
-			green := a_green
+			wel_set_green ((a_green * 255).rounded)
 		end
 
 	set_blue (a_blue: REAL) is
 			-- Assign `a_blue' to `blue'.
 		do
-			set_blue_with_8_bit ((a_blue * 255).rounded)
-			blue := a_blue
+			wel_set_blue ((a_blue * 255).rounded)
 		end
 
 	set_name (a_name: STRING) is
@@ -93,9 +99,9 @@ feature {EV_ANY_I, EV_DEFAULT_COLORS_IMP}
 			wcr: WEL_COLOR_REF
 		do
 			create wcr.make_system (id)
-			set_red_with_8_bit (wcr.red)
-			set_green_with_8_bit (wcr.green)
-			set_blue_with_8_bit (wcr.blue)
+			wel_set_red (wcr.red)
+			wel_set_green (wcr.green)
+			wel_set_blue (wcr.blue)
 		end
 
 feature {EV_COLOR} -- Conversion
@@ -104,7 +110,7 @@ feature {EV_COLOR} -- Conversion
 			-- `red', `green' and `blue' intensities packed into 24 bits
 			-- with 8 bits per colour and blue in the least significant 8 bits.
 		do
-			Result := (red_8_bit *65536) + (green_8_bit * 256) + blue_8_bit
+			Result := (red_8_bit * 65536) + (green_8_bit * 256) + blue_8_bit
 		end
 
 	set_rgb_with_24_bit (a_24_bit_rgb: INTEGER) is
@@ -114,32 +120,29 @@ feature {EV_COLOR} -- Conversion
 			counter: INTEGER
 		do
 			counter := a_24_bit_rgb
-			set_red_with_8_bit (counter // 65536)
+			wel_set_red (counter // 65536)
 			counter := counter - (counter // 65536)
-			set_green_with_8_bit (counter // 256)
+			wel_set_green (counter // 256)
 			counter := counter - (counter // 256)
-			set_blue_with_8_bit (counter)
+			wel_set_blue (counter)
 		end
 	
 	set_red_with_8_bit (an_8_bit_red: INTEGER) is
 			-- Set `red' from `an_8_bit_red' intinsity.
 		do
 			wel_set_red (an_8_bit_red)
-			red := an_8_bit_red / 255
 		end
 	
 	set_green_with_8_bit (an_8_bit_green: INTEGER) is
 			-- Set `green' from `an_8_bit_green' intinsity.
 		do
 			wel_set_green (an_8_bit_green)
-			green := an_8_bit_green / 255
 		end
 	
 	set_blue_with_8_bit (an_8_bit_blue: INTEGER) is
 			-- Set `blue' from `an_8_bit_blue' intinsity.
 		do
 			wel_set_blue (an_8_bit_blue)
-			blue := an_8_bit_blue / 255
 		end
 
 	red_16_bit: INTEGER is
@@ -147,7 +150,7 @@ feature {EV_COLOR} -- Conversion
 			-- as a 16 bit unsigned integer.
 			-- Range [0,65535]
 		do
-			Result := (red * 65535).rounded
+			Result := red_8_bit * 256
 		end
 
 	green_16_bit: INTEGER is
@@ -155,7 +158,7 @@ feature {EV_COLOR} -- Conversion
 			-- as a 16 bit unsigned integer.
 			-- Range [0,65535]
 		do
-			Result := (green * 65535).rounded
+			Result := green_8_bit * 256
 		end
 	
 	blue_16_bit: INTEGER is
@@ -163,31 +166,25 @@ feature {EV_COLOR} -- Conversion
 			-- as a 16 bit unsigned integer.
 			-- Range [0,65535]
 		do
-			Result := (blue * 65535).rounded
+			Result := blue_8_bit * 256
 		end
 	
 	set_red_with_16_bit (a_16_bit_red: INTEGER) is
 			-- Set `red' from `a_8_bit_red' intinsity.
 		do
-			--|FIXMEred_16_bit := a_16_bit_red
-			wel_set_red (a_16_bit_RED // 256)
-			red := a_16_bit_red / 65535	
+			wel_set_red (a_16_bit_red // 256)
 		end
 	
 	set_green_with_16_bit (a_16_bit_green: INTEGER) is
 			-- Set `green' from `a_16_bit_green' intinsity.
 		do
-			--|FIXMEgreen_16_bit := a_16_bit_green
 			wel_set_green (a_16_bit_green // 256)
-			green := a_16_bit_green / 65535
 		end
 	
 	set_blue_with_16_bit (a_16_bit_blue: INTEGER) is
 			-- Set `blue' from `a_16_bit_blue' intinsity.
 		do
-			--|FIXMEblue_16_bit := a_16_bit_blue
 			wel_set_blue (a_16_bit_blue // 256)
-			blue := a_16_bit_blue
 		end
 
 feature -- Status setting
@@ -199,6 +196,15 @@ feature -- Status setting
 			is_destroyed := True
 			destroy_just_called := True
 		end
+feature {NONE} -- Implementation
+
+	delta: REAL is
+			-- Amount by which two intensities can differ but still be
+			-- considered equal by `is_equal'.
+		do
+			Result := 1/255
+		end
+
 
 end -- class EV_COLOR_IMP
 
@@ -223,6 +229,19 @@ end -- class EV_COLOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/06/07 17:27:53  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.3.8.3  2000/05/16 22:22:59  rogers
+--| Added delta. For use in postcondtions and assertions.
+--|
+--| Revision 1.3.8.2  2000/05/13 03:25:47  pichery
+--| Changed implementation. `red', `blue' and `green' are
+--| no more attributes but features.
+--|
+--| Revision 1.3.8.1  2000/05/03 19:09:12  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.5  2000/02/19 05:52:35  oconnor
 --| released
 --|

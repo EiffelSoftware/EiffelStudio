@@ -10,6 +10,11 @@ deferred class
 inherit
 	ANY
 
+	COMPILER_EXPORTER
+		export
+			{NONE} all
+		end
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -109,7 +114,7 @@ feature -- Reinitialization
 	reset is
 			-- set class attributes to default values
 		do
-			current_class_c := Void
+			current_class_i := Void
 			--if Workbench.system_defined then
 			--	System.set_current_class (Void)
 			--end
@@ -128,7 +133,7 @@ feature -- Reinitialization
 			searched_token := Void
 			current_line := Void
 			searched_line := Void
-			current_class_c := Void
+			current_class_i := Void
 			--if Workbench.system_defined then
 			--	System.set_current_class (Void)
 			--end
@@ -174,7 +179,7 @@ feature {NONE} -- Click ast exploration
 			clickable: CLICKABLE_AST
 			clickable_position: EB_CLICKABLE_POSITION
 			ast_list: CLICK_LIST
-			a_class: CLASS_C
+			a_class: CLASS_I
 			prov_list: LINKED_LIST [EB_CLICKABLE_POSITION]
 			f_name: FEATURE_NAME
 			inherit_clauses: SORTABLE_ARRAY [INTEGER]
@@ -183,7 +188,7 @@ feature {NONE} -- Click ast exploration
 			has_parents: BOOLEAN
 		do
 			initialize_context
-			if context_initialized_successfully then
+			if current_class_i /= Void then
 				parents := current_class_as.parents
 				has_parents := parents /= Void
 				if has_parents then
@@ -213,8 +218,8 @@ feature {NONE} -- Click ast exploration
 						a_click_ast := ast_list.i_th (pos)
 						clickable := a_click_ast.node
 						if clickable.is_class or else clickable.is_precursor then
-							a_class := clickable.associated_eiffel_class (current_class_c)
-							if a_class /= Void then  -- a_class is void if it corresponds to NONE
+							a_class := clickable.associated_eiffel_class (current_class_i)
+							if a_class /= Void then
 								create clickable_position.make (a_click_ast.start_position, a_click_ast.end_position)
 								clickable_position.set_class (a_class.name)
 								prov_list.extend (clickable_position)
@@ -233,7 +238,7 @@ feature {NONE} -- Click ast exploration
 										j := j + 1
 									end
 									if j /= 1 and then pos_in_txt < inherit_clauses @ j then
-										a_class := parents.i_th (j - 1).associated_class (current_class_c)
+										a_class := parents.i_th (j - 1).associated_class (current_class_i)
 										if a_class /= Void then
 											class_name := a_class.name
 										else
@@ -324,45 +329,49 @@ feature {NONE}-- Clickable/Editable implementation
 			class_i: CLASS_I
 			feat: E_FEATURE
 		do
-			index_min := 1
-			index_max := clickable_position_list.count
-			if a_position >= (clickable_position_list @ 1).start then
-					-- search in the list
-				if a_position >= (clickable_position_list @ index_max).start then
-					index_min := index_max
-				else
-					from
-						
-					until
-						index_min >= index_max - 1
-					loop
-						middle := index_min + (index_max - index_min) // 2
-						position := (clickable_position_list @ middle).start
-						if position > a_position then
-							index_max := middle
-						else
-							index_min := middle
-						end
-					end
-				end
-				click_pos := clickable_position_list @ index_min
-				if a_position < click_pos.stop then
-					if click_pos.is_feature then
-						class_i := Universe.class_named (click_pos.class_name, Universe.cluster_of_name (cluster_name))
-						if class_i /= Void and then class_i.compiled and then class_i.compiled_class.has_feature_table then
-							feat := class_i.compiled_class.feature_with_name (click_pos.feature_name)
-							if feat /= Void then
-								create {FEATURE_STONE} Result.make (feat)
+			if clickable_position_list /= Void then
+				index_min := 1
+				index_max := clickable_position_list.count
+				if a_position >= (clickable_position_list @ 1).start then
+						-- search in the list
+					if a_position >= (clickable_position_list @ index_max).start then
+						index_min := index_max
+					else
+						from
+							
+						until
+							index_min >= index_max - 1
+						loop
+							middle := index_min + (index_max - index_min) // 2
+							position := (clickable_position_list @ middle).start
+							if position > a_position then
+								index_max := middle
+							else
+								index_min := middle
 							end
 						end
-					elseif click_pos.is_class then
-						class_i := Universe.class_named (click_pos.class_name, Universe.cluster_of_name (cluster_name))
-						if class_i /= Void and then class_i.compiled then
-							create {CLASSC_STONE} Result.make (class_i.compiled_class)
-						end
-					end	
-				else
-					Result := Void
+					end
+					click_pos := clickable_position_list @ index_min
+					if a_position < click_pos.stop then
+						if click_pos.is_feature then
+							class_i := Universe.class_named (click_pos.class_name, Universe.cluster_of_name (cluster_name))
+							if class_i /= Void and then class_i.compiled and then class_i.compiled_class.has_feature_table then
+								feat := class_i.compiled_class.feature_with_name (click_pos.feature_name)
+								if feat /= Void then
+									create {FEATURE_STONE} Result.make (feat)
+								end
+							end
+						elseif click_pos.is_class then
+							class_i := Universe.class_named (click_pos.class_name, Universe.cluster_of_name (cluster_name))
+							if class_i /= Void then
+								if class_i.compiled then
+									create {CLASSC_STONE} Result.make (class_i.compiled_class)
+								else
+									create {CLASSI_STONE} Result.make (class_i)
+								end
+							end
+						end	
+					end
 				end
 			end
 		end
@@ -375,7 +384,7 @@ feature {NONE}-- Clickable/Editable implementation
 			token_in_line: line.has_token (token)
 		do
 			initialize_context
-			if context_initialized_successfully then
+			if current_class_i /= Void and current_class_i.is_compiled then
 				if not token_image_is_in_array (token, unwanted_symbols) then
 					current_feature_as := ft
 					current_token := token
@@ -395,7 +404,8 @@ feature {NONE}-- Clickable/Editable implementation
 	searched_feature: E_FEATURE is
 			-- analyze class text from `current_token' to find feature associated with `searched_token'
 		require
-			current_class_c_not_void: current_class_c /= Void
+			current_class_i_not_void: current_class_i /= Void
+			current_class_i_compiled: current_class_i.is_compiled
 		local
 			exp: LINKED_LIST [EDITOR_TOKEN]
 			name: STRING
@@ -404,9 +414,11 @@ feature {NONE}-- Clickable/Editable implementation
 			processed_class: CLASS_C
 			type: TYPE_A
 			formal: FORMAL_A
+			l_current_class_c: CLASS_C
 		do
 			from
-				processed_type := current_class_c.actual_type
+				l_current_class_c := current_class_i.compiled_class
+				processed_type := l_current_class_c.actual_type
 				if token_image_is_same_as_word (current_token, Create_word) then
 					go_to_next_token
 					error := not token_image_is_same_as_word (current_token, Opening_brace)
@@ -462,22 +474,22 @@ feature {NONE}-- Clickable/Editable implementation
 							end
 						else
 							go_to_previous_token
-							if current_feature_as /= Void and then current_class_c.parents /= Void then
+							if current_feature_as /= Void and then l_current_class_c.parents /= Void then
 								from
-									current_class_c.parents.start
+									l_current_class_c.parents.start
 								until
-									Result /= Void or else current_class_c.parents.after
+									Result /= Void or else l_current_class_c.parents.after
 								loop
-									type := current_class_c.parents.item
+									type := l_current_class_c.parents.item
 									if type.associated_class /= Void and then type.associated_class.has_feature_table then
 										Result := type.associated_class.feature_with_name (current_feature_as.feature_name)
 									end
-									current_class_c.parents.forth
+									l_current_class_c.parents.forth
 								end
 							end
 						end
-					elseif current_class_c.has_feature_table then
-						Result := current_class_c.feature_with_name (name)
+					elseif l_current_class_c.has_feature_table then
+						Result := l_current_class_c.feature_with_name (name)
 					end
 					if Result = Void then		
 						processed_type := type_of_local_entity_named (name)
@@ -685,6 +697,8 @@ feature {NONE}-- Implementation
 			-- analyze expression represented by list of token `exp'
 		require
 			exp_not_void: exp /= Void
+			current_class_i_not_void: current_class_i /= Void
+			current_class_i_compiled: current_class_i.is_compiled
 		local
 			sub_exp: like exp
 			infix_expected: BOOLEAN
@@ -890,6 +904,8 @@ feature {NONE}-- Implementation
 			-- create list of type from a list of expression (represented by lists of tokens)
 		require
 			expression_table_not_void: expression_table /= Void
+			current_class_i_not_void: current_class_i /= Void
+			current_class_i_compiled: current_class_i.is_compiled
 		local
 			sub_exp, recur_exp: LINKED_LIST[EDITOR_TOKEN]
 			type: TYPE_A
@@ -898,7 +914,9 @@ feature {NONE}-- Implementation
 			processed_class: CLASS_C
 			processed_feature: E_FEATURE
 			formal: FORMAL_A
+			l_current_class_c: CLASS_C
 		do
+			l_current_class_c := current_class_i.compiled_class
 			create Result.make
 			from
 				expression_table.start
@@ -939,14 +957,14 @@ feature {NONE}-- Implementation
 					else
 							-- type is Void
 						name := sub_exp.item.image.as_lower
-						if current_class_c.has_feature_table then
-							processed_feature := current_class_c.feature_with_name (name)
+						if l_current_class_c.has_feature_table then
+							processed_feature := l_current_class_c.feature_with_name (name)
 						end
 						if processed_feature /= Void then
 							if processed_feature.type /= Void then
 								if processed_feature.type.is_formal then
 									formal ?= processed_feature.type
-									type := current_class_c.actual_type
+									type := l_current_class_c.actual_type
 									if
 										type /= Void and then
 										type.has_generics and then 
@@ -1063,9 +1081,11 @@ feature {NONE}-- Implementation
 	type_of_local_entity_named (name: STRING): TYPE_A is
 			-- return type of argument or local variable named `name' found in `current_feature_as'
 			-- Void if there is none
+		require
+			current_class_i_not_void: current_class_i /= Void
+			current_class_i_compiled: current_class_i.is_compiled
 		local
 			current_feature: E_FEATURE
-			current_feature_i: FEATURE_I
 			locals_list: EIFFEL_LIST [TYPE_DEC_AS]
 			id_list: ARRAYED_LIST [INTEGER]
 			stop: BOOLEAN
@@ -1074,14 +1094,16 @@ feature {NONE}-- Implementation
 			ent_list: LINKED_LIST [STRING]
 			tst, lower_name: STRING
 			class_i: CLASS_I
+			l_current_class_c: CLASS_C
 		do
 			if retried then
 				Result := Void
 			else
 				if current_feature_as /= Void then 
 							-- it is maybe a local variable
-					if current_class_c.has_feature_table then
-						current_feature := current_class_c.feature_with_name (current_feature_as.feature_name)
+					l_current_class_c := current_class_i.compiled_class
+					if l_current_class_c.has_feature_table then
+						current_feature := l_current_class_c.feature_with_name (current_feature_as.feature_name)
 					end
 					if current_feature /= Void then
 						if current_feature.locals /= Void then
@@ -1104,9 +1126,9 @@ feature {NONE}-- Implementation
 										if name_id = id_list.item then
 											stop := True
 												-- Compute actual type for local
-											Local_evaluator.set_local_name (name_id)
-											current_feature_i := current_class_c.feature_named (current_feature_as.feature_name)
-											Result := Local_evaluator.evaluated_type (locals_list.item.type, current_class_c.feature_table, current_feature_i)
+											Result := local_evaluated_type (name_id,
+												locals_list.item.type, l_current_class_c,
+												current_feature_as.feature_name)
 										end
 										id_list.forth
 									end
@@ -1142,7 +1164,7 @@ feature {NONE}-- Implementation
 											tst := Local_analyzer.found_class_names.i_th (ent_list.index)
 											if Universe /= Void then
 												class_i  := Universe.class_named (tst, Universe.cluster_of_name (cluster_name))
-												if class_i /= void and then class_i.compiled then
+												if class_i /= Void and then class_i.compiled then
 													Result := class_i.compiled_class.actual_type
 												end
 											end
@@ -1164,16 +1186,25 @@ feature {NONE}-- Implementation
 	type_of_constants_or_reserved_word (token: EDITOR_TOKEN): TYPE_A is
 			-- return type associated with `token' if it represents a constant
 			-- or a reserved word. If not, return Void
+		require
+			current_class_i_not_void: current_class_i /= Void
+			current_class_i_compiled: current_class_i.is_compiled
 		local
 			nb: EDITOR_TOKEN_NUMBER
 			ch: EDITOR_TOKEN_CHARACTER
 			current_feature: E_FEATURE
+			l_current_class_c: CLASS_C
 		do
 			if is_keyword (token) then
+				l_current_class_c := current_class_i.compiled_class
 				if token_image_is_same_as_word (token, Current_word) then
-					Result := current_class_c.actual_type
-				elseif token_image_is_same_as_word (token, Result_word) and then current_feature_as /= Void then
-					current_feature := current_class_c.feature_with_name (current_feature_as.feature_name)
+					Result := l_current_class_c.actual_type
+				elseif
+					token_image_is_same_as_word (token, Result_word) and then
+					current_feature_as /= Void and then l_current_class_c.has_feature_table
+				then
+					current_feature := l_current_class_c.feature_with_name (
+						current_feature_as.feature_name)
 					if current_feature /= Void then
 						Result := current_feature.type
 					end
@@ -1199,6 +1230,53 @@ feature {NONE}-- Implementation
 		end	
 
 feature {NONE}-- Implementation
+
+	local_evaluated_type (a_local_name_id: INTEGER; a_type: TYPE_AS; a_current_class: CLASS_C; a_feature_name: STRING): TYPE_A is
+			-- Given `a_type' from AST resolve its type in `a_current_class' for feature called
+			-- `a_feature_name'.
+		require
+			a_local_name_id_positive: a_local_name_id > 0
+			a_type_not_void: a_type /= Void
+			a_current_class_not_void: a_current_class /= Void
+			a_current_class_has_feature_table: a_current_class.has_feature_table
+			a_feature_name_not_void: a_feature_name /= Void
+		local
+			l_feat: FEATURE_I
+			retried: BOOLEAN
+			l_cluster: CLUSTER_I
+			l_class_c: CLASS_C
+		do
+			if not retried then
+					-- Save compiler context
+				l_class_c := system.current_class
+				l_cluster := inst_context.cluster
+				
+					-- Set new compiler context
+				system.set_current_class (a_current_class)
+				inst_context.set_cluster (a_current_class.cluster)
+
+					-- Resolve local's type
+				check
+					no_errors: not error_handler.has_error
+				end
+				error_handler.mark
+				l_feat := a_current_class.feature_named (a_feature_name)
+				Local_evaluator.set_local_name (a_local_name_id)
+				Result := Local_evaluator.evaluated_type (a_type,
+					a_current_class.feature_table, l_feat)
+			end
+				-- After a crash or after the end of a normal execution
+				-- we need to restore compiler context.
+			system.set_current_class (l_class_c)
+			inst_context.set_cluster (l_cluster)
+		rescue
+			retried := True
+				-- We do not care about errors here, so we get rid of it.
+			if error_handler.new_error then
+				error_handler.wipe_out
+			end
+			retry
+		end
 	
 	after_searched_token: BOOLEAN is
 			-- is `current_token' after `searched_token' ?
@@ -1404,33 +1482,20 @@ feature {NONE}-- Implementation
 feature {NONE} -- Implementation
 
 	initialize_context is
-			-- initialize `current_class_c' and context if possible
-			-- set context_initialized_successfully to True if could
+			-- Initialize `current_class_i'.
 		require
 			current_class_name_is_not_void: current_class_name /= Void
 			cluster_name_is_not_void: cluster_name /= Void
+			workbench_is_not_compiling: not workbench.is_compiling
 		local
 			class_i: CLASS_I
 		do
-			context_initialized_successfully := Workbench.is_already_compiled and then not Workbench.is_compiling
-			if context_initialized_successfully and then Universe /= Void then
-				class_i := Universe.class_named (current_class_name, Universe.cluster_of_name (cluster_name))
-				if class_i /= Void and then class_i.compiled then
-					current_class_c := class_i.compiled_class
-					if current_class_c.has_feature_table then
-						Inst_context.set_cluster (current_class_c.cluster)
-						System.set_current_class (current_class_c)
-						context_initialized_successfully := True
-					end
-				end
-			end
+			current_class_i := Universe.class_named (current_class_name,
+				Universe.cluster_of_name (cluster_name))
 		end
 
-	current_class_c: CLASS_C
-			-- current compiled class 
-
-	context_initialized_successfully: BOOLEAN
-			-- could the context (compiled class / cluster) be initialized ?
+	current_class_i: CLASS_I
+			-- current class 
 
 	platform_is_windows: BOOLEAN is
 			-- Is the current platform Windows?

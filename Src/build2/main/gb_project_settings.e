@@ -168,6 +168,7 @@ feature -- Basic operation
 	load (a_file_name: STRING; file_handler: GB_SIMPLE_XML_FILE_HANDLER) is
 			-- Load `Current' from file `a_file_name' in location `project_location'.
 		require
+			file_name_not_void: a_file_name /= Void
 			file_handler_not_void: file_handler /= Void
 		local
 			data: ARRAYED_LIST [TUPLE [STRING, STRING]]

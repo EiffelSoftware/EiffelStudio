@@ -351,19 +351,10 @@ feature -- Properties
 			general_class: general_class /= Void
 		local
 			local_workbench: WORKBENCH_I
-			local_universe: UNIVERSE_I
-			local_root_cluster: CLUSTER_I
-			a_cluster_list: LINKED_LIST [CLUSTER_I]
-			a_cluster: CLUSTER_I
-			a_class_table: EXTEND_TABLE [CLASS_I, STRING]
-			a_class_i: CLASS_I
-			a_visible_i: VISIBLE_I
 		do
 			first_compilation := True
 
 			local_workbench := Workbench
-			local_universe := Universe
-			local_root_cluster := root_cluster
 
 				-- At the very beginning of a session, even class ANY is
 				-- not compiled. So we must say to the workbench to compile
@@ -393,6 +384,22 @@ feature -- Properties
 			local_workbench.change_class (root_class)
 
 			-- Now add classes with visible features.
+			add_visible_classes
+		end
+
+	add_visible_classes is
+			-- Force visible classes into System
+		local
+			local_workbench: WORKBENCH_I
+			local_universe: UNIVERSE_I
+			a_cluster_list: LINKED_LIST [CLUSTER_I]
+			a_cluster: CLUSTER_I
+			a_class_table: EXTEND_TABLE [CLASS_I, STRING]
+			a_class_i: CLASS_I
+			a_visible_i: VISIBLE_I
+		do
+			local_workbench := Workbench
+			local_universe := Universe
 
 			from
 				a_cluster_list := local_universe.clusters
@@ -414,8 +421,11 @@ feature -- Properties
 						a_visible_i := a_class_i.visible_level
 
 						if a_visible_i /= Void and then a_visible_i.has_visible then
-							-- Add visible class to system.
-							local_workbench.change_class (a_class_i)
+							-- Add visible class to system if
+							-- not in the system yet.
+							if not a_class_i.compiled then
+								local_workbench.change_class (a_class_i)
+							end
 						end
 					end
 
@@ -424,7 +434,6 @@ feature -- Properties
 
 				a_cluster_list.forth
 			end
-
 		end
 
 	protected_classes: BOOLEAN
@@ -721,6 +730,9 @@ end
 				-- changed since last compilaton), insert it in the
 				-- changed_classes.
 				Workbench.change_class (root_class)
+				add_visible_classes
+			else
+				add_visible_classes
 			end
 			if Lace.compile_all_classes then
 					-- `None' is specified as the root class
@@ -3862,6 +3874,8 @@ feature -- Precompilation
 		do
 			if not general_class.compiled then
 				init
+			else
+				add_visible_classes
 			end
 			Workbench.change_all
 			private_freeze := True

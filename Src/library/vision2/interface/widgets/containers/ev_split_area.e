@@ -23,13 +23,16 @@ inherit
 		redefine
 			replace,
 			client_height,
-			client_width
+			client_width,
+			initialize,
+			merge_radio_button_groups
 		end
 
 	EV_WIDGET
 		redefine
 			implementation,
-			create_implementation
+			create_implementation,
+			initialize
 		select
 			implementation
 		end
@@ -38,6 +41,14 @@ inherit
 		undefine
 			default_create,
 			changeable_comparison_criterion
+		end
+
+feature {NONE} -- Initalization
+
+	initialize is
+		do
+			{EV_WIDGET} Precursor
+			first_cell.merge_radio_button_groups (second_cell)
 		end
 
 feature -- Access
@@ -114,7 +125,11 @@ feature -- Status report
 	readable: BOOLEAN is
 			-- Is there a current item that may be read?
 		do
-			Result := index > 0 and then index <= count
+			if index = 1 then
+				Result := first_cell.readable
+			elseif index = 2 then
+				Result := second_cell.readable
+			end
 		end
 
 	writable: BOOLEAN is
@@ -229,6 +244,12 @@ feature -- Element change
 		end	
 
 feature -- Status setting
+
+	merge_radio_button_groups (other: EV_CONTAINER) is
+			-- Merge `Current' radio button group with that of `other'.
+		do
+			first_cell.merge_radio_button_groups (other)
+		end
 
 	set_split_position (a_split_position: INTEGER) is
 			-- Make `a_split_position' the new position of the splitter in pixels.
@@ -354,6 +375,10 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/03 16:50:23  brendel
+--| Added feature initialize. Now only to find out why it is not called.
+--| Fixed bug in readable.
+--|
 --| Revision 1.18  2000/03/03 02:52:39  brendel
 --| Since `item' is no longer inherited, pre- and postconditions are added.
 --|

@@ -554,12 +554,12 @@ feature {NONE} -- Implementation
 	button_height: INTEGER is 
 		local
 			wel_dc: WEL_SCREEN_DC
-			wel_font: WEL_SYSTEM_FONT
+			wel_ft: WEL_SYSTEM_FONT
 		once
-			!! wel_font.make
+			!! wel_ft.make
 			!! wel_dc
 			wel_dc.get
-			wel_dc.select_font (wel_font)
+			wel_dc.select_font (wel_ft)
 			Result := wel_dc.string_height ("I") * 7 // 4
 			wel_dc.unselect_font
 			wel_dc.release 

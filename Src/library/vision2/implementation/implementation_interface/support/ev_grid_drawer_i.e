@@ -411,7 +411,7 @@ feature -- Basic operations
 						vertical_node_pixmap_top_offset := current_item_y_position + ((current_row_height - node_pixmap_height + 1)// 2)
 						vertical_node_pixmap_bottom_offset := vertical_node_pixmap_top_offset + node_pixmap_height
 						
-						if drawing_parentrow or current_column_index = 1 then
+						if drawing_parentrow then
 							current_subrow_indent := subrow_indent * (current_row.indent_depth_in_tree - 1) + first_tree_node_indent
 						else
 							current_subrow_indent := 0
@@ -473,6 +473,12 @@ feature -- Basic operations
 								current_tree_adjusted_column_width := current_column_width
 
 								if grid.is_tree_enabled then
+									if current_column_index = 1 then
+											-- If we are drawing the first row then we must ensure that
+											-- the items are indented to the default indent of the tree, even
+											-- if they are not tree items.
+										current_subrow_indent := current_subrow_indent.max (first_tree_node_indent)
+									end
 									if current_column_index = node_index then
 										
 										current_tree_adjusted_item_x_position := current_tree_adjusted_item_x_position + current_subrow_indent

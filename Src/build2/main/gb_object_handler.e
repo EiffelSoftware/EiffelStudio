@@ -9,22 +9,49 @@ class
 	
 inherit
 	INTERNAL
+		export
+			{NONE} all
+		end
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_XML_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_DEFERRED_BUILDER
+		export
+			{NONE} all
+		end
 	
 	GB_LAYOUT_CONSTRUCTOR_STATE_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
 	
 create
 	initialize
@@ -38,6 +65,38 @@ feature {NONE} -- Initialization
 			create deleted_objects.make (20)
 		ensure
 			objects_not_void: objects /= Void
+		end
+		
+feature -- Access
+
+	object_contained_in_object (parent_object, child_object: GB_OBJECT): BOOLEAN is
+			-- Is `child_object' a child (recursively) of `parent_object'?
+		require
+			parent_not_void: parent_object /= Void
+		local
+			parent_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+		do
+			object_contained_in_object_result := False
+			parent_layout_item ?= parent_object.layout_item
+			check
+				parent_layout_item_not_void: parent_layout_item /= Void
+			end
+			parent_layout_item.recursive_do_all (agent is_child (child_object, ?))
+			Result := object_contained_in_object_result
+		end
+		
+	is_child (child_object: GB_OBJECT; an_item: EV_TREE_ITEM) is
+			-- Is `child_object' a direct child of `an_item'?
+		local
+			current_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+		do
+			current_item ?= an_item
+			check
+				current_item_not_void: current_item /= Void
+			end
+			if current_item.object = child_object then
+				object_contained_in_object_result := True
+			end
 		end
 		
 feature -- Basic operation
@@ -251,39 +310,6 @@ feature -- Basic operation
 				local_all_editors.forth
 			end
 		end	
-		
-	object_contained_in_object (parent_object, child_object: GB_OBJECT): BOOLEAN is
-			-- Is `child_object' a child (recursively) of `parent_object'?
-		require
-			parent_not_void: parent_object /= Void
-		local
-			parent_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		do
-			object_contained_in_object_result := False
-			parent_layout_item ?= parent_object.layout_item
-			check
-				parent_layout_item_not_void: parent_layout_item /= Void
-			end
-			parent_layout_item.recursive_do_all (agent is_child (child_object, ?))
-			Result := object_contained_in_object_result
-		end
-		
-	is_child (child_object: GB_OBJECT; an_item: EV_TREE_ITEM) is
-			-- Is `child_object' a direct child of `an_item'?
-		local
-			current_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		do
-			current_item ?= an_item
-			check
-				current_item_not_void: current_item /= Void
-			end
-			if current_item.object = child_object then
-				object_contained_in_object_result := True
-			end
-		end
-		
-	object_contained_in_object_result: Boolean
-		-- Result of last call to `object_contained_in_object'.
 		
 	add_initial_window is
 			-- Add a new window when there are no other contained.
@@ -571,6 +597,7 @@ feature -- Basic operation
 				end
 			end
 		end
+		
 	name_in_use (object_name: STRING; an_object: GB_OBJECT): BOOLEAN is
 			-- Is a GB_OBJECT with name matching `object_name' contained
 			-- in `objects' or `events' of all objects in `objects.
@@ -583,7 +610,6 @@ feature -- Basic operation
 				string_is_feature_name (object_name, an_object)
 		end
 		
-	
 	existing_feature_matches (feature_name, type: STRING): BOOLEAN is
 			-- Do all action sequences with feature named `feature_name' connected,
 			-- have a type that is compatible (argument wise) with `type'.
@@ -636,8 +662,7 @@ feature -- Basic operation
 					objects.forth
 				end
 		end
-		
-		
+
 	mark_as_deleted (an_object: GB_OBJECT) is
 			-- Move `an_object' and all children at all levels in
 			-- to `deleted_objects'.
@@ -666,7 +691,6 @@ feature -- Basic operation
 		ensure
 			object_deleted: deleted_objects.has (an_object)
 		end
-		
 		
 	mark_existing (an_object: GB_OBJECT) is
 			-- Move `an_object' and all children at all levels in to
@@ -1029,6 +1053,11 @@ feature {GB_TITLED_WINDOW_OBJECT, GB_XML_OBJECT_BUILDER} -- Implementation
 		do
 			objects.extend (an_object)
 		end
+		
+feature {NONE} -- Implementation
+
+	object_contained_in_object_result: Boolean
+		-- Result of last call to `object_contained_in_object'.
 
 feature -- Access
 

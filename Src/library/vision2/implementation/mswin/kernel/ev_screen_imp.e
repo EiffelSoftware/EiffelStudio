@@ -71,17 +71,19 @@ feature -- Basic operation
 			--|FIXME
 			check fixme: false end
 			--| See SendInput
-			--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
+	--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
 		end
 
 	fake_pointer_button_press (a_button: INTEGER) is
-			-- Simulate the user pressing a `a_button' on the pointing device.
+			-- Simulate the user pressing a `a_button'
+			-- on the pointing device.
 		do
 			check fixme:false end
 		end
 
 	fake_pointer_button_release (a_button: INTEGER) is
-			-- Simulate the user releasing a `a_button' on the pointing device.
+			-- Simulate the user releasing a `a_button'
+			-- on the pointing device.
 		do
 			check fixme:false end
 		end
@@ -149,6 +151,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/11 21:16:41  king
+--| Made <= 80 columns
+--|
 --| Revision 1.9  2000/04/11 21:11:22  brendel
 --| IEK -- Added unimplemented pointer manipulation stubs.
 --|

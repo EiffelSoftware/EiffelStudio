@@ -177,13 +177,16 @@ feature -- Element change
                         -- Called when the window is deleted (closed).
                         -- (Will exit application if `delete_command'
                         -- is not set).
+		local
+			a: EV_ARGUMENT1[EV_WINDOW]
                 do
                         if delete_command = Void then
                                 if application /= Void then
 					application.exit
 				end
                         else
-                                delete_command.execute (Void)
+				!!a.make (Current)
+                                delete_command.execute (a)
                         end
                 end
 

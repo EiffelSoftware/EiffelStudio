@@ -42,7 +42,18 @@ feature -- Type check, byte code and dead code removal
 
 	type_check is
 			-- Type check an adress access on Current
+		local
+			vrle3: VRLE3
 		do
+			if context.level2 then
+					-- It means that we are in a location where `Result' is not
+					-- acceptable (e.g. an invariant).
+				create vrle3
+				context.init_error (vrle3)
+				Error_handler.insert_error (vrle3)
+					-- Cannot go on here
+				Error_handler.raise_error
+			end
 			context.put (create {TYPED_POINTER_A}.make_typed (Context.feature_type))
 		end
 

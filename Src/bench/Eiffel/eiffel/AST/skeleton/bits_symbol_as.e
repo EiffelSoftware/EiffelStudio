@@ -8,7 +8,7 @@ class BITS_SYMBOL_AS
 inherit
 	BASIC_TYPE
 		redefine
-			set, is_equivalent, append_to
+			set, is_equivalent, append_to, format
 		end
 
 feature {NONE} -- Initialization
@@ -101,6 +101,12 @@ feature
 		end
 
 feature -- Output
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.put_class_name (dump)
+		end
 
 	dump: STRING is
 			-- Debug purpose

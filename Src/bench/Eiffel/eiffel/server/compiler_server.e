@@ -106,7 +106,8 @@ end
 		do
 			server_file := Server_controler.file_of_id (current_id)
 			if
-				server_file.last_offset > Size_limit * Server_controler.block_size
+				server_file = Void
+				or else server_file.last_offset > Size_limit * Server_controler.block_size
 				or else server_file.precompiled
 			then 
 				set_current_id

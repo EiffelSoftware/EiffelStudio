@@ -262,7 +262,7 @@ feature {NONE} -- implementation
 			then
 				if a_has_focus then
 					top_level_dialog_imp.set_current_push_button (interface)
-				elseif top_level_dialog_imp.default_push_button = interface  then
+				elseif top_level_dialog_imp.internal_current_push_button = interface  then
 					top_level_dialog_imp.set_current_push_button (Void)
 				end
 			end

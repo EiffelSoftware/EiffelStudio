@@ -43,7 +43,8 @@ inherit
  			on_wm_vscroll,
  			on_wm_hscroll,
 			show,
-			hide
+			hide,
+			on_destroy
 		redefine
 			default_style,
 			default_ex_style

@@ -60,7 +60,8 @@ inherit
 			on_wm_hscroll,
 			on_key_down,
 			show,
-			hide
+			hide,
+			on_destroy
 		redefine
 			default_ex_style,
 			default_style,

@@ -25,8 +25,6 @@ inherit
 			set_parent,
 			set_size,
 			client_height,
-			set_minimum_width,
-			set_minimum_height,
 			parent_ask_resize,
 			dimensions_set,
 			set_default_minimum_size,
@@ -34,7 +32,9 @@ inherit
 			compute_minimum_height,
 			compute_minimum_size,
 			internal_set_minimum_width,
-			internal_set_minimum_height
+			internal_set_minimum_height,
+			internal_set_minimum_size,
+			on_destroy
 		end
 
 	WEL_FRAME_WINDOW
@@ -64,7 +64,8 @@ inherit
 			window_process_message,
 			on_color_control,
 			on_wm_vscroll,
-			on_wm_hscroll
+			on_wm_hscroll,
+			on_destroy
 		redefine
 			default_ex_style,
 			default_style,
@@ -266,28 +267,6 @@ feature -- Element change
 				maximum_height.min (minimum_height.max (new_height)))
 		end
 
-	set_minimum_width (value: INTEGER) is
-			-- Make `value' the new `minimum_width'.
-			-- If the Current size is smaller, the size
-			-- change.
-		do
-			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
-			if value > width then
-				resize (value, height)
-			end
-		end
-
-	set_minimum_height (value: INTEGER) is
-			-- Make `value' the new `minimum_height'.
-			-- If the Current size is smaller, the size
-			-- change.
-		do
-			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
-			if value > height then
-				resize (width, value)
-			end
-		end
-
 	set_maximum_width (value: INTEGER) is
 			-- Make `value' the new maximum width.
 			-- If the Current size is larger, the size
@@ -430,8 +409,6 @@ feature {NONE} -- Implementation
 
 			-- Finaly, we set the value
 			internal_set_minimum_size (mw, mh)
---			internal_set_minimum_width (value)
---			internal_set_minimum_height (value)
 		end
 
 	internal_set_minimum_width (value: INTEGER) is
@@ -453,6 +430,23 @@ feature {NONE} -- Implementation
 			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
 			if value > height then
 				resize (width, value)
+			end
+		end
+
+	internal_set_minimum_size (mw, mh: INTEGER) is
+			-- Make `mw' the new minimum_width and `mh' the new
+			-- minimum_height. If the Current size is smaller,
+			-- the size change.
+		do
+			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (mw, mh)
+			if mw > width then
+				if mh > height then
+					resize (mw, mh)
+				else
+					resize (mw, height)
+				end
+			elseif mh > height then
+				resize (width, mh)
 			end
 		end
 
@@ -496,7 +490,6 @@ feature {NONE} -- Implementation
 		do
 			Result := Ws_ex_controlparent
 		end
-
 
 	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
@@ -600,6 +593,7 @@ feature {NONE} -- Implementation
 			-- Called when the window is destroy.
 			-- Set the parent sensitive if it exists.
 		do
+			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor
 			if parent_imp /= Void and not parent_imp.destroyed and then parent_imp.insensitive then
 				parent_imp.set_insensitive (False)
 			end

@@ -68,8 +68,8 @@ feature {NONE} -- Removable
 		local
 			cut_figure_command: APP_CUT_FIGURE
 		do
-			!!cut_figure_command;
-			cut_figure_command.execute (selected_circle)
+			!! cut_figure_command.make (selected_circle)
+			cut_figure_command.execute (Void)
 		end;
 	
 feature 

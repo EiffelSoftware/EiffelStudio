@@ -29,7 +29,7 @@ feature {EV_ANY} -- Initialization
 			{EV_BUTTON} Precursor
 			create menu
 			press_actions.extend (menu~show)
-|			menu.item_select_actions.extend (~on_item_select)
+			menu.item_select_actions.extend (~on_item_select)
 		end
 
 feature -- Access
@@ -121,6 +121,9 @@ end -- class EV_OPTION_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/21 00:31:44  oconnor
+--| syntax
+--|
 --| Revision 1.18  2000/03/20 20:25:35  oconnor
 --| comments
 --|

@@ -254,8 +254,12 @@ feature -- Measurement
 			-- Size in bytes (0 if no associated physical file)
 		do
 			if exists then
-				set_buffer;
-				Result := buffered_file_info.size
+				if is_closed then
+					set_buffer;
+					Result := buffered_file_info.size
+				else
+					Result := file_size (file_pointer)
+				end
 			end
 		end;
 
@@ -1427,6 +1431,12 @@ feature {NONE} -- Implementation
 	file_lh (file: POINTER): CHARACTER is
 			-- Look ahead in `file' and find out the value of the next
 			-- character. Do not read over character.
+		external
+			"C"
+		end;
+
+	file_size (file: POINTER): INTEGER is
+			-- Size of `file'
 		external
 			"C"
 		end;

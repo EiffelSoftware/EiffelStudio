@@ -288,6 +288,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			extracted_string: STRING
 			item_list: ARRAYED_LIST [EV_WIDGET]
 			lower, upper: INTEGER
+			check_assert_result: BOOLEAN
 		do
 			full_information := get_unique_full_info (element)
 			item_list ?= first.item_list
@@ -343,8 +344,12 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 				check
 					value_is_integer: extracted_row_span.is_integer
 				end
-					-- Modify the current items position and size.
+					-- Modify the current items position and size. We must remove the
+					-- assertion checking while we do this, as the items have already been
+					-- placed in the table, and are occupying a space.
+				check_assert_result := feature {ISE_RUNTIME}.check_assert (False)
 				set_item_position_and_span (item_list.item, extracted_column.to_integer, extracted_row.to_integer, extracted_column_span.to_integer, extracted_row_span.to_integer)
+				check_assert_result := feature {ISE_RUNTIME}.check_assert (True)
 				
 				item_list.forth
 			end	

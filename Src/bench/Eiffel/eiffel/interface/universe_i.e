@@ -270,30 +270,43 @@ feature -- Access
 			end
 		end
 
-	class_from_assembly (an_assembly, a_dotnet_name: STRING): CLASS_I is
+	class_from_assembly (an_assembly, a_dotnet_name: STRING; lower_case_comparison: BOOLEAN): CLASS_I is
 			-- Associated CLASS_I instance for `a_dotnet_name' external class name
 			-- from given assembly `an_assembly'. If more than one assembly with
 			-- `an_assembly' as name, look only in first found item.
 			--| An example of usage would be:
-			--|	 l_class := universe.class_from_assembly ("mscorlib", "System.IComparable")
+			--|	 l_class := universe.class_from_assembly ("mscorlib", "System.IComparable", False)
 			--| to get the associated `System.IComparable' from `mscorlib'.
+			--|
+			--| Nota: if `lower_case_comparison' is True, compare assembly names in lower case
 		require
 			an_assembly_not_void: an_assembly /= Void
 			an_assembly_not_empty: not an_assembly.is_empty
 			a_dotnet_name_not_void: a_dotnet_name /= Void
 			a_dotnet_name_not_empty: not a_dotnet_name.is_empty
 		local
+			l_an: STRING
+			l_assembly_name: STRING
 			l_assembly: ASSEMBLY_I
 			l_found: BOOLEAN
 		do
 				-- Iterate through to find proper assembly.
+			if lower_case_comparison then
+				l_an := an_assembly.as_lower
+			else
+				l_an := an_assembly
+			end
 			from
 				clusters.start
 			until
 				clusters.after or l_found
 			loop
 				l_assembly ?= clusters.item
-				l_found := l_assembly /= Void and then equal (an_assembly, l_assembly.assembly_name)
+				l_assembly_name := l_assembly.assembly_name
+				if lower_case_comparison then
+					l_assembly_name := l_assembly_name.as_lower
+				end
+				l_found := l_assembly /= Void and then equal (l_an, l_assembly_name)
 				clusters.forth
 			end
 			

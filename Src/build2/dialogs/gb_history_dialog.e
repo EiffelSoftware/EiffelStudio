@@ -79,7 +79,7 @@ feature -- Access
 feature -- Basic operation
 
 	add_command_representation (output: STRING) is
-			--
+			-- Add a history item represented by `output'.
 		require
 			output_valid: output /= Void and then not output.is_empty
 		local

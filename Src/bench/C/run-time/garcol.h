@@ -154,6 +154,7 @@ extern struct gacstat g_stat[GST_NBR];	/* Collection statistics */
 
 /* To start timing or not for GC-profiling */
 extern int gc_ran;				/* Has the GC been running */
+extern int gc_running;			/* Is the GC currently running */
 extern double last_gc_time;			/* Time spent during the last run */
 
 #endif

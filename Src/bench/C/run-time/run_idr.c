@@ -668,7 +668,7 @@ rt_public void widr_multi_double (double *obj, int num)
 			char double_buffer [DBLSIZ];
 			char *idr_buffer;
 
-			idr_buffer = idrf.i_encode.iu_ptr;
+			idr_buffer = idrf.i_encode.i_ptr;
 			bcopy(obj++, double_buffer,DBLSIZ);
 				/* Reverse the order of the double since we stored doubles in
 				* little endian mode */

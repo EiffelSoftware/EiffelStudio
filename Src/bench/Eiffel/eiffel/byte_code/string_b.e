@@ -29,8 +29,7 @@ feature -- Properties
 	type: CL_TYPE_I is
 			-- String type
 		once
-			create Result
-			Result.set_base_id (System.string_id)
+			create Result.make (System.string_id)
 		end
 
 	enlarged: STRING_BL is

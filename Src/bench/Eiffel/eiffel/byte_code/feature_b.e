@@ -669,14 +669,12 @@ feature -- Inlining
 
 				tuple_class ?= written_class
 				if tuple_class = Void then
-					create gen_type_i
-					gen_type_i.set_base_id (written_class.class_id)
+					create gen_type_i.make (written_class.class_id)
 					gen_type_i.set_meta_generic (m)
 					gen_type_i.set_true_generics (true_gen)
 					Result := gen_type_i
 				else
-					create tuple_type_i
-					tuple_type_i.set_base_id (written_class.class_id)
+					create tuple_type_i.make (written_class.class_id)
 					tuple_type_i.set_meta_generic (m)
 					tuple_type_i.set_true_generics (true_gen)
 					Result := tuple_type_i

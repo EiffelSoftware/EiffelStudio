@@ -164,6 +164,15 @@ feature {NONE} -- Implementation
 				tmp_body.append (visitor.c_type)
 				tmp_body.append (Close_parenthesis)
 				tmp_body.append (Argument_name)
+
+			elseif visitor.is_structure then
+				tmp_body.append (Asterisk)
+				tmp_body.append (Open_parenthesis)
+				tmp_body.append (visitor.c_type)
+				tmp_body.append (Asterisk)
+				tmp_body.append (Close_parenthesis)
+				tmp_body.append (Argument_name)
+
 			else
 				if visitor.need_generate_ec then
 					tmp_body.append (Generated_ec_mapper)

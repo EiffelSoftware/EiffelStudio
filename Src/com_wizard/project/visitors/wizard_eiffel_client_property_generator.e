@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 			Result.append (Open_parenthesis)
 			Result.append (Close_parenthesis)
 			Result.append (Colon)
-			if visitor.is_basic_type then
+			if visitor.is_basic_type or is_boolean (visitor.vt_type) then
 				Result.append (visitor.cecil_type)
 			else
 				Result.append (Eif_reference)
@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 			elseif visitor.is_structure_pointer or visitor.is_interface_pointer then
 				Result.append (visitor.c_type)
 
-			elseif visitor.is_basic_type then
+			elseif visitor.is_basic_type or is_boolean (visitor.vt_type) then
 				Result.append (visitor.cecil_type)
 			else
 				Result.append (Eif_object)

@@ -163,7 +163,11 @@ feature {NONE} -- Implementation
 
 							else
 								return_value.append (Space_open_parenthesis)
-								return_value.append (Eif_reference)
+								if (visitor.vt_type = Vt_bool) then
+									return_value.append (Eif_boolean)
+								else
+									return_value.append (Eif_reference)
+								end
 								return_value.append (Close_parenthesis)
 								if visitor.need_generate_ce then
 									return_value.append (Generated_ce_mapper)

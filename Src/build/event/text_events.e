@@ -1,71 +1,50 @@
+indexing
+	description: "Page representing events that can %
+				% be associated with a text component."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
-class TEXT_EVENTS 
+class TEXT_EVENTS
 
 inherit
-	
 	EVENT_PAGE
-		rename
-			make as make_page
-		redefine
-			is_optional,
-            make_button_visible
-        select
-            make_button_visible
-		end;
-
-    EVENT_PAGE 
-        rename
-            make as make_page,
-            make_button_visible as cat_make_button_visible
-        redefine
-            is_optional
-        end;
 
 creation
-
 	make
-	
-feature {CATALOG}
 
-	is_optional: BOOLEAN is True;
-	
-feature {NONE}
+feature -- Access
 
-	symbol: PIXMAP is
+	update_content (ctxt: CONTEXT) is
+		local
+			text_f_c: TEXT_FIELD_C
+		do
+			text_f_c ?= ctxt
+			if text_f_c /= Void then
+				if rows = 1 then
+					extend (return_ev)
+				end
+			elseif rows > 1 then
+				get_item (2).destroy
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.text_pixmap
-		end;
-
-	selected_symbol: PIXMAP is
-		do
-			Result := Pixmaps.selected_text_pixmap
-		end;
-
-	set_focus_string is
-		do
-			button.set_focus_string (Focus_labels.text_label)
-		end;
-
-feature {CATALOG}
-	
-	make_button_visible (button_rc: ROW_COLUMN) is
-            -- call cat_make_button_visible and set focus string for the button
-    	do
-			cat_make_button_visible (button_rc)
-			button.set_focus_string (Focus_labels.text_label)
 		end
 
-feature {NONE}
+--	set_focus_string is
+--		do
+--			button.set_focus_string (Focus_labels.text_label)
+--		end
 
-	make (cat: like associated_catalog) is
+	fill_page is
 		do
-			make_page (cat);
-			extend (text_modify_ev)
-			extend (text_motion_ev)
-			-- added by samik
-		--	set_focus_string (Focus_labels.text_label)
-		--	initialize_focus
-			-- end of samik
+			extend (change_ev)
 		end
 
-end
+end -- class TEXT_EVENTS
+

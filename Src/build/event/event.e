@@ -1,118 +1,106 @@
+indexing
+	description: "General notion of event."
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class EVENT 
+deferred class EVENT
 
 inherit
+	PND_DATA
 
-	DATA
-
-	EVENT_STONE
+--	EVENT_STONE
 
 	SHARED_STORAGE_INFO
 
 	EB_HASHABLE
 
 	SHARED_APPLICATION
-	
-feature {NONE}
 
-	same (other: like Current): BOOLEAN is
-		do
-			Result := not (other = Void) and then
-				(label.is_equal (other.label))
-		end;
- 
-	hash_code: INTEGER is
-		do
-			Result := label.hash_code
-		end;
+feature {NONE} -- Initialization
 
 	make is
 		do
 			event_table.put (Current, - identifier)
-		end;
+		end
 
-	Event_const: EVENT_CONSTANTS is
-		once
-			!! Result
-		end;
+feature {NONE} -- Hashable
 
-	help_file_name: STRING is
+	same (other: like Current): BOOLEAN is
 		do
-			Result := Help_const.event_help_fn
-		end;
+			Result := not (other = Void) and then label.is_equal (other.label)
+		end
 
-feature {CAT_EV_IS}
+	hash_code: INTEGER is
+		do
+			Result := label.hash_code
+		end
+
+feature {CAT_EV_IS} -- Access
 
 	exists_in_application: BOOLEAN is
 		local
-			s: BUILD_STATE;
-			b: BEHAVIOR;
+			s: BUILD_STATE
+			b: BEHAVIOR
 		do
 			from
 				Shared_app_graph.start
 			until
 				Shared_app_graph.off
 			loop
-				s ?= Shared_app_graph.key_for_iteration;
+				s ?= Shared_app_graph.key_for_iteration
 				if s /= Void then
 					from
 						s.start
 					until
 						s.after
 					loop
-						b := s.output.data;
+						b := s.output.data
 						from
 							b.start
 						until
 							b.after or else Result
 						loop
-							Result := b.input = Current;
+							Result := b.input = Current
 							b.forth
-						end;
+						end
 						s.forth
-					end;
-				end;
+					end
+				end
 				Shared_app_graph.forth
-			end;
-		end;
+			end
+		end
 	
-feature 
+feature -- Status report
 
-	data: EVENT is
-		do
-			Result := Current
-		end;
-
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		deferred
-		end;
+		end
 
 	label: STRING is
 		do
 			Result := internal_name
-		end;
+		end
 
 	internal_name: STRING is
 		deferred
-		end;
+		end
 
 	identifier: INTEGER is
 			-- Identifier for current event
 		deferred
-		end;
-	
+		end
+
 	eiffel_text: STRING is
 			-- Eiffel Text for current event
 		deferred
-		end;
-	
-feature 
+		end
 
 	is_valid_for_context (a_context: CONTEXT): BOOLEAN is
 			-- Is the current event defined for `a_context'
 		do
 			Result := True
-		end;
+		end
 
 feature -- Interface Command
 
@@ -122,61 +110,74 @@ feature -- Interface Command
 	command_name: STRING
 			-- Name of associated command.
 
-	add_interface_command (a_context: CONTEXT; a_command: COMMAND) is
-			-- Add `a_command' to the widget corresponding to `a_context'
-			-- according to the kind of event.
-		do
-			specific_add (a_context.widget, a_command)
-		end
+--	add_interface_command (a_context: CONTEXT; a_command: EV_COMMAND) is
+--			-- Add `a_command' to the widget corresponding to `a_context'
+--			-- according to the kind of event.
+--		do
+--			specific_add (a_context.widget, a_command)
+--		end
+--
+--	specific_add (a_widget: EV_WIDGET; a_command: EV_COMMAND) is
+--			-- Add `a_command' to `a_widget' according to the 
+--			-- kind of event.
+--		require else
+--			widget_not_void: a_widget /= Void
+--			command_not_void: a_command /= Void
+--		deferred
+--		end
+--
+--	remove_interface_command (a_context: CONTEXT; a_command: EV_COMMAND) is
+--			-- Remove `a_command' to the widget corresponding to `a_context'
+--			-- according to the kind of event.
+--		do
+--			specific_remove (a_context.widget, a_command)
+--		end
+--
+--	specific_remove (a_widget: EV_WIDGET; a_command: COMMAND) is
+--			-- Remove `a_command' from `a_widget' according to the
+--			-- kind of event.
+--		require else
+--			widget_not_void: a_widget /= Void
+--			command_not_void: a_command /= Void
+--		deferred
+--		end
 
-	specific_add (a_widget: WIDGET; a_command: COMMAND) is
-			-- Add	`a_command' to `a_widget' according to the 
-			-- kind of event.
-		require else
-			widget_not_void: a_widget /= Void
-			command_not_void: a_command /= Void
-		deferred
-		end
-
-	remove_interface_command (a_context: CONTEXT; a_command: COMMAND) is
-			-- Remove `a_command' to the widget corresponding to `a_context'
-			-- according to the kind of event.
-		do
-			specific_remove (a_context.widget, a_command)
-		end
-
-	specific_remove (a_widget: WIDGET; a_command: COMMAND	) is
-			-- Remove `a_command' from `a_widget' according to the
-			-- kind of event.
-		require else
-			widget_not_void: a_widget /= Void
-			command_not_void: a_command /= Void
-		deferred
-		end
-
-	convert (associated_command: CMD_INSTANCE) is
-			-- Separate the data of `associated_command' into `command_name'
+	convert (cmd: CMD_INSTANCE) is
+			-- Separate the data of `cmd' into `command_name'
 			-- and `associated_command_creation_arg'.
 		require
-			associated_command_not_void: associated_command /= Void
+			cmd_not_void: cmd /= Void
 		local
 			argument_instance: ARG_INSTANCE
 		do
-			command_name := associated_command.eiffel_type
-			!! associated_command_creation_arg.make
+			command_name := cmd.eiffel_type
+			create associated_command_creation_arg.make
 			from 
-				associated_command.arguments.start
+				cmd.arguments.start
 			until
-				associated_command.arguments.after
+				cmd.arguments.after
 			loop
-				argument_instance := associated_command.arguments.item
+				argument_instance := cmd.arguments.item
 				if argument_instance.instantiated then
-					associated_command_creation_arg.extend (argument_instance.context.widget)
+					associated_command_creation_arg.extend (argument_instance.context.gui_object)
 				else
 					associated_command_creation_arg.extend (Void)
 				end
-				associated_command.arguments.forth
+				cmd.arguments.forth
 			end
-		end	
-				
-end
+		end
+
+feature {NONE} -- Implementation
+
+	Event_const: EVENT_CONSTANTS is
+		once
+			create Result
+		end
+
+	help_file_name: STRING is
+		do
+			Result := Help_const.event_help_fn
+		end
+
+end -- class EVENT
+

@@ -97,7 +97,7 @@ feature -- Element change
 			-- Assign `an_x' to `x_offset'.
 		require
 			an_x_within_bounds: an_x >= 0 and then
-				an_x <= (item_width - client_width)
+				an_x <= (item_width - client_width).max (0)
 		do
 			implementation.set_x_offset (an_x)
 		ensure
@@ -108,7 +108,7 @@ feature -- Element change
 			-- Assign `a_y' to `y_offset'.
 		require
 			a_y_within_bounds: a_y >= 0 and then
-				a_y <= (item_height - client_height)
+				a_y <= (item_height - client_height).max (0)
 		do
 			implementation.set_y_offset (a_y)
 		ensure
@@ -120,9 +120,9 @@ feature -- Element change
 			-- Assign `a_y' to `y_offset'.
 		require
 			an_x_within_bounds: an_x >= 0 and then
-				an_x <= (item_width - client_width)
+				an_x <= (item_width - client_width).max (0)
 			a_y_within_bounds: a_y >= 0 and then
-				a_y <= (item_height - client_height)
+				a_y <= (item_height - client_height).max (0)
 		do
 			implementation.set_offset (an_x, a_y)
 		ensure
@@ -199,6 +199,9 @@ end -- class EV_VIEWPORT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/24 18:19:38  brendel
+--| Corrected preconditions.
+--|
 --| Revision 1.12  2000/04/24 15:59:59  brendel
 --| Coolified make_for_test.
 --|

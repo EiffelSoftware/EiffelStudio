@@ -20,6 +20,12 @@ inherit
 	EV_PICK_AND_DROPABLE_ACTION_SEQUENCES_IMP
 
 	EV_MULTI_COLUMN_LIST_ROW_ACTION_SEQUENCES_IMP
+	
+	EV_PND_DEFERRED_ITEM
+		undefine
+			copy,
+			is_equal
+		end
 
 create
 	make
@@ -141,6 +147,17 @@ feature -- PND
 		do
 			check
 				do_not_call: False
+			end
+		end
+		
+	parent_widget_is_displayed: BOOLEAN is
+			--
+		local
+			temp_par_imp: EV_MULTI_COLUMN_LIST_IMP
+		do
+			temp_par_imp := parent_imp
+			if temp_par_imp /= Void then
+				Result := temp_par_imp.is_displayed
 			end
 		end
 

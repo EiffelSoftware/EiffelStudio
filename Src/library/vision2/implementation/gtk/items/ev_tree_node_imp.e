@@ -46,6 +46,13 @@ inherit
 			set_pixmap,
 			remove_pixmap
 		end
+		
+	EV_PND_DEFERRED_ITEM
+		undefine
+			copy,
+			is_equal,
+			dispose
+		end
 
 create
 	make
@@ -357,8 +364,41 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				set_parent_imp (Void)
 			end
 		end
+		
+feature {EV_APPLICATION_IMP} -- Implementation
+		
+	pointer_over_widget (a_gdk_window: POINTER; a_x, a_y: INTEGER): BOOLEAN is
+		-- Is mouse pointer over the row.
+		local
+			gdkwin_parent, clist_parent: POINTER
+			par_tree_imp: EV_TREE_IMP
+		do
+			par_tree_imp := parent_tree_imp
+			if par_tree_imp /= Void then
+				gdkwin_parent := C.gdk_window_get_parent (a_gdk_window)
+				clist_parent := C.gdk_window_get_parent (
+					C.gtk_clist_struct_clist_window (par_tree_imp.list_widget)
+				)
+				if gdkwin_parent = clist_parent then
+					if par_tree_imp.row_from_y_coord (a_y) = Current then
+						Result := True
+					end	
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
+
+	parent_widget_is_displayed: BOOLEAN is
+			--
+		local
+			temp_par_tree_imp: EV_TREE_IMP
+		do
+			temp_par_tree_imp := parent_tree_imp
+			if temp_par_tree_imp /= Void then
+				Result := temp_par_tree_imp.is_displayed
+			end
+		end
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 		do

@@ -16,6 +16,7 @@
 #include "eif_argcargv.h"
 #include "eif_err_msg.h"
 #include "eif_econsole.h"
+#include "eif_error.h"
 
 #define BUFFER_SIZE 128
 
@@ -29,7 +30,7 @@ static BOOL eif_console_allocated = FALSE;
 
 void eif_console_putint (long l);
 void eif_console_putchar (EIF_CHARACTER c);
-void eif_console_putstring (BYTE *s, long length);
+void eif_console_putstring (EIF_POINTER s, long length);
 void eif_show_console();
 
 EIF_INTEGER eif_console_readint()
@@ -160,7 +161,7 @@ long eif_console_readstream(char *s, long bound)
 	EIF_GET_CONTEXT
 	EIF_INTEGER amount = bound;	/* Number of characters to be read */
 	int c;					/* Last char read */
-	int i = 0;					/* Counter */
+	long i = 0;					/* Counter */
 	DWORD buffer_length = (DWORD) 0;
 	
 	if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
@@ -168,7 +169,7 @@ long eif_console_readstream(char *s, long bound)
 
 	while (amount-- > 0) {
 		c = eif_console_buffer [i];
-		if (i++ == buffer_length)
+		if (i++ == (long) buffer_length)
 			break;
 		*s++ = c;
 	}
@@ -207,11 +208,11 @@ long eif_console_readword(char *s, long bound, long start)
 		if (!ReadConsole(eif_coninfile, eif_console_buffer, BUFFER_SIZE, &buffer_length, NULL))
 			eio();
 
-		while (i < buffer_length)
+		while (i < (long) buffer_length)
 			if (!isspace(c = eif_console_buffer [i++]))
 				break;
 
-		if (isspace(eif_console_buffer [i]) && (i == buffer_length))
+		if (isspace(eif_console_buffer [i]) && (i == (long) buffer_length))
 			return (EIF_INTEGER) 0;				/* Reached EOF before word */
 		else
 			i--;
@@ -219,7 +220,7 @@ long eif_console_readword(char *s, long bound, long start)
 
 	while (amount-- > 0) {
 		c = eif_console_buffer [i++];
-		if (i == buffer_length)
+		if (i == (long) buffer_length)
 			break;
 		if (isspace(c))
 			break;
@@ -231,7 +232,7 @@ long eif_console_readword(char *s, long bound, long start)
 		 * condition.
 		 */
 		
-	if ((i == buffer_length) || isspace(c))
+	if ((i == (long) buffer_length) || isspace(c))
 		return bound - start - amount - 1;	/* Number of characters read */
 
 	return bound - start + 1;			/* Error condition */
@@ -263,7 +264,7 @@ void eif_console_putchar (EIF_CHARACTER c)
 	EIF_END_GET_CONTEXT
 }
 
-void eif_console_putstring (BYTE *s, long length)
+void eif_console_putstring (EIF_POINTER s, long length)
 {
 	EIF_GET_CONTEXT
 	eif_show_console();
@@ -336,10 +337,9 @@ int print_err_msg (FILE *err, char *StrFmt, ...)
 	EIF_END_GET_CONTEXT
 }
 
-void eif_console_cleanup ()
+void eif_console_cleanup (void)
 {
 	EIF_GET_CONTEXT
-	int result;
 	BOOL b;
 	DWORD buffer_length = (DWORD) 0;
 

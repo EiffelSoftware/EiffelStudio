@@ -52,9 +52,9 @@ feature -- Implementation
 
 invariant
 	SELECTION_BOX_parent_exists: parent /= Void
-	SELECTION_BOX_frame_exists: frame /= Void
-	SELECTION_BOX_resource_exists: resource /= Void
-	SELECTION_BOX_resource_exists: caller /= Void
+	--SELECTION_BOX_frame_exists: frame /= Void
+	--SELECTION_BOX_resource_exists: resource /= Void
+	--SELECTION_BOX_resource_exists: caller /= Void
 	SELECTION_BOX_hide_consistency: frame.parent=Void implies resource=Void
 	SELECTION_BOX_display_consistency: frame.parent/=Void implies resource /= Void 
 end -- class SELECTION_BOX

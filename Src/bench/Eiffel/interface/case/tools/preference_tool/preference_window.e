@@ -8,10 +8,18 @@ class
 	PREFERENCE_WINDOW
 
 inherit
-	ECASE_WINDOW
+	EV_WINDOW
 		redefine
 			make
 		end
+
+	ONCES
+	
+	CONSTANTS
+
+	OBSERVER
+
+	SIZE_SAVABLE
 
 creation
 	make
@@ -27,7 +35,7 @@ feature -- Initialization
 			fix: EV_FIXED
 		do
 			precursor(par)
-			set_title(widget_names.preference_tool)
+			set_title("Preference tool")
 			set_size(300,300)
 
 			!! menu.make (Current)
@@ -62,6 +70,12 @@ feature -- Initialization
 			show
 		end
 
+	set_file(s: STRING) is
+			-- Set file name where the preferences come from.
+		do
+			file_name := s
+		end
+
 feature -- Update
 
 	update is
@@ -72,6 +86,7 @@ feature -- Update
 		end
 
 	clear is
+			-- Clear the editor.
 		do
 			boolean_selec.hide
 			text_selec.hide
@@ -79,7 +94,12 @@ feature -- Update
 			font_selec.hide
 		end
 
-feature -- Widgets
+feature -- Implementation
+
+	file_name: STRING 
+		-- File name where the preferences may be saved.
+
+feature -- Graphical Components.
 
 	boolean_selec: BOOLEAN_SELECTION_BOX
 		-- Box in which the user may choose whether the value is TRUE or FALSE.
@@ -93,7 +113,14 @@ feature -- Widgets
 	font_selec: FONT_SELECTION_BOX
 			-- Box in which the user may change the value associated to a font.
 
-	menu: EDITOR_WINDOW_MENU
+	save_preferences: SAVE_PREFERENCES is
+		once
+			!! Result
+		end	
+
+feature -- Widgets.
+
+	menu: EV_STATIC_MENU_BAR 
 		-- menu of Current.
 
 	left_list: EV_LIST
@@ -143,16 +170,70 @@ feature -- Execution
 			end
 		end
 
-feature --Implementation
+feature --Menu
 
 	fill_menu is
+			-- Fill the menu.
+		require
+			menu_exists: menu /= Void
 		local
-		do
-			if menu /= Void then	
+			it: EV_MENU_ITEM
+			itt: EV_MENU
+			com: EV_ROUTINE_COMMAND
+		do	
+			!! itt.make_with_text(menu,"File")
 
-			end
+			!! it.make_with_text(itt,"Save%TCTRL+S")
+			!! com.make(~save)
+			it.add_select_command(com,Void)
+
+			!! it.make_with_text(itt,"OK")
+			!! com.make(~ok)
+			it.add_select_command(com,Void)
+
+			!! it.make_with_text(itt,"Apply")
+			!! com.make(~apply)
+			it.add_select_command(com,Void)
+		
+			!! it.make_with_text(itt,"Exit Tool")
+			!! com.make(~exit)
+			it.add_select_command(com,Void)
+
+ 			!! itt.make_with_text(menu,"Help")
 		end
- 
+
+	exit (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Exit the Tool.
+		require
+			not_destroyed: not destroyed
+		do
+			destroy
+		ensure
+			destroyed: destroyed
+		end 
+
+	save (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Save Current Selection.
+		do
+			save_preferences.initialize(Current)
+			save_preferences.save
+		end 
+
+	apply (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+		do
+			resources.reinitialize
+		end 
+
+	ok (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Apply then popdown the Preferences Tool.
+		do
+			resources.reinitialize
+			destroy
+		end 
+
+
+feature -- Fill Lists
+
 	fill_list is
 			-- Fill Left list.
 		local
@@ -198,7 +279,4 @@ feature -- savable parameters
 	
 	get_width_name	: STRING	is "class_tool_width"
 
-invariant
-	PREFERENCES_WINDOW_value_editors_exist: boolean_selec /= Void and text_selec/= Void and color_selec/=Void and font_selec/=Void
-	PREFERENCES_WINDOW_lists_exist: left_list /= Void and right_list /= Void
 end -- class CLASS_WINDOW

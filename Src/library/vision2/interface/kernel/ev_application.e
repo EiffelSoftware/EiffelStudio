@@ -99,10 +99,8 @@ feature -- Basic operation
 
 	destroy is
 			-- Quit the application.
-		external
-			"C [macro <stdio.h>]"
-		alias
-			"exit(0)"
+		do
+			exit_normal
 		end
 
 feature -- Status report
@@ -183,6 +181,15 @@ feature {NONE} -- Implementation
 			post_launch_actions := Void
 		end
 
+feature {NONE} -- Externals
+
+	exit_normal is
+		external
+			"C [macro <stdio.h>]"
+		alias
+			"exit(0)"
+		end
+
 invariant
 	pick_actions_not_void: pick_actions /= Void
 	drop_actions_not_void: drop_actions /= Void
@@ -213,6 +220,9 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/04/05 15:47:25  brendel
+--| Corrected `destroy'.
+--|
 --| Revision 1.23  2000/04/05 01:58:28  brendel
 --| destroy now quits the Eiffel Vision application.
 --| This can be done in a nicer way, though.

@@ -14,6 +14,8 @@ inherit
 			position as text_position
 		undefine
 			pass_address, copy, setup, consistent, is_equal
+		redefine
+			number_of_stop_points
 		end;
 	CONSTRUCT_LIST [T]
 		rename
@@ -26,7 +28,7 @@ inherit
 			make
 		end;
 
-creation {ARRAY_AS, PARENT_AS, UN_STRIP_AS}
+creation {ARRAY_AS, PARENT_AS, UN_STRIP_AS, YACC_ABSTRACT_EIFFEL}
 
 	make
 
@@ -37,6 +39,24 @@ feature {NONE} -- Initialization
 			cl_make (n)
 			compare_objects
 		end;
+
+feature -- Access
+
+	number_of_stop_points: INTEGER is
+			-- Number of stop points for AST
+		local
+			i, l_count: INTEGER;
+		do
+			from
+				i := 1;
+				l_count := count;
+			until
+				i > l_count
+			loop
+				Result := Result + i_th (i).number_of_stop_points;
+				i := i + 1
+			end;
+		end
 
 feature -- Element change
 

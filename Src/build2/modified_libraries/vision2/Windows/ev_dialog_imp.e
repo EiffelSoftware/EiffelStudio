@@ -443,7 +443,9 @@ feature {NONE} -- Implementation
 				else
 					button := interface.default_cancel_button
 				end
-				if button /= Void and then button.is_sensitive and then button.is_displayed then
+					-- Note that we have hacked this from Vision2, so that the actions
+					-- are fired, even when the button is not actually there.
+				if button /= Void then--and then button.is_sensitive and then button.is_displayed then
 					button_actions := button.select_actions
 					if button_actions /= Void then
 						button_actions.call ([])

@@ -383,16 +383,7 @@ feature -- Element change
 			end
 			column_alignment_changed (an_alignment, a_column)
 		end
-		
-	disable_default_key_processing is
-			-- Ensure default key processing is not performed.
-		do
-			default_key_processing_disabled := True
-		end
-		
-	default_key_processing_disabled: BOOLEAN
-		-- Has default key processing been disabled?
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	expand_column_count_to (a_columns: INTEGER) is

@@ -62,10 +62,10 @@ void c_ev_gtk_new_callback_marshal (
 	for (i = 0 ; i < n_param_values ; i++)
 	{
 		printf ("Value of parameter %i is %s\n", i, G_VALUE_TYPE_NAME (param_values + i));
-	}*/
+	}
 
 
-	//printf ("Type of GValue %s", G_VALUE_TYPE_NAME(param_values));
+	printf ("Type of GValue %s", G_VALUE_TYPE_NAME(param_values));*/
 	if (ev_gtk_callback_marshal != NULL && closure != NULL)
 	{
 		ev_gtk_callback_marshal (

@@ -636,40 +636,25 @@ feature {NONE} -- Implementation
 			-- Ensure `an_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		local
-			tree_item_imp: EV_TREE_ITEM_IMP
-			node_ptr: POINTER
-			item_imp: EV_TREE_NODE_IMP
-		do
+			tree_item_imp: EV_TREE_NODE_IMP
+			parent_item_imp: EV_TREE_ITEM_IMP
+		do	
 			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
-			tree_item_imp ?= an_item.implementation
-			node_ptr := tree_item_imp.tree_node_ptr
-			if not feature {EV_GTK_EXTERNALS}.gtk_ctree_is_viewable (list_widget, node_ptr) then
-				expand_to_node (node_ptr)
-			end
-
-			item_imp ?= an_item.implementation
-
-				-- Show the node `an_item'
-			feature {EV_GTK_EXTERNALS}.gtk_ctree_node_moveto (list_widget, item_imp.tree_node_ptr, 0, 0.0, 1.0)
-			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
-		end
-
-	expand_to_node (a_node: POINTER) is
-			-- 
-		require
-			a_node /= NULL
-		local
-			row, parent_node: POINTER
-		do
-			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
-			if not feature {EV_GTK_EXTERNALS}.gtk_ctree_is_viewable (list_widget, a_node) then
-				row := feature {EV_GTK_EXTERNALS}.glist_struct_data (a_node)
-				parent_node := feature {EV_GTK_EXTERNALS}.gtk_ctree_row_struct_parent (row)
-				if parent_node /= NULL then
-					expand_to_node (parent_node)
-					feature {EV_GTK_EXTERNALS}.gtk_ctree_expand (list_widget, parent_node)
+			from
+				tree_item_imp ?= an_item.implementation
+				parent_item_imp ?= tree_item_imp.parent_imp
+			until
+				parent_item_imp = Void
+			loop
+				if not tree_item_imp.is_viewable then
+					parent_item_imp.set_expand (True)
 				end
+				tree_item_imp := parent_item_imp
+				parent_item_imp ?= tree_item_imp.parent_imp
 			end
+				-- Show the node `an_item'
+			tree_item_imp ?= an_item.implementation
+			feature {EV_GTK_EXTERNALS}.gtk_ctree_node_moveto (list_widget, tree_item_imp.tree_node_ptr, 0, 0.0, 1.0)
 			feature {EV_GTK_EXTERNALS}.gtk_clist_thaw (list_widget)
 		end
 			
@@ -729,7 +714,6 @@ feature {NONE} -- Implementation
 		local
 			item_imp: EV_TREE_NODE_IMP
 		do	
-			-- add_to_container (v, v_imp)
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
 			item_imp.set_item_and_children (NULL, NULL)
@@ -743,11 +727,13 @@ feature {NONE} -- Implementation
 			child_array.go_i_th (i)
 			child_array.put_left (v)
 			if i < count then
-				-- reorder_child (v, v_imp, i)
 				feature {EV_GTK_EXTERNALS}.gtk_clist_row_move (list_widget, item_imp.index - 1, i - 1)
 				ev_children.prune_all (item_imp)
 				ev_children.go_i_th (i)
 				ev_children.put_left (item_imp)
+			end
+			if count = 1 then
+				item_imp.enable_select
 			end
 		end
 

@@ -358,6 +358,17 @@ feature -- Settings
 			any_type_id_set: any_type_id = an_id
 		end
 
+	set_public_key_token (assembly_info: ASSEMBLY_INFO) is
+			-- Set `public_key_token' of `assembly_info' to
+			-- public key token of current generated assembly.
+		require
+			assembly_info_not_void: assembly_info /= Void
+		do
+			if public_key /= Void then	
+				assembly_info.set_public_key_token (public_key.public_key_token_string)
+			end
+		end
+			
 feature -- Generation Structure
 
 	start_assembly_generation (assembly_name, a_file_name,

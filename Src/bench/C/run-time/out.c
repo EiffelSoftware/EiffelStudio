@@ -508,7 +508,7 @@ rt_public EIF_REFERENCE c_outd(EIF_DOUBLE d)
 
 rt_public EIF_REFERENCE c_outc(EIF_CHARACTER c)
 {
-	return makestr(&c, 1);
+	return makestr((char *) &c, 1);
 }
 
 rt_public EIF_REFERENCE c_outp(EIF_POINTER p)

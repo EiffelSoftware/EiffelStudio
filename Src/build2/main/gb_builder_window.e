@@ -20,6 +20,11 @@ inherit
 		undefine
 			default_create, copy, is_equal
 		end
+		
+	GB_COMMAND_HANDLER
+		undefine
+			default_create, copy
+		end
 
 feature -- Initialization
 
@@ -28,6 +33,7 @@ feature -- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
 			set_title (gb_builder_window_title)
+			close_request_actions.extend (agent (show_hide_builder_window_command).execute)
 		end
 
 end -- class GB_BUILDER_WINDOW

@@ -62,6 +62,7 @@ feature {NONE} -- Implementation
 			set_minimum_size (300, 400)
 			is_initialized := True
 			display_view := True
+			close_request_actions.extend (agent (show_hide_component_viewer_command).execute)
 		end
 
 feature -- Access

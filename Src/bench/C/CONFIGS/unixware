@@ -103,7 +103,7 @@ cc='cc'
 gccversion=''
 
 ccflags=''
-mtccflags='-Kthread -DREENTRANT -DEIF_THREADS -DUNIXWARE_THREADS'
+mtccflags='-Kthread -D_REENTRANT -DEIF_THREADS -DUNIXWARE_THREADS'
 
 
 cppflags=''

@@ -22,11 +22,11 @@ feature -- Basic Operation
 	lock is
 			-- lock cache
 		do
-			if count = 0 then
+			internal_count.set_item (count + 1)
+			if count = 1 then
 					-- first lock
 				perform_locking
 			end
-			internal_count.set_item (count + 1)
 		ensure
 			count_incremented: count = old count + 1
 			is_locked: is_locked

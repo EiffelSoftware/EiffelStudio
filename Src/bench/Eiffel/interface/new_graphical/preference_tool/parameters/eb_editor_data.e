@@ -83,7 +83,8 @@ feature {NONE} -- Initialization
 			rmanager.add_observer ("syntax_autocomplete", Current)
 			rmanager.add_observer ("quadruple_click", Current)
 			rmanager.add_observer ("tab_for_indentation", Current)
-
+			rmanager.add_observer ("mouse_wheel_scroll_full_page", Current)
+			rmanager.add_observer ("mouse_wheel_scroll_size", Current)
 			load_preferences
 			from
 				completed_keywords.start
@@ -233,6 +234,13 @@ feature
 
 	customized_strings: ARRAY [STRING]
 			-- strings defined by the user.
+			
+	mouse_wheel_scroll_full_page: BOOLEAN
+			-- Should a mouse wheel scroll event scroll full page?
+			
+	mouse_wheel_scroll_size: INTEGER
+			-- Number of lines to scroll when a mouse wheel scroll event is received.
+			-- Overriden by `mouse_wheel_scroll_full_page'.
 
 feature -- Syntax Completion Customization
 
@@ -496,6 +504,8 @@ feature -- Update
 			syntax_complete_enabled := boolean_resource_value ("syntax_autocomplete", True)
 			quadruple_click_enabled := boolean_resource_value ("quadruple_click", True)
 			use_tab_for_indentation := boolean_resource_value ("tab_for_indentation", True)
+			mouse_wheel_scroll_full_page := boolean_resource_value ("mouse_wheel_scroll_full_page", False)
+			mouse_wheel_scroll_size := integer_resource_value ("mouse_wheel_scroll_size", 3)
 			
 			create customized_strings.make (1, 3)
 			customized_strings.put (string_resource_value ("customized_string_1", ""), 1)

@@ -105,10 +105,6 @@ feature {NONE} -- Initialization
 			is_initialized := True
 		end
 
-	Signal_map_signal_name: INTEGER is 1
-
-	Signal_map_actions: INTEGER is 2
-
 	button_press_switch_is_connected: BOOLEAN
 			-- Is `button_press_switch' connected to its event source.
 		

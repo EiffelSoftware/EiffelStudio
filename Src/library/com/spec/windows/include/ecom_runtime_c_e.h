@@ -55,6 +55,8 @@ public:
 	EIF_REFERENCE ccom_ce_decimal (DECIMAL a_decimal);
 	EIF_REFERENCE ccom_ce_variant (VARIANT a_variant);
 	EIF_REFERENCE ccom_ce_record (void * a_record_pointer, char * a_class_name, int a_size);
+	EIF_REFERENCE ccom_ce_long_long (LARGE_INTEGER  a_large_int);
+	EIF_REFERENCE ccom_ce_u_long_long (ULARGE_INTEGER  a_ularge_int);
 
 	// Pointed
 	EIF_REFERENCE ccom_ce_pointed_bstr (BSTR *a_string);

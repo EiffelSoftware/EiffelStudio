@@ -76,6 +76,45 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_variant (VARIANT a_variant)
 
 //-------------------------------------------------------------------------
 
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_long_long  (LARGE_INTEGER a_large_int)
+
+// Create ECOM_LARGE_INTEGER from C structure
+{
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE make = 0;
+	EIF_POINTER an_item = 0;
+
+	type_id = eif_type_id ("ECOM_LARGE_INTEGER");
+	make = eif_procedure ("make", type_id);
+	result = eif_create (type_id);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE))make) (eif_access (result));
+	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
+	memcpy (an_item, &a_large_int, sizeof (LARGE_INTEGER));
+	return eif_wean (result);
+};
+//-------------------------------------------------------------------------
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_u_long_long  (ULARGE_INTEGER a_large_int)
+
+// Create ECOM_ULARGE_INTEGER from C structure
+{
+	EIF_OBJECT result = 0;
+	EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE make = 0;
+	EIF_POINTER an_item = 0;
+
+	type_id = eif_type_id ("ECOM_ULARGE_INTEGER");
+	make = eif_procedure ("make", type_id);
+	result = eif_create (type_id);
+	nstcall = 0;
+	(FUNCTION_CAST ( void, (EIF_REFERENCE))make) (eif_access (result));
+	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
+	memcpy (an_item, &a_large_int, sizeof (ULARGE_INTEGER));
+	return eif_wean (result);
+};
+//-------------------------------------------------------------------------
+
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_record (void * a_record_pointer, char * a_class_name, int a_size)
 
 // Create Eiffel object from C structure
@@ -91,7 +130,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_record (void * a_record_pointer, char * a
 	nstcall = 0;
 	(FUNCTION_CAST ( void, (EIF_REFERENCE))make) (eif_access (result));
 	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
-	memcpy (an_item, &a_record_pointer, a_size);
+	memcpy (an_item, a_record_pointer, a_size);
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------

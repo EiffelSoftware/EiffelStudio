@@ -15,7 +15,7 @@ feature {WIZARD_WINDOW} -- Basic Operations
 	back is
 			-- Go to the previous state.
 		require
-			possible: history.count>1 and then not history.isfirst
+			possible: history.count > 1 and then not history.isfirst
 		do
 			history.back
 			history.item.clean_screen

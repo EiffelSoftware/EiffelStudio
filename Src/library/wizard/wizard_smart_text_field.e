@@ -257,12 +257,17 @@ feature {NONE} -- Implementation
 		local
 			dir_selector: EV_DIRECTORY_DIALOG
 			start_directory: STRING
+			end_char: CHARACTER
 		do
 			create dir_selector
 
 				-- Retrieve the string from the textfield, and set
 				-- the starting directory with it if it's a directory.
-			start_directory := textfield.text
+			start_directory := clone(textfield.text)
+			end_char := start_directory @ start_directory.count
+			if end_char = '\' or end_char = '/' then
+				start_directory.head (start_directory.count - 1)
+			end
 			if start_directory /= Void and then 
 				not start_directory.is_empty and then
 				(create {DIRECTORY}.make (start_directory)).exists

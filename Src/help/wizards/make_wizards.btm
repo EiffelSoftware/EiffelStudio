@@ -1,24 +1,25 @@
 @echo off
 setdos /x-135678
 if "%@alias[remtrace]" == "" alias remtrace echo
+if not defined INSTALL_LOG set INSTALL_LOG=CON
 setdos /x0
 remtrace *****************************************************************
 remtrace *                 Compiling WEL Wizard                          *
 remtrace *****************************************************************
-call make_wel_wizard.btm
+call make_wel_wizard.btm >>& %INSTALL_LOG
 remtrace *****************************************************************
 remtrace *               Compiling Vision2 Wizard                        *
 remtrace *****************************************************************
-call make_vision2_wizard.btm
+call make_vision2_wizard.btm >>& %INSTALL_LOG
 remtrace *****************************************************************
 remtrace *                Compiling Wizard Wizard                        *
 remtrace *****************************************************************
-call make_wizard_wizard.btm
+call make_wizard_wizard.btm >>& %INSTALL_LOG
 remtrace *****************************************************************
 remtrace *              Compiling Precompilation Wizard                  *
 remtrace *****************************************************************
-call make_precompile_wizard.btm
+call make_precompile_wizard.btm >>& %INSTALL_LOG
 remtrace *****************************************************************
 remtrace *                    Compiling .NET Wizard                      *
 remtrace *****************************************************************
-call make_dotnet_wizard.btm
+call make_dotnet_wizard.btm >>& %INSTALL_LOG

@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 				i > actions.count or
 				buttons.after
 			loop
-				buttons.item_for_iteration.press_actions.extend (actions @ i)
+				buttons.item_for_iteration.select_actions.extend (actions @ i)
 				buttons.forth
 				i := i + 1
 			end
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 			--| user access to it.
 			buttons.put (new_button, s)
 
-			new_button.press_actions.extend (~on_button_press (s))
+			new_button.select_actions.extend (~on_button_press (s))
 			button_box.extend (new_button)
 			button_box.disable_item_expand (new_button)
 			new_button.set_minimum_width (60)
@@ -229,6 +229,9 @@ end -- class EV_MESSAGE_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/27 18:29:54  brendel
+--| Replaced obsolete call.
+--|
 --| Revision 1.20  2000/03/09 16:42:20  rogers
 --| Replaced all disable_child_expand with disable_item_expand.
 --|

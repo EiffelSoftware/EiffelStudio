@@ -24,7 +24,7 @@ ECHO -
 ec -ace ace.ace -precompile -finalize -c_compile
 IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.Base.dll GOTO CACHE
 ECHO Compilation failed !! (no EiffelSoftware.CodeDom.Base.dll was generated in build_studio\EiffelSoftware.CodeDom.Base\EIFGEN\F_code)
-GOTO END
+GOTO ENDCD
 
 :CACHE
 CD ..
@@ -37,7 +37,7 @@ ECHO -
 ec -ace ace.ace -precompile -finalize
 IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.CacheBrowser.dll GOTO PROVIDER
 ECHO Compilation failed !! (no EiffelSoftware.CodeDom.CacheBrowser.dll was generated in build_studio\EiffelSoftware.CodeDom.CacheBrowser\EIFGEN\F_code)
-GOTO END
+GOTO ENDCD
 
 :PROVIDER
 CD ..
@@ -47,10 +47,10 @@ IF EXIST *.epr DEL /Q /F *.epr
 ECHO -
 ECHO COMPILING Eiffel CodeDom Provider
 ECHO -
-ec -ace ace.ace -finalize
+ec -ace ace.ace -precompile -finalize
 IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.dll GOTO VISION2
 ECHO Compilation failed !! (no EiffelSoftware.CodeDom.dll was generated in build_studio\EiffelSoftware.CodeDom\EIFGEN\F_code)
-GOTO END
+GOTO ENDCD
 
 :VISION2
 CD ..
@@ -63,7 +63,7 @@ ECHO -
 ec -ace ace.ace -precompile -finalize -c_compile
 IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.Vision2.dll GOTO SPLITDLL
 ECHO Compilation failed !! (no EiffelSoftware.CodeDom.Vision2.dll was generated in build_studio\EiffelSoftware.CodeDom.Vision2\EIFGEN\F_code)
-GOTO END
+GOTO ENDCD
 
 :SPLITDLL
 CD ..
@@ -76,7 +76,7 @@ ECHO -
 ec -ace ace.ace -precompile -finalize
 IF EXIST EIFGEN\F_code\EiffelSoftware.CodeDom.Splitter.dll GOTO MANAGER
 ECHO Compilation failed !! (no EiffelSoftware.CodeDom.Splitter.dll was generated in build_studio\EiffelSoftware.CodeDom.Splitter\EIFGEN\F_code)
-GOTO END
+GOTO ENDCD
 
 :MANAGER
 CD ..
@@ -91,7 +91,7 @@ COPY ..\..\manager\ecdpman.rc .
 ec -ace ace.ace -finalize
 IF EXIST EIFGEN\F_code\ecdpman.exe GOTO SPLITTER
 ECHO Compilation failed !! (no ecdpman.exe was generated in build_studio\ecdpman\EIFGEN\F_code)
-GOTO END
+GOTO ENDCD
 
 :SPLITTER
 CD ..
@@ -104,7 +104,7 @@ ECHO -
 ec -ace ace.ace -finalize
 IF EXIST EIFGEN\F_code\esplitter.exe GOTO SPLIT
 ECHO Compilation failed !! (no esplitter.exe was generated in build_studio\esplitter\EIFGEN\F_code)
-GOTO END
+GOTO ENDCD
 
 :SPLIT
 CD ..
@@ -115,10 +115,26 @@ ECHO -
 ECHO COMPILING eSplit
 ECHO -
 ec -ace ace.ace -finalize
-IF EXIST EIFGEN\F_code\esplit.exe GOTO END
+IF EXIST EIFGEN\F_code\esplit.exe GOTO NMAP
 ECHO Compilation failed !! (no esplit.exe was generated in build_studio\esplit\EIFGEN\F_code)
-GOTO END
+GOTO ENDCD
 
+:NMAP
+CD ..
+CD nmap
+IF EXIST EIFGEN RD /Q /S EIFGEN
+IF EXIST *.epr DEL /Q /F *.epr
+ECHO -
+ECHO COMPILING Name Mapper
+ECHO -
+ec -ace ace.ace -finalize
+IF EXIST EIFGEN\F_code\nmap.exe GOTO ENDCD
+ECHO Compilation failed !! (no esplit.exe was generated in build_studio\esplit\EIFGEN\F_code)
+GOTO ENDCD
+
+:ENDCD
 CD ..\..
+CALL register_all.bat
+
 :END
 ECHO Done compiling EiffelStudio Eiffel CodeDom Provider projects.

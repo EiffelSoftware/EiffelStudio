@@ -12,7 +12,7 @@ deferred class
 	EV_STATIC_MENU_BAR_I
 
 inherit
-	EV_MENU_ITEM_CONTAINER_I
+	EV_MENU_CONTAINER_I
 	
 feature {NONE} -- Initialization
 	
@@ -26,12 +26,11 @@ feature {NONE} -- Initialization
 feature -- Access
 	
 	parent: EV_WINDOW is
-			-- The parent of the Current widget
-			-- If the widget is an EV_WINDOW without parent,
-			-- this attribute will be `Void'
+			-- The widget that has the current menu
 		require
 			exists: not destroyed
-		deferred
+		do
+			Result ?= parent_imp.interface
 		end
 
 feature -- Status report
@@ -53,11 +52,12 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	parent_imp: EV_WINDOW_IMP
-		-- The window where the menu is.
+			-- The window where the menu is.
 
 end -- class EV_STATIC_MENU_BAR_I
+
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision : library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

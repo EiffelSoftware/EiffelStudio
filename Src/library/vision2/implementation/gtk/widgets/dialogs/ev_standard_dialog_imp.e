@@ -29,16 +29,19 @@ inherit
 			destroy,
 			title,
 			set_title,
-			set_blocking_window,
 			block
 		redefine
-			blocking_window,
 			on_key_event,
 			initialize_client_area,
 			call_close_request_actions
 		end
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
+	
+	EV_DIALOG_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 feature -- Initialization
 
@@ -73,18 +76,49 @@ feature -- Status report
 feature -- Status setting
 
 	show_modal_to_window (a_window: EV_WINDOW) is
-			-- Show the dialog and wait until the user closes it.
+			-- Show `Current' modal with respect to `a_window'.
+		local
+			was_modal: BOOLEAN
+			parent_was_modal: BOOLEAN
+			a_window_imp: EV_WINDOW_IMP
 		do
 			user_clicked_ok := False
-			set_blocking_window (a_window)
 			selected_button := Void
+			C.gtk_window_set_position (c_object, C.Gtk_win_pos_center_enum)
+
+				-- Remove the modality of the parent if it is modal
+			if a_window /= Void then
+				a_window_imp ?= a_window.implementation
+
+				if a_window_imp.is_modal then
+					parent_was_modal := True
+					a_window_imp.disable_modal
+				end
+			end
+
+			if is_modal then
+				was_modal := True
+			else
+				enable_modal
+			end
+
+			set_blocking_window (a_window)
 			C.gtk_widget_show (c_object)
 			block
 			set_blocking_window (Void)
+			
+			if not is_destroyed and then not was_modal then
+				disable_modal
+			end
+				-- Put parent's original modality back.
+			if a_window /= Void and then parent_was_modal then
+				a_window_imp.enable_modal
+			end
+
 			if selected_button /= Void then
-				if selected_button.is_equal ("OK") then
+				if selected_button.is_equal (ev_ok) then
 					interface.ok_actions.call ([])
-				elseif selected_button.is_equal ("Cancel") then
+				elseif selected_button.is_equal (ev_cancel) then
 					interface.cancel_actions.call ([])
 				end
 			end
@@ -151,7 +185,7 @@ feature {NONE} -- Implementation
 	on_cancel is
 			-- Close window and call action sequence.
 		do
-			selected_button := "Cancel"
+			selected_button := ev_cancel
 			C.gtk_widget_hide (c_object)
 		end
 
@@ -159,7 +193,7 @@ feature {NONE} -- Implementation
 			-- Close window and call action sequence.
 		do
 			user_clicked_ok := True
-			selected_button := "OK"
+			selected_button := ev_ok
 			C.gtk_widget_hide (c_object)
 		end
 		

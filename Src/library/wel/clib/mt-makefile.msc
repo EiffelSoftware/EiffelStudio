@@ -1,7 +1,7 @@
 # mtwel.lib - Makefile for Microsoft C
 
 CC = cl
-CFLAGS = -W3 -c -MT -DEIF_THREADS -Ox -I..\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include
+CFLAGS = -nologo -W1 -c -MT -DEIF_THREADS -Ox -I..\spec\windows\include -I$(ISE_EIFFEL)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<
@@ -19,7 +19,7 @@ OBJ = 	disptchr.obj \
 
 mtwel.lib: $(OBJ)
 	if exist $@ del $@
-	lib /OUT:$@ $(OBJ)
+	lib /NOLOGO /OUT:$@ $(OBJ)
 	if not exist ..\spec\msc mkdir ..\spec\msc
 	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
 	copy $@ ..\spec\msc\lib

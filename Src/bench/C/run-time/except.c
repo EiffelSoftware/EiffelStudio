@@ -32,13 +32,7 @@
 
 #ifdef WORKBENCH
 #ifndef NOHOOK					/* For debug_mode */
-#ifdef EIF_WIN_31
-#include "shared.h"				/* in extra/mswin/ipc */
-#elif defined EIF_WIN32
-#include "server.h"				/* in extra/win32/ipc/app */
-#else							/* Unix */
 #include "server.h"				/* ../ipc/app */
-#endif /* EIF_WIN_31 */
 #endif /* NOHOOK */
 #endif /* WORKBENCH */
 
@@ -838,12 +832,10 @@ rt_public void eraise(EIF_CONTEXT char *tag, long num)
 				break;
 #ifdef EIF_WIN32
 			case EN_SYS:				/* Operating system error */
-				if (errno != 0)
-					trace->ex_errno = errno;
+				trace->ex_errno = errno;
 				break;
 			case EN_IO:					/* I/O error */
-				if (errno != 0)
-					trace->ex_errno = _doserrno;
+				trace->ex_errno = _doserrno;
 				break;
 #else
 			case EN_SYS:				/* Operating system error */

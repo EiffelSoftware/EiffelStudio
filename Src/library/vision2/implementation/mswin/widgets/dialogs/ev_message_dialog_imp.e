@@ -44,7 +44,6 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create a message dialog with `par' as parent.
 		do
-			initialize_list (command_count)
 			parent_imp ?= par.implementation
 			wel_make
 			title := ""
@@ -56,7 +55,6 @@ feature {NONE} -- Initialization
 			-- Create a message box with `par' as parent, `a_title' as
 			-- title and `a_msg' as message.
 		do
-			initialize_list (command_count)
 			parent_imp ?= par.implementation
 			title := a_title
 			message := a_msg
@@ -69,7 +67,6 @@ feature {NONE} -- Initialization
 			-- parent, `a_title' as title and `a_msg' as message
 			-- and displays it.
 		do
-			initialize_list (command_count)
 			parent_imp ?= par.implementation
 			title := a_title
 			message := a_msg

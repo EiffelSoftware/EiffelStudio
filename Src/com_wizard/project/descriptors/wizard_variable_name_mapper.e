@@ -67,6 +67,13 @@ feature -- Access
 				privious_upper := (a_name.item (i).is_upper or (a_name.item (i) = '_'))
 				i := i + 1
 			end
+			from
+			until
+				Result.item (1) /= '_'
+			loop
+				Result.tail (Result.count - 1)
+			end
+
 		ensure
 			non_void_name: Result /= Void
 			valid_name: not Result.empty
@@ -81,12 +88,6 @@ feature -- Access
 		do
 			Result := to_eiffel_name (a_name)
 			
-			from
-			until
-				Result.item (1) /= '_'
-			loop
-				Result.tail (Result.count - 1)
-			end
 			Result.to_upper
 			if (a_type = Tkind_enum) then
 				Result.append ("_ENUM")

@@ -31,6 +31,11 @@ feature {NONE}
 
 feature {NONE}
 
+	full_symbol: PIXMAP is
+		do
+			Result := Pixmaps.full_help_pixmap
+		end;
+
 	process_any (dropped: STONE) is
 		do
 			associated_window.update_text (dropped.data);
@@ -39,5 +44,22 @@ feature {NONE}
 	create_empty_editor is
 		do
 		end;
+
+feature
+
+	set_empty_symbol is
+		do
+			if pixmap /= symbol then
+				set_symbol (symbol)
+			end
+		end;
+
+	set_full_symbol is
+		do
+			if pixmap /= full_symbol then
+				set_symbol (full_symbol)
+			end
+		end;
+
 
 end

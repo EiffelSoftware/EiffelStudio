@@ -1,3 +1,9 @@
+#include <sys/types.h>
+#include <stdio.h>
+#include <sys/timeb.h>
+#include <time.h>
+#include "eif_eiffel.h"
+#include "eif_threads.h"
 #include "datetime.h"
 
 #ifdef __cplusplus
@@ -15,11 +21,22 @@
 	struct timeb date_time_fine;
 #endif
 
+#ifdef EIF_THREADS
+	rt_private EIF_MUTEX_TYPE *mutex = NULL;
+#endif
+
 struct tm *date_time;
 	
 void c_get_date_time () 
 {
 	const time_t *tmp;
+#ifdef EIF_THREADS
+	if (!mutex)
+		mutex = eif_thr_mutex_create();
+
+	eif_thr_mutex_lock(mutex);
+#endif
+	
 #ifdef EIF_WIN32
 #ifdef EIF_BORLAND
 	ftime (&date_time_fine);
@@ -30,6 +47,9 @@ void c_get_date_time ()
 	ftime (&date_time_fine);
 #endif
 	date_time = localtime (&(date_time_fine).time);   
+#ifdef EIF_THREADS
+	eif_thr_mutex_unlock(mutex);
+#endif
 }
 
 EIF_INTEGER c_year_now ()

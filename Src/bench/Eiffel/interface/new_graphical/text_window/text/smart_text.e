@@ -26,7 +26,7 @@ inherit
 			make
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -34,7 +34,7 @@ feature -- Initialization
 	make is
 			-- Initialize text.
 		do
-			{CLICKABLE_TEXT} Precursor
+			Precursor {CLICKABLE_TEXT}
 			create click_tool
 		end
 
@@ -280,7 +280,7 @@ feature -- Search
 	reset_text is
 			-- Make the editor ready to load a new content
 		do
-			{CLICKABLE_TEXT} Precursor
+			Precursor {CLICKABLE_TEXT}
 			disable_click_tool
 			click_tool.reset
 		end
@@ -734,7 +734,7 @@ feature {NONE} -- Implementation
 			if click_and_complete_is_active and then not click_tool.is_ready then
 				click_tool.prepare_on_click_analysis
 			else
-				{CLICKABLE_TEXT} Precursor
+				Precursor {CLICKABLE_TEXT}
 			end
 		end
 

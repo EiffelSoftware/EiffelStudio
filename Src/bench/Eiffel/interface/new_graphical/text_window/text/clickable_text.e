@@ -151,7 +151,7 @@ feature -- Load Text handling
 			current_text := Void
 			
 				-- First abort our previous actions.
-			{EDITABLE_TEXT} Precursor
+			Precursor {EDITABLE_TEXT}
 
 				-- Reset the editor state.
 			disable_has_breakable_slots
@@ -165,7 +165,7 @@ feature -- Initialization
 			-- lines and tokens
 		do
 			load_type := from_string
-			{EDITABLE_TEXT} Precursor (a_string)
+			Precursor {EDITABLE_TEXT} (a_string)
 		end
 
 
@@ -269,7 +269,7 @@ feature {NONE} -- Load Text handling
 			-- Agent for function `finish_reading_text'
 		do
 			if internal_Finish_reading_agent = Void then
-				internal_Finish_reading_agent := ~finish_reading
+				internal_Finish_reading_agent := agent finish_reading
 			end
 			Result := internal_Finish_reading_agent
 		end
@@ -287,7 +287,7 @@ feature {NONE} -- Load Text handling
 	on_text_loaded is
 			-- Initialize feature click tool after text loading.
 		do
-			{EDITABLE_TEXT} Precursor
+			Precursor {EDITABLE_TEXT}
 			if feature_click_enabled and then load_type = from_string then
 				feature_click_tool.set_content (Current)
 				feature_click_tool.prepare_on_click_analysis

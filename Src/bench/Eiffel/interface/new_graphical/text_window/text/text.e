@@ -39,8 +39,8 @@ feature {NONE}-- Initialization
 	make is
 			-- create an empty text
 		do
-			{TEXT_OBSERVER_MANAGER} Precursor
-			{B_345_TREE} Precursor
+			Precursor {TEXT_OBSERVER_MANAGER}
+			Precursor {B_345_TREE}
 			create tab_size_cell.put (default_tabulation_size)
 		end
 
@@ -342,7 +342,7 @@ feature {NONE} -- Text Loading
 			-- Agent for function `finish_reading_file'
 		do
 			if internal_Finish_reading_agent = Void then
-				internal_Finish_reading_agent := ~finish_reading_string
+				internal_Finish_reading_agent := agent finish_reading_string
 			end
 			Result := internal_Finish_reading_agent
 		end

@@ -13,7 +13,19 @@ deferred class
 inherit
 	EV_WIDGET
 		redefine
-			implementation
+			implementation,
+			is_in_default_state
+		end
+		
+	EV_PIXMAPABLE
+		rename
+			set_pixmap as set_background_pixmap,
+			remove_pixmap as remove_background_pixmap,
+			pixmap as background_pixmap
+		redefine
+			implementation,
+			is_in_default_state,
+			background_pixmap
 		end
 
 	BOX [EV_WIDGET]
@@ -99,6 +111,13 @@ feature -- Access
 			if cs /= Void then
 				cs.go_to (c)
 			end
+		end
+		
+	background_pixmap: EV_PIXMAP is
+			-- `Result' is pixmap displayed on background of `Current'.
+			-- It is tessellated and fills whole of `Current'.
+		do
+			Result := Precursor {EV_PIXMAPABLE}
 		end
 
 feature -- Status setting
@@ -374,6 +393,14 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			if peers = Void then
 				Result := True
 			end
+		end
+		
+feature {NONE} -- Contract support
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := Precursor {EV_WIDGET} and Precursor {EV_PIXMAPABLE}
 		end
 		
 feature {EV_ANY_I} -- Implementation

@@ -93,6 +93,14 @@ feature {NONE} -- Eiffel Project Directories
 			Result.set_file_name (Dot_workbench);
 		end;
 
+	Project_txt_name: FILE_NAME is
+			-- Full name of the file where the project text is stored
+		once
+			!! Result.make_from_string (Project_directory);
+			Result.extend (Eiffelgen);
+			Result.set_file_name (Project_txt);
+		end;
+
 	Precompilation_file_name: FILE_NAME is
 			-- Full name of file where current precompilation
 			-- information is stored

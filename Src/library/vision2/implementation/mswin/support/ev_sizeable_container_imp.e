@@ -25,7 +25,12 @@ feature -- Access
 			-- We recompute it if necessary.
 		do
 			if bit_set (internal_changes, 1) then
-				compute_minimum_width
+				if bit_set (internal_changes, 2) then
+					compute_minimum_size
+					internal_changes := set_bit (internal_changes, 2, False)
+				else
+					compute_minimum_width
+				end
 				internal_changes := set_bit (internal_changes, 1, False)
 			end
 			Result := internal_minimum_width
@@ -36,7 +41,12 @@ feature -- Access
 			-- We recompute it if necessary.
 		do
 			if bit_set (internal_changes, 2) then
-				compute_minimum_height
+				if bit_set (internal_changes, 1) then
+					compute_minimum_size
+					internal_changes := set_bit (internal_changes, 1, False)
+				else
+					compute_minimum_height
+				end
 				internal_changes := set_bit (internal_changes, 2, False)
 			end
 			Result := internal_minimum_height
@@ -56,7 +66,6 @@ feature -- Basic operations
 			when 3 then
 				compute_minimum_size
 			else
-
 			end
 			move_and_resize (a_x, a_y, a_width, a_height, True)
 		end

@@ -1,6 +1,5 @@
 indexing
-	description: "Eiffel compiler that can be used from either EiffelStudio or
-		from Visual Studio .NET"
+	description: "Eiffel compiler that can be used from either EiffelStudio or from Visual Studio .NET"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -22,7 +21,7 @@ feature {NONE} -- Initialization
 			-- Initialize server.
 		local
 			local_string: STRING
-			com_compiler: ECOM_EIF_COMPILER_REGISTRATION
+			com_compiler: ECOM_ISE_REGISTRATION
 		do
 			if argument_count > 0 then
 				local_string :=argument (1)

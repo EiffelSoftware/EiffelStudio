@@ -1,5 +1,11 @@
 indexing
-	description: "Objects that ..."
+	description: "[
+			Dialogs that are created by the Vision2 docking mechanism when
+			an EV_DOCKABLE_SOURCE is dropped while not over a valid EV_DOCKABLE_TARGET.
+			The transported component will be inserted into `Current', and when `Current'
+			is destroyed, it will be restored back to its original position before the
+			transport began.
+		]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,9 +52,21 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 		do
 			expansion_was_disabled := True
 		end
-		
-
-invariant
-	invariant_clause: True -- Your invariant here
 
 end -- class EV_DOCKABLE_DIALOG
+
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support: http://support.eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

@@ -44,6 +44,6 @@ cluster
 external
 	assembly: 	"..\..\bin\ISE.Reflection.EiffelComponents.dll",
 			"..\..\bin\ISE.Reflection.Formatter.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.XML.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.dll"
+			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\System.XML.dll",
+			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\System.dll"
 end

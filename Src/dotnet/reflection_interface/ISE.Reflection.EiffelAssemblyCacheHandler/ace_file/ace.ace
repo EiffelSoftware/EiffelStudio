@@ -52,9 +52,9 @@ cluster
 		end
 		
 external
-	assembly: 	"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.XML.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.Windows.Forms.dll",
+	assembly: 	"C:\windows\Microsoft.NET\Framework\v1.0.2914\System.XML.dll",
+			"C:\windows\Microsoft.NET\Framework\v1.0.2914\System.dll",
+			"C:\windows\Microsoft.NET\Framework\v1.0.2914\System.Windows.Forms.dll",
 			"..\..\bin\ISE.Reflection.EiffelComponents.dll",
 			"..\..\bin\ISE.Reflection.EiffelAssemblyCacheNotifier.dll",	
 			"..\..\bin\ISE.Reflection.Support.dll"

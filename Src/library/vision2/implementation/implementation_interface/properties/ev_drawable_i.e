@@ -36,7 +36,6 @@ feature -- Access
 			-- Width of line for device.
 		require
 			exists: not destroyed
-			drawable: is_drawable
 		deferred
 		end
 
@@ -44,7 +43,6 @@ feature -- Access
 			-- Drawing mode
 		require
 			exists: not destroyed
-			drawable: is_drawable
 		deferred
 		end
 
@@ -116,12 +114,16 @@ feature -- Clearing operations
 			-- Clear the entire area.
 		require
 			exists: not destroyed
+			drawable: is_drawable
 		deferred
 		end
 
 	clear_rect (left, top, right, bottom: INTEGER) is
 			-- Clear the rectangular area defined by
 			-- `left', `top', `right', `bottom'.
+		require
+			exists: not destroyed
+			drawable: is_drawable
 		deferred
 		end
 
@@ -130,6 +132,8 @@ feature -- Drawing operations
 	draw_point (pt: EV_COORDINATES) is
 			-- Draw a point at the position `pt'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 		deferred
 		end
@@ -137,7 +141,9 @@ feature -- Drawing operations
 	draw_text (pt: EV_COORDINATES; text: STRING) is
 			-- Draw `text' at the position `pt'
 		require
-			vlid_text: text /= Void
+			exists: not destroyed
+			drawable: is_drawable
+			valid_text: text /= Void
 			valid_point: pt /= Void
 		deferred
 		end
@@ -145,6 +151,8 @@ feature -- Drawing operations
 	draw_segment (pt1, pt2: EV_COORDINATES) is
 			-- Draw a segment between `pt1' and `pt2'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point1: pt1 /= Void
 			valid_point2: pt2 /= Void
 		deferred
@@ -152,12 +160,17 @@ feature -- Drawing operations
 
 	draw_straight_line (pt1, pt2: EV_COORDINATES) is
 			-- Draw an infinite line traversing `point1' and `point2'.
+		require
+			exists: not destroyed
+			drawable: is_drawable
 		deferred
 		end
 
 	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
 			-- Draw a polyline, close it automatically if `is_closed'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			points_exists: pts /= Void
 			points_large_enough: not pts.empty
 		deferred
@@ -167,6 +180,8 @@ feature -- Drawing operations
 			-- Draw a rectangle whose center is `pt' and size is `w' and `h'
 			-- and that has the orientation `orientation'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 			width_positive: w >= 0
 			height_positive: h >= 0
@@ -184,6 +199,8 @@ feature -- Drawing operations
 			--    0 : the first point is linked to the last point
 			--    1 : the first and the last point are linked to the center `pt'
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 			positive_radius1: r1 >= 0;
 			positive_radius2: r2 >= 0;
@@ -201,6 +218,8 @@ feature -- Drawing operations
 			-- If there is not enough space to create auxiliery bitmap (DDB) 
 			-- exception will be raised
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 			valid_pixmap: is_valid (pix)
 		deferred
@@ -211,6 +230,8 @@ feature -- filling operations
 	fill_polygon (pts: ARRAY [EV_COORDINATES]) is
 			 -- Fill a polygon.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			points_exists: pts /= Void
 			points_large_enough: not pts.empty
 		deferred
@@ -220,6 +241,8 @@ feature -- filling operations
 			-- Fill a rectangle whose center is `pt' and size is `w' and `h'
 			-- with an orientation `orientation'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 			width_positive: w >= 0
 			height_positive: h >= 0
@@ -237,6 +260,8 @@ feature -- filling operations
 			--    0 : the first point is linked to the last point
 			--    1 : the first and the last point are linked to the center `pt'
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 			positive_radius1: r1 >= 0;
 			positive_radius2: r2 >= 0;

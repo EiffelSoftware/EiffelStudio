@@ -380,7 +380,6 @@ feature -- Removal
 		local
 			i,j: INTEGER;
 			default_value: G;
-			l_count: INTEGER
 		do
 			if not off then
 				from

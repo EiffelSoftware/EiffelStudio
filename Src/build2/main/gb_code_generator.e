@@ -96,10 +96,17 @@ inherit
 			default_create
 		end
 		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+		
 feature {NONE} -- Creation
 
 	default_create is
-			--
+			-- Create `Current'.
 		do
 			reset_generation_constants
 		end
@@ -226,6 +233,7 @@ feature -- Basic operation
 				end
 				error_message := error_message + "%NCode generation has failed.%NPlease ensure that your installation of EiffelBuild has not been corrupted."
 				create warning_dialog.make_with_text (error_message)
+				warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 				warning_dialog.show_modal_to_window (parent_window (progress_bar))
 			end
 		end
@@ -364,6 +372,10 @@ feature {NONE} -- Implementation
 				
 					-- Now add the application class name.
 				add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)
+				
+				if Visual_studio_information.is_visual_studio_wizard then
+					add_generated_string (ace_text, Visual_studio_information.clr_version, Clr_version_tag)
+				end
 				
 				ace_file_name := clone (generated_path)
 				ace_file_name.extend (file_name)

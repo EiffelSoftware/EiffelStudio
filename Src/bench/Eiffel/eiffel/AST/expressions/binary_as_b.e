@@ -41,6 +41,7 @@ feature -- Type check, byte code and dead code removal
 			last_constrained, left_constrained: TYPE_A;
 			left_id: CLASS_ID;
 			feature_b: FEATURE_B;
+			feature_bs: FEATURE_BS;
 			last_class: CLASS_C;
 			depend_unit: DEPEND_UNIT;
 			vwoe: VWOE;
@@ -174,10 +175,26 @@ feature -- Type check, byte code and dead code removal
 			end;
 			context.put (infix_type);
 
-			!!feature_b;
-			feature_b.init (infix_function);
-			feature_b.set_type (infix_type.type_i);
-			context.access_line.insert (feature_b);
+			if last_constrained /= Void and then last_constrained.is_separate then
+debug io.putstring ("Now,  In BINARY_AS_B we perform try-assign on class ")
+io.putstring (context.a_class.name_in_upper);
+io.putstring (" at feature ")
+io.putstring (context.feature_name);
+io.new_line;
+io.putstring ("    ** BINARY_AS_B We created FEATURE_BS here: <");
+io.putstring (feature_b.feature_name);
+io.putstring (">%N"); end
+				!!feature_bs;
+				feature_bs.init (infix_function);
+				feature_bs.set_type (infix_type.type_i);
+				context.access_line.insert (feature_bs);
+			else
+				!!feature_b;
+				feature_b.init (infix_function);
+				feature_b.set_type (infix_type.type_i);
+				context.access_line.insert (feature_b);
+			end;
+
 		end;
 
 	byte_node: BINARY_B is

@@ -322,8 +322,16 @@ feature
 				if register /= Void then
 					old_print_register;
 					generated_file.putstring (" = ");
+					if  register.is_separate and then
+						not context.real_type(type).is_separate then
+						generated_file.putstring ("CURLTS(");
+					end;
 				end;
 				generate_access;
+				if  register /= Void and then register.is_separate and then
+					not context.real_type(type).is_separate then
+					generated_file.putstring (")");
+				end;
 				generated_file.putchar (';');
 				generated_file.new_line;
 				if System.has_separate then reset_added_gc_hooks end;

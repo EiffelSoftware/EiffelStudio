@@ -103,17 +103,21 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				constants_button.select_actions.block
 				constants_button.enable_select
 				constants_button.select_actions.resume
+				list_item := constants_combo_box.selected_item
+				if list_item /= Void then
+					list_item.deselect_actions.block
+				end
+				switch_constants_mode
+				if list_item /= Void then
+					list_item.deselect_actions.resume
+				end
 				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
 				check
 					list_item_not_void: list_item /= Void
 				end
 				list_item.select_actions.block
 				list_item.enable_select
-				list_item.select_actions.resume
-				if last_selected_constant = Void then
-					last_selected_constant := constant_context.constant
-				end
-				switch_constants_mode	
+				list_item.select_actions.resume	
 			else
 				pixmap_path_agent.call (Void)
 				l_pixmap_path := pixmap_path_agent.last_result
@@ -180,8 +184,7 @@ feature {NONE} -- Implementation
 				filler_label.show
 				modify_button.show
 				constants_combo_box.hide
-				constants_combo_box.first.enable_select
-				remove_selected_constant
+				constants_combo_box.remove_selection
 			end
 		end
 		
@@ -215,12 +218,6 @@ feature {NONE} -- Implementation
 		
 	horizontal_box: EV_HORIZONTAL_BOX
 		-- Main horizontal box used in construction of `Current'.
-		
-	last_selected_constant: GB_CONSTANT
-		-- Last constant that was selected in `Current'.
-		-- Must be stored so that when a user switches from using a constant,
-		-- to an actual value, we can remove the constant from the object.
-		-- Note that this will be set, if `Current' is built with a constant.
 		
 	add_pixmap_to_pixmap_container (pixmap: EV_PIXMAP) is
 			-- Add `pixmap' to `pixmap_container'.
@@ -300,7 +297,6 @@ feature {NONE} -- Implementation
 					pixmap_constant = object.constants.item (lookup_string).constant then
 					constants_button.enable_select
 					list_item.enable_select
-					last_selected_constant ?= list_item.data
 				end
 				list_item.select_actions.extend (agent list_item_selected (list_item))
 				pixmap_constants.forth
@@ -367,33 +363,19 @@ feature {NONE} -- Implementation
 		end	
 		
 	filler_label: EV_CELL
-	
-	remove_selected_constant is
-			-- Update `object' and `last_selected_constant' to reflect the
-			-- fact that a user is no longer referencing `last_selected_constant'.
-		local
-			constant: GB_PIXMAP_CONSTANT
-			constant_context: GB_CONSTANT_CONTEXT
-		do
-			if last_selected_constant /= Void then
-				constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
-				if constant_context /= Void then
-					constant ?= constant_context.constant
-					if not constants_combo_box.is_displayed then
-							-- Now assign the value of `last_selected_item' to the control, but only
-							-- if `constants_combo_box' is not displayed, meaning that a user has just
-							-- changed from constants to non constants.
-							execute_agent (Void, Void)
-					end
-					constant_context.destroy
-				end
-			last_selected_constant := Void
-			end
-		end
+
 		
 	list_item_deselected (list_item: EV_LIST_ITEM) is
 			-- `list_item' has been deselected from `constants_combo_box'.
+		local
+			constant: GB_STRING_CONSTANT
+			constant_context: GB_CONSTANT_CONTEXT
 		do
+			constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
+			if constant_context /= Void then
+				constant ?= constant_context.constant
+				constant_context.destroy
+			end
 		end
 		
 	list_item_selected (list_item: EV_LIST_ITEM) is
@@ -413,12 +395,10 @@ feature {NONE} -- Implementation
 --				FIXME No need to perform validation for pixamps.
 --				validate_agent.call ([constant.pixmap])
 --				if validate_agent.last_result then
-					remove_selected_constant
 					create constant_context.make_with_context (constant, object, internal_gb_ev_any.type, internal_type)
 					constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
 					execute_agent (constant.pixmap, constant.pixmap.pixmap_path)
-					last_selected_constant := constant
 					update_editors
 --				else
 --					constants_combo_box.first.enable_select

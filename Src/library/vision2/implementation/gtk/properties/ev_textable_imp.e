@@ -1,7 +1,9 @@
 indexing
-
 	description: 
-		"EiffelVision text container, gtk implementation"
+		"EiffelVision text container, gtk implementation.%
+		% For every textable widget, we create a gtk box to put %
+		% in the widget. The pixmap and the label will then be put%
+		% in this box."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -21,10 +23,33 @@ inherit
 	EV_GTK_TYPES_EXTERNALS
 	
 feature {NONE} -- Initialization
+
+	make is
+			-- feature `make'.
+		deferred
+		end
 	
+	initialize is
+			-- Creation of the `box', where the label and the pixmap
+			-- will be put in.
+			-- Common initialization for textable widgets,
+			-- except for status bar and radio buttons.
+
+		do
+			-- Creation of an gtk_box.
+			box := gtk_hbox_new (False, 5)
+			gtk_widget_show (box)
+
+			-- Adding the box in the widget.
+			gtk_container_add (GTK_CONTAINER (widget), box)
+		end
+
 	create_text_label (txt: STRING) is
+			-- Create the label for the text and
+			-- put it in `box'.
 		require
-			call_only_once: label_widget = Default_pointer
+			call_only_once: label_widget = default_pointer
+			box_already_created: box /= default_pointer
 		local
                         a: ANY
 		do
@@ -33,9 +58,18 @@ feature {NONE} -- Initialization
 			set_label_widget (gtk_label_new ($a))
 			gtk_widget_show (label_widget)
 			gtk_box_pack_end (GTK_BOX (box), label_widget, True, True, 0)
+
+			-- We left-align and vertical_center-position the text.
+			gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
 		end			
-	
-	
+
+	make_with_text (txt: STRING) is
+			-- Create an item with `txt' as label.
+		do
+			make
+			set_text (txt)
+		end
+
 feature -- Access
 
 	text: STRING is
@@ -54,19 +88,19 @@ feature -- Status setting
         set_center_alignment is
                         -- Set text alignment of current label to center.
                 do
-			gtk_misc_set_alignment (label_widget, 0.5, 0.5)
+			gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
  		end
 
         set_right_alignment is
                 -- Set text alignment of current label to right.
                 do
-			gtk_misc_set_alignment (label_widget, 1, 0.5)
+			gtk_misc_set_alignment (gtk_misc (label_widget), 1, 0.5)
 		end
 
         set_left_alignment is
                         -- Set text alignment of current label to left.
                 do
-			gtk_misc_set_alignment (label_widget, 0, 0.5)
+			gtk_misc_set_alignment (gtk_misc (label_widget), 0, 0.5)
                 end
 	
 feature -- Element change	
@@ -84,6 +118,12 @@ feature -- Element change
 			end
 		end
 	
+feature {EV_ANY_I} -- Implementation
+	
+	widget: POINTER is
+		deferred
+		end
+
 feature {EV_PIXMAP_CONTAINER_IMP} -- Implementation
 	
 	box: POINTER

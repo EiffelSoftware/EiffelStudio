@@ -264,6 +264,7 @@ feature -- Execution
 			ignore_all_breakpoints_confirmation_dialog: STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 			l_il_env: IL_ENVIRONMENT
 			l_app_string: STRING
+			is_dotnet_system: BOOLEAN
 		do
 			launch_program := False
 			if  (not Eiffel_project.system_defined) or else (Eiffel_System.name = Void) then
@@ -285,8 +286,9 @@ feature -- Execution
 					create uf.make (Eiffel_system.application_name (True))
 					create make_f.make (makefile_sh_name)
 	
+					is_dotnet_system := Eiffel_system.system.il_generation
 					if uf.exists then
-						if Eiffel_system.system.il_generation then
+						if is_dotnet_system then
 							if Application.execution_mode = feature {EXEC_MODES}.User_stop_points then
 								create l_il_env.make (Eiffel_system.System.clr_runtime_version)
 								l_app_string := l_il_env.Dotnet_debugger_path (dotnet_debugger)
@@ -308,7 +310,10 @@ feature -- Execution
 							end
 						end
 						if not launch_program then
-							if make_f.exists and then make_f.date > uf.date then
+							if 
+								not is_dotnet_system and then
+								make_f.exists and then make_f.date > uf.date 
+							then
 									-- The Makefile file is more recent than the 
 									-- application
 								create cd.make_with_text_and_actions (Warning_messages.w_Makefile_more_recent (makefile_sh_name),

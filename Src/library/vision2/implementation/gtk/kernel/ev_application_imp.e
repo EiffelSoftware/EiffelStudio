@@ -22,8 +22,15 @@ creation
 feature {NONE} -- Initialization
 	
 	make (interf: EV_APPLICATION) is
+		local
+			w: EV_WINDOW
 		do
 			init_windowing
+			w := interf.main_window
+			check
+				valid_main_window: w /= Void
+			end
+			iterate
 		end
 	
 	

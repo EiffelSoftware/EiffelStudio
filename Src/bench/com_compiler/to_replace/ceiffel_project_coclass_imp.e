@@ -128,13 +128,6 @@ feature -- Basic Operations
 			compiler_kernel.create_project (ace_file_name1, project_directory_path)
 		end
 		
-	load_ace_file_only (ace_name: STRING) is
-			-- load only the ace file
-			-- 'ace_name' [in]
-		do
-			compiler_kernel.load_ace_file_only (ace_name)
-		end
-
 feature {NONE}  -- Externals
 
 	ccom_create_item (eif_object: like Current): POINTER is

@@ -114,13 +114,6 @@ feature -- Basic Operations
 			ccom_create_project (initializer, an_ace_file_name, project_directory_path)
 		end
 
-	load_ace_file_only (a_ace_file_name: STRING) is
-			-- Load only the ace file for a project.
-			-- `a_ace_file_name' [in].  
-		do
-			ccom_load_ace_file_only (initializer, a_ace_file_name)
-		end
-
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -141,12 +134,6 @@ feature {NONE}  -- Externals
 			-- Create new project.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT)"
-		end
-
-	ccom_load_ace_file_only (cpp_obj: POINTER; a_ace_file_name: STRING) is
-			-- Load only the ace file for a project.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](EIF_OBJECT)"
 		end
 
 	ccom_project_file_name (cpp_obj: POINTER): STRING is

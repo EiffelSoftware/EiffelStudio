@@ -105,9 +105,6 @@ interface IEiffelProject: IUnknown
   [helpstring ("Create new project.")]
   HRESULT create_project ([in] BSTR an_ace_file_name, [in] BSTR project_directory_path);
 
-  [helpstring ("Load only the ace file for a project.")]
-  HRESULT load_ace_file_only ([in] BSTR ace_file_name);
-
   [helpstring ("Full path to .epr file.")]
   HRESULT project_file_name ([out, retval] BSTR * return_value);
 
@@ -173,13 +170,13 @@ interface IEiffelCompletionInfo: IUnknown
 {
   [helpstring ("Add a local variable used for solving member completion list")]
   HRESULT add_local ([in] BSTR name, [in] BSTR type);
-  
+
   [helpstring ("Add an argument used for solving member completion list")]
   HRESULT add_argument ([in] BSTR name, [in] BSTR type);
 
   [helpstring ("Features accessible from target.")]
   HRESULT target_features ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out, retval] IEnumCompletionEntry ** return_value);
-  
+
   [helpstring ("Feature information")]
   HRESULT target_feature ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out, retval] IEiffelFeatureDescriptor** return_value);
 };
@@ -746,10 +743,10 @@ interface IEiffelFeatureDescriptor: IEiffelCompletionEntry
 
   [helpstring ("Feature parameters.")]
   HRESULT parameters ([out, retval] IEnumParameter** params);
-  
+
   [helpstring ("Feature return type.")]
   HRESULT return_type ([out, retval] BSTR* return_value);
-  
+
   [helpstring ("Feature location, full path to file and line number")]
   HRESULT feature_location (  [in, out] BSTR * file_path,
                 [in, out] ULONG * line_number);
@@ -846,9 +843,9 @@ interface IEiffelParameterDescriptor: IUnknown
 {
   [helpstring ("Parameter name")]
   HRESULT name ([out, retval] BSTR* return_value);
-  
+
   [helpstring ("Parameter display")]
-  HRESULT display ([out, retval] BSTR* return_value);  
+  HRESULT display ([out, retval] BSTR* return_value);
 };
 
 //---------------------------------------------------------------------

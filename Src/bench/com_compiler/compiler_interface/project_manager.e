@@ -161,7 +161,7 @@ feature -- Basic Operations
 						else
 							if not Eiffel_project.initialized then
 								open_project_file (file_name)
-								load_ace_file_only (Eiffel_Ace.file_name)
+								create {PROJECT_PROPERTIES} project_properties_internal.make
 								Valid_project_ref.set_item (True)
 							else
 								last_error_message := "Project has already been initialized"
@@ -182,6 +182,7 @@ feature -- Basic Operations
 			-- Create new project.
 		local
 			enum: ECOM_X__EIF_COMPILATION_TYPES_ENUM
+			dir: DIRECTORY
 		do
 			if not Valid_project_ref.item then
 				if ace_name /= Void and project_directory_path /= Void then
@@ -189,13 +190,19 @@ feature -- Basic Operations
 					if valid_ace_file then
 						Project_directory_name.wipe_out
 						Project_directory_name.set_directory (project_directory_path)
+						
+						create dir.make (project_directory_path)
+						if not dir.exists then
+							dir.create_dir
+						end
+						
 						create project_dir.make (project_directory_path, Void)
 						Eiffel_project.make_new (project_dir, True, Void, Void)
 						if Eiffel_project.initialized then
-							load_ace_file_only (ace_name)
+							Eiffel_ace.set_file_name (ace_name)
+							create {PROJECT_PROPERTIES} project_properties_internal.make
 							create enum
 							Valid_project_ref.set_item (True)
-							--project_properties.set_compilation_type (enum.eif_compt_is_application)
 						else
 							last_error_message := "Project could not be initialized"
 						end
@@ -208,27 +215,6 @@ feature -- Basic Operations
 			end
 		end
 		
-	load_ace_file_only (ace_name: STRING) is
-			-- load only the ace file
-		require
-			non_void_ace_name: ace_name /= Void
-			non_empty_ace_name: not ace_name.is_empty
-		local
-			retried: BOOLEAN
-		do
-			check_ace_file (ace_name)
-			if not retried and valid_ace_file then
-				Eiffel_ace.set_file_name (ace_name)
-				create {PROJECT_PROPERTIES} project_properties_internal.make
-			else
-				last_error_message := "Invalid Ace file"
-			end
-		rescue
-			retried := True
-			retry
-		end
-		
-
 feature {NONE} -- Project directory access
 
 	project_dir: PROJECT_DIRECTORY

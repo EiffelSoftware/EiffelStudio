@@ -200,6 +200,36 @@ feature -- Basic operations
 				end
 				interface_descriptors.forth
 			end
+			
+			if source_interface_descriptors /= Void then
+				from
+					source_interface_descriptors.start
+				until
+					source_interface_descriptors.after
+				loop
+					from
+						source_interface_descriptors.item.functions_start
+					until
+						source_interface_descriptors.item.functions_after
+					loop
+
+						if source_interface_descriptors.item.functions_item.argument_count > 0 then
+							from
+								source_interface_descriptors.item.functions_item.arguments.start
+							until
+								source_interface_descriptors.item.functions_item.arguments.after
+							loop
+								if feature_eiffel_names.has (source_interface_descriptors.item.functions_item.arguments.item.name) then
+									source_interface_descriptors.item.functions_item.arguments.item.name.prepend ("a_")
+								end
+								source_interface_descriptors.item.functions_item.arguments.forth
+							end
+						end
+						source_interface_descriptors.item.functions_forth
+					end
+					source_interface_descriptors.forth
+				end
+			end
 		end
 
 feature {WIZARD_TYPE_INFO_VISITOR} -- Visitor

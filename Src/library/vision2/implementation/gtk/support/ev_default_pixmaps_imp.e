@@ -11,8 +11,20 @@ feature -- Access
 
 	Information_pixmap: EV_PIXMAP is
 			-- Pixmap symbolizing a piece of information.
+		local
+			pixmap_imp: EV_PIXMAP_IMP
+			gdk_pixmap: POINTER
 		do
-			--| FIXME: To be implemented
+			create Result
+			pixmap_imp ?= Result.implementation
+			gdk_pixmap := information_pixmap_xpm
+			gdk_pixmap := C.gdk_pixmap_create_from_xpm_d (
+				C.gdk_root_parent,
+				Default_pointer,
+				Default_pointer,
+				error_pixmap_xpm
+			)
+			pixmap_imp.set_pixmap (gdk_pixmap, Default_pointer)
 		end
 
 	Error_pixmap: EV_PIXMAP is
@@ -50,6 +62,41 @@ feature -- Access
 			pixmap_imp.set_with_default
 		end
 
+feature {NONE} -- Externals
+
+	C: EV_C_EXTERNALS is
+		once
+			create Result
+		end
+
+	information_pixmap_xpm: POINTER is
+		external
+			"C [macro %"ev_c_util.h%"]"
+		alias
+			"information_pixmap_xpm"
+		end
+
+	error_pixmap_xpm: POINTER is
+		external
+			"C [macro %"ev_c_util.h%"]"
+		alias
+			"error_pixmap_xpm"
+		end
+
+	warning_pixmap_xpm: POINTER is
+		external
+			"C [macro %"ev_c_util.h%"]"
+		alias
+			"warning_pixmap_xpm"
+		end
+
+	question_pixmap_xpm: POINTER is
+		external
+			"C [macro %"ev_c_util.h%"]"
+		alias
+			"question_pixmap_xpm"
+		end
+
 end -- class EV_DEFAULT_PIXMAPS_IMP
 
 --!-----------------------------------------------------------------------------
@@ -73,6 +120,9 @@ end -- class EV_DEFAULT_PIXMAPS_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/05/03 21:34:49  king
+--| Added default_pixmap externals
+--|
 --| Revision 1.2  2000/05/03 17:51:13  brendel
 --| Added pixmap_imp.
 --|

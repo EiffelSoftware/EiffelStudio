@@ -251,6 +251,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEiffelProject),
         helpstring ("Eiffel Project.")
@@ -308,6 +309,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         object,
         uuid (UUID_IEiffelProjectProperties),
         helpstring ("Eiffel Project Properties.")
@@ -458,6 +460,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEiffelCompiler),
         helpstring ("Eiffel Compiler.")
@@ -497,6 +500,9 @@ library EiffelComCompiler
         [id (DISPID_EiffelComCompiler_DisplayWarnings), helpstring ("Should warning events be raised when compilation raises a warning?"), propput]
         HRESULT DisplayWarnings ([in] VARIANT_BOOL vbShowWarnings);
 
+        [id (DISPID_EiffelComCompiler_DiscardAssertions), helpstring ("Should compiler discard assertions when finalizing?"), propput]
+        HRESULT DiscardAssertions ([in] VARIANT_BOOL vbDiscard);
+
         [id (DISPID_EiffelComCompiler_ExpandPath), helpstring ("Takes a path and expands it using the env vars.")]
         HRESULT ExpandPath ([in] BSTR bstrPath, [out, retval] BSTR* pbstrFullPath);
 
@@ -509,6 +515,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEiffelCompilerEvents),
         helpstring ("Eiffel Compiler Events.")
@@ -542,6 +549,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEiffelCompletionInfo),
         helpstring ("Eiffel Completion info.")
@@ -584,6 +592,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEiffelHtmlDocumentationGenerator),
         helpstring ("Eiffel Project HTML Documentation Generator.")
@@ -611,6 +620,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEiffelHtmlDocumentationEvents),
         helpstring ("Callback interface for HTML Documentation Generator.")
@@ -641,6 +651,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEiffelSystemBrowser),
         helpstring ("System Browser.")
@@ -696,6 +707,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid(UUID_IEnumCluster),
         helpstring ("Eiffel Cluster Enumeration.")
@@ -726,6 +738,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEiffelClusterDescriptor),
         helpstring ("Eiffel Cluster Descriptor.")
@@ -771,6 +784,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid(UUID_IEnumEiffelClass),
         helpstring ("Eiffel Class Enumeration.")
@@ -801,6 +815,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEiffelClassDescriptor),
         helpstring ("Eiffel Class Descriptor.")
@@ -894,6 +909,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid(UUID_IEnumFeature),
         helpstring ("Eiffel Feature Enumeration.")
@@ -924,6 +940,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEiffelFeatureDescriptor),
         helpstring ("Eiffel Feature Descriptor.")
@@ -1044,6 +1061,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEnumParameter),
         helpstring ("Feature paramaters enumeration.")
@@ -1074,6 +1092,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEiffelParameterDescriptor),
         helpstring ("Feature parameter info.")
@@ -1092,6 +1111,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid(UUID_IEnumClusterProp),
         helpstring ("Eiffel Cluster Properties Enumeration.")
@@ -1122,7 +1142,8 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
-        object,
+        pointer_default (ptr),
+        oleautomation,
         uuid (UUID_IEiffelSystemClusters),
         helpstring ("Eiffel System Clusters.")
     ]
@@ -1167,7 +1188,8 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
-        object,
+        pointer_default (ptr),
+        oleautomation,
         uuid (UUID_IEiffelClusterProperties),
         helpstring ("Eiffel Cluster Properties (for Ace file).")
     ]
@@ -1266,6 +1288,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         object,
         uuid (UUID_IEiffelSystemExternals),
         helpstring ("Eiffel System Externals.")
@@ -1281,7 +1304,7 @@ library EiffelComCompiler
         [id (DISPID_EiffelComCompiler_ReplaceIncludePath), helpstring ("Replace an include path in the project.")]
         HRESULT ReplaceIncludePath ([in] BSTR bstrPath, [in] BSTR bstrOldPath);
 
-        [id (DISPID_EiffelComCompiler_IncludePaths), helpstring ("Include paths.")]
+        [id (DISPID_EiffelComCompiler_IncludePaths), helpstring ("Include paths enumerator.")]
         HRESULT IncludePaths ([out, retval] IEiffelEnumString** ppIEiffelEnumString);
 
         [id (DISPID_EiffelComCompiler_AddObjectFile), helpstring ("Add a object file to the project.")]
@@ -1293,8 +1316,20 @@ library EiffelComCompiler
         [id (DISPID_EiffelComCompiler_ReplaceObjectFile), helpstring ("Replace an object file in the project.")]
         HRESULT ReplaceObjectFile ([in] BSTR bstrFileName, [in] BSTR bstrOldFileName);
 
-        [id (DISPID_EiffelComCompiler_ObjectFiles), helpstring ("Object files.")]
+        [id (DISPID_EiffelComCompiler_ObjectFiles), helpstring ("Object files enumerator.")]
         HRESULT ObjectFiles ([out, retval] IEiffelEnumString** ppIEiffelEnumString);
+
+        [id (DISPID_EiffelComCompiler_AddDotnetResource), helpstring ("Add a .NET resource to the project.")]
+        HRESULT AddDotnetResource ([in] BSTR bstrFileName);
+
+        [id (DISPID_EiffelComCompiler_RemoveDotnetResource), helpstring ("Remove a .NET resource from the project.")]
+        HRESULT RemoveDotnetResource ([in] BSTR bstrFileName);
+
+        [id (DISPID_EiffelComCompiler_ReplaceDotnetResource), helpstring ("Replace a .NET resource in the project.")]
+        HRESULT ReplaceDotnetResource ([in] BSTR bstrFileName, [in] BSTR bstrOldFileName);
+
+        [id (DISPID_EiffelComCompiler_DotnetResources), helpstring (".NET resources enumerator.")]
+        HRESULT DotnetResources ([out, retval] IEiffelEnumString** ppIEiffelEnumString);
 
         [id (DISPID_EiffelComCompiler_Store), helpstring ("Save changes.")]
         HRESULT Store ();
@@ -1305,6 +1340,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid(UUID_IEiffelEnumString),
         helpstring ("Eiffel String Enumeration.")
@@ -1335,6 +1371,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         object,
         uuid (UUID_IEiffelSystemAssemblies),
         helpstring ("Eiffel System Assemblies.")
@@ -1365,6 +1402,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid(UUID_IEnumAssembly),
         helpstring ("Eiffel Assembly Enumeration.")
@@ -1395,6 +1433,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         object,
         uuid (UUID_IEiffelAssemblyProperties),
         helpstring ("Eiffel Assembly Properties (for Ace file).")
@@ -1431,6 +1470,7 @@ library EiffelComCompiler
     //---------------------------------------------------------------------
     [
         dual,
+        pointer_default (ptr),
         oleautomation,
         uuid (UUID_IEiffelException),
         helpstring ("A single exception object")

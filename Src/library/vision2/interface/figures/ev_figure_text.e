@@ -1,8 +1,8 @@
 indexing
 	description:
-		"EiffelVision2 text figure. A text is defined by one point, its%
-		% top-left corner, and by a text and font attribute."
+		"Figure representing a text displayed by a font on a given point."
 	status: "See notice at end of file"
+	keywords: "figure, text, string"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -138,3 +138,37 @@ invariant
 	font_exists: font /= Void
 
 end -- class EV_FIGURE_TEXT
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/04/26 15:56:34  brendel
+--| Added CVS Log.
+--| Added copyright notice.
+--| Improved description.
+--| Added keywords.
+--| Formatted for 80 columns.
+--| Added make_for_test.
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

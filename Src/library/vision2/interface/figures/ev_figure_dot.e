@@ -2,6 +2,7 @@ indexing
 	description:
 		"A figure that is a pixel or a dot."
 	status: "See notive at end of class"
+	keywords: "figure, dot, point, pixel"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,7 +43,8 @@ feature -- Initialization
 			default_create
 			get_point_by_index (1).set_x (50)
 			get_point_by_index (1).set_y (100)
-			set_foreground_color (create {EV_COLOR}.make_with_rgb (1.0, 0.0, 0.0))
+			set_foreground_color (create {EV_COLOR}.make_with_rgb (1.0, 0.0,
+				0.0))
 			set_line_width (10)
 		end
 
@@ -76,9 +78,11 @@ feature -- Events
 
 	position_on_figure (x, y: INTEGER): BOOLEAN is
 			-- Is the point on (`x', `y') on this figure?
-			--| Kind of brute force right now, but we just want to get it to work, first.
+			--| Kind of brute force right now, but we just want to get it to
+			--| work, first.
 		do
-			Result := distance (x, y, point.x_abs, point.y_abs) < (line_width + 1) // 2
+			Result := distance (x, y, point.x_abs, point.y_abs) < (line_width
+				+ 1) // 2
 		end
 
 feature {EV_PROJECTION} -- Implementation
@@ -90,3 +94,37 @@ feature {EV_PROJECTION} -- Implementation
 		end
 
 end -- class EV_FIGURE_DOT
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.6  2000/04/26 15:56:34  brendel
+--| Added CVS Log.
+--| Added copyright notice.
+--| Improved description.
+--| Added keywords.
+--| Formatted for 80 columns.
+--| Added make_for_test.
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

@@ -1,8 +1,9 @@
 indexing
 	description:
-		"EiffelVision2 polyline figure. Consists of (n-1) lines when%
-		% not closed and n if closed and n > 2."
-	status: "See notie at end of file"
+		"Figure consisting of any number of points. Lines are drawn between%N%
+		%consecutive points."
+	status: "See notice at end of file"
+	keywords: "figure, polyline, line"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,9 +17,10 @@ inherit
 			list_has_correct_size
 		end
 
-creation
+create
 	default_create,
-	make_with_point_list
+	make_with_point_list,
+	make_for_test
 
 feature {NONE}-- Initialization
 
@@ -26,6 +28,28 @@ feature {NONE}-- Initialization
 			-- Initialize without points
 		do
 			Precursor
+		end
+
+	make_for_test is
+			-- Create interesting to display.
+		do
+			default_create
+			from until point_count = 5 loop
+				add_point (create {EV_RELATIVE_POINT})
+			end
+			get_point_by_index (1).set_x (3)
+			get_point_by_index (1).set_y (3)
+			get_point_by_index (2).set_x (30)
+			get_point_by_index (2).set_y (50)
+			get_point_by_index (3).set_x (90)
+			get_point_by_index (3).set_y (10)
+			get_point_by_index (4).set_x (80)
+			get_point_by_index (5).set_y (190)
+			get_point_by_index (5).set_x (130)
+			get_point_by_index (5).set_y (150)
+			set_foreground_color (create {EV_COLOR}.make_with_rgb (
+				0.5, 1.0, 0.5))
+			set_line_width (2)
 		end
 
 feature -- Access
@@ -124,3 +148,37 @@ feature -- Contract support
 		end
 
 end -- class EV_FIGURE_POLYLINE
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+
+--|-----------------------------------------------------------------------------
+--| CVS log
+--|-----------------------------------------------------------------------------
+--|
+--| $Log$
+--| Revision 1.5  2000/04/26 15:56:34  brendel
+--| Added CVS Log.
+--| Added copyright notice.
+--| Improved description.
+--| Added keywords.
+--| Formatted for 80 columns.
+--| Added make_for_test.
+--|
+--|
+--|-----------------------------------------------------------------------------
+--| End of CVS log
+--|-----------------------------------------------------------------------------

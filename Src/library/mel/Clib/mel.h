@@ -11,7 +11,9 @@
 #include "eif_config.h"
 #include "eif_argv.h"
 #include <sys/types.h>
+#ifndef __VMS
 #include <sys/param.h>
+#endif /* not vms */
 
 #ifdef I_XM_PROTOCOLS
 #include <Xm/Protocols.h>

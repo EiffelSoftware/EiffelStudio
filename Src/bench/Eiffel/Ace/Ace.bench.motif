@@ -106,9 +106,15 @@ cluster
 
 		ipc:				"$BENCH/Eiffel/ipc";
 
+	-- Case
 		case_common:		"$BENCH/Eiffel/case_storage/common";
 		case_bench:			"$BENCH/Eiffel/case_storage/bench";
 
+	-- Resources
+		resources_common:	"$BENCH/Eiffel/resources/common";
+		resources_bench:	"$BENCH/Eiffel/resources/bench";
+
+	-- Vision
 		graph_resources:	"$EIFFEL3/library/vision/implement/motif/Resources";
 		graph_widgets:		"$EIFFEL3/library/vision/implement/motif/widgets";
 		graph_toolkit:		"$EIFFEL3/library/vision/implement/toolkit";
@@ -116,6 +122,7 @@ cluster
 		graph_commands:		"$EIFFEL3/library/vision/oui/commands";
 		graph_kernel:		"$EIFFEL3/library/vision/oui/kernel";
 		graph_oui_widgets:	"$EIFFEL3/library/vision/oui/widgets";
+		graph_tools:		"$EIFFEL3/library/vision/tools";
 
 external
 

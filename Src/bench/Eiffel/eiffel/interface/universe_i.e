@@ -564,6 +564,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			else
 				l_actions.put (agent system.set_system_string_class, "system_string")
 				l_actions.put (agent system.set_native_array_class, "native_array")
+				l_actions.put (agent system.set_arguments_class, "arguments")
 					-- In MSIL generation, WIDE_CHARACTER does not exist since
 					-- all characters are wide.
 			end

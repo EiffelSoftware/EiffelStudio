@@ -369,6 +369,7 @@ feature -- Properties
 			else
 				local_workbench.change_class (native_array_class)
 				local_workbench.change_class (system_string_class)
+				local_workbench.change_class (arguments_class)
 			end
 
 			local_workbench.change_class (string_class)
@@ -428,6 +429,7 @@ feature -- Properties
 			else
 				native_array_class.compiled_class.record_precompiled_class_in_system
 				system_string_class.compiled_class.record_precompiled_class_in_system
+				arguments_class.compiled_class.record_precompiled_class_in_system
 			end
 		end
 
@@ -1122,6 +1124,7 @@ end
 			else
 				native_array_class.compiled_class.mark_class (marked_classes)
 				system_string_class.compiled_class.mark_class (marked_classes)
+				arguments_class.compiled_class.mark_class (marked_classes)
 			end
 
 				-- Now mark all classes reachable from `unref_classes'.

@@ -31,7 +31,7 @@ feature {EV_APPLICATION_IMP} -- Access
 			-- Table that memories and passes the accelerators to the
 			-- system. In this table, all the accelerators are unique.
 		once
-			!! Result
+			create Result
 		end
 
 feature {NONE} -- Status report

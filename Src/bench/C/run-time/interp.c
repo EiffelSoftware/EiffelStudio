@@ -1737,7 +1737,7 @@ rt_private void interpret(int flag, int where)
 			unsigned long stagval;
 
 			stagval = tagval;
-			new_obj = RTLN(type);		/* Create new object */
+			new_obj = RTLNSMART(type);	/* Create new object */
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;	
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
@@ -2554,7 +2554,6 @@ rt_private void interpret(int flag, int where)
 			struct item *it;
 			long elem_size;
 			unsigned char *OLD_IC;
-			short is_tuple;
  
 			if (code == BC_PARRAY) {
 				origin = get_long();		/* Get the origin class id */
@@ -2565,17 +2564,12 @@ rt_private void interpret(int flag, int where)
 				dtype = get_compound_id(MTC icurrent->it_ref,dtype);
 
 				nbr_of_items = get_long();	  	/* Number of items in array */
-				is_tuple = get_short(); /* Is it actually a TUPLE?*/
 				stagval = tagval;
 				OLD_IC = IC;					/* Save IC counter */
 	 
 				new_obj = RTLN(dtype);			/* Create new object */
 				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
-				if (is_tuple)
-					((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))(new_obj);
-				else
-					((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))
-						(new_obj, 1L, nbr_of_items);
+				((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj))) (new_obj, 1L, nbr_of_items);
 			} else {
 				stype = get_short();			/* Get the static type */
 				dtype = get_short();			/* Get the static type */
@@ -2585,17 +2579,12 @@ rt_private void interpret(int flag, int where)
 
 				feat_id = get_short();		  	/* Get the feature id */
 				nbr_of_items = get_long();	  	/* Number of items in array */
-				is_tuple = get_short(); /* Is it actually a TUPLE? */
 				stagval = tagval;
 				OLD_IC = IC;					/* Save IC counter */
 	 
 				new_obj = RTLN(dtype);			/* Create new object */
 				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
-				if (is_tuple)
-					((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))(new_obj);
-				else
-					((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))
-						(new_obj, 1L, nbr_of_items);
+				((void (*)()) RTWF(stype, feat_id, Dtype(new_obj))) (new_obj, 1L, nbr_of_items);
 			}
 
 			IC = OLD_IC;
@@ -2623,14 +2612,8 @@ rt_private void interpret(int flag, int where)
 						*((EIF_REFERENCE *) sp_area + curr_pos) = it->it_bit;
 						break;
 					case SK_EXP:
-						if (is_tuple) {
-							EIF_REFERENCE loc1 = RTCL(it->it_ref);
-							*((EIF_REFERENCE *) sp_area + curr_pos) = loc1;
-							RTAS_OPT(loc1, curr_pos, sp_area);
-						} else {
-							elem_size = *(EIF_INTEGER_32 *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(EIF_INTEGER_32));
-							ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
-						}
+						elem_size = *(EIF_INTEGER_32 *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(EIF_INTEGER_32));
+						ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
 						break;
 					case SK_REF:
 						*((EIF_REFERENCE *) sp_area + curr_pos) = it->it_ref;
@@ -2664,6 +2647,123 @@ rt_private void interpret(int flag, int where)
 			}
 			RT_GC_WEAN(sp_area);			/* Release protection of `sp_area' */
 			RT_GC_WEAN(new_obj);			/* and of `new_obj'. */
+			last = iget();
+			last->type = SK_REF;
+			last->it_ref = new_obj;
+			break;
+		}
+
+	case BC_TUPLE:
+	case BC_PTUPLE:
+#ifdef DEBUG
+		if (code == BC_TUPLE) {
+			dprintf(2)("BC_TUPLE\n");
+		} else {
+			dprintf(2)("BC_PTUPLE\n");
+		}
+#endif
+		{
+			int32 origin, ooffset;
+			long nbr_of_items;
+			EIF_REFERENCE new_obj;
+			short stype, dtype, feat_id;
+			unsigned long stagval;
+			int curr_pos = 1;	/* 1 because tuple starts at 1 */
+			struct item *it;
+			unsigned char *OLD_IC;
+			EIF_BOOLEAN is_atomic;
+ 
+			if (code == BC_PTUPLE) {
+				origin = get_long();		/* Get the origin class id */
+				ooffset = get_long();		/* Get the offset in origin */
+				dtype = get_short();			/* Get the static type */
+
+					/*GENERIC CONFORMANCE */
+				dtype = get_compound_id(MTC icurrent->it_ref,dtype);
+
+				nbr_of_items = get_long();	  	/* Number of items in tuple */
+				is_atomic = EIF_TEST(get_long());
+				stagval = tagval;
+				OLD_IC = IC;					/* Save IC counter */
+	 
+				new_obj = RTLNTS(dtype, nbr_of_items, is_atomic);	/* Create new object */
+				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
+				((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj)))(new_obj);
+			} else {
+				stype = get_short();			/* Get the static type */
+				dtype = get_short();			/* Get the static type */
+
+					/*GENERIC CONFORMANCE */
+				dtype = get_compound_id(MTC icurrent->it_ref,dtype);
+
+				feat_id = get_short();		  	/* Get the feature id */
+				nbr_of_items = get_long();	  	/* Number of items in tuple */
+				is_atomic = get_long();
+				stagval = tagval;
+				OLD_IC = IC;					/* Save IC counter */
+	 
+					new_obj = RTLNTS(dtype, nbr_of_items, is_atomic);	/* Create new object */
+				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
+				((void (*)()) RTWF(stype, feat_id, Dtype(new_obj)))(new_obj);
+			}
+
+			IC = OLD_IC;
+			if (tagval != stagval)
+				sync_registers(MTC scur, stop); /* If calls melted make of tuple */ 
+		
+			while (curr_pos < nbr_of_items) {
+				/* Fill the tuple with the expressions for the manifest tuple. */
+
+				it = opop();		/* Pop expression off stack */
+				switch (it->type & SK_HEAD) {
+					case SK_BOOL:
+						eif_put_boolean_item(new_obj, curr_pos, it->it_char);
+						break;
+					case SK_CHAR:
+						eif_put_character_item(new_obj, curr_pos, it->it_char);
+						break;
+					case SK_WCHAR:
+						eif_put_wide_character_item(new_obj, curr_pos, it->it_wchar);
+						break;
+					case SK_BIT:
+						eif_put_reference_item(new_obj, curr_pos, it->it_bit);
+						break;
+					case SK_EXP:
+						{
+							EIF_REFERENCE loc1 = RTCL(it->it_ref);
+							eif_put_reference_item(new_obj, curr_pos, loc1);
+						}
+						break;
+					case SK_REF:
+						eif_put_reference_item(new_obj, curr_pos, it->it_ref);
+						break;
+					case SK_INT8:
+						eif_put_integer_8_item(new_obj, curr_pos, it->it_int8);
+						break;
+					case SK_INT16:
+						eif_put_integer_16_item(new_obj, curr_pos, it->it_int16);
+						break;
+					case SK_INT32:
+						eif_put_integer_32_item(new_obj, curr_pos, it->it_int32);
+						break;
+					case SK_INT64:
+						eif_put_integer_64_item(new_obj, curr_pos, it->it_int64);
+						break;
+					case SK_FLOAT:
+						eif_put_real_item(new_obj, curr_pos, it->it_float);
+						break;
+					case SK_DOUBLE:
+						eif_put_double_item(new_obj, curr_pos, it->it_double);
+						break;
+					case SK_POINTER:
+						eif_put_pointer_item(new_obj, curr_pos, it->it_ptr);
+						break;
+					default:
+						eif_panic(MTC botched);
+				}
+				curr_pos++;
+			}
+			RT_GC_WEAN(new_obj);			/* Release protection of `new_obj' */
 			last = iget();
 			last->type = SK_REF;
 			last->it_ref = new_obj;

@@ -10,7 +10,7 @@ class
 inherit
 	TIMER_I
 
-	G_ANY_WINDOWS
+	--G_ANY_WINDOWS
 
 	WEL_FRAME_WINDOW
 		rename
@@ -48,10 +48,7 @@ feature -- Status setting
 	set_next_call_back (a_delay: INTEGER; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when `a_delay'
 			-- in milliseconds has expired.
-		local
-			bw: BASE_WINDOWS
 		do
-			timer_actions.add (bw, a_command, an_argument)
 			current_callback := a_command
 			current_arg := an_argument
 			call_back_set := True
@@ -61,10 +58,7 @@ feature -- Status setting
 
 	set_no_call_back is
 			-- Remove any call-back already set.
-		local
-			bw: BASE_WINDOWS
 		do
-			timer_actions.remove (bw, current_callback, current_arg)
 			call_back_set := False
 			call_back_regular := False
 			kill_timer (timer_id)
@@ -73,10 +67,7 @@ feature -- Status setting
 	set_regular_call_back (a_time: INTEGER; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute all the `a_time'
 			-- milliseconds.
-		local
-			bw: BASE_WINDOWS
 		do
-			timer_actions.add (bw, a_command, an_argument)
 			current_callback := a_command
 			current_arg := an_argument
 			call_back_set := True
@@ -86,6 +77,10 @@ feature -- Status setting
 
 	destroy is
 		do
+			if is_call_back_set then
+				kill_timer (timer_id)
+			end
+			wel_destroy
 		end
 
 feature {NONE} -- Implementation
@@ -95,7 +90,6 @@ feature {NONE} -- Implementation
 			check
 				valid_id: a_timer_id = timer_id
 			end
-			print ("tick")
 			current_callback.execute (current_arg)
 			if not call_back_regular then
 				kill_timer (timer_id)
@@ -112,7 +106,6 @@ feature {NONE} -- Implementation
 
 	timer_id: INTEGER is 1
 			-- Timer identifier
-
 
 end -- TIMER_W 
  

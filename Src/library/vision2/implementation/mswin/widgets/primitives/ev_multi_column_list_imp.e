@@ -669,7 +669,6 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 	on_item_added_at (row: EV_MULTI_COLUMN_LIST_ROW_IMP; an_item: STRING; item_index: INTEGER) is
 			-- `an_item' has been added to index `item_index' in row `row.
 		local
-			litem: WEL_LIST_VIEW_ITEM
 			current_index: INTEGER
 		do
 			if item_index > column_count then

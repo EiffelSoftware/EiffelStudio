@@ -41,7 +41,6 @@ feature -- Access
 			l_url, 
 			l_title,
 			l_icon: STRING
-			l_is_parent: BOOLEAN
 		do			
 			if not e.is_root_node then
 				l_parent ?= parent_stack.item

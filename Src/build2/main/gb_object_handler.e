@@ -1006,6 +1006,9 @@ feature -- Basic operation
 				rebuild_associated_editors (an_object.object)
 				some_objects.forth
 			end
+				-- Update project so it may be saved.
+			system_status.enable_project_modified
+			command_handler.update
 		end
 		
 feature {GB_TITLED_WINDOW_OBJECT} -- Basic operations

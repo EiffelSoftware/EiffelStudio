@@ -20,7 +20,7 @@ inherit
 		redefine
 			implementation
 		end
-	
+
 feature -- Access
 
 	text: STRING is
@@ -30,6 +30,56 @@ feature -- Access
 		do
 			Result:= implementation.text
 		end 
+
+	text_length: INTEGER is
+			-- Length of the text in the widget
+		require
+			exists: not destroyed
+		do
+			Result := implementation.text_length
+		end
+
+feature -- Status report
+
+	position: INTEGER is
+			-- Current position of the caret.
+		require
+			exist: not destroyed
+		do
+			Result := implementation.position
+		end
+
+	has_selection: BOOLEAN is
+			-- Is something selected?
+		require
+			exist: not destroyed
+		do
+			Result := implementation.has_selection
+		end
+
+	selection_start: INTEGER is
+			-- Index of the first character selected
+		require
+			exist: not destroyed
+			has_selection: has_selection
+		do
+			Result := implementation.selection_start
+		ensure
+			result_large_enough: Result >= 0
+			result_small_enough: Result <= text_length
+		end
+
+	selection_end: INTEGER is
+			-- Index of the last character selected
+		require
+			exist: not destroyed
+			has_selection: has_selection
+		do
+			Result := implementation.selection_end
+		ensure
+			result_large_enough: Result >= 0
+			result_small_enough: Result <= text_length
+		end
 
 feature -- Status setting
 	
@@ -41,6 +91,26 @@ feature -- Status setting
 		do
 			implementation.set_editable (flag)
 		end
+	
+	set_position (pos: INTEGER) is
+			-- Set current insertion position.
+		require
+			exist: not destroyed			
+			valid_pos: pos > 0 and pos <= text_length
+		do
+			implementation.set_position (pos)
+		end
+	
+	set_maximum_line_length (len: INTEGER) is
+			-- Make `len' the new number of characters on a line.
+			-- If `len' < `text.cout' then the text is truncated
+		require
+			exist: not destroyed			
+		do
+			implementation.set_maximum_line_length (len)
+		end
+
+feature -- Element change
 
 	set_text (txt: STRING) is
 			-- Make `txt' the new `text'.
@@ -74,37 +144,6 @@ feature -- Status setting
 		ensure
 			text_prepended: 
 		end
-	
-	set_position (pos: INTEGER) is
-			-- Set current insertion position.
-		require
-			exist: not destroyed			
-			valid_pos: pos > 0 and pos <= text.count
-		do
-			implementation.set_position (pos)
-		end
-	
-	set_maximum_line_length (len: INTEGER) is
-			-- Make `len' the new number of characters on a line.
-			-- If `len' < `text.cout' then the text is truncated
-		require
-			exist: not destroyed			
-		do
-			implementation.set_maximum_line_length (len)
-		end
-
-	select_region (start_pos, end_pos: INTEGER) is
-			-- Select (hilight) the text between 
-			-- `start_pos' and `end_pos'
-		require
-			exist: not destroyed
-			valid_start: start_pos > 0 and start_pos <= text.count
-			valid_end: end_pos > 0 and end_pos <= text.count
-		do
-			implementation.select_region (start_pos, end_pos)
-		ensure
-			-- region selected
-		end
 
 feature -- Resizing
 
@@ -119,16 +158,54 @@ feature -- Resizing
 
 feature -- Basic operation
 
-	search (str: STRING): INTEGER is
-			-- Search the string `str' in the text.
-			-- If `str' is find, it returns its start
-			-- index in the text, otherwise, it returns
-			-- `Void'
+	select_region (start_pos, end_pos: INTEGER) is
+			-- Select (hilight) the text between 
+			-- `start_pos' and `end_pos'
 		require
-			exists: not destroyed
-			valid_string: str /= Void
+			exist: not destroyed
+			valid_start: start_pos > 0 and start_pos <= text_length
+			valid_end: end_pos > 0 and end_pos <= text_length
 		do
-			Result := implementation.search (str)
+			implementation.select_region (start_pos, end_pos)
+		ensure
+			has_selection: has_selection
+			selection_start_set: selection_start = start_pos
+			selection_end_set: selection_end = end_pos
+		end
+
+	select_all is
+			-- Select all the text.
+		require
+			exist: not destroyed
+			positive_length: text_length > 0
+		do
+			implementation.select_all
+		ensure
+			has_selection: has_selection
+			selection_start_set: selection_start = 0
+			selection_end_set: selection_end <= text_length + 2
+		end
+
+	deselect_all is
+			-- Unselect the current selection.
+		require
+			exist: not destroyed
+			has_selection: has_selection
+		do
+			implementation.deselect_all
+		ensure
+			has_no_selection: not has_selection
+		end
+
+	delete_selection is
+			-- Delete the current selection.
+		require
+			exist: not destroyed
+			has_selection: has_selection
+		do
+			implementation.delete_selection
+		ensure
+			has_no_selection: not has_selection
 		end
 
 	cut_selection is
@@ -139,6 +216,7 @@ feature -- Basic operation
 			-- nothing.
 		require
 			exists: not destroyed
+			has_selection: has_selection
 		do
 			implementation.cut_selection
 		end
@@ -150,6 +228,7 @@ feature -- Basic operation
 			-- nothing.
 		require
 			exists: not destroyed
+			has_selection: has_selection
 		do
 			implementation.copy_selection
 		end
@@ -164,7 +243,7 @@ feature -- Basic operation
 		do
 			implementation.paste (index)
 		end
-	
+
 feature {NONE} -- Implementation
 
 	implementation: EV_TEXT_COMPONENT_I

@@ -164,8 +164,8 @@ feature {CONTEXT_DIAGRAM} -- XML
 		do
 			create l_namespace.make ("", "")
 			create Result.make_child (a_parent, "CLIENT_SUPPLIER_FIGURE", l_namespace)
-			Result.add_attribute ("SRC", l_namespace, client.name)
-			Result.add_attribute ("TRG", l_namespace, supplier.name)
+			add_attribute ("SRC", l_namespace, client.name, Result)
+			add_attribute ("TRG", l_namespace, supplier.name, Result)
 			create label_xml_element.make_child (Result, "LABEL", l_namespace)
 			label_xml_element.put_last (
 				xml_node (
@@ -238,17 +238,13 @@ feature {CONTEXT_DIAGRAM} -- XML
 						line_labelled := xml_integer (node, "LINE")
 						name_shifted := xml_boolean (node, "SHIFTED")
 					else
-						create error_window
-						error_window.set_text ("Tag: " + node.name + " not known")
-						error_window.show
+						display_warning_message ("Tag: " + node.name + " not known")
 					end
 				else
 					debug
 						att_node ?= a_cursor.item
 						if att_node = Void then
-							create error_window
-							error_window.set_text ("XML element missing")
-							error_window.show
+							display_warning_message ("XML element missing")
 						end
 					end
 				end

@@ -65,8 +65,8 @@ feature {CONTEXT_DIAGRAM} -- XML
 			if vertices.count > 2 then
 				create l_namespace.make ("", "")
 				create Result.make_child (a_parent, "INHERITANCE_FIGURE", l_namespace)
-				Result.add_attribute ("SRC", l_namespace, descendant.name)
-				Result.add_attribute ("TRG", l_namespace, ancestor.name)
+				add_attribute ("SRC", l_namespace, descendant.name, Result)
+				add_attribute ("TRG", l_namespace, ancestor.name, Result)
 				from
 					vertices.go_i_th (2)
 				until	
@@ -117,17 +117,13 @@ feature {CONTEXT_DIAGRAM} -- XML
 						create new_midpoint.make_with_position (x_pos, y_pos)
 						retrieved_midpoints.put_front (new_midpoint)
 					else
-						create error_window
-						error_window.set_text ("tag: " + node.name + " not known")
-						error_window.show
+						display_warning_message ("tag: " + node.name + " not known")
 					end
 				else
 					debug
 						att_node ?= a_cursor.item
 						if att_node = Void then
-							create error_window
-							error_window.set_text ("XML element missing")
-							error_window.show
+							display_warning_message ("XML element missing")
 						end
 					end
 				end

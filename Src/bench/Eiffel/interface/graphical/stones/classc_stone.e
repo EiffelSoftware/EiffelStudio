@@ -98,8 +98,13 @@ feature -- Access
 		end;
  
 	click_list: CLICK_STONE_ARRAY is
+		local
+			c_list: CLICK_LIST
 		do
-			!! Result.make (e_class.click_list, e_class)
+			c_list := e_class.click_list;
+			if c_list /= Void then
+				!! Result.make (c_list, e_class)
+			end
 		end;
  
 	file_name: STRING is

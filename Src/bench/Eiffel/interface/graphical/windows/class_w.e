@@ -16,7 +16,6 @@ inherit
 		rename
 			make as normal_create,
 			attach_all as default_attach_all,
-			build_edit_bar as old_build_edit_bar,
 			reset as old_reset, 
 			close_windows as old_close_windows
 		redefine
@@ -24,7 +23,8 @@ inherit
 			tool_name, open_command, save_command,
 			save_as_command, quit_command, editable,
 			create_edit_buttons, set_default_position,
-			set_default_size, build_widgets, resize_action
+			set_default_size, build_widgets, resize_action,
+			build_edit_bar
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -36,8 +36,7 @@ inherit
 			set_default_size, build_widgets, attach_all,
 			close_windows, resize_action
 		select
-			build_edit_bar, reset, make, attach_all,
-			close_windows
+			reset, make, attach_all, close_windows
 		end
 
 creation
@@ -76,10 +75,14 @@ feature
 		end;
 
 	close_windows is
+			-- Close sub-windows.
 		do
 			old_close_windows;
 			if change_class_command.choice.is_popped_up then
 				change_class_command.choice.popdown
+			end;
+			if filter_command.filter_window.is_popped_up then
+				filter_command.filter_window.popdown
 			end
 		end;
 
@@ -143,10 +146,10 @@ feature
 			default_attach_all;
 			global_form.detach_right (text_window);
 			global_form.attach_right (command_bar, 0);
-			global_form.attach_bottom (command_bar, 0);
+			global_form.attach_bottom_widget (format_bar, command_bar, 10);
 			global_form.attach_right_widget (command_bar, text_window, 0);
 			global_form.attach_top_widget (edit_bar, command_bar, 0);
-			global_form.attach_right_widget (command_bar, format_bar, 0);
+			global_form.attach_right (format_bar, 0);
 		end;
 
 feature {NONE}
@@ -196,19 +199,19 @@ feature {NONE}
 			!!shell_command.make (command_bar, text_window);
 			command_bar.attach_left (shell_command, 0);
 			command_bar.attach_bottom (shell_command, 0);
+			!! filter_command.make (command_bar, text_window);
+			command_bar.attach_left (filter_command, 0);
+			command_bar.attach_right (filter_command, 0);
+			command_bar.attach_bottom_widget (shell_command, filter_command, 0);
 			!! current_target.make (command_bar, text_window);
 			command_bar.attach_left (current_target, 0);
-			command_bar.attach_bottom_widget (shell_command, current_target, 10);
+			command_bar.attach_bottom_widget (filter_command, current_target, 10);
 			!! next_target.make (command_bar, text_window);
 			command_bar.attach_left (next_target, 0);
 			command_bar.attach_bottom_widget (current_target, next_target, 0);
 			!! previous_target.make (command_bar, text_window);
 			command_bar.attach_left (previous_target, 0);
-			command_bar.attach_bottom_widget (next_target, previous_target, 0);
-			!! filter_command.make (command_bar, text_window);
-			command_bar.attach_left (filter_command, 0);
-			command_bar.attach_right (filter_command, 0);
-			command_bar.attach_bottom_widget (previous_target, filter_command, 10);
+			command_bar.attach_bottom_widget (next_target, previous_target, 0)
 		end;
 
 	build_format_bar is
@@ -227,6 +230,7 @@ feature {NONE}
 			!!showroutines_command.make (format_bar, text_window);
 			!!showdeferreds_command.make (format_bar, text_window);
 			!!showexternals_command.make (format_bar, text_window);
+			!!showexported_command.make (format_bar, text_window);
 			!!showonces_command.make (format_bar, text_window);
 			--!!showcustom_command.make (format_bar, text_window);
 				format_bar.attach_top (showtext_command, 0);
@@ -256,7 +260,9 @@ feature {NONE}
 				format_bar.attach_top (showonces_command, 0);
 				format_bar.attach_right_widget (showexternals_command, showonces_command, 0);
 				format_bar.attach_top (showexternals_command, 0);
-				format_bar.attach_right (showexternals_command, 10);
+				format_bar.attach_right_widget (showexported_command, showexternals_command, 0);
+				format_bar.attach_top (showexported_command, 0);
+				format_bar.attach_right (showexported_command, 0);
 		end;
  
 	format_label: LABEL;
@@ -265,18 +271,40 @@ feature {NONE}
 	build_edit_bar is
 			-- Build top bar: editing commands
 		do
-			old_build_edit_bar;
-			edit_bar.detach_right (type_teller);
+			edit_bar.set_fraction_base (21);
+			!!hole.make (edit_bar, Current);
+			create_edit_buttons;
+			!!type_teller.make (new_name, edit_bar);
+			type_teller.set_center_alignment;
+			clean_type
+			!!search_command.make (edit_bar, text_window);
+			!!change_font_command.make (edit_bar, text_window);
+
+			edit_bar.attach_left (hole, 0);
+			edit_bar.attach_top (hole, 0);
+			edit_bar.attach_left_widget (hole, type_teller, 0);
+			edit_bar.attach_top (type_teller, 0);
+			edit_bar.attach_bottom (type_teller, 0);
+			edit_bar.attach_right_position (type_teller, 7);
 			change_class_form.attach_left (change_class_command, 0);
 			change_class_form.attach_right (change_class_command, 0);
 			change_class_form.attach_top (change_class_command, 0);
 			change_class_form.attach_bottom (change_class_command, 0);
-			edit_bar.attach_left (change_class_form, 140);
-			edit_bar.attach_right_widget (change_class_form, type_teller, 0);
-			edit_bar.attach_right_widget (open_command, change_class_form, 0);
-			--format_label.make ("Format", text_window);	
-			--class_name_tf.make ("Class_name", text_window);	
-			--change_class_command.make (Current);	
+			edit_bar.attach_top (change_class_form, 0);
+			edit_bar.attach_left_position (change_class_form, 7);
+			edit_bar.attach_right_position (change_class_form, 13);
+			edit_bar.attach_right (quit_command, 0);
+			edit_bar.attach_top (quit_command, 0);
+			edit_bar.attach_top (change_font_command, 0);
+			edit_bar.attach_right_widget (quit_command, change_font_command, 5);
+			edit_bar.attach_top (search_command, 0);
+			edit_bar.attach_right_widget (change_font_command, search_command, 0);
+			edit_bar.attach_top (save_as_command, 0);
+			edit_bar.attach_right_widget (search_command, save_as_command, 0);
+			edit_bar.attach_top (save_command, 0);
+			edit_bar.attach_right_widget (save_as_command, save_command, 0);
+			edit_bar.attach_top (open_command, 0);
+			edit_bar.attach_right_widget (save_command, open_command, 0)
 		end;
 
 	set_format_label (s: STRING) is
@@ -313,6 +341,7 @@ feature -- Formats
 	showdeferreds_command: SHOW_DEFERREDS;
 	showexternals_command: SHOW_EXTERNALS;
 	showonces_command: SHOW_ONCES;
+	showexported_command: SHOW_EXPORTED;
 	--showcustom_command: SHOW_CUSTOM
 
 end -- class CLASS_W

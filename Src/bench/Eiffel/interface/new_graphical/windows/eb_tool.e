@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 	make (man: EB_TOOL_MANAGER) is
 		require
-			manager_exists: manager /= Void
+			man_exists: man /= Void
 		do
 				-- Linking with manager
 			manager := man

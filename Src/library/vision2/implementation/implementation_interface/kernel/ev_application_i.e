@@ -41,7 +41,7 @@ feature {EV_APPLICATION} -- Initialization
 			create pnd_targets.make (8)
 			create internal_idle_actions
 			create once_idle_actions
-			do_once_idle_actions_agent := ~do_once_idle_actions
+			do_once_idle_actions_agent := agent do_once_idle_actions
 			is_initialized := True
 		end
 
@@ -315,8 +315,8 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 									trg.target_name
 								)
 								Result.extend (i)
-								i.select_actions.extend (
-									(trg.drop_actions)~call ([a_pebble])
+								i.select_actions.extend (agent 
+									(trg.drop_actions).call ([a_pebble])
 								)
 							end
 						end
@@ -375,7 +375,7 @@ feature {NONE} -- Implementation
 	help_handler_procedure: PROCEDURE [ANY, TUPLE] is
 			-- Help handler procedure associated with help accelerator
 		once
-			Result := ~help_handler
+			Result := agent help_handler
 		end
 	
 	help_handler is
@@ -392,13 +392,13 @@ feature {NONE} -- Implementation
 	contextual_help_handler_procedure: PROCEDURE [ANY, TUPLE] is
 			-- Help handler procedure associated with context help accelerator
 		once
-			Result := ~enable_contextual_help
+			Result := agent enable_contextual_help
 		end
 
 	contextual_help_procedure: PROCEDURE [ANY, TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]] is
 			-- Called when mouse pointer is pressed while contextual help is enabled
 		once
-			Result := ~contextual_help
+			Result := agent contextual_help
 		end
 
 	contextual_help (x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER) is

@@ -98,10 +98,10 @@ feature {NONE} -- Initialization
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_ITEM_LIST_IMP}
 			create radio_group.make
-			new_item_actions.extend (~add_button)
-			new_item_actions.extend (~add_radio_button)
-			new_item_actions.extend (~add_toggle_button)
-			remove_item_actions.extend (~remove_radio_button)
+			new_item_actions.extend (agent add_button)
+			new_item_actions.extend (agent add_radio_button)
+			new_item_actions.extend (agent add_toggle_button)
+			remove_item_actions.extend (agent remove_radio_button)
 		end
 
 feature -- Access

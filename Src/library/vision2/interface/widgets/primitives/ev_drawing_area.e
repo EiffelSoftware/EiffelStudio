@@ -1,8 +1,11 @@
 indexing
 	description:
-		"EiffelVision drawing area. Widgets that can be drawn on."
+		"Widget onto which graphical primatives may be drawn.%N%
+		%Primatives are drawn directly onto the screen without buffering.%
+		%(When buffering is required use {EV_PIXMAP}.)"
 	status: "See notice at end of class"
-	keywords: "drawable, expose, repaint, primitives, figures"
+	keywords: "drawable, expose, repaint, primitive, figure, canvas, draw, %
+		%paint, graphic, picture, image"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,10 +17,6 @@ inherit
 		undefine
 			create_action_sequences
 		redefine
-			--set_background_color,
-			--set_foreground_color,
-			--background_color,
-			--foreground_color,
 			implementation,
 			is_in_default_state
 		end
@@ -40,32 +39,40 @@ create
 
 feature -- Basic operations
 
-	clear_and_redraw is
-			-- Clear the window and redraw it.
-		do
-			implementation.clear_and_redraw
-		end
-
 	redraw is
-			-- Redraw the window without clearing it.
+			-- Call `expose_actions' for whole window when next idle.
 		do
 			implementation.redraw
 		end
 
-	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Clear and redraw the rectangle (`x1',`y1') - (`x2', `y2')
+	clear_and_redraw is
+			-- Clear the window.
+			-- Call `expose_actions' for whole window when next idle.
 		do
-			implementation.clear_and_redraw_rectangle (x1, y1, x2, y2)
+			implementation.clear_and_redraw
 		end
 
 	redraw_rectangle (x1, y1, x2, y2: INTEGER) is
-			-- Redraw the rectangle (`x1',`y1') - (`x2', `y2')
+			-- Call `expose_actions' for rectangle (`x1',`y1') - (`x2', `y2')
+			-- when next idle.
 		do
 			implementation.redraw_rectangle (x1, y1, x2, y2)
 		end
 
+	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
+			-- Clear the rectangle (`x1',`y1') - (`x2', `y2').
+			-- Call `expose_actions' for rectangle when next idle.
+		do
+			implementation.clear_and_redraw_rectangle (x1, y1, x2, y2)
+		end
+
 	flush is
-			-- Update immediately the screen if needed
+			-- Execute any delayed calls to `expose_actions' without waiting
+			-- for next idle. Delayed calls to `expose_actions' happen as a
+			-- result of calling on of `redraw', `clear_and_redraw',
+			-- `redraw_rectangle' or `clear_and_redraw_rectngle'.
+			-- Call this feature to make the effects of one or more previous
+			-- calls to these features imediately visible.
 		do
 			implementation.flush
 		end
@@ -73,37 +80,37 @@ feature -- Basic operations
 feature -- Events
 
 	expose_actions: EV_GEOMETRY_ACTION_SEQUENCE
-			-- Actions to be performed on expose.
+			-- Actions to be performed when part of the drawing area needs to be
+			-- redrawn.
 
 feature {EV_ANY} -- Contract support
 
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state.
 		do
-			Result := {EV_PRIMITIVE} Precursor and then
-				{EV_DRAWABLE} Precursor
-		end
-
-feature {NONE} -- Implementation
-
-	create_implementation is
-			-- Create implementation of drawing area.
-		do
-			create {EV_DRAWING_AREA_IMP} implementation.make (Current)
-		end
-
-	create_action_sequences is
-			-- Create action sequences.
-		do
-			{EV_PRIMITIVE} Precursor
-			create expose_actions
+			Result := {EV_PRIMITIVE} Precursor
+				and then {EV_DRAWABLE} Precursor
 		end
 
 feature {EV_DRAWING_AREA_I} -- Implementation
 
 	implementation: EV_DRAWING_AREA_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+		-- Responsible for interaction with the native graphics toolkit.
+
+feature {NONE} -- Implementation
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_DRAWING_AREA_IMP} implementation.make (Current)
+		end
+
+	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
+		do
+			{EV_PRIMITIVE} Precursor
+			create expose_actions
+		end
 
 invariant
 	expose_actions_not_void: expose_actions /= Void
@@ -131,6 +138,9 @@ end -- class EV_DRAWING_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/21 02:09:23  oconnor
+--| comments and formatting
+--|
 --| Revision 1.16  2000/03/03 03:59:03  pichery
 --| added feature `flush'
 --|
@@ -144,7 +154,8 @@ end -- class EV_DRAWING_AREA
 --| updated copyright date and formatting
 --|
 --| Revision 1.12  2000/02/16 18:08:05  pichery
---| added new features: redraw_rectangle, clear_and_redraw, clear_and_redraw_rectangle
+--| added new features: redraw_rectangle, clear_and_redraw,
+--| clear_and_redraw_rectangle
 --|
 --| Revision 1.10.6.28  2000/01/28 20:00:19  oconnor
 --| released

@@ -1,6 +1,11 @@
 indexing 
 	description:
-		"Eiffel Vision horizontal range."
+		"Interactive horizontal range widget. A sliding thumb displays the%N%
+		%current `value' and allows it to be adjusted"
+	appearance:
+		"+-------------+%N%
+		"|  |#|        |%N%
+		"+-------------+"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -53,6 +58,9 @@ end -- class EV_HORIZONTAL_RANGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/21 02:09:57  oconnor
+--| comments and formatting
+--|
 --| Revision 1.6  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|
@@ -75,7 +83,8 @@ end -- class EV_HORIZONTAL_RANGE
 --| added --| FIXME Not for release
 --|
 --| Revision 1.2.6.2  2000/01/11 16:53:40  rogers
---| Altered to comply with the major Vision2 changes. Make with range no longer takes a parent. Added create implementation.
+--| Altered to comply with the major Vision2 changes. Make with range no longer
+--| takes a parent. Added create implementation.
 --|
 --| Revision 1.2.6.1  1999/11/24 17:30:54  oconnor
 --| merged with DEVEL branch

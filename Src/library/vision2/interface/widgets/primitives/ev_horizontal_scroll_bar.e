@@ -1,6 +1,10 @@
 indexing
 	description:
-		"Eiffel Vision horizontal scroll bar."
+		"Interactive horizontal scrolling widget."
+	appearance:
+		"+-+---------+-+%N%
+		%|<| |#|     |>|%N%
+		%+-+---------+-+"
 	status: "See notice at end of class."
 	keywords: "horizontal, scroll, bar, gauge"
 	date: "$Date$"
@@ -22,14 +26,14 @@ create
 
 feature {NONE} -- Implementation
 
+	implementation: EV_HORIZONTAL_SCROLL_BAR_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 	create_implementation is
-			-- Create implementation of horizontal scroll bar.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_HORIZONTAL_SCROLL_BAR_IMP} implementation.make (Current)
 		end
-
-	implementation: EV_HORIZONTAL_SCROLL_BAR_I
-			-- Platform dependent access.
 
 end -- class EV_HORIZONTAL_SCROLL_BAR
 
@@ -54,6 +58,9 @@ end -- class EV_HORIZONTAL_SCROLL_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/21 02:10:26  oconnor
+--| comments and formatting
+--|
 --| Revision 1.7  2000/03/01 20:07:36  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|
@@ -79,14 +86,14 @@ end -- class EV_HORIZONTAL_SCROLL_BAR
 --| added --| FIXME Not for release
 --|
 --| Revision 1.2.6.2  2000/01/06 20:30:45  rogers
---| Now works with the new vision2 changes. added create implementation. removed make, make_with_range now does not take a parent.
+--| Now works with the new vision2 changes. added create implementation.
+--| removed make, make_with_range now does not take a parent.
 --|
 --| Revision 1.2.6.1  1999/11/24 17:30:54  oconnor
 --| merged with DEVEL branch
 --|
 --| Revision 1.2.2.2  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

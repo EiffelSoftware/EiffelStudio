@@ -1,6 +1,8 @@
 indexing
 	description: 
-		"Eiffel Vision label. Displays a textual label."
+		"Displays a textual label."
+	appearance:
+		" `text' "
 	status: "See notice at end of class"
 	keywords: "label, text"
 	date: "$Date$"
@@ -27,16 +29,15 @@ create
 
 feature {NONE} -- Implementation
 
+	implementation: EV_LABEL_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 	create_implementation is
-			-- Create implementation of label.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_LABEL_IMP} implementation.make (Current)
 		end
 
-	implementation: EV_LABEL_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
-	
 end -- class EV_LABEL
 
 --!-----------------------------------------------------------------------------
@@ -60,6 +61,9 @@ end -- class EV_LABEL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/21 02:11:27  oconnor
+--| comments and formatting
+--|
 --| Revision 1.19  2000/03/01 20:07:36  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -10,15 +10,13 @@ inherit
 		end;
 	SHARED_DECLARATIONS;
 
-creation
-
-	make
-
-	
 feature 
 
 	Infix_file_name: STRING is "/Erout";
 			-- Infix string for file names
+
+	Postfix_file_name: CHARACTER is 'c';
+			-- Postfix character for file names
 
 	Size_limit: INTEGER is 10000;
 			-- Limit of size for each generated file

@@ -26,12 +26,17 @@ feature
 		deferred
 		end;
 
+	postfix_file_name: CHARACTER is
+			-- Postfix character for file names (after `.');
+		deferred
+		end;
+
 	size_limit: INTEGER is
 			-- Limit of size for each generated file
 		deferred
 		end;
 
-	make is
+	init is
 			-- Initialization
 		do
 			file_counter := 0;
@@ -51,7 +56,8 @@ feature
 			file_name.append (generation_path);
 			file_name.append (infix_file_name);
 			file_name.append_integer (file_counter);
-			file_name.append (".c");
+			file_name.append_character ('.');
+			file_name.append_character (postfix_file_name);
 			!!Result.make (file_name);
 		end;
 

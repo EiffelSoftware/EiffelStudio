@@ -36,6 +36,9 @@ cp -f PorterPackage_all.tar ~/
 #Let's compile for Red Hat Fedora in background
 /bin/sh make_linux_fedora local &
 
+#Let's compile for SGI in background
+/bin/sh make_sgi local &
+
 #Compile and build CDs
 cd PorterPackage
 /bin/sh compile_exes

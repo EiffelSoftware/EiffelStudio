@@ -1,0 +1,32 @@
+#!/bin/sh
+
+if [ "$1" == "local" ]; then
+	echo $1
+	export REMOTE=iris
+	cp -f make_sgi ~/
+	# Launch platform specific scripts
+	rsh $REMOTE "cd local/TEST_DELIV ; mv -f ~/make_sgi ."
+	rsh $REMOTE "cd local/TEST_DELIV ; bash ./make_sgi"
+
+ftp -n << EOF 
+verbose 
+open iris.ise 
+user manus manus 
+binary
+get local/TEST_DELIV/PorterPackage/Eiffel55_enterprise.tgz Eiffel55_sgi.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel55_free.tgz Eiffel55_free_sgi.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel55_enterprise.iso.gz Eiffel55_enterprise_sgi.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel55_university.iso.gz Eiffel55_university_sgi.iso.gz
+get local/TEST_DELIV/PorterPackage/Eiffel55_free.iso.gz Eiffel55_free_sgi.iso.gz
+close 
+EOF
+
+	echo SGI compilation done
+else
+	rm -rf PorterPackage
+	tar xvf ~/PorterPackage_all.tar
+	cd PorterPackage
+	export ISE_PLATFORM=sgi
+	bash compile_exes
+	bash make_images
+fi

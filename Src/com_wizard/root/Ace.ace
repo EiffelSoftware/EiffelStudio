@@ -1,0 +1,59 @@
+system
+	wizard
+
+root
+	APPLICATION (root_cluster): "make"
+
+default
+	assertion (all)
+	multithreaded (no)
+	console_application (no)
+	dynamic_runtime (no)
+	dead_code_removal (yes)
+	profile (no)
+	line_generation (no)
+	debug  (no)
+	array_optimization (no)
+	inlining (no)
+	inlining_size ("4")
+
+
+cluster
+	
+	root_cluster: "d:\projects\EiffelCOM";
+
+		-- EiffelBase
+	base:					"$LIBRARY\base"
+	structures(base):			"$\structures"
+	kernel(base):				"$\kernel"
+	support(base):			"$\support"
+	access(structures):			"$\access"
+	cursors(structures):			"$\cursors"
+	cursor_tree(structures):		"$\cursor_tree"
+	dispenser(structures):		"$\dispenser"
+	iteration(structures):		"$\iteration"
+	list(structures):			"$\list"
+	set(structures):			"$\set"
+	sort(structures):			"$\sort"
+	storage(structures):			"$\storage"
+	table(structures):			"$\table"
+	traversing(structures):		"$\traversing"
+	tree(structures):			"$\tree"
+
+	-- WEL
+	wel_constants:	"$LIBRARY\wel\consts";
+	wel_controls:		"$LIBRARY\wel\controls";
+	wel_gdi:		"$LIBRARY\wel\gdi";
+	wel_gdi_stocks: 	"$LIBRARY\wel\gdistock";
+	wel_messages:		"$LIBRARY\wel\messages";
+	wel_standard_dialogs:"$LIBRARY\wel\stddlgs";
+	wel_structures: 	"$LIBRARY\wel\structs";
+	wel_support:		"$LIBRARY\wel\support";
+	wel_windows:		"$LIBRARY\wel\windows";
+
+external
+	include_path:		"$(EIFFEL4)\library\wel\spec\windows\include";
+	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib",
+					"C:\dev\devstudio\vc\lib\shell32.lib",
+					"C:\dev\devstudio\vc\lib\comctl32.lib";
+end

@@ -131,9 +131,9 @@ feature {NONE} -- Implementation / Constants
 			-- Default title for the dialog window.
 
 	Default_message: STRING is
-		"YourCompany (R) ado_application%N%
+		"YourCompany (R) ADO Application%N%
 		%Version 1.0%N%
 		%%N%
-		%Copyright (C) 2001 YourCompany"
+		%Copyright (C) 2003 YourCompany"
 
 end -- class ABOUT_DIALOG

@@ -45,17 +45,17 @@ feature
 			temp.append_integer (1);
 			dir_name.extend (temp);
 
-			!! subdir.make (dir_name.path);
+			!! subdir.make (dir_name);
 			if not subdir.exists then
 				subdir.create
 			end;
-			!!file_name.make_from_string (dir_name.path);
+			!!file_name.make_from_string (dir_name);
 			temp := clone (Infix_file_name);
 			temp.append_integer (file_counter);
 			temp.append (Dot_h);
 			file_name.set_file_name (temp);
 
-			Extern_declarations.generate (file_name.path);
+			Extern_declarations.generate (file_name);
 			Extern_declarations.wipe_out;
 		end;
 

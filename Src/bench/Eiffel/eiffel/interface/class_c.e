@@ -263,7 +263,6 @@ feature
 			parent_list: EIFFEL_LIST [PARENT_AS];
 			invariant_info: READ_INFO;
 			old_syntactical_suppliers: like syntactical_suppliers;
-			vd22: VD22;
 		do
 				-- Check suppliers of parsed class represented by `ast'.
 				-- Supplier classes not present already in the system
@@ -1349,13 +1348,13 @@ feature
 			subdirectory.append (Feature_table_suffix);
 			subdirectory.append_integer (packet_number);
 			d_name.extend (subdirectory);
-			!!dir.make (d_name.path);
+			!!dir.make (d_name);
 			if not dir.exists then	
 				dir.create
 			end;
-			!!f_name.make_from_string (d_name.path);
+			!!f_name.make_from_string (d_name);
 			f_name.set_file_name (base_file_name);
-			Result := f_name.path
+			Result := f_name
 		end;
 
 	base_file_name: STRING is

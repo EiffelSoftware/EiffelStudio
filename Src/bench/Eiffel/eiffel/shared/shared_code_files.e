@@ -23,7 +23,7 @@ feature {NONE}
 			if final_mode then
 				!!dir_name.make_from_string (Final_generation_path);
 				dir_name.extend (subdir_name);
-				!!subdir.make (dir_name.path);
+				!!subdir.make (dir_name);
 				if not subdir.exists then
 					subdir.create
 				end;
@@ -32,16 +32,16 @@ feature {NONE}
 			else
 				!!dir_name.make_from_string (Workbench_generation_path);
 				dir_name.extend (subdir_name);
-				!!subdir.make (dir_name.path);
+				!!subdir.make (dir_name);
 				if not subdir.exists then
 					subdir.create
 				end;
 				temp := clone (Esize);
 				temp.append (Dot_c);
 			end;
-			!!file_name.make_from_string (dir_name.path);
+			!!file_name.make_from_string (dir_name);
 			file_name.set_file_name (temp);
-			!!Result.make (file_name.path);
+			!!Result.make (file_name);
 		end;
 
 	History_file: INDENT_FILE is
@@ -137,7 +137,7 @@ feature {NONE}
 			end;
 			!!f_name.make_From_string (p);
 			f_name.set_file_name (Makefile_SH);
-			!!Result.make (f_name.path);
+			!!Result.make (f_name);
 		end;
 
 feature {NONE}
@@ -155,15 +155,15 @@ feature {NONE}
 
 			!!dir_name.make_from_string (Final_generation_path);
 			dir_name.extend (subdir_name);
-			!! subdir.make (dir_name.path);
+			!! subdir.make (dir_name);
 			if not subdir.exists then
 				subdir.create
 			end;
-			!!file_name.make_from_string (dir_name.path);
+			!!file_name.make_from_string (dir_name);
 			temp := clone (base_name);
 			temp.append (Dot_c);
 			file_name.set_file_name (temp);
-			Result := file_name.path
+			Result := file_name
 		end;
 
 	workbench_file_name (base_name: STRING): STRING is
@@ -179,15 +179,15 @@ feature {NONE}
 
 			!!dir_name.make_from_string (Workbench_generation_path);
 			dir_name.extend (subdir_name);
-			!! subdir.make (dir_name.path);
+			!! subdir.make (dir_name);
 			if not subdir.exists then
 				subdir.create
 			end;
-			!!file_name.make_from_string (dir_name.path);
+			!!file_name.make_from_string (dir_name);
 			temp := clone (base_name);
 			temp.append (Dot_c);
 			file_name.set_file_name (temp);
-			Result := file_name.path
+			Result := file_name
 		end;
 
 	gen_file_name (final_mode: BOOLEAN; base_name: STRING): STRING is

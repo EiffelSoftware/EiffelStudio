@@ -44,7 +44,7 @@ feature
 		do
 			!!fn.make_from_string (cluster.path);
 			fn.set_file_name (base_name);
-			Result := fn.path
+			Result := fn
 		end;
 
 	date: INTEGER;

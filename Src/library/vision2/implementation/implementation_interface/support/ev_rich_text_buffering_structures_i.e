@@ -266,8 +266,7 @@ feature {EV_ANY_I} -- Status Setting
 							format_stack.remove
 						elseif current_character = '\' then
 							process_keyword (rtf_text, main_iterator)
-						elseif current_character = ' '  then
-							process_text (rtf_text, main_iterator)
+						
 						elseif main_iterator >= 2 and then current_character /= '%R' and
 							(rtf_text.item (main_iterator - 1) = '%N' or
 							rtf_text.item (main_iterator - 1) = '}' or
@@ -277,6 +276,8 @@ feature {EV_ANY_I} -- Status Setting
 								-- keyword. As in this case, `current_character' is the start of the text, call `process_text'
 								-- from the previous position, as the first index is ignored.
 							process_text (rtf_text, main_iterator - 1)
+						elseif current_character = ' '  then
+							process_text (rtf_text, main_iterator)
 						end
 					elseif current_character = '{' then
 							-- Store state on stack

@@ -62,4 +62,18 @@ feature -- Initialization
 			end
 		end
 		
+feature -- Basic operation
+
+	ensure_object_visible (an_object: GB_OBJECT) is
+			-- Ensure that `an_object' is contained in `Current'.
+		require
+			not_destroyed: not is_destroyed
+			is_displayed: is_displayed
+			object_contained: has_recursively (an_object.layout_item)
+		do
+			ensure_item_visible (an_object.layout_item)	
+		end
+		
+		
+		
 end -- class GB_LAYOUT_CONSTRUCTOR

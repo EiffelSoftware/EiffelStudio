@@ -1,5 +1,8 @@
 class MAKEFILE_TRANSLATOR
 
+inherit
+	PATH_CONVERTER
+
 creation
 	make
 
@@ -17,6 +20,7 @@ feature -- Initialization
 			create dependent_directories.make (55)
 
 			eiffel_dir := env.get ("ISE_EIFFEL")
+			eiffel_dir := short_path
 			platform := env.get ("ISE_PLATFORM")
 			compiler := env.get ("ISE_C_COMPILER")
 
@@ -57,7 +61,11 @@ feature -- Initialization
 				
 				smart_checking := options.get_boolean ("smart_checking", True)
 				if compiler.is_equal ("msc") and smart_checking then
+						-- Visual Studio C compiler.
 					create vs_setup.make
+				elseif compiler.is_equal ("bcb") then
+						-- Borland C compiler.
+					create borland_setup.make
 				end
 			else
 				error_msg.append ("Could not launch finish_freezing. Make%N")
@@ -134,15 +142,12 @@ feature -- Access
 
 	appl: STRING			
 			-- Application name
-
-	eiffel_dir: STRING			
-			-- EIFFEL installation environment variable
 			
 	platform: STRING			
 			-- ISE_PLATFORM environment variable
 	
 	compiler: STRING
-			-- ISE_C_COMPILER environment variable
+			-- ISE_C_COMPILER environment variable		
 			
 	uses_precompiled: BOOLEAN
 
@@ -1523,10 +1528,8 @@ feature {NONE} -- Implementation
 	vs_setup: VS_SETUP
 			-- Visual Studio setup details.
 
-	env: EXECUTION_ENVIRONMENT is
-		once
-			!!Result
-		end
+	borland_setup: BORLAND_SETUP
+			-- Borland setup details.
 
 	search_and_replace(line: STRING) is
 			-- search words starting with $ and replace with option or env variable

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Setup environment variables for Visual Studio C compiler."
 	date: "$Date$"
 	revision: "$Revision$"
 

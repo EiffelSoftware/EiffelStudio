@@ -30,20 +30,13 @@ inherit
 			compute_minimum_size,
 			interface,
 			initialize
-		select
-			interface
 		end
 
---	EV_FONTABLE_IMP
---		rename
---			interface as ev_fontable_interface
---		end
-
 	EV_TEXTABLE_IMP
-		rename
-			interface as ev_textable_interface
 		undefine
 			set_default_minimum_size
+		redefine
+			interface
 		end
 
 	EV_SYSTEM_PEN_IMP
@@ -229,6 +222,23 @@ feature {NONE} -- WEL Implementation
 		end
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Redraw frame with `style'.
+		do
+			inspect style
+				when Ev_frame_lowered then check not_yet: False end
+				when Ev_frame_raised then check not_yet: False end
+				when Ev_frame_etched_in then
+					paint_etched_in_frame (paint_dc, invalid_rect)
+				when Ev_frame_etched_out then check not_yet: False end
+			else
+				check
+					valid_value: False
+				end
+			end
+		end
+
+	paint_etched_in_frame (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- paint frame that looks like a groove.
 		local
 			top: INTEGER
 		do
@@ -333,6 +343,9 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/04/27 17:42:35  brendel
+--| Started reimplementing on_paint.
+--|
 --| Revision 1.27  2000/04/27 17:15:19  brendel
 --| Started revising.
 --|

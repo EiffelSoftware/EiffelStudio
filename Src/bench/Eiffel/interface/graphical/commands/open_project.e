@@ -9,7 +9,6 @@ class OPEN_PROJECT
 
 inherit
 
-	EB_CONSTANTS;
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
 	COMMAND_W;
@@ -32,9 +31,13 @@ feature -- Callbacks
 		end;
 
 	open_project (argument: ANY) is
+		local
+			mp: MOUSE_PTR
 		do
 			if not project_tool.initialized then
 				last_name_chooser.set_window (Project_tool);
+				!! mp.do_nothing;
+				mp.restore;
 				last_name_chooser.call (Current)
 			end
 		end;
@@ -198,7 +201,7 @@ feature -- Project Initialization
 		do
 			!! e_displayer.make (Error_window);
 			Eiffel_project.set_error_displayer (e_displayer);
-			if not Project_tool_resources.graphical_output_disabled.actual_value then
+			if not Project_resources.graphical_output_disabled.actual_value then
 				!! g_degree_output;
 				Eiffel_project.set_degree_output (g_degree_output)
 			end

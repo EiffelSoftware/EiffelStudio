@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 			-- parent.
 		do
 			make_key_code
-			create custom_event_handler.make (4)
 			create {EV_TEXT_EDITOR_HISTORY} history.make
 			{EV_RICH_TEXT} Precursor (par)
 			

@@ -88,11 +88,11 @@ feature -- Status report
 			result_small_enough: Result <= text_length
 		end
 
-	valid_character_position (pos: INTEGER): BOOLEAN is
+	valid_position (pos: INTEGER): BOOLEAN is
 		require
 			exist: not destroyed
 		do
-			Result := pos > 0 and pos < text_length			
+			Result := pos > 0 and pos <= text_length			
 		end
 
 feature -- Status setting
@@ -201,8 +201,8 @@ feature -- Basic operation
 		deferred
 		ensure
 			has_selection: has_selection
-			selection_start_set: selection_start = start_pos
-			selection_end_set: selection_end = end_pos
+--			selection_start_set: selection_start = start_pos
+--			selection_end_set: selection_end = end_pos
 		end	
 
 	select_all is

@@ -33,7 +33,8 @@ inherit
 			selection_start as wel_selection_start,
 			selection_end as wel_selection_end,
 			line as wel_line,
-			line_index as wel_line_index
+			line_index as wel_line_index,
+			current_line_number as wel_current_line_number
 		undefine
 			window_process_message,
 			remove_command,
@@ -92,28 +93,64 @@ feature -- Access
 
 
 feature -- Status Report
+
+	current_line_number: INTEGER is
+			-- Returns the number of the line the cursor currently
+			-- is on.
+		do
+			Result := wel_current_line_number + 1
+		end
 	
 	line_count: INTEGER is
 		do
 			Result := ({WEL_MULTIPLE_LINE_EDIT} Precursor  ) + 1
 		end
 
-	first_character_from_line_number (a_line: INTEGER): INTEGER is	
+	first_position_from_line_number (a_line: INTEGER): INTEGER is	
 		do
 			Result := wel_line_index (a_line - 1) + 1
 		end
 
-	last_character_from_line_number (a_line: INTEGER): INTEGER is	
+	last_position_from_line_number (a_line: INTEGER): INTEGER is	
 		do
 			if
 				valid_line_index (a_line + 1)
 			then
-				Result := first_character_from_line_number (a_line + 1) - 1
+				Result := first_position_from_line_number (a_line + 1) - 1
 			else
 				Result := text_length
 			end
 		end
+
+	has_system_frozen_widget: BOOLEAN is
+			-- Is there any widget frozen?
+			-- If a widget is frozen any updates made to it
+			-- will not be shown until the widget is
+			-- thawn again.
+		do
+			Result := has_system_window_locked
+		end
 	
+feature -- Status Settings
+
+	freeze is
+			-- Freeze this widget.
+			-- If the widget is frozen any updates made to the
+			-- window will not be shown until the widget is
+			-- thawn again.
+			-- Note: Only one window can be frozen at a time.
+			-- This is because of a limitation on Windows.
+		do
+			lock_window_update
+		end
+
+	thaw is
+			-- Thaw a frozen widget.
+		do
+			unlock_window_update
+		end
+
+
 feature -- Basic operation
 
 	put_new_line is

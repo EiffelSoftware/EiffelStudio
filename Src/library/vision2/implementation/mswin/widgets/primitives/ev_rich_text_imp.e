@@ -39,7 +39,9 @@ inherit
 			set_text_limit,
 			insert_text,
 			process_notification_info,
-			caret_position
+			caret_position,
+			wel_current_line_number,
+			set_caret_position
 		redefine
 			search,
 			set_background_color,
@@ -72,7 +74,8 @@ inherit
 			selection_end as wel_selection_end,
 			line_number_from_position as wel_line_number_from_position,
 			line as wel_line,
-			line_index as wel_line_index
+			line_index as wel_line_index,
+			current_line_number as wel_current_line_number
 		undefine
 			window_process_message,
 			remove_command,
@@ -122,19 +125,20 @@ feature {NONE} -- Initialization
 		do
 			ww ?= par.implementation
 			wel_make (ww, "", 0, 0, 0, 0, 0)
+			set_event_mask (enm_change + enm_keyevents)
 		end
 
 	make_with_text (txt: STRING) is
 		do
 			{EV_TEXT_IMP} Precursor (txt)
-			--enable_all_notifications
+			enable_all_notifications
 		end
 	
 	make is
 		do
 			{EV_TEXT_IMP} Precursor
 			--enable_all_notifications
-			set_event_mask (enm_keyevents)
+			set_event_mask (enm_keyevents + enm_change)
 		end
 
 feature -- Access
@@ -169,6 +173,14 @@ feature -- Status setting
 		do
 			format := character_format
 			set_caret_position (pos - 1)
+			set_character_format (format)
+		end
+
+	format_region (first_pos, last_pos: INTEGER; format: EV_CHARACTER_FORMAT) is
+			-- Set the format of the text between `first_pos' and `last_pos' to
+			-- `format'.
+		do
+			select_region (first_pos, last_pos)
 			set_character_format (format)
 		end
 

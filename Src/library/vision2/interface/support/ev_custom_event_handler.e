@@ -16,6 +16,9 @@ feature -- Access
 			-- Does the object has at least one command on the 
 			-- event given by `event_key'.
 		do
+			check	
+				event_table_not_void: event_table /= Void
+			end
 			if event_table /= Void then
 				Result := event_table.has (event_key)
 			else
@@ -69,7 +72,12 @@ feature -- Basic operation
 			list: DYNAMIC_LIST [EV_INTERNAL_COMMAND]
 			i: INTEGER
 		do
-			if has_command (event_key) then
+			check	
+				event_table_not_void: event_table /= Void
+			end
+			if
+				has_command (event_key)		
+			then
 				list := event_table.item (event_key)
 				check
 					list_not_void: list /= Void

@@ -556,13 +556,12 @@ feature {NONE} -- Autocomplete implementation
 				x_pos := widget.screen_x + x_pos + left_margin_width + 5 - offset
 				y_pos := widget.screen_y + (cursor.y_in_lines - first_line_displayed)*line_height
 				y_pos := y_pos + (line_height - choices.to_be_inserted.height) // 2
---! FIXME : screen_* are null after show on GTK
 				w_height := dev_window.window.height + dev_window.window.screen_y - y_pos - 20
 				w_width := dev_window.window.width + dev_window.window.screen_x - x_pos - 20
 				invalidate_cursor_rect (True)
+				choices.set_minimum_size (w_width, w_height)
 				choices.set_position (x_pos, y_pos)
 				choices.show
-				choices.set_minimum_size (w_width, w_height)
 				choices.to_be_inserted.set_focus
 			end
 		end

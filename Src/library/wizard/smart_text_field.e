@@ -9,7 +9,7 @@ class
 
 inherit
 	EV_VERTICAL_BOX
-		
+			
 creation	
 	make
 
@@ -36,6 +36,12 @@ feature -- Access
 			Result := tf.text
 		ensure
 			not_void: Result /= Void
+		end
+
+
+	change_actions: EV_NOTIFY_ACTION_SEQUENCE is
+		do
+			Result := tf.change_actions
 		end
 
 feature -- Settings

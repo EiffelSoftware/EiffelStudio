@@ -620,15 +620,6 @@ feature {EV_FIGURE, EV_RELATIVE_POINT, EV_PROJECTOR} -- Implementation
 				end
 			end
 		end
-		
-feature -- Obsolete
-
-	trace is
-		Obsolete
-			"Please do not use this feature as it will shortly be removed."
-		do
-			io.error.put_string (out_rel + "=" + out_abs)
-		end
 
 invariant
 	notify_list_exists: notify_list_ids /= Void

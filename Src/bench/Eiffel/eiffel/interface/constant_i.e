@@ -203,7 +203,18 @@ feature -- Byte code generation
 		do
 			ba := Byte_array;
 			ba.clear;
-	
+
+				-- Once mark and reserved space for once key.
+			if is_once then
+					-- The once mark
+				ba.append ('%/001/');
+					-- Allocate space for once key
+				ba.allocate_space (Long_c_type);
+			else
+					-- Not a once routine
+				ba.append ('%U');
+			end;
+
 				-- Start	
 			ba.append (Bc_start);
 				-- Routine id

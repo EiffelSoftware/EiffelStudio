@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision notebook, implementation interface."
 	status: "See notice at end of class"
@@ -11,8 +10,10 @@ deferred class
 	EV_NOTEBOOK_I
 	
 inherit
-	EV_INVISIBLE_CONTAINER_I
-	
+	EV_CONTAINER_I
+		redefine
+			add_child_ok
+		end
 	
 feature -- Constants
 	
@@ -20,12 +21,18 @@ feature -- Constants
 	
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
+	make (par: EV_CONTAINER) is
                         -- Create a fixed widget with, `par' as
                         -- parent
 		deferred
 		end		
-	
+
+feature -- Status report
+
+	count: INTEGER is
+			-- Number of pages in the notebook
+		deferred
+		end
 	
 feature -- Status setting
 	
@@ -33,13 +40,18 @@ feature -- Status setting
 			-- set position of tabs (left, right, top or bottom)
 		require
 			exists: not destroyed		
-			correct_pos: pos <= Pos_left and pos >= Pos_right
+			correct_pos: pos = Pos_left or pos = Pos_right or pos = Pos_top or pos = Pos_bottom
 		deferred
 		end
 	
-	
 feature -- Element change
-	
+
+	set_page_title (index: INTEGER; str: STRING) is
+			-- Set the label of the `index' page of the notebook.
+			-- The first page is the page number 1.
+		deferred
+		end
+
 	append_page (c: EV_WIDGET_I; label: STRING) is
 		-- New page for notebook containing child 'c' with tab 
 		-- label 'label
@@ -48,7 +60,19 @@ feature -- Element change
 		deferred
 		end
 
-end
+feature {NONE} -- Implementation
+
+		add_child_ok: BOOLEAN is
+   			-- Used in the precondition of
+   			-- 'add_child'. True, if it is ok to add a
+   			-- child to container. Normal container have
+   			-- only one child, but this feature can be
+   			-- redefined in decendants.
+   		do
+ 			Result := True
+ 		end
+
+end -- class EV_NOTEBOOK_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -148,6 +148,8 @@ feature -- Access
 			not_destroyed: not is_destroyed
 		do
 			Result := label.text
+		ensure
+			not_void: Result /= Void
 		end
 
 	foreground_color: EV_COLOR
@@ -219,21 +221,21 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: not a_text.is_empty
 		do
 			label.set_text (a_text)
 		ensure
 			assigned: text.is_equal (a_text)
+			cloned: text /= a_text
 		end
 
 	remove_text is
-			-- Assign `Void' to `text'.
+			-- Make `text' empty.
 		require
 			not_destroyed: not is_destroyed
 		do
-			label.remove_text
+			set_text ("")
 		ensure
-			text_void: text = Void
+			text_not_void: text /= Void and text.is_empty
 		end
 
 	set_buttons (button_labels: ARRAY [STRING]) is

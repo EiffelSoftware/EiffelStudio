@@ -408,9 +408,10 @@ feature {NONE} -- IL code generation
 					-- a dynamic dispatch when we handle an Eiffel class.
 				l_out_label := il_generator.create_label
 				l_end_label := il_generator.create_label
-				il_generator.generate_is_true_instance_of (any_type)
 				il_generator.duplicate_top
+				il_generator.generate_is_true_instance_of (any_type)
 				il_generator.branch_on_false (l_out_label)
+				il_generator.generate_is_true_instance_of (any_type)
 				generate_il_normal_call (written_type, True)
 				il_generator.branch_to (l_end_label)
 				il_generator.mark_label (l_out_label)

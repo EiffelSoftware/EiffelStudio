@@ -66,35 +66,37 @@ feature -- Execution
 		local
 			st: STRUCTURED_TEXT
 		do
-			debug_window.clear_window;
-			!! st.make;
-			if 
-				Application.debugged_routines.empty and 
-				Application.removed_routines.empty 
-			then
-				st.add_string ("No stop points.");
-				st.add_new_line;
-			else
-				if not Application.debugged_routines.empty then
-					st.add_string ("Enabled stop points:");
+			if Project_tool.initialized then
+				debug_window.clear_window;
+				!! st.make;
+				if 
+					Application.debugged_routines.empty and 
+					Application.removed_routines.empty 
+				then
+					st.add_string ("No stop points.");
+					st.add_new_line;
+				else
+					if not Application.debugged_routines.empty then
+						st.add_string ("Enabled stop points:");
+						st.add_new_line;
+						st.add_new_line;
+						display_debuggable_routines (st, Application.debugged_routines)
+					end;
+					st.add_new_line;
+					st.add_string ("-------------");
 					st.add_new_line;
 					st.add_new_line;
-					display_debuggable_routines (st, Application.debugged_routines)
+					if not Application.removed_routines.empty then
+						st.add_string ("Disabled stop points:");
+						st.add_new_line;
+						st.add_new_line;
+						display_debuggable_routines (st, Application.removed_routines)
+					end;
 				end;
 				st.add_new_line;
-				st.add_string ("-------------");
-				st.add_new_line;
-				st.add_new_line;
-				if not Application.removed_routines.empty then
-					st.add_string ("Disabled stop points:");
-					st.add_new_line;
-					st.add_new_line;
-					display_debuggable_routines (st, Application.removed_routines)
-				end;
-			end;
-			st.add_new_line;
-			debug_window.process_text (st);
-			debug_window.display
+				debug_window.process_text (st);
+				debug_window.display
+			end
 		end;
 
 feature -- Output

@@ -53,24 +53,26 @@ feature {NONE} -- Implementation
 			st: STRUCTURED_TEXT
 			st_syst: STRUCTURED_TEXT
 		do
-			!! st.make
-			if Application.is_running then
-				Application.status.display_status (st)
-				Debug_window.clear_window
-				Debug_window.process_text (st)
-				Debug_window.set_top_character_position (0)
-				Debug_window.display
-			else
-				st.add_string ("System not launched")
-				st.add_new_line
-				st_syst := project_tool.structured_system_info 
-				if st_syst /= Void then
-					st.append (st_syst)
+			if Project_tool.initialized then
+				!! st.make
+				if Application.is_running then
+					Application.status.display_status (st)
+					Debug_window.clear_window
+					Debug_window.process_text (st)
+					Debug_window.set_top_character_position (0)
+					Debug_window.display
+				else
+					st.add_string ("System not launched")
+					st.add_new_line
+					st_syst := project_tool.structured_system_info 
+					if st_syst /= Void then
+						st.append (st_syst)
+					end
+					Debug_window.clear_window
+					Debug_window.process_text (st)
+					Debug_window.set_top_character_position (0)
+					Debug_window.display
 				end
-				Debug_window.clear_window
-				Debug_window.process_text (st)
-				Debug_window.set_top_character_position (0)
-				Debug_window.display
 			end
 		end;
 

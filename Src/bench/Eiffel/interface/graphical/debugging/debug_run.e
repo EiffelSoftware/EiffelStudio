@@ -98,34 +98,36 @@ feature -- Execution
 		local
 			update_command: UPDATE_PROJECT
 		do
-			if argument = melt_and_run then
-				update_command ?= tool.update_cmd_holder.associated_command
-				update_command.set_run_after_melt (True)
-				update_command.set_quick_melt
-				need_to_wait := True
-				update_command.execute (tool)
-				need_to_wait := False
-				Application.set_execution_mode (User_stop_points)
-				launch_application (tool)
-				update_command.set_run_after_melt (false)
-			elseif argument = button_three_action then
-				if argument_window.destroyed then
-					argument_window.initialize (popup_parent, Current)
-					argument_window.call
-				else
-					argument_window.destroy
-				end
-			else
-				if argument /= tool  and then not need_to_wait then
-						--| It means that the user clicked on the EXEC_STOP, EXEC_STEP,
-						--| EXEC_NOSTOP or EXEC_LAST button and not on the RUN button
-					launch_application (argument)
-				elseif not need_to_wait then
-						--| The user clicked on the Run button and since `execution_mode'
-						--| is a shared variable, we need to update its value before to
-						--| launch the execution
+			if Project_tool.initialized then
+				if argument = melt_and_run then
+					update_command ?= tool.update_cmd_holder.associated_command
+					update_command.set_run_after_melt (True)
+					update_command.set_quick_melt
+					need_to_wait := True
+					update_command.execute (tool)
+					need_to_wait := False
 					Application.set_execution_mode (User_stop_points)
-					launch_application (argument)
+					launch_application (tool)
+					update_command.set_run_after_melt (false)
+				elseif argument = button_three_action then
+					if argument_window.destroyed then
+						argument_window.initialize (popup_parent, Current)
+						argument_window.call
+					else
+						argument_window.destroy
+					end
+				else
+					if argument /= tool  and then not need_to_wait then
+							--| It means that the user clicked on the EXEC_STOP, EXEC_STEP,
+							--| EXEC_NOSTOP or EXEC_LAST button and not on the RUN button
+						launch_application (argument)
+					elseif not need_to_wait then
+							--| The user clicked on the Run button and since `execution_mode'
+							--| is a shared variable, we need to update its value before to
+							--| launch the execution
+						Application.set_execution_mode (User_stop_points)
+						launch_application (argument)
+					end
 				end
 			end
 		end

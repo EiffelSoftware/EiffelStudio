@@ -43,9 +43,6 @@ feature -- Il code generation
 			-- class we simply need to load address of target.
 		local
 			local_number: INTEGER
-			ref_class: CLASS_C
-			basic_i: BASIC_I
-			feat: FEATURE_I
 		do
 			if target_type = Void then
 				if real_metamorphose then
@@ -59,29 +56,42 @@ feature -- Il code generation
 				end
 			else
 				if a_type.is_basic and then not target_type.is_external then
-					basic_i ?= a_type
-					
-						-- Assign value to a temporary local variable.
-					context.add_local (a_type)
-					local_number := context.local_list.count
-					il_generator.put_dummy_local_info (a_type, local_number)
-					il_generator.generate_local_assignment (local_number)
-					
-						-- Create _REF class
-					il_generator.create_object (basic_i.associated_reference.type)
-					il_generator.duplicate_top
-					
-						-- Call `set_item' from the _REF class
-					ref_class := basic_i.associated_reference.associated_class
-					feat := ref_class.feature_table.item_id (predefined_names.set_item_name_id)
-					
-					il_generator.generate_local (local_number)
-					il_generator.generate_feature_access (basic_i.associated_reference.type,
-						feat.feature_id, False)
+					generate_il_eiffel_metamorphose (a_type)
 				else
 					il_generator.generate_metamorphose (a_type)
 				end
 			end
+		end
+
+	generate_il_eiffel_metamorphose (a_type: TYPE_I) is
+			-- Generate a metamorphose of `a_type' into a _REF type.
+		require
+			a_type_is_basic: a_type.is_basic
+		local
+			local_number: INTEGER
+			basic_i: BASIC_I
+			feat: FEATURE_I
+			ref_class: CLASS_C
+		do
+			basic_i ?= a_type
+			
+				-- Assign value to a temporary local variable.
+			context.add_local (a_type)
+			local_number := context.local_list.count
+			il_generator.put_dummy_local_info (a_type, local_number)
+			il_generator.generate_local_assignment (local_number)
+			
+				-- Create _REF class
+			il_generator.create_object (basic_i.associated_reference.type)
+			il_generator.duplicate_top
+			
+				-- Call `set_item' from the _REF class
+			ref_class := basic_i.associated_reference.associated_class
+			feat := ref_class.feature_table.item_id (predefined_names.set_item_name_id)
+			
+			il_generator.generate_local (local_number)
+			il_generator.generate_feature_access (basic_i.associated_reference.type,
+				feat.feature_id, False)
 		end
 
 feature -- C generation

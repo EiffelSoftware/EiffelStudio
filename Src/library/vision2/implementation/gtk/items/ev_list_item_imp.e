@@ -11,10 +11,11 @@ inherit
 	EV_LIST_ITEM_I
 
 	EV_SIMPLE_ITEM_IMP
+		undefine
+			parent
 		redefine
 			has_parent,
-			set_text,
-			parent_imp
+			set_text
 		end
 
 create
@@ -59,9 +60,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	parent_imp: EV_LIST_IMP
-			-- Parent of the Current item
 
 	index: INTEGER is
 			-- Index of the current item.
@@ -138,6 +136,32 @@ feature -- Status setting
 		end
 
 feature -- element change
+	
+	set_parent (par: like parent) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void.
+			-- Before to remove the widget from the
+			-- container, we increment the number of
+			-- reference on the object otherwise gtk
+			-- destroyed the object. And after having
+			-- added the object to another container,
+			-- we remove this supplementary reference.
+		do
+			if parent_imp /= Void then
+				gtk_object_ref (widget)
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				check
+					parent_not_void: parent_imp /= Void
+				end
+				parent_imp.add_item (Current)
+				show
+				gtk_object_unref (widget)
+			end
+		end
 	
 	set_text (txt: STRING) is
 			-- Set current button text to `txt'.

@@ -25,7 +25,9 @@ feature
 
 	data: CMD_INSTANCE is
 		do
-			Result := instance_editor.command_instance.data
+			if instance_editor.command_instance /= Void then
+				Result := instance_editor.command_instance.data
+			end
 		end;
 
 	target, source: WIDGET is
@@ -64,6 +66,25 @@ feature
 		do
 			Result := Pixmaps.command_instance_pixmap
 		end;
+
+	full_symbol: PIXMAP is
+		do
+			Result := Pixmaps.command_instance_dot_pixmap
+		end;
+
+	set_empty_symbol is
+		do
+			if pixmap /= symbol then
+				set_symbol (symbol)
+			end
+		end
+
+	set_full_symbol is
+		do
+			if pixmap /= full_symbol then
+				set_symbol (full_symbol)
+			end
+		end
 
 feature {NONE}
 

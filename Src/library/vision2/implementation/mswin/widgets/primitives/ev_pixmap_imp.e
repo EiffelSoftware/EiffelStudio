@@ -191,9 +191,6 @@ feature -- Access
 			Result := mask_bitmap /= Void
 		end
 
-	icon: WEL_ICON
-		-- Current icon used. Void if none.
-
 	palette: WEL_PALETTE
 		-- Current palette used. Void if none.
 
@@ -218,10 +215,8 @@ feature -- Status setting
 			new_bitmap			: WEL_BITMAP
 			new_mask			: WEL_BITMAP
 			wel_rect			: WEL_RECT
+			info_icon			: WEL_ICON_INFO
 		do
-				-- Operation not possible on icons.
-			icon := Void	-- Stop using icons.
-
 				-- Stretch the bitmap
 			bitmap := stretch_wel_bitmap (
 				bitmap,
@@ -241,6 +236,15 @@ feature -- Status setting
 				-- Update the width & height attributes
 			width := bitmap.width
 			height := bitmap.height
+
+				-- Recreate the icon if there was any.
+			if icon /= Void then
+				create info_icon.make
+				info_icon.set_fIcon (True)
+				info_icon.set_color_bitmap (bitmap)
+				info_icon.set_mask_bitmap (mask_bitmap)
+				create icon.make_by_icon_info (info_icon)
+			end
 		end
 
 	set_transparent_color (value: EV_COLOR) is
@@ -1193,6 +1197,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/25 01:24:27  pichery
+--| Stretching a pixmap now preserve the icon.
+--|
 --| Revision 1.31  2000/04/13 18:45:28  pichery
 --| cosmetics
 --|

@@ -225,7 +225,7 @@ feature -- Status setting
 			temp_caret_pos := caret_position
 			gtk_text_set_point (entry_widget, text_length)
 			insert_text (txt)
-			set_caret_position (temp_caret_pos)
+			internal_set_caret_position (temp_caret_pos)
 		end
 	
 	prepend_text (txt: STRING) is
@@ -236,7 +236,7 @@ feature -- Status setting
 			temp_caret_pos := caret_position
 			gtk_text_set_point (entry_widget, 0)
 			insert_text (txt)
-			set_caret_position (temp_caret_pos)
+			internal_set_caret_position (temp_caret_pos)
 		end
 	
 	delete_text (start, finish: INTEGER) is

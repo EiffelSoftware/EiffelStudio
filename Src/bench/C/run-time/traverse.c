@@ -263,7 +263,21 @@ rt_shared void traversal(char *object, int p_accounting)
 		object_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
 		count = RT_SPECIAL_COUNT_WITH_INFO(object_ref);
 
-		if (!(flags & EO_COMP))
+		if (flags & EO_TUPLE) {
+			EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
+				/* Don't forget that first element of TUPLE is just a placeholder
+				 * to avoid offset computation from Eiffel code */
+			l_item++;
+			count--;
+			for (; count > 0; count--, l_item++) {
+				if
+					((eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) &&
+				 	(eif_reference_tuple_item(l_item)))
+				{
+					traversal(eif_reference_tuple_item(l_item), p_accounting);	
+				}
+			}
+		} else if (!(flags & EO_COMP))
 			/* Special object filled with references */
 			for (i = 0; i < count; i++) {
 				reference = *((char **) object + i);
@@ -604,7 +618,25 @@ rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_RE
 			return;
 		CHECK ("Not a SPECIAL of expanded objects", !(flags & EO_COMP));
 
-		count = *(EIF_INTEGER *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
+		if (flags & EO_TUPLE) {
+			EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
+				/* Don't forget that first element of TUPLE is just a placeholder
+				 * to avoid offset computation from Eiffel code */
+			l_item++;
+			count = RT_SPECIAL_COUNT(object) - 1;
+			for (; count > 0; count--, l_item++) {
+				if
+					((eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) &&
+					(eif_reference_tuple_item(l_item)))
+				{
+					action_fnptr (object, eif_reference_tuple_item(l_item));
+					match_object (eif_reference_tuple_item(l_item), action_fnptr);
+				}
+			}
+			return;
+		} else {
+			count = *(EIF_INTEGER *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
+		}
 	} else {
 		count = References(Deif_bid(flags));
 	}
@@ -686,7 +718,21 @@ rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 		object_ref = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
 		count = RT_SPECIAL_COUNT_WITH_INFO(object_ref);
 
-		if (!(flags & EO_COMP))
+		if (flags & EO_TUPLE) {
+			EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
+				/* Don't forget that first element of TUPLE is just a placeholder
+				 * to avoid offset computation from Eiffel code */
+			l_item++;
+			count--;
+			for (; count > 0; count--, l_item++) {
+				if
+					((eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) &&
+				 	(eif_reference_tuple_item(l_item)))
+				{
+					object_count = chknomark(eif_reference_tuple_item(l_item), tbl, object_count);	
+				}
+			}
+		} else if (!(flags & EO_COMP)) {
 			/* Special object filled with references */
 			for (; count > 0; count--,
 					object = (char *) ((char **) object + 1)) {
@@ -695,7 +741,7 @@ rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 					/* Non void reference */
 					object_count = chknomark(reference,tbl,object_count);					
 			}
-		else {
+		} else {
 			/* Special object filled with expanded objects which are
 			 * necessary not special objects.
 			 */

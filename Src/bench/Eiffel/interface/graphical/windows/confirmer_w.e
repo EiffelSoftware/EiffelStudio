@@ -28,30 +28,30 @@ feature
 
 	make (a_composite: COMPOSITE) is
 			-- Create a confirmer window.
-		local
-			void_argument: ANY
 		do
 			question_create (l_Confirm, a_composite);
 			set_title (l_Confirm);
 			hide_help_button;
 			add_ok_action (Current, Current);
-			add_cancel_action (Current, void_argument);
-			parent.hide
+			add_cancel_action (Current, Void);
+			set_default_position (false);
+			realize
 		end;
 
 	popup is
 			-- Popup corfimer window.
+		local
+			new_x, new_y: INTEGER
 		do
-			if window /= Void then
-				parent.set_x_y (window.real_x, window.real_y);
-				parent.set_size (window.width, window.height);
-				window := Void
-			else
-				parent.set_x_y (0, 0);
-				parent.set_size (screen.width, screen.height);
-			end;
-			parent.hide;
 			if is_popped_up then popdown end;
+			if window /= Void then
+				new_x := window.real_x + (window.width - width) // 2;
+				new_y := window.real_y + (window.height - height) // 2;
+			else
+				new_x := (screen.width - width) // 2;
+				new_y := (screen.height - height) // 2
+			end;
+			set_x_y (new_x, new_y);
 			question_popup;
 			raise
 		end;

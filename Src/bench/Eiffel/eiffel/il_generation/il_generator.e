@@ -58,13 +58,24 @@ feature -- Generation
 			-- Generate a .NET assembly
 		local
 			file_name: STRING
-			retried: BOOLEAN
+			retried, is_assembly_loaded, is_error_available: BOOLEAN
 			il_md_gen: IL_META_DATA_GENERATOR
 			classes: ARRAY [CLASS_C]
 		do
 			if not retried then
-				create il_md_gen.make
+				create il_md_gen
 				il_generator.set_msil_generation
+
+					-- At this point the COM component should be properly instantiated.
+				is_assembly_loaded := True
+
+					-- Let's check that we can retrieve an error if any, we do not care
+					-- about the value, we just want to make sure that the call does not
+					-- raise any exception, if it does `is_error_available' will be 
+					-- False which will cause not to be used in case of an exception
+					-- (See rescue clause below).
+				is_error_available := il_generator.last_error /= Void
+
 				il_generator.set_meta_data_generator (il_md_gen)
 
 					-- Compute name of generated file if any.
@@ -79,6 +90,8 @@ feature -- Generation
 				else
 					il_generator.set_window_application
 				end
+				
+				il_generator.set_verifiability (System.il_verifiable)
 
 					-- Generate reference to assemblies on which Current system depends on.
 				generate_reference_to_assemblies
@@ -105,12 +118,14 @@ feature -- Generation
 					-- Finish code generation.
 				il_generator.end_module_generation
 				il_generator.end_assembly_generation
-			else
-				Error_handler.raise_error
 			end
 		rescue
 			if not retried then
-				Error_handler.insert_error (create {IL_ERROR}.make (il_generator.last_error))
+				if not is_assembly_loaded or not is_error_available then
+					Error_handler.insert_error (create {IL_ERROR}.make_com_error)
+				else
+					Error_handler.insert_error ( create {IL_ERROR}.make (il_generator.last_error))
+				end
 				retried := True
 				retry
 			end

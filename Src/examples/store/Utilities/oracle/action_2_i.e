@@ -7,11 +7,11 @@
 
 indexing
 
-	description: "Nested queries example.";
-	product: "EiffelStore";
-	database: "Oracle";
-	date: "$Date$";
-	revision: "$Revision$";
+	description: "Nested queries example."
+	product: "EiffelStore"
+	database: "Oracle"
+	date: "$Date$"
+	revision: "$Revision$"
 	author: "Patrice Khawam"
 
 class ACTION_2_I inherit
@@ -29,13 +29,13 @@ feature
 
         execute is
 		local
-			tuple: DB_TUPLE;
+			tuple: DB_TUPLE
 			column_name: STRING
 		do
-			!! tuple.copy (selection.cursor);
+			!! tuple.copy (selection.cursor)
 			column_name ?= tuple.item (1)
 			if column_name /= Void then
-				io.putstring (column_name);
+				io.putstring (column_name)
 				io.new_line
 			end
 		end

@@ -33,11 +33,11 @@ feature {INTERVAL_B} -- Creation
 
 	make (i: like lower; j: like upper) is
 			-- Create a new interval with lower `i' and upper `j'.
-			-- If `i' >= `j', then we reverse the order.
 		require
 			i_not_void: i /= Void
 			j_not_void: j /= Void
 			same_type: i.same_type (j)
+			not_empty: i <= j
 		do
 			lower := i
 			upper := j
@@ -106,12 +106,6 @@ feature -- Comparison
 
 feature -- Status report
 
-	is_good_range: BOOLEAN is
-			-- Is Current lower <= upper?
-		do
-			Result := lower <= upper
-		end
-
 	is_lower_included: BOOLEAN is true
 			-- Is `lower' included in an interval?
 
@@ -162,7 +156,6 @@ feature -- Byte code generation
 			-- Generate byte code for interval range.
 		require
 			ba_not_void: ba /= Void
-			is_good_range: is_good_range
 		do
 			lower.make_byte_code (ba)
 			upper.make_byte_code (ba)
@@ -235,7 +228,7 @@ feature -- IL code generation
 				instruction.generate_il_load_value
 				lower.il_load_value
 				il_generator.generate_binary_operator (il_minus)
-				upper.il_load_difference (lower)
+				lower.il_load_difference (upper)
 				if label = Void then
 					il_generator.branch_on_condition ({MD_OPCODES}.bgt_un, else_label)
 				else
@@ -252,5 +245,7 @@ feature -- IL code generation
 invariant
 	lower_not_void: lower /= Void
 	upper_not_void: upper /= Void
+	bounds_of_same_type: lower.same_type (upper)
+	valid_range: lower <= upper
 
 end

@@ -28,8 +28,11 @@ feature -- {NONE} Implementation
 	parse_special_part is
 			-- Parse the special part
 			--| By default, it is empty
+		local
+			s: like special_part
 		do
-			if special_part.count /= 0 then
+			s := special_part
+			if s /= Void and then s.count /= 0 then
 				raise_error ("Invalid special routine clause")
 			end
 		end

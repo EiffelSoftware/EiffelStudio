@@ -1012,7 +1012,7 @@ Retry:						TE_RETRY
 Rescue:						/* empty */
 								{$$ = NULL;}
 	|						TE_RESCUE {list_init();} Compound 
-								{$$ = list_new(CONSTRUCT_LIST_AS);}
+								{$$ = rescue_instr();}
 	;
 /*
 Assignment:					Set_position Identifier TE_ASSIGN Expression

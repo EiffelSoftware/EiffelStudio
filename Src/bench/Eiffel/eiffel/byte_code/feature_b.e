@@ -725,6 +725,7 @@ feature -- Inlining
 			constraint		: TYPE_A
 			formal_a		: FORMAL_A
 			nb_generics, i	: INTEGER
+			l_formal_dec: FORMAL_DEC_AS
 		do
 			original_feature := context_type.type_a.associated_class.
 									feature_table.origin_table.item (routine_id)
@@ -747,8 +748,8 @@ feature -- Inlining
 				until
 					i > nb_generics
 				loop
-					create formal_a
-					formal_a.set_position (i)
+					l_formal_dec := written_class.generics.i_th (1)
+					create formal_a.make (l_formal_dec.is_reference, l_formal_dec.is_expanded, i)
 					actual_type := formal_a.instantiation_in (real_target_type, written_class.class_id)
 					actual_gen.put (actual_type, i)
 					if actual_type.is_expanded then

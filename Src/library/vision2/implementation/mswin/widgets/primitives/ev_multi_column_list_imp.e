@@ -39,6 +39,7 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
+			on_key_down,
 			on_key_up
 		redefine
 			set_column_title,
@@ -276,6 +277,8 @@ feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 			ev_children.force (an_item)
 		end
 
+feature {NONE} -- WEL Implementation
+
 	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is
 			-- A column was tapped.
 		do
@@ -301,6 +304,22 @@ feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 				end
 			end
 			disable_default_processing
+		end
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
 
 end -- class EV_MULTI_COLUMN_LIST_IMP

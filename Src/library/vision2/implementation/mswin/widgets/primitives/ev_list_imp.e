@@ -53,6 +53,7 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
+			on_key_down,
 			on_key_up,
 			wel_background_color,
 			wel_foreground_color,
@@ -93,6 +94,7 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
+			on_key_down,
 			on_key_up,
 			wel_background_color,
 			wel_foreground_color,
@@ -294,7 +296,7 @@ feature {NONE} -- Implementation : WEL features
 
 	default_style : INTEGER is
 		do
-			Result := Lbs_ownerdrawfixed + Lbs_hasstrings
+			Result := Lbs_ownerdrawfixed + Lbs_hasstrings + Lbs_nointegralheight
 			if is_multiple_selection then
 				Result := Result + {WEL_MULTIPLE_SELECTION_LIST_BOX} Precursor
 			else
@@ -330,6 +332,22 @@ feature {NONE} -- Implementation : WEL features
 	wel_foreground_color: WEL_COLOR_REF is
 		do
 			Result := foreground_color_imp
+		end
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
 		end
 
 end -- class EV_LIST_IMP

@@ -19,6 +19,8 @@ inherit
 	EV_LIST_ITEM_CONTAINER_IMP
 
 	EV_TEXT_COMPONENT_IMP
+		undefine
+			build
 		redefine
 			set_editable,
 			move_and_resize
@@ -50,6 +52,7 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
+			on_key_down,
 			on_key_up
 		redefine
 			default_process_message,
@@ -317,6 +320,22 @@ feature {NONE} -- Wel implementation
 				disable_default_processing
 			end
  		end
+
+	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgTabItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlgtabitem (hdlg, hctl, previous)
+		end
+
+	next_dlggroupitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
+			-- Encapsulation of the SDK GetNextDlgGroupItem,
+			-- because we cannot do a deferred feature become an
+			-- external feature.
+		do
+			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+		end
 
 end -- class EV_COMBO_BOX_IMP
 

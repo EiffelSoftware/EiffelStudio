@@ -31,7 +31,7 @@ upx wizard.exe
 echo -----------------------------------------------------------------
 echo ------- Copying generated executable file into Delivery ---------
 echo -----------------------------------------------------------------
-copy wizard.exe %DELIVERY%\studio\wizards\precompile\spec\windows\bin
+copy wizard.exe %DELIVERY%\studio\wizards\precompile\spec\windows
 cd %TEMP%
 popd
 echo -----------------------------------------------------------------

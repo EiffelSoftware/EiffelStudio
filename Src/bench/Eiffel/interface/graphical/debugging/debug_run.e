@@ -62,19 +62,14 @@ feature
 			kept_objects: LINKED_SET [STRING];
 			debug_text: TEXT_WINDOW;
 			ready_to_run: BOOLEAN;
-			temp: STRING
+			temp: STRING;
+			update_command: UPDATE_PROJECT
 		do
 			if argument = melt_and_run then
-				text_window.tool.update_command.execute (text_window);
-				ready_to_run := Lace.file_name /= Void and 
-						Workbench.successfull and not System.freezing_occurred
-			else
-				ready_to_run := true
-			end;
-
-			set_global_cursor (watch_cursor);
-			if not ready_to_run then
-					-- Do nothing
+				update_command := text_window.tool.update_command;
+				update_command.set_run_after_melt (true);
+				update_command.execute (text_window);
+				update_command.set_run_after_melt (false)
 			elseif Run_info.is_running then
 					-- Application is running. Continue execution.
 debug
@@ -82,6 +77,7 @@ debug
 	io.error.putstring (": Contine execution%N");
 end;
 
+				set_global_cursor (watch_cursor);
 				if Run_info.is_stopped then
 						-- Ask the application to wean objects the
 						-- debugger doesn't need anymore.
@@ -108,6 +104,7 @@ end;
 					debug_window.put_string ("System is running%N");
 					debug_window.display
 				end;
+				restore_cursors
 			else
 					-- Application is not running. Start it.
 
@@ -116,6 +113,7 @@ debug
 	io.error.putstring (": Start execution%N");
 end;
 
+				set_global_cursor (watch_cursor);
 				if project_tool.initialized and then 
 					System.system_name /= Void 
 				then
@@ -167,9 +165,9 @@ end;
 					debug_window.put_string ("System not compiled%N");
 					debug_window.display
 				end;
-				Run_info.set_is_stopped (False)
+				Run_info.set_is_stopped (False);
+				restore_cursors
 			end;
-			restore_cursors
 		end;
 
 feature 

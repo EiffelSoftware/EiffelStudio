@@ -118,8 +118,10 @@ EIF_INTEGER file_desc;
 			if (idr_temp_buf == (char *)0)
 				xraise (EN_MEM);
 			dattrib = (int **) xmalloc (scount * sizeof (int *), C_T, GC_OFF);
-			if (dattrib == (int **)0)
+			if (dattrib == (int **)0){
+				xfree(idr_temp_buf);
 				xraise (EN_MEM);
+				}
 			bzero ((char *)dattrib, scount * sizeof (int *));
 			break;
 		default: 			/* If not one of the above, error!! */
@@ -1306,7 +1308,7 @@ char * object, * parent;
 
 					ridr_multi_any (object + attrib_offset, 1);
 					ridr_norm_int (&old_flags);
-					size_count = get_expanded_pos (o_type, num_attrib);
+					size_count = get_expanded_pos (o_type, attrib_order[--num_attrib]);
 
 #if DEBUG & 1
 					printf ("\n %lx", *((char **)(object + attrib_offset)));

@@ -18,14 +18,14 @@ feature -- Initialization
 			-- Initialization.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			name := a_name
 			namespace := a_namespace
 			abstract := is_abstract
 		ensure
 			non_void_name: name /= Void
-			valid_name: not name.empty and then name.is_equal (a_name)
+			valid_name: not name.is_empty and then name.is_equal (a_name)
 		end
 
 feature -- Access
@@ -49,7 +49,7 @@ feature -- Basic operations
 			if abstract then
 				create class_protector.make (50)
 				class_protector.append ("__")
-				if namespace /= Void and then not namespace.empty then
+				if namespace /= Void and then not namespace.is_empty then
 					class_protector.append (namespace)
 					class_protector.append ("_")
 				end
@@ -67,7 +67,7 @@ feature -- Basic operations
 				Result.append (New_line)
 			end
 
-			if namespace /= Void and then not namespace.empty then
+			if namespace /= Void and then not namespace.is_empty then
 				Result.append ("namespace ")
 				Result.append (namespace)
 				Result.append (New_line)
@@ -81,7 +81,7 @@ feature -- Basic operations
 			Result.append (Semicolon)
 			Result.append (New_line)
 
-			if namespace /= Void and then not namespace.empty then
+			if namespace /= Void and then not namespace.is_empty then
 				Result.append (Close_curly_brace)
 				Result.append (New_line)
 			end
@@ -94,12 +94,12 @@ feature -- Basic operations
 
 		ensure
 			non_void_generated_code: Result /= Void
-			valid_generated_code: not Result.empty
+			valid_generated_code: not Result.is_empty
 		end
 
 invariant
 	non_void_name: name /= Void
-	valid_name: not name.empty 
+	valid_name: not name.is_empty 
 			
 end -- class WIZARD_WRITER_FORWARD_CLASS_DECLARATION
 --|----------------------------------------------------------------

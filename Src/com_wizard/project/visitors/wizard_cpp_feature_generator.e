@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			-- Code for interface pointer checking
 		require
 			non_void_interface_name: interface_name /= Void 
-			valid_interface_name: not interface_name.empty 
+			valid_interface_name: not interface_name.is_empty 
 		do
 			create Result.make (1000)
 			Result.append (Tab)
@@ -83,14 +83,14 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_result: Result /= Void
-			valid_result: not Result.empty
+			valid_result: not Result.is_empty
 		end
 
 	examine_parameter_error (variable_name: STRING): STRING is
 			-- Examine parameter error function
 		require
 			non_void_variable_name: variable_name /= Void
-			valid_variable_name: not variable_name.empty
+			valid_variable_name: not variable_name.is_empty
 		do
 			create Result.make (1000)
 			Result.append (New_line_tab)
@@ -144,14 +144,14 @@ feature {NONE} -- Implementation
 			Result.append (Close_curly_brace)
 		ensure
 			non_void_result: Result /= Void
-			valid_result: not Result.empty
+			valid_result: not Result.is_empty
 		end
 
 	examine_hresult_with_pointer (variable_name: STRING; pointer_variables: LINKED_LIST[STRING]): STRING is
 			-- Hresult examination function
 		require
 			non_void_name: variable_name /= Void
-			valid_name: not variable_name.empty
+			valid_name: not variable_name.is_empty
 			non_void_variables: pointer_variables /= Void
 		do
 			create Result.make (1000)
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (New_line_tab_tab)
 			Result.append (Open_curly_brace)
-			if not pointer_variables.empty then
+			if not pointer_variables.is_empty then
 				from
 					pointer_variables.start
 				until
@@ -190,14 +190,14 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_result: Result /= Void
-			valid_result: not Result.empty
+			valid_result: not Result.is_empty
 		end
 
 	examine_hresult (variable_name: STRING): STRING is
 			-- Hresult examination function.
 		require
 			non_void_name: variable_name /= Void
-			valid_name: not variable_name.empty
+			valid_name: not variable_name.is_empty
 		do
 			create Result.make (1000)
 
@@ -314,14 +314,14 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_examine_hresult: Result /= Void
-			valid_examine_hresult: not Result.empty
+			valid_examine_hresult: not Result.is_empty
 		end
 
 	raise_com_error (variable_name: STRING): STRING is
 			-- Code for raising COM exception.
 		require
 			non_void_name: variable_name /= Void
-			valid_name: not variable_name.empty
+			valid_name: not variable_name.is_empty
 		do
 			--	com_eraise (f.c_format_message (`variable_name'), HRESULT_CODE (EN_PROG));
 
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 		ensure
 			non_void_raise: Result /= Void
-			valid_raise: not Result.empty
+			valid_raise: not Result.is_empty
 		end
 		
 	initialize_excepinfo: STRING is
@@ -496,14 +496,14 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			non_void_retval: Result /= Void
-			valid_retval: not Result.empty
+			valid_retval: not Result.is_empty
 		end
 
 	retval_value_set_up (attribute_name: STRING): STRING is
 			-- Set up code for return variable 
 		require
 			non_void_name: attribute_name /= Void
-			valid_name: not attribute_name.empty
+			valid_name: not attribute_name.is_empty
 		do
 			create Result.make (500)
 			Result.append (Return_variant_variable_name)
@@ -511,7 +511,7 @@ feature {NONE} -- Implementation
 			Result.append (attribute_name)
 		ensure
 			non_void_argument: Result /= Void
-			valid_argument: not Result.empty
+			valid_argument: not Result.is_empty
 		end
 
 end -- class WIZARD_C_FEATURE_GENERATOR

@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 				loop
 					visitor := arguments.item.type.visitor
 
-					if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
+					if visitor.c_header_file /= Void and then not visitor.c_header_file.is_empty then
 						c_header_files.force (visitor.c_header_file)
 					end
 
@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 					return_value.append (Semicolon)
 					return_value.append (New_line_tab)
 				else
-					if not arguments.empty then
+					if not arguments.is_empty then
 						signature.remove (signature.count)
 					end
 				end

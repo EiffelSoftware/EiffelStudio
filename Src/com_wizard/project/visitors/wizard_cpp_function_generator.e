@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
 			create Result.make (1000)
-			if not func_desc.arguments.empty then
+			if not func_desc.arguments.is_empty then
 				from
 					func_desc.arguments.start
 				until
@@ -115,14 +115,14 @@ feature {NONE} -- Implementation
 			-- Add reference to interface pointer before passing it.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			create Result.make (100)
 			Result.append (a_name)
 			Result.append (Add_reference_function)
 		ensure
 			non_void_add_ref: Result /= Void
-			valid_add_ref: not Result.empty
+			valid_add_ref: not Result.is_empty
 		end
 
 end -- class WIZARD_CPP_FUNCTION_GENERATOR

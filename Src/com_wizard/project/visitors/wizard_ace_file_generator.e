@@ -100,7 +100,7 @@ feature -- Access
 
 				insert_visible_class
 
-				if not original_cluster_info.clusters.empty then
+				if not original_cluster_info.clusters.is_empty then
 					from
 						original_cluster_info.clusters.start
 					until
@@ -296,7 +296,7 @@ feature -- Basic operations
 		end
 
 	is_empty_clib_folder (a_folder: STRING): BOOLEAN is
-			-- Is folder `a_folder' empty?
+			-- Is folder `a_folder' is_empty?
 		local
 			a_directory: DIRECTORY
 			a_working_directory: STRING
@@ -325,7 +325,7 @@ feature -- Basic operations
 			tmp_string.append (Registration_class_creation_routine)
 			tmp_string.append (Double_quote)
 
-			if not system_descriptor.coclasses.empty then
+			if not system_descriptor.coclasses.is_empty then
 				Result.replace_substring_all (Any_type, tmp_string)
 				if Shared_wizard_environment.in_process_server then
 					Result.replace_substring_all (Default_keyword, Shared_library_option)
@@ -374,7 +374,7 @@ feature -- Basic operations
 
 			if 
 				Shared_wizard_environment.server  and
-				not system_descriptor.coclasses.empty
+				not system_descriptor.coclasses.is_empty
 			then
 				Result.append (Registration_class_name)
 				Result.append (Semicolon)
@@ -431,13 +431,13 @@ feature -- Basic operations
 			Result.append (Partial_ace_file_part_two)
 			Result.append (Tab_tab_tab)
 
-			if original_cluster_info /= Void and not original_cluster_info.include_path.empty then
+			if original_cluster_info /= Void and not original_cluster_info.include_path.is_empty then
 				from
 					original_cluster_info.include_path.start
 				until
 					original_cluster_info.include_path.after
 				loop
-					if not original_cluster_info.include_path.item.empty then
+					if not original_cluster_info.include_path.item.is_empty then
 						Result.append (original_cluster_info.include_path.item)
 						Result.append (New_line_tab_tab_tab)
 					end
@@ -477,13 +477,13 @@ feature -- Basic operations
 			Result.append (New_line)
 			Result.append (End_ace_file)
 
-			if original_cluster_info /= Void and not original_cluster_info.objects.empty then
+			if original_cluster_info /= Void and not original_cluster_info.objects.is_empty then
 				from
 					original_cluster_info.objects.start
 				until
 					original_cluster_info.objects.after
 				loop
-					if not original_cluster_info.objects.item.empty then
+					if not original_cluster_info.objects.item.is_empty then
 						Result.append (New_line_tab_tab_tab)
 						Result.append (original_cluster_info.objects.item)
 					end
@@ -499,7 +499,7 @@ feature -- Basic operations
 			-- insert into visible clause `eiffel_class_name'
 		require
 			non_void_cluster: a_cluster /= Void
-			valid_cluster: not a_cluster.empty
+			valid_cluster: not a_cluster.is_empty
 		local
 			a_cluster_name_index, a_colon_index, a_class_index, a_class_index_before, a_class_index_after: INTEGER
 		do

@@ -260,7 +260,7 @@ feature {NONE} -- Implementations
 			tmp_body.append (New_line_tab)
 			if 
 				coclass_descriptor.namespace /= Void and then
-				not coclass_descriptor.namespace.empty
+				not coclass_descriptor.namespace.is_empty
 			then
 				tmp_body.append (coclass_descriptor.namespace)
 				tmp_body.append ("::")
@@ -274,7 +274,7 @@ feature {NONE} -- Implementations
 			tmp_body.append (Space)
 			if 
 				coclass_descriptor.namespace /= Void and then
-				not coclass_descriptor.namespace.empty
+				not coclass_descriptor.namespace.is_empty
 			then
 				tmp_body.append (coclass_descriptor.namespace)
 				tmp_body.append ("::")

@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 			-- Set `c_header_file' with `a_header_file'
 		require
 			non_void_header_file: a_header_file /= Void
-			valid_header_file: not a_header_file.empty
+			valid_header_file: not a_header_file.is_empty
 		do
 			c_header_file := clone (a_header_file)
 		end

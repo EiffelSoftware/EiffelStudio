@@ -250,7 +250,7 @@ feature {NONE} -- Implementation
 			-- Creation procedure, make from ECOM_ARRAY
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
-			valid_eiffel_type: not an_eiffel_type.empty
+			valid_eiffel_type: not an_eiffel_type.is_empty
 		local
 			argument, body: STRING
 			assertion: WIZARD_WRITER_ASSERTION
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			-- Creation procedure, make from ARRAY
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
-			valid_eiffel_type: not an_eiffel_type.empty
+			valid_eiffel_type: not an_eiffel_type.is_empty
 		local
 			argument, body: STRING
 			assertion: WIZARD_WRITER_ASSERTION
@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 			-- Creation procedure, make from CELL
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
-			valid_eiffel_type: not an_eiffel_type.empty
+			valid_eiffel_type: not an_eiffel_type.is_empty
 		local
 			argument, body: STRING
 			assertion: WIZARD_WRITER_ASSERTION
@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 			-- Creation procedure, make from CELL
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
-			valid_eiffel_type: not an_eiffel_type.empty
+			valid_eiffel_type: not an_eiffel_type.is_empty
 		local
 			argument, body: STRING
 			assertion: WIZARD_WRITER_ASSERTION
@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 			-- Creation procedure, make from Interface
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
-			valid_eiffel_type: not an_eiffel_type.empty
+			valid_eiffel_type: not an_eiffel_type.is_empty
 		local
 			argument, body: STRING
 			assertion: WIZARD_WRITER_ASSERTION
@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 			-- Creation procedure, make from Structure
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
-			valid_eiffel_type: not an_eiffel_type.empty
+			valid_eiffel_type: not an_eiffel_type.is_empty
 		local
 			argument, body: STRING
 			assertion: WIZARD_WRITER_ASSERTION
@@ -523,7 +523,7 @@ feature {NONE} -- Implementation
 			-- Creation procedure, make from STRING
 		require
 			non_void_eiffel_type: an_eiffel_type /= Void
-			valid_eiffel_type: not an_eiffel_type.empty
+			valid_eiffel_type: not an_eiffel_type.is_empty
 		local
 			argument, body: STRING
 			assertion: WIZARD_WRITER_ASSERTION

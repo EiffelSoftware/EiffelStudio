@@ -92,7 +92,7 @@ feature {NONE} -- Implementation
 			feature_body.append (Cpp_clause)
 			feature_body.append (New)
 			feature_body.append (Space)
-			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
 				feature_body.append (a_component_descriptor.namespace)
 				feature_body.append ("::")
 			end
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
 			feature_body.append (Cpp_clause)
 			feature_body.append (Delete)
 			feature_body.append (Space)
-			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
 				feature_body.append (a_component_descriptor.namespace)
 				feature_body.append ("::")
 			end
@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_component_descriptor: a_component_descriptor /= Void
 			non_void_ccom_create_feature_name: ccom_create_feature_name /= Void
-			valid_ccom_create_feature_name: not ccom_create_feature_name.empty
+			valid_ccom_create_feature_name: not ccom_create_feature_name.is_empty
 		local
 			feature_body: STRING
 		do
@@ -202,7 +202,7 @@ feature {NONE} -- Implementation
 			feature_body.append (Cpp_clause)
 			feature_body.append (New)
 			feature_body.append (Space)
-			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
 				feature_body.append (a_component_descriptor.namespace)
 				feature_body.append ("::")
 			end
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
-			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
 				feature_body.append (a_component_descriptor.namespace)
 				feature_body.append ("::")
 			end
@@ -287,11 +287,11 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
-			valid_feature_name: not Result.name.empty
+			valid_feature_name: not Result.name.is_empty
 			non_void_feature_comment: Result.comment /= Void
-			valid_feature_comment: not Result.comment.empty
+			valid_feature_comment: not Result.comment.is_empty
 			non_void_feature_body: Result.body /= Void
-			valid_feature_body: not Result.body.empty
+			valid_feature_body: not Result.body.is_empty
 		end
 
 	last_source_of_exception_feature: WIZARD_WRITER_FEATURE is
@@ -317,11 +317,11 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
-			valid_feature_name: not Result.name.empty
+			valid_feature_name: not Result.name.is_empty
 			non_void_feature_comment: Result.comment /= Void
-			valid_feature_comment: not Result.comment.empty
+			valid_feature_comment: not Result.comment.is_empty
 			non_void_feature_body: Result.body /= Void
-			valid_feature_body: not Result.body.empty
+			valid_feature_body: not Result.body.is_empty
 		end
 
 	last_error_description_feature: WIZARD_WRITER_FEATURE is
@@ -347,11 +347,11 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
-			valid_feature_name: not Result.name.empty
+			valid_feature_name: not Result.name.is_empty
 			non_void_feature_comment: Result.comment /= Void
-			valid_feature_comment: not Result.comment.empty
+			valid_feature_comment: not Result.comment.is_empty
 			non_void_feature_body: Result.body /= Void
-			valid_feature_body: not Result.body.empty
+			valid_feature_body: not Result.body.is_empty
 		end
 
 	last_error_help_file_feature: WIZARD_WRITER_FEATURE is
@@ -377,11 +377,11 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_feature: Result /= Void
 			non_void_feature_name: Result.name /= Void
-			valid_feature_name: not Result.name.empty
+			valid_feature_name: not Result.name.is_empty
 			non_void_feature_comment: Result.comment /= Void
-			valid_feature_comment: not Result.comment.empty
+			valid_feature_comment: not Result.comment.is_empty
 			non_void_feature_body: Result.body /= Void
-			valid_feature_body: not Result.body.empty
+			valid_feature_body: not Result.body.is_empty
 		end
 
 	ccom_last_error_code_feature  (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
@@ -402,7 +402,7 @@ feature {NONE} -- Implementation
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
-			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
 				feature_body.append (a_component_descriptor.namespace)
 				feature_body.append ("::")
 			end
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
-			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
 				feature_body.append (a_component_descriptor.namespace)
 				feature_body.append ("::")
 			end
@@ -484,7 +484,7 @@ feature {NONE} -- Implementation
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
-			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
 				feature_body.append (a_component_descriptor.namespace)
 				feature_body.append ("::")
 			end
@@ -525,7 +525,7 @@ feature {NONE} -- Implementation
 			feature_body.append (Tab_tab_tab)
 			feature_body.append (Double_quote)
 			feature_body.append (Cpp_clause)
-			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.empty then
+			if a_component_descriptor.namespace /= Void and then not a_component_descriptor.namespace.is_empty then
 				feature_body.append (a_component_descriptor.namespace)
 				feature_body.append ("::")
 			end

@@ -41,7 +41,7 @@ feature {NONE} -- Implementation
 			-- Code to release interface
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			-- if (`interface_variable_prepend'`a_name' == NULL )
 			--	`interface_vaiable_prepend'`a_name'`Release_function'
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 		ensure
 			non_void_release_interface: Result /= Void
-			valid_release_interface: not Result.empty
+			valid_release_interface: not Result.is_empty
 		end
 
 
@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line)
 		ensure
 			non_void_co_initialize: Result /= Void
-			valid_co_initialize: not Result.empty
+			valid_co_initialize: not Result.is_empty
 		end
 
 end -- class WIZARD_COMPONENT_C_CLIENT_GENERATOR

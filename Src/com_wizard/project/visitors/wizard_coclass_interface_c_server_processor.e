@@ -31,7 +31,7 @@ feature -- Basic operations
 				coclass_generator.cpp_class_writer.add_parent (an_interface.c_type_name, 
 						an_interface.namespace, Public)
 				
-				if not an_interface.c_header_file_name.empty then
+				if not an_interface.c_header_file_name.is_empty then
 					coclass_generator.cpp_class_writer.add_import (an_interface.c_header_file_name)
 				end
 

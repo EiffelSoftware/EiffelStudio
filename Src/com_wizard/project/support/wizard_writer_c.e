@@ -53,7 +53,7 @@ feature -- Access
 			Result.append (New_line)
 		ensure
 			non_void_protector: Result /= Void
-			valid_protector: not Result.empty
+			valid_protector: not Result.is_empty
 		end
 
 	cpp_protector_start: STRING is
@@ -64,7 +64,7 @@ feature -- Access
 			Result.append (Hash_end_if)
 		ensure
 			non_void_protector: Result /= Void
-			valid_protector: not Result.empty
+			valid_protector: not Result.is_empty
 		end
 
 	cpp_protector_end1: STRING is
@@ -76,7 +76,7 @@ feature -- Access
 			Result.append (Hash_end_if)
 		ensure
 			non_void_protector: Result /= Void
-			valid_protector: not Result.empty
+			valid_protector: not Result.is_empty
 		end
 
 	cpp_protector_end: STRING is
@@ -90,7 +90,7 @@ feature -- Access
 			Result.append (cpp_protector_end1)
 		ensure
 			non_void_protector: Result /= Void
-			valid_protector: not Result.empty
+			valid_protector: not Result.is_empty
 		end
 
 feature -- Basic operations
@@ -106,7 +106,7 @@ feature -- Basic operations
 			-- Protect multiple inclusion of same header file.
 		require
 			non_void_name: a_header_file_name /= Void
-			valid_name: not a_header_file_name.empty
+			valid_name: not a_header_file_name.is_empty
 		do
 			create Result.make (100)
 			Result.append ("__")
@@ -116,7 +116,7 @@ feature -- Basic operations
 			Result.to_upper
 		ensure
 			non_void_protector: Result /= Void
-			valid_protector: not Result.empty
+			valid_protector: not Result.is_empty
 		end
 
 	add_global_variable (a_variable: WIZARD_WRITER_C_MEMBER) is
@@ -143,7 +143,7 @@ feature -- Basic operations
 			-- Add `an_import_file' to list of imported header files.
 		require
 			non_void_import_file: an_import_file /= Void
-			valid_import_file: not an_import_file.empty
+			valid_import_file: not an_import_file.is_empty
 			valid_syntax: an_import_file.item (1) /= '%N' and an_import_file.item (an_import_file.count) /= '%N'
 		do
 			if not import_files.has (an_import_file) then
@@ -187,7 +187,7 @@ feature -- Basic operations
 			-- Add `an_import_file' to list of imported header files.
 		require
 			non_void_import_file: an_import_file /= Void
-			valid_import_file: not an_import_file.empty
+			valid_import_file: not an_import_file.is_empty
 			valid_syntax: an_import_file.item (1) /= '%N' and an_import_file.item (an_import_file.count) /= '%N'
 		do
 			if not import_files_after.has (an_import_file) then

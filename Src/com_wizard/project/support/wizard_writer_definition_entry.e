@@ -30,7 +30,7 @@ feature -- Access
 		do
 			Result := clone (root_class_name)
 
-			if not class_creation_feature_name.empty then
+			if not class_creation_feature_name.is_empty then
 				Result.append (Space_open_parenthesis)
 				Result.append (class_creation_feature_name)
 				Result.append (Close_parenthesis)
@@ -44,12 +44,12 @@ feature -- Access
 				Result.append_integer (feature_index)
 			end
 
-			if feature_alias /= Void and then not feature_alias.empty then
+			if feature_alias /= Void and then not feature_alias.is_empty then
 				Result.append (" alias ")
 				Result.append (feature_alias)
 			end
 
-			if call_type /= Void and then not call_type.empty then
+			if call_type /= Void and then not call_type.is_empty then
 				Result.append (" call_type ")
 				Result.append (call_type)
 			end
@@ -78,9 +78,9 @@ feature -- Status
 	can_generate: BOOLEAN is
 			-- Can code be generated?
 		do
-			Result := root_class_name /= Void and not root_class_name.empty 
+			Result := root_class_name /= Void and not root_class_name.is_empty 
 						and export_feature_name /= Void and
-						not export_feature_name.empty
+						not export_feature_name.is_empty
 		end
 
 
@@ -90,7 +90,7 @@ feature -- Element Change
 			-- Set `root_class_name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			root_class_name := clone (a_name)
 		ensure
@@ -101,7 +101,7 @@ feature -- Element Change
 			-- Set 'class_creation_feature_name' with 'a_feature_name'.
 		require
 			non_void_name: a_feature_name /= Void
-			valid_name: not a_feature_name.empty
+			valid_name: not a_feature_name.is_empty
 		do
 			class_creation_feature_name := clone (a_feature_name)
 		ensure
@@ -112,7 +112,7 @@ feature -- Element Change
 			-- Set 'export_feature_name' with 'a_feature_name'
 		require
 			non_void_name: a_feature_name /= Void
-			valid_name: not a_feature_name.empty
+			valid_name: not a_feature_name.is_empty
 		do
 			export_feature_name := clone (a_feature_name)
 		ensure
@@ -133,7 +133,7 @@ feature -- Element Change
 			-- Set 'feature_alias' with 'an_alias'
 		require
 			non_void_alias: an_alias /= Void
-			valid_alias: not an_alias.empty
+			valid_alias: not an_alias.is_empty
 		do
 			feature_alias := clone (an_alias)
 		ensure

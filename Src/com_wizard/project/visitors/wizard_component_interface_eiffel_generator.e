@@ -56,8 +56,8 @@ feature -- Basic Operations
 		require
 			non_void_feature: a_feature /= Void
 		do
-			if (a_feature.result_type /= Void and then not a_feature.result_type.empty) and
-				(a_feature.arguments = Void or else a_feature.arguments.empty)
+			if (a_feature.result_type /= Void and then not a_feature.result_type.is_empty) and
+				(a_feature.arguments = Void or else a_feature.arguments.is_empty)
 			then
 				eiffel_writer.add_feature (a_feature, Access)
 			else

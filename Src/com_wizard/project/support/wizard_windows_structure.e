@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			-- Initialize
 		require
 			non_void_line: a_line /= Void
-			valid_line: not a_line.empty
+			valid_line: not a_line.is_empty
 		local
 			i, J, a_count: INTEGER
 			words: ARRAY [STRING]
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 			structure_protector := words.item (3)
 		ensure
 			non_void_name:  name /= Void
-			valid_name: not name.empty
+			valid_name: not name.is_empty
 		end
 
 feature -- Access
@@ -73,9 +73,9 @@ feature -- Access
 
 invariant
 	non_void_name: name /= Void
-	valid_name: not name.empty
+	valid_name: not name.is_empty
 	non_void_file_protector: file_protector /= Void
-	valid_file_protector: not file_protector.empty
+	valid_file_protector: not file_protector.is_empty
 
 end -- class WIZARD_WINDOWS_STRUCTURE
 

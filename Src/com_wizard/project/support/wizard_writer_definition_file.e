@@ -52,7 +52,7 @@ feature -- Access
 			-- Can code be generated?
 		do
 			Result := system_name /= Void and not 
-				system_name.empty and entries /= Void and not entries.empty
+				system_name.is_empty and entries /= Void and not entries.is_empty
 		end
 
 feature -- Element Change
@@ -61,7 +61,7 @@ feature -- Element Change
 			-- Set 'system_name' with 'a_name'
 		require	
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			system_name := clone (a_name)
 		ensure

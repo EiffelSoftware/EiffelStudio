@@ -16,9 +16,9 @@ feature -- Initialization
 			-- Creation.
 		require
 			non_void_features: some_features /= Void
-			valid_features: not some_features.empty
+			valid_features: not some_features.is_empty
 			non_void_class: a_class /= Void
-			valid_class: not a_class.empty
+			valid_class: not a_class.is_empty
 		do
 			features := some_features
 			to_class := a_class
@@ -32,9 +32,9 @@ feature -- Access
 
 invariant
 	non_void_features: features /= Void
-	valid_features: not features.empty
+	valid_features: not features.is_empty
 	non_void_class: to_class /= Void
-	valid_class: not to_class.empty
+	valid_class: not to_class.is_empty
 
 end -- class WIZARD_WRITER_EXPORT_DIRECTIVE
 

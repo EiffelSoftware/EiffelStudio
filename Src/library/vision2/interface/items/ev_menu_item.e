@@ -16,12 +16,12 @@ inherit
 			implementation
 		end
 	
-	EV_MENU_ITEM_CONTAINER
-		redefine
-			implementation
-		end
+--	EV_PIXMAP_CONTAINER
+--		redefine
+--			implementation
+--		end
 
-	EV_PIXMAP_CONTAINER
+	EV_MENU_ITEM_CONTAINER
 		redefine
 			implementation
 		end
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		do
 			!EV_MENU_ITEM_IMP!implementation.make_with_text (par, txt)
 			implementation.set_interface (Current)
-			par.add_item (Current)
+			par.implementation.add_item (Current)
 		end	
 
 feature -- Status report

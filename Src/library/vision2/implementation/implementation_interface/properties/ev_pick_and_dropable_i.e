@@ -274,7 +274,6 @@ execute (
 	update_pointer_style (target: EV_ABSTRACT_PICK_AND_DROPABLE) is
 			-- Assign correct cursor for transport to `Current'.  
 		do
-			io.putstring ("update_pointer_style called%N")
 			if
 				target /= Void and then (
 					target.drop_actions.accepts_pebble (pebble)
@@ -426,8 +425,8 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.6  2001/07/11 20:45:06  rogers
---| Reverted `execute' back to previous implementation as it was causing problems.
+--| Revision 1.7  2001/07/11 20:48:10  rogers
+--| Removed debugging information.
 --|
 --| Revision 1.5  2001/06/20 23:32:09  manus
 --| Removed non-used local variable.

@@ -21,8 +21,6 @@ inherit
 
 	SHARED_TYPES
 
-	SHARED_CONSTRAINT_ERROR
-
 	SHARED_EVALUATOR
 
 	SHARED_ARG_TYPES
@@ -712,6 +710,7 @@ feature -- Export checking
 		end
 
 feature -- Check
+
 -- Note: `require else' can be used even if the feature has no
 -- precursor. There is no problem to raise an error in the normal case,
 -- the only case  where we cannot do anything is when aliases are used
@@ -735,7 +734,7 @@ feature -- Check
 				if is_code_replicated then
 					Result := Rep_feat_server.item (bid)
 				elseif
-					Tmp_body_server.has (bid) or Body_server.has (bid)
+					Tmp_body_server.has (bid) or else Body_server.has (bid)
 				then
 					Result := Body_server.item (bid)
 				end
@@ -1025,7 +1024,7 @@ feature -- Signature checking
 					!!vrfa
 					vrfa.set_class (written_class)
 					vrfa.set_feature (Current)
-					vrfa.set_other_feature (feat_table.item (arg_id))
+					vrfa.set_other_feature (feat_table.found_item)
 					Error_handler.insert_error (vrfa)
 				end
 				arg_names.forth
@@ -1046,6 +1045,7 @@ feature -- Signature checking
 			vffd7: VFFD7
 			vtug: VTUG
 			vtcg1: VTCG1
+			constraint_error_list: LINKED_LIST [CONSTRAINT_INFO]
 		do
 			if type.has_like and then is_once then
 					-- We have an anchored type.
@@ -1089,12 +1089,12 @@ end
 					Error_handler.raise_error
 				end
 					-- Check constrained genericity validity rule
-				solved_type.check_constraints (written_class)
-				if not Constraint_error_list.empty then
+				constraint_error_list := solved_type.check_constraints (written_class)
+				if constraint_error_list /= Void then
 					!!vtcg1
 					vtcg1.set_class (written_class)
 					vtcg1.set_feature (Current)
-					vtcg1.set_error_list (deep_clone (Constraint_error_list))
+					vtcg1.set_error_list (constraint_error_list)
 					Error_handler.insert_error (vtcg1)
 				end
 			end
@@ -1693,14 +1693,14 @@ feature -- Byte code access
 
 feature {NONE} -- log file
 
-	add_in_log (class_type: CLASS_TYPE encoded_name: STRING) is
+	add_in_log (class_type: CLASS_TYPE; encoded_name: STRING) is
 		do
 			System.used_features_log_file.add (class_type, feature_name, encoded_name)
 		end
 
 feature -- C code generation
 
-	generate (class_type: CLASS_TYPE file: INDENT_FILE) is
+	generate (class_type: CLASS_TYPE; file: INDENT_FILE) is
 			-- Generate feature written in `class_type' in `file'.
 		require
 			valid_file: file /= Void

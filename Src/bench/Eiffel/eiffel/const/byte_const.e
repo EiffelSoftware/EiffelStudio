@@ -155,6 +155,7 @@ feature -- Access
 	Bc_offset:			CHARACTER is '%/004/'
 	Bc_zero:			CHARACTER is '%/005/'
 	Bc_one:			CHARACTER is '%/006/'
+	Bc_three_way_comparison: CHARACTER is '%/007/'
 
 		-- Special instructions for Bit operations
 	Bc_int_bit_op:		CHARACTER is '%/138/'

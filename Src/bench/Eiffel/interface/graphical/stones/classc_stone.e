@@ -29,6 +29,8 @@ inherit
 			is_valid, synchronized_stone, invalid_stone_message
 		end;
 	WINDOWS
+	
+	PLATFORM_CONSTANTS
 
 creation
 
@@ -75,6 +77,8 @@ feature -- Access
 		end;
 
 	header: STRING is
+			-- Display class name, class' cluster and class location in 
+			-- window title bar.
 		do
 			!!Result.make (20);
 			Result.append (stone_signature);
@@ -84,7 +88,9 @@ feature -- Access
 				Result.append ("  (precompiled)")
 			else
 				Result.append ("   located in ")
-				Result.append (clone (e_class.lace_class.cluster.path))
+				Result.append (e_class.lace_class.cluster.path)
+				Result.append_character (Directory_separator)
+				Result.append (e_class.lace_class.base_name)
 			end
 		end;
 

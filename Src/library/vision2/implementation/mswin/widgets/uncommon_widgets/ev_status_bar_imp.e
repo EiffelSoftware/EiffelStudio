@@ -36,7 +36,7 @@ inherit
 	WEL_STATUS_WINDOW
 		rename
 			make as wel_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			shown as is_displayed,
 			destroy as wel_destroy,
@@ -98,19 +98,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	wel_parent: WEL_WINDOW is
-			--|---------------------------------------------------------------
-			--| FIXME ARNAUD
-			--|---------------------------------------------------------------
-			--| Small hack in order to avoid a SEGMENTATION VIOLATION
-			--| with Compiler 4.6.008. To remove the hack, simply remove
-			--| this feature and replace "parent as wel_window_parent" with
-			--| "parent as wel_parent" in the inheritance clause of this class
-			--|---------------------------------------------------------------
-		do
-			Result := wel_window_parent
-		end
-
 	ev_children: ARRAYED_LIST [EV_STATUS_BAR_ITEM_IMP]
 			-- List of the children
 
@@ -119,11 +106,6 @@ feature -- Access
 		do
 			Result ?= {EV_PRIMITIVE_IMP} Precursor
 		end
-
-	--FIXME Should no longer be required as is now in item_list.
-	--item: EV_STATUS_BAR_ITEM is
-	--	do
-	--	end
 
 feature -- Element change
 
@@ -461,6 +443,9 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/04/26 23:36:56  rogers
+--| Removed wel_window_parent fix and item which was redundent.
+--|
 --| Revision 1.28  2000/04/26 23:32:24  rogers
 --| insert_item no longer directly modifies ev_children.
 --| Update_texts, update_edges and set_child_owner_draw now ensure

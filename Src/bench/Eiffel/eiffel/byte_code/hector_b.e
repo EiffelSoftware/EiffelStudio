@@ -70,12 +70,23 @@ feature -- Byte code generation
 			-- Generate byte code for an unprotected external call argument
 		do
 			if expr.type.is_basic then
-				ba.append (Bc_object_addr);
-				expr.make_byte_code (ba);
+					-- Getting the address of a basic type can be done
+					-- only once all the expressions have been evaluated
+				ba.append (Bc_reserve)
 			else
 				expr.make_byte_code (ba);
 			end
 		end;
+
+	make_protected_byte_code (ba: BYTE_ARRAY; pos: INTEGER) is
+			-- Generate byte code for an unprotected external call argument
+		do
+			if expr.type.is_basic then
+				ba.append (Bc_object_addr);
+				ba.append_uint32_integer (pos);
+				expr.make_byte_code (ba);
+			end
+		end
 
 	generate_operator is
 			-- Generate the operator

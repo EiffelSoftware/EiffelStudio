@@ -37,38 +37,39 @@ feature -- Basic Operations
 		end
 		
 	proceed_with_current_info is
-		--local
-		--	project_name_lowercase: STRING
-		--	project_location: STRING
-		--	ec_command_line: STRING
-		--	eifgen_directory: DIRECTORY
-		--	epr_file: RAW_FILE
+--		local
+--			project_name_lowercase: STRING
+--			project_location: STRING
+--			ec_command_line: STRING
+--			eifgen_directory: DIRECTORY
+--			epr_file: RAW_FILE
 		do
 			project_generator.generate_code
 			write_bench_notification_ok (wizard_information)
+			--emit_all_assemblies
 			
 				-- Compilation
-		--	if wizard_information.compile_project then
-		--		project_name_lowercase := clone (wizard_information.project_name)
-		--		project_name_lowercase.to_lower
-		--		project_location := wizard_information.project_location
-		--		
-		--		ec_command_line := ec_location
-		--		if is_incremental_compilation_possible then
-		--			ec_command_line.append (Space + Project_compilation_option + Space + project_location + Back_slash + project_name_lowercase + Epr_extension)
-		--		else
-		--			create eifgen_directory.make (project_location + Back_slash + Eifgen)
-		--			if eifgen_directory.exists then
-		--				eifgen_directory.recursive_delete
-		--			end
-		--			create epr_file.make (project_location + Back_slash + project_name_lowercase + Epr_extension)
-		--			if epr_file.exists then
-		--				epr_file.delete
-		--			end
-		--			ec_command_line.append (Space + Ace_compilation_option + Space + project_location + Back_slash + project_name_lowercase + Ace_extension + Space + Project_path_compilation_option + Space + project_location)
-		--		end
-		--		(create {EXECUTION_ENVIRONMENT}).launch (ec_command_line)		
-		--	end
+--			if wizard_information.compile_project then
+--				project_name_lowercase := clone (wizard_information.project_name)
+--				project_name_lowercase.to_lower
+--				project_location := wizard_information.project_location
+--				
+--				ec_command_line := ec_location
+--				if is_incremental_compilation_possible then
+--					ec_command_line.append (Space + Project_compilation_option + Space + project_location + Back_slash + project_name_lowercase + Epr_extension)
+--				else
+--					create eifgen_directory.make (project_location + Back_slash + Eifgen)
+--					if eifgen_directory.exists then
+--						eifgen_directory.recursive_delete
+--					end
+--					create epr_file.make (project_location + Back_slash + project_name_lowercase + Epr_extension)
+--					if epr_file.exists then
+--						epr_file.delete
+--					end
+--					ec_command_line.append (Space + Ace_compilation_option + Space + project_location + Back_slash + project_name_lowercase + Ace_extension + Space + Project_path_compilation_option + Space + project_location)
+--				end
+--				(create {EXECUTION_ENVIRONMENT}).launch (ec_command_line)		
+--			end
 			Precursor
 		end
 
@@ -86,27 +87,27 @@ feature -- Access
 				word := Space
 			end
 			if not wizard_information.selected_assemblies.is_empty then
-				if not wizard_information.dependencies.is_empty then
+--				if not wizard_information.dependencies.is_empty then
+--					if not wizard_information.local_assemblies.is_empty then
+--						message_text := Common_message +
+--							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string + New_line +	
+--							l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies) + New_line
+--						message_text.append (local_dependencies_string)
+--					else
+--						message_text := Common_message +
+--							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies)
+--					end
+--				else
 					if not wizard_information.local_assemblies.is_empty then
 						message_text := Common_message +
-							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string + New_line +	
-							l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies) + New_line
-						message_text.append (local_dependencies_string)
-					else
-						message_text := Common_message +
-							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + l_Dependencies + Space + New_line + assemblies_string (wizard_information.dependencies)
-					end
-				else
-					if not wizard_information.local_assemblies.is_empty then
-						message_text := Common_message +
-							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + local_assemblies_string + New_line +	
-							l_Dependencies + Space + New_line 
-						message_text.append (local_dependencies_string)
+							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies) + New_line + New_line + L_local_assemblies + New_line + local_assemblies_string + New_line
+--							l_Dependencies + Space + New_line 
+--						message_text.append (local_dependencies_string)
 					else
 						message_text := Common_message +
 							l_External_assemblies + Space + New_line + assemblies_string (wizard_information.selected_assemblies)					
 					end
-				end
+--				end
 				message_text_field.set_text (message_text)
 			else
 				message_text_field.set_text (Common_message)			
@@ -172,7 +173,16 @@ feature {NONE} -- Implementation
 				a_list.after
 			loop
 				an_assembly := a_list.item
-				Result.append (Tab + an_assembly.name + ", " + an_assembly.version + New_line)
+				Result.append (Tab)
+				Result.append (an_assembly.name)
+				Result.append (", ")
+				Result.append (an_assembly.version)
+				Result.append (", ")
+				Result.append (an_assembly.culture)
+				Result.append (", ")
+				Result.append (an_assembly.public_key)
+				Result.append (New_line)
+
 				a_list.forth
 			end
 			Result.right_adjust
@@ -181,57 +191,22 @@ feature {NONE} -- Implementation
 			not_empty_text: not Result.is_empty
 		end
 
-	local_dependencies_string: STRING is
-			-- String from `wizard_information.local_dependencies'
-		local
-			local_dependencies: LINKED_LIST [STRING]
-			an_assembly_name: STRING
-		do
-			local_dependencies := wizard_information.local_dependencies
-			if local_dependencies /= Void then
-				from
-					create Result.make (1024)
-					local_dependencies.start
-				until
-					local_dependencies.after
-				loop
-					an_assembly_name := local_dependencies.item
-					if message_text.substring_index (an_assembly_name, 1) < 1 then
-						Result.append (Tab + an_assembly_name + New_line)
-					end
-					local_dependencies.forth
-					if not local_dependencies.after then
-						local_dependencies.forth
-					end
-				end
-				Result.right_adjust
-			end
-		end
-
 	local_assemblies_string: STRING is
 			-- String from `wizard_information.local_assemblies'
 		require
 			non_void_local_assemblies: wizard_information.local_assemblies /= Void 
 		local
-			local_assemblies: HASH_TABLE [STRING, STRING]
-			a_local_assembly: STRING
-			last_backslash_index: INTEGER
+			local_assemblies: LINKED_LIST [STRING]
 		do
+			create Result.make (1024)
 			local_assemblies := wizard_information.local_assemblies
 			from
-				create Result.make (1024)
 				local_assemblies.start
 			until
-				local_assemblies.off
+				local_assemblies.after
 			loop
-				a_local_assembly := clone (local_assemblies.key_for_iteration)
-				if a_local_assembly /= Void and then not a_local_assembly.is_empty then
-					last_backslash_index := a_local_assembly.last_index_of ('\', a_local_assembly.count)
-					if last_backslash_index > 1 then
-						a_local_assembly := a_local_assembly.substring (last_backslash_index + 1, a_local_assembly.count)
-					end
-					Result.append (Tab + a_local_assembly + New_line)
-				end
+				Result.append (local_assemblies.item + New_line)
+
 				local_assemblies.forth
 			end
 			Result.right_adjust
@@ -289,26 +264,26 @@ feature {NONE} -- Constants
 	Common_message: STRING is 
 			-- Message to the user (no matter if there are selected assemblies)
 		local
-			root_class_external_name: STRING
+			--root_class_external_name: STRING
 			creation_routine_name: STRING
-			creation_routine_external_name: STRING
+			--creation_routine_external_name: STRING
 		once
 			Result := "You have specified the following settings:" + New_line + New_line +
 					"Project name: " + Tab + wizard_information.project_name + New_line +
 					"Location: " + Tab + wizard_information.project_location + New_line + New_line +
 					"Root class name: " + Tab + wizard_information.root_class_name + New_line 
-			root_class_external_name := wizard_information.root_class_external_name
-			if root_class_external_name /= Void and then not root_class_external_name.is_empty and then not root_class_external_name.is_equal (Unrelevant_data) then
-				Result.append ("Root class external name: " + Tab + root_class_external_name + New_line)
-			end
+--			root_class_external_name := wizard_information.root_class_external_name
+--			if root_class_external_name /= Void and then not root_class_external_name.is_empty and then not root_class_external_name.is_equal (Unrelevant_data) then
+--				Result.append ("Root class external name: " + Tab + root_class_external_name + New_line)
+--			end
 			creation_routine_name := wizard_information.creation_routine_name
 			if creation_routine_name /= Void and then not creation_routine_name.is_empty and then not creation_routine_name.is_equal (Unrelevant_data) then
 				Result.append ("Creation routine name: " + Tab + wizard_information.creation_routine_name + New_line)
 			end
-			creation_routine_external_name := wizard_information.creation_routine_external_name
-			if creation_routine_external_name /= Void and then not creation_routine_external_name.is_empty and then not creation_routine_external_name.is_equal (Unrelevant_data) then
-				Result.append ("Creation routine external name: " + Tab + wizard_information.creation_routine_external_name + New_line)
-			end
+--			creation_routine_external_name := wizard_information.creation_routine_external_name
+--			if creation_routine_external_name /= Void and then not creation_routine_external_name.is_empty and then not creation_routine_external_name.is_equal (Unrelevant_data) then
+--				Result.append ("Creation routine external name: " + Tab + wizard_information.creation_routine_external_name + New_line)
+--			end
 			Result.append (New_line)
 		ensure
 			non_void_message: Result /= Void
@@ -354,9 +329,12 @@ feature {NONE} -- Constants
 	l_External_assemblies: STRING is ".NET assemblies:"
 			-- Label before displaying the selected .NET assemblies
 	
-	l_Dependencies: STRING is "Dependencies:"
-			-- Label before displaying the dependencies of the selected .NET assemblies
+--	l_Dependencies: STRING is "Dependencies:"
+--			-- Label before displaying the dependencies of the selected .NET assemblies
 	
+	l_Local_assemblies: STRING is "Local assemblies:"
+			-- Label before displaying the local assemblies.
+
 	Text_if_compile: STRING is "and compile"
 			-- Text appended to the current state text in case the user asked for project compilation
 			

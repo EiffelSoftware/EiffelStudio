@@ -29,32 +29,7 @@ feature {NONE} -- Initialization
 feature -- Status report
 
 	tabs: INTEGER
-			-- Value of indentation, in tabs
-
-	old_tabs: INTEGER
-			-- Saved indentation value
-
-	emitted: BOOLEAN
-			-- Have leading tabs already been emitted?
-
-	is_il_generation: BOOLEAN
-			-- Are we in IL code generation?
-
-	count: INTEGER is
-			-- Number of characters in current.
-		do
-			from
-				buffers.start
-			until
-				buffers.after
-			loop
-				Result := Result + buffers.item.count
-				buffers.forth
-			end
-			Result := Result + current_buffer.count
-		ensure
-			count_nonnegative: Result >= 0
-		end
+			-- Number of inserted tabs.
 
 	as_string: STRING is
 			-- Representation of Current as a STRING.
@@ -132,10 +107,10 @@ feature -- Open, close buffer operations
 			until
 				buffers.after
 			loop
-				file.putstring (buffers.item)
+				file.put_string (buffers.item)
 				buffers.forth
 			end
-			file.putstring (current_buffer)
+			file.put_string (current_buffer)
 			clear_all
 		end
 
@@ -151,51 +126,64 @@ feature -- Settings
 
 feature -- Ids generation
 
-	generate_class_id (class_id: INTEGER) is
+	put_class_id (class_id: INTEGER) is
 			-- Generate textual representation of class id
 			-- in generated C code
 		do
-			putint (class_id)
+			put_integer (class_id)
 		end
 
-	generate_real_body_id (real_body_id: INTEGER) is
+	put_real_body_id (real_body_id: INTEGER) is
 			-- Generate textual representation of real body id
 			-- in generated C code
 		do
-			putint (real_body_id - 1)
+			put_integer (real_body_id - 1)
 		end
 
-	generate_real_body_index (real_body_index: INTEGER) is
+	put_real_body_index (real_body_index: INTEGER) is
 			-- Generate textual representation of real body index
 			-- in generated C code
 		do
-			putint (real_body_index - 1)
+			put_integer (real_body_index - 1)
 		end
 
-	generate_type_id (type_id: INTEGER) is
+	put_type_id (type_id: INTEGER) is
 			-- Generate textual representation of static type id
 			-- in generated C code
 		do
-			putint (type_id - 1)
+			put_integer (type_id - 1)
 		end
 
-feature -- Element change
+	put_static_type_id (static_type_id: INTEGER) is
+			-- Generate textual representation of type id
+			-- in generated C code
+		do
+			put_integer (static_type_id - 1)
+		end
 
-	append (s: STRING) is
-			-- Append a copy of `s' at end of `buffer'.
+feature -- Basic element change
+
+	put_character (c: CHARACTER) is
+			-- Write char `c'.
+		do
+			emit_tabs
+			current_buffer.append_character (c)
+		end
+	
+	put_integer (i: INTEGER) is
+			-- Write int `i'.
+		do
+			emit_tabs
+			current_buffer.append_integer (i)
+		end
+	
+	put_string (s: STRING) is
+			-- Write string `s'.
 		require
 			s_not_void: s /= Void
-		local
-			l_count: INTEGER
 		do
-			if (current_buffer.count + s.count) > current_buffer.capacity then
-				l_count := count
-				buffers.extend (current_buffer)
-				create current_buffer.make (Max_chunk_size.min (l_count * 2))
-			end
-			current_buffer.append (s)
-		ensure
-			new_count: count = old count + s.count
+			emit_tabs
+			append (s)
 		end
 
 	indent is
@@ -226,25 +214,7 @@ feature -- Element change
 			tabs := old_tabs
 		end
 
-	emit_tabs is
-			-- Emit the `tabs' leading tabs
-		local
-			i: INTEGER
-		do
-			if not emitted then
-				from
-					i := 1
-				until
-					i > tabs
-				loop
-					current_buffer.append_character ('%T')
-					i := i + 1
-				end
-				emitted := True
-			end
-		end
-
-	new_line is
+	put_new_line is
 			-- Write a '\n'.
 		do
 			current_buffer.append_character ('%N')
@@ -287,43 +257,6 @@ feature -- Element change
 			append ("RTLR(")
 			current_buffer.append_integer (i)
 			append (",Result);")
-		end
-
-	putchar (c: CHARACTER) is
-			-- Write char `c'.
-		do
-			emit_tabs
-			current_buffer.append_character (c)
-		end
-	
-	putint (i: INTEGER) is
-			-- Write int `i'.
-		do
-			emit_tabs
-			current_buffer.append_integer (i)
-		end
-	
-	putreal (r: REAL) is
-			-- Writes float `r'.
-		do
-			emit_tabs
-			append (r.out)
-		end
-	
-	putdouble (d: DOUBLE) is
-			-- Write double `d'.
-		do
-			emit_tabs
-			append (d.out)
-		end
-	
-	putstring (s: STRING) is
-			-- Write string `s'.
-		require
-			s_not_void: s /= Void
-		do
-			emit_tabs
-			append (s)
 		end
 
 	escape_string (s: STRING) is
@@ -411,17 +344,17 @@ feature -- prototype code generation
 			end
 
 			current_buffer.append_character (')')
-			new_line
+			put_new_line
 			current_buffer.append_character ('{')
-			new_line
+			put_new_line
 			if not is_il_generation then
 				indent
-				putstring ("GTCX")
+				put_string ("GTCX")
 				exdent
-				new_line
+				put_new_line
 			end
 		end
-
+	
 feature {GENERATION_BUFFER} -- prototype code generation
 
 	generate_function_declaration (type: STRING; f_name: STRING;
@@ -472,13 +405,16 @@ feature {GENERATION_BUFFER} -- prototype code generation
 			append (");%N")
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Implementation: Status report
 
-	current_buffer: STRING
-			-- Currently used buffer.
+	is_il_generation: BOOLEAN
+			-- Are we in IL code generation?
 
-	buffers: ARRAYED_LIST [STRING]
-			-- Store buffers when they become too large.
+	emitted: BOOLEAN
+			-- Have leading tabs already been emitted?
+
+	old_tabs: INTEGER
+			-- Saved indentation value
 
 	chunk_size: INTEGER
 			-- Size of buffers we will create.
@@ -486,10 +422,71 @@ feature {NONE} -- Implementation
 	max_chunk_size: INTEGER is 10485760
 			-- Maximum size of chunks allocated (10MB)
 
+	count: INTEGER is
+			-- Number of characters in current.
+		do
+			from
+				buffers.start
+			until
+				buffers.after
+			loop
+				Result := Result + buffers.item.count
+				buffers.forth
+			end
+			Result := Result + current_buffer.count
+		ensure
+			count_nonnegative: Result >= 0
+		end
+
+feature {NONE} -- Implementation: Access
+
+	current_buffer: STRING
+			-- Currently used buffer.
+
+	buffers: ARRAYED_LIST [STRING]
+			-- Store buffers when they become too large.
+
 	string_converter: STRING_CONVERTER is
 			-- Instance of STRING_CONVERTER for `escape_string' and `escape_char'.
 		once
 			create Result
+		end
+
+feature {NONE} -- Implementation: Element change
+
+	append (s: STRING) is
+			-- Append a copy of `s' at end of `buffer'.
+		require
+			s_not_void: s /= Void
+		local
+			l_count: INTEGER
+		do
+			if (current_buffer.count + s.count) > current_buffer.capacity then
+				l_count := count
+				buffers.extend (current_buffer)
+				create current_buffer.make (Max_chunk_size.min (l_count * 2))
+			end
+			current_buffer.append (s)
+		ensure
+			new_count: count = old count + s.count
+		end
+
+	emit_tabs is
+			-- Emit the `tabs' leading tabs
+		local
+			i: INTEGER
+		do
+			if not emitted then
+				from
+					i := 1
+				until
+					i > tabs
+				loop
+					current_buffer.append_character ('%T')
+					i := i + 1
+				end
+				emitted := True
+			end
 		end
 
 invariant

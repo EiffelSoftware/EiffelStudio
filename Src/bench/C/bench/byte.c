@@ -4,20 +4,6 @@
 #include <stdio.h>
 #include <string.h>
 
-void ca_copy(char *from, char *to, long int nbitems, long int at)
-{
-	/* Copy `nbitems' character from `from' into `to'. */
-
-	memcpy (to + at, from, nbitems * sizeof(char));
-}
-
-void ca_zero(char *area, long int size)
-{
-	/* Reset character array `area' to zero. */
-
-	memset (area, 0, size * sizeof(char));
-}
-
 void ca_int64 (char *area, EIF_INTEGER_64 val, long int pos)
 {
 	/* Write long integer `val' in array of character `area', starting

@@ -287,7 +287,8 @@ feature -- Element change
 			-- Do not move cursor.
 		do
 			if after or empty then
-				extend (v)
+				extend (v);
+				index := index + 1
 			else
 				insert (v, index)
 			end

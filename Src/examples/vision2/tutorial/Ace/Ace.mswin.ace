@@ -3,7 +3,7 @@ system
 	tutorial
 
 root
-
+ 
 	tutorial (main): "make"
 
 default
@@ -15,6 +15,47 @@ cluster
 
 --------------- Tutorial clusters
 
+<<<<<<< Ace.mswin.ace
+	tutorial:							"$EIFFEL4\examples\vision2\tutorial"
+	main (tutorial):					"$\main"
+	demo_items (tutorial):				"$\demo_items"
+	demo_windows (tutorial):			"$\demo_windows"
+	demo_tabs (tutorial):				"$\demo_tabs"
+
+
+------------------------ EiffelBase:
+
+	base:						"$EIFFEL4\library\base"
+	structures(base):			"$\structures"
+	kernel(base):				"$\kernel"
+	support(base):				"$\support"
+	access(structures):			"$\access"
+	cursors(structures):		"$\cursors"
+	cursor_tree(structures):	"$\cursor_tree"
+	dispenser(structures):		"$\dispenser"
+	iteration(structures):		"$\iteration"
+	list(structures):			"$\list"
+	set(structures):			"$\set"
+	sort(structures):			"$\sort"
+	storage(structures):		"$\storage"
+	table(structures):			"$\table"
+	traversing(structures):		"$\traversing"
+	tree(structures):			"$\tree"
+
+
+------------------------ Wel:
+
+	wel:						"$EIFFEL4\library\wel"
+	wel_constants(wel):			"$\consts"
+	wel_controls(wel):			"$\controls"
+	wel_gdi(wel):				"$\gdi"
+	wel_gdi_stocks(wel):		"$\gdistock"
+	wel_standard_dialogs(wel):	"$\stddlgs"
+	wel_structures(wel):		"$\structs"
+	wel_support(wel):			"$\support"
+	wel_windows(wel):			"$\windows"
+	wel_messages(wel):			"$\messages"
+=======
 	tutorial:					"$EIFFEL4\examples\vision2\tutorial"
 	main (tutorial):			"$\main"
 	demo_items (tutorial):		"$\demo_items"
@@ -35,6 +76,7 @@ cluster
 		default
 			assertion (all)
 		end
+>>>>>>> 1.5
                         
 ------------------------ EiffelVision
 

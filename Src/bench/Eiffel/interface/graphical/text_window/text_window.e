@@ -40,7 +40,7 @@ feature
 			text_create (a_name, a_parent);
 			!! history.make (10);
 			tool := a_tool;
-			set_read_only;
+			set_mode_for_editing;
 			add_callbacks;
 			upper := -1 			-- Init clickable array.
 			set_font_to_default;
@@ -77,8 +77,6 @@ feature
 
 	set_mode_for_editing is
 			-- Set edit mode for text modification (set to read only)
-		require
-			not_read_only: not is_read_only
 		do
 			set_read_only	
 		end;
@@ -198,6 +196,7 @@ feature
 --				set_text (a_file.last_error_message);
 --				set_changed (false);
 --			end;
+			tool.set_default_format;
 			root_stone := Void;
 		ensure
 			up_to_date: not changed;
@@ -214,8 +213,7 @@ feature
 					last_format.execute (a_stone);
 					history.extend (root_stone)
 				else
-					warner.set_window (Current);
-					warner.gotcha_call (w_Pebble_not_valid)
+					warner (Current).gotcha_call (w_Pebble_not_valid)
 				end
 			end
 		ensure
@@ -312,6 +310,7 @@ feature
 			root_stone := Void;
 			file_name := Void;
 			set_changed (false);
+			set_mode_for_editing
 		ensure
 			image.empty;
 			position = 0;
@@ -446,7 +445,7 @@ feature {NONE}
 		local
 			clicked_type: INTEGER;
 			cursor_x, cursor_y: INTEGER;
-			start_pos: INTEGER;
+			start_pos: INTEGER
 		do
 			tab_execute (argument);
 			if not changed then
@@ -456,7 +455,9 @@ feature {NONE}
 					end;
 					set_changed (true)
 				elseif argument = grabber then
-					warner.popdown;
+					if last_warner /= Void then
+						last_warner.popdown
+					end;
 					if clickable_count /= 0 then
 						change_focus;
 						start_pos := expanded_position (focus_start);

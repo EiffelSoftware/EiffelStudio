@@ -312,31 +312,41 @@ feature {NONE} -- Implementation
 				type_consumer := type_consumers.item_for_iteration
 				type_consumers.remove (type_consumers.key_for_iteration)
 				type_consumer.initialize
-				type := type_consumer.consumed_type
-				parent := type.parent
-				if parent /= Void then
-					l_is_value_type := parent.name.is_equal ("System.ValueType")
-					l_is_delegate := parent.name.is_equal ("System.MulticastDelegate") or parent.name.is_equal ("System.Delegate")					
-				end
-				types.put (type.dotnet_name, type.eiffel_name, type.is_interface, type.is_enum, l_is_delegate, l_is_value_type)
-				fn := file_name (type)
-				create s.make (fn.count + destination_path.count + Classes_path.count)
-				s.append (destination_path)
-				s.append (Classes_path)
-				s.append (fn)
-				serializer.serialize (type, s)
-				if not serializer.successful and error_printer /= Void then
-					set_error (Serialization_error, type.eiffel_name + ", " + serializer.error_message)
-					l_string_tuple.put (error_message, 1)
-					error_printer.call (l_string_tuple)
-				else
-					if status_printer /= Void then
-						l_string_tuple.put ("Written " + s, 1)
-						status_printer.call (l_string_tuple)
+				if not type_consumer.initialized then
+						-- An error occured during the initialization of type.
+						-- Notice the problem on this specific type and try the next type.
+					if type_consumer.consumed_type.dotnet_name /= Void then
+						set_error (Type_initialization_error, "One of the features of "+ type_consumer.consumed_type.dotnet_name +" is invalid.")
+					else	
+						set_error (Type_initialization_error, "")
 					end
-					if status_querier /= Void then
-						status_querier.call (l_empty_tuple)
-						done := status_querier.last_result
+				else
+					type := type_consumer.consumed_type
+					parent := type.parent
+					if parent /= Void then
+						l_is_value_type := parent.name.is_equal ("System.ValueType")
+						l_is_delegate := parent.name.is_equal ("System.MulticastDelegate") or parent.name.is_equal ("System.Delegate")					
+					end
+					types.put (type.dotnet_name, type.eiffel_name, type.is_interface, type.is_enum, l_is_delegate, l_is_value_type)
+					fn := file_name (type)
+					create s.make (fn.count + destination_path.count + Classes_path.count)
+					s.append (destination_path)
+					s.append (Classes_path)
+					s.append (fn)
+					serializer.serialize (type, s)
+					if not serializer.successful and error_printer /= Void then
+						set_error (Serialization_error, type.eiffel_name + ", " + serializer.error_message)
+						l_string_tuple.put (error_message, 1)
+						error_printer.call (l_string_tuple)
+					else
+						if status_printer /= Void then
+							l_string_tuple.put ("Written " + s, 1)
+							status_printer.call (l_string_tuple)
+						end
+						if status_querier /= Void then
+							status_querier.call (l_empty_tuple)
+							done := status_querier.last_result
+						end
 					end
 				end
 			end

@@ -49,11 +49,6 @@ inherit
 			{NONE} all
 		end
 		
-	OPERATING_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
 	WEL_STANDARD_TOOL_BAR_BITMAP_CONSTANTS
 		export
 			{NONE} all
@@ -112,16 +107,19 @@ feature -- GUI Elements
 			clear_button, separator_button: WEL_TOOL_BAR_BUTTON
 			rebar_info: WEL_REBARBANDINFO
 			tool_bar: WEL_TOOL_BAR
+			tool_bar_bitmap: WEL_TOOL_BAR_BITMAP
 		once
 			create Result.make (Current, -1)
 			create tool_bar.make (Current, -1)
 			tool_bar.set_style (tool_bar.style + Tbstyle_flat)
-			tool_bar.add_bitmaps (create {WEL_TOOL_BAR_BITMAP}.make_by_predefined_id (Idb_std_small_color), 1)
+			create tool_bar_bitmap.make_by_predefined_id (Idb_std_small_color)
+			tool_bar.add_bitmaps (tool_bar_bitmap, 1)
 			create new_button.make_button (tool_bar.last_bitmap_index + Std_filenew, New_id)
 			create open_button.make_button (tool_bar.last_bitmap_index + Std_fileopen, Open_id)
 			create save_button.make_button (tool_bar.last_bitmap_index + Std_filesave, Save_id)
 			create separator_button.make_separator
-			tool_bar.add_bitmaps (create {WEL_TOOL_BAR_BITMAP}.make (Toolbar_bitmap_constant), 1)
+			create tool_bar_bitmap.make (Toolbar_bitmap_constant)
+			tool_bar.add_bitmaps (tool_bar_bitmap, 1)
 			create clear_button.make_button (tool_bar.last_bitmap_index, Clear_id)
 			create launch_button.make_button (tool_bar.last_bitmap_index + 1, Launch_id)
 			tool_bar.add_buttons (<<new_button, open_button, save_button, separator_button, launch_button, clear_button>>)
@@ -481,7 +479,6 @@ feature {NONE} -- Implementation
 			a_file: RAW_FILE
 		do
 			a_string := clone (shared_wizard_environment.destination_folder)
-			a_string.append_character (directory_separator)
 			a_string.append (a_file_name)
 			create a_file.make (a_string)
 			if a_file.exists then

@@ -276,7 +276,7 @@ feature -- IL code generation
 		do
 			l_left_type := left.type
 			l_right_type := right.type
-			l_same_type := l_left_type.same_type (l_right_type)
+			l_same_type := l_left_type.same_as (l_right_type)
 			if not l_same_type then
 				l_type := l_left_type.heaviest (l_right_type)
 			end

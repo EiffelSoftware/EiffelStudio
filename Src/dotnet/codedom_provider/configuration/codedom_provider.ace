@@ -114,25 +114,24 @@ cluster
 assembly
 	"EiffelSoftware.EiffelCompiler":	"$EIFFEL_SRC\dotnet\codedom_provider\assemblies\EiffelSoftware.Compiler.dll"
 
-	"System.Configuration.Install":	"System.Configuration.Install","1.0.5000.0","neutral","b03f5f7f11d50a3a"
+	"System.Configuration.Install":	"$ISE_DOTNET_FRAMEWORK\System.Configuration.Install.dll"
 		prefix
 			"CONFIG_INSTALL_"
 		end
 
-	"System.Runtime.Serialization.Formatters.Soap, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"System.Runtime.Serialization.Formatters.Soap","1.0.5000.0","neutral","b03f5f7f11d50a3a"
+	"System.Runtime.Serialization.Formatters.Soap":	"$ISE_DOTNET_FRAMEWORK\System.Runtime.Serialization.Formatters.Soap.dll"
 
-	"Accessibility, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"Accessibility","1.0.5000.0","neutral","b03f5f7f11d50a3a"
+	"Accessibility":	"$ISE_DOTNET_FRAMEWORK\Accessibility.dll"
 
-	"System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"System.Drawing","1.0.5000.0","neutral","b03f5f7f11d50a3a"
+	"System.Drawing":	"$ISE_DOTNET_FRAMEWORK\System.Drawing.dll"
 		prefix
 			"DRAWING_"
 		end
 
-	"System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089":	"System.Windows.Forms","1.0.5000.0","neutral","b77a5c561934e089"
+	"System.Windows.Forms":	"$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll"
 		prefix
 			"WINFORMS_"
 		end
-
 
 end -- system EiffelSoftware.CodeDom
 

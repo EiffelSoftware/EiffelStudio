@@ -26,7 +26,6 @@ inherit
 			set_background_color
 		redefine
 			interface,
-			visual_widget,
 			has_focus,
 			disconnect_all_signals,
 			default_key_processing_blocked,
@@ -52,30 +51,24 @@ feature {NONE} -- Initialization
 			temp_sig_id: INTEGER
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_event_box_new)
-			drawing_area_widget := C.gtk_drawing_area_new
+			set_c_object (C.gtk_drawing_area_new)
 			temp_sig_id := c_signal_connect (
-					drawing_area_widget,
+					c_object,
 					eiffel_to_c ("button-press-event"),
 					agent give_focus
 			)
 			temp_sig_id := c_signal_connect (
-					drawing_area_widget,
+					c_object,
 					eiffel_to_c ("focus-in-event"),
 					agent attain_focus
 			)
 			temp_sig_id := c_signal_connect (
-					drawing_area_widget,
+					c_object,
 					eiffel_to_c ("focus-out-event"),
 					agent lose_focus
 			)
-			C.gtk_widget_show (drawing_area_widget)
-			C.gtk_container_add (c_object, drawing_area_widget)
-			C.gtk_container_set_focus_child (c_object, NULL)
 			gc := C.gdk_gc_new (default_gdk_window)
 			init_default_values
-		--	gtk_widget_set_flags (visual_widget, C.GTK_CAN_FOCUS_ENUM)
-				-- Needed for focus hack
 		end
 
 feature -- Access
@@ -147,9 +140,9 @@ feature {NONE} -- Implementation
 	set_focus is
 			-- Grab keyboard focus.
 		do
-			GTK_WIDGET_SET_FLAGS (visual_widget, C.GTK_CAN_FOCUS_ENUM)
-			C.gtk_widget_grab_focus (visual_widget)
-			GTK_WIDGET_UNSET_FLAGS (visual_widget, C.GTK_CAN_FOCUS_ENUM)
+			GTK_WIDGET_SET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
+			C.gtk_widget_grab_focus (c_object)
+			GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
 		end
 
 	has_focus: BOOLEAN
@@ -190,16 +183,9 @@ feature {NONE} -- Implementation
 
 feature {EV_DRAWABLE_IMP} -- Implementation
 
-	visual_widget: POINTER is
-		do
-			Result := drawing_area_widget
-		end
-
-	drawing_area_widget: POINTER
-
 	drawable: POINTER is
 		do
-			Result := C.gtk_widget_struct_window (drawing_area_widget)
+			Result := C.gtk_widget_struct_window (c_object)
 		end
 
 end -- class EV_DRAWING_AREA_IMP

@@ -59,7 +59,7 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 			-- Create `Current'.
 		do
 			base_make (an_interface)
-			create wel_font.make_indirect (default_wel_log_font)
+			create wel_font.make_indirect (Default_wel_log_font)
 
 				-- Create and setup the preferred font face mechanism
 			create preferred_families
@@ -68,11 +68,11 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Initialization
 
 				-- Retrieve shape, weight and family from
 				-- the default font returned by Windows.
-			shape := convert_font_shape(default_wel_log_font.italic)
-			weight := convert_font_weight(default_wel_log_font.weight)
+			shape := convert_font_shape(Default_wel_log_font.italic)
+			weight := convert_font_weight(Default_wel_log_font.weight)
 			family := family_screen
-			internal_face_name := default_wel_log_font.face_name
-			update_internal_is_proportional(default_wel_log_font)
+			internal_face_name := Default_wel_log_font.face_name
+			update_internal_is_proportional(Default_wel_log_font)
 		end
 
 
@@ -105,12 +105,12 @@ feature -- Element change
 			-- Set `a_family' as preferred font category.
 		do
 				-- retrieve current values
-			wel_log_font.update_by_font(wel_font)
+			Wel_log_font.update_by_font(wel_font)
 
 				-- change value
 			family := a_family
 
-				-- commit changes to `wel_log_font' into `wel_font'.
+				-- commit changes to `Wel_log_font' into `wel_font'.
 			update_font_face
 		end
 
@@ -118,53 +118,53 @@ feature -- Element change
 			-- Set `a_weight' as preferred font thickness.
 		do
 				-- retrieve current values
-			wel_log_font.update_by_font(wel_font)
+			Wel_log_font.update_by_font(wel_font)
 
 				-- change value
 			weight := a_weight
 			inspect weight
 			when weight_thin then
-				wel_log_font.set_weight (100)
+				Wel_log_font.set_weight (100)
 			when weight_regular then
-				wel_log_font.set_weight (400)
+				Wel_log_font.set_weight (400)
 			when weight_bold then
-				wel_log_font.set_weight (700)
+				Wel_log_font.set_weight (700)
 			when weight_black then
-				wel_log_font.set_weight (900)
+				Wel_log_font.set_weight (900)
 			else
 				check impossible: False end
 			end
 
-				-- commit changes to `wel_log_font' into `wel_font'.
-			wel_font.set_indirect (wel_log_font)
+				-- commit changes to `Wel_log_font' into `wel_font'.
+			wel_font.set_indirect (Wel_log_font)
 		end
 
 	set_shape (a_shape: INTEGER) is
 			-- Set `a_shape' as preferred font slant.
 		do
 				-- retrieve current values
-			wel_log_font.update_by_font(wel_font)
+			Wel_log_font.update_by_font(wel_font)
 
 				-- change value
 			shape := a_shape
 			inspect shape
 			when shape_regular then
-				wel_log_font.set_not_italic
+				Wel_log_font.set_not_italic
 			when shape_italic then
-				wel_log_font.set_italic
+				Wel_log_font.set_italic
 			else
 				check impossible: False end
 			end
 
-				-- commit changes to `wel_log_font' into `wel_font'.
-			wel_font.set_indirect (wel_log_font)
+				-- commit changes to `Wel_log_font' into `wel_font'.
+			wel_font.set_indirect (Wel_log_font)
 		end
 
 	set_height (a_height: INTEGER) is
 			-- Set `a_height' as preferred font size in pixels.
 		do
 			wel_font.set_height (a_height)
-			wel_log_font.update_by_font (wel_font) 
+			Wel_log_font.update_by_font (wel_font) 
 		end
 
 feature -- Status report
@@ -260,24 +260,24 @@ feature {EV_FONTABLE_IMP, EV_FONT_DIALOG_IMP} -- Access
 			-- Set state by passing an already created WEL_FONT.
 		do
 			wel_font := wf
-			wel_log_font.update_by_font (wel_font)
-			shape := convert_font_shape(wel_log_font.italic)
-			weight := convert_font_weight(wel_log_font.weight)
-			family := convert_font_family(wel_log_font.family,
-				wel_log_font.pitch)
+			Wel_log_font.update_by_font (wel_font)
+			shape := convert_font_shape(Wel_log_font.italic)
+			weight := convert_font_weight(Wel_log_font.weight)
+			family := convert_font_family(Wel_log_font.family,
+				Wel_log_font.pitch)
 			preferred_families.wipe_out
-			preferred_families.extend (clone(wel_log_font.face_name))
+			preferred_families.extend (clone(Wel_log_font.face_name))
 		end
 
 feature {EV_ANY_I} -- Implementation
 
-	wel_log_font: WEL_LOG_FONT is
+	Wel_log_font: WEL_LOG_FONT is
 			-- Structure used to specify font characteristics.
 		once
 			create Result.make_by_font (gui_font)
 		end
 
-	default_wel_log_font: WEL_LOG_FONT is
+	Default_wel_log_font: WEL_LOG_FONT is
 			-- Structure used to initialize fonts.
 		once
 			create Result.make_by_font (gui_font)
@@ -297,9 +297,9 @@ feature {EV_ANY_I} -- Implementation
 	update_preferred_faces (a_face: STRING) is
 		do
 				-- retrieve current values
-			wel_log_font.update_by_font(wel_font)
+			Wel_log_font.update_by_font(wel_font)
 
-				-- commit changes to `wel_log_font' into `wel_font'.
+				-- commit changes to `Wel_log_font' into `wel_font'.
 			update_font_face
 		end
 
@@ -313,24 +313,24 @@ feature {EV_ANY_I} -- Implementation
 				-- First, set the family
 			inspect family
 			when family_screen then
-				wel_log_font.set_family(wel_screen_font_family)
-				wel_log_font.set_pitch(wel_screen_font_pitch)
+				Wel_log_font.set_family(wel_screen_font_family)
+				Wel_log_font.set_pitch(wel_screen_font_pitch)
 
 			when family_roman then
-				wel_log_font.set_roman_family
-				wel_log_font.set_variable_pitch
+				Wel_log_font.set_roman_family
+				Wel_log_font.set_variable_pitch
 
 			when family_sans then
-				wel_log_font.set_swiss_family
-				wel_log_font.set_variable_pitch
+				Wel_log_font.set_swiss_family
+				Wel_log_font.set_variable_pitch
 
 			when family_typewriter then
-				wel_log_font.set_modern_family
-				wel_log_font.set_fixed_pitch
+				Wel_log_font.set_modern_family
+				Wel_log_font.set_fixed_pitch
 
 			when family_modern then
-				wel_log_font.set_modern_family
-				wel_log_font.set_variable_pitch
+				Wel_log_font.set_modern_family
+				Wel_log_font.set_variable_pitch
 			else
 				check impossible: False end
 			end
@@ -348,39 +348,39 @@ feature {EV_ANY_I} -- Implementation
 					preferred_families.forth
 				end
 				if found then
-					wel_log_font.set_face_name (lower_face)
+					Wel_log_font.set_face_name (lower_face)
 				else
 						-- Preferred face not found, leave Windows do
 						-- its best.
-					wel_log_font.set_face_name ("")
+					Wel_log_font.set_face_name ("")
 				end
 			else
 					-- Leave Windows choose the font that best
 					-- match our attributes.
-				wel_log_font.set_face_name ("")
+				Wel_log_font.set_face_name ("")
 			end
 
-				-- commit changes to `wel_log_font' into `wel_font'.
-			wel_font.set_indirect (wel_log_font)
+				-- commit changes to `Wel_log_font' into `wel_font'.
+			wel_font.set_indirect (Wel_log_font)
 
 				-- retrieve values set by windows
-			wel_log_font.update_by_font(wel_font)
+			Wel_log_font.update_by_font(wel_font)
 
 				-- Update internal attributes.
-			internal_face_name := clone(wel_log_font.face_name)
-			update_internal_is_proportional(wel_log_font)
+			internal_face_name := clone(Wel_log_font.face_name)
+			update_internal_is_proportional(Wel_log_font)
 		end
 
 	set_name (str: STRING) is
 			-- sets the name of the current font
 		do
 				-- retrieve current values
-			wel_log_font.update_by_font(wel_font)
+			Wel_log_font.update_by_font(wel_font)
 
 				-- change value
-			wel_log_font.set_face_name (str)
+			Wel_log_font.set_face_name (str)
 
-				-- commit changes to `wel_log_font' into `wel_font'.
+				-- commit changes to `Wel_log_font' into `wel_font'.
 			update_font_face
 		end
 
@@ -389,12 +389,12 @@ feature {EV_ANY_I} -- Implementation
 			-- Let toolkit find the best matching name.
 		do
 				-- retrieve current values
-			wel_log_font.update_by_font(wel_font)
+			Wel_log_font.update_by_font(wel_font)
 
 				-- change value (Leave windows choose the font)
-			wel_log_font.set_face_name ("")
+			Wel_log_font.set_face_name ("")
 
-				-- commit changes to `wel_log_font' into `wel_font'.
+				-- commit changes to `Wel_log_font' into `wel_font'.
 			update_font_face
 		end
 
@@ -404,7 +404,7 @@ feature {EV_ANY_I} -- Implementation
 	internal_is_proportional: BOOLEAN
 		-- Is the font proportional? (or fixed).
 
-	update_internal_is_proportional(logfont: WEL_LOG_FONT) is
+	update_internal_is_proportional(logfont: Wel_log_font) is
 		do	
 			if logfont.pitch = Default_pitch then
 				internal_is_proportional := not (logfont.family = Ff_modern)
@@ -568,15 +568,15 @@ feature {NONE} -- Not used
 			-- Set the charset to a value based on `a_charset'.
 		do
 			if a_charset.is_equal ("ansi") then
-				wel_log_font.set_ansi_character_set
+				Wel_log_font.set_ansi_character_set
 			elseif a_charset.is_equal ("oem") then
-				wel_log_font.set_oem_character_set
+				Wel_log_font.set_oem_character_set
 			elseif a_charset.is_equal ("symbol") then
-				wel_log_font.set_symbol_character_set
+				Wel_log_font.set_symbol_character_set
 			elseif a_charset.is_equal ("unicode") then
-				wel_log_font.set_unicode_character_set
+				Wel_log_font.set_unicode_character_set
 			else
-				wel_log_font.set_default_character_set
+				Wel_log_font.set_default_character_set
 			end
 		end
 
@@ -584,11 +584,11 @@ feature {NONE} -- Not used
 			-- Set the clip precision based on `a_clip_precision'.
 		do
 			if a_clip_precision.is_equal ("character") then
-				wel_log_font.set_character_clipping_precision
+				Wel_log_font.set_character_clipping_precision
 			elseif a_clip_precision.is_equal ("stroke") then
-				wel_log_font.set_stroke_clipping_precision
+				Wel_log_font.set_stroke_clipping_precision
 			else
-				wel_log_font.set_default_clipping_precision
+				Wel_log_font.set_default_clipping_precision
 			end
 		end
 
@@ -596,9 +596,9 @@ feature {NONE} -- Not used
 			-- Set escapement based on value of `an_escapement'.
 		do
 			if an_escapement /= Void and an_escapement.is_integer then
-				wel_log_font.set_escapement (an_escapement.to_integer)
+				Wel_log_font.set_escapement (an_escapement.to_integer)
 			else	
-				wel_log_font.set_escapement (0)
+				Wel_log_font.set_escapement (0)
 			end
 		end
 
@@ -606,9 +606,9 @@ feature {NONE} -- Not used
 			-- Set the orientation based on the value of `an_orientation'.
 		do
 			if an_orientation /= Void and then an_orientation.is_integer then
-				wel_log_font.set_orientation (an_orientation.to_integer)
+				Wel_log_font.set_orientation (an_orientation.to_integer)
 			else
-				wel_log_font.set_orientation (0)
+				Wel_log_font.set_orientation (0)
 			end
 		end
 
@@ -616,13 +616,13 @@ feature {NONE} -- Not used
 			-- Set the precision based on the value of `a_precision'.
 		do
 			if a_precision.is_equal ("character") then
-				wel_log_font.set_character_output_precision
+				Wel_log_font.set_character_output_precision
 			elseif a_precision.is_equal ("string") then
-				wel_log_font.set_string_output_precision
+				Wel_log_font.set_string_output_precision
 			elseif a_precision.is_equal ("stroke") then
-				wel_log_font.set_stroke_output_precision
+				Wel_log_font.set_stroke_output_precision
 			else
-				wel_log_font.set_default_output_precision
+				Wel_log_font.set_default_output_precision
 			end
 		end
 
@@ -630,11 +630,11 @@ feature {NONE} -- Not used
 			-- Set pitch based on value in `a_pitch'.
 		do
 			if a_pitch.is_equal ("fixed") then
-				wel_log_font.set_fixed_pitch
+				Wel_log_font.set_fixed_pitch
 			elseif a_pitch.is_equal ("variable") then
-				wel_log_font.set_variable_pitch
+				Wel_log_font.set_variable_pitch
 			else
-				wel_log_font.set_default_pitch
+				Wel_log_font.set_default_pitch
 			end
 		end
 
@@ -642,35 +642,35 @@ feature {NONE} -- Not used
 			-- Set quality based on value in `a_quality'.
 		do
 			if a_quality.is_equal ("draft") then
-				wel_log_font.set_draft_quality
+				Wel_log_font.set_draft_quality
 			elseif a_quality.is_equal ("proof") then
-				wel_log_font.set_proof_quality
+				Wel_log_font.set_proof_quality
 			else
-				wel_log_font.set_default_quality
+				Wel_log_font.set_default_quality
 			end
 		end
 
 	set_styles (styles: STRING) is
 			-- Set the style based on values in `styles'.
 		do
-			wel_log_font.set_not_italic
-			wel_log_font.set_not_underlined
-			wel_log_font.set_not_strike_out
+			Wel_log_font.set_not_italic
+			Wel_log_font.set_not_underlined
+			Wel_log_font.set_not_strike_out
 			if styles /= Void then
 				if styles.has ('i') then
-					wel_log_font.set_italic
+					Wel_log_font.set_italic
 				end
 				if styles.has ('u') then
-					wel_log_font.set_underlined
+					Wel_log_font.set_underlined
 				end
 				if styles.has ('s') then
-					wel_log_font.set_strike_out
+					Wel_log_font.set_strike_out
 				end
 			end
 		end
 
 invariant
-	wel_log_font_exists: wel_log_font /= Void
+	wel_log_font_exists: Wel_log_font /= Void
 	wel_font_exists: wel_font /= Void
 
 end -- class EV_FONT_IMP

@@ -11,6 +11,10 @@ inherit
 
 	EB_TOOL_MANAGER
 
+	EB_SHARED_INTERFACE_TOOLS
+
+	INTERFACE_NAMES
+
 feature -- Initialization
 
 	initialize_main_menu is
@@ -84,6 +88,24 @@ feature {EB_TOOL} -- Tool management
 			hidden: not shown
 		end
 
+feature -- Resize
+
+	set_tool_size (t: like tool; new_width, new_height: INTEGER) is
+		do
+			set_size (new_width, new_height)
+		end
+
+	set_tool_width (t: like tool; new_width: INTEGER) is
+		do
+			set_width (new_width)
+		end
+
+	set_tool_height (t: like tool; new_height: INTEGER) is
+		do
+			set_height (new_height)
+		end
+
+
 feature -- Tool status report
 
 	tool_title: STRING is
@@ -112,5 +134,36 @@ feature {NONE} -- Implementation
 	
 	menu_bar: EV_STATIC_MENU_BAR
 			-- Menu bar for the window
+
+	build_windows_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+			-- Builds the standart windows items in `a_menu'
+		local
+			i: EV_MENU_ITEM
+			create_class_cmd: EB_CREATE_CLASS_CMD
+			create_feature_cmd: EB_CREATE_FEATURE_CMD
+			create_object_cmd: EB_CREATE_OBJECT_CMD
+			show_preferences: EB_SHOW_PREFERENCE_TOOL
+			raise_project_tool: EB_RAISE_TOOL_CMD
+		do
+			create create_class_cmd.make (project_tool)
+			create i.make_with_text (a_menu, m_New_class)
+			i.add_select_command (create_class_cmd, Void)
+
+			create create_feature_cmd.make (project_tool)
+			create i.make_with_text (a_menu, m_New_routine)
+			i.add_select_command (create_feature_cmd, Void)
+
+			create create_object_cmd.make (project_tool)
+			create i.make_with_text (a_menu, m_New_object)
+			i.add_select_command (create_object_cmd, Void)
+
+			create show_preferences.make
+			create i.make_with_text (a_menu, m_Preferences)
+			i.add_select_command (show_preferences, Void)
+
+			create raise_project_tool.make (project_tool)
+			create i.make_with_text (a_menu, m_Raise_project)
+			i.add_select_command (raise_project_tool, Void)
+		end	
 
 end -- class EB_TOOL_WINDOW

@@ -108,7 +108,15 @@ feature -- Saving
 				st.new_line
 			end
 		end
+		
+feature -- Setting
 
+	set_prefix_name (name: like prefix_name) is
+			-- Assgin `name' to `prefix_name'.
+		do
+			prefix_name := name
+		end
+		
 invariant
 	cluster_name_not_void: cluster_name /= Void
 	assembly_name_not_void: assembly_name /= Void

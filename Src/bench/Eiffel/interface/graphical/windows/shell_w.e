@@ -63,8 +63,10 @@ feature {NONE} -- Implementation
 				cmd_name := associcated_command.command_shell_name;
 				cmd_name.wipe_out;
 				cmd_name.append (clone (selection_text));
+				unrealize;
 				popdown
 			elseif argument = cancel_it then
+				unrealize;
 				popdown
 			end
 		end;

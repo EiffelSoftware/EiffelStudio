@@ -57,8 +57,8 @@ feature -- Basic operations
 			local
 				dialog: EV_FILE_OPEN_DIALOG
 				project_settings: GB_PROJECT_SETTINGS
-				file: RAW_FILE
 				opened: BOOLEAN
+				file_handler: GB_SIMPLE_XML_FILE_HANDLER
 			do
 				create dialog
 				dialog.set_filter (project_file_filter)
@@ -80,12 +80,15 @@ feature -- Basic operations
 						-- If the ok button was clicked and the file name exists,
 						-- then we attempt to open it.
 					if not dialog.file_name.is_empty and valid_file_name (dialog.file_name) then
+						create file_handler
 						create project_settings
-						project_settings.load (dialog.file_name)
-						system_status.set_current_project (project_settings)
-						xml_handler.load
-						system_status.main_window.show_tools
-						command_handler.update
+						project_settings.load (dialog.file_name, file_handler)
+						if file_handler.last_load_successful then
+							system_status.set_current_project (project_settings)
+							xml_handler.load
+							system_status.main_window.show_tools
+							command_handler.update
+						end	
 					end
 				end
 			end

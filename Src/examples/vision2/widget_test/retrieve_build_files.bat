@@ -66,6 +66,8 @@ XCOPY /Y Src\Build2\interface\widgets\containers\gb_ev_viewport_editor_construct
 REM Copy any required dialogs
 XCOPY /Y Src\Build2\dialogs\gb_fixed_positioner\gb_fixed_positioner.e .\interface
 XCOPY /Y Src\Build2\dialogs\gb_fixed_positioner\gb_fixed_positioner_imp.e .\interface
+XCOPY /Y Src\Build2\dialogs\gb_table_positioner\gb_table_positioner.e .\interface
+XCOPY /Y Src\Build2\dialogs\gb_table_positioner\gb_table_positioner_imp.e .\interface
 XCOPY /Y Src\Build2\dialogs\constants.e .\interface
 
 XCOPY /E /I /Y Src\Build2\interface\events .\interface\events

@@ -195,8 +195,10 @@ rt_public void allocate_gen_buffer ()
 		char g_status = g_data.status;
 
 		g_data.status |= GC_STOP;
-		general_buffer = (char *) xmalloc (buffer_size * sizeof (char), C_T, GC_OFF);
-/* FIXME: hubert => EIF_BUFFER_ALLOCATED_SIZE instead of buffer_size ???*/
+		general_buffer = (char *) xmalloc (EIF_BUFFER_ALLOCATED_SIZE * sizeof (char), C_T, GC_OFF);
+/* FIXME: EIF_BUFFER_ALLOCATED_SIZE = buffer_size + padding size
+if no compression, use buffer_size -> 1k instead of 32k + padding
+*/
 		if (general_buffer == (char *) 0)
 			eraise ("out of memory", EN_PROG);
 

@@ -51,7 +51,8 @@ feature {NONE}-- Initialization
 			
 				-- Initialize properties of all widgets.
 			set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			set_title ("Display window")
+			disable_user_resize
+			set_title ("Test Generation")
 			l_vertical_box_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_vertical_box_1.disable_item_expand (l_cell_1)
 			l_vertical_box_1.disable_item_expand (l_horizontal_box_3)

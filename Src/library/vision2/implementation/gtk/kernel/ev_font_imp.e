@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 			from
 				i := try_string_array.lower
 			until
-				temp_font /= Void or i > try_string_array.upper
+				(temp_font /= Void and then not (temp_font.c_object = default_pointer)) or i > try_string_array.upper
 			loop
 				temp_font := match_preferred_face (try_string_array.item (i))
 				i := i + 1

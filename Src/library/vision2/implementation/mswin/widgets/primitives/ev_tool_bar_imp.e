@@ -54,7 +54,6 @@ inherit
 	WEL_FLAT_TOOL_BAR
 		rename
 			make as wel_make,
---| FIXME			button_count as count,
 			insert_button as wel_insert_button,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
@@ -234,9 +233,6 @@ feature -- Element change
 
 			-- Finally, we insert the button
 			wel_insert_button (an_index - 1, but)
-			--children.put (button, button.id)
-	--		ev_children.go_i_th (an_index - 1)
-	--		ev_children.put_right (button)
 
 			-- We notify the change to integrate them if necessary
 			notify_change (2 + 1)
@@ -249,8 +245,6 @@ feature -- Element change
 		do
 			id1 := ev_children.index_of (button, 1)
 			delete_button (internal_get_index (button))
-		--	ev_children.go_i_th (id1)
-		--	ev_children.remove
 			notify_change (2 + 1)
 		end
 
@@ -708,6 +702,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/04/24 22:26:47  rogers
+--| Removed redundent code.
+--|
 --| Revision 1.54  2000/04/20 01:16:05  pichery
 --| Fixed call to an obsolete feature
 --|

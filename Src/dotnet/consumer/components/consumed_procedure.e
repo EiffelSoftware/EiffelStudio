@@ -31,24 +31,24 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 		do
 			member_make (en, dn, pub, a_type)
-			arguments := args
+			a := args
 			if froz or not virt then
-				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_frozen
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_frozen
 			end
 			if static then
-				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_static
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_static
 			end
 			if defer then
-				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_deferred
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_deferred
 			end
 			if ns then
-				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_newslot
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_newslot
 			end
 			if virt then
-				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_virtual
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_virtual
 			end
 			if poe then
-				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_property_or_event				
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_property_or_event				
 			end
 		ensure
 			eiffel_name_set: eiffel_name = en
@@ -66,8 +66,11 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	arguments: ARRAY [CONSUMED_ARGUMENT]
+	arguments: ARRAY [CONSUMED_ARGUMENT] is
 			-- Feature arguments
+		do
+			Result := a
+		end
 
 feature -- Status report
 
@@ -77,6 +80,11 @@ feature -- Status report
 			Result := arguments /= Void and then arguments.count /= 0
 		end
 		
+feature {NONE} -- Access
+
+	a: like arguments
+			-- Internal data for `arguments'.
+
 invariant
 	non_void_arguments: arguments /= Void
 

@@ -17,27 +17,35 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: STRING; id: INTEGER; e: like element_type) is
-			-- Initialize Current with type name `n' defined in assembly `id'
-			-- where elements are of type `e'.
+	make (a_name: STRING; id: INTEGER; t: like element_type) is
+			-- Initialize Current with type name `a_name' defined in assembly `id'
+			-- where elements are of type `t'.
 		require
-			name_not_void: n /= Void
-			name_not_empty: not n.is_empty
+			name_not_void: a_name /= Void
+			name_not_empty: not a_name.is_empty
 			id_positive: id > 0
-			e_not_void: e /= Void
+			t_not_void: t /= Void
 		do
-			referenced_type_make (n, id)
-			element_type := e
+			referenced_type_make (a_name, id)
+			e := t
 		ensure
-			name_set: name = n
+			name_set: name = a_name
 			id_set: assembly_id = id
-			element_type_set: element_type = e
+			element_type_set: element_type = t
 		end
 		
 feature -- Access
 
-	element_type: CONSUMED_REFERENCED_TYPE
+	element_type: CONSUMED_REFERENCED_TYPE is
 			-- Type of array element.
+		do
+			Result := e
+		end
+
+feature {NONE} -- Access
+
+	e: like element_type
+			-- Internal data for `element_type'.
 
 invariant
 	element_type_not_void: element_type /= Void

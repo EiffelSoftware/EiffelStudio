@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 		do
 			entity_make (en, pub, a_type)
-			arguments := args
+			a := args
 		ensure
 			eiffel_name_set: eiffel_name = en
 			arguments_set: arguments = args
@@ -41,11 +41,17 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	arguments: ARRAY [CONSUMED_ARGUMENT]
+	arguments: ARRAY [CONSUMED_ARGUMENT] is
 			-- Constructor arguments
+		do
+			Result := a
+		end
 
-	is_public: BOOLEAN
+	is_public: BOOLEAN is
 			-- Is constructor public?
+		do
+			Result := p
+		end
 
 	is_frozen: BOOLEAN is True
 			-- A constructor cannot be redefined.
@@ -66,10 +72,18 @@ feature -- Settings
 	set_is_public (pub: like is_public) is
 			-- Set `is_public' with `pub'.
 		do
-			is_public := pub
+			p := pub
 		ensure
 			is_public_set: is_public = pub
 		end
+
+feature {NONE} -- Access
+
+	a: like arguments
+			-- Internal data for `arguments'.
+	
+	p: like is_public
+			-- Internal data for `is_public'.
 
 invariant
 	non_void_arguments: arguments /= Void

@@ -201,9 +201,11 @@ feature -- Inlining
 
 	pre_inlined_code: like Current is
 		do  
-			check
-				not_called: False
-			end
+				-- We now return Current even if usually byte code contains an
+				-- HECTOR_B node cannot be inlined. This is to make the manual
+				-- inlining of `element_address' and `base_address' of SPECIAL
+				-- possible.
+			Result := Current
 		end
 
 	inlined_byte_code: like Current is

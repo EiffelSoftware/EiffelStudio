@@ -184,7 +184,7 @@ feature -- Melting
 			until
 				after
 			loop
-				if not item.class_type.is_precompiled then
+				if item.class_type.is_modifiable then
 					actual_count := actual_count + 1
 				end;
 				forth
@@ -211,67 +211,8 @@ feature -- Melting
 			until
 				after
 			loop
-				if not item.class_type.is_precompiled then
+				if item.class_type.is_modifiable then
 					item.make_byte_code (ba);
-				end;
-				forth
-			end
-		end;
-
-feature -- DLE
-
-	melt_dle is
-			-- Melt the list of descriptors
-			-- Format:
-			--    1) Number of descriptors (short)
-			--    2) Sequence of descriptor byte code
-		require
-			dynamic_system: System.is_dynamic
-		local
-			ba: BYTE_ARRAY;
-			md: MELTED_DESC;
-			actual_count: INTEGER
-		do
-				-- Initialization.
-			ba := Byte_array;
-			ba.clear;
-
-			from
-				start
-			until
-				after
-			loop
-				if item.class_type.is_dynamic then
-					actual_count := actual_count + 1
-				end;
-				forth
-			end;
-				-- Write the number descriptors.
-			ba.append_integer (actual_count);
-
-				-- Append the byte of each individual
-				-- class type descriptor.
-			make_dle_byte_code (ba);
-
-				-- Put the byte code in server.
-			md := ba.melted_descriptor;
-			md.set_class_id (base_class.id);
-			Tmp_m_desc_server.put (md)
-		end;
-
-	make_dle_byte_code (ba: BYTE_ARRAY) is
-			-- Append the byte code of each individual 
-			-- descriptor to `ba'
-		require
-			dynamic_system: System.is_dynamic
-		do
-			from
-				start
-			until
-				after
-			loop
-				if item.class_type.is_dynamic then
-					item.make_byte_code (ba)
 				end;
 				forth
 			end

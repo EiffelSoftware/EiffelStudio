@@ -49,7 +49,6 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
-			on_key_down,
 			on_draw_item,
 			on_menu_command
 		redefine
@@ -71,7 +70,9 @@ feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create a fixed widget with, `par' as
-			-- parent
+			-- parent.
+			-- We cannot use make if we want to have access
+			-- to the creation data.
 		local
 			wel_imp: WEL_WINDOW
 		do
@@ -208,6 +209,16 @@ feature -- Implementation
 		do
 			{EV_CONTAINER_IMP} Precursor (child_imp)
 			child_imp.hide
+		end
+
+	top_level_window_imp: WEL_WINDOW
+			-- Top level window that contains the current widget.
+
+	set_top_level_window_imp (a_window: WEL_WINDOW) is
+			-- Make `a_window' the new `top_level_window_imp'
+			-- of the widget.
+		do
+			top_level_window_imp := a_window
 		end
 
 feature {NONE} -- Implementation for automatic size compute

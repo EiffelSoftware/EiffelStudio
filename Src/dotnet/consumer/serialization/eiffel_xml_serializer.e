@@ -42,7 +42,6 @@ feature -- Basic Operations
 		local
 			f: STREAM_WRITER
 			retried: BOOLEAN
-			r: SYSTEM_RANDOM
 		do
 			create serialized_references.make_1 (25)
 			last_error := No_error

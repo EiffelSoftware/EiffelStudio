@@ -46,7 +46,7 @@ feature -- Conversion
 
 	-- FIXME this is a hack and needs to be thought over.
 
-   eiffel_to_c (o: ANY): POINTER is
+  	 eiffel_to_c (o: ANY): POINTER is
 			-- Try to convert any eiffel object into
 			-- a useful C structrue.
 			-- Supports:

@@ -10,6 +10,7 @@ inherit
 			print_register, propagate,
 			free_register, enlarged, used,
 			has_gcable_variable, has_call,
+			allocates_memory,
 			make_byte_code, is_unsafe,
 			calls_special_features,
 			optimized_byte_node, size,
@@ -50,6 +51,11 @@ feature
 			-- Is the expression using a call ?
 		do
 			Result := expr.has_call;
+		end;
+
+	allocates_memory: BOOLEAN is
+		do
+			Result := expr.allocates_memory
 		end;
 
 	used (r: REGISTRABLE): BOOLEAN is

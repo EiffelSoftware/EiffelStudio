@@ -9,9 +9,10 @@ inherit
 			register, set_register,
 			analyze, generate,
 			propagate, print_register,
-			is_simple_expr, unanalyze
+			is_simple_expr, unanalyze,
+			allocates_memory
 		end;
-	
+
 feature 
 
 	register: REGISTRABLE;
@@ -79,7 +80,9 @@ feature
 			generated_file.putchar(')');
 		end;
 
-	is_simple_expr: BOOLEAN is true;
+	is_simple_expr: BOOLEAN is True;
 			-- A string is a simple expression
+
+	allocates_memory: BOOLEAN is True;
 
 end

@@ -11,7 +11,8 @@ inherit
 			is_feature_call, basic_register, generate_parameters_list,
 			generate_access_on_type, is_polymorphic, has_call,
 			set_register, register, set_parent, parent, generate_access,
-			generate_on, analyze_on, analyze, generate_special_feature
+			generate_on, analyze_on, analyze, generate_special_feature,
+			allocates_memory
 		end;
 	FEATURE_B
 		redefine
@@ -19,7 +20,8 @@ inherit
 			is_feature_call, basic_register, generate_parameters_list,
 			generate_access_on_type, is_polymorphic, has_call,
 			set_register, register, set_parent, parent, generate_access,
-			generate_on, analyze_on, analyze, generate_special_feature
+			generate_on, analyze_on, analyze, generate_special_feature,
+			allocates_memory
 		select
 			free_register
 		end;
@@ -304,7 +306,9 @@ end;
 			end;
 		end
 
-	has_call: BOOLEAN is true;
-			-- The expression as at least one call
+	has_call: BOOLEAN is True;
+			-- The expression has at least one call
+
+	allocates_memory: BOOLEAN is True;
 
 end

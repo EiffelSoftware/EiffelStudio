@@ -9,7 +9,7 @@ inherit
 			propagate, print_register,
 			analyze, unanalyze, generate, enlarged,
 			free_register, has_gcable_variable,
-			has_call, make_byte_code,
+			has_call, allocates_memory, make_byte_code,
 			is_unsafe, optimized_byte_node, calls_special_features,
 			size, pre_inlined_code, inlined_byte_code
 		end;
@@ -87,6 +87,11 @@ feature
 			-- Is the expression using a call ?
 		do
 			Result := left.has_call or right.has_call;
+		end;
+
+	allocates_memory: BOOLEAN is
+		do
+			Result := left.allocates_memory or right.allocates_memory
 		end;
 
 	used (r: REGISTRABLE): BOOLEAN is

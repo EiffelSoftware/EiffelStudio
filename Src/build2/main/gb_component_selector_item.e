@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			set_pebble_function (agent generate_pebble)	
 			create component.make_with_name (a_name)
 			create pixmaps
-			set_pixmap (pixmaps.pixmap_by_name (component.root_element_type))
+			set_pixmap (pixmaps.pixmap_by_name (component.root_element_type.as_lower))
 		end
 
 feature {NONE} -- Implementation

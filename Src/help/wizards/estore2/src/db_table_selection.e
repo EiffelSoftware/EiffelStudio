@@ -92,10 +92,10 @@ feature -- basic Operations
 
 			unselected_items.enable_multiple_selection
 			selected_items.enable_multiple_selection
-			unselected_items.select_actions.extend (~enable_add_b)
-			unselected_items.deselect_actions.extend (~enable_add_b)
-			selected_items.select_actions.extend (~enable_remove_b)
-			selected_items.deselect_actions.extend (~enable_remove_b)
+			unselected_items.select_actions.extend (agent enable_add_b)
+			unselected_items.deselect_actions.extend (agent enable_add_b)
+			selected_items.select_actions.extend (agent enable_remove_b)
+			selected_items.deselect_actions.extend (agent enable_remove_b)
 
 			add_b.disable_sensitive
 			remove_b.disable_sensitive
@@ -210,22 +210,14 @@ feature -- basic Operations
 			remove_b.disable_sensitive
 		end
 
-	enable_add_b (it: EV_LIST_ITEM) is
+	enable_add_b is
 		do
-			if unselected_items.selected_item = Void then
-				add_b.disable_sensitive
-			else
-				add_b.enable_sensitive
-			end
+			add_b.enable_sensitive
 		end
 
-	enable_remove_b (it: EV_LIST_ITEM) is
+	enable_remove_b is
 		do
-			if selected_items.selected_item = Void then
-				remove_b.disable_sensitive
-			else
-				remove_b.enable_sensitive
-			end
+			remove_b.disable_sensitive
 		end
 
 	proceed_with_current_info is 

@@ -22,36 +22,15 @@ feature {NONE}
 			Result := main_panel.base
 		end
 	
---	main_panel: MAIN_PANEL is
---		once
---			!! Result.make (eb_screen)
---		end
-
 	main_panel: MAIN_PANEL is
 		once
 			!! Result.make (eb_screen)
 		end
 
--- 	context_catalog: CONTEXT_CATALOG  is
--- 		once
--- 			!! Result.make
--- 		end
-
 	context_catalog: CONTEXT_CATALOG is
 		once
---			Result := new_main_panel.context_catalog_widget
 			Result := main_panel.context_catalog_widget
 		end
-
---	current_mode: CURRENT_MODE_DLG is
---		once
---			!! Result.make 
---		end
-
---	application_object_window: APPLICATION_OBJECT_WINDOW is
---		once
---			!! Result.make
---		end
 
 feature {NONE} -- Initial windowing
 
@@ -138,14 +117,18 @@ feature {NONE} -- Windows
 			!! Result.make (eb_screen)
 		end
 
--- 	tree: CONTEXT_TREE is
--- 		once
--- 			!! Result.make (eb_screen)
--- 		end
+	class_selector: CLASS_SELECTOR is
+		once
+			!! Result.make ("", eb_screen)
+		end
+
+	object_tool_generator: OBJECT_TOOL_GENERATOR is
+		once
+			!! Result.make ("", eb_screen)
+		end
 
 	tree: CONTEXT_TREE is
 		once
---			Result := new_main_panel.context_tree_widget
 			Result := main_panel.context_tree_widget
 		end
 

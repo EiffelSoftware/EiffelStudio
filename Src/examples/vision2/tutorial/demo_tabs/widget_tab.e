@@ -14,6 +14,7 @@ inherit
 			current_widget,
 			set_current_widget
 		end
+	EV_BASIC_COLORS
 
 creation
 	make
@@ -24,6 +25,8 @@ feature -- Initialization
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
+			available_colors: LINKED_LIST[EV_COLOR]
+			l1: EV_LIST_ITEM
 		do
 			{ANY_TAB} Precursor (par)
 				
@@ -46,6 +49,23 @@ feature -- Initialization
 			!!cmd1.make (~set_min_height)
 			!!cmd2.make (~get_min_height)
 			create f6.make (Current, 5, 0, "Min Height", cmd1, cmd2)
+			create cmd2.make (~back_color)
+			create c1.make (Current, 6, 0, "Background Color", cmd2, cmd2)
+			create cmd2.make (~fore_color)
+			create c2.make (Current, 7, 0, "Foreground Color", cmd2, cmd2)
+			available_colors:= all_colors
+			from
+				available_colors.start
+			until
+				available_colors.off
+			loop
+				create l1.make_with_text (c1.combo, available_colors.item.name)
+				l1.set_data (available_colors.item)
+				create l1.make_with_text (c2.combo, available_colors.item.name)
+				l1.set_data (available_colors.item)
+				available_colors.forth
+			end
+
 		end
 
 feature -- element change
@@ -78,8 +98,10 @@ feature -- Access
 	current_widget: EV_WIDGET
 			-- Current widget we are working on. 
 
-	f1, f2, f3, f4, f5, f6: TEXT_FEATURE_MODIFIER
-			-- Some modifiers.
+	f1, f2, f3, f4, f5, f6, f7, f8: TEXT_FEATURE_MODIFIER
+			-- Some text modifiers.
+	c1, c2: COMBO_FEATURE_MODIFIER
+			-- Combo feture modifiers.
 
 
 feature -- Execution feature
@@ -166,6 +188,40 @@ feature -- Execution feature
 			if f6.get_text.is_integer then
 				current_widget.set_minimum_height(f6.get_text.to_integer)	
 			end
-		end 
+		end
+
+	back_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Set background color.
+		local
+			current_color: EV_COLOR
+			drawable_test: EV_DRAWING_AREA
+		do
+			if c1.combo.selected then
+				current_color ?= c1.combo.selected_item.data
+				current_widget.set_background_color(current_color)
+				drawable_test ?= current_widget
+					-- Is the current widget a drawing area?
+				if drawable_test /= Void then
+					drawable_test.clear	
+				end
+			end
+		end
+
+	fore_color (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Set foreground color.
+		local
+			current_color: EV_COLOR
+			drawable_test: EV_DRAWING_AREA
+		do
+			if c2.combo.selected then
+				current_color ?= c2.combo.selected_item.data
+				current_widget.set_foreground_color(current_color)
+				drawable_test ?= current_widget
+					-- Is the current widget a drawing area?
+				if drawable_test /= Void then
+					drawable_test.clear	
+				end
+			end
+		end
 
 end -- class WIDGET_TAB

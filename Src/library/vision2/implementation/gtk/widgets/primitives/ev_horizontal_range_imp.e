@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			-- Parameters are:
 			-- value, lower, upper, step_increment, page_increment.
 			widget := c_gtk_hscale_new (0, 0, 100, 1, 5)
+			gtk_scale_set_digits (widget, 0)
 
 			adjustment_widget := c_gtk_range_adjustment (widget)
 			gtk_object_ref (widget)

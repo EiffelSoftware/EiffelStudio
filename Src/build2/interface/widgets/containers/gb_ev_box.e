@@ -323,7 +323,7 @@ feature {NONE} -- Implementation
 		end
 		
 	update_border is
-			-- Update border_width of items in `objects' depending os
+			-- Update border_width of items in `objects' depending on
 			-- state of `border_entry'.
 		do
 			if border_entry.text.is_integer and then

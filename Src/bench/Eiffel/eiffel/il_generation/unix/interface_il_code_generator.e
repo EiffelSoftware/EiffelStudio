@@ -88,6 +88,17 @@ feature -- IL Generation
 			generate_il_implementation_parents (class_interface)
 			generate_il_type_features (class_c, class_type, class_c.generic_features)
 			generate_il_type_features (class_c, class_type, class_c.anchored_features)
+
+				-- FIXME: We are hard-coding code generation of some routines
+				-- of System.Object which are frozen in ANY. However, some like
+				-- `Finalize' should not be generate all the time, as it might
+				-- slow down code execution.
+			if current_select_tbl.has (System.memory_dispose_id) then
+				generate_finalize_feature (current_select_tbl.item (System.Memory_dispose_id))
+			end
+				-- Generate `ToString' from System.Object.
+			generate_to_string_feature (current_select_tbl.item (internal_to_string_rout_id))
+
 			
 				-- Reset global variable for collection.
 			current_class_type := Void
@@ -209,14 +220,6 @@ feature -- IL Generation
 				end
 				features.forth
 			end
-
-				-- FIXME: Should be removed as this should automatically done.
-				-- Generate `Finalize' from System.Object.
-			feat := select_tbl.item (internal_finalize_rout_id)
-			generate_finalize_feature (feat)
-				-- Generate `ToString' from System.Object.
-			feat := select_tbl.item (internal_to_string_rout_id)
-			generate_to_string_feature (feat)
 		end
 
 	generate_il_implementation_inherited
@@ -399,7 +402,7 @@ feature -- IL Generation
 			else
 				generate_feature_il (feat, dup_feat,
 					implemented_type (feat.written_in,
-						current_class_type.type).associated_class_type.implementation_id,
+						current_class_type.type).implementation_id,
 					feat.written_feature_id)
 			end
 

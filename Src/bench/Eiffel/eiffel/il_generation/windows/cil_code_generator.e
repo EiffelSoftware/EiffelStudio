@@ -1718,17 +1718,17 @@ feature -- IL Generation
 		end
 
 	generate_finalize_feature (feat: FEATURE_I) is
-			-- Generate `Finalize' that calls `finalize' definition from ANY.
+			-- Generate `Finalize' that calls `feat'. `feat' should already be
+			-- generated.
 		require
 			feat_not_void: feat /= Void
 		local
 			l_finalize_token: INTEGER
 			l_dotnet_finalize_token: INTEGER
 		do
-			generate_feature (feat, False, True, False)
-			generate_feature_code (feat)
-
-			l_finalize_token := implementation_feature_token (current_type_id, feat.feature_id)
+			l_finalize_token := implementation_feature_token (
+				implemented_type (feat.written_in, current_class_type.type).implementation_id,
+				feat.written_feature_id)
 
 				-- Generate `Finalize' that calls `finalize'.
 			uni_string.set_string ("Finalize")
@@ -1757,7 +1757,9 @@ feature -- IL Generation
 			generate_feature (feat, False, True, False)
 			generate_feature_code (feat)
 
-			l_to_string_token := implementation_feature_token (current_type_id, feat.feature_id)
+			l_to_string_token := implementation_feature_token (
+				implemented_type (feat.written_in, current_class_type.type).implementation_id,
+				feat.written_feature_id)
 
 				-- Generate `Finalize' that calls `finalize'.
 			l_sig := method_sig

@@ -33,91 +33,73 @@ feature -- Initialization
 
 feature -- File names
 
-	system_general: STRING is
+	system_general: FILE_NAME is
 			-- General system level resource specification file
 			-- ($EIFFEL3/eifinit/application_name/general)
-		local
-			fn: FILE_NAME
 		do
 			if Eiffel3 /= Void then
-				!!fn.make_from_string (Eiffel3);
-				fn.extend_from_array (<<Eifinit, application_name>>);
-				fn.set_file_name (General);
-				Result := fn
+				!! Result.make_from_string (Eiffel3);
+				Result.extend_from_array (<<Eifinit, application_name>>);
+				Result.set_file_name (General);
 			end
 		end;
 
-	system_specific: STRING is
+	system_specific: FILE_NAME is
 			-- Platform specific system level resource specification file
 			-- ($EIFFEL3/eifinit/application_name/spec/$PLATFORM)
-		local
-			fn: FILE_NAME
 		do
 			if Eiffel3 /= Void and Platform /= Void then
-				!!fn.make_from_string (Eiffel3);
-				fn.extend_from_array (<<Eifinit, application_name, Spec>>);
-				fn.set_file_name (Platform);
-				Result := fn
+				!! Result.make_from_string (Eiffel3);
+				Result.extend_from_array (<<Eifinit, application_name, Spec>>);
+				Result.set_file_name (Platform);
 			end
 		end;
 
-	user_general: STRING is
+	user_general: FILE_NAME is
 			-- General user level resource specification file
 			-- $HOME/eifinit/application_name/general
-		local
-			fn: FILE_NAME
 		do
 			if Home /= Void then
-				!! fn.make_from_string (Home);
-				fn.extend (Eifinit);
-				fn.extend (application_name);
-				fn.set_file_name (General);
-				Result := fn
+				!! Result.make_from_string (Home);
+				Result.extend (Eifinit);
+				Result.extend (application_name);
+				Result.set_file_name (General);
 			end
 		end;
 
-	user_specific: STRING is
+	user_specific: FILE_NAME is
 			-- Platform specific user level resource specification file
 			-- $HOME/eifinit/application_name/spec/$PLATFORM
-		local
-			fn: FILE_NAME
 		do
 			if Home /= Void and Platform /= Void then
-				!!fn.make_from_string (Home);
-				fn.extend (Eifinit);
-				fn.extend (application_name);
-				fn.extend (Spec);
-				fn.set_file_name (Platform);
-				Result := fn
+				!! Result.make_from_string (Home);
+				Result.extend (Eifinit);
+				Result.extend (application_name);
+				Result.extend (Spec);
+				Result.set_file_name (Platform);
 			end
 		end;
 
-	defaults_general: STRING is
+	defaults_general: FILE_NAME is
 			-- General user level resource specification file
 			-- $EIF_DEFAULTS/application_name/general
-		local
-			fn: FILE_NAME
 		do
 			if Eifdefaults /= Void then
-				!! fn.make_from_string (Eifdefaults);
-				fn.extend (application_name);
-				fn.set_file_name (General);
-				Result := fn
+				!! Result.make_from_string (Eifdefaults);
+				Result.extend (application_name);
+				Result.set_file_name (General);
 			end
 		end;
 
-	defaults_specific: STRING is
+	defaults_specific: FILE_NAME is
 			-- Platform specific user level resource specification file
 			-- $EIF_DEFAULTS/application_name/spec/$PLATFORM
-		local
-			fn: FILE_NAME
 		do
 			if Eifdefaults /= Void and Platform /= Void then
-				!! fn.make_from_string (Eifdefaults);
-				fn.extend (application_name);
-				fn.extend (Spec);
-				fn.set_file_name (Platform);
-				Result := fn
+				!! Result.make_from_string (Eifdefaults);
+				Result.extend (application_name);
+				Result.extend (Spec);
+				Result.set_file_name (Platform);
 			end
 		end
 

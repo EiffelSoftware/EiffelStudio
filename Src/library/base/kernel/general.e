@@ -250,6 +250,12 @@ feature -- Output
 
 feature -- Basic operations
 
+	default_rescue is
+			-- Process exception for routines with no Rescue clause.
+			-- (Default: do nothing.)
+		do
+		end
+
 	frozen do_nothing is
 			-- Execute a null action.
 		do

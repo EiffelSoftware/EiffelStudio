@@ -307,8 +307,15 @@ feature -- Access
 			-- Override cluster in the universe.
 		require
 			has_override_cluster: has_override_cluster
+		local
+			c: CURSOR
 		do
+				-- Saving position
+			c := clusters.cursor
+			
 			Result := cluster_of_name (override_cluster_name)
+
+			clusters.go_to (c)
 		end;
 
 feature -- Update

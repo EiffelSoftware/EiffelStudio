@@ -25,7 +25,7 @@ inherit
 
 feature -- Initialization
 
-	setup (a_label: STRING; a_key: like key; a_text_processor: like text_processor; a_enter_processor: like enter_processor) is
+	setup (a_label: STRING; a_key: like key; a_text_processor: like text_processor; a_enter_processor: like enter_processor; a_select_processor: like select_processor) is
 			-- Set `text_processor' with `a_text_processor'.
 			-- Set `key' with `a_key'.
 			-- Set `label' with `a_label'.
@@ -39,6 +39,7 @@ feature -- Initialization
 		do
 			text_processor := a_text_processor
 			enter_processor := a_enter_processor
+			select_processor := a_select_processor
 			key := a_key
 			text_label.set_text (a_label)
 			initialize_combo (text_combo, key)
@@ -89,6 +90,17 @@ feature -- Access
 			end
 		end
 
+	save_on_return: BOOLEAN is
+			-- Should items be saved when `return' is hit?
+			-- True by default.
+		do
+			if internal_save_on_return = Void then
+				Result := True
+			else
+				Result := internal_save_on_return.item
+			end
+		end
+
 feature -- Status Report
 
 	excluded: BOOLEAN
@@ -129,7 +141,7 @@ feature -- Basic Operations
 		
 feature -- Element Change
 
-	set_default_text (a_text: STRING) is
+	set_default_text (a_text: like default_text) is
 			-- Set `default_text' with `a_text'.
 		require
 			non_void_default_text: a_text /= Void
@@ -137,6 +149,17 @@ feature -- Element Change
 			internal_default_text := a_text
 		ensure
 			default_text_set: default_text = a_text
+		end
+	
+	set_save_on_return (a_value: like save_on_return) is
+			-- Set `save_on_return' with `a_value'.
+		do
+			if internal_save_on_return = Void then
+				create internal_save_on_return
+			end
+			internal_save_on_return.set_item (a_value)
+		ensure
+			save_on_return_set: save_on_return = a_value
 		end
 	
 feature {NONE} -- Events Handling
@@ -151,12 +174,6 @@ feature {NONE} -- Events Handling
 				Profile_manager.save_active_profile
 			end
 			l_text := text_combo.text
-			if l_text.is_empty then
-				text_combo.change_actions.block
-				text_combo.set_text (default_text)
-				text_combo.change_actions.resume
-				l_text := default_text
-			end
 			if text_processor /= Void then
 				l_valid := text_processor.item ([l_text])
 				if l_valid then
@@ -174,9 +191,19 @@ feature {NONE} -- Events Handling
 			-- Called by `return_actions' of `path_combo'.
 			-- Save text
 		do
-			save_combo_text
+			if save_on_return then
+				save_combo_text
+			end
 			if enter_processor /= Void then
 				enter_processor.call (Void)
+			end
+		end
+
+	on_select is
+			-- Called by `select_actions' of `path_combo'.
+		do
+			if select_processor /= Void then
+				select_processor.call (Void)
 			end
 		end
 
@@ -213,6 +240,9 @@ feature {NONE} -- Private Access
 	enter_processor: PROCEDURE [ANY, TUPLE []]
 			-- Process `enter' key press
 
+	select_processor: PROCEDURE [ANY, TUPLE []]
+			-- Process `enter' key press
+
 	key: STRING
 			-- Key used to store and retrieve combo box items
 
@@ -233,5 +263,8 @@ feature {NONE} -- Private Access
 	internal_default_text: STRING
 			-- Default text internal cache
 
+	internal_save_on_return: BOOLEAN_REF
+			-- Cell for `save_on_return'
+		
 end -- class WIZARD_TEXT_BOX
 

@@ -78,11 +78,4 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	build_display_object is
-			-- Build `display_object' from type of `Current'
-			-- and hence `object'.
-		do
-			display_object ?= vision2_object_from_type (type)
-		end
-
 end -- class GB_MENU_OBJECT

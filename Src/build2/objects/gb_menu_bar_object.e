@@ -78,14 +78,4 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			end
 		end
 
-	
-feature {GB_TITLED_WINDOW_OBJECT} -- Implementation
-
-	build_display_object is
-			-- Build `display_object' from type of `Current'
-			-- and hence `object'.
-		do
-			display_object ?= vision2_object_from_type (type)
-		end
-
 end -- class GB_MENU_BAR_OBJECT

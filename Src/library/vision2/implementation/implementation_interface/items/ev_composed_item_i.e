@@ -13,6 +13,21 @@ deferred class
 inherit
 	EV_ITEM_I
 
+feature {NONE} -- Initialization
+
+	make is
+			-- Create an row with one empty column.
+		deferred
+		end
+
+	make_with_text (txt: ARRAY [STRING]) is
+			-- Create a row with text in it.
+		require
+			valid_text: txt /= Void
+			no_void_text: not txt.has (Void)
+		deferred
+ 		end
+
 feature -- Access
 
 	count: INTEGER is
@@ -37,7 +52,7 @@ feature -- Access
 		deferred
 		end
 
-	pixmap_cell (index: INTEGER): EV_PIXMAP is
+	cell_pixmap (index: INTEGER): EV_PIXMAP is
 			-- Return the pixmap of the cell number
 			-- `index'. On windows platform, 
 			-- if index > 1, the result is void.

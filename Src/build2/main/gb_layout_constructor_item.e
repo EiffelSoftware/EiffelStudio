@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 	make_root is
 			-- Create `Current' as a root object.
 		local
-			an_object: GB_CELL_OBJECT
+			an_object: GB_TITLED_WINDOW_OBJECT
 		do
 			default_create
 			create an_object.make_with_type_and_object (ev_titled_window_string, display_window)

@@ -47,7 +47,7 @@ feature {NONE}
 					popup_window
 				else
 					question_box.popup (Current, 
-						Messages.save_project_qu, Void)
+						Messages.create_project_qu, Void)
 				end
 			end
 		end
@@ -59,20 +59,6 @@ feature {NONE}
 			pw: CREATE_PROJ_WIN;
 		do
 			if yes then
-				open_new_application
-			else
-				popup_window
-			end
-		end
-
-	open_new_application is
-		local
-			save_proj: SAVE_PROJECT;
-			pw: CREATE_PROJ_WIN;
-		do
-			!!save_proj;
-			save_proj.execute (Void)
-			if save_proj.completed then
 				popup_window
 			end
 		end;
@@ -88,6 +74,6 @@ feature {NONE}
 	popuper_parent: COMPOSITE is
 		do
 			Result := main_panel.base
-		end
+		end;
 
 end

@@ -275,7 +275,7 @@ feature -- C Code generation
 					buffer.new_line
 				end
 
-				buffer.putstring ("sp_init (loc1, pdtype, 0, arg1 - 1);")
+				buffer.putstring ("loc1 = sp_init (loc1, pdtype, 0, arg1 - 1);")
 				buffer.new_line
 			else
 				type_c.generate_size (buffer)

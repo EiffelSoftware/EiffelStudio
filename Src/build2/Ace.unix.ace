@@ -103,7 +103,7 @@ external
 		"\$(EIFFEL_SRC)/library/vision2/spec/include"
 
 	object:
-		"`$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --devel --object`",
+		"`$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib/vision2-gtk-config --devel --object`"
 
 
 end

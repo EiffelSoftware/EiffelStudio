@@ -11,7 +11,8 @@ inherit
 	PRIMITIVE_WINDOWS
 		rename
 			screen_cursor as windows_cursor,
-			cursor as screen_cursor
+			cursor as screen_cursor,
+			on_key_down as primitive_on_key_down
 		redefine
 			realize, unrealize,
 			set_height, set_size, set_width,
@@ -77,11 +78,12 @@ inherit
 			on_mouse_move,
 			on_destroy,
 			on_set_cursor,
-			on_key_up,
-			on_key_down
+			on_key_up
 		redefine
 			on_lbn_selchange,
-			on_lbn_errspace
+			on_lbn_errspace,
+			on_lbn_dblclk,
+			on_key_down	
 		end
 
 	WEL_LBS_CONSTANTS
@@ -261,18 +263,21 @@ feature  -- Access
 	selected_position: INTEGER is
 			-- Position of selected item if single or browse selection mode is
 			-- selected
-			-- Null if nothing is selected
-		require else
-			single_selection: not multiple_selection
+			-- Position of the first selected item, if in multiple_selection mode
+			-- 0 if nothing is selected			
 		do
-			Result := private_selected_position
+			if multiple_selection then
+				if not private_selected_positions.empty then
+					Result := private_selected_positions.first
+				end
+			else
+				Result := private_selected_position
+			end
 		end
 
 	selected_positions: LINKED_LIST [INTEGER] is
 			-- Positions of the selected items
-			--| Void if single selection
-		require else
-			multiple_selection: multiple_selection
+			-- Void if single selection
 		do
 			Result := private_selected_positions	
 		end
@@ -287,6 +292,27 @@ feature -- Status report
 
 	multiple_selection: BOOLEAN
 			-- Is the list capable of multiple selection?
+
+feature -- Default action callbacks
+	add_default_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to execute
+			-- when items are selected with double click or by
+			-- pressing 'RETURN'
+			-- in current scroll list.
+		do
+			default_actions.add (Current, a_command, argument)
+		end
+
+	remove_default_action  is
+			-- Remove all actions executed 
+			-- when items are selected with click double click or by
+			-- pressing 'RETURN'
+			-- in current scroll list.
+		do
+			default_actions.delete (Current)
+		end
+
+
 
 feature -- Status setting
 
@@ -660,11 +686,7 @@ feature {NONE} -- Implementation
 			valid_i: i <= count
 		do
 			if realized then
-				if multiple_selection then
-					select_item_at (i - 1)
-				else
-					select_item_at (i - 1)
-				end
+				select_item_at (i - 1)
 			end
 			if multiple_selection
 			and then not private_selected_positions.has (i) then
@@ -696,6 +718,7 @@ feature {NONE} -- Implementation
 		local
 			a_font_windows: FONT_WINDOWS
 		do
+
 			if realized then
 				if fixed_size_flag then
 					a_font_windows ?= font.implementation
@@ -710,6 +733,12 @@ feature {NONE} -- Implementation
 				else
 					wel_insert_string_at (s, pos)
 				end
+			end
+			-- Change the selection, if added element affected it
+			if multiple_selection and then
+			   not private_selected_positions.empty and then pos < private_selected_positions.first or else
+			   not multiple_selection and then pos < private_selected_position then
+				update_private_selection
 			end
 		end
 
@@ -744,6 +773,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+
 		end
 
 	longest_string_width: INTEGER is
@@ -807,9 +837,8 @@ feature {NONE} -- Implementation
 			unselected: not selected
 		end
 
-	on_lbn_selchange is
-			-- The selection is changed, update the
-			-- private attributes.
+	update_private_selection is
+			-- Updates the private selection
 		local
 			i: INTEGER
 		do
@@ -838,9 +867,22 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 			end
-			if not multiple_selection then
+		end
+
+
+	on_lbn_selchange is
+			-- The selection is changed, update the
+			-- private attributes.
+	
+		do
+			update_private_selection
+
+		-- Feature add_click_action of SCROLLABLE_LIST did not work
+		-- because of this if-clause.
+		-- After commenting this out, add_click_action works
+		-- 	if not multiple_selection then
 				selection_change_actions.execute (Current, Void)
-			end
+		--	end
 		end
 
 	on_lbn_errspace is
@@ -850,6 +892,28 @@ feature {NONE} -- Implementation
 			information_message_box ("Cannot allocate enough memory to perform%
 				%request!","Error")
 		end
+
+	on_lbn_dblclk is
+			-- List item is double clicked
+			-- This feature implements the default action together 
+			-- with feature on_key_down
+		do
+			default_actions.execute (Current, Void)
+		end
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- a key is pressed when an item is selected. 
+			-- This procedure checks if the pressed key is 
+			-- 'RETURN' and executes the default action then.
+			-- This feature implements the default action together 
+			-- with feature on_lbn_dblclk 
+		do
+			primitive_on_key_down (virtual_key, key_data)
+			if virtual_key = Vk_return then
+				default_actions.execute (Current, Void)
+			end
+		end
+
 
 	has_width: BOOLEAN
 			-- Is the default width overruled?

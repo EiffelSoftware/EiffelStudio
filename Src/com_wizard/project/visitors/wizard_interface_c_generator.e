@@ -41,9 +41,9 @@ feature -- Access
 				end
 			end
 
-			a_descriptor.vtable_functions.sort
-
 			if a_descriptor.vtable_functions /= Void and then not a_descriptor.vtable_functions.empty then
+				a_descriptor.vtable_functions.sort
+				
 				from
 					a_descriptor.vtable_functions.start
 				until
@@ -57,24 +57,23 @@ feature -- Access
 					
 					cpp_class_writer.add_function (func_generator.ccom_feature_writer, Public)
 					
-					if 
-						func_generator.c_header_files /= Void and then 
-						not func_generator.c_header_files.empty
-					then
-						from
-							func_generator.c_header_files.start
-						until
-							func_generator.c_header_files.off
-						loop
-							if func_generator.c_header_files.item /= Void and then not func_generator.c_header_files.item.empty then
-								if cpp_class_writer.import_files.occurrences (func_generator.c_header_files.item) = 0 then
-									cpp_class_writer.add_import (func_generator.c_header_files.item)
-								end
-							end
-							func_generator.c_header_files.forth
-						end
-					end
+					add_type_definitions_and_include_files (func_generator)
+
 					a_descriptor.vtable_functions.forth
+				end
+			end
+
+			if a_descriptor.dispatch_functions /= Void and then not a_descriptor.dispatch_functions.empty then
+				
+				from
+					a_descriptor.dispatch_functions.start
+				until
+					a_descriptor.dispatch_functions.off
+				loop
+					func_generator.generate_dual (a_descriptor.dispatch_functions.item)
+					add_type_definitions_and_include_files (func_generator)
+					
+					a_descriptor.dispatch_functions.forth
 				end
 			end
 
@@ -110,7 +109,51 @@ feature {NONE} -- Implementation
 			valid_definition: not Result.empty
 		end
 
+	add_type_definitions_and_include_files (func_generator: WIZARD_CPP_VIRTUAL_FUNCTION_GENERATOR) is
+			-- Add neccessary type definitions and include files.
+		require
+			non_void_function_generator: func_generator /= Void
+		do
+			if 
+				func_generator.c_header_files /= Void and then 
+				not func_generator.c_header_files.empty
+			then
+				from
+					func_generator.c_header_files.start
+				until
+					func_generator.c_header_files.off
+				loop
+					if func_generator.c_header_files.item /= Void and then not func_generator.c_header_files.item.empty then
+						if cpp_class_writer.import_files.occurrences (func_generator.c_header_files.item) = 0 then
+							cpp_class_writer.add_import (func_generator.c_header_files.item)
+						end
+					end
+					func_generator.c_header_files.forth
+				end
+			end
 
+			if 
+				func_generator.forward_declarations /= Void and then 
+				not func_generator.forward_declarations.empty
+			then
+				from
+					func_generator.forward_declarations.start
+				until
+					func_generator.forward_declarations.off
+				loop
+					if 
+						func_generator.forward_declarations.item /= Void and then 
+						not func_generator.forward_declarations.item.empty 
+					then
+						if cpp_class_writer.others.occurrences (func_generator.forward_declarations.item) = 0 then
+							cpp_class_writer.add_other (func_generator.forward_declarations.item)
+						end
+					end
+					func_generator.forward_declarations.forth
+				end
+			end
+		end
+		
 end -- class WIZARD_INTERFACE_C_GENERATOR
 
 --|----------------------------------------------------------------

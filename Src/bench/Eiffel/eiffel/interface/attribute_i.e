@@ -175,6 +175,7 @@ feature
 			table: POLY_TABLE [ENTRY];
 			rout_id: INTEGER;
 		do
+			generate_header (file);
 			skeleton := class_type.skeleton;
 			result_type := type.actual_type.type_i;
 			if result_type.has_formal then

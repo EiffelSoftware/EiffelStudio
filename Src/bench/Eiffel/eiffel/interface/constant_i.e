@@ -123,6 +123,7 @@ feature -- C code generation
 --						and then
 					(	System.is_used (Current)))
 			then
+				generate_header (file);
 				type_i := type.actual_type.type_i;
 				internal_name := Encoder.feature_name (class_type.id, body_id); 
 					-- Generation of function's header

@@ -92,7 +92,7 @@ feature {NONE}
 					table.after
 				loop
 					unit := table.item;
-					if System.class_of_id (unit.id).conform_to (written_class) then
+					if System.class_of_id (unit.id).simple_conform_to (written_class) then
 						old_position := table.position;
 						other_body_id := body_table.item (unit.body_index);
 						if not bid_rid_is_marked (other_body_id, rout_id_val) then
@@ -122,7 +122,7 @@ feature {NONE}
 		require
 			feat_exists: feat /= Void;
 			actual_class_exists: actual_class /= Void;
-			consistency: actual_class.conform_to (feat.written_class);
+			consistency: actual_class.simple_conform_to (feat.written_class);
 			rout_id_not_void: rout_id_val /= Void
 		local
 			depend_list: FEATURE_DEPENDANCE;

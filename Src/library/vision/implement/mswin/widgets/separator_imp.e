@@ -108,7 +108,7 @@ feature -- Status report
 			if not in_menu then
 				Result := exists
 			else
-				result := parent.realized
+				Result := parent.realized
 			end
 		end
 
@@ -120,7 +120,11 @@ feature -- Status setting
 	set_3d_separator is
 			-- Set the separator to be Windows 3D
 		do
-			set_form_height (6)
+			if is_horizontal then
+				set_form_height (6)
+			else
+				set_form_width (6)
+			end
 			w3d_separator := True
 		end
 
@@ -327,6 +331,13 @@ feature -- Status setting
 				end
 				is_horizontal := flag
 			end
+
+			if flag then
+				set_form_height (6)
+			else
+				set_form_width (6)
+			end
+
 			if exists then
 				invalidate
 			end
@@ -405,11 +416,21 @@ feature {NONE} -- Implementation
 				!! color.make_system (Color_btnshadow)
 				!! a_pen.make (Ps_solid, 1, color)
 				a_paint_dc.select_pen (a_pen)
-				a_paint_dc.line (0, height // 2 - 1, width, height // 2 - 1)
+
+				if is_horizontal then
+					a_paint_dc.line (0, height // 2 - 1, width, height // 2 - 1)
+				else
+					a_paint_dc.line (width // 2 - 1, 0, width // 2 - 1, height)
+				end
 				!! color.make_rgb (255, 255, 255)
 				!! a_pen.make (Ps_solid, 1, color)
 				a_paint_dc.select_pen (a_pen)
-				a_paint_dc.line (0, height // 2, width, height // 2)
+
+				if is_horizontal then
+					a_paint_dc.line (0, height // 2, width, height // 2)
+				else
+					a_paint_dc.line (width // 2, 0, width // 2, height)
+				end
 			else
 				a_paint_dc.select_pen (pen)
 				a_paint_dc.set_background_color (c_background)

@@ -181,7 +181,6 @@ feature -- Commands
 					create l_xm_concatenator.make_null
 					l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
 					l_parser.parse_from_stream (l_file)
-					l_file.close
 					if l_parser.is_correct then 
 						if not l_tree_pipe.error.has_error then
 							Result := l_tree_pipe.document

@@ -194,16 +194,11 @@ feature -- Basic Operations
 			-- Body of constructor.
 		do
 			create Result.make (1000)
-			Result.append (Tab)
+
+			Result.append (New_line_tab)
 			Result.append ("ref_count = 0;")
 			Result.append (New_line_tab)
 
-			Result.append (Type_id)
-			Result.append (Space_equal_space)
-			Result.append (Type_id_variable_name)
-			Result.append (Semicolon)
-
-			Result.append (New_line_tab)
 			Result.append (Eiffel_object)
 			Result.append (Space_equal_space)
 			Result.append (Eif_create)

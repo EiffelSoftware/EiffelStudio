@@ -8,7 +8,6 @@ deferred class
 	WIZARD_WRITER
 
 inherit
-
 	WEL_PROCESS_CREATION_CONSTANTS
 		export
 			{NONE} all

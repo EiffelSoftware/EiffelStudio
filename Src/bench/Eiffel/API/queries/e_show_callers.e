@@ -52,14 +52,14 @@ feature -- Execution
 			feat: E_FEATURE;
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_I];
 			list: SORTED_LIST [STRING];
-			table: EXTEND_TABLE [SORTED_LIST [STRING], CLASS_ID];
+			table: HASH_TABLE [SORTED_LIST [STRING], CLASS_ID];
 			st: like structured_text;
 			invariant_name: STRING
 		do
-			invariant_name := "_invariant";
+			invariant_name := "_inv_";
 			st := structured_text;
 			clients := current_class.clients;
-			!! table.make (5);
+			!! table.make (20);
 			!! classes.make;
 			from
 				clients.start
@@ -74,9 +74,10 @@ feature -- Execution
 				end;
 				clients.forth;
 			end;
-			classes.sort;
-			tabs := tabs + 1;
+
 			from
+				classes.sort;
+				tabs := tabs + 1;
 				classes.start
 			until
 				classes.after
@@ -86,8 +87,8 @@ feature -- Execution
 				add_tabs (st, tabs);
 				client.append_name (st);
 				st.add_new_line;
-				list := table.item (client.id);
 				from
+					list := table.item (client.id);
 					list.start
 				until
 					list.after

@@ -98,15 +98,15 @@ feature -- Access
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
-		
-	paragraph_format_contiguous (start_line, end_line: INTEGER): BOOLEAN is
-			-- Is paragraph formatting from line `start_line' to `end_line' contiguous?
+
+	paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
+			-- Is paragraph formatting from caret_position `start_position' to `end_position' contiguous?
 		require
 			not_destroyed: not is_destroyed
-			valid_character_index: start_line >= 1 and end_line <= line_count and
-				start_line <= end_line
+			valid_character_index: start_position >= 1 and end_position <= text_length + 1 and
+				start_position <= end_position
 		do
-			Result := implementation.paragraph_format_contiguous (start_line, end_line)
+			Result := implementation.paragraph_format_contiguous (start_position, end_position)
 		ensure
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
@@ -132,18 +132,18 @@ feature -- Access
 				old selection_start = selection_start and old selection_end = selection_end	
 		end
 		
-	paragraph_format_range_information (start_line, end_line: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
-			-- Formatting range information from lines `start_line' to `end_line'.
-			-- All attributes in `Result' are set to `True' if they remain consitent from `start_line' to
-			--`end_line' and `False' otherwise.
+	paragraph_format_range_information (start_position, end_position: INTEGER): EV_PARAGRAPH_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from caret position `start_position' to `end_position'.
+			-- All attributes in `Result' are set to `True' if they remain consitent from `start_position' to
+			--`end_position' and `False' otherwise.
 			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
 			-- are subsequently changed.
 		require
 			not_destroyed: not is_destroyed
-			valid_line_index: start_line >= 1 and end_line <= line_count and
-				start_line <= end_line
+			valid_character_index: start_position >= 1 and end_position <= text_length + 1 and
+				start_position <= end_position
 		do
-			Result := implementation.paragraph_format_range_information (start_line, end_line)
+			Result := implementation.paragraph_format_range_information (start_position, end_position)
 		ensure
 			result_not_void: Result /= Void
 			caret_not_moved: caret_position = old caret_position
@@ -267,14 +267,16 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	format_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT) is
-			-- Apply paragraph formatting `format' to lines `start_line', `end_line' inclusive.
+	format_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT) is
+			-- Apply paragraph formatting `format' to character positions `start_position', `end_position' inclusive.
+			-- Formatting applies to complete lines as seperated by new line characters that `start_position' and
+			-- `end_position' fall on.
 		require
 			not_destroyed: not is_destroyed
-			lines_valid: start_line >= 1 and end_line >= start_line and end_line <= line_count
+			valid_positions: start_position < end_position and start_position >= 1 and end_position <= text_length + 1
 			format_not_void: format /= Void
 		do
-			implementation.format_paragraph	 (start_line, end_line, format)
+			implementation.format_paragraph (start_position, end_position, format)
 		ensure
 			caret_not_moved: caret_position = old caret_position
 			selection_not_changed: old has_selection = has_selection and has_selection implies
@@ -314,16 +316,17 @@ feature -- Status setting
 				old selection_start = selection_start and old selection_end = selection_end
 		end
 		
-	modify_paragraph (start_line, end_line: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
-			-- Modify paragraph formatting from lines `start_line' to `end_line' applying all attributes of `format' that are set to
-			-- `True' within `applicable_attributes', ignoring others.
+	modify_paragraph (start_position, end_position: INTEGER; format: EV_PARAGRAPH_FORMAT; applicable_attributes: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION) is
+			-- Modify paragraph formatting from lines `start_position' to `end_position' applying all attributes of `format' that are set to
+			-- `True' within `applicable_attributes', ignoring others. Modification applies to complete lines as seperated by
+			-- new line characters that `start_position' and `end_position' fall on.
 		require
 			not_destroyed: not is_destroyed
 			applicable_attributes_not_void: applicable_attributes /= Void
-			valid_positions: start_line <= end_line and start_line >= 1 and end_line <= line_count
+			valid_positions: start_position < end_position and start_position >= 1 and end_position <= text_length + 1
 			format_not_void: format /= Void
 		do
-			implementation.modify_paragraph (start_line, end_line, format, applicable_attributes)
+			implementation.modify_paragraph (start_position, end_position, format, applicable_attributes)
 		ensure
 			text_not_changed: text.is_equal (old text)
 			caret_not_moved: caret_position = old caret_position

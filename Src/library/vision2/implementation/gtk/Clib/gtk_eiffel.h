@@ -310,6 +310,8 @@ void c_gtk_text_insert (GtkWidget *widget, const char *txt);
 void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 				  gint expand, gint fill);
 
+#define c_gtk_container_border_width(p)     (((GtkContainer*)p)->border_width)     /*integer*/
+
 
 /*==============================================================================
  gtk_window functions

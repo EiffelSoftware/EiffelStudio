@@ -96,7 +96,7 @@ feature -- Basic operation
 			-- Search the string `str' in the text.
 			-- If `str' is find, it returns its start
 			-- index in the text, otherwise, it returns
-			-- `Void'
+			-- `-1'
 		require
 			exists: not destroyed
 			valid_string: str /= Void

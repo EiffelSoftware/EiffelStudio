@@ -146,7 +146,7 @@ feature -- Duplication
 			l_temp: BOOLEAN
 		do
 			l_temp := feature {ISE_RUNTIME}.check_assert (False)
-			Result := feature {ISE_RUNTIME}.c_standard_clone ($Current)
+			Result ?= feature {ISE_RUNTIME}.c_standard_clone ($Current)
 			Result.copy (Current)
 			l_temp := feature {ISE_RUNTIME}.check_assert (l_temp)
 		ensure
@@ -215,7 +215,7 @@ feature -- Duplication
 			temp: BOOLEAN
 		do
 			temp := feature {ISE_RUNTIME}.check_assert (False)
-			Result := feature {ISE_RUNTIME}.c_standard_clone ($Current)
+			Result ?= feature {ISE_RUNTIME}.c_standard_clone ($Current)
 			Result.standard_copy (Current)
 			temp := feature {ISE_RUNTIME}.check_assert (temp)
 		ensure
@@ -226,7 +226,7 @@ feature -- Duplication
 	frozen deep_twin: like Current is
 			-- New object structure recursively duplicated from Current.
 		do
-			Result := feature {ISE_RUNTIME}.c_deep_clone ($Current)
+			Result ?= feature {ISE_RUNTIME}.c_deep_clone ($Current)
 		ensure
 			deep_equal: deep_equal (Current, Result)
 		end

@@ -138,8 +138,10 @@ feature -- Basic operations
 					end
 				end
 				
-					-- We must now initailize the tools for a new empty project.
-				object_handler.add_initial_window
+				if created_project then
+						-- We must now initailize the tools for a new empty project.
+					object_handler.add_initial_window
+				end
 			end
 
 end -- class GB_NEW_PROJECT_COMMAND

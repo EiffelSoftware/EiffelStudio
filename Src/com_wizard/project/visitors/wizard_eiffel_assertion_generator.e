@@ -51,8 +51,14 @@ feature -- Basic operation
 		
 			visitor := type.visitor 
 
-			if not visitor.is_basic_type and not is_boolean (visitor.vt_type) 
-					and not visitor.is_enumeration then
+			if 
+				not visitor.is_basic_type and 
+				not is_boolean (visitor.vt_type) and 
+				not visitor.is_enumeration and 
+				not (visitor.vt_type = Vt_lpstr) and
+				not (visitor.vt_type = Vt_lpwstr) and
+				not (visitor.vt_type = Vt_bstr)
+			then
 				create tmp_tag.make (100)
 				tmp_tag.append ("non_void_")
 				tmp_tag.append (a_name)
@@ -164,7 +170,7 @@ feature {NONE}
 
 				elseif is_error (visitor.vt_type) or is_hresult (visitor.vt_type) then
 
-				elseif not visitor.is_basic_type_ref then
+				elseif not visitor.is_basic_type_ref and in_param then
 					
 					create tmp_tag.make (100)
 					tmp_tag.append ("valid_")

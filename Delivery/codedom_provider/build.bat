@@ -59,7 +59,7 @@ IF NOT EXIST EIFGEN\F_Code\silent_launcher.exe GOTO END
 COPY EIFGEN\F_Code\silent_launcher.exe ..\..\..\delivery
 
 ECHO Building intaller_launcher
-CD ..\silent_launcher
+CD ..\intaller_launcher
 IF EXIST EIFGEN rd /q /s EIFGEN
 IF EXIST installer_launcher.epr del installer_launcher.epr
 SET ISE_CFLAGS=

@@ -44,8 +44,13 @@ feature	-- Access
 	rename_clauses: LIST [CODE_RENAME_CLAUSE]
 			-- Rename inheritance clauses
 
+	snippet_parent: CODE_SNIPPET_PARENT
+			-- Corresponding snippet parent
+
 	code: STRING is
 			-- | Result := "`name' [`inheritace_clauses']"
+		local
+			l_has_snippet, l_has_clause: BOOLEAN
 		do
 			create Result.make (250)
 			
@@ -53,11 +58,38 @@ feature	-- Access
 			Result.append (type.eiffel_name)
 			Result.append_character ('%N')
 
-			Result.append (clauses_code (rename_clauses))
-			Result.append (clauses_code (undefine_clauses))
-			Result.append (clauses_code (redefine_clauses))
+			l_has_snippet := snippet_parent /= Void
+			
+			l_has_clause := l_has_snippet and then snippet_parent.renames /= Void
+			if l_has_clause then
+				Result.append (snippet_parent.renames_code)
+			end
+			Result.append (clauses_code (rename_clauses, not l_has_clause))
 
-			if undefine_clauses.count > 0 or redefine_clauses.count > 0 or rename_clauses.count > 0 then
+			l_has_clause := l_has_snippet and then snippet_parent.exports /= Void
+			if l_has_clause then
+				Result.append (snippet_parent.exports_code)
+			end
+			
+			l_has_clause := l_has_snippet and then snippet_parent.undefines /= Void
+			if l_has_clause then
+				Result.append (snippet_parent.undefines_code)
+			end
+			Result.append (clauses_code (undefine_clauses, not l_has_clause))
+
+			l_has_clause := l_has_snippet and then snippet_parent.redefines /= Void
+			if l_has_clause then
+				Result.append (snippet_parent.redefines_code)
+			end
+			Result.append (clauses_code (redefine_clauses, not l_has_clause))
+
+			l_has_clause := l_has_snippet and then snippet_parent.selects /= Void
+			if l_has_clause then
+				Result.append (snippet_parent.selects_code)
+			end
+
+			if undefine_clauses.count > 0 or redefine_clauses.count > 0 or rename_clauses.count > 0 or 
+				(l_has_snippet and then not snippet_parent.is_empty) then
 				Result.append ("%T%Tend%N")
 				Result.append ("%N")
 			end
@@ -95,10 +127,22 @@ feature -- Status Setting Inheritance Clauses
 			rename_clause_added: rename_clauses.has (a_clause)
 		end
 
+	set_snippet_parent (a_parent: CODE_SNIPPET_PARENT) is
+			-- Set `snippet_parent' with `a_parent'.
+		require
+			non_void_parent: a_parent /= Void
+			valid_parent: a_parent.type.is_equal (type.eiffel_name)
+		do
+			snippet_parent := a_parent
+		ensure
+			snippet_parent_set: snippet_parent = a_parent
+		end
+		
 feature {NONE} -- Implementation
 	
-	clauses_code (a_list: LIST [CODE_INHERITANCE_CLAUSE]): STRING is
+	clauses_code (a_list: LIST [CODE_INHERITANCE_CLAUSE]; a_generate_keyword: BOOLEAN): STRING is
 			-- Code for `a_list'
+			-- Includes inheritance clause keyword iff `a_generate_keyword'
 		require
 			non_void_list: a_list /= Void
 		do
@@ -107,9 +151,14 @@ feature {NONE} -- Implementation
 			from
 				a_list.start
 				if not a_list.after then
-					Result.append ("%T%T")
-					Result.append (a_list.item.keyword)
-					Result.append ("%N%T%T%T")
+					if a_generate_keyword then
+						Result.append ("%T%T")
+						Result.append (a_list.item.keyword)
+						Result.append_character ('%N')
+					else
+						Result.append ("%T%T%T,%N")
+					end
+					Result.append ("%T%T%T")
 					Result.append (a_list.item.code)
 					a_list.forth
 				end

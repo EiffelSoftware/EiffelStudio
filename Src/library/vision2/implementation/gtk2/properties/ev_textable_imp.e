@@ -101,8 +101,7 @@ feature -- Element change
 			else
 				create a_cs.make (a_text)
 				feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
-			end			
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
+			end
 		end
 	
 feature {EV_ANY_IMP} -- Implementation

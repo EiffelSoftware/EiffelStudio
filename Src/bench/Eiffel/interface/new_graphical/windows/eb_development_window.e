@@ -2511,6 +2511,7 @@ feature {NONE} -- Implementation
 				str.tail (str.count - 2)
 				set_title (str)
 			end
+			address_manager.enable_formatters
 		end			
 		
 

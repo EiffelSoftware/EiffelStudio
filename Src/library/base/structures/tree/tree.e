@@ -265,15 +265,11 @@ feature -- Cursor movement
 	child_start is
 			-- Move cursor to first child.
 		deferred
-		ensure then
-			is_first_child: not is_leaf implies child_isfirst
 		end
 
 	child_finish is
 			-- Move cursor to last child.
 		deferred
-		ensure then
-			is_last_child: not is_leaf implies child_islast
 		end
 
 	child_forth is
@@ -429,18 +425,20 @@ feature -- Duplication
 			tmp_tree: like Current
 		do
 			tmp_tree := clone_node (other)
-			if not other.is_leaf then 
-				tree_copy (other, tmp_tree) 
+			if not other.is_leaf then
+				tree_copy (other, tmp_tree)
 			end
 			standard_copy (tmp_tree)
 			old_idx := child_index
 			from
 				i := 1
 			until
-				i > arity
+				i > child_capacity
 			loop
 				child_go_i_th (i)
-				child.attach_to_parent (Current)
+				if child /= Void then
+					child.attach_to_parent (Current)
+				end
 				i := i + 1
 			end
 			child_go_i_th (old_idx)
@@ -513,7 +511,6 @@ feature {TREE} -- Implementation
 			child_go_to (pos)
 		end
 
-
 	fill_list (al: ARRAYED_LIST [G]) is
 			-- Fill `al' with all the children's items.
 		do
@@ -547,7 +544,7 @@ feature {TREE} -- Implementation
 			no_left_sibling: left_sibling = Void
 			no_right_sibling: right_sibling = Void
 		end
-		
+
 feature {NONE} -- Implementation
 
 	fill_subtree (s: TREE [G]) is
@@ -572,10 +569,9 @@ feature {NONE} -- Implementation
 			trees_not_empty: not t1.is_empty and not t2.is_empty
 			same_rule: t1.object_comparison = t2.object_comparison
 		local
-			i: INTEGER
 			p1, p2: like Current
 			t1_stack, t2_stack: LINKED_STACK [like Current]
-			idx_stack, orgidx1_stack, orgidx2_stack: LINKED_STACK [INTEGER]
+			orgidx1_stack, orgidx2_stack: LINKED_STACK [INTEGER]
 			l_current_cursor, l_other_cursor: CURSOR
 		do
 			l_current_cursor := t1.child_cursor
@@ -588,22 +584,21 @@ feature {NONE} -- Implementation
 			else
 				create t1_stack.make
 				create t2_stack.make
-				create idx_stack.make
 				create orgidx1_stack.make
 				create orgidx2_stack.make
 				orgidx1_stack.put (t1.child_index)
 				orgidx2_stack.put (t2.child_index)
 				from
 					Result := True
-					i := 1
 					p1 := t1
 					p2 := t2
+					p1.child_start
+					p2.child_start
 				invariant
-					same_count: t1_stack.count = t2_stack.count and
-								t2_stack.count = idx_stack.count
+					same_count: t1_stack.count = t2_stack.count 
 				until
 					not Result or else
-						(i > p1.child_capacity and t1_stack.is_empty)
+						p1.child_after and t1_stack.is_empty
 				loop
 						check
 							p1_not_void: p1 /= Void
@@ -611,26 +606,19 @@ feature {NONE} -- Implementation
 								-- Because the loop is always terminated before a
 								-- node pointer becomes Void.
 						end
-					p1.child_go_i_th (i)
-					p2.child_go_i_th (i)
 					if p1.child_readable and p2.child_readable and
 						p1.child_capacity = p2.child_capacity then
-							check
-								p1_consistent: p1.child.parent = p1
-								p2_consistent: p2.child.parent = p2
-									-- Because the tree has to be consistent.
-							end
 						Result := p1.node_is_equal (p2)
 						if not (p1.child.is_leaf or p2.child.is_leaf) then
 							t1_stack.put (p1)
 							t2_stack.put (p2)
-							idx_stack.put (i + 1)
 							p1 := p1.child
 							p2 := p2.child
 							Result := p1.node_is_equal (p2)
 							orgidx1_stack.put (p1.child_index)
 							orgidx2_stack.put (p2.child_index)
-							i := 0
+							p1.child_start
+							p2.child_start
 						elseif p1.child.is_leaf xor p2.child.is_leaf then
 							Result := False
 						else
@@ -640,24 +628,22 @@ feature {NONE} -- Implementation
 							(p1.child_readable xor p2.child_readable) then
 						Result := False
 					end
-					if i <= p1.child_capacity then
-						i := i + 1
+					if not p1.child_after then
+						p1.child_forth
+						p2.child_forth
 					else
 						from
 						invariant
-							same_count: t1_stack.count = t2_stack.count and
-										t2_stack.count = idx_stack.count
+							same_count: t1_stack.count = t2_stack.count
 						until
-							t1_stack.is_empty or else i <= p1.child_capacity
+							t1_stack.is_empty or else not p1.child_after --or else i <= p1.arity
 						loop
-							p1.child_go_i_th (orgidx1_stack.item)
-							p2.child_go_i_th (orgidx2_stack.item)
 							p1 := t1_stack.item
 							p2 := t2_stack.item
-							i := idx_stack.item
+							p1.child_forth
+							p2.child_forth
 							t1_stack.remove
 							t2_stack.remove
-							idx_stack.remove
 							orgidx1_stack.remove
 							orgidx2_stack.remove
 						end
@@ -855,6 +841,7 @@ feature {NONE} -- Implementation
 
 invariant
 
+--	tree_consistent: child /= Void implies child.parent = Current
 	leaf_definition: is_leaf = (arity = 0)
 	child_off_definition: child_off = child_before or child_after
 	child_before_definition: child_before = (child_index = 0)
@@ -862,7 +849,6 @@ invariant
 	child_islast_definition:
 			child_islast = (not is_leaf and child_index = child_capacity)
 	child_after_definition: child_after = (child_index >= child_capacity + 1)
-	child_consistency: child_readable implies child.parent = Current
 
 indexing
 

@@ -410,6 +410,7 @@ feature {NONE} -- Event handling
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
 			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
+			caret_position: INTEGER
 		do
 			if not left_alignment_button.is_selected then
 				left_alignment_button.select_actions.block
@@ -418,7 +419,8 @@ feature {NONE} -- Event handling
 			else
 				unselect_all_buttons_except (left_alignment_button)
 			end
-			paragraph := rich_text.paragraph_format (rich_text.caret_position)
+			caret_position := rich_text.caret_position
+			paragraph := rich_text.paragraph_format (caret_position)
 			paragraph.enable_left_alignment
 			if rich_text.has_selection then
 				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
@@ -426,7 +428,7 @@ feature {NONE} -- Event handling
 					paragraph,
 					paragraph_info)
 			else
-				rich_text.format_paragraph (rich_text.caret_position, rich_text.caret_position, paragraph)
+				rich_text.format_paragraph (caret_position, caret_position + 1, paragraph)
 			end
 		end
 	
@@ -435,6 +437,7 @@ feature {NONE} -- Event handling
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
 			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
+			caret_position: INTEGER
 		do
 			if not center_alignment_button.is_selected then
 				center_alignment_button.select_actions.block
@@ -443,7 +446,8 @@ feature {NONE} -- Event handling
 			else
 				unselect_all_buttons_except (center_alignment_button)
 			end
-			paragraph := rich_text.paragraph_format (rich_text.caret_position)
+			caret_position := rich_text.caret_position
+			paragraph := rich_text.paragraph_format (caret_position)
 			paragraph.enable_center_alignment
 			if rich_text.has_selection then
 				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
@@ -451,7 +455,7 @@ feature {NONE} -- Event handling
 					paragraph,
 					paragraph_info)
 			else
-				rich_text.format_paragraph (rich_text.selection_start, rich_text.selection_end, paragraph)
+				rich_text.format_paragraph (caret_position, caret_position + 1, paragraph)
 			end
 		end
 	
@@ -460,6 +464,7 @@ feature {NONE} -- Event handling
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
 			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
+			caret_position: INTEGER
 		do
 			if not right_alignment_button.is_selected then
 				right_alignment_button.select_actions.block
@@ -468,7 +473,8 @@ feature {NONE} -- Event handling
 			else
 				unselect_all_buttons_except (right_alignment_button)
 			end
-			paragraph := rich_text.paragraph_format (rich_text.caret_position)
+			caret_position := rich_text.caret_position
+			paragraph := rich_text.paragraph_format (caret_position)
 			paragraph.enable_right_alignment
 			if rich_text.has_selection then
 				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
@@ -476,7 +482,7 @@ feature {NONE} -- Event handling
 					paragraph,
 					paragraph_info)
 			else
-				rich_text.format_paragraph (rich_text.selection_start, rich_text.selection_end, paragraph)
+				rich_text.format_paragraph (caret_position, caret_position + 1, paragraph)
 			end
 		end
 		
@@ -485,6 +491,7 @@ feature {NONE} -- Event handling
 		local
 			paragraph: EV_PARAGRAPH_FORMAT
 			paragraph_info: EV_PARAGRAPH_FORMAT_RANGE_INFORMATION
+			caret_position: INTEGER
 		do
 			if not justified_button.is_selected then
 				justified_button.select_actions.block
@@ -493,7 +500,8 @@ feature {NONE} -- Event handling
 			else
 				unselect_all_buttons_except (justified_button)
 			end
-			paragraph := rich_text.paragraph_format (rich_text.caret_position)
+			caret_position := rich_text.caret_position
+			paragraph := rich_text.paragraph_format (caret_position)
 			paragraph.enable_justification
 			if rich_text.has_selection then
 				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
@@ -501,7 +509,7 @@ feature {NONE} -- Event handling
 					paragraph,
 					paragraph_info)
 			else
-				rich_text.format_paragraph (rich_text.selection_start, rich_text.selection_end, paragraph)
+				rich_text.format_paragraph (caret_position, caret_position + 1, paragraph)
 			end
 		end
 
@@ -1187,11 +1195,8 @@ feature {NONE} -- To be removed
 				get_file_name (saving_file)
 			end
 			if not file_dialog_cancelled then
-				start_profiling
 				save_progress.value_range.adapt (create {INTEGER_INTERVAL}.make (1, rich_text.text_length))
 				save_progress.value_range.adapt (create {INTEGER_INTERVAL}.make (1, rich_text.text_length))
-				real_save_file
-				stop_profiling
 				general_label.hide
 				save_progress.show
 				start_profiling
@@ -1240,19 +1245,6 @@ feature {NONE} -- To be removed
 		
 	file_dialog_cancelled: BOOLEAN
 		-- Was dialog shown by last call to `get_file_name' cancelled?
-		
-	load_file is
-			-- Called by `select_actions' of `l'.
-		do
-			rich_text.set_with_named_file (create {FILE_NAME}.make_from_string ("C:\Documents and Settings\rogers\Desktop\test.rtf"))
-		end
-		
-	real_save_file is
-			--
-		do
-			rich_text.save_to_named_file (create {FILE_NAME}.make_from_string ("C:\Documents and Settings\rogers\Desktop\test.rtf"))
-		end
-		
 
 	update_progress_on_save (pos: INTEGER) is
 			-- 

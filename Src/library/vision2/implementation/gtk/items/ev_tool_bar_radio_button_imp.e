@@ -21,7 +21,8 @@ inherit
 			parent_imp,
 			make,
 			interface,
-			connect_signals
+			connect_signals,
+			initialize
 		end
 
 	EV_RADIO_PEER_IMP
@@ -42,6 +43,13 @@ feature {NONE} -- Initialization
 				-- Needed to prevent calling of action sequence.
 			enable_select
 			avoid_reselection := False
+		end
+
+	initialize is
+			-- Initialize default settings for radio item.
+		do
+			Precursor
+			align_text_left
 		end
 
 feature {NONE} -- Implementation
@@ -136,6 +144,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/05/03 18:19:42  king
+--| made text left aligned
+--|
 --| Revision 1.22  2000/04/25 18:44:47  king
 --| gslist->radio_group
 --|

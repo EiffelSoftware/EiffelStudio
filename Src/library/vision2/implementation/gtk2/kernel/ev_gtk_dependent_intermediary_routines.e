@@ -13,7 +13,7 @@ inherit
 			copy, is_equal
 		end
 		
-	ANY
+	EV_GTK_KEY_CONVERSION
 	
 feature {EV_GTK_CALLBACK_MARSHAL, EV_ANY_IMP} -- Tuple optimizations
 
@@ -35,6 +35,40 @@ feature {EV_ANY_I} -- Implementation
 				a_text_iter := feature {EV_GTK_EXTERNALS}.gtk_value_pointer (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_array_i_th (args, 1))
 				a_text_mark := feature {EV_GTK_EXTERNALS}.gtk_value_pointer (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_array_i_th (args, 2))
 				a_rich_text.on_text_mark_changed (a_text_iter, a_text_mark )
+			end
+		end
+
+	window_state_intermediary (a_object_id: INTEGER; n_args: INTEGER; args: POINTER) is
+			-- The window state of the window `a_object_id' has changed
+		local
+			gdk_event: POINTER
+			window_flags: INTEGER
+			titled_window_imp: EV_TITLED_WINDOW_IMP
+		do
+			titled_window_imp ?= eif_id_object (a_object_id)
+			gdk_event := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
+			window_flags := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_event_window_state_struct_new_window_state (gdk_event)
+			if titled_window_imp /= Void and then not titled_window_imp.is_destroyed then
+				if window_flags & feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum = feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum then
+					--print ("Window minimized%N")
+					titled_window_imp.call_window_state_event (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum)
+				elseif window_flags & feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum = feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum then
+					--print ("Window maximized%N")
+					titled_window_imp.call_window_state_event (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum)
+				elseif window_flags & feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_above_enum = feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_above_enum then
+					--print ("Window above%N")
+				elseif window_flags & feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_below_enum = feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_below_enum then
+					--print ("Window below%N")
+				elseif window_flags & feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_sticky_enum = feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_sticky_enum then
+					--print ("Window sticky%N")
+				elseif window_flags & feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_fullscreen_enum = feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_fullscreen_enum then
+					--print ("Window fullscreen%N")
+				elseif window_flags & feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_withdrawn_enum = feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_withdrawn_enum then
+					--print ("Window withdrawn%N")
+				else
+					--print ("Window restored%N")
+					titled_window_imp.call_window_state_event (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_iconified_enum | feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_state_maximized_enum)
+				end				
 			end
 		end
 
@@ -64,7 +98,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	boolean_cell_renderer_toggle_intermediary (a_object_id: INTEGER; nargs: INTEGER; args: POINTER) is
-			--
+			-- Called when a cell renderer is toggled (EV_CHECKABLE_LIST)
 		local
 			a_list_imp: EV_CHECKABLE_LIST_IMP
 			a_tree_path_str: POINTER
@@ -75,8 +109,38 @@ feature {EV_ANY_I} -- Implementation
 				a_list_imp.on_tree_path_toggle (a_tree_path_str)
 			end
 		end
-		
-		
+
+	scroll_wheel_translate (n: INTEGER; args: POINTER): TUPLE is
+			-- Transform scroll wheel event
+		local
+			scroll_event: POINTER
+			button_number: INTEGER
+		do
+			scroll_event := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_pointer (args)
+			if feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_event_scroll_struct_scroll_direction (scroll_event) = feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_scroll_up_enum then
+				button_number := 4
+			else
+				button_number := 5
+			end
+			Result := [feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM, 0, 0, button_number, 0.5, 0.5, 0.5, 0, 0]
+		end
+
+	accel_activate_intermediary (a_object_id: INTEGER; n: INTEGER; p: POINTER) is
+			-- Call accelerators for window `a_object_id'
+		local
+			arg: POINTER
+			accel_key, accel_mods: INTEGER
+			a_titled_window_imp: EV_TITLED_WINDOW_IMP
+		do
+			a_titled_window_imp ?= eif_id_object (a_object_id)
+			arg := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (p, 1)
+			accel_key := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_uint (arg)
+			arg := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_args_array_i_th (p, 2)
+			accel_mods := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_value_flags (arg)
+			if a_titled_window_imp /= Void and then not a_titled_window_imp.is_destroyed then
+				a_titled_window_imp.call_accelerators (key_code_from_gtk (accel_key), accel_mods)
+			end
+		end
 
 	page_switch_translate (n: INTEGER; args: POINTER): TUPLE is
 			-- Retrieve index of switched page.
@@ -114,7 +178,6 @@ feature {EV_ANY_I} -- Implementation
 				a_toolbar_button_imp.select_actions_internal.call (Void)
 			end
 		end
-		
 
 feature {EV_ANY_I} -- Externals
 

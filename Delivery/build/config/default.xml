@@ -40,6 +40,7 @@
 			<TEXT>external_tool_order<LIST_STRING></LIST_STRING></TEXT>
 			<TEXT>tip_of_day_index<INTEGER>1</INTEGER></TEXT>
 			<TEXT>recent_projects<LIST_STRING></LIST_STRING></TEXT>
+			<TEXT>tools_on_top<BOOLEAN>True</BOOLEAN></TEXT>
 			
 	</TOPIC>
 </TOPIC>

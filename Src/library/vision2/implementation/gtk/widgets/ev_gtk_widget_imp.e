@@ -10,6 +10,22 @@ deferred class
 inherit
 	EV_ANY_IMP
 
+feature {NONE} -- Agent functions.
+
+	key_event_translate_agent: FUNCTION [EV_GTK_CALLBACK_MARSHAL, TUPLE [INTEGER, POINTER], TUPLE] is
+			-- Translation agent used for key events
+		once
+			Result := agent (App_implementation.gtk_marshal).key_event_translate
+		end
+
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
+
+	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- Used for key event actions sequences, redefined by descendants
+		do
+
+		end
+
 feature {NONE} -- Implementation
 
 	is_parentable: BOOLEAN is
@@ -100,8 +116,8 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
-	widget_imp_at_pointer_position: EV_WIDGET_IMP is
-			-- Widget implementation at current mouse pointer position (if any)
+	gtk_widget_imp_at_pointer_position: EV_GTK_WIDGET_IMP is
+			-- Gtk Widget implementation at current mouse pointer position (if any)
 		local
 			a_x, a_y: INTEGER
 			gdkwin, gtkwid: POINTER
@@ -120,6 +136,12 @@ feature {EV_ANY_I} -- Implementation
 			if Result /= Void and then Result.is_destroyed then
 				Result := Void
 			end
+		end
+
+	widget_imp_at_pointer_position: EV_WIDGET_IMP is
+			-- Widget implementation at current mouse pointer position (if any)
+		do
+			Result ?= gtk_widget_imp_at_pointer_position
 		end
 
 	set_pointer_style (a_cursor: like pointer_style) is

@@ -129,8 +129,6 @@ feature
 			pos: INTEGER;
 			c1, c2: CURSOR;
 		do
-			!!other_set.make
-			other_set.compare_objects
 			other_set ?= other;
 			if other_set /= Void and then count = other_set.count then
 				c1 := cursor;

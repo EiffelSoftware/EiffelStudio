@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-  <Module Id="eiffel_com" Guid="FF5EF6B2-8164-41E6-8817-C9137C10AFFA" Language="0" Version="5.5">
+  <Module Id="eiffel_com" Guid="FF5EF6B2-8164-41E6-8817-C9137C10AFFA" Language="0" Version="5.6">
     <Package Id="FF5EF6B2-8164-41E6-8817-C9137C10AFFA" Keywords="MergeModule, MSI, Database" Description="EiffelCOM" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" SummaryCodepage="0" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Component Id="Registry" Guid="18B68737-CE2F-4F57-B358-1DAE29826C27">
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\com_wizard" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\com_wizard" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
       </Component>
       <Directory Id="Application" Name=".">
         <Directory Id="library" Name="library">
@@ -254,7 +254,7 @@
         </Directory>
       </Directory>
       <Directory Id="ProgramMenuFolder" Name="Redist">
-        <Directory Id="EiffelStudio_5.5" Name="EIFFEL~5" LongName="EiffelStudio 5.5">
+        <Directory Id="EiffelStudio" Name="EIFFEL~5" LongName="EiffelStudio 5.6">
           <Directory Id="Documentation7" Name="DOCUME~5" LongName="Documentation">
             <Component Id="Documentation7" Guid="34749585-99BD-4328-9C8D-21310D66A542" KeyPath="yes">
               <Shortcut Id="EIFFEL1.HLPEiffelcom.hlp" Directory="Documentation7" Name="COMWIZ~1" LongName="COM Wizard Documentation" Target="[#Eiffelcom.hlp]" Description="Documentation concerning the COM wizard" Hotkey="0" Show="normal" />

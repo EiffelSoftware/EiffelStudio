@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-  <Module Id="vision2_tour" Guid="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Language="0" Version="5.5">
+  <Module Id="vision2_tour" Guid="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Language="0" Version="5.6">
 	<Package Id="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Keywords="MergeModule, MSI, Database" Description="Vision2Tour" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="0" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Component Id="Registry" Guid="232839E5-2B6C-4AAA-866A-899685E51D46">
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\vision2_tour" Name="ISE_PLATFORM" Value="windows" Id="registry1" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel55\vision2_tour" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\vision2_tour" Name="ISE_PLATFORM" Value="windows" Id="registry1" />
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\vision2_tour" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
       </Component>
       <Directory Id="ProgramMenuFolder" Name="Redist">
-        <Directory Id="EiffelStudio_5.5" Name="EIFFEL~2" LongName="EiffelStudio 5.5">
+        <Directory Id="EiffelStudio" Name="EIFFEL~2" LongName="EiffelStudio 5.6">
           <Directory Id="Documentation1" Name="DOCUME~2" LongName="Documentation">
             <Component Id="Documentation1" Guid="81D37F1B-9598-4251-8DDA-FD90F76FF79A" KeyPath="yes">
               <Shortcut Id="VISION1.EXEvision2_tour.exe" Directory="Documentation1" Name="EIFFEL~1" LongName="EiffelVision2 Tour" Target="[#vision2_tour.exe]" Description="EiffelVision2 overview presentation" Hotkey="0" Show="normal" />

@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-  <Module Id="graphical_libraries" Guid="3F15FBD9-23A7-4BCE-8A0F-109883675A70" Language="0" Version="5.5">
+  <Module Id="graphical_libraries" Guid="3F15FBD9-23A7-4BCE-8A0F-109883675A70" Language="0" Version="5.6">
     <Package Id="3F15FBD9-23A7-4BCE-8A0F-109883675A70" Keywords="MergeModule, MSI, Database" Description="Graphical Libraries" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" SummaryCodepage="0" />
 	<Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="Application" Name=".">
@@ -1361,6 +1361,7 @@
                   <File Id="V137" Name="EV_PAR~3.E" LongName="ev_paragraph_format_range_information.e" />
                   <File Id="ev_character_format_constants.e" Name="EV_CHA~6.E" LongName="ev_character_format_constants.e" />
                   <File Id="ev_active_list.e" Name="EV_ACT~2.E" LongName="ev_active_list.e" />
+				  <File Id="ev_notebook_tab.e" Name="EV_NOT~1.E" LongName="ev_notebook_tab.e" />
                 </Component>
               </Directory>
               <Directory Id="items" Name="items">
@@ -1449,7 +1450,7 @@
                   <File Id="ev_button_action_sequences.e" Name="EV_BUT~2.E" LongName="ev_button_action_sequences.e" />
                   <File Id="V97" Name="EV_TOO~6.E" LongName="ev_tool_bar_button_action_sequences.e" />
                   <File Id="V98" Name="EV_MEN~A.E" LongName="ev_menu_item_select_action_sequence.e" />
-                  <File Id="ev_tree_node_action_sequences.e" Name="EV_TRE~C.E" LongName="ev_tree_node_action_sequences.e" />
+                  <File Id="ev_tree_node_action_sequences.e" Name="EV_TRE~1.E" LongName="ev_tree_node_action_sequences.e" />
                   <File Id="ev_pnd_start_action_sequence.e" Name="EV_PND~4.E" LongName="ev_pnd_start_action_sequence.e" />
                   <File Id="ev_pixmap_action_sequences.e" Name="EV_PIX~6.E" LongName="ev_pixmap_action_sequences.e" />
                   <File Id="ev_new_item_action_sequence.e" Name="EV_NEW~1.E" LongName="ev_new_item_action_sequence.e" />
@@ -1463,12 +1464,14 @@
                   <File Id="V111" Name="EV_MUL~B.E" LongName="ev_multi_column_list_action_sequences.e" />
                   <File Id="ev_widget_action_sequences.e" Name="EV_WID~8.E" LongName="ev_widget_action_sequences.e" />
                   <File Id="ev_menu_item_action_sequences.e" Name="EV_MEN~J.E" LongName="ev_menu_item_action_sequences.e" />
-                  <File Id="V114" Name="EV_CHE~B.E" LongName="ev_checkable_list_action_sequences.e" />
+                  <File Id="V114" Name="EV_CHE~1.E" LongName="ev_checkable_list_action_sequences.e" />
+                  <File Id="V141" Name="EV_CHE~2.E" LongName="ev_checkable_tree_action_sequences.e" />
                   <File Id="ev_action_sequence.e" Name="EV_ACT~1.E" LongName="ev_action_sequence.e" />
                   <File Id="V117" Name="EV_TEX~K.E" LongName="ev_text_component_action_sequences.e" />
                   <File Id="ev_pnd_finished_action_sequence.e" Name="EV_PND~2.E" LongName="ev_pnd_finished_action_sequence.e" />
                   <File Id="V118" Name="EV_MUL~C.E" LongName="ev_multi_column_list_row_select_action_sequence.e" />
-                  <File Id="ev_tree_action_sequences.e" Name="EV_TRE~F.E" LongName="ev_tree_action_sequences.e" />
+                  <File Id="ev_tree_action_sequences.e" Name="EV_TRE~2.E" LongName="ev_tree_action_sequences.e" />
+                  <File Id="V142" Name="EV_TRE~3.E" LongName="ev_tree_item_check_action_sequence.e" />
                   <File Id="ev_pnd_action_sequence.e" Name="EV_PND~1.E" LongName="ev_pnd_action_sequence.e" />
                   <File Id="V122" Name="EV_PIC~7.E" LongName="ev_pick_and_dropable_action_sequences.e" />
                   <File Id="ev_gauge_action_sequences.e" Name="EV_GAU~5.E" LongName="ev_gauge_action_sequences.e" />
@@ -1578,7 +1581,6 @@
                     <File Id="ev_range.e" Name="ev_range.e" />
                     <File Id="ev_multi_column_list.e" Name="EV_MUL~2.E" LongName="ev_multi_column_list.e" />
                     <File Id="ev_horizontal_scroll_bar.e" Name="EV_HOR~5.E" LongName="ev_horizontal_scroll_bar.e" />
-                    <File Id="ev_checkable_list.e" Name="EV_CHE~4.E" LongName="ev_checkable_list.e" />
                     <File Id="ev_text_field.e" Name="EV_TEX~A.E" LongName="ev_text_field.e" />
                     <File Id="ev_vertical_range.e" Name="EV_VER~8.E" LongName="ev_vertical_range.e" />
                     <File Id="ev_text_component.e" Name="EV_TEX~E.E" LongName="ev_text_component.e" />
@@ -1586,7 +1588,9 @@
                     <File Id="ev_drawing_area.e" Name="EV_DRA~4.E" LongName="ev_drawing_area.e" />
                     <File Id="ev_spin_button.e" Name="EV_SPI~2.E" LongName="ev_spin_button.e" />
                     <File Id="ev_password_field.e" Name="EV_PAS~3.E" LongName="ev_password_field.e" />
-                    <File Id="ev_check_button.e" Name="EV_CHE~8.E" LongName="ev_check_button.e" />
+                    <File Id="ev_check_button.e" Name="EV_CHE~1.E" LongName="ev_check_button.e" />
+                    <File Id="ev_checkable_list.e" Name="EV_CHE~2.E" LongName="ev_checkable_list.e" />
+                    <File Id="ev_checkable_tree.e" Name="EV_CHE~3.E" LongName="ev_checkable_tree.e" />
                     <File Id="ev_tree.e" Name="ev_tree.e" />
                     <File Id="ev_text.e" Name="ev_text.e" />
                     <File Id="ev_list.e" Name="ev_list.e" />
@@ -1655,6 +1659,7 @@
                     <File Id="ev_gdi_object.e" Name="EVF101~1.E" LongName="ev_gdi_object.e" />
                     <File Id="ev_gdi_allocated_pens.e" Name="EV_GDI~3.E" LongName="ev_gdi_allocated_pens.e" />
                     <File Id="ev_pixmap_imp_loader.e" Name="EV_PIX~A.E" LongName="ev_pixmap_imp_loader.e" />
+                    <File Id="ev_notebook_tab_imp.e" Name="EV_NOT~1.E" LongName="ev_notebook_tab_imp.e" />
                   </Component>
                 </Directory>
                 <Directory Id="properties" Name="PROPER~1" LongName="properties">
@@ -1706,7 +1711,8 @@
                     <File Id="V79" Name="EV_LIS~3.E" LongName="ev_list_item_list_action_sequences_imp.e" />
                     <File Id="ev_window_action_sequences_imp.e" Name="EV_WIN~3.E" LongName="ev_window_action_sequences_imp.e" />
                     <File Id="V81" Name="EV_MUL~4.E" LongName="ev_multi_column_list_row_action_sequences_imp.e" />
-                    <File Id="V82" Name="EV_CHE~3.E" LongName="ev_checkable_list_action_sequences_imp.e" />
+					<File Id="V82" Name="EV_CHE~1.E" LongName="ev_checkable_list_action_sequences_imp.e" />
+                    <File Id="V140" Name="EV_CHE~2.E" LongName="ev_checkable_tree_action_sequences_imp.e" />
                     <File Id="V90" Name="EV_MUL~6.E" LongName="ev_multi_column_list_action_sequences_imp.e" />
                     <File Id="V100" Name="EV_TOO~7.E" LongName="ev_tool_bar_button_action_sequences_imp.e" />
                     <File Id="V101" Name="EV_TIT~3.E" LongName="ev_titled_window_action_sequences_imp.e" />
@@ -1717,7 +1723,6 @@
                     <File Id="V112" Name="EV_TEX~H.E" LongName="ev_text_component_action_sequences_imp.e" />
                     <File Id="ev_pixmap_action_sequences_imp.e" Name="EV_PIX~B.E" LongName="ev_pixmap_action_sequences_imp.e" />
                     <File Id="V120" Name="EV_APP~6.E" LongName="ev_application_action_sequences_imp.e" />
-                    <File Id="empty_directory121" Name="EMPTY_~2" LongName="empty_directory" />
                     <File Id="V123" Name="EV_TEX~N.E" LongName="ev_text_field_action_sequences_imp.e" />
                     <File Id="V124" Name="EV_PIC~8.E" LongName="ev_pick_and_dropable_action_sequences_imp.e" />
                     <File Id="ev_notebook_action_sequences_imp.e" Name="EV_NOT~7.E" LongName="ev_notebook_action_sequences_imp.e" />
@@ -1783,8 +1788,9 @@
                       <File Id="ev_text_field_imp.e" Name="EV_TEX~F.E" LongName="ev_text_field_imp.e" />
                       <File Id="ev_pixmap_imp.e" Name="EV_PIX~4.E" LongName="ev_pixmap_imp.e" />
                       <File Id="ev_horizontal_separator_imp.e" Name="EV_HOR~9.E" LongName="ev_horizontal_separator_imp.e" />
-                      <File Id="ev_check_button_imp.e" Name="EV_CHE~5.E" LongName="ev_check_button_imp.e" />
-                      <File Id="ev_checkable_list_imp.e" Name="EV_CHE~6.E" LongName="ev_checkable_list_imp.e" />
+                      <File Id="ev_check_button_imp.e" Name="EV_CHE~1.E" LongName="ev_check_button_imp.e" />
+                      <File Id="ev_checkable_list_imp.e" Name="EV_CHE~2.E" LongName="ev_checkable_list_imp.e" />
+                      <File Id="ev_checkable_tree_imp.e" Name="EV_CHE~3.E" LongName="ev_checkable_tree_imp.e" />
                       <File Id="ev_range_imp.e" Name="EV_RAN~1.E" LongName="ev_range_imp.e" />
                       <File Id="ev_label_imp.e" Name="EV_LAB~1.E" LongName="ev_label_imp.e" />
                       <File Id="ev_horizontal_scroll_bar_imp.e" Name="EV_HOR~C.E" LongName="ev_horizontal_scroll_bar_imp.e" />
@@ -1847,6 +1853,7 @@
                     <File Id="ev_shared_transport_i.e" Name="EV_SHA~3.E" LongName="ev_shared_transport_i.e" />
                     <File Id="ev_print_projector_i.e" Name="EV_PRI~C.E" LongName="ev_print_projector_i.e" />
                     <File Id="ev_item_list_i.e" Name="EV_ITE~A.E" LongName="ev_item_list_i.e" />
+                    <File Id="ev_notebook_tab_i.e" Name="EV_NOT~1.E" LongName="ev_notebook_tab_i.e" />
                     <File Id="V138" Name="EV_RIC~8.E" LongName="ev_rich_text_buffering_structures_i.e" />
                     <File Id="ev_rich_text_constants_i.e" Name="EV_RIC~9.E" LongName="ev_rich_text_constants_i.e" />
                     <File Id="rtf_format_i.e" Name="RTF_FO~1.E" LongName="rtf_format_i.e" />
@@ -1911,35 +1918,35 @@
                 </Directory>
                 <Directory Id="events37" Name="events">
                   <Component Id="ev_item_action_sequences_i.e" Guid="ABF859C0-2F16-4222-9779-86C1EA3FD95A">
-                    <File Id="ev_item_action_sequences_i.e" Name="EV_ITE~2.E" LongName="ev_item_action_sequences_i.e" KeyPath="yes" />
-                    <File Id="ev_button_action_sequences_i.e" Name="EV_BUT~1.E" LongName="ev_button_action_sequences_i.e" />
-                    <File Id="V83" Name="EV_TEX~4.E" LongName="ev_text_component_action_sequences_i.e" />
-                    <File Id="V84" Name="EV_DOC~3.E" LongName="ev_dockable_target_action_sequences_i.e" />
-                    <File Id="ev_text_field_action_sequences_i.e" Name="EV_TEX~9.E" LongName="ev_text_field_action_sequences_i.e" />
-                    <File Id="V85" Name="EV_MEN~6.E" LongName="ev_menu_item_list_action_sequences_i.e" />
-                    <File Id="empty_directory" Name="EMPTY_~1" LongName="empty_directory" />
-                    <File Id="ev_gauge_action_sequences_i.e" Name="EV_GAU~3.E" LongName="ev_gauge_action_sequences_i.e" />
-                    <File Id="V93" Name="EV_TIT~2.E" LongName="ev_titled_window_action_sequences_i.e" />
-                    <File Id="V94" Name="EV_MUL~7.E" LongName="ev_multi_column_list_row_action_sequences_i.e" />
-                    <File Id="V95" Name="EV_DOC~6.E" LongName="ev_dockable_source_action_sequences_i.e" />
                     <File Id="ev_application_action_sequences_i.e" Name="EV_APP~5.E" LongName="ev_application_action_sequences_i.e" />
-                    <File Id="V103" Name="EV_DRA~8.E" LongName="ev_drawing_area_action_sequences_i.e" />
-                    <File Id="ev_widget_action_sequences_i.e" Name="EV_WID~5.E" LongName="ev_widget_action_sequences_i.e" />
-                    <File Id="V105" Name="EV_TOO~B.E" LongName="ev_tool_bar_button_action_sequences_i.e" />
-                    <File Id="V106" Name="EV_MUL~9.E" LongName="ev_multi_column_list_action_sequences_i.e" />
-                    <File Id="V107" Name="EV_LIS~8.E" LongName="ev_list_item_list_action_sequences_i.e" />
-                    <File Id="ev_pixmap_action_sequences_i.e" Name="EV_PIX~8.E" LongName="ev_pixmap_action_sequences_i.e" />
-                    <File Id="ev_window_action_sequences_i.e" Name="EV_WIN~5.E" LongName="ev_window_action_sequences_i.e" />
-                    <File Id="V113" Name="EV_PIC~4.E" LongName="ev_pick_and_dropable_action_sequences_i.e" />
-                    <File Id="ev_notebook_action_sequences_i.e" Name="EV_NOT~6.E" LongName="ev_notebook_action_sequences_i.e" />
+                    <File Id="ev_button_action_sequences_i.e" Name="EV_BUT~1.E" LongName="ev_button_action_sequences_i.e" />
+                    <File Id="V119" Name="EV_CHE~1.E" LongName="ev_checkable_list_action_sequences_i.e" />
+                    <File Id="V139" Name="EV_CHE~2.E" LongName="ev_checkable_tree_action_sequences_i.e" />
                     <File Id="ev_container_action_sequences_i.e" Name="EV_CON~5.E" LongName="ev_container_action_sequences_i.e" />
-                    <File Id="ev_tree_node_action_sequences_i.e" Name="EV_TRE~E.E" LongName="ev_tree_node_action_sequences_i.e" />
-                    <File Id="ev_menu_item_action_sequences_i.e" Name="EV_MEN~K.E" LongName="ev_menu_item_action_sequences_i.e" />
-                    <File Id="V119" Name="EV_CHE~D.E" LongName="ev_checkable_list_action_sequences_i.e" />
-                    <File Id="ev_tree_action_sequences_i.e" Name="EV_TRE~H.E" LongName="ev_tree_action_sequences_i.e" />
-                    <File Id="V126" Name="EV_STA~7.E" LongName="ev_standard_dialog_action_sequences_i.e" />
+                    <File Id="V95" Name="EV_DOC~6.E" LongName="ev_dockable_source_action_sequences_i.e" />
+                    <File Id="V84" Name="EV_DOC~3.E" LongName="ev_dockable_target_action_sequences_i.e" />
+                    <File Id="V103" Name="EV_DRA~8.E" LongName="ev_drawing_area_action_sequences_i.e" />
+                    <File Id="ev_gauge_action_sequences_i.e" Name="EV_GAU~3.E" LongName="ev_gauge_action_sequences_i.e" />
+                    <File Id="ev_item_action_sequences_i.e" Name="EV_ITE~2.E" LongName="ev_item_action_sequences_i.e" KeyPath="yes" />
                     <File Id="ev_list_item_action_sequences_i.e" Name="EV_LIS~F.E" LongName="ev_list_item_action_sequences_i.e" />
+                    <File Id="V107" Name="EV_LIS~8.E" LongName="ev_list_item_list_action_sequences_i.e" />
+                    <File Id="ev_menu_item_action_sequences_i.e" Name="EV_MEN~K.E" LongName="ev_menu_item_action_sequences_i.e" />
+                    <File Id="V85" Name="EV_MEN~6.E" LongName="ev_menu_item_list_action_sequences_i.e" />
+                    <File Id="V106" Name="EV_MUL~9.E" LongName="ev_multi_column_list_action_sequences_i.e" />
+                    <File Id="V94" Name="EV_MUL~7.E" LongName="ev_multi_column_list_row_action_sequences_i.e" />
+                    <File Id="ev_notebook_action_sequences_i.e" Name="EV_NOT~6.E" LongName="ev_notebook_action_sequences_i.e" />
+                    <File Id="V113" Name="EV_PIC~4.E" LongName="ev_pick_and_dropable_action_sequences_i.e" />
+                    <File Id="ev_pixmap_action_sequences_i.e" Name="EV_PIX~8.E" LongName="ev_pixmap_action_sequences_i.e" />
                     <File Id="ev_rich_text_action_sequences_i.e" Name="EV_RIC~4.E" LongName="ev_rich_text_action_sequences_i.e" />
+                    <File Id="V126" Name="EV_STA~7.E" LongName="ev_standard_dialog_action_sequences_i.e" />
+                    <File Id="V83" Name="EV_TEX~4.E" LongName="ev_text_component_action_sequences_i.e" />
+                    <File Id="ev_text_field_action_sequences_i.e" Name="EV_TEX~9.E" LongName="ev_text_field_action_sequences_i.e" />
+                    <File Id="V93" Name="EV_TIT~2.E" LongName="ev_titled_window_action_sequences_i.e" />
+                    <File Id="V105" Name="EV_TOO~B.E" LongName="ev_tool_bar_button_action_sequences_i.e" />
+                    <File Id="ev_tree_action_sequences_i.e" Name="EV_TRE~H.E" LongName="ev_tree_action_sequences_i.e" />
+                    <File Id="ev_tree_node_action_sequences_i.e" Name="EV_TRE~E.E" LongName="ev_tree_node_action_sequences_i.e" />
+                    <File Id="ev_widget_action_sequences_i.e" Name="EV_WID~5.E" LongName="ev_widget_action_sequences_i.e" />
+                    <File Id="ev_window_action_sequences_i.e" Name="EV_WIN~5.E" LongName="ev_window_action_sequences_i.e" />
                   </Component>
                 </Directory>
                 <Directory Id="widgets25" Name="widgets">
@@ -1963,7 +1970,7 @@
                       <File Id="ev_horizontal_progress_bar_i.e" Name="EV_HOR~B.E" LongName="ev_horizontal_progress_bar_i.e" />
                       <File Id="ev_vertical_range_i.e" Name="EV_VER~A.E" LongName="ev_vertical_range_i.e" />
                       <File Id="ev_progress_bar_i.e" Name="EV_PRO~3.E" LongName="ev_progress_bar_i.e" />
-                      <File Id="ev_check_button_i.e" Name="EV_CHE~7.E" LongName="ev_check_button_i.e" />
+                      <File Id="ev_check_button_i.e" Name="EV_CHE~1.E" LongName="ev_check_button_i.e" />
                       <File Id="ev_button_i.e" Name="EV_BUT~3.E" LongName="ev_button_i.e" />
                       <File Id="ev_vertical_separator_i.e" Name="EV_VER~B.E" LongName="ev_vertical_separator_i.e" />
                       <File Id="ev_range_i.e" Name="EV_RAN~2.E" LongName="ev_range_i.e" />
@@ -1978,7 +1985,8 @@
                       <File Id="ev_separator_i.e" Name="EV_SEP~4.E" LongName="ev_separator_i.e" />
                       <File Id="ev_toggle_button_i.e" Name="EV_TOG~3.E" LongName="ev_toggle_button_i.e" />
                       <File Id="ev_multi_column_list_i.e" Name="EV_MUL~D.E" LongName="ev_multi_column_list_i.e" />
-                      <File Id="ev_checkable_list_i.e" Name="EV_CHE~C.E" LongName="ev_checkable_list_i.e" />
+                      <File Id="ev_checkable_list_i.e" Name="EV_CHE~2.E" LongName="ev_checkable_list_i.e" />
+                      <File Id="ev_checkable_tree_i.e" Name="EV_CHE~3.E" LongName="ev_checkable_tree_i.e" />
                       <File Id="ev_tool_bar_i.e" Name="EV_TOO~K.E" LongName="ev_tool_bar_i.e" />
                       <File Id="ev_list_i.e" Name="EV_LIS~E.E" LongName="ev_list_i.e" />
                       <File Id="ev_rich_text_i.e" Name="EV_RIC~1.E" LongName="ev_rich_text_i.e" />
@@ -2231,7 +2239,6 @@
                 <File Id="wel_mdi_create_struct.e" Name="WEL_MD~4.E" LongName="wel_mdi_create_struct.e" />
                 <File Id="wel_tv_dispinfo.e" Name="WEL_TV~7.E" LongName="wel_tv_dispinfo.e" />
                 <File Id="wel_tree_view_item.e" Name="WEL_TR~5.E" LongName="wel_tree_view_item.e" />
-                <File Id="wel_tc_keydown.e" Name="WEL_TC~3.E" LongName="wel_tc_keydown.e" />
                 <File Id="wel_point.e" Name="WEL_PO~4.E" LongName="wel_point.e" />
                 <File Id="wel_hd_notify.e" Name="WEL_HD~8.E" LongName="wel_hd_notify.e" />
                 <File Id="wel_file_time.e" Name="WEL_FI~5.E" LongName="wel_file_time.e" />
@@ -2241,6 +2248,8 @@
                 <File Id="wel_character_format2.e" Name="WEL_CH~A.E" LongName="wel_character_format2.e" />
                 <File Id="wel_paragraph_format2.e" Name="WEL_PA~6.E" LongName="wel_paragraph_format2.e" />
                 <File Id="wel_nm_list_view_getinfotip.e" Name="WE1FF9~1.E" LongName="wel_nm_list_view_getinfotip.e" />
+				<File Id="wel_tc_hittestinfo.e" Name="WEL_TC~1.E" LongName="wel_tc_hittestinfo.e" />
+                <File Id="wel_tc_keydown.e" Name="WEL_TC~2.E" LongName="wel_tc_keydown.e" />
               </Component>
             </Directory>
             <Directory Id="messages" Name="messages">
@@ -2519,6 +2528,7 @@
                 <File Id="wel_cbeif_constants.e" Name="WEL_CB~2.E" LongName="wel_cbeif_constants.e" />
                 <File Id="wel_brush_style_constants.e" Name="WEL_BR~2.E" LongName="wel_brush_style_constants.e" />
                 <File Id="wel_file_constants.e" Name="WEL_FI~6.E" LongName="wel_file_constants.e" />
+				<File Id="wel_nm_constants.e" Name="WEL_NM~1.E" LongName="wel_nm_constants.e" />
               </Component>
               <Directory Id="new_consts" Name="NEW_CO~1" LongName="new_consts">
                 <Component Id="wel_window_constants.e" Guid="A2A7F228-DC79-413A-BD44-A077BE16B22F">

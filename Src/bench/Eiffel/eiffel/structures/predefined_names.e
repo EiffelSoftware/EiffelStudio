@@ -109,6 +109,7 @@ feature -- Constants
 	to_cil_name_id: INTEGER is 99
 	is_digit_name_id: INTEGER is 100
 	internal_correct_mismatch_name_id: INTEGER is 101
+	memory_calloc_name_id: INTEGER is 102
 	
 			-- Predefined name IDs constants
 

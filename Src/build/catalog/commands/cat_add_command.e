@@ -10,21 +10,12 @@ class CAT_ADD_COMMAND
 inherit
 
 	CAT_ADD_ELEMENT
-		rename 
-			undo as parent_undo,
-			redo as parent_redo
-		redefine
-			element,
-			page
-		end
-	CAT_ADD_ELEMENT
 		redefine
 			undo, redo,
 			element,
 			page
-		select
-			undo, redo
 		end
+
 	WINDOWS
 	
 feature {NONE}
@@ -50,14 +41,15 @@ feature
 
 	redo is
 		do
-			parent_redo
+			{CAT_ADD_ELEMENT} Precursor
 			element.recreate_class
 		end
 
 	undo is
 		do
-			parent_undo
+			{CAT_ADD_ELEMENT} Precursor
 			element.remove_class
 		end
 			
-end
+end -- class CAT_ADD_COMMAND
+

@@ -7,7 +7,6 @@ indexing
 deferred class CMD_UPDATE_PARENT 
 
 inherit
-
 	CMD_COMMAND
 
 feature {NONE}
@@ -29,12 +28,12 @@ feature {NONE}
 			Result := edited_command.command_editor
 		end
 
-	argument_box: ARG_INST_BOX is
-		require
-			command_editor_not_void: command_editor /= Void
-		do
-			Result := command_editor.argument_box
-		end
+--	argument_box: ARG_INST_BOX is
+--		require
+--			command_editor_not_void: command_editor /= Void
+--		do
+--			Result := command_editor.argument_box
+--		end
 
 	associated_instance: CMD_INSTANCE is
 		require
@@ -54,7 +53,7 @@ feature {NONE}
 				arguments.after
 			loop
 				if
-					arguments.item.parent_type = edited_command.parent_type
+					arguments.item.parent_type = edited_command.ancestor_type
 				then
 					arguments.remove
 					if command_editor /= Void then
@@ -65,23 +64,23 @@ feature {NONE}
 					i := i + 1
 				end
 			end
-			from
-				labels.start
-			until
-				labels.after
-			loop
-				if
-					labels.item.parent_type = edited_command.parent_type and
-					labels.item.parent_type /= Void
-				then
-					labels.remove
-				else
-					labels.forth
-				end
-			end
-			edited_command.set_parent_type (Void)
+--			from
+--				labels.start
+--			until
+--				labels.after
+--			loop
+--				if
+--					labels.item.parent_type = edited_command.ancestor_type and
+--					labels.item.parent_type /= Void
+--				then
+--					labels.remove
+--				else
+--					labels.forth
+--				end
+--			end
+			edited_command.set_ancestor_type (Void)
 			if command_editor /= Void then
-				command_editor.labels.set (labels)
+--				command_editor.labels.set (labels)
 			end
 		end -- undo
 
@@ -96,7 +95,7 @@ feature {NONE}
 			if previous_parent /= Void then		
 				remove_parent
 			end
-			edited_command.set_parent_type (c)
+			edited_command.set_ancestor_type (c)
 			from
 				oal := c.arguments
 				oal.start
@@ -111,30 +110,31 @@ feature {NONE}
 					associated_instance.add_argument
 				end
 			end
-			from
-				oll := c.labels
-				oll.start
-				labels.finish
-			until
-				oll.after
-			loop
-				new_label := clone (oll.item.label)
-				!!l.make (oll.item.label)
-				l.set_parent (c)
-				labels.extend (l)
-				oll.forth
-			end
+--			from
+--				oll := c.labels
+--				oll.start
+--				labels.finish
+--			until
+--				oll.after
+--			loop
+--				new_label := clone (oll.item.label)
+--				!!l.make (oll.item.label)
+--				l.set_parent (c)
+--				labels.extend (l)
+--				oll.forth
+--			end
 			if command_editor /= Void then
-				command_editor.labels.set (labels)
+--				command_editor.labels.set (labels)
 			end
 		end 
 
 	worked_on: STRING is
 		do
-			if edited_command /= Void and then edited_command.parent_type /= Void then	
+			if edited_command /= Void and then edited_command.ancestor_type /= Void then	
 				!!Result.make (0)
-				Result.append (edited_command.parent_type.label)
+				Result.append (edited_command.ancestor_type.label)
 			end
-		end -- worked_on
+		end
 
-end
+end -- class CMD_UPDATE_PARENT
+

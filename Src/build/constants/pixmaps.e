@@ -1,3 +1,9 @@
+indexing
+	description: "EiffelBuild pixmaps."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
+
 class PIXMAPS
 
 inherit
@@ -6,844 +12,1100 @@ inherit
 	
 feature -- General Pixmaps
 
-	Alignment_pixmap: PIXMAP is
+	Alignment_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("align")
-		end;
+		end
 
-	App_interior_stipple: PIXMAP is
+	App_interior_stipple: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("int_stip")
-		end;
+		end
 
-	Attribute_pixmap: PIXMAP is
+	Attribute_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("attrib")
-		end;
+		end
 
-	Behavior_pixmap: PIXMAP is
+	Behavior_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("behavior")
-		end;
+		end
 
-	Behavior_dot_pixmap: PIXMAP is
+	Behavior_dot_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("beh_dot")
-		end;
+		end
 
-	Behavior_format_pixmap: PIXMAP is
+	Behavior_format_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("beh_frmt")
-		end;
+		end
 
- 	Bg_color_stone_pixmap: PIXMAP is
+ 	Bg_color_stone_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("bg_clrst")
-		end;
+		end
 
- 	Bg_pixmap_stone_pixmap: PIXMAP is
+ 	Bg_pixmap_stone_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("bg_pxmap")
-		end;
+		end
 
- 	Cat_temp_wind_pixmap: PIXMAP is
+		--| Containers
+
+ 	Cat_temp_wind_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("cat_tmpw")
- 		end;
+ 		end
  
- 	Cat_perm_wind_pixmap: PIXMAP is
+ 	Cat_perm_wind_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("cat_prmw")
- 		end;
+ 		end
  
- 	Cat_bulletin_pixmap: PIXMAP is
+ 	Cat_bulletin_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("cat_bltn")
- 		end;
+ 		end
  
- 	Cat_menu_entry_pixmap: PIXMAP is
- 		once
- 			Result := symbol_file_content ("cat_ment")
- 		end;
- 
- 	Cat_menu_pull_pixmap: PIXMAP is
- 		once
- 			Result := symbol_file_content ("cat_mpul")
- 		end;
- 
- 	Cat_opt_pull_pixmap: PIXMAP is
- 		once
- 			Result := symbol_file_content ("cat_opul")
- 		end;
- 
- 	Cat_bar_pixmap: PIXMAP is
+	Cat_vbox_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_vbox")
+		end
+
+	Cat_hbox_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_hbox")
+		end
+
+	Cat_table_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_table")
+		end
+
+	Cat_notebook_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_notebook")
+		end
+
+	Cat_frame_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_frame")
+		end
+
+	Cat_scroll_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_scroll")
+		end
+
+	Cat_hsplit_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_vertisplit")
+		end
+
+	Cat_vsplit_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_horizsplit")
+		end
+
+		--| Primitives
+
+	Cat_label_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_label")
+		end
+
+	Cat_button_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_button")
+		end
+
+	Cat_toggle_b_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_toggle")
+		end
+
+	Cat_check_b_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_check")
+		end
+
+	Cat_radio_b_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_radio")
+		end
+
+	Cat_vseparator_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_vertisep")
+		end
+
+	Cat_hseparator_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_horizsep")
+		end
+
+	Cat_draw_area_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_drawing")
+		end
+
+		--| Menus
+	
+	Cat_static_bar_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_staticbar")
+		end
+
+ 	Cat_bar_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("cat_bar")
- 		end;
+ 		end
+
+ 	Cat_menu_pixmap: EV_PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("cat_menu")
+ 		end
+
+ 	Cat_menu_item_pixmap: EV_PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("cat_ment")
+ 		end
+
+ 	Cat_check_menu_pixmap: EV_PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("cat_check")
+ 		end
+
+ 	Cat_radio_menu_pixmap: EV_PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("cat_radio")
+ 		end
  
- 	Color_pixmap: PIXMAP is
+ 	Cat_popup_menu_pixmap: EV_PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("cat_popup")
+ 		end
+ 
+ 	Cat_opt_pull_pixmap: EV_PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("cat_opul")
+ 		end
+
+	Cat_status_bar_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_status")
+		end
+
+	Cat_status_bar_item_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_statitem")
+		end
+
+		--| Toolbars
+
+	Cat_toolbar_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_toolbar")
+		end
+
+	Cat_toolbar_button_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_button")
+		end
+
+	Cat_toolbar_toggle_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_toggle")
+		end
+
+	Cat_toolbar_radio_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_radio")
+		end
+
+	Cat_toolbar_separator_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_vertisep")
+		end
+
+		--| Text components
+
+	Cat_text_field_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_textfield")
+		end
+
+	Cat_passwd_field_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_passwd")
+		end
+
+	Cat_combo_box_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_combo")
+		end
+
+	Cat_list_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_list")
+		end
+
+	Cat_list_item_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_ment")
+		end
+
+	Cat_multi_col_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_multi")
+		end
+
+	Cat_multi_col_row_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_multirow")
+		end
+
+	Cat_tree_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_tree")
+		end
+
+	Cat_tree_item_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_treeitem")
+		end
+
+	Cat_rich_text_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_richtext")
+		end
+
+	Cat_text_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("cat_text")
+		end
+
+
+ 	Color_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("color")
-		end;
+		end
 
- 	Color_stone_pixmap: PIXMAP is
+ 	Color_stone_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("color_st")
-		end;
+		end
 
-	Command_instance_pixmap: PIXMAP is
+	Command_instance_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("instance")
-		end;
+		end
 
-	Command_instance_dot_pixmap: PIXMAP is
+	Command_instance_dot_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("inst_dot")
-		end;
+		end
 
-	Command_page_pixmap: PIXMAP is
+	Command_page_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("cmd_page")
-		end;
+		end
 
-	Command_i_icon_pixmap: PIXMAP is
+	Command_i_icon_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("cmd_inst")
-		end;
+		end
 
-	Command_pixmap: PIXMAP is
+	Command_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("command")
-		end;
+		end
 
-	Command_dot_pixmap: PIXMAP is
+	Command_dot_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("cmd_dot")
-		end;
+		end
 
-	Create_command_instance_pixmap: PIXMAP is
+	Create_command_instance_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("crt_inst")
-		end;
+		end
 
-	Create_project_pixmap: PIXMAP is
+	Create_project_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("crt_proj")
-		end;
+		end
 
- 	Ear_pixmap: PIXMAP is
+ 	Ear_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("ear")
-		end;
+		end
 
-	EiffelBuild_pixmap: PIXMAP is
+	EiffelBuild_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("ebuild");
-		end;
+			Result := symbol_file_content ("ebuild")
+		end
 
-	Ev_label_pixmap: PIXMAP is
+	Ev_label_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("ev_label");
-		end;
+			Result := symbol_file_content ("ev_label")
+		end
 
-	Event_pixmap: PIXMAP is
+	Event_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("event")
-		end;
+		end
 
-	Event_dot_pixmap: PIXMAP is
+	Event_dot_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("evnt_dot")
-		end;
+		end
 
-	Exit_label_pixmap: PIXMAP is
+	Exit_label_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("exit_lbl")
-		end;
+		end
 
-	Expand_parent_pixmap: PIXMAP is
+	Expand_parent_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("expand")
-		end;
+		end
 
-	File_pixmap: PIXMAP is
+	File_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("file");
-		end;
+			Result := symbol_file_content ("file")
+		end
 
- 	Fg_color_stone_pixmap: PIXMAP is
+ 	Fg_color_stone_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("fg_clrst")
-		end;
+		end
 
-	Font_pixmap: PIXMAP is
+	Font_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("font")
-		end;
+		end
 
-	Full_help_pixmap: PIXMAP is
+	Full_help_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("fullhelp")
-		end;
+		end
 
-	General_pixmap: PIXMAP is
+	General_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("general")
-		end;
+		end
 
-	Generate_pixmap: PIXMAP is
+	Generate_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("generate")
-		end;
+		end
 
-	generated_pixmap: PIXMAP is
+	generated_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("generated")
 		end
 
-	Geometry_pixmap: PIXMAP is
+	Geometry_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("geometry")
-		end;
+		end
 
- 	Grid_pixmap: PIXMAP is
+ 	Grid_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("grid")
-		end;
+		end
 
- 	Grid5_pixmap: PIXMAP is
+ 	Grid5_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("grid5")
-		end;
+		end
 
- 	Grid10_pixmap: PIXMAP is
+ 	Grid10_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("grid10")
-		end;
+		end
 
- 	Grid15_pixmap: PIXMAP is
+ 	Grid15_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("grid15")
-		end;
+		end
 
- 	Grid20_pixmap: PIXMAP is
+ 	Grid20_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("grid20")
-		end;
+		end
 
-	Help_pixmap: PIXMAP is
+	Help_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("help")
-		end;
+		end
 
-	Import_pixmap: PIXMAP is
+	Import_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("import")
-		end;
+		end
 
-	Initial_state_pixmap: PIXMAP is
+	Initial_state_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("initl_st")
-		end;
+		end
 
-	Load_project_pixmap: PIXMAP is
+	Load_project_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("open")
-		end;
+		end
 
-	Menus_pixmap: PIXMAP is
+	Menus_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("menus")
-		end;
+		end
 
-	Merge_pixmap: PIXMAP is
+	Merge_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("merge");
-		end;
+			Result := symbol_file_content ("merge")
+		end
 
-	Namer_pixmap: PIXMAP is
+	Namer_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("namer")
-		end;
+		end
 
-	Ok_pixmap: PIXMAP is
+	Open_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("open")
+		end
+
+	Ok_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("ok_tick")
 		end
 
-	Parent_pixmap: PIXMAP is
+	Parent_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("parent")
-		end;
+		end
 
-	Parent_dot_pixmap: PIXMAP is
+	Parent_dot_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("par_dot")
-		end;
+		end
 
-	Popup_filename_pixmap: PIXMAP is
+	Popup_filename_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("pop_fn")
-		end;
+		end
 
-	Popup_instances_pixmap: PIXMAP is
+	Popup_instances_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("pop_inst")
-		end;
+		end
 
-	Popup_context_pixmap: PIXMAP is
+	Popup_context_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("pop_cntx")
-		end;
+		end
 
-	Predef_command_pixmap: PIXMAP is
+	Predef_command_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("pred_cmd")
-		end;
+		end
 
-	Primitives_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("primitvs")
-		end;
+-- 	Primitives_pixmap: EV_PIXMAP is
+-- 		once
+-- 			Result := symbol_file_content ("primitvs")
+-- 		end
 
-	Presentation_pixmap: PIXMAP is
+	Presentation_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("present")
 		end
 
-	Quit_pixmap: PIXMAP is
+	Quit_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("quit")
-		end;
+		end
 
-	Raise_widget_pixmap: PIXMAP is
+	Raise_widget_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("raise_wd")
-		end;
+		end
 	
-	Reset_pixmap: PIXMAP is
+	Reset_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("reset")
 		end
 
-	Save_pixmap: PIXMAP is
+	Save_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("save")
-		end;
+		end
 
-	Selected_alignment_pixmap: PIXMAP is
+	Selected_alignment_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("salign")
-		end;
+		end
 
-	Selected_attribute_pixmap: PIXMAP is
+	Selected_attribute_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("sattrib")
-		end;
+		end
 
-	Selected_behavior_format_pixmap: PIXMAP is
+	Selected_behavior_format_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("sbh_frmt")
-		end;
+		end
 
-	Selected_button_pixmap: PIXMAP is
+	Selected_button_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("sbutton")
-		end;
+		end
 
- 	Selected_color_pixmap: PIXMAP is
+ 	Selected_color_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("scolor")
-		end;
+		end
 
-	Selected_command_page_pixmap: PIXMAP is
+	Selected_command_page_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("scmd_pge")
-		end;
+		end
 
-	Selected_drawing_area_pixmap: PIXMAP is
+	Selected_drawing_area_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("sdrwn_ar")
-		end;
+		end
 
-	Selected_file_pixmap: PIXMAP is
+	Selected_file_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("sfile");
-		end;
+			Result := symbol_file_content ("sfile")
+		end
 
-	Selected_font_pixmap: PIXMAP is
+	Selected_font_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("sfont")
-		end;
+		end
 
-	Selected_general_pixmap: PIXMAP is
+	Selected_general_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("sgeneral")
-		end;
+		end
 
-	Selected_generated_pixmap: PIXMAP is
+	Selected_generated_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("sgenerated")
 		end
 
-	Selected_geometry_pixmap: PIXMAP is
+	Selected_geometry_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("sgeomtry")
-		end;
+		end
 
- 	Selected_grid_pixmap: PIXMAP is
+ 	Selected_grid_pixmap: EV_PIXMAP is
  		once
  			Result := symbol_file_content ("sgrid")
-		end;
+		end
 
-	Selected_list_pixmap: PIXMAP is
+	Selected_list_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("sscrll_l")
-		end;
+		end
 
-	Selected_scrolled_w_pixmap: PIXMAP is
+	Selected_scrolled_w_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("sscrll_w")
-		end;
+		end
 
-	Selected_resize_pixmap: PIXMAP is
+	Selected_resize_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("sresize");
-		end;
+			Result := symbol_file_content ("sresize")
+		end
 
-	Selected_reset_pixmap: PIXMAP is
+	Selected_reset_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("sreset")
 		end
 
-	Selected_windows_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("swindows")
-		end;
+-- 	Selected_windows_pixmap: EV_PIXMAP is
+-- 		once
+-- 			Result := symbol_file_content ("swindows")
+-- 		end
 
-	Selected_primitives_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("sprimtvs")
-		end;
+-- 	Selected_primitives_pixmap: EV_PIXMAP is
+-- 		once
+-- 			Result := symbol_file_content ("sprimtvs")
+-- 		end
 
-	Selected_menus_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("smenus")
-		end;
+-- 	Selected_menus_pixmap: EV_PIXMAP is
+-- 		once
+-- 			Result := symbol_file_content ("smenus")
+-- 		end
 
-	Selected_mouse_pixmap: PIXMAP is
+	Selected_mouse_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("smouse")
-		end;
+		end
 
-	Selected_scale_pixmap: PIXMAP is
+	Selected_scale_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("sscale")
-		end;
- 
- 	Selected_groups_pixmap: PIXMAP is
- 		once
- 			Result := symbol_file_content ("sgroups")
- 		end;
- 
- 	Selected_sets_pixmap: PIXMAP is
- 		once
- 			Result := symbol_file_content ("ssets")
-		end;
+		end
 
-	Selected_submenu_pixmap: PIXMAP is
+-- 	Selected_groups_pixmap: EV_PIXMAP is
+-- 		once
+-- 			Result := symbol_file_content ("sgroups")
+-- 		end
+
+-- 	Selected_sets_pixmap: EV_PIXMAP is
+-- 		once
+-- 			Result := symbol_file_content ("ssets")
+-- 		end
+
+	Selected_submenu_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("ssubmenu");
-		end;
+			Result := symbol_file_content ("ssubmenu")
+		end
 
-	Selected_text_pixmap: PIXMAP is
+	Selected_text_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("stext");
-		end;
+			Result := symbol_file_content ("stext")
+		end
 
-	Selected_text_field_pixmap: PIXMAP is
+	Selected_text_field_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("stxt_fld")
-		end;
+		end
 
-	Selected_translation_pixmap: PIXMAP is
+	Selected_translation_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("strnsltn")
-		end;
+		end
 
-	Selected_user_defined_pixmap: PIXMAP is
+	Selected_user_defined_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("susr_def")
-		end;
+		end
 
- 	Sets_pixmap: PIXMAP is
- 		once
- 			Result := symbol_file_content ("sets")
-		end;
+-- 	Sets_pixmap: EV_PIXMAP is
+-- 		once
+-- 			Result := symbol_file_content ("sets")
+-- 		end
 
-	Self_label_pixmap: PIXMAP is
+	Self_label_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("self_lbl")
-		end;
+		end
 
-	Show_window_pixmap: PIXMAP is
+	Show_window_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("shw_wndw")
-		end;
+		end
 
-	State_pixmap_small: PIXMAP is
+	State_pixmap_small: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("state_sm")
-		end;
+		end
 
-	State_pixmap: PIXMAP is
+	State_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("state")
-		end;
+		end
 
-	State_dot_pixmap: PIXMAP is
+	State_dot_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("state_dt")
-		end;
+		end
 
-	Return_pixmap: PIXMAP is
+	Return_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("return")
-		end;
+		end
 
-	Transition_line_pixmap: PIXMAP is
+	Transition_line_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("transitn");
-		end;
+			Result := symbol_file_content ("transitn")
+		end
 
-	Type_pixmap: PIXMAP is
+	Type_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("type")
-		end;
+		end
 
-	Unsave_pixmap: PIXMAP is
+	Unsave_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("modified")
-		end;
+		end
 
-	User_command_pixmap: PIXMAP is
+	User_command_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("user_cmd")
-		end;
+		end
 
-	User_defined_pixmap: PIXMAP is
+	User_defined_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("user_def")
-		end;
+		end
 
-	Wastebasket_pixmap: PIXMAP is
+	Wastebasket_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("wastbskt")
-		end;
+		end
 
-	Windows_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("windows")
-		end;
+ 	Windows_pixmap: EV_PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("windows")
+ 		end
 
 feature -- Context Pixmaps
 
-	Arrow_b_pixmap: PIXMAP is
+	Arrow_b_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("arrow_b")
-		end;
+		end
 
-	Bar_pixmap: PIXMAP is
+	Bar_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("bar")
-		end;
+		end
 
-	Bulletin_pixmap: PIXMAP is
+	Bulletin_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("bulletin")
-		end;
+		end
 
-	Check_box_pixmap: PIXMAP is
+	Check_box_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("check_bx")
-		end;
+		end
 
-	Context_pixmap: PIXMAP is
+	Context_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("context")
-		end;
+		end
 
-	Context_dot_pixmap: PIXMAP is
+	Context_dot_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("cont_dot")
-		end;
+		end
 
-	Dialog_shell_pixmap: PIXMAP is
+	Dialog_shell_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("dialg_sh")
-		end;
+		end
 
-	Drawing_area_pixmap: PIXMAP is
+	Drawing_area_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("drwng_ar")
-		end;
+		end
 
- 	Group_pixmap: PIXMAP is
- 		once
- 			Result := symbol_file_content ("groups")
- 		end;
- 
- 	Groups_pixmap: PIXMAP is
- 		once
- 			Result := symbol_file_content ("groups")
- 		end;
- 
-	Label_pixmap: PIXMAP is
+	Group_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("label");
-		end;
+			Result := symbol_file_content ("groups")
+		end
 
-	List_pixmap: PIXMAP is
+-- 	Groups_pixmap: EV_PIXMAP is
+-- 		once
+-- 			Result := symbol_file_content ("groups")
+-- 		end
+
+	Label_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("label")
+		end
+
+	List_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("scrll_l")
-		end;
+		end
 
-	Menu_pull_pixmap: PIXMAP is
+	Menu_pull_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("menu_pll")
-		end;
+		end
 
-	Menu_entry_pixmap: PIXMAP is
+	Menu_entry_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("menu_ent")
-		end;
+		end
 
-	Opt_pull_pixmap: PIXMAP is
+	Opt_pull_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("opt_pull")
-		end;
+		end
 
-	Pict_color_b_pixmap: PIXMAP is
+	Pict_color_b_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("pictclrb")
-		end;
+		end
 
-	Push_b_pixmap: PIXMAP is
+	Push_b_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("push_b");
-		end;
+			Result := symbol_file_content ("push_b")
+		end
 
-	Top_shell_pixmap: PIXMAP is
+	Top_shell_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("top_shll");
-		end;
+			Result := symbol_file_content ("top_shll")
+		end
 
-	Radio_box_pixmap: PIXMAP is
+	Radio_box_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("radio_bx")
-		end;
+		end
 
-	Scrolled_w_pixmap: PIXMAP is
+	Scrolled_w_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("scr_w")
-		end;
+		end
 
-	Scrolled_t_pixmap: PIXMAP is
+	Scrolled_t_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("scr_t")
-		end;
+		end
 
-	Separator_pixmap: PIXMAP is
+	Separator_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("separatr")
-		end;
+		end
 
-	Scale_pixmap: PIXMAP is
+	Scale_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("scale")
-		end;
+		end
  
-	Scroll_list_pixmap: PIXMAP is
+	Scroll_list_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("scrll_l")
-		end;
+		end
 
-	Scrollable_list_pixmap: PIXMAP is
+	Scrollable_list_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("scrll_l")
-		end;
+		end
 
-	Text_pixmap: PIXMAP is
+	Text_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("text");
-		end;
+			Result := symbol_file_content ("text")
+		end
 
-	Text_field_pixmap: PIXMAP is
+	Text_field_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("text_fld")
-		end;
+		end
 
-	Toggle_b_pixmap: PIXMAP is
+	Toggle_b_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("toggle_b")
-		end;
+		end
 
 feature -- Event pixmaps
 
-	Button_arm_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("but_arm")
-		end;
-
-	Button_release_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("but_rels")
-		end;
-
-	Button_activate_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("but_actv")
-		end;
-
-	Button_pixmap: PIXMAP is
+	Button_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("button")
-		end;
+		end
 
-	Expose_pixmap: PIXMAP is
+	Button_click_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("expose");
-		end;
+			Result := symbol_file_content ("but_click")
+		end
 
-	Input_pixmap: PIXMAP is
+	Change_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("input");
-		end;
+			Result := symbol_file_content ("change")
+		end
 
-	Key_return_pixmap: PIXMAP is
+	Close_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("key_rtrn");
-		end;
+			Result := symbol_file_content ("close")
+		end
 
-	Key_press_pixmap: PIXMAP is
+	Column_click_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("key_prss");
-		end;
+			Result := symbol_file_content ("column_click")
+		end
 
-	Key_release_pixmap: PIXMAP is
+	Deselect_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("key_rels");
-		end;
+			Result := symbol_file_content ("deselect")
+		end
 
-	Mouse1u_pixmap: PIXMAP is
+	Destroy_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("mouse1u");
-		end;
+			Result := symbol_file_content ("wdgt_dst")
+		end
 
-	Mouse2u_pixmap: PIXMAP is
+	Double_click_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("mouse2u");
-		end;
+			Result := symbol_file_content ("double_click")
+		end
 
-	Mouse3u_pixmap: PIXMAP is
+	Enter_notify_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("mouse3u");
-		end;
+			Result := symbol_file_content ("enter_notify")
+		end
 
-	Mouse1d_pixmap: PIXMAP is
+	Get_focus_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("mouse1d");
-		end;
+			Result := symbol_file_content ("get_focus")
+		end
 
-	Mouse2d_pixmap: PIXMAP is
+	Key_press_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("mouse2d");
-		end;
+			Result := symbol_file_content ("key_prss")
+		end
 
-	Mouse3d_pixmap: PIXMAP is
+	Key_release_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("mouse3d");
-		end;
+			Result := symbol_file_content ("key_rels")
+		end
 
-	Mouse_pixmap: PIXMAP is
+	Key_return_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("key_rtrn")
+		end
+
+	Leave_notify_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("leave_notify")
+		end
+
+	Lose_focus_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("button")
+		end
+
+	Motion_notify_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("motion_notify")
+		end
+
+	Mouse1_dbl_click_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("mouse1_dbl")
+		end
+
+	Mouse2_dbl_click_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("mouse2_dbl")
+		end
+
+	Mouse3_dbl_click_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("mouse3_dbl")
+		end
+
+	Mouse1_motion_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("mouse1mt")
+		end
+
+	Mouse2_motion_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("mouse2mt")
+		end
+
+	Mouse3_motion_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("mouse3mt")
+		end
+
+	Mouse1_press_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("mouse1d")
+		end
+
+	Mouse2_press_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("mouse2d")
+		end
+
+	Mouse3_press_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("mouse3d")
+		end
+
+	Mouse1_release_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("mouse1u")
+		end
+
+	Mouse2_release_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("mouse2u")
+		end
+
+	Mouse3_release_pixmap: EV_PIXMAP is
+		once
+			Result := symbol_file_content ("mouse3u")
+		end
+
+	Mouse_pixmap: EV_PIXMAP is
 		once
 			Result := symbol_file_content ("mouse")
-		end;
+		end
 
-	Mouse_motion1_pixmap: PIXMAP is
+	Move_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("mt1mouse");
-		end;
+			Result := symbol_file_content ("move")
+		end
 
-	Mouse_motion2_pixmap: PIXMAP is
+	Paint_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("mt2mouse");
-		end;
+			Result := symbol_file_content ("paint")
+		end
 
-	Mouse_motion3_pixmap: PIXMAP is
+	Resize_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("mt3mouse");
-		end;
+			Result := symbol_file_content ("resize")
+		end
 
-	Mouse_enter_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("mse_entr");
-		end;
+--	Scr_t_modify_pixmap: EV_PIXMAP is
+--		once
+--			Result := symbol_file_content ("scr_modf")
+--		end
+--
+--	Scr_t_motion_pixmap: EV_PIXMAP is
+--		once
+--			Result := symbol_file_content ("scr_motn")
+--		end
 
-	Move_pixmap: PIXMAP is
+	Select_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("move");
-		end;
+			Result := symbol_file_content ("select")
+		end
 
-	Mouse_leave_pixmap: PIXMAP is
+	Selection_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("mse_leav");
-		end;
+			Result := symbol_file_content ("single")
+		end
 
-	Pointer_motion_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("pntr_mot");
-		end;
+--	Submenu_pixmap: EV_PIXMAP is
+--		once
+--			Result := symbol_file_content ("submenu")
+--		end
 
-	Scr_t_modify_pixmap: PIXMAP is
+	Subtree_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("scr_modf");
-		end;
+			Result := symbol_file_content ("subtree")
+		end
 
-	Scr_t_motion_pixmap: PIXMAP is
+	Switch_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("scr_motn");
-		end;
+			Result := symbol_file_content ("switch")
+		end
 
-	Selection_pixmap: PIXMAP is
+	Toggle_pixmap: EV_PIXMAP is
 		once
-			Result := symbol_file_content ("single");
-		end;
+			Result := symbol_file_content ("ok_tick")
+		end
 
-	Submenu_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("submenu");
-		end;
-
-	Translation_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("transltn")
-		end;
-
-	Resize_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("resize");
-		end;
-
-	Value_changed_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("changed");
-		end;
-
-	Widget_destroy_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("wdgt_dst");
-		end;
+--	Value_changed_pixmap: EV_PIXMAP is
+--		once
+--			Result := symbol_file_content ("changed")
+--		end
 
 feature {NONE} -- Read from file
 	
@@ -859,32 +1121,23 @@ feature {NONE} -- Read from file
 	
 	Pixmap_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Environment.bitmaps_directory);
+			create Result.make_from_string (Environment.bitmaps_directory)
 			Result.extend (Pixmap_suffix)
-		end;
+		end
 	
-	symbol_file_content (fn: STRING): PIXMAP is
+	symbol_file_content (name: STRING): EV_PIXMAP is
 		local
-			full_name: FILE_NAME;
+			fn: FILE_NAME
 		do
-			!! full_name.make_from_string (Pixmap_path);
-			full_name.set_file_name (fn);	
-			full_name.add_extension (Pixmap_suffix)
-			!! Result.make;
-			if full_name.is_valid then
-				Result.read_from_file (full_name);
--- 				if not Result.is_valid then 
--- 					io.error.putstring ("%NWarning: cannot read pixmap file ");
--- 					io.error.putstring (full_name);
--- 					io.error.new_line;
--- 				end
+			create fn.make_from_string (Pixmap_path)
+			fn.set_file_name (name)	
+			fn.add_extension (Pixmap_suffix)
+			if fn.is_valid then
+				create Result.make_from_file (fn)
 			else
 				Result := Void
--- 				io.error.putstring ("%NWarning: ");
--- 				io.error.putstring (full_name);
--- 				io.error.putstring (" is an invalid file name.");
--- 				io.error.new_line;
 			end
 		end
 
-end
+end -- class PIXMAPS
+

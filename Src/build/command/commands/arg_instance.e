@@ -60,7 +60,7 @@ feature -- Argument Instance part
 
 feature {NONE} -- Attributes
 
-	associated_icon_stone: ARG_INST_ICON
+--	associated_icon_stone: ARG_INST_ICON
 
 feature -- Attributes
 
@@ -76,34 +76,34 @@ feature -- Access
 			-- Reset `context'.
 		do
 			context := Void
-			if associated_icon_stone /= Void then
-				associated_icon_stone.set_symbol (type.symbol)
-				associated_icon_stone.set_label (type.label)
-			end
+--			if associated_icon_stone /= Void then
+--				associated_icon_stone.set_symbol (type.symbol)
+--				associated_icon_stone.set_label (type.label)
+--			end
 		end
 
 	reset is 
 			-- Reset Current.
 		do
-			associated_icon_stone := Void
+--			associated_icon_stone := Void
 		end
 
-	set_icon_stone (i: ARG_INST_ICON) is
-			-- Set `associated_icon_stone' to `i'.
-		do
-			associated_icon_stone := i
-		end
+--	set_icon_stone (i: ARG_INST_ICON) is
+--			-- Set `associated_icon_stone' to `i'.
+--		do
+--			associated_icon_stone := i
+--		end
 
-	set_context (other: CONTEXT_STONE) is
+	set_context (other: CONTEXT) is
 			-- Set `context'.
 		require
 			not_void_other: not (other = Void)
 		do
-			context := other.data
-			if associated_icon_stone /= Void then
-				associated_icon_stone.set_symbol (context.symbol)
-				associated_icon_stone.set_label (context.title_label)
-			end
+			context := other
+--			if associated_icon_stone /= Void then
+--				associated_icon_stone.set_symbol (context.symbol)
+--				associated_icon_stone.set_label (context.title_label)
+--			end
 		end
 
 feature -- Identification
@@ -119,11 +119,6 @@ feature -- Identification
 			end
 		end
 
-	data: ARG_INSTANCE is
-		do
-			Result := Current
-		end
-
 	label: STRING is
 		do
 			if instantiated then
@@ -133,19 +128,12 @@ feature -- Identification
 			end
 		end
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			if instantiated then
 				Result := context.symbol
 			else
 				Result := type.symbol
-			end
-		end
-
-	source: WIDGET is
-		do
-			if instantiated then
-				Result := context.widget
 			end
 		end
 
@@ -191,4 +179,5 @@ feature -- Argument part
 --		argument_type: ARG 
 			-- Type of Current argument
 
-end
+end -- class ARG_INSTANCE
+

@@ -9,172 +9,112 @@ class
 	COMMAND_EDITOR
 
 inherit
-
-	FORM
+	EV_VERTICAL_BOX
 		rename
-			init_toolkit as g_any_init_toolkit
+			make as box_make
 		redefine
-			realize,
 			destroy
 		end
 
 	CONSTANTS
 
-	COMMAND
+	EV_COMMAND
 
 	WINDOWS
-		select
-			init_toolkit
-		end
 
 	ERROR_POPUPER
 
 creation 
+	make
 
-	make,
-	make_unmanaged
+feature {NONE} -- Initialization
 
-feature -- Creation
-
-	set_command_tool (a_command_tool: COMMAND_TOOL) is
-			-- Set `command_tool' to `a_command_tool'.
-		do
-			command_tool := a_command_tool
-		end
-
-	create_interface is
+	make (par: COMMAND_TOOL) is
 			-- Create the interface of a command editor.
+		local
+			hbox, hbox1: EV_HORIZONTAL_BOX
+			vbox: EV_VERTICAL_BOX
+			label: EV_LABEL
+			scroll: EV_SCROLLABLE_AREA
+			fixed: EV_FIXED
+			tbar: EV_TOOL_BAR
 		do
-			!! editing_button_form.make ("Editing Button Form", Current)
-			!! list_form.make ("List form", Current)
-			!! observer_form.make ("Observer form", list_form)
-			!! label_form.make ("Label form", list_form)
-			!! add_ancestor_hole.make (Current, editing_button_form)
-			!! undoable_toggle_b.make ("Undoable", editing_button_form)
-			!! observed_instances_label.make ("Observed commands:", observer_form)
-			!! new_label_label.make ("New label", label_form)
-			!! new_label_text.make ("", label_form)
-			!! observed_commands_scrolled_w.make (Widget_names.scroll2, observer_form)
-			!! observed_commands.make ("Observer box", observed_commands_scrolled_w, command_tool)
-			!! label_scrolled_w.make (Widget_names.scroll3, label_form)
-			!! labels.make ("Label box", label_scrolled_w, Current)
-			!! text_editor.make ("Text editor", Current)
+			command_tool := par
+
+			box_make (Void)
+			create hbox.make (Current)
+			hbox.set_spacing (3)
+			hbox.set_expand (False)
+				--| Labels
+			create vbox.make (hbox)
+			create labels.make (vbox)
+			labels.set_column_title ("Labels:", 1)
+			labels.set_minimum_height (55)
+			create hbox1.make (vbox)
+			hbox1.set_expand (False)
+			create label.make_with_text (hbox1, "New label:")
+			label.set_expand (False)
+			create new_label_text.make (hbox1)
+				--| Observed commands
+			create vbox.make (hbox)
+			create observed_commands.make (vbox)
+			observed_commands.set_column_title ("Observed commands:", 1)
+			observed_commands.set_column_title ("description", 2)
+			observed_commands.set_minimum_height (53)
+			create hbox.make (vbox)
+			hbox.set_expand (False)
+			create undoable_check.make (hbox)
+			undoable_check.set_expand (False)
+			create fixed.make (hbox)
+			create tbar.make (hbox)
+			create add_ancestor_hole.make_with_editor (tbar, Current)
+
+			create text_editor.make (Current)
 			set_values
-			attach_all
 			set_callbacks
 		end
 
 	set_values is
 			-- Set the values for the GUI elements.
 		do
-			list_form.set_height (75)
-			label_scrolled_w.set_height (55)
-			label_form.set_height (55)
-			observed_commands_scrolled_w.set_height (55)
-			observer_form.set_height (55)
-		end
-
-	attach_all is
-			-- Perform attachments.
-		do
-			attach_top (list_form, 0)
-			attach_left (list_form, 0)
-			attach_right (list_form, 0)
-			attach_top_widget (list_form, editing_button_form, 0)
-			attach_left (editing_button_form, 0)
-			attach_right (editing_button_form, 0)
-			attach_top_widget (editing_button_form, text_editor, 0)
-			attach_left (text_editor, 0)
-			attach_right (text_editor, 0)
-			attach_bottom (text_editor, 0)
-
-			editing_button_form.attach_top (add_ancestor_hole, 0)
-			editing_button_form.attach_top (undoable_toggle_b, 0)
-			editing_button_form.attach_left (add_ancestor_hole, 0)
-			editing_button_form.attach_right (undoable_toggle_b, 0)
-			editing_button_form.attach_bottom (add_ancestor_hole, 0)
-			editing_button_form.attach_bottom (undoable_toggle_b, 0)
-
-			list_form.set_fraction_base (5)
-			list_form.attach_top (observer_form, 0)
-			list_form.attach_top (label_form, 0)
-			list_form.attach_left (observer_form, 0)
-			list_form.attach_right_position (observer_form, 2)
-			list_form.attach_left_position (label_form, 2)
-			list_form.attach_right (label_form, 0)
-			list_form.attach_bottom (observer_form, 2)
-			list_form.attach_bottom (label_form, 2)
-
-			observer_form.attach_top (observed_instances_label, 5)
-			observer_form.attach_left (observed_instances_label, 0)
-			observer_form.attach_right (observed_instances_label, 0)
-			observer_form.attach_top_widget (observed_instances_label, observed_commands_scrolled_w, 2)
-			observer_form.attach_left (observed_commands_scrolled_w, 0)
-			observer_form.attach_right (observed_commands_scrolled_w, 0)
-			observer_form.attach_bottom (observed_commands_scrolled_w, 0)
-
-			label_form.attach_top (new_label_label, 5)
-			label_form.attach_top (new_label_text, 0)
-			label_form.attach_left (new_label_label, 0)
-			label_form.attach_right (new_label_text, 0)
-			label_form.attach_left_widget (new_label_label, new_label_text, 5)
-			label_form.attach_top_widget (new_label_text, label_scrolled_w, 0)
-			label_form.attach_top_widget (new_label_label, label_scrolled_w, 2)
-			label_form.attach_left (label_scrolled_w, 0)
-			label_form.attach_right (label_scrolled_w, 0)
-			label_form.attach_bottom (label_scrolled_w, 0)
+			undoable_check.set_text ("Undoable")
+			undoable_check.set_expand (False)
 		end
 
 	set_callbacks is
 			-- Add callbacks on GUI elements.
+		local
+			arg: EV_ARGUMENT1 [INTEGER]
 		do
-			new_label_text.add_activate_action (Current, new_label_text)
-			undoable_toggle_b.add_activate_action (Current, undoable_toggle_b)
+			create arg.make (1)
+			new_label_text.add_return_command (Current, arg)
+			create arg.make (2)
+			undoable_check.add_toggle_command (Current, arg)
 		end
 
-feature {NONE} -- Graphical interface
-		--| Forms
-	editing_button_form,
-			-- Button form in the command editor part
-	list_form,
-			-- Form in ` in which will be diplayed
-			-- the observer list and the label list
-	observer_form,
-			-- Form in ` containing the  observer box
-	label_form: FORM
-			-- Form in ` containing the label box
+feature {NONE} -- GUI attributes
 
-		--| Graphical elements
-
-	observed_commands_scrolled_w: SCROLLED_W
-			-- Scrolled window enclosing `observed_commands'
+	new_label_text: EV_TEXT_FIELD
+			-- Text field to enter the value of a new label
+	undoable_check: EV_CHECK_BUTTON
+			-- Check button to specify if a command is undoable
 	add_ancestor_hole: CMD_INH_HOLE
 			-- Hole used to add an ancestor to the edited command
-	observed_instances_label,
-			-- Label for observed instances list
-	new_label_label: LABEL
-			-- Label specifying "New label"
-	new_label_text: TEXT_FIELD
-			-- Text field to enter the value of a new label
-	undoable_toggle_b: TOGGLE_B
-			-- Toggle button to specify if a command is undoable
-	label_scrolled_w: SCROLLED_W
-			-- Scrolled window enclosing `labels'
 
 feature {COMMAND_TOOL, CMD_COMMAND} -- Graphical interface
 
-	observed_commands: OBSERVED_INSTANCE_BOX
+	observed_commands: EB_ICON_LIST
 			-- Observers of command_instance
-	labels: LABEL_BOX
+	labels: EB_ICON_LIST
 			-- Labels of current edited command
 
 feature {USER_CMD}
 
-	text_editor: SCROLLED_T
+	text_editor: EV_RICH_TEXT
 			-- Text editing area containing the code of the Eiffel
 			-- class representing the edited command
 
-feature 
+feature -- Access
 
 	command_tool: COMMAND_TOOL
 			-- Parent command tool if so
@@ -192,21 +132,21 @@ feature -- Realization
 		require
 			editing_user_cmd: edited_command /= Void
 		do
-			if realized then
+			if text_editor /= Void then
 				edited_command.retrieve_text_from_disk
 				text_editor.set_text (edited_command.eiffel_text)
 			end
 		end
 
-	realize is
-		do
-			Precursor
-			if edited_command = Void then
-				add_ancestor_hole.hide
-			else
-				update_user_eiffel_text_from_disk
-			end
-		end
+--	realize is
+--		do
+--			Precursor
+--			if edited_command = Void then
+--				add_ancestor_hole.hide
+--			else
+--				update_user_eiffel_text_from_disk
+--			end
+--		end
 
 feature -- Attributes
 
@@ -227,7 +167,7 @@ feature -- Eiffel code
 
 feature
 
-	update_parent_symbol is
+	update_ancestor_symbol is
 			-- Update the pixmap on `add_ancestor_hole'. If the edited
 			-- command has an ancestor, set the pixmap to represent a
 			-- "full" symbol.
@@ -241,9 +181,9 @@ feature -- Editing
 			-- destroy Current
 		do
 			Precursor
-			add_ancestor_hole.unregister
-			argument_box.unregister_holes
-			labels.unregister_holes
+--			add_ancestor_hole.unregister
+--			argument_box.unregister_holes
+--			labels.unregister_holes
 		end;
 
 	close is
@@ -258,21 +198,21 @@ feature -- Editing
 	clear is
 			-- Clear Current editor
 		do
-			save_command
-			arguments.wipe_out
-			observed_commands.wipe_out
-			labels.wipe_out
-			text_editor.set_text ("")
---			current_command := Void
---			edited_command := Void
-			update_parent_symbol;
+-- 			save_command
+-- 			arguments.wipe_out
+-- 			observed_commands.wipe_out
+-- 			labels.wipe_out
+-- 			text_editor.set_text ("")
+-- --			current_command := Void
+-- --			edited_command := Void
+-- 			update_ancestor_symbol
 		end
 
-	empty: BOOLEAN is
-			-- Does `Current' have an edited command
-		do
-			Result := (current_command = Void)
-		end
+-- 	empty: BOOLEAN is
+-- 			-- Does `Current' have an edited command
+-- 		do
+-- 			Result := (current_command = Void)
+-- 		end
 
 feature -- Command tool access
 
@@ -304,8 +244,6 @@ feature -- Command tool access
 			Result := command_tool.command_instance
 		end
 
-
-
 feature {COMMAND_TOOL}
 
 	edit_command (cmd: CMD) is
@@ -328,7 +266,7 @@ feature {COMMAND_TOOL}
 			elseif edited_command /= Void then
 				set_editable_command (edited_command)
 			end
-			update_parent_symbol
+			update_ancestor_symbol
 			update_title
 		end
 
@@ -344,8 +282,8 @@ feature {COMMAND_TOOL}
 			current_command := cmd
 			edited_command ?= cmd
 		end
-			
-feature
+
+feature -- Basic action
 
 	update_title is
 			-- Update the title of the command tool parent
@@ -359,12 +297,12 @@ feature
 			-- Update `labels' and the argument box in 
 			-- `command_tool'.
 		do
-			labels.refresh_display
-			observed_commands.set (instance_of_command_tool.observed_commands)
-			observed_commands.refresh_display
+--			labels.refresh_display
+--			observed_commands.set (instance_of_command_tool.observed_commands)
+--			observed_commands.refresh_display
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	set_editable_command (cmd: USER_CMD) is
 			-- Set `cmd' to edited_command. Update the editor to
@@ -372,26 +310,19 @@ feature {NONE}
 		require
 			not_void_cmd: not (cmd = Void)
 		do
---			edited_command := cmd
---			current_command := cmd
 			labels.set (cmd.labels)
 			update_user_eiffel_text_from_disk
---			current_command.set_editor (Current)
 			text_editor.set_text (current_command.eiffel_text)
-			text_editor.set_editable
-			undoable_toggle_b.set_sensitive
+			text_editor.set_editable (True)
+			undoable_check.set_insensitive (False)
 			if edited_command.undoable then
-				undoable_toggle_b.set_toggle_on
+				undoable_check.set_state (True)
 			else
-				undoable_toggle_b.set_toggle_off
+				undoable_check.set_state (False)
 			end
-			if add_ancestor_hole.realized and then 
-				not add_ancestor_hole.shown 
-			then
-				add_ancestor_hole.show
-			end
+			add_ancestor_hole.set_insensitive (False)
 		end
- 
+
 	set_read_only_command (cmd: PREDEF_CMD) is
 			-- Update the editor to reflect the contents of `cmd'
 			-- and do not allow editing or adding more arguments.
@@ -399,18 +330,12 @@ feature {NONE}
 			not_void_cmd: not (cmd = Void)
 		do
 			edited_command := Void
---			current_command := cmd
 			labels.set (cmd.labels)
 			text_editor.set_text (cmd.eiffel_text)
---			current_command.set_editor (Current)
-			text_editor.set_read_only
-			undoable_toggle_b.set_insensitive
-			if add_ancestor_hole.realized and then 
-				add_ancestor_hole.shown 
-			then
-				add_ancestor_hole.hide
-			end
-		end;
+			text_editor.set_editable (False)
+			undoable_check.set_insensitive (True)
+			add_ancestor_hole.set_insensitive (True)
+		end
 
 feature {COMMAND_TOOL}
 
@@ -426,14 +351,14 @@ feature {COMMAND_TOOL}
 
 feature -- Argument box
 
-	argument_box: ARG_INST_BOX is
-			-- Argument box in parent command tool.
-		do
-			Result := command_tool.arguments
-		end
+-- 	argument_box: ARG_INST_BOX is
+-- 			-- Argument box in parent command tool.
+-- 		do
+-- 			Result := command_tool.arguments
+-- 		end
 
 feature -- Labels
- 
+
 	add_label is
 			-- Add a label to currently
 			-- edited command.
@@ -444,15 +369,15 @@ feature -- Labels
 				if edited_command.has_descendents then
 					popup_error_box (Messages.instance_add_label_er)
 				else
-					!! new_cmd_label.make (new_label_text.text)
-					edited_command.add_label (new_cmd_label)
-					labels.extend (new_cmd_label)
+--					!! new_cmd_label.make (new_label_text.text)
+--					edited_command.add_label (new_cmd_label)
+--					labels.extend (new_cmd_label)
 				end
 			else
 				popup_error_box (Messages.add_label_er)
 			end
 		end
- 
+
 	remove_label (l: CMD_LABEL) is
 			-- Remove `l' from the list of labels
 			-- of currently edited command.
@@ -463,95 +388,90 @@ feature -- Labels
 				else
 					edited_command.remove_label (l)
 					if shown then
-						labels.start
-						labels.search (l)
-						labels.remove
+--						labels.start
+--						labels.search (l)
+--						labels.remove
 					end
-					labels.refresh_display
+--					labels.refresh_display
 				end
 			end
 		end
 
 feature -- Parent
- 
-	set_parent (c: CMD) is
-			-- Make `c' parent of Current.
+
+	set_ancestor (c: CMD) is
+			-- Make `c' ancestor of Current.
 		require
-			not_void_c: not (c = Void)
+			not_void_c: c /= Void
 		do
-			if (edited_command /= Void) then
-				if (c /= edited_command and then 
-					(edited_command.parent_type /= c)) then
-					if
-						edited_command.has_instances
-						and not c.arguments.empty
+			if edited_command /= Void then
+				if c /= edited_command
+				and then edited_command.ancestor_type /= c
+				then
+					if edited_command.has_instances
+					and not c.arguments.empty
 					then
 						popup_error_box (Messages.instance_add_inh_er)
 					else
-						edited_command.set_parent (c)
+						edited_command.set_ancestor (c)
 					end
 				end
 			else
 				popup_error_box (Messages.add_parent_er)
 			end
 		end
- 
-	remove_parent is
+
+	remove_ancestor is
 		do
 			if edited_command /= Void then
 				if
 					edited_command.has_instances and
-					not edited_command.parent_type.arguments.empty
+					not edited_command.ancestor_type.arguments.empty
 				then
 					popup_error_box (Messages.instance_rem_inh_er)
 				else
-					edited_command.remove_parent 
+					edited_command.remove_ancestor 
 				end
 			else
 				popup_error_box (Messages.remove_parent_er)
 			end
 		end
 
-feature {NONE}
+feature {NONE} -- Command
 
-	execute (argument: ANY) is
+	execute (argument: EV_ARGUMENT1 [INTEGER]; data: EV_EVENT_DATA) is
 			-- Execute routine. Used:
 			--	 . To add a label
 			--	 . To toggle between non-undoable and doable
 		local
-			non_undo_cmd: CMD_NON_UNDOABLE
-			undo_cmd: CMD_UNDOABLE
-			id: IDENTIFIER
+--			non_undo_cmd: CMD_NON_UNDOABLE
+--			undo_cmd: CMD_UNDOABLE
+--			id: IDENTIFIER
 		do
-			if edited_command /= Void then
-				if argument = new_label_text then
+--			if edited_command /= Void then
+				if argument.first = 1 then
 					if not new_label_text.text.empty then
-						!! id.make (new_label_text.text.count)
-						id.append (new_label_text.text)
-						if id.is_valid then
-							add_label
-							new_label_text.set_text ("")
-						else
-							error_box.popup (Current, 
-								Messages.invalid_feature_name_er, 
-								new_label_text.text)
-						end
+--						!! id.make (new_label_text.text.count)
+--						id.append (new_label_text.text)
+--						if id.is_valid then
+--							add_label
+--							new_label_text.set_text ("")
+--						else
+--							error_box.popup (Current, 
+--								Messages.invalid_feature_name_er, 
+--								new_label_text.text)
+--						end
 					end
-				elseif argument = undoable_toggle_b then
-					if undoable_toggle_b.state then
-						!! undo_cmd
-						undo_cmd.execute (edited_command)
-					else
-						!! non_undo_cmd
-						non_undo_cmd.execute (edited_command)
-					end
-					-- TODO: move this part in COMMAND_TOOL
---				elseif argument = Void then
---					-- configure event
---					popup_instances_button.update_popup_position;
---					popup_contexts_button.update_popup_position
+				elseif argument.first = 2 then
+--					if undoable_check.state then
+--						!! undo_cmd
+--						undo_cmd.execute (edited_command)
+--					else
+--						!! non_undo_cmd
+--						non_undo_cmd.execute (edited_command)
+--					end
 				end
-			end
+--			end
 		end 
 
 	popup_error_box (s: STRING) is
@@ -559,7 +479,7 @@ feature {NONE}
 		require
 			not_void_s: s /= Void
 		do
-			error_box.popup (Current, s, Void)
+			error_dialog.popup (Current, s, Void)
 		end
 
 feature {USER_CMD}
@@ -573,32 +493,32 @@ feature {USER_CMD}
 
 feature -- POPUPER
 
-	popuper_parent: COMPOSITE is
-		do
-			Result := Current
-		end 
+-- 	popuper_parent: COMPOSITE is
+-- 		do
+-- 			Result := Current
+-- 		end 
 
 feature
 
-	arguments: EB_LINKED_LIST [ARG] is
-			-- Box containing the arguments of the command
-			-- TODO: Check this behavior!!!!
-		local
-			arg_box: ARG_INST_BOX
-			an_arg: ARG
-		do
-			!! Result.make
-			arg_box := command_tool.arguments
-			from
-				arg_box.start
-			until
-				arg_box.after
-			loop
-				!! an_arg.session_init (arg_box.item.type)
-				Result.extend (an_arg)
-				arg_box.forth
-			end
-		end
+-- 	arguments: EB_LINKED_LIST [ARG] is
+-- 			-- Box containing the arguments of the command
+-- 			-- TODO: Check this behavior!!!!
+-- 		local
+-- 			arg_box: ARG_INST_BOX
+-- 			an_arg: ARG
+-- 		do
+-- 			!! Result.make
+-- 			arg_box := command_tool.arguments
+-- 			from
+-- 				arg_box.start
+-- 			until
+-- 				arg_box.after
+-- 			loop
+-- 				!! an_arg.session_init (arg_box.item.type)
+-- 				Result.extend (an_arg)
+-- 				arg_box.forth
+-- 			end
+-- 		end
 
 feature 
 
@@ -609,3 +529,4 @@ feature
 		end
 
 end -- class COMMAND_EDITOR
+

@@ -10,30 +10,31 @@ class
 
 inherit
 
-	ICON_STONE
-		rename
-			stone_cursor as icon_stone_cursor
-		undefine
-			initialize_transport, init_toolkit -- last by sami
-		redefine
-			set_data, data, set_widget_default, stone
-		end
+	EB_ICON_LIST_ITEM
+--	ICON_STONE
+--		rename
+--			stone_cursor as icon_stone_cursor
+--		undefine
+--			initialize_transport, init_toolkit -- last by sami
+--		redefine
+--			set_data, data, set_widget_default, stone
+--		end
 
-	STONE
-		redefine
-			stone
-		end
+--	STONE
+--		redefine
+--			stone
+--		end
 
-	HOLE
-		rename
-			target as source
-		redefine
-			process_context, compatible
-		end
+--	HOLE
+--		rename
+--			target as source
+--		redefine
+--			process_context, compatible
+--		end
 
 	ERROR_POPUPER
 
-	CONTEXT_DRAG_SOURCE
+--	CONTEXT_DRAG_SOURCE
 
 	REMOVABLE
 
@@ -145,4 +146,5 @@ invariant
 
 	command_tool_not_void: command_tool /= Void
 
-end
+end -- class ARG_INST_ICON
+

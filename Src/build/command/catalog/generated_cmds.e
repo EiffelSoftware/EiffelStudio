@@ -9,37 +9,31 @@ class
 	GENERATED_CMDS
 
 inherit
-
 	COMMAND_PAGE
 
 creation
-
 	make
 
 feature {NONE}
 
-	make (cmd_catalog: COMMAND_CATALOG) is
-		do
-			old_make (cmd_catalog)
-		end
-
-	reset_commands is
+	fill_page is
 		do
 		end
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.generated_pixmap
 		end
 
-	selected_symbol: PIXMAP is
-		do
-			Result := Pixmaps.selected_generated_pixmap
-		end
-
-	set_focus_string is
-		do
-			button.set_focus_string (Focus_labels.generated_commands_label)
-		end
-
+-- 	selected_symbol: PIXMAP is
+-- 		do
+-- 			Result := Pixmaps.selected_generated_pixmap
+-- 		end
+-- 
+-- 	set_focus_string is
+-- 		do
+-- 			button.set_focus_string (Focus_labels.generated_commands_label)
+-- 		end
+ 
 end -- class GENERATED_CMDS
+

@@ -31,7 +31,7 @@ feature
 			arg: ARG
 		once
 			!! Result.make
-			!! arg.session_init (context_catalog.perm_wind_type)
+			!! arg.session_init (context_catalog.container_page.perm_wind_type)
 			Result.extend (arg)
 		end
 

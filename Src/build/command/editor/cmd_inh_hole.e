@@ -1,105 +1,104 @@
 indexing
-	description: "";
-	date: "$Date$";
+	description: "Inherit hole within the command editor."
+	id: "$Id$"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	CMD_INH_HOLE
 
 inherit
+	EB_BUTTON
 
-	CMD_EDITOR_HOLE
-		rename
-			make as old_make
-		redefine
-			process_command
-		end;
-	
-	DRAG_SOURCE;
-	CMD_STONE;
+	EV_COMMAND
+
 	REMOVABLE
 
 creation
+	make_with_editor
 
-	make
+feature {NONE} -- Initialization
 
-feature {NONE}
-
-	create_focus_label is
+	make_with_editor (par: EV_TOOL_BAR; ed: COMMAND_EDITOR) is
 		do
-			if data = Void then
-				set_focus_string (Focus_labels.parent_label)
-			else
-				set_focus_string (data.label)
-			end
+			command_editor := ed
+			make (par)
+			add_pnd_command (Pnd_types.command_type, Current, Void)
 		end
 
-	make (ed: like command_editor; a_parent: COMPOSITE) is
-		do
-			old_make (ed, a_parent);
-			initialize_transport;
-		end;
+feature {NONE} -- Implementation
 
-	symbol: PIXMAP is
+--	create_focus_label is
+--		do
+--			if ancestor_command = Void then
+--				set_focus_string (Focus_labels.parent_label)
+--			else
+--				set_focus_string (data.label)
+--			end
+--		end
+
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.parent_pixmap
-		end;
+		end
 
-	full_symbol: PIXMAP is
+	full_symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.parent_dot_pixmap
-		end;
+		end
 
-	source: WIDGET is
-		do
-			Result := Current
-		end;
+	command_editor: COMMAND_EDITOR
 
-feature {NONE}
-
-	data: CMD is
+	ancestor_command: CMD is
 		local
 			user_cmd: USER_CMD
 		do
 			user_cmd := command_editor.edited_command
 			if user_cmd /= Void then
-				Result := user_cmd.parent_type
+				Result := user_cmd.ancestor_type
 			end
-		end;
+		end
 
-	process_command (dropped: CMD_STONE) is
+feature {NONE} -- Pick and Drop
+
+	execute (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
+			-- A command is dropped on current.
+		local
+			cmd: CMD
 		do
-			command_editor.set_parent (dropped.data)
-		end;
+			cmd ?= ev_data.data
+			command_editor.set_ancestor (cmd)
+		end
 
 	remove_yourself is
 		do
-			command_editor.remove_parent
-		end;
+			command_editor.remove_ancestor
+		end
 
-feature {CMD_EDITOR, COMMAND_EDITOR}
+feature {COMMAND_EDITOR} -- Status setting
 
 	update_symbol is
 		do
-			if data = Void then
+			if ancestor_command = Void then
 				set_empty_symbol
 			else
 				set_full_symbol
 			end
-		end;
+		end
 
 	set_empty_symbol is
 		do
 			if pixmap /= symbol then
-				set_symbol (symbol)
+				set_pixmap (symbol)
 			end
 		end
 
 	set_full_symbol is
 		do
 			if pixmap /= full_symbol then
-				set_symbol (full_symbol)
+				set_pixmap (full_symbol)
 			end
 		end
 
 end -- class CMD_INH_HOLE
+

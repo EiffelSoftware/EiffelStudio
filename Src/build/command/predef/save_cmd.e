@@ -27,7 +27,7 @@ feature
 			arg: ARG
 		once
 			!! Result.make
-			!! arg.session_init (context_catalog.text_type)
+			!! arg.session_init (context_catalog.text_page.text_type)
 			arguments.extend (arg)
 		end
 

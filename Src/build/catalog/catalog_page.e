@@ -1,123 +1,97 @@
+indexing
+	description: "Catalog page with an icon list."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class CAT_PAGE [T -> DATA] 
+deferred class
+	CATALOG_PAGE [T -> PND_DATA]
 
 inherit
-	
+	EB_ICON_LIST
+		redefine
+			make
+		end
+
 	CONSTANTS
 
-	CATALOG_BOX [T]
-		rename
-			make_visible as box_make_visible,
-			make_unmanaged as box_make_unman
-		export
-			{CAT_COM_IS,CATALOG, CMD_CAT_BUTTON} 
-			hide, show, shown, manage, unmanage, 
-			managed, associated_catalog
-		end
-	
-feature {CATALOG}
+feature {NONE} -- Initialization
 
-	is_optional: BOOLEAN is
-			-- Is Current page optional?
+	make (cat: CATALOG) is
+			-- Create a catalog page.
+		local
+--			w: INTEGER
 		do
+			{EB_ICON_LIST} Precursor (cat)
+			set_column_title ("description", 2)
+--			w := width // 2
+--			set_columns_width (<<w, w>>)
+			fill_page
 		end
 
-	button: CAT_BUTTON
-			-- Button which represents the page
+feature -- Access
 
-	focus_source: WIDGET is
-		do
-			Result := button
-		end
-
-	make_visible (a_parent: COMPOSITE) is
-		do
-			make_box (Widget_names.row_column, a_parent)
-			set_background_color (Resources.catalog_background_color)
-			set_foreground_color (Resources.catalog_foreground_color)
-			make_box_visible
-			set_spacing (3)
-			set_column_layout
-		end
-
-	make_unmanaged (a_parent: COMPOSITE) is
-		do
-			after := False
-			make_box_unmanaged (Widget_names.row_column, a_parent)
-			set_background_color (Resources.catalog_background_color)
-			set_foreground_color (Resources.catalog_foreground_color)
-			make_box_visible
-			set_spacing (3)
-			set_column_layout
-		end
-
-feature {NONE} -- Focus label	
-	
-	Focus_labels: FOCUS_LABEL_CONSTANTS is
-		once
-			!! Result
-		end
-	
-	focus_label: FOCUS_LABEL_I is
-                	-- has to be redefined, so that it returns
-                	-- correct toolkit initializer to which object
-                	-- belongs for every instance of this class
-                local
-                        ti: TOOLTIP_INITIALIZER
-                do
-                       ti ?= top
-                        check
-                                valid_tooltip_initializer: ti/= Void
-                        end
-                        Result := ti.label
-                end
-	
-	set_focus_string is
-		deferred
-		end
-	
-
-feature {NONE}
-
-	symbol: PIXMAP is
-			-- Symbol which represents the page 
-		deferred
-		end
-
-	selected_symbol: PIXMAP is
-		deferred
-		end
-	
-feature {CATALOG}
-
-	make_button_visible (button_rc: ROW_COLUMN) is
-			-- Make a button visible with `a_name' as the
-			-- widget_name of button and `button_rc' as
-			-- the parent. Also set the pixmap of button
-			-- with symbol.
+	extend (v: T) is
+			-- Extend the element `v' to current list.
 		require
-			not_void_form: button_rc /= Void
-		do	
-			!! button.make (Current, button_rc, symbol)
-			set_focus_string
-			button.initialize_focus	
-		end
-
-	set_selected_symbol is
+			valid_element: v /= Void
+		local
+			elmt: EB_ICON_LIST_ITEM [T]
 		do
-			button.set_symbol (selected_symbol)
+			create elmt.make_with_text (Current, <<v.label, v.comment>>)
+--XX		elmt.set_pixmap (dt.symbol)
+			elmt.activate_pick_and_drop (Void, Void)
+			elmt.set_data_type (pnd_type)
+			elmt.set_transported_data (v)
 		end
 
-	set_symbol is
-		do
-			button.set_symbol (symbol)
+feature {NONE} -- Deferred attribute
+
+	symbol: EV_PIXMAP is
+			-- Symbol file which represents the page 
+		deferred
 		end
 
-feature
-
-	select_it is
-		do
-			associated_catalog.update_page (Current)
+	pnd_type: EV_PND_TYPE is
+			-- Type of the data stored in the elements of the page
+		deferred
 		end
 
-end -- class CAT_PAGE 
+	fill_page is
+			-- Fill the page with the elements.
+		deferred
+		end
+
+--feature {NONE} -- Focus label	
+--|XX to be kept when the tooltips will be implemented.
+--
+--	focus_source: WIDGET is
+--		do
+--			Result := button
+--		end
+--	
+--	Focus_labels: FOCUS_LABEL_CONSTANTS is
+--		once
+--			!! Result
+--		end
+--	
+--	focus_label: FOCUS_LABEL_I is
+--	-- has to be redefined, so that it returns
+--	-- correct toolkit initializer to which object
+--	-- belongs for every instance of this class
+--		local
+--			ti: TOOLTIP_INITIALIZER
+--		do
+--			ti ?= top
+--			check
+--				valid_tooltip_initializer: ti/= Void
+--			end
+--			Result := ti.label
+--		end
+--	
+--	set_focus_string is
+--		deferred
+--		end
+
+end -- class CATALOG_PAGE
+

@@ -1,13 +1,25 @@
+indexing
+	description: "Represents an EiffelBuild command."
+	Id: "$Id$" 
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 deferred class CMD 	
 
 inherit
+	PND_DATA
 
-	DATA
 	SHARED_APPLICATION
+
 	WINDOWS
+		redefine
+			popuper_parent
+		end
+
 	EDITABLE
-	
+
+	HELPABLE
+
 feature -- Editable
 
 	create_editor is
@@ -27,11 +39,11 @@ feature -- Editable
 		end	
 
 	choose_instance is
-		local
-			instances_list: CMD_ED_CHOICE_WND
+--		local
+--			instances_list: CMD_ED_CHOICE_WND
 		do
-			!! instances_list.make_with_cmd (main_panel.base, Current)
-			instances_list.popup_with_list (instances)
+--			create instances_list.make_with_cmd (main_panel.base, Current)
+--			instances_list.popup_with_list (instances)
 		end
 
 	has_instances: BOOLEAN is
@@ -78,7 +90,7 @@ feature -- Editable
 			b: BEHAVIOR
 			found: BOOLEAN
 		do
-			!! Result.make
+			create Result.make
 			from
 				Shared_app_graph.start
 			until
@@ -124,7 +136,7 @@ feature -- Editable
 			cmd_tool: COMMAND_TOOL
 			observers: LINKED_LIST [CMD_INSTANCE]		
 		do
-			!! Result.make
+			create Result.make
 			from
 				Shared_app_graph.start
 			until
@@ -193,7 +205,7 @@ feature -- Editable
 			tool_list: LINKED_LIST [COMMAND_TOOL]
 			a_tool: COMMAND_TOOL
 		do
-			!! Result.make
+			create Result.make
 			tool_list := window_mgr.command_tools
 			from
 				tool_list.start
@@ -213,13 +225,13 @@ feature -- Editable
 	instance_count: INTEGER is
 		do
 			if instance_counter = Void then
-				!! instance_counter
+				create instance_counter
 			end
 			Result := instance_counter.value
 			instance_counter.next
 		end
 
-feature -- Stone
+feature -- Pick and Drop Source
 
 	identifier: INTEGER is
 		deferred
@@ -261,15 +273,6 @@ feature -- Stone
 	eiffel_text: STRING is
 			-- Eiffel class text of Current
 			-- command
-		deferred
-		end
-
-	data: CMD is
-		do
-			Result := Current
-		end
-
-	symbol: PIXMAP is
 		deferred
 		end
 
@@ -317,8 +320,8 @@ feature -- Code Generation
 			old_label, temp: STRING
 			n: LOCAL_NAMER
 		do
-			!! n.make ("argument")
-			!! Result.make (0)
+			create n.make ("argument")
+			create Result.make (0)
 			Result.append (eiffel_type_to_upper)
 			if arguments.count > 0 then
 				Result.append ("%N%T%Trename%N%T%T%T")
@@ -352,7 +355,7 @@ feature -- Code Generation
 		local
 			temp: STRING
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.append ("%Texecute is%N%T%Tdo%N%T%T%T{")
 			Result.append (eiffel_type)
 			Result.append ("} Precursor%N%T%Tend")
@@ -362,7 +365,7 @@ feature -- Code Generation
 			-- Code generation for the 
 			-- creation clause of Current.
 		do
-			!! Result.make (0)
+			create Result.make (0)
 			Result.append ("%T%T%T{")
 			Result.append (eiffel_type)
 			Result.append ("} Precursor")
@@ -396,15 +399,16 @@ feature -- Code Generation
 		deferred
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
-	popuper_parent: COMPOSITE is
+	popuper_parent: EV_CONTAINER is
 		do
 			if edited then	
 				Result := command_editor
 			else
-				Result := main_panel.base
+				Result := main_window
 			end
 		end
 
-end 
+end -- class CMD
+ 

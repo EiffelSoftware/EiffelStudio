@@ -1,72 +1,64 @@
+indexing
+	description: "General notion of a command on a EiffelBuild command (CMD)."
+	Id: "$Id$" 
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 deferred class CMD_COMMAND 
 
 inherit
 
-	EB_UNDOABLE
+	EB_UNDOABLE_COMMAND
 		redefine
-			is_template, execute
-		end;
+			execute
+		end
 
-feature 
+feature -- Access
 
-	is_template: BOOLEAN is True;
-	
 	redo is
 		do
 			command_work
-		end;
+		end
 
-	execute (argument: ANY) is
+	execute (arg: EV_ARGUMENT1 [CMD]; ev_data: EV_EVENT_DATA) is
 		do
-			edited_command ?= argument;
+			edited_command ?= arg.first
 			if edited_command /= Void then
-				command_work;
-				update_history
+				command_work
+			else
+					-- do not update the history
+				failed := True
 			end
-		end;
+		end
 
-feature 
-	
-	name: STRING is
+	comment: STRING is
 		do
-			!!Result.make (0);
-			Result.append (c_name);
-			Result.append (" (");
+			create Result.make (0)
 			if edited_command /= Void then
-				Result.append (edited_command.label);
+				Result.append (edited_command.label)
 			end
 			if
 				worked_on /= Void
 			then
-				Result.append ("-");
-				Result.append (worked_on);
-			end;
-			Result.append (")");
-		end;
+				Result.append ("-")
+				Result.append (worked_on)
+			end
+		end
 	
 	edited_command: USER_CMD
 
-feature {NONE}
-
-	work (argument: ANY) is
-		do
-		end;
+feature {NONE} -- Implementation
 
 	command_work is
 		deferred
-		end;
+		end
 	
 	worked_on: STRING is
 			-- What the command changed
 		deferred
-		end; 
+		end 
 
-	c_name: STRING is
-			-- Name of the command
-		deferred
-		end;
-
-	failed: BOOLEAN;
+	failed: BOOLEAN
 	
-end
+end -- class CMD_COMMAND
+

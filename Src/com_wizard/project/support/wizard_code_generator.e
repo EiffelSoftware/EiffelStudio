@@ -188,14 +188,12 @@ feature -- Basic operations
 					or Shared_wizard_environment.abort
 				loop
 					an_interface := system_descriptor.interfaces.item
-					if shared_wizard_environment.client then
-						c_client_visitor.visit (an_interface)
-						eiffel_client_visitor.visit (an_interface)
-					end
-					if shared_wizard_environment.server then
-						c_server_visitor.visit (an_interface)
-						eiffel_server_visitor.visit (an_interface)
-					end
+
+					c_client_visitor.visit (an_interface)
+					eiffel_client_visitor.visit (an_interface)
+
+					c_server_visitor.visit (an_interface)
+					eiffel_server_visitor.visit (an_interface)
 
 					system_descriptor.interfaces.forth
 					progress_report.step

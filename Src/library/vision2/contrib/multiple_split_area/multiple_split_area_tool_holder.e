@@ -99,8 +99,10 @@ feature {NONE} -- Initialization
 			-- Respond to dock starting on `Current'.
 		do
 			parent_area.initialize_docking_areas (Current)
-			original_height := height
-			original_width := width
+			if parent_dockable_dialog (main_box) = Void then
+				original_height := height
+				original_width := width
+			end
 		end
 	
 	original_height, original_width: INTEGER
@@ -111,10 +113,20 @@ feature {NONE} -- Initialization
 		local
 			dialog: EV_DOCKABLE_DIALOG
 			original_position, new_position: INTEGER
+			original_parent_window: EV_WINDOW
+			locked_in_here: BOOLEAN
 		do
 			parent_area.store_positions
 			original_position := parent_area.all_holders.index_of (Current, 1)
-			parent_window (parent_area).lock_update
+			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
+			if locked_in_here then
+				original_parent_window := parent_window (parent_area)
+				if original_parent_window /= Void then
+					original_parent_window.lock_update
+				end
+			end		
+			
+			
 			dialog := parent_dockable_dialog (tool)
 			if dialog /= Void then
 				dialog.close_request_actions.wipe_out
@@ -124,13 +136,20 @@ feature {NONE} -- Initialization
 				if not parent_area.is_item_external (tool) then
 					parent_area.external_representation.extend (tool)
 				end
-				dialog.set_width (original_width)
-				dialog.set_height (original_height)
+					-- This ensures that we only set the height when `Current' has just been docked from
+					-- `parent_area'.
+				if not (original_height = 0 and original_width = 0) then
+					dialog.set_width (original_width + (dialog.width - dialog.item.width))
+					dialog.set_height (original_height + (dialog.height - dialog.item.height))	
+				end			
 				minimize_button.disable_sensitive
 				maximize_button.disable_sensitive
 				parent_area.store_positions
 				parent_area.rebuild
 				parent_area.restore_stored_positions
+				if not (original_height = 0 and original_width = 0) then
+					parent_area.docked_out_actions.call ([])
+				end
 			end
 			if parent /= Void then
 				parent.prune (Current)
@@ -152,9 +171,17 @@ feature {NONE} -- Initialization
 				parent_area.update_for_holder_position_change (original_position, new_position)
 				parent_area.rebuild
 				parent_area.restore_stored_positions
+				parent_area.docked_in_actions.call ([])
 			end
 			parent_area.remove_docking_areas
-			parent_window (parent_area).unlock_update
+			if original_parent_window /= Void then
+				original_parent_window.unlock_update	
+			end
+			
+				-- Reset `original_width' and `original_height' so that we no longer assume that
+				-- we have just been docked from `parent_area'.
+			original_height := 0
+			original_width := 0
 		end
 		
 	position_docked_from: INTEGER
@@ -327,15 +354,26 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 			parented_in_dialog: parent_dockable_dialog (tool) = dialog
 		local
 			tool_height: INTEGER
+			locked_in_here: BOOLEAN
+			original_parent_window: EV_WINDOW
 		do
 			tool_height := main_box.height
 			tool.parent.prune_all (tool)
 			parent_area.all_holders.prune_all (Current)
 			dialog.destroy
-			parent_window (parent_area).lock_update
+			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
+			if locked_in_here then
+				original_parent_window := parent_window (parent_area)
+				if original_parent_window /= Void then
+					original_parent_window.lock_update
+				end
+			end		
 			parent_area.external_representation.prune_all (tool)
 			parent_area.insert_widget (tool, display_name, (position_docked_from.min (parent_area.count + 1)).max (1), tool_height)
-			parent_window (parent_area).unlock_update
+			if original_parent_window /= Void then
+				original_parent_window.unlock_update
+			end
+			parent_area.docked_in_actions.call ([])
 		ensure
 			put_back_in_split_area: parent_area.linear_representation.has (tool)
 		end
@@ -448,7 +486,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 		do
 			is_minimized := True
 		ensure
-			maximized: is_maximized = True
+			minimized: is_minimized = True
 		end
 		
 	silent_remove_minimized is

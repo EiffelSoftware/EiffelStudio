@@ -172,19 +172,298 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 
 	bzero((char *)eif_globals,sizeof(eif_global_context_t));
 	
+		/*----------*/
+		/* cecil.c  */
+		/*----------*/
+	eif_ignore_invisible = (unsigned char) 0;
+
+#ifdef WORKBENCH
+		/*----------*/
+		/* debug.c  */
+		/*----------*/
+	db_stack.st_hd = (struct stdchunk *) 0;      /* st_hd */
+	db_stack.st_tl =	(struct stdchunk *) 0;      /* st_tl */
+	db_stack.st_cur =	(struct stdchunk *) 0;      /* st_cur */
+	db_stack.st_top =	(struct dcall *) 0;         /* st_top */
+	db_stack.st_end =	(struct dcall *) 0;        /* st_end */
+
+	once_list.idl_hd = (struct idlchunk *) 0;      /* idl_hd */
+	once_list.idl_tl =	(struct idlchunk *) 0;      /* idl_tl */
+	once_list.idl_last = (uint32 *) 0;               /* idl_last */
+	once_list.idl_end =	(uint32 *) 0;               /* idl_end */
+ 
+#endif	/* WORKBENCH */
+
+		/*----------*/
 		/* except.c */
-	exdata.ex_val = 1; /* Attention! exdata is eif_globals->exdata_cx */
+		/*----------*/
+	
+	eif_stack.st_hd =	(struct stxchunk *) 0;				/* st_hd */
+	eif_stack.st_tl =	(struct stxchunk *) 0;				/* st_tl */
+	eif_stack.st_cur =	(struct stxchunk *) 0;				/* st_cur */
+	eif_stack.st_top =	(struct ex_vect *) 0;				/* st_top */
+	eif_stack.st_end =	(struct ex_vect *) 0;				/* st_end */
+
+	eif_trace.st_hd = 	(struct stxchunk *) 0;				/* st_hd */
+	eif_trace.st_tl =	(struct stxchunk *) 0;				/* st_tl */
+	eif_trace.st_cur = 	(struct stxchunk *) 0;				/* st_cur */
+	eif_trace.st_top =	(struct ex_vect *) 0;				/* st_top */
+	eif_trace.st_end =	(struct ex_vect *) 0;				/* st_end */
+	eif_trace.st_bot =	(struct ex_vect *) 0;				/* st_bot */
+
+	exdata.ex_val = 		0;				
+	exdata.ex_nomem = 		0;				
+	exdata.ex_nsig = 		0;				
+	exdata.ex_level = 		0;				
+	exdata.ex_org = 		0;				
+	exdata.ex_tag = 		(char *) 0;		
+	exdata.ex_otag = 		(char *) 0;		
+	exdata.ex_rt = 		(char *) 0;		
+	exdata.ex_ort = 		(char *) 0;		
+	exdata.ex_class = 		0;				
+	exdata.ex_oclass = 		0;				
+
 	print_history_table = ~0;
 
+	ex_string.area =	NULL;   
+	ex_string.used =	0L;    
+	ex_string.size =		0L    ;
+
+
+		/*----------*/
 		/* garcol.c */
+		/*----------*/
+	/* `clsc_per'; and `plsc_per', `th_alloc'
+	 * are set in eif_alloc_init (), inherithed from 
+	 * the thread creato, if any. */
+	gc_monitor = 0;
+	root_obj = (EIF_REFERENCE) 0;
+	last_from = (struct chunk *) 0; 
+	spoilt_tbl = (struct s_table *) 0;
+	gc_ran = 0;
+	last_gc_time = 0;
+	gc_running = 0;
+
+#ifdef ITERATIVE_MARKING
+	path_stack.st_hd = 		(struct stchunk *) 0;	
+	path_stack.st_tl = 		(struct stchunk *) 0;	
+	path_stack.st_cur = 		(struct stchunk *) 0;	
+	path_stack.st_top = 		(EIF_REFERENCE *) 0;			
+	path_stack.st_end = 		(EIF_REFERENCE *) 0;			
+
+	parent_expanded_stack.st_hd = 		(struct stchunk *) 0;	
+	parent_expanded_stack.st_tl = 		(struct stchunk *) 0;	
+	parent_expanded_stack.st_cur = 		(struct stchunk *) 0;	
+	parent_expanded_stack.st_top = 		(EIF_REFERENCE *) 0;			
+	parent_expanded_stack.st_end = 		(EIF_REFERENCE *) 0;			
+
+#endif	/* ITERATIVE_MARKING */
+
+	g_data.nb_full = 		0L;			
+	g_data.nb_partial = 		0L;			
+	g_data.mem_used = 		0L;			
+	g_data.gc_to = 		0;			
+	g_data.status = 		(char) 0;	
+
+	g_stat [0].mem_used = 			0L;		
+	g_stat [0].mem_collect = 			0L;			
+	g_stat [0].mem_avg = 	   		0L;		
+	g_stat [0].real_avg = 			0L;					
+	g_stat [0].real_time = 		   	0L;		
+	g_stat [0].real_iavg = 			0L;					 
+	g_stat [0].real_itime = 			0L;		
+	g_stat [0].cpu_avg = 			0.;					 
+	g_stat [0].sys_avg = 			0.;		
+	g_stat [0].cpu_iavg = 			0.;					 
+	g_stat [0].sys_iavg = 			0.;		
+	g_stat [0].cpu_time = 			0.;					
+	g_stat [0].sys_time = 			0.;		
+	g_stat [0].cpu_itime = 			0.;					 
+	g_stat [0].sys_itime = 			0.;		
+
+	g_stat [1].mem_used = 			0L;		
+	g_stat [1].mem_collect = 			0L;			
+	g_stat [1].mem_avg = 	   		0L;		
+	g_stat [1].real_avg = 			0L;					
+	g_stat [1].real_time = 		   	0L;		
+	g_stat [1].real_iavg = 			0L;					 
+	g_stat [1].real_itime = 			0L;		
+	g_stat [1].cpu_avg = 			0.;					 
+	g_stat [1].sys_avg = 			0.;		
+	g_stat [1].cpu_iavg = 			0.;					 
+	g_stat [1].sys_iavg = 			0.;		
+	g_stat [1].cpu_time = 			0.;					
+	g_stat [1].sys_time = 			0.;		
+	g_stat [1].cpu_itime = 			0.;					 
+	g_stat [1].sys_itime = 			0.;		
+
+	loc_stack.st_hd = 		(struct stchunk *) 0;	
+	loc_stack.st_tl = 		(struct stchunk *) 0;	
+	loc_stack.st_cur = 		(struct stchunk *) 0;	
+	loc_stack.st_top = 		(EIF_REFERENCE *) 0;			
+	loc_stack.st_end = 		(EIF_REFERENCE *) 0;			
+
+	loc_set.st_hd = 		(struct stchunk *) 0;	
+	loc_set.st_tl = 		(struct stchunk *) 0;	
+	loc_set.st_cur = 		(struct stchunk *) 0;	
+	loc_set.st_top = 		(EIF_REFERENCE *) 0;			
+	loc_set.st_end = 		(EIF_REFERENCE *) 0;			
+	
+	rem_set.st_hd = 		(struct stchunk *) 0;	
+	rem_set.st_tl = 		(struct stchunk *) 0;	
+	rem_set.st_cur = 		(struct stchunk *) 0;	
+	rem_set.st_top = 		(EIF_REFERENCE *) 0;			
+	rem_set.st_end = 		(EIF_REFERENCE *) 0;			
+
 #ifdef EIF_REM_SET_OPTIMIZATION
-	special_rem_set = (struct special_table *) 0;	
+	special_rem_set = (struct special_table *) 0; 
+					/* Remembered special table for special objects. */ 
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 
+	moved_set.st_hd = 		(struct stchunk *) 0;	
+	moved_set.st_tl = 		(struct stchunk *) 0;	
+	moved_set.st_cur = 		(struct stchunk *) 0;	
+	moved_set.st_top = 		(EIF_REFERENCE *) 0;			
+	moved_set.st_end = 		(EIF_REFERENCE *) 0;			
+
+	once_set.st_hd = 		(struct stchunk *) 0;	
+	once_set.st_tl = 		(struct stchunk *) 0;	
+	once_set.st_cur = 		(struct stchunk *) 0;	
+	once_set.st_top = 		(EIF_REFERENCE *) 0;			
+	once_set.st_end = 		(EIF_REFERENCE *) 0;			
+
+#ifdef EIF_MEMORY_OPTIMIZATION
+
+	memory_set.st_hd = 		(struct stchunk *) 0;	
+	memory_set.st_tl = 		(struct stchunk *) 0;	
+	memory_set.st_cur = 		(struct stchunk *) 0;	
+	memory_set.st_top = 		(EIF_REFERENCE *) 0;			
+	memory_set.st_end = 		(EIF_REFERENCE *) 0;			
+
+#endif	/* EIF_MEMORY_OPTIMIZATION */
+
+
+		/*----------*/
 		/* malloc.c */
+		/*----------*/
 	gen_scavenge = GS_SET;
+	eiffel_usage = 0;
+	type_use = 0;
+	c_mem = 0;
+	/* eif_max_mem is set in eif_alloc_init (); and inherited from
+	 * the thread creator, if any. */
+	m_data.ml_chunk = 		0;		
+	m_data.ml_total = 		0;		
+	m_data.ml_used = 		0;		
+	m_data.ml_over = 		0;		
+
+	/* For each C and Eiffel memory; we keep track of general informations too. This
+	 * enables us to pilot the garbage collector correctly or to call coalescing
+	 * over the memory only if it is has a chance to succeed.
+	 */
+	c_data.ml_chunk = 		0;		
+	c_data.ml_total = 		0;		
+	c_data.ml_used = 		0;		
+	c_data.ml_over = 		0;		
+		
+	e_data.ml_chunk = 		0;		
+	e_data.ml_total = 		0;		
+	e_data.ml_used = 		0;		
+	e_data.ml_over = 		0;		
+
+	cklst.ck_head = 		(struct chunk *) 0;			
+	cklst.ck_tail = 		(struct chunk *) 0;			
+	cklst.cck_head = 		(struct chunk *) 0;			
+	cklst.cck_tail = 		(struct chunk *) 0;			
+	cklst.eck_head = 		(struct chunk *) 0;			
+	cklst.eck_tail = 		(struct chunk *) 0;			
+
+		/*----------*/
+		/* urgent.c */
+		/*----------*/
+
+	urgent_index = -1;
+
+		/*----------*/
+		/* hector.c */
+		/*----------*/
+
+	hec_stack.st_hd = 		(struct stchunk *) 0;	
+	hec_stack.st_tl = 		(struct stchunk *) 0;	
+	hec_stack.st_cur = 		(struct stchunk *) 0;	
+	hec_stack.st_top = 		(EIF_REFERENCE *) 0;			
+	hec_stack.st_end = 		(EIF_REFERENCE *) 0;			
+
+	hec_saved.st_hd = 		(struct stchunk *) 0;	
+	hec_saved.st_tl = 		(struct stchunk *) 0;	
+	hec_saved.st_cur = 		(struct stchunk *) 0;	
+	hec_saved.st_top = 		(EIF_REFERENCE *) 0;			
+	hec_saved.st_end = 		(EIF_REFERENCE *) 0;			
+
+	free_stack.st_hd = 		(struct stchunk *) 0;	
+	free_stack.st_tl = 		(struct stchunk *) 0;	
+	free_stack.st_cur = 		(struct stchunk *) 0;	
+	free_stack.st_top = 		(EIF_REFERENCE *) 0;			
+	free_stack.st_end = 		(EIF_REFERENCE *) 0;			
+
+#ifdef WORKBENCH
+		/*----------*/
+		/* interp.c */
+		/*----------*/
+
+	op_stack.st_hd = 		(struct stochunk *) 0;      
+	op_stack.st_tl = 		(struct stochunk *) 0;      
+	op_stack.st_cur = 		(struct stochunk *) 0;      
+	op_stack.st_top = 		(struct item *) 0;          
+	op_stack.st_end = 		(struct item *) 0;          
+
+	IC = (char *) 0;
+	iregs = (struct item **) 0;
+	iregsz = 0;  
+	argnum = 0;  
+	locnum = 0; 
+	tagval = 0L;
+	inv_mark_table = (char *) 0;
+
+
+#endif	/* WORKBENCH */	
+		/*----------*/
+		/* memory.c */
+		/*----------*/
+
+	m_largest = 0;
+	
+		/*--------*/
 		/* main.c */
+		/*--------*/
+
 	in_assertion = 0;
+		/*--------*/
+		/* out.c */
+		/*--------*/
+	tagged_out = (char *) 0;
+	tagged_max = 0;
+	tagged_len = 0;
+
+		/*-----------*/
+		/* pattern.c */
+		/*-----------*/
+
+	darray = (uint32 **) 0;
+
+		/*--------*/
+		/* plug.c */
+		/*--------*/
+
+	nstcall = 0;
+	inv_mark_tablep = (char * ) 0;
+
+		/*-------*/
+		/* sig.c */
+		/*-------*/
+	
+	esigblk = 0;
+	
 }
 
 

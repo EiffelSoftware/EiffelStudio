@@ -106,6 +106,48 @@ feature {NONE} -- Initialization
 			!! all_ev_children.make (1)
 		end
 
+feature -- FIXME To be implemented.
+
+	selected_items: LINKED_LIST [EV_TREE_ITEM] is
+			-- List of all the selected tree items. For a single
+			-- selection list, it gives a list with only one
+			-- element which is `selected_item'. Therefore, one
+			-- should use `selected_item' rather than 
+			-- `selected_items' for a single selection list
+		do
+		check
+			to_be_implemented: FALSE
+		end
+		end
+
+	enable_multiple_selection is
+			-- Allow the user to do a multiple selection simply
+			-- by clicking on several choices.
+		do
+		check
+			to_be_implemented: FALSE
+		end
+		end
+
+	disable_multiple_selection is
+			-- Allow the user to do only one selection. It is the
+			-- default status of the list
+		do
+		check
+			to_be_implemented: FALSE
+		end
+		end
+
+	multiple_selection_enabled: BOOLEAN is
+			-- True if the user can choose several items
+			-- False otherwise
+		do
+		check
+			to_be_implemented: FALSE
+		end
+		end
+
+
 feature -- Access
 
 	count: INTEGER is
@@ -602,6 +644,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/06 19:09:07  rogers
+--| Added selected_items, enable_multiple_selection, disable_multiple_selection and multiple_selection_enabled. All these are to be implemented.
+--|
 --| Revision 1.37  2000/03/01 18:09:23  oconnor
 --| released
 --|

@@ -746,7 +746,7 @@ feature {NONE} -- Implementation, Pixmap handling
 				until
 					ev_children.after
 				loop
-					pixmap := ev_children.item.pixmap
+					pixmap := ev_children.item.internal_pixmap
 					if pixmap /= Void then
 						set_row_pixmap (
 							ev_children.index,

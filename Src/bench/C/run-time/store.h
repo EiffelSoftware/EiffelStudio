@@ -43,13 +43,12 @@ extern "C" {
 /*
  * Eiffel calls
  */
-extern void estore(EIF_INTEGER file_desc, char *object, EIF_CHARACTER file_storage_type);			/* Store by file name */
+extern void estore(EIF_INTEGER file_desc, char *object);			/* Store by file name */
 
 /*
  * Utilities
  */
 extern int fides;			/* File descriptor used by `store_write' */
-extern char fstoretype;		/* File storage type used by `store_write' */
 extern void st_write(char *object);			/* Write an object in file */
 extern char *account;			/* Array of traversed dyn types */
 extern void allocate_gen_buffer(void);
@@ -73,6 +72,9 @@ extern char * cmps_general_buffer;
 
 extern void (*store_write_func)(void);
 extern void store_write(void);
+
+extern int (*char_write_func)(char *, int);
+extern int char_write(char *pointer, int size);
 
 extern void rt_init_store(void (*store_function) (void), int buf_size);
 extern void rt_reset_store(void);

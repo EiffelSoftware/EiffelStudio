@@ -30,6 +30,9 @@ inherit
 			generate_gen_type_il
 		end
 
+create
+	make
+	
 feature -- Access
 
 	meta_generic: META_GENERIC

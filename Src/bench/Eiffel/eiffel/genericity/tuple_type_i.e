@@ -17,6 +17,9 @@ inherit
 			il_type_name
 		end
 
+create
+	make
+	
 feature
 
 	same_as (other: TYPE_I): BOOLEAN is

@@ -113,17 +113,11 @@ feature {NONE} -- Implementation
 		do
 			l_has_schema := Shared_document_manager.has_schema
 			l_has_toc := not Shared_toc_manager.is_empty
-			if l_has_schema and then l_has_toc then
-				transform_box.enable_sensitive
+			if l_has_toc then
 				help_box.enable_sensitive
 				transform_help_box.enable_sensitive
-			elseif l_has_schema then
-				transform_box.enable_sensitive
+			else
 				help_box.disable_sensitive
-				transform_help_box.disable_sensitive
-			elseif l_has_toc then
-				transform_box.disable_sensitive
-				help_box.enable_sensitive
 				transform_help_box.disable_sensitive
 			end
 		end	

@@ -78,7 +78,7 @@ feature -- Query
 		local
 			proj_dir, toc_dir: DIRECTORY
 			l_constants: APPLICATION_CONSTANTS
-			l_toc: XML_TABLE_OF_CONTENTS
+			l_toc: TABLE_OF_CONTENTS
 		do
 			l_constants := Shared_constants.Application_constants
 			if title_text1.text.is_empty then

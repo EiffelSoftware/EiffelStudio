@@ -316,6 +316,7 @@ rt_private void read_header(char rt_type);
 
 
 		/* Read general header */
+rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count);
 rt_private EIF_REFERENCE object_rread_special (EIF_REFERENCE object, uint32 flags, uint32 count);
 rt_private EIF_REFERENCE object_rread_attributes (EIF_REFERENCE object, uint32 flags, long expanded_offset);
 rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent);		/* read the individual attributes of the object*/
@@ -1216,10 +1217,10 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 				/* Special object: read the saved size */
 			buffer_read((char *) &spec_size, (sizeof(uint32)));
 			nb_byte = spec_size & B_SIZE;
-			if (!(flags & EO_REF)) {
-				newadd = spmalloc(nb_byte, EIF_TRUE);
+			if (flags & EO_TUPLE) {
+				newadd = RTLNT(crflags & EO_TYPE);
 			} else {
-				newadd = spmalloc(nb_byte, EIF_FALSE);
+				newadd = spmalloc (nb_byte, EIF_TEST(!(flags & EO_REF)));
 			}
 			if (newadd == (EIF_REFERENCE) 0) {
 					/* Creation of Eiffel object failed */
@@ -1231,11 +1232,10 @@ rt_public EIF_REFERENCE rt_nmake(long int objectCount)
 				/* Normal object */
 			if (rt_kind) {
 				nb_byte = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
-				newadd = emalloc(crflags & EO_TYPE); 
 			} else {
 				nb_byte = EIF_Size((uint16)(flags & EO_TYPE));
-				newadd = emalloc(crflags & EO_TYPE);
 			}
+			newadd = emalloc(crflags & EO_TYPE);
 			if (newadd == (EIF_REFERENCE) 0) {
 					/* Creation of Eiffel object failed */
 				xraise(EN_MEM);
@@ -1290,7 +1290,6 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 	 * Return pointer on retrived object.
 	 */
 	EIF_GET_CONTEXT
-	long nb_byte;
 	char *oldadd;
 	char * volatile newadd = (char *) 0;
 	EIF_OBJECT new_hector;
@@ -1335,55 +1334,38 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 		/* Read a possible size */
 		if (flags & EO_SPEC) {
 			uint32 count, elm_size;
-			uint32 dgen, spec_type;
-
-			spec_type = dtypes[flags & EO_TYPE];
-			dgen = special_generic_type (spec_type);
-
-			if (!((dgen & SK_HEAD) == SK_EXP)) {
-				switch (dgen) {
-					case SK_INT8:
-						spec_size = sizeof (EIF_INTEGER_8);
-						break;
-					case SK_INT16:
-						spec_size = sizeof (EIF_INTEGER_16);
-						break;
-					case SK_INT32:
-						spec_size = sizeof (EIF_INTEGER_32);
-						break;
-					case SK_INT64:
-						spec_size = sizeof (EIF_INTEGER_64);
-						break;
-					case SK_CHAR:
-						spec_size = sizeof (EIF_CHARACTER);
-						break;
-					case SK_WCHAR:
-						spec_size = sizeof (EIF_WIDE_CHAR);
-						break;
-					case SK_BOOL:
-						spec_size = sizeof (EIF_BOOLEAN);
-						break;
-					case SK_FLOAT:
-						spec_size = sizeof (EIF_REAL);
-						break;
-					case SK_DOUBLE:
-						spec_size = sizeof (EIF_DOUBLE);
-						break;
-					case SK_POINTER:
-						spec_size = sizeof (EIF_POINTER);
-						break;
-					case SK_DTYPE:
-					case SK_REF:
-						spec_size = sizeof (EIF_OBJECT);
-						break;
-					default:
-						if (dgen & SK_BIT) 
-							spec_size = BITOFF(dgen & SK_DTYPE);
-						else
-							eise_io("General retrieve: not an Eiffel object.");
-				}
+			long nb_byte;
+			if (flags & EO_TUPLE) {
+				spec_size = sizeof(EIF_TYPED_ELEMENT);
 			} else {
-				spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
+				uint32 dgen, spec_type;
+
+				spec_type = dtypes[flags & EO_TYPE];
+				dgen = special_generic_type (spec_type);
+
+				if (!((dgen & SK_HEAD) == SK_EXP)) {
+					switch (dgen) {
+						case SK_INT8: spec_size = sizeof (EIF_INTEGER_8); break;
+						case SK_INT16: spec_size = sizeof (EIF_INTEGER_16); break;
+						case SK_INT32: spec_size = sizeof (EIF_INTEGER_32); break;
+						case SK_INT64: spec_size = sizeof (EIF_INTEGER_64); break;
+						case SK_CHAR: spec_size = sizeof (EIF_CHARACTER); break;
+						case SK_WCHAR: spec_size = sizeof (EIF_WIDE_CHAR); break;
+						case SK_BOOL: spec_size = sizeof (EIF_BOOLEAN); break;
+						case SK_FLOAT: spec_size = sizeof (EIF_REAL); break;
+						case SK_DOUBLE: spec_size = sizeof (EIF_DOUBLE); break;
+						case SK_POINTER: spec_size = sizeof (EIF_POINTER); break;
+						case SK_DTYPE:
+						case SK_REF: spec_size = sizeof (EIF_OBJECT); break;
+						default:
+							if (dgen & SK_BIT) 
+								spec_size = BITOFF(dgen & SK_DTYPE);
+							else
+								eise_io("General retrieve: not an Eiffel object.");
+					}
+				} else {
+					spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
+				}
 			}
 			buffer_read((char *) &count, sizeof(uint32));
 			nb_byte = CHRPAD(count * spec_size ) + LNGPAD_2;
@@ -1393,10 +1375,11 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 		printf (" %x", count);
 		printf (" %x", elm_size);
 #endif
-			if (!(crflags & EO_REF)) {
-				newadd = spmalloc(nb_byte, EIF_TRUE);
+			
+			if (crflags & EO_TUPLE) {
+				newadd = RTLNT(crflags & EO_TYPE);
 			} else {
-				newadd = spmalloc(nb_byte, EIF_FALSE);
+				newadd = spmalloc(nb_byte, EIF_TEST(!(crflags & EO_REF)));
 			}
 			if (newadd == (EIF_REFERENCE) 0) {
 					/* Creation of Eiffel object failed */
@@ -1413,7 +1396,6 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
 			/* Normal object */
-			nb_byte = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
 			newadd = emalloc(crflags & EO_TYPE); 
 			if (newadd == (EIF_REFERENCE) 0) {
 					/* Creation of Eiffel object failed */
@@ -1519,55 +1501,39 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 		/* Read a possible size */
 		if (flags & EO_SPEC) {
 			uint32 count, elm_size;
-			uint32 dgen, spec_type;
-
-			spec_type = dtypes[flags & EO_TYPE];
-			dgen = special_generic_type (spec_type);
-
-			if (!((dgen & SK_HEAD) == SK_EXP)) {
-				switch (dgen) {
-					case SK_INT8:
-						spec_size = sizeof (EIF_INTEGER_8);
-						break;
-					case SK_INT16:
-						spec_size = sizeof (EIF_INTEGER_16);
-						break;
-					case SK_INT32:
-						spec_size = sizeof (EIF_INTEGER_32);
-						break;
-					case SK_INT64:
-						spec_size = sizeof (EIF_INTEGER_64);
-						break;
-					case SK_CHAR:
-						spec_size = sizeof (EIF_CHARACTER);
-						break;
-					case SK_WCHAR:
-						spec_size = sizeof (EIF_WIDE_CHAR);
-						break;
-					case SK_BOOL:
-						spec_size = sizeof (EIF_BOOLEAN);
-						break;
-					case SK_FLOAT:
-						spec_size = sizeof (EIF_REAL);
-						break;
-					case SK_DOUBLE:
-						spec_size = sizeof (EIF_DOUBLE);
-						break;
-					case SK_POINTER:
-						spec_size = sizeof (EIF_POINTER);
-						break;
-					case SK_DTYPE:
-					case SK_REF:
-						spec_size = sizeof (EIF_OBJECT);
-						break;
-					default:
-						if (dgen & SK_BIT) 
-							spec_size = BITOFF(dgen & SK_DTYPE);
-						else
-							eise_io("Independent retrieve: not an Eiffel object.");
-				}
+			if (flags & EO_TUPLE) {
+				spec_size = sizeof(EIF_TYPED_ELEMENT);
 			} else {
-				spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
+				uint32 dgen, spec_type;
+
+				spec_type = dtypes[flags & EO_TYPE];
+				dgen = special_generic_type (spec_type);
+
+				if (!((dgen & SK_HEAD) == SK_EXP)) {
+					switch (dgen) {
+						case SK_INT8: spec_size = sizeof (EIF_INTEGER_8); break;
+						case SK_INT16: spec_size = sizeof (EIF_INTEGER_16); break;
+						case SK_INT32: spec_size = sizeof (EIF_INTEGER_32); break;
+						case SK_INT64: spec_size = sizeof (EIF_INTEGER_64); break;
+						case SK_CHAR: spec_size = sizeof (EIF_CHARACTER); break;
+						case SK_WCHAR: spec_size = sizeof (EIF_WIDE_CHAR); break;
+						case SK_BOOL: spec_size = sizeof (EIF_BOOLEAN); break;
+						case SK_FLOAT: spec_size = sizeof (EIF_REAL); break;
+						case SK_DOUBLE: spec_size = sizeof (EIF_DOUBLE); break;
+						case SK_POINTER: spec_size = sizeof (EIF_POINTER); break;
+						case SK_DTYPE:
+						case SK_REF:
+							spec_size = sizeof (EIF_OBJECT);
+							break;
+						default:
+							if (dgen & SK_BIT) 
+								spec_size = BITOFF(dgen & SK_DTYPE);
+							else
+								eise_io("Independent retrieve: not an Eiffel object.");
+					}
+				} else {
+					spec_size = EIF_Size((uint16)(dgen & SK_DTYPE)) + OVERHEAD;
+				}
 			}
 			ridr_norm_int (&count);
 			nb_byte = CHRPAD(count * spec_size ) + LNGPAD_2;
@@ -1577,10 +1543,10 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 		printf (" %x", count);
 		printf (" %x", elm_size);
 #endif
-			if (!(crflags & EO_REF)) {
-				newadd = spmalloc(nb_byte, EIF_TRUE);
+			if (crflags & EO_TUPLE) {
+				newadd = RTLNT(crflags & EO_TYPE);
 			} else {
-				newadd = spmalloc(nb_byte, EIF_FALSE);
+				newadd = spmalloc(nb_byte, EIF_TEST(!(crflags & EO_REF)));
 			}
 			if (newadd == (EIF_REFERENCE) 0) {
 					/* Creation of Eiffel object failed */
@@ -1597,7 +1563,6 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 			HEADER(newadd)->ov_flags |= crflags & (EO_REF|EO_COMP|EO_TYPE);
 		} else {
 			/* Normal object */
-			nb_byte = EIF_Size((uint16)(dtypes[flags & EO_TYPE]));
 			newadd = emalloc(crflags & EO_TYPE); 
 			if (newadd == (EIF_REFERENCE) 0) {
 					/* Creation of Eiffel object failed */
@@ -1712,13 +1677,8 @@ rt_private EIF_REFERENCE new_special_object (int new_type, uint32 crflags, uint3
 				eise_io ("Independent retrieve: not an Eiffel object.");
 	}
 	nb_byte = CHRPAD (count * spec_size) + LNGPAD_2;
-	if (crflags & EO_REF)
-		result = spmalloc (nb_byte, EIF_FALSE);
-	else
-		result = spmalloc (nb_byte, EIF_TRUE);
-
-	if (result != NULL)
-	{
+	result = spmalloc (nb_byte, EIF_TEST(!(crflags & EO_REF)));
+	if (result != NULL) {
 		EIF_REFERENCE o_ref = RT_SPECIAL_INFO (result);
 		RT_SPECIAL_COUNT_WITH_INFO (o_ref) = count;
 		RT_SPECIAL_ELEM_SIZE_WITH_INFO (o_ref) = spec_size;
@@ -1782,7 +1742,14 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 			ridr_norm_int (&count);
 			ridr_norm_int (&elem_size);
 			spec_elm_size[conv->new_type] = elem_size;
-			newadd = new_special_object (conv->new_type, crflags, count);
+			if (flags & EO_TUPLE) {
+				int16 dftype = crflags & EO_TYPE;
+				if (conv->new_dftype != TYPE_UNDEFINED)
+					dftype = conv->new_dftype;
+				newadd = RTLNT(dftype);
+			} else {
+				newadd = new_special_object (conv->new_type, crflags, count);
+			}
 		}
 		else {		/* Normal object */
 			int16 dftype = crflags & EO_TYPE;
@@ -1814,12 +1781,16 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 			if (i == objectCount)
 				eraise (conv->name, EN_RETR);
 			rt_dropped (oldadd, old_type);
-			if (flags & EO_SPEC)
-				object_rread_special (NULL, flags, count);
-			else
+			if (flags & EO_SPEC) {
+				if (flags & EO_TUPLE) {
+					object_rread_tuple (NULL, count);
+				} else {
+					object_rread_special (NULL, flags, count);
+				}
+			} else {
 				object_rread_attributes (NULL, flags, 0L);
-		}
-		else {
+			}
+		} else {
 			EIF_REFERENCE old_values;
 			EIF_OBJECT new_hector = hrecord (newadd);
 			nb_recorded++;
@@ -1828,11 +1799,21 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 			rt_update1 (oldadd, new_hector);
 
 				/* Read object values from file */
-			if (flags & EO_SPEC)
-				old_values = object_rread_special (
+			if (flags & EO_SPEC) {
+				if (flags & EO_TUPLE) {
+						/* We can always hold in a tuple types that do not match
+						 * since it always contains references to items, even for
+						 * expanded items. Therefore we can safely set `old_values'
+						 * to NULL. */
+					old_values = NULL;
+					object_rread_tuple (eif_access(new_hector), count);
+				} else {
+					old_values = object_rread_special (
 						eif_access (new_hector), flags, count);
-			else
+				}
+			} else {
 				old_values = object_rread_attributes (eif_access (new_hector), flags, 0L);
+			}
 
 			if (old_values != NULL)
 				add_mismatch (eif_access (new_hector), old_values);
@@ -1929,10 +1910,7 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new_
 
 	rt_info = (struct rt_struct *) ht_first(rt_table, key);
 
-#ifdef MAY_PANIC
-	if (rt_info->rt_status != UNSOLVED)
-		eif_panic("cannot already be solved");
-#endif
+	CHECK("Not already solved", rt_info->rt_status == UNSOLVED);
 
 	/* First, solve references if any. */
 	rt_unsolved = rt_info->rt_list;
@@ -1977,6 +1955,8 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new_
 	rt_info->rt_obj = new_obj;
 }
 
+rt_private void rt_subupdate (EIF_REFERENCE old, EIF_REFERENCE reference, EIF_REFERENCE addr, EIF_REFERENCE new_obj, EIF_REFERENCE parent);
+
 rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFERENCE parent)
 {
 	/* Reference field updating: record new unsolved references.
@@ -2007,7 +1987,25 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFEREN
 		size = zone->ov_size & B_SIZE;	
 		o_ref = RT_SPECIAL_INFO_WITH_ZONE(new_obj, zone);
 		count = RT_SPECIAL_COUNT_WITH_INFO(o_ref);
-		if (!(flags & EO_COMP)) {		/* Special of references */
+		if (flags & EO_TUPLE) {
+			EIF_TYPED_ELEMENT * l_item = (EIF_TYPED_ELEMENT *) new_obj;
+				/* Don't forget that first element of TUPLE is just a placeholder
+				 * to avoid offset computation from Eiffel code */
+			l_item++;
+			count--;
+			for (; count > 0; count--, l_item++) {
+				if
+					((eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) &&
+					(eif_reference_tuple_item(l_item)))
+				{
+						/* Update reference value to new value in retrieved system */
+					rt_subupdate(old, eif_reference_tuple_item(l_item),
+						(EIF_REFERENCE) &eif_reference_tuple_item(l_item), new_obj, parent);
+				}
+			}
+			/* Nothing to do anymore */
+			return;
+		} else if (!(flags & EO_COMP)) {		/* Special of references */
 			nb_references = count;
 			goto update;
 		} else {						/* Special of expanded objects */
@@ -2025,6 +2023,8 @@ rt_private void rt_update2(EIF_REFERENCE old, EIF_REFERENCE new_obj, EIF_REFEREN
 					count--, addr += elem_size, old_addr += old_elem_size) {
 				rt_update2(old_addr, addr, parent);
 			}
+			/* Nothing to do anymore */
+			return;
 		}
 	} else {							/* Normal object */
 		nb_references = References(flags & EO_TYPE);
@@ -2056,47 +2056,52 @@ update:
 				continue;
 			} 
 		} 
-		{
-			struct rt_struct *rt_info;
-			unsigned long key = ((unsigned long) reference) - 1;
-			EIF_REFERENCE supplier;
+			/* Update reference value to new value in retrieved system */
+		rt_subupdate(old, reference, addr, new_obj, parent);
+	}
+}
 
-			rt_info = (struct rt_struct *) ht_first(rt_table, key);
-			if (rt_info->rt_status == DROPPED) {
-				/* We raise an exception for an object dropped (due to its
-				 * generating type not being present in the retrieving
-				 * system) only if an attribute actually references it.
-				 * This still leads to cases where it is harmless (e.g.
-				 * this object, itself, may be no longer referenced), but
-				 * these cases are very hard to detect in general.
-				 */
-				eraise (type_description (rt_info->rtu_data.old_type)->name, EN_RETR);
-			}
-			else if (rt_info->rt_status == SOLVED) {
-				/* Reference is already solved */
-				supplier = eif_access(rt_info->rt_obj);
-				*(EIF_REFERENCE *) addr = supplier;			/* Attachment */
-				RTAS(supplier, new_obj);					/* Age check */
-			} else {
-				/* Reference is stil unsolved */
-				struct rt_cell *new_cell, *old_cell;
 
-				new_cell = (struct rt_cell *) xmalloc(sizeof(struct rt_cell), C_T, GC_OFF);
-				if (new_cell == (struct rt_cell *)0)
-					xraise (EN_MEM);
-				new_cell->status = RTU_KEYED;
-				new_cell->u.key = ((unsigned long) old) - 1;
-				new_cell->offset = (long) (addr - parent);
-				old_cell = rt_info->rt_list;
-				new_cell->next = old_cell;
-				rt_info->rt_list = new_cell;
-				rt_info->rt_status = UNSOLVED;
-				*(EIF_REFERENCE *) addr = (EIF_REFERENCE) 0; 
-						/* Set to zero the unsolved reference
-						 * in order to put the object in a
-						 * stable state. */
-			}
-		}
+rt_private void rt_subupdate (EIF_REFERENCE old, EIF_REFERENCE reference, EIF_REFERENCE addr, EIF_REFERENCE new_obj, EIF_REFERENCE parent)
+{
+	struct rt_struct *rt_info;
+	unsigned long key = ((unsigned long) reference) - 1;
+	EIF_REFERENCE supplier;
+
+	rt_info = (struct rt_struct *) ht_first(rt_table, key);
+	if (rt_info->rt_status == DROPPED) {
+		/* We raise an exception for an object dropped (due to its
+		 * generating type not being present in the retrieving
+		 * system) only if an attribute actually references it.
+		 * This still leads to cases where it is harmless (e.g.
+		 * this object, itself, may be no longer referenced), but
+		 * these cases are very hard to detect in general.
+		 */
+		eraise (type_description (rt_info->rtu_data.old_type)->name, EN_RETR);
+	}
+	else if (rt_info->rt_status == SOLVED) {
+		/* Reference is already solved */
+		supplier = eif_access(rt_info->rt_obj);
+		*(EIF_REFERENCE *) addr = supplier;			/* Attachment */
+		RTAS(supplier, new_obj);					/* Age check */
+	} else {
+		/* Reference is stil unsolved */
+		struct rt_cell *new_cell, *old_cell;
+
+		new_cell = (struct rt_cell *) xmalloc(sizeof(struct rt_cell), C_T, GC_OFF);
+		if (new_cell == (struct rt_cell *)0)
+			xraise (EN_MEM);
+		new_cell->status = RTU_KEYED;
+		new_cell->u.key = ((unsigned long) old) - 1;
+		new_cell->offset = (long) (addr - parent);
+		old_cell = rt_info->rt_list;
+		new_cell->next = old_cell;
+		rt_info->rt_list = new_cell;
+		rt_info->rt_status = UNSOLVED;
+		*(EIF_REFERENCE *) addr = (EIF_REFERENCE) 0; 
+				/* Set to zero the unsolved reference
+				 * in order to put the object in a
+				 * stable state. */
 	}
 }
 
@@ -3625,30 +3630,16 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 			types_cn = *(System(o_type).cn_types + num_attrib);
 
 			switch (types_cn & SK_HEAD) {
-				case SK_INT8:
-					buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_8));
-					break;
-				case SK_INT16:
-					buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_16));
-					break;
-				case SK_INT32:
-					buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_32));
-					break;
-				case SK_INT64:
-					buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_64));
-					break;
+				case SK_INT8: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_8)); break;
+				case SK_INT16: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_16)); break;
+				case SK_INT32: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_32)); break;
+				case SK_INT64: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_64)); break;
+				case SK_WCHAR: buffer_read(object + attrib_offset, sizeof(EIF_WIDE_CHAR)); break;
+				case SK_FLOAT: buffer_read(object + attrib_offset, sizeof(EIF_REAL)); break;
+				case SK_DOUBLE: buffer_read(object + attrib_offset, sizeof(EIF_DOUBLE)); break;
 				case SK_BOOL:
 				case SK_CHAR:
 					buffer_read(object + attrib_offset, sizeof(EIF_CHARACTER));
-					break;
-				case SK_WCHAR:
-					buffer_read(object + attrib_offset, sizeof(EIF_WIDE_CHAR));
-					break;
-				case SK_FLOAT:
-					buffer_read(object + attrib_offset, sizeof(EIF_REAL));
-					break;
-				case SK_DOUBLE:
-					buffer_read(object + attrib_offset, sizeof(EIF_DOUBLE));
 					break;
 				case SK_BIT:
 						{
@@ -3698,39 +3689,27 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_INTEGER count, elem_size;
 			EIF_REFERENCE ref, o_ptr;
-			uint32 dgen;
 
 			o_ptr = RT_SPECIAL_INFO(object);
 			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
-			dgen = special_generic_type (o_type);
 
-			if (!(flags & EO_REF)) {			/* Special of simple types */
+			if (flags & EO_TUPLE) {
+				buffer_read(object, count * sizeof(EIF_TYPED_ELEMENT));
+			} else if (!(flags & EO_REF)) {			/* Special of simple types */
+				uint32 dgen;
+				dgen = special_generic_type (o_type);
 				switch (dgen & SK_HEAD) {
-					case SK_INT8:
-						buffer_read(object, count*sizeof(EIF_INTEGER_8));
-						break;
-					case SK_INT16:
-						buffer_read(object, count*sizeof(EIF_INTEGER_16));
-						break;
-					case SK_INT32:
-						buffer_read(object, count*sizeof(EIF_INTEGER_32));
-						break;
-					case SK_INT64:
-						buffer_read(object, count*sizeof(EIF_INTEGER_64));
-						break;
+					case SK_INT8: buffer_read(object, count*sizeof(EIF_INTEGER_8)); break;
+					case SK_INT16: buffer_read(object, count*sizeof(EIF_INTEGER_16)); break;
+					case SK_INT32: buffer_read(object, count*sizeof(EIF_INTEGER_32)); break;
+					case SK_INT64: buffer_read(object, count*sizeof(EIF_INTEGER_64)); break;
 					case SK_BOOL:
 					case SK_CHAR:
 						buffer_read(object, count*sizeof(EIF_CHARACTER));
 						break;
-					case SK_WCHAR:
-						buffer_read(object, count*sizeof(EIF_WIDE_CHAR));
-						break;
-					case SK_FLOAT:
-						buffer_read(object, count*sizeof(EIF_REAL));
-						break;
-					case SK_DOUBLE:
-						buffer_read(object, count*sizeof(EIF_DOUBLE));
-						break;
+					case SK_WCHAR: buffer_read(object, count*sizeof(EIF_WIDE_CHAR)); break;
+					case SK_FLOAT: buffer_read(object, count*sizeof(EIF_REAL)); break;
+					case SK_DOUBLE: buffer_read(object, count*sizeof(EIF_DOUBLE)); break;
 					case SK_EXP: {
 						uint32 old_flags, hflags;
 
@@ -3904,99 +3883,25 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_INTEGER count, elem_size;
 			EIF_REFERENCE ref, o_ptr;
-			uint32 dgen;
 
 			o_ptr = RT_SPECIAL_INFO(object);
 			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
-			dgen = special_generic_type (o_type);
 	
-			if (!(flags & EO_REF)) {			/* Special of simple types */
+			if (flags & EO_TUPLE) {
+				object_rread_tuple(object, count);
+			} else if (!(flags & EO_REF)) {			/* Special of simple types */
+				uint32 dgen;
+				dgen = special_generic_type (o_type);
 				switch (dgen & SK_HEAD) {
-					case SK_INT8:
-						ridr_multi_int8 ((EIF_INTEGER_8 *)object, count);
-#if DEBUG & 1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *(((EIF_INTEGER_8 *)object) + z));
-							if (!(z % 40))
-								printf ("\n");
-						}
-#endif
-						break;
-					case SK_INT16:
-						ridr_multi_int16 ((EIF_INTEGER_16 *)object, count);
-#if DEBUG & 1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *(((EIF_INTEGER_16 *)object) + z));
-							if (!(z % 40))
-								printf ("\n");
-						}
-#endif
-						break;
-					case SK_INT32:
-						ridr_multi_int32 ((EIF_INTEGER_32 *)object, count);
-#if DEBUG & 1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *(((EIF_INTEGER_32 *)object) + z));
-							if (!(z % 40))
-								printf ("\n");
-						}
-#endif
-						break;
-					case SK_INT64:
-						ridr_multi_int64 ((EIF_INTEGER_64 *)object, count);
-#if DEBUG & 1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *(((EIF_INTEGER_64 *)object) + z));
-							if (!(z % 40))
-								printf ("\n");
-						}
-#endif
-
-						break;
+					case SK_INT8: ridr_multi_int8 ((EIF_INTEGER_8 *)object, count); break;
+					case SK_INT16: ridr_multi_int16 ((EIF_INTEGER_16 *)object, count); break;
+					case SK_INT32: ridr_multi_int32 ((EIF_INTEGER_32 *)object, count); break;
+					case SK_INT64: ridr_multi_int64 ((EIF_INTEGER_64 *)object, count); break;
 					case SK_BOOL:
-					case SK_CHAR:
-						ridr_multi_char ((EIF_CHARACTER *) object, count);
-#if DEBUG & 1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *((EIF_CHARACTER *)(object + z)));
-							if (!(z % 40))
-								printf ("\n");
-						}
-#endif
-
-						break;
-					case SK_WCHAR:
-						ridr_multi_int32 ((EIF_INTEGER_32 *) object, count);
-#if DEBUG & 1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *((EIF_CHARACTER *)(object + z)));
-							if (!(z % 40))
-								printf ("\n");
-						}
-#endif
-
-						break;
-					case SK_FLOAT:
-						ridr_multi_float ((EIF_REAL *)object, count);
-#if DEBUG & 1
-						for (z = 0; z < count; z++) {
-							printf (" %f", *(((EIF_REAL *)object) + z));
-							if (!(z % 40))
-								printf ("\n");
-						}
-#endif
-
-						break;
-					case SK_DOUBLE:
-						ridr_multi_double ((EIF_DOUBLE *)object, count);
-#if DEBUG & 1
-						for (z = 0; z < count; z++) {
-							printf (" %lf", *(((EIF_DOUBLE *)object) + z));
-							if (!(z % 40))
-								printf ("\n");
-						}
-#endif
-						break;
+					case SK_CHAR: ridr_multi_char ((EIF_CHARACTER *) object, count); break;
+					case SK_WCHAR: ridr_multi_int32 ((EIF_INTEGER_32 *) object, count); break;
+					case SK_FLOAT: ridr_multi_float ((EIF_REAL *)object, count); break;
+					case SK_DOUBLE: ridr_multi_double ((EIF_DOUBLE *)object, count); break;
 					case SK_EXP: {
 						uint32  old_flags, hflags;
 
@@ -4005,10 +3910,6 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 						rt_id_read_cid ((uint32 *) 0, &hflags, old_flags);
 						for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
-	
-#if DEBUG & 1
-							printf (" %x", old_flags);
-#endif
 							HEADER(ref)->ov_flags = (hflags & (EO_REF|EO_EXP|EO_COMP|EO_TYPE));
 							HEADER(ref)->ov_size = (uint32)(ref - parent);
 							object_read (ref, parent);						
@@ -4017,26 +3918,8 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 					}
 						break;
 					case SK_BIT: 
-					{
-#if DEBUG & 1
-						uint32 l; /* %%ss read but never initialized */
-#endif
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 						ridr_multi_bit ((struct bit *)object, count, elem_size);
-#if DEBUG & 1
-						printf (" %x", l);
-
-						for (ref = object; count > 0; count--, ref += elem_size ) {
-							int q;
-							for (q = 0; q < BIT_NBPACK(l) ; q++) {
-								printf (" %lx", *((uint32 *)(((struct bit *)ref)->b_value + q)));
-								if (!(q % 40))
-									printf ("\n");
-							}
-							printf ("\n");
-						}
-#endif
-					}
 						break;
 					case SK_POINTER:
 						ridr_multi_any (object, count);
@@ -4053,22 +3936,11 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent)
 	
 				if (!(flags & EO_COMP)) {		/* Special of references */
 					ridr_multi_any (object, count);
-#if DEBUG & 1
-					for (ref = object; count > 0; count--,
-							ref = (EIF_REFERENCE) ((EIF_REFERENCE *) ref + 1)) {
-						printf (" %lx", ref);
-						if (!(count % 40))
-							printf ("\n");
-					}
-#endif
 				} else {						/* Special of composites */
 					uint32  old_flags, hflags;
 
 					ridr_norm_int (&old_flags);
 					rt_read_cid ((uint32 *) 0, &hflags, old_flags);
-#if DEBUG & 1
-					printf (" %x", old_flags);
-#endif
 					elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 					for (ref = object + OVERHEAD; count > 0;
 							count --, ref += elem_size) {
@@ -4395,6 +4267,51 @@ rt_private EIF_REFERENCE object_rread_special (
 		xfree (trash);
 
 	return result;
+}
+
+/* Read a tuple object, of type in storing system described by `flags',
+ * consisting of `count' elements, each of size `elem_size', into `object.
+ */
+rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
+{
+	EIF_REFERENCE addr, trash = NULL;
+	EIF_TYPED_ELEMENT *l_item;
+	char l_type;
+
+	if (object != NULL)
+		addr = object;
+	else {
+		trash = (EIF_REFERENCE) xmalloc (count * sizeof (EIF_TYPED_ELEMENT), C_T, GC_OFF);
+		addr = trash;
+	}
+
+	l_item = (EIF_TYPED_ELEMENT *) addr;
+		/* Don't forget that first element of TUPLE is just a placeholder
+		 * to avoid offset computation from Eiffel code */
+	l_item++;
+	count--;
+	for (; count > 0; count--, l_item++) {
+		ridr_multi_char(&l_type, 1);
+		CHECK("Same type", l_type == eif_tuple_item_type(l_item));
+		switch (l_type) {
+			case EIF_REFERENCE_CODE: ridr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
+			case EIF_BOOLEAN_CODE: ridr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
+			case EIF_CHARACTER_CODE: ridr_multi_char (&eif_character_tuple_item(l_item), 1); break;
+			case EIF_DOUBLE_CODE: ridr_multi_double (&eif_double_tuple_item(l_item), 1); break;
+			case EIF_REAL_CODE: ridr_multi_float (&eif_real_tuple_item(l_item), 1); break;
+			case EIF_INTEGER_8_CODE: ridr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
+			case EIF_INTEGER_16_CODE: ridr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
+			case EIF_INTEGER_32_CODE: ridr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
+			case EIF_INTEGER_64_CODE: ridr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
+			case EIF_POINTER_CODE: ridr_multi_any ((char *) &eif_pointer_tuple_item(l_item), 1); break;
+			case EIF_WIDE_CHAR_CODE: ridr_multi_int32 (&eif_wide_character_tuple_item(l_item), 1); break;
+			default:
+				eise_io ("Recoverable retrieve: unsupported tuple element type.");
+		}
+	}
+
+	if (trash != NULL)
+		xfree (trash);
 }
 
 rt_private int char_read(char *pointer, int size)

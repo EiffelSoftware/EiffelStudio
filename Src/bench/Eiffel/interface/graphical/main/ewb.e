@@ -1,7 +1,7 @@
 indexing
 	description: "Abstract root class for gui eiffelbench class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class
 	EWB

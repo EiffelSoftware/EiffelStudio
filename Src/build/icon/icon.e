@@ -149,11 +149,11 @@ feature  -- Interface section
 	set_managed (b: BOOLEAN) is
 		do
 			if b then 
-				manage;
 				if not icon_label.text.empty then
 					icon_label.manage;
 				end;
 				button.manage;
+				manage;
 			else unmanage;
 				if button.managed then
 					button.unmanage;
@@ -176,12 +176,6 @@ feature {EB_BOX}
 			res: like Resources
 		do
 			res := Resources;
-			color := res.background_color;
-			if color /= Void then
-				set_background_color (color);
-				icon_label.set_background_color (color);
-				button.set_background_color (color)
-			end;
 			color := res.foreground_color;
 			if color /= Void then
 				button.set_foreground_color (color)

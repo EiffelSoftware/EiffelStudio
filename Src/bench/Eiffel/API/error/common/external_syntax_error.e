@@ -5,8 +5,10 @@ class EXTERNAL_SYNTAX_ERROR
 inherit
 
 	SYNTAX_ERROR
+		rename
+			syntax_message as external_error_message
 		redefine
-			build_explain
+			external_error_message
 		end
 
 creation
@@ -15,18 +17,12 @@ creation
 feature
 
 	external_error_message: STRING;
+			-- Specific syntax message
 
 	set_external_error_message (message: STRING) is
 		do
 			!!external_error_message.make (0);
 			external_error_message.copy (message);
 		end;
-
-	build_explain is
-            -- Build specific explanation image for current error
-            -- in `error_window'.
-        do
-			put_string (external_error_message);
-        end
 
 end

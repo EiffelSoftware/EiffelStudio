@@ -6,7 +6,7 @@ inherit
 
 	SYNTAX_ERROR
 		redefine
-			build_explain
+			syntax_message
 		end
 
 creation
@@ -15,11 +15,10 @@ creation
 
 feature
 
-	build_explain is
-            -- Build specific explanation image for current error
-            -- in `error_window'.
+	syntax_message: STRING is
+			-- Specific syntax message.
         do
-			put_string ("(empty string not permitted here)%N")
+			Result := "empty string not permitted here"
         end;
 
 end

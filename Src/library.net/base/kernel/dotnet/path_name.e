@@ -18,7 +18,7 @@ inherit
 			extend as string_extend
 		export
 			{NONE} all
-			{ANY} is_empty, empty, to_cil, wipe_out
+			{ANY} is_empty, empty, to_cil, wipe_out, to_c
 			{PATH_NAME} count, area
 		redefine
 			is_equal

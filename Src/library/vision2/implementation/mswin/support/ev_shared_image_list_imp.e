@@ -1,6 +1,5 @@
 indexing
 	description	: "Object to share image lists among all vision2 controls"
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
 	date		: "$Date$"
 	revision	: "$Revision$"
 

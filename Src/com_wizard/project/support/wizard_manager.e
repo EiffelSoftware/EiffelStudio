@@ -267,22 +267,6 @@ feature {NONE} -- Implementation
 					create c_reg_gen
 					c_reg_gen.generate
 
---					from
---						system_descriptor.coclasses.start
---						progress_report.start
---						progress_report.set_title (Registration_code_generation_title)
---						progress_report.set_range (a_range)
---					until
---						system_descriptor.coclasses.after
---						or Shared_wizard_environment.abort
---					loop
---						
---						c_server_visitor.visit (system_descriptor.coclasses.item)
---						eiffel_server_visitor.visit (system_descriptor.coclasses.item)
---
---						system_descriptor.coclasses.forth
---						progress_report.step
---					end
 				end
 
 				if Shared_wizard_environment.abort then

@@ -393,7 +393,7 @@ feature -- Iteration
 			Result := iteration_position > capacity - 1
 		end
 
-	item_for_iteration: H is
+	item_for_iteration, key_for_iteration: H is
 			-- Item at cursor position
 		require
 			not_off: not after

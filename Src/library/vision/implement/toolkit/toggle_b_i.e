@@ -13,6 +13,15 @@ inherit
 	
 feature 
 
+	set_accelerator_action (a_translation: STRING) is
+            -- Set the accerlator action (modifiers and key to use as a shortcut
+            -- in selecting a button) to `a_translation'.
+            -- `a_translation' must be specified with the X toolkit conventions.
+		require
+			translation_not_void: a_translation /= Void
+		deferred
+		end;
+
 	add_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when value
 			-- is changed.
@@ -71,6 +80,11 @@ feature
 		end;
 
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
+		deferred
+		end;
+
+	remove_accelerator_action is
+			-- Remove the accelerator action.
 		deferred
 		end;
 

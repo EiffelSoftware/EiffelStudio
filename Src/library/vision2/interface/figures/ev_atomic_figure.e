@@ -39,6 +39,16 @@ feature {NONE} -- Initialization
 			{EV_FIGURE} Precursor
 		end
 
+	make_for_test is
+			-- Create interesting.
+		do
+			default_create
+			set_foreground_color (create {EV_COLOR}.make_with_rgb (
+				random_real, random_real, random_real))
+			set_line_width (random_from_range (1, 8))
+			set_random_values_for_points
+		end
+
 feature -- Access
 
 	foreground_color: EV_COLOR
@@ -91,6 +101,39 @@ feature -- Miscellaneous
 			create a_projector.make (a_world, p)
 			a_projector.project
 			Result := p
+		end
+
+feature {NONE} -- Implementation
+
+	set_random_values_for_points is
+			-- Set all points to have random values for testing purposes.
+		local
+			n: INTEGER
+		do
+			from n := 1 until n > point_count loop
+				get_point_by_index (n).set_x (random_from_range (3, 297))
+				get_point_by_index (n).set_y (random_from_range (3, 97))
+			end
+		end
+
+	random_from_range (a_min, a_max: INTEGER): INTEGER is
+			-- Any integer between `a_min', `a_max'.
+		do
+			random.forth
+			Result := (random.real_item * (a_max - a_min)).rounded + a_min
+		end
+
+	random_real: DOUBLE is
+			-- Double value in range [0, 1].
+		do
+			random.forth
+			Result := random.real_item
+		end
+
+	random: RANDOM is
+			-- Generator.
+		once
+			create Result.make
 		end
 
 invariant

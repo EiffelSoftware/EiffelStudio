@@ -37,17 +37,6 @@ feature -- Initialization
 			set_point (pos)
 		end
 
-	make_for_test is
-			-- Create interesting to display.
-		do
-			default_create
-			get_point_by_index (1).set_x (50)
-			get_point_by_index (1).set_y (100)
-			set_foreground_color (create {EV_COLOR}.make_with_rgb (1.0, 0.0,
-				0.0))
-			set_line_width (10)
-		end
-
 feature -- Access
 
 	point_count: INTEGER is
@@ -116,6 +105,9 @@ end -- class EV_FIGURE_DOT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/27 19:10:50  brendel
+--| Centralized testing code.
+--|
 --| Revision 1.6  2000/04/26 15:56:34  brendel
 --| Added CVS Log.
 --| Added copyright notice.

@@ -12,7 +12,8 @@ class
 inherit
 	EV_ATOMIC_FIGURE
 		redefine
-			default_create
+			default_create,
+			make_for_test
 		end
 
 create
@@ -52,11 +53,9 @@ feature -- Initialization
 		end
 
 	make_for_test is
-			-- Create interesting to display.
+			-- Create interesting.
 		do
-			default_create
-			get_point_by_index (1).set_x (50)
-			get_point_by_index (1).set_y (100)
+			Precursor
 			set_pixmap (create {EV_PIXMAP}.make_for_test)
 		end
 
@@ -153,6 +152,9 @@ end -- class EV_FIGURE_PICTURE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/27 19:10:50  brendel
+--| Centralized testing code.
+--|
 --| Revision 1.5  2000/04/26 15:56:34  brendel
 --| Added CVS Log.
 --| Added copyright notice.

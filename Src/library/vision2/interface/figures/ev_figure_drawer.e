@@ -191,9 +191,21 @@ feature -- Figure drawing
 		require
 			slice_not_void: slice /= Void
 		do
-			check
-				to_be_implemented: False
+			--| FIXME To be implemented.
+			drawable.set_line_width (slice.line_width)
+			drawable.set_drawing_mode (slice.logical_function_mode)	
+			if slice.fill_color /= Void then
+				drawable.set_foreground_color (slice.fill_color)
+				drawable.fill_pie_slice (
+					slice.center.x_abs, slice.center.y_abs,
+					slice.corner.x_abs, slice.corner.y_abs,
+					0, slice.aperture)
 			end
+			drawable.set_foreground_color (slice.foreground_color)
+			drawable.draw_pie_slice (
+				slice.center.x_abs, slice.center.y_abs,
+				slice.corner.x_abs, slice.corner.y_abs,
+				0, slice.aperture)
 		end
 
 	draw_figure_picture (picture: EV_FIGURE_PICTURE) is

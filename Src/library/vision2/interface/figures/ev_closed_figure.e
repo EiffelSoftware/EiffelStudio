@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	EV_ATOMIC_FIGURE
+		redefine
+			make_for_test
+		end
 
 feature -- Access
 
@@ -21,6 +24,14 @@ feature -- Access
 	fill_style: INTEGER
 			-- There is something like fill-style too...
 			--| FIXME To be implemented
+
+	make_for_test is
+			-- Create interesting.
+		do
+			Precursor
+			set_fill_color (create {EV_COLOR}.make_with_rgb (
+				random_real, random_real, random_real))
+		end
 
 feature -- Status report
 
@@ -70,6 +81,9 @@ end -- class EV_CLOSED_FIGURE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/27 19:10:50  brendel
+--| Centralized testing code.
+--|
 --| Revision 1.6  2000/02/29 18:09:07  oconnor
 --| reformatted indexing cluase
 --|

@@ -58,20 +58,6 @@ feature {NONE} -- Initialization
 			set_point_b (point_a.get_relative_point (w, h))
 		end
 
-	make_for_test is
-			-- Create interesting to display.
-		do
-			default_create
-			get_point_by_index (1).set_x (3)
-			get_point_by_index (1).set_y (3)
-			get_point_by_index (2).set_x (97)
-			get_point_by_index (2).set_y (197)
-			set_foreground_color (create {EV_COLOR}.make_with_rgb (
-				0.5, 0.0, 0.5))
-			set_fill_color (create {EV_COLOR}.make_with_rgb (0.5, 1.0, 0.5))
-			set_line_width (1)
-		end
-
 feature -- Status report
 
 	point_count: INTEGER is
@@ -248,6 +234,9 @@ end -- class EV_FIGURE_RECTANGLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/27 19:10:50  brendel
+--| Centralized testing code.
+--|
 --| Revision 1.6  2000/04/26 15:56:34  brendel
 --| Added CVS Log.
 --| Added copyright notice.

@@ -963,8 +963,13 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				
 				new_window.set_position (old_window.x_position, old_window.y_position)
 				new_window.set_size (old_window.width.max (new_window.minimum_width), old_window.height.max (new_window.minimum_height))
-				if old_window.is_displayed then					
-					new_window.show
+				if old_window.is_displayed then
+						-- Executing the show command twice, prevents us from 
+						-- having to know about the different states for displaying
+						-- the window. The command already knows about it, we simply
+						-- hide, and then show, and the command handles everything for us.
+					Command_handler.Show_hide_display_window_command.execute
+					Command_handler.Show_hide_display_window_command.execute
 				end
 				old_window.destroy
 				
@@ -973,7 +978,12 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 				new_builder_window.set_position (old_builder_window.x_position, old_builder_window.y_position)
 				new_builder_window.set_size (old_builder_window.width.max (new_builder_window.minimum_width), old_builder_window.height.max (new_builder_window.minimum_height))
 				if old_builder_window.is_displayed then
-					new_builder_window.show
+						-- Executing the show command twice, prevents us from 
+						-- having to know about the different states for displaying
+						-- the window. The command already knows about it, we simply
+						-- hide, and then show, and the command handles everything for us.
+					Command_handler.Show_hide_builder_window_command.execute
+					Command_handler.Show_hide_builder_window_command.execute
 				end
 				old_builder_window.destroy
 			end

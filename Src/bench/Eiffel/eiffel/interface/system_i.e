@@ -2252,7 +2252,7 @@ feature {NONE} -- Finalization implementation
 			j: INTEGER
 			deg_output: DEGREE_OUTPUT
 		do
-			Eiffel_project.delete_f_code_content (Void, Void) -- No agent
+			Eiffel_project.delete_generation_directory (Final_generation_path, Void, Void) -- No agent
 			!FINAL_MAKER! makefile_generator.make
 			open_log_files
 			j := classes.count

@@ -98,14 +98,14 @@ feature {NONE}
 			if help_label = Void then
 				quest_d.hide_help_button;
 			else
-				quest_d.set_cancel_label (cancel_label);
 				quest_d.set_help_label (help_label);
 			end;
+			quest_d.set_ok_label (ok_label);
+			quest_d.set_cancel_label (cancel_label);
 			quest_d.set_exclusive_grab;
 			quest_d.add_ok_action (Current, First);
 			quest_d.add_cancel_action (Current, Second);
 			quest_d.add_help_action (Current, Third);
-			quest_d.set_ok_label (ok_label);
 
 			!! set_dialog_att; 
 			set_dialog_att.execute (quest_d);

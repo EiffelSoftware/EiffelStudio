@@ -163,7 +163,7 @@ feature
 			end;
 			icon_pixmap := a_pixmap;
 			pixmap_implementation ?= icon_pixmap.implementation;
-			c_bitmap := pixmap_implementation.resource_pixmap (screen);
+			c_bitmap := pixmap_implementation.resource_bitmap (screen);
 			pixmap_implementation.put_object (Current);
 			ext_name := MiconPixmap.to_c;
 			m_wm_set_pixmap (screen_object, c_bitmap, $ext_name)

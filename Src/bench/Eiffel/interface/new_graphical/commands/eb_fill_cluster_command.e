@@ -20,37 +20,59 @@ feature -- Basic operations
 	execute is
 			-- Perform on center cluster.
 		local
-			cd: CLUSTER_DIAGRAM
+			cluster_fig: EG_CLUSTER_FIGURE
+			port_x, port_y: INTEGER
+			old_count: INTEGER
 		do
-			cd ?= tool.cluster_view
-			if cd /= Void then
-				cd.center_cluster.add_all_classes
+			check
+				only_aviable_in_cluster_graph: tool.cluster_graph /= Void
+			end
+			cluster_fig ?= tool.cluster_view.figure_from_model (tool.cluster_graph.center_cluster)
+			port_x := cluster_fig.port_x
+			port_y := cluster_fig.port_y
+			
+			old_count := tool.cluster_graph.center_cluster.flat_linkables.count
+			tool.cluster_graph.include_all_classes (tool.cluster_graph.center_cluster)
+			if not tool.cluster_graph.last_included_classes.is_empty then
+				tool.layout.layout_cluster_only (cluster_fig)
+				tool.world.update
+				
+				cluster_fig.set_port_position (port_x, port_y)
+				tool.restart_force_directed
 				tool.reset_history
-				tool.projector.project
+				tool.projector.full_project
 			end
 		end
 
 	execute_with_cluster_stone (a_stone: CLUSTER_STONE) is
 			-- Add all classes of `a_stone'.
 		local
-			clfs: CLUSTER_FIGURE_STONE
-			clf: CLUSTER_FIGURE
-			cd: CLUSTER_DIAGRAM
+			es_cluster: ES_CLUSTER
+			cluster_fig: EG_CLUSTER_FIGURE
+			port_x, port_y: INTEGER
+			old_count: INTEGER
 		do
-			cd ?= tool.cluster_view
-			clfs ?= a_stone
-			if clfs /= Void and then clfs.source.world = cd then
-				clfs.source.add_all_classes
-				clfs.source.update_minimum_size
-			else
-				if cd /= Void then
-					clf := cd.cluster_figure_by_cluster (a_stone.cluster_i)
-					if clf /= Void then
-						clf.add_all_classes
-						clf.update_minimum_size
-						tool.reset_history
-						tool.projector.project
-					end
+			check
+				only_aviable_in_cluster_graph: tool.cluster_graph /= Void
+			end
+			es_cluster := tool.cluster_graph.cluster_from_interface (a_stone.cluster_i)
+			if es_cluster /= Void then
+				cluster_fig ?= tool.cluster_view.figure_from_model (es_cluster)
+				port_x := cluster_fig.port_x
+				port_y := cluster_fig.port_y
+				
+				old_count := es_cluster.flat_linkables.count
+				tool.cluster_graph.include_all_classes (es_cluster)
+				
+				if not tool.cluster_graph.last_included_classes.is_empty then
+					
+					tool.layout.layout_cluster_only (cluster_fig)
+					tool.world.update
+					
+					cluster_fig.set_port_position (port_x, port_y)
+					tool.restart_force_directed
+					tool.reset_history
+					tool.projector.full_project
 				end
 			end
 		end

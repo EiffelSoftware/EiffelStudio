@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 					end
 					class_i := Void
 				else
-					create wd.make_with_text (Warning_messages.w_Cannot_delete_read_only_class (class_i.name_in_upper))
+					create wd.make_with_text (Warning_messages.w_cannot_delete_none_empty_cluster (class_i.name_in_upper))
 					wd.show_modal_to_window (window.window)
 					class_i := Void
 				end
@@ -187,14 +187,19 @@ feature {NONE} -- Implementation
 					not cluster_i.is_library and
 					not cluster_i.is_precompiled
 				then
-					str := cluster_i.cluster_name.twin
-					if Application.is_running then
-						create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<agent delete_cluster>>)
-						cd.show_modal_to_window (window.window)
+					if cluster_i.classes.is_empty and then cluster_i.sub_clusters.is_empty then
+						str := cluster_i.cluster_name.twin
+						if Application.is_running then
+							create cd.make_with_text_and_actions (Warning_messages.W_stop_debugger,	<<agent delete_cluster>>)
+							cd.show_modal_to_window (window.window)
+						else
+							create cd.make_with_text_and_actions (Warning_messages.w_Confirm_delete_cluster (str),
+														<<agent delete_cluster>>)
+							cd.show_modal_to_window (window.window)
+						end
 					else
-						create cd.make_with_text_and_actions (Warning_messages.w_Confirm_delete_cluster (str),
-													<<agent delete_cluster>>)
-						cd.show_modal_to_window (window.window)
+						create wd.make_with_text (Warning_messages.w_cannot_delete_none_empty_cluster (cluster_i.cluster_name))
+						wd.show_modal_to_window (window.window)	
 					end
 					cluster_i := Void
 				else

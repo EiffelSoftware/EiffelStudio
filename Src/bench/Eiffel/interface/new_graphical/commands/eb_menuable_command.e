@@ -95,7 +95,7 @@ feature -- Basic operations
 			end
 		end
 
-feature {EB_COMMAND_MENU_ITEM} -- Implementation
+feature --{EB_COMMAND_MENU_ITEM} -- Implementation
 
 	managed_menu_items: ARRAYED_LIST [like new_menu_item] is
 			-- Menu items associated with this command.

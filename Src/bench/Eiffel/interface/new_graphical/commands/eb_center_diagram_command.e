@@ -55,12 +55,16 @@ feature -- Basic operations
 	execute_with_class_stone (a_stone: CLASSI_STONE) is
 			-- Create a development window and process `a_stone'.
 		do
+			was_dropped := True
+			tool.set_is_rebuild_world_needed (True)
 			tool.tool.launch_stone (a_stone)
 		end
 
 	execute_with_cluster_stone (a_stone: CLUSTER_STONE) is
 			-- Create a development window and process `a_stone'.
 		do
+			was_dropped := True
+			tool.set_is_rebuild_world_needed (True)
 			tool.tool.launch_stone (a_stone)
 		end
 
@@ -83,16 +87,22 @@ feature {NONE} -- Implementation
 			cluster_stone: CLUSTER_STONE
 			tbi: EB_COMMAND_TOOL_BAR_BUTTON
 		do
-			Result := tool.tool.stone
-			tbi := managed_toolbar_items.first
-			class_stone ?= Result
-			cluster_stone ?= Result
-			if class_stone /= Void then
-				tbi.set_accept_cursor (cursors.Cur_class)
-			elseif cluster_stone /= Void then
-				tbi.set_accept_cursor (cursors.Cur_cluster)
+			if not was_dropped then
+				Result := tool.tool.stone
+				tbi := managed_toolbar_items.first
+				class_stone ?= Result
+				cluster_stone ?= Result
+				if class_stone /= Void then
+					tbi.set_accept_cursor (cursors.Cur_class)
+				elseif cluster_stone /= Void then
+					tbi.set_accept_cursor (cursors.Cur_cluster)
+				end
+			else
+				was_dropped := False
 			end
 		end
+		
+	was_dropped: BOOLEAN
 
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the command (one for the

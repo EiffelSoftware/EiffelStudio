@@ -38,7 +38,6 @@ inherit
 			pixmap
 		redefine
 			drop_class,
-			drop_cluster,
 			delete_class,
 			delete_cluster,
 			execute
@@ -55,97 +54,14 @@ feature -- Initialization
 			make_context_diagram (a_target)
 			window := a_window
 		end
+		
+feature -- Access
 
 	execute is
 			-- Display information about `Current'.
 		do
 			create explain_dialog.make_with_text (Interface_names.e_Diagram_delete_item)
 			explain_dialog.show_modal_to_window (tool.development_window.window)
-		end
-
-	execute_with_inherit_stone (a_stone: INHERIT_STONE) is
-			-- Remove `a_stone' from diagram.
-		local
-			cf: CLASS_FIGURE
-			cd: CONTEXT_DIAGRAM
-		do
-			cd ?= tool.class_view
-			if cd = Void then
-				cd ?= tool.cluster_view
-			end
-			check cd /= Void end			
-			if a_stone.source.world = cd then
-				cf ?= a_stone.source.descendant
-				if cf /= Void then
-					cf.code_generator.reset_date
-					cf.code_generator.set_diagram (cf.world)
-				end
-				history.do_named_undoable (
-					Interface_names.t_Diagram_delete_inheritance_link_cmd,
-					agent remove_inheritance_figure (a_stone.source),
-					agent restore_inheritance_figure (a_stone.source,
-						a_stone.source.midpoints.twin))
-				if not a_stone.source.last_generation_successful then
-					history.remove_last
-					a_stone.source.update
-				end
-			end
-		end
-
-	execute_with_client_stone (a_stone: CLIENT_STONE) is
-			-- Remove `a_stone' from diagram.
-		local
-			csfs_to_remove: LINKED_LIST [CLIENT_SUPPLIER_FIGURE]
-			names: LINKED_LIST [STRING]
-			cancelled: BOOLEAN
-			cf: CLASS_FIGURE
-			dial: EB_DELETE_CLIENT_LINK_DIALOG
-			cd: CONTEXT_DIAGRAM
-		do
-			cd ?= tool.class_view
-			if cd = Void then
-				cd ?= tool.cluster_view
-			end
-			check cd /= Void end		
-			if a_stone.source.world = cd then
-				cancelled := False
-				create csfs_to_remove.make
-				cf ?= a_stone.source.client
-				if cf /= Void then
-					cf.code_generator.reset_date
-				end
-				if not a_stone.source.children_figures.is_empty then
-					dial := delete_client_link_dialog
-					dial.set_strings (a_stone.source.feature_names)
-					dial.show_modal_to_window (window.window)
-					if not dial.cancelled and then
-						not dial.selected_item.is_empty then
-							names := dial.selected_items
-							from
-								names.start
-							until
-								names.after
-							loop
-								csfs_to_remove.extend (a_stone.source.link_by_feature_name (names.item))
-								names.forth
-							end	
-					else
-						cancelled := True
-					end
-					dial.destroy
-				else
-					csfs_to_remove.extend (a_stone.source)
-				end
-				if not cancelled then
-					history.do_named_undoable (
-						Interface_names.t_Diagram_delete_client_link_cmd,
-						[<<agent remove_client_supplier_figures (csfs_to_remove, a_stone.source),
-							agent update_label (a_stone.source)>>],
-						[<<agent restore_client_supplier_figures (csfs_to_remove,
-							a_stone.source.midpoints.twin, a_stone.source),
-							agent update_label (a_stone.source)>>])
-				end
-			end
 		end
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
@@ -156,234 +72,6 @@ feature -- Initialization
 			Result.drop_actions.extend (agent execute_with_client_stone)
 			Result.drop_actions.extend (agent drop_class)
 			Result.drop_actions.extend (agent drop_cluster)
-		end
-
-	project is
-			-- Call the projector.
-		do
-			tool.projector.project
-		end
-
-	remove_inheritance_figure (a_inheritance_figure: INHERITANCE_FIGURE) is
-			-- Remove `a_inheritance_figure' from diagram and from code.
-		local
-			d: CONTEXT_DIAGRAM
-		do
-			d ?= tool.class_view
-			if d = Void then
-				d ?= tool.cluster_view
-			end
-
-			a_inheritance_figure.remove_from_diagram (d)
-		end
-		
-	restore_inheritance_figure (
-		a_inheritance_figure: INHERITANCE_FIGURE;
-		saved_midpoints: ARRAYED_LIST [LINK_MIDPOINT]) is
-			-- Put `a_inheritance_figure' back on diagram and code.
-		local
-			d: CONTEXT_DIAGRAM
-		do
-			d ?= tool.class_view
-			if d = Void then
-				d ?= tool.cluster_view
-			end
-			check d /= Void end
-
-			a_inheritance_figure.put_on_diagram (d)
-			a_inheritance_figure.retrieve_midpoints (saved_midpoints)
-			tool.projector.project
-		end
-
-	remove_client_supplier_figures (
-			client_supplier_figures: LINKED_LIST [CLIENT_SUPPLIER_FIGURE];
-			client_stone: CLIENT_SUPPLIER_FIGURE)
-		is
-			-- Remove `client_supplier_figures' items from diagram.
-		require
-			client_supplier_figures_not_void: client_supplier_figures /= Void
-			client_stone_not_void: client_stone /= Void
-		local
-			d: CONTEXT_DIAGRAM
-			cf: CLASS_FIGURE
-			data: LINKED_LIST [CASE_SUPPLIER]
-		do
-			d ?= tool.class_view
-			if d = Void then
-				d ?= tool.cluster_view
-			end
-			check d /= Void end
-
-			if not client_supplier_figures.is_empty then
-				cf ?= client_supplier_figures.first.client
-				if cf /= Void then
-					cf.code_generator.set_diagram (d)
-				end
-			end
-
-			create data.make
-			from
-				client_supplier_figures.start
-			until
-				client_supplier_figures.after
-			loop
-				data.put_front (client_supplier_figures.item.supplier_data)
-				client_supplier_figures.forth
-			end
-			cf.code_generator.remove_features_with_data (data)
-			
-			client_stone.update
-			tool.projector.project			
-		end
-		
-	restore_client_supplier_figures (
-			client_supplier_figures: LINKED_LIST [CLIENT_SUPPLIER_FIGURE];
-			saved_midpoints: ARRAYED_LIST [LINK_MIDPOINT];
-			client_stone: CLIENT_SUPPLIER_FIGURE)
-		is
-			-- Put `client_supplier_figures' items back on  diagram.
-		require
-			client_supplier_figures_not_void: client_supplier_figures /= Void
-			saved_midpoints_not_void: saved_midpoints /= Void
-			client_stone_not_void: client_stone /= Void
-		local
-			d: CONTEXT_DIAGRAM
-			cf: CLASS_FIGURE
-			data: LINKED_LIST [CASE_SUPPLIER]
-		do
-			d ?= tool.class_view
-			if d = Void then
-				d ?= tool.cluster_view
-			end
-			check d /= Void end
-
-			if not client_supplier_figures.is_empty then
-				cf ?= client_supplier_figures.first.client
-				if cf /= Void then
-					cf.code_generator.set_diagram (d)
-				end
-			end
-
-			if client_stone.world = Void then
-				client_stone.put_on_diagram (d)
-				client_stone.reset
-				client_stone.retrieve_midpoints	(saved_midpoints)	
-				client_stone.disable_is_valid
-			end
-
-			create data.make
-			from
-				client_supplier_figures.start
-			until
-				client_supplier_figures.after
-			loop
-				data.extend (client_supplier_figures.item.supplier_data)
-				client_supplier_figures.forth
-			end
-			cf.code_generator.extend_features_with_data (data)
-
-			tool.projector.project
-		end
-
-	drop_class (st: CLASSI_STONE) is
-			-- Extract the class that should be removed from `st' and erase it.
-		local
-			cfs: CLASSI_FIGURE_STONE
-			cd: CONTEXT_DIAGRAM
-		do
-			cd ?= tool.class_view
-			if cd = Void then
-				cd ?= tool.cluster_view
-			end
-			check cd /= Void end		
-			cfs ?= st
-			if cfs /= Void and then cfs.source.world = cd then
-				class_figure := cfs.source
-			else
-				class_figure := cd.class_figure_by_class (st.class_i)			
-			end
-			Precursor (st)
-		end
-
-	class_figure: CLASS_FIGURE
-			-- Figure to be removed.
-
-	drop_cluster (st: CLUSTER_STONE) is
-			-- Extract the cluster that should be removed from `st' and erase it.
-		local
-			cfs: CLUSTER_FIGURE_STONE
-			cld: CLUSTER_DIAGRAM
-		do
-			cld ?= tool.cluster_view
-			cfs ?= st
-			if cfs /= Void then
-				cluster_figure := cfs.source
-			else
-				if cfs /= Void and then cfs.source.world = cld then
-					cluster_figure := Void
-				elseif cld /= Void then
-					cluster_figure := cld.cluster_figure_by_cluster (st.cluster_i)
-				end
-			end
-			Precursor (st)
-		end
-
-	cluster_figure: CLUSTER_FIGURE
-			-- Figure to be removed.
-
-	delete_class is
-			-- Remove `class_i' from the system.
-		local
-			file: PLAIN_TEXT_FILE
-			wd: EV_WARNING_DIALOG
-			retried: BOOLEAN
-		do
-			if not retried then
-				create file.make (class_i.file_name)
-				if
-					file.exists and then
-					file.is_writable
-				then
-					file.delete
-					manager.remove_class (class_i)
-					if class_figure /= Void then
-						class_figure.remove_from_diagram (True)
-						class_figure.update_pebble
-					end					
-					could_not_delete := False
-				end
-				Application.resynchronize_breakpoints
-				Window_manager.synchronize_all
-			end
-			if could_not_delete then
-					-- We were not able to delete the file.
-				create wd.make_with_text (Warning_messages.w_Not_writable (class_i.file_name))
-				wd.show_modal_to_window (window.window)
-			end
-		rescue
-			retried := True
-			retry	
-		end
-
-	delete_cluster is
-			-- Remove `cluster_i' from the system.
-		do
-			history.wipe_out
-			if cluster_figure /= Void then
-				cluster_figure.recursive_remove_from_diagram (True)
-			end
-			Precursor		
-		end
-
-	update_label (link: CLIENT_SUPPLIER_FIGURE) is
-			-- `link' needs to have its labels updated.
-		require
-			link_exists: link /= Void
-		do
-			if link.world /= Void then
-				link.build_label
-				link.update_name_figure
-			end
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is
@@ -408,6 +96,321 @@ feature -- Initialization
 	name: STRING is "Delete_item"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
+			
+feature {NONE} -- Implementation
+
+	drop_class (st: CLASSI_STONE) is
+			-- Extract the class that should be removed from `st' and erase it.
+		local
+			fs: FEATURE_STONE
+			es_class: ES_CLASS
+			l_links: LIST [EG_LINK]
+			l_item: ES_ITEM
+			wd: EV_WARNING_DIALOG
+			referenced_classes: STRING
+			msg: STRING
+		do
+			fs ?= st
+			if fs = Void then
+				es_class := tool.graph.class_from_interface (st.class_i)
+				if es_class /= Void then
+					from
+						create referenced_classes.make_empty
+						l_links := es_class.links
+						l_links.start
+					until
+						l_links.after
+					loop
+						l_item ?= l_links.item
+						if l_item /= Void and then l_item.is_needed_on_diagram and then l_links.item.target = es_class then
+							referenced_classes.append ("%N" + l_links.item.source.name)
+						end
+						l_links.forth
+					end
+					if referenced_classes.is_empty then
+						if 
+							not st.class_i.is_compiled or else
+							st.class_i.compiled_class.syntactical_clients.is_empty
+						then
+							Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND} (st)
+						else
+							msg := warning_messages.w_recompile_to_remove_references (es_class.name)
+							create wd.make_with_text (msg)
+							wd.show_modal_to_window (window.window)
+						end
+					else
+						msg := warning_messages.w_still_referenced (es_class.name)
+						msg.append (referenced_classes)
+						create wd.make_with_text (msg)
+						wd.show_modal_to_window (window.window)
+					end
+				else
+					Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND} (st)
+				end
+			end
+		end
+
+	delete_class is
+			-- Remove `class_i' from the system.
+		local
+			file: PLAIN_TEXT_FILE
+			wd: EV_WARNING_DIALOG
+			retried: BOOLEAN
+			es_class: ES_CLASS
+			l_links: LIST [EG_LINK]
+		do
+			if not retried then
+				if Application.is_running then
+					Application.kill
+				end
+				Debugger_manager.disable_debug
+				create file.make (class_i.file_name)
+				if
+					file.exists and then
+					file.is_writable
+				then
+					file.delete
+					manager.remove_class (class_i)
+					could_not_delete := False
+				end
+				Application.resynchronize_breakpoints
+			end
+			if could_not_delete then
+					-- We were not able to delete the file.
+				create wd.make_with_text (Warning_messages.w_Not_writable (class_i.file_name))
+				wd.show_modal_to_window (window.window)
+			else
+				es_class := tool.graph.class_from_interface (class_i)
+				if es_class /= Void then
+					from
+						l_links := es_class.links
+						l_links.start
+					until
+						l_links.after
+					loop
+						tool.graph.remove_link (l_links.item)
+						l_links.forth
+					end
+					tool.graph.remove_node (es_class)
+				end
+				tool.reset_history
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	delete_cluster is
+			-- Remove `cluster_i' from the system.
+		do
+			tool.reset_history
+			Precursor {EB_DELETE_CLASS_CLUSTER_COMMAND}	
+		end
+
+	execute_with_inherit_stone (a_stone: INHERIT_STONE) is
+			-- Remove `a_stone' from diagram.
+		local
+			ctm: CLASS_TEXT_MODIFIER
+			descendant, ancestor: ES_CLASS
+			e_item: ES_INHERITANCE_LINK
+			link: EIFFEL_INHERITANCE_FIGURE
+		do
+			link := a_stone.source
+			descendant := link.model.descendant
+			ancestor := link.model.ancestor
+			if ancestor /= Void and then descendant /= Void then
+				ctm := descendant.code_generator
+				
+				e_item ?= a_stone.source.model
+				check
+					e_item_not_void: e_item /= Void
+				end
+				e_item.disable_needed_on_diagram
+				
+				tool.history.do_named_undoable (
+					interface_names.t_diagram_delete_inheritance_link_cmd,
+					agent remove_ancestor (ctm, ancestor.name, e_item),
+					agent add_ancestor (ctm, ancestor.name, e_item))
+			end
+		end
+		
+	remove_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK) is
+			-- Remove ancestor with `a_name' and hide `a_link' if succesfull.
+		do
+			a_ctm.remove_ancestor (a_name)
+			if not a_ctm.class_modified_outside_diagram then
+				a_link.disable_needed_on_diagram
+			end
+		end
+		
+	add_ancestor (a_ctm: CLASS_TEXT_MODIFIER; a_name: STRING; a_link: ES_INHERITANCE_LINK) is
+			--Add ancestor with `a_name' and show `a_link' if succesfull.
+		do
+			a_ctm.add_ancestor (a_name)
+			if not a_ctm.class_modified_outside_diagram then
+				a_link.enable_needed_on_diagram
+			end
+		end
+		
+	execute_with_client_stone (a_stone: CLIENT_STONE) is
+			-- Delete feature in `a_stone'.
+		local
+			features: LIST [FEATURE_AS]
+			selected_features: ARRAYED_LIST [FEATURE_AS]
+			cancelled: BOOLEAN
+			dial: EB_DELETE_CLIENT_LINK_DIALOG
+			names: LIST [STRING]
+			l_item: FEATURE_AS
+		do
+			features := a_stone.source.model.features
+			if features.count = 1 then
+				delete_features (features.twin, a_stone.source)
+			else
+				-- Let user select a subset
+				dial := delete_client_link_dialog
+				dial.set_strings (a_stone.source.feature_names)
+				dial.show_modal_to_window (window.window)
+				if 
+					not dial.cancelled and then
+					not dial.selected_item.is_empty 
+				then
+					names := dial.selected_items
+					from
+						names.start
+						create selected_features.make (features.count)
+					until
+						names.after
+					loop
+						l_item := item_from_name (features, names.item)
+						if l_item /= Void then
+							selected_features.extend (l_item)
+						end
+						names.forth
+					end	
+				else
+					cancelled := True
+				end
+				dial.destroy
+				if not cancelled then
+					delete_features (selected_features, a_stone.source)
+				end
+			end
+		end
+		
+	item_from_name (a_list: LIST [FEATURE_AS]; a_name: STRING): FEATURE_AS is
+			-- Feature with `a_name' in `a_list' or Void if none.
+		require
+			a_list_not_void: a_list /= Void
+			a_name_not_void: a_name /= Void
+		do
+			from
+				a_list.start
+			until
+				Result /= Void or else a_list.after
+			loop
+				if a_list.item.feature_name.is_equal (a_name) then
+					Result := a_list.item
+				end
+				a_list.forth
+			end
+		end
+		
+	delete_features (a_features: LIST [FEATURE_AS]; a_link: EIFFEL_CLIENT_SUPPLIER_FIGURE) is
+			-- Delete features in `a_features'.
+		require
+			a_features_not_void: a_features /= Void
+			a_link_not_void: a_link /= Void
+		local
+			ctm: CLASS_TEXT_MODIFIER
+			undo_list: LIST [TUPLE [STRING, INTEGER]]
+			l_model: ES_CLIENT_SUPPLIER_LINK
+			l_client: ES_CLASS
+		do
+			if not a_features.is_empty then
+				ctm := a_link.model.client.code_generator
+				ctm.remove_features (a_features)
+				if not ctm.class_modified_outside_diagram then
+					undo_list := ctm.last_removed_code.twin
+					
+					l_model := a_link.model
+					if a_link.model.features.count = a_features.count then
+						l_model.disable_needed_on_diagram
+						
+						history.register_named_undoable (
+							interface_names.t_diagram_delete_client_link_cmd,
+							agent remove_features_and_link (ctm, a_features, l_model),
+--							[<<
+--								agent ctm.remove_features (a_features), 
+--								agent l_model.disable_needed_on_diagram
+--							>>],
+							agent reinclude_code_and_link (ctm, undo_list, l_model))
+--							[<<
+--								agent ctm.undelete_code (undo_list),
+--								agent l_model.enable_needed_on_diagram
+--							>>])
+					else
+						l_client := l_model.client
+						l_client.remove_queries (a_features)
+						l_model.synchronize
+						
+						history.register_named_undoable (
+							interface_names.t_diagram_delete_client_link_cmd,
+							agent remove_features (ctm, a_features, l_model, l_client),
+--							[<<
+--								agent ctm.remove_features(a_features), 
+--								agent l_client.remove_queries (a_features),
+--								agent l_model.synchronize
+--							>>],
+							agent reinclude_features (ctm, a_features, undo_list, l_model, l_client))
+--							[<< 
+--								agent ctm.undelete_code (undo_list),
+--								agent l_client.add_queries (a_features),
+--								agent l_model.synchronize
+--							>>])
+					end
+				end
+			end
+		end
+		
+	remove_features (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; a_link: ES_CLIENT_SUPPLIER_LINK; a_client: ES_CLASS) is
+			-- 
+		do
+			a_ctm.remove_features (a_features)
+			if not a_ctm.class_modified_outside_diagram then
+				a_client.remove_queries (a_features)
+				a_link.synchronize
+			end
+		end 
+		
+	reinclude_features (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; code: LIST [TUPLE [STRING, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK; a_client: ES_CLASS) is
+			-- 
+		do
+			a_ctm.undelete_code (code)
+			if not a_ctm.class_modified_outside_diagram then
+				a_client.add_queries (a_features)
+				a_link.synchronize
+			end
+		end 
+	
+	remove_features_and_link (a_ctm: CLASS_TEXT_MODIFIER; a_features: LIST [FEATURE_AS]; a_link: ES_CLIENT_SUPPLIER_LINK) is
+			-- 
+		do
+			a_ctm.remove_features (a_features)
+			if not a_ctm.class_modified_outside_diagram then
+				a_link.disable_needed_on_diagram
+			end
+		end
+		
+	reinclude_code_and_link (a_ctm: CLASS_TEXT_MODIFIER; code: LIST [TUPLE [STRING, INTEGER]]; a_link: ES_CLIENT_SUPPLIER_LINK) is
+			-- 
+		do
+			a_ctm.undelete_code (code)
+			if not a_ctm.class_modified_outside_diagram then
+				a_link.enable_needed_on_diagram
+			end
+		end
+		
+		
 
 	delete_client_link_dialog: EB_DELETE_CLIENT_LINK_DIALOG is
 			-- Associated widget.

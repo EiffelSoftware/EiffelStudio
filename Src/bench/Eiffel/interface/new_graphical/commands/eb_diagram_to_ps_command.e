@@ -27,11 +27,8 @@ feature -- Basic operations
 		local
 			png_file: FILE_NAME
 			png_format: EV_PNG_FORMAT
-			cd: CONTEXT_DIAGRAM
-			cld: CLUSTER_DIAGRAM
 			p: EV_PIXMAP
 			dial: EV_FILE_SAVE_DIALOG
-			size: EV_RECTANGLE
 			test_file: RAW_FILE
 			error: INTEGER
 			wd: EB_WARNING_DIALOG
@@ -40,17 +37,12 @@ feature -- Basic operations
 		do
 			if error = 0 then
 				create dial
-				cd ?= tool.class_view
-				if cd = Void then
-					cld ?= tool.cluster_view
-					check cld /= Void end
-					cd := cld
-				end
 				set_dialog_filters_and_add_all (dial, <<Png_files_filter>>)
-				if cld = Void then
-					dial.set_file_name (cd.center_class.name + ".png")
+				
+				if tool.class_graph /= Void then
+					dial.set_file_name (tool.class_graph.center_class.name + ".png")
 				else
-					dial.set_file_name (cld.center_cluster.name + ".png")
+					dial.set_file_name (tool.cluster_graph.center_cluster.name + ".png")
 				end
 				create env
 				current_directory := env.current_working_directory
@@ -60,37 +52,37 @@ feature -- Basic operations
 				env.change_working_directory (current_directory)
 				if not dial.file_name.is_empty then
 					error := 1
-					size := cd.bounds
-					p := tool.projector.diagram_image (size)
+					p := tool.projector.world_as_pixmap (5)
 					if p /= Void then 
-						if p.width * p.height > 0 then
-							create png_file.make_from_string (dial.file_name)
-							create test_file.make_open_write (png_file)
-							if test_file.is_writable then
-								test_file.close
-								create png_format
-								tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
-								p.save_to_named_file (png_format, png_file)
-								tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
-								error := 0
-							else
-								test_file.close
-							end
+						create png_file.make_from_string (dial.file_name)
+						create test_file.make_open_write (png_file)
+						if test_file.is_writable then
+							test_file.close
+							create png_format
+							tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
+							p.save_to_named_file (png_format, png_file)
+							tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
+							error := 0
 						else
-							error := 2
+							test_file.close
 						end
 					end
 				end
 			else
 				if error = 1 then
 					create wd.make_with_text (Warning_messages.w_cannot_save_png_file (dial.file_name))
-				else
+				elseif error = 2 then
 					create wd.make_with_text (Warning_messages.W_cannot_generate_png)
 				end
 				wd.show_modal_to_window (tool.development_window.window)
 			end
 		rescue
-			error := 1
+			if tool.projector.is_world_too_large then
+				error := 2
+			else
+				error := 1
+			end
+			tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
 			retry
 		end
 
@@ -117,29 +109,5 @@ feature -- Basic operations
 			-- Name of the command. Used to store the command in the
 			-- preferences.
 
-	ps_projector: EV_POSTSCRIPT_PROJECTOR
-			-- Projector of diagram to eps file.
-
-	draw_bon_inheritance_figure_agent: PROCEDURE [ANY, TUPLE [EV_FIGURE]] is
-			-- Routine to add to projector.
-		once
-			Result := agent draw_bon_inheritance_figure
-		end
-
-	draw_bon_inheritance_figure (ihf: BON_INHERITANCE_FIGURE) is
-		do
-			ihf.draw_ps (ps_projector)
-		end
-
-	draw_bon_client_supplier_figure_agent: PROCEDURE [ANY, TUPLE [EV_FIGURE]] is
-			-- Routine to add to projector.
-		once
-			Result := agent draw_bon_client_supplier_figure
-		end
-
-	draw_bon_client_supplier_figure (csf: BON_CLIENT_SUPPLIER_FIGURE) is
-		do
-			csf.draw_ps (ps_projector)
-		end
 
 end -- class EB_DIAGRAM_TO_PS_COMMAND

@@ -20,23 +20,14 @@ feature -- Basic operations
 
 	execute is
 			-- Perform operation.
-		local
-			world: CONTEXT_DIAGRAM
 		do
-			if tool.class_view /= Void then
-				world := tool.class_view
-			elseif tool.cluster_view /= Void then
-				world := tool.cluster_view
+			if tool.world.is_labels_shown and then not current_button.is_selected then
+				tool.world.hide_labels
+			elseif not tool.world.is_labels_shown and then current_button.is_selected then
+				tool.world.show_labels
 			end
-			if world /= Void then
-				if world.labels_shown then
-					world.hide_labels
-				else
-					world.show_labels
-				end
-				current_button.set_tooltip (tooltip)
-				tool.projector.full_project
-			end
+			current_button.set_tooltip (tooltip)
+			tool.projector.full_project
 		end
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
@@ -47,19 +38,14 @@ feature -- Basic operations
 		do
 			create Result.make (Current)
 			current_button := Result
+			if tool.world.is_labels_shown then
+				Result.toggle
+			end
 			initialize_toolbar_item (Result, display_text, use_gray_icons)
-			Result.toggle
 			Result.select_actions.extend (agent execute)
 		end
-
-feature {NONE} -- Implementation
-
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
-		do
-			Result := Pixmaps.Icon_display_labels
-		end
+		
+feature -- Access
 
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
@@ -69,6 +55,15 @@ feature {NONE} -- Implementation
 			else
 				Result := Interface_names.f_diagram_show_labels
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	pixmap: ARRAY [EV_PIXMAP] is
+			-- Pixmaps representing the command (one for the
+			-- gray version, one for the color version).
+		do
+			Result := Pixmaps.Icon_display_labels
 		end
 
 	description: STRING is

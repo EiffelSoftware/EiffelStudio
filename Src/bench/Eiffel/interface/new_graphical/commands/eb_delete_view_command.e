@@ -65,20 +65,11 @@ feature {NONE} -- Events
 	ok_pressed is
 			-- The user really wants to delete current view.
 		local
-			cd: CONTEXT_DIAGRAM
+			ew: EIFFEL_WORLD
 		do
-			cd ?= tool.class_view
-			if cd = Void then
-				cd ?= tool.cluster_view
-			end
-			check cd_not_void: cd /= Void end
-			if not cd.current_view.is_equal ("DEFAULT") then
-				cd.available_views.prune_all (cd.current_view)
-				cd.remove_view (cd.current_view)
-				tool.view_selector.select_actions.block
-				tool.view_selector.set_strings (cd.available_views)
-				tool.view_selector.set_text ("DEFAULT")
-				tool.view_selector.select_actions.resume
+			ew := tool.world
+			if not ew.current_view.is_equal ("DEFAULT") then
+				tool.remove_view (ew.current_view)
 			end
 		end
 

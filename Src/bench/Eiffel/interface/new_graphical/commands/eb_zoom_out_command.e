@@ -9,7 +9,6 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 
-
 create
 	make
 
@@ -18,50 +17,32 @@ feature -- Basic operations
 	execute is
 			-- Perform operation.
 		local
-			world: CONTEXT_DIAGRAM
+			l_world: EIFFEL_WORLD
+			new_scale_factor, l_scale_factor: DOUBLE
+			l_zoom_selector: EB_ZOOM_SELECTOR
+			new_scale, old_scale: INTEGER
+			l_projector: EIFFEL_PROJECTOR
 		do
-			if tool.class_view /= Void then
-				world := tool.class_view
-			elseif tool.cluster_view /= Void then
-				world := tool.cluster_view
-			end
-			if world /= Void and world.scale_x >= 0.5 then
-				history.do_named_undoable (
-					Interface_names.t_Diagram_zoom_out_cmd,
-					[<<agent change_scale (world, world.scale_x - 0.1),
-						agent project>>],
-					[<<agent change_scale (world, world.scale_x),
-						agent project>>])
+			l_world := tool.world
+			l_scale_factor := l_world.scale_factor
+			new_scale_factor := (0.1 - l_scale_factor) / -l_scale_factor
+			if l_world.scale_factor * new_scale_factor > 0.1 then
+				old_scale := (l_world.scale_factor * 100).rounded
+				l_world.scale (new_scale_factor)
+				tool.crop_diagram
+				l_projector := tool.projector
+				l_projector.full_project
+				new_scale := (l_world.scale_factor * 100).rounded
+				l_zoom_selector := tool.zoom_selector
+				l_zoom_selector.show_as_text (new_scale)
+				history.register_named_undoable (
+						Interface_names.t_Diagram_zoom_out_cmd,
+						[<<agent l_world.scale (new_scale_factor), agent tool.crop_diagram, agent l_zoom_selector.show_as_text (new_scale), agent l_projector.full_project>>],
+						[<<agent l_world.scale (1/new_scale_factor), agent tool.crop_diagram, agent l_zoom_selector.show_as_text (old_scale), agent l_projector.full_project>>])
 			end
 		end
 
 feature {NONE} -- Implementation
-
-	project is
-			-- Call the projector.
-		do
-			tool.projector.project
-		end
-
-	change_scale (cd: CONTEXT_DIAGRAM; new_scale: DOUBLE) is
-			-- Change scaling factor of world origin.
-		require
-			cd_not_void: cd /= Void
-		local
-			old_grid_x, old_grid_y: INTEGER
-		do
-			old_grid_x := cd.grid_x
-			old_grid_y := cd.grid_y
-			cd.set_scale_x (new_scale)
-			cd.set_scale_y (new_scale)
-			cd.point.set_scale_x (new_scale)
-			cd.point.set_scale_y (new_scale)
-			cd.set_grid_x ((cd.Default_grid_x * new_scale).rounded)
-			cd.set_grid_y ((cd.Default_grid_y * new_scale).rounded)
-			cd.point.set_position (
-				(cd.point.x // old_grid_x) * cd.grid_x,
-				(cd.point.y // old_grid_y) * cd.grid_y)
-		end
 
 	pixmap: ARRAY [EV_PIXMAP] is
 			-- Pixmaps representing the command (one for the

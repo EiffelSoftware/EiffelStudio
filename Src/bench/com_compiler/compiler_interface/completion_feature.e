@@ -11,11 +11,11 @@ inherit
 		redefine
 			all_callers,
 			all_callers_count,
-			ancestor_version_count,
+			ancestor_versions_count,
 			ancestor_versions,
 			descendant_callers,
 			descendant_callers_count,
-			descendant_version_count,
+			descendant_versions_count,
 			descendant_versions,
 			description,
 			evaluated_class,
@@ -24,7 +24,7 @@ inherit
 			feature_location,
 			has_postcondition,
 			has_precondition,
-			implementer_count,
+			implementers_count,
 			implementers,
 			is_attribute,
 			is_constant,
@@ -116,7 +116,7 @@ feature -- Access
 			create Result.make (create {ARRAYED_LIST [FEATURE_DESCRIPTOR]}.make (0))
 		end
 		
-	ancestor_version_count: INTEGER is 0
+	ancestor_versions_count: INTEGER is 0
 	
 	descendant_versions: FEATURE_ENUMERATOR is
 			-- all decendant versions of feature
@@ -124,7 +124,7 @@ feature -- Access
 			create Result.make (create {ARRAYED_LIST [FEATURE_DESCRIPTOR]}.make (0))
 		end
 		
-	descendant_version_count: INTEGER is 0
+	descendant_versions_count: INTEGER is 0
 	
 	descendant_callers: FEATURE_ENUMERATOR is
 			-- all decendant callers to feature
@@ -203,7 +203,7 @@ feature -- Access
 			create Result.make (create {ARRAYED_LIST [FEATURE_DESCRIPTOR]}.make (0))
 		end
 		
-	implementer_count: INTEGER is 0
+	implementers_count: INTEGER is 0
 	
 	is_attribute: BOOLEAN
 	is_constant: BOOLEAN 

@@ -24,11 +24,11 @@ inherit
 			descendant_callers,
 			descendant_callers_count,
 			implementers,
-			implementer_count,
+			implementers_count,
 			ancestor_versions,
-			ancestor_version_count,
+			ancestor_versions_count,
 			descendant_versions,
-			descendant_version_count,
+			descendant_versions_count,
 			exported_to_all,
 			is_once,
 			is_external,
@@ -361,7 +361,7 @@ feature -- Access
 			result_exists: Result /= void			
 		end
 
-	implementer_count: INTEGER is
+	implementers_count: INTEGER is
 			-- Number of feature implementers.
 		do
 			Result := implementers.count
@@ -378,7 +378,7 @@ feature -- Access
 			result_exists: Result /= void	
 		end
 
-	ancestor_version_count: INTEGER is
+	ancestor_versions_count: INTEGER is
 			-- Number of ancestor versions.
 		do
 			Result := ancestor_versions_internal.count
@@ -393,7 +393,7 @@ feature -- Access
 			create Result.make (res)
 		end
 
-	descendant_version_count: INTEGER is
+	descendant_versions_count: INTEGER is
 			-- Number of descendant versions.
 		do
 			Result := descendant_versions_internal.count
@@ -456,7 +456,7 @@ feature -- Access
 	is_procedure: BOOLEAN is
 			-- Is procedure?
 		do
-			Result := compiler_feature.is_procedure and not compiler_feature.is_function
+			--Result := compiler_feature.is_procedure and not compiler_feature.is_function
 		end
 
 	is_function: BOOLEAN is

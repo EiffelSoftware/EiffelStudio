@@ -86,7 +86,7 @@ feature -- Access
 			end
 		end
 			
-	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
+	html_doc_generator: IEIFFEL_HTML_DOCUMENTATION_GENERATOR_INTERFACE is
 			-- Html document generator for project
 		require else
 			project_initialized: valid_project
@@ -114,7 +114,7 @@ feature -- Access
 	is_compiled: BOOLEAN is
 			-- Has system been compiled?
 		do
-			Result := compiler.is_successful
+			Result := compiler.was_compilation_successful
 		end
 		
 	project_has_updated: BOOLEAN is
@@ -214,6 +214,49 @@ feature -- Basic Operations
 				end
 			end
 		end
+
+	generate_new_eiffel_project (a_name: STRING; a_root_class: STRING; a_creation_routine: STRING; a_ace_file_name: STRING; a_project_directory_path: STRING) is
+			-- generate new Eiffel project in `a_project_directory_path' and creates
+			-- basic .NET project ace `a_ace_file_name'
+		require else
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+			non_void_root_class: a_root_class /= Void
+			valid_root_class: not a_root_class.is_empty
+			non_void_creation_routine: a_creation_routine /= Void
+			valid_creation_routine: (a_creation_routine = Void or else a_creation_routine.is_empty) implies (a_root_class.is_equal ("ANY") or else a_root_class.is_equal ("NONE"))
+			ace_exists: not (create {RAW_FILE}.make (a_ace_file_name)).exists
+			project_path_exists: not (create {DIRECTORY}.make (a_project_directory_path)).exists
+		local
+			dir: DIRECTORY
+			ace_file: PLAIN_TEXT_FILE
+		do
+			create dir.make (a_project_directory_path)
+			dir.create_dir
+			
+			-- create most basic ace file
+			create ace_file.make_open_write (a_ace_file_name)
+			ace_file.put_string ("system")
+			ace_file.put_string ("%N%T%"" + a_name + "%"")
+			ace_file.put_string ("%N%Nroot")
+			ace_file.put_string ("%N%T" + a_root_class)
+			if a_creation_routine /= Void and then not a_creation_routine.is_empty then
+				ace_file.put_string (": " + a_creation_routine)
+			end
+			ace_file.put_string ("%N%Ndefault")
+			ace_file.put_string ("%N%Tmsil_generation (yes)")
+			ace_file.put_string ("%N%Til_verifiable (yes)")
+			ace_file.put_string ("%N%Tcls_compliant (yes)")
+			ace_file.put_string ("%N%Tdotnet_naming_convention (yes)")
+			ace_file.put_string ("%N%Ncluster")
+			ace_file.put_string ("%N%Nassembly")
+			ace_file.put_string ("%N%Nend")
+			ace_file.close
+			
+			-- attempt to load ace `a_ace_file_name' and create new project in `a_project_directory_path'
+			create_eiffel_project (a_ace_file_name, a_project_directory_path)
+		end
+		
 
 	create_eiffel_project (a_ace_file_name: STRING; a_project_directory_path: STRING) is
 			-- Create new Eiffel project.

@@ -52,11 +52,7 @@ feature -- Status setting
    			not_is_sensitive: not is_sensitive
    		end
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_MENU_ITEM_I	
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of menu.
@@ -69,6 +65,12 @@ feature {EV_ANY_I} -- Implementation
 			Precursor
 			create press_actions
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_MENU_ITEM_I	
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 
 end -- class EV_MENU_ITEM
 
@@ -93,6 +95,9 @@ end -- class EV_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/01 20:28:52  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.32  2000/02/29 18:09:07  oconnor
 --| reformatted indexing cluase
 --|

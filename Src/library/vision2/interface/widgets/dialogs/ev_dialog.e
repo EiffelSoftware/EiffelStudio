@@ -38,14 +38,14 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	implementation: EV_DIALOG_I
-			-- Implementation of the dialog
-
 	create_implementation is
 			-- Create implementation of dialog box.
 		do
 			create {EV_DIALOG_IMP} implementation.make (Current)
 		end
+
+	implementation: EV_DIALOG_I
+			-- Implementation of the dialog.
 
 end -- class EV_DIALOG
 
@@ -70,6 +70,9 @@ end -- class EV_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/01 20:28:52  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.12  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

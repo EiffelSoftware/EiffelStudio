@@ -26,11 +26,8 @@ inherit
 create
 	default_create
 
-feature -- Implementation
+feature {NONE} -- Implementation
 
-	implementation: EV_STATUS_BAR_I
-			-- Platform dependent access.
-	
 	create_implementation is
 			-- Create implementation of status bar.
 		do
@@ -42,6 +39,11 @@ feature -- Implementation
 			{EV_PRIMITIVE} Precursor
 			{EV_ITEM_LIST} Precursor
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_STATUS_BAR_I
+			-- Platform dependent access.
 
 end -- class EV_STATUS_BAR
 
@@ -66,6 +68,9 @@ end -- class EV_STATUS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/01 20:28:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.12  2000/02/29 18:09:11  oconnor
 --| reformatted indexing cluase
 --|

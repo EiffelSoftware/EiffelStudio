@@ -291,18 +291,6 @@ feature -- Basic operations
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_FONT_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
-
-	create_implementation is
-			-- Create implementation of drawing area.
-		do
-			create {EV_FONT_IMP} implementation.make (Current)
-		end
-
 feature {EV_ANY} -- Contract support
 
 	is_in_default_state: BOOLEAN is
@@ -359,6 +347,20 @@ feature -- Obsolete
  			Result := implementation.is_standard
  		end
 
+feature {NONE} -- Implementation
+
+	create_implementation is
+			-- Create implementation of drawing area.
+		do
+			create {EV_FONT_IMP} implementation.make (Current)
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_FONT_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
+
 invariant
 	family_valid: valid_family (family)
 	weight_valid: valid_weight (weight)
@@ -396,6 +398,9 @@ end -- class EV_FONT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/01 20:28:52  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.18  2000/02/23 02:33:45  pichery
 --| Added class EV_DEFAULT_FONT which contains default fonts. Used this new
 --| class to improve contracts into EV_FONT (is_in_default_state)

@@ -52,14 +52,14 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	implementation: EV_STATUS_BAR_ITEM_I
-			-- platform dependent access.
-
 	create_implementation is
 			-- Create implementation of status bar item.
 		do
 			create {EV_STATUS_BAR_ITEM_IMP} implementation.make (Current)
 		end
+
+	implementation: EV_STATUS_BAR_ITEM_I
+			-- platform dependent access.
 
 end -- class EV_STATUS_BAR_ITEM
 
@@ -84,6 +84,9 @@ end -- class EV_STATUS_BAR_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/01 20:28:52  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.14  2000/02/29 18:09:08  oconnor
 --| reformatted indexing cluase
 --|

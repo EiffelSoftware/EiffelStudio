@@ -91,17 +91,20 @@ feature -- Status setting
 			implementation.stretch (a_x, a_y)
 		end
 
-feature {EV_ANY_I} -- Implementation
 
-	implementation: EV_PIXMAP_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of pixmap with default size.
 		do
 			create {EV_PIXMAP_IMP} implementation.make (Current)
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_PIXMAP_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 
 end -- class EV_PIXMAP
 
@@ -126,6 +129,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/01 20:28:53  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.19  2000/03/01 03:12:18  oconnor
 --| added create make_for_test
 --|

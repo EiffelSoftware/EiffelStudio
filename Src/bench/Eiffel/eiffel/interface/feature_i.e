@@ -809,10 +809,11 @@ feature -- Conveniences
 					l_ext ?= extension
 						 -- Static access only if it is a C external (l_ext = Void)
 						 -- or if IL external does not need an object.
-					Result := (l_ext = Void and is_external) or
+					Result :=
+						(l_ext = Void and (is_external and is_frozen and not has_assertion)) or
 						(l_ext /= Void and then not l_ext.need_current (l_ext.type))
 				else
-					Result := is_external
+					Result := is_external and is_frozen and not has_assertion
 				end
 			end
 		end

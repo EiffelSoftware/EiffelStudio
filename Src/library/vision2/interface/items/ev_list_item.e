@@ -20,7 +20,7 @@ inherit
 creation
 	make,
 	make_with_text,
-	make_with_pixmap,
+	make_with_index,
 	make_with_all
 
 feature {NONE} -- Initialization
@@ -42,22 +42,24 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
-	make_with_pixmap (par: EV_LIST; pix: EV_PIXMAP) is
-			-- Create an item with `par' as parent and `pix'
-			-- as pixmap.
+	make_with_index (par: EV_LIST; value: INTEGER) is
+			-- Create an item with `par' as parent and `value'
+			-- as index.
+		require
+			valid_parent: par /= Void
 		do
-			!EV_LIST_ITEM_IMP!implementation.make_with_pixmap (pix)
+			!EV_LIST_ITEM_IMP!implementation.make_with_index (par, value)
 			implementation.set_interface (Current)
-			set_parent (par)
 		end
 
-	make_with_all (par: EV_LIST; txt: STRING; pix: EV_PIXMAP) is
+	make_with_all (par: EV_LIST; txt: STRING; value: INTEGER) is
 			-- Create an item with `par' as parent, `txt' as text
-			-- and `pix' as pixmap.
+			-- and `value' as index.
+		require
+			valid_parent: par /= Void
 		do
-			!EV_LIST_ITEM_IMP!implementation.make_with_all (txt, pix)
+			!EV_LIST_ITEM_IMP!implementation.make_with_all (par, txt, value)
 			implementation.set_interface (Current)
-			set_parent (par)
 		end
 
 feature -- Access
@@ -66,6 +68,15 @@ feature -- Access
 			-- Parent of the current item.
 		do
 			Result ?= {EV_ITEM} Precursor
+		end
+
+	index: INTEGER is
+			-- Index of the current item.
+		require
+			exists: not destroyed
+			has_parent: parent /= Void
+		do
+			Result := implementation.index
 		end
 
 feature -- Status report
@@ -79,18 +90,11 @@ feature -- Status report
 			Result := implementation.is_selected
 		end
 
-	index: INTEGER is
-			-- Index of the current item.
-		require
-			exists: not destroyed
-		do
-			Result := implementation.index
-		end
-
 	is_first: BOOLEAN is
 			-- Is the item first in the list ?
 		require
 			exists: not destroyed
+			has_parent: parent /= Void
 		do
 			Result := implementation.is_first
 		end
@@ -99,6 +103,7 @@ feature -- Status report
 			-- Is the item last in the list ?
 		require
 			exists: not destroyed
+			has_parent: parent /= Void
 		do
 			Result := implementation.is_last
 		end
@@ -134,6 +139,16 @@ feature -- Element change
 			implementation.set_parent (par)
 		ensure
 			parent_set: parent = par
+		end
+
+	set_index (value: INTEGER) is
+			-- Make `value' the new index of the item in the
+			-- list.
+		require
+			exists: not destroyed
+			has_parent: parent /= Void
+		do
+			implementation.set_index (value)
 		end
 
 feature -- Event : command association

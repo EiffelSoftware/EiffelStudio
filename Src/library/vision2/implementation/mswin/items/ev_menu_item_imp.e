@@ -8,7 +8,7 @@ indexing
 	
 class
 	EV_MENU_ITEM_IMP
-	
+
 inherit
 	EV_MENU_ITEM_I
 
@@ -26,9 +26,7 @@ inherit
 
 creation
 	make,
-	make_with_text,
-	make_with_pixmap,
-	make_with_all
+	make_with_text
 
 feature {NONE} -- Initialization
 
@@ -37,6 +35,11 @@ feature {NONE} -- Initialization
 		do
 			set_text ("")
 		end
+
+feature -- Access
+
+	id: INTEGER
+		-- Identifier of the item
 
 feature -- Status report
 
@@ -103,6 +106,12 @@ feature -- Element change
 			end
 		end
 
+	set_id (new_id: INTEGER) is
+			-- Set `id' to `new_id'
+		do
+			id := new_id
+		end
+
 	add_item (an_item: EV_MENU_ITEM_IMP) is
 			-- Add `an_item' into container.
 		do
@@ -111,7 +120,7 @@ feature -- Element change
 				!! submenu.make
 				ev_children := parent_imp.ev_children
 				parent_menu.delete_item (id)
-				parent_imp.insert_item (submenu, position, text)
+				parent_imp.insert_menu (submenu, position, text)
 			end
 			{EV_MENU_ITEM_HOLDER_IMP} Precursor (an_item)
 		end

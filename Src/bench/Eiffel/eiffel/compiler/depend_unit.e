@@ -40,11 +40,12 @@ feature {NONE} -- Initialization
 			internal_flags := internal_flags.set_bit_with_mask (f.is_external, is_external_mask)
 		end
 
-	make_no_dead_code (c_id: INTEGER; f: INTEGER) is
-			-- Creation of a depend unit with just a feature_id
+	make_no_dead_code (c_id: INTEGER; r_id: INTEGER) is
+			-- Creation of a depend unit with just a `routine_id'
 			-- cannot be used during dead code removal
 		do
 			class_id := c_id
+			rout_id := r_id
 		end
 
 	make_expanded_unit (c_id: INTEGER) is
@@ -102,13 +103,13 @@ feature -- Comparison
 			-- Is `other' greater than Current ?
 		do
 			Result := class_id < other.class_id or else
-				(class_id = other.class_id and then body_index < other.body_index)
+				(class_id = other.class_id and then rout_id < other.rout_id)
 		end
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Are `other' and `Current' equal?
 		do
-			Result := class_id = other.class_id and body_index = other.body_index
+			Result := class_id = other.class_id and rout_id = other.rout_id
 		end
 
 feature {NONE} -- Settings

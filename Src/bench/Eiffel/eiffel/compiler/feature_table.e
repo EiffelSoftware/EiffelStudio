@@ -362,7 +362,7 @@ debug ("ACTIVITY")
 	io.error.putstring (old_feature_i.feature_name);
 	io.error.putstring (" is propagated to clients%N");
 end;
-					!!depend_unit.make_no_dead_code (feat_tbl_id, old_feature_i.feature_id);
+					!!depend_unit.make_no_dead_code (feat_tbl_id, old_feature_i.rout_id_set.first);
 					propagators.put (depend_unit);
 					propagate_feature := False;
 				end;
@@ -374,7 +374,7 @@ end;
 				then
 						-- Detect an attribute changed into a function.
 					if depend_unit = Void then
-						!!depend_unit.make_no_dead_code (feat_tbl_id, old_feature_i.feature_id);
+						!!depend_unit.make_no_dead_code (feat_tbl_id, old_feature_i.rout_id_set.first);
 					end;
 debug ("ACTIVITY")
 	io.error.putstring ("Melted propagators: ");
@@ -478,7 +478,7 @@ end;
 					-- There is no need for a corresponding "reactivate" here
 					-- since it will be done in by pass2 in `feature_unit' if need be
 
-					removed_feature_ids.extend (f.feature_id);
+					removed_feature_ids.extend (f.rout_id_set.first);
 					remove (key_for_iteration_id);
 				end;
 				forth
@@ -486,7 +486,7 @@ end;
 		end;
 
 	removed_feature_ids: LINKED_LIST [INTEGER]
-			-- Set of feature_ids removed by `update_table'
+			-- Set of routine_ids removed by `update_table'
 			--| It will be used for incrementality (propagation of pass3)
 
 	check_table is

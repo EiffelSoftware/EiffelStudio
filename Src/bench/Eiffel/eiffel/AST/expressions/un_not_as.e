@@ -7,9 +7,6 @@ class UN_NOT_AS
 
 inherit
 	UNARY_AS
-		redefine
-			operator_is_keyword
-		end
 
 feature -- Visitor
 
@@ -22,8 +19,6 @@ feature -- Visitor
 feature -- Properties
 
 	operator_name: STRING is "not"
-	
-	operator_is_keyword: BOOLEAN is True
 
 feature -- Type check
 

@@ -8,7 +8,7 @@ class UN_OLD_AS
 inherit
 	UNARY_AS
 		redefine
-			operator_is_keyword, simple_format,
+			simple_format,
 			type_check, byte_node, format,
 			prefix_feature_name
 		end
@@ -31,8 +31,6 @@ feature -- Properties
 		end
 
 	operator_name: STRING is "old"
-	
-	operator_is_keyword: BOOLEAN is True
 
 feature -- Type check, byte code and dead code removal
 

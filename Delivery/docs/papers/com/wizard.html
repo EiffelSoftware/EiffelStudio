@@ -1,0 +1,1354 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML EXPERIMENTAL 970324//EN">
+<HTML>
+<HEAD>
+<META NAME="GENERATOR" CONTENT="Microsoft FrontPage 4.0">
+<LINK REL="STYLESHEET" HREF="../../styles/tech.css">
+
+<TITLE>EiffelCOM</TITLE><meta name="Microsoft Border" content="t, default">
+</HEAD>
+<BODY BGCOLOR="#ffffff"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">EiffelCOM</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="center"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+<hr>
+
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+<A NAME="pgfId=374738">
+ </A>
+<H1>The EiffelCOM Wizard</H1>
+<DIV>
+<H6 CLASS="dd-sec2">
+<A NAME="pgfId=371662">
+ </A>
+OVERVIEW</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=371663">
+ </A>
+COM is a standard that allows software components written in different languages to communicate with each other. Unfortunately, building COM compliant applications requires the developments of huge amount of code only dedicated to support the technology. The EiffelCOM wizard was designed to free programmers from writing all the plumbing code.</LI>
+<LI CLASS="nn-first">
+<A NAME="pgfId=375227">
+ </A>
+The EiffelCOM wizard is a powerful tool that enables the fast development of COM components in Eiffel. It also helps accessing existing COM components from Eiffel systems. It consists of a series of dialogs which ask about the properties of a component. This information is used to produce an Eiffel system skeleton including all the code needed to access or create a component. It also produces component-specific runtime libraries. </LI>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=374028">
+ </A>
+The wizard is intended to allow Eiffel developers with little COM knowledge to develop or reuse COM components. The design of the generated code follows the Eiffel standards and should be familiar to any experienced Eiffel user. The only prerequisite to use the EiffelCOM wizard is an understanding of the Interface Definition Language. IDL is the main tool used to describe a component and can be processed by standard compilers to generate Type Libraries. They can be analyzed by tools, such as the EiffelCOM wizard, that need information on a given component. The IDL syntax is very close to C and easy to learn.</LI>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=369655">
+ </A>
+The wizard will generate code from a Type Library and additional information given by the user. This code will consist of Eiffel classes, C/C++ files, and library files. The library files are produced automatically from the generated C and C++ code. These are given for information only and you will not need to work with them to build your EiffelCOM system.</LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=370383">
+ </A>
+Code Generation Process</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=370381">
+ </A>
+<MAP NAME="wizard-1">
+</MAP>
+<IMG SRC="../../images/wizard-1.gif" USEMAP="#wizard-1" ALIGN="LEFT" width="408" height="230">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=370497">
+ </A>
+The wizard can automatically compile the generated C and Eiffel code. MIDL, the Microsoft IDL compiler, is used by the wizard to produce the Type Library corresponding to the given IDL file. You may also provide the wizard with the type library directly. For the remainder of the manual Definition File will refer to the input file given to the wizard (either an IDL file or a Type Library).</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec2">
+<A NAME="pgfId=370309">
+ </A>
+THE WIZARD</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=370500">
+ </A>
+Let's focus on the wizard itself and the different questions that need to be answered to generate the code. There are five different dialogs but each session will use only four of them. The third dialog is different depending on whether the Definition File is an IDL file or a Type Library. Once the dialogs have been completed, the wizard will start analyzing the Type Library and will eventually generate the code.</LI>
+</OL>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=370574">
+ </A>
+Main Window</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=370629">
+ </A>
+The EiffelCOM wizard can be launched from the Windows start menu:</LI>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.text">
+<A NAME="pgfId=370633">
+ </A>
+Start-&gt;Programs-&gt;EiffelXX-&gt;EiffelCOM Wizard</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=370657">
+ </A>
+where EiffelXX corresponds to your Eiffel installation (e.g. Eiffel45). The following window will be displayed:</LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=370590">
+ </A>
+EiffelCOM Wizard Main Window</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=370588">
+ </A>
+<IMG SRC="../../images/wizard-2.gif" ALIGN="LEFT" width="483" height="314">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=370661">
+ </A>
+The introduction dialog lets you choose between opening an existing project or creating a new one. Creating a new project will open the <A HREF="wizard.html#28307" CLASS="XRef">
+See Introduction Dialog.</A>
+. Opening an existing project will display an open file dialog from which you can select a previously saved EiffelCOM project.</LI>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=375318">
+ </A>
+The main window includes a toolbar and a menu. The first three buttons on the toolbar correspond to the first three entries in the File menu: New, Open and Save. New resets all the information previously entered in the wizard. Open brings up an Open File Dialog that can be used to retrieve a previously saved EiffelCOM project. Save is used to save the current project. A project is defined by all the values entered in the wizard. A project can be saved only after the wizard has been run. The file extension for an EiffelCOM project is ewz.</LI>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=373265">
+ </A>
+The second menu, Build, includes the entries Launch Wizard and Generate (no wizard) corresponding respectively to the last two toolbar buttons. The former activates the <A HREF="wizard.html#28307" CLASS="XRef">
+See Introduction Dialog.</A>
+ while the later launches the generation with the current settings and bypasses the dialogs. This last button can be used only when a project has been loaded or when the wizard has been run once.</LI>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=375357">
+ </A>
+The last four buttons on the dialog Back, Next, Cancel and Help are common to all dialogs displayed throughout the execution of the wizard. Next validates all the values entered in the current dialog and activates the next one. Back discards all the values entered in current dialog and displays the previous one. Cancel exits the dialog and discards all the values entered. Finally, Help brings up this manual.</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=370579">
+ </A>
+Required File</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=373200">
+ </A>
+Before you launch the wizard you need to make sure you have a definition file ready for the component you want to access or create.</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=373199">
+ </A>
+<A NAME="28307">
+ </A>
+Introduction Dialog</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=370516">
+ </A>
+The first dialog asks if you want to access or build a component. If you want to access an existing component then the generated code will be for a client. If you choose to build a new one, the generated code will be for a COM server. Choose the server or client check box to specify which kind of project you want to work on. You may specify both in the case where both the component and its client(s) will be written in Eiffel.</LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=370524">
+ </A>
+Introduction Dialog</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=370522">
+ </A>
+<IMG SRC="../../images/wizard-3.gif" ALIGN="LEFT" width="484" height="254">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=370533">
+ </A>
+This dialog also asks for the location of the component. EiffelCOM supports all location types:</LI>
+<LI CLASS="Bulleted">
+<A NAME="pgfId=370534">
+ </A>
+In-Process: These components are Dynamic Link Libraries (DLLs) that will be loaded inside the client process. The server runs in the same process as the client.</LI>
+<LI CLASS="Bulleted">
+<A NAME="pgfId=370539">
+ </A>
+Out-of-process: These components are executable files that can be accessed through the network. Clients and servers run in different processes and may even run on different machines</LI>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=370561">
+ </A>
+Choose the kind of component you want to access or create. In-process components are Active-X like components, they are usually smaller than local or remote components and used by bigger application (often through a high level language). Remote components can act as middleware in a three tier client server architecture. See <A HREF="com.html#38980" CLASS="XRef">
+See Location.</A>
+ <A HREF="com.html#38980" CLASS="XRef">
+See Location.</A>
+for additional information on possible component locations.</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=370681">
+ </A>
+Definition File Dialog</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=370565">
+ </A>
+This dialog is used to specify the location of the definition file for the project. An IDL file is usually provided when building a new component since all the sources are available. However, when it comes to accessing an existing component, the sources might not be available. The Type Library is often embedded in the component itself and includes enough information for the wizard to generate the code.</LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=370544">
+ </A>
+Definition File Dialog</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=370542">
+ </A>
+<IMG SRC="../../images/wizard-4.gif" ALIGN="LEFT" width="484" height="254">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=370572">
+ </A>
+This dialog is also used to enter the destination folder, i.e. the directory where all the files will be generated, preferably empty. If the wizard was to overwrite an existing file it would first back it up and emit a warning message. If any of the entered values are not correct when the Next button is pressed the wizard will display a warning message.</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=370326">
+ </A>
+IDL Marshalling Definition Dialog</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=370735">
+ </A>
+This dialog is displayed only for a server project and if the chosen definition file is an IDL file. It is used to specify how marshalling will work for the component. The first choice that has to be made is whether the component will be accessed through Automation (using IDispatch) or through the interface's virtual table (for additional information on Automation versus virtual table access, please consult COM).</LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=370740">
+ </A>
+IDL Marshalling Definition Dialog</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=370738">
+ </A>
+<IMG SRC="../../images/wizard-5.gif" ALIGN="RIGHT" width="471" height="253">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=370780">
+ </A>
+If Automation is chosen then the Universal marshaller will be used (for additional information on Marshalling please see COM). If Virtual Table access is specified then you have the choice between using the Windows Universal marshaller or the marshaller generated from the definition file. Since this dialog is displayed only when the definition file is an IDL file, choosing Standard Marshalling will force the wizard to compile the marshaller from the code generated with the MIDL compiler. Standard marshalling should be used whenever some interface functions make use of non Automation compatible types (see <A HREF="com.html#25753" CLASS="XRef">
+See Automation.</A>
+ for a complete listing of these types).</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=370781">
+ </A>
+Type Library Marshalling Definition Dialog</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=370792">
+ </A>
+This dialog is displayed only for a server project and if the definition file is a Type Library. It includes the same controls as the previous one. You have to choose between Automation and Virtual Table access and between Universal and Standard marshalling.</LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=370797">
+ </A>
+Type Library Marshalling Definition Dialog</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=370795">
+ </A>
+<IMG SRC="../../images/wizard-6.gif" ALIGN="LEFT" width="475" height="253">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=370818">
+ </A>
+Because the definition file is a Type Library, the wizard cannot compile the Standard marshaller by itself. This is the reason for having an extra text field for the path to the marshaller (also known as Proxy/Stub pair or just Proxy/Stub). The Proxy/Stub is a Dynamic Link Library that is used to marshall the data on the wire for a given component (for additional information on Proxy/Stubs, please see <A HREF="com.html#20493" CLASS="XRef">
+See Marshalling.</A>
+<A HREF="com.html#20493" CLASS="XRef">
+See Marshalling.</A>
+).</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=370782">
+ </A>
+<A NAME="23940">
+ </A>
+Final Dialog</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=374219">
+ </A>
+The last dialog offers a choice of different output levels. By default, the wizard will display errors, warnings and generic information. You can choose not to see warnings or extra informations. </LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=374227">
+ </A>
+Final Dialog</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=374225">
+ </A>
+<IMG SRC="../../images/wizard-7.gif" ALIGN="LEFT" width="476" height="253">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=370907">
+ </A>
+This dialog also asks whether you wish to continue even though an error occurred while compiling a file.</LI>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=375399">
+ </A>
+The Finish button will close the dialog and start the processing of the definition file. The project can be saved after the processing is finished.</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=370908">
+ </A>
+Definition File Processing</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=374194">
+ </A>
+There are six phases involved in the definition file processing:</LI>
+<LI CLASS="Bulleted">
+<A NAME="pgfId=374195">
+ </A>
+IDL Compilation: will occur only if the definition file is an IDL file. The wizard will compile the IDL file into a Type Library and produce the marshaller from the generated C files if Standard Marshalling was chosen.</LI>
+<LI CLASS="Bulleted">
+<A NAME="pgfId=374196">
+ </A>
+Type Library Parsing: The wizard analyze the type library and all its components and builds all the information it needs to generate the code.</LI>
+<LI CLASS="Bulleted">
+<A NAME="pgfId=374197">
+ </A>
+Code Generation: The wizard generates both the Eiffel and C/C++ code from the information gathered during last step.</LI>
+<LI CLASS="Bulleted">
+<A NAME="pgfId=374203">
+ </A>
+C/C++ Compilation: The wizard compiles the C and C++ code generated during last phase into object files and libraries that will be linked with the Eiffel system.</LI>
+<LI CLASS="Bulleted">
+<A NAME="pgfId=375402">
+ </A>
+Eiffel Compilation: The wizard compiles the generated Eiffel code into a precompiled library that can be reused from any project for a client project. In the case of a server project the generated Eiffel code will be compiled into a standard project with the registration class as root class. If the location is In-process then the project corresponds to a DLL whereas if the location of the server is out-of-process then the project corresponds to a standard executable.</LI>
+<LI CLASS="Bulleted">
+<A NAME="pgfId=375648">
+ </A>
+Finally, the wizard will launch EiffelBench and automatically open the generated Eiffel system.</LI>
+<LI CLASS="nn-first">
+<A NAME="pgfId=370902">
+ </A>
+During processing, the name and progress of each phase is displayed.</LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=370888">
+ </A>
+Wizard Progress Dialog</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=370886">
+ </A>
+<IMG SRC="../../images/wizard-8.gif" ALIGN="LEFT" width="476" height="131">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=370920">
+ </A>
+While the wizard processes the definition file it will also display information in real time in the main window if this option was chosen in the <A HREF="wizard.html#23940" CLASS="XRef">
+See Final Dialog.</A>
+. Displayed information includes output of calls to external compilers (C, Eiffel and IDL) and description of the current analyzed or generated Type Library item.</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=370940">
+ </A>
+Generated Files</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=374235">
+ </A>
+The wizard will generated code in the specified destination folder. The file hierarchy is the following:</LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=374314">
+ </A>
+Generated Files Hierarchy</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=374312">
+ </A>
+<MAP NAME="wizard-9">
+</MAP>
+<IMG SRC="../../images/wizard-9.gif" USEMAP="#wizard-9" ALIGN="LEFT" width="483" height="168">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-first">
+<A NAME="pgfId=374315">
+ </A>
+The root folder includes two files and three subclusters.</LI>
+<LI CLASS="Bulleted">
+<A NAME="pgfId=374316">
+ </A>
+The file generated.txt includes a list of all the files generated by the wizard.</LI>
+<LI CLASS="Bulleted">
+<A NAME="pgfId=371121">
+ </A>
+The file component.log includes a summary of the processing done by the wizard. The name of the file is the name of the definition file appended with log (so Figure 10 presumes that the definition file was e.g. component.idl)</LI>
+<LI CLASS="Bulleted">
+<A NAME="pgfId=371124">
+ </A>
+The folders Client and Server include the files generated respectively for reusing a component or creating a new component. Each includes three subdirectories: Include contains all the header files needed to compile the Eiffel code, CLib contains the generated C and C++ code as well as the library files. Component includes the code that wraps or defines the component. The Component subfolder of Server will also include the registration class. This Eiffel class includes the code needed to activate the component, its content depends on its location and will differ whether the component is in-process or out-of-process. You will not need to read or edit the C and C++ code included in CLib since the wizard will automatically compile it. It is given for information only and can be deleted (you will need to keep the library file though). The Client and Server folders also include the Ace file used to compile the generated Eiffel code. In the case of a client, the generated code is precompiled whereas in the case of a server it is compiled in a normal system with the registration class being the root class of the system. In the case of a in-process server the Eiffel system is compiled into a DLL whereas in the case of an out-of-process server, it is compiled in a standard executable.</LI>
+<LI CLASS="Bulleted">
+<A NAME="pgfId=371132">
+ </A>
+The Common folder includes code that will be used for both the server and the client part. The Include and CLib directory contain respectively the header files and the C and C++ code. Again the C and C++ sources are not needed and can be deleted, only the library file needs to be kept for the Eiffel system to compile. The Interfaces subdirectory include Eiffel classes corresponding to the component interfaces and the Structures subdirectory includes Eiffel classes wrapping data structures specified in the definition file.</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=371722">
+ </A>
+Class Hierarchy</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=372785">
+ </A>
+The generated Eiffel code reflects the architecture of the component described in the definition file. Each interface corresponds to a deferred Eiffel class that includes one deferred feature per interface function. This deferred feature is implemented in the heir of the Eiffel class inheriting from all these interfaces. This central class will be referred to as Eiffel coclass in the rest of this document.</LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=372925">
+ </A>
+EiffelCOM System Basic Architecture</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=372923">
+ </A>
+<MAP NAME="wizard-10">
+</MAP>
+<IMG SRC="../../images/wizard-10.gif" USEMAP="#wizard-10" ALIGN="LEFT" width="483" height="195">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=373158">
+ </A>
+The Eiffel coclass inherits from the class <EM CLASS="ee-text">
+ECOM_QUERIABLE </EM>
+which is part of the EiffelCOM library. This class includes the feature <EM CLASS="ee-text">
+make_from_other </EM>
+that can be used to initialize the component from another instance of <EM CLASS="ee-text">
+ECOM_QUERIABLE</EM>
+. The Component folder also includes Eiffel classes wrapping interfaces that are sent to or received by the component. Such interfaces will be referred to as implemented interfaces in the rest of the document. These classes inherit from both the deferred interface class and <EM CLASS="ee-text">
+ECOM_QUERIABLE</EM>
+.</LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=373273">
+ </A>
+Implemented Interfaces</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=373271">
+ </A>
+<MAP NAME="wizard-11">
+</MAP>
+<IMG SRC="../../images/wizard-11.gif" USEMAP="#wizard-11" ALIGN="LEFT" width="483" height="108">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=373336">
+ </A>
+For both Eiffel coclass and Implemented interfaces, the <EM CLASS="ee-text">
+INTERFACE</EM>
+ class contains no implementation, it only defines the signatures of the functions that are part of the interface. The actual implementation lies in the heir of that class.</LI>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=373366">
+ </A>
+How you should use these generated classes in your system depends on whether you want to access an existing component (client) or build a new component in Eiffel (server).</LI>
+</OL>
+</DIV>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec2">
+<A NAME="pgfId=371723">
+ </A>
+ACCESSING A COMPONENT</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=373349">
+ </A>
+The wizard will generate all the necessary code to access the existing component. All the plumbing is already done, so instantiating the Eiffel coclass will actually initialize all the necessary COM internals.</LI>
+</OL>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=371724">
+ </A>
+Using the Generated Code</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=373367">
+ </A>
+To access the component, you need to call features of the coclass. The interface functions signatures data types are either Eiffel types defined in Eiffel data structure libraries (EiffelBase) or wrappers of COM data types specified in the definition file. For example, the following IDL line</LI>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=373375">
+ </A>
+HRESULT InterfaceFunction ([in] int a, [out, retval] MyStruct * b)</P>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=373411">
+ </A>
+will generate the following feature in the Eiffel coclass:</LI>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=373414">
+ </A>
+interface_function (a: INTEGER): MY_STRUCT</P>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=373436">
+ </A>
+where <EM CLASS="ee-text">
+MY_STRUCT</EM>
+ is a generated Eiffel class wrapping <EM CLASS="ee-text">
+MyStruct</EM>
+.</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=373348">
+ </A>
+Contracts</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=373448">
+ </A>
+The wizard cannot generate fully specified contracts. Indeed, the tool has no domain specific knowledge and can only generate contracts that are domain independent. Such contracts, although useful, are not enough to describe entirely the behavior of the component. Generated contracts include void Eiffel objects as well as C pointer validity (for wrappers) checking. There might be other conditions to allow calls to an Eiffel coclass feature. Invariants and postconditions can be enforced in a heir of the generated Eiffel coclass. Preconditions, however, cannot be strengthened. A workaround provided by the wizard is to generate a precondition function for each feature in the interface. The default implementation of these functions always return <EM CLASS="ee-reserved">
+True</EM>
+. They should be redefined to implement the correct behavior:</LI>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=373463">
+ </A>
+interface_function (a: INTEGER): MY_STRUCT <EM CLASS="ee-keyword">
+is</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373464">
+ </A>
+		<EM CLASS="ee-comment">
+-- Example of a generated Eiffel coclass feature</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373465">
+ </A>
+	<EM CLASS="ee-keyword">
+require</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373466">
+ </A>
+		interface_function_user_precondition: </P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373467">
+ </A>
+					interface_function_user_precondition</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373468">
+ </A>
+	<EM CLASS="ee-keyword">
+do</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373469">
+ </A>
+		...</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373470">
+ </A>
+	<EM CLASS="ee-keyword">
+ensure</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373471">
+ </A>
+		non_void_my_struct: <EM CLASS="ee-reserved">
+Result</EM>
+ /= <EM CLASS="ee-reserved">
+Void</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373472">
+ </A>
+	<EM CLASS="ee-keyword">
+end</EM>
+</P>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=373481">
+ </A>
+So the complete class hierarchy for an Eiffel client coclass is the following:</LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=373486">
+ </A>
+EiffelCOM Client System</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=373484">
+ </A>
+<MAP NAME="wizard-12">
+</MAP>
+<IMG SRC="../../images/wizard-12.gif" USEMAP="#wizard-12" ALIGN="LEFT" width="483" height="180">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal1">
+<A NAME="pgfId=371725">
+ </A>
+Another advantage of the previous hierarchy is that it adds incrementality to the EiffelCOM system. Indeed, should the definition file be modified and the wizard run once more against it, your code would not be changed. Only the generated Eiffel coclass would be, and it would suffice to adapt your heir accordingly.</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=373560">
+ </A>
+<A NAME="41902">
+ </A>
+Exceptions</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=373569">
+ </A>
+Another issue is the COM requirement that any interface function should return a status value (known as a HRESULT). This leads to side effect features which the Eiffel methodology tends to avoid. The workaround used in EiffelCOM systems is to map these return values into Eiffel exceptions. Should the server the EiffelCOM system is accessing return an error code, the EiffelCOM runtime will raise an Eiffel exception that your code should catch.</LI>
+<TABLE BORDER="1">
+<CAPTION>
+<H6 CLASS="ff.figtitle">
+<A NAME="pgfId=373577">
+ </A>
+EiffelCOM Client System Exception Raising</H6>
+</CAPTION>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<H6 CLASS="mm.celltitle">
+<A NAME="pgfId=373575">
+ </A>
+<MAP NAME="wizard-13">
+</MAP>
+<IMG SRC="../../images/wizard-13.gif" USEMAP="#wizard-13" ALIGN="LEFT" width="483" height="158">
+</H6>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=373694">
+ </A>
+As a result, any feature in the coclass client making calls to the user defined Eiffel coclass should include a rescue clause. The processing done in this clause might depend on the nature of the exception. All the standard COM exceptions can be found in the library class <EM CLASS="ee-text">
+ECOM_EXCEPTION_CODES</EM>
+ which is inherited from by <EM CLASS="ee-text">
+ECOM_EXCEPTION</EM>
+. The later also inherits from the kernel class <EM CLASS="ee-text">
+EXCEPTIONS</EM>
+ and can consequently be used by the coclass client to catch the exceptions.</LI>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=373848">
+ </A>
+The following code snippet illustrates how a client can process exceptions raised in the Eiffel coclass:</LI>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=373750">
+ </A>
+<EM CLASS="ee-keyword">
+indexing</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373937">
+ </A>
+	description: &quot;Eiffel coclass client example&quot;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373938">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373936">
+ </A>
+<EM CLASS="ee-keyword">
+class</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373742">
+ </A>
+	COCLASS_CLIENT</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373758">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373749">
+ </A>
+<EM CLASS="ee-keyword">
+inherit</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373744">
+ </A>
+	ECOM_EXCEPTION</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373820">
+ </A>
+		<EM CLASS="ee-keyword">
+export</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373821">
+ </A>
+			{NONE} all</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373822">
+ </A>
+		<EM CLASS="ee-keyword">
+end</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373760">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373873">
+ </A>
+<EM CLASS="ee-keyword">
+create</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373874">
+ </A>
+	make</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373875">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373876">
+ </A>
+<EM CLASS="ee-keyword">
+feature</EM>
+ {NONE} <EM CLASS="ee-comment">
+-- Initialization</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373877">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373885">
+ </A>
+	make <EM CLASS="ee-keyword">
+is</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373886">
+ </A>
+			<EM CLASS="ee-comment">
+-- Initialize Eiffel coclass.</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373887">
+ </A>
+		<EM CLASS="ee-keyword">
+do</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373888">
+ </A>
+			<EM CLASS="ee-keyword">
+create</EM>
+ coclass.make</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373889">
+ </A>
+		<EM CLASS="ee-keyword">
+end</EM>
+</P>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=373819">
+ </A>
+&nbsp;
+</LI>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=373903">
+ </A>
+<EM CLASS="ee-keyword">
+feature </EM>
+<EM CLASS="ee-comment">
+-- Basic Operations</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373904">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373905">
+ </A>
+	coclass_feature_client <EM CLASS="ee-keyword">
+is</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373906">
+ </A>
+<EM CLASS="ee-comment">
+			-- Example of a coclass feature caller</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373907">
+ </A>
+		<EM CLASS="ee-keyword">
+local</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373908">
+ </A>
+			retried: BOOLEAN</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373909">
+ </A>
+			coclass: EIFFEL_COCLASS_PROXY</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373910">
+ </A>
+		<EM CLASS="ee-keyword">
+do</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373911">
+ </A>
+			<EM CLASS="ee-keyword">
+create </EM>
+coclass.make</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373912">
+ </A>
+			<EM CLASS="ee-keyword">
+if</EM>
+ not retried <EM CLASS="ee-keyword">
+then</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373913">
+ </A>
+				coclass.coclass_feature<EM CLASS="ee-comment">
+ -- Actual call</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373914">
+ </A>
+			<EM CLASS="ee-keyword">
+end</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373915">
+ </A>
+		<EM CLASS="ee-keyword">
+rescue</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373916">
+ </A>
+			<EM CLASS="ee-keyword">
+if</EM>
+ exception = E_notimpl<EM CLASS="ee-keyword">
+ then</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373917">
+ </A>
+				<EM CLASS="ee-comment">
+-- Process non implemented function error.</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373918">
+ </A>
+				retried := True</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373919">
+ </A>
+				<EM CLASS="ee-keyword">
+retry</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373920">
+ </A>
+			<EM CLASS="ee-keyword">
+elseif</EM>
+ exception = E_invalidarg<EM CLASS="ee-keyword">
+ then</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373921">
+ </A>
+				<EM CLASS="ee-comment">
+-- Process invalid argument error.</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373922">
+ </A>
+				retried := True</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373923">
+ </A>
+				<EM CLASS="ee-keyword">
+retry</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373924">
+ </A>
+			<EM CLASS="ee-keyword">
+else</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373925">
+ </A>
+				<EM CLASS="ee-comment">
+-- Forward exception to caller.</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373926">
+ </A>
+			<EM CLASS="ee-keyword">
+end</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373927">
+ </A>
+		<EM CLASS="ee-keyword">
+end</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373928">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=373929">
+ </A>
+<EM CLASS="ee-keyword">
+end</EM>
+<EM CLASS="ee-comment">
+ -- class COCLASS_CLIENT</EM>
+</P>
+</TD>
+</TR>
+</TABLE>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=373971">
+ </A>
+Summary</H6>
+<P CLASS="aa.normal">
+<A NAME="pgfId=371703">
+ </A>
+There are a few rules to follow when building an Eiffel coclass client but they are straightforward and do not add any constraints. The first rule consist in inheriting the generated Eiffel coclass to implement the preconditions if needed and to ensure better incrementality. The second rule applies to the client: any feature call to the Eiffel coclass should include a rescue clause.</P>
+</DIV>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec2">
+<A NAME="pgfId=373966">
+ </A>
+BUILDING A COMPONENT</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=373983">
+ </A>
+Accessing components from Eiffel is only half what the EiffelCOM wizard can do. The other part is to enable the development of COM components in Eiffel.</LI>
+</OL>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=370371">
+ </A>
+Using the Generated Code</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=373984">
+ </A>
+The generated Eiffel coclass features are empty features that should be redefined to implement the intended behavior. Unlike client generated code, the server generated code will differ whether you have chosen to implement an in-process or an out-of-process component. The difference lies in the component activation code in the class ECOM_&lt;Name_of_system&gt;_REGISTRATION. If the component is in-process then this class includes the four functions that need to be exported from an in-process COM component (DllRegisterServer, DllUnregisterServer, DllGetClassObject and DllCanUnloadNow). If the component is out-of-process then the registration class includes call to initialize the component and its graphical user interface (see <A HREF="wizard.html#34604" CLASS="XRef">
+See Component's GUI.</A>
+).</LI>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=374337">
+ </A>
+The architecture remains the same as when accessing a component: the generated Eiffel coclass should be inherited from and the contract features redefined. The default implementation for features from the generated Eiffel coclass are empty. They should also be redefined to implement the intended behavior. These features will be called by the EiffelCOM runtime whenever a client access an interface.</LI>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="CellBody">
+<A NAME="pgfId=375536">
+ </A>
+Note: For this first release, the name of the user defined coclass has to be &lt;Name_of_generated_coclass&gt;_IMP. So if the generated coclass name is MY_COCLASS then the user defined coclass name must be MY_COCLASS_IMP.</P>
+</TD>
+</TR>
+</TABLE>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=370378">
+ </A>
+<A NAME="34604">
+ </A>
+Component's GUI</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=375550">
+ </A>
+In the case of an out-of-process server, you might want to add a Graphical User Interface to your component. There are two different scenarios in which the component can be activated: either its user launched it explicitly (e.g. by double clicking the executable icon) or it was launched by the COM runtime to satisfy a client request. The GUI should appear only in the former case, when the application has been explicitly launched by the user. The generated registration class for an out-of-process server includes the feature:</LI>
+<TABLE BORDER="1">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=375560">
+ </A>
+main_window: WEL_FRAME_WINDOW</P>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=375570">
+ </A>
+This feature is a once function that can be redefined in a child class to return the class corresponding to the component window. This window is displayed only if the component is not started by COM. When COM loads an out-of-process component, it appends the option &quot;-embedding&quot; to the executable. The generated registration class looks for this option and if it is part of the process argument list then it sets the default window appearance to hidden.</LI>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=375583">
+ </A>
+As a summary, when building a server you need to implement classes that will inherit from the coclasses and implement the interfaces functions. The names of the children classes should be the names of the parent classes appended with _IMP. You will also have to inherit from the registration class in the case of an out-of-process component to provide the class that implements the component GUI.</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=375549">
+ </A>
+Exceptions</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=374350">
+ </A>
+The COM standard way of returning error status to the client is by returning an HRESULT from the interface function. Such behavior is not acceptable in Eiffel and is replaced with exceptions. In the case of accessing an existing component, exceptions will be raise by the EiffelCOM runtime and caught by your code (see <A HREF="wizard.html#41902" CLASS="XRef">
+See Exceptions.</A>
+ for details). While when creating a component it will be your code that will raise exceptions and the EiffelCOM runtime that will catch them. Here is what the code for an Eiffel coclass should look like:</LI>
+<TABLE>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=374517">
+ </A>
+<EM CLASS="ee-keyword">
+indexing</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374518">
+ </A>
+	description: &quot;Eiffel coclass server example&quot;</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374519">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374520">
+ </A>
+<EM CLASS="ee-keyword">
+class</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374521">
+ </A>
+	ECOM_SERVER_COCLASS_IMP
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374522">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374523">
+ </A>
+<EM CLASS="ee-keyword">
+inherit</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374571">
+ </A>
+	ECOM_SERVER_COCLASS <EM CLASS="ee-comment">
+-- Generated by the wizard</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374572">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374524">
+ </A>
+	ECOM_EXCEPTION</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374525">
+ </A>
+		<EM CLASS="ee-keyword">
+export</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374526">
+ </A>
+			{NONE} all</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374527">
+ </A>
+		<EM CLASS="ee-keyword">
+end</EM>
+</P>
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId=374639">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374675">
+ </A>
+<EM CLASS="ee-keyword">
+feature </EM>
+<EM CLASS="ee-comment">
+-- Basic Operations</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374640">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374641">
+ </A>
+	coclass_feature (an_argument: ARGUMENT_TYPE) <EM CLASS="ee-keyword">
+is</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374642">
+ </A>
+<EM CLASS="ee-comment">
+			-- Example of a coclass feature</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374643">
+ </A>
+		<EM CLASS="ee-keyword">
+do</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374644">
+ </A>
+			<EM CLASS="ee-keyword">
+if</EM>
+ not is_valid (an_argument) <EM CLASS="ee-keyword">
+then</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374645">
+ </A>
+				trigger (E_invalidargument)</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374646">
+ </A>
+			<EM CLASS="ee-keyword">
+else</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374647">
+ </A>
+				<EM CLASS="ee-comment">
+-- Normal processing</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374648">
+ </A>
+			<EM CLASS="ee-keyword">
+end</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374649">
+ </A>
+		<EM CLASS="ee-keyword">
+end</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374650">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374651">
+ </A>
+<EM CLASS="ee-keyword">
+feature</EM>
+ {NONE}<EM CLASS="ee-comment">
+ -- Implementation</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374652">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374653">
+ </A>
+	is_valid (an_argument: ARGUMENT_TYPE): BOOLEAN <EM CLASS="ee-keyword">
+is</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374654">
+ </A>
+			<EM CLASS="ee-comment">
+-- Is an_argument a valid argument?</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374655">
+ </A>
+		<EM CLASS="ee-keyword">
+do</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374656">
+ </A>
+			<EM CLASS="ee-comment">
+-- Test of validity of an_argument</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374657">
+ </A>
+		<EM CLASS="ee-keyword">
+end</EM>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374658">
+ </A>
+</P>
+<P CLASS="ee-text">
+<A NAME="pgfId=374637">
+ </A>
+<EM CLASS="ee-keyword">
+end</EM>
+<EM CLASS="ee-comment">
+ -- class ECOM_SERVER_COCLASS_IMP</EM>
+</P>
+</TD>
+</TR>
+</TABLE>
+<LI CLASS="nn-normal">
+<A NAME="pgfId=374678">
+ </A>
+This class inherits from the generated Eiffel coclass and from ECOM_EXCEPTION. It redefines the feature coclass_feature from the generated coclass. This feature is part of the interfaces functions that can be called by clients of the component. Its implementation uses the feature trigger from ECOM_EXCEPTION to raise exceptions in case the feature cannot be executed normally (invalid argument e.g.). This exception will be catch by the EiffelCOM runtime and mapped into an HRESULT that will be sent back to the client.</LI>
+</OL>
+</DIV>
+<DIV>
+<H6 CLASS="dd-sec3">
+<A NAME="pgfId=374682">
+ </A>
+Summary</H6>
+<OL>
+<LI CLASS="nn-first">
+<A NAME="pgfId=374686">
+ </A>
+Implementing an EiffelCOM components consists in inheriting from the generated Eiffel coclasses and implementing their features. The only specific rules to follow relate to the redefinition of precondition features and the use of exceptions to return error status to the client. In the case of an out-of-process server, the registration class should be inherited from and the feature corresponding to the component window redefined to return the correct class.</LI>
+</OL>
+</DIV>
+</DIV>
+<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
+</HTML>

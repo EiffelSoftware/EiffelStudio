@@ -398,45 +398,21 @@ feature -- EiffelCase output
 			-- Store information relevant for EiffelCase
 			-- in `s' (feature_data and invariants).
 		local
-			f_l: ARRAYED_LIST [S_FEATURE_DATA];
-			s_clauses: ARRAYED_LIST [S_FEATURE_CLAUSE];
-			f_clause: S_FEATURE_CLAUSE;
-			public_export: S_EXPORT_ALL_I;
-			private_export: S_EXPORT_NONE_I;
+			s_clauses: ARRAYED_LIST [S_FEATURE_CLAUSE]
 		do
 			if not categories.empty then
 				!! s_clauses.make (2);
 				from
-					!! f_l.make (5);
 					categories.start
 				until
 					categories.after
 				loop
-					f_l.append (categories.item.public_features_storage_info);
+					s_clauses.extend (categories.item.storage_info)
 					categories.forth
-				end;
-				if not f_l.empty then
-					!! public_export;
-					--!! f_clause.make (f_l, public_export)
-					s_clauses.extend (f_clause)
-				end;
-				from
-					!! f_l.make (5);
-					categories.start
-				until
-					categories.after
-				loop
-					f_l.append (categories.item.private_features_storage_info);
-					categories.forth
-				end;
-				if not f_l.empty then
-					!! private_export;
-					--!! f_clause.make (f_l, private_export)
-					s_clauses.extend (f_clause)
 				end;
 				s.set_feature_clause_list (s_clauses)
-				invariant_server.store_case_info (s);
 			end;
+			invariant_server.store_case_info (s);
 		end;
 
 feature {NONE} -- Implementation

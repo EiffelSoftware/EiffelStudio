@@ -21,7 +21,19 @@ inherit
 		end
 
 creation
-	make
+	make,
+	make_none
+
+feature {NONE} -- Initialization
+
+	make_none is
+			-- Initialize Current to be exported to none.
+		do
+			make;
+			put_front (None_string)
+		ensure
+			is_none: is_none
+		end
 
 feature -- Properties
 
@@ -80,8 +92,6 @@ feature -- Comparison
 				end
 			end
 		end
-
-feature -- Element change
 
 	extend (v: like item) is
 			-- Add `v' to end.

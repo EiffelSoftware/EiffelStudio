@@ -75,9 +75,10 @@ feature {COMPILER_EXPORTER}
 
 feature {COMPILER_EXPORTER} -- Case storage
 
-	storage_info: S_EXPORT_NONE_I is
+	storage_info: S_EXPORT_SET_I is
+			-- Stored information of export none
 		do
-			!! Result
+			!! Result.make_none
 		end
 
 end

@@ -212,44 +212,34 @@ feature -- Removal
 
 feature {FLAT_STRUCT, FORMAT_REGISTRATION} -- Implementation
 
-	public_features_storage_info: LINKED_LIST [S_FEATURE_DATA] is
-			-- List of features relevant for EiffelCase.
+	storage_info: S_FEATURE_CLAUSE is
+			-- Feature clause data for EiffelCase
+		require
+			must_have_one_entry: clauses.count = 1
 		local
-			feat_clause: FEATURE_CLAUSE_EXPORT
+			f_clause: FEATURE_CLAUSE_EXPORT;
+			comment_data: S_FREE_TEXT_DATA
 		do
-			!! Result.make;
-			from
-				clauses.start
-			until
-				clauses.after
-			loop
-				feat_clause := clauses.item;
-					-- Store feature information
-				if feat_clause.export_status.storage_info.is_all then
-					Result.append (feat_clause.features_storage_info);
-				end;
-				clauses.forth
+			f_clause := clauses.first;
+			if comments = Void then
+				!! comment_data.make (0);
+			else
+				!! comment_data.make (comments.count);
+				from	
+					comment_data.start;
+					comments.start
+				until	
+					comment_data.after
+				loop
+					comment_data.replace (comments.item);
+					comment_data.forth;
+					comments.forth
+				end
 			end;
-		end;	
-
-	private_features_storage_info: LINKED_LIST [S_FEATURE_DATA] is
-			-- List of features relevant for EiffelCase.
-		local
-			feat_clause: FEATURE_CLAUSE_EXPORT
-		do
-			!! Result.make;
-			from
-				clauses.start
-			until
-				clauses.after
-			loop
-				feat_clause := clauses.item;
-				if feat_clause.export_status.storage_info.is_none then
-						-- Store feature information
-					Result.append (clauses.item.features_storage_info);
-				end;
-				clauses.forth
-			end;
+			!! Result.make (
+				f_clause.features_storage_info,
+				f_clause.export_status.storage_info, 
+				comment_data);
 		end;	
 
 invariant

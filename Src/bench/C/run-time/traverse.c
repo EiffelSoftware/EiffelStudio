@@ -30,6 +30,7 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
 
 #include "rt_hector.h"
 #include "rt_traverse.h"
+#include "rt_types.h"
 #include "eif_memory.h"
 #include "rt_gen_types.h"
 #include "rt_gen_conf.h"
@@ -45,13 +46,12 @@ doc:<file name="traverse.c" header="eif_traverse.h" version="$Id$" summary="Trav
  */
 /*#define DEBUG */		/**/
 
-#ifndef EIF_THREADS
 /*
 doc:	<attribute name="map_stack" return_type="struct mstack" export="private">
 doc:		<summary>Map table. It is used to record the EIF_OBJECT protections of all the objects created during the maping traversal. It is represented as a stack and not as an array to avoid fragmentation when resizing (since we do not know how many objects we will traverse)--RAM.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
 doc:	</attribute>
 */
 rt_private struct mstack map_stack;
@@ -60,11 +60,21 @@ rt_private struct mstack map_stack;
 doc:	<attribute name="obj_nb" return_type="EIF_INTEGER_32" export="shared">
 doc:		<summary>Counter of marked objects. Only used with ISE_GC.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
 doc:	</attribute>
 */
 rt_shared EIF_INTEGER_32 obj_nb;
+
+#ifdef EIF_THREADS
+/*
+doc:	<attribute name="eif_eo_store_mutex" return_type="EIF_LW_MUTEX_TYPE" export="shared">
+doc:		<summary>When using EO_MARK to mark object, the full marking and unmarking process should be protected using this mutex. Not doing so, you might end up marking objects marked by a different thread or unmarking them, at the end it is a mess.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</attribute>
+*/
+
+rt_shared EIF_LW_MUTEX_TYPE *eif_eo_store_mutex = NULL;
 #endif
 
 #ifndef lint
@@ -86,7 +96,15 @@ rt_private void match_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERE
 rt_private void internal_find_instance_of (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to);
 rt_private void internal_find_referers (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to);
 
-/* Account for types of attributes of dynamic type `dtype'. */
+/*
+doc:	<routine name="account_attributes" export="private">
+doc:		<summary>Account for types of attributes of dynamic type `dtype'.</summary>
+doc:		<param name="dtype" type="int16">Dynamic type from which we want to know the types of its attributes.</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
 rt_private void account_attributes (int16 dtype)
 {
 	RT_GET_CONTEXT
@@ -125,7 +143,15 @@ rt_private void account_attributes (int16 dtype)
 	}
 }
 
-/* Account for type of object found */
+/*
+doc:	<routine name="account_type" export="private">
+doc:		<summary>Account for type of object found.</summary>
+doc:		<param name="dftype" type="int16">Full dynamic type from which we want to know the types of its attributes.</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
 rt_private void account_type (uint32 dftype, int p_accounting)
 {
 	RT_GET_CONTEXT
@@ -183,11 +209,21 @@ rt_private void account_type (uint32 dftype, int p_accounting)
 	}
 }
 
-rt_shared void traversal(char *object, int p_accounting)
+/*
+doc:	<routine name="traversal" export="shared">
+doc:		<summary>First pass of the store mechanism consisting in marking objects with the EO_STORE flag.</summary>
+doc:		<param name="object" type="EIF_REFERENCE">Object from which we start the marking mechanism.</param>
+doc:		<param name="p_accounting" type="int">Type of possible accounting (TR_PLAIN, TR_ACCOUNT, TR_MAP, TR_ACCOUNT_ATTR, INDEPEND_ACCOUNT or RECOVER_ACCOUNT).</param>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
+rt_shared void traversal(EIF_REFERENCE object, int p_accounting)
 {
 	/* First pass of the store mechanism consisting in marking objects. */
 
-	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	char *object_ref, *reference;
 	EIF_INTEGER count, elem_size;
@@ -320,27 +356,31 @@ rt_shared void traversal(char *object, int p_accounting)
  * Indirection table handling.
  */
 
+/*
+doc:	<routine name="map_start" export="shared">
+doc:		<summary>Restart the maping table at the beginning. Note that we are using the extra st_bot field which is added after all the fields from the stack structure.</summary>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
 rt_shared void map_start(void)
 {
-	/* Restart the maping table at the beginning. Note that we are using the
-	 * extra st_bot field which is added after all the fields from the stack
-	 * structure.
-	 */
-
-	RT_GET_CONTEXT
 	map_stack.st_bot = map_stack.st_hd->sk_arena;	/* First item */
 	map_stack.st_cur = map_stack.st_hd;
 	map_stack.st_end = map_stack.st_cur->sk_end;
 }
 
+/*
+doc:	<routine name="map_next" return_type="EIF_OBJECT" export="shared">
+doc:		<summary>Return next object in the map table, via its indirection pointer. Note that the stack structure is physically destroyed in the process, being mangled from the bottom.</summary>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
 rt_shared EIF_OBJECT map_next(void)
 {
-	/* Return next object in the map table, via its indirection pointer. Note
-	 * that the stack structure is physically destroyed in the process, being
-	 * mangled from the bottom.
-	 */
-
-	RT_GET_CONTEXT
 	register1 EIF_OBJECT *item;		/* Item we shall return */
 	register2 struct stchunk *cur;	/* New current chunk */
 
@@ -365,13 +405,18 @@ rt_shared EIF_OBJECT map_next(void)
 	return *item;
 }
 
+/*
+doc:	<routine name="map_next" export="shared">
+doc:		<summary>At the end of a cloning operation, the stack is reset (i.e. emptied) and a consistency check is made to ensure it is really empty.</summary>
+doc:		<param name="emergency" type="int">Need to reset due to emergency (exception)?</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
 rt_shared void map_reset(int emergency)
 			  		/* Need to reset due to emergency (exception) */
 {
-	/* At the end of a cloning operation, the stack is reset (i.e. emptied)
-	 * and a consistency check is made to ensure it is really empty.
-	 */
-	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 	struct stchunk *next;	/* Next chunk in stack list */
 	struct stchunk *cur;	/* Current chunk in stack list */
@@ -403,13 +448,12 @@ rt_shared void map_reset(int emergency)
 #endif
 }
 
-#ifndef EIF_THREADS
 /*
 doc:	<attribute name="referers_target" return_type="EIF_REFERENCE" export="private">
 doc:		<summary>Object for which we track all the objects that refers to it in `find_referers'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
 doc:	</attribute>
 */
 rt_private EIF_REFERENCE referers_target = NULL;
@@ -418,38 +462,60 @@ rt_private EIF_REFERENCE referers_target = NULL;
 doc:	<attribute name="instance_type" return_type="EIF_INTEGER" export="private">
 doc:		<summary>Dynamic type used to track all objects of this particular dynamic type in `find_instance_of'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
 doc:	</attribute>
 */
 rt_private EIF_INTEGER instance_type = 0;
-#endif
+
+/*
+doc:	<routine name="find_referers" return_type="EIF_REFERENCE" export="shared">
+doc:		<summary>Find all objects that refers to `target' and return a SPECIAL object.</summary>
+doc:		<param name="target" type="EIF_REFERENCE">Object from which we want to find all objects that refer to it.</param>
+doc:		<param name="result_type" type="EIF_INTEGER">Full dynamic type of SPECIAL [ANY].</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_eo_store_mutex'.</synchronization>
+doc:	</routine>
+*/
 
 rt_public EIF_REFERENCE find_referers (EIF_REFERENCE target, EIF_INTEGER result_type)
-	/* Find all objects that refers to `target' and return a SPECIAL object
-	 * of type `result_type'. */
 {
 	RT_GET_CONTEXT
+	EIF_REFERENCE result = NULL;
+	EIF_EO_STORE_LOCK;
 	referers_target = target;
-	return matching (internal_find_referers, result_type);
+	result = matching (internal_find_referers, result_type);
+	EIF_EO_STORE_UNLOCK;
+	return result;
 }
+
+/*
+doc:	<routine name="find_instance_of" return_type="EIF_REFERENCE" export="shared">
+doc:		<summary>Find all object that have `type' as dynamic type and return a SPECIAL object containing them all.</summary>
+doc:		<param name="type" type="EIF_INTEGER">Dynamic type of objects we are looking for.</param>
+doc:		<param name="result_type" type="EIF_INTEGER">Full dynamic type of SPECIAL[ANY].</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Through `eif_eo_store_mutex'.</synchronization>
+doc:	</routine>
+*/
 
 rt_public EIF_REFERENCE find_instance_of (EIF_INTEGER type, EIF_INTEGER result_type)
-	/* Find all object that have `type' as dynamic type and return a SPECIAL
-	 * object containing them all of type `result_type'. */
 {
 	RT_GET_CONTEXT
+	EIF_REFERENCE result = NULL;
+	EIF_EO_STORE_LOCK;
 	instance_type = type;
-	return matching (internal_find_instance_of, result_type);
+	result = matching (internal_find_instance_of, result_type);
+	EIF_EO_STORE_UNLOCK;
+	return result;
 }
 
-#ifndef EIF_THREADS
 /*
 doc:	<attribute name="found_collection" return_type="struct obj_array *" export="private">
 doc:		<summary>Collects all matching objects found in `find_instance_of' or `find_referers'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
 doc:	</attribute>
 */
 rt_private struct obj_array *found_collection = NULL;
@@ -458,15 +524,23 @@ rt_private struct obj_array *found_collection = NULL;
 doc:	<attribute name="marked_collection" return_type="struct obj_array *" export="private">
 doc:		<summary>Keeps all objects marked during search in `find_instance_of' or `find_referers'.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>Private per thread data</synchronization>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
 doc:	</attribute>
 */
 rt_private struct obj_array *marked_collection = NULL;
-#endif
+
+/*
+doc:	<routine name="obj_array_extend" export="private">
+doc:		<summary>Add `obj' to `a_collection'.</summary>
+doc:		<param name="obj" type="EIF_REFERENCE">Object to add in `a_collection'.</param>
+doc:		<param name="a_collection" type="struct obj_array *">Collection in which `obj' is added.</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
 
 rt_private void obj_array_extend (EIF_REFERENCE obj, struct obj_array *a_collection)
-	/* Add `obj' to `a_collection'. */
 {
 	a_collection->index = a_collection->index + 1;
 
@@ -478,10 +552,18 @@ rt_private void obj_array_extend (EIF_REFERENCE obj, struct obj_array *a_collect
 	a_collection->count = a_collection->count + 1;
 }
 
+/*
+doc:	<routine name="internal_find_instance_of" export="private">
+doc:		<summary>Check if dynamic type of `compare_to' and `enclosing' matches `instance_type'. If so, add it to `found_collection'.</summary>
+doc:		<param name="enclosing" type="EIF_REFERENCE">Object we possibly want to add to `found_collection'.</param>
+doc:		<param name="compare_to" type="EIF_REFERENCE">Only for signature purposes. We only do something if `enclosing' references the same object as `compare_to'.</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
 rt_private void internal_find_instance_of (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to)
-	/* Check if dynamic type of `compare_to' and `enclosing' matches `instance_type'. If so, add it to `found_collection'. */
 {
-	RT_GET_CONTEXT
 	if
 		((enclosing == compare_to) &&
 		((EIF_INTEGER) ((HEADER(enclosing)->ov_flags) & EO_TYPE) == instance_type ? 1 : 0) &&
@@ -491,11 +573,18 @@ rt_private void internal_find_instance_of (EIF_REFERENCE enclosing, EIF_REFERENC
 	}
 }
 
+/*
+doc:	<routine name="internal_find_referers" export="private">
+doc:		<summary>Check if `compare_to' refers to `referers_target' and that `enclosing' is not equal to `compare_to'. If it matches, then we add `enclosing' to `found_collection'.</summary>
+doc:		<param name="enclosing" type="EIF_REFERENCE">Object we possibly want to add to `found_collection'.</param>
+doc:		<param name="compare_to" type="EIF_REFERENCE">If `compare_to' is `referers_target' then we add enclosing.</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
 rt_private void internal_find_referers (EIF_REFERENCE enclosing, EIF_REFERENCE compare_to)
-	/* Check if `compare_to' refers to `referers_target' and that `enclosing' is not equal to `compare_to'. If
-	 * it matches, then we add `enclosing' to `found_collection'. */
 {
-	RT_GET_CONTEXT
 	if
 		((enclosing != compare_to) &&
 		(referers_target == compare_to ? 1 : 0))
@@ -504,10 +593,17 @@ rt_private void internal_find_referers (EIF_REFERENCE enclosing, EIF_REFERENCE c
 	}
 }
 
+/*
+doc:	<routine name="matching" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' returns a matching object. Return a SPECIAL [ANY] of type `result_type' with all found references.</summary>
+doc:		<param name="action_fnptr" type="void (*) (EIF_REFERENCE, EIF_REFERENCE)">Agent to be called for each object we find.</param>
+doc:		<param name="result_type" type="int">Full dynamic type of SPECIAL [ANY].</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
 rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE), int result_type)
-	/* Using `action_fnptr' find all objects where `action_fnptr' returns
-	 * a matching object. Return a SPECIAL [ANY] of type `result_type' with all
-	 * found references. */
 {
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
@@ -586,6 +682,16 @@ rt_private EIF_REFERENCE matching (void (*action_fnptr) (EIF_REFERENCE, EIF_REFE
 	return Result;
 } 
 
+/*
+doc:	<routine name="match_simple_stack" export="private">
+doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' returns a matching object for objects located in simple stacks.</summary>
+doc:		<param name="stk" type="struct stack *">Stack in which we are searching.</param>
+doc:		<param name="action_fnptr" type="void (*) (EIF_REFERENCE, EIF_REFERENCE)">Agent to be called for each object we find.</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
 rt_private void match_simple_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE))
 {
 	struct stchunk* s;
@@ -609,6 +715,16 @@ rt_private void match_simple_stack (struct stack *stk, void (*action_fnptr) (EIF
 		}
 	}
 }
+
+/*
+doc:	<routine name="match_stack" export="private">
+doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' returns a matching object for objects located in stacks.</summary>
+doc:		<param name="stk" type="struct stack *">Stack in which we are searching.</param>
+doc:		<param name="action_fnptr" type="void (*) (EIF_REFERENCE, EIF_REFERENCE)">Agent to be called for each object we find.</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
 
 rt_private void match_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE))
 {
@@ -634,10 +750,18 @@ rt_private void match_stack (struct stack *stk, void (*action_fnptr) (EIF_REFERE
 	}
 }
 
+/*
+doc:	<routine name="match_object" export="private">
+doc:		<summary>Using `action_fnptr' find all objects where `action_fnptr' returns a matching object for objects located in stacks. Performs a recursive call for every references found in `object'.</summary>
+doc:		<param name="object" type="EIF_REFERENCE">Object we use for comparison.</param>
+doc:		<param name="action_fnptr" type="void (*) (EIF_REFERENCE, EIF_REFERENCE)">Agent to be called for each object we find.</param>
+doc:		<thread_safety>Safe with synchronization</thread_safety>
+doc:		<synchronization>Safe if caller holds the `eif_eo_store_mutex' lock.</synchronization>
+doc:	</routine>
+*/
+
 rt_private void match_object (EIF_REFERENCE object, void (*action_fnptr) (EIF_REFERENCE, EIF_REFERENCE))
-		/* Find objects below by `object' that reference `target'. */
 {
-	RT_GET_CONTEXT
 	EIF_REFERENCE *o_ref;
 	EIF_INTEGER count;
 	union overhead *zone;

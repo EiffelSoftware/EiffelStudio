@@ -62,17 +62,29 @@ feature -- Element change
 			-- Assign `a_style' to `style'.
 		local
 			gtk_style: INTEGER
+			border_width: INTEGER
 		do
 			inspect a_style
-				when Ev_frame_lowered then gtk_style := C.Gtk_shadow_in_enum
-				when Ev_frame_raised then gtk_style := C.Gtk_shadow_out_enum
-				when Ev_frame_etched_in then gtk_style := C.Gtk_shadow_etched_in_enum
-				when Ev_frame_etched_out then gtk_style := C.Gtk_shadow_etched_out_enum
+				when Ev_frame_lowered then
+					gtk_style := C.Gtk_shadow_in_enum
+					border_width := 1
+				when Ev_frame_raised then
+					gtk_style := C.Gtk_shadow_out_enum
+					border_width := 1
+				when Ev_frame_etched_in then
+					gtk_style := C.Gtk_shadow_etched_in_enum
+					border_width := 2
+				when Ev_frame_etched_out then
+					gtk_style := C.Gtk_shadow_etched_out_enum
+					border_width := 2
 			else
 				check
 					valid_value: False
 				end
 			end
+			--| FIXME incorporate border_width.
+			--| NB This is not gtk_container_set_border_width!
+			--| Maybe we have to draw the frame ourselves.
 			C.gtk_frame_set_shadow_type (c_object, gtk_style)
 		end
 
@@ -155,6 +167,10 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/28 22:03:34  brendel
+--| Tried to change border width to 1 for lowered and raised but this attempt
+--| failed. See code.
+--|
 --| Revision 1.10  2000/04/27 17:35:07  brendel
 --| Implemented `style' and `set_style'.
 --|

@@ -110,9 +110,19 @@ feature -- Generation constants
 			Result := "%N%T%T%T"
 		end
 		
+feature -- XML saving
+
+	filename: FILE_NAME is
+			-- File to be generated.
+		do
+			--| FIXME
+			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
+			Result.extend ("build")
+			Result.extend ("temp")
+			Result.extend ("xml_output.xml")
+		end		
 		
-		
-feature -- Xml constants
+feature -- XML constants
 
 
 	True_string: STRING is "True"

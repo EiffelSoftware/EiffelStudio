@@ -14,7 +14,7 @@ open lisbon.ise
 user manus manus 
 binary
 get local/TEST_DELIV/PorterPackage/Eiffel52_deliv.tgz Eiffel52_ppc.tgz
-get local/TEST_DELIV/PorterPackage/Eiffel52.iso Eiffel52_ppc.iso
+get local/TEST_DELIV/PorterPackage/Eiffel52_enterprise.iso Eiffel52_enterprise_ppc.iso
 close 
 EOF
 

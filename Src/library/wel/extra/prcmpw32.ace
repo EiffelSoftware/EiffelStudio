@@ -12,6 +12,7 @@ cluster
 	wel_controls:		"$EIFFEL3\library\wel\controls";
 	wel_gdi:		"$EIFFEL3\library\wel\gdi";
 	wel_gdi_stocks: 	"$EIFFEL3\library\wel\gdistock";
+	wel_messages:		"$EIFFEL3\library\wel\messages";
 	wel_standard_dialogs:	"$EIFFEL3\library\wel\stddlgs";
 	wel_structures: 	"$EIFFEL3\library\wel\structs";
 	wel_support:		"$EIFFEL3\library\wel\support";

@@ -1968,7 +1968,7 @@ feature -- Class initialization
 			parents := Void
 			computed_parents := Void
 
-			ancestor_id := System.ancestor_class_to_all_classes_id
+			ancestor_id := System.any_id
 			if parents_as /= Void and then not parents_as.is_empty then
 				if class_id = ancestor_id then
 					create vhpr1
@@ -2028,22 +2028,13 @@ feature -- Class initialization
 				end
 			elseif not (class_id = ancestor_id) then
 					-- No parents are syntactiaclly specified: ANY is
-					-- the default parent for Eiffel classes, but not for CLI
-					-- classes which inherits from SYSTEM_OBJECT. And ANY
-					-- also inherits from SYSTEM_OBJECT.
+					-- the default parent for Eiffel classes.
 				create parents_classes.make (1)
 
-				if is_external or else class_id = System.any_id then
-						-- Add a descendant to class SYSTEM_OBJECT
-					System.system_object_class.compiled_class.add_descendant (Current)
-						-- Insertion in `parents_classes'
-					parents_classes.extend (System.system_object_class.compiled_class)
-				else
-						-- Add a descendant to class SYSTEM_OBJECT
-					System.any_class.compiled_class.add_descendant (Current)
-						-- Insertion in `parents_classes'
-					parents_classes.extend (System.any_class.compiled_class)
-				end
+					-- Add a descendant to class ANY
+				System.any_class.compiled_class.add_descendant (Current)
+					-- Insertion in `parents_classes'
+				parents_classes.extend (System.any_class.compiled_class)
 			else
 					-- In case of the ancestor class to all classes, just create an empty
 					-- parent structure.
@@ -2258,27 +2249,6 @@ feature {NONE} -- Private access
 			Result.set_parent_type (Any_type)
 		ensure
 			any_parent_not_void: Result /= Void
-		end
-
-	System_object_type: CL_TYPE_A is
-			-- Default parent type
-		require
-			il_generation: System.il_generation
-		once
-			create Result.make (System.system_object_id)
-		ensure
-			system_object_type_not_void: Result /= Void
-		end
-
-	System_object_parent: PARENT_C is
-			-- Default compiled parent
-		require
-			il_generation: System.il_generation
-		once
-			create Result
-			Result.set_parent_type (System_object_type)
-		ensure
-			system_object_parent_not_void: Result /= Void
 		end
 
 feature
@@ -2596,20 +2566,12 @@ feature -- Parent checking
 					parents.extend (l_parent_c.parent_type)
 					l_parents_as.forth
 				end
-			elseif not (class_id = System.ancestor_class_to_all_classes_id) then
+			elseif not (class_id = System.any_id) then
 					-- No parents are syntactiaclly specified: ANY is
-					-- the default parent for Eiffel classes, but not for CLI
-					-- classes which inherits from SYSTEM_OBJECT. And ANY
-					-- also inherits from SYSTEM_OBJECT.
-				if is_external or else class_id = System.any_id then
-					parents.extend (System_object_type)
-						-- Fill parent list of corresponding class info
-					computed_parents.extend (System_object_parent)
-				else
-					parents.extend (Any_type)
-						-- Fill parent list of corresponding class info
-					computed_parents.extend (Any_parent)
-				end
+					-- the default parent for Eiffel classes
+				parents.extend (Any_type)
+					-- Fill parent list of corresponding class info
+				computed_parents.extend (Any_parent)
 			end
 		ensure
 			parents_not_void: parents /= Void
@@ -2698,10 +2660,8 @@ feature -- Parent checking
 			end
 
 				-- Only classes that explicitely inherit from an external class only once
-				-- are marked `single. ANY is not even though it inherits directly from
-				-- SYSTEM_OBJECT.
-			set_is_single (l_single_classes /= Void and then l_single_classes.count = 1
-				and then not is_class_any)
+				-- are marked `single.
+			set_is_single (l_single_classes /= Void and then l_single_classes.count = 1)
 			if System.il_generation and then l_old_is_single /= is_single then
 					-- Class has its `is_single' status changed. We have to
 					-- reset its `types' so that they are recomputed and we have
@@ -5132,6 +5092,8 @@ feature {DEGREE_3} -- Degree 3
 	add_to_degree_3 is
 			-- Add current class to Degree 3.
 			-- Set `finalization_needed' to True
+		require
+			not_a_true_external_class: not is_true_external
 		do
 			degree_3_needed := True
 			finalization_needed := True
@@ -5156,6 +5118,8 @@ feature {DEGREE_2} -- Degree 2
 
 	add_to_degree_2 is
 			-- Add current class to Degree 2.
+		require
+			not_a_true_external_class: not is_true_external
 		do
 			degree_2_needed := True
 		ensure
@@ -5178,6 +5142,8 @@ feature {DEGREE_1} -- Degree 1
 
 	add_to_degree_1 is
 			-- Add current class to Degree 1.
+		require
+			not_a_true_external_class: not is_true_external
 		do
 			degree_1_needed := True
 		ensure
@@ -5200,6 +5166,8 @@ feature {DEGREE_MINUS_1, IL_GENERATOR} -- Degree -1
 
 	add_to_degree_minus_1 is
 			-- Add current class to Degree -1.
+		require
+			not_a_true_external_class: not is_true_external
 		do
 			degree_minus_1_needed := True
 		ensure

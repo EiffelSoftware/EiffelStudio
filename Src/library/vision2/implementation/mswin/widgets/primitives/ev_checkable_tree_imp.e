@@ -50,12 +50,16 @@ feature -- Status report
 		local
 			item_imp: EV_TREE_ITEM_IMP
 			state: INTEGER
+			original_mask: INTEGER
+			original_state_mask: INTEGER
 		do
 			item_imp ?= tree_item.implementation
-			item_imp.set_mask (item_imp.mask | tvif_state)
-			item_imp.set_statemask (tvis_stateimagemask)
-			state := item_imp.state
-			Result := flag_set (state, cwin_index_to_state_image_mask (2))
+			original_mask := item_imp.mask
+			original_state_mask := item_imp.state_mask
+			item_imp.set_mask (tvif_state)
+			Result := flag_set (item_imp.state, cwin_index_to_state_image_mask (2))
+			item_imp.set_mask (original_mask)
+			item_imp.set_statemask (original_state_mask)
 		end
 
 feature -- Status setting
@@ -66,14 +70,18 @@ feature -- Status setting
 		local
 			item_imp: EV_TREE_NODE_IMP
 			original_mask: INTEGER
+			original_state_mask: INTEGER
 		do
 			item_imp ?= tree_item.implementation
 			original_mask := item_imp.mask
+			original_state_mask := item_imp.state_mask
 			item_imp.set_mask (tvif_state)
 			item_imp.set_statemask (tvis_stateimagemask)
 			item_imp.set_state (cwin_index_to_state_image_mask (2))
-			set_tree_item (item_imp)
+			original_mask := item_imp.state
+			set_tree_item (item_imp)		
 			item_imp.set_mask (original_mask)
+			item_imp.set_statemask (original_state_mask)
 		end
 
 	uncheck_item (tree_item: EV_TREE_NODE) is
@@ -82,14 +90,17 @@ feature -- Status setting
 		local
 			item_imp: EV_TREE_NODE_IMP
 			original_mask: INTEGER
+			original_state_mask: INTEGER
 		do
 			item_imp ?= tree_item.implementation
 			original_mask := item_imp.mask
+			original_state_mask := item_imp.state_mask
 			item_imp.set_mask (tvif_state)
 			item_imp.set_statemask (tvis_stateimagemask)
 			item_imp.set_state (cwin_index_to_state_image_mask (1))
 			set_tree_item (item_imp)
 			item_imp.set_mask (original_mask)
+			item_imp.set_statemask (original_state_mask)
 		end
 
 feature {EV_ANY_I} -- Implementation

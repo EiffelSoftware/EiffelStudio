@@ -36,9 +36,11 @@ feature -- Basic Operation
 				-- the widgets inside.
 				-- This is needed if we are coming here, from the fourth state.
 			first_window.set_minimum_size (100, 100)
-			first_window.set_size (100, 100)
+			first_window.set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			main_window.hide_all_floating_tools
 			first_window.set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
+			first_window.disable_user_resize
+			first_window.disable_maximize
 			create locals_grouped.make_with_text ("Group attribute declarations? e.g. button1, button2: EV_BUTTON")
 			if project_settings.grouped_locals then
 				locals_grouped.enable_select

@@ -71,7 +71,7 @@ rt_private void obj_inspect(EIF_OBJ object);
 rt_private void bit_inspect(EIF_OBJ object);
 rt_private void string_inspect(EIF_OBJ object);				/* String object inspection */
 rt_private void load_bc(int slots, int amount);				/* Load byte code information */
-rt_private long sp_lower, sp_upper;							/* Special objects' bounds to be inspected */
+rt_private long sp_lower, sp_upper;						/* Special objects' bounds to be inspected */
 
 extern char *simple_out(struct item *);	/* Out routine for simple time (from run-time) */
 
@@ -81,8 +81,8 @@ extern void set_breakpoint_count(int num);	/* Sets the breakpoint interrupt numb
 /* Object/local modification routines */
 extern unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32 loc_number, struct item *new_value); /* modify a local variable/ an argument */
 rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, long arg_loc_number, struct item *ip);
-rt_private unsigned char modify_attr(char *object, long attr_number, struct item *new_value);
-rt_private void modify_object_attribute(long arg_addr, long arg_attr_number, struct item *new_value);
+rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, struct item *new_value);
+rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_number, struct item *new_value);
 
 /* Dynamic function evaluation */
 rt_private void opush_dmpitem(struct item *item);
@@ -149,7 +149,7 @@ static int curr_modify = NO_CURRMODIF;
 
 #define arg_1	rqst->rq_opaque.op_first
 #define arg_2	rqst->rq_opaque.op_second
-#define arg_3	rqst->rq_opaque.op_third
+#define arg_3	(int) rqst->rq_opaque.op_third
 
 #ifdef USE_ADD_LOG
 	add_log(9, "received request type %d", rqst->rq_type);
@@ -439,14 +439,14 @@ rt_public void stop_rqst(int s)
 	ewhere(&wh);			/* Find out where we are */
 	if (wh.wh_type == -1){	/* Could not compute position */
 		rqst.st_wh.wh_name = "Unknown";			/* Feature name */
-		rqst.st_wh.wh_obj = (long) 0;			/* (char *) -> long for XDR */
+		rqst.st_wh.wh_obj = (rt_int_ptr) NULL;	/* (char *) -> rt_int_ptr for XDR */
 		rqst.st_wh.wh_origin = 0;				/* Written where? */
 		rqst.st_wh.wh_type = 0;					/* Dynamic type */
 		rqst.st_wh.wh_offset = 0;				/* Offset in byte code */
 	} 
 	else {
 		rqst.st_wh.wh_name = wh.wh_name;		/* Feature name */
-		rqst.st_wh.wh_obj = (long) wh.wh_obj;	/* (char *) -> long for XDR */
+		rqst.st_wh.wh_obj = (rt_int_ptr) wh.wh_obj;		/* (char *) -> rt_int_ptr for XDR */
 		rqst.st_wh.wh_origin = wh.wh_origin;	/* Written where? */
 		rqst.st_wh.wh_type = wh.wh_type;		/* Dynamic type */
 		rqst.st_wh.wh_offset = wh.wh_offset;	/* Offset in byte code for melted feature, line number for frozen one */
@@ -496,13 +496,13 @@ rt_private void modify_local_variable(long arg_stack_depth, long arg_loc_type, l
 }
 
 /* Encapsulate the 'modify_attr' function */
-rt_private void modify_object_attribute(long arg_addr, long arg_attr_number, struct item *new_value)
+rt_private void modify_object_attribute(rt_int_ptr arg_addr, long arg_attr_number, struct item *new_value)
 {
 #ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd[EWBOUT];
 #endif
 
-	static char *object = NULL;
+	static EIF_REFERENCE object = NULL;
 	static long attr_number = 0;
 	unsigned char result;
 	
@@ -638,7 +638,7 @@ rt_private void adopt(int s, Opaque *what)
 	char hector_addr[20];	/* Buffer where indirection address is stored */
 
 	physical_addr = (char *) what->op_third;
-	sprintf(hector_addr, "0x%lX", (unsigned long) eif_adopt((EIF_OBJ) &physical_addr));
+	sprintf(hector_addr, "0x" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_adopt((EIF_OBJ) &physical_addr));
 	twrite(hector_addr, strlen(hector_addr));
 }
 
@@ -661,7 +661,7 @@ rt_private void ipc_access(int s, Opaque *what)
 	char *hector_addr;		/* Hector address with indirection */
 
 	hector_addr = (char *) what->op_third;
-	sprintf(physical_addr, "0x%lX", (unsigned long) eif_access((EIF_OBJ) hector_addr));
+	sprintf(physical_addr, "0x" EIF_POINTER_DISPLAY, (rt_uint_ptr) eif_access((EIF_OBJ) hector_addr));
 	twrite(physical_addr, strlen(physical_addr));
 }
 
@@ -827,15 +827,15 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 {
 	/* Inspect recursively `object''s attribute */
 
-	register2 struct cnode *obj_desc;		/* Object type description */
+	struct cnode *obj_desc;		/* Object type description */
 	int32 nb_attr;							/* Attribute number */
-	register4 uint32 *types;				/* Attribute types */
-	register4 int32 *cn_attr;				/* Attribute keys */
+	uint32 *types;				/* Attribute types */
+	int32 *cn_attr;				/* Attribute keys */
 	long offset;
-	register5 int16 dtype;				/* Object dynamic type */
+	int16 dtype;				/* Object dynamic type */
 	EIF_REFERENCE o_ref;
 	EIF_REFERENCE reference;				/* Reference attribute */
-	register7 char **names;					/* Attribute names */
+	char **names;					/* Attribute names */
 	char *name;
 	long i;
 	uint32 type, sk_type, ref_flags;
@@ -939,9 +939,9 @@ rt_private void rec_sinspect(EIF_REFERENCE object)
 	/* Inspect special object */
 
 	union overhead *zone;		/* Object header */
-	register5 uint32 flags;		/* Object flags */
-	register3 long sp_index;	/* Element index */
-	register4 EIF_INTEGER elem_size;	/* Element size */
+	uint32 flags;		/* Object flags */
+	long sp_index;	/* Element index */
+	EIF_INTEGER elem_size;	/* Element size */
 	char *o_ref;
 	char *reference;
 	int32 count;					/* Element count */
@@ -1115,7 +1115,7 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 			 * to avoid offset computation from Eiffel code */
 		l_item++;
 		for (i = 1; count > 0; count--, i++, l_item++) {
-			sprintf (buffer, "%ld", i);
+			sprintf (buffer, "%d", i);
 			twrite (buffer, strlen(buffer));
 			switch (eif_tuple_item_type(l_item)) {
 				case EIF_INTEGER_8_CODE:
@@ -1220,13 +1220,13 @@ rt_private void string_inspect(EIF_OBJ object)
 {
 		/* Inspect the string object to get the string value */
 
-	register2 struct cnode *obj_desc;		/* Object type description */
-	register3 long nb_attr;					/* Attribute number */
-	register4 int32 *cn_attr;				/* Attribute keys */
+	struct cnode *obj_desc;		/* Object type description */
+	long nb_attr;					/* Attribute number */
+	int32 *cn_attr;				/* Attribute keys */
 	long offset;
-	register5 int16 dtype;				/* Object dynamic type */
+	int16 dtype;				/* Object dynamic type */
 	char *o_ref;
-	register7 char **names;					/* Attribute names */
+	char **names;					/* Attribute names */
 	char *reference;
 	long i, string_count = 0;
 	char *string_area = NULL;
@@ -1338,7 +1338,7 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, struct ite
 /* addr: address of the object where attribute to modify lies */
 /* attr_number: */
 /* new_value: */
-rt_private unsigned char modify_attr(char *object, long attr_number, struct item *new_value)
+rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, struct item *new_value)
 {
 	/* modify recursively `object''s attribute */
 

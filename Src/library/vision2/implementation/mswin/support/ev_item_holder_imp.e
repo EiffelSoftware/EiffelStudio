@@ -160,8 +160,12 @@ feature -- Access
 		do
 			original_index := index
 			item_to_imp (v).set_parent (interface)
-			insert_item (item_to_imp (v), 1)		
-			ev_children.go_i_th (original_index + 1)
+			insert_item (item_to_imp (v), 1)
+			if original_index > 0 then	
+				ev_children.go_i_th (original_index + 1)
+			else
+				ev_children.go_i_th (0)
+			end
 		end
 
 	replace (v: like item) is
@@ -240,6 +244,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/02/24 21:32:00  rogers
+--| Fixed bug in put_front which would cause the cursor to point to the first item, after the insertion, if the original position was off at the start, i.e. index 0.
+--|
 --| Revision 1.20  2000/02/24 01:30:05  brendel
 --| Switched 2 statemnts in `remove'.
 --| Added precondition on item_to_imp.

@@ -13,6 +13,13 @@ inherit
 		redefine
 			implementation
 		end
+		
+	EV_FONTABLE
+		undefine
+			is_in_default_state
+		redefine
+			implementation
+		end
 	
 create
 	default_create,

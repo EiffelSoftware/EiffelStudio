@@ -379,6 +379,43 @@ feature -- Status report
 			positive_width: Result.width >= 0
 			positive_height: Result.height >= 0
 		end
+		
+	char_abc_widths (first_char_index, last_char_index: INTEGER): ARRAYED_LIST [WEL_ABC_STRUCT] is
+			-- `Result' is a list of Windows ABC structures corresponding to the currently
+			-- selected truetype font, with an entry for each character contained within the
+			-- indices `first_char_index', `last_char_index'.
+		require
+			indexes_valid: first_char_index >= 1 and last_char_index >= first_char_index
+		local
+			managed_pointer: MANAGED_POINTER
+			abc_struct: WEL_ABC_STRUCT
+			character_count: INTEGER
+			loop_counter: INTEGER
+			pointer: POINTER
+			struct_size: INTEGER
+		do
+			create abc_struct.make
+			character_count := last_char_index - first_char_index + 1
+			struct_size := abc_struct.structure_size
+			create managed_pointer.make (character_count * struct_size)
+			cwel_get_char_abc_widths (item, first_char_index, last_char_index, managed_pointer.item)
+			create Result.make (character_count)
+			pointer := managed_pointer.item
+			from
+				loop_counter := 0
+			until
+				loop_counter = character_count
+			loop
+				create abc_struct.make_by_pointer (pointer)
+				Result.extend (abc_struct)
+				pointer := pointer + struct_size
+				loop_counter := loop_counter + 1
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+		
 
 	device_caps (capability: INTEGER): INTEGER is
 			-- Give device-specific information about
@@ -1781,15 +1818,6 @@ feature {NONE} -- Externals
 			"TabbedTextOut"
 		end
 
-	cwin_draw_text (hdc: POINTER; string: POINTER; length: INTEGER; 
-			rect: POINTER; format: INTEGER): INTEGER is
-			-- SDK DrawText
-		external
-			"C [macro <windows.h>] (HDC, LPCSTR, int, LPRECT, UINT): int"
-		alias
-			"DrawText"
-		end
-
 	cwin_draw_state (hdc, hbr, lpoutputfunc, ldata: POINTER; wdata, x, y, cx, cy, fuflags: INTEGER): INTEGER is
 			-- SDK DrawState
 		external
@@ -2271,16 +2299,7 @@ feature {NONE} -- Externals
 		alias
 			"GetROP2"
 		end
-
-	cwin_get_text_extend_point (hdc: POINTER; s: POINTER; len: INTEGER;
-			si: POINTER) is
-			-- SDK GetTextExtentPoint
-		external
-			"C [macro <windows.h>] (HDC, LPCSTR, int, LPSIZE)"
-		alias
-			"GetTextExtentPoint32"
-		end
-
+		
 	cwin_get_tabbed_text_extent (hdc: POINTER; s: POINTER;
 			len, tab_count: INTEGER; tabs: POINTER): INTEGER is
 			-- SDK GetTabbedTextExtent
@@ -2289,6 +2308,15 @@ feature {NONE} -- Externals
 				%LPINT): EIF_INTEGER"
 		alias
 			"GetTabbedTextExtent"
+		end
+
+	cwin_get_text_extend_point (hdc: POINTER; s: POINTER; len: INTEGER;
+			si: POINTER) is
+			-- SDK GetTextExtentPoint
+		external
+			"C [macro <windows.h>] (HDC, LPCSTR, int, LPSIZE)"
+		alias
+			"GetTextExtentPoint32"
 		end
 
 	cwin_device_caps (hdc: POINTER; capability: INTEGER): INTEGER is
@@ -2357,6 +2385,13 @@ feature {NONE} -- Externals
 		alias
 			"GetDIBits"
 		end
+		
+	cwel_get_char_abc_widths (hdc: POINTER; first, last: INTEGER; array: POINTER) is
+		external
+			"C [macro <wingdi.h>] (HDC, UINT, UINT, LPABC)"
+		alias
+			"GetCharABCWidths"
+		end
 
 	Opaque: INTEGER is
 		external
@@ -2414,6 +2449,17 @@ feature {NONE} -- Externals
 			create module_name_ptr.make ("Gdi32.dll")
 			create function_name_ptr.make ("MaskBlt")
 			internal_mask_blt_funcaddr := cwin_get_function_address(module_name_ptr.item, function_name_ptr.item)
+		end
+		
+feature {WEL_FONT} -- Externals
+	
+	cwin_draw_text (hdc: POINTER; string: POINTER; length: INTEGER; 
+			rect: POINTER; format: INTEGER): INTEGER is
+			-- SDK DrawText
+		external
+			"C [macro <windows.h>] (HDC, LPCSTR, int, LPRECT, UINT): int"
+		alias
+			"DrawText"
 		end
 
 invariant

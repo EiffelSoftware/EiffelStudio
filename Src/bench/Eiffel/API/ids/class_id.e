@@ -34,6 +34,16 @@ feature {COMPILER_EXPORTER} -- Access
 			end
 		end
 
+	generated_id: STRING is
+			-- Textual representation of class id
+			-- used in generated C code
+		do
+			!! Result.make (5);
+			Result.append_integer (id);
+		ensure
+			generated_id_not_void: Result /= Void
+		end
+
 feature {COMPILER_EXPORTER} -- Status report
 
 	protected: BOOLEAN is

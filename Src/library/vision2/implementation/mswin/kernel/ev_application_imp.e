@@ -25,7 +25,10 @@ creation
 feature {NONE} -- Implemenation dlls
 
 	common_control_dll: WEL_COMMON_CONTROLS_DLL
-			-- Needed for the tab controls (notebook)
+			-- Needed for the common controls.
+
+	rich_edit_dll: WEL_RICH_EDIT_DLL
+			-- Needed if the user want to open a rich edit.
 
 feature {NONE} -- Implementation
 
@@ -39,6 +42,7 @@ feature {NONE} -- Implementation
 			-- Load the dll needed sometimes
 		do
 			!! common_control_dll.make
+			!! rich_edit_dll.make
 		end
 
 	iterate is

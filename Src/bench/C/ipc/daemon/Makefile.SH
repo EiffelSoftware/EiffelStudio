@@ -38,8 +38,8 @@ DIR = $DIR
 
 CC = $cc
 CTAGS = ctags
-JCFLAGS = \$(CFLAGS) $optimize $ccflags $large
-JLDFLAGS = \$(LDFLAGS) $optimize $ldflags
+JCFLAGS = \$(CFLAGS) $optimize $warning_level $ccflags $large
+JLDFLAGS = \$(LDFLAGS) $optimize $warning_level $ldflags
 LIBS = $libs
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --

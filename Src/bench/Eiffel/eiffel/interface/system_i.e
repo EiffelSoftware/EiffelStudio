@@ -3387,6 +3387,7 @@ feature -- Main file generation
 			rcoffset: INTEGER
 
 			a_class: CLASS_C
+			class_array: ARRAY [CLASS_C]
 		do
 
 			final_mode := byte_context.final_mode;
@@ -3446,11 +3447,16 @@ feature -- Main file generation
 				until
 					classes.after
 				loop
-					a_class := classes.item_for_iteration;
-					if a_class.actual_type.type_i.is_separate then
-						Initialization_file.putstring ("extern ");
-						Initialization_file.putstring (a_class.actual_type.associated_class.class_name);
-						Initialization_file.putstring ("case(); %N");
+					class_array := classes.item_for_iteration
+					nb := class_counter.item (classes.key_for_iteration).count
+					from i := 1 until i > nb loop
+						a_class := class_array.item (i);
+						if a_class.actual_type.type_i.is_separate then
+							Initialization_file.putstring ("extern ");
+							Initialization_file.putstring (a_class.actual_type.associated_class.class_name);
+							Initialization_file.putstring ("case(); %N");
+						end;
+						i := i + 1
 					end;
 					classes.forth;
 				end;

@@ -211,9 +211,7 @@ end
 				updated_feature_id := feature_id
 			end
 
-			create Result
-			Result.set_feature_id (updated_feature_id)
-			Result.set_feature_name (feature_name)
+			create Result.make (updated_feature_id, feature_name_id)
 		end
 
 feature -- Comparison

@@ -80,4 +80,17 @@ feature
 			cache_wipe_out;
 			!!used.make (1,1);
 		end;
+
+feature -- DLE
+
+	init_dle (other: EIFFEL_HISTORY) is
+			-- Initialization of `used' with information of `other'.
+		require
+			dynamic_system: System.is_dynamic;
+			other_exists: other /= Void
+		do
+			used := clone (other.used);
+			used.resize (1, System.routine_id_counter.value)
+		end;
+
 end

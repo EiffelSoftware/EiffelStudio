@@ -533,8 +533,8 @@ end;
 			go (pos);
 		end;
 
-	feature_of_rout_id (set: ROUT_ID_SET): FEATURE_I is
-			-- Feature found in routine id set
+	feature_of_rout_id (rout_id: INTEGER): FEATURE_I is
+			-- Feature found in routine table rout_id
 		local
 			feat: FEATURE_I;
 			pos: INTEGER
@@ -546,7 +546,7 @@ end;
 				after or else Result /= Void
 			loop
 				feat := item_for_iteration;
-				if set.has (feat.rout_id_set.first) then
+				if feat.rout_id_set.has (rout_id) then
 					Result := feat;
 				end;
 				forth;
@@ -683,6 +683,7 @@ end;
 			file.putstring ("int32 ra");
 			file.putint (feat_tbl_id);
 			file.putstring ("[] = {");
+			file.new_line;
 			from
 				i := 0;
 				nb := tab.upper;

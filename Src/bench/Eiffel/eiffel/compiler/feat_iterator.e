@@ -230,4 +230,31 @@ feature
 			Result := (used_table.item (body_id) /= Void)
 		end;
 
+feature -- DLE
+
+	was_alive (feat: FEATURE_I): BOOLEAN is
+			-- Was the feature `feat' already recorded in
+			-- the static system?
+		require
+			dynamic_system: System.is_dynamic;
+			final_mode: System.in_final_mode;
+			feat_exists: feat /= Void
+		do
+			Result := was_body_alive (feat.body_id)
+		end;
+
+	was_body_alive (body_id: INTEGER): BOOLEAN is
+			-- Was the body id recorded in the `used_table' of
+			-- the static system?
+		require
+			dynamic_system: System.is_dynamic;
+			final_mode: System.in_final_mode
+		local
+			old_body_id: INTEGER
+		do
+			old_body_id := System.dle_finalized_nobid_table.item (body_id);
+			Result := used_table.valid_index (old_body_id) and then
+				used_table.item (old_body_id) /= Void
+		end;
+
 end

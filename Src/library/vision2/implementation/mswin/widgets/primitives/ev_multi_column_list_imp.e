@@ -305,7 +305,7 @@ feature -- Status setting
 		do
 			if not first_addition then
 				first_addition := True
-				set_columns (v.columns)
+				set_columns (v.count)
 			end
 			{EV_ITEM_LIST_IMP} Precursor (v)
 		end
@@ -316,7 +316,7 @@ feature -- Status setting
 		do
 			if not first_addition then
 				first_addition := True
-				set_columns (v.columns)
+				set_columns (v.count)
 			end
 			{EV_ITEM_LIST_IMP} Precursor (v)
 		end
@@ -329,7 +329,7 @@ feature -- Status setting
 		do
 			if not first_addition then
 				first_addition := True
-				set_columns (v.columns)
+				set_columns (v.count)
 			end
 			{EV_ITEM_LIST_IMP} Precursor (v)
 		end
@@ -927,6 +927,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.58  2000/03/23 23:26:23  brendel
+--| Replaced obsolete call.
+--|
 --| Revision 1.57  2000/03/23 18:19:37  brendel
 --| Commented out line that uses internal_text. get back to this.
 --|

@@ -178,6 +178,9 @@ feature {IL_CODE_GENERATOR} -- Access
 	c_module_name: UNI_STRING
 			-- Name of C generated module containing all C externals.
 
+	current_feature_token: INTEGER
+			-- Token of feature being generated in `generate_feature_code'.
+
 feature {NONE} -- Debug info
 
 	dbg_writer: DBG_WRITER
@@ -1649,8 +1652,10 @@ feature -- Features info
 						last_override_token := l_meth_token
 					end
 				end
-				create l_ca_factory
-				l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
+				if not is_override then
+					create l_ca_factory
+					l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
+				end
 			end
 		end
 
@@ -2034,6 +2039,7 @@ feature -- IL Generation
 			i, nb: INTEGER
 			l_is_c_external: BOOLEAN
 			l_sequence_point: like sequence_point
+			l_sequence_point_list: LIST [like sequence_point]
 			l_class_type: CLASS_TYPE
 		do
 			l_meth_token := feature_token (current_type_id, feat.feature_id)
@@ -2069,17 +2075,25 @@ feature -- IL Generation
 				then
 					if is_debug_info_enabled then
 						dbg_writer.open_method (l_meth_token)
-						l_sequence_point := method_sequence_points.item (l_token)
-						dbg_offsets_count := l_sequence_point.integer_item (1)
-						dbg_offsets ?= l_sequence_point.item (2)
-						dbg_start_lines ?= l_sequence_point.item (3)
-						dbg_start_columns ?= l_sequence_point.item (4)
-						dbg_end_lines ?= l_sequence_point.item (5)
-						dbg_end_columns ?= l_sequence_point.item (6)
-						dbg_writer.define_sequence_points (
-							dbg_documents.item (feat.written_in),
-							dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
-							dbg_end_lines, dbg_end_columns)
+						l_sequence_point_list := method_sequence_points.item (l_token)
+						from
+							l_sequence_point_list.start
+						until
+							l_sequence_point_list.after
+						loop
+							l_sequence_point := l_sequence_point_list.item
+							dbg_offsets_count := l_sequence_point.integer_item (1)
+							dbg_offsets ?= l_sequence_point.item (2)
+							dbg_start_lines ?= l_sequence_point.item (3)
+							dbg_start_columns ?= l_sequence_point.item (4)
+							dbg_end_lines ?= l_sequence_point.item (5)
+							dbg_end_columns ?= l_sequence_point.item (6)
+							dbg_writer.define_sequence_points (
+								dbg_documents.item (l_sequence_point.integer_item (7)),
+								dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
+								dbg_end_lines, dbg_end_columns)
+							l_sequence_point_list.forth
+						end
 						generate_local_debug_info (l_token)
 						dbg_writer.close_method
 					end
@@ -2130,9 +2144,11 @@ feature -- IL Generation
 			feat_not_void: feat /= Void
 		local
 			l_meth_token: INTEGER
+			l_sequence_point_list: LINKED_LIST [like sequence_point]
 		do
 			if not feat.is_attribute and not feat.is_c_external and not feat.is_deferred then
 				l_meth_token := implementation_feature_token (current_type_id, feat.feature_id)
+				current_feature_token := l_meth_token
 				start_new_body (l_meth_token)
 
 
@@ -2159,8 +2175,13 @@ feature -- IL Generation
 						dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 						dbg_end_lines, dbg_end_columns)
 					dbg_writer.close_method
-					method_sequence_points.put ([dbg_offsets_count, dbg_offsets, dbg_start_lines,
-						dbg_start_columns, dbg_end_lines, dbg_end_columns], l_meth_token)
+					l_sequence_point_list := method_sequence_points.item (l_meth_token)
+					if l_sequence_point_list = Void then
+						create l_sequence_point_list.make
+						method_sequence_points.put (l_sequence_point_list, l_meth_token)
+					end
+					l_sequence_point_list.extend ([dbg_offsets_count, dbg_offsets, dbg_start_lines,
+						dbg_start_columns, dbg_end_lines, dbg_end_columns, feat.written_in])
 				end
 			end
 		end
@@ -4049,6 +4070,7 @@ feature -- Line info
 				dbg_end_lines.force (n, l_pos)
 				dbg_end_columns.force (1000, l_pos)
 				dbg_offsets_count := l_pos + 1
+				method_body.put_nop
 			end
 		end
 
@@ -4068,6 +4090,39 @@ feature -- Line info
 				dbg_end_lines.force (location.line_number, l_pos)
 				dbg_end_columns.force (location.end_column_position, l_pos)
 				dbg_offsets_count := l_pos + 1
+				method_body.put_nop
+			end
+		end
+
+	flush_sequence_points (a_class_type: CLASS_TYPE) is
+			-- Flush all sequence points.
+		require
+			a_class_type_not_void: a_class_type /= Void
+		local
+			l_sequence_point_list: LINKED_LIST [like sequence_point]
+		do
+			if is_debug_info_enabled then
+				dbg_writer.define_sequence_points (
+					dbg_documents.item (a_class_type.associated_class.class_id),
+					dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
+					dbg_end_lines, dbg_end_columns)
+
+				l_sequence_point_list := method_sequence_points.item (current_feature_token)
+				if l_sequence_point_list = Void then
+					create l_sequence_point_list.make
+					method_sequence_points.put (l_sequence_point_list, current_feature_token)
+				end
+				l_sequence_point_list.extend ([dbg_offsets_count, dbg_offsets, dbg_start_lines,
+					dbg_start_columns, dbg_end_lines, dbg_end_columns,
+					a_class_type.associated_class.class_id])
+
+					-- Reset offsets.
+				create dbg_offsets.make (0, 5)
+				create dbg_start_lines.make (0, 5)
+				create dbg_start_columns.make (0, 5)
+				create dbg_end_lines.make (0, 5)
+				create dbg_end_columns.make (0, 5)
+				dbg_offsets_count := 0
 			end
 		end
 
@@ -5057,8 +5112,14 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 	internal_assemblies: ARRAY [INTEGER]
 			-- Array indexed by class ID that contains assembly token.
 
-	sequence_point: TUPLE [INTEGER, ARRAY [INTEGER], ARRAY [INTEGER], ARRAY [INTEGER],
-			ARRAY [INTEGER], ARRAY [INTEGER]]
+	sequence_point: TUPLE [
+			INTEGER,			-- Offset count
+			ARRAY [INTEGER],	-- Offsets
+			ARRAY [INTEGER],	-- Start lines
+			ARRAY [INTEGER],	-- Start columns
+			ARRAY [INTEGER],	-- End lines
+			ARRAY [INTEGER],	-- End columns
+			INTEGER]			-- Written in class ID
 		is
 			-- For type definition purpose.
 		do
@@ -5072,7 +5133,7 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 	local_info: HASH_TABLE [like local_debug_info, INTEGER]
 			-- Table of `method_token' to local definition.
 
-	method_sequence_points: HASH_TABLE [like sequence_point, INTEGER]
+	method_sequence_points: HASH_TABLE [LINKED_LIST [like sequence_point], INTEGER]
 			-- Table of `method_token' to sequence points definition.
 
 	dbg_documents: ARRAY [DBG_DOCUMENT_WRITER]

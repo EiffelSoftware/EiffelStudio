@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 		do
 			main_window_class_name := "MAIN_WINDOW"
 			application_class_name := "VISION2_APPLICATION"
+			project_name := "VISION2_PROJECT"
 			enable_complete_project
 			enable_grouped_locals
 		end
@@ -55,6 +56,9 @@ feature -- Access
 		
 	attributes_local: BOOLEAN
 		-- Should attributes be generated as locals?
+		
+	project_name: STRING
+		-- Name of project.
 	
 feature -- Basic operation
 
@@ -73,6 +77,7 @@ feature -- Basic operation
 			data.extend ([grouped_locals_string, grouped_locals.out])
 			data.extend ([debugging_output_string, debugging_output.out])
 			data.extend ([attributes_local_string, attributes_local.out])
+			data.extend ([project_name_string, project_name.out])
 			create file_name.make_from_string (project_location)
 			file_name.extend (project_filename)
 			create file_handler
@@ -160,6 +165,13 @@ feature -- Basic operation
 				else
 					attributes_local := False
 				end
+				
+				temp_tuple := data @ 8
+				temp_string ?= temp_tuple @ 2
+				check
+					data_was_string: temp_string /= Void
+				end
+				set_project_name (temp_string)
 			end
 		end
 
@@ -194,6 +206,17 @@ feature -- Status Setting
 		ensure
 			application_class_name.is_equal (name)
 		end
+		
+	set_project_name (name: STRING) is
+			--  Assign `name' to `project_name'.
+		require
+			name_not_void: name /= Void
+		do
+			project_name := name
+		ensure
+			project_name.is_equal (name)
+		end
+		
 		
 	enable_complete_project is
 			-- Assign `True' to `complete_project'.
@@ -260,5 +283,7 @@ feature {NONE} --Implementation
 	debugging_output_string: STRING is "Generate_debugging_output"
 	
 	attributes_local_string: STRING is "Attributes_local"
+	
+	project_name_string: STRING is "Project_name"
 	
 end -- class GB_PROJECT_SETTINGS

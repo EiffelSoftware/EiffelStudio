@@ -15,16 +15,16 @@ inherit
 	
 	EV_BUTTON_IMP
 		redefine
-			make_with_label
+			make_with_text
 		end
         
 creation
 
-        make, make_with_label
+         make_with_text
 
 feature {NONE} -- Initialization
 
-        make_with_label (par: EV_CONTAINER; txt: STRING) is
+        make_with_text (par: EV_CONTAINER; txt: STRING) is
                         -- Create a gtk push button.
                 local
                         a: ANY

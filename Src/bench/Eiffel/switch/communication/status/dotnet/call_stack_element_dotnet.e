@@ -67,8 +67,6 @@ feature -- Filling
 	set_routine (a_chain: ICOR_DEBUG_CHAIN; a_frame: ICOR_DEBUG_FRAME; melted: BOOLEAN; a_address: STRING; 
 			a_dyn_type: CLASS_TYPE; a_org_class: CLASS_C; 
 			a_feature: FEATURE_I; a_il_offset: INTEGER; a_line_number: INTEGER) is
-		local
-			l_icd_il_frame: ICOR_DEBUG_IL_FRAME
 		do
 			icd_chain := a_chain
 			icd_chain.add_ref

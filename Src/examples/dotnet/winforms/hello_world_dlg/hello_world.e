@@ -5,12 +5,9 @@ class
 	HELLO_WORLD
 
 inherit
-
 	WINFORMS_FORM
 		rename
 			make as make_form
-		undefine
-			to_string, finalize, equals, get_hash_code
 		redefine
 			dispose_boolean
 		end
@@ -99,7 +96,7 @@ feature {NONE} -- Implementation
 			end
 			Precursor {WINFORMS_FORM}(a_disposing)
 		rescue
-			retried := true
+			retried := True
 			retry
 		end
 

@@ -56,6 +56,24 @@ feature {NONE} -- Initialization
 			destroy_just_called := True
 		end
 
+feature -- Status report
+
+	pointer_position: EV_COORDINATES is
+			-- Position of the screen pointer.
+		do
+			--|FIXME
+			check fixme: false end
+		end
+
+feature -- Basic operation
+
+	set_pointer_position (x, y: INTEGER) is
+			-- Set `pointer_position' to (`x',`y`).		
+		do
+			--|FIXME
+			check fixme: false end
+		end
+
 feature -- Measurement
 
 	height: INTEGER is
@@ -103,6 +121,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/06 20:12:30  oconnor
+--| added pointer position features
+--|
 --| Revision 1.6  2000/04/04 20:56:14  oconnor
 --| formatting
 --|

@@ -19,6 +19,27 @@ inherit
 create
 	default_create
 
+feature -- Status report
+
+	pointer_position: EV_COORDINATES is
+			-- Position of the screen pointer.
+		do
+			Result := implementation.pointer_position
+		ensure
+			bridge_ok: Result = implementation.pointer_position
+		end 
+
+feature -- Basic operation
+
+	set_pointer_position (x, y: INTEGER) is
+			-- Set `pointer_position' to (`x',`y`).		
+		do
+			implementation.set_pointer_position (x, y)
+		ensure
+			pointer_position_set:
+				pointer_position.x = x and pointer_position.y = y
+		end
+
 feature -- Measurement
 
 	width: INTEGER is
@@ -52,6 +73,11 @@ feature {EV_ANY_I} -- Implementation
 	implementation: EV_SCREEN_I
 			-- Responsible for interaction with the native graphics toolkit.
 
+--| FIXME turn back on when pointer_position is implemented
+--| invariant
+--|	pointer_position_not_negative:
+--|		pointer_position.x >= 0 and pointer_position.y >= 0
+
 end -- class EV_SCREEN
 
 --!-----------------------------------------------------------------------------
@@ -75,6 +101,9 @@ end -- class EV_SCREEN
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/06 20:12:30  oconnor
+--| added pointer position features
+--|
 --| Revision 1.8  2000/03/17 01:23:34  oconnor
 --| formatting and layout
 --|

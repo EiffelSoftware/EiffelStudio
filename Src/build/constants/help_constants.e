@@ -7,7 +7,7 @@ feature -- Message
 		 %(cannot read file: ";
 	contact_ise_message: STRING is
 		")%N%
-		%%NAn error message should always be available.%N% 
+		%%NA help message should always be available.%N% 
 		%Please contact ISE.%N%N";
 
 

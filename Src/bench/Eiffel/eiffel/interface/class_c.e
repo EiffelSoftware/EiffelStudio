@@ -211,7 +211,8 @@ feature
 	build_ast: CLASS_AS_B is
 			-- Parse the file and generate the AST
 		local
-			file: RAW_FILE;
+			file, copy_file: RAW_FILE;
+			f_name: FILE_NAME;
 			class_file_name: STRING;
 			vd21: VD21;
 		do
@@ -237,6 +238,16 @@ feature
 			check
 				file.is_open_read;
 			end;
+				-- Save the source class in a Backup directory
+			if Workbench.automatic_backup then
+				!! f_name.make_from_string (cluster.backup_directory);
+				f_name.extend (lace_class.base_name);
+				!! copy_file.make_open_write (f_name);
+				file.readstream (file.count);
+				file.start;
+				copy_file.putstring (file.laststring);
+				copy_file.close;
+			end
 
 			unique_counter.reset;
 

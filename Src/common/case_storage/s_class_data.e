@@ -7,7 +7,6 @@ indexing
 class S_CLASS_DATA
 
 inherit
-
 	S_LINKABLE_DATA
 		rename
 			make as old_make
@@ -15,15 +14,16 @@ inherit
 			is_equal
 		redefine
 			chart, set_chart
-		end;
-	S_CASE_INFO;
+		end
+
+	S_CASE_INFO
+
 	HASHABLE
 		rename
 			hash_code as view_id
 		end
 
 creation
-
 	make
 
 feature

@@ -182,12 +182,10 @@ feature -- Display
 				category_list.forth
 			end
 
-			attach_forms;
-
 			set_size (500, 550);
 
-			category_list.start;
-			category_list.forth;
+			attach_forms;
+
 			set_delete_command (Current);
 
 			initialize_window;
@@ -218,13 +216,13 @@ feature -- Display
 				category_list.item.reset_content;
 				category_list.forth
 			end
-			category_list.go_to (cur);
-			display_category (category_list.item);
 			if not realized then
 				realize
 			else
 				show
 			end
+			category_list.go_to (cur);
+			display_category (category_list.item);
 			raise
 		end;
 

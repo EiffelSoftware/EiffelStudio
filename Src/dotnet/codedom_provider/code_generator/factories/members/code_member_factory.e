@@ -144,28 +144,6 @@ feature {NONE} -- Components initialization.
 			end
 		end
 
-	initialize_statements (a_statements: SYSTEM_DLL_CODE_STATEMENT_COLLECTION) is
-			-- | Call in loop `generate_statement_from_dom'.
-			-- Generate feature statements from `a_source'.
-		require
-			non_void_routine: current_routine /= Void
-			non_void_statements: a_statements /= Void
-		local
-			i, l_count: INTEGER
-		do
-			from
-				l_count := a_statements.count
-			until
-				i = l_count
-			loop
-				code_dom_generator.generate_statement_from_dom (a_statements.item (i))
-				if last_statement /= Void then
-					current_routine.add_statement (last_statement)
-				end
-				i := i + 1
-			end
-		end
-
 	initialize_member_status (status_attributes: SYSTEM_DLL_MEMBER_ATTRIBUTES) is
 			-- Initialize current feature with `status_attribute'.
 		require

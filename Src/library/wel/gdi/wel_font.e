@@ -42,7 +42,18 @@ feature {NONE} -- Initialization
 			item := cwin_create_font_indirect (a_log_font.item)
 		end
 
-feature -- Access
+feature -- Re-initialisation
+
+	set_indirect (a_log_font: WEL_LOG_FONT) is
+			-- Reset the current font the 'a_log_font' without
+			-- creating new object
+		require
+			a_log_font_not_void: a_log_font /= Void
+		do
+			item := cwin_create_font_indirect (a_log_font.item)
+		end
+
+feature	-- Access
 
 	log_font: WEL_LOG_FONT is
 			-- Log font structure associated to `Current'

@@ -9,6 +9,7 @@ default
 	assertion (require)
 	assertion (ensure)
 	disabled_debug (yes)
+	disabled_debug ("_jfiat")
 	disabled_debug ("activity")
 	disabled_debug ("actual_replication")
 	disabled_debug ("anchored_features")
@@ -66,6 +67,7 @@ default
 	disabled_debug ("documentation")
 	disabled_debug ("dollar")
 	disabled_debug ("editor")
+	disabled_debug ("eifnet_debugger")
 	disabled_debug ("filters")
 	disabled_debug ("fixme")
 	disabled_debug ("flat_short")
@@ -85,6 +87,7 @@ default
 	disabled_debug ("options")
 	disabled_debug ("parse")
 	disabled_debug ("profile_convert")
+	disabled_debug ("refactor_fixme")
 	disabled_debug ("remove_class")
 	disabled_debug ("replication")
 	disabled_debug ("sep_debug")
@@ -286,7 +289,6 @@ external
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\libpng.lib",
-		"$(EIFFEL_SRC)\C\minilzo\minilzo.obj",
 		"$(EIFFEL_SRC)\C\ipc\ewb\ewb.lib",
 		"$(EIFFEL_SRC)\C\ipc\shared\ipc.lib",
 		"$(EIFFEL_SRC)\C\idrs\idr.lib",

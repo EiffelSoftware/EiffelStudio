@@ -136,8 +136,6 @@ external
 
 	object:
 		"$(EIFFEL_SRC)/C/bench/libcompiler.a",
-        "$(EIFFEL_SRC)/C/platform/libplatform.a",
-        "$(EIFFEL_SRC)/C/minilzo/minilzo.o"
-
+        "$(EIFFEL_SRC)/C/platform/libplatform.a"
 
 end

@@ -252,7 +252,6 @@ external
 		"$(EIFFEL_SRC)/C/ipc/ewb/libewb.a",
 		"$(EIFFEL_SRC)/C/ipc/shared/libipc.a",
 		"$(EIFFEL_SRC)/C/platform/libplatform.a",
-		"$(EIFFEL_SRC)/C/minilzo/minilzo.o",
 		"$(EIFFEL_SRC)/C/idrs/libidr.a",
 		"$(EIFFEL_SRC)/library/event/spec/$(ISE_PLATFORM)/lib/io_watcher.o",
 		"$(EIFFEL_SRC)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a",

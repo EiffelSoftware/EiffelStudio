@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 
 feature -- Event - command association
 	
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_return_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed 
 			-- when the text field is activated, ie when the user
 			-- press the enter key.
@@ -91,7 +91,7 @@ feature -- Event - command association
 
 feature -- Event -- removing command association
 
-	remove_activate_commands is
+	remove_return_commands is
 			-- Empty the list of commands to be executed
 			-- when the text field is activated, ie when the user
 			-- press the enter key.

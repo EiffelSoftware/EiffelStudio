@@ -50,10 +50,9 @@ href="dll.html#TOP"><IMG
 align=right alt=TOP border=1 src="styles/top.gif"></A> 
 <P>The ISE Eiffel compiler offers now the possibility to generate a <B>dynamic 
 shared library</B> of the system. </P>
-<P>Thanks to this dynamic library, the user will be able to call an eiffel 
-feature from a C program, by using the real name of the feature.</P>
+<P>Thanks to this dynamic library, the user will be able to call an Eiffel feature from a C program, by using the real name of the feature.</P>
 <P>The user can generate a DLL <I>(*.dll)</I> of the system on windows, and a 
-shared library <I>(*.so)</I> on unix.</P>
+shared library <I>(*.so)</I> on Unix.</P>
 <P>For that, the user has to <I>describe</I> what he want to <I>export</I> in 
 its dynamic library. This is done via the definition file <I>(*.def)</I> in 
 which the user will specify the feature he wants to export.</P>
@@ -63,7 +62,7 @@ name=def></A>
 <H2>The Definition File</H2><A 
 href="dll.html#TOP"><IMG 
 align=right alt=TOP border=1 src="styles/top.gif"></A> 
-<P>The syntax is pretty simple when you undertsand what you need to export a 
+<P>The syntax is pretty simple when you understand what you need to export a 
 feature: you need the name of the <B>feature</B>, the name of the concerned 
 <B>class</B>, and the name of a <B>creation procedure</B>, what is optional is 
 to specify an <B>index</B>, and an <B>alias</B>. The index is mainly to create a 
@@ -88,7 +87,10 @@ DLL for windows, and the alias to export the feature under a different name.</P>
     <TR>
       <TD><B>Alias_part</B></TD>
       <TD bgColor=#ffffe8>"<B>Alias</B>" 
-<I>alias_name</I></TD></TR></TBODY></TABLE></UL>
+<I>alias_name</I></TD></TR>
+    <TR>
+      <TD><b>Call_type_part</b></TD>
+      <TD bgColor=#ffffe8>"<b>call_type</b>" <i>call_type_name</i></TD></TR></TBODY></TABLE></UL>
 <H3>Example</H3>
 <UL>
   <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0>
@@ -97,7 +99,8 @@ DLL for windows, and the alias to export the feature under a different name.</P>
       <TD><FONT size=+1><FONT color=purple>ROOT_CLASS <FONT 
         color=green>(make): foo <FONT color=black><B>@</B><FONT color=blue> 4 
         <FONT color=black>Alias <FONT color=blue>my_foo 
-        </FONT></FONT></FONT></FONT></FONT></FONT></FONT></TD></TR></TBODY></TABLE></UL>
+        </FONT></FONT></FONT></FONT></FONT></FONT><font color="blue"> </font>call_type<font color="blue">
+        __stdcall</font></FONT></TD></TR></TBODY></TABLE></UL>
 <H3>Constraint</H3>
 <UL>
   <UL>
@@ -109,7 +112,10 @@ DLL for windows, and the alias to export the feature under a different name.</P>
     <LI><U>on the alias name:</U> 
     <UL>It must be a valid name for a C function. </UL>
     <LI><U>on the index:</U> 
-    <UL>It must be strictly positive. </UL></LI></UL>
+    <UL>It must be strictly positive. </UL>
+    <LI><U>on the call type:</U> 
+    <UL>It must be a valid call type for the targeted platform (useful for
+      Windows only). </UL></LI></UL>
   <P>
   <LI>For each feature you will need to specify a <B>class</B>, a <B>creation 
   procedure</B>,and a <B>feature</B>. 
@@ -117,7 +123,7 @@ DLL for windows, and the alias to export the feature under a different name.</P>
     <LI>If the feature is a creation procedure then do not specify any creation, 
     it will use the feature as creation. For example <B>ROOT_CLASS: make</B>. 
     <LI>If the class has no creation procedure, do not specify any creation. 
-    </LI></UL></LI></UL>
+    </LI></UL>
 <H3>The definition file</H3>
 <UL>
   <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0 width=500>
@@ -204,12 +210,12 @@ name=c_level></A>
 <H2>At the C level</H2><A 
 href="dll.html#TOP"><IMG 
 align=right alt=TOP border=1 src="styles/top.gif"></A> 
-<P>Basically, once the eiffel definition file is created, the compiler will 
-generate a set of files.<BR><FONT color=red>To generate the Dynamic library, go 
-to the <I>EIFGEN/W_code</I> or <I>EIFGEN/F_code</I> directory, and type <B>make 
-dynlib</B> (or nmake on windows). </FONT><BR><FONT color=#888888 
-size=-1><U>Nota:</U> to generate these files, you have to open at least once 
-your definition file, during your current session, this way the compiler will 
+    <P>Basically, once the Eiffel definition file is created, the compiler will 
+generate a set of files and will compile them to generate the Dynamic
+    library into the <I>EIFGEN/W_code</I> or <I>EIFGEN/F_code</I>  directory.</P>
+    <P><FONT color=#888888 
+size=-1><U>Note:</U> to generate and compile these files, you have to open at least once 
+your definition file, during your current session, this way EiffelBench will 
 know which one to use, if you do not specify any definition file, nothing will 
 be generated. </FONT></P>
 <P>The set of files is composed of: </P>

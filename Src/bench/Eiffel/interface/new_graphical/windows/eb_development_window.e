@@ -3011,12 +3011,6 @@ feature {EB_TOOL} -- Implementation / Commands
 	print_cmd: EB_PRINT_COMMAND
 			-- Command to print the content of editor with focus
 
-	dotnet_import_cmd: EB_DOTNET_IMPORT_CMD is
-			-- Manage .Net assemblies.
-		do
-			Result := debugger_manager.dotnet_import_cmd
-		end
-		
 	eac_browser_cmd: EB_OPEN_EAC_BROWSER_CMD is
 			-- Command to display the eac browser
 		do

@@ -25,12 +25,14 @@ feature -- Access
 
 	text_length: INTEGER is
 			-- Length of the text in `Current'.
-		deferred
+		do
+			Result := text.count
+		ensure
+			Result_not_negative: Result >= 0
 		end
 
 	selected_text: STRING is
 			-- Text currently selected in `Current'.
-		require
 		do
 			Result := text.substring (selection_start, selection_end)
 		end
@@ -49,19 +51,16 @@ feature -- Status report
 
 	is_editable: BOOLEAN is
 			-- Is the text editable by the user?
-		require
 		deferred
 		end
 
 	caret_position: INTEGER is
 			-- Current position of the caret.
-		require
 		deferred
 		end
 
 	has_selection: BOOLEAN is
 			-- Does `Current' have a selection?
-		require
 		deferred
 		end
 
@@ -87,7 +86,6 @@ feature -- Status report
 
 	valid_caret_position (pos: INTEGER): BOOLEAN is
 			-- Is `pos' a valid position for the caret?
-		require
 		do
 			Result := pos >= 1 and pos <= text_length + 1			
 		end
@@ -177,7 +175,6 @@ feature -- Basic operation
 
 	deselect_all is
 			-- Unselect the current selection.
-		require
 		deferred
 		ensure
 			has_no_selection: not has_selection

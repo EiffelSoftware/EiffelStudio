@@ -6,9 +6,9 @@
 */
 
 
-#include "eif_project.h"
 #include "eif_config.h"
-#include "eif_path_name.h"	/* this includes eif_portable.h */
+#include "eif_path_name.h"	/* includes eif_portable.h */
+#include "eif_project.h"
 
 #ifdef EIF_WINDOWS
 #include <windows.h>
@@ -30,8 +30,16 @@
 #include "eif_eiffel.h"			/* For Windows and OS2 */
 #include "eif_lmalloc.h"
 
+#ifdef EIF_VMS
+#include <lib$routines>
+#include <dvidef>
+#include <ssdef>
+#pragma message disable (NEEDCONSTEXT)	/* skip non-constant address warnings */
+#pragma message disable (ADDRCONSTEXT)	/* skip non-constant address warnings */
+#define DX_BUF(d,buf) DX d = { sizeof buf, DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)&buf }
+#endif
 
-#if defined EIF_WINDOWS || defined EIF_OS2
+#if defined EIF_WINDOWS || defined EIF_OS2 || defined EIF_VMSxxx
 rt_public EIF_BOOLEAN eif_is_file_valid (EIF_POINTER);
 rt_public EIF_BOOLEAN eif_is_directory_name_valid (EIF_POINTER);
 rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_POINTER);
@@ -101,7 +109,7 @@ rt_public EIF_BOOLEAN eif_is_directory_valid(EIF_POINTER p)
 	eif_free(s);
 	return result;
 
-#elif defined (__VMS)
+#elif defined EIF_VMS
 	/* first check to see if p includes a ] */
 	/* in fact, the last character should be ] */
 	if ( p[strlen(p)-1] != ']')		/* end with ] */
@@ -134,8 +142,21 @@ rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_POINTER p)
 	return EIF_FALSE;
 #elif defined EIF_OS2
 	/* To implement */
-#elif defined (__VMS)
-	/* To implement */
+
+#elif defined EIF_VMS
+	if (p && *p && p[strlen(p)-1] == ':' ) {
+	    /* ***VMS_FIXME*** */
+	    long ret;
+	    DX_BLD (dev_dx, p, strlen(p));
+	    char resbuf[256];	/* this size should be a symbolic somehwere */
+	    DX_BLD (res_dx, resbuf, sizeof resbuf);	/* result is zero filled */
+	    unsigned short reslen;
+	    VMS_STS sts = lib$getdvi (&DVI$_DISPLAY_DEVNAM, 0, &dev_dx, 0, &res_dx, &reslen);
+	    if (VMS_SUCCESS(sts) || sts == SS$_NOSUCHDEV)
+		return EIF_TRUE;
+	}
+	return EIF_FALSE;
+
 #else
 		/* Unix */
 	return (*p == '\0');
@@ -159,14 +180,21 @@ rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_POINTER p)
 	for (s = p; *s; s++)
 		if ((*s == '\\') || (*s == '*') || (*s == '?') || (*s == ':')) 
 				return EIF_FALSE;
-
 	return EIF_TRUE;
-#elif defined (__VMS)
-	/* To implement */
+
+#elif defined EIF_VMS
+	/* VMS filenames are of the form [ <name> ] [ . [ <ext> ] ] */
+	/* where <name> and <ext> start with an alphabetic and may be followed */
+	/* by up to 38 alphanumeric chars. Alphabetic are A-Z, $, _.   */
+	/* but we want to allow unix syntax also */
+
+	/* ***VMS_FIXME*** */
+	return EIF_TRUE;
+
 #else
 		/* Unix implement */
 	return EIF_TRUE;
-#endif
+#endif /* platform */
 }
 
 rt_public EIF_BOOLEAN eif_is_extension_valid (EIF_POINTER p)
@@ -178,8 +206,12 @@ rt_public EIF_BOOLEAN eif_is_extension_valid (EIF_POINTER p)
 		return EIF_FALSE;
 
 	return eif_is_file_name_valid (p);
-#elif defined (__VMS)
-	/* To implement */
+
+#elif defined EIF_VMS
+	
+	/* ***VMS_FIXME*** */
+	return EIF_TRUE;
+
 #else
 		/* Unix implement */
 	return EIF_TRUE;
@@ -209,8 +241,12 @@ rt_public EIF_BOOLEAN eif_is_file_valid (EIF_POINTER p)
 	if (!eif_is_file_name_valid (c+1))
 		return EIF_FALSE;
 	return eif_is_directory_valid (s);
-#elif defined (__VMS)
+
+#elif defined EIF_VMS
 	/* To implement */
+
+	/* ***VMS_FIXME*** */
+	return EIF_TRUE;
 #else
 		/* Unix implement */
 	return EIF_TRUE;
@@ -222,7 +258,7 @@ rt_public EIF_BOOLEAN eif_is_directory_name_valid (EIF_POINTER p)
 		/* Test to see if `p' is a valid directory name (no parent directory part) */
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return eif_is_file_name_valid (p);
-#elif defined (__VMS)
+#elif defined EIF_VMS
 	/* For VMS, allow "subdir" or "[.subdir]" or "dev:[sub.subdir]" */
 	if ( strchr( (char *)p,'[') != NULL) /* if it has a [ ... */
 		if ( p[strlen(p)-1] != ']')	/* ... end with ] */
@@ -241,8 +277,8 @@ rt_public EIF_BOOLEAN eif_path_name_compare(EIF_POINTER s, EIF_POINTER t, EIF_IN
 		/* Test to see if `s' and `t' represent the same path name */
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return EIF_TEST(!strnicmp(s, t, length));
-#elif defined (EIF_VMS)
-	/** **FIXME** **VMS** implement this routine for VMS */
+#elif defined EIF_VMS
+	/** **VMS_FIXME** **VMS** implement this routine for VMS */
 	return EIF_TEST (!strncasecmp(s, t, length) );
 #else	/* Unix */
 	return EIF_TEST(!strncmp(s, t, length));
@@ -343,7 +379,7 @@ rt_public EIF_BOOLEAN eif_case_sensitive_path_names(void)
 		/* Are path names case sensitive? */
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return EIF_FALSE;
-#elif defined (__VMS)
+#elif defined (EIF_VMS)
 	return EIF_FALSE;
 #else
 		/* Unix */
@@ -354,7 +390,7 @@ rt_public EIF_BOOLEAN eif_case_sensitive_path_names(void)
 rt_public EIF_REFERENCE eif_current_dir_representation(void)
 {
 		/* String representation of Current directory */
-#ifdef __VMS
+#ifdef EIF_VMS
 	return RTMS("[]");
 #else
 	return RTMS(".");
@@ -382,7 +418,7 @@ rt_public EIF_REFERENCE eif_home_directory_name(void)
 		/* String representation of $HOME */
 #ifdef EIF_WIN_31
 	return NULL;
-#elif defined (__VMS)
+#elif defined (EIF_VMS)
 	return RTMS(getenv("SYS$LOGIN"));
 #else
 	return RTMS(getenv("HOME"));
@@ -394,7 +430,7 @@ rt_public EIF_REFERENCE eif_root_directory_name(void)
 		/* String representation of the root directory */
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return RTMS("\\");
-#elif defined (__VMS)
+#elif defined (EIF_VMS)
 	return RTMS("[000000]");
 #else
 	return RTMS("/");
@@ -410,7 +446,7 @@ rt_public EIF_REFERENCE eif_volume_name(EIF_POINTER p)
  
 #if defined EIF_WINDOWS || defined EIF_OS2
 	/* To implement */
-#elif defined (__VMS)
+#elif defined (EIF_VMS)
 	/* To implement */
 #else
 	/* Unix */
@@ -431,7 +467,7 @@ rt_public EIF_REFERENCE eif_extracted_paths(EIF_POINTER p)
  
 #if defined EIF_WINDOWS || defined EIF_OS2
 	/* To implement */
-#elif defined (__VMS)
+#elif defined (EIF_VMS)
 	/* To implement */
 #else
 	/* Unix */

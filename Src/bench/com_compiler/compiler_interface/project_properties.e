@@ -17,8 +17,6 @@ inherit
 			evaluate_check,
 			evaluate_loop,
 			evaluate_invariant,
-			working_directory,
-			arguments,
 			debug_info,
 			clusters,
 			compilation_type,
@@ -33,14 +31,9 @@ inherit
 			set_evaluate_check,
 			set_evaluate_loop,
 			set_evaluate_invariant,
-			set_working_directory,
-			set_arguments,
 			set_compilation_type,
 			set_console_application,
 			set_debug_info,
-			add_cluster,
-			remove_cluster,
-			cluster_properties,
 			add_assembly,
 			remove_assembly,
 			update_project_ace_file,
@@ -153,22 +146,6 @@ feature -- Access
 				Result := ace.invariant_evaluated
 			end
 		end
-		
-	working_directory: STRING is
-			-- Working directory.
-		do
-			if is_valid then
-				Result := ace.working_directory
-			end
-		end
-
-	arguments: STRING is
-			-- Program arguments.
-		do
-			if is_valid then
-				Result := ace.arguments	
-			end
-		end
 
 	debug_info: BOOLEAN is
 			-- Generate debug info?
@@ -178,35 +155,10 @@ feature -- Access
 			end
 		end
 
-	clusters: ECOM_VARIANT is
+	clusters: SYSTEM_CLUSTERS is
 			-- List of clusters in current project (list of IEiffelClusterProperties*).
-		local
-			res: ARRAY [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]
-			ecom_res: ECOM_ARRAY [IEIFFEL_CLUSTER_PROPERTIES_INTERFACE]
-			clp: CLUSTER_PROPERTIES
-			ace_res: LINKED_LIST [STRING]
-			i: INTEGER
 		do
-			if is_valid then
-				ace_res := ace.cluster_names
-				if ace_res /= Void and then not ace_res.is_empty then
-					create res.make (1, ace_res.count)
-					from
-						ace_res.start
-						i := 1
-					until
-						ace_res.after
-					loop
-						create clp.make (ace_res.item, ace)
-						res.put (clp, i)
-						i := i + 1
-						ace_res.forth
-					end
-				end
-				create ecom_res.make_from_array (res, 1, <<1>>, <<res.count>>)
-				create Result.make
-				Result.set_unknown_array (ecom_res)
-			end
+			create Result.make (ace)
 		end
 
 	compilation_type: INTEGER is
@@ -265,19 +217,6 @@ feature -- Access
 			end
 		end
 
-	cluster_properties (cluster_name: STRING): IEIFFEL_CLUSTER_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-		local
-			ace_clusters: LINKED_LIST [STRING]
-		do
-			if is_valid then
-				ace_clusters := ace.cluster_names
-				ace_clusters.compare_objects
-				if ace_clusters.has (cluster_name) then
-					create {CLUSTER_PROPERTIES} Result.make (cluster_name, ace)
-				end
-			end
-		end
 		
 feature -- Element change
 
@@ -338,7 +277,7 @@ feature -- Element change
 	set_evaluate_loop (return_value: BOOLEAN) is
 			-- Should loop assertions be evaluated?
 		do
-			if ace.is_valid then
+			if is_valid then
 				ace.set_assertions (evaluate_require, evaluate_ensure, evaluate_check, return_value, evaluate_invariant)
 			end
 		end
@@ -348,26 +287,6 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_assertions (evaluate_require, evaluate_ensure, evaluate_check, evaluate_loop, return_value)
-			end
-		end
-
-	set_working_directory (return_value: STRING) is
-			-- Working directory.
-		do
-			if is_valid then
-				if return_value /= Void and then not return_value.is_empty then
-					ace.set_working_directory (return_value)
-				end				
-			end
-		end
-
-	set_arguments (return_value: STRING) is
-			-- Program arguments.
-		do
-			if is_valid then
-				if return_value /= Void and then not return_value.is_empty then
-					ace.set_arguments (return_value)
-				end				
 			end
 		end
 
@@ -399,30 +318,6 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_line_generation (return_value)
-			end
-		end
-
-	add_cluster (cluster_name: STRING; parent_name: STRING; cluster_path: STRING) is
-			-- Add a cluster to the project.
-		do
-			if is_valid then
-				if
-					cluster_name /= Void and cluster_path /= Void
-				and then
-					not cluster_name.is_empty and not cluster_path.is_empty
-				then
-					ace.add_cluster (cluster_name, parent_name, cluster_path)
-				end
-			end
-		end
-
-	remove_cluster (cluster_name: STRING) is
-			-- Remove a cluster from the project.
-		do
-			if is_valid then
-				if cluster_name /= Void and then not cluster_name.is_empty then
-					ace.remove_cluster (cluster_name)
-				end
 			end
 		end
 
@@ -471,7 +366,7 @@ feature -- Basic operations
 			project_ace: ACE_FILE_ACCESSER
 			project_ace_file: RAW_FILE
 		do
-			if ace.is_valid then
+			if is_valid then
 				create project_ace_file.make (project_ace_file_name)
 				if not project_ace_file.exists then
 					project_ace_file.create_read_write
@@ -497,7 +392,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	ace: ACE_FILE_MODIFIER
+	ace: ACE_FILE_ACCESSER
 			-- Access to the Ace file.
 
 	blank_ace_file (sys_name: STRING): STRING is

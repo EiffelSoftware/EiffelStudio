@@ -217,7 +217,6 @@ feature -- Access
 	insert_text (txt: STRING) is
 			-- Insert `txt' at `caret_position'.
 		local
-			temp_text: STRING
 			previous_caret_position: INTEGER
 			a_string: STRING
 			sel_start, sel_end: INTEGER

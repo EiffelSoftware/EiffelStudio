@@ -38,7 +38,8 @@ feature {NONE} -- Initialization
 			C.gtk_rc_parse(eiffel_to_c ("gtkrc"));
 			C.gdk_rgb_init
 			tooltips := C.gtk_tooltips_new
-			set_tooltip_delay (500) --| FIXME Check this.
+			--| FIXME Check this:
+			set_tooltip_delay (500)
 			idle_actions_agent := (interface.idle_actions)~call ([])
 		end
 
@@ -408,6 +409,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/04/20 18:15:13  brendel
+--| Put comment on single line.
+--|
 --| Revision 1.27  2000/04/20 00:30:10  oconnor
 --| fixed NOTIFY_ACTION_SEQUENCE call in marshaler
 --|

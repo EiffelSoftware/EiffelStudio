@@ -23,7 +23,7 @@ feature -- Customizable parameters
 
 feature	-- Access
 
-	buffer: BUFFER
+	buffer: PC_BUFFER
 			-- Global buffer.
 
 	finished: BOOLEAN_REF

@@ -5,7 +5,7 @@ indexing
     revision: "$Revision$"
 
 class
-	BUFFER
+	PC_BUFFER
 
 create
 	make

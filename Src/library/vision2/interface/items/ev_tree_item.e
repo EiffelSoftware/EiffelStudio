@@ -43,7 +43,7 @@ feature -- Access
 feature -- Status report
 
 	is_selected: BOOLEAN is
-			-- Is the item selected?
+			-- Is `Current' selected in `parent_tree'?
 		require
 			parent_tree_not_void: parent_tree /= Void
 		do
@@ -51,7 +51,7 @@ feature -- Status report
 		end
 
 	is_expanded: BOOLEAN is
-			-- is the item expanded?
+			-- Are items in `Current' displayed?
 		require
 			in_tree: parent_tree /= Void
 		do
@@ -173,6 +173,9 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/04/04 21:37:52  oconnor
+--| comments
+--|
 --| Revision 1.39  2000/03/24 03:10:22  oconnor
 --| formatting and comments
 --|

@@ -9,7 +9,6 @@ inherit
 			descriptor_suffix
 		end;
 	SHARED_SERVER;
-	SHARED_ENCODER;
 	SHARED_BODY_ID;
 	SHARED_BYTE_CONTEXT
 		rename
@@ -185,7 +184,7 @@ feature -- Conveniences
 
 feature -- Generation
 
-	valid_body_ids: TWO_WAY_SORTED_SET [INTEGER];
+	valid_body_ids: TWO_WAY_SORTED_SET [BODY_ID];
 
 	update_valid_body_ids is
 		local
@@ -194,6 +193,7 @@ feature -- Generation
 			feature_i: FEATURE_I
 		do
 			!! valid_body_ids.make;
+			valid_body_ids.compare_objects;
 			current_class := associated_class;
 			feature_table := current_class.feature_table;
 
@@ -215,7 +215,7 @@ feature -- Generation
 		local
 			feature_table: FEATURE_TABLE;
 			current_class: CLASS_C;
-			body_id: INTEGER;
+			body_id: BODY_ID;
 			feature_i: FEATURE_I;
 			file: INDENT_FILE;
 			inv_byte_code: INVARIANT_B;
@@ -554,7 +554,7 @@ feature -- Generation
 						class_type.associated_class.creation_feature;
 				if creation_feature /= Void then
 					creat_name := 
-						clone (Encoder.feature_name (class_type.id.id, creation_feature.body_id))
+						creation_feature.body_id.feature_name (class_type.id)
 					file.putstring (creat_name);
 					file.putchar ('(');
 					file.putstring ("l[0] + ");
@@ -607,7 +607,7 @@ feature -- Generation
 	init_procedure_name: STRING is
 			-- C name of the procedure used to initialize the object
 		do
-			Result := Encoder.feature_name (id.id, Initialization_id);
+			Result := Initialization_body_id.feature_name (id)
 		end;
 
 feature -- Byte code generation
@@ -751,7 +751,7 @@ feature -- Skeleton generation
 					-- routine of the current class type
 				Skeleton_file.putstring ("extern void ");
 				Skeleton_file.putstring (
-					Encoder.feature_name (id.id, Invariant_id));
+					Invariant_body_id.feature_name (id));
 				Skeleton_file.putstring ("();%N%N");
 			end;
 		end;
@@ -801,7 +801,7 @@ feature -- Skeleton generation
 					a_class.assertion_level.check_invariant
 				then
 					Skeleton_file.putstring (
-						Encoder.feature_name (id.id, Invariant_id));
+						Invariant_body_id.feature_name (id));
 				else
 					Skeleton_file.putstring ("(void (*)()) 0");
 				end;
@@ -1057,8 +1057,7 @@ feature -- Precompilation
 
 	is_precompiled: BOOLEAN is
 		do
-			Result := id.is_precompiled and
-				not Compilation_modes.is_precompiling
+			Result := id.is_precompiled
 		end;
 
 feature -- DLE
@@ -1146,7 +1145,7 @@ feature -- DLE
 					a_class.assertion_level.check_invariant
 				then
 					Skeleton_file.putstring (
-						Encoder.feature_name (id.id, Invariant_id))
+						Invariant_body_id.feature_name (id))
 				else
 					Skeleton_file.putstring ("(void (*)()) 0")
 				end;
@@ -1217,20 +1216,17 @@ feature -- DLE
 						r_id := creation_feature.rout_id_set.first;
 						rout_info := System.rout_info_table.item (r_id);
 						Skeleton_file.putint (rout_info.origin.id);
-						Skeleton_file.putstring
-							("node->static_id = ")
+						Skeleton_file.putstring ("node->static_id = ")
 						Skeleton_file.putint (rout_info.offset)
 					else
 						Skeleton_file.putint (0);
-						Skeleton_file.putstring
-							("node->static_id = (int32) 0")
+						Skeleton_file.putstring ("node->static_id = (int32) 0")
 					end;
 					Skeleton_file.putchar (';');
 					Skeleton_file.new_line;
 				else
 						-- Creation feature id if any.
-					Skeleton_file.putstring
-						("node->cn_creation_id = ");
+					Skeleton_file.putstring ("node->cn_creation_id = ");
 					Skeleton_file.putstring ("(int32) ");
 					creation_feature := a_class.creation_feature;
 					if creation_feature /= Void then

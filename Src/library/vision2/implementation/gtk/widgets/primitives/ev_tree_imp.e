@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 			C.gtk_widget_show (list_widget)
 			
 			create ev_children.make (0)
-				-- Make initial hash table with room for 100 child pointers, may be increased later.
+				-- Make initial hash table with room for 1000 child pointers, may be increased later.
 		
 			create tree_node_ptr_table.make (100)
 			C.gtk_clist_set_row_height (list_widget, 0)
@@ -679,7 +679,6 @@ feature {NONE} -- Implementation
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
 			item_imp.set_item_and_children (NULL)
-		--	item_imp.insert_pixmap
 			item_imp.check_branch_pixmaps
 			ev_children.force (item_imp)
 			update_pnd_status
@@ -706,7 +705,10 @@ feature {NONE} -- Implementation
 
 				-- Remove all items (Eiffel part)
 			ev_children.wipe_out
+
+			child_array.wipe_out
 			tree_node_ptr_table.clear_all
+			
 			index := 0
 
 			update_pnd_status

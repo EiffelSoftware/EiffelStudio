@@ -16,7 +16,6 @@ inherit
 		redefine
 			implementation,
 			parent,
-			set_parent,
 			parent_needed
 		end
 
@@ -40,20 +39,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: EV_WINDOW is
+	parent: EV_UNTITLED_WINDOW is
 			-- The parent of the Current widget
 			-- Can be Void
 		do
 			Result ?= {EV_PRIMITIVE} Precursor
-		end
-
-feature -- Element change
-
-	set_parent (par: EV_UNTITLED_WINDOW) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		do
-			implementation.set_parent (par)
 		end
 
 feature -- Assertion

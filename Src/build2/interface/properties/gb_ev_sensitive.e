@@ -61,8 +61,17 @@ feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
+			-- Note that we must query the _I, as there is no way to know
+			-- if the widget was really disabled by the user, or by its
+			-- parent except in the interface.
+		local
+			sensitive_i: EV_SENSITIVE_I
 		do
-			if not first.is_sensitive then
+			sensitive_i ?= first.implementation
+			check
+				sensitive_i_not_void: sensitive_i /= Void
+			end
+			if sensitive_i.internal_non_sensitive then
 				add_element_containing_boolean (element, is_sensitive_string, objects.first.is_sensitive)
 			end
 		end
@@ -84,7 +93,7 @@ feature {GB_XML_STORE} -- Output
 			end
 		end
 		
-	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+	generate_code (element: XML_ELEMENT; info: GB_GENERATED_INFO): STRING is
 			-- `Result' is string representation of
 			-- settings held in `Current' which is
 			-- in a compilable format.
@@ -97,9 +106,9 @@ feature {GB_XML_STORE} -- Output
 			element_info := full_information @ (is_sensitive_string)
 			if element_info /= Void then
 				if element_info.data.is_equal (True_string) then
-					Result := a_name + ".enable_sensitive"
+					Result := info.name + ".enable_sensitive"
 				else
-					Result := a_name + ".disable_sensitive"
+					Result := info.name + ".disable_sensitive"
 				end
 			end
 		end

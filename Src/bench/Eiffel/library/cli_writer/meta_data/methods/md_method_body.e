@@ -8,9 +8,6 @@ class
 	
 inherit
 	MD_SHARED_OPCODES
-		export
-			{NONE} opcodes
-		end
 
 create {MD_METHOD_WRITER}
 	make
@@ -151,10 +148,20 @@ feature -- Settings
 		
 feature -- Opcode insertion
 
+	put_nop is
+			-- Insert `nop'.
+		require
+			not_yet_written: not is_written
+		do
+			internal_put (feature {MD_OPCODES}.nop.to_integer_8, current_position)
+			current_position := current_position + 1
+		end
+		
 	put_opcode (opcode: INTEGER_16) is
 			-- Insert `opcode'.
 		require
 			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
 		local
 			l_pos, l_incr: INTEGER
 			l_opcodes: like opcodes
@@ -193,6 +200,7 @@ feature -- Opcode insertion
 			-- Insert `opcode' manipulating a metadata token.
 		require
 			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
 		do
 			put_opcode (opcode)
 			add_integer (token)
@@ -202,6 +210,7 @@ feature -- Opcode insertion
 			-- Insert `opcode' manipulating an integer.
 		require
 			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
 		do
 			put_opcode (opcode)
 			internal_put (i, current_position)
@@ -212,6 +221,7 @@ feature -- Opcode insertion
 			-- Insert `opcode' manipulating an integer.
 		require
 			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
 		do
 			put_opcode (opcode)
 			add_integer_16 (i)
@@ -221,6 +231,7 @@ feature -- Opcode insertion
 			-- Insert `opcode' manipulating an integer.
 		require
 			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
 		do
 			put_opcode (opcode)
 			add_integer (i)
@@ -230,6 +241,7 @@ feature -- Opcode insertion
 			-- Insert `opcode' manipulating a real.
 		require
 			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
 		do
 			put_opcode (opcode)
 			add_real (r)
@@ -239,6 +251,7 @@ feature -- Opcode insertion
 			-- Insert `opcode' manipulating a double.
 		require
 			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
 		do
 			put_opcode (opcode)
 			add_double (d)
@@ -248,6 +261,7 @@ feature -- Opcode insertion
 			-- Insert `opcode' manipulating an integer 64.
 		require
 			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
 		do
 			put_opcode (opcode)
 			add_integer_64 (i)
@@ -282,6 +296,7 @@ feature -- Labels manipulation
 			-- Insert `opcode' branching to `label'
 		require
 			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
 		local
 			l_label: MD_LABEL
 			l_jmp: INTEGER
@@ -320,6 +335,7 @@ feature -- Opcode insertion with manual update of `current_stack_depth'.
 			-- Perform call to `feature_token' with proper stack size computation.
 		require
 			not_yet_written: not is_written
+			has_opcodes: opcodes.has (opcode)
 		local
 			l_additional: INTEGER
 		do

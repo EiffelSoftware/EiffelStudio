@@ -48,6 +48,7 @@ feature {NONE} -- Initialzation
 			create Integer_constants.make (4)
 			create deleted_constants.make (4)
 			create all_constant_names.make (4)
+			create all_constants.make (4)
 			all_constant_names.compare_objects
 		end
 
@@ -71,20 +72,8 @@ feature -- Access
 			obejct_comparison_on: Result.object_comparison
 		end
 		
-	all_constants: ARRAYED_LIST [GB_CONSTANT] is
-			-- All constants in system.
-			-- Should only be used for access, not iterated, you 
-			-- should copy `Result' and iterate the copy.
-		local
-			other_list: ARRAYED_LIST [GB_CONSTANT]
-		do
-			Result := clone (integer_constants)
-			other_list := clone (string_constants)
-			Result.start
-			Result.merge_left (other_list)
-		ensure
-			Result_not_void: Result /= Void
-		end
+	all_constants: HASH_TABLE [GB_CONSTANT, STRING]	
+		-- All constants accessible by name.
 
 	integer_constants: ARRAYED_LIST [GB_CONSTANT]
 		-- All integer constants in system.
@@ -133,6 +122,7 @@ feature -- Element change
 				deleted_constants.prune_all (integer_constant)
 			end
 			Constants_dialog.update_for_addition (integer_constant)
+			all_constants.put (integer_constant, integer_constant.name)
 		ensure
 			contained: integer_constants.has (integer_constant)
 			count_increased: integer_constants.count = old integer_constants.count + 1
@@ -149,6 +139,7 @@ feature -- Element change
 				deleted_constants.prune_all (string_constant)
 			end
 			Constants_dialog.update_for_addition (string_constant)
+			all_constants.put (string_constant, string_constant.name)
 		ensure
 			contained: string_constants.has (string_constant)
 			count_increased: string_constants.count = old string_constants.count + 1
@@ -188,6 +179,7 @@ feature {GB_CLOSE_PROJECT_COMMAND} -- Basic operation
 			string_constants.wipe_out
 			all_constant_names.wipe_out
 			Constants_dialog.reset_list
+			all_constants.clear_all
 		end
 
 feature {NONE} -- Implementation

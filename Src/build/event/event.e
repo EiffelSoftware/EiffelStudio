@@ -3,16 +3,15 @@ deferred class EVENT
 
 inherit
 
-	DATA;
-	EVENT_STONE;
-	SHARED_STORAGE_INFO;
-	EB_HASHABLE;
+	DATA
+
+	EVENT_STONE
+
+	SHARED_STORAGE_INFO
+
+	EB_HASHABLE
+
 	SHARED_APPLICATION
-	SHARED_MODE
-		rename
-			current_mode as editing_or_executing_mode
-		end
-	MODE_CONSTANTS
 	
 feature {NONE}
 

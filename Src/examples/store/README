@@ -1,0 +1,23 @@
+
+
+Set of small examples showing how to
+use different EiffelStore capabilities
+
+The suggested order of examples use is
+the following:
+
+1) select
+
+2) insert
+
+3) esql
+
+4) rm2oom
+
+5) oom2rm
+
+6) nesting
+
+7) st_proc
+
+8) convert (to exercise the flat file conversion utilities)

@@ -47,17 +47,14 @@ feature -- Code generation
 	is_special: BOOLEAN is True
 
 	generate is
-		local	
-			h_file: STRING
 		do
 			generate_include_files
-			h_file := class_header_file
-			if not shared_include_queue.has (h_file) then
-				shared_include_queue.extend (h_file)
+			if not shared_include_queue.has (class_header_file) then
+				shared_include_queue.extend (class_header_file)
 				if not context.final_mode then
-					generated_file.putstring ("#include ");
-					generated_file.putstring (h_file);
-					generated_file.new_line;
+					generated_file.putstring ("#include ")
+					generated_file.putstring (class_header_file);
+					generated_file.new_line
 				end
 			end
 			generate_signature

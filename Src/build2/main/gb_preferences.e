@@ -38,17 +38,20 @@ feature -- Basic operations
 			directory: DIRECTORY_NAME
 			file_name: FILE_NAME
 		do
+			--| FIXME Ensure correct handling when used as Envision Wizard.
 			register_basic_graphical_types
 			create file_name.make_from_string (Eiffel_installation_dir_name)
 			file_name.extend ("build")
 			file_name.extend ("config")
 			file_name.extend ("default.xml")
 			initialize (file_name, Eiffel_preferences)
-			directory := Bitmaps_path
+			directory := clone (Bitmaps_path)
 			if eiffel_platform.as_lower.is_equal ("windows") then
+				directory.extend ("ico")
 				Pixmaps_path_cell.put (directory)
 				Pixmaps_extension_cell.put ("ico")
 			else
+				directory.extend ("png")
 				Pixmaps_path_cell.put (directory)
 				Pixmaps_extension_cell.put ("png")
 			end

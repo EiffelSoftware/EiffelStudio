@@ -3284,7 +3284,7 @@ feature {EB_TOOL_WINDOW, EB_EXPLORER_BAR, EB_DEBUGGER_MANAGER} -- Floating tool 
 				all_tool_windows.wipe_out
 			end
 		ensure
-			tool_windows_empty: all_tool_windows.is_empty
+			tool_windows_empty: all_tool_windows /= Void implies all_tool_windows.is_empty
 		end
 		
 		

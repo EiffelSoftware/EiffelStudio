@@ -3,22 +3,18 @@ DELDIR = rd /q /S
 LN = copy 
 RM = del
 CP = copy
-FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\windows\bin\finish_freezing -silent
 EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
 EIFLIB = EIFGEN\W_code\libcecil.lib 
 CFLAGS = -DEIF_WIN32
 LIBS = 
 OBJECT = fext.obj
 
-all: fext.obj compile_eiffel compile_c
+all: fext.obj compile_eiffel mklink
 
 compile_eiffel:
-	$(EC) -freeze
+	$(EC) -freeze -c_compile
 
-compile_c:
-	cd EIFGEN\W_code
-	$(FINISH_FREEZING)
-	cd ..\..
+mklink:
 	$(LN) EIFGEN\W_code\cecil.exe .
 	$(LN) EIFGEN\W_code\cecil.melted .
 

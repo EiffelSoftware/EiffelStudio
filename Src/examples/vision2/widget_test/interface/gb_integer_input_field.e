@@ -75,6 +75,12 @@ feature -- Access
 			Result := text_field.text
 		end
 		
+feature {GB_EV_EDITOR_CONSTRUCTOR}
+
+	update_constant_display (a_value: STRING) is
+			--
+		do
+		end
 
 feature {NONE} -- Implementation
 

@@ -249,7 +249,7 @@ feature -- Basic Operations
 			i: INTEGER
 		do
 			if not l_retried then				
-				create l_cache_folder.make (cache_reader.absolute_path)
+				create l_cache_folder.make (cache_reader.eiffel_assembly_cache_path)
 				if l_cache_folder.exists then
 					l_assemblies := cache_reader.consumed_assemblies
 					
@@ -273,7 +273,7 @@ feature -- Basic Operations
 							end
 							if not l_match then
 									-- there is no entry in cache info so lets remove it
-								l_assembly_path := cache_reader.absolute_path.twin
+								l_assembly_path := cache_reader.eiffel_assembly_cache_path.twin
 								l_assembly_path.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)
 								l_assembly_path.append (l_directories.item)
 								create l_cache_folder.make (l_assembly_path)

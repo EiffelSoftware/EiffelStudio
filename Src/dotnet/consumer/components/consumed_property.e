@@ -12,7 +12,8 @@ inherit
 			make as entity_make
 		redefine
 			eiffelized_consumed_entities,
-			dotnet_name
+			dotnet_name,
+			is_property
 		end
 
 create
@@ -59,6 +60,14 @@ feature {NONE} -- Initialization
 			valid_getter: has_getter implies getter.is_property_or_event
 			setter_set: has_setter implies setter /= Void
 			valid_setter: has_setter implies setter.is_property_or_event
+		end
+		
+feature -- ConsumerWrapper functions
+
+	is_property: BOOLEAN is
+			-- Is `Current' a .Net Property.
+		do
+			Result := True
 		end
 
 feature -- Access

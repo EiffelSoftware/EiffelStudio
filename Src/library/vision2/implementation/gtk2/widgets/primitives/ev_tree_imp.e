@@ -81,19 +81,19 @@ feature {NONE} -- Initialization
 				if previous_selected_item /= Void then
 					previous_selected_item_imp ?= previous_selected_item.implementation
 					if previous_selected_item_imp.deselect_actions_internal /= Void then
-						previous_selected_item_imp.deselect_actions_internal.call (app_implementation.empty_tuple)
+						previous_selected_item_imp.deselect_actions_internal.call (Void)
 					end
 					if deselect_actions_internal /= Void then
-						deselect_actions_internal.call (app_implementation.empty_tuple)
+						deselect_actions_internal.call (Void)
 					end
 				end	
 				if a_selected_item /= Void then
 					a_selected_item_imp ?= a_selected_item.implementation
 					if a_selected_item_imp.select_actions_internal /= Void then
-						a_selected_item_imp.select_actions_internal.call (app_implementation.empty_tuple)
+						a_selected_item_imp.select_actions_internal.call (Void)
 					end
 					if select_actions_internal /= Void then
-						select_actions_internal.call (app_implementation.empty_tuple)
+						select_actions_internal.call (Void)
 					end
 				end
 			end
@@ -162,9 +162,6 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_set_mode (a_selection, feature {EV_GTK_EXTERNALS}.gtk_selection_browse_enum)
 			initialize_pixmaps
 			connect_button_press_switch
-			
-			set_row_height ((App_implementation.default_font_point_height * 2 + 2).max (20))
-				-- We explicitly set the row height to be proportional to the default gtk application font
 		end
 
 	create_pointer_motion_actions: EV_POINTER_MOTION_ACTION_SEQUENCE is

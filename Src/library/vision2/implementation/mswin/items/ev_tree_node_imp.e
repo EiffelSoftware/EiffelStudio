@@ -47,7 +47,8 @@ inherit
 			copy, is_equal
 		redefine
 			interface,
-			set_tooltip
+			set_tooltip,
+			destroy
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
@@ -221,6 +222,7 @@ feature {EV_ANY_I} -- Status setting
 	destroy is
 			-- Destroy `Current'.
 		do
+			Precursor {EV_TOOLTIPABLE_IMP}
 			Precursor {EV_ITEM_IMP}
 			internal_children := Void
 		end
@@ -597,7 +599,7 @@ feature {NONE} -- Implementation
 			-- as for widgets that contain items, there are correct implementations. It is
 			-- of no harm to call this, as it will just do nothing and docking will not occur.
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_NODE

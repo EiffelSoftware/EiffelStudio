@@ -90,7 +90,7 @@ feature {NONE} -- Initialization
 			drawing_area.key_press_actions.extend (agent on_key_pressed_on_drawing_area)
 			drawing_area.key_release_actions.extend (agent on_key_released_on_drawing_area)
 			
-			create autoscroll.make_with_interval (500)
+			create autoscroll.make_with_interval (normal_timeout_interval)
 			autoscroll.actions.extend (agent on_autoscroll_time_out)
 			
 			extend (vertical_box)
@@ -327,6 +327,12 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	normal_timeout_interval: INTEGER is 500
+		-- Normal millesecond timeout interval for autoscrolling
+	
+	scroll_timeout_interval: INTEGER is 50
+		-- Active millesecond timeout interval for autoscrolling
+
 	autoscroll: EV_TIMEOUT
 			-- Timer limiting scrolling speed.
 	
@@ -350,6 +356,8 @@ feature {NONE} -- Implementation
 				resize_if_necessary
 				if is_scroll then
 					scroll_if_necessary
+				elseif autoscroll.interval /= normal_timeout_interval then
+					autoscroll.set_interval (normal_timeout_interval)
 				end
 				check
 					world.is_show_requested
@@ -467,12 +475,15 @@ feature {NONE} -- Implementation
 		local
  			cursor_x, cursor_y, new_value: INTEGER
  			scrolled: BOOLEAN
+ 			da_width, da_height: INTEGER
 		do	
 			if is_autoscroll_enabled then
 				cursor_x := pointer_position.x
 				world.hide
-				if cursor_x > drawing_area.width - autoscroll_border then
-					new_value := horizontal_scrollbar.value_range.upper.min (horizontal_scrollbar.value + ((cursor_x - (drawing_area.width - autoscroll_border))*scroll_speed).truncated_to_integer)
+				da_width := drawing_area.width
+				da_height := drawing_area.height
+				if cursor_x > da_width - autoscroll_border then
+					new_value := horizontal_scrollbar.value_range.upper.min (horizontal_scrollbar.value + ((cursor_x - (da_width - autoscroll_border))*scroll_speed).truncated_to_integer)
 					horizontal_scrollbar.set_value (new_value)
 					scrolled := True
 				end
@@ -482,8 +493,8 @@ feature {NONE} -- Implementation
 					scrolled := True
 				end
 				cursor_y := pointer_position.y
-				if cursor_y > drawing_area.height - autoscroll_border then
-					new_value := vertical_scrollbar.value_range.upper.min (vertical_scrollbar.value + ((cursor_y - (drawing_area.height - autoscroll_border)) * scroll_speed).truncated_to_integer)
+				if cursor_y > da_height - autoscroll_border then
+					new_value := vertical_scrollbar.value_range.upper.min (vertical_scrollbar.value + ((cursor_y - (da_height - autoscroll_border)) * scroll_speed).truncated_to_integer)
 					vertical_scrollbar.set_value (new_value)
 					scrolled := True
 				end
@@ -494,9 +505,7 @@ feature {NONE} -- Implementation
 				end
 				if scrolled then
 					projector.simulate_mouse_move (cursor_x, cursor_y)
-					autoscroll.set_interval (50)
-				else
-					autoscroll.set_interval (500)
+					autoscroll.set_interval (scroll_timeout_interval)
 				end
 				world.show
 			end

@@ -28,6 +28,11 @@ inherit
 		undefine
 			default_create, copy
 		end
+		
+	GB_COMMAND_HANDLER
+		undefine
+			default_create, copy
+		end
 	
 	EV_LIST_ITEM
 
@@ -83,7 +88,12 @@ feature {NONE} -- Implementation
 				end
 				create component.make_with_name (text)
 				component_viewer.set_component (component)
-				component_viewer.show
+					-- We don't call execute on the component viewer command
+					-- as this toggles between states, and we do not want the
+					-- viewer hidden
+				if not component_viewer.is_show_requested then
+					show_hide_component_viewer_command.execute
+				end
 			else
 				create Result.make_with_name (text)
 			end

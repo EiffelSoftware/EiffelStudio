@@ -29,7 +29,7 @@ feature -- Initialization
 			-- Creation of the window.
 		do
 			{EV_WINDOW} Precursor
-			!!button.make (Current)
+			create button.make (Current)
 			set_values
 			set_commands
 		end
@@ -47,12 +47,22 @@ feature -- Status setting
 		local
 			cmd: HELLO_COMMAND
 			arg: EV_ARGUMENT1 [STRING]
+			accelerator: EV_ACCELERATOR
+			key: EV_KEY_CODE
 		do
-			!!arg.make (button.text)
-			!!cmd
+			create cmd
+			create key.make
+
+			-- A direct command
+			create arg.make (button.text)
 			button.add_click_command (cmd, arg)
+
+			-- A command linked to an accelerator
+			create accelerator.make (key.Key_f1, False, False, False)
+			create arg.make ("F1 Key pressed")
+			button.add_accelerator_command (accelerator, cmd, arg)
 		end
-	
+
 end -- class MAIN_WINDOW
 
 --|----------------------------------------------------------------

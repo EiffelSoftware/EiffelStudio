@@ -38,7 +38,7 @@ private char *add_argv();		/* Append one word to the argv[] array */
 public void shfree();			/* Free structure used by argv[] */
 public char **shword();			/* Parse command string and split into words */
 
-extern char *strsave();			/* Save string somewhere in memory */
+extern char *str_save();			/* Save string somewhere in memory */
 
 private int is_separator(c)
 char c;			/* Character to be tested among those in the ifs set */
@@ -108,7 +108,7 @@ char *word;
 	int new_size;
 
 	if (word != (char *) 0) {
-		saved = strsave(word);		/* Save string in memory (duplicata) */
+		saved = str_save(word);		/* Save string in memory (duplicata) */
 		if (saved == (char *) 0)	/* Not enough memory to save string */
 			return (char *) 0;
 	} else

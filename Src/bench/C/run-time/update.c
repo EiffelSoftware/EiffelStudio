@@ -76,7 +76,7 @@ else strcpy (filename, ".");
 strcat(filename, "/.UPDT");
 
 if ((fil = fopen(filename, "r")) == (FILE *) 0) {
-	printf("Error while opening\n");
+	fprintf(stderr, "ISE Eiffel3: could not open .UPDT file\n");
 	exit(0);
 }
 	xfree (filename);

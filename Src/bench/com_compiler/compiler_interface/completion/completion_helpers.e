@@ -137,9 +137,7 @@ feature -- Basic operations
 					if l_feature_table.found then
 						l_type := l_feature_table.found_item.type
 					end
-					if l_type = Void or else l_type.is_void then 
-						Result := l_feature_table
-					else
+					if l_type /= Void and then not l_type.is_void then 
 						targets.start
 						targets.remove
 						Result := recursive_lookup (l_type, targets, l_feature_table)

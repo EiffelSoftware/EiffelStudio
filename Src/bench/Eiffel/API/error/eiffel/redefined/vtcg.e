@@ -38,10 +38,14 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_error_list (e: like error_list) is
-			-- Assign `e' to `error_list'.
+	set_error_list (list: like error_list) is
+			-- Set `list' to `error_list'
+		require
+			list_exists: list /= Void
 		do
-			error_list := e;
-		end;
+			error_list := list
+		ensure
+			error_list: error_list = list
+		end
 
 end -- class VTCG

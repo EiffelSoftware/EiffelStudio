@@ -7,9 +7,9 @@ class
 	EB_DYNAMIC_LIB_TOOL
 
 inherit
-	EB_MULTIFORMAT_EDIT_TOOL
+	EB_EDIT_TOOL
 		rename
-			edit_bar as dynamic_lib_toolbar
+			toolbar as dynamic_lib_toolbar
 --			Dynamic_lib_resources as resources
 		redefine
 			make,
@@ -17,7 +17,7 @@ inherit
 --			build_format_bar, hole,
 --			tool_name, open_cmd_holder, save_cmd_holder,
 --			editable,
- reset, build_interface,
+ reset,
 			close_windows,
 -- resize_action,
  stone,
@@ -31,7 +31,6 @@ inherit
 --			process_feature_error,
 			able_to_edit, format_list,
 			build_file_menu, build_special_menu,
-			close_cmd, save_text,
 			empty_tool_name,
 			close, parse_file,
 			set_default_format,
@@ -52,7 +51,6 @@ feature -- Initialization
 
 	make (man: EB_TOOL_MANAGER) is
 		do
---			resources.add_user (Current)
 			Precursor (man)
  			create stone
 --			set_default_size
@@ -67,21 +65,9 @@ feature -- Initialization
 			set_last_format (format_list.default_format)
 		end
 
-feature {EB_TOOL_MANAGER} -- Initialization
-
-	build_interface is
-		do
-			Precursor
-
---			if resources.command_bar.actual_value = False then
---				dynamic_lib_toolbar.hide
---			end
-			show
-		end
-
 feature -- Representation
 
-	dynamic_lib_exports: HASH_TABLE [LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE],INTEGER]
+	dynamic_lib_exports: HASH_TABLE [LINKED_LIST [DYNAMIC_LIB_EXPORT_FEATURE], INTEGER]
 
 feature -- Properties
 
@@ -103,20 +89,12 @@ feature -- Properties
 			is_clickable := val
 		end
 
---	help_index: INTEGER is 8
-
---	icon_id: INTEGER is
---			-- Icon id of Current window (only for windows)
---		do
---			Result := Interface_names.i_Dynamic_lib_id
---		end
-
 feature -- Access
 
 	format_bar_is_used: BOOLEAN is False
 
 	has_editable_text: BOOLEAN is
-			-- Does Current tool have an editable text window?
+			-- Does Current tool have an editable text area?
 		do
 			Result := True
 		end
@@ -150,13 +128,13 @@ feature -- Status setting
 	set_mode_for_reading_only is
 			-- Set the text mode to be read only.
 		do
-			text_window.set_editable (False)
+			text_area.set_editable (False)
 		end
 
 	set_mode_for_editing is
 			-- Set the text mode to be editable.
 		do
-			text_window.set_editable (True)
+			text_area.set_editable (True)
 		end
 
 feature -- Update
@@ -164,12 +142,11 @@ feature -- Update
 	update_save_symbol is
 			-- Update the save symbol in tool.
 		do
---			if save_cmd /= Void then
---				if Eiffel_dynamic_lib.modified then
---					save_cmd.change_state (False)
---				else
---					save_cmd.change_state (True)
---				end
+			Precursor
+--			if Eiffel_dynamic_lib.modified then
+--				save_cmd.change_state (False)
+--			else
+--				save_cmd.change_state (True)
 --			end
 		end
 	
@@ -195,8 +172,8 @@ feature -- Stone process
 			class_i: CLASS_I
 		do
 			class_i := s.class_i
-			text_window.put_string (class_i.name)
-			text_window.put_string ("%N")
+			text_area.put_string (class_i.name)
+			text_area.put_string ("%N")
 		end
  
 	process_class (s: CLASSC_STONE) is
@@ -204,8 +181,8 @@ feature -- Stone process
 			e_class: CLASS_C
 		do
 			e_class := s.e_class
-			text_window.put_string (e_class.name)
-			text_window.put_string ("%N")
+			text_area.put_string (e_class.name)
+			text_area.put_string ("%N")
 		end
 
 	process_feature (s: FEATURE_STONE) is
@@ -236,7 +213,7 @@ feature -- Stone process
 --			local_showflat_frmt_holder: FORMAT_HOLDER
 --			local_showclick_frmt_holder: FORMAT_HOLDER
 		do
-			display_clickable_dynamic_lib_exports(False)
+			display_clickable_dynamic_lib_exports (False)
 			update_save_symbol
 		end
 
@@ -263,7 +240,7 @@ feature -- Stone process
 			update_save_symbol
 			--reset_stone
 		ensure
-			up_to_date: not text_window.changed
+			up_to_date: not text_area.changed
 			--no_stone: stone = Void
 		end
 
@@ -322,7 +299,7 @@ feature -- Stone process
 							end
 							st.add_string (")")
 						elseif (dl_exp.creation_routine =Void) then
-							st.add_string (" (!!)")
+							st.add_string (" (create)")
 						end
 						if (dl_exp.routine /= Void) then
 							st.add_string (" : ")
@@ -351,16 +328,19 @@ feature -- Stone process
 				dynamic_lib_exports.forth
 			end
 
-			text_window.freeze
-   			text_window.clear_window
-			text_window.process_text (st)
---			text_window.set_top_character_position (0)
- 			text_window.thaw
-			text_window.set_changed(False)
+			text_area.freeze
+   			text_area.clear_window
+			text_area.process_text (st)
+--			text_area.set_top_character_position (0)
+ 			text_area.thaw
+			text_area.set_changed(False)
 		end
 
 	set_default_format is
 			-- Default format of windows.
+			--| FIXME
+			--| Christophe, 18 oct 1999
+			--| Why an if then else? one of the `set_last_format' must be modified
 		local
 		do
 			if stone /= Void then
@@ -390,12 +370,11 @@ feature -- Update
 --			showclick_frmt_holder.set_sensitive (True)
 		end
 
-	parse_file: BOOLEAN is
+	parse_file is
 			-- Parse the file if possible.
-			-- (By default, do nothing).
 		do
 			Eiffel_dynamic_lib.set_modified(False)
-			Result := True
+			update_format
 		end
 
 feature -- Window Settings
@@ -434,53 +413,23 @@ feature -- Graphical Interface
 --			if not shown then
 --				set_default_format
 --				set_default_position
---				init_text_window
+--				init_text_area
 --				show
 --			end
 			raise
 --			set_in_use (True)
 		end
 
-	build_toolbar_menu is
-			-- Build the toolbar menu under the special sub menu.
-		local
---			sep: SEPARATOR
---			toolbar_t: TOGGLE_B
-		do
---			!! sep.make (Interface_names.t_Empty, special_menu)
---			!! toolbar_t.make (dynamic_lib_toolbar.identifier, special_menu)
---			dynamic_lib_toolbar.init_toggle (toolbar_t)
-		end
-
-	create_toolbar (a_parent: EV_CONTAINER) is
-			-- Create a toolbar_parent with parent `a_parent'.
-		local
---			sep: THREE_D_SEPARATOR
-		do
---			!! toolbar_parent.make (new_name, a_parent)
---			!! sep.make (Interface_names.t_Empty, toolbar_parent)
---			toolbar_parent.set_column_layout
---			toolbar_parent.set_free_size	
---			toolbar_parent.set_margin_height (0)
---			toolbar_parent.set_spacing (1)
---			!! dynamic_lib_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
---			if not Platform_constants.is_windows then
---				!! sep.make (Interface_names.t_Empty, toolbar_parent)
---			else
---				dynamic_lib_toolbar.set_height (22)
---			end
-		end
-
 	raise_shell_popup is
-			-- Raise the shell command popup window if it is popped up.
+			-- Raise the shell command popup dialog if it is popped up.
 		local
---			shell_window: SHELL_W
+--			shell_dialog: SHELL_W
 --			shell_cmd: SHELL_COMMAND
 		do
 --			shell_cmd ?= shell.associated_command
---			shell_window := shell_cmd.shell_window
---			if shell_window /= Void and then shell_window.is_popped_up then
---				shell_window.raise
+--			shell_dialog := shell_cmd.shell_dialog
+--			if shell_dialog /= Void and then shell_dialog.is_popped_up then
+--				shell_dialog.raise
 --			end
 		end
 
@@ -500,7 +449,7 @@ feature {NONE} -- Properties Window Properties
  
 	format_label: EV_LABEL
 
-feature {NONE} -- Implemetation Window Settings
+feature {NONE} -- Implementation Window Settings
 
 	set_format_label (s: STRING) is
 			-- Set the format label to `s'.
@@ -513,34 +462,26 @@ feature {NONE} -- Implemetation Window Settings
 	resize_action is 
 			-- If the window is moved or resized, raise
 			-- popups with an exclusive grab.
-			-- Move also the choice window and update the text field.
+			-- Move also the choice dialog and update the text field.
 		do
 			raise
 		end
 
+feature {EB_CLOSE_DYNAMIC_LIB_CMD, EB_OPEN_DYNAMIC_LIB_CMD} -- Commands
 
-feature
-
-	save_text is
-			-- launches the save command, if any.
-		do
-			save_cmd.execute (Void, Void)
-		end
-
-
-feature {NONE, QUIT_DYNAMIC_LIB, OPEN_DYNAMIC_LIB} -- Commands
-
---	open_cmd: COMMAND_HOLDER
-
-	save_cmd: EB_SAVE_FILE_CMD
+--	open_cmd: EB_OPEN_DYNAMIC_LIB_CMD
+--| FIXME
+--| Christophe, 15 oct 1999
+--| Does this class need to be implemented?
 
 	shell_cmd: EB_OPEN_SHELL_CMD
 
 	filter_cmd: EB_FILTER_CMD
 
-feature -- D'OH!
-
-	close_cmd: EB_CLOSE_EDITOR_CMD
+--	close_cmd: EB_CLOSE_DYNAMIC_LIB_CMD
+--| FIXME
+--| Christophe, 15 oct 1999
+--| Does this class need to be implemented?
 
 feature {EB_TOOL_MANAGER} -- Menus Implementation
 
@@ -585,7 +526,7 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 feature {NONE} -- Implementation Graphical Interface
 
-	build_edit_bar (a_toolbar: EV_BOX) is
+	build_toolbar (tb: EV_BOX) is
 		local
 --			quit_cmd: QUIT_DYNAMIC_LIB
 --			quit_button: EB_BUTTON
@@ -599,28 +540,28 @@ feature {NONE} -- Implementation Graphical Interface
 --			save_menu_entry: EB_MENU_ENTRY
 --			history_list_cmd: LIST_HISTORY
 		do
---			!! open_cmd.make (Current)
---			!! open_button.make (open_cmd, dynamic_lib_toolbar)
---			!! open_menu_entry.make (open_cmd, file_menu)
---			!! open_cmd_holder.make (open_cmd, open_button, open_menu_entry)
---			!! save_cmd.make (Current)
---			!! save_button.make (save_cmd, dynamic_lib_toolbar)
---			!! save_menu_entry.make (save_cmd, file_menu)
---			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry)
+--			create open_cmd.make (Current)
+--			create open_button.make (open_cmd, dynamic_lib_toolbar)
+--			create open_menu_entry.make (open_cmd, file_menu)
+--			create open_cmd_holder.make (open_cmd, open_button, open_menu_entry)
+--			create save_cmd.make (Current)
+--			create save_button.make (save_cmd, dynamic_lib_toolbar)
+--			create save_menu_entry.make (save_cmd, file_menu)
+--			create save_cmd_holder.make (save_cmd, save_button, save_menu_entry)
 --			build_save_as_menu_entry
 --			build_print_menu_entry
---			!! quit_cmd.make (Current)
---			!! quit_menu_entry.make (quit_cmd, file_menu)
+--			create quit_cmd.make (Current)
+--			create quit_menu_entry.make (quit_cmd, file_menu)
 --			if General_resources.close_button.actual_value then
---				!! quit_button.make (quit_cmd, dynamic_lib_toolbar)
+--				create quit_button.make (quit_cmd, dynamic_lib_toolbar)
 --			end
---			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
---			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
---			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
+--			create quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+--			create exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
+--			create exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 --			exit_cmd_holder.set_menu_entry (exit_menu_entry)
 --			build_edit_menu (dynamic_lib_toolbar)
 
-			create format_bar.make (a_toolbar)
+			create format_bar.make (tb)
 		end
 
 --	build_format_bar is
@@ -639,30 +580,30 @@ feature {NONE} -- Implementation Graphical Interface
 --			sep: SEPARATOR
 --			sep1, sep2, sep3: THREE_D_SEPARATOR
 --		do
---			!! shell_cmd.make (Current)
---			!! shell_button.make (shell_cmd, dynamic_lib_toolbar)
+--			create shell_cmd.make (Current)
+--			create shell_button.make (shell_cmd, dynamic_lib_toolbar)
 --			shell_button.add_third_button_action
---			!! shell_menu_entry.make (shell_cmd, special_menu)
---			!! shell.make (shell_cmd, shell_button, shell_menu_entry)
+--			create shell_menu_entry.make (shell_cmd, special_menu)
+--			create shell.make (shell_cmd, shell_button, shell_menu_entry)
 --
 --			build_filter_menu_entry
 --
---			!! sep.make (new_name, special_menu)
+--			create sep.make (new_name, special_menu)
 --
 --				-- First we create all objects.
---			!! tex_cmd.make (Current)
---			!! tex_button.make (tex_cmd, dynamic_lib_toolbar)
---			!! tex_menu_entry.make (tex_cmd, format_menu)
---			!! showtext_frmt_holder.make (tex_cmd, tex_button, tex_menu_entry)
+--			create tex_cmd.make (Current)
+--			create tex_button.make (tex_cmd, dynamic_lib_toolbar)
+--			create tex_menu_entry.make (tex_cmd, format_menu)
+--			create showtext_frmt_holder.make (tex_cmd, tex_button, tex_menu_entry)
 --
---			!! click_cmd.make (Current)
---			!! click_button.make (click_cmd, dynamic_lib_toolbar)
---			!! click_menu_entry.make (click_cmd, format_menu)
---			!! showclick_frmt_holder.make (click_cmd, click_button, click_menu_entry)
+--			create click_cmd.make (Current)
+--			create click_button.make (click_cmd, dynamic_lib_toolbar)
+--			create click_menu_entry.make (click_cmd, format_menu)
+--			create showclick_frmt_holder.make (click_cmd, click_button, click_menu_entry)
 --
---			!! hole.make (Current)
---			!! hole_button.make (hole, dynamic_lib_toolbar)
---			!! hole_holder.make_plain (hole)
+--			create hole.make (Current)
+--			create hole_button.make (hole, dynamic_lib_toolbar)
+--			create hole_holder.make_plain (hole)
 --			hole_holder.set_button (hole_button)
 --
 --			create_edit_buttons

@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			-- This has been redefined, as we need to place the EiffelBuild
 			-- interface in the window, and hence need to build the contents
 			-- of the frame differently.
-		require
+		require else
 			main_box_empty: main_box.count=0
 		local
 			title_white_box: EV_HORIZONTAL_BOX	-- Box where is displayed the state title and an icon (white bkgroud).
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 
 			create tuple.make
 			choice_box.set_help_context (~create_help_context (tuple))
-		ensure
+		ensure then
 			main_box_has_at_least_one_element: main_box.count > 0
 		end
 		

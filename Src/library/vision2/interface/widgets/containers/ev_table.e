@@ -474,7 +474,7 @@ feature -- Element change
 			-- cursor was on `v', move to right neighbor.
 		do
 			implementation.remove (v)
-		ensure
+		ensure then
 			not_has_v: not has (v)
 			had_item_implies_parent_void:
 				old has (v) implies v.parent = Void

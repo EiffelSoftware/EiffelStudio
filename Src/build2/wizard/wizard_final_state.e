@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 			"%N%NProject name : " + system_status.current_project_settings.project_name +
 			"%NApplication class : " + system_status.current_project_settings.application_class_name +
 			"%NWindow class : " + system_status.current_project_settings.main_window_class_name
-		ensure
+		ensure then
 			Result /= Void
 		end
 

@@ -502,6 +502,7 @@
 			<TEXT DESCRIPTION="Display confirmation dialog on clearing breakpoints">confirm_clear_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display confirmation dialog when starting the application without stopping at breakpoints">confirm_ignore_all_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display confirmation dialog before converting an old project">confirm_convert_project<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display dialog that warns that text is being loaded and is not editable or clickable.">acknowledge_not_loaded<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Dynamic_data" ICON="icon_preferences_folder" VISIBILITY="hidden">

@@ -561,17 +561,17 @@ feature {NONE} -- Initialization
 			hbox.set_border_width (Layout_constants.Small_border_size)
 
 			create vbox
-			check_check := new_check_button (vbox, "check")
-			require_check := new_check_button (vbox, "require")
+			check_check := new_check_button (vbox, "check", False)
+			require_check := new_check_button (vbox, "require", False)
 			hbox.extend (vbox)
 			
 			create vbox
-			ensure_check := new_check_button (vbox, "ensure")
-			loop_check := new_check_button (vbox, "loop")
+			ensure_check := new_check_button (vbox, "ensure", False)
+			loop_check := new_check_button (vbox, "loop", False)
 			hbox.extend (vbox)
 
 			create vbox
-			invariant_check := new_check_button (vbox, "class invariant")
+			invariant_check := new_check_button (vbox, "class invariant", False)
 			hbox.extend (vbox)
 			
 			Result.extend (hbox)

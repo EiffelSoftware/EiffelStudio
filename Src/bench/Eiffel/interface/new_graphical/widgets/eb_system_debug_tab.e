@@ -423,14 +423,14 @@ feature {NONE} -- Graphical initialization
 			create hbox
 			hbox.set_border_width (Layout_constants.Small_border_size)
 
-			line_generation := new_check_button (hbox, "Line number generation")
+			line_generation := new_check_button (hbox, "Line number generation", True)
 
 			if Has_profiler then
 				create profile_check.make_with_text ("Profiling")
 				hbox.extend (profile_check)
 			end
 
-			trace_check := new_check_button (hbox, "Call tracing")
+			trace_check := new_check_button (hbox, "Call tracing", True)
 
 			Result.extend (hbox)
 		end

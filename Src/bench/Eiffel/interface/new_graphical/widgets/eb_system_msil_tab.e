@@ -466,23 +466,23 @@ feature {NONE} -- Initialization
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			
 			create item_box
-			cls_compliant_check := new_check_button (item_box, "CLS compliant")
+			cls_compliant_check := new_check_button (item_box, "CLS compliant", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
 			
 			create item_box
 			dotnet_naming_convention_check := new_check_button (item_box,
-				"Follow .NET naming guidelines")
+				"Follow .NET naming guidelines", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
 			
 			create item_box
-			verifiable_check := new_check_button (item_box, "Verifiable")
+			verifiable_check := new_check_button (item_box, "Verifiable", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
 			
 			create item_box
-			dll_check := new_check_button (item_box, "Generate DLL")
+			dll_check := new_check_button (item_box, "Generate DLL", False)
 			vbox.extend (item_box)
 			vbox.disable_item_expand (item_box)
 

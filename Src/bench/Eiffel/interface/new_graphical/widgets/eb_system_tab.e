@@ -278,7 +278,7 @@ feature -- Convenience
 			-- Result characters are upper case.
 		end
 
-	new_check_button (box: EV_BOX; st: STRING): EV_CHECK_BUTTON is
+	new_check_button (box: EV_BOX; st: STRING; a_expand: BOOLEAN): EV_CHECK_BUTTON is
 			-- Add check button with title `st' to `box'
 		require
 			box_not_void: box /= Void
@@ -286,6 +286,9 @@ feature -- Convenience
 		do
 			create Result.make_with_text (st)
 			box.extend (Result)
+			if not a_expand then
+				box.disable_item_expand (Result)
+			end
 		ensure
 			result_not_void: Result /= Void
 		end

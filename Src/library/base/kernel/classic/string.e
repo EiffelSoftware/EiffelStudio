@@ -64,6 +64,7 @@ feature -- Initialization
 			non_negative_size: n >= 0
 		do
 			count := 0
+			internal_hash_code := 0
 			if n = 0 then
 				area := empty_area
 			else
@@ -105,6 +106,7 @@ feature -- Initialization
 			if Current /= s then
 				area := s.area.twin
 				count := s.count
+				internal_hash_code := 0
 			end
 		ensure
 			not_shared_implementation: Current /= s implies not shared_with (s)
@@ -122,6 +124,7 @@ feature -- Initialization
 			make_area (length + 1)
 			area.base_address.memory_copy (c_string, length)
 			count := length
+			internal_hash_code := 0
 		end
 
 	from_c (c_string: POINTER) is
@@ -138,6 +141,7 @@ feature -- Initialization
 			end
 			area.base_address.memory_copy (c_string, length)
 			count := length
+			internal_hash_code := 0
 		ensure
 			no_zero_byte: not has ('%/0/')
 			-- characters: for all i in 1..count, item (i) equals
@@ -164,6 +168,7 @@ feature -- Initialization
 				-- from `start_pos' .. `end_pos'.
 			area.base_address.memory_copy (c_string + (start_pos - 1), end_pos - start_pos + 1)
 			count := length
+			internal_hash_code := 0
 		ensure
 			valid_count: count = end_pos - start_pos + 1
 			-- characters: for all i in 1..count, item (i) equals

@@ -39,7 +39,7 @@ feature -- Access
 			p: POINTER
 		do
 			p := gtk_pixmap
-			if p /= Void
+			if p /= Void then
 				Result := eif_object_from_c (p)
 			end
 		end
@@ -122,6 +122,9 @@ end -- EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/03 01:02:29  oconnor
+--| fixed syntax error
+--|
 --| Revision 1.16  2000/03/03 00:59:46  oconnor
 --| erimplemented for new postconditions
 --|

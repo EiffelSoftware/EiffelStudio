@@ -47,8 +47,6 @@ feature -- Access
 			Result.append (header_protector (header_file_name))
 			Result.append ("%N")
 			if not others_forward.is_empty then
-				Result.append (cpp_protector_start)
-				Result.append ("%N")
 				from
 					others_forward.start
 				until
@@ -59,8 +57,6 @@ feature -- Access
 					others_forward.forth
 				end
 				Result.append ("%N%N")
-				Result.append (cpp_protector_end)
-				Result.append ("%N")
 			end
 			Result.append ("%N")
 			from
@@ -73,8 +69,6 @@ feature -- Access
 				Result.append ("%"%N%N")
 				import_files.forth
 			end
-			Result.append (cpp_protector_start)
-			Result.append ("%N%N")
 			from
 				global_variables.start
 			until
@@ -102,8 +96,6 @@ feature -- Access
 				Result.append (functions.item.generated_header_file)
 				functions.forth
 			end
-			Result.append ("%N")
-			Result.append (cpp_protector_end)
 			Result.append ("%N")
 			from
 				import_files_after.start
@@ -133,8 +125,6 @@ feature -- Access
 			Result.append ("%N-----------------------------------------------------------*/%N%N#include %"")
 			Result.append (header_file_name)
 			Result.append ("%"%N%N")
-			Result.append (cpp_protector_start)
-			Result.append ("%N%N")
 			from
 				others_source.start
 			until
@@ -153,8 +143,6 @@ feature -- Access
 				Result.append (functions.item.generated_code)
 				functions.forth
 			end
-			Result.append ("%N")
-			Result.append (cpp_protector_end)
 		end
 
 	can_generate: BOOLEAN is

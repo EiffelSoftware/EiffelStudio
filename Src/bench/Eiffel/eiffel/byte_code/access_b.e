@@ -589,6 +589,7 @@ feature -- Byte code generation
 
 				gen_type ?= cl_type
 				if gen_type /= Void then
+					ba.append_short_integer (context.current_type.generated_id (False))
 					gen_type.make_gen_type_byte_code (ba, true)
 				end
 				ba.append_short_integer (-1)

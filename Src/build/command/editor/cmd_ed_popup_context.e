@@ -1,6 +1,7 @@
 indexing
-	description: "";
-	date: "$Date$";
+	description: "Popup a list of the contexts associated to the %
+					% currently edited instance."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -19,25 +20,25 @@ creation
 
 feature {NONE}
 
-	command_editor: COMMAND_TOOL;
+	command_tool: COMMAND_TOOL
 
 	make (ed: COMMAND_TOOL; a_parent: COMPOSITE) is
 		do
-			command_editor := ed;
-			make_visible (a_parent);
+			command_tool := ed
+			make_visible (a_parent)
 			add_activate_action (Current, Void)
-		end;
+		end
 
 
 	create_focus_label is
 		do
 			set_focus_string (Focus_labels.popup_context_label)
-		end;
+		end
 
 	symbol: PIXMAP is
 		do
-			Result := Pixmaps.popup_context_pixmap;
-		end;
+			Result := Pixmaps.popup_context_pixmap
+		end
 			
 feature {NONE}
 
@@ -45,24 +46,27 @@ feature {NONE}
 
 	execute (arg: ANY) is
 		local
-			list: LINKED_LIST [CONTEXT];
+			list: LINKED_LIST [CONTEXT]
+			cmd: CMD
 		do
-			if command_editor.current_command /= Void then
-				list := command_editor.current_command.contexts_with_instances
-				!! edit_list.make (command_editor)
+			
+			cmd := command_tool.edited_command
+			if cmd /= Void then
+				list := cmd.contexts_with_instances
+				!! edit_list.make (command_tool)
 				edit_list.popup_with_list (list)
 			end
-		end;
+		end
 
 feature
 
 	update_popup_position is
 		do
 			if edit_list /= Void and then not edit_list.destroyed then
-				edit_list.update_position (real_x, real_y);
-				edit_list.raise;
+				edit_list.update_position (real_x, real_y)
+				edit_list.raise
 			end
-		end;
+		end
 
 
 end -- class CMD_ED_POPUP_CONTEXT

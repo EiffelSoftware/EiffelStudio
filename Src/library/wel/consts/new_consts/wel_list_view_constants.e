@@ -931,6 +931,30 @@ feature -- Flags defining search in a list view.
 			--
 			-- Declared in Windows as LVFI_NEARESTXY
 
+feature -- List View Item Rectangle constants.
+
+	Lvir_bounds: INTEGER is 0
+			-- Returns the bounding rectangle of the entire item, including 
+			-- the icon and label. 
+			--
+			-- Declared in Windows as LVIR_BOUNDS
+
+	Lvir_icon: INTEGER is 1
+			-- Returns the bounding rectangle of the icon or small icon. 
+			--
+			-- Declared in Windows as LVIR_ICON
+
+	Lvir_label: INTEGER is 2
+			-- Returns the bounding rectangle of the item text. 
+			--
+			-- Declared in Windows as LVIR_LABEL
+
+	Lvir_selectbounds: INTEGER is 3
+			-- Returns the union of the LVIR_ICON and LVIR_LABEL rectangles, 
+			-- but excludes columns in report view. 
+			--
+			-- Declared in Windows as LVIR_SELECTBOUNDS
+
 feature -- Validation
 
 	is_valid_list_view_flag (a_flag: INTEGER): BOOLEAN is

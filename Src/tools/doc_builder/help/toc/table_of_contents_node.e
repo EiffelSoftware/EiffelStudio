@@ -139,7 +139,6 @@ feature -- Element change
 			if l_node /= Void then
 				children.start
 				children.prune (l_node)
-				print ("deleted " + a_id.out)
 			end
 		end
 		

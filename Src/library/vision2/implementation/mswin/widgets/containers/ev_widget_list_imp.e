@@ -24,7 +24,7 @@ feature -- Access
 			-- Current item.
 		do
 			if ev_children.item /= Void then
-				Result ?= ev_children.item.interface
+				Result := ev_children.item.interface
 				check
 					Result_not_void: Result /= Void
 				end
@@ -296,6 +296,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/21 02:31:04  brendel
+--| Replaced unnecessary assignment attempt with assignment.
+--|
 --| Revision 1.14  2000/03/14 16:22:48  brendel
 --| Fixed bug in put_front.
 --|

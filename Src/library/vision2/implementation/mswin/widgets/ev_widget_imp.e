@@ -33,7 +33,7 @@ inherit
 
 	EV_WIDGET_EVENTS_CONSTANTS_IMP
 
-	EV_ACCELERATOR_HANDLER_IMP
+	--EV_ACCELERATOR_HANDLER_IMP
 
 	EV_PICK_AND_DROPABLE_IMP
 		redefine	
@@ -920,6 +920,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.61  2000/03/21 02:29:07  brendel
+--| Replaced unnecessary assignment attempt with assignment.
+--|
 --| Revision 1.60  2000/03/20 23:23:23  pichery
 --| - Added `on_contained' notion. A widget is now notified when it is put
 --|   in a container (usefull for pixmap)

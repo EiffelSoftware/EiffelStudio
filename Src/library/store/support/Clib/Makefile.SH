@@ -56,8 +56,8 @@ libsupport.a: $(OBJS)
 	mkdir -p ../../spec/$(PLATFORM)/lib
 	$(RM) $@
 	$(AR) $@ $(OBJS)
+	$(RANLIB) $@
 	$(MV) $@ ../../spec/$(PLATFORM)/lib
-	$(RANLIB) ../../spec/$(PLATFORM)/lib/$@
 	$(MAKE) clobber
 
 ########################################################################

@@ -22,16 +22,10 @@ feature -- Access
 
 	Product_name: STRING is "EiffelBuild"
 		-- Name of system displayed to users.
-		
-	Visual_studio_project_argument: STRING is "visualstudio_project"
-		-- Command line argument to start from VisualStudio.
 	
 	Class_argument: STRING is "class"
 		-- Command line argument to start as class only.
 		
-	Envision_build_wizard_title: STRING is "Advanced GUI Project Wizard"
-		-- title displayed in wizard mode.
-	
 feature -- Menu texts.
 	
 	Gb_file_menu_text: STRING is "&File"
@@ -620,9 +614,6 @@ feature -- Warning Dialogs
 	invalid_characters1: STRING is "EiffelBuild only supports standard ascii characters in the range 0 to 127.%NThe project contains the following unsupported ascii characters : %N%N"
 	
 	invalid_characters2: STRING is "%N%NIf you continue, these characters will be replaced by the character '*' in the save file (not the open project).%N%NDo you wish to continue saving?"
-	
-	vs_invalid_characters1: STRING is "The Advanced Gui Project Wizard only supports standard ascii characters in the range 0 to 127.%NThe project contains the following unsupported ascii characters : %N%N"
-	vs_invalid_characters2: STRING is "%N%NIn the saved project files, each of these will be replaced with '*'."
 	
 	cannot_delete_as_still_referenced_multiple: STRING is "The top level object you are attempting to delete is still referenced by multiple objects."
 	

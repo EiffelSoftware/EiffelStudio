@@ -78,7 +78,6 @@ feature -- Basic operation
 			dialog: EV_MESSAGE_DIALOG
 			warning_text: STRING
 			abort_saving: BOOLEAN
-			is_vs: BOOLEAN
 			warning_dialog: EV_WARNING_DIALOG
 		do
 			create generation_settings
@@ -96,15 +95,10 @@ feature -- Basic operation
 				-- Check for invalid characters.
 				-- It is only possible to perform this at this stage, as the save file must have been generated
 				-- so that we have access to the text so we may search for invalid characters.
-			is_vs := visual_studio_information.is_visual_studio_wizard
 			invalid_chars := invalid_characters (last_string.string)
 			if not invalid_chars.is_empty then
 				clear_status_bar
-				if is_vs then
-					warning_text := vs_invalid_characters1.twin
-				else
-					warning_text := invalid_characters1.twin
-				end
+				warning_text := invalid_characters1.twin
 				from
 					invalid_chars.start
 				until
@@ -118,13 +112,8 @@ feature -- Basic operation
 						warning_text.append (", ")
 					end
 				end
-				if is_vs then
-					warning_text.append (vs_invalid_characters2)
-					create {EV_INFORMATION_DIALOG} dialog.make_with_text (warning_text)
-				else
-					warning_text.append (invalid_characters2)
-					create {EV_CONFIRMATION_DIALOG} dialog.make_with_text (warning_text)
-				end
+				warning_text.append (invalid_characters2)
+				create {EV_CONFIRMATION_DIALOG} dialog.make_with_text (warning_text)
 				dialog.show_modal_to_window (main_window)
 				if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 					replace_invalid_characters (last_string.string)

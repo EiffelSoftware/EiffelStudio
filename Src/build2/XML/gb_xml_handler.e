@@ -262,16 +262,10 @@ feature {NONE} -- Implementation
 	component_filename: FILE_NAME is
 			-- Location of component file.
 		do
-			if visual_studio_information.is_visual_studio_wizard then
-				create Result.make_from_string (visual_studio_information.wizard_installation_path)
-				Result.extend ("components")
-				Result.extend ("components.xml")
-			else
-				create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
-				Result.extend ("build")
-				Result.extend ("components")
-				Result.extend ("components.xml")
-			end
+			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
+			Result.extend ("build")
+			Result.extend ("components")
+			Result.extend ("components.xml")
 		ensure
 			Result_exists: Result /= Void and not Result.is_empty
 		end
@@ -280,12 +274,8 @@ feature {NONE} -- Implementation
 			-- Display current save progress as percentage of `total' based on `written',
 			-- unless Build is running in Wizard mode.
 		do
-				-- The wizard version of Build has to perform a real store at the end,
-				-- so we avoid displaying the output if we are in wizard mode.
-			if not System_status.is_wizard_system then
-				set_status_text ("Saving : " + (((written / total) * 95).truncated_to_integer.out) + "%%")
-				environment.application.process_events
-			end
+			set_status_text ("Saving : " + (((written / total) * 95).truncated_to_integer.out) + "%%")
+			environment.application.process_events
 		end
 		
 	pipe_callback: XM_TREE_CALLBACKS_PIPE is

@@ -21,6 +21,9 @@ inherit
 			is_equal
 		end
 
+creation
+	make
+
 feature -- Access
 
 	value: STRING is

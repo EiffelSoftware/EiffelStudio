@@ -379,16 +379,6 @@ feature -- Element change
 			column_alignment_changed (an_alignment, a_column)
 		end
 		
-
-	set_row_height (a_height: INTEGER) is
-			-- Set all rows to `a_height'.
-		require
-			height_valid: a_height > 0
-		deferred
-		ensure
-			a_height_assigned: a_height = row_height
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	expand_column_count_to (a_columns: INTEGER) is
@@ -569,6 +559,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.50  2000/04/21 16:32:56  rogers
+--| Removed set_row_height.
+--|
 --| Revision 1.49  2000/04/21 00:59:13  king
 --| Changed alignment code to prevent setting of first column
 --|

@@ -85,112 +85,19 @@ feature {NONE} -- Implementation
 
 end -- class EV_VERTICAL_SEPARATOR_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.11  2001/07/14 12:46:25  manus
---| Replace --! by --|
---|
---| Revision 1.10  2001/07/14 12:16:30  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.9  2001/06/07 23:08:17  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.5.8.13  2000/11/02 05:02:13  manus
---| Updated comment on EV_SYSTEM_PEN_IMP to show that after using one of these WEL_PEN
---| object the Vision2 implementor needs to call `delete' on them to free the allocated
---| GDI object. Updated code of classes which was not doing it.
---|
---| Revision 1.5.8.12  2000/10/27 02:37:57  manus
---| Correct bad merge of `interface'.
---| Call `delete' instead of `dispose'.
---|
---| Revision 1.5.8.11  2000/10/12 15:50:27  pichery
---| Added reference tracking for GDI objects to decrease
---| the number of GDI objects alive.
---|
---| Revision 1.5.8.10  2000/09/26 03:57:59  manus
---| Better drawing of vertical/horizontal separator when they are bigger than their
---| default minimum size.
---|
---| Revision 1.5.8.9  2000/09/08 19:36:50  manus
---| Removed `is_raised' and `is_flat' from the implementation since they have been removed from
---| the interface.
---|
---| Revision 1.5.8.8  2000/08/11 18:27:51  rogers
---| Fixed copyright clauses. Now use ! instead of |. Formatting.
---|
---| Revision 1.5.8.7  2000/08/08 02:35:13  manus
---| New resizing policy by calling `ev_' instead of `internal_', see
---|   `vision2/implementation/mswin/doc/sizing_how_to.txt'.
---| Redo the painting algorithm so that it is not transparent.
---|
---| Revision 1.5.8.6  2000/07/21 22:12:56  pichery
---| Added drawing operations for flat separators.
---|
---| Revision 1.5.8.5  2000/06/22 19:05:19  pichery
---| - Added the style `is_flat'
---|
---| Revision 1.5.8.4  2000/06/19 21:20:55  rogers
---| Removed FIXME NOT_REVIEWED. Comments, formatting.
---|
---| Revision 1.5.8.3  2000/05/08 19:45:50  brendel
---| Optimized implementation of on_paint.
---|
---| Revision 1.5.8.2  2000/05/03 22:21:28  pichery
---| - Replaced calls to `width'/`height' to calls to
---|   `wel_width'/`wel_height'.
---| - Cosmetics / Optimizations using local variables
---|
---| Revision 1.5.8.1  2000/05/03 19:09:51  oconnor
---| mergred from HEAD
---|
---| Revision 1.7  2000/02/19 05:45:01  oconnor
---| released
---|
---| Revision 1.6  2000/02/14 11:40:45  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.5.10.4  2000/02/08 07:21:03  brendel
---| Minor changes to run through compiler.
---| Still needs major revision.
---|
---| Revision 1.5.10.3  2000/01/27 19:30:31  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.5.10.2  2000/01/11 19:53:31  rogers
---| Modified to comply with the major vision2 changes. See diff for
---| redefinitions. Added interface.
---|
---| Revision 1.5.10.1  1999/11/24 17:30:35  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.5.6.2  1999/11/02 17:20:10  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
---|----------------------------------------------------------------

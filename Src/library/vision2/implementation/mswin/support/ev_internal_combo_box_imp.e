@@ -206,84 +206,19 @@ feature {NONE} -- Implementation
 
 end -- class EV_INTERNAL_COMBO_FIELD_IMP
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.9  2001/07/14 12:46:25  manus
---| Replace --! by --|
---|
---| Revision 1.8  2001/07/14 12:16:29  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.7  2001/06/18 22:24:01  rogers
---| Improved comments.
---|
---| Revision 1.6  2001/06/07 23:08:13  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.2.8.6  2000/08/11 19:10:17  rogers
---| Fixed copyright clause. Now use ! instead of |. Formatting.
---|
---| Revision 1.2.8.5  2000/08/08 01:37:20  manus
---| No need for defining a custom made messges handling, we simply need to use
---| the new one from WEL.
---|
---| Revision 1.2.8.4  2000/06/12 22:04:43  rogers
---| Removed FIXME NOT_REVIEEWED. Comments, formatting.
---|
---| Revision 1.2.8.3  2000/05/09 00:49:41  manus
---| Update with recent WEL changes:
---| - replace `register_window (Current)' by `register_current_window'
---| - replace `windows.item (p)' by `window_of_item (p)'
---|
---| Revision 1.2.8.2  2000/05/07 03:53:09  manus
---| No need to set `exists' explicitely since it is not an attribute anymore and
---| we are using `exists' of WEL_ANY that computes this value automatically
---| without user intervention.
---|
---| Revision 1.2.8.1  2000/05/03 19:09:17  oconnor
---| mergred from HEAD
---|
---| Revision 1.4  2000/03/07 02:39:12  oconnor
---| released
---|
---| Revision 1.3  2000/02/14 11:40:41  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.2.10.3  2000/01/29 02:17:44  rogers
---| Changed reference to make_with_pointer to make_by_pointer.
---|
---| Revision 1.2.10.2  2000/01/27 19:30:14  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.2.10.1  1999/11/24 17:30:21  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.2.6.3  1999/11/02 17:20:08  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
---|----------------------------------------------------------------

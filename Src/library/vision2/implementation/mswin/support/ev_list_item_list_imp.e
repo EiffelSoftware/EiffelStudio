@@ -187,91 +187,19 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_LIST_ITEM_LIST_IMP
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
-
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.10  2001/07/14 12:46:25  manus
---| Replace --! by --|
---|
---| Revision 1.9  2001/07/14 12:16:29  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.8  2001/06/07 23:08:13  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.6.2.10  2000/08/21 20:27:21  rogers
---| Added remove_pixmap_of_child as deferred.
---|
---| Revision 1.6.2.8  2000/07/28 02:42:06  pichery
---| Fixed bug in `set_text' of EV_LIST_ITEM_IMP (changes
---| were not reflected in the parent if the item was already in a
---| list).
---|
---| Revision 1.6.2.7  2000/07/24 23:58:12  rogers
---| Now inherits EV_LIST_ITEM_LIST_ACTION_SEQUENCES_IMP.
---|
---| Revision 1.6.2.6  2000/07/18 20:40:59  rogers
---| Added pixmaps_size_changed. This was previously identical in both
---| EV_COMBO_BOX_IMP and Ev_LIST_IMP.
---|
---| Revision 1.6.2.5  2000/07/17 18:06:10  rogers
---| Added remove_image_list as deferred.
---|
---| Revision 1.6.2.4  2000/07/14 17:47:07  rogers
---| Added image_list for association of pixmaps, and added setup_image_list
---| as deferred.
---|
---| Revision 1.6.2.3  2000/06/12 23:04:50  rogers
---| Removed FIXME NOT_REVIEWED. COmments, formatting.
---|
---| Revision 1.6.2.2  2000/05/10 20:01:02  king
---| Integrated interface
---|
---| Revision 1.6.2.1  2000/05/03 19:09:18  oconnor
---| mergred from HEAD
---|
---| Revision 1.6  2000/04/20 01:11:18  pichery
---| Complete Refactoring.
---|
---| Revision 1.5  2000/04/18 22:35:57  pichery
---| Reborn removed file
---|
---| Revision 1.3  2000/04/05 21:16:11  brendel
---| Merged changes from LIST_REFACTOR_BRANCH.
---|
---| Revision 1.2.2.1  2000/04/05 19:53:31  brendel
---| Removed calls to ev_children by graphical insert/remove features.
---|
---| Revision 1.2  2000/03/30 18:10:32  brendel
---| Added deferred features `top_index', `item_height' and
---| `set_pointer_style'.
---|
---| Revision 1.1  2000/03/30 17:31:58  brendel
---| New class as common list ancestor for EV_LIST_IMP and EV_COMBO_BOX_IMP.
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
 --|----------------------------------------------------------------
 

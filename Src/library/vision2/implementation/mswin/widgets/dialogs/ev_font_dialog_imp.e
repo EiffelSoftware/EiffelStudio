@@ -207,80 +207,18 @@ feature {EV_ANY_I}
 end -- class EV_FONT_DIALOG_IMP
 
 --|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
 
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.12  2001/07/14 12:16:30  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.11  2001/06/14 18:45:33  rogers
---| Corrected spelling mistake. familys is now families.
---|
---| Revision 1.10  2001/06/14 17:24:33  rogers
---| changed preferred_faces to preferred_familys.
---|
---| Revision 1.9  2001/06/07 23:08:14  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.7.4.9  2001/05/20 10:31:27  pichery
---| In `set_font', when the given font has no face name, use the first choice
---| in `preferred_faces'.
---|
---| Revision 1.7.4.8  2001/02/01 18:22:34  rogers
---| Removed fixme not for release and not reviewed. title is now a constant.
---| Comments.
---|
---| Revision 1.7.4.7  2001/01/31 20:05:27  rogers
---| Exported interface to EV_ANY_I.
---|
---| Revision 1.7.4.6  2001/01/31 19:54:31  rogers
---| Redefined interface. Initial implementation of font.
---|
---| Revision 1.7.4.4  2000/11/02 03:18:44  manus
---| Removed non-used local variables
---|
---| Revision 1.7.4.3  2000/09/06 02:29:20  manus
---| Added missing stuff from new EV_POSITIONNED_I.
---|
---| Revision 1.7.4.2  2000/08/08 02:20:15  manus
---| On a dialog messages should be left aligned.
---|
---| Revision 1.7.4.1  2000/05/03 19:09:22  oconnor
---| mergred from HEAD
---|
---| Revision 1.8  2000/02/14 11:40:42  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.7.6.2  2000/01/27 19:30:18  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.7.6.1  1999/11/24 17:30:25  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.7.2.3  1999/11/02 17:20:08  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
---|----------------------------------------------------------------

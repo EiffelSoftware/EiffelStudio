@@ -69,63 +69,19 @@ feature -- Access
 
 end -- class EV_GDI_ALLOCATED_BRUSHES
 
---|-----------------------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.8  2001/07/14 12:46:25  manus
---| Replace --! by --|
---|
---| Revision 1.7  2001/07/14 12:16:29  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.6  2001/06/07 23:08:13  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.5.2.8  2001/02/25 18:20:24  pichery
---| Renammed debug clause
---|
---| Revision 1.5.2.7  2000/10/24 15:27:25  pichery
---| Improved the cache system for caching GDI objects. It now
---| takes into account the date of the last access to the object.
---|
---| Revision 1.5.2.6  2000/10/16 14:27:35  pichery
---| Improved WEL_BRUSH and WEL_PEN caching
---|
---| Revision 1.5.2.5  2000/10/12 15:50:24  pichery
---| Added reference tracking for GDI objects to decrease
---| the number of GDI objects alive.
---|
---| Revision 1.5.2.4  2000/09/13 00:15:25  manus
---| Improved debugging output to include number of items in cache.
---|
---| Revision 1.5.2.3  2000/08/11 19:12:43  rogers
---| Fixed copyright clause. Now use ! instead of |. Formatting.
---|
---| Revision 1.5.2.2  2000/08/03 17:40:35  rogers
---| Comments. Added copyright clause and CVS log.
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
---|----------------------------------------------------------------

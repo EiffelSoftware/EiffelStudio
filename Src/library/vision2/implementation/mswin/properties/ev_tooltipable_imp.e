@@ -106,91 +106,19 @@ feature {EV_ANY_I} -- Implementation
 
 end -- EV_TOOLTIPABLE_IMP
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.5  2001/07/14 12:46:24  manus
---| Replace --! by --|
---|
---| Revision 1.4  2001/07/14 12:16:29  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.3  2001/06/07 23:08:13  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.1.2.12  2001/03/30 02:11:48  rogers
---| Added a check that internal_tooltip is not void in `remove_tooltip'.
---|
---| Revision 1.1.2.11  2001/01/19 00:59:32  rogers
---| Remove_tooltip no longer attempts to do anything when `Current' does not
---| have a tooltip. Previously would crash when calling remove_tooltip without
---| having set a tooltip.
---|
---| Revision 1.1.2.10  2000/11/07 23:00:29  rogers
---| Internal_tooltip is now destroyed before being re-created.
---|
---| Revision 1.1.2.9  2000/11/07 00:13:21  rogers
---| Set_tooltip now prunes an existing tooltip from `all_tooltips' within
---| EV_APPLICATION_IMP.
---|
---| Revision 1.1.2.8  2000/11/07 00:01:40  rogers
---| set_tooltip now deletes the existing tool associated to `Current' before
---| setting a new one. Previously calling set_tooltip twice on `Current'
---| would set two tooltips. Only one tooltip is allowed with this interface.
---|
---| Revision 1.1.2.7  2000/06/28 00:15:11  rogers
---| Added and improved comments.
---|
---| Revision 1.1.2.6  2000/06/27 23:25:13  rogers
---| Implemented remove_tooltip.
---|
---| Revision 1.1.2.5  2000/06/27 22:42:49  rogers
---| Removed unrefernced local variables from set_tooltip.
---|
---| Revision 1.1.2.4  2000/06/27 22:17:21  rogers
---| Now inherits WEL_TTI_CONSTANTS. Implemented tooltip and set_tooltip.
---| Tooltips currently only work for primitives.
---|
---| Revision 1.1.2.3  2000/05/10 23:10:00  king
---| Integrated tooltipable changes
---|
---| Revision 1.1.2.2  2000/05/04 19:14:05  brendel
---| Removed inheritance of non-existent EV_ANY_IMP.
---|
---| Revision 1.1.2.1  2000/05/04 19:00:52  king
---| initial
---|
---| Revision 1.1.2.2  2000/05/04 18:50:31  king
---| Corrected set_tooltip
---|
---| Revision 1.1.2.1  2000/05/03 19:08:41  oconnor
---| mergred from HEAD
---|
---| Revision 1.1  2000/05/02 22:15:40  king
---| Initial
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
---|----------------------------------------------------------------

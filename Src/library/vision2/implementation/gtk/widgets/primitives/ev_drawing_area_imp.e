@@ -54,8 +54,11 @@ feature {NONE} -- Initialization
 			-- and `Precursor' initialization.
 		do
 			Precursor
-			connect_signal_to_actions ("expose-event",
-				interface.expose_actions)
+			connect_signal_to_actions (
+				"expose-event",
+				interface.expose_actions,
+				default_translate
+			)
 		end
 
 feature {NONE} -- Implementation
@@ -120,6 +123,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/04 20:54:08  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.11  2000/03/03 03:59:03  pichery
 --| added feature `flush'
 --|
@@ -220,7 +226,6 @@ end -- class EV_DRAWING_AREA_IMP
 --|
 --| Revision 1.6.2.2  1999/11/02 17:20:04  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

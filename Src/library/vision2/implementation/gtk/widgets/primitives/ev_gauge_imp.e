@@ -40,9 +40,13 @@ feature {NONE} -- Initialization
 			--| widgets that inherit twice from EV_WIDGET_IMP,
 			--| so initialize does not have to be called again.
 		do
-			real_signal_connect (adjustment, "value-changed",
+			real_signal_connect (
+				adjustment,
+				"value-changed",
 				--(interface.change_actions)~call)
-				~value_changed_handler)
+				~value_changed_handler,
+				default_translate
+			)
 		end
 
 feature -- Access
@@ -56,13 +60,17 @@ feature -- Access
 	step: INTEGER is
 			-- Value by which `value' is increased after `step_forward'.
 		do
-			Result := C.gtk_adjustment_struct_step_increment (adjustment).rounded
+			Result := C.gtk_adjustment_struct_step_increment (
+				adjustment
+			).rounded
 		end
 
 	leap: INTEGER is
 			-- Value by which `value' is increased after `leap_forward'.
 		do
-			Result := C.gtk_adjustment_struct_page_increment (adjustment).rounded
+			Result := C.gtk_adjustment_struct_page_increment (
+				adjustment
+			).rounded
 		end
 
 	minimum: INTEGER is
@@ -74,7 +82,9 @@ feature -- Access
 	maximum: INTEGER is
 			-- Highest value of the gauge.
 		do
-			Result := C.gtk_adjustment_struct_upper (adjustment).rounded - page_size
+			Result := C.gtk_adjustment_struct_upper (
+				adjustment
+			).rounded - page_size
 		end
 
 	range: INTEGER_INTERVAL is
@@ -164,10 +174,17 @@ feature -- Element change
 					--| VB 02/15/2000 Bug/feature in GTK:
 					--| When lower equals upper, and minimum is decreased
 					--| value is decreased as well. This is evil, but
-					--| can be worked around by temporarily increasing the maximum.
-					C.set_gtk_adjustment_struct_upper (adjustment, maximum + page_size + 1)
+					--| can be worked around by temporarily increasing
+					--| the maximum.
+					C.set_gtk_adjustment_struct_upper (
+						adjustment,
+						maximum + page_size + 1
+					)
 					C.gtk_adjustment_changed (adjustment)
-					C.set_gtk_adjustment_struct_upper (adjustment, maximum + page_size - 1)
+					C.set_gtk_adjustment_struct_upper (
+						adjustment,
+						maximum + page_size - 1
+					)
 				end
 				C.set_gtk_adjustment_struct_lower (adjustment, a_minimum)
 				C.gtk_adjustment_changed (adjustment)
@@ -181,7 +198,10 @@ feature -- Element change
 			-- Set `maximum' to `a_maximum'.
 		do
 			if maximum /= a_maximum then
-				C.set_gtk_adjustment_struct_upper (adjustment, a_maximum + page_size)
+				C.set_gtk_adjustment_struct_upper (
+					adjustment,
+					a_maximum + page_size
+				)
 				C.gtk_adjustment_changed (adjustment)
 			end
 		end
@@ -191,7 +211,10 @@ feature -- Element change
 		do
 			if minimum /= a_range.lower or else maximum /= a_range.upper then
 				C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
-				C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper + page_size)
+				C.set_gtk_adjustment_struct_upper (
+					adjustment,
+					a_range.upper + page_size
+				)
 				C.gtk_adjustment_changed (adjustment)
 			end
 		end
@@ -201,7 +224,10 @@ feature -- Element change
 			-- Set `value' to `a_range.lower'.
 		do
 			C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
-			C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper + page_size)
+			C.set_gtk_adjustment_struct_upper (
+				adjustment,
+				a_range.upper + page_size
+			)
 			C.gtk_adjustment_changed (adjustment)
 			C.gtk_adjustment_set_value (adjustment, a_range.lower)
 			C.gtk_adjustment_value_changed (adjustment)
@@ -255,6 +281,9 @@ end -- class EV_GAUGE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/04 20:54:08  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.11  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|
@@ -271,7 +300,8 @@ end -- class EV_GAUGE_I
 --| Moved implementating of feature `range' to _IMP.
 --|
 --| Revision 1.8  2000/02/15 00:43:40  brendel
---| Removed connection to "changed" signal, since we only want the "value-changed".
+--| Removed connection to "changed" signal, since we only want the
+--| "value-changed".
 --|
 --| Revision 1.7  2000/02/14 22:19:51  brendel
 --| Changed range instead of taking two integers to take an INTEGER_INTERVAL.
@@ -316,7 +346,6 @@ end -- class EV_GAUGE_I
 --|
 --| Revision 1.4.2.2  1999/11/02 17:20:04  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

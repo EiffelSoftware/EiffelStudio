@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Call to both precursors.
 		do
-			signal_connect ("activate", ~on_activate)
+			signal_connect ("activate", ~on_activate, default_translate)
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			initialize_menu_item_box
@@ -168,6 +168,9 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/04/04 20:50:18  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.43  2000/03/27 18:04:59  brendel
 --| Redefined `text', `set_text' and `remove_text' as specified in the note
 --| in EV_MENU_ITEM.
@@ -224,7 +227,6 @@ end -- class EV_MENU_ITEM_IMP
 --|
 --| Revision 1.36.2.2  1999/11/02 17:20:02  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -24,7 +24,8 @@ feature {NONE} -- Initialization
 			-- Create a window with a parent.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_file_selection_new (eiffel_to_c ("Select file")))
+			set_c_object
+				(C.gtk_file_selection_new (eiffel_to_c ("Select file")))
 			C.gtk_object_ref (c_object)
 			C.gtk_window_set_modal (c_object, True)
 			filter := "*.*"
@@ -37,11 +38,15 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				C.gtk_file_selection_struct_ok_button (c_object),
 				"clicked",
-				~on_ok)
+				~on_ok,
+				default_translate
+			)
 			real_signal_connect (
 				C.gtk_file_selection_struct_cancel_button (c_object),
 				"clicked",
-				~on_cancel)
+				~on_cancel,
+				default_translate
+			)
 			is_initialized := True
 		end
 
@@ -50,7 +55,9 @@ feature -- Access
 	file_name: STRING is
 			-- Full name of currently selected file including path.
 		do
-			if selected_button /= Void and then selected_button.is_equal ("OK") then
+			if
+				selected_button /= Void and then selected_button.is_equal ("OK")
+			then
 				create Result.make (0)
 				Result.from_c (C.gtk_file_selection_get_filename (c_object))
 			end
@@ -79,7 +86,8 @@ feature -- Status report
 		do
 			if file_name /= Void then
 				Result := clone (file_name)
-				Result.head (Result.count - Result.mirrored.index_of ('/', 1) + 1)
+				Result.head
+					(Result.count - Result.mirrored.index_of ('/', 1) + 1)
 			end
 		end
 
@@ -133,6 +141,9 @@ end -- class EV_FILE_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/04 20:51:57  oconnor
+--| updated signal connection for new marshaling scheme
+--|
 --| Revision 1.9  2000/03/01 00:02:39  brendel
 --| Changed "pressed" signal to "clicked" which fixed a bug occurring when
 --| a dialog is shown inside the signal of another dialog.
@@ -170,7 +181,6 @@ end -- class EV_FILE_DIALOG_IMP
 --|
 --| Revision 1.5.2.2  1999/11/02 17:20:03  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

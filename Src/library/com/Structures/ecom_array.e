@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			-- with lower indices in each dimension as described by `some_lower_indices'
 			-- and element count in each dimension as described by `some_element_counts'.
 		require
-			valid_dimension_count: a_dimension_count > 0
+			valid_dimension_count: a_dimension_count >= 0
 			valid_lower_indices: some_lower_indices /= Void and then 
 					some_lower_indices.count = a_dimension_count and
 					some_lower_indices.lower = 1
@@ -246,7 +246,7 @@ feature -- Status report
 				i := i + 1
 			end
 		ensure
-			valid_count: Result > 0
+			valid_count: Result >= 0
 		end
 
 	are_element_counts_consistent: BOOLEAN is
@@ -308,24 +308,23 @@ feature -- Removal
 feature -- Resizing
 
 	resize (n_upper_indices: ARRAY [INTEGER]) is
-			-- Rearrange array so that it can accommodate `new_upper_indices'
+			-- Rearrange array so that it can accommodate `n_upper_indices'
 			-- without losing any previously entered items
 			-- or changing their indices;
 			-- do nothing if possible.
 		require
 			are_indices_large_enough (n_upper_indices)
 		local
-			i, an_upper: INTEGER
+			i, a_count: INTEGER
 			new_upper_indices, new_element_counts, an_index: ARRAY [INTEGER]
 			new: like Current
 			need_resize: BOOLEAN
 		do
 			from
 				i := 1
-				an_upper := 1
+				a_count := 1
 				create new_upper_indices.make (1, dimension_count)
 				create new_element_counts.make (1, dimension_count)
-				create an_index.make (1, dimension_count)
 			variant
 				dimension_count - i + 1
 			until
@@ -340,16 +339,16 @@ feature -- Resizing
 					new_upper_indices.put (upper_indices.item (i), i)
 					new_element_counts.put (element_counts.item (i), i)
 				end
-				an_upper := an_upper * new_element_counts.item (i)
-				an_index.put (lower_indices.item (i), i)
+				a_count := a_count * new_element_counts.item (i)
 				i := i + 1
 			end
 
 			if need_resize then
-				create new.make (dimension_count, lower_indices, new_upper_indices)
+				create new.make (dimension_count, lower_indices, new_element_counts)
 
 				from
 					exhausted := False
+					an_index := clone (lower_indices)
 				until
 					exhausted
 				loop
@@ -358,7 +357,7 @@ feature -- Resizing
 				end
 				upper_indices := new_upper_indices
 				element_counts := new_element_counts
-				upper := an_upper
+				upper := lower + a_count - 1
 				area := new.area
 			end
 		end
@@ -409,8 +408,6 @@ feature {NONE} -- Implementation
 			from
 				i := dimension_count
 				exhausted := True
-			variant
-				i
 			until
 				i = 0 or new_index
 			loop

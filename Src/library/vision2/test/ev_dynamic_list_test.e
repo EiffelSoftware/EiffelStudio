@@ -27,7 +27,7 @@ feature -- Initialization
 	do_tests is
 		local
 			hbox_test, vbox_test, nb_test : EV_LIST_TEST [EV_WIDGET]
-			list_test, tb_test, sb_test, mcl_test: EV_LIST_TEST [EV_WIDGET]
+			list_test, tb_test, sb_test, mcl_test: EV_LIST_TEST [EV_ITEM]
 		do
 			create hbox_test.make ("EV_HORIZONTAL_BOX", ~hbox_list_generator, ~item_generator)
 			create vbox_test.make ("EV_VERTICAL_BOX", ~vbox_list_generator, ~item_generator)

@@ -49,7 +49,12 @@ feature -- Callbacks
 
 	execute_warner_ok (argument: ANY) is
 		do
-			Eiffel_project.call_finish_freezing (True)
+			if not launch_program then		
+				Eiffel_project.call_finish_freezing (True)
+			else
+				launch_program := False
+				start_program
+			end
 		end;
 
 feature -- Properties
@@ -124,7 +129,6 @@ debug
 	io.error.putstring (generator);
 	io.error.putstring (": Start execution%N");
 end;
-				!! mp.set_watch_cursor;
 				!!makefile_sh_name.make_from_string (Workbench_generation_path);
 				makefile_sh_name.set_file_name (Makefile_SH);
 
@@ -139,28 +143,13 @@ end;
 							Warning_messages.w_Makefile_more_recent (Makefile_SH), 
 							Interface_names.b_Ok, Void, Interface_names.b_Cancel)
 					else
-						mp.restore;
-						if Application.is_ignoring_stop_points then	
-							warner (popup_parent).gotcha_call
-								(Warning_messages.w_Ignoring_all_stop_points)
-						end
-						debug_window.clear_window;
-						Project_tool.save_current_cursor_position;
-						debug_window.put_string ("Launching system...");
-						debug_window.new_line;
-						mp.set_watch_cursor;
-						Application.run (argument_window.argument_list);
-						if Application.is_running then
-							debug_window.clear_window;
-							debug_window.put_string ("System is running");
-							debug_window.new_line;
+						launch_program := True
+						if Application.has_breakpoints and then Application.is_ignoring_stop_points then	
+							warner (popup_parent).custom_call (Current,
+								Warning_messages.w_Ignoring_all_stop_points, Interface_names.b_Ok, Void, Interface_names.b_Cancel)
 						else
-								-- Something went wrong
-							debug_window.clear_window;
-							debug_window.put_string 
-								(Application.eiffel_timeout_message);
-						end;
-						debug_window.display
+							start_program
+						end
 					end
 				elseif make_f.exists then
 						-- There is no application
@@ -170,7 +159,6 @@ end;
 					warner (popup_parent).gotcha_call 
 						(Warning_messages.w_Must_compile_first)
 				end;
-				mp.restore
 			else
 				status := Application.status;
 				if status.is_stopped then
@@ -202,6 +190,30 @@ end;
 			end
 		end;
  
+	start_program is
+			-- Launch the program to be debugged.
+		local
+			mp: MOUSE_PTR
+		do
+			debug_window.clear_window;
+			Project_tool.save_current_cursor_position;
+			debug_window.put_string ("Launching system...");
+			debug_window.new_line;
+			!! mp.set_watch_cursor;
+			Application.run (argument_window.argument_list);
+			if Application.is_running then
+				debug_window.clear_window;
+				debug_window.put_string ("System is running");
+				debug_window.new_line;
+			else
+					-- Something went wrong
+				debug_window.clear_window;
+				debug_window.put_string (Application.eiffel_timeout_message);
+			end;
+			debug_window.display
+			mp.restore;
+		end
+
 feature {NONE} -- Attributes
 
 	name: STRING is
@@ -227,5 +239,8 @@ feature {NONE} -- Attributes
 
 	cont_request: EWB_REQUEST
 			-- Request for continuation.
+
+	launch_program: BOOLEAN
+			-- Are we currently trying to launch the program.
 
 end -- DEBUG_RUN

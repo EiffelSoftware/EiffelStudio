@@ -105,7 +105,7 @@ feature
 			-- Make the element of index i younger
 			-- as it is accessed in the cache
 		require
-				out_of_bound: i <= count
+				out_of_bound: i <= capacity
 		local
 			next_i, previous_i: INTEGER
 		do
@@ -132,7 +132,7 @@ feature
 			-- history
 			-- Do not check if i is really a used cell
 		require
-				out_of_bound: i <= count
+				out_of_bound: i <= capacity
 		local
 			previous_i, next_i: INTEGER
 		do

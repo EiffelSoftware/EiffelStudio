@@ -53,7 +53,7 @@ inherit
 			{NONE} all
 		end
 
-	WEL_SYSTEM_METRICS
+	WEL_BM_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -85,6 +85,7 @@ feature -- Initialization
 			create_buttons
 			create_controls
 			set_fonts
+			set_default_button
 		end
 
 	realize is
@@ -487,6 +488,11 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	set_default_button is
+			-- Set default_button
+		deferred
+		end
+
 	resize_children is
 			-- Resize the children if necessary.
 		require
@@ -693,6 +699,21 @@ feature {NONE} -- Implementation
 			resize (valid_width ,valid_height)
 			reposition_children
 			update_visibility
+			set_default_button
+		end
+
+	unset_default_button_style (a_button: WEL_PUSH_BUTTON) is
+			-- Unset the default button style for `a_button'.
+		do
+			cwin_send_message (a_button.item, Bm_setstyle,
+				Bs_pushbutton, cwin_make_long (1, 0))
+		end
+
+	set_default_button_style (a_button: WEL_PUSH_BUTTON) is
+			-- Set the default button style for `a_button'.
+		do
+			cwin_send_message (a_button.item, Bm_setstyle,
+				Bs_defpushbutton, cwin_make_long (1, 0))
 		end
 
 	set_position is
@@ -706,8 +727,8 @@ feature {NONE} -- Implementation
 					wel_move_relative (((parent.wel_width - wel_width) // 2),
 						(parent.wel_height - wel_height) // 2)
 				else
-					wel_move (((full_screen_client_area_width - wel_width) // 2),
-						(full_screen_client_area_height - wel_height) // 2)
+					wel_move (((Maximum_window_width - wel_width) // 2),
+						(Maximum_window_height - wel_height) // 2)
 				end
 			end
 		end

@@ -406,7 +406,7 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Implementation
 			-- Node containing max
 		do
 			if has_right then
-				Result := right_child.min_node
+				Result := right_child.max_node
 			else
 				Result := Current
 			end

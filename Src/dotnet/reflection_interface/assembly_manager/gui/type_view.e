@@ -181,7 +181,6 @@ feature -- Basic Operations
 			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)
 			set_icon (dictionary.Edit_icon)
-			set_maximizebox (False)
 
 				-- `Selected assembly: '
 			create_form_label (assembly_descriptor.name, dictionary.Margin, dictionary.Margin)
@@ -236,7 +235,7 @@ feature -- Event handling
 		do
 				-- Resize `panel'.
 			a_size.set_width (width - dictionary.Margin // 2)
-			if errors_list_view /= Void and then errors_list_view.contains (errors_list_view) then
+			if errors_list_view /= Void and then controls.contains (errors_list_view) then
 				a_size.set_height (height - 6 * dictionary.Margin - 7 * dictionary.Label_height - dictionary.Button_height)
 			else
 				a_size.set_height (height - 6 * dictionary.Margin - 5 * dictionary.Label_height - dictionary.Button_height)
@@ -418,55 +417,108 @@ feature -- Event handling
 			non_void_assembly_descriptor: assembly_descriptor /= Void
 			non_void_eiffel_class: eiffel_class /= Void
 		local
-			returned_value: INTEGER
-			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 			type_view_handler: TYPE_VIEW_HANDLER
 			xml_generator: ISE_REFLECTION_XMLCODEGENERATOR
 			i: INTEGER
 			a_child: ISE_REFLECTION_EIFFELCLASS
 			a_size: SYSTEM_DRAWING_SIZE
-			eiffel_generation_dialog: EIFFEL_GENERATION_DIALOG
+			regenerate_eiffel_classes_delegate: SYSTEM_EVENTHANDLER	
+			cursors: SYSTEM_WINDOWS_FORMS_CURSORS
+			wait_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
+			normal_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
+			retried: BOOLEAN
+			message_box: MESSAGE_BOX
 		do
-			returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Check_validity_message, dictionary.Information_caption, dictionary.Ok_message_box_button, dictionary.Information_icon)
-			create type_view_handler.make (eiffel_class, type_modifications, Current)
-			type_view_handler.check_and_update
-			if not type_view_handler.is_valid then
-				cancel_button.set_enabled (False)
-				a_size.set_width (width - dictionary.Margin // 2)
-				a_size.set_height (dictionary.Window_height - 6 * dictionary.Margin - 7 * dictionary.Label_height - dictionary.Button_height)
-				panel.set_size (a_size)
-				if errors_list_view /= Void and then controls.contains (errors_list_view) then
-					controls.remove (errors_list_view)
-				end
-				display_errors (type_view_handler.class_error_message, type_view_handler.errors_in_features, type_view_handler.errors_in_arguments)
-				refresh
-			else
-				close
-				eiffel_class := type_view_handler.eiffel_class
-				children := type_view_handler.children
-				assembly_view.set_children (eiffel_class, children)
-				create xml_generator.make_xmlcodegenerator
-				xml_generator.makexmlcodegenerator
-				xml_generator.replacetype (assembly_descriptor, eiffel_class)
-				from
-				until
-					i = children.count
-				loop
-					a_child ?= children.item (i)
-					if a_child /= Void then
-						xml_generator.replacetype (assembly_descriptor, a_child)
+			if not retried then
+				wait_cursor := cursors.WaitCursor
+				set_cursor (wait_cursor)
+				create type_view_handler.make (eiffel_class, type_modifications, Current)
+				type_view_handler.check_and_update
+				normal_cursor := cursors.Arrow
+				set_cursor (normal_cursor)
+				if not type_view_handler.is_valid then
+					cancel_button.set_enabled (False)
+					a_size.set_width (width - dictionary.Margin // 2)
+					a_size.set_height (height - 6 * dictionary.Margin - 7 * dictionary.Label_height - dictionary.Button_height)
+					panel.set_size (a_size)
+					if errors_list_view /= Void and then controls.contains (errors_list_view) then
+						controls.remove (errors_list_view)
 					end
-					i := i + 1
-				end	
-				--assembly_view.update_gui
-				
-				returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Eiffel_generation_question, dictionary.Question_caption, dictionary.Yes_no_message_box_buttons, dictionary.Question_icon)
-				if returned_value = dictionary.Yes then
-					create eiffel_generation_dialog.make (assembly_descriptor, eiffel_path)
+					display_errors (type_view_handler.class_error_message, type_view_handler.errors_in_features, type_view_handler.errors_in_arguments)
+					refresh
+				else
+					close
+					eiffel_class := type_view_handler.eiffel_class
+					children := type_view_handler.children
+					assembly_view.set_children (eiffel_class, children)
+					create xml_generator.make_xmlcodegenerator
+					xml_generator.makexmlcodegenerator
+					xml_generator.replacetype (assembly_descriptor, eiffel_class)
+					from
+					until
+						i = children.count
+					loop
+						a_child ?= children.item (i)
+						if a_child /= Void then
+							xml_generator.replacetype (assembly_descriptor, a_child)
+						end
+						i := i + 1
+					end
+					assembly_view.update_gui
+					create regenerate_eiffel_classes_delegate.make_eventhandler (Current, $regenerate_eiffel_classes)
+					create message_box.make (dictionary.Eiffel_generation, regenerate_eiffel_classes_delegate)
 				end
+			else
+				normal_cursor := cursors.Arrow
+				set_cursor (normal_cursor)
 			end
 		end
 
+	regenerate_eiffel_classes (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+		indexing
+			description: "Open Eiffel generation dialog."
+			external_name: "RegenerateEiffelClasses"
+		require
+			non_void_sender: sender /= Void
+		local
+			message_box: MESSAGE_BOX
+			assembly_name: SYSTEM_REFLECTION_ASSEMBLYNAME
+			assembly: SYSTEM_REFLECTION_ASSEMBLY
+			conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT
+			emitter: NEWEIFFELCLASSGENERATOR
+			returned_value: INTEGER
+			windows_message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX	
+			eiffel_generation_dictionary: EIFFEL_GENERATION_DIALOG_DICTIONARY
+			retried: BOOLEAN
+			cursors: SYSTEM_WINDOWS_FORMS_CURSORS
+			wait_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
+		do
+			if not retried then
+				message_box ?= sender
+				if message_box /= Void then
+					wait_cursor := cursors.WaitCursor
+					message_box.set_cursor (wait_cursor)
+					message_box.refresh
+					create conversion_support.make_conversionsupport
+					assembly_name := conversion_support.assemblynamefromdescriptor (assembly_descriptor)
+					assembly := assembly.load (assembly_name)
+					create emitter.make_neweiffelclassgenerator
+					emitter.generateeiffelclassesfromxml (assembly)			
+					message_box.close
+				end
+			else
+				message_box ?= sender
+				if message_box /= Void then
+					message_box.close
+				end
+				create eiffel_generation_dictionary
+				returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (eiffel_generation_dictionary.Eiffel_generation_error, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
+			end
+		rescue
+			retried := True
+			retry
+		end
+	
 	on_cancel_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 			-- Process `cancel_button' activation.
 		indexing

@@ -86,7 +86,6 @@ feature -- Basic Operations
 			a_size.set_Height (dictionary.Window_height)
 			set_size (a_size)	
 			set_icon (dictionary.Edit_icon)
-			set_maximizebox (False)
 
 				-- `Selected assembly: '
 			create assembly_label.make_label
@@ -141,8 +140,9 @@ feature -- Event handling
 			eiffel_class: ISE_REFLECTION_EIFFELCLASS
 			children: SYSTEM_COLLECTIONS_ARRAYLIST
 			type_view: TYPE_VIEW
-			returned_value: INTEGER
-			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
+			cursors: SYSTEM_WINDOWS_FORMS_CURSORS
+			wait_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
+			normal_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
 		do
 			if data_grid.CurrentCell /= Void and then data_grid.currentcell.columnnumber /= Void then
 				selected_column := data_grid.currentcell.columnnumber
@@ -161,10 +161,11 @@ feature -- Event handling
 								else
 									children ?= children_table.item (eiffel_class)
 								end
-								returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Edit_type, dictionary.Information_caption, dictionary.Ok_cancel_message_box_buttons, dictionary.Information_icon)
-								if returned_value /= dictionary.Cancel then
-									create type_view.make (assembly_descriptor, eiffel_class, children, Current)
-								end
+								wait_cursor := cursors.WaitCursor
+								set_cursor (wait_cursor)
+								create type_view.make (assembly_descriptor, eiffel_class, children, Current)
+								normal_cursor := cursors.Arrow
+								set_cursor (normal_cursor)
 							end							
 						end
 					end

@@ -154,7 +154,7 @@ feature -- Event handling
 			non_void_arguments: arguments /= Void
 		do
 			ask_for_folder
-			if last_folder /= Void then
+			if last_folder /= Void and then last_folder.length > 0 then
 				destination_path_text_box.set_text (last_folder)
 			end
 		end
@@ -175,20 +175,14 @@ feature {NONE} -- Implementation
 		local
 			browser: FOLDERDIALOG
 			retried: BOOLEAN
-			process_info: SYSTEM_DIAGNOSTICS_PROCESSSTARTINFO
-			environment_variables: SYSTEM_COLLECTIONS_SPECIALIZED_STRINGDIRECTORY
-			last_path: STRING
+			current_path: STRING
 			dir: SYSTEM_IO_DIRECTORY
 		do
 			if not retried then
 				create browser.make
-				create process_info.make
-				environment_variables := process_info.environmentvariables
-				if environment_variables.contains (dictionary.Path_key) then
-					last_path := environment_variables.item (dictionary.Path_key)
-					if dir.Exists (last_path) then
-					--	browser.set_start_directory (last_path)
-					end
+				current_path := destination_path_text_box.text
+				if current_path /= Void and then current_path.length > 0 and then dir.Exists (current_path) then
+					browser.set_start_folder (current_path)
 				end
 				browser.ask_for_folder
 				last_folder := browser.last_folder
@@ -196,23 +190,6 @@ feature {NONE} -- Implementation
 		rescue
 			retried := True
 			retry
-		end
-
-	put_environment_variable is
-		indexing
-			description: "Put an environment variable corresponding to the selected path"
-			external_name: "PutEnvironmentVariable"
-		require
-			non_void_path: destination_path_text_box.text /= Void
-			not_empty_path: destination_path_text_box.text.length > 0
-		local
-			process_info: SYSTEM_DIAGNOSTICS_PROCESSSTARTINFO
-		do
-			create process_info.make
-			if process_info.environmentvariables.containskey (dictionary.Path_key) then
-				process_info.environmentvariables.remove (dictionary.Path_key)
-			end
-			process_info.environmentvariables.add (dictionary.Path_key, destination_path_text_box.text)
 		end
 		
 end -- class GENERATION_DIALOG

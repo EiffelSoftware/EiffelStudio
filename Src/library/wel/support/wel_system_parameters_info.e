@@ -87,6 +87,14 @@ feature -- Status
 				Result := Void
 			end
 		end
+		
+	get_wheel_scroll_lines: INTEGER is
+			-- Retrieves the number of lines that will be scrolled when the mouse wheel is rotated.
+		local
+			success: BOOLEAN
+		do
+			success := c_system_parameters_info (Spi_getwheelscrolllines, 0, $Result, 0)
+		end
 
 feature -- Obsolete
 

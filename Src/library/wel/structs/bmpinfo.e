@@ -14,39 +14,73 @@ inherit
 			make as structure_make
 		end
 
+	WEL_DIB_COLORS_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_dib_colors_constant
+		end
+
 creation
 	make,
+	make_by_dc,
 	make_by_pointer
 
 feature {NONE} -- Initialization
 
 	make (a_bitmap_info_header: WEL_BITMAP_INFO_HEADER;
-			a_num_rgb_quad: INTEGER) is
+			a_rgb_quad_count: INTEGER) is
 			-- Make a BITMAPINFO structure
 			-- with `a_bitmap_info_header'
 		require
 			a_bitmap_info_header_not_void: a_bitmap_info_header
 				/= Void
+			positive_rgb_quad_count: a_rgb_quad_count >= 0
 		do
+			rgb_quad_count := a_rgb_quad_count
 			structure_make
-			private_num_rgb_quad := a_num_rgb_quad
 			set_bitmap_info_header (a_bitmap_info_header)
-		ensure
-			bitmap_info_header_set: bitmap_info_header =
-				a_bitmap_info_header
+		end
+
+	make_by_dc (dc: WEL_DC; bitmap: WEL_BITMAP; usage: INTEGER) is
+			-- Make a bitmap info structure using `dc' and
+			-- `bitmap'.
+		require
+			dc_not_void: dc /= Void
+			dc_exists: dc.exists
+			bitmap_not_void: bitmap /= Void
+			bitmap_exists: bitmap.exists
+			valid_usage: valid_dib_colors_constant (usage)
+		local
+			bih: WEL_BITMAP_INFO_HEADER
+		do
+			rgb_quad_count := 0
+			structure_make
+			!! bih.make
+			set_bitmap_info_header (bih)
+			cwin_get_di_bits (dc.item, bitmap.item, 0, 0,
+				default_pointer, item, usage)
 		end
 
 feature -- Access
 
-	bitmap_info_header: WEL_BITMAP_INFO_HEADER is
+	header: WEL_BITMAP_INFO_HEADER is
+			-- Information about the dimensions and color
+			-- format of a DIB
 		do
 			!! Result.make_by_pointer (
-				cwel_bitmap_info_get_bitmap_info_header (item))
+				cwel_bitmap_info_get_header (item))
+		ensure
+			result_not_void: Result /= Void
 		end
 
+	rgb_quad_count: INTEGER
+			-- Number of colors
+
 	rgb_quad (index: INTEGER): WEL_RGB_QUAD is
+			-- Bitmap color at zero-based `index'
 		require
-			positive_index: index > 0
+			index_small_enough: index < rgb_quad_count
+			index_large_enough: index >= 0
 		do
 			!! Result.make
 			Result.memory_copy (
@@ -58,18 +92,20 @@ feature -- Access
 
 feature -- Element change
 
-	set_bitmap_info_header (a_bitmap_info_header: WEL_BITMAP_INFO_HEADER) is
+	set_bitmap_info_header (a_header: WEL_BITMAP_INFO_HEADER) is
+			-- Set `header' with `a_header'.
 		require
-			a_bitmap_info_header_not_void: a_bitmap_info_header /= Void
+			a_header_not_void: a_header /= Void
 		do
-			memory_copy (a_bitmap_info_header.item, structure_size)
-		ensure
-			bitmap_info_header_set: bitmap_info_header =
-				a_bitmap_info_header
+			cwel_bitmap_info_set_header (item, a_header.item)
 		end
 
 	set_rgb_quad (index: INTEGER; a_rgb_quad: WEL_RGB_QUAD) is
+			-- Set `rgb_quad' with `a_rgb_quad' at
+			-- zero-based `index'.
 		require
+			index_small_enough: index < rgb_quad_count
+			index_large_enough: index >= 0
 			a_rgb_quad_not_void: a_rgb_quad /= Void
 		do
 			cwel_bitmap_info_set_rgb_quad_rgb_red (item, index,
@@ -88,13 +124,15 @@ feature -- Measurement
 			-- Size to allocate (in bytes)
 		do
 			Result := c_size_of_bitmap_info +
-				(private_num_rgb_quad * c_size_of_rgb_quad)
+				(rgb_quad_count * c_size_of_rgb_quad)
 		end
 
-feature {NONE} -- Implementation
+feature -- Obsolete
 
-	private_num_rgb_quad: INTEGER
-			-- Number of entries used to allocate the memory
+	bitmap_info_header: WEL_BITMAP_INFO_HEADER is obsolete "Use ``header''"
+		do
+			Result := header
+		end
 
 feature {NONE} -- Externals
 
@@ -118,6 +156,11 @@ feature {NONE} -- Externals
 			"C [macro <bmpinfo.h>]"
 		end
 
+	cwel_bitmap_info_set_header (ptr: POINTER; value: POINTER) is
+		external
+			"C [macro <bmpinfo.h>]"
+		end
+
 	cwel_bitmap_info_set_rgb_quad_rgb_green (ptr: POINTER; index,
 			value: INTEGER) is
 		external
@@ -136,7 +179,7 @@ feature {NONE} -- Externals
 			"C [macro <bmpinfo.h>]"
 		end
 
-	cwel_bitmap_info_get_bitmap_info_header (ptr: POINTER): POINTER is
+	cwel_bitmap_info_get_header (ptr: POINTER): POINTER is
 		external
 			"C [macro <bmpinfo.h>]"
 		end
@@ -144,6 +187,16 @@ feature {NONE} -- Externals
 	cwel_bitmap_info_get_rgb_quad (ptr: POINTER; i: INTEGER): POINTER is
 		external
 			"C [macro <bmpinfo.h>]"
+		end
+
+	cwin_get_di_bits (hdc, hbmp: POINTER; start_scan, scan_lines: INTEGER;
+			bits, bi: POINTER; usage: INTEGER) is
+			-- SDK GetDIBits
+		external
+			"C [macro <wel.h>] (HDC, HBITMAP, UINT, UINT, %
+				%VOID *, BITMAPINFO *, UINT)"
+		alias
+			"GetDIBits"
 		end
 
 end -- class WEL_BITMAP_INFO

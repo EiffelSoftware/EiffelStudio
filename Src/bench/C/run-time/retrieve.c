@@ -2117,6 +2117,18 @@ char * object, * parent;
 	}
 }
 
+rt_private long dbl_off(v,w,x,y,z)
+long v, w, x, y, z;
+{
+	return (PTROFF(v,w,x,y)+(z)*PTRSIZ+PADD(PTROFF(v,w,x,y)+(z)*PTRSIZ,DBLSIZ));
+}
+
+rt_private long obj_size(u,v,w,x,y,z)
+long u, v, w, x, y, z;
+{
+	return (dbl_off(u,v,w,x,y)+(z)*DBLSIZ+REMAINDER(dbl_off(u,v,w,x,y)+(z)*DBLSIZ));
+}
+
 rt_private long get_expanded_pos (o_type, num_attrib)
 uint32 o_type, num_attrib;
 {
@@ -2161,5 +2173,10 @@ uint32 o_type, num_attrib;
 				eio();
 		}
 	}
-	return ((long) OBJSIZ (num_ref, num_char, num_int, num_float, num_pointer, num_double) + bit_size + exp_size + OVERHEAD);
+#ifdef SYMANTEC_CPP
+	return (obj_size(num_ref,num_char,num_int,num_float,num_pointer,num_double)+bit_size+exp_size+OVERHEAD);
+#else
+	return ((long) OBJSIZ(num_ref,num_char,num_int,num_float,num_pointer,num_double)+bit_size+exp_size+OVERHEAD);
+#endif
 }
+

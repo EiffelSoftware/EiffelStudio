@@ -3,7 +3,7 @@
 	<HEAD>EiffelBench Resources, version 4.8</HEAD>
 	<TOPIC TOPIC_ID="Applications_and_directories" ICON="icon_preferences_folder">
 		<HEAD>Applications and Directories</HEAD>
-		<TEXT>text_mode<STRING>UNIX</STRING></TEXT>
+		<TEXT DESCRIPTION="Text files format: True = Windows / False = UNIX">text_mode_is_windows<BOOLEAN>False</BOOLEAN></TEXT>
 		<TEXT>editor<STRING>vi</STRING></TEXT>
 		<TEXT>temporary_directory<STRING>/tmp</STRING></TEXT>
 		<TEXT DESCRIPTION="Command used to launch an external editor">shell_command<STRING>xterm -geometry 80x40 -e vi +$line $target</STRING></TEXT>

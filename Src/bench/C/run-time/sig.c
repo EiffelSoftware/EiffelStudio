@@ -465,7 +465,7 @@ rt_public int esigvec(int sig, struct sigvec *vec, struct sigvec *ovec)
 	 * reception will no longer be well-defined.
 	 */
 
-	EIF_GET_CONTEXT
+	RT_GET_CONTEXT
 	Signal_t (*oldfunc)(int);		/* Previous signal handler set */
 	/*	int ignored;	*/			/* Ignore status for previous handler */
 

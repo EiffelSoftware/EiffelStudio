@@ -15,6 +15,13 @@ inherit
 	
 	EV_TEXT_CONTAINER_I
 
+feature {NONE} -- Initialization
+
+        make (par: EV_CONTAINER) is
+                        -- Create a label implementation.
+		deferred
+                end	
+	
 end --class EV_LABEL_I
 
 

@@ -7,8 +7,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
---XX deferred class 
-class 
+deferred class 
 
 	EV_BOX
 

@@ -59,7 +59,7 @@ feature -- Element change
 feature {EV_CONTAINER} -- Element change
 	
 	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
+			-- Add child into container
 		do
 			--gtk_container_add (widget, child_imp.widget)
 		end

@@ -56,12 +56,12 @@ feature -- Status setting
 	
 feature -- Element change	
 	
-	set_text (a_text: STRING) is
-			-- Set current button text to `a_text'.
+	set_text (txt: STRING) is
+			-- Set current button text to `txt'.
 		local
 			a: ANY
 		do
-			a ?= a_text.to_c
+			a ?= txt.to_c
 			gtk_label_set (label_widget, $a)
 		end
 	

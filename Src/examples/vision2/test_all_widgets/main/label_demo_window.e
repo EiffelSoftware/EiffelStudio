@@ -20,22 +20,22 @@ creation
 
 feature -- Access
 
-	main_widget: EV_WIDGET is
+	main_widget: EV_LABEL is
 		once
-			!EV_LABEL!Result.make (Current)
+			!!Result.make (Current)
 		end
 	
 feature -- Status setting
         
 	set_widgets is
-                local
-			l: EV_LABEL
 		do
-			l ?= main_widget
-			l.set_text ("Label")
-			set_title ("Label demo")
                 end
 	
+	set_values is
+		do
+			main_widget.set_text ("Label")
+			set_title ("Label demo")
+		end
 end
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
                         -- parent
 		do
 			!EV_VERTICAL_BOX_IMP!implementation.make (par)
-			Precursor (par)
+			widget_make (par)
 		end
 
 feature {NONE} -- Implementation

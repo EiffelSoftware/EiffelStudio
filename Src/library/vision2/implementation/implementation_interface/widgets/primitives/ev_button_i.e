@@ -15,6 +15,12 @@ inherit
 
 	EV_TEXT_CONTAINER_I
 
+feature {NONE} -- Initialization
+
+        make (par: EV_CONTAINER) is
+                        -- Create a push button implementation.
+		deferred
+                end	
 	
 end -- class EV_BUTTON_I
 

@@ -1,36 +1,22 @@
 indexing
 
 	description: 
-	"EiffelVision single line entry. To query a single line of text from the user"
+		"EiffelVision single line entry, implementation interface."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-
-class EV_SINGLE_LINE_ENTRY
-
+	
+deferred class
+	EV_ENTRY_I
+	
 inherit
-
-	EV_ENTRY
-		redefine
-			make, implementation
-		end
-	
-	EV_BAR_ITEM
-	
-creation
-	
-	make
-	
+	EV_BAR_ITEM_I
 	
 feature {NONE} -- Initialization
 
         make (par: EV_CONTAINER) is
-                        -- Create a push button with, `par' as
-                        -- parent
-		do
-			!EV_SINGLE_LINE_ENTRY_IMP!implementation.make (par)
-			widget_make (par)
+		deferred
 		end
 	
 feature -- Access
@@ -39,8 +25,7 @@ feature -- Access
                         -- Text of current label
                 require
                         exists: not destroyed
-                do
-                        Result:= implementation.text
+                deferred
                 end 
 
 feature -- Status setting
@@ -50,29 +35,19 @@ feature -- Status setting
 		require
 			exist: not destroyed			
 			not_void: txt /= Void
-		do
+		deferred		
 		ensure
 			text_set: text.is_equal (txt)
-		end
-	
-	set_text (txt: STRING) is
-			-- set text entry to 'txt'
-		require
-			exist: not destroyed			
-			not_void: txt /= Void		
-		do
-		ensure
-                        text_set: text.is_equal (txt)
 		end
 	
 	append_text (txt: STRING) is
 			-- append 'txt' to entry
 		require
 			exist: not destroyed			
-			not_void: txt /= Voiddo
-		do
+			not_void: txt /= Void
+		deferred
 		ensure
-			text_appended: text.is_equal (text.append (txt))
+			text_appended:
 		end
 	
 	prepend_text (txt: STRING) is
@@ -80,9 +55,9 @@ feature -- Status setting
 		require
 			exist: not destroyed			
 			not_void: txt /= Void
-		do
+		deferred
 		ensure
-			text_prepended: text.is_equal (text.append (txt))
+			text_prepended:
 		end
 	
 	set_position (pos: INTEGER) is
@@ -90,14 +65,14 @@ feature -- Status setting
 		require
 			exist: not destroyed			
 			valid_pos: pos > 0 and pos <= text.count
-		do
+		deferred
 		end
 	
 	set_maximum_line_length (lenght: INTEGER) is
 			-- Maximum number of charachters on line
 		require
 			exist: not destroyed			
-		do
+		deferred
 		end
 	
 	select_region (start_pos, end_pos: INTEGER) is
@@ -107,16 +82,12 @@ feature -- Status setting
 			exist: not destroyed
 			valid_start: start_pos > 0 and start_pos <= text.count
 			valid_end: end_pos > 0 and end_pos <= text.count
-		do
+		deferred
 		ensure
-		end
-	
-feature {NONE} -- Implementation
+		end	
 
-	implementation: EV_SINGLE_LINE_ENTRY_I
-			-- Implementation of button
-			
-end -- class EV_SINGLE_LINE_ENTRY
+end --class EV_ENTRY_I
+
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
@@ -133,4 +104,3 @@ end -- class EV_SINGLE_LINE_ENTRY
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

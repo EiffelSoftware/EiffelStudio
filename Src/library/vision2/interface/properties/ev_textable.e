@@ -7,8 +7,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
---XX deferred class
-class
+deferred class
+
 	EV_TEXT_CONTAINER
 	
 inherit
@@ -62,15 +62,15 @@ feature -- Status setting
 
 feature -- Element chnage
 
-        set_text (a_text: STRING) is
-                        -- Set text of current label to `a_text'.
+        set_text (txt: STRING) is
+                        -- Set text of current label to `txt'.
                 require
                         exists: not destroyed
-                        not_a_text_void: a_text /= Void
+                        not_a_text_void: txt /= Void
                 do
-                        implementation.set_text (a_text)
+                        implementation.set_text (txt)
                 ensure
-                        text.is_equal (a_text)
+                        text_set: text.is_equal (txt)
                 end
 
 feature {NONE} -- Implementation

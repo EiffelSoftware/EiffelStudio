@@ -99,7 +99,9 @@ feature
 			until
 				i > nb
 			loop
-				values.item (i).generate_declaration (file);
+				if values.item (i).is_valid then
+					values.item (i).generate_declaration (file);
+				end;
 				i := i + 1;
 			end;
 			from
@@ -111,9 +113,14 @@ feature
 			until
 				i > nb
 			loop
-				values.item (i).generate (file);
-				temp.append_integer (values.item (i).real_pattern_id);
-				temp.append (",%N");
+				if values.item (i).is_valid then
+					values.item (i).generate (file);
+					temp.append_integer (values.item (i).real_pattern_id);
+					temp.append (",%N");
+				else
+					file.putstring ("(fnptr) 0,%N");
+					temp.append ("-1,%N");
+				end;
 				i := i + 1;
 			end;
 			file.putstring ("};%N");

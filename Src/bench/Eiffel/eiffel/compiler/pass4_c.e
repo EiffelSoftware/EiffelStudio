@@ -19,6 +19,7 @@ feature
 				io.error.putstring ("Pass 4 on class ");
 				io.error.putstring (associated_class.class_name);
 				io.error.new_line;
+
 				associated_class.melt;
 			end;
 		end;

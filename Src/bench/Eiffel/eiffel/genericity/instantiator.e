@@ -67,8 +67,7 @@ end;
 			insertion_list.search_equal (type_i);
 			if insertion_list.offright then
 					-- New data or item
-				insertion_list.start;
-				insertion_list.add_left (type_i);
+				insertion_list.add_front (type_i);
 			end;
 
 				-- Recursion on the generic types

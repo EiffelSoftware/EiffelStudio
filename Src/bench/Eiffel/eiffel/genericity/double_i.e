@@ -8,8 +8,10 @@ inherit
 			is_double,
 			is_numeric,
 			same_as,
-			description, sk_value, generate_cecil_value, hash_code
-		end
+			description, sk_value, generate_cecil_value, hash_code,
+			byte_code_cast
+		end;
+	BYTE_CONST
 
 feature
 
@@ -17,6 +19,12 @@ feature
 			-- Internal code for generation
 		do
 			Result := C_double;
+		end;
+
+	byte_code_cast: CHARACTER is
+			-- Code for interpreter cast
+		do
+			Result := Bc_cast_double;
 		end;
 
 	is_double: BOOLEAN is

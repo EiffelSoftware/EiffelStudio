@@ -6,7 +6,6 @@ inherit
 		rename
 			transfer_to as procedure_transfer_to
 		redefine
-			transfer_to,
 			unselected, replicated, set_type, is_function, type		
 		end;
 

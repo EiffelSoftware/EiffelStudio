@@ -406,6 +406,7 @@ feature -- Byte code generation
 			basic_type: BASIC_I;
 			assignment: BOOLEAN;
 			target_type: TYPE_I;
+			basic_target, basic_source: BASIC_I;
 		do
 			target_type := Context.real_type (type);
 			if target_type.is_none then
@@ -423,6 +424,13 @@ feature -- Byte code generation
 					ba.append (bit_assign_code);	
 					assignment := True;
 				else
+					if target_type.is_numeric and then source_type.is_numeric then
+						basic_target ?= target_type;
+						basic_source ?= source_type;
+						if basic_target.level /= basic_source.level then
+							ba.append (basic_target.byte_code_cast);
+						end;
+					end;
 					ba.append (assign_code);
 					assignment := True;
 				end;

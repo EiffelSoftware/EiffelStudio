@@ -55,7 +55,13 @@ feature
 
 	execute is
 		do
-			if  (associated_class.changed or else associated_class.changed2)
+				-- Verbose
+			io.error.putstring ("Pass 2 on class ");
+			io.error.putstring (associated_class.class_name);
+			io.error.new_line;
+
+			if	
+				(associated_class.changed or else associated_class.changed2)
 			then
 					-- Analysis of inheritance for a class
 				analyzer.pass2 (Current, supplier_status_modified);
@@ -67,29 +73,24 @@ feature
 				end;
 
 					-- Update the freeze list for changed hash tables.
-				if associated_class.changed2 then
-					System.freeze_set2.put (associated_class.id);
-					System.melted_set.put (associated_class.id);
-				end;
+				System.freeze_set2.put (associated_class.id);
+				System.melted_set.put (associated_class.id);
 			else
 					-- Propagation of assertion modifications only.
 				propagate_pass2 (False);
-				io.error.putstring ("Pass 2 on class ");
-				io.error.putstring (associated_class.class_name);
-				io.error.new_line;
 			end;
+
 			if assert_prop_list /= Void then
 				associated_class.feature_table.propagate_assertions
 					(assert_prop_list);
 			end;
 		end;
 
-	propagate (feature_table, resulting_table: FEATURE_TABLE; 
+	propagate (resulting_table: FEATURE_TABLE; equivalent_table: BOOLEAN;
 				pass2_control: PASS2_CONTROL; l: LINKED_LIST [INTEGER]) is
 			-- Propagate the pass2 and pass3 according to `resulting_table'
 			-- and `pass2_control'
 		local
-			different_feature_tables: BOOLEAN;
 			real_pass2, do_pass2: BOOLEAN;
 			do_pass3: BOOLEAN;
 		do
@@ -104,8 +105,7 @@ feature
 					-- Incremetality test: asked the compiler to apply at
 					-- least the second pass to the direct descendants
 					-- of the class `associated_class'.
-			different_feature_tables := not resulting_table.equiv (feature_table);
-			real_pass2 := different_feature_tables or else expanded_modified
+			real_pass2 := (not equivalent_table) or else expanded_modified
 					or else deferred_modified;
 
 					-- If the propagation is the result of assertion

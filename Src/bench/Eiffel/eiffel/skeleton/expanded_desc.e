@@ -51,6 +51,7 @@ feature
 
 	trace is
 		do
+			io.error.putstring (attribute_name);
 			io.error.putstring ("[EXPANDED ");
 			io.error.putstring (class_type.associated_class.class_name);
 			io.error.putstring ("]");

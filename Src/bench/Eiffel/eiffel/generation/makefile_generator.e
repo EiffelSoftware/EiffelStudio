@@ -15,15 +15,15 @@ inherit
 			context as byte_context
 		end;
 
-creation
-
-	make
-
-	
 feature
 
 	object_basket: EXTEND_STACK [STRING];
 			-- The entire set of object files we have to make
+
+	empty_class_types: SORTED_SET [INTEGER];
+			-- Set of all the class types that have no used
+			-- features (final mode), i.e. the C file would
+			-- be empty.
 
 	partial_objects: INTEGER;
 			-- Number of partial objects files needed
@@ -31,10 +31,18 @@ feature
 	Packet_number: INTEGER is 300;
 			-- Maximum number of files in a single linking phase
 
-	make is
+	init is
 			-- Creation
 		do
 			!!object_basket.make;
+			!!empty_class_types.make
+		end;
+
+	clear is
+			-- Forget the lists
+		do
+			object_basket := Void;
+			empty_class_types := Void;
 		end;
 
 	generate is
@@ -157,11 +165,16 @@ feature
 					loop
 						cl_type := types.item;
 							-- C code
-						object_name := cl_type.base_file_name;
-						!!file_name.make (16);
-						file_name.append (object_name);
-						file_name.append (".o");
-						object_basket.put (file_name);
+
+						if	workbench_mode or else
+							not empty_class_types.has (cl_type.id)
+						then
+							object_name := cl_type.base_file_name;
+							!!file_name.make (16);
+							file_name.append (object_name);
+							file_name.append (".o");
+							object_basket.put (file_name);
+						end;
 							-- Descriptor file
 						if workbench_mode then
 							!!file_name.make (16);
@@ -484,5 +497,13 @@ feature
 			end;
 			generate_simple_executable (run_time);
 		end;
+
+	record_empty_class_type (a_class_type: INTEGER) is
+			-- add `a_class_type' to the set of class types that
+			-- are not generated
+		do
+			empty_class_types.add (a_class_type);
+		end;
+
 
 end

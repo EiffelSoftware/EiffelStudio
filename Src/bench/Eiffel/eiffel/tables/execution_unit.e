@@ -53,7 +53,6 @@ feature
 			written_type: CL_TYPE_I;
 			written_class: CLASS_C
 		do
-			Result := Body_server.has (body_id);
 			written_class := System.class_of_id (written_in);
 			if written_class = Void then
 				Result := False
@@ -61,6 +60,8 @@ feature
 				written_type :=	class_type.written_type (written_class);
 				if written_type = Void then
 					Result := False
+				else
+					Result := Body_server.has (body_id);
 				end;
 			end;
 		end;

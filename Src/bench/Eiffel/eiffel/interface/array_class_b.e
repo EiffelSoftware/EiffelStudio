@@ -6,7 +6,7 @@ inherit
 
 	CLASS_C
 		redefine
-			check_validity
+			check_validity, mark_all_used
 		end;
 	SPECIAL_CONST
 
@@ -71,7 +71,21 @@ feature
 				
 		end; -- check_validity
 
-	
+feature	-- Dead code removal
+
+	mark_all_used (remover: REMOVER) is
+		local
+			feat: FEATURE_I;
+			feat_table: FEATURE_TABLE;
+		do
+			creators.start;
+			feat_table := feature_table;
+			feat := feat_table.item (creators.key_for_iteration);
+--			if not feat.used then
+				remover.record (feat, Current);
+--			end;
+		end;
+
 feature {NONE}
 
 	To_special_parent: GEN_TYPE_A is

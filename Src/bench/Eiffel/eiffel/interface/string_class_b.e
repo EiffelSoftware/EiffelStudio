@@ -114,7 +114,7 @@ feature
 		end;
 
 	mark_all_used (remover: REMOVER) is
-			-- Protection of feature `make'.
+			-- Protection of features `make' and `set_count'.
 		local
 			feat: FEATURE_I;
 			feat_table: FEATURE_TABLE;
@@ -122,13 +122,13 @@ feature
 			creators.start;
 			feat_table := feature_table;
 			feat := feat_table.item (creators.key_for_iteration);
-			if not feat.used then
+--			if not feat.used then
 				remover.record (feat, Current);
-			end;
+--			end;
 			feat := feat_table.item ("set_count");
-			if not feat.used then
+--			if not feat.used then
 				remover.record (feat, Current);
-			end;
+--			end;
 		end;
 
 end

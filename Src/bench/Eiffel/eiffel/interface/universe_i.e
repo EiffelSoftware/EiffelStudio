@@ -51,8 +51,7 @@ feature
 			good_argument: c /= Void;
 			consistency: not has_cluster_of_path (c.path);
 		do
-			clusters.start;
-			clusters.add_left (c);
+			clusters.add_front (c);
 		end;
 
 	cluster_changed: BOOLEAN is

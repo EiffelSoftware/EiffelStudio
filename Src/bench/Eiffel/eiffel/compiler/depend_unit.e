@@ -28,7 +28,8 @@ feature
 	infix "<" (other: DEPEND_UNIT): BOOLEAN is
 			-- Is `other' greater than Current ?
 		do
-			Result := id < other.id;
+			Result := id < other.id or else
+				(id = other.id and then feature_id < other.feature_id);
 		end; -- infix "<"
 
 feature -- Debug

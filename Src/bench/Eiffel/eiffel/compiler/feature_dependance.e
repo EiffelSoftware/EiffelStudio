@@ -5,15 +5,19 @@ inherit
 	SORTED_SET [DEPEND_UNIT]
 		rename
 			make as sorted_set_make,
-			wipe_out as sorted_set_wipe_out
+			wipe_out as sorted_set_wipe_out,
+			twin as basic_twin
 		end;
 	SORTED_SET [DEPEND_UNIT]
 		redefine
-			make, wipe_out
+			make, wipe_out, twin
 		select
-			make, wipe_out
+			make, wipe_out, twin
 		end;
 	SHARED_WORKBENCH
+		undefine
+			twin
+		end;
 
 creation
 
@@ -42,6 +46,17 @@ feature
 		do
 			sorted_set_wipe_out;
 			suppliers.wipe_out;
+		end;
+
+	twin: like Current is
+		do
+			Result := basic_twin;
+			Result.set_suppliers (suppliers.twin);
+		end;
+
+	set_suppliers (new_suppliers: like suppliers) is
+		do
+			suppliers := new_suppliers
 		end;
 
 feature -- Incrementality

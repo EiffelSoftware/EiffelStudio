@@ -67,7 +67,7 @@ feature
 			melted_propagators.merge (pass2_control.melted_propagators);
 		end;
 
-	empty_intersection (depend_list: SORTED_TWO_WAY_LIST [DEPEND_UNIT]): BOOLEAN is
+	empty_intersection (depend_list: FEATURE_DEPENDANCE): BOOLEAN is
 			-- Is the intersection of `depend_list' and `propagators'
 			-- empty ?
 		require
@@ -87,11 +87,10 @@ feature
 				Result := propagators.off;
 				depend_list.forth;
 			end;
-			depend_list.go (pos);
+			depend_list.go_i_th (pos);
 		end;
 
-	melted_empty_intersection
-				(depend_list: SORTED_TWO_WAY_LIST [DEPEND_UNIT]): BOOLEAN is
+	melted_empty_intersection (depend_list: FEATURE_DEPENDANCE): BOOLEAN is
 		  	-- Is the intersection of `depend_list' and `melted_propagators'
 			-- empty ?
 		require
@@ -111,7 +110,7 @@ feature
 				Result := melted_propagators.off;
 				depend_list.forth;
 			end;
-			depend_list.go (pos);
+			depend_list.go_i_th (pos);
 		end;
 
 	changed_status_empty_intersection (feature_suppliers: SORTED_SET [INTEGER]): BOOLEAN is

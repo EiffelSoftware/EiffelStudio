@@ -76,8 +76,14 @@ feature
 			good_argument: 	external_name /= Void;
 			has_occurence:	has (external_name);
 			good_occurence: item (external_name).occurence > 0;
+		local
+			info: EXTERNAL_INFO;
 		do
-			item (external_name).remove_occurence;
+			info := item (external_name);
+			info.remove_occurence;
+			if info.occurence = 0 then
+				remove (external_name)
+			end;
 		end;
 
 	freeze is

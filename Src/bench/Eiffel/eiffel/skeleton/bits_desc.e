@@ -46,6 +46,7 @@ feature
 
 	trace is
 		do
+			io.error.putstring (attribute_name);
 			io.error.putstring ("[BITS ");
 			io.error.putint (value);
 			io.error.putstring ("]");

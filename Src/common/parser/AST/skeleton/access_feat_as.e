@@ -185,9 +185,17 @@ feature -- Type check, byte code and dead code removal
 					vuex.set_feature_name (feature_name);
 					Error_handler.insert_error (vuex);
 				end;
-				if a_feature.is_obsolete then
+				if
+					a_feature.is_obsolete
+				and then
+						-- The current feature is whether the invariant or
+						-- a non obsolete feature
+					(context.a_feature = Void or else
+					not context.a_feature.is_obsolete)
+				then
 					!!obs_warn;
-					obs_warn.set_feature (a_feature);
+					obs_warn.set_obsolete_feature (a_feature);
+					obs_warn.set_feature (context.a_feature);
 					obs_warn.set_class (context.last_class);
 					Error_handler.insert_warning (obs_warn);
 				end;

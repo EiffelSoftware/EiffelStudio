@@ -64,7 +64,7 @@ current_skeleton.trace;
 end;
 					current_skeleton.go_expanded;
 				until
-					current_skeleton.offright or else finished
+					current_skeleton.after or else finished
 				loop
 					attr_desc := current_skeleton.item;	
 					if attr_desc.is_expanded = False then

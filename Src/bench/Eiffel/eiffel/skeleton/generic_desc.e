@@ -74,6 +74,7 @@ feature
 	trace is
 			-- Debug purpose
 		do
+			io.error.putstring (attribute_name);
 			io.error.putstring ("Generic desc: ");
 			type.trace;
 		end;

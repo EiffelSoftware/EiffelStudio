@@ -310,11 +310,9 @@ feature -- Inherited precondition
 			file.putstring ("RTJB;");
 			file.new_line;
 			file.exdent;
-			file.exdent;
 			context.print_current_label;
 			file.putchar (':');
 			file.new_line;
-			file.indent;
 			file.indent;
 		end;
 

@@ -13,14 +13,14 @@ creation
 
 feature
 
-	used_table: USED_TABLE;
+	used_table: ARRAY [BOOLEAN];
 			-- Table of used body ids
 
 	make is
 			-- Initialization
 		do
 			!!control.make;
-			!!used_table.make;
+			!!used_table.make (1, System.body_id_counter.value);
 		end;
 
 feature
@@ -109,7 +109,7 @@ feature {NONE}
 					unit := c.item;
 					if System.class_of_id (unit.id).conform_to (static_class) then
 						other_body_id := body_table.item (unit.body_index);
-						if not used_table.has (other_body_id) then
+						if used_table.item (other_body_id) = False then
 							descendant_class := System.class_of_id (unit.id);
 							des_feat_table := descendant_class.feature_table;
 							des_orig_table := des_feat_table.origin_table;
@@ -140,7 +140,7 @@ feature {NONE}
 			consistency: actual_class.conform_to (feat.written_class);
 		local
 			class_depend: CLASS_DEPENDANCE;
-			depend_list: SORTED_TWO_WAY_LIST [DEPEND_UNIT];
+			depend_list: FEATURE_DEPENDANCE;
 			feature_table: FEATURE_TABLE;
 			depend_unit: DEPEND_UNIT;
 			depend_feature, original_feature: FEATURE_I;
@@ -165,12 +165,12 @@ feature {NONE}
 			end;
 			feature_name := original_feature.feature_name;
 			class_depend := Depend_server.item (written_class.id);
---debug ("DEAD_CODE_REMOVAL")
+debug ("DEAD_CODE_REMOVAL")
     io.error.putstring (feature_name);
     io.error.putstring (" from ");
     io.error.putstring (written_class.class_name);
     io.error.new_line;
---end;
+end;
 			if class_depend.has (feature_name) then
 				from
 					depend_list := class_depend.item (feature_name);
@@ -179,13 +179,22 @@ feature {NONE}
 					depend_list.after
 				loop
 					depend_unit := depend_list.item;
-					static_class := System.class_of_id (depend_unit.id);
-					feature_table := static_class.feature_table;
-					depend_feature := feature_table.feature_of_feature_id
+					if depend_unit.feature_id /= -1 then
+						static_class := System.class_of_id (depend_unit.id);
+						feature_table := static_class.feature_table;
+						depend_feature := feature_table.feature_of_feature_id
 													(depend_unit.feature_id);
-					if not is_alive (depend_feature) then
-						!!unit_to_traverse.make (depend_feature, static_class);
-						control.add (unit_to_traverse);
+						if not is_alive (depend_feature) then
+debug
+	io.error.putstring ("Propagated to ");
+	io.error.putstring (depend_feature.feature_name);
+	io.error.putstring (" from ");
+	io.error.putstring (static_class.class_name);
+	io.error.new_line;
+end;
+							!!unit_to_traverse.make (depend_feature, static_class);
+							control.add (unit_to_traverse);
+						end;
 					end;
 					depend_list.forth
 				end;
@@ -199,7 +208,14 @@ feature {NONE}
 		require
 			good_argument: feat /= Void
 		do
-			used_table.put (feat.body_id);
+debug
+	io.error.putstring ("Feature ");
+	io.error.putstring (feat.feature_name);
+	io.error.putstring (" from ");
+	io.error.putstring (feat.written_class.class_name);
+	io.error.putstring (" is alive%N");
+end;
+			used_table.put (True, feat.body_id);
 		ensure
 			is_alive: is_alive (feat)
 		end;
@@ -211,9 +227,15 @@ feature
 		require
 			good_argument: feat /= Void
 		do
-			Result := used_table.has (feat.body_id)
+			Result := used_table.item (feat.body_id)
 		ensure
-			is_used: Result implies used_table.has (feat.body_id)
+			is_used: Result implies used_table.item (feat.body_id)
+		end;
+
+	is_body_alive (body_id: INTEGER): BOOLEAN is
+			-- Is the body id recorded in the `used_table' ?
+		do
+			Result := used_table.item (body_id)
 		end;
 
 end

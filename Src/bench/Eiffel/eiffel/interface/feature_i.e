@@ -846,6 +846,13 @@ feature -- Conveniences
 			not_is_il_external: Result implies not is_il_external
 		end
 
+	is_process_relative: BOOLEAN is
+			-- Is feature process-wide (rather than thread-local)?
+			-- (Usually applies to once routines.)
+		do
+			-- False by default
+		end
+
 	has_static_access: BOOLEAN is
 			-- Can Current be access in a static manner?
 		local

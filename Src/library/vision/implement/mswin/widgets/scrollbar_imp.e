@@ -48,7 +48,8 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font,
 			foreground_color as wel_foreground_color,
-			background_color as wel_background_color
+			background_color as wel_background_color,
+			is_horizontal as wel_is_horizontal
 		undefine
 			on_hide,
 			on_show,
@@ -62,7 +63,8 @@ inherit
 			on_destroy,
 			on_set_cursor,
 			on_key_up,
-			on_key_down
+			on_key_down,
+			background_brush
 		redefine
 			on_scroll
 		end

@@ -127,10 +127,12 @@ feature -- Execute command
 	execute_right_click (arg: EV_ARGUMENT; data: EV_BUTTON_EVENT_DATA) is
 		local
 			pt: EV_POINT
+			ang: EV_ANGLE
 		do
 			angle := (angle + 11) \\ 360
+			create ang.make_in_degrees (angle)
 			!! pt.set (data.x, data.y)
-			figure.rotate (angle, pt)
+			figure.rotate (ang, pt)
 			figure.draw
 		end
 

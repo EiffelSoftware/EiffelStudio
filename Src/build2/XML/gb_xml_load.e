@@ -143,7 +143,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			if titled_window_object = Void then
 					-- As `titled_window_object' = Void, it means that we are building a new object,
 					-- and hence we must create it accordingly.
-				window_object := object_handler.add_root_window
+				window_object := object_handler.add_root_window (window.attribute_by_name (type_string).value.to_utf8)
 				if not directory_name.is_empty then
 						--| FIXME should probably add a procedure in the directory item to handle this.
 					directory_item := Window_selector.directory_object_from_name (directory_name)

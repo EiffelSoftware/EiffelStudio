@@ -189,6 +189,10 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 	generate_transportable: GB_OBJECT is
 			-- `Result' is a GB_OBJECT matching `text' of `Current'.
 		do
+				-- Firstly, wipe out all drop actions for the type_selector
+				-- as they must now be empty, as we are picking a new type,
+				-- not an object.
+			type_selector.update_drop_actions_for_all_children (Void)
 			Result := object_handler.build_object_from_string (type)
 		ensure
 			Result_not_void: Result /= Void

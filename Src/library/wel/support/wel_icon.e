@@ -15,7 +15,8 @@ creation
 	make_by_name,
 	make_by_predefined_id,
 	make_by_file,
-	make_by_pointer
+	make_by_pointer,
+	make_by_icon_info
 
 feature {NONE} -- Initialization
 
@@ -30,6 +31,12 @@ feature {NONE} -- Initialization
 			!! a_wel_string.make (file_name)
 			item := cwin_load_image (default_pointer, a_wel_string.item,
 				Image_icon, 0, 0, Lr_loadfromfile)
+		end
+
+	make_by_icon_info (icon_info: WEL_ICON_INFO) is
+		
+		do
+			item := cwin_create_icon_indirect (icon_info.item)
 		end
 
 feature {NONE} -- Implementation
@@ -55,6 +62,14 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HINSTANCE, LPCSTR): EIF_POINTER"
 		alias
 			"LoadIcon"
+		end
+
+	cwin_create_icon_indirect (info: POINTER): POINTER is
+			-- SDK CreateIconIndirect
+		external
+			"C [macro <wel.h>] (ICONINFO *): EIF_POINTER"
+		alias
+			"CreateIconIndirect"
 		end
 
 	cwin_destroy_icon (hicon: POINTER) is

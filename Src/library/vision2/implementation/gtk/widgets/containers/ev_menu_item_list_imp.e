@@ -44,6 +44,9 @@ feature {NONE} -- implementation
 			insert_menu_item (an_item_imp, pos)
 			sep_imp ?= an_item_imp
 			if sep_imp /= Void then
+				check
+					sep_imp_radio_group_void: sep_imp.radio_group = Default_pointer
+				end
 				from
 					interface.go_i_th (pos + 1)
 				until
@@ -160,6 +163,7 @@ feature {NONE} -- implementation
 			-- Remove item at `a_position'
 		local
 			item_imp: EV_ITEM_IMP
+			radio_imp: EV_RADIO_MENU_ITEM
 		do
 			item_imp ?= eif_object_from_c (
 				C.g_list_nth_data (
@@ -218,6 +222,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/28 00:50:56  king
+--| Added check for separator radio group
+--|
 --| Revision 1.17  2000/04/28 00:23:42  king
 --| Refactored radio grouping code
 --|

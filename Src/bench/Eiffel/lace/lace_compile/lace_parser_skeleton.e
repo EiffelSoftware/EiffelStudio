@@ -11,7 +11,7 @@ inherit
 
 	LACE_PARSER_ROUTINES
 
-	YY_PARSER_SKELETON [ANY]
+	YY_NEW_PARSER_SKELETON
 		rename
 			parse as yyparse,
 			make as make_parser_skeleton

@@ -33,6 +33,276 @@ feature {NONE} -- Implementation
 			yycheck ?= yycheck_template
 		end
 
+	yy_create_value_stacks is
+			-- Create value stacks.
+		do
+		end
+
+	yy_init_value_stacks is
+			-- Initialize value stacks.
+		do
+			yyvsp1 := -1
+			yyvsp2 := -1
+			yyvsp3 := -1
+			yyvsp4 := -1
+			yyvsp5 := -1
+			yyvsp6 := -1
+			yyvsp7 := -1
+			yyvsp8 := -1
+			yyvsp9 := -1
+			yyvsp10 := -1
+			yyvsp11 := -1
+			yyvsp12 := -1
+			yyvsp13 := -1
+			yyvsp14 := -1
+			yyvsp15 := -1
+			yyvsp16 := -1
+			yyvsp17 := -1
+			yyvsp18 := -1
+			yyvsp19 := -1
+			yyvsp20 := -1
+			yyvsp21 := -1
+			yyvsp22 := -1
+			yyvsp23 := -1
+			yyvsp24 := -1
+			yyvsp25 := -1
+			yyvsp26 := -1
+			yyvsp27 := -1
+			yyvsp28 := -1
+			yyvsp29 := -1
+			yyvsp30 := -1
+			yyvsp31 := -1
+		end
+
+	yy_clear_value_stacks is
+			-- Clear objects in semantic value stacks so that
+			-- they can be collected by the garbage collector.
+		do
+			if yyvs1 /= Void then
+				yyvs1.clear_all
+			end
+			if yyvs2 /= Void then
+				yyvs2.clear_all
+			end
+			if yyvs3 /= Void then
+				yyvs3.clear_all
+			end
+			if yyvs4 /= Void then
+				yyvs4.clear_all
+			end
+			if yyvs5 /= Void then
+				yyvs5.clear_all
+			end
+			if yyvs6 /= Void then
+				yyvs6.clear_all
+			end
+			if yyvs7 /= Void then
+				yyvs7.clear_all
+			end
+			if yyvs8 /= Void then
+				yyvs8.clear_all
+			end
+			if yyvs9 /= Void then
+				yyvs9.clear_all
+			end
+			if yyvs10 /= Void then
+				yyvs10.clear_all
+			end
+			if yyvs11 /= Void then
+				yyvs11.clear_all
+			end
+			if yyvs12 /= Void then
+				yyvs12.clear_all
+			end
+			if yyvs13 /= Void then
+				yyvs13.clear_all
+			end
+			if yyvs14 /= Void then
+				yyvs14.clear_all
+			end
+			if yyvs15 /= Void then
+				yyvs15.clear_all
+			end
+			if yyvs16 /= Void then
+				yyvs16.clear_all
+			end
+			if yyvs17 /= Void then
+				yyvs17.clear_all
+			end
+			if yyvs18 /= Void then
+				yyvs18.clear_all
+			end
+			if yyvs19 /= Void then
+				yyvs19.clear_all
+			end
+			if yyvs20 /= Void then
+				yyvs20.clear_all
+			end
+			if yyvs21 /= Void then
+				yyvs21.clear_all
+			end
+			if yyvs22 /= Void then
+				yyvs22.clear_all
+			end
+			if yyvs23 /= Void then
+				yyvs23.clear_all
+			end
+			if yyvs24 /= Void then
+				yyvs24.clear_all
+			end
+			if yyvs25 /= Void then
+				yyvs25.clear_all
+			end
+			if yyvs26 /= Void then
+				yyvs26.clear_all
+			end
+			if yyvs27 /= Void then
+				yyvs27.clear_all
+			end
+			if yyvs28 /= Void then
+				yyvs28.clear_all
+			end
+			if yyvs29 /= Void then
+				yyvs29.clear_all
+			end
+			if yyvs30 /= Void then
+				yyvs30.clear_all
+			end
+			if yyvs31 /= Void then
+				yyvs31.clear_all
+			end
+		end
+
+	yy_push_last_value (yychar1: INTEGER) is
+			-- Push semantic value associated with token `last_token'
+			-- (with internal id `yychar1') on top of corresponding
+			-- value stack.
+		do
+			yyvsp1 := yyvsp1 + 1
+			if yyvsp1 >= yyvsc1 then
+				if yyvs1 = Void then
+					debug ("GEYACC")
+						std.error.put_line ("Create yyvs1")
+					end
+					create yyspecial_routines1
+					yyvsc1 := yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.make (yyvsc1)
+				else
+					debug ("GEYACC")
+						std.error.put_line ("Resize yyvs1")
+					end
+					yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+				end
+			end
+			yyvs1.put (last_any_value, yyvsp1)
+		end
+
+	yy_push_error_value is
+			-- Push semantic value associated with token 'error'
+			-- on top of corresponding value stack.
+		local
+			yyval1: ANY
+		do
+			yyvsp1 := yyvsp1 + 1
+			if yyvsp1 >= yyvsc1 then
+				if yyvs1 = Void then
+					debug ("GEYACC")
+						std.error.put_line ("Create yyvs1")
+					end
+					create yyspecial_routines1
+					yyvsc1 := yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.make (yyvsc1)
+				else
+					debug ("GEYACC")
+						std.error.put_line ("Resize yyvs1")
+					end
+					yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+					yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+				end
+			end
+			yyvs1.put (yyval1, yyvsp1)
+		end
+
+	yy_pop_last_value (yystate: INTEGER) is
+			-- Pop semantic value from stack when in state `yystate'.
+		local
+			yy_type_id: INTEGER
+		do
+			yy_type_id := yytypes1.item (yystate)
+			inspect yy_type_id
+			when 1 then
+				yyvsp1 := yyvsp1 - 1
+			when 2 then
+				yyvsp2 := yyvsp2 - 1
+			when 3 then
+				yyvsp3 := yyvsp3 - 1
+			when 4 then
+				yyvsp4 := yyvsp4 - 1
+			when 5 then
+				yyvsp5 := yyvsp5 - 1
+			when 6 then
+				yyvsp6 := yyvsp6 - 1
+			when 7 then
+				yyvsp7 := yyvsp7 - 1
+			when 8 then
+				yyvsp8 := yyvsp8 - 1
+			when 9 then
+				yyvsp9 := yyvsp9 - 1
+			when 10 then
+				yyvsp10 := yyvsp10 - 1
+			when 11 then
+				yyvsp11 := yyvsp11 - 1
+			when 12 then
+				yyvsp12 := yyvsp12 - 1
+			when 13 then
+				yyvsp13 := yyvsp13 - 1
+			when 14 then
+				yyvsp14 := yyvsp14 - 1
+			when 15 then
+				yyvsp15 := yyvsp15 - 1
+			when 16 then
+				yyvsp16 := yyvsp16 - 1
+			when 17 then
+				yyvsp17 := yyvsp17 - 1
+			when 18 then
+				yyvsp18 := yyvsp18 - 1
+			when 19 then
+				yyvsp19 := yyvsp19 - 1
+			when 20 then
+				yyvsp20 := yyvsp20 - 1
+			when 21 then
+				yyvsp21 := yyvsp21 - 1
+			when 22 then
+				yyvsp22 := yyvsp22 - 1
+			when 23 then
+				yyvsp23 := yyvsp23 - 1
+			when 24 then
+				yyvsp24 := yyvsp24 - 1
+			when 25 then
+				yyvsp25 := yyvsp25 - 1
+			when 26 then
+				yyvsp26 := yyvsp26 - 1
+			when 27 then
+				yyvsp27 := yyvsp27 - 1
+			when 28 then
+				yyvsp28 := yyvsp28 - 1
+			when 29 then
+				yyvsp29 := yyvsp29 - 1
+			when 30 then
+				yyvsp30 := yyvsp30 - 1
+			when 31 then
+				yyvsp31 := yyvsp31 - 1
+			else
+				debug ("GEYACC")
+					std.error.put_string ("Error in parser: unknown type id: ")
+					std.error.put_integer (yy_type_id)
+					std.error.put_new_line
+				end
+				abort
+			end
+		end
+
 feature {NONE} -- Semantic actions
 
 	yy_do_action (yy_act: INTEGER) is
@@ -40,490 +310,490 @@ feature {NONE} -- Semantic actions
 		do
 			inspect yy_act
 			when 1 then
-					--|#line 77 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_1
 			when 2 then
-					--|#line 79 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_2
 			when 3 then
-					--|#line 83 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_3
 			when 4 then
-					--|#line 87 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_4
 			when 5 then
-					--|#line 91 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_5
 			when 6 then
-					--|#line 98 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_6
 			when 7 then
-					--|#line 102 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_7
 			when 8 then
-					--|#line 104 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_8
 			when 9 then
-					--|#line 108 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_9
 			when 10 then
-					--|#line 110 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_10
 			when 11 then
-					--|#line 114 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_11
 			when 12 then
-					--|#line 116 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_12
 			when 13 then
-					--|#line 120 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_13
 			when 14 then
-					--|#line 125 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_14
 			when 15 then
-					--|#line 132 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_15
 			when 16 then
-					--|#line 134 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_16
 			when 17 then
-					--|#line 136 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_17
 			when 18 then
-					--|#line 138 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_18
 			when 19 then
-					--|#line 140 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_19
 			when 20 then
-					--|#line 142 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_20
 			when 21 then
-					--|#line 146 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_21
 			when 22 then
-					--|#line 148 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_22
 			when 23 then
-					--|#line 153 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_23
 			when 24 then
-					--|#line 155 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_24
 			when 25 then
-					--|#line 157 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_25
 			when 26 then
-					--|#line 159 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_26
 			when 27 then
-					--|#line 161 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_27
 			when 28 then
-					--|#line 163 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_28
 			when 29 then
-					--|#line 165 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_29
 			when 30 then
-					--|#line 167 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_30
 			when 31 then
-					--|#line 171 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_31
 			when 32 then
-					--|#line 173 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_32
 			when 33 then
-					--|#line 178 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_33
 			when 34 then
-					--|#line 183 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_34
 			when 35 then
-					--|#line 191 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_35
 			when 36 then
-					--|#line 195 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_36
 			when 37 then
-					--|#line 197 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_37
 			when 38 then
-					--|#line 202 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_38
 			when 39 then
-					--|#line 206 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_39
 			when 40 then
-					--|#line 208 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_40
 			when 41 then
-					--|#line 212 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_41
 			when 42 then
-					--|#line 214 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_42
 			when 43 then
-					--|#line 218 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_43
 			when 44 then
-					--|#line 220 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_44
 			when 45 then
-					--|#line 224 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_45
 			when 46 then
-					--|#line 226 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_46
 			when 47 then
-					--|#line 230 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_47
 			when 48 then
-					--|#line 235 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_48
 			when 49 then
-					--|#line 242 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_49
 			when 50 then
-					--|#line 247 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_50
 			when 51 then
-					--|#line 254 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_51
 			when 52 then
-					--|#line 259 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_52
 			when 53 then
-					--|#line 266 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_53
 			when 54 then
-					--|#line 268 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_54
 			when 55 then
-					--|#line 272 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_55
 			when 56 then
-					--|#line 274 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_56
 			when 57 then
-					--|#line 278 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_57
 			when 58 then
-					--|#line 283 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_58
 			when 59 then
-					--|#line 290 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_59
 			when 60 then
-					--|#line 292 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_60
 			when 61 then
-					--|#line 296 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_61
 			when 62 then
-					--|#line 301 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_62
 			when 63 then
-					--|#line 308 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_63
 			when 64 then
-					--|#line 312 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_64
 			when 65 then
-					--|#line 314 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_65
 			when 66 then
-					--|#line 318 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_66
 			when 67 then
-					--|#line 320 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_67
 			when 68 then
-					--|#line 324 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_68
 			when 69 then
-					--|#line 326 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_69
 			when 70 then
-					--|#line 330 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_70
 			when 71 then
-					--|#line 332 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_71
 			when 72 then
-					--|#line 336 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_72
 			when 73 then
-					--|#line 341 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_73
 			when 74 then
-					--|#line 348 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_74
 			when 75 then
-					--|#line 350 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_75
 			when 76 then
-					--|#line 352 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_76
 			when 77 then
-					--|#line 354 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_77
 			when 78 then
-					--|#line 358 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_78
 			when 79 then
-					--|#line 360 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_79
 			when 80 then
-					--|#line 362 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_80
 			when 81 then
-					--|#line 364 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_81
 			when 82 then
-					--|#line 366 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_82
 			when 83 then
-					--|#line 368 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_83
 			when 84 then
-					--|#line 377 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_84
 			when 85 then
-					--|#line 382 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_85
 			when 86 then
-					--|#line 389 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_86
 			when 87 then
-					--|#line 393 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_87
 			when 88 then
-					--|#line 395 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_88
 			when 89 then
-					--|#line 399 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_89
 			when 90 then
-					--|#line 404 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_90
 			when 91 then
-					--|#line 411 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_91
 			when 92 then
-					--|#line 413 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_92
 			when 93 then
-					--|#line 417 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_93
 			when 94 then
-					--|#line 419 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_94
 			when 95 then
-					--|#line 421 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_95
 			when 96 then
-					--|#line 425 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_96
 			when 97 then
-					--|#line 427 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_97
 			when 98 then
-					--|#line 429 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_98
 			when 99 then
-					--|#line 433 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_99
 			when 100 then
-					--|#line 435 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_100
 			when 101 then
-					--|#line 437 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_101
 			when 102 then
-					--|#line 439 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_102
 			when 103 then
-					--|#line 441 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_103
 			when 104 then
-					--|#line 445 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_104
 			when 105 then
-					--|#line 447 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_105
 			when 106 then
-					--|#line 449 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_106
 			when 107 then
-					--|#line 453 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_107
 			when 108 then
-					--|#line 458 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_108
 			when 109 then
-					--|#line 465 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_109
 			when 110 then
-					--|#line 470 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_110
 			when 111 then
-					--|#line 477 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_111
 			when 112 then
-					--|#line 479 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_112
 			when 113 then
-					--|#line 483 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_113
 			when 114 then
-					--|#line 485 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_114
 			when 115 then
-					--|#line 487 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_115
 			when 116 then
-					--|#line 491 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_116
 			when 117 then
-					--|#line 496 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_117
 			when 118 then
-					--|#line 503 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_118
 			when 119 then
-					--|#line 507 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_119
 			when 120 then
-					--|#line 512 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_120
 			when 121 then
-					--|#line 514 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_121
 			when 122 then
-					--|#line 516 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_122
 			when 123 then
-					--|#line 520 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_123
 			when 124 then
-					--|#line 525 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_124
 			when 125 then
-					--|#line 532 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_125
 			when 126 then
-					--|#line 536 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_126
 			when 127 then
-					--|#line 538 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_127
 			when 128 then
-					--|#line 542 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_128
 			when 129 then
-					--|#line 544 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_129
 			when 130 then
-					--|#line 548 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_130
 			when 131 then
-					--|#line 550 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_131
 			when 132 then
-					--|#line 554 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_132
 			when 133 then
-					--|#line 556 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_133
 			when 134 then
-					--|#line 560 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_134
 			when 135 then
-					--|#line 565 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_135
 			when 136 then
-					--|#line 572 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_136
 			when 137 then
-					--|#line 574 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_137
 			when 138 then
-					--|#line 576 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_138
 			when 139 then
-					--|#line 578 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_139
 			when 140 then
-					--|#line 580 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_140
 			when 141 then
-					--|#line 582 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_141
 			when 142 then
-					--|#line 586 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_142
 			when 143 then
-					--|#line 590 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_143
 			when 144 then
-					--|#line 592 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_144
 			when 145 then
-					--|#line 596 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_145
 			when 146 then
-					--|#line 600 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_146
 			when 147 then
-					--|#line 602 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_147
 			when 148 then
-					--|#line 606 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_148
 			when 149 then
-					--|#line 610 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_149
 			when 150 then
-					--|#line 612 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_150
 			when 151 then
-					--|#line 617 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_151
 			when 152 then
-					--|#line 624 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_152
 			when 153 then
-					--|#line 626 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_153
 			when 154 then
-					--|#line 630 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_154
 			when 155 then
-					--|#line 634 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_155
 			when 156 then
-					--|#line 639 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_156
 			when 157 then
-					--|#line 646 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_157
 			when 158 then
-					--|#line 648 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_158
 			when 159 then
-					--|#line 652 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_159
 			when 160 then
-					--|#line 654 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_160
 			when 161 then
-					--|#line 658 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_161
 			when 162 then
-					--|#line 659 "lace.y"
+					--|#line <not available> "lace.y"
 				yy_do_action_162
 			else
 				debug ("GEYACC")
@@ -536,3429 +806,4821 @@ feature {NONE} -- Semantic actions
 		end
 
 	yy_do_action_1 is
-			--|#line 77 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 77 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 77")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-ast := yytype2 (yyvs.item (yyvsp)) 
-
+ast := yyvs2.item (yyvsp2) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 + 1
+	yyvsp2 := yyvsp2 -1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		end
+	end
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_2 is
-			--|#line 79 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 79 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 79")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-			yyval := yyval_default;
-ast := yytype4 (yyvs.item (yyvsp)) 
-
+ast := yyvs4.item (yyvsp4) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 + 1
+	yyvsp4 := yyvsp4 -1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
+		end
+	end
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_3 is
-			--|#line 83 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval2: ACE_SD
 		do
---|#line 83 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 83")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval2.initialize (yytype9 (yyvs.item (yyvsp - 7)), yytype15 (yyvs.item (yyvsp - 6)), yytype22 (yyvs.item (yyvsp - 5)), yytype20 (yyvs.item (yyvsp - 4)), yytype21 (yyvs.item (yyvsp - 3)), yytype26 (yyvs.item (yyvsp - 2)), click_list) 
-			yyval := yyval2
+create yyval2.initialize (yyvs9.item (yyvsp9), yyvs15.item (yyvsp15), yyvs22.item (yyvsp22), yyvs20.item (yyvsp20), yyvs21.item (yyvsp21), yyvs26.item (yyvsp26), click_list) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 8
-	yyvsp := yyvsp - 7
-	yyvs.put (yyval, yyvsp)
+	yyvsp2 := yyvsp2 + 1
+	yyvsp9 := yyvsp9 -1
+	yyvsp15 := yyvsp15 -1
+	yyvsp22 := yyvsp22 -1
+	yyvsp20 := yyvsp20 -1
+	yyvsp21 := yyvsp21 -1
+	yyvsp26 := yyvsp26 -1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp2 >= yyvsc2 then
+		if yyvs2 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs2")
+			end
+			create yyspecial_routines2
+			yyvsc2 := yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.make (yyvsc2)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs2")
+			end
+			yyvsc2 := yyvsc2 + yyInitial_yyvs_size
+			yyvs2 := yyspecial_routines2.resize (yyvs2, yyvsc2)
+		end
+	end
+	yyvs2.put (yyval2, yyvsp2)
 end
 		end
 
 	yy_do_action_4 is
-			--|#line 87 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 87 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 87")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval9 := yytype9 (yyvs.item (yyvsp)) 
-			yyval := yyval9
+yyval9 := yyvs9.item (yyvsp9) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_5 is
-			--|#line 91 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval15: ROOT_SD
 		do
---|#line 91 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 91")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				create yyval15.initialize (yytype31 (yyvs.item (yyvsp - 2)).first, yytype9 (yyvs.item (yyvsp - 1)), yytype9 (yyvs.item (yyvsp)))
-				yytype31 (yyvs.item (yyvsp - 2)).second.set_node (yyval15)
+				create yyval15.initialize (yyvs31.item (yyvsp31).first, yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9))
+				yyvs31.item (yyvsp31).second.set_node (yyval15)
 			
-			yyval := yyval15
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyvsp15 := yyvsp15 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp31 := yyvsp31 -1
+	yyvsp9 := yyvsp9 -2
+	if yyvsp15 >= yyvsc15 then
+		if yyvs15 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs15")
+			end
+			create yyspecial_routines15
+			yyvsc15 := yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.make (yyvsc15)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs15")
+			end
+			yyvsc15 := yyvsc15 + yyInitial_yyvs_size
+			yyvs15 := yyspecial_routines15.resize (yyvs15, yyvsc15)
+		end
+	end
+	yyvs15.put (yyval15, yyvsp15)
 end
 		end
 
 	yy_do_action_6 is
-			--|#line 98 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval31: PAIR [ID_SD, CLICK_AST]
 		do
---|#line 98 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 98")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval31 := new_clickable_id (yytype9 (yyvs.item (yyvsp))) 
-			yyval := yyval31
+yyval31 := new_clickable_id (yyvs9.item (yyvsp9)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp31 := yyvsp31 + 1
+	yyvsp9 := yyvsp9 -1
+	if yyvsp31 >= yyvsc31 then
+		if yyvs31 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs31")
+			end
+			create yyspecial_routines31
+			yyvsc31 := yyInitial_yyvs_size
+			yyvs31 := yyspecial_routines31.make (yyvsc31)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs31")
+			end
+			yyvsc31 := yyvsc31 + yyInitial_yyvs_size
+			yyvs31 := yyspecial_routines31.resize (yyvs31, yyvsc31)
+		end
+	end
+	yyvs31.put (yyval31, yyvsp31)
 end
 		end
 
 	yy_do_action_7 is
-			--|#line 102 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 102 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 102")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval9
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp9 := yyvsp9 + 1
+	if yyvsp9 >= yyvsc9 then
+		if yyvs9 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs9")
+			end
+			create yyspecial_routines9
+			yyvsc9 := yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.make (yyvsc9)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs9")
+			end
+			yyvsc9 := yyvsc9 + yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_8 is
-			--|#line 104 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 104 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 104")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval9 := yytype9 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval9
+yyval9 := yyvs9.item (yyvsp9) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -2
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_9 is
-			--|#line 108 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 108 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 108")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval9
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp9 := yyvsp9 + 1
+	if yyvsp9 >= yyvsc9 then
+		if yyvs9 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs9")
+			end
+			create yyspecial_routines9
+			yyvsc9 := yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.make (yyvsc9)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs9")
+			end
+			yyvsc9 := yyvsc9 + yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_10 is
-			--|#line 110 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 110 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 110")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval9 := yytype9 (yyvs.item (yyvsp)) 
-			yyval := yyval9
+yyval9 := yyvs9.item (yyvsp9) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_11 is
-			--|#line 114 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval20: LACE_LIST [CLUSTER_SD]
 		do
---|#line 114 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 114")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval20 := yytype20 (yyvs.item (yyvsp)) 
-			yyval := yyval20
+yyval20 := yyvs20.item (yyvsp20) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs20.put (yyval20, yyvsp20)
 end
 		end
 
 	yy_do_action_12 is
-			--|#line 116 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval20: LACE_LIST [CLUSTER_SD]
 		do
---|#line 116 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 116")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval20 := Void 
-			yyval := yyval20
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp20 := yyvsp20 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp20 >= yyvsc20 then
+		if yyvs20 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs20")
+			end
+			create yyspecial_routines20
+			yyvsc20 := yyInitial_yyvs_size
+			yyvs20 := yyspecial_routines20.make (yyvsc20)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs20")
+			end
+			yyvsc20 := yyvsc20 + yyInitial_yyvs_size
+			yyvs20 := yyspecial_routines20.resize (yyvs20, yyvsc20)
+		end
+	end
+	yyvs20.put (yyval20, yyvsp20)
 end
 		end
 
 	yy_do_action_13 is
-			--|#line 120 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval20: LACE_LIST [CLUSTER_SD]
 		do
---|#line 120 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 120")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval20.make (10)
-				yyval20.extend (yytype6 (yyvs.item (yyvsp - 1)))
+				yyval20.extend (yyvs6.item (yyvsp6))
 			
-			yyval := yyval20
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp20 := yyvsp20 + 1
+	yyvsp6 := yyvsp6 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp20 >= yyvsc20 then
+		if yyvs20 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs20")
+			end
+			create yyspecial_routines20
+			yyvsc20 := yyInitial_yyvs_size
+			yyvs20 := yyspecial_routines20.make (yyvsc20)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs20")
+			end
+			yyvsc20 := yyvsc20 + yyInitial_yyvs_size
+			yyvs20 := yyspecial_routines20.resize (yyvs20, yyvsc20)
+		end
+	end
+	yyvs20.put (yyval20, yyvsp20)
 end
 		end
 
 	yy_do_action_14 is
-			--|#line 125 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval20: LACE_LIST [CLUSTER_SD]
 		do
---|#line 125 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 125")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval20 := yytype20 (yyvs.item (yyvsp - 2))
-				yyval20.extend (yytype6 (yyvs.item (yyvsp - 1)))
+				yyval20 := yyvs20.item (yyvsp20)
+				yyval20.extend (yyvs6.item (yyvsp6))
 			
-			yyval := yyval20
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp6 := yyvsp6 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs20.put (yyval20, yyvsp20)
 end
 		end
 
 	yy_do_action_15 is
-			--|#line 132 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
 		do
---|#line 132 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 132")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval6.initialize (yytype9 (yyvs.item (yyvsp - 3)), yytype9 (yyvs.item (yyvsp - 2)), yytype9 (yyvs.item (yyvsp)), Void, False, False) 
-			yyval := yyval6
+create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), Void, False, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyvsp6 := yyvsp6 + 1
+	yyvsp9 := yyvsp9 -3
+	yyvsp1 := yyvsp1 -1
+	if yyvsp6 >= yyvsc6 then
+		if yyvs6 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs6")
+			end
+			create yyspecial_routines6
+			yyvsc6 := yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.make (yyvsc6)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs6")
+			end
+			yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
+		end
+	end
+	yyvs6.put (yyval6, yyvsp6)
 end
 		end
 
 	yy_do_action_16 is
-			--|#line 134 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
 		do
---|#line 134 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 134")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval6.initialize (yytype9 (yyvs.item (yyvsp - 3)), yytype9 (yyvs.item (yyvsp - 2)), yytype9 (yyvs.item (yyvsp)), Void, True, False) 
-			yyval := yyval6
+create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), Void, True, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyvsp6 := yyvsp6 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp9 := yyvsp9 -3
+	if yyvsp6 >= yyvsc6 then
+		if yyvs6 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs6")
+			end
+			create yyspecial_routines6
+			yyvsc6 := yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.make (yyvsc6)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs6")
+			end
+			yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
+		end
+	end
+	yyvs6.put (yyval6, yyvsp6)
 end
 		end
 
 	yy_do_action_17 is
-			--|#line 136 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
 		do
---|#line 136 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 136")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval6.initialize (yytype9 (yyvs.item (yyvsp - 3)), yytype9 (yyvs.item (yyvsp - 2)), yytype9 (yyvs.item (yyvsp)), Void, True, True) 
-			yyval := yyval6
+create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), Void, True, True) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyvsp6 := yyvsp6 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp9 := yyvsp9 -3
+	if yyvsp6 >= yyvsc6 then
+		if yyvs6 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs6")
+			end
+			create yyspecial_routines6
+			yyvsc6 := yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.make (yyvsc6)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs6")
+			end
+			yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
+		end
+	end
+	yyvs6.put (yyval6, yyvsp6)
 end
 		end
 
 	yy_do_action_18 is
-			--|#line 138 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
 		do
---|#line 138 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 138")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval6.initialize (yytype9 (yyvs.item (yyvsp - 5)), yytype9 (yyvs.item (yyvsp - 4)), yytype9 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp - 1)), False, False) 
-			yyval := yyval6
+create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), yyvs4.item (yyvsp4), False, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyvsp6 := yyvsp6 + 1
+	yyvsp9 := yyvsp9 -3
+	yyvsp1 := yyvsp1 -2
+	yyvsp4 := yyvsp4 -1
+	if yyvsp6 >= yyvsc6 then
+		if yyvs6 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs6")
+			end
+			create yyspecial_routines6
+			yyvsc6 := yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.make (yyvsc6)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs6")
+			end
+			yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
+		end
+	end
+	yyvs6.put (yyval6, yyvsp6)
 end
 		end
 
 	yy_do_action_19 is
-			--|#line 140 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
 		do
---|#line 140 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 140")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval6.initialize (yytype9 (yyvs.item (yyvsp - 5)), yytype9 (yyvs.item (yyvsp - 4)), yytype9 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp - 1)), True, False) 
-			yyval := yyval6
+create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), yyvs4.item (yyvsp4), True, False) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 7
-	yyvsp := yyvsp - 6
-	yyvs.put (yyval, yyvsp)
+	yyvsp6 := yyvsp6 + 1
+	yyvsp1 := yyvsp1 -3
+	yyvsp9 := yyvsp9 -3
+	yyvsp4 := yyvsp4 -1
+	if yyvsp6 >= yyvsc6 then
+		if yyvs6 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs6")
+			end
+			create yyspecial_routines6
+			yyvsc6 := yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.make (yyvsc6)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs6")
+			end
+			yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
+		end
+	end
+	yyvs6.put (yyval6, yyvsp6)
 end
 		end
 
 	yy_do_action_20 is
-			--|#line 142 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
 		do
---|#line 142 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 142")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval6.initialize (yytype9 (yyvs.item (yyvsp - 5)), yytype9 (yyvs.item (yyvsp - 4)), yytype9 (yyvs.item (yyvsp - 2)), yytype4 (yyvs.item (yyvsp - 1)), True, True) 
-			yyval := yyval6
+create yyval6.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), yyvs4.item (yyvsp4), True, True) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 7
-	yyvsp := yyvsp - 6
-	yyvs.put (yyval, yyvsp)
+	yyvsp6 := yyvsp6 + 1
+	yyvsp1 := yyvsp1 -3
+	yyvsp9 := yyvsp9 -3
+	yyvsp4 := yyvsp4 -1
+	if yyvsp6 >= yyvsc6 then
+		if yyvs6 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs6")
+			end
+			create yyspecial_routines6
+			yyvsc6 := yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.make (yyvsc6)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs6")
+			end
+			yyvsc6 := yyvsc6 + yyInitial_yyvs_size
+			yyvs6 := yyspecial_routines6.resize (yyvs6, yyvsc6)
+		end
+	end
+	yyvs6.put (yyval6, yyvsp6)
 end
 		end
 
 	yy_do_action_21 is
-			--|#line 146 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 146 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 146")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval9
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp9 := yyvsp9 + 1
+	if yyvsp9 >= yyvsc9 then
+		if yyvs9 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs9")
+			end
+			create yyspecial_routines9
+			yyvsc9 := yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.make (yyvsc9)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs9")
+			end
+			yyvsc9 := yyvsc9 + yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_22 is
-			--|#line 148 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 148 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 148")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval9 := yytype9 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval9
+yyval9 := yyvs9.item (yyvsp9) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -2
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_23 is
-			--|#line 153 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
 		do
---|#line 153 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 153")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval4.initialize (yytype29 (yyvs.item (yyvsp - 7)), yytype9 (yyvs.item (yyvsp - 6)), yytype25 (yyvs.item (yyvsp - 5)), yytype25 (yyvs.item (yyvsp - 4)), yytype19 (yyvs.item (yyvsp - 3)), yytype22 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1)), yytype18 (yyvs.item (yyvsp))) 
-			yyval := yyval4
+create yyval4.initialize (yyvs29.item (yyvsp29), yyvs9.item (yyvsp9), yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25), yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 8
-	yyvsp := yyvsp - 7
-	yyvs.put (yyval, yyvsp)
+	yyvsp4 := yyvsp4 + 1
+	yyvsp29 := yyvsp29 -1
+	yyvsp9 := yyvsp9 -1
+	yyvsp25 := yyvsp25 -2
+	yyvsp19 := yyvsp19 -1
+	yyvsp22 := yyvsp22 -1
+	yyvsp27 := yyvsp27 -1
+	yyvsp18 := yyvsp18 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
 end
 		end
 
 	yy_do_action_24 is
-			--|#line 155 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
 		do
---|#line 155 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 155")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval4.initialize (Void, yytype9 (yyvs.item (yyvsp - 6)), yytype25 (yyvs.item (yyvsp - 5)), yytype25 (yyvs.item (yyvsp - 4)), yytype19 (yyvs.item (yyvsp - 3)), yytype22 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1)), yytype18 (yyvs.item (yyvsp))) 
-			yyval := yyval4
+create yyval4.initialize (Void, yyvs9.item (yyvsp9), yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25), yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 7
-	yyvsp := yyvsp - 6
-	yyvs.put (yyval, yyvsp)
+	yyvsp4 := yyvsp4 + 1
+	yyvsp9 := yyvsp9 -1
+	yyvsp25 := yyvsp25 -2
+	yyvsp19 := yyvsp19 -1
+	yyvsp22 := yyvsp22 -1
+	yyvsp27 := yyvsp27 -1
+	yyvsp18 := yyvsp18 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
 end
 		end
 
 	yy_do_action_25 is
-			--|#line 157 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
 		do
---|#line 157 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 157")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval4.initialize (Void, Void, yytype25 (yyvs.item (yyvsp - 5)), yytype25 (yyvs.item (yyvsp - 4)), yytype19 (yyvs.item (yyvsp - 3)), yytype22 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1)), yytype18 (yyvs.item (yyvsp))) 
-			yyval := yyval4
+create yyval4.initialize (Void, Void, yyvs25.item (yyvsp25 - 1), yyvs25.item (yyvsp25), yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyvsp4 := yyvsp4 + 1
+	yyvsp25 := yyvsp25 -2
+	yyvsp19 := yyvsp19 -1
+	yyvsp22 := yyvsp22 -1
+	yyvsp27 := yyvsp27 -1
+	yyvsp18 := yyvsp18 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
 end
 		end
 
 	yy_do_action_26 is
-			--|#line 159 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
 		do
---|#line 159 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 159")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval4.initialize (Void, Void, Void, yytype25 (yyvs.item (yyvsp - 4)), yytype19 (yyvs.item (yyvsp - 3)), yytype22 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1)), yytype18 (yyvs.item (yyvsp))) 
-			yyval := yyval4
+create yyval4.initialize (Void, Void, Void, yyvs25.item (yyvsp25), yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyvsp4 := yyvsp4 + 1
+	yyvsp25 := yyvsp25 -1
+	yyvsp19 := yyvsp19 -1
+	yyvsp22 := yyvsp22 -1
+	yyvsp27 := yyvsp27 -1
+	yyvsp18 := yyvsp18 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
 end
 		end
 
 	yy_do_action_27 is
-			--|#line 161 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
 		do
---|#line 161 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 161")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval4.initialize (Void, Void, Void, Void, yytype19 (yyvs.item (yyvsp - 3)), yytype22 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1)), yytype18 (yyvs.item (yyvsp))) 
-			yyval := yyval4
+create yyval4.initialize (Void, Void, Void, Void, yyvs19.item (yyvsp19), yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyvsp4 := yyvsp4 + 1
+	yyvsp19 := yyvsp19 -1
+	yyvsp22 := yyvsp22 -1
+	yyvsp27 := yyvsp27 -1
+	yyvsp18 := yyvsp18 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
 end
 		end
 
 	yy_do_action_28 is
-			--|#line 163 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
 		do
---|#line 163 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 163")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval4.initialize (Void, Void, Void, Void, Void, yytype22 (yyvs.item (yyvsp - 2)), yytype27 (yyvs.item (yyvsp - 1)), yytype18 (yyvs.item (yyvsp))) 
-			yyval := yyval4
+create yyval4.initialize (Void, Void, Void, Void, Void, yyvs22.item (yyvsp22), yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp4 := yyvsp4 + 1
+	yyvsp22 := yyvsp22 -1
+	yyvsp27 := yyvsp27 -1
+	yyvsp18 := yyvsp18 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
 end
 		end
 
 	yy_do_action_29 is
-			--|#line 165 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
 		do
---|#line 165 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 165")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval4.initialize (Void, Void, Void, Void, Void, Void, yytype27 (yyvs.item (yyvsp - 1)), yytype18 (yyvs.item (yyvsp))) 
-			yyval := yyval4
+create yyval4.initialize (Void, Void, Void, Void, Void, Void, yyvs27.item (yyvsp27), yyvs18.item (yyvsp18)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp4 := yyvsp4 + 1
+	yyvsp27 := yyvsp27 -1
+	yyvsp18 := yyvsp18 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
 end
 		end
 
 	yy_do_action_30 is
-			--|#line 167 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
 		do
---|#line 167 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 167")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval4.initialize (Void, Void, Void, Void, Void, Void, Void, yytype18 (yyvs.item (yyvsp))) 
-			yyval := yyval4
+create yyval4.initialize (Void, Void, Void, Void, Void, Void, Void, yyvs18.item (yyvsp18)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp4 := yyvsp4 + 1
+	yyvsp18 := yyvsp18 -1
+	if yyvsp4 >= yyvsc4 then
+		if yyvs4 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs4")
+			end
+			create yyspecial_routines4
+			yyvsc4 := yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.make (yyvsc4)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs4")
+			end
+			yyvsc4 := yyvsc4 + yyInitial_yyvs_size
+			yyvs4 := yyspecial_routines4.resize (yyvs4, yyvsc4)
+		end
+	end
+	yyvs4.put (yyval4, yyvsp4)
 end
 		end
 
 	yy_do_action_31 is
-			--|#line 171 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval29: LACE_LIST [DEPEND_SD]
 		do
---|#line 171 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 171")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval29 := yytype29 (yyvs.item (yyvsp)) 
-			yyval := yyval29
+yyval29 := yyvs29.item (yyvsp29) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs29.put (yyval29, yyvsp29)
 end
 		end
 
 	yy_do_action_32 is
-			--|#line 173 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval29: LACE_LIST [DEPEND_SD]
 		do
---|#line 173 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 173")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval29
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp29 := yyvsp29 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp29 >= yyvsc29 then
+		if yyvs29 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs29")
+			end
+			create yyspecial_routines29
+			yyvsc29 := yyInitial_yyvs_size
+			yyvs29 := yyspecial_routines29.make (yyvsc29)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs29")
+			end
+			yyvsc29 := yyvsc29 + yyInitial_yyvs_size
+			yyvs29 := yyspecial_routines29.resize (yyvs29, yyvsc29)
+		end
+	end
+	yyvs29.put (yyval29, yyvsp29)
 end
 		end
 
 	yy_do_action_33 is
-			--|#line 178 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval29: LACE_LIST [DEPEND_SD]
 		do
---|#line 178 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 178")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval29.make (10)
-				yyval29.extend (yytype17 (yyvs.item (yyvsp - 1)))
+				yyval29.extend (yyvs17.item (yyvsp17))
 			
-			yyval := yyval29
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp29 := yyvsp29 + 1
+	yyvsp17 := yyvsp17 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp29 >= yyvsc29 then
+		if yyvs29 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs29")
+			end
+			create yyspecial_routines29
+			yyvsc29 := yyInitial_yyvs_size
+			yyvs29 := yyspecial_routines29.make (yyvsc29)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs29")
+			end
+			yyvsc29 := yyvsc29 + yyInitial_yyvs_size
+			yyvs29 := yyspecial_routines29.resize (yyvs29, yyvsc29)
+		end
+	end
+	yyvs29.put (yyval29, yyvsp29)
 end
 		end
 
 	yy_do_action_34 is
-			--|#line 183 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval29: LACE_LIST [DEPEND_SD]
 		do
---|#line 183 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 183")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval29 := yytype29 (yyvs.item (yyvsp - 2))
-				yyval29.extend (yytype17 (yyvs.item (yyvsp - 1)))
+				yyval29 := yyvs29.item (yyvsp29)
+				yyval29.extend (yyvs17.item (yyvsp17))
 			
-			yyval := yyval29
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp17 := yyvsp17 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs29.put (yyval29, yyvsp29)
 end
 		end
 
 	yy_do_action_35 is
-			--|#line 191 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval17: DEPEND_SD
 		do
---|#line 191 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 191")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval17.initialize (yytype23 (yyvs.item (yyvsp - 2)), yytype9 (yyvs.item (yyvsp))) 
-			yyval := yyval17
+create yyval17.initialize (yyvs23.item (yyvsp23), yyvs9.item (yyvsp9)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp17 := yyvsp17 + 1
+	yyvsp23 := yyvsp23 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp9 := yyvsp9 -1
+	if yyvsp17 >= yyvsc17 then
+		if yyvs17 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs17")
+			end
+			create yyspecial_routines17
+			yyvsc17 := yyInitial_yyvs_size
+			yyvs17 := yyspecial_routines17.make (yyvsc17)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs17")
+			end
+			yyvsc17 := yyvsc17 + yyInitial_yyvs_size
+			yyvs17 := yyspecial_routines17.resize (yyvs17, yyvsc17)
+		end
+	end
+	yyvs17.put (yyval17, yyvsp17)
 end
 		end
 
 	yy_do_action_36 is
-			--|#line 195 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 195 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 195")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval9
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp9 := yyvsp9 + 1
+	if yyvsp9 >= yyvsc9 then
+		if yyvs9 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs9")
+			end
+			create yyspecial_routines9
+			yyvsc9 := yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.make (yyvsc9)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs9")
+			end
+			yyvsc9 := yyvsc9 + yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_37 is
-			--|#line 197 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 197 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 197")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval9 := yytype9 (yyvs.item (yyvsp)) 
-			yyval := yyval9
+yyval9 := yyvs9.item (yyvsp9) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_38 is
-			--|#line 202 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 202 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 202")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval9 := yytype9 (yyvs.item (yyvsp)) 
-			yyval := yyval9
+yyval9 := yyvs9.item (yyvsp9) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_39 is
-			--|#line 206 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
 		do
---|#line 206 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 206")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval25
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp25 := yyvsp25 + 1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_40 is
-			--|#line 208 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
 		do
---|#line 208 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 208")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval25 := yytype25 (yyvs.item (yyvsp)) 
-			yyval := yyval25
+yyval25 := yyvs25.item (yyvsp25) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_41 is
-			--|#line 212 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
 		do
---|#line 212 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 212")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval25 := yytype25 (yyvs.item (yyvsp)) 
-			yyval := yyval25
+yyval25 := yyvs25.item (yyvsp25) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_42 is
-			--|#line 214 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
 		do
---|#line 214 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 214")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval25
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_43 is
-			--|#line 218 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
 		do
---|#line 218 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 218")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval25
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp25 := yyvsp25 + 1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_44 is
-			--|#line 220 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
 		do
---|#line 220 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 220")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval25 := yytype25 (yyvs.item (yyvsp)) 
-			yyval := yyval25
+yyval25 := yyvs25.item (yyvsp25) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_45 is
-			--|#line 224 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
 		do
---|#line 224 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 224")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval25 := yytype25 (yyvs.item (yyvsp)) 
-			yyval := yyval25
+yyval25 := yyvs25.item (yyvsp25) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_46 is
-			--|#line 226 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
 		do
---|#line 226 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 226")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval25
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_47 is
-			--|#line 230 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
 		do
---|#line 230 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 230")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval25.make (10)
-				yyval25.extend (create {FILE_NAME_SD}.initialize (yytype9 (yyvs.item (yyvsp - 1))))
+				yyval25.extend (create {FILE_NAME_SD}.initialize (yyvs9.item (yyvsp9)))
 			
-			yyval := yyval25
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 + 1
+	yyvsp9 := yyvsp9 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_48 is
-			--|#line 235 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
 		do
---|#line 235 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 235")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval25 := yytype25 (yyvs.item (yyvsp - 2))
-				yyval25.extend (create {FILE_NAME_SD}.initialize (yytype9 (yyvs.item (yyvsp - 1))))
+				yyval25 := yyvs25.item (yyvsp25)
+				yyval25.extend (create {FILE_NAME_SD}.initialize (yyvs9.item (yyvsp9)))
 			
-			yyval := yyval25
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp9 := yyvsp9 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_49 is
-			--|#line 242 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
 		do
---|#line 242 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 242")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval25.make (10)
-				yyval25.extend (create {FILE_NAME_SD}.initialize (yytype9 (yyvs.item (yyvsp - 1))))
+				yyval25.extend (create {FILE_NAME_SD}.initialize (yyvs9.item (yyvsp9)))
 			
-			yyval := yyval25
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp25 := yyvsp25 + 1
+	yyvsp9 := yyvsp9 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_50 is
-			--|#line 247 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
 		do
---|#line 247 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 247")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval25 := yytype25 (yyvs.item (yyvsp - 2))
-				yyval25.extend (create {FILE_NAME_SD}.initialize (yytype9 (yyvs.item (yyvsp - 1))))
+				yyval25 := yyvs25.item (yyvsp25)
+				yyval25.extend (create {FILE_NAME_SD}.initialize (yyvs9.item (yyvsp9)))
 			
-			yyval := yyval25
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp9 := yyvsp9 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs25.put (yyval25, yyvsp25)
 end
 		end
 
 	yy_do_action_51 is
-			--|#line 254 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 254 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 254")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval23.make (10)
-				yyval23.extend (yytype9 (yyvs.item (yyvsp)))
+				yyval23.extend (yyvs9.item (yyvsp9))
 			
-			yyval := yyval23
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp23 := yyvsp23 + 1
+	yyvsp9 := yyvsp9 -1
+	if yyvsp23 >= yyvsc23 then
+		if yyvs23 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs23")
+			end
+			create yyspecial_routines23
+			yyvsc23 := yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.make (yyvsc23)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs23")
+			end
+			yyvsc23 := yyvsc23 + yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.resize (yyvs23, yyvsc23)
+		end
+	end
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_52 is
-			--|#line 259 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 259 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 259")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval23 := yytype23 (yyvs.item (yyvsp - 2))
-				yyval23.extend (yytype9 (yyvs.item (yyvsp)))
+				yyval23 := yyvs23.item (yyvsp23)
+				yyval23.extend (yyvs9.item (yyvsp9))
 			
-			yyval := yyval23
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvsp9 := yyvsp9 -1
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_53 is
-			--|#line 266 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
 		do
---|#line 266 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 266")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval19
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp19 := yyvsp19 + 1
+	if yyvsp19 >= yyvsc19 then
+		if yyvs19 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs19")
+			end
+			create yyspecial_routines19
+			yyvsc19 := yyInitial_yyvs_size
+			yyvs19 := yyspecial_routines19.make (yyvsc19)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs19")
+			end
+			yyvsc19 := yyvsc19 + yyInitial_yyvs_size
+			yyvs19 := yyspecial_routines19.resize (yyvs19, yyvsc19)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs19.put (yyval19, yyvsp19)
 end
 		end
 
 	yy_do_action_54 is
-			--|#line 268 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
 		do
---|#line 268 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 268")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval19 := yytype19 (yyvs.item (yyvsp)) 
-			yyval := yyval19
+yyval19 := yyvs19.item (yyvsp19) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs19.put (yyval19, yyvsp19)
 end
 		end
 
 	yy_do_action_55 is
-			--|#line 272 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
 		do
---|#line 272 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 272")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval19 := yytype19 (yyvs.item (yyvsp)) 
-			yyval := yyval19
+yyval19 := yyvs19.item (yyvsp19) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs19.put (yyval19, yyvsp19)
 end
 		end
 
 	yy_do_action_56 is
-			--|#line 274 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
 		do
---|#line 274 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 274")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval19
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp19 := yyvsp19 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp19 >= yyvsc19 then
+		if yyvs19 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs19")
+			end
+			create yyspecial_routines19
+			yyvsc19 := yyInitial_yyvs_size
+			yyvs19 := yyspecial_routines19.make (yyvsc19)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs19")
+			end
+			yyvsc19 := yyvsc19 + yyInitial_yyvs_size
+			yyvs19 := yyspecial_routines19.resize (yyvs19, yyvsc19)
+		end
+	end
+	yyvs19.put (yyval19, yyvsp19)
 end
 		end
 
 	yy_do_action_57 is
-			--|#line 278 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
 		do
---|#line 278 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 278")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval19.make (10)
-				yyval19.extend (yytype5 (yyvs.item (yyvsp - 1)))
+				yyval19.extend (yyvs5.item (yyvsp5))
 			
-			yyval := yyval19
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp19 := yyvsp19 + 1
+	yyvsp5 := yyvsp5 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp19 >= yyvsc19 then
+		if yyvs19 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs19")
+			end
+			create yyspecial_routines19
+			yyvsc19 := yyInitial_yyvs_size
+			yyvs19 := yyspecial_routines19.make (yyvsc19)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs19")
+			end
+			yyvsc19 := yyvsc19 + yyInitial_yyvs_size
+			yyvs19 := yyspecial_routines19.resize (yyvs19, yyvsc19)
+		end
+	end
+	yyvs19.put (yyval19, yyvsp19)
 end
 		end
 
 	yy_do_action_58 is
-			--|#line 283 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
 		do
---|#line 283 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 283")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval19 := yytype19 (yyvs.item (yyvsp - 2))
-				yyval19.extend (yytype5 (yyvs.item (yyvsp - 1)))
+				yyval19 := yyvs19.item (yyvsp19)
+				yyval19.extend (yyvs5.item (yyvsp5))
 			
-			yyval := yyval19
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp5 := yyvsp5 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs19.put (yyval19, yyvsp19)
 end
 		end
 
 	yy_do_action_59 is
-			--|#line 290 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval5: CLUST_ADAPT_SD
 		do
---|#line 290 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 290")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create {CLUST_IGN_SD} yyval5.initialize (yytype9 (yyvs.item (yyvsp - 2))) 
-			yyval := yyval5
+create {CLUST_IGN_SD} yyval5.initialize (yyvs9.item (yyvsp9)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp5 := yyvsp5 + 1
+	yyvsp9 := yyvsp9 -1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp5 >= yyvsc5 then
+		if yyvs5 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs5")
+			end
+			create yyspecial_routines5
+			yyvsc5 := yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.make (yyvsc5)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs5")
+			end
+			yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
+		end
+	end
+	yyvs5.put (yyval5, yyvsp5)
 end
 		end
 
 	yy_do_action_60 is
-			--|#line 292 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval5: CLUST_ADAPT_SD
 		do
---|#line 292 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 292")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create {CLUST_REN_SD} yyval5.initialize (yytype9 (yyvs.item (yyvsp - 3)), yytype28 (yyvs.item (yyvsp))) 
-			yyval := yyval5
+create {CLUST_REN_SD} yyval5.initialize (yyvs9.item (yyvsp9), yyvs28.item (yyvsp28)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyvsp5 := yyvsp5 + 1
+	yyvsp9 := yyvsp9 -1
+	yyvsp1 := yyvsp1 -2
+	yyvsp28 := yyvsp28 -1
+	if yyvsp5 >= yyvsc5 then
+		if yyvs5 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs5")
+			end
+			create yyspecial_routines5
+			yyvsc5 := yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.make (yyvsc5)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs5")
+			end
+			yyvsc5 := yyvsc5 + yyInitial_yyvs_size
+			yyvs5 := yyspecial_routines5.resize (yyvs5, yyvsc5)
+		end
+	end
+	yyvs5.put (yyval5, yyvsp5)
 end
 		end
 
 	yy_do_action_61 is
-			--|#line 296 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
 		do
---|#line 296 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 296")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval28.make (10)
-				yyval28.extend (yytype16 (yyvs.item (yyvsp)))
+				yyval28.extend (yyvs16.item (yyvsp16))
 			
-			yyval := yyval28
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp28 := yyvsp28 + 1
+	yyvsp16 := yyvsp16 -1
+	if yyvsp28 >= yyvsc28 then
+		if yyvs28 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs28")
+			end
+			create yyspecial_routines28
+			yyvsc28 := yyInitial_yyvs_size
+			yyvs28 := yyspecial_routines28.make (yyvsc28)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs28")
+			end
+			yyvsc28 := yyvsc28 + yyInitial_yyvs_size
+			yyvs28 := yyspecial_routines28.resize (yyvs28, yyvsc28)
+		end
+	end
+	yyvs28.put (yyval28, yyvsp28)
 end
 		end
 
 	yy_do_action_62 is
-			--|#line 301 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
 		do
---|#line 301 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 301")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval28 := yytype28 (yyvs.item (yyvsp - 2))
-				yyval28.extend (yytype16 (yyvs.item (yyvsp)))
+				yyval28 := yyvs28.item (yyvsp28)
+				yyval28.extend (yyvs16.item (yyvsp16))
 			
-			yyval := yyval28
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvsp16 := yyvsp16 -1
+	yyvs28.put (yyval28, yyvsp28)
 end
 		end
 
 	yy_do_action_63 is
-			--|#line 308 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval16: TWO_NAME_SD
 		do
---|#line 308 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 308")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval16.initialize (yytype9 (yyvs.item (yyvsp - 2)), yytype9 (yyvs.item (yyvsp))) 
-			yyval := yyval16
+create yyval16.initialize (yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp16 := yyvsp16 + 1
+	yyvsp9 := yyvsp9 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp16 >= yyvsc16 then
+		if yyvs16 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs16")
+			end
+			create yyspecial_routines16
+			yyvsc16 := yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.make (yyvsc16)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs16")
+			end
+			yyvsc16 := yyvsc16 + yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.resize (yyvs16, yyvsc16)
+		end
+	end
+	yyvs16.put (yyval16, yyvsp16)
 end
 		end
 
 	yy_do_action_64 is
-			--|#line 312 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
 		do
---|#line 312 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 312")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval22
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp22 := yyvsp22 + 1
+	if yyvsp22 >= yyvsc22 then
+		if yyvs22 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs22")
+			end
+			create yyspecial_routines22
+			yyvsc22 := yyInitial_yyvs_size
+			yyvs22 := yyspecial_routines22.make (yyvsc22)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs22")
+			end
+			yyvsc22 := yyvsc22 + yyInitial_yyvs_size
+			yyvs22 := yyspecial_routines22.resize (yyvs22, yyvsc22)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs22.put (yyval22, yyvsp22)
 end
 		end
 
 	yy_do_action_65 is
-			--|#line 314 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
 		do
---|#line 314 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 314")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval22 := yytype22 (yyvs.item (yyvsp)) 
-			yyval := yyval22
+yyval22 := yyvs22.item (yyvsp22) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs22.put (yyval22, yyvsp22)
 end
 		end
 
 	yy_do_action_66 is
-			--|#line 318 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
 		do
---|#line 318 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 318")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval22 := yytype22 (yyvs.item (yyvsp)) 
-			yyval := yyval22
+yyval22 := yyvs22.item (yyvsp22) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs22.put (yyval22, yyvsp22)
 end
 		end
 
 	yy_do_action_67 is
-			--|#line 320 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
 		do
---|#line 320 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 320")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval22
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp22 := yyvsp22 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp22 >= yyvsc22 then
+		if yyvs22 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs22")
+			end
+			create yyspecial_routines22
+			yyvsc22 := yyInitial_yyvs_size
+			yyvs22 := yyspecial_routines22.make (yyvsc22)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs22")
+			end
+			yyvsc22 := yyvsc22 + yyInitial_yyvs_size
+			yyvs22 := yyspecial_routines22.resize (yyvs22, yyvsc22)
+		end
+	end
+	yyvs22.put (yyval22, yyvsp22)
 end
 		end
 
 	yy_do_action_68 is
-			--|#line 324 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
 		do
---|#line 324 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 324")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval27
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp27 := yyvsp27 + 1
+	if yyvsp27 >= yyvsc27 then
+		if yyvs27 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs27")
+			end
+			create yyspecial_routines27
+			yyvsc27 := yyInitial_yyvs_size
+			yyvs27 := yyspecial_routines27.make (yyvsc27)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs27")
+			end
+			yyvsc27 := yyvsc27 + yyInitial_yyvs_size
+			yyvs27 := yyspecial_routines27.resize (yyvs27, yyvsc27)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs27.put (yyval27, yyvsp27)
 end
 		end
 
 	yy_do_action_69 is
-			--|#line 326 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
 		do
---|#line 326 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 326")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval27 := yytype27 (yyvs.item (yyvsp)) 
-			yyval := yyval27
+yyval27 := yyvs27.item (yyvsp27) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs27.put (yyval27, yyvsp27)
 end
 		end
 
 	yy_do_action_70 is
-			--|#line 330 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
 		do
---|#line 330 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 330")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval27 := yytype27 (yyvs.item (yyvsp)) 
-			yyval := yyval27
+yyval27 := yyvs27.item (yyvsp27) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs27.put (yyval27, yyvsp27)
 end
 		end
 
 	yy_do_action_71 is
-			--|#line 332 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
 		do
---|#line 332 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 332")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval27
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp27 := yyvsp27 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp27 >= yyvsc27 then
+		if yyvs27 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs27")
+			end
+			create yyspecial_routines27
+			yyvsc27 := yyInitial_yyvs_size
+			yyvs27 := yyspecial_routines27.make (yyvsc27)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs27")
+			end
+			yyvsc27 := yyvsc27 + yyInitial_yyvs_size
+			yyvs27 := yyspecial_routines27.resize (yyvs27, yyvsc27)
+		end
+	end
+	yyvs27.put (yyval27, yyvsp27)
 end
 		end
 
 	yy_do_action_72 is
-			--|#line 336 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
 		do
---|#line 336 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 336")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval22.make (10)
-				yyval22.extend (yytype8 (yyvs.item (yyvsp - 1)))
+				yyval22.extend (yyvs8.item (yyvsp8))
 			
-			yyval := yyval22
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp22 := yyvsp22 + 1
+	yyvsp8 := yyvsp8 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp22 >= yyvsc22 then
+		if yyvs22 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs22")
+			end
+			create yyspecial_routines22
+			yyvsc22 := yyInitial_yyvs_size
+			yyvs22 := yyspecial_routines22.make (yyvsc22)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs22")
+			end
+			yyvsc22 := yyvsc22 + yyInitial_yyvs_size
+			yyvs22 := yyspecial_routines22.resize (yyvs22, yyvsc22)
+		end
+	end
+	yyvs22.put (yyval22, yyvsp22)
 end
 		end
 
 	yy_do_action_73 is
-			--|#line 341 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
 		do
---|#line 341 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 341")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval22 := yytype22 (yyvs.item (yyvsp - 2))
-				yyval22.extend (yytype8 (yyvs.item (yyvsp - 1)))
+				yyval22 := yyvs22.item (yyvsp22)
+				yyval22.extend (yyvs8.item (yyvsp8))
 			
-			yyval := yyval22
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp8 := yyvsp8 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs22.put (yyval22, yyvsp22)
 end
 		end
 
 	yy_do_action_74 is
-			--|#line 348 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval8: D_OPTION_SD
 		do
---|#line 348 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 348")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create {D_PRECOMPILED_SD} yyval8.initialize (Precompiled_keyword, yytype13 (yyvs.item (yyvsp)), Void) 
-			yyval := yyval8
+create {D_PRECOMPILED_SD} yyval8.initialize (Precompiled_keyword, yyvs13.item (yyvsp13), Void) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp8 := yyvsp8 + 1
+	yyvsp1 := yyvsp1 -1
+	yyvsp13 := yyvsp13 -1
+	if yyvsp8 >= yyvsc8 then
+		if yyvs8 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs8")
+			end
+			create yyspecial_routines8
+			yyvsc8 := yyInitial_yyvs_size
+			yyvs8 := yyspecial_routines8.make (yyvsc8)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs8")
+			end
+			yyvsc8 := yyvsc8 + yyInitial_yyvs_size
+			yyvs8 := yyspecial_routines8.resize (yyvs8, yyvsc8)
+		end
+	end
+	yyvs8.put (yyval8, yyvsp8)
 end
 		end
 
 	yy_do_action_75 is
-			--|#line 350 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval8: D_OPTION_SD
 		do
---|#line 350 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 350")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create {D_PRECOMPILED_SD} yyval8.initialize (Precompiled_keyword, yytype13 (yyvs.item (yyvsp - 1)), Void) 
-			yyval := yyval8
+create {D_PRECOMPILED_SD} yyval8.initialize (Precompiled_keyword, yyvs13.item (yyvsp13), Void) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp8 := yyvsp8 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp13 := yyvsp13 -1
+	if yyvsp8 >= yyvsc8 then
+		if yyvs8 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs8")
+			end
+			create yyspecial_routines8
+			yyvsc8 := yyInitial_yyvs_size
+			yyvs8 := yyspecial_routines8.make (yyvsc8)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs8")
+			end
+			yyvsc8 := yyvsc8 + yyInitial_yyvs_size
+			yyvs8 := yyspecial_routines8.resize (yyvs8, yyvsc8)
+		end
+	end
+	yyvs8.put (yyval8, yyvsp8)
 end
 		end
 
 	yy_do_action_76 is
-			--|#line 352 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval8: D_OPTION_SD
 		do
---|#line 352 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 352")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create {D_PRECOMPILED_SD} yyval8.initialize (Precompiled_keyword, yytype13 (yyvs.item (yyvsp - 2)), yytype28 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval8
+create {D_PRECOMPILED_SD} yyval8.initialize (Precompiled_keyword, yyvs13.item (yyvsp13), yyvs28.item (yyvsp28)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyvsp8 := yyvsp8 + 1
+	yyvsp1 := yyvsp1 -2
+	yyvsp13 := yyvsp13 -1
+	yyvsp28 := yyvsp28 -1
+	if yyvsp8 >= yyvsc8 then
+		if yyvs8 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs8")
+			end
+			create yyspecial_routines8
+			yyvsc8 := yyInitial_yyvs_size
+			yyvs8 := yyspecial_routines8.make (yyvsc8)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs8")
+			end
+			yyvsc8 := yyvsc8 + yyInitial_yyvs_size
+			yyvs8 := yyspecial_routines8.resize (yyvs8, yyvsc8)
+		end
+	end
+	yyvs8.put (yyval8, yyvsp8)
 end
 		end
 
 	yy_do_action_77 is
-			--|#line 354 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval8: D_OPTION_SD
 		do
---|#line 354 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 354")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval8.initialize (yytype14 (yyvs.item (yyvsp - 1)), yytype13 (yyvs.item (yyvsp))) 
-			yyval := yyval8
+create yyval8.initialize (yyvs14.item (yyvsp14), yyvs13.item (yyvsp13)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp8 := yyvsp8 + 1
+	yyvsp14 := yyvsp14 -1
+	yyvsp13 := yyvsp13 -1
+	if yyvsp8 >= yyvsc8 then
+		if yyvs8 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs8")
+			end
+			create yyspecial_routines8
+			yyvsc8 := yyInitial_yyvs_size
+			yyvs8 := yyspecial_routines8.make (yyvsc8)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs8")
+			end
+			yyvsc8 := yyvsc8 + yyInitial_yyvs_size
+			yyvs8 := yyspecial_routines8.resize (yyvs8, yyvsc8)
+		end
+	end
+	yyvs8.put (yyval8, yyvsp8)
 end
 		end
 
 	yy_do_action_78 is
-			--|#line 358 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
 		do
---|#line 358 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 358")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval14 := Assertion_keyword 
-			yyval := yyval14
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp14 := yyvsp14 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp14 >= yyvsc14 then
+		if yyvs14 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs14")
+			end
+			create yyspecial_routines14
+			yyvsc14 := yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.make (yyvsc14)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs14")
+			end
+			yyvsc14 := yyvsc14 + yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.resize (yyvs14, yyvsc14)
+		end
+	end
+	yyvs14.put (yyval14, yyvsp14)
 end
 		end
 
 	yy_do_action_79 is
-			--|#line 360 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
 		do
---|#line 360 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 360")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval14 := Debug_keyword 
-			yyval := yyval14
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp14 := yyvsp14 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp14 >= yyvsc14 then
+		if yyvs14 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs14")
+			end
+			create yyspecial_routines14
+			yyvsc14 := yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.make (yyvsc14)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs14")
+			end
+			yyvsc14 := yyvsc14 + yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.resize (yyvs14, yyvsc14)
+		end
+	end
+	yyvs14.put (yyval14, yyvsp14)
 end
 		end
 
 	yy_do_action_80 is
-			--|#line 362 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
 		do
---|#line 362 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 362")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval14 := Disabled_debug_keyword 
-			yyval := yyval14
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp14 := yyvsp14 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp14 >= yyvsc14 then
+		if yyvs14 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs14")
+			end
+			create yyspecial_routines14
+			yyvsc14 := yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.make (yyvsc14)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs14")
+			end
+			yyvsc14 := yyvsc14 + yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.resize (yyvs14, yyvsc14)
+		end
+	end
+	yyvs14.put (yyval14, yyvsp14)
 end
 		end
 
 	yy_do_action_81 is
-			--|#line 364 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
 		do
---|#line 364 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 364")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval14 := Optimize_keyword 
-			yyval := yyval14
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp14 := yyvsp14 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp14 >= yyvsc14 then
+		if yyvs14 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs14")
+			end
+			create yyspecial_routines14
+			yyvsc14 := yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.make (yyvsc14)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs14")
+			end
+			yyvsc14 := yyvsc14 + yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.resize (yyvs14, yyvsc14)
+		end
+	end
+	yyvs14.put (yyval14, yyvsp14)
 end
 		end
 
 	yy_do_action_82 is
-			--|#line 366 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
 		do
---|#line 366 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 366")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval14 := Trace_keyword 
-			yyval := yyval14
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp14 := yyvsp14 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp14 >= yyvsc14 then
+		if yyvs14 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs14")
+			end
+			create yyspecial_routines14
+			yyvsc14 := yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.make (yyvsc14)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs14")
+			end
+			yyvsc14 := yyvsc14 + yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.resize (yyvs14, yyvsc14)
+		end
+	end
+	yyvs14.put (yyval14, yyvsp14)
 end
 		end
 
 	yy_do_action_83 is
-			--|#line 368 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
 		do
---|#line 368 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 368")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				create {FREE_OPTION_SD} yyval14.initialize (yytype9 (yyvs.item (yyvsp)))
+				create {FREE_OPTION_SD} yyval14.initialize (yyvs9.item (yyvsp9))
 				if not yyval14.is_valid then
 					raise_error
 				end
 			
-			yyval := yyval14
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp14 := yyvsp14 + 1
+	yyvsp9 := yyvsp9 -1
+	if yyvsp14 >= yyvsc14 then
+		if yyvs14 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs14")
+			end
+			create yyspecial_routines14
+			yyvsc14 := yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.make (yyvsc14)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs14")
+			end
+			yyvsc14 := yyvsc14 + yyInitial_yyvs_size
+			yyvs14 := yyspecial_routines14.resize (yyvs14, yyvsc14)
+		end
+	end
+	yyvs14.put (yyval14, yyvsp14)
 end
 		end
 
 	yy_do_action_84 is
-			--|#line 377 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
 		do
---|#line 377 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 377")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval27.make (10)
-				yyval27.extend (yytype12 (yyvs.item (yyvsp - 1)))
+				yyval27.extend (yyvs12.item (yyvsp12))
 			
-			yyval := yyval27
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp27 := yyvsp27 + 1
+	yyvsp12 := yyvsp12 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp27 >= yyvsc27 then
+		if yyvs27 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs27")
+			end
+			create yyspecial_routines27
+			yyvsc27 := yyInitial_yyvs_size
+			yyvs27 := yyspecial_routines27.make (yyvsc27)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs27")
+			end
+			yyvsc27 := yyvsc27 + yyInitial_yyvs_size
+			yyvs27 := yyspecial_routines27.resize (yyvs27, yyvsc27)
+		end
+	end
+	yyvs27.put (yyval27, yyvsp27)
 end
 		end
 
 	yy_do_action_85 is
-			--|#line 382 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
 		do
---|#line 382 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 382")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval27 := yytype27 (yyvs.item (yyvsp - 2))
-				yyval27.extend (yytype12 (yyvs.item (yyvsp - 1)))
+				yyval27 := yyvs27.item (yyvsp27)
+				yyval27.extend (yyvs12.item (yyvsp12))
 			
-			yyval := yyval27
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp12 := yyvsp12 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs27.put (yyval27, yyvsp27)
 end
 		end
 
 	yy_do_action_86 is
-			--|#line 389 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval12: O_OPTION_SD
 		do
---|#line 389 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 389")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval12.initialize (yytype14 (yyvs.item (yyvsp - 2)), yytype13 (yyvs.item (yyvsp - 1)), yytype23 (yyvs.item (yyvsp))) 
-			yyval := yyval12
+create yyval12.initialize (yyvs14.item (yyvsp14), yyvs13.item (yyvsp13), yyvs23.item (yyvsp23)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp12 := yyvsp12 + 1
+	yyvsp14 := yyvsp14 -1
+	yyvsp13 := yyvsp13 -1
+	yyvsp23 := yyvsp23 -1
+	if yyvsp12 >= yyvsc12 then
+		if yyvs12 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs12")
+			end
+			create yyspecial_routines12
+			yyvsc12 := yyInitial_yyvs_size
+			yyvs12 := yyspecial_routines12.make (yyvsc12)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs12")
+			end
+			yyvsc12 := yyvsc12 + yyInitial_yyvs_size
+			yyvs12 := yyspecial_routines12.resize (yyvs12, yyvsc12)
+		end
+	end
+	yyvs12.put (yyval12, yyvsp12)
 end
 		end
 
 	yy_do_action_87 is
-			--|#line 393 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 393 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 393")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval23
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp23 := yyvsp23 + 1
+	if yyvsp23 >= yyvsc23 then
+		if yyvs23 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs23")
+			end
+			create yyspecial_routines23
+			yyvsc23 := yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.make (yyvsc23)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs23")
+			end
+			yyvsc23 := yyvsc23 + yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.resize (yyvs23, yyvsc23)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_88 is
-			--|#line 395 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 395 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 395")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval23 := yytype23 (yyvs.item (yyvsp)) 
-			yyval := yyval23
+yyval23 := yyvs23.item (yyvsp23) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_89 is
-			--|#line 399 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 399 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 399")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval23.make (10)
-				yyval23.extend (yytype9 (yyvs.item (yyvsp)))
+				yyval23.extend (yyvs9.item (yyvsp9))
 			
-			yyval := yyval23
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp23 := yyvsp23 + 1
+	yyvsp9 := yyvsp9 -1
+	if yyvsp23 >= yyvsc23 then
+		if yyvs23 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs23")
+			end
+			create yyspecial_routines23
+			yyvsc23 := yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.make (yyvsc23)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs23")
+			end
+			yyvsc23 := yyvsc23 + yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.resize (yyvs23, yyvsc23)
+		end
+	end
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_90 is
-			--|#line 404 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 404 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 404")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval23 := yytype23 (yyvs.item (yyvsp - 2))
-				yyval23.extend (yytype9 (yyvs.item (yyvsp)))
+				yyval23 := yyvs23.item (yyvsp23)
+				yyval23.extend (yyvs9.item (yyvsp9))
 			
-			yyval := yyval23
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvsp9 := yyvsp9 -1
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_91 is
-			--|#line 411 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 411 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 411")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval13
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp13 := yyvsp13 + 1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_92 is
-			--|#line 413 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 413 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 413")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval13 := yytype13 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval13
+yyval13 := yyvs13.item (yyvsp13) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -2
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_93 is
-			--|#line 417 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 417 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 417")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval13 := yytype13 (yyvs.item (yyvsp)) 
-			yyval := yyval13
+yyval13 := yyvs13.item (yyvsp13) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_94 is
-			--|#line 419 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 419 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 419")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval13 := yytype13 (yyvs.item (yyvsp)) 
-			yyval := yyval13
+yyval13 := yyvs13.item (yyvsp13) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_95 is
-			--|#line 421 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 421 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 421")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval13.make (yytype9 (yyvs.item (yyvsp))) 
-			yyval := yyval13
+create yyval13.make (yyvs9.item (yyvsp9)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp13 := yyvsp13 + 1
+	yyvsp9 := yyvsp9 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_96 is
-			--|#line 425 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 425 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 425")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval13 := Yes_keyword 
-			yyval := yyval13
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp13 := yyvsp13 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_97 is
-			--|#line 427 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 427 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 427")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval13 := No_keyword 
-			yyval := yyval13
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp13 := yyvsp13 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_98 is
-			--|#line 429 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 429 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 429")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval13 := All_keyword 
-			yyval := yyval13
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp13 := yyvsp13 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_99 is
-			--|#line 433 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 433 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 433")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval13 := Require_keyword 
-			yyval := yyval13
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp13 := yyvsp13 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_100 is
-			--|#line 435 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 435 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 435")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval13 := Ensure_keyword 
-			yyval := yyval13
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp13 := yyvsp13 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_101 is
-			--|#line 437 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 437 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 437")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval13 := Invariant_keyword 
-			yyval := yyval13
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp13 := yyvsp13 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_102 is
-			--|#line 439 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 439 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 439")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval13 := Loop_keyword 
-			yyval := yyval13
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp13 := yyvsp13 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_103 is
-			--|#line 441 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
 		do
---|#line 441 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 441")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval13 := Check_keyword 
-			yyval := yyval13
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp13 := yyvsp13 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp13 >= yyvsc13 then
+		if yyvs13 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs13")
+			end
+			create yyspecial_routines13
+			yyvsc13 := yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.make (yyvsc13)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs13")
+			end
+			yyvsc13 := yyvsc13 + yyInitial_yyvs_size
+			yyvs13 := yyspecial_routines13.resize (yyvs13, yyvsc13)
+		end
+	end
+	yyvs13.put (yyval13, yyvsp13)
 end
 		end
 
 	yy_do_action_104 is
-			--|#line 445 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
 		do
---|#line 445 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 445")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval21
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp21 := yyvsp21 + 1
+	if yyvsp21 >= yyvsc21 then
+		if yyvs21 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs21")
+			end
+			create yyspecial_routines21
+			yyvsc21 := yyInitial_yyvs_size
+			yyvs21 := yyspecial_routines21.make (yyvsc21)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs21")
+			end
+			yyvsc21 := yyvsc21 + yyInitial_yyvs_size
+			yyvs21 := yyspecial_routines21.resize (yyvs21, yyvsc21)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs21.put (yyval21, yyvsp21)
 end
 		end
 
 	yy_do_action_105 is
-			--|#line 447 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
 		do
---|#line 447 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 447")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval21 := yytype21 (yyvs.item (yyvsp)) 
-			yyval := yyval21
+yyval21 := yyvs21.item (yyvsp21) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs21.put (yyval21, yyvsp21)
 end
 		end
 
 	yy_do_action_106 is
-			--|#line 449 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
 		do
---|#line 449 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 449")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval21
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp21 := yyvsp21 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp21 >= yyvsc21 then
+		if yyvs21 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs21")
+			end
+			create yyspecial_routines21
+			yyvsc21 := yyInitial_yyvs_size
+			yyvs21 := yyspecial_routines21.make (yyvsc21)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs21")
+			end
+			yyvsc21 := yyvsc21 + yyInitial_yyvs_size
+			yyvs21 := yyspecial_routines21.resize (yyvs21, yyvsc21)
+		end
+	end
+	yyvs21.put (yyval21, yyvsp21)
 end
 		end
 
 	yy_do_action_107 is
-			--|#line 453 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
 		do
---|#line 453 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 453")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval21.make (5)
-				yyval21.extend (yytype7 (yyvs.item (yyvsp - 1)))
+				yyval21.extend (yyvs7.item (yyvsp7))
 			
-			yyval := yyval21
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp21 := yyvsp21 + 1
+	yyvsp7 := yyvsp7 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp21 >= yyvsc21 then
+		if yyvs21 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs21")
+			end
+			create yyspecial_routines21
+			yyvsc21 := yyInitial_yyvs_size
+			yyvs21 := yyspecial_routines21.make (yyvsc21)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs21")
+			end
+			yyvsc21 := yyvsc21 + yyInitial_yyvs_size
+			yyvs21 := yyspecial_routines21.resize (yyvs21, yyvsc21)
+		end
+	end
+	yyvs21.put (yyval21, yyvsp21)
 end
 		end
 
 	yy_do_action_108 is
-			--|#line 458 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
 		do
---|#line 458 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 458")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval21 := yytype21 (yyvs.item (yyvsp - 2))
-				yyval21.extend (yytype7 (yyvs.item (yyvsp - 1)))
+				yyval21 := yyvs21.item (yyvsp21)
+				yyval21.extend (yyvs7.item (yyvsp7))
 			
-			yyval := yyval21
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs21.put (yyval21, yyvsp21)
 end
 		end
 
 	yy_do_action_109 is
-			--|#line 465 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval7: ASSEMBLY_SD
 		do
---|#line 465 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 465")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 					-- name: "assembly_name"
-				create yyval7.initialize (yytype9 (yyvs.item (yyvsp - 3)), yytype9 (yyvs.item (yyvsp - 1)), yytype9 (yyvs.item (yyvsp)), Void, Void, Void)
+				create yyval7.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), Void, Void, Void)
 			
-			yyval := yyval7
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp9 := yyvsp9 -3
+	yyvsp1 := yyvsp1 -1
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_110 is
-			--|#line 470 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval7: ASSEMBLY_SD
 		do
---|#line 470 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 470")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 					-- name: "assembly_name", "version", "culture", "public_key_token"
-				create yyval7.initialize (yytype9 (yyvs.item (yyvsp - 9)), yytype9 (yyvs.item (yyvsp - 7)), yytype9 (yyvs.item (yyvsp)), yytype9 (yyvs.item (yyvsp - 5)), yytype9 (yyvs.item (yyvsp - 3)), yytype9 (yyvs.item (yyvsp - 1)))
+				create yyval7.initialize (yyvs9.item (yyvsp9 - 5), yyvs9.item (yyvsp9 - 4), yyvs9.item (yyvsp9), yyvs9.item (yyvsp9 - 3), yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1))
 			
-			yyval := yyval7
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 10
-	yyvsp := yyvsp - 9
-	yyvs.put (yyval, yyvsp)
+	yyvsp7 := yyvsp7 + 1
+	yyvsp9 := yyvsp9 -6
+	yyvsp1 := yyvsp1 -4
+	if yyvsp7 >= yyvsc7 then
+		if yyvs7 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs7")
+			end
+			create yyspecial_routines7
+			yyvsc7 := yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.make (yyvsc7)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs7")
+			end
+			yyvsc7 := yyvsc7 + yyInitial_yyvs_size
+			yyvs7 := yyspecial_routines7.resize (yyvs7, yyvsc7)
+		end
+	end
+	yyvs7.put (yyval7, yyvsp7)
 end
 		end
 
 	yy_do_action_111 is
-			--|#line 477 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 477 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 477")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval9
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp9 := yyvsp9 + 1
+	if yyvsp9 >= yyvsc9 then
+		if yyvs9 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs9")
+			end
+			create yyspecial_routines9
+			yyvsc9 := yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.make (yyvsc9)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs9")
+			end
+			yyvsc9 := yyvsc9 + yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_112 is
-			--|#line 479 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 479 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 479")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval9 := yytype9 (yyvs.item (yyvsp - 1)) 
-			yyval := yyval9
+yyval9 := yyvs9.item (yyvsp9) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -2
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_113 is
-			--|#line 483 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
 		do
---|#line 483 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 483")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval26
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp26 := yyvsp26 + 1
+	if yyvsp26 >= yyvsc26 then
+		if yyvs26 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs26")
+			end
+			create yyspecial_routines26
+			yyvsc26 := yyInitial_yyvs_size
+			yyvs26 := yyspecial_routines26.make (yyvsc26)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs26")
+			end
+			yyvsc26 := yyvsc26 + yyInitial_yyvs_size
+			yyvs26 := yyspecial_routines26.resize (yyvs26, yyvsc26)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs26.put (yyval26, yyvsp26)
 end
 		end
 
 	yy_do_action_114 is
-			--|#line 485 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
 		do
---|#line 485 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 485")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval26 := yytype26 (yyvs.item (yyvsp)) 
-			yyval := yyval26
+yyval26 := yyvs26.item (yyvsp26) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs26.put (yyval26, yyvsp26)
 end
 		end
 
 	yy_do_action_115 is
-			--|#line 487 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
 		do
---|#line 487 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 487")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval26
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp26 := yyvsp26 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp26 >= yyvsc26 then
+		if yyvs26 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs26")
+			end
+			create yyspecial_routines26
+			yyvsc26 := yyInitial_yyvs_size
+			yyvs26 := yyspecial_routines26.make (yyvsc26)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs26")
+			end
+			yyvsc26 := yyvsc26 + yyInitial_yyvs_size
+			yyvs26 := yyspecial_routines26.resize (yyvs26, yyvsc26)
+		end
+	end
+	yyvs26.put (yyval26, yyvsp26)
 end
 		end
 
 	yy_do_action_116 is
-			--|#line 491 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
 		do
---|#line 491 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 491")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval26.make (10)
-				yyval26.extend (yytype10 (yyvs.item (yyvsp - 1)))
+				yyval26.extend (yyvs10.item (yyvsp10))
 			
-			yyval := yyval26
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp26 := yyvsp26 + 1
+	yyvsp10 := yyvsp10 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp26 >= yyvsc26 then
+		if yyvs26 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs26")
+			end
+			create yyspecial_routines26
+			yyvsc26 := yyInitial_yyvs_size
+			yyvs26 := yyspecial_routines26.make (yyvsc26)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs26")
+			end
+			yyvsc26 := yyvsc26 + yyInitial_yyvs_size
+			yyvs26 := yyspecial_routines26.resize (yyvs26, yyvsc26)
+		end
+	end
+	yyvs26.put (yyval26, yyvsp26)
 end
 		end
 
 	yy_do_action_117 is
-			--|#line 496 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
 		do
---|#line 496 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 496")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval26 := yytype26 (yyvs.item (yyvsp - 2))
-				yyval26.extend (yytype10 (yyvs.item (yyvsp - 1)))
+				yyval26 := yyvs26.item (yyvsp26)
+				yyval26.extend (yyvs10.item (yyvsp10))
 			
-			yyval := yyval26
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp10 := yyvsp10 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs26.put (yyval26, yyvsp26)
 end
 		end
 
 	yy_do_action_118 is
-			--|#line 503 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval10: LANG_TRIB_SD
 		do
---|#line 503 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 503")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval10.initialize (yytype11 (yyvs.item (yyvsp - 2)), yytype23 (yyvs.item (yyvsp))) 
-			yyval := yyval10
+create yyval10.initialize (yyvs11.item (yyvsp11), yyvs23.item (yyvsp23)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp10 := yyvsp10 + 1
+	yyvsp11 := yyvsp11 -1
+	yyvsp1 := yyvsp1 -1
+	yyvsp23 := yyvsp23 -1
+	if yyvsp10 >= yyvsc10 then
+		if yyvs10 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs10")
+			end
+			create yyspecial_routines10
+			yyvsc10 := yyInitial_yyvs_size
+			yyvs10 := yyspecial_routines10.make (yyvsc10)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs10")
+			end
+			yyvsc10 := yyvsc10 + yyInitial_yyvs_size
+			yyvs10 := yyspecial_routines10.resize (yyvs10, yyvsc10)
+		end
+	end
+	yyvs10.put (yyval10, yyvsp10)
 end
 		end
 
 	yy_do_action_119 is
-			--|#line 507 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval11: LANGUAGE_NAME_SD
 		do
---|#line 507 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 507")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval11.initialize (yytype9 (yyvs.item (yyvsp))) 
-			yyval := yyval11
+create yyval11.initialize (yyvs9.item (yyvsp9)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp11 := yyvsp11 + 1
+	yyvsp9 := yyvsp9 -1
+	if yyvsp11 >= yyvsc11 then
+		if yyvs11 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs11")
+			end
+			create yyspecial_routines11
+			yyvsc11 := yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.make (yyvsc11)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs11")
+			end
+			yyvsc11 := yyvsc11 + yyInitial_yyvs_size
+			yyvs11 := yyspecial_routines11.resize (yyvs11, yyvsc11)
+		end
+	end
+	yyvs11.put (yyval11, yyvsp11)
 end
 		end
 
 	yy_do_action_120 is
-			--|#line 512 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 512 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 512")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
-
-			yyval := yyval_default;
 
 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_121 is
-			--|#line 514 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 514 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 514")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
-
-			yyval := yyval_default;
 
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_122 is
-			--|#line 516 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 516 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 516")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
-
-			yyval := yyval_default;
 
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_123 is
-			--|#line 520 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 520 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 520")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-			yyval := yyval_default;
 --		create $$.make (10)
 --		$$.extend ($1)
 	
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_124 is
-			--|#line 525 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 525 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 525")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-			yyval := yyval_default;
 --		$$ := $1
 --		$$.extend ($2)
 	
-
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -2
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_125 is
-			--|#line 532 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 532 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 532")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
-
-			yyval := yyval_default;
 
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvsp11 := yyvsp11 -1
+	yyvsp9 := yyvsp9 -1
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_126 is
-			--|#line 536 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 536 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 536")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
-
-			yyval := yyval_default;
 
 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_127 is
-			--|#line 538 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 538 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 538")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
-
-			yyval := yyval_default;
 
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -2
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_128 is
-			--|#line 542 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 542 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 542")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
-
-			yyval := yyval_default;
 
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_129 is
-			--|#line 544 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 544 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 544")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
-
-			yyval := yyval_default;
 
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_130 is
-			--|#line 548 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
 		do
---|#line 548 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 548")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval18
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp18 := yyvsp18 + 1
+	if yyvsp18 >= yyvsc18 then
+		if yyvs18 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs18")
+			end
+			create yyspecial_routines18
+			yyvsc18 := yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.make (yyvsc18)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs18")
+			end
+			yyvsc18 := yyvsc18 + yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.resize (yyvs18, yyvsc18)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs18.put (yyval18, yyvsp18)
 end
 		end
 
 	yy_do_action_131 is
-			--|#line 550 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
 		do
---|#line 550 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 550")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval18 := yytype18 (yyvs.item (yyvsp)) 
-			yyval := yyval18
+yyval18 := yyvs18.item (yyvsp18) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs18.put (yyval18, yyvsp18)
 end
 		end
 
 	yy_do_action_132 is
-			--|#line 554 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
 		do
---|#line 554 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 554")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval18 := yytype18 (yyvs.item (yyvsp)) 
-			yyval := yyval18
+yyval18 := yyvs18.item (yyvsp18) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs18.put (yyval18, yyvsp18)
 end
 		end
 
 	yy_do_action_133 is
-			--|#line 556 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
 		do
---|#line 556 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 556")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval18
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp18 := yyvsp18 + 1
+	yyvsp1 := yyvsp1 -2
+	if yyvsp18 >= yyvsc18 then
+		if yyvs18 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs18")
+			end
+			create yyspecial_routines18
+			yyvsc18 := yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.make (yyvsc18)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs18")
+			end
+			yyvsc18 := yyvsc18 + yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.resize (yyvs18, yyvsc18)
+		end
+	end
+	yyvs18.put (yyval18, yyvsp18)
 end
 		end
 
 	yy_do_action_134 is
-			--|#line 560 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
 		do
---|#line 560 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 560")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval18.make (10)
-				yyval18.extend (yytype3 (yyvs.item (yyvsp - 1)))
+				yyval18.extend (yyvs3.item (yyvsp3))
 			
-			yyval := yyval18
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp18 := yyvsp18 + 1
+	yyvsp3 := yyvsp3 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp18 >= yyvsc18 then
+		if yyvs18 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs18")
+			end
+			create yyspecial_routines18
+			yyvsc18 := yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.make (yyvsc18)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs18")
+			end
+			yyvsc18 := yyvsc18 + yyInitial_yyvs_size
+			yyvs18 := yyspecial_routines18.resize (yyvs18, yyvsc18)
+		end
+	end
+	yyvs18.put (yyval18, yyvsp18)
 end
 		end
 
 	yy_do_action_135 is
-			--|#line 565 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
 		do
---|#line 565 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 565")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval18 := yytype18 (yyvs.item (yyvsp - 2))
-				yyval18.extend (yytype3 (yyvs.item (yyvsp - 1)))
+				yyval18 := yyvs18.item (yyvsp18)
+				yyval18.extend (yyvs3.item (yyvsp3))
 			
-			yyval := yyval18
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp3 := yyvsp3 -1
+	yyvsp1 := yyvsp1 -1
+	yyvs18.put (yyval18, yyvsp18)
 end
 		end
 
 	yy_do_action_136 is
-			--|#line 572 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
 		do
---|#line 572 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 572")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval3.initialize (yytype9 (yyvs.item (yyvsp)), Void, Void, Void, Void) 
-			yyval := yyval3
+create yyval3.initialize (yyvs9.item (yyvsp9), Void, Void, Void, Void) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp3 := yyvsp3 + 1
+	yyvsp9 := yyvsp9 -1
+	if yyvsp3 >= yyvsc3 then
+		if yyvs3 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs3")
+			end
+			create yyspecial_routines3
+			yyvsc3 := yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.make (yyvsc3)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs3")
+			end
+			yyvsc3 := yyvsc3 + yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
+		end
+	end
+	yyvs3.put (yyval3, yyvsp3)
 end
 		end
 
 	yy_do_action_137 is
-			--|#line 574 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
 		do
---|#line 574 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 574")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval3.initialize (yytype9 (yyvs.item (yyvsp - 1)), Void, Void, Void, Void) 
-			yyval := yyval3
+create yyval3.initialize (yyvs9.item (yyvsp9), Void, Void, Void, Void) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp3 := yyvsp3 + 1
+	yyvsp9 := yyvsp9 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp3 >= yyvsc3 then
+		if yyvs3 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs3")
+			end
+			create yyspecial_routines3
+			yyvsc3 := yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.make (yyvsc3)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs3")
+			end
+			yyvsc3 := yyvsc3 + yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
+		end
+	end
+	yyvs3.put (yyval3, yyvsp3)
 end
 		end
 
 	yy_do_action_138 is
-			--|#line 576 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
 		do
---|#line 576 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 576")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval3.initialize (yytype9 (yyvs.item (yyvsp - 2)), Void, Void, Void, yytype28 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval3
+create yyval3.initialize (yyvs9.item (yyvsp9), Void, Void, Void, yyvs28.item (yyvsp28)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp3 := yyvsp3 + 1
+	yyvsp9 := yyvsp9 -1
+	yyvsp28 := yyvsp28 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp3 >= yyvsc3 then
+		if yyvs3 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs3")
+			end
+			create yyspecial_routines3
+			yyvsc3 := yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.make (yyvsc3)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs3")
+			end
+			yyvsc3 := yyvsc3 + yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
+		end
+	end
+	yyvs3.put (yyval3, yyvsp3)
 end
 		end
 
 	yy_do_action_139 is
-			--|#line 578 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
 		do
---|#line 578 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 578")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval3.initialize (yytype9 (yyvs.item (yyvsp - 3)), Void, Void, yytype23 (yyvs.item (yyvsp - 2)), yytype28 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval3
+create yyval3.initialize (yyvs9.item (yyvsp9), Void, Void, yyvs23.item (yyvsp23), yyvs28.item (yyvsp28)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
-	yyvsp := yyvsp - 3
-	yyvs.put (yyval, yyvsp)
+	yyvsp3 := yyvsp3 + 1
+	yyvsp9 := yyvsp9 -1
+	yyvsp23 := yyvsp23 -1
+	yyvsp28 := yyvsp28 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp3 >= yyvsc3 then
+		if yyvs3 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs3")
+			end
+			create yyspecial_routines3
+			yyvsc3 := yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.make (yyvsc3)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs3")
+			end
+			yyvsc3 := yyvsc3 + yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
+		end
+	end
+	yyvs3.put (yyval3, yyvsp3)
 end
 		end
 
 	yy_do_action_140 is
-			--|#line 580 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
 		do
---|#line 580 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 580")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval3.initialize (yytype9 (yyvs.item (yyvsp - 4)), Void, yytype23 (yyvs.item (yyvsp - 3)), yytype23 (yyvs.item (yyvsp - 2)), yytype28 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval3
+create yyval3.initialize (yyvs9.item (yyvsp9), Void, yyvs23.item (yyvsp23 - 1), yyvs23.item (yyvsp23), yyvs28.item (yyvsp28)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 5
-	yyvsp := yyvsp - 4
-	yyvs.put (yyval, yyvsp)
+	yyvsp3 := yyvsp3 + 1
+	yyvsp9 := yyvsp9 -1
+	yyvsp23 := yyvsp23 -2
+	yyvsp28 := yyvsp28 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp3 >= yyvsc3 then
+		if yyvs3 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs3")
+			end
+			create yyspecial_routines3
+			yyvsc3 := yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.make (yyvsc3)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs3")
+			end
+			yyvsc3 := yyvsc3 + yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
+		end
+	end
+	yyvs3.put (yyval3, yyvsp3)
 end
 		end
 
 	yy_do_action_141 is
-			--|#line 582 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
 		do
---|#line 582 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 582")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval3.initialize (yytype9 (yyvs.item (yyvsp - 5)), yytype9 (yyvs.item (yyvsp - 4)), yytype23 (yyvs.item (yyvsp - 3)), yytype23 (yyvs.item (yyvsp - 2)), yytype28 (yyvs.item (yyvsp - 1))) 
-			yyval := yyval3
+create yyval3.initialize (yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9), yyvs23.item (yyvsp23 - 1), yyvs23.item (yyvsp23), yyvs28.item (yyvsp28)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 6
-	yyvsp := yyvsp - 5
-	yyvs.put (yyval, yyvsp)
+	yyvsp3 := yyvsp3 + 1
+	yyvsp9 := yyvsp9 -2
+	yyvsp23 := yyvsp23 -2
+	yyvsp28 := yyvsp28 -1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp3 >= yyvsc3 then
+		if yyvs3 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs3")
+			end
+			create yyspecial_routines3
+			yyvsc3 := yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.make (yyvsc3)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs3")
+			end
+			yyvsc3 := yyvsc3 + yyInitial_yyvs_size
+			yyvs3 := yyspecial_routines3.resize (yyvs3, yyvsc3)
+		end
+	end
+	yyvs3.put (yyval3, yyvsp3)
 end
 		end
 
 	yy_do_action_142 is
-			--|#line 586 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 586 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 586")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval9 := yytype9 (yyvs.item (yyvsp)) 
-			yyval := yyval9
+yyval9 := yyvs9.item (yyvsp9) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_143 is
-			--|#line 590 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 590 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 590")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval23
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp23 := yyvsp23 + 1
+	if yyvsp23 >= yyvsc23 then
+		if yyvs23 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs23")
+			end
+			create yyspecial_routines23
+			yyvsc23 := yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.make (yyvsc23)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs23")
+			end
+			yyvsc23 := yyvsc23 + yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.resize (yyvs23, yyvsc23)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_144 is
-			--|#line 592 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 592 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 592")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval23 := yytype23 (yyvs.item (yyvsp)) 
-			yyval := yyval23
+yyval23 := yyvs23.item (yyvsp23) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_145 is
-			--|#line 596 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 596 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 596")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval23 := yytype23 (yyvs.item (yyvsp)) 
-			yyval := yyval23
+yyval23 := yyvs23.item (yyvsp23) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_146 is
-			--|#line 600 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 600 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 600")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval23
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp23 := yyvsp23 + 1
+	if yyvsp23 >= yyvsc23 then
+		if yyvs23 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs23")
+			end
+			create yyspecial_routines23
+			yyvsc23 := yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.make (yyvsc23)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs23")
+			end
+			yyvsc23 := yyvsc23 + yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.resize (yyvs23, yyvsc23)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_147 is
-			--|#line 602 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 602 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 602")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval23 := yytype23 (yyvs.item (yyvsp)) 
-			yyval := yyval23
+yyval23 := yyvs23.item (yyvsp23) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_148 is
-			--|#line 606 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 606 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 606")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval23 := yytype23 (yyvs.item (yyvsp)) 
-			yyval := yyval23
+yyval23 := yyvs23.item (yyvsp23) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_149 is
-			--|#line 610 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 610 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 610")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval23
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp23 := yyvsp23 + 1
+	if yyvsp23 >= yyvsc23 then
+		if yyvs23 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs23")
+			end
+			create yyspecial_routines23
+			yyvsc23 := yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.make (yyvsc23)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs23")
+			end
+			yyvsc23 := yyvsc23 + yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.resize (yyvs23, yyvsc23)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_150 is
-			--|#line 612 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 612 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 612")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval23.make (10)
-				yyval23.extend (yytype9 (yyvs.item (yyvsp)))
+				yyval23.extend (yyvs9.item (yyvsp9))
 			
-			yyval := yyval23
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp23 := yyvsp23 + 1
+	yyvsp9 := yyvsp9 -1
+	if yyvsp23 >= yyvsc23 then
+		if yyvs23 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs23")
+			end
+			create yyspecial_routines23
+			yyvsc23 := yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.make (yyvsc23)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs23")
+			end
+			yyvsc23 := yyvsc23 + yyInitial_yyvs_size
+			yyvs23 := yyspecial_routines23.resize (yyvs23, yyvsc23)
+		end
+	end
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_151 is
-			--|#line 617 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
 		do
---|#line 617 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 617")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval23 := yytype23 (yyvs.item (yyvsp - 2))
-				yyval23.extend (yytype9 (yyvs.item (yyvsp)))
+				yyval23 := yyvs23.item (yyvsp23)
+				yyval23.extend (yyvs9.item (yyvsp9))
 			
-			yyval := yyval23
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvsp9 := yyvsp9 -1
+	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
 	yy_do_action_152 is
-			--|#line 624 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
 		do
---|#line 624 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 624")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval28
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp28 := yyvsp28 + 1
+	if yyvsp28 >= yyvsc28 then
+		if yyvs28 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs28")
+			end
+			create yyspecial_routines28
+			yyvsc28 := yyInitial_yyvs_size
+			yyvs28 := yyspecial_routines28.make (yyvsc28)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs28")
+			end
+			yyvsc28 := yyvsc28 + yyInitial_yyvs_size
+			yyvs28 := yyspecial_routines28.resize (yyvs28, yyvsc28)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs28.put (yyval28, yyvsp28)
 end
 		end
 
 	yy_do_action_153 is
-			--|#line 626 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
 		do
---|#line 626 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 626")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval28 := yytype28 (yyvs.item (yyvsp)) 
-			yyval := yyval28
+yyval28 := yyvs28.item (yyvsp28) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs28.put (yyval28, yyvsp28)
 end
 		end
 
 	yy_do_action_154 is
-			--|#line 630 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
 		do
---|#line 630 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 630")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-yyval28 := yytype28 (yyvs.item (yyvsp)) 
-			yyval := yyval28
+yyval28 := yyvs28.item (yyvsp28) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
-	yyvsp := yyvsp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvs28.put (yyval28, yyvsp28)
 end
 		end
 
 	yy_do_action_155 is
-			--|#line 634 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
 		do
---|#line 634 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 634")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 				create yyval28.make (10)
-				yyval28.extend (yytype16 (yyvs.item (yyvsp)))
+				yyval28.extend (yyvs16.item (yyvsp16))
 			
-			yyval := yyval28
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp28 := yyvsp28 + 1
+	yyvsp16 := yyvsp16 -1
+	if yyvsp28 >= yyvsc28 then
+		if yyvs28 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs28")
+			end
+			create yyspecial_routines28
+			yyvsc28 := yyInitial_yyvs_size
+			yyvs28 := yyspecial_routines28.make (yyvsc28)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs28")
+			end
+			yyvsc28 := yyvsc28 + yyInitial_yyvs_size
+			yyvs28 := yyspecial_routines28.resize (yyvs28, yyvsc28)
+		end
+	end
+	yyvs28.put (yyval28, yyvsp28)
 end
 		end
 
 	yy_do_action_156 is
-			--|#line 639 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
 		do
---|#line 639 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 639")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-				yyval28 := yytype28 (yyvs.item (yyvsp - 2))
-				yyval28.extend (yytype16 (yyvs.item (yyvsp)))
+				yyval28 := yyvs28.item (yyvsp28)
+				yyval28.extend (yyvs16.item (yyvsp16))
 			
-			yyval := yyval28
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp1 := yyvsp1 -1
+	yyvsp16 := yyvsp16 -1
+	yyvs28.put (yyval28, yyvsp28)
 end
 		end
 
 	yy_do_action_157 is
-			--|#line 646 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval16: TWO_NAME_SD
 		do
---|#line 646 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 646")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
 
-
-			yyval := yyval16
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp16 := yyvsp16 + 1
+	if yyvsp16 >= yyvsc16 then
+		if yyvs16 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs16")
+			end
+			create yyspecial_routines16
+			yyvsc16 := yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.make (yyvsc16)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs16")
+			end
+			yyvsc16 := yyvsc16 + yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.resize (yyvs16, yyvsc16)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs16.put (yyval16, yyvsp16)
 end
 		end
 
 	yy_do_action_158 is
-			--|#line 648 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval16: TWO_NAME_SD
 		do
---|#line 648 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 648")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-create yyval16.initialize (yytype9 (yyvs.item (yyvsp - 2)), yytype9 (yyvs.item (yyvsp))) 
-			yyval := yyval16
+create yyval16.initialize (yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9)) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
-	yyvsp := yyvsp - 2
-	yyvs.put (yyval, yyvsp)
+	yyvsp16 := yyvsp16 + 1
+	yyvsp9 := yyvsp9 -2
+	yyvsp1 := yyvsp1 -1
+	if yyvsp16 >= yyvsc16 then
+		if yyvs16 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs16")
+			end
+			create yyspecial_routines16
+			yyvsc16 := yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.make (yyvsc16)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs16")
+			end
+			yyvsc16 := yyvsc16 + yyInitial_yyvs_size
+			yyvs16 := yyspecial_routines16.resize (yyvs16, yyvsc16)
+		end
+	end
+	yyvs16.put (yyval16, yyvsp16)
 end
 		end
 
 	yy_do_action_159 is
-			--|#line 652 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 652 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 652")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval9 := new_id_sd (token_buffer, False) 
-			yyval := yyval9
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp9 := yyvsp9 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp9 >= yyvsc9 then
+		if yyvs9 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs9")
+			end
+			create yyspecial_routines9
+			yyvsc9 := yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.make (yyvsc9)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs9")
+			end
+			yyvsc9 := yyvsc9 + yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
+		end
+	end
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_160 is
-			--|#line 654 "lace.y"
+			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
 		do
---|#line 654 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 654")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
 yyval9 := new_id_sd (token_buffer, True) 
-			yyval := yyval9
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvsp9 := yyvsp9 + 1
+	yyvsp1 := yyvsp1 -1
+	if yyvsp9 >= yyvsc9 then
+		if yyvs9 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs9")
+			end
+			create yyspecial_routines9
+			yyvsc9 := yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.make (yyvsc9)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs9")
+			end
+			yyvsc9 := yyvsc9 + yyInitial_yyvs_size
+			yyvs9 := yyspecial_routines9.resize (yyvs9, yyvsc9)
+		end
+	end
+	yyvs9.put (yyval9, yyvsp9)
 end
 		end
 
 	yy_do_action_161 is
-			--|#line 658 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 658 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 658")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
-
-			yyval := yyval_default;
 
 
 if yy_parsing_status = yyContinue then
-	yyvsp := yyvsp + 1
-	if yyvsp >= yyvsc then
-		yyvsc := yyvsc + yyInitial_stack_size
-		yyvs := FIXED_ARRAY_.resize (yyvs, yyvsc)
-		debug ("GEYACC")
-			std.error.put_string ("Stack (yyvs) size increased to ")
-			std.error.put_integer (yyvsc)
-			std.error.put_new_line
+	yyssp := yyssp - 0
+	yyvsp1 := yyvsp1 + 1
+	if yyvsp1 >= yyvsc1 then
+		if yyvs1 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs1")
+			end
+			create yyspecial_routines1
+			yyvsc1 := yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.make (yyvsc1)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs1")
+			end
+			yyvsc1 := yyvsc1 + yyInitial_yyvs_size
+			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
-	yyvs.put (yyval, yyvsp)
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
 	yy_do_action_162 is
-			--|#line 659 "lace.y"
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
 		do
---|#line 659 "lace.y"
+--|#line <not available> "lace.y"
 debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line 659")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
-
-			yyval := yyval_default;
 
 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
-	yyvs.put (yyval, yyvsp)
+	yyvs1.put (yyval1, yyvsp1)
 end
 		end
 
@@ -4340,484 +6002,379 @@ feature {NONE} -- Table templates
 			   -1,   -1,   -1,   -1,  264>>)
 		end
 
-feature {NONE} -- Conversion
+feature {NONE} -- Semantic value stacks
 
-	yytype2 (v: ANY): ACE_SD is
-		require
-			valid_type: yyis_type2 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs1: SPECIAL [ANY]
+			-- Stack for semantic values of type ANY
 
-	yyis_type2 (v: ANY): BOOLEAN is
-		local
-			u: ACE_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc1: INTEGER
+			-- Capacity of semantic value stack `yyvs1'
 
-	yytype3 (v: ANY): CLAS_VISI_SD is
-		require
-			valid_type: yyis_type3 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp1: INTEGER
+			-- Top of semantic value stack `yyvs1'
 
-	yyis_type3 (v: ANY): BOOLEAN is
-		local
-			u: CLAS_VISI_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines1: KL_SPECIAL_ROUTINES [ANY]
+			-- Routines that ought to be in SPECIAL [ANY]
 
-	yytype4 (v: ANY): CLUST_PROP_SD is
-		require
-			valid_type: yyis_type4 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs2: SPECIAL [ACE_SD]
+			-- Stack for semantic values of type ACE_SD
 
-	yyis_type4 (v: ANY): BOOLEAN is
-		local
-			u: CLUST_PROP_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc2: INTEGER
+			-- Capacity of semantic value stack `yyvs2'
 
-	yytype5 (v: ANY): CLUST_ADAPT_SD is
-		require
-			valid_type: yyis_type5 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp2: INTEGER
+			-- Top of semantic value stack `yyvs2'
 
-	yyis_type5 (v: ANY): BOOLEAN is
-		local
-			u: CLUST_ADAPT_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines2: KL_SPECIAL_ROUTINES [ACE_SD]
+			-- Routines that ought to be in SPECIAL [ACE_SD]
 
-	yytype6 (v: ANY): CLUSTER_SD is
-		require
-			valid_type: yyis_type6 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs3: SPECIAL [CLAS_VISI_SD]
+			-- Stack for semantic values of type CLAS_VISI_SD
 
-	yyis_type6 (v: ANY): BOOLEAN is
-		local
-			u: CLUSTER_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc3: INTEGER
+			-- Capacity of semantic value stack `yyvs3'
 
-	yytype7 (v: ANY): ASSEMBLY_SD is
-		require
-			valid_type: yyis_type7 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp3: INTEGER
+			-- Top of semantic value stack `yyvs3'
 
-	yyis_type7 (v: ANY): BOOLEAN is
-		local
-			u: ASSEMBLY_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines3: KL_SPECIAL_ROUTINES [CLAS_VISI_SD]
+			-- Routines that ought to be in SPECIAL [CLAS_VISI_SD]
 
-	yytype8 (v: ANY): D_OPTION_SD is
-		require
-			valid_type: yyis_type8 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs4: SPECIAL [CLUST_PROP_SD]
+			-- Stack for semantic values of type CLUST_PROP_SD
 
-	yyis_type8 (v: ANY): BOOLEAN is
-		local
-			u: D_OPTION_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc4: INTEGER
+			-- Capacity of semantic value stack `yyvs4'
 
-	yytype9 (v: ANY): ID_SD is
-		require
-			valid_type: yyis_type9 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp4: INTEGER
+			-- Top of semantic value stack `yyvs4'
 
-	yyis_type9 (v: ANY): BOOLEAN is
-		local
-			u: ID_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines4: KL_SPECIAL_ROUTINES [CLUST_PROP_SD]
+			-- Routines that ought to be in SPECIAL [CLUST_PROP_SD]
 
-	yytype10 (v: ANY): LANG_TRIB_SD is
-		require
-			valid_type: yyis_type10 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs5: SPECIAL [CLUST_ADAPT_SD]
+			-- Stack for semantic values of type CLUST_ADAPT_SD
 
-	yyis_type10 (v: ANY): BOOLEAN is
-		local
-			u: LANG_TRIB_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc5: INTEGER
+			-- Capacity of semantic value stack `yyvs5'
 
-	yytype11 (v: ANY): LANGUAGE_NAME_SD is
-		require
-			valid_type: yyis_type11 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp5: INTEGER
+			-- Top of semantic value stack `yyvs5'
 
-	yyis_type11 (v: ANY): BOOLEAN is
-		local
-			u: LANGUAGE_NAME_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines5: KL_SPECIAL_ROUTINES [CLUST_ADAPT_SD]
+			-- Routines that ought to be in SPECIAL [CLUST_ADAPT_SD]
 
-	yytype12 (v: ANY): O_OPTION_SD is
-		require
-			valid_type: yyis_type12 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs6: SPECIAL [CLUSTER_SD]
+			-- Stack for semantic values of type CLUSTER_SD
 
-	yyis_type12 (v: ANY): BOOLEAN is
-		local
-			u: O_OPTION_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc6: INTEGER
+			-- Capacity of semantic value stack `yyvs6'
 
-	yytype13 (v: ANY): OPT_VAL_SD is
-		require
-			valid_type: yyis_type13 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp6: INTEGER
+			-- Top of semantic value stack `yyvs6'
 
-	yyis_type13 (v: ANY): BOOLEAN is
-		local
-			u: OPT_VAL_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines6: KL_SPECIAL_ROUTINES [CLUSTER_SD]
+			-- Routines that ought to be in SPECIAL [CLUSTER_SD]
 
-	yytype14 (v: ANY): OPTION_SD is
-		require
-			valid_type: yyis_type14 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs7: SPECIAL [ASSEMBLY_SD]
+			-- Stack for semantic values of type ASSEMBLY_SD
 
-	yyis_type14 (v: ANY): BOOLEAN is
-		local
-			u: OPTION_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc7: INTEGER
+			-- Capacity of semantic value stack `yyvs7'
 
-	yytype15 (v: ANY): ROOT_SD is
-		require
-			valid_type: yyis_type15 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp7: INTEGER
+			-- Top of semantic value stack `yyvs7'
 
-	yyis_type15 (v: ANY): BOOLEAN is
-		local
-			u: ROOT_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines7: KL_SPECIAL_ROUTINES [ASSEMBLY_SD]
+			-- Routines that ought to be in SPECIAL [ASSEMBLY_SD]
 
-	yytype16 (v: ANY): TWO_NAME_SD is
-		require
-			valid_type: yyis_type16 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs8: SPECIAL [D_OPTION_SD]
+			-- Stack for semantic values of type D_OPTION_SD
 
-	yyis_type16 (v: ANY): BOOLEAN is
-		local
-			u: TWO_NAME_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc8: INTEGER
+			-- Capacity of semantic value stack `yyvs8'
 
-	yytype17 (v: ANY): DEPEND_SD is
-		require
-			valid_type: yyis_type17 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp8: INTEGER
+			-- Top of semantic value stack `yyvs8'
 
-	yyis_type17 (v: ANY): BOOLEAN is
-		local
-			u: DEPEND_SD
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines8: KL_SPECIAL_ROUTINES [D_OPTION_SD]
+			-- Routines that ought to be in SPECIAL [D_OPTION_SD]
 
-	yytype18 (v: ANY): LACE_LIST [CLAS_VISI_SD] is
-		require
-			valid_type: yyis_type18 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs9: SPECIAL [ID_SD]
+			-- Stack for semantic values of type ID_SD
 
-	yyis_type18 (v: ANY): BOOLEAN is
-		local
-			u: LACE_LIST [CLAS_VISI_SD]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc9: INTEGER
+			-- Capacity of semantic value stack `yyvs9'
 
-	yytype19 (v: ANY): LACE_LIST [CLUST_ADAPT_SD] is
-		require
-			valid_type: yyis_type19 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp9: INTEGER
+			-- Top of semantic value stack `yyvs9'
 
-	yyis_type19 (v: ANY): BOOLEAN is
-		local
-			u: LACE_LIST [CLUST_ADAPT_SD]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines9: KL_SPECIAL_ROUTINES [ID_SD]
+			-- Routines that ought to be in SPECIAL [ID_SD]
 
-	yytype20 (v: ANY): LACE_LIST [CLUSTER_SD] is
-		require
-			valid_type: yyis_type20 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs10: SPECIAL [LANG_TRIB_SD]
+			-- Stack for semantic values of type LANG_TRIB_SD
 
-	yyis_type20 (v: ANY): BOOLEAN is
-		local
-			u: LACE_LIST [CLUSTER_SD]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc10: INTEGER
+			-- Capacity of semantic value stack `yyvs10'
 
-	yytype21 (v: ANY): LACE_LIST [ASSEMBLY_SD] is
-		require
-			valid_type: yyis_type21 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp10: INTEGER
+			-- Top of semantic value stack `yyvs10'
 
-	yyis_type21 (v: ANY): BOOLEAN is
-		local
-			u: LACE_LIST [ASSEMBLY_SD]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines10: KL_SPECIAL_ROUTINES [LANG_TRIB_SD]
+			-- Routines that ought to be in SPECIAL [LANG_TRIB_SD]
 
-	yytype22 (v: ANY): LACE_LIST [D_OPTION_SD] is
-		require
-			valid_type: yyis_type22 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs11: SPECIAL [LANGUAGE_NAME_SD]
+			-- Stack for semantic values of type LANGUAGE_NAME_SD
 
-	yyis_type22 (v: ANY): BOOLEAN is
-		local
-			u: LACE_LIST [D_OPTION_SD]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc11: INTEGER
+			-- Capacity of semantic value stack `yyvs11'
 
-	yytype23 (v: ANY): LACE_LIST [ID_SD] is
-		require
-			valid_type: yyis_type23 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp11: INTEGER
+			-- Top of semantic value stack `yyvs11'
 
-	yyis_type23 (v: ANY): BOOLEAN is
-		local
-			u: LACE_LIST [ID_SD]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines11: KL_SPECIAL_ROUTINES [LANGUAGE_NAME_SD]
+			-- Routines that ought to be in SPECIAL [LANGUAGE_NAME_SD]
 
-	yytype25 (v: ANY): LACE_LIST [FILE_NAME_SD] is
-		require
-			valid_type: yyis_type25 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs12: SPECIAL [O_OPTION_SD]
+			-- Stack for semantic values of type O_OPTION_SD
 
-	yyis_type25 (v: ANY): BOOLEAN is
-		local
-			u: LACE_LIST [FILE_NAME_SD]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc12: INTEGER
+			-- Capacity of semantic value stack `yyvs12'
 
-	yytype26 (v: ANY): LACE_LIST [LANG_TRIB_SD] is
-		require
-			valid_type: yyis_type26 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp12: INTEGER
+			-- Top of semantic value stack `yyvs12'
 
-	yyis_type26 (v: ANY): BOOLEAN is
-		local
-			u: LACE_LIST [LANG_TRIB_SD]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines12: KL_SPECIAL_ROUTINES [O_OPTION_SD]
+			-- Routines that ought to be in SPECIAL [O_OPTION_SD]
 
-	yytype27 (v: ANY): LACE_LIST [O_OPTION_SD] is
-		require
-			valid_type: yyis_type27 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs13: SPECIAL [OPT_VAL_SD]
+			-- Stack for semantic values of type OPT_VAL_SD
 
-	yyis_type27 (v: ANY): BOOLEAN is
-		local
-			u: LACE_LIST [O_OPTION_SD]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc13: INTEGER
+			-- Capacity of semantic value stack `yyvs13'
 
-	yytype28 (v: ANY): LACE_LIST [TWO_NAME_SD] is
-		require
-			valid_type: yyis_type28 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp13: INTEGER
+			-- Top of semantic value stack `yyvs13'
 
-	yyis_type28 (v: ANY): BOOLEAN is
-		local
-			u: LACE_LIST [TWO_NAME_SD]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines13: KL_SPECIAL_ROUTINES [OPT_VAL_SD]
+			-- Routines that ought to be in SPECIAL [OPT_VAL_SD]
 
-	yytype29 (v: ANY): LACE_LIST [DEPEND_SD] is
-		require
-			valid_type: yyis_type29 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvs14: SPECIAL [OPTION_SD]
+			-- Stack for semantic values of type OPTION_SD
 
-	yyis_type29 (v: ANY): BOOLEAN is
-		local
-			u: LACE_LIST [DEPEND_SD]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyvsc14: INTEGER
+			-- Capacity of semantic value stack `yyvs14'
 
-	yytype31 (v: ANY): PAIR [ID_SD, CLICK_AST] is
-		require
-			valid_type: yyis_type31 (v)
-		do
-			Result ?= v
-		ensure
-			definition: Result = v
-		end
+	yyvsp14: INTEGER
+			-- Top of semantic value stack `yyvs14'
 
-	yyis_type31 (v: ANY): BOOLEAN is
-		local
-			u: PAIR [ID_SD, CLICK_AST]
-		do
-			u ?= v
-			Result := (u = v)
-		end
+	yyspecial_routines14: KL_SPECIAL_ROUTINES [OPTION_SD]
+			-- Routines that ought to be in SPECIAL [OPTION_SD]
 
+	yyvs15: SPECIAL [ROOT_SD]
+			-- Stack for semantic values of type ROOT_SD
+
+	yyvsc15: INTEGER
+			-- Capacity of semantic value stack `yyvs15'
+
+	yyvsp15: INTEGER
+			-- Top of semantic value stack `yyvs15'
+
+	yyspecial_routines15: KL_SPECIAL_ROUTINES [ROOT_SD]
+			-- Routines that ought to be in SPECIAL [ROOT_SD]
+
+	yyvs16: SPECIAL [TWO_NAME_SD]
+			-- Stack for semantic values of type TWO_NAME_SD
+
+	yyvsc16: INTEGER
+			-- Capacity of semantic value stack `yyvs16'
+
+	yyvsp16: INTEGER
+			-- Top of semantic value stack `yyvs16'
+
+	yyspecial_routines16: KL_SPECIAL_ROUTINES [TWO_NAME_SD]
+			-- Routines that ought to be in SPECIAL [TWO_NAME_SD]
+
+	yyvs17: SPECIAL [DEPEND_SD]
+			-- Stack for semantic values of type DEPEND_SD
+
+	yyvsc17: INTEGER
+			-- Capacity of semantic value stack `yyvs17'
+
+	yyvsp17: INTEGER
+			-- Top of semantic value stack `yyvs17'
+
+	yyspecial_routines17: KL_SPECIAL_ROUTINES [DEPEND_SD]
+			-- Routines that ought to be in SPECIAL [DEPEND_SD]
+
+	yyvs18: SPECIAL [LACE_LIST [CLAS_VISI_SD]]
+			-- Stack for semantic values of type LACE_LIST [CLAS_VISI_SD]
+
+	yyvsc18: INTEGER
+			-- Capacity of semantic value stack `yyvs18'
+
+	yyvsp18: INTEGER
+			-- Top of semantic value stack `yyvs18'
+
+	yyspecial_routines18: KL_SPECIAL_ROUTINES [LACE_LIST [CLAS_VISI_SD]]
+			-- Routines that ought to be in SPECIAL [LACE_LIST [CLAS_VISI_SD]]
+
+	yyvs19: SPECIAL [LACE_LIST [CLUST_ADAPT_SD]]
+			-- Stack for semantic values of type LACE_LIST [CLUST_ADAPT_SD]
+
+	yyvsc19: INTEGER
+			-- Capacity of semantic value stack `yyvs19'
+
+	yyvsp19: INTEGER
+			-- Top of semantic value stack `yyvs19'
+
+	yyspecial_routines19: KL_SPECIAL_ROUTINES [LACE_LIST [CLUST_ADAPT_SD]]
+			-- Routines that ought to be in SPECIAL [LACE_LIST [CLUST_ADAPT_SD]]
+
+	yyvs20: SPECIAL [LACE_LIST [CLUSTER_SD]]
+			-- Stack for semantic values of type LACE_LIST [CLUSTER_SD]
+
+	yyvsc20: INTEGER
+			-- Capacity of semantic value stack `yyvs20'
+
+	yyvsp20: INTEGER
+			-- Top of semantic value stack `yyvs20'
+
+	yyspecial_routines20: KL_SPECIAL_ROUTINES [LACE_LIST [CLUSTER_SD]]
+			-- Routines that ought to be in SPECIAL [LACE_LIST [CLUSTER_SD]]
+
+	yyvs21: SPECIAL [LACE_LIST [ASSEMBLY_SD]]
+			-- Stack for semantic values of type LACE_LIST [ASSEMBLY_SD]
+
+	yyvsc21: INTEGER
+			-- Capacity of semantic value stack `yyvs21'
+
+	yyvsp21: INTEGER
+			-- Top of semantic value stack `yyvs21'
+
+	yyspecial_routines21: KL_SPECIAL_ROUTINES [LACE_LIST [ASSEMBLY_SD]]
+			-- Routines that ought to be in SPECIAL [LACE_LIST [ASSEMBLY_SD]]
+
+	yyvs22: SPECIAL [LACE_LIST [D_OPTION_SD]]
+			-- Stack for semantic values of type LACE_LIST [D_OPTION_SD]
+
+	yyvsc22: INTEGER
+			-- Capacity of semantic value stack `yyvs22'
+
+	yyvsp22: INTEGER
+			-- Top of semantic value stack `yyvs22'
+
+	yyspecial_routines22: KL_SPECIAL_ROUTINES [LACE_LIST [D_OPTION_SD]]
+			-- Routines that ought to be in SPECIAL [LACE_LIST [D_OPTION_SD]]
+
+	yyvs23: SPECIAL [LACE_LIST [ID_SD]]
+			-- Stack for semantic values of type LACE_LIST [ID_SD]
+
+	yyvsc23: INTEGER
+			-- Capacity of semantic value stack `yyvs23'
+
+	yyvsp23: INTEGER
+			-- Top of semantic value stack `yyvs23'
+
+	yyspecial_routines23: KL_SPECIAL_ROUTINES [LACE_LIST [ID_SD]]
+			-- Routines that ought to be in SPECIAL [LACE_LIST [ID_SD]]
+
+	yyvs24: SPECIAL [FILE_NAME_SD]
+			-- Stack for semantic values of type FILE_NAME_SD
+
+	yyvsc24: INTEGER
+			-- Capacity of semantic value stack `yyvs24'
+
+	yyvsp24: INTEGER
+			-- Top of semantic value stack `yyvs24'
+
+	yyspecial_routines24: KL_SPECIAL_ROUTINES [FILE_NAME_SD]
+			-- Routines that ought to be in SPECIAL [FILE_NAME_SD]
+
+	yyvs25: SPECIAL [LACE_LIST [FILE_NAME_SD]]
+			-- Stack for semantic values of type LACE_LIST [FILE_NAME_SD]
+
+	yyvsc25: INTEGER
+			-- Capacity of semantic value stack `yyvs25'
+
+	yyvsp25: INTEGER
+			-- Top of semantic value stack `yyvs25'
+
+	yyspecial_routines25: KL_SPECIAL_ROUTINES [LACE_LIST [FILE_NAME_SD]]
+			-- Routines that ought to be in SPECIAL [LACE_LIST [FILE_NAME_SD]]
+
+	yyvs26: SPECIAL [LACE_LIST [LANG_TRIB_SD]]
+			-- Stack for semantic values of type LACE_LIST [LANG_TRIB_SD]
+
+	yyvsc26: INTEGER
+			-- Capacity of semantic value stack `yyvs26'
+
+	yyvsp26: INTEGER
+			-- Top of semantic value stack `yyvs26'
+
+	yyspecial_routines26: KL_SPECIAL_ROUTINES [LACE_LIST [LANG_TRIB_SD]]
+			-- Routines that ought to be in SPECIAL [LACE_LIST [LANG_TRIB_SD]]
+
+	yyvs27: SPECIAL [LACE_LIST [O_OPTION_SD]]
+			-- Stack for semantic values of type LACE_LIST [O_OPTION_SD]
+
+	yyvsc27: INTEGER
+			-- Capacity of semantic value stack `yyvs27'
+
+	yyvsp27: INTEGER
+			-- Top of semantic value stack `yyvs27'
+
+	yyspecial_routines27: KL_SPECIAL_ROUTINES [LACE_LIST [O_OPTION_SD]]
+			-- Routines that ought to be in SPECIAL [LACE_LIST [O_OPTION_SD]]
+
+	yyvs28: SPECIAL [LACE_LIST [TWO_NAME_SD]]
+			-- Stack for semantic values of type LACE_LIST [TWO_NAME_SD]
+
+	yyvsc28: INTEGER
+			-- Capacity of semantic value stack `yyvs28'
+
+	yyvsp28: INTEGER
+			-- Top of semantic value stack `yyvs28'
+
+	yyspecial_routines28: KL_SPECIAL_ROUTINES [LACE_LIST [TWO_NAME_SD]]
+			-- Routines that ought to be in SPECIAL [LACE_LIST [TWO_NAME_SD]]
+
+	yyvs29: SPECIAL [LACE_LIST [DEPEND_SD]]
+			-- Stack for semantic values of type LACE_LIST [DEPEND_SD]
+
+	yyvsc29: INTEGER
+			-- Capacity of semantic value stack `yyvs29'
+
+	yyvsp29: INTEGER
+			-- Top of semantic value stack `yyvs29'
+
+	yyspecial_routines29: KL_SPECIAL_ROUTINES [LACE_LIST [DEPEND_SD]]
+			-- Routines that ought to be in SPECIAL [LACE_LIST [DEPEND_SD]]
+
+	yyvs30: SPECIAL [CLICK_AST]
+			-- Stack for semantic values of type CLICK_AST
+
+	yyvsc30: INTEGER
+			-- Capacity of semantic value stack `yyvs30'
+
+	yyvsp30: INTEGER
+			-- Top of semantic value stack `yyvs30'
+
+	yyspecial_routines30: KL_SPECIAL_ROUTINES [CLICK_AST]
+			-- Routines that ought to be in SPECIAL [CLICK_AST]
+
+	yyvs31: SPECIAL [PAIR [ID_SD, CLICK_AST]]
+			-- Stack for semantic values of type PAIR [ID_SD, CLICK_AST]
+
+	yyvsc31: INTEGER
+			-- Capacity of semantic value stack `yyvs31'
+
+	yyvsp31: INTEGER
+			-- Top of semantic value stack `yyvs31'
+
+	yyspecial_routines31: KL_SPECIAL_ROUTINES [PAIR [ID_SD, CLICK_AST]]
+			-- Routines that ought to be in SPECIAL [PAIR [ID_SD, CLICK_AST]]
 
 feature {NONE} -- Constants
 

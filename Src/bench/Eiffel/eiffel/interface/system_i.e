@@ -2290,11 +2290,13 @@ end;
 			has_attribute, final_mode: BOOLEAN;
 			types: TYPE_LIST;
 			type_cursor: LINKABLE [CLASS_TYPE];
-			f_name: STRING;
+			temp: STRING;
 				-- cltype_array is indexed by `id' not by `type_id'
 				-- as `class_types'
 			cltype_array: ARRAY [CLASS_TYPE];
-			subdir: DIRECTORY
+			subdir: DIRECTORY;
+			f_name: FILE_NAME;
+			dir_name: DIRECTORY_NAME
 		do
 			nb := Type_id_counter.value;
 			final_mode := byte_context.final_mode;
@@ -2320,16 +2322,19 @@ if class_types.item (i) /= Void then
 end;
 					i := i + 1;
 				end;
-				f_name := clone (System_object_prefix);
-				f_name.append_integer (1);
-				f_name := build_path (Final_generation_path, f_name);
-				!! subdir.make (f_name);
+				temp := clone (System_object_prefix);
+				temp.append_integer (1);
+				!!dir_name.make_from_string (Final_generation_path);
+				dir_name.extend (temp);
+				!! subdir.make (dir_name.path);
 				if not subdir.exists then
 					subdir.create
 				end;
-				f_name := build_path (f_name, Eskelet);
-				f_name.append (Dot_h);
-				Extern_declarations.generate (f_name);
+				!!f_name.make_from_string (dir_name.path);
+				temp := clone (Eskelet);
+				temp.append (Dot_h);
+				f_name.set_file_name (temp);
+				Extern_declarations.generate (f_name.path);
 				Extern_declarations.wipe_out;
 			else
 					-- Hash table extern declaration in workbench mode
@@ -2480,8 +2485,10 @@ end;
 			cl_type: CLASS_TYPE;
 			a_class: CLASS_C;
 			final_mode: BOOLEAN;
-			f_name: STRING;
-			subdir: DIRECTORY
+			temp: STRING;
+			subdir: DIRECTORY;
+			f_name: FILE_NAME;
+			dir_name: DIRECTORY_NAME
 		do
 			final_mode := byte_context.final_mode;
 
@@ -2508,15 +2515,17 @@ end;
 
 			if final_mode then
 					-- Extern declarations for previous file
-				f_name := clone (System_object_prefix);
-				f_name.append_integer (1);
-				f_name := build_path (Final_generation_path, f_name);
-				!! subdir.make (f_name);
+				temp := clone (System_object_prefix);
+				temp.append_integer (1);
+				!!dir_name.make_from_string (Final_generation_path);
+				dir_name.extend (temp);
+				!! subdir.make (dir_name.path);
 				if not subdir.exists then
 					subdir.create
 				end;
-				f_name := build_path (f_name, "ececil.h");
-				Extern_declarations.generate (f_name);
+				!!f_name.make_from_string (dir_name.path);
+				f_name.set_file_name ("ececil.h");
+				Extern_declarations.generate (f_name.path);
 				Extern_declarations.wipe_out;
 				Cecil_file.putstring ("%Nstruct ctable ce_rname[] = {%N");
 				from
@@ -2984,6 +2993,8 @@ feature -- Main file generation
 				%extern void emain();%N%
 				%extern void reclaim();%N%
 				%extern void failure();%N%
+				%extern void initsig();%N%
+				%extern void initstk();%N%
 				%extern void eif_rtinit();%N%N");
 
 			Main_file.putstring ("void main(argc, argv, envp)%N%
@@ -3501,21 +3512,26 @@ feature -- Log files
 		-- File where the names of the removed features are generated
 
 	open_log_files is
+		local
+			f_name: FILE_NAME
 		do
 			if in_final_mode then
 					-- removed_log_file is used only in final mode
-				!!removed_log_file.make
-					(build_path (Final_generation_path, Removed_log_file_name));
+				!!f_name.make_from_string (Final_generation_path);
+				f_name.set_file_name (Removed_log_file_name);
+				!!removed_log_file.make (f_name.path);
 
-				!!used_features_log_file.make
-					(build_path (Final_generation_path, Translation_log_file_name));
+				!!f_name.make_from_string (Final_generation_path);
+				f_name.set_file_name (Translation_log_file_name);
+				!!used_features_log_file.make (f_name.path);
 
 					-- Files are open using the `write' mode
 				removed_log_file.open_write;
 				used_features_log_file.open_write;
 			else
-				!!used_features_log_file.make
-					(build_path (Workbench_generation_path, Translation_log_file_name));
+				!!f_name.make_from_string (Workbench_generation_path);
+				f_name.set_file_name (Translation_log_file_name);
+				!!used_features_log_file.make (f_name.path);
 
 					-- File is open using the `append' mode
 					-- (refreezing)

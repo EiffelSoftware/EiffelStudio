@@ -115,12 +115,12 @@ feature -- Basic operations
 			elseif is_dispatch (a_type) then
 				ce_function_name.append ("ccom_ce_dispatch")
 				ec_function_name.append ("ccom_ec_dispatch")
-				is_interface := True
+				is_interface_pointer := True
 
 			elseif is_unknown (a_type) then
 				ce_function_name.append ("ccom_ce_unknown")
 				ec_function_name.append ("ccom_ec_unknown")
-				is_interface := True
+				is_interface_pointer := True
 
 			elseif is_lpstr (a_type) then
 				ce_function_name.append ("ccom_ce_lpstr")

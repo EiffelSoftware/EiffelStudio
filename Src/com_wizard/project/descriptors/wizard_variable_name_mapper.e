@@ -59,8 +59,10 @@ feature -- Basic operations
 				Result.append ("_ENUM")
 			elseif (a_type = Tkind_record) then
 				Result.append ("_RECORD")
-			elseif (a_type = Tkind_interface) or (a_type = Tkind_dispatch) then
+			elseif (a_type = Tkind_interface) then
 				Result.append ("_INTERFACE")
+			elseif (a_type = Tkind_dispatch) then
+				Result.append ("_AUTO_INTERFACE")
 			elseif (a_type = Tkind_coclass) then
 				if is_client then
 					Result.append ("_PROXY")

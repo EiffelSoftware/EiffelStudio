@@ -20,6 +20,11 @@ inherit
 
 	WIZARD_SHARED_DATA
 
+	ECOM_TYPE_FLAGS
+		export
+			{NONE} all
+		end
+
 feature -- Processing
 
 	process_alias (alias_descriptor: WIZARD_ALIAS_DESCRIPTOR) is

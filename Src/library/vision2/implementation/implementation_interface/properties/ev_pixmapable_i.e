@@ -37,6 +37,12 @@ feature -- Element change
 		ensure
 			pixmap_removed: pixmap = Void
 		end
+		
+	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
+			-- Is `a_pixmap' equal to `pixmap'?
+		do
+			Result := a_pixmap.is_equal (pixmap)
+		end
 
 feature {EV_ANY_I} -- Implementation
 

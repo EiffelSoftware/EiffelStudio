@@ -9,11 +9,13 @@
 This page tests all the different types of code generation required by ASP.NET.
 
 <script runat=server>
-	rename
-		on_load as my_on_load
-	redefine
-		my_on_load
-	end
+inherit
+	WEB_PAGE
+		rename
+			on_load as my_on_load
+		redefine
+			my_on_load
+		end
 </script>
 
 
@@ -42,9 +44,8 @@ feature -- Basic Operations
 			-- Do databind
 			if is_post_back then
 				data_source := create_data_source
-
---				repeater_1.set_data_source (data_source)
---				repeater_1.data_bind
+				repeater_1.set_data_source (data_source)
+				repeater_1.data_bind
 			end
 		end
 
@@ -133,7 +134,7 @@ feature -- Basic Operations
 
 	<hr>
 	This is a data bound templated control: <br>
-<!--
+
 	<asp:Repeater id="repeater1" runat="server">
 		<HeaderTemplate>
 			<table cellspacing=0 cellpadding=1 style="font-family:verdana;font-size:8pt;border-collapse:collapse">
@@ -151,7 +152,7 @@ feature -- Basic Operations
 			</table>
 		</FooterTemplate>
 	</asp:Repeater>
--->
+
 </form>
 </body>
 </html>

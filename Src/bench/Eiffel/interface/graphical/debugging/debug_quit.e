@@ -19,7 +19,8 @@ inherit
 
 creation
 
-	make, non_gui_make
+	make, 
+	non_gui_make
 
 feature -- Initialization
 

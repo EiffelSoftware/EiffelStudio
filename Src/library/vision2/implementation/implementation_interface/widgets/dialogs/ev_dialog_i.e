@@ -67,7 +67,7 @@ feature -- Status Report
 			if internal_current_push_button /= Void then
 				Result := internal_current_push_button
 			else
-				Result := default_push_button
+				Result := internal_default_push_button
 			end
 		end
 
@@ -81,10 +81,27 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 			a_button_not_void: a_button /= Void
 			has_button: interface.has_recursive (a_button)
 		do
-			if default_push_button /= Void then
-				default_push_button.disable_default_push_button
-			end 
-			a_button.enable_default_push_button
+			if internal_current_push_button = Void then
+					-- No other button than `internal_default_push_button', if it is set,
+					-- has the `is_default_push_button' flag.
+
+					-- If we already had a default push button, we need to remove the
+					-- `is_default_push_button' flag.
+				if internal_default_push_button /= Void then
+					internal_default_push_button.disable_default_push_button
+				end
+					-- Now we set `a_button' with the `is_default_push_button' flag.
+				a_button.enable_default_push_button	
+			else
+					-- A button is already selected for being the current push button:
+					-- nothing to be done here.
+				check
+					internal_default_push_button_disabled:
+						internal_default_push_button /= Void implies
+							not internal_default_push_button.is_default_push_button
+				end
+			end
+				-- Set the new `internal_default_push_button'.
 			internal_default_push_button := a_button
 		ensure
 			default_push_button_set: 
@@ -96,7 +113,18 @@ feature {EV_ANY, EV_ANY_I} -- Status Setting
 		require
 			has_default_push_button: default_push_button /= Void
 		do
-			default_push_button.disable_default_push_button
+			if internal_current_push_button = Void then
+					-- Simply remove `is_disable_default_push_button' status from our
+					-- previous `default_push_button'.
+				internal_default_push_button.disable_default_push_button
+			else
+				-- A button is already selected for being the current push button:
+				-- nothing to be done here.
+				check
+					internal_default_push_button_disabled:
+						not internal_default_push_button.is_default_push_button
+				end
+			end
 			internal_default_push_button := Void
 		ensure
 			not_has_default_push_button: default_push_button = Void
@@ -225,9 +253,40 @@ feature {EV_WIDGET_I} -- Implementation
 			-- Set the push button to be `a_button'. `a_button' can
 			-- be Void if there are no more current push button
 		do
-			internal_current_push_button := a_button
+				-- Remove `is_default_push_button' status from either
+				-- `internal_default_push_button' or `internal_current_push_button'.
+			if current_push_button /= Void then
+				current_push_button.disable_default_push_button
+			end
+
+				-- At this stage no button in Current dialog has the `is_default_push_button' flag.
+			if a_button /= Void then
+				check
+					a_button_not_default: not a_button.is_default_push_button
+				end
+				a_button.enable_default_push_button
+				if a_button /= internal_default_push_button then
+						-- Only set `internal_current_push_button' if `a_button'
+						-- is different from `internal_default_push_button' as otherwise
+						-- we would break the invariant.
+					internal_current_push_button := a_button
+				else
+						-- Ensures the `internal_default_push_button_enabled' invariant
+						-- so that only `a_button' is enabled
+					internal_current_push_button := Void
+				end
+			else
+				internal_current_push_button := Void
+					-- If `internal_default_push_button' is set, then set its
+					-- `is_default_push_button' flag.
+				if internal_default_push_button /= Void then
+					internal_default_push_button.enable_default_push_button
+				end
+			end
 		ensure
-			current_push_button_set: internal_current_push_button = a_button
+			current_push_button_set: 
+				(a_button = Void or else a_button /= internal_default_push_button) implies
+					internal_current_push_button = a_button
 		end
 		
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -235,6 +294,22 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: EV_DIALOG
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'
+
+invariant
+	internal_default_push_button_distinct_from_current_push_button:
+		internal_default_push_button /= Void implies
+			(internal_default_push_button /= internal_current_push_button)
+
+	internal_current_push_button_distinct_from_default_push_button:
+		internal_current_push_button /= Void implies
+			(internal_current_push_button /= internal_default_push_button)
+
+	internal_default_push_button_enabled:
+		(internal_default_push_button /= Void and then internal_default_push_button.is_default_push_button) implies
+			internal_current_push_button = Void
+
+	only_one_button_is_enabled:
+		-- Only one button of Current has the `is_default_push_button' flag set.
 
 end -- class EV_DIALOG_I
 

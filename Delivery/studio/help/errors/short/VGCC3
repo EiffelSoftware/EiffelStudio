@@ -1,3 +1,3 @@
 Error: Creation instruction lists explicit creation type which does
-  not conform to type of target, and is a reference type.
+  not conform to type of target.
 What to do: make sure that explicit type, if needed, conforms to target type.

@@ -286,6 +286,14 @@ feature -- Access: file name
 			create Result.make
 			Result.set_directory ("tmp")
 		end
+		
+	ISE_eac_browser_name: FILE_NAME is
+			-- Filename of EAC Browser application
+		once
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend_from_array (<<short_studio_name, "spec", Eiffel_platform, "bin">>)
+			Result.set_file_name (Eac_browser_file)
+		end
 
 feature -- Access: command name
 

@@ -199,10 +199,15 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	internal_text: STRING
+		-- Text displayed in `Current'
 
 	destroy is
-			-- 
+			-- Clean up `Current'
 		do
+			if parent_imp /= Void then
+				parent_imp.interface.prune_all (interface)
+			end
+			is_destroyed := True
 			pixmap := Void
 		end
 

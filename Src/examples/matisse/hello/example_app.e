@@ -35,11 +35,12 @@ feature -- Initialization
 				-- Read a text file in the example project directory.
 				-- Then create new objects of the class BOOK, AUTHOR
 				-- and PUBLISHER, and store these objects in the database.
-				
-		
+
+			appl.commit_transaction
+			appl.start_transaction
 		-- The followings are the examples for the document "A mechanism for..." --
 			
-			find_and_print_books_from_title("Eiffel The Language")
+			find_and_print_books_from_title("EIFFEL THE LANGUAGE")
 				-- An example of entry point
 								
 			find_and_print_books_using_index("M", "N")
@@ -147,6 +148,9 @@ feature
 			a_file: PLAIN_TEXT_FILE
 			author_name, pub_name: STRING
 			message: STRING
+
+			a: ARRAY [AUTHOR]
+			arg: AUTHOR
 		do
 			message := "This program is going to update the database "
 			message.append(appl.database_name)
@@ -223,7 +227,10 @@ feature
 				loop
 					a_file.readline
 					author_name := a_file.laststring
-					a_book.get_written_by.force(authors.item(author_name), j)
+					a := a_book.get_written_by
+					arg := authors.item(author_name)
+					a.force (arg, j)
+		--			a_book.get_written_by.force(authors.item(author_name), j)
 						-- "Persistence by reachability"
 					j :=  j + 1
 				end
@@ -241,12 +248,12 @@ feature -- Programs in the document
 		-- section 3.2.1
 		local
 			ep: MT_ENTRYPOINT
-			an_array: ARRAY[BOOK]
+			an_array: ARRAY [MT_STORABLE]
 			i: INTEGER
 		do
 			print("%N%Nfind_and_print_books_from_title%N")
 			!!ep.make_from_name("title", "BOOK")
-			an_array ?=  ep.retrieve_objects(a_title)
+			an_array :=  ep.retrieve_objects(a_title)
 			from
 				i := an_array.lower
 			until
@@ -358,16 +365,16 @@ feature -- Programs in the document
 		local
 			a_book: BOOK
 			an_ep: MT_ENTRYPOINT
-			books: ARRAY[BOOK]
+			books: ARRAY[MT_STORABLE]
 			i: INTEGER
 		do
 			print("%N%Nprint_properites_of_book_using_mt_get_functions%N")
 			!!an_ep.make_from_name("title", "BOOK")
-			books ?= an_ep.retrieve_objects(book_title)
+			books := an_ep.retrieve_objects(book_title)
 			from i := books.lower
 			until i > books.upper
 			loop
-				a_book := books.item(i)
+				a_book ?= books.item(i)
 				print(a_book.mt_get_string_by_name("title"))
 				print(a_book.mt_get_real_by_name("price"))
 				print(a_book.mt_get_successor_by_name("publisher"))

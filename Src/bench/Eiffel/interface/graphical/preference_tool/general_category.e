@@ -60,6 +60,7 @@ feature {TTY_RESOURCES} -- Initialization
 			else
 				!! text_mode.make ("text_mode", rt, "DOS")
 			end;
+			!! motif_1_2.make ("motif_1_2", rt, False)
 		end
 
 feature -- Validation
@@ -90,5 +91,6 @@ feature -- Resources
 	color_list: ARRAY_RESOURCE;
 	shell_command: STRING_RESOURCE
 	text_mode: STRING_RESOURCE
+	motif_1_2: BOOLEAN_RESOURCE
 
 end -- class GENERAL_CATEGORY

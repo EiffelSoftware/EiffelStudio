@@ -16,12 +16,26 @@ inherit
 		end;
 	PREFERENCE_CATEGORY
 		redefine
-			init_colors
+			init_colors, save_resources
 		end;
 	SYSTEM_CONSTANTS
 
 creation
 	make
+
+feature -- Access
+
+	save_resources (file: PLAIN_TEXT_FILE) is
+		-- Save the resources from Current in `file'.
+		do
+			{PREFERENCE_CATEGORY} Precursor (file)
+			if associated_category.motif_1_2.actual_value then
+				file.put_string ("motif_1_2: true%N")
+			else
+				file.put_string ("motif_1_2: false%N")
+			end
+		end
+
 
 feature {NONE} -- Initialization
 

@@ -21,6 +21,26 @@ feature -- comparison
 			Result := type_id < other.type_id	
 		end
 
+feature -- Status
+
+	is_set: BOOLEAN
+		-- Flag to give a status for the current entry.
+		--| The value is set after doing a call to `is_polymorphic' from POLY_TABLE.
+		--| This is done to save some time when doing the degree -5 so we don't need to
+		--| go through the POLY_TABLE each time.
+		--| However, as soon as the POLY_CACHE is removed from the cache, we will lose
+		--| this information and we will have to recompute it again.
+
+	is_polymorphic: BOOLEAN
+		-- Is the current call a polymorphic one?
+		--| Can be true only if `is_set' is True
+
+	set_polymorphic (v: BOOLEAN) is
+		do
+			is_set := True
+			is_polymorphic := v
+		end
+
 feature -- from ENTRY
 
 	type_id: INTEGER

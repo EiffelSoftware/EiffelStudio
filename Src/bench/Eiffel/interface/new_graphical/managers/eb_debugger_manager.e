@@ -513,6 +513,7 @@ feature -- Debugging events
 			st: CALL_STACK_STONE
 			stt: STRUCTURED_TEXT
 		do
+			Application.set_current_execution_stack (1)
 			stop_cmd.disable_sensitive
 			no_stop_cmd.enable_sensitive
 			debug_cmd.enable_sensitive
@@ -522,7 +523,6 @@ feature -- Debugging events
 			debug ("debugger_interface")
 				io.putstring ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")
 			end
-			Application.set_current_execution_stack (1)
 			create st.make (1)
 			object_tool.disable_refresh
 			if st.is_valid then

@@ -1,8 +1,8 @@
 indexing
 
 	description:
-		"Abstract notion of a command for the preference tool.";
-	date: "$Date$";
+		"Abstract notion of a command for the preference tool."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class

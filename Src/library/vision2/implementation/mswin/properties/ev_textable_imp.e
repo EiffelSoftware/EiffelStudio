@@ -12,44 +12,56 @@ deferred class
 	
 inherit
 	EV_TEXT_CONTAINER_I
-	
-	EV_PRIMITIVE_IMP
-	
-	EV_FONTABLE_IMP
-	     
+
+
 feature -- Access
+
+	wel_window: WEL_WINDOW is
+			-- Actual wel_window
+		deferred
+		end
 
 	text: STRING is 
 		do
 			Result := wel_window.text
 		end
-		
+	
 feature -- Status setting
 
-        set_center_alignment is
-                        -- Set text alignment of current label to center.
-                do
+	set_center_alignment is
+			-- Set text alignment of current label to center.
+		do
                         check
                                 not_yet_implemented: False
                         end
-                end
+		end
 
-        set_right_alignment is
-                -- Set text alignment of current label to right.
-                do
+	set_right_alignment is
+			-- Set text alignment of current label to right.
+		do
 			check
                                 not_yet_implemented: False
                         end
 		end
 
-        set_left_alignment is
-                        -- Set text alignment of current label to left.
-                do
+	set_left_alignment is
+			-- Set text alignment of current label to left.
+		do
 		        check
                                 not_yet_implemented: False
                         end
-                end
+		end
 	
+	destroyed: BOOLEAN is
+		deferred
+		end
+
+
+	set_default_size is
+			-- Set to the size of the text
+		do
+		end
+
 feature -- Element change	
 	
 	set_text (t: STRING) is
@@ -58,35 +70,7 @@ feature -- Element change
 			set_default_size
 		end
 	
-	wel_font: WEL_FONT is
-		do
-			Result := wel_window.font
-		end
-
-	wel_set_font (f:WEL_FONT) is
-		do
-			wel_window.set_font (f)
-		end
-	
-feature -- Implementation
-	
-	set_default_size is
-		-- Resize to a default size.
-		local
-			fw: EV_FONT_IMP
-		do
-			fw ?= font.implementation
-			check
-				font_not_void: fw /= Void
-			end
-			set_minimum_width (fw.string_width (Current, text) + Extra_width)
-			set_minimum_height (7 * fw.string_height (Current, text) // 4 - 2)
-			set_size (minimum_width, minimum_height)
-		end
-	
-	Extra_width: INTEGER is 10
-
-end
+end -- class EV_TEXT_CONTAINER_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

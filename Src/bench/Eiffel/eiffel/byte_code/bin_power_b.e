@@ -37,12 +37,12 @@ feature
 					buf.putchar (')')
 				when 2,3 then 
 					done := True
-					buf.putstring ("(EIF_DOUBLE) (")
+					buf.putstring ("(EIF_DOUBLE) ((EIF_DOUBLE)")
 					left.print_register
-					buf.putstring (" * ")
+					buf.putstring (" * (EIF_DOUBLE) ")
 					left.print_register
 					if power_value = 3 then
-						buf.putstring (" * ")
+						buf.putstring (" * (EIF_DOUBLE) ")
 						left.print_register
 					end
 					buf.putchar (')')

@@ -11,7 +11,6 @@ inherit
 	WIZARD_CPP_SERVER_FUNCTION_GENERATOR
 		redefine
 			generate,
-			signature,
 			body
 		end
 
@@ -32,15 +31,11 @@ feature -- Basic operation
 			ccom_feature_writer.set_name (func_desc.name)
 			ccom_feature_writer.set_comment (func_desc.description)
 
-			-- Set return type.
 			ccom_feature_writer.set_result_type (Std_method_imp)
-
-			-- Set signature.
 			ccom_feature_writer.set_signature (signature)
-
-			-- Set body.
 			ccom_feature_writer.set_body (body)
 		end
+
 feature {NONE} -- Implementation
 
 	signature: STRING is
@@ -257,6 +252,7 @@ feature {NONE} -- Implementation
 			Result.append (End_ecatch)
 			Result.append (Return_s_ok)
 		end
+
 end -- class WIZARD_CPP_SERVER_FUNCTION_GENERATOR
 
 --|----------------------------------------------------------------

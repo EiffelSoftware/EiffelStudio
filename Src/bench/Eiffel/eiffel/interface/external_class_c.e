@@ -128,7 +128,7 @@ feature -- Initialization
 
 				-- Topological sort has been done and therefore all parents of current class
 				-- have been processed yet.
---			class_interface.process_features (l_feat_tbl)
+			class_interface.process_features (l_feat_tbl)
 
 				-- Save freshly computed feature table on disk.
 			Tmp_feat_tbl_server.put (l_feat_tbl)
@@ -546,10 +546,6 @@ feature {NONE} -- Initialization
 				l_feat.set_origin_class_id (l_written_type.class_id)
 				l_feat.set_written_feature_id (l_feat.feature_id)
 
-				if l_written_type.class_id = class_id then
-					l_feat.set_is_origin (True)
-				end
-
 					-- Let's find the right routine id, i.e. reuse one
 					-- because current feature is a redefinition or create
 					-- a new one.
@@ -586,7 +582,8 @@ feature {NONE} -- Implementation
 
 	compute_rout_id_set (a_feat_tbl: FEATURE_TABLE; a_feat: FEATURE_I; a_member: CONSUMED_ENTITY) is
 			-- Compute a new `rout_id_set' for `a_feat' based on
-			-- info of current class and parent classes.
+			-- info of current class and parent classes. If we do not found a matching routine
+			-- in a parent class, then we set `is_origin' on `a_feat'.
 		require
 			a_feat_tbl_not_void: a_feat_tbl /= Void
 			a_feat_tbl_has_origin_table: a_feat_tbl.origin_table /= Void
@@ -663,6 +660,8 @@ feature {NONE} -- Implementation
 				else
 					l_rout_id_set.put (Routine_id_counter.next_rout_id)
 				end
+					-- Because no previous routine could be found, this is an origin.
+				a_feat.set_is_origin (True)
 			end
 
 				-- Insert the computed routine IDs.

@@ -101,7 +101,7 @@ feature -- Checking
 						vtec2.set_entity_name (feature_name)
 						Error_handler.insert_error (vtec2)
 					elseif
-						solved_type.is_true_expanded and then
+						solved_type.is_expanded and then
 						solved_type.associated_class = class_c
 					then
 						create vlec

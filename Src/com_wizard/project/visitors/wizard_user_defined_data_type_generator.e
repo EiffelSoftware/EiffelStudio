@@ -70,6 +70,25 @@ feature -- Processing
 			a_type_visitor.visit (a_type_descriptor)
 			writable := a_type_visitor.writable
 
+			is_array_basic_type := a_type_visitor.is_array_basic_type
+			is_basic_type := a_type_visitor.is_basic_type
+			is_basic_type_ref := a_type_visitor.is_basic_type_ref
+			is_coclass := a_type_visitor.is_coclass
+			is_coclass_pointer := a_type_visitor.is_coclass_pointer
+			is_coclass_pointer_pointer := a_type_visitor.is_coclass_pointer_pointer
+			is_enumeration := a_type_visitor.is_enumeration
+			is_interface := a_type_visitor.is_interface 
+			is_interface_pointer := a_type_visitor.is_interface_pointer
+			is_interface_pointer_pointer := a_type_visitor.is_interface_pointer_pointer
+			is_structure := a_type_visitor.is_structure 
+			is_structure_pointer := a_type_visitor.is_structure_pointer
+
+			if is_interface_pointer or is_coclass_pointer then
+				vt_type := vt_unknown
+			elseif is_coclass_pointer_pointer or is_interface_pointer_pointer then
+				vt_type := binary_or (vt_unknown, vt_byref)
+			end
+
 			if a_type_visitor.is_basic_type then
 				need_generate_ce := False
 				is_basic_type := True

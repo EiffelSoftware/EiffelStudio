@@ -462,11 +462,11 @@ feature {EB_SET_SLICE_SIZE_CMD}
 			create Result.make_with_text (dv.name + ": " + dv.dump_value.type_and_value)
 			Result.set_pixmap (icons @ (dv.kind))
 			Result.set_data (dv)
-			if dv.expandable and not dv.is_external_type then
+			if dv.expandable then
 				Result.extend (create {EV_TREE_ITEM}.make_with_text ("Bug"))
 				Result.expand_actions.extend (agent fill_item (Result))
 			end
-			if dv.address /= Void and not dv.is_external_type then
+			if dv.address /= Void then
 					--| For now we don't support this for external type
 				create ost.make (dv.address, dv.name, dv.dynamic_class)
 				ost.set_associated_tree_item (Result)
@@ -819,7 +819,7 @@ feature {NONE} -- Implementation
 			dv ?= item.data
 			if dv /= Void then
 				list := dv.children
-				if not list.is_empty then
+				if list /= Void and then not list.is_empty then
 					create folder_item.make_with_text (Interface_names.l_Object_attributes)
 					folder_item.set_pixmap (Pixmaps.Icon_attributes)
 					item.extend (folder_item)

@@ -464,7 +464,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
 			urgent_plsc(&object);					/* Full safe collection */
 			if (-1 == epush(&moved_set, object))	/* Still failed */
-				enomem();							/* Critical exception */
+				enomem(MTC_NOARG);							/* Critical exception */
 		}
 	}
 
@@ -666,7 +666,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 		if ((char *) 0 != result)
 			return result;				/* We must have it */
 
-		panic(inconsistency);
+		panic(MTC inconsistency);
 	}
 
 	/* Call garbage collector if it is not turned off and restart our
@@ -696,7 +696,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 				if ((char *) 0 != result)
 					return result;					/* We must have it */
 				if (nbytes)
-					panic(inconsistency);
+					panic(MTC inconsistency);
 			}
 #ifdef HAS_SMART_MMAP
 			else {
@@ -711,7 +711,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 				if ((char *) 0 != result)
 					return result;					/* We must have it */
 				if (nbytes)
-					panic(inconsistency);
+					panic(MTC inconsistency);
 			}
 #ifdef HAS_SMART_MMAP
 			else {
@@ -2475,7 +2475,7 @@ rt_private char *malloc_from_zone(unsigned int nbytes)
 		 */
 
 		if ((OVERHEAD+nbytes+sc_from.sc_top) > sc_from.sc_end)
-			 enomem();
+			 enomem(MTC_NOARG);
 	}
 
 	SIGBLOCK;								/* Block signals */
@@ -2590,7 +2590,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 		 * room for stack growth.
 		 */
 		if (-1 == epush(&moved_set, (char *) (zone + 1)))
-			enomem();					/* Critical exception */
+			enomem(MTC_NOARG);					/* Critical exception */
 		zone->ov_flags |= EO_NEW;		/* Released object is young */
 		object++;						/* One more released object */
 	}
@@ -2688,7 +2688,7 @@ rt_shared char *eif_set(char *object, unsigned int nbytes, uint32 type)
 		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
 			urgent_plsc(&object);					/* Full collection */
 			if (-1 == epush(&moved_set, object))	/* Still failed */
-				enomem();							/* Critical exception */
+				enomem(MTC_NOARG);							/* Critical exception */
 		}
 
 	/* If the object has an initialization routine, call it now. This routine
@@ -2732,7 +2732,7 @@ rt_shared char *eif_spset(char *object, unsigned int nbytes)
 	if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
 		urgent_plsc(&object);					/* Full collection */
 		if (-1 == epush(&moved_set, object)) 	/* Still failed */
-			enomem();							/* Critical exception */
+			enomem(MTC_NOARG);							/* Critical exception */
 	}
 
 	SIGRESUME;					/* End of critical section */

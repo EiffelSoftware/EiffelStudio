@@ -255,7 +255,7 @@ rt_public void failure(void)
 	 */
 	
 	trapsig(emergency);					/* Weird signals are trapped */
-	esfail();							/* Dump the execution stack trace */
+	esfail(MTC_NOARG);							/* Dump the execution stack trace */
 
 #ifdef EIF_WINDOWS
 	show_trace();

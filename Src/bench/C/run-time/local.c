@@ -185,7 +185,7 @@ rt_public void evpush(va_alist)
 	if (top == (char **) 0) {				/* No stack yet? */
 		top = st_alloc(stk, STACK_CHUNK);	/* Create one */
 		if (top == (char **) 0)				/* Cannot allocate stack */
-			enomem();						/* Critical exception */
+			enomem(MTC_NOARG);						/* Critical exception */
 	}
 
 	/* Attempt an optimization: if there is enough room until the end of the
@@ -215,7 +215,7 @@ rt_public void evpush(va_alist)
 			if (stk->st_cur == stk->st_tl) {	/* Last chunk */
 				if (-1 == extend(&loc_stack)) {	/* Cannot extend stack at all */
 					va_end(ap);					/* End processing of list */
-					enomem();					/* Critical exception */
+					enomem(MTC_NOARG);					/* Critical exception */
 				}
 				top = stk->st_top;				/* Update new top */
 			} else {							/* Go to next chunk */
@@ -262,10 +262,10 @@ rt_public char **eget(register int num)
 	if (top == (char **) 0) {					/* No stack yet? */
 		top = st_alloc(&loc_set, STACK_CHUNK);	/* Create one */
 		if (top == (char **) 0)					/* Cannot allocate stack */
-			enomem();							/* Critical exception */
+			enomem(MTC_NOARG);							/* Critical exception */
 
 		if (num > (loc_set.st_end - top))	/* Not enough room in chunk */
-			panic("out of locals");			/* Panic, that's all we can do */
+			panic(MTC "out of locals");			/* Panic, that's all we can do */
 
 		loc_set.st_top += num;				/* Reserve room for variables */
 
@@ -298,7 +298,7 @@ rt_public char **eget(register int num)
 
 	if (top == (char **) 0) {					/* No next chunk */
 		if (-1 == extend(&loc_set))				/* Extension failed */
-			enomem();							/* "Out of memory" exception */
+			enomem(MTC_NOARG);							/* "Out of memory" exception */
 		top = loc_set.st_top;					/* New top of chunk */
 	} else {
 		loc_set.st_cur = (struct stchunk *) top;	/* Current = next chunk */
@@ -314,10 +314,10 @@ rt_public char **eget(register int num)
 
 	if (num > (loc_set.st_end - top)) {	/* Not enough room in chunk */
 		if (num > STACK_CHUNK)			/* Too many locals requested */
-			panic("out of locals");		/* Panic, that's all we can do */
+			panic(MTC "out of locals");		/* Panic, that's all we can do */
 		else {							/* The chunk is too small */
 			eback(saved_top);			/* Restore original stack context */
-			enomem();					/* This is an exception */
+			enomem(MTC_NOARG);					/* This is an exception */
 		}
 	}
 
@@ -424,7 +424,7 @@ rt_shared void initstk(void)
 		top = st_alloc(&hec_stack, STACK_CHUNK);
 
 	if (top == (char **) 0)
-		panic("can't create runtime stacks");
+		panic(MTC "can't create runtime stacks");
 
 #ifdef WORKBENCH
 	initdb();				/* Initialize debugger stack */

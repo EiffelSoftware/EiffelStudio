@@ -121,7 +121,7 @@ rt_private void buffer_allocate(void)
 
 	tagged_out = (char *) xcalloc(TAG_SIZE, sizeof(char));
 	if (tagged_out == (char *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	tagged_max = TAG_SIZE;
 	tagged_len = 0;
 }
@@ -416,7 +416,7 @@ rt_private void write_string(char *str)
 		while (tagged_len >= tagged_max);
 		tagged_out = xrealloc(tagged_out, tagged_max, GC_OFF);
 		if (tagged_out == (char *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 	}
 	/* Append `str' to `tagged_out' */
 	strcat(tagged_out, str);

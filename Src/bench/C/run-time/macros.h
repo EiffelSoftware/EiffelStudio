@@ -13,6 +13,7 @@
 #ifndef _macros_h_
 #define _macros_h_
 
+#include "eif_globals.h"
 #include "config.h"
 #include "malloc.h"
 #include "garcol.h"
@@ -297,12 +298,12 @@ extern int fcount;
  *	RTIS(x) new stack invariant frame of type 'x'
  *  RTVR(x,y) check if call of feature 'y' on 'x' is done on a void reference
  */
-#define RTCT(t,x) exasrt(t, x)
-#define RTCS(x) exasrt((char *) 0, x)
+#define RTCT(t,x) exasrt(MTC t, x)
+#define RTCS(x) exasrt(MTC (char *) 0, x)
 #define RTCK in_assertion = 0; expop(&eif_stack);
-#define RTCF in_assertion = 0; eviol();
-#define RTIT(t,x) exinv(t, x)
-#define RTIS(x) exinv((char *) 0, x)
+#define RTCF in_assertion = 0; eviol(MTC_NOARG);
+#define RTIT(t,x) exinv(MTC t, x)
+#define RTIS(x) exinv(MTC (char *) 0, x)
 #define RTTE(x,y) if (!(x)) goto y 
 #define RTJB goto body
 #ifdef WORKBENCH
@@ -331,11 +332,11 @@ extern int fcount;
 #define RTEX struct ex_vect *exvect
 #define RTED jmp_buf exenv
 #define RTES if (setjmp(exenv)) goto rescue
-#define RTEA(x,y,z) exvect = exset(x, y, z)
+#define RTEA(x,y,z) exvect = exset(MTC x, y, z)
 #define RTEV exvect = exft()
 #define RTET(t,x) eraise(t,x)
 #define RTEC(x) RTET((char *) 0,x)
-#define RTSO check_options_stop()
+#define RTSO check_options_stop(MTC_NOARG)
 #ifdef WORKBENCH
 #define RTEE RTSO; expop(&eif_stack)
 #define RTEJ current_call_level = trace_call_level; \
@@ -347,12 +348,12 @@ extern int fcount;
 #endif
 #define RTER in_assertion = 0; \
 	exvect = exret(exvect); goto start
-#define RTEU exresc(exvect)
-#define RTEF exfail()
+#define RTEU exresc(MTC exvect)
+#define RTEF exfail(MTC_NOARG)
 #define RTXS(x) RTXSC; RTXI(x)
 #define RTXSC RTXE; RTHS; RTLS
 #define RTXD RTXL; RTXH; RTXLS
-#define RTOK exok()
+#define RTOK exok(MTC_NOARG)
 
 /* Accessing of bits in a bit field is done via macros.
  * Bits are stored from left to right. If the size of an int is I (in bits),

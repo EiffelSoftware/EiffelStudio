@@ -542,7 +542,7 @@ HANDLE eif_load_dll(char *module_name)
 	if (eif_dll_table == (struct eif_dll_info *) 0) {
 		eif_dll_table = malloc(sizeof(struct eif_dll_info) * eif_dll_capacity);
 		if (eif_dll_table == (struct eif_dll_info *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 	}
 
 	for (i=0; i < eif_dll_count; i++) {
@@ -556,11 +556,11 @@ HANDLE eif_load_dll(char *module_name)
 		eif_dll_table = realloc(eif_dll_table, sizeof(struct eif_dll_info) * eif_dll_capacity);
 
 		if (eif_dll_table == (struct eif_dll_info *) 0)
-			enomem();
+			enomem(MTC_NOARG);
 	}
 
 	if ((m_name = (char *) malloc(strlen(module_name)+1)) == (char *) 0)
-		enomem();
+		enomem(MTC_NOARG);
 	strcpy (m_name, module_name);
 
 	a_result = LoadLibrary(module_name);

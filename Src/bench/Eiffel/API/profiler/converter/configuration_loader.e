@@ -8,21 +8,23 @@ indexing
 class CONFIGURATION_LOADER
 
 inherit
-	EIFFEL_ENV
+	EIFFEL_ENV;
+	SHARED_WORKBENCH;
+	SHARED_EIFFEL_PROJECT
 
 creation
 	make_and_load
 
 feature -- Initialization
 
-	make_and_load (a_profiler: STRING) is
+	make_and_load (profiler: STRING) is
 			-- Load the specific profiler-configuration file.
 		do
 			!! shared_prof_config;
-			a_profiler.to_lower;
-			read_config_file(a_profiler);
-			shared_prof_config.set_config_name (a_profiler);
-		end;
+			profiler.to_lower;
+			read_config_file (profiler);
+			shared_prof_config.set_config_name (profiler)
+		end
 
 feature {NONE} -- Implementation
 
@@ -38,6 +40,7 @@ feature {NONE} -- Implementation
 
 				if not file_name.is_valid then
 					error_occured := true;
+					error_code := Invalid_profiler_type
 				else
 					!! config_file.make_open_read (file_name);
 					config_file.read_stream (config_file.count);
@@ -280,5 +283,9 @@ feature {EWB_GENERATE, GENERATE_PROFILE_INFO_CMD} -- Error handling
 
 	profiler: STRING
 		-- The profile tool used for profiling.
+
+	Invalid_profiler_type: INTEGER is unique
+		-- No profiler information file found in
+		-- $EIFFEL3/bench/profiler
 
 end -- class CONFIGURATION_LOADER

@@ -283,14 +283,40 @@ feature {NONE} -- Implementation
 		end
 		
 
-	close_requested is
+	close_requested is 
 			-- End the current application.
+		local
+			confirmation: EV_CONFIRMATION_DIALOG
+			question: EV_QUESTION_DIALOG
+			must_exit, must_save: BOOLEAN
+			constants: EV_DIALOG_CONSTANTS
 		do
-			--| FIXME Need a confirmation_dialog.
-				-- Save all the user generated components.
-			xml_handler.save_components;
-				-- Destroy the application.
-			(create {EV_ENVIRONMENT}).application.destroy
+			create constants
+			if system_status.project_modified then
+				create question.make_with_text (Exit_save_warning)
+				question.show_modal_to_window (Current)
+				if question.selected_button.is_equal (constants.ev_yes) then
+					must_save := True
+				end
+				if not question.selected_button.is_equal (constants.ev_cancel) then
+					must_exit := True
+				end
+			else
+				create confirmation.make_with_text (Exit_warning)
+				confirmation.show_modal_to_window (Current)
+				if confirmation.selected_button.is_equal (constants.ev_ok) then
+					must_exit := True
+				end
+			end
+			if must_save then
+				command_handler.save_command.execute
+			end
+			if must_exit then
+					-- Save all the user generated components.
+				xml_handler.save_components;
+					-- Destroy the application.
+				(create {EV_ENVIRONMENT}).application.destroy
+			end
 		end
 		
 	tool_holder: EV_VERTICAL_BOX

@@ -892,9 +892,6 @@ feature {NONE} -- Implementation, cursor of the widget
 	on_set_cursor (hit_code: INTEGER) is
 			-- Called when a `Wm_setcursor' message is received.
 			-- See class WEL_HT_CONSTANTS for valid `hit_code' values.
-		local
-			wel_cursor: WEL_CURSOR
-			cursor_imp: EV_PIXMAP_IMP_STATE
 		do
 				-- We must check that we are not currently executing
 				-- a pick/drag as if we are, we should not do anything.
@@ -906,7 +903,24 @@ feature {NONE} -- Implementation, cursor of the widget
 				(hit_code = (feature {WEL_HT_CONSTANTS}.Htnowhere) or else hit_code = (feature {WEL_HT_CONSTANTS}.Htclient))
 				and then cursor_pixmap /= Void
 			then
-				cursor_imp ?= cursor_pixmap.implementation
+				internal_on_set_cursor		
+				set_message_return_value (1)
+				disable_default_processing
+			end
+		end
+		
+feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementation
+	
+	internal_on_set_cursor is
+			-- Called as a result of a `Wm_setcursor' message is received.
+			-- This was extracted from `on_set_cursor' as if we are a combo box,
+			-- we need to be able to execute this without the message processing performed
+			-- in `on_set_cursor', due to the event propagation from the internal controls.
+		local
+			wel_cursor: WEL_CURSOR
+			cursor_imp: EV_PIXMAP_IMP_STATE
+		do
+			cursor_imp ?= cursor_pixmap.implementation
 				wel_cursor := cursor_imp.cursor
 				if wel_cursor = Void then	
 					wel_cursor := cursor_imp.build_cursor
@@ -921,10 +935,6 @@ feature {NONE} -- Implementation, cursor of the widget
 				end
 				current_wel_cursor := wel_cursor
 				wel_cursor.set
-				
-				set_message_return_value (1)
-				disable_default_processing
-			end
 		end
 
 feature {NONE} -- Implementation, pick and drop

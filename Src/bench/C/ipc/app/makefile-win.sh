@@ -5,7 +5,7 @@ CC = $cc
 JCFLAGS = $(CFLAGS) $ccflags $optimize -DWORKBENCH
 MAKE = $make
 MV = copy
-RM = $del
+RM = del
 
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<

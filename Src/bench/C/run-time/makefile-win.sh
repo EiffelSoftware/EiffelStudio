@@ -11,7 +11,7 @@ LIB_EXE = $lib_exe
 LN = copy
 MAKE = $make
 MV = move
-RM = $del
+RM = del
 LINK32 = $link32
 DLLFLAGS = $dllflags
 
@@ -286,7 +286,7 @@ $(OUTDIR)\ebench.$lib: $(EOBJECTS)
 all:: x2c.exe
 
 x2c.exe: x2c.c
-	$(CC) -I$(TOP) x2c.c -o x2c.exe
+	$(CC) -I$(TOP) x2c.c -ox2c.exe
 
 all:: 
 	@echo WARNING: If you want to generate or to update DLLs : USE "make dll".
@@ -299,7 +299,7 @@ eif_config.h : $(TOP)\eif_config.h
 eif_portable.h : $(TOP)\eif_portable.h
 	$(LN) $(TOP)\eif_portable.h .
 
-*.$obj: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h
+$all_dependency
 
 ###################
 # OBJECTS
@@ -749,8 +749,8 @@ $(INDIR)\wmain.$obj : eif_except.h eif_garcol.h main.c eif_malloc.h eif_plug.h e
 
 $(INDIR)\object_id.$obj : eif_garcol.h eif_except.h eif_hector.h
 
-$(INDIR)\gen_conf.$obj : eif_gen_conf.h eif_struct.h eif_macros.h
-$(INDIR)\wgen_conf.$obj : eif_gen_conf.h eif_struct.h eif_macros.h
+$(INDIR)\gen_conf.$obj : eif_gen_conf.h eif_struct.h
+$(INDIR)\wgen_conf.$obj : eif_gen_conf.h eif_struct.h
 
 $(INDIR)\rout_obj.$obj : eif_rout_obj.h
 $(INDIR)\wrout_obj.$obj : eif_rout_obj.h

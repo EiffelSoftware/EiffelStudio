@@ -5,7 +5,7 @@ CC = $cc
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 MAKE = $make
 MV = copy
-RM = $del
+RM = del
 DPFLAGS = -I$(TOP) -I$(TOP)\run-time
 CFLAGS = $(DPFLAGS)
 

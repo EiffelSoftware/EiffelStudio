@@ -2,7 +2,7 @@ TOP = ..\..
 CC = $cc
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 MV = copy
-RM = $del
+RM = del
 
 # Where shared archive is located (path and name)
 LIBDIR = ..\shared

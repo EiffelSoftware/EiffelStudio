@@ -26,7 +26,6 @@ feature {NONE} -- Initialization
 			v1: EV_VERTICAL_BOX
 		do
 			default_create
-			disable_user_resize
 			set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			create wizard_page
 			create v1

@@ -15,7 +15,7 @@ inherit
 				all;
 			{ANY}
 				cursor, start, forth, back, after, off, item, empty,
-				finish, wipe_out, islast, first_element, last,
+				finish, wipe_out, islast, first_element, last, append,
 				index, put_right, put_left, put_front, go_to
 		end;
 	SHARED_RESCUE_STATUS;
@@ -234,7 +234,7 @@ feature -- Element change
 		local
 			l_item: like item
 		do
-			!FEATURE_TEXT! l_item.make (str, feat);
+			!FEATURE_TEXT! l_item.make (feat, str);
 			add (l_item)
 		end;
 
@@ -321,6 +321,18 @@ feature -- Element change
 		do
 			!! cs.make (column_num);
 			add (cs)
+		end;
+
+	add_feature_error (feat: E_FEATURE; str: STRING; pos: INTEGER) is
+			-- Put `address' for `e_class'.
+		require
+			valid_str: str /= Void;
+			positive_pos: pos > 0
+		local
+			l_item: like item
+		do
+			!FEATURE_ERROR_TEXT! l_item.make (feat, pos, str);
+			add (l_item)
 		end;
 
 end -- class STRUCTURED_TEXT

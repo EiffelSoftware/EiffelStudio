@@ -64,6 +64,7 @@ result,			TE_RESULT
 retry,			TE_RETRY
 select,			TE_SELECT
 separate,		TE_SEPARATE
+signature,		TE_SIGNATURE
 strip,			TE_STRIP
 then,			TE_THEN
 true,			TE_TRUE

@@ -142,6 +142,7 @@ int fbody_pos;		/* To memorize the beginning of a feature body */
 %token		TE_RETRY
 %token		TE_SELECT
 %token		TE_SEPARATE
+%token		TE_SIGNATURE
 %token		TE_THEN
 %token		TE_UNDEFINE
 %token		TE_UNIQUE
@@ -827,6 +828,10 @@ Type:
 		{
 		$$ = create_node(LIKE_CUR_AS);
 		yacc_error_code=171;}
+	| TE_SIGNATURE Identifier
+		{
+		$$ = create_node1(SIGNATURE_AS, $2);
+		yacc_error_code=3;}
 	;
 
 Class_type:
@@ -1161,6 +1166,8 @@ Expression:					Expression_constant
 								{yyerrok;$$ = create_node1(VALUE_AS,$1);yacc_error_code=291;}
 	|						Feature_call
 								{$$ = create_node1(EXPR_CALL_AS, $1);yacc_error_code=292;}
+	|						Routine_creation
+								{$$ = $1;}
 	|						TE_LPARAN Expression TE_RPARAN
 								{$$ = create_node1(PARAN_AS, $2);yacc_error_code=293;}
 	|						Expression TE_PLUS Expression
@@ -1263,8 +1270,6 @@ Feature_call:				Call_on_current
 	|						Call_on_precursor
 								{$$ = $1;yacc_error_code=334;}
 	|						Creation_expression
-								{$$ = $1;}
-	|						Routine_creation
 								{$$ = $1;}
 	;
 

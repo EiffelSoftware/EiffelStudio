@@ -49,6 +49,8 @@ feature {GB_TITLED_WINDOW_OBJECT, GB_WINDOW_SELECTOR} -- Initialization
 			default_create
 			set_object (an_object)
 			set_text (object.short_type)
+			expand_actions.extend (agent register_expand)
+			collapse_actions.extend (agent register_collapse)
 			update_pixmap
 		ensure
 			object_assigned: object = an_object
@@ -130,6 +132,19 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_OBJECT} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	register_expand is
+			-- Flag `object' as expanded.
+		do
+			object.register_expand
+		end
+		
+	register_collapse is
+			-- Flag `obejct' as collapsed.
+		do
+			object.register_collapse
+		end
+		
 
 	retrieve_pebble: ANY is
 			-- Retrieve pebble for transport.

@@ -346,7 +346,8 @@ feature {NONE} -- Registers
 			is_param_temporary_reg, failed: BOOLEAN;
 			local_reg: REGISTRABLE;
 			p: PARAMETER_B;
-			expr: EXPR_B
+			expr: EXPR_B;
+			nest, msg: NESTED_B
 		do
 			if a /= Void then
 				from
@@ -364,27 +365,49 @@ feature {NONE} -- Registers
 					is_param_temporary_reg := false;
 
 					expr := parameters.item;
+
+						-- First, let's check if we have a local (LOCAL_BL):
 					if expr.is_temporary or expr.is_predefined then
 						local_reg := expr;
 						is_param_temporary_reg := True
 					else
 						local_reg := expr.register;
 						if local_reg = Void then
+								-- Let's check if we have a parameter (PARAMETER_BL):
 							p ?= expr;
 							if p /= Void then
+									-- We have a parameter.
 								expr := p.expression;
+									-- If the rest fails, at least local_reg will be this, 
+									-- which includes the ATTRIBUTE_BL case.
+								local_reg := expr.register;
+									-- Do we have a local (LOCAL_BL)?
 								if expr.is_temporary or expr.is_predefined then
 									local_reg := expr;
 									is_param_temporary_reg := True
 								else
-									local_reg := p.expression.register;
-									if (local_reg /= Void) then
-										is_param_temporary_reg :=  local_reg.is_temporary or 
-											local_reg.is_predefined
+										-- We might have a nested call: `a.b.c.d'. The 
+										-- register we're looking for is d's, but we have to 
+										-- traverse the nested calls first:
+									nest ?= expr;
+									if nest /= Void then
+										from
+											msg := nest;
+										until
+											msg = Void
+										loop
+											nest := msg;
+											msg ?= msg.message
+										end;
+										local_reg := nest.register
 									end
 								end
 							end
 						end
+					end;
+
+					if (local_reg /= Void) then
+						is_param_temporary_reg :=  local_reg.is_temporary or local_reg.is_predefined
 					end;
 
 					temporary_parameters.put (is_param_temporary_reg, i);					

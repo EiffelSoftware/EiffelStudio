@@ -39,7 +39,7 @@
 		<heading>
 			<size>2</size>Compilation
 		</heading>
-		<paragraph>Just launch the compilation: the  Eiffel Software  compiler will generate and link the multi-threaded executable. </paragraph>
+		<paragraph>Just launch the compilation: the Eiffel compiler will generate and link the multi-threaded executable. </paragraph>
 		<heading>
 			<size>2</size>External C files
 		</heading>
@@ -52,7 +52,7 @@
 		<heading>
 			<size>2</size>Thread Safe Eiffel libraries
 		</heading>
-		<paragraph>Most  Eiffel Software  Eiffel libraries are not thread safe. This means that even though you can use them in a multi-threaded environment, you will need to add the necessary protection to ensure that objects are accessed only by one thread at a time. </paragraph>
+		<paragraph>Most libraries are not thread safe. This means that even though you can use them in a multi-threaded environment, you will need to add the necessary protection to ensure that objects are accessed only by one thread at a time. </paragraph>
 		<paragraph>Most of the issues is related to the use of EiffelBase containers which have been designed at a time where threads where not present. In the future we will certainly provide a version of EiffelBase which will be designed to be thread safe, in the meantime, you have to use basic protection mechanism such a mutexes to guarantee a safe execution of your programs. </paragraph>
 		<paragraph>Here is a summary of what you need to include in your project settings when using our libraries:</paragraph>
 		<paragraph>- EiffelBase: not thread safe, no externals required</paragraph>

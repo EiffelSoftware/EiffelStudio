@@ -1,9 +1,9 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision clip. Rectangular area.";
-	status: "See notice at end of class";
-	date: "$Date$";
+		"EiffelVision clip. Rectangular area."
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -183,6 +183,9 @@ end -- class EV_RECTANGLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/29 19:20:22  oconnor
+--| removed simicolons from indexing
+--|
 --| Revision 1.8  2000/02/29 18:09:08  oconnor
 --| reformatted indexing cluase
 --|

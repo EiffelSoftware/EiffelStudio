@@ -1,9 +1,9 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision coordinates (x, y)";
-	status: "See notice at end of class";
-	date: "$Date$";
+		"EiffelVision coordinates (x, y)"
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -105,6 +105,9 @@ end -- class EV_COORDINATES
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/29 19:20:22  oconnor
+--| removed simicolons from indexing
+--|
 --| Revision 1.4  2000/02/29 18:09:08  oconnor
 --| reformatted indexing cluase
 --|

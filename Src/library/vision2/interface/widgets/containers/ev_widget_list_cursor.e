@@ -1,10 +1,9 @@
 indexing
 	description:
-		"Cursors for widget lists.";
-
-	status: "See notice at end of class";
+		"Cursors for widget lists."
+	status: "See notice at end of class"
 	keywords: "container, widget list, cursor"
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -55,6 +54,9 @@ end -- class ARRAYED_LIST_CURSOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/29 19:20:23  oconnor
+--| removed simicolons from indexing
+--|
 --| Revision 1.3  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

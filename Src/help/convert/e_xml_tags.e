@@ -7,6 +7,58 @@ indexing
 class
 	E_XML_TAGS
 
+feature -- Miscellaneous
+
+	get_start_tag (name, attr: STRING): STRING is
+			-- A XML-start-tag with `name' and attributes `attr'.
+		do
+			Result := "<" + name + attr + ">"
+		end
+
+	get_end_tag (name: STRING): STRING is
+			-- A XML-end-tag with `name'.
+		do
+			Result := "</" + name + ">"
+		end
+
+	get_single_tag (name: STRING): STRING is
+			-- A stand-alone XML tag with `name'.
+		do
+			Result := "<" + name + "/>"
+		end
+
+	get_line_break: STRING is
+			-- Get stand-alone line-break tag.
+		do
+			Result := get_single_tag (line_break_tag)
+		end
+
+	get_attr (name, value: STRING): STRING is
+			-- Attribute `name' with `value'.
+		do
+			Result := " " + name + "=%"" + value + "%""
+		end
+
+	remove_excess_whitespace (s: STRING) is
+			-- Reduces all occurences of returns, tabs and spaces with 1 space.
+		do
+			s.replace_substring_all ("%N", " ")
+			s.replace_substring_all ("%T", " ")
+			s.replace_substring_all ("  ", " ")
+		end
+
+	format_for_xml (s: STRING) is
+			-- Converts special characters into special tags.
+		do
+			s.replace_substring_all (chconv (226).out + chconv (128).out + chconv (156).out, "&quot;")
+			s.replace_substring_all (chconv (226).out + chconv (128).out + chconv (157).out, "&quot;")
+			s.replace_substring_all (chconv (226).out + chconv (128).out + chconv (153).out, " ")
+			s.replace_substring_all (chconv (226).out + chconv (126).out + chconv (151).out, "*")
+			s.replace_substring_all ("<", "&lt;")
+			s.replace_substring_all (">", "&gt;")
+			s.replace_substring_all ("%"", "&quot;")
+		end
+
 feature -- Constants
 
 	eiffel_document_tag: STRING is
@@ -39,7 +91,7 @@ feature -- Constants
 			Result := "TEXT"
 		end
 
-	head: STRING is
+	head_tag: STRING is
 			-- The topic-title tag.
 		once
 			Result := "HEAD"
@@ -121,6 +173,16 @@ feature -- Constants
 			-- The keyword-tag. Words between keyword tags are added to the index.
 		once
 			Result := "IMP"
+		end
+
+feature {NONE} -- Implementation
+
+	chconv (i: INTEGER): CHARACTER is
+			-- Character associated with integer value `i'
+			--! FIXME <Vincent 10/19/99>
+			--! I had to copy this since it is not exported from CHARACTER_REF.
+		external
+			"C [macro %"eif_misc.h%"]"
 		end
 
 end -- class E_XML_TAGS

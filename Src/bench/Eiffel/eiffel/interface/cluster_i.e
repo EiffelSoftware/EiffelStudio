@@ -809,6 +809,8 @@ feature {COMPILER_EXPORTER} -- Element change
 	force_compilation_on_class_from_file (file_name: STRING) is
 			-- Insert class written in `file_name' into current
 			-- cluster and make sure it will be compiled.
+		require
+			file_name_not_void: file_name /= Void
 		local
 			class_path: FILE_NAME
 			class_name: STRING

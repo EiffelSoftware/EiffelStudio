@@ -301,6 +301,11 @@ feature -- Element change
 				but.set_state (feature {WEL_TB_STATE_CONSTANTS}.Tbstate_indeterminate)
 			end
 			
+				-- Also take care of toggled state if a toggle button.
+			if toggle_button /= Void and then toggle_button.is_selected then
+				but.set_state  (feature {WEL_TB_STATE_CONSTANTS}.Tbstate_checked + feature {WEL_TB_STATE_CONSTANTS}.Tbstate_enabled)
+			end
+			
 				-- If we are a separator then there is no need to handle the text.
 			if separator_button = Void then	
 					-- Then, the text of the button.

@@ -124,7 +124,7 @@
 /* Macro used to record once functions:
  *  RTOC calls onceset to record the address of Result (static variable)
  */
-#define RTOC 		onceset(&Result, &done)
+#define RTOC 		onceset(&Result)
 
 /* Dynamic type of object. The name is not RTDT for historical reasons. */
 #define Dtype(x) (HEADER(x)->ov_flags & EO_TYPE)

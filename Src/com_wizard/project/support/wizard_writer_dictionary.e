@@ -302,6 +302,8 @@ feature -- C keywords -- 3
 
 	Memcpy: STRING is "memcpy"
 
+	Eof_word: STRING is "EOF"
+
 feature -- IDL keywords -- 4
 
 	In: STRING is "in"

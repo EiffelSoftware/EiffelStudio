@@ -26,11 +26,8 @@ feature
 			real_val := i;
 		end;
 
-	is_real: BOOLEAN is
+	is_real: BOOLEAN is True
 			-- Is the current constant a real one ?
-		do
-			Result := True;
-		end;
 
 	valid_type (t: TYPE_A): BOOLEAN is
 			-- Is the current value compatible with `t' ?

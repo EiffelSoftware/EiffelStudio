@@ -38,7 +38,10 @@ create
 	make_by_date_time,
 	make_by_date,
 	make_now,
-	make_from_string
+	make_from_string,
+	make_from_string_with_base,
+	make_from_string_default,
+	make_from_string_default_with_base
 	
 
 feature -- Initialization 
@@ -114,13 +117,15 @@ feature -- Initialization
 			h := c_hour_now
 			mi := c_minute_now
 			s := c_second_now
-			Create date.make(y,m,d) 
-			Create time.make_fine(h,mi,s+c_millisecond_now/1000)
+			create date.make(y,m,d) 
+			create time.make_fine(h,mi,s+c_millisecond_now/1000)
 		end
 
 	make_from_string_default (s: STRING) is
 			-- Initialize from a "standard" string of form
 			-- `default_format_string'.
+			-- (For 2-digit year specifications, the current century is used as
+			-- base century.)
 		require
 			s_exists: s /= Void;
 			date_time_valid: date_time_valid (s, default_format_string)
@@ -128,9 +133,23 @@ feature -- Initialization
 			make_from_string (s, default_format_string)
 		end
 
+	make_from_string_default_with_base (s: STRING; base: INTEGER) is
+			-- Initialize from a "standard" string of form
+			-- `default_format_string' with base century `base'.
+		require
+			s_exists: s /= Void;
+			base_valid: base > 0 and (base \\ 100 = 0)
+			date_time_valid: 
+					date_time_valid_with_base (s, default_format_string, base)
+		do
+			make_from_string_with_base (s, default_format_string, base)
+		end
+
 	make_from_string (s: STRING; code: STRING) is
 			-- Initialize from a "standard" string of form
 			-- `code'.
+			-- (For 2-digit year specifications, the current century is used as
+			-- base century.)
 		require
 			s_exists: s /= Void;
 			c_exists: code /= Void
@@ -140,6 +159,24 @@ feature -- Initialization
 			date_time: DATE_TIME
 		do
 			create code_string.make (code)
+			date_time := code_string.create_date_time (s)
+			make_by_date_time (date_time.date, date_time.time)
+		end
+
+	make_from_string_with_base (s: STRING; code: STRING; base: INTEGER) is
+			-- Initialize from a "standard" string of form
+			-- `code' with base century `base'.
+		require
+			s_exists: s /= Void;
+			c_exists: code /= Void
+			base_valid: base > 0 and (base \\ 100 = 0)
+			date_time_valid: date_time_valid_with_base (s, code, base)
+		local
+			code_string: DATE_TIME_CODE_STRING
+			date_time: DATE_TIME
+		do
+			create code_string.make (code)
+			code_string.set_base_century (base)
 			date_time := code_string.create_date_time (s)
 			make_by_date_time (date_time.date, date_time.time)
 		end

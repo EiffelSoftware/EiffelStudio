@@ -20,57 +20,14 @@ inherit
 		end
 
 create
-	make,
-	my_make
+	make
 
 feature {NONE} -- Initialization
 
-	make (egn, esn, dn: STRING; args:ARRAY [CONSUMED_ARGUMENT]; has_getter, has_setter, pub, stat: BOOLEAN; type, decl_type: CONSUMED_REFERENCED_TYPE) is
+	make (dn: STRING; pub, stat: BOOLEAN; decl_type: CONSUMED_REFERENCED_TYPE; cp_getter: CONSUMED_FUNCTION; cp_setter: CONSUMED_PROCEDURE) is
 			-- Initialize event.
 		require
---			non_void_eiffel_name: en /= Void
 			non_void_dotnet_name: dn /= Void
-			non_void_args: args /= Void
---			valid_eiffel_name: not en.is_empty
---			valid_dotnet_name: not dn.is_empty
-			getter: egn = Void implies not has_getter
-			setter: esn = Void implies not has_setter
-			non_void_type: type /= Void
-			non_void_declaring_type: decl_type /= Void
-		do
-			dotnet_name := dn
-			is_public := pub
-			is_static := stat
-			entity_make (egn, pub, decl_type)
-			if has_getter then
-				create getter.make (	egn,
-									dn,
-									args,
-									type,
-									False, stat, False, False, False, pub, True,
-									decl_type)
-			end
-			if has_setter then
-				create setter.make (esn,
-									dn,
-									args,
-									False, stat, False, pub, True,
-									decl_type)
-			end
-		ensure
-			dotnet_name_set: dotnet_name = dn
-			getter_set: has_getter implies getter /= Void
-			valid_getter: has_getter implies getter.is_property_or_event
-			setter_set: has_setter implies setter /= Void
-			valid_setter: has_setter implies setter.is_property_or_event
-		end
-
-	my_make (dn: STRING; pub, stat: BOOLEAN; decl_type: CONSUMED_REFERENCED_TYPE; cp_getter: CONSUMED_FUNCTION; cp_setter: CONSUMED_PROCEDURE) is
-			-- Initialize event.
-		require
---			non_void_property_name: pn /= Void
-			non_void_dotnet_name: dn /= Void
---			valid_property_name: not pn.is_empty
 			valid_dotnet_name: not dn.is_empty
 			non_void_declaring_type: decl_type /= Void
 			getter_or_setter: cp_getter = Void implies cp_setter /= Void
@@ -109,6 +66,7 @@ feature -- ConsumerWrapper functions
 	is_static: BOOLEAN
 			-- Is `Current' static.
 
+
 feature -- Access
 
 	eiffelized_consumed_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
@@ -122,7 +80,6 @@ feature -- Access
 				Result.extend (setter)
 			end
 		end
-		
 
 	dotnet_name: STRING
 			-- .NET property name

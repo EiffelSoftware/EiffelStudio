@@ -115,6 +115,7 @@ feature -- Initialization
 			as98: FEATURE_CLAUSE_AS;
 			as99: CREATION_AS;
 			as100: ARRAY_AS;
+			as100_bis: TUPLE_AS;
 			as101: UN_STRIP_AS;
 			as102: NONE_TYPE_AS;
 			as103: CLIENT_AS;
@@ -324,6 +325,8 @@ feature -- Initialization
 			as99.pass_address (creation_as);
 			!!as100;
 			as100.pass_address (array_as);
+			!!as100_bis;
+			as100_bis.pass_address (tuple_as);
 			!!as101;
 			as101.pass_address (un_strip_as);
 			!!as102;

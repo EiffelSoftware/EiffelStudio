@@ -34,8 +34,9 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	children: ARRAYED_LIST [EV_MENU_ITEM_IMP]
-			-- Ids of the children of the menu
+	children: ARRAYED_LIST [EV_ITEM_IMP]
+			-- List of EV_ITEM_IMP because of the separator
+			-- Children of the menu in graphical order.
 			-- We need them in memory because we cannot
 			-- get them from the system
 
@@ -55,7 +56,7 @@ feature -- Element change
 			-- Add `item_imp' into container.
 		local
 			iid: INTEGER
-			c: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+			c: ARRAYED_LIST [EV_ITEM_IMP]
 		do
 			-- We set the item in the list and set it a position
 			if children = Void then
@@ -88,8 +89,8 @@ feature -- Element change
 			-- Remove `item_imp' from the menu,
 		do
 			-- First, we remove it from the children.
+			menu.delete_position (internal_get_index (item_imp) - 1)
 			children.prune_all (item_imp)
-			menu.delete_item (item_imp.id)
 			if children.empty then
 				remove_children
 			end
@@ -100,10 +101,46 @@ feature -- Element change
 			end
 		end
 
+	add_separator (sep_imp: EV_MENU_SEPARATOR_IMP) is
+			-- Add `sep_imp' at the end of the menu.
+		do
+			insert_separator (sep_imp, count + 1)
+		end
+
+	insert_separator (sep_imp: EV_MENU_SEPARATOR_IMP; pos: INTEGER) is
+			-- Insert `sep_imp' at the position `pos' in the menu.
+		do
+			-- We insert the separator only in its parent because
+			-- no event can be linl to it.
+			children.go_i_th (pos)
+			children.put_left (sep_imp)
+			menu.insert_separator (pos - 1)
+		end
+
+	remove_separator (sep_imp: EV_MENU_SEPARATOR_IMP) is
+			-- Remove `sep_imp' from the menu.
+		do
+			-- First, we remove it from the children.
+			menu.delete_position (internal_get_index (sep_imp) - 1)
+			children.prune_all (sep_imp)
+			if children.empty then
+				remove_children
+			end
+		end
+
+	move_separator (sep_imp: EV_MENU_SEPARATOR_IMP; index: INTEGER) is
+			-- Move `sep_imp' to the `index' position.
+		do
+			remove_separator (sep_imp)
+			insert_separator (sep_imp, index)
+		end
+
 	clear_items is
 			-- Clear all the items of the list.
 		local
-			cc: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+			cc: ARRAYED_LIST [EV_ITEM_IMP]
+			it: EV_MENU_ITEM_IMP
+			sep: EV_MENU_SEPARATOR_IMP
 		do
 			cc := children
 			if not cc.empty then
@@ -112,7 +149,13 @@ feature -- Element change
 				until
 					cc.empty
 				loop
-					remove_item (cc.first)
+					it ?= cc.first
+					if it = Void then
+						sep ?= cc.first
+						remove_separator (sep)
+					else
+						remove_item (it)
+					end
 				end
 			end
 		end
@@ -126,8 +169,9 @@ feature -- Event association
 
 feature -- Basic operation
 
-	internal_get_index (item_imp: EV_MENU_ITEM_IMP): INTEGER is
+	internal_get_index (item_imp: EV_ITEM_IMP): INTEGER is
 			-- Return the index of `item' in the list.
+			-- Used by the separator also.
 		do
 			Result := children.index_of (item_imp, 1)
 		end

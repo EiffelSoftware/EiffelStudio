@@ -94,6 +94,14 @@ feature -- Window Messages
 			-- Declared in Windows as WM_TIMECHANGE
 
 	Wm_cancelmode: INTEGER is 31
+			-- The WM_CANCELMODE message is sent to cancel certain modes, such as mouse 
+			-- capture. 
+			-- For example, the system sends this message to the active window when a dialog 
+			-- box or message box is displayed. Certain functions also send this message 
+			-- explicitly to the specified window regardless of whether it is the active 
+			-- window. For example, the EnableWindow function sends this message when 
+			-- disabling the specified window. 
+			--
 			-- Declared in Windows as WM_CANCELMODE
 
 	Wm_setcursor: INTEGER is 32

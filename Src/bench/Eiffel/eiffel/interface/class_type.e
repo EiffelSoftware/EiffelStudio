@@ -421,7 +421,7 @@ feature -- Generation
 					file_name.append (Dot_c)
 				end
 			end;
-			!!Result.make (file_name);
+			!! Result.make (file_name);
 		end;
 
 	descriptor_file: INDENT_FILE is
@@ -434,7 +434,7 @@ feature -- Generation
 			file_name := full_file_name (Descriptor_suffix);
 			file_name.append_character (Descriptor_file_suffix);
 			file_name.append (Dot_c);
-			!!Result.make (file_name);
+			!! Result.make (file_name);
 		end;
 
 	extern_declaration_filename: STRING is
@@ -494,21 +494,21 @@ feature -- Generation
 			temp: STRING
 		do
 				-- Subdirectory
-			!!temp.make (10);
-			temp.append (Class_suffix);
-			temp.append_integer (packet_number);
+			!! temp.make (10)
+			temp.append (Class_suffix)
+			temp.append_integer (packet_number)
 
-			!!f_name.make_from_string (temp);
+			!! f_name.make_from_string (temp)
 
 				-- File name
-			temp := clone (base_file_name);
+			temp := clone (base_file_name)
 			if byte_context.final_mode then
 				temp.append (Dot_x)
 			else
-				temp.append (Dot_c);
-			end;
+				temp.append (Dot_c)
+			end
 
-			f_name.set_file_name (temp);
+			f_name.set_file_name (temp)
 			Result := f_name
 		end
 
@@ -1575,7 +1575,7 @@ feature -- DLE
 				file_name := full_file_name (Class_suffix)
 			end;
 			file_name.append (Dot_x);
-			!!Result.make (file_name)
+			!! Result.make (file_name)
 		end;
 
 	dle_extern_declaration_filename: STRING is

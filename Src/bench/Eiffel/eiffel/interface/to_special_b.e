@@ -25,23 +25,18 @@ feature
 			special_error: SPECIAL_ERROR;
 		do
 			feat_table := feature_table;
+
 				-- Check if class has one formal generic
-			if 	generics = Void
-				or else
-				generics.count /= 1
-			then
+			if generics = Void or else generics.count /= 1 then
 				!!special_error.make (Case_1, Current);
 				Error_handler.insert_error (special_error);
 			end;
 
-				-- Check if class has an attribute `area' of type
-				-- SPECIAL [T].
+				-- Check if class has an attribute `area' of type SPECIAL [T].
 			area_feature ?= feature_table.item ("area");
 			if 	(area_feature = Void)
-				or else
-				not equal (area_feature.written_in, id)
-				or else
-				not Area_type.is_deep_equal (area_feature.type.actual_type)
+				or else not equal (area_feature.written_in, id)
+				or else not Area_type.is_deep_equal (area_feature.type.actual_type)
 			then
 				!!special_error.make (Case_2, Current);
 				Error_handler.insert_error (special_error);
@@ -50,8 +45,7 @@ feature
 				-- Check if class has a procedure `make_area'.
 			make_area_feature ?= feature_table.item ("make_area");
 			if 	make_area_feature = Void
-				or else
-				not equal (make_area_feature.written_in, id)
+				or else not equal (make_area_feature.written_in, id)
 			then
 				!!special_error.make (Case_3, Current);
 				Error_handler.insert_error (special_error);

@@ -3,7 +3,6 @@
 class FEAT_ARG 
 
 inherit
-
 	SHARED_WORKBENCH
 		undefine
 			copy, setup, consistent, is_equal
@@ -305,7 +304,7 @@ feature {FEATURE_I}
 			args := Current;
 			if args /= Void then
 				c := args.count;
-				!! Result.make (c);
+				!! Result.make_filled (c);
 				from
 					i := 1;
 				until

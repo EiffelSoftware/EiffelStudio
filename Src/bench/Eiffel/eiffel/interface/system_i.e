@@ -10,7 +10,6 @@ inherit
 	SHARED_EXPANDED_CHECKER
 	SHARED_TYPEID_TABLE
 	SHARED_TABLE
-	SHARED_FILES
 	SHARED_CODE_FILES
 	SHARED_GENERATOR
 	SHARED_ERROR_HANDLER
@@ -104,7 +103,7 @@ feature -- Properties
 
 	changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, BODY_ID] is
 		once
-			!!Result.make (2)
+			!! Result.make (2)
 		end;
 
 	rout_info_table: ROUT_INFO_TABLE;
@@ -401,69 +400,79 @@ feature -- Properties
 			-- Create the system.
 		do
 			set_compilation_id;
-			!!server_controler;
-			server_controler.make;
+			!! server_controler.make;
+
 				-- Creation of the system hash table
-			!!class_types.make (1, System_chunk);
-			!!new_classes.make;
+			!! class_types.make (1, System_chunk);
+			!! new_classes.make;
+
 				-- Creation of a topological sorter
-			!!sorter.make;
+			!! sorter.make;
+
 				-- Creation of servers
-			!!feat_tbl_server.make;
-			!!class_comments_server.make;
-			!!body_server.make;
-			!!byte_server.make;
-			!!ast_server.make;
-			!!rep_server.make;
-			!!rep_feat_server.make;
-			!!class_info_server.make;
-			!!inv_ast_server.make;
-			!!inv_byte_server.make;
-			!!depend_server.make;
-			!!rep_depend_server.make;
-			!!m_feat_tbl_server.make;
-			!!m_feature_server.make;
-			!!m_rout_id_server.make;
-			!!m_desc_server.make;
+			!! feat_tbl_server.make;
+			!! class_comments_server.make;
+			!! body_server.make;
+			!! byte_server.make;
+			!! ast_server.make;
+			!! rep_server.make;
+			!! rep_feat_server.make;
+			!! class_info_server.make;
+			!! inv_ast_server.make;
+			!! inv_byte_server.make;
+			!! depend_server.make;
+			!! rep_depend_server.make;
+			!! m_feat_tbl_server.make;
+			!! m_feature_server.make;
+			!! m_rout_id_server.make;
+			!! m_desc_server.make;
 			!! classes.make;
+
 				-- Counter creation
 			!! routine_id_counter.make;
 			!! class_counter.make;
-			!!static_type_id_counter.make;
-			!!body_id_counter.make;
-			!!body_index_counter.make;
-			!!feature_as_counter.make;
-			!!type_id_counter;
+			!! static_type_id_counter.make;
+			!! body_id_counter.make;
+			!! body_index_counter.make;
+			!! feature_as_counter.make;
+			!! type_id_counter;
+
 				-- Routine table controler creation
-			!!history_control.make;
-			!!instantiator.make;
+			!! history_control.make;
+			!! instantiator.make;
 			instantiator.compare_objects;
+
 				-- Type set creation
-			!!type_set.make (100);
+			!! type_set.make (100);
+
 				-- External table creation
-			!!externals.make;
+			!! externals.make;
+
 				-- Pattern table creation
-			!!pattern_table.make;
+			!! pattern_table.make;
+
 				-- Freeze control sets creation
-			!!freeze_set1.make;
+			!! freeze_set1.make;
 			freeze_set1.compare_objects;
-			!!freeze_set2.make;
+			!! freeze_set2.make;
 			freeze_set2.compare_objects;
+
 				-- Body index table creation
-			!!body_index_table.make (System_chunk);
-			!!original_body_index_table.make (1);
+			!! body_index_table.make (System_chunk);
+			!! original_body_index_table.make (1);
+
 				-- Run-time table creation
-			!!dispatch_table.make;
-			!!execution_table.make;
-			!!melted_set.make;
+			!! dispatch_table.make;
+			!! execution_table.make;
+			!! melted_set.make;
 			melted_set.compare_objects;
-			!!rout_info_table.make (500);
-			!!onbidt.make (50);
-			!!optimization_tables.make;
-			!!dle_frozen_nobid_table.make (50)
+			!! rout_info_table.make (500);
+			!! onbidt.make (50);
+			!! optimization_tables.make;
+			!! dle_frozen_nobid_table.make (50)
 
 				-- Address table
-			!!address_table.make (100)
+			!! address_table.make (100)
 		end;
 
 	reset_debug_counter is
@@ -4154,23 +4163,23 @@ end;
 			Result := (current_pass = pass3_controler)
 		end;
 
---	clear is
---				-- Clear the servers
---		do
---			Tmp_ast_server.clear;
---			Tmp_feat_tbl_server.clear;
---			Tmp_body_server.clear;
---			Tmp_class_info_server.clear;
---			Tmp_rep_info_server.clear;
---			Tmp_byte_server.clear;
---			Tmp_inv_byte_server.clear;
---			Tmp_inv_ast_server.clear;
---			Tmp_depend_server.clear;
---			Tmp_rep_depend_server.clear;
---			Tmp_rep_server.clear;
---			Tmp_rep_feat_server.clear;
---			Tmp_rep_info_server.clear;
---		end;
+	clear is
+				-- Clear the servers
+		do
+			Tmp_ast_server.clear;
+			Tmp_feat_tbl_server.clear;
+			Tmp_body_server.clear;
+			Tmp_class_info_server.clear;
+			Tmp_rep_info_server.clear;
+			Tmp_byte_server.clear;
+			Tmp_inv_byte_server.clear;
+			Tmp_inv_ast_server.clear;
+			Tmp_depend_server.clear;
+			Tmp_rep_depend_server.clear;
+			Tmp_rep_server.clear;
+			Tmp_rep_feat_server.clear;
+			Tmp_rep_info_server.clear;
+		end
 
 	System_chunk: INTEGER is 500;
 
@@ -4181,8 +4190,6 @@ feature -- Purge of compilation files
 		require
 			successful
 		do
-			server_controler.remove_useless_files;
-
 				-- Transfer datas from servers to temporary servers
 			feat_tbl_server.purge;
 			depend_server.purge;
@@ -4196,6 +4203,8 @@ feature -- Purge of compilation files
 			m_rout_id_server.purge;
 			m_desc_server.purge;
 			rep_server.purge;
+
+			server_controler.remove_useless_files;
 		end;
 
 feature -- Conveniences
@@ -4293,7 +4302,7 @@ feature -- Conveniences
 			inlining_size := 4;
 			code_replication_off := True;
 			exception_stack_managed := False; 
-			server_controler.set_chunk_size (10000);
+			server_controler.set_block_size (1024);
 
 			do_not_check_vape := False;
 			address_expression_allowed := False;

@@ -3,30 +3,33 @@
 class UNIVERSE_I
 
 inherit
-
 	SHARED_ERROR_HANDLER
 		export
 			{COMPILER_EXPORTER} all
 		redefine
-			copy
+			copy, is_equal
 		end
+
 	SHARED_WORKBENCH
 		export
 			{COMPILER_EXPORTER} all
 		redefine
-			copy
-		end;
+			copy, is_equal
+		end
+
 	COMPILER_EXPORTER
 		redefine
-			copy
-		end;
+			copy, is_equal
+		end
+
 	PROJECT_CONTEXT
 		redefine
-			copy
-		end;
+			copy, is_equal
+		end
+
 	SHARED_TEXT_ITEMS
 		redefine
-			copy
+			copy, is_equal
 		end
 
 creation {COMPILER_EXPORTER}
@@ -369,12 +372,9 @@ feature {COMPILER_EXPORTER} -- Implementation
 	copy (other: like Current) is
 			-- Clone universe
 		do
--- FIXME
--- FIXME: is_equal must be redefined as well...
--- FIXME
-			make
-			override_cluster_name := other.override_cluster_name
 			from
+				make
+				override_cluster_name := other.override_cluster_name
 				other.clusters.start
 			until
 				other.clusters.after
@@ -382,6 +382,21 @@ feature {COMPILER_EXPORTER} -- Implementation
 				insert_cluster (other.clusters.item)
 				other.clusters.forth
 			end
+		end
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		do
+			Result := equal (override_cluster_name, other.override_cluster_name)
+			from
+				clusters.start
+				other.clusters.start
+			until
+				not Result or clusters.after or other.clusters.after
+			loop
+				Result := Result and clusters.item.is_equal (other.clusters.item)
+			end		
 		end
 
 	check_universe is

@@ -25,6 +25,9 @@ feature -- Values
 	current_call_stack_element_dotnet: CALL_STACK_ELEMENT_DOTNET is
 		do
 		end
-		
+
+	refresh_current_thread_id is
+		do
+		end
 
 end -- class APPLICATION_STATUS_DOTNET

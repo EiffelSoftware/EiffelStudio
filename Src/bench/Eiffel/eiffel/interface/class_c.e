@@ -41,6 +41,8 @@ inherit
 
 	COMPILER_EXPORTER
 
+	HASHABLE
+
 creation
 
 	make
@@ -188,6 +190,16 @@ feature -- Access
 		do
 			Result := Ast_server.has (id)
 		end
+
+feature -- status
+
+	hash_code: INTEGER is
+			-- Hash code value corresponds to `id.hash_code'.
+		do
+			Result := id.hash_code
+		end
+
+feature -- Action
 
 	build_ast: CLASS_AS_B is
 			-- Parse the file and generate the AST
@@ -2026,6 +2038,29 @@ feature
 					vcfg1.set_class (Current)
 					vcfg1.set_formal_name (generic_name)
 					Error_handler.insert_error (Vcfg1)
+				end
+				gens.forth
+			end
+		end
+
+	check_creation_constraint_genericity is
+		require
+			generics_exists: generics /= Void
+		local
+			generic_dec: FORMAL_DEC_AS_B
+			constraint_type: TYPE_B
+			gens: like generics
+		do
+			gens := generics
+			Inst_context.set_cluster (cluster)
+			from
+				gens.start
+			until
+				gens.after
+			loop
+				generic_dec := gens.item
+				if generic_dec.has_constraint and then generic_dec.has_creation_constraint then
+					generic_dec.check_constraint_creation (Current, generic_dec.constraint)
 				end
 				gens.forth
 			end

@@ -17,7 +17,7 @@ default
 	profile (no)
 	trace (no)
 	check_vape (yes)
-	console_application (no)
+	console_application (yes)
 	syntax_warning (no)
 	array_optimization (no)
 	dead_code_removal (yes)

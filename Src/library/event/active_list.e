@@ -13,7 +13,7 @@ class
 inherit
 	LINKED_LIST [G]
 		redefine
-			default_create
+			default_create,
 			new_cell,
 			cleanup_after_remove,
 			merge_left,
@@ -64,9 +64,10 @@ feature  {LINKED_LIST} -- Implementation
 	new_cell (v: like item): like first_element is
 			-- Create new cell with `v'.
 		do
-			Result := Precursor (v)
 			consistency_count := consistency_count + 1
 			add_actions.call ([v])
+			create Result
+			Result.put (v)
 		end
 
 	cleanup_after_remove (v: like first_element) is
@@ -123,6 +124,9 @@ end -- class ACTIVE_LIST
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.2  2000/01/25 16:55:08  brendel
+--| Minor bug fixes.
+--|
 --| Revision 1.1  2000/01/25 16:27:40  brendel
 --| Initial.
 --|

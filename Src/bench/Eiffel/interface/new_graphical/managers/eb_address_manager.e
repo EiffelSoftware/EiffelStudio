@@ -1876,9 +1876,9 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			feature_label.pointer_enter_actions.extend (agent highlight_label (feature_label))
 			feature_label.pointer_leave_actions.extend (agent unhighlight_label (feature_label))
 
-			cluster_label.pointer_button_release_actions.extend (agent button_action (cluster_address, ?, ?, ?, ?, ?, ?, ?, ?))
-			class_label.pointer_button_release_actions.extend (agent button_action (class_address, ?, ?, ?, ?, ?, ?, ?, ?))
-			feature_label.pointer_button_release_actions.extend (agent button_action (feature_address, ?, ?, ?, ?, ?, ?, ?, ?))
+			cluster_label.pointer_button_press_actions.extend (agent button_action (cluster_address, ?, ?, ?, ?, ?, ?, ?, ?))
+			class_label.pointer_button_press_actions.extend (agent button_action (class_address, ?, ?, ?, ?, ?, ?, ?, ?))
+			feature_label.pointer_button_press_actions.extend (agent button_action (feature_address, ?, ?, ?, ?, ?, ?, ?, ?))
 			
 			class_label.drop_actions.extend (agent drop_class)
 			feature_label.drop_actions.extend (agent drop_feature)

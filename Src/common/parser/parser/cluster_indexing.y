@@ -11,7 +11,7 @@ class CLUSTER_INDEXING_PARSER
 inherit
 	EIFFEL_PARSER_SKELETON
 
-creation
+create
 	make
 
 %}

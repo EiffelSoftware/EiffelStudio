@@ -31,8 +31,25 @@ feature -- Initialization
 			positive_position: position > 0
 		end;
 
-feature
-		
+feature -- Access
+
+	feature_with_name (n: STRING): FEATURE_AS is
+			-- Feature ast with internal name `n'
+		local
+			cur: CURSOR
+		do
+			cur := features.cursor;
+			from
+				features.start
+			until
+				features.after or else Result /= Void
+			loop
+				Result := features.item.feature_with_name (n);
+				features.forth
+			end
+			features.go_to (cur)
+		end;
+
 	has_feature_name (n: FEATURE_NAME): BOOLEAN is
 			-- Does `n' appear in current feature clause?
 		local

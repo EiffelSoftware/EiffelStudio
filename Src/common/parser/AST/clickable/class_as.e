@@ -52,6 +52,27 @@ feature -- Properties
 	suppliers: SUPPLIERS_AS;
 			-- Supplier types
 
+feature -- Access
+
+	feature_with_name (n: STRING): FEATURE_AS is
+			-- Feature ast with internal name `n'
+		local
+			cur: CURSOR
+		do
+			if features /= Void then
+				cur := features.cursor
+				from
+					features.start
+				until
+					features.after or else Result /= Void
+				loop
+					Result := features.item.feature_with_name (n)
+					features.forth
+				end
+				features.go_to (cur)
+			end;
+		end;
+
 feature -- Initialization
 
 	set is

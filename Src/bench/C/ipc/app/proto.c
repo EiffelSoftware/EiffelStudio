@@ -326,16 +326,16 @@ rt_private void inspect(int s, Opaque *what)
 		out = dview((EIF_OBJ) &addr);
 		break;
 	case IN_LOCAL:					/* Local inspection */
-		val = ivalue(IV_LOCAL, what->op_second);
+		val = ivalue(MTC IV_LOCAL, what->op_second);
 		break;
 	case IN_ARG:					/* Argument inspection */
-		val = ivalue(IV_ARG, what->op_second);
+		val = ivalue(MTC IV_ARG, what->op_second);
 		break;
 	case IN_CURRENT:				/* Value of Current */
-		val = ivalue(IV_CURRENT,0);		/* %%zs misuse, added ",0" */
+		val = ivalue(MTC IV_CURRENT,0);		/* %%zs misuse, added ",0" */
 		break;
 	case IN_RESULT:					/* Value of Result */
-		val = ivalue(IV_RESULT,0);		/* %%zs misuse, added ",0" */
+		val = ivalue(MTC IV_RESULT,0);		/* %%zs misuse, added ",0" */
 		break;
 	default:
 		panic("BUG inspect");

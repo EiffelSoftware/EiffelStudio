@@ -50,8 +50,7 @@ inherit
 		redefine
 			clear_window, display, 
 			update_before_transport, initial_x, initial_y,
-			update_after_transport, update_symbol, reset_update_symbol,
-			set_font_to_default
+			update_after_transport, set_font_to_default
 		end;
 	SHARED_APPLICATION_EXECUTION
 		undefine
@@ -125,8 +124,8 @@ feature -- Drag source/Hole properties
 
 feature -- Properties
 
-	update_symbol: BOOLEAN;
-			-- Update symbol?
+	last_found_position: INTEGER;
+			-- Start position of last successful search 
 
 feature -- Access
 
@@ -170,12 +169,6 @@ feature -- Changing
 			-- Set font to the default value.
 		do
 			--set_text_font (default_font.item)
-		end;
-
-	reset_update_symbol is
-			-- Set `update_symbol' to False.
-		do
-			update_symbol := False
 		end;
 
 	set_changed (b: BOOLEAN) is
@@ -355,7 +348,9 @@ feature -- Update
 			if b <= count then
 					-- Does not highlight if `b' is beyond the
 					-- bounds of the text.
-				set_selection (a,b)
+				if b > a then
+					set_selection (a,b)
+				end
 			end
 		end;
 
@@ -387,6 +382,7 @@ feature -- Update
 			start_position, end_position: INTEGER;
 			temp: STRING;
 		do
+			last_found_position := -1;
 			local_text := implementation.actual_text;
 
 			l_t := clone (local_text);
@@ -414,6 +410,7 @@ feature -- Update
 				end
 				if matcher.found then
 					start_position := matcher.found_at - 1;
+					last_found_position := start_position;
 					end_position := start_position + s.count;
 					start_position := implementation.unexpanded_position (start_position);
 					end_position := implementation.unexpanded_position (end_position);
@@ -427,14 +424,21 @@ feature -- Update
 	replace_text (s, r: STRING; replace_all: BOOLEAN) is
 			-- Replace next occurence of `s' with `r'.
 		local
-			s_pos, e_pos: INTEGER
+			s_pos, e_pos: INTEGER;
+			start_position, end_position: INTEGER
 		do
 			if not replace_all then
-					--| User wants to replace only the next occurence.
-				search (s);
 				if matcher.found then
-					replace (begin_of_selection, end_of_selection, r)
-				end
+					end_position := last_found_position + s.count;
+					if 
+						is_selection_active and then
+						last_found_position = begin_of_selection and then
+						end_position = end_of_selection
+					then
+						replace (begin_of_selection, end_of_selection, r)
+					end
+				end;
+				search (s);
 			else
 					--| Replace all.
 				from

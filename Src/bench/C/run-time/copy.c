@@ -10,6 +10,10 @@
 	Multiple copy routines.
 */
 
+/*
+doc:<file name="copy.c" header="eif_copy.h" version="$Id$" summary="Various object copy mechanism">
+*/
+
 #include "eif_portable.h"
 #include "eif_eiffel.h"
 #include "eif_copy.h"
@@ -37,16 +41,13 @@
 
 
 /*
-doc:<file name="copy.c" header="eif_copy.h">
-doc:	<attribute name="hclone" return_type="struct hash">
+doc:	<attribute name="hclone" return_type="struct hash" export="private">
 doc:		<summary>The following hash table is used to keep the maping between cloned objects, so that we know for instance where we put the clone for object X. It takes a pointer and yields an EIF_OBJECT.</summary>
 doc:		<thread_safety>Not safe</thread_safety>
 doc:		<eiffel_classes>ISE_RUNTIME</eiffel_classes>
 doc:		<fixme>hclone access is not protected. Therefore to deep clone/copy operation occurring at the same time in two different threads will certainly fail. Solution is to put `hclone' in the `eif_globals' structure, so that two threads can perform parallel deep copy/clone.</fixme>
 doc:	</attribute>
-doc:</file>
 */
-
 rt_private struct hash hclone;			/* Cloning hash table */
 
 /* Function declarations */
@@ -789,3 +790,7 @@ rt_public void spclearall (EIF_REFERENCE spobj)
 	} else
 		memset (spobj, 0, count * elem_size);
 }
+
+/*
+doc:</file>
+*/

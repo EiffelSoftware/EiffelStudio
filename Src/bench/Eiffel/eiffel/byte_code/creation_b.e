@@ -68,9 +68,10 @@ feature -- IL code generation
 			target_type: TYPE_I
 			create_type: CREATE_TYPE
 			create_feat: CREATE_FEAT
-			is_special, is_external: BOOLEAN
+			is_native_array, is_external: BOOLEAN
 			cl_type: CL_TYPE_I
 			class_c: CLASS_C
+			native_array_class: NATIVE_ARRAY_B
 			f: FEATURE_B
 		do
 			generate_il_line_info
@@ -86,20 +87,25 @@ feature -- IL code generation
 						cl_type_not_void: cl_type /= Void
 					end
 					class_c := cl_type.base_class
-					is_special := class_c.is_special
+					is_native_array := class_c.is_native_array
 					is_external := class_c.is_external
 				else
 					create_feat ?= info
 					if create_feat /= Void then
-						is_special := create_feat.is_array (target.type)
+						is_native_array := create_feat.is_array (target.type)
 						is_external := create_feat.is_external (target.type)
 					end
+				end
+
+				if is_native_array then
+					native_array_class ?= class_c
+					is_native_array := native_array_class /= Void
 				end
 
 					-- Issue current object if needed for assignment
 				target.generate_il_start_assignment
 
-				if is_external and then not is_special then
+				if is_external and then not is_native_array then
 					context.set_il_external_creation (True)
 					if System.java_generation then
 						info.generate_il
@@ -112,7 +118,7 @@ feature -- IL code generation
 					context.set_il_external_creation (False)
 					target.generate_il_assignment (target_type)
 				else
-					if not is_special then
+					if not is_native_array then
 							-- Standard creation call
 						info.generate_il
 						target.generate_il_assignment (target_type)
@@ -120,7 +126,7 @@ feature -- IL code generation
 							call.generate_il
 						end
 					else
-							-- Creation call on an ARRAY.
+							-- Creation call on an NATIVE_ARRAY.
 						check
 							call_not_void: call /= Void
 						end

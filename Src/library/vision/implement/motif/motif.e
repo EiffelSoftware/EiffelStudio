@@ -66,6 +66,9 @@ feature
 			end
 		end;
 
+	name: STRING is "MOTIF";
+			-- Toolkit implmentation name
+
 	screen_cursor (a_cursor: SCREEN_CURSOR): SCREEN_CURSOR_X is
 			-- Motif implementation of `a_cursor'
 		do

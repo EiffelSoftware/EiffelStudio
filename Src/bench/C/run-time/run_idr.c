@@ -38,6 +38,7 @@
 #ifdef EIF_OS2
 #include <io.h>
 #endif
+#include "eif_size.h"	/* Needed for DBLSIZ */
 
 
 rt_shared char *idr_temp_buf;	/* This is shared so it can be freed
@@ -624,40 +625,60 @@ rt_public void widr_multi_float (float *obj, int num)
 	}
 }
 
+#if DBLSIZ != 8
+"Warning there is a problem with the current platform which does not
+have a 8 bytes double"
+#endif
 
 rt_public void ridr_multi_double (double *obj, int num)
 {
 	register int i = 0;
-	char temp_len;
 
 	while (num > i++) {
-		check_capacity (&idrf.i_decode, sizeof (char));
-		bcopy (idrf.i_decode.i_ptr, &temp_len, sizeof(char));
-		idrf.i_decode.i_ptr += sizeof (char);
+		check_capacity (&idrf.i_decode, DBLSIZ);
+#if BYTEORDER == 0x4321
+		{
+			int j;
+			char double_buffer[DBLSIZ];
+			char *idr_buffer;
 
-		check_capacity (&idrf.i_decode, (int)temp_len);
-		bcopy (idrf.i_decode.i_ptr, idr_temp_buf, (int)temp_len);
-		idrf.i_decode.i_ptr += (int)temp_len;
-		*(idr_temp_buf + temp_len) = '\0';
-		sscanf (idr_temp_buf, "%lf", obj++);
+			idr_buffer = idrf.i_decode.i_ptr;
+				/* Reverse the order of the double since we stored doubles in
+				* little endian mode */
+			for (j=0;j<DBLSIZ;j++) 
+				double_buffer[DBLSIZ - 1 - j] = idr_buffer [j];
+			bcopy(double_buffer, obj++,DBLSIZ);
+		}
+#elif BYTEORDER == 0x1234
+		bcopy (idrf.i_decode.i_ptr, obj++, DBLSIZ);
+#endif
+		idrf.i_decode.i_ptr += DBLSIZ;
 	}
 }
 
 rt_public void widr_multi_double (double *obj, int num)
 {
 	register int i = 0;
-	char temp_len;
 
 	while (num > i++) {
-		sprintf (idr_temp_buf, "%lf", *(obj++));
-		temp_len = (char) strlen (idr_temp_buf);
-		check_capacity (&idrf.i_encode, sizeof (char));
-		bcopy (&temp_len, idrf.i_encode.i_ptr, sizeof(char));
-		idrf.i_encode.i_ptr += sizeof (char);
+		check_capacity (&idrf.i_encode, DBLSIZ);
+#if BYTEORDER == 0x4321
+		{
+			int j;
+			char double_buffer [DBLSIZ];
+			char *idr_buffer;
 
-		check_capacity (&idrf.i_encode, (int)temp_len);
-		bcopy (idr_temp_buf, idrf.i_encode.i_ptr, (int)temp_len);
-		idrf.i_encode.i_ptr += (int)temp_len;
+			idr_buffer = idrf.i_encode.iu_ptr;
+			bcopy(obj++, double_buffer,DBLSIZ);
+				/* Reverse the order of the double since we stored doubles in
+				* little endian mode */
+			for (j=0;j<DBLSIZ;j++) 
+				idr_buffer[DBLSIZ - 1 - j] = double_buffer [j];
+		}
+#elif BYTEORDER == 0x1234
+		bcopy (obj++, idrf.i_encode.i_ptr, DBLSIZ);
+#endif
+		idrf.i_encode.i_ptr += DBLSIZ;
 	}
 }
 

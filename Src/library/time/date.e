@@ -409,8 +409,8 @@ feature -- Basic operations
 				year_forth
 			else
 				days_in_new_month := days_in_i_th_month (month + 1, year)
-				if day > days_in_month then
-					set_day (days_in_month)
+				if day > days_in_new_month then
+					set_day (days_in_new_month)
 				end
 				set_month (month + 1)
 			end

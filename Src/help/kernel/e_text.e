@@ -5,12 +5,15 @@ indexing
 class
 	E_TEXT
 
-creation
+inherit
+	FACILITIES
+
+create
 	make_from_xml_tree
 
 feature -- Initialization
 
-	make_from_xml_tree(node:XML_ELEMENT) is
+	make_from_xml_tree (node: XML_ELEMENT) is
 			-- Initialize
 		require
 			not_void: node /= Void
@@ -25,13 +28,14 @@ feature -- Initialization
 	create_list(node:XML_ELEMENT; cur_part:E_TEXT_PART) is
 			-- Recursively build the list.
 		require
-			not_void: node /= Void and cur_part /= Void
+			node_exists: node /= Void
+			cur_part_exists: cur_part /= Void
 		local
 			node_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			c_item: XML_TEXT
 			item: XML_ELEMENT
 			tag, s: STRING
-			temp, cr:E_TEXT_PART
+			temp, cr: E_TEXT_PART
 		do
 			from
 				node_cursor := node.new_cursor
@@ -52,55 +56,53 @@ feature -- Initialization
 					item ?= node_cursor.item
 					if item /= Void then
 						tag := item.name
-						if tag.is_equal("B") then
+						if tag.is_equal(bold_tag) then
 							create temp.make_from_other(cur_part)
 							temp.set_bold(true)
 							create_list(item, temp)
-						elseif tag.is_equal("I") then
+						elseif tag.is_equal(italics_tag) then
 							create temp.make_from_other(cur_part)
 							temp.set_italic(true)
 							create_list(item, temp)
-						elseif tag.is_equal("B") then
+						elseif tag.is_equal(underlined_tag) then
 							create temp.make_from_other(cur_part)
-							temp.set_bold(true)
+							temp.set_underline(true)
 							create_list(item, temp)
-						elseif tag.is_equal("UL") then
-							cr := get_line_break(cur_part.list_depth)
-							text_parts.extend(cr)
+						elseif tag.is_equal(list_tag) then
+							cr := get_line_break_indent(cur_part.list_depth)
 							create temp.make_from_other(cur_part)
 							temp.set_list_depth(temp.list_depth+1)
 							create_list(item, temp)
-							text_parts.extend(cr)
-							text_parts.extend(cr)
-						elseif tag.is_equal("LI") then
-							cr := get_line_break(cur_part.list_depth)
+							text_parts.extend (cr)
+						elseif tag.is_equal(list_item_tag) then
+							cr := get_line_break_indent(cur_part.list_depth)
 							cr.set_bullet(true)
 							text_parts.extend(cr)
 							create_list(item, cur_part)
-						elseif tag.is_equal("BR") then
-							cr := get_line_break(cur_part.list_depth)
+						elseif tag.is_equal(line_break_tag) then
+							cr := get_line_break_indent(cur_part.list_depth)
 							text_parts.extend(cr)
 							create_list(item, cur_part)
-						elseif tag.is_equal("A") then
+						elseif tag.is_equal(anchor_tag) then
 							create temp.make_from_other(cur_part)
-							if item.attributes.has("TOPIC_ID") then
+							if item.attributes.has(anchor_topic_id_attr) then
 								temp.set_font_color_by_string("link")
-								temp.set_hyperlink(item.attributes.item("TOPIC_ID").value)
+								temp.set_hyperlink(item.attributes.item(anchor_topic_id_attr).value)
 							end
 							create_list(item, temp)
-						elseif tag.is_equal("FONT") then
+						elseif tag.is_equal(font_tag) then
 							create temp.make_from_other(cur_part)
-							if item.attributes.has("NAME") then
-								temp.set_font_name(item.attributes.item("NAME").value)
+							if item.attributes.has(font_name_attr) then
+								temp.set_font_name(item.attributes.item(font_name_attr).value)
 							end
-							if item.attributes.has("COLOR") then
-								temp.set_font_color_by_string(item.attributes.item("COLOR").value)
+							if item.attributes.has(font_color_attr) then
+								temp.set_font_color_by_string(item.attributes.item(font_color_attr).value)
 							end
-							if item.attributes.has("SIZE") then
-								temp.set_font_size(item.attributes.item("SIZE").value.to_integer)
+							if item.attributes.has(font_size_attr) then
+								temp.set_font_size(item.attributes.item(font_size_attr).value.to_integer)
 							end
 							create_list(item, temp)
-						elseif tag.is_equal("IMP") then
+						elseif tag.is_equal(keyword_tag) then
 							create temp.make_from_other(cur_part)
 							temp.set_important(true)
 							create_list(item, temp)
@@ -111,12 +113,12 @@ feature -- Initialization
 			end
 		end
 
-	get_line_break(depth:INTEGER):E_TEXT_PART is
+	get_line_break_indent (depth: INTEGER): E_TEXT_PART is
 		do
 			create Result.make_empty
-			Result.set_list_depth(depth)
-			Result.set_line_break(true)
-			Result.set_text("")
+			Result.set_list_depth (depth)
+			Result.set_line_break (True)
+			Result.set_text ("")
 		end
 
 feature -- Display

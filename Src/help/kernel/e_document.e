@@ -5,17 +5,16 @@ indexing
 class
 	E_DOCUMENT
 
-creation
-	make
+inherit
+	FACILITIES
 
 feature -- Initialization
 
-	make is
-			-- Empty initialization. Used by class FACILITIES.
-		do
-		end
+	initialized: BOOLEAN
+			-- Have the properties of this class been initialized?
+			-- This is to have invariants in this class.
 
-	make_from_xml_tree(node:XML_ELEMENT; path:FILE_NAME) is
+	make_from_xml_tree (node :XML_ELEMENT; path: FILE_NAME) is
 			-- Create the the document tree structure from XML-tree.
 		require
 			node_not_void: node /= Void
@@ -24,7 +23,7 @@ feature -- Initialization
 			node_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			found: BOOLEAN
 		do
-			if node.name.is_equal("EIFFEL_DOCUMENT") then
+			if node.name.is_equal(eiffel_document_tag) then
 				from
 					node_cursor := node.new_cursor
 					node_cursor.start
@@ -32,43 +31,34 @@ feature -- Initialization
 					found or else node_cursor.after
 				loop
 					sub ?= node_cursor.item
-					if sub /= Void and then sub.name.is_equal("TOPIC") then
+					if sub /= Void and then sub.name.is_equal(topic_tag) then
 						create topic.make_from_xml_tree(sub, path)
 						found := true
 					end
 					node_cursor.forth
 				end
 				if not found then
-					io.putstring("No TOPIC found")
+					warning("XML", "No " + topic_tag + " found", main_window)
 				end
 			else
-				io.putstring("EIFFEL_DOCUMENT missing")
+				warning("XML", eiffel_document_tag+" missing", main_window)
 			end
 			initialize_sorted_list
 			initialize_hash_table
 			initialize_in_order_list
+			initialized := True
 		end
 
-	make_from_file_name(file_name:FILE_NAME) is
+	make_from_file_name (file_name: FILE_NAME) is
 			-- Create this topic from a file.
 		require
 			file_name_not_void: file_name /= Void
 		local
-			file: RAW_FILE
-			s: STRING
-			parser: XML_TREE_PARSER
+			node: XML_ELEMENT
 		do
-			create parser.make 
-			create file.make (file_name)
-			if file.exists then
-				file.open_read
-				file.read_stream (file.count)
-				create s.make(file.count)
-				s.append (file.last_string)
-				parser.parse_string(s)
-				parser.set_end_of_file
-				file.close
-				make_from_xml_tree(parser.root_element, file_name)
+			node := parse_xml_file (file_name)
+			if node /= Void then
+				make_from_xml_tree(node, file_name)
 			end
 		end
 
@@ -98,11 +88,16 @@ feature -- Miscellaneous
 
 	create_tree(tree:EV_TREE) is
 			-- Fills the tree with the document structure.
+		require
+			initialized
 		do
 			topic.create_tree_item(tree)
 		end
 
 	show_first_topic(list:EV_LIST; start_with:STRING) is
+			-- Highlight the first topic that starts with the string in the text-field.
+		require
+			initialized
 		local
 			found:BOOLEAN
 			front:STRING
@@ -198,7 +193,7 @@ feature -- Miscellaneous
 			end
 		end
 
-feature -- Obsolete
+feature -- Currently not used.
 
 	create_sorted_indexes(list: EV_LIST) is
 			-- This is to put all topics in the list.
@@ -220,17 +215,17 @@ feature -- Access
 	topic: E_TOPIC
 			-- The root topic of this document.
 
-	all_topics: SORTED_TWO_WAY_LIST[E_TOPIC]
+	all_topics: SORTED_TWO_WAY_LIST [E_TOPIC]
 			-- A sorted list with all topics in it.
 
-	topics_in_order: LINKED_LIST[E_TOPIC]
+	topics_in_order: LINKED_LIST [E_TOPIC]
 			-- A list with all text-topics in order.
 
-	topic_lookup: HASH_TABLE[E_TOPIC, STRING]
+	topic_lookup: HASH_TABLE [E_TOPIC, STRING]
 			-- An easy way to find a topic by its 'id'.
 
 invariant
-	--must_contain_topic: topic /= Void
-	--sorted_list_exists: all_topics /= Void
+	must_contain_topic: initialized implies topic /= Void
+	sorted_list_exists: initialized implies all_topics /= Void
 
 end -- class E_DOCUMENT

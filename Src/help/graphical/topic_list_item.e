@@ -23,7 +23,7 @@ feature -- Initialization
 		require
 			not_void: tr /= Void and then top /= Void and then top.id /= Void
 		do
-			make_with_text(tr, top.id)
+			make_with_text(tr, top.head)
 			topic := top
 		end
 

@@ -81,6 +81,36 @@ feature -- Display
 			area.reset_text_format
 		end
 
+	get_character_format: EV_CHARACTER_FORMAT is
+		do
+			create Result.make
+			Result.set_bold(bold)
+			Result.set_italic(italic)
+		--	-- Underline is not supported by EV_RICH_TEXT.
+		--	Result.set_underline(underline)
+
+		--	if font_name /= Void or else font_size > 0 then
+		--		font := Result.font
+		--		if font_name /= Void then
+		--			font.set_name(font_name)
+		--		end
+		--		if font_size > 0 then
+		--			font.set_height(font_size)
+		--		end
+		--		Result.set_font(font)
+		--	end
+			if font_color /= Void then
+				Result.set_color(font_color)
+			end
+		end
+
+	needs_character_format: BOOLEAN is
+		do
+			Result := bold or else italic or else underline or else
+				font_name /= Void or else font_size > 0 or else
+				font_color /= Void
+		end
+
 feature -- Element change
 
 	set_text(txt:STRING) is

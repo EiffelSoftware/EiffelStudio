@@ -25,7 +25,7 @@ feature -- Initialization
 				viewer := caller
 				make_top_level
 				set_size(800,500)
-				create doc.make
+				create doc
 				set_main_structure(doc)
 				build
 			else
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			create tool_bar.make(right)
 			fill_tool_bar
 			right.set_child_expandable(tool_bar, False)
-			create view_area.make(right, Current)
+			create view_area.make(right)
 			enable_disable
 		end
 
@@ -164,7 +164,7 @@ feature -- Actions
 					go_forth
 				end
 			elseif arg.first.is_equal("Help about Help") then
-				viewer.set_help_file("d:\viewer\src\help\examples\files\help.xml")
+				viewer.set_help_file(viewer.default_file)
 			elseif arg.first.is_equal("About Help") then
 				warning("About","There is no such thing.",Current)
 			elseif arg.first.is_equal("Next") then
@@ -206,7 +206,7 @@ feature -- Status setting
 			err: BOOLEAN
 		do
 			if not err then
-				create doc.make
+				create doc
 				set_title(viewer.help_file)
 				doc.make_from_file_name(viewer.help_file)
 				set_main_structure(doc)
@@ -434,7 +434,7 @@ feature -- Widgets
 
 	tool_bar: EV_TOOL_BAR
 
-	pic_win: PICTURE_WINDOW
+--	pic_win: PICTURE_WINDOW
 
 feature -- Access
 	

@@ -27,12 +27,11 @@ feature -- Initialization
 			process_command_line
 			create file.make(help_file)
 			if not file.exists then
-				io.put_string("File not found. Using default.%N")
+				warning ("File not found", "Using default. (help.xml)", first_window)
 				help_file := default_file
 			end
 			first_window.update
 			--install_timer
-		
 		end
 
 	install_timer is
@@ -68,7 +67,7 @@ feature -- Initialization
 					help_file := default_file
 				end
 			else
-				warning("Arguments bad entered.","Please check the arguments and retry",first_window)
+				warning("Error while reading command-line", "Please check the arguments and retry.", first_window)
 			end
 		ensure
 			help_file_set: help_file /= Void
@@ -88,7 +87,7 @@ feature -- State Setting
 			first_window.update
 		end
 
-feature {NONE} -- Implementation
+feature -- Implementation
 
 	default_file: FILE_NAME is
 			-- The default root-file.

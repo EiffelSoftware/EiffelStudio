@@ -16,26 +16,35 @@ root-topic of that file.</TEXT></TOPIC>
 
 	<TOPIC ID="HEAD"><HEAD>HEAD</HEAD>
 	<TEXT>Specify the head of a help-topic. You cannot use mark-up tags
-within a HEAD tag.</TEXT></TOPIC>
+within a HEAD tag, because it also will be displayed in the Tree-view.</TEXT></TOPIC>
 
 	<TOPIC ID="TEXT"><HEAD>TEXT</HEAD>
-	<TEXT>If a topic contains text, you can put the paragraphs in TEXT-tags.</TEXT></TOPIC>
+	<TEXT>If a topic contains text, you can put the paragraphs in TEXT-tags. Within text-topics,
+you can use these tags: FONT, BR, IMP, A, B, I, U. Underlined text is not
+yet supported by the topic display area (EV_RICH_TEXT)</TEXT></TOPIC>
 
 	<TOPIC ID="FONT"><HEAD>FONT</HEAD>
 	<TEXT>With FONT you can specify NAME, SIZE and COLOR. Example:
-FONT NAME="Arial" SIZE="16" COLOR="blue".
-Color is not yet implemented.</TEXT></TOPIC>
+<FONT NAME="Arial" SIZE="16" COLOR="blue">&lt;FONT NAME="Arial" SIZE="16" COLOR="blue"&gt;</FONT>
+The NAME is not (yet) platform independent.
+The NAME and SIZE are not implemented yet on Unix.</TEXT></TOPIC>
 
 	<TOPIC ID="BR"><HEAD>BR</HEAD>
 	<TEXT>The BR is a strange tag, because in XML a tag should always
 have a end-tag. If you want to use this tag, use it as a
-standalone-tag in this way: BR/</TEXT></TOPIC>
+standalone-tag in this way: &lt;BR/&gt;</TEXT></TOPIC>
 
 	<TOPIC ID="IMP"><HEAD>IMP</HEAD>
-	<TEXT>All word that you put in a IMP-tag will show up in the
+	<TEXT>All words that you put in a IMP-tag will show up in the
 search-index and you will be able to find the topic in the
 search-results list of that keyword. The search is
 case-insensitive.</TEXT></TOPIC>
+
+	<TOPIC ID="A"><HEAD>A</HEAD>
+	<TEXT>You can use anchors in your body text. to make a link to another topic
+within the ENTIRE system, use &lt;A TOPIC_ID="General"&gt;
+Be sure to type the name correct. Case sensitive.
+Not yet supported, but feel free to start using it: HREF</TEXT></TOPIC>
 
 </TOPIC>
 </EIFFEL_DOCUMENT>

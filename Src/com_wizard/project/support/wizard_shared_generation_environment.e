@@ -18,10 +18,7 @@ inherit
 			{NONE} all
 		end
 
-	EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
+	WIZARD_EXECUTION_ENVIRONMENT
 
 feature -- Access
 
@@ -356,6 +353,7 @@ feature -- Access
 			Result.force ("f", "f")
 			Result.force (clone (exists_routine), clone (exists_routine))
 			Result.force ("class_name", "class_name")
+			Result.force ("set_value", "set_value")
 		end
 
 	c_keywords: HASH_TABLE [STRING, STRING] is
@@ -769,7 +767,7 @@ feature -- Access
 			create Result.make (500)
 			Result.compare_objects
 
-			eiffel4 := clone (get ("EIFFEL4"))
+			eiffel4 := clone (execution_environment.get ("EIFFEL4"))
 			tmp_path := eiffel4 + "\wizards\com\config\wizard_struct.cfg"
 
 			create a_directory.make_open_read (eiffel4 + "\wizards\com\config")
@@ -802,7 +800,7 @@ feature -- Access
 			create Result.make (500)
 			Result.compare_objects
 
-			eiffel4 := clone (get ("EIFFEL4"))
+			eiffel4 := clone (execution_environment.get ("EIFFEL4"))
 			tmp_path := eiffel4 + "\wizards\com\config\wizard_winapi_names.cfg"
 
 			create a_directory.make_open_read (eiffel4 + "\wizards\com\config")
@@ -838,8 +836,8 @@ feature -- Access
 			if browse_directory_cell.item /= Void then
 				Result := browse_directory_cell.item
 
-			elseif (get (Eiffelcom_browse_directory) /= Void) then
-				Result := get (Eiffelcom_browse_directory)
+			elseif (execution_environment.get (Eiffelcom_browse_directory) /= Void) then
+				Result := execution_environment.get (Eiffelcom_browse_directory)
 				set_browse_directory (Result)
 
 			else
@@ -857,7 +855,7 @@ feature -- Basic Operations
 			valid_directory: not a_directory.empty
 		do
 			browse_directory_cell.put (a_directory)
-			put (a_directory, Eiffelcom_browse_directory)
+			execution_environment.put (a_directory, Eiffelcom_browse_directory)
 		end
 
 	safe_browse_directory_from_dialog (a_file_dialog: WEL_FILE_DIALOG) is

@@ -85,7 +85,7 @@ feature -- Tag
 					Buffered_tags.remove
 				end				
 			end
-			if Element_attribute_mappings.has (a_local_part) then
+			if element_attribute_mappings.has (a_local_part) then
 				Attribute_stack.remove
 			end
 			previous_elements.remove
@@ -184,11 +184,12 @@ feature {NONE} -- Processing
 					else
 						write_attribute (e, False)
 					end
+						-- Stylesheet
 				elseif e.is_equal ("stylesheet") then
 					write_element (e, True, True)
 					write_attribute ("rel", False)
 					output_string.insert_string ("%"stylesheet%"", attribute_value_write_position)
-					process_attribute_element ("url")
+					process_attribute_element ("url")									
 				else
 					write_element (e, is_start, True)
 				end					
@@ -249,7 +250,7 @@ feature {NONE} -- Processing
 			-- Process class attribute element `e'
 		require
 			e_not_void: e /= Void
-		do						
+		do
 			write_attribute (e, True)
 		end
 		
@@ -278,18 +279,25 @@ feature {NONE} -- Processing
 				else
 					l_att := " " + a_name + "=%"" + a_value + "%""
 				end				
-				
-						-- List
+										
 				if l_prev_element.is_equal ("list") then
+						-- List
 					if a_value.is_equal ("true") then
 						write_element ("list_ordered", True, True)
 					elseif a_value.is_equal ("false") then						
 						write_element ("list_unordered", True, True)
-					end
-				else					
+					end						
+				elseif l_prev_element.is_equal ("output") then
+						-- Output
+					if a_name.is_equal ("output") then
+						l_att := " id=%"" + a_value + "%""
+						output_string.insert_string (l_att, attribute_write_position)
+						attribute_write_position := output_string.count
+					end						
+				else										
 					output_string.insert_string (l_att, attribute_write_position)
 					attribute_write_position := output_string.count
-				end
+				end					
 			end					
 			previous_attribute := [a_name, a_value]
 		end		
@@ -356,8 +364,7 @@ feature {NONE} -- Output
 		require
 			e_not_void: e /= Void
 			e_not_empty: not e.is_empty
-			e_maps: element_element_complex_mappings.has (e) or element_element_mappings.has (e)
-			not_in_attribute: not in_attribute
+			e_maps: element_element_complex_mappings.has (e) or element_element_mappings.has (e)			
 		local
 			l_start_tag,
 			l_name: STRING
@@ -391,8 +398,7 @@ feature {NONE} -- Output
 			-- Write `e' as attribute
 		require
 			e_not_void: e /= Void
-			e_is_valid_element: element_attribute_mappings.has (e) or style_elements.has (e)
-			processing_in_attribute: in_attribute
+			e_is_valid_element: element_attribute_mappings.has (e) or style_elements.has (e)			
 		local
 			l_att: STRING
 		do			

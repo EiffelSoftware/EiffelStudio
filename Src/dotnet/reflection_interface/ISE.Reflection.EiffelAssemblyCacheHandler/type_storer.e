@@ -294,10 +294,10 @@ feature {NONE} -- Implementation
 				end
 
 					-- <create>
-				creation_routines := eiffel_class.get_Creation_Routines
-				if creation_routines.get_count > 0 then
-					generate_xml_element_from_list (Create_Element, creation_routines)
-				end
+			--	creation_routines := eiffel_class.get_Creation_Routines
+			--	if creation_routines.get_count > 0 then
+			--		generate_xml_element_from_list (Create_Element, creation_routines)
+			--	end
 
 					-- <create_none>
 				if eiffel_class.get_Create_None then

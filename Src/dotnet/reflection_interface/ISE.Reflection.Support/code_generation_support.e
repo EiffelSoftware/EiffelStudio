@@ -428,21 +428,21 @@ feature {NONE} -- Implementation
 					-- Set `creation_routines'.
 				if type_description.get_Name.equals_string (xml_elements.Create_element) then
 					creation_routines_string := type_description.read_element_string_string (xml_elements.Create_element)
-					if creation_routines_string.get_length > 0 then
-						if creation_routines_string.Index_Of_Char (',') = -1 then
-							eiffel_class.Add_Creation_Routine (creation_routines_string)
-						else					
-							from
-							until
-								creation_routines_string.Index_Of_Char (',') = -1 
-							loop
-								comma_index := creation_routines_string.Index_Of_Char (',')
-								eiffel_class.Add_Creation_Routine (creation_routines_string.Substring_Int32_Int32 (0, comma_index))
-								creation_routines_string := creation_routines_string.Substring (comma_index + 1).Trim
-							end
-							eiffel_class.Add_Creation_Routine (creation_routines_string)
-						end
-					end
+--					if creation_routines_string.get_length > 0 then
+--						if creation_routines_string.Index_Of_Char (',') = -1 then
+--							eiffel_class.Add_Creation_Routine (creation_routines_string)
+--						else					
+--							from
+--							until
+--								creation_routines_string.Index_Of_Char (',') = -1 
+--							loop
+--								comma_index := creation_routines_string.Index_Of_Char (',')
+--								eiffel_class.Add_Creation_Routine (creation_routines_string.Substring_Int32_Int32 (0, comma_index))
+--								creation_routines_string := creation_routines_string.Substring (comma_index + 1).Trim
+--							end
+--							eiffel_class.Add_Creation_Routine (creation_routines_string)
+--						end
+--					end
 				end
 
 					-- Set `create_none'.
@@ -873,7 +873,9 @@ feature {NONE} -- Implementation
 				if type_description.get_name.equals_string (xml_elements.Modified_feature_element) then
 					modified_feature := type_description.read_element_string_string (xml_elements.Modified_feature_element)
 					if modified_feature.equals_string (xml_elements.True_string) then
-						eiffel_feature.Set_Modified
+						eiffel_feature.Set_Modified (True)
+					elseif modified_feature.equals_string (xml_elements.False_string) then
+						eiffel_feature.set_modified (False)
 					end
 				end
 				
@@ -944,19 +946,25 @@ feature {NONE} -- Implementation
 					-- Set `new_slot'.
 				is_new_slot := type_description.read_element_string_string (xml_elements.New_slot_element)
 				if is_new_slot.equals_string (xml_elements.True_string) then
-					eiffel_feature.Set_New_Slot
+					eiffel_feature.Set_New_Slot (True)
+				elseif is_new_slot.equals_string (xml_elements.False_string) then
+					eiffel_feature.set_new_slot (False)
 				end	
 				
 					-- Set `enum_literal'.
 				is_enum_literal := type_description.read_element_string_string (xml_elements.Enum_literal_element)
 				if is_enum_literal.equals_string (xml_elements.True_string) then
-					eiffel_feature.Set_Enum_Literal
+					eiffel_feature.Set_Enum_Literal (True)
+				elseif is_enum_literal.equals_string (xml_elements.False_string) then
+					eiffel_feature.set_enum_literal (False)
 				end	
 
 					-- Set `is_literal'.
 				is_literal := type_description.read_element_string_string (xml_elements.Is_literal_element)
 				if is_literal.equals_string (xml_elements.True_string) then
-					eiffel_feature.set_literal
+					eiffel_feature.set_literal (True)
+				elseif is_literal.equals_string (xml_elements.False_string) then
+					eiffel_feature.set_literal (False)
 				end	
 			end
 		rescue

@@ -51,7 +51,6 @@ feature -- Status setting
 			has_dot := hd
 		end
 
-
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
@@ -78,7 +77,7 @@ feature -- Comparison
 			Result := lower_current.lower_than (lower_other)
 		end
 		
-	begins_with (s:STRING):BOOLEAN is
+	begins_with (s:STRING): BOOLEAN is
 			-- does this feature name begins with `s'?
 		local
 			lower_current, lower_s: STRING
@@ -87,8 +86,7 @@ feature -- Comparison
 			lower_current.to_lower
 			lower_s := s.out
 			lower_s.to_lower
-			Result := lower_current.substring_index (lower_s, 1) = 1
+			Result := lower_current.substring_index_in_bounds (lower_s, 1, lower_s.count) = 1
 		end	
-
 
 end -- class EB_NAME_FOR_COMPLETION

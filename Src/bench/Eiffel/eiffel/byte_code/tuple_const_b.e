@@ -63,84 +63,13 @@ feature -- IL generation
 	generate_il is
 			-- Generate IL code for manifest tuple.
 		local
-			real_ty: TUPLE_TYPE_I
-			actual_type: CL_TYPE_I
-			tuple_make: FEATURE_I
-			expr: EXPR_B
-			array_class: CLASS_C
-			class_type, array_any, array_char: SPECIAL_CLASS_TYPE
-			local_array_any, local_array_char: INTEGER
-			i: INTEGER
+			real_ty: CL_TYPE_I
 		do
+				-- FIXME: Manu 10/24/2001. Tuples are not yet implemented
+				-- and therefore we need them first before implementing
+				-- manifest tuples.
 			real_ty ?= context.real_type (type)
-
-				-- Retrieve info on `make' of TUPLE.
-			tuple_make := real_ty.base_class.feature_table.item_id (make_name_id)
-
-				-- Retrieve info on ARRAY [ANY] and ARRAY [CHARACTER]
-				-- in order to create them.
-			array_class := System.special_class.compiled_class
-			from
-				array_class.types.start
-			until
-				array_class.types.after
-			loop
-				class_type ?= array_class.types.item
-				if class_type.is_character_array then
-					array_char := class_type
-				elseif class_type.is_any_array then
-					array_any := class_type
-				end
-				array_class.types.forth
-			end
-
-				-- Creation of an ARRAY [CHARACTER]
-			context.add_local (array_char.type)
-			local_array_char := context.local_list.count
-			il_generator.put_dummy_local_info (array_char.type, local_array_char)
-			il_generator.put_integer_32_constant (expressions.count)
-			array_char.generate_il (make_name_id)
-			il_generator.generate_local_assignment (local_array_char)
-
-				-- Creation of an ARRAY [ANY]
-			context.add_local (array_any.type)
-			local_array_any := context.local_list.count
-			il_generator.put_dummy_local_info (array_any.type, local_array_any)
-			il_generator.put_integer_32_constant (expressions.count)
-			array_any.generate_il (make_name_id)
-			il_generator.generate_local_assignment (local_array_any)
-
-			from
-				expressions.start
-			until
-				expressions.after
-			loop
-				expr ?= expressions.item
-				actual_type ?= context.real_type (expr.type)
-
-					-- Prepare call to `put'.
-				il_generator.generate_local (local_array_any)
-				il_generator.put_integer_32_constant (i)
-
-					-- Generate expression
-				expr.generate_il
-				if
-					actual_type /= Void and then
-					actual_type.is_expanded
-				then 
-						-- We generate a boxed version of type.
-					expr.generate_il_metamorphose (actual_type, True)
-				end
-				array_any.generate_il (put_name_id)
-				i := i + 1
-				expressions.forth
-			end
-
 			il_generator.create_object (real_ty)
-			il_generator.duplicate_top
-			il_generator.generate_local (local_array_any)
-			il_generator.generate_local (local_array_char)
-			il_generator.generate_feature_access (real_ty, tuple_make.feature_id, True)
 		end
 
 feature -- Byte code generation

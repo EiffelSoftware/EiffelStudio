@@ -22,7 +22,8 @@ inherit
 		redefine
 			destroy,
 			parent_imp,
-			interface
+			interface,
+			on_parented
 		end
 
 	EV_PICK_AND_DROPABLE_IMP
@@ -128,6 +129,13 @@ feature {EV_ANY_I} -- Access
 
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 
+	on_parented is
+			-- `Current' just parented.
+		do
+			dirty_child
+			parent_imp.update_children
+		end
+
 	set_parent (par: like parent) is
 			-- Make `par' the new parent of the widget.
 		do
@@ -143,18 +151,6 @@ feature {EV_ANY_I} -- Access
 		do
 		--	{EV_COMPOSED_ITEM_IMP} Precursor
 		--	internal_text := Void
-		end
-
-feature -- Element Change
-
-	set_cell_text (column: INTEGER; txt: STRING) is
-			-- Make `text ' the new label of the `column'-th
-			-- cell of the row.
-		do
-		--	{EV_COMPOSED_ITEM_IMP} Precursor (column, txt)
-		--	if parent_imp /= Void then
-		--		parent_imp.set_cell_text (column - 1, index - 1, txt)
-		--	end
 		end
 
 feature {EV_PICK_AND_DROPABLE_I} -- Pick and Drop
@@ -228,6 +224,11 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/29 19:19:19  rogers
+--| Redefined on_parented from EV_ITEM_IMP so that a row which
+--| had texts added before the parent was set will have it's texts
+--| updated correctly. Removed redundent set_cell_text.
+--|
 --| Revision 1.32  2000/03/29 02:18:09  brendel
 --| Removed inheritance from EV_PIXMAPABLE temporarily.
 --| Added inheritance of WEL_LIST_VIEW_ITEM.

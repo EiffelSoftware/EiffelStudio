@@ -71,7 +71,7 @@ feature -- Element change
 	show is
 			-- Show composite.
 		do
-			if exists and then ((parent /= Void and then parent.wel_shown) or (parent = Void)) then 
+			if exists then 
 				wel_show
 				show_children
 			end

@@ -27,6 +27,14 @@ feature -- Status settings
 			exist: not destroyed
 		deferred
 		end
+
+	set_border_width (value: INTEGER) is
+			-- Border width around container
+		require
+			exist: not destroyed
+			positive_value: value >= 0
+		deferred
+		end	
 	
 	set_spacing (value: INTEGER) is
 			-- Spacing between the objects in the box

@@ -1,3 +1,8 @@
+indexing
+	description: "Representation of an external function"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class EXTERNAL_FUNC_I 
 
 inherit

@@ -1,4 +1,7 @@
--- Replicated unselected feature
+indexing
+	description: "Representation of an unselected replicated deferred procedure"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class RD1_DEF_PROC_I
 

@@ -1,3 +1,8 @@
+indexing
+	description: "Representation of a deferred procedure"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class DEF_PROC_I 
 
 inherit
@@ -5,7 +10,7 @@ inherit
 	PROCEDURE_I			
 		redefine
 			is_deferred, has_entry, to_generate_in,
-			to_melt_in, update_api, transfer_to, access
+			to_melt_in, update_api, transfer_to, access_for_feature
 		end
 	
 feature -- Status Report
@@ -20,11 +25,14 @@ feature -- Status Report
 
 feature -- Access
 
-	access (access_type: TYPE_I): ACCESS_B is
+	access_for_feature (access_type: TYPE_I; static_type: CL_TYPE_I): ACCESS_B is
 			-- New ACCESS_B structure for current deferred routine
 		local
 			external_b: EXTERNAL_B
 		do
+			check
+				not_a_static_binding: static_type = Void
+			end
 			if extension /= Void then
 				create external_b
 				external_b.init (Current)
@@ -33,7 +41,7 @@ feature -- Access
 				external_b.set_extension (extension)
 				Result := external_b
 			else
-				Result := Precursor {PROCEDURE_I} (access_type)
+				Result := Precursor {PROCEDURE_I} (access_type, static_type)
 			end
 		end
 

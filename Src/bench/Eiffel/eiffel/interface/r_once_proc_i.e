@@ -1,4 +1,7 @@
--- Replicated procedure
+indexing
+	description: "Representation of a replicated once procedure"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class R_ONCE_PROC_I
 

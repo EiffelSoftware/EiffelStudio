@@ -1,4 +1,7 @@
--- Replicated unselected feature
+indexing
+	description: "Representation of an unselected replicated once function"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class RD1_ONCE_FUNC_I
 

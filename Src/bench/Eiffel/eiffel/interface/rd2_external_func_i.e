@@ -1,4 +1,7 @@
--- Replicated procedure
+indexing
+	description: "Representation of an replicated unselected external function"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class RD2_EXTERNAL_FUNC_I
 

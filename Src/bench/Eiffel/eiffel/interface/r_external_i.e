@@ -1,4 +1,7 @@
--- Replicated procedure
+indexing
+	description: "Representation of a replicated external procedure"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class R_EXTERNAL_I
 

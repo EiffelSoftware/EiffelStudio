@@ -1,4 +1,7 @@
--- Replicated procedure
+indexing
+	description: "Representation of an replicated unselected deferred function"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class RD2_DEF_FUNC_I
 

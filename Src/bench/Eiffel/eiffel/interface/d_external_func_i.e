@@ -1,4 +1,7 @@
--- Unselected feature
+indexing
+	description: "Representation of an inherited external function which is unselected"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class D_EXTERNAL_FUNC_I
 

@@ -1,4 +1,4 @@
-indexing
+ indexing
 	description: "EiffelVision list. Mswindows implementation."
 	note: "In the wel_list, the index starts with the element%
 		% number zero although in the linked_list, it starts%
@@ -135,13 +135,7 @@ feature -- Access
 			-- Item which is currently selected, for a multiple
 			-- selection, it gives the last selected item.
 		do
-			if is_multiple_selection then
-				if last_selected_item /= Void then
-					Result ?= last_selected_item.interface
-				else
-					Result := Void
-				end
-			else
+			if not is_multiple_selection and selected then
 				Result ?= (ev_children.i_th (single_selected_item + 1)).interface
 			end
 		end

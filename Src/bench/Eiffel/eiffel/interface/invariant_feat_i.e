@@ -15,7 +15,7 @@ feature
 
 	make (a_class: CLASS_C) is
 		do
-			feature_name := "_invariant"
+			set_feature_name ("_invariant")
 			!!rout_id_set.make (1)
 			rout_id_set.put (System.routine_id_counter.invariant_rout_id)
 			written_in := a_class.class_id

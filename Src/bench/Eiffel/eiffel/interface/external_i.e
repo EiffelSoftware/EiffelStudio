@@ -117,7 +117,7 @@ feature
 			if alias_name = Void then
 				extension.set_alias_name (feature_name)
 			end
-			feature_name := s
+			Precursor {PROCEDURE_I} (s)
 		end
 
 	set_encapsulated (b: BOOLEAN) is

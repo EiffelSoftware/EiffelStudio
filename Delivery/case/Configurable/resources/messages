@@ -1,35 +1,35 @@
 Mc/Environment problem :\%X  
-Ma/All differences processed. Merging finished.
-Me/Please open or create a project before trying to resize
-Md/Attempt to resize failed. Please ensure that your project is loaded or created
-Mh/A problem occurs when loading the file. give up
-Mi/Problem with the syntax of the text. Please ensure to avoid multi-lines comments and that each line has a separator ":"
-Mj/The re-positionning performed an illegal operation. Operation stopped
-Mk/The cluster you choose does not contain any clusters or classes
-Mm/This format is not printable
-Mn/The relation has to link entities which belong to the same cluster. 
+Ma/All differences merged. Processing complete.
+Me/A project must be open before it can be resized.
+Md/Attempt to resize failed. Make sure that the project is open and try again.
+Mh/Error loading the file.
+Mi/Error with the syntax of the text. Avoid multiline comments and make sure that each line has a separator ":"
+Mj/An illegal operation occured during repositioning.
+Mk/This cluster does not contain any clusters or classes
+Mm/Unable to print this format
+Mn/This type of relation link belongs to development objects in the same cluster.
 Mo/You can only use labels with a client-supplier or an aggregation link. 
-Mp/An error occured. This may be due to an incorrect path or a bad command for the printer.
-Mq/Something went wrong with the converter.No conversion will be done.
-Mt/Can not create the file :\%X
-Ms/A problem occured when printing. Please check your printer configuration.
-Mr/A problem occured when writing to a file. Please check the access right and the path. 
-Mu/Unable to read the text file.Please check the path and the accees rights.
+Mp/Unable to print. This may be due to an incorrect path, or an invalid print command.
+Mq/Converter error. Conversion incomplete.
+Mt/Unable to create the file : \%X
+Ms/Error printing. Check the printer configuration.
+Mr/Error writing to file. Check the path, permissions, and try again.
+Mu/Unable to read the text file. Check the path permissions, and try again.
 Mv/The external editor is unavailable.
-Mx/Unable to print.Please check the settings of your printer. 
-Mw/The format file is uncorrect. Please contact I.S.E.
-My/Please fill the field "printer_command" in $EIFFEL4/eifinit/case/general, then restart Ecase
-Mz/Impossible to import this linkable because already one has the name: \%X 
-Maa/Please use the button "Add Selection" to add your selection. 
-Mab/Please ensure that both imported and current system are stored with the option "Save All".Continue?
-Mac/Please close all the workareas and retry.
-Mad/Something went wrong, please retry.
-Mae/The import failed : please check the format and the file content and retry
-Maf/The content of the file has to follow the .csv format 
-Mag/Please change the value ( $EIFINIT/general ) of width_to_scatter with something superior to 200. 
-Mah/A class content was not correctly retrieved. Please refer to the file "CASEGEN/error".
-Mai/The generation was successful.
-Mg/Please open or create a project before using this Tool
-Mf/Please open or create a project before creating an entity. 
-Ml/Please ensure that the Tool contains a data
-Mb/A documentation already exists for cluster \%X. Please remove the old doc.case 
+Mx/Unable to print. Check the settings for your printer. 
+Mw/Invalid format file. For more information, contact ISE.
+My/Type a command in the "printer-command" field in $EIFFEL4/eifinit/case/general, and then restart ECase.
+Mz/Unable to import this link. A link with this name already exists.
+Maa/Use the "Add Selection" button to add your selection. 
+Mab/Make sure that both imported and current system are stored with the option "Save All".Continue?
+Mac/Close all workareas, and try again.
+Mad/An error occured. Try again.
+Mae/The import failed. Check the format, the contents of the files and try again.
+Maf/The contents of the file has to follow the .csv format 
+Mag/Increase the value ( $EIFINIT/general ) of width_to_scatter.
+Mah/Unable to open the class. For more information, see the file "CASEGEN/error".
+Mai/Generation successful.
+Mg/Open or create a project before using this Tool
+Mf/Open or create a project before creating an entity. 
+Ml/Make sure that the Tool contains data
+Mb/Documentation exists for this cluster \%X. Remove the old doc.case and try again.

@@ -25,6 +25,15 @@ feature {NONE} -- Initialization
 
 feature -- Status Setting
 
+	set_summary (a_type: STRING) is
+			-- Set summary
+		require
+			type_not_void: a_type /= Void
+			type_not_empty: not a_type.is_empty
+		do
+			summary_label.set_text (a_type)
+		end		
+
 	set_exception_type (a_type: STRING) is
 			-- Set type
 		require

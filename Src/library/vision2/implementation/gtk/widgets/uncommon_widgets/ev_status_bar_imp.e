@@ -24,7 +24,7 @@ inherit
 
 	EV_ITEM_HOLDER_IMP
 
-creation
+create
 	make
 
 feature {NONE}-- Initialization

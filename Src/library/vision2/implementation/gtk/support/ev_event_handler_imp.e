@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			-- Create the `event_command_array' and the `arguments_list' with a length
 			-- of command_count.
 		do
-			!! event_command_array.make (1, command_count)
+			create event_command_array.make (1, command_count)
 		
 		ensure
 			array_non_void: event_command_array /= void

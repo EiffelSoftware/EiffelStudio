@@ -17,7 +17,7 @@ inherit
 
 	EV_GDK_FONT_EXTERNALS
 
-creation
+create
 	make,
 	make_by_name,
 	make_by_system_name
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 		local
 			a: ANY 
 		do
-			!! system_name.make_default
+			create system_name.make_default
 			a := full_name.to_c
 			widget := gdk_font_load ($a)	
  		end
@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 		local
 			a: ANY
 		do
-			!! system_name.make_by_name (str)
+			create system_name.make_by_name (str)
 			a := full_name.to_c
 			widget := gdk_font_load ($a)
 		end
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 		local
 			a: ANY
 		do
-			!! system_name.make_by_system_name (str)
+			create system_name.make_by_system_name (str)
 			a := full_name.to_c
 			widget := gdk_font_load ($a)
 		end
@@ -264,19 +264,19 @@ feature {NONE} -- Implementation
 	
 end -- class EV_FONT_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------
 

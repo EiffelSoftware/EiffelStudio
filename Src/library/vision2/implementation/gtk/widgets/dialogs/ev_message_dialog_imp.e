@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 			-- First the build of the window
 			set_background_color (Color_dialog)
-			!! color.make_rgb (0, 0, 0)
+			create color.make_rgb (0, 0, 0)
 			set_foreground_color (color)
 
 			-- We cannot use the precursor, but it is
@@ -47,25 +47,25 @@ feature {NONE} -- Initialization
 				create parent.make_top_level
 			end
 
-			!! container_interface.make (parent)
+			create container_interface.make (parent)
 			container_interface.set_implementation (Current)
 			check
 				container_not_void: container_interface /= Void
 			end
 
-			!! dbox.make (container_interface)
+			create dbox.make (container_interface)
 			dbox.set_homogeneous (False)
 			dbox.set_border_width (12)
 			dbox.set_spacing (4)
 
-			!! display_area.make (dbox)
+			create display_area.make (dbox)
 			display_area.set_spacing (3)
 --			display_area.set_height (100)
 --			display_area.set_minimum_height (100)
 --			display_area.set_width (250)
 --			display_area.set_minimum_width (250)
 
-			!! action_area.make (dbox)
+			create action_area.make (dbox)
 			action_area.set_border_width (3)
 			action_area.set_spacing (4)
 --			action_area.set_expand (False)
@@ -165,7 +165,7 @@ feature -- Status settings
 			-- Add a Help button in the dialog.
 		do
 			if help_button = Void then
-				!!help_button.make_with_text (action_area, "Help")
+				create help_button.make_with_text (action_area, "Help")
 --				help_button.set_expand(True)
 				action_area.set_child_expandable (help_button, True)
 			end
@@ -303,7 +303,7 @@ feature {NONE} -- Basic operation
 			inspect number
 			when 1 then
 				if first_button = Void then
-					!! first_button.make_with_text (action_area, label)
+					create first_button.make_with_text (action_area, label)
 --					first_button.set_expand(True)
 					action_area.set_child_expandable (first_button, True)
 				else
@@ -311,7 +311,7 @@ feature {NONE} -- Basic operation
 				end
 			when 2 then
 				if second_button = Void then
-					!! second_button.make_with_text (action_area, label)
+					create second_button.make_with_text (action_area, label)
 --					second_button.set_expand(True)
 					action_area.set_child_expandable (second_button, True)
 				else
@@ -319,7 +319,7 @@ feature {NONE} -- Basic operation
 				end
 			when 3 then
 				if third_button = Void then
-					!! third_button.make_with_text (action_area, label)
+					create third_button.make_with_text (action_area, label)
 --					third_button.set_expand(True)
 					action_area.set_child_expandable (third_button, True)
 				else
@@ -360,8 +360,8 @@ feature {NONE} -- Basic operation
 			arg: EV_ARGUMENT1 [EV_MESSAGE_DIALOG_I]
 		do
 --			if button.get_click_commands /= Void then
-				!! cmd.make (~execute)
-				!! arg.make (Current)
+				create cmd.make (~execute)
+				create arg.make (Current)
 				button.add_click_command(cmd, arg)
 --			end
 		end
@@ -406,7 +406,7 @@ feature {NONE} -- Implementation
 			-- Set the message to be displayed
 		do
 			if message = Void then
-				!!message.make_with_text (display_area, msg)
+				create message.make_with_text (display_area, msg)
 			else
 				message.set_text(msg)
 			end
@@ -444,18 +444,18 @@ feature {NONE} -- Implementation
 
 end -- class EV_MESSAGE_DIALOG_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------

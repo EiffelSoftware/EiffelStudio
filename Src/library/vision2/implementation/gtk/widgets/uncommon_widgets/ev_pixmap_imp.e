@@ -33,7 +33,7 @@ inherit
 			height
 		end
 	
-creation
+create
 	make,
 	make_with_size
 
@@ -48,11 +48,11 @@ feature {NONE} -- Initialization
 			xpmFile: STRING
 		do
 			-- create the temporary window needed to create the pixmap
-			creation_window := gtk_window_new (GTK_WINDOW_TOPLEVEL)
+			create_window := gtk_window_new (GTK_WINDOW_TOPLEVEL)
 
 			-- create the pixmap
 			-- Here we create the pixmap with a default xpm.
-			widget := c_gtk_pixmap_create_empty (creation_window)
+			widget := c_gtk_pixmap_create_empty (create_window)
 
 			-- setting status
 			is_locked := False
@@ -63,10 +63,10 @@ feature {NONE} -- Initialization
 			-- 'w' and `h' as size.
 		do
 			-- create the temporary window needed to create the pixmap
-			creation_window := gtk_window_new (GTK_WINDOW_TOPLEVEL)
+			create_window := gtk_window_new (GTK_WINDOW_TOPLEVEL)
 
 			-- create the gdk pixmap
-			gdk_pixmap_widget := c_gtk_pixmap_create_with_size (creation_window, w, h)
+			gdk_pixmap_widget := c_gtk_pixmap_create_with_size (create_window, w, h)
 		end	
 
 feature -- Measurement
@@ -95,21 +95,21 @@ feature -- Element change
 			a := file_name.to_c
 
 			if widget = Void then
-				widget := c_gtk_pixmap_create_from_xpm (creation_window, $a)
+				widget := c_gtk_pixmap_create_from_xpm (create_window, $a)
 			else
-				c_gtk_pixmap_read_from_xpm (widget, creation_window, $a)
+				c_gtk_pixmap_read_from_xpm (widget, create_window, $a)
 			end
 
 			-- The following is done only once.
-			if (creation_window /= default_pointer) then
+			if (create_window /= default_pointer) then
 				-- Add a reference to the pixmap othewise it will be
-				-- destroyed when we will destroy the `creation_window' below.
+				-- destroyed when we will destroy the `create_window' below.
 				gtk_object_ref (widget)
 
 				-- Destroy the temporary window which
-				-- was needed at the creation of the pixmap
-				gtk_widget_destroy (creation_window)
-				creation_window := Default_pointer
+				-- was needed at the create of the pixmap
+				gtk_widget_destroy (create_window)
+				create_window := Default_pointer
 			end
 		end	
 
@@ -119,7 +119,7 @@ feature {NONE} -- Implementation
 
 feature {EV_PIXMAPABLE_IMP} -- Implementation
 
-	creation_window: POINTER
+	create_window: POINTER
 			-- gtk window defined because to create the pixmap
 			-- we need a realized widget.
 
@@ -140,18 +140,18 @@ feature {NONE} -- Inapplicable
 
 end -- EV_PIXMAP_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------

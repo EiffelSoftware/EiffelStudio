@@ -8,7 +8,7 @@ indexing
 class
 	EV_GTK_COMMAND_LIST
 
-creation
+create
 	make
 
 feature -- Initialization

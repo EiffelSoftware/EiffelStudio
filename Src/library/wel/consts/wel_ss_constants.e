@@ -23,6 +23,13 @@ feature -- Access
 			"SS_CENTER"
 		end
 
+	Ss_notify: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"SS_NOTIFY"
+		end
+
 	Ss_right: INTEGER is
 		external
 			"C [macro %"wel.h%"]"

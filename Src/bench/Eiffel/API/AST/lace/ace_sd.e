@@ -42,7 +42,8 @@ inherit
 		end;
 	SHARED_USE;
 	SHARED_STATUS;
-	SYSTEM_CONSTANTS
+	SHARED_MELT_ONLY;
+	EIFFEL_ENV;
 	CLICKER
 
 feature -- Attributes

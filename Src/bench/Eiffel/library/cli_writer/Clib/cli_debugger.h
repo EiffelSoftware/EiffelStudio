@@ -14,6 +14,8 @@ extern EIF_POINTER new_cordebug ();
 
 extern EIF_INTEGER dbg_timer_id ();
 extern void dbg_init_synchro();
+extern void dbg_terminate_synchro ();
+
 extern void dbg_enable_estudio_callback (EIF_OBJECT estudio_cb_obj, EIF_POINTER estudio_cb_event);
 
 extern void dbg_start_timer();

@@ -22,37 +22,36 @@ inherit
 	EV_ITEM_IMP
 		undefine
 			pixmap_size_ok
-		redefine
-			parent
 		end
 
 creation
 	make,
-	make_with_text
+	make_with_text,
+	make_with_pixmap,
+	make_with_all
 
 feature {NONE} -- Initialization
 
-	make (par: EV_MENU_ITEM_CONTAINER) is
-			-- Create and add a menu_item with an empty label.
+	make is
+			-- Create the widget with `par' as parent.
 		do
-			make_with_text (par, "")
-		end
-
-	make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
-			-- Create and add a menu_item with `txt' as label.
-		do
-			parent ?= par.implementation
-			check
-				parent_not_void: parent /= Void
-			end
-			text := txt
-			ev_children := parent.ev_children
+			set_text ("")
 		end
 
 feature -- Access
 
-	text: STRING
-			-- Text of the current item
+	parent_imp: EV_MENU_ITEM_CONTAINER_IMP
+			-- Container of the current item
+
+	parent: EV_MENU_ITEM_CONTAINER is
+			-- Parent of the current item.
+		do
+			if parent_imp /= Void then
+				Result ?= parent_imp.interface
+			else
+				Result := Void
+			end
+		end
 
 feature -- Status report
 
@@ -60,11 +59,7 @@ feature -- Status report
 			-- Is current object destroyed ?
 			-- Yes if the item doesn't exist in the menu.
 		do
-			if submenu /= Void then
-				Result := not parent_menu.popup_exists (position)
-			else
-				Result := not parent_menu.item_exists (id)
-			end
+			Result := False
 		end
 
 	insensitive: BOOLEAN is
@@ -78,7 +73,11 @@ feature -- Status setting
 	destroy is
 			-- Destroy the current item.
 		do
-			parent.remove_item (id)
+			if parent_imp /= Void then
+				parent_imp.remove_item (id)
+				parent_imp := Void
+			end
+			interface := Void
 		end
 
 	set_insensitive (flag: BOOLEAN) is
@@ -94,41 +93,54 @@ feature -- Status setting
 
 feature -- Element change
 
+	set_parent (par: EV_MENU_ITEM_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		do
+			if parent_imp /= Void then
+				parent_imp.remove_item (id)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				ev_children := parent_imp.ev_children
+				parent_imp.add_item (Current)
+			end
+		end
+
 	set_text (str: STRING) is
 			-- Set `text' to `str'
 		do
-			parent_menu.modify_string (str, id)
-			text := str
+			if parent_imp /= Void then
+				parent_menu.modify_string (str, id)
+			else
+				text := str
+			end
 		end
 
-feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
-
-	add_item (an_item: EV_MENU_ITEM) is
+	add_item (an_item: EV_MENU_ITEM_IMP) is
 			-- Add `an_item' into container.
 		do
 			-- First, we transform the item into a menu.
 			if submenu = Void then
 				!! submenu.make
-				ev_children := parent.ev_children
+				ev_children := parent_imp.ev_children
 				parent_menu.delete_item (id)
-				parent.insert_item (submenu, position, text)
+				parent_imp.insert_item (submenu, position, text)
 			end
 			{EV_MENU_ITEM_CONTAINER_IMP} Precursor (an_item)
 		end
 
 feature {EV_MENU_ITEM_CONTAINER_IMP} -- Access
 	
-	parent: EV_MENU_ITEM_CONTAINER_IMP
-			-- The vision parent of the current item.
-
 	parent_menu: WEL_MENU is
 			-- Wel menu that contains the current item.
 		local
 			item: EV_MENU_ITEM_IMP
 		do
-			Result ?= parent
+			Result ?= parent_imp
 			if Result = Void then
-				item ?= parent
+				item ?= parent_imp
 				Result := item.submenu
 			end
 		end
@@ -142,13 +154,13 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			-- Is called by the menu when the item is activated.
 		do
 			execute_command (Cmd_item_activate, Void)
-			parent.on_selection_changed (Current)
+			parent_imp.on_selection_changed (Current)
 		end
 
 	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
 			-- `sitem' has been selected'
 		do
-			parent.on_selection_changed (sitem)
+			parent_imp.on_selection_changed (sitem)
 		end
 
 end -- class EV_MENU_ITEM_IMP

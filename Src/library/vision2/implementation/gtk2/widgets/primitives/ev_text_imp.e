@@ -233,12 +233,14 @@ feature -- Access
 		local
 			a_start_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
 			temp_text: POINTER
+			a_cs: EV_GTK_C_UTF8_STRING
 		do
 			create a_start_iter.make
 			create a_end_iter.make
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_bounds (text_buffer, a_start_iter.item, a_end_iter.item)
 			temp_text := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter.item, False)
-			create Result.make_from_c (temp_text)
+			create a_cs.make_from_utf8_pointer (temp_text)
+			Result := a_cs.string
 			feature {EV_GTK_EXTERNALS}.g_free (temp_text)
 		end
 
@@ -250,6 +252,7 @@ feature -- Access
 			temp_text: POINTER
 			a_success: BOOLEAN
 			i: INTEGER
+			a_cs: EV_GTK_C_UTF8_STRING
 		do
 			create a_start_iter.make
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_start_iter (text_buffer, a_start_iter.item)
@@ -265,7 +268,8 @@ feature -- Access
 			a_end_iter := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_iter_copy (a_start_iter.item)
 			a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_forward_display_line_end (text_view, a_end_iter)
 			temp_text := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_text (text_buffer, a_start_iter.item, a_end_iter, False)
-			create Result.make_from_c (temp_text)
+			create a_cs.make_from_utf8_pointer (temp_text)
+			Result := a_cs.string
 			
 			feature {EV_GTK_EXTERNALS}.g_free (temp_text)
 			feature {EV_GTK_EXTERNALS}.g_free (a_end_iter)
@@ -376,7 +380,7 @@ feature -- Status setting
 	
 	insert_text (a_text: STRING) is
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_UTF8_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			create a_cs.make (a_text)
@@ -392,7 +396,7 @@ feature -- Status setting
 	
 	set_text (a_text: STRING) is
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_UTF8_STRING
 		do
 			create a_cs.make (a_text)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_set_text (text_buffer, a_cs.item, -1)
@@ -407,7 +411,7 @@ feature -- Status setting
 	prepend_text (a_text: STRING) is
 			-- Prepend 'txt' to `text'.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_UTF8_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			create a_cs.make (a_text)
@@ -502,7 +506,7 @@ feature {NONE} -- Implementation
 	append_text_internal (a_text_buffer: POINTER; a_text: STRING) is
 			-- Append `txt' to `text'.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_UTF8_STRING
 			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			create a_cs.make (a_text)

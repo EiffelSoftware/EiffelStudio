@@ -20,11 +20,28 @@ feature {NONE} -- Implementation
 
 	make (an_info: like wizard_information) is
 			-- Set `help_filename' with `h_filename.
+			-- Initialize `wizard_information.available_assemblies'.
+		local
+			an_assembly: ASSEMBLY_INFORMATION
+			gac_assemblies: IL_ASSEMBLY_FACADE
 		do
 			set_help_filename (h_filename)
-			Precursor {BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW} (an_info) 
+			Precursor {BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW} (an_info)
+			
+			(create {CLI_COM}).initialize_com
+			create gac_assemblies.make
+			from
+				gac_assemblies.start
+			until
+				gac_assemblies.after
+			loop
+				create an_assembly.make_from_info (gac_assemblies.assembly_name, gac_assemblies.assembly_version, gac_assemblies.assembly_culture, gac_assemblies.assembly_public_key_token, "dummy")
+				wizard_information.available_assemblies.extend (an_assembly)
+				
+				gac_assemblies.forth
+			end
 		end
-		
+
 feature -- Access
 
 	h_filename: STRING is "help/wizards/edotnet/docs/reference/30_assembly_selection/index.html"
@@ -37,8 +54,8 @@ feature -- Basic Operation
 		local
 			add_button_box: EV_VERTICAL_BOX
 			remove_button_box: EV_VERTICAL_BOX
-			import_button_box: EV_HORIZONTAL_BOX
-			emit_button_box: EV_HORIZONTAL_BOX			
+			--import_button_box: EV_HORIZONTAL_BOX
+--			browse_button_box: EV_HORIZONTAL_BOX			
 			references_to_add_box: EV_HORIZONTAL_BOX
 			added_references_box: EV_HORIZONTAL_BOX
 			buttons_box: EV_HORIZONTAL_BOX
@@ -53,6 +70,8 @@ feature -- Basic Operation
 				
 				-- Create tables.
 			create references_to_add
+--			references_to_add.enable_multiple_selection
+			references_to_add.disable_multiple_selection
 			references_to_add.set_column_titles (<< interface_names.l_Available_assemblies_name, interface_names.l_Version, interface_names.l_Culture, interface_names.l_Public_key >>)
 			references_to_add.set_column_widths (default_column_widths)
 			references_to_add.set_minimum_height (Dialog_unit_to_pixels(110))
@@ -60,6 +79,8 @@ feature -- Basic Operation
 			references_to_add.deselect_actions.extend (agent update_buttons_state)
 			
 			create added_references
+--			added_references.enable_multiple_selection
+			added_references.disable_multiple_selection
 			added_references.set_column_titles (<< interface_names.l_Selected_assemblies_name, interface_names.l_Version, interface_names.l_Culture, interface_names.l_Public_key >>)
 			added_references.set_column_widths (default_column_widths)
 			added_references.set_minimum_height (Dialog_unit_to_pixels(70))
@@ -76,13 +97,13 @@ feature -- Basic Operation
 			remove_button.select_actions.extend (agent unselect_assembly)
 			set_default_size_for_button (remove_button)
 
-			create import_button.make_with_text (interface_names.b_Assembly_manager)
-			import_button.select_actions.extend (agent import_assembly)
-			set_default_size_for_button (import_button)
+--			create import_button.make_with_text (interface_names.b_Assembly_manager)
+--			import_button.select_actions.extend (agent import_assembly)
+--			set_default_size_for_button (import_button)
 
-			create emit_button.make_with_text (interface_names.b_Import_local_assemblies)
-			emit_button.select_actions.extend (agent emit_assembly)
-			set_default_size_for_button (emit_button)
+--			create browse_button.make_with_text (interface_names.b_Import_local_assemblies)
+--			browse_button.select_actions.extend (agent emit_assembly)
+--			set_default_size_for_button (browse_button)
 			
 				-- Layout buttons						
 			create add_button_box
@@ -95,13 +116,13 @@ feature -- Basic Operation
 			remove_button_box.disable_item_expand (remove_button)
 			remove_button_box.extend (create {EV_CELL})
 
-			create import_button_box			
-			import_button_box.extend (import_button)
-			import_button_box.disable_item_expand (import_button)
+--			create import_button_box			
+--			import_button_box.extend (import_button)
+--			import_button_box.disable_item_expand (import_button)
 
-			create emit_button_box			
-			emit_button_box.extend (emit_button)
-			emit_button_box.disable_item_expand (emit_button)
+--			create browse_button_box			
+--			browse_button_box.extend (browse_button)
+--			browse_button_box.disable_item_expand (browse_button)
 			
 				-- Layout Tables with their resp. "Add/Remove" buttons.
 			create references_to_add_box
@@ -119,10 +140,10 @@ feature -- Basic Operation
 				-- `ISE Assembly Manager' and `Import Local Assemblies' buttons
 			create buttons_box
 			buttons_box.set_padding (Small_padding_size)
-			buttons_box.extend (import_button_box)
-			buttons_box.extend (emit_button_box)
-			buttons_box.disable_item_expand (import_button_box)
-			buttons_box.disable_item_expand (emit_button_box)
+			--buttons_box.extend (import_button_box)
+			--buttons_box.extend (browse_button_box)
+			--buttons_box.disable_item_expand (import_button_box)
+			--buttons_box.disable_item_expand (browse_button_box)
 			
 				-- Add widgets to `choice_box'.
 			choice_box.set_padding (Small_padding_size)
@@ -136,15 +157,14 @@ feature -- Basic Operation
 			update_buttons_state (Void)
 
 			set_updatable_entries(<<add_button.select_actions,
-									remove_button.select_actions, 
-									import_button.select_actions>>)
+									remove_button.select_actions>>)
 		end
 
 	proceed_with_current_info is 
 			-- Commit current info
 		do
 			Precursor
-			proceed_with_new_state (create {WIZARD_FINAL_STATE}.make (wizard_information))
+			proceed_with_new_state (create {WIZARD_EMIT_STATE}.make (wizard_information))
 			message_box.show
 		end
 
@@ -168,11 +188,11 @@ feature {NONE} -- Vision2 controls
 	remove_button: EV_BUTTON
 			-- Button to remove a selected assembly
 	
-	import_button: EV_BUTTON
-			-- Button labeled "ISE Assemblies manager"
+--	import_button: EV_BUTTON
+--			-- Button labeled "ISE Assemblies manager"
 	
-	emit_button: EV_BUTTON
-			-- Button used to import local assemblies, i.e. run the emitter on them
+--	browse_button: EV_BUTTON
+--			-- Button used to import local assemblies, i.e. run the emitter on them
 
 feature {NONE} -- Implementation
 
@@ -185,53 +205,35 @@ feature {NONE} -- Implementation
 		end
 
 	fill_lists is
-			-- Fill 
+			-- Fill both multi column lists.
 		local
-			assemblies: LIST [ASSEMBLY_INFORMATION]
-			local_assemblies: HASH_TABLE [STRING, STRING]
-			a_local_assembly: STRING
-			last_backslash_index: INTEGER
+			list_row: EV_MULTI_COLUMN_LIST_ROW
 		do
-			assemblies := wizard_information.available_assemblies
 			from
-				assemblies.start
+				wizard_information.available_assemblies.start
 			until
-				assemblies.after
+				wizard_information.available_assemblies.after
 			loop
-				references_to_add.extend (build_list_row_from_assembly (assemblies.item))
-				assemblies.forth
+				list_row := build_list_row_from_assembly (wizard_information.available_assemblies.item)
+				references_to_add.extend (list_row)
+	
+				wizard_information.available_assemblies.forth
 			end
 
-			assemblies := wizard_information.selected_assemblies
 			from
-				assemblies.start
+				wizard_information.selected_assemblies.start
 			until
-				assemblies.after
+				wizard_information.selected_assemblies.after
 			loop
-				added_references.extend (build_list_row_from_assembly (assemblies.item))
-				assemblies.forth
-			end
-			
-			local_assemblies := wizard_information.local_assemblies
-			from
-				local_assemblies.start
-			until
-				local_assemblies.off 
-			loop
-				a_local_assembly := clone (local_assemblies.key_for_iteration)
-				if a_local_assembly /= Void and then not a_local_assembly.is_empty then
-					last_backslash_index := a_local_assembly.last_index_of ('\', a_local_assembly.count)
-					if last_backslash_index > 1 then
-						a_local_assembly := a_local_assembly.substring (last_backslash_index + 1, a_local_assembly.count)
-					end
-					added_references.extend (build_list_row_from_assembly_name (a_local_assembly))
-				end
-				local_assemblies.forth
+				list_row := build_list_row_from_assembly (wizard_information.selected_assemblies.item)
+				added_references.extend (list_row)
+				
+				wizard_information.selected_assemblies.forth
 			end
 		end
-		
+
 	select_assembly is
-			-- Add the selected assembly in `selected_assemblies'
+			-- Add the selected assembly in `selected_assemblies'.
 		local
 			selected_item: EV_MULTI_COLUMN_LIST_ROW
 			assembly_info: ASSEMBLY_INFORMATION
@@ -253,7 +255,7 @@ feature {NONE} -- Implementation
 		end
 		
 	unselect_assembly is
-			-- Check and remove the selected assembly from `selected_assemblies'
+			-- Check and remove the selected assembly from `selected_assemblies'.
 		local
 			selected_item: EV_MULTI_COLUMN_LIST_ROW
 			assembly_info: ASSEMBLY_INFORMATION
@@ -269,7 +271,7 @@ feature {NONE} -- Implementation
 		end
 
 	remove_assembly (a_list_item: EV_MULTI_COLUMN_LIST_ROW) is
-			-- Remove the selected assembly from `selected_assemblies'
+			-- Remove the selected assembly from `selected_assemblies'.
 		local
 			assembly_info: ASSEMBLY_INFORMATION
 		do
@@ -286,21 +288,21 @@ feature {NONE} -- Implementation
 			wizard_information.available_assemblies.extend (assembly_info)
 		end
 
-	import_assembly is
-			-- Launch ISE Assembly Manager.
-		local
-			cursor_pixmap: EV_STOCK_PIXMAPS
-			process_launcher: WEL_PROCESS_LAUNCHER
-		do
-			create cursor_pixmap
-			first_window.set_pointer_style (cursor_pixmap.Wait_cursor)
-			import_button.disable_sensitive 
-			create process_launcher
-			process_launcher.launch_and_refresh (ISE_assembly_manager_filename, "", ~on_refresh)
-			first_window.set_pointer_style (cursor_pixmap.Standard_cursor)
-			import_button.enable_sensitive
-			update_gui
-		end
+--	import_assembly is
+--			-- Launch ISE Assembly Manager.
+--		local
+--			cursor_pixmap: EV_STOCK_PIXMAPS
+--			process_launcher: WEL_PROCESS_LAUNCHER
+--		do
+--			create cursor_pixmap
+--			first_window.set_pointer_style (cursor_pixmap.Wait_cursor)
+--			import_button.disable_sensitive 
+--			create process_launcher
+--			process_launcher.launch_and_refresh (ISE_assembly_manager_filename, "", ~on_refresh)
+--			first_window.set_pointer_style (cursor_pixmap.Standard_cursor)
+--			import_button.enable_sensitive
+--			update_gui
+--		end
 
 	emit_assembly is
 			-- Ask for .NET assembly and location and then call the emitter.
@@ -371,19 +373,6 @@ feature {NONE} -- Implementation
 			
 			Result.set_data (an_assembly_name)
 		end
-	
-	ISE_assembly_manager_filename: STRING is
-			-- Filename of `ISE.AssemblyManager.exe'
-		once
-			Result := clone (Eiffel_installation_dir_name)
-			Result.append (ISE_assembly_manager_relative_filename)
-		ensure
-			non_void_filename: Result /= Void
-			not_empty_filename: not Result.is_empty
-		end
-		
-	ISE_assembly_manager_relative_filename: STRING is "\wizards\dotnet\ISE.AssemblyManager.exe"
-			-- Filename of `ISE.AssemblyManager.exe' (relatively to Eiffel delivery path) 
 
 	on_refresh is
 			-- Action performed while ISE Assembly Manager is active to refresh EiffelStudio development window

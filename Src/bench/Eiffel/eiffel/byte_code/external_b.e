@@ -10,10 +10,6 @@ inherit
 			is_unsafe, optimized_byte_node,
 			calls_special_features
         end;
-
-
-		end;
-
 	SHARED_INCLUDE
 
 feature 

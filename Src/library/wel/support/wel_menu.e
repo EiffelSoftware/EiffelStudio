@@ -372,7 +372,7 @@ feature -- Status setting
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
-			cwin_check_menu_item (item, an_id, Mf_checked + Mf_bycommand)
+			cwin_check_menu_item (item, an_id, Mf_checked | Mf_bycommand)
 		ensure
 			item_checked: item_checked (an_id)
 		end
@@ -385,7 +385,7 @@ feature -- Status setting
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
-			cwin_check_menu_item (item, an_id, Mf_unchecked + Mf_bycommand)
+			cwin_check_menu_item (item, an_id, Mf_unchecked | Mf_bycommand)
 		ensure
 			item_unchecked: not item_checked (an_id)
 		end
@@ -397,7 +397,7 @@ feature -- Status setting
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
-			cwin_enable_menu_item (item, an_id, Mf_enabled + Mf_bycommand)
+			cwin_enable_menu_item (item, an_id, Mf_enabled | Mf_bycommand)
 		ensure
 			item_enabled: item_enabled (an_id)
 		end
@@ -409,7 +409,7 @@ feature -- Status setting
 			position_large_enough: position >= 0
 			position_small_enough: position < count
 		do
-			cwin_enable_menu_item (item, position, Mf_enabled + Mf_byposition)
+			cwin_enable_menu_item (item, position, Mf_enabled | Mf_byposition)
 		ensure
 			position_enabled: position_enabled (position)
 		end
@@ -421,7 +421,7 @@ feature -- Status setting
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
-			cwin_enable_menu_item (item, an_id, Mf_disabled + Mf_grayed + Mf_bycommand)
+			cwin_enable_menu_item (item, an_id, Mf_grayed | Mf_bycommand)
 		ensure
 			item_disabled: not item_enabled (an_id)
 		end
@@ -433,7 +433,7 @@ feature -- Status setting
 			position_large_enough: position >= 0
 			position_small_enough: position < count
 		do
-			cwin_enable_menu_item (item, position, Mf_disabled + Mf_grayed + Mf_byposition)
+			cwin_enable_menu_item (item, position, Mf_grayed | Mf_byposition)
 		ensure
 			position_disabled: not position_enabled (position)
 		end

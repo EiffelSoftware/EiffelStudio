@@ -30,6 +30,7 @@ inherit
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
+			shown as displayed,
 			destroy as wel_destroy
 		undefine
 			window_process_message,
@@ -49,7 +50,9 @@ inherit
 			on_kill_focus,
 			on_set_cursor,
 			on_bn_clicked,
-			set_text
+			set_text,
+			show,
+			hide
 		redefine
 			default_style
 		end	

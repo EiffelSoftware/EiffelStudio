@@ -36,6 +36,7 @@ inherit
 			parent as wel_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
+			shown as displayed,
 			font as wel_font,
 			set_font as wel_set_font,
 			count as rows,
@@ -59,7 +60,9 @@ inherit
 			on_kill_focus,
 			on_key_down,
 			on_key_up,
-			on_set_cursor
+			on_set_cursor,
+			show,
+			hide
 		redefine
 			set_column_title,
 			set_column_width,
@@ -631,10 +634,19 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			Result := c_mouse_message_y (lparam)
 		end
 
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
+		end
+
 end -- class EV_MULTI_COLUMN_LIST_IMP
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

@@ -102,16 +102,12 @@ feature -- Basic operations
 			-- Process a tab or arrow key press to give the focus to the next widget
 			-- Need to be called in the feature on_key_down when the control need to
 			-- process this kind of keys.
-			-- We can remove an item from the tab sequence, not from
-			-- the arrows sequence.
 		do
 			if virtual_key = Vk_tab then
-				if flag_set (style, Ws_tabstop) then
-					if key_down (Vk_shift) then
-						tab_action (False)
-					else
-						tab_action (True)
-					end
+				if key_down (Vk_shift) then
+					tab_action (False)
+				else
+					tab_action (True)
 				end
 			elseif virtual_key = Vk_down then
 				arrow_action (True)

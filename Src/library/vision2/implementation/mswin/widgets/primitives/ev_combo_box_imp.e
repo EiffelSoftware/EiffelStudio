@@ -51,6 +51,7 @@ inherit
 			font as wel_font,
 			set_font as wel_set_font,
 			destroy as wel_destroy,
+			shown as displayed,
 			select_item as wel_select_item,
 			selected_item as wel_selected_item,
 			height as wel_height,
@@ -75,7 +76,9 @@ inherit
 			on_kill_focus,
 			on_key_down,
 			on_key_up,
-			on_set_cursor
+			on_set_cursor,
+			show,
+			hide
 		redefine
 			on_cben_endedit_item,
 			on_cbn_editchange,
@@ -199,11 +202,7 @@ feature -- Status setting
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
-			internal_set_minimum_height (22)
-			internal_set_minimum_width (30)
-			if parent_imp /= Void then
-				notify_change (1 + 2)
-			end
+			internal_set_minimum_size (30, 22)
 		end
 
 	select_item (index: INTEGER) is
@@ -548,6 +547,15 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
 		end
 
 end -- class EV_COMBO_BOX_IMP

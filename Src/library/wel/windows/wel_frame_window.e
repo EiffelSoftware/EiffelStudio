@@ -231,8 +231,7 @@ feature {NONE} -- Implementation
 			-- Wm_erasebkgnd message.
 			-- A WEL_DC and WEL_PAINT_STRUCT are created and passed to the
 			-- `on_erase_background' routine.
-			-- To be more efficient when the windows does not have a `background_brush'
-			-- attribute set, this routine does nothing.
+			-- Does nothing when `background_brush' is not set
 		require
 			exists: exists
 		local

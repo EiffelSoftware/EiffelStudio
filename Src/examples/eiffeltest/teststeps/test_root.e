@@ -15,7 +15,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (argv: ARRAY[STRING]) is
+	make (argv: ARRAY [STRING]) is
 			-- Create test.
 		local
 			log: SCREEN_LOG

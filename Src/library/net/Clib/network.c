@@ -252,26 +252,26 @@ EIF_INTEGER mask_size()
 }
 
 
-void c_mask_clear(EIF_OBJ mask, EIF_INTEGER pos)
+void c_mask_clear(EIF_POINTER mask, EIF_INTEGER pos)
 	/*x turn the bit for pos off in mask */
 {
 	FD_CLR((int) pos, (fd_set *) mask);
 }
 
 
-void c_set_bit(EIF_OBJ mask, EIF_INTEGER pos)
+void c_set_bit(EIF_POINTER mask, EIF_INTEGER pos)
 	/*x turn the bit for pos on in mask */
 {
 	FD_SET((int) pos, (fd_set *) mask);
 }
 
-EIF_BOOLEAN c_is_bit_set(EIF_OBJ mask, EIF_INTEGER pos)
+EIF_BOOLEAN c_is_bit_set(EIF_POINTER mask, EIF_INTEGER pos)
 	/*x test the bit for pos in mask */
 {
 	return (EIF_BOOLEAN) ((FD_ISSET((int) pos, (fd_set *) mask)) != 0);
 }
 
-void c_zero_mask(EIF_OBJ mask)
+void c_zero_mask(EIF_POINTER mask)
 	/*x clear all bits in mask */
 {
 	FD_ZERO((fd_set *) mask);
@@ -588,7 +588,7 @@ void c_connect(EIF_INTEGER s, EIF_POINTER add, EIF_INTEGER length)
 #endif
 }
 
-EIF_INTEGER c_select(EIF_INTEGER nfds, EIF_OBJ rmask, EIF_OBJ wmask, EIF_OBJ emask, EIF_INTEGER timeout, EIF_INTEGER timeoutm)
+EIF_INTEGER c_select(EIF_INTEGER nfds, EIF_POINTER rmask, EIF_POINTER wmask, EIF_POINTER emask, EIF_INTEGER timeout, EIF_INTEGER timeoutm)
 	/* Read The Fine Manual */
 {
 	struct timeval t;
@@ -685,13 +685,13 @@ EIF_INTEGER c_peer_name(EIF_INTEGER s, EIF_POINTER addr, EIF_INTEGER length)
 		(struct sockaddr *) addr_pointer, (int) sizeofaddr)<0) ? ((errno!=EWOULDBLOCK) ? EIFNET_ERROR_HAPPENED : 0) : 0);
 #endif
 
-void c_send_char_to(EIF_INTEGER fd, EIF_CHARACTER c, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
+void c_send_char_to(EIF_INTEGER fd, EIF_CHARACTER c, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of character c through socket fd */
 {
 	CSENDXTO(fd,&c,sizeof(char),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
 
-void c_send_int_to(EIF_INTEGER fd, EIF_INTEGER i, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
+void c_send_int_to(EIF_INTEGER fd, EIF_INTEGER i, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
 	/* transmission of Eiffel integer i through socket fd */
 {
 	unsigned long ti;
@@ -699,7 +699,7 @@ void c_send_int_to(EIF_INTEGER fd, EIF_INTEGER i, EIF_INTEGER flags, EIF_OBJ add
 	CSENDXTO(fd,(char *) &ti,sizeof(ti),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
 
-void c_send_float_to(EIF_INTEGER fd, EIF_REAL f, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
+void c_send_float_to(EIF_INTEGER fd, EIF_REAL f, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of real f through socket fd */
 {
 	/* If no prototype is used for the declaration of c_send_float_to() in
@@ -712,7 +712,7 @@ void c_send_float_to(EIF_INTEGER fd, EIF_REAL f, EIF_INTEGER flags, EIF_OBJ addr
 	CSENDXTO(fd,(char *)&tf,sizeof(tf),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
 
-void c_send_double_to(EIF_INTEGER fd, EIF_DOUBLE d, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
+void c_send_double_to(EIF_INTEGER fd, EIF_DOUBLE d, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of double d through socket fd */
 {
 	double dbl;
@@ -720,7 +720,7 @@ void c_send_double_to(EIF_INTEGER fd, EIF_DOUBLE d, EIF_INTEGER flags, EIF_OBJ a
 	CSENDXTO(fd,(char *) &dbl,sizeof(dbl),flags,(struct sockaddr *) addr_pointer,sizeofaddr)
 }
 
-void c_send_stream_to(EIF_INTEGER fd, EIF_OBJ stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_OBJ addr_pointer, EIF_INTEGER sizeofaddr)
+void c_send_stream_to(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length, EIF_INTEGER flags, EIF_POINTER addr_pointer, EIF_INTEGER sizeofaddr)
 	/*x transmission of string s of size size trought socket fd */
 {
 	CSENDXTO(fd, (char *)stream_pointer,length,flags,(struct sockaddr *) addr_pointer,sizeofaddr)
@@ -778,7 +778,7 @@ void c_put_double(EIF_INTEGER fd, EIF_DOUBLE d)
 	CPUTX(fd,(char *) &dbl,sizeof(dbl))
 }
 
-void c_put_stream(EIF_INTEGER fd, EIF_OBJ stream_pointer, EIF_INTEGER length)
+void c_put_stream(EIF_INTEGER fd, EIF_POINTER stream_pointer, EIF_INTEGER length)
 	/*x transmission of string s of size size trought socket fd */
 {
 	CPUTX(fd, (char *) stream_pointer,length)
@@ -835,7 +835,7 @@ EIF_INTEGER c_read_int(EIF_INTEGER fd)
 }
 
 
-EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_OBJ buf)
+EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
 	/*x read a stream of character from socket fd into buffer buf
 	    of length len */
 {
@@ -856,7 +856,7 @@ EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_OBJ buf)
 }
 
 
-EIF_INTEGER c_receive(EIF_INTEGER fd, EIF_OBJ buf, EIF_INTEGER len, EIF_INTEGER flags)
+EIF_INTEGER c_receive(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
 	/*x receive at most len bytes from socket fd into buffer buf
 	    flags can be or'ed from 0, MSG_OOB, MSG_PEEK or MSG_DONTROUTE */
 {
@@ -925,7 +925,7 @@ EIF_INTEGER c_write(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER l)
 	return (EIF_INTEGER) result;
 }
 
-EIF_INTEGER c_send(EIF_INTEGER fd, EIF_OBJ buf, EIF_INTEGER len, EIF_INTEGER flags)
+EIF_INTEGER c_send(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
 	/*x send at most len bytes from buffer buf into socket fd
 	    to connected peer address
 	    flags can be or'ed from 0 with MSG_OOB, MSG_PEEK, MSG_DONTROUTE
@@ -940,7 +940,7 @@ EIF_INTEGER c_send(EIF_INTEGER fd, EIF_OBJ buf, EIF_INTEGER len, EIF_INTEGER fla
 	return (EIF_INTEGER) result;
 }
 
-EIF_INTEGER c_send_to (EIF_INTEGER fd, EIF_OBJ buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_OBJ addr, EIF_INTEGER addr_len)
+EIF_INTEGER c_send_to (EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_INTEGER addr_len)
 	/*x like c_send and peer address can be set through socket address
 	    structure addr of length addr_len */
 {

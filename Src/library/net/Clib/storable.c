@@ -9,7 +9,7 @@
 #include "eif_except.h"		/* eraise */
 #include "eif_store.h"
 #include "eif_retrieve.h"
-#include "eif_compress.h"
+#include "rt_compress.h"
 #include "eif_error.h"    	/* for eio() */
 #include "eif_traverse.h"
 #include "eif_lmalloc.h"

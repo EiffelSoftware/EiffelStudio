@@ -120,11 +120,12 @@ feature {NONE} -- Implementation
 		end
 
 	cwin_listview_setcheckstate (hwnd: POINTER; iindex: INTEGER; fcheck: BOOLEAN) is
-			--
+			-- Code below is inlined as old version of C compilers do not define
+			-- ListView_SetCheckState although they define ListView_GetCheckState.
 		external
-			"C macro signature (HWND, UINT, BOOL) use <commctrl.h>"
+			"C inline use <commctrl.h>"
 		alias
-			"ListView_SetCheckState"
+			"ListView_SetItemState($hwnd, $iindex, INDEXTOSTATEIMAGEMASK(($fcheck)?2:1), LVIS_STATEIMAGEMASK)"
 		end
 		
 	cwin_listview_getcheckstate (hwnd: POINTER; iindex: INTEGER): BOOLEAN is

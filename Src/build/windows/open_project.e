@@ -39,16 +39,17 @@ feature
 			end;	
 			!! dir.make (proj_dir);
 			if dir.exists then
-				!! restore_name.make_from_string (Environment.restore_directory);
-				restore_name.extend (Environment.restore_directory);
-				restore_name.set_file_name (Environment.interface_file_name);
-				!! restore_file.make (restore_name);
 				!! bpdir.make (Environment.storage_directory);
 				if bpdir.exists then
 					!! storage_name.make_from_string (Environment.storage_directory);
-					storage_name.extend (Environment.storage_directory);
 					storage_name.set_file_name (Environment.interface_file_name);
 					!! storage_file.make (storage_name);
+
+					!! restore_name.make_from_string 
+						(Environment.restore_directory);
+					restore_name.set_file_name (Environment.interface_file_name);
+					!! restore_file.make (restore_name);
+
 					if 
 						restore_file.exists and then
 						restore_file.date >= storage_file.date 

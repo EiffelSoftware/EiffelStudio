@@ -110,21 +110,6 @@ feature -- Figure drawing
 			drawable.draw_polyline (polygon.point_array, True)
 		end
 
-	draw_figure_triangle (triangle: EV_FIGURE_TRIANGLE) is
-			-- Draw a standard representation of `triangle' to the canvas.
-		require
-			triangle_not_void: triangle /= Void
-		do
-			drawable.set_line_width (triangle.line_width)
-			drawable.set_drawing_mode (triangle.logical_function_mode)	
-			if triangle.fill_color /= Void then
-				drawable.set_foreground_color (triangle.fill_color)
-				drawable.fill_polygon (triangle.point_array)
-			end
-			drawable.set_foreground_color (triangle.foreground_color)
-			drawable.draw_polyline (triangle.point_array, True)
-		end
-
 	draw_figure_text (text_figure: EV_FIGURE_TEXT) is
 			-- Draw a standard representation of `text_figure' to the canvas.
 		require

@@ -276,7 +276,6 @@ feature {NONE} -- Implementation
 			polyline: EV_FIGURE_POLYLINE
 			rectangle: EV_FIGURE_RECTANGLE
 			text: EV_FIGURE_TEXT
-			triangle: EV_FIGURE_TRIANGLE
 		do
 			arc ?= figure
 			if arc /= Void then
@@ -331,11 +330,6 @@ feature {NONE} -- Implementation
 			text ?= figure
 			if text /= Void then
 				device.draw_figure_text (text)
-			end
-
-			triangle ?= figure
-			if triangle /= Void then
-				device.draw_figure_triangle (triangle)
 			end
 		end
 

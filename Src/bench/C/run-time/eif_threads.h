@@ -92,7 +92,7 @@ extern void eif_thr_join_all(void);
 	if (pthread_mutex_init(m,NULL)) eif_thr_panic(msg)
 #define EIF_MUTEX_LOCK(m,msg)       if (pthread_mutex_lock(m)) eif_thr_panic(msg)
 #define EIF_MUTEX_TRYLOCK(m,r,msg)	\
-	r = pthread_mutex_trylock(m)	\
+	r = pthread_mutex_trylock(m);	\
 	if (r && (r!=EBUSY))				\
 		eif_thr_panic(msg)
 #define EIF_MUTEX_UNLOCK(m,msg)		if (pthread_mutex_unlock(m)) eif_thr_panic(msg)

@@ -184,9 +184,11 @@ feature {NONE} -- Initialization
 			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
 			real_signal_connect (list_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
 			real_signal_connect (list_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
-			
+
 			if user_set_row_height > 0 then
 				set_row_height (user_set_row_height)		
+			else
+				set_row_height (App_implementation.default_font_height + 5)
 			end
 
 			C.gtk_widget_show (list_widget)

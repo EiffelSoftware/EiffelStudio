@@ -904,12 +904,15 @@ feature -- Generation
 				sub_skel := sub_class_type.skeleton
 				sub_skel.go_expanded
 				if not sub_skel.after then
-					buffer.putstring (Encoder.feature_name (sub_class_type.static_type_id,
-						Initialization_body_index))
+					creat_name := Encoder.feature_name (sub_class_type.static_type_id,
+						Initialization_body_index)
+					buffer.putstring (creat_name)
 					buffer.putstring("(Current")
 					skeleton.generate(buffer, False)
 					buffer.putstring(", parent);")
 					buffer.new_line
+					Extern_declarations.add_routine_with_signature (Void_c_type,
+						creat_name, <<"EIF_REFERENCE, EIF_REFERENCE">>)
 				end
 				skeleton.forth
 				i := i + 1

@@ -3,15 +3,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class 
-
+deferred class
 	DATABASE
 
 feature
 
 	database_handle_name : STRING is
-	deferred
-	end
+			-- Database handle name.
+		deferred
+		end
 
 feature -- For DATABASE_STATUS
 
@@ -672,11 +672,6 @@ feature -- External features
 
 	begin: INTEGER is
 			-- Begin a data base transaction
-		deferred
-		end
-
-	database_handle: DATABASE_HANDLE [like Current] is
-			-- Specific handle
 		deferred
 		end
 

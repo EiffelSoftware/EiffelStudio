@@ -367,15 +367,6 @@ feature -- XML saving
 			Result.extend ("system_interface.xml")
 		end		
 		
-	component_filename: FILE_NAME is
-			-- Location of component file.
-		do
-			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
-			Result.extend ("build")
-			Result.extend ("components")
-			Result.extend ("components.xml")
-		end
-		
 	project_filename: STRING is "build_project.bpr"
 		-- File name for project settings.
 		

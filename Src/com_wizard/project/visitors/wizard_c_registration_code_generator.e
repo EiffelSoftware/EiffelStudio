@@ -1560,7 +1560,7 @@ feature {NONE} -- Implementation
 
 			Result.append (Comma)
 			Result.append (New_line_tab)
-			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (interface_descriptor.functions.count.out), C_true))
+			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (interface_descriptor.functions_count.out), C_true))
 
 			if not interface_descriptor.inherited_interface.c_type_name.is_equal (Iunknown_type) and 
 					not interface_descriptor.inherited_interface.c_type_name.is_equal (Idispatch_type) then
@@ -1674,7 +1674,7 @@ feature {NONE} -- Implementation
 
 			Result.append (Comma)
 			Result.append (New_line_tab)
-			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (interface_descriptor.functions.count.out), C_true))
+			Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (interface_descriptor.functions_count.out), C_true))
 
 			if not interface_descriptor.inherited_interface.c_type_name.is_equal (Iunknown_type) and 
 					not interface_descriptor.inherited_interface.c_type_name.is_equal (Idispatch_type) then

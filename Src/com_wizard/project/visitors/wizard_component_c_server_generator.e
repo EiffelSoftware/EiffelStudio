@@ -569,21 +569,26 @@ feature -- Basic Operations
 
 			if interface_desc.inherit_from_dispatch then
 				from
-					interface_desc.functions.start
+					interface_desc.functions_start
 				until
-					interface_desc.functions.after
+					interface_desc.functions_after
 				loop
-					if is_propertyget (interface_desc.functions.item.invoke_kind) then
-						prop_get_functions.force (propertyget_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
-					elseif is_propertyput (interface_desc.functions.item.invoke_kind) then
-						prop_put_functions.force (propertyput_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
-					elseif is_propertyputref (interface_desc.functions.item.invoke_kind) then
-						prop_put_functions.force (propertyput_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
-					else
-						Result.append (function_case (interface_desc.functions.item))
+					if 
+						interface_desc.functions_item.dual or 
+						interface_desc.functions_item.func_kind = func_dispatch
+					then
+						if is_propertyget (interface_desc.functions_item.invoke_kind) then
+							prop_get_functions.force (propertyget_case (interface_desc.functions_item), interface_desc.functions_item.member_id)
+						elseif is_propertyput (interface_desc.functions_item.invoke_kind) then
+							prop_put_functions.force (propertyput_case (interface_desc.functions_item), interface_desc.functions_item.member_id)
+						elseif is_propertyputref (interface_desc.functions_item.invoke_kind) then
+							prop_put_functions.force (propertyput_case (interface_desc.functions_item), interface_desc.functions_item.member_id)
+						else
+							Result.append (function_case (interface_desc.functions_item))
+						end
 					end
 
-					interface_desc.functions.forth
+					interface_desc.functions_forth
 				end
 
 				if not interface_desc.properties.empty then
@@ -634,7 +639,7 @@ feature -- Basic Operations
 		ensure
 			non_void_result: Result /= Void
 			valid_result: interface_desc.inherit_from_dispatch and 
-					not interface_desc.functions.empty
+					not interface_desc.functions_empty
 					implies not Result.empty
 		end
 

@@ -408,9 +408,8 @@ feature -- Status setting
 			if not a_col_i.is_visible then
 				a_col_i.set_is_visible (True)
 				visible_column_count := visible_column_count + 1
-			
-				fixme ("Handle index for all columns hidden before this one.")
-					-- Now show the header
+
+					-- Now show the header.
 				header.go_i_th (previous_visible_column_from_index (a_col_i.index))
 				header.put_right (a_col_i.header_item)
 				
@@ -1214,6 +1213,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			check
 				visible_column_count_correct: visible_column_count = j
 			end
+		ensure
+			result_not_void: Result /= Void
+			result_count_equals_visible_column_count: Result.count = visible_column_count
 		end
 
 	previous_visible_column_from_index (a_index: INTEGER): INTEGER is
@@ -2077,12 +2079,8 @@ feature {NONE} -- Event handling
 			-- A pointer button press has been received by `drawable' so propagate to the interface.
 		local
 			pointed_item: EV_GRID_ITEM_I
-			a_subrow_indent: INTEGER
-			first_tree_node_indent: INTEGER
-			node_pixmap_width, node_pixmap_height: INTEGER
-			total_tree_node_width: INTEGER
+			node_pixmap_width: INTEGER
 			current_item_x_position: INTEGER
-			node_index: INTEGER
 			current_subrow_indent: INTEGER
 			node_x_position_click_edge: INTEGER
 			pointed_row_i: EV_GRID_ROW_I

@@ -25,6 +25,7 @@
 #include "error.h"
 #include "rtlimits.h"
 #include "traverse.h"
+#include "compress.h"
 
 #include <ctype.h>					/* For isspace() */
 
@@ -88,15 +89,15 @@ rt_public char r_fstoretype;	/* File storage type used for retrieve */
  */
 rt_public char *irt_make();			/* Do the independant retrieve */
 rt_public char *grt_make();			/* Do the general retrieve (3.3 and later) */
-rt_public char *irt_nmake();			/* Retrieve n objects  independent form*/
-rt_public char *grt_nmake();			/* Retrieve n objects  general form*/
+rt_public char *irt_nmake();			/* Retrieve n objects independent form*/
+rt_public char *grt_nmake();			/* Retrieve n objects general form*/
 rt_private void iread_header();		/* Read independent header */
 rt_private void rt_clean();			/* Clean data structure */
 rt_private void rt_update1();			/* Reference correspondance update */
 rt_private void rt_update2();			/* Fields updating */
 rt_public char *rt_make();				/* Do the retrieve */
 rt_public char *rt_nmake();			/* Retrieve n objects */
-rt_private void read_header();			/* Read  general header */
+rt_private void read_header();			/* Read general header */
 rt_private void object_read ();		/* read the individual attributes of the object*/
 rt_private void gen_object_read ();	/* read the individual attributes of the object*/
 rt_private long get_expanded_pos ();
@@ -108,8 +109,10 @@ rt_private int buffer_read ();
 /* read function declarations */
 int retrieve_read ();
 int old_retrieve_read ();
+int retrieve_read_with_compression ();
+int old_retrieve_read_with_compression ();
 
-int (*retrieve_read_func)() = retrieve_read;
+int (*retrieve_read_func)() = retrieve_read_with_compression;
 
 /*
  * Function definitions
@@ -153,21 +156,29 @@ EIF_CHARACTER file_storage_type;
 	switch (rt_type) {
 		case BASIC_STORE_3_1:			/*old basic store */
 			retrieve_read_func = old_retrieve_read;
+			allocate_gen_buffer ();
+			rt_kind = BASIC_STORE;
+			break;
 		case BASIC_STORE_3_2:			/* New basic store */
+			retrieve_read_func = retrieve_read;
+		case BASIC_STORE_4_0:
 			allocate_gen_buffer ();
 			rt_kind = BASIC_STORE;
 			break;
 		case GENERAL_STORE_3_1:			/* Old general store */
 			retrieve_read_func = old_retrieve_read;
-		case GENERAL_STORE_3_2:			/* New General store */
 			allocate_gen_buffer ();
 			rt_kind = GENERAL_STORE;
 			break;
+		case GENERAL_STORE_3_2:			/* New General store */
 		case GENERAL_STORE_3_3:			/* New General store 3.3 */
+			retrieve_read_func = retrieve_read;
+		case GENERAL_STORE_4_0:			/* New General store */
 			allocate_gen_buffer ();
 			rt_kind = GENERAL_STORE;
 			break;
 		case INDEPENDENT_STORE_3_2:		/* New Independent store */
+		case INDEPENDENT_STORE_4_0:		/* New Independent store */
 			run_idr_init ();
 			rt_kind = INDEPENDENT_STORE;
 			idr_temp_buf = (char *) xmalloc (48, C_T, GC_OFF);
@@ -183,12 +194,10 @@ EIF_CHARACTER file_storage_type;
 		default: 			/* If not one of the above, error!! */
 			eraise("invalid retrieve type", EN_RETR);	
 	}
-			
 
 #ifdef DEBUG
 		printf ("\n %d", rt_kind);
 #endif
-
 
 	if (rt_kind == INDEPENDENT_STORE) {
 		iread_header();					/* Make correspondance table */
@@ -212,16 +221,12 @@ EIF_CHARACTER file_storage_type;
 	ht_free(rt_table);					/* Free hash table descriptor */
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
 	switch (rt_type) {
-		case BASIC_STORE_3_1:
-			retrieve_read_func = retrieve_read;
-			break;
-		case GENERAL_STORE_3_1: 
-			retrieve_read_func = retrieve_read;
-			break;
 		case GENERAL_STORE_3_3: 
+		case GENERAL_STORE_4_0: 
 			free_sorted_attributes();
 			break;
-		case INDEPENDENT_STORE_3_2: {
+		case INDEPENDENT_STORE_3_2:
+		case INDEPENDENT_STORE_4_0: {
 			int i;
 
 			run_idr_destroy ();
@@ -232,10 +237,11 @@ EIF_CHARACTER file_storage_type;
 					xfree (*(dattrib +i));
 			}
 			xfree (dattrib);
-			dattrib = (int  **) 0;
+			dattrib = (int **) 0;
 			break;
 		}
 	}
+	retrieve_read_func = retrieve_read_with_compression;
 
 	return retrieved;
 }
@@ -470,7 +476,7 @@ long objectCount;
 			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
 			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, :
-			 *    "dtype visible_name size nb_generics {meta_type}+"
+			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
 				int16 *gt_type = info->gt_type;
 				int32 *gt_gen;
@@ -660,7 +666,7 @@ long objectCount;
 			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
 			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, :
-			 *    "dtype visible_name size nb_generics {meta_type}+"
+			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
 				int16 *gt_type = info->gt_type;
 				int32 *gt_gen;
@@ -953,7 +959,7 @@ char *old, *new, *parent;
 				rt_update2(old_addr, addr, parent);
 			}
 		}
-	} else {							  /* Normal object */
+	} else {							/* Normal object */
 		nb_references = References(flags & EO_TYPE);
 		size = Size(flags & EO_TYPE);
 	}
@@ -1337,10 +1343,10 @@ rt_private void iread_header()
 							while (strcmp(att_name, 
 									*(System (new_dtype).cn_names + i++))) {
 								if (i > chk_attrib){
-                                			        	xfree (attrib_order);
-                                 				       	eraise(vis_name, EN_RETR); 
-							             	/* non matching attributes */
-                                				}
+									xfree (attrib_order);
+									eraise(vis_name, EN_RETR); 
+										/* non matching attributes */
+								}
 							
 							}
 									/* check that the attribues of the
@@ -1353,7 +1359,7 @@ rt_private void iread_header()
 							} else {
 								xfree (attrib_order);
 								eraise(vis_name, EN_RETR);
-                                                                     	/* non matching attributes */
+									/* non matching attributes */
 							}
 						} else {
 							*(attrib_order + num_attrib) = num_attrib;
@@ -1462,8 +1468,6 @@ int size;
 	return (i);
 }
 
-
-
 rt_public int old_retrieve_read ()
 {
 	char * ptr = general_buffer;
@@ -1481,6 +1485,68 @@ rt_public int old_retrieve_read ()
 
 	current_position = 0;
 	return (end_of_buffer);
+}
+
+rt_public int old_retrieve_read_with_compression ()
+{
+	  char* dcmps_in_ptr = (char *)0;
+	  char* dcmps_out_ptr = (char *)0;
+	  char* pdcmps_in_size = (char *)0;
+	  int dcmps_in_size = 0;
+	  int dcmps_out_size = 0;
+	  char cmps_head [EIF_CMPS_HEAD_SIZE];
+	  char* ptr = (char *)0;
+	  int read_size = 0;
+	  int part_read = 0;
+	  int total_read = 0;
+	  register i = 0;
+
+#ifdef EIF_WIN32
+	  if (r_fstoretype == 'F')
+			  {
+			  if ((read (r_fides, cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
+					  eio();
+			  }
+	  else
+			  if ((recv (r_fides, cmps_head, EIF_CMPS_HEAD_SIZE, 0)) < EIF_CMPS_HEAD_SIZE)
+					  eio();
+#else
+	  if ((read (r_fides, cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
+				eio();
+#endif
+	  pdcmps_in_size = cmps_head + EIF_CMPS_HEAD_DIS_SIZE;
+	  eif_cmps_read_u32_from_char_buf ((unsigned char*)pdcmps_in_size, (uint32*)&dcmps_in_size);
+
+	  ptr = cmps_general_buffer;
+	  for (i = 0; i < EIF_CMPS_HEAD_SIZE; i ++) *ptr ++ = cmps_head [i];
+	  read_size = dcmps_in_size;
+
+	  while (total_read < read_size) {
+#ifdef EIF_WIN32
+	  if (r_fstoretype == 'F')
+			  part_read = read (r_fides, ptr, read_size);
+	  else
+			  part_read = recv (r_fides, ptr, read_size, 0);
+#else
+			  part_read = read (r_fides, ptr, read_size);
+#endif
+			  if (part_read < 0)
+					  eio();
+			  total_read += part_read;
+			  ptr += part_read;
+	  }
+
+	  dcmps_in_ptr = cmps_general_buffer;
+	  dcmps_out_ptr = general_buffer;
+
+	  eif_decompress ((unsigned char*)dcmps_in_ptr,
+									  (unsigned long)dcmps_in_size,
+									  (unsigned char*)dcmps_out_ptr,
+									  (unsigned long*)&dcmps_out_size);
+
+	  current_position = 0;
+	  end_of_buffer = dcmps_out_size;
+	  return (end_of_buffer);
 }
 
 rt_public int retrieve_read ()
@@ -1501,7 +1567,7 @@ rt_public int retrieve_read ()
 			eio();
 #else
 	if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
-                eio();
+				eio();
 #endif
 
 	while (end_of_buffer < read_size) {
@@ -1519,6 +1585,70 @@ rt_public int retrieve_read ()
 		ptr += part_read;
 	}
 	current_position = 0;
+	return (end_of_buffer);
+}
+
+rt_public int retrieve_read_with_compression ()
+{
+	char* dcmps_in_ptr = (char *)0;
+	char* dcmps_out_ptr = (char *)0;
+	char* pdcmps_in_size = (char *)0;
+	int dcmps_in_size = 0;
+	int dcmps_out_size = 0;
+	char cmps_head [EIF_CMPS_HEAD_SIZE];
+	char* ptr = (char *)0;
+	int read_size = 0;
+	int part_read = 0;
+	int total_read = 0;
+	register i = 0;
+	
+	end_of_buffer = 0;
+	
+#ifdef EIF_WIN32
+	if (r_fstoretype == 'F')
+		{
+		if ((read (r_fides, cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
+			eio();
+		}
+	else
+		if ((recv (r_fides, cmps_head, EIF_CMPS_HEAD_SIZE, 0)) < EIF_CMPS_HEAD_SIZE)
+			eio();
+#else
+	if ((read (r_fides, cmps_head, EIF_CMPS_HEAD_SIZE)) < EIF_CMPS_HEAD_SIZE)
+                eio();
+#endif
+	pdcmps_in_size = cmps_head + EIF_CMPS_HEAD_DIS_SIZE;
+	eif_cmps_read_u32_from_char_buf ((unsigned char*)pdcmps_in_size, (uint32*)&dcmps_in_size);
+
+	ptr = cmps_general_buffer;
+	for (i = 0; i < EIF_CMPS_HEAD_SIZE; i ++) *ptr ++ = cmps_head [i];
+	read_size = dcmps_in_size;
+	
+	while (end_of_buffer < read_size) {
+#ifdef EIF_WIN32
+	if (r_fstoretype == 'F')
+		part_read = read (r_fides, ptr, read_size);
+	else
+		part_read = recv (r_fides, ptr, read_size, 0);
+#else
+		part_read = read (r_fides, ptr, read_size);
+#endif
+		if (part_read < 0)
+			eio();
+		end_of_buffer += part_read;
+		ptr += part_read;
+	}
+	
+	dcmps_in_ptr = cmps_general_buffer;
+	dcmps_out_ptr = general_buffer;
+	
+	eif_decompress ((unsigned char*)dcmps_in_ptr,
+					(unsigned long)dcmps_in_size,
+					(unsigned char*)dcmps_out_ptr,
+					(unsigned long*)&dcmps_out_size);
+	
+	current_position = 0;
+	end_of_buffer = dcmps_out_size;
 	return (end_of_buffer);
 }
 
@@ -1611,7 +1741,7 @@ char * object, * parent;
 			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
 			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, :
-			 *    "dtype visible_name size nb_generics {meta_type}+"
+			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
 				int16 *gt_type = info->gt_type;
 				int32 *gt_gen;
@@ -1666,7 +1796,7 @@ char * object, * parent;
 						buffer_read(object, count*sizeof(EIF_POINTER));
 						break;
 					default:
-   	   	          		eio();
+   	   			  		eio();
 						break;
 				}
 			} else {
@@ -1812,7 +1942,7 @@ char * object, * parent;
 			info = (struct gt_info *) ct_value(&ce_gtype, vis_name);
 			if (info != (struct gt_info *) 0) {	/* Is the type a generic one ? */
 			/* Generic type, :
-			 *    "dtype visible_name size nb_generics {meta_type}+"
+			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
 				int16 *gt_type = info->gt_type;
 				int32 *gt_gen;
@@ -1903,9 +2033,9 @@ char * object, * parent;
 #if DEBUG & 1
 						printf (" %x", l);
 
-                                                for (ref = object; count > 0; count--, ref += elem_size ) {
-                                                        int q;
-                                                        for (q = 0; q < BIT_NBPACK(l) ; q++) {
+												for (ref = object; count > 0; count--, ref += elem_size ) {
+														int q;
+														for (q = 0; q < BIT_NBPACK(l) ; q++) {
 								printf (" %lx", *((uint32 *)(((struct bit *)ref)->b_value + q)));
 								if (!(q % 40))
 									printf ("\n");
@@ -1928,7 +2058,7 @@ char * object, * parent;
 						break;
 
 					default:
-   	   	          		eio();
+   	   			  		eio();
 						break;
 				}
 			} else {

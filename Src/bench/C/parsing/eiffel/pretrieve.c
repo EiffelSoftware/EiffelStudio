@@ -31,7 +31,7 @@ long position, nb_obj;
 	/* Return `nb_obj' retrieved in file `file_ptr' read at `position'. */
 	char *result;
 
-	retrieve_read_func = old_retrieve_read;
+	retrieve_read_func = old_retrieve_read_with_compression;
 
 	rt_kind = '\0';
 	r_fides = (int)f_desc;
@@ -42,7 +42,7 @@ long position, nb_obj;
 	ht_free(rt_table);                  /* Free hash table descriptor */
     epop(&hec_stack, nb_recorded);      /* Pop hector records */
 
-	retrieve_read_func = retrieve_read;
+	retrieve_read_func = retrieve_read_with_compression;
 
 	return result;
 }
@@ -55,7 +55,7 @@ long position;
 	 * position. */
 	char *result;
 
-	retrieve_read_func = old_retrieve_read;
+	retrieve_read_func = old_retrieve_read_with_compression;
 
 	rt_kind = '\0';
 	r_fides = (int)f_desc;
@@ -66,7 +66,7 @@ long position;
 	ht_free(rt_table);					/* Free hash table descriptor */
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
 
-	retrieve_read_func = retrieve_read;
+	retrieve_read_func = retrieve_read_with_compression;
 
 	return result;
 }

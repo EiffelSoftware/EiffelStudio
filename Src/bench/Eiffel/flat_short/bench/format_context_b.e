@@ -125,6 +125,12 @@ feature -- Properties
 			Result := current_class_only and not is_short
 		end;
 
+	is_flat_short: BOOLEAN is
+			-- Is the Current format doing a flat-short?
+		do
+			Result := is_short and then not current_class_only
+		end;
+
 	class_c: CLASS_C;
 			-- Current class being processed
 	
@@ -377,13 +383,15 @@ feature -- Execution
 				prev_class := System.current_class;
 				prev_cluster := Inst_context.cluster;
 				execution_error := false;
-				Error_handler.wipe_out;
 				class_name := clone (class_c.name)
 				class_name.to_upper;
 				if is_short then
 					client := system.any_class.compiled_class;
 				end;
 				!! format_registration.make (class_c, client);
+				if is_flat_short then
+					format_registration.initialize_creators;
+				end;
 				if not order_same_as_text then
 					format_registration.set_feature_clause_order (feature_clause_order);
 				end;

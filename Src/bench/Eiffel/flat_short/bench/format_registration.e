@@ -35,10 +35,15 @@ feature -- Initialization
 			target_class := target;
 			client := cl;	
 			initialize;
-			if not order_same_as_text then
-				creators := target.creators;
-			end;
 			ancestors.extend (System.any_class.compiled_class);
+		end;
+
+	initialize_creators is
+			-- Initialize `creators'.
+		require
+			valid_target: target_class /= Void
+		do
+			creators := target_class.creators;
 		end;
 
 	initialize is

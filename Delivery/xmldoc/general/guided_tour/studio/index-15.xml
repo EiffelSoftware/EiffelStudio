@@ -655,20 +655,20 @@
 				<size>2</size>
 				<content>Metric archives</content>
 			</heading>
-			<paragraph>What does a measure mean? You don't necessarily know in the absolute, but you might want to compare your results to those of other projects.  For example, if you have measured the average number of invariants in classes of your system, you might be curious to know how this compares to  Eiffel Software 's EiffelBase library.  </paragraph>
+			<paragraph>What does a measure mean? You don't necessarily know in the absolute, but you might want to compare your results to those of other projects.  For example, if you have measured the average number of invariants in classes of your system, you might be curious to know how this compares to the EiffelBase library.  </paragraph>
 			<paragraph>The notion of metric archive addresses this need.  You may:</paragraph>
 			<list ordered="false">
 				<item>As noted above, archive all current measures into an XML file, called a measurement archive.  </item>
 				<item>Make this measurement archive available in a shared directory, or as a URL on the Internet.  </item>
 			</list>
 			<paragraph>At any time in a project, select any measurement archive, local or at a URL, as the reference archive; in that case all the measures you perform will be compared to those of the reference archive.  You may select various comparison formats: percentage (the default), difference percentage, plain value.  </paragraph>
-			<paragraph> Eiffel Software  has established a Web site, 
+			<paragraph> Eiffel Software has established a Web site, 
 				<span>
 					<link>
 						<url>http://metrics.eiffel.com</url>
 						<label>http://metrics.eiffel.com</label>
 					</link>
-				</span>, as a publicly available reference for metric collections on  Eiffel Software 's own libraries (EiffelBase, EiffelVision, ...).  This provides an invaluable source of comparisons for other projects within and without  Eiffel Software .
+				</span>, as a publicly available reference for metric collections on Eiffel Software's own libraries (EiffelBase, EiffelVision, ...).  This provides an invaluable source of comparisons for other projects within and without Eiffel Software.
 			</paragraph>
 			<paragraph>Let's see how this works.  We'll compare the number of classes in our system to the number of classes in EiffelVision.  Click the last button, 
 				<code>

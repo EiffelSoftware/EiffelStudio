@@ -89,6 +89,8 @@ feature -- Execution
 					new_tool := window_manager.explain_window
 				when System_type then
 					new_tool := system_tool;
+				when Dynamic_lib_type then
+					new_tool := dynamic_lib_tool;
 				end;
 				if new_tool /= Void then
 					new_tool.display

@@ -40,15 +40,7 @@ feature -- Basic operations
 			ftype := field_type (i, object)
 			fname := field_name (i, object)
 			Result := True
--- FIXME: The attribute data_type of a table column is of type string for Oracle
---	andof type integer for the other databases.
-			if fname.is_equal ("data_type") then
-				if value.generator.is_equal ("STRING") then
-					ftype := 10
-				end
-			end
---
---
+
 			if ftype = Integer_type then
 				double_ref ?= value
 				if double_ref /= Void then

@@ -146,28 +146,31 @@ feature {NONE} -- Implementation
 			set_system_descriptor (create {WIZARD_SYSTEM_DESCRIPTOR}.make)
 			system_descriptor.generate (shared_wizard_environment.type_library_file_name)
 
-			parent.add_title (Generation_title)
-			from
-				system_descriptor.start
-			until
-				system_descriptor.after
-			loop
+			intialize_file_directories
+			if directories_initialized then
+				parent.add_title (Generation_title)
 				from
-					i := 1
+					system_descriptor.start
 				until
-					i > system_descriptor.library_descriptor_for_iteration.descriptors.count
+					system_descriptor.after
 				loop
-					if shared_wizard_environment.client then
-						c_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
-						eiffel_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
-					end
-					if shared_wizard_environment.server then
-						c_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
-						eiffel_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
-					end
-					i := i + 1
-				end	
-				system_descriptor.forth
+					from
+						i := 1
+					until
+						i > system_descriptor.library_descriptor_for_iteration.descriptors.count
+					loop
+						if shared_wizard_environment.client then
+							c_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+							eiffel_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+						end
+						if shared_wizard_environment.server then
+							c_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+							eiffel_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+						end
+						i := i + 1
+					end	
+					system_descriptor.forth
+				end
 			end
 		end
 		
@@ -176,7 +179,7 @@ feature {NONE} -- Implementation
 		local
 			a_string: STRING
 		do
-			a_string := "Failed with return code "
+			a_string := clone (Failed_message)
 			a_string.append_integer (shared_wizard_environment.return_code)
 			parent.add_error (a_string)
 		end
@@ -187,4 +190,127 @@ feature {NONE} -- Implementation
 			create Result.make (parent)
 		end
 
+	intialize_file_directories is
+			-- Create generated files directories.
+		local
+			a_file: RAW_FILE
+			a_path, a_path2: STRING
+		do
+			-- Initialize Common subdirectory
+			a_path := clone (shared_wizard_environment.destination_folder)
+			a_path.append (Common)
+			initialize_directory (a_path)
+			a_path.append_character (Directory_separator)
+			a_path2 := clone (a_path)
+			a_path2.append (Clib)
+			initialize_directory (a_path2)
+			a_path2 := clone (a_path)
+			a_path2.append (Include)
+			initialize_directory (a_path2)
+			a_path2 := clone (a_path)
+			a_path2.append (Interfaces)
+			initialize_directory (a_path2)
+			a_path2 := clone (a_path)
+			a_path2.append (Structures)
+			initialize_directory (a_path2)
+
+			-- Initialize Client subdirectory
+			a_path := clone (Shared_wizard_environment.destination_folder)
+			a_path.append (Client)
+			a_path.append_character (Directory_separator)
+			a_path2 := clone (a_path)
+			a_path2.append (Clib)
+			initialize_directory (a_path2)
+			a_path2 := clone (a_path)
+			a_path2.append (Include)
+			initialize_directory (a_path2)
+			a_path2 := clone (a_path)
+			a_path2.append (Component)
+			initialize_directory (a_path2)
+			
+			-- Initialize Server subdirectory
+			a_path := clone (Shared_wizard_environment.destination_folder)
+			a_path.append (Server)
+			a_path.append_character (Directory_separator)
+			a_path2 := clone (a_path)
+			a_path2.append (Clib)
+			initialize_directory (a_path2)
+			a_path2 := clone (a_path)
+			a_path2.append (Include)
+			initialize_directory (a_path2)
+			a_path2 := clone (a_path)
+			a_path2.append (Component)
+			initialize_directory (a_path2)
+		end
+
+	initialize_directory (a_path: STRING) is
+			-- Create directory `a_path' if does not exist.
+		require
+			-- is_directory (a_path)
+			-- only last directory in path is not created
+		local
+			a_file: RAW_FILE
+			a_string: STRING
+			a_directory: DIRECTORY
+		do
+			directories_initialized := True
+			create a_file.make (a_path)
+			if a_file.exists then
+				if not a_file.is_directory then
+					a_string := clone (File_already_exists)
+					a_string.append (Colon)
+					a_string.append (Space)
+					a_string.append (a_path)
+					add_warning (Current, a_string)
+					add_message (Current, File_backed_up)
+					a_string := clone (Copy_command)
+					a_string.append (Space)
+					a_string.append (a_path)
+					a_string.append (Space)
+					a_string.append (a_path)
+					a_string.append (Backup_file_extension)
+					Shared_process_launcher.launch (a_string, Void)
+					if not (Shared_process_launcher.last_launch_successful and Shared_process_launcher.last_process_result = 0) then
+						a_string := clone (Could_not_copy_file)
+						a_string.append (Colon)
+						a_string.append (Space)
+						a_string.append (a_path)
+						directories_initialized := False
+						add_error (Current, a_string)
+					else
+						a_string := clone (Delete_command)
+						a_string.append (Space)
+						a_string.append (a_path)
+						Shared_process_launcher.launch (a_string, Void)
+						if not (Shared_process_launcher.last_launch_successful and Shared_process_launcher.last_process_result = 0) then
+							a_string := clone (Could_not_delete_file)
+							a_string.append (Colon)
+							a_string.append (Space)
+							a_string.append (a_path)
+							directories_initialized := False
+							add_error (Current, a_string)
+						else
+							create a_directory.make (a_path)
+							check
+								not_exists: not a_directory.exists
+							end
+							a_directory.create_dir
+						end
+					end
+				end
+			else
+				create a_directory.make (a_path)
+				check
+					not_exists: not a_directory.exists
+				end
+				a_directory.create_dir
+			end
+		end
+					
+	directories_initialized: BOOLEAN
+			-- Were directories correctly initialized?
+
+	Failed_message: STRING is "Failed with return code "
+			-- Failure message
+			
 end -- class WIZARD_MANAGER

@@ -6,7 +6,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SCROLLED_T_M
+class 
+	SCROLLED_T_M
 
 inherit
 
@@ -21,19 +22,16 @@ inherit
 
 	TEXT_M
 		undefine
-			mel_text_make, clean_up,
+			mel_text_make, make_from_existing,
 			height, real_x, real_y, realized, shown, width,
 			x, y, hide, lower, propagate_event, raise,
 			realize, set_x, set_x_y, set_y, show, unrealize,
-			set_no_event_propagation
+			set_no_event_propagation, clean_up, object_clean_up
 		redefine
 			make, make_word_wrapped,
-			set_background_color,
-			update_background_color,
-			set_foreground_color,
-			update_foreground_color,
+			set_background_color_from_imp,
 			set_managed, set_size, set_height,
-			set_width	
+			set_width, parent
 		end;
 
 	MEL_SCROLLED_TEXT
@@ -74,7 +72,9 @@ inherit
 			x, y, hide, lower, propagate_event, raise,
 			realize, set_x, set_x_y, set_y, show, unrealize
 		redefine
-			set_height, set_width, set_size
+			set_height, set_width, set_size, parent
+		select
+			mel_text_make, make_from_existing
 		end
 
 creation
@@ -85,11 +85,12 @@ feature {NONE} -- Initialization
 
 	make (a_scrolled_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif scrolled text.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_text_make (a_scrolled_text.identifier,
-					mel_parent (a_scrolled_text, widget_index),
-					man);
+			mel_text_make (a_scrolled_text.identifier, mc, man);
 			a_scrolled_text.set_font_imp (Current);
 			set_multi_line_mode;
 		end;
@@ -97,10 +98,12 @@ feature {NONE} -- Initialization
 	make_word_wrapped (a_scrolled_text: TEXT; man: BOOLEAN; oui_parent:
 COMPOSITE) is
 			-- Create a motif scrolled text enabling word wrap.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			make_detailed (a_scrolled_text.identifier,
-					mel_parent (a_scrolled_text, widget_index),
+			make_detailed (a_scrolled_text.identifier, mc, 
 					man, False, True, False, False);
 			a_scrolled_text.set_font_imp (Current);
 			set_single_line_mode;
@@ -109,10 +112,13 @@ COMPOSITE) is
 
 feature -- Access
 
+	parent: MEL_SCROLLED_WINDOW;
+			-- Scrolled window parent
+
 	main_widget: MEL_WIDGET is
 			-- Main widget which is the scrolled window
 		do
-			Result := scrolled_window
+			Result := parent
 		end
 
 feature -- Status setting
@@ -182,7 +188,7 @@ feature -- Status setting
 		local
 			w: MEL_WIDGET
 		do
-			w := scrolled_window.horizontal_scroll_bar
+			w := parent.horizontal_scroll_bar
 			if w /= Void then
 				w.unmanage
 			end;
@@ -193,7 +199,7 @@ feature -- Status setting
 		local
 			w: MEL_WIDGET
 		do
-			w := scrolled_window.vertical_scroll_bar
+			w := parent.vertical_scroll_bar
 			if w /= Void then
 				w.unmanage
 			end;
@@ -204,7 +210,7 @@ feature -- Status setting
 		local
 			w: MEL_WIDGET
 		do
-			w := scrolled_window.horizontal_scroll_bar
+			w := parent.horizontal_scroll_bar
 			if w /= Void then
 				w.manage
 			end;
@@ -215,95 +221,33 @@ feature -- Status setting
 		local
 			w: MEL_WIDGET
 		do
-			w := scrolled_window.vertical_scroll_bar
+			w := parent.vertical_scroll_bar
 			if w /= Void then
 				w.manage
 			end
 		end;
 
-	set_background_color (a_color: COLOR) is
-			-- Set background_color to `a_color'.
+	set_background_color_from_imp (color_imp: COLOR_X) is
+			-- Set the background color from implementation `color_imp'.
 		local
-			pixmap_implementation: PIXMAP_X;
-			color_implementation: COLOR_X;
-			pix: POINTER
+			w: MEL_WIDGET
 		do
-			if private_background_pixmap /= Void then
-				pixmap_implementation ?= private_background_pixmap.implementation;
-				pixmap_implementation.remove_object (Current);
-				private_background_pixmap := Void
+			mel_set_background_color (color_imp);
+			update_colors;
+			parent.set_background_color (color_imp);
+			w := parent.vertical_scroll_bar;
+			if w /= Void then
+				w.set_background_color (color_imp);	
+				w.update_colors
 			end;
-			if private_background_color /= Void then
-				color_implementation ?= private_background_color.implementation;
-				color_implementation.remove_object (Current)
-			end;
-			private_background_color := a_color;
-			color_implementation ?= private_background_color.implementation;
-			color_implementation.put_object (Current);
-			pix := color_implementation.pixel (screen);
-			--xm_change_bg_color (screen_object, pix);
-			--xm_change_bg_color (action_target, pix);
-			--xm_change_bg_color (vertical_widget, pix);
-			if not is_word_wrap_mode then
-					-- There are no horizontal_widget when
-					-- Current is word wrapped.
-				--xm_change_bg_color (horizontal_widget, pix);
+			w := parent.horizontal_scroll_bar;
+			if w /= Void then
+				w.set_background_color (color_imp);
+				w.update_colors
 			end;
 			if private_foreground_color /= Void then
 				update_foreground_color
 			end
-		end;
-
-	set_foreground_color (a_color: COLOR) is
-			-- Set `foreground_color' to `a_color'.
-		local
-			color_implementation: COLOR_X;
-			ext_name: ANY
-		do
-			if private_foreground_color /= Void then
-				color_implementation ?= private_foreground_color.implementation;
-				color_implementation.remove_object (Current)
-			end;
-			private_foreground_color := a_color;
-			color_implementation ?= a_color.implementation;
-			color_implementation.put_object (Current);
-			--ext_name := Mforeground_color.to_c;
-			--c_set_color (action_target, color_implementation.pixel (screen), $ext_name)
-		end;
-
-feature {COLOR_X} -- Implementation
-
-	update_background_color is
-			-- Update the X color after a change inside the Eiffel color.
-		local
-			color_implementation: COLOR_X;
-			pix: POINTER
-		do
-			color_implementation ?= background_color.implementation;
-			pix := color_implementation.pixel (screen);
-			--xm_change_bg_color (screen_object, pix);
-			--xm_change_bg_color (action_target, pix);
-			if not is_word_wrap_mode then
-					-- There are no horizontal_widget when
-					-- Current is word wrapped.
-				--xm_change_bg_color (horizontal_widget, pix);
-			end;
-			--xm_change_bg_color (vertical_widget, pix);
-			if private_foreground_color /= Void then
-				update_foreground_color
-			end
-		end;
-
-	update_foreground_color is
-			-- Update the X color after a change inside the Eiffel color.
-		local
-			ext_name: ANY;
-			color_implementation: COLOR_X
-		do
-			--ext_name := Mforeground_color.to_c;
-			color_implementation ?= foreground_color.implementation;
-			--c_set_color (action_target,
-				--color_implementation.pixel (screen), $ext_name)
 		end;
 
 end -- class SCROLLED_T_M

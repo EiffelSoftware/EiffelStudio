@@ -49,6 +49,7 @@ feature
 
 	description: ATTR_DESC is
 		do
+			Result := Reference_c_type.description
 		end
 
 	generate_cecil_value (buffer: GENERATION_BUFFER) is

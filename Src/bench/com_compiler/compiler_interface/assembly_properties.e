@@ -40,9 +40,7 @@ feature {NONE} -- initalization
 			asm_version: ID_SD
 			asm_culture: ID_SD
 			asm_public_key_token: ID_SD
-			asm_prefix: ID_SD
 		do
-			asm_prefix := new_id_sd(a_prefix, false);
 			asm_cluster_name := new_id_sd(a_cluster_name, false)
 			asm_name := new_id_sd(a_assembly_name, true)
 			
@@ -56,7 +54,8 @@ feature {NONE} -- initalization
 				asm_public_key_token := new_id_sd(a_public_key_token, true)	
 			end
 			
-			create assembly_sd.initialize (asm_cluster_name, asm_name, asm_prefix, asm_version, asm_culture, asm_public_key_token)
+			create assembly_sd.initialize (asm_cluster_name, asm_name, Void, asm_version, asm_culture, asm_public_key_token)
+			set_assembly_prefix(a_prefix)
 			set_assembly_type
 		end
 		
@@ -107,8 +106,15 @@ feature -- Status setting
 		local
 			asm_prefix: ID_SD
 		do
-			asm_prefix := new_id_sd(a_prefix.clone(a_prefix), FALSE)
-			asm_prefix.to_upper
+			if a_prefix /= Void and then a_prefix.count > 0 then
+				asm_prefix := new_id_sd(a_prefix.clone(a_prefix), FALSE)
+				asm_prefix.to_upper				
+				assembly_sd.set_prefix_name (asm_prefix)
+			else
+				assembly_sd.set_prefix_name (Void)
+			end
+
+
 		end
 		
 feature -- Access
@@ -123,6 +129,7 @@ feature -- Access
 				Result := ""
 			else
 				Result := a_prefix
+				Result.to_upper
 			end
 		end
 		

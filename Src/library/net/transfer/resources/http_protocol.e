@@ -89,7 +89,7 @@ feature -- Status setting
 				end
 				main_socket.connect
 			end
-			if not (is_open or main_socket.socket_ok) then
+			if not (is_open and main_socket.socket_ok) then
 				error_code := Connection_refused
 			else
 				bytes_transferred := 0

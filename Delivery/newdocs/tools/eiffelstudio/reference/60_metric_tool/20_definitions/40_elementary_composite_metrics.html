@@ -1,0 +1,69 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Example overview topic</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Metric,elementary">
+		<META NAME="MS-HKWD" CONTENT="Metric,composite">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Elementary and composite metrics</H1>
+        <p>Some
+        of our metrics will be elementary and some composite. An
+        elementary metric is measured directly from the product or project
+        record:</p>
+
+		<P CLASS="note"><b><a name="Elementary metric">Elementary metric</a></b><a name="Elementary metric:">:<br>
+        </a>
+        - An <b>elementary product
+        metric </b>is a product metric whose values (integers) indicate the
+        number of occurrences of a certain pattern in a product.<br>
+        - An <b>elementary process metric </b>is a process
+        metric whose values reflect measurements drawn directly from project
+        records.</P>
+        <p>An example of elementary product metric is the
+        number of source lines. An example of elementary process metric is the
+        number of incremental compilations of a system.</p>
+        <p>Elementary metrics are provided by default by the metric tool. There
+        is no means to remove them or to define new of them since they must be
+        implemented to be reached.</p>
+        <p>From
+        these elementary metrics we may define composite ones:</p>
+
+		<P CLASS="note"><b><a name="Composite metric">Composite metric</a></b>:
+        A <b>composite metric </b>is
+        a metric whose values are defined by a mathematical formula involving
+        other metrics (elementary, or previously defined composite metrics).</P>
+        A later section will introduce a number of
+        operations for defining composite metrics out of elementary ones.
+        <p>&nbsp;</p>
+        <p>Again
+        we may distinguish between product and process:</p>
+
+		<P CLASS="note"><b>Composite product metric,
+        composite process metric:</b><br>
+        - A <b>composite product
+        metric </b>is a composite metric defined entirely in terms of product
+        metrics.<br>
+        A <b>composite process
+        metric </b>is a composite metric whose definition involves one or more
+        process metrics.</P>
+        <p>By
+        convention, this definition treats as process metric a composite metric
+        involving both product and process components.</p>
+        <p>The
+        classification introduced for metrics extends to measures, so that we
+        may talk about an elementary product measure, a composite process
+        measure and so on.</p>
+        <p>The metric menu of the metric tool separates elementary and composite
+        metrics:&nbsp;</p>
+        <p align="center"><img border="0" src="/images/eiffelbench/Metrics_png/metric_category.png"></p>
+        <p>All metrics (elementary and composite) are not always sensitive at a
+        given time. Their sensitiveness depends on also on <a href="70_scopes_scope_types.html">scopes</a></p>
+        <P CLASS="seealso">
+		<B>See Also</B><BR>
+        <a href="10_attributes_metrics_measures.html#Metric">Metrics</a>, <a href="70_scopes_scope_types.html">scopes</a>
+		</P>
+	</BODY>
+</HTML>

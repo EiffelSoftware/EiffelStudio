@@ -1,0 +1,192 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Example overview topic</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Metric,raw metrics">
+		<META NAME="MS-HKWD" CONTENT="Metric,selection criteria">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Raw metrics and selection criteria</H1>
+        <p>Elementary
+        metrics measure patterns whose occurrences (in a product or process) can
+        be counted. We need to decompose this notion further to avoid an
+        explosion of the number of elementary metrics. For example the features
+        of a class can be classified along several lines:
+
+        </p>
+        <ul>
+          <li>
+            <p>Some
+            are attributes (object fields), others are routines (algorithms).
+
+            </li>
+          <li>
+            <p>Some
+            are inherited from a parent, others immediate (defined in the
+            class).
+
+            </li>
+          <li>
+            <p>Some
+            are exported, others secret
+
+            </li>
+        </ul>
+        <p>and
+        so on. Many combinations of these properties may be worth counting on
+        their own: you may ask for the number of secret attributes, of exported
+        inherited features and so on. But if we define all of these metrics
+        independently, we will soon have too many elementary metrics, while
+        still failing to satisfy user needs if we have omitted a particular
+        combination.
+
+        </p>
+        <p>To
+        avoid this we must identify a subset of elementary metrics as <b>raw
+        metrics</b>: metrics whose results are counted directly. “Number of
+        features in a class” is a raw metric. From a raw metric, we may then
+        derive other elementary metrics by applying <b>selection criteria </b>such
+        as “Is this feature an attribute?” or “Is this feature
+        exported?” Here are the definitions:
+
+        </p>
+
+		<P CLASS="note"><b>Raw metric, selection
+        criterion, derived metric:<br>
+        </b>An elementary metric is
+        either<b> raw </b>or<b> derived</b>. A <b>selection criterion </b>for
+        a raw metric is a property, with a fixed set of possible values (two or
+        more), characterizing the patterns or events being counted by the
+        metric.<br>
+        A <b>derived metric </b>is
+        an elementary metric defined from a raw metric by counting only the
+        patterns satisfying a certain combination of its selection criteria.</P>
+
+		<P>The metric menu of the metric tool classifies raw and
+        derived metric:</P>
+
+		<P align="center"><img border="0" src="/images/eiffelbench/Metrics_png/raw_derived.png"></P>
+        <p>A set of raw metrics and selection criteria is provided by default by
+        the metric tool, see <a href="60_predefined_raw_metrics_selection_criteria.html">predefined
+        raw metrics and selection criteria</a>
+
+        </p>
+        <p>To
+        define a derived metric, we start from a raw metric, for example
+        “number of features”, and combine some of the associated selection
+        criteria. The combination may be:
+
+        </p>
+        <ul>
+          <li>
+            <p>An
+            “or”: for example, count all the features that are attributes or
+            exported (or both).
+
+            </li>
+          <li>
+            <p>An
+            “and”: count all the features that are both attributes and
+            exported.
+
+            </li>
+        </ul>
+        <p>Our
+        metric framework does not provide more general Boolean combinations,
+        although they would be easy to add if necessary. Here is the interface
+        provided to <a href="/tools/eiffelbench/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/10_defining_derived_metrics.html">define
+        derived</a> metrics:
+
+        </p>
+        <p align="center"><img border="0" src="/images/eiffelbench/Metrics_png/derived.png">
+
+        </p>
+        <p>A
+        selection criterion may have more than two possible values. Most, as in
+        these examples, have just two: a feature is either an attribute or a
+        routine; it is either exported or secret.
+
+        </p>
+        <p>The
+        definition states that every derived metric is derived from a certain
+        raw metric. This provides only for two levels of elementary metrics, raw
+        and derived; you may not, from an existing derived metric, derive new
+        ones, since you may only associate selection criteria with raw metrics.
+
+        </p>
+        <p>As
+        a general guideline, we will try to keep the selection criteria for a
+        given raw metric independent. For example, to distinguish the classes
+        that inherit from a given class we will use the following selection
+        criteria:
+
+        </p>
+        <ul>
+          <li>
+            <p>Heirs:
+            count the number of direct heirs of a class.
+
+            </li>
+          <li>
+            <p>Indirect_heirs:
+            count the number of indirect heirs.
+
+            </li>
+          <li>
+            <p>Self:
+            count only the class itself.
+
+            </li>
+        </ul>
+        <p>Other
+        interesting notions are “proper descendant”, covering direct and
+        indirect heirs, and “descendant”, covering proper descendants and
+        descendants. We do not introduce these as separate criteria, since this
+        would result in a non-independent set of criteria: every proper
+        descendant is a descendant, every heir (direct or indirect) is a proper
+        descendant.
+
+        </p>
+        <p>Instead
+        we limit ourselves to the three criteria listed above. If you need a
+        finer decomposition, it is easy, with the techniques discussed below, t
+        o define Proper_descendants and Descendants as composite
+        metrics expressed in terms of the elementary metrics Heirs, Indirect_heirs
+        and Self.
+
+        </p>
+        This criterion independence principle is not
+        absolute, however, and in some cases we may find it clearer to define a
+        new criterion even though its value is entirely determined by certain
+        values of another. For example one criterion on features determines
+        whether it is an attribute or a routine, another whether
+        it is deferred or effective. An attribute is always
+        effective, so the two criteria are not independent. Even though we could
+        remove the dependency by using a single criterion with three values
+        (attribute, effective routine, deferred routine), it is more convenient
+        to keep two criteria. Of course the underlying counting mechanisms must
+        make sure never to count an element twice even in an “or” query, as
+        when a user asks for the number of features that are attributes or
+        effective.
+        <p>The following diagram will help
+        remember the various kinds of metric, as used in the rest of the
+        discussion:</p>
+        <p>DIAGRAM....</p>
+        <p>A metric is either elementary or
+        composite. An elementary metric is either a raw metric, such as
+        “number of features”, or a derived metric obtained from slicing a
+        raw metric by selection criteria. Composite metrics are obtained from
+        existing metrics (elementary, or previously defined composite metrics)
+        by applying some mathematical formula. The three kinds of composite
+        metrics shown on the figure will be explained shortly.</p>
+        <p>&nbsp;</p>
+        <P CLASS="seealso">
+		<B>See Also</B><BR>
+        <a href="40_elementary_composite_metrics.html#Elementary metric">Elementary
+        metrics</a>, <a href="/tools/eiffelbench/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/10_defining_derived_metrics.html">defining
+        derived metrics</a>
+		</P>
+	</BODY>
+</HTML>

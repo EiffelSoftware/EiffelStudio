@@ -1,0 +1,84 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Example overview topic</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Metric,scope, scope types">
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+        <h1>Scopes and scope types</h1>
+        <p>Every metric has a scope:</p>
+
+		<P CLASS="note"><b>Scope of a metric</b>:<br>
+        The <b>scope </b>of a metric
+        is defined as follows:<br>
+        &nbsp;• For a raw product metric, the type of product over which the
+        metric is counted, such as: a feature, a class, a cluster, a system, an
+        archive built for a given systems to make it possible to compare systems
+        one to another.<br>
+        • For a raw process metric, the type of process on which the metric is
+        measured, such as analysis, documentation, entire project etc.<br>
+        • For a derived metric (recursively), the scope of the raw metric from
+        which it is derived.<br>
+        • For a composite metric (recursively), the
+        largest of the scopes of all its constituent metrics, where cluster is
+        “larger than” class and so on.
+
+
+        </P>
+        <P>&nbsp; </P>
+
+        <p>This
+        notion also applies to measures:</font>
+        </p>
+
+		<P CLASS="note"><b>Scope of a measure</b>:<br>
+        The <b>scope </b>of a measure is defined as follows:<br>
+        • For an elementary measure (the application of an elementary metric,
+        raw or derived), the set of products or processes to which the
+        associated metric has been applied to yield the measure.<br>
+        • For a composite measure, the union of (recursively) the scopes of
+        its constituent measures.&nbsp;
+        </P>
+        <p>For
+        both metrics and measures, the notion of scope will help us compare our
+        quantitative assessments to some already on record. For example you may
+        compare the value of a certain metric, such as number of invariant
+        clauses in each class, with the values that have been archived for your
+        project, for a reference project such as the EiffelBase library, for the
+        previous projects of your company, or for a global set of previous
+        projects maintained at some central location. You may also, with
+        appropriate permissions, update such a shared archive with the values
+        from your own measurements.
+
+        </p>
+        <p>In
+        the environment, the notion of scope will be handled in a simple way.
+
+        </p>
+        <p>There
+        will be a set of predefined scopes, corresponding to software units:
+        feature, class, cluster, system. Any scope beyond the system level will
+        be defined by “measurement archives”, as explained next.
+
+        </p>
+        <p>For product scopes,
+        we will also rely on the notion of scope type:</p>
+
+		<P CLASS="note"><b><a name="scope_type">Scope type</a></b><a name="scope_type">:</a><br>
+
+        Every product scope has a <b>scope
+        type</b>, denoting the type of software unit of which it is an instance,
+        for example Class for a class.</P>
+        <p>The metric tool provides a combo box listing all scope types. This
+        one is being shrunk or extended regarding the selected scope object:</p>
+        <p align="center"><img border="0" src="/images/eiffelbench/Metrics_png/scopecombobox.png"></p>
+        <p>Unlike the other tables, which list
+        their entries alphabetically, the above list shows scopes types from smaller
+        to larger. This list indeed defines an <b>order relation </b>between
+        scope types, which follows from the containment relation of the
+        corresponding software units: every class contains features; every
+        cluster contains classes; and so on.</p>
+	</BODY>
+</HTML>

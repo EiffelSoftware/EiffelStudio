@@ -33,7 +33,7 @@ feature -- Basic Operations
 			key: STRING
 			culture: STRING
 		do
-			if aname.get_public_key_token = Void then
+			if aname.get_public_key_token = Void or else aname.get_public_key_token.length = 0 then
 				key := "null"
 			else
 				key := encoded_key (aname.get_public_key_token)

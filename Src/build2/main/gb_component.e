@@ -52,7 +52,6 @@ feature -- Access
 			new_value: STRING
 			full_information1: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			current_element: XM_ELEMENT
-			ucstring: UCSTRING
 		do
 			Result := (new_object ((create {GB_SHARED_XML_HANDLER}).xml_handler.xml_element_representing_named_component (name), True))
 				-- We must now update all ids in the new object, as they may not
@@ -98,8 +97,7 @@ feature -- Access
 							end
 						end
 						new_value := single_spaced_values_from_list (values)
-							-- We must now replace the current string value in the xml element, with `new_value'.
-						create ucstring.make_from_string (merged_groups_string)
+
 							-- We can just do a wipe_out as containers only have this
 							-- one attribute.
 						current_element.wipe_out

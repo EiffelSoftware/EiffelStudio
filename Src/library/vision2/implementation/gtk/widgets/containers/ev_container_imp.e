@@ -298,14 +298,14 @@ feature -- Status setting
 		do	
 			pix_imp ?= background_pixmap.implementation
 			a_style := feature {EV_GTK_EXTERNALS}.gtk_style_copy (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (visual_widget))
-			pix_ptr := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (pix_imp.gtk_pixmap))
+			pix_ptr := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (pix_imp.drawable)
 			from
 				i := 0
 			until
 				i = 12
 			loop
 				-- We need to ref the pixmap twice for each state to prevent GdkPixmap deletion.
-				pix_ptr := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (pix_imp.gtk_pixmap))
+				pix_ptr := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (pix_imp.drawable)	
 				i := i + 1
 			end
 			from

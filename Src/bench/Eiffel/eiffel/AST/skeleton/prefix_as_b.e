@@ -15,7 +15,7 @@ inherit
 			fix_operator as old_fix_operator
 		undefine
 			internal_name, infix "<", 
-			main_feature_format, temp_name
+			temp_name
 		end;
 
 	INFIX_AS_B

@@ -29,71 +29,6 @@ class ARRAYED_TREE [G] inherit
 		redefine
 			parent, attach_to_parent, duplicate, extend,
 			duplicate_all, fill_subtree
-		select
-			object_comparison, linear_representation,
-			has
-		end
-
-	ARRAYED_LIST [ARRAYED_TREE [G]]
-		rename
-			make as al_make,
-			item as child,
-			i_th as array_item,
-			last as last_child,
-			first as first_child,
-			search as search_child,
-			has as al_has,
-			readable as readable_child,
-			extend as al_extend,
-			extendible as al_extendible,
-			put as al_put,
-			replace as al_replace,
-			fill as al_fill,
-			writable as writable_child,
-			remove as al_remove,
-			remove_left as al_remove_left,
-			remove_right as al_remove_right,
-			linear_representation as al_lin_rep,
-			count as arity,
-			empty as al_empty,
-			is_empty as is_leaf,
-			full as al_full,
-			start as child_start,
-			finish as child_finish,
-			forth as child_forth,
-			back as child_back,
-			go_i_th as child_go_i_th,
-			index as child_index,
-			off as child_off,
-			after as child_after,
-			before as child_before,
-			isfirst as child_isfirst,
-			islast as child_islast,
-			cursor as child_cursor,
-			go_to as child_go_to,
-			duplicate as al_duplicate,
-			put_left as al_put_left,
-			put_right as al_put_right,
-			merge_left as al_merge_left,
-			merge_right as al_merge_right,
-			object_comparison as al_object_comparison
-		export
-			{NONE}
-				al_extend, al_duplicate,
-				al_remove, al_make,
-				al_put, al_replace, al_has,
-				al_fill, al_full, al_empty,
-				al_remove_left, al_remove_right, al_lin_rep,
-				al_put_left, al_put_right,
-				al_merge_left, al_merge_right, al_object_comparison
-		undefine
-			is_leaf, child_isfirst, is_equal,
-			child_islast, valid_cursor_index,
-			changeable_comparison_criterion,
-			compare_objects, compare_references,
-			al_empty, copy
-		select
-			is_leaf
 		end
 
 create
@@ -108,6 +43,7 @@ feature -- Initialization
 		require
 			valid_number_of_children: n >= 0
 		do
+			create arrayed_list.make (n)
 			al_make (n)
 			replace (v)
 		ensure
@@ -250,22 +186,30 @@ feature -- Element change
 			n.attach_to_parent (Current)
 		end
 
-	merge_tree_before (other: like first_child) is
+	merge_tree_before (other: ARRAYED_TREE [G]) is
 			-- Merge children of `other' into current structure
 			-- before cursor position. Do not move cursor.
 			-- Make `other' a leaf.
+		local
+			l_list: ARRAYED_LIST [like other]
 		do
 			attach (other)
-			al_merge_left (other)
+			create l_list.make (1)
+			l_list.extend (other)
+			al_merge_left (l_list)
 		end
 
-	merge_tree_after (other: like first_child) is
+	merge_tree_after (other: ARRAYED_TREE [G]) is
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
+		local
+			l_list: ARRAYED_LIST [like other]
 		do
 			attach (other)
-			al_merge_right (other)
+			create l_list.make (1)
+			l_list.extend (other)
+			al_merge_left (l_list)
 		end
 
 feature -- Removal
@@ -444,6 +388,9 @@ feature {ARRAYED_TREE} -- Implementation
 
 feature {NONE} -- Implementation
 
+	arrayed_list: ARRAYED_LIST [ARRAYED_TREE [G]]
+			-- arrayed list of arrayed_tree.
+
 	new_tree: like Current is
 			-- A newly created instance of the same type.
 		do
@@ -465,9 +412,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	attach (other: like first_child) is
-				-- Attach all children of `other' to current node.
-				-- Put `other' in mode `off'.
+	attach (other: ARRAYED_TREE [G]) is
+			-- Attach all children of `other' to current node.
+			-- Put `other' in mode `off'.
 		local
 			c: like child
 		do
@@ -480,6 +427,210 @@ feature {NONE} -- Implementation
 				other.child_forth
 				c.attach_to_parent (Current)
 			end
+		end
+
+feature -- Access
+
+	child: like parent is
+		do
+			Result := arrayed_list.item
+		end
+
+	array_item (n: INTEGER): ARRAYED_TREE [G] is
+		do
+			Result := arrayed_list.i_th (n)
+		end
+
+	last_child: like first_child is
+		do
+			Result := arrayed_list.last
+		end
+
+	first_child: like parent is
+		do
+			Result := arrayed_list.first
+		end
+
+	search_child (v: ARRAYED_TREE [like item]) is
+		do
+			arrayed_list.search (v)
+		end
+
+	readable_child: BOOLEAN is
+		do
+			Result := arrayed_list.readable
+		end
+
+	writable_child: BOOLEAN is
+		do
+			Result := arrayed_list.writable
+		end
+
+	arity: INTEGER is
+		do
+			Result := arrayed_list.count
+		end
+
+	child_start is
+		do
+			arrayed_list.start
+		end
+
+	child_finish is
+		do
+			arrayed_list.finish
+		end
+
+	child_forth is
+		do
+			arrayed_list.forth
+		end
+
+	child_back is
+		do
+			arrayed_list.back
+		end
+
+	child_go_i_th (i: INTEGER) is
+		do
+			arrayed_list.go_i_th (i)
+		end
+
+	child_index: INTEGER is
+		do
+			Result := arrayed_list.index
+		end
+
+	child_off: BOOLEAN is
+		do
+			Result := arrayed_list.off
+		end
+
+	child_after: BOOLEAN is
+		do
+			Result := arrayed_list.after
+		end
+
+	child_before: BOOLEAN is
+		do
+			Result := arrayed_list.before
+		end
+
+	child_cursor: CURSOR is
+		do
+			Result := arrayed_list.cursor
+		end
+
+	child_go_to (p: CURSOR) is
+		do
+			arrayed_list.go_to (p)
+		end
+
+	index_of (v: ARRAYED_TREE [like item]; i: INTEGER): INTEGER is
+		do
+			Result := arrayed_list.index_of (v, i)
+		end
+
+	prune (n: like parent) is
+		do
+			arrayed_list.prune (n)
+		end
+	
+	wipe_out is
+		do
+			arrayed_list.wipe_out
+		end
+
+feature {NONE} -- private access arrayed_list
+
+	al_make (n: INTEGER)is
+		do
+			arrayed_list.make (n)
+		end
+
+	al_extend (v: ARRAYED_TREE [like item]) is
+		do
+			arrayed_list.extend (v)
+		end
+
+	al_duplicate (n: INTEGER): ARRAYED_LIST [like Current] is
+		do
+			Result := arrayed_list.duplicate (n)
+		end
+
+	al_remove is
+		do
+			arrayed_list.remove
+		end
+
+	al_remove_left is
+		do
+			arrayed_list.remove_left
+		end
+
+	al_remove_right is
+		do
+			arrayed_list.remove_right
+		end
+
+	al_put_left (v: ARRAYED_TREE [like item]) is
+		do
+			arrayed_list.put_left (v)
+		end
+
+	al_put_right (v: ARRAYED_TREE [like item]) is
+		do
+			arrayed_list.put_right (v)
+		end
+
+	al_merge_left (v: ARRAYED_LIST [ARRAYED_TREE [like item]]) is
+		do
+			arrayed_list.merge_left (v)
+		end
+
+	al_merge_right (v: ARRAYED_LIST [ARRAYED_TREE [like item]]) is
+		do
+			arrayed_list.merge_right (v)
+		end
+
+	al_object_comparison: BOOLEAN is
+		do
+			Result := arrayed_list.object_comparison
+		end
+
+	al_full: BOOLEAN is
+		do
+			Result := arrayed_list.full
+		end
+
+	al_extendible: BOOLEAN is
+		do
+			Result := arrayed_list.extendible
+		end
+
+	al_put (v: ARRAYED_TREE [like item]) is
+		do
+			arrayed_list.put (v)
+		end
+
+	al_replace (v: ARRAYED_TREE [G]) is
+		do
+			arrayed_list.replace (v)
+		end
+
+	al_fill (other: CONTAINER [ARRAYED_TREE [G]]) is
+		do
+			arrayed_list.fill (other)
+		end
+
+	al_lin_rep: LINEAR [ARRAYED_TREE [G]] is
+		do
+			Result := arrayed_list.linear_representation
+		end
+
+	al_has (v: ARRAYED_TREE [like item]): BOOLEAN is
+		do
+			Result := arrayed_list.has (v)
 		end
 
 indexing

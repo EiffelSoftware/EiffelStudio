@@ -384,6 +384,7 @@ feature {NONE} -- Implementation
 			-- Initialize `Current'. To be called during `initialize' of
 			-- the implementation classes.
 		do
+			create row_list.make (5)
 			create drawer.make_with_grid (Current)	
 			create drawable
 		end
@@ -394,7 +395,7 @@ feature {NONE} -- Implementation
 	drawer: EV_GRID_DRAWER_I
 		-- Drawer which is able to redraw `Current'.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN} -- Implementation
 
 	interface: EV_GRID
 			-- Provides a common user interface to possibly dependent

@@ -623,7 +623,21 @@ rt_private void st_store(char *object)
 
 			o_ptr = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
 			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
-			if (!(flags & EO_COMP)) {		/* Special of references */
+			if (flags & EO_TUPLE) {
+				EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) object;
+					/* Don't forget that first element of TUPLE is just a placeholder
+					 * to avoid offset computation from Eiffel code */
+				l_item++;
+				count--;
+				for (; count > 0; count--, l_item++) {
+					if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+						o_ref = eif_reference_tuple_item(l_item);
+						if (o_ref) {
+							st_store(o_ref);
+						}
+					}
+				}
+			} else if (!(flags & EO_COMP)) {		/* Special of references */
 				for (ref = object; count > 0; count--,
 						ref = (EIF_REFERENCE) ((EIF_REFERENCE *) ref + 1)) {
 					o_ref = *(EIF_REFERENCE *) ref;
@@ -927,100 +941,88 @@ rt_private void gen_object_write(char *object)
 		if (flags & EO_SPEC) {		/* Special object */
 			EIF_INTEGER count, elem_size;
 			EIF_REFERENCE ref, o_ptr;
-			char *vis_name;
-			uint32 dgen;
-			int16 *gt_type;
-			int32 *gt_gen;
-			int nb_gen;
-			struct gt_info *info;
 
 			o_ptr = RT_SPECIAL_INFO(object);
 			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
-			vis_name = System(o_type).cn_generator;
+
+			if (flags & EO_TUPLE) {
+				buffer_write (object, count * sizeof(EIF_TYPED_ELEMENT));
+			} else {
+				char *vis_name;
+				uint32 dgen;
+				int16 *gt_type;
+				int32 *gt_gen;
+				int nb_gen;
+				struct gt_info *info;
+
+				vis_name = System(o_type).cn_generator;
 
 
-			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			CHECK ("Must be a generic type", info != (struct gt_info *) 0);
+				info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
+				CHECK ("Must be a generic type", info != (struct gt_info *) 0);
 
-			/* Generic type, write in file:
-			 *	"dtype visible_name size nb_generics {meta_type}+"
-			 */
-			gt_type = info->gt_type;
-			nb_gen = info->gt_param;
+				/* Generic type, write in file:
+				 *	"dtype visible_name size nb_generics {meta_type}+"
+				 */
+				gt_type = info->gt_type;
+				nb_gen = info->gt_param;
 
-			for (;;) {
-				if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
-					break;
-			}
-			gt_type--;
-			gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
-			dgen = *gt_gen;
-
-	
-			if (!(flags & EO_REF)) {		/* Special of simple types */
-				switch (dgen & SK_HEAD) {
-					case SK_INT8:
-						buffer_write(object, count*sizeof(EIF_INTEGER_8));
-						break;
-					case SK_INT16:
-						buffer_write(object, count*sizeof(EIF_INTEGER_16));
-						break;
-					case SK_INT32:
-						buffer_write(object, count*sizeof(EIF_INTEGER_32));
-						break;
-					case SK_INT64:
-						buffer_write(object, count*sizeof(EIF_INTEGER_64));
-						break;
-					case SK_WCHAR:
-						buffer_write(object, count*sizeof(EIF_WIDE_CHAR));
-						break;
-					case SK_BOOL:
-					case SK_CHAR:
-						buffer_write(object, count*sizeof(EIF_CHARACTER));
-						break;
-					case SK_FLOAT:
-						buffer_write(object, count*sizeof(EIF_REAL));
-						break;
-					case SK_DOUBLE:
-						buffer_write(object, count*sizeof(EIF_DOUBLE));
-						break;
-					case SK_BIT:
-						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-
-/*FIXME: header for each object ????*/
-						buffer_write(object, count*elem_size); /* %%ss arg1 was cast (struct bit *) */
-						break;
-					case SK_EXP:
-						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-						hfflags = HEADER(object + OVERHEAD)->ov_flags;
-						hflags = Mapped_flags(hfflags);
-						buffer_write((char *) (&hflags), sizeof(uint32));
-						st_write_cid (hfflags & EO_TYPE);
-
-						for (ref = object + OVERHEAD; count > 0;
-							count --, ref += elem_size) {
-							gen_object_write(ref);
-						}
-						break;
-					case SK_POINTER:
-						buffer_write(object, count*sizeof(EIF_POINTER));
-						break;
-					default:
-						eise_io("General store: not an Eiffel object.");
+				for (;;) {
+					if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
 						break;
 				}
-			} else {
-				if (!(flags & EO_COMP)) {	/* Special of references */
-					buffer_write(object, count*sizeof(EIF_REFERENCE));
-				} else {			/* Special of composites */
-					hfflags = HEADER(object)->ov_flags;
-					hflags = Mapped_flags(hfflags);
-					elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-					buffer_write((char *)(&hflags), sizeof(uint32));
-					st_write_cid (hfflags & EO_TYPE);
-					for (ref = object + OVERHEAD; count > 0;
-							count --, ref += elem_size) {
-						gen_object_write(ref);
+				gt_type--;
+				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+				dgen = *gt_gen;
+
+	
+				if (!(flags & EO_REF)) {		/* Special of simple types */
+					switch (dgen & SK_HEAD) {
+						case SK_INT8: buffer_write(object, count*sizeof(EIF_INTEGER_8)); break;
+						case SK_INT16: buffer_write(object, count*sizeof(EIF_INTEGER_16)); break;
+						case SK_INT32: buffer_write(object, count*sizeof(EIF_INTEGER_32)); break;
+						case SK_INT64: buffer_write(object, count*sizeof(EIF_INTEGER_64)); break;
+						case SK_WCHAR: buffer_write(object, count*sizeof(EIF_WIDE_CHAR)); break;
+						case SK_BOOL:
+						case SK_CHAR: buffer_write(object, count*sizeof(EIF_CHARACTER)); break;
+						case SK_FLOAT: buffer_write(object, count*sizeof(EIF_REAL)); break;
+						case SK_DOUBLE: buffer_write(object, count*sizeof(EIF_DOUBLE)); break;
+						case SK_POINTER: buffer_write(object, count*sizeof(EIF_POINTER)); break;
+						case SK_BIT:
+							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+
+	/*FIXME: header for each object ????*/
+							buffer_write(object, count*elem_size); /* %%ss arg1 was cast (struct bit *) */
+							break;
+						case SK_EXP:
+							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+							hfflags = HEADER(object + OVERHEAD)->ov_flags;
+							hflags = Mapped_flags(hfflags);
+							buffer_write((char *) (&hflags), sizeof(uint32));
+							st_write_cid (hfflags & EO_TYPE);
+
+							for (ref = object + OVERHEAD; count > 0;
+								count --, ref += elem_size) {
+								gen_object_write(ref);
+							}
+							break;
+						default:
+							eise_io("General store: not an Eiffel object.");
+							break;
+					}
+				} else {
+					if (!(flags & EO_COMP)) {	/* Special of references */
+						buffer_write(object, count*sizeof(EIF_REFERENCE));
+					} else {			/* Special of composites */
+						hfflags = HEADER(object)->ov_flags;
+						hflags = Mapped_flags(hfflags);
+						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+						buffer_write((char *)(&hflags), sizeof(uint32));
+						st_write_cid (hfflags & EO_TYPE);
+						for (ref = object + OVERHEAD; count > 0;
+								count --, ref += elem_size) {
+							gen_object_write(ref);
+						}
 					}
 				}
 			}
@@ -1028,6 +1030,40 @@ rt_private void gen_object_write(char *object)
 	}
 }
 
+
+rt_private void object_tuple_write (EIF_REFERENCE object)
+	/* Storing TUPLE. Version for independent store */
+{
+	EIF_TYPED_ELEMENT * l_item = (EIF_TYPED_ELEMENT *) object;
+	unsigned int count = RT_SPECIAL_COUNT(object) - 1; /* Always one non-used element in TUPLE */
+	char l_type;
+
+	REQUIRE ("TUPLE object", HEADER(object)->ov_flags & EO_TUPLE);
+
+		/* Don't forget that first element of TUPLE is just a placeholder
+		 * to avoid offset computation from Eiffel code */
+	l_item++;
+	for (; count > 0; count--, l_item++) {
+			/* For each tuple element we store its type first, and then the associated value */
+		l_type = eif_tuple_item_type(l_item);
+		widr_multi_char (&l_type, 1);
+		switch (l_type) {
+			case EIF_REFERENCE_CODE: widr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
+			case EIF_BOOLEAN_CODE: widr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
+			case EIF_CHARACTER_CODE: widr_multi_char (&eif_character_tuple_item(l_item), 1); break;
+			case EIF_DOUBLE_CODE: widr_multi_double (&eif_double_tuple_item(l_item), 1); break;
+			case EIF_REAL_CODE: widr_multi_float (&eif_real_tuple_item(l_item), 1); break;
+			case EIF_INTEGER_8_CODE: widr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
+			case EIF_INTEGER_16_CODE: widr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
+			case EIF_INTEGER_32_CODE: widr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
+			case EIF_INTEGER_64_CODE: widr_multi_int64 (&eif_integer_64_tuple_item(l_item), 1); break;
+			case EIF_POINTER_CODE: widr_multi_any ((char *) &eif_pointer_tuple_item(l_item), 1); break;
+			case EIF_WIDE_CHAR_CODE: widr_multi_int32 (&eif_wide_character_tuple_item(l_item), 1); break;
+			default:
+				eise_io("Independent store: unexpected tuple element type");
+		}
+	}
+}
 
 rt_private void object_write(char *object)
 {
@@ -1112,189 +1148,91 @@ rt_private void object_write(char *object)
 		} 
 	} else {
 		if (flags & EO_SPEC) {		/* Special object */
-			EIF_INTEGER count, elem_size;
 			EIF_REFERENCE ref, o_ptr;
-			char *vis_name;
-			uint32 dgen, dgen_typ;
-			int16 *gt_type;
-			int32 *gt_gen;
-			int nb_gen;
-			struct gt_info *info;
+			EIF_INTEGER count, elem_size;
 
 			o_ptr = RT_SPECIAL_INFO(object);
 			count = RT_SPECIAL_COUNT_WITH_INFO(o_ptr);
-			vis_name = System(o_type).cn_generator;
+
+			if (flags & EO_TUPLE) {
+				object_tuple_write (object);
+			} else {
+				char *vis_name;
+				uint32 dgen, dgen_typ;
+				int16 *gt_type;
+				int32 *gt_gen;
+				int nb_gen;
 
 
-			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			CHECK ("Must be a generic type", info != (struct gt_info *) 0);
+				struct gt_info *info;
+				vis_name = System(o_type).cn_generator;
 
-			/* Generic type, write in file:
-			 *	"dtype visible_name size nb_generics {meta_type}+"
-			 */
-			gt_type = info->gt_type;
-			nb_gen = info->gt_param;
+				info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
+				CHECK ("Must be a generic type", info != (struct gt_info *) 0);
 
-			for (;;) {
-#if DEBUG &1
-				if (*gt_type == SK_INVALID)
-					eif_panic("corrupted cecil table");
-#endif
-				if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
-					break;
-			}
-			gt_type--;
-			gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
-			dgen = *gt_gen;
-	
-			if (!(flags & EO_REF)) {		/* Special of simple types */
-				switch (dgen & SK_HEAD) {
-					case SK_INT8:
-#if DEBUG &1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *(((EIF_INTEGER_8 *)object) + z));
-							if (!(z % 40))
-								printf("\n");
-						}
-#endif
-						widr_multi_int8 (((EIF_INTEGER_8 *)object), count);
-						break;
-					case SK_INT16:
-#if DEBUG &1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *(((EIF_INTEGER_16 *)object) + z));
-							if (!(z % 40))
-								printf("\n");
-						}
-#endif
-						widr_multi_int16 (((EIF_INTEGER_16 *)object), count);
-						break;
-					case SK_INT32:
-#if DEBUG &1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *(((EIF_INTEGER_32 *)object) + z));
-							if (!(z % 40))
-								printf("\n");
-						}
-#endif
-						widr_multi_int32 (((EIF_INTEGER_32 *)object), count);
-						break;
-					case SK_INT64:
-#if DEBUG &1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *(((EIF_INTEGER_64 *)object) + z));
-							if (!(z % 40))
-								printf("\n");
-						}
-#endif
-						widr_multi_int64 (((EIF_INTEGER_64 *)object), count);
-						break;
-					case SK_BOOL:
-					case SK_CHAR:
-#if DEBUG &1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *((EIF_CHARACTER *)(object + z)));
-							if (!(z % 40))
-								printf("\n");
-						}
-#endif
-						widr_multi_char ((EIF_CHARACTER *) object, count);
-						break;
-					case SK_WCHAR:
-#if DEBUG &1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", *((EIF_CHARACTER *)(object + z)));
-							if (!(z % 40))
-								printf("\n");
-						}
-#endif
-						widr_multi_int32 ((EIF_INTEGER_32 *) object, count);
-						break;
-					case SK_FLOAT:
-#if DEBUG &1
-						for (z = 0; z < count; z++) {
-							printf (" %f", *(((EIF_REAL *)object) + z));
-							if (!(z % 40))
-								printf("\n");
-						}
-#endif
-						widr_multi_float ((EIF_REAL *)object, count);
-						break;
-					case SK_DOUBLE:
-#if DEBUG &1
-						for (z = 0; z < count; z++) {
-							printf (" %lf", *(((EIF_DOUBLE *)object) + z));
-							if (!(z % 40))
-								printf("\n");
-						}
-#endif
-						widr_multi_double ((EIF_DOUBLE *)object, count);
-						break;
-					case SK_BIT:
-						dgen_typ = dgen & SK_DTYPE;
-						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-#if DEBUG &1
-						printf (" %x", dgen_typ);
-						for (ref = object; count > 0; count--, ref += elem_size) {
-							int q;
-							for (q = 0; q < BIT_NBPACK(dgen & SK_DTYPE ) ; q++) {
-								printf (" %lx", *((uint32 *)(((struct bit *)ref)->b_value + q)));
-								if (!(q % 40))
-									printf("\n");
-							}
-							printf ("\n");
-						}
-#endif
-						widr_multi_bit ((struct bit *)object, count, dgen_typ, elem_size);
-						break;
-					case SK_EXP:
-						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-						hfflags = HEADER(object + OVERHEAD)->ov_flags;
-						hflags = Mapped_flags(hfflags);
-						widr_norm_int (&hflags);		/* %%zs misuse, removed ",1" */
-						ist_write_cid (hfflags & EO_TYPE);
+				/* Generic type, write in file:
+				 *	"dtype visible_name size nb_generics {meta_type}+"
+				 */
+				gt_type = info->gt_type;
+				nb_gen = info->gt_param;
 
-						for (ref = object + OVERHEAD; count > 0;
-							count --, ref += elem_size) {
-							object_write(ref);
-						}
-						break;
-					case SK_POINTER:
-#if DEBUG &1
-						for (z = 0; z < count; z++) {
-							printf (" %lx", (((char *)object) + z));
-							if (!(z % 40))
-								printf("\n");
-						}
-#endif
-						widr_multi_any (object, count);
-						break;
-
-					default:
-						eise_io("Basic store: not an Eiffel object.");
+				for (;;) {
+					CHECK("Not invalid", *gt_type != SK_INVALID);
+					if ((*gt_type++ & SK_DTYPE) == (int16) o_type)
 						break;
 				}
-			} else {
-				if (!(flags & EO_COMP)) {	/* Special of references */
-					widr_multi_any (object, count);
-#if DEBUG &1
-					for (ref = object; count > 0; count--,
-							ref = (char *) ((char **) ref + 1)) {
-						printf (" %lx", *(EIF_INTEGER *)(ref));
-						if (!(count % 40))
-							printf ("\n");
-					}
-#endif
-				} else {			/* Special of composites */
-					elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-					hfflags = HEADER(object)->ov_flags;
-					hflags = Mapped_flags(hfflags);
-					widr_norm_int (&hflags);	/* %%zs misuse, removed ",1" */
-					ist_write_cid (hflags & EO_TYPE);
+				gt_type--;
+				gt_gen = info->gt_gen + nb_gen * (gt_type - info->gt_type);
+				dgen = *gt_gen;
+		
+				if (!(flags & EO_REF)) {		/* Special of simple types */
+					switch (dgen & SK_HEAD) {
+						case SK_INT8: widr_multi_int8 (((EIF_INTEGER_8 *)object), count); break;
+						case SK_INT16: widr_multi_int16 (((EIF_INTEGER_16 *)object), count); break;
+						case SK_INT32: widr_multi_int32 (((EIF_INTEGER_32 *)object), count); break;
+						case SK_INT64: widr_multi_int64 (((EIF_INTEGER_64 *)object), count); break;
+						case SK_POINTER: widr_multi_any (object, count); break;
+						case SK_WCHAR: widr_multi_int32 ((EIF_INTEGER_32 *) object, count); break;
+						case SK_FLOAT: widr_multi_float ((EIF_REAL *)object, count); break;
+						case SK_DOUBLE: widr_multi_double ((EIF_DOUBLE *)object, count); break;
+						case SK_BOOL:
+						case SK_CHAR: widr_multi_char ((EIF_CHARACTER *) object, count); break;
+						case SK_BIT:
+							dgen_typ = dgen & SK_DTYPE;
+							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+							widr_multi_bit ((struct bit *)object, count, dgen_typ, elem_size);
+							break;
+						case SK_EXP:
+							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+							hfflags = HEADER(object + OVERHEAD)->ov_flags;
+							hflags = Mapped_flags(hfflags);
+							widr_norm_int (&hflags);		/* %%zs misuse, removed ",1" */
+							ist_write_cid (hfflags & EO_TYPE);
 
-					for (ref = object + OVERHEAD; count > 0;
-							count --, ref += elem_size) {
-						object_write(ref);
+							for (ref = object + OVERHEAD; count > 0;
+								count --, ref += elem_size) {
+								object_write(ref);
+							}
+							break;
+
+						default:
+							eise_io("Basic store: not an Eiffel object.");
+							break;
+					}
+				} else {
+					if (!(flags & EO_COMP)) {	/* Special of references */
+						widr_multi_any (object, count);
+					} else {			/* Special of composites */
+						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
+						hfflags = HEADER(object)->ov_flags;
+						hflags = Mapped_flags(hfflags);
+						widr_norm_int (&hflags);	/* %%zs misuse, removed ",1" */
+						ist_write_cid (hflags & EO_TYPE);
+
+						for (ref = object + OVERHEAD; count > 0;
+								count --, ref += elem_size) {
+							object_write(ref);
+						}
 					}
 				}
 			}

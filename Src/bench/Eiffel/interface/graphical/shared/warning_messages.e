@@ -104,10 +104,20 @@ feature -- Warning messages
 		require
 			dir_name_not_void: dir_name /= Void
 		do
-			!!Result.make (30);
+			!! Result.make (128);
 			Result.append ("Directory: ");
 			Result.append (dir_name);
 			Result.append ("%Ncannot be read")
+		end
+
+	w_Cannot_create_project_directory (dir_name: STRING): STRING is
+		require
+			dir_name_not_void: dir_name /= Void
+		do
+			!! Result.make (128);
+			Result.append ("Cannot create project directory in: ");
+			Result.append (dir_name);
+			Result.append ("%NYou may try again after fixing the permissions.")
 		end
 
 	w_Cannot_read_file (file_name: STRING): STRING is
@@ -185,23 +195,38 @@ feature -- Warning messages
 	w_Clear_breakpoints: STRING is "Do you wish to clear the stop points?"
 
 	w_Default_ace_file_not_exist (f_name: STRING): STRING is
+			-- Error message when the Ace file does not exist.
 		require
 			f_name_not_void: f_name /= Void
 		do
-			!! Result.make (30);
+			!! Result.make (128);
 			Result.append ("Default ace file: ");
 			Result.append (f_name);
 			Result.append ("%Ndoes not exist")
 		end;
-			
+	
 	w_Directory_not_exist (dir_name: STRING): STRING is
+			-- Error message when a directory does not exist.
 		require
 			dir_name_not_void: dir_name /= Void
 		do
-			!!Result.make (30);
-			Result.append ("Directory: ");
+			!! Result.make (128);
+			Result.append ("Directory ");
 			Result.append (dir_name);
-			Result.append ("%Ndoes not exist")
+			Result.append ("%Ndoes not exist.")
+		end
+			
+	w_Project_directory_not_exist (dir_name: STRING): STRING is
+			-- Error message when something is missing in the Project directory.
+		require
+			dir_name_not_void: dir_name /= Void
+		do
+			!! Result.make (256);
+			Result.append ("Cannot open project in ");
+			Result.append (dir_name);
+			Result.append ("%N%NTry to fix the permissions or to check that the COMP,")
+			Result.append ("%NF_CODE and W_code directories and the `project.eif' ")
+			Result.append ("%Nfile are present in your EIFGEN directory.")
 		end;
 			
 	w_Directory_wrong_permissions (dir_name: STRING): STRING is

@@ -5,19 +5,19 @@
 		<list ordered="false">
 			<item><link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.xml</url><label>DB_REPOSITORY</label></link> objects 
 				<link>
-					<url>#describe</url>
+					<anchor_name>describe</anchor_name>
 					<label>describe a relational table</label>
 				</link> and enable to create Eiffel objects mapping database tables.
 			</item>
 			<item><link><url>/libraries/store/reference/interface/DB_STORE_flatshort.xml</url><label>DB_STORE</label></link> enables to 
 				<link>
-					<url>#insert</url>
+					<anchor_name>insert</anchor_name>
 					<label>insert data into relational tables</label>
 				</link> using directly <link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.xml</url><label>DB_REPOSITORY</label></link> objects.
 			</item>
 			<item><link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.xml</url><label>DB_SELECTION</label></link> can 
 				<link>
-					<url>#map</url>
+					<anchor_name>map</anchor_name>
 					<label>map a database query result into Eiffel objects</label>
 				</link>. 
 			</item>

@@ -1,10 +1,10 @@
 <document output="studio" title="EiffelWeb Sample">
 	<meta_data/>
 	<paragraph>
-		<paragraph> This sample shows how to retrieve and display information from a            basic form on a web page.</paragraph>
+		<paragraph> This sample shows how to retrieve and display information from a basic form on a web page.</paragraph>
 		<paragraph>
 			<note>
-				<bold>Note:</bold> This sample requires a web server supporting CGI in            order to be run. Both the Internet Information Services web server            from Microsoft and the GNU Apache server may be used.
+				<bold>Note:</bold> This sample requires a web server supporting CGI in order to be run. Both the Internet Information Services web server            from Microsoft and the GNU Apache server may be used.
 				<heading>
 					<size>2</size>Compiling
 				</heading>
@@ -63,7 +63,6 @@
 					<paragraph> </paragraph>
 					<paragraph> See the 
 						<link>
-							<url>root_cluster/index.xml</url>
 							<label>reference</label>
 						</link> for the class interfaces. 
 					</paragraph>

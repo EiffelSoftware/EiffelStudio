@@ -14,25 +14,25 @@
 			<list ordered="false">
 				<item>The 
 					<link>
-						<url>#handle</url>
+						<anchor_name>handle</anchor_name>
 						<label>active database handle</label>
 					</link>.
 				</item>
 				<item>The 
 					<link>
-						<url>#association</url>
+						<anchor_name>association</anchor_name>
 						<label>association between interface and implementation</label>
 					</link> objects.
 				</item>
 				<item>The 
 					<link>
-						<url>#access</url>
+						<anchor_name>access</anchor_name>
 						<label>access to the DBMS call interface</label>
 					</link> from the implementation layer.
 				</item>
 				<item>The 
 					<link>
-						<url>#selection</url>
+						<anchor_name>selection</anchor_name>
 						<label>active database selection</label>
 					</link> from the database application.0
 				</item>

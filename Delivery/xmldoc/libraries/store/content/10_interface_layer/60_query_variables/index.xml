@@ -7,13 +7,13 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>#create</url>
+					<anchor_name>create</anchor_name>
 					<label>Create</label>
 				</link> a template query.
 			</item>
 			<item>
 				<link>
-					<url>#bind</url>
+					<anchor_name>bind</anchor_name>
 					<label>Bind</label>
 				</link> variables to the query. 
 			</item>

@@ -38,7 +38,7 @@
 		<paragraph>  All Vision2 action sequences inherit <link><url>../../reference/interface/events/EV_ACTION_SEQUENCE_chart.xml</url><label>EV_ACTION_SEQUENCE</label></link> and  when it is called, all of the agents held within are fired, thus calling all of the procedures represented by the agents. The signature of any agent that you place in an action sequence must conform to those of the action sequences actual generic parameter. </paragraph>
 		<paragraph>  When you want an agent to be called from a certain action sequence and  the signatures do not match, you may use 
 			<link>
-				<url>../../reference/interface/events/EV_ACTION_SEQUENCE_chart.xmll#f_force_extend</url>
+				<url>../../reference/interface/events/EV_ACTION_SEQUENCE_chart.xmll</url><anchor_name>f_force_extend</anchor_name>
 				<label>force_extend</label>
 			</link>, this will call  your agent but has no guarantees on the arguments passed to your  procedure. 
 		</paragraph>

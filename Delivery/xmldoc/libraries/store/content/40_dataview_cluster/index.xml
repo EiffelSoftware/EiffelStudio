@@ -146,25 +146,25 @@
 		<list ordered="false">
 			<item>The <link><url>../../reference/dataview/processing/DV_SEARCHER_chart.xml</url><label>DV_SEARCHER</label></link> class to 
 				<link>
-					<url>#dv_searcher</url>
+					<anchor_name>dv_searcher</anchor_name>
 					<label>select table  rows from the database</label>
 				</link>.
 			</item>
 			<item>The <link><url>../../reference/dataview/processing/DV_TABLEROWS_NAVIGATOR_chart.xml</url><label>DV_TABLEROW_NAVIGATOR</label></link> class to 
 				<link>
-					<url>#dv_tablerow_navigator</url>
+					<anchor_name>dv_tablerow_navigator</anchor_name>
 					<label>navigate  among selected table rows</label>
 				</link>.
 			</item>
 			<item>The <link><url>../../reference/dataview/processing/DV_CREATOR_chart.xml</url><label>DV_CREATOR</label></link> class to 
 				<link>
-					<url>#dv_creator</url>
+					<anchor_name>dv_creator</anchor_name>
 					<label>create new  table rows in the database</label>
 				</link>.
 			</item>
 			<item>The <link><url>../../reference/dataview/processing/DV_TABLEROW_FIELDS_chart.xml</url><label>DV_TABLEROW_FIELDS</label></link> class to 
 				<link>
-					<url>#dv_tablerow_fields</url>
+					<anchor_name>dv_tablerow_fields</anchor_name>
 					<label>edit  a table row content</label>
 				</link>.
 			</item>
@@ -178,31 +178,31 @@
 			<item>Call set_tablecode to specify which table the component will deal with.</item>
 			<item>Specify 
 				<link>
-					<url>#output_handler</url>
+					<anchor_name>output_handler</anchor_name>
 					<label>handlers to output messages</label>
 				</link>.
 			</item>
 			<item>Set the 
 				<link>
-					<url>#database_handler</url>
+					<anchor_name>database_handler</anchor_name>
 					<label>database handler</label>
 				</link>.
 			</item>
 			<item>Add different 
 				<link>
-					<url>#controllers</url>
+					<anchor_name>controllers</anchor_name>
 					<label>controllers corresponding to actions  to perform</label>
 				</link>.
 			</item>
 			<item>Set 
 				<link>
-					<url>#subcomponents</url>
+					<anchor_name>subcomponents</anchor_name>
 					<label>subcomponents</label>
 				</link>.
 			</item>
 			<item>Set 
 				<link>
-					<url>#associated_components</url>
+					<anchor_name>associated_components</anchor_name>
 					<label>associated components</label>
 				</link>.
 			</item>
@@ -237,7 +237,7 @@
 		<paragraph>To perform 'write', 'refresh' and 'delete' at runtime, a controller isassociated to each of these actions. This controller triggers the action when adetermined user event is grabbed, for instance, when the user clicks a button.</paragraph>
 		<paragraph>
 			<link>
-				<url>#dv_s_control</url>
+				<anchor_name>dv_s_control</anchor_name>
 				<label>Controllers</label>
 			</link> are implemented by the abstract class <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CONTROL_chart.xml</url><label>DV_SENSITIVE_CONTROL</label></link> of cluster user_interactions (handle).
 		</paragraph>
@@ -295,13 +295,13 @@
 		<list ordered="false">
 			<item><link><url>../../reference/dataview/processing/DV_TYPED_SEARCHER_chart.xml</url><label>DV_TYPED_SEARCHER</label></link> performs different 
 				<link>
-					<url>#dv_typed_searcher</url>
+					<anchor_name>dv_typed_searcher</anchor_name>
 					<label>basic  searches</label>
 				</link> used by the cluster.
 			</item>
 			<item><link><url>../../reference/dataview/processing/DV_INTERACTIVE_SEARCHER_chart.xml</url><label>DV_INTERACTIVE_SEARCHER</label></link> enables to create a graphic interface to 
 				<link>
-					<url>#dv_interactive_searcher</url>
+					<anchor_name>dv_interactive_searcher</anchor_name>
 					<label>let  user set search parameters</label>
 				</link>.
 			</item>
@@ -341,31 +341,31 @@
 		<list ordered="false">
 			<item>A 
 				<link>
-					<url>#dv_s_control</url>
+					<anchor_name>dv_s_control</anchor_name>
 					<label> controller</label>
 				</link> that enables to launch the search
 			</item>
 			<item>A 
 				<link>
-					<url>#dv_s_string</url>
+					<anchor_name>dv_s_string</anchor_name>
 					<label> text input field</label>
 				</link> to set qualifying attribute
 			</item>
 			<item>A 
 				<link>
-					<url>#dv_s_string</url>
+					<anchor_name>dv_s_string</anchor_name>
 					<label> text input field</label>
 				</link> to set qualifying value
 			</item>
 			<item>A 
 				<link>
-					<url>#dv_s_integer</url>
+					<anchor_name>dv_s_integer</anchor_name>
 					<label> typed input field</label>
 				</link> to set qualification type
 			</item>
 			<item>A 
 				<link>
-					<url>#dv_s_check</url>
+					<anchor_name>dv_s_check</anchor_name>
 					<label> Boolean input field</label>
 				</link> to set case sensitivity
 			</item>
@@ -408,7 +408,7 @@
 		</tip>
 		<paragraph>You can directly set 
 			<link>
-				<url>#dv_s_control</url>
+				<anchor_name>dv_s_control</anchor_name>
 				<label> controllers</label>
 			</link> for "previous" and"next" actions. A 3rd controller, "edit list", enables toshow or raise the display list.
 		</paragraph>
@@ -417,7 +417,7 @@
 		</warning>
 		<paragraph>You can assign a 
 			<link>
-				<url>#dv_tablerow_list</url>
+				<anchor_name>dv_tablerow_list</anchor_name>
 				<label> display list</label>
 			</link> to the navigator with a <link><url>../../reference/dataview/user_interactions/DV_TABLEROW_LIST_chart.xml</url><label>DV_TABLEROW_LIST</label></link> component.
 		</paragraph>
@@ -474,7 +474,7 @@
 		<list ordered="true">
 			<item>Table row creation is triggered by a 
 				<link>
-					<url>#dv_s_control</url>
+					<anchor_name>dv_s_control</anchor_name>
 					<label> controller</label>
 				</link> ("create")
 			</item>
@@ -484,7 +484,7 @@
 			<item> <code><class_name>DV_TABLEROW_ID_PROVIDER</class_name></code> assigns the table rows to <code><class_name>DV_TABLEROWS_NAVIGATOR</class_name></code>  and  pops up the interface with the table rows</item>
 			<item>Table row selection is triggered by a 
 				<link>
-					<url>#dv_s_control</url>
+					<anchor_name>dv_s_control</anchor_name>
 					<label> controller</label>
 				</link> ("ok")
 			</item>
@@ -501,7 +501,7 @@
 			<item>Create a <code><class_name>DV_TABLEROW_ID_PROVIDER</class_name></code> object and assign the  <code><class_name>DV_TABLEROWS_NAVIGATOR</class_name></code>  object to it</item>
 			<item>Set a 
 				<link>
-					<url>#dv_s_control</url>
+					<anchor_name>dv_s_control</anchor_name>
 					<label> controller</label>
 				</link> to trigger foreign key selection
 			</item>
@@ -509,7 +509,7 @@
 			<item>Create a <code><class_name>DV_CHOICE_CREATOR</class_name></code>  object and assign the <code><class_name>DV_TABLEROW_ID_PROVIDER</class_name></code>  object to it</item>
 			<item>Set a 
 				<link>
-					<url>#dv_s_control</url>
+					<anchor_name>dv_s_control</anchor_name>
 					<label> controller</label>
 				</link> to trigger table row creation
 			</item>
@@ -544,13 +544,13 @@
 		</heading>
 		<paragraph>This class enables to edit a table row attribute value. The view is abstracted using the handle cluster <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.xml</url><label>DV_SENSITIVE_STRING</label></link> class that 
 			<link>
-				<url>#dv_s_string</url>
+				<anchor_name>dv_s_string</anchor_name>
 				<label>represents the editable text value</label>
 			</link>.
 		</paragraph>
 		<paragraph>This class manages a field value but can also provide field name and type if 
 			<link>
-				<url>#dv_s_string</url>
+				<anchor_name>dv_s_string</anchor_name>
 				<label>graphic fields</label>
 			</link> are provided. Notice that standard <link><url>../../reference/dataview/processing/DV_TABLEROW_FIELD_chart.xml</url><label>DV_TABLEROW_FIELD</label></link> objects can be generated through the <link><url>../../reference/dataview/graphical/DV_FACTORY_chart.xml</url><label>DV_FACTORY</label></link> class, which is a component factory.
 		</paragraph>
@@ -559,38 +559,38 @@
 		</heading>
 		<paragraph>This cluster provides the model with an interface to input or output data on the GUI. This enables to remove any link to a graphic implementation in the model, following the 
 			<link>
-				<url>#model-view_sep</url>
+				<anchor_name>model-view_sep</anchor_name>
 				<label>Model-View separation</label>
 			</link> design pattern. The cluster contains a set of interface classes to design this: 
 		</paragraph>
 		<list ordered="false">
 			<item>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CONTROL_chart.xml</url><label>DV_SENSITIVE_CONTROL</label></link> class to 
 				<link>
-					<url>#dv_s_control</url>
+					<anchor_name>dv_s_control</anchor_name>
 					<label>let the user  trigger an action</label>
 				</link>.
 			</item>
 			<item>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.xml</url><label>DV_SENSITIVE_STRING</label></link> class to 
 				<link>
-					<url>#dv_s_string</url>
+					<anchor_name>dv_s_string</anchor_name>
 					<label>input or output a  text value</label>
 				</link>.
 			</item>
 			<item>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.xml</url><label>DV_SENSITIVE_INTEGER</label></link> class to 
 				<link>
-					<url>#dv_s_integer</url>
+					<anchor_name>dv_s_integer</anchor_name>
 					<label>input or output  a quantity value</label>
 				</link>.
 			</item>
 			<item>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CHECK_chart.xml</url><label>DV_SENSITIVE_CHECK</label></link> class to 
 				<link>
-					<url>#dv_s_check</url>
+					<anchor_name>dv_s_check</anchor_name>
 					<label>input or output a  tag value</label>
 				</link>.
 			</item>
 			<item>The <link><url>../../reference/dataview/user_interactions/DV_TABLEROW_LIST_chart.xml</url><label>DV_TABLEROW_LIST</label></link> class to 
 				<link>
-					<url>#dv_tablerow_list</url>
+					<anchor_name>dv_tablerow_list</anchor_name>
 					<label>display a set of  table rows and grab events on it</label>
 				</link>.
 			</item>
@@ -651,11 +651,11 @@
 		<note>
 			<bold>Note</bold>: This class is used for the 
 			<link>
-				<url>#dv_control_navigator</url>
+				<anchor_name>dv_control_navigator</anchor_name>
 				<label>standard implementation</label>
 			</link> of <link><url>../../reference/dataview/processing/DV_TABLEROWS_NAVIGATOR_chart.xml</url><label>DV_TABLEROW_NAVIGATOR</label></link> to 
 			<link>
-				<url>#dv_tablerow_navigator</url>
+				<anchor_name>dv_tablerow_navigator</anchor_name>
 				<label>navigate among table rows</label>
 			</link> selected from the database.
 		</note>

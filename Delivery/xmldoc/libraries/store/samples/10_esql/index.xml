@@ -16,13 +16,13 @@
 				<item>Browse to 
 					<italic>$ISE_EIFFEL\examples\store\esql\</italic>. 
 				</item>
-				<item>Choose the file that fits your platform and the DBMS you want to              use:              
+				<item>Choose the file that fits your platform and the DBMS you want to use:              
 					<list ordered="false">
 						<item>
-							<italic>Ace.odbc.windows.ace</italic> on Windows platforms for ODBC                  DBMS drivers
+							<italic>Ace.odbc.windows.ace</italic> on Windows platforms for ODBC DBMS drivers
 						</item>
 						<item>
-							<italic>Ace.oracle.windows.ace</italic> on Window platforms for Oracle                  DBMS
+							<italic>Ace.oracle.windows.ace</italic> on Window platforms for Oracle DBMS
 						</item>
 						<item>
 							<italic>Ace.oracle.unix.ace</italic> on Unix platforms for Oracle DBMS
@@ -39,7 +39,7 @@
 					<size>2</size>Running
 				</heading>
 				<paragraph>This sample lets you interact with your database through a console. </paragraph>
-				<paragraph>            First you have to enter the database            connection information: </paragraph>
+				<paragraph>First you have to enter the database connection information: </paragraph>
 				<list ordered="false">
 					<item>For ODBC:
 					<code_block>
@@ -51,10 +51,10 @@ Password: mypass
 					<note>
 						<bold>Note:</bold>
 						<italic> Name</italic> and 
-						<italic>Password</italic> are no required with          ODBC. If you don't need 
+						<italic>Password</italic> are no required with ODBC. If you don't need 
 						<italic>Name</italic> and 
 						<italic>Password</italic>,
-						<italic/>you          can simply hit 
+						<italic/>you can simply hit 
 						<bold>Return</bold> when prompted
 						<italic>.</italic>
 					</note>
@@ -68,13 +68,13 @@ Name: smith@HANDSON
 Password: mypass
 					</code_block>
 					<note>
-						<bold>Note:</bold>   you have to specify the Oracle User Name and Net          Service Name with the syntax 
+						<bold>Note:</bold>   you have to specify the Oracle User Name and Net Service Name with the syntax 
 						<italic>&lt;user&gt;@&lt;service&gt; </italic>where          
 						<italic>&lt;user&gt;</italic> stands for the User Name and 
-						<italic>&lt;service&gt;</italic>          stands for the Net Service Name. 
+						<italic>&lt;service&gt;</italic> stands for the Net Service Name. 
 					</note></item>
 				</list>
-				<paragraph>Then you can enter standard SQL queries to interact with your        database, for instance: </paragraph>
+				<paragraph>Then you can enter standard SQL queries to interact with your database, for instance: </paragraph>
 				<code_block>
 SQL> select firstname, lastname from CONTACTS where lastname = 'Smith'
 John    Smith
@@ -87,7 +87,7 @@ SQL>
 				<heading>
 					<size>2</size>Under the Hood
 				</heading>
-				<paragraph>            This sample showcases the use of the 3 basic classes to interact            with your database: </paragraph>
+				<paragraph>            This sample showcases the use of the 3 basic classes to interact with your database: </paragraph>
 				<list ordered="false">
 					<item>
 						<link>
@@ -112,15 +112,13 @@ SQL>
 				<list ordered="false">
 					<item>
 						<link>
-							<url>root_cluster/esql_chart.xml</url>
 							<label>ESQL</label>
 						</link> for Oracle.
 					</item>
 					<item>
 						<link>
-							<url>root_cluster/esql_odbc_chart.xml</url>
 							<label>ESQL_ODBC</label>
-						</link> for            ODBC.
+						</link> for ODBC.
 					</item>
 				</list>
 			</paragraph>

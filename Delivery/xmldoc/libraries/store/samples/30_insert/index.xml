@@ -110,7 +110,7 @@ Object inserted
 						<label>DB_STORE</label>
 					</link>        class to 
 					<link>
-						<url>../../content/10_interface_layer/50_data_object_coupling/index.xml#insert</url>
+						<url>../../content/10_interface_layer/50_data_object_coupling/index.xml</url><anchor_name>insert</anchor_name>
 						<label> perform        database insertions</label>
 					</link> where the SQL language is totally        abstracted. 
 				</paragraph>
@@ -118,13 +118,11 @@ Object inserted
 				<list ordered="false">
 					<item>
 						<link>
-							<url>root_cluster/inserter_chart.xml</url>
 							<label>INSERTER</label>
 						</link> for Oracle.
 					</item>
 					<item>
 						<link>
-							<url>root_cluster/inserter_odbc_chart.xml</url>
 							<label>INSERTER_ODBC</label>
 						</link> for ODBC.
 					</item>

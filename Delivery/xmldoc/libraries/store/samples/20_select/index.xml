@@ -143,13 +143,11 @@ Author? ('exit' to terminate):
 				<list ordered="false">
 					<item>
 						<link>
-							<url>root_cluster/selector_chart.xml</url>
 							<label>SELECTOR</label>
 						</link> for Oracle.
 					</item>
 					<item>
 						<link>
-							<url>root_cluster/selector_odbc_chart.xml</url>
 							<label>SELECTOR_ODBC</label>
 						</link> for ODBC.
 					</item>

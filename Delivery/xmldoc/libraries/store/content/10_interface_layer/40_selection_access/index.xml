@@ -18,13 +18,13 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>#retrieve</url>
+					<anchor_name>retrieve</anchor_name>
 					<label>retrieve</label>
 				</link> DB_RESULT objects.
 			</item>
 			<item>
 				<link>
-					<url>#access</url>
+					<anchor_name>access</anchor_name>
 					<label>access</label>
 				</link> DB_RESULT content. 
 			</item>

@@ -112,7 +112,7 @@
 					<paragraph>Assuming that the type of 
 						<italic>iom1 </italic>is <code><class_name>IO_MEDIUM</class_name></code> or    a conforming type such as 
 						<link>
-							<url>../../base/reference/kernel/file_chart.xml</url>
+							<url>../../base/reference/kernel/classic/FILE_chart.xml</url>
 							<label>FILE</label>
 						</link>    or one of the <code><class_name>_SOCKET</class_name></code> classes, and that the type of 
 						<italic>struct1</italic>    conforms to <code><class_name>STORABLE</class_name></code> 

@@ -104,9 +104,10 @@ feature {NONE} -- Implementation
 			cmd_string: STRING;
 			filterable_format: FILTERABLE;
 			shell_request: EXTERNAL_COMMAND_EXECUTOR;
-			filename, new_text: STRING
+			filename, new_text: STRING;
+			mp: MOUSE_PTR
 		do
-			set_global_cursor (watch_cursor);
+			!! mp.set_watch_cursor;
 			if argument = Void then
 					-- 3rd button pressed
 				filter_window.call 
@@ -154,7 +155,7 @@ feature {NONE} -- Implementation
 					shell_request.execute (cmd_string);
 				end
 			end;
-			restore_cursors
+			mp.restore
 		end;
 	
 	save_to_file (a_text: STRING; a_filename: STRING) is

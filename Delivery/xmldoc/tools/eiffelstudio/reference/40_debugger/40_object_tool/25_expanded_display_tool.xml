@@ -1,0 +1,36 @@
+<document title="Expanded display" output="studio">
+	<meta_data/>
+	<paragraph>
+		<paragraph>Located in the object tool toolbar, this command 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_expand_string_color.gif</url>
+			</image> opens an Expanded display dialog when an object is dropped onto the button. 
+<line_break></line_break>			
+			The dropped object needs to have a string representation of its value, for instance an object conform to <link><url>/libraries/base/reference/kernel/classic/string_chart.xml</url><label><code><class_name>STRING</class_name></code></label></link>
+			 or conform to  <link><url>/libraries/base/reference/kernel/classic/debug_output_chart.xml</url><label><code><class_name>DEBUG_OUTPUT</class_name></code></label></link> (see 
+			<link>
+				<url>17_debug_output.xml</url>
+				<label>Debug Output</label>
+			</link>)
+
+		</paragraph>
+		<paragraph>This dialog show the object as a string, by default the displayed length is 50:</paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/debugger/expanded_display_default.png</url>
+			</image>
+		</paragraph>
+		<paragraph>If the limts are over the current slice limits, the displayed string will end by "..." to show there is more.
+	<line_break></line_break>
+			 If you click on the auto expand button 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_auto_slice_limits_color.png</url>
+			</image> , the slice limits will be set to the lower and upper limits of the string value.
+		</paragraph>
+		<paragraph>You can enable or disable the line wrapping by clicking onto 
+			<image>
+				<url>/images/eiffelstudio/icons/icon_word_wrap_color.png</url>
+			</image>.		
+
+		</paragraph>
+	</paragraph></document>

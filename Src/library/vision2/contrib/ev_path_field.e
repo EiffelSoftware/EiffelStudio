@@ -63,8 +63,6 @@ feature -- Settings
 	set_browse_for_file (filter: STRING) is
 			-- Force file browsing dialog to appear when user
 			-- click on `browse_button'.
-		require
-			filter_not_void: filter /= Void
 		do
 			browse_button.select_actions.wipe_out
 			browse_button.select_actions.extend (agent browse_for_file (filter))
@@ -147,7 +145,9 @@ feature {NONE} -- Actions
 			start_directory: STRING
 		do
 			create fd
-			fd.set_filter (filter)
+			if filter /= Void then
+				fd.set_filter (filter)
+			end
 			fd.set_title ("Select a file")
 			start_directory := field.text
 			if

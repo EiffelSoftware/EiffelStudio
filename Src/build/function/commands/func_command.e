@@ -32,13 +32,15 @@ feature
 	undo is 
 		do
 			undo_work;
+			update_interface;
 			update_page_number
 		end;
 
 	redo is
 		do
 			redo_work;
-			update_page_number
+			update_interface;
+			update_page_number;
 		end
 
 feature {NONE}
@@ -48,6 +50,11 @@ feature {NONE}
 			if edited_function.func_editor /= Void then
 				edited_function.func_editor.display_page_number
 			end
+		end;
+
+	update_interface is
+		do
+			App_editor.update_transitions_list (Void)
 		end;
 
 	undo_work is

@@ -299,7 +299,7 @@ cluster
       "CVS";
     end
     
-  all common_ast_visitor (common_parser):   "$\ast\visitor"
+  common_ast_visitor (common_parser):   "$\ast\visitor"
     exclude
       "CVS";
     end
@@ -325,11 +325,6 @@ cluster
     end
     
   yacc:   "$EIFFEL_SRC\Eiffel\yacc"
-    exclude
-      "CVS";
-    end
-    
-  const:    "$EIFFEL_SRC\Eiffel\const"
     exclude
       "CVS";
     end

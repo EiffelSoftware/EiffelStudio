@@ -21,7 +21,6 @@ inherit
 creation
 	make
 	
-
 feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
@@ -39,7 +38,13 @@ feature -- Status report
 		do
 			Result := implementation.count
 		end
-	
+
+	current_page: INTEGER is
+			-- Index of the page currently opened
+		do
+			Result := implementation.current_page
+		end
+
 feature -- Status setting
 	
 	set_tab_top is
@@ -96,7 +101,19 @@ feature -- Element change
 		do
 			implementation.append_page (c.implementation, label)
 		end
+
+feature -- Event - command association
 	
+	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add 'cmd' to the list of commands to be executed
+			-- the a page is switch in the notebook.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_switch_command (cmd, arg)
+		end	
+		
 feature {NONE} -- Implementation
 	
 	implementation: EV_NOTEBOOK_I

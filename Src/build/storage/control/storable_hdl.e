@@ -29,6 +29,10 @@ feature
 			!! f.make_open_read (fn);
 			retrieved ?= storable_retrieved (f);
 			f.close
+		rescue
+			if not (f = Void or else f.is_closed) then
+				f.close
+			end
 		end;
 
 	tmp_store_by_name (dir_name: STRING) is

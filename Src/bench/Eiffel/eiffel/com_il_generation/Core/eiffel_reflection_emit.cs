@@ -96,7 +96,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 		#endif
 		try {
 			is_debugging_enabled = Debug;
-			module = assembly.DefineDynamicModule (Name, Name, Debug);
+			main_module = assembly.DefineDynamicModule (Name, Name, Debug);
 		}
 		catch (Exception error) {
 			LogError (error);
@@ -146,6 +146,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 		try
 		{
 			bool is_array = ElementTypeName.Length > 0;
+			EiffelClass eiffel_class;
 
 			switch (ClassName)
 			{
@@ -163,18 +164,17 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 				default: break;
 			}
 
-			Classes [TypeID] = new EiffelClass (module);
-			Classes [TypeID].SetName (ClassName);
-			Classes [TypeID].SetTypeID (TypeID);
-			Classes [TypeID].SetInterfaceID (InterfaceID);
-			Classes [TypeID].SetIsArray(is_array);
+			eiffel_class = new EiffelClass ();
+			Classes [TypeID] = eiffel_class;
+			eiffel_class.SetName (ClassName);
+			eiffel_class.SetTypeID (TypeID);
+			eiffel_class.SetInterfaceID (InterfaceID);
+			eiffel_class.SetIsArray(is_array);
 			if (is_array)
-				Classes [TypeID].SetArrayElementName (ElementTypeName);
-			if (is_debugging_enabled && !is_array)
-				Classes [TypeID].SetDocument (module.DefineDocument
-					(SourceFileName, new Guid ("6805C61E-8195-490c-87EE-A713301A670C"),
-					new Guid ("B68AF30E-9424-485f-8264-D4A726C162E7"),
-					System.Guid.Empty));
+				eiffel_class.SetArrayElementName (ElementTypeName);
+			if (is_debugging_enabled) {
+				eiffel_class.set_source_file_name (SourceFileName);
+			}
 		}
 		catch (Exception error) {
 			LogError (error, "For class " + ClassName + " with TypeID "
@@ -194,19 +194,30 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 		#endif
 		
 		try {
+			EiffelClass eiffel_class = Classes [TypeID];
+
 			if (IsExternal) {
-				ExternalType = TypeFromName (Classes [TypeID].Name);
+				ExternalType = TypeFromName (eiffel_class.Name);
 				if (ExternalType == null)
 					throw (new ApplicationException ("Could not find type " +
-								Classes [TypeID].Name));
-				Classes [TypeID].SetTypeBuilder (ExternalType);
+								eiffel_class.Name));
+				eiffel_class.SetTypeBuilder (ExternalType);
 			} else {
-				Classes [TypeID].SetIsDeferred(IsDeferred);
-				Classes [TypeID].SetIsInterface(IsInterface);
-				Classes [TypeID].SetIsExpanded(IsExpanded);
+				if (nb_classes_generated % nb_classes_per_module == 0) {
+					string module_name = "internal_module_" + (nb_classes_generated / nb_classes_per_module) + ".dll";
+					module = assembly.DefineDynamicModule (module_name, module_name, is_debugging_enabled);
+				}
+				nb_classes_generated = nb_classes_generated + 1;
+				eiffel_class.set_module (module);
+				eiffel_class.SetIsDeferred(IsDeferred);
+				eiffel_class.SetIsInterface(IsInterface);
+				eiffel_class.SetIsExpanded(IsExpanded);
+				if (is_debugging_enabled) {
+					eiffel_class.create_document ();
+				}
 			}
-			Classes [TypeID].SetIsExternal (IsExternal);
-			Classes [TypeID].SetIsFrozen (IsFrozen);
+			eiffel_class.SetIsExternal (IsExternal);
+			eiffel_class.SetIsFrozen (IsFrozen);
 			CurrentTypeID = TypeID;
 		}
 		catch (Exception error) {
@@ -421,7 +432,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 			ILGenerator Generator;
 			EiffelMethod RealEntryPoint;
 	
-			EntryType = module.DefineType (Classes [TypeID].Name + EntryTypeName);
+			EntryType = main_module.DefineType (Classes [TypeID].Name + EntryTypeName);
 			EntryPoint = EntryType.DefineMethod (EntryPointName,
 				MethodAttributes.Public | MethodAttributes.Static,
 				Type.GetType ("void"), Type.EmptyTypes);
@@ -904,14 +915,12 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 					MethodIL = Override.GetILGenerator();
 					GenerateCurrent ();
-					for (i = 0; i < nb ; i++) {
-						GenerateArgument (i + 1);
+					GenerateArgument (1);
 // FIXME: to uncomment when Eiffel is covariance safe, which it is not at the moment.
-//						if (Method.ParameterTypeIDs [i] != ParentMethod.ParameterTypeIDs [i]) {
-//							MethodIL.Emit (OpCodes.Castclass,
-//								Classes [Method.ParameterTypeIDs [i]].Builder);
-//						}
-					}
+//					if (Method.ParameterTypeIDs [i] != ParentMethod.ParameterTypeIDs [i]) {
+//						MethodIL.Emit (OpCodes.Castclass,
+//							Classes [Method.ParameterTypeIDs [i]].Builder);
+//					}
 					MethodIL.Emit (OpCodes.Callvirt, Method.SetterBuilder);
 					MethodIL.Emit (OpCodes.Ret);
 
@@ -1813,19 +1822,15 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 
 /* Perform Type lookup */
 
-	internal Type TypeFromName (string TypeName) {
+	private Type TypeFromName (string TypeName) {
 			// Search current assembly and mscorlib
 		Type ExternalType = Type.GetType (TypeName, false, false);
 		if (ExternalType == null) {
-				// Search in current module
-			ExternalType = module.GetType (TypeName, false, false);
-			if (ExternalType == null) {
-					// Search in referenced assemblies
-				foreach (Assembly assembly in ExternalAssemblies) {
-					ExternalType = assembly.GetType (TypeName);
-					if (ExternalType != null)
-						return ExternalType;
-				}
+				// Search in referenced assemblies
+			foreach (Assembly assembly in ExternalAssemblies) {
+				ExternalType = assembly.GetType (TypeName);
+				if (ExternalType != null)
+					return ExternalType;
 			}
 		}
 		return ExternalType;
@@ -1841,7 +1846,7 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	private void CleanUp () {
 		Classes = null;
 		assembly = null;
-		module = null;
+		main_module = null;
 		ExternalAssemblies = null;
 		MethodIL = null;
 		Labels = null;
@@ -1863,8 +1868,15 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	// Built assembly
 	private AssemblyBuilder assembly;
 	
-	// Built module
-	private ModuleBuilder module;
+	// Main module being built
+	private ModuleBuilder main_module;
+
+	// Current module used for code generation
+	private ModuleBuilder module = null;
+
+	// Number of classes per module
+	private static int nb_classes_per_module = 20;
+	private int nb_classes_generated = 0;
 	
 	// Current Method IL Generator
 	private ILGenerator MethodIL;

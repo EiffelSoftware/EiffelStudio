@@ -148,4 +148,12 @@ feature -- Inlining
 			Result := Current
 		end
 
+feature -- Concurrent Eiffel
+
+	has_separate_call: BOOLEAN is
+			-- Is there a separate call in this byte node?
+		do
+			Result := False;
+		end
+
 end

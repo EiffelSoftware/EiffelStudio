@@ -391,9 +391,9 @@ feature -- Generation constants
 				"make_with_window (a_window: EV_TITLED_WINDOW) is" + indent + "-- Create `Current' in `a_window'." +
 				indent_less_one + "require" + indent + "window_not_void: a_window /= Void" +
 				indent + "window_empty: a_window.is_empty" + indent + "no_menu_bar: a_window.menu_bar = Void" +
-				indent_less_one + "do" + indent + "window := a_window" + indent + "initialize" + indent_less_one + "ensure" + indent + "window_set: window = a_window" + indent + "window_not_void: window /= Void" + "end%N" +
+				indent_less_one + "do" + indent + "window := a_window" + indent + "initialize" + indent_less_one + "ensure" + indent + "window_set: window = a_window" + indent + "window_not_void: window /= Void" + indent_less_one + "end%N" +
 				indent_less_two + "default_create is" + indent + " -- Create `Current'." + indent_less_one + "do" + indent +
-				"create window" + indent + "initialize" + indent_less_one + "ensure" + indent + "window_not_void: window /= Void" + indent + "end"
+				"create window" + indent + "initialize" + indent_less_one + "ensure" + indent + "window_not_void: window /= Void" + indent_less_one + "end"
 		end
 	
 	default_create_redefinition: STRING is

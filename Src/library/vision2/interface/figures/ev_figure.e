@@ -169,7 +169,7 @@ feature -- Action sequences
 			Result := internal_pointer_leave_actions
 		end
 
-	proximity_in_actions: EV_PROXIMITY_ACTION_SEQUENCE is
+	proximity_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when pointing device comes into range.
 		obsolete "Not supported."
 		do
@@ -179,7 +179,7 @@ feature -- Action sequences
 			Result := internal_proximity_in_actions
 		end
 
-	proximity_out_actions: EV_PROXIMITY_ACTION_SEQUENCE is
+	proximity_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when pointing device goes out of range.
 		obsolete "Not supported."
 		do
@@ -612,10 +612,10 @@ feature {EV_WIDGET_PROJECTOR, EV_FIGURE} -- Implementation
 	internal_pointer_leave_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `pointer_leave_actions'.
 
-	internal_proximity_in_actions: EV_PROXIMITY_ACTION_SEQUENCE
+	internal_proximity_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `proximity_in_actions'.
 
-	internal_proximity_out_actions: EV_PROXIMITY_ACTION_SEQUENCE
+	internal_proximity_out_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Implementation of once per object `proximity_out_actions'.
 
 	internal_pick_actions: EV_PND_START_ACTION_SEQUENCE

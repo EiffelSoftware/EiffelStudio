@@ -162,7 +162,7 @@ feature -- Implementation
 		is
 			-- Filter out double click events.
 		do
-			if a_type = feature {EV_GTK_EXTERNALS}.Gdk_button_press_enum and then widget_imp_at_pointer_position = Current 
+			if a_type = feature {EV_GTK_EXTERNALS}.Gdk_button_press_enum and then gtk_widget_imp_at_pointer_position = Current 
 			and then not App_implementation.is_in_transport then
 				start_transport (
 					a_x,
@@ -543,13 +543,13 @@ feature -- Implementation
 		local
 			gdkwin: POINTER
 			x, y: INTEGER
-			a_wid_imp: EV_WIDGET_IMP
+			a_wid_imp: EV_PICK_AND_DROPABLE_IMP
 			a_pnd_deferred_item_parent: EV_PND_DEFERRED_ITEM_PARENT
 			a_row_imp: EV_PND_DEFERRED_ITEM
 			pnd_targets: ARRAYED_LIST [INTEGER] 
 		do
-			a_wid_imp := widget_imp_at_pointer_position
-			if a_wid_imp /= Void and then a_wid_imp.is_sensitive then
+			a_wid_imp ?= gtk_widget_imp_at_pointer_position
+			if a_wid_imp /= Void and then has_struct_flag (a_wid_imp.c_object, feature {EV_GTK_EXTERNALS}.gTK_SENSITIVE_ENUM) then
 				if App_implementation.pnd_targets.has (a_wid_imp.interface.object_id) then
 					Result := a_wid_imp.interface
 				end

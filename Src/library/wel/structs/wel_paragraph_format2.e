@@ -131,6 +131,7 @@ feature -- Element change
 	set_space_before (space: INTEGER) is
 			-- Set `space_before' to `space'.
 		do
+			add_mask (Pfm_spacebefore)
 			cwel_paraformat_set_dyspacebefore (item, space)
 		ensure
 			space_set: space_before = space
@@ -139,6 +140,7 @@ feature -- Element change
 	set_space_after (space: INTEGER) is
 			-- Set `space_after' to `space'.
 		do
+			add_mask (Pfm_spaceafter)
 			cwel_paraformat_set_dyspaceafter (item, space)
 		ensure
 			space_set: space_after = space
@@ -147,6 +149,7 @@ feature -- Element change
 	set_line_spacing (space: INTEGER) is
 			-- Set `line_spacing' to `space'.
 		do
+			add_mask (Pfm_linespacing)
 			cwel_paraformat_set_dylinespacing (item, space)
 		ensure
 			space_set: line_spacing = space
@@ -155,54 +158,70 @@ feature -- Element change
 	set_style (a_style: INTEGER) is
 			-- Set `style' to `a_style'.
 		do
+			add_mask (Pfm_style)
 			cwel_paraformat_set_sstyle (item, a_style)
 		end
 		
+	set_line_spacing_rule (a_rule: INTEGER) is
+			-- Set `line_spacing_rule' to `a_rule'.
+		do
+			add_mask (pfm_spaceafter)
+			cwel_paraformat_set_blinespacingrule (item, a_rule)
+		end
+
 	set_shading_weight (a_weight: INTEGER) is
 			-- Set `shading_widget' to `a_weight'.
 		do
+			add_mask (Pfm_shading)
 			cwel_paraformat_set_wshadingweight (item, a_weight)
 		end
 		
 	set_shading_style (a_style: INTEGER) is
 			-- Set `shading_style' to `a_style'.
 		do
+			add_mask (Pfm_shading)
 			cwel_paraformat_set_wshadingstyle (item, a_style)
 		end
 		
 	set_numbering_start (a_start: INTEGER) is
 			-- Set `numbering_start' to `a_start'.
 		do
+			add_mask (Pfm_numberingstart)
 			cwel_paraformat_set_wnumberingstart (item, a_start)
 		end
 		
 	set_numbering_style (a_style: INTEGER) is
 			-- Set `numbering_style' to `a_style'.
 		do
+			add_mask (Pfm_numberingstyle)
 			cwel_paraformat_set_wnumberingstyle (item, a_style)
 		end
 		
 	set_numbering_tab (a_tab: INTEGER) is
 			-- Set `numbering_tab' to `a_tab'.
 		do
+			add_mask (Pfm_numberingtab)
 			cwel_paraformat_set_wnumberingtab (item, a_tab)
 		end
 		
 	set_border_space (a_space: INTEGER) is
 			-- Set `border_space' to `a_space'.
 		do
+			add_mask (pfm_border)
 			cwel_paraformat_set_wborderspace (item, a_space)
 		end
 		
 	set_border_width (a_width: INTEGER) is
 			-- Set `border_width' to `a_width'.
 		do
+			add_mask (pfm_border)
 			cwel_paraformat_set_wborderwidth (item, a_width)
 		end
 	
 	set_borders (a_border: INTEGER)	is
 			-- Set `borders' to `a_border'.
 		do
+			add_mask (pfm_border)
 			cwel_paraformat_set_wborders (item, a_border)
 		end
 

@@ -1675,11 +1675,19 @@ feature -- Byte code access
 			-- Byte code access for current feature
 		local
 			feature_b: FEATURE_B;
+			feature_bs: FEATURE_BS;
 		do
-			!!feature_b;
-			feature_b.init (Current);
-			feature_b.set_type (access_type);
-			Result := feature_b;
+			if (context.last_constrained_type /= Void and then context.last_constrained_type.is_separate) then
+				!!feature_bs;
+				feature_bs.init (Current);
+				feature_bs.set_type (access_type);
+				Result := feature_bs;
+			else
+				!!feature_b;
+				feature_b.init (Current);
+				feature_b.set_type (access_type);
+				Result := feature_b;
+			end;
 		ensure
 			Result_exists: Result /= Void
 		end;

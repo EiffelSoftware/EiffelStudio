@@ -413,6 +413,8 @@ end;
 						generated_file.putstring ("CURGR(0);");
 					elseif value_type.is_long then
 						generated_file.putstring ("CURGI(0);");
+					elseif value_type.is_feature_pointer then
+						generated_file.putstring ("CURGP(0);");
 					elseif value_type.is_expanded then
 						generated_file.putstring ("CURGO(0);");
 					else

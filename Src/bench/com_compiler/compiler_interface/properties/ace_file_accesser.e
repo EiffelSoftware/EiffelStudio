@@ -19,6 +19,7 @@ inherit
 		
 create
 	make,
+	make_from_ast,
 	make_in_memory
 
 feature {NONE} -- Initialization
@@ -36,6 +37,16 @@ feature {NONE} -- Initialization
 			end
 		ensure
 			non_void_ast: root_ast /= Void
+		end
+		
+	make_from_ast (a_ast: like root_ast) is
+			-- Initialize `root_ast' with `a_ast'
+		require
+			a_ast_not_void: a_ast /= Void
+		do
+			root_ast := a_ast
+		ensure
+			root_ast_set: root_ast = a_ast
 		end
 
 	make_in_memory is

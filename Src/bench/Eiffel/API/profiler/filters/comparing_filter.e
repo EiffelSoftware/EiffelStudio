@@ -1,7 +1,15 @@
+indexing
+
+	description:
+		"Profile filter the check whether the stored information is equal %
+		%to the information specified by the user.";
+	date: "$Date$";
+	revision: "$Revision$"
+
 deferred class COMPARING_FILTER
 
 inherit
-	FILTER
+	PROFILE_FILTER
 		redefine
 			filtering_is_allowed
 		end
@@ -140,7 +148,7 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Hidden features
 
-	extend (new_filter: FILTER) is
+	extend (new_filter: PROFILE_FILTER) is
 		do
 		end
 

@@ -1,6 +1,6 @@
 indexing
 	description: "Action sequence for EV_CHECKABLE_LIST check events."
-	author: ""
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -40,7 +40,7 @@ feature -- Properties
 
 	name: STRING is
 		do
-			Result := l_Object
+			Result := l_New_object
 		end;
 
     stone_type: INTEGER is

@@ -193,7 +193,7 @@ feature -- Window Properties
 	tool_name: STRING is
 			-- Name of the tool represented by Current.
 		do
-			Result := l_Explain
+			Result := l_Empty_explain
 		end;
 
 feature {NONE} -- Attributes; Forms And Holes

@@ -802,7 +802,7 @@ feature {TEXT_WINDOW} -- Properties
 
 	tool_name: STRING is
 		do
-			Result := l_Routine
+			Result := l_Empty_routine
 		end;
 
 end -- class ROUTINE_W

@@ -41,7 +41,7 @@ feature -- Properties
 
 	name: STRING is
 		do
-			Result := l_Routine
+			Result := l_New_routine
 		end;
 
     stone_type: INTEGER is

@@ -399,6 +399,24 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 			Result := C.gdk_font_struct_ascent (C.gtk_style_struct_font (temp_style)) + 1
 		end
 		
+	default_font_ascent: INTEGER is
+			--
+		local
+			temp_style: POINTER
+		once
+			temp_style := C.gtk_widget_struct_style (default_gtk_window)
+			Result := C.gdk_font_struct_ascent (C.gtk_style_struct_font (temp_style))
+		end
+		
+	default_font_descent: INTEGER is
+			--
+		local
+			temp_style: POINTER
+		once
+			temp_style := C.gtk_widget_struct_style (default_gtk_window)
+			Result := C.gdk_font_struct_descent (C.gtk_style_struct_font (temp_style))
+		end
+		
 	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is		
 		once
 			Result := agent gtk_marshal.gdk_event_to_tuple

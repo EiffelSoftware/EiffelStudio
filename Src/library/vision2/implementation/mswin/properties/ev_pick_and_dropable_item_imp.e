@@ -19,7 +19,7 @@ inherit
 
 feature -- Access
 
-	pnd_original_parent: EV_ITEM_LIST_IMP [EV_ITEM]
+	pnd_original_parent: EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
 		-- Actual widget parent of `Current' when PND starts.
 		--| This is required as the item's parent may change during
 		--| exection of the actions, while we still need to access it
@@ -33,7 +33,10 @@ feature -- Access
 			--| this feature rather than pnd_press which would lead
 			--| to unecessary code duplication. 
 		do
-			pnd_original_parent := parent_imp
+			pnd_original_parent ?= parent_imp
+			check
+				pnd_original_parent_not_void: pnd_original_parent /= Void
+			end
 		end
 		
 	parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
@@ -42,9 +45,16 @@ feature -- Access
 		end
 
 	top_level_window_imp: EV_WINDOW_IMP is
+			-- Window containing `Current' in parenting heirarchy.
+		local
+			pickable_parent: EV_PICK_AND_DROPABLE_IMP
 		do
 			if parent_imp /= Void then
-				Result := parent_imp.top_level_window_imp
+				pickable_parent ?= parent_imp
+				check
+					parent_is_item_list: pickable_parent /= Void
+				end
+				Result := pickable_parent.top_level_window_imp
 			end
 		end
 
@@ -115,9 +125,15 @@ feature -- Access
 
 	set_pointer_style (c: EV_CURSOR) is
 			-- Assign `c' to `parent_imp' pointer style.
+		local
+			pickable_parent: EV_PICK_AND_DROPABLE_IMP
 		do
 			if parent_imp /= Void then
-				parent_imp.set_pointer_style (c)
+				pickable_parent ?= parent_imp
+				check
+					parent_is_item_list: pickable_parent /= Void
+				end
+				pickable_parent.set_pointer_style (c)
 			end
 		end
 

@@ -227,9 +227,9 @@ feature {NONE} -- External implementation
 	gtk_object_unref (a_c_object: POINTER) is
 			-- Only for use in dispose.
 			-- (Dispose cannot call C.gtk_object_unref)
-        external
-            "C (GtkObject*) | <gtk/gtk.h>"
-        end
+        	external
+            		"C (GtkObject*) | <gtk/gtk.h>"
+        	end
 
 	C: EV_C_EXTERNALS is
 			-- Access to external C functions.
@@ -349,6 +349,9 @@ end -- class EV_ANY_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/02/18 18:36:15  king
+--| Corrected indenting on external
+--|
 --| Revision 1.2  2000/02/14 12:05:08  oconnor
 --| added from prerelease_20000214
 --|

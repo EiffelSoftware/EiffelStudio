@@ -18,8 +18,7 @@ feature -- Access
 			-- Unique for current object in any given session
 		do
 			if internal_id = 0 then
-				reference_list.extend (
-					create {CLI_CELL [WEAK_REFERENCE]}.put (create {WEAK_REFERENCE}.make_from_target (Current)))
+				reference_list.extend (create {WEAK_REFERENCE}.make_from_target (Current))
 				internal_id := reference_list.count
 			end
 			Result := internal_id
@@ -31,15 +30,11 @@ feature -- Access
 			-- Object associated with `an_id' (void if no such object)
 		local
 			wr: WEAK_REFERENCE
-			l_cell: CLI_CELL [WEAK_REFERENCE]
 		do
 			if reference_list.valid_index (an_id) then
-				l_cell := reference_list.i_th (an_id)
-				if l_cell /= Void then
-					wr := l_cell.item
-					if wr /= Void then
-						Result ?= wr.target
-					end
+				wr := reference_list.i_th (an_id)
+				if wr /= Void then
+					Result ?= wr.target
 				end
 			end
 		ensure
@@ -117,7 +112,7 @@ feature {IDENTIFIED} -- Implementation
 
 feature {IDENTIFIED_CONTROLLER} -- Implementation
 
-	reference_list: ARRAYED_LIST [CLI_CELL [WEAK_REFERENCE]] is
+	reference_list: ARRAYED_LIST [WEAK_REFERENCE] is
 			-- List of weak references used. Id's correspond to indices in this list.
 		once
 			create Result.make (50)

@@ -19,7 +19,7 @@ feature -- Attributes
 	data_type: EV_PND_TYPE
 			-- Type of the transported data
 
-	initial_point: EV_POINT
+	initial_point: EV_COORDINATES
 			-- Initial point for the pick and drop
 
 feature -- Access

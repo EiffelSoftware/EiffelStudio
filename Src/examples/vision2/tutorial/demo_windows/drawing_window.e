@@ -88,7 +88,7 @@ feature -- Execute command
 
 	execute_expose (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 		local
-			pt1, pt2, pt3: EV_POINT
+			pt1, pt2, pt3: EV_COORDINATES
 			color: EV_COLOR
 		do
 			!! pt1.set (100, 100)
@@ -98,7 +98,7 @@ feature -- Execute command
 	execute_motion (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Increase the angle
 		local
-			pt1: EV_POINT
+			pt1: EV_COORDINATES
 		do
 			angle := (angle + 11) \\ 360
 			!! pt1.set (100, 100)

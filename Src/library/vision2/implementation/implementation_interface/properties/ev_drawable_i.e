@@ -127,14 +127,14 @@ feature -- Clearing operations
 
 feature -- Drawing operations
 
-	draw_point (pt: EV_POINT) is
+	draw_point (pt: EV_COORDINATES) is
 			-- Draw a point at the position `pt'.
 		require
 			valid_point: pt /= Void
 		deferred
 		end
 
-	draw_text (pt: EV_POINT; text: STRING) is
+	draw_text (pt: EV_COORDINATES; text: STRING) is
 			-- Draw `text' at the position `pt'
 		require
 			vlid_text: text /= Void
@@ -142,7 +142,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_segment (pt1, pt2: EV_POINT) is
+	draw_segment (pt1, pt2: EV_COORDINATES) is
 			-- Draw a segment between `pt1' and `pt2'.
 		require
 			valid_point1: pt1 /= Void
@@ -150,7 +150,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_polyline (pts: ARRAY [EV_POINT]; is_closed: BOOLEAN) is
+	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
 			-- Draw a polyline, close it automatically if `is_closed'.
 		require
 			points_exists: pts /= Void
@@ -158,7 +158,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_rectangle (pt: EV_POINT; w, h: INTEGER; orientation: REAL) is
+	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
 			-- Draw a rectangle whose center is `pt' and size is `w' and `h'
 			-- and that has the orientation `orientation'.
 		require
@@ -170,7 +170,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_arc (pt: EV_POINT; r1, r2: INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
+	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
 			-- Draw an arc centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
 			-- and with an orientation of `orientation' using the style `style'.
@@ -191,7 +191,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_pixmap (pt: EV_POINT; pix : EV_PIXMAP) is
+	draw_pixmap (pt: EV_COORDINATES; pix : EV_PIXMAP) is
 			-- Copy `pix' into the drawable at the point `pt'.
 			-- If there is not enough space to create auxiliery bitmap (DDB) 
 			-- exception will be raised
@@ -203,7 +203,7 @@ feature -- Drawing operations
 
 feature -- filling operations
 
-	fill_polygon (pts: ARRAY [EV_POINT]) is
+	fill_polygon (pts: ARRAY [EV_COORDINATES]) is
 			 -- Fill a polygon.
 		require
 			points_exists: pts /= Void
@@ -211,7 +211,7 @@ feature -- filling operations
 		deferred
 		end
 
-	fill_rectangle (pt: EV_POINT; w, h: INTEGER; orientation: REAL) is
+	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
 			-- Fill a rectangle whose center is `pt' and size is `w' and `h'
 			-- with an orientation `orientation'.
 		require
@@ -223,7 +223,7 @@ feature -- filling operations
 		deferred
 		end
 
-	fill_arc (pt: EV_POINT; r1, r2 : INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
+	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
 			-- Fill an arc centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
 			-- and with an orientation of `orientation' using the style `style'.

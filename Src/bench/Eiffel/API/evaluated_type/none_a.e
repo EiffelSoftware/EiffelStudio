@@ -81,8 +81,11 @@ feature {COMPILER_EXPORTER}
     storage_info, storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
             -- Storage info for Current type in class `classc'
             -- and store the name of the class for Current
+	local
+		fake_id: CLASS_ID
         do
-            !! Result.make ("NONE", 0)
+		!! fake_id.make (0)
+		!! Result.make ("NONE", fake_id)
         end
 
 end -- class NONE_A

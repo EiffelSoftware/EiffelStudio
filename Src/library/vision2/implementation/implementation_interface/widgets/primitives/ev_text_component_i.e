@@ -58,7 +58,7 @@ feature -- Status report
 		deferred
 		ensure
 			result_large_enough: Result >= 0
-			result_small_enough: Result <= text_length
+			result_small_enough: Result <= text_length - 1
 		end
 
 	selection_end: INTEGER is
@@ -68,7 +68,7 @@ feature -- Status report
 			has_selection: has_selection
 		deferred
 		ensure
-			result_large_enough: Result >= 0
+			result_large_enough: Result >= 1
 			result_small_enough: Result <= text_length
 		end
 

@@ -16,6 +16,7 @@ inherit
 	EV_CONTAINER_I
 		redefine
 			interface,
+			parent,
 			parent_imp
 		end
 	
@@ -36,6 +37,14 @@ feature {NONE} -- Initialization
 		end
 
 feature  -- Access
+
+	parent: EV_WINDOW is
+			-- The parent of the Current window: a window
+			-- If the widget is an EV_WINDOW without parent,
+			-- this attribute will be `Void'
+		do
+			Result := parent_imp.interface
+		end
 
 	interface: EV_WINDOW
 			-- Current interface of the window

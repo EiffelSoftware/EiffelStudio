@@ -38,7 +38,7 @@ doc:<file name="idr_run.c" header="eif_run_idr.h" version="$Id$" summary="IDR = 
 #include "rt_retrieve.h"
 #endif
 #if !defined(CUSTOM) || defined(NEED_STORE_H)
-#include "eif_store.h"
+#include "rt_store.h"
 #endif
 #include "eif_error.h"
 #include "eif_run_idr.h"

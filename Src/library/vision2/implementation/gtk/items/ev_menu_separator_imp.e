@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Do nothing because an empty GtkMenuItem is a separator.
 		do
+			real_text := ""
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			initialize_menu_sep_box

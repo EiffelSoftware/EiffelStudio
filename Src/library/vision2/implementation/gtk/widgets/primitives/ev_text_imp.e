@@ -48,9 +48,6 @@ feature -- Access
 			p := C.gtk_editable_get_chars (c_object, 0, -1)
 			create Result.make_from_c (p)
 			C.g_free (p)
-			if Result.is_equal ("") then
-				Result := Void
-			end
 		end
 
 	line (i: INTEGER): STRING is
@@ -108,9 +105,7 @@ feature -- Status report
 	line_count: INTEGER is
 			-- Number of lines in widget.
 		do
-			if text /= Void then
-				Result := text.occurrences ('%N') + 1
-			end	
+			Result := text.occurrences ('%N') + 1
 		end 
 
 	first_position_from_line_number (i: INTEGER): INTEGER is

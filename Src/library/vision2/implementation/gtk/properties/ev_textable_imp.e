@@ -41,12 +41,10 @@ feature -- Access
 		do
 			p := text_label
 			C.gtk_label_get (text_label, $p)
-			if p /= NULL then
-				create Result.make_from_c (p)
-				if Result.is_empty then
-					Result := Void
-				end
+			check
+				p_not_null: p /= NULL
 			end
+			create Result.make_from_c (p)
 		end
 
 	alignment: EV_TEXT_ALIGNMENT is
@@ -103,8 +101,11 @@ feature -- Element change
 
 	remove_text is
 			-- Assign `Void' to `text'.
+		local
+			temp_text: ANY
 		do
-			C.gtk_label_set_text (text_label, NULL)
+			temp_text := ("").to_c
+			C.gtk_label_set_text (text_label, $temp_text)
 			C.gtk_widget_hide (text_label)
 		end
 	

@@ -42,9 +42,6 @@ feature -- Access
 			-- Text displayed in field.
 		do
 			create Result.make_from_c (C.gtk_entry_get_text (entry_widget))
-			if Result.is_equal ("") then
-				Result := Void
-			end
 		end
 
 feature -- Status setting

@@ -164,7 +164,7 @@ feature -- Generation
 			rout_infos := renumbered_table;
 			nb_elements := rout_infos.count;
 			!!Result.make (0);
-			Result.append ("#include %"macros.h%"%N%N");
+			Result.append ("#include %"eif_macros.h%"%N%N");
 			Result.append ("struct rout_info forg_table[] = {%N");
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
@@ -285,7 +285,7 @@ feature -- DLE
 			rout_infos := renumbered_table;
 			nb_elements := rout_infos.count;
 			!!Result.make (0);
-			Result.append ("#include %"macros.h%"%N%N");
+			Result.append ("#include %"eif_macros.h%"%N%N");
 			Result.append ("static struct rout_info Dforg_table[] = {%N");
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.

@@ -80,13 +80,11 @@ feature
 					until
 						types.after
 					loop
-						c_pattern := 
-							info.instantiation_in (types.item.type).c_pattern;
+						c_pattern := info.instantiation_in (types.item.type).c_pattern;
 						!!c_pattern_info;
 						c_pattern_info.set_pattern (c_pattern);
 						if not c_patterns.has (c_pattern_info) then
-							c_pattern_info.set_c_pattern_id
-												(c_pattern_id_counter.next);
+							c_pattern_info.set_c_pattern_id (c_pattern_id_counter.next);
 							c_patterns.put (c_pattern_info);
 						end;
 						types.forth;
@@ -195,13 +193,13 @@ feature -- Generation
 			Pattern_file.open_write_c;
 
 			Pattern_file.putstring ("%
-				%#include %"macros.h%"%N%
-				%#include %"struct.h%"%N%
-				%#include %"interp.h%"%N%N");
+				%#include %"eif_macros.h%"%N%
+				%#include %"eif_struct.h%"%N%
+				%#include %"eif_interp.h%"%N%N");
 	
 			if System.has_separate then
 				Pattern_file.putstring ("%
-					%#include %"curextern.h%"%N%N");
+					%#include %"eif_curextern.h%"%N%N");
 			end;
 
 			generate_pattern;
@@ -300,12 +298,12 @@ feature -- Concurrent Eiffel
 			final_pattern_file.open_write_c;
 
 			final_pattern_file.putstring ("%
-				%#include %"macros.h%"%N%
-				%#include %"struct.h%"%N%
-				%#include %"interp.h%"%N%N");
+				%#include %"eif_macros.h%"%N%
+				%#include %"eif_struct.h%"%N%
+				%#include %"eif_interp.h%"%N%N");
 	
 			final_pattern_file.putstring ("%
-				%#include %"curextern.h%"%N%N");
+				%#include %"eif_curextern.h%"%N%N");
 
 			generate_only_separate_pattern (final_pattern_file);
 
@@ -382,10 +380,10 @@ feature -- DLE
 			Pattern_file.open_write_c;
 
 			Pattern_file.putstring ("%
-				%#include %"macros.h%"%N%
-				%#include %"struct.h%"%N%
-				%#include %"interp.h%"%N%			
-				%#include %"curextern.h%"%N%N");
+				%#include %"eif_macros.h%"%N%
+				%#include %"eif_struct.h%"%N%
+				%#include %"eif_interp.h%"%N%			
+				%#include %"eif_curextern.h%"%N%N");
 
 			generate_dle_pattern;
 

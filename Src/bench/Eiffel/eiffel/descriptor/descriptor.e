@@ -61,7 +61,7 @@ feature -- Generation
 			f := class_type.descriptor_file;
 			f.open_write;
 
-			f.putstring ("#include %"macros.h%"%N%N");
+			f.putstring ("#include %"eif_macros.h%"%N%N");
 			Class_counter.generate_extern_offsets (f);
 			Static_type_id_counter.generate_extern_offsets (f);
 			if Compilation_modes.is_precompiling then

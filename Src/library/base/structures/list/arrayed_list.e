@@ -36,7 +36,7 @@ class ARRAYED_LIST [G] inherit
 			prune, consistent, is_equal, occurrences, 
 			extendible, has
 		redefine
-			extend, setup, copy, prune_all, full
+			extend, setup, copy, prune_all, full, valid_key
 		end;
 
 	ARRAY [G]
@@ -61,7 +61,7 @@ class ARRAYED_LIST [G] inherit
 			extendible, has
 		redefine 
 			wipe_out, extend,
-			setup, copy, prune_all
+			setup, copy, prune_all, valid_key
 		select
 			wipe_out
 		end;
@@ -178,6 +178,12 @@ feature -- Status report
 				Result := valid_cursor_index (al_c.index)
 			end
 		end;
+
+	valid_key (k: INTEGER) is
+			-- Is `k' a valid key?
+		do
+			Result := (1 <= k) and (k <= count)
+		end
 
 feature -- Cursor movement
 

@@ -84,6 +84,7 @@ feature -- Access
 		end
 
 	gray_pixmap: EV_PIXMAP
+		-- The gray_pixmap of `Current'.
 
 	gray_pixmap_imp: EV_PIXMAP_IMP is
 			-- Implementation of the gray pixmap contained 
@@ -105,7 +106,7 @@ feature -- Status report
 		end
 
 	is_sensitive: BOOLEAN is
-			-- Is the current button insensitive?
+			-- Is `Current' insensitive?
 		do
 			Result := parent_imp.button_enabled (id)
 		end
@@ -113,13 +114,13 @@ feature -- Status report
 feature -- Status setting
 
 	enable_sensitive is
-			 -- Enable button.
+			 -- Enable `Current'.
 		do
 			parent_imp.enable_button (id)
 		end
 
 	disable_sensitive is
-			 -- Disable button.
+			 -- Disable `Current'.
 		do
 			parent_imp.disable_button (id)
 		end
@@ -127,7 +128,7 @@ feature -- Status setting
 feature -- Element change
 
 	wel_set_text (txt: STRING) is
-			-- Make `txt' the new label of the item.
+			-- Make `txt' the new label of `Current'.
 		do
 			real_text := clone (txt)
 			if parent_imp /= Void then
@@ -137,7 +138,7 @@ feature -- Element change
 		end
 
 	set_pixmap (pix: EV_PIXMAP) is
-			-- Make `pix' the new pixmap of the widget.
+			-- Make `pix' the new pixmap of `Current'.
 			-- We need to destroy the dc that comes with it,
 			-- because a bitmap can be linked to only one dc
 			-- at a time.
@@ -149,7 +150,7 @@ feature -- Element change
 		end
 
 	set_gray_pixmap (pix: EV_PIXMAP) is
-			-- Make `pix' the new pixmap of the widget.
+			-- Make `pix' the new pixmap of `Current'.
 			-- We need to destroy the dc that comes with it,
 			-- because a bitmap can be linked to only one dc
 			-- at a time.
@@ -172,7 +173,7 @@ feature -- Element change
 feature {NONE} -- Implementation, pick and drop
 
 	widget_source: EV_WIDGET_IMP is
-			-- Widget drag source used for transport
+			-- Widget drag source used for transport.
 		do
 			Result := parent_imp
 		end
@@ -183,7 +184,7 @@ feature {EV_ANY_I} -- Interface
 
 end -- class EV_TOOL_BAR_BUTTON_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -197,13 +198,16 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/25 22:00:24  rogers
+--| Comments, formatting.
+--|
 --| Revision 1.25  2000/04/24 21:23:15  rogers
 --| Removed FIXME_NOT_REVIEWED.
 --|

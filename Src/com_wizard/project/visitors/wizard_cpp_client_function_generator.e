@@ -379,7 +379,7 @@ feature {NONE} -- Implementation
 				Result.append (name)
 
 			elseif is_boolean (visitor.vt_type) then
-				if visitor.is_pointed or is_byref (visitor.vt_type) then
+				if visitor.is_pointed or is_byref (visitor.vt_type) or is_array (visitor.vt_type) then
 					if visitor.need_generate_ec then
 						Result.append (Generated_ec_mapper)
 					else

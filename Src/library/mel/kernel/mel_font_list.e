@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Implementation of Font List.";
+		"Implementation of Motif Font List.";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -9,18 +9,15 @@ indexing
 class
 	MEL_FONT_LIST
 
+inherit
+
+	MEL_MEMORY
+
 creation
-	make_from_existing, append_entry
+	make_from_existing, 	
+	append_entry
 
 feature {NONE} -- Initialization
-
-	make_from_existing (a_font_list_ptr: POINTER) is
-			-- Make from an existing C `a_font_list_ptr'.
-		require
-			font_list_ptr_not_null: a_font_list_ptr /= default_pointer
-		do 
-			handle := a_font_list_ptr
-		end;
 
 	append_entry (an_entry: MEL_FONT_LIST_ENTRY) is
 			-- Append font list entry `an_entry' to
@@ -35,9 +32,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	handle: POINTER
-			-- C pointer to XmFontList
- 
 	font_context: MEL_FONT_CONTEXT is
 			-- Font context from Current font list
 		require
@@ -46,33 +40,13 @@ feature -- Access
 			!! Result.make (Current)
 		end;
 
-	is_valid: BOOLEAN is
-			-- Is the resource valid?
-		do
-			Result := handle /= default_pointer
-		ensure
-			valid_result: Result implies handle /= default_pointer
-		end;
-
-	is_destroyed: BOOLEAN is
-			-- Is the resource destroyed?
-		do
-			Result := not is_valid
-		ensure
-			valid_result : Result = not is_valid
-		end;
-
 feature -- Removal
 
-	free is
+	destroy is
 			-- Free the font list.
-		require
-			not_destroyed: not is_destroyed
 		do
 			xm_font_list_free (handle);	
 			handle := default_pointer
-		ensure
-			destroyed: is_destroyed
 		end;
 
 feature {NONE} -- External features

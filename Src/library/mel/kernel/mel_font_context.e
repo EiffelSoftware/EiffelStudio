@@ -9,8 +9,11 @@ indexing
 class
 	MEL_FONT_CONTEXT
 
-creation
+inherit
 
+	MEL_MEMORY
+
+creation
 	make
 
 feature {NONE} -- Initialization
@@ -24,9 +27,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	handle: POINTER;
-			-- Handle to C
 
 	next_entry: MEL_FONT_LIST_ENTRY is
 			-- Next entry in a font_list
@@ -43,33 +43,13 @@ feature -- Access
 			valid_result: Result /= Void implies Result.is_valid
 		end;
 
-	is_valid: BOOLEAN is
-			-- Is the context valid?
-		do
-			Result := handle /= default_pointer
-		ensure
-			valid_result: Result = not is_destroyed
-		end;
-
-	is_destroyed: BOOLEAN is
-			-- Is the context destroyed?
-		do
-			Result := not is_valid
-		ensure
-			valid_result: Result = not is_valid
-		end
-
 feature -- Removal
 
-	free is
+	destroy is
 			-- Free font context.
-		require
-			not_destroyed: not is_destroyed		
 		do
 			xm_font_list_free_font_context (handle);
 			handle := default_pointer
-		ensure
-			destroyed: is_destroyed		
 		end;
 
 feature {NONE} -- External features

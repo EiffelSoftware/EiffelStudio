@@ -14,7 +14,8 @@ inherit
 	MEL_RESOURCE
 
 creation
-	make, make_from_existing_handle
+	make, 
+	make_from_existing_handle
 
 feature {NONE} -- Initialization
 
@@ -29,7 +30,10 @@ feature {NONE} -- Initialization
 		do 
 			ext_name := a_font_name.to_c;
 			display_handle := a_display.handle;
-			handle := x_load_query_font (display_handle, $ext_name)
+			handle := x_load_query_font (display_handle, $ext_name);
+			shared := True
+		ensure
+			shared: shared
 		end;
 
 feature -- Access
@@ -71,16 +75,14 @@ feature -- Access
 
 feature -- Removal
 
-	free is
+	destroy is
 			-- Free font structure.
-		require
-			not_destroyed: not is_destroyed;
-			has_valid_display: has_valid_display
 		do
+			check
+				valid_display: has_valid_display
+			end;
 			x_free_font (display_handle, handle);
 			handle := default_pointer
-		ensure
-			destroyed: is_destroyed
 		end;
 
 feature {NONE} -- External features

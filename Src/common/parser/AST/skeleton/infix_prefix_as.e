@@ -44,7 +44,7 @@ feature -- Visitor
 	process (v: AST_VISITOR) is
 			-- process current element.
 		do
-			v.process_infix_as (Current)
+			v.process_infix_prefix_as (Current)
 		end
 
 feature -- Comparison

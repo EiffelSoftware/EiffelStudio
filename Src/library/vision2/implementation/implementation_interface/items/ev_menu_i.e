@@ -51,7 +51,9 @@ feature {EV_MENU} -- Contract support
 			separator: EV_MENU_SEPARATOR
 			checked_radio_items: INTEGER
 			radio_item: EV_RADIO_MENU_ITEM
+			a_cursor: CURSOR
 		do
+			a_cursor := interface.cursor
 			Result := True
 			from
 				interface.start
@@ -71,6 +73,9 @@ feature {EV_MENU} -- Contract support
 				end
 				interface.forth
 			end
+			interface.go_to (a_cursor)
+		ensure
+			index_not_changed: index = old index
 		end
 
 feature {EV_ANY_I} -- Implementation

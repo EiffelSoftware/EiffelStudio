@@ -261,24 +261,22 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("%Tegc_fco_table = egc_fco_table_init ; %N")
 			Plug_file.putstring ("%Tegc_system_mod_init = egc_system_mod_init_init ; %N")
 
-			Plug_file.putstring ("%N#ifdef WORKBENCH%N")
-			Plug_file.putstring ("%Tegc_frozen = egc_frozen_init ; %N")
-			Plug_file.putstring ("%Tegc_fpatidtab = egc_fpatidtab_init ; %N");
-			Plug_file.putstring ("%Tegc_foption = egc_foption_init ; %N")
-			Plug_file.putstring ("%Tegc_address_table = egc_address_table_init ; %N")
-			Plug_file.putstring ("%Tegc_fdispatch = egc_fdispatch_init ; %N")
-			Plug_file.putstring ("%Tegc_fpattern = egc_fpattern_init ; %N")
-			
-			Plug_file.putstring ("%N%Tegc_einit = egc_einit_init ; %N")
-			Plug_file.putstring ("%Tegc_tabinit = egc_tabinit_init ; %N")
+			if not final_mode then
+				Plug_file.putstring ("%Tegc_frozen = egc_frozen_init ; %N")
+				Plug_file.putstring ("%Tegc_fpatidtab = egc_fpatidtab_init ; %N");
+				Plug_file.putstring ("%Tegc_foption = egc_foption_init ; %N")
+				Plug_file.putstring ("%Tegc_address_table = egc_address_table_init ; %N")
+				Plug_file.putstring ("%Tegc_fdispatch = egc_fdispatch_init ; %N")
+				Plug_file.putstring ("%Tegc_fpattern = egc_fpattern_init ; %N")
+				
+				Plug_file.putstring ("%N%Tegc_einit = egc_einit_init ; %N")
+				Plug_file.putstring ("%Tegc_tabinit = egc_tabinit_init ; %N")
+	
+				Plug_file.putstring ("%N%Tegc_fcall = egc_fcall_init ; %N")
+				Plug_file.putstring ("%Tegc_forg_table = egc_forg_table_init ; %N")
+				Plug_file.putstring ("%Tegc_fdtypes = egc_fdtypes_init ; %N")
 
-			Plug_file.putstring ("%N%Tegc_fcall = egc_fcall_init ; %N")
-			Plug_file.putstring ("%Tegc_forg_table = egc_forg_table_init ; %N")
-			Plug_file.putstring ("%Tegc_fdtypes = egc_fdtypes_init ; %N")
-
-			if final_mode then
-				Plug_file.putstring ("%N#else%N")
-
+			else
 					-- Initialization routines
 				Plug_file.putstring ("egc_ecreate = ")
 				Plug_file.putstring (table_prefix)
@@ -292,12 +290,11 @@ feature -- Plug and Makefile file
 				Plug_file.putstring (dispose_name)
 				Plug_file.putstring (";%N")
 
-				Plug_file.putstring ("%Tegc_ce_rname = egc_ce_rname_init; %N")
-				Plug_file.putstring ("%Tegc_fnbref = egc_fnbref_init; %N")
-				Plug_file.putstring ("%T /* egc_fsize = egc_fsize_init; */ %N")
+				Plug_file.putstring ("%Tegc_ce_rname = egc_ce_rname_init;%N")
+				Plug_file.putstring ("%Tegc_fnbref = egc_fnbref_init;%N")
+				Plug_file.putstring ("%Tegc_fsize = egc_fsize_init;%N")
 
 			end
-			Plug_file.putstring ("#endif%N")
 			Plug_file.putstring ("%N}%N")
 
 			Plug_file.close_c

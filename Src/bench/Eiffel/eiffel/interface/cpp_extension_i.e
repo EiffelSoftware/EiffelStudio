@@ -194,28 +194,30 @@ feature {NONE} -- Code generation
 				generate_cast := True
 				arg_types := argument_types
 			end
-			from
-				parameters.start
-				if type = standard then
-						-- Skip C++ object
+			if parameters /= Void then
+				from
+					parameters.start
+					if type = standard then
+							-- Skip C++ object
+						parameters.forth
+					end
+					i := 1
+				until
+					parameters.after
+				loop
+					expr := parameters.item
+					if generate_cast then
+						generated_file.putchar ('(')
+						generated_file.putstring (arg_types.item (i))
+						generated_file.putstring (") ")
+					end
+					expr.print_register;
+					if not parameters.islast then
+						generated_file.putstring (", ")
+					end
 					parameters.forth
+					i := i + 1
 				end
-				i := 1
-			until
-				parameters.after
-			loop
-				expr := parameters.item
-				if generate_cast then
-					generated_file.putchar ('(')
-					generated_file.putstring (arg_types.item (i))
-					generated_file.putstring (") ")
-				end
-				expr.print_register;
-				if not parameters.islast then
-					generated_file.putstring (", ")
-				end
-				parameters.forth
-				i := i + 1
 			end
 		end
 

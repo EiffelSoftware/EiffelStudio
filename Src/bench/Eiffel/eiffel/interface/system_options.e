@@ -36,8 +36,11 @@ feature -- Access
 	line_generation: BOOLEAN
 			-- Does the system generate the line number in the C-code?
 
-	has_multithreaded: BOOLEAN
-			-- Is the system a multithreaded one?
+	has_multithreaded: BOOLEAN is
+			-- Is the system a multithreaded one, only true for classic system?
+		do
+			Result := not il_generation and then internal_has_multithreaded
+		end
 
 	has_syntax_warning: BOOLEAN
 			-- Does system produce warnings on old syntactical constructs?
@@ -395,14 +398,14 @@ feature -- Update
 		end
 
 	set_has_multithreaded (b: BOOLEAN) is
-			-- Set `has_multithreaded' to `b'
+			-- Set `internal_has_multithreaded' to `b'
 		do
-			if has_multithreaded /= b then
+			if internal_has_multithreaded /= b then
 				set_freeze
 			end
-			has_multithreaded := b
+			internal_has_multithreaded := b
 		ensure
-			has_multithreaded_set: has_multithreaded = b
+			has_multithreaded_set: internal_has_multithreaded = b
 		end
 
 	set_has_syntax_warning (b: BOOLEAN) is
@@ -526,5 +529,8 @@ feature {SYSTEM_I} -- Implementation
 
 	private_melt: BOOLEAN
 			-- Force melt process when only Ace file has been changed.
+
+	internal_has_multithreaded: BOOLEAN
+			-- Is the system a multithreaded one?
 
 end -- class SYSTEM_OPTIONS

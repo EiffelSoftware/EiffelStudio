@@ -9,19 +9,19 @@ feature
 
 	display is
 		do
-			io.putstring ("In class HEIR");
+			io.put_string ("In class HEIR");
 			io.new_line;
-			io.putstring ("-------------------");
+			io.put_string ("-------------------");
 			io.new_line
 			display_routine; 
-			io.putstring (an_attribute);
+			io.put_string (an_attribute);
 			io.new_line;
 			io.new_line
 		end;
 
 	display_routine is 
 		do 
-			io.putstring ("Calling a routine of class HEIR");
+			io.put_string ("Calling a routine of class HEIR");
 			io.new_line 
 		end;
 

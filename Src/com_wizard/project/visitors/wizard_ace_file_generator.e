@@ -91,33 +91,33 @@ feature -- Access
 			if retried then
 				Result := ""
 			else
-				create cluster_info.make
+				create original_cluster_info.make
 				create Result.make (10000)
 
 				create input_file.make_open_read (shared_wizard_environment.ace_file_name)
 
-				cluster_info.input_from_file (input_file)
+				original_cluster_info.input_from_file (input_file)
 
 				insert_visible_class
 
-				if not cluster_info.clusters.empty then
+				if not original_cluster_info.clusters.empty then
 					from
-						cluster_info.clusters.start
+						original_cluster_info.clusters.start
 					until
-						cluster_info.clusters.after
+						original_cluster_info.clusters.after
 					loop
-						if cluster_info.clusters.item.substring_index ("%".%"", 1) > 0 then
+						if original_cluster_info.clusters.item.substring_index ("%".%"", 1) > 0 then
 							str_buffer := clone (shared_wizard_environment.eiffel_project_name)
 							str_buffer.head (str_buffer.last_index_of ('\', str_buffer.count) - 1)
 							str_buffer.prepend ("%"")
 							str_buffer.append ("%"")
-							cluster_info.clusters.item.replace_substring_all ("%".%"", str_buffer)		
+							original_cluster_info.clusters.item.replace_substring_all ("%".%"", str_buffer)		
 						end
-						Result.append (cluster_info.clusters.item)
+						Result.append (original_cluster_info.clusters.item)
 
 						Result.append (New_line)
 						Result.append (Tab_tab)
-						cluster_info.clusters.forth
+						original_cluster_info.clusters.forth
 					end
 				end
 			end
@@ -129,7 +129,7 @@ feature -- Access
 	Common_cluster: STRING is "all common"
 			-- Common cluster
 
-	cluster_info: EI_CLUSTER_DATA_INPUT
+	original_cluster_info: EI_CLUSTER_DATA_INPUT
 			-- Cluster information
 
 	Ace_file_name: STRING is "Ace.ace"
@@ -431,18 +431,18 @@ feature -- Basic operations
 			Result.append (Partial_ace_file_part_two)
 			Result.append (Tab_tab_tab)
 
-			if cluster_info /= Void and not cluster_info.include_path.empty then
+			if original_cluster_info /= Void and not original_cluster_info.include_path.empty then
 				from
-					cluster_info.include_path.start
+					original_cluster_info.include_path.start
 				until
-					cluster_info.include_path.after
+					original_cluster_info.include_path.after
 				loop
-					if not cluster_info.include_path.item.empty then
-						Result.append (cluster_info.include_path.item)
+					if not original_cluster_info.include_path.item.empty then
+						Result.append (original_cluster_info.include_path.item)
 						Result.append (New_line_tab_tab_tab)
 					end
 
-					cluster_info.include_path.forth
+					original_cluster_info.include_path.forth
 				end
 			end
 
@@ -477,18 +477,18 @@ feature -- Basic operations
 			Result.append (New_line)
 			Result.append (End_ace_file)
 
-			if cluster_info /= Void and not cluster_info.objects.empty then
+			if original_cluster_info /= Void and not original_cluster_info.objects.empty then
 				from
-					cluster_info.objects.start
+					original_cluster_info.objects.start
 				until
-					cluster_info.objects.after
+					original_cluster_info.objects.after
 				loop
-					if not cluster_info.objects.item.empty then
+					if not original_cluster_info.objects.item.empty then
 						Result.append (New_line_tab_tab_tab)
-						Result.append (cluster_info.objects.item)
+						Result.append (original_cluster_info.objects.item)
 					end
 
-					cluster_info.objects.forth
+					original_cluster_info.objects.forth
 				end
 			end
 			Result.append (New_line)
@@ -527,11 +527,10 @@ feature -- Basic operations
 					if a_cluster.substring_index ("end", 1) >= a_cluster.count - 3 then
 						a_cluster.head (a_cluster.substring_index ("end", 1) - 1)
 					end
-					a_cluster.insert (
+					a_cluster.append (
 						"%N%T%Tvisible%N%
 						%%T%T%T" + shared_wizard_environment.eiffel_class_name + ";%N%
-						%%T%Tend", 
-						a_cluster.count)
+						%%T%Tend")
 				end
 			end
 		end
@@ -539,8 +538,8 @@ feature -- Basic operations
 	insert_visible_class is
 			-- Insert visible clause into correct cluster.
 		require
-			non_void_cluster_info: cluster_info /= Void
-			non_void_clusters: cluster_info.clusters /= Void
+			non_void_cluster_info: original_cluster_info /= Void
+			non_void_clusters: original_cluster_info.clusters /= Void
 		do
 			from
 				standard_clusters.start
@@ -552,12 +551,12 @@ feature -- Basic operations
 			end
 
 			from
-				cluster_info.clusters.start
+				original_cluster_info.clusters.start
 			until
-				cluster_info.clusters.after
+				original_cluster_info.clusters.after
 			loop
-				if_class_cluster_insert_visible (cluster_info.clusters.item)
-				cluster_info.clusters.forth
+				if_class_cluster_insert_visible (original_cluster_info.clusters.item)
+				original_cluster_info.clusters.forth
 			end
 		end
 

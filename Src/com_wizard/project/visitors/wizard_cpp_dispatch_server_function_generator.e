@@ -22,6 +22,7 @@ feature -- Basic operation
 			--Generate C server feature
 		do
 			func_desc := a_descriptor
+			component_desc := a_component
 			coclass_name := a_component.name
 
 			create ccom_feature_writer.make

@@ -1202,8 +1202,9 @@ feature -- Access
 
 				--| Get expression_byte_node
 			get_expression_byte_node
-			
-			Result := expression_byte_node.type.is_boolean
+			if expression_byte_node /= Void then
+				Result := expression_byte_node.type.is_boolean
+			end
 			
 				--| FIXME JFIAT: check in which cases we call the is_condition
 				--| to see if it is pertinent to save.restore data ...			

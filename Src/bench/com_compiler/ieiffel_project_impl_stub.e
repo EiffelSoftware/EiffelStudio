@@ -54,6 +54,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	project_has_updated: BOOLEAN is
+			-- Has the project updated since last compilation?
+		do
+			-- Put Implementation here.
+		end
+
 	system_browser: IEIFFEL_SYSTEM_BROWSER_INTERFACE is
 			-- System Browser.
 		do

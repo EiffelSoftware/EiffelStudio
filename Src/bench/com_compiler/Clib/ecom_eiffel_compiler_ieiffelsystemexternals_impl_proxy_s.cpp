@@ -213,7 +213,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_incl
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_164 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_165 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -312,7 +312,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_obje
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_167 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_168 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

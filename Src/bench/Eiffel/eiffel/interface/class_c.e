@@ -376,7 +376,7 @@ end
 			end
 		end
 
-feature -- Conformance dependenies
+feature -- Conformance dependencies
 
 	conf_dep_table: ARRAY [BOOLEAN]
 			-- Table for quick lookup

@@ -387,7 +387,7 @@ feature {NONE} -- Actions
 		do
 				-- Class type appearing in a parent clause does
 				-- not hold any qualifier.
-			class_type := new_class_type_as (n.first, g, False, False, False)
+			class_type := new_class_type_as (n.first, g, False, False)
 			n.second.set_node (class_type)
 			Result := new_parent_as (class_type, rn, e, u, rd, s)
 		ensure
@@ -747,7 +747,7 @@ feature {NONE} -- Clickable factory
 
 feature {NONE} -- Type factory
 
-	new_class_type (ci: PAIR [ID_AS, CLICK_AST]; generics: EIFFEL_LIST [TYPE_AS]; is_ref, is_exp, is_sep: BOOLEAN): TYPE_AS is
+	new_class_type (ci: PAIR [ID_AS, CLICK_AST]; generics: EIFFEL_LIST [TYPE_AS]; is_exp, is_sep: BOOLEAN): TYPE_AS is
 			-- New class type (Take care of formal generics);
 			-- Update the clickable list and register the resulting
 			-- type as a supplier of the class being parsed.
@@ -783,7 +783,7 @@ feature {NONE} -- Type factory
 				end
 				if Result = Void then
 						-- It is a common class type.
-					class_type := new_class_type_as (class_name, generics, is_ref, is_exp, is_sep)
+					class_type := new_class_type_as (class_name, generics, is_exp, is_sep)
 						-- Put the supplier in `suppliers'.
 					suppliers.insert_supplier_id (class_name)
 					click_ast.set_node (class_type)

@@ -164,7 +164,7 @@ create
 
 %type <TOKEN_LOCATION>		Position
 
-%expect 91
+%expect 93
 
 %%
 
@@ -484,13 +484,13 @@ Class_list: Clickable_identifier_as_upper
 			{
 				$$ := new_eiffel_list_id_as (Initial_class_list_size)
 				$$.extend ($1.first)
-				$1.second.set_node (new_class_type_as ($1.first, Void, False, False, False))
+				$1.second.set_node (new_class_type_as ($1.first, Void, False, False))
 			}
 	|	Class_list TE_COMMA Clickable_identifier_as_upper
 			{
 				$$ := $1
 				$$.extend ($3.first)
-				$3.second.set_node (new_class_type_as ($3.first, Void, False, False, False))
+				$3.second.set_node (new_class_type_as ($3.first, Void, False, False))
 			}
 	;
 
@@ -1085,12 +1085,17 @@ Type: Class_type
 			{ $$ := $1 }
 	;
 
-Non_class_type: TE_EXPANDED Clickable_identifier_as_upper Generics_opt
-			{ $$ := new_class_type ($2, $3, False, True, False) }
-	|	TE_REFERENCE Clickable_identifier_as_upper Generics_opt
-			{ $$ := new_class_type ($2, $3, True, False, False) }
+Non_class_type: Position TE_EXPANDED Clickable_identifier_as_upper Generics_opt
+			{
+				$$ := new_class_type ($3, $4, True, False)
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make ($1.start_position,
+						$1.end_position, filename, 0, "Make an expanded version of the base class associated with this type."))
+				end
+			}
 	|	TE_SEPARATE Clickable_identifier_as_upper Generics_opt
-			{ $$ := new_class_type ($2, $3, False, False, True) }
+			{ $$ := new_class_type ($2, $3, False, True) }
 	|	TE_BIT Integer_constant
 			{ $$ := new_bits_as ($2) }
 	|	TE_BIT Identifier_as_lower
@@ -1102,7 +1107,7 @@ Non_class_type: TE_EXPANDED Clickable_identifier_as_upper Generics_opt
 	;
 
 Class_type: Clickable_identifier_as_upper Generics_opt
-			{ $$ := new_class_type ($1, $2, False, False, False) }
+			{ $$ := new_class_type ($1, $2, False, False) }
 	;
 
 Generics_opt: -- Empty
@@ -1608,15 +1613,20 @@ Delayed_actual: TE_QUESTION
 --	|	TE_LCURLY Type TE_RCURLY
 --			{ $$ := new_operand_as ($2, Void, Void) }
 	|	TE_LCURLY Clickable_identifier_as_upper TE_RCURLY
-			{ $$ := new_operand_as (new_class_type ($2, Void, False, False, False), Void, Void) }
+			{ $$ := new_operand_as (new_class_type ($2, Void, False, False), Void, Void) }
 	|	TE_LCURLY Clickable_identifier_as_upper Generics TE_RCURLY
-			{ $$ := new_operand_as (new_class_type ($2, $3, False, False, False), Void, Void) }
-	|	TE_LCURLY TE_REFERENCE Clickable_identifier_as_upper Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_class_type ($3, $4, True, False, False), Void, Void) }
-	|	TE_LCURLY TE_EXPANDED Clickable_identifier_as_upper Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_class_type ($3, $4, False, True, False), Void, Void) }
+			{ $$ := new_operand_as (new_class_type ($2, $3, False, False), Void, Void) }
+	|	Position TE_LCURLY TE_EXPANDED Clickable_identifier_as_upper Generics_opt TE_RCURLY
+			{
+				$$ := new_operand_as (new_class_type ($4, $5, True, False), Void, Void)
+				if has_syntax_warning then
+					Error_handler.insert_warning (
+						create {SYNTAX_WARNING}.make ($1.start_position,
+						$1.end_position, filename, 0, "Make an expanded version of the base class associated with this type."))
+				end
+		}
 	|	TE_LCURLY TE_SEPARATE Clickable_identifier_as_upper Generics_opt TE_RCURLY
-			{ $$ := new_operand_as (new_class_type ($3, $4, False, False, True), Void, Void) }
+			{ $$ := new_operand_as (new_class_type ($3, $4, False, True), Void, Void) }
 	|	TE_LCURLY TE_BIT Integer_constant TE_RCURLY
 			{ $$ := new_operand_as (new_bits_as ($3), Void, Void) }
 	|	TE_LCURLY TE_BIT Identifier_as_lower TE_RCURLY

@@ -28,11 +28,17 @@ feature -- Access
 	
 	None_node: SYSTEM_STRING is "NONE"
 	
+	Xmls_node: SYSTEM_STRING is "XMLS"
+	
 	Field_name_xml_attribute: SYSTEM_STRING is "N"
 
 	Array_lower_bound_xml_attribute: SYSTEM_STRING is "L"
 
 	Array_count_xml_attribute: SYSTEM_STRING is "C"
+	
+	Compare_objects_xml_attribute: SYSTEM_STRING is "CO"
+
+	Version_xml_attribute: SYSTEM_STRING is "VER"
 
 	Type_xml_attribute: SYSTEM_STRING is "T"
 

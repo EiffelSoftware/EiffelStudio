@@ -24,7 +24,7 @@ feature
 			-- Pixmap used
 		deferred
 		ensure
-			Result.is_valid
+			valid_result: Result.is_valid
 		end; -- pixmap
 
 	set_pixmap (a_pixmap: PIXMAP) is

@@ -162,7 +162,7 @@ feature -- Access
 		do
 			Result := client_rect.height
 			if status_bar /= Void then
-				Result := (Result - status_bar.height).max (0)
+				Result := (Result - status_bar.minimum_height).max (0)
 			end
 		end
 
@@ -389,17 +389,34 @@ feature -- Element change
 
 	set_status_bar (a_bar: EV_WIDGET) is
 			-- Make `a_bar' the new status bar of the window.
+		local
+			v_imp: EV_WIDGET_IMP
 		do
-			--| FIXME Vertical box, etc...
+			a_bar.implementation.on_parented
+
+			v_imp ?= a_bar.implementation
+			check
+				v_imp_not_void: v_imp /= Void
+			end
+
 			status_bar := a_bar
-			compute_minimum_height
+			v_imp.wel_set_parent (Current)
+			v_imp.set_top_level_window_imp (Current)
+			notify_change (1 + 2)
 		end
 
 	remove_status_bar is
 			-- Remove the current status bar of the window.
+		local
+			v_imp: EV_WIDGET_IMP
 		do
+			v_imp ?= status_bar.implementation
+			check
+				v_imp_not_void: v_imp /= Void
+			end
 			status_bar := Void
-			compute_minimum_height
+			v_imp.on_orphaned
+			notify_change (1 + 2)
 		end
 
 	enable_modal is
@@ -805,12 +822,13 @@ feature {NONE} -- Implementation
 				if item /= Void then
 					item_imp.parent_ask_resize (client_width, client_height)
 				end
-			--	if status_bar /= Void then
-			--		sb_imp ?= status_bar.implementation
-			--		if sb_imp /= Void then
-			--			sb_imp.reposition
-			--		end
-			--	end
+				if status_bar /= Void then
+					sb_imp ?= status_bar.implementation
+					check
+						sb_imp_not_void: sb_imp /= Void
+					end
+					sb_imp.set_move_and_size (0, client_height, client_width, client_height + sb_imp.minimum_height)
+				end
 				interface.resize_actions.call ([x_position, y_position, a_width, a_height])
 			end
 		end
@@ -1008,6 +1026,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2000/04/28 23:39:42  brendel
+--| Fixed some status bar code. Not quite there yet, though.
+--|
 --| Revision 1.42  2000/04/28 22:13:30  brendel
 --| Commented out statusbar code.
 --|

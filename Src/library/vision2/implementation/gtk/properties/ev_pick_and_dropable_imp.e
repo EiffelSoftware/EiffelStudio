@@ -45,7 +45,7 @@ feature -- Implementation
 			pointer_y := a_screen_y
 			
 			target := pointed_target
-			if target /= last_pointed_target then
+			if target /= last_pointed_target or target = Void then
 				update_pointer_style (target)
 			end
 		end

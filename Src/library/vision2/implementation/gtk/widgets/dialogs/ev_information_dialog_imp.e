@@ -11,7 +11,11 @@ class
 inherit
 	EV_INFORMATION_DIALOG_I
 
-	EV_MESSAGE_DIALOG_IMP	
+	EV_MESSAGE_DIALOG_IMP
+		redefine
+			icon_build
+		end
+
 
 creation
 	make,

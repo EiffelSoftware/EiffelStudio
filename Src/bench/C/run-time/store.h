@@ -24,6 +24,7 @@ extern "C" {
 #define NULL 0
 #endif
 
+#include "eif_globals.h"
 #include "malloc.h"				/* For macros HEADER */
 #include "garcol.h"				/* For flags manipulation */
 

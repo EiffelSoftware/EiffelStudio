@@ -491,6 +491,7 @@ feature -- Status report
 		do
 			flags := cwin_get_menu_state (item, position,
 				Mf_byposition)
+			Result := not flag_set (flags, Mf_grayed) and not flag_set(flags, Mf_disabled)
 		end
 
 	id_string (an_id: INTEGER): STRING is

@@ -168,13 +168,18 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 
 feature {GB_CODE_GENERATOR} -- Status setting
 
-	generate_code (element: XML_ELEMENT; a_name, a_type: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
-			-- `Result' is string representation of
-			-- settings held in `Current' which is
+	generate_code (element: XML_ELEMENT; info: GB_GENERATED_INFO): STRING is
+			-- `Result' is string representation of settings held in `Current' which is
 			-- in a compilable format.
-			-- `a_name' is the attribute name of the object that will represent `Current' in the generated code.
-			-- `a_type' is a STRING representation of the type of `a_name', e.g. "EV_BUTTON".
-			-- `children_names' is a list of all the childrens attribute names.'
+			-- `element' is the XML element that contains information about `Current'.
+			-- So if `Current' is GB_EV_CONTAINER, `element' is <CONTAINER> in XML.
+			-- `info' is info retrieved from the XML during the prepass stage, and contains
+			-- all necessary information about the object that `Current' represents.
+			-- Note that `info' therefore contains `element' within `supported_type_elements'.
+		require
+			element_not_void: element /= Void
+			info_not_void: info /= Void
+			info_contains_element: info.supported_type_elements.has (element)
 		deferred
 		end
 		

@@ -9,7 +9,6 @@ class PRINT_DIALOG
 
 inherit
 
-	G_ANY_I;
 	CLOSEABLE
 
 feature -- Removal

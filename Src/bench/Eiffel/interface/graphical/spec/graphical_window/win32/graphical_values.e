@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			valid_font: a_font /= Void
 		local
 			c_ref: WEL_COLOR_REF;
-			f_w: FONT_WINDOWS;
+			f_w: FONT_IMP;
 			l_font: WEL_LOG_FONT
 		do
 			!! Result.make;

@@ -79,6 +79,6 @@ feature -- Display
 
 feature {NONE} -- Implementation
 
-	implementation: TOP_SHELL_I
+	implementation: TOP_SHELL_IMP
 
 end -- class EB_TOP_SHELL

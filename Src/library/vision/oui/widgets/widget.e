@@ -1,0 +1,635 @@
+--|---------------------------------------------------------------
+--|   Copyright (C) Interactive Software Engineering, Inc.	  --
+--|	270 Storke Road, Suite 7 Goleta, California 93117		--
+--|				   (805) 685-1006							--
+--| All rights reserved. Duplication or distribution prohibited --
+--|---------------------------------------------------------------
+
+-- Most general notion of "widget"
+-- (i.e. user interface object).
+
+indexing
+
+	names: widget;
+	date: "$Date$";
+	revision: "$Revision$"
+
+deferred class WIDGET 
+
+inherit
+
+	G_ANY
+		export
+			{NONE} all
+		end;
+
+	W_MAN_GEN
+		export
+			{NONE} all
+		end
+
+feature -- Callbacks (adding)
+
+	add_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to be executed 
+			-- when the mouse is moved while the `number'-th mouse 
+			-- button is pressed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.add_button_motion_action (number, a_command, argument)
+		end; 
+
+	add_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to be executed 
+			-- when the `number'-th mouse button is pressed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.add_button_press_action (number, a_command, argument)
+		end; 
+
+	add_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to be executed 
+			-- when the `number'-th mouse button is released.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.add_button_release_action (number, a_command, argument)
+		end; 
+
+	add_destroy_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to be executed 
+			-- when current widget is destroyed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.add_destroy_action (a_command, argument)
+		end; 
+
+	add_enter_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to be executed 
+			-- when the pointer enters Current widget.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.add_enter_action (a_command, argument)
+		end; 
+
+	add_key_press_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to be executed 
+			-- when a key is pressed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.add_key_press_action (a_command, argument)
+		end;
+
+	add_key_release_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to be executed 
+			-- when a key is released.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.add_key_release_action (a_command, argument)
+		end; 
+
+	add_leave_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to be executed 
+			-- when the pointer leaves Current widget.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.add_leave_action (a_command, argument)
+		end; 
+
+	add_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+			-- Add `a_command' to the list of actions to be executed 
+			-- when the mouse is moved.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.add_pointer_motion_action (a_command, argument)
+		end; 
+
+	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
+			-- Set `a_command' to be executed when `a_translation' occurs.
+			-- `a_translation' must be specified with the X toolkit conventions.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
+		require
+			Valid_command: a_command /= Void;
+			Valid_translation: a_translation /= Void
+		do
+			implementation.set_action (a_translation, a_command, argument)
+		end; -- set_action
+
+feature -- Callbacks (removing)
+
+	remove_action (a_translation: STRING) is
+			-- Remove the command executed when `a_translation' occurs.
+			-- Do nothing if no command has been specified.
+		require
+			Valid_translation: a_translation /= Void
+		do
+			implementation.remove_action (a_translation)
+		end; 
+
+	remove_button_motion_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of actions to be executed when the
+			-- mouse is moved while the `number'-th mouse button is pressed.
+			-- Do nothing if the pair (`a_command', `argument') had not 
+			-- been specified previously.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.remove_button_motion_action (number, a_command, argument)
+		end; 
+
+	remove_button_press_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of actions to be executed when the
+			-- `number'-th mouse button is pressed.
+			-- Do nothing if the pair (`a_command', `argument') had not 
+			-- been specified previously.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.remove_button_press_action (number, a_command, argument)
+		end; 
+
+	remove_button_release_action (number: INTEGER; a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of actions to be executed when the
+			-- `number'-th mouse button is released.
+			-- Do nothing if the pair (`a_command', `argument') had not 
+			-- been specified previously.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.remove_button_release_action (number, a_command, argument)
+		end; 
+
+	remove_destroy_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of actions to be executed when
+			-- Current widget is destroyed.
+			-- Do nothing if the pair (`a_command', `argument') had not 
+			-- been specified previously.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.remove_destroy_action (a_command, argument)
+		end; 
+
+	remove_enter_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of actions to be executed when the
+			-- pointer enters Current widget.
+			-- Do nothing if the pair (`a_command', `argument') had not 
+			-- been specified previously.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.remove_enter_action (a_command, argument)
+		end;
+
+	remove_key_press_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of actions to be executed when
+			-- a key is pressed.
+			-- Do nothing if the pair (`a_command', `argument') had not 
+			-- been specified previously.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.remove_key_press_action (a_command, argument)
+		end;
+
+	remove_key_release_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of actions to be executed when
+			-- a key is released.
+			-- Do nothing if the pair (`a_command', `argument') had not 
+			-- been specified previously.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.remove_key_release_action (a_command, argument)
+		end;
+
+	remove_leave_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of actions to be executed when the
+			-- pointer leaves Current widget.
+			-- Do nothing if the pair (`a_command', `argument') had not 
+			-- been specified previously.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.remove_leave_action (a_command, argument)
+		end;
+
+	remove_pointer_motion_action (a_command: COMMAND; argument: ANY) is
+			-- Remove `a_command' from the list of actions to be executed when the
+			-- mouse is moved.
+			-- Do nothing if the pair (`a_command', `argument') had not 
+			-- been specified previously.
+		require
+			Valid_command: a_command /= Void
+		do
+			implementation.remove_pointer_motion_action (a_command, argument)
+		end;
+
+feature -- Color and pixmap
+
+	background_color: COLOR is
+			-- Background color of Current widget
+		do
+			Result := implementation.background_color
+		end;
+
+	background_pixmap: PIXMAP is
+			-- Background pixmap of Current widget
+		do
+			Result := implementation.background_pixmap
+		end;
+
+	set_background_color (new_color: COLOR) is
+			-- Set background color to `new_color'.
+		require
+			Valid_color: new_color /= Void
+		do
+			implementation.set_background_color (new_color)
+		ensure
+			Color_set: background_color = new_color;
+			Pixmap_not_set: background_pixmap = Void
+		end;
+
+	set_background_pixmap (a_pixmap: PIXMAP) is
+			-- Set background pixmap to `a_pixmap'.
+		require
+			Valid_pixmap: a_pixmap /= Void
+		do
+			implementation.set_background_pixmap (a_pixmap)
+		ensure
+			Pixmap_set: background_pixmap = a_pixmap;
+			Color_not_set: background_color = Void
+		end;
+
+feature -- Cursor
+
+	cursor: SCREEN_CURSOR is
+			-- Cursor of current widget
+		do
+			Result := implementation.cursor
+		end;
+
+	set_cursor (a_cursor: SCREEN_CURSOR) is
+			-- Set `cursor' of current widget to `a_cursor'.
+		require
+			Valid_cursor: a_cursor /= Void;
+			Widget_realized: realized
+		do
+			implementation.set_cursor (a_cursor)
+		end;
+
+feature -- Geometry
+
+	x: INTEGER is
+			-- Horizontal position relative to parent
+		do
+			Result := implementation.x
+		end;
+
+	y: INTEGER is
+			-- Vertical position relative to parent
+		do
+			Result := implementation.y
+		end;
+
+	width: INTEGER is
+			-- Width of widget
+		do
+			Result := implementation.width
+		ensure
+			Positive_width: Result >= 0
+		end;
+
+	height: INTEGER is
+			-- Height of widget
+		do
+			Result := implementation.height
+		ensure
+			Positive_height: Result >= 0
+		end; 
+
+	real_x: INTEGER is
+			-- Vertical position relative to root window
+		do
+			Result := implementation.real_x
+		end; 
+
+	real_y: INTEGER is
+			-- Horizontal position relative to root window
+		do
+			Result := implementation.real_y
+		end; 
+
+	set_size (new_width:INTEGER; new_height: INTEGER) is
+			-- Set width and height to `new_width'
+			-- and `new_height'.
+		require
+			Positive_width: new_width >= 0;
+			Positive_height: new_height >= 0
+		do
+			implementation.set_size (new_width, new_height)
+		end; 
+
+	set_width (new_width :INTEGER) is
+			-- Set width to `new_width'.
+		require
+			Positive_width: new_width >= 0;
+		do
+			implementation.set_width (new_width)
+		end;
+
+	set_height (new_height: INTEGER) is
+			-- Set height to `new_height'.
+		require
+			Positive_height: new_height >= 0
+		do
+			implementation.set_height (new_height)
+		end;
+
+	set_x (new_x: INTEGER) is
+			-- Set  horizontal position relative
+			-- to parent to `new_x'.
+		do
+			implementation.set_x (new_x)
+		end;
+
+	set_x_y (new_x: INTEGER; new_y: INTEGER) is
+			-- Set horizontal position and
+			-- vertical position relative to parent
+			-- to `new_x' and `new_y'.
+		do
+			implementation.set_x_y (new_x, new_y)
+		end;
+
+	set_y (new_y: INTEGER) is
+			-- Set vertical position relative
+			-- to parent to `new_y'.
+		do
+			implementation.set_y (new_y)
+		end
+
+feature -- Windowing
+
+	destroy is
+			-- Destroy actual screen object of Current
+			-- widget and of all children.
+		do
+			widget_manager.destroy (Current);
+			implementation.destroy;
+			implementation := Void
+		end;
+
+	destroyed: BOOLEAN is
+			-- Is Current widget destroyed?
+		do
+			Result := (implementation = Void)
+		end;
+
+	hide is
+			-- Hide Current widget.
+		require
+			widget_realized: realized
+		do
+			implementation.hide
+		ensure
+			Not_shown: not shown
+		end;
+
+	show is
+			-- Show Current widget.
+		require
+			widget_realized: realized
+		do
+			implementation.show
+		ensure
+			Shown: shown
+		end;
+
+	shown: BOOLEAN is
+			-- Is current widget visible?
+		require
+			widget_realized: realized
+		do
+			Result := implementation.shown
+		end;
+
+	manage is
+			-- Enable geometry managment.
+		do
+			implementation.set_managed (True)
+		ensure
+			Managed: managed
+		end;
+
+	set_managed (b: BOOLEAN) is
+		do
+			if b then
+				manage
+			else
+				unmanage
+			end
+		end;
+
+	unmanage is
+			-- Disable geometry managment.
+		do
+			implementation.set_managed (False)
+		ensure
+			Not_managed: not managed
+		end;
+
+	managed: BOOLEAN is
+			-- Is Current widget subject to
+			-- geometry managment?
+		do
+			Result := implementation.managed
+		end;
+
+	realize is
+			-- Create actual screen object of Current
+			-- widget and of all children (recursively) .
+		do
+			implementation.realize
+		ensure
+			Realized: realized
+		end;
+
+	unrealize is
+			-- Destroy screen window implementation and all
+			-- screen window implementations of its children if `flag'.
+		do
+			implementation.unrealize
+		ensure
+			not realized
+		end;
+
+	realized: BOOLEAN is
+			-- Is Current widget realized?
+		do
+			Result := implementation.realized
+		end;
+
+	screen: SCREEN is
+			-- Screen of Current widget
+		do
+			Result := widget_manager.screen (Current)
+		ensure
+			not (Result = Void)
+		end; 
+
+feature -- Event handling
+
+	insensitive: BOOLEAN is
+			-- Is current widget insensitive to
+			-- user actions? (If it is, events will
+			-- not be dispatched to Current widget or
+			-- any of its children)
+		do
+			Result := implementation.insensitive
+		end;
+
+	set_sensitive is
+			-- Make Current widget sensitive.
+		do
+			implementation.set_insensitive (False)
+		ensure
+			Sensitive: not insensitive	
+		end;
+
+	set_insensitive is
+			-- Make Current widget insensitive
+		do
+			implementation.set_insensitive (True)
+		ensure
+			Insensitive: insensitive
+		end;
+
+	set_no_event_propagation is
+			-- Do not propagate events to direct
+			-- parent.
+		require
+			widget_realized: realized
+		do
+			implementation.set_no_event_propagation
+		end;
+
+	propagate_event is
+			-- Propagate events not handled by Current
+			-- widget to direct parent.
+		require
+			widget_realized: realized
+		do
+			implementation.propagate_event
+		end; -- propagate_event
+
+	grab (a_cursor: SCREEN_CURSOR) is
+			-- Grab the mouse and the keyboard , i.e.
+			-- channel all events to Current widget 
+			-- regardless of where they occur
+			-- If `cursor' is not void, the pointer 
+			-- will have `a_cursor' shape during the grab.
+		require
+			widget_realized: realized
+		do
+			implementation.grab (a_cursor)
+		end;
+
+	ungrab is
+			-- Release the mouse and the keyboard 
+			-- from an earlier grab.
+		require
+			widget_realized: realized
+		do
+			implementation.ungrab
+		end; 
+
+feature
+
+	identifier: STRING;
+			-- Name of widget
+
+feature -- Hierarchy
+
+	top: TOP is
+			-- Top shell or base of Current widget
+		do
+			Result := widget_manager.top (Current)
+		ensure
+			not (Result = Void)
+		end;
+
+	parent: WIDGET is
+			-- Parent of Current widget
+		do
+			Result := widget_manager.parent (Current)
+		end;
+
+feature 
+
+	same (other: like Current): BOOLEAN is
+			-- Does Current widget and `other' correspond
+			-- to the same screen object?
+		require
+			other_exists: not (other = Void)
+		do
+			Result := other.implementation = implementation
+		end;
+
+feature {WIDGET, W_MANAGER}
+
+	depth: INTEGER;
+			-- Depth of Current widget
+			-- (top_shell's depth is 0, its child's depth is 1,...)
+
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
+
+	implementation: WIDGET_I;
+			-- Implementation of Current widget
+
+feature {G_ANY, G_ANY_I, WIDGET_I}
+
+	is_fontable: BOOLEAN is
+			-- Can a font be set for Current
+			-- widget?
+		do
+		end; 
+
+feature {NONE}
+
+	set_default is
+			-- Set default values of Current widget.
+		deferred
+		end;
+
+invariant
+
+	Positive_depth: depth >= 0
+
+end

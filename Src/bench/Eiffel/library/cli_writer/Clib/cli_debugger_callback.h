@@ -188,6 +188,8 @@ public:
 			EIF_POINTER a_cb_breakpoint_set_error
 			);
 
+	HRESULT terminate_callback() ;
+
 protected:
     long        m_refCount;
 
@@ -240,6 +242,8 @@ public:
 			EIF_OBJECT callback_object,
 			EIF_POINTER a_ucb_debug_event
 			);
+
+	HRESULT terminate_callback() ;
 
     // IUnknown
     ULONG STDMETHODCALLTYPE AddRef() 

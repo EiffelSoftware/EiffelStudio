@@ -524,9 +524,12 @@ feature -- Status Setting
 	
 	update is
 			-- Update all elements after changes.
+		local
+			l_unselect: BOOLEAN
 		do
 			if not argument_check.is_selected then	
 				argument_check.enable_select
+				l_unselect := True
 			end
 			retrieve_ace_arguments
 			retrieve_user_arguments
@@ -552,6 +555,9 @@ feature -- Status Setting
 				argument_check.disable_select
 			end
 			refresh
+			if l_unselect then
+				argument_check.disable_select
+			end
 		end
 
 	set_working_directory (a_path: STRING) is
@@ -636,7 +642,6 @@ feature {NONE} -- Element Change
 					ace_arguments_list := argument_list
 				when User_mode then
 					user_arguments_list := argument_list
-				else
 			end
 			store_arguments (root_ast)
 			synch_with_others
@@ -714,7 +719,6 @@ feature {NONE} -- Actions
 			else
 				set_mode (User_mode)
 			end
---			synch_with_others
 		end
 
 	arg_text_changed (key: EV_KEY) is

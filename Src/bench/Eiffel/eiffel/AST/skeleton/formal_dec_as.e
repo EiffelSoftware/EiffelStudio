@@ -104,6 +104,7 @@ feature -- Comparison
 				if o_ct /= Void then
 					Result := ct.same_as (o_ct)
 				end
+				Result := Result and then equivalent (creation_feature_list, other.creation_feature_list)
 			else
 				Result := o_ct = Void
 			end

@@ -15,7 +15,7 @@ feature -- Access
 	is_infix: INTEGER is 8
 	is_prefix: INTEGER is 16
 	is_public: INTEGER is 32
-	is_artificially_added: INTEGER is 32
+	is_artificially_added: INTEGER is 64
 			-- Possible attributes of a feature.
 
 end -- class FEATURE_ATTRIBUTE

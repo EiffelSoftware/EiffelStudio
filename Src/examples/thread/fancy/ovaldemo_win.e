@@ -22,6 +22,10 @@ feature -- deferred
 			Result := oval_demo_cmd
 		end
 
+	title: STRING is "Ovals"
+			-- Title of the window.
+		
+
 end -- class OVAL_DEMO_WINDOW
 
 --|----------------------------------------------------------------

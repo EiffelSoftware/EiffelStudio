@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	make is
 		do
 			exit_mutex.lock
-			make_top ("Ovals")
+			make_top (title)
 			resize (200,200)
 			create  client_window.make (Current, "Client Window")
 			ptr_window := client_window.item
@@ -41,6 +41,10 @@ feature	-- Deferred
 		deferred
 		end
 	
+	title: STRING is
+			-- Title of the window.
+		deferred
+		end
 
 feature -- Access
 

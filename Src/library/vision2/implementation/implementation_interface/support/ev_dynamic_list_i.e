@@ -69,7 +69,26 @@ feature -- Status report
 		do
 			dlc ?= p
 			Result := dlc /= Void and then
-				(dlc.item = Void or else interface.has (dlc.item))
+				(dlc.item = Void or else has (dlc.item))
+		end
+
+	has (v: like item): BOOLEAN is
+			-- Does structure contain `v'?
+		require
+			v_not_void: v /= Void
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > count or else Result
+			loop
+				if i_th (i) = v then
+					Result := True
+				end
+				i := i + 1
+			end
 		end
 
 feature -- Cursor movement
@@ -152,7 +171,7 @@ feature -- Element change
 				index := index + 1
 			end
 		ensure
-			has_v: interface.has (v)
+			has_v: has (v)
 		end
 
 	replace (v: like item) is
@@ -164,7 +183,7 @@ feature -- Element change
 			remove_i_th (index)
 			insert_i_th (v, index)
 		ensure
-			has_v: interface.has (v)
+			has_v: has (v)
 		end
 
 	put_front (v: like item) is
@@ -177,7 +196,7 @@ feature -- Element change
 				index := index + 1
 			end
 		ensure
-			has_v: interface.has (v)
+			has_v: has (v)
 		end
 
 	put_right (v: like item) is
@@ -187,7 +206,7 @@ feature -- Element change
 		do
 			insert_i_th (v, index + 1)
 		ensure
-			has_v: interface.has (v)
+			has_v: has (v)
 		end
 
 	put_i_th (v: like item; i: INTEGER) is
@@ -199,7 +218,7 @@ feature -- Element change
 			insert_i_th (v, i)
 			remove_i_th (i + 1)
 		ensure
-			has_v: interface.has (v)
+			has_v: has (v)
 		end
 
 	merge_left (other: like interface) is
@@ -249,7 +268,7 @@ feature -- Removal
 			remove_i_th (interface.sequential_index_of (v, 1))
 			index := old_index
 		ensure
-			not_has_v: not interface.has (v)
+			not_has_v: not has (v)
 		end
 
 	remove is
@@ -261,7 +280,7 @@ feature -- Removal
 				index := count + 1
 			end
 		ensure
-			not_has_v: not interface.has (old item)
+			not_has_v: not has (old item)
 		end
 
 	remove_left is
@@ -271,7 +290,7 @@ feature -- Removal
 			index := index - 1
 			remove_i_th (index)
 		ensure then
-			left_neighbor_removed: not interface.has (old i_th (index - 1))
+			left_neighbor_removed: not has (old i_th (index - 1))
 		end
 
 	remove_right is
@@ -280,7 +299,7 @@ feature -- Removal
 		do
 			remove_i_th (index + 1)
 		ensure then
-			right_neighbor_removed: not interface.has (old i_th (index + 1))
+			right_neighbor_removed: not has (old i_th (index + 1))
 		end
 
 feature {NONE} -- Implementation
@@ -352,6 +371,10 @@ end -- class EV_DYNAMIC_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/07 01:32:31  brendel
+--| Added has.
+--| Replaced interface.has with has.
+--|
 --| Revision 1.5  2000/04/06 00:03:17  brendel
 --| Fixed bug in merge_right.
 --|

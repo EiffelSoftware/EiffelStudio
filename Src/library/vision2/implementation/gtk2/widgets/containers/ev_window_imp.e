@@ -284,10 +284,12 @@ feature -- Status setting
 	destroy is
 			-- Render `Current' unusable.
 		do
-			lower_bar.wipe_out
-			upper_bar.wipe_out
-			remove_menu_bar
-			Precursor {EV_CONTAINER_IMP}
+			if not is_destroyed then
+				lower_bar.wipe_out
+				upper_bar.wipe_out
+				remove_menu_bar
+				Precursor {EV_CONTAINER_IMP}
+			end
 		end
 		
 	show is
@@ -543,8 +545,6 @@ feature {NONE} -- Implementation
 		do
 			Precursor
 			is_initialized := False
-			accel_group := feature {EV_GTK_EXTERNALS}.gtk_accel_group_new
-			feature {EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
 			create upper_bar
 			create lower_bar
 
@@ -580,6 +580,7 @@ feature {NONE} -- Implementation
 			bar_imp: EV_VERTICAL_BOX_IMP
 		do
 			vbox := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (False, 0)
+			
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (vbox)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (client_area, vbox)
 			hbox := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
@@ -597,6 +598,8 @@ feature {NONE} -- Implementation
 			app_implementation.window_oids.extend (object_id)
 		end
 
+feature {EV_ACCELERATOR_IMP} -- Implementation
+
 	vbox: POINTER
 			-- Vertical_box to have a possibility for a menu on the
 			-- top and a status bar at the bottom.
@@ -606,9 +609,8 @@ feature {EV_ANY_I} -- Implementation
 	lock_update is
 			-- Lock drawing updates for `Current'
 		do
-			Precursor {EV_WINDOW_I}
---			event_mask := feature {EV_GTK_EXTERNALS}.gdk_window_get_events (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
---			feature {EV_GTK_EXTERNALS}.gdk_window_set_events (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
+			Precursor {EV_WINDOW_I}			
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_freeze_updates (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 		
 	event_mask: INTEGER
@@ -618,7 +620,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Restore drawing updates for `Current'
 		do
 			Precursor {EV_WINDOW_I}
---			feature {EV_GTK_EXTERNALS}.gdk_window_set_events (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), event_mask)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_thaw_updates (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
 		end
 
 feature {EV_INTERMEDIARY_ROUTINES}
@@ -630,11 +632,6 @@ feature {EV_INTERMEDIARY_ROUTINES}
 				close_request_actions_internal.call (Void)
 			end
 		end
-
-feature {EV_MENU_BAR_IMP} -- Implementation
-
-	accel_group: POINTER
-			-- Pointer to GtkAccelGroup struct.
 			
 feature {EV_CLIPBOARD_IMP} -- Implementation
 

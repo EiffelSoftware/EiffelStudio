@@ -5,8 +5,8 @@
 //
 //  File:		ecom_runtime_e_c.c
 //
-//  Contents:	Runtime conversion functions from C to Eiffel 
-//				
+//  Contents:	Runtime conversion functions from C to Eiffel
+//
 //--------------------------------------------------------------------------
 
 #include "ecom_runtime_e_c.h"
@@ -34,7 +34,7 @@ DATE ecom_runtime_ec::ccom_ec_date (EIF_REFERENCE a_ref)
 // Create DATE from Eiffel DATE_TIME
 {
 	EIF_OBJECT date_time;
-	
+
 	SYSTEMTIME * systime;
 	DATE variant_time;
 
@@ -277,9 +277,114 @@ CURRENCY ecom_runtime_ec::ccom_ec_currency (EIF_REFERENCE a_ref)
 	c_currency = (CURRENCY *)(f_item)(eif_access (a_currency));
 	eif_wean (a_currency);
 
-	return (*c_currency);	
+	return (*c_currency);
 };
 //----------------------------------------------------------------------------
+
+char * ecom_runtime_ec::ccom_ec_pointed_character (EIF_REFERENCE a_ref)
+
+// Create char * from EIF_REFERENCE (CELL [CHARACTER])
+{
+	EIF_OBJECT eif_object;
+	EIF_TYPE_ID type_id;
+	EIF_CHARACTER_FUNCTION item;
+	char * result;
+
+	eif_object = eif_protect (a_ref);
+	type_id = eif_type_id ("CELL [CHARACTER]");
+	item = eif_character_function ("item", type_id);
+
+	result = (char *) CoTaskMemAlloc (sizeof (char));
+	* result = (char) item (eif_access (eif_object));
+
+	eif_wean (eif_object);
+	return result;
+};
+//----------------------------------------------------------------------------
+
+short * ecom_runtime_ec::ccom_ec_pointed_short (EIF_REFERENCE a_ref)
+
+// Create short * from EIF_REFERENCE (CELL [INTEGER])
+{
+	EIF_OBJECT eif_object;
+	EIF_TYPE_ID type_id;
+	EIF_INTEGER_FUNCTION item;
+	short * result;
+
+	eif_object = eif_protect (a_ref);
+	type_id = eif_type_id ("CELL [INTEGER]");
+	item = eif_integer_function ("item", type_id);
+
+	result = (short *) CoTaskMemAlloc (sizeof (short));
+	* result = (short) item (eif_access (eif_object));
+
+	eif_wean (eif_object);
+	return result;
+};
+//---------------------------------------------------------------------------
+
+long * ecom_runtime_ec::ccom_ec_pointed_long (EIF_REFERENCE a_ref)
+
+// Create long * from EIF_REFERENCE (CELL [INTEGER])
+{
+	EIF_OBJECT eif_object;
+	EIF_TYPE_ID type_id;
+	EIF_INTEGER_FUNCTION item;
+	long * result;
+
+	eif_object = eif_protect (a_ref);
+	type_id = eif_type_id ("CELL [INTEGER]");
+	item = eif_integer_function ("item", type_id);
+
+	result = (long *) CoTaskMemAlloc (sizeof (long));
+	* result = (long) item (eif_access (eif_object));
+
+	eif_wean (eif_object);
+	return result;
+};
+//---------------------------------------------------------------------------
+
+float * ecom_runtime_ec::ccom_ec_pointed_real (EIF_REFERENCE a_ref)
+
+// Create float * from EIF_REFERENCE (CELL [REAL])
+{
+	EIF_OBJECT eif_object;
+	EIF_TYPE_ID type_id;
+	EIF_REAL_FUNCTION item;
+	float * result;
+
+	eif_object = eif_protect (a_ref);
+	type_id = eif_type_id ("CELL [REAL]");
+	item = eif_real_function ("item", type_id);
+
+	result = (float *) CoTaskMemAlloc (sizeof (float));
+	* result = (float) item (eif_access (eif_object));
+
+	eif_wean (eif_object);
+	return result;
+};
+//---------------------------------------------------------------------------
+
+double * ecom_runtime_ec::ccom_ec_pointed_double (EIF_REFERENCE a_ref)
+
+// Create double * from EIF_REFERENCE (CELL [DOUBLE])
+{
+	EIF_OBJECT eif_object;
+	EIF_TYPE_ID type_id;
+	EIF_DOUBLE_FUNCTION item;
+	double * result;
+
+	eif_object = eif_protect (a_ref);
+	type_id = eif_type_id ("CELL [DOUBLE]");
+	item = eif_double_function ("item", type_id);
+
+	result = (double *) CoTaskMemAlloc (sizeof (double));
+	* result = (double) item (eif_access (eif_object));
+
+	eif_wean (eif_object);
+	return result;
+};
+//---------------------------------------------------------------------------
 
 CURRENCY * ecom_runtime_ec::ccom_ec_pointed_currency (EIF_REFERENCE a_ref)
 
@@ -297,7 +402,7 @@ CURRENCY * ecom_runtime_ec::ccom_ec_pointed_currency (EIF_REFERENCE a_ref)
 	c_currency = (CURRENCY *)(f_item)(eif_access (a_currency));
 	eif_wean (a_currency);
 
-	return c_currency;	
+	return c_currency;
 };
 //----------------------------------------------------------------------------
 
@@ -391,7 +496,7 @@ VARIANT ecom_runtime_ec::ccom_ec_variant (EIF_REFERENCE a_ref)
 	c_variant = (VARIANT *)(f_item)(eif_access(a_variant));
 	eif_wean (a_variant);
 
-	return (*c_variant);	
+	return (*c_variant);
 };
 //----------------------------------------------------------------------------
 
@@ -411,7 +516,7 @@ VARIANT * ecom_runtime_ec::ccom_ec_pointed_variant (EIF_REFERENCE a_ref)
 	c_variant = (VARIANT *)(f_item)(eif_access(a_variant));
 	eif_wean (a_variant);
 
-	return c_variant;	
+	return c_variant;
 };
 //----------------------------------------------------------------------------
 
@@ -448,7 +553,7 @@ DATE * ecom_runtime_ec::ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension)
 	capacity = (int)(count)(eif_access(eif_date_array));
 
 	date_array = (DATE *) CoTaskMemAlloc (capacity*(sizeof(DATE)));
-	
+
 	for (int i=0; i < capacity; i++)
 	{
 		a_date = ccom_ec_date( (f_item)(eif_access(eif_date_array), ((EIF_INTEGER)(i+1))));
@@ -457,7 +562,7 @@ DATE * ecom_runtime_ec::ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension)
 
 	eif_wean (eif_date_array);
 
-	return date_array;	
+	return date_array;
 };
 //----------------------------------------------------------------------------
 
@@ -492,7 +597,7 @@ short * ecom_runtime_ec::ccom_ec_array_short (EIF_REFERENCE a_ref, int dimension
 	capacity = (int)(f_capacity)(eif_access(e_short_array));
 
 	short_array = (short *)CoTaskMemAlloc (capacity*(sizeof(short)));
-	
+
 	for (int i=0; i < capacity; i++)
 	{
 		a_short = (short)(f_item)(eif_access(e_short_array), ((EIF_INTEGER)(i+1)));
@@ -501,7 +606,7 @@ short * ecom_runtime_ec::ccom_ec_array_short (EIF_REFERENCE a_ref, int dimension
 
 	eif_wean (e_short_array);
 
-	return short_array;	
+	return short_array;
 };
 //----------------------------------------------------------------------------
 
@@ -537,7 +642,7 @@ HRESULT * ecom_runtime_ec::ccom_ec_array_hresult (EIF_REFERENCE a_ref, int dimen
 	capacity = (int)(f_capacity)(eif_access(e_hresult_array));
 
 	hresult_array = (HRESULT *)CoTaskMemAlloc (capacity*(sizeof(HRESULT)));
-	
+
 	for (int i=0; i < capacity; i++)
 	{
 		hr = ccom_ec_hresult ((f_item)(eif_access(e_hresult_array), ((EIF_INTEGER)(i+1))));
@@ -546,7 +651,7 @@ HRESULT * ecom_runtime_ec::ccom_ec_array_hresult (EIF_REFERENCE a_ref, int dimen
 
 	eif_wean (e_hresult_array);
 
-	return hresult_array;	
+	return hresult_array;
 };
 //----------------------------------------------------------------------------
 
@@ -582,7 +687,7 @@ CURRENCY * ecom_runtime_ec::ccom_ec_array_currency (EIF_REFERENCE a_ref, int dim
 	capacity = (int)(f_capacity)(eif_access(e_currency_array));
 
 	currency_array = (CURRENCY *)CoTaskMemAlloc (capacity*(sizeof(CURRENCY)));
-	
+
 	for (int i=0; i < capacity; i++)
 	{
 		p_currency = ccom_ec_pointed_currency ((f_item)(eif_access(e_currency_array), ((EIF_INTEGER)(i+1))));
@@ -591,7 +696,7 @@ CURRENCY * ecom_runtime_ec::ccom_ec_array_currency (EIF_REFERENCE a_ref, int dim
 
 	eif_wean (e_currency_array);
 
-	return currency_array;	
+	return currency_array;
 };
 //----------------------------------------------------------------------------
 
@@ -627,7 +732,7 @@ VARIANT * ecom_runtime_ec::ccom_ec_array_variant (EIF_REFERENCE a_ref, int dimen
 	capacity = (int)(f_capacity)(eif_access(e_variant_array));
 
 	variant_array = (VARIANT *) CoTaskMemAlloc (capacity * (sizeof (VARIANT)));
-	
+
 	for (i = 0; i < capacity; i++)
 	{
 		p_var = ccom_ec_pointed_variant ((f_item)(eif_access(e_variant_array), ((EIF_INTEGER)(i+1))));
@@ -636,7 +741,7 @@ VARIANT * ecom_runtime_ec::ccom_ec_array_variant (EIF_REFERENCE a_ref, int dimen
 
 	eif_wean (e_variant_array);
 
-	return variant_array;	
+	return variant_array;
 };
 //----------------------------------------------------------------------------
 
@@ -672,7 +777,7 @@ DECIMAL * ecom_runtime_ec::ccom_ec_array_decimal (EIF_REFERENCE a_ref, int dimen
 	capacity = (int)(f_capacity)(eif_access(e_decimal_array));
 
 	decimal_array = (DECIMAL *) CoTaskMemAlloc (capacity * (sizeof (DECIMAL)));
-	
+
 	for (i = 0; i < capacity; i++)
 	{
 		p_decimal = ccom_ec_pointed_decimal ((f_item)(eif_access(e_decimal_array), ((EIF_INTEGER)(i+1))));
@@ -681,7 +786,7 @@ DECIMAL * ecom_runtime_ec::ccom_ec_array_decimal (EIF_REFERENCE a_ref, int dimen
 
 	eif_wean (e_decimal_array);
 
-	return decimal_array;	
+	return decimal_array;
 };
 //----------------------------------------------------------------------------
 
@@ -717,7 +822,7 @@ VARIANT_BOOL * ecom_runtime_ec::ccom_ec_array_boolean (EIF_REFERENCE a_ref, int 
 	capacity = (int)(f_capacity)(eif_access(e_boolean_array));
 
 	boolean_array = (VARIANT_BOOL *) CoTaskMemAlloc (capacity * (sizeof (VARIANT_BOOL)));
-	
+
 	for (i = 0; i < capacity; i++)
 	{
 		a_bool = ccom_ec_boolean ((f_item)(eif_access(e_boolean_array), ((EIF_INTEGER)(i+1))));
@@ -726,7 +831,7 @@ VARIANT_BOOL * ecom_runtime_ec::ccom_ec_array_boolean (EIF_REFERENCE a_ref, int 
 
 	eif_wean (e_boolean_array);
 
-	return boolean_array;	
+	return boolean_array;
 };
 //-----------------------------------------------------------------------
 
@@ -763,7 +868,7 @@ LARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_long_long (EIF_REFERENCE a_ref, i
 	capacity = (int)(f_capacity)(eif_access(e_large_integer_array));
 
 	int_array = (LARGE_INTEGER *) CoTaskMemAlloc (capacity * (sizeof (LARGE_INTEGER)));
-	
+
 	for (i = 0; i < capacity; i++)
 	{
 		p_int = ccom_ec_pointed_long_long ((f_item)(eif_access(e_large_integer_array), ((EIF_INTEGER)(i+1))));
@@ -772,7 +877,7 @@ LARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_long_long (EIF_REFERENCE a_ref, i
 
 	eif_wean (e_large_integer_array);
 
-	return int_array;	
+	return int_array;
 };
 //-----------------------------------------------------------------------
 
@@ -787,31 +892,31 @@ ULARGE_INTEGER * ecom_runtime_ec::ccom_ec_array_ulong_long (EIF_REFERENCE a_ref,
 	EIF_INTEGER_FUNCTION f_capacity;
 
 	ULARGE_INTEGER * int_array;
-	ULARGE_INTEGER * p_int;	
+	ULARGE_INTEGER * p_int;
 	int capacity, i;
-	
+
 	e_ularge_integer_array = eif_protect (a_ref);
-	
-	if (dimension > 1)								
-	{										
-		tid = eif_type_id ("ECOM_ARRAY[ECOM_ULARGE_INTEGER]");			
+
+	if (dimension > 1)
+	{
+		tid = eif_type_id ("ECOM_ARRAY[ECOM_ULARGE_INTEGER]");
 		f_item = eif_reference_function ("array_item", tid);
 	}
 	else
 	{
 		tid = eif_type_id ("ARRAY[ECOM_ULARGE_INTEGER]");
 		f_item = eif_reference_function ("item", tid);
-	}																					
-	// Allocate memory								
+	}
+	// Allocate memory
 	f_capacity = eif_integer_function ("count", tid);
-	
+
 	capacity = (int)(f_capacity)(eif_access(e_ularge_integer_array));
 	int_array = (ULARGE_INTEGER *)CoTaskMemAlloc (capacity * (sizeof (ULARGE_INTEGER)));
-	
+
 	for (i = 0; i < capacity; i++)
 	{
 		p_int = ccom_ec_pointed_ulong_long ((f_item)(eif_access(e_ularge_integer_array), ((EIF_INTEGER)(i+1))));
-		memcpy ((ULARGE_INTEGER *)int_array, p_int, sizeof (ULARGE_INTEGER));																			
+		memcpy ((ULARGE_INTEGER *)int_array, p_int, sizeof (ULARGE_INTEGER));
 	}
 	eif_wean (e_ularge_integer_array);
 	return int_array;
@@ -831,7 +936,7 @@ IDispatch * ecom_runtime_ec::ccom_ec_array_dispatch (EIF_REFERENCE a_ref, int di
 	IDispatch * dispatch_array;
 	IDispatch * an_interface;
 	int capacity, i;
-	
+
 	e_dispatch_array = eif_protect (a_ref);
 
 	if (dimension > 1)
@@ -850,7 +955,7 @@ IDispatch * ecom_runtime_ec::ccom_ec_array_dispatch (EIF_REFERENCE a_ref, int di
 	capacity = (int)(f_capacity)(eif_access(e_dispatch_array));
 
 	dispatch_array = (IDispatch *) CoTaskMemAlloc (capacity * (sizeof (IDispatch *)));
-	
+
 	for (i = 0; i < capacity; i++)
 	{
 		an_interface = ccom_ec_dispatch ((f_item)(eif_access(e_dispatch_array), ((EIF_INTEGER)(i+1))));
@@ -859,7 +964,7 @@ IDispatch * ecom_runtime_ec::ccom_ec_array_dispatch (EIF_REFERENCE a_ref, int di
 
 	eif_wean (e_dispatch_array);
 
-	return dispatch_array;	
+	return dispatch_array;
 };
 //-----------------------------------------------------------------------------------------------
 
@@ -878,7 +983,7 @@ IUnknown * ecom_runtime_ec::ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dime
 	int capacity, i;
 
 	e_unknown_array = eif_protect (a_ref);
-	
+
 	if (dimension > 1)
 	{
 		tid = eif_type_id ("ECOM_ARRAY[ECOM_GENERIC_INTERFACE]");
@@ -895,7 +1000,7 @@ IUnknown * ecom_runtime_ec::ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dime
 	capacity = (int)(f_capacity)(eif_access(e_unknown_array));
 
 	unknown_array = (IUnknown *) CoTaskMemAlloc (capacity * (sizeof (IUnknown *)));
-	
+
 	for (i = 0; i < capacity; i++)
 	{
 		an_interface = ccom_ec_unknown ((f_item)(eif_access(e_unknown_array), ((EIF_INTEGER)(i+1))));
@@ -904,7 +1009,7 @@ IUnknown * ecom_runtime_ec::ccom_ec_array_unknown (EIF_REFERENCE a_ref, int dime
 
 	eif_wean (e_unknown_array);
 
-	return unknown_array;	
+	return unknown_array;
 };
 //-------------------------------------------------------------------------------------------
 
@@ -923,7 +1028,7 @@ LPWSTR * ecom_runtime_ec::ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimensi
 	int capacity, i;
 
 	e_lpwstr_array = eif_protect (a_ref);
-	
+
 	if (dimension > 1)
 	{
 		tid = eif_type_id ("ECOM_ARRAY[STRING]");
@@ -940,7 +1045,7 @@ LPWSTR * ecom_runtime_ec::ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimensi
 	capacity = (int)(f_capacity)(eif_access(e_lpwstr_array));
 
 	lpwstr_array = (LPWSTR *)CoTaskMemAlloc (capacity * (sizeof (LPWSTR)));
-	
+
 	for (i = 0; i < capacity; i++)
 	{
 		a_string = ccom_ec_lpwstr ((f_item)(eif_access(e_lpwstr_array), ((EIF_INTEGER)(i+1))));
@@ -949,7 +1054,7 @@ LPWSTR * ecom_runtime_ec::ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimensi
 
 	eif_wean (e_lpwstr_array);
 
-	return lpwstr_array;	
+	return lpwstr_array;
 };
 //----------------------------------------------------------------------------------------
 
@@ -966,9 +1071,9 @@ LPSTR * ecom_runtime_ec::ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension
 	LPSTR * lpstr_array;
 	LPSTR a_string;
 	int capacity, i;
-	
+
 	e_lpstr_array = eif_protect (a_ref);
-	
+
 	if (dimension > 1)
 	{
 		tid = eif_type_id ("ECOM_ARRAY[STRING]");
@@ -985,7 +1090,7 @@ LPSTR * ecom_runtime_ec::ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension
 	capacity = (int)(f_capacity)(eif_access(e_lpstr_array));
 
 	lpstr_array = (LPSTR *) CoTaskMemAlloc (capacity * (sizeof (LPSTR)));
-	
+
 	for (i = 0; i < capacity; i++)
 	{
 		a_string = ccom_ec_lpstr ((f_item)(eif_access(e_lpstr_array), ((EIF_INTEGER)(i+1))));
@@ -994,7 +1099,7 @@ LPSTR * ecom_runtime_ec::ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension
 
 	eif_wean (e_lpstr_array);
 
-	return lpstr_array;	
+	return lpstr_array;
 };
 //---------------------------------------------------------------------------------------------
 
@@ -1030,7 +1135,7 @@ BSTR * ecom_runtime_ec::ccom_ec_array_bstr (EIF_REFERENCE a_ref, int dimension)
 	capacity = (int)(f_capacity)(eif_access(e_bstr_array));
 
 	bstr_array = (BSTR *)CoTaskMemAlloc (capacity * (sizeof (BSTR)));
-	
+
 	for (i = 0; i < capacity; i++)
 	{
 		a_string = ccom_ec_bstr ((f_item)(eif_access(e_bstr_array), ((EIF_INTEGER)(i+1))));
@@ -1039,7 +1144,7 @@ BSTR * ecom_runtime_ec::ccom_ec_array_bstr (EIF_REFERENCE a_ref, int dimension)
 
 	eif_wean (e_bstr_array);
 
-	return bstr_array;	
+	return bstr_array;
 };
 //------------------------------------------------------------------------------------
 
@@ -1075,19 +1180,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -1098,7 +1203,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_I1, dimensions, array_bound);
@@ -1121,7 +1226,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_char (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -1187,19 +1292,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_float (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -1210,7 +1315,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_float (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_R4, dimensions, array_bound);
@@ -1233,7 +1338,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_float (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -1299,19 +1404,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -1322,7 +1427,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_I4, dimensions, array_bound);
@@ -1345,7 +1450,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_long (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -1411,19 +1516,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_short (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -1434,7 +1539,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_short (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_I2, dimensions, array_bound);
@@ -1457,7 +1562,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_short (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -1523,19 +1628,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_double (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -1546,7 +1651,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_double (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_R8, dimensions, array_bound);
@@ -1569,7 +1674,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_double (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -1635,19 +1740,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_boolean (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -1658,7 +1763,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_boolean (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_BOOL, dimensions, array_bound);
@@ -1681,7 +1786,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_boolean (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -1747,19 +1852,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_date (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -1770,7 +1875,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_date (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_DATE, dimensions, array_bound);
@@ -1793,7 +1898,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_date (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -1859,19 +1964,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_hresult (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -1882,7 +1987,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_hresult (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_HRESULT, dimensions, array_bound);
@@ -1905,7 +2010,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_hresult (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -1971,19 +2076,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -1994,7 +2099,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_VARIANT, dimensions, array_bound);
@@ -2017,7 +2122,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_variant (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -2083,19 +2188,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -2106,7 +2211,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_CY, dimensions, array_bound);
@@ -2129,7 +2234,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_currency (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -2195,19 +2300,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -2218,7 +2323,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_DECIMAL, dimensions, array_bound);
@@ -2241,7 +2346,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_decimal (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -2307,19 +2412,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_bstr (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -2330,7 +2435,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_bstr (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_BSTR, dimensions, array_bound);
@@ -2353,7 +2458,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_bstr (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -2419,19 +2524,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -2442,7 +2547,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_DISPATCH, dimensions, array_bound);
@@ -2465,7 +2570,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{
@@ -2531,19 +2636,19 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 
 	f_dimensions = eif_integer_function ("dimension_count", ecom_array_tid);
 	dimensions = (int)(f_dimensions)(eif_access (eif_safe_array));
-	
+
 
 	f_to_c = eif_pointer_function ("to_c", int_array_tid);
 	f_lower_indexes = eif_reference_function ("lower_indeces", ecom_array_tid);
 	f_element_counts = eif_reference_function ("element_counts", ecom_array_tid);
 	f_upper_indexes = eif_reference_function ("upper_indeces", ecom_array_tid);
-	
+
 	tmp_object1 = eif_protect ((f_lower_indexes)(eif_access (eif_safe_array)));
 	lower_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object1)));
 
 	tmp_object2 = eif_protect ((f_element_counts)(eif_access (eif_safe_array)));
 	element_counts = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object2)));
-	
+
 	tmp_object3 = eif_protect ((f_upper_indexes)(eif_access (eif_safe_array)));
 	upper_indexes = (EIF_INTEGER *) ((f_to_c)(eif_access (tmp_object3)));
 
@@ -2554,7 +2659,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 	{
 		array_bound[i].lLbound  = (long) lower_indexes [i];
 		array_bound[i].cElements  = (long) element_counts [i];
-	} 
+	}
 
 	// Create SAFEARRAY
 	c_safe_array = SafeArrayCreate (VT_UNKNOWN, dimensions, array_bound);
@@ -2577,7 +2682,7 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 	tmp_index = (EIF_INTEGER *)malloc (dimensions * sizeof (EIF_INTEGER));
 	memcpy (tmp_index, lower_indexes, (dimensions *sizeof (EIF_INTEGER)));
 
-	// 
+	//
 	// copy elements from eiffel array to c array
 	do
 	{

@@ -6,7 +6,7 @@
 //  File:		ecom_runtime_e_c.h
 //
 //  Contents:	Runtime conversion functions from Eiffel to C
-//				
+//
 //--------------------------------------------------------------------------
 
 #ifndef __ECOM_RUNTIME_EC_H_INC__
@@ -38,15 +38,20 @@ class ecom_runtime_ec
 		LPSTR ccom_ec_lpstr (EIF_REFERENCE a_ref);
 		LPWSTR ccom_ec_lpwstr (EIF_REFERENCE a_ref);
 		VARIANT ccom_ec_variant (EIF_REFERENCE a_ref);
-		
+
 		//Pointed
-		
+		char * ccom_ec_pointed_character (EIF_REFERENCE a_ref);
+		short * ccom_ec_pointed_short (EIF_REFERENCE a_ref);
+		long * ccom_ec_pointed_long (EIF_REFERENCE a_ref);
+		float * ccom_ec_pointed_real (EIF_REFERENCE a_ref);
+		double * ccom_ec_pointed_double (EIF_REFERENCE a_ref);
+		VARIANT_BOOL * ccom_ec_pointed_boolean (EIF_REFERENCE a_ref);
 		CURRENCY * ccom_ec_pointed_currency (EIF_REFERENCE a_ref);
 		VARIANT * ccom_ec_pointed_variant (EIF_REFERENCE a_ref);
 		DECIMAL * ccom_ec_pointed_decimal (EIF_REFERENCE a_ref);
 		LARGE_INTEGER * ccom_ec_pointed_long_long (EIF_REFERENCE a_ref);
 		ULARGE_INTEGER * ccom_ec_pointed_ulong_long (EIF_REFERENCE a_ref);
-		
+
 		// ARRAY
 		DATE * ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension);
 		short * ccom_ec_array_short (EIF_REFERENCE a_ref, int dimension);
@@ -62,7 +67,7 @@ class ecom_runtime_ec
 		LPWSTR * ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimension);
 		LPSTR * ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension);
 		BSTR * ccom_ec_array_bstr (EIF_REFERENCE a_ref, int dimension);
-		
+
 		// SAFEARRAY
 		SAFEARRAY * ccom_ec_safearray_char (EIF_REFERENCE a_ref);
 		SAFEARRAY * ccom_ec_safearray_float (EIF_REFERENCE a_ref);
@@ -81,5 +86,5 @@ class ecom_runtime_ec
 };
 
 #include "ecom_rt_globals.h"
-
+;
 #endif // !__ECOM_RUNTIME_EC_H_INC__

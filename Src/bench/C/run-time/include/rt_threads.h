@@ -254,7 +254,11 @@ extern pid_t eif_thread_fork(void);
 #endif	/* POSIX_10034A */
 #define EIF_THR_JOIN(which)         pthread_join(which,NULL)
 #define EIF_THR_JOIN_ALL
-#define EIF_THR_YIELD
+#ifdef _POSIX_PRIORITY_SCHEDULING
+#define EIF_THR_YIELD sched_yield()
+#else
+#define EIF_THR_YIELD usleep(1)
+#endif
 
 #define EIF_THR_SET_PRIORITY(tid,prio)
 #define EIF_THR_GET_PRIORITY(tid,prio)

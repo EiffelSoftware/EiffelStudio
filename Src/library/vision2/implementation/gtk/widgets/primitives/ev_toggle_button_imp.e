@@ -63,7 +63,7 @@ feature -- Event - command association
 			-- Add 'command' to the list of commands to be
 			-- executed when the button is toggled
 		do
-			add_command ( "toggled", command,  arguments )
+			add_command (widget, "toggled", command,  arguments )
 		end
 
 feature -- Event -- removing command association
@@ -72,7 +72,7 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the button is toggled.
 		do
-			remove_commands (toggled_id)
+			remove_commands (widget, toggled_id)
 		end	
 
 end -- class EV_TOGGLE_BUTTON_IMP

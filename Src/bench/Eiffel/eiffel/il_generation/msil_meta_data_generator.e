@@ -308,7 +308,11 @@ feature {NONE} -- Feature generation
 				is_frozen := feat.is_frozen
 				
 				if is_static then
-					name := "$$" + feat.external_name
+					if feat.is_c_external then
+						name := "__" + System.system_name + "_" + feat.external_name
+					else
+						name := "$$" + feat.external_name
+					end
 				else
 					name := feat.external_name
 				end

@@ -156,7 +156,7 @@ feature -- Generation settings
 			imp: COM_IL_CODE_GENERATOR
 		do
 			create imp.make
-			imp.generate_key
+			imp.generate_key (System.in_final_mode)
 			implementation := imp
 		end
 
@@ -171,7 +171,11 @@ feature -- Generation Structure
 			file_name_not_void: file_name /= Void
 			file_name_not_empty: not file_name.is_empty
 		do
-			implementation.start_assembly_generation (assembly_name, file_name, (create {PROJECT_CONTEXT}).Final_generation_path)
+			if System.in_final_mode then
+				implementation.start_assembly_generation (assembly_name, file_name, (create {PROJECT_CONTEXT}).Final_generation_path)
+			else
+				implementation.start_assembly_generation (assembly_name, file_name, (create {PROJECT_CONTEXT}).Workbench_generation_path)
+			end
 			assembly_generation_started := True
 		ensure
 			assembly_generation_started: assembly_generation_started

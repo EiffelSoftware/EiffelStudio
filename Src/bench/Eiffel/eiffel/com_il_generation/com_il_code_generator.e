@@ -37,15 +37,21 @@ create
 
 feature -- Basic Operations
 
-	generate_key is
+	generate_key (final_mode: BOOLEAN) is
 			-- Generate key pair for corresponding assembly.
 		local
 			key_path: STRING
 		do
-			create key_path.make_from_string ((create {PROJECT_CONTEXT}).Final_generation_path)
-			key_path := key_path + (create {OPERATING_ENVIRONMENT}).Directory_separator.out + Key_filename
+			if final_mode then
+				create key_path.make_from_string ((create {PROJECT_CONTEXT}).Final_generation_path)
+			else
+				create key_path.make_from_string ((create {PROJECT_CONTEXT}).Workbench_generation_path)
+			end
+			key_path := key_path + (create {OPERATING_ENVIRONMENT}).Directory_separator.out
+				+ Key_filename
 			if not (create {RAW_FILE}.make (key_path)).exists then
-				(create {WEL_PROCESS_LAUNCHER}).launch (Sn_command + Double_quote + key_path + Double_quote, (create {EXECUTION_ENVIRONMENT}).current_working_directory, Void)
+				(create {WEL_PROCESS_LAUNCHER}).launch (Sn_command + Double_quote + key_path +
+					Double_quote, (create {EXECUTION_ENVIRONMENT}).current_working_directory, Void)
 			end
 		end
 

@@ -244,15 +244,15 @@ char *obj1, *obj2;
 	return (Dtype(obj1) == Dtype(obj2));
 }
 
-public char econfg(obj1,obj2)
+public EIF_BOOLEAN econfg(obj1,obj2)
 char *obj1, *obj2;
 {
 	/* Does dynamic type of `obj2' conform to dynamic type of `obj1' ? */
 
 	if ((char *) 0 == obj1 || (char *) 0 == obj2)
-		return (char) 0;
+		return (EIF_BOOLEAN) 0;
 
-	return (char) econfm(Dtype(obj1), Dtype(obj2));
+	return (EIF_BOOLEAN) econfm(Dtype(obj1), Dtype(obj2));
 
 }
 

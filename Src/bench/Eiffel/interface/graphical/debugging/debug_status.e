@@ -69,6 +69,7 @@ feature {NONE} -- Implementation
 				end
 				Debug_window.clear_window
 				Debug_window.process_text (st)
+				Debug_window.set_top_character_position (0)
 				Debug_window.display
 			end
 		end;

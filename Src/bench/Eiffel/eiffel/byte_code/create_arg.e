@@ -56,6 +56,8 @@ feature -- C code generation
 			buffer: GENERATION_BUFFER
 		do
 			buffer := context.buffer
+			
+			buffer.putstring ("RTLN(")
 			cl_type_i := type_to_create
 			gen_type_i ?= cl_type_i
 			buffer.putstring ("RTCA(arg")
@@ -67,6 +69,7 @@ feature -- C code generation
 			else
 				buffer.putint (cl_type_i.type_id - 1)
 			end
+			buffer.putchar (')')
 			buffer.putchar (')')
 		end
 

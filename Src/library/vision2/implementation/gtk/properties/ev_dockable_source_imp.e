@@ -117,6 +117,29 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+	internal_enable_dockable is
+			-- Activate drag mechanism.
+ 		do
+			if drag_button_press_connection_id = 0 then
+				real_signal_connect (
+					c_object,
+					"button-press-event",
+					agent (App_implementation.gtk_marshal).start_drag_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
+					App_implementation.default_translate
+				)
+				drag_button_press_connection_id := last_signal_connection_id				
+			end
+		end
+		
+	internal_disable_dockable is
+			-- Deactivate drag mechanism
+		do
+			if drag_button_press_connection_id > 0 then
+				signal_disconnect (drag_button_press_connection_id)
+				drag_button_press_connection_id := 0
+			end
+		end
+
 	drag_and_drop_starting_movement: INTEGER is 3
 
 	start_dragable (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
@@ -138,7 +161,7 @@ feature {NONE} -- Implementation
 			drag_button_release_connection_id := last_signal_connection_id
 		end
 		
-	drag_button_release_connection_id, drag_motion_notify_connection_id: INTEGER
+	drag_button_press_connection_id, drag_button_release_connection_id, drag_motion_notify_connection_id: INTEGER
 			-- Signal id's for drag event connection.
 
 	real_start_dragging (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,

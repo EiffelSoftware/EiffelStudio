@@ -81,21 +81,23 @@ feature -- Execution
 
 feature -- Formatting
 
-	format (stone: FEATURE_STONE) is
+	format (stone: STONE) is
 			-- Show the "debug" format of `stone' if it is debuggable.
 		local
 			bar_and_text_tool: BAR_AND_TEXT;
 			e_feature: E_FEATURE;
 			message: STRING
+			f_stone: FEATURE_STONE
 		do
-			if stone /= Void then
-				e_feature := stone.e_feature;
+			f_stone ?= stone
+			if f_stone /= Void then
+				e_feature := f_stone.e_feature;
 				if e_feature.is_debuggable then
-					old_format (stone)
+					old_format (f_stone)
 				else
 					bar_and_text_tool ?= tool;
 					if tool /= Void then
-						bar_and_text_tool.showtext_frmt_holder.execute (stone)
+						bar_and_text_tool.showtext_frmt_holder.execute (f_stone)
 					end;
 					if e_feature.body_id = Void then
 						message := Warning_messages.w_Cannot_debug_feature

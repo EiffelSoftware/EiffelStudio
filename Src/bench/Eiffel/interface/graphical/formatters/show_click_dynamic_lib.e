@@ -35,34 +35,38 @@ feature -- Properties
 
 feature -- Formatting
 
-	format (stone: DYNAMIC_LIB_STONE) is
+	format (stone: STONE) is
 			-- Show special format of `stone' in class text `text_window',
 			-- if it's clickable; do nothing otherwise.
 		local
 			cur: CURSOR;
 			retried: BOOLEAN;
 			mp: MOUSE_PTR
+			d_stone: DYNAMIC_LIB_STONE
 		do
-			if not retried then
-				tool.close_search_window;
-				display_temp_header (stone);
-				!! mp.set_watch_cursor;
-				cur := text_window.cursor;
-
-				if cur /= Void then
-					text_window.go_to (cur)
-				end;
-				tool.set_clickable(True)
-				tool.display_clickable_dynamic_lib_exports(True)
-				tool.set_last_format (holder);
-
-				display_header (stone);
-				mp.restore
-			else
-				if mp /= Void then
+			d_stone ?= stone
+			if d_stone /= Void then
+				if not retried then
+					tool.close_search_window;
+					display_temp_header (d_stone);
+					!! mp.set_watch_cursor;
+					cur := text_window.cursor;
+	
+					if cur /= Void then
+						text_window.go_to (cur)
+					end;
+					tool.set_clickable(True)
+					tool.display_clickable_dynamic_lib_exports(True)
+					tool.set_last_format (holder);
+	
+					display_header (d_stone);
 					mp.restore
-				end;
-				warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info);
+				else
+					if mp /= Void then
+						mp.restore
+					end;
+					warner (popup_parent).gotcha_call (Warning_messages.w_Cannot_retrieve_info);
+				end
 			end
 		rescue
 			if original_exception = Io_exception then

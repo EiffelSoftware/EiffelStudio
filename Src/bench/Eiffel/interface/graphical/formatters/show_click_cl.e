@@ -36,7 +36,7 @@ feature -- Properties
 
 feature -- Formatting
 
-	format (stone: CLASSC_STONE) is
+	format (stone: STONE) is
 			-- Show special format of `stone' in class text `text_window',
 			-- if it's clickable; do nothing otherwise.
 		local
@@ -45,44 +45,51 @@ feature -- Formatting
 			retried: BOOLEAN;
 			mp: MOUSE_PTR
 			same_stone: BOOLEAN
+			c_stone: CLASSC_STONE
 		do
 			if not retried then
-				root_stone ?= tool.stone;
-				same_stone := root_stone /= Void and then stone.same_as (root_stone)
-				if
-					do_format or else filtered or else
-					(tool.last_format.associated_command /= Current or
-					not same_stone)
-				then
-					if stone /= Void and then stone.is_valid then
-						tool.close_search_window;
-						if stone.clickable then
-							display_temp_header (stone);
-							!! mp.set_watch_cursor;
-							cur := text_window.cursor;
-							text_window.clear_window;
-							tool.set_read_only_text;
-							tool.set_file_name (file_name (stone));
-							display_info (stone);
-							if cur /= Void and then same_stone then
-								text_window.go_to (cur)
+				c_stone ?= stone
+				if c_stone /= Void then
+					root_stone ?= tool.stone;
+					same_stone := root_stone /= Void and then c_stone.same_as (root_stone)
+					if
+						do_format or else filtered or else
+						(tool.last_format.associated_command /= Current or
+						not same_stone)
+					then
+						if c_stone.is_valid then
+							tool.close_search_window;
+							if c_stone.clickable then
+								display_temp_header (c_stone);
+								!! mp.set_watch_cursor;
+								cur := text_window.cursor;
+								text_window.clear_window;
+								tool.set_read_only_text;
+								tool.set_file_name (file_name (c_stone));
+								display_info (c_stone);
+								if cur /= Void and then same_stone then
+									text_window.go_to (cur)
+								else
+									text_window.set_top_character_position (0)
+								end;
+								tool.show_read_only_text;
+								text_window.display;
+								tool.set_stone (c_stone);
+								tool.set_last_format (holder);
+								filtered := false;
+								display_header (c_stone);
+								mp.restore
 							else
-								text_window.set_top_character_position (0)
-							end;
-							tool.show_read_only_text;
-							text_window.display;
-							tool.set_stone (stone);
-							tool.set_last_format (holder);
-							filtered := false;
-							display_header (stone);
-							mp.restore
+								holder.set_selected (False);
+								tool.showtext_frmt_holder.execute (c_stone)
+							end
 						else
 							holder.set_selected (False);
-							tool.showtext_frmt_holder.execute (stone)
 						end
-					else
-						holder.set_selected (False);
 					end
+				else
+					holder.set_selected (False);
+					tool.showtext_frmt_holder.execute (stone)
 				end
 			else
 				if mp /= Void then

@@ -18,7 +18,6 @@ feature -- Access
 	i_th_color (i: INTEGER): WEL_COLOR_REF is
 			-- Color at the position `i'
 		require
-			exists: exists
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 		do
@@ -36,7 +35,6 @@ feature -- Element change
 	set_color (a_color: WEL_COLOR_REF; i: INTEGER) is
 			-- Set `a_color' at the position `i'.
 		require
-			exists: exists
 			i_large_enough: i >= 1
 			i_small_enough: i <= count
 			a_color_exists: a_color /= Void

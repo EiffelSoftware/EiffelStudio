@@ -9,7 +9,7 @@ external class
 inherit
 	TEXT_WRITER
 		rename
-			null as null579
+			null as null580
 		redefine
 			write_string,
 			write_array_char_int32,

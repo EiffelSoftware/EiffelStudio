@@ -9,7 +9,7 @@ external class
 inherit
 	TEXT_READER
 		rename
-			null as null577
+			null as null578
 		redefine
 			read_line,
 			read_to_end,

@@ -330,6 +330,7 @@ feature -- Access
 			has_maximized_tool: BOOLEAN
 			items_by_name: HASH_TABLE [EB_EXPLORER_BAR_ITEM, STRING]
 			temp_layout: ARRAY [STRING]
+			minimized_count: INTEGER
 		do
 				-- Clear `item_list' and store all items in `items_by_name', hashed
 				-- by their names, for retrieval based on the current settings in `layout'.
@@ -478,8 +479,14 @@ feature -- Access
 				 end
 				 a_height := item_height.to_integer
 				if item_state.is_equal ("minimized") and not has_maximized_tool then
-					if not curr_item.is_minimized then
-							curr_item.minimize
+					minimized_count := minimized_count + 1
+					check
+						not_all_items_minimized: minimized_count < count
+					end
+					if minimized_count < count then
+						if not curr_item.is_minimized then
+								curr_item.minimize
+						end
 					end
 				elseif item_state.is_equal ("maximized") then
 					curr_item.maximize

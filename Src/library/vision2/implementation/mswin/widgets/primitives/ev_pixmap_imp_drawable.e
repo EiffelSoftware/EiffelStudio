@@ -107,6 +107,9 @@ feature {NONE} -- Initialization
 				mask_dc.select_bitmap (internal_mask_bitmap)
 			end
 			s_dc.release
+			
+				-- update events from `other'.
+			copy_events_from_other (other)
 
 				-- Update the dimension attributes
 			width := internal_bitmap.width
@@ -115,6 +118,34 @@ feature {NONE} -- Initialization
 				-- Destroy `other' implementation
 			other.destroy
 		end
+		
+	copy_events_from_other (other: EV_PIXMAP_I) is
+			-- Copy all events from `other' to `Current'.
+			-- Note that `other' is EV_PIXMAP_I and not EV_PIXMAP_IMP,
+			-- as we need to use this in cases where `other' will
+			-- not conform to EV_PIXMAP_IMP.
+		do
+			expose_actions_internal := other.expose_actions_internal
+			focus_in_actions_internal := other.focus_in_actions_internal
+			focus_out_actions_internal := other.focus_out_actions_internal
+			key_press_actions_internal := other.key_press_actions_internal
+			key_press_string_actions_internal := other.key_press_string_actions_internal
+			key_release_actions_internal := other.key_release_actions_internal
+			pointer_button_press_actions_internal := other.pointer_button_press_actions_internal
+			pointer_button_release_actions_internal := other.pointer_button_release_actions_internal
+			pointer_double_press_actions_internal := other.pointer_double_press_actions_internal
+			pointer_enter_actions_internal := other.pointer_enter_actions_internal
+			pointer_leave_actions_internal := other.pointer_leave_actions_internal
+			pointer_motion_actions_internal := other.pointer_motion_actions_internal
+			resize_actions_internal := other.resize_actions_internal
+			conforming_pick_actions_internal := other.conforming_pick_actions_internal
+			drop_actions_internal := other.drop_actions_internal
+			pick_actions_internal := other.pick_actions_internal
+			pick_ended_actions_internal := other.pick_ended_actions_internal
+			
+			
+		end
+		
 
 	adapt_from_simple (other: EV_PIXMAP_IMP) is
 			-- Adapt the current implementation to `other'.

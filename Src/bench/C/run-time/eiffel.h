@@ -26,9 +26,9 @@ extern "C" {
 
 #include "out.h"
 #include <stdio.h>				/* For FILE routines */
-#include "file.h"
 #include <sys/types.h>			/* Needed for directory entries */
 #include "dir.h"				/* Directory routines */
+#include "file.h"				/* %%ss moved from 3 lines above */
 
 #ifdef I_STRING
 #include <string.h>

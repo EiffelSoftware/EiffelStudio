@@ -64,7 +64,7 @@ feature -- Access
 
 feature -- Measurement
 
-	count: INTEGER is
+	count, capacity: INTEGER is
 			-- Count of the special area
 		do
 			Result := sp_count ($Current)

@@ -20,6 +20,8 @@ feature -- Access
 	Remove_error: INTEGER is 0x02000003
 	
 	Not_in_eac_error: INTEGER is 0x02000004
+	
+	Update_error: INTEGER is 0x02000005
 
 feature {NONE} -- Implementation
 
@@ -31,6 +33,7 @@ feature {NONE} -- Implementation
 			Result.put ("Could not import assembly", Consume_error)
 			Result.put ("Could not remove assembly from EAC", Remove_error)
 			Result.put ("Assembly is not in the EAC", Not_in_eac_error)
+			Result.put ("Could not update assembly", Update_error)
 		end
 		
 end -- class CACHE_ERRORS

@@ -142,19 +142,19 @@ feature {NONE} -- Implementation
 	b_item (a_bit: POINTER; index: INTEGER): BOOLEAN is
 			-- Boolean item at position `i' in `a_bit'
 		external
-			"C"
+			"C | <bits.h>"
 		end;
 
 	b_count (a_bit: POINTER): INTEGER is
 			-- Size of `a_bit'
 		external
-			"C"
+			"C | <bits.h>"
 		end;
 
 	c_standard_is_equal (target, source: POINTER): BOOLEAN is
 			-- C external performing standard equality
 		external
-			"C"
+			"C | <bits.h>"
 		alias
 			"b_equal"
 		end;
@@ -162,49 +162,49 @@ feature {NONE} -- Implementation
 	b_shift (a_bit: POINTER; s: INTEGER): BIT_REF is
 			-- Result of shifting `a_bit' by `s' positions
 		external
-			"C"
+			"C | <bits.h>"
 		end;
 
 	b_rotate (a_bit: POINTER; s: INTEGER): BIT_REF is
 			-- Result of rotating `a_bit' by `s' positions
 		external
-			"C"
+			"C | <bits.h>"
 		end;
 
 	b_and (a_bit1, a_bit2: POINTER): BIT_REF is
 			-- Conjunction of `a_bit1' with `a_bit2'
 		external
-			"C"
+			"C | <bits.h>"
 		end;
 
 	b_implies (a_bit1, a_bit2: POINTER): BIT_REF is
 			-- Implication for `a_bit1' of `a_bit2'
 		external
-			"C"
+			"C | <bits.h>"
 		end;
 
 	b_or (a_bit1, a_bit2: POINTER): BIT_REF is
 			-- Disjunction of `a_bit1' with `a_bit2'
 		external
-			"C"
+			"C | <bits.h>"
 		end;
 
 	b_xor (a_bit1, a_bit2: POINTER): BIT_REF is
 			-- Exclusive or of `a_bit1' with `a_bit2'
 		external
-			"C"
+			"C | <bits.h>"
 		end;
 
 	b_not (a_bit: POINTER): BIT_REF is
 			-- Negation of `a_bit'
 		external
-			"C"
+			"C | <bits.h>"
 		end;
 
 	c_standard_copy (source, target: POINTER) is
 			-- Copy of bit sequence
 		external
-			"C"
+			"C | <bits.h>"
 		alias
 			"b_copy"
 		end;
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 	c_standard_clone (other: POINTER): BIT_REF is
 			-- New object of same dynamic type as `other'
 		external
-			"C"
+			"C | <bits.h>"
 		alias
 			"b_clone"
 		end;
@@ -220,13 +220,13 @@ feature {NONE} -- Implementation
 	b_put (a_bit: POINTER; val: BOOLEAN; index: INTEGER) is
 			-- Put `val' in `a_bit' at position `index'.
 		external
-			"C"
+			"C | <bits.h>"
 		end;
 
 	c_out (b: POINTER): STRING is
 			-- Out representation of Current
 		external
-			"C"
+			"C | <bits.h>"
 		alias
 			"b_eout"
 		end;

@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 	c_outb (b: BOOLEAN): STRING is
 			-- Printable representation of boolean
 		external
-			"C"
+			"C | <out.h>"
 		end;
 
 invariant

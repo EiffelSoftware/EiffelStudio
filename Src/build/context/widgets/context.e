@@ -1534,7 +1534,7 @@ feature
 
 feature {NONE} -- External features
 
-	context_set_int (a_w: POINTER; a_val: INTEGER; a_res: ANY) is
+	context_set_int (a_w: POINTER; a_val: INTEGER; a_res: POINTER) is
 		external
 			"C"
 		alias

@@ -186,7 +186,7 @@ feature
 
 feature {NONE} -- External features
 
-	eb_bulletin_set_int (a_w: POINTER; a_val: INTEGER; a_res: ANY)  is
+	eb_bulletin_set_int (a_w: POINTER; a_val: INTEGER; a_res: POINTER)  is
 		external
 			"C"
 		alias

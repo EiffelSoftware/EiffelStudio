@@ -1,4 +1,3 @@
-
 class EB_BULLETIN 
 
 inherit
@@ -46,7 +45,7 @@ feature
 			temp1 := temp.to_c;
 			eb_bulletin_set_int (implementation.screen_object, 0, $temp1);
 
-				-- Callback
+			-- Callback
 			set_action ("<Configure>", Current, Current);
 		end;
 
@@ -186,7 +185,7 @@ feature
 
 feature {NONE} -- External features
 
-	eb_bulletin_set_int (a_w: POINTER; a_val: INTEGER; a_res: ANY)  is
+	eb_bulletin_set_int (a_w: POINTER; a_val: INTEGER; a_res: POINTER)  is
 		external
 			"C"
 		alias

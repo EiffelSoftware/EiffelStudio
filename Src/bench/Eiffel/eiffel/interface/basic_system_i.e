@@ -142,6 +142,17 @@ feature -- Access
 			valid_result: Result > 0
 		end
 
+	system_string_id: INTEGER is
+			-- Id of class STRING
+		require
+			system_string_class_exists: system_string_class /= Void
+			compiled: system_string_class.is_compiled
+		do
+			Result := system_string_class.compiled_class.class_id
+		ensure
+			valid_result: Result > 0
+		end
+
 	string_id: INTEGER is
 			-- Id of class STRING
 		require

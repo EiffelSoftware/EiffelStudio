@@ -13,7 +13,11 @@ inherit
 	EV_DIALOG_I
 		undefine
 			propagate_background_color,
-			propagate_foreground_color
+			propagate_foreground_color,
+			--|FIXME See last_call_was_destroy from
+			--|EV_WINDOW_IMP to see why this is
+			--|undefined below.
+			last_call_was_destroy
 		redefine
 			interface
 		end
@@ -83,6 +87,9 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/29 17:59:02  rogers
+--| Undefined last_call_was_destroy  inherited from EV_DIALOG_I as last_call_from_destroy is now re-defined in EV_WINDOW_IMP. Needs fixing.
+--|
 --| Revision 1.8  2000/02/19 05:45:00  oconnor
 --| released
 --|

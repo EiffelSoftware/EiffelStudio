@@ -55,4 +55,12 @@ feature -- Setting values
             chart := ch;
         end;
  
+feature
+
+	reversed_engineered_file_name: STRING is
+			-- Directory path of reversed engineered cluster
+			-- (with environment variables not interpreted)
+		do
+		end;
+
 end

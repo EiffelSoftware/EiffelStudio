@@ -141,13 +141,23 @@ feature -- Duplication
 		end
 
 	copy (other: like Current) is 
-			-- Update `Current' to have same appearence as `other'.
+			-- Update `Current' to have same appearance as `other'.
 			-- (So as to satisfy `is_equal'.)
 		do
 			if implementation = Void then
 				default_create
 			end
 			implementation.copy_pixmap (other)
+		end
+
+	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP is
+			-- Return a pixmap region of `Current' represented by rectangle `area'
+		require
+			area_not_void: area /= Void
+		do
+			Result := implementation.sub_pixmap (area)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {EV_ANY_I, EV_IMAGE_LIST_IMP, EV_STOCK_PIXMAPS_IMP, EV_FIGURE_POSTSCRIPT_DRAWER, ANY} -- Implementation

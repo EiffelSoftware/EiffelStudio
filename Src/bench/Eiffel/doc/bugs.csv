@@ -1,5 +1,6 @@
 ,,,EiffelStudio bugs,,,,,,,
 
+,1 (Low) 5 (High)
 
 Category,Criticality (1-5),Frequency (1-5),Description,Additional info,Submitter,Fixer,Est. time (days),Status,"ID (FMT, EDT, INT, DBG, CMP)",Date of submission
 Interface,,,,,,,,,,

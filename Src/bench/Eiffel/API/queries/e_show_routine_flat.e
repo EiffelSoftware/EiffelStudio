@@ -31,11 +31,11 @@ feature -- Execution
 
 	execute is
 		local
-			ctxt: ROUTINE_TEXT_FORMATTER;
+			ctxt: FEATURE_TEXT_FORMATTER;
 			text_filter: TEXT_FILTER
 		do
 			!! ctxt;
-			ctxt.format (current_feature, current_class);
+			ctxt.format (current_feature);
 			structured_text.add_string (ctxt.text.image);
 			structured_text.add_new_line
 		end;

@@ -298,9 +298,21 @@ feature -- Storing
 				dir.create
 			end;
 
-			!! internal_file.make_open_write (file_path (storage_path, view_id, True));
-			disk_content.independent_store (internal_file);
-			internal_file.close;
+			!! internal_file.make (file_path (storage_path, view_id, True));
+			if (internal_file.exists and then 
+				internal_file.is_writable) 
+			or else
+				(not internal_file.exists and then 
+				internal_file.is_creatable) 
+			then
+				internal_file.open_write;
+				disk_content.independent_store (internal_file);
+				internal_file.close;
+			else
+				io.error.putstring ("Error: cannot write to ");
+				io.error.putstring (internal_file.name);
+				io.error.putstring (". Please check permissions.%N");
+			end;
 			disk_content := Void;
 		ensure
 			disk_content_is_void: disk_content = Void

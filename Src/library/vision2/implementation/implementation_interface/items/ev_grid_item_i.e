@@ -102,6 +102,7 @@ feature -- Access
 			if parent_i /= Void then
 					-- If there is no parent, then return 0
 				Result := parent_i.column_offsets @ (column_i.index)
+				Result := Result + parent_i.item_indent (Current)
 			end
 		ensure
 			parent_void_implies_result_zero: parent = Void implies Result = 0
@@ -128,6 +129,20 @@ feature -- Access
 			end
 		ensure
 			parent_void_implies_result_zero: parent = Void implies Result = 0
+		end
+		
+	horizontal_indent: INTEGER is
+			-- Horizontal distance in pixels from left edge of `Current' to left edge of `column'.
+			-- This may not be set, but the value is determined by the current tree structure
+			-- of `parent' and `row'.
+		do
+			if parent_i /= Void then
+				Result := parent_i.item_indent (Current)
+			end
+		ensure
+			not_parented_implies_result_zero: parent = Void implies Result = 0
+			not_parent_tree_enabled_implies_result_zero: not parent.is_tree_enabled implies Result = 0
+			parent_tree_enabled_implies_result_greater_or_equal_to_zero: parent.is_tree_enabled implies Result >= 0
 		end
 
 feature -- Status setting

@@ -8,6 +8,7 @@ inherit
 		redefine
 			work, undo, redo
 		end;
+	SHARED_APPLICATION
 
 feature {GROUP_CMD, HISTORY_WND}
 
@@ -35,6 +36,10 @@ feature {NONE}
 	set_parent_contexts: LINKED_LIST [CONTEXT];
 		-- Contexts deleted
 
+	behavior_cut_list: LINKED_LIST [FUNC_CUT];
+		-- List of commands to remove behavior from state
+		-- for `context'
+
 	associated_form: INTEGER is
 		do
 			Result := Context_const.geometry_form_nbr
@@ -51,6 +56,9 @@ feature
 
 	work (argument: CONTEXT) is
 			-- Do not record into history
+		local
+			state: STATE;
+			func_cut: FUNC_CUT
 		do
 			context := argument;
 			parent ?= context.parent;
@@ -74,6 +82,20 @@ feature
 				else
 					context_list.merge_right (context.cut_list);
 					set_parent_contexts.put_front (context)
+				end;
+				!! behavior_cut_list.make;
+				from
+					Shared_app_graph.start
+				until
+					Shared_app_graph.after
+				loop
+					state ?= Shared_app_graph.key_for_iteration;
+					func_cut ?= state.remove_line_command_for_context (context);
+					if func_cut /= Void then
+						behavior_cut_list.put_front (func_cut);
+						func_cut.execute (state)
+					end;
+					Shared_app_graph.forth
 				end;
 				redo;
 			else
@@ -99,10 +121,19 @@ feature
 				context_list.item.undo_cut;
 				context_list.forth;
 			end;
+			from
+				behavior_cut_list.start
+			until
+				behavior_cut_list.after
+			loop
+				behavior_cut_list.item.undo
+				behavior_cut_list.forth
+			end
 			tree.display (context);
 		end;
 
-	redo is
+	redo_without_func_cut is
+			-- Used for redo	
 		do
 			from
 				context_list.start
@@ -125,6 +156,19 @@ feature
 			else
 				tree.display (parent)
 			end;
+		end;
+
+	redo is
+		do
+			from
+				behavior_cut_list.start
+			until
+				behavior_cut_list.after
+			loop
+				behavior_cut_list.item.redo;
+				behavior_cut_list.forth
+			end;
+			redo_without_func_cut;
 		end;
 
 	

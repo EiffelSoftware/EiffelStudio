@@ -1,7 +1,5 @@
 indexing
-
-	description: 
-		"Error that occured within a feature.";
+	description: "Error that occured within a feature.";
 	date: "$Date$";
 	revision: "$Revision $"
 

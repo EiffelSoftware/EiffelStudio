@@ -10,39 +10,49 @@ class MEL_TEXT_FIELD
 
 inherit
 
+	MEL_TEXT_FIELD_RESOURCES
+		export
+			{NONE} all
+		end;
+
 	MEL_PRIMITIVE
 		redefine
 			create_callback_struct
 		end;
 
-	MEL_TEXT_FIELD_RESOURCES
-		export
-			{NONE} all
-		end
+	MEL_FONTABLE
+		undefine	
+			clean_up
+		redefine
+			create_callback_struct
+		end;
 
 creation
-	make, make_from_existing
+	make, 
+	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
 			-- Create a motif text field.
 		require
-			a_name_exists: a_name /= Void;
-			a_parent_exists: a_parent /= Void and then not a_parent.is_destroyed
+			name_exists: a_name /= Void;
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed
 		local
 			widget_name: ANY
 		do
 			parent := a_parent;
 			widget_name := a_name.to_c;
 			screen_object := xm_create_text_field (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
 			end
 		ensure
-			exists: not is_destroyed
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
 
 feature -- Access
@@ -142,14 +152,6 @@ feature -- Status report
 			exists: not is_destroyed
 		do
 			Result := get_xt_boolean (screen_object, XmNresizeWidth)
-		end;
-
-	font_list: MEL_FONT_LIST is
-			-- Font list
-		require
-			exists: not is_destroyed
-		do
-		ensure
 		end;
 
 	string, value: STRING is
@@ -288,15 +290,6 @@ feature -- Status setting
 			cursor_is_visible_set: is_cursor_position_visible = b
 		end;
 
-	set_font_list (a_font_list: MEL_FONT_LIST) is
-			-- Set `font_list' to `a_font_list'.
-		require
-			exists: not is_destroyed;
-		do
-		ensure
-			font_list_set:
-		end;
-
 	set_resize_width (b: BOOLEAN) is
 			-- Set `resize_width' to `b'.
 		require
@@ -402,7 +395,7 @@ feature -- Status setting
 		end;
 
 	set_selection_with_current_time (first, last: INTEGER) is
-			-- Select the text between `first' and `last' at `CurrentTime'.
+			-- Select the text between `first' and `last' at `Current_time'.
 		require
 			exists: not is_destroyed;
 			first_positive_not_null: first >= 0;
@@ -410,7 +403,7 @@ feature -- Status setting
 			first_fewer_than_last: first <= last;
 			realized: realized
 		do
-			xm_text_set_selection (screen_object, first, last, x_current_time)
+			xm_text_set_selection (screen_object, first, last, current_time)
 		ensure
 			is_selection_active: is_selection_active;
 			correctly_set: begin_of_selection = first and then
@@ -562,7 +555,7 @@ feature -- Element change
 		do
 			ext_name := a_text.to_c;
 			xm_text_insert (screen_object, a_position, $ext_name)
-		ensure then
+		ensure 
 			count_incremented: count = (old count) + a_text.count;
 			valid_count: a_text.count > 0 implies 
 				a_text.is_equal (value.substring (a_position+1, a_position + a_text.count))
@@ -570,6 +563,9 @@ feature -- Element change
 
 	replace (from_position, to_position: INTEGER; a_text: STRING) is
 			-- Replace text from `from_position' to `to_position' by `a_text'.
+			-- `from_position' indicates the character position in the
+			-- string starting from 0. `to_position' indicates the
+			-- last character position to replace.
 		require
 			not_text_void: a_text /= Void;
 			from_position_smaller_than_to_position: from_position <= to_position;
@@ -580,8 +576,9 @@ feature -- Element change
 		do
 			ext_name := a_text.to_c;
 			xm_text_replace (screen_object, from_position, to_position, $ext_name)
-		ensure then
-			count_incremented: count = old count + a_text.count + to_position - from_position;
+		ensure
+			count_incremented: count = ((old count) + 
+					a_text.count + from_position - to_position);
 			valid_count: a_text.count > 0 implies a_text.is_equal
 				(value.substring (from_position+1, from_position + a_text.count))
 		end;
@@ -698,12 +695,12 @@ feature -- Removal
 		end;
 
 	clear_selection_with_current_time is
-			-- Clear text using `CurrentTime'.
+			-- Clear text using `Current_time'.
 		require
 			realized: realized
 			selection_active: is_selection_active;
 		do
-			xm_text_clear_selection (screen_object, x_current_time)
+			xm_text_clear_selection (screen_object, current_time)
 		ensure
 			not_selection_active: not is_selection_active
 		end;
@@ -811,7 +808,7 @@ feature {NONE} -- Implementation
 		external
 			"C [macro <Xm/Text.h>] (Widget, Time)"
 		alias
-			"XmTextSetSelection"
+			"XmTextClearSelection"
 		end;
 
 	xm_text_get_max_length (w: POINTER): INTEGER is

@@ -898,7 +898,6 @@ feature -- Generation Structure
 		MethodIL.Emit (OpCodes.Ret);
 	}
 
-	
 	// Generate info about current feature.
 	public void GenerateImplementationFeatureIL (int FeatureID) {
 		try {
@@ -986,6 +985,7 @@ feature -- Generation Structure
 	public void GenerateMethodImpl (int FeatureID, int ParentTypeID, int ParentFeatureID) {
 		try {
 			FEATURE Method, ParentMethod;
+			MethodBuilder override_method;
 			int[] param_info = null, parent_param_info = null;
 			int i, nb;
 			bool same_type;
@@ -1022,16 +1022,18 @@ feature -- Generation Structure
 				for (i = 0; i < nb; i++)
 					ParameterTypes [i] = Classes [param_info [i]].Builder;
 
-				MethodBuilder Override = ((TypeBuilder) Classes [CurrentTypeID].Builder).
+				override_method = ((TypeBuilder) Classes [CurrentTypeID].Builder).
 					DefineMethod (Override_prefix + ParentMethod.name () + counter.ToString(),
 						MethodAttributes.Virtual | MethodAttributes.Final |
 							MethodAttributes.Private,
 						ParentMethod.method_builder.ReturnType,
 						ParameterTypes);
 
+				override_method.SetCustomAttribute (CA.not_cls_compliant_attr);
+
 				counter = counter + 1;
 
-				MethodIL = Override.GetILGenerator();
+				MethodIL = override_method.GetILGenerator();
 				GenerateCurrent ();
 				for (i = 0; i < nb ; i++) {
 					GenerateArgument (i + 1);
@@ -1049,11 +1051,11 @@ feature -- Generation Structure
 				MethodIL.Emit (OpCodes.Ret);
 
 				((TypeBuilder) Classes [CurrentTypeID].Builder).
-					DefineMethodOverride (Override, ParentMethod.method_builder);
+					DefineMethodOverride (override_method, ParentMethod.method_builder);
 
 				if (Method.is_attribute && ParentMethod.is_attribute) {
 						// Generate MethodImpl on Setter.
-					Override = ((TypeBuilder) Classes [CurrentTypeID].Builder).
+					override_method = ((TypeBuilder) Classes [CurrentTypeID].Builder).
 						DefineMethod (Override_prefix + Setter_prefix + ParentMethod.name () +
 							counter.ToString(), MethodAttributes.Virtual | MethodAttributes.Final |
 								MethodAttributes.Private, VoidType,
@@ -1061,7 +1063,7 @@ feature -- Generation Structure
 
 					counter = counter + 1;
 
-					MethodIL = Override.GetILGenerator();
+					MethodIL = override_method.GetILGenerator();
 					GenerateCurrent ();
 					GenerateArgument (1);
 					generate_cast (ParentMethod.return_type_id,
@@ -1070,7 +1072,7 @@ feature -- Generation Structure
 					MethodIL.Emit (OpCodes.Ret);
 
 					((TypeBuilder) Classes [CurrentTypeID].Builder).
-						DefineMethodOverride (Override, ParentMethod.setter_builder);
+						DefineMethodOverride (override_method, ParentMethod.setter_builder);
 				}
 			}
 		} else {
@@ -2096,7 +2098,7 @@ feature -- Private
 	private ModuleBuilder module = null;
 
 	// Number of classes per module
-	private const int Nb_classes_per_module = 10000;
+	private const int Nb_classes_per_module = 50;
 	private int nb_classes_generated = 0;
 	
 	// Current Method IL Generator

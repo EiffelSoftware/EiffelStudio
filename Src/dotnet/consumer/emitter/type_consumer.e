@@ -395,7 +395,7 @@ feature {NONE} -- Implementation
 						-- Conversion to integer is required to get associated value of `info',
 						-- Otherwise we simply get an object where calling `ToString' on it
 						-- will print out field name.
-					l_value := feature {CONVERT}.to_int_64_object (info.get_value (Void))
+					l_value := feature {SYSTEM_CONVERT}.to_int_64_object (info.get_value (Void))
 				else
 					l_value := info.get_value (Void)
 				end

@@ -49,7 +49,7 @@ feature -- Save
 			-- Save current in `st'.
 		do
 			cluster_name.save (st)
-			st.putstring (": ignore")
+			st.put_string (": ignore")
 			st.new_line
 		end
 

@@ -88,7 +88,7 @@ feature -- Saving
 	save (st: GENERATION_BUFFER) is
 			-- Save current in `st'.
 		do
-			st.putstring (language_name)
+			st.put_string (language_name)
 		end
 
 feature {NONE} -- Constants

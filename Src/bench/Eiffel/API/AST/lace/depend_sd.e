@@ -58,7 +58,7 @@ feature -- Saving
 			-- Save current in `st'.
 		do
 			depend_on.save (st)
-			st.putstring (": ")
+			st.put_string (": ")
 			script.save (st)
 		end
 

@@ -165,7 +165,7 @@ feature -- Saving
 	save (st: GENERATION_BUFFER) is
 			-- Save current in `st'.
 		do
-			st.putstring ("system")
+			st.put_string ("system")
 			st.new_line
 			st.indent
 			system_name.save (st)
@@ -173,7 +173,7 @@ feature -- Saving
 			st.new_line
 			st.new_line
 
-			st.putstring ("root")
+			st.put_string ("root")
 			st.new_line
 			st.indent
 			root.save (st)
@@ -182,7 +182,7 @@ feature -- Saving
 			st.new_line
 
 			if defaults /= Void then
-				st.putstring ("default")	
+				st.put_string ("default")	
 				st.new_line
 				st.indent
 				defaults.save_with_new_line (st)
@@ -198,14 +198,14 @@ feature -- Saving
 				until
 					comment_list.after
 				loop
-					st.putstring (comment_list.item)
+					st.put_string (comment_list.item)
 					st.new_line
 					comment_list.forth
 				end
 			end
 	
 			st.new_line
-			st.putstring ("cluster")
+			st.put_string ("cluster")
 			st.new_line
 			st.indent
 			if clusters /= Void then
@@ -214,7 +214,7 @@ feature -- Saving
 			st.exdent
 
 			if assemblies /= Void then
-				st.putstring ("assembly")
+				st.put_string ("assembly")
 				st.new_line
 				st.indent
 				assemblies.save_with_new_line (st)
@@ -222,7 +222,7 @@ feature -- Saving
 			end
 			
 			if externals /= Void then
-				st.putstring ("external")
+				st.put_string ("external")
 				st.new_line
 				st.indent
 				externals.save_with_new_line (st)
@@ -230,7 +230,7 @@ feature -- Saving
 			end
 
 			st.new_line
-			st.putstring ("end")
+			st.put_string ("end")
 			st.new_line
 		end
 

@@ -79,31 +79,31 @@ feature -- Saving
 			-- Saving in `st'.
 		do
 			cluster_name.save (st)
-			st.putchar (':')
-			st.putchar ('%T')
+			st.put_character (':')
+			st.put_character ('%T')
 			assembly_name.save (st)
 			if version /= Void then
-				st.putchar (',')
+				st.put_character (',')
 				version.save (st)		
 			end
 			if culture /= Void then
-				st.putchar (',')
+				st.put_character (',')
 				culture.save (st)
 			end
 			if public_key_token /= Void then
-				st.putchar (',')
+				st.put_character (',')
 				public_key_token.save (st)
 			end
 			st.new_line
 			if prefix_name /= Void then
 				st.indent
-				st.putstring ("prefix")
+				st.put_string ("prefix")
 				st.new_line
 				st.indent
 				prefix_name.save (st)
 				st.exdent
 				st.new_line
-				st.putstring ("end")
+				st.put_string ("end")
 				st.exdent
 				st.new_line
 			end

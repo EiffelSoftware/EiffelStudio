@@ -20,19 +20,23 @@ create_one_platform()
     cp $1/template/vision/Ace.ace $1/$2/vision
 }
 
-
-if [ $# != 1 ]; then
-        echo "Usage: $0 spec_directory"
+if [ $# = 2 ]; then
+	create_one_platform $1 $2
+	exit 0
+elif [ $# != 1 ]; then
+        echo "Usage: $0 spec_directory or"
+        echo "Usage: $0 spec_directory platform"
         exit 1
 fi
 
 
 
-create_one_platform $1 "linux-elf"
+create_one_platform $1 "linux"
 create_one_platform $1 "hp9000"
 create_one_platform $1 "sgi"
 create_one_platform $1 "solaris"
 create_one_platform $1 "sparc"
+create_one_platform $1 "unixware"
 
 
 

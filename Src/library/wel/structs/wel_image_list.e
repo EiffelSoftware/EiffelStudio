@@ -96,7 +96,6 @@ feature -- Basic operations
 			bitmap_not_void: bitmap_to_add /= Void
 			compatible_width_for_bitmap: bitmap_to_add.width = bitmaps_width
 			compatible_height_for_bitmap: bitmap_to_add.height = bitmaps_height
-			not_use_masked_bitmap: not use_masked_bitmap
 		do
 			last_position := cwel_imagelist_add(item, bitmap_to_add.item, Default_pointer)
 		end

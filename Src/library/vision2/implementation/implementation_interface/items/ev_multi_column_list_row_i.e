@@ -18,11 +18,6 @@ inherit
 			interface
 		end
 
-	EV_PICK_AND_DROPABLE_I
-		redefine
-			interface
-		end
-	
 feature -- Access
 
 	parent: EV_ITEM_LIST [EV_MULTI_COLUMN_LIST_ROW] is
@@ -100,6 +95,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/10 01:26:41  king
+--| Removed inheritence from PND, moved up to COMPOSED_ITEM
+--|
 --| Revision 1.31  2000/03/09 01:18:30  king
 --| Now inheriting from PND
 --|

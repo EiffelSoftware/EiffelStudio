@@ -4,10 +4,16 @@ indexing
 	revision: "$Revision$"
 	interface_metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
-		create {GUID_ATTRIBUTE}.make ("E1FFE1B6-5067-499a-9A25-E6DDA9076E77") end
+		create {GUID_ATTRIBUTE}.make ("E1FFE100-F122-4DD9-914E-E37ED8FF236C") end
 
 class
 	COM_ASSEMBLY_INFORMATION
+	
+inherit
+	SAFE_ASSEMBLY_LOADER
+		export 
+			{NONE} all
+		end
 	
 create
 	make
@@ -65,6 +71,21 @@ feature -- Access
 			end
 		ensure
 			non_void_result: Result /= Void
+		end
+		
+	is_in_gac: BOOLEAN is
+			-- Is assembly currently is GAC
+		local
+			l_assembly: ASSEMBLY
+		do
+			l_assembly := load_from_gac_or_path (impl.location)
+			if l_assembly /= Void then
+				if is_mscorlib (l_assembly) then
+					Result := True
+				else
+					Result := l_assembly.global_assembly_cache
+				end
+			end
 		end
 		
 	is_consumed: BOOLEAN is

@@ -42,6 +42,9 @@ extern "C" {
 /* Setting of `eif_discard_pointer_values' */
 RT_LNK void eif_set_discard_pointer_values(EIF_BOOLEAN);
 
+/* Recoverable storable */
+RT_LNK void set_mismatch_information_access (EIF_OBJECT, EIF_PROCEDURE, EIF_PROCEDURE);
+
 /*
  * Eiffel calls
  */

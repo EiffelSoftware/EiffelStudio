@@ -24,10 +24,12 @@ feature {NONE} -- Initialization
 			in_types.put (Com_float_type, Real_type)
 			in_types.put (Double_type, Double_type)
 			in_types.put (Variant_bool, Boolean_type)
-			in_types.put (Com_currency_type, Ecom_currency)
 			in_types.put (Bstr, String_type)
 			in_types.put (Com_char_type, Character_type)
 			in_types.put (Com_integer_type, Integer_type)
+			in_types.put (Com_currency_type, Ecom_currency)
+			in_types.put (Com_decimal_type, Ecom_decimal)
+			in_types.put (Com_date_type, Date_time)
 
 			create inout_types.make (10)
 

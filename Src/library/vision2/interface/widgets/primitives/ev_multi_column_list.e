@@ -29,6 +29,9 @@ feature {NONE} -- Initialization
 			-- Create a list widget with `par' as
 			-- parent and `col_nb' columns.
 			-- By default, a list allow only one selection.
+		require
+			valid_parent: parent_needed implies par /= Void
+			valid_nb: col_nb > 0
 		do
 			!EV_MULTI_COLUMN_LIST_IMP!implementation.make_with_size (col_nb)
 			widget_make (par)
@@ -38,6 +41,9 @@ feature {NONE} -- Initialization
 			-- Create a list widget with `par' as parent,
 			-- and as many columns as the number of titles
 			-- given.
+		require
+			valid_parent: parent_needed implies par /= Void
+			valid_text: txt /= Void
 		do
 			!EV_MULTI_COLUMN_LIST_IMP!implementation.make_with_text (txt)
 			widget_make (par)

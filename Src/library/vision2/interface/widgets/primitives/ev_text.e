@@ -12,7 +12,8 @@ class
 inherit
 	EV_TEXT_COMPONENT
 		redefine
-			make, implementation
+			make,
+			implementation
 		end
 	
 creation
@@ -32,6 +33,8 @@ feature {NONE} -- Initialization
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Create a text area with `par' as
 			-- parent and `txt' as text.
+		require
+			valid_parent: parent_needed implies par /= Void
 		do
 			!EV_TEXT_AREA_IMP!implementation.make_with_text (txt)
 			widget_make (par)

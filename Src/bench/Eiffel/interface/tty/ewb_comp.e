@@ -5,7 +5,7 @@ inherit
 
 	EWB_CMD
 		redefine
-			loop_execute
+			loop_execute, check_permissions
 		end;
 	EIFFEL_ENV;
 
@@ -131,6 +131,17 @@ feature -- Compilation
 				end;
 			end;
 		end;
+
+	check_permissions is
+		do
+			if is_project_writable then
+				Project_read_only.set_item (false)
+			else
+				io.error.put_string (
+					"Project is not writable; check permissions.%N");
+				error_occurred := true
+			end
+		end
 
 	compile is
 			-- Regular compilation

@@ -8,6 +8,8 @@ inherit
 			name as loop_cmd_name,
 			help_message as loop_help,
 			abbreviation as loop_abb
+		redefine
+			check_permissions
 		end;
 
 feature
@@ -22,24 +24,28 @@ feature
 					Lace.set_file_name (Void);
 				else
 					retrieve_project;
-					if is_project_writable then
-						Project_read_only.set_item (false)
-					elseif is_project_readable then
-						Project_read_only.set_item (true);
-						io.error.put_string (
-							"No write permissions on project.%N%
-							%Project opened in read-only mode.%N")
-					else
-						io.error.put_string (
-							"Project is not readable; check permissions.%N");
-						error_occurred := true
-					end
 				end
 			end;
 			if not error_occurred then
 				ewb_iterate				
 			end;
 		end;
+
+	check_permissions is
+		do
+			if is_project_writable then
+				Project_read_only.set_item (false)
+			elseif is_project_readable then
+				Project_read_only.set_item (true);
+				io.error.put_string (
+					"No write permissions on project.%N%
+					%Project opened in read-only mode.%N")
+			else
+				io.error.put_string (
+					"Project is not readable; check permissions.%N");
+				error_occurred := true
+			end
+		end
 
 feature -- Initialization
 

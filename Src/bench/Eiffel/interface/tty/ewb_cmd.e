@@ -197,7 +197,9 @@ if not initialized.item then
 					precomp_r.set_precomp_dir;
 				end;
 				System.server_controler.init;
-				Universe.update_cluster_paths	
+				Universe.update_cluster_paths;
+
+				check_permissions
 			else
 				retried := False;
 				if not workbench_file.is_closed then
@@ -223,6 +225,22 @@ end
 				retry
 			end
 		end;
+
+	check_permissions is
+			-- Check to see if the project writable/readable
+			-- Most of the commands need only read permissions
+			-- It is the default behavior
+		do
+			if is_project_writable then
+				Project_read_only.set_item (false)
+			elseif is_project_readable then
+				Project_read_only.set_item (true);
+			else
+				io.error.put_string (
+					"Project is not readable; check permissions.%N");
+				error_occurred := true
+			end
+		end
 
 	make_new_project is
 			-- Initialize project as a new one.

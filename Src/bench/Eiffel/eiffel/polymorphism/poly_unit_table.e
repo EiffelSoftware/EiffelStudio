@@ -120,4 +120,18 @@ feature
 		deferred
 		end;
 
+feature -- Trace
+
+	trace is
+		do
+			from
+				start
+			until
+				after
+			loop
+				item.trace;
+				forth
+			end
+		end;
+
 end

@@ -68,8 +68,9 @@ io.error.new_line;
 end;
 			written_type := written_class.meta_type (class_type.type);
 			Result.set_written_type_id (written_type.type_id);
-			Result.set_pattern_id
-				(Pattern_table.c_pattern_id (pattern_id, written_type) - 1);
+			-- Not necessary anymore
+			--Result.set_pattern_id
+			--	(Pattern_table.c_pattern_id (pattern_id, written_type) - 1);
 		end;
 
 end

@@ -25,7 +25,7 @@ feature
 
 feature
 
-	record (feat: FEATURE_I; in_class: CLASS_C)_ is
+	record (feat: FEATURE_I; in_class: CLASS_C) is
 			-- Record Eiffel routines reachable by feature `feat' from
 			-- static type `in_class'.
 		do
@@ -88,15 +88,15 @@ feature {NONE}
 			rout_id_val := f.rout_id_set.first;
 
 			check
-				(not Poly_server.has (rout_id_val)) implies f.is_deferred;
+				(not Tmp_poly_server.has (rout_id_val)) implies f.is_deferred;
 					-- Case for an non existing routine table: a deferred
 					-- feature without any implementation in descendant classes
 					-- leads to NO routine table.
 			end;
-			if Poly_server.has (rout_id_val) then
+			if Tmp_poly_server.has (rout_id_val) then
 					-- If routine id available: this is not a deferred feature
 					-- without any implementation
-				table ?= Poly_server.item (rout_id_val);
+				table ?= Tmp_poly_server.item (rout_id_val);
 				check
 					table_exists: table /= Void;
 				end;

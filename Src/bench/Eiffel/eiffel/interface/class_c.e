@@ -923,8 +923,6 @@ feature -- Melting
 				end;
 			end;
 
-				-- Melt all polymorhpic tables
-			tbl.origin_table.change_all_units (id);
 			if not Tmp_m_rout_id_server.has (id) then
 					-- If not already done, Melt routine id array
 				tbl.melt;
@@ -957,11 +955,20 @@ feature -- Melting
 			end;
 		end;
 
-feature -- Workbench feature table generation
+	melt_descriptor_tables is
+			-- Melt descriptor tables of associated class types
+		local
+			sel_tbl: SELECT_TABLE
+		do
+			sel_tbl := feature_table.origin_table;
+			sel_tbl.melt (Current);
+		end;
+
+feature -- Workbench feature and descriptor table generation
 
 	generate_feature_table is
-			-- Generation of workbench mode feature table for the current
-			-- class
+			-- Generation of workbench mode feature table for 
+			-- the current class
 		local
 			table_file_name: STRING;
 			feat_tbl: FEATURE_TABLE;
@@ -969,9 +976,8 @@ feature -- Workbench feature table generation
 		do
 			feat_tbl := feature_table;
 			table_file_name := full_file_name;
-			table_file_name.append ("T");
 			table_file_name.append_integer (id);
-			table_file_name.append (".c");
+			table_file_name.append ("F.c");
 			!!file.make (table_file_name);
 			file.open_write;
 			file.putstring ("%
@@ -979,6 +985,16 @@ feature -- Workbench feature table generation
 				%#include %"struct.h%"%N%N");
 			feature_table.generate (file);
 			file.close;
+		end;
+
+	generate_descriptor_tables is
+			-- Generation of workbench mode descriptor tables
+			-- of associated class types
+		local
+			sel_tbl: SELECT_TABLE
+		do
+			sel_tbl := feature_table.origin_table;
+			sel_tbl.generate (Current);
 		end;
 
 	full_file_name: STRING is
@@ -2172,6 +2188,19 @@ feature -- Cecil
 		end;
 
 feature -- Conformance table generation
+
+ 	process_polymorphism is
+		local
+			ftab: FEATURE_TABLE;
+			stab: SELECT_TABLE;
+			ftabid: INTEGER
+		do
+			ftab := feature_table;
+			ftabid := ftab.feat_tbl_id;
+			stab := ftab.origin_table;
+			ftab := Void;
+			stab.add_units (ftabid)
+		end; 
 
 	make_conformance_table (t: CONFORM_TABLE) is
 			-- Make final conformance table

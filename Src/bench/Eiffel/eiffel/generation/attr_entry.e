@@ -46,4 +46,14 @@ feature
 			file.putstring ("(long) 0");
 		end;
 
+	workbench_offset: INTEGER is
+			-- Offset of attribute in object structure
+		local
+			skel: SKELETON
+		do
+			skel := System.class_type_of_id (type_id).skeleton;
+			skel.search_feature_id (feature_id);
+			Result := skel.workbench_offset
+		end;
+
 end

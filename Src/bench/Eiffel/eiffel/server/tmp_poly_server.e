@@ -76,7 +76,7 @@ feature
 			until
 				i > nb_useless
 			loop
-				Poly_server.remove (useless_rout_ids.item (i));
+				Tmp_poly_server.remove (useless_rout_ids.item (i));
 				i := i + 1;
 			end;
 			nb_useless := 0;

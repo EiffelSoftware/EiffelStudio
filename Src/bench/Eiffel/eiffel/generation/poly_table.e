@@ -331,16 +331,8 @@ feature
 
 	melt is
 			-- Melt current table
-		local
-			melted_rout_table: MELTED_ROUT_TABLE;
-			ba: BYTE_ARRAY;
 		do
-			ba := Byte_array;
-			ba.clear;
-			make_byte_code (ba);
-			melted_rout_table := ba.melted_routine_table;
-			melted_rout_table.set_rout_id (rout_id);
-			M_rout_tbl_server.put (melted_rout_table);
+			io.putstring ("POLY_TABLE.melt: Should not be calles anymore%N");
 		end;
 			
 	make_byte_code (ba: BYTE_ARRAY) is

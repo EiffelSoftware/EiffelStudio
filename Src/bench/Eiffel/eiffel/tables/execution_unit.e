@@ -27,6 +27,29 @@ feature
 			Result := index;
 		end;
 
+	pattern_id: INTEGER;
+		-- Pattern id of feature corresponding to Current
+		-- unit
+
+	written_in: INTEGER;
+		-- Id of class in which the feature corresponding
+		-- to Current execution unit is written.
+		--|Note: for ATTRIBUTE_I it is the `generate_in' value.
+
+	real_pattern_id: INTEGER is
+			-- Pattern id associated with Current execution unit
+		local
+			written_type: CL_TYPE_I;
+			written_class: CLASS_C
+		do
+			written_class := System.class_of_id (written_in);
+			written_type :=	class_type.written_type (written_class);
+			if written_type /= Void then
+				Result :=
+					Pattern_table.c_pattern_id (pattern_id, written_type) - 1;
+			end;
+		end;
+
 	is_valid: BOOLEAN is
 			-- Is the executino unit still valid ?
 		do
@@ -48,9 +71,19 @@ feature
 		local
 			result_type: TYPE_I;
 			gen_type: GEN_TYPE_I;
+			ai: ATTRIBUTE_I;
 		do
 			class_type := cl_type;
 			body_id := f.body_id;
+				-- Save information for later computation
+				-- of pattern id.
+			pattern_id := f.pattern_id;
+			ai ?= f;
+			if ai /= Void then
+				written_in := ai.generate_in;
+			else
+				written_in := f.written_in;
+			end;
 			result_type := f.type.actual_type.type_i;
 			if result_type.has_formal then
 				gen_type ?= cl_type.type;

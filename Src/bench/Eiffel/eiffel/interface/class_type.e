@@ -260,6 +260,18 @@ feature -- Generation
 			!!Result.make (file_name);
 		end;
 
+	descriptor_file: UNIX_FILE is
+			-- File for generating descriptor table
+		require
+			Workbench_mode: not byte_context.final_mode
+		local
+			file_name: STRING;
+		do
+			file_name := full_file_name;
+			file_name.append ("D.c");
+			!!Result.make (file_name);
+		end;
+
 	extern_declaration_filename: STRING is
 			-- File for external declarations in final mode
 		do

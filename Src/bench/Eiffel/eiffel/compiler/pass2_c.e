@@ -9,7 +9,6 @@ inherit
 		rename
 			Inherit_table as analyzer
 		end;
-	SHARED_HISTORY_CONTROL
 
 creation
 
@@ -54,8 +53,6 @@ feature
 					System.freeze_set2.put (associated_class.id);
 					System.melted_set.put (associated_class.id);
 				end;
-
-				History_control.check_overload;
 			end;
 		end;
 

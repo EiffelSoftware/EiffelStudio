@@ -37,8 +37,7 @@ inherit
 	EXCEPTIONS
 		undefine
 			twin
-		end;
-
+		end
 
 creation
 
@@ -302,8 +301,18 @@ feature
 			a_class.process_creation_feature (resulting_table);
 				-- Process paterns of origin features
 			process_pattern (resulting_table);
-				-- Process polymorphism for the class
-			resulting_table.process_polymorphism (feature_table);
+
+-- Line removed by Frederic Deramat 15/04/92.
+--
+--    *** resulting_table.process_polymorphism (feature_table); ***
+--
+-- The "polymorphical tables" are not generated in workbench mode
+-- anymore (replaced by "offset descriptors"). Nevertheless, the
+-- facility is still used to produce finalized code, but
+-- "polymorphical tables" are in no case stored to disk (only
+-- generated temporarily in final mode in order to generate the
+-- static C routine tables.
+
 				-- Put the resulting table in the temporary feature table
 				-- server.
 			Tmp_feat_tbl_server.put (resulting_table);
@@ -645,9 +654,13 @@ feature
 				end;
 				if compute_new_rout_id then
 					!!new_rout_id_set.make (1);
-					new_rout_id_set.put (feature_i.new_rout_id);
+					new_rout_id := feature_i.new_rout_id;
+					new_rout_id_set.put (new_rout_id);
 					feature_i.set_rout_id_set (new_rout_id_set);
 				end;
+					-- Insertion into the system routine info table.
+				System.rout_info_table.put (new_rout_id, a_class);
+					--
 				!!info;
 				info.set_a_feature (feature_i);
 			else

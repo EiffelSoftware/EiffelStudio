@@ -9,7 +9,7 @@ inherit
 		redefine
 			check_redeclaration
 		end;
-	SHARED_WORKBENCH;
+	SHARED_WORKBENCH
 
 
 creation
@@ -120,6 +120,8 @@ feature
 						else
 							new_rout_id := attribute.new_rout_id
 						end;
+							-- Insertion into the routine info table.
+						System.rout_info_table.put (new_rout_id, System.current_class);
 						rout_id_set.force (new_rout_id);
 					end;
 				else

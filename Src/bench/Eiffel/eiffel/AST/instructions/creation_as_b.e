@@ -6,7 +6,6 @@ inherit
 		redefine
 			type_check, byte_node, format
 		end;
-	SHARED_HISTORY_CONTROL;
 
 feature -- Attributes
 
@@ -260,8 +259,6 @@ feature -- Type check, byte code and dead code removal
 				if not type_set.has (rout_id) then
 						-- Found a new routine id having a type table
 					type_set.force (rout_id);
-						-- Remember to melt this table
-					History_control.change_rout_id (rout_id);
 				end;
 			end;
 

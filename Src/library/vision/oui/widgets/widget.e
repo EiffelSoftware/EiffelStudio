@@ -51,7 +51,7 @@ feature -- Access
 		do
 			Result := implementation.background_pixmap
 		ensure
-			valid_result: Result /= Void and then Result.is_valid
+			valid_result: (Result /= Void) implies Result.is_valid
 		end;
 
 	cursor: SCREEN_CURSOR is

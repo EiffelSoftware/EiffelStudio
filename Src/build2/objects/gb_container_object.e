@@ -64,7 +64,6 @@ feature {GB_OBJECT} -- Delete
 			-- We must unmerge any radio button groups
 			-- that are being deleted.
 		local
-			container: EV_CONTAINER
 			list: ARRAYED_LIST [EV_CONTAINER]
 		do
 			-- We must unmerge any radio groupings of the current container.

@@ -105,7 +105,7 @@ debug ("SERVER")
 end;
 				end;
 				files.remove (f.id)
-				removed_files.put (f, f.id)
+				add_to_removed_files (f)
 			end
 		end;
 
@@ -121,7 +121,7 @@ end;
 			end;
 				-- Remove `f' from the controler
 			files.remove (f.id)
-			removed_files.put (f, f.id)
+			add_to_removed_files (f)
 
 				-- Remove file from the disk
 			f.delete;
@@ -131,6 +131,14 @@ debug ("SERVER")
 	io.error.new_line;
 end;
 		end;
+
+	add_to_removed_files (f: SERVER_FILE) is
+			-- Move `f' in `removed_files' only if it is possible
+		do
+			if not f.precompiled then
+				removed_files.put (f, f.id)
+			end
+		end
 
 	remove_useless_files is
 			-- Remove all empty files from disk
@@ -167,14 +175,11 @@ end;
 		require
 			good_argument: f /= Void;
 			is_closed: not f.is_open
-		local
-			opened_file: SERVER_FILE
 		do
 			f.open;
 			force (f)
-			opened_file := last_removed_item
 			if last_removed_item /= Void then
-				opened_file.close
+				last_removed_item.close
 			end
 debug ("SERVER")
 	io.error.put_string ("Opening file: ");
@@ -200,9 +205,6 @@ end;
 			end
 			{CACHE} Precursor
 		end
-
-
-
 
 feature -- Status report
 

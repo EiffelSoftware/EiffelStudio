@@ -108,22 +108,16 @@ feature -- Graphical User Interface
 			root_class_edit.set_text ("ROOT_CLASS");
 			creation_procedure_edit.set_text ("make");
 
-			no_ass.set_text ("No assertions");
-			no_ass.set_toggle_off;
-			require_ass.set_text ("Require");
 			require_ass.set_toggle_on;
-			ensure_ass.set_text ("Ensure");
-			ensure_ass.set_toggle_off;
-			invariant_ass.set_text ("Invariant");
-			invariant_ass.set_toggle_off;
-			loop_ass.set_text ("Loop");
-			loop_ass.set_toggle_off;
-			check_ass.set_text ("Check");
-			check_ass.set_toggle_off;
-			all_ass.set_text ("All");
-			all_ass.set_toggle_off;
-
 			assertion_radio.set_always_one (True);
+
+			no_ass.set_text ("No assertions");
+			require_ass.set_text ("Require");
+			ensure_ass.set_text ("Ensure");
+			invariant_ass.set_text ("Invariant");
+			loop_ass.set_text ("Loop");
+			check_ass.set_text ("Check");
+			all_ass.set_text ("All");
 
 			dialog.action_form.attach_top (dir_label, 15);
 			dialog.action_form.attach_left (dir_label, 10);
@@ -192,7 +186,10 @@ feature -- Information Handling
 			!! new_ace.make ("Ace.ace");
 			!! id.make (0);
 			id.append (system_edit.text);
-			if not new_ace.is_writable then
+			if 
+				(new_ace.exists and then not new_ace.is_writable) or else
+				not new_ace.is_creatable 
+			 then
 				warner (dialog).gotcha_call 
 						(Warning_messages.w_Not_writable (new_ace.name))
 				processed := False;
@@ -328,31 +325,32 @@ feature {NONE} -- Properties
 		local
 			new_precomp: STRING;
 			dir: DIRECTORY;
-			full_name: STRING;
 			file_name: FILE_NAME;
 			file: RAW_FILE
 		once
 			!! Result.make;
-			!! dir.make_open_read (Default_precompiled_location);
-			from
-				dir.start;
-				dir.readentry
-			until
-				dir.lastentry = Void
-			loop
-				full_name := clone (dir.name);
-				full_name.extend (Operating_environment.Directory_separator);
-				full_name.append (dir.lastentry);
-				!! file_name.make_from_string (full_name);
-				file_name.extend_from_array (<<Eiffelgen, Dot_workbench>>);
-				!! file.make (file_name);
+			!! dir.make (Default_precompiled_location);
+			if dir.exists and then dir.is_readable then
+				from
+					dir.open_read;
+					dir.start;
+					dir.readentry
+				until
+					dir.lastentry = Void
+				loop
+					!! file_name.make_from_string (dir.name);
+					file_name.extend_from_array 
+						(<<dir.lastentry, Eiffelgen>>);
+					file_name.set_file_name (Dot_workbench);
+					!! file.make (file_name);
 
-				if file.exists then
-					Result.extend (full_name)
+					if file.exists then
+						Result.extend (file_name)
+					end;
+					dir.readentry
 				end;
-				dir.readentry
-			end;
-			dir.close;
+				dir.close;
+			end
 		end;
 
 	caller: CREATE_ACE_CALLER;

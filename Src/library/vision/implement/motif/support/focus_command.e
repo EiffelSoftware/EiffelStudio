@@ -29,8 +29,6 @@ feature {NONE} -- Initialize
 feature -- Execution
 
 	execute (arg: FOCUSABLE) is
-		local
-			w: WIDGET
 		do
 			if arg /= Void then
 				if popup_timer.is_call_back_set then

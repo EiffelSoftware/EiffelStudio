@@ -79,9 +79,7 @@ feature {MEL_SELECTION} -- Implementation
 			valid_widget: a_widget /= Void;
 			time_not_zero: time /= 0;
 		local
-			an_atom: MEL_ATOM;
 			ext_string: ANY;
-			old_lose_command: like lose_command
 		do
 			ext_string := a_string.to_c;
 			xt_own_selection (a_widget.screen_object, 
@@ -297,7 +295,6 @@ feature {NONE} -- External features passed out to C
 			a_callback_struct: MEL_CALLBACK_STRUCT;
 			a_widget: MEL_OBJECT;
 			a_key: MEL_TRANSLATION;
-			str: STRING
 		do
 			a_widget := Mel_widgets.item (a_screen_object);
 			create a_key.make_no_adopted (a_translation);
@@ -376,8 +373,6 @@ feature {NONE} -- External features passed out to C
 
 	frozen handle_lose_callback is
 			-- Handle the lose callback. 
-		local
-			str: STRING
 		do
 			if lose_command /= Void then
 				lose_command.command.execute (lose_command.argument)
@@ -386,8 +381,6 @@ feature {NONE} -- External features passed out to C
 
 	frozen handle_done_callback is
 			-- Handle the done callback. 
-		local
-			str: STRING
 		do
 			if done_command /= Void then
 				done_command.command.execute (done_command.argument)

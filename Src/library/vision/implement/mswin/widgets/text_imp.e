@@ -706,7 +706,7 @@ feature -- Element change
 				if a_position = text.count then
 					text.append (s)
 				else
-					text.insert (s, a_position + 1)
+					text.insert_string (s, a_position + 1)
 				end
 			end
 		end
@@ -727,7 +727,7 @@ feature -- Element change
 				end
 			else
 				if from_position = to_position then
-					text.insert (s, from_position + 1)
+					text.insert_string (s, from_position + 1)
 				else
 					text.replace_substring (s, from_position + 1, to_position)
 				end

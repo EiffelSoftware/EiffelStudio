@@ -336,8 +336,6 @@ feature {NONE} -- Implementation
 
 	create_dispatcher is
 			-- Create the `dispatcher' for MEL callbacks.
-		local
-			dispatcher: MEL_DISPATCHER;
 		once
 			if Mel_dispatcher /= Void then end
 		end;

@@ -99,7 +99,6 @@ feature -- Execution
 		local
 			context_data: CONTEXT_DATA;
 			com_exec: COMMAND_EXEC;
-			command_clone: COMMAND;
 			widget_m: WIDGET_IMP;
 			event: MEL_EVENT;
 			widget_oui: WIDGET

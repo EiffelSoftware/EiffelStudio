@@ -39,8 +39,6 @@ feature -- Removal
             -- Remove all `command' with `argument' from the list of commands.
 		require
 			command_not_void: command /= Void
-		local
-			a_cmd: MEL_COMMAND
         do
 			from
 				start

@@ -156,7 +156,6 @@ feature {NONE} -- Implementation
 					value = Text_font_value
 		local
 			a_font_list: MEL_FONT_LIST;
-			an_entry: MEL_FONT_LIST_ENTRY;
 			resource: POINTER;
 			list: LINKED_LIST [POINTER]
 		do

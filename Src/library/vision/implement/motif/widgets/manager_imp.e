@@ -61,8 +61,6 @@ feature -- Status Setting
 			a_color_exists: not (a_color = Void)
 		local
 			color_implementation: COLOR_IMP;	
-			ext_name: ANY;
-			pixel: POINTER
 		do
 			if private_foreground_color /= Void then
 				color_implementation ?= private_foreground_color.implementation;

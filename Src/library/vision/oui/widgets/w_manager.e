@@ -143,7 +143,7 @@ feature -- Basic operations
 			end
 			if widget.depth = 0 then
 				if count >= array_count then
-					resize (1, array_count + Chunk)
+					conservative_resize (1, array_count + Chunk)
 				end;
 				area.put (widget, count);
 				count := count + 1;
@@ -152,7 +152,7 @@ feature -- Basic operations
 				insert_position := index_of (a_parent) + 1;
 				if count + 1 > array_count then
 						-- Resize Current if necessary
-					resize (1, array_count + Chunk)
+					conservative_resize (1, array_count + Chunk)
 				end;
 				widget_area := area;
 				from

@@ -53,7 +53,7 @@ feature -- Status report
 			keysym := mnemonic;
 			if Result.has (keysym) then
 				pos := Result.index_of (keysym, 1);
-				Result.insert ("&", pos)
+				Result.insert_string ("&", pos)
 			end;
 			pull ?= parent;
 			if pull /= Void then
@@ -74,9 +74,6 @@ feature -- Status setting
 			-- Set button text to `a_text'.
 		require
 			not_text_void: a_text /= Void
-		local
-			menu_m: MENU_IMP;
-			button_text: STRING
 		do
 			if a_text.is_empty then
 				set_label_as_string (a_text)
@@ -115,7 +112,6 @@ feature {NONE} -- Implementation
 			-- option pull
 		local
 			menu_m: MENU_IMP;
-			a_text: STRING
 		do
 			if not is_label then
 				menu_m ?= parent;

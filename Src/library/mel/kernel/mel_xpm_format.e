@@ -77,9 +77,8 @@ feature {NONE} -- Initialization
 			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid
 		local
 			path_ptr: ANY;
-			id, mask: POINTER;
+			mask: POINTER;
 			att_ptr: POINTER;
-			disp: MEL_DISPLAY
 		do
 			path_ptr := path.to_c;
 			if attr /= Void then

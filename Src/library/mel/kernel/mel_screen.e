@@ -120,7 +120,6 @@ feature -- Access
 		local
 			dp: POINTER;
 			widget_c: POINTER;
-			void_pointer: POINTER;
 		do
 			dp := display.handle;
 		 	create Result.make;

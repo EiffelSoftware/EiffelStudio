@@ -58,8 +58,6 @@ feature -- Miscellaneous
 			parent_set: a_popup.parent /= Void;
 			has_parent: has (a_popup.parent.screen_object);
 			not_added: not has (a_popup.screen_object);
-		local
-			a_parent: MEL_COMPOSITE
 		do
 			a_popup.parent.add_popup_child (a_popup);
 			put (a_popup, a_popup.screen_object)

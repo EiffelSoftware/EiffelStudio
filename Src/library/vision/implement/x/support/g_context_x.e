@@ -72,7 +72,7 @@ feature -- Status setting
 			-- Set pattern of dash lengths.
 		require
 			a_dash_exists: not (a_dash = Void);
-			a_dash_valid: not a_dash.empty
+			a_dash_valid: not a_dash.is_empty
 		do
 			set_dashes (a_dash, a_dash.offset)
 		end;

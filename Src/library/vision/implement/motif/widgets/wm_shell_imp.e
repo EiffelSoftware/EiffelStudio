@@ -41,7 +41,6 @@ feature -- Access
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon
 		local
-			ext_name: ANY;
 			pixmap_x: PIXMAP_IMP
 		do
 			if private_icon_pixmap = Void then

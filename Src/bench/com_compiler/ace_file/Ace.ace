@@ -141,7 +141,7 @@ cluster
 				end
 			ieiffel_exception_impl_stub
 				end
-			DESCRIPTIONS_ENUMERATOR
+			descriptions_enumerator
 				end
 			class_descriptor
 				end
@@ -470,6 +470,9 @@ cluster
 		exclude
 			"cache.e"; "CVS"; 
 		end
+
+	dotnet_helpers:		"$EIFFEL_SRC\dotnet\helpers"
+
 
 external
 

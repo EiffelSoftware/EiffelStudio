@@ -15,12 +15,7 @@ inherit
 			make,
 			implementation
 		end
-	
-	EV_BAR_ITEM
-		redefine
-			implementation
-		end
-	
+
 	EV_TEXTABLE
 		redefine
 			implementation

@@ -37,10 +37,14 @@ feature {NONE}
 				then
 					text_window.show_file (fn);
 					text_window.display_header (fn)
+				elseif f.exists and then not f.is_plain then
+					warner.set_window (text_window);
+					warner.custom_call (Current, w_Not_a_file_retry (fn),
+												" OK ", Void, "Cancel");
 				else
 					warner.set_window (text_window);
 					warner.custom_call (Current, w_Cannot_read_file_retry (fn),
-												" Ok ", Void, "Cancel");
+												" OK ", Void, "Cancel");
 				end
 			else
 				-- First click on open

@@ -498,10 +498,10 @@ rt_private void eif_std_field_copy (EIF_REFERENCE source, EIF_REFERENCE target, 
 			*(EIF_INTEGER_32 *) t_ref = *(EIF_INTEGER_32 *) s_ref; break;
 		case SK_INT64:
 			*(EIF_INTEGER_64 *) t_ref = *(EIF_INTEGER_64 *) s_ref; break;
-		case SK_FLOAT:
-			*(EIF_REAL *) t_ref = *(EIF_REAL *) s_ref; break;
-		case SK_DOUBLE:
-			*(EIF_DOUBLE *) t_ref = *(EIF_DOUBLE *) s_ref; break;
+		case SK_REAL32:
+			*(EIF_REAL_32 *) t_ref = *(EIF_REAL_32 *) s_ref; break;
+		case SK_REAL64:
+			*(EIF_REAL_64 *) t_ref = *(EIF_REAL_64 *) s_ref; break;
 		case SK_POINTER:
 			*(EIF_POINTER *) t_ref = *(EIF_POINTER *) s_ref; break;
 		case SK_EXP:

@@ -182,11 +182,11 @@ rt_public void c_recv_value (EIF_OBJ target)
 					case SK_INT64:
 						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER_64)) set_integer_64) (eif_access (target), item.it_int64);
 						return;
-					case SK_FLOAT:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL)) set_real) (eif_access (target), item.it_float);
+					case SK_REAL32:
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_32)) set_real) (eif_access (target), item.it_real32);
 						return;
-					case SK_DOUBLE:
-						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_DOUBLE)) set_double) (eif_access (target), item.it_double);
+					case SK_REAL64:
+						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_REAL_64)) set_double) (eif_access (target), item.it_real64);
 						return;
 					case SK_POINTER:
 						(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_POINTER)) set_pointer) (eif_access (target), item.it_ptr);

@@ -209,13 +209,13 @@ rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, lo
 				new_obj = RTLN(egc_int64_ref_dtype);
 				*(EIF_INTEGER_64 *) new_obj = *(EIF_INTEGER_64 *) o_ref;
 				break;
-			case SK_DOUBLE:
-				new_obj = RTLN(egc_doub_ref_dtype);
-				*(EIF_DOUBLE *) new_obj = *(EIF_DOUBLE *) o_ref;
+			case SK_REAL64:
+				new_obj = RTLN(egc_real64_ref_dtype);
+				*(EIF_REAL_64 *) new_obj = *(EIF_REAL_64 *) o_ref;
 				break;
-			case SK_FLOAT:
-				new_obj = RTLN(egc_real_ref_dtype);
-				*(EIF_REAL *) new_obj = *(EIF_REAL *) o_ref;
+			case SK_REAL32:
+				new_obj = RTLN(egc_real32_ref_dtype);
+				*(EIF_REAL_32 *) new_obj = *(EIF_REAL_32 *) o_ref;
 				break;
 			case SK_POINTER:
 				new_obj = RTLN(egc_point_ref_dtype);

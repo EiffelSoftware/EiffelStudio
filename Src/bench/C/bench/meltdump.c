@@ -1035,8 +1035,8 @@ static  void    print_dtype (uint32 type)
 			case SK_INT16:    fprintf (mfp," [INTEGER_16]"); break;
 			case SK_INT32:    fprintf (mfp," [INTEGER]"); break;
 			case SK_INT64:    fprintf (mfp," [INTEGER_64]"); break;
-			case SK_FLOAT:  fprintf (mfp," [FLOAT]"); break;
-			case SK_DOUBLE: fprintf (mfp," [DOUBLE]"); break;
+			case SK_REAL32:  fprintf (mfp," [REAL_32]"); break;
+			case SK_REAL64: fprintf (mfp," [REAL_64]"); break;
 			case SK_POINTER:fprintf (mfp," [POINTER]"); break;
 			case SK_BIT:    fprintf (mfp," [BIT]"); break;
 			case SK_EXP:    fprintf (mfp,"ET %u", type & SK_DTYPE);

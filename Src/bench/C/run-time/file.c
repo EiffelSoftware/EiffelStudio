@@ -435,7 +435,7 @@ rt_public void file_pi(FILE *f, EIF_INTEGER number)
 		eise_io("FILE: unable to write INTEGER value.");
 }
 
-rt_public void file_pr(FILE *f, EIF_REAL number)
+rt_public void file_pr(FILE *f, EIF_REAL_32 number)
 {
 	/* Write `number' on `f' */
 
@@ -453,12 +453,12 @@ rt_public void file_pib(FILE *f, EIF_INTEGER number)
 		eise_io("FILE: unable to write INTEGER value.");
 }
 
-rt_public void file_prb(FILE *f, EIF_REAL number)
+rt_public void file_prb(FILE *f, EIF_REAL_32 number)
 {
 	/* Write `number' on `f' */
 
 	errno = 0;
-    if (1 != fwrite(&number, sizeof(EIF_REAL),1, f))
+    if (1 != fwrite(&number, sizeof(EIF_REAL_32),1, f))
 		eise_io("FILE: unable to write REAL value.");
 }
 
@@ -504,7 +504,7 @@ rt_public void file_pc(FILE *f, char c)
 		eise_io("FILE: unable to write CHARACTER value.");
 }
 
-rt_public void file_pd(FILE *f, EIF_DOUBLE val)
+rt_public void file_pd(FILE *f, EIF_REAL_64 val)
 {
 	/* Write double `val' onto `f' */
 
@@ -513,7 +513,7 @@ rt_public void file_pd(FILE *f, EIF_DOUBLE val)
 		eise_io("FILE: unable to write DOUBLE value.");
 }
 
-rt_public void file_pdb(FILE *f, EIF_DOUBLE val)
+rt_public void file_pdb(FILE *f, EIF_REAL_64 val)
 {
 	/* Write double `val' onto `f' */
 
@@ -613,11 +613,11 @@ rt_public EIF_INTEGER file_gi(FILE *f)
 	return i;
 }
 
-rt_public EIF_REAL file_gr(FILE *f)
+rt_public EIF_REAL_32 file_gr(FILE *f)
 {             
 	/* Get a real from `f' */
 
-	EIF_REAL r;     
+	EIF_REAL_32 r;     
 
 	errno = 0;
 	if (0 > fscanf(f, "%f", &r))
@@ -627,11 +627,11 @@ rt_public EIF_REAL file_gr(FILE *f)
 	return r;
 }
 
-rt_public EIF_DOUBLE file_gd(FILE *f)
+rt_public EIF_REAL_64 file_gd(FILE *f)
 {             
 	/* Get a double from `f' */
 
-	EIF_DOUBLE d;     
+	EIF_REAL_64 d;     
 
 	errno = 0;
 	if (0 > fscanf(f, "%lf", &d))
@@ -653,27 +653,27 @@ rt_public EIF_INTEGER file_gib(FILE *f)
 	return i;
 }
 
-rt_public EIF_REAL file_grb(FILE *f)
+rt_public EIF_REAL_32 file_grb(FILE *f)
 {             
 	/* Get a real from `f' */
 
-	EIF_REAL r;     
+	EIF_REAL_32 r;     
 
 	errno = 0;
-	if (1 != fread (&r, sizeof (EIF_REAL), 1, f))
+	if (1 != fread (&r, sizeof (EIF_REAL_32), 1, f))
 		eise_io("FILE: unable to read REAL value.");
 
 	return r;
 }
 
-rt_public EIF_DOUBLE file_gdb(FILE *f)
+rt_public EIF_REAL_64 file_gdb(FILE *f)
 {             
 	/* Get a double from `f' */
 
-	EIF_DOUBLE d;     
+	EIF_REAL_64 d;     
 
 	errno = 0;
-	if (1 != fread (&d, sizeof(EIF_DOUBLE), 1, f))
+	if (1 != fread (&d, sizeof(EIF_REAL_64), 1, f))
 		eise_io("FILE: unable to read DOUBLE value.");
 
 	return d;

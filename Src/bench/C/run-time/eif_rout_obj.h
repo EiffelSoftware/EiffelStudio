@@ -37,13 +37,13 @@ typedef union {
 	EIF_BOOLEAN		barg;
 	EIF_CHARACTER	carg;
 	EIF_WIDE_CHAR	wcarg;
-	EIF_DOUBLE		darg;
+	EIF_REAL_64		darg;
 	EIF_INTEGER_8	i8arg;
 	EIF_INTEGER_16	i16arg;
 	EIF_INTEGER_32	i32arg;
 	EIF_INTEGER_64	i64arg;
 	EIF_POINTER		parg;
-	EIF_REAL		farg;
+	EIF_REAL_32		farg;
 	EIF_REFERENCE	rarg;
 } EIF_ARG_UNION;
 
@@ -82,8 +82,8 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define RBVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? EIF_FALSE : *((EIF_BOOLEAN *)v))
 #define RCVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_CHARACTER) 0 : *((EIF_CHARACTER *)v))
 #define RWCVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_WIDE_CHAR) 0 : *((EIF_WIDE_CHAR *)v))
-#define RDVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_DOUBLE) 0.0 : *((EIF_DOUBLE *)v))
-#define RFVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_REAL) 0.0 : *((EIF_REAL *)v))
+#define RDVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_REAL_64) 0.0 : *((EIF_REAL_64 *)v))
+#define RFVAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_REAL_32) 0.0 : *((EIF_REAL_32 *)v))
 #define RI8VAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_INTEGER_8) 0 : *((EIF_INTEGER_8 *)v))
 #define RI16VAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_INTEGER_16) 0 : *((EIF_INTEGER_16 *)v))
 #define RI32VAL(v) (((EIF_REFERENCE)(v))== (EIF_REFERENCE) 0 ? (EIF_INTEGER_32) 0 : *((EIF_INTEGER_32 *)v))
@@ -131,13 +131,13 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define eif_boolean_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.barg
 #define eif_character_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.carg
 #define eif_wide_character_tuple_item(item)	((EIF_TYPED_ELEMENT *) (item))->element.wcarg
-#define eif_double_tuple_item(item)			((EIF_TYPED_ELEMENT *) (item))->element.darg
+#define eif_real_64_tuple_item(item)			((EIF_TYPED_ELEMENT *) (item))->element.darg
 #define eif_integer_8_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.i8arg
 #define eif_integer_16_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.i16arg
 #define eif_integer_32_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.i32arg
 #define eif_integer_64_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.i64arg
 #define eif_pointer_tuple_item(item)		((EIF_TYPED_ELEMENT *) (item))->element.parg
-#define eif_real_tuple_item(item)			((EIF_TYPED_ELEMENT *) (item))->element.farg
+#define eif_real_32_tuple_item(item)			((EIF_TYPED_ELEMENT *) (item))->element.farg
 
 /* Macro for accessing type of tuple element */
 #define eif_item_type(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->type
@@ -146,26 +146,26 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define eif_boolean_item(tuple,pos)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.barg
 #define eif_character_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg
 #define eif_wide_character_item(tuple,pos)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg
-#define eif_double_item(tuple,pos)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.darg
+#define eif_real_64_item(tuple,pos)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.darg
 #define eif_integer_8_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i8arg
 #define eif_integer_16_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i16arg
 #define eif_integer_32_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i32arg
 #define eif_integer_64_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i64arg
 #define eif_pointer_item(tuple,pos)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.parg
-#define eif_real_item(tuple,pos)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.farg
+#define eif_real_32_item(tuple,pos)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.farg
 #define eif_reference_item(tuple,pos)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.rarg
 
 /* Conveniences */
 #define EIF_BOOLEAN_ITEM eif_boolean_item
 #define EIF_CHARACTER_ITEM eif_character_item
 #define EIF_WIDE_CHARACTER_ITEM eif_wide_character_item
-#define EIF_DOUBLE_ITEM eif_double_item
+#define EIF_REAL_64_ITEM eif_real_64_item
 #define EIF_INTEGER_8_ITEM eif_integer_8_item
 #define EIF_INTEGER_16_ITEM eif_integer_16_item
 #define EIF_INTEGER_32_ITEM eif_integer_32_item
 #define EIF_INTEGER_64_ITEM eif_integer_64_item
 #define EIF_POINTER_ITEM eif_pointer_item
-#define EIF_REAL_ITEM eif_real_item
+#define EIF_REAL_32_ITEM eif_real_32_item
 #define EIF_REFERENCE_ITEM eif_reference_item
 
 /* Macro for setting tuple element value from a reference object
@@ -173,26 +173,26 @@ RT_LNK void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION* a
 #define eif_put_boolean_item_with_object(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.barg = *(EIF_BOOLEAN *)(val)
 #define eif_put_character_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg = *(EIF_CHARACTER *)(val)
 #define eif_put_wide_character_item_with_object(tuple,pos,val)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg = *(EIF_WIDE_CHAR *)(val)
-#define eif_put_double_item_with_object(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.darg = *(EIF_DOUBLE *)(val)
+#define eif_put_real_64_item_with_object(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.darg = *(EIF_REAL_64 *)(val)
 #define eif_put_integer_8_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i8arg = *(EIF_INTEGER_8 *)(val)
 #define eif_put_integer_16_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i16arg = *(EIF_INTEGER_16 *)(val)
 #define eif_put_integer_32_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i32arg = *(EIF_INTEGER_32 *)(val)
 #define eif_put_integer_64_item_with_object(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i64arg = *(EIF_INTEGER_64 *)(val)
 #define eif_put_pointer_item_with_object(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.parg = *(EIF_POINTER *)(val)
-#define eif_put_real_item_with_object(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.farg = *(EIF_REAL *)(val)
+#define eif_put_real_32_item_with_object(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.farg = *(EIF_REAL_32 *)(val)
 #define eif_put_reference_item_with_object(tuple,pos,val)		eif_put_reference_item(tuple,pos,val)
 
 /* Macro for setting tuple element value */
 #define eif_put_boolean_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.barg = (EIF_BOOLEAN)(val)
 #define eif_put_character_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.carg = (EIF_CHARACTER)(val)
 #define eif_put_wide_character_item(tuple,pos,val)	((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.wcarg = (EIF_WIDE_CHAR)(val)
-#define eif_put_double_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.darg = (EIF_DOUBLE)(val)
+#define eif_put_real_64_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.darg = (EIF_REAL_64)(val)
 #define eif_put_integer_8_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i8arg = (EIF_INTEGER_8)(val)
 #define eif_put_integer_16_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i16arg = (EIF_INTEGER_16)(val)
 #define eif_put_integer_32_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i32arg = (EIF_INTEGER_32)(val)
 #define eif_put_integer_64_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.i64arg = (EIF_INTEGER_64)(val)
 #define eif_put_pointer_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.parg = (EIF_POINTER)(val)
-#define eif_put_real_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.farg = (EIF_REAL)(val)
+#define eif_put_real_32_item(tuple,pos,val)			((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.farg = (EIF_REAL_32)(val)
 #define eif_put_reference_item(tuple,pos,val)		((EIF_TYPED_ELEMENT *) (tuple) + pos)->element.rarg = (EIF_REFERENCE) (val); RTAR((EIF_REFERENCE) (tuple), (EIF_REFERENCE) (val))
 
 #ifdef __cplusplus

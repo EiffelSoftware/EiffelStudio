@@ -101,17 +101,20 @@ struct cnode {
 #define SK_BOOL		0x04000000			/* Simple boolean type */
 #define SK_CHAR		0x08000000			/* Simple character type */
 #define SK_INT8		0x0c000000			/* Simple integer 8 type */
-#define SK_INT		0x10000000			/* Simple integer type */
 #define SK_INT32	0x10000000			/* Simple integer 32 type */
 #define SK_INT16	0x14000000			/* Simple integer 16 type */
-#define SK_FLOAT	0x18000000			/* Simple real type */
-#define SK_REAL		0x18000000			/* Simple real type */
+#define SK_REAL32	0x18000000			/* Simple real type */
 #define SK_WCHAR	0x1c000000			/* Simple unicode character type */
-#define SK_DOUBLE	0x20000000			/* Simple double type */
+#define SK_REAL64	0x20000000			/* Simple double type */
 #define SK_INT64	0x24000000			/* Simple integer 64 types */
 #define SK_BIT		0x28000000			/* Signals bits type */
 #define SK_STRING	0x2c000000			/* String type / Use for debugging only */
+#define SK_UINT8	0x30000000			/* Simple unsigned integer 8 type */
+#define SK_UINT16	0x34000000			/* Simple unsigned integer 16 type */
+#define SK_UINT32	0x38000000			/* Simple unsigned integer 32 type */
+#define SK_UINT64	0x3c000000			/* Simple unsigned integer 64 type */
 #define SK_POINTER	0x40000000			/* Simple pointer type */
+#define SK_CHAR32	0x44000000			/* Simple 32 bits character type */
 #define SK_BMASK	0x07ffffff			/* Bits number (coded on 27 bits) */
 #define SK_SIMPLE	0x7c000000			/* Mask to test for simple type */
 #define SK_REF		0xf8000000			/* Mask to test for reference type */

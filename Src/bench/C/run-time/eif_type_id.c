@@ -386,10 +386,10 @@ rt_private int32 sk_type (int32 cecil_id)
 		return SK_INT32;
 	} else if (cecil_id == egc_int64_dtype) {
 		return SK_INT64;
-	} else if (cecil_id == egc_real_dtype) {
-		return SK_FLOAT;
-	} else if (cecil_id == egc_doub_dtype) {
-		return SK_DOUBLE;
+	} else if (cecil_id == egc_real32_dtype) {
+		return SK_REAL32;
+	} else if (cecil_id == egc_real64_dtype) {
+		return SK_REAL64;
 	} else if (cecil_id == egc_point_dtype) {
 		return SK_POINTER;
 	} else {

@@ -202,13 +202,13 @@ rt_private bool_t idr_Item (IDR *idrs, struct item *ext)
 			memcpy (idrs->i_ptr, &ext->it_int64, sizeof(EIF_INTEGER_64));
 			idrs->i_ptr += sizeof(EIF_INTEGER_64);
 			return TRUE;
-		case SK_FLOAT:
-			memcpy (idrs->i_ptr, &ext->it_float, sizeof(EIF_REAL));
-			idrs->i_ptr += sizeof(EIF_REAL);
+		case SK_REAL32:
+			memcpy (idrs->i_ptr, &ext->it_real32, sizeof(EIF_REAL_32));
+			idrs->i_ptr += sizeof(EIF_REAL_32);
 			return TRUE;
-		case SK_DOUBLE:
-			memcpy (idrs->i_ptr, &ext->it_double, sizeof(EIF_DOUBLE));
-			idrs->i_ptr += sizeof(EIF_DOUBLE);
+		case SK_REAL64:
+			memcpy (idrs->i_ptr, &ext->it_real64, sizeof(EIF_REAL_64));
+			idrs->i_ptr += sizeof(EIF_REAL_64);
 			return TRUE;
 		case SK_POINTER:
 			memcpy (idrs->i_ptr, &ext->it_ptr, sizeof(EIF_POINTER));
@@ -251,13 +251,13 @@ rt_private bool_t idr_Item (IDR *idrs, struct item *ext)
 			memcpy (&ext->it_int64, idrs->i_ptr, sizeof(EIF_INTEGER_64));
 			idrs->i_ptr += sizeof(EIF_INTEGER_64);
 			return TRUE;
-		case SK_FLOAT:
-			memcpy (&ext->it_float, idrs->i_ptr, sizeof(EIF_REAL));
-			idrs->i_ptr += sizeof(EIF_REAL);
+		case SK_REAL32:
+			memcpy (&ext->it_real32, idrs->i_ptr, sizeof(EIF_REAL_32));
+			idrs->i_ptr += sizeof(EIF_REAL_32);
 			return TRUE;
-		case SK_DOUBLE:
-			memcpy (&ext->it_double, idrs->i_ptr, sizeof(EIF_DOUBLE));
-			idrs->i_ptr += sizeof(EIF_DOUBLE);
+		case SK_REAL64:
+			memcpy (&ext->it_real64, idrs->i_ptr, sizeof(EIF_REAL_64));
+			idrs->i_ptr += sizeof(EIF_REAL_64);
 			return TRUE;
 		case SK_POINTER:
 			memcpy (&ext->it_ptr, idrs->i_ptr, sizeof(EIF_POINTER));

@@ -585,12 +585,12 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 			if (*(EIF_INTEGER_64 *) t_ref != *(EIF_INTEGER_64 *) s_ref)
 				return EIF_FALSE;
 			break;
-		case SK_FLOAT:
-			if (*(EIF_REAL *) t_ref != *(EIF_REAL *) s_ref)
+		case SK_REAL32:
+			if (*(EIF_REAL_32 *) t_ref != *(EIF_REAL_32 *) s_ref)
 				return EIF_FALSE;
 			break;
-		case SK_DOUBLE:
-			if (*(EIF_DOUBLE *) t_ref != *(EIF_DOUBLE *) s_ref)
+		case SK_REAL64:
+			if (*(EIF_REAL_64 *) t_ref != *(EIF_REAL_64 *) s_ref)
 				return EIF_FALSE;
 			break;
 		case SK_POINTER:
@@ -700,12 +700,12 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 			if (*(EIF_INTEGER_64 *) t_ref != *(EIF_INTEGER_64 *) s_ref)
 				return EIF_FALSE;
 			break;
-		case SK_FLOAT:
-			if (*(EIF_REAL *) t_ref != *(EIF_REAL *) s_ref)
+		case SK_REAL32:
+			if (*(EIF_REAL_32 *) t_ref != *(EIF_REAL_32 *) s_ref)
 				return EIF_FALSE;
 			break;
-		case SK_DOUBLE:
-			if (*(EIF_DOUBLE *) t_ref != *(EIF_DOUBLE *) s_ref)
+		case SK_REAL64:
+			if (*(EIF_REAL_64 *) t_ref != *(EIF_REAL_64 *) s_ref)
 				return EIF_FALSE;
 			break;
 		case SK_POINTER:

@@ -226,17 +226,26 @@ typedef signed char		EIF_INTEGER_8;
 typedef int16			EIF_INTEGER_16;
 typedef int32			EIF_INTEGER;
 typedef int32			EIF_INTEGER_32;
-#ifdef CYGWIN
-typedef long long		EIF_INTEGER_64;
-#elif defined(EIF_WIN32)	/* or whatever they actually are */
+#if defined(EIF_WIN32) && !defined(CYGWIN)	/* or whatever they actually are */
 typedef __int64			EIF_INTEGER_64;
 #elif defined(EIF_VMS)
 typedef long long int		EIF_INTEGER_64;
 #else
 typedef long long		EIF_INTEGER_64;
 #endif
-typedef float			EIF_REAL;
-typedef double			EIF_DOUBLE;
+typedef unsigned char	EIF_NATURAL_8;
+typedef uint16			EIF_NATURAL_16;
+typedef uint32			EIF_NATURAL;
+typedef uint32			EIF_NATURAL_32;
+#if defined(EIF_WIN32) && !defined(CYGWIN)	/* or whatever they actually are */
+typedef unsigned __int64			EIF_NATURAL_64;
+#elif defined(EIF_VMS)
+typedef unsigned long long int		EIF_NATURAL_64;
+#else
+typedef unsigned long long		EIF_NATURAL_64;
+#endif
+typedef float			EIF_REAL_32;
+typedef double			EIF_REAL_64;
 typedef char *			EIF_REFERENCE;
 typedef void *			EIF_POINTER;
 
@@ -275,6 +284,44 @@ RT_LNK char * dir_dot_dir (char * dir) ;
 #endif
 #endif /* EIF_VMS */
 
+/* Compatibility with 5.x (where x <= 5) version of compiler. */
+/* eif_cecil.h */
+#define EIF_REAL_FUNCTION	EIF_REAL_32_FUNCTION
+#define EIF_DOUBLE_FUNCTION	EIF_REAL_64_FUNCTION
+#define eif_real_function	eif_real_32_function
+#define eif_double_function	eif_real_64_function
+#define EIF_REAL_TYPE		EIF_REAL_32_TYPE
+#define EIF_DOUBLE_TYPE		EIF_REAL_64_TYPE
+#define EIF_FN_FLOAT		EIF_FN_REAL_32
+#define	EIF_FN_DOUBLE		EIF_FN_REAL_64
+
+/* eif_struct.h */
+#define SK_FLOAT	SK_REAL32
+#define SK_REAL		SK_REAL32
+#define	SK_DOUBLE	SK_REAL64
+#define SK_INT		SK_INT32
+
+/* eif_portable.h */
+#define EIF_REAL	EIF_REAL_32
+#define EIF_DOUBLE	EIF_REAL_64
+
+/* eif_rout_obj.h */
+#define eif_real_item	eif_real32_item
+#define eif_double_item	eif_real64_item
+#define eif_put_double_item_with_object	eif_put_real64_item_with_object
+#define eif_put_real_item_with_object	eif_put_real32_item_with_object
+#define eif_put_double_item	eif_put_real64_item
+#define eif_put_real_item	eif_put_real32_item
+
+/* Private compatibility */
+#define it_float	it_real32
+#define it_double	it_real64
+#define egc_sp_real	egc_sp_real32
+#define egc_sp_double	egc_sp_real64
+#define	egc_real_ref_dtype	egc_real32_ref_dtype
+#define egc_doub_ref_dtype	egc_real64_ref_dtype
+#define egc_real_dtype	egc_real32_dtype
+#define egc_doub_dtype	egc_real64_dtype
 
 #ifdef __cplusplus
 }

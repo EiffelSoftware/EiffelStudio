@@ -33,9 +33,9 @@ doc:<file name="x2c.c" header="x2c.h" version="$Id$" summary="Convert .x file in
 rt_private long chroff(char recursive_call);
 rt_private long i16off(char recursive_call);
 rt_private long lngoff(char recursive_call);
-rt_private long fltoff(char recursive_call);
+rt_private long r32off(char recursive_call);
 rt_private long ptroff(char recursive_call);
-rt_private long dbloff(char recursive_call);
+rt_private long r64off(char recursive_call);
 rt_private long objsiz(char recursive_call);
 rt_private long i64off(char recursive_call);
 rt_private long bitoff(char recursive_call);
@@ -44,8 +44,8 @@ rt_private long refacs (char recursive_call);
 rt_private long chracs (char recursive_call);
 rt_private long i16acs (char recursive_call);
 rt_private long lngacs (char recursive_call);
-rt_private long fltacs (char recursive_call);
-rt_private long dblacs (char recursive_call);
+rt_private long r32acs (char recursive_call);
+rt_private long r64acs (char recursive_call);
 rt_private long i64acs (char recursive_call);
 rt_private long ptracs (char recursive_call);
 
@@ -70,10 +70,10 @@ long a[8];		/* Parameters array */
 #define nb_char	a[1]
 #define nb_i16	a[2]
 #define nb_int	a[3]
-#define nb_flt	a[4]
+#define nb_r32	a[4]
 #define nb_ptr	a[5]
 #define nb_i64	a[6]
-#define nb_dbl	a[7]
+#define nb_r64	a[7]
 
 #define MAXLEN	6		/* Each macro keyword is 6 characters */
 
@@ -86,19 +86,24 @@ struct parse {
 	{ "CHRACS", 1, chracs },
 	{ "I16ACS", 1, i16acs },
 	{ "LNGACS", 1, lngacs },
-	{ "FLTACS", 1, fltacs },
+	{ "R32ACS", 1, r32acs },
 	{ "PTRACS", 1, ptracs },
-	{ "DBLACS", 1, dblacs },
+	{ "R64ACS", 1, r64acs },
 	{ "I64ACS", 1, i64acs },
 	{ "CHROFF", 2, chroff },
 	{ "I16OFF", 3, i16off },
 	{ "LNGOFF", 4, lngoff },
-	{ "FLTOFF", 5, fltoff },
+	{ "R32OFF", 5, r32off },
 	{ "PTROFF", 6, ptroff },
 	{ "I64OFF", 7, i64off },
-	{ "DBLOFF", 8, dbloff },
+	{ "R64OFF", 8, r64off },
 	{ "OBJSIZ", 8, objsiz },
 	{ "BITOFF", 1, bitoff },
+/* Fixme: to remove when bootstrap done */
+	{ "DBLOFF", 8, r64off },
+	{ "DBLACS", 1, r64acs },
+	{ "FLTOFF", 5, r32off },
+	{ "FLTACS", 1, r32acs },
 };
 
 rt_private struct parse *locate (char *name);
@@ -353,18 +358,18 @@ rt_private long lngoff(char recursive_call)
 		return to_add + eif_padding(to_add,(long)  LNGSIZ) + LNGACS(fourth_argument);
 }
 
-rt_private long fltoff(char recursive_call)
+rt_private long r32off(char recursive_call)
 {
 	long to_add = lngoff(RECURSIVE) + nb_int * LNGSIZ;
 	if (recursive_call == RECURSIVE)
-		return to_add + eif_padding(to_add, (long) FLTSIZ);
+		return to_add + eif_padding(to_add, (long) R32SIZ);
 	else
-		return to_add + eif_padding(to_add, (long) FLTSIZ) + FLTACS(fifth_argument);
+		return to_add + eif_padding(to_add, (long) R32SIZ) + R32ACS(fifth_argument);
 }
 
 rt_private long ptroff(char recursive_call)
 {
-	long to_add = fltoff(RECURSIVE) + nb_flt * FLTSIZ;
+	long to_add = r32off(RECURSIVE) + nb_r32 * R32SIZ;
 	if (recursive_call == RECURSIVE)
 		return to_add + eif_padding(to_add, (long) PTRSIZ);
 	else
@@ -380,18 +385,18 @@ rt_private long i64off(char recursive_call)
 		return to_add + eif_padding(to_add, (long) I64SIZ) + I64ACS(seventh_argument);
 }
 
-rt_private long dbloff(char recursive_call)
+rt_private long r64off(char recursive_call)
 {
 	long to_add = i64off(RECURSIVE) + nb_i64 * I64SIZ;
 	if (recursive_call == RECURSIVE)
-		return to_add + eif_padding(to_add, (long) DBLSIZ);
+		return to_add + eif_padding(to_add, (long) R64SIZ);
 	else
-		return to_add + eif_padding(to_add, (long) DBLSIZ) + DBLACS(eigth_argument);
+		return to_add + eif_padding(to_add, (long) R64SIZ) + R64ACS(eigth_argument);
 }
 
 rt_private long objsiz(char recursive_call)
 {
-	long to_add = dbloff(RECURSIVE) + nb_dbl * DBLSIZ;
+	long to_add = r64off(RECURSIVE) + nb_r64 * R64SIZ;
 	return to_add + eif_remainder(to_add);
 }
 
@@ -400,8 +405,8 @@ rt_private long refacs (char recursive_call) { return REFACS(first_argument); }
 rt_private long chracs (char recursive_call) { return CHRACS(first_argument); }
 rt_private long i16acs (char recursive_call) { return I16ACS(first_argument); }
 rt_private long lngacs (char recursive_call) { return LNGACS(first_argument); }
-rt_private long fltacs (char recursive_call) { return FLTACS(first_argument); }
-rt_private long dblacs (char recursive_call) { return DBLACS(first_argument); }
+rt_private long r32acs (char recursive_call) { return R32ACS(first_argument); }
+rt_private long r64acs (char recursive_call) { return R64ACS(first_argument); }
 rt_private long i64acs (char recursive_call) { return I64ACS(first_argument); }
 rt_private long ptracs (char recursive_call) { return PTRACS(first_argument); }
 

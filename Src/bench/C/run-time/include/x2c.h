@@ -31,15 +31,15 @@
 		(CHROFF(x)+(y)*CHRSIZ+PADD(CHROFF(x)+(y)*CHRSIZ,I16SIZ))
 #define LNGOFF(x,y,z) \
 		(I16OFF(x,y)+(z)*I16SIZ+PADD(I16OFF(x,y)+(z)*I16SIZ,LNGSIZ))
-#define FLTOFF(w,x,y,z) \
-		(LNGOFF(w,x,y)+(z)*LNGSIZ+PADD(LNGOFF(w,x,y)+(z)*LNGSIZ,FLTSIZ))
+#define R32OFF(w,x,y,z) \
+		(LNGOFF(w,x,y)+(z)*LNGSIZ+PADD(LNGOFF(w,x,y)+(z)*LNGSIZ,R32SIZ))
 #define PTROFF(v,w,x,y,z) \
-		(FLTOFF(v,w,x,y)+(z)*FLTSIZ+PADD(FLTOFF(v,w,x,y)+(z)*FLTSIZ,PTRSIZ))
+		(R32OFF(v,w,x,y)+(z)*R32SIZ+PADD(R32OFF(v,w,x,y)+(z)*R32SIZ,PTRSIZ))
 #define I64OFF(u,v,w,x,y,z) \
 		(PTROFF(u,v,w,x,y)+(z)*PTRSIZ+PADD(PTROFF(u,v,w,x,y)+(z)*PTRSIZ,I64SIZ))
-#define DBLOFF(t,u,v,w,x,y,z) \
-		(I64OFF(t,u,v,w,x,y)+(z)*I64SIZ+PADD(I64OFF(t,u,v,w,x,y)+(z)*I64SIZ,DBLSIZ))
+#define R64OFF(t,u,v,w,x,y,z) \
+		(I64OFF(t,u,v,w,x,y)+(z)*I64SIZ+PADD(I64OFF(t,u,v,w,x,y)+(z)*I64SIZ,R64SIZ))
 #define OBJSIZ(s,t,u,v,w,x,y,z) \
-		(DBLOFF(s,t,u,v,w,x,y)+(z)*DBLSIZ+REMAINDER(DBLOFF(s,t,u,v,w,x,y)+(z)*DBLSIZ))
+		(R64OFF(s,t,u,v,w,x,y)+(z)*R64SIZ+REMAINDER(R64OFF(s,t,u,v,w,x,y)+(z)*R64SIZ))
 
 #endif

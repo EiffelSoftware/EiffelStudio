@@ -63,8 +63,8 @@ extern "C" {
 	RT_LNK uint32 egc_sp_int16;		/* Dynamic type of SPECIAL[INTEGER_16] */
 	RT_LNK uint32 egc_sp_int32;		/* Dynamic type of SPECIAL[INTEGER_32] */
 	RT_LNK uint32 egc_sp_int64;		/* Dynamic type of SPECIAL[INTEGER_64] */
-	RT_LNK uint32 egc_sp_real;			/* Dynamic type of SPECIAL[REAL] */
-	RT_LNK uint32 egc_sp_double;		/* Dynamic type of SPECIAL[DOUBLE] */
+	RT_LNK uint32 egc_sp_real32;			/* Dynamic type of SPECIAL[REAL_32] */
+	RT_LNK uint32 egc_sp_real64;		/* Dynamic type of SPECIAL[REAL_64] */
 	RT_LNK uint32 egc_sp_pointer;		/* Dynamic type of SPECIAL[POINTER] */
 	RT_LNK uint32 egc_sp_ref;			/* Dynamic type of SPECIAL[ANY] */
 
@@ -73,8 +73,8 @@ extern "C" {
 	RT_LNK int egc_int32_ref_dtype;	/* Dynamic type of INTEGER_32_REF */
 	RT_LNK int egc_int64_ref_dtype;	/* Dynamic type of INTEGER_64_REF */
 	RT_LNK int egc_bool_ref_dtype;	/* Dynamic type of BOOLEAN_REF */
-	RT_LNK int egc_real_ref_dtype;	/* Dynamic type of REAL_REF */
-	RT_LNK int egc_doub_ref_dtype;	/* Dynamic type of DOUBLE_REF */
+	RT_LNK int egc_real32_ref_dtype;	/* Dynamic type of REAL_32_REF */
+	RT_LNK int egc_real64_ref_dtype;	/* Dynamic type of REAL_64_REF */
 	RT_LNK int egc_char_ref_dtype;	/* Dynamic type of CHARACTER_REF */
 	RT_LNK int egc_wchar_ref_dtype;	/* Dynamic type of WIDE_CHARACTER_REF */
 	RT_LNK int egc_point_ref_dtype;	/* Dynamic type of POINTER_REF */
@@ -84,8 +84,8 @@ extern "C" {
 	RT_LNK int egc_int32_dtype;	/* Dynamic type of INTEGER_32 */
 	RT_LNK int egc_int64_dtype;	/* Dynamic type of INTEGER_64 */
 	RT_LNK int egc_bool_dtype;	/* Dynamic type of BOOLEAN */
-	RT_LNK int egc_real_dtype;	/* Dynamic type of REAL */
-	RT_LNK int egc_doub_dtype;	/* Dynamic type of DOUBLE */
+	RT_LNK int egc_real32_dtype;	/* Dynamic type of REAL_32 */
+	RT_LNK int egc_real64_dtype;	/* Dynamic type of REAL_64 */
 	RT_LNK int egc_char_dtype;	/* Dynamic type of CHARACTER */
 	RT_LNK int egc_wchar_dtype;	/* Dynamic type of WIDE_CHARACTER */
 	RT_LNK int egc_point_dtype;	/* Dynamic type of POINTER */

@@ -546,11 +546,11 @@ rt_public unsigned char modify_local(uint32 stack_depth, uint32 loc_type, uint32
 		case SK_INT64:
 			*(EIF_INTEGER_64 *)(ip->it_addr) = new_value->it_int64;
 			break;
-		case SK_FLOAT:
-			*(EIF_REAL *)(ip->it_addr) = new_value->it_float;
+		case SK_REAL32:
+			*(EIF_REAL_32 *)(ip->it_addr) = new_value->it_real32;
 			break;
-		case SK_DOUBLE:
-			*(EIF_DOUBLE *)(ip->it_addr) = new_value->it_double;
+		case SK_REAL64:
+			*(EIF_REAL_64 *)(ip->it_addr) = new_value->it_real64;
 			break;
 		case SK_POINTER:
 			*(EIF_POINTER *)(ip->it_addr) = new_value->it_ptr;

@@ -45,7 +45,7 @@ doc:<file name="run_idr.c" header="rt_run_idr.h" version="$Id$" summary="IDR = I
 #ifdef EIF_OS2
 #include <io.h>
 #endif
-#include "eif_size.h"	/* Needed for DBLSIZ */
+#include "eif_size.h"	/* Needed for R64SIZ */
 #include "rt_malloc.h"
 #include "rt_assert.h"
 
@@ -801,7 +801,7 @@ rt_public void widr_multi_int64 (EIF_INTEGER_64 *obj, size_t num)
 	}
 }
 
-rt_public void ridr_multi_float (EIF_REAL *obj, size_t num)
+rt_public void ridr_multi_float (EIF_REAL_32 *obj, size_t num)
 {
 	RT_GET_CONTEXT
 	size_t i = 0;
@@ -820,15 +820,15 @@ rt_public void ridr_multi_float (EIF_REAL *obj, size_t num)
 			sscanf (idr_temp_buf, "%f", (obj++));
 		}
 	} else {
-		EIF_DOUBLE tmp;
+		EIF_REAL_64 tmp;
 		while (num > i++) {
 			ridr_multi_double (&tmp, 1);
-			*obj++ = (EIF_REAL) tmp;
+			*obj++ = (EIF_REAL_32) tmp;
 		}
 	}
 }
 
-rt_public void widr_multi_float (EIF_REAL *obj, size_t num)
+rt_public void widr_multi_float (EIF_REAL_32 *obj, size_t num)
 {
 	RT_GET_CONTEXT
 	size_t i = 0;
@@ -847,19 +847,19 @@ rt_public void widr_multi_float (EIF_REAL *obj, size_t num)
 			idrf.i_encode.i_ptr += (int)temp_len;
 		}
 	} else {
-		EIF_DOUBLE tmp;
+		EIF_REAL_64 tmp;
 		while (num > i++) {
-			tmp = (EIF_DOUBLE) *(obj++);
+			tmp = (EIF_REAL_64) *(obj++);
 			widr_multi_double (&tmp, 1);
 		}
 	}
 }
 
-#if DBLSIZ != 8
-"Warning there is a problem with the current platform which does not have a 8 bytes EIF_DOUBLE"
+#if R64SIZ != 8
+"Warning there is a problem with the current platform which does not have a 8 bytes EIF_REAL_64"
 #endif
 
-rt_public void ridr_multi_double (EIF_DOUBLE *obj, size_t num)
+rt_public void ridr_multi_double (EIF_REAL_64 *obj, size_t num)
 {
 	RT_GET_CONTEXT
 	size_t i = 0;
@@ -880,29 +880,29 @@ rt_public void ridr_multi_double (EIF_DOUBLE *obj, size_t num)
 		}
 	} else {
 		while (num > i++) {
-			check_capacity (&idrf.i_decode, DBLSIZ);
+			check_capacity (&idrf.i_decode, R64SIZ);
 #if BYTEORDER == 0x4321
 			{
 				int j;
-				char double_buffer[DBLSIZ];
+				char double_buffer[R64SIZ];
 				char *idr_buffer;
 
 				idr_buffer = idrf.i_decode.i_ptr;
-					/* Reverse the order of the EIF_DOUBLE since we stored EIF_DOUBLEs in
+					/* Reverse the order of the EIF_REAL_64 since we stored EIF_REAL_64s in
 					* little endian mode */
-				for (j=0;j<DBLSIZ;j++) 
-					double_buffer[DBLSIZ - 1 - j] = idr_buffer [j];
-				memcpy (obj++, double_buffer,DBLSIZ);
+				for (j=0;j<R64SIZ;j++) 
+					double_buffer[R64SIZ - 1 - j] = idr_buffer [j];
+				memcpy (obj++, double_buffer,R64SIZ);
 			}
 #elif BYTEORDER == 0x1234
-			memcpy  (obj++, idrf.i_decode.i_ptr, DBLSIZ);
+			memcpy  (obj++, idrf.i_decode.i_ptr, R64SIZ);
 #endif
-			idrf.i_decode.i_ptr += DBLSIZ;
+			idrf.i_decode.i_ptr += R64SIZ;
 		}
 	}
 }
 
-rt_public void widr_multi_double (EIF_DOUBLE *obj, size_t num)
+rt_public void widr_multi_double (EIF_REAL_64 *obj, size_t num)
 {
 	RT_GET_CONTEXT
 	size_t i = 0;
@@ -923,24 +923,24 @@ rt_public void widr_multi_double (EIF_DOUBLE *obj, size_t num)
 		}
 	} else {
 		while (num > i++) {
-			check_capacity (&idrf.i_encode, DBLSIZ);
+			check_capacity (&idrf.i_encode, R64SIZ);
 #if BYTEORDER == 0x4321
 			{
 				int j;
-				char double_buffer [DBLSIZ];
+				char double_buffer [R64SIZ];
 				char *idr_buffer;
 
 				idr_buffer = idrf.i_encode.i_ptr;
-				memcpy (double_buffer, obj++, DBLSIZ);
-					/* Reverse the order of the EIF_DOUBLE since we stored EIF_DOUBLEs in
+				memcpy (double_buffer, obj++, R64SIZ);
+					/* Reverse the order of the EIF_REAL_64 since we stored EIF_REAL_64s in
 					* little endian mode */
-				for (j=0;j<DBLSIZ;j++) 
-					idr_buffer[DBLSIZ - 1 - j] = double_buffer [j];
+				for (j=0;j<R64SIZ;j++) 
+					idr_buffer[R64SIZ - 1 - j] = double_buffer [j];
 			}
 #elif BYTEORDER == 0x1234
-			memcpy  (idrf.i_encode.i_ptr, obj++, DBLSIZ);
+			memcpy  (idrf.i_encode.i_ptr, obj++, R64SIZ);
 #endif
-			idrf.i_encode.i_ptr += DBLSIZ;
+			idrf.i_encode.i_ptr += R64SIZ;
 		}
 	}
 }

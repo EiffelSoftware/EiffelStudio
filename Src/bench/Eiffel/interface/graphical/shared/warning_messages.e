@@ -167,6 +167,16 @@ feature {NONE}
 			Result.append (" already exists.%NDo you wish to overwrite it?")
 		end;
 
+	w_File_exists_edit_it (file_name: STRING): STRING is
+		require
+			file_name_not_void: file_name /= Void
+		do
+			!!Result.make (30);
+			Result.append ("File: ");
+			Result.append (file_name);
+			Result.append (" already exists.%NDo you wish to edit it?")
+		end;
+
 	w_Freeze_warning: STRING is "Freezing implies some C compilation%N%
 									%and linking. Do you want to do it now?";
 

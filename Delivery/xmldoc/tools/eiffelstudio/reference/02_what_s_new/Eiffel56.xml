@@ -39,6 +39,7 @@
 				<list ordered="false">
 					<item>Changed signature of <code><feature_name>subarray</feature_name></code> to match ELKS specification. It now returns an <code><class_name>ARRAY [G]</class_name></code> instead of <code><keyword>like Current</keyword></code>.</item>
 					<item>Fixed <code><feature_name>has</feature_name></code> to return <code><keyword>True</keyword></code> when searching for <code><keyword>Void</keyword></code> when comparing objects in an array containing a <code><keyword>Void</keyword></code> element.</item>
+					<item>Fixed issue on .NET with <code><feature_name>clone</feature_name></code>/<code><feature_name>copy</feature_name></code> which were not really duplicating the internal of the array, and therefore enabling aliasing of its content by more than one array.</item>
 				</list>
 			</item>
 			<item><code><class_name>STRING</class_name></code>:

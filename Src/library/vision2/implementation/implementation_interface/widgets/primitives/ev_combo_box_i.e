@@ -17,6 +17,8 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_COMBO_BOX_ACTION_SEQUENCES_I
 
 feature {EV_COMBO_BOX_I} -- Implementation
 

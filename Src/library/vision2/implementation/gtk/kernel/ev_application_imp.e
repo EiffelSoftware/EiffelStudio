@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 			C.c_gtk_init_toolkit
 			tooltips := C.gtk_tooltips_new
 			set_tooltip_delay (500) --| FIXME Check this.
+			idle_actions_agent := (interface.idle_actions)~call ([])
 		end
 
 	launch is
@@ -45,8 +46,24 @@ feature {NONE} -- Initialization
 				0,
 				(interface.post_launch_actions)~call
 			)
-			idle_connect_action_sequence (internal_idle_actions)
-			idle_connect_action_sequence (interface.idle_actions)
+			internal_idle_actions.not_empty_actions.extend (
+				~connect_internal_idle_actions
+			)
+			internal_idle_actions.empty_actions.extend (
+				~disconnect_internal_idle_actions
+			)
+			if not internal_idle_actions.empty then
+				connect_internal_idle_actions
+			end
+			interface.idle_actions.not_empty_actions.extend (
+				internal_idle_actions~extend (idle_actions_agent)
+			)
+			interface.idle_actions.empty_actions.extend (
+				internal_idle_actions~prune_all (idle_actions_agent)
+			)
+			if not interface.idle_actions.empty then
+				internal_idle_actions.extend (idle_actions_agent)
+			end
 			is_in_gtk_main := True
 			C.gtk_main
 			is_in_gtk_main := False
@@ -249,30 +266,39 @@ feature {EV_WIDGET_IMP} -- Implementation
 feature -- Implementation
 
 	ev_gtk_callback_marshal: EV_GTK_CALLBACK_MARSHAL
-		-- Marshal responsible for directing signals from GTK.
+			-- Marshal responsible for directing signals from GTK.
 
 	is_in_gtk_main: BOOLEAN
-		-- Is execution currently in gtk_main?
+			-- Is execution currently in gtk_main?
 
 	C: EV_C_EXTERNALS
-		-- Access to C externals.
+			-- Access to C externals.
 
-	idle_connect_action_sequence (an_action_sequence: ACTION_SEQUENCE [TUPLE]) is
-			-- Call `an_action_sequence' when idle.
+	internal_idle_actions_connection_id: INTEGER
+			-- GTK connection handle.
+
+	idle_actions_agent: PROCEDURE [ACTION_SEQUENCE [TUPLE []], TUPLE []]
+			-- Agent for interface.idle_actions.call ([])
+
+	connect_internal_idle_actions is
 		do
-			an_action_sequence.set_source_connection_agent (
-				~idle_connect (
-					an_action_sequence~call (?)
-				)
-			)
+			if internal_idle_actions_connection_id = 0 then
+				internal_idle_actions_connection_id :=
+					c_ev_gtk_callback_marshal_idle_connect (
+						internal_idle_actions~call (?) 
+					)
+			end
+		ensure
+			internal_idle_actions_connection_id_positive:
+					internal_idle_actions_connection_id > 0
 		end
 
-	idle_connect (an_agent: PROCEDURE [ANY, TUPLE]) is
-		local
-			con_id: INTEGER
+	disconnect_internal_idle_actions is
 		do
-			con_id := c_ev_gtk_callback_marshal_idle_connect (an_agent)
-			--| FIXME ignore connection id for the time being. Sam 20000120
+			if internal_idle_actions_connection_id /= 0 then
+					C.gtk_idle_remove (internal_idle_actions_connection_id)
+					internal_idle_actions_connection_id := 0
+			end
 		end
 
 feature -- External implementation
@@ -300,6 +326,7 @@ invariant
 	ev_gtk_callback_marshal_not_void: ev_gtk_callback_marshal /= Void
 	c_externals_object_not_void: C /= Void
 	tooltips_not_void: tooltips /= Default_pointer
+	idle_actions_agent_not_void: idle_actions_agent /= void
 
 end -- class EV_APPLICATION_IMP
 
@@ -324,8 +351,8 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.19  2000/03/23 19:18:17  king
---| Updated for signature change of pebble_over_widget
+--| Revision 1.20  2000/03/24 02:21:14  oconnor
+--| rewrote idle handling using new kamikaze agents
 --|
 --| Revision 1.18  2000/03/22 21:59:27  king
 --| Added pebble_over_widget functionality

@@ -120,7 +120,6 @@ feature {EV_ANY_I} -- Event handling
 
 	connect_signal_to_actions (a_signal_name: STRING;
 		an_action_sequence: ACTION_SEQUENCE [TUPLE]) is
-
 			-- Connect `a_signal_name' to `an_action_sequence'.
 		require
 			a_signal_name_not_void: a_signal_name /= Void
@@ -136,21 +135,72 @@ feature {EV_ANY_I} -- Event handling
 
 	real_connect_signal_to_actions (a_c_object: POINTER; a_signal_name: STRING;
 		an_action_sequence: ACTION_SEQUENCE [TUPLE]) is
-
-			-- Connect `a_signal_name' to `an_action_sequence'.
+			-- Connect `a_signal_name' for `a_c_object' to `an_action_sequence'.
+			-- Connection delayed until `an_actions_sequence' is not empty.
 		require
 			a_c_object_not_void: a_c_object /= Void
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.empty
 			an_action_sequence_not_void: an_action_sequence /= Void
 		do
-			an_action_sequence.set_source_connection_agent (
-				~real_signal_connect (
+			an_action_sequence.not_empty_actions.extend (
+				~connect_signal_to_actions_now (
 					a_c_object,
 					a_signal_name,
-					an_action_sequence~call (?)
+					an_action_sequence
 				)
 			)
+			if not an_action_sequence.empty then
+				connect_signal_to_actions_now (
+					a_c_object,
+					a_signal_name,
+					an_action_sequence
+				)
+			end
+		end
+
+	connect_signal_to_actions_now (a_c_object: POINTER; a_signal_name: STRING;
+		an_action_sequence: ACTION_SEQUENCE [TUPLE]) is
+			-- Connect `a_signal_name' for `a_c_object' to `an_action_sequence'.
+		local
+			disconnect_agent: PROCEDURE [ANY, TUPLE []]
+		do
+			real_signal_connect (
+				a_c_object,
+				a_signal_name,
+				an_action_sequence~call (?)
+			)
+			disconnect_agent := ~signal_disconnect (last_signal_connection_id)
+			an_action_sequence.empty_actions.extend (disconnect_agent)
+			an_action_sequence.empty_actions.extend (
+				kamikaze_agent (an_action_sequence, disconnect_agent)
+			)
+		end
+
+	kamikaze_agent (an_action_sequence: LINKED_LIST [PROCEDURE [ANY, TUPLE]];
+		target: PROCEDURE [ANY, TUPLE]):
+		PROCEDURE [ANY, TUPLE []] is
+			-- Agent to remove `target' and itself form `an_action_sequence'.
+		local
+			kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE[]]]
+		do
+			create kamikaze_cell.put (Void)
+			Result := ~do_kamikaze (
+				an_action_sequence,
+				target,
+				kamikaze_cell
+			)
+			kamikaze_cell.put (Result)
+		end
+	
+	do_kamikaze (an_action_sequence: LINKED_LIST [PROCEDURE [ANY, TUPLE]];
+		target: PROCEDURE [ANY, TUPLE];
+		kamikaze_cell: CELL [PROCEDURE [ANY, TUPLE]]) is
+			-- Remove `target' and agent for self (from `kamikaze_cell') from
+			-- `an_action_sequence'.
+		do
+			an_action_sequence.prune_all (target)
+			an_action_sequence.prune_all (kamikaze_cell.item)
 		end
 
 feature {NONE} -- Implementation
@@ -358,6 +408,9 @@ end -- class EV_ANY_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/24 02:21:36  oconnor
+--| rewrote idle handling using new kamikaze agents
+--|
 --| Revision 1.6  2000/03/14 19:18:55  oconnor
 --| disconnect GTK destroy callback on dispose
 --|

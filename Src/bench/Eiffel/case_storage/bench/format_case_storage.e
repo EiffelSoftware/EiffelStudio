@@ -162,7 +162,6 @@ feature -- Execution
 				end
 			else
 				rescued := False;
-				output_window.display
 			end;
 			if Workbench.system_defined then	
 				System.set_current_class (prev_class);
@@ -356,10 +355,13 @@ feature {NONE} -- Implementation
 		rescue
 			if Case_file_server.had_io_problems then
 				output_window.put_string ("Cannot store EiffelCase format to CASEGEN directory.");
+				output_window.new_line
+				output_window.display
 			elseif Case_file_server.is_saving then
 				output_window.put_string ("EiffelCase format maybe corrupted.");
+				output_window.new_line
+				output_window.display
 			end;
-			output_window.new_line
 		end;
 
 	set_list_class_with_string (s_system_data: S_SYSTEM_DATA) is

@@ -82,6 +82,9 @@ feature {CACHE_WRITER} -- Element Settings
 			new: ARRAY [CONSUMED_ASSEMBLY]
 		do
 			create new.make (1, assemblies.count - 1)
+			if assemblies.object_comparison then
+				new.compare_objects
+			end
 			from
 				i := 1
 				j := 1

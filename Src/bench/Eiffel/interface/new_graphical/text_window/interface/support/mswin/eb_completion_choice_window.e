@@ -155,57 +155,65 @@ feature -- Events handling
 				when Key_enter then
 					close_and_complete
 				when Key_up then
-					if choice_list.selected_item /= Void then
-						ix:= choice_list.index_of (choice_list.selected_item,1)
-						if ix <= 1 then
-							ix := choice_list.count
+					if not choice_list.is_empty then
+						if choice_list.selected_item /= Void then
+							ix:= choice_list.index_of (choice_list.selected_item,1)
+							if ix <= 1 then
+								ix := choice_list.count
+							else
+								ix := (ix - 1)
+							end
 						else
-							ix := (ix - 1)
+							ix := 1
 						end
-					else
-						ix := 1
+						choice_list.i_th (ix).enable_select
+						choice_list.ensure_item_visible (choice_list.i_th (ix))
 					end
-					choice_list.i_th (ix).enable_select
-					choice_list.ensure_item_visible (choice_list.i_th (ix))
 				when Key_down then
-					if choice_list.selected_item /= Void then
-						ix:= choice_list.index_of (choice_list.selected_item,1)
-						if ix >= choice_list.count then
-							ix := 1
+					if not choice_list.is_empty then
+						if choice_list.selected_item /= Void then
+							ix:= choice_list.index_of (choice_list.selected_item,1)
+							if ix >= choice_list.count then
+								ix := 1
+							else
+								ix := (ix + 1)
+							end
 						else
-							ix := (ix + 1)
+							ix := 1
 						end
-					else
-						ix := 1
+						choice_list.i_th (ix).enable_select
+						choice_list.ensure_item_visible (choice_list.i_th (ix))
 					end
-					choice_list.i_th (ix).enable_select
-					choice_list.ensure_item_visible (choice_list.i_th (ix))
 				when Key_page_up then
-					if choice_list.selected_item /= Void then
-						ix:= choice_list.index_of (choice_list.selected_item,1)
-						if ix <= 10 then
-							ix := choice_list.count
+					if not choice_list.is_empty then
+						if choice_list.selected_item /= Void then
+							ix:= choice_list.index_of (choice_list.selected_item,1)
+							if ix <= 10 then
+								ix := choice_list.count
+							else
+								ix := ix - 10
+							end
 						else
-							ix := ix - 10
-						end
-					else
-						ix := 1
-					end
-					choice_list.i_th (ix).enable_select
-					choice_list.ensure_item_visible (choice_list.i_th (ix))
-				when Key_page_down then
-					if choice_list.selected_item /= Void then
-						ix:= choice_list.index_of (choice_list.selected_item,1)
-						if ix > choice_list.count - 10 then
 							ix := 1
-						else
-							ix := ix + 10
 						end
-					else
-						ix := 1
+						choice_list.i_th (ix).enable_select
+						choice_list.ensure_item_visible (choice_list.i_th (ix))
 					end
-					choice_list.i_th (ix).enable_select
-					choice_list.ensure_item_visible (choice_list.i_th (ix))
+				when Key_page_down then
+					if not choice_list.is_empty then
+						if choice_list.selected_item /= Void then
+							ix:= choice_list.index_of (choice_list.selected_item,1)
+							if ix > choice_list.count - 10 then
+								ix := 1
+							else
+								ix := ix + 10
+							end
+						else
+							ix := 1
+						end
+						choice_list.i_th (ix).enable_select
+						choice_list.ensure_item_visible (choice_list.i_th (ix))
+					end
 				when Key_escape then
 					exit
 					editor.set_focus

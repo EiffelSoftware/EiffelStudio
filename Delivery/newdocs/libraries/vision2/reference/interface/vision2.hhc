@@ -2,14 +2,8 @@
 	<UL>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="interface"><param name="Local" value="libraries\vision2\reference\interface\index.html"></OBJECT>
 		<UL>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\CVS\index.html"></OBJECT>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="developer_notes"><param name="Local" value="libraries\vision2\reference\interface\developer_notes\index.html"></OBJECT>
-			<UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\developer_notes\CVS\index.html"></OBJECT>
-			</UL>
 			<LI><OBJECT type="text/sitemap"><param name="Name" value="events"><param name="Local" value="libraries\vision2\reference\interface\events\index.html"></OBJECT>
 			<UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\events\CVS\index.html"></OBJECT>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="EV_ACTION_SEQUENCE"><param name="Local" value="libraries\vision2\reference\interface\events\ev_action_sequence_chart.html"></OBJECT>
 				<UL>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="make"><param name="Local" value="libraries\vision2\reference\interface\events\ev_action_sequence.html#f_make"></OBJECT>
@@ -2026,7 +2020,6 @@
 			</UL>
 			<LI><OBJECT type="text/sitemap"><param name="Name" value="figures"><param name="Local" value="libraries\vision2\reference\interface\figures\index.html"></OBJECT>
 			<UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\figures\CVS\index.html"></OBJECT>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="EV_ARROWED_FIGURE"><param name="Local" value="libraries\vision2\reference\interface\figures\ev_arrowed_figure_chart.html"></OBJECT>
 				<UL>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="arrow_size"><param name="Local" value="libraries\vision2\reference\interface\figures\ev_arrowed_figure.html#f_arrow_size"></OBJECT>
@@ -3799,7 +3792,6 @@
 			</UL>
 			<LI><OBJECT type="text/sitemap"><param name="Name" value="items"><param name="Local" value="libraries\vision2\reference\interface\items\index.html"></OBJECT>
 			<UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\items\CVS\index.html"></OBJECT>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="EV_CHECK_MENU_ITEM"><param name="Local" value="libraries\vision2\reference\interface\items\ev_check_menu_item_chart.html"></OBJECT>
 				<UL>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="default_create"><param name="Local" value="libraries\vision2\reference\interface\items\ev_check_menu_item.html#f_default_create"></OBJECT>
@@ -5047,7 +5039,6 @@
 			</UL>
 			<LI><OBJECT type="text/sitemap"><param name="Name" value="kernel"><param name="Local" value="libraries\vision2\reference\interface\kernel\index.html"></OBJECT>
 			<UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\kernel\CVS\index.html"></OBJECT>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="EV_ACCELERATOR"><param name="Local" value="libraries\vision2\reference\interface\kernel\ev_accelerator_chart.html"></OBJECT>
 				<UL>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="alt_required"><param name="Local" value="libraries\vision2\reference\interface\kernel\ev_accelerator.html#f_alt_required"></OBJECT>
@@ -5518,17 +5509,8 @@
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="is_destroyed"><param name="Local" value="libraries\vision2\reference\interface\kernel\ev_timeout.html#f_is_destroyed"></OBJECT>
 				</UL>
 			</UL>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="new_figures"><param name="Local" value="libraries\vision2\reference\interface\new_figures\index.html"></OBJECT>
-			<UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\new_figures\CVS\index.html"></OBJECT>
-			</UL>
-			<LI><OBJECT type="text/sitemap"><param name="Name" value="pick_and_drop"><param name="Local" value="libraries\vision2\reference\interface\pick_and_drop\index.html"></OBJECT>
-			<UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\pick_and_drop\CVS\index.html"></OBJECT>
-			</UL>
 			<LI><OBJECT type="text/sitemap"><param name="Name" value="properties"><param name="Local" value="libraries\vision2\reference\interface\properties\index.html"></OBJECT>
 			<UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\properties\CVS\index.html"></OBJECT>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="EV_ABSTRACT_PICK_AND_DROPABLE"><param name="Local" value="libraries\vision2\reference\interface\properties\ev_abstract_pick_and_dropable_chart.html"></OBJECT>
 				<UL>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="accept_cursor"><param name="Local" value="libraries\vision2\reference\interface\properties\ev_abstract_pick_and_dropable.html#f_accept_cursor"></OBJECT>
@@ -5796,7 +5778,6 @@
 			</UL>
 			<LI><OBJECT type="text/sitemap"><param name="Name" value="support"><param name="Local" value="libraries\vision2\reference\interface\support\index.html"></OBJECT>
 			<UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\support\CVS\index.html"></OBJECT>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="EV_ACCELERATOR_LIST"><param name="Local" value="libraries\vision2\reference\interface\support\ev_accelerator_list_chart.html"></OBJECT>
 				<UL>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="default_create"><param name="Local" value="libraries\vision2\reference\interface\support\ev_accelerator_list.html#f_default_create"></OBJECT>
@@ -6631,7 +6612,6 @@
 			<UL>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="containers"><param name="Local" value="libraries\vision2\reference\interface\widgets\containers\index.html"></OBJECT>
 				<UL>
-					<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\widgets\containers\CVS\index.html"></OBJECT>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="EV_BOX"><param name="Local" value="libraries\vision2\reference\interface\widgets\containers\ev_box_chart.html"></OBJECT>
 					<UL>
 					<LI><OBJECT type="text/sitemap"><param name="Name" value="default_create"><param name="Local" value="libraries\vision2\reference\interface\widgets\containers\ev_box.html#f_default_create"></OBJECT>
@@ -9345,10 +9325,8 @@
 					<LI><OBJECT type="text/sitemap"><param name="Name" value="is_destroyed"><param name="Local" value="libraries\vision2\reference\interface\widgets\containers\ev_window.html#f_is_destroyed"></OBJECT>
 					</UL>
 				</UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\widgets\CVS\index.html"></OBJECT>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="dialogs"><param name="Local" value="libraries\vision2\reference\interface\widgets\dialogs\index.html"></OBJECT>
 				<UL>
-					<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\widgets\dialogs\CVS\index.html"></OBJECT>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="EV_COLOR_DIALOG"><param name="Local" value="libraries\vision2\reference\interface\widgets\dialogs\ev_color_dialog_chart.html"></OBJECT>
 					<UL>
 					<LI><OBJECT type="text/sitemap"><param name="Name" value="default_create"><param name="Local" value="libraries\vision2\reference\interface\widgets\dialogs\ev_color_dialog.html#f_default_create"></OBJECT>
@@ -10926,7 +10904,6 @@
 				</UL>
 				<LI><OBJECT type="text/sitemap"><param name="Name" value="primitives"><param name="Local" value="libraries\vision2\reference\interface\widgets\primitives\index.html"></OBJECT>
 				<UL>
-					<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\widgets\primitives\CVS\index.html"></OBJECT>
 <LI><OBJECT type="text/sitemap"><param name="Name" value="EV_BUTTON"><param name="Local" value="libraries\vision2\reference\interface\widgets\primitives\ev_button_chart.html"></OBJECT>
 					<UL>
 					<LI><OBJECT type="text/sitemap"><param name="Name" value="default_create"><param name="Local" value="libraries\vision2\reference\interface\widgets\primitives\ev_button.html#f_default_create"></OBJECT>
@@ -15038,10 +15015,6 @@
 					<LI><OBJECT type="text/sitemap"><param name="Name" value="resize_actions"><param name="Local" value="libraries\vision2\reference\interface\widgets\primitives\ev_vertical_separator.html#f_resize_actions"></OBJECT>
 					<LI><OBJECT type="text/sitemap"><param name="Name" value="is_destroyed"><param name="Local" value="libraries\vision2\reference\interface\widgets\primitives\ev_vertical_separator.html#f_is_destroyed"></OBJECT>
 					</UL>
-				</UL>
-				<LI><OBJECT type="text/sitemap"><param name="Name" value="uncommon_widgets"><param name="Local" value="libraries\vision2\reference\interface\widgets\uncommon_widgets\index.html"></OBJECT>
-				<UL>
-					<LI><OBJECT type="text/sitemap"><param name="Name" value="CVS"><param name="Local" value="libraries\vision2\reference\interface\widgets\uncommon_widgets\CVS\index.html"></OBJECT>
 				</UL>
 			</UL>
 		</UL>

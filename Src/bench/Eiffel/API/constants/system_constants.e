@@ -143,8 +143,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 			-- Tags used in project file header.
 
 	Major_version_number: INTEGER is 5
-	Minor_version_number: INTEGER is 1
-	Build_version_number: INTEGER is 10
+	Minor_version_number: INTEGER is 2
 			-- Version number
 
 	Version_number: STRING is
@@ -156,7 +155,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 			Result.append_character ('.')
 			Result.append_integer (Minor_version_number)
 			Result.append_character ('.')
-			Result.append_integer (Build_version_number)
+			Result.append_string ("0126")
 		end
 
 	Version_tag: INTEGER is 0x00000026

@@ -83,16 +83,15 @@ feature -- Basic Operations
 	
 feature {NONE} -- Removal
 
-		destroy_item is
-				-- Called by the `dispose' routine to
-				-- destroy `item' by calling the
-				-- corresponding Windows function and
-				-- set `item' to `default_pointer'.
-			do
-				cwel_imalloc_release (item)
-				cwin_couninitialize
-				Precursor
-			end
+	destroy_item is
+			-- Called by the `dispose' routine to
+			-- destroy `item' by calling the
+			-- corresponding Windows function and
+			-- set `item' to `default_pointer'.
+		do
+			cwel_imalloc_release (item)
+			Precursor
+		end
 
 feature -- Measurement
 
@@ -112,25 +111,25 @@ feature {NONE}-- Externals
 		end
 
 	cwin_coinitialize is
-			external
-				"C [macro %"wel_imalloc.h%"]"
-			alias
-				"CoInitialize (NULL)"
-			end
+		external
+			"C [macro %"wel_imalloc.h%"]"
+		alias
+			"CoInitialize (NULL)"
+		end
 
 	cwin_couninitialize is
-			external
-				"C | %"wel_imalloc.h%""
-			alias
-				"CoUninitialize"
-			end
+		external
+			"C | %"wel_imalloc.h%""
+		alias
+			"CoUninitialize"
+		end
 
 	cwin_sh_get_malloc (a_pointer: POINTER) is
-			external
-				"C [macro <shlobj.h>] (LPMALLOC*)"
-			alias
-				"SHGetMalloc"
-			end
+		external
+			"C [macro <shlobj.h>] (LPMALLOC*)"
+		alias
+			"SHGetMalloc"
+		end
 
 	cwel_imalloc_alloc (a_pointer: POINTER; an_integer: INTEGER): POINTER is
 			external

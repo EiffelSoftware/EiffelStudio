@@ -1774,6 +1774,95 @@ feature -- Byte code generation
 			Result := ba.feature_table
 		end
 
+feature -- Cleaning
+
+	remove_c_generated_files is
+			-- Remove the C generated files when we remove `Current' from system.
+		local
+			retried, file_exists: BOOLEAN
+			object_name: STRING
+			generation_dir: DIRECTORY_NAME
+			c_file_name, cpp_file_name: FILE_NAME
+			packet_nb: INTEGER
+			file: PLAIN_TEXT_FILE
+			finished_file_name: FILE_NAME
+			finished_file: PLAIN_TEXT_FILE
+		do
+			if not retried and not is_precompiled and System.makefile_generator /= Void then
+				create generation_dir.make_from_string (Workbench_generation_path)
+				
+				packet_nb := packet_number
+
+					-- Descriptor file removal
+				create object_name.make (5)
+				object_name.append_character (C_prefix)
+				object_name.append_integer (packet_nb)
+				create c_file_name.make_from_string (generation_dir)
+				c_file_name.extend (object_name)
+
+				create object_name.make (12)
+				object_name.append (base_file_name)
+				object_name.append_character (Descriptor_file_suffix)
+				object_name.append (Dot_c)
+				finished_file_name := c_file_name.twin
+				c_file_name.set_file_name (object_name)
+				create file.make (c_file_name)
+				file_exists := file.exists
+				if file_exists and then file.is_writable then
+					file.delete
+				end
+				if file_exists then
+						-- We delete `finished' only if there was a file to delete
+						-- If there was no file, maybe it was simply a melted class.
+					finished_file_name.set_file_name (Finished_file_for_make)
+					create finished_file.make (finished_file_name)
+					if finished_file.exists and then finished_file.is_writable then
+						finished_file.delete
+					end
+				end
+
+					-- C Code file removal
+				create c_file_name.make_from_string (generation_dir)
+				create object_name.make (5)
+				object_name.append_character (C_prefix)
+				object_name.append_integer (packet_nb)
+				c_file_name.extend (object_name)
+				finished_file_name := c_file_name.twin
+				cpp_file_name := c_file_name.twin
+				create object_name.make (12)
+				object_name.append (base_file_name)
+				object_name.append (Dot_c)
+				c_file_name.set_file_name (object_name)
+				create file.make (c_file_name)
+				file_exists := file.exists
+				if file_exists and then file.is_writable then
+					file.delete
+				else
+					create object_name.make (12)
+					object_name.append (base_file_name)
+					object_name.append (Dot_cpp)
+					cpp_file_name.set_file_name (object_name)
+					create file.make (cpp_file_name)
+					file_exists := file.exists
+					if file_exists and then file.is_writable then
+						file.delete
+					end
+				end
+				if file_exists then
+						-- We delete `finished' only if there was a file to delete
+						-- If there was no file, maybe it was simply a melted class.
+					finished_file_name.set_file_name (Finished_file_for_make)
+					create finished_file.make (finished_file_name)
+					if finished_file.exists and then finished_file.is_writable then
+						finished_file.delete
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+	
 feature -- Debug
 
 	trace is

@@ -222,6 +222,7 @@ feature {NONE} -- Implementation for automatic size compute
 				end
 				lchild.go_to (cur)
 				childvisible_nb := nb_visi
+				compute_childexpand_nb
 			end
 			ev_set_minimum_height (value + 2 * border_width)
 		end
@@ -252,6 +253,7 @@ feature {NONE} -- Implementation for automatic size compute
 						lchild.forth
 					end
 					childvisible_nb := nb_visi
+					compute_childexpand_nb
 					ev_set_minimum_width (value * nb_visi +
 						total_spacing + 2 * border_width)
 				else
@@ -269,6 +271,7 @@ feature {NONE} -- Implementation for automatic size compute
 					end
 					children_width := value
 					childvisible_nb := nb_visi
+					compute_childexpand_nb
 					ev_set_minimum_width
 						(value + total_spacing + 2 * border_width)
 				end
@@ -307,6 +310,7 @@ feature {NONE} -- Implementation for automatic size compute
 						lchild.forth
 					end
 					childvisible_nb := nb_visi
+					compute_childexpand_nb
 					ev_set_minimum_size (wvalue * nb_visi +
 						total_spacing + 2 * border_width, hvalue +
 						2 * border_width)
@@ -326,6 +330,7 @@ feature {NONE} -- Implementation for automatic size compute
 					end
 					children_width := wvalue
 					childvisible_nb := nb_visi
+					compute_childexpand_nb
 					ev_set_minimum_size (wvalue + total_spacing +
 						2 * border_width, hvalue + 2 * border_width) 
 				end

@@ -108,6 +108,9 @@ feature {NONE} -- Internal generation
 			l_names_heap := Names_heap
 			shared_include_queue.put (l_names_heap.eif_misc_header_name_id)
 
+			buf.putchar ('{')
+			buf.new_line
+			buf.indent
 			buf.putstring ("static char done = 0;")
 			buf.new_line
 			buf.putstring ("static EIF_POINTER fp = NULL;")
@@ -187,6 +190,10 @@ feature {NONE} -- Internal generation
 			generate_parameter_list (Void, dll_byte_code.argument_count)
 			buf.putchar (')');
 			buf.putchar (';');
+
+			buf.exdent
+			buf.new_line
+			buf.putchar ('}')
 			buf.new_line
 		end
 

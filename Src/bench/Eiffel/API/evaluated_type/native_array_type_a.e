@@ -25,9 +25,7 @@ feature -- Access
 			create meta_generic.make (1)
 			meta_generic.put (generics.item (1).type_i, 1)
 
-			create Result.make (class_id)
-			Result.set_meta_generic (meta_generic)
-			Result.set_true_generics (meta_generic)
+			create Result.make (class_id, meta_generic, meta_generic)
 			Result.set_is_expanded (is_expanded)
 		end
 

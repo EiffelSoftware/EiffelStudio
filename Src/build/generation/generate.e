@@ -24,29 +24,18 @@ inherit
 
 	ERROR_POPUPER
 
-	SHARED_TOOLKIT_NAME
-
 	EXCEPTIONS
 		rename
 			class_name as exceptions_class_name
 		end
-
-	COMMAND_ARGS
-
-	SHARED_INSTANTIATOR
 
 feature 
 
 	rescued: BOOLEAN
 
 	execute (argument: ANY) is
-		local
-			toolkit_popup: TOOLKIT_SELECTION_POPUP
 		do
-			if argument = First then
-				!! toolkit_popup.make
-				toolkit_popup.popup
-			elseif main_panel.project_initialized then
+			if main_panel.project_initialized then
 				work (argument)
 			end
 		end
@@ -61,7 +50,7 @@ feature
 				!!mp
 				mp.set_watch_shape
 				save_edited_commands
-				command_instantiator_generator.update_command
+--				command_instantiator_generator.update_command
 				generate_files	
 				mp.restore
 			else
@@ -336,7 +325,6 @@ feature {NONE}
 			Result.append ("feature%N%N")	
 			Result.append ("%Tapplication_screen: SCREEN is%N%T%Tonce%N%T%T%T!!Result.make (%"%")%N%T%Tend%N%N")
 			Result.append ("%Tinit_toolkit: TOOLKIT_IMP")
---			Result.append (Shared_toolkit_name)
 			Result.append (" is%N%T%Tonce%N%T%T%T!!Result.make (%"%")%N%T%Tend%N%N")
 			Result.append ("%Tinit_windowing is%N%T%Tdo%N%
 					%%T%T%Tif (init_toolkit = Void) then end%N%

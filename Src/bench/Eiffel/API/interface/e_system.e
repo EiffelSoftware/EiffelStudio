@@ -198,7 +198,7 @@ feature -- Access
 			end;
 		end;
 
-feature {CALL_STACK_ELEMENT, RUN_INFO, REFERENCE_VALUE, APPLICATION_STATUS}
+feature {CALL_STACK_ELEMENT, RUN_INFO, REFERENCE_VALUE, EXPANDED_VALUE, ATTR_REQUEST, APPLICATION_STATUS}
 
 	valid_dynamic_id (i: INTEGER): BOOLEAN is
 			-- Is the class_type dynamic id `i' valid?

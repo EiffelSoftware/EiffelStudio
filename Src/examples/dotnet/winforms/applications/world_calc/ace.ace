@@ -36,9 +36,9 @@ cluster
 	all base_net:		"$ISE_EIFFEL\library.net\base"
 
 assembly
-	math:	"D:\Eiffel52\examples\dotnet\winforms\applications\world_calc\math.dll"
+	math:	"$ISE_EIFFEL\examples\dotnet\winforms\applications\world_calc\math.dll"
 
-	parser_util:	"D:\Eiffel52\examples\dotnet\winforms\applications\world_calc\parserutils.dll"
+	parser_util:	"$ISE_EIFFEL\examples\dotnet\winforms\applications\world_calc\parserutils.dll"
 		prefix
 			"parser_"
 		end

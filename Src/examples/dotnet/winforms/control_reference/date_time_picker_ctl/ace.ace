@@ -23,7 +23,7 @@ default
 
 
 cluster
-	root_cluster:		"$EIFFEL_SRC\examples\dotnet\winforms\control_reference\date_time_picker_ctl"
+	root_cluster:		"$ISE_EIFFEL\examples\dotnet\winforms\control_reference\date_time_picker_ctl"
 
 
 	all base:		"$ISE_EIFFEL\library\base"

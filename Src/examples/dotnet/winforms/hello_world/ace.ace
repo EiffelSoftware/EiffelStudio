@@ -2,7 +2,7 @@ system
 	"hello_world"
 
 root
-	HELLO_WORLD: make
+	hello_world: make
 
 default
 	assertion (no)
@@ -13,10 +13,13 @@ default
 	il_verifiable (yes)
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (no)
+	address_expression (no)
 
 
 cluster

@@ -19,10 +19,12 @@ feature -- Initialization
 			type := a_type
 			create {ARRAYED_LIST [CODE_UNDEFINE_CLAUSE]} undefine_clauses.make (4)
 			create {ARRAYED_LIST [CODE_REDEFINE_CLAUSE]} redefine_clauses.make (4)
+			create {ARRAYED_LIST [CODE_RENAME_CLAUSE]} rename_clauses.make (4)
 		ensure then
 			type_set: type = a_type
 			non_void_undefine_clauses: undefine_clauses /= Void
 			non_void_redefine_clauses: redefine_clauses /= Void
+			non_void_rename_clauses: rename_clauses /= Void
 		end
 		
 feature	-- Access

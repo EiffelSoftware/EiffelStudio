@@ -156,7 +156,7 @@ feature -- Basic operations
 			-- Return the index of `item_imp' in the list.
 			--|FIXME Can this be removed?
 		do
-			--Result := ev_children.index_of (item_imp, 1) - 1
+			Result := ev_children.index_of (item_imp, 1) - 1
 		end
 
 feature {NONE} -- Implementation
@@ -249,6 +249,9 @@ end -- class EV_LIST_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/01 18:32:12  rogers
+--| Re-implemented internal_get_index.
+--|
 --| Revision 1.21  2000/02/25 22:03:05  rogers
 --| Internal_copy_list, now restores the index after performing its actions. Added a postcondition to ensure this.
 --|

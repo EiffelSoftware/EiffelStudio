@@ -237,26 +237,8 @@ feature -- Status report
 
 	string_width (a_string: STRING): INTEGER is
 			-- Width in pixels of `a_string' in the current font.
-	--	local
-	--		screen_dc: WEL_SCREEN_DC
-	--		ww: WEL_WINDOW
-	--		number_of_lines: INTEGER
 		do
-	--		if not a_string.empty then
-	--			create screen_dc
-	--			screen_dc.get
-	--			screen_dc.select_font (wel_font)
-	--			number_of_lines := a_string.occurrences ('%N') + 1
-	--			if number_of_lines > 1 then
-	--				Result := maximum_line_width (screen_dc, a_string, number_of_lines)
-	--			else
-	--				Result := screen_dc.string_width (a_string)
-	--			end
-	--			screen_dc.unselect_font
-	--			screen_dc.release
-	--		end
-			calculate_text_extent (a_string)
-			Result := last_text_width
+			Result := string_width_and_height (a_string).integer_item (1)
 		end
 
 	horizontal_resolution: INTEGER is
@@ -525,25 +507,16 @@ feature {NONE} -- Implementation
 
 feature {EV_TEXTABLE_IMP} -- Implementation
 
-	--| Features used to recalculate sizes of widgets.
-
-	last_text_width: INTEGER
-			-- Last calculated text width.
-
-	last_text_height: INTEGER
-			-- Last calculated text height.
-
-	calculate_text_extent (a_string: STRING) is
-			-- Recompute `last_text_width' and `last_text_height'.
+	string_width_and_height (a_string: STRING): TUPLE [INTEGER, INTEGER] is
+			-- Calculate extent of `a_string'.
 		require
 			a_string_not_void: a_string /= Void
 		local
+			cur_width, cur_height: INTEGER
 			index, n: INTEGER
 			screen_dc: WEL_SCREEN_DC
 			extent: WEL_SIZE
 		do
-			last_text_width := 0
-			last_text_height := 0
 			create screen_dc
 			screen_dc.get
 			screen_dc.select_font (wel_font)
@@ -560,14 +533,14 @@ feature {EV_TEXTABLE_IMP} -- Implementation
 					extent := screen_dc.string_size (a_string.substring (n, a_string.count))
 					n := a_string.count + 1
 				end
-				if extent.width > last_text_width then
-					last_text_width := extent.width
+				if extent.width > cur_width then
+					cur_width := extent.width
 				end
-				last_text_height := last_text_height + extent.height
+				cur_height := cur_height + extent.height
 			end
 			screen_dc.unselect_font
 			screen_dc.quick_release
-			io.put_string (last_text_height.out + " " + last_text_width.out + "%N")
+			Result := [cur_width, cur_height]
 		end
 
 feature {NONE} -- Not used
@@ -723,6 +696,10 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/03 01:37:45  brendel
+--| Removed calculate_text_extent.
+--| Added string_width_and_height.
+--|
 --| Revision 1.27  2000/03/03 01:23:52  brendel
 --| Improved implementation of calculate_text_extent.
 --|

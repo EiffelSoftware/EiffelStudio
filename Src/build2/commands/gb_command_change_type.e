@@ -58,7 +58,7 @@ feature -- Basic Operation
 			original_object, new_object: GB_OBJECT
 		do
 			store_layout_constructor
-			original_object := Object_handler.deep_object_from_id (original_id)
+			original_object := object_handler.objects.item (original_id)
 			
 				-- Call delete on object.
 			original_object.delete
@@ -66,8 +66,8 @@ feature -- Basic Operation
 				-- We do not call `mark_as_deleted' here, as this would
 				-- mark all the children as deleted also. Only the
 				-- actual object should be marked as deleted.
-			object_handler.objects.prune_all (original_object)
-			object_handler.deleted_objects.extend (original_object)
+			object_handler.objects.remove (original_id)
+			object_handler.deleted_objects.extend (original_object, original_id)
 			
 				-- `new_id' is 0, the first time that we execute this command. In this case, we
 				-- build a new object to replace the current one. Subsequent calls to `execute' will

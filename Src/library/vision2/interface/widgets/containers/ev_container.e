@@ -218,7 +218,38 @@ feature -- Contract support
 			end
 		end
 
-feature {NONE} -- Inaplicable
+feature -- Contract support
+
+	all_radio_buttons_connected: BOOLEAN is
+			-- Are all radio buttons in this container connected?
+		local
+			cur: CURSOR
+			peer: EV_RADIO_PEER
+			peers: LINKED_LIST [like peer]
+		do
+			cur := cursor
+			from
+				start
+			until
+				off or else not Result
+			loop
+				peer ?= item
+				if peer /= Void then
+					if peers = Void then
+						peers := peer.peers
+					else
+						Result := peers.has (peer)
+					end
+				end
+				forth
+			end
+			go_to (cur)
+			if peers = Void then
+				Result := True
+			end
+		end
+
+feature {NONE} -- Inapplicable
 
 	cl_put (v: like item) is
 			-- Replace `item' with `v'.
@@ -231,6 +262,9 @@ feature {NONE} -- Inaplicable
 		do
 			extend (v)
 		end
+
+invariant
+	all_radio_buttons_connected: all_radio_buttons_connected
 
 end -- class EV_CONTAINER
 
@@ -255,6 +289,10 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/25 22:34:51  brendel
+--| Added invariant all_radio_buttons_connected.
+--| No actions have been taken to satisfy it yet!
+--|
 --| Revision 1.16  2000/02/22 18:39:50  oconnor
 --| updated copyright date and formatting
 --|

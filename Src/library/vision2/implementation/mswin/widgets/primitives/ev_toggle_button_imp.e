@@ -15,9 +15,11 @@ inherit
 
 	EV_SELECT_BUTTON_IMP
 		undefine
+			--| FIXME Get back to this.
+			wel_make,
+			make_by_id
+
 			default_style,
-			wel_make,	--| FIXME Get back to this.
-			make_by_id	--| FIXME Get back to this.
 		redefine
 			interface
 		end
@@ -113,6 +115,9 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/22 22:49:56  brendel
+--| Fixed to have comments on a single line.
+--|
 --| Revision 1.24  2000/03/17 17:03:23  rogers
 --| renamed
 --| 	x -> x_position,

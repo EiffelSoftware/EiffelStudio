@@ -55,7 +55,7 @@ feature  -- Status setting
 			windows_brush: WEL_BRUSH
 		do
 			if private_background_color = Void then
-				!WEL_LIGHT_GRAY_BRUSH! Result.make
+				!! Result.make_by_sys_color (Color_window + 1)
 			else
 				windows_color ?= private_background_color.implementation
 				!! Result.make_solid (windows_color)

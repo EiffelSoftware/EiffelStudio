@@ -25,7 +25,7 @@ inherit
 	
 feature {EV_ANY} -- Initialization
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| Creation sequence for all Vision2 objects is like this:
 --|
 --| - Default_create is defined once in EV_ANY.
@@ -43,7 +43,7 @@ feature {EV_ANY} -- Initialization
 --| The postcondition of `default_create' checks `is_in_default_state', this
 --| returns True by default but should be redefined by decendants to check for
 --| proper initial results from class queries.
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 
 	frozen default_create is
 			-- Standard creation procedure.
@@ -239,7 +239,7 @@ invariant
 
 end -- class EV_ANY
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| The "bridge pattern" as used in Vision2
 --|
 --| The bridge pattern is described in the Design Patterns book (Gamma et al.).
@@ -256,7 +256,7 @@ end -- class EV_ANY
 --|   (Not applicable in Eiffel)
 --| - Sharing an implementation object among interface objects.
 --| - Delaying creation of implementation object.
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.

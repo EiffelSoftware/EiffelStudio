@@ -34,23 +34,39 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	item: POINTER
-			-- Generic Windows handle or pointer.
+			-- Generic Windows handle or structure pointer.
 			-- Can be a HWND, HICON, RECT *, WNDCLASS *, etc...
+
+feature -- Status report
+
+	shared: BOOLEAN
+			-- Is `item' shared by another object?
+			-- If False (by default), `item' will
+			-- be destroyed by `destroy_item'.
+			-- If True, `item' will not be destroyed.
+
+	exists: BOOLEAN is
+			-- Does the `item' exist?
+		do
+			Result := item /= default_pointer
+		ensure
+			Result = (item /= default_pointer)
+		end
 
 feature -- Element change
 
-	set_item (a_item: POINTER) is
-			-- Set `item' with `a_item'
+	set_item (an_item: POINTER) is
+			-- Set `item' with `an_item'
 		do
-			item := a_item
+			item := an_item
 		ensure
-			item_set: item = a_item
+			item_set: item = an_item
 		end
 
 feature -- Status setting
 
 	set_shared is
-			-- Set `shared' to True
+			-- Set `shared' to True.
 		do
 			shared := True
 		ensure
@@ -58,7 +74,7 @@ feature -- Status setting
 		end
 
 	set_unshared is
-			-- Set `shared' to False
+			-- Set `shared' to False.
 		do
 			shared := False
 		ensure
@@ -74,24 +90,6 @@ feature -- Conversion
 		ensure
 			Result = cwel_pointer_to_integer (item)
 		end
-
-feature -- Status report
-
-	exists: BOOLEAN is
-			-- Does the `item' exist?
-		do
-			Result := item /= default_pointer
-		ensure
-			Result = (item /= default_pointer)
-		end
-
-feature {WEL_ANY} -- Status report
-
-	shared: BOOLEAN
-			-- Is `item' shared by another object?
-			-- If False (by default), `item' will
-			-- be destroyed by `destroy_item'.
-			-- If True, `item' will not be destroyed.
 
 feature {NONE} -- Removal
 

@@ -128,7 +128,7 @@ feature -- Basic Operations
 					when feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_freeze then
 						Eiffel_project.freeze
 					when feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_finalize then
-						Eiffel_project.finalize (discard_assertions)
+						Eiffel_project.finalize (not discard_assertions)
 					when feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_precompile then
 						Eiffel_project.precompile (True)
 					end

@@ -164,6 +164,8 @@ feature {NONE} -- Implementation
 			create help_about.make_with_text (Gb_help_about_menu_text)
 			help_menu.extend (help_about)
 			help_about.select_actions.extend (agent show_about_dialog)
+			
+			assign_command_accelerators_to_window
 				
 				-- Assign `True' to `menus_initialized'.
 			menus_initialized := True
@@ -261,6 +263,26 @@ feature {NONE} -- Implementation
 		end
 		
 feature {NONE} -- Implementation
+
+	assign_command_accelerators_to_window is
+			-- For all command accelerators,
+			-- add them to the accelerators of `Current'.
+		local
+			local_commands: ARRAYED_LIST [EB_STANDARD_CMD]
+		do
+			local_commands := command_handler.all_commands
+			from
+				local_commands.start
+			until
+				local_commands.off
+			loop
+				if local_commands.item.accelerator /= Void then
+					accelerators.extend (local_commands.item.accelerator)
+				end
+				local_commands.forth
+			end
+		end
+		
 
 	close_requested is
 			-- End the current application.

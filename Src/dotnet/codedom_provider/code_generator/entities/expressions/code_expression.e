@@ -13,6 +13,8 @@ feature -- Status Repport
 
 	type: CODE_TYPE_REFERENCE is
 			-- Type of expression
+		require
+			is_in_code_generation: current_state = Code_generation
 		deferred
 		ensure
 			non_void_type: Result /= Void

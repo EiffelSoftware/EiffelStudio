@@ -220,8 +220,9 @@ feature -- Status setting
 				exists := displayed_objects.item.address.is_equal (addr)
 				if exists then
 					displayed_objects.remove
-					debugger_manager.kept_objects.start
-					debugger_manager.kept_objects.prune_all (addr)
+					-- The address may be used by an expression.
+					--debugger_manager.kept_objects.start
+					--debugger_manager.kept_objects.prune_all (addr)
 					from
 						object_tree.start
 							--| The first item is the current object. It cannot be removed.

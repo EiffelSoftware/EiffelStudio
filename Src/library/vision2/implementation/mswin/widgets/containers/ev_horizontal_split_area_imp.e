@@ -71,28 +71,6 @@ feature -- Element change
 
 feature {NONE} -- Basic operation
 
-	set_local_width (new_width: INTEGER) is
-			-- Make `new_width' the new `width' of the 
-			-- container and both children.
-		do
-			if new_width > width then
-				set_width (new_width)
-				if child2 /= Void then
-					child2.parent_ask_resize (new_width - child1.child_cell.width - size, child2.child_cell.height)
-				end
-			end
-		end
-
-	set_local_height (new_height: INTEGER) is
-			-- Make `new_height' the new `height' of the 
-			-- container and both children.
-		do
-			if new_height > minimum_height then
-				set_height (new_height)
-				resize_children (level)
-			end
-		end
-
 	resize_children (a_level: INTEGER) is
 			-- Resize the two children according to the new level of the 
 			-- splitter.
@@ -105,6 +83,15 @@ feature {NONE} -- Basic operation
 							width - a_level - size, height)
 			end
 			refresh
+		end
+
+	update_display is
+			-- Feature that update the actual container.
+		do
+			if child1.width = 0 then
+				child1.parent_ask_resize (child1.minimum_width, height)
+			end
+			resize_children (level)
 		end
 
 feature {NONE} -- Implementation for automatic size compute
@@ -180,15 +167,6 @@ feature {NONE} -- Implementation
 			dc.rectangle (temp_level, -1, temp_level + size, height+1)
 			dc.set_rop2 (old_rop2)
 			dc.release
-		end
-
-	update_display is
-			-- Feature that update the actual container.
-		do
-			if child1.width = 0 then
-				child1.parent_ask_resize (child1.minimum_width, height)
-			end
-			resize_children (level)
 		end
 
 feature {NONE} -- WEL Implementation

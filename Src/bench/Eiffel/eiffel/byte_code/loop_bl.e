@@ -26,6 +26,7 @@ feature
 			-- Builds a proper context (for C code).
 		local
 			workbench_mode: BOOLEAN;
+			check_loop: BOOLEAN;
 		do
 			if from_part /= Void then
 				from_part.analyze;
@@ -33,14 +34,11 @@ feature
 			context.init_propagation;
 			stop.propagate (No_register);
 			stop.analyze;
-			if compound /= Void then
-				compound.analyze;
-			end;
 			workbench_mode := context.workbench_mode;
-			if 	workbench_mode
-				or else
-				context.assertion_level.check_loop
-			then
+			check_loop := workbench_mode or else
+				context.assertion_level.check_loop;
+
+			if check_loop then
 				if invariant_part /= Void then
 					if workbench_mode then
 						context.add_dt_current;
@@ -52,8 +50,15 @@ feature
 						context.add_dt_current;
 					end;
 					variant_part.analyze;
-					variant_part.free_register;
 				end;
+			end;
+
+			if compound /= Void then
+				compound.analyze;
+			end;
+
+			if check_loop and then variant_part /= Void then
+				variant_part.free_register;
 			end;
 		end;
 

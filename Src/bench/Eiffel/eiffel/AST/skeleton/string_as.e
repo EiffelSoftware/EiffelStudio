@@ -40,7 +40,20 @@ feature -- Properties
 
 	value: STRING
 			-- Real string value.
+			
+	is_once_string: BOOLEAN
+			-- Is current preceded by `once' keyword?
 
+feature -- Settings
+
+	set_is_once_string (v: like is_once_string) is
+			-- Set `is_once_string' with `v'.
+		do
+			is_once_string := v
+		ensure
+			is_once_string_set: is_once_string = v
+		end
+		
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -98,43 +111,11 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_string_item (string_value)
-		end
-
-feature {AST_EIFFEL, DOCUMENTATION_ROUTINES} -- Output
-
-	append_multilined (s: STRING; st: STRUCTURED_TEXT; ind: INTEGER) is
-			-- Format on a new line, breaking at every newline.
-			-- Indent `ind' times.
-		local
-			sb: STRING
-			n: INTEGER
-		do
-			st.add_new_line
-			st.add_indents (ind)
-			n := s.substring_index ("%%N", 1)
-			st.add_indexing_string (s.substring (1, n + 1) + "%%")
-			st.add_new_line
-			st.add_indents (ind)
-			s.remove_head (n + 1)
-			from
-				n := s.substring_index ("%%N", 1)
-			until
-				n = 0
-			loop
-				if n = 0 then
-					n := s.count
-				else
-					n := n + 1
-				end
-				sb := s.substring (1, n)
-				s.remove_head (n)
-				st.add_indexing_string ("%%" + sb + "%%")
-				st.add_new_line
-				st.add_indents (ind)
-				n := s.substring_index ("%%N", 1)
+			if is_once_string then
+				ctxt.put_text_item (ti_once_keyword)
+				ctxt.put_space
 			end
-			st.add_indexing_string ("%%" + s)
+			ctxt.put_string_item (string_value)
 		end
 
 feature {DOCUMENTATION_ROUTINES} -- Output
@@ -174,49 +155,6 @@ feature {DOCUMENTATION_ROUTINES} -- Output
 				n := s.substring_index ("%%N", 1)
 			end
 			st.add_indexing_string (s)
-		end
-
-	append_format_multilined (s: STRING; st: STRUCTURED_TEXT; in_index: BOOLEAN) is
-			-- Format on a new line, breaking at every newline.
-			-- Do not indent.
-			-- If `in_index', try to find meaningful substrings (URLs, ...).
-			-- Display %N... characters as they were typed.
-		require
-			valid_string: s /= Void
-			valid_text: st /= Void
-		local
-			sb: STRING
-			n: INTEGER
-		do
-				-- Forget differences between platforms.
-			s.prune_all ('%R')
-			from
-				n := s.index_of (carriage_return_char, 1)
-				if not s.is_empty then
-					st.add_new_line
-				end
-			until
-				n = 0
-			loop
-				sb := s.substring (1, n - 1)
-				s.remove_head (n)
-				if not sb.is_empty then
-					if in_index then
-						st.add_indexing_string (sb)
-					else
-						st.add_string (sb)
-					end
-				end
-				st.add_new_line
-				n := s.index_of (carriage_return_char, 1)
-			end
-			if not s.is_empty then
-				if in_index then
-					st.add_indexing_string (s)
-				else
-					st.add_string (s)
-				end
-			end
 		end
 
 feature {INFIX_PREFIX_AS, DOCUMENTATION_ROUTINES} -- Status setting

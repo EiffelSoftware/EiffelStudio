@@ -122,6 +122,15 @@ feature -- Status report
 		do
 			Result := implementation.title_shown
 		end
+	
+	get_column_width (column: INTEGER): INTEGER is
+			-- `Result' is column `column' width.
+		require
+			exists: not destroyed
+			column_exists: column >= 1 and column <= columns
+		do
+			Result := implementation.get_column_width (column)
+		end
 
 feature -- Status setting
 

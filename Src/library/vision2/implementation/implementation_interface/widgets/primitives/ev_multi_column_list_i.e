@@ -88,6 +88,14 @@ feature -- Status report
 		deferred
 		end
 
+	get_column_width (column: INTEGER): INTEGER is
+			-- `Result' is column `column' width.
+		require
+			exists: not destroyed
+			column_exists: column >= 1 and column <= columns
+		deferred
+		end
+
 feature -- Status setting
 
 	select_item (index: INTEGER) is

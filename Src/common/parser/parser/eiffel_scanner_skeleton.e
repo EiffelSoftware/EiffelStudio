@@ -337,6 +337,9 @@ feature {NONE} -- Constants
 	Maximum_character_code: INTEGER is 255
 			-- Largest supported code for CHARACTER values
 
+	Case_sensitive: BOOLEAN is False
+			-- Is code case sensitive?
+
 invariant
 
 	token_buffer_not_void: token_buffer /= Void

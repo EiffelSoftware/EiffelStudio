@@ -21,6 +21,8 @@ inherit
 		rename
 			focus_source as target,
 			make as eb_button_make
+		redefine
+			associated_command
 		end
 
 creation
@@ -62,10 +64,10 @@ feature -- For redefinition in the descendants.
 			Result := associated_command.full_symbol
 		end;
 
-	icon_symbol: PIXMAP is
-		do
-			Result := associated_command.icon_symbol
-		end;
+--	icon_symbol: PIXMAP is
+--		do
+--			Result := associated_command.icon_symbol
+--		end;
 
 feature -- Pick and Throw
 
@@ -77,6 +79,22 @@ feature -- Pick and Throw
 			end
 		end;
 
+feature -- Setting
+
+	set_empty_symbol is
+		do
+			if pixmap /= symbol then
+				set_symbol (symbol)
+			end
+		end
+
+	set_full_symbol is
+		do
+			if pixmap /= full_symbol then
+				set_symbol (full_symbol)
+			end
+		end
+
 feature -- Properties
 
 	tool: TOOL_W is
@@ -84,5 +102,9 @@ feature -- Properties
 		do
 			Result := associated_command.tool
 		end
+
+feature {NONE} -- Properties
+
+	associated_command: HOLE_COMMAND
 
 end -- class EB_BUTTON_HOLE

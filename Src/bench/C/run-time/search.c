@@ -14,6 +14,7 @@
 #include "portable.h"
 #include "search.h"
 #include "tools.h"
+#include "except.h"	/* for xcalloc(),cmalloc(),xfree(),enomem() */
 
 #ifdef I_STRING
 #include <string.h>

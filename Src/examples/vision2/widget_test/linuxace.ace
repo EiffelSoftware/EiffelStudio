@@ -1,5 +1,5 @@
 system
-	"vision2_widget_test"
+	"vision2_tour"
 
 root
 	vision2_application: make_and_launch

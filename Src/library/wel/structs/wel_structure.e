@@ -39,6 +39,18 @@ feature -- Basic operations
 			c_memcpy (item, source_pointer, length)
 		end
 
+	initialize is
+			-- Fill Current with zeros.
+		do
+			initialize_with_character ('%U')
+		end
+
+	initialize_with_character (a_character: CHARACTER) is
+			-- Fill current with `a_character'.
+		do
+			c_memset (item, a_character, structure_size)
+		end
+
 feature -- Measurement
 
 	structure_size: INTEGER is
@@ -49,7 +61,6 @@ feature -- Measurement
 		end
 
 feature {NONE} -- Removal
-
 
 	destroy_item is
 			-- Free `item'
@@ -93,6 +104,14 @@ feature {NONE} -- Externals
 			"C | %"eif_except.h%""
 		alias
 			"enomem"
+		end
+
+	c_memset (destination: POINTER; a_char: CHARACTER; count: INTEGER) is
+			-- C function 
+		external
+			"C (void *, int, size_t) | <memory.h>"
+		alias
+			"memset"
 		end
 
 invariant

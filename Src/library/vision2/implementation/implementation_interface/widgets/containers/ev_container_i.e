@@ -207,7 +207,7 @@ feature -- Basic operations
 				l.start
 				bg := background_color
 			until
-				l.after
+				l.off
 			loop
 				l.item.set_background_color (bg)
 				c ?= l.item
@@ -383,7 +383,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			from
 				l.start
 			until
-				l.after or Result = False
+				l.off or not Result
 			loop
 				if l.item.parent /= interface then
 					Result := False
@@ -416,7 +416,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			from
 				l.start
 			until
-				l.after or Result = False
+				l.off or not Result
 			loop
 				if ll.has (l.item) then
 					Result := False
@@ -448,7 +448,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			from
 				l.start
 			until	
-				l.after or not Result
+				l.off or not Result
 			loop
 				c ?= l.item
 				if not foreground_color.is_equal (l.item.foreground_color) then
@@ -482,7 +482,7 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			from
 				l.start
 			until	
-				l.after or not Result
+				l.off or not Result
 			loop
 				c ?= l.item
 				if not background_color.is_equal (l.item.background_color) then

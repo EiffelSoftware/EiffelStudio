@@ -263,13 +263,19 @@ feature -- Basic operations
 
 feature -- Conversion
 
+	to_integer_8: INTEGER_8 is
+			-- Return `item'.
+		do
+			Result := item
+		end
+
 	to_integer_16: INTEGER_16 is
 			-- Convert `item' into an INTEGER_16 value.
 		do
 			Result := item.to_integer_16
 		end
 
-	to_integer: INTEGER is
+	to_integer, to_integer_32: INTEGER is
 			-- Convert `item' into an INTEGER_32 value.
 		do
 			Result := item.to_integer

@@ -282,6 +282,12 @@ feature -- Conversion
 			Result := item.to_integer_16
 		end
 
+	to_integer, to_integer_32: INTEGER is
+			-- Return `item'.
+		do
+			Result := item
+		end
+
 	to_integer_64: INTEGER_64 is
 			-- Convert `item' into an INTEGER_64 value.
 		do

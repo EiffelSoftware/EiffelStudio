@@ -13,6 +13,19 @@ inherit
 	PIXMAP_COMMAND
 		rename
 			init as make
+		redefine
+			make
+		end
+
+
+feature
+
+	make (a_tool: like tool) is
+			-- Initialize a command with the `symbol' icon,
+			-- `a_tool' is passed as argument to the activation action.
+		do
+			tool := a_tool
+			is_shown := True
 		end
 
 feature -- Properties

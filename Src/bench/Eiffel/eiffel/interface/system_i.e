@@ -2099,7 +2099,6 @@ end
 					a_class := class_list.item_for_iteration
 					if a_class.must_be_recompiled then
 						a_class.update_valid_body_ids
-						print ("%NUpdate body id")
 					end
 					class_list.forth
 				end

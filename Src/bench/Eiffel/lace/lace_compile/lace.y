@@ -66,9 +66,6 @@ creation
 									Class_rename_list
 %type <LACE_LIST [DEPEND_SD]>		Depend_list Depend
 
-%type <PAIR [ID_SD, CLICK_AST]>		Clickable_name
-
-
 %expect 2
 
 %%
@@ -88,15 +85,10 @@ System: LAC_SYSTEM Name
 			{ $$ := $2 }
 	;
 
-Root: LAC_ROOT Clickable_name Cluster_mark Creation_procedure
+Root: LAC_ROOT Name Cluster_mark Creation_procedure
 			{
-				create $$.initialize ($2.first, $3, $4)
-				$2.second.set_node ($$)
+				create $$.initialize ($2, $3, $4)
 			}
-	;
-
-Clickable_name: Name
-			{ $$ := new_clickable_id ($1) }
 	;
 
 Cluster_mark: -- Empty

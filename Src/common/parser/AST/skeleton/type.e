@@ -33,13 +33,14 @@ feature -- Properties
 
 feature -- Access
 
-	is_deep_equal (other: TYPE): BOOLEAN is
+	frozen is_deep_equal (other: TYPE): BOOLEAN is
 			-- Is the current type the same as `other' ?
 			--| `deep_equal' cannot be used as for STRINGS, the area
 			--| can have a different size but the STRING is still
 			--| the same (problem detected for LIKE_FEATURE). Xavier
 		do
-			Result := deep_equal (Current, other)
+			Result := other /= Void and then c_same_type ($Current, $other)
+				and then is_equivalent (other)
 		end;
 
 feature -- Comparison

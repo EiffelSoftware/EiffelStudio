@@ -15,8 +15,7 @@ inherit
 			lock_update,
 			unlock_update
 		redefine
-			interface,
-			set_current_push_button
+			interface
 		end
 
 	EV_TITLED_WINDOW_IMP
@@ -629,21 +628,6 @@ feature {NONE} -- Implementation
 		do
 		end
 
-feature {EV_WIDGET_I} -- Implementation
-
-	set_current_push_button (a_button: EV_BUTTON) is
-			-- Set the push button to be `a_button'. `a_button' can
-			-- be Void if there are no more current push button
-		local
-			widget_imp: EV_WIDGET_IMP
-		do
-			Precursor {EV_DIALOG_I} (a_button)
-			if item /= Void then
-				widget_imp ?= item.implementation
-				widget_imp.redraw_current_push_button (a_button)
-			end
-		end
-		
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_DIALOG

@@ -18,7 +18,6 @@ inherit
 			process_notification
 		redefine
 			interface,
-			redraw_current_push_button,
 			update_current_push_button,
 			on_bn_clicked,
 			has_pushed_appearence,
@@ -128,12 +127,6 @@ feature {NONE} -- Implementation, focus event
 			if top_level_dialog_imp /= Void then
 				top_level_dialog_imp.set_current_push_button (top_level_dialog_imp.internal_default_push_button)
 			end
-		end
-
-	redraw_current_push_button (focused_button: EV_BUTTON) is
-			-- Put a bold border on the current push button and
-			-- remove any bold border to the other buttons.
-		do
 		end
 
  	internal_background_brush: WEL_BRUSH is

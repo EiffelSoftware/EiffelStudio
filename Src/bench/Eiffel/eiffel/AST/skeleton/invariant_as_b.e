@@ -10,12 +10,12 @@ inherit
 
 	INVARIANT_AS
 		redefine
-			assertion_list, format_assertions
+			assertion_list
 		end;
 
 	AST_EIFFEL_B
 		undefine
-			simple_format, is_invariant_obj
+			is_invariant_obj
 		redefine
 			is_invariant_obj, type_check, byte_node, format
 		end;
@@ -60,20 +60,14 @@ feature -- Formatter
 	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
-			ctxt.put_text_item (ti_Before_invariant);
-			ctxt.put_text_item (ti_Invariant_keyword);
-			ctxt.indent_one_more;
 			ctxt.continue_on_failure;
-			ctxt.next_line;
 			ctxt.set_separator (ti_Semi_colon);
-			ctxt.new_line_between_tokens;
+			ctxt.set_new_line_between_tokens;
 			if assertion_list /= Void then
 				format_assertions (ctxt);
 			end;
 			if ctxt.last_was_printed then
 				ctxt.commit;
-				ctxt.put_text_item (ti_After_invariant)
 			else
 				ctxt.rollback
 			end
@@ -96,7 +90,7 @@ feature -- Formatter
 					ctxt.put_separator;
 				end;
 				ctxt.new_expression;
-				assertion_list.i_th(i).format(ctxt);
+				assertion_list.i_th (i).format(ctxt);
 				if ctxt.last_was_printed then
 					not_first := True
 					ctxt.commit;
@@ -106,7 +100,7 @@ feature -- Formatter
 				i := i + 1
 			end;
 			if not_first then
-				ctxt.indent_one_less;
+				ctxt.exdent;
 				ctxt.commit
 			else
 				ctxt.rollback
@@ -115,16 +109,16 @@ feature -- Formatter
 
 feature -- Case Storage
 
-	storage_info (classc: CLASS_C): FIXED_LIST [S_TAG_DATA] is
+	storage_info: FIXED_LIST [S_TAG_DATA] is
 			-- Storage information for Current in the
 			-- context class `classc'.
 		require
 			valid_assertions: assertion_list /= Void
 		local	
-			ctxt: FORMAT_CONTEXT_B;
+			ctxt: FORMAT_CONTEXT;
 		do
 			!! Result.make (assertion_list.count);
-			!! ctxt.make_for_case (classc);
+			!! ctxt.make_for_case;
 			from
 				Result.start;
 				assertion_list.start

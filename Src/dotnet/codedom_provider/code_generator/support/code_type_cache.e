@@ -97,7 +97,7 @@ feature -- Element Settings
 			generated_types_set: generated_types.has (a_type.name)
 		end
 
-	reset_generated_types is
+	reset is
 			-- Reset content of `Generated_types'.
 		do
 			Generated_types.clear_all

@@ -2892,7 +2892,7 @@ private void update_moved_set()
 						zone->ov_flags &= ~EO_MARK;		/* Unmark object */
 					} else if (!(flags & EO_REM))		/* Not remembered */
 						zone->ov_flags &= ~EO_MARK;		/* Unmark object */
-				} else if (!(zone->ov_size & B_C))
+				} else if (!(zone->ov_size & B_C) && (zone->ov_size & B_BUSY))
 					gfree(zone);				/* Free if under GC control */
 			}
 		}

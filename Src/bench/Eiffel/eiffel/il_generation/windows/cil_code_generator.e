@@ -4485,6 +4485,18 @@ feature -- Line info
 				method_body.put_nop
 			end
 		end
+
+	put_ghost_debug_infos (a_line_n:INTEGER; a_nb: INTEGER) is
+			-- Generate `a_nb' ghost debug informations,
+			-- this is to deal with the not generated debug clauses
+			-- but displayed in eStudio during debugging
+		require
+			a_nb_positive_or_zero: a_nb >= 0
+		do
+			if is_debug_info_enabled then
+				Il_debug_info_recorder.record_ghost_debug_infos (current_class_type, Byte_context.current_feature, method_body.count, a_line_n, a_nb)
+			end
+		end
 		
 	put_silent_debug_info (location: TOKEN_LOCATION) is
 			-- Generate debug information for `location' to enable to
@@ -4498,7 +4510,7 @@ feature -- Line info
 				Il_debug_info_recorder.ignore_next_debug_info
 				put_debug_info (location)				
 			end
-		end		
+		end
 
 	flush_sequence_points (a_class_type: CLASS_TYPE) is
 			-- Flush all sequence points.

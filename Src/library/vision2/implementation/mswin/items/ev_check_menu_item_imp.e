@@ -16,7 +16,7 @@ inherit
 			interface
 		end
 
-	EV_MENU_ITEM_IMP
+	EV_SELECT_MENU_ITEM_IMP
 		redefine
 			on_activate,
 			interface
@@ -25,20 +25,7 @@ inherit
 create
 	make
 
-feature -- Status report
-	
-	is_selected: BOOLEAN is
-			-- Is current menu-item selected?
-		do
-			Result := parent_imp.item_checked (id)	
-		end
-	
 feature -- Status setting
-
-	enable_select is
-		do
-			parent_imp.check_item (id)
-		end
 
 	disable_select is
 		do
@@ -88,6 +75,9 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/24 20:35:38  brendel
+--| Changed to comply with interface.
+--|
 --| Revision 1.14  2000/02/24 01:42:02  brendel
 --| Undefined parent from ImpInt.
 --|

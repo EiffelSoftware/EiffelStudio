@@ -935,6 +935,8 @@ feature {COMPILER_EXPORTER} -- Element change
 					Error_handler.insert_error (vd10)
 				end
 			end
+		ensure
+			read_class_name_in_file_in_upper: Result /= Void implies (Result.is_equal (Result.as_upper))
 		end
 
 	restore_compiled_class (new_class, old_class: CLASS_I) is

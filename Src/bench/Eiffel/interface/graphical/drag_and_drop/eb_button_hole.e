@@ -64,11 +64,6 @@ feature -- For redefinition in the descendants.
 			Result := associated_command.full_symbol
 		end;
 
---	icon_symbol: PIXMAP is
---		do
---			Result := associated_command.icon_symbol
---		end;
-
 feature -- Pick and Throw
 
 	receive (a_stone: STONE) is

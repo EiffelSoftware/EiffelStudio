@@ -49,6 +49,17 @@ feature {NONE} -- Initialization
 		do
 			il_parser := True
 			make
+		ensure
+			il_parser: il_parser
+		end
+
+	make_type_parser is
+			-- Create a new Eiffel type parser.
+		do
+			type_parser := True
+			make
+		ensure
+			type_parser: type_parser
 		end
 
 feature -- Initialization
@@ -70,6 +81,9 @@ feature -- Status report
 
 	il_parser: BOOLEAN
 			-- Is current Eiffel parser an IL Eiffel parser?
+
+	type_parser: BOOLEAN
+			-- Is current Eiffel parser a type parser?
 
 feature -- Parsing
 
@@ -118,6 +132,9 @@ feature -- Access
 
 	root_node: CLASS_AS
 			-- Root node of AST
+
+	type_node: TYPE
+			-- Type node of AST
 
 	suppliers: SUPPLIERS_AS
 			-- Suppliers of class being parsed

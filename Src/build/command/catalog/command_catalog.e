@@ -85,19 +85,19 @@ feature {NONE}
 			window_commands: WINDOW_CMDS
 			command_templates: TEMPL_CMDS
 		do
-			!! user_defined_commands1.make (1, Current)
-			!! user_defined_commands2.make (2, Current)
-			!! generated_commands.make (3, Current)
+			!! generated_commands.make (1, Current)
+			!! user_defined_commands1.make (2, Current)
+			!! user_defined_commands2.make (3, Current)
 			!! command_templates.make (Current)
 			!! window_commands.make (Current)
 			!! file_commands.make (Current)
+			add_page (generated_commands)
 			add_page (user_defined_commands1)
 			add_page (user_defined_commands2)
-			add_page (generated_commands)
 			add_page (file_commands)
 			add_page (window_commands)
 			add_page (command_templates)
-			set_initial_page (user_defined_commands1)
+			set_initial_page (generated_commands)
 		end
 
 feature {CMD_CAT_BUTTON} -- Attributes

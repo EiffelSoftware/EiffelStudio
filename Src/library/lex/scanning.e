@@ -14,7 +14,7 @@ class SCANNING inherit
 
 creation
 
-	make
+	make, make_extended
 
 feature -- Initialization
 
@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			-- make a lexical analyzer for Eiffel
 			-- and store it into file of name `store_file_name'
 		do
-			make;
+			make_extended (last_character_code);
 			read_grammar (grammar_file_name);
 			store_analyzer (store_file_name)
 		ensure

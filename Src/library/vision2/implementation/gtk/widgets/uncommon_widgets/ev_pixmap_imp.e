@@ -362,7 +362,7 @@ feature {EV_ANY_I} -- Implementation
 	gtk_pixmap: POINTER
 			-- Pointer to the gtk pixmap widget.
 
-feature {EV_STOCK_PIXMAPS_IMP} -- Implementation
+feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 
 	set_pixmap (gdkpix, gdkmask: POINTER) is
 			-- Set the GtkPixmap using Gdk pixmap data and mask.

@@ -422,50 +422,154 @@ feature {COMPILER_EXPORTER} -- Implementation
 			-- Check universe
 		require
 			system_exists: system /= Void
+		local
+			l_class: CLASS_I
 		do
 			if system.il_generation then
-				system.set_system_object_class (unique_class ("system_object"))
+				l_class := unique_class ("system_object")
+				if l_class /= Void then
+					system.set_system_object_class (l_class)
+				end
 			end
-			system.set_any_class (unique_class ("any"))
-			system.set_boolean_class (unique_class ("boolean"))
-			system.set_character_class (unique_class ("character"), False)
-			system.set_integer_class (unique_class ("integer_8"), 8)
-			system.set_integer_class (unique_class ("integer_16"), 16)
-			system.set_integer_class (unique_class ("integer"), 32)
-			system.set_integer_class (unique_class ("integer_64"), 64)
-			system.set_real_class (unique_class ("real"))
-			system.set_double_class (unique_class ("double"))
-			system.set_string_class (unique_class ("string"))
-			system.set_pointer_class (unique_class ("pointer"))
-			system.set_array_class (unique_class ("array"))
-			system.set_special_class (unique_class ("special"))
-			system.set_tuple_class (unique_class ("tuple"))
-			system.set_memory_class_i (unique_class ("memory"))
-			system.set_routine_class (unique_class ("routine"))
-			system.set_procedure_class (unique_class ("procedure"))
-			system.set_function_class (unique_class ("function"))
-			system.set_to_special_class (unique_class ("to_special"))
+			l_class := unique_class ("any")
+			if l_class /= Void then
+				system.set_any_class (l_class)
+			end
+			l_class := unique_class ("boolean")
+			if l_class /= Void then
+				system.set_boolean_class (l_class)
+			end
+			l_class := unique_class ("character")
+			if l_class /= Void then
+				system.set_character_class (l_class, False)
+			end
+			l_class := unique_class ("integer_8")
+			if l_class /= Void then
+				system.set_integer_class (l_class, 8)
+			end
+			l_class := unique_class ("integer_16")
+			if l_class /= Void then
+				system.set_integer_class (l_class, 16)
+			end
+			l_class := unique_class ("integer")
+			if l_class /= Void then
+				system.set_integer_class (l_class, 32)
+			end
+			l_class := unique_class ("integer_64")
+			if l_class /= Void then
+				system.set_integer_class (l_class, 64)
+			end
+			l_class := unique_class ("real")
+			if l_class /= Void then
+				system.set_real_class (l_class)
+			end
+			l_class := unique_class ("double")
+			if l_class /= Void then
+				system.set_double_class (l_class)
+			end
+			l_class := unique_class ("string")
+			if l_class /= Void then
+				system.set_string_class (l_class)
+			end
+			l_class := unique_class ("pointer")
+			if l_class /= Void then
+				system.set_pointer_class (l_class)
+			end
+			l_class := unique_class ("array")
+			if l_class /= Void then
+				system.set_array_class (l_class)
+			end
+			l_class := unique_class ("special")
+			if l_class /= Void then
+				system.set_special_class (l_class)
+			end
+			l_class := unique_class ("tuple")
+			if l_class /= Void then
+				system.set_tuple_class (l_class)
+			end
+			l_class := unique_class ("memory")
+			if l_class /= Void then
+				system.set_memory_class_i (l_class)
+			end
+			l_class := unique_class ("routine")
+			if l_class /= Void then
+				system.set_routine_class (l_class)
+			end
+			l_class := unique_class ("procedure")
+			if l_class /= Void then
+				system.set_procedure_class (l_class)
+			end
+			l_class := unique_class ("function")
+			if l_class /= Void then
+				system.set_function_class (l_class)
+			end
+			l_class := unique_class ("to_special")
+			if l_class /= Void then
+				system.set_to_special_class (l_class)
+			end
 
 				-- XX_REF classes
-			system.set_bit_class (unique_class ("bit_ref"))
-			system.set_character_ref_class (unique_class ("character_ref"), False)
-			system.set_boolean_ref_class (unique_class("boolean_ref"))
-			system.set_integer_ref_class (unique_class("integer_8_ref"), 8)
-			system.set_integer_ref_class (unique_class("integer_16_ref"), 16)
-			system.set_integer_ref_class (unique_class("integer_ref"), 32)
-			system.set_integer_ref_class (unique_class("integer_64_ref"), 64)
-			system.set_real_ref_class (unique_class("real_ref"))
-			system.set_double_ref_class (unique_class("double_ref"))
-			system.set_pointer_ref_class (unique_class("pointer_ref"))
+			l_class := unique_class ("bit_ref")
+			if l_class /= Void then
+				system.set_bit_class (l_class)
+			end
+			l_class := unique_class ("character_ref")
+			if l_class /= Void then
+				system.set_character_ref_class (l_class, False)
+			end
+			l_class := unique_class("boolean_ref")
+			if l_class /= Void then
+				system.set_boolean_ref_class (l_class)
+			end
+			l_class := unique_class("integer_8_ref")
+			if l_class /= Void then
+				system.set_integer_ref_class (l_class, 8)
+			end
+			l_class := unique_class("integer_16_ref")
+			if l_class /= Void then
+				system.set_integer_ref_class (l_class, 16)
+			end
+			l_class := unique_class("integer_ref")
+			if l_class /= Void then
+				system.set_integer_ref_class (l_class, 32)
+			end
+			l_class := unique_class("integer_64_ref")
+			if l_class /= Void then
+				system.set_integer_ref_class (l_class, 64)
+			end
+			l_class := unique_class("real_ref")
+			if l_class /= Void then
+				system.set_real_ref_class (l_class)
+			end
+			l_class := unique_class("double_ref")
+			if l_class /= Void then
+				system.set_double_ref_class (l_class)
+			end
+			l_class := unique_class("pointer_ref")
+			if l_class /= Void then
+				system.set_pointer_ref_class (l_class)
+			end
 
 			if not system.il_generation then
-				system.set_character_class (unique_class ("wide_character"), True)
+				l_class := unique_class ("wide_character")
+				if l_class /= Void then
+					system.set_character_class (l_class, True)
+				end
 					-- XX_REF classes
-				system.set_character_ref_class (unique_class ("wide_character_ref"), True)
+				l_class := unique_class ("wide_character_ref")
+				if l_class /= Void then
+					system.set_character_ref_class (l_class, True)
+				end
 
 			else
-				system.set_system_string_class (unique_class ("system_string"))
-				system.set_native_array_class (unique_class ("native_array"))
+				l_class := unique_class ("system_string")
+				if l_class /= Void then
+					system.set_system_string_class (l_class)
+				end
+				l_class := unique_class ("native_array")
+				if l_class /= Void then
+					system.set_native_array_class (l_class)
+				end
 
 					-- In MSIL generation, WIDE_CHARACTER does not exist since
 					-- all characters are wide.

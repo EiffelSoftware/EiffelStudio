@@ -10,11 +10,6 @@ class
 	
 inherit
 
-	TOE_TREE_FACTORY
-		export
-			{NONE} all
-		end
-	
 	GB_XML_UTILITIES
 		export
 			{NONE} all
@@ -70,7 +65,7 @@ feature -- Basic operation
 	store is
 			-- Store `display_window' and contents in XML format in file `filename'.
 		local
-			formater: XML_FORMATER
+			formater: XM_FORMATTER
 			generation_settings: GB_GENERATION_SETTINGS
 			last_string: STRING
 		do
@@ -84,7 +79,7 @@ feature -- Basic operation
 			formater.process_document (document)
 				
 				-- Now format the generated XML.
-			last_string := formater.last_string.to_utf8
+			last_string := formater.last_string
 			process_xml_string (last_string)
 					
 				-- Save our XML ouput to disk in `filename'.
@@ -108,11 +103,11 @@ feature {NONE} -- Basic operation.
 		
 feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 
-	add_new_object_to_output (an_object: GB_OBJECT; element: XML_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
+	add_new_object_to_output (an_object: GB_OBJECT; element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
 			-- Add XML representation of `an_object' to `element'.
 		local
 			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-			new_widget_element: XML_ELEMENT
+			new_widget_element: XM_ELEMENT
 			gb_parent_object: GB_PARENT_OBJECT
 		do
 			output_attributes (an_object, element, generation_settings)
@@ -137,7 +132,7 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 			end
 		end
 		
-	output_attributes (an_object: GB_OBJECT; element: XML_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
+	output_attributes (an_object: GB_OBJECT; element: XM_ELEMENT; generation_settings: GB_GENERATION_SETTINGS) is
 			--Output attributes of `an_object' to `element'. If `add_names' then generate
 			-- a unique name for each object that is not named.
 		local
@@ -145,7 +140,7 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 			supported_types: ARRAYED_LIST [STRING]
 			current_type: STRING
 			gb_ev_any: GB_EV_ANY
-			new_type_element: XML_ELEMENT
+			new_type_element: XM_ELEMENT
 			vision2_type: STRING
 			new_name: STRING
 			events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
@@ -234,10 +229,10 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			-- that was not named by the user.
 		local
 			application_element, window_element,
-			new_type_element, directory_element: XML_ELEMENT
-			toe_document: TOE_DOCUMENT
+			new_type_element, directory_element: XM_ELEMENT
 			window_selector_item: GB_WINDOW_SELECTOR_ITEM
 			window_selector_layout: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			namespace: XM_NAMESPACE
 		do
 			object_count := object_handler.objects.count
 			objects_written := 0
@@ -246,15 +241,14 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			if generation_settings.generate_names then
 				generated_names.wipe_out
 			end
-			application_element := new_root_element ("application", "")
-			add_attribute_to_element (application_element, "xsi", "xmlns", "http://www.w3.org/1999/XMLSchema-instance")	
 			
-			create toe_document.make
-			create document.make_from_imp (toe_document)
-			document.start
+			create namespace.make ("", "")
+			create application_element.make_root ("application", namespace)-- := new_root_element (root_node_name, "")
+			add_attribute_to_element (application_element, "xsi", "xmlns", Schema_instance)	
+			create document.make
+
 				-- Add `application_element' as the root element of `document'.
 			document.force_first (application_element)
-			
 
 			from 
 				window_selector.start
@@ -296,7 +290,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 			end
 		end
 		
-	document: XML_DOCUMENT
+	document: XM_DOCUMENT
 		-- Result of last call to `generate_document'.
 		-- XML document generated from created window.
 

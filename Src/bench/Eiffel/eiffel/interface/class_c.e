@@ -489,7 +489,10 @@ feature -- Third pass: byte code production and type check
 			new_body_id: BODY_ID;
 			old_body_id: BODY_ID;
 			changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, BODY_ID];
-			changed_body_id_info: CHANGED_BODY_ID_INFO
+			changed_body_id_info: CHANGED_BODY_ID_INFO;
+
+				-- For Concurrent Eiffel
+			body_id_changed: BOOLEAN
 		do
 			from
 				system.changed_body_ids.clear_all
@@ -527,18 +530,28 @@ feature -- Third pass: byte code production and type check
 			loop
 				feature_i := feat_table.item_for_iteration;
 				feature_name := feature_i.feature_name;
+debug ("SEP_DEBUG")
+io.error.putstring ("CLASS_C.PASS3 Feature ");
+io.error.putstring (feature_name);
+io.error.putstring (" whose FEATURE_ID: ");
+io.error.putint (feature_i.feature_id);
+io.error.new_line;
+end;
 				if feature_i.to_melt_in (Current) then
 
-debug ("ACTIVITY")
+debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putstring ("%TTo melt_in true: ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
+					if System.has_separate then
+						body_id_changed := False 
+					end;
 						-- For a feature written in the class
 					feature_changed := 	changed_features.has (feature_name)
 										and
 										not feature_i.is_attribute;
-debug ("ACTIVITY")
+debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putstring ("%T%Tfeature_changed: ");
 	io.error.putbool (feature_changed);
 	io.error.new_line;
@@ -556,7 +569,7 @@ end;
 						feature_changed :=
 							(not propagators.melted_empty_intersection
 																(f_suppliers));
-debug ("ACTIVITY")
+debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putstring ("%T%Tfeature_changed (After melted_empty_intersection): ");
 	io.error.putbool (feature_changed);
 	io.error.new_line;
@@ -568,6 +581,9 @@ end;
 						end;
 						if feature_changed then
 								-- Automatic melting of the feature
+							if System.has_separate then
+								body_id_changed := True; 
+							end;
 							feature_i.change_body_id;
 							if new_suppliers = Void then
 								new_suppliers := suppliers.same_suppliers;
@@ -578,6 +594,9 @@ end;
 					if feature_i.is_attribute then	
 							-- Redefinitions of functions into attributes are
 							-- always melted
+						if System.has_separate then
+							body_id_changed := True; 
+						end;
 						feature_changed := True;
 						feature_i.change_body_id;
 					end;
@@ -598,12 +617,12 @@ end;
 								))
 						then
 								-- Type check
-debug ("VERBOSE", "ACTIVITY")
+debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 	io.error.putstring ("%Ttype check ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
-debug ("ACTIVITY")
+debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putstring ("%T%Tfeature changed: ");
 	io.error.putbool (feature_changed);
 	io.error.new_line;
@@ -617,7 +636,7 @@ debug ("ACTIVITY")
 end;
 
 							Error_handler.mark;
-debug ("ACTIVITY");
+debug ("SEP_DEBUG", "ACTIVITY");
 	if f_suppliers /= Void then
 		io.error.putstring ("Feature_suppliers%N");
 		f_suppliers.trace;
@@ -659,11 +678,15 @@ end;
 --										-- deferred features
 --									feature_changed := False;
 --								else
-debug ("VERBOSE", "ACTIVITY")
+debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 	io.error.putstring ("%Tbyte code for ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
+									if System.has_separate and then not body_id_changed then
+										body_id_changed := True; 
+										feature_i.change_body_id;
+									end;
 									feature_i.compute_byte_code;
 									byte_code_generated := True;
 --								end;
@@ -687,7 +710,7 @@ end;
 						and then
 						not (type_check_error or else feature_i.is_deferred)
 					then
-debug ("VERBOSE", "ACTIVITY")
+debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 	io.error.putstring ("%TMelted_set.put for ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
@@ -726,7 +749,7 @@ end;
 
 				-- Recomputation of invariant clause
 
-debug ("VERBOSE", "ACTIVITY")
+debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 	io.error.putstring ("%TProcessing invariant%N");
 end;
 
@@ -770,7 +793,7 @@ end;
 					invar_clause := Inv_ast_server.item (id);
 					Error_handler.mark;
 
-debug ("ACTIVITY")
+debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putstring ("%TType check for invariant%N");
 end;
 					invar_clause.type_check;
@@ -793,7 +816,7 @@ end;
 						end;
 						new_suppliers.add_occurence (f_suppliers);
 
-debug ("VERBOSE", "ACTIVITY")
+debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 	io.error.putstring ("%TByte code for invariant%N");
 end;
 

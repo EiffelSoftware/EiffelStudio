@@ -350,7 +350,7 @@ external
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib",
 		"$(EIFFEL_SRC)\dotnet\VisualStudio\tools\documentation_manager\generated\Client\Include",
-		"$(EIFFEL_SRC)\dotnet\VisualStudio\tools\documentation_manager\generated\Common\Include"
+		"$(EIFFEL_SRC)\dotnet\VisualStudio\tools\documentation_manager\generated\Common\Include -D_WIN32_DCOM"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",

@@ -149,7 +149,7 @@ feature -- Basic operations
 						if use_overloading and id_table /= Void then
 							id_table.search (table.key_for_iteration)
 							if id_table.found then
-								feature_name := clone (Names_heap.item (id_table.found_item))
+								feature_name := Names_heap.item (id_table.found_item).twin
 							else
 								feature_name := fi.feature_name
 							end	
@@ -335,7 +335,6 @@ feature -- Basic operations
 		do
 			if call_type = Standard_call or call_type = Precursor_call then
 				Result := not fi.is_infix and not fi.is_prefix and
-							fi.feature_name_id /= (feature {PREDEFINED_NAMES}.Void_name_id) and
 							(not qualified_call or fi.is_exported_for (a_class_i.compiled_class))
 
 			elseif call_type = Static_call then
@@ -350,7 +349,6 @@ feature -- Basic operations
 			elseif call_type = Agent_call then
 				Result := not fi.is_infix and not fi.is_prefix and
 							not fi.is_c_external and not fi.is_attribute and
-							fi.feature_name_id /= (feature {PREDEFINED_NAMES}.Void_name_id) and
 							(not qualified_call or fi.is_exported_for (a_class_i.compiled_class))
 			end
 			if Result and fi.has_static_access and call_type /= Static_call then

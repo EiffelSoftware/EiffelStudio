@@ -8,7 +8,6 @@ indexing
 class HISTORY_WINDOW 
 
 inherit
-
 	EV_HISTORY
 
 	EB_WINDOW
@@ -23,10 +22,9 @@ inherit
 	CLOSEABLE
 
 creation
-
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (par: EV_WINDOW) is
 			-- Create history window.
@@ -56,7 +54,6 @@ feature -- Initialization
 		do
  			set_title (Widget_names.history_window)
  			set_initial_position
--- 			initialize_window_attributes
 			list.set_single_selection
 			list.set_column_title ("Action", 1)
 			list.set_column_title ("Entity", 2)
@@ -84,18 +81,47 @@ feature -- Initialization
 		do
  			create history_list.make
  			set_saved
-			initialize_list -- Just to test the list
 		end
-
-feature -- Geometry
 
 	set_geometry is
 		do
-			set_width (Resources.history_wnd_width)
-			set_height (Resources.history_wnd_height)
+			set_minimum_width (Resources.history_wnd_width)
+			set_minimum_height (Resources.history_wnd_height)
 		end
-	
-feature 
+
+feature -- Access
+
+	record (cmd: like item) is
+			-- Put `cmd' in history list
+			-- and highlight the corresponding
+			-- item. Remove all commands bellow.
+		local
+			cut_cmd: CONTEXT_CUT_CMD
+			a_row: EV_MULTI_COLUMN_LIST_ROW
+			arg: EV_ARGUMENT1 [INTEGER]
+		do
+			remove_tail
+			if history_list.count = History_count then
+				history_list.start
+					-- Special case (destroy widgets)
+				cut_cmd ?= history_list.item
+				if cut_cmd /= Void then
+					cut_cmd.destroy_widgets
+				end
+				list.get_item (1).destroy
+				history_list.remove
+				history_list.finish
+			end
+			history_list.put_right (cmd)
+			history_list.forth
+			create a_row.make_with_text (list, <<cmd.name, cmd.comment>>)
+			create arg.make (3)
+			a_row.add_activate_command (Current, arg)
+			set_unsaved
+			select_item (list.rows)
+		end
+
+feature -- Status report
 
 	item: EB_UNDOABLE_COMMAND is
 			-- Current command in the history window
@@ -111,13 +137,12 @@ feature
 			Result := history_list.before
 		end
 
-	
-feature {NONE}
+	history_count: INTEGER is 
+		do
+			Result := Resources.history_size
+		end
 
-	last_command_saved: EV_UNDOABLE_COMMAND
-			-- Last command saved
-
-feature 
+feature -- Status setting
 
 	saved_application: BOOLEAN
 			-- Has the application been saved?
@@ -139,21 +164,29 @@ feature
 			end
 		end
 
-feature {NONE}
+feature -- Basic operations
 
-	set_saved is
+	wipe_out is
+			-- Empty the history list
 		do
-			saved_application := True
---			main_panel.set_saved_symbol
+			if not history_list.empty then
+				if history_list.last = last_command_saved then
+					last_command_saved := Void
+				end
+				list.clear_items
+				history_list.wipe_out
+			end
 		end
 
-	set_unsaved is
+	history_list: TWO_WAY_LIST [like item]
+
+	select_item (id: INTEGER)is
+			-- Select the `id' element in the list
 		do
-			saved_application := False
---			main_panel.set_unsaved_symbol
+			list.get_item (id).set_selected (True)
 		end
 
-feature -- Command
+feature {NONE} -- Command
 
 	execute (argument: EV_ARGUMENT1 [INTEGER]; data: EV_EVENT_DATA) is
 		do
@@ -163,7 +196,6 @@ feature -- Command
 				forth
 			elseif argument.first = 3 then
 				play
---				index := list.selected_item.index
 			end
 		end
 
@@ -186,51 +218,39 @@ feature -- Command
 			-- Move back in history list
 			-- and select current item.
 		do
-			if not history_list.empty and then not history_list.isfirst then
+			if not history_list.empty and then history_list.index /= 0 then
 				item.undo
 				history_list.back
 				if (history_list.before and last_command_saved = Void) 
 				or (not history_list.before and then history_list.item = last_command_saved)
 				then
-				set_saved
+					set_saved
 				else
 					set_unsaved
 				end
---				if shown then
---					if list.before and not list.empty then
---						list.deselect_i_th (1)
---					else
---						select_item
---					end
---				end
-				select_item (history_list.index)
+				if history_list.before then
+					list.get_item (1).set_selected (False)
+				else
+					select_item (history_list.index)
+				end
 			end
 		end
-
-	
-feature {NONE}
 
 	play is
 			-- Redo or undo a sequence of commands.
 		local
 			offset, i: INTEGER
---			play_stopped: BOOLEAN
+			play_stopped: BOOLEAN
 		do
---			offset := list.selected_item.index - history_list.index
-			if history_list.index = 0 then --list.selected_item.index = 0 then
-				select_item (list.rows)
-			elseif offset > 0 then
+			offset := list.selected_item.index - history_list.index
+			if offset > 0 then
 				from
 					i := offset 
 				until
 					i <= 0
 				loop
---					if list.rows /= 0 and then not list.selected_item.is_last then
 						forth
 						i := i - 1
---					else
---						play_stopped := True
---					end
 				end
 			else
 				from
@@ -238,64 +258,21 @@ feature {NONE}
 				until
 					i >= 0
 				loop
---					if list.rows /= 0 and then not list.selected_item.is_first then
 						back
 						i := i + 1
---					else
---						play_stopped := True
---					end
 				end
 			end
 		end
 
-	
-feature 
-
-	History_count: INTEGER is 
-		do
-			Result := Resources.history_size
-		end
-
-	record (cmd: like item) is
-			-- Put `cmd' in history list
-			-- and highlight the corresponding
-			-- item. Remove all commands bellow.
-		local
-			cut_cmd: CONTEXT_CUT_CMD
-			a_row: EV_MULTI_COLUMN_LIST_ROW
-			arg: EV_ARGUMENT1 [INTEGER]
-		do
-			remove_tail
-			if history_list.count = History_count then
-				history_list.start
-					-- Special case (destroy widgets)
-				cut_cmd ?= history_list.item
-				if cut_cmd /= Void then
-					cut_cmd.destroy_widgets
-				end
-				list.get_item (1).destroy
-				list.get_item (list.rows).set_selected (True)
-				history_list.remove
-				history_list.finish
-			end
-			history_list.put_right (cmd)
-			history_list.forth
-			create a_row.make_with_text (list, <<cmd.name, cmd.comment>>)
-			create arg.make (3)
-			a_row.add_activate_command (Current, arg)
-			set_unsaved
-			select_item (list.rows)
-		end
-
-	
-feature {NONE}
+feature {NONE} -- Implementation
 
 	remove_tail is
 		local
 			create_cont: CONTEXT_CREATE_CMD
 --			grp_cmd: GROUP_CMD
 		do
-			if not history_list.islast and then not history_list.empty then
+			if not history_list.empty
+			and then not history_list.islast then
 				from
 					history_list.forth
 				until
@@ -312,33 +289,25 @@ feature {NONE}
 					history_list.remove
 				end
 				history_list.back
-				select_item (history_list.index)
-			end
-		end
-	
-feature 
-
-	wipe_out is
-			-- Empty the history list
-		do
-			if not history_list.empty then
-				if history_list.last = last_command_saved then
-					last_command_saved := Void
+				if not history_list.off then
+					select_item (history_list.index)
 				end
-				list.clear_items
-				initialize_list
-				history_list.wipe_out
 			end
 		end
 
-	history_list: TWO_WAY_LIST [like item]
+	last_command_saved: EV_UNDOABLE_COMMAND
+			-- Last command saved
 
-	select_item (id: INTEGER)is
-			-- Select the `id' element in the list
+	set_saved is
 		do
---			list.select_item (id)
-			list.get_item (id).set_selected (True)
---			list.scroll_to_current
+			saved_application := True
+			main_window.set_saved_symbol
+		end
+
+	set_unsaved is
+		do
+			saved_application := False
+			main_window.set_unsaved_symbol
 		end
 
 feature -- Interface
@@ -353,17 +322,12 @@ feature -- Interface
 		do
 			set_initial_position
  			{EB_WINDOW} Precursor
--- 			if list.rows /= 0 and then list.selected_item = Void then
--- 				select_item (list.rows)
---				index := list.selected_item.index
--- 			end
 		end
 
 	set_initial_position is	
 		do
---			set_x_y (main_panel.base.x + main_panel.base.width // 2
---				- width // 2,
---				main_panel.base.y)
+			set_x_y (main_window.x + main_window.width // 2 - width // 2,
+					main_window.y)
 		end
 
 feature {NONE} -- GUI elements
@@ -373,20 +337,6 @@ feature {NONE} -- GUI elements
 	undo_button: EV_BUTTON
 
 	redo_button: EV_BUTTON
-
-	initialize_list is
-			-- Empty the list and set the first element 
-			-- to `No Action'.
-		local
---			first_element: STRING_SCROLLABLE_ELEMENT
-		do
-			list.clear_items
---			!! first_element.make (9)
---			first_element.append ("No action")
---			list.extend (first_element)
---			list.start
---			list.select_item
-		end
 
 end -- class HISTORY_WINDOW
 

@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class DRAWING_X 
+deferred class DRAWING_X
 
 inherit
 
@@ -31,7 +31,7 @@ feature {NONE}
 			Result <= 23040
 		end; -- angle_x
 
-feature 
+feature
 
 	clear is
 			-- Clear the entire area.
@@ -49,7 +49,7 @@ feature
 			a_bitmap_valid: a_bitmap.is_valid
 		local
 			resource_x: POINTER;
-			a_bitmap_implementation: PIXMAP_X	
+			a_bitmap_implementation: PIXMAP_X
 		do
 			a_bitmap_implementation ?= a_bitmap.implementation;
 			resource_x := a_bitmap_implementation.resource_bitmap (screen);
@@ -64,12 +64,12 @@ feature
 			a_pixmap_valid: a_pixmap.is_valid
 		local
 			resource_x: POINTER;
-			a_bitmap_implementation: PIXMAP_X	
+			a_bitmap_implementation: PIXMAP_X
 		do
 			a_bitmap_implementation ?= a_pixmap.implementation;
 			resource_x := a_bitmap_implementation.resource_pixmap (screen);
 			x_copy_area (display_pointer, resource_x, window_object, graphic_context, 0, 0, a_pixmap.width, a_pixmap.height, a_point.x, a_point.y)
-		end; 
+		end;
 
 	draw_arc (center: COORD_XY; radius1, radius2: INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER) is
 			-- Draw an arc centered in (`x', `y') with a great radius of
@@ -123,7 +123,7 @@ feature
 		do
 			ext_name := text.to_c;
 			x_draw_image_string (display_pointer, window_object, graphic_context, base.x, base.y, $ext_name, text.count)
-		end; 
+		end;
 
 	draw_inf_line (point1, point2: COORD_XY) is
 			-- Draw an infinite line traversing `point1' and `point2'.
@@ -187,7 +187,7 @@ feature
 			points.go_to (keep_cursor);
 			x_draw_lines (display_pointer, window_object, graphic_context, array_points, points_count, CoordModeOrigin);
 			c_free_points (array_points)
-		end; 
+		end;
 
 	draw_rectangle (center: COORD_XY; r_width, r_height: INTEGER; orientation: REAL) is
 			-- Draw a rectangle whose center is `center' and
@@ -227,7 +227,7 @@ feature
 		do
 			ext_name := text.to_c;
 			x_draw_string (display_pointer, window_object, graphic_context, base.x, base.y, $ext_name, text.count)
-		end; 
+		end;
 
 feature {NONE}
 
@@ -259,7 +259,7 @@ feature {NONE}
 			end
 		end;
 
-feature 
+feature
 
 	fill_polygon (points: LIST [COORD_XY]) is
 			 -- Fill a polygon.
@@ -307,14 +307,14 @@ feature
 			else
 				c_fill_rectangle (display_pointer, window_object, graphic_context, center.x, center.y, half_width, half_height, real_to_integer (orientation*64))
 			end
-		end; 
+		end;
 
 feature {NONE}
 
 	height: INTEGER is
 			-- Height of drawing area
 		deferred
-		end; 
+		end;
 
 	join_lines (center: COORD_XY; x0, y0, x1, y1: INTEGER; arc_style: INTEGER) is
 			-- Join (x0, y0) and (x1, y1) if `arc_style' = 0,
@@ -332,7 +332,7 @@ feature {NONE}
 			end
 		end;
 
-feature 
+feature
 
 	max_count_for_draw_polyline: INTEGER is
 			-- Maximum value for `points.count' for `draw_polyline'
@@ -347,7 +347,7 @@ feature
 		require
 			color_not_void: not (background_color = Void)
 		local
-			background_color_implementation: COLOR_X	
+			background_color_implementation: COLOR_X
 		do
 			background_color_implementation ?= background_color.implementation;
 			set_gc_background (background_color_implementation.pixel (screen))
@@ -358,7 +358,7 @@ feature
 		require
 			font_exists: not (font = Void)
 		local
-			font_implementation: FONT_X	
+			font_implementation: FONT_X
 		do
 			font_implementation ?= font.implementation;
 			x_set_font (display_pointer, graphic_context, c_font_id (font_implementation.resource (screen)))
@@ -369,7 +369,7 @@ feature
 		require
 			color_not_void: not (foreground_color = Void)
 		local
-			foreground_color_implementation: COLOR_X	
+			foreground_color_implementation: COLOR_X
 		do
 			foreground_color_implementation ?= foreground_color.implementation;
 			set_gc_foreground (foreground_color_implementation.pixel (screen))
@@ -424,7 +424,7 @@ feature {NONE} -- External features
 			"XFillRectangle"
 		end;
 
-	x_fill_polygon (dspl_pointer, wndw_obj, gc, arr_pt: POINTER; 
+	x_fill_polygon (dspl_pointer, wndw_obj, gc, arr_pt: POINTER;
 				count, val1, val2: INTEGER) is
 		external
 			"C"

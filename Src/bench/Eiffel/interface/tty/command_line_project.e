@@ -89,6 +89,7 @@ feature -- Project Initialization
 		do
 			!! project_dir.make (dir, p);
 			if project_path_name /= Void then
+				Project_directory_name.wipe_out
 				Project_directory_name.set_directory (project_path_name)
 			end
 			project_is_new := True
@@ -104,6 +105,7 @@ feature -- Project Initialization
 			new_file_name: STRING
 			msg: STRING
 		do
+			Project_directory_name.wipe_out
 			if project_path_name /= Void then
 					-- `project_path_name' has been specified, so `file_name'
 					-- should not contain any absolute path.

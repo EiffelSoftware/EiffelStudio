@@ -1960,6 +1960,7 @@ feature -- Case storage informatio
 			type_a: TYPE_A
 			classc: CLASS_C
 			gen_type_a: GEN_TYPE_A
+			s_feat : S_FEATURE_DATA_R40
 		do
 			type_a := type.actual_type
 			classc := written_class
@@ -1992,8 +1993,121 @@ feature -- Case storage informatio
 			if arguments /= Void then
 				f.set_arguments (arguments.storage_info (classc))
 			end
+			s_feat ?= f
+			-- we know that s_feat/= VOid but ... ?
+			if s_feat/= Void then
+				fill_body ( s_feat )
+			end
 		end
 
+	fill_body ( s : S_FEATURE_DATA_R40 ) is
+		local
+			s_body : S_FEATURE_BODY
+			bod1 : FEATURE_AS
+			bod2 : BODY_AS
+			bod3 : ROUTINE_AS
+			bod4 : CONSTANT_AS	
+			li_st  : LINKED_LIST [STRING]	
+		do
+			!! li_st.make
+			bod1 := body
+			if bod1/= Void then
+				bod2 ?= bod1.body
+				if bod2/= Void then
+					bod3 ?= bod2.content	
+					if bod3/= Void then
+						if bod3.locals/= Void and then bod3.locals.count>0 then
+							li_st.extend("local")
+							deal_with_loc ( bod3.locals, li_st )
+						end	
+						deal_with_body (bod3.routine_body, li_st)	
+					else
+						bod4?= bod2.content
+						if bod4/= Void then
+		
+						end		
+					end	
+				end			
+			end
+			!! s_body.make(li_st.count)
+			s_body.set_text(li_st)
+			s.set_body(s_body)		
+		end		
+
+	deal_with_body ( rot_body : ROUT_BODY_AS ; li_st : LINKED_LIST [ STRING ] ) is
+	local
+		intern : INTERNAL_AS
+		instruc : INSTRUCTION_AS
+		format_c : FORMAT_CONTEXT
+		ss : STRING	
+	do
+		intern ?= rot_body
+		
+		if intern/= Void then
+			if intern.is_once then
+				li_st.extend("Once") 
+			else
+				li_st.extend("Do")
+			end
+			if intern.compound/= Void then
+				from
+					intern.compound.start
+				until
+					intern.compound.after
+				loop
+					instruc := intern.compound.item
+					!! format_c.make_for_case
+					instruc.simple_format(format_c)
+					!!ss.make ( 20 )
+					if format_c.text/= Void then
+						from
+							format_c.text.start
+						until
+							format_c.text.after
+						loop
+							ss.append(format_c.text.item.image)	
+							format_c.text.forth
+						end	
+					end
+					li_st.extend(ss)	
+					intern.compound.forth
+				end
+			end		
+		end
+	end
+
+	deal_with_loc (loc:FIXED_LIST[ TYPE_DEC_AS] ; li_st : LINKED_LIST [ STRING] ) is
+	local
+		id_list : FIXED_LIST [ ID_AS ]
+		line : TYPE_DEC_AS
+		st : STRING	
+	do
+		from
+			loc.start
+		until
+			loc.after
+		loop
+			line := loc.item
+			if line.id_list/= Void then
+				from
+					line.id_list.start
+					!! st.make ( 20 )
+				until
+					line.id_list.after
+				loop
+					if st.count>0 then
+						st.append(",")
+					end	
+					st.append(line.id_list.item)
+					line.id_list.forth	
+				end
+				st.append(":")
+				st.append(loc.item.type.dump)	
+			end	
+			loc.forth
+			li_st.extend(st)	
+		end	
+	end
 	case_feature_key: S_FEATURE_KEY is
 			-- Case feature Key for Current
 		local

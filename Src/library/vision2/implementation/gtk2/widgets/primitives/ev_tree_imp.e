@@ -53,7 +53,7 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False
+	needs_event_box: BOOLEAN is True
 	
 	scrollable_area: POINTER
 		-- Pointer to the GtkScrolledWindow widget used for scrolling the tree view

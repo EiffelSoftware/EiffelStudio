@@ -85,8 +85,8 @@ feature {NONE} -- Type check, byte code production, dead code removal
 				if compound /= Void then
 					Result.set_compound (tmp2);
 				end
+				Result.set_line_number (line_number)
 			end;
-			Result.set_line_number (line_number)
 		end;
 
 feature -- Debugging

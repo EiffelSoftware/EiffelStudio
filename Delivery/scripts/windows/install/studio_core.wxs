@@ -5,12 +5,10 @@
 	<IgnoreModularization Name="PROJECTDIR" Type="Property" />
 	<IgnoreModularization Name="SELECTEDCCOMPILER" Type="Property" />
     <Directory Id="TARGETDIR" Name="SourceDir">
-      <Component Id="Registry" Guid="E4C043A0-6236-4A40-A532-2F5EE81F5BDF">
-        <Registry Root="HKCU" Key="Software\ISE\Eiffel56\recent projects" Name="EIFARR_studio_recent_files" Value="$not_a_project_path$" Id="registry34" Type="string" />
-        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry36" Type="string" />
+      <Component Id="LocalMachineRegistry" Guid="E4C043A0-6236-4A40-A532-2F5EE81F5BDF">
+        <Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry36" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_EIFFEL" Value="[Application]" Id="registry44" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry49" Type="string" />
-        <Registry Root="HKCU" Key="Software\ISE\Eiffel56\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry33" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry39" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_EIFFEL" Value="[Application]" Id="registry46" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry42" Type="string" />
@@ -18,34 +16,33 @@
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry43" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry47" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_CFLAGS" Id="registry41" Type="string" />
-        <Registry Root="HKCU" Key="Software\ISE\Eiffel56\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry35" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\ec" Name="ISE_C_COMPILER" Value="[SELECTEDCCOMPILER]" Id="registry48" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\finish_freezing" Name="ISE_SHAREDLIBS" Id="registry45" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\recent projects" Name="EIFARR_studio_recent_files" Value="$not_a_project_path$" Id="registry40" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\wizard" Name="ISE_EIFFEL" Value="[Application]" Id="registry37" Type="string" />
+    </Component>
+    <Component Id="UserRegistry" Guid="9CABF13E-26F4-46d3-B72A-D5F0C008F790">
+        <Registry Root="HKCU" Key="Software\ISE\Eiffel56\recent projects" Name="EIFARR_studio_recent_files" Value="$not_a_project_path$" Id="registry34" Type="string" />
+        <Registry Root="HKCU" Key="Software\ISE\Eiffel56\ec" Name="ISE_PROJECTS" Value="[PROJECTDIR]" Id="registry33" Type="string" />
+        <Registry Root="HKCU" Key="Software\ISE\Eiffel56\wizard" Name="ISE_PROJECTS" Value="[PROJECTDIR]" KeyPath="yes" Id="registry35" Type="string" />
       </Component>
-	  <!--      <Component Id="registry" Guid="F746C614-200F-47DF-AA21-E42FBD216D54">
-        <Registry Root="HKCR" Key="estudio.project\shell\open\command" Value="&quot;[Application]studio\spec\windows\bin\estudio.exe&quot; &quot;%1&quot;" Id="registry53" Type="string" />
-        <Registry Root="HKCR" Key="estudio.project\shell\open" Value="open" Id="registry51" Type="string" />
-        <Registry Root="HKCR" Key="estudio.project\shell" Value="open" Id="registry54" Type="string" />
-        <Registry Root="HKCR" Key="estudio.project" Value="EiffelStudio Project" Id="registry52" Type="string" />
-        <Registry Root="HKCR" Key=".epr" Value="estudio.project" KeyPath="yes" Id="registry" Type="string" />
-	</Component>
-	-->
-	  <Directory Id="DesktopFolder" Name="." />
+      <Directory Id="DesktopFolder" Name="." />
       <Directory Id="ProgramMenuFolder" Name=".">
         <Directory Id="EiffelStudio" Name="EIFFEL~5" LongName="EiffelStudio 5.6">
           <Component Id="EiffelStudio" Guid="96C73318-4E9A-414E-A2DE-222E40C1D981">
             <CreateFolder />
+            <RemoveFolder Id="EiffelStudio" On="uninstall"/>
           </Component>
           <Directory Id="Tools9" Name="Tools">
             <Component Id="Tools9" Guid="AD69E09D-AC14-4696-99D3-777BBAFCE1D4">
               <CreateFolder />
+              <RemoveFolder Id="tools" On="uninstall"/>
             </Component>
           </Directory>
-          <Directory Id="Documentation8" Name="DOCUME~6" LongName="Documentation">
-            <Component Id="Documentation8" Guid="641DA88D-F5A4-4C61-A3C1-A68000526175">
+          <Directory Id="Documentation" Name="DOCUME~6" LongName="Documentation">
+            <Component Id="Documentation" Guid="641DA88D-F5A4-4C61-A3C1-A68000526175">
               <CreateFolder />
+              <RemoveFolder Id="Documentation" On="uninstall"/>
             </Component>
           </Directory>
         </Directory>
@@ -337,7 +334,7 @@
             <Directory Id="png" Name="png">
               <Component Id="png" Guid="4D7056EF-5B56-496D-B220-A0908F975A18">
                 <File Id="logo.png" Name="logo.png" KeyPath="yes" />
-				<File Id="studio_icon_matrix.png" Name="STUDIO~1.PNG" LongName="studio_icon_matrix.png" />
+                <File Id="studio_icon_matrix.png" Name="STUDIO~1.PNG" LongName="studio_icon_matrix.png" />
                 <File Id="Xinterro.png" Name="Xinterro.png" />
                 <File Id="obj_down.png" Name="obj_down.png" />
                 <File Id="icon_step_into_color.png" Name="IC6787~1.PNG" LongName="icon_step_into_color.png" />
@@ -703,7 +700,7 @@
                 <File Id="V112" Name="ICON_T~4.PNG" LongName="icon_toggle_signature_vsmall_color.png" />
                 <File Id="icon_static_object_symbol.png" Name="IC162A~1.PNG" LongName="icon_static_object_symbol.png" />
                 <File Id="icon_static_external_symbol.png" Name="ICA682~1.PNG" LongName="icon_static_external_symbol.png" />
-				<File Id="icon_arrow_empty.png" Name="ICON_A~4.PNG" LongName="icon_arrow_empty.png" />
+                <File Id="icon_arrow_empty.png" Name="ICON_A~4.PNG" LongName="icon_arrow_empty.png" />
               </Component>
             </Directory>
             <Directory Id="cursor" Name="cursor">
@@ -1085,21 +1082,23 @@
             <Directory Id="windows7" Name="$(env.ISE_PLATFORM)">
               <Directory Id="bin8" Name="bin">
                 <Component Id="estudio.exe" Guid="80B6C77B-41F5-4346-B02F-E00153176E46">
-					<File Id="estudio.exe" Name="estudio.exe" KeyPath="yes" />
-					<ProgId Id="estudio.project" Description="EiffelStudio project">
-						<Extension Id="epr">
-							<Verb Id="epr" Argument="&quot;%1&quot;" Command="open" Target="&quot;[Application]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe&quot;" />
-						</Extension>
-					</ProgId>
-                  <Shortcut Id="estudio.exe" Directory="EiffelStudio" Name="EIFFEL~1.2" LongName="EiffelStudio 5.6" Target="[#estudio.exe]" Description="EiffelStudio development environment" Hotkey="0"  Show="normal" />
-				  <Shortcut Id="estudio.exe1" Directory="DesktopFolder" Name="ISEEIF~1.2" LongName="EiffelStudio 5.6" Target="[#estudio.exe]" Description="EiffelStudio development environment" Hotkey="0" Show="normal" />
+                  <File Id="estudio.exe" Name="estudio.exe" KeyPath="yes">
+                    <Shortcut Id="estudio.exe" Directory="EiffelStudio" Name="EIFFEL~1.2" LongName="EiffelStudio 5.6" Description="EiffelStudio development environment" Hotkey="0"  Show="normal" />
+                    <Shortcut Id="estudio.exe1" Directory="DesktopFolder" Name="ISEEIF~1.2" LongName="EiffelStudio 5.6" Description="EiffelStudio development environment" Hotkey="0" Show="normal" />
+                  </File>
+                  <ProgId Id="estudio.project" Description="EiffelStudio project">
+                    <Extension Id="epr">
+                      <Verb Id="epr" Argument="&quot;%1&quot;" Command="open" Target="&quot;[Application]studio\spec\$(env.ISE_PLATFORM)\bin\estudio.exe&quot;" />
+                    </Extension>
+                  </ProgId>
                 </Component>
                 <Component Id="FINISH1.EXE" Guid="371AC489-A5B5-4CD9-AC82-59F6C2EB2EEC">
                   <File Id="finish_freezing.exe" Name="FINISH~1.EXE" LongName="finish_freezing.exe" KeyPath="yes" />
                 </Component>
                 <Component Id="h2e.exe" Guid="70827559-3A13-4F64-9E8E-6A9462E31FDC">
-                  <File Id="h2e.exe" Name="h2e.exe" KeyPath="yes" />
-                  <Shortcut Id="h2e.exe" Directory="Tools9" Name="h2e.exe" Target="[#h2e.exe]" Description="A tool to extract constant definitions into Eiffel classes" Hotkey="0" Show="normal" />
+                  <File Id="h2e.exe" Name="h2e.exe" KeyPath="yes">
+                    <Shortcut Id="h2e.exe" Directory="Tools9" Name="h2e.exe" Description="A tool to extract constant definitions into Eiffel classes" Hotkey="0" Show="normal" />
+                  </File>
                 </Component>
                 <Component Id="legacy.exe" Guid="B3A1D6E5-0085-42BB-817F-BF1B315BE839">
                   <File Id="legacy.exe" Name="legacy.exe" KeyPath="yes" />
@@ -1193,9 +1192,9 @@
           </Directory>
           <Directory Id="bin10" Name="bin">
             <Component Id="rb.exe" Guid="1CC472C3-5426-40D4-A917-3E86C494B904">
-              <File Id="rb.exe" Name="rb.exe" KeyPath="yes" />
-              <Shortcut Id="rb.exe" Directory="Tools9" Name="RESOUR~1" LongName="ResourceBench" Target="[#rb.exe]" Description="A tool to convert .rc files into WEL classes" Hotkey="0" Show="normal" />
-              <Shortcut Id="ResourceBench_Documentation" Directory="Documentation8" Name="RESOUR~1" LongName="ResourceBench Documentation" Target="[SHORTCUTPATH]" Arguments="mk:@MSITStore:[#eiffel.chm]::/tools/resource_bench/index.html" Hotkey="0" Show="normal" />
+              <File Id="rb.exe" Name="rb.exe" KeyPath="yes">
+                <Shortcut Id="rb.exe" Directory="Tools9" Name="RESOUR~1" LongName="ResourceBench" Description="A tool to convert .rc files into WEL classes" Hotkey="0" Show="normal" />
+              </File>
             </Component>
           </Directory>
         </Directory>
@@ -1236,7 +1235,7 @@
               </Directory>
               <Directory Id="wel2" Name="wel">
                 <Component Id="wel2" Guid="7B4957D5-F93E-4CB4-BF19-8F185BB0FF5E">
-					<File Id="ace.ace3" Name="ace.ace" KeyPath="yes" />
+                  <File Id="ace.ace3" Name="ace.ace" KeyPath="yes" />
                 </Component>
               </Directory>
               <Directory Id="base4" Name="base">
@@ -1249,8 +1248,10 @@
         </Directory>
         <Directory Id="docs" Name="docs">
           <Component Id="eiffel.chm" Guid="157B7187-2D9F-4A55-B421-7C28926B657B">
-            <File Id="eiffel.chm" Name="eiffel.chm" KeyPath="yes" />
-            <Shortcut Id="eiffel.chm1" Directory="Documentation8" Name="EIFFEL~1" LongName="Eiffel Developer Help Center" Target="[#eiffel.chm]" Description="Main documentation, covering Eiffel, ISE libraries and ISE tools" Hotkey="0" Show="normal" />
+            <File Id="eiffel.chm" Name="eiffel.chm" KeyPath="yes">
+              <Shortcut Id="eiffel.chm1" Directory="Documentation" Name="EIFFEL~1" LongName="Eiffel Developer Help Center" Description="Main documentation, covering Eiffel, ISE libraries and ISE tools" Hotkey="0" Show="normal" />
+            </File>
+			<Shortcut Id="ResourceBench_Documentation" Directory="Documentation" Name="RESOUR~1" LongName="ResourceBench Documentation" Target="[SHORTCUTPATH]" Arguments="mk:@MSITStore:[#eiffel.chm]::/tools/resource_bench/index.html" Hotkey="0" Show="normal" />
           </Component>
         </Directory>
       </Directory>

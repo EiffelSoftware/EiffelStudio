@@ -10,19 +10,10 @@ class BAR_AND_TEXT
 inherit
 
 	TOOL_W
-		rename
-			execute as tool_w_execute
 		redefine
-			save_cmd_holder, set_default_format,
-			hole
+			save_command, set_default_format, hole
 		end;
-	TOOL_W
-		redefine
-			save_cmd_holder, set_default_format,
-			hole, execute
-		select
-			execute
-		end;
+	COMMAND;
 	TOP_SHELL
 		rename
 			make as shell_make,
@@ -48,18 +39,18 @@ feature -- Initialization
 			-- Create an assembly tool.
 		do
 			shell_make (tool_name, a_screen);
+			!! history.make;
 			!! global_form.make (new_name, Current);
 			build_widgets;
 			if hole.icon_symbol.is_valid then
 				set_icon_pixmap (hole.icon_symbol);
 			end;
 			set_icon_name (tool_name);
-			set_action ("<Unmap>,<Prop>", Current, popdown);
 			set_action ("<Configure>", Current, remapped);
 			set_action ("<Visible>", Current, remapped);
 			set_delete_command (quit.associated_command);
-			transporter_init;
 			set_composite_attributes (Current);
+			register;
 			text_window.set_font_to_default
 		end;
 
@@ -265,7 +256,7 @@ feature -- Window Properties
 
 	global_form: FORM;
 
-	hole: HOLE;
+	hole: EB_BUTTON_HOLE;
 			-- Hole characterizing Current.
 
 	edit_bar, format_bar: FORM;
@@ -323,8 +314,6 @@ feature -- Execution Implementation
 					-- The tool is being raised,
 					-- moved, or resized.
 				resize_action
-			else
-				tool_w_execute (argument)
 			end;
 		end;
 

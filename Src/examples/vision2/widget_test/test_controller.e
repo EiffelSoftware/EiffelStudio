@@ -9,6 +9,9 @@ class
 	
 inherit
 	EV_HORIZONTAL_BOX
+		redefine
+			initialize, is_in_default_state
+		end
 	
 	WIDGET_TEST_SHARED
 		undefine
@@ -20,18 +23,13 @@ inherit
 			copy, default_create, is_equal
 		end
 	
-create
-	make_with_text_control
-	
 feature {NONE} -- Initialization
 
-	make_with_text_control (a_text_control: EV_TEXT; a_generation_button: EV_BUTTON) is
+	initialize is
 			-- Create `Current' and assign `a_text_control' to
 			-- `text_control'.
-		require
-			text_control_not_void: a_text_control /= Void
 		do
-			default_create
+			Precursor {EV_HORIZONTAL_BOX}
 			create test_notebook
 			test_notebook.selection_actions.extend (agent update_displayed_test)
 			create class_texts.make (4)
@@ -41,12 +39,20 @@ feature {NONE} -- Initialization
 			register_type_change_agent (agent update_for_type_change)
 
 			hide_interface
-			class_text_output := a_text_control
-			generation_button := a_generation_button
-			generation_button.select_actions.extend (agent generate_current_test)
 		end		
 		
 feature -- Status setting
+
+	set_class_output (a_text_control: EV_TEXT) is
+			-- Assign `a_text_control' to `class_text_output'.
+		require
+			text_control_not_void: a_text_control /= Void
+		do
+			class_text_output := a_text_control
+		ensure
+			control_set: class_text_output = a_text_control
+		end		
+		
 
 	update_for_type_change (a_widget: EV_WIDGET) is
 			-- Test widget has changed to `a_widget', so
@@ -81,6 +87,25 @@ feature -- Status setting
 			end
 			build_tests
 			
+		end
+		
+feature -- Access
+
+	selected_test_name: STRING is
+			-- `Result' is name of currently selected test.
+		do
+			Result := clone (class_names @ test_notebook.selected_item_index)
+		end
+		
+
+feature {GENERATION_DIALOG} -- Basic operations
+
+	generate_current_test (directory: DIRECTORY) is
+			-- Generate a stand alone test that may be compiled, based on
+			-- the selected test in `test_notebook'.
+		do
+			Test_generator.generate_project (directory, selected_test_name,
+				test_widget_type.substring (4, test_widget_type.count))	
 		end
 
 feature {NONE} -- Implementation
@@ -242,31 +267,20 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	generate_current_test is
-			-- Generate a stand alone test that may be compiled, based on
-			-- the selected test in `test_notebook'.
-		do
-			Test_generator.generate_project (class_names @ test_notebook.selected_item_index,
-				test_widget_type.substring (4, test_widget_type.count))	
-		end
-		
-		
 	class_texts: HASH_TABLE [STRING, STRING]
 		-- All texts of classes associated with each class filename.
-	
-	class_names: ARRAYED_LIST [STRING]
-		-- All class names of tests, ordered as found in directory.
 		
 	test_notebook: EV_NOTEBOOK
 		-- A notebook containing all the tests that are available.
 		
 	included_tests: WIDGET_TEST_INCLUDE
 		-- All available tests are included via this class.
+		
+	class_names: ARRAYED_LIST [STRING]
+		-- All class names of tests, ordered as found in directory.
 	
 	class_text_output: EV_TEXT
 		-- An EV_TEXT to display all test class texts.
-		
-	generation_button: EV_BUTTON
 	
 	test_generator: WIDGET_TEST_PROJECT_GENERATOR is
 			-- Once access to a project generator.
@@ -274,6 +288,8 @@ feature {NONE} -- Implementation
 			create Result
 		end
 		
+	is_in_default_state: BOOLEAN is True
+		-- Is `Current' in its default state?
 
 invariant
 	test_notebook_not_void: test_notebook /= Void

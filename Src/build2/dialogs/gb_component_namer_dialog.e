@@ -19,9 +19,6 @@ inherit
 		end
 	
 	GB_CONSTANTS
-		undefine
-			default_create, copy
-		end
 		
 	GB_NAMING_UTILITIES
 		undefine

@@ -438,6 +438,9 @@ feature -- Generation constants
 	font_height_string: STRING is "Height"
 	font_height_points_string: STRING is "Height_in_points"
 	font_preferred_family_string: STRING is "Preferred_family"
+	
+	background_color_string: STRING is "Background_color"
+	foreground_color_string: STRING is "Foreground_color"
 
 feature -- Wizard
 
@@ -751,6 +754,8 @@ feature -- Object editor properties
 	reset_minimum_width_tooltip: STRING is "Restore default minimum width"
 	
 	reset_minimum_height_tooltip: STRING is "Restore default minimum height"
+	
+	colorizable_type: STRING is "EV_COLORIZABLE"
 	
 feature -- Tooltips
 

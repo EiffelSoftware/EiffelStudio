@@ -158,12 +158,9 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for creation instruction
 		local
-			cl_type: CL_TYPE_I
 			ext_call: EXTERNAL_B
 		do
-			cl_type ?= type
-
-			if cl_type.is_external then
+			if type.is_external then
 					-- Creation call on external class.
 
 				check

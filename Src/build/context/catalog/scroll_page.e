@@ -108,7 +108,7 @@ feature {NONE}
 				!!text_item.make (0);
 				text_item.append (I_tem);
 				text_item.append (to_string (i));
-				scroll_list.add_right (text_item);
+				scroll_list.put_right (text_item);
 				scroll_list.forth;
 				i := i + 1
 			end;

@@ -120,10 +120,17 @@ feature {NONE}
 			arity, counter: INTEGER;
 			s_context: S_CONTEXT;
 			temp: COMPOSITE_C;
+			temp_wind: S_TEMP_WIND
 		do
 			s_context := current_table.item (index);
+			temp_wind ?= s_context;
 			arity := s_context.arity;
-			Result := s_context.context (a_parent);
+			if temp_wind = Void then
+				Result := s_context.context (a_parent);
+			else
+				temp := find_parent (temp_wind.parent_name);
+				Result := s_context.context (temp);
+			end;
 			context_table.put (Result, s_context.identifier);
 			temp ?= Result;
 			from
@@ -138,5 +145,28 @@ feature {NONE}
 			end;
 			--s_context.post_process;
 		end;
+
+	find_parent (parent_name: STRING): COMPOSITE_C is
+		do
+			from 
+				retrieved_data.start
+			until
+				retrieved_data.after or else Result /= Void
+			loop
+				if parent_name.is_equal (retrieved_data.item.entity_name) then
+					Result ?= retrieved_data.item;
+				end;
+				retrieved_data.forth;
+			end;
+
+		debug ("storer")
+			io.putstring (Result.entity_name);
+			io.new_line;
+		end;
+
+			
+		end;
+
+
 
 end 

@@ -480,6 +480,11 @@ feature {NONE}
 			until
 				window_list.after
 			loop
+
+debug ("main_panel")
+	io.putstring (window_list.item.entity_name);
+	io.new_line;
+end;
 				window_list.item.show;
 				window_list.forth
 			end;

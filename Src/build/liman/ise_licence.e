@@ -303,7 +303,7 @@ feature {NONE}
 			"C"
 		end;
 
-	l_strerror: ANY is
+	l_strerror: POINTER is
 		external
 			"C"
 		end;

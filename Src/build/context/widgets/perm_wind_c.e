@@ -46,7 +46,7 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		local
-			contin_command: ITER_COMMAND;
+			contin_command: WINDOW_ITERATOR_COMMAND;
 		do
 			!!widget.make (entity_name, eb_screen);
 			widget_set_title (entity_name);
@@ -54,7 +54,7 @@ feature
 			set_size (400, 500);
 			set_default_pixmap;
 			add_window_geometry_action;
-			!!contin_command;
+			!!contin_command.make (Current);
 			widget.top_shell.set_delete_command (contin_command);
 		end;
 
@@ -67,8 +67,19 @@ feature
 		do
 			widget.top_shell.remove_action ("<Configure>");
  		end;
-	
+		
+	skip_configure_action is
+		do
+			remove_window_geometry_action;
+			widget.top_shell.set_action ("<Configure>", Current, Fifth);
+		end;
 
+
+	skip_two_configure_action is
+		do
+			remove_window_geometry_action;
+			widget.top_shell.set_action ("<Configure>", Current, sixth);
+		end;
 
 
 	
@@ -107,7 +118,7 @@ feature
 			loop
 				child_temp_wind ?= window_list.item;
 				if child_temp_wind /= Void then
-					if child_temp_wind.popup_parent = Current then
+					if child_temp_wind.parent = Current then
 						child_temp_wind.remove_yourself;
 						if not window_list.before then
 							window_list.start;
@@ -127,6 +138,7 @@ feature
 
 	undo_cut is
 		do
+			skip_configure_action;
 			widget.show;
 			old_undo_cut
 		end;

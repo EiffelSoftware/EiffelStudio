@@ -71,24 +71,17 @@ feature {NONE}
 			-- has not been set or the directory does 
 			-- not exist.
 		local
-			env_var: STRING;
-			temp, temp2: ANY;
 			dir: FILE_NAME;
 			string: STRING
 		do
-			!!env_var.make (EiffelBuild_var_name.count);
-			env_var.append (EiffelBuild_var_name);
-			!!string.make (0);
-			temp2 := env_var.to_c;
-			temp := unix_env_getenv ($temp2);
-			if temp = Void then
+			string := get (EiffelBuild_var_name);
+			if string = Void then
 				io.error.putstring ("Environment varaible ");
 				io.error.putstring (EiffelBuild_var_name);
 				io.error.putstring (" not defined%N");
 				error := True
 			else
 				!!dir.make (0);
-				string.from_c (temp);
 				dir.from_string (string);
 				if not dir.exists then
 					io.error.putstring ("Directory ");

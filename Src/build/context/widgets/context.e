@@ -323,6 +323,11 @@ feature
 		deferred
 		end;
 
+	raise is
+		do
+			widget.raise;
+		end;
+
 	set_widget (a_widget: WIDGET) is
 		do
 			widget := a_widget

@@ -97,11 +97,17 @@ feature {NONE}
 
 	execute (argument: ANY) is
 		local
+			doc: EB_DOCUMENT;
 			cmd: USER_CMD
 		do
 			!!cmd.make;
 			cmd.set_internal_name ("");
 			cmd.set_eiffel_text (cmd.template);
+			!!doc;
+			doc.set_directory_name (Command_directory);
+			doc.set_document_name (cmd.eiffel_type);
+			doc.update (clone (cmd.template));
+			doc := Void;
 			command_catalog.add (cmd)
 		end;
 

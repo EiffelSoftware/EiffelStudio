@@ -246,4 +246,16 @@ feature -- Code Generation
 			Result.append (";%N");
 		end;
 
+	remove_class is
+			-- Remove associated class file when command
+			-- is deleted.
+		deferred
+		end;
+
+	recreate_class is
+			-- Regenerate associated class file when class
+			-- is undeleted
+		deferred
+		end;
+
 end 

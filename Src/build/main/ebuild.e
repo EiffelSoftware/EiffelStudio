@@ -10,6 +10,8 @@ inherit
 			{NONE} all
 		end;
 	AUTO_SAVE
+		rename
+			command_line as exec_command_line
 		export
 			{NONE} all
 		end

@@ -25,7 +25,7 @@ feature
 			if node.title_modified then
 				title := node.title
 			end;
-			parent_name := clone (node.popup_parent.entity_name);
+			parent_name := clone (node.parent.entity_name);
 			resize_policy_disabled := node.resize_policy_disabled;
 			resize_policy_modified := node.resize_policy_modified;
 		end;
@@ -35,7 +35,7 @@ feature
 			void_composite_c: COMPOSITE_C;
 		do
 			!!Result;
-			create_context (Result, void_composite_c);
+			create_context (Result, a_parent);
 		end;
 
 	set_context_attributes (a_context: TEMP_WIND_C) is
@@ -77,7 +77,7 @@ feature
 				c.set_resize_policy (resize_policy.resize_policy (c))
 			end;
 			if twc /= Void then
-				twc.popup;
+				--twc.popup;
 			end;
 			if position_modified then
 				c.set_x_y (x, y);

@@ -48,6 +48,11 @@ feature {NONE}
 	Eighth: ANY is
 		once
 			!!Result
-		end
+		end;
+
+	Nineth: ANY is
+		once
+			!!Result
+		end;
 
 end

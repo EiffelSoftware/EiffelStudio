@@ -5,7 +5,10 @@ inherit
 	
 	APP_SHARED;
 	APP_FIND_FIGURE;
-	COMMAND;
+	COMMAND
+		redefine
+			context_data_useful
+		end;
 	COMMAND_ARGS
 		rename
 			First as expose_action,
@@ -466,17 +469,26 @@ feature
 			set_delete_command (contin_command);
 		end; 
 
+	context_data_useful: BOOLEAN is
+		do
+			Result := True;
+		end;
+
 	execute (argument: ANY) is
 				-- Execute the command.
 		local
 			state_name: STRING;
 			circle: STATE_CIRCLE;
+			expose_data: EXPOSE_DATA;
 		do
 			if
 				argument = expose_action
 			then
-				lines.draw;
-				figures.draw	
+				expose_data ?= context_data;
+				if expose_data.exposes_to_come = 0 then
+					lines.draw;
+					figures.draw	
+				end;
 			elseif
 				argument = ctrl_select_action
 			then

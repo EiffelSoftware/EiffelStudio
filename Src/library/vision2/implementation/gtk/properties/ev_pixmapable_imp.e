@@ -40,7 +40,10 @@ feature -- Access
 		do
 			p := gtk_pixmap
 			if p /= Void then
-				Result := eif_object_from_c (p)
+				Result ?= eif_object_from_c (p)
+				check
+					Result_not_void: Result /= Void
+				end
 			end
 		end
 
@@ -73,7 +76,6 @@ feature -- Element change
 			end
 
 			C.gtk_widget_hide (pixmap_box)
-			pixmap := Void
 		end
 
 feature {NONE} -- Implementation
@@ -122,6 +124,9 @@ end -- EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/03 01:07:11  oconnor
+--| added assignment attempt and check in parent
+--|
 --| Revision 1.17  2000/03/03 01:02:29  oconnor
 --| fixed syntax error
 --|

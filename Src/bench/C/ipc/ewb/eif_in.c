@@ -66,7 +66,7 @@ EIF_REFERENCE request_handler (void)
 
 EIF_REFERENCE request_dispatch (Request rqst)
 {
-	char *eif_string;
+	EIF_REFERENCE eif_string;
 
 	switch (rqst.rq_type) {
 		case ASYNACK:

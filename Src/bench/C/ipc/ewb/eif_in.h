@@ -3,6 +3,6 @@
 
 #include "eif_io.h"
 
-rt_public EIF_OBJ request_dispatch (Request rqst);
+rt_public EIF_REFERENCE request_dispatch (Request rqst);
 
 #endif /* _eif_in_h_ */

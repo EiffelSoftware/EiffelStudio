@@ -698,8 +698,8 @@ feature {NONE} -- Implementation
 		do
 			if default_position then
 				if parent /= Void and then parent.exists then
-					wel_move (((parent.wel_width - wel_width) // 2),
-						(parent.wel_height - wel_height) // 2)
+					wel_move (parent.real_x + ((parent.wel_width - wel_width) // 2),
+						parent.real_y + (parent.wel_height - wel_height) // 2)
 				else
 					wel_move (((Maximum_window_width - wel_width) // 2),
 						(Maximum_window_height - wel_height) // 2)

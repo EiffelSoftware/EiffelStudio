@@ -157,10 +157,13 @@ feature {NONE} -- Implementation
 
 	system_string_id: INTEGER is
 			-- ID of SYSTEM_STRING if we are in IL code generation
-			-- Otherwise, 0.
+			-- Otherwise, -1 (to avoid conflicts with basic type
+			-- that have a class_id of 0).
 		once
 			if System.system_string_class /= Void and System.system_string_class.is_compiled then
 				Result := System.system_string_id
+			else
+				Result := -1
 			end
 		end
 

@@ -1,0 +1,114 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelCOM Wizard Reference</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM Wizard">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM Wizard, Reference">
+		<META NAME = "MS-HKWD" CONTENT = "">
+		<META NAME = "MS-HKWD" CONTENT = "">
+		<META NAME = "MS-HKWD" CONTENT = "">
+	</HEAD>
+
+	<BODY>
+		<h1>
+		<A NAME="pgfId=370908">
+		 </A>
+		 COM Definition File Processing</h1>
+		<p>
+		<A NAME="pgfId=374194">
+		</A>Six phases are involved in the COM definition file processing:<p>
+		<A NAME="pgfId=374195">
+		 </A>
+		 <i>IDL Compilation</i>: If the definition file is an IDL file, the wizard
+		compiles the IDL file into a Type Library and if Standard Marshalling have been
+		chosen, produces the marshaler from the generated C files.
+		  <p>
+		<A NAME="pgfId=374196">
+		 </A>
+        <i>Type Library Parsing</i>: The wizard analyzes the type library and transforms the
+		information it needs to generate the code into internal representation.
+		  <p>
+		<A NAME="pgfId=374197"></A>
+		<i>Code Generation</i>: The
+		wizard generates both the Eiffel and C/C++ code from the information gathered
+		during the previous step.
+
+		  <p>
+		<A NAME="pgfId=374203">
+		 </A>
+        <i>C/C++ Compilation</i>: The wizard compiles the generated C and C++ code into object
+		files and libraries that will be linked with the Eiffel system.
+		  <p>
+		<A NAME="pgfId=375402">
+		 </A>
+        <i>Eiffel Compilation</i>: For a client project the wizard compiles the generated
+		Eiffel code into a precompiled library that can be reused from other projects.
+		For a server project the wizard compiles the generated Eiffel code into a
+		standard project with the registration class as root class. If the location is
+		In-process then the project corresponds to a DLL whereas if the location of the
+		server is out-of-process then the project corresponds to a standard executable.
+		<p align="justify"><a name="pgfId_375648"></a>Finally, the wizard launches
+		EiffelBench and automatically opens the generated Eiffel system.</p>
+		<p align="justify"><a name="pgfId_370902"></a>During processing, the name and
+		progress of each phase is displayed.</p>
+		<OL>
+		<TABLE BORDER="1">
+		<CAPTION>
+		<H6 CLASS="figuretitle">
+		<A NAME="pgfId=370888">
+		 </A>
+		Wizard Progress Dialog</H6>
+		</CAPTION>
+		<TR>
+		<TD ROWSPAN="1" COLSPAN="1">
+		<H6 CLASS="mm.celltitle">
+		<A NAME="pgfId=370886">
+		 </A>
+		<IMG SRC="../images/wizard-8.gif" ALIGN="LEFT" width="476" height="131">
+		</H6>
+		</TD>
+		</TR>
+		</TABLE>
+		</OL>
+		<p>
+		<A NAME="pgfId=370920"></A>
+		While processing the wizard displays information in real
+		time in the main window if this option was chosen in the Final Dialog. Displayed
+		information includes output of calls to external compilers (C, Eiffel and IDL)
+		and description of the current analyzed or generated Type Library item.
+		</p>
+        <p class="seealso">See Also: <br>
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/01_introduction_d.html">
+        Introduction Dialog and Main Window</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/02_generated_code_type_d.html">
+        Generated Code Type Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/03_definition_file_d.html">Definition
+        File Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/04_eiffel_project_file_d.html">Eiffel
+        Project File Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/05_destination_folder_d.html">Destination
+        Folder Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/06_idl_marshalling_d.html">IDL
+        Marshaling Definition Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/07_type_lybrary_m_d.html">Type
+        Library Marshaling Definition Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/08_Final_d.html">Final
+        Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/09_com_definition_file_processing.html">COM
+        Definition File Processing</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/10_eiffel_project_processing.html">Eiffel
+        Project Processing</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/11_generated_files.html">Generated
+        Files</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/12_class_hierarchy.html">Class
+        Hierarchy</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/13_accessing_component.html">Accessing
+        a Component</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/14_building_component.html">Building
+        a Component</a></p>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

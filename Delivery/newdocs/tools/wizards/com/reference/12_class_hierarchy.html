@@ -1,0 +1,192 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>EiffelCOM Wizard Reference</TITLE>
+		<LINK REL=StyleSheet HREF="../../../../default.css">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM Wizard">
+		<META NAME = "MS-HKWD" CONTENT = "EiffelCOM Wizard, Reference">
+		<META NAME = "MS-HKWD" CONTENT = "">
+		<META NAME = "MS-HKWD" CONTENT = "">
+		<META NAME = "MS-HKWD" CONTENT = "">
+	</HEAD>
+
+	<BODY>
+
+		<h1>
+		<A NAME="pgfId=371722">
+		 </A>
+		 Class Hierarchy</h1>
+		<p>
+		<A NAME="pgfId=372785"></A>
+		 The generated Eiffel code reflects the architecture of the component described
+		 in the definition file. Each interface corresponds to a deferred Eiffel class
+		 that includes one deferred feature per interface function. The deferred
+		 features are implemented in the heir inheriting from all interfaces. This
+		 central class will be referred to as Eiffel coclass in the rest of this
+		 document.
+
+		<p>
+
+
+		<OL>
+		<TABLE BORDER="1">
+		<CAPTION>
+		<p class="figuretitle">
+		<A NAME="pgfId=372925">
+		 </A>
+		EiffelCOM System Basic Architecture</p>
+		</CAPTION>
+		<TR>
+		<TD ROWSPAN="1" COLSPAN="1">
+		<H6 CLASS="mm.celltitle">
+		<A NAME="pgfId=372923">
+		 </A>
+		<MAP NAME="wizard-10">
+		</MAP>
+		<IMG SRC="../images/com_Image24.gif" USEMAP="#wizard-10" ALIGN="LEFT" width="439" height="283">
+		</H6>
+		</TD>
+		</TR>
+		</TABLE>
+		</OL>
+		<A NAME="pgfId=373158"></A>In a client application the Eiffel coclass inherits from the class 
+		<span class="eclass">ECOM_QUERIABLE, 	</span>
+		which is part of the EiffelCOM library. This class includes the feature <span class="efeature">make_from_other
+		</span>to initialize the component from another instance of <span class="eclass">ECOM_INTERFACE</span>.&nbsp;
+
+		<p>
+
+
+		<OL>
+		<TABLE BORDER="1">
+		<CAPTION>
+		<p class="figuretitle">
+		<A NAME="pgfId=372925">
+		 </A>
+		EiffelCOM System Basic Architecture</p>
+		</CAPTION>
+		<TR>
+		<TD ROWSPAN="1" COLSPAN="1">
+		<H6 CLASS="mm.celltitle">
+		<A NAME="pgfId=372923">
+		 </A>
+		<MAP NAME="FPMap0">
+		</MAP>
+		<IMG SRC="../images/com_Image25.gif" USEMAP="#FPMap0" ALIGN="LEFT" width="430" height="390">
+		</H6>
+		</TD>
+		</TR>
+		</TABLE>
+		</OL>
+		<A NAME="pgfId=373158"></A>In a server application the Eiffel coclass inherits from the class
+		<span class="eclass">ECOM_STUB,
+		</span>which is part of the EiffelCOM library. This class includes the feature 
+		<span class="efeature">create_item
+		</span>to initialize the component for COM.&nbsp;
+		<p>
+		The <i>Interface_proxy</i> folder includes Eiffel classes wrapping interfaces
+		that are sent to or received by the component. Such interfaces will be referred
+		to as client implemented interfaces in the rest of the document. These classes inherit
+		from both the deferred interface class and <span class="eclass">ECOM_QUERIABLE</span>.</p>
+
+		<p>
+
+
+		<OL>
+		<TABLE BORDER="1">
+		<CAPTION>
+		<p class="figuretitle">
+		<A NAME="pgfId=373273">
+		</A>Client&nbsp; Implemented Interfaces</p>
+		</CAPTION>
+		<TR>
+		<TD ROWSPAN="1" COLSPAN="1">
+		<H6 CLASS="mm.celltitle">
+		<A NAME="pgfId=373271">
+		 </A>
+		<MAP NAME="wizard-11">
+		</MAP>
+		<IMG SRC="../images/com_Image26.gif" USEMAP="#wizard-11" ALIGN="LEFT" width="348" height="267">
+		</H6>
+		</TD>
+		</TR>
+		</TABLE>
+		</OL>
+		<p>
+		The <i>Interface_stub</i> folder includes Eiffel classes implementing interfaces
+		that are sent by the component. Such interfaces will be referred
+		to as server implemented interfaces in the rest of the document. These classes inherit
+		from both the deferred interface class and <span class="eclass">ECOM_STUB</span>.</p>
+
+		<p>
+
+
+		<OL>
+		<TABLE BORDER="1">
+		<CAPTION>
+		<p class="figuretitle">
+		<A NAME="pgfId=373273">
+		</A>Server Implemented Interfaces</p>
+		</CAPTION>
+		<TR>
+		<TD ROWSPAN="1" COLSPAN="1">
+		<H6 CLASS="mm.celltitle">
+		<A NAME="pgfId=373271">
+		 </A>
+		<MAP NAME="FPMap1">
+		</MAP>
+		<IMG SRC="../images/com_Image27.gif" USEMAP="#FPMap1" ALIGN="LEFT" width="363" height="268">
+		</H6>
+		</TD>
+		</TR>
+		</TABLE>
+		</OL>
+        &nbsp;
+		<p>
+		<A NAME="pgfId=373336">
+		 </A>
+		 For both Eiffel coclass and Implemented interfaces,
+		 the <span class="eclass">INTERFACE</span> class contains no implementation; it only defines the
+		 signatures of the functions that are part of the interface. The actual
+		 implementation lies in the heir of that class.</p>
+		  <p>
+		<A NAME="pgfId=373366">
+		 </A>
+		 How you should use the generated classes in your system depends on whether you
+		want to access an existing component (client) or build a new component in Eiffel
+		(server).
+		</p>
+        <p class="seealso">See Also: <br>
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/01_introduction_d.html">
+        Introduction Dialog and Main Window</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/02_generated_code_type_d.html">
+        Generated Code Type Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/03_definition_file_d.html">Definition
+        File Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/04_eiffel_project_file_d.html">Eiffel
+        Project File Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/05_destination_folder_d.html">Destination
+        Folder Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/06_idl_marshalling_d.html">IDL
+        Marshaling Definition Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/07_type_lybrary_m_d.html">Type
+        Library Marshaling Definition Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/08_Final_d.html">Final
+        Dialog</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/09_com_definition_file_processing.html">COM
+        Definition File Processing</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/10_eiffel_project_processing.html">Eiffel
+        Project Processing</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/11_generated_files.html">Generated
+        Files</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/12_class_hierarchy.html">Class
+        Hierarchy</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/13_accessing_component.html">Accessing
+        a Component</a>, 
+        <a href="file:///D:/newdoc/Delivery/newdocs/tools/wizards/com/reference/14_building_component.html">Building
+        a Component</a></p>
+		<P>&nbsp;</P>
+	</BODY>
+</HTML>

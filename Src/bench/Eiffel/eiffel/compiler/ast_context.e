@@ -171,14 +171,8 @@ feature -- Setting
 			-- Assign `b' to `level4'.
 			-- Also set `b' to check_for_vape.
 		do
-			level4 := b;
-			set_check_for_vape (b);
-		end;
-
-	set_check_for_vape (b: BOOLEAN) is
-			-- Assign `b' to `check_for_special_error'.
-		do
-			check_for_special_error := b;
+			level4 := b
+			check_for_special_error := b
 		end;
 
 	check_for_vape: BOOLEAN is

@@ -592,11 +592,11 @@ feature {NONE} -- WEL Implementation
 	hide_current_selection is
 			-- Hide the current selected page.
 		local
-			ww: WEL_WINDOW
+			ww: EV_WIDGET_IMP
 		do
-			ww := (get_item (current_selection)).window
+			ww ?= (get_item (current_selection)).window
 			if ww /= Void and then ww.exists then
-				cwin_show_window (ww.item, Sw_hide)
+				ww.show_window (ww.item, Sw_hide)
 			end
 		end
 
@@ -611,7 +611,7 @@ feature {NONE} -- WEL Implementation
 		do
 			ww ?= (get_item (current_selection)).window
 			if ww /= Void and then ww.exists then
-				cwin_show_window (ww.item, Sw_show)
+				ww.show_window (ww.item, Sw_show)
 				rect := sheet_rect
 				ww.move_and_resize (rect.left, rect.top, rect.width, rect.height, True)
 			end

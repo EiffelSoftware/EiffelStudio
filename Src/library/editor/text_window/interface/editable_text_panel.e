@@ -254,7 +254,7 @@ feature {NONE} -- Handle keystokes
 			when Key_c then
 					-- Ctrl-C (copy)
 				copy_selection
-
+				scroll_to_cursor := False
 			when Key_v then
 					-- Ctrl-V (paste)
 				run_if_editable (agent paste)

@@ -19,8 +19,8 @@ indexing
 		 create birthday_actions.make ("birthday", <<"age","name">>)
 		 send_card (age: INTEGER, name, from: STRING) is ...
 		 buy_gift (age: INTEGER, name, gift, from: STRING) is ...
-		 birthday_actions.extend (~send_card (?, ?, "Sam")
-		 birthday_actions.extend (~buy_gift (?, ?, "Wine", "Sam")
+		 birthday_actions.extend (agent send_card (?, ?, "Sam")
+		 birthday_actions.extend (agent buy_gift (?, ?, "Wine", "Sam")
 		 birthday_actions.call ([35, "Julia"])
 		 causes call to: send_card (35, "Julia", "Sam")
 		                 buy_gift (35, "Julia", "Wine", "Sam")
@@ -39,16 +39,12 @@ class
 	ACTION_SEQUENCE [EVENT_DATA -> TUPLE create make end]
 
 inherit
-	LINKED_LIST [PROCEDURE [ANY, EVENT_DATA]]
+	ARRAYED_LIST [PROCEDURE [ANY, EVENT_DATA]]
 		rename
-			make as linked_list_make
+			make as arrayed_list_make
 		redefine
-			new_cell,
-			merge_left,
-			merge_right,
-			cleanup_after_remove,
-			wipe_out,
-			default_create
+			default_create,
+			set_count
 		end
 
 create
@@ -57,22 +53,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
-		obsolete
-			"use default_create"
-		do
-			default_create
-		end
-
 	default_create is
 			-- Begin in `Normal_state'.
 		do
-			linked_list_make
+			arrayed_list_make (1)
 			create is_aborted_stack.make
 			create call_buffer.make
 			state := Normal_state
-			create not_empty_actions.make
-			create empty_actions.make
+			create not_empty_actions.make (0)
+			create empty_actions.make (0)
 		end
 
 feature -- Basic operations
@@ -82,30 +71,30 @@ feature -- Basic operations
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
 		local
-			snapshot: LINKED_LIST [PROCEDURE [ANY, EVENT_DATA]]
+			snapshot: ARRAYED_LIST [PROCEDURE [ANY, EVENT_DATA]]
+			i: INTEGER
 		do
-			create snapshot.make
-			snapshot.fill (Current)
+			snapshot := clone (Current)
 			if kamikazes /= Void then
 				call_action_list (kamikazes)
 				kamikazes := Void
 			end
-			inspect
+			inspect 
 				state
 			when
 				Normal_state
 			then
 				from
 					is_aborted_stack.extend (False)
-					snapshot.start
+					i := 1
 				variant
-					snapshot.count + 1 - snapshot.index
+					snapshot.count + 1 - i
 				until
-					snapshot.after
+					i > snapshot.count
 					or is_aborted_stack.item
 				loop
-					snapshot.item.call (event_data)
-					snapshot.forth
+					snapshot.i_th (i).call (event_data)
+					i := i + 1
 				end
 				is_aborted_stack.remove
 			when
@@ -230,110 +219,54 @@ feature -- Element Change
 			has (an_action)
 		do
 			if kamikazes = Void then
-				create kamikazes.make
+				create kamikazes.make (1)
 			end
-			kamikazes.extend (~prune_all (an_action))
-		end
-
-	merge_left (other: like Current) is
-			-- Merge `other' into current structure after cursor
-			-- position. Do not move cursor. Empty `other'
-		do
-			if count = 0 then
-				Precursor (other)
-				if count > 0 then
-					call_action_list (not_empty_actions)
-				end
-			else
-				Precursor (other)
-			end
-		end
-
-	merge_right (other: like Current) is
-			-- Merge `other' into current structure before cursor
-			-- position. Do not move cursor. Empty `other'
-		do
-			if count = 0 then
-				Precursor (other)
-				if count > 0 then
-					call_action_list (not_empty_actions)
-				end
-			else
-				Precursor (other)
-			end
-		end
-
-	wipe_out is
-			-- Remove all items.
-		do
-			Precursor
-			call_action_list (empty_actions)
-		end
-
-	set_source_connection_agent
-				(a_source_connection_agent: PROCEDURE [ANY, TUPLE []]) is
-			-- Set `a_source_connection_agent' that will connect sequence to an
-			-- actual event source. The agent will be called when the first action is
-			-- added to the sequence. If there are already actions in the
-			-- sequence the agent is called immediately.
-		obsolete
-			"use not_empty_actions"
-		do
-			not_empty_actions.extend (a_source_connection_agent)
-			if not is_empty then
-				a_source_connection_agent.call ([])
-			end 
+			kamikazes.extend (agent prune_all (an_action))
 		end
 
 feature -- Event handling
 
-	not_empty_actions: LINKED_LIST [PROCEDURE [ANY, TUPLE []]]
+	not_empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE []]]
 			-- Actions to be performed on transition from `is_empty' to not `is_empty'.
 
-	empty_actions: LINKED_LIST [PROCEDURE [ANY, TUPLE []]]
+	empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE []]]
 			-- Actions to be performed on transition from not `is_empty' to `is_empty'.
 
-feature {LINKED_LIST} -- Implementation
+feature {NONE} -- Implementation, ARRAYED_LIST
 
-	new_cell (v: like item): like first_element is
-			-- Create new cell with `v'.
+	set_count (new_count: INTEGER) is
+			-- Set `count' to `new_count'
 		do
-			if count = 0 then
-				Result := Precursor (v)
-				call_action_list (not_empty_actions)
-			else
-				Result := Precursor (v)
-			end
-		end
-
-	cleanup_after_remove (v: like first_element) is
-			-- Clean-up a just removed cell.
-		do
-			Precursor (v)
-			if count = 0 then
+			if count /= 0 and new_count = 0 then
+					-- Transition from not `is_empty' to `is_empty'.
 				call_action_list (empty_actions)
+			elseif count = 0 and new_count /= 0 then
+					-- Transition from `is_empty' to not `is_empty'.
+				call_action_list (not_empty_actions)
 			end
+			
+				-- Adjust `count'
+			count := new_count
 		end
 
 feature {NONE} -- Implementation
 
-	call_action_list (actions: LINKED_LIST [PROCEDURE [ANY, TUPLE []]]) is
+	call_action_list (actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE []]]) is
 			-- Call each action in `actions'.
 		require
 			actions_not_void: actions /= Void
 		local
 			snapshot: like actions
+			i: INTEGER
 		do
-			create snapshot.make
-			snapshot.fill (actions)
+			snapshot := clone (actions)
 			from
-				snapshot.start
+				i := 1
 			until
-				snapshot.after
+				i > snapshot.count
 			loop
-				snapshot.item.call ([])
-				--snapshot.item.call (Void)
-				snapshot.forth
+				snapshot.i_th (i).call ([])
+				i := i + 1
 			end
 		end
 
@@ -356,8 +289,32 @@ feature {NONE} -- Implementation
 	dummy_event_data_internal: EVENT_DATA
 			-- See dummy_event_data.
 	
-	kamikazes: LINKED_LIST [PROCEDURE [ANY, TUPLE []]]
+	kamikazes: ARRAYED_LIST [PROCEDURE [ANY, TUPLE []]]
 			-- Used by `prune_when_called'.
+
+feature -- Obsolete
+
+	make is
+		obsolete
+			"use default_create"
+		do
+			default_create
+		end
+
+	set_source_connection_agent
+				(a_source_connection_agent: PROCEDURE [ANY, TUPLE []]) is
+			-- Set `a_source_connection_agent' that will connect sequence to an
+			-- actual event source. The agent will be called when the first action is
+			-- added to the sequence. If there are already actions in the
+			-- sequence the agent is called immediately.
+		obsolete
+			"use not_empty_actions"
+		do
+			not_empty_actions.extend (a_source_connection_agent)
+			if not is_empty then
+				a_source_connection_agent.call ([])
+			end 
+		end
 
 invariant
 	is_aborted_stack_not_void: is_aborted_stack /= Void

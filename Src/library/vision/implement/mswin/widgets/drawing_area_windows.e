@@ -5,12 +5,18 @@ indexing
 	revision: "$Revision$"
 
 class
+
 	DRAWING_AREA_WINDOWS
 
 inherit
+
 	PRIMITIVE_WINDOWS
+		undefine
+			on_size,
+			on_move
 		redefine
-			resize
+			set_size,
+			set_background_color
 		end
 
 	WEL_CONTROL_WINDOW
@@ -42,87 +48,39 @@ inherit
 			on_left_button_up, on_right_button_down,
 			on_mouse_move, on_destroy, on_set_cursor,
 			on_key_up,
-			on_size,
-			on_move,
-			on_key_down
+			on_key_down,
+			on_show,
+			on_hide
 		redefine
 			class_name,
 			on_paint,
-			resize
+			on_left_button_down,
+			on_left_button_up,
+			on_right_button_down,
+			on_right_button_up,
+			default_ex_style
 		end
 
 	D_AREA_I
 
 	DRAWABLE_DEVICE_WINDOWS
-		rename
-			clear as dd_clear,
-			copy_bitmap as dd_copy_bitmap,
-			draw_arc as dd_draw_arc,
-			draw_image_text as dd_draw_image_text,
-			draw_inf_line as dd_draw_inf_line,
-			draw_point as dd_draw_point,
-			draw_polyline as dd_draw_polyline,
-			draw_rectangle as dd_draw_rectangle,
-			draw_segment as dd_draw_segment,
-			draw_text as dd_draw_text,
-			fill_arc as dd_fill_arc,
-			fill_polygon as dd_fill_polygon,
-			fill_rectangle as dd_fill_rectangle,
-			update_brush as dd_update_brush,
-			update_dc as dd_update_dc,
-			update_pen as dd_update_pen,
-			update_font as dd_update_font
-		redefine
-			set_drawing_dc,
-			unset_drawing_dc,
-			is_drawable
-		end
+	
+	CURSOR_WIDGET_MANAGER
 
-	DRAWABLE_DEVICE_WINDOWS
-		redefine
-			clear,
-			copy_bitmap,
-			draw_arc,
-			draw_image_text,
-			draw_inf_line,
-			draw_point,
-			draw_polyline,
-			draw_rectangle,
-			draw_segment,
-			draw_text,
-			fill_arc,
-			fill_polygon,
-			fill_rectangle, 
-			is_drawable,
-			set_drawing_dc,
-			unset_drawing_dc,
-			update_brush,
-			update_dc,
-			update_font,
-			update_pen
-		select
-			clear,
-			copy_bitmap,
-			draw_arc,
-			draw_image_text,
-			draw_inf_line,
-			draw_point,
-			draw_polyline,
-			draw_rectangle,
-			draw_segment,
-			draw_text,
-			fill_arc,
-			fill_polygon,
-			fill_rectangle,
-			update_brush,
-			update_dc,
-			update_font,
-			update_pen
+	WEL_MK_CONSTANTS
+		export
+			{NONE} all
 		end
 
 	WEL_MM_CONSTANTS
+		export
+			{NONE} all
+		end
 
 	WEL_CAPABILITIES_CONSTANTS
+		export
+			{NONE} all
+		end
 
 creation
 	make
@@ -137,7 +95,13 @@ feature -- Initialization
 			managed := man
 			set_line_width (1);
 			!! gc_fg_color.make_system (Color_windowtext)
-			!! gc_bg_color.make_system (Color_window)
+			if private_background_color /= Void then
+				!! gc_bg_color.make_rgb (private_background_color.red // 256,
+					private_background_color.green // 256,
+					private_background_color.blue // 256)
+			else
+				!! gc_bg_color.make_system (Color_window)
+			end
 			line_style := ps_solid
 		end
 
@@ -145,201 +109,58 @@ feature -- Initialization
 			-- Display a drawing area
 		local
 			wc: WEL_COMPOSITE_WINDOW
+			client_dc: WEL_CLIENT_DC
 		do
 			if not realized then
+				!! background_brush.make_solid (gc_bg_color)
+				!! background_pen.make (Ps_solid, 1, gc_bg_color)
 				wc ?= parent
-				make_with_coordinates (wc, "", x, y, width, height)
-				!WEL_CLIENT_DC! drawing_dc.make (Current)
---				clear
+				make_with_coordinates (wc, "", x, y, width.min (maximal_width),
+					height.min (maximal_height))
+				!! client_dc.make (Current)
+				client_dc.get
+				client_dc.set_bk_color (gc_bg_color)
+				client_dc.select_brush (background_brush)
+				drawing_dc := client_dc
+				clear
 			end
 		end
 
 feature -- Status report
 
+	set_size (new_width, new_height: INTEGER) is
+			-- Set the height to new_height,
+			-- width to `new_width'.
+		do
+			private_attributes.set_width (new_width)
+			private_attributes.set_height (new_height)
+			if exists then
+				resize (new_width.min(maximal_width), new_height.min (maximal_height))
+			end
+			if parent /= Void then
+				parent.child_has_resized
+			end
+		end
+
 	painting: BOOLEAN
 			-- Are we currently executing a WM_PAINT message?
 
-	is_drawable: BOOLEAN is
-			-- Is the device drawable?
-		do
-			Result := drawing_dc /= Void
-		end
-
 	is_valid: BOOLEAN is
-			-- Is drawing area vaild?
 		do
 			Result := true
 		end
 
 feature -- Status setting
 
-	resize (a_width, a_height: INTEGER) is
-			-- Resize the window with `a_width', `a_height'.
-		require else
-			exists: exists
-			not_minimized: not minimized
+	set_background_color (a_color: COLOR) is
 		do
-			cwin_set_window_pos (wel_item, default_pointer,
-				0, 0, a_width, a_height,
-				Swp_nomove + Swp_nozorder + Swp_noactivate)
-		end
-
-	
-feature -- Output
-
-	clear is
-			-- Clear the entire area.
-		do
-			if is_drawable then
-				set_drawing_dc (drawing_dc)
-				dd_clear
-				unset_drawing_dc
+			private_background_color := a_color
+			bg_color ?= a_color.implementation
+			check
+				valid_color: bg_color /= Void
 			end
-		end
-
-	copy_bitmap (a_point: COORD_XY; a_bitmap : PIXMAP) is
-			-- Copy `a_bitmap' to the drawing at `a_point'.
-		require else
-			a_point_exists: a_point /= Void
-			a_bitmap_exists: a_bitmap /= Void
-			a_bitmap_valid: a_bitmap.is_valid
-			drawing_dc_not_void: drawing_dc /= Void
-		do
-			set_drawing_dc (drawing_dc)
-			dd_copy_bitmap (a_point, a_bitmap)
-			unset_drawing_dc
-		end
-
-	draw_arc (center: COORD_XY; radius1, radius2: INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER) is
-			-- Draw an arc centered in (`x', `y') with a great radius of
-			-- `radius1' and a small radius of `radius2'
-			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
-			-- and with an orientation of `orientation'.
-		do
-			set_drawing_dc (drawing_dc)
-			dd_draw_arc (center, radius1, radius2, angle1, angle2, orientation, arc_style)
-			unset_drawing_dc
-		end
-
-	draw_image_text (base: COORD_XY; text: STRING) is
-			-- Draw text
-		do
-			set_drawing_dc (drawing_dc)
-			dd_draw_image_text (base, text)
-			unset_drawing_dc
-		end
-
-	draw_inf_line (point1, point2: COORD_XY) is
-			-- Draw an infinite line traversing `point1' and `point2'.
-		do
-			set_drawing_dc (drawing_dc)
-			dd_draw_inf_line (point1, point2)
-			unset_drawing_dc
-		end
-
-	draw_point (a_point: COORD_XY) is
-			-- Draw `a_point'.
-		do
-			set_drawing_dc (drawing_dc)
-			dd_draw_point (a_point)
-			unset_drawing_dc
-		end
-
-	draw_polyline (points: LIST [COORD_XY]; is_closed: BOOLEAN) is
-			-- Draw a polyline, close it automatically if `is_closed'.
-		do
-			set_drawing_dc (drawing_dc)
-			dd_draw_polyline (points, is_closed)
-			unset_drawing_dc
-		end
-
-	draw_rectangle (center: COORD_XY; rwidth, rheight: INTEGER; an_orientation: REAL) is
-			-- Draw a rectangle whose center is `center' and
-			-- whose size is `rwidth' and `rheight'.
-		do
-			set_drawing_dc (drawing_dc)
-			dd_draw_rectangle (center, rwidth, rheight, an_orientation)
-			unset_drawing_dc
-		end
-
-	draw_segment (point1, point2: COORD_XY) is
-			-- Draw a segment between `point1' and `point2'.
-		do
-			set_drawing_dc (drawing_dc)
-			dd_draw_segment (point1, point2)
-			unset_drawing_dc
-		end
-
-	draw_text (base: COORD_XY; text: STRING) is
-			-- Draw text
-		do
-			set_drawing_dc (drawing_dc)
-			dd_draw_text (base, text)
-			unset_drawing_dc
-		end
-
-	fill_arc (center: COORD_XY; radius1, radius2 : INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER) is
-			-- Fill an arc centered in (`x', `y') with a great radius of
-			-- `radius1' and a small radius of `radius2'
-			-- beginnning at `angle1' and finishing at `angle1'+`angle2'
-			-- and with an orientation of `orientation'.
-		do
-			set_drawing_dc (drawing_dc)
-			dd_fill_arc (center, radius1, radius2, angle1, angle2, orientation, arc_style)
-			unset_drawing_dc
-		end
-
-	fill_polygon (points: LIST [COORD_XY]) is
-			 -- Fill a polygon.
-		do
-			set_drawing_dc (drawing_dc)
-			dd_fill_polygon (points)
-			unset_drawing_dc
-		end
-
-	fill_rectangle (center: COORD_XY; rwidth, rheight : INTEGER; an_orientation: REAL) is
-			-- Fill a rectangle whose center is `center' and
-			-- whose size is `rwidth' and `rheight'.
-		do
-			set_drawing_dc (drawing_dc)
-			dd_fill_rectangle (center, rwidth, rheight, an_orientation)
-			unset_drawing_dc
-		end 
-
-	output_to_printer (a_name: STRING) is
-		require
-			a_name_valid: a_name /= Void and not a_name.empty
-		local
-			old_dc: WEL_DC
-			print_dc: WEL_DEFAULT_PRINTER_DC
-			t: INTEGER
-			expose_data: EXPOSE_DATA
-			coord: COORD_XY
-			clip: CLIP
-		do
-			!! print_dc.make
-			if print_dc.exists then
-				print_dc.start_document (a_name)
-				print_dc.set_map_mode (mm_anisotropic)
-				print_dc.set_window_extent (width, height)
-				print_dc.set_viewport_extent (print_dc.device_caps (horizontal_resolution), print_dc.device_caps (vertical_resolution))
-				painting := true
-				old_dc := drawing_dc
-				set_drawing_dc (print_dc)
-				!! coord
-				coord.set (0, 0)
-				!! clip
-				clip.set (coord, width, height)
-				!! expose_data.make (owner, clip, 0)
-				expose_actions.execute (Current, expose_data)
-				unset_drawing_dc
-				print_dc.new_frame
-				print_dc.end_document
-				drawing_dc := old_dc
-				painting := false
-			else
-				t := message_box ("No default printer set.  Printing unavailable.", 
-					"Printer Not Set", mb_iconstop + mb_ok)
+			if drawing_dc /= Void and then drawing_dc.exists then
+				drawing_dc.rectangle (0, 0, width, height)
 			end
 		end
 
@@ -370,119 +191,155 @@ feature -- Removal
 			character_actions.remove (Current, command, arg)
 		end
 
+feature -- Basic operations
 
-feature {NONE} -- Implementation
-
-	set_drawing_dc (dc: WEL_DC) is
-			-- Set `drawing_dc' as necessary
-		require else
-			painting: painting
-		local
-			a_client_dc: WEL_CLIENT_DC
-		do
-			drawing_dc := dc
-			if not painting then
-				a_client_dc ?= drawing_dc
-				check
-					client_dc_not_void: a_client_dc /= Void
-				end
-				a_client_dc.get
-			end
-			update_brush
-			if drawing_font /= Void then
-				update_font
-			end
-			dd_update_dc
-			update_pen
-		end
-
-	unset_drawing_dc is
-			-- Reset the dc to the original contents
-		local
-			a_client_dc: WEL_CLIENT_DC
-		do
-			drawing_dc.unselect_all
-			if not painting then
-				a_client_dc ?= drawing_dc
-				check
-					client_dc_not_void: a_client_dc /= Void
-				end
-				a_client_dc.release
-			end
-		end
-
-	update_dc is
-			-- Update the `drawing_dc' due to dc details changing
-		require else
-			drawing_dc: drawing_dc /= Void
-		do
-			if drawing_dc.exists then
-				dd_update_dc
-			end
-		end
-
-	class_name: STRING is
-			-- Class name
-		once
-			Result := "EVisionDrawingArea"
-		end
-
-	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
-			-- Redraw area.
+	output_to_printer (a_name: STRING) is
+		require
+			a_name_valid: a_name /= Void and not a_name.empty
 		local
 			old_dc: WEL_DC
+			printer_dc: WEL_DEFAULT_PRINTER_DC
+			t: INTEGER
 			expose_data: EXPOSE_DATA
 			coord: COORD_XY
 			clip: CLIP
 		do
+			!! printer_dc.make
+			if printer_dc.exists then
+				printer_dc.start_document (a_name)
+				printer_dc.set_map_mode (mm_anisotropic)
+				printer_dc.set_window_extent (width, height)
+				printer_dc.set_viewport_extent (printer_dc.device_caps (horizontal_resolution), printer_dc.device_caps (vertical_resolution))
+				painting := true
+				old_dc := drawing_dc
+				drawing_dc := printer_dc
+				!! coord
+				coord.set (0, 0)
+				!! clip
+				clip.set (coord, width, height)
+				!! expose_data.make (owner, clip, 0)
+				expose_actions.execute (Current, expose_data)
+				unset_drawing_dc
+				printer_dc.new_frame
+				printer_dc.end_document
+				drawing_dc := old_dc
+				painting := false
+			else
+				t := message_box ("No default printer set.  Printing unavailable.", 
+					"Printer Not Set", mb_iconstop + mb_ok)
+			end
+		end
+
+	output_to_printer_dc (a_printer_dc: WEL_PRINTER_DC; a_name: STRING) is
+			-- Output to `a_printer_dc'.
+		require
+			a_name_valid: a_name /= Void and not a_name.empty
+			a_printer_dc_not_void: a_printer_dc /= Void
+			a_printer_dc_exists: a_printer_dc.exists
+		local
+			old_dc: WEL_DC
+			t: INTEGER
+			expose_data: EXPOSE_DATA
+			coord: COORD_XY
+			clip: CLIP
+		do
+			a_printer_dc.start_document (a_name)
+			a_printer_dc.set_map_mode (mm_isotropic)
+			a_printer_dc.set_window_extent (width, height)
+			a_printer_dc.set_viewport_extent (a_printer_dc.device_caps (horizontal_resolution), a_printer_dc.device_caps (vertical_resolution))
 			painting := true
 			old_dc := drawing_dc
-			set_drawing_dc (paint_dc)
+			drawing_dc := a_printer_dc
 			!! coord
-			coord.set (invalid_rect.x, invalid_rect.y)
+			coord.set (0, 0)
 			!! clip
-			clip.set (coord, invalid_rect.width, invalid_rect.height)
+			clip.set (coord, width, height)
 			!! expose_data.make (owner, clip, 0)
 			expose_actions.execute (Current, expose_data)
 			unset_drawing_dc
+			a_printer_dc.new_frame
+			a_printer_dc.end_document
 			drawing_dc := old_dc
 			painting := false
 		end
 
-	update_brush is
-			-- Update the `drawing_dc' due to brush details changing
-		require else
-			drawing_dc: drawing_dc /= Void
+	output_to_file (a_file_name: FILE_NAME) is
+		require
+			a_file_name_valid: a_file_name /= Void and not a_file_name.empty
+		local
+			old_dc: WEL_DC
+			virtual_dc: WEL_MEMORY_DC
+			virtual_bitmap: WEL_BITMAP
+			t: INTEGER
+			expose_data: EXPOSE_DATA
+			coord: COORD_XY
+			clip: CLIP
 		do
-			if drawing_dc.exists then
-				dd_update_brush
-			end
+			!! virtual_dc.make_by_dc (drawing_dc)
+			!! virtual_bitmap.make_compatible (drawing_dc, width, height)
+			virtual_dc.select_bitmap (virtual_bitmap)
+			painting := true
+			old_dc := drawing_dc
+			drawing_dc := virtual_dc
+			clear
+			!! coord
+			coord.set (0, 0)
+			!! clip
+			clip.set (coord, width, height)
+			!! expose_data.make (owner, clip, 0)
+			expose_actions.execute (Current, expose_data)
+			unset_drawing_dc
+			drawing_dc := old_dc
+			drawing_dc.save (virtual_bitmap, a_file_name)
+			painting := false
 		end
 
-	update_font is
-			-- Update the `drawing_dc' due to font details changing
-		require else
-			drawing_dc: drawing_dc /= Void
+feature -- WEL
+
+	background_brush: WEL_BRUSH
+			-- Brush used to paint the background.
+
+	background_pen: WEL_PEN
+			-- Pen used to paint the background
+
+	class_name: STRING is
+			-- Windows class name
 		do
-			if drawing_dc.exists then
-				dd_update_font
-			end
+			Result := "EVisionDrawingArea"
 		end
 
-	update_pen is
-			-- Update the `drawing_dc' due to pen details changing
-		require else
-			drawing_dc: drawing_dc /= Void
+	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Respond to a paint message.
+		local
+			clip: CLIP
+			coord_xy: COORD_XY
+			expose_data: EXPOSE_DATA
+			old_pen: WEL_PEN
 		do
-			if drawing_dc.exists then
-				dd_update_pen
+			if drawing_dc /= Void then
+				clear_rect (invalid_rect.left, 
+					invalid_rect.top, invalid_rect.right, 
+					invalid_rect.bottom)
 			end
+			!! coord_xy
+			coord_xy.set (invalid_rect.left, invalid_rect.top)
+			!! clip
+			clip.set (coord_xy, invalid_rect.width, invalid_rect.height)
+			!! expose_data.make (widget_oui, clip, 0)
+			expose_actions.execute (Current, expose_data)
 		end
 
-	wel_font: WEL_FONT
-
-	wel_set_font (f:WEL_FONT) is
+	wel_font: WEL_FONT is
 		do
+		end
+
+	wel_set_font (f: WEL_FONT) is
+		do
+		end
+
+	default_ex_style: INTEGER is
+		do
+			Result := 768
 		end
 
 end -- class DRAWING_AREA_WINDOWS
@@ -499,3 +356,4 @@ end -- class DRAWING_AREA_WINDOWS
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

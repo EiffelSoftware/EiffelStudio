@@ -7,58 +7,32 @@ indexing
 class
 	TDS_ACCELERATORS
 
-	-- Replace ANY below by the name of parent class if any (adding more parents
-	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
-	ANY
-		rename
-		export
-		undefine
-		redefine
-		select
-		end
-
--- The following Creation_clause can be removed if you need no other
--- procedure than `default_create':
+	TDS_RESOURCE
 
 create
-	default_create
+	make
 
-feature -- Initialization
+feature
 
-feature -- Access
+	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: POINTER) is
+		do
+		end
 
-feature -- Measurement
+	generate_wel_code is
+		do
+		end
 
-feature -- Status report
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+		do
+		end
 
-feature -- Status setting
+	display is
+		do
+		end
 
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
+	insert_accelerator (v: TDS_ACCELERATORS_ITEM) is
+		do
+		end
 
 end -- class TDS_ACCELERATORS

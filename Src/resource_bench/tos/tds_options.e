@@ -1,117 +1,55 @@
 indexing
-	description: "Scrollbar statement representation in the tds"
+	description: "Options representation in the tds"
 	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	TDS_SCROLLBAR_STATEMENT
+	TDS_OPTIONS
 
 inherit
-	TDS_CONTROL_STATEMENT
-
-	TDS_CONTROL_CONSTANTS
-		export
-			{NONE} all
-		end
+	LINKED_LIST [STRING]
 
 creation
 	make
-
-feature	-- Initialization
-
-	finish_control_setup is
-		do
-			set_variable_name ("scrollbar")
-			set_wel_class_name ("WEL_SCROLL_BAR")
-			set_type (C_scrollbar)
-		end
 
 feature -- Code generation
 
 	display is
 		do
-			from 
+			io.putstring ("%NOptions : ")
+
+			from
 				start
 			until
 				after
-
 			loop
-				io.new_line
-				io.putstring ("SCROLLBAR ")
-
-				io.putstring (item.text)
-
+				io.putstring (item)
 				io.putstring (" ")
-				item.id.display
-
-				io.putstring (" ")
-				io.putint (item.x)
-
-				io.putstring (" ")
-				io.putint (item.y)
-
-				io.putstring (" ")
-				io.putint (item.width)
-
-				io.putstring (" ")
-				io.putint (item.height)
-
-				if (item.style /= Void) then
-					item.style.display
-				end
-
-				if (item.exstyle /= Void) then
-					item.exstyle.display
-				end
 
 				forth
 			end
+			io.new_line
 		end
 
-	generate_resource_file (resource_file: PLAIN_TEXT_FILE) is
-			-- generate the resource script file from the tds memory structure
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+			-- Generate `a_resource_file' from the tds memory structure.
+		require
+			a_resource_file_exists: a_resource_file.exists
 		do
-			from 
+			from
 				start
 			until
 				after
-
 			loop
-				resource_file.putstring ("%N%TSCROLLBAR ")
-
-				resource_file.putstring (item.text)
-
-				resource_file.putstring (", ")
-				item.id.generate_resource_file (resource_file)
-
-				resource_file.putstring (", ")
-				resource_file.putint (item.x)
-
-				resource_file.putstring (", ")
-				resource_file.putint (item.y)
-
-				resource_file.putstring (", ")
-				resource_file.putint (item.width)
-
-				resource_file.putstring (", ")
-				resource_file.putint (item.height)
-
-				if (item.style /= Void) then
-					resource_file.putstring (", ")
-					item.style.generate_resource_file (resource_file)
-				end
-
-				if (item.exstyle /= Void) then
-					resource_file.putstring (", ")
-					item.exstyle.generate_resource_file (resource_file)
-				end
+				a_resource_file.putstring (item)
+				a_resource_file.putstring (" ")
 
 				forth
 			end
 		end
 
-end -- class TDS_SCROLLBAR_STATEMENT
+end -- class TDS_OPTIONS
 
 --|---------------------------------------------------------------
 --|   Copyright (C) Interactive Software Engineering, Inc.      --

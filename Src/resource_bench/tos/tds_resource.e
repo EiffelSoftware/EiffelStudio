@@ -4,61 +4,88 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	TDS_RESOURCE
 
-	-- Replace ANY below by the name of parent class if any (adding more parents
-	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
-	ANY
-		rename
-		export
-		undefine
-		redefine
-		select
-		end
+	LINKED_LIST [TDS_RESOURCE]
 
--- The following Creation_clause can be removed if you need no other
--- procedure than `default_create':
-
-create
-	default_create
-
-feature -- Initialization
+	TDS_RESOURCE_CONSTANTS
 
 feature -- Access
 
-feature -- Measurement
+	tree_view_item: INTEGER
 
-feature -- Status report
+	is_wel_code_on: BOOLEAN
 
-feature -- Status setting
+	class_name: STRING
 
-feature -- Cursor movement
+	set_class_name (s: STRING) is
+		do
+			class_name := s
+		end
 
-feature -- Element change
+	type: INTEGER
 
-feature -- Removal
+	set_type (a_type: INTEGER) is
+		do
+		end
 
-feature -- Resizing
+	make_options is
+		do
+			create options.make
+		end
 
-feature -- Transformation
+	make_load_and_mem_attributes is
+		do
+			create load_and_mem_attributes.make
+		end
 
-feature -- Conversion
+	id: TDS_ID
 
-feature -- Duplication
+	set_id (s: STRING) is
+		do
+			id.set_id (s)
+		end
 
-feature -- Miscellaneous
+	insert (v: TDS_RESOURCE) is
+		do
+		end
 
-feature -- Basic operations
+	set_tree_view_item (a_parent: POINTER) is
+		do
+		end
 
-feature -- Obsolete
+	set_wel_code (value: BOOLEAN) is
+		do
+			is_wel_code_on := value
+		end
 
-feature -- Inapplicable
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+		deferred
+		end
 
-feature {NONE} -- Implementation
+	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: POINTER) is
+		deferred
+		end
 
-invariant
-	invariant_clause: -- Your invariant here
+	generate_wel_code is
+		deferred
+		end
+
+	load_and_mem_attributes: TDS_LOAD_AND_MEM_ATTRIBUTES
+
+	options: TDS_OPTIONS
+
+	filename: STRING
+	
+	set_filename (s: STRING) is
+		do
+			filename := s
+		end
+
+	display is
+		deferred
+		end
 
 end -- class TDS_RESOURCE

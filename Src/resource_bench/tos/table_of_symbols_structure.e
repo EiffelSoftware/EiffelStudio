@@ -236,7 +236,7 @@ feature -- Code generation
 		require
 			a_tree_view_not_void: a_tree_view /= Void
 		local
-			parent: INTEGER
+			parent: POINTER
 		do
 			from
 				parent := a_tree_view.last_item

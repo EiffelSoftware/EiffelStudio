@@ -1,64 +1,130 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Icon representation in the tds"
+	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	TDS_ANIICON
 
-	-- Replace ANY below by the name of parent class if any (adding more parents
-	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
-	ANY
+	TDS_RESOURCE
 		rename
-		export
-		undefine
-		redefine
-		select
+			make as list_make
 		end
 
--- The following Creation_clause can be removed if you need no other
--- procedure than `default_create':
+creation
+	make
 
-create
-	default_create
+feature	-- Initialization
 
-feature -- Initialization
+	make is
+		do
+			list_make
+			set_type (R_aniicon)
+		end
 
-feature -- Access
+feature -- Code generation
 
-feature -- Measurement
+	display is
+			-- Display the tds.
+		local
+			icon: TDS_ANIICON
+		do
+			from 
+				start
+			until 
+				after
+			loop
+				icon ?= item
 
-feature -- Status report
+				io.putstring ("%N------------------------------------")
+				io.putstring ("%NAniicon ID : ")
+				icon.id.display
 
-feature -- Status setting
+				if (icon.load_and_mem_attributes /= Void) then
+					icon.load_and_mem_attributes.display
+				end                
 
-feature -- Cursor movement
+				io.putstring ("%Nfilename = ")
+				io.putstring (icon.filename)
 
-feature -- Element change
+				io.new_line
+				forth
+			end
+		end
 
-feature -- Removal
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+			-- Generate `a_resource_file' from the tds memory structure.
+		local
+			icon: TDS_ICON
+		do
+			a_resource_file.putstring ("%N////////////////////////////////////////////////////////////////%N")
+			a_resource_file.putstring ("//%N")
+			a_resource_file.putstring ("// ANIICON%N")
+			a_resource_file.putstring ("//%N%N")
+			
+			from 
+				start
+			until 
+				after
+			loop
+				icon ?= item
 
-feature -- Resizing
+				icon.id.generate_resource_file (a_resource_file)
+				a_resource_file.putstring (" ANIICON ")
 
-feature -- Transformation
 
-feature -- Conversion
+				if (icon.load_and_mem_attributes /= Void) then
+					icon.load_and_mem_attributes.generate_resource_file (a_resource_file)
+				end                
 
-feature -- Duplication
+				a_resource_file.putstring (icon.filename)
+				forth
+			end
 
-feature -- Miscellaneous
+			a_resource_file.new_line
+		end
 
-feature -- Basic operations
+	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: POINTER) is
+			-- Generate `a_tree_view' control from the tds memory structure.
+		local
+			tvis: WEL_TREE_VIEW_INSERT_STRUCT
+			tv_item: WEL_TREE_VIEW_ITEM
+			parent: POINTER
+		do
+			!! tvis.make
+			tvis.set_sort
+			tvis.set_parent (a_parent)
+			!! tv_item.make
+			tv_item.set_text ("Aniicon")
+			tvis.set_tree_view_item (tv_item)
+			a_tree_view.insert_item (tvis)
 
-feature -- Obsolete
+			from
+				parent := a_tree_view.last_item
+				set_tree_view_item (parent)
+				start
+			until
+				after
+			loop
+				item.id.generate_tree_view (a_tree_view, parent)
+				item.set_tree_view_item (a_tree_view.last_item)
+				forth
+			end 
+		end
 
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
+	generate_wel_code is
+			-- Generate the eiffel code.
+		do
+		end
 
 end -- class TDS_ANIICON
+
+--|---------------------------------------------------------------
+--|   Copyright (C) Interactive Software Engineering, Inc.      --
+--|    270 Storke Road, Suite 7 Goleta, California 93117        --
+--|                   (805) 685-1006                            --
+--| All rights reserved. Duplication or distribution prohibited --
+--|---------------------------------------------------------------
+

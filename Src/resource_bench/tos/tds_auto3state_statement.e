@@ -1,64 +1,122 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Auto3state statement representation in the tds"
+	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	TDS_AUTO3STATE_STATEMENT
 
-	-- Replace ANY below by the name of parent class if any (adding more parents
-	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
-	ANY
-		rename
+	TDS_CONTROL_STATEMENT
+
+	TDS_CONTROL_CONSTANTS
 		export
-		undefine
-		redefine
-		select
+			{NONE} all
 		end
 
--- The following Creation_clause can be removed if you need no other
--- procedure than `default_create':
+creation
+	make
 
-create
-	default_create
+feature	-- Initialization
 
-feature -- Initialization
+	finish_control_setup is
+		do
+			set_variable_name ("auto3state")
+			set_wel_class_name ("WEL_AUTO3STATE")
+			set_type (C_auto3state)
+		end
 
-feature -- Access
+feature -- Code generation
 
-feature -- Measurement
+	display is
+		do
+			from 
+				start
+			until
+				after
 
-feature -- Status report
+			loop
+				io.new_line
+				io.putstring ("AUTO3STATE ")
 
-feature -- Status setting
+				io.putstring (item.text)
 
-feature -- Cursor movement
+				io.putstring (" ")
+				item.id.display
 
-feature -- Element change
+				io.putstring (" ")
+				io.putint (item.x)
 
-feature -- Removal
+				io.putstring (" ")
+				io.putint (item.y)
 
-feature -- Resizing
+				io.putstring (" ")
+				io.putint (item.width)
 
-feature -- Transformation
+				io.putstring (" ")
+				io.putint (item.height)
 
-feature -- Conversion
+				if (item.style /= Void) then
+					item.style.display
+				end
 
-feature -- Duplication
+				if (item.exstyle /= Void) then
+					item.exstyle.display
+				end
 
-feature -- Miscellaneous
+				forth
+			end
+		end
 
-feature -- Basic operations
+	generate_resource_file (resource_file: PLAIN_TEXT_FILE) is
+			-- generate the resource script file from the tds memory structure
+		do
+			from 
+				start
+			until
+				after
 
-feature -- Obsolete
+			loop
+				resource_file.putstring ("%N%TAUTO3STATE ")
 
-feature -- Inapplicable
+				resource_file.putstring (item.text)
 
-feature {NONE} -- Implementation
+				resource_file.putstring (", ")
+				item.id.generate_resource_file (resource_file)
 
-invariant
-	invariant_clause: -- Your invariant here
+				resource_file.putstring (", ")
+				resource_file.putint (item.x)
+
+				resource_file.putstring (", ")
+				resource_file.putint (item.y)
+
+				resource_file.putstring (", ")
+				resource_file.putint (item.width)
+
+				resource_file.putstring (", ")
+				resource_file.putint (item.height)
+
+				if (item.style /= Void) then
+					resource_file.putstring (", ")
+					item.style.generate_resource_file (resource_file)
+				end
+
+				if (item.exstyle /= Void) then
+					resource_file.putstring (", ")
+					item.exstyle.generate_resource_file (resource_file)
+				end
+
+				forth
+			end
+		end
 
 end -- class TDS_AUTO3STATE_STATEMENT
+
+--|---------------------------------------------------------------
+--|   Copyright (C) Interactive Software Engineering, Inc.      --
+--|    270 Storke Road, Suite 7 Goleta, California 93117        --
+--|                   (805) 685-1006                            --
+--| All rights reserved. Duplication or distribution prohibited --
+--|---------------------------------------------------------------
+

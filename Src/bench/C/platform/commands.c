@@ -105,7 +105,7 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 			NULL,					/* Process security attribute */
 			NULL,					/* Primary thread security attributes */
 			TRUE,					/* Handles are inherited */
-			CREATE_NEW_CONSOLE,		/* Creation flags */
+			DETACHED_PROCESS,		/* Creation flags */
 			NULL,					/* Use parent's environment */
 			eif_access(c_code_dir),	/* Use cmd's current directory */
 			&siStartInfo,			/* STARTUPINFO pointer */

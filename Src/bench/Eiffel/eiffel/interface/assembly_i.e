@@ -346,6 +346,7 @@ feature {NONE} -- Implementation
 		local
 			l_emitter: IL_EMITTER
 			l_vd64: VD64
+			l_dir: DIRECTORY
 		do
 			if is_local then
 				create l_emitter.make
@@ -358,6 +359,10 @@ feature {NONE} -- Implementation
 						-- already been generated.
 					if assembly_path /= Void then
 							-- And call emitter to generate XML file if needed.
+						create l_dir.make (Local_assembly_path)
+						if not l_dir.exists then
+							l_dir.create_dir
+						end
 						l_emitter.consume_local_assembly (assembly_path, Local_assembly_path)
 					end
 				end

@@ -27,25 +27,11 @@ feature -- Basic Operations
 			"ImportAssemblyWithoutDependancies"
 		end
 
-	generate_eiffel_classes_from_xml_and_path_name (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING) is
-		external
-			"IL signature (System.Reflection.Assembly, System.String): System.Void use EiffelClassGenerator"
-		alias
-			"GenerateEiffelClassesFromXmlAndPathName"
-		end
-
 	import_assembly_with_dependancies (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING; formatting: BOOLEAN) is
 		external
 			"IL signature (System.Reflection.Assembly, System.String, System.Boolean): System.Void use EiffelClassGenerator"
 		alias
 			"ImportAssemblyWithDependancies"
-		end
-
-	generate_eiffel_classes_from_xml (assembly: SYSTEM_REFLECTION_ASSEMBLY) is
-		external
-			"IL signature (System.Reflection.Assembly): System.Void use EiffelClassGenerator"
-		alias
-			"GenerateEiffelClassesFromXml"
 		end
 
 	is_assembly_imported (assembly: SYSTEM_REFLECTION_ASSEMBLY): BOOLEAN is
@@ -64,23 +50,23 @@ feature {NONE} -- Implementation
 			"GeneratedFeature"
 		end
 
-	prepare_eiffel_code_generation (path_name: STRING) is
+	eiffel_path (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING): STRING is
 		external
-			"IL signature (System.String): System.Void use EiffelClassGenerator"
+			"IL signature (System.Reflection.Assembly, System.String): System.String use EiffelClassGenerator"
 		alias
-			"PrepareEiffelCodeGeneration"
+			"EiffelPath"
 		end
 
-	emit_eiffel_classes_from_xml (path_name: STRING) is
+	emit_eiffel_classes_from_xml (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING) is
 		external
-			"IL signature (System.String): System.Void use EiffelClassGenerator"
+			"IL signature (System.Reflection.Assembly, System.String): System.Void use EiffelClassGenerator"
 		alias
 			"EmitEiffelClassesFromXml"
 		end
 
-	emit_from_assembly (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING; import_dependancies: BOOLEAN) is
+	emit_from_assembly (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING) is
 		external
-			"IL signature (System.Reflection.Assembly, System.String, System.Boolean): System.Void use EiffelClassGenerator"
+			"IL signature (System.Reflection.Assembly, System.String): System.Void use EiffelClassGenerator"
 		alias
 			"EmitFromAssembly"
 		end
@@ -99,16 +85,16 @@ feature {NONE} -- Implementation
 			"IsEiffelPathValid"
 		end
 
-	emit_eiffel_classes (path_name: STRING) is
+	emit_eiffel_classes (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING) is
 		external
-			"IL signature (System.String): System.Void use EiffelClassGenerator"
+			"IL signature (System.Reflection.Assembly, System.String): System.Void use EiffelClassGenerator"
 		alias
 			"EmitEiffelClasses"
 		end
 
-	emit_xml_files (path_name: STRING) is
+	emit_xml_files (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING) is
 		external
-			"IL signature (System.String): System.Void use EiffelClassGenerator"
+			"IL signature (System.Reflection.Assembly, System.String): System.Void use EiffelClassGenerator"
 		alias
 			"EmitXmlFiles"
 		end

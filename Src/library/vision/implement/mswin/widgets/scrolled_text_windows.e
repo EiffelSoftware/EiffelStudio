@@ -36,15 +36,14 @@ feature -- Initialization
 	make (a_scrolled_text: SCROLLED_T; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Make a scrolled text
 		do
+			init_common_controls_dll
+			init_rich_edit_dll
 			!! private_attributes
 			is_multi_line_mode := True
 			parent ?= oui_parent.implementation
 			!! private_text.make (0)
 			managed := man
-			show_horizontal_scrollbar
-			show_vertical_scrollbar
 			a_scrolled_text.set_font_imp (Current)
-			--init_dlls
 		end
 
 	realize is
@@ -75,8 +74,9 @@ feature -- Initialization
 				if margin_width + margin_height > 0 then
 					set_margins (margin_width, margin_height)
 				end
-				if not is_multi_line_mode then
-					hide_vertical_scrollbar
+				show_horizontal_scrollbar
+				if is_multi_line_mode then
+					show_vertical_scrollbar
 				end
 				if not managed and wel_shown then
 					wel_hide

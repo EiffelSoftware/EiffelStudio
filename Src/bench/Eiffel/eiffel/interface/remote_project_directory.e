@@ -128,6 +128,15 @@ feature -- Access
 			create Result.make (precomp_eif)
 		end
 
+	precomp_eid_file: FILE_NAME is
+			-- File where the il debug info for the precompiled is stored
+		do
+			create Result.make_from_string (name);
+			Result.extend_from_array (<<Eiffelgen, W_code>>);
+			Result.set_file_name (system_name)			
+			Result.add_extension ("eid")	
+		end
+		
 	precompiled_preobj: FILE_NAME is
 			-- Full name of `preobj' object file
 		local

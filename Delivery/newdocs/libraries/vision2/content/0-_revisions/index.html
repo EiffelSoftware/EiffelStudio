@@ -51,6 +51,7 @@
 				</UL>
 			<LI><B>EV_TEXT</B> - `set_background_color' now correctly sets the color of the whole background. Previously only the area containing text was modified.</LI>
 			<LI><B>EV_CLIPBOARD</B> - Our implementation would sometimes query `text' when not allowed by Windows, thus causing postcondition failures.</LI>
+			<LI><B>EV_BUTTON</B> - The result of querying `text_alignment' after default_create was incorrect.
 			</UL>
 		<LI><B>Gtk</B></LI>
 			<UL>

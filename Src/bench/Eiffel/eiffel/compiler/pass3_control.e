@@ -75,6 +75,7 @@ feature
 		local
 			pos: INTEGER;
 		do
+-- FIXME: use `disjoint'
 			pos := depend_list.index;
 			from
 				Result := True;
@@ -98,6 +99,7 @@ feature
 		local
 			pos: INTEGER;
 		do
+-- FIXME: use `disjoint'
 			pos := depend_list.index;
 			from
 				Result := True;

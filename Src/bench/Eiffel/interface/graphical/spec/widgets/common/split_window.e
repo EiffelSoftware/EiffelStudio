@@ -47,4 +47,14 @@ feature -- Access
 		do
 		end;
 
+feature -- Status Setting
+
+	set_widget_pane_minimum (a_widget: WIDGET; a_dimension: INTEGER) is
+		local
+			l: MEL_RECT_OBJ
+		do
+			l ?= a_widget.implementation;
+			implementation.set_widget_pane_minimum (l, a_dimension)
+		end
+
 end -- class SPLIT_WINDOW

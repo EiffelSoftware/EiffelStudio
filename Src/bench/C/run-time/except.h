@@ -17,6 +17,12 @@
 #include "malloc.h"
 #include "garcol.h"
 #include <setjmp.h>
+#include <errno.h>    /* needed in error.c, except.c, retrieve.c */
+
+#ifdef __VMS
+#define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR
+	/* apparently this routine is in the library in capital letters */
+#endif
 
 /* Structure used as the execution vector. This is for both the execution
  * stack (eif_stack) and the exception trace stack (eif_trace).

@@ -155,6 +155,7 @@ feature {NONE}
 			attach_left_widget (v_sep_single, v_sep_double, 8);
 			attach_left_widget (v_sep_double, v_sep_single_dashed, 8);
 			attach_left_widget (v_sep_single_dashed, v_sep_double_dashed, 8);
+			attach_left_widget (v_sep_double_dashed, scale, 10);
 			attach_right (scale, 10);
 
 			attach_top (push_b_type.source, 1);

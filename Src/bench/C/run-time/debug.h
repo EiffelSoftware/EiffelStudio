@@ -141,6 +141,9 @@ extern struct dcall *dpop();	/* Pop value off stack */
 extern struct dcall *dtop();	/* Current top value */
 extern void dmove();			/* Move active routine cursor */
 
+/* Breakpoint handling */
+extern shared void dbreak();	/* Program execution stopped */
+
 /* Once list handling */
 extern uint32 *onceadd();		/* Add once body_id to list */	
 extern uint32 *onceitem();		/* Item with body_id in list */

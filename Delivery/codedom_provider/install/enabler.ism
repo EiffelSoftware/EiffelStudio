@@ -252,7 +252,7 @@
 		<col key="yes" def="s72">Name</col>
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
-		<row><td>NewBinary1</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\IsDialogBanner.ibd</td></row>
+		<row><td>NewBinary1</td><td/><td>&lt;ISProjectFolder&gt;\banner.jpg</td></row>
 		<row><td>NewBinary10</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\CompleteSetupIco.ibd</td></row>
 		<row><td>NewBinary11</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\CustomSetupIco.ibd</td></row>
 		<row><td>NewBinary12</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\DestIcon.ibd</td></row>
@@ -266,7 +266,7 @@
 		<row><td>NewBinary2</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\New.ibd</td></row>
 		<row><td>NewBinary3</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\Up.ibd</td></row>
 		<row><td>NewBinary4</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\WarningIcon.ibd</td></row>
-		<row><td>NewBinary5</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\IsDialogBitmap.ibd</td></row>
+		<row><td>NewBinary5</td><td/><td>&lt;ISProjectFolder&gt;\dialog.jpg</td></row>
 		<row><td>NewBinary6</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\CustomSetupIco.ibd</td></row>
 		<row><td>NewBinary7</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\ReinstIco.ibd</td></row>
 		<row><td>NewBinary8</td><td/><td>&lt;ISProductFolder&gt;\Redist\Language Independent\OS Independent\RemoveIco.ibd</td></row>
@@ -354,12 +354,14 @@
 		<row><td>EiffelSoftware.Runtime.dll</td><td>{33127FF4-7555-4BA8-A071-89DD373F8D3E}</td><td>BIN</td><td>8</td><td/><td>eiffelsoftware.runtime.dll</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.Runtime.dll1</td><td>{75636316-149F-4143-814A-47128E265769}</td><td>BIN1</td><td>8</td><td/><td>eiffelsoftware.runtime.dll1</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>EiffelSoftware.Runtime.dll2</td><td>{D35F440D-96EE-47EE-BF57-E3EA55F914AD}</td><td>GlobalAssemblyCache</td><td>8</td><td/><td>eiffelsoftware.runtime.dll2</td><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EifinitFiles</td><td>{107D51F0-C596-4F62-A183-FD25F1743419}</td><td>EIFINIT</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>EifinitStudioFiles</td><td>{C03A1A10-12EA-4D1F-B72E-565E88EAD3F2}</td><td>STUDIO1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Empty</td><td>{A35E73D1-2614-4A37-8819-FA14C434E6F8}</td><td>ASSEMBLIES</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>ErrorFiles</td><td>{160B4CBE-AFEE-476C-817A-E462A987F12F}</td><td>ERRORS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>IconFiles</td><td>{561052E8-AADE-46E5-8331-27342DEA4828}</td><td>ICONS</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>Library</td><td>{0FEA0AF1-E705-4712-8744-33CF25097FF2}</td><td>LIBRARY</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>LibraryDotNet</td><td>{E05D8E65-9CEB-4E1D-8353-72E4663A9DA1}</td><td>LIBRARY.NET</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
-		<row><td>MDRegFile</td><td>{757CE16E-4B12-4B4D-9810-DFA9F4BCB5FA}</td><td>BIN1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
+		<row><td>MDRegFiles</td><td>{507C0807-FE24-4381-A19B-C3E1699DB266}</td><td>BIN1</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>SamplesFiles</td><td>{07FB8B42-EAB9-458C-8FC4-1E9844F0ECD8}</td><td>SAMPLES</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>VirtualDirComponent</td><td>{70E9460C-4F29-4900-A0DD-A32B0052696C}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
 		<row><td>XCACLS</td><td>{8D0F564F-1893-493C-A036-0A18BE7210E1}</td><td>INSTALLDIR</td><td>8</td><td/><td/><td>1</td><td/><td/><td/><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td><td>/LogFile=</td></row>
@@ -442,7 +444,7 @@
 		<row><td>CustomSetup</td><td>ChangeFolder</td><td>PushButton</td><td>301</td><td>203</td><td>66</td><td>17</td><td>3</td><td/><td>##IDS__IsCustomSelectionDlg_Change##</td><td>Help</td><td/><td>0</td><td/><td/><td/></row>
 		<row><td>CustomSetup</td><td>Details</td><td>PushButton</td><td>93</td><td>243</td><td>66</td><td>17</td><td>3</td><td/><td>##IDS__IsCustomSelectionDlg_Space##</td><td>Back</td><td/><td>0</td><td/><td/><td/></row>
 		<row><td>CustomSetup</td><td>DlgDesc</td><td>Text</td><td>17</td><td>23</td><td>292</td><td>25</td><td>65539</td><td/><td>##IDS__IsCustomSelectionDlg_SelectFeatures##</td><td/><td/><td>0</td><td/><td/><td/></row>
-		<row><td>CustomSetup</td><td>DlgLine</td><td>Line</td><td>48</td><td>234</td><td>326</td><td>0</td><td>1</td><td/><td/><td/><td/><td>0</td><td/><td/><td/></row>
+		<row><td>CustomSetup</td><td>DlgLine</td><td>Line</td><td>48</td><td>234</td><td>324</td><td>0</td><td>1</td><td/><td/><td/><td/><td>0</td><td/><td/><td/></row>
 		<row><td>CustomSetup</td><td>DlgText</td><td>Text</td><td>9</td><td>51</td><td>360</td><td>10</td><td>3</td><td/><td>##IDS__IsCustomSelectionDlg_ClickFeatureIcon##</td><td/><td/><td>0</td><td/><td/><td/></row>
 		<row><td>CustomSetup</td><td>DlgTitle</td><td>Text</td><td>9</td><td>6</td><td>292</td><td>25</td><td>65539</td><td/><td>##IDS__IsCustomSelectionDlg_CustomSetup##</td><td/><td/><td>0</td><td/><td/><td/></row>
 		<row><td>CustomSetup</td><td>FeatureGroup</td><td>GroupBox</td><td>235</td><td>67</td><td>131</td><td>120</td><td>1</td><td/><td>##IDS__IsCustomSelectionDlg_FeatureDescription##</td><td/><td/><td>0</td><td/><td/><td/></row>
@@ -565,7 +567,7 @@
 		<row><td>InstallWelcome</td><td>Image</td><td>Bitmap</td><td>0</td><td>0</td><td>374</td><td>234</td><td>1</td><td/><td/><td/><td/><td>0</td><td/><td/><td>NewBinary5</td></row>
 		<row><td>InstallWelcome</td><td>Next</td><td>PushButton</td><td>230</td><td>243</td><td>66</td><td>17</td><td>3</td><td/><td>##IDS_NEXT##</td><td>Cancel</td><td/><td>0</td><td/><td/><td/></row>
 		<row><td>InstallWelcome</td><td>TextLine1</td><td>Text</td><td>135</td><td>8</td><td>225</td><td>45</td><td>65539</td><td/><td>##IDS__IsWelcomeDlg_WelcomeProductName##</td><td/><td/><td>0</td><td/><td/><td/></row>
-		<row><td>InstallWelcome</td><td>TextLine2</td><td>Text</td><td>135</td><td>55</td><td>228</td><td>45</td><td>65539</td><td/><td>##IDS__IsWelcomeDlg_InstallProductName##</td><td/><td/><td>0</td><td/><td/><td/></row>
+		<row><td>InstallWelcome</td><td>TextLine2</td><td>Text</td><td>135</td><td>55</td><td>235</td><td>45</td><td>65539</td><td/><td>##IDS__IsWelcomeDlg_InstallProductName##</td><td/><td/><td>0</td><td/><td/><td/></row>
 		<row><td>LicenseAgreement</td><td>Agree</td><td>RadioButtonGroup</td><td>8</td><td>190</td><td>291</td><td>40</td><td>3</td><td>AgreeToLicense</td><td/><td>Back</td><td/><td>0</td><td/><td/><td/></row>
 		<row><td>LicenseAgreement</td><td>Back</td><td>PushButton</td><td>164</td><td>243</td><td>66</td><td>17</td><td>3</td><td/><td>##IDS_BACK##</td><td>Next</td><td/><td>0</td><td/><td/><td/></row>
 		<row><td>LicenseAgreement</td><td>Banner</td><td>Bitmap</td><td>0</td><td>0</td><td>374</td><td>44</td><td>1</td><td/><td/><td/><td/><td>0</td><td/><td/><td>NewBinary1</td></row>
@@ -740,10 +742,10 @@
 		<row><td>SetupProgress</td><td>Branding2</td><td>Text</td><td>3</td><td>228</td><td>50</td><td>13</td><td>65537</td><td/><td>##IDS_INSTALLSHIELD##</td><td/><td/><td>0</td><td/><td/><td/></row>
 		<row><td>SetupProgress</td><td>Cancel</td><td>PushButton</td><td>301</td><td>243</td><td>66</td><td>17</td><td>3</td><td/><td>##IDS_CANCEL##</td><td>Back</td><td/><td>0</td><td/><td/><td/></row>
 		<row><td>SetupProgress</td><td>DlgDesc</td><td>Text</td><td>21</td><td>23</td><td>292</td><td>25</td><td>65538</td><td/><td>##IDS__IsProgressDlg_UninstallingFeatures2##</td><td/><td/><td>0</td><td/><td/><td/></row>
-		<row><td>SetupProgress</td><td>DlgDesc2</td><td>Text</td><td>21</td><td>23</td><td>292</td><td>25</td><td>65538</td><td/><td>##IDS__IsProgressDlg_UninstallingFeatures##</td><td/><td/><td>0</td><td/><td/><td/></row>
+		<row><td>SetupProgress</td><td>DlgDesc2</td><td>Text</td><td>21</td><td>24</td><td>292</td><td>25</td><td>65538</td><td/><td>##IDS__IsProgressDlg_UninstallingFeatures##</td><td/><td/><td>0</td><td/><td/><td/></row>
 		<row><td>SetupProgress</td><td>DlgLine</td><td>Line</td><td>48</td><td>234</td><td>326</td><td>0</td><td>1</td><td/><td/><td/><td/><td>0</td><td/><td/><td/></row>
-		<row><td>SetupProgress</td><td>DlgText</td><td>Text</td><td>59</td><td>51</td><td>275</td><td>30</td><td>65538</td><td/><td>##IDS__IsProgressDlg_WaitUninstall2##</td><td/><td/><td>0</td><td/><td/><td/></row>
-		<row><td>SetupProgress</td><td>DlgText2</td><td>Text</td><td>59</td><td>51</td><td>275</td><td>30</td><td>65538</td><td/><td>##IDS__IsProgressDlg_WaitUninstall##</td><td/><td/><td>0</td><td/><td/><td/></row>
+		<row><td>SetupProgress</td><td>DlgText</td><td>Text</td><td>59</td><td>51</td><td>286</td><td>30</td><td>65538</td><td/><td>##IDS__IsProgressDlg_WaitUninstall2##</td><td/><td/><td>0</td><td/><td/><td/></row>
+		<row><td>SetupProgress</td><td>DlgText2</td><td>Text</td><td>58</td><td>51</td><td>288</td><td>30</td><td>65538</td><td/><td>##IDS__IsProgressDlg_WaitUninstall##</td><td/><td/><td>0</td><td/><td/><td/></row>
 		<row><td>SetupProgress</td><td>DlgTitle</td><td>Text</td><td>13</td><td>6</td><td>292</td><td>25</td><td>65538</td><td/><td>##IDS__IsProgressDlg_InstallingProductName##</td><td/><td/><td>0</td><td/><td/><td/></row>
 		<row><td>SetupProgress</td><td>DlgTitle2</td><td>Text</td><td>13</td><td>6</td><td>292</td><td>25</td><td>65538</td><td/><td>##IDS__IsProgressDlg_Uninstalling##</td><td/><td/><td>0</td><td/><td/><td/></row>
 		<row><td>SetupProgress</td><td>LbSec</td><td>Text</td><td>172</td><td>139</td><td>32</td><td>12</td><td>2</td><td/><td>##IDS__IsProgressDlg_SecHidden##</td><td/><td/><td>0</td><td/><td/><td/></row>
@@ -890,8 +892,8 @@
 		<row><td>AdminWelcome</td><td>Next</td><td>NewDialog</td><td>AdminNetworkLocation</td><td>1</td><td>0</td></row>
 		<row><td>CancelSetup</td><td>No</td><td>EndDialog</td><td>Return</td><td>1</td><td>0</td></row>
 		<row><td>CancelSetup</td><td>Yes</td><td>EndDialog</td><td>Exit</td><td>1</td><td>2</td></row>
-		<row><td>CustomSetup</td><td>Back</td><td>NewDialog</td><td>DestinationFolder</td><td>Installed</td><td>0</td></row>
-		<row><td>CustomSetup</td><td>Back</td><td>NewDialog</td><td>SetupType</td><td>NOT Installed</td><td>0</td></row>
+		<row><td>CustomSetup</td><td>Back</td><td>NewDialog</td><td>DestinationFolder</td><td>Installed</td><td>1</td></row>
+		<row><td>CustomSetup</td><td>Back</td><td>NewDialog</td><td>SetupType</td><td>NOT Installed</td><td>2</td></row>
 		<row><td>CustomSetup</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>CustomSetup</td><td>ChangeFolder</td><td>SelectionBrowse</td><td>InstallChangeFolder</td><td>1</td><td>0</td></row>
 		<row><td>CustomSetup</td><td>Details</td><td>SelectionBrowse</td><td>DiskSpaceRequirements</td><td>1</td><td>1</td></row>
@@ -926,7 +928,7 @@
 		<row><td>InstallChangeFolder</td><td>OK</td><td>EndDialog</td><td>Return</td><td>1</td><td>3</td></row>
 		<row><td>InstallChangeFolder</td><td>OK</td><td>SetTargetPath</td><td>[_BrowseProperty]</td><td>1</td><td>2</td></row>
 		<row><td>InstallChangeFolder</td><td>Up</td><td>DirectoryListUp</td><td>0</td><td>1</td><td>0</td></row>
-		<row><td>InstallWelcome</td><td>Back</td><td>NewDialog</td><td>SplashBitmap</td><td>Display_IsBitmapDlg</td><td>0</td></row>
+		<row><td>InstallWelcome</td><td>Back</td><td>NewDialog</td><td>SplashBitmap</td><td>Display_IsBitmapDlg</td><td>1</td></row>
 		<row><td>InstallWelcome</td><td>Cancel</td><td>SpawnDialog</td><td>CancelSetup</td><td>1</td><td>0</td></row>
 		<row><td>InstallWelcome</td><td>Next</td><td>NewDialog</td><td>DestinationFolder</td><td>1</td><td>0</td></row>
 		<row><td>LicenseAgreement</td><td>Back</td><td>NewDialog</td><td>InstallWelcome</td><td>1</td><td>0</td></row>
@@ -1024,6 +1026,7 @@
 		<col key="yes" def="s72">Directory_</col>
 		<col key="yes" def="s72">Component_</col>
 		<row><td>ASSEMBLIES</td><td>Empty</td></row>
+		<row><td>EIFINIT</td><td>EifinitFiles</td></row>
 		<row><td>INSTALLDIR</td><td>VirtualDirComponent</td></row>
 	</table>
 
@@ -1069,7 +1072,7 @@
 		<row><td>AdminNetworkLocation</td><td>50</td><td>50</td><td>374</td><td>266</td><td>3</td><td>##IDS_PRODUCTNAME_INSTALLSHIELD##</td><td>InstallNow</td><td>InstallNow</td><td>Cancel</td><td>Network Location</td><td/><td>0</td><td/></row>
 		<row><td>AdminWelcome</td><td>50</td><td>50</td><td>374</td><td>266</td><td>3</td><td>##IDS_PRODUCTNAME_INSTALLSHIELD##</td><td>Next</td><td>Next</td><td>Cancel</td><td>Administration Welcome</td><td/><td>0</td><td/></row>
 		<row><td>CancelSetup</td><td>50</td><td>50</td><td>260</td><td>85</td><td>3</td><td>##IDS_PRODUCTNAME_INSTALLSHIELD##</td><td>No</td><td>No</td><td>No</td><td>Cancel</td><td/><td>0</td><td/></row>
-		<row><td>CustomSetup</td><td>50</td><td>50</td><td>374</td><td>266</td><td>35</td><td>##IDS_PRODUCTNAME_INSTALLSHIELD##</td><td>Tree</td><td>Next</td><td>Cancel</td><td>Custom Selection</td><td/><td>0</td><td/></row>
+		<row><td>CustomSetup</td><td>50</td><td>50</td><td>372</td><td>266</td><td>35</td><td>##IDS_PRODUCTNAME_INSTALLSHIELD##</td><td>Tree</td><td>Next</td><td>Cancel</td><td>Custom Selection</td><td/><td>0</td><td/></row>
 		<row><td>CustomSetupTips</td><td>50</td><td>50</td><td>374</td><td>266</td><td>3</td><td>##IDS_PRODUCTNAME_INSTALLSHIELD##</td><td>OK</td><td>OK</td><td>OK</td><td>Custom Setup Tips</td><td/><td>0</td><td/></row>
 		<row><td>CustomerInformation</td><td>50</td><td>50</td><td>374</td><td>266</td><td>3</td><td>##IDS_PRODUCTNAME_INSTALLSHIELD##</td><td>NameEdit</td><td>Next</td><td>Cancel</td><td>Identification</td><td/><td>0</td><td/></row>
 		<row><td>DatabaseFolder</td><td>50</td><td>50</td><td>374</td><td>266</td><td>3</td><td>##IDS_PRODUCTNAME_INSTALLSHIELD##</td><td>Next</td><td>Next</td><td>Cancel</td><td>Database Folder</td><td/><td>0</td><td/></row>
@@ -1120,6 +1123,7 @@
 		<row><td>CommonFiles64Folder</td><td>TARGETDIR</td><td>.:Common64</td><td/><td>0</td><td/></row>
 		<row><td>CommonFilesFolder</td><td>TARGETDIR</td><td>.:Common</td><td/><td>0</td><td/></row>
 		<row><td>DesktopFolder</td><td>TARGETDIR</td><td>.:Desktop</td><td/><td>3</td><td/></row>
+		<row><td>EIFINIT</td><td>COMPILER</td><td>eifinit</td><td/><td>0</td><td/></row>
 		<row><td>ERRORS</td><td>HELP</td><td>errors</td><td/><td>0</td><td/></row>
 		<row><td>FavoritesFolder</td><td>TARGETDIR</td><td>.:FAVORI~1|Favorites</td><td/><td>0</td><td/></row>
 		<row><td>FontsFolder</td><td>TARGETDIR</td><td>.:Fonts</td><td/><td>0</td><td/></row>
@@ -1144,6 +1148,7 @@
 		<row><td>SAMPLES</td><td>INSTALLDIR</td><td>Samples</td><td/><td>0</td><td/></row>
 		<row><td>SPEC</td><td>STUDIO</td><td>spec</td><td/><td>0</td><td/></row>
 		<row><td>STUDIO</td><td>COMPILER</td><td>studio</td><td/><td>0</td><td/></row>
+		<row><td>STUDIO1</td><td>EIFINIT</td><td>studio</td><td/><td>0</td><td/></row>
 		<row><td>SendToFolder</td><td>TARGETDIR</td><td>.:SendTo</td><td/><td>3</td><td/></row>
 		<row><td>StartMenuFolder</td><td>TARGETDIR</td><td>.:STARTM~1|Start Menu</td><td/><td>3</td><td/></row>
 		<row><td>StartupFolder</td><td>TARGETDIR</td><td>.:StartUp</td><td/><td>3</td><td/></row>
@@ -1400,12 +1405,14 @@
 		<row><td>Feature</td><td>EiffelSoftware.Runtime.dll</td></row>
 		<row><td>Feature</td><td>EiffelSoftware.Runtime.dll1</td></row>
 		<row><td>Feature</td><td>EiffelSoftware.Runtime.dll2</td></row>
+		<row><td>Feature</td><td>EifinitFiles</td></row>
+		<row><td>Feature</td><td>EifinitStudioFiles</td></row>
 		<row><td>Feature</td><td>Empty</td></row>
 		<row><td>Feature</td><td>ErrorFiles</td></row>
 		<row><td>Feature</td><td>IconFiles</td></row>
 		<row><td>Feature</td><td>Library</td></row>
 		<row><td>Feature</td><td>LibraryDotNet</td></row>
-		<row><td>Feature</td><td>MDRegFile</td></row>
+		<row><td>Feature</td><td>MDRegFiles</td></row>
 		<row><td>Feature</td><td>SamplesFiles</td></row>
 		<row><td>Feature</td><td>VirtualDirComponent</td></row>
 		<row><td>Feature</td><td>XCACLS</td></row>
@@ -1445,7 +1452,7 @@
 		<row><td>eiffelsoftware.runtime.dll2</td><td>EiffelSoftware.Runtime.dll2</td><td>EIFFEL~1.DLL|EiffelSoftware.Runtime.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\EiffelSoftware.Runtime.dll</td><td>1</td><td/></row>
 		<row><td>libeiffelsoftware.codedombas</td><td>libEiffelSoftware.CodeDomBase.dll</td><td>LIBEIF~1.DLL|libEiffelSoftware.CodeDomBase.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\libEiffelSoftware.CodeDomBase.dll</td><td>1</td><td/></row>
 		<row><td>libeiffelsoftware.codedomvis</td><td>libEiffelSoftware.CodeDomVision2.dll</td><td>LIBEIF~1.DLL|libEiffelSoftware.CodeDomVision2.dll</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_BIN_FILES&gt;\libEiffelSoftware.CodeDomVision2.dll</td><td>1</td><td/></row>
-		<row><td>md.reg</td><td>MDRegFile</td><td>md.reg</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\md.reg</td><td>1</td><td/></row>
+		<row><td>md.reg</td><td>MDRegFiles</td><td>md.reg</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\md.reg</td><td>1</td><td/></row>
 		<row><td>xcacls.vbs</td><td>XCACLS</td><td>XCACLS.vbs</td><td>0</td><td/><td/><td/><td>1</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\XCACLS.vbs</td><td>1</td><td/></row>
 	</table>
 
@@ -1628,12 +1635,14 @@
 		<row><td>EiffelSoftware.Runtime.dll</td><td/><td/><td>_85C2255F_9D58_4532_9404_13B2E76B01E4_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.Runtime.dll1</td><td/><td/><td>_09E3568D_D040_4AF7_B977_CB2F2AE00C76_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>EiffelSoftware.Runtime.dll2</td><td/><td/><td>_51FF6C21_E57B_4BA4_A4E2_79000ACB78E2_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EifinitFiles</td><td/><td/><td>_DE711AFA_3763_4318_8099_3F28BDA3D4FB_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>EifinitStudioFiles</td><td/><td/><td>_2C09BFE0_DB3C_4087_823B_E02E3AC18033_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Empty</td><td/><td/><td>_39C2145D_C592_42C1_A809_53CC7DBE45E8_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>ErrorFiles</td><td/><td/><td>_9426D662_3307_4ED0_A6F4_BE503BDA051E_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>IconFiles</td><td/><td/><td>_BBB58E15_2620_4976_9505_7A2352CFAD8D_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>Library</td><td/><td/><td>_90E8817E_BF3D_4872_93B7_5DFC046A13B3_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>LibraryDotNet</td><td/><td/><td>_664E0909_D1D9_447D_9BC1_224D5B752C79_FILTER</td><td/><td/><td/><td/></row>
-		<row><td>MDRegFile</td><td/><td/><td>_54F93FD9_84D0_4EBD_B9FB_31D396969C53_FILTER</td><td/><td/><td/><td/></row>
+		<row><td>MDRegFiles</td><td/><td/><td>_6EE03059_909F_4C1A_BF27_541041502459_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>SamplesFiles</td><td/><td/><td>_CE202EBA_3F2C_4DA0_91D9_B5BD7B0CC407_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>VirtualDirComponent</td><td/><td/><td>_2186BDB6_DC0C_4E01_A286_C99E24D4AD50_FILTER</td><td/><td/><td/><td/></row>
 		<row><td>XCACLS</td><td/><td/><td>_96C105CC_743D_435E_967F_7F073187F62F_FILTER</td><td/><td/><td/><td/></row>
@@ -1669,6 +1678,7 @@
 		<col def="S255">ExcludeFiles</col>
 		<col def="I4">ISAttributes</col>
 		<row><td>ConfigFiles</td><td>&lt;PATH_TO_WINDOWS_FILES&gt;</td><td>4</td><td/><td/><td>2</td></row>
+		<row><td>EifinitStudioFiles</td><td>&lt;PATH_TO_CODEDOM_PROVIDE_FILES&gt;\checkout\eifinit_delivery\studio</td><td>4</td><td/><td/><td>2</td></row>
 		<row><td>ErrorFiles</td><td>&lt;PATH_TO_ERRORS_FILES&gt;</td><td>4</td><td/><td/><td>2</td></row>
 		<row><td>IconFiles</td><td>&lt;PATH_TO_BIN_FILES&gt;\icons</td><td>4</td><td/><td/><td>2</td></row>
 		<row><td>Library</td><td>&lt;PATH_TO_LIBRARY_FILES&gt;</td><td>4</td><td/><td/><td>2</td></row>
@@ -1777,6 +1787,7 @@
 		<col def="S255">Cabinet</col>
 		<col def="S32">VolumeLabel</col>
 		<col def="S32">Source</col>
+		<row><td>1</td><td>Beta 1</td><td>Beta 1</td><td>0</td><td/><td/><td/><td/></row>
 	</table>
 
 	<table name="ISLogicalDiskFeatures">
@@ -1907,6 +1918,7 @@
 		<col key="yes" def="s72">ISProductConfiguration</col>
 		<col def="S255">ProductConfigurationFlags</col>
 		<col def="I4">GeneratePackageCode</col>
+		<row><td>Beta 1</td><td/><td>1</td></row>
 		<row><td>Final</td><td/><td>1</td></row>
 		<row><td>Test</td><td/><td>1</td></row>
 	</table>
@@ -1922,6 +1934,9 @@
 		<col key="yes" def="s72">ISProductConfiguration_</col>
 		<col key="yes" def="s72">Property</col>
 		<col def="L255">Value</col>
+		<row><td>Beta 1</td><td>MSIPackageFileName</td><td>enabler_beta1</td></row>
+		<row><td>Beta 1</td><td>ProductName</td><td>ASP.NET Enabler 2.0 Beta 1</td></row>
+		<row><td>Beta 1</td><td>SetupFileName</td><td>setup</td></row>
 		<row><td>Final</td><td>MSIPackageFileName</td><td>enabler</td></row>
 		<row><td>Final</td><td>ProductName</td><td>ASP.NET Enabler 2.0</td></row>
 		<row><td>Final</td><td>ProductVersion</td><td>2.01.1319</td></row>
@@ -1962,6 +1977,7 @@
 		<col def="S255">DotNetBuildConfiguration</col>
 		<col def="S255">MsiCommandLine</col>
 		<col def="I4">ISSetupPrerequisiteLocation</col>
+		<row><td>Beta 1</td><td>Beta 1</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>0</td><td>0</td><td>1</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>8527884</td><td/><td/><td/><td/></row>
 		<row><td>Final</td><td>Final</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>1</td><td>Intel</td><td/><td>1033</td><td>0</td><td>0</td><td>0</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>8595468</td><td/><td/><td/><td/></row>
 		<row><td>Test</td><td>Test</td><td>&lt;ISProjectDataFolder&gt;</td><td>PackageName</td><td>1</td><td>1033</td><td>2</td><td>2</td><td>Intel</td><td/><td>1033</td><td>3</td><td>0</td><td>0</td><td>0</td><td/><td>0</td><td/><td>MediaLocation</td><td/><td>http://</td><td/><td/><td/><td/><td>8464397</td><td/><td/><td/><td/></row>
 	</table>
@@ -1997,6 +2013,9 @@
 		<col def="I4">MsiEngineVersion</col>
 		<col def="S255">WinMsi30Url</col>
 		<col def="S255">CertPassword</col>
+		<row><td>Beta 1</td><td>Beta 1</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>0</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert03/isengine</td><td/><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert03/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td>16</td><td>3</td><td>4</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
+		<row><td>Beta 1</td><td>Final</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
+		<row><td>Copy of Final</td><td>Final</td><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></row>
 		<row><td>Final</td><td>Final</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>1</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>1</td><td>http://www.installengine.com/cert03/isengine</td><td/><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert03/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td>24</td><td>3</td><td>4</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
 		<row><td>Test</td><td>Test</td><td>0</td><td>http://</td><td>0</td><td>install</td><td>install</td><td>[WindowsFolder]Downloaded Installations</td><td>0</td><td>http://www.installengine.com/Msiengine20</td><td>http://www.installengine.com/Msiengine20</td><td>0</td><td>http://www.installengine.com/cert03/isengine</td><td/><td/><td/><td/><td>3</td><td>http://www.installengine.com/cert03/dotnetfx</td><td>0</td><td>1033</td><td/><td/><td/><td/><td>16</td><td>3</td><td>4</td><td>http://www.installengine.com/Msiengine30</td><td/></row>
 	</table>
@@ -2694,7 +2713,9 @@
 		<row><td>ID_STRING16</td><td>1033</td><td>ASP.NET Enabler 2.0</td><td>0</td><td/><td>-1659350926</td></row>
 		<row><td>ID_STRING17</td><td>1033</td><td>ASP.NET Enabler 2.0 Installation Database</td><td>0</td><td/><td>-1659332366</td></row>
 		<row><td>ID_STRING18</td><td>1033</td><td>ASP.NET Enabler 2.0</td><td>0</td><td/><td>-1659326222</td></row>
+		<row><td>ID_STRING19</td><td>1033</td><td>ASP.NET Enabler 2.0 Beta 1 Installation Database</td><td>0</td><td/><td>-585592247</td></row>
 		<row><td>ID_STRING2</td><td>1033</td><td>http://www.eiffel.com</td><td>0</td><td/><td>-1659345077</td></row>
+		<row><td>ID_STRING20</td><td>1033</td><td>ASP.NET Enabler 2.0 Beta 1</td><td>0</td><td/><td>-585582007</td></row>
 		<row><td>ID_STRING3</td><td>1033</td><td>info@eiffel.com</td><td>0</td><td/><td>-1659328693</td></row>
 		<row><td>ID_STRING4</td><td>1033</td><td>http://support.eiffel.com</td><td>0</td><td/><td>-1659326645</td></row>
 		<row><td>ID_STRING5</td><td>1033</td><td>1-805-685-1006</td><td>0</td><td/><td>-1659320501</td></row>
@@ -2766,7 +2787,7 @@
 		<col def="V0">Data</col>
 		<col def="S255">ISBuildSourcePath</col>
 		<col def="I2">ISIconIndex</col>
-		<row><td>ARPPRODUCTICON.exe</td><td/><td>&lt;PATH_TO_MANAGER_FILES&gt;\ecdpman.ico</td><td>0</td></row>
+		<row><td>ARPPRODUCTICON.exe</td><td/><td>&lt;ISProjectFolder&gt;\ecdp.ico</td><td>0</td></row>
 		<row><td>NewShortcut1_9A6FB091D3454C2B9B8BEB345DB1F04D.exe</td><td/><td>&lt;PATH_TO_MANAGER_FILES&gt;\ecdpman.ico</td><td>0</td></row>
 	</table>
 
@@ -2878,9 +2899,10 @@
 		<col def="S0">Value</col>
 		<row><td>ActiveLanguage</td><td>1033</td></row>
 		<row><td>Comments</td><td/></row>
-		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="75383eef26d1ac478f4b637c41ec182a">
-RgBpAG4AYQBsAAEARgBpAG4AYQBsAA==
+		<row><td>CurrentMedia</td><td dt:dt="bin.base64" md5="ff77f95c2074e0b3e9ae49aff5f59cf1">
+QgBlAHQAYQAgADEAAQBCAGUAdABhACAAMQA=
 			</td></row>
+		<row><td>DefaultProductConfiguration</td><td>Final</td></row>
 		<row><td>ISCompilerOption_CompileBeforeBuild</td><td>1</td></row>
 		<row><td>ISCompilerOption_Debug</td><td>0</td></row>
 		<row><td>ISCompilerOption_IncludePath</td><td/></row>
@@ -3053,7 +3075,7 @@ RgBpAG4AYQBsAAEARgBpAG4AYQBsAA==
 		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>Culture</td><td>neutral</td></row>
 		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>Name</td><td>EiffelSoftware.MetadataConsumer</td></row>
 		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>PublicKeyToken</td><td>DEF26F296EFEF469</td></row>
-		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>Version</td><td>5.6.121.0</td></row>
+		<row><td>EiffelSoftware.MetadataConsumer.dll</td><td>Version</td><td>5.5.1125.0</td></row>
 		<row><td>EiffelSoftware.Runtime.dll</td><td>Culture</td><td>neutral</td></row>
 		<row><td>EiffelSoftware.Runtime.dll</td><td>FileVersion</td><td>5.5.820.0</td></row>
 		<row><td>EiffelSoftware.Runtime.dll</td><td>Name</td><td>EiffelSoftware.Runtime</td></row>

@@ -73,7 +73,7 @@ feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
 					conv_nat_value.fill_items (spec_lower, spec_higher)
 				end
 				list := dv.children
-				if not list.is_empty then
+				if list /= Void and then not list.is_empty then
 					from
 						list.start
 					until
@@ -114,13 +114,15 @@ feature {NONE} -- Specific Implementation
 			dv ?= associated_debug_value
 			if dv /= Void then
 				list := dv.children
-				from
-					list.start
-				until
-					list.after
-				loop
-					parent.extend (debug_value_to_item (list.item))
-					list.forth
+				if list /= Void then
+					from
+						list.start
+					until
+						list.after
+					loop
+						parent.extend (debug_value_to_item (list.item))
+						list.forth
+					end					
 				end
 				parent.start
 				parent.remove

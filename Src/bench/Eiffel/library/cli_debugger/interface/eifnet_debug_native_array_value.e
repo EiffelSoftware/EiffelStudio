@@ -67,15 +67,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
---	icd_frame: ICOR_DEBUG_FRAME
---
---	value: ICOR_DEBUG_VALUE
---			-- Value of object.
-
 	array_value: ICOR_DEBUG_ARRAY_VALUE
-
---	value_info: EIFNET_DEBUG_VALUE_INFO
---			-- Value info of object.
 
 	dynamic_class: CLASS_C is
 			-- Find corresponding CLASS_C to type represented by `value'.
@@ -168,6 +160,7 @@ feature -- Output
 				end
 			end
 		end
+
 
 end -- class EIFNET_DEBUG_NATIVE_ARRAY_VALUE
 

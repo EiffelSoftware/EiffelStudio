@@ -212,8 +212,8 @@ feature -- Access
 			internal_pos: INTEGER
 		do
 			internal_pos := internal_caret_position
-			new_lines_to_caret_position := wel_text.substring (1, internal_pos).occurrences ('%R')
-			Result := internal_pos + 1 - new_lines_to_caret_position
+			new_lines_to_caret_position := current_line_number
+			Result := internal_pos - new_lines_to_caret_position + 2
 		end
 		
 	insert_text (txt: STRING) is

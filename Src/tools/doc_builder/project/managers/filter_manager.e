@@ -69,7 +69,7 @@ feature -- Status setting
 			end
 		end
 
-feature {PREFERENCES_DIALOG} -- Status setting
+feature {PREFERENCES_DIALOG, DOCUMENT_PROJECT_PREFERENCES} -- Status setting
 
 	add_filter (a_filter: DOCUMENT_FILTER) is
 			-- Add new filter
@@ -120,26 +120,9 @@ feature {NONE} -- Implementation
 		local
 			l_filter: OUTPUT_FILTER
 		do			
-			create l_filter.make (unfiltered_flag, unfiltered)
+			create l_filter.make_with_default_flag (unfiltered_flag, unfiltered)
 			add_filter (l_filter)
 			set_filter (l_filter) -- (Default filter)
-			create l_filter.make (studio_flag, studio_desc)
-			l_filter.add_output_flag (studio_flag)
-			l_filter.add_output_flag (studio_win_flag)
-			l_filter.add_output_flag (studio_lin_flag)
-			l_filter.add_output_flag (studio_mac_flag)
-			add_filter (l_filter)
-			create l_filter.make (studio_win_flag, studio_win_desc)
-			l_filter.add_output_flag (studio_flag)
-			add_filter (l_filter)
-			create l_filter.make (studio_lin_flag, studio_lin_desc)
-			l_filter.add_output_flag (studio_flag)
-			add_filter (l_filter)
-			create l_filter.make (studio_mac_flag, studio_mac_desc)
-			l_filter.add_output_flag (studio_flag)
-			add_filter (l_filter)
-			create l_filter.make (Envision_flag, envision_desc)
-			add_filter (l_filter)
 		end	
 
 	unique_id: INTEGER

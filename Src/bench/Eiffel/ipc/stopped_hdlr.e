@@ -98,9 +98,9 @@ end;
 			check
 				application_launched: status /= Void
 			end;
+			status.set_is_stopped (true);
 			status.set (name, address, org_type, dyn_type, offset, reason);
 			status.set_exception (last_int, last_string);
-			status.set_is_stopped (true);
 
 if enabled_debug_trace then
 	io.error.putstring ("Finished setting status (Now calling after cmd)%N")

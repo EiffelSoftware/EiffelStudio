@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Eiffel server property generator."
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,20 +8,21 @@ class
 	WIZARD_EIFFEL_SERVER_PROPERTY_GENERATOR
 
 inherit
-	WIZARD_EIFFEL_PROPERTY_GENERATOR
+	WIZARD_EIFFEL_EFFECTIVE_PROPERTY_GENERATOR
+
+create
+	generate
 
 feature -- Basic operations
 
-	generate (coclass_name: STRING; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
+	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Generate access and setting features from property.
-		require
-			non_void_coclass_name: coclass_name /= Void
-			non_void_descriptor: a_descriptor /= Void
 		local
-			access_name, setting_name, tmp_string: STRING
+			coclass_name, access_name, setting_name, tmp_string: STRING
 			tmp_assertion: WIZARD_WRITER_ASSERTION
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
+			coclass_name := a_component_descriptor.eiffel_class_name
 			create access_feature.make
 			create setting_feature.make
 			create changed_names.make (2)
@@ -68,10 +69,7 @@ feature -- Basic operations
 			setting_feature.set_comment (tmp_string)
 			
 			setting_feature.set_effective
-			setting_feature.set_body (Empty_function_body)
-		ensure
-			access_feature_exist: access_feature /= Void
-			setting_feature_exist: setting_feature /= Void			
+			setting_feature.set_body (Empty_function_body)		
 		end
 
 end -- class WIZARD_EIFFEL_SERVER_PROPERTY_GENERATOR

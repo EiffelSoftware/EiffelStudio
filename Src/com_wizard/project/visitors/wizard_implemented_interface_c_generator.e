@@ -10,53 +10,18 @@ deferred class
 inherit
 	WIZARD_COMPONENT_C_GENERATOR
 
+	WIZARD_CPP_WRITER_GENERATOR
+
 feature -- Initialization
 
 	initialize is
 			-- Initialize generator.
 		do
 			cpp_class_writer := Void
-			dispatch_interface := False
 		ensure
-			void_atributes: cpp_class_writer = Void and
-				dispatch_interface = False
+			void_atributes: cpp_class_writer = Void 
 		end
 
-feature -- Access
-
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
-feature -- Basic operations
-
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-	
-invariant
-	invariant_clause: -- Your invariant here
 
 end -- class WIZARD_IMPLEMENTED_INTERFACE_C_GENERATOR
 

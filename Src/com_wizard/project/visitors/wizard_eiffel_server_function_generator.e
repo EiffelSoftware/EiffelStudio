@@ -1,5 +1,5 @@
 indexing
-	description: ""
+	description: "Eiffel server function generator."
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,20 +8,20 @@ class
 	WIZARD_EIFFEL_SERVER_FUNCTION_GENERATOR
 
 inherit
-	WIZARD_EIFFEL_FUNCTION_GENERATOR
+	WIZARD_EIFFEL_EFFECTIVE_FUNCTION_GENERATOR
+
+create 
+	generate
 
 feature -- Basic operations
 
-	generate (coclass_name: STRING; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
+	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Generate server feature signature.
-		require
-			non_void_coclass_name: coclass_name /= Void
-			valid_coclass_name: not coclass_name.empty
-			non_void_descriptor: a_descriptor /= Void
 		local
-			tmp_string: STRING
+			coclass_name, tmp_string: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
+			coclass_name := a_component_descriptor.name
 			func_desc := a_descriptor
 			create original_name.make (100)
 			create changed_name.make (100)
@@ -50,10 +50,6 @@ feature -- Basic operations
 			feature_writer.set_body (Exception_body)
 
 			feature_writer.set_effective
-		ensure
-			feature_generated: feature_writer /= Void
-			valid_feature_writer: feature_writer.can_generate
-			function_descriptor_set: func_desc /= Void
 		end
 
 end -- class WIZARD_EIFFEL_SERVER_FUNCTION_GENERATOR

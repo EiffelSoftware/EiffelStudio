@@ -35,6 +35,7 @@ feature -- Basic operations
 			a_class_name: STRING
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
 			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
+			interface_generator: WIZARD_COMPONENT_INTERFACE_EIFFEL_CLIENT_GENERATOR
 		do
 			create a_visible.make
 			a_visible.set_name (a_descriptor.eiffel_class_name)
@@ -53,7 +54,9 @@ feature -- Basic operations
 
 			create inherit_clause.make
 			inherit_clause.set_name (a_descriptor.interface_descriptor.eiffel_class_name)
-			generate_functions_and_properties (a_descriptor.interface_descriptor, a_descriptor, eiffel_writer, inherit_clause)
+
+			create interface_generator.make (a_descriptor, a_descriptor.interface_descriptor, eiffel_writer, inherit_clause)
+			interface_generator.generate_functions_and_properties (a_descriptor.interface_descriptor)
 			eiffel_writer.add_inherit_clause (inherit_clause)
 
 			set_default_ancestors (eiffel_writer)
@@ -91,8 +94,6 @@ feature {NONE} -- Implementation
 		local
 			tmp_writer: WIZARD_WRITER_INHERIT_CLAUSE
 		do
-			{WIZARD_COMPONENT_EIFFEL_CLIENT_GENERATOR} Precursor (an_eiffel_writer)
-
 			create tmp_writer.make
 			tmp_writer.set_name (Queriable_type)
 			an_eiffel_writer.add_inherit_clause (tmp_writer)

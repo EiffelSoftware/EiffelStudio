@@ -8,22 +8,17 @@ class
 	WIZARD_EIFFEL_CLIENT_PROPERTY_GENERATOR
 
 inherit
-	WIZARD_EIFFEL_PROPERTY_GENERATOR
+	WIZARD_EIFFEL_EFFECTIVE_PROPERTY_GENERATOR
 
 	WIZARD_VARIABLE_NAME_MAPPER
 
-	ECOM_VAR_FLAGS
-		export
-			{NONE} all
-		end
+create
+	generate
 
 feature -- Basic operations
 
 	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Generate client access and setting features.
-		require
-			non_void_component: a_component_descriptor /= Void
-			non_void_descriptor: a_descriptor /= Void
 		local
 			access_name, setting_name, tmp_string: STRING
 			tmp_assertion: WIZARD_WRITER_ASSERTION
@@ -43,10 +38,8 @@ feature -- Basic operations
 				generate_setting_feature (visitor)
 				generate_external_setting_feature (visitor, a_component_descriptor)
 			end
-		ensure
-			access_feature_exist: access_feature /= Void
+		ensure then
 			external_access_feature_exist: external_access_feature /= Void
-			setting_feature_exist: not is_varflag_freadonly (a_descriptor.var_flags)  implies (setting_feature /= Void)
 			external_setting_feature_exist: not is_varflag_freadonly (a_descriptor.var_flags)  implies (external_setting_feature /= Void)
 		end
 

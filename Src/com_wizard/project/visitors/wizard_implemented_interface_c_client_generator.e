@@ -22,6 +22,7 @@ inherit
 
 	WIZARD_COMPONENT_C_CLIENT_GENERATOR
 
+
 feature -- Basic operations
 
 	generate (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
@@ -29,6 +30,7 @@ feature -- Basic operations
 		local
 			data_member: WIZARD_WRITER_C_MEMBER
 			tmp_string: STRING
+			interface_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
 		do
 			create cpp_class_writer.make
 			cpp_class_writer.set_name (a_descriptor.c_type_name)
@@ -88,7 +90,8 @@ feature -- Basic operations
 
 			end
 
-			generate_functions_and_properties (a_descriptor, a_descriptor.interface_descriptor, a_descriptor.interface_descriptor.name)
+			create interface_generator.make (a_descriptor, a_descriptor.interface_descriptor, cpp_class_writer)
+			interface_generator.generate_functions_and_properties (a_descriptor.interface_descriptor)
 
 			add_default_function
 			cpp_class_writer.set_destructor (destructor (a_descriptor))
@@ -109,6 +112,9 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
+
+	dispatch_interface: BOOLEAN
+			-- Is dispinterface?
 
 	pointer_constructor (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_WRITER_CPP_CONSTRUCTOR is
 			-- Constructor.

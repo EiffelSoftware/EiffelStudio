@@ -19,6 +19,9 @@ inherit
 			{NONE} all
 		end
 
+create
+	generate
+
 feature -- Access
 
 	precondition_access_feature_writer: WIZARD_WRITER_FEATURE
@@ -29,8 +32,6 @@ feature -- Basic operations
 
 	generate (a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Generate deferred access and setting features from property.
-		require
-			non_void_descriptor: a_descriptor /= Void
 		local
 			tmp_string, tmp_tag, tmp_body: STRING
 			tmp_assertion: WIZARD_WRITER_ASSERTION
@@ -101,9 +102,6 @@ feature -- Basic operations
 				set_precondition_feature_writer (precondition_set_feature_writer, a_set_name)
 				precondition_set_feature_writer.arguments.append (clone (setting_feature.arguments))
 			end
-		ensure
-			access_feature_exist: access_feature /= Void
-			setting_feature_exist: setting_feature /= Void			
 		end
 
 end -- class WIZARD_EIFFEL_DEFERRED_PROPERTY_GENERATOR

@@ -14,6 +14,9 @@ inherit
 
 	WIZARD_EIFFEL_DEFERRED_FEATURE_GENERATOR
 
+create
+	generate
+
 feature -- Access
 
 	precondition_feature_writer: WIZARD_WRITER_FEATURE
@@ -22,8 +25,6 @@ feature -- Basic operation
 
 	generate (a_descriptor: WIZARD_FUNCTION_DESCRIPTOR) is
 			-- Generate deferred function
-		require
-			non_void_descriptor: a_descriptor /= Void
 		local
 			precondition_writer: WIZARD_WRITER_ASSERTION
 			tmp_arguments: STRING

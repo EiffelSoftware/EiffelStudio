@@ -30,7 +30,12 @@ feature -- Access
 			end
 			Result.append (eiffel_name)
 			Result.append (": ")
-			Result.append (result_type.eiffel_name)
+			if result_type /= Void then
+				Result.append (result_type.eiffel_name)
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_return_type, ["Attribute " + name + " (" + eiffel_name + ")"])
+				Result.append ("ANY")
+			end
 			Result.append_character ('%N')			
 			Result.append (comments_code)
 			Result.append (indexing_clause)

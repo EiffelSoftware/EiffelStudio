@@ -12,45 +12,54 @@ class
 
 inherit
 
-	TABBED_TEXT_I;
+	TABBED_TEXT_I
+		rename
+			append as i_append,
+			insert as i_insert,
+			replace as i_replace,
+			set_text as i_set_text,
+			text as i_text,
+			clear as i_clear,
+			count as i_count,
+			cursor_position as i_cursor_position,
+			set_cursor_position as i_set_cursor_position,
+			set_selection as i_set_selection,
+			begin_of_selection as i_begin_of_selection,
+			end_of_selection as i_end_of_selection,
+			x_coordinate as i_x_coordinate,
+			y_coordinate as i_y_coordinate,
+			character_position as i_character_position
+		select
+			i_append, i_insert, i_replace, i_set_text, i_text, 
+			i_clear, i_count, i_cursor_position, i_set_cursor_position,
+			i_set_selection, i_begin_of_selection, i_end_of_selection,
+			i_x_coordinate, i_y_coordinate, i_character_position
+		end;
 
 	SCROLLED_T_M
 		rename
 			make as st_make,
-			append as st_append,
-			insert as st_insert,
-			replace as st_replace,
-			set_text as st_set_text,
-			text as st_text,
-			clear as st_clear,
-			count as st_count,
 			make_word_wrapped as st_make_word_wrapped,
-			cursor_position as st_cursor_position,
-			set_cursor_position as st_set_cursor_position,
-			set_selection as st_set_selection,
-			begin_of_selection as st_begin_of_selection,
-			end_of_selection as st_end_of_selection,
-			x_coordinate as st_x_coordinate,
-			y_coordinate as st_y_coordinate,
-			character_position as st_character_position
-		end;
-
-	SCROLLED_T_M
-		redefine
-			make, append, insert, replace, set_text, text, clear,
-			cursor_position, set_cursor_position,
-			set_selection, begin_of_selection, end_of_selection,
-			x_coordinate, y_coordinate, character_position,
-			count, make_word_wrapped
-		select
-			make, append, insert, replace, set_text, text, clear,
-			cursor_position, set_cursor_position,
-			set_selection, begin_of_selection, end_of_selection,
-			x_coordinate, y_coordinate, character_position,
-			make_word_wrapped, count
+            append as st_append,
+            replace as st_replace,
+            set_text as st_set_text,
+            text as st_text,
+            clear as st_clear,
+            count as st_count,
+            cursor_position as st_cursor_position,
+            set_cursor_position as st_set_cursor_position,
+            set_selection as st_set_selection,
+            begin_of_selection as st_begin_of_selection,
+            end_of_selection as st_end_of_selection,
+            x_coordinate as st_x_coordinate,
+            y_coordinate as st_y_coordinate,
+            character_position as st_character_position
 		end;
 
 	COMMAND
+		redefine
+			context_data_useful
+		end
 
 creation
 	make, make_word_wrapped
@@ -99,30 +108,30 @@ feature -- Status setting
 			unexpanded_text: STRING;
 			last_cursor_position: INTEGER
 		do
-			last_cursor_position := cursor_position;
-			unexpanded_text := text;
+			last_cursor_position := i_cursor_position;
+			unexpanded_text := i_text;
 			tab_length := new_length;
-			set_text (unexpanded_text);
-			set_cursor_position (last_cursor_position)
+			i_set_text (unexpanded_text);
+			i_set_cursor_position (last_cursor_position)
 		end;
 
 feature -- Access
 
-	character_position (x_pos, y_pos: INTEGER): INTEGER is
+	i_character_position (x_pos, y_pos: INTEGER): INTEGER is
 			-- Character position at cursor position `x' and `y'
 		do	
 			Result := unexpanded_position 
 				(st_character_position (x_pos, y_pos))
 		end;
 
-	x_coordinate (char_pos: INTEGER): INTEGER is
+	i_x_coordinate (char_pos: INTEGER): INTEGER is
 			-- X coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
 		do
 			Result := st_x_coordinate (expanded_position (char_pos))
 		end;
 
-	y_coordinate (char_pos: INTEGER): INTEGER is
+	i_y_coordinate (char_pos: INTEGER): INTEGER is
 			-- Y coordinate relative to the upper left corner
 			-- of Current text widget at character position `char_pos'.
 		do
@@ -131,7 +140,7 @@ feature -- Access
 
 feature -- Text manipulation
 
-	replace (from_position, to_position: INTEGER; a_text: STRING) is
+	i_replace (from_position, to_position: INTEGER; a_text: STRING) is
 			--  Replace text from `from_position' to `to_position' by `a_text'.
 		local
 			w_start, w_end, i, text_count: INTEGER;
@@ -183,7 +192,7 @@ feature -- Text manipulation
 				i := i + 1
 			end;
 			internal_action := True;
-			if count = st_cursor_position then
+			if i_count = st_cursor_position then
 					-- This is a hack. On some platforms, the cursor
 					-- stays before the character we just type if this
 					-- character is the last one in the text.
@@ -191,7 +200,7 @@ feature -- Text manipulation
 			end;
 			st_replace (w_start, w_end, expanded_text);
 			if at_last_char then
-				st_set_cursor_position (count)
+				st_set_cursor_position (st_cursor_position)
 			end
 			internal_action := False
 debug ("TABULATION")
@@ -200,7 +209,7 @@ debug ("TABULATION")
 end;
 		end;
 
-	insert (a_text: STRING; a_position: INTEGER) is
+	i_insert (a_text: STRING; a_position: INTEGER) is
 			--  Insert `a_text' in current text field at `a_position'.
 		local
 			w_pos, i, text_count: INTEGER;
@@ -231,7 +240,7 @@ end;
 				i := i + 1
 			end;
 			internal_action := True;
-			st_insert (expanded_text, w_pos);
+			mel_insert (w_pos, expanded_text);
 			internal_action := False
 debug ("TABULATION")
 	io.error.putstring ("tabulations after `insert': %N");
@@ -239,7 +248,7 @@ debug ("TABULATION")
 end;
 		end;
 
-	append (a_text: STRING) is
+	i_append (a_text: STRING) is
 			--  Append `a_text' at the end of current text.
 		local
 			i, text_count: INTEGER;
@@ -252,7 +261,7 @@ end;
 			tab_list.finish;
 			last_offset := 0;
 			last_exp_position := st_count;
-			last_unexp_position := count;
+			last_unexp_position := i_count;
 			from
 				text_area := a_text.area
 			until
@@ -280,7 +289,7 @@ debug ("TABULATION")
 end;
 		end;
 
-	set_text (a_text: STRING) is
+	i_set_text (a_text: STRING) is
 			--  Set `text' to `a_text'.
 		local
 			i, text_count: INTEGER;
@@ -319,7 +328,7 @@ debug ("TABULATION")
 end;
 		end;
 		
-	clear is
+	i_clear is
 			--  Clear current text field.
 		do
 			tab_list.wipe_out;
@@ -337,7 +346,7 @@ debug ("TABULATION")
 end;
 		end;
 
-	text: STRING is
+	i_text: STRING is
 			-- Text with non expanded tabs
 		local
 			expanded_text: STRING;
@@ -376,11 +385,18 @@ end;
 										(tab_pos - tab_list.item, tab_pos - 1))
 			end;
 			tab_list.go_i_th (old_index)
+print ("Result count: ")
+print (Result.count)
+print (" i_count: ")
+print (i_count)
+print (" st_count: ")
+print (st_count)
+io.new_line
 		end;
 
 feature -- Text count
 
-	count: INTEGER is
+	i_count: INTEGER is
 			--  Number of character in current text
 		do
 			internal_action := True;
@@ -390,7 +406,7 @@ feature -- Text count
 
 feature -- Text cursor position
 
-	cursor_position: INTEGER is
+	i_cursor_position: INTEGER is
 			--  Current position of the text cursor (it indicates the position
 			--  where the next character pressed by the user will be inserted)
 		do
@@ -399,7 +415,7 @@ feature -- Text cursor position
 			internal_action := False
 		end;
 
-	set_cursor_position (a_position: INTEGER) is
+	i_set_cursor_position (a_position: INTEGER) is
 			--  Set `cursor_position' to `a_position'.
 		do
 			internal_action := True;
@@ -409,13 +425,13 @@ feature -- Text cursor position
 
 feature -- Text selection
 
-	set_selection (first, last: INTEGER) is
+	i_set_selection (first, last: INTEGER) is
 			--  Select the text between `first' and `last'.
 			--  This text will be physically highlightened on the screen.
 		local
 			w_first, w_last: INTEGER
 		do
-			if last <= count then
+			if last <= i_count then
 				w_first := expanded_position (first);
 				w_last := expanded_position (last);
 				internal_action := True;
@@ -424,7 +440,7 @@ feature -- Text selection
 			end
 		end;
 
-	begin_of_selection: INTEGER is
+	i_begin_of_selection: INTEGER is
 			--  Position of the beginning of the current selection highlightened
 		do
 			internal_action := True;
@@ -432,7 +448,7 @@ feature -- Text selection
 			internal_action := False
 		end;
 
-	end_of_selection: INTEGER is
+	i_end_of_selection: INTEGER is
 			--  Position of the end of the current selection highlightened
 		do
 			internal_action := True;
@@ -462,7 +478,7 @@ feature {NONE} -- Conversion
 	expanded_position (pos: INTEGER): INTEGER is
 			-- Position in the text after tabulation expansion
 		require
-			valid_pos: pos >= 0 and pos <= count
+			valid_pos: pos >= 0 and pos <= i_count
 		local
 			offset, tab_nb: INTEGER
 		do
@@ -566,7 +582,7 @@ debug ("TABULATION")
 	tabulations_trace
 end;
 		ensure
-			valid_result: Result >= 0 and Result <= count
+			valid_result: Result >= 0 and Result <= i_count
 		end;
 
 feature {NONE} -- Default callbacks
@@ -583,6 +599,8 @@ feature {NONE} -- Default callbacks
 		once
 			!! Result
 		end;
+
+	context_data_useful: BOOLEAN is True;
 
 	internal_action, in_execute: BOOLEAN;
 
@@ -603,9 +621,12 @@ feature {NONE} -- Default callbacks
 			cursor_x, cursor_y: INTEGER;
 			start_posi: INTEGER
 		do
+print ("1%N")
 			if not internal_action and not in_execute then
+print ("2%N")
 				in_execute := True;
 				if argument = modify_event then
+print ("in modify%N")
 					modify_data ?= context_data;
 					if modify_data /= Void then
 						start_pos := modify_data.start_position;
@@ -630,7 +651,7 @@ feature {NONE} -- Default callbacks
 --							disable_verify_bell;
 							forbid_action;
 --							enable_verify_bell;
-							replace (u_start_pos, u_last_pos, new_text)
+							i_replace (u_start_pos, u_last_pos, new_text)
 						else
 								-- PB: the reverse video stays when we delete
 								-- characters even after a `clear_selection'.
@@ -657,16 +678,17 @@ end;
 						if is_selection_active then
 							clear_selection
 						end;
-						set_cursor_position (u_next_pos)
+						i_set_cursor_position (u_next_pos)
 					end
 				elseif argument = motion_event then
+print ("in motio%N")
 					motion_data ?= context_data;
 					if motion_data /= Void then
 						next_pos := motion_data.next_cursor_position;
 						cur_pos := motion_data.current_cursor_position;
 						if is_selection_active then
-							u_start_select_pos := begin_of_selection;
-							u_last_select_pos := end_of_selection;
+							u_start_select_pos := i_begin_of_selection;
+							u_last_select_pos := i_end_of_selection;
 							if next_pos > cur_pos then
 								if 
 									expanded_position (u_last_select_pos) /= 
@@ -689,7 +711,7 @@ end;
 						forbid_action;
 --						enable_verify_bell;
 						if u_start_select_pos /= u_last_select_pos then
-							set_selection (u_start_select_pos,u_last_select_pos)
+							i_set_selection (u_start_select_pos,u_last_select_pos)
 						end
 						u_next_pos := unexpanded_position (next_pos);
 						if 
@@ -697,9 +719,9 @@ end;
 							u_next_pos = unexpanded_position (cur_pos)
 						then
 								-- We have some problem to span this tab.
-							set_cursor_position (u_next_pos + 1)
+							i_set_cursor_position (u_next_pos + 1)
 						else
-							set_cursor_position (u_next_pos)
+							i_set_cursor_position (u_next_pos)
 						end
 					end
 				end;

@@ -64,6 +64,12 @@ feature -- Status report
 			Result := count
 		end
 
+	is_empty: BOOLEAN is
+			-- Is Current empty?
+		do
+			Result := native_array.count = 0
+		end
+
 feature -- Element change
 
 	put (v: SYSTEM_OBJECT; k: INTEGER) is

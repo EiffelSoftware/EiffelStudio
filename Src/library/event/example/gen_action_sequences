@@ -1,0 +1,106 @@
+#!/usr/bin/perl -w
+
+while (<>) {
+	@args = ();
+	@arg_names = ();
+	@arg_types = ();
+	if (!/^[\n 	#].*/) {
+		chomp;
+		@fields = split (/;[ 	]*/,$_);
+		$name = shift (@fields);
+		@parts = split (/:[ 	]*/,$name);
+		$name = $parts[0];
+		$desc = $parts[1];
+		foreach $field (@fields) {
+			push (@args, $field);
+			@parts = split (/:[	 ]*/,$field);
+			push (@arg_names, $parts[0]);
+			push (@arg_types, $parts[1]);
+		}
+
+		$parent = "ACTION_SEQUENCE";
+		$_ = $parent;
+		tr/[A-Z]/[a-z]/;
+		$parent_lower = $_;
+
+		$_ = $name;
+		tr/[a-z]/[A-Z]/;
+		$classname = "$_\_$parent";
+
+		print "$classname\n";
+
+		$_ = $classname;
+		tr/[A-Z]/[a-z]/;
+		$lower_classname = $_;
+
+		$data_type = "TUPLE [";
+		$wrapper_args = "";
+		$arg_name_array = "";
+		$arg_name_list = "";
+		if ($#args > 0) {
+		$data_type = shift (@ats);
+			@ats = @arg_types;
+			$data_type = shift (@ats);
+			$data_type = "$data_type$data_type";
+			foreach $type (@ats) {
+				$data_type = "$data_type, $type";
+			}
+
+			@ans = @arg_names;
+			$n = shift (@ans);
+			$arg_name_array = "\"$n\"";
+			$arg_name_list = "a_$n";
+			foreach $name (@ans) {
+				$arg_name_array = "$arg_name_array, \"$name\"";
+				$arg_name_list = "$arg_name_list, a_$name";
+			}
+
+			foreach $field (@fields) {
+				$wrapper_args = "${wrapper_args}a_$field; "
+			}
+			$wrapper_args = "$wrapper_args "
+		}
+		$data_type = "$data_type]";
+
+		open (OH, ">" . "$lower_classname.e");
+
+		print OH <<EOT;
+indexing
+	description: "Action sequence $desc."
+	status: "Generated!"
+	keywords: "$name"
+	date: "Generated!"
+	revision: "Generated!"
+
+class $classname
+
+inherit $parent [$data_type]
+		rename
+			make as $parent_lower\_make
+		end
+
+creation
+	make
+
+feature -- Initialization
+	
+	make is
+		do
+			$parent_lower\_make ("$name", <<$arg_name_array>>)
+		end
+
+feature -- Access
+
+	event_data_type: $data_type
+
+	wrapper (${wrapper_args}action: PROCEDURE [ANY, TUPLE]) is
+		do
+			action.call ([$arg_name_list])
+		end
+
+end
+EOT
+		close(OH)
+
+	}
+}

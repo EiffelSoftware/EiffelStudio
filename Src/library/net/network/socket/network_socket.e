@@ -57,14 +57,20 @@ feature -- Status report
 	ready_for_reading: BOOLEAN is
 			-- Is data available for reading from the socket within 
 			-- `timeout' seconds?
+		local
+			retval: INTEGER
 		do
-			Result := c_select_poll_with_timeout (descriptor, True, timeout)
+			retval := c_select_poll_with_timeout (descriptor, True, timeout)
+			Result := (retval > 0)
 		end
 	
 	ready_for_writing: BOOLEAN is
 			-- Can data be written to the socket within `timeout' seconds?
+		local
+			retval: INTEGER
 		do
-			Result := c_select_poll_with_timeout (descriptor, False, timeout)
+			retval := c_select_poll_with_timeout (descriptor, False, timeout)
+			Result := (retval > 0)
 		end
 	
 	timeout: INTEGER

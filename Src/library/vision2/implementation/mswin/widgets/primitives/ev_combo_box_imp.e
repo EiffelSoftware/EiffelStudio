@@ -348,19 +348,14 @@ feature {NONE} -- Implementation
 
 	is_item_imp_selected (li_imp: EV_LIST_ITEM_IMP): BOOLEAN is
 			-- Is `li_imp' selected?
-		local
-			pos: INTEGER
 		do
-			pos := index_of_item_imp (li_imp)
+			Result := is_selected (index_of_item_imp (li_imp) - 1)
 		end
 
 	select_item_imp (li_imp: EV_LIST_ITEM_IMP) is
 			-- Set `li_imp' selected.
 		do
-			select_item (index_of_item_imp (li_imp))
-			check
-				to_be_implemented: False
-			end
+			select_item (index_of_item_imp (li_imp) - 1)
 		end
 
 	deselect_item_imp (li_imp: EV_LIST_ITEM_IMP) is
@@ -368,10 +363,7 @@ feature {NONE} -- Implementation
 		local
 			pos: INTEGER
 		do
-			pos := index_of_item_imp (li_imp)
-			check
-				to_be_implemented: False
-			end
+			deselect_item (index_of_item_imp (li_imp) - 1)
 		end
 
 	set_item_imp_text (li_imp: EV_LIST_ITEM_IMP; a_text: STRING) is
@@ -380,9 +372,8 @@ feature {NONE} -- Implementation
 			pos: INTEGER
 		do
 			pos := index_of_item_imp (li_imp)
-			check
-				to_be_implemented: False
-			end
+			delete_string (pos - 1)
+			insert_string_at (li_imp.wel_text, pos - 1)
 		end
 
 	top_index: INTEGER is
@@ -696,6 +687,10 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.67  2000/03/30 22:40:04  rogers
+--| Fixed by re-implementing : is_item_imp_selected, select_item_imp,
+--| deselect_item_imp and set_item_imp_text.
+--|
 --| Revision 1.66  2000/03/30 18:11:12  brendel
 --| Removed `insert_item'.
 --| Added `top_index'.

@@ -77,9 +77,8 @@ feature {NONE} -- Initialization
 		do
 			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (c_object) then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (c_object, Gdk_events_mask)
-			end
-			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (visual_widget) and then c_object /= visual_widget then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (visual_widget, Gdk_events_mask)
+			else
+				--print (generator + "has no events for c_object%N")
 			end
 		end
 

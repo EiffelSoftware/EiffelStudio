@@ -41,7 +41,7 @@ interface,,,,,,,
 ,3,"Add a class with queries relative to the validity of names (for classes, features, system,…)",Xavier,INT0036,,
 ,4,"Save all backed up files in a file, and propose to reopen these back-ups at next start-up",Julian,INT0037,,
 ,4,"In the new blank project wizard, let the user choose the name of the root_class and of the root_cluster",Xavier,INT0038,,
-
+,3,Give a different icon in the cluster tree to deferred/effective classes,Xavier,INT0039,,
 
 
 

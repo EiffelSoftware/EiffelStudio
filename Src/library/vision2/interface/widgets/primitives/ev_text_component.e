@@ -140,7 +140,7 @@ feature -- Status setting
 		end
 	
 	set_caret_position (a_caret_position: INTEGER) is
-			-- Assign `a_caret_posiiton' to `caret_position'.
+			-- Assign `a_caret_position' to `caret_position'.
 		require
 			not_destroyed: not is_destroyed
 			valid_caret_position: valid_caret_position (a_caret_position)

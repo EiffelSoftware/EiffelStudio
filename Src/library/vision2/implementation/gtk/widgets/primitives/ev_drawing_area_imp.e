@@ -15,8 +15,7 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			interface,
-			dispose
+			interface
 		end
 
 	EV_PRIMITIVE_IMP

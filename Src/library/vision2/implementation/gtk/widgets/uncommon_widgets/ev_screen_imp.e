@@ -19,8 +19,7 @@ inherit
 	EV_DRAWABLE_IMP
 		redefine
 			interface,
-			initialize,
-			dispose
+			initialize
 		end
 
 create
@@ -233,7 +232,6 @@ feature {NONE} -- Implementation
 				gdk_gc_unref (gc)
 				gc := default_pointer
 			end
-			Precursor {EV_DRAWABLE_IMP}
 		end
 
 	drawable: POINTER is

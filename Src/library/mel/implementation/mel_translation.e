@@ -14,17 +14,14 @@ indexing
 class MEL_TRANSLATION
 
 inherit
-
 	MEL_CALLBACK_KEY
 		redefine
 			out, is_equal
-		end;
+		end
 
-	MEMORY
-		export
-			{NONE} all
+	DISPOSABLE
 		redefine
-			dispose, out, is_equal
+			out, is_equal
 		end
 
 create

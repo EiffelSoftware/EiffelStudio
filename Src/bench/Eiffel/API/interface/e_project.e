@@ -643,14 +643,8 @@ feature -- Output
 			file_name: FILE_NAME
 			project_name: STRING
 			project_file: RAW_FILE
-			c_init: INIT_SERVER
 		do
 			if not retried then
-					--| Reset the information in order to do a correct
-					--| store.
-				!! c_init
-				c_init.server_reset
-
 				error_status_mode.set_item (Ok_status)
 
 					--| Prepare informations to store
@@ -691,9 +685,6 @@ feature -- Output
 				project_file.go (project_file.count)
 				project_file.independent_store (Current)
 				project_file.close
-
-					--| Re-initialize the storing for the SERVERs
-				c_init.server_init
 			else
 				if project_file /= Void and then not project_file.is_closed then
 					project_file.close

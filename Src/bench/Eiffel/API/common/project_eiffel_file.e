@@ -145,14 +145,8 @@ feature {NONE} -- Implementation
 			-- Retrieve project
 		local
 			retried: BOOLEAN
-			c_init: INIT_SERVER
 		do
 			if not retried then
-					--| Reset the information in order to do a correct
-					--| retrieve.
-				!! c_init
-				c_init.server_reset
-
 				open_read
 				if has_header then
 					check_version_number (0);
@@ -174,8 +168,6 @@ feature {NONE} -- Implementation
 						error_value := corrupt_value
 					end
 				end
-					--| Re-initialize the storing for the SERVERs
-				c_init.server_init
 			end
 		ensure
 			valid_result: not error implies Result /= Void
@@ -189,7 +181,6 @@ feature {NONE} -- Implementation
 				error_value := corrupt_value
 			end;
 				--| Re-initialize the storing for the SERVERs
-			c_init.server_init
 			retried := True
 			retry
 		end;

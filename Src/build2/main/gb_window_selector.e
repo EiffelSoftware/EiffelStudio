@@ -459,6 +459,7 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			all_top_level_names: HASH_TABLE [STRING, STRING]
 			command_convert_to_top_level: GB_COMMAND_CONVERT_TO_TOP_LEVEL
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
+			flatten_command: GB_COMMAND_FLATTEN_OBJECT
 		do
 			create all_top_level_names.make (50)
 			objects.do_all (agent add_object_name_to_hash_table (?, all_top_level_names))
@@ -494,6 +495,12 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 						an_object.set_name (dialog.name.as_lower)
 						command_add_window.execute
 					else
+							-- If the object is an instance of another top level object,
+							-- flatten that representation before converting to a top level object.
+						if an_object.is_instance_of_top_level_object then
+							create flatten_command.make (an_object, False)
+							flatten_command.execute
+						end
 						create command_convert_to_top_level.make (an_object, parent_item, dialog.name.as_lower)
 						command_convert_to_top_level.execute	
 					end
@@ -1136,9 +1143,8 @@ feature {NONE} -- Implementation
 			-- Veto drop of `object_stone'.
 		require
 			object_stone_not_void: object_stone /= Void
-			
 		do
-			Result := not object_stone.is_instance_of_top_level_object
+			Result := True
 		end
 		
 	check_for_object_delete (a_key: EV_KEY) is
@@ -1234,13 +1240,33 @@ feature {NONE} -- Implementation
 			position_not_changed: widget.index = old widget.index
 		end
 		
+feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
+		
 	handle_object_drop (object_pebble: GB_OBJECT_STONE; selector_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
 			-- Respond to the dropping of `object_pebble' onto `selector_item'.
 		require
 			object_pebble_not_void: object_pebble /= Void
 			selector_item_not_void: selector_item /= Void
+		local
+			flatten_command: GB_COMMAND_FLATTEN_OBJECT
+			new_object: GB_OBJECT
+			is_top_level: BOOLEAN
+			clipboard_stone: GB_CLIPBOARD_OBJECT_STONE
 		do
-			add_new_object (object_pebble.object, selector_item)
+			new_object := object_pebble.object
+			
+			clipboard_stone ?= object_pebble
+			if clipboard_stone /= Void then
+					-- Special handling for instances of top level objects from the clipboard. If we are
+					-- to convert them into their own top level representations, they can no
+					-- longer be representations, so we silently flatten them.
+				is_top_level := object_pebble.is_instance_of_top_level_object
+				if is_top_level then
+					create flatten_command.make (new_object, False)
+					flatten_command.silent_execute
+				end
+			end
+			add_new_object (new_object, selector_item)
 		end
 		
 feature {GB_WINDOW_SELECTOR_TOOL_BAR, GB_WINDOW_SELECTOR_COMMON_ITEM} -- Implementation

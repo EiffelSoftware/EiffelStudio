@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+	<Module Id="dotnet" Guid="298AA83F-2BD4-43d0-9EDB-25F84FE39367" Language="0" Version="2.0.1313">
+		<Package Id="A05C72D0-9A8E-4f21-9BD3-B6406E5F7270" Keywords="MergeModule, MSI, Database" Description="ASP.NET Enabler 2.0" Manufacturer="Eiffel Software" InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="0" />
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="Application" Name=".">
+				<Directory Id="Codedom" Name="Codedom">
+					<Directory Id="Bin" Name="bin">
+						<Component Id="EiffelSoftware.Runtime.dll" Guid="2518826B-F681-4041-84E3-8695FC17F7AB">
+							<File Id="EiffelSoftware.Runtime.dll" Name="EIFFEL~1.DLL" LongName="EiffelSoftware.Runtime.dll" Checksum="yes" KeyPath="yes" Assembly=".net">
+							</File>
+						</Component>
+						<Component Id="EiffelSoftware.CodeDomBase.dll" Guid="199F54DD-3351-4cb6-8296-9D403B7236A1">
+							<File Id="EiffelSoftware.CodeDomBase.dll" Name="EIFFEL~2.DLL" LongName="EiffelSoftware.CodeDomBase.dll" Checksum="yes" KeyPath="yes" Assembly=".net">
+							</File>
+						</Component>
+						<Component Id="EiffelSoftware.CacheBrowser.dll" Guid="2700929A-377B-493f-A279-893697A3869C">
+							<File Id="EiffelSoftware.CacheBrowser.dll" Name="EIFFEL~3.DLL" LongName="EiffelSoftware.CacheBrowser.dll" Checksum="yes" KeyPath="yes" Assembly=".net">
+							</File>
+						</Component>
+						<Component Id="EiffelSoftware.CodeDom.dll" Guid="186A4516-C472-4e55-9B17-04D703E97E79">
+							<File Id="EiffelSoftware.CodeDom.dll" Name="EIFFEL~4.DLL" LongName="EiffelSoftware.CodeDom.dll" Checksum="yes" KeyPath="yes" Assembly=".net">
+							</File>
+						</Component>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+	</Module>
+</Wix>

@@ -72,6 +72,7 @@ cluster
 		eiffel_error_unredefined:		"$BENCH/Eiffel/eiffel/error/unredefined";
 		generation:			"$BENCH/Eiffel/eiffel/generation";
 		genericity:			"$BENCH/Eiffel/eiffel/genericity";
+		ids:				"$BENCH/Eiffel/eiffel/ids";
 		inheritance:		"$BENCH/Eiffel/eiffel/inheritance";
 		interface:			"$BENCH/Eiffel/eiffel/interface";
 		polymorphism:		"$BENCH/Eiffel/eiffel/polymorphism";
@@ -107,6 +108,10 @@ cluster
 		debugging:			"$BENCH/Eiffel/interface/debugging";
 		archi_text:			"$BENCH/Eiffel/interface/archi_text";
 		shared_interface:	"$BENCH/Eiffel/interface/shared";
+
+		bench_common:		"$BENCH/Eiffel/interface/graphical/common";
+		platform_common:	"$BENCH/Eiffel/interface/graphical/spec/common";
+		platform_windows:	"$BENCH/Eiffel/interface/graphical/spec/windows";
 
 		ipc:				"$BENCH/Eiffel/ipc";
 

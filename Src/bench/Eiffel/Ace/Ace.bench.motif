@@ -119,6 +119,7 @@ cluster
 	-- graphical interface (bench):
 
 		archi_text:			"$BENCH/Eiffel/interface/graphical/archi_text";
+		bench_common:		"$BENCH/Eiffel/interface/graphical/common";
 		clicking:			"$BENCH/Eiffel/interface/graphical/clicking";
 		commands:			"$BENCH/Eiffel/interface/graphical/commands";
 		debugging:			"$BENCH/Eiffel/interface/graphical/debugging";
@@ -127,6 +128,9 @@ cluster
 		graphical_shared:	"$BENCH/Eiffel/interface/graphical/shared";
 		stones:				"$BENCH/Eiffel/interface/graphical/stones";
 		windows:			"$BENCH/Eiffel/interface/graphical/windows";
+
+		platform_common:	"$BENCH/Eiffel/interface/graphical/spec/common";
+		platform_motif:		"$BENCH/Eiffel/interface/graphical/spec/motif";
 
 	-- Communications
 

@@ -25,7 +25,6 @@ inherit
 		select
 			free_register
 		end;
-	SHARED_ENCODER;
 	SHARED_DECLARATIONS;
 
 feature 

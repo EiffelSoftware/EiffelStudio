@@ -25,7 +25,6 @@ inherit
 			generate, print_register, free_register
 		end;
 	SHARED_TABLE;
-	SHARED_ENCODER;
 	SHARED_WORKBENCH;
 	SHARED_DECLARATIONS;
 

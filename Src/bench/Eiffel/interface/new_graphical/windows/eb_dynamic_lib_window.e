@@ -1180,6 +1180,8 @@ feature {NONE} -- Implementation: Properties dialog
 			create feature_field
 			if for_modification then
 				feature_field.disable_edit
+			else
+				feature_field.return_actions.extend (~on_creation_ok)
 			end
 			hb.extend (feature_field)
 			vb.extend (hb)
@@ -1277,7 +1279,9 @@ feature {NONE} -- Implementation: Properties dialog
 			
 			properties_dialog.set_minimum_height (properties_dialog.height)
 			properties_dialog.set_default_cancel_button (cancelb)
-			properties_dialog.set_default_push_button (okb)
+			if for_modification then
+				properties_dialog.set_default_push_button (okb)
+			end
 		ensure
 			dialog_created: valid_properties_dialog
 		end
@@ -1539,17 +1543,23 @@ feature {NONE} -- Implementation: Properties dialog
 				class_field.set_text (cl.name_in_upper)
 					-- Fill in `creation_combo' with the list of valid creation routines of `cl'.
 				available_creation_routines := valid_creation_routines (cl)
-				from
-					available_creation_routines.start
-				until
-					available_creation_routines.after
-				loop
-					create cit.make_with_text (available_creation_routines.item.name)
+				if not available_creation_routines.is_empty then
+					from
+						available_creation_routines.start
+					until
+						available_creation_routines.after
+					loop
+						create cit.make_with_text (available_creation_routines.item.name)
+						creation_combo.extend (cit)
+						available_creation_routines.forth
+					end
+					feature_field.set_focus
+--					properties_dialog.set_default_push_button (okb)
+				else
+						-- The entered class has no valid creation routine.
+					create cit.make_with_text (Warning_messages.W_no_valid_creation_routine)
 					creation_combo.extend (cit)
-					available_creation_routines.forth
 				end
-				feature_field.set_focus
-				properties_dialog.set_default_push_button (okb)
 			end
 		end
 

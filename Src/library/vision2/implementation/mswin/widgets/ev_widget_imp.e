@@ -396,16 +396,6 @@ feature -- Element change
 
 feature -- Implementation
 
-	on_parented is
-			-- `Current' has just been put into a container.
-		do
-		end
-
-	on_orphaned is
-			-- `Current' has just been removed from its container.
-		do
-		end
-
 	background_color_imp: EV_COLOR_IMP
 			-- Color used for the background of the widget
 
@@ -928,6 +918,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.67  2000/04/14 20:54:20  brendel
+--| Removed on_parented and on_orphaned.
+--|
 --| Revision 1.66  2000/04/10 17:04:19  rogers
 --| Commented client to screen.
 --|

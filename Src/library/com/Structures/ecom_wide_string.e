@@ -116,7 +116,7 @@ feature {NONE} -- Externals
 
 	ccom_create_from_string (str: POINTER): POINTER is
 		external
-			"C (EIF_POINTER): (WCHAR *)| %"E_wide_string.h%""
+			"C (char *): EIF_POINTER | %"E_wide_string.h%""
 		end
 
 

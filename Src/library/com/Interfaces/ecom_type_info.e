@@ -9,9 +9,6 @@ class
 
 inherit
 	ECOM_WRAPPER
-		redefine
-			dispose
-		end
 
 	ECOM_INVOKE_KIND
 
@@ -91,13 +88,13 @@ feature -- Access
 		local
 			tmp_pointer: POINTER
 		do
-			if func_desc_pointers = Void then
-				create func_desc_pointers.make
+			if func_descs = Void then
+				create func_descs.make
 			end
 			tmp_pointer := ccom_get_func_desc (initializer, an_index)
 			create Result.make_by_pointer (tmp_pointer)
 			Result.set_parent (Current)
-			func_desc_pointers.extend (tmp_pointer)
+			func_descs.extend (Result)
 		ensure
 			non_void_description: Result /= Void
 			valid_description: Result.is_parent_valid
@@ -178,7 +175,6 @@ feature -- Access
 				tmp_pointer := ccom_get_type_attr (initializer)
 				create type_attr_impl.make_by_pointer (tmp_pointer)
 				is_type_attr_set := True
-				type_attr_pointer := tmp_pointer
 			end
 			Result := type_attr_impl
 		ensure
@@ -201,13 +197,13 @@ feature -- Access
 		local
 			tmp_pointer: POINTER
 		do
-			if var_desc_pointers = Void then
-				create var_desc_pointers.make
+			if var_descs = Void then
+				create var_descs.make
 			end
 			tmp_pointer := ccom_get_var_desc (initializer, an_index)
 			create Result.make_by_pointer (tmp_pointer)
 			Result.set_parent (Current)
-			var_desc_pointers.extend (tmp_pointer)
+			var_descs.extend (Result)
 		ensure
 			non_void_description: Result /= Void
 			valid_description: Result.is_parent_valid
@@ -264,7 +260,7 @@ feature {NONE} -- Implementation
 	delete_wrapper is
 			-- Delete structure
 		do
-			ccom_delete_c_type_info (initializer);
+			--ccom_delete_c_type_info (initializer);
 		end
 
 	containing_type_lib_impl: ECOM_TYPE_LIB 
@@ -279,77 +275,24 @@ feature {NONE} -- Implementation
 	is_type_attr_set: BOOLEAN
 			-- Is TYPEATTR structure initialized?
 
-	release_type_attr is
-			-- Release TYPEATTR structure
-		do
-			if is_type_attr_set then
-				ccom_release_type_attr (initializer, type_attr_pointer)
-			end
-		end
 
 	release_func_desc (a_func_desc_ptr: POINTER) is
 			-- Release FUNCDESC structure
 		do
-			ccom_release_func_desc (initializer, a_func_desc_ptr)
+			--ccom_release_func_desc (initializer, a_func_desc_ptr)
 		end
 
 	release_var_desc (a_var_desc_ptr: POINTER) is
 			-- Release VARDESC structure
 		do
-			ccom_release_var_desc (initializer, a_var_desc_ptr)
+			--ccom_release_var_desc (initializer, a_var_desc_ptr)
 		end
 
-	release_func_desc_pointers is
-			-- Release pointers.
-		require
-			non_void_description: func_desc_pointers /= Void
-		do
-			from
-				func_desc_pointers.start
-			until
-				func_desc_pointers.after
-			loop
-				release_func_desc (func_desc_pointers.item)
-				func_desc_pointers.forth
-			end
-		end
+	func_descs: LINKED_LIST [ECOM_FUNC_DESC]
+			-- FUNCDESC structures
 
-	release_var_desc_pointers is
-			-- Release pointers.
-		require
-			non_void_description: var_desc_pointers /= Void
-		do
-			from
-				var_desc_pointers.start
-			until
-				var_desc_pointers.after
-			loop
-				release_var_desc (var_desc_pointers.item)
-				var_desc_pointers.forth
-			end
-		end
-
-	dispose is
-			-- Release descriptions.
-		do
-			release_type_attr
-			if func_desc_pointers /= Void then
-				release_func_desc_pointers
-			end
-			if var_desc_pointers /= Void then
-				release_var_desc_pointers
-			end
-			Precursor
-		end
-
-	type_attr_pointer: POINTER
-			-- Pointer to TYPEATTR structure
-
-	func_desc_pointers: LINKED_LIST [POINTER]
-			-- Pointers to FUNCDESC structures
-
-	var_desc_pointers: LINKED_LIST [POINTER]
-			-- Pointers to VARDESC structures
+	var_descs: LINKED_LIST [ECOM_VAR_DESC]
+			-- VARDESC structures
 
 feature {NONE} -- Externals
 

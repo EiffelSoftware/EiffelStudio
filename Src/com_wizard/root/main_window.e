@@ -8,8 +8,8 @@ inherit
 			on_control_id_command,
 			on_accelerator_command,
 			on_wm_erase_background,
-			on_size,
-			on_notify
+			on_notify,
+			on_size
 		end
 
 	WIZARD_OUTPUT_WINDOW
@@ -34,16 +34,6 @@ inherit
 			{NONE} all
 		end
 		
-	WEL_WS_CONSTANTS
-		export
-			{NONE} all
-		end
-
-	WEL_ES_CONSTANTS
-		export
-			{NONE} all
-		end
-
 	WEL_OFN_CONSTANTS
 		export
 			{NONE} all
@@ -78,12 +68,11 @@ feature {NONE} -- Initialization
 			-- Create the main window.
 		do
 			state := Initial_state
-			create lines.make
 			create previous_states.make
 			create msg_box.make
 			make_top (Title)
+			create output_edit.make (Current, rebar.height)
 			set_menu (main_menu)
-			setup_output_edit
 			create introduction_dialog.make (Current)
 			create initial_dialog.make (Current)
 			create idl_dialog.make (Current)
@@ -97,9 +86,6 @@ feature -- GUI Elements
 
 	msg_box: WEL_MSG_BOX
 			-- Message box
-
-	Output_edit: WEL_RICH_EDIT
-			-- Output edit
 
 	rebar: WEL_REBAR is
 			-- Create and initialise toolbar.
@@ -199,96 +185,42 @@ feature -- GUI Elements
 			Result.set_filter (<<Wizard_filter, "All Files (*.*)">>, <<Wizard_wild_card, "*.*">>)
 		end
 
-	Background_color: WEL_COLOR_REF is
-			-- Text output background color
-		once
-			create Result.make_rgb (210, 210, 210)
-		end
+	output_edit: WIZARD_OUTPUT_EDIT
+			-- Output edit used to display messages
 
-	Text_color: WEL_COLOR_REF is
-			-- Text output color
-		once
-			create Result.make_rgb (0, 0, 0)
-		end
-
-	Title_color: WEL_COLOR_REF is
-			-- Text output color
-		once
-			create Result.make_rgb (0, 0, 100)
-		end
-
-	Warning_color: WEL_COLOR_REF is
-			-- Text output color
-		once
-			create Result.make_rgb (100, 50, 50)
-		end
-
-	Error_color: WEL_COLOR_REF is
-			-- Text output color
-		once
-			create Result.make_rgb (150, 0, 0)
-		end
-
-feature -- Element Change
-
-	new_line is
-			-- Begin a new line.
-		do
-			add_text ("%R%N")
-			process_messages
-		end
+feature -- Output
 
 	add_message (a_text: STRING) is
 			-- Add text `a_text' into window's text.
 		do
-			add_text (a_text)
-			new_line
+			output_edit.add_text (a_text)
 		end
 	
 	add_title (a_title: STRING) is
 			-- Add title `a_title' to window's text.
 		do
-		--	output_edit.set_caret_position (output_edit.count)
-			new_line
-			output_edit.set_character_format_word (Title_format)
-			output_edit.insert_text (a_title)
-			output_edit.set_character_format_word (Text_format)
-		--	output_edit.set_caret_position (output_edit.count)
-			new_line
-			process_messages
+			output_edit.set_title_format
+			output_edit.add_text (a_title)
 		end
 
 	add_warning (a_warning: STRING) is
 			-- Add warning `a_warning' to window's text.
 		do
-		--	output_edit.set_caret_position (output_edit.count)
-			new_line
-			output_edit.set_character_format_word (Warning_format)
-			output_edit.insert_text (a_warning)
-			output_edit.set_character_format_word (Text_format)
-		--	output_edit.set_caret_position (output_edit.count)
-			new_line
-			process_messages
+			output_edit.set_warning_format
+			output_edit.add_text (a_warning)
 		end
 
 	add_error (a_error: STRING) is
 			-- Add error `a_error' to window's text.
 		do
-		--	output_edit.set_caret_position (output_edit.count)
-			new_line
-			output_edit.set_character_format_word (Error_format)
-			output_edit.insert_text (a_error)
-			output_edit.set_character_format_word (Text_format)
-		--	output_edit.set_caret_position (output_edit.count)
-			new_line
-			process_messages
+			output_edit.set_title_format
+			output_edit.add_text (a_error)
 		end
 
 	clear is
 			-- Clear window text.
 		do
-			output_edit.set_text (Initial_text)
-			process_messages
+			output_edit.clear
 		end
 
 feature {NONE} -- State management
@@ -338,6 +270,7 @@ feature {NONE} -- State management
 				create wizard_manager.make (Current)
 				wizard_manager.run
 			end
+			clean
 		end
 
 	change_state (move_to_next: BOOLEAN) is
@@ -375,91 +308,8 @@ feature {NONE} -- State management
 
 feature {NONE} -- Implementation
 
-	add_text (a_text: STRING) is
-			-- Add text `a_text' into window's text.
-		do
-		--	output_edit.set_caret_position (output_edit.count)
-			output_edit.insert_text (a_text)
-		--	output_edit.set_caret_position (output_edit.count)
-			process_messages
-		end
-	
-	process_messages is
-			-- Process messages in queue.
-		do
-			from
-				win_msg.peek_all
-			until
-				not win_msg.last_boolean_result
-			loop
-				if win_msg.last_boolean_result then
-					win_msg.translate
-					win_msg.dispatch
-				end
-				win_msg.peek_all
-			end
-		end
-
-	setup_output_edit is
-			-- Initialize output edit.
-		do
-			create output_edit.make (Current, Output_edit_name, 0, client_rect.y + rebar.height, width, height - rebar.height, -1)
-			output_edit.set_text (Initial_text)
-			output_edit.set_character_format_all (Text_format)
-			output_edit.set_style (Ws_visible + Ws_child + Ws_group + Ws_tabstop + Ws_vscroll + Ws_hscroll + Es_left + Es_autohscroll + Es_autovscroll + Es_multiline)
-			output_edit.set_read_only
-			output_edit.enable_scroll_caret_at_selection
-			output_edit.set_background_color (Background_color)
-		end
-
-	lines: LINKED_LIST [STRING]
-			-- Window text
-
-	code_generator: WIZARD_CODE_GENERATOR
-			-- Code generator
-
 	wizard_manager: WIZARD_MANAGER
 			-- Code generation manager
-
-	Text_format: WEL_CHARACTER_FORMAT is
-			-- Window character format
-		once
-			create Result.make
-			Result.set_face_name ("Tahoma")
-			Result.set_height (160)
-			Result.unset_bold
-			Result.set_text_color (Text_color)
-		end
-
-	Title_format: WEL_CHARACTER_FORMAT is
-			-- Window character format
-		once
-			create Result.make
-			Result.set_face_name ("Tahoma")
-			Result.set_height (200)
-			Result.set_bold
-			Result.set_text_color (Title_color)
-		end
-
-	Warning_format: WEL_CHARACTER_FORMAT is
-			-- Window character format
-		once
-			create Result.make
-			Result.set_face_name ("Tahoma")
-			Result.set_height (160)
-			Result.set_bold
-			Result.set_text_color (Warning_color)
-		end
-
-	Error_format: WEL_CHARACTER_FORMAT is
-			-- Window character format
-		once
-			create Result.make
-			Result.set_face_name ("Tahoma")
-			Result.set_height (160)
-			Result.set_bold
-			Result.set_text_color (Error_color)
-		end
 
 	clean is
 			-- Delete temporary generated files.
@@ -472,30 +322,25 @@ feature {NONE} -- Implementation
 			delete_file (c_to_obj (Generated_iid_file_name))
 			delete_file (c_to_obj (Generated_dlldata_file_name))
 			delete_file (c_to_obj (Generated_ps_file_name))
+			delete_file (Temporary_input_file_name)
 			delete_file (Def_file_name)
 		end
 
 	delete_file (a_file_name: STRING) is
 			-- Delete file `a_file_name' from Wizard destination folder.
-		require
-			non_void_file_name: a_file_name /= Void
-			valid_file_name: not a_file_name.empty
 		local
 			a_string: STRING
 			a_file: RAW_FILE
 		do
-			a_string := clone (shared_wizard_environment.destination_folder)
-			a_string.append (a_file_name)
-			create a_file.make (a_string)
-			if a_file.exists then
-				a_file.delete
+			if (a_file_name /= Void and then not a_file_name.empty) and
+				Shared_wizard_environment.destination_folder /= Void then
+				a_string := clone (shared_wizard_environment.destination_folder)
+				a_string.append (a_file_name)
+				create a_file.make (a_string)
+				if a_file.exists then
+					a_file.delete
+				end
 			end
-		end
-
-	win_msg: WEL_MSG is
-			-- Used by `process_messages'
-		once
-			!! Result.make
 		end
 
 	open_project (a_project: STRING) is
@@ -510,16 +355,13 @@ feature {NONE} -- Implementation
 					set_shared_wizard_environment (an_environment)
 					add_message (Open_message)
 					project_retrieved := True
-					new_line
 				else
 					add_message (Open_error_message)
 					project_retrieved := False
-					new_line
 				end
 			else
 				add_message (Open_error_message)
 				project_retrieved := False
-				new_line
 			end
 		rescue
 			retried := True
@@ -537,10 +379,8 @@ feature {NONE} -- Implementation
 			if not retried then
 				shared_wizard_environment.store_by_name (a_project)
 				add_message (Save_message)
-				new_line
 			else
 				add_message (Save_error_message)
-				new_line
 			end
 		rescue
 			retried := True
@@ -558,12 +398,6 @@ feature {NONE} -- Implementation
 
 	Save_message: STRING is "Project Saved."
 			-- Save project message
-
-	Output_edit_name: STRING is "Output"
-			-- Output edit name
-
-	Initial_text: STRING is ""
-			-- Output edit initial text
 
 	project_retrieved: BOOLEAN	
 			-- Was project correctly retrieved?
@@ -625,14 +459,6 @@ feature {NONE} -- Behavior
 			end
 		end
 
-   	on_size (size_type, a_width, a_height: INTEGER) is
-			-- Wm_size message
-		do
-			if output_edit /= Void then
-				output_edit.resize (a_width, a_height - client_rect.y - rebar.height)
-			end
-		end
-
    	on_wm_erase_background (wparam: INTEGER) is
    			-- Wm_paint message.
    			-- May be redefined to paint something on
@@ -643,11 +469,17 @@ feature {NONE} -- Behavior
 			disable_default_processing
 		end
 
+	on_size (size_type, a_width, a_height: INTEGER) is
+			-- Wm_size message
+			-- See class WEL_SIZE_CONSTANTS for `size_type' value
+		do
+			output_edit.resize (a_width, a_height - rebar.height)
+		end
+
 invariant
 	
 	valid_state: state = Introduction_state or state = Initial_state or state = Idl_state or state = Ps_state or 
 				state = Final_state or state = Finished_state or state = Abort_state
-	non_void_lines: lines /= Void
 
 end -- class MAIN_WINDOW
 

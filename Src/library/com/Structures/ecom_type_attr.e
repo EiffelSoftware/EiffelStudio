@@ -9,6 +9,9 @@ class
 
 inherit
 	ECOM_STRUCTURE
+		redefine
+			dispose
+		end
 
 	ECOM_TYPE_KIND
 		
@@ -136,6 +139,13 @@ feature -- Measurement
 			-- Size of TYPEDESC structure
 		do
 			Result := c_size_of_type_attr 
+		end
+
+feature {NONE} -- Implementation
+
+	dispose is
+			-- `item' freed by ECOM_TYPE_INFO.
+		do
 		end
 
 feature {NONE} -- Externals

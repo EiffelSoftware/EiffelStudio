@@ -18,6 +18,28 @@
 #include "eif_except.h"
 #include "ecom_rt_globals.h"
 
+struct FUNCDESCLISTITEM;
+typedef struct FUNCDESCLISTITEM {
+	FUNCDESC * item;
+	struct FUNCDESCLISTITEM * next;
+} FUNCDESCLISTITEM;
+
+struct VARDESCLISTITEM;
+typedef struct VARDESCLISTITEM {
+	VARDESC * item;
+	struct VARDESCLISTITEM * next;
+} VARDESCLISTITEM;
+
+typedef struct FUNCDESCLIST {
+	FUNCDESCLISTITEM first;
+	FUNCDESCLISTITEM *current;
+} FUNCDESCLIST;
+
+typedef struct VARDESCLIST {
+	VARDESCLISTITEM first;
+	VARDESCLISTITEM *current;
+} VARDESCLIST;
+
 class E_IType_Info
 {
 public:
@@ -56,6 +78,13 @@ private:
 	ITypeInfo * pTypeInfo;	
 	ITypeLib * pContainingTypeLib;
 	EIF_INTEGER index;
+	TYPEATTR * pTypeAttr;
+	FUNCDESCLIST FuncDescList;
+	VARDESCLIST VarDescList;
+	void save_func_desc (FUNCDESC *pFuncDesc);
+	void save_var_desc (VARDESC *pVarDesc);
+	void release_func_descs ();
+	void release_var_descs ();
 };
 
 #endif // !__ECOM_E_ITYPEINFO_H_INC__

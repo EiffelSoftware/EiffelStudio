@@ -150,9 +150,6 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	Temporary_input_file_name: STRING is "Input_File"
-			-- Input file
-
 	check_return_code (a_status: INTEGER) is
 			-- Display error message and stops execution if last system call returned
 			-- other value than `a_status'.

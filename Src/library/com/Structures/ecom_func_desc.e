@@ -169,8 +169,8 @@ feature -- Measurement
 feature {NONE} -- Implementation
 
 	dispose is
+			-- `item' is freed by ECOM_TYPE_INFO.
 		do
-			Precursor
 		end
 
 feature {NONE} -- Externals

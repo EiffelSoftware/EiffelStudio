@@ -64,6 +64,8 @@ feature {NONE} -- Execution
 				if prof_converter.conf_load_error then
 					io.error.put_string (proffile_dir)
 					io.error.putstring (": File does not exist!%N%N")
+				else
+					io.putstring ("Ready for queries...")
 				end
 			end;
 		end;

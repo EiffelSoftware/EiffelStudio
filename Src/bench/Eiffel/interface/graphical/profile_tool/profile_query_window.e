@@ -29,10 +29,11 @@ feature {NONE} -- Initialization
 			tool := a_tool
 			form_d_make (Interface_names.n_X_resource_name, a_tool)
 			set_title (Interface_names.t_Profile_query_window)
-				--|
+			set_size (30, 30);
+
 			!! all_subqueries.make
 			!! all_operators.make
-				--| Guillaume 
+
 			build_interface
 		ensure
 			tool_set: tool.is_equal (a_tool)
@@ -70,7 +71,6 @@ feature -- Status Setting
 			profiler_options := po;
 			profinfo := pi;
 
-			--|
 			count_active_subqueries
 			if profiler_query.subqueries.count > active_subqueries then
 				from
@@ -92,9 +92,7 @@ feature -- Status Setting
 			end
 
 			update_query_form  
-			--| Guillaume - 09/26/97
-
-			-- query_text.set_text (pq.image);
+			subquery_text.clear
 			text_window.clear_window;
 			text_window.process_text (st);
 			text_window.display
@@ -107,10 +105,9 @@ feature -- Update
 		do
 			text_window.clear_window;
 			text_window.init_resource_values;
-			run_subquery_cmd.execute (Void)
+			run_query_cmd.execute (Void)
 		end
 
-		--|
 	update_query_form is
 		local
 			i : INTEGER
@@ -134,8 +131,11 @@ feature -- Update
 					until
 						all_subqueries.after or else all_operators.after
 					loop
-						!! scrollable_subquery.make_with_operator (all_operators.item.actual_operator, all_subqueries.item.image, i )
+						!! scrollable_subquery.make (all_operators.item.actual_operator, all_subqueries.item.image, i )
 						if all_subqueries.item.is_active then
+							if active_query_window.empty then
+								!! scrollable_subquery.make ("", all_subqueries.item.image, i) 
+							end
 							active_query_window.force (scrollable_subquery)
 						else
 							inactive_subqueries_window.force (scrollable_subquery)
@@ -145,11 +145,14 @@ feature -- Update
 						i := i + 1
 					end							
 				end
-			else
-				--| Guillaume - 09/24/97 : display an error message
 			end
 		end
-		--| Guillaume - 09/26/97
+
+	update_profiler_query is
+		do
+			profiler_query.set_subqueries (all_subqueries)
+			profiler_query.set_subquery_operators (all_operators)
+		end
 
 feature {NONE} -- Graphical User Interface
 
@@ -167,33 +170,32 @@ feature {NONE} -- Graphical User Interface
 			!! text_sep.make (Interface_names.t_Empty, Current);
 			!! subquery_sep.make (Interface_names.t_Empty, Current);
 
-			-- !! query_label.make (Interface_names.l_Query, query_form);
-			-- !! query_text.make (Interface_names.t_Empty, query_form);
-			-- query_text.set_read_only;
-			-- query_text.set_rows (3);
+			!! active_query_form.make (Interface_names.t_empty, query_form)
+			!! query_button_form.make (Interface_names.t_empty, query_form)
+			!! inactive_subqueries_form.make (Interface_names.t_empty, query_form)
 
-				--|
-			!! active_query_form.make ("active query form", query_form)
-			!! query_button_form.make ("button form", query_form)
-			!! inactive_subqueries_form.make ("inactive subqueries form", query_form)
-
-			!! active_query_label.make ("Active query", active_query_form)
-			!! active_query_window.make ("Active query window", active_query_form)
+			!! active_query_label.make (Interface_names.l_Active_query, active_query_form)
+			!! active_query_window.make (Interface_names.t_empty, active_query_form)
 			active_query_window.set_multiple_selection
 
-			!! reactivate_label.make ("Reactivate", query_button_form)
-			!! inactivate_label.make ("Inactivate", query_button_form)
-			!! reactivate_button.make ("<-", query_button_form)
+			!! reactivate_label.make (Interface_names.l_Reactivate, query_button_form)
+			!! inactivate_label.make (Interface_names.l_Inactivate, query_button_form)
+			!! reactivate_button.make (Interface_names.t_empty, query_button_form)
 			reactivate_button.set_left
-			!! inactivate_button.make ("->", query_button_form)
+			!! inactivate_button.make (Interface_names.t_empty, query_button_form)
 			inactivate_button.set_right
 			reactivate_button.add_activate_action (Current, reactivate_subqueries)
 			inactivate_button.add_activate_action (Current, inactivate_subqueries)
+			!! change_operator_label.make (Interface_names.l_Change_operator, query_button_form) 
+			!! set_or_operator_button.make (Interface_names.b_Or, query_button_form)
+			!! set_and_operator_button.make (Interface_names.b_And, query_button_form)
+			!! change_operator_cmd.make (Current)
+			set_or_operator_button.add_activate_action (change_operator_cmd, "or")
+			set_and_operator_button.add_activate_action (change_operator_cmd, "and")
 
-			!! inactive_subqueries_label.make ("Inactive subqueries", inactive_subqueries_form)
-			!! inactive_subqueries_window.make ("Inactive subqueries window", inactive_subqueries_form)
+			!! inactive_subqueries_label.make (Interface_names.l_Inactive_subqueries, inactive_subqueries_form)
+			!! inactive_subqueries_window.make (Interface_names.t_empty, inactive_subqueries_form)
 			inactive_subqueries_window.set_multiple_selection
-				--| Guillaume - 09/26/97
 
 			!! text_label.make (Interface_names.l_Results, text_form);
 			if is_graphics_disabled then
@@ -207,20 +209,21 @@ feature {NONE} -- Graphical User Interface
 			end;
 
 			text_window.init_resource_values;
-			!! subquery_label.make (Interface_names.l_Subquery, subquery_form);
-			!! operator_box.make ("operator_box", subquery_form)
-			operator_box.set_always_one (True)
-			!! and_toggle.make ("AND", operator_box)
-			and_toggle.set_toggle_on
-			!! or_toggle.make ("OR", operator_box)  --| Guillaume - 09/26/97
+
 			!! subquery_label.make (Interface_names.l_Subquery, subquery_form);
 			!! subquery_text.make (Interface_names.t_Empty, subquery_form);
+			!! add_label.make (Interface_names.l_Add, subquery_form)
+			add_label.set_left_alignment
+			!! add_subquery_cmd.make(Current)
+			!! add_and_operator_button.make (Interface_names.b_And, subquery_form);
+			add_and_operator_button.add_activate_action (add_subquery_cmd, "and")
+			!! add_or_operator_button.make (Interface_names.b_Or, subquery_form); 
+			add_or_operator_button.add_activate_action (add_subquery_cmd, "or")
 
-			!! run_button.make (Interface_names.b_Run_subquery, button_form);
-			!! run_subquery_cmd.make (Current);
-			run_button.add_activate_action (run_subquery_cmd, Void);
-			subquery_text.add_activate_action (run_subquery_cmd, Void);
-			!! save_as_button.make (Interface_names.b_Save_as, button_form);
+			!! run_button.make (Interface_names.b_Run, button_form);
+			!! run_query_cmd.make (Current);
+			run_button.add_activate_action (run_query_cmd, Void);
+			!! save_as_button.make (Interface_names.b_Save, button_form);
 			!! save_result_cmd.make (Current);
 			save_as_button.add_activate_action (save_result_cmd, Void);
 			!! close_button.make (Interface_names.b_Close, button_form);
@@ -247,83 +250,79 @@ feature {NONE} -- Graphical User Interface
 			attach_right (query_sep, 0);
 			attach_left (query_sep, 0);
 
-			attach_top_widget (query_sep, text_form, 1);
+			attach_top_widget (query_sep, text_form, 2);
 			attach_right (text_form, 0);
-			attach_bottom_widget (text_sep, text_form, 1);
+			attach_bottom_widget (text_sep, text_form, 2);
 			attach_left (text_form, 0);
 
 			attach_right (text_sep, 0);
-			attach_bottom_widget (subquery_form, text_sep, 1);
+			attach_bottom_widget (subquery_form, text_sep, 2);
 			attach_left (text_sep, 0);
 
 			attach_right (subquery_form, 0);
-			attach_bottom_widget (subquery_sep, subquery_form, 1);
+			attach_bottom_widget (subquery_sep, subquery_form, 2);
 			attach_left (subquery_form, 0);
 
 			attach_right (subquery_sep, 0);
-			attach_bottom_widget (button_form, subquery_sep, 1);
+			attach_bottom_widget (button_form, subquery_sep, 2);
 			attach_left (subquery_sep, 0);
 
 			attach_right (button_form, 0);
 			attach_bottom (button_form, 0);
 			attach_left (button_form, 0);
 
-				--| Attach widgets in forms
-			-- query_form.attach_top (query_label, 0);
-			-- query_form.attach_left (query_label, 5);
+			query_form.attach_left (active_query_form, 1)
+			query_form.attach_top (active_query_form, 1)
+			query_form.attach_bottom (active_query_form, 1)
+			-- query_form.attach_left_widget (active_query_form, query_button_form, 1)
+			query_form.attach_top (query_button_form, 1)
+		 	query_form.attach_bottom (query_button_form, 1)
+			-- query_form.attach_left_widget (query_button_form, inactive_subqueries_form,  1)
+			query_form.attach_bottom (inactive_subqueries_form, 1)
+			query_form.attach_right (inactive_subqueries_form, 1)
+			query_form.attach_right_position (active_query_form, 40)
+			query_form.attach_left_position (query_button_form, 40)
+			query_form.attach_right_position (query_button_form, 60)
+			query_form.attach_left_position (inactive_subqueries_form, 60)
+			query_form.attach_top (inactive_subqueries_form, 0)
 
-			-- query_form.attach_top_widget (query_label, query_text, 2);
-			-- query_form.attach_right (query_text, 0);
-			-- query_form.attach_bottom (query_text, 0);
-			-- query_form.attach_left (query_text, 0);
+			active_query_form.attach_left (active_query_label, 0)
+			active_query_form.attach_top (active_query_label, 5)
+			active_query_form.attach_right (active_query_label, 0)
+			active_query_form.attach_top_widget (active_query_label, active_query_window, 10)
+			active_query_form.attach_left (active_query_window, 0)
+			active_query_form.attach_bottom (active_query_window, 0)
+			active_query_form.attach_right (active_query_window, 0)
 
-				--|
-			query_form.attach_left ( active_query_form, 1 )
-			query_form.attach_top ( active_query_form, 1 )
-			query_form.attach_bottom ( active_query_form, 1 )
-			-- query_form.attach_left_widget ( active_query_form, query_button_form, 1)
-			query_form.attach_top ( query_button_form, 1 )
-		 	query_form.attach_bottom ( query_button_form, 1 )
-			-- query_form.attach_left_widget ( query_button_form, inactive_subqueries_form,  1)
-			query_form.attach_bottom ( inactive_subqueries_form, 1)
-			query_form.attach_right ( inactive_subqueries_form, 1 )
-			query_form.attach_right_position ( active_query_form, 40 )
-			query_form.attach_left_position ( query_button_form, 40 )
-			query_form.attach_right_position ( query_button_form, 60 )
-			query_form.attach_left_position ( inactive_subqueries_form, 60 )
-
-			active_query_form.attach_left ( active_query_label, 0 )
-			active_query_form.attach_top ( active_query_label, 0 )
-			active_query_form.attach_right ( active_query_label, 0 )
-			active_query_form.attach_top_widget ( active_query_label, active_query_window, 0)
-			active_query_form.attach_left ( active_query_window, 0 )
-			active_query_form.attach_bottom ( active_query_window, 0 )
-			active_query_form.attach_right ( active_query_window, 0 )
-
-			query_button_form.attach_top ( reactivate_label, 0 )
-			query_button_form.attach_left ( reactivate_label, 0 )
-			query_button_form.attach_right ( reactivate_label, 0 )
-			query_button_form.attach_top_widget ( reactivate_label, reactivate_button, 5 )
-			-- query_button_form.attach_left ( reactivate_button, 0 )
-			query_button_form.attach_left_position ( reactivate_button, 40 )
-			-- query_button_form.attach_right ( reactivate_button, 0 )
-			query_button_form.attach_top_widget ( reactivate_button, inactivate_label, 10 )
-			query_button_form.attach_left ( inactivate_label, 0 )
-			query_button_form.attach_right ( inactivate_label, 0 )
-			query_button_form.attach_top_widget ( inactivate_label, inactivate_button, 5 )
-			-- query_button_form.attach_left ( inactivate_button, 0 )
-			query_button_form.attach_left_position ( inactivate_button, 40 )
-			-- query_button_form.attach_right ( inactivate_button, 0 )
-			-- query_button_form.attach_bottom ( inactivate_button, 0 )
+			query_button_form.attach_top (reactivate_label, 0)
+			query_button_form.attach_left (reactivate_label, 0)
+			query_button_form.attach_right ( reactivate_label, 0)
+			query_button_form.attach_top_widget (reactivate_label, reactivate_button, 5)
+			query_button_form.attach_left_position (reactivate_button, 40)
+			query_button_form.attach_right_position (reactivate_button, 60)
+			query_button_form.attach_top_widget (reactivate_button, inactivate_label, 10)
+			query_button_form.attach_left (inactivate_label, 0)
+			query_button_form.attach_right (inactivate_label, 0)
+			query_button_form.attach_top_widget (inactivate_label, inactivate_button, 5)
+			query_button_form.attach_left_position (inactivate_button, 40)
+			query_button_form.attach_right_position (inactivate_button, 60)
+			query_button_form.attach_top_widget (inactivate_button, change_operator_label, 10)
+			query_button_form.attach_left (change_operator_label, 0)
+			query_button_form.attach_right (change_operator_label, 0)
+			query_button_form.attach_top_widget (change_operator_label, set_and_operator_button, 5)
+			query_button_form.attach_top_widget (change_operator_label, set_or_operator_button, 5)
+			query_button_form.attach_left_position (set_and_operator_button, 10)
+			query_button_form.attach_right_position (set_and_operator_button, 45)
+			query_button_form.attach_left_position (set_or_operator_button, 55)
+			query_button_form.attach_right_position (set_or_operator_button, 90)
 
 			inactive_subqueries_form.attach_left ( inactive_subqueries_label, 0 )
-			inactive_subqueries_form.attach_top ( inactive_subqueries_label, 0 )
+			inactive_subqueries_form.attach_top ( inactive_subqueries_label, 5 )
 			inactive_subqueries_form.attach_right ( inactive_subqueries_label, 0 )
-			inactive_subqueries_form.attach_top_widget ( inactive_subqueries_label, inactive_subqueries_window, 0)
+			inactive_subqueries_form.attach_top_widget ( inactive_subqueries_label, inactive_subqueries_window, 10)
 			inactive_subqueries_form.attach_left ( inactive_subqueries_window, 0 )
 			inactive_subqueries_form.attach_bottom ( inactive_subqueries_window, 0 )
 			inactive_subqueries_form.attach_right ( inactive_subqueries_window, 0 )
-				--| Guillaume - 09/26/97
 
 			text_form.attach_top (text_label, 0);
 			text_form.attach_left (text_label, 5);
@@ -334,16 +333,21 @@ feature {NONE} -- Graphical User Interface
 
 			subquery_form.attach_top (subquery_label, 0);
 			subquery_form.attach_left (subquery_label, 2);
-
-			-- subquery_form.attach_top_widget (subquery_label, subquery_text, 2);
-			subquery_form.attach_top_position ( subquery_text, 50 )
-			subquery_form.attach_right (subquery_text, 0);
-			-- subquery_form.attach_bottom (subquery_text, 0);
-			-- subquery_form.attach_left (subquery_text, 0);
-			subquery_form.attach_top_widget (subquery_label, operator_box, 1);
-			subquery_form.attach_left (operator_box, 0);
-			subquery_form.attach_left_widget (operator_box, subquery_text, 15);
-			subquery_form.attach_bottom (operator_box, 0);
+			subquery_form.attach_top_widget (subquery_label, subquery_text, 10)
+			subquery_form.attach_right_position (subquery_text, 90);
+			subquery_form.attach_left_position (subquery_text, 10)
+			subquery_form.attach_top_widget (subquery_text, add_label, 10)
+			subquery_form.attach_left (add_label, 2)
+			subquery_form.attach_bottom (add_label, 2)
+			subquery_form.attach_right_position (add_label, 25)
+			subquery_form.attach_left_position (add_and_operator_button, 30)
+			subquery_form.attach_right_position (add_and_operator_button, 40)
+			subquery_form.attach_top_widget (subquery_text, add_and_operator_button, 10)
+			subquery_form.attach_bottom (add_and_operator_button, 10)
+			subquery_form.attach_top_widget (subquery_text, add_or_operator_button, 10)
+			subquery_form.attach_bottom (add_or_operator_button, 10)
+			subquery_form.attach_left_position (add_or_operator_button, 60)
+			subquery_form.attach_right_position (add_or_operator_button, 70)
 
 			button_form.set_fraction_base (6);
 			button_form.attach_left_position (run_button, 0);
@@ -365,7 +369,7 @@ feature {NONE} -- Attributes
 	text_sep,
 			-- Separator between `text_form' and `subquery_form'
 
-	subquery_sep: SEPARATOR
+	subquery_sep: THREE_D_SEPARATOR
 			-- Separator between `subquery_form' and `button_form'
 
 	query_form,
@@ -380,22 +384,20 @@ feature {NONE} -- Attributes
 	button_form: FORM;
 			-- Form for the buttons
 
-	-- query_label,
-			-- Label for `query_text'
-
 	text_label,
 			-- Label for `text_window'
 
-	subquery_label: LABEL;
+	subquery_label: LABEL
 			-- Label for `subquery_text'
+
+	change_operator_label: LABEL;
+			-- Label for 'change_operator_button'
 
 	subquery_text: TEXT_FIELD;
 			-- Text field for eventual subqueries
 
-	operator_box: RADIO_BOX
+	-- operator_box: RADIO_BOX
 			-- Select 'and' or 'or' operator
-
-			--| Guillaume - 09/26/97
 
 	text_window: TEXT_WINDOW;
 			-- Output window for the results
@@ -406,10 +408,27 @@ feature {NONE} -- Attributes
 	save_as_button,
 			-- Button for `save_result_cmd'
 
-	close_button: PUSH_B;
+	close_button,
 			-- Button to close Current
 
-	run_subquery_cmd: RUN_SUBQUERY_CMD;
+	add_or_operator_button,
+			-- Button to add a subquery with 'or' operator
+
+	add_and_operator_button,
+			-- Button to add a subquery with 'and' operator
+
+	set_and_operator_button,
+			-- Button to set all the selected subqueries operators
+			-- to 'and'
+
+	set_or_operator_button: PUSH_B
+			-- Button to set all the selected subqueries operators
+			-- to 'or'
+
+	--change_operator_button: PUSH_B
+			-- Button to change a subquery operator
+
+	run_query_cmd: RUN_QUERY_CMD;
 			-- Command to run a subquery from Current
 
 	save_result_cmd: SAVE_RESULT_CMD;
@@ -418,7 +437,11 @@ feature {NONE} -- Attributes
 	close_cmd: CLOSE_QUERY_WINDOW_CMD
 			-- Command to close Current
 
-		--|
+	add_subquery_cmd: ADD_SUBQUERY_CMD
+			-- Command to add a subquery
+
+	change_operator_cmd: CHANGE_OPERATOR_CMD
+			-- Command to change subquery operators
 
 	active_query_form,
 			-- Form for active query
@@ -428,6 +451,9 @@ feature {NONE} -- Attributes
 
 	inactive_subqueries_form: FORM
 			-- Form for inactive subqueries
+
+	add_label,
+			-- Label for adding an operator
 
 	active_query_label,
 			-- Label for 'active_query_form'
@@ -447,23 +473,26 @@ feature {NONE} -- Attributes
 	inactivate_button: ARROW_B
 			-- Button to inactivate one or more subqueries
 
+	active_subqueries: INTEGER
+			-- number of active subqueries in all_subqueries
+
+feature {CHANGE_OPERATOR_CMD} -- Attributes
+
 	active_query_window,
 			--  Scrollable list of active subqueries
 
 	inactive_subqueries_window: SCROLLABLE_LIST
 			-- Scrollable list if inactive queries
 
-	active_subqueries: INTEGER
-			-- number of active subqueries in all_subqueries
-			--| Guillaume - 09/26/97
-
-feature {RUN_SUBQUERY_CMD} -- Attributes
+feature {ADD_SUBQUERY_CMD, CHANGE_OPERATOR_CMD} -- Attributes
 
 	all_subqueries: LINKED_LIST[SUBQUERY]
 			-- all the subqueries typed
 
 	all_operators: LINKED_LIST[SUBQUERY_OPERATOR]
 			-- all the subquery operators typed
+
+feature {RUN_QUERY_CMD} -- Attributes
 
 	profiler_query: PROFILER_QUERY;
 			-- Query from which `profinfo' is the result
@@ -474,11 +503,6 @@ feature {RUN_SUBQUERY_CMD} -- Attributes
 	profinfo: PROFILE_INFORMATION;
 			-- Set of information about profiled system, generated
 			-- with help of `profiler_query' and `profiler_options'
-	and_toggle,
-			-- Toggle to select 'AND' operator
-	
-	or_toggle: TOGGLE_B
-			-- Toggle to select 'OR' operator 
 
 feature {CLOSE_QUERY_WINDOW_CMD} -- User Interface
 
@@ -490,7 +514,7 @@ feature {CLOSE_QUERY_WINDOW_CMD} -- User Interface
 			tool.query_window_is_closed (Current)
 		end;
 
-feature {RUN_SUBQUERY_CMD} -- Access
+feature {ADD_SUBQUERY_CMD} -- Access
 
 	subquery: STRING is
 			-- Text typed in the subquery window
@@ -594,11 +618,6 @@ feature {NONE} -- Implementation
 					profiler_query.set_subqueries ( all_subqueries )
 					profiler_query.set_subquery_operators ( all_operators )
 				end
-				--active_query_window.start
-				--if not active_query_window.after then
-				--	active_element ?= active_query_window.item
-				--	active_element.inactivate_operator
-				--end
 			end
 			update_query_form
 		end
@@ -621,9 +640,9 @@ feature {NONE} -- Implementation
 					i := selected_positions.item
 					inactive_subqueries_window.go_i_th ( i )
 					active_query_window.start
-					!! active_element.make
+					!! active_element.make ("", "", 0)
 					active_element ?= active_query_window.item
-					!! inactive_element.make
+					!! inactive_element.make ("", "", 0)
 					inactive_element ?= inactive_subqueries_window.item
 				until
 					i > selected_positions.last
@@ -671,12 +690,6 @@ feature {NONE} -- Implementation
 					profiler_query.set_subqueries ( all_subqueries )
 					profiler_query.set_subquery_operators ( all_operators )
 				end
-				-- active_query_window.start
-				-- active_query_window.forth
-				--if not active_query_window.after then
-				--	active_element ?= active_query_window.item
-				--	active_element.reactivate_operator
-				--end
 			end
 			update_query_form
 		end
@@ -699,12 +712,9 @@ feature {NONE} -- execution
 		do
 			if arg = reactivate_subqueries then
 				reactivate
-				-- update_query_window --| Utile ???
 			elseif arg = inactivate_subqueries then
 				inactivate
-				-- update_query_window
 			end
 		end
-		--| Guillaume - 09/26/97
 
 end -- class PROFILE_QUERY_WINDOW

@@ -39,6 +39,7 @@ feature {NONE} -- Execution
 			profiler_options: PROFILER_OPTIONS;
 			st: STRUCTURED_TEXT;
 			executer: E_SHOW_PROFILE_QUERY
+			error_dialog: MESSAGE_WINDOW
 		do
 			if arg = Void then
 					--| Run the query
@@ -58,9 +59,31 @@ feature {NONE} -- Execution
 					executer.execute;
 					tool.show_new_window (st, profiler_query, profiler_options, executer.last_output)
 				else
-					--| Display a message
+					!! error_dialog.make ("Query_syntax", tool)
+					error_dialog.hide_cancel_button
+					error_dialog.hide_help_button
+					error_dialog.set_message (message)
+					error_dialog.popup
 				end
 			end
+		end
+
+feature {NONE} -- Help message
+
+	message: STRING is
+		once
+			!! Result.make(0)
+			Result.append ("Please enter a correct query:%N%N")
+			Result.append ("Examples:%N%N")
+			Result.append ("	featurename = WORD.t*%N")
+			Result.append ("	featurename < WORD.mak?%N")
+			Result.append ("	calls > 2%N")
+			Result.append ("	self <= 3.4%N")
+			Result.append ("	descendants in 23 - 34%N")
+			Result.append ("	total >= 12.3%N")
+			Result.append ("	percentage /= 2%N%N")
+			Result.append ("You can combine subqueries with 'and' and 'or', for example:%N%N")
+			Result.append ("	calls > 2 and self <= 3.4 or percentage in 2.3 - 3.5")
 		end
 
 end -- class RUN_PROFILE_QUERY_CMD

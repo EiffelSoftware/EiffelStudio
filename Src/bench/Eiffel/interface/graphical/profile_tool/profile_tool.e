@@ -194,13 +194,18 @@ feature {NONE} -- Graphical User Interface
 	build_widgets is
 		local
 			horizontal_sep,
-			text_sep: SEPARATOR;
+			upper_sep,
+			-- text_sep: SEPARATOR;
+			--| or
+			text_sep: THREE_D_SEPARATOR;
+			--| but use VISIONLITE
 			switch_label,
 			language_label: LABEL;
 		do
 				-- User Interface Components
 			!! global_form.make (Interface_names.t_Empty, Current);
 
+			!! upper_sep.make (Interface_names.t_Empty, global_form);
 			!! switch_label.make (Interface_names.l_Output_switches, global_form);
 			!! switch_form.make (Interface_names.t_Empty, global_form);
 			!! language_label.make (Interface_names.l_Language_type, global_form);
@@ -247,8 +252,6 @@ feature {NONE} -- Graphical User Interface
 			browse_button.add_activate_action (Current, browse_it);
 
 				-- Compilation Mode
-				--| Guillaume - 09/26/97
-			-- !! compilation_label.make (Interface_names.l_Input_file_compilation_type, text_form);
 			!! compilation_label.make ("Input file compilation type", text_form)
 			!! compile_box.make (Interface_names.t_Empty, text_form);
 			compile_box.set_always_one (True);
@@ -268,17 +271,20 @@ feature {NONE} -- Graphical User Interface
 			global_form.attach_left_position (menu_bar, 0);
 			global_form.attach_right_position (menu_bar, 2);
 
-			global_form.attach_top_widget (menu_bar, switch_label, 1);
+			global_form.attach_top_widget (menu_bar, upper_sep, 1);
+			global_form.attach_left (upper_sep, 0);
+			global_form.attach_right (upper_sep, 0 );
+			global_form.attach_top_widget (upper_sep, switch_label, 1);
 			global_form.attach_left_position (switch_label, 0);
 			global_form.attach_top_widget (switch_label, switch_form, 1);
 			global_form.attach_left_position (switch_form, 0);
-			global_form.attach_right_position (switch_form, 1);
+			-- global_form.attach_right_position (switch_form, 1);
 
-			global_form.attach_top_widget (menu_bar, language_label, 1);
+			global_form.attach_top_widget (upper_sep, language_label, 1);
 			global_form.attach_left_position (language_label, 1);
 			global_form.attach_top_widget (language_label, language_form, 1);
 			global_form.attach_left_position (language_form, 1);
-			global_form.attach_right_position (language_form, 2);
+			-- global_form.attach_right_position (language_form, 1);
 
 			global_form.attach_top_widget (switch_form, horizontal_sep, 0);
 			global_form.attach_left (horizontal_sep, 0);
@@ -289,7 +295,9 @@ feature {NONE} -- Graphical User Interface
 			global_form.attach_bottom_widget (text_sep, text_form, 1);
 
 			global_form.attach_bottom_widget (button_form, text_sep, 1);
-			global_form.attach_right_position (text_form, 2);			
+			-- global_form.attach_right_position (text_form, 2);			
+			global_form.attach_left (text_form, 5)
+			global_form.attach_right (text_form, 5)
 			global_form.attach_left_position (text_sep, 0);
 			global_form.attach_right_position (text_sep, 2);
 
@@ -306,25 +314,22 @@ feature {NONE} -- Graphical User Interface
 			button_form.attach_bottom (exit_button, 5);
 			button_form.attach_right_position (exit_button, 2);
 
-			-- text_form.attach_top (input_label, 5);
 			text_form.attach_top (compilation_label, 5);
 			text_form.attach_left (compilation_label, 0);
 			text_form.attach_top_widget(compilation_label, compile_box, 0)
-			text_form.attach_left (compile_box, 0);
+			text_form.attach_left (compile_box, 15);
 			text_form.attach_right (compile_box, 0);
-			text_form.attach_top_widget (compile_box, input_label, 1);
-			--| Guillaume - 09/26/97
-			
+			text_form.attach_top_widget (compile_box, input_label, 1);			
 			text_form.attach_left (input_label, 0);
-			text_form.attach_top_widget (input_label, input_text, 1);
-			text_form.attach_left (input_text, 5);
+			text_form.attach_top_widget (input_label, input_text, 5);
+			text_form.attach_left (input_text, 15);
 			text_form.attach_top_widget (input_text, query_label, 5);
 			text_form.attach_right_widget (browse_button, input_text, 5);
 			text_form.attach_top_widget (input_label, browse_button, 1);
 			text_form.attach_right (browse_button, 5);
 			text_form.attach_left (query_label, 0);
 			text_form.attach_top_widget (query_label, query_text, 5);
-			text_form.attach_left (query_text, 5);
+			text_form.attach_left (query_text, 15);
 			text_form.attach_bottom (query_text, 5);
 			text_form.attach_right (query_text, 5);
 

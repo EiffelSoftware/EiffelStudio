@@ -7,7 +7,7 @@
 #		 -I$(EIFFEL_SRC)\C\platform \
 #		 -I$(EIFFEL_SRC)\C\run-time
 
-CFLAGS = -nologo -Ox -W4 -I$(ISE_EIFFEL)\studio\spec\windows\include
+CFLAGS = -nologo -Ox -W4 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include
 
 OPT_CFLAGS =
 #OPT_CFLAGS = -DASSERTIONS 

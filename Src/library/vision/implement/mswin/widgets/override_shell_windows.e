@@ -1,7 +1,7 @@
 indexing 
 	status: "See notice at end of class"; 
-	date: "$Date$"; 
-	revision: "$Revision$" 
+	date: "$Date$";
+	revision: "$Revision$"
  
 class
 	OVERRIDE_SHELL_WINDOWS
@@ -20,7 +20,8 @@ inherit
 			realized,
 			realize_current,
 			set_enclosing_size,
-			unrealize
+			unrealize,
+			realize
 		end
 
 	SHELL_WINDOWS
@@ -34,7 +35,8 @@ inherit
 			realize_current,
 			realized,
 			set_enclosing_size,
-			unrealize
+			unrealize,
+			realize
 		select
 			destroy
 		end
@@ -55,6 +57,15 @@ feature -- Initialization
 			parent ?= oui_parent.implementation
 			shell_width := 2 * window_border_height
 			shell_height := 2 * window_border_width
+		end
+
+	realize is
+			-- Realize current widget and children.
+		do
+			if not realized then
+				realize_current
+				realize_children
+			end
 		end
 
 	realize_current is
@@ -94,12 +105,11 @@ feature -- Status setting
 	popup is
 			-- Popup widget
 		do
-			if exists then
-				wel_show
-				shown := True
-			else
-				realize		
+			if not exists then
+				realize
 			end
+			wel_show
+			shown := True
 			if is_exclusive_grab then
 				set_windows_insensitive
 			end
@@ -159,7 +169,7 @@ feature -- Status setting
 	default_style: INTEGER is
 			-- Default style
 		once
-			Result := Ws_visible + Ws_border + Ws_popup
+			Result := Ws_border + Ws_popup -- Ws_visible + 
 		end
 
 	minimal_height, minimal_width: INTEGER is

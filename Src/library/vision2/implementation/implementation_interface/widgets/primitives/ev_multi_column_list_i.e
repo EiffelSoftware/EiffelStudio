@@ -106,6 +106,8 @@ feature -- Status report
 				else
 					Result.set_right_alignment
 				end
+			elseif a_column <= column_count then
+				create Result.make_with_left_alignment
 			end
 		end
 
@@ -166,7 +168,7 @@ feature -- Status setting
 			-- Display text of `a_column' left aligned.
 			-- First column is always left aligned.
 		require
-			a_column_within_range: a_column >= 1 and a_column <= column_count
+			a_column_within_range: a_column > 1 and a_column <= column_count
 		local
 			an_alignment: EV_TEXT_ALIGNMENT
 		do
@@ -178,7 +180,7 @@ feature -- Status setting
 			-- Display text of `a_column' centered.
 			-- First column is always left aligned.
 		require
-			a_column_within_range: a_column >= 1 and a_column <= column_count
+			a_column_within_range: a_column > 1 and a_column <= column_count
 		local
 			an_alignment: EV_TEXT_ALIGNMENT
 		do
@@ -191,16 +193,13 @@ feature -- Status setting
 			-- Display text of `a_column' right aligned.
 			-- First column is always left aligned.
 		require
-			a_column_within_range: a_column >= 1 and a_column <= column_count
+			a_column_within_range: a_column > 1 and a_column <= column_count
 		local
 			an_alignment: EV_TEXT_ALIGNMENT
 		do
 			create an_alignment.make_with_right_alignment
 			set_column_alignment (an_alignment, a_column)
 		end
-
-
-	--| FIXME IEK Will setting first column alignment cause problems on Win32.
 
 feature -- Element change
 
@@ -238,6 +237,9 @@ feature -- Element change
 			i: INTEGER
 			old_count: INTEGER
 		do
+			if column_titles.count > column_count then
+				expand_column_count_to (column_titles.count)
+			end
 			from
 				i := 1
 				old_count := column_titles.count
@@ -258,9 +260,7 @@ feature -- Element change
 				i := i + 1
 				old_count := old_count - 1
 			end
-			if column_titles.count > column_count then
-				expand_column_count_to (column_titles.count)
-			end
+
 		end
 
 	set_column_width (a_width: INTEGER; a_column: INTEGER) is
@@ -294,6 +294,9 @@ feature -- Element change
 			i: INTEGER
 			old_count: INTEGER
 		do
+			if widths.count > column_count then
+				expand_column_count_to (widths.count)
+			end
 			from
 				i := 1
 				old_count := column_widths.count
@@ -320,11 +323,13 @@ feature -- Element change
 			-- Assign `alignments' to column text alignments in order.
 		require
 			alignments_not_void: alignments /= Void
-			alignments_count_in_column_range: alignments.count <= column_count
 		local
 			i: INTEGER
 			old_count: INTEGER
 		do
+			if column_alignments.count > column_count then
+				expand_column_count_to (column_alignments.count)
+			end
 			from
 				i := 1
 				alignments.start
@@ -333,8 +338,12 @@ feature -- Element change
 			until
 				alignments.after
 			loop
-				column_alignment_changed (alignments.item, i)
-				column_alignments.extend (alignments.item.alignment_code)
+				if i > 1 then
+					column_alignment_changed (alignments.item, i)
+					column_alignments.extend (alignments.item.alignment_code)
+				else
+					column_alignments.extend (alignments.item.left_alignment)
+				end
 				alignments.forth
 				i := i + 1
 				old_count := old_count - 1
@@ -347,16 +356,13 @@ feature -- Element change
 				i := i + 1
 				old_count := old_count + 1
 			end
-			if column_alignments.count > column_count then
-				expand_column_count_to (column_alignments.count)
-			end
 		end
 
 	set_column_alignment (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is
 			-- Assign text alignment to `an_alignment' for column `a_column'.
 		require
 			an_alignment_not_void: an_alignment /= Void
-			a_column_within_range: a_column > 0 and a_column <= column_count
+			a_column_within_range: a_column > 1 and a_column <= column_count
 		do
 			if a_column <= column_alignments.count then
 				column_alignments.go_i_th (a_column)
@@ -563,6 +569,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/04/21 00:59:13  king
+--| Changed alignment code to prevent setting of first column
+--|
 --| Revision 1.48  2000/04/20 21:30:21  king
 --| Added column alignment features
 --|

@@ -1,5 +1,7 @@
 indexing
 	description: "Read content of Eiffel Assembly Cache"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CACHE_READER
@@ -8,6 +10,11 @@ inherit
 	CACHE_PATH
 		export
 			{ANY} all
+		end
+
+	SHARED_CONSUMED_ASSEMBLY_FACTORY
+		export
+			{NONE} all
 		end
 
 feature -- Access
@@ -94,7 +101,7 @@ feature -- Access
 					until
 						j = names.get_length
 					loop
-						create ca.make_from_name (names.item (j))
+						ca := Consumed_assembly_factory.consumed_assembly_from_name (names.item (j))
 						if ca.is_equal (assembly) then
 							Result.force (ca, index)
 							index := index + 1

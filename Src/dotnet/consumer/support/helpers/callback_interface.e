@@ -1,5 +1,7 @@
 indexing
 	description: "Agents used for callbacks during processing"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CALLBACK_INTERFACE

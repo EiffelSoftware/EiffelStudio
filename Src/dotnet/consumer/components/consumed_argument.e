@@ -1,5 +1,7 @@
 indexing
 	description: ".NET method argument"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CONSUMED_ARGUMENT

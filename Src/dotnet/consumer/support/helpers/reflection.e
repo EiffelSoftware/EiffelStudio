@@ -1,5 +1,7 @@
 indexing
 	description: "Helper functions using .NET reflection"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	REFLECTION

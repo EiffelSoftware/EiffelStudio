@@ -1,5 +1,7 @@
 indexing
 	description: "Mapping between referenced assemblies and ids"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CONSUMED_ASSEMBLY_MAPPING

@@ -1,5 +1,7 @@
 indexing
 	description: "Intermediate representation of constructors used to solve overloading"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CONSTRUCTOR_SOLVER

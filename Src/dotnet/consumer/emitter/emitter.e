@@ -1,6 +1,7 @@
 indexing
-	description	: "System's root class"
-	note		: "Initial version automatically generated"
+	description	: "Emitter's root class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EMITTER

@@ -1,5 +1,7 @@
 indexing
 	description: "Eiffel XML serialization/deserialization error codes"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EIFFEL_XML_SERIALIZATION_ERRORS

@@ -1,5 +1,7 @@
 indexing
 	description: "Allows for adding/removing assemblies from the EAC"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CACHE_WRITER
@@ -8,6 +10,11 @@ inherit
 	CALLBACK_INTERFACE
 
 	CACHE_ERRORS
+
+	SHARED_CONSUMED_ASSEMBLY_FACTORY
+		export
+			{NONE} all
+		end
 
 feature -- Basic Operations
 
@@ -45,7 +52,7 @@ feature -- Basic Operations
 					set_error (Consume_error, create {STRING}.make_from_cil (aname.get_name))
 				else
 					info := cr.info
-	 				info.add_assembly (create {CONSUMED_ASSEMBLY}.make_from_name (aname))
+	 				info.add_assembly (Consumed_assembly_factory.consumed_assembly_from_name (aname))
 					update_info (info)
 					names := assembly.get_referenced_assemblies
 					from
@@ -87,7 +94,7 @@ feature -- Basic Operations
 				dir.delete
 			end
 			info := cr.info
-			create ca.make_from_name (aname)
+			ca := Consumed_assembly_factory.consumed_assembly_from_name (aname)
 			info.remove_assembly (ca)
 			update_info (info)
 			assemblies := cr.client_assemblies (ca)

@@ -1,5 +1,7 @@
 indexing
 	description: "Type referenced by other types (as parent or interface) to be persisted to XML"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CONSUMED_REFERENCED_TYPE

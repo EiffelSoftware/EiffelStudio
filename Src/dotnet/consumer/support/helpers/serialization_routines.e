@@ -1,5 +1,7 @@
 indexing
 	description: "Helper routines"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EIFFEL_XML_SERIALIZATION_ROUTINES

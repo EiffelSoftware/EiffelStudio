@@ -1,5 +1,7 @@
 indexing
 	description: ".NET type as needed by the Eiffel compiler"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CONSUMED_TYPE

@@ -1,5 +1,7 @@
 indexing
 	description: "Solve overloading for a given .NET type"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	OVERLOAD_SOLVER

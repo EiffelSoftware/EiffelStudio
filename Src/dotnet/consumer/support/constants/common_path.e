@@ -1,5 +1,7 @@
 indexing
 	description: "Path used both by conumser and assembly manager"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	COMMON_PATH

@@ -4,6 +4,8 @@ indexing
 					The XML can be used to consume the types
 					defined in the assembly from Eiffel.
 					]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ASSEMBLY_CONSUMER
@@ -19,7 +21,11 @@ inherit
 
 	SHARED_ASSEMBLY_MAPPING
 
+	SHARED_CONSUMED_ASSEMBLY_FACTORY
+
 	NAME_FORMATTER
+
+	SHARED_CONSUMED_ASSEMBLY_FACTORY
 
 create
 	default_create
@@ -44,7 +50,7 @@ feature -- Basic Operations
 			reset_assembly_mapping
 			count := referenced_assemblies.count
 			create assembly_ids.make (1, count + 1)
-			create ca.make (ass)
+			ca := Consumed_assembly_factory.consumed_assembly (ass)
 			assembly_ids.put (ca, 1)
 			assembly_mapping.put (1, ca.out)
 			from
@@ -52,7 +58,7 @@ feature -- Basic Operations
 			until
 				i > count
 			loop
-				create ca.make_from_name (referenced_assemblies.item (i - 1))
+				ca := Consumed_assembly_factory.consumed_assembly_from_name (referenced_assemblies.item (i - 1))
 				i := i + 1
 				assembly_ids.put (ca, i)
 				assembly_mapping.put (i, ca.out)
@@ -117,11 +123,11 @@ feature {NONE} -- Implementation
 			type_consumer: TYPE_CONSUMER
 			module_types: NATIVE_ARRAY [TYPE]
 			t: TYPE
-			type_name: CONSUMED_TYPE_NAME
+			type_name: TYPE_NAME_SOLVER
 			simple_name, dotnet_name: STRING
-			list: SORTED_TWO_WAY_LIST [CONSUMED_TYPE_NAME]
+			list: SORTED_TWO_WAY_LIST [TYPE_NAME_SOLVER]
 			used_names: HASH_TABLE [STRING, STRING]
-			names: HASH_TABLE [SORTED_TWO_WAY_LIST [CONSUMED_TYPE_NAME], STRING]
+			names: HASH_TABLE [SORTED_TWO_WAY_LIST [TYPE_NAME_SOLVER], STRING]
 		do
 			modules := ass.get_modules
 			module_count := modules.count

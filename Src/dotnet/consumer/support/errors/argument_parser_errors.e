@@ -1,5 +1,7 @@
 indexing
 	description: "Errors that may occur during command line parsing"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ARGUMENT_PARSER_ERRORS

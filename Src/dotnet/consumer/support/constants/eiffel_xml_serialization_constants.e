@@ -1,5 +1,7 @@
 indexing
 	description: "Constants used in XML text corresponding to Eiffel class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EIFFEL_XML_SERIALIZATION_CONSTANTS

@@ -1,5 +1,7 @@
 indexing
 	description: "Path to various EAC files"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CACHE_PATH

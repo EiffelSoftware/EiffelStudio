@@ -1,5 +1,7 @@
 indexing
 	description: "Provide conversions from EAC types to .NET types"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CACHE_CONVERSION

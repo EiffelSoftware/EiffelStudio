@@ -1,5 +1,7 @@
 indexing
 	description: "Generic cache implementation"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CACHE [G, H->HASHABLE]

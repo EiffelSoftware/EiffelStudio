@@ -1,5 +1,7 @@
 indexing
 	description: "Method to be consumed in Eiffel, intermediate structure used to solve overloading"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	METHOD_SOLVER

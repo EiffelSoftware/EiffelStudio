@@ -1,5 +1,7 @@
 indexing
 	description: "Eiffel Assembly Cache access errors"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CACHE_ERRORS

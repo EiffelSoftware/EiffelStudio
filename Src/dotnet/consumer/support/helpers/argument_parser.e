@@ -4,6 +4,8 @@ indexing
 					%utility -switch:switch_value non_switch_value%
 					%where '-' and '/' are the possible switch symbols%
 					%(characters that precede a switch)."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	ARGUMENT_PARSER

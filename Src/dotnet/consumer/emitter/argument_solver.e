@@ -1,5 +1,7 @@
 indexing
 	description: "Generate Eiffel arguments from .NET arguments"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ARGUMENT_SOLVER

@@ -1,5 +1,7 @@
 indexing
 	description: "{CONSUMED_TYPE} factory"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	TYPE_CONSUMER

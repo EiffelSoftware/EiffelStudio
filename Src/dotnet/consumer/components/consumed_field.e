@@ -1,5 +1,7 @@
 indexing
 	description: ".NET field as seen by Eiffel"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CONSUMED_FIELD

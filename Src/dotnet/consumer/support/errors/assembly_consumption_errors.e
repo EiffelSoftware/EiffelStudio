@@ -1,5 +1,7 @@
 indexing
 	description: "Errors that can occur during assembly consumption"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ASSEMBLY_CONSUMPTION_ERRORS

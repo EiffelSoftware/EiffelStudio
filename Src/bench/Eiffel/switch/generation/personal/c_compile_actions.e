@@ -1,0 +1,18 @@
+class C_COMPILE_ACTIONS
+
+inherit
+	SHARED_WORKBENCH
+
+feature {NONE}
+
+	freeze_system is
+			-- Action to perform to freeze a system
+		do
+		end
+
+	finalize_system (keep_assert: BOOLEAN) is
+			-- Action to perform to finalize a system
+		do
+		end
+
+end

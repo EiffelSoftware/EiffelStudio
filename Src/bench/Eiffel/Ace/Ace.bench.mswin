@@ -1,0 +1,134 @@
+system es3
+
+root
+
+	ewb_windows (root_cluster): "make"
+
+cluster
+
+-- STANDARD STRUCTURES:
+
+		kernel:				"$EIFFEL3/library/base/kernel";
+		support:			"$EIFFEL3/library/base/support";
+		access:				"$EIFFEL3/library/base/structures/access";
+		cursors:			"$EIFFEL3/library/base/structures/cursors";
+		dispenser:			"$EIFFEL3/library/base/structures/dispenser";
+		list:				"$EIFFEL3/library/base/structures/list";
+		set:				"$EIFFEL3/library/base/structures/set";
+		sort:				"$EIFFEL3/library/base/structures/sort";
+		storage:			"$EIFFEL3/library/base/structures/storage";
+		table:				"$EIFFEL3/library/base/structures/table";
+		traversing:			"$EIFFEL3/library/base/structures/traversing";
+		tree:				"$EIFFEL3/library/base/structures/tree";
+
+-- ES3 SPECIFIC CLUSTERS
+
+
+		liman_common:		"$BENCH/Eiffel/limand/common";
+		liman_bench:		"$BENCH/Eiffel/limand/bench";
+		beurk:				"$BENCH/Eiffel/beurk";
+		replication:		"$BENCH/Eiffel/eiffel/replication";
+		debugclas:			"$BENCH/Eiffel/debug";
+
+	-- General compilation:
+
+		flat_short:			"$BENCH/Eiffel/flat_short";
+		special_ast:		"$BENCH/Eiffel/special_ast";
+		yacc:				"$BENCH/Eiffel/yacc";
+		const:				"$BENCH/Eiffel/const";
+		error:				"$BENCH/Eiffel/error";
+		struct_text:		"$BENCH/Eiffel/structured_text";
+
+	-- Lace compilation:
+
+		lace_AST:			"$BENCH/Eiffel/lace/AST";
+		env:				"$BENCH/Eiffel/lace/env";
+		lace_error:			"$BENCH/Eiffel/lace/error";
+		lace_compile:		"$BENCH/Eiffel/lace/lace_compile";
+		lace_shared:		"$BENCH/Eiffel/lace/shared";
+
+	-- Eiffel compilation:
+
+		instructions:		"$BENCH/Eiffel/eiffel/AST/instructions";
+		expressions:		"$BENCH/Eiffel/eiffel/AST/expressions";
+		ast_skeleton:		"$BENCH/Eiffel/eiffel/AST/skeleton";
+		ast_stonables:		"$BENCH/Eiffel/eiffel/AST/stonables";
+		actual_type:		"$BENCH/Eiffel/eiffel/actual_type";
+		byte_code:			"$BENCH/Eiffel/eiffel/byte_code";
+		cecil:				"$BENCH/Eiffel/eiffel/cecil";
+		compiler:			"$BENCH/Eiffel/eiffel/compiler";
+		eiffel_const:		"$BENCH/Eiffel/eiffel/const";
+		eiffel_error_feature:			"$BENCH/Eiffel/eiffel/error/feature";
+		eiffel_error_parents:			"$BENCH/Eiffel/eiffel/error/parents";
+		eiffel_error_redefined:			"$BENCH/Eiffel/eiffel/error/redefined";
+		eiffel_error_unredefined:		"$BENCH/Eiffel/eiffel/error/unredefined";
+		generation:			"$BENCH/Eiffel/eiffel/generation";
+		genericity:			"$BENCH/Eiffel/eiffel/genericity";
+		inheritance:		"$BENCH/Eiffel/eiffel/inheritance";
+		interface:			"$BENCH/Eiffel/eiffel/interface";
+		polymorphism:		"$BENCH/Eiffel/eiffel/polymorphism";
+		server:				"$BENCH/Eiffel/eiffel/server";
+		eiffel_shared:		"$BENCH/Eiffel/eiffel/shared";
+		skeleton:			"$BENCH/Eiffel/eiffel/skeleton";
+		structures:			"$BENCH/Eiffel/eiffel/structures";
+		tables:				"$BENCH/Eiffel/eiffel/tables";
+		descriptor:			"$BENCH/Eiffel/eiffel/descriptor";
+
+-- SHARED BETWEEN COMPILER AND INTERFACE:
+
+		clicking:			"$BENCH/Eiffel/shared/clicking";
+		stones:				"$BENCH/Eiffel/shared/stones";
+		tops:				"$BENCH/Eiffel/shared/tops";
+
+-- INTERFACE CLUSTERS
+
+-- Root
+
+		root_cluster:		"$BENCH/Eiffel/root";
+
+	-- Switch:
+	
+		switch:				"$BENCH/Eiffel/batch_bench/bench";
+
+	-- graphical interface (bench):
+
+		windows:			"$BENCH/Eiffel/interface/windows";
+		commands:			"$BENCH/Eiffel/interface/commands";
+		formatters:			"$BENCH/Eiffel/interface/formatters";
+		debugging:			"$BENCH/Eiffel/interface/debugging";
+		archi_text:			"$BENCH/Eiffel/interface/archi_text";
+		shared_interface:	"$BENCH/Eiffel/interface/shared";
+
+		ipc:				"$BENCH/Eiffel/ipc";
+
+	-- Case
+		case_common:		"$BENCH/Eiffel/case_storage/common";
+		case_bench:			"$BENCH/Eiffel/case_storage/bench";
+
+	-- Resources
+		resources_common:	"$BENCH/Eiffel/resources/common";
+		resources_bench:	"$BENCH/Eiffel/resources/bench";
+
+	-- Vision
+		graph_resources:	"$EIFFEL3/library/vision/implement/mswin/resource";
+		graph_widgets:		"$EIFFEL3/library/vision/implement/mswin/widget";
+		graph_command:		"$EIFFEL3/library/vision/implement/mswin/command";
+		graph_toolkit:		"$EIFFEL3/library/vision/implement/toolkit";
+		graph_X:			"$EIFFEL3/library/vision/implement/X";
+		graph_commands:		"$EIFFEL3/library/vision/oui/commands";
+		graph_kernel:		"$EIFFEL3/library/vision/oui/kernel";
+		graph_oui_widgets:	"$EIFFEL3/library/vision/oui/widgets";
+		graph_tools:		"$EIFFEL3/library/vision/tools";
+
+external
+
+	object:
+		"$(BENCH)\C\parsing\eiffel\eiffel.lib";
+		"$(BENCH)\C\parsing\lace\lace.lib";
+		"$(BENCH)\C\parsing\shared\parsing.lib";
+		"$(BENCH)\C\platform\platform.lib";
+		"$(BENCH)\C\ipc\ewb\ewb.lib";
+		"$(BENCH)\C\ipc\shared\ipc.lib";
+		"$(BENCH)\C\idrs\idr.lib"
+
+end

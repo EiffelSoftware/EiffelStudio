@@ -17,25 +17,55 @@ deferred class
 feature {NONE} -- Initialization
 	
 	make is
+			-- Create the application.
 		do
-			!EV_APPLICATION_IMP!implementation.make (Current)
+			create {EV_APPLICATION_IMP} implementation.make
+			implementation.launch (Current)
 			implementation.iterate
 		end
-	
-feature	
+
+feature	-- Access
 	
 	main_window: EV_WINDOW is
 			-- Must be defined as a once funtion to create
 			-- the application's main_window.
 		deferred
 		end
-	
+
+feature -- Accelerators - Initialization
+
+	init_accelerators is
+			-- Redefine this feature to add your global
+			-- accelerators to the application.
+		do
+		end
+
+feature -- Accelerators - command association
+
+	add_accelerator_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when `acc' is completed by the user.
+		require
+			valid_command: cmd /= Void
+		do
+			implementation.add_accelerator_command (acc, cmd, arg)
+		end
+
+	remove_accelerator_commands (acc: EV_ACCELERATOR) is
+			-- Empty the list of commands to be executed when
+			-- `acc' is completed by the user.
+		do
+			implementation.remove_accelerator_commands (acc)
+		end
+
+feature -- Basic operation
+
 	exit is
 			-- Exit the application
 		do
 			implementation.exit
 		end
-	
+
 feature {NONE} -- Implementation
 	
 	implementation: EV_APPLICATION_I

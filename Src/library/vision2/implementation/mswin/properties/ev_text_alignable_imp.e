@@ -1,6 +1,5 @@
 indexing
 	description: "Eiffel Vision2 text alignable. Ms Windows implementation."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,6 @@
 indexing
 	description: "Eiffel Vision2 text alignable.%
 		%Implementation interface."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

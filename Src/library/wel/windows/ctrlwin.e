@@ -16,6 +16,8 @@ inherit
 			move,
 			minimal_width,
 			minimal_height,
+			maximal_width,
+			maximal_height,
 			default_style,
 			class_name,
 			class_background			
@@ -68,6 +70,18 @@ feature -- Status report
 			Result := 0
 		end
 
+	maximal_width: INTEGER is
+			-- Maximal width allowed for the window
+		once
+			Result := c_int_max
+		end
+
+	maximal_height: INTEGER is
+			-- Maximal height allowed for the window
+		once
+			Result := c_int_max
+		end
+
 feature -- Basic operations
 
 	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
@@ -104,6 +118,16 @@ feature {NONE} -- Implementation
 			-- Window class name to create
 		once
 			Result := "WELControlWindowClass"
+		end
+
+feature {NONE} -- Externals
+
+	c_int_max: INTEGER is
+			-- Maximum integer value
+		external
+			"C [macro <limits.h>]"
+		alias
+			"INT_MAX"
 		end
 
 end -- class WEL_CONTROL_WINDOW

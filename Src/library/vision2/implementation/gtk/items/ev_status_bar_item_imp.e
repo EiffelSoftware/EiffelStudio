@@ -67,9 +67,18 @@ feature -- Access
 	status_bar_description: STRING is "a status bar item"
 		-- description string needed by gtk
 
+	parent_imp: EV_STATUS_BAR_IMP
+			-- The parent of the Current widget
+			-- Can be void.
+
 feature -- Status report
 
 	text: STRING
+
+	index: INTEGER is
+			-- Index of the current item.
+		do
+		end
 
 feature -- Status setting
 
@@ -115,6 +124,12 @@ feature -- Status setting
 		end
 	
 feature -- Element change
+
+	set_index (pos: INTEGER) is
+			-- Make `pos' the new index of the item in the
+			-- list.
+		do
+		end
 
 	set_text (txt: STRING) is
 		-- set `text' to txt

@@ -31,6 +31,11 @@ extern "C" {
 	/* Assertions checked at compilation time */
 #define COMPILE_CHECK(tag, exp) extern dummy_array_for_checking[(exp)?1:-1];
 
+	/* To use instead of `printf' when a breakpoint needs to be inserted
+	 * when assertion violation is reported. To do so, we have created
+	 * `ise_printf' so that we can simply set a breakpoint in it.
+	 */
+extern int ise_printf (char *StrFmt, ...);
 
 #define INTERNAL_CHECK(type, tag, exp) \
 	if (!(exp)) \

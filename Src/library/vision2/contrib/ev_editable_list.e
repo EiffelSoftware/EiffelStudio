@@ -30,6 +30,7 @@ feature -- Initialization
 			create editable_columns.make (0)
 			create editable_rows.make (0)
 			create end_edit_actions.default_create
+			resize_actions.force_extend (agent resized)
 			column_resized_actions.force_extend (agent resized)
 			pointer_double_press_actions.extend (agent edit_row (?, ?, ?, ?, ?, ?, ?, ?) )
 			end_edit_actions.extend (agent on_change_widget_deselected)
@@ -513,11 +514,12 @@ feature {NONE} -- Implementation
 					l_total := l_total - column_width (cnt)
 					cnt := cnt + 1
 				end
-				column_resized_actions.go_i_th (column_resized_actions.count)
-				column_resized_actions.remove
+				resize_actions.block
+				column_resized_actions.block
 				set_column_width (l_total, cnt)
-				print ("Setting column width to" + l_total.out)
-				column_resized_actions.force_extend (agent resized)
+				print (column_width (2).out)
+				resize_actions.resume
+				column_resized_actions.resume
 		
 					-- Redraw internal dialog if required
 				if internal_dialog /= Void and then internal_dialog.is_displayed then

@@ -18,14 +18,14 @@
 		</paragraph>
 		<paragraph><italic>feature_name</italic>, if present, must be the final name of a feature of the class called 
 			<italic>class_name</italic>.
-			<line_break/>The table below lists the available options, the arguments they require, and their effect:
+			<line_break></line_break>The table below lists the available options, the arguments they require, and their effect:
 		</paragraph>
 		<table>
 			<row><cell><bold>OPTION</bold></cell> <cell><bold>ARGUMENTS</bold></cell> <cell><bold>EFFECT</bold></cell></row>
 			<row> <cell><italic>Operation options</italic></cell> </row>
-			<row><cell>-freeze</cell> <cell>none</cell> <cell>Freeze system.</cell></row>
-			<row><cell>-finalize</cell> <cell>none</cell> <cell>Produce a finalized system. See below.</cell></row>
-			<row><cell>-precompile</cell> <cell>none</cell> <cell>Precompile a system, treating it as a library.</cell></row>
+			<row><cell>-freeze</cell> <cell></cell> <cell>Freeze system.</cell></row>
+			<row><cell>-finalize</cell> <cell></cell> <cell>Produce a finalized system. See below.</cell></row>
+			<row><cell>-precompile</cell> <cell></cell> <cell>Precompile a system, treating it as a library.</cell></row>
 			<row><cell><italic>Browsing operations</italic></cell></row>
 			<row><cell>-ancestors</cell> <cell>class_name</cell> <cell>Print the ancestors of the class.</cell></row>
 			<row><cell>-aversions</cell> <cell>class_name, feature_name</cell> <cell>Print the ancestor versions of the feature.</cell></row>
@@ -40,25 +40,25 @@
 			<row><cell>-suppliers</cell> <cell>class_name, feature_name</cell> <cell>Print all the suppliers of the class.</cell></row>
 			<row><cell><italic>Others options</italic></cell></row>
 			<row><cell>-ace</cell> <cell>file_name</cell> <cell>Use the file as Ace.</cell></row>
-			<row><cell>-batch</cell> <cell>none</cell> <cell>Launch the compilation without user request.</cell></row>
-			<row><cell>-c_compile</cell> <cell>none</cell> <cell>Launch C compilation, if needed, after Eiffel compilation.</cell></row>
+			<row><cell>-batch</cell> <cell></cell> <cell>Launch the compilation without user request.</cell></row>
+			<row><cell>-c_compile</cell> <cell></cell> <cell>Launch C compilation, if needed, after Eiffel compilation.</cell></row>
 			<row><cell>-file</cell> <cell>file_name</cell> <cell>Save the output to the file.</cell></row>
 			<row><cell>-filter</cell> <cell>filter_file_name</cell> <cell>Print text as processed by the filter.</cell></row>
-			<row><cell>-help</cell> <cell>none</cell> <cell>Print the help.</cell></row>
-			<row><cell>-keep</cell> <cell>none</cell> <cell>Keep assertions in final mode. Useful with -finalize only.</cell></row>
-			<row><cell>-loop</cell><cell> none</cell> <cell>Enter interactive mode. See below.</cell></row>
+			<row><cell>-help</cell> <cell></cell> <cell>Print the help.</cell></row>
+			<row><cell>-keep</cell> <cell></cell> <cell>Keep assertions in final mode. Useful with -finalize only.</cell></row>
+			<row><cell>-loop</cell><cell> </cell> <cell>Enter interactive mode. See below.</cell></row>
 			<row><cell>-project</cell> <cell>file_name</cell> <cell>Use the file as project file.</cell></row>
-			<row><cell>-project_path</cell> <cell>directory_name</cell> <cell>Use this directory as compilation directory.</cell></row>
-			<row><cell>-stop</cell> <cell>none</cell> <cell>Stop on errors.</cell></row>
-			<row><cell>-version</cell> <cell>none</cell> <cell>Print compiler version number.</cell></row>
+			<row><cell>-project_path</cell> <cell>directory_name</cell> <cell>Use this directory as compilation directory. (Default: current directory.)</cell></row>
+			<row><cell>-stop</cell> <cell></cell> <cell>Stop on errors. (Default: no.)</cell></row>
+			<row><cell>-version</cell> <cell></cell> <cell>Print compiler version number.</cell></row>
 		</table>
 		<paragraph>
 			<bold>Note</bold>: In the third column, to print means to produce the requested information on the default output of the 
 			<bold>ec</bold> command.
-			<line_break/>
+			<line_break></line_break>
 		</paragraph>
 		<heading><size>2</size>Finalization</heading>
-		<link/>To produce a finalized system, you may use the command 
+		<link></link>To produce a finalized system, you may use the command 
 		<bold>ec</bold> -finalize. The effect is the same as when you press the Finalize button in the graphical environment, except for two differences:
 		<list ordered="true">
 			<item>All assertion checking will by default be turned off in the resulting finalized system. In the graphical environment, an interactive panel asks you whether you want to keep or discard assertions. Command 
@@ -76,7 +76,7 @@ You must now run "finish_freezing" in:
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break/>
+			<line_break></line_break>
 			<link>
 				<url>20_batch_compilation.xml</url>
 				<label>Batch compilation</label>

@@ -188,9 +188,9 @@ feature {NONE} -- Implementation
 				if not cr.is_initialized then
 					set_error (Eac_not_initialized, Void)
 				elseif ass = Void then
-					set_error (Invalid_assembly, Void)
+					set_error (Invalid_assembly, target_path)
 				elseif put_in_eac and ass.get_name.get_public_key_token = Void then
-					set_error (Non_signed_assembly, Void)
+					set_error (Non_signed_assembly, target_path)
 				end
 				if successful then
 					if put_in_eac then
@@ -256,10 +256,14 @@ feature {NONE} -- Implementation
 				set_error (No_target, Void)
 			elseif put_in_eac and destination_path /= Void then
 				set_error (No_destination_if_put_in_eac, Void)
-			elseif not (list_assemblies or init or usage_display) and destination_path = Void then
-				destination_path := (create {EXECUTION_ENVIRONMENT}).current_working_directory
 			elseif put_in_eac and force_local_generation then
 				set_error (Cannot_force_local_and_eac, Void)
+			elseif put_in_eac and no_dependancies then
+				set_error (Dependancies_must_be_generated, Void)
+			elseif force_local_generation and no_dependancies then
+				set_error (Cannot_force_and_exclude_references, Void)
+			elseif not (list_assemblies or init or usage_display) and destination_path = Void then
+				destination_path := (create {EXECUTION_ENVIRONMENT}).current_working_directory
 			end
 		end
 
@@ -277,7 +281,9 @@ feature {NONE} -- Implementation
 		do
 			io.put_string ("Usage: ")
 			io.put_string (System_name)
-			io.put_string (" <assembly> [/d:destination | /a | /r] [/n] [/nologo] [/nice]%N")
+			io.put_string (" <assembly> [/a | /r] [/n] [/nologo] [/nice]%N")
+			io.put_string ("       " + System_name)
+			io.put_string (" <assembly> [/d:destination] [/n] [/nologo] [/nice] [/f | /noref]%N")
 			io.put_string ("       " + System_name)
 			io.put_string (" /l [/nologo]%N")
 			io.put_string ("       " + System_name)
@@ -291,9 +297,8 @@ feature {NONE} -- Implementation
 			io.put_string ("/init%N   Initialize Eiffel Assembly Cache (can only be run once).%N%N")
 			io.put_string ("/list%N   List assemblies in EAC. Short form is '/l'.%N%N")
 			io.put_string ("/nice%N   XML output is indented.%N%N")
-			io.put_string ("/force%N   Consume a local assembly's GAC dependancies into same location (exclusive with /add). Short form '/f'.%N%N")
-			io.put_string ("/noref%N   Do not generated assembly dependancies (exclusive with /add).%N%N")
-			io.put_string ("/nice%N   XML output is indented.%N%N")
+			io.put_string ("/force%N   Consume a local assembly's GAC dependancies into same location. Short form is '/f'.%N%N")
+			io.put_string ("/noref%N   Do not generated assembly dependancies..%N%N")
 			io.put_string (" - Arguments -%N%N")
 			io.put_string ("<assembly>%N   Name of assembly containing types to generate XML for. <assembly> can%N")
 			io.put_string ("   be either a path to a local assembly or an assembly's fully quantified name.%N")
@@ -330,6 +335,8 @@ feature {NONE} -- Implementation
 				end
 				writer.set_error_printer (agent process_error)
 				writer.add_assembly (ass.get_name)
+				
+				consumed_assemblies.extend (create {STRING}.make_from_cil (ass.get_full_name))
 			end
 		end
 		
@@ -345,45 +352,65 @@ feature {NONE} -- Implementation
 			n: INTEGER
 			name: ASSEMBLY_NAME
 			assembly: ASSEMBLY
+			consume_folder: DIRECTORY			
+			reconsume: BOOLEAN
 		do
+			reconsume := True
+			
 			output_destination_path := destination_path.clone (destination_path)
 			if output_destination_path.item (output_destination_path.count) /= '\' then
 				output_destination_path.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
 			end
-			
 			output_destination_path.append (relative_assembly_path (ass.get_name))
 			
-			-- only consume the assembly if it has not already been consumed
-			if not (create {DIRECTORY}.make (output_destination_path)).exists then
+			if not no_output then
+				display_status ("Consuming " + create {STRING}.make_from_cil (ass.get_name.get_full_name))
+			end
+			
+			-- only consume the assembly if it needs to be consumed
+			if assembly_consumer.is_assembly_modified (ass, output_destination_path) then
+				create consume_folder.make (output_destination_path.substring (1, output_destination_path.count - 1))
+				if consume_folder.exists then
+					consume_folder.recursive_delete					
+				end
+				
 				assembly_consumer.set_destination_path (output_destination_path)				
 				assembly_consumer.consume (ass)
-				consumed_assemblies.extend (create {STRING}.make_from_cil (ass.get_full_name))
-				
-				if not no_dependancies then
-					references := ass.get_referenced_assemblies			
-					if references /= Void then
-						from 
-							n := references.lower
-						until
-							n > references.upper
-						loop
-							name := references.item (n)
-							-- do not consume mscore
-							if not name.get_name.equals (("mscorlib").to_cil) then
-								assembly := feature {ASSEMBLY}.load_assembly_name (name)
-								if assembly /= Void then
-									if not consumed_assemblies.has (create {STRING}.make_from_cil (assembly.get_full_name)) then
-										if assembly.get_global_assembly_cache and not force_local_generation then
-											consume_in_eac (assembly)
-										else
-											consume_into_path (assembly)
-										end
+			else
+				if not no_output then
+					display_status ("Up-to-date check: '" + create {STRING}.make_from_cil (ass.get_name.get_full_name) + "' has not been modified since last consumption.%N")
+				end
+			end
+			
+			consumed_assemblies.extend (create {STRING}.make_from_cil (ass.get_full_name))
+			
+			if not no_dependancies then
+				references := ass.get_referenced_assemblies			
+				if references /= Void then
+					from 
+						n := references.lower
+					until
+						n > references.upper
+					loop
+						name := references.item (n)
+						
+						-- do not consume mscorlib, as it isnt loaded from the GAC but from the %SystemRoot%\Microsoft.Net\Framework\<version>\ directory.
+						if not name.get_name.equals (("mscorlib").to_cil) then
+							assembly := feature {ASSEMBLY}.load_assembly_name (name)
+							if assembly /= Void then
+								if not consumed_assemblies.has (create {STRING}.make_from_cil (assembly.get_full_name)) then
+									if assembly.get_global_assembly_cache and not force_local_generation then
+										consume_in_eac (assembly)
+									else
+										consume_into_path (assembly)
 									end
 								end
+							else
+								set_error (Invalid_assembly, create {STRING}.make_from_cil (name.get_full_name))
 							end
-							n := n + 1
-						end	
-					end
+						end
+						n := n + 1
+					end	
 				end
 			end
 		end
@@ -469,6 +496,7 @@ feature {NONE} -- Implementation
 			
 			retry
 		end
+		
 		
 		
 	dummy: CACHE_REFLECTION

@@ -395,10 +395,7 @@ feature -- Action
 			file_name: STRING
 			root_name, system_name: STRING
 			right_file, retried: BOOLEAN
-			l_parser: XM_EIFFEL_PARSER
-			l_file: KL_BINARY_INPUT_FILE
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			l_deserialized_document: XM_DOCUMENT
 			error_dialog: EB_INFORMATION_DIALOG
 			x_pos, y_pos: INTEGER
 			ee: EXECUTION_ENVIRONMENT
@@ -411,23 +408,12 @@ feature -- Action
 			file_name := open_dialog.file_name
 			if not retried then
 				if file_name /= Void and then not file_name.is_empty then
-					create l_file.make (file_name)
-					if l_file.exists then
-						update_archive_field.set_text (file_name)
-						l_file.open_read
-						if l_file.is_open_read then
-							create l_parser.make
-							create l_tree_pipe.make
-							create l_xm_concatenator.make_null
-							l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
-							check
-								ok_parsing: l_parser.is_correct
-							end
-							if l_tree_pipe.document.root_element.has_attribute_by_name ("System") then
-								system_name := l_tree_pipe.document.root_element.attribute_by_name ("System").value						
-							end
+					l_deserialized_document := deserialize_document (file_name)
+					if l_deserialized_document /= Void then
+						if l_deserialized_document.root_element.has_attribute_by_name ("System") then
+							system_name := l_deserialized_document.root_element.attribute_by_name ("System").value						
 						end
-						l_file.close
+
 						right_file := (root_name /= Void and then equal (root_name, "ARCHIVE")) and
 									(system_name /= Void and then equal (system_name, tool.System.name))
 						if right_file then
@@ -515,10 +501,7 @@ feature -- Action
 		local
 			root_name, system_name, archived_result: STRING
 			right_syntax, retried: BOOLEAN
-			l_parser: XM_EIFFEL_PARSER
-			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
-			l_file: KL_BINARY_INPUT_FILE
-			l_xm_concatenator: XM_CONTENT_CONCATENATOR
+			l_deserialized_document: XM_DOCUMENT
 			error_dialog: EB_INFORMATION_DIALOG
 			root_element, current_measure_xml, metric_definitions: XM_ELEMENT
 			row: EV_MULTI_COLUMN_LIST_ROW
@@ -530,79 +513,52 @@ feature -- Action
 			y_pos := archive_dialog.y_position + 50
 			if not retried then
 				if file_name /= Void and then not file_name.is_empty then
-					create l_file.make (file_name)
-					if l_file.exists then
-						l_file.open_read
-						if l_file.is_open_read then
-							create l_parser.make
-							create l_tree_pipe.make
-							create l_xm_concatenator.make_null
-							l_parser.set_callbacks (standard_callbacks_pipe (<<l_xm_concatenator, l_tree_pipe.start>>))
-							l_parser.parse_from_stream (l_file)
-							l_file.close
-							check
-								ok_parsing: l_parser.is_correct
-							end
-							root_element := l_tree_pipe.document.root_element
-							root_name := l_tree_pipe.document.root_element.name
-							if l_tree_pipe.document.root_element.has_attribute_by_name ("System") then
-								system_name := l_tree_pipe.document.root_element.attribute_by_name ("System").value
-							end
-			--				right_syntax := (root_name /= Void and then equal (root_name, "ARCHIVE")) and
-			--						root_element.has (element_by_name (root_element, "METRIC_DEFINITIONS")) and
-			--						root_element.has (element_by_name (root_element, "RECORDED_MEASURES")) and
-			--						system_name /= Void
-							right_syntax := archive_syntax (root_element)
-
-							if right_syntax then
-								import := False
-								tool.set_default_archive (False)
-								create archived_file.make (file_name)
-								archived_root_element := root_element
-								metric_definitions := element_by_name (archived_root_element, "METRIC_DEFINITIONS")
-								if not metric_definitions.is_empty then
-									create confirm_dialog.make_with_text_and_actions ("Import saved metrics of archive:%N"
-												+ file_name + "?", import_actions_array)
-									confirm_dialog.show_modal_to_window (archive_dialog)
-									if import then
-										import_metrics (file_name)
-									end
-								end
-								from
-									tool.multi_column_list.start
-									i := 1
-								until
-									tool.multi_column_list.after
-								loop
-									row := tool.multi_column_list.item
-									a_metric := tool.metric (row.i_th (4))
-									current_measure_xml ?= tool.file_manager.measure_header.item (i)
-									check current_measure_xml /= Void end
-									current_measure := xml_double (current_measure_xml, "RESULT")
-									archived_result := retrieve_archived_result (a_metric, archived_file, root_element, archive_mode, current_measure)
-									row.put_i_th (archived_result, 6)
-									tool.multi_column_list.forth
-									i := i + 1
-								end
-								tool.multi_column_list.set_column_title ("Comparison to: " + system_name, 6)
-								archived_file.close
-							else
-								create error_dialog.make_with_text ("Selected file is not%Nan archive.")
-								error_dialog.set_position (x_pos, y_pos)
-								error_dialog.show_modal_to_window (archive_dialog)
-							end
-						else
-							create error_dialog.make_with_text ("File:" + file_name + "%Nmust have syntax errors.")
-							error_dialog.set_position (x_pos, y_pos)
-							error_dialog.show_modal_to_window (archive_dialog)
-
+					l_deserialized_document := deserialize_document (file_name)
+					if l_deserialized_document /= Void then
+						root_element := l_deserialized_document.root_element
+						root_name := root_element.name
+						if root_element.has_attribute_by_name ("System") then
+							system_name := root_element.attribute_by_name ("System").value
 						end
-						--l_file.close
-					else
-						create error_dialog.make_with_text ("File does not exist.%N%
-													%Please check location.")
-						error_dialog.set_position (x_pos, y_pos)
-						error_dialog.show_modal_to_window (archive_dialog)
+		--				right_syntax := (root_name /= Void and then equal (root_name, "ARCHIVE")) and
+		--						root_element.has (element_by_name (root_element, "METRIC_DEFINITIONS")) and
+		--						root_element.has (element_by_name (root_element, "RECORDED_MEASURES")) and
+		--						system_name /= Void
+						right_syntax := archive_syntax (root_element)
+
+						if right_syntax then
+							import := False
+							tool.set_default_archive (False)
+							create archived_file.make (file_name)
+							archived_root_element := root_element
+							metric_definitions := element_by_name (archived_root_element, "METRIC_DEFINITIONS")
+							if not metric_definitions.is_empty then
+								create confirm_dialog.make_with_text_and_actions ("Import saved metrics of archive:%N"
+											+ file_name + "?", import_actions_array)
+								confirm_dialog.show_modal_to_window (archive_dialog)
+								if import then
+									import_metrics (file_name)
+								end
+							end
+							from
+								tool.multi_column_list.start
+								i := 1
+							until
+								tool.multi_column_list.after
+							loop
+								row := tool.multi_column_list.item
+								a_metric := tool.metric (row.i_th (4))
+								current_measure_xml ?= tool.file_manager.measure_header.item (i)
+								check current_measure_xml /= Void end
+								current_measure := xml_double (current_measure_xml, "RESULT")
+								archived_result := retrieve_archived_result (a_metric, archived_file, root_element, archive_mode, current_measure)
+								row.put_i_th (archived_result, 6)
+								tool.multi_column_list.forth
+								i := i + 1
+							end
+							tool.multi_column_list.set_column_title ("Comparison to: " + system_name, 6)
+							archived_file.close
+						end
 					end
 				end
 			end
@@ -732,7 +688,7 @@ feature -- Action
 			if not retried then
 				create l_namespace.make ("", "")
 				create node.make_root ("ARCHIVE", l_namespace)
-				node.add_attribute ("System", l_namespace, tool.System.name)
+				add_attribute ("System", l_namespace, tool.System.name, node)
 				create archive_header.make
 				archive_header.force_last (node)
 				metric_header := tool.file_manager.metric_header
@@ -749,9 +705,9 @@ feature -- Action
 					a_metric ?= metric_list.item
 					if a_metric = Void or else not a_metric.is_scope_ratio then
 						create xml_element.make_child (node, "MEASURE", l_namespace)
-						xml_element.add_attribute ("Metric", l_namespace, metric_list.item.name)
+						add_attribute ("Metric", l_namespace, metric_list.item.name, xml_element)
 						metric_result := tool.calculate.calculate_metric (metric_list.item, scope)
-						xml_element.add_attribute ("Result", l_namespace, metric_result.out)
+						add_attribute ("Result", l_namespace, metric_result.out, xml_element)
 						measure_header.put_last (xml_element)
 					end
 					metric_list.forth

@@ -66,6 +66,10 @@ feature -- Access
 			-- use assignment attempt.
 			-- Will raise an exception (code `Retrieve_exception')
 			-- if content is not a stored Eiffel structure.
+		require else
+			socket_exists: exists;
+			opened_for_read: is_open_read
+			support_storable: support_storable
 		local
 			was_blocking: BOOLEAN
 		do
@@ -100,6 +104,10 @@ feature -- Element change
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
 			-- Retrievable within current system only.
+		require else
+			socket_exists: exists
+			opened_for_write: is_open_write
+			support_storable: support_storable
 		do
 			eif_net_basic_store (descriptor, $object)
 		end;
@@ -112,6 +120,10 @@ feature -- Element change
 			--| This feature may use a visible name of a class written
 			--| in the `visible' clause of the Ace file. This makes it
 			--| possible to overcome class name clashes.
+		require else
+			socket_exists: exists
+			opened_for_write: is_open_write
+			support_storable: support_storable
 		do
 			eif_net_general_store (descriptor, $object)
 		end
@@ -121,6 +133,10 @@ feature -- Element change
 			-- entire object structure reachable from `object'.
 			-- Retrievable from other systems for the same or other
 			-- platform (machine architecture).
+		require else
+			socket_exists: exists
+			opened_for_write: is_open_write
+			support_storable: support_storable
 		do
 			eif_net_independent_store (descriptor, $object)
 		end

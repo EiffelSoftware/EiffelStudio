@@ -198,11 +198,11 @@ feature {NONE} -- Output
 	print_header is
 			-- Print header information of compilation.
 		do
-			io.putstring ("%
+			io.error.putstring ("%
 				%Eiffel compilation manager%N%
 				%  (version ");
-			io.putstring (Version_number);
-			io.putstring (")%N");
+			io.error.putstring (Version_number);
+			io.error.putstring (")%N");
 		end;
 
 	print_tail is

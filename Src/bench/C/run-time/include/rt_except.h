@@ -25,7 +25,7 @@ extern struct xstack eif_trace;       /* Unsolved exception trace */
 #endif
 
 #ifdef EIF_WIN32
-extern void set_windows_exception_filter();
+extern void set_windows_exception_filter(void);
 #endif
 
 extern void xraise(EIF_CONTEXT int code);			/* Raise an exception with no tag */

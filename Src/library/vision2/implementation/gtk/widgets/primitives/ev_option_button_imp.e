@@ -13,6 +13,12 @@ inherit
 	EV_MENU_HOLDER_IMP
 
 	EV_BUTTON_IMP
+		undefine
+			set_center_alignment,
+			set_left_alignment, 
+			set_right_alignment,
+			set_text,
+			add_click_command			
 		redefine
 			make
 		end

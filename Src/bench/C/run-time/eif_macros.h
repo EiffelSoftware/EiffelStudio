@@ -493,7 +493,9 @@ RT_LNK int fcount;
  *  RTFCID(ct,x,y,z) fetches the creation type of a generic feature in final mode
 */
 
-#define RTCID(tp,x,y,z)		eif_compound_id((tp),(x),(y),(z))
+#define RTCID(tp,x,y,z)	\
+		((x) ? eif_compound_id((tp), (int16) Dftype(x),(y),(z)) : \
+		 eif_compound_id ((tp), (int16) 0, (y), (z)))
 #define RTFCID(ct,x,y,z)	eif_final_id((ct),(x),(y),(z))
 #define RTGPTID(st,x,y)		eif_gen_param_id ((st),(x),(y))
 

@@ -229,6 +229,7 @@ feature {EV_ANY_I} -- Status Setting
 			current_character: CHARACTER
 			found_opening_brace: BOOLEAN
 			paragraph_format: EV_PARAGRAPH_FORMAT
+			last_load_value, current_load_value: INTEGER
 		do
 			last_load_successful := True
 			if rtf_text.item (1).is_equal (rtf_open_brace_character) then
@@ -250,6 +251,7 @@ feature {EV_ANY_I} -- Status Setting
 					-- if the auto color is set as color 0 in the color table.
 				create current_format
 				plain_text := ""
+				
 				from
 					main_iterator := 1
 				until
@@ -291,6 +293,17 @@ feature {EV_ANY_I} -- Status Setting
 						-- if other routines have just called it within this loop.
 					
 					update_main_iterator
+
+					if rich_text.file_access_actions_internal /= Void then
+							-- Here we update the `file_access_actions' with the range 0-90
+							-- for the character formatting.
+						current_load_value := (main_iterator * 90) // rtf_text.count
+						if current_load_value /= last_load_value then
+								-- Fire the `file_access_actions' only if changed.	
+							last_load_value := current_load_value
+							rich_text.file_access_actions.call ([current_load_value])
+						end
+					end
 				end
 				check
 					no_carriage_returns: not plain_text.has ('%R')
@@ -303,6 +316,17 @@ feature {EV_ANY_I} -- Status Setting
 				loop
 					paragraph_format := all_paragraph_formats.item (all_paragraph_format_keys.item)
 					rich_text.format_paragraph (all_paragraph_indexes.i_th (all_paragraph_format_keys.index), all_paragraph_indexes.i_th (all_paragraph_format_keys.index) + 1, paragraph_format)
+					
+					if rich_text.file_access_actions_internal /= Void then
+							-- Here we update the `file_access_actions' with the range 90-100 for the
+							-- paragraph formatting.
+						current_load_value := 90 + ((all_paragraph_format_keys.index * 10) // all_paragraph_format_keys.count)
+						if current_load_value /= last_load_value then
+								-- Fire the `file_access_actions' only if changed.	
+							last_load_value := current_load_value						
+							rich_text.file_access_actions.call ([current_load_value])
+						end
+					end
 					all_paragraph_format_keys.forth
 				end
 			else

@@ -9,6 +9,7 @@ class OPEN_PROJECT
 
 inherit
 
+	EB_CONSTANTS;
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
 	PIXMAP_COMMAND
@@ -37,8 +38,10 @@ feature -- Callbacks
 
 	open_project (argument: ANY) is
 		do
-			last_name_chooser.set_window (popup_parent);
-			last_name_chooser.call (Current)
+			if not project_tool.initialized then
+				last_name_chooser.set_window (popup_parent);
+				last_name_chooser.call (Current)
+			end
 		end;
 
 feature -- Status report
@@ -154,6 +157,9 @@ feature -- Project Initialization
 						title := clone (l_Project);
 						title.append (": ");
 						title.append (project_dir.name);
+						if Eiffel_system.is_precompiled then
+							title.append ("  (precompiled)");
+						end
 						project_tool.set_title (title);
 						project_tool.set_icon_name (Eiffel_system.name);
 					end;
@@ -179,7 +185,10 @@ feature -- Project Initialization
 			elseif Eiffel_project.read_write_error then
 				warner (popup_parent).custom_call (Current,
 						w_Cannot_open_project, Void, "Exit", Void)
-			elseif Eiffel_project.is_read_only then
+			elseif Eiffel_project.is_read_only and then
+				not Eiffel_system.is_precompiled
+			then
+				project_tool.set_initialized;
 				warner (popup_parent).custom_call (Current,
 						w_Read_only_project, " OK ", "Exit", Void)
 			end;
@@ -193,7 +202,7 @@ feature -- Project Initialization
 		do
 			!! e_displayer.make (Error_window);
 			Eiffel_project.set_error_displayer (e_displayer);
-			if not resources.get_boolean (r_Graphical_degree_output_disabled, False) then
+			if not Project_tool_resources.graphical_output_disabled.actual_value then
 				!! g_degree_output;
 				Eiffel_project.set_degree_output (g_degree_output)
 			end

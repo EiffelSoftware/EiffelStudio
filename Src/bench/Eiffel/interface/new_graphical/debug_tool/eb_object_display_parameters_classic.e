@@ -37,7 +37,7 @@ feature {EB_SET_SLICE_SIZE_CMD} -- Refreshing
 			attr_item.expand_actions.wipe_out
 			attr_item.collapse_actions.wipe_out
 			attributes_loaded := True
-			create obj.make (address, spec_lower, spec_higher)
+			create {DEBUGGED_OBJECT_CLASSIC} obj.make (address, spec_lower, spec_higher)
 			list := obj.attributes
 			if not list.is_empty then
 				from
@@ -75,7 +75,7 @@ feature {NONE} -- Specific Implementation
 			debug ("debug_recv")
 				print ("EB_OBJECT_DISPLAY_PARAMETERS.load_attributes_under%N")
 			end
-			create obj.make (address, spec_lower, spec_higher)
+			create {DEBUGGED_OBJECT_CLASSIC} obj.make (address, spec_lower, spec_higher)
 			list := obj.attributes
 			from
 				list.start

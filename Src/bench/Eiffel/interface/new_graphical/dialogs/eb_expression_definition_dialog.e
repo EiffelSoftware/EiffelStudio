@@ -343,7 +343,11 @@ feature {NONE} -- Event handling
 						application.is_stopped and then
 						application.is_valid_object_address (t)
 					then
-						create o.make (t, 0, 1)
+						if application.is_dotnet then
+							create {DEBUGGED_OBJECT_DOTNET} o.make (t, 0, 1)							
+						else
+							create {DEBUGGED_OBJECT_CLASSIC} o.make (t, 0, 1)
+						end
 						create new_expression.make_with_object (o, expression_field.text)
 						if new_expression.syntax_error then
 							expression_field.set_focus

@@ -12,7 +12,7 @@ class TRANSFER_MANAGER inherit
 		rename
 			item as transaction
 		undefine
-			copy, is_equal, force, is_inserted
+			copy, is_equal, force, is_inserted, search
 		end
 
 	ARRAYED_LIST [TRANSACTION]

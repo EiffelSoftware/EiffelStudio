@@ -43,7 +43,7 @@ feature
 				delete_selection
 				history.bind_current_item_to_next
 			end
-			if i > offset then
+			if i >= offset then
 				cursor.make_from_integer (i - local_clipboard.count, Current)
 			else
 				cursor.make_from_integer (i, Current)

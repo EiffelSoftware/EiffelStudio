@@ -29,7 +29,6 @@ feature -- Access
 			pt: EV_POINT
 		do
 			!! Result.make
-			Result.set_line_width (2)
 			!! pt.set (90, 50)
 			Result.set_base_left (pt)
 			Result.set_text ("This is a try")

@@ -50,6 +50,7 @@ feature -- IL code generation
 			has_result := not r_type.is_void
 
 			il_generator.set_once_generation (True)
+			il_generator.set_global_once_generation (is_global_once)
 			
 			il_generator.generate_once_done_info (feature_name)
 			if has_result then
@@ -74,7 +75,7 @@ feature -- IL code generation
 			il_generator.put_debug_info (end_location)
 
 			if has_result then
-				il_generator.generate_result
+				il_generator.generate_once_result
 			end
 			il_generator.generate_return (has_result)
 			

@@ -1199,7 +1199,7 @@ void fb_set_button_bg_color (EIF_POINTER client, EIF_POINTER pix)
 		XmChangeColor (XtParent((fbd->point_menu_buttons)[0]), (Pixel) pix);
 	if (fbd->number_resolution)
 		XmChangeColor (XtParent((fbd->resolution_menu_buttons)[0]), (Pixel) pix);
-	XmChangeColor (XtParent(fbd->stand_fonts_button), pix);
+	XmChangeColor (XtParent(fbd->stand_fonts_button), (Pixel) pix);
 }
 
 void fb_set_text_font (EIF_POINTER client, EIF_POINTER motif_font_list)

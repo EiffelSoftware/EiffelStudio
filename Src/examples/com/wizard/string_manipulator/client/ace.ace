@@ -15,7 +15,7 @@ cluster
 	root_cluster: ".";
 
 		-- Client
-	all client:						"..\generated\client"
+	all component:						"..\generated\client"
 
 		-- EiffelBase
 	all base:						"$EIFFEL4\library\base"

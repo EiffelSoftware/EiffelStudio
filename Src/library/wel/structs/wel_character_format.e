@@ -174,7 +174,7 @@ feature -- Element change
 			add_mask (Cfm_color)
 			cwel_charformat_set_crtextcolor (item, a_color.item)
 		ensure
-			text_color_set: text_color.is_equal (a_color)
+			text_color_set: text_color.item = a_color.item
 		end
 
 	set_bold is

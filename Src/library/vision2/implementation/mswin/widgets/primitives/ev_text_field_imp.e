@@ -14,7 +14,8 @@ inherit
 
 	EV_TEXT_COMPONENT_IMP
 		redefine
-			on_key_down
+			on_key_down,
+			set_maximum_line_length
 		end
 
 	EV_BAR_ITEM_IMP
@@ -27,10 +28,11 @@ inherit
 			foreground_color as wel_foreground_color,
 			font as wel_font,
 			set_font as wel_set_font,
-			destroy as wel_destroy
+			destroy as wel_destroy,
+			clip_cut as cut_selection,
+			clip_copy as copy_selection,
+			unselect as deselect_all
 		undefine
-				-- We undefine the features redefined by EV_WIDGET_IMP,
-				-- and EV_PRIMITIVE_IMP
 			remove_command,
 			set_width,
 			set_height,
@@ -69,6 +71,14 @@ feature {NONE} -- Initialization
 			-- Create a text field with `txt' as label.
 		do
 			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
+		end
+
+feature -- Status setting
+
+	set_maximum_line_length (length: INTEGER) is
+			-- Maximum number of charachters on line
+		do
+			set_text_limit (length)
 		end
 
 feature -- Event - command association

@@ -88,7 +88,6 @@ feature -- Basic operation
 			name_not_void: a_name /= Void
 		local
 			file_name: FILE_NAME
-			file_location: STRING
 			file: RAW_FILE
 		do
 			create Result

@@ -20,6 +20,8 @@ inherit
             find_inherited_definition,
             add_local,
             add_argument,
+            flush_locals,
+            flush_arguments,
             flush_completion_features,
             flush_completion_features_user_precondition,
             initialize_feature,
@@ -335,7 +337,19 @@ feature -- Basic Operations
                 arguments.put (clone (name), type)
             end
         end 
-        
+    
+    flush_locals is
+    		-- Empty locals table.
+    	do
+    		create locals.make (10)
+    	end
+   	
+   	flush_arguments is
+   			-- Empty arguments table.
+   		do
+   			create arguments.make (5)
+   		end
+   		
     flush_completion_features (a_file_name: STRING) is
             -- clear all `completion_features' in `a_file_name'
         require else

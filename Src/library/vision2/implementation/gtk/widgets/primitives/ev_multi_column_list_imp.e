@@ -897,14 +897,14 @@ feature -- Implementation
 			end
 		end
 
-	post_drop_steps is
+	post_drop_steps (a_button: INTEGER) is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			if pnd_row_imp /= Void and not is_destroyed then
+			if a_button > 0 and then pnd_row_imp /= Void and not is_destroyed then
 				if pnd_row_imp.mode_is_pick_and_drop then
 					signal_emit_stop (c_object, "button-press-event")
 				end
-			elseif mode_is_pick_and_drop and not is_destroyed then
+			elseif a_button > 0 and then mode_is_pick_and_drop and not is_destroyed then
 					signal_emit_stop (c_object, "button-press-event")
 			end
 

@@ -275,7 +275,7 @@ feature --Menu
 feature -- Fill Lists
 
 	fill_list is
-			-- Fill Left list.
+			-- Fill Left tree.
 		local
  			it: EV_TREE_ITEM
 			l: LINKED_LIST [RESOURCE_FOLDER]
@@ -298,58 +298,31 @@ feature -- Fill Lists
 			folder_exists: folder /= Void
 		local
  			it, it_child: EV_TREE_ITEM
- 			d_it: EV_DYNAMIC_TREE_ITEM [RESOURCE_FOLDER]
-			l: LINKED_LIST [RESOURCE_FOLDER]
+ 			l: LINKED_LIST [RESOURCE_FOLDER]
 		do
-			if folder.loading_not_done then
-				create d_it
-				d_it.set_text (folder.name)
-				d_it.set_data (folder)
-				d_it.set_dynamic (~expand_item, folder)
-				Result := d_it
-			else
-				create it
-				it.set_text (folder.description)
-				it.set_data (folder)
-				l := folder.child_list
-				from
-					l.start
-				until
-					l.after
-				loop
-					it_child := folder_item (l.item)
-					it.extend (it_child)
-					l.forth
-				end
-				Result := it
+			create it
+			it.set_text (folder.name)
+--			it.set_tooltip (folder.description)
+			it.set_data (folder)
+			l := folder.child_list
+			from
+				l.start
+			until
+				l.after
+			loop
+				it_child := folder_item (l.item)
+				it.extend (it_child)
+				l.forth
 			end
-		end
-
-	expand_item (t_item: EV_DYNAMIC_TREE_ITEM [RESOURCE_FOLDER]) is
-			-- Evaluate and display `t_item'.
-		require
---			list_exists: categories /= Void
-		local
- 			it: EV_TREE_ITEM
-			par: EV_TREE_ITEM_LIST
-		do
-			par ?= t_item.parent
-			par.start
-			par.search (t_item)
-			it := folder_item (t_item.data)
-			par.replace (it)
+			Result := it
 		end
 
 	fill_right_list (t_item: EV_TREE_ITEM) is
 			-- Fill right list
 		local
 			it: RESOURCE_LIST_ITEM
---			itt: PREFERENCE_LIST_ITEM
 			r: RESOURCE_FOLDER
 		do
---			itt ?= t_item
---			if itt /= Void then
---				r := itt.data
 			r ?= t_item.data
 			if r /= Void then
 				right_list.wipe_out

@@ -167,22 +167,5 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-	
-	put_environment_variable is
-		indexing
-			description: "Put an environment variable corresponding to the selected path"
-			external_name: "PutEnvironmentVariable"
-		require
-			non_void_path: destination_path_text_box.text /= Void
-			not_empty_path: destination_path_text_box.text.length > 0
-		local
-			process_info: SYSTEM_DIAGNOSTICS_PROCESSSTARTINFO
-		do
-			create process_info.make
-			if process_info.environmentvariables.containskey (dictionary.Path_key) then
-				process_info.environmentvariables.remove (dictionary.Path_key)
-			end
-			process_info.environmentvariables.add (dictionary.Path_key, destination_path_text_box.text)
-		end
 		
 end -- class EIFFEL_GENERATION_DIALOG

@@ -36,8 +36,9 @@
  *
  *********************************/
 
-char * c_match_font_name (char * pattern)
+EIF_REFERENCE c_match_font_name (char * pattern)
 {
+	EIF_REFERENCE res;
 	char ** match_list; // array of null-term. strings.
 	int list_size; // return var for XListFonts.
 
@@ -47,7 +48,12 @@ char * c_match_font_name (char * pattern)
 	if (list_size == 0) return NULL;
 
 	// return first (and only) string in list.
-	return match_list [0];
+	if (match_list[0])
+		res = RTMS(match_list [0]);
+	else
+		res = NULL;
+	XFreeFontNames(match_list);
+	return res;
 }
 
 /*********************************

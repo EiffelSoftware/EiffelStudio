@@ -251,9 +251,14 @@ feature -- Status Setting
 			-- just insert '<a_tag></a_tag>'.
 		local
 			l_text,
+			l_end_text,
 			l_prev_text: STRING
 		do
-			create l_text.make_from_string ("<" + a_tag + ">")
+			if a_tag.item (1) = '<' then
+				create l_text.make_from_string (a_tag)
+			else			
+				create l_text.make_from_string ("<" + a_tag + ">")
+			end
 			if has_selection then
 				l_text.append (selected_text)
 				if not clipboard_content.is_empty then
@@ -261,7 +266,14 @@ feature -- Status Setting
 				end
 				cut_selection
 			end
-			l_text.append ("</" + a_tag + ">")
+			
+			if a_tag.item (1) = '<' then
+				create l_end_text.make_from_string (a_tag)
+				l_end_text.replace_substring_all ("<", "</")
+				l_text.append (l_end_text)
+			else
+				l_text.append ("</" + a_tag + ">")
+			end
 			insert_text (l_text)
 			select_region (caret_position, caret_position + l_text.count - 1)
 			if l_prev_text /= Void then

@@ -46,6 +46,8 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_PREFERENCES
+
 create
 	make
 
@@ -58,7 +60,8 @@ feature {NONE} -- Initialization
 			eifgen_init: INIT_SERVERS
 			new_resources: TTY_RESOURCES
 			pref_strs: PREFERENCE_CONSTANTS
-			fn: FILE_NAME					
+			fn: FILE_NAME	
+			preference_access: PREFERENCES
 			--| uncomment the following line when profiling 
 			--prof_setting: PROFILING_SETTING
 		do
@@ -87,7 +90,11 @@ feature {NONE} -- Initialization
 
 
 				-- Initialization of compiler resources.
-			setup_preferences
+			create preference_access.make_with_default_values_and_location (system_general, eiffel_preferences)
+			initialize_preferences (preference_access)
+			
+			preferences.initialize_ec_preferences (preference_access)
+
 			create new_resources.initialize
 			if not new_resources.error_occurred then
 					-- Read the resource files
@@ -106,7 +113,13 @@ feature {NONE} -- Initialization
 						-- Formatting includes breakpoints
 					set_is_with_breakable
 	
-					create graphic_compiler.make_and_launch
+					create graphic_compiler.make
+					
+						-- Initialize GUI preferences
+					preferences.initialize_gui_preferences (preference_access)
+
+						-- Launch graphical compiler
+					graphic_compiler.launch
 				else
 					Eiffel_project.set_batch_mode (True)
 					if
@@ -129,16 +142,6 @@ feature {NONE} -- Initialization
 			--| uncomment the following line when profiling 
 			--prof_setting.start_profiling
 		end
-
-	setup_preferences is
-			-- Setup the preferences
-		local
-			l_prefs: PREFERENCES
-			studio_prefs: EB_SHARED_PREFERENCES	
-		do
-			create l_prefs.make_with_default_values_and_location (system_general, eiffel_preferences)			
-			create studio_prefs.make_preferences (l_prefs)						
-		end		
 
 feature {NONE} -- Implementation
 

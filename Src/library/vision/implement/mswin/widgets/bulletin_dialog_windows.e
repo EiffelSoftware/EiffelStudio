@@ -15,19 +15,20 @@ inherit
 			allow_resize as allow_recompute_size,
 			forbid_resize as forbid_recompute_size
 		undefine
+			set_height,
+			set_size, 
+			set_width,
 			child_has_resized,
 			on_destroy,
 			make_with_coordinates,
 			set_default_position,
-			show,
 			maximal_width,
 			maximal_height
 		redefine
 			class_name,
-			dialog_realize, 
 			on_size,
-			realize,
-			unrealize
+			unrealize,
+			default_position
 		select
 			unrealize
 		end
@@ -38,6 +39,7 @@ inherit
 			wel_make as make_child,
 			unrealize as bulletin_unrealize
 		undefine
+			show,
 			set_enclosing_size,
 			resize_for_shell,
 			default_style,
@@ -51,17 +53,15 @@ inherit
 			on_paint,
 			real_x,
 			real_y,
+			realize,
 			realized,
 			realize_current,
-			set_height,
-			set_size, 
-			set_width,
 			wel_move,
 			width
 		redefine
 			class_name,
 			on_size,
-			realize
+			default_position
 		end
 
 	BULLETIN_D_I
@@ -111,19 +111,16 @@ feature -- Status setting
 			if size_type = size_restored then
 				private_attributes.set_height (a_height)
 				private_attributes.set_width (a_width)
-			end				
+			end
 		end
 
-	realize is
-			-- Realize the bulletin.
-		do
-			realized := true
-		end
-	
 	unrealize is
 		do
+			if insensitive_list /= Void then
+				set_windows_sensitive
+			end
 			bulletin_unrealize
-			realized := false
+			wel_destroy
 		end
 
 	class_name: STRING is

@@ -7,10 +7,7 @@ indexing
 class APP_DR_AREA
 
 inherit
-	EV_DRAWING_AREA
-		redefine
-			make
-		end
+	EV_PIXMAP
 
 	EV_COMMAND
 
@@ -29,30 +26,29 @@ feature {NONE} -- Initialization
 			update_trans_cmd: APP_UPDATE_TRANS
 			cmd: EV_ROUTINE_COMMAND
 		do
-			Precursor (par)
-			create cmd.make (~expose_command)
-			add_paint_command (cmd, Void)
-			create cmd.make (~select_command)
-			add_button_press_command (1, cmd, Void)
+			create active_area.make (par)
 
-			activate_pick_and_drop (3, Current, Void)
+			make_with_size (Resources.app_dr_area_width, Resources.app_dr_area_height)
+			active_area.set_pixmap (Current)
+
+			create cmd.make (~select_command)
+			active_area.add_button_press_command (1, cmd, Void)
+			active_area.add_button_press_command (3, Current, Void)
+			active_area.activate_pick_and_drop (Void, Void)
 			create update_trans_cmd
-			add_pnd_command (Pnd_types.label_type, update_trans_cmd, Void)
+			active_area.add_pnd_command (Pnd_types.label_type, update_trans_cmd, Void)
 			create cmd.make (~process_state)
-			add_pnd_command (Pnd_types.state_type, cmd, Void)
+			active_area.add_pnd_command (Pnd_types.state_type, cmd, Void)
 			create cmd.make (~process_new_state)
-			add_pnd_command (Pnd_types.new_state_type, cmd, Void)
+			active_area.add_pnd_command (Pnd_types.new_state_type, cmd, Void)
 		end
+
+feature -- Access
+
+	active_area: EV_DRAWING_AREA
+			-- Active area that receive the events
 
 feature {APP_DR_AREA} -- Commands
-
-	expose_command (arg: EV_ARGUMENT; ev_data: EV_EXPOSE_EVENT_DATA) is
-			-- Redraw all the figures.
-		do
-			clear
-			lines.draw
-			figures.draw
-		end
 
 	select_command (arg: EV_ARGUMENT; ev_data: EV_BUTTON_EVENT_DATA) is
 		do
@@ -61,7 +57,6 @@ feature {APP_DR_AREA} -- Commands
 				if figures.found then
 					app_editor.set_selected (figures.figure)
 					app_editor.display_states
---					app_editor.draw_figures
 					app_editor.display_transitions
 				end
 			end
@@ -71,17 +66,19 @@ feature {APP_DR_AREA} -- Pick and drop
 
 	execute (arg: EV_ARGUMENT; ev_data: EV_BUTTON_EVENT_DATA) is
 		local
-			pnd_cmd: INITIALIZE_PND
-			arg2: EV_ARGUMENT2 [EV_PND_TYPE, ANY]
+			cmd: PND_ACCELERATOR
+			arg1: EV_ARGUMENT1 [ANY]
 		do
 			app_editor.find_pointed_figure (ev_data.x, ev_data.y)
 			if app_editor.pointed_figure /= Void then
-				create pnd_cmd.make (Current)
-				create arg2.make (app_editor.pointed_figure.data_type,
-									app_editor.pointed_figure.data)
-				pnd_cmd.execute (arg2, ev_data)
+				create cmd
+				create arg1.make (app_editor.pointed_figure.data)
+				cmd.execute (arg1, ev_data)
+				active_area.set_data_type (app_editor.pointed_figure.data_type)
+				if active_area.transported_data = Void then
+					active_area.set_transported_data (app_editor.pointed_figure)
+				end
 			end
-			set_transported_data (app_editor.pointed_figure)
 		end
 
 	process_state (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
@@ -120,6 +117,7 @@ feature {APP_DR_AREA} -- Pick and drop
 					new_state.copy_contents (circle.data)
 				end
 			end
+			active_area.set_transported_data (Void)
 		end
 
 	process_new_state (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
@@ -138,6 +136,7 @@ feature {APP_DR_AREA} -- Pick and drop
 			create add_state_cmd
 			create arg2.make (figures.previous_point, new_state)
 			add_state_cmd.execute (arg2, Void)
+			active_area.set_transported_data (Void)
 		end
 
 feature {NONE} -- Implementation

@@ -44,8 +44,8 @@ feature -- Access
 			p: POINTER
 		do
 			p := C.gtk_editable_get_chars (c_object, 0, -1)
-			create Result.make (0)
-			Result.from_c (p)
+			create Result.make_from_c (p)
+			C.g_free (p)
 			if Result.is_equal ("") then
 				Result := Void
 			end
@@ -82,9 +82,8 @@ feature -- Access
 			end
 
 			p := C.gtk_editable_get_chars (c_object, line_begin_pos - 1, line_end_pos - 1)
-
-			create Result.make (0)
-			Result.from_c (p)
+			create Result.make_from_c (p)
+			C.g_free (p)
 		end
 
 feature -- Status report
@@ -200,9 +199,13 @@ feature -- Status setting
 	
 	append_text (txt: STRING) is
 			-- Append `txt' to `text'.
+		local
+			temp_caret_pos: INTEGER
 		do
+			temp_caret_pos := caret_position
 			C.gtk_text_set_point (c_object, text_length)
 			insert_text (txt)
+			set_caret_position (temp_caret_pos)
 		end
 	
 	prepend_text (txt: STRING) is

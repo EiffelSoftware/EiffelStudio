@@ -9,6 +9,40 @@
 	<paragraph>
 		<paragraph>This document contains details of modifications and bug fixes to the vision2 library listed by the release version of EiffelStudio. All bug fixes and modifications are relative to the previously released version.</paragraph>
 		<heading>
+			<size>2</size> EiffelStudio 6.0
+		</heading>
+		<paragraph>
+			<bold>Interface modifications</bold>
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>EV_CHECKABLE_TREE</bold> - A new widget that inherits EV_TREE, providing similar functionality but for each item contained a check box is displayed.
+			</item>
+		</list>
+		<paragraph>
+			<bold>Bug fixes</bold>
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<bold>Platform independent</bold>
+				<list ordered="false">
+					<item/>
+				</list>
+			</item>
+			<item>
+				<bold>Windows</bold>
+				<list ordered="false">
+					<item/>
+				</list>
+			</item>
+			<item>
+				<bold>Gtk</bold>
+				<list ordered="false">
+					<item/>
+				</list>
+			</item>
+		</list>
+		<heading>
 			<size>2</size> EiffelStudio 5.5
 		</heading>
 		<paragraph>

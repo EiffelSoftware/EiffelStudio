@@ -22,7 +22,7 @@ feature -- Initialization
 			t: TWO_ITEMS [T]
 		do
 			size := Cache_size
-			Count := 0
+			count := 0
 			from
 				make_area (size)
 			until
@@ -41,7 +41,7 @@ feature -- Initialization
 			t: TWO_ITEMS [T]
 		do
 			size := n
-			Count := 0
+			count := 0
 			make_area (n)
 			from
 				make_area (size)
@@ -141,13 +141,13 @@ feature -- Cache manipulations
 				if equal (it.id, id) then
 					t.set_first (t.second)
 					last_removed_item := it
-					Count := Count - 1
+					count := count - 1
 				else
 					it := t.second
 					if it /= Void and then equal (it.id, id) then
 						t.set_second (Void)
 						last_removed_item := it
-						Count := Count - 1
+						count := count - 1
 					end
 				end
 			end
@@ -166,7 +166,7 @@ feature -- Cache manipulations
 		end
 
 	force (v: T) is
-			-- put a new element in the cache, if it was full 
+			-- Put a new element in the cache, if it was full 
 			-- remove an element and remind it in last_removed_item	
 		require
 			not_void: v /= Void
@@ -182,8 +182,8 @@ feature -- Cache manipulations
 			if lfirst /= Void then
 				last_removed_item := lsecond
 				if lsecond = Void then
-					if Count < Size then
-						Count := Count + 1
+					if count < size then
+						count := count + 1
 					else
 						remove_first_found
 					end
@@ -192,8 +192,8 @@ feature -- Cache manipulations
 				t.set_first (v)
 			else	
 				last_removed_item := Void
-				if Count < Size then
-					Count := Count + 1
+				if count < size then
+					count := count + 1
 				else
 					remove_first_found
 				end
@@ -205,23 +205,22 @@ feature -- Cache manipulations
 			-- Wipe all out
 		local
 			s, i: INTEGER
-			t: TWO_ITEMS [T]
 		do
 			from
-				s := Size
+				s := size
 			until
-				i = Size
+				i = s
 			loop
-				!! t
-				area.put (t, i)
+				area.item (i).wipe_out
 				i := i + 1
 			end
+			count := 0
 		end
 
 	size: INTEGER
 			-- Maximum number of items in the cache
 
-	Count: INTEGER
+	count: INTEGER
 			-- Number of element in the cache
 
 	last_removed_item: T
@@ -234,11 +233,11 @@ feature -- Linear iteration
 		local
 			i: INTEGER
 		do
-			if Count = 0 then
+			if count = 0 then
 				after := True
 			else
-				-- there IS an element in the cache
-				-- it MUST be a first in a TWO_ITEMS
+					-- There IS an element in the cache
+					-- it MUST be a first in a TWO_ITEMS
 				from 
 				until
 					area.item (i).first /= Void
@@ -271,7 +270,7 @@ feature -- Linear iteration
 				else
 					lfirst := True
 					pos := position
-					if pos < Size - 1 then
+					if pos < size - 1 then
 						pos := pos + 1
 						item := area.item (pos).first
 					else
@@ -286,7 +285,7 @@ feature -- Linear iteration
 					item := area.item (pos).second
 				else
 					lfirst := True
-					if pos < Size - 1 then
+					if pos < size - 1 then
 						pos := pos + 1
 						item := area.item (pos).first
 					else
@@ -299,7 +298,6 @@ feature -- Linear iteration
 			item_for_iteration := item
 		end
 	
-
 	item_for_iteration: T 
 			-- Current item used for the linear traversal.
 
@@ -311,18 +309,18 @@ feature {NONE} -- Implementation
 
 	first: BOOLEAN
 			-- Position of the last searched item
-			-- in the TWO_ITEMS
+			-- in TWO_ITEMS
 
 	remove_first_found is
 			-- Remove the first element found in the cache.
 			-- Force needs to put a new element in a full cache,
-			-- so we don't touch to Count.
+			-- so we don't touch to count.
 		local
 			t: TWO_ITEMS [T]
 		do
 			start
 			t := area.item (position)
-			-- the first element found will be first in the TWO_ITEMS
+				-- The first element found will be first in the TWO_ITEMS
 			if t.second /= Void then
 				last_removed_item := t.second
 				t.set_second (Void)

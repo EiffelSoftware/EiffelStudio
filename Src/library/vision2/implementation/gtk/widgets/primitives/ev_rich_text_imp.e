@@ -23,6 +23,12 @@ create
 
 feature -- Status Report
 
+	modify_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT; applicable_attributes:EV_CHARACTER_FORMAT_RANGE_INFORMATION) is
+			-- Modify formatting from `start_position' to `end_position' applying all attributes of `format' that are set to
+			-- `True' within `applicable_attributes', ignoring others.
+		do
+		end
+
 	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		do

@@ -270,7 +270,6 @@ feature -- Element change
 	is_breakpoint_set (f: E_FEATURE; i: INTEGER): BOOLEAN is
 			-- Is the `i'-th breakpoint of `f' set?
 		require
-			successful_compilation: Eiffel_project.successful;
 			valid_debugged_feature: valid_debugged_feature (f);	
 		do
 			Result := debug_info.is_breakpoint_set (f, i)
@@ -287,7 +286,6 @@ feature -- Element change
 	breakpoints_set_for (f: E_FEATURE): LIST [INTEGER] is
 			-- Breakpoints set for feature `f'
 		require
-			successful_compilation: Eiffel_project.successful;
 			valid_debugged_feature: valid_debugged_feature (f);	
 		do
 			Result := debug_info.breakpoints_set_for (f)

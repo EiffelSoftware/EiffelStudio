@@ -1494,6 +1494,15 @@ feature -- Line info
 		do
 		end
 
+	put_ghost_debug_infos (a_line_n:INTEGER; a_nb: INTEGER) is
+			-- Generate `a_nb' ghost debug informations,
+			-- this is to deal with the not generated debug clauses
+			-- but displayed in eStudio during debugging
+		require
+			a_nb_positive_or_zero: a_nb >= 0
+		do
+		end
+
 	put_silent_debug_info (location: TOKEN_LOCATION) is
 			-- Generate debug information for `location' to enable to
 			-- find corresponding Eiffel class file in IL code.

@@ -164,7 +164,6 @@ feature {EV_ANY_I} -- implementation
 		-- Responsible for interaction with native graphics toolkit.
 
 invariant
-	filter_not_void: filter /= Void
 	filters_not_void: filters /= Void
 	start_directory_not_void: start_directory /= Void
 	file_name_not_void_implies_path_and_title_not_void: file_name /= Void

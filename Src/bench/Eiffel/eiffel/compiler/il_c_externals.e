@@ -41,6 +41,13 @@ inherit
 			copy, is_equal
 		end
 	
+	SHARED_INCLUDE
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 create
 	make
 
@@ -113,7 +120,9 @@ feature -- Code generation
 			header_buffer.end_c_specific_code
 
 			create header_file.make_open_write (full_file_name (System.name + ".h", final_mode))
-			extern_declarations.generate_header_files (header_buffer)
+			if not Shared_include_queue.is_empty then
+				extern_declarations.generate_header_files (header_buffer)
+			end
 			header_file.put_string (header_buffer)
 			header_file.close
 

@@ -276,20 +276,31 @@ feature -- Element change
 		end
 
 	set_breakpoint_status (f: E_FEATURE; i: INTEGER; bp_status: INTEGER) is
-			-- set the status of the `i'-th breakpoint of `f', on the bench
-			-- side. DO NOT NOTIFY the application of the change if the application
+			-- Set  status of  `i'-th breakpoint of `f', on bench side.
+			-- DO NOT NOTIFY application of change if application
 			-- is running. 
 			-- 
-			-- bp_status =  0 <=> the breakpoint is not set,
-			-- bp_status =  1 <=> the breakpoint is set,
-			-- bp_status = -1 <=> the breakpoint is disabled
+			-- Possible value of `bp_status' are taken from DEBUG_INFO class:
+			-- bp_status =  Breakpoint_not_set <=> the breakpoint is not set,
+			-- bp_status =  Breakpoint_set, Breakpoint_condition_set <=> the breakpoint is set,
+			-- bp_status =  Breakpoint_disabled, Breakpoint_condition_disabled <=> the breakpoint is disabled
 		do
 			inspect bp_status
-			when 0 then
+			when
+				feature {DEBUG_INFO}.breakpoint_not_set
+			then
 				debug_info.remove_breakpoint (f, i)
-			when 1 then
+
+			when
+				feature {DEBUG_INFO}.Breakpoint_set,
+				feature {DEBUG_INFO}.Breakpoint_condition_set
+			then
 				debug_info.enable_breakpoint (f, i)
-			when -1 then
+
+			when
+				feature {DEBUG_INFO}.Breakpoint_disabled,
+				feature {DEBUG_INFO}.Breakpoint_condition_disabled
+			then
 				debug_info.disable_breakpoint (f, i)
 			end
 		end
@@ -343,13 +354,14 @@ feature -- Access
 		end
 
 	breakpoint_status (f: E_FEATURE; i: INTEGER): INTEGER is
-			-- Returns 0 if the breakpoint is not set,
-			--         1 if the breakpoint is set and enabled,
-			--		   2 if the breakpoint is enabled and has a condition,
-			--         -1 if the breakpoint is set but disabled,
-			--		   -2 if the breakpoint is disabled and has a condition
+			-- Returns value from DEBUG_INFO class:
+			--	`breakpoint_not_set' if breakpoint is not set,
+			--  `breakpoint_set' if breakpoint is set,
+			--	`breakpoint_condition_set' if breakpoint is enabled and has a condition,
+			--  `breakpoint_disabled' if breakpoint is set but disabled,
+			--	`breakpoint_condition_disabled' if breakpoint is disabled and has a condition
 		do
-			Result := debug_info.breakpoint_status(f, i)
+			Result := debug_info.breakpoint_status (f, i)
 		end
 
 	has_breakpoint_set (f: E_FEATURE): BOOLEAN is

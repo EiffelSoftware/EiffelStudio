@@ -18,7 +18,7 @@ ld='ld'
 mt_prefix='mt'
 
 # FIXME: Manu 02/14/2002: fix threads flag
-mtccflags='-pipe'
+mtccflags='-pipe -fno-common'
 mtlibs=''
 mtsharedlibs=''
 
@@ -31,7 +31,7 @@ create_test='touch finished'
 
 libs=''
 sharedlibs=''
-ccflags='-pipe'
+ccflags='-pipe -fno-common'
 sharedccflags='-fPIC'
 
 suffix='.a'
@@ -141,9 +141,9 @@ cc='gcc'
 gccversion='Apple cpp-precomp 6.14'
 cppflags=$ccflags
 mtcppflags=$mtccflags
-ldsharedflags='-dylib -undefined suppress -o'
-mtldsharedflags='-dylib -undefined suppress -o'
-sharedlink='ld'
+ldsharedflags='-dynamic -lc -lgcc -o'
+mtldsharedflags='-dynamic -lc -lgcc -o'
+sharedlink='libtool'
 ldflags=''
 lkflags=''
 cf_by='manus'

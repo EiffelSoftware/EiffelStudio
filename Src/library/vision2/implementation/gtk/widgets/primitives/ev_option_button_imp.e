@@ -134,7 +134,6 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 		local
 			list: ARRAYED_LIST [EV_MENU_ITEM_IMP]
 		do
---			{EV_BUTTON_IMP} Precursor (color)
 			c_gtk_option_button_set_fg_color (widget, color.red, color.green, color.blue)
 
 			-- Color for the menu.
@@ -163,7 +162,6 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 		local
 			list: ARRAYED_LIST [EV_MENU_ITEM_IMP]
 		do
---			{EV_BUTTON_IMP} Precursor (color)
 			c_gtk_option_button_set_bg_color (widget, color.red, color.green, color.blue)
 
 			-- Color for the menu.
@@ -259,6 +257,11 @@ feature -- Implementation
 			-- we create a menu_item with a text set to `text'
 			-- and we append it to the menu (see `add_item').
 
+	set_menu_title_widget (p: POINTER) is
+			-- Assign `p' to `menu_title_widget'.
+		do
+			menu_title_widget := p
+		end
 end -- class EV_OPTION_BUTTON_IMP
 
 --|----------------------------------------------------------------

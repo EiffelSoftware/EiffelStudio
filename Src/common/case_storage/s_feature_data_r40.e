@@ -13,7 +13,8 @@ inherit
 		redefine
 			body, set_body, 
 			is_reversed_engineered, set_reversed_engineered,
-			is_new_since_last_re, is_deleted_since_last_re
+			is_new_since_last_re, is_deleted_since_last_re,
+			is_once, is_constant
 		end
 
 creation
@@ -21,6 +22,12 @@ creation
 	make
 
 feature -- Properties
+
+	is_constant: BOOLEAN is
+			-- Is Current feature a constant ?
+		do
+			Result := status_handler.is_constant (status)
+		end
 
 	is_deleted_since_last_re: BOOLEAN is
 		do
@@ -32,8 +39,17 @@ feature -- Properties
 			Result := status_handler.is_new_since_last_re (status)
 		end
 
-	is_reversed_engineered: BOOLEAN
+	is_once: BOOLEAN is
+			-- Is Current feature a once?
+		do
+			Result := status_handler.is_once (status)
+		end
+
+	is_reversed_engineered: BOOLEAN is
 			-- Is Current class reversed engineered?
+		do
+			Result := status_handler.is_reversed_engineered (status)
+		end
 
 	body: S_FREE_TEXT_DATA
 			-- Body (with locals and recue) if routine or constant
@@ -50,7 +66,7 @@ feature -- Setting
 	set_reversed_engineered is
 			-- Set `is_reversed_engineered' to True.
 		do
-			is_reversed_engineered := True
+			status := status_handler.set_reversed_engineered (status)
 		ensure then
 			is_reversed_engineered: is_reversed_engineered
 		end
@@ -77,3 +93,8 @@ feature {NONE} -- Implementation
 			-- it's not reliable enough, so we use the `status_handler').
 
 end -- class S_FEATURE_DATA_R340
+
+
+
+
+

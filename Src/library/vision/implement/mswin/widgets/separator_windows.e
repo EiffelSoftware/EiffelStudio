@@ -27,7 +27,7 @@ inherit
 
 	PRIMITIVE_WINDOWS
 		redefine
-			set_foreground_color,			
+			set_foreground_color,
 			set_managed,
 			realize,
 			realized,

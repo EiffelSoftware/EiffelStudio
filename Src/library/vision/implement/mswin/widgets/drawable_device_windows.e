@@ -694,7 +694,7 @@ feature -- Implementation
 		do
 			if not filled then
 				if drawing_dc.brush /= Void then
-					drawing_dc.unselect_brush	
+					drawing_dc.unselect_brush
 				end
 				!! null_brush.make
 				drawing_dc.select_brush (null_brush)
@@ -862,7 +862,7 @@ feature {NONE} -- Implementation
 
 	fill_style: INTEGER
 			-- Style to fill figures
-	
+
 	clip_list: LINKED_LIST [POINTER]
 			-- List of clipping areas
 
@@ -880,6 +880,10 @@ feature {NONE} -- Implementation
 			nb_fracs := 4 * radius1.max(radius2) * angle2 * deg_rad_rate
 			segment_count := nb_fracs.rounded
 			angle_inc := - angle2 * deg_rad_rate / segment_count
+			loop_angle := angle1
+			if loop_angle < 180 then
+				loop_angle := - loop_angle
+			end
 			!!Result.make (1, 2 * (segment_count + 1))
 			from
 				i := 0
@@ -902,9 +906,6 @@ feature {NONE} -- Implementation
 		once
 			Result := Pi / 180
 		end
-		
-
-
 
 end -- class DRAWABLE_DEVICE_WINDOWS
  

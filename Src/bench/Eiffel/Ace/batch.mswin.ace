@@ -33,24 +33,11 @@ cluster
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
 			"table"; "CVS"; 
-		visible
-			array
-				end
-			string
-				end
 		end
 
 	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
 			"CVS"; 
-		end
-
-	all com:		"$EIFFEL_SRC\library\com"
-		exclude
-			"CVS"; 
-		visible
-			ecom_array
-				end
 		end
 
 	liman:		"$EIFFEL_SRC\Eiffel\limand"
@@ -134,25 +121,23 @@ cluster
 
 	profile_tool (interface):		"$\graphical\profile_tool"
 
+	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
+
 external
 
 	include_path:
 		"$(EIFFEL_SRC)\C\bench",
 		"$(EIFFEL_SRC)\C\platform",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
-		"$(EIFFEL_SRC)\library\com\spec\windows\include",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib"
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\C\bench\compiler.lib",
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
 		"$(EIFFEL_SRC)\C\minilzo\minilzo.obj",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
-		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
-		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\ecom.lib"
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
+		"corguids.lib"
 
 end

@@ -144,6 +144,7 @@ rt_private Signal_t ehandlr(EIF_CONTEXT register int sig)
 #endif
 
 		echsig = sig;				/* Signal's number */
+		printf ("Signal %d\n",sig);
 		xraise(EN_SIG);				/* Operating system signal */
 	}
 
@@ -247,6 +248,7 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG)
 			esigblk--;				/* Restore signal handling */
 		} else {					/* Signal not caught -- raise exception */
 			echsig = sig;			/* Signal's number */
+			printf ("Signal %d\n",sig);
 			xraise(EN_SIG);			/* Operating system signal */
 		}
 	}
@@ -399,17 +401,69 @@ rt_shared void initsig(void)
 
 	for (sig = 1; sig < NSIG; sig++) {
 #ifdef EIF_THREADS
-#if defined EIF_DFT_SIGUSR
-	  if ((sig != SIGUSR1) && (sig != SIGUSR2))	/* Used by LinuxThreads */
-#elif defined EIF_PCTHREADS
-	  if (sig != SIGVTALRM)				/* Used by PCThread implementation */
-/* #elif defined VXWORKS */
-/* 	  if (sig == 34528) */
-#elif defined EIF_DLT_SIGWAITING
-	if (sig !=SIGWAITING)	/* used by Unixware threads */
-#endif
-#endif
-		old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
+	/* In Multi-threaded mode, we do not want to call
+     * signal () on some specific signals.
+	 */
+
+	switch (sig) {
+	
+#ifdef EIF_DFLT_SIGUSR
+		/* So far, used in Linux threads */
+		case SIGUSR1:
+			break;
+
+		case SIGUSR2:
+			break;
+#endif /* EIF_DFLT_SIGUSR */
+
+#ifdef EIF_DFLT_SIGVTALARM
+		/* So far, used in PCTHREADS (obsolete, anyway) */
+		case SIGVTALRM:
+			break;
+#endif /* EIF_DFLT_SIGVTALARM */
+
+#ifdef EIF_DFLT_SIGPTRESCHED
+		/* So far, used in Posix 1003.1c threads */
+		case SIGPTRESCHED:
+			break;
+#endif /* EIF_DFLT_SIGPTRESCHED */
+
+#ifdef EIF_DFLT_SIGPTINTR
+		/* So far, used in Posix 1003.1c */
+		case SIGPTINTR:
+			break;
+#endif /* EIF_DFLT_SIGPTINTR */
+
+#ifdef EIF_DFLT_SIGRTMIN
+		/* So far, used in Posix 1003.1b */
+		case SIGRTMIN:
+			break;
+#endif /* EIF_DFLT_SIGRTMIN */
+
+#ifdef EIF_DFLT_SIGRTMAX
+		/* So far, used in Posix 1003.1b */
+		case SIGRTMAX:
+			break;
+#endif /* EIF_DFLT_SIGRTMAX */
+
+#ifdef EIF_DFTL_SIGWAITING 
+		/* So far, used in solaris threads (SunOS 5.5+ and Unixware 2.0)
+		 * On solaris 2.4, it is not used, which is a bug of the thread lib 
+		 */
+		case SIGWAITING:
+			break;
+#endif /* EIF_DFLT_SIGWAITING */
+
+/*#ifdef VXWORKS
+		case 34528:
+			break;
+*/
+		default:
+			old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
+	}			
+#else
+			old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
+#endif	/* EIF_THREADS */
 		if (old == SIG_IGN)
 			sig_ign[sig] = 1;			/* Signal was ignored by default */
 		else

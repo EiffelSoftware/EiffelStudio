@@ -43,7 +43,8 @@ inherit
 		rename
 			make as arrayed_list_make
 		redefine
-			default_create
+			default_create,
+			set_count
 		end
 
 create
@@ -55,7 +56,7 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Begin in `Normal_state'.
 		do
-			arrayed_list_make (1)
+			arrayed_list_make (0)
 			create is_aborted_stack.make
 			create call_buffer.make
 			state := Normal_state

@@ -23,11 +23,17 @@ feature {NONE} -- Initialization
 
 	make (a_tool: EB_DEVELOPMENT_WINDOW; m: EB_CONTEXT_TOOL) is
 			-- Create a new output tool.
+		local
+			f: EV_FRAME
 		do
+			create f
+			f.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			create text_area.make (a_tool)
 			text_area.drop_actions.extend (~drop_class)
 			text_area.drop_actions.extend (~drop_feature)
 			text_area.drop_actions.extend (~drop_cluster)
+			f.extend (text_area.widget)
+			widget := f
 			graphical_output_manager.extend (Current)
 			owner := a_tool
 			
@@ -118,11 +124,8 @@ feature -- Status setting
 
 feature -- Access
 
-	widget: EV_WIDGET is
+	widget: EV_WIDGET
 			-- Graphical representation for Current.
-		do
-			Result := text_area.widget
-		end
 
 	parent_notebook: EV_NOTEBOOK
 			-- Needed to pop up when corresponding menus are selected.

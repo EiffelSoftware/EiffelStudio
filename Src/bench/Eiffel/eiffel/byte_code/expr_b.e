@@ -87,7 +87,7 @@ feature -- Il code generation
 			
 				-- Call `set_item' from the _REF class
 			ref_class := basic_i.associated_reference.associated_class
-			feat := ref_class.feature_table.item_id (predefined_names.set_item_name_id)
+			feat := ref_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id)
 			
 			il_generator.generate_local (local_number)
 			il_generator.generate_feature_access (basic_i.associated_reference.type,
@@ -215,12 +215,4 @@ feature -- Inlining
 			Result := Current
 		end
 
-feature {NONE} -- Once
-
-	predefined_names: PREDEFINED_NAMES is
-			-- Fast access to predefined names.
-		once
-			create Result
-		end
-		
 end

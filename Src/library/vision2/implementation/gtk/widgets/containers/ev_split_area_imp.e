@@ -18,14 +18,74 @@ inherit
 			add_child_ok
 		end
 
+feature -- Status report
+
+	position: INTEGER is
+			-- The position of the split in pixels.
+		do
+			Result := c_gtk_paned_child1_size (widget)
+		end
+
+	minimum_position: INTEGER is
+			-- Minimum position the splitter can have.
+		do
+			check
+				To_Be_implemented: False
+			end
+		end
+
+	maximum_position: INTEGER is
+			-- Maximum position the splitter can have.
+		do
+			check
+				To_Be_implemented: False
+			end
+		end
+
+	is_first_area_shrinkable: BOOLEAN is
+			-- Can the first area be shrunk to a size smaller than the
+			-- child it contains? True if it does not contain any child.
+		do
+			check
+				To_Be_implemented: False
+			end
+		end
+
+	is_second_area_shrinkable: BOOLEAN is
+			-- Can the second area be shrunk to a size smaller than the
+			-- child it contains? True if it does not contain any child.
+		do
+			check
+				To_Be_implemented: False
+			end
+		end
+
 feature -- Status setting
 
 	set_position (value: INTEGER) is
 			-- Make `value' the new position of the splitter.
-			-- `value' is given in percentage.
+			-- `value' is given in pixel.
+			-- This function works only when the window, in which
+			-- the paned is, is shown.
+		do
+			gtk_paned_set_position (widget, value)
+		end
+
+	set_first_area_shrinkable (flag: BOOLEAN) is
+			-- Allow the split area to shrink the first area if `flag', forbid
+			-- it otherwise.
 		do
 			check
-				not_yet_implemented: False
+				To_Be_implemented: False
+			end
+		end
+
+	set_second_area_shrinkable (flag: BOOLEAN) is
+			-- Allow the split area to shrink the second area if `flag', forbid
+			-- it otherwise.
+		do
+			check
+				To_Be_implemented: False
 			end
 		end
 

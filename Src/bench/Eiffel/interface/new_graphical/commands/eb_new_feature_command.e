@@ -47,15 +47,9 @@ feature -- Basic operations
 							class_c := class_i.compiled_class
 							create test_file.make (class_i.file_name)
 							if
-								test_file.exists
-									and then
-								test_file.is_writable
-									and then
+								test_file.exists and then test_file.is_writable and then
 								(
-									class_c = Void
-										or else
-									class_i.cluster = Void
-										or else
+									class_c = Void or else class_i.cluster = Void or else
 									not (class_i.cluster.is_library or class_c.is_precompiled)
 								)
 							then

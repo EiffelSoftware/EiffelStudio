@@ -13,7 +13,8 @@ class
 inherit
 	GB_EV_ANY
 		undefine
-			attribute_editor
+			attribute_editor,
+			set_up_user_events
 		end
 		
 	EV_FRAME_CONSTANTS

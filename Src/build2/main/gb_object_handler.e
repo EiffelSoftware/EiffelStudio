@@ -1180,7 +1180,7 @@ feature {GB_TITLED_WINDOW_OBJECT, GB_XML_OBJECT_BUILDER} -- Implementation
 			objects.extend (an_object)
 		end
 		
-feature {GB_COMMAND_DELETE_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
+feature {GB_COMMAND_DELETE_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementation
 
 	update_object_editors_for_delete (deleted_object, parent_object: GB_OBJECT) is
 			-- For every item in `editors', update to reflect removal of `deleted_object' from `parent_object'.

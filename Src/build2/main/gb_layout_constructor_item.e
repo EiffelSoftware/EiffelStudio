@@ -126,7 +126,7 @@ feature {GB_COMMAND_CHANGE_TYPE} -- Implementation
 			set_pixmap (pixmaps.pixmap_by_name (object.type.as_lower))
 		end
 		
-feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_OBJECT} -- Implementation
+feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementation
 
 	unparent is
 			-- Remove `Current' from its `parent' if any.

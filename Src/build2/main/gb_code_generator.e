@@ -259,7 +259,7 @@ feature {NONE} -- Implementation
 					
 					-- Store `class_text'.				
 				window_file_name := clone (generated_path)
-				window_file_name.extend (system_status.current_project_settings.main_window_class_name + class_implementation_extension.as_lower + eiffel_class_extension)
+				window_file_name.extend (system_status.current_project_settings.main_window_class_name.as_lower + class_implementation_extension.as_lower + eiffel_class_extension)
 				create window_output_file.make_open_write (window_file_name)
 				window_output_file.start
 				window_output_file.putstring (class_text)

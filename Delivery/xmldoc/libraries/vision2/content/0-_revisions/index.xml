@@ -40,6 +40,9 @@
 					<item>
 						<bold>EV_DIALOG_I</bold> - Fixed consistency of `default_push_button', before we could get some assertions violations from the implementation classes.
 					</item>
+					<item>
+						<bold>EV_ANY</bold> - Added protection for multiple calls of `destroy' which previously caused crashes in some situations, now `destroy' calls a `safe_destroy' intermediary which checks if the implementation has not already been destroyed
+					</item>
 				</list>
 			</item>
 			<item>
@@ -90,6 +93,12 @@
 			</item>
 			<item>
 				<bold>Gtk</bold>
+				<list ordered="false">
+					<item>
+						<bold>EV_FONT</bold> Fixed memory leaks in font lookup
+					</item>
+	
+				</list>
 			</item>
 		</list>
 		<heading>

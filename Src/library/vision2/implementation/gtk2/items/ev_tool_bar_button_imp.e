@@ -172,7 +172,7 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 			-- Attach to GTK "clicked" signal.
 		do
 			create Result
-			real_signal_connect (event_widget, "clicked", agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id), Void)
+			real_signal_connect (c_object, "clicked", agent (App_implementation.gtk_marshal).new_toolbar_item_select_actions_intermediary (internal_id), Void)
 		end
 
 feature {NONE} -- Implmentation

@@ -11,7 +11,7 @@ feature -- Access
 	Db_spec: G is
 			-- Handle to actual database
 		do
-			!! Result
+			!! Result 
 		end
 
 end -- class HANDLE_SPEC

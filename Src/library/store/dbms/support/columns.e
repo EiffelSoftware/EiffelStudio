@@ -18,7 +18,6 @@ feature -- Status report
 	owner, table_owner, table_schem: STRING 
 		-- Owner id of table of name `table_name'
 
-
 	table_name: STRING
 		-- Table name
 

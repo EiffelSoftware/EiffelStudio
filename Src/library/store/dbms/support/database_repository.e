@@ -9,7 +9,7 @@ class
 inherit
 
 	EXCEPTIONS
-		rename
+		rename 
 			class_name as exceptions_class_name
 		end
 
@@ -62,59 +62,96 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	generate_class is
+	generate_class(f: FILE) is
 			-- Generate Eiffel class template according to data
 			-- representation given by `repository_name'.
+		require
+			file_exists: f /= Void and then f.exists
 		local
 			el: COLUMNS [G]
 			el_type: INTEGER
 			col_name: STRING
 			tmp_class_name: STRING
+			s,s1,s2,s3,s4: STRING
 		do
 			tmp_class_name := clone (repository_name)
 			tmp_class_name.to_upper
-			io.putstring ("class ")
-			io.putstring (tmp_class_name)
-			io.new_line
-			io.putstring ("%Nfeature%N%N")
+			Create s.make(20)
+			
+			s.append("indexing%N")
+			s.append("%Tdescription: %"Class which allows EiffelStore to retrieve/store%%%N")
+			s.append("%T      %%the content relative to a column of the table "+tmp_class_name+"%"%N%N")
+
+			s.append("class "+tmp_class_name+" %N%N")
+			s.append("%Tinherit%N%T%TANY%N%T%Tredefine%N%T%T%Tout%N%T%Tend%N%N")
+			s.append("Creation%N%T%Tmake%N%N")
+
+			s.append ("%Nfeature -- Access%N%N")
+			
+			s1 := "feature -- Settings%N%N"
+			s3 := "feature -- Initialization%N%N%Tmake is%N%T%Tdo%N"
+			s4 := "feature -- Output%N%N%Tout: STRING is%N%T%Tdo%N%T%T%TResult := %"%"%N"
 
 			from
-				table.start
+				table.start 
 			until
 				table.off
 			loop
 				el := table.item
 				col_name := clone (el.column_name)
 				col_name.to_lower
-				io.putchar ('%T')
-				io.putstring (col_name)
-				io.putstring (": ")
+				
+				s1.append("%Tset_"+col_name+"(a_"+col_name+":")
+				s.append ("%T"+col_name+":")
 				el_type := el.eiffel_type
 				if el_type = Integer_type_database then
-					io.putstring ("INTEGER")
+					s2 := "INTEGER"
+					s3.append("%T%T%T"+col_name+" := 0")
 				elseif el_type = Boolean_type_database then
-					io.putstring ("BOOLEAN")
+					s3.append("%T%T%T"+col_name+" := FALSE%N")
+					s2 := "BOOLEAN"
 				elseif el_type = Real_type_database then
-					io.putstring ("REAL")
+					s3.append("%T%T%T"+col_name+" := 0.0%N")
+					s2 := "DOUBLE"
 				elseif el_type = Float_type_database then
-					io.putstring ("DOUBLE")
+					s3.append("%T%T%T"+col_name+" := 0.0%N")
+					s2 := "DOUBLE"
 				elseif el_type = String_type_database or el_type = Character_type_database then
 					if el.data_length = 1 then
-						io.putstring ("CHARACTER")
+						s3.append("%T%T%T"+col_name+" := 'a'%N")
+						s2 := "CHARACTER"
 					else
-						io.putstring ("STRING")
+						s3.append("%T%T%T"+col_name+" := %"%"%N")
+						s2 := "STRING"
 					end
 				elseif el_type = Date_type_database then
-					io.putstring ("DATE_TIME")
+					s2 := "DATE_TIME"
+					s3.append("%T%T%TCreate "+col_name+".make_now%N")
 				else
-					io.putstring ("Unknown Type")
+					s2 :=  "ANY"
 				end
-				io.putstring ("%N%N")
+
+				s4.append("%T%T%TResult.append(%""+col_name+".out%%N%")%N")
+
+				s1.append(s2+") is%N%T%T%T--Set the value of "+col_name)
+				s1.append("%N%T%Trequire")
+				s1.append("%N%T%T%Tvalue_exists: a_"+col_name+" /= Void")
+				s1.append("%N%T%Tdo")
+				s1.append("%N%T%T%T"+col_name+" := a_"+col_name)
+				s1.append("%N%T%Tensure")
+				s1.append("%N%T%T%Tset: a_"+col_name+" = "+col_name)
+				s1.append("%N%T%Tend%N%N")
+				s.append (s2+"%N%T%T-- Auto-generated%N%N")
 				table.forth
 			end
-			io.putstring ("end -- class ")
-			io.putstring (tmp_class_name)
-			io.new_line
+			s3.append("%T%Tend%N%N")
+			s4.append("%T%Tend%N%N")
+
+			s.append(s3)
+			s.append(s1)
+			s.append(s4)
+			s.append ("end -- class "+tmp_class_name+"%N")
+			f.put_string(s)
 		end
 
 	execute is
@@ -354,6 +391,25 @@ feature -- Status report
 		do
 			Result := not table.empty
 		end
+
+	column_number: INTEGER is
+			-- Column Number
+		do
+			Result := table.count
+		ensure
+			Result >0
+		end
+
+	column_i_th(i: INTEGER): COLUMNS[DATABASE] is
+			-- Column corresponding to indice 'i'
+		require
+			indice_valid: i>=1 and i<=column_number
+		do
+			Result := table.i_th(i)
+		ensure
+			Result /= Void
+		end
+
 
 feature {NONE} -- Status report
 

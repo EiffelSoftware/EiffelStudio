@@ -2490,7 +2490,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_short (SAFEARRAY * a_safearray)
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -2507,7 +2507,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_short (SAFEARRAY * a_safearray)
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -2569,16 +2569,16 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_short (SAFEARRAY * a_safearray)
         eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     if (ccom_element_number (dim_count, element_counts) > 0)
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
         hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
         if (hr != S_OK)
@@ -2588,7 +2588,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_short (SAFEARRAY * a_safearray)
         (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_INTEGER,
             EIF_REFERENCE))put)(eif_access (result), (EIF_INTEGER)sa_element, eif_access (eif_index));
 
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -2601,7 +2601,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_short (SAFEARRAY * a_safearray)
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -2736,7 +2736,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_long (SAFEARRAY * a_safearray)
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -2871,7 +2870,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_int64 (SAFEARRAY * a_safearray)
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -3326,7 +3324,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -3343,7 +3341,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -3410,16 +3408,16 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)
         eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     if (ccom_element_number (dim_count, element_counts) > 0)
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
         hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
         if (hr != S_OK)
@@ -3429,7 +3427,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)
         (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REAL,
             EIF_REFERENCE))put)(eif_access (result), (EIF_REAL)sa_element, eif_access (eif_index));
 
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -3442,7 +3440,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_float (SAFEARRAY * a_safearray)
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -3465,7 +3463,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_double (SAFEARRAY * a_safearray
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -3482,7 +3480,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_double (SAFEARRAY * a_safearray
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -3548,16 +3546,16 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_double (SAFEARRAY * a_safearray
         eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     if (ccom_element_number (dim_count, element_counts) > 0)
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
         hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
         if (hr != S_OK)
@@ -3567,7 +3565,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_double (SAFEARRAY * a_safearray
         (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_DOUBLE,
             EIF_REFERENCE))put)(eif_access (result), (EIF_DOUBLE)sa_element, eif_access (eif_index));
 
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -3580,7 +3578,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_double (SAFEARRAY * a_safearray
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -3603,7 +3601,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_char (SAFEARRAY * a_safearray)
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -3620,7 +3618,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_char (SAFEARRAY * a_safearray)
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -3688,16 +3686,16 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_char (SAFEARRAY * a_safearray)
         eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     if (ccom_element_number (dim_count, element_counts) > 0)
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
         hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
         if (hr != S_OK)
@@ -3708,7 +3706,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_char (SAFEARRAY * a_safearray)
         (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_CHARACTER,
             EIF_REFERENCE))put)(eif_access (result), (EIF_CHARACTER)sa_element, eif_access (eif_index));
 
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -3721,7 +3719,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_char (SAFEARRAY * a_safearray)
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -3744,7 +3742,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_boolean (SAFEARRAY * a_safearra
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -3762,7 +3760,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_boolean (SAFEARRAY * a_safearra
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -3827,16 +3825,16 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_boolean (SAFEARRAY * a_safearra
         eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     if (ccom_element_number (dim_count, element_counts) > 0)
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
         hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
         if (hr != S_OK)
@@ -3847,7 +3845,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_boolean (SAFEARRAY * a_safearra
         (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_BOOLEAN,
             EIF_REFERENCE))put)(eif_access (result), eif_array_element, eif_access (eif_index));
 
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -3860,7 +3858,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_boolean (SAFEARRAY * a_safearra
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -3883,7 +3881,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -3901,7 +3899,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -3967,7 +3965,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
         eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     if (-1 == currency_id)
       currency_id = eif_type_id ("ECOM_CURRENCY");
@@ -3977,10 +3975,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
 
         eif_array_element = eif_create (currency_id);
@@ -4000,7 +3998,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
 
         eif_wean (eif_array_element);
 
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -4013,7 +4011,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_currency (SAFEARRAY * a_safearr
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -4036,7 +4034,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_date (SAFEARRAY * a_safearray)
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -4053,7 +4051,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_date (SAFEARRAY * a_safearray)
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -4118,17 +4116,17 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_date (SAFEARRAY * a_safearray)
         (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     EIF_OBJECT date_object = 0;
     if (ccom_element_number (dim_count, element_counts) > 0)
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
         hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
         if (hr != S_OK)
@@ -4143,7 +4141,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_date (SAFEARRAY * a_safearray)
 
         eif_wean (date_object);
 
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -4156,7 +4154,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_date (SAFEARRAY * a_safearray)
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -4179,7 +4177,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -4197,7 +4195,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -4263,7 +4261,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
         (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     if (-1 == decimal_id)
       decimal_id = eif_type_id ("ECOM_DECIMAL");
@@ -4273,10 +4271,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
 
         eif_array_element = eif_create (decimal_id);
@@ -4297,7 +4295,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
 
         eif_wean (eif_array_element);
 
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -4310,7 +4308,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_decimal (SAFEARRAY * a_safearra
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -4333,7 +4331,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -4350,7 +4348,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -4416,7 +4414,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
         (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     EIF_OBJECT string_object = 0;
 
@@ -4424,10 +4422,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
         hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
         if (hr != S_OK)
@@ -4442,7 +4440,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
 
         eif_wean (string_object);
 
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -4450,7 +4448,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_bstr (SAFEARRAY * a_safearray)
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -4473,7 +4471,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -4491,7 +4489,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -4557,7 +4555,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
         (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     if (-1 == variant_id)
       variant_id = eif_type_id ("ECOM_VARIANT");
@@ -4567,10 +4565,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
 
         eif_array_element = eif_create (variant_id);
@@ -4590,7 +4588,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
 
         eif_wean (eif_array_element);
 
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -4603,7 +4601,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_variant (SAFEARRAY * a_safearra
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -4626,7 +4624,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -4643,7 +4641,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -4709,7 +4707,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
         (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     EIF_OBJECT hresult_object = 0;
 
@@ -4717,10 +4715,10 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
         hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
         if (hr != S_OK)
@@ -4733,7 +4731,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
             (eif_access (result), eif_access (hresult_object), eif_access (eif_index));
 
         eif_wean (hresult_object);
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -4746,7 +4744,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_hresult (SAFEARRAY * a_safearra
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -4769,7 +4767,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -4786,7 +4784,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -4852,17 +4850,17 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
         (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     EIF_OBJECT unknown_object = 0;
     if (ccom_element_number (dim_count, element_counts) > 0)
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
         hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
         if (hr != S_OK)
@@ -4879,7 +4877,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
         if (sa_element != NULL)
           sa_element->AddRef();
 
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -4887,7 +4885,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_unknown (SAFEARRAY * a_safearra
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);
@@ -4910,7 +4908,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
   EIF_INTEGER * lower_indices = 0;
   EIF_INTEGER * upper_indices = 0;
   EIF_INTEGER * element_counts = 0;
-  EIF_INTEGER * index = 0;
+  EIF_INTEGER * array_index = 0;
   long * sa_indices = 0;
   int i = 0;
   long tmp_long = 0;
@@ -4927,7 +4925,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
     lower_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     upper_indices = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     element_counts = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
-    index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
+    array_index = (EIF_INTEGER *)calloc (dim_count, sizeof (EIF_INTEGER));
     sa_indices = (long *)calloc (dim_count, sizeof (long));
 
     for (i = 0; i < dim_count; i++)
@@ -4993,17 +4991,17 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
         (eif_access (result), dim_count,  eif_access (eif_lower_indices), eif_access (eif_element_counts));
 
     // Initialize `result' to contents of SAFEARRAY
-    memcpy (index, lower_indices, dim_count * sizeof(EIF_INTEGER));
+    memcpy (array_index, lower_indices, dim_count * sizeof(EIF_INTEGER));
 
     EIF_OBJECT dispatch_object = 0;
     if (ccom_element_number (dim_count, element_counts) > 0)
     {
       do
       {
-        eif_make_from_c (eif_access (eif_index), index, dim_count, EIF_INTEGER);
+        eif_make_from_c (eif_access (eif_index), array_index, dim_count, EIF_INTEGER);
         for (i = 0; i < dim_count; i++)
         {
-          sa_indices[i] = index [dim_count - 1 - i];
+          sa_indices[i] = array_index [dim_count - 1 - i];
         }
         hr = SafeArrayGetElement (a_safearray, sa_indices, &sa_element);
         if (hr != S_OK)
@@ -5017,7 +5015,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
         if (sa_element != NULL)
           sa_element->AddRef();
 
-      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, index));
+      } while (ccom_safearray_next_index (dim_count, lower_indices, upper_indices, array_index));
     }
 
     // free memory
@@ -5030,7 +5028,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_safearray_dispatch (SAFEARRAY * a_safearr
     free (lower_indices);
     free (element_counts);
     free (upper_indices);
-    free (index);
+    free (array_index);
     free (sa_indices);
 
     eif_wean (eif_lower_indices);

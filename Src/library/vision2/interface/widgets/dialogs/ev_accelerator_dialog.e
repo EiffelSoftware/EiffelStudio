@@ -9,7 +9,7 @@ class
 	EV_ACCELERATOR_SELECTION_DIALOG
 
 inherit
-	EV_STANDARD_DIALOG
+	EV_SELECTION_DIALOG
 		redefine
 			implementation
 		end
@@ -25,13 +25,13 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create a message dialog with `par' as parent.
 		do
-			create implementation.make (par)
+			create {EV_ACCELERATOR_SELECTION_DIALOG_IMP}implementation.make (par)
 		end
 
 	make_with_text (par: EV_CONTAINER; txt: STRING) is
 			-- Create a message dialog with `par' as parent.
 		do
-			create implementation.make_with_text (par, txt)
+			create {EV_ACCELERATOR_SELECTION_DIALOG_IMP}implementation.make_with_text (par, txt)
 		end
 
 	make_with_actions (par: EV_CONTAINER; actions: LINKED_LIST [STRING]) is
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			valid_actions: actions /= Void
 			actions_not_empty: not actions.empty
 		do
-			create implementation.make_with_actions (par, actions)
+			create {EV_ACCELERATOR_SELECTION_DIALOG_IMP}implementation.make_with_actions (par, actions)
 		end
 
 	make_with_all (par: EV_CONTAINER; txt: STRING; actions: LINKED_LIST [STRING]) is
@@ -54,7 +54,7 @@ feature {NONE} -- Initialization
 			valid_actions: actions /= Void
 			actions_not_empty: not actions.empty
 		do
-			create implementation.make_with_all (par, txt, actions)
+			create {EV_ACCELERATOR_SELECTION_DIALOG_IMP}implementation.make_with_all (par, txt, actions)
 		end
 
 feature -- Access

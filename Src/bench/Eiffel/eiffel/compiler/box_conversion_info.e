@@ -13,18 +13,6 @@ inherit
 
 create
 	make
-	
-feature {NONE} -- Initialization
-
-	make (a_target_type: TYPE_A) is
-			-- New instance of BOX_CONVERSION_INFO which will box to `a_target_type' instance
-		require
-			a_target_type_not_void: a_target_type /= Void
-		do
-			target_type := a_target_type
-		ensure
-			target_type_set: target_type = a_target_type
-		end
 		
 feature -- Byte code generation
 

@@ -156,8 +156,7 @@ feature {NONE} -- Implementation
 				-- Initialize the project menu.
 			create project_menu.make_with_text (Gb_project_menu_text)
 			project_menu.extend (command_handler.project_settings_command.new_menu_item)
-			create project_menu_build.make_with_text (Gb_project_menu_build_text)
-			project_menu.extend (project_menu_build)
+			project_menu.extend (command_handler.generation_command.new_menu_item)		
 			
 				-- Initialize the help menu.
 			create help_menu.make_with_text (Gb_help_menu_text)
@@ -243,8 +242,7 @@ feature {NONE} -- Implementation
 			Result.extend (command_handler.redo_command.new_toolbar_item (True, False))
 			create separator
 			Result.extend (separator)
-			create generation_button
-			Result.extend (generation_button)
+			Result.extend (command_handler.generation_command.new_toolbar_item (True, False))		
 			create separator
 			Result.extend (separator)
 			Result.extend (command_handler.project_settings_command.new_toolbar_item (True, False))

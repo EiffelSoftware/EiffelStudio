@@ -157,13 +157,11 @@ feature {NONE} -- Implementation
 			-- Add `v' to container.
 		local
 			imp: EV_LIST_ITEM_IMP
-			s: ANY
 		do	
 			imp ?= v.implementation
-			s := imp.text.to_c
 			C.gtk_combo_set_item_string (c_object,
 				imp.c_object,
-				$s
+				eiffel_to_c (imp.text)
 			)
 			C.gtk_container_add (list_widget, imp.c_object)
 			imp.set_parent_imp (Current)
@@ -174,7 +172,7 @@ feature {NONE} -- Implementation
 		local
 			imp: EV_LIST_ITEM_IMP
 		do
-			imp ?= interface.i_th (a_position).implementation
+			imp ?= i_th (a_position).implementation
 			Precursor (a_position)
 			imp.set_parent_imp (Void)
 			if count = 0 then
@@ -219,6 +217,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/06 22:16:26  brendel
+--| Improved implementation.
+--|
 --| Revision 1.31  2000/04/05 21:16:10  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

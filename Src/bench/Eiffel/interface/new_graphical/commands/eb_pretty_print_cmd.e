@@ -17,15 +17,16 @@ inherit
 	
 	EB_CONSTANTS
 
+	EB_SHARED_DEBUG_TOOLS	
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_tool: EB_OBJECT_TOOL) is
+	make is
 			-- Initialize `Current' and associate it with `a_tool'.
 		do
-			tool := a_tool
 			create opened_dialogs.make (5)
 		end
 
@@ -80,7 +81,7 @@ feature -- Status report
 	associated_window: EV_WINDOW is
 			-- Window to which the child dialogs will be modeless to.
 		do
-			Result := tool.debugger_manager.debugging_window.window
+			Result := debugger_manager.debugging_window.window
 		end
 
 feature {EB_PRETTY_PRINT_DIALOG} -- Status report
@@ -138,11 +139,6 @@ feature {EB_PRETTY_PRINT_DIALOG} -- Dialog
 		ensure
 			is_no_longer_known: not opened_dialogs.has (d)
 		end
-
-feature {EB_PRETTY_PRINT_DIALOG} -- Implementation
-
-	tool: EB_OBJECT_TOOL
-			-- Object tool `Current' is linked with.
 
 feature {NONE} -- Implementation
 

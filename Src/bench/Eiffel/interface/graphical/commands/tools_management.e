@@ -84,13 +84,13 @@ feature {NONE} -- Execution
 				if Preference_tool /= Void then
 					Preference_tool.close
 				end
-				if Dynamic_lib_tool /= Void then
+				if is_dynamic_lib_tool_created then
 					Dynamic_lib_tool.close
 				end
 			when Raise_all_tools_action then
 				window_manager.raise_all_editors
 				if is_system_tool_created then 
-					System_tool.raise
+					System_tool.force_raise
 				end
 				if Profile_tool /= Void then
 					Profile_tool.raise
@@ -98,8 +98,8 @@ feature {NONE} -- Execution
 				if Preference_tool /= Void then
 					Preference_tool.raise
 				end
-				if Dynamic_lib_tool /= Void then
-					Dynamic_lib_tool.raise
+				if is_dynamic_lib_tool_created then
+					Dynamic_lib_tool.force_raise
 				end
 			end
 		end

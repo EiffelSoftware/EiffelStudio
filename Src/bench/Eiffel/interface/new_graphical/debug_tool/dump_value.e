@@ -505,7 +505,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			count_attribute: DEBUG_VALUE [INTEGER]
 			l_count: INTEGER
 			sc: CLASS_C
-			l_conform_to_string: BOOLEAN
+			l_conform_to_string, done: BOOLEAN
 			l_area_name, l_count_name: STRING
 		do
 			sc := Eiffel_system.string_class.compiled_class
@@ -527,29 +527,35 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					l_attributes_cursor := l_attributes.new_cursor
 					l_attributes_cursor.start
 				until
-					l_attributes_cursor.after or (area_attribute /= Void and count_attribute /= Void)
+					l_attributes_cursor.after or done
 				loop
 					l_attributes_item := l_attributes_cursor.item
 					cv_spec ?= l_attributes_item
-					if area_attribute = Void and cv_spec /= Void and then cv_spec.name.is_equal (l_area_name) then
+					if
+						(area_attribute = Void and cv_spec /= Void) and then
+						cv_spec.name.is_equal (l_area_name)
+					then
 						area_attribute := cv_spec
+						done := count_attribute /= Void
 					elseif count_attribute = Void and cv_spec = Void then
 						int_value ?= l_attributes_item
 						if int_value /= Void and then int_value.name.is_equal (l_count_name) then
 							count_attribute := int_value
+							done := area_attribute /= Void
 						end
 					end
 					l_attributes_cursor.forth
 				end
-					--| At the point `area' and `count' from STRING should have been found in
-					--| STRING object.
+					--| At the point `count' from STRING should have been found in
+					--| STRING object. `area' maybe Void, thus `area_attribute' may not be found.
 				check
 					count_attribute_found: count_attribute /= Void
-					area_attribute_found: area_attribute /= Void
 				end
 				
 				l_count := count_attribute.value
-				Result := area_attribute.truncated_raw_string_value (l_count)
+				if area_attribute /= Void then
+					Result := area_attribute.truncated_raw_string_value (l_count)
+				end
 				
 				if Result /= Void then
 						--| We now have retrieved the full `area' of STRING object. Let's check

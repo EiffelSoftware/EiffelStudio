@@ -56,9 +56,7 @@ feature -- C code generation
 				right.print_register;
 				buffer.putchar (')');
 			else
-				left.print_register;
-				generate_operator;
-				right.print_register;
+				Precursor {NUM_BINARY_B}
 			end;
 		end;
 

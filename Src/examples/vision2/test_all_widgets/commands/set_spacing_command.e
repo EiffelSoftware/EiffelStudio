@@ -15,7 +15,7 @@ inherit
 
 feature
 
-	execute (argument: EV_ARGUMENT2[EV_BOX, EV_TEXT_FIELD]) is
+	execute (argument: EV_ARGUMENT2[EV_BOX, EV_TEXT_FIELD]; data: EV_EVENT_DATA) is
 		do
 			argument.first.set_spacing (argument.second.text.to_integer)
 		end

@@ -15,9 +15,9 @@ inherit
 
 feature
 
-	execute (argument: EV_ARGUMENT2[EV_BOX, EV_TOGGLE_BUTTON]) is
+	execute (argument: EV_ARGUMENT2[EV_BOX, EV_TOGGLE_BUTTON]; data: EV_EVENT_DATA) is
 		do
-			argument.first.set_homogeneous (argument.second.pressed)
+			argument.first.set_homogeneous (argument.second.state)
 		end
 
 end

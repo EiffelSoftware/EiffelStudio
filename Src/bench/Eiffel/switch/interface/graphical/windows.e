@@ -9,24 +9,24 @@ class WINDOWS
 
 feature {NONE}
 
-	project_tool: PROJECT_W is
+	Project_tool: PROJECT_W is
 			-- Main and unique control window
 		once
 			!!Result
 		end;
 
-	focus_label: FOCUS_LABEL_I is
+	Focus_label: FOCUS_LABEL_I is
 			-- Focus label
 		once
 			!FOCUS_LABEL! Result.initialize (Project_tool)
 		end;
 
-	transporter: TRANSPORTER is
+	Transporter: TRANSPORTER is
 		once
 			!! Result.make (project_tool)
 		end;
 
-	system_tool: SYSTEM_W is
+	System_tool: SYSTEM_W is
 			-- Unique assembly tool
 		once
 			!! Result.make
@@ -129,33 +129,34 @@ feature {NONE}
 			end;
 		end;
 
-	debug_window: TEXT_WINDOW is
+	Debug_window: TEXT_WINDOW is
 			-- Debug window
 		once
 			Result := bench_error_window
 		end;
 
-	explain_window: EXPLAIN_W is
-			-- Explanation window
-		local
-			ts: EB_TOP_SHELL
-		once
-			ts.make (project_tool.screen);
-			!! Result.make_shell (ts);
-			ts.set_title (Result.tool_name);
-			ts.raise
-		end;
-
-	window_manager: WINDOW_MGR is
+	Window_manager: WINDOW_MGR is
 			-- Window manager for ebench windows
 		once
-			!! Result.make (project_tool.screen, 2);
+			!! Result.make (project_tool.screen);
 		end;
 
-	argument_window: ARGUMENT_W is
+	Argument_window: ARGUMENT_W is
 			-- General argument window.
 		once
 			!! Result.make_plain
+		end;
+
+	Preference_tool: EB_PREFERENCE_TOOL is
+			-- The preference tool
+		do
+			Result := preference_tool_cell.item
+		end;
+
+	Profile_tool: PROFILE_TOOL is
+			-- The profile tool
+		do
+			Result := profile_tool_cell.item
 		end;
 
 feature {NONE} -- Implementation
@@ -199,31 +200,43 @@ feature {NONE} -- Implementation
 			!! Result
 		end;
 
+	preference_tool_cell: CELL [EB_PREFERENCE_TOOL] is
+			-- Cell for the preference tool
+		once
+			!! Result.put (Void)
+		end;
+
+	profile_tool_cell: CELL [PROFILE_TOOL] is
+			-- Cell for the profile tool
+		once
+			!! Result.put (Void)
+		end;
+
 feature {NONE} -- Implementation
 
 	init_windowing is
 			-- Initialize the windowing environment.
 		local
-			new_resources: RESOURCES;
-            display_name: STRING;
+			new_resources: EB_RESOURCES;
+			display_name: STRING;
 			exc: EXCEPTIONS;
 			exec_env: EXECUTION_ENVIRONMENT;
 			eb_display: SCREEN
 		do
-            !! eb_display.make ("");
-            if not eb_display.is_valid then
-                io.error.putstring ("Cannot open display %"");
+			!! eb_display.make ("");
+			if not eb_display.is_valid then
+				io.error.putstring ("Cannot open display %"");
 				!! exec_env;
-                display_name := exec_env.get ("DISPLAY");
-                if display_name /= Void then
-                    io.error.putstring (display_name);
-                end;
-                io.error.putstring ("%"%N%
-                    %Check that $DISPLAY is properly set and that you are%N%
-                    %authorized to connect to the corresponding server%N");
+				display_name := exec_env.get ("DISPLAY");
+				if display_name /= Void then
+					io.error.putstring (display_name);
+				end;
+				io.error.putstring ("%"%N%
+					%Check that $DISPLAY is properly set and that you are%N%
+					%authorized to connect to the corresponding server%N");
 				!! exc;
-                exc.raise ("Invalid display");
-            end;
+				exc.raise ("Invalid display");
+			end;
 				--| First we put bench mode, for
 				--| `popup_file_selection' uses 
 				--| `error_window'.

@@ -126,8 +126,8 @@ feature {GB_OBJECT, GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 		deferred
 		end
 		
-	rebuild_associated_editors (an_object: EV_ANY) is
-			-- For all editors referencing `vision2_object', rebuild any associated object editors.
+	rebuild_associated_editors (object_id: INTEGER) is
+			-- For all editors referencing object with id `object_id', rebuild any associated object editors.
 		deferred
 		end
 		

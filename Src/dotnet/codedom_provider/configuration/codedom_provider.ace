@@ -121,23 +121,17 @@ assembly
 		end
 
 	"System.Runtime.Serialization.Formatters.Soap, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"System.Runtime.Serialization.Formatters.Soap","1.0.5000.0","neutral","b03f5f7f11d50a3a"
-		prefix
-			"SYSTEM_RUNTIME_SERIALIZATION_FORMATTERS_SOAP_"
-		end
 
 	"Accessibility, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"Accessibility","1.0.5000.0","neutral","b03f5f7f11d50a3a"
-		prefix
-			"ACCESSIBILITY_"
-		end
 
 	"System.Drawing, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a":	"System.Drawing","1.0.5000.0","neutral","b03f5f7f11d50a3a"
 		prefix
-			"SYSTEM_DRAWING_"
+			"DRAWING_"
 		end
 
 	"System.Windows.Forms, Version=1.0.5000.0, Culture=neutral, PublicKeyToken=b77a5c561934e089":	"System.Windows.Forms","1.0.5000.0","neutral","b77a5c561934e089"
 		prefix
-			"SYSTEM_WINDOWS_FORMS_"
+			"WINFORMS_"
 		end
 
 

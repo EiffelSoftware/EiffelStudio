@@ -14,7 +14,7 @@ function write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_n
 }
 
 function write_envision_compiling_instruction (path_eifp_file, eifp_name) {
-	document.write ("<p>Click on <a href=" + path_eifp_file + eifp_name + ">this link</a>, and the project going open and compile in Visual Studio. After the compilation, just run the project (Debug -> run).</p>");
+	document.write ("<p>Click on <a href=" + path_eifp_file + eifp_name + ">this link</a>, and the project will be opened and compiled in Visual Studio. After the compilation, just run the project (Debug -> run).</p>");
 	document.write ("<p>&nbsp;</p>")
 }
 

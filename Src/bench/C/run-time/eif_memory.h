@@ -12,11 +12,12 @@
 #ifndef _eif_memory_h_
 #define _eif_memory_h_
 
+#include "eif_eiffel.h"
+#include "eif_constants.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "eif_eiffel.h"
-#include "eif_constants.h"
 
 RT_LNK void mem_free(EIF_REFERENCE object);	/* Unconditionally free object */
 RT_LNK void mem_speed(void);
@@ -44,6 +45,7 @@ RT_LNK EIF_INTEGER eif_generation_object_limit (void);
 RT_LNK void eif_set_coalesce_period (EIF_INTEGER p); /* Set clsc_per */
 RT_LNK EIF_INTEGER eif_get_max_mem(void); /* Return max_mem */
 RT_LNK EIF_INTEGER eif_get_chunk_size(void); /* Return chunk_size */
+
 #ifdef __cplusplus
 }
 #endif

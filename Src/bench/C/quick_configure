@@ -1,6 +1,9 @@
 #!/bin/sh
 
-
+if [ "$EIFFEL_SRC" = "" ]
+then
+	export EIFFEL_SRC="`pwd`/.."
+fi
 
 # quick_configure generate run-times libraries for the platforms given as 
 # arguments.
@@ -26,7 +29,7 @@ run-time:
 	mtshared -> MT shared libraries
 
 platforms:
-	default -> $PLATFORM
+	default -> $ISE_PLATFORM
 	linux-glibc 
 	solaris
 	unixware
@@ -42,43 +45,6 @@ EOF
 
 }
 
-skiplex () {
-
-cd parsing/eiffel
-echo Copying pregenerated .[ch] in parsing/eiffel...
-cp parser.cwn parser.c
-cp parser.hwn  parser.h
-echo Regenerate parsing/eiffel/lexic.c with cvs [n]?
-read rep
-if [ $rep != n ]; then
-	rm -f lexic.c
-	echo Updating lexic.c...
-	cvs update lexic.c
-fi
-touch *.[ch]
-cd ../..
-
-cd parsing/lace
-
-echo Copying pregenerated .[ch] in parsing/lace...
-cp lace_y.hwn lace_y.h
-cp lace_y.cwn lace_y.c
-echo Regenerate parsing/lace/eif_l.c with cvs [n]?
-read rep
-if [ $rep != n ]; then
-	rm -f eif_l.c
-	cvs update eif_l.c
-fi
-echo Regenerate parsing/lace/lace_l.c with cvs [n]?
-read rep
-if [ $rep != n ]; then
-	rm -f lace_l.c
-	cvs update lace_l.c
-fi
-touch *.[ch]
-cd ../..
-}
-
 echo quick_configure begins...
 
 allmakefiles=yes
@@ -91,9 +57,9 @@ fi
 
 if [ $# = 0 ]; then
 	echo No arguments entered, check default...
-	echo Default platform is $PLATFORM
+	echo Default platform is $ISE_PLATFORM
 	echo Default library is all
-	platform=$PLATFORM
+	platform=$ISE_PLATFORM
 	runtimes=all
 elif [ $# = 1 ]; then
 	runtimes=all
@@ -117,17 +83,6 @@ if [ $# -gt 0 ]; then
 			usage
 			exit
 		fi
-	fi
-fi
-
-if [ $runtimes = all ]; then
-	echo Skip lex/yacc? [y]?
-	read rep
-	if [ $rep != y ]; then 
-		echo Will generate file with lex/yacc 
-	else
-		echo Skipping lex/yacc
-		skiplex
 	fi
 fi
 

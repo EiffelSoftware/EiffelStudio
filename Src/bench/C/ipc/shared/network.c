@@ -13,9 +13,9 @@
 	it is not the signal's fault.
 */
 
-#include "eif_config.h"
-#include "ipcvms.h"	/* only affects VMS */
 #include "eif_portable.h"
+#include "eif_network.h"
+#include "ipcvms.h"	/* only affects VMS */
 #include <stdio.h>
 #include <errno.h>
 #include <signal.h>
@@ -76,7 +76,7 @@ rt_public int net_recv(int cs, char *buf, int size)
 {
 	/* Read from network */
 
-	int len = 0;		/* Total amount of bytes read */
+	volatile int len = 0;		/* Total amount of bytes read */
 
 #ifdef EIF_WIN32
 	DWORD length;			/* Amount read by last system call */
@@ -108,9 +108,10 @@ rt_public int net_recv(int cs, char *buf, int size)
 	}
 
 	if (reset)
-		// There is a problem when there are 0 bytes t send
-		// Literally 0 bytes are sent and the Semaphore is set
-		// We need to release the semaphore in this case
+		/* There is a problem when there are 0 bytes t send
+		 * Literally 0 bytes are sent and the Semaphore is set
+		 * We need to release the semaphore in this case
+		 */
 		if (size == 0) {
 				/* Wait to get back in sync. */
 			if (WaitForSingleObject (readev(cs), INFINITE) != WAIT_OBJECT_0)
@@ -195,9 +196,9 @@ closed:
 }
 
 #ifdef EIF_WIN32
-rt_public int net_send(STREAM *cs, char *buf, int size)
+rt_public int net_send(STREAM *cs, char *buffer, int size)
 #else
-rt_public int net_send(int cs, char *buf, int size)
+rt_public int net_send(int cs, char *buffer, int size)
 #endif
        				/* The connected socket descriptor */
           			/* Where data are stored */
@@ -206,6 +207,7 @@ rt_public int net_send(int cs, char *buf, int size)
 	/* Write to network */
 
 	int amount;
+	char * volatile buf = buffer;
 
 #ifdef EIF_WIN32
 	DWORD error;

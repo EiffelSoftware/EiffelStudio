@@ -4,8 +4,7 @@
 gcc-=''
 include_path='$compiler_path\i586-cygwin32\include'
 lib_path='$compiler_path\ar'
-make='$compiler_path\bin\make'
-link32='$compiler_path\bin\ld'
+make='$ms_compiler_path\bin\nmake'
 #
 del='rm -f'
 output_cmd='-o'
@@ -19,7 +18,7 @@ lib='o'
 #-------------------
 ccflags='-mno-cygwin'
 mtccflags='-mno-cygwin -DEIF_THREADS'
-output_libraries='standard'
+output_libraries='standard mtstandard'
 #
 #
 link_line='$compiler_path\bin\ld -r -o $@ $(OBJECTS)'
@@ -33,7 +32,10 @@ debug=''
 #optimize=''
 #debug='-g'
 dllflags=''
+#
 cc='gcc'
+link32='$compiler_path\bin\ld'
 compiler_path='d:\apps\Cygnus\cygwin-b20\H-i586-cygwin32'
+ms_compiler_path='d:\apps\MSVC\VC98'
 all_dependency='*.o: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
 #

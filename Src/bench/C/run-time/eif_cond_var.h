@@ -1,14 +1,14 @@
 #ifndef _eif_cond_var_h_
 #define _eif_cond_var_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef EIF_THREADS
 
 #include <windows.h>
 #include <process.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct
 {

@@ -13,10 +13,6 @@
 #ifndef _eif_bitmask_h_
 #define _eif_bitmask_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifdef I_LIMITS
 #include <limits.h>			/* For WORD_BIT */
 #endif
@@ -25,6 +21,10 @@ extern "C" {
 #endif
 
 #include "eif_portable.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #undef BPI
 #ifdef WORD_BIT				/* Some systems may not define this */

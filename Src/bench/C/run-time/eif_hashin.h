@@ -13,12 +13,11 @@
 #ifndef _hashin_h
 #define _hashin_h
 
+#include "eif_portable.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "eif_config.h"
-#include "eif_portable.h"
 
 /* Structure which describes the hash table: array of keys and array of
  * values, along with the table's size and the number of recorded elements.

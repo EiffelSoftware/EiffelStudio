@@ -10,16 +10,11 @@
 	Search table (like an H table, but no value array).
 */
 
-#include "eif_config.h"
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
 #include "eif_portable.h"
 #include "eif_search.h"
 #include "eif_tools.h"
 #include "eif_except.h"	/* for xcalloc(),cmalloc(),xfree(),enomem() */
+#include <string.h>
 
 rt_public struct s_table *s_create(uint32 size)
 {

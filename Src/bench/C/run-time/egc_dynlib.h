@@ -5,13 +5,13 @@
 #ifndef _EGC_DYNLIB_H_
 #define _EGC_DYNLIB_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-	
 #include "eif_cecil.h"
 #include "eif_eiffel.h"
 	
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern void init_rt(void);
 extern void reclaim_rt(void);
 	

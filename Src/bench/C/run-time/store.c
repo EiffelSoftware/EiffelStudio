@@ -9,11 +9,10 @@
 
 	Eiffel storing mechanism.
 */
-#include "eif_project.h" /* for egc_ce_gtype */
-#include "eif_config.h"
 #include "eif_portable.h"
+#include "eif_project.h" /* for egc_ce_gtype */
 #include "eif_macros.h"
-#include "eif_malloc.h"
+#include "rt_malloc.h"
 #include "eif_except.h"
 #include "eif_store.h"
 #include "eif_traverse.h"
@@ -26,24 +25,20 @@
 #include "eif_run_idr.h"
 #include "eif_error.h"
 #include "eif_main.h"
-#include "eif_compress.h"
+#include "rt_compress.h"
 #include "eif_lmalloc.h"
-#include "x2c.header"	/* For macro LNGPAD */
+#include "x2c.h"	/* For macro LNGPAD */
 #ifdef VXWORKS
 #include <unistd.h>	/* For write () */
 #endif
-#include <assert.h>
+#include "rt_assert.h"
 
 
 #ifdef EIF_WIN32
 #include <io.h>
 #endif
 
-#ifdef I_STRING
 #include <string.h>				/* For strlen() */
-#else
-#include <strings.h>
-#endif
 
 /*#define DEBUG_GENERAL_STORE */	/**/
 
@@ -59,6 +54,7 @@ rt_public char* cmps_general_buffer = (char *) 0;
 rt_public char *general_buffer = (char *) 0;
 rt_public int current_position = 0;
 rt_public long buffer_size = 0;
+rt_public long cmp_buffer_size = 0;
 rt_public int end_of_buffer = 0;
 rt_private char *s_buffer = (char *) 0;
 
@@ -69,7 +65,7 @@ rt_private int s_fides;	/* File descriptor used during the storing process */
 /*
  * Function declarations
  */
-rt_private void internal_store(char *object);
+rt_shared void internal_store(char *object);
 rt_private void st_store(char *object);				/* Second pass of the store */
 rt_public void ist_write(char *object);
 rt_public void gst_write(char *object);
@@ -93,8 +89,7 @@ rt_public void rt_init_store(
 	void (*flush_buffer_function) (void),
 	void (*st_write_function) (char *),
 	void (*make_header_function) (void),
-	int accounting_type,
-	int buf_size);
+	int accounting_type);
 
 rt_public void (*store_write_func)(void);
 rt_public int (*char_write_func)(char *, int);
@@ -113,6 +108,8 @@ rt_private int old_accounting = 0;
 
 rt_private long old_buffer_size = 0;
 
+rt_public EIF_BOOLEAN eif_is_new_independent_format = EIF_TRUE;
+
 /*
  * Shared data declarations
  */
@@ -125,8 +122,8 @@ rt_private int stream_buffer_position;
 rt_private long stream_buffer_size;
 
 /* Functions to write on the specified IO_MEDIUM */
-rt_public  int (char_write) (char *, int);
-rt_private int (stream_write) (char *, int);
+rt_public  int char_write (char *, int);
+rt_private int stream_write (char *, int);
 
 
 #ifndef lint
@@ -150,8 +147,7 @@ rt_public void rt_init_store(
 	void (*flush_buffer_function) (void),
 	void (*st_write_function) (char *),
 	void (*make_header_function) (void),
-	int accounting_type,
-	int buf_size)
+	int accounting_type)
 {
 	old_store_write_func = store_write_func;
 	old_char_write_func = char_write_func;
@@ -167,8 +163,7 @@ rt_public void rt_init_store(
 	st_write_func = st_write_function;
 	make_header_func = make_header_function;
 	accounting = accounting_type;
-	if (buf_size)
-		buffer_size = buf_size;
+	buffer_size = EIF_BUFFER_SIZE;
 }
 
 /* Reset store function pointers and globals to their default values */
@@ -214,14 +209,12 @@ rt_public void estore(EIF_INTEGER file_desc, char *object)
 		flush_st_buffer,
 		st_write,
 		make_header,
-		0,
-		EIF_BUFFER_SIZE);
+		0);
 
 	allocate_gen_buffer();
 	internal_store(object);
 
 	rt_reset_store ();
-	EIF_END_GET_CONTEXT
 }
 
 rt_public long stream_estore(char **buffer, long size, char *object, EIF_INTEGER *real_size)
@@ -232,8 +225,7 @@ rt_public long stream_estore(char **buffer, long size, char *object, EIF_INTEGER
 		flush_st_buffer,
 		st_write,
 		make_header,
-		0,
-		EIF_BUFFER_SIZE);
+		0);
 
 	stream_buffer = *buffer;
 	stream_buffer_size = size;
@@ -268,14 +260,12 @@ rt_public void eestore(EIF_INTEGER file_desc, char *object)
 		flush_st_buffer,
 		gst_write,
 		make_header,
-		TR_ACCOUNT,
-		EIF_BUFFER_SIZE);
+		TR_ACCOUNT);
 
 	allocate_gen_buffer();
 	internal_store(object);
 
 	rt_reset_store ();
-	EIF_END_GET_CONTEXT
 }
 
 rt_public long stream_eestore(char **buffer, long size, char *object, EIF_INTEGER *real_size)
@@ -286,8 +276,7 @@ rt_public long stream_eestore(char **buffer, long size, char *object, EIF_INTEGE
 		flush_st_buffer,
 		gst_write,
 		make_header,
-		TR_ACCOUNT,
-		EIF_BUFFER_SIZE);
+		TR_ACCOUNT);
 
 	stream_buffer = *buffer;
 	stream_buffer_size = size;
@@ -317,8 +306,7 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 		idr_flush,
 		ist_write,
 		imake_header,
-		INDEPEND_ACCOUNT,
-		EIF_BUFFER_SIZE);
+		INDEPEND_ACCOUNT);
 
 		/* Initialize serialization streams for writting (1 stands for write) */
 	run_idr_init (buffer_size, 1);
@@ -331,7 +319,6 @@ rt_public void sstore (EIF_INTEGER file_desc, char *object)
 	idr_temp_buf = (char *)0;
 
 	rt_reset_store ();
-	EIF_END_GET_CONTEXT
 }
 
 rt_public long stream_sstore (char **buffer, long size, char *object, EIF_INTEGER *real_size)
@@ -342,8 +329,7 @@ rt_public long stream_sstore (char **buffer, long size, char *object, EIF_INTEGE
 		idr_flush,
 		ist_write,
 		imake_header,
-		INDEPEND_ACCOUNT,
-		EIF_BUFFER_SIZE);
+		INDEPEND_ACCOUNT);
 
 	stream_buffer = *buffer;
 	stream_buffer_size = size;
@@ -398,26 +384,38 @@ rt_public char **stream_malloc (int stream_size)	/*08/04/98*/
 	return (char **) 0;		/* NOTREACHED */
 }
 
+/* Stream deallocation */
+rt_public void stream_free (char **real_buffer)	/*08/04/98*/
+{
+	eif_free(*real_buffer);
+	eif_free(real_buffer);
+}
+
 rt_public void allocate_gen_buffer (void)
 {
-	EIF_GET_CONTEXT
 	if (general_buffer == (char *) 0) {
 		general_buffer = (char *) xmalloc (buffer_size * sizeof (char), C_T, GC_OFF);
 		if (general_buffer == (char *) 0)
 			eraise ("Out of memory for general_buffer creation", EN_PROG);
 	
 			/* compression */
-		cmps_general_buffer = (char *) xmalloc (buffer_size * sizeof (char), C_T, GC_OFF);
-		if (cmps_general_buffer == (char *) 0)
-			eraise ("out of memory for cmps_general_buffer creation", EN_PROG);
+		{
+		  		/* Compute size of a compression block. It has to be the size of
+				 * what we want to compress plus 6 bytes for the header and 1 bit
+				 * for every 8 bytes. */
+			size_t length = buffer_size * sizeof(char);
+			cmp_buffer_size = (length * 9) / 8 + 1 + EIF_CMPS_HEAD_SIZE;
+			cmps_general_buffer = (char *) xmalloc (cmp_buffer_size, C_T, GC_OFF);
+			if (cmps_general_buffer == (char *) 0)
+				eraise ("out of memory for cmps_general_buffer creation", EN_PROG);
+		}
 	}
 
 	current_position = 0;
 	end_of_buffer = 0;
-	EIF_END_GET_CONTEXT
 }
 
-rt_private void internal_store(char *object)
+rt_shared void internal_store(char *object)
 {
 	/* Store object hierarchy of root `object' in file `file_ptr' and
 	 * produce header if `accounting'.
@@ -430,8 +428,13 @@ rt_private void internal_store(char *object)
 			xraise(EN_MEM);
 		memset (account, 0, scount * sizeof(char));
 		if (accounting == INDEPEND_ACCOUNT) {
-			c = INDEPENDENT_STORE_4_4;
-			rt_kind_version = INDEPENDENT_STORE_4_4;
+			if (eif_is_new_independent_format) {
+				c = INDEPENDENT_STORE_5_0;
+				rt_kind_version = INDEPENDENT_STORE_5_0;
+			} else {
+				c = INDEPENDENT_STORE_4_4;
+				rt_kind_version = INDEPENDENT_STORE_4_4;
+			}
 		}
 		else {
 			c = GENERAL_STORE_4_0;
@@ -478,7 +481,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	}
 	/* Write the count of stored objects */
 	if (accounting == INDEPEND_ACCOUNT)
-		widr_multi_int (&obj_nb, 1);
+		widr_multi_int32 (&obj_nb, 1);
 	else
 		buffer_write((char *)(&obj_nb), sizeof(long));
 
@@ -772,8 +775,20 @@ rt_private void gen_object_write(char *object)
 		for (; num_attrib > 0;) {
 			attrib_offset = get_alpha_offset(o_type, --num_attrib);
 			switch (*(System(o_type).cn_types + num_attrib) & SK_HEAD) {
-				case SK_INT:
-					buffer_write(object + attrib_offset, sizeof(EIF_INTEGER));
+				case SK_INT8:
+					buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_8));
+					break;
+				case SK_INT16:
+					buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_16));
+					break;
+				case SK_INT32:
+					buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_32));
+					break;
+				case SK_INT64:
+					buffer_write(object + attrib_offset, sizeof(EIF_INTEGER_64));
+					break;
+				case SK_WCHAR:
+					buffer_write(object + attrib_offset, sizeof(EIF_WIDE_CHAR));
 					break;
 				case SK_BOOL:
 				case SK_CHAR:
@@ -825,7 +840,7 @@ rt_private void gen_object_write(char *object)
 
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			assert (info != (struct gt_info *) 0); /* must be generic. */
+			CHECK ("Must be a generic type", info != (struct gt_info *) 0);
 
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
@@ -844,8 +859,20 @@ rt_private void gen_object_write(char *object)
 	
 			if (!(flags & EO_REF)) {		/* Special of simple types */
 				switch (dgen & SK_HEAD) {
-					case SK_INT:
-						buffer_write(object, count*sizeof(EIF_INTEGER));
+					case SK_INT8:
+						buffer_write(object, count*sizeof(EIF_INTEGER_8));
+						break;
+					case SK_INT16:
+						buffer_write(object, count*sizeof(EIF_INTEGER_16));
+						break;
+					case SK_INT32:
+						buffer_write(object, count*sizeof(EIF_INTEGER_32));
+						break;
+					case SK_INT64:
+						buffer_write(object, count*sizeof(EIF_INTEGER_64));
+						break;
+					case SK_WCHAR:
+						buffer_write(object, count*sizeof(EIF_WIDE_CHAR));
 						break;
 					case SK_BOOL:
 					case SK_CHAR:
@@ -921,38 +948,33 @@ rt_private void object_write(char *object)
 		for (; num_attrib > 0;) {
 			attrib_offset = get_offset(o_type, --num_attrib);
 			switch (*(System(o_type).cn_types + num_attrib) & SK_HEAD) {
-				case SK_INT:
-#if DEBUG &1
-					printf (" %lx", *((long *)(object + attrib_offset)));
-#endif
-					widr_multi_int ((long int *)(object + attrib_offset), 1);
-
+				case SK_INT8:
+					widr_multi_int8 ((EIF_INTEGER_8 *)(object + attrib_offset), 1);
+					break;
+				case SK_INT16:
+					widr_multi_int16 ((EIF_INTEGER_16 *)(object + attrib_offset), 1);
+					break;
+				case SK_INT32:
+					widr_multi_int32 ((EIF_INTEGER_32 *)(object + attrib_offset), 1);
+					break;
+				case SK_INT64:
+					widr_multi_int64 ((EIF_INTEGER_64 *)(object + attrib_offset), 1);
 					break;
 				case SK_BOOL:
 				case SK_CHAR:
-#if DEBUG &1
-					printf (" %lx", *((char *)(object + attrib_offset)));
-#endif
-					widr_multi_char (object + attrib_offset, 1);
-
+					widr_multi_char ((EIF_CHARACTER *) (object + attrib_offset), 1);
+					break;
+				case SK_WCHAR:
+					widr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1);
 					break;
 				case SK_FLOAT:
-#if DEBUG &1
-					printf (" %f", *((float *)(object + attrib_offset)));
-#endif
-					widr_multi_float ((float *)(object + attrib_offset), 1);
-
+					widr_multi_float ((EIF_REAL *)(object + attrib_offset), 1);
 					break;
 				case SK_DOUBLE:
-#if DEBUG &1
-					printf (" %lf", *((double *)(object + attrib_offset)));
-#endif
-					widr_multi_double ((double *)(object + attrib_offset), 1);
-
+					widr_multi_double ((EIF_DOUBLE *)(object + attrib_offset), 1);
 					break;
 				case SK_BIT:
 					{
-						/* int q;*/ /* %%ss moved to below within the #if ..#endif */
 						struct bit *bptr = (struct bit *)(object + attrib_offset);
 #if DEBUG &1
 						int q;
@@ -1005,7 +1027,8 @@ rt_private void object_write(char *object)
 
 
 			info = (struct gt_info *) ct_value(&egc_ce_gtype, vis_name);
-			assert (info != (struct gt_info *) 0);	/* Must be generic. */
+			CHECK ("Must be a generic type", info != (struct gt_info *) 0);
+
 			/* Generic type, write in file:
 			 *	"dtype visible_name size nb_generics {meta_type}+"
 			 */
@@ -1026,46 +1049,86 @@ rt_private void object_write(char *object)
 	
 			if (!(flags & EO_REF)) {		/* Special of simple types */
 				switch (dgen & SK_HEAD) {
-					case SK_INT:
+					case SK_INT8:
 #if DEBUG &1
 						for (z = 0; z < count; z++) {
-							printf (" %lx", *(((long *)object) + z));
+							printf (" %lx", *(((EIF_INTEGER_8 *)object) + z));
 							if (!(z % 40))
 								printf("\n");
 						}
 #endif
-						widr_multi_int (((long *)object), count);
+						widr_multi_int8 (((EIF_INTEGER_8 *)object), count);
+						break;
+					case SK_INT16:
+#if DEBUG &1
+						for (z = 0; z < count; z++) {
+							printf (" %lx", *(((EIF_INTEGER_16 *)object) + z));
+							if (!(z % 40))
+								printf("\n");
+						}
+#endif
+						widr_multi_int16 (((EIF_INTEGER_16 *)object), count);
+						break;
+					case SK_INT32:
+#if DEBUG &1
+						for (z = 0; z < count; z++) {
+							printf (" %lx", *(((EIF_INTEGER_32 *)object) + z));
+							if (!(z % 40))
+								printf("\n");
+						}
+#endif
+						widr_multi_int32 (((EIF_INTEGER_32 *)object), count);
+						break;
+					case SK_INT64:
+#if DEBUG &1
+						for (z = 0; z < count; z++) {
+							printf (" %lx", *(((EIF_INTEGER_64 *)object) + z));
+							if (!(z % 40))
+								printf("\n");
+						}
+#endif
+						widr_multi_int64 (((EIF_INTEGER_64 *)object), count);
 						break;
 					case SK_BOOL:
 					case SK_CHAR:
 #if DEBUG &1
 						for (z = 0; z < count; z++) {
-							printf (" %lx", *((char *)(object + z)));
+							printf (" %lx", *((EIF_CHARACTER *)(object + z)));
 							if (!(z % 40))
 								printf("\n");
 						}
 #endif
-						widr_multi_char (object, count);
+						widr_multi_char ((EIF_CHARACTER *) object, count);
+						break;
+					case SK_WCHAR:
+#if DEBUG &1
+						for (z = 0; z < count; z++) {
+							printf (" %lx", *((EIF_CHARACTER *)(object + z)));
+							if (!(z % 40))
+								printf("\n");
+						}
+#endif
+						widr_multi_int32 ((EIF_INTEGER_32 *) object, count);
 						break;
 					case SK_FLOAT:
 #if DEBUG &1
 						for (z = 0; z < count; z++) {
-							printf (" %f", *(((float *)object) + z));
+							printf (" %f", *(((EIF_REAL *)object) + z));
 							if (!(z % 40))
 								printf("\n");
 						}
 #endif
-						widr_multi_float ((float *)object, count);
+						widr_multi_float ((EIF_REAL *)object, count);
 						break;
 					case SK_DOUBLE:
 #if DEBUG &1
 						for (z = 0; z < count; z++) {
-							printf (" %lf", *(((double *)object) + z));
+							printf (" %lf", *(((EIF_DOUBLE *)object) + z));
 							if (!(z % 40))
 								printf("\n");
 						}
 #endif
-						widr_multi_double ((double *)object, count);
+						widr_multi_double ((EIF_DOUBLE *)object, count);
 						break;
 					case SK_BIT:
 						dgen_typ = dgen & SK_DTYPE;
@@ -1148,12 +1211,12 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 	int i;
 	char *vis_name;			/* Visible name of a class */
 	struct gt_info *info;
-	int nb_line = 0;
-	size_t bsize = 80;
+	volatile int nb_line = 0;
+	volatile size_t bsize = 80;
 	jmp_buf exenv;
 	RTXD;
 
-	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
+	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_reset_store ();				/* Reset data structure */
@@ -1244,8 +1307,6 @@ rt_public void make_header(EIF_CONTEXT_NOARG)
 	xfree (s_buffer);
 	s_buffer = (char *) 0;
 	expop(&eif_stack);
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void sort_attributes(int dtype)
@@ -1320,13 +1381,13 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 	int i;
 	char *vis_name;			/* Visible name of a class */
 	struct gt_info *info;
-	int nb_line = 0;
-	size_t bsize = 600;
+	volatile int nb_line = 0;
+	volatile size_t bsize = 600;
 	uint32 num_attrib;
 	jmp_buf exenv;
 	RTXD;
 
-	excatch(MTC (char *) exenv);	/* Record pseudo execution vector */
+	excatch(&exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
 		RTXSC;					/* Restore stack contexts */
 		rt_reset_store ();				/* Clean data structure */
@@ -1338,12 +1399,12 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 	if (0 > sprintf(s_buffer,"%d\n", scount)) {
 		eise_io("Independent store: unable to write number of different Eiffel types.");
 	}
-	widr_multi_char (s_buffer, (strlen (s_buffer)));
+	widr_multi_char ((EIF_CHARACTER *) s_buffer, (strlen (s_buffer)));
 	
 	if (0 > sprintf(s_buffer,"%d\n", (int) OVERHEAD)) {
 		eise_io("Independent store: unable to write OVERHEAD size.");
 	}
-	widr_multi_char (s_buffer, (strlen (s_buffer)));
+	widr_multi_char ((EIF_CHARACTER *) s_buffer, (strlen (s_buffer)));
 
 	for (i=0; i<scount; i++)
 		if (account[i])
@@ -1352,7 +1413,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 	if (0 > sprintf(s_buffer,"%d\n", nb_line)) {
 		eise_io("Independent store: unable to write number of header lines.");
 	}
-	widr_multi_char (s_buffer, (strlen (s_buffer)));
+	widr_multi_char ((EIF_CHARACTER *) s_buffer, (strlen (s_buffer)));
 
 	for (i=0; i<scount; i++) {
 		if (!account[i])
@@ -1379,7 +1440,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 				eise_io("Independent store: unable to write the generic type name.");
 			}
 
-			widr_multi_char (s_buffer, (strlen (s_buffer)));
+			widr_multi_char ((EIF_CHARACTER *) s_buffer, (strlen (s_buffer)));
 
 			for (;;) {
 #if DEBUG &1
@@ -1398,7 +1459,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 				if (0 > sprintf(s_buffer, " %lu", dgen)) {
 					eise_io("Independent store: unable to write the generic type description.");
 				}
-				widr_multi_char (s_buffer, (strlen (s_buffer)));
+				widr_multi_char ((EIF_CHARACTER *) s_buffer, (strlen (s_buffer)));
 			}
 		} else {
 			/* Non-generic type, write in file:
@@ -1407,7 +1468,7 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 			if (0 > sprintf(s_buffer, "%d %s 0", i, vis_name)) {
 				eise_io("Independent store: unable to write type description.");
 			}
-			widr_multi_char (s_buffer, (strlen (s_buffer)));
+			widr_multi_char ((EIF_CHARACTER *) s_buffer, (strlen (s_buffer)));
 		}
 		
 				/* also add 
@@ -1418,24 +1479,22 @@ rt_public void imake_header(EIF_CONTEXT_NOARG)
 		if (0 > sprintf(s_buffer, " %d", num_attrib)) {
 			eise_io("Independent store: unable to write number of attributes.");
 		}
-		widr_multi_char (s_buffer, (strlen (s_buffer)));
+		widr_multi_char ((EIF_CHARACTER *) s_buffer, (strlen (s_buffer)));
 		for (; num_attrib-- > 0;) {
 			if (0 > sprintf(s_buffer, "\n%lu %s", (unsigned long) (*(System(i).cn_types + num_attrib) & SK_HEAD), 
 					*(System(i).cn_names + num_attrib))) {
 				eise_io("Independent store: unable to write attribute description.");
 			}
-			widr_multi_char (s_buffer, (strlen (s_buffer)));
+			widr_multi_char ((EIF_CHARACTER *) s_buffer, (strlen (s_buffer)));
 		}	
 		if (0 > sprintf(s_buffer,"\n")) {
 			eise_io("Independent store: unable to write new header entry.");
 		}
-		widr_multi_char (s_buffer, (strlen (s_buffer)));
+		widr_multi_char ((EIF_CHARACTER *) s_buffer, (strlen (s_buffer)));
 	}
 	xfree (s_buffer);
 	s_buffer = (char *) 0;
 	expop(&eif_stack);
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void free_sorted_attributes(void)
@@ -1509,7 +1568,6 @@ rt_public int char_write(char *pointer, int size)
 {
 	EIF_GET_CONTEXT
 	return write(s_fides, pointer, size);
-	EIF_END_GET_CONTEXT
 }
 
 rt_private int stream_write (char *pointer, int size)
@@ -1537,6 +1595,7 @@ void store_write(void)
 	cmps_in_ptr = general_buffer;
 	cmps_in_size = current_position;
 	cmps_out_ptr = cmps_general_buffer;
+	cmps_out_size = cmp_buffer_size;
  
 	eif_compress ((unsigned char*)cmps_in_ptr,
 					(unsigned long)cmps_in_size,

@@ -19,10 +19,13 @@
 #include <ctype.h>
 #ifdef EIF_WIN32
 #include <stdlib.h>
+#endif	/* EIF_WIN32 */
+#ifdef EIF_WINDOWS
 #include <windows.h> /* DLL declarations */
 #endif
 
 #include <math.h>
+#include <ctype.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -65,7 +68,16 @@ RT_LNK EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);
 #define float_sin(x)	(sin ((EIF_DOUBLE) (x)))
 #define float_asin(x)	(asin ((EIF_DOUBLE) (x)))
 
+#define eif_bit_and(i,j)			((i)&(j))
+#define eif_bit_or(i,j)				((i)|(j))
+#define eif_bit_xor(i,j)			((i)^(j))
+#define eif_bit_not(i)				(~(i))
+#define eif_bit_shift_left(i,n)		((i)<<(n))
+#define eif_bit_shift_right(i,n)	((i)>>(n))
+#define eif_bit_test(i,n)			(EIF_TEST((i)&(1 << n)))
+
 RT_LNK EIF_INTEGER eif_system (char *s);
+RT_LNK void eif_system_asynchronous (char *s);
 RT_LNK EIF_INTEGER eif_putenv (char * v, char * k);
 RT_LNK char * eif_getenv(char * k);
 RT_LNK EIF_INTEGER eif_safe_putenv (char *v, char *k); /* Safe Eiffel putenv dealing only with env. var. */
@@ -74,7 +86,7 @@ RT_LNK EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j, EI
 
 #ifdef EIF_WINDOWS
 /* DLL declarations */
-RT_LNK HANDLE eif_load_dll(char *module_name);
+RT_LNK HMODULE eif_load_dll(char *module_name);
 RT_LNK void eif_free_dlls(void);
 
 extern char **_argv;

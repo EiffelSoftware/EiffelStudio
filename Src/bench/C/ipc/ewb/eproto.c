@@ -24,6 +24,7 @@
 #include "stream.h"
 #include "ewbio.h"
 #include "transfer.h"
+#include <string.h>
 
 #ifdef EIF_WIN32
 extern STREAM *sp;

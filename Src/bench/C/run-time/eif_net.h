@@ -1,11 +1,7 @@
 #ifndef _CONCURRENT_NET_
 #define _CONCURRENT_NET_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-	
-#include "eif_config.h"
+#include "eif_portable.h"
 #include <signal.h>
 
 #ifdef EIF_WIN32
@@ -88,6 +84,10 @@ extern "C" {
 #include "eif_bitmask.h"
 */
 			
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
 #ifdef __cplusplus
 }
 #endif

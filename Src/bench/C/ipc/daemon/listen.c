@@ -130,6 +130,7 @@ rt_public void dwide_listen(void)
 
 		if (daemon_data.d_app > 0 && !has_input(daemon_data.d_as)) {
 			CloseHandle (daemon_data.d_app);
+			daemon_data.d_app = NULL;
 #else
 		if (!has_input(readfd(daemon_data.d_cs)))	/* Stream connection broken */
 			return;								/* Abort processing */
@@ -158,6 +159,7 @@ rt_public void dwide_listen(void)
 			if (0 != active_check(daemon_data.d_as, daemon_data.d_app)) {
 #ifdef EIF_WIN32
 				CloseHandle (daemon_data.d_app);
+				daemon_data.d_app = NULL;
 #endif
 				daemon_data.d_app = 0;
 #ifdef EIF_WIN32

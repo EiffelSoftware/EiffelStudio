@@ -16,13 +16,13 @@
 #include "eif_traverse.h"
 #include "eif_garcol.h"
 #include "eif_except.h"
-#include "eif_store.h"
-#include "eif_garcol.h"
 #include "eif_memory.h"
 #include "eif_error.h"
-#include "eif_compress.h"
+#include "x2c.h"		/* For LNGPAD macro */
+#include "rt_store.h"
 #include "pstore.h"
-#include "x2c.header"		/* For LNGPAD macro */
+#include "minilzo.h"
+#include "rt_compress.h"
 
 #ifdef EIF_WIN32
 #include <io.h>
@@ -39,16 +39,18 @@ rt_private long file_position;	/* Position in current opened file */
 rt_private char *parsing_buffer = (char *) 0;
 rt_private long parsing_position = 0;
 rt_private long parsing_buffer_size = 0;
+rt_private int file_descriptor;
 
 rt_private long pst_store(char *object, long int object_count);	/* Recursive store */
 rt_private void parsing_store_write(void);
 rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid);
+rt_private int compiler_char_write(char *pointer, int size);
 
 /* Memory writing function */
 rt_private int parsing_char_write (char *pointer, int size);	/* store in stream */
+rt_private void parsing_compiler_write(void);
 
-/* Followings declaration are coming from store.c and eif_store.h */
-#define EIF_BUFFER_SIZE EIF_CMPS_IN_SIZE
+#define EIF_BUFFER_SIZE 262144L
 
 rt_public void parsing_store_initialize (void) {
 	rt_init_store(
@@ -56,9 +58,8 @@ rt_public void parsing_store_initialize (void) {
 		parsing_char_write,
 		flush_st_buffer,
 		st_write,
-		(void *) (0),
-		0,
-		EIF_BUFFER_SIZE);
+		NULL,
+		0);
 	
 	if (parsing_buffer == (char *) 0) {
 		allocate_gen_buffer ();
@@ -66,6 +67,28 @@ rt_public void parsing_store_initialize (void) {
 	}
 	parsing_buffer_size = EIF_BUFFER_SIZE;
 	parsing_position = 0;
+}
+
+rt_public void parsing_store_dispose (void) {
+	free (parsing_buffer);
+}
+
+rt_public void parsing_store (EIF_INTEGER file_desc, EIF_REFERENCE object)
+{
+	file_descriptor = (int) file_desc;
+
+	rt_init_store (
+		parsing_compiler_write,
+		compiler_char_write,
+		flush_st_buffer,
+		st_write,
+		make_header,
+		0);
+
+	allocate_gen_buffer();
+	internal_store(object);
+
+	rt_reset_store ();
 }
 
 rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, EIF_REFERENCE s)
@@ -145,7 +168,7 @@ rt_private long pst_store(EIF_REFERENCE object, long int object_count)
 	uint32 fflags, flags;
 	int is_expanded;
 	EIF_BOOLEAN object_needs_index;
-	long saved_file_pos;
+	long saved_file_pos = 0;
 	long saved_object_count = object_count;
 
 	object_needs_index = (EIF_BOOLEAN) ((EIF_BOOLEAN (*)())need_index)(server,object);
@@ -221,24 +244,39 @@ rt_private long pst_store(EIF_REFERENCE object, long int object_count)
 	return object_count;
 }
 
+extern long cmp_buffer_size;
+
+/* Work-memory needed for compression. Allocate memory in units
+ * of `long' (instead of `char') to make sure it is properly aligned.
+ */
+
+#define HEAP_ALLOC(var,size) \
+	long __LZO_MMODEL var [ ((size) + (sizeof(long) - 1)) / sizeof(long) ]
+
+static HEAP_ALLOC(wrkmem,LZO1X_1_MEM_COMPRESS);
+
+
 rt_private void parsing_store_write(void)
 {
-	char* cmps_in_ptr = general_buffer;
 	char* cmps_out_ptr = cmps_general_buffer;
-	int cmps_out_size = 0;
-	int number_writen = 0;
+	int cmps_out_size = cmp_buffer_size;
 	
-	eif_compress ((unsigned char*)cmps_in_ptr, 
-				  (unsigned long)current_position,  /* corresponds to cmps_in_size */
-				  (unsigned char*)cmps_out_ptr, 
-				  (unsigned long*)&cmps_out_size);
-				  
-	number_writen = parsing_char_write (cmps_general_buffer,
-							cmps_out_size + EIF_CMPS_HEAD_SIZE);
-	if (number_writen <= 0)
+	lzo1x_1_compress (
+					(unsigned char *) general_buffer,		/* Current buffer location */
+					current_position,	/* Current buffer size */
+					(unsigned char *) cmps_out_ptr,		/* Output buffer for compressed data */
+					&cmps_out_size,		/* Size of output buffer and then size of compressed data */
+					wrkmem);			/* Memory allocator */
+
+		/* Write size of compressed data */
+	if (parsing_char_write ((char *) &cmps_out_size, sizeof(int)) <= 0)
+		eraise ("Unable to write compressed data size", EN_IO);
+
+		/* Write compressed data */
+	if (parsing_char_write (cmps_out_ptr, cmps_out_size) <= 0)
 		eraise ("Unable to write on specified device", EN_IO);
-	else
-		current_position = 0;
+
+	current_position = 0;
 }
 
 rt_private int parsing_char_write (char *pointer, int size)
@@ -253,3 +291,36 @@ rt_private int parsing_char_write (char *pointer, int size)
 	return size;
 }
 
+rt_private void parsing_compiler_write(void)
+{
+	char* cmps_out_ptr = cmps_general_buffer;
+	int cmps_out_size = cmp_buffer_size;
+	int number_written;
+	
+	lzo1x_1_compress (
+					(unsigned char *) general_buffer,		/* Current buffer location */
+					current_position,	/* Current buffer size */
+					(unsigned char *) cmps_out_ptr,		/* Output buffer for compressed data */
+					&cmps_out_size,		/* Size of output buffer and then size of compressed data */
+					wrkmem);			/* Memory allocator */
+
+		/* Write size of compressed data */
+	if (write (file_descriptor, (char *) &cmps_out_size, sizeof(int)) <= 0)
+		eraise ("Unable to write compressed data size", EN_IO);
+
+		/* Write compressed data */
+	while (cmps_out_size > 0) {
+		number_written = write (file_descriptor, cmps_out_ptr, cmps_out_size);
+		if (number_written <= 0)
+			eio();
+		cmps_out_size -= number_written;
+		cmps_out_ptr += number_written;
+	}
+
+	current_position = 0;
+}
+
+rt_private int compiler_char_write(char *pointer, int size)
+{
+	return write(file_descriptor, pointer, size);
+}

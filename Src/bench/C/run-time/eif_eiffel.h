@@ -13,14 +13,12 @@
 #ifndef _eif_eiffel_h_
 #define _eif_eiffel_h_
 
-#include "eif_config.h"
+#include "eif_portable.h"
+
 #ifndef VXWORKS
-#ifdef I_STRING
 #include <string.h>
-#else
-#include <strings.h>
 #endif
-#endif
+
 #include "eif_globals.h"
 
 /* The following includes are needed only because Eiffel has no way to direct

@@ -17,9 +17,9 @@
 
  An implementation of multiple readers, single writer lock */
 
-#include "eif_rw_lock.h"
-#include "eif_threads.h"
 #include "eif_portable.h"
+#include "rt_rw_lock.h"
+#include "rt_threads.h"
 #include "eif_lmalloc.h"
 
 #ifdef EIF_THREADS /* Only in MT mode */

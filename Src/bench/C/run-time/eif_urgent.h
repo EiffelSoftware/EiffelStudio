@@ -13,12 +13,11 @@
 #ifndef _eif_urgent_h_
 #define _eif_urgent_h_
 
+#include "eif_portable.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "eif_config.h"
-#include "eif_portable.h"
 
 #ifdef VXWORKS
 #define URGENT_CHUNK	1016	/* Size of urgent chunk (1K with overhead) */

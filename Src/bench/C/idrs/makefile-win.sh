@@ -71,7 +71,12 @@ MT_OBJECTS = \
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: idr.$lib mtidr.$lib
+all:: $output_libraries
+
+dll: standard
+mtdll: mtstandard
+standard:: idr.$lib
+mtstandard:: mtidr.$lib
 
 idr.$lib: $(OBJECTS)
 	$link_line

@@ -9,7 +9,7 @@
 
 
 #ifdef moose	/* pre DECC V5 */
-/* #include <time.h>	/* for ftime() */
+/* #include <time.h>	*/	/* for ftime() */
 
 /*  From Ultrix's time.h */
 struct timeval {
@@ -53,8 +53,8 @@ int ipcvms_spawn(char *cmd, int async);
 #include <processes.h>	    /* pipe, exec, vfork... */
 #include <unixio.h>	    /* open, close, read, write, dup, ... */
 #include <file.h>	    /* O_RDWR, O_NDELAY, ... */
-/*#define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR
-/*#define cma$tis_vmserrno_get_addr CMA$TIS_VMSERRNO_GET_ADDR
+/*#define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR */
+/*#define cma$tis_vmserrno_get_addr CMA$TIS_VMSERRNO_GET_ADDR */
 /*#include <errno.h> */
 
 /* 

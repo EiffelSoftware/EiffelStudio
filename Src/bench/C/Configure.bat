@@ -8,6 +8,7 @@ echo     Options:
 echo        clean   - remove unecessary files
 echo        win32 b - build a Win32 run-time for Borland
 echo        win32 g - build a Win32 run-time for GCC-cygwin
+echo        win32 l - build a Win32 run-time for lcc
 echo        win32 m - build a Win32 run-time for Microsoft
 echo        win32 w - build a Win32 run-time for Watcom
 echo        win32 s - build a Win32 run-time for Symantec
@@ -46,9 +47,14 @@ copy config.w32w eif_config.h
 copy config.wsh config.sh
 goto process
 :gcc
-if NOT .%2. == .g. goto usage
+if NOT .%2. == .g. goto lcc
 copy config.w32m eif_config.h
 copy config.gsh config.sh
+goto process
+:lcc
+if NOT .%2. == .l. goto usage
+copy config.w32m eif_config.h
+copy config.lsh config.sh
 goto process
 :process
 type config.sh
@@ -72,6 +78,8 @@ copy eif_config.h run-time
 copy eif_portable.h run-time
 copy config.sh bench
 copy make.w32 bench\make.bat
+copy config.sh minilzo
+copy make.w32 minilzo\make.bat
 copy config.sh console
 copy make.w32 console\make.bat
 copy config.sh desc
@@ -84,12 +92,6 @@ copy config.sh ipc\ewb
 copy make.w32 ipc\ewb\make.bat
 copy config.sh ipc\shared
 copy make.w32 ipc\shared\make.bat
-copy config.sh parsing\eiffel
-copy make.w32 parsing\eiffel\make.bat
-copy config.sh parsing\lace
-copy make.w32 parsing\lace\make.bat
-copy config.sh parsing\shared
-copy make.w32 parsing\shared\make.bat
 copy config.sh platform
 copy make.w32 platform\make.bat
 copy config.sh idrs
@@ -112,19 +114,15 @@ cd ipc\shared
 ..\..\rt_converter.exe makefile-win.sh makefile
 cd ..\..\run-time
 ..\rt_converter.exe makefile-win.sh makefile
-cd ..\parsing\shared
-..\..\rt_converter.exe makefile-win.sh makefile
-cd ..\eiffel
-..\..\rt_converter.exe makefile-win.sh makefile
-cd ..\lace
-..\..\rt_converter.exe makefile-win.sh makefile
-cd ..\..\platform
+cd ..\platform
 ..\rt_converter.exe makefile-win.sh makefile
 cd ..\idrs
 ..\rt_converter.exe makefile-win.sh makefile
 cd ..\console
 ..\rt_converter.exe makefile-win.sh makefile
 cd ..\bench
+..\rt_converter.exe makefile-win.sh makefile
+cd ..\minilzo
 ..\rt_converter.exe makefile-win.sh makefile
 cd ..\ipc\daemon
 ..\..\rt_converter.exe makefile-win.sh makefile
@@ -155,16 +153,12 @@ echo cd ..\daemon>> make.bat
 echo call make>> make.bat
 echo cd ..\..\run-time>> make.bat
 echo call make>> make.bat
-echo cd ..\parsing\shared>> make.bat
-echo call make>> make.bat
-echo cd ..\eiffel>> make.bat
-echo call make>> make.bat
-echo cd ..\lace>> make.bat
-echo call make>> make.bat
-echo cd ..\..>> make.bat
+echo cd ..>> make.bat
 echo cd platform>> make.bat
 echo call make>> make.bat
 echo cd ..\bench >> make.bat
+echo call make >> make.bat
+echo cd ..\minilzo >> make.bat
 echo call make >> make.bat
 echo cd ..\desc>> make.bat
 echo call make>> make.bat
@@ -187,6 +181,7 @@ echo del *.zip >> cleanup.bat
 echo del *.pdb >> cleanup.bat
 echo del *.pch >> cleanup.bat
 echo del *.dll >> cleanup.bat
+echo del *.tds >> cleanup.bat
 echo del *.o >> cleanup.bat
 echo del config.sh >> cleanup.bat
 echo del makefile >> cleanup.bat
@@ -195,14 +190,12 @@ echo del cleanup.bat >> cleanup.bat
 
 copy cleanup.bat console\
 copy cleanup.bat bench\
+copy cleanup.bat minilzo\
 copy cleanup.bat desc\
 copy cleanup.bat ipc\app\
 copy cleanup.bat ipc\daemon\
 copy cleanup.bat ipc\ewb\
 copy cleanup.bat ipc\shared\
-copy cleanup.bat parsing\eiffel\
-copy cleanup.bat parsing\lace\
-copy cleanup.bat parsing\shared\
 copy cleanup.bat platform\
 copy cleanup.bat idrs\
 copy cleanup.bat run-time\
@@ -210,6 +203,8 @@ copy cleanup.bat run-time\OBJDIR\
 copy cleanup.bat run-time\LIB\
 
 cd bench
+call cleanup
+cd ..\minilzo
 call cleanup
 cd ..\console
 call cleanup
@@ -220,12 +215,6 @@ call cleanup
 cd ..\daemon
 call cleanup
 cd ..\ewb
-call cleanup
-cd ..\shared
-call cleanup
-cd ..\..\parsing\eiffel
-call cleanup
-cd ..\lace
 call cleanup
 cd ..\shared
 call cleanup
@@ -241,12 +230,6 @@ cd ..\LIB
 call cleanup
 cd ..\..
 
-del parsing\lace\lace_y.c
-del parsing\lace\lace_y.h
-del parsing\eiffel\y_tab.*
-del parsing\eiffel\parser.c
-del parsing\eiffel\parser.h
-del parsing\eiffel\wpstore.c
 del run-time\eif_config.h
 del run-time\eif_size.h
 del run-time\eif_portable.h

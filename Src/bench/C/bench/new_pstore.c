@@ -11,9 +11,6 @@
 
 */
 
-/* Define assertions level */
-/*#define EIF_ASSERTIONS */
-
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_memory.h"
@@ -223,7 +220,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 			/* Store `o_ref' at `object_id' pos in `obj_array' */
 		obj_array [object_id - min_object_id] = o_ref;
 			/* Make sure that the retrieved `object_id' is valid. */
-		assert((object_id - min_object_id) < nb_obj);
+		assert ((object_id - min_object_id) < nb_obj);
 	}
 
 		/* Now, all objects have been retrieved, we do need to update
@@ -246,7 +243,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 					o_field = (EIF_REFERENCE *) (o_ref + j * sizeof(EIF_REFERENCE));
 						/* Make sure that the reference points on a valid
 						 * object, i.e. which has a valid `object_id'. */
-					assert((((EIF_INTEGER) *o_field) - min_object_id) < nb_obj);
+					assert ((((EIF_INTEGER) *o_field) - min_object_id) < nb_obj);
 					if (*o_field != NULL) {
 						*o_field = obj_array [((EIF_INTEGER) (*o_field)) - min_object_id];
 						RTAS_OPT (*o_field, j, o_ref);
@@ -260,7 +257,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 				o_field = (EIF_REFERENCE *) (o_ref + j * sizeof(EIF_REFERENCE));
 					/* Make sure that the reference points on a valid
 					 * object, i.e. which has a valid `object_id'. */
-				assert((((EIF_INTEGER) *o_field) - min_object_id) < nb_obj);
+				assert ((((EIF_INTEGER) *o_field) - min_object_id) < nb_obj);
 				if (*o_field != NULL) {
 					*o_field = obj_array [((EIF_INTEGER) (*o_field)) - min_object_id];
 					RTAS(*o_field, o_ref);

@@ -49,7 +49,7 @@ rt_public void get_argcargv (int *argc, char ***argv)
 	shword (temp, argc, argv);
 }
 
-rt_public void free_argv(int argc, char ***argv)
+rt_public void free_argv(char ***argv)
 {
 	eif_free((*argv)[0]);
 	eif_free(*argv);
@@ -65,9 +65,9 @@ rt_private void shword(char *cmd, int *argc, char ***argvp)
 
 	int quoted = 0;	/* parsing inside a quoted string? */
 	int nbs;		/* number of backspaces */
-	char *p, *pe;	/* pointers in `cmd' */
-	char *qb, *q;	/* pointers in arguments */
 	int i;
+	char *p = NULL, *pe = NULL;	/* pointers in `cmd' */
+	char *qb = NULL, *q = NULL;	/* pointers in arguments */
 
 	/* Remove leading and trailing white spaces */
 	for (p = cmd; *p == ' ' || *p == '\t'; p++)
@@ -79,7 +79,8 @@ rt_private void shword(char *cmd, int *argc, char ***argvp)
 
 		*argc = *argc + 1;	/* at least one argument */
 
-		if (!(qb = q = eif_malloc(pe - p + 2)))
+		qb = q = eif_malloc(pe - p + 2);
+		if (!qb)
 			return;
 
 		do {
@@ -129,7 +130,8 @@ rt_private void shword(char *cmd, int *argc, char ***argvp)
 		return;
 	}
 
-	if (!(*argvp = (char **) eif_malloc ((*argc + 1) * sizeof(char *)))) {
+	*argvp = (char **) eif_malloc ((*argc + 1) * sizeof(char *));
+	if (!(*argvp)) {
 		free(qb);
 		return;
 	}

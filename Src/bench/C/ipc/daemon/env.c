@@ -24,7 +24,7 @@ char *win_eif_getenv (char *k, char *app)
 		return result;
 	else {
 		char *key, *lower_k;
-		static char buf[1024];
+		static unsigned char buf[1024];
 		int appl_len, key_len;
 		char modulename [PATH_MAX + 1];
 		HKEY hkey;
@@ -48,7 +48,7 @@ char *win_eif_getenv (char *k, char *app)
 		strcpy (lower_k, k);
 		CharLowerBuff (lower_k, key_len);
 	
-		strcpy (key, "Software\\ISE\\Eiffel45\\");
+		strcpy (key, "Software\\ISE\\Eiffel50\\");
 		if (app == NULL)
 			strncat (key, strrchr(modulename, '\\')+1, appl_len);
 		else

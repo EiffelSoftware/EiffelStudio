@@ -12,15 +12,11 @@
 
 */
 
-#include "eif_config.h"
 #include "eif_portable.h"	/* must come before <errno.h> for VMS */
 #include "eif_path_name.h"	/* for eifrt_vms_directory_file_name */
 
-#ifdef I_STRING
 #include <string.h>
-#else
-#include <strings.h>
-#endif
+
 #ifdef _CRAY
 #include <sys/param.h>
 #endif
@@ -407,7 +403,7 @@ rt_public void file_pi(FILE *f, EIF_INTEGER number)
 	/* Write `number' on `f' */
 
 	errno = 0;
-	if (0 > fprintf(f, "%ld", number))
+	if (0 > fprintf(f, "%d", number))
 		eise_io("FILE: unable to write INTEGER value.");
 }
 
@@ -582,7 +578,7 @@ rt_public EIF_INTEGER file_gi(FILE *f)
 	EIF_INTEGER i;     
 
 	errno = 0;
-	if (0 > fscanf(f, "%ld", &i))
+	if (0 > fscanf(f, "%d", &i))
 		eise_io("FILE: unable to read INTEGER value.");
 	swallow_nl(f);
 

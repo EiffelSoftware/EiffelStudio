@@ -10,15 +10,15 @@
 	A set of routines to plug the run-time in the generated C code.
 */
 
-#include "eif_project.h" /* for egc... */
+#include "eif_portable.h"
 #include "eif_eiffel.h"
-#include "eif_config.h"
+#include "eif_project.h" /* for egc... */
 #include "eif_plug.h"
 #include "eif_malloc.h"
 #if !defined CUSTOM || defined NEED_OPTION_H
 #include "eif_option.h"
 #endif
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "eif_except.h"
 #include "eif_local.h"
 #include "eif_interp.h"
@@ -26,14 +26,14 @@
 #include "eif_hashin.h"
 #endif
 #include "eif_bits.h"
-#include "x2c.header"		/* For macro LNGPAD */
-#ifdef I_STRING
+#include "x2c.h"		/* For macro LNGPAD */
 #include <string.h>
-#else
-#include <strings.h>
-#endif
-#include <assert.h>			/* For assertions checkings. */
+#include "rt_assert.h"		/* For assertions checkings. */
 
+#ifdef WORKBENCH
+rt_public void discard_breakpoints(void);
+rt_public void undiscard_breakpoints(void);
+#endif
 
 #ifndef lint
 rt_private char *rcsid =
@@ -41,7 +41,7 @@ rt_private char *rcsid =
 #endif
 
 #ifndef EIF_THREADS
-/* The nested call flag is sete to 1 when a feature call is made within a
+/* The nested call flag is set to 1 when a feature call is made within a
  * dot expression. We need to check the invariant before and after the call
  * on those features. This global variable is saved immediately in a local
  * variable upon entrance in the feature, so this is merely an added optional
@@ -73,11 +73,11 @@ rt_public EIF_REFERENCE argarr(EIF_CONTEXT int argc, char **argv)
 
 	typres = eif_typeof_array_of ((int16)egc_str_dtype);
 	array = emalloc((uint32)typres);		/* If we return, it succeeded */
-	epush(&loc_stack, (EIF_REFERENCE ) &array); 		/* Protect address in case it moves */
+	RT_GC_PROTECT(array); 		/* Protect address in case it moves */
 	nstcall = 0;					/* Turn invariant checking off */
 	(egc_arrmake)(array, (EIF_INTEGER) 0, argc-1);	/* Call the `make' routine of ARRAY */
 	sp = *(EIF_REFERENCE *) array;			/* Get the area of the ARRAY */
-	epush (&loc_stack, (EIF_REFERENCE ) &sp);		/* Protect the area */
+	RT_GC_PROTECT (sp);		/* Protect the area */
 
 	/* 
 	 * Fill the array
@@ -86,18 +86,15 @@ rt_public EIF_REFERENCE argarr(EIF_CONTEXT int argc, char **argv)
 		((EIF_REFERENCE *) sp)[i] = makestr(argv[i], strlen(argv[i]));
 	}
 
-	epop(&loc_stack, 1);		/* Remove protection for area */
-	epop(&loc_stack, 1);		/* Remove protection for array */
+	RT_GC_WEAN_N(2);		/* Remove protection for the area and the array */
 	return array;
-
-	EIF_END_GET_CONTEXT
 }
 
 /*
  * Manifest array creation for strip
  */
 
-rt_public EIF_REFERENCE striparr(EIF_CONTEXT register EIF_REFERENCE curr, register int dtype, register EIF_REFERENCE *items, register long int nbr)
+rt_public EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, char **items, long int nbr)
 {
 	/* Create an Eiffel ARRAY[ANY] using current object curr. 
 	 * This routine creates the object and returns a pointer to the newly
@@ -106,8 +103,11 @@ rt_public EIF_REFERENCE striparr(EIF_CONTEXT register EIF_REFERENCE curr, regist
 	 * items.
 	 */
 	EIF_GET_CONTEXT
-	EIF_REFERENCE array, sp, o_ref; 
-	EIF_REFERENCE new_obj;
+	EIF_REFERENCE array = NULL;
+	EIF_REFERENCE sp = NULL;
+	EIF_REFERENCE o_ref = NULL;
+	EIF_REFERENCE new_obj = NULL;
+	EIF_REFERENCE attr = NULL;
 	long nbr_attr, stripped_nbr;
 	struct cnode *obj_desc;
 #ifndef WORKBENCH
@@ -117,7 +117,6 @@ rt_public EIF_REFERENCE striparr(EIF_CONTEXT register EIF_REFERENCE curr, regist
 	long offset;
 #endif
 	register7 char** attr_names;
-	EIF_REFERENCE attr;
 	int i;
 	char found;
 	uint32 type, *types;
@@ -128,6 +127,14 @@ rt_public EIF_REFERENCE striparr(EIF_CONTEXT register EIF_REFERENCE curr, regist
 
 	curr_dtype = Dtype(curr);	/* Dynamic type of current object instance */
 #endif
+
+		/* Protect all object references */
+	RT_GC_PROTECT(curr);
+	RT_GC_PROTECT(array);
+	RT_GC_PROTECT(sp);
+	RT_GC_PROTECT(o_ref);
+	RT_GC_PROTECT(new_obj);
+	RT_GC_PROTECT(attr);
 
 	obj_desc = &System(dtype); 	/* Dynamic type where strip is defined */
 	nbr_attr = obj_desc->cn_nbattr;
@@ -143,16 +150,14 @@ rt_public EIF_REFERENCE striparr(EIF_CONTEXT register EIF_REFERENCE curr, regist
 
 	typres = eif_typeof_array_of((int16)egc_any_dtype);
 	array = emalloc((uint32)typres);	/* If we return, it succeeded */
-	epush(&loc_stack, (EIF_REFERENCE ) &array); 	/* Protect address in case it moves */
 	nstcall = 0;
 	(egc_arrmake)(array, (EIF_INTEGER) 1, stripped_nbr);	
 								/* Call feature `make' in class ARRAY[ANY] */
 
 	sp = *(EIF_REFERENCE *) array;		/* Get the area of the ARRAY */
-	epush (&loc_stack, (EIF_REFERENCE ) &sp);	/* Protect the area */
 
 	while (nbr_attr--) {
-		found = (char) NULL;
+		found = (char) 0;
 		for (i=0; (i < nbr) && (!found); i++) {
 			attr = items[i];
 			if (!(strcmp (attr, attr_names[nbr_attr])))
@@ -172,23 +177,39 @@ rt_public EIF_REFERENCE striparr(EIF_CONTEXT register EIF_REFERENCE curr, regist
 				break;
 			case SK_CHAR:
 				new_obj = RTLN(egc_char_ref_dtype);
-				*new_obj = * (EIF_REFERENCE ) o_ref;
+				*(EIF_CHARACTER *) new_obj = * (EIF_CHARACTER *) o_ref;
+				break;
+			case SK_WCHAR:
+				new_obj = RTLN(egc_wchar_ref_dtype);
+				*(EIF_WIDE_CHAR *) new_obj = *(EIF_WIDE_CHAR *) o_ref;
 				break;
 			case SK_BOOL:
 				new_obj = RTLN(egc_bool_ref_dtype);
-				*new_obj = * (EIF_REFERENCE ) o_ref;
+				*(EIF_BOOLEAN *) new_obj = *(EIF_BOOLEAN *) o_ref;
 				break;
-			case SK_INT:
-				new_obj = RTLN(egc_int_ref_dtype);
-				*(long *) new_obj = *(long *) o_ref;
+			case SK_INT8:
+				new_obj = RTLN(egc_int8_ref_dtype);
+				*(EIF_INTEGER_8 *) new_obj = *(EIF_INTEGER_8 *) o_ref;
+				break;
+			case SK_INT16:
+				new_obj = RTLN(egc_int16_ref_dtype);
+				*(EIF_INTEGER_16 *) new_obj = *(EIF_INTEGER_16 *) o_ref;
+				break;
+			case SK_INT32:
+				new_obj = RTLN(egc_int32_ref_dtype);
+				*(EIF_INTEGER_32 *) new_obj = *(EIF_INTEGER_32 *) o_ref;
+				break;
+			case SK_INT64:
+				new_obj = RTLN(egc_int64_ref_dtype);
+				*(EIF_INTEGER_64 *) new_obj = *(EIF_INTEGER_64 *) o_ref;
 				break;
 			case SK_DOUBLE:
 				new_obj = RTLN(egc_doub_ref_dtype);
-				*(double *) new_obj = *(double *) o_ref;
+				*(EIF_DOUBLE *) new_obj = *(EIF_DOUBLE *) o_ref;
 				break;
 			case SK_FLOAT:
 				new_obj = RTLN(egc_real_ref_dtype);
-				*(float *) new_obj = *(float *) o_ref;
+				*(EIF_REAL *) new_obj = *(EIF_REAL *) o_ref;
 				break;
 			case SK_POINTER:
 				new_obj = RTLN(egc_point_ref_dtype);
@@ -211,11 +232,8 @@ rt_public EIF_REFERENCE striparr(EIF_CONTEXT register EIF_REFERENCE curr, regist
 		((EIF_REFERENCE *) sp)[offset_bis++] = new_obj;
 		}
 	}
-	epop(&loc_stack, 1);		/* Remove protection for area */
-	epop(&loc_stack, 1);		/* Remove protection for array */
+	RT_GC_WEAN_N(6);		/* Remove protection for Eiffel objects*/
 	return array;
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE makestr(register char *s, register int len)
@@ -228,11 +246,19 @@ rt_public EIF_REFERENCE makestr(register char *s, register int len)
 	EIF_REFERENCE string;					/* Were string object is located */
 
 	string = emalloc(egc_str_dtype);	/* If we return, it succeeded */
-	epush(&loc_stack, (EIF_REFERENCE ) &string); /* Protect address in case it moves */
+
+	RT_GC_PROTECT(string); /* Protect address in case it moves */
+
+#ifdef WORKBENCH
+	discard_breakpoints(); /* prevent the debugger from stopping in the following 2 functions */
+#endif
 	nstcall = 0;
 	(egc_strmake)(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING */
 	nstcall = 0;
 	(egc_strset)(string, (EIF_INTEGER) len);		/* Call feature `set_count' in STRING */
+#ifdef WORKBENCH
+	undiscard_breakpoints(); /* the debugger can now stop again */
+#endif
 
 	/* Copy C string `s' in special object `area' of the new string
 	 * descriptor `string'. We know the `area' is the very first reference
@@ -240,11 +266,9 @@ rt_public EIF_REFERENCE makestr(register char *s, register int len)
 	 */
 
 	memcpy (*(EIF_REFERENCE *)string, s, len);
-	epop(&loc_stack, 1);			/* Remove protection */
+	RT_GC_WEAN(string);			/* Remove protection */
 
 	return string;
-
-	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -257,16 +281,12 @@ rt_public EIF_INTEGER sp_count(EIF_REFERENCE spobject)
 
 	EIF_REFERENCE ref; 
 
-	/*** Preconditions. ***/
-	assert (spobject != (EIF_REFERENCE) 0);			/* Not Null. */
-	assert (HEADER (spobject)->ov_flags & EO_SPEC);	/* Must be a special object. */
-	/*** End of preconditions. ***/
+	REQUIRE ("Not null.", spobject != NULL);
+	REQUIRE ("Must be a special object", HEADER (spobject)->ov_flags & EO_SPEC);
 
 	ref = spobject + (HEADER(spobject)->ov_size & B_SIZE) - LNGPAD_2;
 
-	/*** Postconditions. ***/
-	assert (*(EIF_INTEGER *) ref >= 0);				/* Must be positive. */
-	/*** End of Postconditions. ***/
+	ENSURE ("Must be positive", *(EIF_INTEGER *) ref >= 0);
 
 	return *(EIF_INTEGER *)ref;
 }
@@ -298,8 +318,6 @@ rt_public void chkinv (EIF_CONTEXT EIF_REFERENCE obj, int where)
 	memset  (inv_mark_tablep, 0, scount);
 
 	recursive_chkinv(MTC dtype, obj, where);	/* Recurive invariant check */
-
-	EIF_END_GET_CONTEXT
 }
 
 #ifdef WORKBENCH
@@ -309,7 +327,6 @@ rt_public void chkcinv(EIF_CONTEXT EIF_REFERENCE obj)
 	EIF_GET_CONTEXT
 	if (~in_assertion & (WASC(Dtype(obj))) & CK_INVARIANT) {
 		chkinv(MTC obj,1);}
-	EIF_END_GET_CONTEXT
 }
 #endif
 
@@ -324,14 +341,14 @@ rt_private void recursive_chkinv(EIF_CONTEXT int dtype, EIF_REFERENCE obj, int w
 	int *cn_parents;
 	int p_type;
 
-	if (dtype <= 2) return;		/* ANY, GENERAL and PLATFORM do not have invariants */
+	if (dtype <= 0) return;		/* ANY does not have invariants */
 
 	if ((char) 0 != inv_mark_tablep[dtype])	/* Already checked */
 		return;
 	else
 		inv_mark_tablep[dtype] = (char) 1;	/* Mark as checked */
 
-	epush(&loc_stack, (EIF_REFERENCE) &obj);	/* Automatic protection of `obj' */
+	RT_GC_PROTECT(obj);	/* Automatic protection of `obj' */
 	cn_parents = node->cn_parents;	/* Recursion on parents first. */
 
 	/* The list of parent dynamic types is always terminated by a
@@ -351,17 +368,14 @@ rt_private void recursive_chkinv(EIF_CONTEXT int dtype, EIF_REFERENCE obj, int w
 	}
 #else
 	{
-		uint32 body_id;
-		uint16 body_index;
+		uint16 body_id;
 		struct item *last;
 
-		CBodyIdx(body_index,INVARIANT_ID,dtype);
-		if (body_index != INVALID_INDEX) {
-			body_id = dispatch[body_index];
-			if (body_id < zeroc) { 		/* Frozen invariant */
+		CBodyId(body_id,INVARIANT_ID,dtype);
+		if (body_id != INVALID_ID) {
+			if (egc_frozen [body_id]) {	/* Frozen invariant */
 				((void (*)()) egc_frozen[body_id])(obj, where);
 			} else 
-#ifndef DLE
 				/* Melted invariant */
 			{					
 				last = iget();
@@ -370,34 +384,12 @@ rt_private void recursive_chkinv(EIF_CONTEXT int dtype, EIF_REFERENCE obj, int w
 				IC = melt[body_id];
 				xiinv(MTC IC, where);
 			}
-#else
-			if (body_id < dle_level) {
-					/* Static melted invariant */
-				last = iget();
-				last->type = SK_REF;
-				last->it_ref = obj;
-				IC = melt[body_id];
-				xiinv(MTC IC, where);
-			} else if (body_id < dle_zeroc) {
-					/* Dynamic frozen invariant */
-				((void (*)()) dle_frozen[body_id])(obj, where);
-			} else {
-					/* Dynamic melted invariant */
-				last = iget();
-				last->type = SK_REF;
-				last->it_ref = obj;
-				IC = dle_melt[body_id];
-				xiinv(MTC IC, where);
-			}
-#endif
 		}
 	}
 #endif
 
 	/* No more propection for `obj' */
-	epop(&loc_stack, 1);
-
-	EIF_END_GET_CONTEXT
+	RT_GC_WEAN(obj);
 }
 
 #ifdef WORKBENCH
@@ -414,7 +406,6 @@ EIF_REFERENCE cr_exp(uint32 type)
 	register1 struct cnode *exp_desc;	/* Expanded object description */
 
 	result = emalloc(type);
-	epush(&loc_stack, (EIF_REFERENCE)(&result));	/* Protect address in case it moves */
 	exp_desc = &System(Deif_bid(type));
 	if (exp_desc->cn_routids) {
 		int32 feature_id;              	/* Creation procedure feature id */
@@ -422,20 +413,24 @@ EIF_REFERENCE cr_exp(uint32 type)
 
 		feature_id = exp_desc->cn_creation_id;
 		static_id = exp_desc->static_id;	
-		if (feature_id)					/* Call creation routine */
+		if (feature_id) {					/* Call creation routine */
+			RT_GC_PROTECT(result);	/* Protect address in case it moves */
 			wexp(static_id, feature_id, Deif_bid(type), result);
+			RT_GC_WEAN(result);            /* Remove protection */
+		}
 	} else {							/* precompiled creation routine */
 		int32 origin;					/* Origin class id */       
 		int32 offset;					/* Offset in origin class */
 
 		origin = exp_desc->cn_creation_id;
 		offset = exp_desc->static_id;
-		if (origin)						/* Call creation routine */
+		if (origin) {						/* Call creation routine */
+			RT_GC_PROTECT(result);	/* Protect address in case it moves */
 			wpexp(origin, offset, Deif_bid(type), result);
+			RT_GC_WEAN(result);            /* Remove protection */
+		}
 	}
-	epop(&loc_stack, 1);            /* Remove protection */
 	return result;
-	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -468,11 +463,11 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 	 */
 
 	RTLI(2);
-	l[0] = obj;
-	l[1] = parent;
+	RTLR(0,obj);
+	RTLR(1,parent);
 	zone->ov_flags |= EO_COMP;				/* Set the composite flag of `obj' */
 
-	dtype = Dtype(l[0]);
+	dtype = Dtype(obj);
 	desc = &System(dtype);
 	cn_attr = desc->cn_attr;
 	nb_attr = desc->cn_nbattr;
@@ -495,24 +490,24 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 			orig_exp_dtype = exp_dtype = (int) (type & SK_DTYPE);
 			exp_desc = &System(exp_dtype);
 			/* Set the expanded reference */
-			*(EIF_REFERENCE *) (l[0] + REFACS(nb_ref - ++nb_exp)) = l[0] + exp_offset;
+			*(EIF_REFERENCE *) (obj + REFACS(nb_ref - ++nb_exp)) = obj + exp_offset;
 
 			cid = cn_gtypes [i];
 
 			if ((cid != (int16 *) 0) && (cid [1] != -1)) {
-				dftype = eif_compound_id ((int16 *)0, l[1],(int16) (exp_dtype & EO_TYPE), cid);
+				dftype = eif_compound_id ((int16 *)0, parent,(int16) (exp_dtype & EO_TYPE), cid);
 				exp_dtype = (exp_dtype & EO_UPPER) | dftype;
 			}
 
 			/* Set the flags of the expanded object */
-			zone = HEADER(l[0] + exp_offset);
+			zone = HEADER(obj + exp_offset);
 			zone->ov_flags = exp_dtype;
 			zone->ov_flags |= EO_EXP;
-			zone->ov_size = exp_offset + (l[0] - l[1]);
+			zone->ov_size = exp_offset + (obj - parent);
 
 			/* If expanded object is composite also, initialize it. */
 			if (System(orig_exp_dtype).cn_composite)
-				wstdinit(l[0] + exp_offset, l[1]);
+				wstdinit(obj + exp_offset, parent);
 
 			if (exp_desc->cn_routids) {
 				int32 feature_id;			/* Creation procedure feature id */
@@ -521,7 +516,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 				feature_id = exp_desc->cn_creation_id;
 				static_id = exp_desc->static_id;	
 				if (feature_id)				/* Call creation routine */
-					wexp(static_id, feature_id, orig_exp_dtype, l[0] + exp_offset);
+					wexp(static_id, feature_id, orig_exp_dtype, obj + exp_offset);
 			} else {						/* precompiled creation routine */
 				int32 origin;				/* Origin class id */       
 				int32 offset;				/* Offset in origin class */
@@ -529,7 +524,7 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 				origin = exp_desc->cn_creation_id;
 				offset = exp_desc->static_id;
 				if (origin)					/* Call creation routine */
-					wpexp(origin, offset, orig_exp_dtype, l[0] + exp_offset);
+					wpexp(origin, offset, orig_exp_dtype, obj + exp_offset);
 			}
 			}
 			break;
@@ -539,12 +534,12 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 		
 			/* Set dynamic type for bit expanded object */	
 			CAttrOffs(offset,cn_attr[i],dtype);
-			zone = HEADER(l[0] + offset);
+			zone = HEADER(obj + offset);
 			zone->ov_flags = egc_bit_dtype;
 			zone->ov_flags |= EO_EXP;
-			zone->ov_size = offset + (l[0] - l[1]);
+			zone->ov_size = offset + (obj - parent);
 			
-			*(uint32 *)(l[0] + offset) = type & SK_BMASK; /* Write bit size */
+			*(uint32 *)(obj + offset) = type & SK_BMASK; /* Write bit size */
 
 			}
 			break;
@@ -554,7 +549,6 @@ void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 	}
 
 	RTLE;
-	EIF_END_GET_CONTEXT
 }
 #endif
 

@@ -92,7 +92,7 @@ LIBDIR = ../shared
 LIBIDR = ../../idrs
 
 RUN_TIME = ../../run-time
-DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(LIBIDR)
+DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(RUN_TIME)/include -I$(LIBIDR)
 CFLAGS = $(DPFLAGS)
 
 depend:: ../../mkdep

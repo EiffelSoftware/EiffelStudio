@@ -9,15 +9,15 @@
 		Workbench primitives
 */
 
+#include "eif_portable.h"
+#include "eif_wbench.h"
 #include "eif_project.h"
-#include "eif_config.h"
 #include "eif_macros.h"
 #include "eif_malloc.h"
 #include "eif_garcol.h"
 #include "eif_struct.h"
 #include "eif_hashin.h"
 #include "eif_except.h"
-#include "eif_wbench.h"
 #include "eif_interp.h"
 #include "eif_plug.h"
 
@@ -47,36 +47,18 @@ rt_public EIF_REFERENCE_FUNCTION wfeat(int static_type, int32 feature_id, int dy
 	 */
 	EIF_GET_CONTEXT
 	int32 rout_id;
-	uint16 body_index;
 	uint32 body_id;
 
 	nstcall = 0;								/* No invariant check */
 	rout_id = Routids(static_type)[feature_id]; /* Get the routine id */
-	CBodyIdx(body_index,rout_id,dyn_type);		/* Get the body index */
-	body_id = dispatch[body_index];
+	CBodyId(body_id,rout_id,dyn_type);		/* Get the body index */
 
-	if (body_id < zeroc) {
+	if (egc_frozen [body_id])
 		return egc_frozen[body_id];			 /* Frozen feature */
-	}
-	else 
-#ifndef DLE
-	{
+	else {
 		IC = melt[body_id];				 /* Position byte code to interpret */
 		return pattern[MPatId(body_id)].toi;
 	}
-#else
-	if (body_id < dle_level) {
-		IC = melt[body_id];				 /* Position byte code to interpret */
-		return pattern[MPatId(body_id)].toi;
-	} else if (body_id < dle_zeroc) {
-		return dle_frozen[body_id];		 /* Frozen feature in the DC-set */
-	} else {
-		IC = dle_melt[body_id];			 /* Position byte code to interpret */
-		return pattern[DLEMPatId(body_id)].toi;
-	}
-#endif
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE_FUNCTION wpfeat(int32 origin, int32 offset, int dyn_type)
@@ -90,33 +72,17 @@ rt_public EIF_REFERENCE_FUNCTION wpfeat(int32 origin, int32 offset, int dyn_type
 	uint32 body_id;
 
 	nstcall = 0;								/* No invariant check */
-	body_id = dispatch[desc_tab[origin][dyn_type][offset].info];
+	body_id = desc_tab[origin][dyn_type][offset].info;
 
-	if (body_id < zeroc) {
+	if (egc_frozen [body_id])
 		return egc_frozen[body_id];			 /* Frozen feature */
-	}
-	else 
-#ifndef DLE
-	{
+	else {
 		IC = melt[body_id];				 /* Position byte code to interpret */
 		return pattern[MPatId(body_id)].toi;
 	}
-#else
-	if (body_id < dle_level) {
-		IC = melt[body_id];				 /* Position byte code to interpret */
-		return pattern[MPatId(body_id)].toi;
-	} else if (body_id < dle_zeroc) {
-		return dle_frozen[body_id];		 /* Frozen feature in the DC-set */
-	} else {
-		IC = dle_melt[body_id];			 /* Position byte code to interpret */
-		return pattern[DLEMPatId(body_id)].toi;
-	}
-#endif
-
-	EIF_END_GET_CONTEXT
 }
 
-rt_public EIF_REFERENCE_FUNCTION wfeat_inv(int static_type, int32 feature_id, char *name, char *object)
+rt_public EIF_REFERENCE_FUNCTION wfeat_inv(int static_type, int32 feature_id, char *name, EIF_REFERENCE object)
 {
 	/* Function pointer associated to Eiffel feature of feature id
 	 * `feature_id' accessed in Eiffel static type `static_type' to
@@ -126,10 +92,9 @@ rt_public EIF_REFERENCE_FUNCTION wfeat_inv(int static_type, int32 feature_id, ch
 	EIF_GET_CONTEXT
 	int dyn_type;
 	int32 rout_id;
-	uint16 body_index;
 	uint32 body_id;
 
-	if (object == (char *) 0)			/* Void reference check */
+	if (object == NULL)			/* Void reference check */
 			/* Raise an exception for a feature named `name' applied
 			 * to a void reference. */
 		eraise(name, EN_VOID);
@@ -139,36 +104,17 @@ rt_public EIF_REFERENCE_FUNCTION wfeat_inv(int static_type, int32 feature_id, ch
 	dyn_type = Dtype(object);
 
 	rout_id = Routids(static_type)[feature_id];
-	CBodyIdx(body_index,rout_id,dyn_type);
-	body_id = dispatch[body_index];
+	CBodyId(body_id,rout_id,dyn_type);
 
-	if (body_id < zeroc)
-		return egc_frozen[body_id];
-	else 
-#ifndef DLE
-	{
+	if (egc_frozen [body_id])
+		return egc_frozen[body_id];			 /* Frozen feature */
+	else {
 		IC = melt[body_id];	
 		return pattern[MPatId(body_id)].toi;
 	}
-#else
-	if (body_id < dle_level) {
-			/* Static melted routine */
-		IC = melt[body_id];	
-		return pattern[MPatId(body_id)].toi;
-	} else if (body_id < dle_zeroc) {
-			/* Dynamic frozen routine */
-		return dle_frozen[body_id];
-	} else {
-			/* Dynamic melted routine */
-		IC = dle_melt[body_id];	
-		return pattern[DLEMPatId(body_id)].toi;
-	}
-#endif
-
-	EIF_END_GET_CONTEXT
 }
 
-rt_public EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *name, char *object)
+rt_public EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *name, EIF_REFERENCE object)
 {
 	/* Function pointer associated to Eiffel feature of origin class
 	 * `origin', identified by `offset' in that class, and to
@@ -179,7 +125,7 @@ rt_public EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *na
 	int dyn_type;
 	uint32 body_id;
 
-	if (object == (char *) 0)			/* Void reference check */
+	if (object == NULL)			/* Void reference check */
 			/* Raise an exception for a feature named `name' applied
 			 * to a void reference. */
 		eraise(name, EN_VOID);
@@ -188,36 +134,18 @@ rt_public EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *na
 
 	dyn_type = Dtype(object);
 
-	body_id = dispatch[desc_tab[origin][dyn_type][offset].info];
+	body_id = desc_tab[origin][dyn_type][offset].info;
 
-	if (body_id < zeroc)
+	if (egc_frozen [body_id])
 		return egc_frozen[body_id];
-	else 
-#ifndef DLE
-	{
+	else {
 		IC = melt[body_id];	
 		return pattern[MPatId(body_id)].toi;
 	}
-#else
-	if (body_id < dle_level) {
-			/* Static melted routine */
-		IC = melt[body_id];	
-		return pattern[MPatId(body_id)].toi;
-	} else if (body_id < dle_zeroc) {
-			/* Dynamic frozen routine */
-		return dle_frozen[body_id];
-	} else {
-			/* Dynamic melted routine */
-		IC = dle_melt[body_id];	
-		return pattern[DLEMPatId(body_id)].toi;
-	}
-#endif
-
-	EIF_END_GET_CONTEXT
 }
 
 
-rt_public void wexp(int static_type, int32 feature_id, int dyn_type, char *object)
+rt_public void wexp(int static_type, int32 feature_id, int dyn_type, EIF_REFERENCE object)
 {
 	/* Call the creation of the expanded.
 	 * with static type `stype', dynamic type `dtype' and
@@ -225,43 +153,22 @@ rt_public void wexp(int static_type, int32 feature_id, int dyn_type, char *objec
 	 */
 	EIF_GET_CONTEXT
 	int32 rout_id;
-	uint16 body_index;
 	uint32 body_id;
-	char *OLD_IC;
+	unsigned char *OLD_IC;
 
 	nstcall = 0;								/* No invariant check */
 	rout_id = Routids(static_type)[feature_id]; /* Get the routine id */
-	CBodyIdx(body_index,rout_id,dyn_type);		/* Get the body index */
-	body_id = dispatch[body_index];
+	CBodyId(body_id,rout_id,dyn_type);		/* Get the body index */
 
 	OLD_IC = IC;								/* Save old IC */
-	if (body_id < zeroc) 
+	if (egc_frozen [body_id])
 		((void (*)()) (egc_frozen[body_id])) (object);	/* Frozen feature */
 									/* Call frozen creation routine */
-	else 
-#ifndef DLE
-	{
+	else {
 		IC = melt[body_id];	 		/* Position byte code to interpret */
 		((void (*)()) (pattern[MPatId(body_id)].toi)) (object);
 									/* Call melted creation routine */
 	}
-#else
-	if (body_id < dle_level) {
-			/* Static melted routine */
-		IC = melt[body_id];	 		/* Position byte code to interpret */
-		((void (*)()) (pattern[MPatId(body_id)].toi)) (object);
-									/* Call melted creation routine */
-	} else if (body_id < dle_zeroc) {
-			/* Dynamic frozen routine */
-		((void (*)()) (dle_frozen[body_id])) (object);	/* Frozen feature */
-									/* Call frozen creation routine */
-	} else {
-			/* Dynamic melted routine */
-		IC = dle_melt[body_id];	 		/* Position byte code to interpret */
-		((void (*)()) (pattern[DLEMPatId(body_id)].toi)) (object);
-									/* Call melted creation routine */
-	}
-#endif
 	IC = OLD_IC;					/* Restore old IC.
 									 * This was needed if expanded objects
 									 * had expanded objects (which has a
@@ -270,10 +177,9 @@ rt_public void wexp(int static_type, int32 feature_id, int dyn_type, char *objec
 									 * the IC was return to the previous 
 									 * state.
 									 */
-	EIF_END_GET_CONTEXT
 }
 
-rt_public void wpexp(int32 origin, int32 offset, int dyn_type, char *object)
+rt_public void wpexp(int32 origin, int32 offset, int dyn_type, EIF_REFERENCE object)
 {
 	/* Call the creation of the expanded (when precompiled).
 	 * with origin class `origin', dynamic type `dtype' and
@@ -282,39 +188,20 @@ rt_public void wpexp(int32 origin, int32 offset, int dyn_type, char *object)
 
 	EIF_GET_CONTEXT
 	uint32 body_id;
-	char *OLD_IC;
+	unsigned char *OLD_IC;
 
 	nstcall = 0;								/* No invariant check */
-	body_id = dispatch[desc_tab[origin][dyn_type][offset].info];
+	body_id = desc_tab[origin][dyn_type][offset].info;
 
 	OLD_IC = IC;								/* Save old IC */
-	if (body_id < zeroc) 
+	if (egc_frozen [body_id])
 		((void (*)()) (egc_frozen[body_id])) (object);	/* Frozen feature */
 									/* Call frozen creation routine */
-	else 
-#ifndef DLE
-	{
+	else {
 		IC = melt[body_id];	 		/* Position byte code to interpret */
 		((void (*)()) (pattern[MPatId(body_id)].toi)) (object);
 									/* Call melted creation routine */
 	}
-#else
-	if (body_id < dle_level) {
-			/* Static melted routine */
-		IC = melt[body_id];	 		/* Position byte code to interpret */
-		((void (*)()) (pattern[MPatId(body_id)].toi)) (object);
-									/* Call melted creation routine */
-	} else if (body_id < dle_zeroc) {
-			/* Dynamic frozen routine */
-		((void (*)()) (dle_frozen[body_id])) (object);	/* Frozen feature */
-									/* Call frozen creation routine */
-	} else {
-			/* Dynamic melted routine */
-		IC = dle_melt[body_id];	 		/* Position byte code to interpret */
-		((void (*)()) (pattern[DLEMPatId(body_id)].toi)) (object);
-									/* Call melted creation routine */
-	}
-#endif
 	IC = OLD_IC;					/* Restore old IC.
 									 * This was needed if expanded objects
 									 * had expanded objects (which has a
@@ -323,7 +210,6 @@ rt_public void wpexp(int32 origin, int32 offset, int dyn_type, char *object)
 									 * the IC was return to the previous 
 									 * state.
 									 */
-	EIF_END_GET_CONTEXT
 }
 
 rt_public long wattr(int static_type, int32 feature_id, int dyn_type)
@@ -351,7 +237,7 @@ rt_public long wpattr(int32 origin, int32 offset, int dyn_type)
 	return (desc_tab[origin][dyn_type][offset].info);
 }
 
-rt_public long wattr_inv (int static_type, int32 feature_id, char *name, char *object)
+rt_public long wattr_inv (int static_type, int32 feature_id, char *name, EIF_REFERENCE object)
 				
 				 
 			 	/* Target object */
@@ -368,7 +254,7 @@ rt_public long wattr_inv (int static_type, int32 feature_id, char *name, char *o
 	int32 rout_id;
 	long offset;
 
-	if (object == (char *) 0)			/* Void reference check */
+	if (object == NULL)			/* Void reference check */
 			/* Raise an exception for a feature named `fname' applied
 			 * to a void reference. */
 		eraise(name, EN_VOID);
@@ -390,7 +276,7 @@ rt_public long wattr_inv (int static_type, int32 feature_id, char *name, char *o
 	return (offset);
 }
 
-rt_public long wpattr_inv (int32 origin, int32 offset, char *name, char *object)
+rt_public long wpattr_inv (int32 origin, int32 offset, char *name, EIF_REFERENCE object)
 					 
 			 	/* Target object */
 		   		/* Feature name to apply */
@@ -404,7 +290,7 @@ rt_public long wpattr_inv (int32 origin, int32 offset, char *name, char *object)
 
 	int dyn_type;
 
-	if (object == (char *) 0)			/* Void reference check */
+	if (object == NULL)			/* Void reference check */
 			/* Raise an exception for a feature named `fname' applied
 			 * to a void reference. */
 		eraise(name, EN_VOID);
@@ -455,7 +341,7 @@ rt_public int wptype(int32 origin, int32 offset, int dyn_type)
 
 /* GENERIC CONFORMANCE */
 
-rt_public int wtype_gen(int static_type, int32 feature_id, char *object)
+rt_public int wtype_gen(int static_type, int32 feature_id, EIF_REFERENCE object)
 {
 	/* Type of a generic feature of routine id `rout_id' in the class of
 	 * dynamic type of `object'. Replaces formal generics by actual gen.
@@ -476,7 +362,7 @@ rt_public int wtype_gen(int static_type, int32 feature_id, char *object)
 	return (int) eif_compound_id ((int16 *)0, object, type, gen_type);
 }
 
-rt_public int wptype_gen(int static_type, int32 origin, int32 offset, char *object)
+rt_public int wptype_gen(int static_type, int32 origin, int32 offset, EIF_REFERENCE object)
 {
 	/* Type of a generic feature of routine identified by `offset' in 
 	 * its origin class `origin' and to be applied on `object'. Replaces
@@ -502,38 +388,17 @@ rt_public EIF_REFERENCE_FUNCTION wdisp(int dyn_type)
 	 * Return a function pointer.
 	 */
 	EIF_GET_CONTEXT
-	uint16 body_index;
 	uint32 body_id;
 
 	nstcall = 0;								/* No invariant check */
-	CBodyIdx(body_index,egc_disp_rout_id,dyn_type);	/* Get the body index */
-	body_id = dispatch[body_index];
+	CBodyId(body_id,egc_disp_rout_id,dyn_type);	/* Get the body index */
 
-	if (body_id < zeroc) {
+	if (egc_frozen [body_id])
 		return egc_frozen[body_id];		 /* Frozen feature */
-	}
-	else 
-#ifndef DLE
-	{
+	else {
 		IC = melt[body_id];	 /* Position byte code to interpret */
 		return pattern[MPatId(body_id)].toi;
 	}
-#else
-	if (body_id < dle_level) {
-			/* Static melted routine */
-		IC = melt[body_id];	 /* Position byte code to interpret */
-		return pattern[MPatId(body_id)].toi;
-	} else if (body_id < dle_zeroc) {
-			/* Dynamic frozen feature */
-		return dle_frozen[body_id];
-	} else {
-			/* Dynamic melted routine */
-		IC = dle_melt[body_id];	 /* Position byte code to interpret */
-		return pattern[DLEMPatId(body_id)].toi;
-	}
-#endif
-
-	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -590,14 +455,13 @@ rt_public void init_desc(void)
 	int i;
 	struct bounds def;
 
-	def.max = -1; def.min = ccount;
-	bounds_tab = (struct bounds *) 
-			cmalloc (sizeof(struct bounds) * (ccount + 1));	
-	if ((struct bounds *) 0 == bounds_tab)
+	def.max = -1;
+	def.min = (int16) ccount;
+	bounds_tab = (struct bounds *) cmalloc (sizeof(struct bounds) * (ccount + 1));	
+	if (bounds_tab == NULL)
 		enomem(MTC_NOARG);
-	mdesc_tab = (struct mdesc *) 
-			cmalloc (sizeof(struct mdesc) * MDESC_INC);
-	if ((struct mdesc *) 0 == mdesc_tab)
+	mdesc_tab = (struct mdesc *) cmalloc (sizeof(struct mdesc) * MDESC_INC);
+	if (mdesc_tab == NULL)
 		enomem(MTC_NOARG);
 	mdesc_tab_size = MDESC_INC;
 	mdesc_count = 0;
@@ -624,8 +488,8 @@ rt_public void put_desc(struct desc_info *desc_ptr, int org, int dtype)
 		(desc_tab[org])[dtype] = desc_ptr;
 	} else {
 		b = bounds_tab+org;
-		b->min += (dtype<b->min)?(dtype-b->min):0;
-		b->max += (dtype>b->max)?(dtype-b->max):0;
+		b->min = (int16) (b->min + ((dtype<b->min)?(dtype-b->min):0));
+		b->max = (int16) (b->max + ((dtype>b->max)?(dtype-b->max):0));
 	}
 }
 
@@ -644,8 +508,8 @@ rt_public void put_mdesc(struct desc_info *desc_ptr, int org, int dtype)
 
 	if (0 == desc_fill) {
 		b = bounds_tab+org;
-		b->min += (dtype<b->min)?(dtype-b->min):0;
-		b->max += (dtype>b->max)?(dtype-b->max):0;
+		b->min = (int16) (b->min + ((dtype<b->min)?(dtype-b->min):0));
+		b->max = (int16) (b->max + ((dtype>b->max)?(dtype-b->max):0));
 	}	
 
 	/* Insert information in temporary table */
@@ -659,8 +523,8 @@ rt_public void put_mdesc(struct desc_info *desc_ptr, int org, int dtype)
 	}
 
 	md.desc_ptr = desc_ptr;
-	md.origin = org;
-	md.type = dtype;
+	md.origin = (int16) org;
+	md.type = (int16) dtype;
 
 	mdesc_tab[mdesc_count++] = md;
 }

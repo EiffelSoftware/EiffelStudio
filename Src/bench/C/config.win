@@ -731,6 +731,12 @@
  */
 /*#define MAY_PANIC	/* Extra run-time consistency checks */
 
+/* INTEGER_64 display format:
+ * 	This symbol is used in printf and others to display 64 bits signed
+ *	integers.
+ */
+#define EIF_INTEGER_64_DISPLAY "I64d"
+
 #define EIF_WINDOWS
 #define EIF_WIN_31
 

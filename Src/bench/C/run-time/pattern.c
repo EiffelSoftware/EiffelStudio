@@ -15,7 +15,6 @@
 	ACM, volume 35, number 4, April 1992 (Technical Correspondance).
 */
 
-#include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_malloc.h"
 #include "eif_hector.h"
@@ -77,8 +76,6 @@ rt_public int str_str(char *text, char *pattern, int tlen, int plen, int start, 
 		return 0;				/* Pattern not found */
 	else
 		return 1 + (p - text);		/* Index within string */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void compile(char *pattern, register int plen, uint32 *dtable)
@@ -151,8 +148,6 @@ rt_private void fuz_compile(char *pattern, register int plen, int fuzzy)
 
 	for (i = 0; i < fuzzy; i++)
 		compile(pattern, plen - i, darray[i]);
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void free_structures(int n)
@@ -164,8 +159,6 @@ rt_private void free_structures(int n)
 	for (i = 0; i < n; i++)
 		eif_free (darray[i]);	/* Free allocated delta tables */
 	eif_free (darray);					/* Free main table */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private char *qsearch(char *text, int tlen, char *pattern, int plen)
@@ -205,8 +198,6 @@ rt_private char *qsearch(char *text, int tlen, char *pattern, int plen)
 		tx += eif_delta[*(tx + plen)];	/* Shift to next text location */
 	}
 	return (char *) 0;		/* No substring found */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int fuzzy)
@@ -255,7 +246,5 @@ rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int 
 	}
 
 	return (char *) 0;		/* No substring found */
-
-	EIF_END_GET_CONTEXT
 }
 

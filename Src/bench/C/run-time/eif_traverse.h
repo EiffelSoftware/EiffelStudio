@@ -13,12 +13,12 @@
 #ifndef _eif_traverse_h_
 #define _eif_traverse_h_
 
+#include "eif_hector.h"
+#include "eif_globals.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "eif_hector.h"
-#include "eif_globals.h"
 
 /* Flags for traversal */
 #define TR_PLAIN		0x00		/* No accounting during object traversal */
@@ -26,8 +26,10 @@ extern "C" {
 #define TR_MAP			0x02		/* Build a maping table in obj_table */
 #define INDEPEND_ACCOUNT		0x05		/* Accounting of objects in obj_nb */
 
-extern long obj_nb;					/* Count of marked objects */
+extern EIF_INTEGER_32 obj_nb;					/* Count of marked objects */
 extern void traversal(char *object, int p_accounting); /* Traversal of objects */
+
+RT_LNK void find_referers (EIF_REFERENCE target, EIF_REFERENCE result, int result_size);
 
 /* Maping table handling */
 extern void map_start(void);			/* Reset LIFO stack into a FIFO one */

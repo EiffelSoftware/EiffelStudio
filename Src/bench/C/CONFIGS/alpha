@@ -136,6 +136,7 @@ mtldflags=''
 ldsharedflags='-shared -o'
 mtldsharedflags='-shared -o'
 shared_suffix='.so'
+shared_rt_suffix='.so'
 shared_prefix='lib'
 
 lkflags=''

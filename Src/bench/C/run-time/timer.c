@@ -10,7 +10,6 @@
 	Time-related routines
 */
 
-#include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_confmagic.h"
 #include "eif_timer.h"

@@ -13,13 +13,13 @@
 #ifndef _eif_out_h_
 #define _eif_out_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "eif_portable.h"
 #include "eif_cecil.h"		/* %%zs added for EIF_OBJECT definition line 26... */
 #include "eif_interp.h"		/* %%zs added for 'struct item' definition line 48 */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /*
  * Function declarations 
@@ -34,8 +34,8 @@ extern char *build_out(EIF_OBJECT object);		/* Build tagged out in C buffer */
  * Building `out' string for simple types.
  */
 
-RT_LNK EIF_REFERENCE c_outb(EIF_BOOLEAN b);
 RT_LNK EIF_REFERENCE c_outi(EIF_INTEGER i);
+RT_LNK EIF_REFERENCE c_outi64(EIF_INTEGER_64 i);
 RT_LNK EIF_REFERENCE c_outr(EIF_REAL f);
 RT_LNK EIF_REFERENCE c_outd(EIF_DOUBLE d);
 RT_LNK EIF_REFERENCE c_outc(EIF_CHARACTER c);

@@ -1,0 +1,8 @@
+LIBRARY minilzo.dll
+DESCRIPTION	'minilzo.dll'
+
+EXPORTS
+
+lzo1x_1_compress
+lzo1x_decompress
+lzo1x_decompress_safe

@@ -22,7 +22,7 @@
  *	This symbol, if defined, indicates that the program is running under
  *	a BSD system.
  */
-/*#define BSD		/**/
+/*#define BSD		*/	/**/
 
 /* ABORTSIG:
  *	This symbol holds the signal number (symbol) used by the abort() call. To
@@ -80,32 +80,32 @@
  *	This symbol is defined if the bcmp() routine is available to
  *	compare blocks of memory.
  */
-/*#define HAS_BCMP	/**/
+/*#define HAS_BCMP	*/	/**/
 
 /* HAS_BCOPY:
  *	This symbol is defined if the bcopy() routine is available to
  *	copy blocks of memory.
  */
-/*#define HAS_BCOPY	/**/
+/*#define HAS_BCOPY	*/	/**/
 
 /* USE_BSDJMP:
  *	This symbol, if defined, indicates that the BSD _setjmp and _longjmp
  *	routines are available to do non-local gotos wihtout saving or restoring
  *	the signal mask flag.
  */
-/*#define USE_BSDJMP		/**/
+/*#define USE_BSDJMP		*/	/**/
 
 /* HAS_BZERO:
  *	This symbol is defined if the bzero() routine is available to
  *	set a memory block to 0.
  */
-/*#define HAS_BZERO	/**/
+/*#define HAS_BZERO	*/	/**/
 
 /* HAS_CHOWN:
  *	This symbol, if defined, indicates that the chown routine is
  *	available.
  */
-/*#define HAS_CHOWN		/**/
+/*#define HAS_CHOWN		*/	/**/
 
 /* HAS_DUP2:
  *	This symbol, if defined, indicates that the dup2 routine is
@@ -119,7 +119,7 @@
  *	That is, a select() call on that file descriptor will not block when
  *	only an EOF remains (typical behaviour for BSD systems).
  */
-/*#define EOFPIPE		/**/
+/*#define EOFPIPE		*/	/**/
 
 /* HAS_FCNTL:
  *	This symbol, if defined, indicates to the C program that
@@ -140,7 +140,7 @@
  *	The type "Timeval" should be used to refer to "struct timeval".
  */
 #define HAS_FTIME		/**/
-/*#define HAS_GETTIMEOFDAY	/**/
+/*#define HAS_GETTIMEOFDAY	*/	/**/
 #ifdef HAS_FTIME
 #define Timeval struct timeb		/* Structure used by ftime() */
 #endif
@@ -152,7 +152,7 @@
  *	This symbol, if defined, indicates that the gethostid system call is
  *	available to get the host id.
  */
-/*#define HAS_GETHOSTID		/**/
+/*#define HAS_GETHOSTID		*/	/**/
 
 /* HAS_GETHOSTNAME:
  *	This symbol, if defined, indicates that the C program may use the
@@ -171,9 +171,9 @@
  *	Note that the command uses a fully qualified path, so that it is safe
  *	even if used by a process with super-user privileges.
  */
-/*#define HAS_GETHOSTNAME	/**/
-/*#define HAS_UNAME		/**/
-/*#define PHOSTNAME "/usr/bin/hostname"	/* How to get the host name */
+/*#define HAS_GETHOSTNAME	*/	/**/
+/*#define HAS_UNAME		*/	/**/
+/*#define PHOSTNAME "/usr/bin/hostname" */	/* How to get the host name */
 
 /* HAS_GETOPT:
  *	This symbol, if defined, indicates that the getopt() routine exists.
@@ -191,13 +191,13 @@
  *	This symbol is defined if signal handlers needn't be reinstated after
  *	receipt of a signal.
  */
-/*#define SIGNALS_KEPT	/**/
+/*#define SIGNALS_KEPT	*/	/**/
 
 /* HAS_LINK:
  *	This symbol, if defined, indicates that the link routine is
  *	available to create hard links.
  */
-/*#define HAS_LINK	/**/
+/*#define HAS_LINK	*/	/**/
 
 /* HAS_LSTAT:
  *	This symbol, if defined, indicates that the lstat routine is
@@ -225,7 +225,7 @@
  *	check for an active pid (i.e. the kernel will run all the
  *	necessary pid checks, but no signal is actually sent).
  */
-/*#define PIDCHECK		/**/
+/*#define PIDCHECK		*/	/**/
 
 /* HAS_READDIR:
  *	This symbol, if defined, indicates that the readdir routine is
@@ -238,7 +238,7 @@
  *	This symbol, if defined, indicates that the rewinddir routine is
  *	available. You may have to include <dirent.h>. See I_DIRENT.
  */
-/*#define HAS_REWINDDIR		/**/
+/*#define HAS_REWINDDIR		*/	/**/
 
 /* HAS_RENAME:
  *	This symbol, if defined, indicates that the rename routine is available
@@ -259,7 +259,7 @@
  *	available to get process statistics with a sub-second accuracy.
  *	Inclusion of <sys/resource.h> and <sys/time.h> may be necessary.
  */
-/*#define HAS_GETRUSAGE		/**/
+/*#define HAS_GETRUSAGE		*/	/**/
 
 /* HAS_SAFE_BCOPY:
  *	This symbol, if defined, indicates that the bcopy routine is available
@@ -267,7 +267,7 @@
  *	probably use memmove() or memcpy(). If neither is defined, roll your
  *	own version.
  */
-/*#define HAS_SAFE_BCOPY	/**/
+/*#define HAS_SAFE_BCOPY	*/	/**/
 
 /* HAS_SAFE_MEMCPY:
  *	This symbol, if defined, indicates that the memcpy routine is available
@@ -275,33 +275,33 @@
  *	probably use memmove() or memcpy(). If neither is defined, roll your
  *	own version.
  */
-/*#define HAS_SAFE_MEMCPY	/**/
+/*#define HAS_SAFE_MEMCPY	*/	/**/
 
 /* HAS_SBRK:
  *	This symbol, if defined, indicates that the sbrk system call is
  *	available to add/relase core. Always true on Unix.
  */
-/*#define HAS_SBRK	/**/
+/*#define HAS_SBRK	*/	/**/
 
 /* USE_BSDPGRP:
  *	This symbol, if defined, indicates that the BSD notion of process
  *	group is to be used. For instance, you have to say setpgrp(pid, pgrp)
  *	instead of the USG setpgrp().
  */
-/*#define USE_BSDPGRP		/**/
+/*#define USE_BSDPGRP		*/	/**/
 
 /* HAS_SYS_SIGLIST:
  *	This symbol, if defined, indicates that the sys_siglist array is
  *	available to translate signal numbers to strings.
  */
-/*#define HAS_SYS_SIGLIST		/**/
+/*#define HAS_SYS_SIGLIST		*/	/**/
 
 /* HAS_SIGSETMASK:
  *	This symbol, if defined, indicates that the sigsetmask() routine is
  *	available to set current signal mask. Otherwise, you should probably
  *	emulate this by using signal(), but fear race conditions...
  */
-/*#define HAS_SIGSETMASK		/**/
+/*#define HAS_SIGSETMASK		*/	/**/
 
 /* HAS_SIGVEC:
  *	This symbol, if defined, indicates that BSD reliable signals are
@@ -312,8 +312,8 @@
  *	sigvector() instead, and that sigspace() is provided instead of
  *	sigstack().  This is probably only true for HP-UX.
  */
-/*#define HAS_SIGVEC	/**/
-/*#define HAS_SIGVECTOR	/**/
+/*#define HAS_SIGVEC	*/	/**/
+/*#define HAS_SIGVECTOR	*/	/**/
 
 /* HAS_SOCKET:
  *	This symbol, if defined, indicates that the BSD socket interface is
@@ -325,7 +325,7 @@
  *	This symbol is defined to indicate that the index()/rindex()
  *	functions are available for string searching.
  */
-/*#define HAS_INDEX	/**/
+/*#define HAS_INDEX	*/	/**/
 
 /* USE_STRUCT_COPY:
  *	This symbol, if defined, indicates that this C compiler knows how
@@ -362,8 +362,8 @@
  *	array is there.
  */
 #define HAS_STRERROR		/**/
-/*#define HAS_SYS_ERRLIST	/**/
-/*#define HAS_SYS_ERRNOLIST	/**/
+/*#define HAS_SYS_ERRLIST	*/	/**/
+/*#define HAS_SYS_ERRNOLIST	*/	/**/
 #define Strerror(e) strerror(e)
 
 /* HAS_TIME:
@@ -387,14 +387,14 @@
  *	or clock_t on BSD sites (in which case <sys/types.h> should be
  *	included).
  */
-/*#define HAS_TIMES		/**/
+/*#define HAS_TIMES		*/	/**/
 #define Clock_t clock_t	/* Clock time */
 
 /* HAS_USLEEP:
  *	This symbol, if defined, indicates that the usleep routine is
  *	available to let the process sleep on a sub-second accuracy.
  */
-/*#define HAS_USLEEP		/**/
+/*#define HAS_USLEEP		*/	/**/
 
 /* Signal_t:
  *	This symbol's value is either "void" or "int", corresponding to the
@@ -415,8 +415,8 @@
  *	of directory entry names is provided by a d_namlen field.  Otherwise
  *	you need to do strlen() on the d_name field.
  */
-/*#define I_DIRENT		/**/
-/*#define DIRNAMLEN	/**/
+/*#define I_DIRENT		*/	/**/
+/*#define DIRNAMLEN	*/	/**/
 
 /* I_FCNTL:
  *	This manifest constant tells the C program to include <fcntl.h>.
@@ -427,7 +427,7 @@
  *	This symbol, if defined, indicates to the C program that it should
  *	include <grp.h>.
  */
-/*#define I_GRP		/**/
+/*#define I_GRP		*/	/**/
 
 /* I_LIMITS:
  *	This symbol, if defined, indicates to the C program that it should
@@ -444,14 +444,14 @@
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/in.h> instead of <netinet/in.h>.
  */
-/*#define I_NETINET_IN	/**/
-/*#define I_SYS_IN		/**/
+/*#define I_NETINET_IN	*/	/**/
+/*#define I_SYS_IN		*/	/**/
 
 /* I_PWD:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <pwd.h>.
  */
-/*#define I_PWD		/**/
+/*#define I_PWD		*/	/**/
 
 /* I_STRING:
  *	This symbol, if defined, indicates to the C program that it should
@@ -463,13 +463,13 @@
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/dir.h>.
  */
-/*#define I_SYS_DIR		/**/
+/*#define I_SYS_DIR		*/	/**/
 
 /* I_SYS_FILE:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/file.h> to get definition of R_OK and friends.
  */
-/*#define I_SYS_FILE		/**/
+/*#define I_SYS_FILE		*/	/**/
 
 /* USE_TIOCNOTTY:
  *	This symbol, if defined indicate to the C program that the ioctl()
@@ -477,25 +477,25 @@
  *	Otherwise (on USG probably), it is enough to close the standard file
  *	decriptors and do a setpgrp().
  */
-/*#define USE_TIOCNOTTY	/**/
+/*#define USE_TIOCNOTTY	*/	/**/
 
 /* I_SYS_NDIR:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/ndir.h>.
  */
-/*#define I_SYS_NDIR	/**/
+/*#define I_SYS_NDIR	*/	/**/
 
 /* I_SYS_RESOURCE:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/resource.h>.
  */
-/*#define I_SYS_RESOURCE		/**/
+/*#define I_SYS_RESOURCE		*/	/**/
 
 /* I_SYS_SOCKET:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/socket.h> before performing socket calls.
  */
-/* #define I_SYS_SOCKET		/**/
+/* #define I_SYS_SOCKET		*/	/**/
 
 /* I_SYS_TIMEB:
  *	This symbol, if defined, indicates to the C program that it should
@@ -510,13 +510,13 @@
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/times.h>.
  */
-/*#define	I_SYS_TIMES		/**/
+/*#define	I_SYS_TIMES		*/	/**/
 
 /* I_SYS_UN:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/un.h> to get UNIX domain socket definitions.
  */
-/*#define I_SYS_UN		/**/
+/*#define I_SYS_UN		*/	/**/
 
 /* I_TIME:
  *	This symbol, if defined, indicates to the C program that it should
@@ -531,8 +531,8 @@
  *	include <sys/time.h> with KERNEL defined.
  */
 #define I_TIME		/**/
-/*#define I_SYS_TIME		/**/
-/*#define I_SYS_TIME_KERNEL		/**/
+/*#define I_SYS_TIME		*/	/**/
+/*#define I_SYS_TIME_KERNEL		*/	/**/
 
 /* I_STDARG:
  *	This symbol, if defined, indicates that <stdarg.h> exists and should
@@ -543,7 +543,7 @@
  *	include <varargs.h>.
  */
 #define I_STDARG		/**/
-/*#define I_VARARGS	/**/
+/*#define I_VARARGS	*/	/**/
 
 /* INTSIZE:
  *	This symbol contains the size of an int, so that the C preprocessor
@@ -603,7 +603,7 @@
  *	core to the system. If not, you'd probably be better off using the
  *	mmap() system call.
  */
-/*#define HAS_SMART_SBRK /**/
+/*#define HAS_SMART_SBRK */	/**/
 
 /* Caddr_t:
  *	This symbol holds the type of a core address. It is inteded to be used
@@ -616,7 +616,7 @@
  *	This symbol if defined indicates to the C program that the SO_KEEPALIVE
  *	option of setsockopt() will work as advertised in the manual.
  */
-/*#define KEEPALIVE		/**/
+/*#define KEEPALIVE		*/	/**/
 
 /* Uid_t:
  *	This symbol holds the type used to declare user ids in the kernel.
@@ -656,14 +656,14 @@
  *	to leave only critical error messages). This will never be defined by
  *	default.
  */
-/*#define USE_ADD_LOG		/* Allow logging */
+/*#define USE_ADD_LOG	*/	/* Allow logging */
 #define LOGGING_LEVEL	9	/* Logging level */
 
 /* HAS_SMART_MMAP:
  *	This symbol, if defined, indicates to the C program that it can
  *	use mmap and munmap for shared memory.
  */
-/*#define HAS_SMART_MMAP	/**/
+/*#define HAS_SMART_MMAP	*/	/**/
 
 /* HAS_GETPWUID:
  *	This symbol, if defined, indicates that the getpwuid system call is
@@ -677,11 +677,11 @@
  *	This symbol, if defined, indicates that the geteuid system call is
  *	available
  */
-/*#define HAS_GETPWUID	/**/
+/*#define HAS_GETPWUID	*/	/**/
 
-/*#define HAS_GETGRGID	/**/
+/*#define HAS_GETGRGID	*/	/**/
 
-/*#define HAS_GETEUID	/**/
+/*#define HAS_GETEUID	*/	/**/
 
 /* HAS_UTIME:
  *	This symbol, if defined, indicates that the utime routine is
@@ -694,19 +694,19 @@
  *	include <direct.h>.
  * This is a pseudo unit for the Watcom C compiler (DOS)
  */
-/* #define I_DIRECT		/**/
+/* #define I_DIRECT		*/	/**/
 
 /* I_FD_SET_SYS_SELECT:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <sys/select.h> in order to get definition of struct fd_set.
  */
-/*#define I_FD_SET_SYS_SELECT	/**/
+/*#define I_FD_SET_SYS_SELECT	*/	/**/
 
 /* I_NETNS_NS:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <netns/ns.h>.
  */
-/*#define I_NETNS_NS		/**/
+/*#define I_NETNS_NS		*/	/**/
 
 /* I_TMVAL_SYS_SELECT:
  *	This symbol, if defined, indicates to the C program that it should
@@ -715,13 +715,13 @@
  * This unit overrides the default one. It checks the content of
  * the include file <sys/select.h> to find the definition of timeval
  */
-/*#define I_TMVAL_SYS_SELECT	/**/
+/*#define I_TMVAL_SYS_SELECT	*/	/**/
 
 /* I_XM_PROTOCOLS:
  *	This symbol, if defined, indicates to the C program that it should
  *	include <Xm/Protocols.h>.
  */
-/*#define I_XM_PROTOCOLS		/**/
+/*#define I_XM_PROTOCOLS		*/	/**/
 
 /* MAY_PANIC:
  *	This symbol is defined if the run-time is to be compiled with extra
@@ -729,8 +729,13 @@
  *	never occur, and they raise a panic if they do. Typical checks include
  *	free-list consistency check, stack overflow or underflow, etc...
  */
-/*#define MAY_PANIC	/* Extra run-time consistency checks */
+/*#define MAY_PANIC	*/	/* Extra run-time consistency checks */
 
+/* INTEGER_64 display format:
+ * 	This symbol is used in printf and others to display 64 bits signed
+ *	integers.
+ */
+#define EIF_INTEGER_64_DISPLAY "I64d"
 
 #define HAS_UNLINK
 

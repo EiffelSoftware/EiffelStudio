@@ -10,30 +10,14 @@
 	Routines to implement class INTERNAL
 */
 
-#include "eif_project.h" /* for egc_..._ref_dtype */
-#include "eif_config.h"
+#include "eif_portable.h"
 #include "eif_internal.h"
-#ifdef I_STRING
+#include "eif_cecil.h"
+#include "eif_project.h" /* for egc_..._ref_dtype */
+
 #include <string.h>
-#else
-#include <strings.h>
-#endif
 
 rt_private char *ei_oref(long, EIF_REFERENCE);		/* Offset in object */
-
-rt_public long ei_dtype (EIF_REFERENCE object)
-{
-	/* Returns dynamic type of `object' */
-
-	return (long) Dftype(object);
-}
-
-rt_public long ei_count_field (EIF_REFERENCE object)
-{
-	/* Returns the number of logical fields in `object'. */
-
-	return System(Dtype(object)).cn_nbattr;
-}
 
 rt_public char *ei_field (long i, EIF_REFERENCE object)
 {
@@ -60,50 +44,82 @@ rt_public char *ei_field (long i, EIF_REFERENCE object)
 	switch (field_type & SK_HEAD) {
 	case SK_CHAR:
 		{
-			char val = *(EIF_REFERENCE) o_ref;
+			EIF_CHARACTER val = *(EIF_CHARACTER *) o_ref;
 
 			new_obj = RTLN(egc_char_ref_dtype);
-			*(EIF_REFERENCE) new_obj = val;
+			*(EIF_CHARACTER *) new_obj = val;
 			return new_obj;
 		}
 	case SK_BOOL:
 		{
-			char val = *(EIF_REFERENCE) o_ref;
+			EIF_BOOLEAN val = *(EIF_CHARACTER *) o_ref;
 
 			new_obj = RTLN(egc_bool_ref_dtype);
-			*(EIF_REFERENCE) new_obj = val;
+			*(EIF_CHARACTER *) new_obj = val;
 			return new_obj;
 		}
-	case SK_INT:
+	case SK_WCHAR:
 		{
-			long val = *(long *) o_ref;
+			EIF_WIDE_CHAR val = *(EIF_WIDE_CHAR *) o_ref;
 
-			new_obj = RTLN(egc_int_ref_dtype);
-			*(long *) new_obj = val;
+			new_obj = RTLN(egc_wchar_ref_dtype);
+			*(EIF_WIDE_CHAR *) new_obj = val;
+			return new_obj;
+		}
+	case SK_INT8:
+		{
+			EIF_INTEGER_8 val = *(EIF_INTEGER_8 *) o_ref;
+
+			new_obj = RTLN(egc_int8_ref_dtype);
+			*(EIF_INTEGER_8 *) new_obj = val;
+			return new_obj;
+		}
+	case SK_INT16:
+		{
+			EIF_INTEGER_16 val = *(EIF_INTEGER_16 *) o_ref;
+
+			new_obj = RTLN(egc_int16_ref_dtype);
+			*(EIF_INTEGER_16 *) new_obj = val;
+			return new_obj;
+		}
+	case SK_INT32:
+		{
+			EIF_INTEGER_32 val = *(EIF_INTEGER_32 *) o_ref;
+
+			new_obj = RTLN(egc_int32_ref_dtype);
+			*(EIF_INTEGER_32 *) new_obj = val;
+			return new_obj;
+		}
+	case SK_INT64:
+		{
+			EIF_INTEGER_64 val = *(EIF_INTEGER_64 *) o_ref;
+
+			new_obj = RTLN(egc_int64_ref_dtype);
+			*(EIF_INTEGER_64 *) new_obj = val;
 			return new_obj;
 		}
 	case SK_FLOAT:
 		{
-			float val = *(float *) o_ref;
+			EIF_REAL val = *(EIF_REAL *) o_ref;
 
 			new_obj = RTLN(egc_real_ref_dtype);
-			*(float *) new_obj = val;
+			*(EIF_REAL *) new_obj = val;
 			return new_obj;
 		}
 	case SK_POINTER:
 		{
-			fnptr val = *(fnptr *) o_ref;
+			EIF_POINTER val = *(EIF_POINTER *) o_ref;
 
 			new_obj = RTLN(egc_point_ref_dtype);
-			*(fnptr *) new_obj = val;
+			*(EIF_POINTER *) new_obj = val;
 			return new_obj;
 		}
 	case SK_DOUBLE:
 		{
-			double val = *(double *) o_ref;
+			EIF_DOUBLE val = *(EIF_DOUBLE *) o_ref;
 
 			new_obj = RTLN(egc_doub_ref_dtype);
-			*(double *) new_obj = val;
+			*(EIF_DOUBLE *) new_obj = val;
 			return new_obj;
 		}
 	case SK_REF:
@@ -115,31 +131,27 @@ rt_public char *ei_field (long i, EIF_REFERENCE object)
 	}
 }
 
-rt_public char *ei_field_name (long i, EIF_REFERENCE object)
-{
-	/* Returns name of the i_th logical field of `object'. */
-
-	char *name = System(Dtype(object)).cn_names[i];
-
-	return makestr(name, strlen(name));
-}
-
-rt_public long ei_field_type(long i, EIF_REFERENCE object)
+rt_public long ei_field_type_of_type(long i, EIF_INTEGER type_id)
 {
 	/* Returns type of i-th logical field of `object'. */
+	/* Look at `eif_cecil.h' for constants definitions */
 
-	uint32 field_type = System(Dtype(object)).cn_types[i];
+	uint32 field_type = System(Deif_bid(type_id)).cn_types[i];
 
 	switch (field_type & SK_HEAD) {
-	case SK_REF:	return 1L;
-	case SK_CHAR:	return 2L;
-	case SK_BOOL:	return 3L;
-	case SK_INT:	return 4L;
-	case SK_FLOAT:	return 5L;
-	case SK_DOUBLE:	return 6L;
-	case SK_EXP:	return 7L;
-	case SK_BIT:	return 8L;
-	default:		return 0L;
+	case SK_REF:	return EIF_REFERENCE_TYPE;
+	case SK_CHAR:	return EIF_CHARACTER_TYPE;
+	case SK_WCHAR:	return EIF_WIDE_CHAR_TYPE;
+	case SK_BOOL:	return EIF_BOOLEAN_TYPE;
+	case SK_INT8:	return EIF_INTEGER_8_TYPE;
+	case SK_INT16:	return EIF_INTEGER_16_TYPE;
+	case SK_INT32:	return EIF_INTEGER_32_TYPE;
+	case SK_INT64:	return EIF_INTEGER_64_TYPE;
+	case SK_FLOAT:	return EIF_REAL_TYPE;
+	case SK_DOUBLE:	return EIF_DOUBLE_TYPE;
+	case SK_EXP:	return EIF_EXPANDED_TYPE;
+	case SK_BIT:	return EIF_BIT_TYPE;
+	default:		return EIF_POINTER_TYPE;
 	}
 }
 
@@ -164,11 +176,11 @@ rt_public long ei_int_field(long i, EIF_REFERENCE object)
 	return *(long *) ei_oref(i, object);
 }
 
-rt_public float ei_float_field(long i, EIF_REFERENCE object)
+rt_public EIF_REAL ei_float_field(long i, EIF_REFERENCE object)
 {
 	/* Returns float value of i-th value */
 
-	return *(float *) ei_oref(i, object);
+	return *(EIF_REAL *) ei_oref(i, object);
 }
 
 rt_public EIF_POINTER ei_ptr_field(long i, EIF_REFERENCE object)
@@ -178,11 +190,11 @@ rt_public EIF_POINTER ei_ptr_field(long i, EIF_REFERENCE object)
 	return *(EIF_POINTER *) ei_oref(i,object);
 }
 
-rt_public double ei_double_field(long i, EIF_REFERENCE object)
+rt_public EIF_DOUBLE ei_double_field(long i, EIF_REFERENCE object)
 {
 	/* Returns double value of i-th value */
 
-	return *(double *) ei_oref(i,object);
+	return *(EIF_DOUBLE *) ei_oref(i,object);
 }
 
 rt_public char *ei_exp_type(long i, EIF_REFERENCE object)
@@ -248,38 +260,38 @@ rt_private char *ei_oref(long i, EIF_REFERENCE object)
 	return o_ref;
 }
 
-rt_public void ei_set_reference_field (EIF_INTEGER i, EIF_POINTER object, EIF_POINTER value)
+rt_public void ei_set_reference_field (EIF_INTEGER i, EIF_REFERENCE object, EIF_REFERENCE value)
 {
 	RTAR(value,object);
 	*(EIF_POINTER *) ei_oref(i,object) = value;
 }
 
-rt_public void ei_set_double_field(EIF_INTEGER i, EIF_POINTER object, EIF_DOUBLE value)
+rt_public void ei_set_double_field(EIF_INTEGER i, EIF_REFERENCE object, EIF_DOUBLE value)
 {
 	*(EIF_DOUBLE *) ei_oref(i,object) = value;
 }
 
-rt_public void ei_set_char_field(EIF_INTEGER i, EIF_POINTER object, EIF_CHARACTER value)
+rt_public void ei_set_char_field(EIF_INTEGER i, EIF_REFERENCE object, EIF_CHARACTER value)
 {
 	*(EIF_CHARACTER *) ei_oref(i,object) = value;
 }
 
-rt_public void ei_set_boolean_field(EIF_INTEGER i, EIF_POINTER object, EIF_BOOLEAN value)
+rt_public void ei_set_boolean_field(EIF_INTEGER i, EIF_REFERENCE object, EIF_BOOLEAN value)
 {
 	*(EIF_BOOLEAN *) ei_oref(i,object) = value;
 }
 
-rt_public void ei_set_integer_field(EIF_INTEGER i, EIF_POINTER object, EIF_INTEGER value)
+rt_public void ei_set_integer_field(EIF_INTEGER i, EIF_REFERENCE object, EIF_INTEGER value)
 {
 	*(EIF_INTEGER *) ei_oref(i,object) = value;
 }
 
-rt_public void ei_set_float_field(EIF_INTEGER i, EIF_POINTER object, EIF_REAL value)
+rt_public void ei_set_float_field(EIF_INTEGER i, EIF_REFERENCE object, EIF_REAL value)
 {
 	*(EIF_REAL *) ei_oref(i,object) = value;
 }
 
-rt_public void ei_set_pointer_field(EIF_INTEGER i, EIF_POINTER object, EIF_POINTER value)
+rt_public void ei_set_pointer_field(EIF_INTEGER i, EIF_REFERENCE object, EIF_POINTER value)
 {
 	*(EIF_POINTER *) ei_oref(i,object) = value;
 }

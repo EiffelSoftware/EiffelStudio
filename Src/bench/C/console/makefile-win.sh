@@ -3,7 +3,7 @@ OUTDIR= .
 INDIR= .
 CC = $cc
 OUTPUT_CMD = $output_cmd
-CFLAGS = -I$(TOP)\run-time -I$(TOP) -I$(TOP)\ipc\app
+CFLAGS = -I$(TOP)\run-time -I$(TOP)\run-time\include -I$(TOP) -I$(TOP)\ipc\app
 DPFLAGS = -I$(TOP)
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
@@ -18,8 +18,12 @@ MT_WOBJECTS = MTargcargv.$obj MTweconsole.$obj
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<
 
-all:: winconsole.$lib mtwinconsole.$lib
-all:: wwinconsole.$lib mtwwinconsole.$lib
+all:: $output_libraries
+
+dll: standard
+mtdll: mtstandard
+standard:: winconsole.$lib wwinconsole.$lib
+mtstandard:: mtwinconsole.$lib mtwwinconsole.$lib
 
 winconsole.$lib: $(OBJECTS)
 	$link_line

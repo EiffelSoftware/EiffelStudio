@@ -1,11 +1,11 @@
 #ifndef _EGC_INCLUDE_H_
 #define _EGC_INCLUDE_H_
 
+#include "eif_struct.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "eif_struct.h"
 
 	extern struct ctable egc_ce_type_init ;
 	extern struct ctable egc_ce_gtype_init ;
@@ -20,7 +20,6 @@ extern "C" {
 	extern int egc_fpatidtab_init [] ;
 	extern struct eif_opt egc_foption_init [] ;
 	extern fnptr **egc_address_table_init;
-	extern uint32 egc_fdispatch_init [] ;
 	extern struct p_interface egc_fpattern_init [] ;
 	
 	extern void egc_einit_init (void);

@@ -10,20 +10,18 @@
 		Equality C externals
 */
 
-#include "eif_config.h"
+#include "eif_portable.h"
 #include "eif_eiffel.h"			/* For standard macros */
 #include "eif_equal.h"			/* For Eiffel boolean */
 #include "eif_struct.h"			/* For skeleton structure */
 #include "eif_traverse.h"		/* For traversing objects */
-#include "x2c.header"			/* For macro LNGPAD */
+#include "x2c.h"			/* For macro LNGPAD */
 #include "eif_tools.h"			/* For `nprime' */
 #include "eif_search.h"
 #include "eif_plug.h"			/* for econfg */
-#ifdef I_STRING
+#include "rt_garcol.h"
+#include "eif_memory.h"
 #include <string.h>
-#else
-#include <strings.h>
-#endif
 
 #define dprintf(n) if (DEBUG & n) printf
 
@@ -284,18 +282,26 @@ rt_public EIF_BOOLEAN ediso(EIF_REFERENCE target, EIF_REFERENCE source)
 	 * Return a boolean.
 	 */
 
-	EIF_GET_CONTEXT
-	char g_status = g_data.status;		/* Save GC status */
 	EIF_BOOLEAN result;
+#ifdef ISE_GC
+	char g_status;		/* Save GC status */
 
-	g_data.status |= GC_STOP;			/* Stop GC */
+	g_status = gc_ison();
+	if (g_status)
+		gc_stop();						/* Stop GC if enabled*/
+#endif
+
 	table = s_create(100);				/* Create search table */	
 	result = rdeepiso(target,source);	/* Recursive isomorphism test */
-	g_data.status = g_status;			/* Restore GC status */
+
+#ifdef ISE_GC
+	if (g_status)
+		gc_run();						/* Enabled GC it was previously enabled */
+#endif
+
 	xfree((EIF_REFERENCE) (table->s_keys));	/* Free search table keys */
 	xfree((EIF_REFERENCE) table);				/* Free search table descriptor */
 	return result;
-	EIF_END_GET_CONTEXT
 }
 
 rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
@@ -479,16 +485,32 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 			if (*t_ref != *s_ref)
 				return EIF_FALSE;
 			break;
-		case SK_INT:
-			if (*(long *) t_ref != *(long *) s_ref)
+		case SK_WCHAR:
+			if (*(EIF_WIDE_CHAR *) t_ref != *(EIF_WIDE_CHAR *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_INT8:
+			if (*(EIF_INTEGER_8 *) t_ref != *(EIF_INTEGER_8 *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_INT16:
+			if (*(EIF_INTEGER_16 *) t_ref != *(EIF_INTEGER_16 *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_INT32:
+			if (*(EIF_INTEGER_32 *) t_ref != *(EIF_INTEGER_32 *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_INT64:
+			if (*(EIF_INTEGER_64 *) t_ref != *(EIF_INTEGER_64 *) s_ref)
 				return EIF_FALSE;
 			break;
 		case SK_FLOAT:
-			if (*(float *) t_ref != *(float *) s_ref)
+			if (*(EIF_REAL *) t_ref != *(EIF_REAL *) s_ref)
 				return EIF_FALSE;
 			break;
 		case SK_DOUBLE:
-			if (*(double *) t_ref != *(double *) s_ref)
+			if (*(EIF_DOUBLE *) t_ref != *(EIF_DOUBLE *) s_ref)
 				return EIF_FALSE;
 			break;
 		case SK_POINTER:
@@ -578,13 +600,29 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target,
 			if (*t_ref != *s_ref)
 				return EIF_FALSE;
 			break;
-		case SK_INT:
-			if (*(EIF_INTEGER *) t_ref != *(EIF_INTEGER *) s_ref)
+		case SK_WCHAR:
+			if (*(EIF_WIDE_CHAR *) t_ref != *(EIF_WIDE_CHAR *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_INT8:
+			if (*(EIF_INTEGER_8 *) t_ref != *(EIF_INTEGER_8 *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_INT16:
+			if (*(EIF_INTEGER_16 *) t_ref != *(EIF_INTEGER_16 *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_INT32:
+			if (*(EIF_INTEGER_32 *) t_ref != *(EIF_INTEGER_32 *) s_ref)
+				return EIF_FALSE;
+			break;
+		case SK_INT64:
+			if (*(EIF_INTEGER_64 *) t_ref != *(EIF_INTEGER_64 *) s_ref)
 				return EIF_FALSE;
 			break;
 		case SK_FLOAT:
-				if (*(EIF_REAL *) t_ref != *(EIF_REAL *) s_ref)
-					return EIF_FALSE;
+			if (*(EIF_REAL *) t_ref != *(EIF_REAL *) s_ref)
+				return EIF_FALSE;
 			break;
 		case SK_DOUBLE:
 			if (*(EIF_DOUBLE *) t_ref != *(EIF_DOUBLE *) s_ref)

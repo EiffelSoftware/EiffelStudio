@@ -16,6 +16,7 @@
 #include "stdio.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <time.h>
 
 #ifdef I_FCNTL
 #include <fcntl.h>
@@ -35,13 +36,14 @@ rt_private int locked = 0;					/* Did we lock successfully? */
 rt_private void check_lock(char *file);				/* Make sure lockfile is not too old */
 
 #ifndef EIF_WIN32
+#include <unistd.h>
 extern int errno;						/* System error status */
 #else
 #include "io.h"
+extern int usleep(unsigned int);		/* Current time */
 #endif
 
 extern Time_t time(Time_t *t);					/* Current time */
-extern int usleep(unsigned int);					/* Micro sleeps */
 
 rt_public int lock_file(char *file)
            						/* Where lockfile should be written */

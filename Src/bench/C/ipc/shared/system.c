@@ -74,7 +74,7 @@ rt_public int dup2(int old, int new)
 #ifndef HAS_USLEEP
 #ifdef EIF_WIN32
 
-rt_public int usleep (usec)
+rt_public int usleep (int usec)
 {
 	Sleep (usec / 1000);
 	return 0;

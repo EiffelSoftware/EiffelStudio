@@ -98,15 +98,21 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
  * Convention for attribute types
  */
 
-#define EIF_REFERENCE_TYPE  1
-#define EIF_CHARACTER_TYPE  2
-#define EIF_BOOLEAN_TYPE    3
-#define EIF_INTEGER_TYPE    4
-#define EIF_REAL_TYPE       5
-#define EIF_DOUBLE_TYPE     6
-#define EIF_EXPANDED_TYPE   7
-#define EIF_BIT_TYPE        8
-#define EIF_POINTER_TYPE    0
+#define EIF_POINTER_TYPE	0
+#define EIF_REFERENCE_TYPE	1
+#define EIF_CHARACTER_TYPE	2
+#define EIF_BOOLEAN_TYPE	3
+#define EIF_INTEGER_TYPE	4
+#define EIF_INTEGER_32_TYPE	4
+#define EIF_REAL_TYPE		5
+#define EIF_DOUBLE_TYPE		6
+#define EIF_EXPANDED_TYPE	7
+#define EIF_BIT_TYPE		8
+#define EIF_INTEGER_8_TYPE	9
+#define EIF_INTEGER_16_TYPE	10
+#define EIF_INTEGER_64_TYPE 11
+#define EIF_WIDE_CHAR_TYPE	12
+
 
 
 /* Accessing an attribute in read/write mode (this is both an lvalue and
@@ -278,6 +284,8 @@ RT_LNK int eifsibit(EIF_BIT bit, int i);					/* Set ith bit to 1 */
 RT_LNK int eifribit(EIF_BIT bit, int i);					/* Reset ith bit to 0 */
 RT_LNK EIF_BIT eifbcln(EIF_BIT bit);				/* Eiffel bit cloning */
 
+/* Dynamic Type id of an object of type `type_string' */
+RT_LNK EIF_TYPE_ID eif_type_id (char *type_string);
 
 RT_LNK int eiflocate(EIF_OBJECT object, char *name); /* Return the index of attribute `name' in EIF_OBJECT `object'*/
 

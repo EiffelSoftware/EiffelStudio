@@ -23,6 +23,7 @@
 #include "stream.h"
 #include "timehdr.h"
 #include "ewbio.h"
+#include "child.h"
 
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -63,15 +64,18 @@ rt_private int comfort_child(STREAM *sp);	/* Reassure child, make him confident 
 extern char **shword(char *cmd);			/* Shell word parsing of command string */
 #ifndef EIF_WIN32
 rt_private void close_on_exec(int fd);	/* Ensure this file will be closed by exec */
+#else
+rt_private void create_dummy_window (void);
 #endif
 
 #ifdef EIF_WIN32
-rt_public STREAM *spawn_child(char *cmd, HANDLE *child_pid)
+rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, HANDLE *child_process_handle, DWORD *child_process_id)
 #else
-rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
+rt_public STREAM *spawn_child(char *cmd, char *cwd, int handle_meltpath, Pid_t *child_pid)
 #endif
           			/* The child command process */
                  	/* Where pid of the child is writtten */
+					/* Where ProcessId is written (can be NULL if you don't need it) */
 {
 	/* Launch the child process 'cmd' and return the stream structure which can
 	 * be used to communicate with the child. Note that this function only
@@ -104,9 +108,9 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 	Pid_t pid;					/* Pid of the child */
 	STREAM *sp;					/* Stream used for communications with ewb */
 	char **argv;				/* Argument vector for exec() */
-	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
 #endif
 
+	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
 
 	/* Set up pipes and fork, then exec the workbench. Two pairs of pipes are
 	 * opened, one for downwards communications (ised -> ewb) and one for
@@ -122,7 +126,7 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 	saAttr.bInheritHandle = TRUE;
 	saAttr.lpSecurityDescriptor = NULL;
 
-	if (!CreatePipe (&(pup[0]), &(pup[1]), &saAttr, 0)) {
+	if (!CreatePipe (&(pup[PIPE_READ]), &(pup[PIPE_WRITE]), &saAttr, 0)) {
 #else
 	if (-1 == pipe(pup)) {
 #endif
@@ -135,7 +139,7 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 	}
 
 #ifdef EIF_WIN32
-	if (!CreatePipe (&(pdn[0]), &(pipe_to_dup), &saAttr, 0)) {
+	if (!CreatePipe (&(pdn[PIPE_READ]), &(pipe_to_dup), &saAttr, 0)) {
 #else
 	if (-1 == pipe(pdn)) {
 #endif
@@ -149,19 +153,19 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 #ifdef EIF_WIN32
 #ifdef USE_ADD_LOG
 	add_log(12, "opened pipes as pup(%d, %d), pdn(%d, %d)",
-		pup[0], pup[1], pdn[0], pipe_to_dup);
+		pup[PIPE_READ], pup[PIPE_WRITE], pdn[PIPE_READ], pipe_to_dup);
 #endif
 #else
 #ifdef USE_ADD_LOG
 	add_log(12, "opened pipes as pup(%d, %d), pdn(%d, %d)",
-		pup[0], pup[1], pdn[0], pdn[1]);
+		pup[PIPE_READ], pup[PIPE_WRITE], pdn[PIPE_READ], pdn[PIPE_WRITE]);
 #endif
 #endif
 
 
 #ifdef EIF_WIN32
 	if (!DuplicateHandle (GetCurrentProcess(), pipe_to_dup,
-		GetCurrentProcess(), &(pdn[1]), 0,
+		GetCurrentProcess(), &(pdn[PIPE_WRITE]), 0,
 		FALSE, DUPLICATE_SAME_ACCESS)) {
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR cannot dup pipe %d", GetLastError());
@@ -177,6 +181,7 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 		perror("close handle");
 		dexit (1);
 	}
+	pipe_to_dup = NULL;
 
 	cmd2 = strdup(cmd);
 	/* Find the name of the command and place it in cmd2 */
@@ -203,13 +208,40 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 		cmdline = malloc (strlen (cmd) + 18);
 		strcpy (cmdline, cmd);
 	}
-	startpath = strdup (cmd2);
-	*(strrchr (startpath, '\\')) = '\0';
+
+		/* Working directory */
+	if (cwd)
+		startpath = strdup (cwd);
+	else {
+		startpath = strdup (cmd2);
+		*(strrchr (startpath, '\\')) = '\0';
+	}
+
+		/* Set MELT_PATH */
+	if (handle_meltpath) {
+		meltpath = strdup (cmd2);
+		if (meltpath == (char *)0){
+			dexit (1);
+		}
+
+		appname = rindex (meltpath, '\\');
+		if (appname)
+			*appname = 0;
+		else
+			strcpy (meltpath, ".");
+
+		envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
+		if (!envstring){
+			dexit (1);
+		}
+		sprintf (envstring, "MELT_PATH=%s", meltpath);
+		putenv (envstring);
+	}
 
 	/* Encode the pipes to start the child */
 
-	uu_str [0] = pup [1];
-	uu_str [1] = pdn [0];
+	uu_str [0] = pup [PIPE_WRITE];
+	uu_str [1] = pdn [PIPE_READ];
 	strcat (cmdline, " \"?");
 	t_uu = uuencode_str ((char *) uu_str, 2 * sizeof (HANDLE));
 	strcat (cmdline, t_uu);
@@ -229,10 +261,13 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 	siStartInfo.lpReserved2 = NULL;
 	siStartInfo.cbReserved2 = 0;
 	siStartInfo.lpDesktop = NULL;
-	siStartInfo.dwFlags = STARTF_USESTDHANDLES;
-	siStartInfo.hStdOutput = pup[1];
-	siStartInfo.hStdInput =  pdn[0];
+	siStartInfo.dwFlags = STARTF_USESTDHANDLES | STARTF_FORCEONFEEDBACK;
+	siStartInfo.hStdOutput = pup[PIPE_WRITE];
+	siStartInfo.hStdInput =  pdn[PIPE_READ];
 	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
+
+		/* FIXME or HACK: To enable the launched application to be in foreground */
+	create_dummy_window();
 
 	fSuccess = CreateProcess (cmd2,	/* Command 	*/
 		cmdline,			/* Command line */
@@ -263,6 +298,7 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 #endif
 	/*	Required by Windows	*/
 	CloseHandle (piProcInfo.hThread);
+	piProcInfo.hThread = NULL;
 
 	if (!fSuccess) {
 			/* Error */
@@ -363,34 +399,39 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 		/* Now exec command. A successful launch should not return */
 		argv = shword(cmd);					/* Split command into words */
 		if (argv != (char **) 0) {
-			meltpath = (char *) (strdup (argv [0]));
-			if (meltpath == (char *)0){
-#ifdef USE_ADD_LOG
-				add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
-#endif
-				dexit (1);
+
+				/* Working directory */
+			if (cwd) {
+				chdir (cwd);
 			}
+
+			if (handle_meltpath) {
+				meltpath = (char *) (strdup (argv [0]));
+				if (meltpath == (char *)0){
+					dexit (1);
+				}
 
 #ifdef EIF_VMS
-			if ((appname = rindex (meltpath, ']'))) 
-				*(++appname) = 0;
-			else strcpy (meltpath, "[]");
-#else	    /* this calls rindex twice, why? */
-			appname = rindex (meltpath, '/');
-			if (appname = rindex (meltpath, '/')) *appname = 0;
-			else strcpy (meltpath, ".");
+				appname = rindex (meltpath, ']');
+				if (appname) 
+					*(++appname) = 0;
+				else
+					strcpy (meltpath, "[]");
+#else
+				appname = rindex (meltpath, '/');
+				if (appname)
+					*appname = 0;
+				else
+					strcpy (meltpath, ".");
 #endif /* EIF_VMS */
 
-			envstring = (char *)malloc (strlen (meltpath)
-				+ strlen ("MELT_PATH=") + 1);
-			if (!envstring){
-#ifdef USE_ADD_LOG
-			    add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
-#endif
-			    dexit (1);
+				envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
+				if (!envstring){
+					dexit (1);
+				}
+				sprintf (envstring, "MELT_PATH=%s", meltpath);
+				putenv (envstring);
 			}
-			sprintf (envstring, "MELT_PATH=%s", meltpath);
-			putenv (envstring);
 #ifdef EIF_VMS
 			execv(argv[0], argv);
 #else
@@ -460,6 +501,8 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 
 	CloseHandle (pup[PIPE_WRITE]);
 	CloseHandle (pdn[PIPE_READ]);
+	pup[PIPE_WRITE] = NULL;
+	pdn[PIPE_READ] = NULL;
 #else
 	sp = new_stream(pup[PIPE_READ], pdn[PIPE_WRITE]);
 #endif
@@ -481,8 +524,11 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 	 */
 
 #ifdef EIF_WIN32
-	if (child_pid != (HANDLE *) 0)
-		*child_pid = piProcInfo.hProcess ;
+	if (child_process_handle != NULL) {
+		*child_process_handle = piProcInfo.hProcess;
+		if (child_process_id!=NULL)
+			*child_process_id = piProcInfo.dwProcessId;
+	}
 
 	free (startpath);
 	free (cmdline);
@@ -652,4 +698,58 @@ rt_private Signal_t broken(void)
 	longjmp(env, 1);			/* SIGPIPE was received */
 	/* NOTREACHED */
 }
+#else
+LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	return DefWindowProc (hwnd, message, wParam, lParam);
+}
+
+void create_dummy_window (void)
+{
+	static int registred = 0;
+	static int successful = 0;
+	HWND dummy_window = NULL;
+	extern HANDLE hInst;
+
+	if (!registred) {
+		WNDCLASSEX WinClass;
+
+		registred = 1;
+
+		WinClass.cbSize=sizeof(WNDCLASSEX);
+		WinClass.hInstance=hInst;
+		WinClass.lpszClassName="EiffelBench Server";
+		WinClass.lpfnWndProc=WndProc;
+		WinClass.style=CS_HREDRAW | CS_VREDRAW;
+		WinClass.hIcon=LoadIcon(NULL, IDI_APPLICATION);
+		WinClass.hIconSm=0;
+		WinClass.hCursor=LoadCursor(NULL, IDC_ARROW);
+		WinClass.lpszMenuName=NULL;
+		WinClass.cbClsExtra=0;
+		WinClass.cbWndExtra=0;
+		WinClass.hbrBackground=(HBRUSH)GetStockObject(WHITE_BRUSH);
+
+		successful = (int) RegisterClassEx(&WinClass);
+	}
+
+	if (successful) { 
+		dummy_window = CreateWindow("EiffelBench Server",
+								"EiffelBench Server",
+								WS_OVERLAPPEDWINDOW,
+								0,
+								0,
+								0,
+								0,
+								HWND_DESKTOP,
+								NULL,
+								hInst,
+								NULL);
+		if (dummy_window) {
+			SetWindowPos (dummy_window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOSIZE);
+			DestroyWindow (dummy_window);
+			dummy_window = NULL;
+		}
+	}
+}
+
 #endif

@@ -17,6 +17,7 @@
 #include "eif_file.h"
 #define print_err_msg fprintf
 #else
+#define USE_SIGNAL
 #include "eif_err_msg.h"
 #endif
 
@@ -34,10 +35,12 @@
 #include "eif_logfile.h"
 #include "idrf.h"
 #include "rqst_idrs.h"
+#include "child.h"
 #include <stdio.h>		/* For BUFSIZ */
 #include <string.h>
 #include <signal.h>
 #include <stdlib.h>
+#include "rt_assert.h"
 
 #ifdef EIF_VMS
 #include "ipcvms.h"
@@ -49,6 +52,11 @@
 #define OTHER(x) ((x) == readfd(daemon_data.d_cs) ? daemon_data.d_as : daemon_data.d_cs)
 #endif
 
+#define INTERRUPT_APPLICATION	1
+#define NEW_BREAKPOINT_ADDED	2
+rt_private void write_application_interruption_flag(unsigned char value); 	/* write `value' in the interruption flag
+																			 * inside application memory space */
+
 #ifdef EIF_WIN32
 rt_public void drqsthandle(EIF_LPSTREAM);							/* General request processor */
 rt_public void send_packet(STREAM *s, Request *dans);				/* Send an asnwer to client */
@@ -59,6 +67,9 @@ rt_private void commute(STREAM *from, STREAM *to, int size);		/* Commute data fr
 rt_private void run_command(STREAM *sp);							/* Run specified command */
 rt_private void run_asynchronous(STREAM *sp, Request *rqst);		/* Run command in background */
 rt_private void start_app(STREAM *sp);								/* Start Eiffel application */
+rt_private void get_application_cwd (STREAM *sp);								/* Start Eiffel application */
+rt_private LPVOID get_interrupt_flag(STREAM *sp, Request *rqst);	/* retrieve the address of the interrupt flag */
+																	/* inside application memory space */
 #else
 
 rt_public void drqsthandle(int s);							/* General request processor */
@@ -70,20 +81,16 @@ rt_private void commute(int from, int to, int size);		/* Commute data from one f
 rt_private void run_command(int s);							/* Run specified command */
 rt_private void run_asynchronous(int s, Request *rqst);		/* Run command in background */
 rt_private void start_app(int s);							/* Start Eiffel application */
+rt_private void get_application_cwd (int s);							/* Start Eiffel application */
+extern int errno;												/* System call error number */
 #endif
 
 rt_private void kill_app(void);		/* Kill Eiffel application brutally*/
 rt_private IDRF idrf;				/* IDR filters used for serializing */
 rt_private int interrupted;			/* Has application been asked to be interrupted */
+rt_private char *current_directory = NULL;	/* Directory where application is launched */
 
 extern void dexit(int code);				/* Daemon exiting procedure */
-#ifdef EIF_WIN32
-extern STREAM *spawn_child(char *cmd, HANDLE *child_pid);		/* Start up child with ipc link */
-#else
-extern STREAM *spawn_child(char *cmd, Pid_t *child_pid);		/* Start up child with ipc link */
-extern int errno;												/* System call error number */
-#endif
-
 
 /*
  * IDR protocol initialization.
@@ -111,10 +118,8 @@ rt_public void drqsthandle(int s)
 #endif
 {
 	/* Given a connected socket, wait for a request and process it */
-
-	Request rqst;		/* The request we are waiting for */
-
-	Request_Clean (rqst); /* recognized as non initialized -- Didier */
+	Request rqst;			/* The request we are waiting for */
+	Request_Clean (rqst);	/* recognized as non initialized -- Didier */
 
 #ifdef EIF_WIN32
 	if (-1 == recv_packet(s, &rqst, FALSE))		/* Get request */
@@ -131,8 +136,8 @@ rt_private void dprocess_request(STREAM *s, Request *rqst)
 #else
 rt_private void dprocess_request(int s, Request *rqst)
 #endif
-      						/* The connected socket */
-              				/* The received request to be processed */
+							/* The connected socket */
+							/* The received request to be processed */
 {
 	/* Process the received request. Most of the time, we simply pass along
 	 * the request to the other process we are connected to, whoever spoke
@@ -145,7 +150,7 @@ rt_private void dprocess_request(int s, Request *rqst)
 #endif
 
 #ifdef WINDEBUG
-	printf ("In dprocess_request %d\n", rqst->rq_type);
+		printf ("In dprocess_request %d\n", rqst->rq_type);
 #endif
 
 	switch (rqst->rq_type) {
@@ -158,6 +163,9 @@ rt_private void dprocess_request(int s, Request *rqst)
 	case ASYNCMD:			/* Run a command asynchronously */
 		run_asynchronous(s, rqst);
 		break;
+	case APPLICATION_CWD:	/* Current directory where application will be launched */
+		get_application_cwd(s);	
+		break;
 	case APPLICATION:		/* Start application */
 		interrupted = FALSE;
 		start_app(s);
@@ -165,8 +173,26 @@ rt_private void dprocess_request(int s, Request *rqst)
 	case KILL:				/* Kill application asynchronously */
 		kill_app();
 		break;
+#ifdef EIF_WIN32
+	case APP_INTERRUPT_FLAG:	/* Get the address of the interrupt flag within application space */
+		daemon_data.d_interrupt_flag = get_interrupt_flag(s,rqst);
+		break;
+
+	case EWB_NEWBREAKPOINT:		/* Ebench signals the user has added new breakpoints */
+		write_application_interruption_flag(NEW_BREAKPOINT_ADDED);
+		break;
+#endif	/* EIF_WIN32 */
+
 	case EWB_INTERRUPT:		/* Debugger asking to interrupt application */
 		interrupted = TRUE;
+#ifdef EIF_WIN32
+		write_application_interruption_flag(INTERRUPT_APPLICATION);
+#else	/* EIF_WIN32 */
+#ifdef USE_SIGNAL
+		write_application_interruption_flag(INTERRUPT_APPLICATION);
+		kill(daemon_data.d_app, SIGTRAP);	/* send a SIGTRAP signal to the application */
+#endif 	/* USE_SIGNAL */
+#endif	/* EIF_WIN32 */
 		break;
 	case APP_INTERRUPT:		/* Application wondering if it has to stop */
 		if (interrupted)
@@ -190,7 +216,6 @@ rt_private void dprocess_request(int s, Request *rqst)
 		IPCVMS_WAKE_EWB(writefd(OTHER(s)));
 		break;
 #endif
-
 	case RESUME:			/* Debugger asking to resume application */
 		interrupted = FALSE;
 		/* Fall through */	/* i.e. send the request to application */
@@ -204,6 +229,60 @@ rt_private void dprocess_request(int s, Request *rqst)
 	}
 }
 
+rt_private void write_application_interruption_flag(unsigned char value)
+	{
+	/* write the given value for the interrupt flag into 
+	 *	- the memory of the application (WIN32)
+	 *	- the file called /tmp/ebenchXXXX where XXXX is the PID of the application (UNIX)
+	 */
+#ifdef EIF_WIN32
+	/* retrieve the handle of the Application (opened for writing) */
+	/* we can't use the handle we get from CreateProcess because it's not open for writing -- ARNAUD */
+	HANDLE 			hProcess;
+	unsigned char	interrupt_flag = value;
+	DWORD 			written = 0;
+	LPVOID 			addr_flag = daemon_data.d_interrupt_flag;
+	BOOL 			bResult;
+
+	hProcess = OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_WRITE, FALSE, daemon_data.d_app_id); 
+	if (hProcess==NULL)
+		return;
+
+	bResult = WriteProcessMemory(hProcess, addr_flag, &interrupt_flag, sizeof(unsigned char), &written); 
+	if (!bResult)
+		return;
+
+	CloseHandle(hProcess);
+	hProcess = NULL;
+#else
+	unsigned char 	interrupt_flag = value;
+	int 			pid = daemon_data.d_app; /* application's PID */
+	FILE			*file = NULL;
+	char			filename[50];
+
+	filename[0]='0';
+	sprintf(filename,"/tmp/ebench%d",pid);
+
+	file = fopen(filename,"wb");
+	if (file != NULL)
+		{
+		fwrite(&interrupt_flag, sizeof(unsigned char), 1, file);
+		fclose(file);
+		}	
+#endif
+	}
+	
+#ifdef EIF_WIN32
+rt_private LPVOID get_interrupt_flag(STREAM *sp, Request *rqst)
+{
+	LPVOID pFlagAddress;
+
+	net_recv(sp, (char *)&pFlagAddress, sizeof(LPVOID), TRUE);
+	
+	return pFlagAddress;
+}
+#endif
+
 /*
  * Sending/receiving packets.
  */
@@ -214,8 +293,8 @@ rt_public int recv_packet(STREAM *s, Request *rqst, BOOL reset)
 rt_public int recv_packet(int s, Request *rqst)
 #endif
 				/* The connected socket */
-              	/* The request received */
-{
+				/* The request received */
+ {
 #ifdef WINDEBUG
 	printf ("In recv packet\n");
 #endif
@@ -264,11 +343,11 @@ rt_public void send_packet(STREAM *s, Request *dans)
 #else
 rt_public void send_packet(int s, Request *dans)
 #endif
-      			/* The connected socket */
-              	/* The answer to send back */
+				/* The connected socket */
+				/* The answer to send back */
 {
 #ifdef WINDEBUG
-	printf ("In send packet %d\n", dans->rq_type);
+		printf ("In send packet %d\n", dans->rq_type);
 #endif
  	/* Send and answer on the socket. For now, we only send on a local pipe,
 	 * which is also a socket in good English. Provision is make for network
@@ -327,8 +406,8 @@ rt_private void transfer(STREAM *s, Request *rqst)
 #else
 rt_private void transfer(int s, Request *rqst)
 #endif
-      			/* The connected socket */
-              	/* The request received */
+				/* The connected socket */
+				/* The request received */
 {
 	/* Deal with the TRANSFER request, which is used when one of the children
 	 * want to send data to the other child.
@@ -372,52 +451,27 @@ rt_private void commute(STREAM *from, STREAM *to, int size)
 #else
 rt_private void commute(int from, int to, int size)
 #endif
-         		/* Source file descriptor */
-       			/* Target file descriptor */
-         		/* Amount of bytes to be commuted */
+				/* Source file descriptor */
+				/* Target file descriptor */
+				/* Amount of bytes to be commuted */
 {
 	/* Commute 'size' bytes from source to target */
 
-	int amount = 0;				/* Amount of bytes to be read */
-	char buf[BUFSIZ];
+	char *buf = (char *) malloc(size * sizeof(char));
 
 #ifdef USE_ADD_LOG
 	add_log(12, "commuting %d bytes from #%d to #%d", size, from, to);
 #endif
 
 #ifdef EIF_WIN32
-	if (size == 0)
-		{
-		if (-1 == net_recv(from, buf, amount, TRUE))
-			return;
-		if (-1 == net_send(to, buf, amount)) {	/* Cannot send any more */
-#ifdef USE_ADD_LOG
-			add_log(12, "discarding %d bytes from #%d", size, from);
-#endif
-			swallow(from, size - amount);		/* Discard further data */
-			return;
-			}
-		}
-#endif
-
-	while (size > 0) {
-		amount = size;
-		if (amount > BUFSIZ)	/* Do not write more than standard size */
-			amount = BUFSIZ;
-#ifdef EIF_WIN32
-		if (-1 == net_recv(from, buf, amount, TRUE))
+	if (-1 == net_recv(from, buf, size, TRUE))
 #else
-		if (-1 == net_recv(from, buf, amount))
+	if (-1 == net_recv(from, buf, size))
 #endif
-			return;
-		if (-1 == net_send(to, buf, amount)) {	/* Cannot send any more */
-#ifdef USE_ADD_LOG
-			add_log(12, "discarding %d bytes from #%d", size, from);
-#endif
-			swallow(from, size - amount);		/* Discard further data */
-			return;
-		}
-		size -= amount;
+		return;
+
+	if (-1 == net_send(to, buf, size)) {	/* Cannot send any more */
+		return;
 	}
 }
 
@@ -433,8 +487,8 @@ rt_private void run_command(int s)
 
 	char *cmd;			/* Command to be run */
 	int status;			/* Command status, as returned by system() */
-    char *meltpath, *appname, *envstring;   /* set MELT_PATH */
-#ifdef  EIF_WIN32
+	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
+#ifdef EIF_WIN32
 	STARTUPINFO				siStartInfo;
 	PROCESS_INFORMATION		procinfo;
 	char 					*current_dir;
@@ -445,33 +499,33 @@ rt_private void run_command(int s)
 #endif
 
 	cmd = recv_str(sp, (int *) 0);		/* Get command */
-    meltpath = (char *) (strdup (cmd));
-    if (meltpath == (char *)0){
+	meltpath = (char *) (strdup (cmd));
+	if (meltpath == (char *)0){
 #ifdef USE_ADD_LOG
- 	    add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
 #endif
-  	   dexit (1);
-     }
+		dexit (1);
+	}
 
 #ifdef __VMS
-     appname = rindex (meltpath, ']');
-     if (appname) ;
-     else strcpy (meltpath, "[]");
+	appname = rindex (meltpath, ']');
+	if (!appname)
+		strcpy (meltpath, "[]");
 #else
-     appname = rindex (meltpath, '/');
-     if (appname) ;
-     else strcpy (meltpath, ".");
+	appname = rindex (meltpath, '/');
+	if (!appname)
+		strcpy (meltpath, ".");
 #endif
-     envstring = (char *)malloc (strlen (meltpath)
-   		 + strlen ("MELT_PATH=") + 1);
-     if (!envstring){
+	envstring = (char *)malloc (strlen (meltpath)
+ 		 + strlen ("MELT_PATH=") + 1);
+	if (!envstring){
 #ifdef USE_ADD_LOG
-   		 add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
 #endif
-    	 dexit (1);
+		dexit (1);
 	 }
-     sprintf (envstring, "MELT_PATH=%s", meltpath);
-     putenv (envstring);
+	sprintf (envstring, "MELT_PATH=%s", meltpath);
+	putenv (envstring);
 #if defined (BSD) || defined (EIF_VMS)
 	signal (SIGCHLD, SIG_DFL);
 #elif defined (SIGCLD)
@@ -490,7 +544,7 @@ rt_private void run_command(int s)
 	siStartInfo.lpDesktop = NULL;
 	siStartInfo.dwFlags = 0;
 	siStartInfo.hStdOutput = GetStdHandle (STD_OUTPUT_HANDLE);
-	siStartInfo.hStdInput =  GetStdHandle (STD_INPUT_HANDLE);
+	siStartInfo.hStdInput = GetStdHandle (STD_INPUT_HANDLE);
 	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
 
 	status = -1;
@@ -504,9 +558,12 @@ rt_private void run_command(int s)
 		NULL,
 		current_dir,
 		&siStartInfo,
-		&procinfo)) {
+		&procinfo))
+	{
 		CloseHandle (procinfo.hProcess);
 		CloseHandle (procinfo.hThread);
+		procinfo.hProcess = NULL;
+		procinfo.hThread = NULL;
 		status = 0;
 	}
 	chdir(current_dir);
@@ -516,9 +573,9 @@ rt_private void run_command(int s)
 #endif
 
 #if defined (BSD) || defined (EIF_VMS)
-    signal (SIGCHLD, SIG_IGN);
+	signal (SIGCHLD, SIG_IGN);
 #elif defined (SIGCLD)
-    signal (SIGCLD, SIG_IGN);
+	signal (SIGCLD, SIG_IGN);
 #endif
 
 #ifdef EIF_WIN32
@@ -551,13 +608,13 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	char *cmd;			/* Command to be run */
 	int jobnum;			/* Job number assigned to comamnd */
 	Request dans;		/* Answer (status of comamnd) */
-#ifdef  EIF_WIN32
+#ifdef EIF_WIN32
 	STARTUPINFO				siStartInfo;
 	PROCESS_INFORMATION		procinfo;
 	char 					*current_dir;
 #else
 	int status;			/* Command status, as returned by system() */
-    char *meltpath, *appname, *envstring;   /* set MELT_PATH */
+	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
 	STREAM *sp;			/* Stream to be used for communications */
 
 	sp = stream_by_fd[s];				/* Fetch associated stream */
@@ -581,7 +638,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	siStartInfo.lpDesktop = NULL;
 	siStartInfo.dwFlags = 0;
 	siStartInfo.hStdOutput = GetStdHandle (STD_OUTPUT_HANDLE);
-	siStartInfo.hStdInput =  GetStdHandle (STD_INPUT_HANDLE);
+	siStartInfo.hStdInput = GetStdHandle (STD_INPUT_HANDLE);
 	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
 
 	if (CreateProcess (
@@ -598,6 +655,8 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	{
 		CloseHandle (procinfo.hProcess);
 		CloseHandle (procinfo.hThread);
+		procinfo.hProcess = NULL;
+		procinfo.hThread = NULL;
 	}
 	chdir(current_dir);
 	free(current_dir);
@@ -631,36 +690,40 @@ rt_private void run_asynchronous(int s, Request *rqst)
 #endif /* not VMS (skip fork/parent code if VMS) */
 
 /* child */
-    meltpath = (char *) (strdup (cmd));
-    if (meltpath == (char *)0){
+	meltpath = (char *) (strdup (cmd));
+	if (meltpath == (char *)0){
 #ifdef USE_ADD_LOG
-            add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
 #endif
-           dexit (1);
-     }
+		dexit (1);
+	}
 
 #ifdef EIF_VMS
-     if (appname = rindex (meltpath, ']')) *appname = 0;
-     else strcpy (meltpath, "[]");
+	appname = rindex (meltpath, ']');
+	if (appname)
+		*appname = 0;
+	else
+		strcpy (meltpath, "[]");
 #else
-     appname = rindex (meltpath, '/');
-     if (appname = rindex (meltpath, '/')) *appname = 0;
-     else strcpy (meltpath, ".");
+	appname = rindex (meltpath, '/');
+	if (appname)
+		*appname = 0;
+	else
+		strcpy (meltpath, ".");
 #endif
-     envstring = (char *)malloc (strlen (meltpath)
-                 + strlen ("MELT_PATH=") + 1);
-     if (!envstring){
+	envstring = (char *)malloc (strlen (meltpath) + strlen ("MELT_PATH=") + 1);
+	if (!envstring){
 #ifdef USE_ADD_LOG
-                 add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
+		add_log(2, "ERROR out of memory: cannot exec '%s'", cmd);
 #endif
-         dexit (1);
-         }
-     sprintf (envstring, "MELT_PATH=%s", meltpath);
-     putenv (envstring);
+		dexit (1);
+	}
+	sprintf (envstring, "MELT_PATH=%s", meltpath);
+	putenv (envstring);
 #if defined (BSD) || defined (__VMS)
-        signal (SIGCHLD, SIG_DFL);
+	signal (SIGCHLD, SIG_DFL);
 #else
-        signal (SIGCLD, SIG_DFL);
+	signal (SIGCLD, SIG_DFL);
 #endif
 
 #ifndef EIF_VMS
@@ -675,13 +738,13 @@ rt_private void run_asynchronous(int s, Request *rqst)
 		dans.rq_opaque.op_second = AK_ERROR;	/* Comamnd failed */
 
 #ifdef EIF_VMS
-	if (status) {  /* command failed */
-	    char *pgmname = ipcvms_get_progname(NULL);
-	    fprintf (stderr, "%s: %s: \n-- error from system() call: %d\n"
-	    "-- failed cmd: \"%s\" -- %s\n", 
-	    pgmname, __FILE__, errno, cmd, strerror(errno));
+	if (status) {	/* command failed */
+		char *pgmname = ipcvms_get_progname(NULL);
+		fprintf (stderr, "%s: %s: \n-- error from system() call: %d\n"
+		"-- failed cmd: \"%s\" -- %s\n", 
+		pgmname, __FILE__, errno, cmd, strerror(errno));
 	}
-	return;	    /* skip send ack packet, Fred says not done anymore */
+	return;		/* skip send ack packet, Fred says not done anymore */
 #else /* not VMS */
 
 /*
@@ -700,6 +763,28 @@ rt_private void run_asynchronous(int s, Request *rqst)
 }
 
 #ifdef EIF_WIN32
+rt_private void get_application_cwd (STREAM *sp)
+#else
+rt_private void get_application_cwd (int s)
+#endif
+{
+#ifndef EIF_WIN32
+	STREAM *sp;			/* Stream to be used for communications */
+
+	sp = stream_by_fd[s];				/* Fetch associated stream */
+#endif
+
+	current_directory = recv_str(sp, (int *) 0);		/* Get command */
+
+	CHECK ("valid_count", strlen (current_directory) > 0);
+
+		/* If current directory is `.' we reset the value to NULL,
+		 * meaning that we won't look at the value of `current_directory' */
+	if ((current_directory[0] == '.') && (strlen (current_directory) == 1))
+		current_directory = NULL;
+}
+
+#ifdef EIF_WIN32
 rt_private void start_app(STREAM *sp)
 #else
 rt_private void start_app(int s)
@@ -712,7 +797,8 @@ rt_private void start_app(int s)
 	char *cmd;			/* Aplication to be run */
 	STREAM *cp;			/* Child stream */
 #ifdef EIF_WIN32
-	HANDLE pid;			/* Child pid */
+	HANDLE process_handle;	/* Child process handle */
+	DWORD process_id;		/* Child process id */
 #else
 	Pid_t pid;			/* Child pid */
 	STREAM *sp;			/* Stream to be used for communications */
@@ -722,14 +808,19 @@ rt_private void start_app(int s)
 
 	cmd = recv_str(sp, (int *) 0);		/* Get command */
 #ifdef USE_ADD_LOG
-	add_log(12, "starting app  \n");
+	add_log(12, "starting app \n");
 #endif
 
-	cp = spawn_child(cmd, &pid);			/* Start up children */
+#ifdef EIF_WIN32
+	cp = spawn_child(cmd, current_directory, 1, &process_handle, &process_id);	/* Start up children */
+#else
+	cp = spawn_child(cmd, current_directory, 1, &pid);	/* Start up children */
+#endif
 
 #ifdef EIF_WIN32
 	if (cp != (STREAM *) 0) {
-		daemon_data.d_app = (HANDLE) pid;			/* Record its pid */
+		daemon_data.d_app = process_handle;			/* Record its process handle */
+		daemon_data.d_app_id = process_id;			/* Record its process id */
 		daemon_data.d_as = cp;					/* Set-up stream to talk to child */
 
 		if (-1 == add_input(cp, (HANDLE_FN) drqsthandle)) {

@@ -10,13 +10,7 @@
 		Option queries, profiler core, tracer core
 */
 
-#include <stdio.h>
-#include "eif_config.h"
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
+#include "eif_portable.h"
 #include "eif_project.h"
 #ifndef HAS_GETRUSAGE
 #if defined HAS_TIMES && !defined EIF_VMS
@@ -30,6 +24,7 @@
 #include "eif_option.h"
 #include "eif_hashin.h"
 #include "eif_lmalloc.h"
+#include "rt_garcol.h"
 #include "eif_malloc.h"
 #include "eif_macros.h"
 #include "eif_err_msg.h"
@@ -37,7 +32,9 @@
 #include "eif_timer.h"
 #include "eif_misc.h"
 #include "eif_tools.h"		/* For hashcode() */
-#include "eif_main.h"
+#include "rt_main.h"
+#include <stdio.h>
+#include <string.h>
 
 rt_public int trace_call_level = 0;	/* call level for E-TRACE
 					 * recursive calls (whether direct or indirect).
@@ -428,7 +425,6 @@ void check_options(EIF_CONTEXT struct eif_opt *opt, int dtype)
 			/* User wants profiling. */
 		start_profile(vector->ex_rout, vector->ex_orig, dtype);
 	}
-	EIF_END_GET_CONTEXT
 }
 
 void check_options_stop(EIF_CONTEXT_NOARG)
@@ -458,8 +454,6 @@ void check_options_stop(EIF_CONTEXT_NOARG)
 			/* User wants profiling. */
 		stop_profile();
 	}
-
-	EIF_END_GET_CONTEXT
 }
 
 #endif /* WORKBENCH */
@@ -669,7 +663,6 @@ void stop_profile(void)
 	 * information in `class_table'.
 	 */
 
-	EIF_GET_CONTEXT
 	if(prof_recording) {
 		struct prof_info *item;	/* The information to change */
 
@@ -704,7 +697,6 @@ void stop_profile(void)
 			eif_panic(MTC "Profile stack corrupted");
 		}
 	}
-	EIF_END_GET_CONTEXT
 }
 
 #define Classname(x)	System(x).cn_generator

@@ -8,10 +8,6 @@ to indicate indirect(also called Eiffel or protected) address.
 #ifndef _CONCURRENT_CONSTANT_
 #define _CONCURRENT_CONSTANT_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-		
 #define DELETE_SEP_OBJ
 
 #define tDISP_LIST
@@ -60,6 +56,10 @@ extern "C" {
 #include "eif_object_id.h"
 #include "eif_timer.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+		
 /*----------------------------------------------------------*/
 /*    CONSTANTS used only in SUBS.c                         */
 /*----------------------------------------------------------*/

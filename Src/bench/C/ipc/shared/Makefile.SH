@@ -81,7 +81,7 @@ all:: .FORCE_DEPEND
 
 LIBRUN = ../../run-time
 LIBIDR = ../../idrs
-DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBIDR)
+DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBIDR) -I$(LIBRUN)/include
 CFLAGS = $(DPFLAGS) -DWORKBENCH
 
 LSRC = com.c identify.c lock.c logfile.c network.c select.c shword.c stack.c \

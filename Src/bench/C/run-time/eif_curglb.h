@@ -13,10 +13,6 @@ file can include the head files again.
 #ifndef _CONCURRENT_GLOBALS_
 #define _CONCURRENT_GLOBALS_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-	
 /*****************************************************************
     In the C-programs, we use EIF_OBJECT and char * to indicate
 direct(also called raw or unprotected) address; use EIF_REFERENCE
@@ -32,6 +28,10 @@ to indicate indirect(also called Eiffel or protected) address.
 #include "eif_net.h"
 #include "eif_constant.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
 /*----------------------------------------------------*/
 /* The following variables are used for communication */
 /*----------------------------------------------------*/

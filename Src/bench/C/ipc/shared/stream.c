@@ -25,10 +25,11 @@
 #include "ipcvms.h"		/* only affects VMS */
 #include "eif_portable.h"
 #include "stream.h"
+#ifndef EIF_WIN32
+#include <unistd.h>
+#endif
 
 #define MAX_FILE_DESC	64		/* To be Configured--FIXME */
-
-extern Malloc_t malloc(register unsigned int nbytes); /* %%ss complete type */
 
 /* All the recorded streams are recorded in an array, which makes it possible
  * to map an file descriptor to its associated stream structure.
@@ -77,6 +78,10 @@ rt_public void close_stream(STREAM *sp)
 	CloseHandle(writefd(sp));
 	CloseHandle(writeev(sp));
 	CloseHandle(readev(sp));
+	readfd(sp) = NULL;
+	writefd(sp) = NULL;
+	readev(sp) = NULL;
+	writeev(sp) = NULL;
 #else
 	close(readfd(sp));
 	close(writefd(sp));

@@ -16,6 +16,10 @@
 #include "eif_portable.h"
 #include "eif_plug.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define LENGTH(b)	(((struct bit *) b)->b_length)
 #define ARENA(b)	(((struct bit *) b)->b_value)
 
@@ -26,10 +30,6 @@
 #define FALSE		0		/* The boolean false value */
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* 
  * Functions declarations
  */
@@ -37,7 +37,6 @@ RT_LNK EIF_BOOLEAN b_equal(EIF_REFERENCE a, EIF_REFERENCE b);	/* needed in inter
 RT_LNK EIF_REFERENCE b_eout(EIF_REFERENCE bit);					/* Eiffel string for out representation of a bit */
 RT_LNK EIF_REFERENCE b_clone(EIF_REFERENCE bit);				/* Clones bit */
 RT_LNK void b_copy(EIF_REFERENCE a, EIF_REFERENCE b);			/* Copies bit */
-RT_LNK EIF_REFERENCE bmalloc(long int size);			/* Bit object creation */
 RT_LNK void b_put(EIF_REFERENCE bit, char value, int at);
 RT_LNK EIF_BOOLEAN b_item(EIF_REFERENCE bit, long int at);
 RT_LNK EIF_REFERENCE b_shift(EIF_REFERENCE bit, long int s);

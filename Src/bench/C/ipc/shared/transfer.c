@@ -20,6 +20,7 @@
 #include "request.h"
 #include "stream.h"
 #include <stdio.h>				/* To get BUFSIZ */
+#include <string.h>
 
 #ifdef EIF_WIN32
 rt_public STREAM *sp;				/* Stream used for communications */
@@ -126,7 +127,7 @@ rt_public char *tread(int *size)
 	return buffer;
 }
 
-rt_public int twrite(char *buffer, int size)
+rt_public int twrite(void *buffer, int size)
 {
 	/* Write 'size' bytes held in 'buffer' into the "pipe". Return the number
 	 * of bytes effectively written or -1 if an error occured.

@@ -13,10 +13,6 @@
 #ifndef _eif_dir_h_
 #define _eif_dir_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "eif_macros.h"
 
 #ifdef I_DIRECT
@@ -48,9 +44,11 @@ extern "C" {
 #endif
 #endif
 
-#ifdef EIF_WIN32		/* %%zs moved this block to here from dir.c for EIF_WN_DIRENT definition */
-#include <windef.h>
+#ifdef __cplusplus
+extern "C" {
+#endif
 
+#ifdef EIF_WIN32
 typedef struct tagEIF_WIN_DIRENT {
 	char	name [MAX_PATH];
 	HANDLE	handle;
@@ -66,7 +64,6 @@ RT_LNK EIF_BOOLEAN eif_dir_is_readable (char *name);
 RT_LNK EIF_BOOLEAN eif_dir_is_writable (char *name);
 RT_LNK EIF_BOOLEAN eif_dir_is_executable (char *name);
 RT_LNK EIF_BOOLEAN eif_dir_is_deletable (char *name);
-RT_LNK void eif_dir_rename (char *from, char* to);
 RT_LNK void eif_dir_delete (char *name);
 RT_LNK void dir_rewind(EIF_POINTER dirp);
 RT_LNK char *dir_search(EIF_POINTER dirp, char *name);

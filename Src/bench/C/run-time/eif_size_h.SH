@@ -29,14 +29,16 @@ $spitshell >eif_size.h <<!GROK!THIS!
 #ifndef _size_h_
 #define _size_h_
 
-#include "eif_config.h"
+#include "eif_portable.h"
 
 /* Basic sizes */
 #define ALIGN	$alignbytes		/* Alignment restrictions */
 #define DBLSIZ	$doublesize		/* Size of double */
+#define I64SIZ	$integer_64_size	/* Size of integer 64 bits */
 #define FLTSIZ	$floatsize		/* Size of float */
 #define REFSIZ	$ptrsize		/* Size of char * */
 #define LNGSIZ	$longsize		/* Size of long */
+#define I16SIZ	$integer_16_size	/* Size of integer 16 bits */
 #define CHRSIZ	$charsize		/* Size of char */
 #define PTRSIZ	$ptrsize		/* Size of a function pointer: FIXME */
 #define BYTSIZ	$bitpbyte		/* Size of a byte, in bits */
@@ -56,14 +58,26 @@ $spitshell >>eif_size.h <<'!NO!SUBS!'
 #define BIT_UNIT		(sizeof(uint32) * BYTSIZ)		/* Size of a bit unit in bits */
 #define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
 #define BITACS(n)		((1 + BIT_NBPACK((n)))*BIT_PACKSIZE)
+#define BITOFF(n)		(((BITACS(n)/ALIGN)+((BITACS(n)%ALIGN)?1:0))*ALIGN)
 
 #define REFPAD(n) (((((n)*REFSIZ)/ALIGN)+((((n)*REFSIZ)%ALIGN)?1:0))*ALIGN)
 #define CHRPAD(n) (((((n)*CHRSIZ)/ALIGN)+((((n)*CHRSIZ)%ALIGN)?1:0))*ALIGN)
+#define I16PAD(n) (((((n)*I16SIZ)/ALIGN)+((((n)*I16SIZ)%ALIGN)?1:0))*ALIGN)
 #define LNGPAD(n) (((((n)*LNGSIZ)/ALIGN)+((((n)*LNGSIZ)%ALIGN)?1:0))*ALIGN)
 #define FLTPAD(n) (((((n)*FLTSIZ)/ALIGN)+((((n)*FLTSIZ)%ALIGN)?1:0))*ALIGN)
+#define I64PAD(n) (((((n)*I64SIZ)/ALIGN)+((((n)*I64SIZ)%ALIGN)?1:0))*ALIGN)
 #define DBLPAD(n) (((((n)*DBLSIZ)/ALIGN)+((((n)*DBLSIZ)%ALIGN)?1:0))*ALIGN)
 #define PTRPAD(n) (((((n)*PTRSIZ)/ALIGN)+((((n)*PTRSIZ)%ALIGN)?1:0))*ALIGN)
 
+	/* Macros used to access fields in the object */
+#define REFACS(n) ((n)*REFSIZ)
+#define CHRACS(n) ((n)*CHRSIZ)
+#define I16ACS(n) ((n)*I16SIZ)
+#define LNGACS(n) ((n)*LNGSIZ)
+#define FLTACS(n) ((n)*FLTSIZ)
+#define I64ACS(n) ((n)*I64SIZ)
+#define DBLACS(n) ((n)*DBLSIZ)
+#define PTRACS(n) ((n)*PTRSIZ)
 
 #endif
 !NO!SUBS!

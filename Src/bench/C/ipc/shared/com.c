@@ -23,10 +23,8 @@
 #include "request.h"
 #include "com.h"
 #include "stream.h"
-
-#ifdef EIF_WIN32
 #include "eif_logfile.h"
-#endif
+#include <string.h>
 
 #define GRACETIME	5	/* Number of seconds to wait before immediate exit */
 #define MAX_STRING	512	/* Maximum string length for log messages */

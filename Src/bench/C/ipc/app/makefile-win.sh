@@ -3,7 +3,7 @@ OUTDIR = .
 INDIR = .
 CC = $cc
 OUTPUT_CMD = $output_cmd
-CFLAGS = -I$(TOP) -I..\shared -I$(LIBRUN) -I$(LIBIDR)
+CFLAGS = -I$(TOP) -I..\shared -I$(LIBRUN) -I$(LIBIDR) -I$(LIBRUN)\include
 JCFLAGS = $(CFLAGS) $ccflags $optimize -DWORKBENCH
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize -DWORKBENCH
 MAKE = $make
@@ -34,7 +34,12 @@ MT_OBJECTS = \
 	MTapp_server.$obj \
 	$(LIBDIR)\$(LIBMTNAME)
 
-all: network.$lib mtnetwork.$lib
+all:: $output_libraries
+
+dll: standard
+mtdll: mtstandard
+standard: network.$lib
+mtstandard: mtnetwork.$lib
 
 network.$lib: $(OBJECTS) $(LIBDIR)\$(LIBNAME)
 	$link_line

@@ -13,12 +13,11 @@
 #ifndef _eif_plug_h_
 #define _eif_plug_h_
 
+#include "eif_portable.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "eif_config.h"
-#include "eif_portable.h"
 
 /* Structure used to represent bits in the object. The first long integer
  * is the length of the bit field. It is then followed by enough long integers
@@ -41,7 +40,7 @@ struct bit {
 
 RT_LNK EIF_REFERENCE makestr(register char *s, register int len);	/* Build an Eiffel string object */
 extern EIF_REFERENCE makebit(char *bit, long int bit_count);		/* Build an Eiffel bit object */
-extern EIF_REFERENCE striparr(register EIF_REFERENCE curr, register int dtype, register EIF_REFERENCE *items, register long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
+extern EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, EIF_REFERENCE *items, long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
 
 RT_LNK EIF_REFERENCE argarr(int argc, char **argv);		/* ARRAY[STRING] creation from command line arguments */
 
@@ -58,9 +57,8 @@ extern EIF_REFERENCE cr_exp(uint32 type);				/* Creation of expanded objects */
  */
 
 #ifndef WORKBENCH
-extern long *esize;		/* Size of object given DType (updated by DLE) */
-extern long *nbref;		/* Gives # of references given DT (updated by DLE) */
-extern char *(**dle_make)();		/* Make routines of DYNAMIC descendants */
+extern long *esize;		/* Size of object given DType */
+extern long *nbref;		/* Gives # of references given DT */
 #endif
 
 #define System(type)		esystem[type]	/* Object description */
@@ -105,7 +103,7 @@ extern int dynamic_dtype;	/* Dynamic type of DYNAMIC */
 /* Are dynamic types of `obj1' and `obj2' identical? */
 #define estypeg(obj1, obj2) \
 	(((EIF_REFERENCE) obj1 == (EIF_REFERENCE) 0) || ((EIF_REFERENCE) obj2 == (EIF_REFERENCE) 0))? EIF_FALSE: \
-		(Dtype(obj1) == Dtype(obj2))
+		(Dftype(obj1) == Dftype(obj2))
 
 RT_LNK EIF_INTEGER sp_count(EIF_REFERENCE spobject);		/* Count of a special object */
 RT_LNK void chkinv(EIF_REFERENCE obj, int where);	/* Invariant control call */

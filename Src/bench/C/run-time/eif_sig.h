@@ -17,11 +17,11 @@
 #ifndef _eif_signal_h_
 #define _eif_signal_h_
 
+#include "eif_globals.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "eif_globals.h"
 
 /* Testing for pending signals -- if signals are pending, the signal dispatch
  * routine should be called. Tests are made at some strategic points in the

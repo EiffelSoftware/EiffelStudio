@@ -13,11 +13,7 @@
 #ifndef _eif_timer_h_
 #define _eif_timer_h_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "eif_config.h"
+#include "eif_portable.h"
 #include <sys/types.h>
 
 #ifdef I_TIME
@@ -49,16 +45,20 @@ extern "C" {
 # endif
 #endif
 
+#ifdef I_SYS_TIMES
+#include <sys/times.h>		/* For the times() system call */
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef HAS_GETTIMEOFDAY
 #ifndef HAS_FTIME
 #ifdef HAS_TIME
 typedef Time_t Timeval;
 #endif
 #endif
-#endif
-
-#ifdef I_SYS_TIMES
-#include <sys/times.h>		/* For the times() system call */
 #endif
 
 /* Routine declarations */

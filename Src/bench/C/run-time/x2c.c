@@ -10,14 +10,8 @@
 	Pre-computes offsets in generated C code to avoid cpp indigestion.
 */
 
-#include "eif_config.h"
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
 #include "eif_portable.h"
-#include "x2c.header"
+#include "x2c.h"
 #ifdef EIF_WINDOWS
 #define print_err_msg fprintf
 #else
@@ -27,23 +21,28 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 
 #define NON_RECURSIVE	'0'
 #define RECURSIVE		'1'
 
 extern long chroff(char recursive_call);
+extern long i16off(char recursive_call);
 extern long lngoff(char recursive_call);
 extern long fltoff(char recursive_call);
 extern long ptroff(char recursive_call);
 extern long dbloff(char recursive_call);
 extern long objsiz(char recursive_call);
+extern long i64off(char recursive_call);
 extern long bitoff(char recursive_call);
 
 extern long refacs (char recursive_call);
 extern long chracs (char recursive_call);
+extern long i16acs (char recursive_call);
 extern long lngacs (char recursive_call);
 extern long fltacs (char recursive_call);
 extern long dblacs (char recursive_call);
+extern long i64acs (char recursive_call);
 extern long ptracs (char recursive_call);
 
 extern long remainder(long int x);
@@ -52,21 +51,25 @@ extern long padding(long int x, long int y);
 extern long nextarg(void);
 extern void getarg(int n, char *name);
 
-long a[6];		/* Parameters array */
+long a[8];		/* Parameters array */
 
-#define first_argument	a[0]
-#define second_argument	a[1]
-#define third_argument	a[2]
-#define fourth_argument	a[3]
-#define fifth_argument	a[4]
-#define sixth_argument	a[5]
+#define first_argument		a[0]
+#define second_argument		a[1]
+#define third_argument		a[2]
+#define fourth_argument		a[3]
+#define fifth_argument		a[4]
+#define sixth_argument		a[5]
+#define	seventh_argument	a[6]
+#define eigth_argument		a[7]
 
 #define nb_ref	a[0]
 #define nb_char	a[1]
-#define nb_int	a[2]
-#define nb_flt	a[3]
-#define nb_ptr	a[4]
-#define nb_dbl	a[5]
+#define nb_i16	a[2]
+#define nb_int	a[3]
+#define nb_flt	a[4]
+#define nb_ptr	a[5]
+#define nb_i64	a[6]
+#define nb_dbl	a[7]
 
 #define MAXLEN	6		/* Each macro keyword is 6 characters */
 
@@ -75,18 +78,20 @@ struct parse {
 	int c_args;			/* Number of arguments */
 	long (*c_off)(char);	/* Function to compute value */
 } parser[] = {
-	{ "CHROFF", 2, chroff },
 	{ "REFACS", 1, refacs },
 	{ "CHRACS", 1, chracs },
 	{ "LNGACS", 1, lngacs },
 	{ "FLTACS", 1, fltacs },
 	{ "PTRACS", 1, ptracs },
 	{ "DBLACS", 1, dblacs },
-	{ "LNGOFF", 3, lngoff },
-	{ "FLTOFF", 4, fltoff },
-	{ "PTROFF", 5, ptroff },
-	{ "DBLOFF", 6, dbloff },
-	{ "OBJSIZ", 6, objsiz },
+	{ "CHROFF", 2, chroff },
+	{ "I16OFF", 3, i16off },
+	{ "LNGOFF", 4, lngoff },
+	{ "FLTOFF", 5, fltoff },
+	{ "PTROFF", 6, ptroff },
+	{ "I64OFF", 7, i64off },
+	{ "DBLOFF", 8, dbloff },
+	{ "OBJSIZ", 8, objsiz },
 	{ "BITOFF", 1, bitoff },
 };
 
@@ -112,7 +117,7 @@ int main(int argc, char **argv)	/* DEC C will complain if declared as type void 
 	int last_was_backslash = 0;
 	char buf[MAXLEN + 2];				/* Allow for '\0' and overflow */
 	struct parse *ps;
-	int pos;
+	int pos = 0;
 	char xfilename[255];
 	char cfilename[255];
 	char * suffix;
@@ -127,7 +132,7 @@ int main(int argc, char **argv)	/* DEC C will complain if declared as type void 
  */
 
 	if (( argc < 2 ) || ( argc > 3 )){
-		print_err_msg(stderr, "x2c: wrong number of arguments.\n");
+		print_err_msg(stdout, "x2c: wrong number of arguments.\n");
 		print_usage();
 		exit (1);
 	}
@@ -156,12 +161,12 @@ int main(int argc, char **argv)	/* DEC C will complain if declared as type void 
 	}	/* didn't find . */
 
 	if ((input_file = fopen (xfilename, "r")) == (FILE *)0){
-		print_err_msg(stderr, "x2c: cannot open input file %s\n",
+		print_err_msg(stdout, "x2c: cannot open input file %s\n",
 			xfilename);
 		exit (1);
 		}
 	if ((output_file = fopen (cfilename, "w")) == (FILE *)0){
-		print_err_msg(stderr,"x2c: cannot open output file %s\n",
+		print_err_msg(stdout,"x2c: cannot open output file %s\n",
 			cfilename);
 		exit (1);
 		}
@@ -196,7 +201,7 @@ int main(int argc, char **argv)	/* DEC C will complain if declared as type void 
 			putc(c, output_file);
 			continue;
 		} else {
-			print_err_msg(stderr, "x2c: impossible state.\n");
+			print_err_msg(stdout, "x2c: impossible state.\n");
 			exit(1);
 		}
 		if (!in_word) {
@@ -275,7 +280,7 @@ void getarg(int n, char *name)
 	for (i = 0; i < n; i++) {
 		val = nextarg();
 		if (val == -1) {
-			print_err_msg(stderr,
+			print_err_msg(stdout,
 				"x2c: warning: macro %s has %d argument%s, expected %d\n",
 				name, i, i == 1 ? "" : "s", n);
 			for (; i < n; i++)
@@ -337,13 +342,22 @@ long chroff(char recursive_call)
 		return to_add + padding(to_add, (long) CHRSIZ) + CHRACS(second_argument);
 }
 
-long lngoff(char recursive_call)
+long i16off(char recursive_call)
 {
 	long to_add = chroff(RECURSIVE) + nb_char *CHRSIZ;
 	if (recursive_call == RECURSIVE)
+		return to_add + padding(to_add,(long)  I16SIZ);
+	else
+		return to_add + padding(to_add,(long)  I16SIZ) + I16ACS(third_argument);
+}
+
+long lngoff(char recursive_call)
+{
+	long to_add = i16off(RECURSIVE) + nb_i16 *I16SIZ;
+	if (recursive_call == RECURSIVE)
 		return to_add + padding(to_add,(long)  LNGSIZ);
 	else
-		return to_add + padding(to_add,(long)  LNGSIZ) + LNGACS(third_argument);
+		return to_add + padding(to_add,(long)  LNGSIZ) + LNGACS(fourth_argument);
 }
 
 long fltoff(char recursive_call)
@@ -352,7 +366,7 @@ long fltoff(char recursive_call)
 	if (recursive_call == RECURSIVE)
 		return to_add + padding(to_add, (long) FLTSIZ);
 	else
-		return to_add + padding(to_add, (long) FLTSIZ) + FLTACS(fourth_argument);
+		return to_add + padding(to_add, (long) FLTSIZ) + FLTACS(fifth_argument);
 }
 
 long ptroff(char recursive_call)
@@ -361,16 +375,25 @@ long ptroff(char recursive_call)
 	if (recursive_call == RECURSIVE)
 		return to_add + padding(to_add, (long) PTRSIZ);
 	else
-		return to_add + padding(to_add, (long) PTRSIZ) + PTRACS(fifth_argument);
+		return to_add + padding(to_add, (long) PTRSIZ) + PTRACS(sixth_argument);
+}
+
+long i64off(char recursive_call)
+{
+	long to_add = ptroff(RECURSIVE) + nb_ptr * PTRSIZ;
+	if (recursive_call == RECURSIVE)
+		return to_add + padding(to_add, (long) I64SIZ);
+	else
+		return to_add + padding(to_add, (long) I64SIZ) + I64ACS(seventh_argument);
 }
 
 long dbloff(char recursive_call)
 {
-	long to_add = ptroff(RECURSIVE) + nb_ptr * PTRSIZ;
+	long to_add = i64off(RECURSIVE) + nb_i64 * PTRSIZ;
 	if (recursive_call == RECURSIVE)
 		return to_add + padding(to_add, (long) DBLSIZ);
 	else
-		return to_add + padding(to_add, (long) DBLSIZ) + DBLACS(sixth_argument);
+		return to_add + padding(to_add, (long) DBLSIZ) + DBLACS(eigth_argument);
 }
 
 long objsiz(char recursive_call)
@@ -379,52 +402,20 @@ long objsiz(char recursive_call)
 	return to_add + remainder(to_add);
 }
 
-long bitoff (char recursive_call)
-{
-	return BITOFF(first_argument);
-}
-
-long refacs (char recursive_call) 
-{
-	return REFACS(first_argument);
-}
-
-long chracs (char recursive_call)
-{
-	return CHRACS(first_argument);
-}
-
-long lngacs (char recursive_call)
-{
-	return LNGACS(first_argument);
-}
-
-long fltacs (char recursive_call)
-{
-	return FLTACS(first_argument);
-}
-
-long dblacs (char recursive_call)
-{
-	return DBLACS(first_argument);
-}
-
-long ptracs (char recursive_call)
-{
-	return PTRACS(first_argument);
-}
+long bitoff (char recursive_call) { return BITOFF(first_argument); }
+long refacs (char recursive_call) { return REFACS(first_argument); } 
+long chracs (char recursive_call) { return CHRACS(first_argument); }
+long i16acs (char recursive_call) { return I16ACS(first_argument); }
+long lngacs (char recursive_call) { return LNGACS(first_argument); }
+long fltacs (char recursive_call) { return FLTACS(first_argument); }
+long dblacs (char recursive_call) { return DBLACS(first_argument); }
+long i64acs (char recursive_call) { return I64ACS(first_argument); }
+long ptracs (char recursive_call) { return PTRACS(first_argument); }
 
 /*
  * Private functions definitions
  */
 
-long remainder(long int x)
-{
-	return ((x % ALIGN) ? (ALIGN -(x % ALIGN)) : 0);
-}
-
-long padding(long int x, long int y)
-{
-	return remainder(x) % y;
-}
+long remainder(long int x) { return ((x % ALIGN) ? (ALIGN -(x % ALIGN)) : 0); }
+long padding(long int x, long int y) { return remainder(x) % y; }
 

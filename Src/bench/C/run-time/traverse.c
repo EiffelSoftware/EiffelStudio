@@ -12,16 +12,10 @@
 */
 
 
-#include "eif_config.h"
-#ifdef I_STRING
-#include <string.h>				/* For memset() */
-#else
-#include <strings.h>
-#endif
-
-#include "eif_garcol.h"
+#include "eif_portable.h"
+#include "rt_garcol.h"
 #include "eif_malloc.h"
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "eif_except.h"
 
 #if !defined CUSTOM || defined NEED_STORE_H
@@ -34,7 +28,10 @@
 #include "eif_hector.h"
 #include "eif_traverse.h"
 #include "eif_memory.h"
-#include "x2c.header"		/* For LNGPAD macros... */
+#include "rt_gen_types.h"
+#include "x2c.h"		/* For LNGPAD macros... */
+#include <string.h>				/* For memset() */
+#include "rt_assert.h"
 
 /*
  * Declarations
@@ -62,14 +59,7 @@ struct mstack {
  */
 rt_private struct mstack map_stack;	/* Map table */
 
-/* The following panic message is issued whenever an inconsistency is detected
- * in the manipulation of the maping table stack (e.g. when we ask for an
- * object, there must be one and the stack must be empty at the end of the
- * cloning operation).
- */
-rt_private char *botched = "mapping table botched";
-
-rt_shared long obj_nb;				/* Counter of marked objects */
+rt_shared EIF_INTEGER_32 obj_nb;		/* Counter of marked objects */
 
 #ifndef lint
 rt_private char *rcsid =
@@ -81,6 +71,12 @@ rt_private char *rcsid =
 rt_shared long nomark(char *);
 rt_private long chknomark(char *, struct htable *, long);
 #endif
+
+rt_private void find_referers_2 (EIF_REFERENCE object, EIF_REFERENCE target, EIF_REFERENCE result, int result_size, int* i, EIF_REFERENCE **marked, int* marked_index, int* marked_size);
+
+rt_private void find_simple_stack (struct stack *stk, EIF_REFERENCE target, EIF_REFERENCE result, int result_size, int *i, EIF_REFERENCE **marked, int * marked_index, int* marked_size);
+
+rt_private void find_stack (struct stack *stk, EIF_REFERENCE target, EIF_REFERENCE result, int result_size, int *i, EIF_REFERENCE **marked, int * marked_index, int* marked_size);
 
 rt_shared void traversal(char *object, int p_accounting)
 {
@@ -116,7 +112,7 @@ rt_shared void traversal(char *object, int p_accounting)
 		 */
 
 		if (p_accounting & TR_MAP) {
-			epush(&loc_stack, (char *) &object);		/* Protection against GC */
+			RT_GC_PROTECT(object);		/* Protection against GC */
 			new = eclone(object);
 			mapped = hrecord(new);
 			if (-1 == epush((struct stack *) &map_stack, (char *) mapped))
@@ -152,8 +148,8 @@ rt_shared void traversal(char *object, int p_accounting)
 		{
 			dtype = *(cidarr++);
 
-			if (dtype <= -256)
-				dtype = -256-dtype; /* expanded parameter */
+			if (dtype <= EXPANDED_LEVEL)
+				dtype = EXPANDED_LEVEL-dtype; /* expanded parameter */
 
 			if (dtype >= 0)
 			{
@@ -173,7 +169,7 @@ rt_shared void traversal(char *object, int p_accounting)
 	if (flags & EO_SPEC) {			/* Special object */
 		if (!(flags & EO_REF)) {	/* Object does not have any reference */
 			if (mapped_object)
-				epop(&loc_stack, 1);
+				RT_GC_WEAN(object);
 			return;
 		}
 
@@ -211,8 +207,7 @@ rt_shared void traversal(char *object, int p_accounting)
 	}
 
 	if (mapped_object)
-		epop(&loc_stack, 1);
-	EIF_END_GET_CONTEXT
+		RT_GC_WEAN(object);
 }
 
 /*
@@ -241,20 +236,13 @@ rt_shared EIF_OBJECT map_next(void)
 	register1 EIF_OBJECT *item;		/* Item we shall return */
 	register2 struct stchunk *cur;	/* New current chunk */
 
-#ifdef MAY_PANIC
-	/* If we already reached the end of the stack, panic immediately */
-	if (map_stack.st_bot == map_stack.st_top)
-		eif_panic(botched);
-#endif
+	REQUIRE ("Not at the end of the stack", map_stack.st_bot != map_stack.st_top);
 	
 	item = (EIF_OBJECT *) map_stack.st_bot++;		/* Make a guess */
 	if (item >= (EIF_OBJECT *) map_stack.st_end) {	/* Bad guess (beyond chunk) */
 		cur = map_stack.st_cur->sk_next;		/* Advance one chunk */
 
-#ifdef MAY_PANIC
-		if (cur == (struct stchunk *) 0)		/* There has to be one */
-			eif_panic(botched);
-#endif
+		CHECK ("We should have a chunk", cur);
 
 		map_stack.st_end = cur->sk_end;			/* Precompute end of chunk */
 		map_stack.st_bot = cur->sk_arena;		/* This is the new bottom */
@@ -264,10 +252,7 @@ rt_shared EIF_OBJECT map_next(void)
 		map_stack.st_hd = cur;					/* In case of emergency */
 	}
 
-#ifdef MAY_PANIC
-	if (item == (EIF_OBJECT *) map_stack.st_top)	/* Reached the end of stack */
-		eif_panic(botched);
-#endif
+	ENSURE ("Object found before end of stack", item != (EIF_OBJECT *) map_stack.st_top);
 	
 	return *item;
 }
@@ -282,10 +267,7 @@ rt_shared void map_reset(int emergency)
 	struct stchunk *next;	/* Next chunk in stack list */
 	struct stchunk *cur;	/* Current chunk in stack list */
 
-#ifdef MAY_PANIC
-	if (!emergency && map_stack.st_bot != map_stack.st_top)
-		eif_panic(botched);
-#endif
+	REQUIRE ("", emergency || map_stack.st_bot == map_stack.st_top);
 	
 	/* If we get here because of an emergency, we free all the chunks held
 	 * in the stack until the end. Otherwise, we only need to free the current
@@ -308,7 +290,138 @@ rt_shared void map_reset(int emergency)
 	 */
 
 	epop(&hec_stack, obj_nb);		/* Remove stacked EIF_OBJECT pointers */
-	EIF_END_GET_CONTEXT
+}
+
+rt_public void find_referers (EIF_REFERENCE target, EIF_REFERENCE result, int result_size)
+{
+	GTCX
+	int i = 0;
+	EIF_REFERENCE *marked;
+	int marked_index = 0;
+	int marked_size = 1024;
+	union overhead *zone;
+	uint32 flags;
+
+	marked = malloc (sizeof (EIF_REFERENCE) * marked_size);
+
+	find_simple_stack (&hec_saved, target, result, result_size, &i, &marked, &marked_index, &marked_size);
+	find_simple_stack (&hec_stack, target, result, result_size, &i, &marked, &marked_index, &marked_size);
+
+	find_stack (&loc_set, target, result, result_size, &i, &marked, &marked_index, &marked_size);
+	find_stack (&loc_stack, target, result, result_size, &i, &marked, &marked_index, &marked_size);
+
+#ifdef WORKBENCH
+	find_simple_stack (&once_set, target, result, result_size, &i, &marked, &marked_index, &marked_size);
+#else
+	find_stack (&once_set, target, result, result_size, &i, &marked, &marked_index, &marked_size);
+#endif
+
+	find_referers_2 (root_obj, target, result, result_size, &i, &marked, &marked_index, &marked_size);
+
+	for (i = 0 ; i < marked_index ; i++) {
+		zone = HEADER(marked[i]);
+		flags = zone->ov_flags;
+		zone->ov_flags &= (~EO_STORE);
+	}
+	free (marked);
+} 
+
+rt_private void find_simple_stack (struct stack *stk, EIF_REFERENCE target, EIF_REFERENCE result, int result_size, int *i, EIF_REFERENCE **marked, int * marked_index, int* marked_size)
+{
+	struct stchunk* s;
+	EIF_REFERENCE *object, o_ref;
+	int done = 0;
+	int n;
+
+	for (s = stk->st_hd ; s && !done; s = s->sk_next) {
+		object = s->sk_arena;
+		if (s != stk->st_cur) {
+			n = s->sk_end -  object;
+		} else {
+			n = stk->st_top -object;
+			done = 1;
+		}
+		for ( ; n > 0 ; n--, object++) {
+			o_ref = *object;
+			if (o_ref) {
+				if (o_ref != target) {
+					find_referers_2 (o_ref, target, result, result_size, i, marked, marked_index, marked_size);
+				}
+			}
+		}
+	}
+}
+
+rt_private void find_stack (struct stack *stk, EIF_REFERENCE target, EIF_REFERENCE result, int result_size, int *i, EIF_REFERENCE **marked, int * marked_index, int* marked_size)
+{
+	struct stchunk* s;
+	EIF_REFERENCE *object, o_ref;
+	int done = 0;
+	int n;
+
+	for (s = stk->st_hd ; s && !done; s = s->sk_next) {
+		object = s->sk_arena;
+		if (s != stk->st_cur) {
+			n = s->sk_end -  object;
+		} else {
+			n = stk->st_top -object;
+			done = 1;
+		}
+		for ( ; n > 0 ; n--, object++) {
+			o_ref = *(EIF_REFERENCE *) *object;
+			if (o_ref) {
+				if (o_ref != target) {
+					find_referers_2 (o_ref, target, result, result_size, i, marked, marked_index, marked_size);
+				}
+			}
+		}
+	}
+}
+
+rt_private void find_referers_2 (EIF_REFERENCE object, EIF_REFERENCE target, EIF_REFERENCE result, int result_size, int* i, EIF_REFERENCE **marked, int* marked_index, int* marked_size)
+		/* Find objects below by `object' that reference `target'. */
+{
+	EIF_REFERENCE *o_ref;
+	EIF_INTEGER count;
+	union overhead *zone;
+	uint32 flags;
+
+	zone = HEADER(object);
+	flags = zone->ov_flags;
+
+	if ((flags & EO_C) || (flags & EO_STORE))
+		return;
+
+	zone->ov_flags |= EO_STORE;	/* We marked object as traversed. */
+	obj_nb++;
+	if (*marked_index >= *marked_size) {
+		*marked_size = *marked_size * 2;
+		*marked = realloc (*marked, sizeof (EIF_REFERENCE) * (*marked_size));
+	}
+	(*marked) [*marked_index] = object;
+	*marked_index = *marked_index + 1;
+
+	if (flags & EO_SPEC) {	/* Special object */
+		if (!(flags & EO_REF))	/* Object does not have any references. */
+			return;
+		CHECK ("Not a SPECIAL of expanded objects", !(flags & EO_COMP));
+
+		count = *(EIF_INTEGER *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
+	} else {
+		count = References(Deif_bid(flags));
+	}
+
+		/* Perform recursion on enclosed references */
+	for (o_ref = (EIF_REFERENCE *) object; count > 0; count--, o_ref++) {
+		if (*o_ref != NULL) {
+			if ((*o_ref == target) && (*i < result_size)) {
+				*((EIF_REFERENCE*)result + (*i)) = object;
+				RTAS_OPT (object, *i, result);
+				*i = *i + 1;
+			}
+			find_referers_2 (*o_ref, target, result, result_size, i, marked, marked_index, marked_size);
+		}
+	}
 }
 
 #ifdef DEBUG

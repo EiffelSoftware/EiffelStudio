@@ -4,7 +4,6 @@
 
 */
 
-#include "eif_config.h"
 #include "eif_portable.h"
 #include <stdio.h>
 

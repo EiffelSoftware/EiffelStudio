@@ -10,9 +10,8 @@
 		Routines for printing an Eiffel object.
 */
 
-#include <stdio.h>
+#include "eif_portable.h"
 #include "eif_project.h"
-#include "eif_config.h"
 #include "eif_eiffel.h"
 #include "eif_out.h"
 #include "eif_plug.h"
@@ -23,12 +22,10 @@
 #include "eif_hector.h"
 #include "eif_bits.h"
 #include "eif_globals.h"
-#include "x2c.header"		/* For macro LNGPAD */
-#ifdef I_STRING
+#include "rt_malloc.h"
+#include "x2c.h"		/* For macro LNGPAD */
 #include <string.h>
-#else
-#include <strings.h>
-#endif
+#include <stdio.h>
 
 /*
  * Private declarations
@@ -90,8 +87,6 @@ rt_public EIF_REFERENCE c_tagged_out(EIF_OBJECT object)
 	xfree(tagged_out);	/* Buffer not needed anymore */
 
 	return result;		/* An Eiffel string */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_public char *eif_out (EIF_REFERENCE object) 
@@ -108,8 +103,6 @@ rt_public char *eif_out (EIF_REFERENCE object)
 	tagged_out = build_out (i_object);	/* Build "tagged_out".*/
 
 	eif_wean (i_object);	/* We do not need a safe indirection any longer. */
-
-	EIF_END_GET_CONTEXT
 
 	return tagged_out;
 	
@@ -146,8 +139,6 @@ rt_shared char *build_out(EIF_OBJECT object)
 	write_out();
 
 	return tagged_out;		/* This arena must be freed manually */
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void buffer_allocate(EIF_CONTEXT_NOARG)
@@ -160,8 +151,6 @@ rt_private void buffer_allocate(EIF_CONTEXT_NOARG)
 		enomem(MTC_NOARG);
 	tagged_max = TAG_SIZE;
 	tagged_len = 0;
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void rec_write(register EIF_REFERENCE object, int tab)
@@ -233,24 +222,45 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			write_char(*o_ref, buffero);
 			write_out();
 			break;
-		case SK_INT:
-			/* Integer attribute */
-			sprintf(buffero, "INTEGER = %ld\n", *(long *)o_ref);
+		case SK_WCHAR:
+			/* Wide character attribute */
+			sprintf(buffero, "WIDE_CHARACTER = %lu\n", *(EIF_WIDE_CHAR *)o_ref);
+			write_out();
+			break;
+		case SK_INT8:
+			/* Integer 8 bits attribute */
+			sprintf(buffero, "INTEGER_8 = %d\n", *(EIF_INTEGER_8 *)o_ref);
+			write_out();
+			break;
+		case SK_INT16:
+			/* Integer 16 bits attribute */
+			sprintf(buffero, "INTEGER_16 = %d\n", *(EIF_INTEGER_16 *)o_ref);
+			write_out();
+			break;
+		case SK_INT32:
+			/* Integer 32 bits attribute */
+			sprintf(buffero, "INTEGER = %d\n", *(EIF_INTEGER_32 *)o_ref);
+			write_out();
+			break;
+		case SK_INT64:
+			/* Integer 64 bits attribute */
+			sprintf(buffero, "INTEGER_64 = %" EIF_INTEGER_64_DISPLAY "\n",
+				 *(EIF_INTEGER_64 *) o_ref);
 			write_out();
 			break;
 		case SK_FLOAT:
 			/* Real attribute */
-			sprintf(buffero, "REAL = %g\n", *(float *)o_ref);
+			sprintf(buffero, "REAL = %g\n", *(EIF_REAL *)o_ref);
 			write_out();
 			break;
 		case SK_DOUBLE:
 			/* Double attribute */
-			sprintf(buffero, "DOUBLE = %.17g\n", *(double *)o_ref);
+			sprintf(buffero, "DOUBLE = %.17g\n", *(EIF_DOUBLE *)o_ref);
 			write_out();
 			break;	
 		case SK_BIT:
 			{		
-				EIF_REFERENCE str = b_out(o_ref);
+				char *str = b_out(o_ref);
 
 				sprintf(buffero, "BIT %lu = ", (unsigned long) LENGTH(o_ref));
 				write_out();
@@ -307,7 +317,6 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			}
 		}
 	}
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
@@ -359,24 +368,24 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 				if (dt_type == egc_sp_char) {
 					write_char(*o_ref, buffero);
 					write_out();
-				} else if (dt_type == egc_sp_int) {
-					sprintf(buffero, "INTEGER = %ld\n", *(long *)o_ref);
+				} else if (dt_type == egc_sp_int32) {
+					sprintf(buffero, "INTEGER = %d\n", *(EIF_INTEGER_32 *)o_ref);
 					write_out();
 				} else if (dt_type == egc_sp_bool) {
 					sprintf(buffero, "BOOLEAN = %s\n", (*o_ref ? "True" : "False"));
 					write_out();
 				} else if (dt_type == egc_sp_real) {
-					sprintf(buffero, "REAL = %g\n", *(float *)o_ref);
+					sprintf(buffero, "REAL = %g\n", *(EIF_REAL *)o_ref);
 					write_out();
 				} else if (dt_type == egc_sp_double) {
-					sprintf(buffero, "DOUBLE = %.17g\n", *(double *)o_ref);
+					sprintf(buffero, "DOUBLE = %.17g\n", *(EIF_DOUBLE *)o_ref);
 					write_out();
 				} else if (dt_type == egc_sp_pointer) {
 					sprintf(buffero, "POINTER = C pointer 0x%lX\n", (unsigned long) (*(fnptr *)o_ref));
 					write_out();
 				} else {
 					/* Must be bit */
-					EIF_REFERENCE str = b_out(o_ref);
+					char *str = b_out(o_ref);
 
 					sprintf(buffero, "BIT %lu = ", (unsigned long) LENGTH(o_ref));
 					write_out();
@@ -402,8 +411,6 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 					System(Dtype(reference)).cn_generator, (unsigned long) reference);
 			write_out();
 		}
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void write_tab(register int tab)
@@ -415,8 +422,6 @@ rt_private void write_tab(register int tab)
 		sprintf(buffero,"  ");
 		write_out();
 	}
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void write_char (EIF_CHARACTER c, char *buf)
@@ -443,8 +448,6 @@ rt_private void write_out(EIF_CONTEXT_NOARG)
 
 	/* Print private string `buffer' in `tagged_out'. */
 	write_string(buffero);
-
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void write_string(char *str)
@@ -465,28 +468,29 @@ rt_private void write_string(char *str)
 	}
 	/* Append `str' to `tagged_out' */
 	strcat(tagged_out, str);
-
-	EIF_END_GET_CONTEXT
 }
 
 /*
  * Building `out' representation for various data types.
  */
 
-rt_public EIF_REFERENCE c_outb(EIF_BOOLEAN b)
-{
-	EIF_GET_CONTEXT
-	if (b)
-		return makestr("True", 4);
-	else
-		return makestr("False", 5);
-}
-
 rt_public EIF_REFERENCE c_outi(EIF_INTEGER i)
 {
 	EIF_GET_CONTEXT
 	register int len;
 	len = sprintf(buffero, "%ld", (long) i);
+	return makestr(buffero, len);
+}
+
+rt_public EIF_REFERENCE c_outi64(EIF_INTEGER_64 i)
+{
+	EIF_GET_CONTEXT
+	register int len;
+#ifdef EIF_WIN32
+	len = sprintf(buffero, "%I64d", i);
+#else
+	len = sprintf(buffero, "%Ld", i);
+#endif
 	return makestr(buffero, len);
 }
 
@@ -508,7 +512,7 @@ rt_public EIF_REFERENCE c_outd(EIF_DOUBLE d)
 
 rt_public EIF_REFERENCE c_outc(EIF_CHARACTER c)
 {
-	return makestr(&c, 1);
+	return makestr((char *) &c, 1);
 }
 
 rt_public EIF_REFERENCE c_outp(EIF_POINTER p)
@@ -553,8 +557,24 @@ rt_shared char *simple_out(struct item *val)
 	case SK_CHAR:
 		write_char(val->it_char, tagged_out);
 		break;
-	case SK_INT:
-		sprintf(tagged_out, "INTEGER = %ld", val->it_long);
+	case SK_WCHAR:
+		sprintf(tagged_out, "WIDE_CHARACTER = %lu", val->it_wchar);
+		break;
+	case SK_INT8:
+		sprintf(tagged_out, "INTEGER_8 = %d", val->it_int8);
+		break;
+	case SK_INT16:
+		sprintf(tagged_out, "INTEGER_16 = %d", val->it_int16);
+		break;
+	case SK_INT32:
+		sprintf(tagged_out, "INTEGER = %d", val->it_int32);
+		break;
+	case SK_INT64:
+#ifdef EIF_WIN32
+		sprintf(tagged_out, "INTEGER_32 = l%I64d", val->it_int64);
+#else
+		sprintf(tagged_out, "INTEGER_32 = l%Ld", val->it_int64);
+#endif
 		break;
 	case SK_FLOAT:
 		sprintf(tagged_out, "REAL = %g", val->it_float);
@@ -566,7 +586,7 @@ rt_shared char *simple_out(struct item *val)
 		sprintf(tagged_out, "Bit object");
 		break;
 	case SK_POINTER:
-		sprintf(tagged_out, "POINTER = C pointer 0x%lX", val->it_ref);
+		sprintf(tagged_out, "POINTER = C pointer 0x%lX", (unsigned long) val->it_ref);
 		break;
 	default:
 		sprintf(tagged_out, "Not an object?");
@@ -574,8 +594,6 @@ rt_shared char *simple_out(struct item *val)
 	}
 
 	return tagged_out;
-
-	EIF_END_GET_CONTEXT
 }
 
 #endif

@@ -104,6 +104,22 @@ feature -- Status report
 			bridge_ok: Result = implementation.column_width (a_column)
 		end
 
+	pixmaps_width: INTEGER is
+			-- Width of displayed pixmaps in the Multicolumn list.
+		do
+			Result := implementation.pixmaps_width
+		ensure
+			bridge_ok: Result = implementation.pixmaps_width
+		end
+
+	pixmaps_height: INTEGER is
+			-- Height of displayed pixmaps in the Multicolumn list.
+		do
+			Result := implementation.pixmaps_height
+		ensure
+			bridge_ok: Result = implementation.pixmaps_height
+		end
+
 feature -- Status setting
 
 	select_item (an_index: INTEGER) is
@@ -193,6 +209,19 @@ feature -- Status setting
 			a_column_within_range: a_column > 1 and a_column <= column_count
 		do
 			implementation.align_text_right (a_column)
+		end
+
+	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
+			-- Set the size of displayed pixmaps in the Multicolumn list.
+			-- Note: The Default value is 16x16
+		require
+			valid_width: a_width > 0
+			valid_height: a_height > 0
+		do
+			implementation.set_pixmaps_size (a_width, a_height)
+		ensure
+			width_set: pixmaps_width = a_width
+			height_set: pixmaps_height = a_height
 		end
 
 feature -- Element change
@@ -397,6 +426,16 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.58  2000/04/26 00:04:04  pichery
+--| Slight redesign of the pixmap handling in
+--| trees and multi-column lists.
+--|
+--| Added `set_pixmaps_size', `pixmaps_width'
+--| and `pixmaps_height' in the interfaces and
+--| in the implementations.
+--|
+--| Fixed bugs in multi-column lists and trees.
+--|
 --| Revision 1.57  2000/04/25 18:43:05  king
 --| Moved set_row_height in to obsolete feature clause
 --|

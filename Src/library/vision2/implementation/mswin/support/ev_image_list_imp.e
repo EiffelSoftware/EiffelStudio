@@ -75,6 +75,8 @@ feature -- Element change
 			--
 			-- The position in the image list of the pixmap is 
 			-- set to `last_position'.
+		require
+			a_pixmap_imp_not_void: a_pixmap_imp /= Void
 		local
 			pixmap_i	: EV_PIXMAP_I
 			item_value	: INTEGER

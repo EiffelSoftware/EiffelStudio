@@ -12,7 +12,9 @@ class
 inherit
 	EV_TREE_I
 		redefine
-			interface
+			interface,
+			initialize,
+			pixmaps_size_changed
 		end
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
@@ -117,6 +119,7 @@ feature {NONE} -- Initialization
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_ARRAYED_LIST_ITEM_HOLDER_IMP} Precursor
+			{EV_TREE_I} Precursor
 			create all_ev_children.make (1)
 
 			is_initialized := True
@@ -275,6 +278,35 @@ feature {EV_TREE_ITEM_I} -- Implementation
 
 feature {EV_ANY_I} -- Implementation
 
+	pixmaps_size_changed is
+			-- The size of the displayed pixmaps has just
+			-- changed.
+		do
+			if image_list /= Void then
+				general_reset_pixmap
+			end
+		end
+
+	general_reset_pixmap is
+			-- Reset the pixmap (if the size of displayed has
+			-- changes for example)
+		local	
+			c: like ev_children
+		do
+			remove_image_list
+			setup_image_list
+
+			c := ev_children
+			from
+				c.start
+			until
+				c.after
+			loop
+				c.item.general_reset_pixmap
+				c.forth
+			end
+		end
+
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_TREE_ITEM_IMP is
 			-- Find the item at the given position.
 			-- Position is relative to the toolbar.
@@ -298,17 +330,36 @@ feature {EV_ANY_I} -- WEL Implementation
 			-- WEL image list to store all images required by items.
 
 	
-	setup_image_list(a_width, a_height: INTEGER) is
+	setup_image_list is
 			-- Create the image list and associate it
 			-- to the control if it's not already done.
 		do
 				-- Create image list with all images 16 by 16 pixels
-			create image_list.make_with_size (a_width, a_height)
+			create image_list.make_with_size (
+				pixmaps_width, 
+				pixmaps_height
+				)
 
 				-- Associate the image list with the tree.
-			set_image_list(image_list)
+			set_image_list (image_list)
 		ensure
 			image_list_not_void: image_list /= Void
+		end
+
+	remove_image_list is
+			-- Destroy the image list and remove it
+			-- from the control if it's not already done.
+		require
+			image_list_not_void: image_list /= Void
+		do
+				-- Destroy the image list.
+			image_list.destroy
+			image_list := Void
+
+				-- Remove the image list from the multicolumn list.
+			set_image_list (Void)
+		ensure
+			image_list_is_void: image_list = Void
 		end
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
@@ -506,6 +557,16 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.67  2000/04/26 00:03:12  pichery
+--| Slight redesign of the pixmap handling in
+--| trees and multi-column lists.
+--|
+--| Added `set_pixmaps_size', `pixmaps_width'
+--| and `pixmaps_height' in the interfaces and
+--| in the implementations.
+--|
+--| Fixed bugs in multi-column lists and trees.
+--|
 --| Revision 1.66  2000/04/25 01:23:47  pichery
 --| Changed pixmap handling.
 --|

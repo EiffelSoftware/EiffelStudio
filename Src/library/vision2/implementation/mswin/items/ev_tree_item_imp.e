@@ -25,6 +25,7 @@ inherit
 			destroy,
 			interface,
 			set_pixmap,
+			remove_pixmap,
 			on_parented,
 			on_orphaned,
 			set_pnd_original_parent
@@ -91,123 +92,6 @@ feature {NONE} -- Initialization
 			Precursor
 			create internal_children.make (1)
 			is_initialized := True
-		end
-
-feature -- {EV_TREE_IMP}
-
-	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
-		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
-		do
-			--|FIXME This is redundent in this class.
-		end
-
-	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
-			-- `Result' is absolute screen coordinates in pixels
-			-- of coordinates `a_x', a_y_' on `Current'.
-		do
-			--|FIXME This is redundent
-		end
-
-	set_pixmap (p: EV_PIXMAP) is
-			-- Assign `p' to the displayed pixmap.
-		require else
-			pixmap_not_void: pixmap /= Void
-		do
-			if pixmap = Void then
-				create pixmap
-			end
-			pixmap.copy (p)
-				-- We copy `p' into pixmap.
-			if top_parent_imp /= Void then
-				-- If the item is currently contained in the tree then
-				set_pixmap_in_parent
-					-- Update the parent's image list.
-			end
-		end
-
-	on_parented is
-			-- `Current' has just been parented.
-			-- Because this message is only recieved when a tree item becomes 
-			-- the child of a tree, we need to recurse through all children of 
-			-- the item and send this message.
-		local
-			original_index: INTEGER
-		do
-			original_index := ev_children.index
-			from
-				ev_children.start
-			until
-				ev_children.off
-			loop
-				ev_children.item.on_parented
-				ev_children.forth
-			end
-			ev_children.go_i_th (original_index)
-			if pixmap /= Void then
-				-- If `Current' has a pixmap 
-				set_pixmap_in_parent
-					-- Assign `pixmap' to tree. 
-			end
-		ensure then
-			index_not_changed: ev_children.index = old ev_children.index
-		end
-
-	on_orphaned is
-			-- `Current' has just been orphaned.
-			-- Because this message is only recieved when a tree item becomes
-			-- the child of a tree, we need to recurse through all children of 
-			-- the item and send this message.
-		do
-			remove_all_direct_references
-		ensure then
-			index_not_changed: ev_children.index = old ev_children.index
-		end
-
- 	remove_all_direct_references is
- 			-- Recurse through all children and update 
- 			--`top_parent_imp.current_image_list_info' removing images
- 			-- from image list as required.
- 		local	
- 			original_index: INTEGER
- 		do
- 			original_index := ev_children.index
- 			from
- 				ev_children.start
- 			until
- 				ev_children.off
- 			loop
- 				ev_children.item.remove_all_direct_references
- 				ev_children.forth
- 			end
- 				-- Restore original position in `ev_children.
- 			ev_children.go_i_th (original_index)
- 		end
- 
-	set_pixmap_in_parent is
-			-- Add the pixmap to the parent by updating the parent's image 
-			-- list.
-		local
-			p_imp: EV_PIXMAP_IMP_STATE
-			image_list: EV_IMAGE_LIST_IMP
-			image_index: INTEGER
-			root_imp: like top_parent_imp
-		do
-			p_imp ?= pixmap_imp
-			root_imp := top_parent_imp
-
-			image_list := root_imp.image_list
-				-- Create the image list and associate it
-				-- to the control if it's not already done.
-			if image_list = Void then
-				root_imp.setup_image_list (p_imp.width, p_imp.height)
-				image_list := root_imp.image_list
-			end
-
-			image_list.add_pixmap (p_imp)
-			image_index := image_list.last_position
-
-			set_image (image_index, image_index)
-			root_imp.set_tree_item (Current)
 		end
 
 feature -- Access
@@ -337,6 +221,175 @@ feature -- Element change
 			end
 		end
 
+feature {EV_TREE_IMP, EV_TREE_ITEM_IMP} -- Implementation
+
+	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
+		-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
+		do
+			--|FIXME This is redundent in this class.
+		end
+
+	client_to_screen (a_x, a_y: INTEGER): WEL_POINT is
+			-- `Result' is absolute screen coordinates in pixels
+			-- of coordinates `a_x', a_y_' on `Current'.
+		do
+			--|FIXME This is redundent
+		end
+
+	on_parented is
+			-- `Current' has just been parented.
+			-- Because this message is only recieved when a tree item becomes 
+			-- the child of a tree, we need to recurse through all children of 
+			-- the item and send this message.
+		local
+			original_index: INTEGER
+		do
+			original_index := ev_children.index
+			from
+				ev_children.start
+			until
+				ev_children.off
+			loop
+				ev_children.item.on_parented
+				ev_children.forth
+			end
+			ev_children.go_i_th (original_index)
+			if pixmap /= Void then
+				-- If `Current' has a pixmap 
+				set_pixmap_in_parent
+					-- Assign `pixmap' to tree. 
+			end
+		ensure then
+			index_not_changed: ev_children.index = old ev_children.index
+		end
+
+	on_orphaned is
+			-- `Current' has just been orphaned.
+			-- Because this message is only recieved when a tree item becomes
+			-- the child of a tree, we need to recurse through all children of 
+			-- the item and send this message.
+		do
+			remove_all_direct_references
+		ensure then
+			index_not_changed: ev_children.index = old ev_children.index
+		end
+
+ 	remove_all_direct_references is
+ 			-- Recurse through all children and update 
+ 			--`top_parent_imp.current_image_list_info' removing images
+ 			-- from image list as required.
+ 		local	
+ 			original_index: INTEGER
+ 		do
+ 			original_index := ev_children.index
+ 			from
+ 				ev_children.start
+ 			until
+ 				ev_children.off
+ 			loop
+ 				ev_children.item.remove_all_direct_references
+ 				ev_children.forth
+ 			end
+ 				-- Restore original position in `ev_children.
+ 			ev_children.go_i_th (original_index)
+ 		end
+ 
+feature {EV_TREE_IMP, EV_TREE_ITEM_IMP} -- Pixmap Handling
+
+	set_pixmap (p: EV_PIXMAP) is
+			-- Assign `p' to the displayed pixmap.
+		require else
+			pixmap_not_void: pixmap /= Void
+		do
+			if pixmap = Void then
+				create pixmap
+			end
+				-- We copy `p' into pixmap.
+			pixmap.copy (p)
+
+				-- If the item is currently contained in the tree then
+			if top_parent_imp /= Void then
+					-- Update the parent's image list.
+				set_pixmap_in_parent
+			end
+		end
+
+	remove_pixmap is
+			-- Assign `p' to the displayed pixmap.
+		require else
+			pixmap_not_void: pixmap /= Void
+		do
+			if pixmap /= Void then
+				pixmap := Void
+
+				-- If the item is currently contained in the tree then..
+				if top_parent_imp /= Void then
+						-- Update the parent's image list.
+					remove_pixmap_in_parent
+				end
+			end
+		end
+
+	set_pixmap_in_parent is
+			-- Add the pixmap to the parent by updating the parent's image 
+			-- list.
+		local
+			p_imp: EV_PIXMAP_IMP_STATE
+			image_list: EV_IMAGE_LIST_IMP
+			image_index: INTEGER
+			root_imp: like top_parent_imp
+		do
+			p_imp ?= pixmap_imp
+			root_imp := top_parent_imp
+
+			image_list := root_imp.image_list
+				-- Create the image list and associate it
+				-- to the control if it's not already done.
+			if image_list = Void then
+				root_imp.setup_image_list
+				image_list := root_imp.image_list
+			end
+
+			image_list.add_pixmap (p_imp)
+			image_index := image_list.last_position
+
+			set_image (image_index, image_index)
+			root_imp.set_tree_item (Current)
+		end
+
+	remove_pixmap_in_parent is
+			-- Remove the pixmap to the parent by updating the parent's image 
+			-- list.
+		local
+			root_imp: like top_parent_imp
+		do
+			set_image (0, 0) -- 0 = transparent image.
+			top_parent_imp.set_tree_item (Current)
+		end
+
+	general_reset_pixmap is
+			-- Reset the pixmap (if the size of displayed has
+			-- changed for example)
+		local	
+			c: like ev_children
+		do
+				-- Reset the current pixmap
+			if pixmap /= Void then
+				set_pixmap_in_parent
+			end
+
+				-- Reset the pixmap of all children.
+			c := ev_children
+			from
+				c.start
+			until
+				c.after
+			loop
+				c.item.general_reset_pixmap
+				c.forth
+			end
+		end
+
 feature {EV_TREE_IMP} -- Implementation, pick and drop
 
 	set_pnd_original_parent is
@@ -442,6 +495,16 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.66  2000/04/26 00:03:10  pichery
+--| Slight redesign of the pixmap handling in
+--| trees and multi-column lists.
+--|
+--| Added `set_pixmaps_size', `pixmaps_width'
+--| and `pixmaps_height' in the interfaces and
+--| in the implementations.
+--|
+--| Fixed bugs in multi-column lists and trees.
+--|
 --| Revision 1.65  2000/04/25 01:16:35  pichery
 --| Changed the handling of pixmaps.
 --|

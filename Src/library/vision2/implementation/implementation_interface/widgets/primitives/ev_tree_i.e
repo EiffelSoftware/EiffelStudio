@@ -19,6 +19,15 @@ inherit
 			interface
 		end
 
+feature {NONE} -- Initialization
+
+	initialize is
+		do
+				-- Set default width & height for the pixmaps
+			pixmaps_width := 16
+			pixmaps_height := 16
+		end
+
 feature -- Access
 
 	selected_item: EV_TREE_ITEM is
@@ -32,6 +41,33 @@ feature -- Status report
 			-- Is at least one tree item selected ?
 		require
 		deferred
+		end
+
+	pixmaps_width: INTEGER
+			-- Width of displayed pixmaps in the Multicolumn list.
+
+	pixmaps_height: INTEGER
+			-- Height of displayed pixmaps in the Multicolumn list.
+
+feature -- Status setting
+
+	set_pixmaps_size (a_width: INTEGER; a_height: INTEGER) is
+			-- Set the size of displayed pixmaps in the Multicolumn list.
+		do
+			if pixmaps_width /= a_width or pixmaps_height /= a_height then
+				pixmaps_width := a_width
+				pixmaps_height := a_height
+				pixmaps_size_changed
+			end
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	pixmaps_size_changed is
+			-- The size of the displayed pixmaps has just
+			-- changed.
+		do
+			-- Do nothing by default
 		end
 
 feature {EV_ANY_I}
@@ -61,6 +97,16 @@ end -- class EV_TREE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/26 00:02:44  pichery
+--| Slight redesign of the pixmap handling in
+--| trees and multi-column lists.
+--|
+--| Added `set_pixmaps_size', `pixmaps_width'
+--| and `pixmaps_height' in the interfaces and
+--| in the implementations.
+--|
+--| Fixed bugs in multi-column lists and trees.
+--|
 --| Revision 1.22  2000/03/17 00:01:26  king
 --| Accounted for name change of tree_item_holder
 --|

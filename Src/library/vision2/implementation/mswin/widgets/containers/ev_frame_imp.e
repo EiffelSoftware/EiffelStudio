@@ -160,6 +160,7 @@ feature {NONE} -- Implementation : WEL features
 			top: INTEGER
 		do
 			paint_dc.select_font (private_font)
+			paint_dc.set_text_color (foreground_color_imp)
 			paint_dc.set_background_color (background_color_imp)
 			paint_dc.text_out (10, 0, text)
 			if text.empty then

@@ -1907,12 +1907,17 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			class_label.set_deny_cursor (Cursors.cur_X_Class)
 			feature_label.set_deny_cursor (Cursors.cur_X_Feature)
 
-			cluster_label.set_minimum_width ((default_font.string_width (default_cluster_name) * bold_ratio).ceiling)
 			cluster_label.set_text (default_cluster_name)
-			class_label.set_minimum_width ((default_font.string_width (default_class_name) * bold_ratio).ceiling)
+			highlight_label (cluster_label)
+			unhighlight_label (cluster_label)
+
 			class_label.set_text (default_class_name)
-			feature_label.set_minimum_width ((default_font.string_width (default_feature_name) * bold_ratio).ceiling)
+			highlight_label (class_label)
+			unhighlight_label (class_label)
+
 			feature_label.set_text (default_feature_name)
+			highlight_label (feature_label)
+			unhighlight_label (feature_label)
 
 			hb.set_padding (2)
 			hb.extend (cluster_label)

@@ -108,7 +108,7 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			interface_assigned: interface = an_interface
 		end
 
-	set_initialized is
+	enable_initialized is
 			-- Set the implementation to be initialized
 			-- Should only ever be called by {EV_ANY}.replace_implementation.
 		do
@@ -119,6 +119,19 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 			is_initialized := True
 		ensure
 			is_initialized: is_initialized
+		end
+
+	disable_initialized is
+			-- Set the implementation to be un-initialized
+			-- Should only ever be called by {EV_ANY}.replace_implementation.
+		do
+			check
+				called_by_replace_implementation_only: false
+					-- replace_implementation calls turns assertions off.
+			end
+			is_initialized := False
+		ensure
+			not_is_initialized: not is_initialized
 		end
 
 feature {EV_ANY_I, EV_ANY} -- Contract support
@@ -147,7 +160,7 @@ feature {NONE} -- Contract support
 		end
 
 invariant
-	interface_coupled:
+	interface_coupled: is_useable implies
 		interface /= Void and then interface.implementation = Current
 	base_make_called: base_make_called
 	no_calls_after_destroy: not last_call_was_destroy implies not is_destroyed
@@ -175,6 +188,11 @@ end -- class EV_ANY_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/12 01:21:06  pichery
+--| - added feature `disable_initialized'
+--| - renamed feature `set_initialized' to
+--|   `enable_initialized'
+--|
 --| Revision 1.10  2000/04/11 17:46:18  oconnor
 --| typo
 --|

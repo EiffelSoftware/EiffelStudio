@@ -606,8 +606,8 @@ feature {NONE} -- Dispose feature
 
 	dispose is
 		do
-			{TERMINAL_IMP} precursor
-			{WEL_FONT_FAMILY_ENUMERATOR} precursor
+			{TERMINAL_IMP} Precursor
+			{WEL_FONT_FAMILY_ENUMERATOR} Precursor
 		end
 
 invariant

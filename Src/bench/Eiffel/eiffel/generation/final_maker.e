@@ -184,34 +184,27 @@ feature
 				i > nb
 			loop
 				a_class := class_array.item (i)
-				if a_class /= Void then
-					if not a_class.is_precompiled or else a_class.is_in_system then
-						from
-							types := a_class.types;
-							types.start
-						until
-							types.after
-						loop
-							cl_type := types.item;
-							if
-								types.has_type (cl_type.type)
-								and then types.found_item = cl_type
-							then
-								-- Do not generate twice the same type if it
-								-- has been derived in two different merged
-								-- precompiled libraries.
-								if not empty_class_types.has (cl_type.static_type_id) then
-										-- C code
-									create file_name.make (16);
-									file_name.append (cl_type.base_file_name);
-									file_name.append (".o");
-									string_list := object_baskets.item (cl_type.packet_number)
-									string_list.extend (file_name);
-									string_list.finish
-								end;
-							end;
-							types.forth;
-						end;
+				if
+					a_class /= Void and then a_class.has_types and then
+					(not a_class.is_precompiled or else a_class.is_in_system)
+				then
+					from
+						types := a_class.types
+						types.start
+					until
+						types.after
+					loop
+						cl_type := types.item
+						if not empty_class_types.has (cl_type.static_type_id) then
+								-- C code
+							create file_name.make (16)
+							file_name.append (cl_type.base_file_name)
+							file_name.append (".o")
+							string_list := object_baskets.item (cl_type.packet_number)
+							string_list.extend (file_name)
+							string_list.finish
+						end
+						types.forth
 					end
 				end
 				i := i + 1

@@ -175,7 +175,7 @@ feature
 				i > nb
 			loop
 				a_class := class_array.item (i)
-				if a_class /= Void then
+				if a_class /= Void and then a_class.has_types then
 					from
 						types := a_class.types;
 						types.start
@@ -183,35 +183,25 @@ feature
 						types.after
 					loop
 						cl_type := types.item;
-						if
-							types.has_type (cl_type.type)
-							and then types.found_item = cl_type
-						then
-							-- Do not generate twice the same type if it
-							-- has been derived in two different merged
-							-- precompiled libraries.
-	
-							if (not cl_type.is_precompiled) then
-								packet_nb := cl_type.packet_number
-									-- C code
-								object_name := cl_type.base_file_name;
-								create file_name.make (16);
-								file_name.append (object_name);
-								file_name.append (".o");
-								string_list := object_baskets.item (packet_nb)
-								string_list.extend (file_name)
-								string_list.finish
+						if (not cl_type.is_precompiled) then
+							packet_nb := cl_type.packet_number
+								-- C code
+							object_name := cl_type.base_file_name;
+							create file_name.make (16);
+							file_name.append (object_name);
+							file_name.append (".o");
+							string_list := object_baskets.item (packet_nb)
+							string_list.extend (file_name)
+							string_list.finish
 
-									-- Descriptor file
-								create file_name.make (16);
-								file_name.append (object_name);
-								file_name.append_character (Descriptor_file_suffix);
-								file_name.append (".o");
-								string_list := object_baskets.item (packet_nb)
-								string_list.extend (file_name)
-								string_list.finish
-							end;
-
+								-- Descriptor file
+							create file_name.make (16);
+							file_name.append (object_name);
+							file_name.append_character (Descriptor_file_suffix);
+							file_name.append (".o");
+							string_list := object_baskets.item (packet_nb)
+							string_list.extend (file_name)
+							string_list.finish
 						end;
 						types.forth;
 					end;

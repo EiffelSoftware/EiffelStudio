@@ -201,10 +201,10 @@ feature -- Conversion
 					else
 						cv_cmd ?= item
 						if cv_cmd /= Void and then cv_cmd.is_displayed then
-							cur_bar.extend (curitem)
-							cmd_found := True
 							cur_x := curitem.pixmap.width
 							cur_y := curitem.pixmap.height
+							cur_bar.extend (curitem)
+							cmd_found := True
 						end
 					end
 					forth

@@ -147,7 +147,7 @@ feature {NONE} -- Initialization
 			is_initialized := False
 
 				-- Destroy `other' implementation
-			other.destroy
+			other.safe_destroy
 		end
 
 	initialize is

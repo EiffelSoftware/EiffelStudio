@@ -17,23 +17,25 @@ feature -- Basic operations
 	project is
 			-- Make a standard projection of the world on the device.
 		do
-			--| FIXME Maybe send an event here?
-
-			--| This is to tell the world that changes to relative
-			--| positions have to be taken into account, and
-			--| positioners have to be called again.
+			device.set_background_color (world.background_color)
+			clear_device
 			world.invalidate_absolute_position
-
-			--| FIXME We can do all calculation right now by calling
-			--world.calculate_absolute_position
-			--| But since x_abs and y_abs are called anyway, why bother?
-			--| At least not in this implementation of EV_PROJECTION.
-
-			device.clear
 			project_figure_group (world)
 		end
 
 feature {NONE} -- Implementation
+
+	erasing: BOOLEAN
+			-- Is this pass just to erase the old canvas?
+
+	clear_device is
+			-- Do smart erasing of the canvas.
+		do
+			erasing := True
+			device.set_foreground_color (world.background_color)
+			project_figure_group (world)
+			erasing := False
+		end
 
 	project_figure_group (group: EV_FIGURE_GROUP) is
 			-- Draw all figures in group to device.
@@ -63,33 +65,40 @@ feature {NONE} -- Implementation
 			-- Determine the figure and apply it to the device.
 		local
 			line: EV_FIGURE_LINE
-			point: EV_FIGURE_POINT
+			dot: EV_FIGURE_DOT
 			ellipse: EV_FIGURE_ELLIPSE
 			rectangle: EV_FIGURE_RECTANGLE
 		do
 			set_attributes (figure)
 			line ?= figure
-			if line  /= Void then
+			if line /= Void then
 				project_line (line)
-			end
-			point ?= figure
-			if point  /= Void then
-				project_point (point)
-			end
-			ellipse ?= figure
-			if ellipse  /= Void then
-				project_ellipse (ellipse)
-			end
-			rectangle ?= figure
-			if rectangle  /= Void then
-				project_rectangle (rectangle)
+			else
+				dot ?= figure
+				if dot /= Void then
+					project_dot (dot)
+				else
+					ellipse ?= figure
+					if ellipse /= Void then
+						project_ellipse (ellipse)
+					else
+						rectangle ?= figure
+						if rectangle /= Void then
+							project_rectangle (rectangle)
+						else
+							io.put_string ("EV_STANDARD_PROJECTION: Figure not known.")
+						end
+					end
+				end
 			end
 		end
 
 	set_attributes (figure: EV_ATOMIC_FIGURE) is
 			-- Set applicable attributes for `figure'.
 		do
-			device.set_foreground_color (figure.foreground_color)
+			if not erasing then
+				device.set_foreground_color (figure.foreground_color)
+			end
 			device.set_line_width (figure.line_width)
 			device.set_logical_mode (figure.logical_function_mode)
 		end
@@ -98,13 +107,12 @@ feature {NONE} -- Implementation
 			-- Make standard projection of EV_FIGURE_LINE.
 		do
 			device.draw_segment (line.coordinates_a, line.coordinates_b)
-			device.draw_segment (create {EV_COORDINATES}.set (5,5), create {EV_COORDINATES}.set (50,50))
 		end
 
-	project_point (point: EV_FIGURE_POINT) is
-			-- Make standard projection of EV_FIGURE_POINT.
+	project_dot (dot: EV_FIGURE_DOT) is
+			-- Make standard projection of EV_FIGURE_DOT.
 		do
-			device.draw_point (point.coordinates)
+			device.draw_point (dot.coordinates)
 		end
 
 	project_ellipse (ellipse: EV_FIGURE_ELLIPSE) is
@@ -112,9 +120,9 @@ feature {NONE} -- Implementation
 		do
 			if ellipse.fill_color /= Void then
 				--device.set_background_color (figure.fill_color)
-				device.fill_ellipse (ellipse.center, ellipse.radius1, ellipse.radius2, base_angle)
+				device.fill_ellipse (ellipse.center, ellipse.radius1, ellipse.radius2, ellipse.orientation)
 			else
-				device.draw_ellipse (ellipse.center, ellipse.radius1, ellipse.radius2, base_angle)
+				device.draw_ellipse (ellipse.center, ellipse.radius1, ellipse.radius2, ellipse.orientation)
 			end
 		end
 
@@ -123,16 +131,10 @@ feature {NONE} -- Implementation
 		do
 			if rectangle.fill_color /= Void then
 				--device.set_background_color (figure.fill_color)
-				device.fill_rectangle (rectangle.top_left, rectangle.width, rectangle.height, base_angle)
+				device.fill_rectangle (rectangle.top_left, rectangle.width, rectangle.height, rectangle.orientation)
 			else
-				device.draw_rectangle (rectangle.top_left, rectangle.width, rectangle.height, base_angle)
+				device.draw_rectangle (rectangle.top_left, rectangle.width, rectangle.height, rectangle.orientation)
 			end
-		end
-
-	base_angle: EV_ANGLE is
-			-- 3 o'clock angle.
-		do
-			create Result.make_radians (0)
 		end
 
 end -- class EV_STANDARD_PROJECTION

@@ -57,12 +57,12 @@ inherit
 			set_column_width as wel_set_column_width,
 			get_column_width as wel_get_column_width,
 			item as wel_item,
+			move as wel_move,
 			enabled as is_sensitive, 
 			width as wel_width,
 			height as wel_height,
 			x as x_position,
 			y as y_position,
-			move as wel_move,
 			resize as wel_resize,
 			move_and_resize as wel_move_and_resize
 		undefine
@@ -624,16 +624,21 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
---	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is
---		-- Propagate `event_id' to the good item. 
---		local 
---			it: EV_MULTI_COLUMN_LIST_ROW_IMP 
---	do
---		it := find_item_at_position (x_pos, y_pos) 
---		if it /= Void then 
---		--it.execute_command (event_id, ev_data) 
---		end 
---	end 
+	internal_propagate_pointer_press (event_id, x_pos, y_pos, button: INTEGER) is
+			-- Propagate `event_id' to the good item. 
+		local 
+			mcl_row: EV_MULTI_COLUMN_LIST_ROW_IMP
+			pt: WEL_POINT
+			offsets: TUPLE [INTEGER, INTEGER]
+		do
+			mcl_row := find_item_at_position (x_pos, y_pos) 
+			if mcl_row /= Void then 
+				pt := client_to_screen (x_pos, y_pos)
+				offsets := mcl_row.relative_position
+				mcl_row.interface.pointer_button_press_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
+				y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0, pt.x, pt.y])
+			end 
+		end 
 
 
 	process_message (hwnd: POINTER; msg,
@@ -687,15 +692,9 @@ feature {NONE} -- WEL Implementation
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_lbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
---		local
---			ev_data: EV_BUTTON_EVENT_DATA
 		do
---			ev_data := get_button_data (1, keys, x_pos, y_pos)
---			if has_command (Cmd_button_one_press) then
---				execute_command (Cmd_button_one_press, ev_data)
---			end
---			internal_propagate_event 
--- (Cmd_button_one_press, x_pos, y_pos, ev_data)
+			internal_propagate_pointer_press (keys, x_pos, y_pos, 1)
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -804,10 +803,17 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
 	child_y (child: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
 			-- `Result' is relative ycoor of row to `parent_imp'
+		local
+			a, b: INTEGER
 		do
-			Result := (top_index - internal_get_index (child)) * 16 
-			+ (top_index - internal_get_index (child))
-			- window_frame_height
+			a := top_index
+			b := internal_get_index (child)
+			if not title_shown then
+				Result := (internal_get_index (child) - top_index - 1) * 14
+			else
+				Result := (internal_get_index (child) - top_index) * 14 + window_frame_height - 1
+			end
+			a := window_frame_height
 		end
 
 	child_x: INTEGER is
@@ -890,26 +896,14 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.51  2000/03/14 03:11:05  brendel
---| Fixed implementation.
---|
---| Revision 1.50  2000/03/14 03:02:56  brendel
---| Merged changed from WINDOWS_RESIZING_BRANCH.
+--| Revision 1.52  2000/03/14 18:41:05  rogers
+--| Changed internal_propagate_event to internal_propagate_pointer_press and implemented this feature. Re-implemented child_y.
 --|
 --| Revision 1.49  2000/03/13 23:15:21  rogers
 --| Added internal_propagate_event, not yet implemented. Redfined on_mouse_move from ev_primitive and call the pointer_motion_actions on an item if required. Changed the export status of implementation feature to {EV_MULTI_COLUMN_LIST_ROW_IMP}.
 --|
 --| Revision 1.48  2000/03/13 22:22:13  rogers
 --| Fixed set_columns so if the list does not have a parent and items are added, the default_parent will be used.
---|
---| Revision 1.47.2.2  2000/03/11 00:19:21  brendel
---| Renamed move to wel_move.
---| Renamed resize to wel_resize.
---| Renamed move_and_resize to wel_move_and_resize.
---|
---| Revision 1.47.2.1  2000/03/09 21:39:48  brendel
---| Replaced x with x_position and y with y_position.
---| Before, both were available.
 --|
 --| Revision 1.47  2000/03/07 18:31:37  rogers
 --| Redefined on_size from WEL_LIST_VIEW, so the resize_actions can be called.

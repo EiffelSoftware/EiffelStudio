@@ -1,5 +1,5 @@
--- Set execution format so that only the last breakable point of the current
--- routine will be taken into account.
+-- Set execution format so that all breakable points set except those 
+-- of the current routine will be taken into account.
 
 class
 	
@@ -32,7 +32,7 @@ feature {NONE}
 
 	execution_mode: INTEGER is
 		once
-			Result := Last_routine_breakable
+			Result := Out_of_routine
 		end;
 
 	command_name: STRING is

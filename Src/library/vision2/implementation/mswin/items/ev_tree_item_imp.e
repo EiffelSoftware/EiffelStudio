@@ -119,7 +119,6 @@ feature -- Status setting
 
 	set_expand (flag: BOOLEAN) is
 			-- Expand the item if `flag', collapse it otherwise.
-			-- Do nothing if the item is not a sub-tree.
 		local
 			tree: EV_TREE_IMP
 		do

@@ -61,14 +61,13 @@ feature -- Basic operations
 		local
 			l_root, l_element: XM_ELEMENT
 		do
-			create l_root.make_root (project_tag, Void)
-			
 			if document = Void then
 				create document.make
 			else
 				document.wipe_out
 			end
 			
+			create l_root.make_root (document, project_tag, create {XM_NAMESPACE}.make_default)
 			document.put_first (l_root)
 
 					-- Name

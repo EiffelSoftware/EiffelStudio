@@ -24,11 +24,14 @@ feature -- Access
 		local
 			retried: BOOLEAN
 			l_formatter: XM_ESCAPED_FORMATTER
+			l_output: KL_STRING_OUTPUT_STREAM
 		do				
 			if not retried then
 				create l_formatter.make
+				create l_output.make_empty
+				l_formatter.set_output (l_output)
 				l_formatter.process_document (a_doc)
-				Result := l_formatter.last_string
+				Result := l_output.string
 			end
 		rescue
 			retried := True
@@ -144,7 +147,7 @@ feature -- Status Setting
 				if l_element /= Void then
 					l_attribute := l_element.attribute_by_name (a_attribute)
 					if l_attribute /= Void and then a_value.is_empty then
-						l_attribute.parent.delete (l_attribute)
+						l_attribute.parent.equality_delete (l_attribute)
 					elseif l_attribute /= Void and then not a_value.is_empty then						
 						l_attribute.set_value (a_value)
 					elseif l_attribute = Void and then not a_value.is_empty then						
@@ -181,7 +184,7 @@ feature -- Status Setting
 				loop
 					l_child_element := l_element.element_by_name (a_array_path.item (cnt + 1))
 					if l_child_element = Void then
-						create l_child_element.make_child (l_element, a_array_path.item (cnt + 1), Void)
+						create l_child_element.make_child (l_element, a_array_path.item (cnt + 1), create {XM_NAMESPACE}.make_default)
 						l_element.put_first (l_child_element)
 					end
 					l_element := l_child_element
@@ -190,13 +193,13 @@ feature -- Status Setting
 				if l_element /= Void then
 					l_child_element := l_element.element_by_name (a_element)
 					if l_child_element = Void then
-						create l_child_element.make_child (l_element, a_element, Void)
+						create l_child_element.make_child (l_element, a_element, create {XM_NAMESPACE}.make_default)
 						l_element.put_first (l_child_element)
 					elseif l_child_element.count > 0 then					
 						l_child_element.remove (1)
 					end
 					if a_value.is_empty then
-						l_child_element.parent.delete (l_child_element)
+						l_child_element.parent.equality_delete (l_child_element)
 					else
 						l_child_element.put_first (create {XM_CHARACTER_DATA}.make (l_child_element, a_value))
 					end					
@@ -396,12 +399,13 @@ feature -- Storage
 		do
 			if not retried then
 					-- Write document
-				create l_formatter.make
-				l_formatter.process_document (a_doc)
 				create l_output_file.make (a_doc_name)
+				create l_formatter.make
+				l_formatter.set_output (l_output_file)												
 				l_output_file.open_write
 				if l_output_file.is_open_write then
-					l_output_file.put_string (l_formatter.last_string)
+--					l_output_file.put_string (l_formatter.last_string)
+					l_formatter.process_document (a_doc)
 					l_output_file.flush
 					l_output_file.close
 				else

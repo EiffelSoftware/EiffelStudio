@@ -39,7 +39,7 @@ feature -- Creation
 			make
 			toc := a_toc
 			filename := a_filename
-			create l_root.make_root ("table_of_contents", Void)
+			create l_root.make_root (Current, "table_of_contents", Void)
 			set_root_element (l_root)
 			build (toc, root_element)
 			save_xml_document (Current, filename)
@@ -75,7 +75,7 @@ feature {NONE} -- XML
 				else
 					l_name := Topic_string
 				end
-				create l_node.make_child (a_parent, l_name, Void)			
+				create l_node.make_child (a_parent, l_name, create {XM_NAMESPACE}.make_default)			
 				create l_node_attribute.make ("id", Void, l_id.out, l_node)
 				l_node.put_last (l_node_attribute)
 				if l_title /= Void then

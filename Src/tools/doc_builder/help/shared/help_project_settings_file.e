@@ -43,8 +43,8 @@ feature -- Access
 			value: XM_CHARACTER_DATA
 		do
 			create document.make
-			create ns.make ("", "")
-			create parent_element.make_root (Shared_constants.Help_constants.Help_project_tag, ns)
+			create ns.make_default
+			create parent_element.make_root (document, Shared_constants.Help_constants.Help_project_tag, ns)
 			document.force_first (parent_element)
 			
 			create element.make_child (parent_element, Shared_constants.Help_constants.Name_tag, ns)

@@ -1,61 +1,54 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-
 	description: 
-		"EiffelVision fixed, gtk implementation."
+		"Eiffel Vision fixed. GTK+ implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
 class
-	
 	EV_FIXED_IMP
 	
 inherit
-	
 	EV_FIXED_I
-		
-	EV_INVISIBLE_CONTAINER_IMP
-		export {NONE}
-			add_child_packing
 		redefine
-			add_child,
-			remove_child
+			interface
+		end
+		
+	EV_WIDGET_LIST_IMP
+		redefine
+			interface
 		end
 	
 create
-	
 	make
 
 feature {NONE} -- Initialization
-	
-        make is
-                        -- Create a fixed widget. 
+
+	make (an_interface: like interface) is
+			-- Create the fixed container.
 		do
-			widget := gtk_fixed_new
+			base_make (an_interface)
+			ev_wel_control_container_make
 		end
 
-feature -- Element change
-	
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite.
-			-- Redefined because we do not have any
-			-- resizing options in an EV_FIXED.
+feature -- Status setting
+
+	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER) is
+			-- Set `a_widget.x_position' to `an_x'.
+			-- Set `a_widget.y_position' to `a_y'.
 		do
-			-- Put the `vbox' into the current container. 
-			gtk_container_add (GTK_CONTAINER (widget), child_imp.widget)
+			check
+				to_be_implemented: False
+			end
 		end
 
-	remove_child (child_imp: EV_WIDGET_IMP) is	
-			-- Remove the given child from the children of
-			-- the container.
-			-- Redefined because we do not have any
-			-- resizing options in an EV_FIXED.
+	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
+			-- Set `a_widget.width' to `a_width'.
+			-- Set `a_widget.height' to `a_height'.
 		do
-			-- Remove the child from the current container. 			
-			gtk_container_remove (GTK_CONTAINER (widget), child_imp.widget)
+			check
+				to_be_implemented: False
+			end
 		end
 
 end -- class EV_FIXED
@@ -81,6 +74,10 @@ end -- class EV_FIXED
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/05/02 00:40:28  brendel
+--| Reintroduced EV_FIXED.
+--| Complete revision.
+--|
 --| Revision 1.8  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

@@ -1,11 +1,7 @@
---| Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-
 	description: 
-		"EiffelVision fixed, implementation interface."
+		"Eiffel Vision fixed. Implementation interface."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -13,8 +9,89 @@ deferred class
 	EV_FIXED_I
 	
 inherit
-	EV_CONTAINER_I
-	
+	EV_WIDGET_LIST_I
+		redefine
+			interface
+		end
+
+feature -- Element change
+
+	set_item_x_position (a_widget: EV_WIDGET; an_x: INTEGER) is
+			-- Set `a_widget.x_position' to `an_x'.
+		require
+			has_a_widget: has (a_widget)
+			an_x_non_negative: an_x >= 0
+		do
+			set_item_position (a_widget, an_x, a_widget.y_position)
+		ensure
+			a_widget_x_position_assigned: a_widget.x_position = an_x
+		end
+
+	set_item_y_position (a_widget: EV_WIDGET; a_y: INTEGER) is
+			-- Set `a_widget.y_position' to `a_y'.
+		require
+			has_a_widget: has (a_widget)
+			a_y_non_negative: a_y >= 0
+		do
+			set_item_position (a_widget, a_widget.x_position, a_y)
+		ensure
+			a_widget_y_position_assigned: a_widget.y_position = a_y
+		end
+
+	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER) is
+			-- Set `a_widget.x_position' to `an_x'.
+			-- Set `a_widget.y_position' to `a_y'.
+		require
+			has_a_widget: has (a_widget)
+			an_x_non_negative: an_x >= 0
+			a_y_non_negative: a_y >= 0
+		deferred
+		ensure
+			a_widget_x_position_assigned: a_widget.x_position = an_x
+			a_widget_y_position_assigned: a_widget.y_position = a_y
+		end
+
+	set_item_width (a_widget: EV_WIDGET; a_width: INTEGER) is
+			-- Set `a_widget.width' to `a_width'.
+		require
+			has_a_widget: has (a_widget)
+			a_width_non_negative: a_width >= 0
+		do
+			set_item_size (a_widget, a_width, a_widget.height)
+		ensure
+			a_widget_width_assigned: a_widget.width = a_width
+		end
+
+	set_item_height (a_widget: EV_WIDGET; a_height: INTEGER) is
+			-- Set `a_widget.height' to `a_height'.
+		require
+			has_a_widget: has (a_widget)
+			a_height_non_negative: a_height >= 0
+		do
+			set_item_size (a_widget, a_widget.width, height)
+		ensure
+			a_widget_height_assigned: a_widget.height = a_height
+		end
+
+	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
+			-- Set `a_widget.width' to `a_width'.
+			-- Set `a_widget.height' to `a_height'.
+		require
+			has_a_widget: has (a_widget)
+			a_width_non_negative: a_width >= 0
+			a_height_non_negative: a_height >= 0
+		deferred
+		ensure
+			a_widget_width_assigned: a_widget.width = a_width
+			a_widget_height_assigned: a_widget.height = a_height
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_FIXED
+			-- Provides a common user interface to platform dependent
+			-- functionality implemented by `Current'
+
 end -- class EV_FIXED_I
 
 --!-----------------------------------------------------------------------------
@@ -38,6 +115,10 @@ end -- class EV_FIXED_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/05/02 00:40:26  brendel
+--| Reintroduced EV_FIXED.
+--| Complete revision.
+--|
 --| Revision 1.6  2000/03/21 16:52:26  oconnor
 --| removed invisible container
 --|

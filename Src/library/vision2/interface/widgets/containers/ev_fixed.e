@@ -1,13 +1,19 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-		"EiffelVision fixed. Invisible container that allows%
-		%unlimited number of other widgets to be put inside it.%
-		%The location of each widget inside is specified by%
-		%the coordinates of the widget."
+		"Container that allows custom placement of widgets. Widgets are%N%
+		%placed relative to (`origin_x', `origin_y'). Clipping will be%N%
+		%applied. Items are ordered in z-order with the last item as the%N%
+		%topmost."
+	appearance:
+		"+---------------------+%N%
+		%|    +--------+       |%N%
+		%|    |        |       |%N%
+		%|  +-+ `last' +-------+%N%
+		%|  | |        |`first'|%N%
+		%|  +-+        +-------+%N%
+		%+----+--------+-------+"
 	status: "See notice at end of class"
-	keywords: "container, invisible"
+	keywords: "container, fixed, custom"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -15,43 +21,130 @@ class
 	EV_FIXED
 
 inherit
-	EV_INVISIBLE_CONTAINER
+	EV_WIDGET_LIST
 		redefine
-			make,
 			implementation,
-			manager
+			create_implementation,
+			make_for_test
 		end
-	
+
 create
-	make
+	default_create,
+	make_for_test
 	
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create a fixed widget with, `par' as
-			-- parent
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
 		do
-			create {EV_FIXED_IMP} implementation.make
-			widget_make (par)
-		ensure
-			false
-			--| FIXME NPC
+			create {EV_FIXED_IMP} implementation.make (Current)
 		end
 
-feature -- Status report
-	
-	--| FIXME is_manager
-	manager: BOOLEAN is 
-			--|FIXME explain more 
-			-- Does the container manage its children?
+	make_for_test is
+			-- Create for testing purposes.
+		local
+			swap_timer: EV_TIMEOUT
 		do
-			Result := False
+			Precursor
+			from start until after loop
+				set_item_position (item, index * 20, index * 10)
+				set_item_size (item, 50, 20)
+			end
+			create swap_timer.make_with_interval (1000)
+			swap_timer.actions.extend (~do_test)
 		end
-	
-feature {NONE} -- Implementation
+
+	do_test is
+			-- Cycle the first widget into the last position.
+		local
+			w: EV_WIDGET
+		do
+			w := first
+			if w /= Void then
+				prune_all (w)
+				extend (w)
+			end
+		end
+
+feature -- Element change
+
+	set_item_x_position (a_widget: EV_WIDGET; an_x: INTEGER) is
+			-- Set `a_widget.x_position' to `an_x'.
+		require
+			has_a_widget: has (a_widget)
+			an_x_non_negative: an_x >= 0
+		do
+			implementation.set_item_x_position (a_widget, an_x)
+		ensure
+			a_widget_x_position_assigned: a_widget.x_position = an_x
+		end
+
+	set_item_y_position (a_widget: EV_WIDGET; a_y: INTEGER) is
+			-- Set `a_widget.y_position' to `a_y'.
+		require
+			has_a_widget: has (a_widget)
+			a_y_non_negative: a_y >= 0
+		do
+			implementation.set_item_y_position (a_widget, a_y)
+		ensure
+			a_widget_y_position_assigned: a_widget.y_position = a_y
+		end
+
+	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER) is
+			-- Set `a_widget.x_position' to `an_x'.
+			-- Set `a_widget.y_position' to `a_y'.
+		require
+			has_a_widget: has (a_widget)
+			an_x_non_negative: an_x >= 0
+			a_y_non_negative: a_y >= 0
+		do
+			implementation.set_item_position (a_widget, an_x, a_y)
+		ensure
+			a_widget_x_position_assigned: a_widget.x_position = an_x
+			a_widget_y_position_assigned: a_widget.y_position = a_y
+		end
+
+	set_item_width (a_widget: EV_WIDGET; a_width: INTEGER) is
+			-- Set `a_widget.width' to `a_width'.
+		require
+			has_a_widget: has (a_widget)
+			a_width_non_negative: a_width >= 0
+		do
+			implementation.set_item_width (a_widget, a_width)
+		ensure
+			a_widget_width_assigned: a_widget.width = a_width
+		end
+
+	set_item_height (a_widget: EV_WIDGET; a_height: INTEGER) is
+			-- Set `a_widget.height' to `a_height'.
+		require
+			has_a_widget: has (a_widget)
+			a_height_non_negative: a_height >= 0
+		do
+			implementation.set_item_height (a_widget, a_height)
+		ensure
+			a_widget_height_assigned: a_widget.height = a_height
+		end
+
+	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
+			-- Set `a_widget.width' to `a_width'.
+			-- Set `a_widget.height' to `a_height'.
+		require
+			has_a_widget: has (a_widget)
+			a_width_non_negative: a_width >= 0
+			a_height_non_negative: a_height >= 0
+		do
+			implementation.set_item_size (a_widget, a_width, a_height)
+		ensure
+			a_widget_width_assigned: a_widget.width = a_width
+			a_widget_height_assigned: a_widget.height = a_height
+		end
+
+feature {EV_ANY_I} -- Implementation
 	
 	implementation: EV_FIXED_I
-			
+			-- Responsible for interaction with the native graphics toolkit.
+
 end -- class EV_FIXED
 
 --!-----------------------------------------------------------------------------
@@ -75,6 +168,10 @@ end -- class EV_FIXED
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/05/02 00:40:25  brendel
+--| Reintroduced EV_FIXED.
+--| Complete revision.
+--|
 --| Revision 1.11  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

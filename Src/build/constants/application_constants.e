@@ -1,19 +1,5 @@
 class APPLICATION_CONSTANTS
 
-feature -- Colors
-
-	Black: COLOR is
-		once
-			!!Result.make;
-			Result.set_name ("black");
-		end;
-
-	White: COLOR is
-		once
-			!!Result.make;
-			Result.set_name ("white");
-		end;
-
 feature -- Integer constants
 
 	Arrow_head_w: INTEGER is 10;

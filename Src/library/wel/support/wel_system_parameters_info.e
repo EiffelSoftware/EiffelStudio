@@ -21,15 +21,15 @@ feature -- Status
 
 	has_flat_menu: BOOLEAN is
 			-- Determines whether native User menus have flat menu appearance
-		require
-			windows_xp_required: (create {WEL_WINDOWS_VERSION}).is_windows_xp_compatible
 		local
 			res: INTEGER
 			success: BOOLEAN
 		do
-			success := c_system_parameters_info (Spi_getflatmenu, 0, $res, 0)
-			if success then
-				Result := res /= 0
+			if is_windows_xp_compatible then
+				success := c_system_parameters_info (Spi_getflatmenu, 0, $res, 0)
+				if success then
+					Result := res /= 0
+				end
 			end
 		end
 
@@ -44,7 +44,7 @@ feature -- Status
 			res: INTEGER
 			success: BOOLEAN
 		do
-			if not is_windows_95 or else has_windows_plus then
+			if not is_windows_95 or else has_windows95_plus then
 				success := c_system_parameters_info (Spi_getdragfullwindows, 1, $res, 0)
 				if success then
 					Result := res /= 0
@@ -52,20 +52,20 @@ feature -- Status
 			end
 		end
 
-	has_windows_plus: BOOLEAN is
-			-- Windows 95: Indicates whether the Windows extension,
+	has_windows95_plus: BOOLEAN is
+			-- Windows 95 only: Indicates whether the Windows extension,
 			-- Windows Plus!, is installed. Set the uiParam parameter to 1.
 			-- The pvParam parameter is not used. The function returns TRUE
 			-- if the extension is installed, or FALSE if it is not.
-		require
-			windows_95_only: (create {WEL_WINDOWS_VERSION}).is_windows_95
 		local
 			success: BOOLEAN
 			res: INTEGER
 		do
-			success := c_system_parameters_info (Spi_getwindowsextension, 1, $res, 0)
-			if success then
-				Result := res /= 0
+			if is_windows_95 then
+				success := c_system_parameters_info (Spi_getwindowsextension, 1, $res, 0)
+				if success then
+					Result := res /= 0
+				end
 			end
 		end
 
@@ -86,6 +86,18 @@ feature -- Status
 			if not success then
 				Result := Void
 			end
+		end
+
+feature -- Obsolete
+
+	has_windows_plus: BOOLEAN is
+			-- Windows 95 only: Indicates whether the Windows extension,
+			-- Windows Plus!, is installed. Set the uiParam parameter to 1.
+			-- The pvParam parameter is not used. The function returns TRUE
+			-- if the extension is installed, or FALSE if it is not.
+		obsolete "Use `has_windows95_plus' instead"
+		do
+			Result := has_windows95_plus
 		end
 
 feature {NONE} -- Externals

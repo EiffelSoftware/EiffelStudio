@@ -69,6 +69,13 @@ feature -- Initialization
 				make_util := translator.options.get_string ("make", "make utility")
 				create status_box.make (make_util, retried, c_error, False, False)
 			end
+			
+			if index_of_word_option ("vs") /= 0 then
+				if retried or c_error then
+					-- Make the application return a non-zero value to OS to flag an error to calling process.
+					feature {EXCEPTIONS}.die (1)
+				end
+			end
 		rescue
 			retried := true
 			retry

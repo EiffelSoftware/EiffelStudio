@@ -87,7 +87,7 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 	{
 		AssemblyDescriptor Descriptor, ADescriptor;
 		ISE.AssemblyManager.Support support;
-		AssemblyName [] Dependencies;	
+		Object [] Dependencies;	
 		AssemblyName AName;
 		ConversionSupport convert;
 		int i, j;
@@ -99,7 +99,7 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 		Descriptor.Make( Name, Version, Culture, PublicKey );
 		support = new ISE.AssemblyManager.Support();
 		support.Make();
-		Dependencies = ( AssemblyName [] )support.DependanciesFromInfo( Descriptor );
+		Dependencies = support.DependanciesFromInfo( Descriptor );
 		
 		assemblyDependencies = new String [Dependencies.Length * 5];
 		convert = new ConversionSupport();
@@ -109,7 +109,7 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 		j = 0;
 		for( i = 0; i < Dependencies.Length; i++ )
 		{
-			AName = Dependencies [i];
+			AName = ( AssemblyName )Dependencies [i];
 			ADescriptor = convert.AssemblyDescriptorFromName( AName );
 			reflectionInterface.Search( ADescriptor );
 			if( reflectionInterface.Found )

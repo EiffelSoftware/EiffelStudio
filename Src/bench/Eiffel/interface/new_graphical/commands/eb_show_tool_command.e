@@ -115,10 +115,10 @@ feature -- Basic operations
 		do
 			create Result.make (Current)
 			initialize_toolbar_item (Result, display_text, use_gray_icons)
-			Result.select_actions.extend (agent execute)
 			if is_selected then
 				Result.enable_select
 			end
+			Result.select_actions.extend (agent execute)
 		end
 
 	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM is

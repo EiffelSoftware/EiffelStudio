@@ -119,6 +119,9 @@ feature -- Case properties
 	name_of_current_feature: STRING;
 			-- Name of feature currently being processed
 
+	dotnet_name_of_current_feature: STRING;
+			-- .NET name of feature currently being processed
+
 feature -- Properties
 
 	is_for_case: BOOLEAN

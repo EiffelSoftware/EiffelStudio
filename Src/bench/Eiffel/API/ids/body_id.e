@@ -1,4 +1,9 @@
--- Body ids.
+indexing
+ 
+	description:
+		"Feature body identifiers.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class BODY_ID
 

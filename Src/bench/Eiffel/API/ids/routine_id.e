@@ -1,4 +1,9 @@
--- Routine Ids
+indexing
+ 
+	description:
+		"Routine identifiers.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class ROUTINE_ID
 

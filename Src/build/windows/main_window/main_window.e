@@ -40,6 +40,8 @@ creation
 feature -- Creation
 	make (a_screen: SCREEN) is
 		do
+			!! hide_show_windows
+
 			!! base.make ("1", a_screen)
 			!! form.make (widget_names.form, base)
 				--| Menu bar
@@ -159,10 +161,13 @@ feature -- Creation
 			interface_entry.set_toggle_on
 			vertical_separator.set_horizontal (False)
 			command_editor.set_command_tool (command_tool)
---			set_current_state (app_editor.initial_state_circle.data)
 			v_separator_1.set_horizontal (False)
 			v_separator_2.set_horizontal (False)
 			v_separator_3.set_horizontal (False)
+			main_split_window.set_proportion (66)
+			top_split_window.set_proportion (50)
+			command_split_window.set_proportion (50)
+			context_split_window.set_proportion (50)
 		end
 
 	attach_all is
@@ -542,8 +547,8 @@ feature -- Realization
 	realize is
 		do
 			base.realize
-			context_tree_widget.realize
 			context_catalog_widget.realize
+			context_tree_widget.realize
 			command_catalog.realize
 		end
 
@@ -842,6 +847,7 @@ feature -- Hide/Show Command editor
 	hide_command_editor is
 			-- Hide Command editor.
 		do
+-- 			base.set_height (base.height - command_editor.height)
 			command_editor_split_form.unmanage
 			if not command_split_form.managed then
 				bottom_split_form.unmanage
@@ -851,6 +857,9 @@ feature -- Hide/Show Command editor
 	show_command_editor is
 			-- Show command editor.
 		do
+-- 			bottom_split_window.set_proportion (100 * command_split_form.height //
+-- 					(command_split_form.height + resources.cmd_ed_height))
+-- 			base.set_height (base.height + Resources.cmd_ed_height)
 			if not command_split_form.managed then
 				bottom_split_form.manage
 			end

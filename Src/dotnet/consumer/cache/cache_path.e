@@ -153,7 +153,7 @@ feature {CACHE_READER} -- Access
 						
 						l_obj := Current
 						create l_file_info.make (l_obj.get_type.assembly.location)
-						l_str := l_file_info.name.substring_integer_integer (0, l_file_info.name.length - 4)
+						l_str := l_file_info.name.substring (0, l_file_info.name.length - 4)
 						l_registry_key := l_registry_key.open_sub_key (l_str)
 						if l_registry_key /= Void then
 							l_obj := l_registry_key.get_value (Ise_key)

@@ -533,6 +533,13 @@ feature {NONE} -- Implementation
 
 			app_implementation.window_oids.extend (object_id)
 		end
+		
+
+	vbox: POINTER
+			-- Vertical_box to have a possibility for a menu on the
+			-- top and a status bar at the bottom.
+
+feature {EV_GTK_CALLBACK_MARSHAL}
 
 	call_close_request_actions is
 			-- Call the close request actions.
@@ -542,9 +549,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	vbox: POINTER
-			-- Vertical_box to have a possibility for a menu on the
-			-- top and a status bar at the bottom.
 			
 feature {EV_MENU_BAR_IMP} -- Implementation
 

@@ -31,7 +31,7 @@ extern void traversal(char *object, int p_accounting); /* Traversal of objects *
 
 /* Maping table handling */
 extern void map_start(void);			/* Reset LIFO stack into a FIFO one */
-extern EIF_OBJ map_next(void);			/* Get next object as in a FIFO stack */
+extern EIF_OBJECT map_next(void);			/* Get next object as in a FIFO stack */
 extern void map_reset(int emergency);			/* Reset maping table */
 
 #ifdef DEBUG						/* For copy.c */

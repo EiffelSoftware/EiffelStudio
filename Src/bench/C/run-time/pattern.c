@@ -29,12 +29,12 @@ rt_private uint32 **darray = (uint32 **) 0;	/* Pointer to array recording shifti
 #endif /* EIF_THREADS */
 
 rt_private void compile(char *pattern, register int plen, uint32 *dtable);			/* Regular pattern compilation */
-rt_private void fuz_compile(EIF_OBJ pattern, register int plen, int fuzzy);		/* Fuzzy pattern compilation */
+rt_private void fuz_compile(EIF_OBJECT pattern, register int plen, int fuzzy);		/* Fuzzy pattern compilation */
 rt_private void free_structures(int n);	/* Free fuzzy shifting tables */
 rt_private char *qsearch(char *text, int tlen, char *pattern, int plen);		/* Sunday's Quick Search algorithm */
 rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int fuzzy);	/* Fuzzy version of Quick Search */
 
-rt_public int str_str(EIF_CONTEXT EIF_OBJ text, EIF_OBJ pattern, int tlen, int plen, int start, int fuzzy)
+rt_public int str_str(EIF_CONTEXT EIF_OBJECT text, EIF_OBJECT pattern, int tlen, int plen, int start, int fuzzy)
              		/* The text string */
                 	/* The pattern we are looking for */
          			/* Length of the text */
@@ -67,7 +67,7 @@ rt_public int str_str(EIF_CONTEXT EIF_OBJ text, EIF_OBJ pattern, int tlen, int p
 	/* Exact matching does not use any memory allocation at all, so it is safe
 	 * to use eif_access() now to pass true addresses.
 	 * Fuzzy pattern matching uses memory allocation to store the delta tables.
-	 * This means we have to pass EIF_OBJ pointers to the pattern compilation
+	 * This means we have to pass EIF_OBJECT pointers to the pattern compilation
 	 * routine. But once compile is done, no more memory allocation is needed
 	 * and then we may pass the true pointer to the search function, which is
 	 * nice.
@@ -124,7 +124,7 @@ rt_private void compile(char *pattern, register int plen, uint32 *dtable)
 		dtable[*p] = plen - i;
 }
 
-rt_private void fuz_compile(EIF_CONTEXT EIF_OBJ pattern, register int plen, int fuzzy)
+rt_private void fuz_compile(EIF_CONTEXT EIF_OBJECT pattern, register int plen, int fuzzy)
                 	/* The pattern we want to look at */
                    	/* The length of the pattern */
           			/* Fuzzy control */

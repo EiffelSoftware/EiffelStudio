@@ -48,7 +48,7 @@ extern void dle_reclaim(void);		/* Free resources introduced by the DC-set */
 extern EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path);	/* Load the Dynamic Class Set */
 extern EIF_REFERENCE dle_instance(EIF_CONTEXT int dtype, EIF_REFERENCE arg);
 extern EIF_INTEGER dle_search(EIF_REFERENCE obj, EIF_REFERENCE class_name);	/* Search for a class in the DC-Set */
-extern void c_pass_dle_routines(EIF_PROC set_dtype_addr);	/* Pass eiffel routine addr to C */
+extern void c_pass_dle_routines(EIF_PROCEDURE set_dtype_addr);	/* Pass eiffel routine addr to C */
 extern void dle_reclaim(void);
 
 #ifdef __cplusplus

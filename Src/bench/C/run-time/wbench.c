@@ -38,7 +38,7 @@
  * `wdisp (dyn_type)'
  */
 
-rt_public EIF_FN_REF wfeat(int static_type, int32 feature_id, int dyn_type)
+rt_public EIF_REFERENCE_FUNCTION wfeat(int static_type, int32 feature_id, int dyn_type)
 {
 	/* Function pointer associated to Eiffel feature of feature id
 	 * `feature_id' accessed in Eiffel static type `static_type' to
@@ -79,7 +79,7 @@ rt_public EIF_FN_REF wfeat(int static_type, int32 feature_id, int dyn_type)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public EIF_FN_REF wpfeat(int32 origin, int32 offset, int dyn_type)
+rt_public EIF_REFERENCE_FUNCTION wpfeat(int32 origin, int32 offset, int dyn_type)
 {
 	/* Function pointer associated to Eiffel feature of origin class
 	 * `origin', identified by `offset' in that class, and to
@@ -116,7 +116,7 @@ rt_public EIF_FN_REF wpfeat(int32 origin, int32 offset, int dyn_type)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public EIF_FN_REF wfeat_inv(int static_type, int32 feature_id, char *name, char *object)
+rt_public EIF_REFERENCE_FUNCTION wfeat_inv(int static_type, int32 feature_id, char *name, char *object)
 {
 	/* Function pointer associated to Eiffel feature of feature id
 	 * `feature_id' accessed in Eiffel static type `static_type' to
@@ -168,7 +168,7 @@ rt_public EIF_FN_REF wfeat_inv(int static_type, int32 feature_id, char *name, ch
 	EIF_END_GET_CONTEXT
 }
 
-rt_public EIF_FN_REF wpfeat_inv(int32 origin, int32 offset, char *name, char *object)
+rt_public EIF_REFERENCE_FUNCTION wpfeat_inv(int32 origin, int32 offset, char *name, char *object)
 {
 	/* Function pointer associated to Eiffel feature of origin class
 	 * `origin', identified by `offset' in that class, and to
@@ -495,7 +495,7 @@ rt_public int wptype_gen(int static_type, int32 origin, int32 offset, char *obje
 	return (int) eif_compound_id ((int16 *) 0,object, desc->type, desc->gen_type);
 }
 
-rt_public EIF_FN_REF wdisp(int dyn_type)
+rt_public EIF_REFERENCE_FUNCTION wdisp(int dyn_type)
 {
 	/* Function pointer associated to Eiffel feature of routine id
 	 * `routine_id' accessed in Eiffel dynamic type `dyn_type'.

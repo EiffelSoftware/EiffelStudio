@@ -1,6 +1,6 @@
 
 /*****************************************************************
-    In the C-programs, we use EIF_OBJ and char * to indicate
+    In the C-programs, we use EIF_OBJECT and char * to indicate
 direct(also called raw or unprotected) address; use EIF_REFERENCE
 to indicate indirect(also called Eiffel or protected) address.
 *****************************************************************/
@@ -13,7 +13,7 @@ to indicate indirect(also called Eiffel or protected) address.
 #define tDEBUG
                                    
 void separate_server(case_process)
-EIF_PROC case_process;
+EIF_PROCEDURE case_process;
 {
 /* perform server function for the local processor.
  * Whenever it get a request from a client, it servers it.

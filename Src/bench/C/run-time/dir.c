@@ -378,7 +378,7 @@ rt_public char *dir_next(DIR *dirp)
 }
 #endif
 
-rt_public EIF_OBJ dir_current(void)
+rt_public EIF_OBJECT dir_current(void)
 {
 	/* Return the Eiffel string corresponding to the current working
 	 * directory.  Note this always returns a new string.
@@ -390,7 +390,7 @@ rt_public EIF_OBJ dir_current(void)
 	cwd = getcwd(NULL, PATH_MAX);
 	cwd_string = makestr(cwd, strlen (cwd));
 	eif_free (cwd);
-	return ((EIF_OBJ)cwd_string);
+	return ((EIF_OBJECT)cwd_string);
 }
 
 rt_public EIF_CHARACTER eif_dir_separator (void)
@@ -404,7 +404,7 @@ rt_public EIF_CHARACTER eif_dir_separator (void)
 #endif
 }
 
-rt_public EIF_INTEGER eif_chdir (EIF_OBJ path)
+rt_public EIF_INTEGER eif_chdir (EIF_OBJECT path)
 {
 	/* Set current dir to `path'
 	 * Returns the error status

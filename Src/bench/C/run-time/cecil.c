@@ -42,7 +42,7 @@
 /* Function declarations */
 rt_private int cid_to_dtype(EIF_TYPE_ID cid);		/* Converts a class ID into a dynamic type */
 rt_private int locate(char *object, char *name);			/* Locate attribute by name in skeleton */
-rt_public int eiflocate (EIF_OBJ object, char *name);
+rt_public int eiflocate (EIF_OBJECT object, char *name);
 
 #ifndef lint
 rt_private char *rcsid =
@@ -168,7 +168,7 @@ rt_public EIF_TYPE_ID eifexp(EIF_TYPE_ID id)
  * Object creation
  */
 
-rt_public EIF_OBJ eifcreate(EIF_TYPE_ID cid)
+rt_public EIF_OBJECT eifcreate(EIF_TYPE_ID cid)
 {
 	/* Create an instance of class 'cid', but does not call any creation
 	 * routine. Return the address in the indirection table (access to the
@@ -181,7 +181,7 @@ rt_public EIF_OBJ eifcreate(EIF_TYPE_ID cid)
 	
 	dtype = cid_to_dtype(cid);		/* Convert class ID to dynamic type */
 	if (dtype < 0)					/* Was not a valid reference type */
-		return (EIF_OBJ) 0;			/* No creation, return null pointer */
+		return (EIF_OBJECT) 0;			/* No creation, return null pointer */
 
 	object = emalloc(dtype);		/* Create object */
 
@@ -192,47 +192,47 @@ rt_public EIF_OBJ eifcreate(EIF_TYPE_ID cid)
  * Function pointers handling
  */
 
-rt_public EIF_PROC eifproc(char *routine, EIF_TYPE_ID cid)
+rt_public EIF_PROCEDURE eifproc(char *routine, EIF_TYPE_ID cid)
 {
-	return (EIF_PROC) eifref(routine, cid);		/* Eiffel procedure */
+	return (EIF_PROCEDURE) eifref(routine, cid);		/* Eiffel procedure */
 }
 
-rt_public EIF_FN_INT eiflong(char *routine, EIF_TYPE_ID cid)
+rt_public EIF_INTEGER_FUNCTION eiflong(char *routine, EIF_TYPE_ID cid)
 {
-	return (EIF_FN_INT) eifref(routine, cid);	/* Function returning INTEGER */
+	return (EIF_INTEGER_FUNCTION) eifref(routine, cid);	/* Function returning INTEGER */
 }
 
-rt_public EIF_FN_CHAR eifchar(char *routine, EIF_TYPE_ID cid)
+rt_public EIF_CHARACTER_FUNCTION eifchar(char *routine, EIF_TYPE_ID cid)
 {
-	return (EIF_FN_CHAR) eifref(routine, cid);	/* Function returning CHAR */
+	return (EIF_CHARACTER_FUNCTION) eifref(routine, cid);	/* Function returning CHAR */
 }
 
-rt_public EIF_FN_FLOAT eifreal(char *routine, EIF_TYPE_ID cid)
+rt_public EIF_REAL_FUNCTION eifreal(char *routine, EIF_TYPE_ID cid)
 {
-	return (EIF_FN_FLOAT) eifref(routine, cid);	/* Function returning REAL */
+	return (EIF_REAL_FUNCTION) eifref(routine, cid);	/* Function returning REAL */
 }
 
-rt_public EIF_FN_DOUBLE eifdouble(char *routine, EIF_TYPE_ID cid)
+rt_public EIF_DOUBLE_FUNCTION eifdouble(char *routine, EIF_TYPE_ID cid)
 {
-	return (EIF_FN_DOUBLE) eifref(routine, cid);	/* Returning DOUBLE */
+	return (EIF_DOUBLE_FUNCTION) eifref(routine, cid);	/* Returning DOUBLE */
 }
 
-rt_public EIF_FN_BIT eifbit(char *routine, EIF_TYPE_ID cid)
+rt_public EIF_BIT_FUNCTION eifbit(char *routine, EIF_TYPE_ID cid)
 {
-	return (EIF_FN_BIT) eifref(routine, cid);	/* Function returning BIT */
+	return (EIF_BIT_FUNCTION) eifref(routine, cid);	/* Function returning BIT */
 }
 
-rt_public EIF_FN_BOOL eifbool(char *routine, EIF_TYPE_ID cid)
+rt_public EIF_BOOLEAN_FUNCTION eifbool(char *routine, EIF_TYPE_ID cid)
 {
-	return (EIF_FN_BOOL) eifref(routine, cid);	/* Function returning BOOLEAN */
+	return (EIF_BOOLEAN_FUNCTION) eifref(routine, cid);	/* Function returning BOOLEAN */
 }
 
-rt_public EIF_FN_POINTER eifptr(char *routine, EIF_TYPE_ID cid)
+rt_public EIF_POINTER_FUNCTION eifptr(char *routine, EIF_TYPE_ID cid)
 {
-	return (EIF_FN_POINTER) eifref(routine, cid);	/* Returning POINTER */
+	return (EIF_POINTER_FUNCTION) eifref(routine, cid);	/* Returning POINTER */
 }
 
-rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
+rt_public EIF_REFERENCE_FUNCTION eifref(char *routine, EIF_TYPE_ID cid)
 {
 	/* Look for the routine named 'routine' in the type 'cid' (there is no
 	 * polymorphism here). Return a pointer to the routine if found, or the
@@ -250,16 +250,16 @@ rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
 	uint16 body_index;
 	int32 *cn_routids;
 #else
-	EIF_FN_REF *ref;
+	EIF_REFERENCE_FUNCTION *ref;
 #endif
 
 	if (dtype < 0)						/* Invalid type (not a reference) */
-		return (EIF_FN_REF) 0;			/* Cannot use Cecil on simple types */
+		return (EIF_REFERENCE_FUNCTION) 0;			/* Cannot use Cecil on simple types */
 
 	ptr_table = &Cecil(dtype);			/* Get associated H table */
 
 #ifndef WORKBENCH
-	ref = (EIF_FN_REF *) ct_value(ptr_table, routine);	/* Code location */
+	ref = (EIF_REFERENCE_FUNCTION *) ct_value(ptr_table, routine);	/* Code location */
 	if (!ref && !eif_ignore_invisible)
 		eraise ("Unknown routine (visible?)", EN_PROG);
 	return *ref;
@@ -267,7 +267,7 @@ rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
 	if ((feature_ptr = (int32 *) ct_value(ptr_table, routine)) == (int32*)0) {
 		if (!eif_ignore_invisible)
 			eraise ("Unknown routine (visible?)", EN_PROG);
-		return (EIF_FN_REF) 0;
+		return (EIF_REFERENCE_FUNCTION) 0;
 	}
 	cn_routids = System(dtype).cn_routids;
 	if (cn_routids)
@@ -303,7 +303,7 @@ rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
  * Class ID versus dynamic type
  */
 
-rt_public int eiftype(EIF_OBJ object)
+rt_public EIF_TYPE_ID eiftype(EIF_OBJECT object)
 {
 	/* Return the dynamic type of the specified object */
 
@@ -372,8 +372,8 @@ rt_public char *eifaddr(char *object, char *name)
 }
 
 
-rt_public int eiflocate (EIF_OBJ object, char *name) {
-    /* Return the index of attribute `name' in EIF_OBJ `object' */
+rt_public int eiflocate (EIF_OBJECT object, char *name) {
+    /* Return the index of attribute `name' in EIF_OBJECT `object' */
 
     return locate (eif_access (object), name);
 }
@@ -433,13 +433,13 @@ rt_public EIF_BIT eifgbit(char *object, char *name)
 
 	i = locate(object, name);		/* Locate attribute by name */
 	if (i == -1)					/* Attribute not found */
-		return EIF_NO_BFIELD;		/* No bit field */
+		return EIF_NO_BIT_FIELD;		/* No bit field */
 
 	sk = &System(Dtype(object));	/* Fetch skeleton entry */
 
 #ifndef WORKBENCH
 	if (!(sk->cn_types[i] & SK_BIT))
-		return EIF_NO_BFIELD;		/* Wrong type (not a bit field) */
+		return EIF_NO_BIT_FIELD;		/* Wrong type (not a bit field) */
 
 	return (EIF_BIT) (object + (sk->cn_offsets[i]));
 #else
@@ -464,7 +464,7 @@ rt_public void eifsbit(char *object, char *name, EIF_BIT bit)
 		return;
 	
 	obj_field = eifgbit(object, name);	/* Get address of bit field */
-	if (obj_field == EIF_NO_BFIELD)		/* Eh! This is not a bit field! */
+	if (obj_field == EIF_NO_BIT_FIELD)		/* Eh! This is not a bit field! */
 		return;							/* Do nothing */
 
 	/* The size of the whole bit field is the size of the long which holds the

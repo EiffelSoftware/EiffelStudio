@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 #include "eif_portable.h"
-#include "eif_cecil.h"		/* %%zs added for EIF_OBJ definition line 26... */
+#include "eif_cecil.h"		/* %%zs added for EIF_OBJECT definition line 26... */
 #include "eif_interp.h"		/* %%zs added for 'struct item' definition line 48 */
 
 /*
@@ -26,8 +26,8 @@ extern "C" {
  */
 
 RT_LNK char *c_generator(register char *Current);		/* Eiffel feature `generator' (GENERAL) */
-extern char *c_tagged_out(EIF_OBJ object);	/* Eiffel feature `tagged_out' (GENERAL) */
-extern char *build_out(EIF_OBJ object);		/* Build tagged out in C buffer */
+extern char *c_tagged_out(EIF_OBJECT object);	/* Eiffel feature `tagged_out' (GENERAL) */
+extern char *build_out(EIF_OBJECT object);		/* Build tagged out in C buffer */
 
 /*
  * Building `out' string for simple types.

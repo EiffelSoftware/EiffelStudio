@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-struct hash {				/* Hashing table pointer -> EIF_OBJ */
+struct hash {				/* Hashing table pointer -> EIF_OBJECT */
 	int h_size;				/* Size of the hash table */
 	char **h_key;			/* Keys array */
 	char **h_entry;			/* Entries array */

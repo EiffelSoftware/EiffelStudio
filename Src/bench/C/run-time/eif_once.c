@@ -94,10 +94,10 @@ rt_private EIF_MUTEX_TYPE *eif_pop_table_mutex = (EIF_MUTEX_TYPE *) 0;
  * otherwise several threads can access and modify it  */
 rt_private EIF_MUTEX_TYPE *eif_fop_table_mutex = (EIF_MUTEX_TYPE *) 0;
 
-rt_private struct fop_list *init_fop_list (EIF_FN_REF feature_address); 
+rt_private struct fop_list *init_fop_list (EIF_REFERENCE_FUNCTION feature_address); 
 	/* Creates and returns a pointer on a new 'fop_list' */
 	
-rt_private struct pop_list *init_pop_list (EIF_PROC feature_address); 
+rt_private struct pop_list *init_pop_list (EIF_PROCEDURE feature_address); 
 	/* creates and returns a pointer on a new 'pop_list' */
  
 /* For reclaiming eif_pop_table and eif_fop_table */
@@ -106,7 +106,7 @@ rt_private void eif_destroy_pop_list (struct pop_list *list); 	/* destroy a pop_
 
 /* Implementations */
 
-rt_private struct fop_list *init_fop_list (EIF_FN_REF feature_address)
+rt_private struct fop_list *init_fop_list (EIF_REFERENCE_FUNCTION feature_address)
 {
 	/* Creates and initializes a pointer on a new struct fop_list 
 	 * (first call of once function). 		 
@@ -131,7 +131,7 @@ rt_private struct fop_list *init_fop_list (EIF_FN_REF feature_address)
 } /* init_fop_list */	
 
 
-rt_private struct pop_list *init_pop_list(EIF_PROC feature_address)
+rt_private struct pop_list *init_pop_list(EIF_PROCEDURE feature_address)
 {
 	/* Creates a new 'pop_list'
 	 * (first call of once procedure). 				 
@@ -180,7 +180,7 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER 
 				* containing information about feature */ 
 
 
-	EIF_FN_REF feature_address = (EIF_FN_REF) function_ptr; /* need to cast function_ptr for C-ANSI conformance */
+	EIF_REFERENCE_FUNCTION feature_address = (EIF_REFERENCE_FUNCTION) function_ptr; /* need to cast function_ptr for C-ANSI conformance */
 
 	EIF_MUTEX_CREATE(eif_fop_table_mutex, "Couldn't create mutex for once per process management\n");
 	
@@ -280,7 +280,7 @@ rt_public void eif_global_procedure (EIF_REFERENCE Current, EIF_POINTER proc_ptr
 
         struct pop_list *list; /* current pointer on struct pop_list containing information about feature */
  
-	EIF_PROC feature_address = (EIF_PROC) proc_ptr; /* need to cast proc_ptr for C-ANSI conformance */
+	EIF_PROCEDURE feature_address = (EIF_PROCEDURE) proc_ptr; /* need to cast proc_ptr for C-ANSI conformance */
 
 #ifdef DEBUG
 	printf ("DEBUG: Entering eif_global_procedure\n");

@@ -244,7 +244,7 @@ rt_public EIF_INTEGER eif_putenv (char *v, char *k)
 #endif
 }
 
-rt_public EIF_INTEGER eif_safe_putenv (EIF_OBJ v, EIF_OBJ k) 
+rt_public EIF_INTEGER eif_safe_putenv (EIF_OBJECT v, EIF_OBJECT k) 
 {
 	/* Safe Eiffel putenv using environment variables. This has been added
 	 * for EiffelWeb, because on windows we needed to deal with environment
@@ -281,11 +281,11 @@ rt_public char * eif_getenv (char * k)
 	appl_len = strlen (egc_system_name);
 	key_len = strlen (k);
 	if ((key = (char *) eif_calloc (appl_len + 46 +key_len, 1)) == NULL)
-		return (EIF_OBJ) 0;
+		return (EIF_OBJECT) 0;
 
 	if ((lower_k = (char *) eif_calloc (key_len+1, 1)) == NULL) {
 		eif_free (key);
-		return (EIF_OBJ) 0;
+		return (EIF_OBJECT) 0;
 	}
 
 	strcpy (lower_k, k);
@@ -297,7 +297,7 @@ rt_public char * eif_getenv (char * k)
 	if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
 		eif_free (key);
 		eif_free (lower_k);
-		return (EIF_OBJ) 0;
+		return (EIF_OBJECT) 0;
 	}
 
 	bsize = 1024;
@@ -305,15 +305,15 @@ rt_public char * eif_getenv (char * k)
 		eif_free (key);
 		eif_free (lower_k);
 		RegCloseKey (hkey);
-		return (EIF_OBJ) getenv (k);
+		return (EIF_OBJECT) getenv (k);
 	}
 
 	eif_free (key);
 	eif_free (lower_k);
 	RegCloseKey (hkey);
-	return (EIF_OBJ) buf;
+	return (EIF_OBJECT) buf;
 #else
-	return (EIF_OBJ) getenv (k);
+	return (EIF_OBJECT) getenv (k);
 #endif
 }
 

@@ -33,11 +33,13 @@ struct bit {
 	uint32 b_value[1];				/* Array long integers holding value */
 };
 
+#define	eif_make_string	makestr	/* Returns an Eiffel string */
+
 /*
  * Run time functions used by generated C code.
  */
 
-RT_LNK char *makestr(register char *s, register int len);	/* Build an Eiffel string object */
+RT_LNK EIF_REFERENCE makestr(register char *s, register int len);	/* Build an Eiffel string object */
 extern char *makebit(char *bit, long int bit_count);		/* Build an Eiffel bit object */
 extern char *striparr(register char *curr, register int dtype, register char **items, register long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
 

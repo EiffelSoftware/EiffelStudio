@@ -51,7 +51,7 @@ rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where);		
  * class creation routine
  */
 
-rt_public char *argarr(EIF_CONTEXT int argc, char **argv)
+rt_public EIF_REFERENCE argarr(EIF_CONTEXT int argc, char **argv)
 {
 	/* Create an Eiffel ARRAY [STRING] with the values contained in
 	 * `argv'

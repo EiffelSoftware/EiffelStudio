@@ -87,7 +87,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount);			/* Retrieve n obj
 rt_public char *grt_nmake(EIF_CONTEXT long int objectCount);			/* Retrieve n objects general form*/
 rt_private void iread_header(EIF_CONTEXT_NOARG);		/* Read independent header */
 rt_private void rt_clean(void);			/* Clean data structure */
-rt_private void rt_update1(register char *old, register EIF_OBJ new);			/* Reference correspondance update */
+rt_private void rt_update1(register char *old, register EIF_OBJECT new);			/* Reference correspondance update */
 rt_private void rt_update2(char *old, char *new, char *parent);			/* Fields updating */
 rt_public char *rt_make(void);				/* Do the retrieve */
 rt_public char *rt_nmake(EIF_CONTEXT long int objectCount);			/* Retrieve n objects */
@@ -355,7 +355,7 @@ rt_public char *rt_nmake(EIF_CONTEXT long int objectCount)
 	long nb_char;
 	char *oldadd;
 	char *newadd = (char *) 0;
-	EIF_OBJ new_hector;
+	EIF_OBJECT new_hector;
 	uint32 crflags, fflags, flags;
 	uint32 spec_size = 0;
 	char g_status = g_data.status;
@@ -508,7 +508,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 	long nb_char;
 	char *oldadd;
 	char *newadd = (char *) 0;
-	EIF_OBJ new_hector;
+	EIF_OBJECT new_hector;
 	uint32 crflags, fflags, flags;
 	uint32 spec_size = 0;
 	char g_status = g_data.status;
@@ -597,7 +597,7 @@ rt_public char *grt_nmake(EIF_CONTEXT long int objectCount)
 						break;
 					case SK_DTYPE:
 					case SK_REF:
-						spec_size = sizeof (EIF_OBJ);
+						spec_size = sizeof (EIF_OBJECT);
 						break;
 					default:
 						if (dgen & SK_BIT) 
@@ -691,7 +691,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 	long nb_char;
 	char *oldadd;
 	char *newadd = (char *) 0;
-	EIF_OBJ new_hector;
+	EIF_OBJECT new_hector;
 	uint32 crflags, fflags, flags;
 	uint32 spec_size = 0;
 	char g_status = g_data.status;
@@ -791,7 +791,7 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 						break;
 					case SK_DTYPE:
 					case SK_REF:
-						spec_size = sizeof (EIF_OBJ);
+						spec_size = sizeof (EIF_OBJECT);
 						break;
 					default:
 						if (dgen & SK_BIT) 
@@ -946,7 +946,7 @@ rt_private void rt_clean(void)
 	EIF_END_GET_CONTEXT
 }
 
-rt_private void rt_update1 (register char *old, register EIF_OBJ new)
+rt_private void rt_update1 (register char *old, register EIF_OBJECT new)
 {
 	/* `new' is hector pointer to a retrieved object. We have to solve
 	 * possible references with it, before putting it in the hash table.

@@ -21,13 +21,13 @@ extern void set_str_val_into_parameter(PARAMETER *, char *);
 extern void make_server();
 
 /* utilities for client */
-extern EIF_BOOLEAN on_local_processor(EIF_OBJ);
+extern EIF_BOOLEAN on_local_processor(EIF_OBJECT);
 extern CONNECTION  *setup_connection(EIF_INTEGER, EIF_INTEGER);
-extern EIF_OBJ  create_child();
+extern EIF_OBJECT  create_child();
 extern EIF_POINTER  create_sep_obj(EIF_INTEGER, EIF_INTEGER, EIF_INTEGER);
-extern EIF_POINTER clone_sep_obj_proxy(EIF_OBJ);
-extern EIF_BOOLEAN reserve_sep_obj(EIF_OBJ);
-extern void free_sep_obj(EIF_OBJ);
+extern EIF_POINTER clone_sep_obj_proxy(EIF_OBJECT);
+extern EIF_BOOLEAN reserve_sep_obj(EIF_OBJECT);
+extern void free_sep_obj(EIF_OBJECT);
 extern char *command_text(EIF_INTEGER);
 extern char valid_command(EIF_INTEGER);
 
@@ -40,16 +40,16 @@ extern void send_command(EIF_INTEGER);
 extern void server_execute();
 
 /* utilities for "remote_server" */
-extern EIF_OBJ remote_server_by_name(char *);
-extern EIF_OBJ remote_server_by_index(EIF_INTEGER);
-extern EIF_OBJ remote_server(char *, EIF_INTEGER);
+extern EIF_OBJECT remote_server_by_name(char *);
+extern EIF_OBJECT remote_server_by_index(EIF_INTEGER);
+extern EIF_OBJECT remote_server(char *, EIF_INTEGER);
 
 /* utilities for local server */
 extern void register_a_ref(EIF_INTEGER, EIF_BOOLEAN);
 extern void unregister_from_local_processor(EIF_INTEGER, EIF_INTEGER, EIF_INTEGER);
 extern void unregister(EIF_INTEGER, EIF_INTEGER);
 extern void tell_parent_info_of_myself(char *, EIF_INTEGER);
-extern void wait_sep_child_obj(EIF_OBJ);
+extern void wait_sep_child_obj(EIF_OBJECT);
 extern void to_register(EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER);
 
 /* for "cli_list" */
@@ -170,7 +170,7 @@ extern void cur_unset_with_rejection();
 extern void cur_set_daemon_port(EIF_INTEGER);
 extern EIF_INTEGER cur_port_of_local_server();
 
-extern EIF_OBJ cur_deep_import(EIF_OBJ);
+extern EIF_OBJECT cur_deep_import(EIF_OBJECT);
 
 extern void separate_call();
 

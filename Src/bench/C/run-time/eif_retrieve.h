@@ -48,7 +48,7 @@ struct rt_cell {
 struct rt_struct {
 	int rt_status;					/* Is the reference solved or not ? */
 	union {
-		EIF_OBJ rtu_obj;			/* Solved hector reference */
+		EIF_OBJECT rtu_obj;			/* Solved hector reference */
 		struct rt_cell  *rtu_cell;	/* Unsolved references descriptions */
 	} rtu_data; 
 };

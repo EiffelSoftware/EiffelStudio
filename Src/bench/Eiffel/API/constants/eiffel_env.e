@@ -68,20 +68,27 @@ feature {NONE}
 
 	filter_path: STRING is
 		local
-			c: CHARACTER;
-			temp: STRING;
-			file_name: FILE_NAME;
+			file_name: FILE_NAME
 		once
-			Result := Execution_environment.get ("EIF_FILTER_PATH");
-			if Result = Void or else Result.empty then
-					-- EIF_FILTER_PATH was not set.
-				!!file_name.make_from_string (Eiffel3_dir_name);
-				file_name.extend_from_array (<<"bench", "filters">>);
-				Result := resources.get_string (r_Filter_path, file_name.path);
-				if Result.empty then
-					result := temp
-				end
-			end;
+			!!file_name.make_from_string (Eiffel3_dir_name);
+			file_name.extend_from_array (<<"bench", "filters">>);
+			Result := resources.get_string (r_Filter_path, file_name.path);
+			if Result.empty then
+				Result := file_name.path
+			end
 		end;
+
+	tmp_directory: STRING is
+		local
+			file_name: FILE_NAME
+		once
+			!!file_name.make;
+			file_name.set_directory ("tmp");
+			Result := resources.get_string (r_Tmp_directory, file_name.path);
+			if Result.empty then
+				Result := file_name.path
+			end
+		end;
+
 
 end

@@ -42,7 +42,7 @@ feature {NONE} -- Implementation
 			-- Generic menu item insertion.
 		do
 			an_item_imp.set_parent_imp (Current)
-			C.gtk_menu_shell_insert (c_object, an_item_imp.c_object, pos + 1)
+			C.gtk_menu_bar_insert (c_object, an_item_imp.c_object, pos + 1)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -72,6 +72,9 @@ end -- class EV_MENU_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/25 21:36:59  king
+--| Changed external call from menu_shell to menu_bar
+--|
 --| Revision 1.10  2000/04/25 19:01:09  king
 --| Removed gtk_reorder_child, added insert_menu_item
 --|

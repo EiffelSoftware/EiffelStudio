@@ -10,32 +10,32 @@ deferred class E_CLASS_FORMAT_CMD
 
 inherit
 
-	SHARED_SERVER;
+	SHARED_EIFFEL_PROJECT;
 	E_CLASS_CMD
 
 feature -- Access
 
-	criterium (f: FEATURE_I): BOOLEAN is 
+	criterium (f: E_FEATURE): BOOLEAN is 
 			-- Criterium for feature `f'
 		deferred 
 		end;
 
-	any_criterium (f: FEATURE_I): BOOLEAN is
+	any_criterium (f: E_FEATURE): BOOLEAN is
 			-- True if:
 			--	`f' is written in a descendant of ANY
 			--	 or if formatted class is a parent of ANY
 		do
 			Result :=
-				 f.written_class > System.any_class.compiled_class;
+				 f.written_class > Any_class;
 			Result := Result or
-				(current_class <= System.any_class.compiled_class);
+				(current_class <= Any_class);
 		ensure
 			valid_result: Result implies 
-				f.written_class > System.any_class.compiled_class or else
-					current_class <= System.any_class.compiled_class
+				f.written_class > Any_class or else
+					current_class <= Any_class
 		end;
 
-	display_feature (f: FEATURE_I; c: CLASS_C) is
+	display_feature (f: E_FEATURE; c: E_CLASS) is
 			-- Display feature `f' defined in class `c'
 			-- to the output window.
 		do
@@ -48,39 +48,39 @@ feature -- Execution
 			-- Display routines of `current_class' that follow `criterium'.
 		local
 				-- Compiler structures
-			feature_table: FEATURE_TABLE;
-			feature_i: FEATURE_I;
-			class_c: CLASS_C;
+			feature_table: E_FEATURE_TABLE;
+			e_feature: E_FEATURE;
+			e_class: E_CLASS;
 			id: INTEGER;
 				-- Temporary structures
-			list: PART_SORTED_TWO_WAY_LIST [FEATURE_I];
-			table: EXTEND_TABLE [PART_SORTED_TWO_WAY_LIST [FEATURE_I], INTEGER];
-			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
+			list: SORTED_TWO_WAY_LIST [E_FEATURE];
+			table: EXTEND_TABLE [SORTED_TWO_WAY_LIST [E_FEATURE], INTEGER];
+			classes: PART_SORTED_TWO_WAY_LIST [E_CLASS];
 			c: like current_class
 		do
 			c := current_class;
-			feature_table := Feat_tbl_server.item (c.id);
+			feature_table := c.feature_table;
 			
 			-- Group the features in terms of their origin.
 			from
-				!!table.make (20);
-				!!classes.make;
+				!! table.make (20);
+				!! classes.make;
 				feature_table.start
 			until
 				feature_table.after
 			loop
-				feature_i := feature_table.item_for_iteration;
-				if criterium (feature_i) then
-					class_c := feature_i.written_class;
-					id := class_c.id;
+				e_feature := feature_table.item_for_iteration;
+				if criterium (e_feature) then
+					e_class := e_feature.written_class;
+					id := e_class.id;
 					if table.has (id) then
 						list := table.item (id);
 					else
 						!! list.make;
 						table.put (list, id);
-						classes.put_front (class_c);
+						classes.put_front (e_class);
 					end;
-					list.put_front (feature_i);
+					list.put_front (e_feature);
 				end;
 				feature_table.forth
 			end;
@@ -93,19 +93,19 @@ feature -- Execution
 				classes.after
 			loop
 				output_window.put_string ("Class ");
-				class_c := classes.item;
-				class_c.append_clickable_signature (output_window);
+				e_class := classes.item;
+				e_class.append_clickable_signature (output_window);
 				output_window.put_string (":%N%N");
-				list := table.item (class_c.id);
+				list := table.item (e_class.id);
 				list.sort;
 				from
 					list.start
 				until
 					list.after
 				loop
-					feature_i := list.item;
+					e_feature := list.item;
 					output_window.put_char ('%T');
-					display_feature (feature_i, c);
+					display_feature (e_feature, c);
 					output_window.new_line;
 					list.forth
 				end;
@@ -113,5 +113,12 @@ feature -- Execution
 				classes.forth
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	any_class: E_CLASS is
+		once
+			Result := Eiffel_system.any_class.compiled_eclass
+		end;
 
 end -- class E_CLASS_FORMAT_CMD

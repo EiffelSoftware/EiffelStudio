@@ -12,7 +12,7 @@ inherit
 
 	EWB_CMD
 
-creation
+create
 
 	make
 

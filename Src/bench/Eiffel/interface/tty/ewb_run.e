@@ -39,21 +39,21 @@ feature {NONE} -- Implementation
 			else
 				system_name := clone (Eiffel_system.name);
 				appl_name := Eiffel_system.application_name (True);
-				!! f.make (appl_name);
+				create f.make (appl_name);
 				if not f.exists then
 					output_window.put_string (Warning_messages.w_file_not_exist (appl_name))
 					output_window.new_line
 				else
-					!! f_name.make_from_string (Workbench_generation_path);
+					create f_name.make_from_string (Workbench_generation_path);
 					f_name.set_file_name (Makefile_SH);
-					!! make_f.make (f_name);
+					create make_f.make (f_name);
 					if make_f.exists and then make_f.date > f.date then
 						output_window.put_string (Warning_messages.w_MakefileSH_more_recent)
 						output_window.new_line
 						error := True
 					end;
 					if not error then
-						!! cmd_exec;
+						create cmd_exec;
 						cmd_exec.execute_with_args (appl_name, arguments);
 					end;
 				end

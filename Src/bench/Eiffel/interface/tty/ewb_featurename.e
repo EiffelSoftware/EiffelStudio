@@ -16,7 +16,7 @@ inherit
 			abbreviation as featurename_abb
 		end
 
-creation
+create
 	make_loop
 
 feature -- Creation

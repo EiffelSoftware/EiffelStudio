@@ -19,7 +19,7 @@ inherit
 		end
 	TTY_CONSTANTS
 
-creation
+create
 
 	make, do_nothing
 

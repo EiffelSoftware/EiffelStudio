@@ -49,15 +49,15 @@ feature {NONE} -- Execution
 			conf_load: CONFIGURATION_LOADER
 			prof_invoker: PROFILER_INVOKER
 		do
-			!! conf_load.make_and_load (profiler);
+			create conf_load.make_and_load (profiler);
 			if conf_load.error_occurred then
 				raise_config_error;
 			else
-				!! prof_invoker.make (conf_load.profiler_type, arguments, proffile_dir, compile_type);
+				create prof_invoker.make (conf_load.profiler_type, arguments, proffile_dir, compile_type);
 				if prof_invoker.must_invoke_profiler then
 					prof_invoker.invoke_profiler;
 				end;
-				!! prof_converter.make (<<proffile_dir, compile_type>>, conf_load.shared_prof_config);
+				create prof_converter.make (<<proffile_dir, compile_type>>, conf_load.shared_prof_config);
 				if prof_converter.conf_load_error then
 					io.error.put_string (proffile_dir)
 					io.error.putstring (": File does not exist!%N%N")

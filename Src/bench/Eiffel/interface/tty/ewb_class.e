@@ -67,7 +67,7 @@ feature {NONE} -- Execution
 				if class_list.is_empty then
 					class_name.to_upper;
 					io.error.putstring (class_name);
-					!! id.make (0);
+					create id.make (0);
 					id.append (class_name);
 					if id.is_valid then
 						io.error.putstring (" is not in the universe%N")
@@ -111,7 +111,7 @@ feature {NONE} -- Execution
 					if class_i = Void then
 						class_name.to_upper;
 						io.error.putstring (class_name);
-						!! id.make (0);
+						create id.make (0);
 						id.append (class_name);
 						if id.is_valid then
 							io.error.putstring (" is not in cluster ");

@@ -16,7 +16,7 @@ inherit
 		end;
 	SHARED_ERROR_HANDLER
 
-creation
+create
 
 	make, do_nothing
 

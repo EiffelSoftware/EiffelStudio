@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 	associated_cmd: E_SHOW_CLUSTER_HIERARCHY is
 			-- Associated system command to be executed
 		do
-			!! Result.make
+			create Result.make
 		end;
 
 end -- class EWB_CLUSTER_HIERARCHY

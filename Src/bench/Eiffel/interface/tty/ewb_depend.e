@@ -12,7 +12,7 @@ inherit
 
 	SHARED_SERVER
 
-creation
+create
 	make, do_nothing
 
 feature
@@ -30,7 +30,7 @@ feature
 			dep := Depend_server.item (class_c.id);
 			fdep := dep.item (f.feature_name);
 
-			!! st.make
+			create st.make
 			st.add_string ("Dependents:");
 			st.add_new_line;
 			from

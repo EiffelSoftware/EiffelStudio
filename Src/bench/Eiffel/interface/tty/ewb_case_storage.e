@@ -20,7 +20,7 @@ feature {NONE} -- Implementation
 			format_storage: FORMAT_CASE_STORAGE
 		do
 				-- We generate all clusters by default
-			!! format_storage.make (output_window, degree_output, True);
+			create format_storage.make (output_window, degree_output, True);
 			format_storage.execute ("")
 		end
 

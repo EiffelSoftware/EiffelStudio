@@ -24,11 +24,11 @@ feature -- Element change
 		do
 			editor := shell_editor
 			if editor /= Void then
-				!!cmd.make (0);
+				create cmd.make (0);
 				cmd.append (editor);
 				cmd.extend (' ');
 				cmd.append (a_file);
-				!! cmd_exec;
+				create cmd_exec;
 				cmd_exec.execute (cmd)
 			else
 				io.error.putstring ("The resource EDITOR is not set%N");

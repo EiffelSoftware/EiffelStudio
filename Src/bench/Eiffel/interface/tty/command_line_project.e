@@ -270,7 +270,7 @@ feature -- Project retrieval
 				elseif Ace_name = Void then
 					create path.make_from_string (Execution_environment.current_working_directory)
 					path.set_file_name ("Ace.ace")	
-					!!file.make (path)
+					create file.make (path)
 					if file.exists then
 						Ace_name := path
 					else

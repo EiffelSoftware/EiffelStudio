@@ -12,7 +12,7 @@ inherit
 
 	OUTPUT_WINDOW
 
-creation
+create
 
 	make
 
@@ -20,7 +20,7 @@ feature -- Initalization
 
 	make is
 		do
-			!!stored_output.make (0);
+			create stored_output.make (0);
 		end;
 
 feature -- Properties

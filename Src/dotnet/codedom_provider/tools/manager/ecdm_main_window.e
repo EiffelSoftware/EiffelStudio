@@ -120,8 +120,9 @@ feature {NONE} -- Initialization
 			create help_parent_control.make_from_text ("")
 			create help_control
 			help_control.extend (help_parent_control)
-			initialize_combo (precompile_combo_box, Precompiled_paths)
+			initialize_combo (precompile_ace_file_combo_box, Precompile_ace_files)
 			initialize_combo (metadata_cache_combo_box, Metadata_cache_paths)
+			initialize_combo (precompile_cache_combo_box, Precompile_cache_paths)
 			show_actions.extend (agent on_column_resize (1))
 			initialize_from_configuration
 			set_clean
@@ -180,8 +181,9 @@ feature {NONE} -- Events
 				set_clean
 				add_entry_to_combo_and_save (log_server_combo_box.text, log_server_combo_box)
 				add_entry_to_combo_and_save (root_class_combo_box.text, root_class_combo_box)
-				add_entry_to_combo_and_save (precompile_combo_box.text, precompile_combo_box)
+				add_entry_to_combo_and_save (precompile_ace_file_combo_box.text, precompile_ace_file_combo_box)
 				add_entry_to_combo_and_save (metadata_cache_combo_box.text, metadata_cache_combo_box)
+				add_entry_to_combo_and_save (precompile_cache_combo_box.text, precompile_cache_combo_box)
 			end
 		ensure then
 			clean: active_configuration /= Void implies not is_dirty
@@ -383,33 +385,32 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_precompiled_change is
+	on_precompile_ace_file_change is
 			-- Update selected configuration object.
 			-- Set dirty flag.
 		local
 			l_precomp: STRING
 		do
 			if active_configuration /= Void then
-				l_precomp := precompile_combo_box.text
+				l_precomp := precompile_ace_file_combo_box.text
 				if not (l_precomp.is_empty or l_precomp.is_equal ("(none)")) then
-					if active_configuration.precompile = Void or else not l_precomp.is_equal (active_configuration.precompile) then
-						active_configuration.set_precompile (l_precomp)
+					if active_configuration.precompile_ace_file = Void or else not l_precomp.is_equal (active_configuration.precompile_ace_file) then
+						active_configuration.set_precompile_ace_file (l_precomp)
 						set_dirty
 					end
-				elseif active_configuration.precompile /= Void then
-					active_configuration.set_precompile (Void)
-					precompile_combo_box.set_text ("(none)")
+				elseif active_configuration.precompile_ace_file /= Void then
+					active_configuration.set_precompile_ace_file (Void)
+					precompile_ace_file_combo_box.set_text ("(none)")
 					set_dirty
 				end
 			end
 		end
 
-	on_precompiled_browse is
+	on_precompile_ace_file_browse is
 			-- Browse for precompiled library.
 		local
 			l_dialog: EV_FILE_OPEN_DIALOG
 			l_path: STRING
-			l_index: INTEGER
 		do
 			if active_configuration /= Void then
 				create l_dialog.make_with_title ("Browse to Precompiled Library Ace File")
@@ -417,11 +418,7 @@ feature {NONE} -- Events
 				l_dialog.show_modal_to_window (Current)
 				l_path := l_dialog.file_name
 				if not l_path.is_empty then
-					l_index := l_path.last_index_of ((create {OPERATING_ENVIRONMENT}).Directory_separator, l_path.count)
-					if l_index > 0 then
-						l_path.keep_head (l_index - 1)
-					end
-					precompile_combo_box.set_text (l_path)
+					precompile_ace_file_combo_box.set_text (l_path)
 				end
 			end
 		end
@@ -463,6 +460,42 @@ feature {NONE} -- Events
 			end
 		end
 
+	on_precompile_cache_change is
+			-- Save new precompile cache path.
+			-- Restore default precompile cache path if combo box empty.
+		local
+			l_precompile_cache: STRING
+		do
+			if active_configuration /= Void then
+				l_precompile_cache := precompile_cache_combo_box.text
+				if not l_precompile_cache.is_empty then
+					if active_configuration.precompile_cache = Void or else not l_precompile_cache.is_equal (active_configuration.precompile_cache) then
+						active_configuration.set_precompile_cache (l_precompile_cache)
+						set_dirty
+					end
+				elseif active_configuration.precompile_cache /= Void then
+					precompile_cache_combo_box.set_text (active_configuration.precompile_cache) -- Precompile cache path cannot be void
+				end
+			end
+		end
+		
+	on_precompile_cache_browse is
+			-- Called by `select_actions' of `precompile_cache_browse_button'.
+			-- Browse for precompile cache.
+		local
+			l_dialog: EV_DIRECTORY_DIALOG
+			l_path: STRING
+		do
+			if active_configuration /= Void then
+				create l_dialog.make_with_title ("Browse for Precompile cache folder")
+				l_dialog.show_modal_to_window (Current)
+				l_path := l_dialog.directory
+				if not l_path.is_empty then
+					precompile_cache_combo_box.set_text (l_path)
+				end
+			end
+		end
+	
 	on_add_application is
 			-- Called by `select_actions' of `add_button'.
 			-- Browse for application.
@@ -715,15 +748,20 @@ feature {NONE} -- Implementation
 				else
 					root_class_combo_box.remove_text
 				end
-				if l_config.precompile /= Void and then not l_config.precompile.is_empty then
-					precompile_combo_box.set_text (l_config.precompile)
+				if l_config.precompile_ace_file /= Void and then not l_config.precompile_ace_file.is_empty then
+					precompile_ace_file_combo_box.set_text (l_config.precompile_ace_file)
 				else
-					precompile_combo_box.set_text ("(none)")
+					precompile_ace_file_combo_box.set_text ("(none)")
 				end
 				if l_config.metadata_cache /= Void and then not l_config.metadata_cache.is_empty then
 					metadata_cache_combo_box.set_text (l_config.metadata_cache)
 				else
 					metadata_cache_combo_box.set_text ("(none)")
+				end
+				if l_config.precompile_cache /= Void and then not l_config.precompile_cache.is_empty then
+					precompile_cache_combo_box.set_text (l_config.precompile_cache)
+				else
+					precompile_cache_combo_box.remove_text
 				end
 				if not compiler_frame.is_show_requested then
 					compiler_frame.show

@@ -14,13 +14,14 @@ all:: net.lib
 .c.obb:
 	$(CC) -o$@ -c $(CFLAGS) $<
 
-SMODE = network.c networkr.c
+SMODE = network.c networkr.c storable.c
 
 LSRCS = $(SMODE)
 
 OBJS = \
 	network.obj \
-	networkr.obj
+	networkr.obj \
+	storable.obj
 
 local_clean:: remove
 
@@ -31,7 +32,7 @@ local_realclean::
 
 net.lib: $(OBJS)
 	$(RM) $@
-	$(AR) $@ /c +networkr.obj +network.obj
+	$(AR) $@ /c +networkr.obj +network.obj +storable.obj
 	$(RANLIB) $@
 	if not exist ..\spec mkdir ..\spec
 	if not exist ..\spec\w32bcc mkdir ..\spec\w32bcc

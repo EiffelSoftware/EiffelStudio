@@ -237,17 +237,17 @@ feature -- Warning messages
 			Result.append ("%Ndoes not exist.")
 		end
 			
-	w_Project_directory_not_exist (dir_name: STRING): STRING is
+	w_Project_directory_not_exist (file_name, dir_name: STRING): STRING is
 			-- Error message when something is missing in the Project directory.
 		require
 			dir_name_not_void: dir_name /= Void
 		do
 			!! Result.make (256);
-			Result.append ("Cannot open project in ");
-			Result.append (dir_name);
-			Result.append ("%N%NTry to fix the permissions or to check that the COMP,")
-			Result.append ("%NF_CODE and W_code directories and the `project.eif' ")
-			Result.append ("%Nfile are present in your EIFGEN directory.")
+			Result.append ("%NCannot open project `")
+			Result.append (file_name)
+			Result.append ("'.%N%NMake sure you have a complete EIFGEN directory in `")
+			Result.append (dir_name)
+			Result.append ("'.")
 		end;
 			
 	w_Directory_wrong_permissions (dir_name: STRING): STRING is
@@ -267,6 +267,17 @@ feature -- Warning messages
 
 	w_Finalize_warning: STRING is "Finalizing implies some C compilation%N%
 									%and linking. Do you want to do it now?";
+
+	w_Project_exists (dir_name: STRING): STRING is
+		require
+			dir_name_not_void: dir_name /= Void
+		do
+			!! Result.make (128)
+			Result.append ("In `")
+			Result.append (dir_name)
+			Result.append ("' an Eiffel project already exists.%N")
+			Result.append ("Do you wish to overwrite it?")
+		end
 
 	w_File_exists (file_name: STRING): STRING is
 		require

@@ -117,11 +117,24 @@ char **envp;
 
 	einit();							/* Various static initializations */
 	fcount = scount;
-	update();							/* Read melted information 
+
+	{
+		char temp = 0;
+		int i;
+
+		for (i=1;i<argc;i++) {
+			if (0 == strcmp (argv[i], "-ignore_updt")) {
+				temp = (char) 1;	
+				break;
+			}
+		}
+		update(temp);					
+	}									/* Read melted information
 										 * Note: the `update' function takes
 										 * care of the initialization of the 
 										 * temporary descriptor structures
 										 */
+
 	create_desc();						/* Create descriptor (call) tables */
 	
 	/* In workbench mode, we have a slight problem: when we link ewb in

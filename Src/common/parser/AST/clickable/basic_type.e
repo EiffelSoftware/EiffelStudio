@@ -8,7 +8,19 @@ deferred class BASIC_TYPE
 
 inherit
 
-	TYPE
+	TYPE;
+	CLICKABLE_AST
+		redefine
+			is_class
+		end			
+
+feature -- Properties
+
+	is_class: BOOLEAN is
+			-- Does the Current AST represent a class?
+		do
+			Result := True
+		end;
 
 feature -- Initialization
 

@@ -26,8 +26,6 @@
  * `wpfeat (origin, offset, dyn_type)'
  * `wfeat_inv (static_type, feature_id, name, object)'
  * `wpfeat_inv (origin, offset, name, object)'
- * `wpointer (static_type, feature_id, dyn_type)'
- * `wppointer (origin, offset, dyn_type)'
  * `wattr (static_type, feature_id, dyn_type)'
  * `wpattr (origin, offset, dyn_type)'
  * `wattr_inv (static_type, feature_id, name, object)'
@@ -332,71 +330,6 @@ char *object;
 									 * the IC was return to the previous 
 									 * state.
 									 */
-}
-
-public fnptr wpointer(static_type, feature_id, dyn_type)
-int static_type, dyn_type;
-int32 feature_id;
-{
-	/* Function pointer associated to Eiffel feature of feature id
-	 * `feature_id' accessed in Eiffel static type `static_type' to
-	 * apply on an object of dynamic type `dyn_type'.
-	 * Return a function pointer if not melted.
-	 */
-
-	int32 rout_id;
-	uint32 body_id;
-	int16 body_index;
-
-	rout_id = Routids(static_type)[feature_id];
-	CBodyIdx(body_index,rout_id,dyn_type);
-	body_id = dispatch[body_index];
-
-	if (body_id < zeroc)
-		/* Frozen feature */
-		return frozen[body_id];
-	else
-#ifndef DLE
-		xraise(EN_DOL);
-#else
-	if (body_id < dle_level) xraise(EN_DOL);
-	else if (body_id < dle_zeroc)
-			/* Dynamic frozen feature */
-		return dle_frozen[body_id];
-	else
-		xraise(EN_DOL);
-#endif	
-}
-
-public fnptr wppointer(origin, offset, dyn_type)
-int32 origin, offset;
-int dyn_type;
-{
-	/* Function pointer associated to Eiffel feature identified by `offset'
-	 * in its origin class `origin' and to be applied on an object of
-	 * dynamic type `dyn_type'.
-	 * Return a function pointer if not melted.
-	 */
-
-	uint32 body_id;
-
-	body_id = dispatch[desc_tab[origin][dyn_type][offset].info];
-
-	if (body_id < zeroc)
-		/* Frozen feature */
-		return frozen[body_id];
-	else
-#ifndef DLE
-		xraise(EN_DOL);
-#else
-	if (body_id < dle_level)
-		xraise(EN_DOL);
-	else if (body_id < dle_zeroc)
-			/* Dynamic frozen feature */
-		return dle_frozen[body_id];
-	else
-		xraise(EN_DOL);
-#endif	
 }
 
 public long wattr(static_type, feature_id, dyn_type)

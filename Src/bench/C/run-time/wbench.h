@@ -23,8 +23,6 @@ extern char *(*wpfeat_inv())();			/* Nested precompiled feature call */
 extern void wexp();						/* Creation call for expanded types */
 extern void wpexp();			/* Creation call for precomp expanded types */
 extern char *(*wdisp())();          	/* Feature call for dispose routine */ 
-extern fnptr wpointer();				/* Feature pointer */
-extern fnptr wppointer();				/* Precompiled feature pointer */
 extern long	wattr();					/* Attribute access */
 extern long	wpattr();					/* Precompiled attribute access */
 extern long wattr_inv();				/* Nested attribute access */

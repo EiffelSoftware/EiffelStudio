@@ -3,7 +3,7 @@
 <HTML>
 	<HEAD>
 		<TITLE>What's new in EiffelStudio 5.0</TITLE>
-		<LINK REL=StyleSheet HREF="/default.css">
+		<LINK REL=StyleSheet HREF="../../../default.css">
 	</HEAD>
 
 	<BODY>
@@ -19,9 +19,9 @@
         </ul>
 		<h2>Compiler</h2>
         <ul>
-          <li>A yet 20% faster Eiffel compiler.</li>
-          <li>Introduction of the feature {CLASS_NAME}.feature_name notation to
-            access external features and .NET static methods.</li>
+          <li>Click
+          <a href="30_compiler/60_version_history/01_51_release/00_50_to_51_changes.html">
+          here</a> for more details</li>
         </ul>
         <h2>.NET</h2>
         <ul>
@@ -29,9 +29,25 @@
           <li>Support for multiple inheritance in .NET software.</li>
         </ul>
 		<h2>Libraries</h2>
+		<h3>EiffelBase</h3>
+        <ul>
+          <li>It is now forbidden to create a <span class="eclass">BIT_REF</span> or a <span class="eclass">BIT X</span> object using 
+          its creation procedure (before it was accepted but did not work)</li>
+          <li>Added <span class="efeature">make_temporary_name</span> in <span class="eclass">FILE_NAME</span></li>
+          <li>Made <span class="efeature">to_c</span> obsolete from class <span class="eclass">INTEGER_INTERVAL</span></li>
+          <li>Change semantic of <span class="efeature">split</span> from class <span class="eclass">STRING</span></li>
+          <li>Fixed a bug in <span class="efeature">clear_all</span> from <span class="eclass">HASH_TABLE</span> that 
+          kept a reference to the last found item. Now it does not keep the 
+          reference after a call to <span class="efeature">clear_all</span>.</li>
+        </ul>
+		<h3>Vision2</h3>
         <ul>
           <li>Support for Vision2 applications on GTK platforms.</li>
+          <li>Some changes in the Vision2 library have been made,
+          <a href="../../../libraries/vision2/content/0-_revisions/index.html">
+          check here on how to update your code</a>.</li>
         </ul>
+		<p>&nbsp;</p>
 		<H1>What was new in EiffelStudio 5.0</H1>
 		<p>&nbsp;</p>
         <h2>Graphical environment</h2>

@@ -122,7 +122,7 @@ BEGIN
                     121,90,55,10
     CONTROL         "Minimum",Minimum_Radio,"Button",BS_AUTORADIOBUTTON,121,
                     105,55,10
-    LTEXT           "A summary of all the generated classes will be available in the file ""generated.txt""",
+    LTEXT           "A summary of all the generated files will be available in the file ""generated.txt""",
                     Output2_Static,110,125,139,20
     PUSHBUTTON      "Cancel",IDCANCEL,235,160,50,14
     LTEXT           "Output",Introduction_Static,110,5,230,10
@@ -157,8 +157,10 @@ BEGIN
                     110,5,230,10
     LTEXT           "The wizard can generate code for using a component (client) or creating a new one (server). ",
                     Introduction2_Static,110,25,230,20
-    LTEXT           "The component can be a dll (in-process) or a standard executable (local or remote). The wizard can generate code for multiple locations.",
-                    Introduction3_Static,110,55,230,25
+    LTEXT           "The component can be a dll (in-process) or a standard executable (local or remote).",
+                    Introduction3_Static,110,45,230,20
+    LTEXT           "Choose whether you want to generate code for a client or a server and the location of the component.",
+                    Introduction4_Static,110,65,230,15
 END
 
 Progress_Dialog DIALOG DISCARDABLE  0, 0, 187, 90

@@ -544,8 +544,9 @@ feature -- Generation Structure
 
 			Generator.Emit (OpCodes.Call, eiffel_entry_point.method_builder);
 
-			Classes [TypeID].module.SetUserEntryPoint (eiffel_entry_point.method_builder);
-
+			if (is_debugging_enabled) {
+				Classes [TypeID].module.SetUserEntryPoint (eiffel_entry_point.method_builder);
+			}
 
 			Generator.Emit (OpCodes.Ret);
 			EntryType.CreateType();

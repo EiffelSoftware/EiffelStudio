@@ -24,7 +24,7 @@
 
 #define ccom_c_array_element(_c_array_, _index_, _type_) (*((_type_ *)_c_array_ + _index_))
 
-typedef void (*EIF_SET_REAL_ITEM)(EIF_REFERENCE, EIF_REAL); 
+typedef void (*EIF_SET_REAL_ITEM)(EIF_REFERENCE, EIF_REAL);
 
 class ecom_runtime_ce
 {
@@ -61,9 +61,13 @@ public:
 	EIF_REFERENCE ccom_ce_pointed_short (short * an_integer, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_long (long * an_integer, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_integer (int * an_integer, EIF_OBJECT an_object);
+	EIF_REFERENCE ccom_ce_pointed_character (char * a_character, EIF_OBJECT an_object);
+	EIF_REFERENCE ccom_ce_pointed_unsigned_short (unsigned short * an_integer, EIF_OBJECT an_object);
+	EIF_REFERENCE ccom_ce_pointed_unsigned_long (unsigned long * an_integer, EIF_OBJECT an_object);
+	EIF_REFERENCE ccom_ce_pointed_unsigned_integer (unsigned int * an_integer, EIF_OBJECT an_object);
+	EIF_REFERENCE ccom_ce_pointed_unsigned_character (unsigned char * a_character, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_real (EIF_REAL * a_real, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_double (EIF_DOUBLE * a_double, EIF_OBJECT an_object);
-	EIF_REFERENCE ccom_ce_pointed_character (char * a_character, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_boolean (VARIANT_BOOL * a_bool, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_currency (CURRENCY * a_currency);
 	EIF_REFERENCE ccom_ce_pointed_decimal (DECIMAL * a_decimal);

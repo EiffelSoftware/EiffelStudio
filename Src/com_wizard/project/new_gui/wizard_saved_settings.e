@@ -126,6 +126,7 @@ feature {NONE} -- Implementation
 		do
 			a_combo.wipe_out
 			if not a_list.is_empty then
+				a_combo.select_actions.block
 				from
 					a_list.start
 				until
@@ -134,6 +135,7 @@ feature {NONE} -- Implementation
 					a_combo.extend (create {EV_LIST_ITEM}.make_with_text (a_list.item))
 					a_list.forth
 				end
+				a_combo.select_actions.resume
 				a_combo.set_text (a_list.first)
 			end
 		end

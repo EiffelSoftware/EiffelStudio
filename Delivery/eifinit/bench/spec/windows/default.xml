@@ -4,9 +4,9 @@
 	<TOPIC TOPIC_ID="Global_preferences" ICON="icon_preferences_folder">
 		<HEAD>Global preferences</HEAD>
 		<TEXT DESCRIPTION="Text files format: True = Windows / False = UNIX">text_mode_is_windows<BOOLEAN>True</BOOLEAN></TEXT>
-		<TEXT>editor<STRING>vi</STRING></TEXT>
-		<TEXT>temporary_directory<STRING>/tmp</STRING></TEXT>
-		<TEXT DESCRIPTION="Command used to launch an external editor">shell_command<STRING>vi +$line $target</STRING></TEXT>
+		<TEXT>editor<STRING>notepad</STRING></TEXT>
+		<TEXT>temporary_directory<STRING>C:\tmp</STRING></TEXT>
+		<TEXT DESCRIPTION="Command used to launch an external editor">shell_command<STRING>notepad $target</STRING></TEXT>
 		<TEXT>filter_name<STRING>PostScript</STRING></TEXT>
 		<TEXT>filter_command<STRING>none</STRING></TEXT>
 		<TEXT DESCRIPTION="Use an external command to print?">use_external_editor<BOOLEAN>False</BOOLEAN></TEXT>

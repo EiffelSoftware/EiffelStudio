@@ -264,7 +264,7 @@ EIF_INTEGER addr;
 #ifdef EIF_WIN32
 		{ struct in_addr tmp;
 		tmp.s_addr = addr;
-    	return inet_ntoa(&tmp));
+    	return inet_ntoa(tmp);
 		}
 		/* Because the BUG existed in Windows NT's socket. */
 #endif

@@ -269,6 +269,7 @@ int eif_rt_unlink (const char *name)
 
 
 #else  /* EIF_VMS_OLD */
+
 rt_public int eif_rt_putenv (const char *envstring) {  
     extern int DECC$PUTENV (const char *envstring) ;
     return DECC$PUTENV (envstring);  
@@ -282,6 +283,11 @@ rt_public int eif_rt_setenv(const char *name, const char *val, int overwrite) {
 rt_public int eif_rt_unlink (const char *name) {
     extern int DECC$UNLINK ( const char*name) ;
     return DECC$UNLINK (name);  
+}
+
+rt_public char* eif_rt_strdup (const char* str) {
+    extern char* DECC$STRDUP ( const char* str) ;
+    return DECC$STRDUP (str);
 }
 
 #endif  /* EIF_VMS_OLD */

@@ -107,7 +107,8 @@ feature -- Basic operations
 				add_get_type_info_function (a_descriptor)
 				add_get_type_info_count_function (a_descriptor)
 				add_get_ids_of_names_function (a_descriptor)
-				add_invoke_function (a_descriptor)
+				-- add_invoke_function (a_descriptor)
+				dispatch_invoke_function (a_descriptor)
 			end
 
 			-- constructor
@@ -416,6 +417,21 @@ feature {NONE} -- Implementation
 			func_writer.set_signature ("DISPID dispID, REFIID riid, LCID lcid, unsigned short wFlags, DISPPARAMS *pDispParams, VARIANT *pVarResult, EXCEPINFO *pExcepInfo, unsigned int *puArgErr")
 
 			body_code := check_type_info (cocls_descriptor)
+			body_code.append (Hresult)
+			body_code.append (Space)
+			body_code.append (Hresult_variable_name)
+			body_code.append (Space_equal_space)
+			body_code.append (Zero)
+			body_code.append (Semicolon)
+			body_code.append (New_line_tab)
+			body_code.append (Int)
+			body_code.append (Space)
+			body_code.append ("i")
+			body_code.append (Space_equal_space)
+			body_code.append (Zero)
+			body_code.append (Semicolon)
+			body_code.append (New_line)
+			body_code.append (New_line_tab)
 			body_code.append (Assert)
 			body_code.append (Open_parenthesis)
 			body_code.append (Riid)
@@ -433,13 +449,14 @@ feature {NONE} -- Implementation
 			body_code.append (Struct_selection_operator)
 			body_code.append ("rgvarg")
 			body_code.append (Semicolon)
-			body_code.append (New_line_tab_tab_tab)
+			body_code.append (New_line_tab)
 
 			body_code.append ("VARIANTARG * ")
 			body_code.append (Tmp_variable_name)
 			body_code.append (Space_equal_space)
 			body_code.append (Zero)
 			body_code.append (Semicolon)
+			body_code.append (New_line)
 			body_code.append (New_line_tab)
 
 			body_code.append (Switch)
@@ -564,6 +581,10 @@ feature {NONE} -- Implementation
 						prop_put_functions.remove (prop_get_functions.key_for_iteration)
 					end
 
+					Result.append (New_line)
+					Result.append (New_line_tab_tab_tab)
+					Result.append (Break)
+					Result.append (Semicolon)
 					prop_get_functions.forth
 				end
 			end
@@ -582,6 +603,10 @@ feature {NONE} -- Implementation
 					Result.append (New_line_tab_tab_tab)
 
 					Result.append (prop_put_functions.item_for_iteration)
+					Result.append (New_line_tab_tab_tab)
+					Result.append (Break)
+					Result.append (Semicolon)
+
 					prop_put_functions.forth
 				end
 			end
@@ -790,10 +815,12 @@ feature {NONE} -- Implementation
 			Result.append_integer (func_desc.argument_count)
 			Result.append (Close_parenthesis)
 			Result.append (New_line_tab_tab_tab)
+			Result.append (Tab)
 			Result.append (Return)
 			Result.append (Space)
 			Result.append ("DISP_E_BADPARAMCOUNT")
 			Result.append (Semicolon)
+			Result.append (New_line)
 			Result.append (New_line_tab_tab_tab)
 
 			if func_desc.argument_count > 0 then
@@ -812,12 +839,15 @@ feature {NONE} -- Implementation
 				Result.append (Space_open_parenthesis)
 				Result.append (Variantarg)
 				Result.append (Close_parenthesis)
+				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
+				Result.append (New_line)
 				Result.append (New_line_tab_tab_tab)
 
 				Result.append (If_keyword)
 				Result.append (Space_open_parenthesis)
 				Result.append (Dispparam_parameter)
+				Result.append (Struct_selection_operator)
 				Result.append ("cNamedArgs")
 				Result.append (Space)
 				Result.append (More)
@@ -826,9 +856,10 @@ feature {NONE} -- Implementation
 
 				-- for (int i=0; i < 'dispparam'->cNamedArgs;i++)
 				Result.append (New_line_tab_tab_tab)
+				Result.append (Tab)
 				Result.append (For)
 				Result.append (Space_open_parenthesis)
-				Result.append ("int i=0; i < ")
+				Result.append ("i=0; i < ")
 				Result.append (Dispparam_parameter)
 				Result.append (Struct_selection_operator)
 				Result.append ("cNamedArgs")
@@ -837,31 +868,40 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 
 				Result.append (New_line_tab_tab_tab)
-				Result.append (Tab)
+				Result.append (Tab_tab)
+				Result.append (Asterisk)
 				Result.append (Open_parenthesis)
 				Result.append (Tmp_variable_name)
 				Result.append (Plus)
-				Result.append (Space_open_parenthesis)
+				Result.append (Asterisk)
+				Result.append (Open_parenthesis)
+				Result.append (Open_parenthesis)
 				Result.append (Dispparam_parameter)
 				Result.append (Struct_selection_operator)
 				Result.append ("rgdispidNamedArgs")
+				Result.append (Close_parenthesis)
 				Result.append (Plus)
 				Result.append ("i")
 				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
 				Result.append (Space_equal_space)
+				Result.append (Asterisk)
+				Result.append (Open_parenthesis)
 				Result.append (Variant_parameter)
 				Result.append (Plus)
 				Result.append ("i")
+				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
+				Result.append (New_line)
 				Result.append (New_line_tab_tab_tab)
 
 				-- for (int i='dispparam'->cArgs, counter = 0;i>'dispparam'->cNamedArgs;i--)
 				Result.append (For)
 				Result.append (Space_open_parenthesis)
-				Result.append ("int i=")
+				Result.append ("i=")
 				Result.append (Dispparam_parameter)
 				Result.append (Struct_selection_operator)
+				Result.append ("cArgs")
 				Result.append (Semicolon)
 				Result.append ("i>")
 				Result.append (Dispparam_parameter)
@@ -872,6 +912,8 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Tab)
+				Result.append (Asterisk)
+				Result.append (Open_parenthesis)
 				Result.append (Tmp_variable_name)
 				Result.append (Plus)
 				Result.append (Open_parenthesis)
@@ -880,7 +922,10 @@ feature {NONE} -- Implementation
 				Result.append ("cArgs")
 				Result.append ("-i")
 				Result.append (Close_parenthesis)
+				Result.append (Close_parenthesis)
 				Result.append (Space_equal_space)
+				Result.append (Asterisk)
+				Result.append (Open_parenthesis)
 				Result.append (Variant_parameter)
 				Result.append (Plus)
 				Result.append (Open_parenthesis)
@@ -889,8 +934,10 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
 			end
-
-			Result.append ("HRESULT hr = ")
+			Result.append (New_line)
+			Result.append (New_line_tab_tab_tab)
+			Result.append (Hresult_variable_name)
+			Result.append (Space_equal_space)
 			Result.append (func_desc.name)
 			Result.append (Space_open_parenthesis)
 
@@ -905,7 +952,7 @@ feature {NONE} -- Implementation
 					create visitor
 					visitor.visit (func_desc.arguments.item.type)
 
-					Result.append (Comma_space)
+					Result.append (Space)
 					Result.append (Open_parenthesis)
 					Result.append (Tmp_variable_name)
 					Result.append (Plus)
@@ -913,7 +960,7 @@ feature {NONE} -- Implementation
 					Result.append (Close_parenthesis)
 					Result.append (Struct_selection_operator)
 					Result.append (vartype_namer.variant_field_name (visitor))
-					Result.append (Comma_space)
+					Result.append (Comma)
 
 					if is_paramflag_fout (func_desc.arguments.item.flags) then
 						local_buffer.append (Open_parenthesis)
@@ -934,10 +981,11 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			if func_desc.return_type.name.is_equal (Void_c_keyword) then
+			if not func_desc.return_type.name.is_equal (Void_c_keyword) then
 				create visitor
 				visitor.visit (func_desc.return_type)
 
+				Result.append (Ampersand)
 				Result.append ("pVarResult")
 				Result.append (Struct_selection_operator)
 				Result.append (vartype_namer.variant_field_name (visitor))
@@ -981,11 +1029,15 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab_tab_tab)
 			Result.append (Close_curly_brace)
+			Result.append (New_line_tab_tab_tab)
 
 			if not local_buffer.empty then
 				Result.append (local_buffer)
 				Result.append (New_line_tab_tab_tab)
 			end
+			Result.append (Break)
+			Result.append (Semicolon)
+			Result.append (New_line_tab_tab_tab)
 		end
 
 	add_invoke_function (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is

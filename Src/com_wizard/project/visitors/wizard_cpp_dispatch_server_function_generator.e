@@ -245,6 +245,7 @@ feature {NONE} -- Implementation
 						Result.append (Semicolon)
 					end
 					Result.append (New_line)
+					Result.append (New_line_tab)
 				end
 
 				if func_desc.arguments.count > 0 or not visitor.c_type.is_equal (Void_c_keyword) then

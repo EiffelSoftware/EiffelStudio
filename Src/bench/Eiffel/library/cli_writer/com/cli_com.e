@@ -22,7 +22,7 @@ feature -- High level
 
 feature -- Disposal
 
-	release (a_pointer: POINTER) is
+	frozen release (a_pointer: POINTER) is
 			-- Release COM objects represented by `a_pointer'.
 		external
 			"C++ IUnknown use %"unknwn.h%""
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 --			"C use %"cli_writer.h%""
 --		end
 
-	com_initialize: INTEGER is
+	frozen com_initialize: INTEGER is
 		external
 			"C inline use %"unknwn.h%""
 		alias
@@ -60,14 +60,14 @@ feature {NONE} -- Initialization
 --			"CoInitializeEx(NULL, COINIT_MULTITHREADED)"
 --		end
 
-	com_S_OK: INTEGER is
+	frozen com_S_OK: INTEGER is
 		external
 			"C macro use %"objbase.h%""
 		alias
 			"S_OK"
 		end
 
-	com_S_FALSE: INTEGER is
+	frozen com_S_FALSE: INTEGER is
 		external
 			"C macro use %"unknwn.h%""
 		alias

@@ -66,7 +66,7 @@ feature -- Measurement
 			Result := structure_size
 		end
 
-	structure_size: INTEGER is
+	frozen structure_size: INTEGER is
 			-- Size of IMAGE_DATA_DIRECTORY.
 		external
 			"C macro use <windows.h>"

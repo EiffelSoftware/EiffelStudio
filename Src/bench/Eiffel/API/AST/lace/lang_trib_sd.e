@@ -36,26 +36,16 @@ feature -- Lace compilation
 
 	adapt is
 			-- External analysis
-		local
-			vd18: VD18;
 		do
 			if language_name.is_make then
-				if file_names /= Void and then file_names.count = 1 then
-					System.set_makefile_name (file_names.first);
-				else
-					!!vd18;
-					vd18.set_node (Current);
-					Error_handler.insert_error (vd18);
-					Error_handler.raise_error;
-				end;
+				System.set_makefile_names (file_names);
 			elseif language_name.is_c then
 				System.set_c_file_names (file_names);
 			elseif language_name.is_object then
 				System.set_object_file_names (file_names);
 			else
-
 					-- Is it an error ?
-				io.error.putstring ("%NWARNING: undefined name in Externals clause");
+				io.error.putstring ("%NWARNING: undefined name in Externals clause ");
 				io.error.putstring (language_name.language_name);
 				io.error.new_line;
 			end;

@@ -23,10 +23,10 @@ feature
 			-- An independent copy of the color
 		do
 			!!Result.make;
-			if (n_ame = Void) then
+			if (name = Void) then
 				Result.set_rgb (red, green, blue);
 			else
-				Result.set_name ( clone (n_ame))
+				Result.set_name ( clone (name))
 			end
 		end;
 
@@ -60,7 +60,7 @@ feature
 	blue: INTEGER is
 			-- Blue saturation level
 		require
-			color_not_specified_by_name: (n_ame = Void)
+			color_not_specified_by_name: (name = Void)
 		do
 			Result := implementation.blue
 		end;
@@ -74,7 +74,7 @@ feature
 	green: INTEGER is
 			-- Green saturation level
 		require
-			color_not_specified_by_name: (n_ame = Void)
+			color_not_specified_by_name: (name = Void)
 		do
 			Result := implementation.green
 		end;
@@ -89,16 +89,22 @@ feature
 			Result := implementation.is_white_by_default
 		end;
 
-	n_ame: STRING is
+	name: STRING is
 			-- name of desired color for current
 		do
-			Result := implementation.n_ame
+			Result := implementation.name
+		end;
+
+	n_ame: STRING is obsolete "Use ``name''"
+			-- name of desired color for current
+		do
+			Result := name
 		end;
 
 	red: INTEGER is
 			-- Red saturation level
 		require
-			color_not_specified_by_name: (n_ame = Void)
+			color_not_specified_by_name: (name = Void)
 		do
 			Result := implementation.red
 		end;
@@ -120,7 +126,7 @@ feature
 		do
 			implementation.set_blue (blue_value)
 		ensure
-			(n_ame = Void);
+			(name = Void);
 			blue = blue_value
 		end;
 
@@ -132,7 +138,7 @@ feature
 		do
 			implementation.set_green (green_value)
 		ensure
-			(n_ame = Void);
+			(name = Void);
 			green = green_value
 		end;
 
@@ -143,8 +149,8 @@ feature
 		do
 			implementation.set_name (a_name)
 		ensure
-			not (n_ame = Void);
-			n_ame.is_equal (a_name)
+			not (name = Void);
+			name.is_equal (a_name)
 		end;
 
 	set_red (red_value: INTEGER) is
@@ -155,7 +161,7 @@ feature
 		do
 			implementation.set_red (red_value)
 		ensure
-			(n_ame = Void);
+			(name = Void);
 			red = red_value
 		end;
 
@@ -172,7 +178,7 @@ feature
 		do
 			implementation.set_rgb (red_value, green_value, blue_value)
 		ensure
-			(n_ame = Void);
+			(name = Void);
 			red = red_value;
 			green = green_value;
 			blue = blue_value

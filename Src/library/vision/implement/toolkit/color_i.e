@@ -42,14 +42,14 @@ feature
 	blue: INTEGER is
 			-- Blue saturation level
 		require
-			color_not_specified_by_name: (n_ame = Void)
+			color_not_specified_by_name: (name = Void)
 		deferred
 		end; -- blue
 
 	green: INTEGER is
 			-- Green saturation level
 		require
-			color_not_specified_by_name: (n_ame = Void)
+			color_not_specified_by_name: (name = Void)
 		deferred
 		end; -- green
 
@@ -59,15 +59,21 @@ feature
 		deferred
 		end; -- is_white_by_default
 
-	n_ame: STRING is
+	name: STRING is
 			-- name of desired color for current
 		deferred
+		end; -- name
+
+	n_ame: STRING is obsolete "Use ``name''"
+			-- name of desired color for current
+		do
+			Result := name
 		end; -- n_ame
 
 	red: INTEGER is
 			-- Red saturation level
 		require
-			color_not_specified_by_name: (n_ame = Void)
+			color_not_specified_by_name: (name = Void)
 		deferred
 		end; -- red
 
@@ -86,7 +92,7 @@ feature
 			blue_value_not_negative: blue_value >= 0
 		deferred
 		ensure
-			(n_ame = Void);
+			(name = Void);
 			blue = blue_value
 		end; -- set_blue
 
@@ -97,7 +103,7 @@ feature
 			green_value_not_negative: green_value >= 0
 		deferred
 		ensure
-			(n_ame = Void);
+			(name = Void);
 			green = green_value
 		end; -- set_green
 
@@ -107,8 +113,8 @@ feature
 			a_name_not_void: not (a_name = Void)
 		deferred
 		ensure
-			not (n_ame = Void);
-			n_ame.is_equal (a_name)
+			not (name = Void);
+			name.is_equal (a_name)
 		end; -- set_name
 
 	set_red (red_value: INTEGER) is
@@ -118,7 +124,7 @@ feature
 			red_value_not_negative: red_value >= 0
 		deferred
 		ensure
-			(n_ame = Void);
+			(name = Void);
 			red = red_value
 		end; -- set_red
 
@@ -134,7 +140,7 @@ feature
 			blue_value_not_negative: blue_value >= 0
 		deferred
 		ensure
-			(n_ame = Void);
+			(name = Void);
 			red = red_value;
 			green = green_value;
 			blue = blue_value

@@ -601,7 +601,7 @@ feature -- DLE
 				Error_handler.raise_error
 			end;
 			if Lace.not_first_parsing then
-				if extendible /= Compilation_modes.is_extendible then
+				if extendible /= System.extendible then
 						-- Cannot change the `extendible' status between
 						-- two compilations.
 					!!v9cd;
@@ -616,6 +616,7 @@ feature -- DLE
 					Error_handler.raise_error
 				end
 			end;
+			Compilation_modes.set_is_extending (Result /= Void)
 			Compilation_modes.set_is_extendible (extendible)
 		end;
 			

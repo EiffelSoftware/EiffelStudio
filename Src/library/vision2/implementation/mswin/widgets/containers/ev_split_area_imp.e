@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 					v_imp := first_imp
 					first := Void
 					second_expandable := True
-					first_expandable := False
+					first_expandable := True
 						-- Hide the splitter as `Current' only 
 					splitter_width := 0
 					set_split_position (0)
@@ -178,7 +178,7 @@ feature {NONE} -- Implementation
 					v_imp := second_imp
 					second := Void
 					first_expandable := True
-					second_expandable := False
+					second_expandable := True
 					splitter_width := 0 
 					set_split_position (maximum_split_position)
 				end
@@ -519,6 +519,9 @@ end -- class EV_SPLIT_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2001/06/29 01:00:22  rogers
+--| Fixed bug in prune with expandable items after calling wipe_out.
+--|
 --| Revision 1.27  2001/06/07 23:08:15  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

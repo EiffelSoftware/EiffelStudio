@@ -124,10 +124,14 @@ feature
 			-- Generation of the table through the writer
 		require
 			writer_exists: writer /= Void
+		local
+			l_poly: POLY_TABLE [ENTRY]
 		do
-			writer.generate (Current)
+			l_poly ?= Current
+			check l_poly_not_void: l_poly /= Void end
+			writer.generate (l_poly)
 			if has_type_table and then not has_one_type then
-				writer.generate_type_table (Current)
+				writer.generate_type_table (l_poly)
 			end
 		end
 
@@ -491,7 +495,7 @@ feature -- Insertion
 	merge (other: like Current) is
 			-- Put `other' into Current
 		local
-			tmp: ARRAY [ENTRY]
+			tmp: ARRAY [T]
 			i, j, k, nb: INTEGER
 			t_max, o_max: INTEGER
 			t_item: ENTRY
@@ -507,7 +511,7 @@ feature -- Insertion
 				increase_size (nb - i)
 			end
 
-			tmp := Tmp_poly_table
+			tmp ?= tmp_poly_table
 			if (nb > tmp.upper) then
 				increase_tmp_size (nb - tmp.upper)
 			end
@@ -569,7 +573,9 @@ feature -- Sort
 	sort is
 			-- Sort Current object in ascending order.
 		do
-			quick_sort (lower, max_position)
+			if max_position > 0 then
+				quick_sort (lower, max_position)
+			end
 		end
 
 feature {NONE} -- Implementation of quick sort algorithm
@@ -678,10 +684,11 @@ feature {NONE} -- Implementation
 
 feature {POLY_TABLE} -- Special data
 
-	Tmp_poly_table: ARRAY [ENTRY] is
+	tmp_poly_table: ARRAY [ENTRY] is
 			-- Contain a copy of Current during a merge
-		once
-			create Result.make (1, Block_size)
+		deferred
+		ensure
+			tmp_poly_table_not_void: Result /= Void
 		end
 
 	bad_cast_but_valid (e: POINTER): T is
@@ -694,11 +701,11 @@ feature {POLY_TABLE} -- Special data
 	increase_tmp_size (n: INTEGER) is
 			-- Increase the current array of `n' elements.
 		do
-			Tmp_poly_table.make (1, Tmp_poly_table.upper + (1 + n // Block_size) * Block_size)
+			tmp_poly_table.make (1, tmp_poly_table.upper + (1 + n // Block_size) * Block_size)
 		end
 
 	Block_size: INTEGER is 50
-			-- Size of a block of `Tmp_poly_table'.
+			-- Size of a block of `tmp_poly_table'.
 
 feature {NONE} -- Implementation
 

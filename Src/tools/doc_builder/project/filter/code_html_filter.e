@@ -226,9 +226,6 @@ feature {NONE} -- Implementation
 			if Result.last_index_of ('/', Result.count) > 0 then				
 				Result := Result.substring (1, Result.last_index_of ('/', Result.count))
 			end
-			if Result.substring (1, 3).is_equal ("../") then				
-				Result.remove_substring (1, 3)	
-			end
 		end		
 		
 end -- class CODE_HTML_FILTER

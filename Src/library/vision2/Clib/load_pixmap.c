@@ -21,6 +21,8 @@
 #include "eif_malloc.h"
 #include <stdio.h>
 
+
+#include <sys/types.h>
 #include <sys/timeb.h>
 #include "load_pixmap.h"
 

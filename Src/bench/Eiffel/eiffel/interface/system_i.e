@@ -157,6 +157,10 @@ feature -- Properties
 			-- Is it the first compilation of the system
 			-- Used by the time check
 
+	marked_precompiled_classes: BOOLEAN
+			-- Is it the first compilation of the system
+			-- using a precompiled library?
+
 	poofter_finalization: BOOLEAN
 			-- Will the next finalization be a poofter finalization?
 			-- i.e. not straight.
@@ -393,6 +397,7 @@ feature -- Properties
 		require
 			not_is_precompiling: not Compilation_modes.is_precompiling
 		do
+			marked_precompiled_classes := True
 			general_class.compiled_class.record_precompiled_class_in_system
 			any_class.compiled_class.record_precompiled_class_in_system
 			double_class.compiled_class.record_precompiled_class_in_system
@@ -753,7 +758,10 @@ end
 					-- First compilation.
 				init
 			else
-				if not Compilation_modes.is_precompiling then
+				if
+					not marked_precompiled_classes and then
+					not Compilation_modes.is_precompiling and then uses_precompiled
+				then
 					mark_only_used_precompiled_classes
 				end
 				if root_class.compiled_class = Void then
@@ -2913,7 +2921,7 @@ end
 			-- Generate skeletons of class types
 		local
 			class_array: ARRAY [CLASS_C]
-			j, i, nb, nb_class: INTEGER
+			j, i, nb, nb_class, id: INTEGER
 			cl_type: CLASS_TYPE
 			a_class: CLASS_C
 			has_attribute, final_mode: BOOLEAN
@@ -2938,7 +2946,7 @@ end
 
 			if not final_mode then
 					-- Hash table extern declaration in workbench mode
-				buffer.putstring ("#include %"eif_macros.h%"%N")
+				buffer.putstring ("#include %"eif_macros.h%"")
 				buffer.new_line
 				from
 					local_classes := classes
@@ -2975,8 +2983,9 @@ end
 								until
 									types.off
 								loop
+									id := types.item.type_id
 									buffer.putstring ("extern uint32 types")
-									buffer.putint (types.item.type_id)
+									buffer.putint (id)
 									buffer.putstring ("[];%N")
 									types.forth
 								end
@@ -3701,7 +3710,10 @@ feature -- Pattern table generation
 				cl_type := class_types.item (i)
 
 				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.id) then
-					if not final_mode or else (cl_type.is_precompiled and then cl_type.associated_class.is_in_system) then
+					if
+						not final_mode or else
+						(not cl_type.is_precompiled or else cl_type.associated_class.is_in_system)
+					then
 						buffer.generate_extern_declaration (
 									"void", cl_type.id.module_init_name, <<"void">>)
 					end
@@ -3717,10 +3729,10 @@ feature -- Pattern table generation
 
 			if license.demo_mode then
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
-				buffer.putstring ("%N%Tegc_type_of_gc = 123159;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123160;%N")
 			else
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
-				buffer.putstring ("%N%Tegc_type_of_gc = 123160;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123161;%N")
 			end
 
 			from
@@ -3732,7 +3744,10 @@ feature -- Pattern table generation
 				cl_type := class_types.item (i)
 
 				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.id) then
-					if not final_mode or else (cl_type.is_precompiled and then cl_type.associated_class.is_in_system) then
+					if
+						not final_mode or else
+						(not cl_type.is_precompiled or else cl_type.associated_class.is_in_system)
+					then
 						buffer.putstring ("%T")
 						buffer.putstring (cl_type.id.module_init_name)
 						buffer.putstring ("();%N")

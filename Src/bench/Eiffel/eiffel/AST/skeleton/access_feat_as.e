@@ -241,10 +241,13 @@ feature -- Type check, byte code and dead code removal
 							l_like_arg_type := arg_type.conformance_type
 							l_like_arg_type :=
 								l_like_arg_type.instantiation_in (last_type, last_id).actual_type
-								-- Check that `current_item' does conform to its `like argument'.
+								-- Check that `current_item' is compatible to its `like argument'.
 								-- Once this is done, then type checking is done on the real
 								-- type of the routine, not the anchor.
-							if not current_item.conform_to (l_like_arg_type) then
+							if
+								not current_item.conform_to (l_like_arg_type) and then
+								not current_item.convert_to (context.current_class, l_like_arg_type)
+							then
 								insert_vuar2_error (a_feature, last_id, i, current_item, l_like_arg_type)
 							end
 						end

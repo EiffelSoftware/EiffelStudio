@@ -112,7 +112,7 @@ feature -- Saving
 feature -- Setting
 
 	set_prefix_name (name: like prefix_name) is
-			-- Assgin `name' to `prefix_name'.
+			-- Assign `name' to `prefix_name'.
 		do
 			prefix_name := name
 		end

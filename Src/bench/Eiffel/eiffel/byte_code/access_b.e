@@ -378,7 +378,7 @@ feature -- Conveniences
 	is_assignable: BOOLEAN is
 			-- Can current be assigned to?
 		do
-			Result := is_local or is_current or is_attribute
+			Result := is_local or is_current or is_attribute or is_result
 		end
 
 	is_message: BOOLEAN is

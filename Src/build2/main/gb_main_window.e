@@ -60,10 +60,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor {EV_TITLED_WINDOW}
 			set_title (gb_main_window_title)
-			--build_commands
 			build_menu
 			build_widget_structure
-			set_up_first_window
 			set_minimum_size (640, 480)
 				-- Tell `system_settings' that `Current' is the
 				-- main window of the system.
@@ -137,11 +135,8 @@ feature {NONE} -- Implementation
 				-- Initialize the view menu.
 			create view_menu.make_with_text (Gb_view_menu_text)
 			a_menu_bar.extend (view_menu)
-				--| FIXME make into a command.
-			create view_menu_display_window.make_with_text ("Show display window")
-			view_menu.extend (view_menu_display_window)
-			create view_menu_builder_window.make_with_text ("Show builder window")
-			view_menu.extend (view_menu_builder_window)
+			view_menu.extend (command_handler.show_hide_builder_window_command.new_menu_item)
+			view_menu.extend (command_handler.show_hide_display_window_command.new_menu_item)
 			create menu_separator
 			view_menu.extend (menu_separator)
 			view_menu.extend (command_handler.show_history_command.new_menu_item)
@@ -203,18 +198,6 @@ feature {NONE} -- Implementation
 			
 			create filler
 			extend (filler)
-			--extend (tool_holder)
-			builder_window.show
-		end
-		
-	toggle_builder_window is
-			-- Toggle `is_displayed' status of `builder_window'.
-		do
-			if builder_window.is_displayed then
-				builder_window.hide
-			else
-				builder_window.show
-			end
 		end
 	
 	tool_bar: EV_TOOL_BAR is
@@ -245,12 +228,8 @@ feature {NONE} -- Implementation
 			create separator
 			Result.extend (separator)
 			Result.extend (command_handler.project_settings_command.new_toolbar_item (True, False))
-		end
-		
-	set_up_first_window is
-			-- Initialize window to hold widgets.
-		do
-			display_window.show
+			Result.extend (command_handler.show_hide_builder_window_command.new_toolbar_item (True, False))
+			Result.extend (command_handler.show_hide_display_window_command.new_toolbar_item (True, False))
 		end
 		
 	show_about_dialog is

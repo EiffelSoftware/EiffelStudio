@@ -90,27 +90,6 @@ feature -- Initialization
 			end
 		end;
 
-feature -- Access
-
-	feature_with_name (n: STRING): FEATURE_AS_B is
-			-- Feature ast with internal name `n'
-		local
-			cur: CURSOR;
-		do
-			cur := feature_names.cursor;
-			from
-				feature_names.start
-			until
-				feature_names.after or else Result /= Void
-			loop
-				if n.is_equal (feature_names.item.internal_name) then
-					Result := Current
-				end;
-				feature_names.forth
-			end
-			feature_names.go_to (cur)
-		end;
-
 feature -- Type check, byte code and dead code removal
 
 	type_check is
@@ -150,14 +129,10 @@ feature -- Type check, byte code and dead code removal
 
 feature -- Stoning
  
-	stone (reference_class: CLASS_C): FEATURE_STONE is
-		local
-			a_feature_i: FEATURE_I
+	stone (reference_class: E_CLASS): FEATURE_NAME_STONE is
 		do
-			a_feature_i := reference_class.feature_named 
-								(feature_names.first.internal_name);
-			!!Result.make_with_positions (a_feature_i, reference_class, start_position, 
-											end_position)
+			!! Result.make (feature_names.first.internal_name, 
+					reference_class) 
 		end;
 
 feature -- Debugger

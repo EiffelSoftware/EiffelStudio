@@ -41,6 +41,77 @@ RT_LNK void eif_thr_proxy_dispose(EIF_POINTER);
 /*---------------------------------------*/
 
 
+/* Tuning for FSU POSIX Threads */
+#ifdef EIF_FSUTHREADS
+#define HASNT_SCHED_H
+#define EIF_POSIX_THREADS
+#define EIF_NONPOSIX_TSD
+#define HASNT_SCHEDPARAM
+#define EIF_THR_SET_PRIO attr.prio = pr
+#define pthread_attr_setschedpolicy pthread_attr_setsched
+#define EIF_THR_SET_DETACHSTATE(attr,detach) \
+    {int idetach = (int) detach; pthread_attr_setdetachstate (&attr, &idetach);}
+#define EIF_MAX_PRIORITY 101
+#endif
+
+/* Tuning for POSIX LinuxThreads */
+#ifdef EIF_LINUXTHREADS
+#define EIF_POSIX_THREADS
+#ifndef EIF_DFL_SIGUSR
+#define EIF_DFLT_SIGUSR
+#endif  /* EIF_DFLT_SIGUSR */
+#endif
+
+/* Tuning for POSIX PCThreads */
+#ifdef EIF_PCTHREADS
+#define HASNT_SCHED_H
+#ifdef SIGVTARLARM
+#define EIF_DFLT_SIGVTALARM
+#endif /* SIGVTARLARM */
+#define EIF_POSIX_THREADS
+#define EIF_NONPOSIX_TSD
+#define EIF_SCHEDPARAM_EXTRA param.sched_quantum = 2; /* bug in PCThreads */
+#define EIF_DEFAULT_PRIORITY 16
+#endif
+
+/* Tuning for CRAY */
+#ifdef _CRAY
+#define EIF_NO_SEM
+#define EIF_NO_POSIX_SEM
+#define HASNT_SCHED_H
+#define HASNT_SCHEDPARAM
+#define pthread_attr_setschedpolicy(a,b)
+#endif
+
+/* Tuning for Solaris Threads */
+#if defined SOLARIS_THREADS
+#define HAS_SEMA
+#endif
+
+/* Tuning for VxWorks */
+#ifdef VXWORKS
+#define EIF_NO_CONDVAR
+#define EIF_NO_POSIX_SEM
+    /* This can change if VxWorks compiled with option POSIX_SEM */
+#endif
+
+/* Tuning for Windows */
+#ifdef EIF_WIN32
+#define EIF_NO_POSIX_SEM
+#endif
+
+/* Tuning for Unixware threads */
+#ifdef UNIXWARE_THREADS
+#ifndef EIF_DFLT_SIGWAITING
+#	define EIF_DFLT_SIGWAITING
+#endif	/* EIF_DFLT_SIGWAITING */
+#define SOLARIS_THREADS
+#define NEED_SYNCH_H
+#define HASNT_SCHED_H
+#define HASNT_SEMAPHORE_H
+#define HAS_SEMA
+#endif
+
 /* Defaults for semaphores */
 #ifndef EIF_NO_POSIX_SEM
 
@@ -77,76 +148,6 @@ RT_LNK void eif_thr_proxy_dispose(EIF_POINTER);
 #endif
 
 
-/* Tuning for FSU POSIX Threads */
-#ifdef EIF_FSUTHREADS
-#define HASNT_SCHED_H
-#define EIF_POSIX_THREADS
-#define EIF_NONPOSIX_TSD
-#define HASNT_SCHEDPARAM
-#define EIF_THR_SET_PRIO attr.prio = pr
-#define pthread_attr_setschedpolicy pthread_attr_setsched
-#define EIF_THR_SET_DETACHSTATE(attr,detach) \
-	{int idetach = (int) detach; pthread_attr_setdetachstate (&attr, &idetach);}
-#define EIF_MAX_PRIORITY 101
-#endif
-
-/* Tuning for POSIX LinuxThreads */
-#ifdef EIF_LINUXTHREADS
-#define EIF_POSIX_THREADS
-#ifndef EIF_DFL_SIGUSR
-#define EIF_DFLT_SIGUSR
-#endif	/* EIF_DFLT_SIGUSR */
-#endif
-
-/* Tuning for POSIX PCThreads */
-#ifdef EIF_PCTHREADS
-#define HASNT_SCHED_H
-#ifdef SIGVTARLARM
-#define EIF_DFLT_SIGVTALARM
-#endif /* SIGVTARLARM */
-#define EIF_POSIX_THREADS
-#define EIF_NONPOSIX_TSD
-#define EIF_SCHEDPARAM_EXTRA param.sched_quantum = 2; /* bug in PCThreads */
-#define EIF_DEFAULT_PRIORITY 16
-#endif
-
-/* Tuning for CRAY */
-#ifdef _CRAY
-#define EIF_NO_SEM
-#define EIF_NO_POSIX_SEM
-#define HASNT_SCHED_H
-#define HASNT_SCHEDPARAM
-#define pthread_attr_setschedpolicy(a,b)
-#endif
-
-/* Tuning for Solaris Threads */
-#if defined SOLARIS_THREADS
-#define HAS_SEMA
-#endif
-
-/* Tuning for VxWorks */
-#ifdef VXWORKS
-#define EIF_NO_CONDVAR
-#define EIF_NO_POSIX_SEM
-	/* This can change if VxWorks compiled with option POSIX_SEM */
-#endif
-
-/* Tuning for Windows */
-#ifdef EIF_WIN32
-#define EIF_NO_POSIX_SEM
-#endif
-
-/* Tuning for Unixware threads */
-#ifdef UNIXWARE_THREADS
-#ifndef EIF_DFLT_SIGWAITING
-#	define EIF_DFLT_SIGWAITING
-#endif	/* EIF_DFLT_SIGWAITING */
-#define SOLARIS_THREADS
-#define NEED_SYNCH_H
-#define HASNT_SCHED_H
-#define HASNT_SEMAPHORE_H
-#define HAS_SEMA
-#endif
 
 
 /* Exported functions */

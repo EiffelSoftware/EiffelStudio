@@ -22,17 +22,16 @@ feature -- Properties
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
-		local
-			upper_name: STRING
 		do
 			put_cluster_name (st);
-			st.add_string ("Class name: ");
-			upper_name := clone (first.class_name);
-			upper_name.to_upper;
-			st.add_string (upper_name);
+			st.add_string ("First class: ");
+			first.append_name (st);
 			st.add_new_line;
 			st.add_string ("First file: ");
 			st.add_string (first.file_name);
+			st.add_new_line;
+			st.add_string ("Second class: ");
+			second.append_name (st);
 			st.add_new_line;
 			st.add_string ("Second file: ");
 			st.add_string (second.file_name);

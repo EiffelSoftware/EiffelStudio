@@ -58,7 +58,16 @@ feature -- Status setting
 			-- Allow only one item to be selected.
 		deferred
 		end
-	
+		
+	disable_default_key_processing is
+			-- Ensure default key processing is not performed.
+		do
+			default_key_processing_disabled := True
+		end
+		
+	default_key_processing_disabled: BOOLEAN
+		-- Has default key processing been disabled?
+
 feature {EV_LIST_I, EV_LIST_ITEM_IMP} -- Implementation
 
 	interface: EV_LIST

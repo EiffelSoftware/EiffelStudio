@@ -34,16 +34,13 @@ feature -- Access
 feature -- Measurement
 
 	upper: INTEGER is
-			-- Minimum index.
-		do
-			-- Built-in
-		end
-
-	lower: INTEGER is
 			-- Maximum index.
 		do
-			-- Built-in
+			Result := count - 1
 		end
+
+	lower: INTEGER is 0
+			-- Minimum index.
 
 	count: INTEGER is
 			-- Number of available indices.

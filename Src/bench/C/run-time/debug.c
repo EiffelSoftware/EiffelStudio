@@ -38,6 +38,7 @@ doc:<file name="debug.c" header="eif_debug.h" version="$Id$" summary="Routines u
 #include "eif_error.h"
 #include "eif_project.h"
 #include "rt_wbench.h"
+#include "rt_assert.h"
 
 #ifdef EIF_THREADS
 #include "rt_threads.h"
@@ -632,13 +633,17 @@ rt_public void dstop_nested(struct ex_vect *exvect, uint32 break_index)
 *************************************************************************************************************************/
 
 rt_shared void dbreak(EIF_CONTEXT int why)
-	{
+{
 	/* Program execution stopped. The run-time context is saved and the
 	 * application is put in a server mode, where it listens for workbench
 	 * requests (object dump, variable printing, etc...). Leaving the server
 	 * mode means the user wishes to resume execution. We then restore the
 	 * run-time context and return.
 	 */
+
+	REQUIRE("is debugging", debug_mode);
+
+	DBGMTX_LOCK;
 
 #ifdef NEVER
 	dserver();
@@ -648,8 +653,10 @@ rt_shared void dbreak(EIF_CONTEXT int why)
 	esresume();					/* Restore run-time context */
 #endif
 
+	DBGMTX_UNLOCK;
+
 	/* Returning from this routine will resume execution where it stopped */
-	}
+}
 
 
 /**************************************************************************/

@@ -20,24 +20,35 @@ inherit
 	GB_LAYOUT_NODE
 		rename
 			implementation as old_imp
+		export
+			{NONE} all
+			{ANY} object
 		end
 
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
 		
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
 		undefine
 			copy, default_create, is_equal
 		end
 		
 	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
 		undefine
 			copy, default_create, is_equal
 		end
 		
 	GB_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			copy, default_create, is_equal
 		end

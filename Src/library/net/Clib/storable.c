@@ -111,7 +111,6 @@ retry:
 			i += prev;
 	}
 	return i;
-	EDCX
 }
 
 int net_char_write(char *pointer, int size)
@@ -190,11 +189,10 @@ void net_store_write(void)
 
 rt_public char *eif_net_retrieved(EIF_INTEGER file_desc)
 {
-	EIF_GET_CONTEXT
+	GTCX
 	socket_fides = file_desc;
 
 	return portable_retrieve(net_char_read);
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)

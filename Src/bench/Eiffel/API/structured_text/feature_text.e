@@ -37,7 +37,7 @@ feature -- Initialization
 
 feature -- Properties
 
-	e_feature: E_FEATURE
+	e_feature: E_FEATURE;
 			-- Eiffel feature associated with image
 
 	e_class: E_CLASS;

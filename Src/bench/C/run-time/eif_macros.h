@@ -463,7 +463,7 @@ RT_LNK int fcount;
  *  RTWT(x,y,z) fetches the creation type
  *  RTWPT(x,y,z) fetches the creation type of a precompiled feature
  *  RTWCT(x,y,z) fetches the creation type of a generic features
- *  RTWPCT(x,y,z) fetches the creation type of a precompiled generic feature
+ *  RTWPCT(st,x,y,z) fetches the creation type of a precompiled generic feature
  *  RTWPP(x,y) returns the feature address ($ operator)
  *  RTWO(x) stores in a list the body id of the just called once routine
  */
@@ -478,7 +478,7 @@ RT_LNK int fcount;
 #define RTWT(x,y,z) wtype(x,y,z)
 #define RTWPT(x,y,z) wptype(x,y,z)
 #define RTWCT(x,y,z) wtype_gen(x,y,z)
-#define RTWPCT(x,y,z) wptype_gen(x,y,z)
+#define RTWPCT(st,x,y,z) wptype_gen(st,x,y,z)
 #define RTWPP(x,y) ((egc_address_table[x])[y])
 #define RTWO(x) onceadd(x)
 
@@ -495,12 +495,12 @@ RT_LNK int fcount;
 #endif
 
 /* Generic conformance
- *  RTCID(x,y,z) converts a type array into a single id
- *  RTFCID(x,y,z) fetches the creation type of a generic feature in final mode
+ *  RTCID(tp,x,y,z) converts a type array into a single id
+ *  RTFCID(ct,x,y,z) fetches the creation type of a generic feature in final mode
 */
 
-#define RTCID(x,y,z) eif_compound_id((x),(y),(z))
-#define RTFCID(x,y,z) eif_final_id((x),(y),(z))
+#define RTCID(tp,x,y,z) eif_compound_id((tp),(x),(y),(z))
+#define RTFCID(ct,x,y,z) eif_final_id((ct),(x),(y),(z))
 #define RTGPTID(x,y) eif_gen_param_id ((x),(y))
 
 #ifdef WORKBENCH

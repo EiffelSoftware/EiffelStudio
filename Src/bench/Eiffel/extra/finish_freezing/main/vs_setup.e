@@ -63,7 +63,7 @@ feature -- Initialization
 				l_cmd.append (l_com_spec)
 				l_cmd.append (" /c ")
 				l_cmd.append (l_batch_file.name)
-				l_process_launcher.spawn (l_cmd, Void)
+				l_process_launcher.launch (l_cmd, Void, Void)
 				l_batch_file.delete
 				create l_temp_file.make ("temp")
 				if l_temp_file.exists then

@@ -142,8 +142,8 @@ feature -- Implementation
 
 	able_to_transport (a_button: INTEGER): BOOLEAN is
 		do
-			Result := (mode_is_drag_and_drop and a_button = 1) or
-				(mode_is_pick_and_drop and a_button = 3)
+			Result := (mode_is_drag_and_drop and then a_button = 1 and then not is_dockable) or
+				(mode_is_pick_and_drop and then a_button = 3)
 		end
 
 	set_to_drag_and_drop: BOOLEAN is
@@ -541,7 +541,11 @@ feature {EV_APPLICATION_IMP, EV_PICK_AND_DROPABLE_IMP, EV_DOCKABLE_SOURCE_IMP} -
 			-- 
 		deferred
 		end
-		
+
+	is_dockable: BOOLEAN is
+			-- 
+		deferred
+		end
 	
 feature {NONE} -- Implementation
 

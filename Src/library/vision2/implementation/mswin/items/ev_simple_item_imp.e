@@ -40,6 +40,11 @@ inherit
 			interface as textable_interface
 		end
 
+	EV_PICK_AND_DROPABLE_IMP
+		redefine
+			interface
+		end
+
 feature {NONE}
 
 	interface: EV_SIMPLE_ITEM
@@ -67,6 +72,9 @@ end -- class EV_SIMPLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/10 00:30:00  rogers
+--| Now inherits EV_PICK_AND_DROPABLE_IMP.
+--|
 --| Revision 1.17  2000/02/23 02:17:39  brendel
 --| Removed features `text' and `set_text', since they were redefined
 --| in all descendants.

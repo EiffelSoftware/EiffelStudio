@@ -1298,7 +1298,7 @@ feature {NONE} -- Implementation
 					ast_context.start_lines
 					Result := exp.byte_node
 				end
-				ast_context.clear1				
+				ast_context.clear1
 			else
 				if not type_check_succeed then
 					error_message := "Type checking failed"
@@ -1323,13 +1323,8 @@ feature {NONE} -- Implementation
 			c_not_void: c /= Void
 		local
 			l_ct_locals: HASH_TABLE [LOCAL_INFO, STRING]
-			floc: EIFFEL_LIST [TYPE_DEC_AS]
-			locinf: LOCAL_INFO
-			tda: TYPE_DEC_AS
-			l_type_a: TYPE_A
-			l_id_list: ARRAYED_LIST [INTEGER]
-			n: INTEGER
 			f_as: FEATURE_AS
+			l_fi: FEATURE_I
 		do
 			Ast_context.set_current_class (c)
 			Inst_context.set_cluster (ast_context.current_class.cluster)
@@ -1338,45 +1333,11 @@ feature {NONE} -- Implementation
 				Ast_context.set_current_feature (f.associated_feature_i)
 				
 					--| Locals
-				floc := f.locals
 				f_as := f.ast
-				l_ct_locals := f_as.local_table_for_format (f.associated_feature_i)
-				if floc /= Void then
-					create l_ct_locals.make (floc.count)
-					if not floc.is_empty then
-						from
-							floc.start
-							n := 0
-						until
-							floc.after
-						loop
-							tda := floc.item
-							l_type_a := tda.type.solved_type (ast_context.current_class.feature_table, ast_context.current_feature)
-							check
-								l_type_a /= Void
-							end
-							
-							from
-								l_id_list := tda.id_list
-								l_id_list.start
-							until
-								l_id_list.after
-							loop
-								n := n + 1
-								create locinf
-								locinf.set_is_used (True)
-								locinf.set_position (n)
-								locinf.set_type (l_type_a)
-								l_ct_locals.put (locinf, tda.item_name (l_id_list.index)) -- FIXME ???						
-								l_id_list.forth
-							end
-							floc.forth
-						end	
-					end
-
+				l_fi := f.associated_feature_i
+				if l_fi /= Void then
+					l_ct_locals := f_as.local_table (l_fi)
 					ast_context.set_locals (l_ct_locals)
-				else
-					--| no locals ...
 				end
 			end
 		end
@@ -1403,7 +1364,6 @@ feature {NONE} -- Utility Implementation
 			create yw.make
 			yw.process_text (st)
 			Result := yw.stored_output
-			
 		end
 		
 feature {NONE} -- List helpers

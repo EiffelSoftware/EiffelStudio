@@ -504,7 +504,7 @@
 			<TEXT DESCRIPTION="Display ANY.generating_type value">generating_type_evaluation<BOOLEAN>True</BOOLEAN></TEXT>
 			<TOPIC TOPIC_ID="Dotnet_debugging_tools" ICON="icon_preferences_folder">
 				<HEAD>Dotnet</HEAD>
-				<TEXT DESCRIPTION="Enable optimized JIT debugging">enable_optimized_jit_debugging<BOOLEAN>True</BOOLEAN></TEXT>
+				<TEXT DESCRIPTION="Enable optimized JIT debugging">enable_optimized_jit_debugging<BOOLEAN>False</BOOLEAN></TEXT>
 			</TOPIC>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Internal_data" ICON="icon_preferences_folder" VISIBILITY="hidden">

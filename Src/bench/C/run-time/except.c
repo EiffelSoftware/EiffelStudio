@@ -1620,13 +1620,22 @@ rt_public void eif_panic(EIF_CONTEXT char *msg)
 	/* Some verbose stuff. Make sure however there is only one panic raised.
 	 * Others will cause an immediate termination with the exit status 2.
 	 */
-	if (done++) {
-		print_err_msg(stderr, "\n%s: PANIC CASCADE: %s -- Giving up...\n",
-			ename, msg);
-		reclaim();
-		exit(2);
-	} else
-		print_err_msg(stderr, "\n%s: PANIC: %s ...\n", ename, msg);
+	switch (done) {
+		case 0:
+			done = 1;
+			print_err_msg(stderr, "\n%s: PANIC: %s ...\n", ename, msg);
+			break;
+		case 1:
+			done = 2;
+			print_err_msg(stderr, "\n%s: PANIC CASCADE: %s -- Giving up...\n", ename, msg);
+			reclaim ();
+			exit (2);
+			break;
+		default:
+			print_err_msg(stderr, "\n%s: FINAL PANIC: Cannot reclaim Eiffel objects -- Giving up...\n", ename);
+			exit (2);
+			break;
+	}
 
 	/* If we are already in panic mode, ouch... We've been printing our message
 	 * on stderr, and something really weird must be happening, but there is
@@ -1667,12 +1676,22 @@ rt_public void fatal_error(EIF_CONTEXT char *msg)
 	/* Some verbose stuff. Make sure however there is only one fatal raised.
 	 * Others will cause an immediate termination with the exit status 2.
 	 */
-	if (done++) {
-		print_err_msg(stderr, "\n%s: FATAL CASCADE: %s -- Giving up...\n",
-			ename, msg);
-		exit(2);
-	} else
-		print_err_msg(stderr, "\n%s: FATAL: %s ...\n", ename, msg);
+	switch (done) {
+		case 0:
+			done = 1;
+			print_err_msg(stderr, "\n%s: PANIC: %s ...\n", ename, msg);
+			break;
+		case 1:
+			done = 2;
+			print_err_msg(stderr, "\n%s: PANIC CASCADE: %s -- Giving up...\n", ename, msg);
+			reclaim ();
+			exit (2);
+			break;
+		default:
+			print_err_msg(stderr, "\n%s: FINAL PANIC: Cannot reclaim Eiffel objects -- Giving up...\n", ename);
+			exit (2);
+			break;
+	}
 
 	/* If we are already in fatal mode, ouch... We've been printing our message
 	 * on stderr, and something really weird must be happening, but there is
@@ -2106,11 +2125,11 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 	if (eif_except.from >= 0)
 		if (eif_except.obj_id) {
 			if (eif_except.from != (int)Dtype(eif_except.obj_id))
-				sprintf(buf, "(From %.15s)", Origin(eif_except.from));
+				sprintf(buf, "         (From %.15s)", Origin(eif_except.from));
 		} else
-			sprintf(buf, "(From %.15s)", Origin(eif_except.from));
+			sprintf(buf, "         (From %.15s)", Origin(eif_except.from));
 
-	sprintf(buffer, "<%08X>		  %-22.22s %-29.29s ",
+	sprintf(buffer, "<%08X> %-31.31s %-29.29s ",
 		eif_except.obj_id, buf, exception_string(code));
 	append_trace(buffer);
 

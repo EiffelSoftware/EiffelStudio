@@ -43,7 +43,7 @@ feature -- Initialization
  			Execution_environment.change_working_directory (project_directory.name)
 			retrieve
 		ensure
-			initialized: initialized
+  			initialized_if_no_error: not error_occurred implies initialized
 		end
 
 	make_new (project_dir: PROJECT_DIRECTORY) is
@@ -317,7 +317,7 @@ feature -- Error status
 			Result := error_status = retrieve_incompatible_error_status 
 		ensure
 			correct_error: Result implies 
-						error_status = retrieve_corrupt_error_status 
+						error_status = retrieve_incompatible_error_status 
 		end
 
 feature -- Status report

@@ -58,7 +58,7 @@ feature -- Access
 
 feature -- Status Setting
 
-	set_query_result (st: STRUCTURED_TEXT; pq: PROFILER_QUERY;
+	update_window (st: STRUCTURED_TEXT; pq: PROFILER_QUERY;
 				po: PROFILER_OPTIONS; pi: PROFILE_INFORMATION) is
 			-- Update User Interface Widgets to reflect the parameters.
 		do
@@ -67,7 +67,19 @@ feature -- Status Setting
 			profinfo := pi;
 
 			query_text.set_text (pq.image);
-			text_window.set_text (st.image)
+			text_window.clear_window;
+			text_window.process_text (st);
+			text_window.display
+		end
+
+feature -- Update
+
+	update_graphical_resources is
+			-- Update the graphical resources.
+		do
+			text_window.clear_window;
+			text_window.init_resource_values;
+			run_subquery_cmd.execute (Void)
 		end
 
 feature {NONE} -- Graphical User Interface
@@ -102,6 +114,7 @@ feature {NONE} -- Graphical User Interface
 				!GRAPHICAL_TEXT_WINDOW! text_window.make (Interface_names.t_Empty, text_form)
 			end;
 
+			text_window.init_resource_values;
 			!! subquery_label.make (Interface_names.l_Subquery, subquery_form);
 			!! subquery_text.make (Interface_names.t_Empty, subquery_form);
 
@@ -263,20 +276,6 @@ feature {RUN_SUBQUERY_CMD} -- Attributes
 	profinfo: PROFILE_INFORMATION;
 			-- Set of information about profiled system, generated
 			-- with help of `profiler_query' and `profiler_options'
-
-feature {RUN_SUBQUERY_CMD} -- Update Interface
-
-	update_window (st: STRUCTURED_TEXT; pq: PROFILER_QUERY; pi: PROFILE_INFORMATION) is
-			-- Update contents to reflect parameters.
-		do
-			profiler_query := pq;
-			profinfo := pi;
-
-			query_text.set_text (pq.image);
-
-			text_window.set_text (st.image);
-			subquery_text.set_text (Interface_names.t_Empty)
-		end
 
 feature {CLOSE_QUERY_WINDOW_CMD} -- User Interface
 

@@ -85,8 +85,8 @@ feature -- Graphical User Interface
 			new_window: PROFILE_QUERY_WINDOW
 		do
 			!! new_window.make (Current);
-			new_window.set_query_result (st, pq, po, profinfo);
 			new_window.popup;
+			new_window.update_window (st, pq, po, profinfo);
 			open_tools.extend (new_window)
 		end;
 
@@ -411,7 +411,7 @@ feature {NONE} -- Execution Arguments
 			!! Result
 		end
 
-feature {QUIT_PROFILE_TOOL, CLOSE_ALL_CMD} -- Implementation
+feature -- Update
 
 	close is
 			-- Close Current
@@ -432,6 +432,21 @@ feature {QUIT_PROFILE_TOOL, CLOSE_ALL_CMD} -- Implementation
 		end
 
 feature -- Update
+
+	update_graphical_resources is
+			-- Update the graphical resources of the profile
+			-- query tool's text.
+		do
+			top_shell_show;
+			from
+				open_tools.start
+			until
+				open_tools.after
+			loop
+				open_tools.item.update_graphical_resources;
+				open_tools.forth
+			end;
+		end;
 
 	show is
 			-- Show Current and open_tools.

@@ -1,5 +1,5 @@
 3.0.0.507
-1078
+1079
 1033,release_notes.html,0,Release Notes,0,942281138,1
 vti_globalpage:BW|true
 1018,papers/index.html,0,Technology Papers,0,942202015,1
@@ -17,6 +17,7 @@ vti_globalpage:BW|true
 1025,papers/eiffel2java.html,0,Eiffel to Java Interface,1018,942203218,0
 1076,papers/eiffelstore.html,0,EiffelStore,1018,942435569,0
 1077,papers/eiffeltime.html,0,EiffelTime,1018,942435569,0
+1078,papers/eiffelmath.html,0,EiffelMath,1018,942450249,0
 1049,papers/eiffel.html,0,Eiffel in ISE EiffelBench,1018,942293007,0
 1061,papers/net/index.html,0,EiffelNet Manual,1018,942302125,0
 1048,papers/wel.html,0,Windows Eiffel Library,1018,942301541,0

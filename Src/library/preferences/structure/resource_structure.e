@@ -80,13 +80,13 @@ feature {PREFERENCES} -- Resource Management
 		do
 			implementation.save_resource (a_resource)
 		ensure
-			resource_saved: has_resource (a_resource.name)
+			resource_saved: has_resource (a_resource.string_type + "_" + a_resource.name)
 		end		
 
 feature {PREFERENCES} -- Saving
 
 	save (resources: ARRAYED_LIST [PREFERENCE]) is
-			-- Save all changes in appropriate storing device.
+			-- Save all resources.
 		require
 			resources_not_void: resources /= Void
 		do

@@ -197,7 +197,14 @@ feature -- Resource
 			-- Commit all changes by saving the underlying data store.  Only save resources 
 			-- which are not using the default value.			
 		do
-			resource_structure.save (resources.linear_representation)
+			from
+				resources.start
+			until
+				resources.after
+			loop
+				save_resource (resources.item_for_iteration)
+				resources.forth
+			end
 		end
 		
 	restore_defaults is

@@ -74,35 +74,29 @@ feature {PREFERENCE_STRUCTURE} -- Resource Management
 
 	has_resource (a_name: STRING): BOOLEAN is
 			-- Does the underlying store contain a resource with `a_name'?
-		local
-			l_handle,
-			l_child_handle: POINTER
 		do
-			l_handle := open_key_with_access (location, Key_read)			
-			l_child_handle := open_key (l_handle, location + a_name, Key_read)
-			close_key (l_child_handle)
-			close_key (l_handle)
-			Result := l_child_handle /= default_pointer
+			Result := get_resource_value (a_name) /= Void
 		end
 		
 	get_resource_value (a_name: STRING): STRING is
 			-- Retrieve the resource string value from the underlying store.
 		local
-			l_handle,
-			l_child_handle: POINTER
+			l_handle: POINTER
 			l_key_value: WEL_REGISTRY_KEY_VALUE
 		do
-			l_handle := open_key_with_access (location, Key_read)			
-			l_child_handle := open_key (l_handle, location + a_name, Key_read)
+			l_handle := open_key_with_access (location, Key_read)						
 			
-			l_key_value := key_value (l_child_handle, location + a_name)
-			Result := l_key_value.string_value
-			close_key (l_child_handle)
-			close_key (l_handle)			
+			if l_handle /= default_pointer then				
+				l_key_value := key_value (l_handle, a_name)
+				if l_key_value /= Void then
+					Result := l_key_value.string_value
+				end
+				close_key (l_handle)
+			end			
 		end	
 
 	save_resource (a_resource: PREFERENCE) is
-			-- Save `a_resource' to registry
+			-- Save `a_resource' to registry.
 		local
 			l_parent_key: POINTER
 			l_new_value: WEL_REGISTRY_KEY_VALUE

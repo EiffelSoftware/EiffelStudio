@@ -1,6 +1,6 @@
 indexing
 	description: 
-		"Linear container of widgets.%N%
+		"Linear widget container.%N%
 		%Base class for EV_HORIZONTAL_BOX and EV_VERTICAL_BOX"
 	status: "See notice at end of class"
 	keywords: "box, container, child"
@@ -32,7 +32,7 @@ feature -- Initialization
 feature -- Status report
 
 	is_homogeneous: BOOLEAN is
-			-- Are all children restriced to be the same size.
+			-- Are all items forced to have the same dimensions.
 		do
 			Result := implementation.is_homogeneous
 		ensure
@@ -74,7 +74,7 @@ feature -- Status report
 feature -- Status setting
 	
 	enable_homogeneous is
-			-- Make every child the same size.
+			-- Force all items to have the same dimensions.
 		do
 			implementation.set_homogeneous (True)
 		ensure
@@ -82,7 +82,7 @@ feature -- Status setting
 		end
 
 	disable_homogeneous is
-			-- Remove restriction that every child is the same size.
+			-- Allow items to have different dimensions.
 		do
 			implementation.set_homogeneous (False)
 		ensure
@@ -136,7 +136,7 @@ feature -- Status setting
 feature -- Implementation
 	
 	implementation: EV_BOX_I
-			-- Platform dependent access.
+			-- Responsible for interaction with the native graphics toolkit.
 
 feature {EV_ANY} -- Contract support
 
@@ -208,6 +208,9 @@ end -- class EV_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/17 23:44:21  oconnor
+--| comments
+--|
 --| Revision 1.23  2000/03/17 18:41:28  oconnor
 --| formatting comments
 --|
@@ -221,7 +224,7 @@ end -- class EV_BOX
 --| reverted last commit which was in error
 --|
 --| Revision 1.19  2000/03/01 03:12:30  oconnor
---| added create make_for_testnterface/widgets/primitives/ev_vertical_separator.e
+--| added create make_for_test
 --|
 --| Revision 1.18  2000/02/22 18:39:50  oconnor
 --| updated copyright date and formatting
@@ -258,7 +261,6 @@ end -- class EV_BOX
 --|
 --| Revision 1.16.2.3  1999/11/02 17:20:12  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

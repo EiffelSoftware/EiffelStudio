@@ -1,7 +1,12 @@
 indexing
 	description: 
-		"Eiffel Vision horizontal split area. Displays `first_item' on the%N%
-		%left of a separator and `second_item' on the right."
+		"Displays two widgets side by side, seperated by an adjustable divider."
+	apearance:
+		"------------------------------%N%
+		%|             ||             |%N%
+		%|   `first'   ||   `second'  |%N%
+		%|             ||             |%N%
+		%------------------------------"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,6 +27,7 @@ create
 feature -- Initialization
 
 	initialize is
+			-- Create main box and separator.
 		do
 			create {EV_HORIZONTAL_BOX} split_box
 			create {EV_VERTICAL_SEPARATOR} sep
@@ -32,6 +38,7 @@ feature {NONE} -- Implementation
 
 	select_from (a_hor, a_vert: INTEGER): INTEGER is
 			-- Return `a_hor'.
+			-- See `{EV_SPLIT_AREA}.select_from'
 		do
 			Result := a_hor
 		end
@@ -71,6 +78,9 @@ end -- class EV_HORIZONTAL_SPLIT_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/17 23:50:03  oconnor
+--| comments
+--|
 --| Revision 1.15  2000/03/06 19:51:52  brendel
 --| Considerably reduced amount of implementation. Most of it could be moved
 --| upwards into EV_SPLIT_AREA.

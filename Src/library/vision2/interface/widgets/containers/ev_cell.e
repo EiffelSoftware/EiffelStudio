@@ -1,6 +1,12 @@
 indexing
 	description: 
-		"EiffelVision cell. Holds one other widget."
+		"Container that holds only one widget."
+	appearance:
+		"---------------%N%
+		%|             |%N%
+		%|   `item'    |%N%
+		%|             |%N%
+		%---------------"
 	status: "See notice at end of class"
 	keywords: "container"
 	date: "$Date$"
@@ -84,8 +90,7 @@ feature -- Conversion
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_CELL_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 	create_implementation is
 			-- Create implementation of cell.
@@ -116,6 +121,9 @@ end -- class EV_CELL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/17 23:47:55  oconnor
+--| comments
+--|
 --| Revision 1.8  2000/03/01 19:54:17  brendel
 --| Replaced occurences of item with implementation.item.
 --|

@@ -1,7 +1,12 @@
 indexing
 	description: 
-		"Eiffel Vision frame. A container displayed with a border and%N%
-		%optional textual label."
+		"Displays a labeled border around a widget"
+	appearance:
+		"-<`text'>------%N%
+		%|             |%N%
+		%|   `item'    |%N%
+		%|             |%N%
+		%---------------"
 	status: "See notice at end of class"
 	keywords: "container, frame, box, border"
 	date: "$Date$"
@@ -30,15 +35,14 @@ create
 
 feature {NONE} -- Implementation
 
+	implementation: EV_FRAME_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 	create_implementation is
 			-- Create implementation of frame.
 		do
 			create {EV_FRAME_IMP} implementation.make (Current)
 		end
-
-	implementation: EV_FRAME_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
 
 end -- class EV_FRAME
 
@@ -63,6 +67,9 @@ end -- class EV_FRAME
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/17 23:48:19  oconnor
+--| comments
+--|
 --| Revision 1.10  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -1,6 +1,12 @@
 indexing
 	description: 
-		"Eiffel Vision horizontal box."
+		"Horizontal linear widget container."
+	appearance:
+		"---------------------------------------------%N%
+		%|             |              |              |%N%
+		%|   `first'   |     ....     |    `last'    |%N%
+		%|             |              |              |%N%
+		%---------------------------------------------"
 	status: "See notice at end of class"
 	keywords: "container, horizontal, box"
 	date: "$Date$"
@@ -18,18 +24,19 @@ inherit
 create
 	default_create,
 	make_for_test
-	
-feature {NONE} -- Implementation
-
-	create_implementation is
-			-- Create implementation of horizontal box.
-		do
-			create {EV_HORIZONTAL_BOX_IMP} implementation.make (Current)
-		end
 
 feature {EV_ANY_I} -- Implementation
  	
 	implementation: EV_HORIZONTAL_BOX_I
+			-- Responsible for interaction with the native graphics toolkit.
+	
+feature {NONE} -- Implementation
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_HORIZONTAL_BOX_IMP} implementation.make (Current)
+		end
  			
 end -- class EV_HORIZONTAL_BOX
 
@@ -54,6 +61,9 @@ end -- class EV_HORIZONTAL_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/17 23:50:03  oconnor
+--| comments
+--|
 --| Revision 1.12  2000/03/01 20:07:35  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|
@@ -89,7 +99,6 @@ end -- class EV_HORIZONTAL_BOX
 --|
 --| Revision 1.7.2.2  1999/11/02 17:20:12  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

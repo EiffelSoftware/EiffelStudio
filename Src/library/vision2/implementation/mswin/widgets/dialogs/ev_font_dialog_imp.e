@@ -5,12 +5,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_FONT_SELECTION_DIALOG_IMP
+	EV_FONT_DIALOG_IMP
 
 inherit
-	EV_FONT_SELECTION_DIALOG_I
+	EV_FONT_DIALOG_I
 
-	EV_STANDARD_DIALOG_IMP
+	EV_SELECTION_DIALOG_IMP
 
 	WEL_CHOOSE_FONT_DIALOG
 		rename
@@ -30,7 +30,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-end -- class EV_FONT_SELECTION_DIALOG_IMP
+end -- class EV_FONT_DIALOG_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

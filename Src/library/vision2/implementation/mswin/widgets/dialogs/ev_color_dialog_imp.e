@@ -5,12 +5,12 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_COLOR_SELECTION_DIALOG_IMP
+	EV_COLOR_DIALOG_IMP
 
 inherit
-	EV_COLOR_SELECTION_DIALOG_I
+	EV_COLOR_DIALOG_I
 
-	EV_STANDARD_DIALOG_IMP
+	EV_SELECTION_DIALOG_IMP
 
 	WEL_CHOOSE_COLOR_DIALOG
 		rename
@@ -59,6 +59,24 @@ feature -- Element change
 			set_rgb_result (color_imp)
 		end
 
+feature -- Event - command association
+
+	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when
+			-- the "Help" button is pressed.
+		do
+			add_command (Cmd_help, cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_help_commands is
+			-- Empty the list of commands to be executed when
+			-- "Help" button is pressed.
+		do
+			remove_command (Cmd_help)
+		end
+
 feature {NONE} -- Implementation for events handling
 
 	dispatch_events is
@@ -68,7 +86,7 @@ feature {NONE} -- Implementation for events handling
 		do
 		end
 
-end -- class EV_COLOR_SELECTION_DIALOG_IMP
+end -- class EV_COLOR_DIALOG_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

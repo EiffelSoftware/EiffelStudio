@@ -152,22 +152,22 @@ EIF_CHARACTER c;
 
 rt_public EIF_INTEGER eschar_size()
 {
-	return ALIGN*CHRSIZ;
+	return BYTSIZ*CHRSIZ;
 }
 
 rt_public EIF_INTEGER esreal_size()
 {
-	return ALIGN*FLTSIZ;
+	return BYTSIZ*FLTSIZ;
 }
 
 rt_public EIF_INTEGER esint_size()
 {
-	return ALIGN*LNGSIZ;
+	return BYTSIZ*LNGSIZ;
 }
 
 rt_public EIF_INTEGER esdouble_size()
 {
-	return ALIGN*DBLSIZ;
+	return BYTSIZ*DBLSIZ;
 }
 
 /*

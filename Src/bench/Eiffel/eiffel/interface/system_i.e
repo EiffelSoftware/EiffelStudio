@@ -258,6 +258,9 @@ feature -- Properties
 			-- Tables keeping track of flags for loop optimization
 			-- Based on the body_index of a feature
 
+	names: NAMES_HEAP
+			-- Fast lookup for stored name, to avoid name duplication in memory.
+
 	make is
 			-- Create the system.
 		do
@@ -308,6 +311,9 @@ feature -- Properties
 
 				-- Address table
 			create address_table.make (100)
+
+				-- Names heap creation
+			create names.make
 		end
 
 	init is

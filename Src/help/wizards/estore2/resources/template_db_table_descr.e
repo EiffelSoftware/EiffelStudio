@@ -64,6 +64,10 @@ feature -- Access
 			-- foreign key for this table.
 			-- Deletion on this table may imply deletions on
 			-- depending tables. 
+			--| Example: an A table is related to a B table (described by this class)
+			--| with a b_id foreign key:
+			--| Adding this relation to the hash-table will be:
+			--| Result.extend (tables.a_description.B_id, tables.A)
 		once
 			<DH>		end
 
@@ -72,6 +76,10 @@ feature -- Access
 			-- linking foreign keys.
 			-- Creation on this table may imply creations on
 			-- associated necessary tables.
+			--| Example: an A table (described by this class) is related to a B table 
+			--| with a b_id foreign key:
+			--| Adding this relation to the hash-table will be:
+			--| Result.extend (B_id, tables.B)
 		once
 			<CH>		end
 
@@ -152,4 +160,4 @@ feature {NONE} -- Implementation
 	<CN:L>: <CN:U>
 			-- Piece of <CN:L> associated with the description	
 
-end -- class CODES_DESCRIPTION
+end -- class <CN:U>_DESCRIPTION

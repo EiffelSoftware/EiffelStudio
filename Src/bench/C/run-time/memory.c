@@ -158,7 +158,21 @@ rt_public void mem_tiny(void)
  * Memory coalescing.
  */
 
-rt_public EIF_INTEGER mem_coalesc(void)
+#ifndef EIF_THREADS
+rt_private EIF_INTEGER m_largest = 0;
+#endif
+
+rt_public EIF_INTEGER mem_largest(void)
+{
+#ifdef ISE_GC
+	RT_GET_CONTEXT
+	return m_largest;			/* Return size of the largest block */
+#else
+	return 0;
+#endif
+}
+
+rt_public void mem_coalesc(void)
 {
 	/* Run a full coalescing on all the chunks managed by the run-time, both
 	 * C and Eiffel ones. This certainly can be a big help in reducing the
@@ -169,9 +183,8 @@ rt_public EIF_INTEGER mem_coalesc(void)
 	 */
 
 #ifdef ISE_GC
-	return full_coalesc(ALL_T);
-#else
-	return 0;
+	RT_GET_CONTEXT
+	m_largest = (EIF_INTEGER) full_coalesc(ALL_T);
 #endif
 }
 

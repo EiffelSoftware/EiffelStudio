@@ -13,10 +13,14 @@ deferred class
 
 inherit
 	EV_ITEM
-		rename
-			parent as old_parent
-		export
-			{NONE} old_parent
+		undefine
+			is_equal, parent
+		redefine
+			implementation,
+			is_in_default_state
+		end
+		
+	EV_TREE_NODE_LIST
 		redefine
 			implementation,
 			is_in_default_state
@@ -24,7 +28,8 @@ inherit
 
 	EV_TEXTABLE
 		undefine
-			initialize
+			initialize,
+			is_equal
 		redefine
 			implementation,
 			is_in_default_state
@@ -32,7 +37,8 @@ inherit
 
 	EV_DESELECTABLE
 		undefine
-			initialize
+			initialize,
+			is_equal
 		redefine
 			implementation,
 			is_in_default_state
@@ -40,31 +46,24 @@ inherit
 
 	EV_TOOLTIPABLE
 		undefine
-			initialize
-		redefine
-			implementation,
-			is_in_default_state
-		end
-
-	EV_TREE_NODE_CONTAINER
-		undefine
-			initialize
+			initialize,
+			is_equal
 		redefine
 			implementation,
 			is_in_default_state
 		end
 
 	EV_TREE_NODE_ACTION_SEQUENCES
+		undefine
+			is_equal
 		redefine
 			implementation
 		end
 
 feature -- Access
 
-	parent: EV_TREE_NODE_CONTAINER is
+	parent: EV_TREE_NODE_LIST is
 			-- Parent of `Current'.
-		require
-			not_destroyed: not is_destroyed
 		do
 			Result := implementation.parent
 		end
@@ -95,7 +94,6 @@ feature -- Status setting
 			-- Set `is_expanded' `True'.
 		require
 			not_destroyed: not is_destroyed
-			parent_tree_not_void: parent_tree /= Void
 			is_expandable: is_expandable
 		do
 			implementation.set_expand (True)
@@ -107,7 +105,6 @@ feature -- Status setting
 			-- Set `is_expanded' `False'.
 		require
 			not_destroyed: not is_destroyed
-			parent_tree_not_void: parent_tree /= Void
 			is_collapsable: is_expandable
 		do
 			implementation.set_expand (False)
@@ -154,8 +151,6 @@ feature {EV_TREE_NODE} -- Contract support
 
 	is_parent_recursive (a_list: EV_TREE_NODE): BOOLEAN is
 			-- Is `a_list' `parent' or recursively `parent' of `parent'?
-		require
-			not_destroyed: not is_destroyed
 		local
 			a_parent: EV_TREE_NODE
 		do
@@ -171,7 +166,7 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_ITEM} and Precursor {EV_TEXTABLE} and
 			Precursor {EV_DESELECTABLE} and Precursor {EV_TOOLTIPABLE} and
-			Precursor {EV_TREE_NODE_CONTAINER} and is_expanded = False
+			is_expanded = False
 		end
 
 feature {EV_ANY_I}-- Implementation

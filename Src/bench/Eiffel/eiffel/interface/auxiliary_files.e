@@ -515,8 +515,7 @@ feature -- Plug and Makefile file
 				creators.start
 				creation_feature := array_cl.feature_table.item (creators.key_for_iteration)
 				arr_make_name := creation_feature.body_id.feature_name (id)
--- FIXME
-	--			array_make_name := clone (arr_make_name)
+				system.set_array_make_name (arr_make_name)
 			else
 				cl_type := System.Instantiator.Array_type.associated_class_type; 
 				arr_type_id := cl_type.type_id

@@ -266,6 +266,12 @@ feature -- Properties
 			-- consists of saving the name the very first time it
 			-- is computed.
 
+	set_array_make_name (name: STRING) is
+			-- Set `name' to `array_make_name'.
+		do
+			array_make_name := clone (name)
+		end
+
 	tuple_make_name: STRING
 			-- Name of the C routine corresponding to the
 			-- make routine of TUPLE. See also comment above.
@@ -3413,7 +3419,7 @@ feature -- Pattern table generation
 			cl_type := root_cl.types.first
 			dtype := cl_type.type_id - 1
 
-			if creation_name /= Void then
+			if not Compilation_modes.is_precompiling and then creation_name /= Void then
 				root_feat := root_cl.feature_table.item (creation_name)
 				if root_feat.has_arguments then
 					has_argument := True

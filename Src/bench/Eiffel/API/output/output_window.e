@@ -7,17 +7,6 @@ indexing
 
 deferred class OUTPUT_WINDOW
 
-feature -- Properties
-
-	image: STRING is 
-			-- Image of output 
-			-- (By default is empty string)
-		do 
-			Result := "" 
-		ensure
-			non_void_result: Result /= Void
-		end;
-
 feature -- Ouput
 	
 	display is 

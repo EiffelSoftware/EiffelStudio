@@ -14,6 +14,10 @@ inherit
         EV_RADIO_BUTTON_I
 	
 	EV_CHECK_BUTTON_IMP
+		export {NONE}
+			box,
+			initialize,
+			create_text_label
 		redefine
 			make,
 			make_with_text,

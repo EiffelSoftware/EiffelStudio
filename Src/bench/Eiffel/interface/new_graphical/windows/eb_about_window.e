@@ -9,8 +9,6 @@ class
 inherit
 	EV_WINDOW
 
-	WINDOWS
-
 	EV_COMMAND
 
 	SYSTEM_CONSTANTS
@@ -32,16 +30,17 @@ feature -- Initialization
 
 			set_title ("About ISE EiffelBench...")
 
-			set_delete_command (Current)
+--			add_destroy_command (Current, Void)
+--add_destroy_command not bebugged yet
 
 			create form.make (Current)
 
-			create image.make_from_file ("isepower")
-			create logo.make_with_pixmap (form, logo)
+			create image.make_from_file ("/miami2/common/Eiffel44/bench/bitmaps/xpm/isepower.xpm")
+			create logo.make_with_pixmap (form, image)
 
-			create label.make (form, t_info)
+			create label.make_with_text (form, t_info)
 
-			create button.make (form, t_button)
+			create button.make_with_text (form, t_button)
 			button.add_click_command (Current, Void)
 
 		end
@@ -81,19 +80,19 @@ feature -- Attachements
 			-- Set positions and sizes of `text_area' and
 			-- `text_field' in the form.
 		local
-			total_width:INTEGER
-			logo_width, logo_height:INTEGER
+--			total_width:INTEGER
+--			logo_width, logo_height:INTEGER
 		do
-			logo_width  := bm_ISE_power.width
-			logo_height  := bm_ISE_power.height
-			total_width := logo_width
-
-			button.set_size(75, 25)
-			button.set_x ((total_width - 75) // 2)
-			button.forbid_recompute_size
-
-			set_size (total_width, logo_height * 2)
-			forbid_resize
+--			logo_width  := bm_ISE_power.width
+--			logo_height  := bm_ISE_power.height
+--			total_width := logo_width
+--
+--			button.set_size(75, 25)
+--			button.set_x ((total_width - 75) // 2)
+--			button.forbid_recompute_size
+--
+--			set_size (total_width, logo_height * 2)
+--			forbid_resize
 		end
 
 feature {NONE} --execution

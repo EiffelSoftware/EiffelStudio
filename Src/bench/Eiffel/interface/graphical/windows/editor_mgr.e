@@ -113,19 +113,28 @@ feature -- Tabulations
 
 feature -- Synchronization
 
-	synchronize is
+	update_graphical_resources is
 			-- Synchronize active editors.
-		local
-			ed: TOOL_W
 		do
 			from 
 				active_editors.start
 			until
 				active_editors.after
 			loop
-				ed := active_editors.item;
-				ed.initialize_text_window_resources;
-				ed.synchronize;
+				active_editors.item.update_graphical_resources;
+				active_editors.forth
+			end
+		end;
+
+	synchronize is
+			-- Synchronize active editors.
+		do
+			from 
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				active_editors.item.synchronize;
 				active_editors.forth
 			end
 		end;

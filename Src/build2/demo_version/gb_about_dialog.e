@@ -120,7 +120,8 @@ feature -- Constant strings
 
 	t_version_info: STRING is
 		once
-			Result := "EiffelBuild (5.3.0204)"
+			Result := "EiffelBuild (5.3.0204)%N%
+				%Evaluation version"
 		end
 		
 

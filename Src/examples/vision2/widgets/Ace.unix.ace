@@ -28,7 +28,12 @@ cluster
 			"CVS"; "clib"; 
 		end
 
-	all vision2_interface:  "$ISE_EIFFEL/library/vision2/interface" 
+	all vision2_interface:  "$ISE_EIFFEL/library/vision2/interface"
+
+	all vision2_contrib:	"$ISE_EIFFEL/library/vision2/contrib" 
+		exclude
+			"mswin"
+		end
 
 	all vision2_implementation:	"$ISE_EIFFEL/library/vision2/implementation"
 		exclude

@@ -6,14 +6,9 @@ indexing
 class CLASS_C
 
 inherit
-	E_CLASS
-		rename
-			feature_table as api_feature_table,
-			comp_feature_table as feature_table
+	CLASS_C_ROUTINES
 		export
 			{ANY} feature_table, types, invariant_feature
-		redefine
-			generics, descendants, clients
 		end
 
 	SHARED_COUNTER
@@ -31,7 +26,7 @@ inherit
 
 	SHARED_BODY_ID
 
-	PART_COMPARABLE
+	HASHABLE
 
 	MEMORY
 
@@ -40,8 +35,6 @@ inherit
 	SHARED_ASSERTION_LEVEL
 
 	COMPILER_EXPORTER
-
-	HASHABLE
 
 creation
 
@@ -81,15 +74,6 @@ feature -- Access
 	syntactical_clients: LINKED_LIST [CLASS_C]
 			-- Syntactical clients of the class
 			--| Useful for class removal
-
-	generics: EIFFEL_LIST_B [FORMAL_DEC_AS_B]
-			-- Formal generical parameters
-
-	descendants: LINKED_LIST [CLASS_C]
-			-- Direct descendants of the current class
-
-	clients: LINKED_LIST [CLASS_C]
-			-- Clients of the class
 
 	changed2: BOOLEAN
 			-- Has the compiler to apply the second pass to this class
@@ -189,14 +173,6 @@ feature -- Access
 			-- compilation ?
 		do
 			Result := Ast_server.has (id)
-		end
-
-feature -- status
-
-	hash_code: INTEGER is
-			-- Hash code value corresponds to `id.hash_code'.
-		do
-			Result := id.hash_code
 		end
 
 feature -- Action
@@ -1125,19 +1101,20 @@ end
 		require
 			good_argument: new_suppliers /= Void
 		local
-			supplier_clients: LINKED_LIST [E_CLASS]
+			local_suppliers: like suppliers
+			supplier_clients: LINKED_LIST [CLASS_C]
 		do
 			from
-				suppliers.start
+				local_suppliers := suppliers
+				local_suppliers.start
 			until
-				suppliers.after
+				local_suppliers.after
 			loop
-				supplier_clients := suppliers.item.supplier.clients
+				supplier_clients := local_suppliers.item.supplier.clients
 				supplier_clients.start
-				supplier_clients.compare_references
 				supplier_clients.search (Current)
 				supplier_clients.remove
-				suppliers.forth
+				local_suppliers.forth
 			end
 
 			from
@@ -1889,24 +1866,25 @@ feature
 		require
 			parents_exists: parents /= Void
 		local
-			cl: LINKED_LIST [E_CLASS]
+			local_suppliers: SUPPLIER_LIST
+			clients_list: LINKED_LIST [CLASS_C]
 		do
 			remove_parent_relations
 			from
-				suppliers.start
+				local_suppliers := suppliers
+				local_suppliers.start
 			until
-				suppliers.after
+				local_suppliers.after
 			loop
-				cl := suppliers.item.supplier.clients
-				cl.start
-				cl.compare_references
-				cl.search (Current)
-				if not cl.after then
-					cl.remove
+				clients_list := local_suppliers.item.supplier.clients
+				clients_list.start
+				clients_list.search (Current)
+				if not clients_list.after then
+					clients_list.remove
 				end
-				suppliers.forth
+				local_suppliers.forth
 			end
-			suppliers.wipe_out
+			local_suppliers.wipe_out
 		end
 
 	remove_parent_relations is
@@ -1914,25 +1892,26 @@ feature
 		require
 			parents_exists: parents /= Void
 		local
-			des: LINKED_LIST [E_CLASS]
-			c: E_CLASS
+			des: like descendants
+			parents_list: like parents
+			c: CLASS_C
 		do
 			from
-				parents.start
+				parents_list := parents
+				parents_list.start
 			until
-				parents.after
+				parents_list.after
 			loop
-				c := parents.item.associated_eclass
+				c := parents_list.item.associated_class
 				if c /= Void then
-					des := c.descendants
+					des:= c.descendants
 					des.start
-					des.compare_references
 					des.search (Current)
 					if not des.after then
 						des.remove
 					end
 				end
-				parents.forth
+				parents_list.forth
 			end
 		end
 
@@ -2479,16 +2458,16 @@ feature -- Convenience features
 			creators := c
 		end
 
-	add_descendant (c: E_CLASS) is
+	add_descendant (c: CLASS_C) is
 			-- Insert class `c' into the descendant list
 		require
 			good_argument: c /= Void
 		local
-			desc: LINKED_LIST [E_CLASS]
+			desc: LINKED_LIST [CLASS_C]
 		do
 			desc := descendants
 			if not desc.has (c) then
-				desc.put_front (c)	
+				desc.put_front (c)
 			end
 		end
 
@@ -2955,24 +2934,29 @@ feature -- Conformance table generation
 			-- Make final conformance table
 		require
 			good_argument: t /= Void
+		local
+			dec: LINKED_LIST [CLASS_C]
+			type_list: TYPE_LIST
 		do
 				-- Mark conformance table `t' first.
 			from
-				types.start
+				type_list := types
+				type_list.start
 			until
-				types.off
+				type_list.off
 			loop
-				t.mark (types.item.type_id)
-				types.forth
+				t.mark (type_list.item.type_id)
+				type_list.forth
 			end
 				-- Recursion on descendants
 			from
-				descendants.start
+				dec := descendants
+				dec.start
 			until
-				descendants.after
+				dec.after
 			loop
-				descendants.item.make_conformance_table (t)
-				descendants.forth
+				dec.item.make_conformance_table (t)
+				dec.forth
 			end
 		end
 
@@ -3253,7 +3237,7 @@ feature -- Merging
 			other_not_void: other /= Void
 			same_class: id.is_equal (other.id)
 		local
-			classes: LINKED_LIST [E_CLASS]
+			classes: LINKED_LIST [CLASS_C]
 			class_c: CLASS_C
 		do
 			is_used_as_expanded := is_used_as_expanded or other.is_used_as_expanded
@@ -3262,8 +3246,8 @@ feature -- Merging
 
 			from 
 				classes := other.clients
+				classes.start
 				clients.finish
-				classes.start 
 			until 
 				classes.after 
 			loop
@@ -3277,12 +3261,12 @@ feature -- Merging
 
 			from 
 				classes := other.descendants
-				descendants.finish
 				classes.start 
+				descendants.finish
 			until 
 				classes.after 
 			loop
-				class_c := System.class_of_id (classes.item.id)
+				class_c  := System.class_of_id (classes.item.id)
 				if not descendants.has (class_c) then
 					descendants.extend (class_c)
 					descendants.forth

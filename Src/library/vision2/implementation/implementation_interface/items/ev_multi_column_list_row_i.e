@@ -12,8 +12,8 @@ inherit
 		rename
 			count as columns,
 			set_count as set_columns
-		redefine
-			top_parent_imp
+--		redefine
+--			top_parent_imp
 		end
 
 	EV_PND_SOURCE_I
@@ -27,11 +27,11 @@ feature -- Access
 		deferred
 		end
 
-	top_parent_imp: EV_MULTI_COLUMN_LIST_IMP is
-			-- Top item holder containing the current item.
-		do
-			Result ?= {EV_COMPOSED_ITEM_I} Precursor
-		end
+--	top_parent_imp: EV_MULTI_COLUMN_LIST_IMP is
+--			-- Top item holder containing the current item.
+--		do
+--			Result ?= {EV_COMPOSED_ITEM_I} Precursor
+--		end
 
 feature -- Status report
 	

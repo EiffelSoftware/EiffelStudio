@@ -14,7 +14,7 @@ inherit
 	EV_SIMPLE_ITEM_I
 		redefine
 			parent_imp,
-			top_parent_imp,
+--			top_parent_imp,
 			pixmap_size_ok
 		end
 
@@ -22,15 +22,20 @@ inherit
 
 feature -- Access
 
-	parent_imp: EV_MENU_ITEM_HOLDER_IMP is
+	parent_imp: EV_MENU_ITEM_HOLDER_IMP
 			-- Parent implementation
-		deferred
-		end
 
-	top_parent_imp: EV_MENU_IMP is
+	top_parent_imp: EV_MENU_ITEM_HOLDER_IMP is
 			-- Top item holder containing the current item.
+		local
+			itm: EV_MENU_ITEM_IMP
 		do
-			Result ?= {EV_SIMPLE_ITEM_I} Precursor
+			itm ?= parent_imp
+			if itm = Void then
+				Result ?= parent_imp
+			else
+				Result := itm.top_parent_imp
+			end
 		end
 
 feature -- Status report
@@ -39,17 +44,16 @@ feature -- Status report
 			-- Is current widget insensitive?
 		require
 			exists: not destroyed
-		deferred
+   		deferred
 		end
 
 	is_selected: BOOLEAN is
 			-- True if the current item is selected.
 			-- False otherwise.
 			-- We use it only when the grand parent is an option button.
-   		require
+		require
 			exists: not destroyed
-			valid_grand_parent: grand_parent_is_option_button
-		deferred
+   		deferred
 		end
 
 feature -- Status setting

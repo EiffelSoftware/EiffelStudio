@@ -10,8 +10,8 @@ deferred class
 inherit
 	EV_SIMPLE_ITEM_I
 		redefine
-			parent_imp,
-			top_parent_imp
+			parent_imp--,
+--			top_parent_imp
 		end
 
 	EV_TREE_ITEM_HOLDER_I
@@ -22,15 +22,20 @@ inherit
 
 feature -- Access
 
-	parent_imp: EV_TREE_ITEM_HOLDER_IMP is
+	parent_imp: EV_TREE_ITEM_HOLDER_IMP
 			-- Parent implementation
-		deferred
-		end
 
-	top_parent_imp: EV_TREE_IMP is
+	top_parent_imp: EV_TREE_ITEM_HOLDER_IMP is
 			-- Top item holder containing the current item.
+		local
+			itm: EV_TREE_ITEM_IMP
 		do
-			Result ?= {EV_SIMPLE_ITEM_I} Precursor
+			itm ?= parent_imp
+			if itm = Void then
+				Result ?= parent_imp
+			else
+				Result := itm.top_parent_imp
+			end
 		end
 
 feature -- Status report

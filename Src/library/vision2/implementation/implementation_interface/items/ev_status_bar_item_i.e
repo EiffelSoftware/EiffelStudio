@@ -10,8 +10,8 @@ deferred class
 inherit
 	EV_SIMPLE_ITEM_I
 		redefine
-			parent_imp,
-			top_parent_imp
+			parent_imp--,
+--			top_parent_imp
 		end
 
 feature -- Access
@@ -21,11 +21,11 @@ feature -- Access
 		deferred
 		end
 
-	top_parent_imp: EV_STATUS_BAR_IMP is
-			-- Top item holder containing the current item.
-		do
-			Result ?= {EV_SIMPLE_ITEM_I} Precursor
-		end
+--	top_parent_imp: EV_STATUS_BAR_IMP is
+--			-- Top item holder containing the current item.
+--		do
+--			Result ?= {EV_SIMPLE_ITEM_I} Precursor
+--		end
 
 feature -- Measurement
 

@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 			remove_item_actions.call ([v_imp.interface])
 			remove_item (v_imp)
 			v_imp.set_parent_imp (Void)
-			Precursor (i)
+			Precursor {EV_DYNAMIC_LIST_IMP} (i)
 		end
 
 feature {EV_ANY_I} -- implementation

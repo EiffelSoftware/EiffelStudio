@@ -21,13 +21,13 @@ inherit
 creation
 	make
 
-feature --Initialisation
+feature --Initialization
 	
 	make (a_name: STRING; a_parent: SPLIT_WINDOW_CHILD) is
 		do
-			{SCROLLABLE_LIST} Precursor(a_name,a_parent)
-			set_widget_attributes(Current)
- 			add_click_action(Current,"selector_command")
+			{SCROLLABLE_LIST} Precursor (a_name,a_parent)
+			set_widget_attributes (Current)
+ 			add_click_action (Current,"selector_command")
 			selector_parent?= a_parent
 		end
 
@@ -149,8 +149,9 @@ feature -- User interface
 			loop
 				local_tool := active_class_editors.item
 				t:= local_tool.class_text_field.text
-				if local_tool.realized 
---  					and then local_tool.shown 
+				if
+					local_tool.realized 
+--  				and then local_tool.shown 
 					and then not local_tool.class_text_field.text.empty 
 				then
 					!!tmp.make(local_tool)

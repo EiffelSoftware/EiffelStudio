@@ -10,8 +10,8 @@ inherit
 		redefine
 			is_expanded, is_separate, instantiation_in, valid_generic,
 			duplicate, meta_type, same_as, good_generics, error_generics,
-			has_expanded, is_valid, format, convert_to, reference_actual_type,
-			is_full_named_type, is_external
+			has_expanded, is_valid, format, convert_to,
+			is_full_named_type, is_external, is_conformant_to
 		end
 
 	DEBUG_OUTPUT
@@ -83,18 +83,6 @@ feature -- Comparison
 		end
 
 feature -- Access
-
-	reference_actual_type: CL_TYPE_A is
-			-- `actual_type' if not `is_expanded'.
-			-- Otherwise associated reference of `actual type'
-		do
-			if not is_expanded then
-				Result := Current
-			else
-				Result := twin
-				Result.set_is_expanded (False)
-			end
-		end
 		
 	hash_code: INTEGER is
 			-- Hash code value.
@@ -148,9 +136,6 @@ feature -- Output
 			if is_expanded and not associated_class.is_expanded then
 				create Result.make (class_name.count + 9)
 				Result.append ("expanded ")
-			elseif not is_expanded and associated_class.is_expanded then
-				create Result.make (class_name.count + 10)
-				Result.append ("reference ")
 			elseif is_separate then
 				create Result.make (class_name.count + 9)
 				Result.append ("separate ")
@@ -249,6 +234,39 @@ feature {COMPILER_EXPORTER} -- Conformance
 					Result := not is_expanded
 						and then associated_class.conform_to (other_class_type.associated_class)
 						and then other_class_type.valid_generic (Current)
+				end
+			end
+		end
+		
+	is_conformant_to (other: TYPE_A): BOOLEAN is
+			-- Does Current inherit from other?
+			-- Most of the time, it is equivalent to `conform_to' except
+			-- when current is an expanded type.
+		local
+			l_is_exp, l_other_is_exp: BOOLEAN
+			l_other_class_type: CL_TYPE_A
+		do
+			l_other_class_type ?= other.actual_type
+			if l_other_class_type /= Void then
+					-- We perform conformance as if the two types were not
+					-- expanded. So, if they are expanded, we remove their
+					-- expanded flag to do the conformance check.
+				l_is_exp := is_expanded
+				l_other_is_exp := l_other_class_type.is_expanded
+				if l_is_exp then
+					set_is_expanded (False)
+				end
+				if l_other_is_exp then
+					l_other_class_type.set_is_expanded (False)
+				end
+				
+				Result := conform_to (other)
+				
+				if l_is_exp then
+					set_is_expanded (True)
+				end
+				if l_other_is_exp then
+					l_other_class_type.set_is_expanded (True)
 				end
 			end
 		end

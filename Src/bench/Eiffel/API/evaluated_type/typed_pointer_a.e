@@ -19,14 +19,14 @@ inherit
 			is_equivalent, instantiation_of, same_as, instantiation_in,
 			is_full_named_type
 		redefine
-			is_typed_pointer, type_i, associated_class, reference_actual_type
+			is_typed_pointer, type_i, associated_class
 		end
 		
 	GEN_TYPE_A
 		undefine
 			meta_type, is_basic, feature_type, is_valid
 		redefine
-			is_typed_pointer, type_i, associated_class, reference_actual_type
+			is_typed_pointer, type_i, associated_class
 		end
 
 create
@@ -61,13 +61,6 @@ feature -- Property
 			-- Type pointed by current if any.
 		do
 			Result := generics.item (1)
-		end
-
-	reference_actual_type: GEN_TYPE_A is
-			-- `actual_type' if not `is_expanded'.
-			-- Otherwise associated reference of `actual type'
-		do
-			create Result.make (class_id, generics)
 		end
 
 feature {COMPILER_EXPORTER}

@@ -13,7 +13,7 @@ inherit
 		redefine
 			actual_type, has_like, is_like, is_external,
 			is_basic, instantiated_in, meta_type,
-			has_associated_class, reference_actual_type,
+			has_associated_class,
 			is_reference, is_expanded
 		end
 
@@ -24,13 +24,6 @@ feature -- Properties
 	actual_type: TYPE_A
 			-- Actual type of the anchored type in a given class
 			
-	reference_actual_type: TYPE_A is
-			-- `actual_type' if not `is_expanded'.
-			-- Otherwise associated reference of `actual type'
-		do
-			Result := actual_type.reference_actual_type
-		end
-
 	is_like: BOOLEAN is True
 			-- Is the type anchored one ?
 

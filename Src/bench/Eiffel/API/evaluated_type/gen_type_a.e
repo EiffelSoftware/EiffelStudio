@@ -611,7 +611,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 			constraint_type: TYPE_A
 			formal_type, other_formal_type: FORMAL_A
 			gen_type: GEN_TYPE_A
-			l_ref: TYPE_A
 			pos: INTEGER
 			conformance_on_formal, is_conform: BOOLEAN
 			formal_dec_as: FORMAL_DEC_AS
@@ -699,9 +698,11 @@ feature {COMPILER_EXPORTER} -- Primitives
 							-- Check new VTCG3 rule for expanded actual generic parameter against
 							-- reference constraint_type.
 						if to_check.is_expanded and then not constraint_type.is_expanded then
-							l_ref := to_check.reference_actual_type
 							if system.in_pass3 then
-								if not (to_check.convert_to (context_class, l_ref) and l_ref.conform_to (constraint_type)) then
+								if
+									not (to_check.convert_to (context_class, constraint_type) and
+									to_check.is_conformant_to (constraint_type))
+								then
 									generate_constraint_error (Current, to_check, constraint_type, i)
 									is_conform := False
 								end

@@ -147,7 +147,7 @@ feature {COMPILER_EXPORTER}
 			-- Otherwise, computed type of Current conforms to A.
 		local
 			gen_type: GEN_TYPE_A
-			generic_param, type_a, l_ref: TYPE_A
+			generic_param, type_a: TYPE_A
 			i, nb: INTEGER
 		do
 			nb := count
@@ -167,11 +167,6 @@ feature {COMPILER_EXPORTER}
 						type_a := item (i)
 						Result := type_a.conform_to (generic_param) or else
 							type_a.convert_to (context.current_class, generic_param)
-						if not Result and not generic_param.is_expanded and type_a.is_expanded then
-							l_ref := type_a.reference_actual_type
-							Result := type_a.convert_to (context.current_class, l_ref) and
-								l_ref.conform_to (generic_param)
-						end
 						i := i + 1
 					end
 				end

@@ -11,19 +11,23 @@ deferred class TOOL_W
 inherit
 
 	NAMER;
-	SHARED_TABS;
 	SHARED_PIXMAPS;
 	WINDOWS;
 	INTERFACE_W;
 	HOLE
-		rename
-			target as text_window
 		export
 			{ANY} receive
 		end;
-	CLOSEABLE
+	CLOSEABLE;
+	SHARED_TABS
 
 feature -- Window Properties
+
+	last_format: FORMAT_HOLDER;
+			-- Last format used
+
+	tab_length: INTEGER;
+			-- Number of blank characters in a tabulation
 
 	is_a_shell: BOOLEAN is
 			-- Is Current part of a shell?
@@ -34,6 +38,16 @@ feature -- Window Properties
 	eb_shell: EB_SHELL is
 			-- Shell representing Current
 		deferred
+		end;
+
+	popup_parent: COMPOSITE is
+			-- Parent for popups created for Current tool
+		do
+			if is_a_shell then
+				Result := eb_shell
+			else
+				Result := global_form
+			end
 		end;
 
 	global_form: FORM is
@@ -47,6 +61,9 @@ feature -- Window Properties
 	stone: STONE;
 			-- Stone in tool
 
+	file_name: STRING;
+			-- Name of the file being displayed
+
 	stone_type: INTEGER is
 			-- Stone type
 		do
@@ -54,6 +71,18 @@ feature -- Window Properties
 
 	text_window: TEXT_WINDOW;
 			-- Text window attached to Current
+
+	read_only_text_window: TEXT_WINDOW is
+			-- Text window that cannot be edited
+		do
+			Result := text_window
+		end;
+
+	editable_text_window: TEXT_WINDOW is
+			-- Text window that can be edited
+		do
+			Result := text_window
+		end;
 
 	tool_name: STRING is 
 			-- Name of the tool
@@ -94,17 +123,37 @@ feature -- Window Properties
 			stone = Void
 		end;
 
+	search_cmd_holder: COMMAND_HOLDER;
+			-- Command to search for a text.
+
+	edit_menu: MENU_PULL;
+			-- Edit menu
+			-- Only used during debugging
+
+	file_menu: MENU_PULL;
+			-- File menu
+
+	target: WIDGET is
+			-- Target of the hole is the text window.
+		do
+			Result := text_window.hole_target
+		end
+
+feature -- Access
+
+	has_editable_text: BOOLEAN is
+			-- Does Current tool have an editable text window?
+		do
+		end;
+
 feature -- Window Implementation
 
 	display is
 			-- Display tool.
 		do
-			eb_shell.display
-		end;
-
-	realize is
-			-- Realize Current.
-		deferred
+			set_default_position;
+			eb_shell.display;
+			init_text_window;
 		end;
 
 	show is
@@ -146,6 +195,24 @@ feature -- Window Implementation
 
 feature -- Window settings
 
+	set_last_format (f: like last_format) is
+			-- Assign `f' to `last_format'.
+		require
+			format_exists: f /= Void
+		do
+			if last_format /= f then
+				if last_format /= Void then
+					last_format.set_selected (False)
+				end;
+				last_format := f;
+				last_format.set_selected (True)
+			else
+				last_format.set_selected (True)
+			end
+		ensure
+			last_format_set: last_format = f
+		end;
+
 	set_default_position is
 			-- Set the position to its default.
 		deferred
@@ -172,7 +239,48 @@ feature -- Window settings
 		deferred
 		end;
 
-feature {TEXT_WINDOW} -- Status setting
+	set_mode_for_editing is
+			-- Set edit mode for text modification.	
+			-- (By default it is set to read only)
+		do
+			text_window.set_read_only
+		end;
+
+	default_font: CELL [FONT] is
+			-- Default font
+		once
+			--!! Result.put (text_window.font)
+			!! Result.put (Void)
+		end;
+
+	set_tab_length_to_default is
+			-- Set `tab_length' to the default tab length.
+		do
+			if read_only_text_window /= editable_text_window then
+				read_only_text_window.set_tab_length_to_default
+				editable_text_window.set_tab_length_to_default
+			else
+				text_window.set_tab_length_to_default
+			end
+		end;
+
+	set_tab_length (new_length: INTEGER) is
+			-- Assign `new_length' to `tab_length'.
+		require
+			valid_length: new_length > 1
+		do
+			tab_length := new_length;
+			if read_only_text_window /= editable_text_window then
+				read_only_text_window.set_tab_length (new_length);
+				editable_text_window.set_tab_length (new_length);
+			else
+				text_window.set_tab_length (new_length)
+			end
+		ensure
+			assigned: tab_length = new_length;
+		end;
+
+feature -- Status setting
 
 	set_stone (s: like stone) is
 		require
@@ -191,7 +299,117 @@ feature {TEXT_WINDOW} -- Status setting
 			set: s = stone
 		end;
 
+	set_font_to_default is
+			-- Set `font' to the default font.
+		do
+			if default_font.item /= Void then
+				--set_font (default_font.item)
+			end
+		end;
+
+	set_default_font (new_font: FONT) is
+			-- Assign `new_font' to `default_font'.
+		do
+			default_font.put (new_font)
+		end;
+
+	set_font (a_font: FONT) is
+			-- Set new font `a_font' to window
+		do
+		end;
+
+	set_file_name (f: STRING) is
+			-- Assign `f' to file_name.
+		do
+			file_name := f;
+		end;
+
+feature -- Text window creation
+
+	build_text_windows is
+			-- Create `read_text_window' different ways whether
+			-- the tabulation mecanism is disable or not
+			--| All windows have a read only text window. However,
+			--| only certain windows have editable text.
+		local
+			ro_text_window, ed_text_window: TEXT_WINDOW
+		do
+			if is_graphics_disabled then
+				if tabs_disabled then
+					!SCROLLED_TEXT_WINDOW! ro_text_window.make (new_name, Current)
+				else
+					!TABBED_TEXT_WINDOW! ro_text_window.make (new_name, Current)
+				end;
+			else
+				!GRAPHICAL_TEXT_WINDOW! 
+					ro_text_window.make (new_name, Current)
+			end;
+			set_read_only_text_window (ro_text_window);
+			--if has_editable_text and then not text_window.is_editable then
+			if has_editable_text then 
+				if tabs_disabled then
+					!SCROLLED_TEXT_WINDOW! 
+						ed_text_window.make (new_name, Current)
+				else
+					!TABBED_TEXT_WINDOW! 
+						ed_text_window.make (new_name, Current)
+				end;
+				set_editable_text_window (ed_text_window)
+				text_window := ed_text_window;
+			else
+				text_window := ro_text_window;
+			end;
+			check
+				text_window_set: text_window /= Void
+			end;
+			set_mode_for_editing;
+			set_tab_length_to_default
+		end;
+
 feature -- Update
+
+	set_read_only_text is
+			-- Set `text_window' to `read_only_text_window'.
+		do
+			text_window := read_only_text_window;
+		ensure
+			set: text_window = read_only_text_window 
+		end;
+
+	show_read_only_text is
+			-- Show `read_only_text_window'.
+		require
+			is_readonly_text: text_window = read_only_text_window
+		do
+			if realized and then not read_only_text_window.shown then
+				text_window.show;
+				editable_text_window.hide	
+			end
+		ensure
+			shown_if_realized: realized implies read_only_text_window.shown
+		end;
+
+	set_editable_text is
+			-- Set `text_window' to `editable_text_window'.
+		do
+			text_window := editable_text_window;
+		ensure
+			set: text_window = editable_text_window 
+		end;
+
+	show_editable_text is
+			-- Set `text_window' to `editable_text_window' and
+			-- show it if it is not shown.
+		require
+			is_editable_text: text_window = editable_text_window
+		do
+			if realized and then not editable_text_window.shown then
+				text_window.show;
+				read_only_text_window.hide	
+			end
+		ensure
+			shown_if_realized: realized implies editable_text_window.shown
+		end;
 
 	update_save_symbol is
 			-- Update the save symbol in tool.
@@ -211,6 +429,30 @@ feature -- Update
 			synchronise_stone
 		end;
 
+	 show_file (f: PLAIN_TEXT_FILE) is
+			-- Display content of file `f' and its name as the title
+			-- of the ancestor tool. Forget about clicking and stones.
+		require
+			file_no_void: f /= Void
+			valid_file: f.exists and then f.is_readable and then f.is_plain
+		do
+			f.open_read;
+			f.readstream (f.count);
+			f.close;
+			text_window.clear_window;
+			set_editable_text;
+			show_editable_text;
+			text_window.set_text (f.laststring);
+			update_save_symbol;
+			set_file_name (f.name);
+			set_title (f.name);
+			set_default_format;
+			reset_stone;
+		ensure
+			up_to_date: not text_window.changed;
+			no_stone: stone = Void
+		end;
+
 	synchronise_stone is
 			-- Synchronize the root stone of the window
 			-- and the history's stones.
@@ -225,7 +467,7 @@ feature -- Update
 				stone.synchronized_stone /= Void
 			then
 					-- The root stone is still valid.
-				f ?= text_window.last_format.associated_command;
+				f := last_format.associated_command;
 				old_do_format := f.do_format;
 				f.set_do_format (true);
 				if history.item.origin_text /= Void then
@@ -242,10 +484,8 @@ feature -- Update
 				end;
 				set_default_format;
 				text_window.set_cursor_position (0);
-				text_window.clean;
-				text_window.clear;
+				text_window.clear_window;
 				text_window.display;
-				text_window.set_changed (False);
 				update_save_symbol;
 				set_title (tool_name);
 				if hole /= Void then
@@ -260,9 +500,13 @@ feature -- Pick and Throw Implementation
 			-- Reset the window contents.
 		do
 			set_title (tool_name);
+			set_tab_length_to_default;
+			set_font_to_default;
 			set_default_format;
 			set_default_size;
 			text_window.clear_window;
+			reset_stone;
+			history.wipe_out;
 			close_windows;
 			if hole /= Void then
 				hole.set_empty_symbol
@@ -277,6 +521,18 @@ feature -- Pick and Throw Implementation
 			end
 		ensure
 			current_unregistered: not registered
+		end;
+
+feature -- Element change
+
+	add_to_history (a_stone: like stone) is
+			-- Add `a_stone' to `history'
+		require
+			valid_history: history /= Void
+		do
+			history.extend (a_stone)
+		ensure
+			has_history: history.has (a_stone)
 		end;
 
 feature {NONE} -- Implementation
@@ -304,6 +560,69 @@ feature {NONE} -- Implementation
 			else
 				window_manager.class_win_mgr.raise_shell_popup
 			end
+		end;
+
+	is_graphics_disabled: BOOLEAN is
+			-- Is Graphics disabled for the text window?
+		once 
+			Result := resources.get_boolean (r_Graphics, False) 
+		end;
+
+feature {PROJECT_W} -- Implementation
+
+	build_edit_menu (a_parent: COMPOSITE) is
+			-- Build a standard edit menu with `a_parent'
+		local
+			cut_b: EB_MENU_ENTRY;
+			copy_b: EB_MENU_ENTRY;
+			paste_b: EB_MENU_ENTRY;
+			sep: SEPARATOR
+			search_b: EB_MENU_ENTRY;
+			search_cmd: SEARCH_STRING
+		do
+			--!! edit_menu.make ("", a_parent);
+			--!! sep.make ("", edit_menu);
+			--!! search_cmd_holder.make_plain (search_cmd);
+				--!! search_b.make (search_cmd, edit_menu);
+				--!! search_cmd.make (a_parent, Current);
+				--search_cmd_holder.set_menu_entry (search_b);
+		end;
+
+	init_text_window is
+			-- Initiatialize the text window to display text_window.
+		require
+			realized: realized
+		do
+			if read_only_text_window /= editable_text_window then
+				-- If both are the same then do nothing
+				if text_window = editable_text_window then
+					read_only_text_window.hide
+					editable_text_window.show
+				else
+					editable_text_window.hide
+					read_only_text_window.show
+				end
+			end
+		end;
+
+	set_editable_text_window (ed: like editable_text_window) is
+			-- Set `editable_text_window' to `ed'.
+		require
+			valid_ed: ed /= Void and then ed.is_editable;
+			has_editable_text: has_editable_text
+		do
+		ensure
+			set: editable_text_window = ed
+		end;
+
+	set_read_only_text_window (ed: like read_only_text_window) is
+			-- Set `read_only_text_window' to `ed'.
+		require
+			valid_ed: ed /= Void;
+		do
+			-- If it not redefined the postcondition is still meet.
+		ensure
+			set: read_only_text_window = ed
 		end;
 
 invariant

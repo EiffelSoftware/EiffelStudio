@@ -1,0 +1,49 @@
+Tree 1: object comparison: False, size: 100
+Tree 2: object comparison: False, size: 100
+Result: False
+
+Tree 1: object comparison: False, size: 100
+Tree 2: object comparison: True, size: 100
+Result: False
+
+Tree 1: object comparison: True, size: 100
+Tree 2: object comparison: False, size: 100
+Result: False
+
+Tree 1: object comparison: True, size: 100
+Tree 2: object comparison: True, size: 100
+Result: True
+
+Tree 1: object comparison: False, size: 100
+Tree 2: object comparison: False, size: 10
+Result: False
+
+Tree 1: object comparison: False, size: 100
+Tree 2: object comparison: True, size: 10
+Result: False
+
+Tree 1: object comparison: True, size: 100
+Tree 2: object comparison: False, size: 10
+Result: False
+
+Tree 1: object comparison: True, size: 100
+Tree 2: object comparison: True, size: 10
+Result: False
+
+Tree 1: object comparison: False, size: 10
+Tree 2: object comparison: False, size: 100
+Result: False
+
+Tree 1: object comparison: False, size: 10
+Tree 2: object comparison: True, size: 100
+Result: False
+
+Tree 1: object comparison: True, size: 10
+Tree 2: object comparison: False, size: 100
+Result: False
+
+Tree 1: object comparison: True, size: 10
+Tree 2: object comparison: True, size: 100
+Result: False
+
+Execution completed

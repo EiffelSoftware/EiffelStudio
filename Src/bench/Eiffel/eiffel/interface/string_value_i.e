@@ -35,9 +35,12 @@ feature
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate value in `buffer'.
 		do
-			buffer.putstring ("RTMS(%"");
-			buffer.escape_string (str_val);
-			buffer.putstring ("%")");
+			buffer.putstring ("RTMS_EX(%"")
+			buffer.escape_string (str_val)
+			buffer.putchar('"')
+			buffer.putchar(',')
+			buffer.putint(str_val.count)
+			buffer.putchar (')')
 		end;
 
 	valid_type (t: TYPE_A): BOOLEAN is

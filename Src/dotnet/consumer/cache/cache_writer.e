@@ -151,10 +151,15 @@ feature -- Basic Operations
 		require
 			non_void_info: info /= Void
 		local
+			l_absolute_xml_info_path: STRING
 			serializer: EIFFEL_XML_SERIALIZER
+			bin_serializer: EIFFEL_BINARY_SERIALIZER
 		do
+			l_absolute_xml_info_path := (create {CACHE_READER}).Absolute_info_path
 			create serializer
-			serializer.serialize (info, (create {CACHE_READER}).Absolute_info_path)
+			serializer.serialize (info, l_absolute_xml_info_path)
+			create bin_serializer
+			bin_serializer.serialize (info, l_absolute_xml_info_path)
 		end
 
 end -- class CACHE_WRITER

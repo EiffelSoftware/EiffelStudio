@@ -35,7 +35,8 @@ feature -- Access
 		do
 			Result := implementation.text_length
 		ensure
-			bridge_ok: Result = implementation.text_length
+			bridge_ok: Result.is_equal (implementation.text_length)
+			Result_not_negative: Result >= 0
 		end
 
 	selected_text: STRING is
@@ -353,6 +354,7 @@ feature {EV_ANY_I} -- Implementation
 
 invariant
 	text_not_void: is_usable implies text /= Void
+	text_length_consistent: text_length = text.count
 			
 end -- class EV_TEXT_COMPONENT
 

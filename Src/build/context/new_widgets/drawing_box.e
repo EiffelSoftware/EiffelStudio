@@ -29,7 +29,8 @@ inherit
 		redefine
 			x, y, set_x_y, hide, show, realize, 
 			set_managed, shown, unrealize, realized,
-			managed, unmanage, manage, make_unmanaged, background_color
+			managed, unmanage, manage, make_unmanaged, background_color,
+			set_cursor
 		end;
 
 	DRAWING_AREA
@@ -40,7 +41,8 @@ inherit
 			set_foreground_color, realize, show, hide, shown, set_size, 
 			set_x_y, height, width, real_y, real_x, y, x, 
 			set_managed, unrealize, realized,
-			managed, unmanage, manage, make_unmanaged, background_color
+			managed, unmanage, manage, make_unmanaged, background_color,
+			set_cursor
 		select
 			set_background_pixmap, set_background_color, 
 			set_foreground_color, set_size, height, width, real_y,
@@ -116,6 +118,13 @@ feature
 			!!Result;
 			Result.set (x0, y0);
 		end;
+
+	set_cursor (a_cursor: SCREEN_CURSOR) is
+				-- set `cursor' of current widget to `a_cursor'.
+		do
+			precursor (a_cursor)
+			scrolled_window.set_cursor (a_cursor)
+		end
 
 feature -- Color 	
 	-- note: foreground and background colors are those of scrolled_window 

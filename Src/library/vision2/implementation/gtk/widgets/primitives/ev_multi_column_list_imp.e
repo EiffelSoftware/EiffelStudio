@@ -136,6 +136,7 @@ feature {NONE} -- Initialization
 				ev_children.after
 			loop
 				i := C.c_gtk_clist_append_row (list_widget)
+				ev_children.item.dirty_child
 				update_child (ev_children.item, ev_children.index)
 				ev_children.forth
 			end
@@ -524,6 +525,7 @@ feature {NONE} -- Implementation
 			else
 				-- add row to the existing gtk column list:
 				an_index := C.c_gtk_clist_append_row (list_widget)
+				item_imp.dirty_child
 				update_child (item_imp, ev_children.count)
 			end		
 		end
@@ -626,6 +628,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/03/28 00:32:48  king
+--| Using dirty_child to have for update_children reuse
+--|
 --| Revision 1.50  2000/03/27 22:36:35  king
 --| Corrected add_to_container to deal with all row situations
 --|

@@ -128,6 +128,7 @@ feature {NONE} -- Implementation
 			-- `a_button' is used as parent.
 		local
 			a_list: LINKED_LIST [STRING]
+			wd: EV_WARNING_DIALOG
 		do
 --			if choices = Void then
 --				!! choices.make (Project_tool)
@@ -137,7 +138,7 @@ feature {NONE} -- Implementation
 			if list = Void then				
 				dynamic_lib_tool.process (d_class, d_routine, d_routine, d_index, d_alias)
 			elseif list.empty then
---				warner (dynamic_lib_tool.eb_shell).gotcha_call ("There is no valid creation for this feature.%N(ie: with no argument)")
+--				create wd.make_default (dynamic_lib_tool.parent, "Warning", "There is no valid creation for this feature.%N(ie: with no argument)")
 			elseif list.count =1 then
 				dynamic_lib_tool.process (d_class, list.first, d_routine, d_index, d_alias)
 			elseif list /= Void and then not list.empty then

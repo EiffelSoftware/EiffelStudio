@@ -16,14 +16,16 @@ feature
 
 	data_list: LINKED_LIST [EDITABLE];
 
-	first_line: STRING is
+	first_line: STRING_SCROLLABLE_ELEMENT is
 		once
-			Result := "Select to edit"
+			!! Result.make (14)
+			Result.append ("Select to edit")
 		end;
 
-	no_item_line: STRING is
+	no_item_line: STRING_SCROLLABLE_ELEMENT is
 		once
-			Result := "No items to select"
+			!! Result.make (18)
+			Result.append ("No items to select")
 		end;
 
 	popup_with_list (l: LINKED_LIST [EDITABLE]) is

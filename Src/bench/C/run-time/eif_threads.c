@@ -645,6 +645,7 @@ rt_public void eif_thr_mutex_destroy(EIF_POINTER mutex_pointer) {
 
 rt_public EIF_POINTER eif_thr_sem_create (EIF_INTEGER count)
 {
+#ifndef EIF_NO_SEM
 	EIF_SEM_TYPE *a_sem_pointer;
 
 	EIF_SEM_CREATE(a_sem_pointer, count, "cannot create semaphore\n");
@@ -652,28 +653,36 @@ rt_public EIF_POINTER eif_thr_sem_create (EIF_INTEGER count)
 	printf ("Created semaphore %x\n", a_sem_pointer);
 #endif
 	return (EIF_POINTER) a_sem_pointer;
+#else
+	return (EIF_POINTER) 0;
+#endif
 }
 
 rt_public void eif_thr_sem_wait (EIF_POINTER sem)
 {
+#ifndef EIF_NO_SEM
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
 	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
 		EIF_SEM_WAIT(a_sem_pointer, "cannot lock semaphore");
 	} else 
 		eraise("Trying to lock a NULL semaphore", EN_EXT);
+#endif
 }
 
 rt_public void eif_thr_sem_post (EIF_POINTER sem)
 {
+#ifndef EIF_NO_SEM
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
 	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
 		EIF_SEM_POST(a_sem_pointer, "cannot post semaphore");
 	} else 
 		eraise("Trying to post a NULL semaphore", EN_EXT);
+#endif
 }
 
 rt_public EIF_BOOLEAN eif_thr_sem_trywait (EIF_POINTER sem)
 {
+#ifndef EIF_NO_SEM
 	int status;
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
 	if (a_sem_pointer != (EIF_SEM_TYPE *) 0) {
@@ -681,10 +690,12 @@ rt_public EIF_BOOLEAN eif_thr_sem_trywait (EIF_POINTER sem)
 	} else
 		eraise("Trying to trywait a NULL semaphore", EN_EXT);
 	return ((EIF_BOOLEAN)(!status));
+#endif
 }
 
 rt_public void eif_thr_sem_destroy (EIF_POINTER sem)
 {
+#ifndef EIF_NO_SEM
 	EIF_SEM_TYPE *a_sem_pointer = (EIF_SEM_TYPE *) sem;
 #ifdef DEBUG
 	printf ("Destroying semaphore %x\n", a_sem_pointer);
@@ -693,15 +704,16 @@ rt_public void eif_thr_sem_destroy (EIF_POINTER sem)
 		EIF_SEM_DESTROY(a_sem_pointer, "cannot destroy semaphore");
 		a_sem_pointer = (EIF_SEM_TYPE *) 0;
 	}
+#endif
 }
 
 /*
  * class CONDITION_VARIABLE externals
  */
 
-#ifndef EIF_NO_CONDVAR
 rt_public EIF_POINTER eif_thr_cond_create (void)
 {
+#ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *cond;
 
 	EIF_COND_CREATE(cond, "cannot create cond. variable");
@@ -709,30 +721,38 @@ rt_public EIF_POINTER eif_thr_cond_create (void)
 	printf ("Created cond. var %x\n", cond);
 #endif
 	return (EIF_POINTER) cond;
+#else
+	return (EIF_POINTER) 0;
+#endif /* EIF_NO_CONDVAR */
 }
 
 rt_public void eif_thr_cond_broadcast (EIF_POINTER cond_ptr)
 {
+#ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
 
 	if (cond != (EIF_COND_TYPE *) 0) {
 		EIF_COND_BROADCAST(cond, "cannot cond_broadcast");
 	} else
 		eraise ("Trying to cond_broadcast on NULL", EN_EXT);
+#endif /* EIF_NO_CONDVAR */
 }
 
 rt_public void eif_thr_cond_signal (EIF_POINTER cond_ptr)
 {
+#ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
 
 	if (cond != (EIF_COND_TYPE *) 0) {
 		EIF_COND_SIGNAL(cond, "cannot cond_signal");
 	} else
 		eraise ("Trying to cond_signal on NULL", EN_EXT);
+#endif /* EIF_NO_CONDVAR */
 }
 
 rt_public void eif_thr_cond_wait (EIF_POINTER cond_ptr, EIF_POINTER mutex_ptr)
 {
+#ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
 	EIF_MUTEX_TYPE *mutex = (EIF_MUTEX_TYPE *) mutex_ptr;
 
@@ -740,17 +760,19 @@ rt_public void eif_thr_cond_wait (EIF_POINTER cond_ptr, EIF_POINTER mutex_ptr)
 		EIF_COND_WAIT(cond, mutex, "cannot cond_wait");
 	} else
 		eraise ("Trying to cond_wait on NULL", EN_EXT);
+#endif /* EIF_NO_CONDVAR */
 }
 
 rt_public void eif_thr_cond_destroy (EIF_POINTER cond_ptr)
 {
+#ifndef EIF_NO_CONDVAR
 	EIF_COND_TYPE *cond = (EIF_COND_TYPE *) cond_ptr;
 #ifdef DEBUG
 	printf ("Destroying cond. var %x\n", cond);
 #endif
 	EIF_COND_DESTROY(cond, "destroying condition variable");
-}
 #endif /* EIF_NO_CONDVAR */
+}
 
 
 rt_public void eif_thr_panic(char *msg)

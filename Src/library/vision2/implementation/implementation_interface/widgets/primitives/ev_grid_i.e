@@ -618,7 +618,33 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 	drawable: EV_DRAWING_AREA
 		-- Drawing area for `Current' on which all drawing operations are performed.
-
+		
+	virtual_x_position: INTEGER is
+			-- Virtual X coordinate of `viewport' relative to left hand edge of grid.
+		do
+			Result := horizontal_scroll_bar.value
+		end
+		
+	virtual_y_position: INTEGER is
+			-- Virtual Y coordinate of `viewport' relative to top edge of grid.
+		do
+			Result := vertical_scroll_bar.value
+		end
+		
+	vertical_item_ofFset: INTEGER is
+			--
+		do
+			Result := vertical_scroll_bar.value
+		end
+		
+		
+	viewport: EV_VIEWPORT
+		-- Viewport containing `header' and `drawable', permitting the header to be offset
+		-- correctly in relation to the horizontal scroll bar.
+		
+	header: EV_HEADER
+		-- Header displayed at top of `Current'.
+	
 feature {NONE} -- Drawing implementation
 
 	initialize_grid is
@@ -635,8 +661,11 @@ feature {NONE} -- Drawing implementation
 			
 			create drawer.make_with_grid (Current)
 			create drawable
+			drawable.set_minimum_size (buffered_drawable_size, buffered_drawable_size)
 			create vertical_scroll_bar
+			vertical_scroll_bar.set_leap (default_scroll_bar_leap)
 			create horizontal_scroll_bar
+			horizontal_scroll_bar.set_step (default_scroll_bar_leap)
 			horizontal_scroll_bar.change_actions.extend (agent horizontal_scroll_bar_changed)
 			create horizontal_box
 			create vertical_box
@@ -701,7 +730,7 @@ feature {NONE} -- Drawing implementation
 				end
 					-- Update the range and leap of `horizontal_scroll_bar' to reflect the relationship between
 					-- `l_total_header_width' and `l_client_width'.
-				horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (1, l_total_header_width - l_client_width))
+				horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, l_total_header_width - l_client_width))
 				horizontal_scroll_bar.set_leap (width)
 			else
 					-- The headers are not as wide as the visible client area.
@@ -741,19 +770,12 @@ feature {NONE} -- Drawing implementation
 			-- Resizing has completed on `header_item'.
 		require
 			header_item_not_void: header_item /= Void
-		local
-			l_total_header_width: INTEGER
 		do
 			if is_resizing_divider_enabled then
 				remove_resizing_line
 			end
-			
-			l_total_header_width := total_header_width
-				-- Ensure that the total width of `header' and `drawable' are equal
-				-- to the width of all headers combined or the client area of `viewport'.
-			if l_total_header_width.max (viewport.width) > viewport.item.width then
-				viewport.set_item_width (l_total_header_width.max (viewport.width))
-			end
+			fixme ("Only invalidate to the right hand side of the resized header item")
+			drawable.redraw
 		end
 		
 	screen: EV_SCREEN is
@@ -778,9 +800,9 @@ feature {NONE} -- Drawing implementation
 					screen.enable_dashed_line_style
 				end
 				screen.set_invert_mode
-				screen.draw_segment (drawable.screen_x + position, drawable.screen_y + resizing_line_border, drawable.screen_x + position, drawable.screen_y + drawable.height - resizing_line_border)
+				screen.draw_segment (drawable.screen_x + position, drawable.screen_y + resizing_line_border, drawable.screen_x + position, drawable.screen_y + viewport.height - resizing_line_border)
 				if last_dashed_line_position > 0 then
-					screen.draw_segment (last_dashed_line_position, drawable.screen_y + resizing_line_border, last_dashed_line_position, drawable.screen_y + drawable.height - resizing_line_border)
+					screen.draw_segment (last_dashed_line_position, drawable.screen_y + resizing_line_border, last_dashed_line_position, drawable.screen_y + viewport.height - resizing_line_border)
 				end
 				last_dashed_line_position := drawable.screen_x + position
 			end
@@ -789,6 +811,7 @@ feature {NONE} -- Drawing implementation
 	remove_resizing_line is
 			-- Remove resizing line drawn on `drawable'.
 		do
+			fixme ("Must remove resizing line if the area in which it was previously drawn has been re-drawn by `Current'")
 				-- Remove line representing position in current divider style.
 			if is_resizing_divider_solid then
 				screen.disable_dashed_line_style
@@ -796,7 +819,7 @@ feature {NONE} -- Drawing implementation
 				screen.enable_dashed_line_style
 			end
 			screen.set_invert_mode
-			screen.draw_segment (last_dashed_line_position, drawable.screen_y + resizing_line_border, last_dashed_line_position, drawable.screen_y + drawable.height - resizing_line_border)
+			screen.draw_segment (last_dashed_line_position, drawable.screen_y + resizing_line_border, last_dashed_line_position, drawable.screen_y + viewport.height - resizing_line_border)
 			last_dashed_line_position := - 1
 		ensure
 			last_position_negative: last_dashed_line_position = -1
@@ -811,17 +834,42 @@ feature {NONE} -- Drawing implementation
 			header_item_resizing (header.last)
 			header_item_resize_ended (header.last)
 		end
+		
+	recompute_vertical_scroll_bar is
+			-- Recompute dimensions of `vertical_scroll_bar'.
+		do
+			vertical_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (0, row_count))
+			horizontal_scroll_bar.set_leap (height // 16)
+		end
+		
 
 	horizontal_scroll_bar_changed (a_value: INTEGER) is
 			-- Respond to a change in value from `horizontal_scroll_bar'.
 		require
 			a_value_non_negative: a_value >= 0
+		local
+			buffer_space: INTEGER
+			current_buffer_position: INTEGER
 		do
-			viewport.set_x_offset (a_value)
+			buffer_space := (buffered_drawable_size - viewport.width)
+			current_buffer_position := viewport.x_offset
+			
+			if (a_value > last_value) and ((a_value - last_value) + (current_buffer_position)) >= buffer_space then
+				viewport.set_x_offset (0)
+				drawable.redraw
+			elseif (a_value < last_value) and ((a_value - last_value) + (current_buffer_position)) <= 0 then
+				viewport.set_x_offset (buffer_space)
+				drawable.redraw
+			else
+				viewport.set_x_offset (current_buffer_position + a_value - last_value)
+			end
 			header_viewport.set_x_offset (a_value)
-		ensure
-			viewport_offset_set: viewport.x_offset = a_value
+			
+			last_value := a_value			
 		end
+		
+		
+	last_value: INTEGER
 
 	update_scroll_bar_spacer is
 			-- Update `scroll_bar_spacer' so that it has the appropriate minimum dimensions
@@ -844,38 +892,14 @@ feature {NONE} -- Drawing implementation
 		local
 			new_width, new_height: INTEGER
 		do
-				-- If the width of the item contained in `viewport' is smaller than the width of the viewport,
-				-- enlarge it to the viewport's width.
-			if viewport.item.width < viewport.width then
-				new_width := viewport.width
-			else
-				new_width := viewport.item.width
-			end
-				-- Ensure that the height of the viewport's item always matches that of the viewport.
-			new_height := viewport.height
-
-				-- Now actually perform size setting.
-			viewport.set_item_size (new_width, new_height)
-
 			if not header.is_empty then
 					-- Update horizontal scroll bar settings.
 				header_item_resizing (header.last)
 			end
+			recompute_vertical_scroll_bar
 		ensure
 			viewport_item_at_least_as_big_as_viewport: viewport.item.width >= viewport.width and
 				viewport.item.height >= viewport.height
-		end
-		
-	virtual_x_position: INTEGER is
-			-- Virtual X coordinate of `viewport' relative to left hand edge of grid.
-		do
-			Result := horizontal_scroll_bar.value
-		end
-		
-	virtual_y_position: INTEGER is
-			-- Virtual Y coordinate of `viewport' relative to top edge of grid.
-		do
-			Result := vertical_scroll_bar.value
 		end
 		
 	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
@@ -884,14 +908,11 @@ feature {NONE} -- Drawing implementation
 	horizontal_scroll_bar: EV_HORIZONTAL_SCROLL_BAR
 		-- Horizontal scroll bar of `Current'.
 		
-	viewport: EV_VIEWPORT
-		-- Viewport containing `header' and `drawable', permitting the header to be offset
-		-- correctly in relation to the horizontal scroll bar.
+--	viewport: EV_VIEWPORT
+--		-- Viewport containing `header' and `drawable', permitting the header to be offset
+--		-- correctly in relation to the horizontal scroll bar.
 		
 	header_viewport: EV_VIEWPORT
-		
-	header: EV_HEADER
-		-- Header displayed at top of `Current'.
 		
 	scroll_bar_spacer: EV_CELL
 		-- A spacer to separate the corners of the scroll bars.
@@ -910,6 +931,9 @@ feature {NONE} -- Drawing implementation
 		
 	resizing_line_border: INTEGER is 4
 		-- Distance that resizing line is displayed from top and bottom edges of `drawable'.
+		
+	buffered_drawable_size: INTEGER is 1000
+		-- Default size of `drawable' used for scrolling purposes.
 		
 feature {NONE} -- Implementation
 
@@ -990,6 +1014,7 @@ feature {NONE} -- Implementation
 			else
 				grid_rows.put_left (a_grid_row.implementation)
 			end
+			recompute_horizontal_scroll_bar
 		end
 
 	enlarge_row_list (new_count: INTEGER) is
@@ -1005,8 +1030,8 @@ feature {NONE} -- Implementation
 	maximum_header_width: INTEGER is 10000
 		-- Maximium width of `header'.
 		
-	buffered_drawable_size: INTEGER is 2000
-		-- Default size of `drawable' used for scrolling purposes.
+	default_scroll_bar_leap: INTEGER is 1
+		
 
 	enlarge_row (a_index, new_count: INTEGER) is
 			-- Enlarge the row at index `a_index' to `new_count'.

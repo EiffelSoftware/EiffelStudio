@@ -97,6 +97,9 @@ feature {GB_XML_LOAD} -- Implementation
 			extend (an_item)
 				-- Ensure that `Current' is expanded
 			expand
+				-- Update the system
+			system_status.enable_project_modified
+			command_handler.update	
 		ensure
 			item_contained: has (an_item)
 		end

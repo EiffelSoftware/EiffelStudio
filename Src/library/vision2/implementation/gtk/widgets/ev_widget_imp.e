@@ -128,7 +128,7 @@ feature {NONE} -- Initialization
 	button_press_switch_is_connected: BOOLEAN
 			-- Is `button_press_switch' connected to its event source.
 		
-feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
@@ -169,14 +169,45 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 		
 	connect_button_press_switch is
 			-- Connect `button_press_switch' to its event sources.
-			--| See comment in `button_press_switch' above.
 		do
 			if not button_press_switch_is_connected then
 				real_signal_connect (event_widget,  "button-press-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), App_implementation.default_translate)
 				button_press_switch_is_connected := True
 			end
 		end
-	
+       
+	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Gtk_Widget."size-allocate" happened.
+		do
+			if last_width /= a_width or else last_height /= a_height then
+				last_width := a_width
+				last_height := a_height
+				if resize_actions_internal /= Void then
+					resize_actions_internal.call ([a_x, a_y, a_width, a_height])
+				end
+				if parent_imp /= Void then
+					parent_imp.child_has_resized (Current)
+				end
+			end
+		end
+		
+	on_focus_changed (a_has_focus: BOOLEAN) is
+			-- Called from focus intemediary agents when focus for `Current' has changed.
+			-- if `a_has_focus' then `Current' has just received focus.
+		do
+			if a_has_focus then
+				if focus_in_actions_internal /= Void then
+					focus_in_actions_internal.call (Void)
+				end
+			else
+				if focus_out_actions_internal /= Void then
+					focus_out_actions_internal.call (Void)
+				end
+			end				
+		end
+
+feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
+
 	button_press_switch (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
@@ -223,7 +254,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			
 			if a_button >= 1 and then a_button <= 3 then
-				if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM and not is_transport_enabled then
+				if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
 					if pointer_button_press_actions_internal /= Void then
 						pointer_button_press_actions_internal.call (t)
 					end
@@ -234,36 +265,6 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				end			
 			end
        end
-       
-	on_size_allocate (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Gtk_Widget."size-allocate" happened.
-		do
-			if last_width /= a_width or else last_height /= a_height then
-				last_width := a_width
-				last_height := a_height
-				if resize_actions_internal /= Void then
-					resize_actions_internal.call ([a_x, a_y, a_width, a_height])
-				end
-				if parent_imp /= Void then
-					parent_imp.child_has_resized (Current)
-				end
-			end
-		end
-		
-	on_focus_changed (a_has_focus: BOOLEAN) is
-			-- Called from focus intemediary agents when focus for `Current' has changed.
-			-- if `a_has_focus' then `Current' has just received focus.
-		do
-			if a_has_focus then
-				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call (Void)
-				end
-			else
-				if focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call (Void)
-				end
-			end				
-		end
 
 feature -- Access
 

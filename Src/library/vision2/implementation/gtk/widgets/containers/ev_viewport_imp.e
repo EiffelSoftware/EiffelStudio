@@ -161,8 +161,6 @@ feature -- Element change
 
 	set_y_offset (a_y: INTEGER) is
 			-- Set `y_offset' to `a_y'.
-		local
-			item_imp: EV_WIDGET_IMP
 		do
 			block_resize_actions
 			if a_y < 0 then

@@ -253,11 +253,12 @@ feature {EV_LIST_ITEM_IMP} -- implementation
 
 		list_is_pnd_source : BOOLEAN
 
-		child_source: EV_LIST_ITEM_IMP
+		pnd_child_source: EV_LIST_ITEM_IMP
+				-- If the pnd started in an item, then this is the item.
 
-		set_child_source (c: EV_LIST_ITEM_IMP) is
+		set_pnd_child_source (c: EV_LIST_ITEM_IMP) is
 			do
-				child_source := c
+				pnd_child_source := c
 			end
 
 		set_source_true is
@@ -271,20 +272,41 @@ feature {EV_LIST_ITEM_IMP} -- implementation
 				list_is_pnd_source := False
 			end
 
-		transport_started_in_list: BOOLEAN
-
-		transport_started_in_list_item: BOOLEAN
+		transport_started_in_item: BOOLEAN
 
 		set_t_item_true is
 			do
-				transport_started_in_list_item := True
+				transport_started_in_item := True
 			end
 
 		set_t_item_false is
 			do
-				transport_started_in_list_item := False
+				transport_started_in_item := False
 			end
 feature {EV_ANY_I} -- Implementation : WEL features
+
+	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+		do
+			inspect
+				press_action
+			when
+				Ev_pnd_start_transport
+			then
+					start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+					set_source_true
+					--transport_started_in_list := True
+			when
+				Ev_pnd_end_transport
+			then
+				end_transport (a_x, a_y, a_button)
+				set_source_false
+				--transport_started_in_list := False
+			else
+				check
+					disabled: press_action = Ev_pnd_disabled
+				end
+			end
+		end
 
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
@@ -296,8 +318,8 @@ feature {EV_ANY_I} -- Implementation : WEL features
 			pt := client_to_screen (x_pos, y_pos)
 				if it /= Void and it.is_transport_enabled and not list_is_pnd_source then
 					it.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
-				elseif child_source /= Void then 
-					child_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+				elseif pnd_child_source /= Void then 
+					pnd_child_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 				end
 			if it /= Void then
 				it.interface.pointer_button_press_actions.call ([x_pos,y_pos - it.relative_y, button, 0.0, 0.0, 0.0, pt.x, pt.y])
@@ -424,41 +446,17 @@ feature {EV_ANY_I} -- Implementation : WEL features
 			a: BOOLEAN
 		do
 
-			a:= transport_started_in_list_item
+			a:= transport_started_in_item
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
 			it := find_item_at_position (x_pos, y_pos)
 
-			if transport_started_in_list_item = a then
+			if transport_started_in_item = a then
 				pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
 			end
 			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])	
 		end
-
-	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
-		do
-			inspect
-				press_action
-			when
-				Ev_pnd_start_transport
-			then
-					start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
-					set_source_true
-					transport_started_in_list := True
-			when
-				Ev_pnd_end_transport
-			then
-				end_transport (a_x, a_y, a_button)
-				set_source_false
-				transport_started_in_list := False
-			else
-				check
-					disabled: press_action = Ev_pnd_disabled
-				end
-			end
-		end
-
 
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- A key has been pressed
@@ -489,8 +487,8 @@ feature {EV_ANY_I} -- Implementation : WEL features
 				--|Julian Rogers
 				it.interface.pointer_motion_actions.call ([x_pos,y_pos - it.relative_y, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
-			if child_source /= Void then
-				child_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
+			if pnd_child_source /= Void then
+				pnd_child_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end 
@@ -668,6 +666,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/03/21 01:25:54  rogers
+--| Renamed child_source -> pnd_child_source, set_child_source -> set_pnd_child_source. Added pnd_press.
+--|
 --| Revision 1.50  2000/03/17 23:40:34  rogers
 --| Added the following features: list_is_pnd_source, child_source, set_child_Source, set_source_true, set_source_false. These fatures are now being reviewed and will be modified further. Implemented on_mouse_move and pnd_press.
 --|

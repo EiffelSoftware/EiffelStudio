@@ -42,8 +42,8 @@ feature {NONE} -- Initialization
 			set_height_internal (App_implementation.default_font_height)
 
 			create preferred_families
-			preferred_families.add_actions.extend (agent update_preferred_faces)
-			preferred_families.remove_actions.extend (agent update_preferred_faces)
+			preferred_families.internal_add_actions.extend (agent update_preferred_faces)
+			preferred_families.internal_remove_actions.extend (preferred_families.internal_add_actions.first)
 
 			update_font_face
 		end

@@ -129,24 +129,18 @@ fi
 TMP_EIFFEL_SRC=$EIFFEL_SRC
 EIFFEL_SRC=$NEW_EIFFEL_SRC
 
-remtrace Check out the documentation
-cd $INSTALL_DIR
-exprt -r $DEFAULT_CVS_TAG -d docs Delivery/newdocs
-cd $INSTALL_DIR/docs
-fullrd PDF
-cd $INSTALL_DIR
-
 cd $INIT_DIR
 give_time_to organize the delivery and to start filling it
 
 # Fill directories
 if [ ! "$NO_COMPILE" ]; then
 	remtrace Update all libraries
-	source update_libraries
+	source update_libraries $GTK_DIR
 	cd $INIT_DIR
 	give_time_to update libraries
 
 	remtrace Generate needed executables of the bin directory
+	cd $INIT_DIR
 	source make_exes
 	cd $INIT_DIR
 	give_time_to compile exes
@@ -167,21 +161,14 @@ else
 	give_time_to copy executables from the old delivery
 fi
 
-remtrace Recompile abs2rel
-cd $EIFFEL_SRC
-exprt -r $DEFAULT_CVS_TAG -d abs2rel Src/tools/abs2rel
-cd abs2rel
-finalize abs2rel.ace
-fff
-cleanup_eiffel abs2rel
-
-remtrace Converting absolute path names in the documentation.
-abs2rel -root:$INSTALL_DIR/docs
+remtrace Check out the documentation
+cd $INIT_DIR
+source make_xml_documentation
 
 cd $INIT_DIR
 
 remtrace "Putting the Eiffel libraries in the delivery"
-. make_libraries
+. make_libraries $GTK_DIR
 give_time_to "export the Eiffel libraries"
 cd $INIT_DIR
 

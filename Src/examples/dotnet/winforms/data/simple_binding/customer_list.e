@@ -15,9 +15,9 @@ feature {NONE} -- Initialization
 			l_customer: CUSTOMER
 		do
 			create customers.make
-			create l_customer.make_with_data ("1", "M", "Neil", "AMSTRONG", "15 ", create {SYSTEM_DATE_TIME}.make_from_year_and_month_and_day (2002, 01, 01))
+			create l_customer.make_with_data ("1", "M", "Neil", "AMSTRONG", "15 ", create {SYSTEM_DATE_TIME}.make (2002, 01, 01))
 			customers.extend (l_customer)
-			create l_customer.make_with_data ("2", "M", "Mickael", "JORDAN", "15 ", create {SYSTEM_DATE_TIME}.make_from_year_and_month_and_day (1979, 11, 25))
+			create l_customer.make_with_data ("2", "M", "Mickael", "JORDAN", "15 ", create {SYSTEM_DATE_TIME}.make (1979, 11, 25))
 			customers.extend (l_customer)
 		ensure
 			non_void_customers: customers /= Void

@@ -18,10 +18,8 @@ feature {NONE} -- Initialization
 	make is
 			--| Set title with "hello_world".
 			-- Entry point.
-		local
-			dummy: SYSTEM_OBJECT
 		do
-			set_text (("Hello world").to_cil)
+			set_text ("Hello world")
 			feature {WINFORMS_APPLICATION}.run_form (Current)
 		end	
 

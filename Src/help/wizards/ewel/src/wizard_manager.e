@@ -8,10 +8,9 @@ class
 	WIZARD_MANAGER
 
 inherit
-	WIZARD_PROJECT_MANAGER
+	BENCH_WIZARD_MANAGER
 		redefine
-			Wizard_title,
-			prepare
+			Wizard_title
 		end
 
 create
@@ -19,13 +18,7 @@ create
 
 feature -- Initialization
 
-	prepare is
-			-- Prepare the first window to be displayed.
-		do
-			Precursor
-		end
-
-	Wizard_title: STRING is 
+	Wizard_title: STRING is
 			-- Window title for this wizard.
 		once
 			Result := "New WEL Application Wizard"

@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 					if i > 1 then
 						s1 := Result.substring (1, i - 1);
 					else
-						!!s1.make (0);
+						create s1.make (0);
 					end;
 					i := i + 1;
 					current_character := Result.item (i);
@@ -102,30 +102,30 @@ feature {NONE} -- Implementation
 							if interpreted then
 								s2 := Execution_environment.get (Result.substring (i, j - 1));
 							else
-								!! s2.make (15);
+								create s2.make (15);
 								s2.append ("$(");
 								s2.append (Result.substring (i, j - 1));
 								s2.extend (')')
 							end
 						else
-							!!s2.make (0);
+							create s2.make (0);
 						end;
 					else
 						if j >= i then
 							if interpreted then
 								s2 := Execution_environment.get (Result.substring (i, j));
 							else
-								!! s2.make (15);
+								create s2.make (15);
 								s2.append ("$(");
 								s2.append (Result.substring (i, j));
 								s2.extend (')')
 							end
 						else
-							!!s2.make (0);
+							create s2.make (0);
 						end;
 					end;
 					if s2 = Void then
-						!!s2.make (0);
+						create s2.make (0);
 					end;
 					s1.append (s2);
 					i := s1.count + 1;

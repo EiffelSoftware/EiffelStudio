@@ -5,7 +5,7 @@ class RUN_REQUEST
 inherit
 	EWB_REQUEST
 
-creation
+create
 	make 
 
 end -- class RUN_REQUEST

@@ -28,7 +28,7 @@ feature {NONE}
 
 	new_license: LICENSE is
 		do
-			!BENCH_LICENSE! Result.make
+			create {BENCH_LICENSE} Result.make
 			Result.set_version (4.0);
 			Result.set_application_name ("eiffelstudio")
 			licenses.put (Result, "eiffelstudio")
@@ -37,7 +37,7 @@ feature {NONE}
 	concurrency_license: LICENSE is
 			-- License for Concrrent Eiffel
 		once
-			!CONCURRENCY_LICENSE! Result.make
+			create {CONCURRENCY_LICENSE} Result.make
 			licenses.put (Result, Result.application_name)
 		end
 
@@ -94,7 +94,7 @@ feature {NONE}
 			ht: like licenses
 			l: LICENSE
 		do
-			!! Result.make (20)
+			create Result.make (20)
 			from
 				ht := licenses
 				ht.start
@@ -149,7 +149,7 @@ feature {NONE}
 debug ("LIMAN")
 	io.error.putstring ("Creating new license%N")
 end
-						!! l.make
+						create l.make
 						l.set_library_name (precomp_name)
 						l.get_license
 						if l.licensed then
@@ -161,7 +161,7 @@ end
 debug ("LIMAN")
 	io.error.putstring ("Cannot get initial license%N")
 end
-							!! error
+							create error
 							error.set_application_name (l.library_name)
 							Error_handler.insert_error (error)
 						end
@@ -169,7 +169,7 @@ end
 debug ("LIMAN")
 	io.error.putstring ("Cannot get initial license%N")
 end
-						!! error
+						create error
 						error.set_application_name (l.library_name)
 						Error_handler.insert_error (error)
 					else
@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 	licenses: HASH_TABLE [LICENSE, STRING] is
 			-- Licenses for the application
 		Once
-			!! Result.make (5)
+			create Result.make (5)
 		end
 
 end

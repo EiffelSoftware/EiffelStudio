@@ -11,18 +11,18 @@ feature {NONE}
 	Project_tool: PROJECT_W is
 			-- Main and unique control window
 		once
-			!! Result.make (ewb_display)
+			create Result.make (ewb_display)
 		end
 
 	Transporter: TRANSPORTER is
 		once
-			!! Result.make (project_tool)
+			create Result.make (project_tool)
 		end
 
 	System_tool: SYSTEM_W is
 			-- Unique assembly tool
 		once
-			!! Result.make (ewb_display)
+			create Result.make (ewb_display)
 			is_system_tool_created := True
 		end
 
@@ -32,7 +32,7 @@ feature {NONE}
 	Dynamic_lib_tool: DYNAMIC_LIB_W is
 			-- Unique assembly tool
 		once
-			!! Result.make (ewb_display)
+			create Result.make (ewb_display)
 			is_dynamic_lib_tool_created := True
 		end
 
@@ -44,7 +44,7 @@ feature {NONE}
 		require
 			popup_parent_not_void: popup_parent /= Void
 		do
-			!! Result.make (popup_parent)
+			create Result.make (popup_parent)
 			Result.set_window (popup_parent)
 			if last_name_chooser /= Void and then not last_name_chooser.destroyed then
 				last_name_chooser.popdown
@@ -68,7 +68,7 @@ feature {NONE}
 		local
 			old_warner: WARNER_W
 		do
-			!! Result.make (popup_parent)
+			create Result.make (popup_parent)
 			Result.set_window (popup_parent)
 			old_warner := last_warner
 			if old_warner /= Void and then not old_warner.destroyed then
@@ -91,7 +91,7 @@ feature {NONE}
 		local
 			old_confirmer: CONFIRMER_W
 		do
-			!! Result.make (popup_parent)
+			create Result.make (popup_parent)
 			Result.set_window (popup_parent)
 			old_confirmer := last_confirmer
 			if old_confirmer /= Void and then not old_confirmer.destroyed then
@@ -112,7 +112,7 @@ feature {NONE}
 		require
 			popup_parent_not_void: popup_parent /= Void
 		do
-			!! Result.make (popup_parent)
+			create Result.make (popup_parent)
 			if last_routine_custom_window /= Void then
 				last_routine_custom_window.popdown
 				last_routine_custom_window.destroy
@@ -145,13 +145,13 @@ feature {NONE}
 	Window_manager: WINDOW_MGR is
 			-- Window manager for ebench windows
 		once
-			!! Result.make (project_tool.screen)
+			create Result.make (project_tool.screen)
 		end
 
 	Argument_window: ARGUMENT_W is
 			-- General argument window.
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	Preference_tool: EB_PREFERENCE_TOOL is
@@ -176,30 +176,30 @@ feature {NONE} -- Implementation
 	last_warner_cell: CELL [WARNER_W] is
 			-- Cell containing the last warner window created
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 	last_confirmer_cell: CELL [CONFIRMER_W] is
 			-- Cell containing the last confirmer window created
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 	last_name_chooser_cell: CELL [NAME_CHOOSER_W] is
 			-- Cell containing the last name chooser window created
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 	last_routine_custom_window_cell: CELL [ROUTINE_CUSTOM_W] is
 			-- Cell containing the last name routine custom window created
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 	mode: BOOLEAN_REF is
 		once
-			!! Result
+			create Result
 			Result.set_item (True)
 		end
 
@@ -210,19 +210,19 @@ feature {NONE} -- Implementation
 
 	term_window: TERM_WINDOW is
 		once
-			!! Result
+			create Result
 		end
 
 	preference_tool_cell: CELL [EB_PREFERENCE_TOOL] is
 			-- Cell for the preference tool
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 	profile_tool_cell: CELL [EB_PROFILE_TOOL] is
 			-- Cell for the profile tool
 		once
-			!! Result.put (Void)
+			create Result.put (Void)
 		end
 
 feature {NONE} -- Implementation
@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 		do
 			if not ewb_display.is_valid then
 				io.error.putstring ("Cannot open display %"")
-				!! exec_env
+				create exec_env
 				display_name := exec_env.get ("DISPLAY")
 				if display_name /= Void then
 					io.error.putstring (display_name)
@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 				io.error.putstring ("%"%N%
 					%Check that $DISPLAY is properly set and that you are%N%
 					%authorized to connect to the corresponding server%N")
-				!! exc
+				create exc
 				exc.raise ("Invalid display")
 			end
 				--| If we don't put bench mode here,
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 				--| Also note that `error_window' is a
 				--| once-function!!
 			mode.set_item (False)
-			!! new_resources.initialize
+			create new_resources.initialize
 			launched_project_tool := Project_tool
 		end
 
@@ -266,11 +266,11 @@ feature {NONE} -- Implementation
 		local
 			p: PLATFORM_CONSTANTS
 		once
-			!! p
+			create p
 			if p.is_vms then
-				!! Result.make ("")
+				create Result.make ("")
 			else
-				!! Result.make (Void)
+				create Result.make (Void)
 			end
 		end
 

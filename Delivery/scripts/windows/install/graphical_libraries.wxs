@@ -2108,6 +2108,7 @@
             <Directory Id="structs" Name="structs">
               <Component Id="wel_wnd_class.e" Guid="F1847E60-D390-4F03-81C3-88EDED7EA0ED">
                 <File Id="wel_wnd_class.e" Name="WEL_WN~1.E" LongName="wel_wnd_class.e" KeyPath="yes" />
+                <File Id="wel_abc_struct.e" Name="WEL_AB~1.E" LongName="wel_abc_struct.e" />
                 <File Id="wel_tool_info.e" Name="WEL_TO~3.E" LongName="wel_tool_info.e" />
                 <File Id="wel_rich_edit_buffer_loader.e" Name="WEL_RI~1.E" LongName="wel_rich_edit_buffer_loader.e" />
                 <File Id="wel_structure.e" Name="WEL_ST~3.E" LongName="wel_structure.e" />

@@ -53,8 +53,7 @@ feature -- Access
 		require
 			valid_member: text_is_valid
 		do
-			create Result.make (0)
-			Result.from_c (cwel_tv_item_get_psztext (item))
+			create Result.make_from_c (cwel_tv_item_get_psztext (item))
 		ensure
 			result_not_void: Result /= Void
 		end

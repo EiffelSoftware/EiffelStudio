@@ -9,6 +9,9 @@ class
 
 inherit
 	WIZARD_DATA_TYPE_DESCRIPTOR
+		redefine
+			visitor
+		end
 
 	ECOM_TYPE_KIND
 		export
@@ -35,6 +38,61 @@ feature -- Access
 	
 	pointed_data_type_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
 			-- Description of array element type
+
+	visitor: WIZARD_DATA_TYPE_VISITOR is
+			-- Data type visitor.
+		local
+			type_descriptor: WIZARD_TYPE_DESCRIPTOR
+			user_defined: WIZARD_USER_DEFINED_DATA_TYPE_DESCRIPTOR
+			pointed: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+		do
+			if instance_visitor /= Void then
+				Result := instance_visitor
+			elseif pointed_data_type_descriptor.pointing_visitor /= Void then
+				Result := pointed_data_type_descriptor.pointing_visitor
+				instance_visitor := Result
+			else
+				user_defined ?= pointed_data_type_descriptor
+				pointed ?= pointed_data_type_descriptor
+				if user_defined /= Void then
+					type_descriptor := user_defined.library_descriptor.descriptors.item 
+							(user_defined.type_descriptor_index)
+					if type_descriptor.pointed_data_type_visitor /= Void then
+						Result := type_descriptor.pointed_data_type_visitor
+						instance_visitor := Result
+						pointed_data_type_descriptor.set_pointing_visitor (Result)
+					else
+						create Result
+						Result.visit (Current)
+						instance_visitor := Result
+						pointed_data_type_descriptor.set_pointing_visitor (Result)
+						type_descriptor.set_pointed_data_type_visitor (Result)
+					end
+				elseif pointed /= Void then
+					user_defined ?= pointed.pointed_data_type_descriptor
+					if user_defined /= Void then
+						type_descriptor := user_defined.library_descriptor.descriptors.item 
+							(user_defined.type_descriptor_index)
+						if type_descriptor.pointed_pointed_data_type_visitor /= Void then
+							Result := type_descriptor.pointed_pointed_data_type_visitor
+							instance_visitor := Result
+							pointed_data_type_descriptor.set_pointing_visitor (Result)
+						else
+							create Result
+							Result.visit (Current)
+							instance_visitor := Result
+							pointed_data_type_descriptor.set_pointing_visitor (Result)
+							type_descriptor.set_pointed_pointed_data_type_visitor (Result)
+						end
+					end
+				else
+					create Result
+					Result.visit (Current)
+					instance_visitor := Result
+					pointed_data_type_descriptor.set_pointing_visitor (Result)
+				end
+			end
+		end
 
 feature -- Status report
 

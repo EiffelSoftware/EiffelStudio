@@ -9,6 +9,9 @@ class
 
 inherit
 	WIZARD_DATA_TYPE_DESCRIPTOR
+		redefine
+			visitor
+		end
 
 create
 	make
@@ -36,6 +39,27 @@ feature -- Access
 
 	library_descriptor: WIZARD_TYPE_LIBRARY_DESCRIPTOR
 			-- Description of type library
+
+	visitor: WIZARD_DATA_TYPE_VISITOR is
+			-- Data type visitor.
+		local
+			type_descriptor: WIZARD_TYPE_DESCRIPTOR
+		do
+			type_descriptor := library_descriptor.descriptors.item (type_descriptor_index)
+			if instance_visitor /= Void then
+				Result := instance_visitor
+			elseif type_descriptor.data_type_visitor /= Void then
+				instance_visitor := type_descriptor.data_type_visitor
+				Result := type_descriptor.data_type_visitor
+			else
+				create Result
+				Result.visit (Current)
+				instance_visitor := Result
+				type_descriptor.set_data_type_visitor (Result)
+			end
+		ensure then
+			non_void_data_type_visitor: library_descriptor.descriptors.item (type_descriptor_index).data_type_visitor /= Void
+		end
 
 feature -- Status report
 

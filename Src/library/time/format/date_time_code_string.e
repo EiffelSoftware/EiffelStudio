@@ -53,10 +53,12 @@ feature -- Creation
 					pos1 := pos2 + 1
 				end
 			end
-			base_century := ((create {C_DATE}).year_now // 100) * 100
+			base_century := (create {C_DATE}).year_now // 100 * -100
+				-- A negative value of `base_century' indicates that it has
+				-- been calculated automatically, therefore '* -100'.
 		ensure
 			value_set: value /= Void
-			base_century_set: base_century >= 0 and (base_century \\ 100 = 0)
+			base_century_set: base_century < 0 and (base_century \\ 100 = 0)
 		end
 
 feature -- Attributes
@@ -224,6 +226,7 @@ feature -- Interface
 			int, i, type: INTEGER
 			double: DOUBLE
 			am_pm: STRING
+			l_tmp: STRING
 		do
 			create Result.make (1)
 			am_pm := ""
@@ -250,26 +253,30 @@ feature -- Interface
 					Result.append (days.item (int))
 				when 4 then
 					-- Test if the year has four digits, if not put 0 to fill it
-					if date.year.out.count = 4 then
-						Result.append (date.year.out)
+					l_tmp := date.year.out
+					if l_tmp.count = 4 then
+						Result.append (l_tmp)
 					else
-						if date.year.out.count = 1 then
+						if l_tmp.count = 1 then
 							Result.append ("000")
-							Result.append (date.year.out)
-						elseif date.year.out.count = 2 then
+							Result.append (l_tmp)
+						elseif l_tmp.count = 2 then
 							Result.append ("00")
-							Result.append (date.year.out)
-						elseif date.year.out.count = 3 then
+							Result.append (l_tmp)
+						elseif l_tmp.count = 3 then
 							Result.append ("0")
-							Result.append (date.year.out)
+							Result.append (l_tmp)
 						end
 					end
 				when 5 then 
-					int := date.year - base_century
-					if int < 10 then
-						Result.append ("0")
+						-- Two digit year, we only keep the last two digits
+					l_tmp := date.year.out
+					if l_tmp.count > 2 then
+						l_tmp.keep_tail (2)
+					elseif l_tmp.count = 1 then
+						Result.append_character ('0')
 					end
-					Result.append (int.out)
+					Result.append (l_tmp)
 				when 6 then
 					Result.append (date.month.out)
 				when 7 then

@@ -28,7 +28,7 @@ inherit
 			is_equal, out
 		end
 
-creation
+create
 
 	make,
 	make_fine,
@@ -137,7 +137,7 @@ feature -- Initialization
 			code_string: DATE_TIME_CODE_STRING
 			time: TIME
 		do
-			!! code_string.make (code)
+			create code_string.make (code)
 			time := code_string.create_time (s)
 			make_fine (time.hour, time.minute, time.fine_second)
 		end
@@ -158,7 +158,7 @@ feature -- Access
 	origin: TIME is
 			-- Origin time
 		once
-			!! Result.make (0, 0, 0)
+			create Result.make (0, 0, 0)
 		end;
 
 feature -- Comparison
@@ -178,7 +178,7 @@ feature -- Measurement
 	duration: TIME_DURATION is 
 			-- Duration elapsed from midnight 
 		do 
-			!! Result.make_fine (hour, minute, fine_second) 
+			create Result.make_fine (hour, minute, fine_second) 
 		ensure then
 			seconds_large_enough: duration.seconds_count >= 0;
 			seconds_small_enough: duration.seconds_count < Seconds_in_day
@@ -216,7 +216,7 @@ feature -- Basic operations
 	relative_duration (other: like Current): TIME_DURATION is
 			-- Duration elapsed from `other' to `Current'
 		do
-			!! Result.make_by_fine_seconds (fine_seconds - other.fine_seconds);
+			create Result.make_by_fine_seconds (fine_seconds - other.fine_seconds);
 			Result := Result.to_canonical
 		end;
 
@@ -350,7 +350,7 @@ feature -- Output
 		local
 			code: DATE_TIME_CODE_STRING
 		do
-			!! code.make (s)
+			create code.make (s)
 			Result := code.create_time_string (Current)
 		end	
 	

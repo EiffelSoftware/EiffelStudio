@@ -20,7 +20,7 @@ inherit
 			is_equal	
 		end
 
-creation
+create
 	make,
 	make_definite,
 	make_fine,
@@ -33,8 +33,8 @@ feature -- Initialization
 			-- Set `year', `month', `day' to `y', `mo', `d' .
 			-- Set `hour', `minute', `second' to `h', `mi', `s'.
 		do
-			!! date.make (y, mo, d);
-			!! time.make (h, mi, s)
+			create date.make (y, mo, d);
+			create time.make (h, mi, s)
 		ensure
 			year_set: year = y; 
 			month_set: month = mo; 
@@ -48,8 +48,8 @@ feature -- Initialization
 			-- Set `day' to `d'.
 			-- Set `hour', `minute', `second' to `h', `m', `s'.
 		do
-			!! date.make_by_days (d);
-			!! time.make (h, m, s)
+			create date.make_by_days (d);
+			create time.make (h, m, s)
 		ensure
 			definite_result: definite;
 			day_set: day = d; 
@@ -62,8 +62,8 @@ feature -- Initialization
 			-- set `year', `month', `day' to `y', `mo', `d'.
 			-- set `hour', `minute', `second' to `h', `mi', `s'.
 		do
-			!! date.make (y, mo, d);
-			!! time.make_fine (h, mi, s)
+			create date.make (y, mo, d);
+			create time.make_fine (h, mi, s)
 		ensure
 			year_set: year = y; 
 			month_set: month = mo; 
@@ -92,7 +92,7 @@ feature -- Initialization
 			d_exists: d /= Void; 
 		do 
 			date := d;
-			!! time.make (0,0,0); 
+			create time.make (0,0,0); 
 		ensure 
 			date_set: date = d; 
 			time_set: time.is_equal (time.zero)
@@ -197,13 +197,13 @@ feature -- Basic operations
 	infix "+" (other:like current): like current is
 			-- Sum with `other' (commutative)
 		do
-			!! Result.make_by_date_time (date + other.date, time + other.time)
+			create Result.make_by_date_time (date + other.date, time + other.time)
 		end;
 
 	infix "-" (other:like current): like current is
 			-- Difference with `other'
 		do
-			!! Result.make_by_date_time (date - other.date, time - other.time)
+			create Result.make_by_date_time (date - other.date, time - other.time)
 		end;
 
 	prefix "+": like current is
@@ -215,7 +215,7 @@ feature -- Basic operations
 	prefix "-": like current is
 			-- Unary minus
 		do
-			!! Result.make_by_date_time (-date, -time)
+			create Result.make_by_date_time (-date, -time)
 		end;
 
 	day_add (d: INTEGER) is
@@ -241,7 +241,7 @@ feature -- Conversion
 				Result := deep_clone (Current)
 			else
 				final_date := start_date + Current;
-				!! time_part_of_Result.make_fine (final_date.hour - start_date.hour,
+				create time_part_of_Result.make_fine (final_date.hour - start_date.hour,
 					final_date.minute - start_date.minute,
 					final_date.fine_second - start_date.fine_second);
 				if (final_date >= start_date) and then (final_date.time < start_date.time) then
@@ -251,8 +251,8 @@ feature -- Conversion
 					time_part_of_result.hour_add (-24);
 					final_date.day_add (1)
 				end;
-				!! date_part_of_Result.make_by_days (final_date.days - start_date.days);
-				!! Result.make_by_date_time (date_part_of_Result.to_canonical (start_date.date), time_part_of_Result.to_canonical)
+				create date_part_of_Result.make_by_days (final_date.days - start_date.days);
+				create Result.make_by_date_time (date_part_of_Result.to_canonical (start_date.date), time_part_of_Result.to_canonical)
 			end
 		ensure
 			canonical_set: Result.canonical (start_date)

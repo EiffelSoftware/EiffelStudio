@@ -28,7 +28,7 @@ inherit
 			is_equal, out
 		end
 
-creation
+create
  
 	make,
 	make_month_day_year,
@@ -134,7 +134,7 @@ feature {DATE_TIME} -- Initialization
 			code_string: DATE_TIME_CODE_STRING
 			date: DATE
 		do
-			!! code_string.make (code)
+			create code_string.make (code)
 			date := code_string.create_date (s)
 			make (date.year, date.month, date.day)
 		end
@@ -155,7 +155,7 @@ feature -- Access
 	origin: DATE is
 			-- Origin date
 		once
-			!! Result.make (1600, 1, 1)
+			create Result.make (1600, 1, 1)
 		end;
 
 feature -- Comparison
@@ -175,7 +175,7 @@ feature -- Measurement
 	duration: DATE_DURATION is
 			-- Definite duration elapsed since `origin'
 		do
-			!! Result.make_by_days (days_from (origin.year) + year_day - 
+			create Result.make_by_days (days_from (origin.year) + year_day - 
 				origin.year_day)
 		ensure then
 			definite_result: Result.definite
@@ -267,7 +267,7 @@ feature -- Status report
 		local
 			january_1st: DATE
 		do
-			!! january_1st.make (year,1,1);
+			create january_1st.make (year,1,1);
 			Result := january_1st.day_of_the_week 
 		ensure
 			day_of_the_week_definition: Result > 0 and then Result < 8
@@ -287,7 +287,7 @@ feature -- Conversion
 	to_date_time: DATE_TIME is
 			-- Date-time version, with a zero time component
 		do
-			!! Result.make_by_date (Current)
+			create Result.make_by_date (Current)
 		end
 
 feature -- Basic operations
@@ -319,7 +319,7 @@ feature -- Basic operations
 	relative_duration (other: like Current): DATE_DURATION is
 			-- Duration from `other' to the current date, expressed in year, month and day
 		do
-			!! Result.make_by_days (days - other.days);
+			create Result.make_by_days (days - other.days);
 			Result := Result.to_canonical (other)
 		ensure then
 			exact_duration: (other + Result).is_equal (Current);
@@ -473,7 +473,7 @@ feature -- Output
 		local
 			code: DATE_TIME_CODE_STRING
 		do
-			!! code.make (s)
+			create code.make (s)
 			Result := code.create_date_string (Current)
 		end
 

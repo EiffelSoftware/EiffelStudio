@@ -14,7 +14,7 @@ inherit
 			item as item_array
 		end
 
-creation
+create
 	make
 
 feature -- Creation
@@ -41,7 +41,7 @@ feature -- Access
 		do
 			c_t ?= item_array ((2 * i) - 1)
 			frac_sec ?= item_array (2 * i)
-			!! Result.make_by_compact_time (c_t.item)
+			create Result.make_by_compact_time (c_t.item)
 			Result.set_fractionals (frac_sec.item)
 		end
 

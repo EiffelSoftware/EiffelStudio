@@ -14,7 +14,7 @@ inherit
 			item as item_array
 		end
 
-creation
+create
 	make
 
 feature -- Creation
@@ -36,7 +36,7 @@ feature -- Access
 		require
 			i_not_void: i /= Void
 		do
-			!! Result.make_by_compact_date (item_array(i))
+			create Result.make_by_compact_date (item_array(i))
 		end
 
 	last: INTEGER

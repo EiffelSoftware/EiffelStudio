@@ -27,7 +27,7 @@ inherit
 			is_equal
 		end
 		
-creation
+create
 
 	make,
 	make_fine,
@@ -109,7 +109,7 @@ feature -- Access
 	zero: TIME_DURATION is
 			-- Neutral element for "+" and "-"
 		once
-			!! Result.make (0, 0, 0)
+			create Result.make (0, 0, 0)
 		end;
 
 feature -- Attributes
@@ -236,13 +236,13 @@ feature -- Basic operations
 	infix "+" (other: like Current): like Current is
 			-- Sum with `other'
 		do
-			!! Result.make_fine (hour + other.hour, minute + other.minute, fine_second + other.fine_second)
+			create Result.make_fine (hour + other.hour, minute + other.minute, fine_second + other.fine_second)
 		end;
 
 	infix "-" (other: like Current): like Current is
 			-- Difference with `other'
 		do
-			!! Result.make_fine (hour - other.hour, minute - other.minute, fine_second - other.fine_second)
+			create Result.make_fine (hour - other.hour, minute - other.minute, fine_second - other.fine_second)
 		end;
 
 	prefix "+": like Current is
@@ -254,7 +254,7 @@ feature -- Basic operations
 	prefix "-": like Current is
 			-- Unary minus 
 		do
-			!! Result.make_fine (- hour, - minute, - fine_second)
+			create Result.make_fine (- hour, - minute, - fine_second)
 		end;
 
 feature -- Conversion
@@ -266,9 +266,9 @@ feature -- Conversion
 				Result:= clone (Current)
 			else
 				if fine_seconds_count >= 0 then
-					!! Result.make_by_fine_seconds (fine_seconds_count)
+					create Result.make_by_fine_seconds (fine_seconds_count)
 				else
-					!! Result.make_by_fine_seconds (- fine_seconds_count);
+					create Result.make_by_fine_seconds (- fine_seconds_count);
 					Result := - Result
 				end
 			end
@@ -285,7 +285,7 @@ feature -- Conversion
 	time_modulo_day: like Current is
 			-- Duration modulo duration of a day
 		do
-			!! Result.make_by_seconds (mod (fine_seconds_count.floor, Seconds_in_day));
+			create Result.make_by_seconds (mod (fine_seconds_count.floor, Seconds_in_day));
 			Result.fine_second_add (fine_seconds_count - fine_seconds_count.floor)
 		ensure
 			Result_smaller_than_day: Result.seconds_count < Seconds_in_day

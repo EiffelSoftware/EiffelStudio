@@ -7,7 +7,7 @@ class DATE_TIME_CODE_STRING	inherit
 
 	FIND_SEPARATOR_FACILITY
 
-creation
+create
 	make
 
 feature -- Creation
@@ -22,10 +22,10 @@ feature -- Creation
 			substrg, substrg2, tmp_strg: STRING
 			date_constants: DATE_CONSTANTS
 		do
-			!! value.make(20)
+			create value.make(20)
 			pos1 := 1
 			pos2 := 1
-			!! date_constants
+			create date_constants
 			days := clone (date_constants.days_text)
 			months := clone (date_constants.months_text)
 			from
@@ -41,12 +41,12 @@ feature -- Creation
 			--		pos1 := s.count + 1
 			--	else
 					if substrg.count > 0 then
-						!! code.make (substrg)
+						create code.make (substrg)
 						value.put (code, i)
 						i := i + 1
 					end
 					if substrg2.count > 0 then
-						!! code_separator.make (substrg2)
+						create code_separator.make (substrg2)
 						value.put (code_separator, i)
 					end
 					pos1 := pos2 + 1
@@ -67,7 +67,7 @@ feature -- Attributes
 		local
 			i: INTEGER
 		do	
-			!! Result.make (1)
+			create Result.make (1)
 			from
 				i := 1
 			until
@@ -188,7 +188,7 @@ feature -- Interface
 			double: DOUBLE
 			am_pm: STRING
 		do
-			!! Result.make (1)
+			create Result.make (1)
 			am_pm := ""
 			date := date_time.date
 			time := date_time.time
@@ -307,7 +307,7 @@ feature -- Interface
 		local
 			date_time: DATE_TIME
 		do
-			!! date_time.make_by_date (date)
+			create date_time.make_by_date (date)
 			Result := create_string (date_time)
 		ensure
 			string_exists: Result /= Void
@@ -321,7 +321,7 @@ feature -- Interface
 		local
 			date_time: DATE_TIME
 		do
-			!! date_time.make_fine (1, 1, 1, time.hour, time.minute, time.fine_second)
+			create date_time.make_fine (1, 1, 1, time.hour, time.minute, time.fine_second)
 			Result := create_string (date_time)
 		ensure
 			string_exists: Result /= Void
@@ -340,7 +340,7 @@ feature -- Interface
 		do
 			right_day_text := True
 			build_parser (s)
-			!! Result.make_fine (parser.year, parser.month, parser.day, 
+			create Result.make_fine (parser.year, parser.month, parser.day, 
 					parser.hour, parser.minute, parser.fine_second)
 			if parser.day_text /= Void then
 				i := Result.date.day_of_the_week
@@ -365,17 +365,17 @@ feature -- Interface
 		do
 			tmp_ht := clone (value)
 			i := value.count + 1
-			!! tmp_code.make (" ")
+			create tmp_code.make (" ")
 			value.put (tmp_code, i)
-			!! tmp_code.make ("hh")
+			create tmp_code.make ("hh")
 			value.put (tmp_code, i+1)
-			!! tmp_code.make (":")
+			create tmp_code.make (":")
 			value.put (tmp_code, i+2)
-			!! tmp_code.make ("mi")
+			create tmp_code.make ("mi")
 			value.put (tmp_code, i+3)
-			!! tmp_code.make (":")
+			create tmp_code.make (":")
 			value.put (tmp_code, i+4)
-			!! tmp_code.make ("ss")
+			create tmp_code.make ("ss")
 			value.put (tmp_code, i+5)
 			s.append (" 0:0:0")
 			Result := create_date_time (s).date
@@ -400,17 +400,17 @@ feature -- Interface
 		do
 			tmp_ht := clone (value)
 			i := value.count + 1
-			!! tmp_code.make (" ")
+			create tmp_code.make (" ")
 			value.put (tmp_code, i)
-			!! tmp_code.make ("dd")
+			create tmp_code.make ("dd")
 			value.put (tmp_code, i+1)
-			!! tmp_code.make ("/")
+			create tmp_code.make ("/")
 			value.put (tmp_code, i+2)
-			!! tmp_code.make ("mm")
+			create tmp_code.make ("mm")
 			value.put (tmp_code, i+3)
-			!! tmp_code.make ("/")
+			create tmp_code.make ("/")
 			value.put (tmp_code, i+4)
-			!! tmp_code.make ("yy")
+			create tmp_code.make ("yy")
 			value.put (tmp_code, i+5)
 			s.append (" 1/1/01")
 			Result := create_date_time (s).time

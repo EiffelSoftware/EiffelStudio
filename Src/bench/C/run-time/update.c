@@ -49,7 +49,7 @@ rt_public long melt_count;				/* Size of melting table */
 /*#define DEBUG 3		/**/
 
 /* TEMPORARY */
-FILE *fil;
+static FILE *fil;
 
 rt_public void update(ignore_updt)
 char ignore_updt;

@@ -364,30 +364,32 @@ feature {NONE} -- Contract support
 			go_to (c)
 		end
 
-feature {NONE}-- Assertion
+feature -- Contract support
 
 	lists_equal (list1, list2: LINKED_LIST [G]): BOOLEAN is
 			-- Are elements in `list1' equal to those in `list2'.
 		require
 			list1_not_void: list1 /= Void
 			list2_not_void: list2 /= Void
+		local
+			cur1, cur2: CURSOR
 		do
-			if list1.count = list1.count and then list1.count > 0 then
+			if list1.count = list2.count then
 				from
+					cur1 := list1.cursor
+					cur2 := list2.cursor
 					list1.start
 					list2.start
 					Result := True
 				until
-					list1.off
+					list1.after or else Result = False
 				loop
-					if list1.item /= list2.item then
-						Result := False
-					end
+					Result := list1.item /= list2.item
 					list1.forth
 					list2.forth
 				end
-				list1.start
-				list2.start
+				list1.go_to (cur1)
+				list2.go_to (cur2)
 			end
 		end
 
@@ -430,6 +432,9 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/29 21:44:51  brendel
+--| Corrected implementation of `lists_equal'.
+--|
 --| Revision 1.10  2000/03/17 01:23:34  oconnor
 --| formatting and layout
 --|

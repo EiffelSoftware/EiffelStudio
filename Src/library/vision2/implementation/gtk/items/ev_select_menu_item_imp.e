@@ -23,6 +23,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is this menu item checked?
 		do
+			Result := C.gtk_check_menu_item_struct_active (c_object).to_boolean
 		end
 
 feature -- Status setting
@@ -30,6 +31,7 @@ feature -- Status setting
 	enable_select is
 			-- Select this menu item.
 		do
+			C.gtk_check_menu_item_set_active (c_object, True)
 		end
 
 feature {NONE} -- Implementation
@@ -59,6 +61,9 @@ end -- class EV_SELECT_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/02/25 01:53:38  brendel
+--| Implemented.
+--|
 --| Revision 1.1  2000/02/24 20:27:21  brendel
 --| Initial revision. Needed for rearranged radio-item inheritance structure.
 --|

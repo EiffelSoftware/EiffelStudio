@@ -20,29 +20,58 @@ inherit
 	
 feature -- Status report
 
-	is_selected: BOOLEAN is
-			-- Is this radio item checked?
-		do
-		end
-
 	peers: LINKED_LIST [like interface] is
 			-- List of all radio items in the group `Current' is in.
+		local
+			cur: POINTER
+			peer_imp: like Current
 		do
+			create Result.make
+			if gslist = Void then
+				Result.extend (interface)
+			else
+				from
+					cur := gslist
+				until
+					cur = Default_pointer
+				loop
+					peer_imp ?= eif_object_from_c (C.gslist_struct_data (cur))
+					Result.extend (peer_imp.interface)
+					cur := C.gslist_struct_next (cur)
+				end
+			end
+			io.put_string (Result.count.out + "%N")
 		end
 
 	selected_peer: like interface is
 			-- Radio item that is currently selected.
+		local
+			cur: POINTER
+			peer_imp: like Current
 		do
-		end
-
-feature -- Status setting
-
-	enable_select is
-			-- Select this radio item.
-		do
+			if gslist = Void then
+				Result := interface
+			else
+				from
+					cur := gslist
+				until
+					cur = Default_pointer or else Result /= void
+				loop
+					peer_imp ?= eif_object_from_c (C.gslist_struct_data (cur))
+					if peer_imp.is_selected then
+						Result := peer_imp.interface
+					end
+					cur := C.gslist_struct_next (cur)
+				end
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
+
+	gslist: POINTER is
+			-- Reference to front of radio group. *GSList.
+		deferred
+		end
 
 	interface: EV_RADIO_PEER
 
@@ -69,6 +98,9 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/02/25 01:48:52  brendel
+--| Implemented.
+--|
 --| Revision 1.2  2000/02/24 20:48:54  brendel
 --| Changed in compliance with interface.
 --|

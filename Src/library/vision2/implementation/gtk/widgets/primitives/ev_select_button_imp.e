@@ -23,6 +23,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is toggle button pressed?
 		do
+			Result := C.gtk_toggle_button_get_active (c_object)
 		end 
 	
 feature -- Status setting
@@ -30,8 +31,8 @@ feature -- Status setting
 	enable_select is
 			-- Set `is_selected' `True'.
 		do
+			C.gtk_toggle_button_set_active (c_object, True)
 		end
-
 
 feature {EV_ANY_I} -- Implementation
 
@@ -60,6 +61,9 @@ end -- class EV_SELECT_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/02/25 01:49:28  brendel
+--| Implemented.
+--|
 --| Revision 1.1  2000/02/24 20:27:21  brendel
 --| Initial revision. Needed for rearranged radio-item inheritance structure.
 --|

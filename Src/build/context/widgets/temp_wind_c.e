@@ -52,7 +52,7 @@ feature
 				set_x_y (x1, y1);
 				set_start_hidden (True);
 			end;
-			add_window_geometry_action;
+			widget.set_parent_action ("<Map>,<Prop>", Current, Current);
 			add_to_window_list
 		end;
 

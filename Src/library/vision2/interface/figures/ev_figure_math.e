@@ -44,16 +44,16 @@ feature -- Implementation
 		do
 			if x2 = x1 then
 				if y1 > y2 then
-					Result := 3/2 * Pi
+					Result := pi_half_times_three
 				else
-					Result := 1/2 * Pi
+					Result := pi_half
 				end
 			else
 				Result := arc_tangent ((y1 - y2) / (x1 - x2))
 				if x1 > x2 then
 					Result := Result - Pi
 				end
-				Result := modulo (Result, 2 * Pi)
+				Result := modulo (Result, pi_times_two)
 			end
 		end
 
@@ -222,6 +222,16 @@ feature -- Implementation
 		do
 			Result := n >= a.min (b) and then n <= a.max (b)
 		end		
+		
+	pi_half: DOUBLE is 1.57079633
+	
+	pi_quater: DOUBLE is 0.785398163
+	
+	pi_times_two: DOUBLE is 6.28318531
+	
+	pi_times_three: DOUBLE is 9.42477796
+	
+	pi_half_times_three: DOUBLE is 4.71238898
 
 end -- class EV_FIGURE_MATH
 

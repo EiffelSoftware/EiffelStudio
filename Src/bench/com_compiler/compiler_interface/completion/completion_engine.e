@@ -32,8 +32,7 @@ feature {NONE} -- Initialization
 			non_void_file_name: a_file_name /= void
 			valid_file_name: not a_file_name.is_empty
 		do
-			create file_name.make_from_string (a_file_name)
-			file_name.to_lower
+			file_name := a_file_name.as_lower
 			class_i := eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (file_name))
 			is_initialized := class_i /= void and then class_i.compiled and then class_i.compiled_class.has_feature_table
 			if is_initialized then
@@ -70,7 +69,7 @@ feature -- Access
 			-- File containing Eiffel class in which to find target features
 
 feature -- Basic Operations
-
+		
 	find (target: STRING; use_overloading: BOOLEAN) is
 			-- Lookup `target' and set `found_item' according to `use_overloading'.
 		require
@@ -95,13 +94,12 @@ feature -- Element settings
 		do
 			feature_name := a_feature_name
 			feature_i := feature_table.item (feature_name)
-			if feature_i = void then
+			if feature_i = Void then
 				cf := uncompiled_completion_feature (feature_name)
-				if cf /= void then
+				if cf /= Void then
 					create {R_DYN_FUNC_I} feature_i
 				end
 			end
-			is_initialized := feature_i /= void
 		ensure
 			feature_name_set: feature_name = a_feature_name
 		end
@@ -183,8 +181,7 @@ feature {NONE} -- Implementation
 				l_features := completion_features.found_item
 				from
 					l_features.start
-					create temp.make_from_string (a_feature_name)
-					temp.to_lower
+					temp := a_feature_name.as_lower
 				until
 					l_features.after or Result /= void
 				loop

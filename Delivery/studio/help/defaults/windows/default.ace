@@ -1,0 +1,20 @@
+system
+	$system_name
+
+root
+	$root_class_line
+
+default
+	assertion ($assertion_value)
+$default_options
+$precompile
+
+cluster
+	$root_cluster_line
+
+		-- EiffelBase
+	library base:				"$ISE_EIFFEL/library/base"
+		exclude
+			"table_eiffel3";"desc"
+		end
+end

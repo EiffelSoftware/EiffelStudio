@@ -127,18 +127,19 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	uint32 age_table_cx[TENURE_MAX];	/* Number of objects/age */
 	uint32 size_table_cx[TENURE_MAX];	/* Amount of bytes/age */
 	uint32 tenure_cx;					/* Hector needs to see that */
-	EIF_INTEGER	clsc_per_cx;		/* Period of full coalescing. */
+	EIF_INTEGER	clsc_per_cx;			/* Period of full coalescing. */
 	long plsc_per_cx;					/* Period of plsc in acollect */
 	int gc_running_cx;					/* Is the GC running */
-	double last_gc_time_cx;			/* The time spent on the last collect, sweep or whatever the GC did */
+	double last_gc_time_cx;				/* The time spent on the last collect,
+										 * sweep or whatever the GC did */
 	int gc_ran_cx;						/* Has the GC been running */
 	struct s_table *spoilt_tbl_cx;
 	struct sc_zone ps_from_cx;			/* From zone */
 	struct sc_zone ps_to_cx;			/* To zone */
 	struct chunk *last_from_cx;		/* Last 'from' used by partial scavenging */
-	long th_alloc_cx;					/* Allocation threshold before calling GC */
-	int gc_monitor_cx;					/* Disable GC time-monitoring by default */
-	char *root_obj_cx;					/* Address of the 'root' object */
+	long th_alloc_cx;				/* Allocation threshold before calling GC */
+	int gc_monitor_cx;				/* Disable GC time-monitoring by default */
+	EIF_REFERENCE root_obj_cx;				/* Address of the 'root' object */
 
 		/* urgent.c */
 	char *urgent_mem_cx[URGENT_NBR];        /* Array holding urgent chunks */
@@ -207,7 +208,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct s_stack sig_stk_cx;	/* Initialized by initsig() */
 
 		/* main.c */
-	char **EIF_once_values_cx;	/* Once values for a thread */
+	EIF_REFERENCE *EIF_once_values_cx;	/* Once values for a thread */
     int in_assertion_cx ;    /* Is an assertion evaluated? */
 
 #ifdef WORKBENCH
@@ -334,8 +335,6 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define eiffel_usage	(eif_globals->eiffel_usage_cx)	/* rt_public */
 #define type_use		(eif_globals->type_use_cx)		/* rt_private */
 #define c_mem			(eif_globals->c_mem_cx)		/* rt_private */
-#define eif_chunk_size	(eif_globals->chunk_size_cx)	/* rt_shared? */
-#define eif_scavenge_size (eif_globals->scavenge_size_cx)	/* rt_shared? */
 #define eif_max_mem		(eif_globals->max_mem_cx)
 
 	/* memory.c */
@@ -435,7 +434,7 @@ extern struct sc_zone ps_to;	/* Partial scavenging 'to' zone */
 extern struct chunk *last_from;	/* Last 'from' chunk used by plsc() */
 extern long th_alloc;			/* Allocation threshold (in bytes) */
 extern int gc_monitor;			/* GC monitoring flag */
-RT_LNK char *root_obj;			/* Address of the 'root' object */
+RT_LNK EIF_REFERENCE root_obj;			/* Address of the 'root' object */
 
 	/* hector.c */
 RT_LNK struct stack hec_stack;		/* Indirection table "hector" */
@@ -455,8 +454,6 @@ extern struct sc_zone sc_from;		/* Scavenging 'from' zone */
 extern struct sc_zone sc_to;		/* Scavenging 'to' zone */
 extern uint32 gen_scavenge;			/* Is Generation Scavenging running ? */
 extern long eiffel_usage;			/* For memory statistics */
-extern int eif_chunk_size;			/* Size of memory chunks */
-extern int eif_scavenge_size;		/* Size of scavenge zones */
 extern int eif_max_mem;				/* Maximum memory that can be allocated */
 
 	/* plug.c */
@@ -468,7 +465,7 @@ extern int esigblk;				/* Are signals blocked for later delivery? */
 extern struct s_stack sig_stk;	/* The signal stack */
 
 	/* main.c */
-RT_LNK char **EIF_once_values;	/* Once values for a thread */
+RT_LNK EIF_REFERENCE *EIF_once_values;	/* Once values for a thread */
 RT_LNK int in_assertion;	/* Value of the assertion level */
 
 #endif	/* EIF_THREADS */

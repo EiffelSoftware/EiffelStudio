@@ -36,7 +36,7 @@ rt_public EIF_INTEGER clsc_per = 0;
 							/* Period of full coalescing: 0 => never. */
 #endif	/* !EIF_THREADS */
 
-rt_public void mem_free(char *object)
+rt_public void mem_free(EIF_REFERENCE object)
 {
 	/* Unconditionally free object, if not in generational scavenge zone, in
 	 * which case the object will be either collected if it is really dead
@@ -128,11 +128,11 @@ rt_public void mem_tiny(void)
 rt_private int m_largest = 0;		/* Size of the largest coalesced block */ /* %%ss mt */
 #endif /* EIF_THREADS */
 
-rt_public int mem_largest(void)
+rt_public EIF_INTEGER mem_largest(void)
 {
 	EIF_GET_CONTEXT
 
-	return m_largest;			/* Return size of the largest block */
+	return (EIF_INTEGER) m_largest;			/* Return size of the largest block */
 
 	EIF_END_GET_CONTEXT
 }
@@ -344,7 +344,7 @@ rt_public char gc_ison(void)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public void		eif_set_coalesc_period (EIF_INTEGER p)
+rt_public void		eif_set_coalesce_period (EIF_INTEGER p)
 {
 	EIF_GET_CONTEXT
 	assert (p >= 0);
@@ -363,20 +363,6 @@ rt_public void eif_set_max_mem (EIF_INTEGER lim)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public void eif_set_chunk_size (EIF_INTEGER sz)
-{
-	/*
-	 * Set the chunk size (the run-time always allocates a number of bytes
-	 * multiple of this amount from the system)
-	 */
-
-	EIF_GET_CONTEXT
-	int size = (int) sz;
-	if (size > 0) 
-		eif_chunk_size = size;
-	EIF_END_GET_CONTEXT
-}
-
 rt_public EIF_INTEGER eif_get_max_mem (void)
 {
 	/*
@@ -386,14 +372,46 @@ rt_public EIF_INTEGER eif_get_max_mem (void)
 	EIF_GET_CONTEXT
 	return (EIF_INTEGER) eif_max_mem;
 	EIF_END_GET_CONTEXT
-}
+}	/* eif_max_mem () */
 
-rt_public EIF_INTEGER eif_coalesc_period () 
+rt_public EIF_INTEGER eif_tenure (void)	
 {
+	/* Return the maximum tenuring age. */
+
+	/* Not in per thread basis. */
+
+	return	eif_tenure_max;
+}	/* eif_tenure () */
+
+rt_public EIF_INTEGER eif_generation_object_limit (void)
+{
+	/* Return the maximum size of object allocatable in 	
+	 * the generational scavenge zone.
+	 */
+
+	/* Not in per thread basis. */
+
+	return (EIF_INTEGER) eif_gs_limit;
+}	/* eif_generation_object_limit () */
+
+rt_public EIF_INTEGER eif_scavenge_zone_size (void)
+{
+	/* Return size of geneartional scavenge zone. */
+
+	/* Not in per thread basis. */
+
+	return (EIF_INTEGER) eif_scavenge_size;
+}	/* eif_scavenge_zone_size () */
+
+rt_public EIF_INTEGER eif_coalesce_period (void) 
+{
+	int ret;	/* Return value. */
 	EIF_GET_CONTEXT
+	ret = clsc_per;	
 	EIF_END_GET_CONTEXT
-	return plsc_per;
-}	
+	return (EIF_INTEGER) ret;
+}	/* eif_coalesce_period () */	
+
 rt_public EIF_INTEGER eif_get_chunk_size (void)
 {
 	/*
@@ -403,7 +421,7 @@ rt_public EIF_INTEGER eif_get_chunk_size (void)
 	EIF_GET_CONTEXT
 	return (EIF_INTEGER) eif_chunk_size;
 	EIF_END_GET_CONTEXT
-}
+}	/* eif_get_chunk_size () */
 
 #ifdef __cplusplus
 }

@@ -102,7 +102,7 @@ RT_LNK int fcount;
 /* Macro used for object creation to get the proper creation type:
  *  RTCA(x,y) returns the dynamic type of 'x' if not void, otherwise 'y'
  */
-#define RTCA(x,y) ((x) == (char *) 0 ? (y) : Dftype(x))
+#define RTCA(x,y) ((x) == (EIF_REFERENCE) 0 ? (y) : Dftype(x))
 
 /* Macros used for assignments:
  *  RTAG(x) is true if 'x' is an old object not remembered
@@ -122,35 +122,35 @@ RT_LNK int fcount;
 #define RTAN(x) (!(HEADER(x)->ov_flags & EO_OLD))
 #define RTAM(x) eremb(x)
 #define RTAX(x,y) (RTAG(y)?(RTAN(x)?RTAM((y)),(x):(x)):(x))
-#define RTAR(x,y) if ((x) != (char *) 0 && RTAN(x)) { \
+#define RTAR(x,y) if (((x) != (EIF_REFERENCE) 0) && (RTAN(x))) { \
 	if (HEADER(y)->ov_flags & EO_EXP) { \
-	   register char *z = (char *) y - (HEADER (y)->ov_size & B_SIZE); \
+	   register EIF_REFERENCE z = (EIF_REFERENCE) y - (HEADER (y)->ov_size & B_SIZE); \
 		if (RTAG(z)) RTAM(z); \
 	} else if (RTAG(y)) RTAM(y); \
 	}
 #if !defined NDEBUG && defined EIF_REM_SET_OPTIMIZATION
-#define RTAS(x,y) if ((x) != (char *) 0 && RTAN(x)) { \
+#define RTAS(x,y) if ((x) != (EIF_REFERENCE) 0 && RTAN(x)) { \
 	if (RTAE(y)) eif_panic ("Must call RTAS_OPT instead");\
 	if (HEADER(y)->ov_flags & EO_EXP) { \
-		register char *z = (char *) y - (HEADER(y)->ov_size & B_SIZE); \
+		register EIF_REFERENCE z = (EIF_REFERENCE) y - (HEADER(y)->ov_size & B_SIZE); \
 		if (RTAG(z)) erembq((z)); \
 	} else if (RTAG(y)) erembq((y)); \
 	}
 #else	/* !NDEBUG && EIF_REM_SET_OPTIMIZATION */
-#define RTAS(x,y) if ((x) != (char *) 0 && RTAN(x)) { \
+#define RTAS(x,y) if ((x) != (EIF_REFERENCE) 0 && RTAN(x)) { \
 	if (HEADER(y)->ov_flags & EO_EXP) { \
-		register char *z = (char *) y - (HEADER(y)->ov_size & B_SIZE); \
+		register EIF_REFERENCE z = (EIF_REFERENCE) y - (HEADER(y)->ov_size & B_SIZE); \
 		if (RTAG(z)) erembq((z)); \
 	} else if (RTAG(y)) erembq((y)); \
 	}
 #endif	/* !NDEBUG && EIF_REM_SET_OPTIMIZATION */
 
 #define RTAS_OPT(x,i,y) \
-	if ((x) != (char *) 0 && RTAN(x)) \
+	if ((x) != (EIF_REFERENCE) 0 && RTAN(x)) \
 	{ \
 	if (HEADER(y)->ov_flags & EO_EXP) \
 	{ \
-		register char *z = (char *) y - (HEADER(y)->ov_size & B_SIZE); \
+		register EIF_REFERENCE z = (EIF_REFERENCE) y - (HEADER(y)->ov_size & B_SIZE); \
 		if (RTAG(z)) erembq((z)); \
 	} \
 	else if (RTAO(y)) \
@@ -169,9 +169,9 @@ RT_LNK int fcount;
  *  RTRM(x,y) memorizes 'x' if not void and 'y' is old with 'x' new
  */
 #define RTRC(x,y) econfm(x,y)
-#define RTRA(x,y) ((y) == (char *) 0 ? 0 : RTRC((x),Dftype(y)))
-#define RTRV(x,y) (RTRA((x),(y)) ? (y) : (char *) 0)
-#define RTRM(x,y) ((x) == (char *) 0 ? 0 : RTAX(x,y))
+#define RTRA(x,y) ((y) == (EIF_REFERENCE) 0 ? 0 : RTRC((x),Dftype(y)))
+#define RTRV(x,y) (RTRA((x),(y)) ? (y) : (EIF_REFERENCE) 0)
+#define RTRM(x,y) ((x) == (EIF_REFERENCE) 0 ? 0 : RTAX(x,y))
 
 /* Macros used for array optimization
  *	RTADTYPE(x) defines the variable for the dynamic type of `x'
@@ -202,7 +202,7 @@ RT_LNK int fcount;
 	}
 
 #define RTAUA(cast,x,y,i) \
-	*(cast*)(*(char**)(y+CAT2(x,_area_offset))+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(cast))
+	*(cast*)(*(EIF_REFERENCE *)(y+CAT2(x,_area_offset))+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(cast))
 
 #define RTAUP(cast,x,y,val,i) CAT2(RTAUP_,cast)(cast,x,y,val,i)
 
@@ -215,18 +215,18 @@ RT_LNK int fcount;
 
 #define RTAUP_EIF_REFERENCE(cast,x,y,val,i) \
 	{ \
-	register char *ptr_current = (*(char**)(y+CAT2(x,_area_offset))); \
+	register EIF_REFERENCE ptr_current = (*(EIF_REFERENCE *)(y+CAT2(x,_area_offset))); \
 	RTAS (val, ptr_current); \
 	*(EIF_REFERENCE*)(ptr_current+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(EIF_REFERENCE)) = val; \
 	}
 
 #define RTAUP_BASIC(cast,x,y,val,i) \
-	*(cast*)(*(char**)(y+CAT2(x,_area_offset))+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(cast)) = val
+	*(cast*)(*(EIF_REFERENCE *)(y+CAT2(x,_area_offset))+(i-*(long*)(y+CAT2(x,_lower_offset)))*sizeof(cast)) = val
 
 #define RTAI(cast,x,y) \
 	if (y) { \
 		RTAITYPE(x,y); \
-		if (CAT2(x,_area) = *(char**) ((y)+ (eif_area_table) [CAT2(x,_dtype)])) { \
+		if (CAT2(x,_area) = *(EIF_REFERENCE *) ((y)+ (eif_area_table) [CAT2(x,_dtype)])) { \
 			if (!(HEADER(CAT2(x,_area))->ov_size & B_C)) { \
 				CAT2(x,_freeze) = 1; \
 				HEADER(CAT2(x,_area))->ov_size |= B_C; \
@@ -238,7 +238,7 @@ RT_LNK int fcount;
 #define RTAIOFF(cast,x,y) \
 	if (y) { \
 		RTAITYPE(x,y); \
-		if (CAT2(x,_area) = *(char**) ((y)+CAT2(x,_area_offset))) { \
+		if (CAT2(x,_area) = *(EIF_REFERENCE *) ((y)+CAT2(x,_area_offset))) { \
 			if (!(HEADER(CAT2(x,_area))->ov_size & B_C)) { \
 				CAT2(x,_freeze) = 1; \
 				HEADER(CAT2(x,_area))->ov_size |= B_C; \
@@ -292,15 +292,15 @@ RT_LNK int fcount;
 	}
 #define RTLE \
 	{ \
-		if (ol == (char **) 0) \
+		if (ol == (EIF_REFERENCE *) 0) \
 			loc_set.st_top = l; \
 		else { \
 			eback(ol); \
 		} \
 	}
 #define RTLD \
-	char **l = loc_set.st_top; \
-	char **ol = (char **) 0
+	EIF_REFERENCE *l = loc_set.st_top; \
+	EIF_REFERENCE *ol = (EIF_REFERENCE *) 0
 #define RTXI(x) \
 	{ \
 		if (l + (x) <= loc_set.st_end) \
@@ -313,8 +313,8 @@ RT_LNK int fcount;
 	if (lc) loc_set.st_end = lc->sk_end; \
 	loc_set.st_top = lt
 #define RTXL \
-	char **l = loc_set.st_top; \
-	char **lt = loc_set.st_top; \
+	EIF_REFERENCE *l = loc_set.st_top; \
+	EIF_REFERENCE *lt = loc_set.st_top; \
 	struct stchunk *lc = loc_set.st_cur
 
 /* Macro used to record once functions:
@@ -349,15 +349,15 @@ RT_LNK int fcount;
  *  RTVR(x,y) check if call of feature 'y' on 'x' is done on a void reference
  */
 #define RTCT(t,x) exasrt(MTC t, x)
-#define RTCS(x) exasrt(MTC (char *) 0, x)
+#define RTCS(x) exasrt(MTC (EIF_REFERENCE) 0, x)
 #define RTCK in_assertion = 0; expop(&eif_stack);
 #define RTCF in_assertion = 0; eviol(MTC_NOARG);
 #define RTIT(t,x) exinv(MTC t, x)
-#define RTIS(x) exinv(MTC (char *) 0, x)
+#define RTIS(x) exinv(MTC (EIF_REFERENCE) 0, x)
 #define RTTE(x,y) if (!(x)) goto y 
 #define RTJB goto body
 #ifdef WORKBENCH
-#define RTVR(x,y) if ((x) == (char *) 0) eraise(y, EN_VOID)
+#define RTVR(x,y) if ((x) == (EIF_REFERENCE) 0) eraise(y, EN_VOID)
 #endif
 
 /* Macros for exception handling:
@@ -385,7 +385,7 @@ RT_LNK int fcount;
 #define RTEA(x,y,z) exvect = exset(MTC x, y, z)
 #define RTEV exvect = exft()
 #define RTET(t,x) eraise(t,x)
-#define RTEC(x) RTET((char *) 0,x)
+#define RTEC(x) RTET((EIF_REFERENCE) 0,x)
 #define RTSO check_options_stop(MTC_NOARG)
 #ifdef WORKBENCH
 #define RTEE RTSO; expop(&eif_stack)
@@ -428,7 +428,7 @@ RT_LNK int fcount;
 #define RTHP(x) hrecord(x)
 #define RTHF(x) epop(&hec_stack, x)
 #define RTXH \
-	char **ht = hec_stack.st_top; \
+	EIF_REFERENCE *ht = hec_stack.st_top; \
 	struct stchunk *hc = hec_stack.st_cur
 #define RTHS \
 	hec_stack.st_cur = hc; \
@@ -440,7 +440,7 @@ RT_LNK int fcount;
  * RTLS resynchronizes the loc_stack by restoring saved context
  */
 #define RTXLS \
-	char **lst = loc_stack.st_top; \
+	EIF_REFERENCE *lst = loc_stack.st_top; \
 	struct stchunk *lsc = loc_stack.st_cur
 #define RTLS \
 	loc_stack.st_cur = lsc; \
@@ -460,7 +460,7 @@ RT_LNK int fcount;
 #define	RTST(c,d,i,n) striparr(c,d,i,n);
 #define RTXA(x,y) xcopy(x, y)
 #define RTEQ(x,y) xequal(x, y)
-#define RTIE(x) ((x) != (char *) 0 ? HEADER(x)->ov_flags & EO_EXP : 0)
+#define RTIE(x) ((x) != (EIF_REFERENCE) 0 ? HEADER(x)->ov_flags & EO_EXP : 0)
 #define RTOF(x) (HEADER(x)->ov_size & B_SIZE)
 #define RTEO(x) ((x) - RTOF(x))
 

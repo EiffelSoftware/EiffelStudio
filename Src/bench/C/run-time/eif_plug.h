@@ -40,17 +40,17 @@ struct bit {
  */
 
 RT_LNK EIF_REFERENCE makestr(register char *s, register int len);	/* Build an Eiffel string object */
-extern char *makebit(char *bit, long int bit_count);		/* Build an Eiffel bit object */
-extern char *striparr(register char *curr, register int dtype, register char **items, register long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
+extern EIF_REFERENCE makebit(char *bit, long int bit_count);		/* Build an Eiffel bit object */
+extern EIF_REFERENCE striparr(register EIF_REFERENCE curr, register int dtype, register EIF_REFERENCE *items, register long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
 
-RT_LNK char *argarr(int argc, char **argv);		/* ARRAY[STRING] creation from command line arguments */
+RT_LNK EIF_REFERENCE argarr(int argc, char **argv);		/* ARRAY[STRING] creation from command line arguments */
 
 extern long *eif_lower_table;		/* ARRAY `lower' (array optimization) */
 extern long *eif_area_table;		/* ARRAY `area' (array optimization) */
 
 #ifdef WORKBENCH
-extern void wstdinit(char *obj, char *parent);				/* Composite objects initialization */
-extern char *cr_exp(uint32 type);				/* Creation of expanded objects */
+extern void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent);				/* Composite objects initialization */
+extern EIF_REFERENCE cr_exp(uint32 type);				/* Creation of expanded objects */
 #endif
 
 /*
@@ -99,20 +99,20 @@ extern int dynamic_dtype;	/* Dynamic type of DYNAMIC */
   
 /* Conformance query in class GENERAL */
 #define econfg(obj1, obj2) \
-	(((char *) obj1) == ((char *) 0) || ((char *) obj2) == ((char *) 0))? EIF_FALSE: \
+	(((EIF_REFERENCE) obj1 == (EIF_REFERENCE) 0) || ((EIF_REFERENCE) obj2 == (EIF_REFERENCE) 0 )) ? EIF_FALSE: \
 		eif_gen_conf((int16) Dftype(obj1), (int16) Dftype(obj2))
   
 /* Are dynamic types of `obj1' and `obj2' identical? */
 #define estypeg(obj1, obj2) \
-	(((char *) obj1) == ((char *) 0) || ((char *) obj2) == ((char *) 0))? EIF_FALSE: \
+	(((EIF_REFERENCE) obj1 == (EIF_REFERENCE) 0) || ((EIF_REFERENCE) obj2 == (EIF_REFERENCE) 0))? EIF_FALSE: \
 		(Dtype(obj1) == Dtype(obj2))
 
 RT_LNK int econfm(int ancestor, int heir);	/* Conformance query for assignment attempt */
-RT_LNK long sp_count(char *spobject);		/* Count of a special object */
-RT_LNK void chkinv(char *obj, int where);	/* Invariant control call */
+RT_LNK long sp_count(EIF_REFERENCE spobject);		/* Count of a special object */
+RT_LNK void chkinv(EIF_REFERENCE obj, int where);	/* Invariant control call */
 
 #ifdef WORKBENCH
-RT_LNK void chkcinv(char *obj);			/* Creation invariant call */	
+RT_LNK void chkcinv(EIF_REFERENCE obj);			/* Creation invariant call */	
 #endif
 
 #ifndef WORKBENCH

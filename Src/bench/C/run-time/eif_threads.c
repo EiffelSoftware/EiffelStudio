@@ -34,7 +34,7 @@
 /*---  In multi-threaded environment  ---*/
 /*---------------------------------------*/
 
-rt_public void eif_thr_panic(char *);
+rt_public void eif_thr_panic(EIF_REFERENCE);
 rt_public void eif_thr_init_root(void);
 rt_public void eif_thr_register(void);
 rt_public unsigned int eif_thr_is_initialized(void);
@@ -106,11 +106,11 @@ rt_public void eif_thr_register(void)
 	   * Also set value root thread id.
 	   */
 
-		EIF_once_values = (char **) realloc (EIF_once_values, EIF_once_count * sizeof (char *));
+		EIF_once_values = (EIF_REFERENCE *) realloc (EIF_once_values, EIF_once_count * REFSIZ);
 			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
-		if (EIF_once_values == (char **) 0) /* Out of memory */
+		if (EIF_once_values == (EIF_REFERENCE *) 0) /* Out of memory */
 			enomem();
-		bzero((char *) EIF_once_values, EIF_once_count * sizeof (char *));
+		bzero((EIF_REFERENCE) EIF_once_values, EIF_once_count * REFSIZ);
 	} else 
 	{
 		once = 1;
@@ -170,9 +170,6 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 	 * fields.
 	 */
 
-	/* no need to call EIF_GET_CONTEXT, it has been done in 
-	 * the calling functions .
-	 */
 	bzero((char *)eif_globals,sizeof(eif_global_context_t));
 	
 		/* except.c */
@@ -180,9 +177,6 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 	print_history_table = ~0;
 
 		/* garcol.c */
-	tenure = (uint32) TENURE_MAX;
-	plsc_per = PLSC_PER;
-	th_alloc = TH_ALLOC;
 #ifdef EIF_REM_SET_OPTIMIZATION
 	special_rem_set = (struct special_table *) 0;	
 #endif	/* EIF_REM_SET_OPTIMIZATION */
@@ -327,7 +321,7 @@ rt_private EIF_THR_ENTRY_TYPE eif_thr_entry (EIF_THR_ENTRY_ARG_TYPE arg)
 			EIF_PROCEDURE execute = (EIF_PROCEDURE) routine_ctxt->routine;
 			(execute)(root_obj);
 		}
-		root_obj = (char *)0;
+		root_obj = (EIF_REFERENCE) 0;
 		EIF_END_GET_CONTEXT
 	}
 	eif_thr_exit ();
@@ -354,7 +348,7 @@ rt_public void eif_thr_exit(void)
 
 	thr_list_t *ptr, **thr_list = eif_thr_context->addr_thr_list;
 	int ret;	/* Return Status of "eifaddr". */
-	char *terminated = 
+	EIF_REFERENCE terminated = 
 		eifaddr (eif_access (eif_thr_context->current), "terminated", &ret);
 	if (ret != EIF_CECIL_OK) 
 		eraise ("eif_thr_exit", EN_EXT);

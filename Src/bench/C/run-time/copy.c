@@ -38,16 +38,16 @@
 rt_private struct hash hclone;			/* Cloning hash table */
 
 /* Function declarations */
-rt_private void rdeepclone(char *source, char *enclosing, int offset);			/* Recursive cloning */
-rt_private void expanded_update(char *source, char *target, int shallow_or_deep);		/* Expanded reference update */
-rt_private char *duplicate(char *source, char *enclosing, int offset);			/* Duplication with aging tests */
+rt_private void rdeepclone(EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset);			/* Recursive cloning */
+rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int shallow_or_deep);		/* Expanded reference update */
+rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset);			/* Duplication with aging tests */
 
 #ifndef lint
 rt_private char *rcsid =
 	"$Id$";
 #endif
 
-rt_public char *eclone(register char *source)
+rt_public EIF_REFERENCE eclone(register EIF_REFERENCE source)
 {
 	/* Clone an of Eiffel object `source'. Assumes that source is not a
 	 * special object.
@@ -56,23 +56,23 @@ rt_public char *eclone(register char *source)
 	return emalloc(HEADER(source)->ov_flags & EO_TYPE);
 }
 
-rt_public char *spclone(char *source)
+rt_public EIF_REFERENCE spclone(EIF_REFERENCE source)
 {
 	/* Clone an of Eiffel object `source'. Assumes that source
 	 * is a special object.
 	 */
 	
 	EIF_GET_CONTEXT
-	register4 char *result;				/* Clone pointer */
+	register4 EIF_REFERENCE result;				/* Clone pointer */
 	register1 union overhead *zone;		/* Pointer on source header */
 	register2 uint32 flags;				/* Source object flags */
 	register3 uint32 size;				/* Source object size */
-	char *s_ref, *r_ref;
+	EIF_REFERENCE s_ref, r_ref;
 
-	if ((char *) 0 == source)
-		return (char *) 0;				/* Void source */
+	if ((EIF_REFERENCE) 0 == source)
+		return (EIF_REFERENCE) 0;				/* Void source */
 
-	epush(&loc_stack, (char *)(&source));			/* Protection against GC */
+	epush(&loc_stack, (EIF_REFERENCE)(&source));			/* Protection against GC */
 
 	zone = HEADER(source);				/* Allocation of a new object */
 	flags = zone->ov_flags;
@@ -93,17 +93,17 @@ rt_public char *spclone(char *source)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public char *edclone(EIF_CONTEXT char *source)
+rt_public EIF_REFERENCE edclone(EIF_CONTEXT EIF_REFERENCE source)
 {
 	/* Recursive Eiffel clone. This function recursively clones the source
 	 * object and returns a pointer to the top of the new tree.
 	 */
 	EIF_GET_CONTEXT	
-	char *root = (char *) 0;		/* Root of the deep cloned object */
+	EIF_REFERENCE root = (EIF_REFERENCE)  0;		/* Root of the deep cloned object */
 	jmp_buf exenv;					/* Environment saving */
 	struct {
 		union overhead discard;		/* Pseudo object header */
-		char *boot;					/* Anchor point for cloning process */
+		EIF_REFERENCE boot;					/* Anchor point for cloning process */
 	} anchor;
 
 #ifdef DEBUG
@@ -116,12 +116,12 @@ rt_public char *edclone(EIF_CONTEXT char *source)
 	 */
 
 	bzero(&anchor, sizeof(anchor));	/* Reset header */
-	anchor.boot = (char *) &root;	/* To boostrap cloning process */
+	anchor.boot = (EIF_REFERENCE)  &root;	/* To boostrap cloning process */
 
 	if (0 == source)
-		return (char *) 0;			/* Void source */
+		return (EIF_REFERENCE) 0;			/* Void source */
 
-	epush(&loc_stack, (char *) &source);	/* Protect source: allocation will occur */
+	epush(&loc_stack, (EIF_REFERENCE) &source);	/* Protect source: allocation will occur */
 
 #ifdef DEBUG
 	xobjs = nomark(source);
@@ -169,7 +169,7 @@ rt_public char *edclone(EIF_CONTEXT char *source)
 	 * represents a pseudo anchor object for the object hierarchy being cloned.
 	 */
 
-	rdeepclone(source, (char *) &anchor.boot, 0);	/* Recursive clone */
+	rdeepclone(source, (EIF_REFERENCE) &anchor.boot, 0);	/* Recursive clone */
 	hash_free(&hclone);						/* Free hash table */
 	map_reset(0);							/* And eif_free maping table */
 
@@ -188,15 +188,15 @@ rt_public char *edclone(EIF_CONTEXT char *source)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public char *rtclone(char *source)
+rt_public EIF_REFERENCE rtclone(EIF_REFERENCE source)
 {
 	/* Clone source, copy the source in the clone and return the clone */
 
 	EIF_GET_CONTEXT
-	char *result;					/* Address of the cloned object */
+	EIF_REFERENCE result;					/* Address of the cloned object */
 
-	if (source == (char *) 0)
-		return (char *) 0;
+	if (source == (EIF_REFERENCE) 0)
+		return (EIF_REFERENCE) 0;
 
 	epush(&loc_stack, (char *) &source);	/* In case object is going to move */
 
@@ -214,7 +214,7 @@ rt_public char *rtclone(char *source)
 	EIF_END_GET_CONTEXT
 }
 
-rt_private char *duplicate(char *source, char *enclosing, int offset)
+rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset)
 			 		/* Object to be duplicated */
 					/* Object where attachment is made */
 		   			/* Offset within enclosing where attachment is made */
@@ -228,7 +228,7 @@ rt_private char *duplicate(char *source, char *enclosing, int offset)
 	uint32 flags;					/* Object's flags */
 	uint32 size;					/* Object's size */
 	EIF_OBJECT *hash_zone;				/* Hash table entry recording duplication */
-	char *clone;					/* Where clone is allocated */
+	EIF_REFERENCE clone;					/* Where clone is allocated */
 
 	zone = HEADER(source);			/* Where eif_malloc stores its information */
 	flags = zone->ov_flags;			/* Eiffel flags */
@@ -243,7 +243,7 @@ rt_private char *duplicate(char *source, char *enclosing, int offset)
 		size = zone->ov_size & B_SIZE;		/* Size encoded in header */
 
 	clone = eif_access(map_next());				/* Get next stacked object */
-	*(char **) (enclosing + offset) = clone;	/* Attach new object */
+	*(EIF_REFERENCE *)  (enclosing + offset) = clone;	/* Attach new object */
 	hash_zone = hash_search(&hclone, source);	/* Get an hash table entry */
 	bcopy(source, clone, size);					/* Block copy */
 	*hash_zone = clone;					/* Fill it in with the clone address */
@@ -273,7 +273,7 @@ rt_private char *duplicate(char *source, char *enclosing, int offset)
 		 */
 	{
 		special_erembq (enclosing, offset >> EIF_REFERENCE_BITS);
-		assert (*(char **) (enclosing + offset) == clone);
+		assert (*(EIF_REFERENCE *) (enclosing + offset) == clone);
 	}
 	else if (flags & EO_REM)			/* Old object is already remembered */
 			return clone;				/* No further action necessary */
@@ -290,7 +290,7 @@ rt_private char *duplicate(char *source, char *enclosing, int offset)
 	return clone;
 }
 
-rt_private void rdeepclone (char *source, char *enclosing, int offset)
+rt_private void rdeepclone (EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset)
 			 			/* Source object to be cloned */
 						/* Object receiving clone */
 		   				/* Offset within enclosing where attachment is made */
@@ -302,7 +302,7 @@ rt_private void rdeepclone (char *source, char *enclosing, int offset)
 	 * tests when the attachment to the receiving reference is done.
 	 */
 
-	char *clone, *c_ref, *c_field;
+	EIF_REFERENCE clone, c_ref, c_field;
 	uint32 flags;
 	uint32 size;
 	union overhead *zone;
@@ -318,7 +318,7 @@ rt_private void rdeepclone (char *source, char *enclosing, int offset)
 		 */
 
 		clone = *hash_search(&hclone, source);
-		*(char **) (enclosing + offset) = clone;
+		*(EIF_REFERENCE *) (enclosing + offset) = clone;
 		assert (!(HEADER (enclosing)->ov_size & B_FWD));/* Not forwarded. */
 		if (HEADER (enclosing)->ov_flags & (EO_REF | EO_SPEC) == (EO_REF | EO_SPEC))
 		{
@@ -355,8 +355,8 @@ rt_private void rdeepclone (char *source, char *enclosing, int offset)
 		 */
 
 		if (!(flags & EO_COMP))	{	/* Special object filled with references */
-			for (offset = 0; count > 0; count--, offset += sizeof(char *)) {
-				c_field = *(char **) (clone + offset);
+			for (offset = 0; count > 0; count--, offset += REFSIZ) {
+				c_field = *(EIF_REFERENCE *) (clone + offset);
 				/* Iteration on non void references and Eiffel references */
 				if (0 == c_field || (HEADER(c_field)->ov_flags & EO_C))
 					continue;
@@ -372,19 +372,19 @@ rt_private void rdeepclone (char *source, char *enclosing, int offset)
 		expanded_update(source, clone, DEEP); /* Update intra expanded refs */
 }
 
-rt_public void xcopy(char *source, char *target)
+rt_public void xcopy(EIF_REFERENCE source, EIF_REFERENCE target)
 {
 	/* Copy 'source' into expanded object 'target' if 'source' is not void,
 	 * or raise a "Void assigned to expanded" exception.
 	 */
 	
-	if (source == (char *) 0)
+	if (source == (EIF_REFERENCE)  0)
 		xraise(MTC EN_VEXP);			/* Void assigned to expanded */
 	
 	ecopy(source, target);
 }
 
-rt_public void ecopy(register char *source, register char *target)
+rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE target)
 {
 	/* Copy Eiffel object `source' into Eiffel object `target'.
 	 * Problem: updating intra-references on expanded object
@@ -398,7 +398,7 @@ rt_public void ecopy(register char *source, register char *target)
 	register4 uint32 t_flags;			/* Source target flags */
 	register5 union overhead *s_zone;	/* Source object header */
 	register6 union overhead *t_zone;	/* Target object header */
-	char *enclosing;					/* Enclosing target object */
+	EIF_REFERENCE enclosing;					/* Enclosing target object */
 	uint32 size;
 
 	s_zone = HEADER(source);
@@ -465,7 +465,7 @@ rt_public void ecopy(register char *source, register char *target)
 	}
 }
 
-rt_public void spcopy(register char *source, register char *target)
+rt_public void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE target)
 {
 	/* Copy a special Eiffel object into another one. It assumes that
 	 * `source' and `target' are not NULL. Precondition of redefined
@@ -503,7 +503,7 @@ rt_public void spcopy(register char *source, register char *target)
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 }
 
-rt_private void expanded_update(char *source, char *target, int shallow_or_deep)
+rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int shallow_or_deep)
 {
 	/*
 	 * Update recursively:
@@ -520,18 +520,18 @@ rt_private void expanded_update(char *source, char *target, int shallow_or_deep)
 	register4 union overhead *zone;			/* Target Object header */
 	register2 long nb_ref;					/* Number of references */
 	register3 uint32 flags;					/* Target flags */
-	register1 char *t_reference;			/* Target reference */
-	register5 char *s_reference;			/* Source reference */
-	char *t_enclosing;						/* Enclosing object */
-	char *s_enclosing;						/* Enclosing object */
+	register1 EIF_REFERENCE t_reference;			/* Target reference */
+	register5 EIF_REFERENCE s_reference;			/* Source reference */
+	EIF_REFERENCE t_enclosing;						/* Enclosing object */
+	EIF_REFERENCE s_enclosing;						/* Enclosing object */
 	int t_offset = 0;						/* Offset within target */
 	int s_offset = 0;						/* Offset within target */
 	int temp_offset = 0;					/* Offset within target */
 	int s_sub_offset = 0;					/* Subobject offset */
 	int offset1 = 0;						/* Offset within target */
 	int offset2 = 0;						/* Offset within target */
-	char *t_expanded;
-	char *s_expanded;
+	EIF_REFERENCE t_expanded;
+	EIF_REFERENCE s_expanded;
 
 	/* Compute the enclosing object (i.e. the object which contains the target).
 	 * Normally this is the object itself, unless the target is expanded.
@@ -560,9 +560,9 @@ rt_private void expanded_update(char *source, char *target, int shallow_or_deep)
 	for (
 		/* empty */;
 		nb_ref > 0;
-		nb_ref--, t_offset += sizeof(char *), s_offset += sizeof(char *)
+		nb_ref--, t_offset += REFSIZ, s_offset += REFSIZ 
 	) {
-		t_reference = *(char **) (t_enclosing + t_offset);
+		t_reference = *(EIF_REFERENCE *) (t_enclosing + t_offset);
 		if (0 == t_reference)
 			continue;		/* Void reference */
 
@@ -579,7 +579,7 @@ rt_private void expanded_update(char *source, char *target, int shallow_or_deep)
 			 * expanded object within its enclosing father.
 			 */
 
-			s_reference = *(char **) (s_enclosing + s_offset);
+			s_reference = *(EIF_REFERENCE *) (s_enclosing + s_offset);
 			s_sub_offset = HEADER(s_reference)->ov_size & B_SIZE;
 									/* Get offset from source expanded */
 			temp_offset = s_sub_offset - offset1;
@@ -587,8 +587,8 @@ rt_private void expanded_update(char *source, char *target, int shallow_or_deep)
 									/* Corresponding expanded in target object */
 			t_expanded = t_enclosing + offset2 + temp_offset;
 									/* Update reference point to sub-object */ 
-			*(char **) (t_enclosing + t_offset) = t_expanded;
-			t_reference = *(char **) (t_enclosing + t_offset);
+			*(EIF_REFERENCE *) (t_enclosing + t_offset) = t_expanded;
+			t_reference = *(EIF_REFERENCE *) (t_enclosing + t_offset);
 									/* Update offset in header */ 
 			zone = HEADER(t_reference);
 			zone->ov_size = offset2 + temp_offset;
@@ -643,7 +643,7 @@ rt_public void spsubcopy (EIF_POINTER source, EIF_POINTER target, EIF_INTEGER st
 	 */
 
 	EIF_INTEGER esize, count; /* %%ss removed , i; */
-	char *ref; /* %%ss removed , *src_ref; */
+	EIF_REFERENCE ref; /* %%ss removed , *src_ref; */
 	uint32 flags;
 
 	count = end - start + 1;
@@ -685,10 +685,10 @@ rt_public void spclearall (EIF_POINTER spobj)
 	 */
 
 	union overhead *zone;			/* Malloc information zone */
-	char  *(*init)(char *);				/* Initialization routine to be called */
+	char  *(*init)(EIF_REFERENCE); 				/* Initialization routine to be called */
 	long i, count, elem_size;
 	int dtype, dftype;
-	char *ref;
+	EIF_REFERENCE ref;
 
 	zone = HEADER(spobj);
 	ref = spobj + (zone->ov_size & B_SIZE) - LNGPAD_2;
@@ -702,9 +702,9 @@ rt_public void spclearall (EIF_POINTER spobj)
 		dtype = Deif_bid(dftype);
 		bzero(spobj, count * elem_size);
 			/* Initialize new expanded elements, if any */
-		init = (char *(*)(char *)) (XCreate(dtype)); /* %%ss cast? added */
+		init = (char *(*)(EIF_REFERENCE)) (XCreate(dtype)); /* %%ss cast? added */
 #ifdef MAY_PANIC
-		if ((char *(*)(char *)) 0 == init)		/* There MUST be a routine */
+		if ((char *(*)(EIF_REFERENCE)) 0 == init)		/* There MUST be a routine */
 			eif_panic("Init routine lost");
 #endif
 		for (i = 0; i < count; i++, ref += elem_size) {

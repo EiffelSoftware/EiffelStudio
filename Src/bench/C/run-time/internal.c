@@ -14,23 +14,23 @@
 #include "eif_config.h"
 #include "eif_internal.h"
 
-rt_private char *ei_oref(long, char *);		/* Offset in object */
+rt_private char *ei_oref(long, EIF_REFERENCE);		/* Offset in object */
 
-rt_public long ei_dtype (char *object)
+rt_public long ei_dtype (EIF_REFERENCE object)
 {
 	/* Returns dynamic type of `object' */
 
 	return (long) Dftype(object);
 }
 
-rt_public long ei_count_field (char *object)
+rt_public long ei_count_field (EIF_REFERENCE object)
 {
 	/* Returns the number of logical fields in `object'. */
 
 	return System(Dtype(object)).cn_nbattr;
 }
 
-rt_public char *ei_field (long i, char *object)
+rt_public char *ei_field (long i, EIF_REFERENCE object)
 {
 	/* Returns the object referenced by the i_th field of `object'.
 	 * Take care of normal and expanded types.
@@ -39,7 +39,7 @@ rt_public char *ei_field (long i, char *object)
 	struct cnode *obj_desc;
 	int dtype = Dtype(object);
 	uint32 field_type;
-	char *o_ref, *new_obj;
+	EIF_REFERENCE o_ref, new_obj;
 #ifdef WORKBENCH
 	long offset;
 #endif
@@ -55,18 +55,18 @@ rt_public char *ei_field (long i, char *object)
 	switch (field_type & SK_HEAD) {
 	case SK_CHAR:
 		{
-			char val = *(char *) o_ref;
+			char val = *(EIF_REFERENCE) o_ref;
 
 			new_obj = RTLN(egc_char_ref_dtype);
-			*(char *) new_obj = val;
+			*(EIF_REFERENCE) new_obj = val;
 			return new_obj;
 		}
 	case SK_BOOL:
 		{
-			char val = *(char *) o_ref;
+			char val = *(EIF_REFERENCE) o_ref;
 
 			new_obj = RTLN(egc_bool_ref_dtype);
-			*(char *) new_obj = val;
+			*(EIF_REFERENCE) new_obj = val;
 			return new_obj;
 		}
 	case SK_INT:
@@ -102,15 +102,15 @@ rt_public char *ei_field (long i, char *object)
 			return new_obj;
 		}
 	case SK_REF:
-		return *(char **) o_ref;	/* Return reference */
+		return *(EIF_REFERENCE *) o_ref;	/* Return reference */
 	case SK_EXP:
 		return RTCL(o_ref);			/* Return copy of expanded object */
 	default:
-		return (char *) 0;
+		return (EIF_REFERENCE) 0;
 	}
 }
 
-rt_public char *ei_field_name (long i, char *object)
+rt_public char *ei_field_name (long i, EIF_REFERENCE object)
 {
 	/* Returns name of the i_th logical field of `object'. */
 
@@ -119,7 +119,7 @@ rt_public char *ei_field_name (long i, char *object)
 	return makestr(name, strlen(name));
 }
 
-rt_public long ei_field_type(long i, char *object)
+rt_public long ei_field_type(long i, EIF_REFERENCE object)
 {
 	/* Returns type of i-th logical field of `object'. */
 
@@ -138,49 +138,49 @@ rt_public long ei_field_type(long i, char *object)
 	}
 }
 
-rt_public char ei_char_field(long i, char *object)
+rt_public char ei_char_field(long i, EIF_REFERENCE object)
 {
 	/* Returns character value of i-th value */
 
-	return *(char *) ei_oref(i,object);
+	return *(EIF_REFERENCE) ei_oref(i,object);
 }
 
-rt_public char ei_bool_field(long i, char *object)
+rt_public char ei_bool_field(long i, EIF_REFERENCE object)
 {
 	/* Returns boolean value of i-th value */
 
-	return *(char *) ei_oref(i, object);
+	return *(EIF_REFERENCE) ei_oref(i, object);
 }
 
-rt_public long ei_int_field(long i, char *object)
+rt_public long ei_int_field(long i, EIF_REFERENCE object)
 {
 	/* Returns integer value of i-th value */
 
 	return *(long *) ei_oref(i, object);
 }
 
-rt_public float ei_float_field(long i, char *object)
+rt_public float ei_float_field(long i, EIF_REFERENCE object)
 {
 	/* Returns float value of i-th value */
 
 	return *(float *) ei_oref(i, object);
 }
 
-rt_public EIF_POINTER ei_ptr_field(long i, char *object)
+rt_public EIF_POINTER ei_ptr_field(long i, EIF_REFERENCE object)
 {
 	/* Returns pointer value of i-th value */
 
 	return *(EIF_POINTER *) ei_oref(i,object);
 }
 
-rt_public double ei_double_field(long i, char *object)
+rt_public double ei_double_field(long i, EIF_REFERENCE object)
 {
 	/* Returns double value of i-th value */
 
 	return *(double *) ei_oref(i,object);
 }
 
-rt_public char *ei_exp_type(long i, char *object)
+rt_public char *ei_exp_type(long i, EIF_REFERENCE object)
 {
 	/* Returns the class name of the i-th expanded field of `object'. */
 
@@ -191,14 +191,14 @@ rt_public char *ei_exp_type(long i, char *object)
 	return makestr(s,strlen(s));
 }
 
-rt_public long ei_bit_size(long i, char *object)
+rt_public long ei_bit_size(long i, EIF_REFERENCE object)
 {
 	/* Returns the size (in bit) of the i-the bit field of `object'. */
 
 	return (long) (System(Dtype(object)).cn_types[i] - SK_BIT);
 }
 	
-rt_public long ei_size(char *object)
+rt_public long ei_size(EIF_REFERENCE object)
 {
 	/* Returns physical size occupied by `object'. */
 
@@ -208,27 +208,27 @@ rt_public long ei_size(char *object)
 		return (long) Size(Dtype(object));
 }
 
-rt_public char ei_special(char *object)
+rt_public char ei_special(EIF_REFERENCE object)
 {
 	/* Is `object' a special one ? */
 	
 	return ((HEADER(object)->ov_flags) & EO_SPEC) ? (char) 1 : (char) 0;
 }
 
-rt_public long ei_offset(long i, char *object)
+rt_public long ei_offset(long i, EIF_REFERENCE object)
 {
 	/* Returns offset of i-th field of `object'. */
 
 	return (long) (ei_oref(i, object) - object);
 }
 
-rt_private char *ei_oref(long i, char *object)
+rt_private char *ei_oref(long i, EIF_REFERENCE object)
 {
 	/* Returns character value of i-th value */
 
 	struct cnode *obj_desc;
 	int dtype = Dtype(object);
-	char *o_ref;
+	EIF_REFERENCE o_ref;
 #ifdef WORKBENCH
 	long offset;
 #endif
@@ -243,7 +243,7 @@ rt_private char *ei_oref(long i, char *object)
 	return o_ref;
 }
 
-rt_public void ei_set_reference_field(EIF_INTEGER i, EIF_POINTER object, EIF_POINTER value)
+rt_public void ei_set_reference_field (EIF_INTEGER i, EIF_POINTER object, EIF_POINTER value)
 {
 	RTAR(value,object);
 	*(EIF_POINTER *) ei_oref(i,object) = value;

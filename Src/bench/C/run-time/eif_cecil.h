@@ -264,8 +264,8 @@ RT_LNK char *eifname(EIF_TYPE_ID cid);					/* Give class name from class ID */
 RT_LNK void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, int * const ret);					/* Safely Compute address of attribute, checking type validityi. Must be preceded by *(EIF_TYPE*). */
 RT_LNK void *old_eifaddr(EIF_REFERENCE object, char *name);					/* Compute address of attribute. Old version. */
 RT_LNK void *eifaddr(EIF_REFERENCE object, char *name, int * const ret);					/* Compute address of attribute */
-RT_LNK EIF_BIT eifgbit(char *object, char *name);				/* Get a bit field structure */
-RT_LNK void eifsbit(char *object, char *name, EIF_BIT bit);					/* Set a bit field structure */
+RT_LNK EIF_BIT eifgbit(EIF_REFERENCE object, char *name);				/* Get a bit field structure */
+RT_LNK void eifsbit(EIF_REFERENCE object, char *name, EIF_BIT bit);					/* Set a bit field structure */
 RT_LNK char eifibit(EIF_BIT bit, int i);					/* Access ith bit in bit field */
 RT_LNK int eifsibit(EIF_BIT bit, int i);					/* Set ith bit to 1 */
 RT_LNK int eifribit(EIF_BIT bit, int i);					/* Reset ith bit to 0 */

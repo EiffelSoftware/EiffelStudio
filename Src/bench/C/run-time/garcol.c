@@ -103,19 +103,19 @@ extern void eif_cleanup(void); /* %%ss added. In extra/win32/console/argcargv.c 
 			DEBUG & (n) && MARK_DEBUG & (p) \
 	) printf
 #ifndef EIF_THREADS
-rt_private struct stack path_stack = {	/* Keeps track of explored nodes */ /* %%zmt */
+rt_private struct stack path_stack = {	/* Keeps track of explored nodes */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
-	(char **) 0,			/* st_top */
-	(char **) 0,			/* st_end */
+	(EIF_REFERENCE *) 0,			/* st_top */
+	(EIF_REFERENCE *) 0,			/* st_end */
 };
-rt_private struct stack parent_expanded_stack = {	/* Records expanded parents */ /* %%zmt */
+rt_private struct stack parent_expanded_stack = {	/* Records expanded parents */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
-	(char **) 0,			/* st_top */
-	(char **) 0,			/* st_end */
+	(EIF_REFERENCE *) 0,			/* st_top */
+	(EIF_REFERENCE *) 0,			/* st_end */
 };
 #endif /* EIF_THREADS */
 #endif	/* ITERATIVE_MARKING */
@@ -164,26 +164,26 @@ rt_shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
  * the garbage collector or the memory management routines.
  */
 
-rt_shared struct stack loc_stack = {			/* Local indirection stack */ /* %%zmt */
+rt_shared struct stack loc_stack = {			/* Local indirection stack */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
-	(char **) 0,			/* st_top */
-	(char **) 0,			/* st_end */
+	(EIF_REFERENCE *) 0,			/* st_top */
+	(EIF_REFERENCE *) 0,			/* st_end */
 };
-rt_public struct stack loc_set = {				/* Local variable stack */ /* %%zmt */
+rt_public struct stack loc_set = {				/* Local variable stack */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
-	(char **) 0,			/* st_top */
-	(char **) 0,			/* st_end */
+	(EIF_REFERENCE *) 0,			/* st_top */
+	(EIF_REFERENCE *) 0,			/* st_end */
 };
-rt_private struct stack rem_set = {			/* Remembered set */ /* %%zmt */
+rt_private struct stack rem_set = {			/* Remembered set */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
-	(char **) 0,			/* st_top */
-	(char **) 0,			/* st_end */
+	(EIF_REFERENCE *) 0,			/* st_top */
+	(EIF_REFERENCE *) 0,			/* st_end */
 };
 
 #ifdef EIF_REM_SET_OPTIMIZATION
@@ -192,19 +192,19 @@ rt_private struct special_table *special_rem_set =
 				/* Remembered special table for special objects. */ 
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 
-rt_shared struct stack moved_set = {			/* Moved objects set */ /* %%zmt */
+rt_shared struct stack moved_set = {			/* Moved objects set */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
-	(char **) 0,			/* st_top */
-	(char **) 0,			/* st_end */
+	(EIF_REFERENCE *) 0,			/* st_top */
+	(EIF_REFERENCE *) 0,			/* st_end */
 };
-rt_public struct stack once_set = {			/* Once functions */ /* %%zmt */
+rt_public struct stack once_set = {			/* Once functions */ 
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
-	(char **) 0,			/* st_top */
-	(char **) 0,			/* st_end */
+	(EIF_REFERENCE *) 0,			/* st_top */
+	(EIF_REFERENCE *) 0,			/* st_end */
 };
 
 #ifdef EIF_MEMORY_OPTIMIZATION
@@ -217,46 +217,59 @@ rt_public struct stack memory_set =
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
-	(char **) 0,			/* st_top */
-	(char **) 0,			/* st_end */
+	(EIF_REFERENCE *) 0,			/* st_top */
+	(EIF_REFERENCE *) 0,			/* st_end */
 };
 #endif	/* EIF_MEMORY_OPTIMIZATION */
+
 
 /* Array used to store the number of objects used, indexed by object's age.
  * This is used when computing the demographic feedback-mediated tenuring
  * threshold for the next step (generation collcetion). The size_table array
  * is used by the generation scavenging algorithm.
  */
-rt_private uint32 age_table[TENURE_MAX];		/* Number of objects/age */ /* %%zmt */
-rt_private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */ /* %%zmt */
-rt_shared uint32 tenure = (uint32) TENURE_MAX;	/* Hector needs to see that */ /* %%zmt */
-rt_public long plsc_per = PLSC_PER;			/* Period of plsc in acollect */ /* %%zmt */
-rt_public int gc_running = 0;			/* Is the GC running */ /* %%zmt */
-rt_public double last_gc_time = 0; 		/* The time spent on the last collect, sweep or whatever the GC did */ /* %%zmt */
-rt_public int gc_ran = 0;				/* Has the GC been running */ /* %%zmt */
+
+rt_private uint32 age_table[TENURE_MAX];		/* Number of objects/age */ 
+rt_private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */ 
+rt_shared uint32 tenure;				/* Maximum age for tenuring.
+									     * Initialized in main.c	*/ 
+											
+rt_public long plsc_per;				/* Period of plsc in acollect  
+										 * Initialized in main.c. */
+rt_public int gc_running = 0;			/* Is the GC running */ 
+rt_public double last_gc_time = 0; 		/* The time spent on the last collect, 
+										 * sweep or whatever the GC did */ 
+rt_public int gc_ran = 0;				/* Has the GC been running */ 
+
 
 /* Spoilt chunks are put into a search table, to avoid taking them as 'from'
  * space more than once: for each spoilt chunk we find, we have to allocate a
  * new 'to' zone at the next partial scavenge.
  */
-rt_private struct s_table *spoilt_tbl = (struct s_table *) 0;	/* %%zmt */
+
+rt_private struct s_table *spoilt_tbl = (struct s_table *) 0;
 
 /* Zones used for partial scavenging */
-rt_shared struct sc_zone ps_from;		/* From zone */ /* %%zmt */
-rt_shared struct sc_zone ps_to;		/* To zone */ /* %%zmt */
+rt_shared struct sc_zone ps_from;		/* From zone */ 
+rt_shared struct sc_zone ps_to;		/* To zone */ 
 rt_shared struct chunk *last_from =
-	(struct chunk *) 0;				/* Last 'from' used by partial scavenging */ /* %%zmt */
+	(struct chunk *) 0;				/* Last 'from' used by partial scavenging */ 
 
-rt_public long th_alloc = TH_ALLOC;	/* Allocation threshold before calling GC */ /* %%zmt */
-rt_public int gc_monitor = 0;			/* Disable GC time-monitoring by default */ /* %%zmt */
-rt_public char *root_obj = (char *) 0;	/* Address of the 'root' object */ /* %%zmt */
+rt_public long th_alloc;		/* Allocation threshold before calling GC.  
+						   		 * Initialized in main.c */
+rt_public int gc_monitor = 0;		/* Disable GC time-monitoring by default */ 
+rt_public EIF_REFERENCE root_obj = (EIF_REFERENCE) 0;	
+									/* Address of the 'root' object */ 
 
 #endif /* !EIF_THREADS */
 
-rt_private int nb_items(register1 struct stack *);	/* Number of items held in a stack */
+rt_private int nb_items(register1 struct stack *);	
+									/* Number of items held in a stack */
 #ifdef EIF_REM_SET_OPTIMIZATION
-rt_shared int is_in_rem_set (char *obj);	/* Is obj in rem_set? */
-rt_shared int is_in_special_rem_set (char *obj);	/* Is obj in special_rem_set? */
+rt_shared int is_in_rem_set (EIF_REFERENCE obj);	/* Is obj in rem_set? */
+rt_shared int is_in_special_rem_set (EIF_REFERENCE obj);
+									/* Is obj in special_rem_set? */
+
 /* Automatic invokations of GC */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 rt_public int acollect(void);				/* Collection based on threshold */
@@ -276,11 +289,11 @@ rt_private void run_collector(void);		/* Wrapper for full collections */
 rt_private void clean_up(void);			/* After collection, time to clean up */
 
 /* Stack markers */
-rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move);	/* Marks a collector's stack */
-rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move);			/* Marks a collector's stack */
+rt_private void mark_simple_stack(register5 struct stack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move);	/* Marks a collector's stack */
+rt_private void mark_stack(register5 struct stack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move);			/* Marks a collector's stack */
 #ifdef EIF_REM_SET_OPTIMIZATION
 rt_private void mark_special_table (register struct special_table *spt, 
-									register char *(*marker) (char *),
+									register EIF_REFERENCE (*marker) (EIF_REFERENCE),
 								   	register int move);
 										/* Mark special table. */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
@@ -291,10 +304,10 @@ rt_private void update_object_id_stack(void); /* Update the object id stack */
 rt_public void plsc(void);					/* Storage compaction reclaimer entry */
 rt_private int partial_scavenging(void);	/* The partial scavenging algorithm */
 rt_private void run_plsc(void);			/* Run the partial scavenging algorithm */
-rt_shared void urgent_plsc(char **object);			/* Partial scavenge with given local root */
+rt_shared void urgent_plsc(EIF_REFERENCE *object);			/* Partial scavenge with given local root */
 rt_private void init_plsc(void);			/* Initialize the scavenging process */
 rt_private void clean_zones(void);			/* Clean up scavenge zones */
-rt_private char *scavenge(register char *root, struct sc_zone *to);			/* Scavenge an object */
+rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *to);			/* Scavenge an object */
 /*rt_private void clean_space();*/			/* Sweep forwarded objects */ /* %%ss undefine */
 rt_private void full_update(void);			/* Update scavenge-related structures */
 rt_private void split_to_block(void);		/* Keep only needed space in 'to' block */
@@ -306,13 +319,13 @@ rt_private void find_to_space(struct sc_zone *to);		/* Find standard-size 'to' c
 /* Generation based collector */
 rt_public int collect(void);				/* Generation based collector main entry */
 rt_private int generational_collect(void);	/* The generational collection algorithm */
-rt_public void eremb(char *obj);				/* Remember an old object */
-rt_public void erembq(char *obj);				/* Quick version (no GC call) of eremb */
-rt_public void special_erembq(char *obj, EIF_INTEGER offst);				
+rt_public void eremb(EIF_REFERENCE obj);				/* Remember an old object */
+rt_public void erembq(EIF_REFERENCE obj);				/* Quick version (no GC call) of eremb */
+rt_public void special_erembq(EIF_REFERENCE obj, EIF_INTEGER offst);				
 									/* Quick version (no GC call) of eremb 
 									 * for special objects full of references.*/
 #ifdef EIF_REM_SET_OPTIMIZATION
-rt_public int special_erembq_replace(char *old, char *val);				
+rt_public int special_erembq_replace(EIF_REFERENCE old, EIF_REFERENCE val);				
 									/* Replace `old' by `val' in special_rem_set. */
 rt_private int update_special_rem_set(void);	
 					/* Update remembered set for special object full of references.*/
@@ -321,22 +334,22 @@ rt_private int update_special_rem_set(void);
 rt_private void update_memory_set (void);		/* Update memory set */
 #endif	/* EIF_MEMORY_OPTIMIZATION */
 rt_private void mark_new_generation(EIF_CONTEXT_NOARG);	/* The name says it all, I think--RAM */
-rt_private char *mark_expanded(char *root, char *(*marker) (char *));		/* Marks expanded reference in stack */
+rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, EIF_REFERENCE (*marker) (EIF_REFERENCE));		/* Marks expanded reference in stack */
 rt_private void update_moved_set(void);	/* Update the moved set (young objects) */
 rt_private void update_rem_set(void);		/* Update remembered set */
-rt_private int refers_new_object_not_updated(register char *object);
-rt_private int	all_subreferences_processed (char *root);
-rt_shared int refers_new_object(register char *object);		/* Does an object refers to young ones ? */
-rt_private char *gscavenge(char *root);			/* Generation scavenging on an object */
+rt_private int refers_new_object_not_updated(register EIF_REFERENCE object);
+rt_private int	all_subreferences_processed (EIF_REFERENCE root);
+rt_shared int refers_new_object(register EIF_REFERENCE object);		/* Does an object refers to young ones ? */
+rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root);			/* Generation scavenging on an object */
 rt_private void swap_gen_zones(void);		/* Exchange 'from' and 'to' zones */
-rt_shared char *to_chunk(void);			/* Address of the chunk holding 'to' */
+rt_shared EIF_REFERENCE to_chunk(void);			/* Address of the chunk holding 'to' */
 
 /* Dealing with dispose routine */
 rt_shared void gfree(register union overhead *zone);				/* Free object, eventually call dispose */
 
 /* Stack handling routines */
-rt_shared int epush(register struct stack *stk, register char *value);				/* Push value on stack */
-rt_shared char **st_alloc(register struct stack *stk, register int size);		/* Creates an empty stack */
+rt_shared int epush(register struct stack *stk, register EIF_REFERENCE value);				/* Push value on stack */
+rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size);		/* Creates an empty stack */
 rt_shared void st_truncate(register struct stack *stk);		/* Truncate stack if necessary */
 rt_shared void st_wipe_out(register struct stchunk *chunk);		/* Remove unneeded chunk from stack */
 rt_shared int st_extend(register struct stack *stk, register int size);			/* Extends size of stack */
@@ -348,30 +361,30 @@ rt_private int reset(register1 struct stack *);				/* Reset stack to its initial
 
 /* Marking algorithm */
 #ifdef RECURSIVE_MARKING
-rt_private char *recursive_mark(char *root);	/* Recursively mark reachable objects */
-rt_private char *generation_mark(char *root);	/* A recursive mark with on-the-fly copy */
+rt_private EIF_REFERENCE recursive_mark(EIF_REFERENCE root);	/* Recursively mark reachable objects */
+rt_private EIF_REFERENCE generation_mark(EIF_REFERENCE root);	/* A recursive mark with on-the-fly copy */
 #endif
 
 #ifdef HYBRID_MARKING
-rt_private char *hybrid_mark(char *root);		/* Mark all reachable objects */
-rt_private char *hybrid_gen_mark(char *root);	/* hybrid_mark with on-the-fly copy */
+rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE root);		/* Mark all reachable objects */
+rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root);	/* hybrid_mark with on-the-fly copy */
 #endif
 
 #ifdef ITERATIVE_MARKING
-rt_private char *iterative_mark(char *root);	/* Iteratively mark reachable objects */
-rt_private char *it_gen_mark(char *root);		/* Iterative mark with on-the-fly copy */
-rt_private char *ntop(register1 struct stack *stk);	/* Returns the top element of a stack */
-rt_private char *nget(register1 struct stack *stk);	/* Pops the top element of a stack */
+rt_private EIF_REFERENCE iterative_mark(EIF_REFERENCE root);	/* Iteratively mark reachable objects */
+rt_private EIF_REFERENCE it_gen_mark(EIF_REFERENCE root);		/* Iterative mark with on-the-fly copy */
+rt_private EIF_REFERENCE ntop(register1 struct stack *stk);	/* Returns the top element of a stack */
+rt_private EIF_REFERENCE nget(register1 struct stack *stk);	/* Pops the top element of a stack */
 #endif
 
 #ifdef TEST
 rt_private int cc_for_speed = 1;			/* Priority to speed or memory? */
 #endif
 
-rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*marker) (char *), register6 int move);		/* Marks the exception stacks */
+rt_private void mark_ex_stack(register5 struct xstack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move);		/* Marks the exception stacks */
 
 #ifdef WORKBENCH
-rt_private void mark_op_stack(register4 char *(*marker) (char *), register5 int move);		/* Marks operational stack */
+rt_private void mark_op_stack(register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register5 int move);		/* Marks operational stack */
 
 #ifdef CONCURRENT_EIFFEL
 #define DISP(x,y) \
@@ -453,10 +466,12 @@ rt_public int acollect(void)
 	static long nb_calls = 0;		/* Number of calls to function */
 	static long eif_total = 0;		/* Total Eiffel memory allocated */
 	int status;						/* Status returned by scollect() */
+#ifdef EIF_CONDITIONAL_COLLECT
 	int freemem;					/* Amount of free memory */
 	int tau;						/* Mean allocation rate */
 	int half_tau;					
 	int allocated;					/* Memory used since last full collect */
+#endif	/* EIF_CONDITIONAL_COLLECT */
 #if ! defined CUSTOM || defined NEED_OPTION_H
 	int started_here = 0;			/* Was this the original entry point? */
 
@@ -500,12 +515,12 @@ rt_public int acollect(void)
 	 * been created.
 	 */
 
+#ifdef EIF_CONDITIONAL_COLLECT
 	freemem = e_data.ml_total - e_data.ml_used - e_data.ml_over;
 	tau = plsc_per * th_alloc;
 	half_tau = tau >> 1;
 	allocated = e_data.ml_total - eif_total;
 
-#ifdef EIF_CONDITIONAL_COLLECT
 	if (allocated < tau && freemem > half_tau && freemem < (tau + half_tau)) {
 
 #ifdef DEBUG
@@ -518,10 +533,13 @@ rt_public int acollect(void)
 	 * This period can be set by the user.
 	 */
 
-	if (0 == nb_calls % plsc_per) {	/* Full collection required */
-		plsc();
-		status =  0;
-		eif_total = e_data.ml_total;
+	if (plsc_per)						/* Can we run full collections?.*/
+	{
+		if (0 == nb_calls % plsc_per) {	/* Full collection required */
+			plsc();
+			status =  0;
+			eif_total = e_data.ml_total;
+		}
 	} else							/* Generation-base collector */
 		status =  collect();
 
@@ -530,7 +548,8 @@ rt_public int acollect(void)
 	 * Note that the user can also set his own period of full coalescing. 
 	 */
 
-	if (clsc_per)		
+	if (clsc_per && nb_calls)	/* Do not coalesce at the first collection. 
+								 * It may corrupt the memory. */
 	{
 			if (0 == nb_calls % clsc_per)
 				full_coalesc (ALL_T);
@@ -924,7 +943,7 @@ rt_public void reclaim(void)
 
 #ifdef EIF_THREADS 
 	if (!(eif_thr_is_root ()))
-		free ((char **) EIF_once_values); /* have been allocated with malloc */
+		free ((EIF_REFERENCE *) EIF_once_values); /* have been allocated with malloc */
 	else
 #endif
 	{
@@ -1016,7 +1035,7 @@ rt_private void run_collector(void)
 	 * sense--RAM.
 	 */
 
-	if (root_obj != (char *) 0) {
+	if (root_obj != (EIF_REFERENCE) 0) {
 		full_mark(MTC_NOARG);		/* Mark phase */
 		full_update();		/* Update moved and remembered set (BEFORE sweep) */
 	}
@@ -1117,7 +1136,7 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 }
 
 #ifdef EIF_REM_SET_OPTIMIZATION
-rt_private void mark_special_table (register struct special_table *spt, register char *(*marker) (char *), register int move)
+rt_private void mark_special_table (register struct special_table *spt, register EIF_REFERENCE (*marker) (EIF_REFERENCE),  register int move)
 {
 	/* 
 	 * Mark the special table: scan only the references recorded in the
@@ -1148,7 +1167,7 @@ rt_private void mark_special_table (register struct special_table *spt, register
 	hkeys = spt->h_keys;				/* Indexes table. */
 
 	assert (hkeys != (long *) 0);
-	assert (hvalues != (char **) 0);
+	assert (hvalues != (EIF_REFERENCE *) 0);
 	assert (count <= spt->h_size);		/* Special table must be coherent. */
 
 #ifdef MARK_SPECIAL_TABLE_DEBUG
@@ -1163,7 +1182,7 @@ rt_private void mark_special_table (register struct special_table *spt, register
 		 	 */
 	{
 		zone = HEADER (hvalues [i]);
-		assert (hvalues [i] != (char *) 0);
+		assert (hvalues [i] != (EIF_REFERENCE) 0);
 
 #ifdef MARK_SPECIAL_TABLE_DEBUG
 	printf ("MARK_SPECIAL_TABLE: object %x\n", hvalues [i]);
@@ -1204,8 +1223,8 @@ rt_private void mark_special_table (register struct special_table *spt, register
 		ofst = hkeys [i];
 		if (ofst == -1)
 			continue;				/* No new reference, just unmark it. */
-		container = (char **) (hvalues [i] + ofst * sizeof (EIF_REFERENCE));
-		if (*container == (char *) 0)
+		container = (EIF_REFERENCE *) (hvalues [i] + ofst * sizeof (EIF_REFERENCE));
+		if (*container == (EIF_REFERENCE) 0)
 			continue;				/* Skip Void elements. */
 
 		iz = HEADER (*container);	/* Fetch malloc info zone for item. */
@@ -1305,11 +1324,11 @@ rt_private void mark_special_table (register struct special_table *spt, register
 	/************************ Postconditions. **********************/
 	for (i = 0; i < special_rem_set->count; i ++)
 	{
-		assert ((hvalues [i]) != (char *) 0);
+		assert ((hvalues [i]) != (EIF_REFERENCE) 0);
 		assert ((hvalues [i]) == (special_rem_set->h_values) [i]);
 		assert (!(HEADER ((special_rem_set->h_values) [i])->ov_size & B_FWD));
-		if ((hkeys [i] >= 0) && ((*(char **) ((special_rem_set->h_values) [i] + hkeys [i]*sizeof (EIF_REFERENCE))) != (char *) 0))
-				assert (!(HEADER (*(char **) ((special_rem_set->h_values) [i] + hkeys [i]*sizeof (EIF_REFERENCE)))->ov_size & B_FWD));
+		if ((hkeys [i] >= 0) && ((*(EIF_REFERENCE *) ((special_rem_set->h_values) [i] + hkeys [i]*sizeof (EIF_REFERENCE))) != (EIF_REFERENCE) 0))
+				assert (!(HEADER (*(EIF_REFERENCE *) ((special_rem_set->h_values) [i] + hkeys [i]*sizeof (EIF_REFERENCE)))->ov_size & B_FWD));
 		assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_MARK);
 		assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_SPEC);
 			assert (HEADER ((special_rem_set->h_values) [i])->ov_flags & EO_REF);
@@ -1328,7 +1347,7 @@ rt_private void mark_special_table (register struct special_table *spt, register
 
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 
-rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move)
+rt_private void mark_simple_stack(register5 struct stack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move)
 									/* The stack which is to be marked */
 									/* The routine used to mark objects */
 				   					/* Are the objects expected to move? */
@@ -1342,20 +1361,20 @@ rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(
 	EIF_GET_CONTEXT
 #endif
 
-	register1 char **object;		/* For looping over subsidiary roots */
+	register1 EIF_REFERENCE *object;		/* For looping over subsidiary roots */
 	register2 int roots;			/* Number of roots in each chunk */
 	register3 struct stchunk *s;	/* To walk through each stack's chunk */
 	int done = 0;					/* Top of stack not reached yet */
 
 #ifdef DEBUG
-	int saved_roots; char **saved_object;
+	int saved_roots; EIF_REFERENCE *saved_object;
 	dprintf(1)("mark_simple_stack: scanning %s stack for %s collector\n",
 		stk == &loc_set ? "local" : (stk == &rem_set ? "remembered" : "other"),
 		marker == GEN_SWITCH ? "generation" : "traditional");
 	flush;
 #endif
 
-	if (stk->st_top == (char **) 0)	/* Stack is not created yet */
+	if (stk->st_top == (EIF_REFERENCE *) 0)	/* Stack is not created yet */
 		return;
 
 	for (s = stk->st_hd; s && !done; s = s->sk_next) {
@@ -1372,7 +1391,7 @@ rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(
 			roots, done ? "last" : "current");
 		saved_roots = roots; saved_object = object;
 		if (DEBUG & 2 && debug_ok(2)) {
-			int i; char **obj = object;
+			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
 				printf("    %d: 0x%lx\n", i, *obj);
 		}
@@ -1396,7 +1415,7 @@ rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(
 		dprintf(2)("mark_simple_stack: after GC: %d objects in %s chunk\n",
 			roots, done ? "last" : "current");
 		if (DEBUG & 2 && debug_ok(2)) {
-			int i; char **obj = object;
+			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
 				printf("    %d: 0x%lx\n", i, *obj);
 		}
@@ -1419,18 +1438,18 @@ rt_private void update_object_id_stack(void)
 
 	register4 struct stack *stk = &object_id_stack;
 
-	register1 char **object;		/* For looping over subsidiary roots */
+	register1 EIF_REFERENCE *object;		/* For looping over subsidiary roots */
 	register2 int roots;			/* Number of roots in each chunk */
 	register3 struct stchunk *s;	/* To walk through each stack's chunk */
 	int done = 0;					/* Top of stack not reached yet */
 
 #ifdef DEBUG
-	int saved_roots; char **saved_object;
+	int saved_roots; EIF_REFERENCE *saved_object;
 	dprintf(1)("mark_object_id_stack\n");
 	flush;
 #endif
 
-	if (stk->st_top == (char **) 0)	/* Stack is not created yet */
+	if (stk->st_top == (EIF_REFERENCE *) 0)	/* Stack is not created yet */
 		return;
 
 	for (s = stk->st_hd; s && !done; s = s->sk_next) {
@@ -1447,7 +1466,7 @@ rt_private void update_object_id_stack(void)
 			roots, done ? "last" : "current");
 		saved_roots = roots; saved_object = object;
 		if (DEBUG & 2 && debug_ok(2)) {
-			int i; char **obj = object;
+			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
 				printf("    %d: 0x%lx\n", i, *obj);
 		}
@@ -1460,7 +1479,7 @@ rt_private void update_object_id_stack(void)
 			register union overhead *zone;
 
 			root = *object;
-			if (root != (char *)0){
+			if (root != (EIF_REFERENCE)0){
 				zone = HEADER(root);
 					/* If the object has moved, update the stack */
 				if (zone->ov_size & B_FWD)
@@ -1473,7 +1492,7 @@ rt_private void update_object_id_stack(void)
 		dprintf(2)("mark_object_id_stack: after GC: %d objects in %s chunk\n",
 			roots, done ? "last" : "current");
 		if (DEBUG & 2 && debug_ok(2)) {
-			int i; char **obj = object;
+			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
 				printf("    %d: 0x%lx\n", i, *obj);
 		}
@@ -1483,7 +1502,7 @@ rt_private void update_object_id_stack(void)
 }
 #endif /* !CUSTOM || NEED_OBJECT_ID_H */
 
-rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move)
+rt_private void mark_stack(register5 struct stack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move)
 									/* The stack which is to be marked */
 									/* The routine used to mark objects */
 				   					/* Are the objects expected to move? */
@@ -1496,20 +1515,20 @@ rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker
 #ifdef DEBUG
 	EIF_GET_CONTEXT
 #endif
-	register1 char **object;		/* For looping over subsidiary roots */
+	register1 EIF_REFERENCE *object;		/* For looping over subsidiary roots */
 	register2 int roots;			/* Number of roots in each chunk */
 	register3 struct stchunk *s;	/* To walk through each stack's chunk */
 	int done = 0;					/* Top of stack not reached yet */
 
 #ifdef DEBUG
-	int saved_roots; char **saved_object;
+	int saved_roots; EIF_REFERENCE *saved_object;
 	dprintf(1)("mark_stack: scanning %s stack for %s collector\n",
 		stk == &loc_stack ? "local (indirect)" : "once",
 		marker == GEN_SWITCH ? "generation" : "traditional");
 	flush;
 #endif
 
-	if (stk->st_top == (char **) 0)	/* Stack is not created yet */
+	if (stk->st_top == (EIF_REFERENCE *) 0)	/* Stack is not created yet */
 		return;
 
 	for (s = stk->st_hd; s && !done; s = s->sk_next) {
@@ -1526,19 +1545,19 @@ rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker
 			roots, done ? "last" : "current");
 		saved_roots = roots; saved_object = object;
 		if (DEBUG & 2 && debug_ok(2)) {
-			int i; char **obj = object;
+			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
-				printf("    %d: 0x%lx\n", i, *(char **) *obj);
+				printf("    %d: 0x%lx\n", i, *(EIF_REFERENCE *) *obj);
 		}
 		flush;
 #endif
 
 		if (move) {
 			for (; roots > 0; roots--, object++)
-				*(char **) *object = mark_expanded(*(char **) *object, marker);
+				*(EIF_REFERENCE *) *object = mark_expanded(*(EIF_REFERENCE *) *object, marker);
 		} else {
 			for (; roots > 0; roots--, object++)
-				(void) mark_expanded(*(char **) *object, marker);
+				(void) mark_expanded(*(EIF_REFERENCE *) *object, marker);
 		}
 
 #ifdef DEBUG
@@ -1546,9 +1565,9 @@ rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker
 		dprintf(2)("mark_stack: after GC: %d objects in %s chunk\n",
 			roots, done ? "last" : "current");
 		if (DEBUG & 2 && debug_ok(2)) {
-			int i; char **obj = object;
+			int i; EIF_REFERENCE *obj = object;
 			for (i = 0; i < roots; i++, obj++)
-				printf("    %d: 0x%lx\n", i, * (char **) *obj);
+				printf("    %d: 0x%lx\n", i, * (EIF_REFERENCE *) *obj);
 		}
 		flush;
 #endif
@@ -1558,7 +1577,7 @@ rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker
 #endif
 }
 
-rt_private char *mark_expanded(char *root, char *(*marker) (char *))
+rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, EIF_REFERENCE (*marker) (EIF_REFERENCE))
 		   				/* Expanded reference to be marked */
 				  		/* The routine used to mark objects */
 {
@@ -1570,13 +1589,13 @@ rt_private char *mark_expanded(char *root, char *(*marker) (char *))
 	 * should the enclosing object have moved.
 	 */
 
-	char *enclosing;	/* Address of the enclosing object */
-	char *new;			/* New address of the enclosing object */
+	EIF_REFERENCE enclosing;	/* Address of the enclosing object */
+	EIF_REFERENCE new;			/* New address of the enclosing object */
 	long offset;		/* Offset of the expanded object within enclosing one */
 	union overhead *zone;
 
-	if (root == (char *) 0)
-		return (char *) 0;
+	if (root == (EIF_REFERENCE) 0)
+		return (EIF_REFERENCE) 0;
 
 	zone = HEADER(root);			/* Malloc info zone */
 
@@ -1598,7 +1617,7 @@ rt_private char *mark_expanded(char *root, char *(*marker) (char *))
 
 /* Start of workbench-specific marking functions */
 #ifdef WORKBENCH
-rt_private void mark_op_stack(EIF_CONTEXT register4 char *(*marker) (char *), register5 int move)
+rt_private void mark_op_stack(EIF_CONTEXT register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register5 int move)
 									/* The routine used to mark objects */
 				   					/* Are the objects expected to move? */
 {
@@ -1752,7 +1771,7 @@ rt_private void mark_op_stack(EIF_CONTEXT register4 char *(*marker) (char *), re
 #endif
 /* End of workbench-specific marking functions */
 
-rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*marker) (char *), register6 int move)
+rt_private void mark_ex_stack(register5 struct xstack *stk, register4 EIF_REFERENCE (*marker) (EIF_REFERENCE), register6 int move)
 							 		/* The stack which is to be marked */
 									/* The routine used to mark objects */
 				   					/* Are the objects expected to move? */
@@ -1846,7 +1865,7 @@ rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*ma
 }
 
 #ifdef RECURSIVE_MARKING
-rt_private char *recursive_mark(char *root)
+rt_private EIF_REFERENCE recursive_mark(EIF_REFERENCE root)
 
 {
 	EIF_GET_CONTEXT
@@ -1861,11 +1880,11 @@ rt_private char *recursive_mark(char *root)
 	uint32 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
 	uint32 size;				/* Size of an item (for array of expanded) */
-	char **object;				/* Sub-objects scanned */
+	EIF_REFERENCE *object;				/* Sub-objects scanned */
 
 	/* If 'root' is a void reference, return immediately */
-	if (root == (char *) 0)
-		return (char *) 0;
+	if (root == (EIF_REFERENCE) 0)
+		return (EIF_REFERENCE) 0;
 
 	zone = HEADER(root);			/* Malloc info zone */
 	flags = zone->ov_flags;			/* Fetch Eiffel flags */
@@ -2006,16 +2025,16 @@ marked:		/* I need this goto label to avoid code duplication */
 		 if (flags & EO_COMP) {
 			size = *(long *) (root + size + sizeof(long));	/* Item's size */
 			if (g_data.status & (GC_PART | GC_GEN)) {	/* Moving objects */
-				object = (char **) (root + OVERHEAD);	/* First expanded */
+				object = (EIF_REFERENCE *) (root + OVERHEAD);	/* First expanded */
 				for (; offset > 0; offset--) {			/* Loop over array */
 					*object = recursive_mark(*object);	
-					object = (char **) ((char *) object + size);
+					object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
 				}
 			} else {									/* Object can't move */
-				object = (char **) (root + OVERHEAD);	/* First expanded */
+				object = (EIF_REFERENCE *) (root + OVERHEAD);	/* First expanded */
 				for (; offset > 0; offset--) {			/* Loop over array */
 					(void) recursive_mark(*object);	
-					object = (char **) ((char *) object + size);
+					object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
 				}
 			}
 			return root;	/* Address of possibly moved array of expanded */
@@ -2029,7 +2048,7 @@ marked:		/* I need this goto label to avoid code duplication */
 	if (DEBUG & 16 && debug_ok(16)) {
 		int i;
 		for (i = 0; i < offset; i++)
-			printf("\t0x%lx\n", *((char **) root + i));
+			printf("\t0x%lx\n", *((EIF_REFERENCE *) root + i));
 	}
 	flush;
 #endif
@@ -2037,10 +2056,10 @@ marked:		/* I need this goto label to avoid code duplication */
 	/* Mark all objects under root, updating the references if scavenging */
 
 	if (g_data.status & (GC_PART | GC_GEN))
-		for (object = (char **) root; offset > 0; offset--, object++)
+		for (object = (EIF_REFERENCE *) root; offset > 0; offset--, object++)
 			*object = recursive_mark(*object);
 	else
-		for (object = (char **) root; offset > 0; offset--)
+		for (object = (EIF_REFERENCE *) root; offset > 0; offset--)
 			(void) recursive_mark(*object++);
 
 	return root;	/* Address of possibly moved object */
@@ -2048,7 +2067,7 @@ marked:		/* I need this goto label to avoid code duplication */
 #endif /* RECURSIVE_MARKING */
 
 #ifdef HYBRID_MARKING
-rt_private char *hybrid_mark(char *root)
+rt_private EIF_REFERENCE hybrid_mark(EIF_REFERENCE root)
 
 {
 	/* Mark all the objects referenced by the root object. This is almost the
@@ -2062,23 +2081,23 @@ rt_private char *hybrid_mark(char *root)
 	uint32 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
 	uint32 size;				/* Size of an item (for array of expanded) */
-	char **object;				/* Sub-objects scanned */
-	char *current;				/* Object currently inspected */
-	char **prev;				/* Holder of current (for update) */
+	EIF_REFERENCE *object;				/* Sub-objects scanned */
+	EIF_REFERENCE current;				/* Object currently inspected */
+	EIF_REFERENCE *prev;				/* Holder of current (for update) */
 	long count;					/* Number of references */
 
 	/* If 'root' is a void reference, return immediately. This is redundant
 	 * with the beginning of the loop, but this case occurs quite often.
 	 */
-	if (root == (char *) 0)
-		return (char *) 0;
+	if (root == (EIF_REFERENCE) 0)
+		return (EIF_REFERENCE) 0;
 
 	/* Initialize the variables for the loop */
 	current = root;
-	prev = (char **) 0;
+	prev = (EIF_REFERENCE *) 0;
 
 	do {
-		if (current == (char *) 0)		/* No further exploration */
+		if (current == (EIF_REFERENCE) 0)		/* No further exploration */
 			goto done;					/* Exit the procedure */
 
 		zone = HEADER(current);			/* Malloc info zone */
@@ -2220,16 +2239,16 @@ marked: /* Goto label needed to avoid code duplication */
 			if (flags & EO_COMP) {
 				size = *(long *) (current + size + sizeof(long));	/* Item's size */
 				if (g_data.status & (GC_PART | GC_GEN)) {	/* Moving objects */
-					object = (char **) (current + OVERHEAD);/* First expanded */
+					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
 						*object = hybrid_mark(*object);
-						object = (char **) ((char *) object + size);
+						object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
 					}
 				} else {								/* Object can't move */
-					object = (char **) (current + OVERHEAD);/* First expanded */
+					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
 						(void) hybrid_mark(*object);
-						object = (char **) ((char *) object + size);
+						object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
 					}
 				}
 				/* Keep iterating if and only if the current object has at
@@ -2251,7 +2270,7 @@ marked: /* Goto label needed to avoid code duplication */
 	if (DEBUG & 16 && debug_ok(16)) {
 		int i;
 		for (i = 0; i < offset; i++)
-			printf("\t0x%lx\n", *((char **) current + i));
+			printf("\t0x%lx\n", *((EIF_REFERENCE *) current + i));
 	}
 	flush;
 #endif
@@ -2259,10 +2278,10 @@ marked: /* Goto label needed to avoid code duplication */
 		/* Mark all objects under root, updating the references if scavenging */
 
 		if (g_data.status & (GC_PART | GC_GEN))
-			for (object = (char **) current; offset > 1; offset--, object++)
+			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++)
 				*object = hybrid_mark(*object);
 		else
-			for (object = (char **) current; offset > 1; offset--)
+			for (object = (EIF_REFERENCE *) current; offset > 1; offset--)
 				(void) hybrid_mark(*object++);
 
 		if (count >= 1) {
@@ -2283,7 +2302,7 @@ done:
 #endif /* HYBRID_MARKING */
 
 #ifdef ITERATIVE_MARKING
-rt_private char *iterative_mark(char *root)
+rt_private EIF_REFERENCE iterative_mark(EIF_REFERENCE root)
 {
 	/* Mark all the objects referenced by the root object. Recursion
 	 * is carefully avoided even if highly appropriate (might cause
@@ -2296,11 +2315,11 @@ rt_private char *iterative_mark(char *root)
 	register2 uint32 flags;			/* Eiffel flags */
 	long offset;					/* Reference's offset */
 	register3 uint32 size;			/* Size of an item (for array of expanded) */
-	char **object;					/* Sub-objects scanned */
+	EIF_REFERENCE *object;					/* Sub-objects scanned */
 
-	register4 char *parent = (char *) 0;	/* Parent of the current object */
-	register5 char *child;			/* Child to be inspected */
-	register6 char *node;			/* Node currently inspected */
+	register4 EIF_REFERENCE parent = (EIF_REFERENCE) 0;	/* Parent of the current object */
+	register5 EIF_REFERENCE child;			/* Child to be inspected */
+	register6 EIF_REFERENCE node;			/* Node currently inspected */
 	register7 long position;		/* Child is the position-th attribute of Node */
 	long s_top;						/* Value on top of path_stack */
 
@@ -2311,7 +2330,7 @@ rt_private char *iterative_mark(char *root)
 	/* Initialize the stack with LAST_REF. The algorithm stops when this
 	 * element is on top of the stack.
 	 */
-	epush(&path_stack, (char *) LAST_REF);
+	epush(&path_stack, (EIF_REFERENCE) LAST_REF);
 
 	/* root is kept until the end because we have to return its possibly
 	 * new address.
@@ -2472,14 +2491,14 @@ marked:
 			 * stack consequently.
 			 */
 			if (offset == 1L)
-				epush (&path_stack, (char *) (1L | LAST_REF));
+				epush (&path_stack, (EIF_REFERENCE) (1L | LAST_REF));
 			else
-				epush (&path_stack, (char *) 1L);
+				epush (&path_stack, (EIF_REFERENCE) 1L);
 
 			/* The current node has references. Get the first one */
 			/* Array of expanded */
 			if ((flags & EO_SPEC) && (flags & EO_COMP)) {
-				child = (char *) (node + OVERHEAD);		/* First expanded */
+				child = (EIF_REFERENCE) (node + OVERHEAD);		/* First expanded */
 
 				/* For arrays of expanded, there's no field for the reference
 				 * so we have to store the address of the father in a stack
@@ -2488,8 +2507,8 @@ marked:
 				 */
 				epush (&parent_expanded_stack, parent);
 			} else {
-				child = * (char **) node;
-				* (char **) node = parent;
+				child = * (EIF_REFERENCE *) node;
+				* (EIF_REFERENCE *) node = parent;
 			}
 			parent = node;
 			node = child;
@@ -2530,7 +2549,7 @@ not_explorable:
 				 * and at this point, position must hold the number of
 				 * attributes of the current node.
 				 */
-				object = (char **) node;
+				object = (EIF_REFERENCE *) node;
 				object += position - 1;
 				parent = *object;
 				*object = child;
@@ -2566,15 +2585,15 @@ not_explorable:
 				offset = References(Deif_bid(flags));
 
 			if (position == offset)
-				epush (&path_stack, (char *) (position | LAST_REF));
+				epush (&path_stack, (EIF_REFERENCE) (position | LAST_REF));
 			else
-				epush (&path_stack, (char *) position);
+				epush (&path_stack, (EIF_REFERENCE) position);
 
 			if ((flags & EO_SPEC) && (flags & EO_COMP)) {
 				size = *(long *) (node + size + sizeof(long));
-				child = (char *) (node + OVERHEAD + (position - 1) * (size + OVERHEAD));
+				child = (EIF_REFERENCE) (node + OVERHEAD + (position - 1) * (size + OVERHEAD));
 			} else {
-				object = (char **) node;
+				object = (EIF_REFERENCE *) node;
 				object += position - 2;
 				parent = *object;
 				*object = child;
@@ -2596,7 +2615,7 @@ not_explorable:
 			node = child;
 		}
 
-	} while (ntop(&path_stack) != (char *) LAST_REF);
+	} while (ntop(&path_stack) != (EIF_REFERENCE) LAST_REF);
 
 	(void) nget (&path_stack);
 
@@ -2616,20 +2635,20 @@ not_explorable:
 	EIF_END_GET_CONTEXT
 }
 
-char *nget(register1 struct stack *stk)
+EIF_REFERENCE nget(register1 struct stack *stk)
 {
 	/* Pop the top item of *stk */
 	EIF_GET_CONTEXT
-	register1 char **top = stk->st_top;		/* The top of the stack */
-	/*	register2 char **saved_top = top;	/* Save current top of stack */
-	register3 char **arena;					/* Base address of current chunk */
+	register1 EIF_REFERENCE *top = stk->st_top;		/* The top of the stack */
+	/*	register2 EIF_REFERENCE *saved_top = top;	/* Save current top of stack */
+	register3 EIF_REFERENCE *arena;					/* Base address of current chunk */
 	register4 struct stchunk *s;
 
-	if (top == (char **) 0) {		/* No stack yet? */
+	if (top == (EIF_REFERENCE *) 0) {		/* No stack yet? */
 #ifdef DEBUG
 	fdprintf(128,4)("nget: no stack yet, returning 0\n");
 #endif
-		return (char *) 0;				/* Return null pointer */
+		return (EIF_REFERENCE) 0;				/* Return null pointer */
 	}
 
 	arena = stk->st_cur->sk_arena;
@@ -2668,20 +2687,20 @@ char *nget(register1 struct stack *stk)
 #ifdef DEBUG
 	fdprintf(128,4)("nget: returning 0\n");
 #endif
-		return (char *) 0;
+		return (EIF_REFERENCE) 0;
 	}
 	EIF_END_GET_CONTEXT
 }
 
-char *ntop (register1 struct stack *stk)
+EIF_REFERENCE ntop (register1 struct stack *stk)
 {
 	/* Return the top item of *stk */
-	register1 char **top = stk->st_top;		/* The top of the stack */
-	register2 char **arena;					/* Base address of current chunk */
+	register1 EIF_REFERENCE *top = stk->st_top;		/* The top of the stack */
+	register2 EIF_REFERENCE *arena;					/* Base address of current chunk */
 	register3 struct stchunk *s;
 
-	if (top == (char **) 0)		/* No stack yet? */
-			return (char *) 0;		/* Return null pointer */
+	if (top == (EIF_REFERENCE *) 0)		/* No stack yet? */
+			return (EIF_REFERENCE) 0;		/* Return null pointer */
 
 	arena = stk->st_cur->sk_arena;
 	top--;
@@ -2696,7 +2715,7 @@ char *ntop (register1 struct stack *stk)
 		return (*top);
 	} else {
 		fprintf (stderr,"ntop: stack corrupted!\n");
-		return (char *) 0;
+		return (EIF_REFERENCE) 0;
 	}
 }
 #endif /* ITERATIVE_MARKING */
@@ -2713,10 +2732,10 @@ rt_private void full_sweep(void)
 	EIF_GET_CONTEXT
 	register1 union overhead *zone;		/* Malloc info zone */
 	register2 uint32 size;				/* Object's size in bytes */
-	register3 char *end;				/* First address beyond chunk */
+	register3 EIF_REFERENCE end;				/* First address beyond chunk */
 	register4 uint32 flags;				/* Eiffel flags */
 	register5 struct chunk *chunk;		/* Current chunk */
-	register6 char *arena;				/* Arena in chunk */
+	register6 EIF_REFERENCE arena;				/* Arena in chunk */
 
 	/* We start the sweeping at the end of the memory, and we walk
 	 * backawrds along the chunk list. That way, the freed objects
@@ -2729,7 +2748,7 @@ rt_private void full_sweep(void)
 
 	for (chunk = cklst.ck_tail; chunk; chunk = chunk->ck_prev) {
 
-		arena = (char *) (chunk + 1);
+		arena = (EIF_REFERENCE) (chunk + 1);
 
 		/* Skip the scavenge zones, if they exist and we are in a partial
 		 * scavenge: (objects there have to go back to the free list only if
@@ -2751,7 +2770,7 @@ rt_private void full_sweep(void)
 		} else if (arena == ps_to.sc_arena)
 			continue;						/* Skip 'to' zone */
 
-		end = (char *) arena + chunk->ck_length;	/* Chunk's tail */
+		end = (EIF_REFERENCE) arena + chunk->ck_length;	/* Chunk's tail */
 
 		/* Objects are not chained together, so the only way to walk
 		 * through them is to use the size field of each block. C blocks
@@ -2762,8 +2781,8 @@ rt_private void full_sweep(void)
 
 		for (
 			zone = (union overhead *) arena;
-			(char *) zone < end;
-			zone = (union overhead *) (((char *) zone) + size + OVERHEAD)
+			(EIF_REFERENCE) zone < end;
+			zone = (union overhead *) (((EIF_REFERENCE) zone) + size + OVERHEAD)
 		) {
 			size = zone->ov_size;			/* Size and flags */
 
@@ -2819,9 +2838,6 @@ rt_private void full_sweep(void)
 		
 
 #endif	/* FULL_SWEEP_DEBUG */
-#ifdef EIF_EXPENSIVE_ASSERTIONS
-			assert (!(is_in_spt (special_rem_set, (char *) (zone + 1))));
-#endif	/* EIF_EXPENSIVE_ASSERTIONS */
 			gfree(zone);		/* Object is freed */
 		}
 	}
@@ -2932,7 +2948,7 @@ rt_private void run_plsc(void)
 	clean_up();				/* Dispatch signals, release core, etc... */
 }
 
-rt_shared void urgent_plsc(char **object)
+rt_shared void urgent_plsc(EIF_REFERENCE *object)
 {
 	/* Perform an urgent partial scavenging, taking 'object' as a pointer
 	 * to the address of a variable holding a reference to an Eiffel object
@@ -3092,7 +3108,7 @@ rt_private void clean_zones(void)
 	if (ps_to.sc_arena == ps_to.sc_top)		/* To space is empty */
 		return;
 
-	ps_to.sc_arena = (char *) 0;		/* Signals: no valid 'to' space */
+	ps_to.sc_arena = (EIF_REFERENCE) 0;		/* Signals: no valid 'to' space */
 	EIF_END_GET_CONTEXT
 }
 
@@ -3114,15 +3130,15 @@ rt_private void init_plsc(void)
 	 */
 
 	if (!(g_data.status & GC_PART)) {
-		ps_from.sc_arena = (char *) 0;		/* Will restart from end */
-		if (ps_to.sc_arena != (char *) 0) {	/* One chunk was kept in reserve */
+		ps_from.sc_arena = (EIF_REFERENCE) 0;		/* Will restart from end */
+		if (ps_to.sc_arena != (EIF_REFERENCE) 0) {	/* One chunk was kept in reserve */
 			/* Somehow, it is important to make sure the one big block in the
 			 * empty 'from' space is marked as busy, otherwise we will get
 			 * into trouble when we try to put it back into the free list.
 			 */
 			((union overhead *) ps_to.sc_arena)->ov_size |= B_BUSY;
 			xfreechunk(ps_to.sc_arena + OVERHEAD);
-			ps_to.sc_arena = (char *) 0;	/* No to zone yet */
+			ps_to.sc_arena = (EIF_REFERENCE) 0;	/* No to zone yet */
 		}
 	}
 	EIF_END_GET_CONTEXT
@@ -3148,7 +3164,7 @@ rt_private void split_to_block(void)
 	uint32 old_size;		/* To save the old size for the leading object */
 
 	base = (union overhead *) ps_to.sc_arena;
-	size = ps_to.sc_top - (char *) base;	/* Plus overhead for first block */
+	size = ps_to.sc_top - (EIF_REFERENCE) base;	/* Plus overhead for first block */
 
 	if (size != 0) {		/* Some objects were scavengend */
 
@@ -3169,7 +3185,7 @@ rt_private void split_to_block(void)
 		dprintf(1)("split_to_block: new 'to' is now %d bytes [0x%lx, 0x%lx[\n",
 			size, base, ps_to.sc_top);
 		dprintf(1)("split_to_block: released %d bytes (starting at 0x%lx)\n",
-			ps_to.sc_end - ps_to.sc_top, (char *) base + size);
+			ps_to.sc_end - ps_to.sc_top, (EIF_REFERENCE) base + size);
 		flush;
 #endif
 
@@ -3223,9 +3239,9 @@ rt_private int sweep_from_space(void)
 	register1 union overhead *zone;		/* Currently inspected block */
 	register2 union overhead *next;		/* Address of next block */
 	register3 uint32 flags;				/* Malloc flags and size infos */
-	register4 char *end;				/* First address beyond from space */
+	register4 EIF_REFERENCE end;				/* First address beyond from space */
 	register5 uint32 dtype;				/* Dynamic type of object */
-	char *base;							/* First address of 'from' space */
+	EIF_REFERENCE base;							/* First address of 'from' space */
 	int size;							/* Size of current object */
 	char gc_status;                     /* Saved GC status */
 
@@ -3245,10 +3261,10 @@ rt_private int sweep_from_space(void)
 		/* Loop until we reach an Eiffel block */
 		for (
 			next = (union overhead *)
-				(((char *) zone) + (flags & B_SIZE) + OVERHEAD);
+				(((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD);
 			flags & B_C;
 			next = (union overhead *)
-				(((char *) zone) + (flags & B_SIZE) + OVERHEAD)
+				(((EIF_REFERENCE) zone) + (flags & B_SIZE) + OVERHEAD)
 		) {
 
 #ifdef DEBUG
@@ -3264,7 +3280,7 @@ rt_private int sweep_from_space(void)
 			
 			zone->ov_flags &= ~EO_MARK;	/* Unconditionally unmark object */
 			zone = next;				/* Advance to next object */
-			if ((char *) zone >= end)	/* This zone block was the last one */
+			if ((EIF_REFERENCE) zone >= end)	/* This zone block was the last one */
 				break;
 			flags = zone->ov_size;		/* Update flags for loop tests */
 		}
@@ -3276,13 +3292,13 @@ rt_private int sweep_from_space(void)
 		 * mandatory--RAM.
 		 */
 
-		if ((char *) zone >= end)		/* Seems we reached the end of space */
+		if ((EIF_REFERENCE) zone >= end)		/* Seems we reached the end of space */
 			return -1;					/* 'from' holds at least one C block */
 	
 #ifdef DEBUG
 		dprintf(8)(
 		"sweep_from_space: %sfound a %s %s%s%sblock (%d bytes) at 0x%lx\n",
-			(char *) zone == base ? "" : "(spoilt) ",
+			(EIF_REFERENCE) zone == base ? "" : "(spoilt) ",
 			zone->ov_size & B_LAST ? "last" : "normal",
 			zone->ov_size & B_BUSY ? "" : "free ",
 			zone->ov_size & B_FWD ? "" : "dead ",
@@ -3314,7 +3330,7 @@ rt_private int sweep_from_space(void)
 				if (Disp_rout(dtype)) {					/* Exists ? */
 					gc_status = g_data.status;      	/* Save GC current status */
 					g_data.status |= GC_STOP;			/* Stop GC */
-					DISP(dtype, (char *) (zone + 1));	/* Call it */
+					DISP(dtype, (EIF_REFERENCE) (zone + 1));	/* Call it */
 					g_data.status = gc_status;			/* Restart GC */
 				}
 			}
@@ -3344,9 +3360,9 @@ rt_private int sweep_from_space(void)
 		 */
 		for (
 			/* empty */;
-			!(flags & B_C) && (char *) next < end;
+			!(flags & B_C) && (EIF_REFERENCE) next < end;
 			next = (union overhead *)
-				(((char *) next) + size + OVERHEAD)
+				(((EIF_REFERENCE) next) + size + OVERHEAD)
 		) {
 			flags = next->ov_size;			/* Fetch flags for next loop */
 
@@ -3389,7 +3405,7 @@ rt_private int sweep_from_space(void)
 					if (Disp_rout(dtype)) {				/* Exists ? */
 						gc_status = g_data.status;      /* Save GC current status */
 						g_data.status |= GC_STOP;		/* Stop GC */
-						DISP(dtype,(char *) (next + 1));/* Call it */
+						DISP(dtype,(EIF_REFERENCE) (next + 1));/* Call it */
 						g_data.status = gc_status;		/* Restore previous GC status */
 					}
 
@@ -3439,20 +3455,20 @@ rt_private int sweep_from_space(void)
 		 * the B_LAST bit, in case we coalesced on the fly.
 		 */
 
-		if ((char *) next >= end) {		/* We reached the end */
+		if ((EIF_REFERENCE) next >= end) {		/* We reached the end */
 
 #ifdef DEBUG
-			if ((char *) zone != base)
+			if ((EIF_REFERENCE) zone != base)
 				dprintf(8)("sweep_from_space: freed %d bytes (zone spoilt)\n",
 					zone->ov_size & B_SIZE);
 			flush;
 #endif
 
-			if ((char *) zone == base)		/* The whole space is free */
+			if ((EIF_REFERENCE) zone == base)		/* The whole space is free */
 				return 0;					/* 'from' may become next 'to' */
 			else {							/* At least one C block */
 				zone->ov_size |= B_LAST;	/* Ensure malloc sees it as last */
-				xfree((char *) (zone + 1));	/* Back to free list */
+				xfree((EIF_REFERENCE) (zone + 1));	/* Back to free list */
 				return -1;					/* Space is spoilt */
 			}
 		}
@@ -3471,7 +3487,7 @@ rt_private int sweep_from_space(void)
 		 * This routine is a mess and needs rewriting--RAM.
 		 */
 
-		xfree((char *) (zone + 1));		/* Put block back to free list */
+		xfree((EIF_REFERENCE) (zone + 1));		/* Put block back to free list */
 		zone = next;					/* Reset coalescing base */
 	}
 	/* NOTREACHED */
@@ -3492,7 +3508,7 @@ rt_private int find_scavenge_spaces(void)
 	 */
 	EIF_GET_CONTEXT
 	int from_size;					/* Size of selected 'from' space */
-	char *to_space;					/* Location of the 'to' space */
+	EIF_REFERENCE to_space;					/* Location of the 'to' space */
 
 #ifdef DEBUG
 	dprintf(1)("find_scavenge_spaces: last from was 0x%lx\n", last_from);
@@ -3504,7 +3520,7 @@ rt_private int find_scavenge_spaces(void)
 	 * in with zeros, which means their sc_arena field is a null pointer.
 	 */
 
-	if (ps_from.sc_arena == (char *) 0)		/* From zone was freed */
+	if (ps_from.sc_arena == (EIF_REFERENCE) 0)		/* From zone was freed */
 		last_from = (struct chunk *) 0;		/* Restart from the end */
 
 	if (last_from == (struct chunk *) 0) 	/* Reached the end of the list */
@@ -3526,11 +3542,11 @@ rt_private int find_scavenge_spaces(void)
 	/* Water-mark is unused by the partial scavenging algorithm */
 	from_size = last_from->ck_length;				/* Record length */
 	ps_from.sc_size = from_size;					/* Subject to copying */
-	ps_from.sc_arena = (char *) (last_from + 1);	/* Overwrites first header */
+	ps_from.sc_arena = (EIF_REFERENCE) (last_from + 1);	/* Overwrites first header */
 	ps_from.sc_end = ps_from.sc_arena + from_size;	/* First location beyond */
 	ps_from.sc_top = ps_from.sc_arena;				/* Empty for now */
 
-	if (ps_to.sc_arena != (char *) 0) {
+	if (ps_to.sc_arena != (EIF_REFERENCE) 0) {
 
 #ifdef DEBUG
 		dprintf(1)("find_scavenge_spaces: from [0x%lx, 0x%lx] to [0x%lx, 0x%lx]\n",
@@ -3574,7 +3590,7 @@ rt_private int find_scavenge_spaces(void)
 	 */
 
 	to_space = get_to_from_core(from_size - OVERHEAD);	/* Allocation from free list */
-	if ((char *) 0 == to_space)
+	if ((EIF_REFERENCE) 0 == to_space)
 		return -1;			/* Unable to find a 'to' space */
 	
 	/* The 'to' space will see its header overwritten, which is basically why
@@ -3630,13 +3646,13 @@ rt_private struct chunk *find_std_chunk(register struct chunk *start)
 		 * since we do not want to deal with those spoilt chunks more than once.
 		 */
 		if (spoilt_tbl != (struct s_table *) 0)
-			if (EIF_SEARCH_FOUND == s_search(spoilt_tbl, (char *) (start + 1)))
+			if (EIF_SEARCH_FOUND == s_search(spoilt_tbl, (EIF_REFERENCE) (start + 1)))
 				continue;
 
 		/* Skip the active 'to' space, if any: we must not have 'from' and
 		 * 'to' at the same location, otherwise it's a 4 days bug--RAM.
 		 */
-		if (ps_to.sc_arena != (char *) (start + 1))	/* Used ? */
+		if (ps_to.sc_arena != (EIF_REFERENCE) (start + 1))	/* Used ? */
 			return start;							/* No, it's ok */
 	}
 
@@ -3657,12 +3673,12 @@ rt_private void find_to_space(struct sc_zone *to)
 	register1 int std_size = eif_chunk_size - sizeof(struct chunk);
 	register2 struct chunk *cur;	/* Current chunk we are considering */
 	register3 uint32 flags;			/* Malloc info flags */
-	register4 char *arena;			/* Where chunk's arena starts */
+	register4 EIF_REFERENCE arena;			/* Where chunk's arena starts */
 
 	for (cur = cklst.eck_tail; cur != (struct chunk *) 0; cur = cur->ck_lprev) {
 		if (cur->ck_length != std_size)		/* Not a standard sized chunk */
 			continue;						/* Skip it */
-		arena = (char *) cur + sizeof(struct chunk);
+		arena = (EIF_REFERENCE) cur + sizeof(struct chunk);
 		if (arena == ps_from.sc_arena)
 			continue;						/* Skip scanvenging from space */
 		flags = ((union overhead *) arena)->ov_size;
@@ -3714,7 +3730,7 @@ rt_private void find_to_space(struct sc_zone *to)
 	EIF_END_GET_CONTEXT
 }
 
-rt_shared char *to_chunk(void)
+rt_shared EIF_REFERENCE to_chunk(void)
 {
 	/* Return the address of the 'to' chunk used by partial scavenging. The
 	 * structure 'ps_to' is private but malloc needs the address when it
@@ -3723,14 +3739,14 @@ rt_shared char *to_chunk(void)
 	 */
 
 	EIF_GET_CONTEXT
-	if (ps_to.sc_arena == (char *) 0)
-		return (char *) 0;
+	if (ps_to.sc_arena == (EIF_REFERENCE) 0)
+		return (EIF_REFERENCE) 0;
 
 	return ps_to.sc_arena;
 	EIF_END_GET_CONTEXT
 }
 
-rt_private char *scavenge(register char *root, struct sc_zone *to)
+rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *to)
 {
 	/* The object pointed to by 'root' is to be scavenged in the 'to' space,
 	 * provided it is not an expanded object (otherwise, it has already been
@@ -3739,8 +3755,8 @@ rt_private char *scavenge(register char *root, struct sc_zone *to)
 	 */
 	EIF_GET_CONTEXT
 	register2 union overhead *zone;	/* Malloc info header */
-	char *new;						/* New object's address */
-	char *exp;						/* Expanded data space */
+	EIF_REFERENCE new;						/* New object's address */
+	EIF_REFERENCE exp;						/* Expanded data space */
 	int length;						/* Length of scavenged object */
 
 	zone = HEADER(root);
@@ -3758,11 +3774,11 @@ rt_private char *scavenge(register char *root, struct sc_zone *to)
 	 */
 	if (zone->ov_flags & EO_EXP) {
 		/* Compute original object's address (before scavenge) */
-		zone = (union overhead *) ((char *) zone - (zone->ov_size & B_SIZE));
+		zone = (union overhead *) ((EIF_REFERENCE) zone - (zone->ov_size & B_SIZE));
 		if (!(zone->ov_size & B_FWD))
 			return root;
 		new = zone->ov_fwd;			/* Data space of the scavenged object */
-		exp = new + (root - (char *) (zone + 1));	/* New data space */
+		exp = new + (root - (EIF_REFERENCE) (zone + 1));	/* New data space */
 		return exp;					/* This is the new location of expaded */
 	}
 
@@ -3781,7 +3797,7 @@ rt_private char *scavenge(register char *root, struct sc_zone *to)
 	root = to->sc_top;						/* New location in 'to' space */
 	length = (zone->ov_size & B_SIZE) + OVERHEAD;
 	to->sc_top += length;					/* Update free-location pointer */
-	bcopy((char *) zone, root, length);		/* The scavenge process itself */
+	bcopy((EIF_REFERENCE) zone, root, length);		/* The scavenge process itself */
 	zone->ov_fwd = root + OVERHEAD;			/* Leave forwarding pointer */
 	zone->ov_size |= B_FWD;					/* Mark object as forwarded */
 
@@ -3876,7 +3892,7 @@ rt_private int generational_collect(void)
 	EIF_GET_CONTEXT
 	register1 uint32 age;			/* Computed tenure age */
 	register2 int overused;		/* Amount of data over watermark */
-	char *watermark;			/* Watermark in generation zone */
+	EIF_REFERENCE watermark;			/* Watermark in generation zone */
 
 	if (g_data.status & GC_STOP)
 		return -1;				/* Garbage collection stopped */
@@ -3900,13 +3916,14 @@ rt_private int generational_collect(void)
 	 * the age_table array is used.
 	 */
 
-	tenure = TENURE_MAX;
+	tenure = eif_tenure_max;
 
 	if ((gen_scavenge & GS_ON) && (!(gen_scavenge & GS_STOP))) {
 
 		/* Generation scavenging is on and has not been stopped. If less than
-		 * the watermark is used, set tenure to TENURE_MAX, to avoid tenuring
-		 * for the next cycle. Otherwise, set it so that we tenure at least
+		 * the watermark is used, set tenure to eif_tenure_max, 
+		 * to avoid tenuring for the next cycle. Otherwise, set it so 
+		 * that we tenure at least
 		 * 'overused' bytes next cycle. GS_FLOATMARK is set to 40% of the
 		 * scavenge zone size and lets us get some free space to let other
 		 * young objects die, hopefully.
@@ -3922,7 +3939,7 @@ rt_private int generational_collect(void)
 
 		if (sc_from.sc_top >= watermark) {
 			overused = sc_from.sc_top - sc_from.sc_mark + GS_FLOATMARK;
-			for (age = TENURE_MAX - 1; age >= 0; age--) {
+			for (age = eif_tenure_max - 1; age >= 0; age--) {
 				overused -= size_table[age];	/* Amount tenured at 'age' */
 				if (overused <= 0)
 					break;
@@ -3937,7 +3954,7 @@ rt_private int generational_collect(void)
 	 */
 	
 	overused = 0;
-	for (age = 0; age < TENURE_MAX; age++)
+	for (age = 0; age < eif_tenure_max; age++)
 		overused += age_table[age];
 
 #ifdef DEBUG
@@ -3948,7 +3965,7 @@ rt_private int generational_collect(void)
 
 	if (overused > OBJ_MAX) {
 		overused -= OBJ_MAX;				/* Amount of spurious objects */
-		for (age = TENURE_MAX - 1; age >= 0; age--) {
+		for (age = eif_tenure_max - 1; age >= 0; age--) {
 			overused -= age_table[age];		/* Amount tenured at 'age' */
 			if (overused <= 0)
 				break;
@@ -3958,10 +3975,10 @@ rt_private int generational_collect(void)
 
 	/* We have computed the tenure based on the current state, but at the next
 	 * cycle, the objects will be one generation older, so we have to increase
-	 * the tenure limit by one, in not at TENURE_MAX - 1 or above.
+	 * the tenure limit by one, in not at eif_tenure_max - 1 or above.
 	 */
 
-	if (tenure < TENURE_MAX - 1)
+	if (tenure < eif_tenure_max - 1)
 		tenure++;
 
 #ifdef DEBUG
@@ -3992,7 +4009,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	/* First, reset the age tables, so that we can recompute the tenure
 	 * threshold for the next pass (feedback).
 	 */
-	for (age = 0; age < TENURE_MAX; age++)
+	for (age = 0; age < eif_tenure_max; age++)
 		size_table[age] = age_table[age] = (uint32) 0;
 
 	/* First deal with the root object. If it is not old, then mark it */
@@ -4075,7 +4092,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 }
 
 #ifdef RECURSIVE_MARKING
-rt_private char *generation_mark(char *root)
+rt_private EIF_REFERENCE generation_mark(EIF_REFERENCE root)
 {
 	EIF_GET_CONTEXT
 	/* This function is the same as recursive_mark() but slightly different :-).
@@ -4090,11 +4107,11 @@ rt_private char *generation_mark(char *root)
 	uint32 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
 	uint32 size;				/* Size of items (for array of expanded) */
-	char **object;				/* Sub-objects scanned */
+	EIF_REFERENCE *object;				/* Sub-objects scanned */
 
 	/* If 'root' is a void reference, return immediately */
-	if (root == (char *) 0)
-		return (char *) 0;
+	if (root == (EIF_REFERENCE) 0)
+		return (EIF_REFERENCE) 0;
 
 	zone = HEADER(root);			/* Malloc info zone */
 
@@ -4197,16 +4214,16 @@ rt_private char *generation_mark(char *root)
 		 if (flags & EO_COMP) {
 			size = *(long *) (root + size + sizeof(long));	/* Item's size */
 			if (gen_scavenge & GS_ON) {					/* Moving objects */
-				object = (char **) (root + OVERHEAD);	/* First expanded */
+				object = (EIF_REFERENCE *) (root + OVERHEAD);	/* First expanded */
 				for (; offset > 0; offset--) {			/* Loop over array */
 					*object = generation_mark(*object);	
-					object = (char **) ((char *) object + size);
+					object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
 				}
 			} else {									/* Object can't move */
-				object = (char **) (root + OVERHEAD);	/* First expanded */
+				object = (EIF_REFERENCE *) (root + OVERHEAD);	/* First expanded */
 				for (; offset > 0; offset--) {			/* Loop over array */
 					(void) generation_mark(*object);	
-					object = (char **) ((char *) object + size);
+					object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
 				}
 			}
 			return root;	/* Address of possibly moved array of expanded */
@@ -4220,7 +4237,7 @@ rt_private char *generation_mark(char *root)
 	if (DEBUG & 16 && debug_ok(16)) {
 		int i;
 		for (i = 0; i < offset; i++)
-			printf("\t0x%lx\n", *((char **) root + i));
+			printf("\t0x%lx\n", *((EIF_REFERENCE *) root + i));
 	}
 	flush;
 #endif
@@ -4228,10 +4245,10 @@ rt_private char *generation_mark(char *root)
 	/* Mark all objects under root, updating the references if scavenging */
 
 	if (gen_scavenge & GS_ON) {
-		for (object = (char **) root; offset > 0; offset--, object++)
+		for (object = (EIF_REFERENCE *) root; offset > 0; offset--, object++)
 			*object = generation_mark(*object);
 	} else {
-		for (object = (char **) root; offset > 0; offset--)
+		for (object = (EIF_REFERENCE *) root; offset > 0; offset--)
 			(void) generation_mark(*object++);
 	}
 
@@ -4240,7 +4257,7 @@ rt_private char *generation_mark(char *root)
 #endif /* RECURSIVE_MARKING */
 
 #ifdef HYBRID_MARKING
-rt_private char *hybrid_gen_mark(char *root)
+rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE root)
 
 {
 	/* This function is the half-recursive half-iterative version of
@@ -4254,23 +4271,23 @@ rt_private char *hybrid_gen_mark(char *root)
 	uint32 flags;				/* Eiffel flags */
 	long offset;				/* Reference's offset */
 	uint32 size;				/* Size of items (for array of expanded) */
-	char **object;				/* Sub-objects scanned */
-	char *current;				/* Object currently inspected */
-	char **prev;				/* Holder of current (for update) */
+	EIF_REFERENCE *object;				/* Sub-objects scanned */
+	EIF_REFERENCE current;				/* Object currently inspected */
+	EIF_REFERENCE *prev;				/* Holder of current (for update) */
 	long count;					/* Number of references */
 
 	/* If 'root' is a void reference, return immediately. This is redundant
 	 * with the beginning of the loop, but this case occurs quite often.
 	 */
-	if (root == (char *) 0)
-		return (char *) 0;
+	if (root == (EIF_REFERENCE) 0)
+		return (EIF_REFERENCE) 0;
 
 	/* Initialize the variables for the loop */
 	current = root;
-	prev = (char **) 0;
+	prev = (EIF_REFERENCE *) 0;
 
 	do {
-		if (current == (char *) 0)		/* No further exploration */
+		if (current == (EIF_REFERENCE) 0)		/* No further exploration */
 			goto done;					/* Exit the procedure */
 
 		zone = HEADER(current);			/* Malloc info zone */
@@ -4410,16 +4427,16 @@ rt_private char *hybrid_gen_mark(char *root)
 			if (flags & EO_COMP) {
 				size = *(long *) (current + size + sizeof(long));	/* Item's size */
 				if (gen_scavenge & GS_ON) {					/* Moving objects */
-					object = (char **) (current + OVERHEAD);/* First expanded */
+					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
 						*object = hybrid_gen_mark(*object);
-						object = (char **) ((char *) object + size);
+						object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
 					}
 				} else {							/* Object can't move */
-					object = (char **) (current + OVERHEAD);/* First expanded */
+					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
 						(void) hybrid_gen_mark(*object);
-						object = (char **) ((char *) object + size);
+						object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
 					}
 				}
 				/* Keep iterating if and only if the current object has at
@@ -4440,7 +4457,7 @@ rt_private char *hybrid_gen_mark(char *root)
 	if (DEBUG & 16 && debug_ok(16)) {
 		int i;
 		for (i = 0; i < offset; i++)
-			printf("\t0x%lx\n", *((char **) current + i));
+			printf("\t0x%lx\n", *((EIF_REFERENCE *) current + i));
 	}
 	flush;
 #endif
@@ -4448,10 +4465,10 @@ rt_private char *hybrid_gen_mark(char *root)
 		/* Mark all objects under root, updating the references if scavenging */
 
 		if (gen_scavenge & GS_ON) {
-			for (object = (char **) current; offset > 1; offset--, object++)
+			for (object = (EIF_REFERENCE *) current; offset > 1; offset--, object++)
 				*object = hybrid_gen_mark(*object);
 		} else {
-			for (object = (char **) current; offset > 1; offset--)
+			for (object = (EIF_REFERENCE *) current; offset > 1; offset--)
 				(void) hybrid_gen_mark(*object++);
 		}
 
@@ -4473,18 +4490,18 @@ done:
 #endif /* HYBRID_MARKING */
 
 #ifdef ITERATIVE_MARKING
-rt_private char *it_gen_mark(char *root)
+rt_private EIF_REFERENCE it_gen_mark(EIF_REFERENCE root)
 {
 	EIF_GET_CONTEXT
 	register1 union overhead *zone;	/* Malloc info zone fields */
 	register2 uint32 flags;			/* Eiffel flags */
 	long offset;					/* Reference's offset */
 	register3 uint32 size;			/* Size of an item (for array of expanded) */
-	char **object;					/* Sub-objects scanned */
+	EIF_REFERENCE *object;					/* Sub-objects scanned */
 
-	register4 char *parent = (char *) 0;	/* Parent of the current object */
-	register5 char *child;			/* Child to be inspected */
-	register6 char *node;			/* Node currently inspected */
+	register4 EIF_REFERENCE parent = (EIF_REFERENCE) 0;	/* Parent of the current object */
+	register5 EIF_REFERENCE child;			/* Child to be inspected */
+	register6 EIF_REFERENCE node;			/* Node currently inspected */
 	register7 long position;		/* Child is the position-th attribute of Node */
 	long s_top;						/* Value on top of path_stack */
 
@@ -4495,7 +4512,7 @@ rt_private char *it_gen_mark(char *root)
 	/* Initialize the stack with LAST_REF. The algorithm stops when this
 	 * element is on top of the stack.
 	 */
-	epush(&path_stack, (char *) LAST_REF);
+	epush(&path_stack, (EIF_REFERENCE) LAST_REF);
 
 	/* root is kept until the end because we have to return its possibly
 	 * new address.
@@ -4629,14 +4646,14 @@ rt_private char *it_gen_mark(char *root)
 			 * stack consequently.
 			 */
 			if (offset == 1L)
-				epush (&path_stack, (char *) (1L | LAST_REF));
+				epush (&path_stack, (EIF_REFERENCE) (1L | LAST_REF));
 			else
-				epush (&path_stack, (char *) 1L);
+				epush (&path_stack, (EIF_REFERENCE) 1L);
 
 			/* The current node has references. Get the first one */
 			/* Array of expanded */
 			if ((flags & EO_SPEC) && (flags & EO_COMP)) {
-				child = (char *) (node + OVERHEAD);		/* First expanded */
+				child = (EIF_REFERENCE) (node + OVERHEAD);		/* First expanded */
 
 				/* For arrays of expanded, there's no field for the reference
 				 * so we have to store the address of the father in a stack
@@ -4645,8 +4662,8 @@ rt_private char *it_gen_mark(char *root)
 				 */
 				epush (&parent_expanded_stack, parent);
 			} else {
-				child = * (char **) node;
-				* (char **) node = parent;
+				child = * (EIF_REFERENCE *) node;
+				* (EIF_REFERENCE *) node = parent;
 			}
 			parent = node;
 			node = child;
@@ -4687,7 +4704,7 @@ not_explorable:
 				 * and at this point, position must hold the number of
 				 * attributes of the current node.
 				 */
-				object = (char **) node;
+				object = (EIF_REFERENCE *) node;
 				object += position - 1;
 				parent = *object;
 				*object = child;
@@ -4724,15 +4741,15 @@ not_explorable:
 				offset = References(Deif_bid(flags));
 
 			if (position == offset)
-				epush (&path_stack, (char *) (position | LAST_REF));
+				epush (&path_stack, (EIF_REFERENCE) (position | LAST_REF));
 			else
-				epush (&path_stack, (char *) position);
+				epush (&path_stack, (EIF_REFERENCE) position);
 
 			if ((flags & EO_SPEC) && (flags & EO_COMP)) {
 				size = *(long *) (node + size + sizeof(long));
-				child = (char *) (node + OVERHEAD + (position - 1) * (size + OVERHEAD));
+				child = (EIF_REFERENCE) (node + OVERHEAD + (position - 1) * (size + OVERHEAD));
 			} else {
-				object = (char **) node;
+				object = (EIF_REFERENCE *) node;
 				object += position - 2;
 				parent = *object;
 				*object = child;
@@ -4754,7 +4771,7 @@ not_explorable:
 			node = child;
 		}
 
-	} while (ntop(&path_stack) != (char *) LAST_REF);
+	} while (ntop(&path_stack) != (EIF_REFERENCE) LAST_REF);
 
 	(void) nget (&path_stack);
 
@@ -4776,7 +4793,7 @@ not_explorable:
 }
 #endif /* ITERATIVE_MARKING */
 
-rt_private char *gscavenge(char *root)
+rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 {
 	/* Generation scavenging of 'root', with tenuring done on the fly. The
 	 * address of the new object (scavenged or tenured) is returned.
@@ -4787,7 +4804,7 @@ rt_private char *gscavenge(char *root)
 	register1 union overhead *zone;		/* Malloc header zone */
 	register2 uint32 age;				/* Object's age */
 	register3 uint32 flags;				/* Eiffel flags */
-	char *new;							/* Address of new object (tenured) */ 
+	EIF_REFERENCE new;							/* Address of new object (tenured) */ 
 	int size;							/* Size of scavenged object */
 	int ret;							/* status returned by "epush" or 
 										 * "eif_promote_special" */
@@ -4813,7 +4830,7 @@ rt_private char *gscavenge(char *root)
 	 * Tenure when necessary (i.e. when age is greater than 'tenure_age',
 	 * overflow is taken into account but this relies on the fact that
 	 * the age is not stored in the leftmost bits, to leave room for the
-	 * overflow bit--RAM). Note that when tenure is set to TENURE_MAX,
+	 * overflow bit--RAM). Note that when tenure is set to eif_tenure_max,
 	 * no object can ever be tenured.
 	 */
 
@@ -4881,7 +4898,7 @@ rt_private char *gscavenge(char *root)
 
 			size = zone->ov_size & B_SIZE;		/* Size without header */
 			new = gmalloc(size);				/* Try in Eiffel chunks first */
-			if ((char *) 0 == new) {			/* Out of memory */
+			if ((EIF_REFERENCE) 0 == new) {			/* Out of memory */
 				gen_scavenge |= GS_STOP;		/* Stop generation scavenging */
 				return scavenge(root, &sc_to);	/* Simple scavenge */
 			}
@@ -4969,7 +4986,7 @@ rt_private void update_moved_set(void)
 	 */
 
 	EIF_GET_CONTEXT
-	register1 char **obj;			/* Pointer to objects held in a stack */
+	register1 EIF_REFERENCE *obj;			/* Pointer to objects held in a stack */
 	register2 int i;				/* Number of items in stack chunk */
 	register3 union overhead *zone;	/* Referenced object's header */
 	register4 struct stchunk *s;	/* To walk through each stack's chunk */
@@ -5017,9 +5034,9 @@ rt_private void update_moved_set(void)
 				if (zone->ov_size & B_FWD) {		/* Object forwarded? */
 					zone = HEADER(zone->ov_fwd);	/* Look at fwd object */
 					if (zone->ov_flags & EO_NEW)	/* It's a new one */
-						epush(&new_stack, (char *)(zone+1));	/* Update reference */
+						epush(&new_stack, (EIF_REFERENCE)(zone+1));	/* Update reference */
 				} else if (EO_MOVED == (zone->ov_flags & EO_MOVED))
-					epush(&new_stack, (char *)(zone+1));	/* Remain as is */
+					epush(&new_stack, (EIF_REFERENCE)(zone+1));	/* Remain as is */
 			}
 		}
 	} else if (g_data.status & GC_FAST) {	/* Generation collection */
@@ -5036,7 +5053,7 @@ rt_private void update_moved_set(void)
 				flags = zone->ov_flags;			/* Get Eiffel flags */
 				if (flags & EO_MARK) {			/* Object is alive? */
 					if (flags & EO_NEW) {				/* Not tenrured */
-						epush(&new_stack, (char *)(zone+1));		/* Remains "as is" */
+						epush(&new_stack, (EIF_REFERENCE)(zone+1));		/* Remains "as is" */
 						zone->ov_flags &= ~EO_MARK;		/* Unmark object */
 					} else if (!(flags & EO_REM))		/* Not remembered */
 						zone->ov_flags &= ~EO_MARK;		/* Unmark object */
@@ -5056,7 +5073,7 @@ rt_private void update_moved_set(void)
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
 				zone = HEADER(*obj);			/* Referenced object */
 				if (EO_MOVED == (zone->ov_flags & EO_MOVED))
-					epush(&new_stack,(char *)(zone+1));	/* Remains "as is" */
+					epush(&new_stack,(EIF_REFERENCE)(zone+1));	/* Remains "as is" */
 			}
 		}
 	}
@@ -5093,10 +5110,10 @@ rt_private void update_rem_set(void)
 	 */
 
 	EIF_GET_CONTEXT
-	char **object;					/* Current inspected object */
+	EIF_REFERENCE *object;					/* Current inspected object */
 	int n;							/* Number of objects to be dealt with */
 	struct stack new_stack;			/* The new stack built from the old one */
-	register1 char *current;		/* Address of inspected object */
+	register1 EIF_REFERENCE current;		/* Address of inspected object */
 	register2 char moving;			/* May GC move objects around? */
 	register3 union overhead *zone;	/* Malloc info zone */
 	register4 struct stchunk *s;	/* To walk through each stack's chunk */
@@ -5236,10 +5253,10 @@ rt_private void update_memory_set ()
 {
 	EIF_GET_CONTEXT					/* In MT-mode, for memory_set.	*/
 
-	char **object;					/* Current inspected object */
+	EIF_REFERENCE *object;					/* Current inspected object */
 	int n;							/* Number of objects to be dealt with */
 	struct stack new_stack;			/* The new stack built from the old one */
-	register1 char *current;		/* Address of inspected object */
+	register1 EIF_REFERENCE current;		/* Address of inspected object */
 	register3 union overhead *zone;	/* Malloc info zone */
 	register4 struct stchunk *s;	/* To walk through each stack's chunk */
 	int saved_in_assertion;			/* Saved assertion level.	*/
@@ -5336,7 +5353,7 @@ rt_private void update_memory_set ()
  				 */
 				saved_in_assertion = in_assertion;	/* Save in_assertion. */
 				in_assertion = ~0;			/* Turn off assertion checking. */
-				DISP(dtype,(char *) (zone + 1));	/* Call 'dispose'. */
+				DISP(dtype,(EIF_REFERENCE) (zone + 1));	/* Call 'dispose'. */
 				in_assertion = saved_in_assertion;	/* Set in_assertion back. */
 				g_data.status = gc_status;		/* Restore previous GC status.*/
 			}
@@ -5521,7 +5538,7 @@ rt_private int update_special_rem_set(void)
 	{
 		/* Initializations. */
 		object 	= hvalues [i];			/* Current remembered object. */
-		if (object == (char *) 0)		/* Is special void? */
+		if (object == (EIF_REFERENCE) 0)		/* Is special void? */
 			continue;					/* Skip it. */
 		zone = HEADER (object);			/* Current special's Malloc info zone. */
 		
@@ -5533,10 +5550,10 @@ rt_private int update_special_rem_set(void)
 		int32 ofst = hkeys [i];
 		if (ofst  >= 0)
 		{
-		char *itm;
+		EIF_REFERENCE itm;
 		union overhead *iz;
-		itm =  *(char **)(object + ofst * sizeof (EIF_REFERENCE));
-		if (itm != (char *) 0)
+		itm =  *(EIF_REFERENCE *) (object + ofst * REFSIZ);
+		if (itm != (EIF_REFERENCE) 0)
 		{
 		iz = HEADER (itm);
 
@@ -5672,10 +5689,10 @@ rt_private int update_special_rem_set(void)
 			continue;				/* Skip twins. */
 		}	/* if ... */
 
-		item 	= *(char **)(object + offset * sizeof (EIF_REFERENCE));		
+		item 	= *(EIF_REFERENCE *) (object + offset * sizeof (EIF_REFERENCE));		
 									/* Fetch current item . */
 		izone 	= HEADER (item);	/* Malloc info zone of item. */
-		if (item == (char *) 0)
+		if (item == (EIF_REFERENCE) 0)
 			continue;				/* Skip Void item. */
 
 
@@ -5783,7 +5800,6 @@ rt_private int update_special_rem_set(void)
 #endif	/* UPDATE_SPECIAL_REM_SET_DEBUG */
 
 #ifdef EIF_EXPENSIVE_ASSERTIONS
-		assert (all_subreferences_processed (special_rem_set->h_values [i]));
 		assert (refers_new_object (special_rem_set->h_values [i]));
 #endif	/* EIF_EXPENSIVE_ASSERTIONS */
 
@@ -5810,7 +5826,7 @@ rt_private int update_special_rem_set(void)
 
 
 #ifdef EIF_REM_SET_OPTIMIZATION 
-rt_shared int eif_promote_special (register char *object)
+rt_shared int eif_promote_special (register EIF_REFERENCE object)
 	/* Promote a special object full of reference. This function
 	 * scan all the subreferences of "object" so that only the
 	 * young references will be processed during a partial
@@ -5835,7 +5851,7 @@ rt_shared int eif_promote_special (register char *object)
 
 	/************************ Preconditions. *********************************/
 
-	assert (object != (char *) 0);		/* Not void. */
+	assert (object != (EIF_REFERENCE) 0);		/* Not void. */
 	assert (HEADER (object)->ov_flags & EO_SPEC);
 	assert (HEADER (object)->ov_flags & EO_REF);
 	assert (!(HEADER (object)->ov_size & B_FWD));	
@@ -5845,11 +5861,9 @@ rt_shared int eif_promote_special (register char *object)
 
 	/* Initializations. */
 
-	size = sizeof(EIF_REFERENCE);				/* Usual item size */
 	flags = HEADER(object)->ov_flags;			/* Fetch Eiffel flags */
 	size = (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2;
 	refs = *(long *) (object + size);
-	size = sizeof(char *);						/* Usual item size */
 
 
 	/* Loop over the referenced objects to check 
@@ -5857,13 +5871,13 @@ rt_shared int eif_promote_special (register char *object)
 	 */
 
 	ptr = object;							/* Temproray pointer. */
-	for (i = 0; i < refs ; i++, ptr += size) 
+	for (i = 0; i < refs ; i++, ptr += REFSIZ) 
 	{
 	#ifdef EIF_PROMOTE_SPECIAL_DEBUG
 		printf ("EIF_PROMOTE_SPECIAL: Scanning subref #%d amongthe %d references in %x\n", i, refs, object);
 	#endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
-		item = *(char **) ptr;				/* Fetch item in special object. */
-		if (item == (char *) 0)
+		item = *(EIF_REFERENCE *) ptr;				/* Fetch item in special object. */
+		if (item == (EIF_REFERENCE) 0)
 		{
 	#ifdef EIF_PROMOTE_SPECIAL_DEBUG
 		printf ("EIF_PROMOTE_SPECIAL: Item at %d : 0x%x was void\n", i, item);
@@ -5904,7 +5918,7 @@ rt_shared int eif_promote_special (register char *object)
 #ifdef EIF_PROMOTE_SPECIAL_DEBUG
 	printf ("EIF_PROMOTE_SPECIAL: updating new location of forwarded %x at %d without remembering it\n", item, i);
 #endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
-				*(char **) (object + size * i) = item;	/* Update. */
+				*(EIF_REFERENCE *) (object + REFSIZ * i) = item;	/* Update. */
 			}
 
 			continue;									/* Process next item. */
@@ -5919,7 +5933,7 @@ rt_shared int eif_promote_special (register char *object)
 	printf ("EIF_PROMOTE_SPECIAL: inserting item in special rem set %x with index %d\n", item, i);
 #endif	/* EIF_PROMOTE_SPECIAL_DEBUG */	
 				/* Check that the object is valid. */
-			assert ((*(char **) (object + size * i)) == (char *) item);
+			assert ((*(EIF_REFERENCE *) (object + REFSIZ * i)) == (EIF_REFERENCE) item);
 			special_erembq (object, i);		/* Remember young reference. */
 		}
 			
@@ -5957,7 +5971,7 @@ rt_shared int eif_promote_special (register char *object)
 }	/* eif_promote_special () */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 
-rt_private int	all_subreferences_processed (char *root)
+rt_private int	all_subreferences_processed (EIF_REFERENCE root)
 	/* Check that all the subreferences under root (root included)
 	 * have been processed by some marking. Check is done at the first
 	 * level only.
@@ -5966,12 +5980,11 @@ rt_private int	all_subreferences_processed (char *root)
 	union overhead 	*zone;		/* Malloc info zone of root. */
 	union overhead 	*szone;		/* Malloc info zone of subreference. */
 	int 			refs; 		/* Number of references in root. */
-	int				size;		/* Size of references. */
 	int				i;
 	char			*subref;	/* Subreference in root. */
 
 	EIF_GET_CONTEXT						/* For MT-mode: special_rem_set. */
-	if (root == (char *) 0)
+	if (root == (EIF_REFERENCE) 0)
 		return 1;
 
 	zone = HEADER (root);
@@ -5990,11 +6003,10 @@ rt_private int	all_subreferences_processed (char *root)
 	}
 	
 	refs = *(long *) (root + ((HEADER (root)->ov_size & B_SIZE) - LNGPAD_2));
-	size = sizeof (EIF_REFERENCE);
 
 	for (i = 0; i < refs; i++)
 	{
-		subref = *(char **) (root + i * size); 
+		subref = *(EIF_REFERENCE *) (root + i * REFSIZ); 
 		szone = HEADER (subref);
 		if (!subref)			/* Is reference Void? */
 			continue;			/* Skip it - Next reference. */
@@ -6010,6 +6022,9 @@ rt_private int	all_subreferences_processed (char *root)
 		if ((subref > sc_to.sc_arena && subref <= sc_to.sc_end) ||
 		(subref > ps_to.sc_arena && subref <= ps_to.sc_end))
 			continue;	/* Ok, next. */
+		if (g_data.status & GC_PART)	/* Is this a partial scavenging. */
+			if ((subref > ps_from.sc_arena && subref <= ps_from.sc_end))
+				continue;		/* Next -- Skip object in ps `from' zone. */
 		EIF_END_GET_CONTEXT
 		return 0;
 	}	
@@ -6019,7 +6034,7 @@ rt_private int	all_subreferences_processed (char *root)
 }	/* all_subreferences_processed () */
 
 
-rt_private int refers_new_object_not_updated(register char *object)
+rt_private int refers_new_object_not_updated(register EIF_REFERENCE object)
 {
 	/* Does 'object' directly refers to a new object? Stop as soon as the
 	 * answer is known. Return a boolean value stating the result. This
@@ -6031,10 +6046,10 @@ rt_private int refers_new_object_not_updated(register char *object)
 
 	register2 uint32 flags;			/* Eiffel flags */
 	register3 int refs;				/* Number of references */
-	register4 char *root;			/* Address of referred object */
+	register4 EIF_REFERENCE root;			/* Address of referred object */
 	register5 uint32 size;			/* Size in bytes of an item */
 
-	if (object == (char *) 0)
+	if (object == (EIF_REFERENCE) 0)
 		eif_panic("special remembered set botched");
 
 	assert (HEADER (object)->ov_flags & EO_SPEC);
@@ -6043,11 +6058,10 @@ rt_private int refers_new_object_not_updated(register char *object)
 	flags = HEADER(object)->ov_flags;	/* Fetch Eiffel flags */
 	size = (HEADER(object)->ov_size & B_SIZE) - LNGPAD(2);
 	refs = *(long *) (object + size);
-	size = sizeof(char *);				/* Usual item size */
 
-	for (; refs != 0; refs--, object += size) {
-		root = *(char **) object;			/* Get reference */
-		if (root == (char *) 0)
+	for (; refs != 0; refs--, object += REFSIZ) {
+		root = *(EIF_REFERENCE *) object;			/* Get reference */
+		if (root == (EIF_REFERENCE) 0)
 			continue;						/* Skip void references */
 		if (HEADER (root)->ov_size & B_FWD)
 			root = HEADER (root)->ov_fwd;	/* Update it. */
@@ -6059,7 +6073,7 @@ rt_private int refers_new_object_not_updated(register char *object)
 	return 0;		/* Object does not reference any new object */
 }
 
-rt_shared int refers_new_object(register char *object)
+rt_shared int refers_new_object(register EIF_REFERENCE object)
 {
 	/* Does 'object' directly refers to a new object? Stop as soon as the
 	 * answer is known. Return a boolean value stating the result. This
@@ -6069,16 +6083,16 @@ rt_shared int refers_new_object(register char *object)
 
 	register2 uint32 flags;			/* Eiffel flags */
 	register3 int refs;				/* Number of references */
-	register4 char *root;			/* Address of referred object */
+	register4 EIF_REFERENCE root;			/* Address of referred object */
 	register5 uint32 size;			/* Size in bytes of an item */
 
 #ifdef MAY_PANIC
 	/* If 'object' is a void reference, panic immediately */
-	if (object == (char *) 0)
+	if (object == (EIF_REFERENCE) 0)
 		eif_panic("remembered set botched");
 #endif
 
-	size = sizeof(char *);				/* Usual item size */
+	size = REFSIZ;
 	flags = HEADER(object)->ov_flags;	/* Fetch Eiffel flags */
 	if (flags & EO_SPEC) {				/* Special object */
 		if (!(flags & EO_REF))			/* (see recursive_mark() for details) */
@@ -6086,9 +6100,9 @@ rt_shared int refers_new_object(register char *object)
 		size = (HEADER(object)->ov_size & B_SIZE) - LNGPAD_2;
 		refs = *(long *) (object + size);
 		if (flags & EO_COMP)			/* Composite object = has expandeds */
-			size = *(long *) (object + size + sizeof(long)) + OVERHEAD;
+			size = *(long *) (object + size + LNGSIZ) + OVERHEAD;
 		else
-			size = sizeof(char *);		/* Usual item size */
+			size = REFSIZ;		/* Usual item size */
 	} else
 		refs = References(Deif_bid(flags));	/* Number of references */
 
@@ -6100,8 +6114,8 @@ rt_shared int refers_new_object(register char *object)
 	 * objects in the scavenge zone do not carry the EO_NEW mark.
 	 */
 	for (; refs != 0; refs--, object += size) {
-		root = *(char **) object;			/* Get reference */
-		if (root == (char *) 0)
+		root = *(EIF_REFERENCE *) object;			/* Get reference */
+		if (root == (EIF_REFERENCE) 0)
 			continue;						/* Skip void references */
 		flags = HEADER(root)->ov_flags;
 		if (flags & EO_EXP)	{				/* Expanded object, grrr... */
@@ -6148,7 +6162,7 @@ rt_private void swap_gen_zones(void)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public void eremb(char *obj)
+rt_public void eremb(EIF_REFERENCE obj)
 {
 	/* Remembers the object 'obj' by pushing it in the remembered set.
 	 * It is up to the caller to ensure that 'obj' is not already remembered
@@ -6178,7 +6192,7 @@ rt_public void eremb(char *obj)
 	EIF_END_GET_CONTEXT
 }
 
-rt_public void erembq(char *obj)
+rt_public void erembq(EIF_REFERENCE obj)
 {
 	/* Quick version of eremb(), but without any call to the GC. This is
 	 * provided for special objects (we don't want to ask for GC hooks
@@ -6194,14 +6208,14 @@ rt_public void erembq(char *obj)
 }
 
 #ifdef EIF_REM_SET_OPTIMIZATION
-rt_public int special_erembq_replace(char *old, char *val)
+rt_public int special_erembq_replace(EIF_REFERENCE old, EIF_REFERENCE val)
 {
 	/* Replace `old' by `val' in special_rem_set. */
 	EIF_GET_CONTEXT
 	return spt_replace (special_rem_set, old, val);
 }	/* special_erembq_replace () */
 
-rt_public void 	special_erembq (char *obj, EIF_INTEGER offst)
+rt_public void 	special_erembq (EIF_REFERENCE obj, EIF_INTEGER offst)
 {
 	/*  	
 	 * Special version of erembq() for special objects full of references
@@ -6252,7 +6266,7 @@ rt_public void 	special_erembq (char *obj, EIF_INTEGER offst)
 }	/* special_erembq () */
 #else
 	
-rt_public void 	special_erembq (char *obj, EIF_INTEGER offst)
+rt_public void 	special_erembq (EIF_REFERENCE obj, EIF_INTEGER offst)
 {
 	/* Remember it in the remembered set. In the case we do not any
 	 * remembrance optimization, we redirect this function to the usual
@@ -6307,17 +6321,9 @@ rt_shared void gfree(register union overhead *zone)
 		if (Disp_rout(dtype)) { 
 			gc_status = g_data.status;			/* Save GC status */
 			g_data.status |= GC_STOP;			/* Stop GC */
-/* FIXME */
-/* FIXME */
-/* FIXME */
-/* FIXME */
-/* FIXME */
-/* We should disable invariants but not postconditions (see `dispose' from IDENTIFIED
- * Xavier
- */
 			saved_in_assertion = in_assertion;	/* Save in_assertion */
 			in_assertion = ~0;					/* Turn off assertion checking */
-			DISP(dtype,(char *) (zone + 1));	/* Call 'dispose' */
+			DISP(dtype,(EIF_REFERENCE) (zone + 1));	/* Call 'dispose' */
 			in_assertion = saved_in_assertion;	/* Set in_assertion back */
 			g_data.status = gc_status;			/* Restore previous GC status */
 		}
@@ -6329,7 +6335,7 @@ rt_shared void gfree(register union overhead *zone)
 	flush;
 #endif
 
-	xfree((char *) (zone + 1));		/* Put object back to free-list */
+	xfree((EIF_REFERENCE) (zone + 1));		/* Put object back to free-list */
 	EIF_END_GET_CONTEXT
 }
 
@@ -6338,7 +6344,7 @@ rt_shared void gfree(register union overhead *zone)
  * following to properly record itself.
  */
 
-rt_public char *onceset(void)
+rt_public EIF_REFERENCE onceset(void)
 {
 	/* Record result of once functions onto the once_set stack, so that the
 	 * run-time may update the address should the result be moved around by
@@ -6351,10 +6357,10 @@ rt_public char *onceset(void)
 	flush;
 #endif
 	
-	if (-1 == epush(&once_set, (char *) 0 ))
+	if (-1 == epush(&once_set, (EIF_REFERENCE) 0 ))
 		eraise("once function recording", EN_MEM);
 
-	return (char *) (once_set.st_top - 1);
+	return (EIF_REFERENCE) (once_set.st_top - 1);
 	EIF_END_GET_CONTEXT
 }
 
@@ -6369,7 +6375,7 @@ rt_shared EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once)
 	EIF_GET_CONTEXT	/* MT-safe */
 	register1 int nb_items;			/* Number of items in arena */
 	register2 struct stchunk *s;	/* To walk through each stack's chunk */
-	register3 char **arena;			/* Current arena in chunk */
+	register3 EIF_REFERENCE *arena;			/* Current arena in chunk */
 	int done = 0;					/* Top of stack not reached yet */
 
 	for (s = once_set.st_hd; s && !done; s = s->sk_next) 
@@ -6399,7 +6405,7 @@ rt_shared EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once)
  * structure 'stack' describes the whole data structure completely.
  */
 
-rt_shared int epush(register struct stack *stk, register char *value)
+rt_shared int epush(register struct stack *stk, register EIF_REFERENCE value)
 									/* The stack */
 					  				/* Value to be pushed */
 {
@@ -6408,11 +6414,11 @@ rt_shared int epush(register struct stack *stk, register char *value)
 	 * and -1 is returned to signal failure. Otherwise 0 is returned.
 	 */
 	EIF_GET_CONTEXT
-	register3 char **top = stk->st_top;		/* Current top of stack */
+	register3 EIF_REFERENCE *top = stk->st_top;		/* Current top of stack */
 
-	if (top == (char **) 0)	{					/* No stack yet? */
+	if (top == (EIF_REFERENCE *) 0)	{					/* No stack yet? */
 		top = st_alloc(stk, STACK_CHUNK);		/* Create one */
-		if (top == (char **) 0)
+		if (top == (EIF_REFERENCE *) 0)
 			return -1;				/* Could not create stack */
 	}
 
@@ -6449,28 +6455,28 @@ rt_shared int epush(register struct stack *stk, register char *value)
 	EIF_END_GET_CONTEXT
 }
 
-rt_shared char **st_alloc(register struct stack *stk, register int size)
+rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size)
 									/* The stack */
 				   					/* Initial size */
 {
 	/* The stack 'stk' is created, with size 'size'. Return the arena value */
 	EIF_GET_CONTEXT
-	register3 char **arena;				/* Address for the arena */
+	register3 EIF_REFERENCE *arena;				/* Address for the arena */
 	register4 struct stchunk *chunk;	/* Address of the chunk */
 
-	chunk = (struct stchunk *) xmalloc(size * sizeof(char *), C_T, GC_OFF);
+	chunk = (struct stchunk *) xmalloc(size * REFSIZ, C_T, GC_OFF);
 	if (chunk == (struct stchunk *) 0)
-		return (char **) 0;		/* Malloc failed for some reason */
+		return (EIF_REFERENCE *) 0;		/* Malloc failed for some reason */
 
 	SIGBLOCK;							/* Critical section */
 	stk->st_hd = chunk;					/* New stack (head of list) */
 	stk->st_tl = chunk;					/* One chunk for now */
 	stk->st_cur = chunk;				/* Current chunk */
-	arena = (char **) (chunk + 1);		/* Header of chunk */
+	arena = (EIF_REFERENCE *) (chunk + 1);		/* Header of chunk */
 	stk->st_top = arena;				/* Empty stack */
 	chunk->sk_arena = arena;			/* Base address */
 	stk->st_end = chunk->sk_end =
-		(char **) chunk + size;			/* First free location beyond stack */
+		(EIF_REFERENCE *) chunk + size;			/* First free location beyond stack */
 	chunk->sk_next = (struct stchunk *) 0;
 	chunk->sk_prev = (struct stchunk *) 0;
 	SIGRESUME;							/* End of critical section */
@@ -6487,21 +6493,21 @@ rt_shared int st_extend(register struct stack *stk, register int size)
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
 	 */
 	EIF_GET_CONTEXT
-	register3 char **arena;				/* Address for the arena */
+	register3 EIF_REFERENCE *arena;				/* Address for the arena */
 	register4 struct stchunk *chunk;	/* Address of the chunk */
 
-	chunk = (struct stchunk *) xmalloc(size * sizeof(char *), C_T, GC_OFF);
+	chunk = (struct stchunk *) xmalloc(size * REFSIZ, C_T, GC_OFF);
 	if (chunk == (struct stchunk *) 0)
 		return -1;		/* Malloc failed for some reason */
 
 	SIGBLOCK;								/* Critical section */
-	arena = (char **) (chunk + 1);			/* Header of chunk */
+	arena = (EIF_REFERENCE *) (chunk + 1);			/* Header of chunk */
 	chunk->sk_next = (struct stchunk *) 0;	/* Last chunk in list */
 	chunk->sk_prev = stk->st_tl;			/* Preceded by the old tail */
 	stk->st_tl->sk_next = chunk;			/* Maintain link w/previous */
 	stk->st_tl = chunk;						/* New tail */
 	chunk->sk_arena = arena;				/* Where items are stored */
-	chunk->sk_end = (char **) chunk + size;	/* First item beyond chunk */
+	chunk->sk_end = (EIF_REFERENCE *) chunk + size;	/* First item beyond chunk */
 	stk->st_top = arena;					/* New top */
 	stk->st_end = chunk->sk_end;			/* End of current chunk */
 	stk->st_cur = chunk;					/* New current chunk */
@@ -6519,11 +6525,11 @@ rt_shared void st_truncate(register struct stack *stk)
 	 * next one. Otherwise, we skip the next chunk and free the remainder.
 	 */
 
-	register2 char **top;			/* The current top of the stack */
+	register2 EIF_REFERENCE *top;			/* The current top of the stack */
 	struct stchunk *next;			/* Address of next chunk */
 
 	top = stk->st_top;						/* The first free location */
-	if (top == (char **) 0)					/* Not allocated yet */
+	if (top == (EIF_REFERENCE *) 0)					/* Not allocated yet */
 		return;
 
 	if (stk->st_end - top > MIN_FREE) {		/* Enough locations left */
@@ -6555,7 +6561,7 @@ rt_shared void st_wipe_out(register struct stchunk *chunk)
 		chunk != (struct stchunk *) 0;
 		chunk = next, next = chunk ? chunk->sk_next : chunk
 	)
-		xfree((char *) chunk);
+		xfree((EIF_REFERENCE) chunk);
 }
 
 #ifdef DEBUG
@@ -6572,7 +6578,7 @@ rt_private int reset(register1 struct stack *stk)
 
 	for (k = stk->st_hd; k; k = n) {
 		n = k->sk_next;		/* This is not necessary given current xfree() */
-		xfree((char *) k);	/* But how do I know implementation won't change? */
+		xfree((EIF_REFERENCE) k);	/* But how do I know implementation won't change? */
 	}
 
 	bzero(stk, sizeof(struct stack));	/* Reset to null pointers ? -- RAM */
@@ -6582,7 +6588,7 @@ rt_private int reset(register1 struct stack *stk)
 
 
 #ifdef EIF_REM_SET_OPTIMIZATION
-rt_shared int is_in_special_rem_set (char *obj)
+rt_shared int is_in_special_rem_set (EIF_REFERENCE obj)
 {
 	EIF_GET_CONTEXT
 	int ret;
@@ -6592,7 +6598,7 @@ rt_shared int is_in_special_rem_set (char *obj)
 }
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 
-rt_shared int is_in_rem_set (char *obj)
+rt_shared int is_in_rem_set (EIF_REFERENCE obj)
 {
 	register2 struct stchunk	*s;			/* To walk through the list */
 	register3 int				n = 0;		/* Number of items */
@@ -6691,7 +6697,7 @@ rt_private void run_tests(void)
 	/* Run all garbage collector's tests */
 
 	int i;
-	char *p;
+	EIF_REFERENCE p;
 
 	/* Test generation-based collectors */
 
@@ -6710,8 +6716,8 @@ rt_private void run_tests(void)
 	printf(">> Allocating 15 objects (self references, all remembered)\n");
 	for (i = 0; i < 15; i++) {
 		epush(&rem_set, (p = emalloc(0)));
-		*(char **) p = p;			/* Double reference on itself */
-		*((char **) p + 1) = p;
+		*(EIF_REFERENCE *) p = p;			/* Double reference on itself */
+		*((EIF_REFERENCE *) p + 1) = p;
 	}
 	printf(">> Collecting...\n");
 	(void) collect();
@@ -6783,4 +6789,4 @@ rt_public void eif_panic(char *s)
 
 #ifdef __cplusplus
 }
-#endif
+# endif

@@ -32,7 +32,8 @@ extern "C" {
 #define STACK_CHUNK		1000	/* Size of a stack chunk */
 #endif
 #define MIN_FREE		100		/* Below that, chunk is nearly full */
-#define TH_ALLOC		65536	/* Allocation threshold */
+#define TH_ALLOC		65536	/* Allocation threshold (64 K)*/
+#define TH_ALLOC_MIN	8192	/* Minimal allocation threshold (8 K).*/
 #define OBJ_MAX			1500	/* Maximum # of young objects in moved_set */
 #define TO_MAX			7		/* Maximum number of allocable 'to' */
 #define CHUNK_MIN		5		/* Minimum Eiffel chunk # to activate plsc() */
@@ -86,15 +87,15 @@ extern "C" {
 extern struct stack memory_set;	/* Memory set stack.	*/
 #endif	/* !EIF_THREADS */
 
-extern int is_in_rem_set (char *obj);	/* Is obj in rem-set? */
-extern int is_in_special_rem_set (char *obj);	/* Is obj in special_rem_set? */
+extern int is_in_rem_set (EIF_REFERENCE obj);	/* Is obj in rem-set? */
+extern int is_in_special_rem_set (EIF_REFERENCE obj);	/* Is obj in special_rem_set? */
 /* General-purpose exported functions */
 RT_LNK void plsc(void);					/* Partial scavenging */
-extern void urgent_plsc(char **object);			/* Partial scavenge with given local root */
+extern void urgent_plsc(EIF_REFERENCE *object);			/* Partial scavenge with given local root */
 extern void mksp(void);					/* Mark and sweep algorithm */
 RT_LNK void reclaim(void);				/* Reclaim all the objects */
 RT_LNK int collect(void);				/* Generation-based collector */
-extern int epush(register struct stack *stk, register char *value);					/* Push an addess on a run-time stack */
+extern int epush(register struct stack *stk, register EIF_REFERENCE value);					/* Push an addess on a run-time stack */
 extern char **st_alloc(register struct stack *stk, register int size);			/* Creates an empty stack */
 extern  int st_extend(register struct stack *stk, register int size);         
 /* Extends a stack */
@@ -102,21 +103,22 @@ extern int acollect(void);				/* Automatic garbage collection */
 extern int scollect(int (*gc_func) (void), int i);				/* Collection with statistics */
 extern void st_truncate(register struct stack *stk);			/* Truncate stack if necessary */
 extern void st_wipe_out(register struct stchunk *chunk);			/* Remove unneeded chunk from stack */
-RT_LNK void eremb(char *obj);				/* Remembers old object */
-RT_LNK void erembq(char *obj);				/* Quick veersion (no GC call) of eremb */
-extern void special_erembq(char *obj, EIF_INTEGER offst);				
+RT_LNK void eremb(EIF_REFERENCE obj);				/* Remembers old object */
+RT_LNK void erembq(EIF_REFERENCE obj);				/* Quick veersion (no GC call) of eremb */
+extern void special_erembq(EIF_REFERENCE obj, EIF_INTEGER offst);				
 							/* Quick version (no GC call) of eremb for
 							 *special objects full of references.*/
-extern int special_erembq_replace(char *old, char *val);				
+#ifdef EIF_REM_SET_OPTIMIZATION
+extern int special_erembq_replace(EIF_REFERENCE old, EIF_REFERENCE val);				
 							/* Replace `old' by `val' in special_rem_set. */
-extern int eif_promote_special (register char *object);		
+extern int eif_promote_special (register EIF_REFERENCE object);		
 							/* Does an special refers to young ones ? */
-extern int is_in_special_rem_set (register char *object);
-
+extern int is_in_special_rem_set (register EIF_REFERENCE object);
+#endif	/* EIF_REM_SET_OPTIMIZATION */
 RT_LNK char *onceset(void);				/* Recording of once function result */
 extern EIF_REFERENCE *eif_once_set_addr (EIF_REFERENCE once);
 	/* Get stack address of "once" from "once_set". */
-extern int refers_new_object(register char *object);		/* Does an object refers to young ones ? */
+extern int refers_new_object(register EIF_REFERENCE object);		/* Does an object refers to young ones ? */
 RT_LNK void gc_stop(void);				/* Stop the garbage collector */
 RT_LNK void gc_run(void);				/* Restart the garbage collector */
 extern char *to_chunk(void);			/* Base address of partial 'to' chunk */

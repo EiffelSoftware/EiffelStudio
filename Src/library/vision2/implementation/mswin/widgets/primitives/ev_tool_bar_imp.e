@@ -897,10 +897,11 @@ feature {EV_TOOL_BAR_IMP} -- Implementation
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
 	insertion_position: INTEGER is
-			--
+			-- `Result' is index to left of item beneath the
+			-- current mouse pointer or count + 1 if over the toolbar
+			-- and not over a button. i.e if over button 1, `Result' is 0.
 		local
 			offset: INTEGER
-			button: EV_TOOL_BAR_BUTTON_IMP
 			item_index: INTEGER
 		do
 			Result := -1
@@ -908,16 +909,12 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			
 			item_index := find_button(offset, height // 2)
 			if item_index >= 0 and item_index < ev_children.count then
-				 button ?= ev_children.i_th (item_index + 1)
+				 Result := item_index
 			elseif item_index <= - 1 and item_index >= - count then
-				button ?= ev_children.i_th (item_index.abs)
+				Result := item_index.abs
 			elseif (item_index = -count - 1) then
 				Result := count + 1
 			end
-			
-			if button /= Void then
-				Result := internal_get_index (button)	
-			end	
 		end
 		
 	block_selection_for_docking is

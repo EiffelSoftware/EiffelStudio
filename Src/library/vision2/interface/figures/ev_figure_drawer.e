@@ -148,7 +148,7 @@ feature -- Figure drawing
 			drawable.set_drawing_mode (rectangle.logical_function_mode)	
 			if rectangle.fill_color /= Void then
 				drawable.set_foreground_color (rectangle.fill_color)
-				if rectangle.orientation.radians = 0.0 then
+				if rectangle.orientation = 0.0 then
 					drawable.fill_rectangle (left, top, rectangle.width,
 						rectangle.height)
 				else
@@ -156,7 +156,7 @@ feature -- Figure drawing
 				end
 			end
 			drawable.set_foreground_color (rectangle.foreground_color)
-			if rectangle.orientation.radians = 0.0 then
+			if rectangle.orientation = 0.0 then
 				drawable.draw_rectangle (left, top, rectangle.width,
 					rectangle.height)
 			else

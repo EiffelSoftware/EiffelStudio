@@ -19,10 +19,14 @@ creation
 feature {NONE} -- Execution
 
 	work (arg: ANY) is
+		local
+			mp: MOUSE_PTR
 		do
+			!! mp.set_watch_cursor;
 			!! profile_tool.make (Current);
 			profile_tool.display;
-			profile_tool.raise
+			profile_tool.raise;
+			mp.restore
 		end
 
 feature -- Properties

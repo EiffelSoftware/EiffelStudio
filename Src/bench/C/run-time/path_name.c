@@ -510,6 +510,26 @@ rt_public EIF_REFERENCE eif_extracted_paths(EIF_POINTER p)
 #include <starlet>	/* system, rms services - sys$parse et. al. */
 #include <assert>
 
+/* does the path end in a VMS terminator (dev:[dir] or dev:)? Boolean result. */
+rt_public int eifrt_vms_has_path_terminator (const char* path)
+{
+    if (path && *path) {
+	if (strchr (vms_filespec_delimiters, path[strlen(path) -1]))
+	    return 1;	/* TRUE (VMS delimiter found) */
+    }
+    return 0;	/* FALSE */
+}
+
+/* append a filename to a path (VMS or Unix file specification syntax) */
+/* assumes path can accomodate appended name */
+rt_public void eifrt_vms_append_file_name (char* path, const char* file)
+{
+    /* append unix separator iff no vms-specific delimiter at end of path */
+    if (eifrt_vms_has_path_terminator (path))
+	strcat (path, "/");
+    strcat (path, file);
+}
+
 /* This is ugly (thread unsafe, too) but there's no other way to return the translated filespec. */
 static char stupid_vms_name[PATH_MAX +1] = { '\0' };
 static int stupid_vms_trick (char *name, int type)
@@ -519,7 +539,17 @@ static int stupid_vms_trick (char *name, int type)
     return 0;
 }
 
-/* return the directory file name of a directory */
+/* convert a file specification to VMS syntax */
+rt_public char* eifrt_vms_filespec (const char* filespec, char* buf)
+{
+    int is_unix = (strchr(filespec, '/') != NULL);	/* if filespec contains a '/' it might be a foreign filespec */
+    int res = decc$to_vms (filespec, stupid_vms_trick, 0, 1);
+    if (res) strcpy (buf, stupid_vms_name);
+    else strcpy (buf, filespec);
+    return buf;
+}
+
+/* return the file name of a directory (eg. dev:[dir.sub] ==> dev:[dir]sub.dir */
 rt_public char* eifrt_vms_directory_file_name (const char* dir, char* buf)
 {
     struct FAB fab = cc$rms_fab;

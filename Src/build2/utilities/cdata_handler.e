@@ -29,10 +29,10 @@ feature -- Conversion
 			string_not_void: a_string /= Void
 			has_cdata: has_cdata (a_string)
 		do
-			Result := a_string.substring (cdata_opening.count + 1, a_string.count - cdata_closing.count + 1)
+			Result := a_string.substring (cdata_opening.count + 1, a_string.count - cdata_closing.count)
 		ensure
 			not has_cdata (Result)
-			new_count_correct: a_string.count = old a_string.count - cdata_opening.count - cdata_closing.count
+			new_count_correct: Result.count = old a_string.count - cdata_opening.count - cdata_closing.count
 		end
 		
 	strip_cdata (a_string: STRING): STRING is

@@ -29,8 +29,11 @@ feature -- Initialize
 
 	gtk_dependent_initialize is
 			-- Gtk dependent code for `initialize'
+		local
+			a_settings: POINTER
 		do
 			previous_font_description := ""
+			a_settings := default_gtk_settings
 		end
 
 	gtk_dependent_launch_initialize is
@@ -49,38 +52,38 @@ feature -- Initialize
 feature -- Implementation
 
 	pixel_value_from_point_value (a_point_value: INTEGER): INTEGER is
-			-- 
+			-- Returns the number of screen pixels represented by `a_point_value'
 		do
 			Result := (a_point_value / 72 * 96).rounded
 		end
 
 	point_value_from_pixel_value (a_pixel_value: INTEGER): INTEGER is
-			--
+			-- Returns the number of points represented by `a_pixel_value' screen pixels value
 		do
 			Result := (a_pixel_value / 96 * 72).rounded
 		end
 
 	pango_layout: POINTER is
-			-- 
+			-- PangoLayout structure used for rendering fonts
 		once
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_create_pango_layout (default_gtk_window, default_pointer)
 		end
 
 	pango_iter: POINTER is
-			-- 
+			-- Retrieve PangoLayoutIter from our default layout object, Result must be freed when not needed
 		do
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.pango_layout_get_iter (pango_layout)
 		end
 
 	writeable_pixbuf_formats: ARRAYED_LIST [STRING] is
-			-- 
+			-- Array of GdkPixbuf formats that Vision2 can save to on the gtk2.4.x platform
 		once
 			Result := pixbuf_formats (True)
 			Result.compare_objects
 		end
 		
 	readable_pixbuf_formats: ARRAYED_LIST [STRING] is
-			-- 
+			-- Array of GdkPixbuf formats that Vision2 can load to on the gtk2.4.x platform
 		once
 			Result := pixbuf_formats (False)
 			Result.compare_objects
@@ -251,8 +254,7 @@ feature -- Implementation
 		once
 			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_settings_get_default
 		end
-		
-		
+
 	font_names_on_system: ARRAYED_LIST [STRING] is
 			-- Retrieve a list of all the font names available on the system
 		local
@@ -315,6 +317,7 @@ feature -- Implementation
 feature {NONE} -- Externals
 
 	retrieve_available_fonts (a_widget: POINTER; name_array: TYPED_POINTER [POINTER]; number_elements: TYPED_POINTER [INTEGER]) is
+			-- Retrieve all available fonts present on the system
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
@@ -341,6 +344,7 @@ feature {NONE} -- Externals
 		end
 		
 	gchar_array_i_th (a_gchar_array: POINTER; an_index: INTEGER): POINTER is
+			-- Returns `an_index' i_th value from gchar** `a_gchar_array'
 		require
 			an_index_valid: an_index > 0
 			array_valid: a_gchar_array /= default_pointer

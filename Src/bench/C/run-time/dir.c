@@ -33,8 +33,11 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#if defined EIF_OS2 || defined EIF_WIN32
+#if defined EIF_OS2
 	/* <unistd.h> doesn't exist */
+#elif defined EIF_WIN32
+#include <io.h>			/* %%ss added for access */
+#include <direct.h>		/* %%ss added for (ch|rm)dir */
 #else
 	/* FIXME: write dummy unit */
 #include <unistd.h>

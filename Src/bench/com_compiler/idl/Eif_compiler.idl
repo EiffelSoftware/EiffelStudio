@@ -104,9 +104,9 @@ interface IEiffelCompilerEvents: IUnknown
 //---------------------------------------------------------------------
 
 [
-    object,
+    oleautomation,
     uuid(F09831BB-B43F-42db-821F-D1B3821397F0),
-    pointer_default(unique)
+    helpstring ("Eiffel Class Enumeration.")
 ]
 
 interface IEnumClass : IUnknown
@@ -130,9 +130,9 @@ interface IEnumClass : IUnknown
 //---------------------------------------------------------------------
 
 [
-    object,
+    oleautomation,
     uuid(7D904660-5A31-435a-B154-10CACDBD363C),
-    pointer_default(unique)
+    helpstring ("Eiffel Cluster Enumeration.")
 ]
 
 interface IEnumCluster : IUnknown
@@ -156,9 +156,9 @@ interface IEnumCluster : IUnknown
 //---------------------------------------------------------------------
 
 [
-    object,
+    oleautomation,
     uuid(30BF27F2-86DD-4589-AD8A-8E40FF3D4D07),
-    pointer_default(unique)
+    helpstring ("Eiffel Feature Enumeration.")
 ]
 interface IEnumFeature : IUnknown
 {

@@ -8,7 +8,7 @@ default
 	assertion (check)
 	assertion (require)
 	msil_generation (yes)
-	line_generation (yes)
+	line_generation (no)
 	profile (no)
 	trace (yes)
 	il_verifiable (yes)

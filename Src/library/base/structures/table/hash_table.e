@@ -58,10 +58,9 @@ feature -- Initialization
 			clever: PRIMES
 		do
 			!! clever
-			capacity := clever.higher_prime ((High_ratio * n) // Low_ratio)
-			if capacity < Minimum_size then
-				capacity := Minimum_size
-			end
+			capacity := n.Max (Minimum_capacity)
+			capacity := (capacity * 100) // Initial_occupation + 1
+			capacity := clever.higher_prime (capacity)
 			!! content.make (0, capacity)
 			!! keys.make (0, capacity)
 					-- Position `capacity' ignored by hash sequences,
@@ -70,8 +69,58 @@ feature -- Initialization
 			!! deleted_marks.make (0, capacity-1)
 			iteration_position := capacity + 1
 		ensure
-			capacity_big_enough: capacity >= n and capacity >= Minimum_size
+			breathing_space: count * 100 < capacity * Initial_occupation
+			more_than_minimum: capacity >= Minimum_capacity
+			no_status: not special_status
 		end
+
+	accommodate (n: INTEGER) is
+			-- Reallocate table to hold at least `n' items;
+			-- keep all current items
+		require
+			n >= 0
+		local
+			i: INTEGER
+			other: HASH_TABLE [G, H]
+		do
+				-- Could also use iteration facilities.
+			from
+				!! other.make (count.max (n))
+			until
+				i = capacity
+			loop
+				if occupied (i) then
+					check
+						not other.soon_full
+							-- See invariant clause `sized_generously_enough'
+					end
+					other.put (content.item (i), keys.item (i))
+				end
+				i := i + 1
+			end
+
+			if has_default then
+				other.put (content.item (capacity), keys.item (capacity))
+			end
+
+			capacity := other.capacity
+			used_slot_count := count
+			iteration_position := other.iteration_position
+			if other.has_default then
+				set_default
+			else
+				set_no_default
+			end
+
+			set_content (other.content)
+			set_keys (other.keys)
+			set_deleted_marks (other.deleted_marks)
+		ensure
+			count_not_changed: count = old count
+			slot_count_same_as_count: used_slot_count = count
+			breathing_space: count * 100 < capacity * Initial_occupation
+		end
+
 
 feature -- Access
 
@@ -132,21 +181,23 @@ feature -- Access
 		end
 
 	current_keys: ARRAY [H] is
-			-- Array of actually used keys, from 1 to `count'
+			-- New array containing actually used keys, from 1 to `count'
 		local
-			i, j: INTEGER
+			j: INTEGER
+			old_iteration_position: INTEGER
 		do
+			old_iteration_position := iteration_position
 			from
 				!! Result.make (1, count)
+				start
 			until
-				i = capacity
+				off
 			loop
-				if truly_occupied (i) then
-					j := j + 1
-					Result.put (keys.item (i), j)
-				end
-				i := i + 1
+				j := j + 1
+				Result.put (key_for_iteration, j)
+				forth
 			end
+			iteration_position := old_iteration_position
 		ensure
 			good_count: Result.count = count
  		end
@@ -200,16 +251,16 @@ feature -- Comparison
 
 feature -- Status report
 
-	full: BOOLEAN is false
+	full: BOOLEAN is False
 			-- Is structure filled to capacity? (Answer: no.)
 
-	extendible: BOOLEAN is true
+	extendible: BOOLEAN is True
 			-- May new items be added? (Answer: yes.)
 
 	prunable: BOOLEAN is
 			-- May items be removed? (Answer: yes.)
 		do
-			Result := true
+			Result := True
 		end
 
 	conflict: BOOLEAN is
@@ -242,6 +293,12 @@ feature -- Status report
 			Result := (control = Found_constant)
 		end
 
+	not_found: BOOLEAN is
+			-- Did last operation fail to find the item sought?
+		do
+			Result := (control = Not_found_constant)
+		end
+
 	after, off: BOOLEAN is
 			-- Is cursor past last item?
 		do
@@ -268,12 +325,21 @@ feature -- Status report
 			end
 		end
 
+	valid_key (k: H): BOOLEAN is
+			-- Is `k' a valid key?
+			-- (Answer: always yes for hash tables in this version)
+		do
+			Result := True
+		ensure then
+			Result
+		end
+
 feature -- Cursor movement
 
 	start is
 			-- Bring cursor to first position.
 		do
-			iteration_position := keys.lower - 1
+			iteration_position := -1
 			forth
 		end
 
@@ -311,6 +377,9 @@ feature -- Cursor movement
 		do
 			internal_search (key)
 			search_item := content.item (position)
+		ensure
+			found_or_not_found: found or not_found
+			item_if_found: found implies (search_item = content.item (position)) 
 		end
 
 feature -- Element change
@@ -318,9 +387,10 @@ feature -- Element change
 	put (new: G; key: H) is
 			-- Insert `new' with `key' if there is no other item
 			-- associated with the same key.
-			-- Make `inserted' true if and only if an insertion has
+			-- Set `inserted' if and only if an insertion has
 			-- been made (i.e. `key' was not present).
 			-- If so, set `position' to the insertion position.
+			-- If not, set `conflict'.
 		local
 			default_key: H
 		do
@@ -337,25 +407,33 @@ feature -- Element change
 					set_not_deleted (position)
 				end
 				count := count + 1
+				used_slot_count := used_slot_count + 1
 				insert_at_position (new, key)
 			end
 		ensure then
+			conflict_or_inserted: conflict or inserted
 			insertion_done: inserted implies item (key) = new
 			one_more_if_inserted: inserted implies (count = old count + 1)
+			one_more_slot_if_inserted_unless_reallocated:
+				inserted implies
+					((used_slot_count = old used_slot_count + 1) or
+					(used_slot_count = count))
 			unchanged_if_conflict: conflict implies (count = old count)
+			slot_count_unchanged_if_conflict:
+				conflict implies (used_slot_count = old used_slot_count)
 		end
 
 	force (new: G; key: H) is
 			-- If `key' is present, replace corresponding item by `new',
 			-- if not, insert item `new' with key `key'.
-			-- Make `inserted' true.
+			-- Set `inserted'.
 		require else
 			True
 		local
 			default_key: H
 		do
 			internal_search (key)
-			if not found then
+			if not_found then
 				if soon_full then
 					add_space
 					internal_search (key)
@@ -365,35 +443,42 @@ feature -- Element change
 					set_not_deleted (position)
 				end
 				count := count + 1
+				used_slot_count := used_slot_count + 1
 			end
 			insert_at_position (new, key)
 		ensure then
+			inserted: inserted
 			insertion_done: item (key) = new
 			same_count_or_one_more:  (count = old count) or (count = old count + 1)
-			inserted: inserted
+			same_slot_count_or_one_more_unless_reallocated:
+					(used_slot_count = old used_slot_count) or
+					(used_slot_count = old used_slot_count + 1) or
+					(used_slot_count = count)
 		end
 
 	replace (new: G; key: H) is
 			-- Replace item at `key', if present,
 			-- with `new'; do not change associated key.
-			-- Make `replaced' true if and only if a replacement has
-			-- been made (i.e. `key' was present).
+			-- Set `replaced' if and only if a replacement has been made
+			-- (i.e. `key' was present); otherwise set `not_found'.
 		do
 			internal_search (key)
 			if found then
 				content.put (new, position)
 				set_replaced
-			else
-				set_not_found
 			end
 		ensure
+			replaced_or_not_found: replaced or not_found
 			insertion_done: replaced implies item (key) = new
+			no_change_if_not_found: not_found implies
+						item (key) = old (item (key))
 		end
 
 	replace_key (new_key: H; old_key: H) is
 			-- If there is an item of key `old_key' and no item of key
 			-- `new_key', replace the former's key by `new_key'
-			-- and set status to `replaced'.
+			-- and set `replaced'.
+			-- Otherwise set `not_found' or `conflict' respectively.
 		local
 			insert_position: INTEGER
 			default_value: G
@@ -401,12 +486,12 @@ feature -- Element change
 		do
 			put (default_value, new_key)
 			if not conflict then
-				count := count -1
+				count := count - 1
+				used_slot_count := used_slot_count - 1
 				insert_position := position
 				internal_search (old_key)
 				if found then
 					content.put (content.item (position), insert_position)
-					set_replaced
 					if old_key = default_key then
 						set_no_default
 					else
@@ -415,80 +500,94 @@ feature -- Element change
 					if new_key = default_key then
 						set_default
 					end
+					set_replaced
 				else
 					position := insert_position
 					remove_at_position
+						check not_found: not_found end
 				end
 			end
 		ensure
+			same_count: count = old count
+			same_slot_count: used_slot_count = old used_slot_count
+			replaced_or_conflict_or_not_found: replaced or conflict or not_found
 			old_absent: (replaced and not equal (new_key, old_key))
 								implies (not has (old_key))
-			new_present: replaced implies (has (new_key))
-			same_count: count = old count
+			new_present: (replaced or conflict) = has (new_key)
+			new_item: replaced implies (item (new_key) = old (item (old_key)))
+			not_found_if_no_old_key: not_found = old (not has (old_key))
+			conflict_if_already_there: conflict = old (has (new_key))
+			not_inserted_if_conflict: conflict implies
+						(item (new_key) = old (item (new_key)))
 		end
-
 
 feature -- Removal
 
 	remove (key: H) is
 			-- Remove item associated with `key', if present.
-			-- Make `removed' true if and only if an item has been
-			-- removed (i.e. `key' was present).
-			-- If so, set `position' to index of removed element.
+			-- Set `removed' if and only if an item has been
+			-- removed (i.e. `key' was present);
+			-- if so, set `position' to index of removed element.
+			-- If not, set `not_found'.
 		local
 			default_key: H
 		do
 			internal_search (key)
 			if found then
-				set_removed
 				if key = default_key then
 					set_no_default
 				else
 					remove_at_position
 				end
 				count := count - 1
+				set_removed
 			end
 		ensure
+			removed_or_not_found: removed or not_found
 			not_there: not has (key)
 			one_less: found implies (count = old count - 1)
+			same_slot_count: used_slot_count = old used_slot_count
 		end
 
 	clear_all is
-			-- Reset all items to default values.
+			-- Reset all items to default values; reset status.
 		do
 			content.clear_all
 			keys.clear_all
 			deleted_marks.clear_all
 			count := 0
-			set_no_status
+			used_slot_count := 0
 			position := 0
-			set_no_default
 			iteration_position := capacity + 1
+			set_no_status
+			set_no_default
 		ensure then
 			position_equal_to_zero: position = 0
 			count_equal_to_zero: count = 0
+			used_slot_count_equal_to_zero: used_slot_count = 0
 			has_default_set: not has_default
-			status_set: control = 0
+			no_status: not special_status
 		end
 
 feature -- Conversion
 
 	linear_representation: ARRAYED_LIST [G] is
 			-- Representation as a linear structure
-			-- (order is same as original order of insertion)
 		local
 			i: INTEGER
+			old_iteration_position: INTEGER
 		do
+			old_iteration_position := iteration_position
 			from
 				!! Result.make (count)
+				start
 			until
-				i = capacity
+				off
 			loop
-				if occupied (i) then
-					Result.extend (content.item (i))
-				end
-				i := i + 1
+				Result.extend (item_for_iteration)
+				forth
 			end
+			iteration_position := old_iteration_position
 		ensure then
 			Result_exists: Result /= Void
 			good_count: Result.count = count
@@ -524,17 +623,7 @@ feature -- Obsolete
 			Result := Replaced_constant
 		end
 
-	valid_key (k: H): BOOLEAN is
-			obsolete "The default value is now accepted"
-			-- Is `k' a valid key?
-			-- Answer: yes
-		do
-			Result := True
-		ensure then
-			Result
-		end
-
-feature {HASH_TABLE} -- Implementation: content attributes and preservation procedure
+feature {HASH_TABLE} -- Implementation: content attributes and preservation
 
 	content: ARRAY [G]
 			-- Array of contents
@@ -573,7 +662,9 @@ feature {HASH_TABLE} -- Implementation: search attributes
 			-- Is table close to being filled to current capacity?
 			-- (If so, resizing is needed to avoid performance degradation.)
 		do
-			Result := (count * 100 >= capacity * Size_threshold)
+			Result := ((used_slot_count + 1) * 100 >= capacity * Max_occupation)
+		ensure
+			Result = ((used_slot_count + 1) * 100 >= capacity * Max_occupation)
 		end
 
 	control: INTEGER
@@ -585,11 +676,18 @@ feature {HASH_TABLE} -- Implementation: search attributes
 
 feature {NONE} -- Implementation
 
-	Size_threshold: INTEGER is 80
+	Max_occupation: INTEGER is 80
 			-- Filling percentage over which table will be resized
+
+	Initial_occupation: INTEGER is 66
+			-- Filling percentage for initial requested occupation
 
 	Impossible_position: INTEGER is -1
 			-- Position outside the array indices
+
+	used_slot_count: INTEGER
+			-- Number of slots occuped by an element either present
+			-- or marked as deleted
 
 	occupied (i: INTEGER): BOOLEAN is
 			-- Is position `i' occupied by a non-default key and a value?
@@ -641,6 +739,9 @@ feature {NONE} -- Implementation
 			in_bounds: i >= 0 and i < capacity
 		do
 			deleted_marks.put (True, i)
+
+		ensure
+			deleted: deleted (i)
 		end	
 
 	set_keys (c: like keys) is
@@ -675,7 +776,6 @@ feature {NONE} -- Implementation
 			stop: BOOLEAN
 		do
 			deleted_position := Impossible_position
-			set_no_status
 			if key = default_key then
 				position := capacity
 				if has_default then
@@ -692,7 +792,9 @@ feature {NONE} -- Implementation
 					stop
 				loop
 					if deleted (position) then
-						deleted_position := position
+						if deleted_position = Impossible_position then
+							deleted_position := position
+						end
 						to_next_candidate (increment)
 					elseif keys.item (position) = default_key then
 						stop := True
@@ -705,6 +807,11 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+		ensure
+			found_or_not_found: found or not_found
+			deleted_item_at_deleted_position:
+				(deleted_position /= Impossible_position) implies
+					(deleted (deleted_position))
 		end
 
 	insert_at_position (new: G; key: H) is
@@ -721,6 +828,8 @@ feature {NONE} -- Implementation
 			if key = default_key then
 				set_default
 			end
+		ensure
+			inserted: inserted
 		end
 
 	remove_at_position is
@@ -732,9 +841,14 @@ feature {NONE} -- Implementation
 			content.put (default_value, position)
 			keys.put (default_key, position)
 			set_deleted (position)
-			if (iteration_position = position) then
+			if iteration_position = position then
 				forth
 			end
+		ensure
+			deleted: deleted (position)
+			status_not_changed: control = old control
+			count_not_changed: count = old count
+			slot_count_not_changed: used_slot_count = old used_slot_count
 		end
 
 	key_at (n: INTEGER): H is
@@ -771,10 +885,10 @@ feature {NONE} -- Implementation
 			-- Set status to conflict.
 		do
 			control := Conflict_constant
-		end
 
-	Inserted_constant: INTEGER is unique
-			-- Insertion successful
+		ensure
+			conflict: conflict
+		end
 
 	Found_constant: INTEGER is unique
 			-- Key found
@@ -783,12 +897,19 @@ feature {NONE} -- Implementation
 			-- Set status to found.
 		do
 			control := Found_constant
+		ensure
+			found: found
 		end
+
+	Inserted_constant: INTEGER is unique
+			-- Insertion successful
 
 	set_inserted is
 			-- Set status to inserted.
 		do
 			control := Inserted_constant
+		ensure
+			inserted: inserted
 		end
 
 	Not_found_constant: INTEGER is unique
@@ -798,21 +919,27 @@ feature {NONE} -- Implementation
 			-- Set status to not found.
 		do
 			control := Not_found_constant
+		ensure
+			not_found: not_found
 		end
-
-	Removed_constant: INTEGER is unique
-			-- Remove successful
 
 	set_no_status is
 			-- Set status to normal.
 		do
 			control := 0
+		ensure
+			default_status: not special_status
 		end
+
+	Removed_constant: INTEGER is unique
+			-- Remove successful
 
 	set_removed is
 			-- Set status to removed.
 		do
 			control := Removed_constant
+		ensure
+			removed: removed
 		end
 
 	Replaced_constant: INTEGER is unique
@@ -822,49 +949,30 @@ feature {NONE} -- Implementation
 			-- Set status to replaced.
 		do
 			control := Replaced_constant
+		ensure
+			replaced: replaced
 		end
 
-	non_default_status: BOOLEAN is
-			-- Has status been set to any non-default value?
+	special_status: BOOLEAN is
+			-- Has status been set to some non-default value?
 		do
 			Result := (control > 0)
+		ensure
+			Result = (control > 0)
 		end
 
 	add_space is
 			-- Increase capacity.
-		local
-			i: INTEGER
-			other: HASH_TABLE [G, H]
 		do
-			from
-				!! other.make ((High_ratio * capacity) // Low_ratio)
-			until
-				i = capacity
-			loop
-				if occupied (i) then
-					other.put (content.item (i), keys.item (i))
-				end
-				i := i + 1
-			end
-
-			if has_default then
-				other.put (content.item (capacity), keys.item (capacity))
-			end
-
-			capacity := other.capacity
-			iteration_position := other.iteration_position
-
-			set_content (other.content)
-			set_keys (other.keys)
-			set_deleted_marks (other.deleted_marks)
+			accommodate (count)
+		ensure
+			count_not_changed: count = old count
+			slot_count_same_as_count: used_slot_count = count
+			breathing_space: count * 100 < capacity * Initial_occupation
 		end
 
 
-	Minimum_size : INTEGER is 5
-
-	High_ratio : INTEGER is 3
-
-	Low_ratio : INTEGER is 2
+	Minimum_capacity : INTEGER is 5
 
 feature {NONE} -- Inapplicable
 
@@ -888,8 +996,6 @@ invariant
 
 	keys_not_void: keys /= Void
 	content_not_void: content /= Void
-	count_big_enough: 0 <= count
-	count_small_enough: count <= capacity
 	keys_same_capacity_plus_one: keys.count = capacity + 1
 	content_same_capacity_plus_one: content.count = capacity + 1
 	deleted_same_capacity: deleted_marks.count = capacity
@@ -897,6 +1003,20 @@ invariant
 	content_starts_at_zero: content.lower = 0
 	deleted_starts_at_zero: deleted_marks.lower = 0
 	valid_iteration_position: off or truly_occupied (iteration_position)
+	control_non_negative: control >= 0
+	special_status: special_status =
+		(conflict or inserted or replaced or removed or found or not_found)
+
+	max_occupation_meaningful: (Max_occupation > 0) and (Max_Occupation < 100)
+	initial_occupation_meaningful: (Initial_occupation > 0) and
+							(Initial_Occupation < 100)
+	sized_generously_enough: Initial_occupation < Max_occupation
+	count_big_enough: 0 <= count
+	count_small_enough: count <= capacity
+	breathing_space: count * 100 <= capacity * Max_occupation
+	count_no_more_than_slot_count: count <= used_slot_count
+	slot_count_big_enough: 0 <= count
+	slot_count_small_enough: used_slot_count <= capacity
 							
 end -- class HASH_TABLE
 
@@ -913,3 +1033,5 @@ end -- class HASH_TABLE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+
+

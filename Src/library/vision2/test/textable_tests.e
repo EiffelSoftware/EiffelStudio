@@ -98,9 +98,9 @@ feature -- Initialization
 				tests.forth
 			end
 			if fail then
-				destroy
-			else
 				exit_one
+			else
+				destroy
 			end
 		end
 

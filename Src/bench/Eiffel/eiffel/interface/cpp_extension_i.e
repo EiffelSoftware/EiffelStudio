@@ -1,7 +1,5 @@
 indexing
-
-	description:
-		"Encapsulation of a C++ extension.";
+description: "Encapsulation of a C++ extension.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -10,9 +8,7 @@ class CPP_EXTENSION_I
 inherit
 	EXTERNAL_EXT_I
 		redefine
-			is_equal, is_cpp,
-			has_standard_prototype, generate_external_name,
-			generate_parameter_list
+			is_equal, is_cpp, generate_parameter_list
 		end
 
 	SHARED_CPP_CONSTANTS
@@ -56,28 +52,90 @@ feature -- Comparison
 
 feature -- Code generation
 
-	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING; ret_type: TYPE_C) is
-			-- Generate the C name associated with the extension
+	generate_body (cpp_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+			-- Generate encapsulation to C++ external which has `nb' parameters.
+		local
+			l_buffer: GENERATION_BUFFER
+			l_ret_type: TYPE_I
+		do
+				-- Initialize generation buffer.
+			l_buffer := Context.buffer
+			
+				-- Check for null pointer to C++ object in workbench mode
+			if not Context.final_mode and not System.il_generation then
+				inspect
+					type
+				when standard, data_member then
+					l_buffer.putstring ("if ((")
+					l_buffer.putstring (class_name)
+					l_buffer.putstring ("*) arg1 == NULL)")
+					l_buffer.new_line
+					l_buffer.indent
+					l_buffer.putstring ("RTET(%"")
+					l_buffer.putstring (class_name)
+					l_buffer.putstring ("::")
+					l_buffer.putstring (cpp_byte_code.external_name)
+					l_buffer.putstring ("%", EN_VOID);")
+					l_buffer.new_line
+					l_buffer.exdent
+					l_buffer.new_line
+				else
+					-- Nothing to be done otherwise.
+				end
+			end
+
+			l_ret_type := cpp_byte_code.result_type
+			if not l_ret_type.is_void then
+				a_result.print_register
+				l_buffer.putstring (" = ")
+				l_ret_type.c_type.generate_cast (l_buffer)
+			end
+
+			internal_generate (cpp_byte_code.external_name, Void, cpp_byte_code.argument_count,
+				l_ret_type)
+
+			l_buffer.putchar (';')
+			l_buffer.new_line
+		end
+
+	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
+			-- Generate inline call to C++ external.
+		require
+			external_name_not_void: external_name /= Void
+			a_ret_type_not_void: a_ret_type /= Void
 		do
 			check
 				final_mode: Context.final_mode
+			end
+			if parameters /= Void then
+				internal_generate (external_name, parameters, parameters.count, a_ret_type)
+			else
+				internal_generate (external_name, Void, 0, a_ret_type)
 			end
 		end
 
-	has_standard_prototype: BOOLEAN is False
+feature {NONE} -- Code generation
 
-	generate (external_name: STRING; parameters: BYTE_LIST [EXPR_B]) is
+	internal_generate (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_ret_type: TYPE_I) is
+		require
+			external_name_not_void: external_name /= Void
+			nb_nonnegative: nb >= 0
+			parameters_valid: parameters /= Void implies parameters.count = nb
+			a_ret_type_not_void: a_ret_type /= Void
 		local
 			buffer: GENERATION_BUFFER
 		do
-			context.set_has_cpp_externals_calls (True);
-
-			check
-					-- VAPE on precondition so ...
-				final_mode: Context.final_mode
-			end
-
 			buffer := Context.buffer
+
+			generate_header_files
+
+				-- Set `has_cpp_externals_calls' of BYTE_CONTEXT to True since
+				-- we are currently generating one.
+			context.set_has_cpp_externals_calls (True)
+			
+			if a_ret_type.is_boolean then
+				buffer.putstring("EIF_TEST")
+			end
 
 			buffer.putchar ('(')
 
@@ -96,7 +154,9 @@ feature -- Code generation
 				buffer.putstring ("new ")
 				buffer.putstring (class_name)
 			when delete then
-				buffer.putstring ("delete (")
+				buffer.putstring ("delete ((")
+				buffer.putstring (class_name)
+				buffer.putstring (" *) ")
 				generate_cpp_object_access (parameters)
 				buffer.putchar (')')
 			end
@@ -107,96 +167,71 @@ feature -- Code generation
 					-- Nothing to generate
 			when standard, static, new then
 				buffer.putchar ('(')
-				generate_arguments_with_cast (parameters)
+				if parameters /= Void then
+					generate_parameter_list (parameters, parameters.count)
+				else
+					generate_parameter_list (Void, nb)
+				end
 				buffer.putchar (')')
 			end
  
 			buffer.putchar (')')
 		end
 	
-	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]) is
-			-- Generate parameters for C++ extension
-		local
-			buffer: GENERATION_BUFFER
-		do
-			if parameters /= Void then
-				buffer := Context.buffer
-
-					-- Cast will be done in encapsulation
-				from
-					parameters.start;
-				until
-					parameters.after
-				loop
-					parameters.item.print_register;
-					if not parameters.islast then
-						buffer.putstring (", ");
-					end;
-					parameters.forth;
-				end;
-			end;
-		end
-
-feature {NONE} -- Code generation
-
 	generate_cpp_object_access (parameters: BYTE_LIST [EXPR_B]) is
-			-- Generate the C++ access code (first expression)
+			-- Generate the C++ access code.
 		require
-			non_void_arg: parameters /= Void
-			valid_arg: parameters.count >= 1
+			parameters_valid: parameters /= Void implies parameters.count >= 1
 		local
 			buffer: GENERATION_BUFFER
 		do
 			buffer := Context.buffer
-
 			buffer.putchar ('(')
 			buffer.putstring (class_name)
-			buffer.putstring ("*)")
-			parameters.first.print_register
+			buffer.putstring ("*) ")
+			generate_i_th_parameter (parameters, 1)
 		end
 
-	generate_arguments_with_cast (parameters: BYTE_LIST [EXPR_B]) is
+	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]; nb: INTEGER) is
 			-- Generate the arguments to the C++ call
 		local
-			expr: EXPR_B
-			i: INTEGER
-			generate_cast: BOOLEAN
+			i, j: INTEGER
+			has_cast: BOOLEAN
 			arg_types: like argument_types
 			buffer: GENERATION_BUFFER
-			sep: STRING
 			l_names_heap: like Names_heap
 		do
-			if parameters /= Void then
+			if parameters /= Void or nb > 0then
 				from
 					buffer := Context.buffer
-					if generate_parameter_cast then
-						generate_cast := True
+					if has_arg_list then
+						has_cast := True
 						arg_types := argument_types
 						l_names_heap := Names_heap
-						i := arg_types.lower
+						j := arg_types.lower
 					end
-					sep := ", "
-					parameters.start
 					if type = standard then
-							-- Skip C++ object
-						parameters.forth
+							-- First argument is the pointer to the C++ object
+						i := 2
+					else
+							-- constructor or call to static routine
+						i := 1
 					end
 				until
-					parameters.after
+					i > nb
 				loop
-					expr := parameters.item
-					if generate_cast then
+					if has_cast then
 						buffer.putchar ('(')
-						buffer.putstring (l_names_heap.item (arg_types.item (i)))
+						buffer.putstring (l_names_heap.item (arg_types.item (j)))
 						buffer.putchar (')')
 						buffer.putchar (' ')
-						i := i + 1
+						j := j + 1
 					end
-					expr.print_register;
-					if not parameters.islast then
-						buffer.putstring (sep)
+					generate_i_th_parameter (parameters, i)
+					i := i + 1
+					if i <= nb then
+						buffer.putstring (gc_comma)
 					end
-					parameters.forth
 				end
 			end
 		end

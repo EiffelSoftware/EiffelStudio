@@ -8,9 +8,7 @@ class INLINE_EXTENSION_I
 inherit
 	EXTERNAL_EXT_I
 		redefine
-			is_equal, is_cpp, is_inline,
-			has_standard_prototype, 
-			generate_external_name
+			is_equal, is_cpp, is_inline
 		end
 
 create
@@ -62,51 +60,55 @@ feature -- Comparison
 
 feature -- Code generation
 
-	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING; ret_type: TYPE_C) is
-			-- Generate the C name associated with the extension
-		do
-			if is_cpp then
-				context.set_has_cpp_externals_calls (True)
-			end
-		end
-
-	generate_inline_body (buffer: GENERATION_BUFFER; a_ret_type: TYPE_C) is
+	generate_body (inline_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
 			-- Generate code for inline C feature in a body, i.e. encpasulation of inline.
-		require
-			buffer_not_void: buffer /= Void
+		local
+			l_buffer: GENERATION_BUFFER
+			l_is_func: BOOLEAN
+			l_ret_type: TYPE_I
 		do
-			internal_generate_inline (buffer, Void, a_ret_type)
+			l_buffer := Context.buffer
+			l_ret_type := inline_byte_code.result_type
+			if not l_ret_type.is_void then
+				l_is_func := True
+				a_result.print_register
+				l_buffer.putstring (" = ")
+				l_ret_type.c_type.generate_cast (l_buffer)
+			end
+			internal_generate_inline (Void, l_ret_type)
+			l_buffer.putchar (';')
 		end
 
-	generate_inline_access (buffer: GENERATION_BUFFER; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_C) is
+	generate_access (parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
 			-- Generate code for access to inline C feature.
 		require
-			buffer_not_void: buffer /= Void
 			parameters_not_void: argument_names /= Void implies parameters /= Void
 			parameters_count_valid: argument_names /= Void implies
 				(argument_names.count = parameters.count)
 		do
-			internal_generate_inline (buffer, parameters, a_ret_type)
+			internal_generate_inline (parameters, a_ret_type)
 		end
 
 feature {NONE} -- Implementation
 
-	internal_generate_inline (buffer: GENERATION_BUFFER; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_C) is
+	internal_generate_inline (parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
 			-- Generate code for inline C feature.
 		require
-			buffer_not_void: buffer /= Void
 			parameters_not_void: parameters /= Void implies argument_names /= Void
 			parameters_count_valid: parameters /= Void implies
 				(argument_names.count = parameters.count)
 		local
 			l_code, l_arg: STRING
-			l_old, l_temp: like buffer
+			l_buffer: GENERATION_BUFFER
+			l_old, l_temp: GENERATION_BUFFER
 			l_values: ARRAY [STRING]
 			i, nb: INTEGER
 		do
 			if is_cpp then
 				context.set_has_cpp_externals_calls (True)
 			end
+
+			generate_header_files
 
 			l_code := clone (Names_heap.item (alias_name_id))
 			l_code.right_adjust
@@ -160,15 +162,24 @@ feature {NONE} -- Implementation
 			end
 
 				-- Replace `$$_result_type' if used by return type of current inlined function
-			l_code.replace_substring_all ("$$_result_type", a_ret_type.c_string)
+			l_code.replace_substring_all ("$$_result_type", a_ret_type.c_type.c_string)
 
 				-- FIXME: Manu 03/26/2003:
 				-- When verbatim strings are used, on Windows we get a %R%N which
 				-- is annoying to see in generated code. We get rid of it here.
 			l_code.replace_substring_all ("%R", "")
-			buffer.putstring (l_code)
+
+			l_buffer := Context.buffer
+			if a_ret_type.is_void then
+				l_buffer.putstring (l_code)
+			else
+				if a_ret_type.is_boolean then
+					l_buffer.putstring ("EIF_TEST")
+				end
+				l_buffer.putchar ('(')
+				l_buffer.putstring (l_code)
+				l_buffer.putchar (')')
+			end
 		end
-		
-	has_standard_prototype: BOOLEAN is False
 
 end -- class INLINE_EXTENSION_I

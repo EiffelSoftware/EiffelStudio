@@ -8,9 +8,7 @@ class MACRO_EXTENSION_I
 inherit
 	EXTERNAL_EXT_I
 		redefine
-			is_macro, is_equal, is_cpp,
-			has_standard_prototype, 
-			generate_external_name
+			is_macro, is_equal, is_cpp
 		end
 
 create
@@ -32,7 +30,7 @@ feature -- Properties
 	is_macro: BOOLEAN is True
 
 	is_cpp: BOOLEAN
-		-- Is Current macro a C++ one?
+			-- Is Current macro a C++ one?
 
 feature -- Comparison
 
@@ -45,19 +43,73 @@ feature -- Comparison
 		end
 
 feature -- Code generation
-
-	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING; ret_type: TYPE_C) is
-			-- Generate the C name associated with the extension
+		
+	generate_body (macro_byte_code: EXT_BYTE_CODE; a_result: RESULT_B) is
+			-- Generate encapsulation to C/C++ macro external `macro_byte_code'.
+		local
+			l_buffer: GENERATION_BUFFER
+			l_ret_type: TYPE_I
+			nb: INTEGER
 		do
+			l_ret_type := macro_byte_code.result_type
+			l_buffer := Context.buffer
+			if not l_ret_type.is_void then
+				a_result.print_register
+				l_buffer.putstring (" = ")
+				l_ret_type.c_type.generate_cast (l_buffer)
+			end
+			
+			nb := macro_byte_code.argument_count
+			internal_generate_access (macro_byte_code.external_name, Void, nb, l_ret_type)
+			l_buffer.putchar (';')
+			l_buffer.new_line
+		end
+
+	generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; a_ret_type: TYPE_I) is
+			-- Generate inline C/C++ macro external.
+		require
+			external_name_not_void: external_name /= Void
+			a_ret_type_not_void: a_ret_type /= Void
+		do
+			if parameters = Void then
+				internal_generate_access (external_name, Void, 0, a_ret_type)
+			else
+				internal_generate_access (external_name, parameters, parameters.count, a_ret_type)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	internal_generate_access (external_name: STRING; parameters: BYTE_LIST [EXPR_B]; nb: INTEGER; a_ret_type: TYPE_I) is
+			-- Generate inline C/C++ macro external.
+		require
+			external_name_not_void: external_name /= Void
+			parameters_valid: parameters /= Void implies parameters.count = nb
+			a_ret_type_not_void: a_ret_type /= Void
+		local
+			buffer: GENERATION_BUFFER
+		do
+			buffer := Context.buffer
 			if is_cpp then
 				context.set_has_cpp_externals_calls (True)
 			end
-			if has_return_type then
-				buffer.putchar ('(')
+			
+			generate_header_files
+			
+			if a_ret_type.is_boolean then
+					-- Only in case of a macro which is a function that we can generate paranthesis
+					-- around `external_name', as a procedure might be a multiline macro.
+				buffer.putstring ("EIF_TEST(")
 			end
 			buffer.putstring (external_name)
+			if nb > 0 then
+				buffer.putchar ('(')
+				generate_parameter_list (parameters, nb)
+				buffer.putchar (')')
+			end
+			if a_ret_type.is_boolean then
+				buffer.putchar (')')
+			end
 		end
-
-	has_standard_prototype: BOOLEAN is False
 
 end -- class MACRO_EXTENSION_I

@@ -14,6 +14,7 @@
 #include "ev_any_imp.c"
 #include "ev_c_util.c"
 #include "ev_titled_window_imp.c"
+#include "ev_menu_imp.c"
 #include "ev_gtk_callback_marshal.c"
 
 #include <X11/Xlib.h>

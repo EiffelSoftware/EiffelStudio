@@ -16,13 +16,11 @@
 #include "garcol.h"
 #include "retrieve.h"
 #include "store.h"
+#include "error.h"
 
 #ifdef EIF_OS2
 #include <io.h>
 #endif
-
-extern void esys();
-extern void allocate_gen_buffer();
 
 char *partial_retrieve(f_desc, position, nb_obj)
 EIF_INTEGER f_desc;
@@ -31,7 +29,7 @@ long position, nb_obj;
 	/* Return `nb_obj' retrieved in file `file_ptr' read at `position'. */
 	char *result;
 
-	retrieve_read_func = old_retrieve_read_with_compression;
+	rt_init_retrieve(old_retrieve_read_with_compression, 0);
 
 	rt_kind = '\0';
 	r_fides = (int)f_desc;
@@ -42,7 +40,7 @@ long position, nb_obj;
 	ht_free(rt_table);                  /* Free hash table descriptor */
     epop(&hec_stack, nb_recorded);      /* Pop hector records */
 
-	retrieve_read_func = retrieve_read_with_compression;
+	rt_reset_retrieve();
 
 	return result;
 }
@@ -55,7 +53,7 @@ long position;
 	 * position. */
 	char *result;
 
-	retrieve_read_func = old_retrieve_read_with_compression;
+	rt_init_retrieve(old_retrieve_read_with_compression, 0);
 
 	rt_kind = '\0';
 	r_fides = (int)f_desc;
@@ -66,7 +64,7 @@ long position;
 	ht_free(rt_table);					/* Free hash table descriptor */
 	epop(&hec_stack, nb_recorded);		/* Pop hector records */
 
-	retrieve_read_func = retrieve_read_with_compression;
+	rt_reset_retrieve();
 
 	return result;
 }

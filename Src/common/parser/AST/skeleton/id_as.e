@@ -69,8 +69,7 @@ feature {AST_EIFFEL} -- Output
 
 	string_value: STRING is
 		do
-			!! Result.make (0);
-			Result.append (Current)
+			Result := clone (Current)
 		end
 
 feature {COMPILER_EXPORTER}

@@ -37,7 +37,7 @@ inherit
 feature {NONE} -- Initialization
 
 	initialize is
-			-- 
+			-- Initialize `Current'
 		do
 			Precursor {EV_CONTAINER_IMP}
 			Precursor {EV_DYNAMIC_LIST_IMP}
@@ -71,17 +71,17 @@ feature {NONE} -- Implementation
 			v_imp: EV_WIDGET_IMP
 			a_child: POINTER
 		do
-			child_array.go_i_th (i)
-			v_imp ?= child_array.item.implementation
+			v_imp ?= i_th (i).implementation
 			check
 				v_imp_not_void: v_imp /= Void
 			end
+			child_array.go_i_th (i)
+			child_array.remove
 			on_removed_item (v_imp.interface)
 			a_child := v_imp.c_object
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (a_child)
 			feature {EV_GTK_EXTERNALS}.gtk_container_remove (list_widget, a_child)
 			feature {EV_GTK_EXTERNALS}.set_gtk_widget_struct_parent (a_child, NULL)
-			child_array.remove
 		end
 
 feature {NONE} -- Implementation

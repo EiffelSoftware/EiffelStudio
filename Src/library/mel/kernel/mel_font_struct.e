@@ -73,6 +73,18 @@ feature -- Access
 			Result := x_text_width (handle, $ext_name, a_text.count)
 		end;
 
+	font_list: MEL_FONT_LIST is
+			-- Create a font list from Current font structure
+			-- Use the default font and append a single entry
+			-- to the Result
+		local
+			an_entry: MEL_FONT_LIST_ENTRY
+		do
+			!! an_entry.make_default_from_font_struct (Current);
+			!! Result.append_entry (an_entry);
+			an_entry.destroy
+		end;
+
 feature -- Removal
 
 	destroy is

@@ -103,7 +103,8 @@ feature -- Implementation
 		is
 			-- Filter out double click events.
 		do
-			if a_type = feature {EV_GTK_EXTERNALS}.Gdk_button_press_enum and then widget_imp_at_pointer_position = Current then
+			if a_type = feature {EV_GTK_EXTERNALS}.Gdk_button_press_enum and then widget_imp_at_pointer_position = Current 
+			and then not App_implementation.is_in_transport then
 				start_transport (
 					a_x,
 					a_y,

@@ -38,6 +38,7 @@ feature -- Initialization
 			eifgen_init: INIT_SERVERS
 			project_index: INTEGER
 			open_project: OPEN_PROJECT
+			memory: MEMORY
 		do
 			if not retried then
 					-- Check that environment variables
@@ -70,6 +71,8 @@ feature -- Initialization
 					if init_license then
 						if toolkit = Void then end
 						init_windowing
+						!! memory
+						memory.set_collection_period (Configure_resources.get_integer (r_collection_period, memory.collection_period))
 						project_index := index_of_word_option ("project")
 						if project_index /= 0 then
 							!! open_project.make_from_project_file (Project_tool, argument (project_index + 1))
@@ -80,7 +83,9 @@ feature -- Initialization
 				else
 					Eiffel_project.set_batch_mode (True)
 					if init_license then
-						!! new_resources.initialize
+						!! new_resources.initialize	
+						!! memory
+						memory.set_collection_period (Configure_resources.get_integer (r_collection_period, memory.collection_period))
 							-- Start the compilation in batch mode from the bench executable.
 						!!compiler.make_unlicensed
 						discard_licenses

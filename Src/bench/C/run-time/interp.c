@@ -3992,16 +3992,6 @@ rt_private void diadic_op(int code)
 		}
 		break;
 
-	/* Modulo operator. */
-	case BC_MOD:
-		switch(first->type & SK_HEAD) {
-		case SK_INT8: first->it_int8 = first->it_int8 % second->it_int8; break;
-		case SK_INT16: first->it_int16 = first->it_int16 % second->it_int16; break;
-		case SK_INT32: first->it_int32 = first->it_int32 % second->it_int32; break;
-		case SK_INT64: first->it_int64 = first->it_int64 % second->it_int64; break;
-		default: eif_panic(MTC botched);
-		}
-		break;
 
 	/* Plus operator. */
 	case BC_PLUS: {
@@ -4315,16 +4305,109 @@ rt_private void diadic_op(int code)
 	/* Integer division operator. */
 	case BC_DIV:
 		switch(first->type & SK_HEAD) {
-		case SK_INT8: first->it_int8 = (first->it_int8 / second->it_int8); break;
-		case SK_INT16: first->it_int16 = (first->it_int16 / second->it_int16); break;
-		case SK_INT32: first->it_int32 = (first->it_int32 / second->it_int32); break;
-		case SK_INT64: first->it_int64 = (first->it_int64 / second->it_int64); break;
+		case SK_INT8:
+			CHECK ("Second argument can only be INTEGER_8", (second->type & SK_HEAD) == SK_INT8)
+			first->it_int8 = (first->it_int8 / second->it_int8);
+			break;
+		case SK_INT16:
+			CHECK ("Second argument can only be an INTEGER_8 or INTEGER_16",
+				((second->type & SK_HEAD) == SK_INT8) || ((second->type & SK_HEAD) == SK_INT16));
+					
+			switch (second->type & SK_HEAD) {
+			case SK_INT8:
+				first->it_int16 = (first->it_int16 / (EIF_INTEGER_16) second->it_int8); break;
+			case SK_INT16:
+				first->it_int16 = (first->it_int16 / second->it_int16); break;
+			}
+			break;
+		case SK_INT32:
+			CHECK ("Second argument can only be an INTEGER_8, INTEGER_16 or INTEGER_32",
+				((second->type & SK_HEAD) == SK_INT8) || ((second->type & SK_HEAD) == SK_INT16) ||
+				((second->type & SK_HEAD) == SK_INT32));
+					
+			switch (second->type & SK_HEAD) {
+			case SK_INT8:
+				first->it_int32 = (first->it_int32 / (EIF_INTEGER_32) second->it_int8); break;
+			case SK_INT16:
+				first->it_int32 = (first->it_int32 / (EIF_INTEGER_32) second->it_int16); break;
+			case SK_INT32:
+				first->it_int32 = (first->it_int32 / second->it_int32); break;
+			}
+			break;
+		case SK_INT64:
+			CHECK ("Second argument can only be an INTEGER_8, INTEGER_16, INTEGER_32 or INTEGER_64",
+				((second->type & SK_HEAD) == SK_INT8) || ((second->type & SK_HEAD) == SK_INT16) ||
+				((second->type & SK_HEAD) == SK_INT32) || ((second->type & SK_HEAD) == SK_INT64));
+					
+			switch (second->type & SK_HEAD) {
+			case SK_INT8:
+				first->it_int64 = (first->it_int64 / (EIF_INTEGER_64) second->it_int8); break;
+			case SK_INT16:
+				first->it_int64 = (first->it_int64 / (EIF_INTEGER_64) second->it_int16); break;
+			case SK_INT32:
+				first->it_int64 = (first->it_int64 / (EIF_INTEGER_64) second->it_int32); break;
+			case SK_INT64:
+				first->it_int64 = (first->it_int64 / second->it_int64); break;
+			}
+			break;
 		default: eif_panic(MTC botched);
 		}
 		break;
+
+	/* Modulo operator. */
+	case BC_MOD:
+		switch(first->type & SK_HEAD) {
+		case SK_INT8:
+			CHECK ("Second argument can only be INTEGER_8", (second->type & SK_HEAD) == SK_INT8)
+			first->it_int8 = (first->it_int8 % second->it_int8);
+			break;
+		case SK_INT16:
+			CHECK ("Second argument can only be an INTEGER_8 or INTEGER_16",
+				((second->type & SK_HEAD) == SK_INT8) || ((second->type & SK_HEAD) == SK_INT16));
+					
+			switch (second->type & SK_HEAD) {
+			case SK_INT8:
+				first->it_int16 = (first->it_int16 % (EIF_INTEGER_16) second->it_int8); break;
+			case SK_INT16:
+				first->it_int16 = (first->it_int16 % second->it_int16); break;
+			}
+			break;
+		case SK_INT32:
+			CHECK ("Second argument can only be an INTEGER_8, INTEGER_16 or INTEGER_32",
+				((second->type & SK_HEAD) == SK_INT8) || ((second->type & SK_HEAD) == SK_INT16) ||
+				((second->type & SK_HEAD) == SK_INT32));
+					
+			switch (second->type & SK_HEAD) {
+			case SK_INT8:
+				first->it_int32 = (first->it_int32 % (EIF_INTEGER_32) second->it_int8); break;
+			case SK_INT16:
+				first->it_int32 = (first->it_int32 % (EIF_INTEGER_32) second->it_int16); break;
+			case SK_INT32:
+				first->it_int32 = (first->it_int32 % second->it_int32); break;
+			}
+			break;
+		case SK_INT64:
+			CHECK ("Second argument can only be an INTEGER_8, INTEGER_16, INTEGER_32 or INTEGER_64",
+				((second->type & SK_HEAD) == SK_INT8) || ((second->type & SK_HEAD) == SK_INT16) ||
+				((second->type & SK_HEAD) == SK_INT32) || ((second->type & SK_HEAD) == SK_INT64));
+					
+			switch (second->type & SK_HEAD) {
+			case SK_INT8:
+				first->it_int64 = (first->it_int64 % (EIF_INTEGER_64) second->it_int8); break;
+			case SK_INT16:
+				first->it_int64 = (first->it_int64 % (EIF_INTEGER_64) second->it_int16); break;
+			case SK_INT32:
+				first->it_int64 = (first->it_int64 % (EIF_INTEGER_64) second->it_int32); break;
+			case SK_INT64:
+				first->it_int64 = (first->it_int64 % second->it_int64); break;
+			}
+			break;
+		default: eif_panic(MTC botched);
+		}
+		break;
+
 	default:
-		eif_panic(MTC "invalid diadic opcode");
-		/* NOTREACHED */
+		CHECK ("Found invalid diadic opcode", 0);
 	}
 
 #undef s

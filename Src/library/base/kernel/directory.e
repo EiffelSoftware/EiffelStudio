@@ -191,7 +191,9 @@ feature -- Status report
 		require
 			directory_exists: exists
 		do
-			Result := (count = 0)
+				-- count = 2, since there are "." and ".." which
+				-- are symbolic representations but not effective directories.
+			Result := (count = 2)
 		end;
 
 	exists: BOOLEAN is
@@ -248,6 +250,49 @@ feature -- Removal
 		do
 			external_name := name.to_c;
 			eif_dir_delete ($external_name)
+		end
+
+	recursive_delete is
+			-- Delete directory, its files and its subdirectories.
+		require
+			directory_exists: exists
+		local
+			external_name: ANY
+			l: LINEAR [STRING]
+			file_name: FILE_NAME
+			file: RAW_FILE
+			dir: DIRECTORY
+		do
+			l := linear_representation
+			from
+				l.start
+			until
+				l.after
+			loop
+				if
+					not l.item.is_equal (".") and
+					not l.item.is_equal ("..")
+				then
+					create file_name.make_from_string (name)
+					file_name.set_file_name (l.item)
+					create file.make (file_name)
+					if
+						file.exists and then
+						not file.is_symlink and then
+						file.is_directory
+					then
+							-- Start the recursion
+						create dir.make (file_name)
+						dir.recursive_delete
+					else
+						if file.exists and then file.is_writable then
+							file.delete
+						end
+					end
+				end
+				l.forth
+			end
+			delete
 		end
 
 	dispose is

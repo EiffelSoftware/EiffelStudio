@@ -26,7 +26,11 @@ feature -- Access
 			am := assembly_mapping
 			am.search (name)
 			if am.found then
-				create Result.make (create {STRING}.make_from_cil (t.get_full_name), am.found_item)				
+				if t.get_is_array then
+					create {CONSUMED_ARRAY_TYPE} Result.make (create {STRING}.make_from_cil (t.get_full_name.substring_int32_int32 (0, t.get_full_name.get_length - 3)), am.found_item)
+				else
+					create Result.make (create {STRING}.make_from_cil (t.get_full_name), am.found_item)
+				end
 			end
 		end
 		

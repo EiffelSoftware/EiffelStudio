@@ -13,6 +13,7 @@ feature -- Access
 	Cmd_mul_create: INTEGER is 101
 	Cmd_mul_current_item: INTEGER is 102
 	Cmd_mul_count_item: INTEGER is 103
+	Cmd_mul_count_selected_item: INTEGER is 186
 	Cmd_mul_add_item: INTEGER is 104
 	Cmd_mul_delete: INTEGER is 105
 	Cmd_combo_box_create: INTEGER is 110

@@ -195,6 +195,8 @@ feature {NONE} -- Implementation
 							Error_handler.raise_error
 						end
 					else
+						project_dir.set_licensed (info.licensed)
+						--project_dir.set_system_name (info.system_name)
 						from info.start until info.after loop
 							dir_name := info.key_for_iteration;
 							id := info.item_for_iteration;

@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 	perform_compilation (arg: ANY) is
 			-- The actual compilation process.
 		do
-			Eiffel_project.precompile
+			Eiffel_project.precompile (False)
 		end;
 
 feature {NONE} -- Attributes

@@ -13,11 +13,6 @@ class TEST_SUITE_RESULT inherit
 			copy, is_equal, run_count
 		end
 
-	STORABLE
-		undefine
-			copy, is_equal
-		end
-
 	ACTIVE_CONTAINER [TEST_RUN_RESULT]
 		rename
 			index as run, count as run_count, valid_index as valid_run_index, 

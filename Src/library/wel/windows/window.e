@@ -598,6 +598,7 @@ feature -- Element change
 	set_timer (timer_id, time_out: INTEGER) is
 			-- Set a timer idenfied by `timer_id' with a
 			-- `time_out' value (in milliseconds).
+			-- See also `on_timer'.
 		require
 			exists: exists
 			positive_timer_id: timer_id > 0
@@ -807,6 +808,24 @@ feature -- Basic operations
 			a1 := a_text.to_c
 			cwin_message_box (item, $a1, default_pointer,
 				Mb_ok + Mb_iconhand)
+		end
+
+	question_message_box (a_text, a_title: STRING): BOOLEAN is
+			-- Show a question message box with `Current'
+			-- as parent with `a_text' and `a_title'.
+			-- True is returned if the user answers yes, False
+			-- otherwise.
+		require
+			exists: exists
+			text_not_void: a_text /= Void
+			title_not_void: a_title /= Void
+		local
+			a1, a2: ANY
+		do
+			a1 := a_text.to_c
+			a2 := a_title.to_c
+			Result := cwin_message_box_result (item, $a1, $a2,
+				Mb_yesno + Mb_iconquestion) = Idyes
 		end
 
 	update is

@@ -12,8 +12,14 @@ inherit
 	GB_TWO_STATE_COMMAND
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -22,11 +28,6 @@ feature -- Access
 			-- `Current' command.
 		deferred
 		end
-		
-
-feature -- Measurement
-
-feature -- Status report
 
 feature -- Status setting
 

@@ -305,7 +305,7 @@ rt_public char * eif_getenv (char * k)
 		int appl_len, key_len;
 		HKEY hkey;
 		DWORD bsize = 1024;
-		static char buf[1024];
+		static unsigned char buf[1024];
 	
 		appl_len = strlen (egc_system_name);
 		key_len = strlen (k);
@@ -451,7 +451,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	) {
 		zone = HEADER(ref);
 		zone->ov_size = ref - new_area;		/* For GC: offset within area */
-		zone->ov_flags = dftype;				/* Expanded type */
+		zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
 		if (init) {
 			RT_GC_PROTECT(ref);
 			(init)(ref, ref);						/* Call initialization routine if any*/
@@ -475,7 +475,7 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	) {
 		zone = HEADER(ref);
 		zone->ov_size = ref - new_area;		/* For GC: offset within area */
-		zone->ov_flags = dftype;				/* Expanded type */
+		zone->ov_flags = dftype | EO_EXP;	/* Expanded type */
 		if (init) {
 			RT_GC_PROTECT(ref);
 			(init)(ref, ref);						/* Call initialization routine if any */

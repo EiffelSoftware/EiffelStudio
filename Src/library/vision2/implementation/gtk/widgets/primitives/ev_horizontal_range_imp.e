@@ -30,9 +30,9 @@ feature {NONE} -- Initialization
 			Precursor (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
 			visual_widget := feature {EV_GTK_EXTERNALS}.gtk_hscale_new (adjustment)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (visual_widget)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, visual_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_scale_set_digits (visual_widget, 0)	
+			feature {EV_GTK_EXTERNALS}.gtk_scale_set_digits (visual_widget, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_show (visual_widget)
 		end
 
 feature {EV_ANY_I} -- Implementation

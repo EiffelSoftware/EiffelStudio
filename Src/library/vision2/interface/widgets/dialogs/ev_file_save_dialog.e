@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 			-- Create a window with a parent.
 		do
 			!EV_FILE_SAVE_DIALOG_IMP! implementation.make (par)
+			implementation.set_interface (Current)
 		end
 
 feature -- Implementation

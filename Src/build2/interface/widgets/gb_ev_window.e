@@ -54,20 +54,9 @@ feature -- Access
 			user_can_resize.select_actions.extend (agent update_editors)
 			
 				-- Set up maximum_width and maximum_height.
-			create maximum_width_label.make_with_text ("Maximum_width")
-			Result.extend (maximum_width_label)
-			create maximum_width
-			Result.extend (maximum_width)
-			maximum_width.return_actions.extend (agent set_maximum_width)
-			maximum_width.return_actions.extend (agent update_editors)
 			
-			create maximum_height_label.make_with_text ("Maximum_height")
-			Result.extend (maximum_height_label)
-			create maximum_height
-			Result.extend (maximum_height)
-			--maximum_height.set_text (first.maximum_height.out)
-			maximum_height.return_actions.extend (agent set_maximum_height)
-			maximum_height.return_actions.extend (agent update_editors)
+			create maximum_width_input.make (Current, Result, "Maximum_width", agent set_maximum_width (?), agent valid_maximum_width (?))
+			create maximum_height_input.make (Current, Result, "Maximum_height", agent set_maximum_height (?), agent valid_maximum_height (?))
 			
 				-- Set up title.
 			create title_label.make_with_text ("Title")
@@ -88,22 +77,18 @@ feature -- Access
 			-- from `objects.first'.
 		do
 			user_can_resize.select_actions.block
-			maximum_width.return_actions.block
-			maximum_height.return_actions.block
 			title.change_actions.block
 			
 			if first.user_can_resize then
 				user_can_resize.enable_select
 			else
 				user_can_resize.disable_select
-			end	
-			maximum_width.set_text (first.maximum_width.out)
-			maximum_height.set_text (first.maximum_height.out)
+			end
+			maximum_width_input.set_text (first.maximum_width.out)
+			maximum_height_input.set_text (first.maximum_height.out)
 			title.set_text (first.title)
 			
 			user_can_resize.select_actions.resume
-			maximum_width.return_actions.resume
-			maximum_height.return_actions.resume
 			title.change_actions.resume
 		end
 		
@@ -179,7 +164,10 @@ feature {NONE} -- Implementation
 	user_can_resize: EV_CHECK_BUTTON
 		-- Check button controlling to user_can_resize attribute.
 	
-	maximum_width, maximum_height, title: EV_TEXT_FIELD
+	maximum_width_input, maximum_height_input: GB_INTEGER_INPUT_FIELD
+		-- Input widgets for `maximum_width' and `maximum_height'.
+
+	title: EV_TEXT_FIELD
 		-- Entry fields for `attribute_editor'.
 		
 	maximum_width_label, maximum_height_label, title_label: EV_LABEL
@@ -194,35 +182,33 @@ feature {NONE} -- Implementation
 				for_first_object (agent {EV_WINDOW}.disable_user_resize)
 			end
 		end
-		
-	set_maximum_height is
-			-- Update property `maximum_height' on all items in `objects'.
-		require
-			first_not_void: first /= Void
-		local
-			value: INTEGER
-		do
-			if maximum_height.text /= Void and then maximum_height.text.is_integer then
-				value := maximum_height.text.to_integer
-				if value > 0 and value >= first.minimum_height then
-					for_first_object (agent {EV_WINDOW}.set_maximum_height (value))
-				end
-			end
-		end
-		
-	set_maximum_width is
+
+	set_maximum_width (integer: INTEGER) is
 			-- Update property `maximum_width' on all items in `objects'.
 		require
 			first_not_void: first /= Void
-		local
-			value: INTEGER
 		do
-			if maximum_width.text /= Void and then maximum_width.text.is_integer then
-				value := maximum_width.text.to_integer
-				if value > 0 and value >= first.minimum_width then
-					for_first_object (agent {EV_WINDOW}.set_maximum_width (value))
-				end
-			end
+			for_first_object (agent {EV_WINDOW}.set_maximum_width (integer))
+		end
+		
+	valid_maximum_width (value: INTEGER): BOOLEAN is
+			-- Is `value' a valid maximum_width?
+		do
+			Result := value > 0 and value >= first.minimum_width
+		end
+		
+	set_maximum_height (integer: INTEGER) is
+			-- Update property `maximum_width' on all items in `objects'.
+		require
+			first_not_void: first /= Void
+		do
+			for_first_object (agent {EV_WINDOW}.set_maximum_height (integer))
+		end
+		
+	valid_maximum_height (value: INTEGER): BOOLEAN is
+			-- Is `value' a valid maximum_height?
+		do
+			Result := value > 0 and value >= first.minimum_height
 		end
 		
 	set_title is

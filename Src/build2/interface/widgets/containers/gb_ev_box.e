@@ -64,22 +64,10 @@ feature -- Access
 			Result.extend (is_homogeneous_check)
 			is_homogeneous_check.select_actions.extend (agent update_homogeneous)
 			is_homogeneous_check.select_actions.extend (agent update_editors)
-			create label.make_with_text ("Border width")
-			Result.extend (label)
-			create border_entry
-			Result.extend (border_entry)
-			border_entry.return_actions.extend (agent update_border)
-			border_entry.return_actions.extend (agent update_editors)
 			
-			create label.make_with_text ("Padding width")
-			Result.extend (label)
-			create padding_entry
-			Result.extend (padding_entry)
-			padding_entry.return_actions.extend (agent update_padding)
-			padding_entry.return_actions.extend (agent update_editors)
-			
-			
-			
+			create padding_entry.make (Current, Result, "Padding", agent set_padding (?), agent valid_input (?))
+			create border_entry.make (Current, Result, "Border", agent set_border (?), agent valid_input (?))
+
 				-- We only add the is_expandable label if there are children
 			if not first.is_empty then
 				create label.make_with_text ("Is_item_expanded?")
@@ -115,8 +103,6 @@ feature -- Access
 				counts_match: first.count = check_buttons.count
 			end
 			is_homogeneous_check.select_actions.block
-			border_entry.return_actions.block
-			padding_entry.return_actions.block
 
 			if first.is_homogeneous then
 				is_homogeneous_check.enable_select
@@ -141,8 +127,6 @@ feature -- Access
 				check_buttons.forth
 			end			
 			is_homogeneous_check.select_actions.resume
-			border_entry.return_actions.resume
-			padding_entry.return_actions.resume
 		end
 		
 		
@@ -321,32 +305,32 @@ feature {NONE} -- Implementation
 				for_all_objects (agent {EV_BOX}.disable_homogeneous)
 			end
 		end
-		
-	update_border is
-			-- Update border_width of items in `objects' depending on
-			-- state of `border_entry'.
-		do
-			if border_entry.text.is_integer and then
-				border_entry.text.to_integer >= 0 then
-				for_all_objects (agent {EV_BOX}.set_border_width (border_entry.text.to_integer))
-			end
-		end
-		
-	update_padding is
-			-- Update padding of items in `objects' depending os
-			-- state of `padding_entry'.
-		do
-			if padding_entry.text.is_integer and then
-				padding_entry.text.to_integer >= 0 then
-				for_all_objects (agent {EV_BOX}.set_padding_width (padding_entry.text.to_integer))
-			end
-		end
 
+	set_padding (value: INTEGER) is
+			-- Update property `padding' on all items in `objects'.
+		require
+			first_not_void: first /= Void
+		do
+			for_all_objects (agent {EV_BOX}.set_padding_width (value))
+		end
+		
+	valid_input (value: INTEGER): BOOLEAN is
+			-- Is `value' a valid padding?
+		do
+			Result := value >= 0
+		end
+		
+	set_border (value: INTEGER) is
+			-- Update property `border' on all items in `objects'.
+		require
+			first_not_void: first /= Void
+		do
+			for_all_objects (agent {EV_BOX}.set_border_width (value))
+		end
+		
 	is_homogeneous_check: EV_CHECK_BUTTON
-	
-	border_entry: EV_TEXT_FIELD
-	
-	padding_entry: EV_TEXT_FIELD
+
+	border_entry, padding_entry: GB_INTEGER_INPUT_FIELD
 	
 	Is_homogeneous_string: STRING is "Is_homogeneous"
 	Padding_string: STRING is "Padding"

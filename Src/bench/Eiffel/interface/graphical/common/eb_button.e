@@ -11,7 +11,9 @@ inherit
 	PICT_COLOR_B
 		rename
 			make as button_make
-		end
+		redefine
+			set_sensitive, set_insensitive
+		end;
 	FOCUSABLE
 
 creation
@@ -68,6 +70,18 @@ feature -- Status Setting
 			else
 				set_symbol (symbol)
 			end
+		end;
+
+	set_sensitive is
+			-- Make Current sensitive for user input.
+		do
+			set_symbol (symbol)
+		end;
+
+	set_insensitive is
+			-- Make Current insensitive for user input.
+		do
+			set_symbol (grey_symbol)
 		end;
 
 	set_symbol (p: PIXMAP) is

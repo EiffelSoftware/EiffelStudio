@@ -43,4 +43,8 @@ feature -- Access
 	
 	Case_17: STRING is "Class STRING must have a procedure with an integer argument named `set_count'";
 
+	Case_18: STRING is "Class TUPLE must inherit from ARRAY [ANY]";
+
+	Case_19: STRING is "Class TUPLE must have exactly one creation procedure `make'";
+
 end -- class SPECIAL_CONST

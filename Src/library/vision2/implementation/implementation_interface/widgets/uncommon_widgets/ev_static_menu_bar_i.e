@@ -30,7 +30,11 @@ feature -- Access
 		require
 			exists: not destroyed
 		do
-			Result ?= parent_imp.interface
+			if parent_imp /= Void then
+				Result ?= parent_imp.interface
+			else
+				Result := Void
+			end
 		end
 
 feature -- Status report

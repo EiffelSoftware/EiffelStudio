@@ -11,6 +11,13 @@ inherit
 	GB_TWO_STATE_COMMAND
 	
 	GB_SHARED_TOOLS
+	
+	GB_SHARED_SYSTEM_STATUS
+	
+	WIZARD_SHARED
+		rename
+			pixmap as wizard_pixmap
+		end
 
 create
 	make
@@ -47,7 +54,26 @@ feature -- Execution
 			-- Execute command (toggle between show and hide).
 		do
 			if is_selected then
-				builder_window.show
+					-- If we are in wizard mode from Visual Studio,
+					-- then we must show the window relative to the
+					-- main window. This is because we are shown modally
+					-- to Visual Studio, and otherwise, the windows
+					-- become very annoying.
+				if system_status.is_wizard_system then
+					builder_window.show_relative_to_window (first_window)
+				else
+					builder_window.show
+				end
+					-- If the window is empty, then we give a default size.
+				if builder_window.is_empty then
+					builder_window.set_size (100, 100)
+						-- Ensure that the windows are not displayed directly on top of each other.
+						-- This only seems to happen when they are shown relative.
+					if display_window.is_show_requested and display_window.x_position = builder_window.x_position and
+						display_window.y_position = builder_window.y_position then
+						builder_window.set_position (builder_window.x_position + 5, builder_window.y_position + 5)
+					end
+				end
 			else
 				builder_window.hide
 				builder_window.set_size (0, 0)

@@ -74,13 +74,17 @@ RT_LNK EIF_REFERENCE *EIF_once_values;	/* Once values for a thread */
 RT_LNK int in_assertion;	/* Value of the assertion level */
 
 	/* garcol.c */
+#ifdef ISE_GC
 RT_LNK struct stack loc_stack;	/* Local indirection stack */
 RT_LNK struct stack loc_set;	/* Local variable stack */
+#endif
 RT_LNK struct stack once_set;	/* Once functions */
 
+#ifdef ISE_GC
 	/* hector.c */
 RT_LNK struct stack hec_stack;	/* Indirection table "hector" */
 extern struct stack hec_saved;	/* Saved indirection pointers */
+#endif
 
 #else
 
@@ -176,14 +180,18 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	EIF_CHARACTER eif_string_buffer_cx [MAX_NUM_LEN + 1]; /* Where string is built. */
 
 		/* garcol.c */
+#ifdef ISE_GC
 	struct stack loc_stack_cx;		/* Local indirection stack */
 	struct stack loc_set_cx;	/* Local variable stack */
+#endif
 	struct stack once_set_cx;	/* Once functions */
 
+#ifdef ISE_GC
 		/* hector.c */
 	struct stack hec_stack_cx;		/* Indirection table "hector stack" for references passed to C*/
 	struct stack hec_saved_cx;		/* Indirection table "hector saved" */
 	struct stack free_stack_cx;		/* Entries free in hector */
+#endif
 
 } eif_global_context_t;
 
@@ -321,14 +329,18 @@ rt_private eif_global_context_t * eif_thr_getspecific (EIF_TSD_TYPE global_key) 
 #define eif_string_buffer	(eif_globals->eif_string_buffer_cx)	/* N/A */
 
 	/* garcol.c */
+#ifdef ISE_GC
 #define loc_stack			(eif_globals->loc_stack_cx) /* rt_public */
 #define loc_set				(eif_globals->loc_set_cx) /* rt_public */
+#endif
 #define once_set			(eif_globals->once_set_cx) /* rt_public */
 
+#ifdef ISE_GC
 	/* hector.c */
 #define hec_stack			(eif_globals->hec_stack_cx)		/* rt_public */
 #define hec_saved			(eif_globals->hec_saved_cx)		/* rt_public */
 #define free_stack			(eif_globals->free_stack_cx)	/* rt_private */
+#endif
 
 RT_LNK EIF_TSD_TYPE eif_global_key;
 

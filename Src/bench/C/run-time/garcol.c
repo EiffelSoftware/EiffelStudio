@@ -1604,6 +1604,26 @@ rt_private void mark_overflow_stack(register4 MARKER marker, register6 int move)
 	/* The routine used to mark objects */
 	/* Are the objects expected to move? */
 {
+	/* Overflow stack management:
+	 * --------------------------
+	 *
+	 * During the marking phase, each time we reach a depth of `overflow_stack_limit' we stop
+	 * the recursion on the marking routines. What we do instead is to store the location
+	 * where the reference to the object is stored and we insert it in `overflow_stack_set'.
+	 * Then we continue with our marking. As a consequence the marking phase has
+	 * a stack depth which is bounded to `current_stack_depth + overflow_stack_limit'.
+	 *
+	 * When all structures have been marked, we are marking in an iterative manner
+	 * all objects stored in `stk' a copy of `overflow_stack_set'. Same things here,
+	 * if we reach the maximum depth during marking, we add the item to a freshly created
+	 * copy of `overflow_stack_set'. We repeat this process until there are no more
+	 * objects added to `overflow_stack_set'.
+	 *
+	 * Note the trick is to store the address of where the object is referenced from.
+	 * Without it we would not be able to resolve all references to moved objects during
+	 * marking.
+	 */
+
 	/* Loop over the `overflow_stack_set' stack, using the supplied marker to recursively
 	 * mark the objects. The 'move' flag is a flag which tells us whether the
 	 * objects are expected to move or not (to avoid useless writing
@@ -1647,7 +1667,7 @@ rt_private void mark_overflow_stack(register4 MARKER marker, register6 int move)
 		st_reset(&stk);
 	}
 
-	ENSURE ("Overflow stack empty", overlow_stack_count == 0);
+	ENSURE ("Overflow stack empty", overflow_stack_count == 0);
 }
 
 

@@ -397,6 +397,10 @@ feature -- Access
 			Result.force (clone (exists_routine), clone (exists_routine))
 			Result.force ("class_name", "class_name")
 			Result.force ("set_value", "set_value")
+			Result.force ("recipient_name", "recipient_name")
+			Result.force ("meaning", "meaning")
+			Result.force ("raise", "raise")
+			Result.force ("set_item", "set_item")
 		end
 
 	c_keywords: HASH_TABLE [STRING, STRING] is

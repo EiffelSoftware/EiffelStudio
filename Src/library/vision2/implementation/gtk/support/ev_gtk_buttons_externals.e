@@ -11,64 +11,77 @@ class
 feature {NONE} -- GTK C functions for buttons
 
 	gtk_button_new_with_label (label: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_button_new: POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- GTK C functions for toggle buttons
 
 
 	gtk_toggle_button_new_with_label (label: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_toggle_button_set_active (button: POINTER; state: BOOLEAN) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 	
 	gtk_toggle_button_toggled (button: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_toggle_button_new: POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- GTK C functions for check buttons
 
 	gtk_check_button_new_with_label (label: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_check_button_new: POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- GTK C functions for radio buttons
 
 	gtk_radio_button_new (gp: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_radio_button_new_with_label (gp: POINTER; label: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_radio_button_group (gp: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 	gtk_radio_button_set_group (but, gp: POINTER) is
-		external "C | <gtk/gtk.h>"
+		external
+			"C | <gtk/gtk.h>"
 		end
 
 feature {NONE} -- code in the glue library
 
 	c_gtk_toggle_button_active (button: POINTER): BOOLEAN is
-		external "C | %"gtk_eiffel.h%""
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 end -- class EV_GTK_BUTTONS_EXTERNALS

@@ -183,7 +183,10 @@ feature -- Query
 			line_not_void: a_line /= Void
 		do
 			from
-				start
+				start				
+				if a_line = current_line then
+					Result := 1
+				end
 			until
 				a_line = current_line or after
 			loop

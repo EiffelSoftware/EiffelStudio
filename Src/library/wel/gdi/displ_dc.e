@@ -39,30 +39,6 @@ feature {NONE} -- Externals
 			"GetDC"
 		end
 
-	cwin_get_window_dc (hwnd: POINTER): POINTER is
-			-- SDK GetWindowDC
-		external
-			"C [macro <wel.h>] (HWND): EIF_POINTER"
-		alias
-			"GetWindowDC"
-		end
-
-	cwin_begin_paint (hwnd, paint_struct: POINTER): POINTER is
-			-- SDK BeginPaint
-		external
-			"C [macro <wel.h>] (HWND, PAINTSTRUCT *): EIF_POINTER"
-		alias
-			"BeginPaint"
-		end
-
-	cwin_end_paint (hwnd, paint_struct: POINTER) is
-			-- SDK EndPaint
-		external
-			"C [macro <wel.h>] (HWND, PAINTSTRUCT *)"
-		alias
-			"EndPaint"
-		end
-
 	cwin_release_dc (hwnd, hdc: POINTER) is
 			-- SDK ReleaseDC
 		external

@@ -27,11 +27,11 @@ class IEiffelProjectProperties;
 extern "C" {
 #endif
 
-#ifndef __ecom_eiffel_compiler_IEiffelClusterProperties_FWD_DEFINED__
-#define __ecom_eiffel_compiler_IEiffelClusterProperties_FWD_DEFINED__
+#ifndef __ecom_eiffel_compiler_IEiffelSystemClusters_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEiffelSystemClusters_FWD_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelClusterProperties;
+class IEiffelSystemClusters;
 }
 #endif
 
@@ -170,30 +170,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Working directory.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP working_directory(  /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Working directory.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_working_directory(  /* [in] */ BSTR return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Program arguments.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP arguments(  /* [out, retval] */ BSTR * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Program arguments.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_arguments(  /* [in] */ BSTR return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
 	Generate debug info?
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP debug_info(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
@@ -206,27 +182,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	List of clusters in current project (list of IEiffelClusterProperties*).
+	Project Clusters.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP clusters(  /* [out, retval] */ VARIANT * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Add a cluster to the project.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP add_cluster(  /* [in] */ BSTR cluster_name, /* [in] */ BSTR parent_name, /* [in] */ BSTR cluster_path ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Remove a cluster from the project.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP remove_cluster(  /* [in] */ BSTR cluster_name ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Cluster properties.
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP cluster_properties(  /* [in] */ BSTR cluster_name, /* [out, retval] */ ecom_eiffel_compiler::IEiffelClusterProperties * * return_value ) = 0;
+	virtual STDMETHODIMP clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemClusters * * return_value ) = 0;
 
 
 	/*-----------------------------------------------------------

@@ -161,30 +161,6 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Working directory.
-	-----------------------------------------------------------*/
-	STDMETHODIMP working_directory(  /* [out, retval] */ BSTR * return_value );
-
-
-	/*-----------------------------------------------------------
-	Working directory.
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_working_directory(  /* [in] */ BSTR return_value );
-
-
-	/*-----------------------------------------------------------
-	Program arguments.
-	-----------------------------------------------------------*/
-	STDMETHODIMP arguments(  /* [out, retval] */ BSTR * return_value );
-
-
-	/*-----------------------------------------------------------
-	Program arguments.
-	-----------------------------------------------------------*/
-	STDMETHODIMP set_arguments(  /* [in] */ BSTR return_value );
-
-
-	/*-----------------------------------------------------------
 	Generate debug info?
 	-----------------------------------------------------------*/
 	STDMETHODIMP debug_info(  /* [out, retval] */ VARIANT_BOOL * return_value );
@@ -197,27 +173,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	List of clusters in current project (list of IEiffelClusterProperties*).
+	Project Clusters.
 	-----------------------------------------------------------*/
-	STDMETHODIMP clusters(  /* [out, retval] */ VARIANT * return_value );
-
-
-	/*-----------------------------------------------------------
-	Add a cluster to the project.
-	-----------------------------------------------------------*/
-	STDMETHODIMP add_cluster(  /* [in] */ BSTR cluster_name, /* [in] */ BSTR parent_name, /* [in] */ BSTR cluster_path );
-
-
-	/*-----------------------------------------------------------
-	Remove a cluster from the project.
-	-----------------------------------------------------------*/
-	STDMETHODIMP remove_cluster(  /* [in] */ BSTR cluster_name );
-
-
-	/*-----------------------------------------------------------
-	Cluster properties.
-	-----------------------------------------------------------*/
-	STDMETHODIMP cluster_properties(  /* [in] */ BSTR cluster_name, /* [out, retval] */ ecom_eiffel_compiler::IEiffelClusterProperties * * return_value );
+	STDMETHODIMP clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemClusters * * return_value );
 
 
 	/*-----------------------------------------------------------

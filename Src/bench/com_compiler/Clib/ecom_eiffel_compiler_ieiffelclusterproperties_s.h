@@ -27,6 +27,16 @@ class IEiffelClusterProperties;
 extern "C" {
 #endif
 
+#ifndef __ecom_eiffel_compiler_IEnumClusterProp_FWD_DEFINED__
+#define __ecom_eiffel_compiler_IEnumClusterProp_FWD_DEFINED__
+namespace ecom_eiffel_compiler
+{
+class IEnumClusterProp;
+}
+#endif
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #ifndef __ecom_eiffel_compiler_IEiffelClusterProperties_INTERFACE_DEFINED__
@@ -118,21 +128,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Should preconditions be evaluated by default?
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_evaluate_require_by_default(  /* [in] */ VARIANT_BOOL return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
 	Should postconditions be evaluated by default?
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP evaluate_ensure_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Should postconditions be evaluated by default?
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_evaluate_ensure_by_default(  /* [in] */ VARIANT_BOOL return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -142,21 +140,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Should check assertions be evaluated by default?
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_evaluate_check_by_default(  /* [in] */ VARIANT_BOOL return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
 	Should loop assertions be evaluated by default?
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP evaluate_loop_by_default(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
-
-
-	/*-----------------------------------------------------------
-	Should loop assertions be evaluated by default?
-	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_evaluate_loop_by_default(  /* [in] */ VARIANT_BOOL return_value ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -166,9 +152,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Should class invariants be evaluated by default?
+	Set assertions for cluster.
 	-----------------------------------------------------------*/
-	virtual STDMETHODIMP set_evaluate_invariant_by_default(  /* [in] */ VARIANT_BOOL return_value ) = 0;
+	virtual STDMETHODIMP set_assertions(  /* [in] */ VARIANT_BOOL evaluate_check, /* [in] */ VARIANT_BOOL evaluate_require, /* [in] */ VARIANT_BOOL evaluate_ensure, /* [in] */ VARIANT_BOOL evaluate_loop, /* [in] */ VARIANT_BOOL evaluate_invariant ) = 0;
 
 
 	/*-----------------------------------------------------------
@@ -187,6 +173,42 @@ public:
 	Remove a directory to exclude.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP remove_exclude(  /* [in] */ BSTR dir_name ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Name of the parent cluster.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP parent_name(  /* [out, retval] */ BSTR * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Name of the parent cluster.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP set_parent_name(  /* [in] */ BSTR return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Does the current cluster have a parent cluster?
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP has_parent(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	List of subclusters (list of IEiffelClusterProperties*).
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP subclusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumClusterProp * * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Does the current cluster have children?
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP has_children(  /* [out, retval] */ VARIANT_BOOL * return_value ) = 0;
+
+
+	/*-----------------------------------------------------------
+	Cluster identifier.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP cluster_id(  /* [out, retval] */ ULONG * return_value ) = 0;
 
 
 

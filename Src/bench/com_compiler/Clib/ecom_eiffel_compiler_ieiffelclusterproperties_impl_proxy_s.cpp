@@ -519,38 +519,6 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_eval
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_set_evaluate_require_by_default(  /* [in] */ EIF_BOOLEAN return_value )
-
-/*-----------------------------------------------------------
-	Should preconditions be evaluated by default?
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelClusterProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelClusterProperties_, (void **)&p_IEiffelClusterProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	VARIANT_BOOL tmp_return_value = 0;
-	tmp_return_value = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (return_value);
-	
-	hr = p_IEiffelClusterProperties->set_evaluate_require_by_default(tmp_return_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 EIF_BOOLEAN ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_evaluate_ensure_by_default(  )
 
 /*-----------------------------------------------------------
@@ -581,38 +549,6 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_eval
 	
 	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
 	return (eiffel_result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_set_evaluate_ensure_by_default(  /* [in] */ EIF_BOOLEAN return_value )
-
-/*-----------------------------------------------------------
-	Should postconditions be evaluated by default?
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelClusterProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelClusterProperties_, (void **)&p_IEiffelClusterProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	VARIANT_BOOL tmp_return_value = 0;
-	tmp_return_value = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (return_value);
-	
-	hr = p_IEiffelClusterProperties->set_evaluate_ensure_by_default(tmp_return_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -649,38 +585,6 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_eval
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_set_evaluate_check_by_default(  /* [in] */ EIF_BOOLEAN return_value )
-
-/*-----------------------------------------------------------
-	Should check assertions be evaluated by default?
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelClusterProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelClusterProperties_, (void **)&p_IEiffelClusterProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	VARIANT_BOOL tmp_return_value = 0;
-	tmp_return_value = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (return_value);
-	
-	hr = p_IEiffelClusterProperties->set_evaluate_check_by_default(tmp_return_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 EIF_BOOLEAN ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_evaluate_loop_by_default(  )
 
 /*-----------------------------------------------------------
@@ -711,38 +615,6 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_eval
 	
 	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
 	return (eiffel_result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_set_evaluate_loop_by_default(  /* [in] */ EIF_BOOLEAN return_value )
-
-/*-----------------------------------------------------------
-	Should loop assertions be evaluated by default?
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelClusterProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelClusterProperties_, (void **)&p_IEiffelClusterProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	VARIANT_BOOL tmp_return_value = 0;
-	tmp_return_value = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (return_value);
-	
-	hr = p_IEiffelClusterProperties->set_evaluate_loop_by_default(tmp_return_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -779,10 +651,10 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_eval
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_set_evaluate_invariant_by_default(  /* [in] */ EIF_BOOLEAN return_value )
+void ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_set_assertions(  /* [in] */ EIF_BOOLEAN evaluate_check,  /* [in] */ EIF_BOOLEAN evaluate_require,  /* [in] */ EIF_BOOLEAN evaluate_ensure,  /* [in] */ EIF_BOOLEAN evaluate_loop,  /* [in] */ EIF_BOOLEAN evaluate_invariant )
 
 /*-----------------------------------------------------------
-	Should class invariants be evaluated by default?
+	Set assertions for cluster.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -796,10 +668,18 @@ void ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_set_evaluat
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	VARIANT_BOOL tmp_return_value = 0;
-	tmp_return_value = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (return_value);
+	VARIANT_BOOL tmp_evaluate_check = 0;
+	tmp_evaluate_check = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (evaluate_check);
+	VARIANT_BOOL tmp_evaluate_require = 0;
+	tmp_evaluate_require = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (evaluate_require);
+	VARIANT_BOOL tmp_evaluate_ensure = 0;
+	tmp_evaluate_ensure = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (evaluate_ensure);
+	VARIANT_BOOL tmp_evaluate_loop = 0;
+	tmp_evaluate_loop = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (evaluate_loop);
+	VARIANT_BOOL tmp_evaluate_invariant = 0;
+	tmp_evaluate_invariant = (VARIANT_BOOL)rt_ec.ccom_ec_boolean (evaluate_invariant);
 	
-	hr = p_IEiffelClusterProperties->set_evaluate_invariant_by_default(tmp_return_value);
+	hr = p_IEiffelClusterProperties->set_assertions(tmp_evaluate_check,tmp_evaluate_require,tmp_evaluate_ensure,tmp_evaluate_loop,tmp_evaluate_invariant);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -908,6 +788,205 @@ void ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_remove_excl
 	
 	rt_ce.free_memory_bstr (tmp_dir_name);
 
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_parent_name(  )
+
+/*-----------------------------------------------------------
+	Name of the parent cluster.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelClusterProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelClusterProperties_, (void **)&p_IEiffelClusterProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR ret_value = 0;
+	
+	hr = p_IEiffelClusterProperties->parent_name( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
+	rt_ce.free_memory_bstr (ret_value);
+	return eif_wean (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+void ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_set_parent_name(  /* [in] */ EIF_OBJECT return_value )
+
+/*-----------------------------------------------------------
+	Name of the parent cluster.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelClusterProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelClusterProperties_, (void **)&p_IEiffelClusterProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	BSTR tmp_return_value = 0;
+	tmp_return_value = (BSTR)rt_ec.ccom_ec_bstr (eif_access (return_value));
+	
+	hr = p_IEiffelClusterProperties->set_parent_name(tmp_return_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	rt_ce.free_memory_bstr (tmp_return_value);
+
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_BOOLEAN ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_has_parent(  )
+
+/*-----------------------------------------------------------
+	Does the current cluster have a parent cluster?
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelClusterProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelClusterProperties_, (void **)&p_IEiffelClusterProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	VARIANT_BOOL ret_value = 0;
+	
+	hr = p_IEiffelClusterProperties->has_parent( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
+	return (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_subclusters(  )
+
+/*-----------------------------------------------------------
+	List of subclusters (list of IEiffelClusterProperties*).
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelClusterProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelClusterProperties_, (void **)&p_IEiffelClusterProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	ecom_eiffel_compiler::IEnumClusterProp * ret_value = 0;
+	
+	hr = p_IEiffelClusterProperties->subclusters( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_117 (ret_value));
+	return eif_wean (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_BOOLEAN ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_has_children(  )
+
+/*-----------------------------------------------------------
+	Does the current cluster have children?
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelClusterProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelClusterProperties_, (void **)&p_IEiffelClusterProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	VARIANT_BOOL ret_value = 0;
+	
+	hr = p_IEiffelClusterProperties->has_children( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
+	return (eiffel_result);
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_INTEGER ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy::ccom_cluster_id(  )
+
+/*-----------------------------------------------------------
+	Cluster identifier.
+-----------------------------------------------------------*/
+{
+	HRESULT hr;
+	if (p_IEiffelClusterProperties == NULL)
+	{
+		hr = p_unknown->QueryInterface (IID_IEiffelClusterProperties_, (void **)&p_IEiffelClusterProperties);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	};
+	ULONG ret_value = 0;
+	
+	hr = p_IEiffelClusterProperties->cluster_id( &ret_value);
+	if (FAILED (hr))
+	{
+		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
+		com_eraise (f.c_format_message (hr), EN_PROG);
+	};
+	
+	
+	EIF_INTEGER eiffel_result =  (EIF_INTEGER)ret_value;
+	return (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

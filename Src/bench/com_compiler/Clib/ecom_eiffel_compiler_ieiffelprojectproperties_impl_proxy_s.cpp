@@ -748,140 +748,6 @@ void ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_set_evaluat
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_working_directory(  )
-
-/*-----------------------------------------------------------
-	Working directory.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelProjectProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR ret_value = 0;
-	
-	hr = p_IEiffelProjectProperties->working_directory( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
-	rt_ce.free_memory_bstr (ret_value);
-	return eif_wean (eiffel_result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_set_working_directory(  /* [in] */ EIF_OBJECT return_value )
-
-/*-----------------------------------------------------------
-	Working directory.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelProjectProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_return_value = 0;
-	tmp_return_value = (BSTR)rt_ec.ccom_ec_bstr (eif_access (return_value));
-	
-	hr = p_IEiffelProjectProperties->set_working_directory(tmp_return_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_return_value);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_arguments(  )
-
-/*-----------------------------------------------------------
-	Program arguments.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelProjectProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR ret_value = 0;
-	
-	hr = p_IEiffelProjectProperties->arguments( &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)rt_ce.ccom_ce_bstr (ret_value));
-	rt_ce.free_memory_bstr (ret_value);
-	return eif_wean (eiffel_result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_set_arguments(  /* [in] */ EIF_OBJECT return_value )
-
-/*-----------------------------------------------------------
-	Program arguments.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelProjectProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_return_value = 0;
-	tmp_return_value = (BSTR)rt_ec.ccom_ec_bstr (eif_access (return_value));
-	
-	hr = p_IEiffelProjectProperties->set_arguments(tmp_return_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_return_value);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
 EIF_BOOLEAN ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_debug_info(  )
 
 /*-----------------------------------------------------------
@@ -950,7 +816,7 @@ void ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_set_debug_i
 EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_clusters(  )
 
 /*-----------------------------------------------------------
-	List of clusters in current project (list of IEiffelClusterProperties*).
+	Project Clusters.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -964,19 +830,9 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_cl
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
+	ecom_eiffel_compiler::IEiffelSystemClusters * ret_value = 0;
 	
-	EIF_TYPE_ID tid = -1;
-	EIF_OBJECT result = 0;
-	EIF_PROCEDURE make = 0;
-	VARIANT * ret_value;
-
-	tid = eif_type_id ("ECOM_VARIANT");
-	make = eif_procedure ("make", tid);
-	result = eif_create (tid);
-	make (eif_access (result));
-	ret_value = (VARIANT *)eif_field (eif_access (result), "item", EIF_POINTER);
-	
-	hr = p_IEiffelProjectProperties->clusters( ret_value);
+	hr = p_IEiffelProjectProperties->clusters( &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -985,114 +841,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_cl
 	};
 	
 	
-	return eif_wean (result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_add_cluster(  /* [in] */ EIF_OBJECT cluster_name,  /* [in] */ EIF_OBJECT parent_name,  /* [in] */ EIF_OBJECT cluster_path )
-
-/*-----------------------------------------------------------
-	Add a cluster to the project.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelProjectProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_cluster_name = 0;
-	tmp_cluster_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (cluster_name));
-	BSTR tmp_parent_name = 0;
-	tmp_parent_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (parent_name));
-	BSTR tmp_cluster_path = 0;
-	tmp_cluster_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (cluster_path));
-	
-	hr = p_IEiffelProjectProperties->add_cluster(tmp_cluster_name,tmp_parent_name,tmp_cluster_path);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_cluster_name);
-rt_ce.free_memory_bstr (tmp_parent_name);
-rt_ce.free_memory_bstr (tmp_cluster_path);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_remove_cluster(  /* [in] */ EIF_OBJECT cluster_name )
-
-/*-----------------------------------------------------------
-	Remove a cluster from the project.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelProjectProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_cluster_name = 0;
-	tmp_cluster_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (cluster_name));
-	
-	hr = p_IEiffelProjectProperties->remove_cluster(tmp_cluster_name);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_cluster_name);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelProjectProperties_impl_proxy::ccom_cluster_properties(  /* [in] */ EIF_OBJECT cluster_name )
-
-/*-----------------------------------------------------------
-	Cluster properties.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelProjectProperties == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelProjectProperties_, (void **)&p_IEiffelProjectProperties);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_cluster_name = 0;
-	tmp_cluster_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (cluster_name));
-	ecom_eiffel_compiler::IEiffelClusterProperties * ret_value = 0;
-	
-	hr = p_IEiffelProjectProperties->cluster_properties(tmp_cluster_name, &ret_value);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_cluster_name);
-
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_115 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_Eif_compiler.ccom_ce_pointed_interface_112 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

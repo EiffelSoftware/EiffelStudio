@@ -65,7 +65,7 @@ feature -- Initialization
 			!! a_dc.make (Current)
 			!! window_color.make_system (Color_window)
 			a_dc.get
-			a_dc.set_bk_color (window_color)
+			a_dc.set_background_color (window_color)
 			a_dc.release
 			create_buttons
 			create_controls

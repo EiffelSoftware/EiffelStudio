@@ -10,7 +10,10 @@ class OPEN_FILE
 
 inherit
 
-	PIXMAP_COMMAND;
+	PIXMAP_COMMAND
+		rename
+			init as make
+		end;
 	WARNER_CALLBACKS
 		rename
 			execute_warner_ok as loose_changes
@@ -20,14 +23,6 @@ creation
 
 	make
 	
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialization of the command.
-		do
-			init (a_text_window)
-		end;
-
 feature -- Callbacks
 
 	execute_warner_help is

@@ -9,20 +9,15 @@ class DEBUG_STATUS
 
 inherit
 
-	PIXMAP_COMMAND;
+	PIXMAP_COMMAND
+		rename
+			init as make
+		end;
 	SHARED_APPLICATION_EXECUTION
 
 creation
 
 	make
-
-feature -- Initialization
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialize the command.
-		do 
-			init (a_text_window)
-		end;
 
 feature -- Properties
 

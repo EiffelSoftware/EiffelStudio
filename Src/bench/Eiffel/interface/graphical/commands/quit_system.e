@@ -11,21 +11,13 @@ inherit
 
 	QUIT_FILE
 		redefine 
-			work, make, loose_changes
+			work, loose_changes
 		end
 
 creation
 
 	make
 	
-feature -- Initialization
-
-	make (a_text_window: like text_window) is
-			-- Initialize the command.
-		do
-			init (a_text_window)
-		end;
-
 feature -- Callbacks
 
 	loose_changes (argument: ANY) is

@@ -12,21 +12,13 @@ inherit
 	SHARED_EIFFEL_PROJECT;
 	OPEN_FILE
 		redefine
-			make, work
+			work
 		end;
 
 creation
 
 	make
 	
-feature -- Implementation
-
-	make (a_text_window: TEXT_WINDOW) is
-			-- Initialize the command.
-		do
-			init (a_text_window)
-		end;
-
 feature {NONE} -- Implementation
 
 	work (argument: ANY) is

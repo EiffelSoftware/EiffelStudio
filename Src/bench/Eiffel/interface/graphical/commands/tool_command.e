@@ -13,18 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	init (a_text_window: like text_window) is
-			-- Initialize a command with the `symbol' icon,
-			-- `a_text_window' is passed as argument to the activation action.
-		require
-			a_text_window_not_void: a_text_window /= Void
-		do
-			tool := a_text_window.tool
-		ensure
-			tool_set: tool = a_text_window.tool
-		end;
-
-	init_from_tool (a_tool: like tool) is
+	init (a_tool: like tool) is
 			-- Initialize a command with the `symbol' icon,
 			-- `a_tool' is passed as argument to the activation action.
 		require
@@ -35,12 +24,10 @@ feature {NONE} -- Initialization
 			tool_set: tool = a_tool
 		end;
 
-feature -- Properties
+feature -- Access
 
 	tool: TOOL_W;
 			-- Tool associated with command
-
-feature -- Access
 
 	text_window: TEXT_WINDOW is
 			-- Text window which status tells if we want to execute 

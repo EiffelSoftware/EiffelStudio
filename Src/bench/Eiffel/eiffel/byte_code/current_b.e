@@ -43,7 +43,7 @@ feature
 
 	register_name: STRING is
 			-- The "Current" string
-		do
+		once
 			Result := "Current";
 		end;
 

@@ -26,7 +26,9 @@ inherit
 		redefine
 			append_text,
 			interface,
-			initialize
+			initialize,
+			selection_start,
+			selection_end
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -190,6 +192,25 @@ feature -- Status Report
 			else
 				Result := wel_text_length
 			end
+		end
+		
+	selection_start: INTEGER is
+			-- Index of first character selected.
+		local
+			new_lines_to_start: INTEGER
+			
+		do
+			new_lines_to_start := wel_text.substring (1, wel_selection_start).occurrences ('%R')
+			Result := wel_selection_start + 1 - new_lines_to_start
+		end
+
+	selection_end: INTEGER is
+			-- Index of last character selected.
+		local
+			new_lines_to_end: INTEGER
+		do
+			new_lines_to_end := wel_text.substring (1, wel_selection_end).occurrences ('%R')
+			Result := wel_selection_end - new_lines_to_end
 		end
 	
 feature -- Status Settings

@@ -134,22 +134,22 @@ feature -- Output
 
 feature {NONE} -- Implementation
 
-	nex (a1: like area; size, pos: INTEGER): INTEGER is
+	nex (a1: POINTER; size, pos: INTEGER): INTEGER is
 		external
 			"C"
 		end;
 
-	lar (a1: like area; size: INTEGER): INTEGER is
+	lar (a1: POINTER; size: INTEGER): INTEGER is
 		external
 			"C"
 		end;
 
-	sma (a1: like area; size: INTEGER): INTEGER is
+	sma (a1: POINTER; size: INTEGER): INTEGER is
 		external
 			"C"
 		end;
 
-	bempty (a1: like area; size: INTEGER): INTEGER is
+	bempty (a1: POINTER; size: INTEGER): INTEGER is
 		external
 			"C"
 		end;

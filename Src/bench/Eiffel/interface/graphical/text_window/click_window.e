@@ -20,7 +20,7 @@ inherit
 			put_error, put_class, put_after_class, put_classi, put_cluster,
 			put_class_syntax, put_ace_syntax, process_breakpoint, 
 			process_padded, disable_clicking, update_clickable_from_stone,
-			put_operator
+			put_operator, process_column_text, process_call_stack_item
 		end
 
 feature -- Properties
@@ -217,6 +217,34 @@ feature -- Processing for text_struct
 			put_string (" ")
 		end;
 
+	process_column_text (t: COLUMN_TEXT) is
+			-- Process `text'.
+		local
+			last_pos: INTEGER;
+			str: STRING
+		do
+			last_pos := text_position - current_line_pos.item;
+			!! str.make (t.number_of_blanks (last_pos));
+			str.fill_blank;
+			put_string (str)
+		end;
+
+	process_call_stack_item (t: CALL_STACK_ITEM) is
+			-- Process the current callstack text.
+		local
+			stone: CALL_STACK_STONE;
+			ln: INTEGER
+		do
+			ln := t.level_number;
+			if ln > 0 then
+				!! stone.make (ln);
+				put_stone (stone, t.image)
+			else
+				put_string (t.image)
+			end;
+			current_line_pos.set_item (text_position);
+		end;
+
 feature -- Update
 
 	update_clickable_from_stone is
@@ -322,5 +350,11 @@ feature {NONE} -- Implementation
 			add_click_stone (p);
 			text_position := text_position + length;
 		end;
+
+	current_line_pos: INTEGER_REF is
+			-- Current position in line for callstack
+		once
+			!! Result
+		end
 
 end -- class CLICK_WINDOW

@@ -347,14 +347,6 @@ feature -- Properties
 				local_workbench.change_class (system_object_class)
 			end
 			local_workbench.change_class (any_class)
-			local_workbench.change_class (double_class)
-			local_workbench.change_class (real_class)
-			local_workbench.change_class (integer_8_class)
-			local_workbench.change_class (integer_16_class)
-			local_workbench.change_class (integer_32_class)
-			local_workbench.change_class (integer_64_class)
-			local_workbench.change_class (boolean_class)
-			local_workbench.change_class (character_class)
 			local_workbench.change_class (special_class)
 			local_workbench.change_class (pointer_class)
 			local_workbench.change_class (array_class)
@@ -375,7 +367,16 @@ feature -- Properties
 
 			local_workbench.change_class (string_class)
 
-			protected_classes_level := string_class.compiled_class.class_id
+			local_workbench.change_class (double_class)
+			local_workbench.change_class (real_class)
+			local_workbench.change_class (integer_8_class)
+			local_workbench.change_class (integer_16_class)
+			local_workbench.change_class (integer_32_class)
+			local_workbench.change_class (integer_64_class)
+			local_workbench.change_class (character_class)
+			local_workbench.change_class (boolean_class)
+
+			protected_classes_level := boolean_class.compiled_class.class_id
 				-- The root class is not protected 
 				-- Godammit.
 			local_workbench.change_class (root_class)

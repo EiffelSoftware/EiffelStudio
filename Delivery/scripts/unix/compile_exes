@@ -123,6 +123,7 @@ if [ ! -f x2c ]; then
 fi
 move x2c $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
+cd $EXPORT_DIR
 source compile_wizards
 
 CANCEL

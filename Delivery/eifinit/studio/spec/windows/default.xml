@@ -9,15 +9,15 @@
 			<TEXT>text_mode<STRING>UNIX</STRING></TEXT>
 			<TEXT>editor<STRING>vi</STRING></TEXT>
 			<TEXT>temporary_directory<STRING>/tmp</STRING></TEXT>
-			<TEXT>shell_command<STRING>vi +$line $target</STRING></TEXT>
+			<TEXT DESCRIPTION="Command used to launch an external editor">shell_command<STRING>vi +$line $target</STRING></TEXT>
 			<TEXT>filter_name<STRING>PostScript</STRING></TEXT>
 			<TEXT>filter_command<STRING>none</STRING></TEXT>
-			<TEXT>print_shell_command<STRING>lpr $target</STRING></TEXT>
+			<TEXT DESCRIPTION="Command invoked to print a text">print_shell_command<STRING>lpr $target</STRING></TEXT>
 			<TEXT>web_browser<STRING>netscape</STRING></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="tools" ICON="icon_preferences_folder">
 			<HEAD>Tool</HEAD>
-			<TEXT>history_size<INTEGER>10</INTEGER></TEXT>
+			<TEXT DESCRIPTION="maximum number of items displayed in the history combo boxes">history_size<INTEGER>10</INTEGER></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Tools" ICON="icon_preferences_folder">
@@ -467,13 +467,13 @@
 			<TEXT>class_tool_command_bar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>class_tool_format_bar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>parse_ace_after_saving<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>unified_stone<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Share addresses between the editor and the context tool?">unified_stone<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_address_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_project_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_text_in_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time">development_window__left_panel_use_explorer_style<BOOLEAN>False</BOOLEAN></TEXT>
-			<TEXT>feature_clause_order<LIST_STRING>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST_STRING></TEXT>
+			<TEXT DESCRIPTION="Order used to sort feature clauses in formatted texts">feature_clause_order<LIST_STRING>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST_STRING></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Feature_tool" ICON="icon_preferences_folder">
 			<HEAD>Feature tool</HEAD>
@@ -481,7 +481,7 @@
 			<TEXT>feature_tool_height<INTEGER>450</INTEGER></TEXT>
 			<TEXT>feature_tool_command_bar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>feature_tool_format_bar<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>expand_feature_tree<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Automatically expand the feature tree">expand_feature_tree<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>do_flat_in_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Object_tool" ICON="icon_preferences_folder">
@@ -497,8 +497,8 @@
 		</TOPIC>
 		<TOPIC TOPIC_ID="Diagram" ICON="icon_preferences_folder">
 			<HEAD>Diagram</HEAD>
-			<TEXT>excluded_class_figures<LIST_STRING>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST_STRING></TEXT>
-			<TEXT>ignore_excluded_class_figures<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Names of classes that should not appear in generated diagrams">excluded_class_figures<LIST_STRING>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST_STRING></TEXT>
+			<TEXT DESCRIPTION="Should the named classes be ignored?">ignore_excluded_class_figures<BOOLEAN>False</BOOLEAN></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Dialogs" ICON="icon_preferences_folder">
 			<HEAD>Dialogs</HEAD>
@@ -569,10 +569,10 @@
 			<TEXT>progress_bar_color<COLOR>0;0;255</COLOR></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Formatters" ICON="icon_preferences_folder">
-			<TEXT>show_all_callers<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>show_syntactical_suppliers<BOOLEAN>True</BOOLEAN></TEXT>
-			<TEXT>excluded_indexing_items<LIST_STRING>revision;date;status</LIST_STRING></TEXT>
-			<TEXT>feature_clause_order<LIST_STRING>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation</LIST_STRING></TEXT>
+			<TEXT DESCRIPTION="Show all callers (as opposed to local callers)">show_all_callers<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Show syntactical suppliers (as opposed to actual suppliers)">show_syntactical_suppliers<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Indexing items that need not be included in formatted texts">excluded_indexing_items<LIST_STRING>revision;date;status</LIST_STRING></TEXT>
+			<TEXT DESCRIPTION="Order used to sort feature clauses">feature_clause_order<LIST_STRING>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation</LIST_STRING></TEXT>
 			<TEXT>history_size<INTEGER>60</INTEGER></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Default_fonts" ICON="icon_preferences_folder">

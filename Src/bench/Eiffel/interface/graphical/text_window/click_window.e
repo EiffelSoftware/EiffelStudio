@@ -70,10 +70,10 @@ feature -- Input
 		end;
 
 	put_operator (str: STRING;
-			e_feature: E_FEATURE; e_class: E_CLASS; is_keyword: BOOLEAN) is
+			e_feature: E_FEATURE; is_keyword: BOOLEAN) is
 		   -- Process operator text.
 		do
-			put_feature (e_feature, e_class, str)
+			put_feature (e_feature, str)
 		end;
 
 	put_breakpoint_stone (a_stone: BREAKABLE_STONE; stone_string: STRING) is
@@ -139,13 +139,13 @@ feature -- Input
 			put_stone (stone, str)
 		end;
 
-	put_feature (feat: E_FEATURE; e_class: E_CLASS; str: STRING) is
-			-- Put feature `feat' defined in `e_class' with string
+	put_feature (feat: E_FEATURE; str: STRING) is
+			-- Put feature `feat' with string
 			-- representation `str' at current position.
 		local
 			stone: FEATURE_STONE	
 		do
-			!! stone.make (feat, e_class);
+			!! stone.make (feat);
 			put_stone (stone, str)
 		end;
 

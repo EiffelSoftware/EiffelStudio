@@ -102,7 +102,7 @@ feature -- Type check, byte code and dead code removal
 			end
 
 				-- Export validity
-			if not prefix_feature.is_exported_for (last_class) then
+			if not (context.is_ignoring_export or prefix_feature.is_exported_for (last_class)) then
 				create vuex
 				context.init_error (vuex)
 				vuex.set_static_class (last_class)

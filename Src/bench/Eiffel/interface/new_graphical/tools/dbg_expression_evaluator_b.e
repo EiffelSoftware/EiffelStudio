@@ -1348,7 +1348,10 @@ feature {NONE} -- Implementation
 			reset_error
 			if not retried then
 				error_handler.wipe_out
+				Ast_context.set_is_ignoring_export (True)
 				exp.type_check
+				Ast_context.set_is_ignoring_export (False)
+				
 				if error_handler.has_error then
 					type_check_succeed := True
 					l_error := error_handler.error_list.first

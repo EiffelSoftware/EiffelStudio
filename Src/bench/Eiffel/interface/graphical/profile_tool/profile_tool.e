@@ -10,6 +10,8 @@ class PROFILE_TOOL
 inherit
 	TOP_SHELL
 		rename
+			hide as top_shell_hide,
+			show as top_shell_show,
 			make as top_shell_make
 		end;
 	COMMAND;
@@ -426,6 +428,36 @@ feature {QUIT_PROFILE_TOOL, CLOSE_ALL_CMD} -- Implementation
 				open_tools.remove
 			end;
 			command.done_profiling
+		end
+
+feature -- Update
+
+	show is
+			-- Show Current and open_tools.
+		do
+			top_shell_show;
+			from
+				open_tools.start
+			until
+				open_tools.after
+			loop
+				open_tools.item.popup;
+				open_tools.forth
+			end;
+		end;
+
+	hide is
+			-- Hide Current and open_tools.
+		do
+			top_shell_hide;
+			from
+				open_tools.start
+			until
+				open_tools.after
+			loop
+				open_tools.item.popdown;
+				open_tools.forth
+			end;
 		end
 
 feature {NONE} -- Execution

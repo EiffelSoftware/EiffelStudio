@@ -20,7 +20,6 @@ class ARRAYED_LIST [G] inherit
 			item as i_th,
 			make as array_make,
 			put as put_i_th,
-			wipe_out as array_wipe_out,
 			count as array_count,
 			bag_put as put,
 			copy as array_copy
@@ -36,34 +35,7 @@ class ARRAYED_LIST [G] inherit
 			prune, consistent, occurrences,
 			extendible, has, is_equal
 		redefine
-			extend, setup, prune_all, full, valid_index
-		end;
-
-	ARRAY [G]
-		rename
-			force as force_i_th,
-			item as i_th,
-			make as array_make,
-			put as put_i_th,
-			count as array_count,
-			bag_put as put,
-			copy as array_copy
-		export
-			{NONE}
-				all;
-			{ARRAYED_LIST}
-				array_make;
-			{ANY}
-				capacity
-		undefine
-			linear_representation, prunable, full, put,
-			prune, consistent, occurrences,
-			extendible, has, is_equal
-		redefine
-			wipe_out, extend,
-			setup, prune_all, valid_index
-		select
-			wipe_out
+			extend, setup, prune_all, full, valid_index, wipe_out
 		end;
 
 	DYNAMIC_LIST [G]
@@ -537,7 +509,7 @@ feature -- Removal
 		do
 			count := 0;
 			index := 0;
-			array_wipe_out;
+			discard_items;
 		end;
 
 feature -- Duplication

@@ -76,8 +76,7 @@ feature -- Basic operations
 			-- Activate the dialog box.
 			-- Can be called several times.
 		require
-			parent_not_void: parent /= Void
-			parent_exits: parent.exists
+			parent_exists: parent /= Void implies parent.exists
 			not_exists: not exists
 		do
 			internal_dialog_make (parent, resource_id,

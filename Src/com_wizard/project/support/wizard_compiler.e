@@ -248,7 +248,8 @@ feature -- Basic Operations
 			a_string: STRING
 			a_file: RAW_FILE
 		do
-			a_string := clone (a_folder)
+			a_string := clone (shared_wizard_environment.destination_folder)
+			a_string.append (a_folder)
 			a_string.append_character (Directory_separator)
 			a_string.append (Ace_file_name)
 			create a_file.make_create_read_write (a_string)
@@ -299,7 +300,8 @@ feature -- Basic Operations
 			a_string: STRING
 			a_file: RAW_FILE
 		do
-			a_string := clone (a_folder)
+			a_string := clone (shared_wizard_environment.destination_folder)
+			a_string.append (a_folder)
 			a_string.append_character (Directory_separator)
 			a_string.append (Resource_file_name)
 			create a_file.make_create_read_write (a_string)

@@ -16,7 +16,8 @@ inherit
 			is_equal
 		end;
 	SHARED_FORMAT_INFO;
-	SHARED_TEXT_ITEMS
+	SHARED_TEXT_ITEMS;
+	COMPILER_EXPORTER
 
 creation
 

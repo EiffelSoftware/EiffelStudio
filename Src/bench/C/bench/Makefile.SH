@@ -20,7 +20,7 @@ echo "Extracting ${DIR}Makefile (with variable substitutions)"
 $spitshell >Makefile <<!GROK!THIS!
 
 CC=$cc
-CFLAGS=$ccflags
+CFLAGS=$ccflags $optimize
 INCLUDE_PATH=../run-time
 
 special_tables.o : special_tables.c

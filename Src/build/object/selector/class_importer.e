@@ -323,7 +323,7 @@ feature
 			-- Close class selector.
 		do
 			hide
-			main_panel.class_selector_entry.set_toggle_off
+			main_panel.class_importer_entry.set_toggle_off
 		end
 
 feature -- Lists generation

@@ -314,6 +314,7 @@ feature -- Inlining
 			cl_type: CL_TYPE_I
 			bc: STD_BYTE_CODE
 			old_c_t: CL_TYPE_I
+			computed_body_id: BODY_ID
 		do
 			if not is_once then
 				type_i := context_type;
@@ -322,7 +323,8 @@ feature -- Inlining
 						-- Inline only if it is not polymorphic and if it can be inlined.
 					if Eiffel_table.is_polymorphic (routine_id, cl_type.type_id, True) = -1 then
 						inliner := System.remover.inliner;
-						inline := inliner.inline (type, body_id)
+						computed_body_id := body_id
+						inline := inliner.inline (type, computed_body_id)
 					end;
 				end
 			end
@@ -337,7 +339,7 @@ feature -- Inlining
 					!! inlined_feat_b;
 				end
 				inlined_feat_b.fill_from (Current)
-				bc ?= Byte_server.disk_item (body_id);
+				bc ?= Byte_server.disk_item (computed_body_id);
 
 				old_c_t := Context.current_type;
 				Context.set_current_type (current_type);

@@ -1,7 +1,5 @@
 indexing
 	description: " EiffelVision Toolbar button, mswindows implementation."
-	note: " Menu-items have even ids and tool-bar buttons have%
-		% odd ids because both use the on_wm_command."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"

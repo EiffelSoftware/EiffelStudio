@@ -1,7 +1,6 @@
 @echo off
 if .%1. == .clean. goto clean
 if .%1. == .win32. goto win32
-if .%1. == .win31. goto win31
 :usage
 echo make ...
 echo     Options:
@@ -10,50 +9,26 @@ echo        win32 b - build a Win32 run-time for Borland
 echo        win32 g - build a Win32 run-time for GCC-cygwin
 echo        win32 l - build a Win32 run-time for lcc
 echo        win32 m - build a Win32 run-time for Microsoft
-echo        win32 w - build a Win32 run-time for Watcom
-echo        win32 s - build a Win32 run-time for Symantec
-echo        win31   - build a Windows 3.1 run-time
-goto end
-:win31
-echo Not fully implemented yet
-copy config.win eif_config.h
-copy confmagi.h confmagc.h
-del run-time\eif_config.h
-rem We may be run on a 32 bit machine
-copy eif_confmagic.h confmagc.h
-cd run-time
-copy makefile.win makefile
-wmake
 goto end
 :win32
 if .%2. == .. goto usage
 if NOT .%2. == .b. goto msoft
-copy config.w32b eif_config.h
+copy config.w32 eif_config.h
 copy config.bsh config.sh
 goto process
 :msoft
-if NOT .%2. == .m. goto symantec
-copy config.w32m eif_config.h
+if NOT .%2. == .m. goto gcc
+copy config.w32 eif_config.h
 copy config.msh config.sh
-goto process
-:symantec
-if NOT .%2. == .s. goto watcom
-copy config.w32s eif_config.h
-copy config.ssh config.sh
-goto process
-:watcom
-if NOT .%2. == .w. goto gcc
-copy config.w32w eif_config.h
-copy config.wsh config.sh
 goto process
 :gcc
 if NOT .%2. == .g. goto lcc
-copy config.w32m eif_config.h
+copy config.w32 eif_config.h
 copy config.gsh config.sh
 goto process
 :lcc
 if NOT .%2. == .l. goto usage
-copy config.w32m eif_config.h
+copy config.w32 eif_config.h
 copy config.lsh config.sh
 goto process
 :process
@@ -64,8 +39,8 @@ echo are incorrect, then abort this program (control + break and then
 echo press any key) and edit the configuration file:
 echo     - config.msh (Configuration file for Visual C++)
 echo     - config.bsh (Configuration file for Borland C++)
-echo     - config.wsh (Configuration file for Watcom C++)
-echo     - config.ssh (Configuration file for Symantec C++)
+echo     - config.gsh (Configuration file for GCC)
+echo     - config.lsh (Configuration file for Lcc)
 pause
 echo @echo off > make.w32
 echo $make %%1>> make.w32
@@ -100,6 +75,7 @@ copy config.sh run-time
 copy make.w32 run-time\make.bat
 copy run-time\size.win run-time\eif_size.h
 copy run-time\size.win eif_size.h
+del make.w32
 rem
 rem Create OBJDIR, LIB, and FREELIB in run-time
 rem
@@ -241,7 +217,6 @@ del run-time\eif_portable.h
 del config.sh
 del confmagc.h
 del eif_config.h
-del make.w32
 del make.bat
 del eif_size.h
 del *.$$$

@@ -192,6 +192,17 @@ feature -- Status report
 				Lb_gettopindex, 0, 0)
 		end
 
+	is_selected (index: INTEGER): BOOLEAN is
+			-- Is item at position `index' selected?
+		require
+			exists: exists
+			index_large_enough: index >= 0
+			index_small_enough: index < count
+		do
+			Result := cwin_send_message_result (item, Lb_getsel,
+				index, 0) > 0
+		end
+
 feature -- Basic operations
 
 	find_string (index: INTEGER; a_string: STRING): INTEGER is

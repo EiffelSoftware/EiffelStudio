@@ -994,9 +994,9 @@ feature {NONE} -- Mouse copy cut
 			create cur.make_from_integer (1, text_displayed)
 			position_cursor (cur, x_pos, y_pos)
 			Result := cursor_is_in_selection (cur)
-			if include_selection_end then
-				Result := Result or else cur.is_equal (text_displayed.selection_end)
-			end
+--			if include_selection_end then
+--				Result := Result or else cur.is_equal (text_displayed.selection_end)
+--			end
 		end
 
 	cursor_is_in_selection (cur: TEXT_CURSOR): BOOLEAN is

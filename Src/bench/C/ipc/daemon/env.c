@@ -20,7 +20,7 @@ char *win_eif_getenv (char *k, char *app)
 {
 	char *result = getenv (k);
 
-	if (!result)
+	if (result)
 		return result;
 	else {
 		char *key, *lower_k;

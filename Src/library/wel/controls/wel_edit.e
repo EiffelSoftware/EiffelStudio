@@ -173,8 +173,8 @@ feature -- Status setting
 			cwin_send_message (item, Em_setsel, start_position, end_position)
 		ensure
 			has_selection: (start_position /= end_position) implies has_selection
-			selection_start_set: selection_start = start_position
-			selection_end_set: selection_end = end_position
+			logical_order: (end_position >= start_position) implies (selection_start = start_position and selection_end = end_position)
+			reverse_order: (end_position < start_position) implies (selection_start = end_position and selection_end = start_position)
 		end
 
 	set_caret_position (position: INTEGER) is

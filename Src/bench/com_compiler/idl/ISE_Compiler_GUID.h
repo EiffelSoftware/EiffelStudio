@@ -351,6 +351,7 @@ enum
     DISPID_EiffelComCompiler_GetClusterTree,
     DISPID_EiffelComCompiler_GetAllClusters,
     DISPID_EiffelComCompiler_GetClusterFullName,
+    DISPID_EiffelComCompiler_GetClusterFullNamespace,
     DISPID_EiffelComCompiler_GetClusterProperties,
     DISPID_EiffelComCompiler_GetClusterPropertiesById,
     DISPID_EiffelComCompiler_ChangeClusterName,

@@ -1033,6 +1033,9 @@ interface IEiffelSystemClusters: IDispatch
 	[id (DISPID_EiffelComCompiler_GetClusterFullName ), helpstring( "Get a clusters full name from its name." )]
 	HRESULT GetClusterFullName( [in] BSTR bstrName, [out, retval] BSTR* pbstrFullName );
 
+	[id (DISPID_EiffelComCompiler_GetClusterFullNamespace ), helpstring( "Get a clusters full namespace from its name." )]
+	HRESULT GetClusterFullNamespace( [in] BSTR bstrName, [out, retval] BSTR* pbstrFullNamespace );
+
 	[id (DISPID_EiffelComCompiler_GetClusterProperties ), helpstring( "Retrieve a clusters properties by its name." )]
 	HRESULT GetClusterProperties( [in] BSTR bstrName, [out, retval] IEiffelClusterProperties** ppIEiffelClusterProperties );
 

@@ -94,7 +94,7 @@ private void call_down();				/* Move cursor downwards */
 private void call_up();					/* Move cursor upwards */
 
 extern struct opstack op_stack;			/* Operational stack */
-extern long mcount;						/* Size of the melting table */
+extern long melt_count;					/* Size of the melting table */
 
 #ifndef lint
 private char *rcsid =
@@ -891,9 +891,9 @@ int new;		/* Amount of new entries in melting table */
 
 #ifdef DEBUG
 	dprintf(4)("dmake_room: extending melt (0x%lx), %d items by %d\n",
-		 melt, mcount, new);
+		 melt, melt_count, new);
 	dprintf(4)("dmake_room: extending mpatidtab (0x%lx), %d items by %d\n",
-		 mpatidtab, mcount, new);
+		 mpatidtab, melt_count, new);
 #endif
 
 	if (melt == (char **) 0) {
@@ -901,21 +901,21 @@ int new;		/* Amount of new entries in melting table */
 		new_mpatidtab = (int *) cmalloc(new * sizeof(int));
 	}
 	else {
-		new_melt = (char **) crealloc(melt + zeroc, (mcount + new) * sizeof(char *));
-		new_mpatidtab = (int *) crealloc(mpatidtab + zeroc, (mcount + new) * sizeof(int));
+		new_melt = (char **) crealloc(melt + zeroc, (melt_count + new) * sizeof(char *));
+		new_mpatidtab = (int *) crealloc(mpatidtab + zeroc, (melt_count + new) * sizeof(int));
 	}
 	if ((new_melt == (char **) 0) || (new_mpatidtab == (int *) 0))
 		return -1;				/* Not enough memory for extension */
 
-	mcount += new;				/* New melting table size */
+	melt_count += new;				/* New melting table size */
 	melt = new_melt - zeroc;			/* Melting table address may have changed */
 	mpatidtab = new_mpatidtab - zeroc;	/* Melted pattern id table may heve changed */
 	
 #ifdef DEBUG
 	dprintf(4)("dmake_room: extension ok, melt now at 0x%lx, %d items\n",
-		 melt, mcount);
+		 melt, melt_count);
 	dprintf(4)("dmake_room: extension ok, mpatidtab now at 0x%lx, %d items\n",
-		 mpatidtab, mcount);
+		 mpatidtab, melt_count);
 #endif
 
 	return 0;					/* Reallocation ok */

@@ -238,8 +238,8 @@ char *obj1, *obj2;
 }
 
 public int econfm(ancestor, heir)
-int heir;		/* If conformance is true, this must be the heir type */
-int ancestor;	/* And this must be the ancestor then */
+int ancestor;	/* If conformance is true, this must be the ancestor type */
+int heir;		/* And this must be the heir then */
 {
 	/* Does dynamic type `heir' conform to dynamic type `ancestor' ? */
 

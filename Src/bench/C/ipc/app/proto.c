@@ -29,6 +29,15 @@
 #include "interp.h"
 #include "select.h"
 #include "hector.h"
+#include "out.h"
+#include "plug.h"
+#include "eiffel.h"
+#include "struct.h"
+#include "macros.h"	 /* For macro LNGPAD */
+#include "hashin.h"
+#include "sig.h"
+#include "string.h"
+#include "bits.h"
 
 public int rqstcnt = 0;				/* Request count */
 private char gc_stopped;
@@ -39,6 +48,8 @@ private void adopt();				/* Adopt object */
 private void access();				/* Access object through hector */
 private void wean();				/* Wean adopted object */
 private void load_bc();				/* Load byte code information */
+private void obj_inspect();
+private void bit_inspect();
 
 private IDRF idrf;			/* IDR filter for serialize communications */
 
@@ -124,13 +135,13 @@ Request *rqst;				/* The received request to be processed */
 		load_bc(arg_1, arg_2);
 		break;
 	case ADOPT:						/* Adopt object */
-		adopt(writefd (sp), &rqst->rq_opaque);
+		adopt(writefd(sp), &rqst->rq_opaque);
 		break;
 	case ACCESS:					/* Access object through hector */
-		access(writefd (sp), &rqst->rq_opaque);
+		access(writefd(sp), &rqst->rq_opaque);
 		break;
 	case WEAN:						/* Wean adopted object */
-		wean(writefd (sp), &rqst->rq_opaque);
+		wean(writefd(sp), &rqst->rq_opaque);
 		break;
 	}
 
@@ -282,11 +293,21 @@ Opaque *what;		/* Generic structure describing request */
 
 	char *out;				/* Buffer where out form is stored */
 	struct item *val;		/* Value in operational stack */
+	char *addr;				/* Address of EIF_OBJ */
 
 
 	switch (what->op_first) {		/* First value describes request */
+	case IN_H_ADDR:					/* Hector address inspection */
+		addr = (char *) what->op_third;		/* long -> (char *) */
+		obj_inspect(&(eif_access((EIF_OBJ) addr)));
+		return;
+	case IN_BIT_ADDR:				/* Bit address inspection */
+		addr = (char *) what->op_third;		/* long -> (char *) */
+		bit_inspect((EIF_OBJ) &addr);
+		return;
 	case IN_ADDRESS:				/* Address inspection */
-		out = dview((char *) what->op_third);	/* long -> (char *) */
+		addr = (char *) what->op_third;		/* long -> (char *) */
+		out = dview((EIF_OBJ) &addr);
 		break;
 	case IN_LOCAL:					/* Local inspection */
 		val = ivalue(IV_LOCAL, what->op_second);
@@ -324,11 +345,14 @@ Opaque *what;		/* Generic structure describing request */
 	 * sending the information referred to by this pointer).
 	 */
 
-	char *addr;			/* Buffer where indirection address is stored */
-	
-	addr = (char *)eif_adopt((char *) what->op_third);
-	twrite(addr, strlen(addr));
-	free(addr);
+	char *physical_addr;	/* Address of unprotected object */
+	char hector_addr[20];	/* Buffer where indirection address is stored */
+	char *result;			/* Eiffel string */
+
+	physical_addr = (char *) what->op_third;
+	sprintf(hector_addr, "0x%lX", eif_adopt((EIF_OBJ) &physical_addr));
+	twrite(hector_addr, strlen(hector_addr));
+	free(hector_addr);
 }
 
 private void access(s, what)
@@ -342,11 +366,13 @@ Opaque *what;		/* Generic structure describing request */
 	 * this pointer).
 	 */
 
-	char *addr;			/* Buffer where physical address is stored */
+	char physical_addr[20];	/* Address of unprotected object */
+	char *hector_addr;		/* Hector address with indirection */
 	
-	addr = (char *)eif_access((char *) what->op_third);
-	twrite(addr, strlen(addr));
-	free(addr);
+	hector_addr = (char *) what->op_third;
+	sprintf(physical_addr, "0x%lX", eif_access((EIF_OBJ) hector_addr));
+	twrite(physical_addr, strlen(physical_addr));
+	free(physical_addr);
 }
 
 private void wean(s, what)
@@ -359,9 +385,10 @@ Opaque *what;		/* Generic structure describing request */
 	 * this pointer).
 	 */
 
-	char *addr;			/* Buffer where physical address is stored */
+	char *hector_addr;		/* Hector address with indirection */
 	
-	eif_wean((char *) what->op_third);
+	hector_addr = (char *) what->op_third;
+	eif_wean((EIF_OBJ) hector_addr);
 }
 
 private void load_bc(slots, amount)
@@ -416,5 +443,318 @@ int amount;		/* Amount of byte codes to be downloaded */
 
 #undef arg_1
 #undef arg_2
+}
+
+
+/*
+ *		Routines for inspecting an Eiffel object.
+ */
+
+#define BUF_SIZE 512
+private char buffer[BUF_SIZE];
+
+private void rec_inspect();
+private void rec_sinspect();
+private void write_char ();
+
+private void obj_inspect(object)
+EIF_OBJ object;
+{
+	uint32 flags;		/* Object flags */
+
+	flags = HEADER(eif_access(object))->ov_flags;
+
+	if (flags & EO_SPEC) {
+		/* Special object */
+		sprintf(buffer, "%s", "SPECIAL");
+		twrite (buffer, strlen(buffer));
+		sprintf(buffer, "0x%lX", eif_access(object));
+		twrite (buffer, strlen(buffer));
+		/* Send items recursively */
+		rec_sinspect(eif_access(object));
+	} else {
+		/* Send instance class name and object id */
+		sprintf(buffer, "%s", System(flags & EO_TYPE).cn_generator);
+		twrite (buffer, strlen(buffer));
+		sprintf(buffer, "0x%lX", eif_access(object));
+		twrite (buffer, strlen(buffer));
+		/* Inspect recursively `object' */
+		rec_inspect(eif_access(object));
+	}
+}
+
+private void rec_inspect(object)
+register1 char *object;
+{
+	/* Inspect recursively `object''s attribute */
+
+	register2 struct cnode *obj_desc;		/* Object type description */
+	register3 long nb_attr;					/* Attribute number */
+	register4 uint32 *types;				/* Attribute types */
+#ifndef WORKBENCH
+	register6 long **offsets;				/* Attribute offsets table */
+#else
+	register4 int32 *cn_attr;				/* Attribute keys */
+	long offset;
+#endif
+	register5 int16 dyn_type;				/* Object dynamic type */
+	char *o_ref;
+	register7 char **names;					/* Attribute names */
+	char *reference;						/* Reference attribute */
+	char *refptr;
+	union overhead *zone;
+	long i,nb_old, nb_reference;
+	uint32 type, ref_flags;
+
+	dyn_type = Dtype(object);
+	obj_desc = &System(dyn_type);
+	nb_attr = obj_desc->cn_nbattr;
+	names = obj_desc->cn_names;
+	types = obj_desc->cn_types;
+
+#ifndef WORKBENCH
+	offsets = obj_desc->cn_offsets;
+#else
+	cn_attr = obj_desc->cn_attr;
+#endif
+
+	/* Send the attribute number */
+	sprintf(buffer, "%ld", nb_attr);
+	twrite (buffer, strlen(buffer));
+
+	for (i = 0; i < nb_attr; i++) {
+
+		/* Send attribute name */
+		sprintf(buffer, "%s", names[i]);
+		twrite (buffer, strlen(buffer));
+
+		/* Send attribute value */
+		type = types[i];
+#ifndef WORKBENCH
+		o_ref = object + (offsets[i])[dyn_type];
+#else
+		CAttrOffs(offset,cn_attr[i],dyn_type);
+		o_ref = object + offset;
+#endif
+		switch(type & SK_HEAD) {
+		case SK_POINTER:
+			/* Pointer attribute */
+			sprintf(buffer, "POINTER");
+			twrite (buffer, strlen(buffer));
+			sprintf(buffer, "0x%lX", *(fnptr *)o_ref);
+			twrite (buffer, strlen(buffer));
+			break;
+		case SK_BOOL:
+			/* Boolean attribute */
+			sprintf(buffer, "BOOLEAN");
+			twrite (buffer, strlen(buffer));
+			sprintf(buffer, "%s", (*o_ref ? "True" : "False"));
+			twrite (buffer, strlen(buffer));
+			break;
+		case SK_CHAR:
+			/* Character attribute */
+			sprintf(buffer, "CHARACTER");
+			twrite (buffer, strlen(buffer));
+			write_char (*o_ref, buffer);
+			twrite (buffer, strlen(buffer));
+			break;
+		case SK_INT:
+			/* Integer attribute */
+			sprintf(buffer, "INTEGER");
+			twrite (buffer, strlen(buffer));
+			sprintf(buffer, "%ld", *(long *)o_ref);
+			twrite (buffer, strlen(buffer));
+			break;
+		case SK_FLOAT:
+			/* Real attribute */
+			sprintf(buffer, "REAL");
+			twrite (buffer, strlen(buffer));
+			sprintf(buffer, "%g", *(float *)o_ref);
+			twrite (buffer, strlen(buffer));
+			break;
+		case SK_DOUBLE:
+			/* Double attribute */
+			sprintf(buffer, "DOUBLE");
+			twrite (buffer, strlen(buffer));
+			sprintf(buffer, "%.17g", *(double *)o_ref);
+			twrite (buffer, strlen(buffer));
+			break;	
+		case SK_BIT:
+			sprintf(buffer, "BIT");
+			twrite (buffer, strlen(buffer));
+			{
+				char *str = b_out(o_ref);
+				sprintf(buffer, "%s", str);
+				twrite (buffer, strlen(buffer));
+				xfree(str);
+			}
+			break;	
+		case SK_EXP:
+			/* Expanded attribute */
+			sprintf(buffer, "expanded");
+			twrite (buffer, strlen(buffer));
+			sprintf(buffer, "%s", System(Dtype(o_ref)).cn_generator);
+			twrite (buffer, strlen(buffer));
+			rec_inspect((char *)o_ref);
+			break;
+		default: 
+			/* Object reference */
+			reference = *(char **)o_ref;
+			if (0 != reference) {
+				ref_flags = HEADER(reference)->ov_flags;
+				if (ref_flags & EO_C) {
+					sprintf(buffer, "POINTER");
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "0x%lX", reference);
+					twrite (buffer, strlen(buffer));
+				} else if (ref_flags & EO_SPEC) {
+					/* Special object */
+					sprintf(buffer, "SPECIAL");
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "0x%lX", reference);
+					twrite (buffer, strlen(buffer));
+					rec_sinspect (reference);
+				} else {
+					sprintf(buffer, "%s",System(Dtype(reference)).cn_generator);
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "0x%lX", reference);
+					twrite (buffer, strlen(buffer));
+				}
+			} else {
+				sprintf(buffer, "Void");
+				twrite (buffer, strlen(buffer));
+			}
+		}
+	}
+}
+
+private void rec_sinspect(object)
+register1 char *object;
+{
+	/* Inspect special object */
+
+	union overhead *zone;		/* Object header */
+	register5 uint32 flags;		/* Object flags */
+	register3 long count;		/* Element count */
+	register4 long elem_size;	/* Element size */
+	char *o_ref;
+	char *reference, *bit;
+	long old_count;
+	int dt_type;
+
+	zone = HEADER(object);
+	o_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD(2));
+	count = *(long *) o_ref;
+	old_count = count;
+	elem_size = *(long *) (o_ref + sizeof(long));
+	flags = zone->ov_flags;
+	dt_type = (int) (flags & EO_TYPE);
+
+	
+	/* Send the item number */
+	sprintf(buffer, "%ld", count);
+	twrite (buffer, strlen(buffer));
+
+	if (!(flags & EO_REF)) 
+		if (flags & EO_COMP) 
+			for (o_ref = object + OVERHEAD; count > 0; count--,
+						o_ref += elem_size) {
+				sprintf(buffer, "%ld", old_count - count);
+				twrite (buffer, strlen(buffer));
+				sprintf(buffer, "expanded");
+				twrite (buffer, strlen(buffer));
+				sprintf(buffer, "%s", System(Dtype(o_ref)).cn_generator);
+				twrite (buffer, strlen(buffer));
+				rec_inspect(o_ref);
+			}
+		else
+			for (o_ref = object; count > 0; count--,
+						o_ref += elem_size) {
+				sprintf(buffer, "%ld", old_count - count);
+				twrite (buffer, strlen(buffer));
+				if (dt_type == sp_char) {
+					sprintf(buffer, "CHARACTER");
+					twrite (buffer, strlen(buffer));
+					write_char (*o_ref, buffer);
+					twrite (buffer, strlen(buffer));
+				} else if (dt_type == sp_int) {
+					sprintf(buffer, "INTEGER");
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "%ld", *(long *)o_ref);
+					twrite (buffer, strlen(buffer));
+				} else if (dt_type == sp_bool) {
+					sprintf(buffer, "BOOLEAN");
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "%s", (*o_ref ? "True" : "False"));
+					twrite (buffer, strlen(buffer));
+				} else if (dt_type == sp_real) {
+					sprintf(buffer, "REAL");
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "%g", *(float *)o_ref);
+					twrite (buffer, strlen(buffer));
+				} else if (dt_type == sp_double) {
+					sprintf(buffer, "DOUBLE");
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "%.17g", *(double *)o_ref);
+					twrite (buffer, strlen(buffer));
+				} else if (dt_type == sp_pointer) {
+					sprintf(buffer, "POINTER");
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "0x%lX", *(fnptr *)o_ref);
+					twrite (buffer, strlen(buffer));
+				} else {
+					/* Must be bit */
+					sprintf(buffer, "BIT");
+					twrite (buffer, strlen(buffer));
+					sprintf(buffer, "%s", b_out(*(char **)o_ref));
+					twrite (buffer, strlen(buffer));
+				}
+			}
+	else 
+		for (o_ref = object; count > 0; count--,
+					o_ref = (char *) ((char **)o_ref + 1)) {
+			sprintf(buffer, "%ld", old_count - count);
+			twrite (buffer, strlen(buffer));
+			reference = *(char **)o_ref;
+			if (0 == reference) {
+				sprintf(buffer, "Void");
+				twrite (buffer, strlen(buffer));
+			} else if (HEADER(reference)->ov_flags & EO_C) {
+				sprintf(buffer, "POINTER");
+				twrite (buffer, strlen(buffer));
+				sprintf(buffer, "0x%lX", reference);
+				twrite (buffer, strlen(buffer));
+			} else {
+				sprintf(buffer, "%s", System(Dtype(reference)).cn_generator);
+				twrite (buffer, strlen(buffer));
+				sprintf(buffer, "0x%lX", reference);
+				twrite (buffer, strlen(buffer));
+			}
+		}
+}
+
+private void bit_inspect(object)
+EIF_OBJ object;		/* Reference to a bit object (= BIT_REF) */
+{
+	sprintf(buffer, "%s", b_out(*(char **)object));
+	twrite (buffer, strlen(buffer));
+}
+
+private void write_char (c, buf)
+char c;			/* The character */
+char *buf;		/* Where it should be written */
+{
+	/* Write a character in `buffer' */
+	
+	if (c < ' ')
+	    sprintf(buf, "Ctrl-%c", c + '@');
+	else if (c > 127) {
+	    c -= 128;
+	    if (c < ' ')
+	        sprintf(buf, "Ext-Ctrl-%c", c + '@');
+	    else
+	        sprintf(buf, "Ext-%c", c);
+	} else
+	    sprintf(buf, "'%c'", c);
 }
 

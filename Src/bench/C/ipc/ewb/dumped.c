@@ -61,7 +61,7 @@ public c_recv_rout_info (target)
 					case DMP_MELTED:
 						c_rout_name = dump.dmp_vect -> ex_rout;
 						eif_rout_name = RTMS (c_rout_name);
-						sprintf (ptr, "%lx\0", dump.dmp_vect -> ex_id);
+						sprintf (ptr, "%lX\0", dump.dmp_vect -> ex_id);
 						obj_addr = RTMS (ptr);
 
 						hack = (uint32) dump.dmp_vect -> ex_orig;

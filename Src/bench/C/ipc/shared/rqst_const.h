@@ -50,6 +50,8 @@
 #define IN_ARG			2		/* Argument by number */
 #define IN_CURRENT		3		/* Current */
 #define IN_RESULT		4		/* Result */
+#define IN_H_ADDR		5		/* Object at given hector address */
+#define IN_BIT_ADDR		6		/* Bit object at given address */
 
 #endif
 

@@ -30,8 +30,6 @@ inherit
 
 	SHARED_INSTANTIATOR
 
-	SHARED_CONSTRAINT_ERROR
-
 	SHARED_EVALUATOR
 
 feature -- Attributes
@@ -183,9 +181,7 @@ feature -- Type check, byte code and dead code removal
 						id_list.after
 					loop
 						local_name := id_list.item
-						if
-							f_table.has (local_name)
-						then
+						if f_table.has (local_name) then
 								-- The local name is a feature name of the
 								-- current analyzed class.
 							!!vrle1
@@ -224,6 +220,7 @@ feature -- Type check, byte code and dead code removal
 			vtec1: VTEC1
 			vtec2: VTEC2
 			vtcg3: VTCG3
+			constraint_error_list: LINKED_LIST [CONSTRAINT_INFO]
 			vreg: VREG
 			curr_feat: FEATURE_I
 			vrrr2: VRRR2
@@ -266,9 +263,7 @@ feature -- Type check, byte code and dead code removal
 						id_list.after
 					loop
 						local_name := id_list.item
-						if 
-							curr_feat.has_argument_name (local_name)
-						then
+						if curr_feat.has_argument_name (local_name) then
 								-- The local name is an argument name of the
 								-- current analyzed feature
 							!!vrle2
@@ -313,13 +308,13 @@ feature -- Type check, byte code and dead code removal
 							Error_handler.raise_error
 						end
 							-- Check constraint genericity
-						solved_type.check_constraints (context.a_class)
-						if not Constraint_error_list.empty then
+						constraint_error_list := solved_type.check_constraints (context_class)
+						if constraint_error_list /= Void then
 							!!vtcg3
 							vtcg3.set_class (context_class)
 							vtcg3.set_feature (curr_feat)
 							vtcg3.set_entity_name (local_name)
-							vtcg3.set_error_list (deep_clone (Constraint_error_list))
+							vtcg3.set_error_list (constraint_error_list)
 							Error_handler.insert_error (vtcg3)
 						end
 	

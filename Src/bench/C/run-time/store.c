@@ -109,44 +109,44 @@ doc:	</attribute>
 rt_shared char *general_buffer = NULL;
 
 /*
-doc:	<attribute name="current_position" return_type="int" export="shared">
+doc:	<attribute name="current_position" return_type="size_t" export="shared">
 doc:		<summary>Position of next insertion in `general_buffer'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_shared int current_position = 0;
+rt_shared size_t current_position = 0;
 
 /*
-doc:	<attribute name="buffer_size" return_type="long" export="shared">
+doc:	<attribute name="buffer_size" return_type="size_t" export="shared">
 doc:		<summary>Size of various buffers (general_buffer, run_idr buffer)</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_shared long buffer_size = 0;
+rt_shared size_t buffer_size = 0;
 
 /*
-doc:	<attribute name="old_store_buffer_size" return_type="long" export="private">
+doc:	<attribute name="old_store_buffer_size" return_type="size_t" export="private">
 doc:		<summary>Store default version of `buffer_size'.</summary>
 doc:		<access>Read/Write</access> 
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private long old_store_buffer_size = 0;
+rt_private size_t old_store_buffer_size = 0;
 
 /*
-doc:	<attribute name="cmp_buffer_size" return_type="long" export="shared">
+doc:	<attribute name="cmp_buffer_size" return_type="size_t" export="shared">
 doc:		<summary>Size of compression buffer `cmps_general_buffer', computed from `buffer_size'</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_shared long cmp_buffer_size = 0;
+rt_shared size_t cmp_buffer_size = 0;
 
 /*
 doc:	<attribute name="s_fides" return_type="int" export="private">
@@ -177,7 +177,7 @@ rt_public long get_offset (uint32 o_type, uint32 attrib_num);
 rt_public long get_alpha_offset (uint32 o_type, uint32 attrib_num);
 rt_public void free_sorted_attributes(void);
 rt_public void allocate_gen_buffer(void);
-rt_public void buffer_write(register char *data, int size);
+rt_shared void buffer_write(register char *data, size_t size);
 
 rt_public void rt_reset_store (void);
 
@@ -348,24 +348,24 @@ doc:	</attribute>
 rt_private char *store_stream_buffer;
 
 /*
-doc:	<attribute name="store_stream_buffer_position" return_type="long" export="private">
+doc:	<attribute name="store_stream_buffer_position" return_type="size_t" export="private">
 doc:		<summary>Position in `store_stream_buffer' where next insertion of data will happen.</summary>
 doc:		<access>Read/Write</access> 
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private long store_stream_buffer_position;
+rt_private size_t store_stream_buffer_position;
 
 /*
-doc:	<attribute name="store_stream_buffer_size" return_type="long" export="private">
+doc:	<attribute name="store_stream_buffer_size" return_type="size_t" export="private">
 doc:		<summary>Size of `store_stream_buffer'.</summary>
 doc:		<access>Read/Write</access> 
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private long store_stream_buffer_size;
+rt_private size_t store_stream_buffer_size;
 #endif
 
 /* Functions to write on the specified IO_MEDIUM */
@@ -940,9 +940,9 @@ rt_public void st_write(EIF_REFERENCE object, uint32 fflags)
 	 * Use for basic and general (before 3.3) store
 	 */
 
-	register2 union overhead *zone;
+	union overhead *zone;
 	uint32 flags;
-	register1 uint32 nb_char;
+	uint32 nb_char;
 
 	flags = Mapped_flags(fflags);
 
@@ -995,7 +995,7 @@ rt_public void gst_write(EIF_REFERENCE object, uint32 fflags)
 	 * used for general store
 	 */
 
-	register2 union overhead *zone;
+	union overhead *zone;
 	uint32 flags;
 
 	flags = Mapped_flags(fflags);
@@ -1064,7 +1064,7 @@ rt_public void ist_write(EIF_REFERENCE object, uint32 fflags)
 
 	if (flags & EO_SPEC) {
 		EIF_REFERENCE o_ptr;
-		register2 union overhead *zone;
+		union overhead *zone;
 		uint32 count, elm_size;
 			/* It is safe to access, object's header because a special always
 			 * has a header. */
@@ -1869,7 +1869,7 @@ rt_private struct cecil_info * cecil_info_for_dynamic_type (uint32 dtype)
 rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 {
 	char *name = System (dtype).cn_names[attrib_index];
-	int16 name_length = strlen (name);
+	int16 name_length = (int16) strlen (name);
 	int16 *gtypes = System (dtype).cn_gtypes[attrib_index] + 1;
 	int16 num_gtypes;
 	int16 i;
@@ -1877,6 +1877,8 @@ rt_private void widr_type_attribute (int16 dtype, int16 attrib_index)
 #ifdef RECOVERABLE_DEBUG
 	int16 *typearr = gtypes;
 #endif
+
+	REQUIRE("valid name_length", (size_t) name_length == strlen (name));
 
 	for (num_gtypes=0; gtypes[num_gtypes] != TERMINATOR; num_gtypes++)
 		; /* count types */
@@ -1972,8 +1974,10 @@ rt_private void widr_type_generics (int16 dtype)
 rt_private void widr_type (int16 dtype)
 {
 	char *class_name = System (dtype).cn_generator;
-	int16 name_length = strlen (class_name);
+	int16 name_length = (int16) strlen (class_name);
 	int32 flags = (int32) System(dtype).cn_flags;
+
+	REQUIRE("valid name_length", (size_t) name_length == strlen (class_name));
 
 #ifdef RECOVERABLE_DEBUG
 	printf ("Type %d %s", dtype, class_name);
@@ -2058,10 +2062,10 @@ printf ("Free s_attr (%d) %lx\n", i, s_attr);
 	}
 }
 
-rt_public void buffer_write(register char *data, int size)
+rt_shared void buffer_write(register char *data, size_t size)
 {
 	RT_GET_CONTEXT
-	register int i;
+	size_t i;
 
 	if (current_position + size >= buffer_size) {
 		for (i = 0; i < size; i++) {
@@ -2115,7 +2119,7 @@ rt_public int char_write(char *pointer, int size)
 rt_private int stream_write (char *pointer, int size)
 {
 	RT_GET_CONTEXT
-	if (store_stream_buffer_size - store_stream_buffer_position < size) {
+	if (store_stream_buffer_size - store_stream_buffer_position < (size_t) size) {
 		store_stream_buffer_size += buffer_size;
 		store_stream_buffer = (char *) eif_realloc (store_stream_buffer, store_stream_buffer_size);
 	}
@@ -2130,10 +2134,10 @@ void store_write(void)
 	RT_GET_CONTEXT
 	char* cmps_in_ptr = (char *)0;
 	char* cmps_out_ptr = (char *)0;
-	int cmps_in_size = 0;
-	int cmps_out_size = 0;
+	size_t cmps_in_size = 0;
+	size_t cmps_out_size = 0;
 	register char * ptr = (char *)0;
-	register int number_left = 0;
+	int number_left = 0;
 	int number_writen = 0;
 
 	cmps_in_ptr = general_buffer;
@@ -2147,17 +2151,20 @@ void store_write(void)
 					(unsigned long*)&cmps_out_size);
  
 	ptr = cmps_general_buffer;
-	number_left = cmps_out_size + EIF_CMPS_HEAD_SIZE;
+	CHECK("not too big", (cmps_out_size + EIF_CMPS_HEAD_SIZE) < 0x7FFFFFFF);
+	number_left = (int) (cmps_out_size + EIF_CMPS_HEAD_SIZE);
  
 	while (number_left > 0) {
 		number_writen = char_write_func (ptr, number_left);
-		if (number_writen <= 0)
+		if (number_writen <= 0) {
 			eio();
-		number_left -= number_writen;
-		ptr += number_writen;
+		} else {
+			number_left -= number_writen;
+			ptr += number_writen;
+		}
 	}
 
-	if (((unsigned int) (ptr - cmps_general_buffer)) == cmps_out_size + EIF_CMPS_HEAD_SIZE)
+	if (((size_t) (ptr - cmps_general_buffer)) == cmps_out_size + EIF_CMPS_HEAD_SIZE)
 		current_position = 0;
 	else
 		eise_io("Store: incorrect compression size.");

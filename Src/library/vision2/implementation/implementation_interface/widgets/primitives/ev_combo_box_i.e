@@ -11,11 +11,7 @@ deferred class
 inherit
 	EV_TEXT_FIELD_I
 		export
-			{NONE} position, set_position, select_region
-			{NONE} cut_selection, copy_selection, paste
-			{NONE} selection_start, selection_end
-			{NONE} has_selection, delete_selection
-			{NONE} select_all, deselect_all
+			{NONE} position, set_position
 		end
 
 	EV_LIST_I
@@ -65,89 +61,9 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
-	set_selection (start_position, end_position: INTEGER) is
-			-- Set the selection between `start_position'
-			-- and `end_position'.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	select_all is
-			-- Select all the text.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	deselect_all is
-			-- Unselect the current selection.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	delete_selection is
-			-- Delete the current selection.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	has_selection: BOOLEAN is
-			-- Is something selected?
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	selection_start: INTEGER is
-			-- Index of the first character selected
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	selection_end: INTEGER is
-			-- Index of the last character selected
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
 	make_with_text (txt: STRING) is
 			-- Create a text area with `par' as
 			-- parent and `txt' as text.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	copy_selection is
-			-- Copy the `selected_region' in the Clipboard
-			-- to paste it later.
-			-- If the `selected_region' is empty, it does
-			-- nothing.
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	cut_selection is
-			-- Cut the `selected_region' by erasing it from
-			-- the text and putting it in the Clipboard 
-			-- to paste it later.
-			-- If the `selectd_region' is empty, it does
-			-- nothing.
 		do
 			check
 				Inapplicable: False

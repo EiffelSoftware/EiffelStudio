@@ -248,37 +248,37 @@ feature -- Basic operations
 			
 			-- Add the include paths to the ace
 			if include_paths_list.count > 0 then
-				file_names := new_lace_list_id_sd (include_paths_list.count)
-				file_name := new_id_sd(include_path_keyword, true)
+				create file_names.make (include_paths_list.count)
+				file_name := new_id_sd(include_path_keyword, True)
 				
 				from 
 					include_paths_list.start
 				until
 					include_paths_list.after
 				loop
-					file_names.extend (new_id_sd (include_paths_list.item, true))
+					file_names.extend (new_id_sd (include_paths_list.item, True))
 					include_paths_list.forth
 				end
 				
-				external_item := new_lang_trib_sd (new_language_name_sd (file_name), file_names)
+				create external_item.initialize (create {LANGUAGE_NAME_SD}.initialize (file_name), file_names)
 				externals_list.extend (external_item)
 			end
 			
 			-- Add the object files to the ace
 			if object_files_list.count > 0 then
-				file_names := new_lace_list_id_sd (object_files_list.count)
-				file_name := new_id_sd (object_keyword, true)
+				create file_names.make (object_files_list.count)
+				file_name := new_id_sd (object_keyword, True)
 				
 				from 
 					object_files_list.start
 				until
 					object_files_list.after
 				loop
-					file_names.extend (new_id_sd (object_files_list.item, true))
+					file_names.extend (new_id_sd (object_files_list.item, True))
 					object_files_list.forth
 				end
 				
-				external_item := new_lang_trib_sd (new_language_name_sd (file_name), file_names)
+				create external_item.initialize (create {LANGUAGE_NAME_SD}.initialize (file_name), file_names)
 				externals_list.extend (external_item)
 			end
 			ace_accesser.apply

@@ -558,7 +558,7 @@ feature -- Access
 		local
 			cl: CLUSTER_SD
 			cl_prop: CLUST_PROP_SD
-			l_ex: LACE_LIST [EXCLUDE_SD]
+			l_ex: LACE_LIST [FILE_NAME_SD]
 		do
 			create Result.make
 			cl := cluster_sd_with_name (name)
@@ -797,7 +797,7 @@ feature -- Element change
 		do
 			if root_ast.root = Void then
 				create id_sd.initialize (new_name)
-				root_ast.set_root (new_root_sd (id_sd, Void, Void))
+				root_ast.set_root (create {ROOT_SD}.initialize (id_sd, Void, Void))
 			else
 				root_ast.root.set_root_name (new_id_sd (new_name, False))
 			end
@@ -842,43 +842,43 @@ feature -- Element change
 			had_assertion := False
 			if evaluate_invariant then
 				had_assertion := True
-				v := new_invariant_sd (new_id_sd (ace_dictionary.Invariant_keyword, False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_invariant
+				create ass
+				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)
 			end			
 			if evaluate_loop then
 				had_assertion := True
-				v := new_loop_sd (new_id_sd (ace_dictionary.Loop_keyword, False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_loop
+				create ass
+				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)	
 			end
 			if evaluate_check then
 				had_assertion := True
-				v := new_check_sd (new_id_sd (ace_dictionary.Check_keyword, False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_check
+				create ass
+				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)	
 			end
 			if evaluate_ensure then
 				had_assertion := True
-				v := new_ensure_sd (new_id_sd (ace_dictionary.Ensure_keyword, False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_ensure
+				create ass
+				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)	
 			end
 			if evaluate_require then
 				had_assertion := True
-				v := new_require_sd (new_id_sd (ace_dictionary.Require_keyword, False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_require
+				create ass
+				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)	
 			end
 			if not had_assertion then
-				v := new_no_sd (new_id_sd ("no", False))
-				ass := new_assertion_sd
-				d_option := new_d_option_sd (ass, v)
+				create v.make_no
+				create ass
+				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)	
 			end
 		end
@@ -911,7 +911,7 @@ feature -- Element change
 					end
 				end
 			end			
-			defaults.extend (new_special_option_sd (ace_dictionary.Msil_generation_keyword, Void, b))
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Msil_generation, Void, b))
 		end
 
 	set_il_generation_type (type: INTEGER) is
@@ -949,9 +949,9 @@ feature -- Element change
 				end
 			end
 			if type = Il_generation_exe then
-				defaults.extend (new_special_option_sd (ace_dictionary.Msil_generation_type_keyword, "exe", True))
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Msil_generation_type, "exe", True))
 			elseif type = Il_generation_dll then
-				defaults.extend (new_special_option_sd (ace_dictionary.Msil_generation_type_keyword, "dll", True))
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Msil_generation_type, "dll", True))
 			end
 		end
 		
@@ -986,7 +986,7 @@ feature -- Element change
 					end
 				end
 			end
-			defaults.extend (new_special_option_sd (ace_dictionary.Namespace_keyword, namespace, True))
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Namespace, namespace, True))
 		end
 		
 	set_console_application (b: BOOLEAN) is
@@ -1017,7 +1017,7 @@ feature -- Element change
 					end
 				end
 			end			
-			defaults.extend (new_special_option_sd ("console_application", Void, b))
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Console_application, Void, b))
 		end
 		
 	set_line_generation (b: BOOLEAN) is
@@ -1048,7 +1048,7 @@ feature -- Element change
 					end
 				end
 			end			
-			defaults.extend (new_special_option_sd ("line_generation", Void, b))
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Line_generation, Void, b))
 		end
 
 	set_override_cluster (name: STRING) is
@@ -1084,7 +1084,7 @@ feature -- Element change
 					defaults.forth
 				end
 			end
-			defaults.extend (new_special_option_sd ("override_cluster", name, False))	
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Override_cluster, name, False))	
 		end
 
 	add_cluster (name, parent_name, path: STRING) is
@@ -1098,9 +1098,10 @@ feature -- Element change
 			new_cluster: CLUSTER_SD
 		do
 			if parent_name = Void or else parent_name.is_empty then
-				new_cluster := new_cluster_sd (new_id_sd (name, False), Void, new_id_sd (path, True), Void, False, False)
+				create new_cluster.initialize (new_id_sd (name, False), Void, new_id_sd (path, True), Void, False, False)
 			else
-				new_cluster := new_cluster_sd (new_id_sd (name, False), new_id_sd (parent_name, False), new_id_sd (path, True), Void, False, False)
+				create new_cluster.initialize (new_id_sd (name, False),
+					new_id_sd (parent_name, False), new_id_sd (path, True), Void, False, False)
 			end
 			cluster_list := root_ast.clusters
 			if cluster_list = Void then
@@ -1172,9 +1173,9 @@ feature -- Element change
 					l_ext.forth
 				end
 				if lt = Void then
-					lang := new_language_name_sd (new_id_sd ("assembly", True))
+					create lang.initialize (new_id_sd ("assembly", True))
 					create file_names.make (20)
-					lt := new_lang_trib_sd (lang, file_names)
+					create lt.initialize (lang, file_names)
 					l_ext.extend (lt)
 				end
 				lt.file_names.extend (new_id_sd (path, True))
@@ -1256,9 +1257,9 @@ feature -- Element change
 					l_ext.forth
 				end
 				if lt = Void then
-					lang := new_language_name_sd (new_id_sd ("include_path", True))
+					create lang.initialize (new_id_sd ("include_path", True))
 					create file_names.make (20)
-					lt := new_lang_trib_sd (lang, file_names)
+					create lt.initialize (lang, file_names)
 					l_ext.extend (lt)
 				end
 				lt.file_names.extend (new_id_sd (path, True))
@@ -1337,9 +1338,9 @@ feature -- Element change
 					l_ext.forth
 				end
 				if lt = Void then
-					lang := new_language_name_sd (new_id_sd ("object", True))
+					create lang.initialize (new_id_sd ("object", True))
 					create file_names.make (20)
-					lt := new_lang_trib_sd (lang, file_names)
+					create lt.initialize (lang, file_names)
 					l_ext.extend (lt)
 				end
 				lt.file_names.extend (new_id_sd (path, True))
@@ -1507,7 +1508,7 @@ feature -- Element change
 			if cl /= Void then
 				cl_prop := cl.cluster_properties
 				if cl_prop = Void and not b then
-					cl_prop := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, Void, Void)
+					create cl_prop
 					cl.set_cluster_properties (cl_prop)
 				end
 				if cl_prop /= Void then
@@ -1542,7 +1543,7 @@ feature -- Element change
 			if cl /= Void then
 				cl_prop ?= cl.cluster_properties
 				if cl_prop = Void then
-					cl_prop := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, Void, Void)
+					create cl_prop
 					cl.set_cluster_properties (cl_prop)
 				end
 				new_defaults := cl_prop.default_option
@@ -1566,43 +1567,43 @@ feature -- Element change
 				had_assertion := False
 				if evaluate_invariant then
 					had_assertion := True
-					v := new_invariant_sd (new_id_sd ("invariant", False))
-					ass := new_assertion_sd
-					d_option := new_d_option_sd (ass, v)
+					create v.make_invariant
+					create ass
+					create d_option.initialize (ass, v)
 					new_defaults.put_front (d_option)
 				end			
 				if evaluate_loop then
 					had_assertion := True
-					v := new_loop_sd (new_id_sd ("loop", False))
-					ass := new_assertion_sd
-					d_option := new_d_option_sd (ass, v)
+					create v.make_loop
+					create ass
+					create d_option.initialize (ass, v)
 					new_defaults.put_front (d_option)	
 				end
 				if evaluate_check then
 					had_assertion := True
-					v := new_check_sd (new_id_sd ("check", False))
-					ass := new_assertion_sd
-					d_option := new_d_option_sd (ass, v)
+					create v.make_check
+					create ass
+					create d_option.initialize (ass, v)
 					new_defaults.put_front (d_option)	
 				end
 				if evaluate_ensure then
 					had_assertion := True
-					v := new_ensure_sd (new_id_sd ("ensure", False))
-					ass := new_assertion_sd
-					d_option := new_d_option_sd (ass, v)
+					create v.make_ensure
+					create ass
+					create d_option.initialize (ass, v)
 					new_defaults.put_front (d_option)	
 				end
 				if evaluate_require then
 					had_assertion := True
-					v := new_require_sd (new_id_sd ("require", False))
-					ass := new_assertion_sd
-					d_option := new_d_option_sd (ass, v)
+					create v.make_require
+					create ass
+					create d_option.initialize (ass, v)
 					new_defaults.put_front (d_option)	
 				end	
 				if not had_assertion then
-					v := new_no_sd (new_id_sd ("no", False))
-					ass := new_assertion_sd
-					d_option := new_d_option_sd (ass, v)
+					create v.make_no
+					create ass
+					create d_option.initialize (ass, v)
 					new_defaults.put_front (d_option)	
 				end				
 			end
@@ -1616,13 +1617,13 @@ feature -- Element change
 		local
 			cl: CLUSTER_SD
 			cl_prop: CLUST_PROP_SD
-			l_ex: LACE_LIST [EXCLUDE_SD]
+			l_ex: LACE_LIST [FILE_NAME_SD]
 		do
 			cl := cluster_sd_with_name (name)
 			if cl /= Void then
 				cl_prop := cl.cluster_properties
 				if cl_prop = Void then
-					cl_prop := new_clust_prop_sd (Void, Void, Void, Void, Void, Void, Void, Void)
+					create cl_prop
 					cl.set_cluster_properties (cl_prop)
 				end
 				l_ex := cl_prop.exclude_option
@@ -1630,7 +1631,7 @@ feature -- Element change
 					create l_ex.make (10)
 					cl_prop.set_exclude_option (l_ex)
 				end
-				l_ex.extend (new_exclude_sd (new_id_sd (path, True)))
+				l_ex.extend (create {FILE_NAME_SD}.initialize (new_id_sd (path, True)))
 			end
 		end
 	
@@ -1642,7 +1643,7 @@ feature -- Element change
 		local
 			cl: CLUSTER_SD
 			cl_prop: CLUST_PROP_SD
-			l_ex: LACE_LIST [EXCLUDE_SD]
+			l_ex: LACE_LIST [FILE_NAME_SD]
 		do
 			cl := cluster_sd_with_name (name)
 			if cl /= Void then
@@ -1774,26 +1775,29 @@ feature {NONE} -- Interface names
 
 feature {NONE} -- Generation of AST
 
-	new_special_option_sd (type: STRING; a_name: STRING; flag: BOOLEAN): D_OPTION_SD is
+	new_special_option_sd (type_id: INTEGER; a_name: STRING; flag: BOOLEAN): D_OPTION_SD is
 			-- Create new `D_OPTION_SD' node corresponding to a free
 			-- option clause. If `a_name' Void then it is `free_option (flag)'.
 		require
-			type_not_void: type /= Void
+			valid_type_id: type_id > 0
+			type_id_big_enough: type_id < feature {FREE_OPTION_SD}.free_option_count
 		local
 			argument_sd: FREE_OPTION_SD
 			v: OPT_VAL_SD
 		do
-			argument_sd := new_free_option_sd (new_id_sd (type, False))
+			create argument_sd.make (type_id)
 			if a_name /= Void then
-				v := new_name_sd (new_id_sd (a_name, True))
+				create v.make (new_id_sd (a_name, True))
 			else
 				if flag then
-					v := new_yes_sd (new_id_sd ("yes", False))
+					create v.make_yes
 				else
-					v := new_no_sd (new_id_sd ("no", False))
+					create v.make_no
 				end
 			end
-			Result := new_d_option_sd (argument_sd, v)
+			create Result.initialize (argument_sd, v)
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation

@@ -24,7 +24,8 @@ feature {NONE}
 
 	Case_storage: STRING is "Storage";
 
-	Class_suffix: STRING is "C";
+	C_prefix: STRING is "C"
+			-- Prefix for C generated directories and object files
 
 	Continuation: CHARACTER is '\'
 
@@ -40,8 +41,6 @@ feature {NONE}
 	Default_Class_filename: STRING is "default.cls";
 
 	Descriptor_file_suffix: CHARACTER is 'd'
-
-	Descriptor_suffix: STRING is "D"
 
 	Directory_separator: CHARACTER is
 		once
@@ -137,8 +136,6 @@ feature {NONE}
 
 	Feature_table_file_suffix: CHARACTER is 'f'
 
-	Feature_table_suffix: STRING is "F"
-
 	Makefile_SH: STRING is "Makefile.SH"
 
 	updt_dle: STRING is "melted.dle";
@@ -164,7 +161,7 @@ feature {NONE}
 
 	Updt: STRING is "melted.eif"
 
-	finished_file_for_make: STRING is "finished"
+	Finished_file_for_make: STRING is "finished"
 
 	W_code: STRING is "W_code"
 

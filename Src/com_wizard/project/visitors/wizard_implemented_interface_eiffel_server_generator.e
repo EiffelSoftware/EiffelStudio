@@ -33,7 +33,7 @@ feature -- Basic operations
 
 			create eiffel_writer.make
 
-			a_class_name := an_interface.eiffel_class_name
+			a_class_name := an_interface.impl_eiffel_class_name (False)
 
 			dispatch_interface := (an_interface.interface_descriptor.dispinterface or 
 					an_interface.interface_descriptor.dual)
@@ -74,6 +74,8 @@ feature {NONE} -- Implementation
 			-- e.g. make, constructor, destructor, delete wrapper etc.
 		do
 			eiffel_writer.add_feature (make_feature, Initialization)
+			eiffel_writer.add_feature (create_item_feature, Basic_operations)
+			eiffel_writer.add_feature (ccom_create_item_feature (an_interface), Externals)
 		end
 
 	set_default_ancestors (an_eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS) is
@@ -90,8 +92,42 @@ feature {NONE} -- Implementation
 			an_eiffel_writer.add_inherit_clause (inherit_clause)
 		end
 
-invariant
-	invariant_clause: -- Your invariant here
+	ccom_create_item_feature (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_WRITER_FEATURE is
+			-- `create_item' feature.
+		local
+			feature_body: STRING
+			an_argument: STRING
+		do
+			create Result.make
+			Result.set_name ("ccom_create_item")
+			Result.set_comment ("Initialize %Qitem%'")
+
+			create an_argument.make (100)
+			an_argument.append ("eif_object: ")
+			an_argument.append (an_interface.impl_eiffel_class_name (False))
+			Result.add_argument (an_argument)
+
+			Result.set_result_type ("POINTER")
+
+			create feature_body.make (100)
+			feature_body.append (Tab_tab_tab)
+			feature_body.append ("%"C++ %(new ")
+			feature_body.append (an_interface.impl_c_type_name (False))
+			feature_body.append (Space)
+			feature_body.append (Percent_double_quote)
+			feature_body.append (an_interface.impl_c_header_file_name (False))
+			feature_body.append (Percent_double_quote)
+			feature_body.append (Close_bracket)
+			feature_body.append ("(EIF_OBJECT)")
+			feature_body.append (double_quote)
+
+			Result.set_external
+			Result.set_body (feature_body)
+		ensure
+			non_void_feature: Result /= Void
+			non_void_feature_name: Result.name /= Void
+			non_void_feature_body: Result.body /= Void
+		end
 
 end -- class WIZARD_IMPLEMENTED_INTERFACE_EIFFEL_SERVER_GENERATOR
 

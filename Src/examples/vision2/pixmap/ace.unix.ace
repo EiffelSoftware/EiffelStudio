@@ -31,9 +31,6 @@ cluster
 			"table_eiffel3"
 		end
 
-		-- GEL
-	all gel:			"$ISE_EIFFEL/library/gel"
-
 		-- Vision2
 	event:				"$ISE_EIFFEL/library/event"
 

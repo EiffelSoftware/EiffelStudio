@@ -329,12 +329,19 @@ feature -- Basic Operations
 			-- `p_thread' [in].  
 			-- `p_breakpoint' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_breakpoint)
-			set_last_app_domain_by_pointer (p_app_domain)
-			set_last_thread_by_pointer (p_thread)
-			set_last_breakpoint_by_pointer (p_breakpoint)
-			end_of_managed_callback (Cst_managed_cb_breakpoint)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_breakpoint)
+				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_thread_by_pointer (p_thread)
+				set_last_breakpoint_by_pointer (p_breakpoint)
+				end_of_managed_callback (Cst_managed_cb_breakpoint)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	step_complete (p_app_domain: POINTER; p_thread: POINTER; p_stepper: POINTER; a_reason: INTEGER) is
@@ -345,32 +352,39 @@ feature -- Basic Operations
 			-- `reason' [in]. 
 			-- (See ECOM_COR_DEBUG_STEP_REASON_ENUM for possible `reason' values. )
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_step_complete)
-			set_last_app_domain_by_pointer (p_app_domain)
-			set_last_thread_by_pointer (p_thread)
-			set_last_step_complete_reason (a_reason)
-			end_of_managed_callback (Cst_managed_cb_step_complete)
-			
-				--| STEP_NORMAL means that stepping completed normally, in the same
-				--|		function.
-				--|
-				--| STEP_RETURN means that stepping continued normally, after the function
-				--|		returned.
-				--|
-				--| STEP_CALL means that stepping continued normally, at the start of 
-				--|		a newly called function.
-				--|
-				--| STEP_EXCEPTION_FILTER means that control passed to an exception filter
-				--|		after an exception was thrown.
-				--| 
-				--| STEP_EXCEPTION_HANDLER means that control passed to an exception handler
-				--|		after an exception was thrown.
-				--|
-				--| STEP_INTERCEPT means that control passed to an interceptor.
-				--| 
-				--| STEP_EXIT means that the thread exited before the step completed.
-				--|		No more stepping can be performed with the stepper.
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_step_complete)
+				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_thread_by_pointer (p_thread)
+				set_last_step_complete_reason (a_reason)
+				end_of_managed_callback (Cst_managed_cb_step_complete)
+				
+					--| STEP_NORMAL means that stepping completed normally, in the same
+					--|		function.
+					--|
+					--| STEP_RETURN means that stepping continued normally, after the function
+					--|		returned.
+					--|
+					--| STEP_CALL means that stepping continued normally, at the start of 
+					--|		a newly called function.
+					--|
+					--| STEP_EXCEPTION_FILTER means that control passed to an exception filter
+					--|		after an exception was thrown.
+					--| 
+					--| STEP_EXCEPTION_HANDLER means that control passed to an exception handler
+					--|		after an exception was thrown.
+					--|
+					--| STEP_INTERCEPT means that control passed to an interceptor.
+					--| 
+					--| STEP_EXIT means that the thread exited before the step completed.
+					--|		No more stepping can be performed with the stepper.
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	break (p_app_domain: POINTER; p_thread: POINTER) is
@@ -378,11 +392,18 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].  
 			-- `thread' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_break)
-			set_last_app_domain_by_pointer (p_app_domain)
-			set_last_thread_by_pointer (p_thread)
-			end_of_managed_callback (Cst_managed_cb_break)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_break)
+				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_thread_by_pointer (p_thread)
+				end_of_managed_callback (Cst_managed_cb_break)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	exception (p_app_domain: POINTER; p_thread: POINTER; unhandled: INTEGER) is
@@ -391,15 +412,22 @@ feature -- Basic Operations
 			-- `p_thread' [in].  
 			-- `unhandled' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			debug ("DEBUGGER_TRACE_MESSAGE")
-				-- unhandled :=  --| TRUE = 1 , FALSE = 0
-	 			debugger_messages.extend ("Exception :: param:unhandled = " + (unhandled /= 0).out + "%N")
- 			end
-			begin_of_managed_callback (Cst_managed_cb_exception)
-			set_last_app_domain_by_pointer (p_app_domain)
-			set_last_thread_by_pointer (p_thread)
-			end_of_managed_callback (Cst_managed_cb_exception)
+			if not retried then
+				debug ("DEBUGGER_TRACE_MESSAGE")
+					-- unhandled :=  --| TRUE = 1 , FALSE = 0
+					debugger_messages.extend ("Exception :: param:unhandled = " + (unhandled /= 0).out + "%N")
+				end
+				begin_of_managed_callback (Cst_managed_cb_exception)
+				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_thread_by_pointer (p_thread)
+				end_of_managed_callback (Cst_managed_cb_exception)
+			end
+		rescue
+			retried := True
+			retry
 		end		
 
 	eval_complete (p_app_domain: POINTER; p_thread: POINTER; p_eval: POINTER) is
@@ -408,11 +436,18 @@ feature -- Basic Operations
 			-- `p_thread' [in].  
 			-- `p_eval' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_eval_complete)
-			set_last_app_domain_by_pointer (p_app_domain)
-			set_last_thread_by_pointer (p_thread)
-			end_of_managed_callback (Cst_managed_cb_eval_complete)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_eval_complete)
+				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_thread_by_pointer (p_thread)
+				end_of_managed_callback (Cst_managed_cb_eval_complete)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	eval_exception (p_app_domain: POINTER; p_thread: POINTER; p_eval: POINTER) is
@@ -421,41 +456,69 @@ feature -- Basic Operations
 			-- `p_thread' [in].  
 			-- `p_eval' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_eval_exception)
-			set_last_app_domain_by_pointer (p_app_domain)
-			set_last_thread_by_pointer (p_thread)
-			end_of_managed_callback (Cst_managed_cb_eval_exception)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_eval_exception)
+				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_thread_by_pointer (p_thread)
+				end_of_managed_callback (Cst_managed_cb_eval_exception)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	create_process (p_process: POINTER) is
 			-- No description available.
 			-- `p_process' [in].  
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_create_process)
-			set_last_process_by_pointer (p_process)
-			end_of_managed_callback (Cst_managed_cb_create_process)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_create_process)
+				set_last_process_by_pointer (p_process)
+				end_of_managed_callback (Cst_managed_cb_create_process)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	exit_process (p_process: POINTER) is
 			-- No description available.
 			-- `p_process' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_exit_process)
-			reset_last_process_by_pointer (p_process)			
-			end_of_managed_callback (Cst_managed_cb_exit_process)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_exit_process)
+				reset_last_process_by_pointer (p_process)			
+				end_of_managed_callback (Cst_managed_cb_exit_process)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	create_thread (p_app_domain: POINTER; p_thread: POINTER) is
 			-- No description available.
 			-- `p_app_domain' [in].  
 			-- `thread' [in].  
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_create_thread)
-			set_last_app_domain_by_pointer (p_app_domain)
-			set_last_thread_by_pointer_if_unset (p_thread)
-			end_of_managed_callback (Cst_managed_cb_create_thread)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_create_thread)
+				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_thread_by_pointer_if_unset (p_thread)
+				end_of_managed_callback (Cst_managed_cb_create_thread)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	exit_thread (p_app_domain: POINTER; p_thread: POINTER) is
@@ -463,11 +526,18 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].  
 			-- `thread' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_exit_thread)
-			set_last_app_domain_by_pointer (p_app_domain)
-			reset_last_thread_by_pointer (p_thread)			
-			end_of_managed_callback (Cst_managed_cb_exit_thread)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_exit_thread)
+				set_last_app_domain_by_pointer (p_app_domain)
+				reset_last_thread_by_pointer (p_thread)			
+				end_of_managed_callback (Cst_managed_cb_exit_thread)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	load_module (p_app_domain: POINTER; p_module: POINTER) is
@@ -481,25 +551,31 @@ feature -- Basic Operations
 --			p_cchname: INTEGER
 			
 			l_module: ICOR_DEBUG_MODULE
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_load_module)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_load_module)
 
-			set_last_app_domain_by_pointer (p_app_domain)
+				set_last_app_domain_by_pointer (p_app_domain)
 
-			if p_module /= Default_pointer then
-				create l_module.make_by_pointer (p_module)
-				l_module.add_ref
-				Eifnet_debugger_info.register_new_module (l_module)	
+				if p_module /= Default_pointer then
+					create l_module.make_by_pointer (p_module)
+					l_module.add_ref
+					Eifnet_debugger_info.register_new_module (l_module)	
+				end
+
+	--			debug ("DEBUGGER_TRACE_MESSAGE")
+	--				--| Get Module Name
+	--	 			create mp.make (256 * 2)
+	--	 			l_hr := feature {ICOR_DEBUG_MODULE}.cpp_get_name (p_module, 256, $p_cchname, mp.item)
+	--	 			debugger_messages.extend ("Module :: " + (create {UNI_STRING}.make_by_pointer (mp.item)).string)
+	--	 		end
+
+				end_of_managed_callback (Cst_managed_cb_load_module)
 			end
-
---			debug ("DEBUGGER_TRACE_MESSAGE")
---				--| Get Module Name
---	 			create mp.make (256 * 2)
---	 			l_hr := feature {ICOR_DEBUG_MODULE}.cpp_get_name (p_module, 256, $p_cchname, mp.item)
---	 			debugger_messages.extend ("Module :: " + (create {UNI_STRING}.make_by_pointer (mp.item)).string)
---	 		end
-
-			end_of_managed_callback (Cst_managed_cb_load_module)
+		rescue
+			retried := True
+			retry
 		end
 
 	unload_module (p_app_domain: POINTER; p_module: POINTER) is
@@ -507,10 +583,17 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].  
 			-- `p_module' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_unload_module)
-			set_last_app_domain_by_pointer (p_app_domain)
-			end_of_managed_callback (Cst_managed_cb_unload_module)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_unload_module)
+				set_last_app_domain_by_pointer (p_app_domain)
+				end_of_managed_callback (Cst_managed_cb_unload_module)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	load_class (p_app_domain: POINTER; p_class: POINTER) is
@@ -520,18 +603,24 @@ feature -- Basic Operations
 		require
 		local
 			l_class: ICOR_DEBUG_CLASS
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_load_class)
-			set_last_app_domain_by_pointer (p_app_domain)
-			
-			io.read_line
-			if p_class /= Default_pointer then
-				create l_class.make_by_pointer (p_class)
-				l_class.add_ref
---				Eifnet_debugger_info.register_new_class (l_class)	
-			end		
-			
-			end_of_managed_callback (Cst_managed_cb_load_class)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_load_class)
+				set_last_app_domain_by_pointer (p_app_domain)
+				
+				io.read_line
+				if p_class /= Default_pointer then
+					create l_class.make_by_pointer (p_class)
+					l_class.add_ref
+	--				Eifnet_debugger_info.register_new_class (l_class)	
+				end		
+				
+				end_of_managed_callback (Cst_managed_cb_load_class)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	unload_class (p_app_domain: POINTER; p_class: POINTER) is
@@ -539,10 +628,17 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].  
 			-- `c' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_unload_class)
-			set_last_app_domain_by_pointer (p_app_domain)
-			end_of_managed_callback (Cst_managed_cb_unload_class)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_unload_class)
+				set_last_app_domain_by_pointer (p_app_domain)
+				end_of_managed_callback (Cst_managed_cb_unload_class)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	debugger_error (p_process: POINTER; error_hr: INTEGER; error_code: INTEGER) is
@@ -551,10 +647,17 @@ feature -- Basic Operations
 			-- `error_hr' [in].  
 			-- `error_code' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_debugger_error)
-			set_last_process_by_pointer (p_process)
-			end_of_managed_callback (Cst_managed_cb_debugger_error)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_debugger_error)
+				set_last_process_by_pointer (p_process)
+				end_of_managed_callback (Cst_managed_cb_debugger_error)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	log_message (p_app_domain: POINTER; p_thread: POINTER; l_level: INTEGER; p_log_switch_name: INTEGER_REF; p_message: INTEGER_REF) is
@@ -565,11 +668,18 @@ feature -- Basic Operations
 			-- `p_log_switch_name' [in].  
 			-- `p_message' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_log_message)
-			set_last_app_domain_by_pointer (p_app_domain)
-			set_last_thread_by_pointer (p_thread)
-			end_of_managed_callback (Cst_managed_cb_log_message)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_log_message)
+				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_thread_by_pointer (p_thread)
+				end_of_managed_callback (Cst_managed_cb_log_message)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	log_switch (p_app_domain: POINTER; p_thread: POINTER; l_level: INTEGER; ul_reason: INTEGER; p_log_switch_name: INTEGER_REF; p_parent_name: INTEGER_REF) is
@@ -581,11 +691,18 @@ feature -- Basic Operations
 			-- `p_log_switch_name' [in].  
 			-- `p_parent_name' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_log_switch)
-			set_last_app_domain_by_pointer (p_app_domain)
-			set_last_thread_by_pointer (p_thread)
-			end_of_managed_callback (Cst_managed_cb_log_switch)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_log_switch)
+				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_thread_by_pointer (p_thread)
+				end_of_managed_callback (Cst_managed_cb_log_switch)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	create_app_domain (p_process: POINTER; p_app_domain: POINTER) is
@@ -597,20 +714,26 @@ feature -- Basic Operations
 --			l_icor_debug_process: ICOR_DEBUG_PROCESS;
 --			l_icor_debug_app_domain: ICOR_DEBUG_APP_DOMAIN;
 			l_hr: INTEGER
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_create_app_domain)
-			set_last_process_by_pointer (p_process)
-			set_last_app_domain_by_pointer (p_app_domain)
-			
-			l_hr := feature {ICOR_DEBUG_APP_DOMAIN}.cpp_attach (p_app_domain)
-			check
-				l_hr = 0
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_create_app_domain)
+				set_last_process_by_pointer (p_process)
+				set_last_app_domain_by_pointer (p_app_domain)
+				
+				l_hr := feature {ICOR_DEBUG_APP_DOMAIN}.cpp_attach (p_app_domain)
+				check
+					l_hr = 0
+				end
+
+	--			create l_icor_debug_process.make_by_pointer (p_process)
+	--			l_icor_debug_process.terminate (123)
+
+				end_of_managed_callback (Cst_managed_cb_create_app_domain)
 			end
-
---			create l_icor_debug_process.make_by_pointer (p_process)
---			l_icor_debug_process.terminate (123)
-
-			end_of_managed_callback (Cst_managed_cb_create_app_domain)
+		rescue
+			retried := True
+			retry
 		end
 
 	exit_app_domain (p_process: POINTER; p_app_domain: POINTER) is
@@ -618,14 +741,21 @@ feature -- Basic Operations
 			-- `p_process' [in].  
 			-- `p_app_domain' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_exit_app_domain)
-			set_last_process_by_pointer (p_process)
-			set_last_app_domain_by_pointer (p_app_domain)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_exit_app_domain)
+				set_last_process_by_pointer (p_process)
+				set_last_app_domain_by_pointer (p_app_domain)
 
-			reset_last_app_domain_by_pointer (p_app_domain)			
+				reset_last_app_domain_by_pointer (p_app_domain)			
 
-			end_of_managed_callback (Cst_managed_cb_exit_app_domain)
+				end_of_managed_callback (Cst_managed_cb_exit_app_domain)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	load_assembly (p_app_domain: POINTER; p_assembly: POINTER) is
@@ -637,19 +767,25 @@ feature -- Basic Operations
 			l_hr: INTEGER
 			mp: MANAGED_POINTER
 			p_cchname: INTEGER
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_load_assembly)
-			set_last_app_domain_by_pointer (p_app_domain)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_load_assembly)
+				set_last_app_domain_by_pointer (p_app_domain)
 
-			debug ("DEBUGGER_TRACE_MESSAGE")
-				--| Get Assembly Name
-				create mp.make (256 * 2)
-				l_hr := feature {ICOR_DEBUG_ASSEMBLY}.cpp_get_name (p_assembly, 256, $p_cchname, mp.item)
-				debugger_messages.extend ("Assembly :: " + (create {UNI_STRING}.make_by_pointer (mp.item)).string)	
-				--|
+				debug ("DEBUGGER_TRACE_MESSAGE")
+					--| Get Assembly Name
+					create mp.make (256 * 2)
+					l_hr := feature {ICOR_DEBUG_ASSEMBLY}.cpp_get_name (p_assembly, 256, $p_cchname, mp.item)
+					debugger_messages.extend ("Assembly :: " + (create {UNI_STRING}.make_by_pointer (mp.item)).string)	
+					--|
+				end
+				
+				end_of_managed_callback (Cst_managed_cb_load_assembly)
 			end
-			
-			end_of_managed_callback (Cst_managed_cb_load_assembly)
+		rescue
+			retried := True
+			retry
 		end
 
 	unload_assembly (p_app_domain: POINTER; p_assembly: POINTER) is
@@ -657,20 +793,34 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].  
 			-- `p_assembly' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_unload_assembly)
-			set_last_app_domain_by_pointer (p_app_domain)
-			end_of_managed_callback (Cst_managed_cb_unload_assembly)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_unload_assembly)
+				set_last_app_domain_by_pointer (p_app_domain)
+				end_of_managed_callback (Cst_managed_cb_unload_assembly)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	control_ctrap (p_process: POINTER) is
 			-- No description available.
 			-- `p_process' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_control_ctrap)
-			set_last_process_by_pointer (p_process)
-			end_of_managed_callback (Cst_managed_cb_control_ctrap)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_control_ctrap)
+				set_last_process_by_pointer (p_process)
+				end_of_managed_callback (Cst_managed_cb_control_ctrap)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	name_change (p_app_domain: POINTER; p_thread: POINTER) is
@@ -678,11 +828,18 @@ feature -- Basic Operations
 			-- `p_app_domain' [in].  
 			-- `p_thread' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_name_change)
-			set_last_app_domain_by_pointer (p_app_domain)
-			set_last_thread_by_pointer_if_unset (p_thread)
-			end_of_managed_callback (Cst_managed_cb_name_change)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_name_change)
+				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_thread_by_pointer_if_unset (p_thread)
+				end_of_managed_callback (Cst_managed_cb_name_change)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	update_module_symbols (p_app_domain: POINTER; p_module: POINTER; p_symbol_stream: POINTER) is
@@ -691,10 +848,17 @@ feature -- Basic Operations
 			-- `p_module' [in].  
 			-- `p_symbol_stream' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_update_module_symbols)
-			set_last_app_domain_by_pointer (p_app_domain)
-			end_of_managed_callback (Cst_managed_cb_update_module_symbols)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_update_module_symbols)
+				set_last_app_domain_by_pointer (p_app_domain)
+				end_of_managed_callback (Cst_managed_cb_update_module_symbols)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	edit_and_continue_remap (p_app_domain: POINTER; p_thread: POINTER; p_function: POINTER; f_accurate: INTEGER) is
@@ -704,11 +868,18 @@ feature -- Basic Operations
 			-- `p_function' [in].  
 			-- `f_accurate' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_edit_and_continue_remap)
-			set_last_app_domain_by_pointer (p_app_domain)
-			set_last_thread_by_pointer (p_thread)
-			end_of_managed_callback (Cst_managed_cb_edit_and_continue_remap)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_edit_and_continue_remap)
+				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_thread_by_pointer (p_thread)
+				end_of_managed_callback (Cst_managed_cb_edit_and_continue_remap)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	breakpoint_set_error (p_app_domain: POINTER; p_thread: POINTER; p_breakpoint: POINTER; dw_error: INTEGER) is
@@ -718,11 +889,18 @@ feature -- Basic Operations
 			-- `p_breakpoint' [in].  
 			-- `dw_error' [in].  
 		require
+		local
+			retried: BOOLEAN
 		do
-			begin_of_managed_callback (Cst_managed_cb_breakpoint_set_error)
-			set_last_app_domain_by_pointer (p_app_domain)
-			set_last_thread_by_pointer (p_thread)
-			end_of_managed_callback (Cst_managed_cb_breakpoint_set_error)
+			if not retried then
+				begin_of_managed_callback (Cst_managed_cb_breakpoint_set_error)
+				set_last_app_domain_by_pointer (p_app_domain)
+				set_last_thread_by_pointer (p_thread)
+				end_of_managed_callback (Cst_managed_cb_breakpoint_set_error)
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Implementation

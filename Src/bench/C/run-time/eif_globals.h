@@ -69,7 +69,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	struct xstack eif_trace;		/* Unsolved exception trace */
 	struct eif_except exdata;		/* Exception handling global flags */
 	unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt not extern... */
-	struct exprint except;			/* Where exception has been raised */
+	struct exprint eif_except;		/* Where exception has been raised */
 	int print_history_table;		/* Enable/disable printing of hist. table */
 	SMART_STRING ex_string;			/* Container of the exception trace */
 
@@ -140,7 +140,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	int tagged_len;			/* Actual length of `tagged_out' */
 
 		/* pattern.c */
-	uint32 delta[ASIZE];	/* Records shifting deltas */
+	uint32 eif_delta[ASIZE];	/* Records shifting deltas */
 	uint32 **darray;		/* Pointer to array recording shifting tables */
 
 		/* plug.c */
@@ -195,7 +195,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define eif_trace		(eif_globals->eif_trace)	/* rt_public */
 #define ex_ign			(eif_globals->ex_ign)		/* rt_public */
 #define exdata			(eif_globals->exdata)		/* rt_public */
-#define except			(eif_globals->except)		/* rt_private */
+#define eif_except		(eif_globals->eif_except)		/* rt_private */
 #define print_history_table (eif_globals->print_history_table)   /* rt_private */
 #define ex_string		(eif_globals->ex_string)	/* rt_public */
 #ifdef WORKBENCH
@@ -281,7 +281,7 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define tagged_len		(eif_globals->tagged_len)	/* rt_private */
 
 	/* pattern.c */
-#define delta			(eif_globals->delta)		/* rt_private */
+#define eif_delta		(eif_globals->eif_delta)		/* rt_private */
 #define darray			(eif_globals->darray)		/* rt_private */
 
 	/* plug.c */

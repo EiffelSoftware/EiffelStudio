@@ -167,12 +167,10 @@ feature -- Status setting
 			-- and `end_position'.
 		require
 			exists: exists
-			start_large_enough: start_position >= 0
-			consistent_selection: start_position < end_position
-			end_small_enough: end_position <= text_length
+			selection_in_lower_bound: start_position >= 0 and end_position >= 0
+			selection_in_upper_bound: start_position <= text_length and end_position <= text_length
 		do
-			cwin_send_message (item, Em_setsel, start_position,
-				end_position)
+			cwin_send_message (item, Em_setsel, start_position, end_position)
 		ensure
 			has_selection: has_selection
 			selection_start_set: selection_start = start_position

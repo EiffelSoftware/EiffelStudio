@@ -30,14 +30,12 @@ feature {NONE} -- Initialization
 			!! tool_width.make (associated_category.tool_width);
 			!! tool_height.make (associated_category.tool_height);
 			!! command_bar.make (associated_category.command_bar);
-			!! format_bar.make (associated_category.format_bar);
 			!! parse_ace_after_saving.make (associated_category.parse_ace_after_saving);
 			--!! arr_hidden_clusters.make (associated_category.hidden_clusters);
 
 			resources.extend (tool_width)
 			resources.extend (tool_height)
 			resources.extend (command_bar)
-			resources.extend (format_bar)
 			resources.extend (parse_ace_after_saving)
 			--resources.extend (arr_hidden_clusters)
 		end;
@@ -78,7 +76,7 @@ feature -- Properties
 feature {NONE} -- Resources
 
 	tool_width, tool_height: INTEGER_PREF_RES;
-	command_bar, format_bar, parse_ace_after_saving: BOOLEAN_PREF_RES;
+	command_bar, parse_ace_after_saving: BOOLEAN_PREF_RES;
 	--arr_hidden_clusters: ARRAY_PREF_RES
 
 end -- class SYSTEM_PREF_CAT

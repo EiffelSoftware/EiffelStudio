@@ -31,12 +31,10 @@ feature {NONE} -- Initialization
 			!! tool_width.make (associated_category.tool_width);
 			!! tool_height.make (associated_category.tool_height);
 			!! command_bar.make (associated_category.command_bar);
-			!! format_bar.make (associated_category.format_bar);
 
 			resources.extend (tool_width);
 			resources.extend (tool_height);
 			resources.extend (command_bar);
-			resources.extend (format_bar)
 		end;
 
 	init_colors is
@@ -75,6 +73,6 @@ feature -- Properties
 feature {NONE} -- Resources
 
 	tool_width, tool_height: INTEGER_PREF_RES;
-	command_bar, format_bar: BOOLEAN_PREF_RES;
+	command_bar: BOOLEAN_PREF_RES;
 
 end -- class OBJECT_PREF_CAT

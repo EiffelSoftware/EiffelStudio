@@ -30,8 +30,7 @@ feature {TTY_RESOURCES} -- Initialization
 		do
 			!! tool_width.make ("explain_tool_width", rt, 440);
 			!! tool_height.make ("explain_tool_height", rt, 500);
-			!! command_bar.make ("explain_tool_command_bar", rt, True);
-			!! format_bar.make ("explain_tool_format_bar", rt, True);
+			!! command_bar.make ("explain_tool_bar", rt, True);
 		end
 
 feature -- Validation

@@ -357,6 +357,7 @@ feature -- Widget names
 
 	n_Command_bar_name: STRING is		"Command bar";
 	n_Format_bar_name: STRING is		"Format bar";
+	n_Tool_bar_name: STRING is			"Toolbar";
 	n_X_resource_name: STRING is		"ebench";
 
 feature -- Stone names

@@ -29,8 +29,7 @@ feature {TTY_RESOURCES} -- Initialization
 		do
 			!! tool_width.make ("system_tool_width", rt, 440)
 			!! tool_height.make ("system_tool_height", rt, 500)
-			!! command_bar.make ("system_tool_command_bar", rt, true)
-			!! format_bar.make ("system_tool_format_bar", rt, true)
+			!! command_bar.make ("system_tool_bar", rt, true)
 			!! parse_ace_after_saving.make ("parse_ace_after_saving", rt, True)
 			--!! hidden_clusters.make ("hidden_clusters", rt, <<>>)
 		end

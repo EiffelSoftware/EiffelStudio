@@ -29,8 +29,7 @@ feature {TTY_RESOURCES} -- Initialization
 		do
 			!! tool_width.make ("object_tool_width", rt, 440);
 			!! tool_height.make ("object_tool_height", rt, 500);
-			!! command_bar.make ("object_tool_command_bar", rt, True);
-			!! format_bar.make ("object_tool_format_bar", rt, True)
+			!! command_bar.make ("object_tool_bar", rt, True);
 		end
 
 feature -- Validation

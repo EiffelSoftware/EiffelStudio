@@ -38,7 +38,6 @@ feature {TTY_RESOURCES} -- Initialization
 			!! debugger_show_all_callers.make ("debugger_show_all_callers", rt, False);
 			!! debugger_do_flat_in_breakpoints.make ("debugger_do_flat_in_breakpoints", rt, True);
 			!! interrupt_every_n_instructions.make ("interrupt_every_n_instruction", rt, 500);
-			!! bottom_offset.make ("bottom_offset", rt, 25);
 			!! raise_on_error.make ("raise_on_error", rt, True);
 			!! graphical_output_disabled.make ("graphical_output_disabled", rt, False);
 			!! selector_window.make ("selector_window", rt, True) 
@@ -64,7 +63,6 @@ feature -- Resources
 	debugger_object_height: INTEGER_RESOURCE;
 	debugger_show_all_callers: BOOLEAN_RESOURCE;
 	debugger_do_flat_in_breakpoints: BOOLEAN_RESOURCE;
-	bottom_offset: INTEGER_RESOURCE;
 	interrupt_every_n_instructions: INTEGER_RESOURCE;
 	command_bar: BOOLEAN_RESOURCE;
 	format_bar: BOOLEAN_RESOURCE;

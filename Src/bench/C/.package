@@ -1,11 +1,11 @@
-: This file was created by running packinit on Mon Apr 11 09:24:56 PDT 1994.
+: This file was created by running packinit on Fri Aug 12 13:48:34 PDT 1994.
 : Do not hand edit; run packinit again if changes are to be made.
 packver='3.0160000000000000142'
 : Basic variables
 package=Eiffel3
-baserev=2.3
+baserev=3
 patchbranch=1
-copyright='COPYRIGHT'
+copyright=' '
 mydiff='diff -c'
 maintname=''
 maintloc='eiffel@eiffel.com'

@@ -17,6 +17,35 @@ inherit
 			set_default_colors
 		end
 
+feature {NONE} -- Initialization
+
+	make is
+			-- create the untitled window.
+		deferred
+		end
+
+	make_root is
+			-- Create a root window for the application.
+--		deferred
+--		end
+		local
+			window_imp: EV_UNTITLED_WINDOW_IMP
+		do
+			window_imp ?= Current
+			make
+
+			if (application.item /= Void) then
+				application.item.add_root_window (window_imp)
+			end
+		end
+
+	make_with_owner (par: EV_UNTITLED_WINDOW) is
+			-- Create a window with `par' as parent.
+			-- The life of the window will depend on
+			-- the one of `par'.
+		deferred
+		end
+
 feature {EV_UNTITLED_WINDOW} -- Initialization
 
 	set_default_colors is

@@ -19,7 +19,7 @@ inherit
 			make_for_test
 		end
 
-	EV_ITEM_LIST [EV_TREE_ITEM]
+	EV_TREE_ITEM_HOLDER
 		redefine
 			implementation,
 			create_action_sequences
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 			-- Create the action sequences for the tree.
 		do
 			{EV_PRIMITIVE} Precursor
-			{EV_ITEM_LIST} Precursor
+			{EV_TREE_ITEM_HOLDER} Precursor
 			create select_actions
 			create deselect_actions
 		end
@@ -179,6 +179,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/07 01:33:12  king
+--| Now inheriting from ev_tree_item_holder
+--|
 --| Revision 1.27  2000/03/06 20:16:23  king
 --| Changed action sequence types
 --|

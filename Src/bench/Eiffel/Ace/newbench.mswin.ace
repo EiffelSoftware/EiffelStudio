@@ -198,8 +198,8 @@ cluster
 		exclude
 			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
 		option
-			assertion(no):com_il_code_generator, core_proxy, icore_interface, il_code_generator, il_code_generator_i, il_generator, il_label, il_label_factory, il_meta_data_generator, msil_meta_data_generator
-			assertion(check):com_il_code_generator, core_proxy, icore_interface, il_code_generator, il_code_generator_i, il_generator, il_label, il_label_factory, il_meta_data_generator, msil_meta_data_generator
+			assertion (no): com_il_code_generator, il_code_generator, il_code_generator_i, il_generator, il_label, il_label_factory, il_meta_data_generator
+			assertion (check): com_il_code_generator, il_code_generator, il_code_generator_i, il_generator, il_label, il_label_factory, il_meta_data_generator
 		end
 
 	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"

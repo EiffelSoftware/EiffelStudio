@@ -234,7 +234,7 @@ feature
 		require
 			first_positive_not_null: first >= 0;
 			last_fewer_than_count: last <= count;
-			first_fewer_than_last: first < last;
+			first_fewer_than_last: first <= last;
 			realized: realized
 		deferred
 		ensure

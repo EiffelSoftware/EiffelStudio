@@ -1,0 +1,18 @@
+system
+	app
+
+root 
+	APPLICATION (root_cluster): "make"
+
+default
+	assertion (all);
+	precompiled ("$EIFFEL4\precomp\spec\windows\wel");
+
+cluster 
+	root_cluster:		".";
+
+external
+	include_path:		"$EIFFEL4\library\wel\spec\windows\include";
+	object: 			"$EIFFEL4\library\wel\spec\msc\lib\wel.lib"
+
+end -- system app

@@ -1,42 +1,43 @@
 system
-	build
+	"build"
 
 root
 	GB: execute
 
 default
-	assertion(check)
-	assertion(require)
-	assertion(ensure)
-	arguments(" ")
-	disabled_debug(yes)
-	disabled_debug("dlg_dispatcher")
-	disabled_debug("gdi_count")
-	disabled_debug("vision2_windows")
-	disabled_debug("vision2_windows_gdi")
-	disabled_debug("wel")
-	disabled_debug("wel_gdi_count")
-	disabled_debug("wel_gdi_references")
-	disabled_debug("win_dispatcher")
-	debug(no)
-	line_generation(no)
-	profile(no)
-	trace(no)
-	il_verifiable(yes)
-	msil_generation_type("exe")
-	check_vape(no)
-	console_application(no)
-	address_expression(no)
-	array_optimization(yes)
-	dead_code_removal(yes)
-	dynamic_runtime(no)
-	exception_trace(yes)
-	inlining(no)
-	multithreaded(no)
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	arguments (" ")
+	disabled_debug (yes)
+	disabled_debug ("dlg_dispatcher")
+	disabled_debug ("gdi_count")
+	disabled_debug ("vision2_windows")
+	disabled_debug ("vision2_windows_gdi")
+	disabled_debug ("wel")
+	disabled_debug ("wel_gdi_count")
+	disabled_debug ("wel_gdi_references")
+	disabled_debug ("win_dispatcher")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	il_verifiable (yes)
+	msil_generation_type ("exe")
+	check_vape (no)
+	console_application (no)
+	address_expression (no)
+	array_optimization (yes)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (yes)
+	inlining (no)
+	multithreaded (no)
 
 
--- Note that we exclude ev_widget, as we have a new version for build, which allows
+-- Note that we exclude EV_WIDGET, as we have a new version for build, which allows
 -- you to query whether the minimum_size and minimum_height were set by the user.
+-- Same for EV_PIXMAPABLE.
 
 cluster
 	all build2:		"D:\work\build2"
@@ -46,15 +47,13 @@ cluster
 
 	dev:		"D:\work\library"
 
-
 	all wel (dev):		"$\wel"
-
 
 	all vision2 (dev):		"$\vision2"
 		include
 			"ev_button"; 
 		exclude
-			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; 
+			"new_figures"; "gtk"; "components"; "obsolete"; "release"; "ev_widget.e"; "ev_pixmapable.e"; 
 		end
 
 	all base:		"d:\work\library\base"
@@ -63,7 +62,6 @@ cluster
 		end
 
 	exml_interface:		"D:\work\library\exml_02_cvs_anon\exml\exml\lib\interface"
-
 
 	exml_general_interface (exml_interface):		"$/general"
 
@@ -80,7 +78,6 @@ cluster
 	exml_source_interface (exml_interface):		"$\source"
 
 	exml_implementation:		"D:\work\library\exml_02_cvs_anon\exml\exml\lib\implementation"
-
 
 	exml_implementation_interface (exml_implementation):		"$\implementation_interface"
 

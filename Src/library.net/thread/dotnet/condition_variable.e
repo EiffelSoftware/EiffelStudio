@@ -129,7 +129,6 @@ feature -- Status setting
 			timeout_positive: a_timeout >= 0
 		local
 			l_set_signal_succeed: BOOLEAN
-			l_wait_with_timeout_succeed: BOOLEAN
 		do
 			--| It's ok to increment the number
 			--| of waiters since <a_mutex>
@@ -149,17 +148,6 @@ feature -- Status setting
 			--| Wait to be awakened by a `cond_signal' or `cond_broadcast'.
 			--| but until `a_timeout'
 			Result := cv_sema.wait_with_timeout (a_timeout)
-			
---			if l_wait_with_timeout_succeed and then cv_waiters_lock.try_lock then 
---				--| If we got the sema before the timeout
---				--| and then we got the lock right away, we got the
---				--| `condition_var' on time
---				Result := True
---			else
---				--| Otherwise we passed the timeout and we continue as usual
---				--| since we already got the `cv_sema'
---				Result := False
---			end
 			
 			--| Reacquire lock to avoid race conditions
 			cv_waiters_lock.lock

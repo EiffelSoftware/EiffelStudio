@@ -725,6 +725,7 @@ feature -- Metadata description
 			l_parents: ARRAY [INTEGER]
 			l_parent_class: CLASS_C
 			l_class_type: CLASS_TYPE
+			l_single_inheritance_parent_id: like single_inheritance_parent_id
 		do
 			l_class_type := byte_context.class_type
 			parents := class_c.parents
@@ -732,7 +733,7 @@ feature -- Metadata description
 				create l_list.make (parents.count)
 				parents.start
 				create l_parents.make (0, parents.count)
-				single_inheritance_parent_id := 0
+				l_single_inheritance_parent_id := 0
 			until
 				parents.after
 			loop
@@ -753,7 +754,7 @@ feature -- Metadata description
 						if
 							is_single_inheritance_implementation and then
 							not class_c.is_single and then not l_parent_class.is_interface and then
-							single_inheritance_parent_id = 0 and then
+							l_single_inheritance_parent_id = 0 and then
 							l_parent_class = class_c.main_parent
 						then
 								-- We arbitrary take the first parent as principal parent if
@@ -761,13 +762,13 @@ feature -- Metadata description
 								-- case it goes through a different line of code.
 								-- FIXME: Manu 4/15/2002: To optimize we should take the one
 								-- with the most features
-							single_inheritance_parent_id := cl_type.implementation_id
+							l_single_inheritance_parent_id := cl_type.implementation_id
 						end
 					elseif l_parent_class.is_external or else l_parent_class.is_single then
 						check
-							single_inheritance_parent_id_not_set: single_inheritance_parent_id = 0
+							single_inheritance_parent_id_not_set: l_single_inheritance_parent_id = 0
 						end
-						single_inheritance_parent_id := cl_type.implementation_id
+						l_single_inheritance_parent_id := cl_type.implementation_id
 							-- Note: We do not add into `pars' as we only store there the
 							-- parents than can be included as interfaces.
 					end
@@ -775,11 +776,12 @@ feature -- Metadata description
 				parents.forth
 			end
 
-			if single_inheritance_parent_id = 0 then
+			if l_single_inheritance_parent_id = 0 then
 				single_inheritance_parent_id := object_type_id
 				single_inheritance_token := object_type_token
 			else
-				single_inheritance_token := class_type_token (single_inheritance_parent_id)
+				single_inheritance_token := class_type_token (l_single_inheritance_parent_id)
+				single_inheritance_parent_id := l_single_inheritance_parent_id
 			end
 
 				-- Element after last added should be 0.

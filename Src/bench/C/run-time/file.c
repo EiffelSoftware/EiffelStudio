@@ -526,7 +526,20 @@ FILE *f;
 	/* Swallow next character if it is a new line */
 
 		/* getc() cannot be used as it doesn't set the EOF flag */
-	fscanf (f, "\n");
+
+	if (f != stdin)
+		fscanf (f, "\n");
+	else {
+   		int c;
+
+		errno = 0;
+		c = getc(f);
+		if (c == EOF && ferror(f))
+			eio();
+
+		if (c != '\n' && EOF == ungetc(c, f))
+			eio();
+	}
 }
 			
 public void file_tnil(f)

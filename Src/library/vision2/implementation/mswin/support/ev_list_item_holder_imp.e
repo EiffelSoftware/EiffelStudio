@@ -67,10 +67,11 @@ feature {NONE} -- Implementation
 			-- All the items containers contain items which are
 			-- pixmap container, then, we need this feature to
 			-- call the `on_draw' feature of the items.
-			-- the list must not be empty, otherwise windows can
-			-- send -1.
+			-- In some cases, windows return -1, then we have to
+			-- check before to call the paint message of the
+			-- children.
 		do
-			if count /= 0 then
+			if (struct.item_id /= -1) then
 				(ev_children @ (struct.item_id + 1)).on_draw (struct)
 			end
 		end

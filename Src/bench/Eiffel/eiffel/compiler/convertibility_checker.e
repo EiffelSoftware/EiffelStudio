@@ -139,7 +139,7 @@ feature -- Initialization/Checking
 														Error_handler.insert_error (l_vncp)
 														has_error := True
 													else
-														l_convert_from.put (l_name_id, l_named_type)
+														l_convert_from.force (l_name_id, l_named_type)
 													end
 												else
 													if l_convert_to.has (l_named_type) then
@@ -149,7 +149,7 @@ feature -- Initialization/Checking
 														Error_handler.insert_error (l_vncp)
 														has_error := True
 													else
-														l_convert_to.put (l_name_id, l_named_type)
+														l_convert_to.force (l_name_id, l_named_type)
 													end
 												end
 											end

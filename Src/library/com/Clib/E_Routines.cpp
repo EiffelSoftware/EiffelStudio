@@ -3,18 +3,18 @@
 //  EiffelCOM
 //  Copyright (C) Interactive Software Engineering, 1998.
 //
-//  File:		E_Storage_Routines.cpp
+//  File:		E_Routines.cpp
 //
 //  Contents:	Implementation of storage routines.
 //
 //
 //--------------------------------------------------------------------------
   
-#include "E_Storage_Routines.h"
+#include "E_Routines.h"
 
 //------------------------------------------------------------------
 
-int E_Storage_Routines::ccom_is_compound_file (WCHAR * pwcsName)
+int E_Routines::ccom_is_compound_file (WCHAR * pwcsName)
 
 // Indicates whether a particular disk file contains a storage object.
 // - pwcsName points to the name of the disk file to be examined, 
@@ -30,12 +30,11 @@ int E_Storage_Routines::ccom_is_compound_file (WCHAR * pwcsName)
 		result = 0;
 	else 
 	{
-		Formatter * f;
-		f = new Formatter;
-		com_eraise (f->c_format_message (hr), HRESULT_CODE (hr));
-		delete f;
+		Formatter  f;
+		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	return result;
 };
 //------------------------------------------------------------------
 
+//------------------------------------------------------------------

@@ -15,20 +15,21 @@
 
 void E_Large_Integer::ccom_set_from_integer (EIF_INTEGER i)
 {
+	pli = &li;
 #ifdef EIF_BORLAND
-   (*li).u.HighPart = ((long)((DWORD)i)) < 0 ? -1 : 0;
-   (*li).u.LowPart = ((DWORD)i);
+   (*pli).u.HighPart = ((long)((DWORD)i)) < 0 ? -1 : 0;
+   (*pli).u.LowPart = ((DWORD)i);
 #else
-   LISet32(*li, (DWORD)i);
+   LISet32(*pli, (DWORD)i);
 #endif /* EIF_BORLAND */
 };
 
-void E_Large_Integer::ccom_set_from_large_integer(LARGE_INTEGER * large)
+E_Large_Integer::E_Large_Integer (LARGE_INTEGER * large)
 {
-	*li = *large;
+	pli = large;
 };
 
 LARGE_INTEGER * E_Large_Integer::ccom_large_integer()
 {
-	return li;
+	return pli;
 };

@@ -87,4 +87,97 @@ maximum
 set_step
 set_minimum
 set_maximum
+=========================================================================
+CLASS: ev_item_imp
+DATE:	19990909
+WHO:	king
+parent_widget
+=========================================================================
+CLASS: ev_button_event_data 
+DATE:	19990909
+WHO:	king
+absolute_x
+absolute_y
+=========================================================================
+CLASS: ev_cursor_imp
+DATE:	19990909
+WHO:	king
+make
+make_by_code
+make_by_pixmap
+make_by_filename
+destroyed
+destroy
+=========================================================================
+CLASS:  ev_font_imp
+DATE:	19990909
+WHO:	king
+maximum_width
+=========================================================================
+CLASS:  ev_motion_event_data_imp
+DATE:	19990909
+WHO:	king
+absolute_x
+absolute_y
+=========================================================================
+CLASS:  ev_pnd_transporter_imp
+DATE:	19990909
+WHO:	king
+pointed_target
+=========================================================================
+CLASS:  ev_widget_imp
+DATE:	19990909
+WHO:	king
+cursor
+set_cursor
+=========================================================================
+CLASS:  ev_container_imp
+DATE:	19990909
+WHO:	king
+propagate_background_color
+propagate_foreground_color
+=========================================================================
+CLASS:  ev_untitled_window_imp
+DATE:	19990909
+WHO:	king
+widget_group
+set_widget_group
+=========================================================================
+CLASS:  ev_window_imp
+DATE:	19990909
+WHO:	king
+icon_name
+icon_mask
+icon_pixmap
+is_iconic_state
+is_maximised
+is_minimised
+set_iconic_state
+set_normal_state
+set_icon_mask
+set_icon_pixmap
+=========================================================================
+CLASS: ev_progress_bar_imp
+DATE:	19990909
+WHO:	king
+step
+minimum
+maximum
+set_step
+set_minimum
+set_maximum
+=========================================================================
+CLASS: ev_static_menu_bar_imp
+DATE:	19990909
+WHO:	king
+
+=========================================================================
+CLASS: 
+DATE:	
+WHO:	
+
+
+
+
+
 

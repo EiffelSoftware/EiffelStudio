@@ -131,10 +131,13 @@ feature -- Generation
 			local
 				is_expanded: BOOLEAN
 				target_type: CL_TYPE_I
+				current_type: CL_TYPE_I
 			do
 				generate_line_info
 
+				current_type := context.current_type
 				target_type ?= Context.real_type (info.type)
+
 				context.set_current_type (target_type)
 
 				if call /= Void then
@@ -142,6 +145,8 @@ feature -- Generation
 					call.set_info (info)
 					call.generate
 				end
+
+				context.set_current_type (current_type)
 			end
 
 end -- class CREATION_EXPR_B

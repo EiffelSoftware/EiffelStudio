@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Execution of a list of commands as a result of MOTIF callback";
+		"Execution of a list of commands as a result of callbacks.";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -28,6 +28,11 @@ inherit
 		end;
 
 	SHARED_CALLBACK_STRUCT
+		redefine
+			is_equal
+		end;
+
+	MEL_CALLBACK_STRUCT_CONSTANTS
 		redefine
 			is_equal
 		end
@@ -78,7 +83,6 @@ feature -- Execution
 	execute (argument: ANY) is
 			-- Execute list of commands
 		local
-			a_list: like Current;
 			context_data: CONTEXT_DATA;
 			com_exec: COMMAND_EXEC;
 			command_clone: COMMAND;
@@ -90,13 +94,12 @@ feature -- Execution
 			start;
 				-- Duplicate list just in case that commands are removed
 				-- during the executing of the callbacks.
-			a_list := duplicate (count);
 			from
-				a_list.start
+				start
 			until
-				a_list.after
+				after
 			loop
-				com_exec := a_list.item;
+				com_exec := item;
 				if com_exec.command.context_data_useful then
 					if (context_data = Void) then
 						event := callback_struct.event;
@@ -109,17 +112,16 @@ feature -- Execution
 							widget_m := find_vision_parent (callback_struct.widget)
 						end;
 						widget_oui := widget_m.widget_oui;
-						if event = Void then
-							!! context_data.make (widget_oui)
-						else
-							context_data := create_context_data (widget_oui, event)
-						end
+						context_data := create_context_data (widget_oui, event)
 					end;
 					com_exec.execute (context_data)
 				else
 					com_exec.execute (Void)
 				end;
-				a_list.forth
+				if not after then
+					-- Just in case that commands are removed during the executing of the callbacks
+					forth
+				end
 			end
 		end;
 
@@ -137,6 +139,120 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			found: Result /= Void
+		end;
+
+	create_context_data (widget_oui: WIDGET; event: MEL_EVENT): CONTEXT_DATA is
+			-- Context data associated with Current motif callback
+		local
+			reason: INTEGER
+		do
+			reason := callback_struct.reason;
+			if reason = 0 then
+					-- Then it is a X event callback
+				Result := create_context_data_from_event (widget_oui, event)
+			elseif reason = XmCR_DEFAULT_ACTION then
+				Result := click_data (widget_oui)
+			elseif reason = XmCR_SINGLE_SELECT then
+				Result := single_data (widget_oui)
+			elseif reason = XmCR_BROWSE_SELECT then
+				Result := browse_data (widget_oui)
+			elseif reason = XmCR_MOVING_INSERT_CURSOR then
+				Result := motion_data (widget_oui)
+			elseif reason = XmCR_MODIFYING_TEXT_VALUE then
+				Result := modify_data (widget_oui)
+			elseif reason = XmCR_EXPOSE then
+				Result := expose_data (widget_oui, event)
+			elseif reason = XmCR_INPUT then
+				Result := create_context_data_from_event (widget_oui, event)
+			elseif reason = XmCR_NONE then
+				!! Result.make (widget_oui)
+			elseif event /= Void then
+					-- No context data specific for a motif callback.
+					-- Create a context data from `event'.
+				Result := create_context_data_from_event (widget_oui, event)
+			else
+				!! Result.make (widget_oui)
+			end
+		ensure
+			has_result: Result /= Void
+		end;
+
+feature {NONE} -- Implementation
+ 
+	browse_data (widget_oui: WIDGET): SINGLE_DATA is
+			-- Context data for `browse' action
+		local
+			c_struct: MEL_LIST_CALLBACK_STRUCT;
+			mel_string: MEL_STRING;
+			str: STRING
+		do
+			c_struct ?= callback_struct;
+			mel_string := c_struct.item;
+			if mel_string /= Void then
+				str := mel_string.to_eiffel_string
+			end;
+			!! Result.make (widget_oui,
+					c_struct.item_position,
+					str)
+		end;
+ 
+	click_data (widget_oui: WIDGET): CLICK_DATA is
+			-- Context data for `click' action
+		local
+			c_struct: MEL_LIST_CALLBACK_STRUCT;
+			mel_string: MEL_STRING;
+			str: STRING
+		do
+			c_struct ?= callback_struct;
+			mel_string := c_struct.item;
+			if mel_string /= Void then
+				str := mel_string.to_eiffel_string
+			end;
+			!! Result.make (widget_oui,
+					c_struct.item_position,
+					str)
+		end;
+
+	single_data (widget_oui: WIDGET): SINGLE_DATA is
+			-- Context data for `single' action
+		local
+			c_struct: MEL_LIST_CALLBACK_STRUCT;
+			mel_string: MEL_STRING;
+			str: STRING
+		do
+			c_struct ?= callback_struct;
+			mel_string := c_struct.item;
+			if mel_string /= Void then
+				str := mel_string.to_eiffel_string
+			end;
+			!! Result.make (widget_oui,
+					c_struct.item_position,
+					str)
+		end;
+ 
+	modify_data (widget_oui: WIDGET): MODIFY_DATA is
+			-- Context data for `modify' action
+		local
+			c_struct: MEL_TEXT_VERIFY_CALLBACK_STRUCT;
+		do
+			c_struct ?= callback_struct;
+			!! Result.make (widget_oui,
+					c_struct.current_insert,
+					c_struct.new_insert,
+					c_struct.start_pos,
+					c_struct.end_pos,
+					c_struct.text_string)
+		end;
+ 
+	motion_data (widget_oui: WIDGET): MOTION_DATA is
+			-- Context data for `motion' action
+		local
+			c_struct: MEL_TEXT_VERIFY_CALLBACK_STRUCT
+		do
+			c_struct ?= callback_struct;
+			!! Result.make (widget_oui,
+					c_struct.current_insert,
+					c_struct.new_insert);
 		end;
 
 end -- class MEL_COMMAND_LIST

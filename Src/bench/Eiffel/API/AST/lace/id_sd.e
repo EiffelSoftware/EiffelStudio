@@ -16,6 +16,13 @@ inherit
 			adapt as string_adapt,
 			set as string_set
 		end
+		
+	CHARACTER_ROUTINES
+		export
+			{NONE} all
+		undefine
+			copy, out, is_equal
+		end
 
 create
 	make, initialize
@@ -74,10 +81,10 @@ feature -- Save
 		do
 			if is_string then
 				st.putchar ('"')
-			end
-			st.putstring (Current)
-			if is_string then
+				st.putstring (eiffel_string (Current))
 				st.putchar ('"')
+			else
+				st.putstring (Current)
 			end
 		end
 

@@ -8,7 +8,7 @@ indexing
 class EB_SHOW_PREFERENCE_TOOL
 
 inherit
-	WINDOWS
+	EB_SHARED_INTERFACE_TOOLS
 	EV_COMMAND
 
 	INTERFACE_NAMES
@@ -27,10 +27,15 @@ feature {NONE} -- Execution
 	execute (arg: EV_ARGUMENT1 [EV_CONTAINER]; data: EV_EVENT_DATA) is
 		local
 			p_win: EB_PREFERENCE_WINDOW
-
 		do
-			create p_win.make_top_level
-			p_win.show
+			if
+				not preference_tool_is_valid
+			then
+				create p_win.make_top_level
+				set_preference_tool (p_win.tool)
+			end
+			preference_tool.show
+				-- should be `raise'
 		end
 
 feature -- Properties

@@ -101,8 +101,7 @@ feature -- Element change
 			temp_string: STRING
 			dummy_string: ANY
 		do
-			real_text := clone (a_text)
-			
+			real_text := clone (a_text)	
 			if a_text.has ('&') then
 				temp_string := clone (a_text)
 				filter_ampersand (temp_string, '_')

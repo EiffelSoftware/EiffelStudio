@@ -256,14 +256,10 @@ feature
 					error_found := True;
 				end;
 			when extendible then
-				if value = Void then
+				if value = Void or else not (value.is_no or value.is_yes) then
 					error_found := True
-				elseif value.is_no then
-					System.set_extendible (false)
-				elseif value.is_yes then
-					System.set_extendible (true)
 				else
-					error_found := True;
+					-- Do nothing: the normal case has already been solved
 				end
 			when extending then
 				if value = Void or else not value.is_name then

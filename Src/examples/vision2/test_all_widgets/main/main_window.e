@@ -44,6 +44,7 @@ feature -- Initialization
 			c6: TEXT_AREA_DEMO_WINDOW
 			c7: MENU_DEMO_WINDOW
 			c8: SPLIT_DEMO_WINDOW
+			c9: SCROLLABLE_AREA_DEMO_WINDOW
 		do
 			Precursor
 			!!container.make (Current)
@@ -56,6 +57,7 @@ feature -- Initialization
 			!!c6.make (Current)
 			!!c7.make (Current)
 			!!c8.make (Current)
+			!!c9.make (Current)
 			
 			!!b.make_button (Current, "Label", c1)
 			!!b.make_button (Current, "Fixed", c2)
@@ -65,6 +67,7 @@ feature -- Initialization
 			!!b.make_button (Current, "Text area", c6)
 			!!b.make_button (Current, "Menu", c7)
 			!!b.make_button (Current, "Split area", c8)
+			!!b.make_button (Current, "Scrollable area", c9)
 			
 			set_values
 		end

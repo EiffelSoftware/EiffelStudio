@@ -44,6 +44,13 @@ feature {NONE} -- GTK macros for casting types
 			"GTK_MENU"
 		end
 	
+	gtk_scrolled_window (widget: POINTER): POINTER is
+		external 
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"GTK_SCROLLED_WINDOW"
+		end
+	
 feature {NONE} -- GTK C functions
 
 	-- window

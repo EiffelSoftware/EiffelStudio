@@ -28,28 +28,32 @@ feature -- Initialization
 	make (a_parent: WEL_MDI_FRAME_WINDOW; a_name: STRING) is
 		local
 			file: RAW_FILE
+			dc: WEL_CLIENT_DC
 		do
 			mdi_child_window_make (a_parent, a_name)
 			!! file.make_open_read (a_name)
 			!! dib.make_by_file (file)
 			file.close
+			!! dc.make (Current)
+			dc.get
+			!! bitmap.make_by_dib (dc, dib, Dib_rgb_colors)
+			dc.release
+			!! scroller.make (Current, bitmap.width, bitmap.height, 1, 20)
 		end
 
 feature -- Access
 
 	bitmap: WEL_BITMAP
+			-- Bitmap selected by the user
 
 	dib: WEL_DIB
+			-- DIB informations about `bitmap'
 
 feature -- Basic operations
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Paint the bitmap
 		do
-			if bitmap = Void then
-				!! bitmap.make_by_dib (paint_dc, dib,
-					Dib_rgb_colors)
-			end
 			paint_dc.draw_bitmap (bitmap, 
 				(client_rect.width - bitmap.width) // 2,
 				(client_rect.height - bitmap.height) // 2, 

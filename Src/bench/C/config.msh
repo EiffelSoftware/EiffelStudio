@@ -14,9 +14,9 @@ make='$compiler_path\bin\nmake'
 #
 #-- MT no debug
 #--------------
-ccflags='-nologo -MT -DEIF_THREADS'
-link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
-link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
+#ccflags='-nologo -MT -DEIF_THREADS'
+#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS)'
+#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
 #
 #-- MT DLL debug
 #--------------
@@ -32,9 +32,10 @@ link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS)'
 #
 #-- no MT debug
 #--------
-#ccflags='-Zi -nologo'
-#link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH'
-#link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH'
+ccflags='-Zi -nologo'
+link_line='$compiler_path\bin\lib -OUT:$@ $(OBJECTS) -DEBUGTYPE:BOTH'
+link_wline='$compiler_path\bin\lib -OUT:$@ $(WOBJECTS) -DEBUGTYPE:BOTH'
+link_eline='$compiler_path\bin\lib -OUT:$@ $(EOBJECTS) -DEBUGTYPE:BOTH'
 #
 #-- no MT no debug
 #--------

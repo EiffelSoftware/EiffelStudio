@@ -52,7 +52,7 @@ feature {EV_ANY_HANDLER} -- Initialization
 			check
 				not_already_called: not default_create_called
 					--| Calling default_create twice is not
-					--initialize allowed. This means that reusing
+					--| allowed. This means that reusing
 					--| objects is not allowed unless a
 					--| special purpose feature is provided.
 			end
@@ -224,8 +224,7 @@ feature {EV_ANY} -- Contract support
 			-- Does the application exist? This is used to stop
 			-- manipulation of widgets before an application is created.
 		do
-		--	Result := (create {EV_ENVIRONMENT}).application /= Void
-		Result := True
+			Result := (create {EV_ENVIRONMENT}).application /= Void
 		end
 
 invariant

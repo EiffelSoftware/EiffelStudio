@@ -93,15 +93,76 @@ feature -- Access
 
 feature -- Colors
 
-	white_color: EV_COLOR is
+	White_color: EV_COLOR is
 		once
 			create Result.make_with_rgb (1,1,1)
 		end
 
-	title_font: EV_FONT is
+	Blue_color: EV_COLOR is
 		once
-			create Result.make_with_values (2, 8, 10, 15)
+			create Result.make_with_rgb (0,0,1)
 		end
+
+	Red_color: EV_COLOR is
+		once
+			create Result.make_with_rgb (1,0,0)
+		end
+
+	Green_color: EV_COLOR is
+		once
+			create Result.make_with_rgb (0,1,0)
+		end
+
+	Welcome_title_font: EV_FONT is
+			-- Title for welcome page
+		once
+			create Result
+			Result.set_family (Result.Family_screen)
+			Result.set_weight (Result.Weight_bold)
+			Result.set_shape (Result.Shape_regular)
+			Result.preferred_faces.extend ("Verdana")
+			Result.preferred_faces.extend ("Arial")
+			Result.preferred_faces.extend ("Helvetica")
+			Result.set_height (19)
+		end
+
+	Interior_title_font: EV_FONT is
+			-- Title for interior pages
+		once
+			create Result
+			Result.set_family (Result.Family_screen)
+			Result.set_weight (Result.Weight_bold)
+			Result.set_shape (Result.Shape_regular)
+			Result.preferred_faces.extend ("Tahoma")
+			Result.preferred_faces.extend ("Arial")
+			Result.preferred_faces.extend ("Helvetica")
+			Result.set_height (13)
+		end
+
+	Interior_font: EV_FONT is
+			-- Title for interior pages
+		once
+			create Result
+			Result.set_family (Result.Family_screen)
+			Result.set_weight (Result.Weight_regular)
+			Result.set_shape (Result.Shape_regular)
+			Result.preferred_faces.extend ("Tahoma")
+			Result.preferred_faces.extend ("Arial")
+			Result.preferred_faces.extend ("Helvetica")
+			Result.set_height (13)
+		end
+
+	Title_border_width: INTEGER is 22
+			-- Border on the left of the title
+
+	Title_right_border_width: INTEGER is 5
+			-- Border on the right of the title
+
+	Subtitle_border_width: INTEGER is 20
+			-- Border on the left of the subtitle
+		
+	Interior_border_width: INTEGER is 42
+			-- Border on the left of the text in the core of the wizard.
 
 invariant
 	memory_for_pixmap_allocated: pixmap /= Void
@@ -110,5 +171,5 @@ invariant
 	wizard_source_exists: wizard_source /= Void
 	history_exists: history /= Void
 	window_exists: first_window /= Void
-	window_content_exists: main_box /= Void
+
 end -- class WIZARD_SHARED

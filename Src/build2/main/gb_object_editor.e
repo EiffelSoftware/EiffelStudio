@@ -95,7 +95,7 @@ feature -- Access
 		-- All object modifications are applied to this
 		-- object.
 
-feature {GB_EV_ANY} -- Access
+feature {GB_EV_ANY, GB_COMMAND_DELETE_OBJECT} -- Access
 
 	window_parent: EV_WINDOW is
 			-- `Result' is EV_WINDOW containing `Current'.
@@ -110,6 +110,8 @@ feature {GB_EV_ANY} -- Access
 			end
 		end
 		
+feature {NONE}
+		
 	get_window_parent_recursively (w: EV_WIDGET): EV_WINDOW is
 			-- Result is EV_WINDOW containing `w'.
 		local
@@ -122,10 +124,6 @@ feature {GB_EV_ANY} -- Access
 				Result := get_window_parent_recursively (w.parent)
 			end
 		end
-
-feature -- Measurement
-
-feature -- Status report
 
 feature -- Status setting
 

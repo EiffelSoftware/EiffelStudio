@@ -22,31 +22,61 @@ cluster
 
 	all base:		"$ISE_EIFFEL\library\base"
 		exclude
-			"table_eiffel3"; "classic"; 
+			"table_eiffel3"; "desc"; "classic"; 
 		end
 
 	all base_net:		"$ISE_EIFFEL\library.net\base"
 
-	all system_:		"$ISE_EIFFEL\library.net\system"
 
-	all drawing:		"$ISE_EIFFEL\library.net\drawing"
+assembly
+	mscorlib:   "mscorlib",   "1.0.3300.0", "neutral", "b77a5c561934e089"
 
-	all forms:		"$ISE_EIFFEL\library.net\winforms"
+	system_:    "System",     "1.0.3300.0", "neutral", "b77a5c561934e089"
+				prefix
+							"SYSTEM_DLL_"
+				end
 
-	all accessibility:		"$ISE_EIFFEL\library.net\accessibility"
+	system_xml: "System.Xml", "1.0.3300.0", "neutral", "b77a5c561934e089"
+				prefix
+						   "XML_"
+				end
 
-	all data:		"$ISE_EIFFEL\library.net\data"
+	system_drawing: "System.Drawing","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+				prefix
+							"DRAWING_"
+				end
 
-	all xml:		"$ISE_EIFFEL\library.net\xml"
+	accessibility:     "Accessibility","1.0.3300.0","neutral","b03f5f7f11d50a3a"
 
-external
+	system_runtime_serialization_formatters_soap:            "System.Runtime.Serialization.Formatters.Soap","1.0.3300.0","neutral","b03f5f7f11d50a3a"
 
-	assembly:
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Web.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Web.Services.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\Accessibility.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.xml.dll",
-		"C:\Windows\Microsoft.NET\Framework\v1.0.3705\System.Data.dll"
+	system_windows_forms: "System.Windows.Forms", "1.0.3300.0", "neutral", "b77a5c561934e089"
+				prefix
+							"WINFORMS_"
+				end
+
+	data:		"System.Data", "1.0.3300.0", "neutral", "b77a5c561934e089"
+				prefix
+							"DATA_"
+				end
+
+	system_EnterpriseServices:	"System.EnterpriseServices",	"1.0.3300.0",	"neutral",	"b03f5f7f11d50a3a"
+
+	system_Web:	"System.Web",	"1.0.3300.0",	"neutral",	"b03f5f7f11d50a3a"
+				prefix
+							"WEB_"
+				end
+
+	system_Web_RegularExpressions:	"System.Web.RegularExpressions",	"1.0.3300.0",	"neutral",	"b03f5f7f11d50a3a"
+				prefix
+							"WEB_"
+				end
+
+	Microsoft_visualC:	"Microsoft.VisualC",	"7.0.3300.0",	"neutral",	"b03f5f7f11d50a3a"
+	system_DirectoryServices:	"System.DirectoryServices",	"1.0.3300.0",	"neutral",	"b03f5f7f11d50a3a"
+	system_Runtime_Remoting:	"System.Runtime.Remoting",	"1.0.3300.0",	"neutral",	"b77a5c561934e089"
+	system_Runtime_Serialization_Formatters_Soap:	"System.Runtime.Serialization.Formatters.Soap",	"1.0.3300.0",	"neutral",	"b03f5f7f11d50a3a"
+	cscompmgd:	"cscompmgd",	"7.0.3300.0",	"neutral",	"b03f5f7f11d50a3a"
+
 
 end

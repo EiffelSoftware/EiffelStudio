@@ -85,7 +85,8 @@ feature -- Access
 							type_descriptor.set_pointed_pointed_data_type_visitor (Result)
 						end
 					end
-				else
+				end
+				if Result = Void then
 					create Result
 					Result.visit (Current)
 					instance_visitor := Result

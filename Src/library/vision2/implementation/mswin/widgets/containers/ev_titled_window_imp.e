@@ -16,7 +16,8 @@ inherit
 		redefine
 			make,
 			make_with_owner,
-			default_style
+			default_style,
+			on_show
 		end
 
 creation
@@ -148,6 +149,26 @@ feature {NONE} -- WEL Implementation
 			Result := {EV_UNTITLED_WINDOW_IMP} Precursor
 					- Ws_popup + Ws_border + Ws_sysmenu 
 					+ Ws_minimizebox + Ws_maximizebox
+		end
+
+	on_show is
+			-- When the window receive the on_show message,
+			-- it resizes the window at the size of the child.
+			-- And it send the message to the child because wel
+			-- don't
+		do
+			if child /= Void and (bit_set (internal_changes, 1) or bit_set (internal_changes, 2)) then
+				internal_resize (x, y, (child.minimum_width + 2*system_metrics.window_frame_width).max (minimum_width),
+						(child.minimum_height + system_metrics.title_bar_height
+						+ system_metrics.window_border_height + 2 * system_metrics.window_frame_height).max (minimum_height))
+				internal_changes := set_bit (internal_changes, 1, False)
+				internal_changes := set_bit (internal_changes, 2, False)
+			else
+				move_and_resize (x, y, minimum_width, minimum_height, True)
+			end
+			if has_menu then
+				draw_menu
+			end
 		end
 
 end -- class EV_WINDOW_IMP

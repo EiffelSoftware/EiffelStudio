@@ -5,13 +5,13 @@ Since some people do not have a C compiler, we provide for most of the
 examples a version that does not require a C compiler.
 
 In each directory you will find two ace files:
-- "ace.ace", for people who have a C compiler.
+- "ace.ace", for those who have a C compiler.
 
-- "ace_with_precompiled.ace", for people who do not have a C compiler.
-  In a few cases (comctrls, cursors, magnify), this is a strip down 
+- "ace_with_precompiled.ace", for those who do not have a C compiler.
+  In a few cases (comctrls, cursors, magnify), we provide a strip down 
   version of the 'C-compiler' version.
-  This version requires to have the precompiled version of EiffelBase
-  and WEL librairies.
+  These examples require to have a precompiled library of EiffelBase
+  and WEL.
   
 The following examples do not work without C compiler:
 - commands

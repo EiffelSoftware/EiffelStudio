@@ -161,7 +161,7 @@ create
 
 %type <TOKEN_LOCATION>		Position
 
-%expect 98
+%expect 93
 
 %%
 

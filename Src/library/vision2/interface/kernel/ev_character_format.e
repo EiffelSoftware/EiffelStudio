@@ -196,6 +196,7 @@ feature -- Element change
 			Result.append (background_color.blue_8_bit.out)
 			Result.append (effects.is_underlined.out)
 			Result.append (effects.is_striked_out.out)
+			Result.append (effects.vertical_offset.out)
 		end
 
 feature {NONE} -- Contract support
@@ -209,7 +210,7 @@ feature {NONE} -- Contract support
 			not effects.is_underlined
 		end
 
-feature {EV_RICH_TEXT_I} -- Implementation
+feature {EV_RICH_TEXT_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementation
 
 	hash_value: STRING is
 			-- A hashable representation of `Current'.

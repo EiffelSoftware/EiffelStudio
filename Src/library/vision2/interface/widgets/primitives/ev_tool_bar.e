@@ -22,7 +22,8 @@ inherit
 
 create
 	make,
-	make_with_size
+	make_with_size,
+	make_with_height
 
 feature -- Initialization
 
@@ -45,6 +46,16 @@ feature -- Initialization
 		do
 			!EV_TOOL_BAR_IMP! implementation.make_with_size (w, h)
  			widget_make (par)
+		end
+
+	make_with_height (par: EV_CONTAINER; h: INTEGER) is
+			-- Create the tool-bar with 'par' as parent, 'h' as the height of
+			-- of all buttons.
+		require
+			valid_height: h >= 0
+		do
+			!EV_TOOL_BAR_IMP! implementation.make_with_height (h)
+			widget_make (par)
 		end
 
 feature -- Implementation

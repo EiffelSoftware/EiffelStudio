@@ -100,9 +100,6 @@ feature {NONE} -- Initialization
 				font.preferred_families.extend (font_selection.item.text)
 				font.set_height (16)
 				format.set_font (font)
-				if font.name.is_equal ("Wingdings 3") then
-					do_nothing
-				end
 				rich_text.buffered_append (font_selection.item.text, format)
 				font_selection.forth
 				if not font_selection.off then
@@ -1191,7 +1188,7 @@ feature {NONE} -- To be removed
 	save_file is
 			-- Called by `select_actions' of `s'.
 		do
-			if current_file_name = Void then
+			if current_file_name = Void and not file_dialog_cancelled then
 				get_file_name (saving_file)
 			end
 			if not file_dialog_cancelled then
@@ -1226,7 +1223,7 @@ feature {NONE} -- To be removed
 			else
 				create {EV_FILE_OPEN_DIALOG} file_dialog
 			end
-			file_dialog.set_filter ("*.rtf")
+			file_dialog.filters.extend (["*.rtf", "Rtf Files (*.rtf)"])
 			file_dialog.show_modal_to_window (Current)
 			if file_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_open) or
 				file_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_save) then
@@ -1236,6 +1233,7 @@ feature {NONE} -- To be removed
 			else
 				file_dialog_cancelled := True
 			end
+			print (file_dialog.selected_filter_index)
 		end
 		
 	opening_file: INTEGER is 1

@@ -37,9 +37,9 @@ feature {NONE} -- Initialization
 			ext := a_pattern.to_c;
 			handle := x_list_fonts (a_display.handle, $ext, max, $c);
 			if handle = default_pointer then
-				list_make (0);
+				make_filled (0);
 			else
-				list_make (c);
+				make_filled (c);
 				fill_from_handle (handle);
 				x_free_font_names (handle)
 			end

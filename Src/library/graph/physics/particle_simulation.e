@@ -48,7 +48,7 @@ feature -- Access
 		
 		feature -- Access
 	
-	particles: ARRAYED_LIST [EG_PARTICLE]
+	particles: LIST [EG_PARTICLE]
 		-- Particles in the system.
 	
 feature -- Element change.

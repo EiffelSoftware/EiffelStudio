@@ -1,15 +1,12 @@
 indexing
-	description: "Objects that ..."
+	description: "Objects that represent an EV_TABLE within Build."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	GB_TABLE_OBJECT
-		--| FIXME these really are not supported yet.
-
-	-- Replace ANY below by the name of parent class if any (adding more parents
-	-- if necessary); otherwise you can remove inheritance clause altogether.
+	
 inherit
 	GB_CONTAINER_OBJECT
 		redefine

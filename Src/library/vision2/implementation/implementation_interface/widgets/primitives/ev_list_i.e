@@ -40,7 +40,8 @@ feature -- Access
 	selected_item: EV_LIST_ITEM is
 			-- Item which is currently selected
 			-- It needs to be in single selection mode
-		deferred
+		do
+			Result := selected_items.first
 		end
 
 	selected_items: LINKED_LIST [EV_LIST_ITEM] is
@@ -55,7 +56,6 @@ feature -- Access
 		do
 			original_position := interface.index
 			create Result.make
-			if multiple_selection_enabled then
 				from
 					interface.start
 				until
@@ -66,11 +66,6 @@ feature -- Access
 					end
 					interface.forth
 				end
-			else
-				if selected then
-					Result.extend (selected_item)
-				end
-			end
 			interface.go_i_th (original_position)
 		end
 
@@ -154,6 +149,9 @@ end -- class EV_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/02/29 23:15:03  rogers
+--| Simplified selected_items. Selected item is no longer deferred, but now implemented in this class.
+--|
 --| Revision 1.40  2000/02/29 19:39:24  rogers
 --| Selected items now checks selected rather than selected_item /= Void before appending the selected item to the Result. Only when multiple selection is disabled.
 --|

@@ -22,20 +22,40 @@ feature {NONE}
 			a_context.set_internal_name (internal_name);
 			a_context.set_parent (a_parent);
 			a_context.set_retrieved_node (Current);
-			if context_table.has (identifier) then
+			if for_import.item then
+					-- Record context with this identifier
+					-- for the S_CONTXT_ELMT object.
 				a_context.set_next_identifier;
-				if for_save.item then
-					identifier_changed_table.put (a_context.identifier, a_context.full_name);
-				elseif for_import.item then
-					identifier_changed_table.put (a_context.identifier, full_name);
+				debug ("STORER_CHECK")
+					io.error.putstring ("setting new identifier for context ");
+					io.error.putstring (full_name);
+					io.error.new_line
 				end;
 			else
 				a_context.set_identifier (identifier);
 			end;
-			context_table.put (a_context, a_context.identifier);
+			debug ("STORER")
+				if a_parent /= Void and then 
+					not a_parent.is_a_group and then
+					context_table.has (identifier) 
+				then
+					io.error.putstring ("**** Error: Context already exists: ");
+					io.error.putstring (full_name);
+					io.error.putstring (" ****");
+					io.error.new_line
+				else
+					io.error.putstring ("Creating ");
+					io.error.putstring (a_context.full_name);
+					io.error.putstring (" id: ")
+					io.error.putint (a_context.identifier);
+					if a_context.is_in_a_group then 
+						io.error.putstring (" is in a group")
+					end;
+					io.error.new_line;
+				end
+			end;
 		end;
 
-	
 feature 
 
 	set_context_attributes (a_context: CONTEXT) is
@@ -50,7 +70,7 @@ feature
 	internal_name: STRING;
 
 	
-feature {NONE}
+feature 
 
 	visual_name: STRING;
 
@@ -60,12 +80,6 @@ feature
 	full_name: STRING;
 
 	arity: INTEGER;
-	
-	set_name_change (n: STRING) is
-		do
-			name_changed_table. put (n, full_name);
-		end;
-
 	
 feature {NONE}
 
@@ -137,6 +151,13 @@ feature {NONE}
 			--else
 				full_name := node.full_name;
 			--end;
+			debug ("STORER_CHECK") 
+				io.error.putstring ("storing: ");
+				io.error.putstring (full_name);
+				io.error.putstring (" id: ");
+				io.error.putint (identifier);
+				io.error.new_line
+			end;
 			arity := node.arity;
 			x := node.x;
 			y := node.y;
@@ -173,6 +194,22 @@ feature {GROUP}
 			x := x - new_x_origin;
 			y := y - new_y_origin;
 			position_modified := True;
+		end;
+
+feature -- Debugging
+
+	trace is
+		do
+			io.error.putstring ("fn: ");
+			io.error.putstring (full_name);
+			io.error.putstring (" int: ");
+			io.error.putstring (internal_name);
+			io.error.putstring (" id: ");
+			io.error.putint (identifier);
+			if visual_name /= Void then
+				io.error.putstring (" vn: ");
+				io.error.putstring (visual_name);
+			end
 		end;
 
 end

@@ -23,4 +23,16 @@ feature -- Implementation
 			Result := feature {EV_GTK_EXTERNALS}.gtk_dialog_struct_vbox (a_c_object)
 		end
 
+	horizontal_resolution_internal: INTEGER is
+			-- Number of pixels per inch along horizontal axis 
+		once
+			Result := (feature {EV_GTK_EXTERNALS}.gdk_screen_width / feature {EV_GTK_EXTERNALS}.gdk_screen_get_width_mm (feature {EV_GTK_EXTERNALS}.gdk_screen_get_default) * 25.4).rounded
+		end
+
+	vertical_resolution_internal: INTEGER is
+			-- Number of pixels per inch along vertical axis
+		once
+			Result := (feature {EV_GTK_EXTERNALS}.gdk_screen_height / feature {EV_GTK_EXTERNALS}.gdk_screen_get_height_mm (feature {EV_GTK_EXTERNALS}.gdk_screen_get_default) * 25.4).rounded
+		end
+
 end -- class EV_GTK_DEPENDENT_ROUTINES

@@ -103,6 +103,7 @@ inherit
 			show,
 			hide
 		redefine
+			default_style,
 			on_char,
 			on_key_down,
 			on_key_up
@@ -275,7 +276,16 @@ feature -- Basic operation
 			!! Result.set (wel.x, wel.y)
 		end
 
-feature {NONE}
+feature {NONE} -- WEL Implementation
+
+	default_style: INTEGER is
+   			-- Default style used to create the control
+  		do
+  			Result := ws_visible + ws_child + ws_hscroll
+					+ Ws_vscroll + Ws_border 
+					+ Es_multiline + Es_autohscroll
+					+ Es_disablenoscroll
+  		end
 
 	on_char (character_code, key_data: INTEGER) is
 		do

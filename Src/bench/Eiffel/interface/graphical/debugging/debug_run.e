@@ -31,6 +31,8 @@ inherit
 
 	WARNER_CALLBACKS
 
+	EXEC_MODES
+
 creation
 	make
 
@@ -103,6 +105,7 @@ feature -- Execution
 				need_to_wait := True
 				update_command.execute (tool)
 				need_to_wait := False
+				Application.set_execution_mode (User_stop_points)
 				launch_application (tool)
 				update_command.set_run_after_melt (false)
 			elseif argument = button_three_action then
@@ -112,8 +115,18 @@ feature -- Execution
 				else
 					argument_window.destroy
 				end
-			elseif not need_to_wait then
-				launch_application (argument)
+			else
+				if argument /= tool  and then not need_to_wait then
+						--| It means that the user clicked on the EXEC_STOP, EXEC_STEP,
+						--| EXEC_NOSTOP or EXEC_LAST button and not on the RUN button
+					launch_application (argument)
+				elseif not need_to_wait then
+						--| The user clicked on the Run button and since `execution_mode'
+						--| is a shared variable, we need to update its value before to
+						--| launch the execution
+					Application.set_execution_mode (User_stop_points)
+					launch_application (argument)
+				end
 			end
 		end
 		

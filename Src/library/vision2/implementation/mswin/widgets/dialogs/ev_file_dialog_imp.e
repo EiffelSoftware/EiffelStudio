@@ -146,20 +146,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation for events handling
-
-	dispatch_events is
-			-- Execute the command associated to the action of the user.
-			-- As in `process_message' of WEL_WINDOW, we can't use
-			-- `inspect' here.
-		do
-			if selected then
-				execute_command (Cmd_ok, Void)
-			else
-				execute_command (Cmd_cancel, Void)
-			end
-		end
-
 feature {NONE} -- Deferred features
 
 	flags: INTEGER is

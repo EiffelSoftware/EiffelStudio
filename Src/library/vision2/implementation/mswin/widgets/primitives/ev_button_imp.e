@@ -442,21 +442,6 @@ feature {EV_ANY_I} -- Drawing implementation
 			end
 			create Result.make_solid (color_imp)
 		end
-		
-	parent_internal_background_brush: WEL_BRUSH is
-			-- `Result' is background brush of parent `Current'.
-		local
-			color_imp: EV_COLOR_IMP
-			color: EV_COLOR
-		do
-			color_imp := parent_imp.background_color_imp
-			if color_imp = Void then
-				create color
-				color_imp ?= color.implementation
-				color_imp.set_with_system_id (feature {WEL_COLOR_CONSTANTS}.Color_btnface)
-			end
-			create Result.make_solid (color_imp)
-		end
 
 	on_draw_item (draw_item: WEL_DRAW_ITEM_STRUCT) is
 			-- Wm_drawitem message received. We must now draw `Current'
@@ -639,7 +624,12 @@ feature {EV_ANY_I} -- Drawing implementation
 
 			theme_drawer.update_button_text_rect_for_state (open_theme, state, text_rect)
 
-			theme_drawer.draw_text (open_theme, memory_dc, bp_pushbutton, pbs_normal, text, dt_left | dt_vcenter | dt_singleline, is_sensitive, text_rect, foreground_color)
+			if foreground_color_imp /= Void then
+				color_imp := foreground_color_imp
+			else
+				color_imp ?= (create {EV_STOCK_COLORS}).default_foreground_color.implementation
+			end
+			theme_drawer.draw_text (open_theme, memory_dc, bp_pushbutton, pbs_normal, text, dt_left | dt_vcenter | dt_singleline, is_sensitive, text_rect, color_imp)
 			
 				-- If we have a pixmap set on `Current', then we must draw it.
 			if internal_pixmap_state /= Void then

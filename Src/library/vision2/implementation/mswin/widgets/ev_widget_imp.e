@@ -33,8 +33,6 @@ inherit
 
 	EV_WIDGET_EVENTS_CONSTANTS_IMP
 
-	--EV_ACCELERATOR_HANDLER_IMP
-
 	EV_PICK_AND_DROPABLE_IMP
 		redefine	
 			interface
@@ -90,11 +88,16 @@ feature {NONE} -- Initialization
 
 	initialize  is
 			-- Creation of the widget.
+		local
+			win: EV_TITLED_WINDOW_IMP
 		do
 			initialize_sizeable
 			set_default_colors
 			set_default_minimum_size
-			show
+			win ?= Current
+			if win /= Void then
+				show
+			end
 			is_initialized := True
 		end
 
@@ -378,22 +381,6 @@ feature -- Element change
 			end
 		end
 
-feature -- Accelerators - command association
-
---|FIXME	add_accelerator_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when `acc' is completed by the user.
---|FIXME		do
---|FIXME			add_accel_command (acc, cmd, arg)
---|FIXME		end
-
---|FIXME	remove_accelerator_commands (acc: EV_ACCELERATOR) is
---|FIXME			-- Empty the list of commands to be executed when
---|FIXME			-- `acc' is completed by the user.
---|FIXME		do
---|FIXME			remove_accel_commands (acc)
---|FIXME		end
-
 feature -- Implementation
 
 	on_contained is
@@ -583,11 +570,12 @@ feature {NONE} -- Implementation, key events
 			-- Executed when a key is pressed.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
+		local
+			key: EV_KEY
 		do
 			if valid_wel_code (virtual_key) then
-				interface.key_press_actions.call ([
-					create {EV_KEY}.make_with_code (
-						key_code_from_wel (virtual_key))])
+				create key.make_with_code (key_code_from_wel (virtual_key))
+				interface.key_press_actions.call ([key])
 			end
 		end
 
@@ -595,11 +583,12 @@ feature {NONE} -- Implementation, key events
 			-- Executed when a key is released.
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
+		local
+			key: EV_KEY
 		do
 			if valid_wel_code (virtual_key) then
-				interface.key_release_actions.call ([
-					create {EV_KEY}.make_with_code (
-						key_code_from_wel (virtual_key))])
+				create key.make_with_code (key_code_from_wel (virtual_key))
+				interface.key_release_actions.call ([key])
 			end
 		end
 
@@ -920,6 +909,11 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.62  2000/03/23 01:14:28  brendel
+--| Widget is now only shown by default if it is not of type EV_TITLED_WINDOW
+--| Removed obsolete accelerator code.
+--| Cleaned up key event code.
+--|
 --| Revision 1.61  2000/03/21 02:29:07  brendel
 --| Replaced unnecessary assignment attempt with assignment.
 --|

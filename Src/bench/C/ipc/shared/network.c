@@ -53,7 +53,7 @@ rt_private char *rcsid = "$Id$";
 rt_private jmp_buf env;		/* Environment saving for longjmp() */
 
 #ifdef EIF_WIN32
-rt_private CALLBACK timeout(HWND, UINT, UINT, DWORD);	/* Signal handler for read timeouts */
+rt_private void CALLBACK timeout(HWND, UINT, UINT, DWORD);	/* Signal handler for read timeouts */
 #else
 rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
 rt_private Signal_t timeout(void);	/* Signal handler for read timeouts */
@@ -283,7 +283,7 @@ rt_private Signal_t broken(void)
 #endif
 
 #ifdef EIF_WIN32
-rt_private CALLBACK timeout(HWND hwnd, UINT msg, UINT id, DWORD time)
+rt_private void CALLBACK timeout(HWND hwnd, UINT msg, UINT id, DWORD time)
 #else
 rt_private Signal_t timeout(void)
 #endif

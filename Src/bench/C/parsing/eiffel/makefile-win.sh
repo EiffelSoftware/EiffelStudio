@@ -6,7 +6,7 @@ JCFLAGS = $ccflags $optimize $(CFLAGS)
 LN = copy
 MAKE = nmake
 MV = copy
-RM = del
+RM = $del
 
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<

@@ -2,7 +2,7 @@ TOP = ..\..
 CC = $cc
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 MV = copy
-RM = del
+RM = $del
 
 # Where shared archive is located (path and name)
 LIBDIR = ..\shared
@@ -45,7 +45,7 @@ $borland-ebench.exe: $(LIBS) ebench.lbk
 	tlink32 @ebench.lbk
 
 ebench.lbk: $(OBJECTS)
-	echo -m -n c:\bc45\lib\c0x32.$obj + > ebench.lbk
+	echo -m -n c:\bc45\lib\c0x32.$obj + >> ebench.lbk
 	&echo $** + >> ebench.lbk
 	echo , ebench.exb,, IMPORT32.LIB+CW32.LIB+>> ebench.lbk
 	echo ..\shared\ipc.lbb + >> ebench.lbk

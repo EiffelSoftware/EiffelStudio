@@ -5,6 +5,7 @@ borland-=''
 include_path='$compiler_path\include'
 lib_path='$compiler_path\lib'
 make='$compiler_path\bin\make'
+del='e:\45dev\borlandC\c_del.bat'
 #
 obj='obj'
 lib='lib'
@@ -12,29 +13,29 @@ lib='lib'
 #-- MT debug
 #-----------
 #optimize='-O2'
-#ccflags='-v -tWM -DEIF_THREADS'
+#ccflags='-q -v -tWM -DEIF_THREADS'
 #
 #-- MT no debug
 #--------------
-#ccflags='-tWM -DEIF_THREADS'
+#ccflags='-q -tWM -DEIF_THREADS'
 #
 #-- no MT debug
 #--------
-#ccflags='-v'
+#ccflags='-q -v'
 #
 #-- no MT no debug
 #--------
-#ccflags=''
+ccflags='-q '
 #
 #
 optimize='-O2'
 #optimize=''
-link_line='&$compiler_path\bin\tlib /p256 /c $@ +$**'
-link_wline='&$compiler_path\bin\tlib /p256 /c $@ +$**'
-link_eline='&$compiler_path\bin\tlib /p256 /c $@ +$**'
-cc='bcc32'
+link_line='&$compiler_path\bin\tlib /p256 $@ +-$**'
+link_wline='&$compiler_path\bin\tlib /p256 $@ +-$**'
+link_eline='&$compiler_path\bin\tlib /p256 $@ +-$**'
+cc='$compiler_path\bin\bcc32'
 output_cmd='-o'
 input_cmd=''
 extra_object_files=''
-compiler_path='e:\bc5'
+compiler_path='d:\apps\borland\Cbuilder4'
 #

@@ -16,6 +16,8 @@ inherit
 	EV_MENU_HOLDER_IMP
 		rename
 			make as old_make
+--		undefine
+--			parent
 		redefine
 			parent_imp
 		end
@@ -23,6 +25,8 @@ inherit
 	EV_PRIMITIVE_IMP
 		rename
 			make as old_make
+--		undefine
+--			parent
 		redefine
 			parent_imp
 		end
@@ -38,11 +42,11 @@ feature {NONE} -- Initialization
 			par_imp: EV_WINDOW_IMP
 		do
 			widget := gtk_menu_bar_new ()
-			show
 			parent_imp ?= par.implementation
 			check
 				good_implementation: parent_imp /= Void
 			end
+			show
 			parent_imp.add_static_menu (Current)
 		end	
 

@@ -69,7 +69,7 @@ feature -- status settings
 		end
 
 	set_maximum_text_lenght (lenght: INTEGER) is
-			-- Maximum number of charachters on text
+			-- Maximum number of characters on text
 		do
 			check
 				not_yet_implemented: False

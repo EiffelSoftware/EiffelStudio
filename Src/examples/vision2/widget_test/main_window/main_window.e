@@ -44,6 +44,8 @@ feature {NONE} -- Initialization
 			
 			create event_selector.make_with_list (event_selector_list, event_output)
 			register_type_change_agent (agent event_selector.rebuild)
+			
+			register_type_change_agent (agent parent_test_widget)
 		end
 
 feature {NONE} -- Implementation

@@ -20,7 +20,7 @@ inherit
 	TEXT_M
 		undefine
 			mel_text_make, clean_up,
-			height, real_x, real_y, realized, is_shown, width,
+			height, real_x, real_y, realized, shown, width,
 			x, y, hide, lower, propagate_event, raise,
 			realize, set_x, set_x_y, set_y, show, unrealize
 		redefine
@@ -33,46 +33,46 @@ inherit
 			set_width	
 		end;
 
-    MEL_SCROLLED_TEXT
-        rename
-            make as mel_text_make,
-            foreground_color as mel_foreground_color,
-            set_foreground_color as mel_set_foreground_color,
-            background_color as mel_background_color,
-            background_pixmap as mel_background_pixmap,
-            set_background_color as mel_set_background_color,
-            set_background_pixmap as mel_set_background_pixmap,
-            destroy as mel_destroy,
-            screen as mel_screen,
-            set_editable as mel_set_editable,
-            pos_to_x as x_coordinate,
-            pos_to_y as y_coordinate,
-            xy_to_pos as character_position,
-            resize_height as is_height_resizable,
-            resize_width as is_width_resizable,
-            word_wrap as is_word_wrap_mode,
-            verify_bell as is_bell_enabled,
-            string as text,
-            set_string as set_text,
-            max_length as maximum_size,
-            set_max_length as set_maximum_size,
-            set_single_line_edit_mode as set_single_line_mode,
-            top_character as top_character_position,
-            set_top_character as set_top_character_position,
-            clear_selection as clear_selecton_with_time,
-            clear_selection_with_current_time as clear_selection,
-            set_selection as set_selecton_with_time,
-            set_selection_with_current_time as set_selection,
-            insert as mel_insert,
+	MEL_SCROLLED_TEXT
+		rename
+			make as mel_text_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			set_editable as mel_set_editable,
+			pos_to_x as x_coordinate,
+			pos_to_y as y_coordinate,
+			xy_to_pos as character_position,
+			resize_height as is_height_resizable,
+			resize_width as is_width_resizable,
+			word_wrap as is_word_wrap_mode,
+			verify_bell as is_bell_enabled,
+			string as text,
+			set_string as set_text,
+			max_length as maximum_size,
+			set_max_length as set_maximum_size,
+			top_character as top_character_position,
+			set_top_character as set_top_character_position,
+			clear_selection as clear_selecton_with_time,
+			clear_selection_with_current_time as clear_selection,
+			set_selection as set_selecton_with_time,
+			set_selection_with_current_time as set_selection,
+			insert as mel_insert,
 			is_scroll_vertical as is_vertical_scrollbar,
-			is_scroll_horizontal as is_horizontal_scrollbar
+			is_scroll_horizontal as is_horizontal_scrollbar,
+			is_shown as shown
 		undefine
-			height, real_x, real_y, realized, is_shown, width,
+			height, real_x, real_y, realized, width,
 			x, y, hide, lower, propagate_event, raise,
 			realize, set_x, set_x_y, set_y, show, unrealize
 		redefine
 			set_height, set_width, set_size
-        end
+		end
 
 creation
 
@@ -84,23 +84,23 @@ feature {NONE} -- Initialization
 			-- Create a motif scrolled text.
 		do
 			widget_index := widget_manager.last_inserted_position;
-            mel_text_make (a_scrolled_text.identifier,
-                    mel_parent (a_scrolled_text, widget_index),
-                    man);
+			mel_text_make (a_scrolled_text.identifier,
+					mel_parent (a_scrolled_text, widget_index),
+					man);
 			a_scrolled_text.set_font_imp (Current);
-			set_single_line_mode (False);
+			set_multi_line_mode;
 		end;
 
 	make_word_wrapped (a_scrolled_text: TEXT; man: BOOLEAN) is
 			-- Create a motif scrolled text enabling word wrap.
 		do
 			widget_index := widget_manager.last_inserted_position;
-            make_detailed (a_scrolled_text.identifier,
-                    mel_parent (a_scrolled_text, widget_index),
-                    man, False, True, False, False);
+			make_detailed (a_scrolled_text.identifier,
+					mel_parent (a_scrolled_text, widget_index),
+					man, False, True, False, False);
 			a_scrolled_text.set_font_imp (Current);
-			set_single_line_mode (False);
-            set_word_wrap (True);
+			set_single_line_mode;
+			set_word_wrap (True);
 		end;
 
 feature -- Access

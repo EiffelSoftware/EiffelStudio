@@ -14,8 +14,10 @@ inherit
 	WARNING_D_I;
 
 	MESSAGE_D_M
+        rename
+            is_shown as shown
 		undefine
-			clean_up, create_widget
+			clean_up, create_widget, shown
 		redefine
 			make, dialog_shell, screen_object
 		end;
@@ -31,9 +33,10 @@ inherit
 			set_foreground_color as mel_set_foreground_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
-			screen as mel_screen
+			screen as mel_screen,
+            is_shown as shown
 		undefine
-			raise, lower, show, hide, is_shown
+			raise, lower, show, hide
 		redefine
 			dialog_shell, screen_object
 		select 

@@ -15,7 +15,8 @@ inherit
 
 	TOP_M
 		rename
-			make as top_shell_make
+			make as top_shell_make,
+			is_shown as shown
 		end
 
 creation

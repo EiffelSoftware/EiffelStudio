@@ -13,6 +13,8 @@ inherit
 	TOGGLE_BG_I;
 
 	BUTTON_G_M
+		rename
+			is_shown as shown
 		undefine
 			create_callback_struct
 		end;
@@ -23,7 +25,8 @@ inherit
 		rename
 			make as mel_toggle_make,
 			destroy as mel_destroy,
-			screen as mel_screen
+			screen as mel_screen,
+			is_shown as shown
 		select
 			mel_toggle_make
 		end
@@ -43,6 +46,22 @@ feature {NONE} -- Initialization
 					mel_parent (a_toggle_bg, widget_index),
 					man);
 			a_toggle_bg.set_font_imp (Current)
+		end;
+
+feature -- Status setting
+
+	allow_recompute_size is
+			-- Allow Current to recompute its size
+			-- according to the children.
+		do
+			set_recomputing_size_allowed (True)
+		end;
+
+	forbid_recompute_size is
+			-- Forbid Current to recompute its size
+			-- according to the children.
+		do
+			set_recomputing_size_allowed (False)
 		end;
 
 feature -- Element change

@@ -23,7 +23,7 @@ inherit
 			make as form_m_make
 		undefine
 			lower, raise, 
-			hide, show, is_shown, destroy,
+			hide, show, destroy,
 			define_cursor_if_shell, undefine_cursor_if_shell,
 			is_stackable, clean_up,
 			form_make, create_widget
@@ -50,10 +50,11 @@ inherit
 			detach_right as mel_detach_right,
 			detach_left as mel_detach_left,
 			detach_top as mel_detach_top,
-			detach_bottom as mel_detach_bottom
+			detach_bottom as mel_detach_bottom,
+            is_shown as shown
 		undefine
 			set_x, set_y, set_x_y, raise, lower, 
-			show, hide, is_shown
+			show, hide
 		redefine
 			screen_object
 		select

@@ -24,7 +24,7 @@ inherit
 			make_no_auto_unmanage as file_select_m_make_no_auto_unmanage
 		undefine
 			lower, raise, 
-			show, hide, is_shown, destroy,
+			show, hide, destroy,
 			define_cursor_if_shell, undefine_cursor_if_shell,
 			clean_up, is_stackable, file_selection_make
 		redefine
@@ -48,9 +48,10 @@ inherit
 			set_pattern as mel_set_pattern,
 			pattern as mel_pattern,
 			set_directory as mel_set_directory,
-			directory as mel_directory
+			directory as mel_directory,
+            is_shown as shown
 		undefine
-			raise, lower, show, hide, is_shown
+			raise, lower, show, hide
 		redefine
 			screen_object
 		end

@@ -13,6 +13,8 @@ inherit
 	SCROLLBAR_I;
 
 	PRIMITIVE_M
+		rename
+			is_shown as shown
 		undefine
 			create_callback_struct
 		end;
@@ -32,7 +34,8 @@ inherit
 			value as position,
 			set_increment as set_granularity,
 			set_horizontal as mel_set_horizontal,
-			set_value as set_position
+			set_value as set_position,
+			is_shown as shown
 		end
 
 creation

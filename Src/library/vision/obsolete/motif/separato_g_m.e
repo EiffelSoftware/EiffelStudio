@@ -12,6 +12,8 @@ inherit
 	SEPARATO_G_I;
 
 	WIDGET_M
+		rename
+			is_shown as shown
 		undefine
 			clean_up_callbacks
 		redefine
@@ -24,7 +26,8 @@ inherit
 			make as mel_sep_make,
 			destroy as mel_destroy,
 			screen as mel_screen,
-			set_horizontal as mel_set_horizontal
+			set_horizontal as mel_set_horizontal,
+			is_shown as shown
 		end
 
 

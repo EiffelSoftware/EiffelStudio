@@ -12,7 +12,12 @@ inherit
 
 	LABEL_I;
 
-	PRIMITIVE_M;
+	PRIMITIVE_M
+		rename
+			is_shown as shown
+		undefine
+			shown
+		end;
 
 	FONTABLE_M;
 
@@ -32,6 +37,22 @@ feature {NONE} -- Initialization
 					mel_parent (a_label, widget_index),
 					man);
 			a_label.set_font_imp (Current)
+		end;
+
+feature -- Status Setting
+
+	allow_recompute_size is
+			-- Allow Current to recompute its size
+			-- according to the children.
+		do
+			set_recomputing_size_allowed (True)
+		end;
+
+	forbid_recompute_size is
+			-- Forbid Current to recompute its size
+			-- according to the children.
+		do
+			set_recomputing_size_allowed (False)
 		end;
 
 end -- class LABEL_M

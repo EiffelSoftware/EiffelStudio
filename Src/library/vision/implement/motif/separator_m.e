@@ -12,7 +12,10 @@ inherit
 
     SEPARATOR_I;
 
-	PRIMITIVE_M;
+	PRIMITIVE_M
+		rename
+			is_shown as shown
+		end;
 
     MEL_SEPARATOR
         rename
@@ -25,7 +28,8 @@ inherit
             set_background_pixmap as mel_set_background_pixmap,
             destroy as mel_destroy,
             screen as mel_screen,
-			set_horizontal as mel_set_horizontal
+			set_horizontal as mel_set_horizontal,
+			is_shown as shown
         end
 
 creation

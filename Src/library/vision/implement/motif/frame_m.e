@@ -13,7 +13,10 @@ inherit
 
 	FRAME_I;
 
-	MANAGER_M;
+	MANAGER_M
+        rename
+            is_shown as shown
+		end;
 
 	MEL_FRAME
 		rename
@@ -25,7 +28,8 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
-			screen as mel_screen
+			screen as mel_screen,
+            is_shown as shown
 		end
 
 creation

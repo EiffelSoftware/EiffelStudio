@@ -15,6 +15,8 @@ inherit
 	FONTABLE_M;
 
 	PRIMITIVE_M
+		rename
+			is_shown as shown
 		undefine
             create_callback_struct
         end;
@@ -34,7 +36,8 @@ inherit
             set_string as set_text,
             max_length as maximum_size,
             set_max_length as set_maximum_size,
-            insert as mel_insert
+            insert as mel_insert,
+			is_shown as shown
         end
 
 creation

@@ -17,7 +17,7 @@ inherit
 
 	BUTTON_M
 		undefine
-			create_callback_struct
+			create_callback_struct, shown
 		end;
 
 	FONTABLE_M;
@@ -32,7 +32,8 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
-			screen as mel_screen
+			screen as mel_screen,
+			is_shown as shown
 		select
 			mel_drawn_make
 		end
@@ -54,6 +55,22 @@ feature {NONE} -- Initialization
 			set_push_button_enabled (True);
 			display_pointer := xt_display (screen_object);
 			create_gc
+		end;
+
+feature -- Status setting
+
+	allow_recompute_size is
+			-- Allow Current to recompute its size
+			-- according to the children.
+		do
+			set_recomputing_size_allowed (True)
+		end;
+
+	forbid_recompute_size is
+			-- Forbid Current to recompute its size
+			-- according to the children.
+		do
+			set_recomputing_size_allowed (False)
 		end;
 
 feature -- Element change

@@ -23,7 +23,7 @@ inherit
 			make as prompt_make
 		undefine
 			lower, raise, hide,
-			is_shown, show, destroy, selection_make,
+			show, destroy, selection_make,
 			define_cursor_if_shell, undefine_cursor_if_shell,
 			is_stackable, clean_up, create_widget
 		redefine
@@ -41,9 +41,10 @@ inherit
 			set_foreground_color as mel_set_foreground_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
-			screen as mel_screen
+			screen as mel_screen,
+            is_shown as shown
 		undefine
-			raise, lower, show, hide, is_shown
+			raise, lower, show, hide
 		redefine
 			screen_object
 		select

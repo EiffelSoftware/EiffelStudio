@@ -37,7 +37,8 @@ inherit
 			detach_right as mel_detach_right,
 			detach_left as mel_detach_left,
 			detach_top as mel_detach_top,
-			detach_bottom as mel_detach_bottom
+			detach_bottom as mel_detach_bottom,
+            is_shown as shown
 		select
 			form_make, make_no_auto_unmanage
         end

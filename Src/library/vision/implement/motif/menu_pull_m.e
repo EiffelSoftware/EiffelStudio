@@ -18,7 +18,8 @@ inherit
 			set_background_color as menu_set_background_color,
 			set_size as menu_set_size,
 			set_width as menu_set_width,
-			set_height as menu_set_height
+			set_height as menu_set_height,
+            is_shown as shown
 		undefine
 			create_callback_struct
 		redefine
@@ -29,6 +30,8 @@ inherit
 		end;
 
 	MENU_M
+        rename
+            is_shown as shown
 		undefine
 			create_callback_struct
 		redefine
@@ -52,7 +55,8 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
-			screen as mel_screen
+			screen as mel_screen,
+            is_shown as shown
 		redefine
 			set_size, set_width, set_height, managed,
 			set_x, set_x_y, set_y, real_x, real_y,

@@ -9,7 +9,7 @@ inherit
 			on_control_id_command,
 			on_size,
 			on_menu_select,
-			default_process_message
+			on_notify
 		end
 
 	APPLICATION_IDS
@@ -161,17 +161,15 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	default_process_message (msg, wparam, lparam: INTEGER) is
+	on_notify (control_id: INTEGER; info: WEL_NMHDR) is
 			-- Draw the tooltips.
 		local
 			tt: WEL_TOOLTIP_TEXT
 		do
-			if msg = Wm_notify then
-				!! tt.make_by_pointer (cwel_integer_to_pointer (lparam))
-				if tt.hdr.code = Ttn_needtext then
-					-- Set resource string id.
-					tt.set_text_id (tt.hdr.id_from)
-				end
+			if info.code = Ttn_needtext then
+				!! tt.make_by_nmhdr (info)
+				-- Set resource string id.
+				tt.set_text_id (tt.hdr.id_from)
 			end
 		end
 

@@ -79,10 +79,10 @@ const IID IID_ICorDebugArrayValue = {0x0405B0DF,0xA660,0x11d2,0xBD,0x02,0x00,0x0
 */
 
 typedef LONG EIF_DBG_STATE;
+rt_private volatile EIF_DBG_STATE dbg_state ;
 rt_private Callback_ids dbg_last_callback_id;
 rt_private HANDLE estudio_thread_handle;
 rt_private DWORD estudio_thread_id;
-rt_private EIF_DBG_STATE dbg_state;
 rt_private BOOL dbg_start_timer_requested;
 rt_private UINT dbg_keep_synchro;
 rt_private bool dbg_estudio_notification_processing;
@@ -172,7 +172,7 @@ rt_public void trace_event (char* mesg)
   fprintf(out,"%d:%d - <%d>%s\n",
 		  			dbg_msg_displayed_index, 
 					GetCurrentThreadId(),
-					dbg_state, 
+					InterlockedExchangeAdd (&dbg_state, 0), 
 					mesg
 					);
   fclose(out);
@@ -188,7 +188,7 @@ rt_public void trace_event (char* mesg, char* mesg2)
   fprintf(out,"%d:%d - <%d>%s %s\n",
 		  			dbg_msg_displayed_index, 
 					GetCurrentThreadId(),
-					dbg_state, 
+					InterlockedExchangeAdd (&dbg_state, 0), 
 					mesg, mesg2
 					);
   fclose(out);
@@ -203,7 +203,7 @@ rt_public void trace_event_dbg_hr (char* mesg,HRESULT hr)
   fprintf(out,"%d:%d - <%d>%s %d\n",
 		  			dbg_msg_displayed_index, 
 		  			GetCurrentThreadId(),
-					dbg_state, 
+					InterlockedExchangeAdd (&dbg_state, 0), 
 					mesg,
 					hr
 					);
@@ -219,7 +219,7 @@ rt_public void trace_event_dbg_dword (char* mesg,DWORD dw)
   fprintf(out,"%d:%d - <%d>%s %d \n",
 		  			dbg_msg_displayed_index, 
 		  			GetCurrentThreadId(),
-					dbg_state, 
+					InterlockedExchangeAdd (&dbg_state, 0), 
 					mesg,
 					dw
 					);
@@ -335,9 +335,6 @@ rt_public void dbg_terminate_synchro () {
 	// to suspend or resume
 	//DBG_CLOSE_ESTUDIO_THREAD_HANDLE;
 	DBGTRACE("[Synchro|ES] Terminate Synchro: done");
-#ifdef DBGTRACE_ENABLED
-	CLI_MUTEX_DESTROY(trace_mutex, "");
-#endif
 }
 
 rt_public void dbg_enable_estudio_callback (EIF_OBJECT estudio_cb_obj, EIF_POINTER estudio_cb_event) {
@@ -437,7 +434,7 @@ rt_public void dbg_restore_cb_notification_state () {
 	 * 
 	 */
 	DBGTRACE("[???] restore cb notification state");
-	CHECK (dbg_state != 5, "Require: end of evaluation processing")
+	CHECK (InterlockedExchangeAdd (&dbg_state, 0) != 5,"Require: end of evaluation processing")
 	dbg_reset_dbg_state (4);
 }
 

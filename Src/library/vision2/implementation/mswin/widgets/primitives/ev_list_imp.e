@@ -523,6 +523,8 @@ feature {EV_LIST_ITEM_I} -- Implementation
 				log_font.width.abs * 15 + 7, -- 15 characters wide
 				log_font.height.abs	* 3 + 7	 -- 3 characters tall
 				)
+				-- Now dispose of `log_font' as it is no longer required.
+			log_font.dispose
 		end
 
 	wipe_out is

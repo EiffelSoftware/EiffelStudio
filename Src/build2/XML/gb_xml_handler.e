@@ -77,8 +77,6 @@ feature -- Basic operations
 	load_components is
 			-- Load previously stored components in `component_document',
 			-- or create `component_document' if no component file exists.
-		require
-			component_doc_void: component_document = Void
 		local
 			file: RAW_FILE
 			an_element, component_element: XML_ELEMENT
@@ -86,6 +84,9 @@ feature -- Basic operations
 			buffer: STRING
 			parser: XML_TREE_PARSER
 		do
+			check
+				component_doc_void: component_document = Void
+			end
 			create file.make (component_filename)
 			if file.exists then
 					-- Load the existing file into `component document'
@@ -139,14 +140,14 @@ feature -- Basic operations
 	save_components is
 			-- Store `component_document' into file
 			-- `component_filename'.
-		require
-			component_doc_not_void: component_document /= Void
 		local
 			file: RAW_FILE
 			error_dialog: GB_TWO_BUTTON_ERROR_DIALOG
 			cancelled: BOOLEAN
 		do
-			
+			check
+				component_doc_not_void: component_document /= Void
+			end
 			create file.make (component_filename)
 			from
 			until

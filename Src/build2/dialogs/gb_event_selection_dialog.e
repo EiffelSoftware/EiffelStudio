@@ -28,6 +28,11 @@ inherit
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
+	
+	GB_WIDGET_UTILITIES
+		undefine
+			default_create, copy
+		end
 
 
 create
@@ -264,9 +269,11 @@ feature {NONE} -- Implementation
 			label: EV_LABEL
 			current_check_button: EV_CHECK_BUTTON
 			frame: EV_FRAME
+			current_text_field: EV_TEXT_FIELD
 		do
 			lock_update
 			current_check_button := all_check_buttons @ index
+			current_text_field := all_text_fields @ index
 			if (current_check_button).is_selected then
 				horizontal_box ?= current_check_button.parent
 				vertical_box ?= horizontal_box.parent
@@ -277,9 +284,9 @@ feature {NONE} -- Implementation
 				create label.make_with_text ("Generated feature name : ")
 				create horizontal_box
 				horizontal_box.extend (label)
-				horizontal_box.extend (all_text_fields @ index)
-				horizontal_box.disable_item_expand (label)
-				horizontal_box.disable_item_expand (all_text_fields @ index)
+				current_text_field.set_text (current_text_field.text.as_lower)
+				horizontal_box.extend (current_text_field)
+				disable_all_items (horizontal_box)
 				frame.extend (horizontal_box)
 			else
 				horizontal_box ?= current_check_button.parent
@@ -292,11 +299,11 @@ feature {NONE} -- Implementation
 					-- Need to unparent the previous text field, as this object
 					-- is retained. This enables us to keep the previous name
 					-- as the text is not lost.
-				horizontal_box ?= (all_text_fields @ index).parent
+				horizontal_box ?= current_text_field.parent
 				check
 					parent_was_a_horizontal_box: horizontal_box /= Void
 				end
-				horizontal_box.prune (all_text_fields @ index)
+				horizontal_box.prune (current_text_field)
 			end
 			unlock_update
 			

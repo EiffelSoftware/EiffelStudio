@@ -2823,7 +2823,7 @@ private void update_moved_set()
 	register3 union overhead *zone;	/* Referenced object's header */
 	register4 struct stchunk *s;	/* To walk through each stack's chunk */
 	register5 uint32 flags;			/* Used only if GC_FAST */
-	register6 char *addr;           /* Object's address */
+	register6 char *addr;			/* Object's address */
 	struct stack new_stack;			/* The new stack built from the old one */
 	int done = 0;					/* Top of stack not reached yet */
 
@@ -2863,7 +2863,10 @@ private void update_moved_set()
 				done = 1;						/* Reached end of stack */
 			}
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
-				zone = HEADER(*obj);			/* Referenced object */
+				addr = *obj;					/* Get stack item value */
+				if ((char *) 0 == addr)			/* Freed object? */
+				continue;						/* Skip free objects */
+				zone = HEADER(addr);			/* Referenced object */
 				if (zone->ov_size & B_FWD) {		/* Object forwarded? */
 					zone = HEADER(zone->ov_fwd);	/* Look at fwd object */
 					if (zone->ov_flags & EO_NEW)	/* It's a new one */
@@ -2885,7 +2888,7 @@ private void update_moved_set()
 				addr = *obj;					/* Get stack item value */
 				if (addr == (char *) 0)			/* Freed object? */
 					continue;					/* Remove it from stack */
-				zone = HEADER(*obj);			/* Referenced object */
+				zone = HEADER(addr);			/* Referenced object */
 				flags = zone->ov_flags;			/* Get Eiffel flags */
 				if (flags & EO_MARK) {			/* Object is alive? */
 					if (flags & EO_NEW) {				/* Not tenrured */
@@ -2908,9 +2911,9 @@ private void update_moved_set()
 			}
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
 				addr = *obj;					/* Get stack item value */
-				if (addr == (char *) 0)
-					continue;	
-				zone = HEADER(*obj);			/* Referenced object */
+				if (addr == (char *) 0)			/* Freed object? */
+					continue;					/* Skip free objects */
+				zone = HEADER(addr);			/* Referenced object */
 				if (EO_MOVED == (zone->ov_flags & EO_MOVED))
 					epush(&new_stack, zone+1);	/* Remains "as is" */
 			}
@@ -2989,7 +2992,7 @@ private void update_rem_set()
 
 		for (; n > 0; n--, object++) {
 			current = *object;				/* Save that for later perusal */
-			if (current == (char *) 0)		/* Reached a freed object */
+			if (current == (char *) 0)		/* Freed object */
 				continue;					/* Remove it from stack */
 			zone = HEADER(current);			/* Object's header */
 

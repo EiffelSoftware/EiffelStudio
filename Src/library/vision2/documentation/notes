@@ -28,6 +28,10 @@ To be revised:
     ev_simple_item.e
 
 To do:
+- Right click interface to pick and drop.
+- The event `expose_actions' is triggered twice on a container when a window
+  is resized. !! This makes resizing take twice as long!!
+- Color is inefficent on GTK+. 
 - Load different file formats in GTK EV_PIXMAP_IMP.
 - Fix key release events on GTK.
 - Fix key as string action sequence.
@@ -45,7 +49,6 @@ To do:
 - Look into recursive radio events problem.
 - Look into destroyed tree item problem.
 - Test all state variables in non-parented widgets.
-- The event `expose_actions' is triggered twice on a container when a window is resized.
 - Rename titled_window_imp.e <-> window_imp.e
 
 

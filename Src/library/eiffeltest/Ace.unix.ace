@@ -6,7 +6,7 @@ root
 
 default
 	assertion (all)
-	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
 
@@ -18,7 +18,7 @@ cluster
 
 	-- EiffelBase
 	
-	all base:		"$EIFFEL4\library\base"
+	all base:		"$EIFFEL4/library/base"
 		exclude
 			"desc"; "table_eiffel3"
 		end
@@ -26,13 +26,13 @@ cluster
 	
 	-- EiffelTime
 
-	all time:	"$EIFFEL4\library\time"
+	all time:	"$EIFFEL4/library/time"
 		exclude
 			"french"; "german"
 		end
 
 external
 	object: 
-		"$(EIFFEL4)\library\time\Clib\datetime.lib"
-		
+		"\$(EIFFEL4)/library/time/Clib/libdatetime.a"
+
 end -- system eiffeltest

@@ -9,13 +9,8 @@ indexing
 
 class RESOURCE_X 
 
-inherit
-
-
 creation
-
 	make
-
 	
 feature 
 
@@ -41,13 +36,12 @@ feature
 	identifier: POINTER
 			-- X identifier of the resource
 
-
 	set_allocated (b: BOOLEAN) is
 		do
 			is_allocated := b;
 		end;
 
-end 
+end  -- class RESOURCE_X
 
 
 --|----------------------------------------------------------------

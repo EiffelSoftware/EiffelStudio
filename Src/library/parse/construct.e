@@ -157,6 +157,11 @@ feature -- Output
 
 feature {CONSTRUCT} -- Implementation
 
+	complete: BOOLEAN
+			-- Has the construct been completely recognized?
+			-- (Like `parsed', but in addition the construct,
+			-- if optional, must be present.)
+
 	parent: CONSTRUCT;
 			-- Parent of current construct
 
@@ -187,11 +192,6 @@ feature {CONSTRUCT} -- Implementation
 		end;
 
 feature {NONE} -- Implementation
-
-	complete: BOOLEAN
-			-- Has the construct been completely recognized?
-			-- (Like `parsed', but in addition the construct,
-			-- if optional, must be present.)
 
 	put (c: CONSTRUCT) is
 			-- Add a construct to the production.

@@ -38,7 +38,7 @@ feature
 		local
 			ext_name_shell: ANY
 		do
-			!!is_poped_up_ref;
+			!!is_popped_up_ref;
 			ext_name_shell := a_dialog_shell.identifier.to_c;
 			screen_object := create_dialog_shell ($ext_name_shell,
 							a_dialog_shell.parent.implementation.screen_object);

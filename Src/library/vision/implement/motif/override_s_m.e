@@ -29,7 +29,7 @@ feature
 		local
 			ext_name: ANY
 		do
-			!!is_poped_up_ref;
+			!!is_popped_up_ref;
 			ext_name := an_override_shell.identifier.to_c;
 			screen_object := xt_create_override_shell ($ext_name,
 					an_override_shell.parent.implementation.screen_object);

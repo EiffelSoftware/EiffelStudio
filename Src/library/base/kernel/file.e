@@ -139,7 +139,9 @@ feature -- Access
 	item: CHARACTER is
 			-- Current item
 		do
+			readchar
 			Result := lastchar
+			back
 		end;
 
 	position: INTEGER is
@@ -824,7 +826,6 @@ feature -- Cursor movement
 			file_opened: not is_closed;
 		do
 			file_go (file_pointer, 0);
-			readchar;
 		end;
 
 	finish is
@@ -841,7 +842,6 @@ feature -- Cursor movement
 			file_opened: not is_closed;
 		do
 			file_move (file_pointer, 1);
-			readchar
 		end;
 		
 	back is

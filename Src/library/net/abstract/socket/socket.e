@@ -25,6 +25,64 @@ creation {SOCKET}
 
 	create_from_descriptor
 
+feature -- Status report
+
+	support_storable: BOOLEAN is
+			-- Can medium be used to store an Eiffel structure?
+		do
+			Result := False
+		end
+
+feature -- Access
+ 
+	retrieved: ANY is
+			-- Retrieved object structure
+			-- To access resulting object under correct type,
+			-- use assignment attempt.
+			-- Will raise an exception (code `Retrieve_exception')
+			-- if content is not a stored Eiffel structure.
+		local
+			was_blocking: BOOLEAN
+		do
+			was_blocking := is_blocking
+			set_blocking
+			Result := c_retrieved (descriptor, 'S')
+			if not was_blocking then
+				set_non_blocking
+			end
+		end
+ 
+feature -- Element change
+ 
+	basic_store (object: ANY) is
+			-- Produce an external representation of the
+			-- entire object structure reachable from `object'.
+			-- Retrievable within current system only.
+		do
+			c_basic_store (descriptor, $object, 'S')
+		end;
+ 
+	general_store (object: ANY) is
+			-- Produce an external representation of the
+			-- entire object structure reachable from `object'.
+			-- Retrievable from other systems for same platform
+			-- (machine architecture).
+			--| This feature may use a visible name of a class written
+			--| in the `visible' clause of the Ace file. This makes it
+			--| possible to overcome class name clashes.
+		do
+			c_general_store (descriptor, $object, 'S')
+		end
+ 
+	independent_store (object: ANY) is
+			-- Produce an external representation of the
+			-- entire object structure reachable from `object'.
+			-- Retrievable from other systems for the same or other
+			-- platform (machine architecture).
+		do
+			c_independent_store (descriptor, $object, 'S')
+		end
+
 feature
 
 	create_from_descriptor (fd: INTEGER) is
@@ -720,12 +778,6 @@ feature -- socket options
 			Result := c_fcntl (descriptor, c_fgetown, 0)
 		end
 
-feature {STORABLE} -- Implementation
-
-	storage_type: CHARACTER is 'S'
-			-- Type for storage mechanism
-			-- F for File, S for Socket
-
 feature {NONE} -- Externals
 
 	c_socket (add_family, a_type, protoc: INTEGER): INTEGER is
@@ -903,6 +955,42 @@ feature {NONE} -- Externals
 			"C"
 		end
 
+	c_retrieved (file_handle: INTEGER; file_storage_type: CHARACTER): ANY is
+			-- Object structured retrieved from file of pointer
+			-- `file_handle'
+		external
+			"C"
+		alias
+			"eretrieve"
+		end;
+
+	c_basic_store (file_handle: INTEGER; object: POINTER; file_storage_type: CHARACTER) is
+			-- Store object structure reachable form current object
+			-- in file pointer `file_ptr'.
+		external
+			"C"
+		alias
+			"estore"
+		end;
+ 
+	c_general_store (file_handle: INTEGER; object: POINTER; file_storage_type: CHARACTER) is
+			-- Store object structure reachable form current object
+			-- in file pointer `file_ptr'.
+		external
+			"C"
+		alias
+			"eestore"
+		end;
+ 
+	c_independent_store (file_handle: INTEGER; object: POINTER; file_storag_type: CHARACTER) is
+			-- Store object structure reachable form current object
+			-- in file pointer `file_ptr'.
+		external
+			"C"
+		alias
+			"sstore"
+		end;
+ 
 end -- Class SOCKET
 
 

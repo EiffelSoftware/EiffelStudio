@@ -3,7 +3,7 @@ indexing
 					%Used together with class PROCESS_LAUNCHER"
 
 deferred class
-	OUTPUT_WINDOW
+	WIZARD_OUTPUT_WINDOW
 
 feature -- Basic Operations
 
@@ -24,4 +24,4 @@ feature -- Basic Operations
 		deferred
 		end
 
-end -- class OUTPUT_WINDOW
+end -- class WIZARD_OUTPUT_WINDOW

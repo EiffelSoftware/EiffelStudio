@@ -27,7 +27,7 @@
 #include "eif_globals.h"
 #include "rt_hash.h"
 #include "rt_retrieve.h"
-#include "idrf.h"
+#include "idrs.h"
 #include "rt_constants.h"
 
 #ifdef __cplusplus

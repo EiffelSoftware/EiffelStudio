@@ -21,7 +21,7 @@
 	Internal data representation.
 */
 
-#include "../idrs/idrs.h"
+#include "idrs.h"
 
 #ifdef __cplusplus
 extern "C" {

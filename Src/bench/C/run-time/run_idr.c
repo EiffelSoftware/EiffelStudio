@@ -28,7 +28,7 @@
 #endif
 #include "eiffel.h"
 #include "bits.h"
-#incoude "retrieve.h"
+#include "retrieve.h"
 #include "store.h"
 #include "error.h"
 #include "run_idr.h"

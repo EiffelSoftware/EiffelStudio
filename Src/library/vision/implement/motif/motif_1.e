@@ -237,7 +237,7 @@ feature -- Widget access
 oui_parent: COMPOSITE): SEARCH_REPLACE_DIALOG_M is
 			-- Motif implementationof `a_serach_replace_dialog'
 		do
-			--!! Result.make (a_search_replace, oui_parent)
+			!! Result.make (a_search_replace_dialog, oui_parent)
 		end
 
 	separator (a_separator: SEPARATOR; managed: BOOLEAN; oui_parent: COMPOSITE): SEPARATOR_M is

@@ -321,6 +321,8 @@ feature -- Execution
 
 	execute is
 			-- Execute current menu option.
+		require else
+			no_need_for_compiled_project: True
 		do
 				--| At this stage we have the project directory
 			if Eiffel_project.project_directory.project_eif_file = Void then

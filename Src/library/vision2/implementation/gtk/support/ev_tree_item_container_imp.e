@@ -10,11 +10,11 @@ deferred class
 inherit
 	EV_TREE_ITEM_HOLDER_I
 
-	EV_CONTAINER_IMP
-		-- Inheriting from container, because tree item and subtree
-		-- are widgets in gtk, although it is not a widget in
-		-- EiffelVision. This is just for implementation
-		-- reasons.
+--	EV_CONTAINER_IMP
+--		-- Inheriting from container, because tree item and subtree
+--		-- are widgets in gtk, although it is not a widget in
+--		-- EiffelVision. This is just for implementation
+--		-- reasons.
 
 feature -- Access
 
@@ -43,6 +43,13 @@ feature {EV_TREE_IMP, EV_TREE_ITEM_IMP} -- Implementation
 			-- set the `tree_parent_imp' to `tree_par_imp'.
 		do
 			tree_parent_imp := tree_par_imp
+		end
+
+feature -- implementation
+
+	widget: POINTER is
+			-- Pointer to the Gtk object.
+		deferred
 		end
 
 feature {EV_TREE_ITEM_IMP} -- Implementation

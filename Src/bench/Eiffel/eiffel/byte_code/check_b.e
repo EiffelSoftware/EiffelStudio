@@ -191,8 +191,14 @@ feature -- Inlining
 	inlined_byte_code: like Current is
 		do
 			Result := Current
-			if check_list /= Void then
-				check_list := check_list.inlined_byte_code
+			if context.final_mode and not system.keep_assertions then
+					-- Nothing to be done, we do as if there has
+					-- been no expressions in `check_list'.
+				check_list := Void
+			else
+				if check_list /= Void then
+					check_list := check_list.inlined_byte_code
+				end
 			end
 		end
 

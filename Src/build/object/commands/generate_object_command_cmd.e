@@ -24,6 +24,7 @@ feature
 			if object_command_generator.routine_list.selected_count > 0 then
 				application_class := object_command_generator.edited_class
 				application_routine ?= object_command_generator.routine_list.selected_item
+				object_command_generator.generate_command	
 				precondition_t_b ?= arg
 				if precondition_t_b /= Void then
 					check_precondition := precondition_t_b.state
@@ -69,9 +70,9 @@ feature {NONE} -- Command generation
 			!! generated_command.make
 			generated_command.set_internal_name ("")
 			generated_command.set_eiffel_text (generated_eiffel_text)
-			generated_command.set_visual_name (visual_command_name)
 			generated_command.overwrite_text
 			command_catalog.add_to_page (generated_command, command_catalog.generated_commands)
+			generated_command.set_visual_name (visual_command_name)
 		end
 
 	visual_command_name: STRING is

@@ -1,0 +1,1 @@
+Documentation relative to EiffelCase will be added to this directory.

@@ -58,9 +58,9 @@ feature -- Properties
 			Result := Stone_types.Result_type
 		end;
 
-	destroy_command (a_data: FEATURE_DATA): FEATURE_SET_RESULT_U is
+	destroy_command (a_data: FEATURE_DATA):DESTROY is -- FEATURE_SET_RESULT_U is
 		do
-			!! Result.make_with_container (a_data)
+		--	!! Result.make_with_container (a_data)
 		end;
 
 feature -- Access

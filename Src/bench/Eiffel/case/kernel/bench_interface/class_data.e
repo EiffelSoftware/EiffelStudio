@@ -239,15 +239,15 @@ feature -- Setting
 			name.to_upper
 
 			-- Changed by pascalf, non sense !!! system.update_system_link
-			if not System.is_in_retrieving_mode then
+		--	if not System.is_in_retrieving_mode then
 				-- removed temporarily, involves bugs...system.update_system_link
-			end	
+		--	end	
 	
-			!! f_name.make_from_string (s)
-			f_name.add_extension ("e")
-			set_file_name (f_name)
+		--	!! f_name.make_from_string (s)
+		--	f_name.add_extension ("e")
+		--	set_file_name (f_name)
 		ensure then 
-			name_set : name.is_equal ( s )	
+			name_set : name.count =  s.count 	
 		end
 
 	set_file_name (s: STRING) is

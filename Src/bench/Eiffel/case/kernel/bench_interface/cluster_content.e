@@ -404,39 +404,41 @@ feature {CLUSTER_DATA} -- Access
 			end
 		end;
 
-	child_with_file_name (fn: STRING): LINKABLE_DATA is
+	child_with_name (fn: STRING): LINKABLE_DATA is
 			-- Does file_name `fn' exist in current cluster
 		require
-			valid_file_name: fn /= Void and then not fn.empty
+			valid_name: fn /= Void and then not fn.empty
 		local
-			tmp1, tmp2: STRING;
+			tmp1, tmp2: STRING
 		do
-			tmp1 := clone (fn);
-			tmp1.to_upper;
+			tmp1 := clone (fn)
+			tmp1.to_upper
 			from
 				classes.start
 			until
 				classes.after or else Result /= Void
 			loop
-				tmp2 := clone (classes.item.file_name);
-				tmp2.to_upper;
+				tmp2 := clone (classes.item.name)
+				tmp2.to_upper
 				if tmp1.is_equal (tmp2) then
 					Result := classes.item
 				end
 				classes.forth
-			end;
-			from
-				clusters.start
-			until
-				clusters.after or else Result /= Void
-			loop
-				tmp2 := clone (clusters.item.file_name);
-				tmp2.to_upper;
-				if tmp1.is_equal (tmp2) then
-					Result := clusters.item
-				end
-				clusters.forth
-			end;
+			end
+			-- Removed by pascalf, 08/08/1999, since a cluster may have the same
+			-- name of a class.
+			--from
+			--	clusters.start
+			--until
+			--	clusters.after or else Result /= Void
+			--loop
+			--	tmp2 := clone (clusters.item.name)
+			--	tmp2.to_upper
+			--	if tmp1.is_equal (tmp2) then
+			--		Result := clusters.item
+			--	end
+			--	clusters.forth
+			--end
 		end;
 
 feature {CLUSTER_DATA} -- Output
@@ -527,19 +529,19 @@ feature {CLUSTER_DATA} -- Output
 		do
 		end -- generate_code
 
-	generate_code_to_eiffel_project (cluster: CLUSTER_DATA; path: STRING; classes_to_merge: MERGING_CLASS_LIST; caller: EV_WINDOW) is
+	--generate_code_to_eiffel_project (cluster: CLUSTER_DATA; path: STRING; classes_to_merge: MERGING_CLASS_LIST; caller: EV_WINDOW) is
 			-- Generate code in directory `path'.
-		do
-		end -- generate_code
+	--	do
+	--	end -- generate_code
 
-	generate_all_clusters_to_eiffel_project (classes_to_merge: MERGING_CLASS_LIST; caller: EV_WINDOW) is
+	--generate_all_clusters_to_eiffel_project (classes_to_merge: MERGING_CLASS_LIST; caller: EV_WINDOW) is
 			-- Generate all clusters to the eiffel project
-		do
-		end 
+	--	do
+	--	end 
 
-	generate_all_modified_classes (cluster: CLUSTER_DATA; path: STRING; classes_to_merge: MERGING_CLASS_LIST) is
-		do
-		end
+	--generate_all_modified_classes (cluster: CLUSTER_DATA; path: STRING; classes_to_merge: MERGING_CLASS_LIST) is
+	--	do
+	--	end
 
 feature {CLUSTER_DATA} -- Storage
 

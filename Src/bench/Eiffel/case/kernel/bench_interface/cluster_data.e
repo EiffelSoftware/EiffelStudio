@@ -778,14 +778,14 @@ feature -- Access
 			Result := content.has_cluster (cluster_name)
 		end;
 
-	has_child_with_file_name (data: LINKABLE_DATA; fn: STRING): BOOLEAN is
-			-- Does filename `fn' for `data' exists in current cluster?
+	has_child_with_name (data: LINKABLE_DATA; fn: STRING): BOOLEAN is
+			-- Does name `fn' for `data' exists in current cluster?
 		require
 			valid_file_name: fn /= Void and then not fn.empty
 		local
 			tmp: LINKABLE_DATA
 		do
-			tmp := content.child_with_file_name (fn);
+			tmp := content.child_with_name (fn);
 			if tmp /= Void and then tmp /= data then
 				Result := True
 			end
@@ -823,17 +823,17 @@ feature -- Output
 
 	generate_code_for_cluster_root_for_generation is
     		local
-			classes_to_merge: MERGING_CLASS_LIST
-			classes_merger: CLASSES_MERGER
+		--	classes_to_merge: MERGING_CLASS_LIST
+		--	classes_merger: CLASSES_MERGER
 			rescued : BOOLEAN
 		do		end
 
-	generate_code_to_eiffel_project (classes_to_merge: MERGING_CLASS_LIST; caller: EV_WINDOW) is
-		require
-			classes_to_merge_exists: classes_to_merge /= Void
-			valid_content	: content	/= void
-		do
-		end
+	--generate_code_to_eiffel_project (classes_to_merge: MERGING_CLASS_LIST; caller: EV_WINDOW) is
+	--	require
+	--		classes_to_merge_exists: classes_to_merge /= Void
+	--		valid_content	: content	/= void
+	--	do
+	--	end
 
 	create_recursively_dir ( dir : DIRECTORY ) is
 		-- the purpose of this routine is to create a directory dir with all 
@@ -1082,15 +1082,16 @@ feature
 			valid_resources	: resources	/= void
 		do
 			is_icon := True;
-			set_width (Resources.cluster_width);
-			set_height (Resources.cluster_height);
-			set_icon_height (Resources.cluster_icon_y_margin);
+			set_width	(Resources.cluster_width)
+			set_height	 (Resources.cluster_height)
+			set_icon_height (Resources.cluster_icon_y_margin)
+			set_icon_width (Resources.cluster_icon_x_margin)
 		ensure then
-			is_icon: is_icon;
-			valid_width: width > 0;
-			valid_height: height > 0;
-			valid_icon_width: icon_width > 0;
-			valid_icvalid_icon_height: icon_height > 0;
+			is_icon: is_icon
+			valid_width: width > 0
+			valid_height: height > 0
+			valid_icon_width: icon_width > 0
+			valid_icvalid_icon_height: icon_height > 0
 		end;
 
 feature -- Eiffel Generation

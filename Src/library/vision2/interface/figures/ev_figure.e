@@ -477,7 +477,7 @@ feature {EV_FIGURE_GROUP} -- Implementation
 		require
 			new_group_exists: new_group /= Void
 		do
-			if group /= Void and then group /= new_group then
+			if group /= Void then
 				group.prune_all (Current)
 			end
 			group := new_group

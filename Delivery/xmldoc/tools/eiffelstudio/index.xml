@@ -3,7 +3,7 @@
 	<paragraph>
 		<paragraph>Type: Tool
 			<line_break/> Platform: Any
-			<line_break/> Version: 5.0
+			<line_break/> Version: 5.4
 			<line_break/> Availability: Basic Package
 		</paragraph>
 		<paragraph>See:</paragraph>
@@ -30,7 +30,7 @@
 				<link>
 					<url>reference/index.xml</url>
 					<label>Reference</label>
-				</link>  
+				</link>
 			</item>
 		</list>
 	</paragraph></document>

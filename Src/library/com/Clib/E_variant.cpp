@@ -436,12 +436,16 @@ void ecom_variant::ccom_set_variant (VARIANT *a_value)
 
 EIF_POINTER ecom_variant::ccom_unknown_interface ()
 {
-	return (EIF_POINTER)V_UNKNOWN(variant);
+	IUnknown * punk = V_UNKNOWN(variant);
+	punk->AddRef ();
+	return (EIF_POINTER)punk;
 }
 
 EIF_POINTER ecom_variant::ccom_unknown_interface_reference ()
 {
-	return (EIF_POINTER)*(V_UNKNOWNREF(variant));
+	IUnknown * punk = *(V_UNKNOWNREF(variant));
+	punk->AddRef ();
+	return (EIF_POINTER)punk;
 }
 
 void ecom_variant::ccom_set_unknown_interface (IUnknown *a_value)
@@ -460,12 +464,16 @@ void ecom_variant::ccom_set_unknown_interface_reference (IUnknown *a_value)
 
 EIF_POINTER ecom_variant::ccom_dispatch_interface ()
 {
-	return (EIF_POINTER) V_DISPATCH(variant);
+	IDispatch * pdisp = V_DISPATCH(variant);
+	pdisp->AddRef ();
+	return (EIF_POINTER)pdisp;
 }
 
 EIF_POINTER ecom_variant::ccom_dispatch_interface_reference ()
 {
-	return (EIF_POINTER)*(V_DISPATCHREF(variant));
+	IDispatch * pdisp = *(V_DISPATCHREF(variant));
+	pdisp->AddRef ();
+	return (EIF_POINTER)pdisp;
 }
 
 void ecom_variant::ccom_set_dispatch_interface (IDispatch * a_value)

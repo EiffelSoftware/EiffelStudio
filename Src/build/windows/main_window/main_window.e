@@ -19,9 +19,9 @@ inherit
 			set_geometry
 		end
 
+	QUEST_POPUPER
+
 	WINDOWS
-		rename
-			exit_build as close
 		undefine
 			context_catalog
 		end
@@ -257,6 +257,46 @@ feature -- Enable/Disable EiffelBuild
 		do
 			menu_bar.disable
 			toolbar.disable
+		end
+
+feature {EV_WINDOW} -- Finish application
+
+	save_question: BOOLEAN
+
+	close (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
+		do
+			if history_window.saved_application then
+				question_dialog.popup (Current, Messages.exit_qu, Void, False)
+			else
+				save_question := True
+				question_dialog.popup (Current, Messages.save_project_qu, Void, False)
+			end
+		end
+
+	question_ok_action, close_without_any_check is
+--		local
+--			save_proj: SAVE_PROJECT
+--			quit_app_com: QUIT_NOW_COM
+		do
+			if save_question then
+--				!!save_proj
+--				save_proj.execute (Void)
+--				save_question := False
+--				question_box.popup (Current, Messages.exit_qu, Void)
+			else
+--				discard_license
+--				!! quit_app_com
+--				quit_app_com.execute (Void)
+			main_window.destroy
+			end
+		end
+
+	question_cancel_action is
+		do
+			if save_question then
+				save_question := False
+				question_dialog.popup (Current, Messages.exit_qu, Void, False)
+			end
 		end
 
 end -- class MAIN_WINDOW

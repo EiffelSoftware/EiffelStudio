@@ -101,20 +101,28 @@ feature -- Lace compilation
 				-- Thid general adaptation
 			adapt;
 
-				-- Finaly process options
-			process_options;
-
-				-- Remove inexistant classes from the system
-			process_removed_classes;
+			update_clusters;
 
 				-- Remove inexistant clusters from the system
 			process_removed_clusters;
 
+				-- Finaly process options
+			process_options;
+
 				-- Process root clause
 			root.adapt;
 				-- Process external clause
-			if externals /= Void then
-				externals.adapt;
+
+				-- Incrementality on external clause
+			System.reset_external_clause;
+			if Externals /= Void then
+				Externals.adapt;
+			end;
+			System.reset_generate_clause;
+			if Generation /= Void then
+				Generation.adapt
+			else
+				
 			end;
 		end;
 
@@ -162,23 +170,26 @@ feature -- Lace compilation
 		local
 			cluster_list: LINKED_LIST [CLUSTER_I];
 		do
-				-- First Ace-level options
-			if defaults /= Void then
-				from
-					cluster_list := Universe.clusters;
-					cluster_list.start;
-				until
-					cluster_list.offright
-				loop
+				-- First Ace-level options and reset options
+			from
+				cluster_list := Universe.clusters;
+				cluster_list.start;
+			until
+				cluster_list.offright
+			loop
+				cluster_list.item.reset_options;
+
+				if defaults /= Void then
 						-- Update current cluster visible by class D_OPTION_SD
 					context.set_current_cluster (cluster_list.item);
-	
+
 						-- Compute defaults options for current cluster
 					defaults.adapt;
-	
-					cluster_list.forth;
 				end;
+
+				cluster_list.forth;
 			end;
+
 				-- Process options in use file
 			if clusters /= Void then
 				from
@@ -193,8 +204,10 @@ feature -- Lace compilation
 			end;
 		end;
 
-	process_removed_classes is
-			-- Process the classes removed since last compilation
+	update_clusters is
+			-- Update the clusters: remove the classes removed
+			-- from the system, examine the differences in the
+			-- ignore and rename clauses
 		local
 			cluster_list: LINKED_LIST [CLUSTER_I];
 		do
@@ -204,7 +217,7 @@ feature -- Lace compilation
 			until
 				cluster_list.offright
 			loop
-				cluster_list.item.process_removed_classes;
+				cluster_list.item.update_cluster;
 				cluster_list.forth;
 			end;
 		end;

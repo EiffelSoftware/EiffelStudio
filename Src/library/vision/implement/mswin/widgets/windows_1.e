@@ -219,7 +219,6 @@ feature -- Access
 			!! Result.make (a_question_dialog, oui_parent)
 		end; 
 
---	radio_box (a_radio_box: RADIO_BOX; managed: BOOLEAN; oui_parent: COMPOSITE): RADIO_BOX_I is
 	radio_box (a_radio_box: RADIO_BOX; managed: BOOLEAN; oui_parent: COMPOSITE): RADIO_BOX_WINDOWS is
 			-- MS-Windows implementation of `a_radio_box'
 		do

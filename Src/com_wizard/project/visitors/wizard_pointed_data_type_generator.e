@@ -181,6 +181,7 @@ feature -- Basic operations
 					ec_function_name.append ("ccom_ec_pointed_long")
 					ce_function_name.append ("ccom_ce_pointed_long")
 
+
 				elseif is_unsigned_long (a_type) then
 					eiffel_type.append (Integer_ref_type)
 					ec_function_name.append ("ccom_ec_pointed_unsigned_long")
@@ -221,7 +222,9 @@ feature -- Basic operations
 					ec_function_name.append ("ccom_ec_pointed_boolean")
 					ce_function_name.append ("ccom_ce_pointed_boolean")
 
-				elseif is_void (a_type) or (a_type = Vt_empty) then
+				elseif 
+					is_void (a_type) or (a_type = Vt_empty) 
+				then
 					is_basic_type_ref := False
 					if is_byref (a_type ) then
 						eiffel_type.append (Cell_pointer)

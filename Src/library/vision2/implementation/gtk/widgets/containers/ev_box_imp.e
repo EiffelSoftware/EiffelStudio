@@ -27,7 +27,7 @@ inherit
 feature -- Access
 
 	is_homogeneous: BOOLEAN is
-			-- Are all children restriced to be the same size.
+			-- Are all children restricted to be the same size?
 		do
 			Result := feature {EV_GTK_EXTERNALS}.gtk_box_struct_homogeneous (container_widget) /= 0
 		end
@@ -49,7 +49,7 @@ feature -- Access
 feature -- Status report
 
 	is_item_expanded (child: EV_WIDGET): BOOLEAN is
-			-- Is `child' expanded to occupy avalible spare space.
+			-- Is `child' expanded to occupy available spare space?
 		local
 			fill: INTEGER
 			expand, pad, pack_type: INTEGER

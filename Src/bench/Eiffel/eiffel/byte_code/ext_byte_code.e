@@ -305,13 +305,13 @@ feature -- Byte code generation
 			end;
 			generated_file.new_line;
 				-- Now comes the body
-			generated_file.putstring ("a_result = LoadLibrary (");
+			generated_file.putstring ("a_result = eif_load_dll(");
 			generated_file.putstring (special_file_name);
 			generated_file.putstring (");");
 			generated_file.new_line;
-			generated_file.putstring ("if (a_result < 32) eraise (%"Can not load library%",EN_PROG);");
+			generated_file.putstring ("if (a_result < 32) eraise(%"Can not load library%",EN_PROG);");
 			generated_file.new_line;
-			generated_file.putstring ("fp = GetProcAddress (a_result, ");
+			generated_file.putstring ("fp = GetProcAddress(a_result, ");
 			if external_name.is_integer then
 				generated_file.putstring ("MAKEINTRESOURCE (MAKELONG (");
 				generated_file.putstring (external_name);
@@ -323,31 +323,27 @@ feature -- Byte code generation
 			end
 			generated_file.putstring (");");
 			generated_file.new_line;
-			generated_file.putstring ("if (fp == NULL) %
-						%{FreeLibrary (a_result); eraise (%"Can not find function%",EN_PROG);}");
+			generated_file.putstring ("if (fp == NULL) eraise(%"Can not find function%",EN_PROG);");
 			generated_file.new_line;
-			generated_file.putstring ("handle = GetIndirectFunctionHandle (fp");
+			generated_file.putstring ("handle = GetIndirectFunctionHandle(fp");
 			if arguments /= Void then
 				generated_file.putchar (',');
 				generate_type_list;
 			end;
 			generated_file.putstring (", INDIR_ENDLIST);");
 			generated_file.new_line;
-			generated_file.putstring ("if (handle == NULL) %
-						%{FreeLibrary (a_result); eraise (%"Can not allocate function handle%",EN_PROG);}");
+			generated_file.putstring ("if (handle == NULL) eraise(%"Can not allocate function handle%",EN_PROG);");
 			generated_file.new_line;
 
 			if not result_type.is_void then
 				generated_file.putstring ("Result = ");
 			end;
-			generated_file.putstring ("InvokeIndirectFunction (handle");
+			generated_file.putstring ("InvokeIndirectFunction(handle");
 			if arguments /= Void then
 				generated_file.putchar (',');
 				generate_arguments;
 			end;
 			generated_file.putstring (");");
-			generated_file.new_line;
-			generated_file.putstring ("FreeLibrary (a_result);");
 			generated_file.new_line;
 			if not result_type.is_void then
 				generated_file.putstring ("return ");
@@ -379,15 +375,15 @@ feature -- Byte code generation
 			end;
 			generated_file.new_line;
 				-- Now comes the body
-			generated_file.putstring ("a_result = LoadLibrary (");
+			generated_file.putstring ("a_result = eif_load_dll(");
 			generated_file.putstring (special_file_name);
 			generated_file.putstring (");");
 			generated_file.new_line;
-			generated_file.putstring ("if (a_result < 32) eraise (%"Can not load library%",EN_PROG);");
+			generated_file.putstring ("if (a_result < 32) eraise(%"Can not load library%",EN_PROG);");
 			generated_file.new_line;
-			generated_file.putstring ("fp = GetProcAddress (a_result,%"Win386LibEntry%");");
+			generated_file.putstring ("fp = GetProcAddress(a_result,%"Win386LibEntry%");");
 			generated_file.new_line;
-			generated_file.putstring ("if (fp == NULL) {FreeLibrary (a_result); eraise (%"Can not find entry point%",EN_PROG);}");
+			generated_file.putstring ("if (fp == NULL) eraise(%"Can not find entry point%",EN_PROG);");
 			generated_file.new_line;
 			generated_file.putstring ("hindir1 = GetIndirectFunctionHandle (fp");
 			if arguments /= Void then
@@ -396,13 +392,12 @@ feature -- Byte code generation
 			end;
 			generated_file.putstring (", INDIR_WORD, INDIR_ENDLIST);");
 			generated_file.new_line;
-			generated_file.putstring ("if (hindir1 == NULL) %
-											%{FreeLibrary (a_result); eraise (%"Can not allocate function handle%",EN_PROG);}");
+			generated_file.putstring ("if (hindir1 == NULL) eraise(%"Can not allocate function handle%",EN_PROG);");
 			generated_file.new_line;
 			if not result_type.is_void then
 				generated_file.putstring ("Result = ");
 			end;
-			generated_file.putstring ("InvokeIndirectFunction (hindir1");
+			generated_file.putstring ("InvokeIndirectFunction(hindir1");
 			if arguments /= Void then
 				generated_file.putchar (',');
 				generate_arguments;
@@ -410,8 +405,6 @@ feature -- Byte code generation
 			generated_file.putchar (',');
 			generated_file.putstring (external_name);
 			generated_file.putstring (");");
-			generated_file.new_line;
-			generated_file.putstring ("FreeLibrary (a_result);");
 			generated_file.new_line;
 			if not result_type.is_void then
 				generated_file.putstring ("return ");

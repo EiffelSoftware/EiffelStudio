@@ -1179,6 +1179,18 @@ void c_gtk_style_default_bg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* 
 		*r /= 257; *g /= 257; *b /= 257;
 }
 
+void c_gtk_style_default_fg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b)
+{
+		GtkStyle* style;
+
+		style = gtk_widget_get_default_style();
+		*r = style->fg[GTK_STATE_NORMAL].red;
+		*g = style->fg[GTK_STATE_NORMAL].green;
+		*b = style->fg[GTK_STATE_NORMAL].blue;
+		
+		*r /= 257; *g /= 257; *b /= 257;
+}
+
 void c_gtk_widget_set_bg_color (GtkWidget* widget, int r, int g, int b)
 {
 		GtkStyle* style;

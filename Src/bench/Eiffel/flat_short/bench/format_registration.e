@@ -519,17 +519,18 @@ end;
 						create current_feature_table.make (0)
 						current_feature_table.init_origin_table
 					end
-
+	
 					System.set_current_class (current_class)
-
+	
 					debug ("FLAT_SHORT")
 						io.error.putstring ("%TParsing & Registering class: ")
 						io.error.putstring (current_class.name)
 						io.error.new_line
 					end
-
+	
 					current_ast := current_class_ast
 					register_current_ast
+					
 				end
 				ancestors.forth
 			end

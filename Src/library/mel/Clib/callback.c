@@ -4,19 +4,19 @@
 
 #include "mel.h"
 
-private EIF_OBJ dispatcher; 		/* Eiffel Class Dispatcher in MEL */
-private EIF_PROC e_handle_callback;	/* Eiffel routine that dispatches motif events */
-private EIF_PROC e_handle_event;	/* Eiffel routine that dispatches Xt events */
-private EIF_PROC e_handle_translation;	/* Eiffel routine that dispatches translations */
-private EIF_PROC e_handle_wm_protocol;	/* Eiffel routine that dispatches wm protocols */
-private EIF_PROC e_handle_input;	/* Eiffel routine that dispatches input events */
-private EIF_PROC e_handle_timer;	/* Eiffel routine that dispatches timer events */
-private EIF_PROC e_handle_work_proc;/* Eiffel routine that dispatches work procedures */
-private EIF_PROC e_handle_lose_callback;/* Eiffel routine that dispatches 
+rt_private EIF_OBJ dispatcher; 		/* Eiffel Class Dispatcher in MEL */
+rt_private EIF_PROC e_handle_callback;	/* Eiffel routine that dispatches motif events */
+rt_private EIF_PROC e_handle_event;	/* Eiffel routine that dispatches Xt events */
+rt_private EIF_PROC e_handle_translation;	/* Eiffel routine that dispatches translations */
+rt_private EIF_PROC e_handle_wm_protocol;	/* Eiffel routine that dispatches wm protocols */
+rt_private EIF_PROC e_handle_input;	/* Eiffel routine that dispatches input events */
+rt_private EIF_PROC e_handle_timer;	/* Eiffel routine that dispatches timer events */
+rt_private EIF_PROC e_handle_work_proc;/* Eiffel routine that dispatches work procedures */
+rt_private EIF_PROC e_handle_lose_callback;/* Eiffel routine that dispatches 
 											lose selection callback */
-private EIF_PROC e_handle_done_callback;/* Eiffel routine that dispatches 
+rt_private EIF_PROC e_handle_done_callback;/* Eiffel routine that dispatches 
 											done selection callback */
-private EIF_PROC e_handle_requestor_callback;/* Eiffel routine that dispatches 
+rt_private EIF_PROC e_handle_requestor_callback;/* Eiffel routine that dispatches 
 											the requestor callback */
 
 /* Functions */
@@ -70,11 +70,14 @@ XEvent *an_event;
 String *params;
 Cardinal *num_params;
 {
+	EIF_OBJ trans;
+
 	if (*num_params) {
+		sscanf (params [0], "0x%lX", &trans);
 		(e_handle_translation) (
 				(EIF_OBJ) eif_access (dispatcher),
 				(EIF_POINTER) scr_obj,			/* Widget which invoked callback */
-				(EIF_POINTER) params [0],		/* Pass the translation as a argument */
+				(EIF_OBJ) eif_access (trans),	/* Pass the translation as a argument */
 				(EIF_POINTER) an_event			/* Pass the Xevent structure */
 				);
 	}
@@ -234,8 +237,8 @@ EIF_POINTER id;
  * Selection mechanism
  */
 
-private char *string_passed; /* String value selected. */
-private Atom target_atom;/* 
+rt_private char *string_passed; /* String value selected. */
+rt_private Atom target_atom;/* 
 						  * Target Atom of the selection.
 						  * This value can be used to identify the string representation
 						  * between Eiffel applications. (Note: Eiffel will only
@@ -254,7 +257,7 @@ void free_string()
  * The following routines deals with requesting the data.
  */
 
-private void requestor_callback (w, client_data, selection, 
+rt_private void requestor_callback (w, client_data, selection, 
 		type, value, length, format)
 Widget w;
 XtPointer client_data;
@@ -275,7 +278,7 @@ int *format;
 	XtFree (value); 	/* Must always free the value. */
 }
 
-public void xt_get_selection_value (w, target, time)
+rt_public void xt_get_selection_value (w, target, time)
 EIF_POINTER w;
 EIF_POINTER target;
 EIF_INTEGER time;
@@ -288,7 +291,7 @@ EIF_INTEGER time;
  * The following routines deals with ownership.
  */
 
-private Boolean convert_proc (w, selection, target, type_return, 
+rt_private Boolean convert_proc (w, selection, target, type_return, 
 		value_return, length_return, format_return)
 Widget w;
 Atom *selection;
@@ -308,7 +311,7 @@ int *format_return;
 	return (False);
 }
 
-private void lose_ownership_proc (w, selection)
+rt_private void lose_ownership_proc (w, selection)
 Widget w;
 Atom *selection;
 {
@@ -318,7 +321,7 @@ Atom *selection;
 	free_string();
 }
 
-private void transfer_done_proc (w, selection, target)
+rt_private void transfer_done_proc (w, selection, target)
 Widget w;
 Atom *selection;
 Atom *target;
@@ -330,7 +333,7 @@ Atom *target;
 	}
 }
 
-public void xt_own_selection (w, target, time, a_string)
+rt_public void xt_own_selection (w, target, time, a_string)
 EIF_POINTER w;
 EIF_POINTER target;
 EIF_INTEGER time;

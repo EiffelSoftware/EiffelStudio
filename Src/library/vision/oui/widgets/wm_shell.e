@@ -9,8 +9,6 @@ indexing
 
 deferred class WM_SHELL 
 
-inherit
-	
 feature -- Size
 
 	set_base_height (a_height: INTEGER) is
@@ -405,7 +403,7 @@ feature {WM_SHELL_I}
 			implementation := a_wm_shell_imp
 		end; -- set_wm_imp
 
-feature {NONE}
+feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 	implementation: WM_SHELL_I;
 			-- Implementation of window manager shell

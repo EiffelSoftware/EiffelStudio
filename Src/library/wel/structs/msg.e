@@ -50,6 +50,40 @@ feature -- Access
 			Result := cwel_msg_get_lparam (item)
 		end
 
+feature -- Element change
+
+	set_hwnd (a_hwnd: POINTER) is
+			-- Set `hwnd' with `a_hwnd'.
+		do
+			cwel_msg_set_hwnd (item, a_hwnd)
+		ensure
+			hwnd_set: hwnd = a_hwnd
+		end
+
+	set_message (a_message: INTEGER) is
+			-- Set `message' with `a_message'.
+		do
+			cwel_msg_set_message (item, a_message)
+		ensure
+			message_set: message = a_message
+		end
+
+	set_wparam (a_wparam: INTEGER) is
+			-- Set `wparam' with `a_wparam'.
+		do
+			cwel_msg_set_wparam (item, a_wparam)
+		ensure
+			wparam_set: wparam = a_wparam
+		end
+
+	set_lparam (a_lparam: INTEGER) is
+			-- Set `lparam' with `a_lparam'.
+		do
+			cwel_msg_set_lparam (item, a_lparam)
+		ensure
+			lparam_set: lparam = a_lparam
+		end
+
 feature -- Status report
 
 	last_boolean_result: BOOLEAN
@@ -228,6 +262,26 @@ feature {NONE} -- Externals
 			"C"
 		alias
 			"cwel_wait_message"
+		end
+
+	cwel_msg_set_hwnd (ptr: POINTER; value: POINTER) is
+		external
+			"C [macro <msg.h>]"
+		end
+
+	cwel_msg_set_message (ptr: POINTER; value: INTEGER) is
+		external
+			"C [macro <msg.h>]"
+		end
+
+	cwel_msg_set_lparam (ptr: POINTER; value: INTEGER) is
+		external
+			"C [macro <msg.h>]"
+		end
+
+	cwel_msg_set_wparam (ptr: POINTER; value: INTEGER) is
+		external
+			"C [macro <msg.h>]"
 		end
 
 	cwel_msg_get_hwnd (ptr: POINTER): POINTER is

@@ -22,28 +22,6 @@ feature -- Access
 		deferred
 		end
 
-	alignment: EV_TEXT_ALIGNMENT is
-			-- Current text positioning.
-		deferred
-		end
-
-feature -- Status setting
-
-	align_text_center is
-			-- Display `text' centered.
-		deferred
-		end
-
-	align_text_left is
-			-- Display `text' left aligned.
-		deferred
-		end
-
-	align_text_right is
-			-- Display `text' right aligned.
-		deferred
-		end
-
 feature -- Element change
 
 	set_text (a_text: STRING) is

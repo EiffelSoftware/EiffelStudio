@@ -9,7 +9,7 @@ feature
 	code: STRING is "V9FM";
 			-- Code error
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
 		end;
 

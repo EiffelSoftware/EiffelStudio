@@ -179,10 +179,13 @@ feature {EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 
 	relative_position: TUPLE [INTEGER, INTEGER] is
 			-- Position relative to `Parent'.
+		local
+			point: WEL_POINT
 		do
 			create Result.make
-			Result.put (parent_imp.get_item_position (index - 1).x, 1)
-			Result.put (parent_imp.get_item_position (index - 1).y, 2)
+			point := parent_imp.get_item_position (index - 1)
+			Result.put (point.x, 1)
+			Result.put (point.y, 2)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -212,6 +215,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/04/21 16:31:57  rogers
+--| Performance improvement in relative_position.
+--|
 --| Revision 1.37  2000/04/20 19:54:32  rogers
 --| Relative_postion now uses parent_imp.get_item_position.
 --|

@@ -336,7 +336,7 @@ feature -- prototype code generation
 			i, nb: INTEGER
 		do
 			extern_dec_file.generate_function_declaration
-				(type, f_name, True, extern, arg_types)
+				(type, f_name, extern, arg_types)
 			if not extern then
 				putstring ("static ")
 			end

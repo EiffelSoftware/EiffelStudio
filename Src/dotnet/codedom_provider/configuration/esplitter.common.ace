@@ -1,0 +1,109 @@
+system
+	"EiffelSoftware.CodeDom.Splitter"
+
+root
+	EIFFEL_PARSER: make
+
+default
+	assertion (no)
+	msil_generation (yes)
+	line_generation (no)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (no)
+	msil_generation_type ("dll")
+	msil_key_file_name ("$EIFFEL_SRC\dotnet\helpers\isekey.snk")
+	console_application (yes)
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom.Vision2")
+	msil_use_optimized_precompile (yes)
+  	version ("2.0.1.1402")
+
+cluster
+	all thread:		"$EIFFEL_SRC\library\thread"
+		exclude
+			"classic"; "CVS"; 
+		default
+			namespace ("EiffelSoftware.Library.Thread")
+		end
+
+	all thread_net:		"$EIFFEL_SRC\library.net\thread"
+		exclude
+			"CVS"; 
+		default
+			namespace ("EiffelSoftware.Library.ThreadNet")
+		visible
+			THREAD
+			end
+			MUTEX
+			end
+		end
+
+	all eclop:		"$ECLOP\eclop"
+		default
+			namespace ("Eclop")
+		visible
+			COMMAND_LINE_SYNTAX
+			end
+			COMMAND_LINE_PARSER
+			end
+		end
+
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
+		exclude
+			"hact"; "se"; "ve"; "base"; "CVS"; "other";
+		default
+			namespace ("Gobo")
+		visible
+			RX_PCRE_REGULAR_EXPRESSION
+			end
+		end
+
+	all comon:		"$EIFFEL_SRC\dotnet\codedom_provider\compiler\support"
+		exclude
+			"CVS"; 
+		default
+			namespace ("EiffelSoftware.CodeDom.Common")
+		end
+
+	codedom_provider:		"$EIFFEL_SRC\dotnet\codedom_provider\common"
+		default
+			namespace ("EiffelSoftware.CodeDom.Common")
+		visible
+			CODE_SHARED_CLASS_SEPARATOR
+			end
+		end
+
+	all ast:		"$EIFFEL_SRC\Eiffel\common\parser\AST"
+		default
+			namespace ("EiffelSoftware.Compiler.Parser")
+		end
+
+	yacc (ast):		"$EIFFEL_SRC\Eiffel\yacc"
+		default
+			namespace ("EiffelSoftware.Compiler.Parser")
+		end
+
+	structure (ast):		"$EIFFEL_SRC\Eiffel\eiffel\structures"
+		default
+			namespace ("EiffelSoftware.Compiler.Parser")
+		end
+
+	eiffel_helper (ast):		"$EIFFEL_SRC\library\helpers\eiffel"
+		default
+			namespace ("EiffelSoftware.Compiler.Parser")
+		end
+
+	eiffel_parser (ast):		"$EIFFEL_SRC\Eiffel\common\parser\parser"
+		default
+			namespace ("EiffelSoftware.Compiler.Parser")
+		end
+
+	eiffel_parser_errors (ast):		"$EIFFEL_SRC\Eiffel\API\error\common"
+		exclude
+			"error_handler.e"; "syntax_error.e"; 
+		default
+			namespace ("EiffelSoftware.Compiler.Parser")
+		end
+end

@@ -44,22 +44,23 @@
 <a href="../../pdf/com/eiffelcom.pdf">Full PDF version of manual</a>
       <p>&nbsp;</p>
       <h1>Release Notes</h1>
-      <p>We hope that you will enjoy the the wizard, which greatly facilitates
+      <p>We hope that you will enjoy the wizard, which greatly facilitates
       the writing and debugging of COM applications, using Eiffel
       on the server side, the client side or both.</p>
       <p>Here are some notes applying to the current version:</p>
       <ol>
         <li>Client
           <ul>
-            <li>You should always access dual interfaces through IDisptch::Invoke
-            instead of direct virtual table access.</font></li>
-            <li>Memory for [in] parameters may cause memory leaks insome
-          special cases (nested pointers).</li>
+            <li>
+			The wizard generates dual interface access through IDisptch::Invoke
+		   	instead of direct virtual table access.</li>
+            <li>Mapping of [in] parameters may cause memory leaks in
+			some special cases (nested pointers).</li>
           </ul>
         </li>
         <li>Server: Automation is not properly supported on the server side.</li>
         <li>Eiffel to C type mapping: the following COM types are not supported:
-            SAFEARRAY and its VARIANT.</li>
+		SAFEARRAY and VARIANT containing SAFEARRAY.</li>
       </ol>
       <p>If you encounter any other problems please do not hesitate to contact
       through the support web page <a href="http://support.eiffel.com">http://support.eiffel.com</a>

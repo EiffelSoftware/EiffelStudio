@@ -1236,7 +1236,7 @@ feature -- Input
 			done: BOOLEAN
 		do
 			from
-				str_area := last_string.to_c; 
+				str_area := last_string.area; 
 				str_cap := last_string.capacity;
 			until
 				done
@@ -1251,7 +1251,7 @@ feature -- Input
 					last_string.resize (str_cap + 1024);
 					str_cap := last_string.capacity;
 					read := read - 1;		-- True amount of byte read
-					str_area := last_string.to_c;
+					str_area := last_string.area;
 				else
 					last_string.set_count (read);
 					done := true
@@ -1274,7 +1274,7 @@ feature -- Input
 			str_area: ANY
 		do
 			last_string.resize (nb_char);
-			str_area := last_string.to_c;
+			str_area := last_string.area;
 			new_count := file_gss (file_pointer, $str_area, nb_char);
 			last_string.set_count (new_count);
 		end;
@@ -1293,7 +1293,7 @@ feature -- Input
 			read: INTEGER;	-- Amount of bytes already read
 		do
 			from
-				str_area := last_string.to_c; 
+				str_area := last_string.area; 
 				str_cap := last_string.capacity;
 			until
 				read > str_cap
@@ -1303,6 +1303,7 @@ feature -- Input
 				if read > str_cap then
 						-- End of word not reached yetO
 					last_string.resize (str_cap + 1024);
+					str_area := last_string.area;
 					str_cap := last_string.capacity;
 					read := read - 1;		-- True amount of byte read
 				else

@@ -7,6 +7,10 @@ deferred class EIFFEL_CALL_STACK
 
 feature -- Fake inherit from TWO_WAY_LIST
 
+	stack_depth: INTEGER is
+		deferred
+		end		
+
 	count: INTEGER is
 		deferred
 		end

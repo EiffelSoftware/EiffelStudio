@@ -210,13 +210,13 @@ feature {NONE} -- Implementation
 	chcode (c: like item): INTEGER is
 			-- Associated integer value
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		end;
 
 	chconv (i: INTEGER): CHARACTER is
 			-- Character associated with integer value `i'
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		end;
 
 	c_outc (c: CHARACTER): STRING is
@@ -227,32 +227,32 @@ feature {NONE} -- Implementation
 
 	chupper (c: CHARACTER): CHARACTER is
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		end;
 
 	chlower (c: CHARACTER): CHARACTER is
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		end;
 
 	chis_lower (c: CHARACTER): BOOLEAN is
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		end;
 
 	chis_upper (c: CHARACTER): BOOLEAN is
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		end;
 
 	chis_digit (c: CHARACTER): BOOLEAN is
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		end;
 
 	chis_alpha (c: CHARACTER): BOOLEAN is
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		end;
 
 end -- class CHARACTER_REF

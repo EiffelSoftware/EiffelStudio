@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 			-- Integer part of `d' (same sign, largest absolute
 			-- value no greater than `d''s)
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		alias
 			"conv_di"
 		end;
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			-- Real part of `d' (same sign, largest absolute
 			-- value no greater than `d''s)
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		alias
 			"conv_dr"
 		end;

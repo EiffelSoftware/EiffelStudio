@@ -315,7 +315,7 @@ feature {NONE} -- Implementation
 			-- Integer part of `r' (same sign, largest absolute
 			-- value no greater than `r''s)
 		external
-			"C | %"eif_misc.h%""
+			"C [macro %"eif_misc.h%"]"
 		alias
 			"conv_ri"
 		end;

@@ -76,9 +76,7 @@ feature -- Execution
 				formatted ?= argument
 			end;
 			if not text_window.changed then
-				!! mp.set_watch_cursor;
 				execute_licenced (formatted);
-				mp.restore;
 			else
 				warner (text_window).call (Current, l_File_changed)
 			end

@@ -65,6 +65,22 @@ feature -- Access
 	current_position: TOKEN_LOCATION
 			-- Position of last token read
 
+	start_position: INTEGER is
+			-- Start position of last token
+		do
+			Result := current_position.start_position
+		ensure
+			definition: Result = current_position.start_position
+		end
+
+	end_position: INTEGER is
+			-- End position of last token
+		do
+			Result := current_position.end_position
+		ensure
+			definition: Result = current_position.end_position
+		end
+
 	last_value: ANY
 			-- Semantic value to be passed to the parser
 
@@ -80,6 +96,12 @@ feature -- Access
 			-- inherit
 			--		BAR
 			--		end
+
+feature -- Osolete
+
+	error_code: INTEGER is 0
+	error_message: STRING is ""
+			-- Compatibility with parser written in C with yacc
 
 feature -- Error handling
 

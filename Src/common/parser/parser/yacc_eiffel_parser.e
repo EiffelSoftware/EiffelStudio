@@ -49,6 +49,37 @@ feature -- Access
 	root_node: CLASS_AS
 			-- Root node of AST
 
+	start_position: INTEGER is
+			-- Start position of last token
+		do
+			Result := get_start_position
+		end
+
+	end_position: INTEGER is
+			-- End position of last token
+		do
+			Result := get_end_position
+		end
+
+	filename: STRING is
+			-- Name of file being parsed
+		do
+			Result := get_yacc_file_name
+		ensure
+			filename_not_void: Result /= Void
+		end
+
+	error_code: INTEGER is
+		do
+			Result := get_yacc_error_code
+		end
+	error_message: STRING is
+		do
+			Result := get_yacc_error_message
+		ensure
+			error_message_not_void: Result /= Void
+		end
+
 feature -- Removal
 
 	wipe_out is
@@ -62,6 +93,36 @@ feature -- Removal
 feature {NONE} -- External
 
 	c_parse (f: POINTER; s: POINTER): CLASS_AS is
+		external
+			"C"
+		end
+
+	get_start_position: INTEGER is
+			-- Get start position processed by yacc
+		external
+			"C"
+		end
+
+	get_end_position: INTEGER is
+			-- Get end position processed by yacc.
+		external	
+			"C"
+		end
+
+	get_yacc_file_name: STRING is
+			-- Get file name processed by yacc.
+		external
+			"C"
+		end
+
+	get_yacc_error_code: INTEGER is
+			-- Get error code processed by yacc.
+		external
+			"C"
+		end
+
+	get_yacc_error_message: STRING is
+			-- Get error message processed by yacc.
 		external
 			"C"
 		end

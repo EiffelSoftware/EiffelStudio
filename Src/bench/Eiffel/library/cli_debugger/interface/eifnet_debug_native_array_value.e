@@ -13,7 +13,7 @@ inherit
 
 	EIFNET_ABSTRACT_DEBUG_VALUE
 		undefine
-			address, append_to
+			address, append_to, sorted_children
 		end
 
 	COMPILER_EXPORTER
@@ -118,7 +118,7 @@ feature {ABSTRACT_DEBUG_VALUE} -- Output
 		end;
 		
 feature -- Output	
-
+		
 	children: DS_LIST [ABSTRACT_DEBUG_VALUE] is
 			-- List of all sub-items of `Current'. May be void if there are no children.
 			-- Generated on demand.

@@ -266,7 +266,7 @@ feature -- Type check, byte code and dead code removal
 							context.init_error (vuar2)
 							vuar2.set_called_feature (a_feature, last_id)
 							vuar2.set_argument_position (i)
-							vuar2.set_argument_name (a_feature.argument_names.i_th (i))
+							vuar2.set_argument_name (a_feature.arguments.item_name (i))
 							vuar2.set_formal_type (arg_type)
 							vuar2.set_actual_type (current_item)
 							Error_handler.insert_error (vuar2)

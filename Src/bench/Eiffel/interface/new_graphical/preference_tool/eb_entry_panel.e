@@ -5,7 +5,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class EB_ENTRY_PANEL
+deferred class 
+	EB_ENTRY_PANEL
 
 inherit
 	EV_VERTICAL_BOX
@@ -20,6 +21,7 @@ feature {NONE} -- Initialization
 		do
 			make_container (par)
 			set_minimum_size (400, 300)
+--			set_border_width (4)
 			Create title.make_with_text (Current, name)
 			title.set_minimum_height (50)
 			title.set_expand (False)

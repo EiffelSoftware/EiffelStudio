@@ -125,7 +125,7 @@ feature
 				i > count
 			loop
 				cl := order.item (i);
-debug ("ACTIVITY")
+debug ("ACTIVITY", "DLE TOPO")
 io.error.putint (i);
 io.error.putstring (": ");
 io.error.putstring (cl.class_name);

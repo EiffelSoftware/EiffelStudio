@@ -123,7 +123,7 @@ end;
 				Conformance_file.putstring (",%N");
 				i := i + Char_size;
 			end;
-			Conformance_file.putstring ("};%N%Nstruct conform conf");
+			Conformance_file.putstring ("};%N%Nstatic struct conform conf");
 			Conformance_file.putint (type_id);
 			Conformance_file.putstring (" = {(int16) ");
 			Conformance_file.putint (min_type_id - 1);

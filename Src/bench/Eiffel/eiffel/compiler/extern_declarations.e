@@ -3,7 +3,8 @@
 class EXTERN_DECLARATIONS
 
 inherit
-	SHARED_INCLUDE
+	SHARED_INCLUDE;
+	SHARED_WORKBENCH
 
 creation
 
@@ -46,6 +47,15 @@ feature
 			attr_table_exists: attr_table /= Void
 		do
 			attribute_tables.put (attr_table);
+		end;
+
+	add_skeleton_attribute_table (attr_table: STRING) is
+			-- Add one attribute offset table to the current extern
+			-- declarations when generating the skeleton.
+		require
+			attr_table_exists: attr_table /= Void
+		do
+			attribute_tables.put (attr_table)
 		end;
 
 	add_type_table (type_table: STRING) is

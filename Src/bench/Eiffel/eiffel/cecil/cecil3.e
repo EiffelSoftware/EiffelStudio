@@ -96,7 +96,11 @@ feature
 			end;
 			Cecil_file.putstring ("};%N%N");
 
-			Cecil_file.putstring ("struct ctable ce_gtype = {(int32) ");
+			if System.is_dynamic then
+				Cecil_file.putstring ("struct ctable Dce_gtype = {(int32) ")
+			else
+				Cecil_file.putstring ("struct ctable ce_gtype = {(int32) ")
+			end;
 			Cecil_file.putint (count);
 			Cecil_file.putstring (", sizeof(struct gt_info),");
 			Cecil_file.putstring (key_name);

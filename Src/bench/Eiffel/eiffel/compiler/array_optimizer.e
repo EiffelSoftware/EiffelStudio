@@ -385,13 +385,16 @@ feature -- Contexts
 			end;
 		end
 
-	generate_plug_declarations (plug_file: INDENT_FILE) is
+	generate_plug_declarations (plug_file: INDENT_FILE; table_prefix: STRING) is
 		do
-			generate_feature_table (plug_file, "eif_lower_table", lower_rout_id);
-			generate_feature_table (plug_file, "eif_area_table", area_rout_id);
+			generate_feature_table
+				(plug_file, "eif_lower_table", lower_rout_id, table_prefix);
+			generate_feature_table
+				(plug_file, "eif_area_table", area_rout_id, table_prefix);
 		end;
 
-	generate_feature_table (plug_file: INDENT_FILE; table_name: STRING; rout_id: INTEGER) is
+	generate_feature_table (plug_file: INDENT_FILE; table_name: STRING;
+			rout_id: INTEGER; table_prefix: STRING) is
 		local
 			entry: POLY_TABLE [ENTRY]
 			temp: STRING
@@ -399,13 +402,15 @@ feature -- Contexts
 			entry := Eiffel_table.item_id (rout_id);
 			temp := Encoder.table_name (rout_id);
 			Plug_file.putstring ("extern long ");
+			Plug_file.putstring (table_prefix);
 			Plug_file.putstring (temp);
 			Plug_file.putstring ("[];%Nlong *");
 			Plug_file.putstring (table_name);
 			Plug_file.putstring (" = ");
+			Plug_file.putstring (table_prefix);
 			Plug_file.putstring (temp);
 			Plug_file.putstring (" - ");
-			Plug_file.putstring ((entry.min_type_id - 1).out);
+			Plug_file.putint (entry.min_type_id - 1);
 			Plug_file.putstring (";%N");
 		end;
 
@@ -522,6 +527,58 @@ end;
 				end;
 				depend_list.forth
 			end;
+		end;
+
+feature -- DLE
+
+	generate_dle_plug_extern (plug_file: INDENT_FILE) is
+			-- Generate extern declarations in `plug_file'.
+		require
+			dynamic_system: System.is_dynamic
+		local
+			entry: POLY_TABLE [ENTRY];
+			temp: STRING
+		do
+			entry := Eiffel_table.item_id (lower_rout_id);
+			temp := Encoder.table_name (lower_rout_id);
+			plug_file.putstring ("extern long *");
+			plug_file.putstring (temp);
+			plug_file.putchar (';');
+			plug_file.new_line;
+			entry := Eiffel_table.item_id (area_rout_id);
+			temp := Encoder.table_name (area_rout_id);
+			plug_file.putstring ("extern long *");
+			plug_file.putstring (temp);
+			plug_file.putchar (';');
+			plug_file.new_line
+		end;
+
+	generate_dle_plug (plug_file: INDENT_FILE) is
+			-- Generate code in `plug_file'. This part of the code will
+			-- have to be called after the routine and attribute tables
+			-- have been initialized.
+		require
+			dynamic_system: System.is_dynamic
+		local
+			entry: POLY_TABLE [ENTRY];
+			temp: STRING
+		do
+			entry := Eiffel_table.item_id (lower_rout_id);
+			temp := Encoder.table_name (lower_rout_id);
+			plug_file.putstring ("eif_lower_table = ");
+			plug_file.putstring (temp);
+			plug_file.putstring (" - ");
+			plug_file.putint (entry.min_type_id - 1);
+			plug_file.putchar (';');
+			plug_file.new_line;
+			entry := Eiffel_table.item_id (area_rout_id);
+			temp := Encoder.table_name (area_rout_id);
+			plug_file.putstring ("eif_area_table = ");
+			plug_file.putstring (temp);
+			plug_file.putstring (" - ");
+			plug_file.putint (entry.min_type_id - 1);
+			plug_file.putchar (';');
+			plug_file.new_line
 		end;
 
 end

@@ -17,10 +17,20 @@ feature -- Basic operation
 
 	execute (arg: EV_ARGUMENT; a_event_data: EV_EVENT_DATA) is
 			-- Execution to be done by the command.
+		local
+			editor: EV_TEXT_EDITOR
 		do
 			event_data ?= a_event_data
-			print ("EV DEL TXT execute%N")
-			print_contents
+--			print ("EV DEL TXT execute%N")
+--			print_contents
+			editor ?= event_data.rich_text
+			check
+				editor /= Void
+			end
+			
+			--editor.update_highlighting_lines_from_character_position (event_data.position, event_data.position + event_data.text.count)
+			--editor.update_highlighting_all
+			
 		ensure then
 			event_data_set: event_data /= Void
 		end

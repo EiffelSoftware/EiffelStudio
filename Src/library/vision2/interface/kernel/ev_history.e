@@ -19,6 +19,20 @@ feature -- Access
 		deferred
 		end
 
+	next_undo_command: EV_UNDOABLE_COMMAND is
+			-- Returns the command that is next in the undo queue
+		require
+			can_undo: can_undo
+		deferred
+		end
+
+	next_redo_command: EV_UNDOABLE_COMMAND is
+			-- Returns the command that is next in the redo queue
+		require
+			can_redo: can_redo
+		deferred
+		end
+		
 feature -- Basic operations
 
 	record (cmd: EV_UNDOABLE_COMMAND) is
@@ -39,6 +53,22 @@ feature -- Basic operations
 			-- Redo the last undone command
 		require
 			can_undo: can_redo
+		deferred
+		end
+
+	fake_undo is
+			-- Moves the history cursor to the next undo position,
+			-- but does not execute the command.
+		require
+			can_undo: can_undo
+		deferred
+		end
+
+	fake_redo is
+			-- Moves the history cursor to the next redo position,
+			-- but does not execute the command.
+		require
+			can_redo: can_redo
 		deferred
 		end
 

@@ -7,9 +7,15 @@ class
 	EV_GRID
 
 inherit
-	EV_PRIMITIVE
+	EV_CELL
+		rename
+			item as cell_item
 		redefine
-			implementation
+			implementation,
+			create_implementation,
+			prunable,
+			readable,
+			writable
 		end
 	
 	EV_GRID_ACTION_SEQUENCES
@@ -234,6 +240,15 @@ feature -- Status setting
 		end
 
 feature -- Status report
+
+	prunable: BOOLEAN is False
+			-- May items be removed?
+			
+	writable: BOOLEAN is False
+			-- Is there a current item that may be modified?
+
+	readable: BOOLEAN is False
+			-- Is there a current item that may be accessed?
 
 	is_tree_enabled: BOOLEAN is
 			-- Is tree functionality enabled?

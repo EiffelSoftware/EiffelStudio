@@ -30,8 +30,12 @@ feature {NONE} -- Initialization
 			check
 				valid_main_window: w /= Void
 			end
+			main_window ?= w.implementation
+			check
+				valid_implementation: main_window /= Void
+			end
+			main_window.connect_to_application ($exit_from_main_window, $Current)
 		end
-	
 	
 feature {NONE} -- Implementation
 	
@@ -53,7 +57,21 @@ feature {NONE} -- Implementation
 		do
 			gtk_main_quit
 		end	
-end
+
+	exit_from_main_window is
+			-- Exit the application after the user
+			-- closed the main window.
+		do
+			if not main_window.has_close_command then
+				exit
+			end
+		end
+
+	main_window: EV_WINDOW_IMP
+			-- Implementation of the main window of
+			-- the application.
+
+end -- class EV_APPLICATION_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

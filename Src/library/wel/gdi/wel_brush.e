@@ -29,6 +29,7 @@ feature {NONE} -- Initialization
 			shared := True
 		ensure
 			shared: shared
+			item_not_void: item /= Default_pointer
 		end
 
 	make_solid (a_color: WEL_COLOR_REF) is
@@ -39,6 +40,7 @@ feature {NONE} -- Initialization
 			item := cwin_create_solid_brush (a_color.item)
 		ensure
 			color_set: exists implies color.item = a_color.item
+			item_not_void: item /= Default_pointer
 		end
 
 	make_hatch (a_hatch: INTEGER; a_color: WEL_COLOR_REF) is
@@ -52,6 +54,7 @@ feature {NONE} -- Initialization
 		ensure
 			hatch_set: exists implies hatch = a_hatch
 			color_set: exists implies color.item = a_color.item
+			item_not_void: item /= Default_pointer
 		end
 
 	make_by_pattern (bitmap: WEL_BITMAP) is
@@ -61,6 +64,8 @@ feature {NONE} -- Initialization
 			bitmap_exists: bitmap.exists
 		do
 			item := cwin_create_pattern_brush (bitmap.item)
+		ensure
+			item_not_void: item /= Default_pointer
 		end
 
 	make_indirect (a_log_brush: WEL_LOG_BRUSH) is
@@ -69,6 +74,8 @@ feature {NONE} -- Initialization
 			a_log_brush_not_void: a_log_brush /= Void
 		do
 			item := cwin_create_brush_indirect (a_log_brush.item)
+		ensure
+			item_not_void: item /= Default_pointer
 		end
 
 feature -- Access
@@ -104,7 +111,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			!! Result.make_by_brush (Current)
+			create Result.make_by_brush (Current)
 		ensure
 			result_not_void: Result /= Void
 		end

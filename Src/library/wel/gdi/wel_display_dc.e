@@ -15,19 +15,19 @@ feature -- Basic operations
 
 	get is
 			-- Get the device context.
-		require
+		require else
 			not_exists: not exists
 		deferred
-		ensure
+		ensure then
 			exists: exists
 		end
 
 	release is 
 			-- Release the device context.
-		require
+		require else
 			exists: exists
 		deferred
-		ensure
+		ensure then
 			not_exists: not exists
 		end
 

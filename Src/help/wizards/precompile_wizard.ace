@@ -1,0 +1,71 @@
+system
+	 wizard
+
+root
+	WIZARD_MANAGER (precompile_wizard): "make_and_launch"
+
+default
+--	assertion (no)
+	assertion (require)
+	assertion (ensure)
+--	assertion (check)
+	multithreaded (no)
+	console_application (no)
+	dynamic_runtime (no)
+	dead_code_removal (yes)
+	profile (no)
+	line_generation (no)
+	debug  (no)
+	array_optimization (no)
+	inlining (no)
+	inlining_size ("4")
+	exception_trace (yes)
+	arguments ("C:\Eiffel50\bench\wizards\precompile -callback c:\test.txt")
+
+cluster
+		-- Root cluster
+	root_cluster: "$EIFFEL_SRC\help\wizards"
+	
+		-- Precompile Wizard
+	precompile_wizard (root_cluster): "$\eprecompile\src"
+	
+		-- Bench Common
+--	bench_common (root_cluster): "$\bench_common"
+	
+		-- EiffelBase
+	all base: "$EIFFEL_SRC\library\base"
+		exclude
+			"desc";"table_eiffel3";"CVS"
+		end
+
+	all wel: "$EIFFEL_SRC\library\wel"
+		exclude
+			"CVS"
+		default
+			assertion (ensure)
+		end
+
+		-- EiffelVision
+	all vision2: "$EIFFEL_SRC\library\vision2"
+		exclude
+			"gtk";"EIFGEN";"tmp";"temp";"release";"obsolete";"CVS"
+		end
+
+		-- Wizard library
+	all wizard_library: "$EIFFEL_SRC\library\wizard"
+
+		-- Lex and Parse
+	all lex: "$EIFFEL_SRC\library\lex"
+	all parse: "$EIFFEL_SRC\library\parse"
+
+external
+	include_path:
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL_SRC)\library\vision2\spec\include"
+
+	object:
+		"$(EIFFEL_SRC)\library\wel\spec\$(COMPILER)\lib\wel.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+		"$(EIFFEL_SRC)\C_library\zlib\zlib.lib",
+		"$(EIFFEL_SRC)\C_library\libpng\libpng.lib"
+end

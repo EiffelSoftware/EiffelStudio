@@ -22,8 +22,8 @@ feature -- Initialization
 			-- Creation and initialization of 'parent's 
 			-- fields according to C pointer 'p'
 		local
-			c: EV_POINT
-			rec: EV_RECTANGLE
+			c: EV_COORDINATES
+			rec: EV_CLIP
 		do
 			Precursor (p)			
 			

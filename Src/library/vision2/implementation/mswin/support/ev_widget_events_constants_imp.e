@@ -59,7 +59,7 @@ feature -- General events for widgets
 	Cmd_get_focus: INTEGER is 16
 			-- The widget gets the focus.
 
-	Cmd_loose_focus: INTEGER is 17
+	Cmd_lose_focus: INTEGER is 17
 			-- The widget looses the focus.
 
 feature -- Events for buttons

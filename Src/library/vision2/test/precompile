@@ -7,13 +7,14 @@
 #$Id$
 #===============================================================================
 
+
 # Make a temporary directory.
 cd /tmp
 tmpdir=v2_precompile_$$
 mkdir $tmpdir
 cd $tmpdir
 
-# All platforms except for windows use GEL.
+# By default set up for GEL.
 platform_lib=gel
 platform_sep='/'
 if [ uname | grep CYGWIN > /dev/null 2>&1 ]
@@ -64,6 +65,7 @@ echo "end" >> Ace.ace
 # Run the compiler.
 if es4 -precompile -stop > out 2>&1
 then
+	tail -4 out
 	cd /tmp
 	rm -rf $tmpdir
 	exit 0
@@ -79,6 +81,9 @@ fi
 #===============================================================================
 #
 # $Log$
+# Revision 1.3  2000/03/09 22:28:57  oconnor
+# added tail of successful output
+#
 # Revision 1.2  2000/03/09 17:05:10  oconnor
 # added comments
 #

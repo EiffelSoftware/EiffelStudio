@@ -292,7 +292,14 @@ feature -- Element change
 				button.set_pixmap_in_parent
 				but.set_bitmap_index (button.image_index)
 			end
-
+			
+				-- Now take care of the sensitivity.
+				-- As the make features used to create `but' all set the
+				-- `state' to enabled, we must alter it, if the original button
+				-- as not enabled.
+			if not button.is_sensitive then
+				but.set_state (feature {WEL_TB_STATE_CONSTANTS}.Tbstate_indeterminate)
+			end
 			
 				-- If we are a separator then there is no need to handle the text.
 			if separator_button = Void then	
@@ -341,7 +348,7 @@ feature -- Element change
 			notify_change (2 + 1, Current)
 				-- Now restore `private_pixmap' and
 				-- `private_grey_pixmap' if necessary.
-			button.restore_private_pixmaps	
+			button.restore_private_pixmaps
 		end
 
 feature -- Basic operation

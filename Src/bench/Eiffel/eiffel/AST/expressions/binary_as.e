@@ -220,15 +220,15 @@ feature -- Type check, byte code and dead code removal
 			-- Associated byte node
 		local
 			access_line: ACCESS_LINE
-			feature_b: FEATURE_B
+			call_access_b: CALL_ACCESS_B
 		do
 			Result := byte_anchor
 			Result.set_left (left.byte_node)
 			Result.set_right (right.byte_node)
 
 			access_line := context.access_line
-			feature_b ?= access_line.access
-			Result.init (feature_b)
+			call_access_b ?= access_line.access
+			Result.init (call_access_b)
 			Result.set_attachment (attachment.type_i)
 			access_line.forth
 		end

@@ -30,22 +30,10 @@ inherit
 		undefine
 			has_valid_display
 		redefine
-			display
-		end;
-		
-	MEMORY
-		rename
-			free as gc_free
-		export
-			{NONE} all
-		undefine
-			is_equal
-		redefine
-			dispose
+			display, dispose
 		end
-
+		
 creation
-
 	make,
 	make_for_screen
 
@@ -134,8 +122,6 @@ feature -- Element change
 			set_up: (type = User_defined_pixmap and then 
 				not is_allocated) implies (source_pixmap /= Void and then
 					cursor_mask /= Void)
-		local
-			mask_bitmap: BITMAP_RESOURCE_X
 		do
 			if not is_allocated then
 				if type = User_defined_pixmap then 
@@ -157,7 +143,7 @@ feature -- Element change
 			-- Called when garbaged collected.
 		do
 			if not is_destroyed then
-				free;
+				destroy
 			end;
 			is_allocated := False;
 		end; 

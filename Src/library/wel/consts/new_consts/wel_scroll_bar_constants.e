@@ -1,6 +1,6 @@
 indexing
-	description	: "Constants relative to scroll bar constants"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	description	: "Constants relative to scroll bar"
+	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
 

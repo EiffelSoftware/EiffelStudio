@@ -1,13 +1,13 @@
 indexing
-	description	: "Constants relative to Mouse & Keyboard"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	description	: "Constants relative to input (Mouse, Keyboard, ...)"
+	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
 
 class
 	WEL_INPUT_CONSTANTS
 
-feature -- Mouse Activate constants.
+feature -- Mouse Activate constants (MA_xxx).
 
 	Ma_activate: INTEGER is 1
 			-- Declared in Windows as MA_ACTIVATE
@@ -21,7 +21,7 @@ feature -- Mouse Activate constants.
 	Ma_noactivateandeat: INTEGER is 4
 			-- Declared in Windows as MA_NOACTIVATEANDEAT
 
-feature -- Mouse and Key (MK) constants
+feature -- Mouse and Key constants (MK_xxxx)
 
 	Mk_control: INTEGER is 8
 			-- Declared in Windows as MK_CONTROL
@@ -38,7 +38,7 @@ feature -- Mouse and Key (MK) constants
 	Mk_shift: INTEGER is 4
 			-- Declared in Windows as MK_SHIFT
 
-feature -- Virtual Key (VK) constants
+feature -- Virtual Key constants (VK_xxxx) 
 
 	Vk_lbutton: INTEGER is 1
 			-- Declared in Windows as VK_LBUTTON

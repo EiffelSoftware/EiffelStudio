@@ -1,6 +1,6 @@
 indexing
 	description	: "Window drawing constants (DT_xxxx, DI_xxxx, ...)"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
 
@@ -10,7 +10,7 @@ class
 create
 	default_create
 
-feature -- DrawText constants
+feature -- DrawText constants (DT_xxxx)
 
 	Dt_top: INTEGER is 0
 			-- Declared in Windows as DT_TOP
@@ -57,7 +57,7 @@ feature -- DrawText constants
 	Dt_internal: INTEGER is 4096
 			-- Declared in Windows as DT_INTERNAL
 
-feature -- DrawImage constants
+feature -- DrawImage constants (DI_xxxx)
 
 	Di_compat: INTEGER is 4
 			-- Declared in Windows as DI_COMPAT

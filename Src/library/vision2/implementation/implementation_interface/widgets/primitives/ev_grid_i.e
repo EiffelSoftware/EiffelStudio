@@ -1499,7 +1499,7 @@ feature {NONE} -- Implementation
 	resize_row_lists (new_count: INTEGER) is
 			-- Resize the row lists so count equals `new_count'
 		require
-			valid_new_count: new_count > row_list.count
+			valid_new_count: new_count >= 0
 		do
 			internal_row_data.resize (new_count)
 			grid_rows.resize (new_count)

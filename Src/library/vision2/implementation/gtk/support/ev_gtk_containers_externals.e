@@ -58,8 +58,25 @@ feature {NONE} -- GTK C functions for tables
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_table_attach (table, widget: POINTER; lef, right, top, bottom,
+	gtk_table_set_homogeneous (table: POINTER; homogeneous: BOOLEAN) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_table_attach (table, widget: POINTER; left, right, top, bottom,
 					  x_opt, y_opt, x_pad, y_pad: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_table_attach_defaults (table, widget: POINTER; left, right,
+					 top, bottom: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_table_rows (table: POINTER): INTEGER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_table_columns (table: POINTER):INTEGER is
 		external "C | <gtk/gtk.h>"
 		end
 
@@ -135,8 +152,15 @@ feature {NONE} -- GTK C functions for scrollable area
 		external "C | <gtk/gtk.h>"
 		end
 
-feature {NONE} -- code in the glue library
+feature {NONE} -- GTK C functions for frames
 
+	gtk_frame_new (l: POINTER): POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_frame_set_label (frame: POINTER; txt: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
 
 end -- class EV_GTK_CONTAINERS_EXTERNALS
 

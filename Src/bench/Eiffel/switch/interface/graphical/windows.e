@@ -15,6 +15,11 @@ feature {NONE}
 			!!Result.make
 		end;
 
+    transporter: TRANSPORTER is
+		once
+			!! Result.make (project_tool)
+		end;
+
 	system_tool: SYSTEM_W is
 			-- Unique assembly tool
 		once
@@ -27,7 +32,7 @@ feature {NONE}
 			!!Result.make (project_tool)
 		end;
 
-	warner (window: TEXT_WINDOW): WARNER_W is
+	warner (window: WIDGET): WARNER_W is
 			-- Warning window associated with `window'
 		require
 			window_not_void: window /= Void
@@ -35,9 +40,9 @@ feature {NONE}
 			new_parent: COMPOSITE;
 			old_warner: WARNER_W
 		do
-			new_parent ?= window.tool;
+			new_parent := window.top;
 			!!Result.make (new_parent);
-			Result.set_window (window);
+			Result.set_window (new_parent);
 			old_warner := last_warner;
 			if old_warner /= Void then
 				old_warner.popdown;

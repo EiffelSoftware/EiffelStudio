@@ -99,13 +99,13 @@ feature -- Access
 	width: INTEGER is
 			-- Width of current rect
 		do
-			Result := right - left
+			Result := (right - left).abs
 		end
 
 	height: INTEGER is
 			-- Height of current rect
 		do
-			Result := bottom - top
+			Result := (bottom - top).abs
 		end
 
 feature -- Element change
@@ -128,8 +128,6 @@ feature -- Element change
 
 	set_left (a_left: INTEGER) is
 			-- Set `left' with `a_left'
-		require
-			left_smaller_than_right: a_left <= right
 		do
 			cwel_rect_set_left (item, a_left)
 		ensure
@@ -138,8 +136,6 @@ feature -- Element change
 
 	set_top (a_top: INTEGER) is
 			-- Set `top' with `a_top'
-		require
-			top_smaller_than_bottom: a_top <= bottom
 		do
 			cwel_rect_set_top (item, a_top)
 		ensure
@@ -148,8 +144,6 @@ feature -- Element change
 
 	set_right (a_right: INTEGER) is
 			-- Set `right' with `a_right'
-		require
-			right_larger_than_left: a_right >= left
 		do
 			cwel_rect_set_right (item, a_right)
 		ensure
@@ -158,8 +152,6 @@ feature -- Element change
 
 	set_bottom (a_bottom: INTEGER) is
 			-- Set `bottom' with `a_bottom'
-		require
-			bottom_larger_than_top: a_bottom >= top
 		do
 			cwel_rect_set_bottom (item, a_bottom)
 		ensure
@@ -401,8 +393,6 @@ feature {NONE} -- Externals
 		end
 
 invariant
-	right_larger_than_left: right >= left
-	bottom_larger_than_top: bottom >= top
 	positive_width: width >= 0
 	positive_height: height >= 0
 

@@ -472,6 +472,7 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
+			set_error_status (ok_status)
 			degree_output.put_new_compilation
 			if not Compilation_modes.is_precompiling then
 				is_compiling_ref.set_item (True)
@@ -619,6 +620,7 @@ feature -- Update
 			able_to_compile: able_to_compile
 			project_is_new: is_new
 		do
+			set_error_status (ok_status)
 			Compilation_modes.set_is_precompiling (True)
 			Compilation_modes.set_is_freezing
 			Workbench.recompile

@@ -49,8 +49,7 @@ feature -- Access
 			if not Resolver.is_generated (target) then
 				Result.append (target.dotnet_type.full_name)
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Not_supported, ["typeof expression on generated type"])
-				Result.append (target.eiffel_name)
+				Result.append (target.name)
 			end
 			Result.append ("%")")
 		end

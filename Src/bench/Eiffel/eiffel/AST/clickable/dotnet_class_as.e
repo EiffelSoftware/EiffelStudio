@@ -16,9 +16,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_consumed: CONSUMED_TYPE; a_flag: BOOLEAN; a_class: CLASS_C) is
+	make (a_consumed: CONSUMED_TYPE; a_flag: BOOLEAN; a_class: CLASS_I) is
 		require
 			a_consumed_not_void: a_consumed /= Void
+			a_classi_not_void: a_class /= Void
 		do
 			consumed_type := a_consumed
 			dotnet_name := a_consumed.dotnet_name
@@ -26,9 +27,12 @@ feature {NONE} -- Initialization
 			is_deferred := a_consumed.is_deferred or a_consumed.is_interface
 			is_frozen := a_consumed.is_frozen
 			is_expanded := a_consumed.is_expanded
-			if a_class /= Void then
-				-- This is a compiled class so we save the CLASS_C for use in formatting.
-				class_c := a_class
+			if a_class /= Void and a_class.compiled_class /= Void then
+					-- This is a compiled class so we save the CLASS_C for use in formatting.
+				class_c := a_class.compiled_class
+				class_i ?= a_class
+			else
+				class_i ?= a_class			
 			end
 			set_current_class_only (a_flag)
 			initialize (a_consumed)
@@ -255,6 +259,9 @@ feature {NONE} -- Access
 
 	class_c: CLASS_C
 			-- The Eiffel compiled class denoting 'consumed_type.
+
+	class_i: EXTERNAL_CLASS_I
+			-- The Eiffel non-compiled class if is not compiled in system.
 
 	dotnet_name: STRING
 			-- Full .NET name.

@@ -108,6 +108,7 @@ feature
 			feature_name: STRING;
 			f1, f2: FEATURE_I;
 			depend_unit: DEPEND_UNIT;
+			ext_i: EXTERNAL_I
 		do
 			from
 				start;
@@ -117,15 +118,26 @@ feature
 			loop
 				feature_name := key_for_iteration;
 				f2 := other.item (feature_name);
+				f1 := item_for_iteration;
 				if f2 = Void then
 debug ("ACTIVITY")
 	io.error.putstring ("%Tfeature ");
 	io.error.putstring (feature_name);
 	io.error.putstring (" is not in the table.%N");
 end;
+					if f1.is_external then
+							-- FIXME
+							-- FIXME
+							-- FIXME
+							-- FIXME
+							--| TEMPORARY SOLUTION FOR 3.2.8 (3.3 beta)
+						ext_i ?= f1;
+						if ext_i.encapsulated then
+							System.set_freeze (True)
+						end
+					end;
 					Result := False;
 				else
-					f1 := item_for_iteration;
 					check
 						f1.feature_name.is_equal (f2.feature_name);
 					end;
@@ -135,6 +147,10 @@ debug ("ACTIVITY")
 	io.error.putstring (feature_name);
 	io.error.putstring (" is not equiv.%N");
 end;
+						if f1.is_external then
+								-- The external definition has changed
+							System.set_freeze (True)
+						end
 						Result := False;
 						!!depend_unit.make (feat_tbl_id, f2.feature_id);;
 						pass2_ctrl.propagators.extend (depend_unit)

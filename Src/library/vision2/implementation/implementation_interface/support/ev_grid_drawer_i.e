@@ -229,6 +229,9 @@ feature -- Basic operations
 		local
 			horizontal_span_items, vertical_span_items: ARRAYED_LIST [INTEGER]
 		do
+			grid.perform_vertical_computation
+				-- Recompute vertical row heights and scroll bar positions before
+				-- querying the item positions
 			horizontal_span_items := items_spanning_horizontal_span (an_x, 0)
 			vertical_span_items := items_spanning_vertical_span (a_y, 0)
 			if not horizontal_span_items.is_empty and not vertical_span_items.is_empty then

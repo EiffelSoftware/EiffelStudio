@@ -206,7 +206,7 @@ feature -- Event : command association
 			-- when the user select the item with the right button
 			-- of the mouse.
 		do
-			add_command (Cmd_item_right_selection, cmd, arg)
+--			add_command (Cmd_item_right_selection, cmd, arg)
 		end
 
 feature -- Event -- removing command association
@@ -237,7 +237,7 @@ feature -- Event -- removing command association
 			-- the user select the item with the right button
 			-- of the mouse.
 		do
-			remove_command (Cmd_item_right_selection)
+--			remove_command (Cmd_item_right_selection)
 		end
 
 end -- class EV_TREE_ITEM_IMP

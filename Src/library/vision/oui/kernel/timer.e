@@ -90,7 +90,7 @@ feature -- Status setting
 			exists: not destroyed;
 			no_call_back_already_set: not is_call_back_set;
 			a_time_positive_and_not_null: a_time >0;
-			not_a_command_void: a_command = Void
+			not_a_command_void: a_command /= Void
 		do
 			implementation.set_regular_call_back (a_time, a_command, an_argument)
 		ensure

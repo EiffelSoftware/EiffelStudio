@@ -95,6 +95,8 @@ feature {NONE} -- Special childrens
 			l_md_import: MD_IMPORT
 			l_tokens: DS_ARRAYED_LIST [INTEGER]
 			l_tokens_array: ARRAY [INTEGER]
+			l_t_index: INTEGER
+			l_t_upper: INTEGER
 			
 			l_tokens_cursor: DS_LINEAR_CURSOR [INTEGER]
 			l_tokens_count: INTEGER
@@ -123,19 +125,36 @@ feature {NONE} -- Special childrens
 					l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, 10)
 					l_tokens_count := l_md_import.count_enum (l_enum_hdl)
 					if l_tokens_count > 0 then
-						create l_tokens.make_from_array (l_tokens_array)
+						create l_tokens.make (l_tokens_count)
+						from
+							l_t_upper := l_tokens_array.upper						
+							l_t_index := l_tokens_array.lower
+						until
+							l_t_index > l_t_upper
+						loop
+							l_tokens.put_last (l_tokens_array.item (l_t_index))				
+							l_t_index := l_t_index + 1
+						end
 						if l_tokens_count > l_tokens_array.count then
 								-- We need to retrieve the rest of the data
 							l_tokens_array := l_md_import.enum_fields ($l_enum_hdl, l_class_token, l_tokens_count - 10)
---							l_tokens.fill (l_tokens_array)
-							l_tokens.append_last (create {DS_ARRAYED_LIST [INTEGER]}.make_from_array (l_tokens_array))
+							
+							from
+								l_t_upper := l_tokens_array.upper
+								l_t_index := l_tokens_array.lower
+							until
+								l_t_index > l_t_upper
+							loop
+								l_tokens.put_last (l_tokens_array.item (l_t_index))				
+								l_t_index := l_t_index + 1
+							end						
+--							l_tokens.extend_last (create {DS_ARRAYED_LIST [INTEGER]}.make_from_array (l_tokens_array))
 						end
 					end
 					l_md_import.close_enum (l_enum_hdl)
 				
 -- FIXME JFIAT: 2004-01-14 : Check with User's preference limit.
 -- FIXME JFIAT: 2004-01-14 : do we get all inherited fields too ?
-	
 					
 					if l_tokens /=  Void then
 						create {DS_ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]} Result.make (l_tokens.count)

@@ -14,9 +14,6 @@ inherit
 		end;
 
 	AST_EIFFEL_B
-		undefine
-			simple_format
-		end;
 
 feature
 

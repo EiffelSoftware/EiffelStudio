@@ -56,6 +56,19 @@ feature -- Status Report
 		do
 		end
 
+	initialize_for_loading is
+			-- Initialize `Current' for load operations, by performing
+			-- optimizations that prevent the control from slowing down due to
+			-- unecessary optimizations.
+		do
+		end
+		
+	complete_loading is
+			-- Restore `Current' back to its default state before last call
+			-- to `initialize_for_loading'.
+		do
+		end
+
 	font_char_set (a_font: EV_FONT): INTEGER is
 			-- 
 		do

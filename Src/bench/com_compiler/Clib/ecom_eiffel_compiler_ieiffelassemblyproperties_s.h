@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Assembly Properties (for Ace file).  Help file: 
+Eiffel Assembly Properties (for Ace file). Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELASSEMBLYPROPERTIES_S_H__
@@ -33,7 +33,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelAssemblyProperties_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelAssemblyProperties : public IDispatch
+class IEiffelAssemblyProperties : public IUnknown
 {
 public:
 	IEiffelAssemblyProperties () {};

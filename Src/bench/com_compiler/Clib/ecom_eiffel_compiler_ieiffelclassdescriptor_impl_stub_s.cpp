@@ -5,7 +5,7 @@ Implemented `IEiffelClassDescriptor' Interface.
 #include "ecom_eiffel_compiler_IEiffelClassDescriptor_impl_stub_s.h"
 static int return_hr_value;
 
-static const IID IID_IEiffelClassDescriptor_ = {0x2138b7f7,0x250e,0x4156,{0xa3,0xf5,0xa4,0xe9,0xf4,0xaf,0x8c,0x5d}};
+static const IID IID_IEiffelClassDescriptor_ = {0xdb9131a8,0x26ca,0x44b5,{0x9e,0xe9,0x3a,0x92,0xbb,0xba,0xeb,0xb0}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -222,7 +222,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::features(  
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_60 (eif_access (tmp_object));
+		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -275,7 +275,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::flat_featur
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_60 (eif_access (tmp_object));
+		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -328,7 +328,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::inherited_f
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_60 (eif_access (tmp_object));
+		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -381,7 +381,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::creation_ro
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_60 (eif_access (tmp_object));
+		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -434,7 +434,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::clients(  /
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_clients = grt_ec_ISE.ccom_ec_pointed_interface_40 (eif_access (tmp_object));
+		*some_clients = grt_ec_ISE.ccom_ec_pointed_interface_39 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -487,7 +487,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::suppliers( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_suppliers = grt_ec_ISE.ccom_ec_pointed_interface_40 (eif_access (tmp_object));
+		*some_suppliers = grt_ec_ISE.ccom_ec_pointed_interface_39 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -540,7 +540,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::ancestors( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_ancestors = grt_ec_ISE.ccom_ec_pointed_interface_40 (eif_access (tmp_object));
+		*some_ancestors = grt_ec_ISE.ccom_ec_pointed_interface_39 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -593,7 +593,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::descendants
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_descendants = grt_ec_ISE.ccom_ec_pointed_interface_40 (eif_access (tmp_object));
+		*some_descendants = grt_ec_ISE.ccom_ec_pointed_interface_39 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

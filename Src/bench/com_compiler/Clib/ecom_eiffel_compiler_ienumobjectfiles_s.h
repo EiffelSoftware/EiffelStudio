@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Object File Enumeration.  Help file: 
+Object File Enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMOBJECTFILES_S_H__

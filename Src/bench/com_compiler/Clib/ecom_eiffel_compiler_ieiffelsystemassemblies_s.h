@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel System Assemblies.  Help file: 
+Eiffel System Assemblies. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELSYSTEMASSEMBLIES_S_H__
@@ -53,7 +53,7 @@ extern "C" {
 #define __ecom_eiffel_compiler_IEiffelSystemAssemblies_INTERFACE_DEFINED__
 namespace ecom_eiffel_compiler
 {
-class IEiffelSystemAssemblies : public IDispatch
+class IEiffelSystemAssemblies : public IUnknown
 {
 public:
 	IEiffelSystemAssemblies () {};

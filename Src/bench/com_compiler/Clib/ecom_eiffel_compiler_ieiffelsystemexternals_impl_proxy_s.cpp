@@ -3,7 +3,7 @@ Implemented `IEiffelSystemExternals' Interface.
 -----------------------------------------------------------*/
 
 #include "ecom_eiffel_compiler_IEiffelSystemExternals_impl_proxy_s.h"
-static const IID IID_IEiffelSystemExternals_ = {0x3b9efc39,0xf565,0x4b15,{0x90,0x67,0xdb,0x7c,0x96,0xa7,0xff,0xd8}};
+static const IID IID_IEiffelSystemExternals_ = {0xea511e88,0x0ff6,0x407b,{0x89,0x56,0xfb,0x41,0x66,0x26,0xb6,0x2a}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,60 +35,15 @@ ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::IEiffelSystemExternals_
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 
-	excepinfo = (EXCEPINFO*)CoTaskMemAlloc (sizeof (EXCEPINFO));
-	if (excepinfo != NULL)
-		memset (excepinfo, '\0', sizeof (EXCEPINFO));
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
 ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::~IEiffelSystemExternals_impl_proxy()
 {
 	p_unknown->Release ();
-	
-	CoTaskMemFree ((void *)excepinfo);
 	if (p_IEiffelSystemExternals!=NULL)
 		p_IEiffelSystemExternals->Release ();
 	CoUninitialize ();
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_INTEGER ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_last_error_code()
-
-/*-----------------------------------------------------------
-	Last error code
------------------------------------------------------------*/
-{
-	return (EIF_INTEGER) excepinfo->wCode;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_last_source_of_exception()
-
-/*-----------------------------------------------------------
-	Last source of exception
------------------------------------------------------------*/
-{
-	return (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrSource);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_last_error_description()
-
-/*-----------------------------------------------------------
-	Last error description
------------------------------------------------------------*/
-{
-	return (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrDescription);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_last_error_help_file()
-
-/*-----------------------------------------------------------
-	Last error help file
------------------------------------------------------------*/
-{
-	return (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrHelpFile);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -249,7 +204,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_incl
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_219 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_218 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -384,7 +339,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemExternals_impl_proxy::ccom_obje
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_222 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_221 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

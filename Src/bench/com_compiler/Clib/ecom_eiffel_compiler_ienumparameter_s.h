@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Feature paramaters enumeration.  Help file: 
+Feature paramaters enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMPARAMETER_S_H__

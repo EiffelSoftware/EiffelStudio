@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Cluster Descriptor.  Help file: 
+Eiffel Cluster Descriptor. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELCLUSTERDESCRIPTOR_S_H__

@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Cluster Properties Enumeration.  Help file: 
+Eiffel Cluster Properties Enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMCLUSTERPROP_S_H__

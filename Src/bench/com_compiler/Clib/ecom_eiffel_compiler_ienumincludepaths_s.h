@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Include Path Enumeration.  Help file: 
+Include Path Enumeration. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IENUMINCLUDEPATHS_S_H__

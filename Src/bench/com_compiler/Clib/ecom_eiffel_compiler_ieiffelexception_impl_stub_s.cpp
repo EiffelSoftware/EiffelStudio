@@ -5,7 +5,7 @@ Implemented `IEiffelException' Interface.
 #include "ecom_eiffel_compiler_IEiffelException_impl_stub_s.h"
 static int return_hr_value;
 
-static const IID IID_IEiffelException_ = {0xd4e4efba,0xb090,0x420a,{0x86,0xa2,0xaf,0x0e,0x64,0x6d,0x6d,0xc4}};
+static const IID IID_IEiffelException_ = {0xfc94930c,0x06f1,0x448e,{0xa2,0x21,0x9c,0x70,0x2b,0x9d,0xf6,0x85}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +49,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelException_impl_stub::inner_exception( 
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*a_result = grt_ec_ISE.ccom_ec_pointed_interface_7 (eif_access (tmp_object));
+		*a_result = grt_ec_ISE.ccom_ec_pointed_interface_6 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

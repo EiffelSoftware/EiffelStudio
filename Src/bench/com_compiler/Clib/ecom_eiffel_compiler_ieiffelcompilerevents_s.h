@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Compiler Events.  Help file: 
+Eiffel Compiler Events. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELCOMPILEREVENTS_S_H__

@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Eiffel Project HTML Documentation Generator.  Help file: 
+Eiffel Project HTML Documentation Generator. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELHTMLDOCGENERATOR_S_H__

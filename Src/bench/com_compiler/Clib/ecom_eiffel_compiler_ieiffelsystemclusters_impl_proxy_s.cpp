@@ -3,7 +3,7 @@ Implemented `IEiffelSystemClusters' Interface.
 -----------------------------------------------------------*/
 
 #include "ecom_eiffel_compiler_IEiffelSystemClusters_impl_proxy_s.h"
-static const IID IID_IEiffelSystemClusters_ = {0xd2773adf,0xfd21,0x4cfa,{0x9a,0x4f,0x87,0x73,0xcf,0xf6,0x2c,0xfd}};
+static const IID IID_IEiffelSystemClusters_ = {0xcd49d55e,0x5467,0x4058,{0xa9,0x99,0x1d,0x35,0xb9,0x05,0x76,0x4e}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -35,60 +35,15 @@ ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::IEiffelSystemClusters_im
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 
-	excepinfo = (EXCEPINFO*)CoTaskMemAlloc (sizeof (EXCEPINFO));
-	if (excepinfo != NULL)
-		memset (excepinfo, '\0', sizeof (EXCEPINFO));
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
 ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::~IEiffelSystemClusters_impl_proxy()
 {
 	p_unknown->Release ();
-	
-	CoTaskMemFree ((void *)excepinfo);
 	if (p_IEiffelSystemClusters!=NULL)
 		p_IEiffelSystemClusters->Release ();
 	CoUninitialize ();
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_INTEGER ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_last_error_code()
-
-/*-----------------------------------------------------------
-	Last error code
------------------------------------------------------------*/
-{
-	return (EIF_INTEGER) excepinfo->wCode;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_last_source_of_exception()
-
-/*-----------------------------------------------------------
-	Last source of exception
------------------------------------------------------------*/
-{
-	return (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrSource);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_last_error_description()
-
-/*-----------------------------------------------------------
-	Last error description
------------------------------------------------------------*/
-{
-	return (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrDescription);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_last_error_help_file()
-
-/*-----------------------------------------------------------
-	Last error help file
------------------------------------------------------------*/
-{
-	return (EIF_REFERENCE) rt_ce.ccom_ce_bstr (excepinfo->bstrHelpFile);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -120,7 +75,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_clust
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_184 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_183 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -153,7 +108,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_flat_
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_184 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_183 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -288,7 +243,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_clust
 	
 	rt_ce.free_memory_bstr (tmp_cluster_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_187 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_186 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -323,7 +278,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemClusters_impl_proxy::ccom_clust
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_187 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_186 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

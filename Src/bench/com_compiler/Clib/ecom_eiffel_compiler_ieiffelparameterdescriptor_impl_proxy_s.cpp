@@ -3,7 +3,7 @@ Implemented `IEiffelParameterDescriptor' Interface.
 -----------------------------------------------------------*/
 
 #include "ecom_eiffel_compiler_IEiffelParameterDescriptor_impl_proxy_s.h"
-static const IID IID_IEiffelParameterDescriptor_ = {0x1863fc71,0x0e34,0x4ee6,{0x99,0x24,0x56,0xd4,0xb4,0x90,0x69,0xb0}};
+static const IID IID_IEiffelParameterDescriptor_ = {0x7857e992,0xd5eb,0x434b,{0x9d,0x21,0xec,0x3e,0x4f,0xf0,0x05,0x8f}};
 
 #ifdef __cplusplus
 extern "C" {

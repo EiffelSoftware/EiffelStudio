@@ -5,7 +5,7 @@ Implemented `IEiffelFeatureDescriptor' Interface.
 #include "ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_stub_s.h"
 static int return_hr_value;
 
-static const IID IID_IEiffelFeatureDescriptor_ = {0x2cb5c09a,0x2222,0x42f7,{0x93,0x71,0x39,0x8f,0xb7,0x1e,0xbb,0x93}};
+static const IID IID_IEiffelFeatureDescriptor_ = {0x75550181,0x6a69,0x43d5,{0xaa,0x40,0x51,0xee,0xc3,0xe2,0xd1,0x9f}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -229,7 +229,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::parameter
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*params = grt_ec_ISE.ccom_ec_pointed_interface_95 (eif_access (tmp_object));
+		*params = grt_ec_ISE.ccom_ec_pointed_interface_94 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -281,7 +281,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_l
 	EIF_OBJECT tmp_file_path = NULL;
 	if (file_path != NULL)
 	{
-		tmp_file_path = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_98 (file_path, NULL));
+		tmp_file_path = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_97 (file_path, NULL));
 	}
 	EIF_OBJECT tmp_line_number = NULL;
 	if (line_number != NULL)
@@ -296,7 +296,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_l
 	
 	if (*file_path != NULL)
 		rt_ce.free_memory_bstr (*file_path);
-	grt_ec_ISE.ccom_ec_pointed_cell_98 (((tmp_file_path != NULL) ? eif_wean (tmp_file_path) : NULL), file_path);
+	grt_ec_ISE.ccom_ec_pointed_cell_97 (((tmp_file_path != NULL) ? eif_wean (tmp_file_path) : NULL), file_path);
 	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_line_number != NULL) ? eif_wean (tmp_line_number) : NULL), line_number);
 	
 	END_ECATCH;
@@ -323,7 +323,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::all_calle
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_callers = grt_ec_ISE.ccom_ec_pointed_interface_60 (eif_access (tmp_object));
+		*some_callers = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -376,7 +376,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::local_cal
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_callers = grt_ec_ISE.ccom_ec_pointed_interface_60 (eif_access (tmp_object));
+		*some_callers = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -429,7 +429,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendan
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_callers = grt_ec_ISE.ccom_ec_pointed_interface_60 (eif_access (tmp_object));
+		*some_callers = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -482,7 +482,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::implement
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_implementers = grt_ec_ISE.ccom_ec_pointed_interface_60 (eif_access (tmp_object));
+		*some_implementers = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -535,7 +535,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::ancestor_
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_implementers = grt_ec_ISE.ccom_ec_pointed_interface_60 (eif_access (tmp_object));
+		*some_implementers = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -588,7 +588,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descendan
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_implementers = grt_ec_ISE.ccom_ec_pointed_interface_60 (eif_access (tmp_object));
+		*some_implementers = grt_ec_ISE.ccom_ec_pointed_interface_59 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

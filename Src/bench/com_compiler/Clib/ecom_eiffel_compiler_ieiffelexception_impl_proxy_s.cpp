@@ -3,7 +3,7 @@ Implemented `IEiffelException' Interface.
 -----------------------------------------------------------*/
 
 #include "ecom_eiffel_compiler_IEiffelException_impl_proxy_s.h"
-static const IID IID_IEiffelException_ = {0xd4e4efba,0xb090,0x420a,{0x86,0xa2,0xaf,0x0e,0x64,0x6d,0x6d,0xc4}};
+static const IID IID_IEiffelException_ = {0xfc94930c,0x06f1,0x448e,{0xa2,0x21,0x9c,0x70,0x2b,0x9d,0xf6,0x85}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -75,7 +75,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelException_impl_proxy::ccom_inner_exce
 	};
 	
 	
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_7 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_6 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

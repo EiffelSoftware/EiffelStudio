@@ -3,7 +3,7 @@ Implemented `IEiffelCompletionInfo' Interface.
 -----------------------------------------------------------*/
 
 #include "ecom_eiffel_compiler_IEiffelCompletionInfo_impl_proxy_s.h"
-static const IID IID_IEiffelCompletionInfo_ = {0x06b9f5aa,0x0e7d,0x4d84,{0x80,0x0a,0x38,0x66,0xac,0x70,0x95,0x03}};
+static const IID IID_IEiffelCompletionInfo_ = {0x8630e639,0xedae,0x46b7,{0x88,0x0b,0x27,0xd6,0x8e,0x71,0x84,0xfa}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -195,7 +195,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelCompletionInfo_impl_proxy::ccom_targe
 rt_ce.free_memory_bstr (tmp_feature_name);
 rt_ce.free_memory_bstr (tmp_file_name);
 
-	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_57 (ret_value));
+	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_56 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

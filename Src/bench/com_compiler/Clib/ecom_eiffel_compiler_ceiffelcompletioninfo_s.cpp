@@ -1,15 +1,15 @@
 /*-----------------------------------------------------------
- Help file: 
+Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #include "ecom_eiffel_compiler_CEiffelCompletionInfo_s.h"
 static int return_hr_value;
 
-static const CLSID CLSID_CEiffelCompletionInfo_ = {0xaabb3c81,0x5b4c,0x47df,{0xa6,0x83,0x1f,0xd7,0x16,0xe9,0x75,0xc6}};
+static const CLSID CLSID_CEiffelCompletionInfo_ = {0xbca3e550,0x3e39,0x4a44,{0xa0,0x34,0x38,0xf8,0xb4,0x22,0xd8,0xdf}};
 
-static const IID IID_IEiffelCompletionInfo_ = {0x06b9f5aa,0x0e7d,0x4d84,{0x80,0x0a,0x38,0x66,0xac,0x70,0x95,0x03}};
+static const IID IID_IEiffelCompletionInfo_ = {0x8630e639,0xedae,0x46b7,{0x88,0x0b,0x27,0xd6,0x8e,0x71,0x84,0xfa}};
 
-static const IID LIBID_eiffel_compiler_ = {0xa81ca1a9,0x3eef,0x4e47,{0xbe,0xae,0xc1,0x63,0x25,0xee,0xfa,0x3f}};
+static const IID LIBID_eiffel_compiler_ = {0x06b5d7c0,0x2c7d,0x4d1c,{0xa9,0x8b,0x45,0x99,0xbd,0xcd,0xfa,0x58}};
 
 #ifdef __cplusplus
 extern "C" {
@@ -138,17 +138,17 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::target_features(  /* [
 	EIF_OBJECT tmp_return_names = NULL;
 	if (return_names != NULL)
 	{
-		tmp_return_names = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_239 (return_names));
+		tmp_return_names = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_238 (return_names));
 	}
 	EIF_OBJECT tmp_return_signatures = NULL;
 	if (return_signatures != NULL)
 	{
-		tmp_return_signatures = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_240 (return_signatures));
+		tmp_return_signatures = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_239 (return_signatures));
 	}
 	EIF_OBJECT tmp_return_image_indexes = NULL;
 	if (return_image_indexes != NULL)
 	{
-		tmp_return_image_indexes = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_241 (return_image_indexes));
+		tmp_return_image_indexes = eif_protect (grt_ce_ISE.ccom_ce_pointed_record_240 (return_image_indexes));
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
@@ -204,7 +204,7 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::target_feature(  /* [i
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_57 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_56 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

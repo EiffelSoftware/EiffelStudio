@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------
-Feature parameter info.  Help file: 
+Feature parameter info. Eiffel language compiler library. Help file: 
 -----------------------------------------------------------*/
 
 #ifndef __ECOM_EIFFEL_COMPILER_IEIFFELPARAMETERDESCRIPTOR_S_H__

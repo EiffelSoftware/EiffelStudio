@@ -57,22 +57,6 @@ feature -- Access
 		do
 			Result := implementation.item
 		end
-		
-	item_minimum_height: INTEGER is
-			-- Minimum height of `item'.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.item_minimum_height
-		end
-		
-	item_minimum_width: INTEGER is
-			-- Minimum width of `item'.
-		require
-			not_destroyed: not is_destroyed
-		do
-			Result := implementation.item_minimum_width
-		end
 	
 	full: BOOLEAN is
 			-- Is there no element?
@@ -101,43 +85,6 @@ feature -- Access
 		end
 
 feature -- Status setting
-		
-	set_item_minimum_height (a_height: INTEGER) is
-			-- Set minimum height of `item' to `a_height.
-		require
-			not_destroyed: not is_destroyed
-			window_not_void: item /= Void
-			height_non_negative: a_height >= 0
-		do
-			implementation.set_item_minimum_height (a_height)
-		ensure
-			height_set: item_minimum_height = a_height
-		end
-		
-	set_item_minimum_width (a_width: INTEGER) is
-			-- Set minimum height of `item' to `a_height.
-		require
-			not_destroyed: not is_destroyed
-			window_not_void: item /= Void
-			height_non_negative: a_width >= 0
-		do
-			implementation.set_item_minimum_width (a_width)
-		ensure
-			width_set: item_minimum_width = a_width
-		end
-		
-	set_item_minimum_size (a_width, a_height: INTEGER) is
-			-- Set minimum size of `item' to `a_width' and `a_height.
-		require
-			not_destroyed: not is_destroyed
-			window_not_void: item /= Void
-			values_non_negative: a_height >= 0
-		do
-			implementation.set_item_minimum_size (a_width, a_height)
-		ensure
-			dimensions_set: item_minimum_width = a_width and
-				item_minimum_height = a_height
-		end
 		
 	wipe_out is
 			-- Remove `child_item'.

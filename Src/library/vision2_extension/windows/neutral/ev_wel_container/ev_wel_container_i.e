@@ -25,33 +25,8 @@ feature -- Access
 			-- `Result' is WEL_WINDOW contained in `Current'.
 		deferred
 		end
-		
-	item_minimum_height: INTEGER is
-			-- Minimum height of `item'.
-		deferred
-		end
-		
-	item_minimum_width: INTEGER is
-			-- Minimum width of `item'.
-		deferred
-		end
-		
-feature -- Status setting
 
-	set_item_minimum_height (a_height: INTEGER) is
-			-- Set minimum height of `item' to `a_height.
-		deferred
-		end
-		
-	set_item_minimum_width (a_width: INTEGER) is
-			-- Set minimum height of `item' to `a_height.
-		deferred
-		end
-		
-	set_item_minimum_size (a_width, a_height: INTEGER) is
-			-- Set minimum size of `item' to `a_width' and `a_height.
-		deferred
-		end
+feature -- Status setting
 		
 	replace (a_window: WEL_WINDOW) is
 			-- Replace `item' with `a_window'.

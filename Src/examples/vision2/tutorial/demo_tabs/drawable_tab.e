@@ -157,7 +157,6 @@ feature -- Access
 		-- Associated labels.
 	points: ARRAY[EV_COORDINATES]
 		-- Array of points to be used for polyline and polyfill.
-
 feature -- Execution Feature
 
 	point_setup is
@@ -301,6 +300,7 @@ feature -- Execution Feature
 		local
 			coor: EV_COORDINATES
 			s1, s2, s3, s4, s5: STRING
+			angle: EV_ANGLE
 		do
 			s1 := text_fields.item (1).text
 			s2 := text_fields.item (2).text
@@ -311,10 +311,11 @@ feature -- Execution Feature
 			s4.is_integer and s5.is_real then
 				create coor.make
 				coor.set (s1.to_integer, s2.to_integer)
+				create angle.make_in_degrees (s5.to_real)
 				if filled then
-					current_widget.fill_rectangle (coor, s3.to_integer, s4.to_integer, s5.to_real)
+					current_widget.fill_rectangle (coor, s3.to_integer, s4.to_integer, angle)
 				else
-					current_widget.draw_rectangle (coor, s3.to_integer, s4.to_integer, s5.to_real)
+					current_widget.draw_rectangle (coor, s3.to_integer, s4.to_integer, angle)
 				end
 			end
 		end
@@ -339,6 +340,7 @@ feature -- Execution Feature
 		local
 			coor: EV_COORDINATES
 			s1, s2, s3, s4, s5, s6, s7, s8: STRING
+			angle1,angle2,angle3: EV_ANGLE
 		do
 			s1 := text_fields.item (1).text
 			s2 := text_fields.item (2).text
@@ -353,10 +355,13 @@ feature -- Execution Feature
 			s8.is_integer and s8.to_integer >= -1 and s8.to_integer <= 1 then
 				create coor.make
 				coor.set (s1.to_integer, s2.to_integer)
+				create angle1.make_in_degrees (s5.to_real)
+				create angle2.make_in_degrees (s6.to_real)
+				create angle3.make_in_degrees (s7.to_real)
 				if filled then
-					current_widget.fill_arc (coor, s3.to_integer, s4.to_integer, s5.to_real, s6.to_real, s7.to_real, s8.to_integer)
+					current_widget.fill_arc (coor, s3.to_integer, s4.to_integer, angle1, angle2, angle3, s8.to_integer)
 				else
-					current_widget.draw_arc (coor, s3.to_integer, s4.to_integer, s5.to_real, s6.to_real, s7.to_real, s8.to_integer)
+					current_widget.draw_arc (coor, s3.to_integer, s4.to_integer, angle1, angle2, angle3, s8.to_integer)
 				end
 			end
 		end
@@ -366,6 +371,7 @@ feature -- Execution Feature
 		local
 			coor: EV_COORDINATES
 			s1, s2, s3, s4, s5: STRING
+			angle: EV_ANGLE
 		do
 			s1 := text_fields.item (1).text
 			s2 := text_fields.item (2).text
@@ -376,10 +382,11 @@ feature -- Execution Feature
 			s4.is_integer and s5.is_real then
 				create coor.make
 				coor.set (s1.to_integer, s2.to_integer)
+				create angle.make_in_degrees (s5.to_real)
 				if filled then
-					current_widget.fill_ellipse (coor, s3.to_integer, s4.to_integer, s5.to_real)
+					current_widget.fill_ellipse (coor, s3.to_integer, s4.to_integer, angle)
 				else
-					current_widget.draw_ellipse (coor, s3.to_integer, s4.to_integer, s5.to_real)
+					current_widget.draw_ellipse (coor, s3.to_integer, s4.to_integer, angle)
 				end
 			end
 		end	

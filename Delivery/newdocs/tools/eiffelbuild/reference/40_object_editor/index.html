@@ -6,19 +6,19 @@
 <P>The screenshot above shows a floating object editor. The docked object editor is almost identical except that it is located within the EiffelBuild main window.</P>
 
 <H2>Docked object editor</H2>
-<P>The docked object editor is displayed to the right hand side of the EifflBuild main window. This editor is always displayed and is permanently linked to the <A HREF="/tools/eiffelbuild/reference/20_layout_constructor/index.html">layout constructor</A>. This means that whenever the selected <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A> changes in the <A HREF="/tools/eiffelbuild/reference/20_layout_constructor/index.html">layout constructor</A>, the docked object editor becomes targeted to this <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A>.</P>
+<P>The docked object editor is displayed to the right hand side of the EiffelBuild main window. This editor is always displayed and is permanently linked to the <A HREF="/tools/eiffelbuild/reference/20_layout_constructor/index.html">layout constructor</A>. This means that whenever the selected <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A> changes in the <A HREF="/tools/eiffelbuild/reference/20_layout_constructor/index.html">layout constructor</A>, the docked object editor becomes targeted to this <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A>.</P>
 
 <H2>Floating object editors</H2>
 <P>These object editors appear in their own window, and you may open as many of these as you wish.</P><P> To open a new floating object editor, <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">drop</A> an <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A> on <img SRC="/images/eiffelbuild/icons/icon_object_editor_color.png" >, displayed in the <A HREF="/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.html">main toolbar</A> and also in each existing object editor. The new object editor will then be targeted to the <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A> that was <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">dropped</A>.</P>
-<P CLASS="note"><B>Note</B>: If the <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A> targetted to floating object editor is deleted, then the editor will be destroyed. This helps stop the screen becoming cluttered with empty editors.</P>
+<P CLASS="note"><B>Note</B>: If the <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A> targeted to floating object editor is deleted, then the editor will be destroyed. This helps stop the screen becoming cluttered with empty editors.</P>
 
 <P>As a shortcut to a complete <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">pick and drop</A> transport, you may hold down the Ctrl key while starting the <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">pick</A>, which will immediately open a new floating object editor targeted to the <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A> you clicked.</P>
 
 <H2>General use</H2>
 <P>When an object editor is targeted to an <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A>, you will see that controls are available within the editor to customize that <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A>. Although every different type of <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A> will have different sets of properties that may be modified, the manipulation of these properties is as standardized as possible. Below are some general rules that apply:</P>
 <UL>
-	<LI>String properties inputed via a text field are updated within the object every time a key is pressed</LI>
-	<LI>Integer properties inputed via a text field are only updated within the object when return is pressed, or
+	<LI>String properties inputted via a text field are updated within the object every time a key is pressed</LI>
+	<LI>Integer properties inputted via a text field are only updated within the object when return is pressed, or
 the input box looses the focus.</LI>
 	<LI> Almost without exception, a push button which controls a property, will open up a dialog, allowing the property to be edited. Examples are colors, pixmaps and events.</LI>
 	<LI>If when you attempt to modify a property, it returns back to its original value, it means that the value you attempted to enter was invalid. For example, looking at the screen show above, if you enter -50 into the minimum_height text field and press return, it will revert back to 23. This is because the minimum_height of an EV_BUTTON may not be set to less than 0. To find allowable values for properties of an <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A>, consult the <A HREF="/libraries/vision2/00_introduction.html">EiffelVision2</A> documentation.</LI>
@@ -36,12 +36,12 @@ the input box looses the focus.</LI>
 	<LI><a href="30_fixed_children_positioning.html">Positioning children of EV_FIXED</a></LI>
 </UL>
 <A NAME="events"></A><H2>Event connection</H2>
-<P>As well as being able to manipulate the standard properties of an <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A>, facilities are provided for connecting to the events of an <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A>. Looking at the object editor screenshot above, you will see that there is a button marked <B>Select events</B> which is also available in all targetted editors.</P>
+<P>As well as being able to manipulate the standard properties of an <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A>, facilities are provided for connecting to the events of an <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A>. Looking at the object editor screenshot above, you will see that there is a button marked <B>Select events</B> which is also available in all targeted editors.</P>
 <P CLASS="note"><B>Note</B>:  The button will be marked <B>Modify events</B> when one or more events are already selected for the current <A HREF="/tools/eiffelbuild/reference/02_notation.html#object">object</A>.</P>
 
 <P>Clicking this button will cause the following dialog to be displayed:</P>
 <P align="center"><IMG SRC="/images/eiffelbuild/screenshots/event_selection_dialog.png"></p>
-<P>Looking at the screenshot above, you will see that this dialog contains all the action_sequences available for the EV_BUTTON to which the object editor is targetted.</P>
+<P>Looking at the screenshot above, you will see that this dialog contains all the action sequences available for the EV_BUTTON to which the object editor is targeted.</P>
 <P>If you check a button connected with one of the action sequences, you will be then able to enter the name of a feature that you wish to connect to the action sequence. The screenshot above shows the user has connected a feature named `button_pressed' to the `select_actions'. When <A HREF="/tools/eiffelbuild/reference/90_code_generation/index.html">code is generated</A>, this will cause EiffelBuild to generate an empty feature named `button_pressed' already connected to the `select_actions' of the button.</P>
 <P CLASS="note"><B>Note</B>: You will only be allowed to enter valid and unique Eiffel feature names. If a name is invalid, it will be highlighted in red, and a dialog will warn you when you attempt to close the dialog.</P>
 

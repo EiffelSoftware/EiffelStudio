@@ -66,7 +66,8 @@ feature -- IL code generation
 	generate_il is
 			-- Generate IL code for unprotected external call argument.
 		do
-			check False end
+			expr.generate_il
+			il_generator.convert_to (type)
 		end
 
 feature -- Byte code generation

@@ -288,16 +288,6 @@ feature {TYPE_CONSUMER} -- Element settings
 		ensure
 			internal_functions_set: internal_functions = func
 		end
-	
-	set_constructors (cons: like constructors) is
-			-- set `constructors' with `cons'.
-		require
-			non_void_constructors: cons /= Void
-		do
-			constructors := cons
-		ensure
-			constructors_set: constructors = cons
-		end
 
 	set_properties (prop: like properties) is
 			-- Set `properties' with `prop'.
@@ -319,6 +309,18 @@ feature {TYPE_CONSUMER} -- Element settings
 			events_set: events = ev
 		end
 		
+feature {TYPE_CONSUMER, ASSEMBLY_CONSUMER} -- Element settings
+	
+	set_constructors (cons: like constructors) is
+			-- set `constructors' with `cons'.
+		require
+			non_void_constructors: cons /= Void
+		do
+			constructors := cons
+		ensure
+			constructors_set: constructors = cons
+		end
+
 feature -- Functions used for easy browsing of data from ConsumerWrapper.
 
 	associated_reference_type: CONSUMED_REFERENCED_TYPE is

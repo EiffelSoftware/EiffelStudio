@@ -18,7 +18,7 @@ inherit
 
 	POLYNOM
 
-creation
+create
 
 	make
 

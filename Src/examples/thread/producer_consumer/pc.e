@@ -12,7 +12,7 @@ inherit
 	THREAD_CONTROL
 			-- For join_all.
 
-creation
+create
 	make
 
 feature -- Customizable parameters
@@ -75,17 +75,17 @@ feature	-- Initialization
 			io.put_string ("Iterations for displaying buffer (0 -> never)")
 			io.read_integer
 			it  :=  io.last_integer
-			!!finished
-			!!p_finished.put (finished)
-			!!buffer.make (size, it, p_finished)
-			!!p_buffer.put (buffer)
+			create finished
+			create p_finished.put (finished)
+			create buffer.make (size, it, p_finished)
+			create p_buffer.put (buffer)
 
 			from
 				i := 1
 			until
 				i > n_p
 			loop
-				!!producer.make (p_buffer, i, p_finished)
+				create producer.make (p_buffer, i, p_finished)
 				i := i + 1
 			end
 			from
@@ -93,7 +93,7 @@ feature	-- Initialization
 			until
 				i > n_c
 			loop
-				!!consumer.make (p_buffer, i,  p_finished)
+				create consumer.make (p_buffer, i,  p_finished)
 				i := i + 1
 			end
 			join_all			

@@ -8,7 +8,7 @@ indexing
 class
 	CALENDAR_TESTER
 
-creation
+create
 
 	make
 
@@ -16,9 +16,9 @@ feature
 
 	make is
 		do
-			!! english_l.make;
-			!! cal.make (english_l, 3)
-			!! date1.make_now
+			create english_l.make;
+			create cal.make (english_l, 3)
+			create date1.make_now
 
 			from
 				test := 'y';

@@ -21,7 +21,7 @@ inherit
 
 	POLYNOM
 
-creation
+create
 
 	make
 
@@ -37,12 +37,12 @@ feature
 			var: VARIABLES;
 			sum: SUM
 		once
-			!!Result.make;
+			create Result.make;
 			Result.forth;
-			!!var.make;
+			create var.make;
 			put (var);
 			keyword (":");
-			!!sum.make;
+			create sum.make;
 			put (sum)
 		end; -- production
 

@@ -18,7 +18,7 @@ inherit
 
 	POLYNOM
 
-creation
+create
 
 	make
 
@@ -36,9 +36,9 @@ feature
 		local
 			base: PRODUCT
 		once
-			!!Result.make;
+			create Result.make;
 			Result.forth;
-			!!base.make;
+			create base.make;
 			put (base)
 		end; -- production
 

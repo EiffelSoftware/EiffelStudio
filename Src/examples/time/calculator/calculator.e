@@ -9,7 +9,7 @@ class
 
 	CALCULATOR
 
-creation
+create
 
 	make
 
@@ -22,7 +22,7 @@ feature -- Initialization
 			command: COMMAND_DATE
 		do
 			print (" CALCULATOR FOR DATES ") print ("%N")
-			!! date2.make_now;
+			create date2.make_now;
 			from
 				test := 'y';
 				initialize_command
@@ -69,16 +69,16 @@ feature -- Initialization
 
 	initialize_command is
 		do
-			!! command_table.make (0);
-			!! add_day;
+			create command_table.make (0);
+			create add_day;
 			command_table.put (add_day, 'd');
-			!! add_month;
+			create add_month;
 			command_table.put (add_month, 'm');
-			!! add_year;
+			create add_year;
 			command_table.put (add_year, 'y');
-			!! add_week;
+			create add_week;
 			command_table.put (add_week, 'w');
-			!! set_date;
+			create set_date;
 			command_table.put (set_date, 's')
 		end;
 			

@@ -18,7 +18,7 @@ inherit
 
 	POLYNOM
 
-creation
+create
 
 	make
 
@@ -33,11 +33,11 @@ feature
 		local
 			expression: SUM
 		once
-			!!Result.make;
+			create Result.make;
 			Result.forth;
 			keyword ("(");
 			commit;
-			!!expression.make;
+			create expression.make;
 			put (expression);
 			keyword (")")
 		end; -- production

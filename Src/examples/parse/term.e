@@ -18,7 +18,7 @@ inherit
 
 	POLYNOM
 
-creation
+create
 
 	make
 
@@ -35,13 +35,13 @@ feature
 			val: POLY_INTEGER;
 			nest: NESTED
 		once
-			!!Result.make;
+			create Result.make;
 			Result.forth;
-			!!id.make;
+			create id.make;
 			put (id);
-			!!val.make;
+			create val.make;
 			put (val);
-			!!nest.make;
+			create nest.make;
 			put (nest)
 		end; -- production
 

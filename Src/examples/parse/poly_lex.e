@@ -43,7 +43,7 @@ feature {NONE}
 	special_expression: STRING is
 			-- Regular expression describing `Special'
 		once
-			!!Result.make (80);
+			create Result.make (80);
 			Result.append ("('\050'..'\057')|");
 			Result.append ("('\072'..'\076')|");
 			Result.append ("'['|']'|'|'|'{'|'}'|%"->%"|%":=%"")

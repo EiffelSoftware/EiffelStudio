@@ -3,7 +3,7 @@ class
 inherit
 	THREAD
 
-creation
+create
 	make
 
 feature

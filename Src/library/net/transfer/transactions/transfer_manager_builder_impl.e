@@ -248,10 +248,10 @@ feature {NONE} -- Implementation
 	transfer_manager: TRANSFER_MANAGER
 			-- The manager
 
-	readable_set: LINKED_SET [STRING]
+	readable_set: BINARY_SEARCH_TREE_SET [STRING]
 			-- Set storing readable adresses
 
-	writable_set: LINKED_SET [STRING]
+	writable_set: BINARY_SEARCH_TREE_SET [STRING]
 			-- Set storing writable adresses
 
 	resource_hash: HASH_TABLE [DATA_RESOURCE, STRING]

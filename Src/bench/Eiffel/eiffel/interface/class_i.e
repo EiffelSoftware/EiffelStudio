@@ -255,12 +255,16 @@ end;
 			-- Assign `d' to `debug_level'.
 		local
 			other_partial, partial: DEBUG_TAG_I;
+			new_partial: DEBUG_TAG_I
 		do
 			if d.is_partial then
 				if debug_level.is_partial then
 					partial ?= debug_level;
 					other_partial ?= d;
-					partial.merge (other_partial);
+					!! new_partial.make;
+					new_partial.merge (partial);
+					new_partial.merge (other_partial);
+					debug_level := new_partial;
 				else
 					debug_level := d;
 				end;

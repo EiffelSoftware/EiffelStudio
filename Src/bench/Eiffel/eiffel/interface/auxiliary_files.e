@@ -9,6 +9,9 @@ class
 
 inherit
 	SHARED_ROUT_ID
+		undefine
+			system
+		end
 
 	SHARED_CODE_FILES
 
@@ -238,17 +241,17 @@ feature -- Plug and Makefile file
 		do
 			local_system := System
 
-			Plug_file.putstring ("%Nint egc_int_ref_dtype = ")
+			Plug_file.putstring ("%Negc_int_ref_dtype = ")
 			Plug_file.putint (system.integer_ref_dtype - 1)
-			Plug_file.putstring (";%Nint egc_bool_ref_dtype = ")
+			Plug_file.putstring (";%Negc_bool_ref_dtype = ")
 			Plug_file.putint (system.boolean_ref_dtype - 1)
-			Plug_file.putstring (";%Nint egc_real_ref_dtype = ")
+			Plug_file.putstring (";%Negc_real_ref_dtype = ")
 			Plug_file.putint (system.real_ref_dtype - 1)
-			Plug_file.putstring (";%Nint egc_char_ref_dtype = ")
+			Plug_file.putstring (";%Negc_char_ref_dtype = ")
 			Plug_file.putint (system.character_ref_dtype - 1)
-			Plug_file.putstring (";%Nint egc_doub_ref_dtype = ")
+			Plug_file.putstring (";%Negc_doub_ref_dtype = ")
 			Plug_file.putint (system.double_ref_dtype - 1)
-			Plug_file.put_string (";%Nint egc_point_ref_dtype = ")
+			Plug_file.put_string (";%Negc_point_ref_dtype = ")
 			Plug_file.put_integer (system.pointer_ref_dtype - 1)
 			Plug_file.put_string (";%N");	
 		end

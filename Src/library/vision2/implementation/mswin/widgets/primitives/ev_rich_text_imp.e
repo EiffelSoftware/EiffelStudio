@@ -259,7 +259,7 @@ feature -- Status report
 			end
 			
 			create Result.make_with_values (a_font,
-				create {EV_COLOR}.make_with_8_bit_rgb (color_ref.red, color_ref.blue, color_ref.green),
+				create {EV_COLOR}.make_with_8_bit_rgb (color_ref.red, color_ref.green, color_ref.blue),
 				character_effects)
 				
 			safe_restore_caret
@@ -865,7 +865,7 @@ feature -- Status setting
 		local
 			wel_character_format: WEL_CHARACTER_FORMAT
 		do	
-			safe_store_caret	
+			safe_store_caret
 			wel_character_format ?= format.implementation
 			check
 				wel_character_format_not_void: wel_character_format /= Void

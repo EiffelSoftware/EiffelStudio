@@ -114,6 +114,22 @@ feature -- Access
 			dir_rewind (directory_pointer);
 		end;
 
+	change_name (new_name: STRING) is
+			-- Change file name to `new_name'
+		require
+			not_new_name_Void: new_name /= Void;
+			file_exists: exists
+		local
+			ext_old_name, ext_new_name: ANY;
+		do
+			ext_old_name := name.to_c;
+			ext_new_name := new_name.to_c;
+			eif_dir_rename ($ext_old_name, $ext_new_name);
+			name := new_name;
+		ensure
+			name_changed: name.is_equal (new_name);
+		end;
+
 feature -- Measurement
 
 	count: INTEGER is
@@ -322,6 +338,14 @@ feature {NONE} -- Implementation
 			-- Is `dir_name' writable?
 		external
 			"C | %"eif_dir.h%""
+		end;
+
+	eif_dir_rename (old_name, new_name: POINTER) is
+			-- Change directory name from `old_name' to `new_name'.
+		external
+			"C | %"eif_file.h%""
+		alias
+			"file_rename"
 		end;
 
 end -- class DIRECTORY

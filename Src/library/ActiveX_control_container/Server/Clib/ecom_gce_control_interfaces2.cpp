@@ -15,6 +15,110 @@ ecom_gce_control_interfaces2::ecom_gce_control_interfaces2(  )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_array_olecmd
+    (EIF_POINTER an_array, EIF_INTEGER element_count, EIF_OBJECT an_object)
+
+// Create Eiffel ARRAY from C array of OLECMD.
+{
+  EIF_GET_CONTEXT
+  EIF_OBJECT result = 0, intermediate_array = 0;
+
+  static EIF_TYPE_ID type_id = -1;
+  
+  EIF_PROCEDURE make = 0, put = 0;
+  int i = 0;
+  OLECMD * an_array_element = 0;
+
+  if (-1 == type_id)
+    type_id = eif_type_id ("ARRAY [X_TAG_OLECMD_RECORD]");
+  
+  make = eif_procedure ("make", type_id);
+  put = eif_procedure ("put", type_id);
+
+
+  if ((an_object == NULL) || (eif_access (an_object) == NULL))
+  {
+    intermediate_array = eif_create (type_id);
+    nstcall = 0;
+    (FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+        EIF_INTEGER))make)(eif_access (intermediate_array), 1, element_count);
+  }
+  else
+    intermediate_array = an_object;
+
+  EIF_OBJECT eif_object_buf = 0;
+
+  for (i = 0; i < element_count; i++)
+  {
+    an_array_element = (OLECMD *)&(ccom_c_array_element (an_array, i, OLECMD));
+    eif_object_buf = eif_protect (ccom_ce_pointed_record_466 ((ecom_control_library::_tagOLECMD *)an_array_element));
+    (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+        EIF_INTEGER))put)(eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
+    eif_wean (eif_object_buf);
+  }
+
+  if ((an_object == NULL) || (eif_access (an_object) == NULL))
+  {
+    result = intermediate_array;
+    return eif_wean (result);
+  }
+  else
+    return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_array_formatetc
+    (EIF_POINTER an_array, EIF_INTEGER element_count, EIF_OBJECT an_object)
+
+// Create Eiffel ARRAY from C array of FORMATETC.
+{
+  EIF_GET_CONTEXT
+  EIF_OBJECT result = 0, intermediate_array = 0;
+
+  static EIF_TYPE_ID type_id = -1;
+  
+  EIF_PROCEDURE make = 0, put = 0;
+  int i = 0;
+  FORMATETC * an_array_element = 0;
+
+  if (-1 == type_id)
+    type_id = eif_type_id ("ARRAY [TAG_FORMATETC_RECORD]");
+  
+  make = eif_procedure ("make", type_id);
+  put = eif_procedure ("put", type_id);
+
+
+  if ((an_object == NULL) || (eif_access (an_object) == NULL))
+  {
+    intermediate_array = eif_create (type_id);
+    nstcall = 0;
+    (FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER,
+        EIF_INTEGER))make)(eif_access (intermediate_array), 1, element_count);
+  }
+  else
+    intermediate_array = an_object;
+
+  EIF_OBJECT eif_object_buf = 0;
+
+  for (i = 0; i < element_count; i++)
+  {
+    an_array_element = (FORMATETC *)&(ccom_c_array_element (an_array, i, FORMATETC));
+    eif_object_buf = eif_protect (ccom_ce_pointed_record_2 ((ecom_control_library::tagFORMATETC *)an_array_element));
+    (FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
+        EIF_INTEGER))put)(eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
+    eif_wean (eif_object_buf);
+  }
+
+  if ((an_object == NULL) || (eif_access (an_object) == NULL))
+  {
+    result = intermediate_array;
+    return eif_wean (result);
+  }
+  else
+    return NULL;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_record_tag_formatetc_record1( ecom_control_library::tagFORMATETC a_record )
 
 /*-----------------------------------------------------------
@@ -48,81 +152,16 @@ EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_record_x_user_stgmedium_reco
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_pointed_record_5( ecom_control_library::_userSTGMEDIUM * a_record_pointer )
+EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_pointed_record_5( STGMEDIUM * a_record_pointer )
 
 /*-----------------------------------------------------------
-  Convert ecom_control_library::_userSTGMEDIUM *  to X_USER_STGMEDIUM_RECORD.
+  Convert STGMEDIUM *  to STGMEDIUM_RECORD.
 -----------------------------------------------------------*/
 {
   if (a_record_pointer != NULL)
-    return rt_ce.ccom_ce_pointed_record (a_record_pointer, "X_USER_STGMEDIUM_RECORD");
+    return rt_ce.ccom_ce_pointed_record (a_record_pointer, "STGMEDIUM_RECORD");
   else
     return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_alias_wire_async_stgmedium_alias3( ecom_control_library::wireASYNC_STGMEDIUM an_alias )
-
-/*-----------------------------------------------------------
-  Convert ecom_control_library::wireASYNC_STGMEDIUM  to WIRE_ASYNC_STGMEDIUM_ALIAS.
------------------------------------------------------------*/
-{
-  EIF_TYPE_ID type_id = -1;
-  EIF_PROCEDURE make = 0;
-  EIF_OBJECT result = 0;
-
-  type_id = eif_type_id ("WIRE_ASYNC_STGMEDIUM_ALIAS");
-  result = eif_create (type_id);
-  make = eif_procedure ("make_from_alias", type_id);
-
-  make (eif_access (result), grt_ce_control_interfaces2.ccom_ce_pointed_record_5 (an_alias));
-
-  return eif_wean (result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_pointed_cell_6( ecom_control_library::wireASYNC_STGMEDIUM * a_pointer, EIF_OBJECT an_object )
-
-/*-----------------------------------------------------------
-  Convert ecom_control_library::wireASYNC_STGMEDIUM *  to CELL [WIRE_ASYNC_STGMEDIUM_ALIAS].
------------------------------------------------------------*/
-{
-  EIF_TYPE_ID type_id = -1;
-  EIF_PROCEDURE set_item = 0;
-  EIF_OBJECT result = 0;
-  EIF_OBJECT tmp_object = 0;
-
-  type_id = eif_type_id ("CELL [WIRE_ASYNC_STGMEDIUM_ALIAS]");
-  set_item = eif_procedure ("put", type_id);
-
-  if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-  {
-    result = eif_create (type_id);
-  }
-  else
-    result = an_object;
-  if (*(ecom_control_library::wireASYNC_STGMEDIUM *) a_pointer != NULL)
-    tmp_object = eif_protect (ccom_ce_alias_wire_async_stgmedium_alias3 (*(ecom_control_library::wireASYNC_STGMEDIUM *) a_pointer));
-  set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-  if (tmp_object != NULL)
-    eif_wean (tmp_object);
-  if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-    return eif_wean (result);
-  else
-    return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_control_interfaces2::ccom_free_memory_pointed_6( ecom_control_library::wireASYNC_STGMEDIUM * a_pointer )
-
-/*-----------------------------------------------------------
-  Free memory of ecom_control_library::wireASYNC_STGMEDIUM *.
------------------------------------------------------------*/
-{
-  if (a_pointer != NULL)
-  {
-    CoTaskMemFree (a_pointer);
-  };
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -1640,62 +1679,11 @@ void ecom_gce_control_interfaces2::ccom_free_memory_pointed_112( ::IEnumSTATDATA
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_alias_wire_stgmedium_alias113( ecom_control_library::wireSTGMEDIUM an_alias )
+
+void ecom_gce_control_interfaces2::ccom_free_memory_pointed_114( ecom_control_library::_userSTGMEDIUM * * a_pointer )
 
 /*-----------------------------------------------------------
-  Convert ecom_control_library::wireSTGMEDIUM  to WIRE_STGMEDIUM_ALIAS.
------------------------------------------------------------*/
-{
-  EIF_TYPE_ID type_id = -1;
-  EIF_PROCEDURE make = 0;
-  EIF_OBJECT result = 0;
-
-  type_id = eif_type_id ("WIRE_STGMEDIUM_ALIAS");
-  result = eif_create (type_id);
-  make = eif_procedure ("make_from_alias", type_id);
-
-  make (eif_access (result), grt_ce_control_interfaces2.ccom_ce_pointed_record_5 (an_alias));
-
-  return eif_wean (result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_pointed_cell_114( ecom_control_library::wireSTGMEDIUM * a_pointer, EIF_OBJECT an_object )
-
-/*-----------------------------------------------------------
-  Convert ecom_control_library::wireSTGMEDIUM *  to CELL [WIRE_STGMEDIUM_ALIAS].
------------------------------------------------------------*/
-{
-  EIF_TYPE_ID type_id = -1;
-  EIF_PROCEDURE set_item = 0;
-  EIF_OBJECT result = 0;
-  EIF_OBJECT tmp_object = 0;
-
-  type_id = eif_type_id ("CELL [WIRE_STGMEDIUM_ALIAS]");
-  set_item = eif_procedure ("put", type_id);
-
-  if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-  {
-    result = eif_create (type_id);
-  }
-  else
-    result = an_object;
-  if (*(ecom_control_library::wireSTGMEDIUM *) a_pointer != NULL)
-    tmp_object = eif_protect (ccom_ce_alias_wire_stgmedium_alias113 (*(ecom_control_library::wireSTGMEDIUM *) a_pointer));
-  set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
-  if (tmp_object != NULL)
-    eif_wean (tmp_object);
-  if ((an_object  ==  NULL) || (eif_access (an_object)  ==  NULL))
-    return eif_wean (result);
-  else
-    return NULL;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_gce_control_interfaces2::ccom_free_memory_pointed_114( ecom_control_library::wireSTGMEDIUM * a_pointer )
-
-/*-----------------------------------------------------------
-  Free memory of ecom_control_library::wireSTGMEDIUM *.
+  Free memory of ecom_control_library::_userSTGMEDIUM * *.
 -----------------------------------------------------------*/
 {
   if (a_pointer != NULL)
@@ -1728,10 +1716,10 @@ EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_pointed_record_117( ecom_con
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_alias_wire_flag_stgmedium_alias115( ecom_control_library::wireFLAG_STGMEDIUM an_alias )
+EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_alias_wire_flag_stgmedium_alias115( ecom_control_library::_userFLAG_STGMEDIUM * an_alias )
 
 /*-----------------------------------------------------------
-  Convert ecom_control_library::wireFLAG_STGMEDIUM  to WIRE_FLAG_STGMEDIUM_ALIAS.
+  Convert ecom_control_library::_userFLAG_STGMEDIUM *  to WIRE_FLAG_STGMEDIUM_ALIAS.
 -----------------------------------------------------------*/
 {
   EIF_TYPE_ID type_id = -1;
@@ -1748,10 +1736,10 @@ EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_alias_wire_flag_stgmedium_al
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_pointed_cell_118( ecom_control_library::wireFLAG_STGMEDIUM * a_pointer, EIF_OBJECT an_object )
+EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_pointed_cell_118( ecom_control_library::_userFLAG_STGMEDIUM * * a_pointer, EIF_OBJECT an_object )
 
 /*-----------------------------------------------------------
-  Convert ecom_control_library::wireFLAG_STGMEDIUM *  to CELL [WIRE_FLAG_STGMEDIUM_ALIAS].
+  Convert ecom_control_library::_userFLAG_STGMEDIUM * *  to CELL [WIRE_FLAG_STGMEDIUM_ALIAS].
 -----------------------------------------------------------*/
 {
   EIF_TYPE_ID type_id = -1;
@@ -1768,8 +1756,8 @@ EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_pointed_cell_118( ecom_contr
   }
   else
     result = an_object;
-  if (*(ecom_control_library::wireFLAG_STGMEDIUM *) a_pointer != NULL)
-    tmp_object = eif_protect (ccom_ce_alias_wire_flag_stgmedium_alias115 (*(ecom_control_library::wireFLAG_STGMEDIUM *) a_pointer));
+  if (*(ecom_control_library::_userFLAG_STGMEDIUM * *) a_pointer != NULL)
+    tmp_object = eif_protect (ccom_ce_alias_wire_flag_stgmedium_alias115 (*(ecom_control_library::_userFLAG_STGMEDIUM * *) a_pointer));
   set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));
   if (tmp_object != NULL)
     eif_wean (tmp_object);
@@ -1780,10 +1768,10 @@ EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_pointed_cell_118( ecom_contr
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_gce_control_interfaces2::ccom_free_memory_pointed_118( ecom_control_library::wireFLAG_STGMEDIUM * a_pointer )
+void ecom_gce_control_interfaces2::ccom_free_memory_pointed_118( ecom_control_library::_userFLAG_STGMEDIUM * * a_pointer )
 
 /*-----------------------------------------------------------
-  Free memory of ecom_control_library::wireFLAG_STGMEDIUM *.
+  Free memory of ecom_control_library::_userFLAG_STGMEDIUM * *.
 -----------------------------------------------------------*/
 {
   if (a_pointer != NULL)
@@ -6213,23 +6201,13 @@ EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_pointed_interface_404( IFont
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_alias_wire_hpalette_alias405( ecom_control_library::wireHPALETTE an_alias )
+EIF_POINTER ecom_gce_control_interfaces2::ccom_ce_alias_wire_hpalette_alias405( HPALETTE an_alias )
 
 /*-----------------------------------------------------------
   Convert ecom_control_library::wireHPALETTE  to WIRE_HPALETTE_ALIAS.
 -----------------------------------------------------------*/
 {
-  EIF_TYPE_ID type_id = -1;
-  EIF_PROCEDURE make = 0;
-  EIF_OBJECT result = 0;
-
-  type_id = eif_type_id ("WIRE_HPALETTE_ALIAS");
-  result = eif_create (type_id);
-  make = eif_procedure ("make_from_alias", type_id);
-
-  make (eif_access (result), grt_ce_control_interfaces2.ccom_ce_pointed_record_38 (an_alias));
-
-  return eif_wean (result);
+  return (EIF_POINTER)an_alias;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

@@ -288,7 +288,12 @@ public:
   -----------------------------------------------------------*/
   EIF_REFERENCE ccom_ce_pointed_record_2( ecom_control_library::tagFORMATETC * a_record_pointer );
 
-
+  /*-----------------------------------------------------------
+  Convert FORMATETC []  to ARRAY [TAG_FORMATETC_RECORD].
+  -----------------------------------------------------------*/
+  EIF_REFERENCE ecom_gce_control_interfaces2::ccom_ce_array_formatetc
+    (EIF_POINTER an_array, EIF_INTEGER element_count, EIF_OBJECT an_object);
+    
   /*-----------------------------------------------------------
   Convert ecom_control_library::_userSTGMEDIUM  to X_USER_STGMEDIUM_RECORD.
   -----------------------------------------------------------*/
@@ -296,27 +301,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::_userSTGMEDIUM *  to X_USER_STGMEDIUM_RECORD.
+  Convert STGMEDIUM *  to STGMEDIUM_RECORD.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_record_5( ecom_control_library::_userSTGMEDIUM * a_record_pointer );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::wireASYNC_STGMEDIUM  to WIRE_ASYNC_STGMEDIUM_ALIAS.
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_alias_wire_async_stgmedium_alias3( ecom_control_library::wireASYNC_STGMEDIUM an_alias );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::wireASYNC_STGMEDIUM *  to CELL [WIRE_ASYNC_STGMEDIUM_ALIAS].
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_6( ecom_control_library::wireASYNC_STGMEDIUM * a_pointer, EIF_OBJECT an_object );
-
-
-  /*-----------------------------------------------------------
-  Free memory of ecom_control_library::wireASYNC_STGMEDIUM *.
-  -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_6( ecom_control_library::wireASYNC_STGMEDIUM * a_pointer );
+  EIF_REFERENCE ccom_ce_pointed_record_5( STGMEDIUM * a_record_pointer );
 
 
   /*-----------------------------------------------------------
@@ -974,21 +961,9 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::wireSTGMEDIUM  to WIRE_STGMEDIUM_ALIAS.
+  Free memory of ecom_control_library::_userSTGMEDIUM * *.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_alias_wire_stgmedium_alias113( ecom_control_library::wireSTGMEDIUM an_alias );
-
-
-  /*-----------------------------------------------------------
-  Convert ecom_control_library::wireSTGMEDIUM *  to CELL [WIRE_STGMEDIUM_ALIAS].
-  -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_114( ecom_control_library::wireSTGMEDIUM * a_pointer, EIF_OBJECT an_object );
-
-
-  /*-----------------------------------------------------------
-  Free memory of ecom_control_library::wireSTGMEDIUM *.
-  -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_114( ecom_control_library::wireSTGMEDIUM * a_pointer );
+  void ccom_free_memory_pointed_114( ecom_control_library::_userSTGMEDIUM * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -1004,21 +979,21 @@ public:
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::wireFLAG_STGMEDIUM  to WIRE_FLAG_STGMEDIUM_ALIAS.
+  Convert ecom_control_library::_userFLAG_STGMEDIUM *  to WIRE_FLAG_STGMEDIUM_ALIAS.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_alias_wire_flag_stgmedium_alias115( ecom_control_library::wireFLAG_STGMEDIUM an_alias );
+  EIF_REFERENCE ccom_ce_alias_wire_flag_stgmedium_alias115( ecom_control_library::_userFLAG_STGMEDIUM * an_alias );
 
 
   /*-----------------------------------------------------------
-  Convert ecom_control_library::wireFLAG_STGMEDIUM *  to CELL [WIRE_FLAG_STGMEDIUM_ALIAS].
+  Convert ecom_control_library::_userFLAG_STGMEDIUM * *  to CELL [WIRE_FLAG_STGMEDIUM_ALIAS].
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_pointed_cell_118( ecom_control_library::wireFLAG_STGMEDIUM * a_pointer, EIF_OBJECT an_object );
+  EIF_REFERENCE ccom_ce_pointed_cell_118( ecom_control_library::_userFLAG_STGMEDIUM * * a_pointer, EIF_OBJECT an_object );
 
 
   /*-----------------------------------------------------------
-  Free memory of ecom_control_library::wireFLAG_STGMEDIUM *.
+  Free memory of ecom_control_library::_userFLAG_STGMEDIUM * *.
   -----------------------------------------------------------*/
-  void ccom_free_memory_pointed_118( ecom_control_library::wireFLAG_STGMEDIUM * a_pointer );
+  void ccom_free_memory_pointed_118( ecom_control_library::_userFLAG_STGMEDIUM * * a_pointer );
 
 
   /*-----------------------------------------------------------
@@ -2716,7 +2691,7 @@ public:
   /*-----------------------------------------------------------
   Convert ecom_control_library::wireHPALETTE  to WIRE_HPALETTE_ALIAS.
   -----------------------------------------------------------*/
-  EIF_REFERENCE ccom_ce_alias_wire_hpalette_alias405( ecom_control_library::wireHPALETTE an_alias );
+  EIF_POINTER ccom_ce_alias_wire_hpalette_alias405( HPALETTE an_alias );
 
 
   /*-----------------------------------------------------------
@@ -3096,6 +3071,11 @@ public:
   -----------------------------------------------------------*/
   EIF_REFERENCE ccom_ce_pointed_record_466( ecom_control_library::_tagOLECMD * a_record_pointer );
 
+
+  /*-----------------------------------------------------------
+  Convert ecom_control_library::_tagOLECMD []  to ARRAY [X_TAG_OLECMD_RECORD].
+  -----------------------------------------------------------*/
+  EIF_REFERENCE ccom_ce_array_olecmd(EIF_POINTER an_array, EIF_INTEGER element_count, EIF_OBJECT an_object);
 
   /*-----------------------------------------------------------
   Convert ecom_control_library::_tagOLECMDTEXT  to X_TAG_OLECMDTEXT_RECORD.

@@ -15,6 +15,113 @@ ecom_gec_control_interfaces2::ecom_gec_control_interfaces2(  )
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+
+OLECMD * ecom_gec_control_interfaces2::ccom_ec_array_olecmd (EIF_REFERENCE a_ref, OLECMD * old)
+
+// Create C array of OLECMD from Eiffel array.
+{
+  EIF_OBJECT e_array = 0;
+
+  static EIF_TYPE_ID tid = -1;
+  
+  EIF_REFERENCE_FUNCTION f_item = 0;
+  EIF_INTEGER_FUNCTION f_capacity = 0;
+
+  OLECMD * c_array = 0;
+  OLECMD * p_element = 0;
+  int capacity = 0, i = 0;
+
+  e_array = eif_protect (a_ref);
+
+  if (-1 == tid)
+    tid = eif_type_id ("ARRAY[X_TAG_OLECMD_RECORD]");
+
+  f_item = eif_reference_function ("item", tid);
+  f_capacity = eif_integer_function ("count", tid);
+
+  // Allocate memory 
+  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
+
+  if (NULL != old)
+  {
+    c_array = old;
+  }
+  else
+  {
+    c_array = (OLECMD *) CoTaskMemAlloc (capacity * (sizeof (OLECMD)));
+  }
+
+  for (i = 0; i < capacity; i++)
+  {
+    p_element = (OLECMD *) ccom_ec_pointed_record_466 ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
+        (eif_access(e_array), ((EIF_INTEGER)(i+1))));
+    memcpy (((OLECMD *) c_array + i), p_element, sizeof (OLECMD));
+  }
+
+  eif_wean (e_array);
+
+  if (old != NULL)
+  {
+    return NULL;
+  }
+  else
+    return c_array;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+FORMATETC * ecom_gec_control_interfaces2::ccom_ec_array_formatetc (EIF_REFERENCE a_ref, FORMATETC * old)
+
+// Create C array of FORMATETC from Eiffel array.
+{
+  EIF_OBJECT e_array = 0;
+
+  static EIF_TYPE_ID tid = -1;
+  
+  EIF_REFERENCE_FUNCTION f_item = 0;
+  EIF_INTEGER_FUNCTION f_capacity = 0;
+
+  FORMATETC * c_array = 0;
+  FORMATETC * p_element = 0;
+  int capacity = 0, i = 0;
+
+  e_array = eif_protect (a_ref);
+
+  if (-1 == tid)
+    tid = eif_type_id ("ARRAY [TAG_FORMATETC_RECORD]");
+
+  f_item = eif_reference_function ("item", tid);
+  f_capacity = eif_integer_function ("count", tid);
+
+  // Allocate memory 
+  capacity = (int)(FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))f_capacity)(eif_access(e_array));
+
+  if (NULL != old)
+  {
+    c_array = old;
+  }
+  else
+  {
+    c_array = (FORMATETC *) CoTaskMemAlloc (capacity * (sizeof (FORMATETC)));
+  }
+
+  for (i = 0; i < capacity; i++)
+  {
+    p_element = (FORMATETC *) ccom_ec_pointed_record_2 ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
+        (eif_access(e_array), ((EIF_INTEGER)(i+1))));
+    memcpy (((FORMATETC *) c_array + i), p_element, sizeof (OLECMD));
+  }
+
+  eif_wean (e_array);
+
+  if (old != NULL)
+  {
+    return NULL;
+  }
+  else
+    return c_array;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 ecom_control_library::tagFORMATETC ecom_gec_control_interfaces2::ccom_ec_record_tag_formatetc_record1( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
@@ -91,10 +198,10 @@ ecom_control_library::_userSTGMEDIUM * ecom_gec_control_interfaces2::ccom_ec_poi
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_control_library::wireASYNC_STGMEDIUM ecom_gec_control_interfaces2::ccom_ec_alias_wire_async_stgmedium_alias3( EIF_REFERENCE eif_ref )
+ecom_control_library::_userSTGMEDIUM * ecom_gec_control_interfaces2::ccom_ec_alias_wire_async_stgmedium_alias3( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-  Convert WIRE_ASYNC_STGMEDIUM_ALIAS to ecom_control_library::wireASYNC_STGMEDIUM.
+  Convert WIRE_ASYNC_STGMEDIUM_ALIAS to ecom_control_library::_userSTGMEDIUM *.
 -----------------------------------------------------------*/
 {
   EIF_OBJECT eif_object = 0;
@@ -114,21 +221,21 @@ ecom_control_library::wireASYNC_STGMEDIUM ecom_gec_control_interfaces2::ccom_ec_
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_control_library::wireASYNC_STGMEDIUM * ecom_gec_control_interfaces2::ccom_ec_pointed_cell_6( EIF_REFERENCE eif_ref, ecom_control_library::wireASYNC_STGMEDIUM * old )
+ecom_control_library::_userSTGMEDIUM * * ecom_gec_control_interfaces2::ccom_ec_pointed_cell_6( EIF_REFERENCE eif_ref, ecom_control_library::_userSTGMEDIUM * * old )
 
 /*-----------------------------------------------------------
-  Convert CELL [WIRE_ASYNC_STGMEDIUM_ALIAS] to ecom_control_library::wireASYNC_STGMEDIUM *.
+  Convert CELL [WIRE_ASYNC_STGMEDIUM_ALIAS] to ecom_control_library::_userSTGMEDIUM * *.
 -----------------------------------------------------------*/
 {
   EIF_OBJECT eif_object = 0;
-  ecom_control_library::wireASYNC_STGMEDIUM * result = 0;
+  ecom_control_library::_userSTGMEDIUM * * result = 0;
   EIF_REFERENCE cell_item = 0;
 
   eif_object = eif_protect (eif_ref);
   if (old != NULL)
     result = old;
   else
-    result = (ecom_control_library::wireASYNC_STGMEDIUM *) CoTaskMemAlloc (sizeof (ecom_control_library::wireASYNC_STGMEDIUM));
+    result = (ecom_control_library::_userSTGMEDIUM * *) CoTaskMemAlloc (sizeof (ecom_control_library::_userSTGMEDIUM *));
   cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
   if (cell_item != NULL)
     *result = ccom_ec_alias_wire_async_stgmedium_alias3 (cell_item);
@@ -1727,10 +1834,10 @@ LPWSTR * ecom_gec_control_interfaces2::ccom_ec_pointed_cell_103( EIF_REFERENCE e
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_control_library::wireSTGMEDIUM ecom_gec_control_interfaces2::ccom_ec_alias_wire_stgmedium_alias113( EIF_REFERENCE eif_ref )
+ecom_control_library::_userSTGMEDIUM * ecom_gec_control_interfaces2::ccom_ec_alias_wire_stgmedium_alias113( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-  Convert WIRE_STGMEDIUM_ALIAS to ecom_control_library::wireSTGMEDIUM.
+  Convert WIRE_STGMEDIUM_ALIAS to ecom_control_library::_userSTGMEDIUM *.
 -----------------------------------------------------------*/
 {
   EIF_OBJECT eif_object = 0;
@@ -1750,21 +1857,21 @@ ecom_control_library::wireSTGMEDIUM ecom_gec_control_interfaces2::ccom_ec_alias_
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_control_library::wireSTGMEDIUM * ecom_gec_control_interfaces2::ccom_ec_pointed_cell_114( EIF_REFERENCE eif_ref, ecom_control_library::wireSTGMEDIUM * old )
+ecom_control_library::_userSTGMEDIUM * * ecom_gec_control_interfaces2::ccom_ec_pointed_cell_114( EIF_REFERENCE eif_ref, ecom_control_library::_userSTGMEDIUM * * old )
 
 /*-----------------------------------------------------------
-  Convert CELL [WIRE_STGMEDIUM_ALIAS] to ecom_control_library::wireSTGMEDIUM *.
+  Convert CELL [WIRE_STGMEDIUM_ALIAS] to ecom_control_library::_userSTGMEDIUM * *.
 -----------------------------------------------------------*/
 {
   EIF_OBJECT eif_object = 0;
-  ecom_control_library::wireSTGMEDIUM * result = 0;
+  ecom_control_library::_userSTGMEDIUM * * result = 0;
   EIF_REFERENCE cell_item = 0;
 
   eif_object = eif_protect (eif_ref);
   if (old != NULL)
     result = old;
   else
-    result = (ecom_control_library::wireSTGMEDIUM *) CoTaskMemAlloc (sizeof (ecom_control_library::wireSTGMEDIUM));
+    result = (ecom_control_library::_userSTGMEDIUM * *) CoTaskMemAlloc (sizeof (ecom_control_library::_userSTGMEDIUM *));
   cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
   if (cell_item != NULL)
     *result = ccom_ec_alias_wire_stgmedium_alias113 (cell_item);
@@ -1811,10 +1918,10 @@ ecom_control_library::_userFLAG_STGMEDIUM * ecom_gec_control_interfaces2::ccom_e
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_control_library::wireFLAG_STGMEDIUM ecom_gec_control_interfaces2::ccom_ec_alias_wire_flag_stgmedium_alias115( EIF_REFERENCE eif_ref )
+ecom_control_library::_userFLAG_STGMEDIUM * ecom_gec_control_interfaces2::ccom_ec_alias_wire_flag_stgmedium_alias115( EIF_REFERENCE eif_ref )
 
 /*-----------------------------------------------------------
-  Convert WIRE_FLAG_STGMEDIUM_ALIAS to ecom_control_library::wireFLAG_STGMEDIUM.
+  Convert WIRE_FLAG_STGMEDIUM_ALIAS to ecom_control_library::_userFLAG_STGMEDIUM *.
 -----------------------------------------------------------*/
 {
   EIF_OBJECT eif_object = 0;
@@ -1834,21 +1941,21 @@ ecom_control_library::wireFLAG_STGMEDIUM ecom_gec_control_interfaces2::ccom_ec_a
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_control_library::wireFLAG_STGMEDIUM * ecom_gec_control_interfaces2::ccom_ec_pointed_cell_118( EIF_REFERENCE eif_ref, ecom_control_library::wireFLAG_STGMEDIUM * old )
+ecom_control_library::_userFLAG_STGMEDIUM * * ecom_gec_control_interfaces2::ccom_ec_pointed_cell_118( EIF_REFERENCE eif_ref, ecom_control_library::_userFLAG_STGMEDIUM * * old )
 
 /*-----------------------------------------------------------
-  Convert CELL [WIRE_FLAG_STGMEDIUM_ALIAS] to ecom_control_library::wireFLAG_STGMEDIUM *.
+  Convert CELL [WIRE_FLAG_STGMEDIUM_ALIAS] to ecom_control_library::_userFLAG_STGMEDIUM * *.
 -----------------------------------------------------------*/
 {
   EIF_OBJECT eif_object = 0;
-  ecom_control_library::wireFLAG_STGMEDIUM * result = 0;
+  ecom_control_library::_userFLAG_STGMEDIUM * * result = 0;
   EIF_REFERENCE cell_item = 0;
 
   eif_object = eif_protect (eif_ref);
   if (old != NULL)
     result = old;
   else
-    result = (ecom_control_library::wireFLAG_STGMEDIUM *) CoTaskMemAlloc (sizeof (ecom_control_library::wireFLAG_STGMEDIUM));
+    result = (ecom_control_library::_userFLAG_STGMEDIUM * *) CoTaskMemAlloc (sizeof (ecom_control_library::_userFLAG_STGMEDIUM *));
   cell_item = eif_field (eif_access (eif_object), "item", EIF_REFERENCE);
   if (cell_item != NULL)
     *result = ccom_ec_alias_wire_flag_stgmedium_alias115 (cell_item);

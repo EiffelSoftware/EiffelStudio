@@ -14,14 +14,17 @@ class
 inherit
 	EV_COMBO_BOX_I
 		undefine
-			set_default_minimum_size
+			selected_item
+			--set_default_minimum_size
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	EV_LIST_ITEM_HOLDER_IMP
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	EV_TEXT_COMPONENT_IMP
@@ -50,7 +53,8 @@ inherit
 			set_editable,
 			on_key_down,
 --			on_key_up
-			interface
+			interface,
+			initialize
 		end
 		
 	WEL_DROP_DOWN_COMBO_BOX_EX
@@ -120,6 +124,12 @@ feature {NONE} -- Initialization
 			internal_window_make (default_parent, Void, default_style + Cbs_dropdown,
 				0, 0, 0, 90, 0, default_pointer)
  			id := 0
+		end
+
+	initialize is
+			-- Initialize combo box.
+		do
+			{EV_TEXT_COMPONENT_IMP} Precursor
 			create text_field.make_with_combo (Current)
 			create combo.make_with_combo (Current)
 			create ev_children.make (2)
@@ -212,7 +222,8 @@ feature -- Status setting
 			if (not selected) or (selected and then not equal (wel_selected_item, an_index - 1)) then
 					-- Only select an item if it is not already selected.
 				if selected then
-					execute_command (Cmd_unselect, Void)
+					--|FIXME Old event system
+					--|execute_command (Cmd_unselect, Void)
 				end
 				wel_select_item (an_index - 1)
 				old_selected_item := ev_children @ (index)
@@ -221,7 +232,8 @@ feature -- Status setting
 					-- it as specified by user.
 					cwin_send_message (parent_item, Wm_command, Cbn_selchange * 65536 + id,
 					cwel_pointer_to_integer (wel_item))
-				execute_command (Cmd_select, Void)
+					--|FIXME Old event system
+					--|execute_command (Cmd_select, Void)
 				-- Must now manually inform the combo box that a selection is taking place.
 			end
 		end
@@ -422,8 +434,8 @@ feature {NONE} -- Implementation
 				-- We create the new combo.
   				internal_window_make (par_imp, Void, default_style + Cbs_dropdown,
 					a, b, c, 90, 0, default_pointer)
- 	 			id := 0
-				create text_field.make_with_combo (Current)
+ 	 			id := 0create text_field.make_with_combo (Current)
+				
 				internal_copy_list
 			end
 		end
@@ -468,7 +480,8 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 				if selected and equal (text, selected_item.text) and (virtual_key /= 9) and
 					(virtual_key /= 40) and (virtual_key /= 38) then
 					clear_selection
-					execute_command (Cmd_unselect, Void)
+					--|FIXME Old event system
+					--|execute_command (Cmd_unselect, Void)
 				end
 			end
 		end
@@ -493,8 +506,9 @@ feature {NONE} -- WEL Implementation
 			-- or has selected an item from the control's drop-down list.
 		do
 			if info.why = Cbenf_return then
-				set_caret_position (0)
-				execute_command (Cmd_activate, Void)
+				set_caret_position (1)
+				--|FIXME Old event system
+				--| exectue_command (Cmd_activate, Void)
 			end
 		end
 
@@ -506,7 +520,8 @@ feature {NONE} -- WEL Implementation
 					if old_selected_item /= Void then
 						--|FIXME The events have changed
 						--old_selected_item.execute_command (Cmd_item_deactivate, Void)
-						execute_command (Cmd_unselect, Void)
+						--|FIXME Old event system
+						--|execute_command (Cmd_unselect, Void)
 					end
 	
 						-- Only performed if an item is selected and the new selection is not equal to
@@ -514,7 +529,8 @@ feature {NONE} -- WEL Implementation
 					old_selected_item := ev_children.i_th (wel_selected_item + 1)
 					--|FIXME The events have changed
 					--old_selected_item.execute_command (Cmd_item_activate, Void)
-					execute_command (Cmd_select, Void)
+					--|FIXME Old event system
+					--|execute_command (Cmd_select, Void)
 						-- Must now manually inform combo box that a selection is taking place
 				elseif wel_selected_item/= Void and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
 					old_selected_item := Void
@@ -538,7 +554,8 @@ feature {NONE} -- WEL Implementation
 			s1,s2: STRING
 		do
 			if not equal (text, last_edit_change) then
-				execute_command (Cmd_change, Void)
+				--|FIXME Old event system
+				--|execute_command (Cmd_change, Void)
 			end
 			last_edit_change := text
 		end
@@ -652,6 +669,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/03/01 16:39:10  rogers
+--| Redfined initialize, commented out old command association.
+--|
 --| Revision 1.53  2000/02/19 06:34:13  oconnor
 --| removed old command stuff
 --|

@@ -425,9 +425,11 @@ feature {NONE} -- Implementation
 			vd21: VD21;
 			class_id: INTEGER
 		do
+				-- If associated file text is not present, then we use the one we have stored,
+				-- instead of generating a useless VD21 error.
 			if
 				current_class.is_precompiled
-				or else not current_class.lace_class.date_has_changed
+				or else not (current_class.lace_class.exists and then current_class.lace_class.date_has_changed)
 			then
 debug ("FLAT_SHORT")
 	io.error.putstring ("Retrieving class ast: ");

@@ -71,7 +71,7 @@ DWORD CALLBACK cwel_editstream_out_callback (DWORD dwCookie, LPBYTE pbBuff, LONG
 	{
 		DWORD result;
 
-		eif_str_buffer = eif_make_string (pbBuff, cb);
+		eif_str_buffer = eif_make_string ((char *) pbBuff, cb);
 		* pcb = cb;
 
 		/* Call the Eiffel routine `internal_callback'. */

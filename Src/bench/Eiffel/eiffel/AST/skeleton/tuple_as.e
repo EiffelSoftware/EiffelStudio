@@ -11,6 +11,11 @@ inherit
 			type_check, byte_node, is_equivalent
 		end
 
+	SHARED_INSTANTIATOR
+		export
+			{NONE} all
+		end
+
 feature -- Visitor
 
 	process (v: AST_VISITOR) is
@@ -70,6 +75,8 @@ feature -- Type check, byte code, dead code removal and formatter
 			end
 				-- Update type stack
 			create tuple_type.make (System.tuple_id, generics)
+
+			Instantiator.dispatch (tuple_type, Context.current_class)
 
 			context.replace (tuple_type)
 				-- Update the tuple type stack

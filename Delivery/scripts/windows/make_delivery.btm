@@ -1,12 +1,12 @@
 @echo off
+set OLD_PATH=%PATH
+set OLD_EIFFEL_SRC=%EIFFEL_SRC
+set INIT_DIR=%@EXECSTR[cd]
 call set_aliases.btm
 remtrace Set up the environment
 on break goto broken
 TIMER ON /1 >> NUL
 TIMER ON /2 >> NUL
-set OLD_PATH=%PATH
-set OLD_EIFFEL_SRC=%EIFFEL_SRC
-set INIT_DIR=%@EXECSTR[cd]
 iff %@INDEX[%@LOWER[%$],h] ge 0 then
 	echo Installation for ISE Eiffel 5 generation.
 	echo Parameters are no_compile, no_doc, no_new_ec, no_wizards and no_install (or nothing to fully regenerate the installation).

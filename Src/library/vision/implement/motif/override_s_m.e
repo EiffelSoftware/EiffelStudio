@@ -29,10 +29,11 @@ feature
 		local
 			ext_name: ANY
 		do
-			!!is_popped_up_ref;
+			widget_index := widget_manager.last_inserted_position;
+			!! is_popped_up_ref;
 			ext_name := an_override_shell.identifier.to_c;
 			screen_object := xt_create_override_shell ($ext_name,
-					an_override_shell.parent.implementation.screen_object);
+					parent_screen_object (an_override_shell, widget_index))
 			initialize (an_override_shell);
 		end;
 

@@ -31,8 +31,10 @@ feature
 		local
 			ext_name: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_push_b.identifier.to_c;
-			screen_object := create_pict_color_b ($ext_name, a_push_b.parent.implementation.screen_object);
+			screen_object := create_pict_color_b ($ext_name, 
+					parent_screen_object (a_push_b, widget_index));
 			a_push_b.set_font_imp (Current)
 		end;
 
@@ -47,7 +49,7 @@ feature
 			pixmap_implementation: PIXMAP_X;
 			ext_name: ANY
 		do
-			if not (pixmap = Void) then
+			if pixmap /= Void then
 				pixmap_implementation ?= pixmap.implementation;
 				pixmap_implementation.remove_object (Current)
 			end;

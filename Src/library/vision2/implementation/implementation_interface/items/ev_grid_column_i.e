@@ -92,8 +92,24 @@ feature -- Access
 			-- All items selected in `Current'.
 		require
 			is_parented: parent /= Void
+		local
+			i: INTEGER
+			create_if_void: BOOLEAN
+			a_item: EV_GRID_ITEM_I
 		do
-			to_implement ("EV_GRID_COLUMN_I.selected_items")
+			from
+				i := 1
+				create_if_void := is_selected
+				create Result.make (count)
+			until
+				i > count
+			loop
+				a_item := parent_grid_i.item_internal (i, index, create_if_void)
+				if a_item /= Void and then a_item.is_selected then
+					Result.extend (a_item.interface)
+				end
+				i := i + 1
+			end
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -134,7 +150,9 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is objects state set to selected.
 		do
-			Result := selected_item_count = count
+			if parent_grid_i /= Void then
+				Result := selected_item_count = count
+			end		
 		end
 			
 feature -- Element change
@@ -240,11 +258,11 @@ feature {EV_GRID_ITEM_I} -- Implementation
 		end
 
 	decrease_selected_item_count is
-			-- Decrease selected_item_count by 1
+			-- Decrease `selected_item_count' by 1
 		require
 			selected_item_count_greater_than_zero: selected_item_count > 0
 		do
-			selected_item_count := selected_item_count + 1
+			selected_item_count := selected_item_count - 1
 		ensure
 			selected_item_count_decreased: selected_item_count = old selected_item_count - 1
 			selected_item_count_not_negative: selected_item_count >= 0
@@ -275,6 +293,9 @@ feature {EV_ANY_I} -- Implementation
 			
 invariant
 	header_item_not_void: is_initialized implies header_item /= Void
+	selected_item_count_within_bounds: parent /= Void implies selected_item_count >= 0 and then selected_item_count <= selected_items.count
+	is_selected_implies_selected_item_count_equals_count: is_selected implies selected_item_count = count
+	physical_index_set: parent /= Void implies physical_index >= 0
 
 end
 

@@ -30,24 +30,14 @@ feature -- Basic operations
 		do
 			create cpp_writer.make
 			cpp_writer.set_header_file_name (Ecom_generated_rt_globals_header_file_name)
-
 			cpp_writer.set_header ("Global variables used in generated code.")
-
 			cpp_writer.add_import ("ecom_rt_globals.h")
 			cpp_writer.add_import (Generated_ec_class_name + ".h")
-
 			cpp_writer.add_import (Generated_ce_class_name + ".h")
-			cpp_writer.add_other ("extern " + 
-						Generated_ec_class_name + " " +
-						Generated_ec_mapper + Semicolon)
-
-			cpp_writer.add_other ("extern " + 
-						Generated_ce_class_name + " " +
-						Generated_ce_mapper + Semicolon)
-
+			cpp_writer.add_other ("extern " + Generated_ec_class_name + " " + Generated_ec_mapper + ";")
+			cpp_writer.add_other ("extern " + Generated_ce_class_name + " " + Generated_ce_mapper + ";")
 			shared_file_name_factory.create_generated_mapper_file_name (cpp_writer)
 			cpp_writer.save_header_file (shared_file_name_factory.last_created_header_file_name)
-
 		end
 
 end -- class WIZARD_GENERATED_RT_GLOBALS_GENERATOR

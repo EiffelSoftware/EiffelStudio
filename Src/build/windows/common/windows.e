@@ -1,32 +1,21 @@
 class
 	WINDOWS 
+
 inherit
-
-	GRAPHICS
-		redefine
-			init_toolkit
-		end 
-
 	SHARED_EXEC_ENVIRONMENT
 
 	QUEST_POPUPER
 
 feature {NONE}
 
-
-	eb_screen: SCREEN is
+	screen: EV_SCREEN is
 		once
-			create Result.make ("")
+			create Result.make
 		end
 
---	transporter: TRANSPORTER is
---		once
---			Result := main_panel.base
---		end
---	
  	main_window: MAIN_WINDOW is
  		once
-			create Result.make_top_level
+			create Result.make_root
  		end
 
 	context_catalog: CONTEXT_CATALOG is
@@ -34,30 +23,37 @@ feature {NONE}
 			Result := main_window.context_catalog
 		end
 
---	presentation_window: BUILD_PRESENT_WINDOW is
---		once
---			create Result.make ("", eb_screen)
---		end
-
 feature {NONE} -- Initial windowing
 
-	init_toolkit: TOOLKIT_IMP is
-			-- Init toolkit to desired implementation.
-		once
-			!! Result.make ("")
-		end
+	project_directory: STRING
 
  	init_project is
+		local
+			cmd: OPEN_PROJECT
  		do
---			main_panel.realize
---			main_panel.unset_project_initialized
---			if (tree = Void) then end
---			if (context_catalog = Void) then end
---			if (command_catalog = Void) then end
---			if (history_window = Void) then end
---			if (app_editor = Void) then end
---			presentation_window.close
+			if (history_window = Void) then end
+			if (app_editor = Void) then end
+			if (namer_window = Void) then end
+--			if (class_importer = Void) then end
+			if project_directory /= Void
+			and then not project_directory.empty
+			then
+				create cmd
+				cmd.open_project (project_directory)
+				project_directory := Void
+			end
  		end
+
+	init_main_window (txt: STRING) is
+			-- Init the main window after retrieving a project.
+		local
+			title_string: STRING
+		do
+			title_string := "ISE EiffelBuild: "
+			title_string.append (txt)
+			main_window.set_title (title_string)
+			main_window.set_project_initialized
+		end
 
 	display_init_windows is
 		do
@@ -80,13 +76,13 @@ feature {NONE} -- Initial windowing
  	clear_project is
  		do
 --			context_catalog.clear
---			command_catalog.clear
---			window_mgr.clear_all_editors
---			command_catalog.initialize_pages		
---			app_editor.clear
---			history_window.wipe_out
---			main_panel.unset_project_initialized
---			namer_window.close
+--			main_window.command_catalog.clear
+			window_mgr.clear_all_editors
+--			main_window. command_catalog.initialize_pages
+			app_editor.clear
+			history_window.wipe_out
+			main_window.unset_project_initialized
+			namer_window.close (Void, Void)
 --			class_importer.close
  		end
 
@@ -141,11 +137,6 @@ feature {WINDOWS} -- Finish application
 
 feature {NONE} -- Windows
 
---	app_editor: APP_EDITOR is
---		once
---			!! Result.make 
---		end
-
 	history_window: HISTORY_WINDOW is
 		once
 			create Result.make (main_window)
@@ -156,19 +147,9 @@ feature {NONE} -- Windows
 --			create Result.make_top_level
 --		end
 
---	tree: CONTEXT_TREE is
---		once
---			Result := main_panel.context_tree_widget
---		end
-
 	error_dialog: EB_ERROR_DIALOG is
 		once
 			!! Result
-		end
-
-	namer_window: NAMER_WINDOW is
-		once
-			create Result.make (main_window)
 		end
 
 	error_window: EB_ERROR_DIALOG is
@@ -183,11 +164,35 @@ feature {NONE} -- Windows
 			!! Result
 		end
 
+feature {WINDOW_MGR} -- Application editor
+
+	app_editor: APP_EDITOR is
+		once
+			create Result.make
+		end
+
+feature {NONE} -- Rename
+
+	namer_window: NAMER_WINDOW is
+		once
+			create Result.make (main_window)
+		end
+
+	change_name (nm: NAMABLE) is
+			-- Popup `namer_window' with `nm' to rename it.
+		require
+			namable: nm /= Void
+		do
+			if nm.is_able_to_be_named then
+				namer_window.popup_with (nm)
+			end
+		end
+
 feature {NONE} -- Window Manager
 
 	window_mgr: WINDOW_MGR is
 		once
-			!! Result.make (main_window)
+			create Result.make (main_window)
 		end
 
 end -- class WINDOWS

@@ -30,7 +30,23 @@ inherit
 			on_kill_focus,
 			on_set_cursor,
 			on_char,
-			on_erase_background
+			on_erase_background,
+			process_message
+		end
+		
+	WEL_WM_CTLCOLOR_CONSTANTS
+		export
+			{NONE} all
+		end
+		
+	EV_SHARED_GDI_OBJECTS
+		export
+			{NONE} all
+		end
+	
+	EV_STOCK_COLORS_IMP
+		export
+			{NONE} all
 		end
 
 create
@@ -195,6 +211,84 @@ feature {NONE} -- Implementation
 		do
 			disable_default_processing
 			set_message_return_value (1)
+		end
+		
+	cwin_get_wm_command_hwnd (wparam, lparam: INTEGER): POINTER is
+		external
+			"C [macro <winx.h>] (WPARAM, LPARAM): EIF_POINTER"
+		alias
+			"GET_WM_COMMAND_HWND"
+		end
+
+	on_wm_ctlcolor (wparam, lparam: INTEGER) is
+			-- Common routine for Wm_ctlcolor messages.
+		require
+			exists: exists
+		local
+			control: WEL_COLOR_CONTROL
+			hwnd_control: POINTER
+			paint_dc: WEL_PAINT_DC
+		do
+			hwnd_control := cwin_get_wm_command_hwnd (wparam, lparam)
+			if hwnd_control /= default_pointer then
+				control ?= window_of_item (hwnd_control)
+				if control /= Void and then control.exists then
+					create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer (wparam))
+					on_color_control (control, paint_dc)
+				end
+			end
+		end
+
+	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
+			-- Wm_ctlcolorstatic, Wm_ctlcoloredit, Wm_ctlcolorlistbox 
+			-- and Wm_ctlcolorscrollbar messages.
+			-- To change its default colors, the color-control `control'
+			-- needs :
+			-- 1. a background color and a foreground color to be selected
+			--    in the `paint_dc',
+			-- 2. a backgound brush to be returned to the system.
+		local
+			brush: WEL_BRUSH
+			int: EV_INTERNAL_COMBO_FIELD_IMP
+			w: EV_COMBO_BOX_IMP
+			background_color: EV_COLOR_IMP
+			foreground_color: EV_COLOR_IMP
+			
+		do
+			int ?= control			
+			w ?= int.parent
+			check
+				is_a_combo_box: w /= Void
+			end
+			if w.background_color_imp /= Void or 
+				w.foreground_color_imp /= Void
+			then
+					-- Not the default color, we need to do something here
+					-- to apply `background_color' to `control'.
+				background_color ?= w.background_color.implementation
+				foreground_color ?= w.foreground_color.implementation
+				paint_dc.set_text_color (foreground_color)
+				paint_dc.set_background_color (background_color)
+				brush := allocated_brushes.get (Void, background_color)
+				debug ("WEL")
+					io.putstring ("Warning, there is no `decrement_reference'%Nfor the previous brush%N")
+				end
+				set_message_return_value (brush.to_integer)
+				disable_default_processing
+			end
+		end
+		
+	process_message (hwnd: POINTER; msg,
+			wparam, lparam: INTEGER): INTEGER is
+			-- Call the routine `on_*' corresponding to the
+			-- message `msg'.
+		do
+			inspect msg
+			when wm_ctlcoloredit then
+				on_wm_ctlcolor (wparam, lparam)
+			else
+				Result := Precursor {WEL_COMBO_BOX} (hwnd, msg, wparam, lparam)
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -147,7 +147,7 @@ feature -- Element change
 				-- value is expressed in 1/20 of points.
 			cwel_charformat_set_yheight (item, a_height * 20)
 		ensure
-			height_set: height = a_height
+			height_set: height = a_height * 20
 		end
 
 	set_offset (an_offset: INTEGER) is

@@ -27,13 +27,14 @@ feature {NONE} -- Initialization
 			list_item: EV_LIST_ITEM
 			counter: INTEGER
 			font: EV_FONT
+			format: EV_CHARACTER_FORMAT
+			tab_positioner: EV_RICH_TEXT_TAB_POSITIONER
 		do
 				-- Initialize color display to black.
 			update_color ((create {EV_STOCK_COLORS}).black)
 
+				-- Update toolbar button display.
 			format_toolbar.disable_vertical_button_style
-			
-			tab_width_entry.set_value (rich_text.tab_width)
 			
 				-- Connect events.
 			rich_text.caret_move_actions.extend (agent caret_moved)
@@ -57,9 +58,13 @@ feature {NONE} -- Initialization
 			create font
 			font_families.start
 			font.preferred_families.extend (font_families.item)
-			font.set_height (12)
+			font.set_height (50)
 			rich_text.set_font (font)
 			
+				-- Add the rich text tab positioner.
+			create tab_positioner.make_with_rich_text (rich_text)
+			tab_control_holder.extend (tab_positioner)
+			tab_control_holder.hide
 			
 				-- Add permitted font heights to `size_selection' combo box.
 			from
@@ -73,15 +78,37 @@ feature {NONE} -- Initialization
 				counter := counter + 2 + (counter // 10)
 			end
 			
+				-- Add an example of every available font to `rich_text'.
+			format := rich_text.character_format (1)
+			from
+				font_selection.start
+			until
+				font_selection.off
+			loop
+				format := rich_text.character_format (1)
+				font := format.font
+				font.preferred_families.wipe_out
+				font.preferred_families.extend (font_selection.item.text)
+				font.set_height (16)
+				format.set_font (font)
+				rich_text.buffered_append (font_selection.item.text, format)
+				font_selection.forth
+				if not font_selection.off then
+					rich_text.buffered_append ("%N", format)
+				end
+			end
+			rich_text.flush_buffer_to (rich_text.text_length + 1, rich_text.text_length + 1)
+			
 			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ((create {EV_KEY_CONSTANTS}).key_s), False, True, False)
 			accelerators.extend (accelerator)
 			accelerator.actions.extend (agent check_line_positions)
 			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ((create {EV_KEY_CONSTANTS}).key_d), False, True, False)
 			accelerators.extend (accelerator)
 			accelerator.actions.extend (agent random_test)
-			create timer.make_with_interval (2000)
-			timer.actions.extend (agent check_line_positions)
 			
+				-- Initialize a test that checks teh contents of each line.
+			create timer.make_with_interval (2000)
+			timer.actions.extend (agent check_line_positions)		
 		end
 		
 feature {NONE} -- Event handling
@@ -310,6 +337,8 @@ feature {NONE} -- Event handling
 		
 	word_wrapping_toggled is
 			-- Called by `select_actions' of `word_wrapping_menu_item'.
+			-- Enable/disable word wrapping in `rich_text' based
+			-- on state of `word_wrapping_menu_item'.
 		do
 			lock_update
 			if word_wrapping_menu_item.is_selected then
@@ -318,6 +347,18 @@ feature {NONE} -- Event handling
 				rich_text.disable_word_wrapping
 			end
 			unlock_update
+		end
+		
+	show_tab_control_toggled is
+			-- Called by `select_actions' of `show_tab_control_menu_item'.
+			-- Hide/show `tab_control' holder based on state of
+			-- `show_tab_control_menu_item'.
+		do
+			if show_tab_control_menu_item.is_selected then
+				tab_control_holder.show
+			else
+				tab_control_holder.hide
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -345,6 +386,8 @@ feature {NONE} -- Implementation
 			
 		display_format (format: EV_CHARACTER_FORMAT) is
 				-- Udpate formatting toolbars to reflect formatting in `format'.
+			require
+				format_not_void: format /= Void
 			local
 				font: EV_FONT
 				name_matched: BOOLEAN
@@ -578,12 +621,10 @@ feature {NONE} -- To be removed
 			a_text: STRING
 			substring: STRING
 			color: EV_COLOR
+			current_text: STRING
 		do
-			print ("Lines : " + rich_text.line_count.out + "%N")
-			if rich_text.text.item (rich_text.text_length) = '%N' then
-				print ("Last letter is newline%N")
-			end
 			a_text := rich_text.text
+			current_text := ""
 			from
 				counter := 1
 			until
@@ -600,11 +641,20 @@ feature {NONE} -- To be removed
 						-- A check for anybody that has checking turned off.
 					print (color.red.out)
 				end
+				current_text.append (current_line)
 				counter := counter + 1
+			end
+			if not current_text.is_equal (a_text) then
+				check
+					False
+				end
+					-- A check for anybody that has checking turned off.
+				print (color.red.out)
 			end
 		end
 		
 	timer: EV_TIMEOUT
+		-- Timer used for testing purposes.
 
 	random_test is
 			-- A feature connected to an accelerator for testing purposes.

@@ -3,6 +3,19 @@ class OBJECT_STONE
 inherit
 
 	UNFILED_STONE
+		redefine
+			is_valid, synchronized_stone, is_equal
+		end;
+
+	SHARED_DEBUG
+		redefine
+			is_equal
+		end;
+
+	OBJECT_ADDR
+		redefine
+			is_equal
+		end
 	
 creation
 
@@ -19,6 +32,8 @@ feature -- making
 			dynamic_class := dclass
 		end;
  
+feature -- Access
+
 	object_address: STRING;
 			-- Hector address (with an indirection)
 
@@ -50,6 +65,31 @@ feature -- Clickable
 			-- Is Current an element with recorded structures information?
 
 	click_list: ARRAY [CLICK_STONE];
+
+feature -- Status report
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Do `Current' and `other' reference the same object?
+		do
+			Result := object_address.is_equal (other.object_address)
+		end;
+
+	is_valid: BOOLEAN is
+			-- Is `Current' a valid stone?
+		do
+			Result := Run_info.is_running and then
+					Run_info.is_stopped and then
+					is_hector_addr (object_address)
+		end;
+
+	synchronized_stone: OBJECT_STONE is
+			-- Clone of `Current' after an execution step
+			-- (May be Void if not valid anymore)
+		do
+			if is_valid then
+				Result := clone (Current)
+			end
+		end;
 
 invariant
 

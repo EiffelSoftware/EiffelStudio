@@ -5,6 +5,20 @@ class CLASSC_STONE
 inherit
 
 	FILED_STONE
+		rename
+			is_valid as fs_valid
+		redefine
+			synchronized_stone
+		end;
+
+	FILED_STONE
+		redefine
+			is_valid, synchronized_stone
+		select
+			is_valid
+		end;
+
+	SHARED_WORKBENCH
 
 creation
 
@@ -84,5 +98,33 @@ feature -- dragging
 				Result := class_c.clickable
 			--end
 		end
+
+feature -- Status report
+
+	is_valid: BOOLEAN is
+			-- Is `Current' a valid stone?
+		local
+			class_i: CLASS_I
+		do
+			if fs_valid and then class_c /= Void then
+				class_i := Universe.class_i (class_c.class_name);
+				Result := class_i /= Void and then 
+						class_i.compiled and then 
+						class_c = class_i.compiled_class
+			else
+				Result := False
+			end
+		end;
+
+feature -- Synchronization
+
+	synchronized_stone: STONE is
+			-- Clone of `Current' stone after a recompilation
+			-- (May be Void if not valid anymore)
+		do
+			if class_c /= Void then
+				Result := clone (Universe.class_stone (class_c.class_name))
+			end
+		end;
 
 end

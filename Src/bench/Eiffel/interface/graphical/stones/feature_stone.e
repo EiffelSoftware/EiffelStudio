@@ -4,14 +4,21 @@ inherit
 
 	FILED_STONE
 		rename
-			origin_text as normal_origin_text
+			origin_text as normal_origin_text,
+			is_valid as fs_valid
+		redefine
+			synchronized_stone
 		end;
+
 	FILED_STONE
 		redefine
-			origin_text
+			origin_text, is_valid, synchronized_stone
 		select
-			origin_text
+			origin_text, is_valid
 		end;
+
+	SHARED_WORKBENCH;
+
 --	SHARED_DEBUG
 -- Removed to cut dependancies for the batch only version
 
@@ -69,21 +76,18 @@ feature -- dragging
 			temp: STRING;
 			cn: STRING;
 		do
-			Result := normal_origin_text;
-			if 
-				(Result /= Void) and then
-				Result.count >= end_position
-			then
-				Result := Result.substring (start_position, end_position);
-				!! temp.make (0);
-				temp.append ("-- Version from class: ");
-					cn := clone (feature_i.written_class.class_name)
-					cn.to_upper;
-				temp.append (cn);
-				temp.append ("%N%N");
-				temp.append (Result);
-				Result := temp	
-			end;
+			temp := normal_origin_text;
+			if temp /= Void then
+				Result := "-- Version from class: ";
+				cn := clone (feature_i.written_class.class_name)
+				cn.to_upper;
+				Result.append (cn);
+				Result.append ("%N%N");
+				if temp.count >= end_position then
+					temp := temp.substring (start_position, end_position);
+					Result.append (temp)
+				end
+			end
 		end;
 
 	click_list: ARRAY [CLICK_STONE] is
@@ -161,9 +165,25 @@ feature -- dragging
 			-- (in fact, to get origin text...)
 
 	is_valid: BOOLEAN is
-			-- Does Current have a corresponding feature_i?
+			-- Is `Current' a valid stone?
+		local
+			class_i: CLASS_I;
+			f_table: FEATURE_TABLE
 		do
-			Result := feature_i /= Void
+			if fs_valid and then class_c /= Void and then feature_i /= Void then
+				class_i := Universe.class_i (class_c.class_name);
+				if 
+					class_i /= Void and then class_i.compiled 
+					and then class_i.compiled_class = class_c
+				then
+					f_table := class_c.feature_table;
+					Result := feature_i = f_table.item (feature_i.feature_name)
+				else
+					Result := False
+				end
+			else
+				Result := False
+			end
 		end;
 
 	set_positions (s, e: INTEGER) is
@@ -172,6 +192,27 @@ feature -- dragging
 		do
 			start_position := s
 			end_position := e
+		end;
+
+	synchronized_stone: FEATURE_STONE is
+			-- Clone of `Current' after a recompilation
+			-- (May be Void if not valid anymore)
+		local
+			new_class_i: CLASS_I;
+			new_class_c: CLASS_C;
+			new_feature_i: FEATURE_I
+		do
+			if class_c /= Void and feature_i /= Void then
+				new_class_i := Universe.class_i (class_c.class_name);
+				if new_class_i /= Void and then new_class_i.compiled then
+					new_class_c := new_class_i.compiled_class;
+					new_feature_i := new_class_c.feature_table.item
+													(feature_i.feature_name);
+					if new_feature_i /= Void then
+						Result := clone (new_feature_i.stone (new_class_c))
+					end
+				end
+			end
 		end;
  
 end

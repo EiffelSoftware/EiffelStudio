@@ -68,6 +68,8 @@ feature {NONE} -- Implementation
 					process_command (value)
 				elseif key_value.substring_index (routine_keyword, 1) > 0 then
 					process_routine (value)
+				elseif key_value.substring_index (precondition_keyword, 1) > 0 then
+					process_precondition (value)
 				end			
 			end
 		end
@@ -129,6 +131,7 @@ feature {NONE} -- Implementation
 						arg_type := signature.substring (lower, upper - 1)
 						!! an_app_command.make (cmd_name, arg_name, arg_type)
 						current_application_class.add_command (an_app_command)
+						current_application_method := an_app_command
 					end
 				end
 			end
@@ -168,16 +171,7 @@ feature {NONE} -- Implementation
 		do
 			lower := 1
 			upper := signature.index_of ('(', 1)
-			if (upper <= 1) then
-				upper := signature.index_of (')', 1)
-				if upper >= 1 then
-					display_error_message
-				else
-					cmd_name := signature.substring (lower, signature.count)
-					cmd_name.prune_all (' ')
-					!! arg_list.make
-				end
-			elseif (upper > (signature.count - 5)) then
+			if (upper <= 1) or (upper > (signature.count - 5)) then
 				display_error_message
 			else
 				cmd_name := signature.substring (lower, upper - 1)
@@ -214,10 +208,22 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
+				if not error then
+					!! app_routine.make (cmd_name, arg_list)
+					current_application_class.add_routine (app_routine)
+					current_application_method := app_routine
+				end
 			end
-			if not error then
-				!! app_routine.make (cmd_name, arg_list)
-				current_application_class.add_routine (app_routine)
+		end
+
+	process_precondition (expression: STRING) is
+			-- Add a precondition to the currently edited APPLICATION_ROUTINE object.
+		local
+			a_precondition: APPLICATION_PRECONDITION
+		do
+			if current_application_method /= Void then		
+				!! a_precondition.make (expression)
+				current_application_method.add_precondition (a_precondition)
 			end
 		end
 
@@ -250,16 +256,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Attribute
+feature {NONE} -- Attributes
+	
+	current_line: INTEGER
+			-- Current line
+	
+	current_application_method: APPLICATION_METHOD
+			-- Currently edited application method object
 
-	current_application_class: APPLICATION_CLASS is
+ 	current_application_class: APPLICATION_CLASS is
 			-- Currently edited application class object 
 		do
 			Result := class_list.item
 		end
 
-	current_line: INTEGER
-			-- Current line 
 
 feature {NONE} -- Constants
 
@@ -274,5 +284,8 @@ feature {NONE} -- Constants
 
 	routine_keyword: STRING is "<routine>"
 			-- Keyword "<routine>"
+
+	precondition_keyword: STRING is "<require>"
+			-- Keyword "<require>"
 
 end -- class IMPORT_APPLICATION_CLASS_CMD	

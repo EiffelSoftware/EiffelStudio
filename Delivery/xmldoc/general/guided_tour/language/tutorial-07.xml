@@ -421,7 +421,7 @@
 		<info>Some variants of the basic creation instruction will be reviewed later: instruction with an explicit type; creation expressions.  See 
 			<link>
 				<url>tutorial-11.xml</url><anchor_name>28280</anchor_name>
-				<label>"Creation variants", page 89</label>
+				<label>Chapter 10, "Other Mechanisms"</label>
 			</link>.
 		</info>
 		<heading>
@@ -546,11 +546,7 @@
 				<symbol>/</symbol>
 			</code> is "not equal").
 		</paragraph>
-		<paragraph>The default initialization rules seen earlier for attributes (see the table on page 
-			<link>
-				<url>tutorial-07.xml</url><anchor_name>25630</anchor_name>
-				<label>21</label>
-			</link>) also serve to initialize local entities and 
+		<paragraph>The default initialization rules seen earlier for attributes also serves to initialize local entities and 
 			<code>
 				<keyword>Result</keyword>
 			</code> on routine entry.  So in the last example, if 
@@ -599,11 +595,7 @@
 		<code_block>
 <keyword>Result</keyword> <symbol>:=</symbol> <feature_name>all_deposits</feature_name>.<feature_name>count</feature_name>
 </code_block>
-		<paragraph>Following the principle of Uniform Access (page 
-			<link>
-				<url>tutorial-07.xml</url><anchor_name>UNIFORM ACCESS</anchor_name>
-				<label>19</label>
-			</link>), this form is the same for calls to attributes and to functions without arguments.  In this example, feature 
+		<paragraph>Following the principle of Uniform Access, this form is the same for calls to attributes and to functions without arguments.  In this example, feature 
 			<code>
 				<string>count</string>
 			</code> from class 
@@ -778,18 +770,14 @@
 				<class_name>DEPOSIT_LIST</class_name>
 			</code>.
 		</paragraph>
-		<paragraph>Three mechanisms introduced below -- expanded types (page 
-			<link>
-				<url>tutorial-07.xml</url><anchor_name>40534</anchor_name>
-				<label>26</label>
-			</link>), genericity (page 
+		<paragraph>Three mechanisms introduced below -- expanded types (this page), genericity (see 
 			<link>
 				<url>tutorial-08.xml</url><anchor_name>15572</anchor_name>
-				<label>36</label>
-			</link>) and anchored declarations (page 
+				<label>Chapter 7, "Genericity and Arrays"</label>
+			</link>) and anchored declarations (see 
 			<link>
 				<url>tutorial-10.xml</url><anchor_name>46019</anchor_name>
-				<label>79</label>
+				<label>Chapter 9, "Inheritance"</label>
 			</link>) -- will generalize the notion of type slightly.  But they do not change the fundamental property that 
 			<bold>every type is based on a class</bold>, called the type's 
 			<bold>base class</bold>.  In the examples seen so far, each type 
@@ -935,10 +923,10 @@
 		<paragraph>To assign, copy and compare values, you can rely on a number of mechanisms.  Two of them, assignment and equality testing, are language constructs; the others are library features, coming from the top-level class 
 			<code>
 				<class_name>ANY</class_name>
-			</code> seen earlier (page 
+			</code> seen earlier (see 
 			<link>
 				<url>tutorial-06.xml</url><anchor_name>82680</anchor_name>
-				<label>15</label>
+				<label>Chapter 5, "The Static Picture: System organization</label>
 			</link>).
 		</paragraph>
 		<paragraph>Assignment uses the symbol 
@@ -1197,7 +1185,7 @@
 			</code> and would, if evaluated, yield an exception as explained in 
 			<link>
 				<url>tutorial-09.xml</url><anchor_name>10722</anchor_name>
-				<label>"Exception handling", page 46</label>
+				<label>Chapter 8, "Design By Contract, Assertions and Exceptions"</label>
 			</link> below.)
 		</paragraph>
 		<paragraph>
@@ -1392,7 +1380,7 @@
 				<local_variable>x</local_variable> 
 				<symbol>:=</symbol> 
 				<local_variable>y</local_variable>
-			</code> of the form illustrated by the figure on page 
+			</code> of the form illustrated by the figure in 
 			<link>
 				<url>tutorial-00.xml</url><anchor_name>35291</anchor_name>
 				<label>28</label>
@@ -1519,10 +1507,10 @@
 			</code> is only available to 
 			<code>
 				<class_name>NONE</class_name>
-			</code>. Because of the global inheritance structure (page 
+			</code>. Because of the global inheritance structure (see 
 			<link>
 				<url>tutorial-06.xml</url><anchor_name>82680</anchor_name>
-				<label>15</label>
+				<label>Chapter 5, "The Static Picture: System Organization"</label>
 			</link>) this means it is in fact available to no useful client at all, and is equivalent in practice to 
 			<code>
 				<keyword>feature</keyword>
@@ -1587,7 +1575,7 @@
 			</code>, ... This enables a group of related classes to provide each other with privileged access, without requiring the introduction of a special module category above the class level (see 
 			<link>
 				<url>tutorial-06.xml</url><anchor_name>29888</anchor_name>
-				<label>"Clusters", page 15</label>
+				<label>Chapter 5, "The Static Picture: System Organization"</label>
 			</link>).
 		</paragraph>
 		<paragraph>Exporting features selectively to a set of classes 
@@ -1888,15 +1876,15 @@
 		</paragraph>
 		<paragraph>These rules follow directly from the more general goals (reusability, extendibility, reliability) and principles (Uniform Access, information hiding) underlying Eiffel software design.  They reflect a view that each class must denote a well-understood abstraction, defined by a set of exported features chosen by the class designer -- the "control panel".  </paragraph>
 		<paragraph>The class documentation (the 
-			contract form, see page 
+			contract form, see 
 			<link>
 				<url>tutorial-09.xml</url><anchor_name>78482</anchor_name>
-				<label>44</label>
+				<label></label>
 			</link>) makes this view clear to client authors; no violation of that interface is permitted.  This approach also paves the way for future 
-			<bold>generalization</bold> -- the final step of the cluster lifecycle, seen earlier on page 
+			<bold>generalization</bold> -- the final step of the cluster lifecycle, seen earlier in 
 			<link>
 				<url>tutorial-04.xml</url><anchor_name>10958</anchor_name>
-				<label>9</label>
+				<label>Chapter 3, "The Software Process in Eiffel"</label>
 			</link> -- of the most promising components, and their inclusion into reusable libraries.
 		</paragraph>
 	</paragraph></document>

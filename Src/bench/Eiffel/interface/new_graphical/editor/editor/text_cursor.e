@@ -105,7 +105,7 @@ feature -- Element change
 
 				-- update the line attribute
 			whole_text.go_i_th(y)
-			line := whole_text.current_line
+			line := whole_text.item
 			update_current_char
 		end
 

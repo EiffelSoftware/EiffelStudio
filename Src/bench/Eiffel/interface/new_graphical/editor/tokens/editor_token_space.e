@@ -35,16 +35,15 @@ feature -- Initialisation
 
 feature -- Miscellaneous
 
-	display(d_x: INTEGER; d_y: INTEGER; dc: WEL_DC): INTEGER is
+	display(d_y: INTEGER; dc: WEL_DC) is
 		do
 			--[ Don't display anything. If an option is set to see the spaces, 
 			--  put it here ]
-			dc.select_font(font)
-			Result := d_x + dc.string_width(image)
-			dc.unselect_font
+		end
 
-				-- update width
-			width := Result - d_x
+	width: INTEGER is
+		do
+			Result := length * space_width
 		end
 
 	get_substring_width(n: INTEGER): INTEGER is
@@ -53,14 +52,14 @@ feature -- Miscellaneous
 		do
 				-- The result can be easily computed since all
 				-- the spaces have the same size.
-			Result := width * n // length
+			Result := n * space_width
 		end
 
 	retrieve_position_by_width(a_width: INTEGER): INTEGER is
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		do
-			Result := a_width // (width // length) + 1
+			Result := a_width // space_width + 1
 		end
 
 feature {NONE} -- Implementation
@@ -83,6 +82,16 @@ feature {NONE} -- Implementation
 				-- create the font
 			create log_font.make(editor_preferences.font_size, editor_preferences.font_name)
 			create Result.make_indirect(log_font)
+		end
+
+	space_width: INTEGER is
+		local
+			dc: WEL_MEMORY_DC
+		once
+			create dc.make
+			dc.select_font(font)
+			Result := dc.string_width(" ")
+			dc.unselect_font
 		end
 
 end -- class EDITOR_TOKEN_SPACE

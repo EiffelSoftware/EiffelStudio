@@ -12,9 +12,6 @@ deferred class
 inherit
 --	HELPABLE
 
---	EB_SHARED_INTERFACE_TOOLS
-		-- waiting for a better place...
-
 	SHARED_CONFIGURE_RESOURCES
 
 	SHARED_PLATFORM_CONSTANTS
@@ -50,6 +47,7 @@ feature {NONE} -- Initialization
 			--
 		do
 			create close_cmd.make (Current)
+			create exit_app_cmd
 		end
 
 feature -- Tool Properties
@@ -190,17 +188,17 @@ feature -- Resize
 
 	set_size (min_x, min_y: INTEGER) is
 		do
-			manager.set_size (min_x, min_y)
+			manager.set_tool_size (Current, min_x, min_y)
 		end
 
 	set_width (new_width: INTEGER) is
 		do
-			manager.set_width (new_width)
+			manager.set_tool_width (Current, new_width)
 		end
 
 	set_height (new_height: INTEGER) is
 		do
-			manager.set_height (new_height)
+			manager.set_tool_height (Current, new_height)
 		end
 
 feature {EB_TOOL_MANAGER} -- Widget Implementation

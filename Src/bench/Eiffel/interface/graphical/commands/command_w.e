@@ -9,7 +9,8 @@ inherit
 	INTERFACE_W;
 	GRAPHICS;
 	CURSOR_W;
-	COMMAND
+	COMMAND;
+	WARNING_MESSAGES
 
 feature 
 

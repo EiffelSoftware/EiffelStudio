@@ -172,7 +172,9 @@ feature -- Interface
 				set_current_state (Code_analysis)
 				code_dom_generator.generate_statement_from_dom (a_statement)
 				set_current_state (Code_generation)
-				output.write_string (last_statement.code)
+				if last_statement /= Void then
+					output.write_string (last_statement.code)
+				end
 				output := Void
 			end
 			Type_reference_factory.reset_cache

@@ -124,8 +124,8 @@ struct prof_info {
 #define s_seconds	system_time.seconds
 #define s_micro		system_time.micro_seconds
 
-#define real_time(x)	(x->u_seconds*1000000) + x->u_micro + \
-					 	(x->s_seconds*1000000) + x->s_micro
+#define real_time(x)	((x)->u_seconds*1000000) + (x)->u_micro + \
+					 	((x)->s_seconds*1000000) + (x)->s_micro
 #define new_prof_info(x)	{\
 								x = (struct prof_info *) cmalloc(sizeof(struct prof_info));\
 								x->this_total_time =\

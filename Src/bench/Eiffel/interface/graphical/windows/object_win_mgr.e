@@ -11,7 +11,7 @@ inherit
 
 	EDITOR_MGR
 		redefine
-			editor_type, synchronize, shell_editor
+			editor_type, synchronize
 		end
 
 creation
@@ -74,31 +74,6 @@ feature -- Synchronization
 				active_editors.forth
 			end
 		end;
-
-feature {WINDOW_MGR} -- Properties
-
-	shell_editor (a_parent: EB_SHELL): like editor_type is
-			-- Creates new editor. (Either creates one or
-			-- retrieves one from the free_list).
-		local
-			mp: MOUSE_PTR
-		do
-			if	not free_list.empty	then
-				free_list.start;
-				Result := free_list.item;
-				Result.set_default_position;
-				Result.text_window.set_tab_length_to_default;
-				Result.text_window.set_font_to_default;
-				Result.text_window.set_default_sp_bounds;
-				free_list.remove
-			else
-				!! mp.set_watch_cursor;
-				!! Result.make (a_parent);
-				mp.restore
-			end;
-			active_editors.extend (Result)
-		end;
-
 
 feature {NONE} -- Properties
 

@@ -1,0 +1,66 @@
+remtrace Check the status
+iff not defined DOCUMENT_DIR then
+	echo DOCUMENT_DIR is not defined. Cannot continue
+	CANCEL
+endiff
+iff not isdir %DOCUMENT_DIR then
+	echo %DOCUMENT_DIR is not a directory
+	CANCEL
+endiff
+iff not exist %DOCUMENT_DIR\document.exe then
+	echo Cannot find document.exe
+	CANCEL
+endiff
+iff not exist %DOCUMENT_DIR\default.css then
+	echo Cannot find default.css
+	CANCEL
+endiff
+iff not isdir %INSTALL_DIR\docs then
+	echo No destination directory for the documentation
+	CANCEL
+endiff
+
+remtrace Retrieve the documentation
+cdd %DOCUMENT_DIR
+iff isdir newdocs then
+	up newdocs
+	iff %? != 0 then
+		echo Couldn't update newdocs... checking out instead
+		fullrd newdocs
+		co -r HEAD -d newdocs Delivery/newdocs
+	endiff
+else
+	if exist newdocs fullrf newdocs
+	co -r HEAD -d newdocs Delivery/newdocs
+endiff
+remtrace Setup files
+cd newdocs
+copy internal\eiffel.hhc .
+copy internal\eiffel.hhp .
+copy internal\stop_words.stp .
+copy ..\document.exe .
+if exist general\guided_tour\studio\index-09A\goto.html fullrf general\guided_tour\studio\index-09A\goto.html
+remtrace Call document.exe
+document -g >>& %INSTALL_LOG
+copy ..\default.css .
+remtrace Compile the documentation (eiffel.chm)
+hhc eiffel.hhp
+iff not exist eiffel.chm then
+	echo Could not generate the help file
+	CANCEL
+endiff
+move eiffel.chm %INSTALL_DIR\docs
+	
+remtrace Compile the Resource Bench help
+cdd %DOCUMENT_DIR
+safe_up Src/resource_bench/RB_documentation/docrb rbdoc
+cd rbdoc
+copy ..\document.exe .
+document -g
+copy new_htmls\resource_bench.hhp .
+hhc resource_bench.hhp
+iff not exist resource_bench.chm then
+	echo Could not generate the Resource Bench help file
+	CANCEL
+endiff
+move resource_bench.chm %INSTALL_DIR\rb\bin

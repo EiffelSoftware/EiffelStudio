@@ -1,0 +1,16 @@
+remtrace Retrieve all source files
+remtrace The wizards...
+cdd %EIFFEL_SRC
+safe_md help
+cd help
+safe_up "Src/wizards" wizards
+
+remtrace ...and the libraries
+cd %EIFFEL_SRC\library
+safe_up "Src/library/wizard" wizard
+
+cd %EIFFEL_SRC\help\wizards
+set DELIVERY=%INSTALL_DIR
+remtrace Launch the actual wizard compilation
+call make_wizards.btm 
+

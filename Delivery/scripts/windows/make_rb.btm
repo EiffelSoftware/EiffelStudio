@@ -1,0 +1,17 @@
+remtrace Update the source files
+cdd %EIFFEL_SRC
+safe_up Src/resource_bench resource_bench
+
+remtrace Recompile Resource Bench
+cdd %EIFFEL_SRC\resource_bench
+clean_project
+finalize ace.ace
+fff
+cleanup_eiffel rb.exe
+if not exist rb.exe (remtrace Couldnt generate rb.exe & cancel)
+move rb.exe %INSTALL_DIR\rb\bin
+
+remtrace Retrieve the example
+cdd %INSTALL_DIR\rb
+export -r HEAD -d example Src/resource_bench/RB_documentation/examples
+

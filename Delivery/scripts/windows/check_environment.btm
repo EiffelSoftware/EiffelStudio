@@ -1,0 +1,110 @@
+iff not defined ISE_EIFFEL then
+	echo ISE_EIFFEL not defined. Cannot continue
+	CANCEL
+endiff
+iff not defined ISE_PLATFORM then
+	echo ISE_PLATFORM not defined. Cannot continue
+	CANCEL
+endiff
+REM iff not defined ISE_C_COMPILER then
+REM 	echo ISE_C_COMPILER not defined. Cannot continue
+REM 	CANCEL
+REM endiff
+iff not defined NO_COMPILE then
+	iff not defined EIFFEL_SRC then
+		echo EIFFEL_SRC not defined. Cannot continue
+		CANCEL
+	endiff
+	iff not defined FINALIZATION_DIR then
+		echo FINALIZED_DIR not defined. Cannot continue
+		CANCEL
+	endiff
+	iff not exist %FINALIZATION_DIR\finalizedbench.ace then
+		echo No finalization ace available in %FINALIZATION_DIR. Cannot continue
+		CANCEL
+	endiff
+	iff not isdir %EIFFEL_SRC\library\wizard then
+		echo Warning: The Wizards will be checked out
+	endiff
+	iff not isdir %EIFFEL_SRC\help\wizards then
+		echo Warning: The Wizard library will be checked out
+	endiff
+	
+	iff "%@SEARCH[ec.exe]" == "" then
+		echo Cannot find a version of ec. Cannot continue
+		CANCEL
+	endiff
+REM	iff not exist %ISE_EIFFEL\BCC55\bcc32.exe then
+REM		echo Cannot find the Borland compiler
+REM		CANCEL
+REM	endiff
+endiff
+iff "%@SEARCH[tar]" == "" then
+	echo Cannot find a version of tar. Cannot continue without cygwin
+	CANCEL
+endiff
+iff not defined NO_DOCUMENTATION then
+	iff not defined DOCUMENT_DIR then
+		echo Error: No path specified for the documentation
+		CANCEL
+	endiff
+	iff not isdir %DOCUMENT_DIR then
+		echo Error: %DOCUMENT_DIR is not a directory
+		CANCEL
+	endiff
+	iff not exist %DOCUMENT_DIR\document.exe then
+		echo Cannot find document.exe in %DOCUMENT_DIR
+		CANCEL
+	endiff
+	iff not exist %DOCUMENT_DIR\default.css then
+		echo Cannot find default.css in %DOCUMENT_DIR
+		CANCEL
+	endiff
+	iff not isdir %DOCUMENT_DIR\newdocs then
+		echo Warning: Documentation will be checked out in %DOCUMENT_DIR\newdocs
+	endiff
+	iff "%@SEARCH[hhc.exe]" == "" then
+		echo Cannot find the HTML help compiler
+		CANCEL
+	endiff
+endiff	
+
+iff not defined INSTALL_LOG then
+	echo Error: No file specified for the log
+	CANCEL
+endiff
+iff not defined INSTALL_DIR then
+	echo Error: No path specified for the generated delivery
+	CANCEL
+endiff
+iff exist %INSTALL_DIR .or. isdir %INSTALL_DIR then
+	echo Warning: %INSTALL_DIR will be replaced by the installation script, you will lose everything in it
+endiff
+echo Current configuration:
+echo ISE_EIFFEL is %ISE_EIFFEL
+echo ISE_PLATFORM is %ISE_PLATFORM
+echo INSTALL_DIR is %INSTALL_DIR
+echo DOCUMENT_SRC is %DOCUMENT_DIR
+echo Log file is %INSTALL_LOG
+echo ec version is:
+ec -version
+echo -----------------------------
+iff defined NO_COMPILE then
+	echo No compilation will be performed (including EiffelStudio's compilation)
+endiff
+iff defined NO_NEW_EC then
+	echo No new version of EiffelStudio will be compiled
+endiff
+iff defined NO_DOCUMENTATION then
+	echo No documentation will be generated
+endiff
+iff defined NO_INSTALL then
+	echo The delivery will be generated, but not the final installation executable
+endiff
+iff not defined NO_INSTALL .and. not defined NO_COMPILE .and. not defined NO_DOCUMENTATION then
+	echo All components will be recompiled
+endiff
+echo Type a key to continue, Ctrl-C or Esc to abort
+pause
+echo Installation parameters are %ISE_EIFFEL, %ISE_PLATFORM, %INSTALL_DIR, %DOCUMENT_DIR >> %INSTALL_LOG
+echo -------------------------------- >> %INSTALL_LOG

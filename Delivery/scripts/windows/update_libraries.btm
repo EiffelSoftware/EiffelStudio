@@ -1,0 +1,56 @@
+remtrace Update the Eiffel libraries source
+cdd %EIFFEL_SRC\library
+remtrace base
+safe_up "Src/library/base" base
+remtrace com
+safe_up "Src/library/com" com
+remtrace encryption
+safe_up "Src/library/encryption" encryption
+remtrace exml
+safe_up "Src/library/exml" exml
+remtrace lex
+safe_up "Src/library/lex" lex
+remtrace net
+safe_up "Src/library/net" net
+remtrace parse
+safe_up "Src/library/parse" parse
+remtrace time
+safe_up "Src/library/time" time
+remtrace wel
+safe_up "Src/library/wel" wel
+remtrace vision2
+safe_up "Src/library/vision2" vision2
+remtrace wizard
+safe_up "Src/library/wizard" wizard
+cd ..
+remtrace Compile the Eiffel libraries C code
+remtrace com_il_generation
+cd Eiffel\eiffel\com_il_generation\Core\clib
+default_make
+remtrace com
+cd %EIFFEL_SRC\library\com\Clib
+default_make
+remtrace com run-time
+cd %EIFFEL_SRC\library\com\Clib_runtime
+default_make
+remtrace encryption
+cd %EIFFEL_SRC\library\encryption\Clib
+default_make
+remtrace exml
+cd %EIFFEL_SRC\library\exml\compiler_specific\ise\clib
+default_make
+remtrace net
+cd %EIFFEL_SRC\library\net\Clib
+default_make
+remtrace time
+cd %EIFFEL_SRC\library\time\Clib
+default_make
+remtrace vision2
+cd %EIFFEL_SRC\library\vision2\Clib
+default_make
+remtrace wel
+cd %EIFFEL_SRC\library\wel\clib
+default_make
+cd %EIFFEL_SRC
+
+

@@ -1,0 +1,190 @@
+@echo off
+remtrace Set up the environment
+on break goto broken
+TIMER ON /1 >> NUL
+TIMER ON /2 >> NUL
+set OLD_PATH=%PATH
+set INIT_DIR=%@EXECSTR[cd]
+iff %@INDEX[%@LOWER[%$],h] ge 0 then
+	echo Installation for ISE Eiffel 5 generation.
+	echo Parameters are no_compile, no_doc, no_new_ec and no_install (or nothing to fully regenerate the installation).
+	CANCEL
+endiff
+iff %@INDEX[%@LOWER[%$],no_compil] ge 0 then
+	set NO_COMPILE="True"
+else
+	unset /Q NO_COMPILE
+endiff
+iff %@INDEX[%@LOWER[%$],no_doc] ge 0 then
+	set NO_DOCUMENTATION="True"
+else
+	unset /Q NO_DOCUMENTATION
+endiff
+iff %@INDEX[%@LOWER[%$],no_install] ge 0 then
+	set NO_INSTALL="True"
+else
+	unset /Q NO_INSTALL
+endiff
+iff %@INDEX[%@LOWER[%$],no_new_ec] ge 0 then
+	set NO_NEW_EC="True"
+else
+	unset /Q NO_NEW_EC
+endiff
+iff %@INDEX[%@LOWER[%$],no_wizard] ge 0 then
+	set NO_WIZARDS="True"
+else
+	unset /Q NO_WIZARDS
+endiff
+
+call set_aliases.btm
+cdd %INIT_DIR
+remtrace Approximative starting time:
+remtrace %_TIME
+
+REM This is not a comment, it should create a 0-sized log file.
+REM > %INSTALL_LOG
+call check_environment.btm
+cdd %INIT_DIR
+
+give_time_to warm up
+remtrace Retrieve and organize the delivery
+remtrace Remove %INSTALL_DIR
+if isdir %INSTALL_DIR fullrd %INSTALL_DIR >>& %INSTALL_LOG
+if exist %INSTALL_DIR fullrf %INSTALL_DIR >>& %INSTALL_LOG
+iff exist %INSTALL_DIR then
+	echo Cannot delete %INSTALL_DIR!
+	CANCEL
+endiff
+md %INSTALL_DIR
+cdd %INSTALL_DIR
+remtrace studio
+export -r HEAD -d studio Delivery/studio
+remtrace eifinit
+export -r HEAD -d eifinit Delivery/eifinit
+remtrace precomp
+safe_md %INSTALL_DIR\precomp
+safe_md %INSTALL_DIR\precomp\spec
+cd %INSTALL_DIR\precomp\spec
+export -r HEAD -d windows Delivery/precomp/spec/windows
+cdd %INSTALL_DIR
+remtrace wizards
+export -r HEAD -d wizards Delivery/wizards
+remtrace C_library
+export -r HEAD -d C_library Src/C_library
+remtrace root
+export -l -r HEAD Delivery/
+move Delivery\*.* . >>& %INSTALL_LOG
+fullrd Delivery >>& %INSTALL_LOG
+
+remtrace Borland files
+gunzip bcc55.tar.gz
+tar -xvf bcc55.tar >>& %INSTALL_LOG
+fullrf bcc55.tar
+
+md docs
+cd docs
+remtrace PDF's
+export -r HEAD -d PDF Delivery/newdocs/PDF
+cd ..
+
+remtrace Create directories
+safe_md %INSTALL_DIR\studio\spec
+safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM
+safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
+safe_md %INSTALL_DIR\wizards
+safe_md %INSTALL_DIR\wizards\com
+safe_md %INSTALL_DIR\wizards\com\config
+safe_md %INSTALL_DIR\wizards\dotnet
+safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
+safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib
+safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc
+safe_md %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\bcb
+safe_md %INSTALL_DIR\rb
+safe_md %INSTALL_DIR\rb\bin
+
+cdd %INIT_DIR
+give_time_to organize the delivery and to start filling it
+
+REM Fill directories
+iff not defined NO_COMPILE then
+	remtrace Update all libraries
+	call update_libraries.btm
+	copy %EIFFEL_SRC\library\wel\spec\%ISE_PLATFORM\msc\dll\wel_hook.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin\
+	cdd %INIT_DIR
+	give_time_to update libraries
+
+	remtrace Generate needed executables of the bin directory
+	call make_exes.btm
+	cdd %INIT_DIR
+	give_time_to compile exes
+
+	iff not defined NO_WIZARDS then
+		remtrace Generate the precompilation and the "new project" wizards
+		call make_wizards.btm
+		cdd %INIT_DIR
+		give_time_to compile basic wizards
+
+		remtrace Generate the COM wizard
+		call make_com_wizard.btm
+		cdd %INIT_DIR
+		give_time_to compile the COM wizard
+	else
+		quick_move /s studio\wizards
+		quick_move /s wizards
+	endiff
+
+	remtrace Generate Resource Bench
+	call make_rb.btm
+	cdd %INIT_DIR
+	give_time_to compile Resource Bench
+
+	remtrace Generate the Assembly Manager
+	call make_assembly_manager.btm
+	cdd %INIT_DIR
+	give_time_to compile the Assembly Manager
+else
+	remtrace Copy executable files from the old delivery
+	quick_move /s studio\spec
+	quick_move /s studio\wizards
+	quick_move /s rb
+	quick_move /s wizards
+	give_time_to copy executables from the old delivery
+endiff
+
+iff not defined NO_DOCUMENTATION then
+	remtrace Recompile the documentation
+	make_documentation
+	cdd %INIT_DIR
+	give_time_to compile the main documentation
+else
+	remtrace Retrieve the old documentation
+	quick_move docs\eiffel.chm
+	quick_move rb\bin\resource_bench.chm
+	give_time_to copy the main documentation from the old delivery
+endiff
+cdd %INIT_DIR
+
+call make_libraries.btm
+cdd %INIT_DIR
+
+iff not defined NO_INSTALL then
+	remtrace Compile the installation executable
+	WfWI "%USERPROFILE\My Documents\Eiffel5.wsi" /c /p SOURCE_DIR=%INSTALL_DIR
+	cdd %INIT_DIR
+	give_time_to compile the delivery
+endiff
+
+REM Finish
+remtrace final time:
+remtrace %_TIME
+remtrace total used time:
+remtrace %@TIMER[2]
+
+REM Error handling and normal ending
+:broken
+echo Exiting...
+set PATH=%OLD_PATH
+cdd %INIT_DIR
+
+quit
+

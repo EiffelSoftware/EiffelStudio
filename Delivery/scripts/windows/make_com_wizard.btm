@@ -1,0 +1,33 @@
+remtrace Retrieve all source files
+cdd %EIFFEL_SRC
+iff isdir com_wizard then
+	up com_wizard
+	iff %? != 0 then
+		echo Couldn't update com_wizard... checking out instead
+		fullrd com_wizard
+		co -r HEAD -d com_wizard "Src/com_wizard"
+	endiff
+else
+	if exist com_wizard fullrf com_wizard
+	co -r HEAD -d com_wizard "Src/com_wizard"
+endiff
+
+remtrace Compile the COM wizard
+cdd %EIFFEL_SRC\com_wizard\root
+copy ..\project\gui\binaries\*.* .
+clean_project
+finalize Ace.ace
+fff
+cleanup_eiffel com_wizard.exe
+if not exist com_wizard.exe (echo Couldnt generate the COM wizard & cancel)
+move com_wizard.exe %INSTALL_DIR\wizards\com
+
+remtrace Compile comspawn.exe
+cd %EIFFEL_SRC\com_wizard\Clib
+cl conspawn.c
+iff not exist conspawn.exe then
+	echo "Couldnt compile conspawn.exe"
+	CANCEL
+endiff
+move conspawn.exe %INSTALL_DIR\wizards\com
+

@@ -178,7 +178,7 @@ rt_private void dprocess_request(int s, Request *rqst)
 		daemon_data.d_interrupt_flag = get_interrupt_flag(s,rqst);
 		break;
 
-	case EWB_NEWBREAKPOINT:		/* Ebench signals the user has added new breakpoints */
+	case EWB_NEWBREAKPOINT:		/* Estudio signals the user has added new breakpoints */
 		write_application_interruption_flag(NEW_BREAKPOINT_ADDED);
 		break;
 #endif	/* EIF_WIN32 */
@@ -233,7 +233,7 @@ rt_private void write_application_interruption_flag(unsigned char value)
 	{
 	/* write the given value for the interrupt flag into 
 	 *	- the memory of the application (WIN32)
-	 *	- the file called /tmp/ebenchXXXX where XXXX is the PID of the application (UNIX)
+	 *	- the file called /tmp/estudioXXXX where XXXX is the PID of the application (UNIX)
 	 */
 #ifdef EIF_WIN32
 	/* retrieve the handle of the Application (opened for writing) */
@@ -261,7 +261,7 @@ rt_private void write_application_interruption_flag(unsigned char value)
 	char			filename[50];
 
 	filename[0]='0';
-	sprintf(filename,"/tmp/ebench%d",pid);
+	sprintf(filename,"/tmp/estudio%d",pid);
 
 	file = fopen(filename,"wb");
 	if (file != NULL)

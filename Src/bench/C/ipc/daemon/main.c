@@ -117,7 +117,7 @@ rt_public void init_bench(int argc, char **argv)
 #ifdef EIF_WIN32
 /*	progname = rindex(argv[0], '\\');	*//* Only last name if '\' found */
 /*	if (progname++ == (char *) 0)		*//* There were no '\' */
-/*	strcpy (progname,"ebench.exe");		*//* This must be the filename then */
+/*	strcpy (progname,"estudio.exe");		*//* This must be the filename then */
 #else
 	progname = rindex(argv[0], '/');	/* Only last name if '/' found */
 	if (progname++ == (char *) 0)		/* There were no '/' */
@@ -182,13 +182,13 @@ rt_public void init_bench(int argc, char **argv)
 	}
 
 #ifdef EIF_VMS
-	strcpy(ewb_path, "ISE_EIFFEL:[bench.spec.");	/* VMS system will translate base name */
+	strcpy(ewb_path, "ISE_EIFFEL:[studio.spec.");	/* VMS system will translate base name */
 #else
 	strcpy(ewb_path, eiffel5);			/* Base name */
 #if defined EIF_WIN32
-	strcat(ewb_path, "\\bench\\spec\\");
+	strcat(ewb_path, "\\studio\\spec\\");
 #else
-	strcat(ewb_path, "/bench/spec/");
+	strcat(ewb_path, "/studio/spec/");
 #endif /* (not) EIF_WIN32 */
 #endif /* (not) EIF_VMS */
 
@@ -219,7 +219,7 @@ rt_public void init_bench(int argc, char **argv)
 	}
 	if ((argc >= 5) && (strcmp (argv[1], "-create")==0) && (strcmp (argv[3], "-ace")==0)) {
 			/* It means that we try to create a project from the command line or from
-			 * ebench or with EiffelBench */
+			 * estudio or with EiffelBench */
 		strcat (ewb_path, " -create ");
 		strcat (ewb_path, argv [2]);
 		strcat (ewb_path, " -ace ");
@@ -227,7 +227,7 @@ rt_public void init_bench(int argc, char **argv)
 	}
 	if ((argc >= 6) && strcmp (argv[5], "-compile") == 0) {
 			/* It means that we try to compile a project from the command line or from
-			 * ebench or with EiffelBench */
+			 * estudio or with EiffelBench */
 		strcat (ewb_path, " -compile");
 	}
 
@@ -384,9 +384,9 @@ rt_public char *strdup (char *s)
 
 #ifdef EIF_WIN32
 
-char szAppName [] = "ebench";		/* Window class name for temporary ebench window */
+char szAppName [] = "estudio";		/* Window class name for temporary estudio window */
 HANDLE hInst;				/* Application main instance			 */
-HWND hwnd;				/* Handle of temporary ebench window 	*/
+HWND hwnd;				/* Handle of temporary estudio window 	*/
 
 /*----------------------------------------------------------------*/
 /* Display a splash window while loading ise4.exe */
@@ -487,7 +487,7 @@ void display_splash(void)
 
 int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdLine, int nCmdShow)
 {
-/* Initialize Ebench, launch ec and establish communications */
+/* Initialize Estudio, launch ec and establish communications */
 
 	int argc;
 	char **argv;

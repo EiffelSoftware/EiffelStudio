@@ -172,7 +172,6 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			--| See comment in `button_press_switch' above.
 		do
 			if not button_press_switch_is_connected then
-				--real_signal_connect (event_widget, "scroll-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), agent (App_implementation.gtk_marshal).scroll_wheel_translate)
 				real_signal_connect (event_widget,  "button-press-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), App_implementation.default_translate)
 				button_press_switch_is_connected := True
 			end
@@ -260,7 +259,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				if focus_in_actions_internal /= Void then
 					focus_in_actions_internal.call (Void)
 				end
-			elseif parent_imp /= Void then
+			else
 				if focus_out_actions_internal /= Void then
 					focus_out_actions_internal.call (Void)
 				end
@@ -626,12 +625,10 @@ feature {EV_ANY_IMP} -- Implementation
 	destroy is
 			-- Destroy `Current'
 		do
-			if not is_destroyed then
-				if parent_imp /= Void then
-					parent_imp.interface.prune_all (interface)
-				end
-				Precursor {EV_PICK_AND_DROPABLE_IMP}
+			if parent_imp /= Void then
+				parent_imp.interface.prune_all (interface)
 			end
+			Precursor {EV_PICK_AND_DROPABLE_IMP}
 		end
 
 	parent_imp: EV_CONTAINER_IMP

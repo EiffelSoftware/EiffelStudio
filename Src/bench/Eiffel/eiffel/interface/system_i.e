@@ -510,6 +510,8 @@ end
 			ext: EXTERNAL_I
 		do
 			if a_class.is_removable then
+				a_class.remove_c_generated_files
+
 				id := a_class.id
 
 debug ("ACTIVITY", "REMOVE_CLASS")
@@ -2386,6 +2388,7 @@ feature -- Final mode generation
 			deg_output: DEGREE_OUTPUT
 			local_classes: CLASS_C_SERVER
 		do
+			Eiffel_project.delete_f_code
 			from
 				local_classes := classes
 				!FINAL_MAKER! makefile_generator.make

@@ -73,7 +73,7 @@ rt_private void gen_object_write (char *object);
 rt_public long get_offset (uint32 o_type, uint32 attrib_num);
 rt_public long get_alpha_offset (uint32 o_type, uint32 attrib_num);
 rt_public void allocate_gen_buffer(void);
-rt_private void store_write(void);
+rt_public void store_write(void);
 rt_public void free_sorted_attributes(void);
 
 rt_public void rt_reset_store (void);

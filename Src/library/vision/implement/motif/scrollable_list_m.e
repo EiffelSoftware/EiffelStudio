@@ -24,7 +24,7 @@ inherit
 			selected_items as mel_selected_items,
 			deselect_all_items as deselect_all,
 			select_item as mel_select_item,
-			deselect_item as me_deselect_item,
+			deselect_item as mel_deselect_item,
 			index_of as mel_index_of,
 			is_shown as shown
 		undefine

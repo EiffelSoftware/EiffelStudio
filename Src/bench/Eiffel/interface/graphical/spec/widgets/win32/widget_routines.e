@@ -14,7 +14,11 @@ feature -- Setting
 	set_scrolled_text_background_color (a_widget: SCROLLED_T_I; a_color: COLOR) is
 			-- Set the scrolled text widget `a_widget' background color
 			-- to `a_color' 
+		local
+			text_windows: TEXT_WINDOWS
 		do
+			text_windows ?= a_widget;
+			text_windows.set_background_color (a_color)
 		end;
 
 	copy_text_from_widget (a_widget: SCROLLED_T_I) is

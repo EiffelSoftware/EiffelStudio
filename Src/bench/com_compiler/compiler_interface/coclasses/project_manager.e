@@ -241,9 +241,9 @@ feature -- Basic Operations
             ace_file.put_string ("system")
             ace_file.put_string ("%N%T%"" + a_name + "%"")
             ace_file.put_string ("%N%Nroot")
-            ace_file.put_string ("%N%T" + a_root_class)
+            ace_file.put_string ("%N%T%"" + a_root_class + "%"")
             if a_creation_routine /= Void and then not a_creation_routine.is_empty then
-                ace_file.put_string (": " + a_creation_routine)
+                ace_file.put_string (": %"" + a_creation_routine + "%"")
             end
             ace_file.put_string ("%N%Ndefault")
             ace_file.put_string ("%N%Tmsil_generation (yes)")

@@ -13,6 +13,11 @@ inherit
 			creation_message
 		end
 
+	WIZARD_COCLASS_GENERATOR_HELPER
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -144,8 +149,10 @@ feature -- Basic operations
 			until
 				interface_descriptors.after
 			loop
-				interface_descriptors.item.disambiguate_c_names (Current)
-				feature_c_names.append (interface_descriptors.item.feature_c_names)
+				if not has_descendants_in_coclass (Current, interface_descriptors.item) then
+					interface_descriptors.item.disambiguate_c_names (Current)
+					feature_c_names.append (interface_descriptors.item.feature_c_names)
+				end
 				interface_descriptors.forth
 			end
 
@@ -154,30 +161,30 @@ feature -- Basic operations
 			until
 				interface_descriptors.after
 			loop
-				from
-					interface_descriptors.item.functions_start
-				until
-					interface_descriptors.item.functions_after
-				loop
+				if not has_descendants_in_coclass (Current, interface_descriptors.item) then
+					from
+						interface_descriptors.item.functions_start
+					until
+						interface_descriptors.item.functions_after
+					loop
 
-					if interface_descriptors.item.functions_item.argument_count > 0 then
-						from
-							interface_descriptors.item.functions_item.arguments.start
-						until
-							interface_descriptors.item.functions_item.arguments.after
-						loop
-							if feature_eiffel_names.has (interface_descriptors.item.functions_item.arguments.item.name) then
-								interface_descriptors.item.functions_item.arguments.item.name.prepend ("a_")
+						if interface_descriptors.item.functions_item.argument_count > 0 then
+							from
+								interface_descriptors.item.functions_item.arguments.start
+							until
+								interface_descriptors.item.functions_item.arguments.after
+							loop
+								if feature_eiffel_names.has (interface_descriptors.item.functions_item.arguments.item.name) then
+									interface_descriptors.item.functions_item.arguments.item.name.prepend ("a_")
+								end
+								interface_descriptors.item.functions_item.arguments.forth
 							end
-							interface_descriptors.item.functions_item.arguments.forth
 						end
+						interface_descriptors.item.functions_forth
 					end
-					interface_descriptors.item.functions_forth
 				end
-
 				interface_descriptors.forth
 			end
-
 		end
 
 feature {WIZARD_TYPE_INFO_VISITOR} -- Visitor

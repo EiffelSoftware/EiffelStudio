@@ -101,6 +101,17 @@ feature -- Access
 
 feature -- Status report
 
+	line_count: INTEGER is
+			-- Number of lines present in widget.
+		local
+			temp_text: STRING
+		do
+			temp_text := text
+			if temp_text /= Void then
+				Result := temp_text.occurrences ('%N') + 1
+			end
+		end
+
 	current_line_number: INTEGER is
 			-- Returns the number of the line the cursor currently
 			-- is on.

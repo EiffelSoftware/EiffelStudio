@@ -14,7 +14,7 @@ inherit
 			reset as old_reset,
 			make_shell as bar_and_text_make_shell
 		redefine
-			hole, hole_button, build_format_bar, 
+			hole, build_format_bar, 
 			build_bar, tool_name, close_windows,
 			build_widgets, set_default_size, attach_all,
 			resize_action, stone, stone_type,
@@ -204,16 +204,16 @@ feature -- Update
 
     resynchronize_debugger (feat: E_FEATURE) is
             -- Resynchronize debugged routine window with feature `feat'.
-        require
-            feat_non_void: feat /= Void
+			-- If `feat' resynchronize routine window.
 		local
 			cur: CURSOR;
 			old_do_format: BOOLEAN;
 			f: FORMATTER
         do
-			if in_debug_format and then stone /= Void and then
-				stone.e_feature /= Void and then
-				feat.body_id.is_equal (stone.e_feature.body_id)
+			if (in_debug_format and then stone /= Void and then
+				stone.e_feature /= Void) and then
+			 	(feat = Void or else 
+				feat.body_id.is_equal (stone.e_feature.body_id))
 			then
 				cur := text_window.cursor;
 				f := showstop_frmt_holder.associated_command;
@@ -333,13 +333,13 @@ feature -- Stone updating
 				i := i + 1
 			end
 			if (fi /= Void) then
-				!! fs.make (fi, c);
+				!! fs.make (fi);
 				process_feature (fs);
 			else
 				error_window.clear_window;
 				!! text.make;
 				text.add_string ("No version of feature ");
-				text.add_feature (stone.e_feature, stone.e_feature.written_class, stone.e_feature.name);
+				text.add_feature (stone.e_feature, stone.e_feature.name);
 				text.add_new_line;
 				text.add_string ("   for class ");
 				s := c.name_in_upper;
@@ -378,8 +378,6 @@ feature -- Graphical Interface
 	
 	build_widgets is
 			-- Build the widgets for this window.
-		local
-			popup_cmd: TOOLBAR_CMD
 		do
 			if is_a_shell then
 				set_default_size
@@ -447,22 +445,19 @@ feature -- Graphical Interface
 
 feature {TEXT_WINDOW} -- Forms And Holes
 
-	hole: ROUTINE_CMD;
+	hole: ROUTINE_HOLE;
 			-- Hole charaterizing Current.
 
-	hole_button: ROUTINE_HOLE;
-			-- Hole characterizing Current.
-
-	class_hole: ROUT_CLASS_CMD;
+	class_hole: ROUT_CLASS_HOLE;
 			-- Hole for version of routine for a particular class.
 
-	class_hole_button: ROUT_CLASS_HOLE;
-			-- Button for the class hole.
+	class_hole_button: EB_BUTTON_HOLE;
+			-- Button for the class hole
 
-	stop_hole: DEBUG_STOPIN_CMD;
+	stop_hole: DEBUG_STOPIN_HOLE;
 			-- To set breakpoints
 
-	stop_hole_button: DEBUG_STOPIN;
+	stop_hole_button: EB_BUTTON_HOLE;
 			-- Button for the stop points hole
 
 feature {TEXT_WINDOW, PROJECT_W} -- Formats
@@ -495,6 +490,8 @@ feature -- Commands
 
 	class_text_field: ROUTINE_CLASS_TEXT_FIELD;
 
+	super_melt_menu_entry: EB_MENU_ENTRY;
+
 feature {NONE} -- Implementation; Window Settings
 
 	resize_action is
@@ -524,6 +521,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			shell_cmd: SHELL_COMMAND;
 			shell_button: EB_BUTTON;
 			shell_menu_entry: EB_MENU_ENTRY;
+			super_melt_cmd: SUPER_MELT;
 			previous_target_cmd: PREVIOUS_TARGET;
 			previous_target_button: EB_BUTTON;
 			previous_target_menu_entry: EB_MENU_ENTRY;
@@ -534,14 +532,19 @@ feature {NONE} -- Implementation; Graphical Interface
 			current_target_button: EB_BUTTON;
 			current_target_menu_entry: EB_MENU_ENTRY;
 			sep: SEPARATOR;
-			history_list_cmd: LIST_HISTORY
+			history_list_cmd: LIST_HISTORY;
+			new_class_button: EB_BUTTON_HOLE
 		do
-			!! shell_cmd.make (edit_bar, text_window);
+			!! shell_cmd.make (text_window);
 			!! shell_button.make (shell_cmd, edit_bar);
-			shell_button.add_button_press_action (3, shell_cmd, Void);
+			shell_button.add_third_button_action;
+
+
 			if show_menus then
 				!! shell_menu_entry.make (shell_cmd, special_menu);
 				!! shell.make (shell_cmd, shell_button, shell_menu_entry);
+            	!! super_melt_cmd.make (Current);
+            	!! super_melt_menu_entry.make (super_melt_cmd, special_menu);
 			else
 				!! shell.make_plain (shell_cmd);
 				shell.set_button (shell_button);
@@ -578,8 +581,13 @@ feature {NONE} -- Implementation; Graphical Interface
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 
+			!! new_class_button.make
+					(Project_tool.class_hole_holder.associated_command, 
+					edit_bar);
 			edit_bar.attach_left_widget (stop_hole_button, shell_button, 0);
+			edit_bar.attach_left_widget (shell_button, new_class_button, 0);
 			edit_bar.attach_top (shell_button, 0);
+			edit_bar.attach_top (new_class_button, 0);
 			previous_target_button.unmanage;
 			next_target_button.unmanage;
 			edit_bar.attach_top (next_target_button, 0);
@@ -642,6 +650,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			end;
 			!! rout_cli_cmd.make (text_window);
 			!! rout_cli_button.make (rout_cli_cmd, format_bar);
+			rout_cli_button.add_third_button_action;
 			if show_menus then
 				!! sep.make (new_name, format_menu);
 				!! rout_cli_menu_entry.make (rout_cli_cmd, format_menu);
@@ -688,6 +697,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			end;
 			!! stop_cmd.make (text_window);
 			!! stop_button.make (stop_cmd, format_bar);
+			stop_button.add_third_button_action;
 			if show_menus then
 				!! sep.make (new_name, format_menu);
 				!! stop_menu_entry.make (stop_cmd, format_menu);
@@ -731,20 +741,20 @@ feature {NONE} -- Implementation; Graphical Interface
 			search_button: EB_BUTTON;
 			search_menu_entry: EB_MENU_ENTRY;
 			class_hole_holder: HOLE_HOLDER;
-			stop_hole_holder: HOLE_HOLDER
+			stop_hole_holder: HOLE_HOLDER;
 		do
 			edit_bar.set_fraction_base (31);
 
 				-- First we create the needed objects.
-			!! hole.make (text_window);
+			!! hole.make (Current);
 			!! hole_button.make (hole, edit_bar);
 			!! hole_holder.make_plain (hole);
 			hole_holder.set_button (hole_button);
-			!! class_hole.make (text_window);
+			!! class_hole.make (Current);
 			!! class_hole_button.make (class_hole, edit_bar);
 			!! class_hole_holder.make_plain (class_hole);
 			class_hole_holder.set_button (class_hole_button);
-			!! stop_hole.make (text_window);
+			!! stop_hole.make (Current);
 			!! stop_hole_button.make (stop_hole, edit_bar);
 			!! stop_hole_holder.make_plain (stop_hole);
 			stop_hole_holder.set_button (stop_hole_button);

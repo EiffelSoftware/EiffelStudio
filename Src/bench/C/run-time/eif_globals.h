@@ -343,6 +343,14 @@ extern int esigblk;				/* Are signals blocked for later delivery? */
 extern struct s_stack sig_stk;	/* The signal stack */
 
 
+	/* special */
+/* These variables are defined only if
+ * __VMS, EIF_OS2 or SYMANTEC_CPP
+ * Found in retrieve.h */
+extern int r_fides;				/* moved here from retrieve.c */
+extern char r_fstoretype;		/* File storage type use for retrieve */
+
+
 #endif	/* EIF_REENTRANT */
 
 #endif	/* _eif_globals_h_ */

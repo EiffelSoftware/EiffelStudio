@@ -15,7 +15,7 @@ inherit
 
 	ACCESS_AS_B
 		redefine
-			type_check, byte_node, format,
+			type_check, byte_node,
 			fill_calls_list, replicate
 		end
 
@@ -362,35 +362,6 @@ feature -- Type check, byte code and dead code removal
 			-- Attachement types line
 		once
 			Result := Context.parameters
-		end
-
-	format (ctxt: FORMAT_CONTEXT_B) is
-			-- Reconstitute text.
-		local
-			p_name : STRING
-		do
-			ctxt.begin
-
-			if parent_name /= Void then
-				p_name := Clone (parent_name.string_value)
-				p_name.to_upper
-				ctxt.put_text_item (ti_L_curly)
-				ctxt.put_class_name (p_name)
-				ctxt.put_text_item (ti_R_curly)
-			end
-
-			ctxt.put_text_item (ti_space)
-			ctxt.put_text_item (ti_Precursor_keyword)
-
-			-- We simply use an empty feature name.
-			ctxt.prepare_for_feature ("", parameters)
-			ctxt.put_current_feature
-
-			if ctxt.last_was_printed then
-				ctxt.commit
-			else
-				ctxt.rollback
-			end
 		end
 
 feature -- Replication

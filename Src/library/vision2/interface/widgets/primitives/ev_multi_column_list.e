@@ -49,7 +49,7 @@ feature -- Access
 			bridge_ok: Result = implementation.selected_item
 		end
 
-	selected_items: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+	selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW] is
 			-- Currently selected items.
 		do
 			Result := implementation.selected_items
@@ -426,6 +426,10 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.59  2000/04/27 17:50:47  pichery
+--| - changed the type of `selected_items' from
+--|   LINKED_LIST to ARRAYED_LIST.
+--|
 --| Revision 1.58  2000/04/26 00:04:04  pichery
 --| Slight redesign of the pixmap handling in
 --| trees and multi-column lists.

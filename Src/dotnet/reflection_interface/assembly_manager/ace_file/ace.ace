@@ -83,12 +83,12 @@ cluster
 		
 external
 	assembly: 	
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.Drawing.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.XML.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\SYSTEM.WINDOWS.FORMS.DLL",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\Accessibility.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.Data.dll",
+			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\System.dll",
+			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\System.Drawing.dll",
+			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\System.XML.dll",
+			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\SYSTEM.WINDOWS.FORMS.DLL",
+			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\Accessibility.dll",
+			"C:\Windows\Microsoft.NET\Framework\v1.0.2914\System.Data.dll",
 			"..\..\bin\ISE.Reflection.ReflectionInterface.dll",
 			"..\..\bin\ISE.Reflection.EiffelComponents.dll",
 	 		"..\..\bin\ISE.Reflection.Formatter.dll",

@@ -20,34 +20,38 @@ feature {EV_WIDGET} -- Initialization
 
 feature -- Status report
 
-	realized: BOOLEAN is
-			-- Is screen window realized?
+	destroyed: BOOLEAN is			
+			-- Is Current widget destroyed?
 		deferred
 		end
-
+	
 	insensitive: BOOLEAN is
 			-- Is current widget insensitive?
+		require
+			exists: not destroyed
 		deferred
 		end
 
 	shown: BOOLEAN is
 			-- Is current widget visible?
 		require
-			widget_realized: realized
+			exists: not destroyed
 		deferred
 		end
-
+	
 feature -- Status setting
 
 	destroy is
 			-- Destroy screen widget implementation.
 		deferred
+		ensure
+			destroyed: destroyed
 		end
 
 	hide is
 			-- Make widget invisible on the screen.
 		require
-			widget_realized: realized
+			exists: not destroyed
 		deferred
 		ensure
 			not shown
@@ -56,24 +60,12 @@ feature -- Status setting
 	show is
 			-- Make widget visible on the screen.
 		require
-			widget_realized: realized
-		deferred
-		end
-
-	realize is
-			-- Create screen window implementation 
+			exist: not destroyed
 		deferred
 		ensure
-			realized
+			shown		
 		end
 
-	unrealize is
-			-- Destroy screen window implementation
-		deferred		
-		ensure
-			not realized
-		end
-	
 	set_insensitive (flag: BOOLEAN) is
 			-- Set current widget in insensitive mode if
 			-- `flag'. This means that any events with an
@@ -83,6 +75,8 @@ feature -- Status setting
 			-- FocusOut will not be dispatched to current
 			-- widget and to all its children.  Set it to
 			-- sensitive mode otherwise.
+		require
+			exists: not destroyed
 		deferred
 		ensure
 			flag = insensitive
@@ -92,26 +86,34 @@ feature -- Measurement
 	
 	x: INTEGER is
 			-- Horizontal position relative to parent
+		require
+			exists: not destroyed		
 		deferred
 		end
 
 	y: INTEGER is
 			-- Vertical position relative to parent
+		require
+			exists: not destroyed
 		deferred
 		end	
 
 	width: INTEGER is
 			-- Width of widget
+		require
+			exists: not destroyed
 		deferred
 		ensure
-			width_large_enough: Result >= 0
+			Positive_width: Result >= 0
 		end
 
 	height: INTEGER is
 			-- Height of widget
+		require
+			exists: not destroyed
 		deferred
 		ensure
-			height_large_enough: Result >= 0
+			Positive_height: Result >= 0
 		end
 
 feature -- Resizing
@@ -120,41 +122,64 @@ feature -- Resizing
 			-- Set both width and height to `new_width'
 			-- and `new_height'.
 		require
-			width_large_enough: new_width >= 0
-			height_large_enough: new_height >= 0
+			exists: not destroyed
+			Positive_width: new_width >= 0
+			Positive_height_: new_height >= 0
 		deferred
+		ensure
+			width_set: width = new_width
+			height_set: height = new_height		
 		end
 
 	set_width (new_width :INTEGER) is
 			-- Set width to `new_width'.
 		require
-			width_large_enough: new_width >= 0
+			exists: not destroyed
+			Positive_width: new_width >= 0
 		deferred
+		ensure
+			width_set: width = new_width
 		end
 	
 	set_height (new_height: INTEGER) is
 			-- Set height to `new_height'.
 		require
-			height_large_enough: new_height >= 0
+			exists: not destroyed
+			Positive_height: new_height >= 0
 		deferred
+		ensure					
+			height_set: height = new_height
 		end
 
 	set_x (new_x: INTEGER) is
 			-- Put at horizontal position `new_x' relative
 			-- to parent.
+		require
+			exists: not destroyed
 		deferred
+		ensure
+			x_set: x = new_x
 		end
 
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
 			-- Put at horizontal position `new_x' and at
 			-- vertical position `new_y' relative to parent.
+		require
+			exists: not destroyed
 		deferred
+		ensure
+			x_set: x = new_x	
+			y_set: y = new_y	
 		end
 
 	set_y (new_y: INTEGER) is
 			-- Put at vertical position `new_y' relative
 			-- to parent.
+		require
+			exists: not destroyed
 		deferred
+		ensure
+			y_set: y = new_y		
 		end
 
 feature -- Event - command association
@@ -169,6 +194,7 @@ feature -- Event - command association
 			-- means that no arguments are passed to the
 			-- command.
 		require
+			exists: not destroyde
 			Valid_event: event /= Void
 			Valid_command: command /= Void
 		deferred
@@ -180,12 +206,16 @@ feature -- Event - command association
 			-- this context. If there is no command
 			-- associated with 'command_id', nothing
 			-- happens.
+		require
+			exists: not destroyed
 		deferred
 		end
 	
 	last_command_id: INTEGER is
 			-- Id of the last command added by feature
 			-- 'add_command'
+		require		
+			exists: not destroyed
 		deferred
 		end
 	

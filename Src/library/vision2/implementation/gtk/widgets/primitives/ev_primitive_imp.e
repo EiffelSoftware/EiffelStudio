@@ -7,11 +7,12 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class
+deferred class
 	
 	EV_PRIMITIVE_IMP
 	
 inherit
+	EV_PRIMITIVE_I
 	
 	EV_WIDGET_IMP
 	

@@ -521,7 +521,7 @@ feature {NONE} -- Implementation
 			-- Command that is used to remove objects from the tree.
 
 	hex_format_cmd: EB_HEX_FORMAT_CMD
-			-- FIXME JFIAT
+			-- Command that is used to switch hex/dec formatting for numerical values
 
 	split: EB_HORIZONTAL_SPLIT_AREA
 			-- Split area that contains both `local_tree' and `object_tree'.

@@ -38,13 +38,6 @@ inherit
 		
 create
 	make
---	,	make_for_pretty_print
-	
---| FIXME JFIAT: remove link to EB_SET_SLICE_SIZE_CMD
---| the slice limits should be specific to Pretty display settings
---| not linked to other dialog
---| we need to decide on this
-				
 
 feature -- Initialization
 
@@ -55,16 +48,6 @@ feature -- Initialization
 			for_tool := True
 		end
 				
---	make_for_pretty_print (dl: EB_PRETTY_PRINT_DIALOG) is
---			-- Initialize `Current' and associate it with a pretty print dialog.
---			-- This changes the behavior of the class.
---		do
---			for_tool := False
---			pretty_dlg := dl
---			slice_min := 0
---			slice_max := Application.displayed_string_size
---		end
-
 feature -- Access
 
 	menu_name: STRING is
@@ -167,11 +150,7 @@ feature -- Basic operations
 						Result := True
 					else
 						if Application.is_dotnet then
-							--| FIXME JFIAT: not working in case of not registered object
---							create {DEBUGGED_OBJECT_DOTNET} dobj.make (conv_obj.object_address, 0, 1)
---							if dobj.is_special then
---								Result := True
---							end						
+							--| not working in case of not registered object
 							nat_dv ?= Application.imp_dotnet.kept_object_item (conv_obj.object_address)
 							Result := nat_dv /= Void
 						else
@@ -187,11 +166,7 @@ feature -- Basic operations
 				end
 			else
 				if Application.is_dotnet then
-							--| FIXME JFIAT: not working in case of not registered object
---					create {DEBUGGED_OBJECT_DOTNET} dobj.make (pretty_dlg.current_object.object_address, 0, 1)
---					if dobj.is_special then
---						Result := True
---					end					
+						--| not working in case of not registered object
 					nat_dv ?= Application.imp_dotnet.kept_object_item (pretty_dlg.current_object.object_address)
 					Result := nat_dv /= Void
 				else

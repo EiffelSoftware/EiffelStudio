@@ -580,7 +580,6 @@ $(INDIR)\wurgent.obj: $(RTSRC)\urgent.c
 $(INDIR)\x2c.obj: $(RTSRC)\x2c.c
 	$(CC) $(JCFLAGS) $(RTSRC)\x2c.c
 
-
 final: finalized.lib
 work: wkbench.lib
 

@@ -379,7 +379,6 @@ external
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
 
 	object:
-		"$(EIFFEL_SRC)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\zlib.lib",

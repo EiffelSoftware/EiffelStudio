@@ -147,7 +147,7 @@ static  char    *names [] = {
 "BC_RCREATE" ,
 "BC_GEN_PARAM_CREATE" ,
 "BC_CREATE_EXP" ,
-"UNUSED_136" ,
+"BC_NULL_POINTER" ,
 "UNUSED_137" ,
 "UNUSED_138" ,
 "UNUSED_139" ,
@@ -241,7 +241,7 @@ static  int             ctype_max;
 static  void    read_byte_code (void);
 static  void    print_byte_code (void);
 static  void    print_instructions (void);
-static  void    print_dtype (uint32);
+static  void    print_dtype (int, uint32);
 static  void    print_ctype (short);
 static  void    print_cid (void);
 static  void    advance (int);
@@ -399,7 +399,7 @@ static  void    print_byte_code ()
 	fprintf (ofp,"Result Type  : ");
 	rtype = buint32 ();
 
-	print_dtype (rtype);
+	print_dtype (0,rtype);
 
 	NEWL;
 
@@ -414,7 +414,7 @@ static  void    print_byte_code ()
 		while (i--)
 		{
 			fprintf (ofp,"  Type : ");
-			print_dtype (buint32 ());
+			print_dtype (0,buint32 ());
 			NEWL;
 		}
 	}
@@ -436,15 +436,23 @@ static  void    print_byte_code ()
 		/* Types of locals - always provided */
 
 		fprintf (ofp,"  Type : ");
-		print_dtype (buint32 ());
+		print_dtype (1,buint32 ());
 		NEWL;
 	}
 
 	/* Arguments which must be cloned */
 
-	while (*ip != BC_NO_CLONE_ARG)
+	if (*ip != BC_NO_CLONE_ARG)
 	{
-		fprintf (ofp,"Clone nr : %d\n", (int) bshort ());
+		/* Consume the BC_CLONE_ARG */
+		ip += sizeof (char);
+
+		/* NOTE: The printout is wrong - FIXME */
+
+		while (*ip != BC_NO_CLONE_ARG)
+		{
+			fprintf (ofp,"Clone nr : %d\n", (int) bshort ());
+		}
 	}
 
 	advance (3);    /* Consume the 'BC_NO_CLONE_ARGS' */
@@ -611,7 +619,7 @@ static  void    print_instructions ()
 				/* Static type of class */
 				print_ctype (bshort ());
 				/* True type */
-				print_dtype (buint32 ());
+				print_dtype (0,buint32 ());
 				break;
 			case  BC_EXP_ASSIGN :
 				/* Attribute (expanded) */
@@ -620,7 +628,7 @@ static  void    print_instructions ()
 				/* Static type of class */
 				print_ctype (bshort ());
 				/* True type */
-				print_dtype (buint32 ());
+				print_dtype (0,buint32 ());
 				break;
 			case  BC_PASSIGN :
 				/* Precompiled attribute */
@@ -629,7 +637,7 @@ static  void    print_instructions ()
 				/* Org. offset */
 				fprintf (ofp,"ooff %ld ", blong ());
 				/* True type */
-				print_dtype (buint32 ());
+				print_dtype (0,buint32 ());
 				break;
 			case  BC_PEXP_ASSIGN :
 				/* Precompiled attribute (expanded)*/
@@ -638,7 +646,7 @@ static  void    print_instructions ()
 				/* Org. offset */
 				fprintf (ofp,"ooff %ld ", blong ());
 				/* True type */
-				print_dtype (buint32 ());
+				print_dtype (0,buint32 ());
 				break;
 			case  BC_NONE_ASSIGN :
 				break;
@@ -665,7 +673,7 @@ static  void    print_instructions ()
 				/* Static type of class */
 				print_ctype (bshort ());
 				/* True type */
-				print_dtype (buint32 ());
+				print_dtype (0,buint32 ());
 				/* Static type of target */
 				print_ctype (bshort ());
 /*GENERIC CONFORMANCE*/
@@ -678,7 +686,7 @@ static  void    print_instructions ()
 				/* Org. offset */
 				fprintf (ofp,"ooff %ld ", blong ());
 				/* True type */
-				print_dtype (buint32 ());
+				print_dtype (0,buint32 ());
 				/* Static type of target */
 				print_ctype (bshort ());
 /*GENERIC CONFORMANCE*/
@@ -687,6 +695,9 @@ static  void    print_instructions ()
 
 /* Creation */
 			case  BC_RCREATE:
+				fprintf (ofp, " Args:%d ", bshort());
+				fprintf (ofp, " Open map:%d ", bshort());
+				fprintf (ofp, " Closed map:%d ", bshort());
 				print_ctype (bshort());
 				print_cid ();
 				break;
@@ -700,14 +711,20 @@ static  void    print_instructions ()
 
 				switch (cval)
 				{
+					case BC_BIT:
+						/* creation of a bit type */
+						fprintf (ofp, " (BC_BIT) %ld", blong());
+						break;
 					case  BC_CTYPE :
 						/* creation type */
+						fprintf (ofp, " (BC_CTYPE) ");
 						print_ctype (bshort ());
 /*GENERIC CONFORMANCE*/
 						print_cid ();
 						break;
 					case BC_CREATE_EXP:
 						/* Hardcoded creation expression type */
+						fprintf (ofp, " (BC_CREATE_EXP) ");
 						(void) bshort ();
 						(void) bshort ();
 						/* creation type */
@@ -718,10 +735,13 @@ static  void    print_instructions ()
 
 					case  BC_CCUR :
 						/* like current */
+						fprintf (ofp, " (BC_CCUR) ");
 						break;
 					case  BC_CARG :
 						/* like argument */
 						/* static creation type */
+						fprintf (ofp, " (BC_CARG) ");
+
 						print_ctype (bshort ());
 /*GENERIC CONFORMANCE*/
 						print_cid ();
@@ -731,6 +751,7 @@ static  void    print_instructions ()
 					case  BC_CLIKE :
 						/* like feature */
 						/* creation type */
+						fprintf (ofp, " (BC_CLIKE) ");
 						print_ctype (bshort ());
 						/* Anchor id */
 						fprintf (ofp,"%ld", blong ());
@@ -738,12 +759,15 @@ static  void    print_instructions ()
 					case  BC_PCLIKE :
 						/* like precompiled feature */
 						/* Org. id */
+						fprintf (ofp, " (BC_PCTYPE) ");
+
 						print_ctype (bshort ());
 						fprintf (ofp,"oid %ld ", blong ());
 						/* Org. offset */
 						fprintf (ofp,"ooff %ld", blong ());
 						break;
 					case BC_GEN_PARAM_CREATE:
+						fprintf (ofp, " (BC_GEN_PARAM_CREATE) ");
 						print_ctype (bshort());
 						fprintf (ofp,"pos %ld", blong ());
 						break;
@@ -763,6 +787,10 @@ static  void    print_instructions ()
 				fprintf (ofp,"fid %d ", (int) bshort ());
 				/* Nr. of items */
 				fprintf (ofp,"%ld", blong ());
+				if (bshort())
+					fprintf (ofp, " Tuple");
+				else
+					fprintf (ofp, " Array");
 				break;
 			case  BC_PARRAY :   /* Have to check this */
 				/* Manifest array precompiled */
@@ -775,6 +803,10 @@ static  void    print_instructions ()
 				print_cid ();
 				/* Nr. of items */
 				fprintf (ofp,"%ld", blong ());
+				if (bshort())
+					fprintf (ofp, " Tuple");
+				else
+					fprintf (ofp, " Array");
 				break;
 			case  BC_CLONE :
 				break;
@@ -862,7 +894,7 @@ static  void    print_instructions ()
 				/* Type of class */
 				print_ctype (bshort ());
 				/* True type */
-				print_dtype (buint32 ());
+				print_dtype (0,buint32 ());
 				break;
 			case  BC_PATTRIBUTE :
 				/* Attribute precompiled */
@@ -871,7 +903,7 @@ static  void    print_instructions ()
 				/* Org. offset */
 				fprintf (ofp,"ooff %ld", blong ());
 				/* True type */
-				print_dtype (buint32 ());
+				print_dtype (0,buint32 ());
 				break;
 			case  BC_ATTRIBUTE_INV :
 				/* Attribute with invariant check */
@@ -882,7 +914,7 @@ static  void    print_instructions ()
 				/* Type of class */
 				print_ctype (bshort ());
 				/* True type */
-				print_dtype (buint32 ());
+				print_dtype (0,buint32 ());
 				break;
 			case  BC_PATTRIBUTE_INV :
 				/* Attribute precompiled with invariant check */
@@ -893,7 +925,7 @@ static  void    print_instructions ()
 				/* Org. offset */
 				fprintf (ofp,"ooff %ld", blong ());
 				/* True type */
-				print_dtype (buint32 ());
+				print_dtype (0,buint32 ());
 				break;
 
 			case  BC_CURRENT :
@@ -1020,6 +1052,9 @@ static  void    print_instructions ()
 			case  BC_DOUBLE :
 				fprintf (ofp,"%lf", bdouble ());
 				break;
+			case  BC_NULL_POINTER :
+				fprintf (ofp,"%ld", 0);
+				break;
 			case  BC_STRING :
 				fprintf (ofp,"\"%s\"", bstr ());
 				break;
@@ -1133,7 +1168,7 @@ static  void    print_instructions ()
 			case  BC_JAVA_RTYPE :
 				/* Feature name */
 				(void) bstr ();
-				print_dtype (buint32());
+				print_dtype (0,buint32());
 				/* Class name */
 				(void) bstr ();
 				break;
@@ -1161,7 +1196,7 @@ static  void    print_instructions ()
 }
 /*------------------------------------------------------------------*/
 
-static  void    print_dtype (uint32 type)
+static  void    print_dtype (int cid, uint32 type)
 
 {
 	int     dtype;
@@ -1192,6 +1227,9 @@ static  void    print_dtype (uint32 type)
 								fprintf (ofp, " [%s]", dtype_names [dtype]);
 							else
 								fprintf (ofp, " [?]");
+
+							if (cid)
+								print_cid ();
 
 							break;
 			case SK_REF:    fprintf (ofp,"RT %u", type & SK_DTYPE);

@@ -61,21 +61,14 @@ feature -- Search
 			-- If not, return the last item found in the list.
 		require
 			type_not_void: t /= Void
+			has_type: has_type (t)
 		do
 			if has_type (t) then
 				Result := found_item
-			else
-					-- FIXME: the above search should make sure that we have an item
-					-- but some time we don't therefore we return `last', if any, or
-					-- Void otherwise.
-				if count = 0 then
-					Result := Void
-				else
-					Result := last				
-				end
 			end
 		ensure
 			cursor_not_changed: index = old index
+			result_not_void: Result /= Void
 		end
 
 feature -- Access

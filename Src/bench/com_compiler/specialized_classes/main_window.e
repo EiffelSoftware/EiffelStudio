@@ -37,19 +37,19 @@ feature {WEL_DISPATCHER}
 				check
 					non_void_compiler: compiler /= Void
 				end
-				compiler.item.compile
+				compiler.item.compile (feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_workbench)
 				Result := 0
 			when compile_finalize_msg then
 				check
 					non_void_compiler: compiler /= Void
 				end
-				compiler.item.finalize
+				compiler.item.compile (feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_finalize)
 				Result := 0
 			when compile_precompile_msg then
 				check
 					non_void_compiler: compiler /= Void
 				end
-				compiler.item.precompile
+				compiler.item.compile (feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_precompile)
 				Result := 0
 			else
 				Result := Precursor (hwnd, msg, wparam, lparam)

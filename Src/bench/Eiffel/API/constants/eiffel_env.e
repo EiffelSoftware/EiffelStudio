@@ -110,7 +110,7 @@ feature -- Access: file name
 			fname: FILE_NAME
 		once
 			if Platform_constants.is_windows then
-				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel55\recent projects"
+				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel56\recent projects"
 			else
 				create fname.make_from_string (Execution_environment.home_directory_name)
 				fname.set_file_name (".ec_recent_projects")
@@ -124,10 +124,10 @@ feature -- Access: file name
 			fname: FILE_NAME
 		once
 			if Platform_constants.is_windows then
-				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel55"
+				Result := "HKEY_CURRENT_USER\Software\ISE\Eiffel56"
 			else
 				create fname.make_from_string (Execution_environment.home_directory_name)
-				fname.set_file_name (".ecrc55")
+				fname.set_file_name (".ecrc56")
 				Result := fname
 			end
 		end

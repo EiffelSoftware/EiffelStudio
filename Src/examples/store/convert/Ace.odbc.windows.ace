@@ -49,5 +49,5 @@ external
 		"$(ISE_EIFFEL)/library/time/spec/$(ISE_COMPILER)/lib/datetime.lib",
 		"$(ISE_EIFFEL)/library/store/spec/$(ISE_COMPILER)/lib/odbc_store.lib",
 -- Specify the correct path
-		"d:\odbcsdk\lib32\odbc32.lib" 
+		"odbc32.lib" 
 end

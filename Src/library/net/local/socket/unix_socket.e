@@ -52,10 +52,10 @@ feature -- Status setting
 		require else
 			name_address: address /= void
 		local
-			ext: ANY
+			ext: C_STRING
 		do
-			ext := name.to_c;
-			c_unlink ($ext)
+			create ext.make (name)
+			c_unlink (ext.item)
 		end
 
 feature {NONE} -- Externals

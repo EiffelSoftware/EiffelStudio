@@ -8,19 +8,15 @@ indexing
 	revision: "$Revision$"
 
 class
-
 	HOST_ADDRESS
 
 inherit
-	TO_SPECIAL[CHARACTER]
-		rename
-			area as address_host
+	ANY
 		redefine
-			copy, is_equal
+			is_equal, copy
 		end
 
-creation
-
+create
 	make, make_local, make_from_name, make_from_ip_number
 
 feature -- Initialization
@@ -28,7 +24,7 @@ feature -- Initialization
 	make is
 			-- Create a host address object.
 		do
-			make_area (in_addr_size)
+			create address_host.make (in_addr_size)
 		end;
 
 	make_local is
@@ -52,6 +48,11 @@ feature -- Initialization
 			set_host_address (an_ip_address)
 		end
 
+feature -- Access
+
+	address_host: MANAGED_POINTER
+			-- Special data zone.
+
 feature -- Measurement
 
 	count: INTEGER is
@@ -73,19 +74,19 @@ feature -- Status_report
 	host_number: INTEGER is
 			-- IP number in long integer form of current address
 		do
-			Result := get_host_addr ($address_host)
+			Result := get_host_addr (address_host.item)
 		end;
 
 	host_address: STRING is
 			-- IP number (dotted format) of current address
 		do
-			Result := net_host ($address_host)
+			create Result.make_from_c (net_host (address_host.item))
 		end;
 
 	local_host_name: STRING is
 			-- Host name of the local machine
 		do
-			Result := c_get_hostname
+			create Result.make_from_c (c_get_hostname)
 		end
 
 feature -- Status_setting
@@ -95,10 +96,10 @@ feature -- Status_setting
 		require
 			name_valid: a_name /= Void and then not a_name.is_empty
 		local
-			ext: ANY
+			ext: C_STRING
 		do
-			ext := a_name.to_c;
-			host_address_from_name ($address_host, $ext)
+			create ext.make (a_name)
+			host_address_from_name (address_host.item, ext.item)
 		end;
 
 	set_host_address (host_id: STRING) is
@@ -106,19 +107,19 @@ feature -- Status_setting
 		require
 			dotted_address_not_void: host_id /= Void
 		local
-			ext: ANY;
+			ext: C_STRING
 			host_num: INTEGER
 		do
-			ext := host_id.to_c;
-			host_num := net_host_addr ($ext);
-			set_host_addr ($address_host, host_num)
+			create ext.make (host_id)
+			host_num := net_host_addr (ext.item);
+			set_host_addr (address_host.item, host_num)
 		end;
 
 	set_in_address_any is
 			-- Set host address to "in address any".
 			-- This is a special address selected by the host machine.
 		do
-			set_host_addr ($address_host, inet_inaddr_any)
+			set_host_addr (address_host.item, inet_inaddr_any)
 		end
 
 feature -- Conversion
@@ -127,7 +128,7 @@ feature -- Conversion
 			-- Converts a c host address structure (address_in)
 			-- to an eiffel address object.
 		do
-			set_from_c ($address_host, ptr)
+			set_from_c (address_host.item, ptr)
 		end
 
 feature -- Duplication
@@ -136,8 +137,8 @@ feature -- Duplication
 			-- Reinitialize by copying the characters of `other'.
 			-- (This is also used by `clone')
 		do
-			Precursor {TO_SPECIAL} (other)
-			make_area (other.count)
+			standard_copy (other)
+			address_host.resize (other.count)
 			address_host.copy (other.address_host)
 		ensure then
 			new_result_count: count = other.count or else count = in_addr_size
@@ -145,7 +146,7 @@ feature -- Duplication
 
 feature {NONE} -- External
 
-	c_get_hostname: STRING is
+	c_get_hostname: POINTER is
 			-- Get local hostname.
 		external
 			"C"
@@ -184,7 +185,7 @@ feature {NONE} -- External
 			"C"
 		end;
 
-	net_host (addr: POINTER): STRING is
+	net_host (addr: POINTER): POINTER is
 		external
 			"C"
 		end;

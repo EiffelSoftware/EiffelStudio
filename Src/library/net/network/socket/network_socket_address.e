@@ -87,14 +87,14 @@ feature -- Status report
 	port: INTEGER is
 			-- Port number
 		do
-			Result := get_sock_port ($socket_address)
+			Result := get_sock_port (socket_address.item)
 		end;
 
 	host_address: HOST_ADDRESS is
 			-- Host address of address
 		do
 			create Result.make;
-			Result.from_c (get_sock_addr_in ($socket_address))
+			Result.from_c (get_sock_addr_in (socket_address.item))
 		end
 
 feature -- Status setting
@@ -103,28 +103,25 @@ feature -- Status setting
 			-- Set port number using `a_name' and `protocol'
 			-- to refer into the (local) services file.
 		local
-			ext1, ext: ANY;
+			ext1, ext: C_STRING
 			return: INTEGER
 		do
-			ext1 := a_name.to_c;
-			ext := protocol.to_c;
-			return := get_servent_port ($ext1, $ext);
+			create ext1.make (a_name)
+			create ext.make (protocol)
+			return := get_servent_port (ext1.item, ext.item);
 			set_port (return)
 		end;
 
 	set_port (p: INTEGER) is
 			-- Set port to `p'.
 		do
-			set_sock_port ($socket_address, p)
+			set_sock_port (socket_address.item, p)
 		end;
 
 	set_host_address (a_host_address: HOST_ADDRESS) is
 			-- Set host address to `a_host_address'
-		local
-			ext: ANY
 		do
-			ext := a_host_address.address_host;
-			set_sock_addr_in ($socket_address, $ext)
+			set_sock_addr_in (socket_address.item, a_host_address.address_host.item)
 		end;
 
 	clear_zero is
@@ -132,7 +129,7 @@ feature -- Status setting
 		local
 			null_pointer: POINTER
 		do
-			set_sock_zero ($socket_address, null_pointer)
+			set_sock_zero (socket_address.item, null_pointer)
 		end
 
 feature {NONE} -- External

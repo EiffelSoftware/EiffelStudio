@@ -77,26 +77,26 @@ feature
 			-- and return the number of mediums waiting
 			-- after 'time_out...' time
 		local
-			lrm, lwm, lem: ANY
+			lrm, lwm, lem: POINTER
 		do
 			if not ignore_read and then not read_command_list.all_default then
 				last_read_mask := clone (read_mask);
-				lrm := last_read_mask.mask
+				lrm := last_read_mask.mask.item
 			end;
 			if not ignore_write and then not write_command_list.all_default then
 				last_write_mask := clone (write_mask);
-				lwm := last_write_mask.mask
+				lwm := last_write_mask.mask.item
 			end;
 			if not ignore_exception and then 
 				not exception_command_list.all_default then
 				last_except_mask := clone (except_mask);
-				lem := last_except_mask.mask
+				lem := last_except_mask.mask.item
 			end;
 
 			if wait then
-				Result := c_select (number_to_check, $lrm, $lwm, $lem, -1, 0)
+				Result := c_select (number_to_check, lrm, lwm, lem, -1, 0)
 			else
-				Result := c_select (number_to_check, $lrm, $lwm, $lem, time_out_msec//1000, time_out_msec\\1000)
+				Result := c_select (number_to_check, lrm, lwm, lem, time_out_msec//1000, time_out_msec\\1000)
 			end
 		end
 

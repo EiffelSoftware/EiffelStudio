@@ -17,7 +17,8 @@ inherit
 	EV_WINDOW_I
 		undefine
 			propagate_foreground_color,
-			propagate_background_color
+			propagate_background_color,
+			last_call_was_destroy
 		redefine
 			interface
 		end
@@ -28,7 +29,8 @@ inherit
 		undefine
 			set_default_colors,
 			show,
-			hide
+			hide,
+			last_call_was_destroy
 		redefine
 			destroy,
 			set_parent,
@@ -95,10 +97,10 @@ inherit
 			on_destroy,
 			on_show,
 			on_move,
-			closeable,
 			default_process_message,
 			move_and_resize,
-			on_menu_command
+			on_menu_command,
+			on_wm_close
 		end
 
 	WEL_MA_CONSTANTS
@@ -205,12 +207,17 @@ feature -- Status setting
 	destroy is
 			-- Destroy the widget, but set the parent sensitive
 			-- in case it was set insensitive by the child.
+		local
+			e: EV_ENVIRONMENT
 		do
-			application.item.remove_root_window (interface)
+			create e
+			e.application.remove_root_window (interface)
 			if parent_imp /= Void then
 				parent_imp.disable_sensitive
 			end
 			wel_destroy
+			is_destroyed := True
+			destroy_just_called := True
 		end
 
 	set_default_minimum_size is
@@ -220,32 +227,6 @@ feature -- Status setting
 			set_maximum_width (maximized_window_width)
 			set_maximum_height (maximized_window_height)
 		end
-
---	set_horizontal_resize (flag: BOOLEAN) is
---			-- Allow the window to be verticaly resized.
---		do
---			{EV_CONTAINER_IMP} Precursor (flag)
---			if flag then
---				min_track.set_x (width)
---				max_track.set_x (width)
---			else
---				min_track.set_x (minimum_width)
---				max_track.set_x (maximum_width)
---			end
---		end
-
---	set_vertical_resize (flag: BOOLEAN) is
---			-- Allow the window to be horizontaly resized.
---		do
---			{EV_CONTAINER_IMP} Precursor (flag)
---			if flag then
---				min_track.set_y (height)
---				max_track.set_y (height)
---			else
---				min_track.set_y (maximum_height)
---				max_track.set_y (maximum_height)
---			end
---		end
 
 	forbid_resize is
 			-- Forbid the resize of the window.
@@ -716,21 +697,6 @@ feature {NONE} -- Implementation
    		do
  		end
 
-	closeable: BOOLEAN is
-			-- Can the user close the window?
-			-- Yes by default.
-		do
-			--|FIXME is this a command or a query, seperate?
-			--if (command_list = Void) or else 
-			--		(command_list @ Cmd_close) = Void then
-			--	Result := True
-			--	interface.remove_implementation
-			--else
-			--	execute_command (Cmd_close, Void)
-			--	Result := False
-			--end
-		end
-
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
 		local
 			min_track, max_track: WEL_POINT
@@ -776,6 +742,12 @@ feature {NONE} -- Implementation
 			if msg = Wm_rbuttondown then
 				set_message_return_value (Ma_noactivate)
 			end
+		end
+	
+	on_wm_close is
+		do
+			interface.close_actions.call ([])
+				-- Call the close events
 		end
 
 feature {EV_PND_TRANSPORTER_IMP}
@@ -866,7 +838,24 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			Result := cwin_get_wm_vscroll_pos (wparam, lparam)
 		end
 
-feature --
+feature -- Contract Support
+
+	last_call_was_destroy: BOOLEAN is
+			--|FIXME This redefinition turns off the
+			--|Invariant from EV_ANY_I, no_calls_after_destroy.
+			--|When destroying a window, windows calls back the window
+			--|which violates no_calls_after_destroy.
+			--|This is a temporary fix, and needs to be corrected.
+			-- Was `destroy' just called?
+			-- Only returns `True' once.
+			-- Should only be called by the invariant!
+			-- See invariant: no_calls_after_destroy
+		do
+				Result := True
+				destroy_just_called := True
+		end
+
+feature -- Implementation
 
 	interface: EV_WINDOW
 
@@ -894,6 +883,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/02/29 18:04:43  rogers
+--| Removed closeable, redefined last_call_was_destroy, which should only be a temporary solution, as it turns off the checking of no_calls_after_destroy for EV_WINDOW_IMP, EV_TITLED_WINDOW_IMP and EV_DIALOG_IMP. Now call the new events from on_wm_close. Removed set_horizontal_resize and set_vertical_resize. in destroy, remove_root_window is now called.
+--|
 --| Revision 1.24  2000/02/23 02:25:28  brendel
 --| Now redefines on_menu_command to propagate the given `id' to the menu-bar,
 --| assuming that it has one when this feature is called.

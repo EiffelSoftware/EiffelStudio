@@ -20,7 +20,7 @@ feature
 			!!Result.make ("");
 		end;
 
-	init_toolkit: MS_WINDOWS is
+	init_toolkit: TOOLKIT_IMP is
 			-- Toolkit for current platform
 		once
 			!!Result.make ("");

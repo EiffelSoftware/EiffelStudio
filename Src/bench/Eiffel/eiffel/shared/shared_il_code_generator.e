@@ -12,7 +12,7 @@ feature {NONE} -- IL generator object
 	il_generator: IL_CODE_GENERATOR is
 			-- To generate IL code
 		once
-			create Result
+			create Result.make
 		end
 
 feature {NONE} -- IL label factory

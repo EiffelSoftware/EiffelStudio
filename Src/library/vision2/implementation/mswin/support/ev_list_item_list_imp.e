@@ -106,8 +106,8 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
 			-- Insert `item_imp' at `an_index'.
 		do
-			ev_children.go_i_th (an_index - 1)
-			ev_children.put_right (item_imp)
+		--	ev_children.go_i_th (an_index - 1)
+		--	ev_children.put_right (item_imp)
 			insert_string_at (item_imp.wel_text, an_index - 1)
 		end
 
@@ -118,8 +118,8 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 		do
 			pos := index_of_item_imp (item_imp)
 			delete_string (pos - 1)
-			ev_children.go_i_th (pos)
-			ev_children.remove
+		--	ev_children.go_i_th (pos)
+		--	ev_children.remove
 		end
 
 feature {NONE} -- Implementation
@@ -167,6 +167,12 @@ end -- class EV_LIST_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/04/05 21:16:11  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.2.2.1  2000/04/05 19:53:31  brendel
+--| Removed calls to ev_children by graphical insert/remove features.
+--|
 --| Revision 1.2  2000/03/30 18:10:32  brendel
 --| Added deferred features `top_index', `item_height' and
 --| `set_pointer_style'.

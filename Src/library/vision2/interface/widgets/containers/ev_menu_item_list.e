@@ -25,6 +25,22 @@ feature {NONE} -- Initialization
 			create item_select_actions
 		end
 
+feature -- Contract support
+
+	is_parent_recursive (a_list: EV_MENU_ITEM_LIST): BOOLEAN is
+			-- Is `a_widget' `parent' or recursively `parent' of `parent'.
+		do
+			Result := a_list = parent or else
+				(parent /= Void and then parent.is_parent_recursive (a_list))
+		end
+
+feature -- Status report
+
+	parent: EV_MENU_ITEM_LIST is
+			-- Container of `Current'.
+		deferred
+		end
+
 feature -- Event handling
 
 	item_select_actions: EV_MENU_ITEM_SELECT_ACTION_SEQUENCE
@@ -56,6 +72,12 @@ end -- class EV_MENU_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/05 21:16:14  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.6.2.1  2000/04/03 18:12:38  brendel
+--| Added is_parent_recursive and parent.
+--|
 --| Revision 1.6  2000/03/22 21:34:12  brendel
 --| Moved item_select_actions up to menu item list, because it also
 --| applies to menu bars.

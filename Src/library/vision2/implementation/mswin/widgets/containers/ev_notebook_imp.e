@@ -19,18 +19,12 @@ inherit
 			interface
 		end
 
-	EV_WIDGET_LIST_I
-		undefine
-			is_useable
-		redefine
-			interface
-		end
-
-	EV_CONTAINER_IMP
+	EV_WIDGET_LIST_IMP
 		rename
-			on_set_focus as widget_on_set_focus	
+			on_set_focus as widget_on_set_focus
 		undefine
-			is_useable
+			is_useable,
+			count
 		redefine
 			enable_sensitive,
 			disable_sensitive,
@@ -42,7 +36,10 @@ inherit
 			notebook_parent,
 			interface,
 			child_added,
-			initialize
+			initialize,
+			insert_i_th,
+			remove_i_th,
+			i_th
 		end
 
 	EV_FONTABLE_IMP
@@ -57,7 +54,7 @@ inherit
 	WEL_TAB_CONTROL
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
@@ -124,6 +121,7 @@ feature {NONE} -- Initialization
 			-- Create an empty notebook.
 		do
 			base_make (an_interface)
+		--	create ev_children.make (3)
 			wel_make (default_parent, 0, 0, 0, 0, 0)
 			tab_pos := interface.tab_top
 			index := 0
@@ -132,11 +130,24 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialize notebook
 		do
-			{EV_CONTAINER_IMP} precursor
+			{EV_WIDGET_LIST_IMP} precursor
 			check_notebook_assertions := True
 		end
 
 feature -- Access
+
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
+		end
 
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains the current widget.
@@ -700,7 +711,7 @@ feature {NONE} -- WEL Implementation
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- A key has been pressed
 		do
-			{EV_CONTAINER_IMP} Precursor (virtual_key, key_data)
+			{EV_WIDGET_LIST_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
 		end
 
@@ -815,241 +826,78 @@ feature --|FIXME all of these need implementating
 			end
 		end
 
-	item: EV_WIDGET is
-			-- Current item
+feature {NONE} -- Implementation
+
+	ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
+			-- Internal list of children.
+
+	i_th (i: INTEGER): EV_WIDGET is
+			-- Item at `i'-th position.
 		local
-			child_item: WEL_TAB_CONTROL_ITEM
-			child_imp: EV_WIDGET_IMP
+			wel_win: WEL_WINDOW
+			v_imp: EV_WIDGET_IMP
 		do
-			child_item := get_item (index - 1)
-			child_imp ?= child_item.window
-			if child_imp /= Void then
-				Result := child_imp.interface
+			wel_win := get_item (i - 1).window
+			v_imp ?= wel_win
+			check
+				v_imp_not_void: v_imp /= Void
 			end
+			Result := v_imp.interface
 		end
 
-	go_to (p: EV_WIDGET_LIST_CURSOR) is
-			-- Move to position `p'
-		do
-			index := p.index
-		end
-
-	forth is
-			-- Move cursor to next position.
-		do
-			index := index + 1
-		end
-
-	extend (v: like item) is
-			-- Add `v' to end.
+	insert_i_th (v: like item; i: INTEGER) is
+			-- Insert `v' at position `i'.
 		local
-			a_wel_item: WEL_TAB_CONTROL_ITEM
-			ww: WEL_WINDOW
-			widget_imp: EV_WIDGET_IMP
-			child_imp: EV_WIDGET_I
-			p: EV_WIDGET_IMP
+			wel_tci: WEL_TAB_CONTROL_ITEM
+			wel_win: WEL_WINDOW
+			v_imp: EV_WIDGET_IMP
 		do
-			child_imp :=v.implementation
-			ww ?= child_imp
-			!! a_wel_item.make
-			a_wel_item.set_window (ww)
-			insert_item (count, a_wel_item)
-			widget_imp ?= child_imp
-			widget_imp.wel_set_parent (Current)
-			widget_imp.set_top_level_window_imp (top_level_window_imp)
+			v_imp ?= v.implementation
+			check
+				v_imp_not_void: v_imp /= Void
+			end
+			wel_win ?= v_imp
+			check
+				wel_win_not_void: wel_win /= Void
+			end
+			create wel_tci.make
+			wel_tci.set_window (wel_win)
+			insert_item (i - 1, wel_tci)
+			v_imp.wel_set_parent (Current)
+			v_imp.set_top_level_window_imp (top_level_window_imp)
+			v_imp.hide
 			notify_change (2 + 1)
 		end
 
-	off: BOOLEAN is
-			-- Is there no current item?
-		do
-			Result := index > count or index < 0
-		end
-
-
-	empty: BOOLEAN is
-			-- Is structure empty?
-		do
-			Result := count = 0
-		end
-
-	prune (v: like item) is
-			-- Remove first occurrence of `v', if any.
-			-- Move cursor to right neighbour.
+	remove_i_th (i: INTEGER) is
+			-- Remove item at `i'-th position.
 		local
-			an_index: INTEGER
-			child_imp: EV_WIDGET_IMP
+			v_imp: EV_WIDGET_IMP
+			wel_win: WEL_WINDOW
 		do
-			child_imp ?= v.implementation
-			an_index := get_child_index (child_imp)
-			interface.go_i_th (an_index)
-			remove
-		end
-
-	wipe_out is
-			-- Remove all items
-		do
-			from
-				interface.start
-			until
-				interface.off
-			loop
-				remove
-				interface.forth
+			v_imp ?= i_th (i).implementation
+			check
+				v_imp_not_void: v_imp /= Void
 			end
-		end
-
-	cursor_index (p: EV_WIDGET_LIST_CURSOR) is
-			-- Index of `p'
-		do
-			index := p.index
-		end
-
-	move (i: INTEGER) is
-			-- Move index `i' positions.
-		do
-			index := index + i;
-			if (index > count + 1) then
-				index := count + 1
-			elseif (index < 0) then
-				index := 0
+			wel_win ?= v_imp
+			check
+				wel_win_not_void: wel_win /= Void
 			end
-		end
-
-
-	replace (v: like item) is
-			-- Replace `item' by `v'
-		local
-			a_wel_item: WEL_TAB_CONTROL_ITEM
-			ww: WEL_WINDOW
-			widget_imp: EV_WIDGET_IMP
-			child_imp: EV_WIDGET_I
-			original_selected_index: INTEGER
-		do
-			original_selected_index := selected_item_index
-			widget_imp ?= item.implementation
-			ww ?= widget_imp
 			disable_notebook_assertions
-			widget_imp.wel_set_parent (default_parent)
-			delete_item (index - 1)
-			if count < index then
-				extend (v)
-			elseif index = 1 then
-				put_front (v)
-				move (-1)
-			else
-				back
-				put_right (v)
-				move (1)	
-			end
-			enable_notebook_assertions
-			if index = original_selected_index then
-				set_current_page (index)
-			end
-		end
-
-	put_right (v: like item) is
-			-- Add `v' to right of `item'
-		local
-			a_wel_item: WEL_TAB_CONTROL_ITEM
-			ww: WEL_WINDOW
-			widget_imp: EV_WIDGET_IMP
-			child_imp: EV_WIDGET_I
-		do
-			child_imp :=v.implementation
-			ww ?= child_imp
-			!! a_wel_item.make
-			a_wel_item.set_window (ww)
-			insert_item (index, a_wel_item)
-			widget_imp ?= child_imp
-			widget_imp.wel_set_parent (Current)
-			widget_imp.set_top_level_window_imp (top_level_window_imp)
-			widget_imp.hide
-			notify_change (2 + 1)
-		end
-
-	remove is
-			-- Remove `item'
-		local
-			item_imp: EV_WIDGET_IMP
-			ww: WEL_WINDOW
-		do
-			item_imp ?= item.implementation
-			ww ?= item_imp
-			disable_notebook_assertions
-			item_imp.wel_set_parent (default_parent)
-			if selected_item_index = index then
+			if selected_item_index = i then
 				if selected_item_index > 1 then
 					set_current_page (selected_item_index - 1)
 				elseif count > selected_item_index then
 					set_current_page (selected_item_index + 1)
 				end
 			end
-			delete_item (index - 1)
+			delete_item (i - 1)
+			v_imp.wel_set_parent (Default_parent)
 			enable_notebook_assertions
 			notify_change (2 + 1)
 		end
 
-	remove_left is
-			-- Remove item to left of cursor position.
-		do
-			back
-			remove
-		end
-
-	remove_right is
-			-- Remove item to right of cursor position.
-		do
-			forth
-			remove
-		end
-
-	index: INTEGER
-		-- Index of current position.
-
-	cursor: CURSOR is
-			-- Current cursor position.
-		do
-			create {EV_WIDGET_LIST_CURSOR} Result.make (index)
-		end
-
-	valid_cursor (p: CURSOR): BOOLEAN is
-		-- Can the cursor be moved to position `p'?
-		local
-			widget_list_cursor: EV_WIDGET_LIST_CURSOR
-		do
-			widget_list_cursor ?= p;
-			if widget_list_cursor /= Void and (widget_list_cursor.index >= 0) 
-			and (widget_list_cursor.index <= count + 1) then
-				Result := True
-			end
-		end
-
-	back is
-			-- Move to previous position.
-		do
-			index := index - 1
-		end
-
-	put_front (v: like item) is
-			-- Add to beginning. Do not move cursor.
-		local
-			a_wel_item: WEL_TAB_CONTROL_ITEM
-			ww: WEL_WINDOW
-			widget_imp: EV_WIDGET_IMP
-			child_imp: EV_WIDGET_I
-		do
-			child_imp :=v.implementation
-			ww ?= child_imp
-			!! a_wel_item.make
-			a_wel_item.set_window (ww)
-			insert_item (0, a_wel_item)
-			widget_imp ?= child_imp
-			widget_imp.wel_set_parent (Current)
-			widget_imp.set_top_level_window_imp (top_level_window_imp)
-			widget_imp.hide
-			notify_change (2 + 1)
-		end
+feature {NONE} -- Implementation
 
 	selected_item_index: INTEGER is
 			-- One based index of topmost page.	
@@ -1066,7 +914,7 @@ feature --|FIXME all of these need implementating
 			child_imp ?= v.implementation
 			an_index := get_child_index (child_imp)
 			set_current_selection (an_index - 1)
-			end
+		end
 
 	set_item_text (v: like item; a_text: STRING) is
 			-- Assign `a_text' to the label for `an_item'.
@@ -1132,6 +980,16 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/04/05 21:16:12  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.50.2.2  2000/04/05 19:55:06  brendel
+--| Fixed insert_i_th and remove_i_th.
+--|
+--| Revision 1.50.2.1  2000/04/03 18:23:10  brendel
+--| Revised with new EV_DYNAMIC_LIST.
+--| New add/remove features still need to be checked.
+--|
 --| Revision 1.50  2000/03/21 02:34:11  brendel
 --| Removed on_accelerator_command from undefine clause.
 --|

@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
     description:
@@ -11,17 +12,6 @@ deferred class
 
 inherit
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
-
-feature {EV_LIST_ITEM_HOLDER_IMP, EV_LIST_ITEM_IMP} -- Implementation
-
-	list_widget: POINTER
-			-- Pointer to the gtk_list.
-			-- We need this pointer because the EiffelVision2
-			-- EV_LIST_ITEM_HOLDER are often composed by
-			-- several Gtk object.
-			-- ex: EV_LIST = GtkScrolledWindow + GtkList
-			--  `widget' would point to the 1st object
-			-- and `list_widget' to the 2nd.
 
 end -- class EV_LIST_ITEM_HOLDER_IMP
 
@@ -46,6 +36,12 @@ end -- class EV_LIST_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/05 21:16:09  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.6.4.1  2000/04/04 23:42:17  brendel
+--| Unreleased.
+--|
 --| Revision 1.6  2000/02/22 18:39:34  oconnor
 --| updated copyright date and formatting
 --|

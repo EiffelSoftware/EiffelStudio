@@ -1,9 +1,8 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: 
-		"EiffelVision tree, Mswindows implementation."
+		"Eiffel Vision tree. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -133,12 +132,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	count: INTEGER is
-			-- Number of direct children of the holder.
-		do
-			Result := ev_children.count
-		end
 
 	all_ev_children: HASH_TABLE [EV_TREE_ITEM_IMP, POINTER]
 			-- Children of the tree Classified by their h_item
@@ -547,6 +540,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.61  2000/04/05 21:16:13  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
 --| Revision 1.60  2000/03/31 00:24:51  rogers
 --| Removed on_left_button_down, on_middle_button_down and
 --| on_right_button_down as they are now inherited from
@@ -554,6 +550,9 @@ end -- class EV_TREE_IMP
 --|
 --| Revision 1.59  2000/03/30 19:59:13  rogers
 --| Removed commented pnd_press.
+--|
+--| Revision 1.57.2.1  2000/04/03 18:25:35  brendel
+--| Count is now implemented in EV_DYNAMIC_LIST_IMP.
 --|
 --| Revision 1.57  2000/03/28 01:33:32  rogers
 --| Formatting.

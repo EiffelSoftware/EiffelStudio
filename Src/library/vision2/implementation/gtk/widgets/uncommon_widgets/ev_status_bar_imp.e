@@ -60,8 +60,6 @@ feature {NONE} -- Implementation
 			C.gtk_box_reorder_child (a_container, a_child, a_position)
 		end
 
-	list_widget: POINTER
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_STATUS_BAR
@@ -73,6 +71,12 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/04/05 21:16:10  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.15.2.1  2000/04/05 00:03:04  brendel
+--| removed list_widget.
+--|
 --| Revision 1.15  2000/03/13 22:11:07  king
 --| Corrected indenting on feature clauses
 --|

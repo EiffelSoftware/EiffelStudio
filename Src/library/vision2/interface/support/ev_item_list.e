@@ -10,313 +10,33 @@ deferred class
 	EV_ITEM_LIST [G -> EV_ITEM]
 
 inherit
-
 	EV_ANY
+		undefine
+			create_action_sequences
 		redefine
 			implementation
 		end
 
-	DYNAMIC_LIST [G]
-		rename
-			prune as dl_prune,
-			extend as dl_extend,
-			replace as dl_replace,
-			put_front as dl_put_front,
-			put_right as dl_put_right
-		export
-			{NONE} duplicate, new_chain
-		undefine
-			changeable_comparison_criterion,
-			default_create,
-			move
+	EV_DYNAMIC_LIST [G]
 		redefine
-			start,
-			finish,
-			merge_left,
-			merge_right
+			implementation
 		end
 
-	SET [G]
-		rename
-			extend as set_extend
-		undefine
-			prune_all,
-			changeable_comparison_criterion,
-			default_create
-		select
-			prune,
-			set_extend
-		end
+feature -- Contract support
 
-feature -- Access
-
-	item: G is
-			-- Item at current position.
+	parent_void (v: like item): BOOLEAN is
+			-- Is `v' not in an Eiffel Vision container yet?
 		do
-			Result := implementation.item
+			Result := v.parent = Void
 		end
 
-	item_by_data (data: ANY): like item is
-			-- First item with `data'.
-		require
-			data_not_void: data /= Void
+	is_parent_of (v: like item): BOOLEAN is
+			-- Is `Current' parent of `v'.
 		do
-			Result := implementation.item_by_data (data)
+			Result := v.parent = Current
 		end
 
-	index: INTEGER is
-			-- Index of current position.
-		do
-			Result := implementation.index
-		ensure then
-			bridge_ok: Result = implementation.index
-		end
-
-	cursor: CURSOR is
-			-- Current cursor position.
-		do
-			Result := implementation.cursor
-		ensure then
-			bridge_ok: Result.is_equal (implementation.cursor)
-		end
-	
-feature -- Measurement
-
-	count: INTEGER is
-			-- Number of items.
-		do
-			Result := implementation.count
-		ensure then
-			bridge_ok: Result = implementation.count
-		end
-
-feature -- Status report
-
-	valid_cursor (p: CURSOR): BOOLEAN is
-			-- Can the cursor be moved to position `p'?
-		do
-			Result := implementation.valid_cursor (p)
-		ensure then
-			bridge_ok: Result = implementation.valid_cursor (p)
-		end
-
-	full: BOOLEAN is false
-		-- Is structured filled to capacity? (Answer: no.)
-
-feature -- Cursor movement
-
-	start is
-			-- Move to first position.
-		do
-			go_i_th (1)
-		end
-
-	finish is
-			-- Move cursor to first position.
-		do
-			go_i_th (count)
-		ensure then
-			empty_implies_before: empty implies before
-		end
-
-	back is
-			-- Move to previous position.
-		do
-			implementation.back
-		end
-
-	forth is
-			-- Move cursor to next position.
-		do
-			implementation.forth
-		end
-
-
-	go_to (p: CURSOR) is
-			-- Move cursor to position `p'.
-		do
-			implementation.go_to (p)
-		end
-
-	move (i: INTEGER) is
-			-- Move cursor `i' positions.
-		do
-			implementation.move (i)
-		end
-
-feature -- Element change
-
-	extend (v: G) is
-			-- Add `v' to end.
-			-- Do not move cursor.
-			-- Remove `v' from existing parent.
-		require
-			extendible: extendible
-			v_not_void: v /= Void
-			not_has_v: not has (v)
-		do
-			implementation.extend (v)
-		ensure
-			item_inserted: has (v)
-			new_count: count = old count + 1
-			item_parent_is_current: v.parent = Current
-		end
-
-	replace (v: G) is
-			-- Replace current item by `v'.
-			-- Remove `v' from existing parent.
-		require
-			writable: writable
-			v_not_void: v /= Void
-			item_is_v_or_not_has_v: item = v or not has (v)
-		do
-			implementation.replace (v)
-		ensure
-			item_replaced: (not old has (v)) or old item = v implies item = v
-			item_parent_is_current: v.parent = Current
-		end
-
-	put_front (v: G) is
-			-- If `v' not already in list add to beginning.
-			-- Do not move cursor.
-			-- Remove `v' from existing parent.
-		require
-			v_not_void: v /= Void
-			not_has_v: not has (v)
-		do
-			implementation.put_front (v)
-		ensure
-			item_inserted: first = v
-			new_count: count = old count + 1
-			item_parent_is_current: v.parent = Current
-		end
-
-	put_right (v: G) is
-			-- If `v' not already in list add to the right of cursor position.
-			-- Do not move cursor.
-			-- Remove `v' from existing parent.
-		require
-			extendible: extendible
-			not_after: not after
-			v_not_void: v /= Void
-			not_has_v: not has (v)
-		do
-			implementation.put_right (v)
-		ensure
-			item_inserted: i_th (index + 1) = v
-	 		new_count: count = old count + 1
-	 		same_index: index = old index
-			item_parent_is_current: v.parent = Current
-		end
-
-	merge_left (other: like Current) is
-			-- Merge `other' into current structure before cursor
-			-- position. Do not move cursor. Empty `other'.
-			--| Redefined because our `put_left'
-			--| automatically removes item from `other'.
-		do
-			from
-				other.start
-			until
-				other.empty
-			loop
-				put_left (other.item)
-				check
-					not_other_has_item: not other.has (item)
-				end
-			end
-		end
-
-	merge_right (other: like Current) is
-			-- Merge `other' into current structure after cursor
-			-- position. Do not move cursor. Empty `other'.
-			--| Redefined because our `put_right'
-			--| automatically removes item from `other'.
-		do
-			from
-				other.finish
-			until
-				other.empty
-			loop
-				put_right (other.item)
-				other.back
-				check
-					not_other_has_item: not other.has (item)
-				end
-			end
-		end
-
-feature -- Removal
-
-	prune (v: G) is
-			-- Remove `v' if present.
-		do
-			if v.parent = Current then
-				implementation.prune (v)
-			end
-		ensure then
-			removed_item_parent_is_void: old has (v) implies v.parent = Void
-		end
-
-	remove is
-			-- Remove current item.
-			-- Move cursor to right neighbor
-			-- (or `after' if no right neighbor).
-		do
-			implementation.remove
-		ensure then
-			removed_item_parent_is_void:
-				old item /= Void implies (old item).parent = Void
-		end
-
-	remove_left is
-			-- Remove item to the left of cursor position.
-		do
-			implementation.remove_left
-		end
-
-	remove_right is
-			-- Remove item to the right of cursor position.
-			-- Do not move cursor.
-		do
-			implementation.remove_right
-		end
-
-feature {NONE} -- Inapplicable
-
-	dl_extend (v: G) is
-		do
-			extend (v)
-		end
-
-	set_extend (v: G) is
-		do
-			extend (v)
-		end
-
-	dl_replace (v: G) is
-		do
-			replace (v)
-		end
-
-	dl_put_front (v: G) is
-		do
-			put_front (v)
-		end
-
-	dl_put_right (v: G) is
-		do
-			put_right (v)
-		end
-
-	new_chain: like Current is
-		do
-			check
-				inapplicable: False
-			end
-		end
-
-feature {NONE} -- Contract support
+feature -- Contract support
 
 	parent_of_items_is_current: BOOLEAN is
 			-- Do all items have parent `Current'?
@@ -364,8 +84,6 @@ feature {NONE} -- Contract support
 			go_to (c)
 		end
 
-feature -- Contract support
-
 	lists_equal (list1, list2: LINKED_LIST [G]): BOOLEAN is
 			-- Are elements in `list1' equal to those in `list2'.
 		require
@@ -406,8 +124,8 @@ feature {EV_ANY_I} -- Implementation
 			-- toolkit.
 
 invariant
---FIXMEparent_of_items_is_current: is_useable implies parent_of_items_is_current
---FIXME	items_unique: is_useable implies items_unique
+--| FIXME	parent_of_items_is_current: is_useable implies parent_of_items_is_current
+--| FIXME	items_unique: is_useable implies items_unique
 	
 end -- class EV_ITEM_LIST
 
@@ -432,6 +150,16 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/05 21:16:13  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.12.2.2  2000/04/04 23:00:08  brendel
+--| Added is_parent_of.
+--|
+--| Revision 1.12.2.1  2000/04/03 18:11:52  brendel
+--| Removed all feature now implemented by EV_DYNAMIC_LIST.
+--| Added new contract support features.
+--|
 --| Revision 1.12  2000/03/29 22:15:34  king
 --| Corrected lists_equal
 --|

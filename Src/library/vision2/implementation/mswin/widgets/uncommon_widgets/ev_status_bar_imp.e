@@ -115,12 +115,6 @@ feature -- Access
 			Result ?= {EV_PRIMITIVE_IMP} Precursor
 		end
 
-	count: INTEGER is
-			-- Number of direct children of the holder.
-		do
-			Result := ev_children.count
-		end
-
 	--FIXME Should no longer be required as is now in item_list.
 	--item: EV_STATUS_BAR_ITEM is
 	--	do
@@ -440,6 +434,12 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/04/05 21:16:13  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.24.2.1  2000/04/03 18:26:12  brendel
+--| Removed count.
+--|
 --| Revision 1.24  2000/03/29 20:26:48  brendel
 --| Workaround for compiler bug. See code.
 --|

@@ -22,7 +22,8 @@ inherit
 	WEL_MENU
 		rename
 			make as wel_make,
-			item as wel_item
+			item as wel_item,
+			count as wel_count
 		end
 
 feature {NONE} -- Initialization
@@ -343,6 +344,12 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/05 21:16:12  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.11.2.1  2000/04/03 18:22:07  brendel
+--| Renamed count as wel_count.
+--|
 --| Revision 1.11  2000/03/24 19:21:36  rogers
 --| Redefined initialize from EV_ITEM_LIST_IMP.
 --|

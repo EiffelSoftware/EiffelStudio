@@ -4,6 +4,7 @@ indexing
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
+
 class
 	EV_MULTI_COLUMN_LIST_IMP 
 
@@ -62,7 +63,8 @@ inherit
 			x as x_position,
 			y as y_position,
 			resize as wel_resize,
-			move_and_resize as wel_move_and_resize
+			move_and_resize as wel_move_and_resize,
+			count as wel_count
 		undefine
 			remove_command,
 			set_width,
@@ -471,8 +473,8 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 					litem.to_integer)
 				list.forth
 			end
-			ev_children.go_i_th (an_index - 1)
-			ev_children.put_right (item_imp)
+		--	ev_children.go_i_th (an_index - 1)
+		--	ev_children.put_right (item_imp)
 		end
 
 	move_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
@@ -498,8 +500,8 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			delete_item (an_index)
 
 			-- Then, we update the children
-			ev_children.go_i_th (an_index + 1)
-			ev_children.remove
+		--	ev_children.go_i_th (an_index + 1)
+		--	ev_children.remove
 		end
 
 	internal_get_index (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
@@ -755,6 +757,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.77  2000/04/05 21:16:12  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
 --| Revision 1.76  2000/03/31 00:25:25  rogers
 --| Removed on_left_button_down, on_middle_button_down and
 --| on_right_button_down as they are now inherited from
@@ -767,6 +772,12 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --| Now inherits from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
 --| Removed features and attributes associated with source of PND as
 --| these are now inherited, and fixed references to these.
+--|
+--| Revision 1.73.2.2  2000/04/05 19:59:32  brendel
+--| Removed calls to ev_children by graphical insert/remove features.
+--|
+--| Revision 1.73.2.1  2000/04/03 18:25:35  brendel
+--| Count is now implemented in EV_DYNAMIC_LIST_IMP.
 --|
 --| Revision 1.73  2000/03/30 16:29:32  rogers
 --| Multiple selection no longer requires pre-parenting.

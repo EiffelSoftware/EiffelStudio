@@ -13,14 +13,14 @@ class
 inherit
 	EV_PRIMITIVE
 		redefine
-			implementation
+			implementation,
+			create_action_sequences
 		end
 
 	EV_ITEM_LIST [EV_TOOL_BAR_ITEM]
-		undefine
-			create_action_sequences
 		redefine
-			implementation
+			implementation,
+			create_action_sequences
 		end
 
 create
@@ -43,6 +43,12 @@ feature {NONE} -- Implementation
 			-- Create implementation of button.
 		do
 			create {EV_TOOL_BAR_IMP} implementation.make (Current)
+		end
+
+	create_action_sequences is
+		do
+			{EV_PRIMITIVE} Precursor
+			{EV_ITEM_LIST} Precursor
 		end
 
 feature {EV_ANY_I} -- Initialization
@@ -73,8 +79,14 @@ end -- class EV_TOOL_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/05 21:16:23  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
 --| Revision 1.12  2000/04/04 16:56:38  rogers
 --| Added merge_radio_button_groups.
+--|
+--| Revision 1.11.4.1  2000/04/04 22:58:18  brendel
+--| Included EV_ITEM_LIST.create_action_sequences.
 --|
 --| Revision 1.11  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq

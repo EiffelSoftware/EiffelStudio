@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision item list, implementation interface."
+		"Eiffel Vision item list. Implementation interface."
 	status: "See notice at end of class."
 	keywords: "item, list"
 	date: "$Date$"
@@ -10,18 +10,12 @@ deferred class
 	EV_ITEM_LIST_I [G -> EV_ITEM]
 
 inherit
-
 	EV_DYNAMIC_LIST_I [G]
 		redefine
 			interface
 		end
 
 feature -- Access
-
-	item: G is
-			-- Item at current position.
-		deferred
-		end
 
 	item_by_data (data: ANY): like item is
 			-- First item with `data'.
@@ -30,18 +24,18 @@ feature -- Access
 		local
 			c: CURSOR
 		do
+			c := cursor
 			from
-				c := interface.cursor
 				interface.start
 			until
-				interface.off or Result /= Void
+				interface.after or Result /= Void
 			loop
 				if interface.item.data.is_equal (data) then
 					Result := interface.item
 				end
 				interface.forth
 			end
-			interface.go_to (c)
+			go_to (c)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -49,7 +43,6 @@ feature {EV_ANY_I} -- Implementation
 	interface: EV_ITEM_LIST [G]
 			-- Provides a common user interface to possibly dependent
 			-- functionality implemented by `Current'
-
 
 end -- class EV_ITEM_LIST_I
 
@@ -74,6 +67,12 @@ end -- class EV_ITEM_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/05 21:16:10  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.7.4.1  2000/04/03 18:04:59  brendel
+--| Revised with new EV_DYNAMIC_LIST.
+--|
 --| Revision 1.7  2000/02/22 18:39:42  oconnor
 --| updated copyright date and formatting
 --|

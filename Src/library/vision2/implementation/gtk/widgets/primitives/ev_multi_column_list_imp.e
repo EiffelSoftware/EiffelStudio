@@ -3,7 +3,6 @@ indexing
 	description: 
 		"EiffelVision multi-column-list, implementation interface."
 	status: "See notice at end of class"
-	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,8 @@ inherit
 	EV_MULTI_COLUMN_LIST_I
 		redefine
 			interface,
-			initialize
+			initialize,
+			item
 		end
 
 	EV_PRIMITIVE_IMP
@@ -36,9 +36,10 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
 		redefine
-			item,
+		--	item,
+			i_th,
 			count,
-			remove_item_from_position,
+			remove_i_th,
 			reorder_child,
 			add_to_container,
 			destroy,
@@ -219,9 +220,14 @@ feature -- Access
 			Result := ev_children.count
 		end
 
-	item: EV_MULTI_COLUMN_LIST_ROW is
+	--item: EV_MULTI_COLUMN_LIST_ROW is
+	--	do
+	--		Result := (ev_children @ (index)).interface
+	--	end
+
+	i_th (i: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
 		do
-			Result := (ev_children @ (index)).interface
+			Result := (ev_children @ i).interface
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
@@ -681,7 +687,7 @@ feature {NONE} -- Implementation
 			update_pnd_status		
 		end
 
-	remove_item_from_position (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER) is
 			-- Remove item from list at `a_position'.
 			-- Set the items parent to void.
 		local
@@ -752,10 +758,6 @@ feature {NONE} -- Implementation
 	scroll_window: POINTER
 		-- Pointer to the scrollable window tree is in.
 
-feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
-
-	list_widget: POINTER
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST
@@ -783,6 +785,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.60  2000/04/05 21:16:10  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
 --| Revision 1.59  2000/04/05 17:06:19  king
 --| Initial PND structure to work with rows
 --|
@@ -795,6 +800,12 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --| Revision 1.56  2000/03/30 19:30:26  king
 --| Changed to one column on creation, added column_* /= Void checks in
 --| create_list
+--|
+--| Revision 1.55.2.2  2000/04/04 23:47:25  brendel
+--| Added redefinition of i_th. Item is not necessary anymore.
+--|
+--| Revision 1.55.2.1  2000/04/04 16:31:08  brendel
+--| remove_item_from_position -> remove_i_th.
 --|
 --| Revision 1.55  2000/03/29 22:14:51  king
 --| Added initial row pnd support

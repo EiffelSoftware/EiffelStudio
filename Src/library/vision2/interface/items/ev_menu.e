@@ -14,7 +14,8 @@ inherit
 		redefine
 			implementation,
 			create_implementation,
-			create_action_sequences
+			create_action_sequences,
+			parent
 		end
 	
 	EV_MENU_ITEM_LIST
@@ -41,6 +42,15 @@ feature {NONE} -- Initialization
 		do
 			{EV_MENU_ITEM} Precursor
 			{EV_MENU_ITEM_LIST} Precursor
+		end
+
+feature -- Status report
+
+	parent: EV_MENU_ITEM_LIST is
+			-- Menu item list containing `Current'.
+			--| Redefined to avoid typing error.
+		do
+			Result := implementation.parent
 		end
 
 feature -- Standard operations
@@ -86,6 +96,12 @@ end -- class EV_MENU
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/04/05 21:16:23  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.25.2.1  2000/04/03 18:14:13  brendel
+--| Redefined parent.
+--|
 --| Revision 1.25  2000/03/22 21:34:12  brendel
 --| Moved item_select_actions up to menu item list, because it also
 --| applies to menu bars.

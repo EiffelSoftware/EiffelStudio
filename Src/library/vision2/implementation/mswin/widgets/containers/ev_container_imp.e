@@ -325,8 +325,6 @@ feature {EV_ANY_I} -- Implementation
 			-- Remove the given child from the children of
 			-- the container.
 		deferred
-		ensure
-			child_removed: not is_child (child_imp)
 		end
 
 	add_child_ok: BOOLEAN is
@@ -481,6 +479,12 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/04/05 21:16:12  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.47.2.1  2000/04/05 19:56:14  brendel
+--| Renoved obsolete postcondition.
+--|
 --| Revision 1.47  2000/03/23 23:22:52  brendel
 --| Renamed widget_contained to widget_parented.
 --| Added widget_orphaned.

@@ -19,18 +19,26 @@ inherit
 create
 	default_create
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_MENU_BAR_I
-			-- Responsible for interaction with the native graphics toolkit.
-
-feature {NONE} -- Implementation
+feature {NONE} -- Initialization
 
 	create_implementation is
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_MENU_BAR_IMP} implementation.make (Current)
 		end
+
+feature -- Status report
+
+	parent: EV_MENU_ITEM_LIST is
+			-- Container of `Current'.
+		do
+			-- Menu bars have no menu item list as parent.
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_MENU_BAR_I
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_MENU BAR
 
@@ -55,6 +63,12 @@ end -- class EV_MENU BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/05 21:16:23  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.11.2.1  2000/04/03 18:15:15  brendel
+--| Implemented parent. Always returns Void.
+--|
 --| Revision 1.11  2000/03/17 01:23:34  oconnor
 --| formatting and layout
 --|

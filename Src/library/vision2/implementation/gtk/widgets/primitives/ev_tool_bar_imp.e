@@ -83,8 +83,6 @@ feature -- Implementation
 			C.gtk_box_reorder_child (a_container, a_child, a_position)
 		end
 
-	list_widget: POINTER
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR
@@ -112,8 +110,14 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/05 21:16:10  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
 --| Revision 1.14  2000/04/05 17:08:35  king
 --| Added connect_radio_grouping to imp
+--|
+--| Revision 1.13.2.1  2000/04/04 23:48:27  brendel
+--| Removed list_widget.
 --|
 --| Revision 1.13  2000/03/13 22:58:34  king
 --| Implemented reorder_child
@@ -125,7 +129,9 @@ end -- class EV_TOOL_BAR_IMP
 --| merged changes from prerelease_20000214
 --|
 --| Revision 1.10.6.7  2000/02/04 21:27:20  king
---| Made toolbar horizontal box for homogeneous height resizing, changed add_to_container to pack widgets in to the toolbar so they are non-expandable
+--| Made toolbar horizontal box for homogeneous height resizing, changed
+--| add_to_container to pack widgets in to the toolbar so they are
+--| non-expandable
 --|
 --| Revision 1.10.6.6  2000/02/04 04:25:39  oconnor
 --| released

@@ -1,8 +1,8 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description:
-		"EiffelVision tree item, Mswindows implementation.";
-	date: "$Date$";
+	description: "Eiffel Vision tree item. Mswindows implementation."
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -362,12 +362,6 @@ feature -- Status report
 	ev_children: ARRAYED_LIST [EV_TREE_ITEM_IMP]
 			-- List of the direct children of the tree-item.
 
-	count: INTEGER is
-			-- Number of direct children of the holder.
-		do
-			Result := ev_children.count
-		end
-
 	is_selected: BOOLEAN is
 			-- Is the item selected?
 		
@@ -602,11 +596,17 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/04/05 21:16:11  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
 --| Revision 1.55  2000/03/30 19:51:58  rogers
 --| Changed all instances of:
 --| 	set_source_true -> set_parent_source_true
 --| 	set_pnd_child_source -> set_item_source
 --| 	set_t_item_true -> set_item_source_true
+--|
+--| Revision 1.54.2.1  2000/04/03 18:07:52  brendel
+--| Removed count.
 --|
 --| Revision 1.54  2000/03/30 18:31:58  rogers
 --| Improved comments, added pre-conditions, added invariant

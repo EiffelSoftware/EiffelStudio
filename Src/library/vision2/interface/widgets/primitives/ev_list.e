@@ -24,10 +24,9 @@ inherit
 		end
 
 	EV_ITEM_LIST [EV_LIST_ITEM]
-		undefine
-			create_action_sequences
 		redefine
-			implementation
+			implementation,
+			create_action_sequences
 		end
 
 create
@@ -152,6 +151,7 @@ feature {NONE} -- Implementation
 	create_action_sequences is
    			-- See `{EV_ANY}.create_action_sequences'.
 		do
+			{EV_ITEM_LIST} Precursor
 			{EV_PRIMITIVE} Precursor
 			create select_actions
 			create deselect_actions
@@ -213,6 +213,12 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/04/05 21:16:22  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.41.2.1  2000/04/04 23:02:29  brendel
+--| Included EV_ITEM_LIST.create_action_sequences.
+--|
 --| Revision 1.41  2000/03/30 17:36:27  brendel
 --| Added invariant.
 --|

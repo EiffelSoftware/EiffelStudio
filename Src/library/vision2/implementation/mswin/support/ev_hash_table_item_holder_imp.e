@@ -15,13 +15,13 @@ inherit
 
 feature -- Access
 
-	ev_children: ARRAYED_LIST [EV_ITEM_IMP] is
-			-- List of the direct children of the item holder.
-			-- Should be define here, but is not because we cannot
-			-- do the hastable deferred, it doesn't work, it should,
-			-- but it doesn't.
-		deferred
-		end
+	--ev_children: ARRAYED_LIST [EV_ITEM_IMP] is
+	--		-- List of the direct children of the item holder.
+	--		-- Should be define here, but is not because we cannot
+	--		-- do the hastable deferred, it doesn't work, it should,
+	--		-- but it doesn't.
+	--	deferred
+	--	end
 
 	get_item (an_index: INTEGER): G is
 			-- Give the item of the list at the zero-base
@@ -75,6 +75,12 @@ end -- class EV_HASH_TABLE_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/05 21:16:11  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.5.4.1  2000/04/03 18:19:03  brendel
+--| Removed deferred redeclaration of ev_children.
+--|
 --| Revision 1.5  2000/02/19 05:45:00  oconnor
 --| released
 --|

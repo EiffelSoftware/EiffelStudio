@@ -15,105 +15,9 @@ inherit
 			interface
 		end
 
-feature -- Access
-
-	item: EV_WIDGET is
-			-- Current item
-		deferred
-		end
-
-	index: INTEGER is
-			-- Index of current position
-		deferred
-		end
-
-	cursor: CURSOR is
-			-- Current cursor position
-		deferred
-		end
-	
-feature -- Measurement
-
-	count: INTEGER is
-			-- Number of items
-		deferred
-		end
-
-feature -- Status report
-
-	valid_cursor (p: CURSOR): BOOLEAN is
-			-- Can the cursor be moved to position `p'?
-		deferred
-		end
-
-feature -- Cursor movement
-
-	back is
-			-- Move to previous item.
-		deferred
-		end
-
-	forth is
-			-- Move cursor to next position.
-		deferred
-		end
-
-
-	go_to (p: CURSOR) is
-			-- Move cursor to position `p'.
-		deferred
-		end
-
-	move (i: INTEGER) is
-			-- Move cursor `i' positions.
-		deferred
-		end
-
-feature -- Element change
-
-	put_front (v: like item) is
-			-- Add `v' to beginning.
-			-- Do not move cursor.
-		require
-			v_not_void: v /= Void
-		deferred
-		end
-
-	put_right (v: like item) is
-			-- Add `v' to the right of cursor position.
-			-- Do not move cursor.
-		require
-			v_not_void: v /= Void
-		deferred
-		end
-
-feature -- Removal
-
-	prune (v: like item) is
-			-- Remove `v' if present.
-		require
-			v_not_void: v /= Void
-		deferred
-		end
-
-	remove is
-			-- Remove current item.
-			-- Move cursor to right neighbor
-			-- (or `after' if no right neighbor).
-		deferred
-		end
-
-	remove_left is
-			-- Remove item to the left of cursor position.
-			-- Do not move cursor.
-		deferred
-		end
-
-
-	remove_right is
-			-- Remove item to the right of cursor position.
-			-- Do not move cursor.
-		deferred
+	EV_DYNAMIC_LIST_I [EV_WIDGET]
+		redefine
+			interface
 		end
 
 feature {EV_ANY_I} -- implementation
@@ -143,6 +47,12 @@ end -- class WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/05 21:16:10  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.5.4.1  2000/04/03 18:06:23  brendel
+--| Removed all feature now implemented by EV_DYNAMIC_LIST_I.
+--|
 --| Revision 1.5  2000/03/03 19:41:05  brendel
 --| Removed feature `put_left'.
 --|

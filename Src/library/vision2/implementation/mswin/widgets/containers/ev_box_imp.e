@@ -225,7 +225,7 @@ feature -- Element change
 					end
 				end
 			child_imp.set_parent (Void)
-			ev_children.prune_all (child_imp)
+	--		ev_children.prune_all (child_imp)
 			if not ev_children.empty then
 				notify_change (Nc_minsize)
 			end
@@ -380,6 +380,12 @@ end -- class EV_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/05 21:16:12  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.32.2.1  2000/04/05 20:00:13  brendel
+--| Removed calls to ev_children by graphical insert/remove features.
+--|
 --| Revision 1.32  2000/03/21 23:39:00  brendel
 --| Modified inheritance clause in compliance with EV_SIZEABLE_IMP.
 --|

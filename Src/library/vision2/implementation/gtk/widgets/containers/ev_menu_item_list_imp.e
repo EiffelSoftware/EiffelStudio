@@ -17,7 +17,7 @@ inherit
 		redefine
 			interface,
 			add_to_container,
-			remove_item_from_position
+			remove_i_th
 		end
 
 feature {NONE} -- implementation
@@ -61,7 +61,7 @@ feature {NONE} -- implementation
 			end
 		end
 
-	remove_item_from_position (a_position: INTEGER) is
+	remove_i_th (a_position: INTEGER) is
 			-- Remove item at `a_position'
 		local
 			item_imp: EV_ITEM_IMP
@@ -169,6 +169,12 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/05 21:16:09  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.6.2.1  2000/04/04 16:22:22  brendel
+--| remove_item_from_position -> remove_i_th.
+--|
 --| Revision 1.6  2000/03/09 22:15:20  king
 --| Implemented parenting fix, corrected remove_item_from_position
 --|

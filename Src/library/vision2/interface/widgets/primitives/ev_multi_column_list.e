@@ -20,9 +20,8 @@ inherit
 		end
 
 	EV_ITEM_LIST [EV_MULTI_COLUMN_LIST_ROW]
-		undefine
-			create_action_sequences
 		redefine
+			create_action_sequences,
 			implementation
 		end
 
@@ -277,6 +276,7 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_PRIMITIVE} Precursor
+			{EV_ITEM_LIST} Precursor
 			create select_actions
 			create deselect_actions
 			create column_click_actions
@@ -374,6 +374,12 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/04/05 21:16:23  brendel
+--| Merged changes from LIST_REFACTOR_BRANCH.
+--|
+--| Revision 1.50.2.1  2000/04/04 22:59:03  brendel
+--| Included EV_ITEM_LIST.create_action_sequences.
+--|
 --| Revision 1.50  2000/03/29 20:26:30  rogers
 --| Postcondition on selected_items now uses lists_equal for
 --| comparison

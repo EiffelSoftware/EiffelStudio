@@ -20,13 +20,13 @@ feature -- Attributes
 	special_file_name: STRING;
 			-- File name including the macro definition
 
-	arg_list: ARRAY[STRING];
+	arg_list: EXTERNALS_LIST;
 			-- List of arguments for the signature
 
 	return_type: STRING;
 			-- Result type of signature
 
-	include_list: ARRAY[STRING];
+	include_list: EXTERNALS_LIST;
 			-- List of include files
 
 	dll_arg: STRING;
@@ -158,10 +158,6 @@ feature -- Parsing
 				-- no need to go on if invalid language name
 			if valid_language_name then
 				offset := source.count - 1;
-					-- create the array for include files
-					-- an item can be added when parsing dll
-					-- (not only when parsing include files)
-				!!include_list.make (1,0);
 					-- cleaning string for next operation
 				image.tail (image.count - pos + 1);
 				image.left_adjust;
@@ -261,6 +257,7 @@ feature -- Parsing
 								end;
 									-- if we reached this point, everything seems to be OK
 									-- Now we can add <windows.h> to the list of include files
+								!!include_list.make (1,0);
 								include_list.force ("<windows.h>",1);
 							else
 								loc_begin := source.substring_index (special_type, 1);
@@ -398,7 +395,12 @@ loc_begin, loc_end);
 						segment := image.substring (2, image.count);
 						segment.left_adjust;
 						from
-							i := include_list.count + 1;
+							if include_list = Void then
+								!!include_list.make (1, 0)
+								i := 1
+							else
+								i := include_list.count + 1;
+							end
 							stop := False;
 						until
 							stop or else segment.count = 0

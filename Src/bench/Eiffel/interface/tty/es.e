@@ -52,6 +52,8 @@ feature {NONE} -- Initialization
 			eifgen_init: INIT_SERVERS
 			new_resources: TTY_RESOURCES
 			file_degree_output: FILE_DEGREE_OUTPUT
+			compilation: EWB_COMP
+			ewb_loop: EWB_LOOP
 		do
 			if not retried then
 					-- Check that environment variables
@@ -102,7 +104,20 @@ feature {NONE} -- Initialization
 							end
 	
 							if not error_occurred then
-								command.execute
+								compilation ?= command
+								ewb_loop ?= command
+								if
+									project_is_new and then
+									compilation = Void and then ewb_loop = Void
+								then
+									create {EWB_QUICK_MELT} compilation		
+									compilation.execute
+									if system.successful then
+										command.execute
+									end
+								else
+									command.execute
+								end
 							end
 							discard_licenses
 						end

@@ -323,6 +323,23 @@ RT_LNK char * dir_dot_dir (char * dir) ;
 #define egc_real_dtype	egc_real32_dtype
 #define egc_doub_dtype	egc_real64_dtype
 
+#define c_outd	c_outr64
+#define c_outr	c_outr32
+#define chupper(c) ((EIF_CHARACTER) toupper(c))
+#define chlower(c) ((EIF_CHARACTER) tolower(c))
+#define chis_upper(c) (EIF_TEST(isupper(c)))
+#define chis_lower(c) (EIF_TEST(islower(c)))
+#define chis_digit(c) (EIF_TEST(isdigit(c)))
+#define chis_alpha(c) (EIF_TEST(isalpha(c)))
+
+#define eif_abs_double	eif_abs_real64
+#define eif_abs_real	eif_abs_real32
+#define eif_min_double	eif_min_real64
+#define eif_max_double	eif_max_real64
+#define eif_min_real	eif_min_real32
+#define eif_max_real	eif_max_real32
+
+
 #ifdef __cplusplus
 }
 #endif

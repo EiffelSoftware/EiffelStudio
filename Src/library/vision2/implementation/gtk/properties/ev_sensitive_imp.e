@@ -26,10 +26,12 @@ feature -- Status report
 			-- Is the object sensitive to user input.
 		do
 			-- Shift to put bit in least significant place then take mod 2
-			Result := (
-				(C.gtk_object_struct_flags (c_object)
-				// C.GTK_SENSITIVE_ENUM) \\ 2
-			) = 1
+			if not is_destroyed then
+				Result := (
+					(C.gtk_object_struct_flags (c_object)
+					// C.GTK_SENSITIVE_ENUM) \\ 2
+				) = 1				
+			end
 		end
 
 feature -- Status setting

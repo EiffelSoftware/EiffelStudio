@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_window_new (C.Gtk_window_dialog_enum))
 			C.gtk_widget_realize (c_object)
-			C.gtk_window_set_position (c_object, C.Gtk_win_pos_center_enum)
 			C.gtk_window_set_policy (c_object, 0, 0, 1) -- allow_shrink = False, allow_grow = False, auto_shrink = True
 			enable_closeable
 		end

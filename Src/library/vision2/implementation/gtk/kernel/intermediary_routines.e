@@ -202,7 +202,9 @@ feature {EV_ANY_IMP} -- List and list item intermediary agent routines
 			l_list_item_list: EV_LIST_ITEM_LIST_IMP
 		do
 			l_list_item_list ?= c_get_eif_reference_from_object_id (a_c_object)
-			l_list_item_list.deselect_callback (n_args, args)
+			if not l_list_item_list.is_destroyed then
+				l_list_item_list.deselect_callback (n_args, args)
+			end
 		end
 		
 	list_clicked_intermediary (a_c_object: POINTER) is

@@ -248,17 +248,21 @@ feature -- Status setting
 			-- Map the Window to the screen.
 		do
 			if not is_show_requested then
-				{EV_CONTAINER_IMP} Precursor
-				if positioned_by_user then
-					app_implementation.process_events
+				if is_positioned or positioned_by_user then
 					C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
+					app_implementation.process_events
 					set_position (user_x_position, user_y_position)
-					--| This is a hack to make sure window is positioned correctly
-					positioned_by_user := False
+					{EV_CONTAINER_IMP} Precursor		
+				else
+					C.gtk_window_set_position (c_object, C.Gtk_win_pos_center_enum)
+					{EV_CONTAINER_IMP} Precursor
 				end
-				
+				is_positioned := True
 			end
 		end
+		
+	is_positioned: BOOLEAN
+		-- Has the Window been previously positioned on screen?
 
 	hide is
 			-- Unmap the Window from the screen.
@@ -503,6 +507,8 @@ feature {NONE} -- Implementation
 			if x_position /= previous_x or y_position /= previous_y then
 				previous_x := x_position
 				previous_y := y_position
+				user_x_position := inner_screen_x
+				user_y_position := inner_screen_y
 				positioned_by_user := False
 				if move_actions_internal /= Void then
 					move_actions_internal.call ([previous_x, previous_y, width, height])

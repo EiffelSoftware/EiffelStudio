@@ -1,6 +1,5 @@
 indexing
 	description: "Gtk implementation of dockable source."
-	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -49,6 +48,7 @@ feature -- Status setting
 			do
 				if a_type = C.Gdk_button_press_enum then
 					if a_button = 1 and not dawaiting_movement and not App_implementation.is_in_docking then
+							orig_cursor := pointer_style
 							enable_capture
 							App_implementation.enable_is_in_docking
 							original_x_offset := a_x
@@ -152,8 +152,7 @@ feature {NONE} -- Implementation
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Actually start the pick/drag and drop mechanism.
 		do
-			if not is_dock_executing then
-			end
+			set_pointer_style (Drag_cursor)
 		end
 		
 	orig_cursor: EV_CURSOR
@@ -163,19 +162,7 @@ feature {NONE} -- Implementation
 			-- Terminate the pick and drop mechanism.
 		do
 			disable_capture
---			if orig_cursor /= Void then
---					-- Restore the cursor style of `Current' if necessary.
---				internal_set_pointer_style (orig_cursor)
---			else
---					-- Restore standard cursor style.
---				if text_component /= Void then
---					internal_set_pointer_style (Default_pixmaps.Ibeam_cursor)
---				else
---					internal_set_pointer_style (Default_pixmaps.Standard_cursor)
---				end
---			end
---			--set_pointer_style (orig_cursor)
-
+			set_composite_widget_pointer_style (NULL)
 			if drag_button_release_connection_id > 0 then
 				signal_disconnect (drag_button_release_connection_id)
 				drag_button_release_connection_id := 0
@@ -185,6 +172,16 @@ feature {NONE} -- Implementation
 				drag_motion_notify_connection_id := 0
 			end
 			if not dawaiting_movement then
+				if orig_cursor /= Void then
+						-- Restore the cursor style of `Current' if necessary.
+					set_pointer_style (orig_cursor)
+					orig_cursor := Void
+				end
+				if widget_imp_at_pointer_position = Current then
+					-- We are dropping back on to the same widget, therefore prevent selection events if applicable.
+					--| FIXME IEK Need to find a better method of preventing execution of selection actions.
+					signal_emit_stop (visual_widget, "button_release_event")
+				end
 				complete_dock
 				original_x_offset := -1
 				original_y_offset := -1
@@ -218,7 +215,23 @@ feature {NONE} -- Implementation
 			-- For now do nothing until further investigation has taken place.
 		end
 		
+feature {NONE} -- Implementation
+
+	signal_emit_stop (a_c_object: POINTER; signal: STRING) is
+		deferred
+		end
+		
 feature {EV_ANY_I} -- Implementation
+
+	set_composite_widget_pointer_style (a_cursor: POINTER) is
+			-- 
+		deferred
+		end
+
+	pointer_style: EV_CURSOR is
+			-- 
+		deferred
+		end
 
 	interface: EV_DOCKABLE_SOURCE
 

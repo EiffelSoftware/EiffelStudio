@@ -70,22 +70,20 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 feature -- Implementation
 
 	insertion_position: INTEGER is
-			-- `Result' is index of item beneath the
+			-- `Result' is index - 1 of item beneath the
 			-- current mouse pointer or count + 1 if over the toolbar
 			-- and not over a button.
 		local
 			wid_imp: EV_WIDGET_IMP
 			tbi: EV_TOOL_BAR_ITEM
 		do
+			Result := count + 1
 			wid_imp := widget_imp_at_pointer_position
 			if wid_imp /= Void then
 				tbi ?= wid_imp.interface
 				if tbi /= Void and has (tbi) then
-					Result := index_of (tbi, 1)
+					Result := index_of (tbi, 1) - 1
 				end
-			end
-			if Result = 0 then
-				Result := count + 1
 			end
 		end
 

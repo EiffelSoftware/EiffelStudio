@@ -27,7 +27,7 @@ feature -- Initialization
 		local
 			tip_ptr: POINTER
 		do
-			tip_ptr := C.gtk_tooltips_data_get (c_object)
+			tip_ptr := C.gtk_tooltips_data_get (visual_widget)
 			if tip_ptr /= NULL then
 				create Result.make_from_c (C.gtk_tooltips_data_struct_tip_text (tip_ptr))
 			else
@@ -45,7 +45,7 @@ feature -- Element change
 			create a_gs.make (a_text)
 			C.gtk_tooltips_set_tip (
 				app_implementation.tooltips,
-				c_object,
+				visual_widget,
 				a_gs.item,
 				NULL
 			)
@@ -56,7 +56,7 @@ feature -- Element change
 	    do
 			C.gtk_tooltips_set_tip (
 				app_implementation.tooltips,
-				c_object,
+				visual_widget,
 				NULL,
 				NULL
 			)

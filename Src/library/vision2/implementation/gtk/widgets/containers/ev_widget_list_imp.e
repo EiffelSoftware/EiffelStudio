@@ -57,13 +57,13 @@ feature {NONE} -- Implementation
 			end
 			a_c_object := v_imp.c_object
 			C.gtk_container_add (list_widget, a_c_object)
-			
 			child_array.go_i_th (i)
 			child_array.put_left (v)
 			if i < count then
 				gtk_reorder_child (list_widget, a_c_object, i - 1)
 			end			
 			on_new_item (v_imp)
+			C.gtk_widget_queue_resize (container_widget)
 		end
 
 	remove_i_th (i: INTEGER) is
@@ -83,6 +83,7 @@ feature {NONE} -- Implementation
 			C.gtk_container_remove (list_widget, a_child)
 			C.set_gtk_widget_struct_parent (a_child, NULL)
 			child_array.remove
+			C.gtk_widget_queue_resize (container_widget)
 		end
 
 feature {NONE} -- Implementation

@@ -108,6 +108,7 @@ feature
 			first := an_item
 			set_item_resize (first, False)
 			update_splitter
+			C.gtk_widget_queue_resize (container_widget)
 		end
 
 	set_second (an_item: like item) is
@@ -122,6 +123,7 @@ feature
 			second := an_item
 			set_item_resize (second, True)
 			update_splitter
+			C.gtk_widget_queue_resize (container_widget)
 		end
 
 	prune (an_item: like item) is
@@ -151,6 +153,7 @@ feature
 				end
 				update_splitter
 			end
+			C.gtk_widget_queue_resize (container_widget)
 		end
 
 	enable_item_expand (an_item: like item) is
@@ -197,13 +200,6 @@ feature
 		do
 			C.gtk_paned_set_gutter_size (c_object, 0)
 			C.gtk_paned_set_handle_size (c_object, 0)
-		end
-
-feature {EV_WIDGET_IMP} -- Implementation
-
-	update_child_visibility (a_widget_imp: EV_WIDGET_IMP) is
-		do
-
 		end
 
 feature {NONE} -- Implementation

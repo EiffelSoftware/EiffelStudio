@@ -64,9 +64,10 @@ feature -- Element change
 			if v /= Void then
 				imp ?= v.implementation
 				C.gtk_container_add (container_widget, imp.c_object)
-				--update_child_requisition (imp.c_object)
+				imp.update_request_size
 				on_new_item (imp)
 			end
+			C.gtk_widget_queue_resize (container_widget)
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -24,7 +24,10 @@ inherit
 			make,
 			initialize,
 			container_widget,
-			visual_widget
+			visual_widget,
+			on_removed_item,
+			minimum_width,
+			minimum_height
 		end
 	
 create
@@ -78,6 +81,22 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	minimum_width: INTEGER is
+			-- Minimum width of widget.
+		do
+			-- Redefined due to bug in Viewport
+			-- Result is as expected though as item has no effect on minimum_width
+			Result := internal_minimum_width.max (0)
+		end
+		
+	minimum_height: INTEGER is
+			-- Minimum_height of widget.
+		do
+			-- Redefined due to bug in Viewport
+			-- Result is as expected though as item has no effect on minimum_height
+			Result := internal_minimum_height.max (0)
+		end
+
 	x_offset: INTEGER is
 			-- Horizontal position of viewport relative to `item'.
 		do
@@ -98,12 +117,19 @@ feature -- Element change
 			item_imp: EV_WIDGET_IMP
 		do
 			item_imp ?= item.implementation
+			-- The blocking of resize actions is due to set uposition causing temporary resizing.
+			if item_imp.resize_actions_internal /= Void then
+				item_imp.resize_actions_internal.block	
+			end	
 			if a_x < 0 then
 				C.gtk_widget_set_uposition (item_imp.c_object, -a_x, -1)
 				internal_set_value_from_adjustment (horizontal_adjustment, 0)
 			else
 				C.gtk_widget_set_uposition (item_imp.c_object, 0, -1)
 				internal_set_value_from_adjustment (horizontal_adjustment, a_x)
+			end
+			if item_imp.resize_actions_internal /= Void then
+				item_imp.resize_actions_internal.resume
 			end
 			internal_x_offset := a_x
 		end
@@ -114,6 +140,11 @@ feature -- Element change
 			item_imp: EV_WIDGET_IMP
 		do
 			item_imp ?= item.implementation
+			
+			-- The blocking of resize actions is due to set uposition causing temporary resizing.
+			if item_imp.resize_actions_internal /= Void then
+				item_imp.resize_actions_internal.block	
+			end	
 			if a_y < 0 then
 				C.gtk_widget_set_uposition (item_imp.c_object, -1, -a_y)
 				internal_set_value_from_adjustment (vertical_adjustment, 0)
@@ -122,37 +153,57 @@ feature -- Element change
 				internal_set_value_from_adjustment (vertical_adjustment, a_y)
 			end
 			internal_y_offset := a_y
+			if item_imp.resize_actions_internal /= Void then
+				item_imp.resize_actions_internal.resume
+			end
 		end
 		
 	set_item_width (a_width: INTEGER) is
 			-- Set `a_widget.width' to `a_width'.
-		local
-			w_imp: EV_WIDGET_IMP
 		do
-			w_imp ?= item.implementation
-			w_imp.set_fixed_size (a_width, -1)		
+			internal_set_item_size (a_width, -1)
 		end
 		
 	set_item_height (a_height: INTEGER) is
 			-- Set `a_widget.height' to `a_height'.
-		local
-			w_imp: EV_WIDGET_IMP
 		do
-			w_imp ?= item.implementation
-			w_imp.set_fixed_size (-1, a_height)		
-		end	
+			internal_set_item_size (-1, a_height)	
+		end
 		
 	set_item_size (a_width, a_height: INTEGER) is
+			-- Set `a_widget.width' to `a_width'.
+			-- Set `a_widget.height' to `a_height'.
+		do
+			internal_set_item_size (a_width, a_height)
+		end
+
+feature {NONE} -- Implementation
+
+	internal_set_item_size (a_width, a_height: INTEGER) is
 			-- Set `a_widget.width' to `a_width'.
 			-- Set `a_widget.height' to `a_height'.
 		local
 			w_imp: EV_WIDGET_IMP
 		do
+			if internal_minimum_width = -1 then
+				internal_minimum_width := minimum_width
+			end
+			if internal_minimum_height = -1 then
+				internal_minimum_height := minimum_height
+			end
 			w_imp ?= item.implementation
-			w_imp.set_fixed_size (a_width, a_height)		
+			C.gtk_widget_set_usize (w_imp.c_object, a_width, a_height)
 		end
 
-feature {NONE} -- Implementation
+	on_removed_item (an_item: EV_WIDGET) is
+			-- Reset minimum size.
+		local
+			item_imp: EV_WIDGET_IMP
+		do
+			Precursor (an_item)
+			item_imp ?= an_item.implementation
+			item_imp.reset_minimum_size
+		end
 
 	internal_x_offset, internal_y_offset: INTEGER
 

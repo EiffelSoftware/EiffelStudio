@@ -21,7 +21,8 @@ inherit
 		redefine
 			interface,
 			initialize,
-			destroy
+			destroy,
+			set_parent_imp
 		end
 	
 	EV_CONTAINER_ACTION_SEQUENCES_IMP
@@ -145,6 +146,7 @@ feature -- Status setting
 			peer: EV_CONTAINER_IMP
 			a_child_list: POINTER
 			rad_but_imp: EV_RADIO_BUTTON_IMP
+			selected_rad_but: EV_RADIO_BUTTON_IMP
 		do
 			peer ?= a_container.implementation
 			if peer = Void then
@@ -162,35 +164,20 @@ feature -- Status setting
 					if l /= Void then
 						from
 							l.start
-						until
-							l.off
-						loop
-							if l.item /= NULL then
-								rad_but_imp ?= eif_object_from_c (C.gtk_widget_struct_parent (l.item))
-									-- The c_object of the radio button is its parent (event box)
-								if rad_but_imp /= Void then
-									peer.remove_radio_button (rad_but_imp.interface)
-								end
+							if l.first /= NULL then
+								rad_but_imp ?= eif_object_from_c (l.first)
 							end
-							l.forth
-						end
-						peer.set_shared_pointer (NULL)
-						peer.set_radio_group (NULL)
-						
-							-- Rebuild peers radio grouping.
-						from
-							l.start
+							peer.set_shared_pointer (NULL)
+							peer.set_radio_group (NULL)
 						until
 							l.off
 						loop
 							if l.item /= NULL then
-								rad_but_imp ?= eif_object_from_c (C.gtk_widget_struct_parent (l.item))
+								rad_but_imp ?= eif_object_from_c (l.item)
 									-- The c_object of the radio button is its parent (event box)
 								if rad_but_imp /= Void then
-									if peer.radio_group /= NULL then
-										C.gtk_radio_button_set_group (rad_but_imp.visual_widget, peer.radio_group)
-									end
-									peer.set_radio_group (C.gtk_radio_button_group (rad_but_imp.visual_widget))
+									C.gtk_radio_button_set_group (rad_but_imp.visual_widget, peer.radio_group)
+									peer.set_radio_group (rad_but_imp.radio_group)
 								end
 							end
 							l.forth
@@ -198,7 +185,34 @@ feature -- Status setting
 					end
 					if a_child_list /= NULL then
 						C.g_list_free (a_child_list)
-					end	
+					end
+					a_child_list := C.gtk_container_children (container_widget)
+					l := glist_to_eiffel (a_child_list)
+					from
+						l.start
+						rad_but_imp := Void
+						selected_rad_but := Void
+					until
+						l.off
+					loop
+							if l.item /= NULL then
+								rad_but_imp ?= eif_object_from_c (l.item)
+								if rad_but_imp /= Void then
+									set_radio_group (rad_but_imp.radio_group)
+									if rad_but_imp.is_selected then
+										selected_rad_but := rad_but_imp
+									end
+								end
+							end
+							l.forth
+					end
+					if selected_rad_but = Void and not l.is_empty then
+						rad_but_imp ?= eif_object_from_c (l.first)
+						rad_but_imp.enable_select
+					end
+					if a_child_list /= NULL then
+						C.g_list_free (a_child_list)
+					end
 				end
 			end
 		end
@@ -253,7 +267,7 @@ feature -- Status setting
 
 				if a_item_pointer /= NULL then
 					an_item_imp ?= eif_object_from_c (
-						a_item_pointer
+						C.gtk_widget_struct_parent (a_item_pointer)
 					)
 					check an_item_imp_not_void: an_item_imp /= Void end
 					set_radio_group (an_item_imp.radio_group)
@@ -274,18 +288,26 @@ feature -- Status setting
 			end
 		end
 
-	set_background_pixmap (a_pixmap: EV_PIXMAP) is
+	internal_set_background_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set the container background pixmap to `pixmap'.
 		local
 			a_style: POINTER
 			pix_imp: EV_PIXMAP_IMP
 			mem_ptr, pix_ptr: POINTER
 			i: INTEGER
-		do
-			background_pixmap := clone (a_pixmap)
+		do	
 			pix_imp ?= background_pixmap.implementation
 			a_style := C.gtk_style_copy (C.gtk_widget_struct_style (visual_widget))
-			pix_ptr := C.gtk_pixmap_struct_pixmap (pix_imp.gtk_pixmap)
+			pix_ptr := C.gdk_pixmap_ref (C.gtk_pixmap_struct_pixmap (pix_imp.gtk_pixmap))
+			from
+				i := 0
+			until
+				i = 12
+			loop
+				-- We need to ref the pixmap twice for each state to prevent GdkPixmap deletion.
+				pix_ptr := C.gdk_pixmap_ref (C.gtk_pixmap_struct_pixmap (pix_imp.gtk_pixmap))
+				i := i + 1
+			end
 			from
 				i := 0
 			until
@@ -297,7 +319,14 @@ feature -- Status setting
 				i := i + 1
 			end
 			C.gtk_widget_set_style (visual_widget, a_style)
-			--C.gtk_style_unref (a_style)
+			C.gtk_style_unref (a_style)
+		end
+		
+	set_background_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Set the container background pixmap to `pixmap'. 
+		do
+			background_pixmap := clone (a_pixmap)
+			internal_set_background_pixmap (a_pixmap)
 		end
 		
 	bg_pixmap (p: POINTER): POINTER is
@@ -390,6 +419,17 @@ feature {EV_WIDGET_IMP} -- Implementation
 			-- 
 		do
 			-- By default do nothing
+		end
+		
+	set_parent_imp (a_parent_imp: EV_CONTAINER_IMP) is
+			-- 
+		do
+			Precursor {EV_WIDGET_IMP} (a_parent_imp)
+			if background_pixmap /= Void and parent_imp = Void then
+				-- We need to reref the background pixmap as gtk doesn't handle it properly
+				-- on removal from parent of Current.
+				internal_set_background_pixmap (background_pixmap)
+			end
 		end
 
 feature {NONE} -- Externals

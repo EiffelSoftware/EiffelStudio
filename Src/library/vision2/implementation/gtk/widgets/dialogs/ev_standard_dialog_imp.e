@@ -81,7 +81,6 @@ feature -- Status setting
 		do
 			user_clicked_ok := False
 			selected_button := Void
-			C.gtk_window_set_position (c_object, C.Gtk_win_pos_center_enum)
 
 				-- Remove the modality of the parent if it is modal
 			if a_window /= Void then
@@ -100,7 +99,7 @@ feature -- Status setting
 			end
 
 			set_blocking_window (a_window)
-			C.gtk_widget_show (c_object)
+			show
 			block
 			set_blocking_window (Void)
 			

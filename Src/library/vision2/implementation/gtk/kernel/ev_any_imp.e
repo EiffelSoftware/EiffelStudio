@@ -13,6 +13,10 @@ deferred class
 
 inherit
 	EV_ANY_I
+		export
+			{EV_INTERMEDIARY_ROUTINES}
+				is_destroyed
+		end
 
 	IDENTIFIED
 		undefine

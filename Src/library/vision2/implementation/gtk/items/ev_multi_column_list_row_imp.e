@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 
@@ -341,6 +340,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/02/18 23:54:11  oconnor
+--| released
+--|
 --| Revision 1.27  2000/02/17 21:47:20  king
 --| Added check for parent in set_cell_*
 --|

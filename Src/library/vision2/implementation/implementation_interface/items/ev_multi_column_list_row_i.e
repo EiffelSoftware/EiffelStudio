@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -88,6 +87,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/02/18 23:54:11  oconnor
+--| released
+--|
 --| Revision 1.27  2000/02/16 20:28:08  king
 --| Removed inheritence from pnd
 --|

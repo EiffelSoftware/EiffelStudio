@@ -5,13 +5,13 @@
 			<size>2</size>What's new
 		</heading>
 		<list ordered="false">
-			<item>Full support for new <code><keyword>convert</keyword></code> keyword.</item>
+			<item>Full support for new <code><keyword>convert</keyword></code>keyword.</item>
+			<item>Made <code><keyword>Void,</keyword></code> previously a feature of <code><class_name>ANY</class_name></code>, a keyword. This prevents the renaming of <code><feature_name>Void</feature_name></code> into <code><feature_name>not_void</feature_name></code> that was possible before when it was a routine of <code><class_name>ANY</class_name></code>.</item>
 		</list>
-		<heading>
-			<size>2</size>Improvements
-		</heading>
+		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Reduced, in classic mode, size of finalized executables by 10 to 50%.</item>
+			<item>Improved speed of evaluation of global onces by having a lock-free mechanism when a once has been evaluated.</item>
 		</list>
 		<heading>
 			<size>2</size>Changes
@@ -32,7 +32,20 @@
 			<size>3</size>Compiler issues
 		</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Fixed issue about conformance checking of type containing a formal generic parameter. We would always evaluate the formal to its constraint, thus allowing the code below to be accepted where it should not have been:
+			<code_block>
+<keyword>class</keyword> <class_name>A</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
+<keyword>feature</keyword>
+	<feature_name>bug</feature_name> <keyword>is</keyword>
+		<keyword>local</keyword>
+			l_any<symbol>:</symbol> <class_name>LIST</class_name> <symbol>[</symbol><class_name>ANY</class_name><symbol>]</symbol>
+			l_g<symbol>:</symbol> <class_name>LIST</class_name> <symbol>[</symbol><class_name>G</class_name><symbol>]</symbol>
+		<keyword>do</keyword>
+			l_any <symbol>:</symbol><symbol>=</symbol> l_g
+			l_g <symbol>:</symbol><symbol>=</symbol> l_any
+		<keyword>end</keyword>
+			</code_block>
+			</item>
 		</list>
 		<heading>
 			<size>3</size>Runtime/code generation issues

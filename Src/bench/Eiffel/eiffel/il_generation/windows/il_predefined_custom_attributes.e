@@ -24,18 +24,4 @@ feature -- Predefined custom attributes
 			Result.put_integer_16 (0)
 		end
 
-	debugger_step_through_ca: MD_CUSTOM_ATTRIBUTE is
-			-- Blob for `System.Diagnostics.DebuggerStepThroughAttribute' attribute.
-		once
-			create Result.make
-			Result.put_integer_16 (0)
-		end
-
-	debugger_hidden_ca: MD_CUSTOM_ATTRIBUTE is
-			-- Blob for `System.Diagnostics.DebuggerHiddenAttribute' attribute.
-		once
-			create Result.make
-			Result.put_integer_16 (0)
-		end
-
 end -- class IL_PREDEFINED_CUSTOM_ATTRIBUTES

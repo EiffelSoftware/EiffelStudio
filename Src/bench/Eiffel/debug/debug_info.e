@@ -568,11 +568,11 @@ feature -- Breakpoints setting
 			from
 				sent_breakpoints.start
 			until
-				sent_breakpoints.after
+				sent_breakpoints.off
 			loop
-				bp := sent_breakpoints.item;
-				if not sent_breakpoints.item.is_continue then
-					bp := clone (sent_breakpoints.item);
+				bp := sent_breakpoints.item_for_iteration;
+				if not bp.is_continue then
+					bp := clone (bp);
 					bp.set_continue;
 					new_breakpoints.extend (bp)
 				end;

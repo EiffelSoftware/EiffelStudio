@@ -10,23 +10,11 @@ class
 
 inherit
 
-	LINKED_SET [BREAKPOINT]
+	HASH_TABLE [BREAKPOINT, BREAKPOINT]
 		rename
-			extend as ls_extend,
-			append as ls_append,
-			make as ls_make
-		export
-			{NONE} ls_make, replace;
-			{NONE} ls_append, fill, merge_left, merge_right;
-			{NONE} put, put_front, force, ls_extend;
-			{NONE} put_i_th, put_left, put_right
-		select
-			ls_extend, ls_append, ls_make
-		end
-
-	LINKED_SET [BREAKPOINT]
-		redefine
-			extend, make, append
+			make as ht_make,
+			extend as ht_extend,
+			clear_all as wipe_out
 		end
 
 creation
@@ -36,10 +24,9 @@ creation
 feature -- Initialization
 
 	make is
-			-- Create an empty list with object comparison mode.
+			-- Create an empty list of break points.
 		do
-			ls_make;
-			compare_objects
+			ht_make (50)
 		end;
 			
 feature -- Element change
@@ -54,31 +41,26 @@ feature -- Element change
 			bp_exists: bp /= Void
 		do
 			if not has (bp) then
-				put_front (bp)
-			elseif i_th (index_of (bp, 1)).is_continue /= bp.is_continue then
-				start;
-				prune (bp)
+				put (bp, bp)
+			elseif item (bp).is_continue /= bp.is_continue then
+				remove (bp)
 			end
 		end;
 
 	append (other: like Current) is
 			-- Add breakpoint instructions held in `other' into `Current'.
-		require else
+		require
 			other_exists: other /= Void
 		do
 			from
 				other.start
 			until
-				other.after
+				other.off
 			loop
-				extend (other.item);
+				extend (other.item_for_iteration);
 				other.forth
 			end
 		end;
-
-invariant
-
-	object_comparison: object_comparison
 
 end -- class BREAK_LIST
 	

@@ -28,11 +28,15 @@ feature {NONE} -- Initialization
 	update_resources is
 			-- Update `resources'.
 		do
-			!! regular_button.make (associated_category.regular_button);
+			if Platform_constants.is_windows then
+				!! regular_button.make (associated_category.regular_button);
+			end
 			!! close_button.make (associated_category.close_button)
 			!! acrobat_reader.make (associated_category.acrobat_reader);
 			!! text_mode.make (associated_category.text_mode);
-			!! tab_step.make (associated_category.tab_step);
+			if Platform_constants.is_windows then
+				!! tab_step.make (associated_category.tab_step);
+			end
 			!! editor.make (associated_category.editor);
 			!! filter_path.make (associated_category.filter_path);
 			!! profile_path.make (associated_category.profile_path);
@@ -50,11 +54,15 @@ feature {NONE} -- Initialization
 				!! browsing_facilities.make (associated_category.browsing_facilities);
 			end
 
-			resources.extend (regular_button);
+			if Platform_constants.is_windows then
+				resources.extend (regular_button);
+			end
 			resources.extend (close_button);
 			resources.extend (acrobat_reader);
 			resources.extend (text_mode)
-			resources.extend (tab_step);
+			if Platform_constants.is_windows then
+				resources.extend (tab_step);
+			end
 			resources.extend (editor);
 			resources.extend (filter_path);
 			resources.extend (profile_path);

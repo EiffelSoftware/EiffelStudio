@@ -283,7 +283,13 @@ feature {NONE} -- Implementation
 			-- position `cur_pos' in text
 		do
 			from
-				search_results.start
+				if not search_results.off then
+					if search_results.item.character_count > cur_pos then
+						search_results.start
+					end
+				else
+					search_results.start
+				end
 			until
 				search_results.after or else search_results.item.character_count >= cur_pos
 			loop
@@ -299,6 +305,11 @@ feature {NONE} -- Implementation
 			-- position `cur_pos' in text
 		do
 			from
+				if not search_results.off then
+					if search_results.item.character_count <= cur_pos then
+						search_results.finish
+					end
+				end
 				search_results.finish
 			until
 				search_results.before or else search_results.item.character_count < cur_pos

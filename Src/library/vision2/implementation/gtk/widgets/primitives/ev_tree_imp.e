@@ -32,7 +32,8 @@ inherit
 			pre_pick_steps,
 			post_drop_steps,
 			call_pebble_function,
-			visual_widget
+			visual_widget,
+			needs_event_box
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
@@ -62,28 +63,32 @@ create
 
 feature {NONE} -- Initialization
 
+	needs_event_box: BOOLEAN is True
+
 	make (an_interface: like interface) is
 			-- Create an empty Tree.
+		local
+			a_scrolled_window: POINTER
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL))
+			a_scrolled_window := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
+			set_c_object (a_scrolled_window)
 			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_policy (
-				c_object, 
+				a_scrolled_window, 
 				feature {EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM,
 				feature {EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM
 			)
-			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_placement (c_object, feature {EV_GTK_EXTERNALS}.gTK_CORNER_TOP_LEFT_ENUM)
+			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_set_placement (a_scrolled_window, feature {EV_GTK_EXTERNALS}.gTK_CORNER_TOP_LEFT_ENUM)
 
 			list_widget := feature {EV_GTK_EXTERNALS}.gtk_ctree_new (1, 0)
 			
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_line_style (list_widget, GTK_CTREE_LINES_DOTTED_ENUM)
 			feature {EV_GTK_EXTERNALS}.gtk_clist_set_selection_mode (list_widget, feature {EV_GTK_EXTERNALS}.GTK_SELECTION_BROWSE_ENUM)
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_expander_style (list_widget, GTK_CTREE_EXPANDER_SQUARE_ENUM)
-			--feature {EV_GTK_EXTERNALS}.gtk_clist_set_shadow_type (list_widget, feature {EV_GTK_EXTERNALS}.gTK_SHADOW_NONE_ENUM)
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_show_stub (list_widget, True)
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_set_indent (list_widget, 17)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (list_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
+			feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_add_with_viewport (a_scrolled_window, list_widget)
 			
 			create ev_children.make (0)
 				-- Make initial hash table with room for 100 child pointers, may be increased later.
@@ -112,6 +117,12 @@ feature {NONE} -- Initialization
 				feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (list_widget, a_wid, -1)
 				tree_width := a_wid
 			end
+		end
+
+	call_selection_action_sequences is
+			-- 
+		do
+			-- Not needed for 1.2 implementation
 		end
 	
 	visual_widget: POINTER is
@@ -191,7 +202,7 @@ feature {NONE} -- Initialization
 				a_screen_x, a_screen_y]
 
 			tree_item_imp := row_from_y_coord (a_y)
-	
+
 			if a_type = feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_ENUM then
 				if not is_transport_enabled and then pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
@@ -389,10 +400,10 @@ feature -- Implementation
 				button_release_not_connected: button_release_connection_id = 0
 			end
 			if button_press_connection_id > 0 then
-				signal_disconnect (button_press_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
 			end
 			real_signal_connect (
-				c_object,
+				visual_widget,
 				"button-press-event", 
 				agent (App_implementation.gtk_marshal).tree_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), 
 				App_implementation.default_translate)
@@ -549,10 +560,10 @@ feature -- Implementation
 		do
 			if pnd_row_imp /= Void and not is_destroyed then
 				if pnd_row_imp.mode_is_pick_and_drop then
-					signal_emit_stop (c_object, "button-press-event")
+					signal_emit_stop (visual_widget, "button-press-event")
 				end
 			elseif mode_is_pick_and_drop and not is_destroyed then
-					signal_emit_stop (c_object, "button-press-event")
+					signal_emit_stop (visual_widget, "button-press-event")
 			end
 
 			app_implementation.on_drop (pebble)

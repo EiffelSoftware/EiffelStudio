@@ -658,7 +658,26 @@ feature {NONE} -- Translation
 					dir := dependent_directories.item
 				end
 			end
-	
+
+			-- The 3 next clauses are to avoid to have an empty D_OBJECT.  --JOC--
+			if not C_done then
+				makefile.putstring ("%N%N");
+				makefile.putstring (options.get_string ("c_objects_text", Void))
+				makefile.putstring (" %"%" %N")
+			end
+
+			if not D_done then
+				makefile.putstring ("%N%N");
+				makefile.putstring (options.get_string ("d_objects_text", Void))
+				makefile.putstring (" %"%" %N")
+			end
+
+			if not F_done then
+				makefile.putstring ("%N%N");
+				makefile.putstring (options.get_string ("f_objects_text", Void))
+				makefile.putstring (" %"%" %N")
+			end
+
 			from
 				makefile.putstring ("%N%N")
 				makefile.putstring (options.get_string ("eobjects_text", Void))

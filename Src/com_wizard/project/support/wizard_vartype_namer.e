@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			c_names.put (Com_integer_type, Vt_int)
 			c_names.put (Uint_type, Vt_uint)
 			c_names.put (void_c_keyword, Vt_void)
+			c_names.put ("void *", binary_or (Vt_void, Vt_byref))
 			c_names.put (Variant_bool, Vt_bool)
 			c_names.put (Date_c_keyword, Vt_date)
 			c_names.put (Hresult, Vt_hresult)

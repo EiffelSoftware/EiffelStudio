@@ -40,6 +40,13 @@ feature -- Basic operations
 			unregistered: not registered (object)
 		do	
 			objects.put (object, object.handle)
+--| FIXME PR 2159
+--| When a conflict occurs during this instruction, object is not registrated in
+--| the HASH_TABLE, and a contract violation occurs.
+--| Suggestion: replace `put' with `force', and see if there is an equivalent
+--| problem in `unregister_object' (i gess there is one).
+--| This sole bug makes any V2-based application as stable as Netscape under
+--| Windows* beta, so i NEED it solved for bootstrapping.
 		ensure
 			registered: registered (object)
 		end

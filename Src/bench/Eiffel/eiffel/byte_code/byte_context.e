@@ -770,7 +770,7 @@ feature
 						generated_file.putstring (")) {");
 						generated_file.new_line;
 						generated_file.indent;
-						nb_exp := expanded_number (argument_b.position);
+						nb_exp := expanded_number (argument_b.position) - 1;
 						generated_file.putstring ("idx[");
 						generated_file.putint (nb_exp);
 						generated_file.putstring ("] = RTOF(arg");
@@ -807,7 +807,7 @@ feature
 							and not (reg.is_current or reg.is_argument)
 							and not (reg.is_result and compound_or_post))
 						then
-							reg.c_type.generate_initial_value (generated_file);
+							generated_file.putstring ("(char *) 0")	
 						else
 							if (reg.c_type.is_bit) and (reg.is_argument) then
 								-- Clone argument if it is bit

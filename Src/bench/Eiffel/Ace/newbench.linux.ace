@@ -101,7 +101,7 @@ cluster
 
 	all vision:		"$EIFFEL_SRC/library/vision2"
 		exclude
-			"CVS"; "mswin"; "obsolete"; 
+			"CVS"; "mswin"; "obsolete"; "gtk2";
 		end
 
 	all net:		"$EIFFEL_SRC/library/net"

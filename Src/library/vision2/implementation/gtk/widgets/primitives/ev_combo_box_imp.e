@@ -307,13 +307,13 @@ feature {NONE} -- Implementation
 		
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 		local
-			success: BOOLEAN
+		--	success: BOOLEAN
 		do
 			if 
 				a_key /= Void and then Key_down = a_key.code
 			then
 					C.gtk_signal_handler_unblock (entry_widget, activate_id)
-					success := C.gtk_widget_activate (entry_widget)
+				--	success := C.gtk_widget_activate (entry_widget)
 					C.gtk_signal_handler_block (entry_widget, activate_id)
 			end
 			Precursor (a_key, a_key_string, a_key_press)

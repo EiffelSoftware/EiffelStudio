@@ -23,7 +23,7 @@ feature -- Initialization
 	rgt: EV_MENU_ITEM
 	vanishing: EV_MENU_SEPARATOR
 
-	hsa: EV_HORIZONTAL_SPLIT_AREA
+	hsa: EV_VERTICAL_BOX
 
 	pix: EV_PIXMAP
 
@@ -105,10 +105,13 @@ feature -- Initialization
 --			i4.set_pixmap (pix)
 			i3.extend (i4)
 
-		--	create hsa
-		--	first_window.extend (hsa)
-		--	hsa.extend (create {EV_BUTTON}.make_with_text ("B1"))
-		--	hsa.extend (create {EV_TEXT_FIELD}.make_with_text ("B2"))
+			create hsa
+			first_window.extend (hsa)
+			hsa.extend (create {EV_TOGGLE_BUTTON}.make_with_text ("toggle"))
+			hsa.extend (create {EV_CHECK_BUTTON}.make_with_text ("check"))
+			hsa.extend (create {EV_RADIO_BUTTON}.make_with_text ("radio1"))
+			hsa.extend (create {EV_RADIO_BUTTON}.make_with_text ("radio2"))
+			hsa.extend (create {EV_RADIO_BUTTON}.make_with_text ("radio3"))
 		end
 
 	on_exit is

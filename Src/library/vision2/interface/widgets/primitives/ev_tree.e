@@ -33,7 +33,7 @@ feature {EV_ANY} -- Contract support
 
 	make_for_test is
 		local
-			t_item: EV_TREE_ITEM
+			t_item, t_item2, t_item3, t_item4: EV_TREE_ITEM
 			a_counter1, a_counter2, a_counter3: INTEGER
 		do
 			Precursor
@@ -70,6 +70,32 @@ feature {EV_ANY} -- Contract support
 				t_item.expand 
 				a_counter1 := a_counter1 + 1
 			end
+				create t_item2.make_with_text ("First item of 'Tree item 5' after tests")
+				create t_item3.make_with_text ("Third item of 'Tree item 5' after tests")
+				t_item2.extend (t_item3)
+				t_item2.start
+				create t_item4.make_with_text ("Fifth item of 'Tree item 5' after tests")
+				t_item2.item.extend (t_item4)
+				t_item.extend (t_item2)
+				t_item.prune (t_item2)
+				from
+					t_item.start
+				until
+					t_item.off
+				loop
+					t_item.put_left (t_item2)
+					t_item.prune (t_item2)
+				if not t_item.off then
+					t_item.forth
+				end
+				end
+				t_item.put_front (t_item2)
+				t_item2.prune (t_item3)
+				t_item.go_i_th (3)		
+				t_item.put_left (t_item3)
+				t_item3.prune (t_item4)
+				t_item.go_i_th (5)
+				t_item.replace (t_item4)
 		end
 
 feature -- Access
@@ -179,6 +205,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/09 17:29:38  rogers
+--| Improved tests in make_for_test.
+--|
 --| Revision 1.28  2000/03/07 01:33:12  king
 --| Now inheriting from ev_tree_item_holder
 --|

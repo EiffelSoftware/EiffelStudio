@@ -148,13 +148,15 @@ feature {EV_ANY_I} -- Implementation
 
 	separator_imp_by_index (an_index: INTEGER): EV_MENU_SEPARATOR_IMP is
 			-- Separator before item with `an_index'.
+			--| Will be needed by reset_radio_grouping
+			--| or insert_i_th.
 		require
-			an_index_within_bounds:
-				an_index > 0 and then an_index <= ev_children.count
+		--	an_index_within_bounds:
+		--		an_index > 0 and then an_index <= ev_children.count
 		local
-			cur: CURSOR
-			cur_item: INTEGER
-			sep_imp: EV_MENU_SEPARATOR_IMP
+		--	cur: CURSOR
+		--	cur_item: INTEGER
+		--	sep_imp: EV_MENU_SEPARATOR_IMP
 		do
 		--	from
 		--		ev_children.start
@@ -194,6 +196,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/06 20:26:14  brendel
+--| Commented out more of separator_imp_by_index.
+--|
 --| Revision 1.8  2000/04/06 18:41:51  brendel
 --| Added separator_imp_by_index.
 --|

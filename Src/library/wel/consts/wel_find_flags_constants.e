@@ -1,5 +1,5 @@
 indexing
-	description: "Constants for defining type of text searh"
+	description: "Constants for defining type of text search"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

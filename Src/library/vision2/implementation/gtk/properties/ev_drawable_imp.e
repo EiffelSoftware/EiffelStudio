@@ -656,7 +656,7 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	gc_not_void: gc /= NULL
+	gc_not_void: is_usable implies gc /= NULL
 
 end -- class EV_DRAWABLE_IMP
 

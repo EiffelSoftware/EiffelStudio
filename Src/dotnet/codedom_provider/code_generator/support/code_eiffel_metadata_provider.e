@@ -85,7 +85,7 @@ feature -- Access
 		do
 			check_eac_for_type (a_type)
 			l_entities := cache_reflection.entities (a_type, a_name)
-			if l_entities /= Void then
+			if l_entities /= Void and then not l_entities.is_empty then
 				Result := l_entities.first.dotnet_eiffel_name
 			end
 		ensure
@@ -170,11 +170,7 @@ feature -- Access
 				check_eac_for_type (a_type)
 				l_consumed_type := cache_reflection.consumed_type (a_type)
 				if l_consumed_type /= Void then
-					create {ARRAYED_LIST [CONSUMED_ENTITY]} l_entities.make_from_array (l_consumed_type.procedures)
-					l_entities.append (create {ARRAYED_LIST [CONSUMED_ENTITY]}.make_from_array (l_consumed_type.functions))
-					l_entities.append (create {ARRAYED_LIST [CONSUMED_ENTITY]}.make_from_array (l_consumed_type.fields))
-					l_entities.append (create {ARRAYED_LIST [CONSUMED_ENTITY]}.make_from_array (l_consumed_type.events))
-					l_entities.append (l_consumed_type.consumed_constructors)
+					l_entities := l_consumed_type.flat_entities
 					create {ARRAYED_LIST [CODE_MEMBER_REFERENCE]} Result.make (l_entities.count)
 					from
 						l_entities.start

@@ -38,7 +38,7 @@ feature {NONE}
 
 	command_name: STRING is do Result := l_Showflat end;
 
-	display_info (i: INTEGER; stone: FEATURE_STONE) is 
+	display_info (stone: FEATURE_STONE) is 
 			-- Display flat form of `stone'.
 		do 
 			text_window.process_text (rout_flat_context_text (stone))

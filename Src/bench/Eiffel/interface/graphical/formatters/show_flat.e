@@ -43,7 +43,7 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Flat_form_of end;
 
-	display_info (i: INTEGER; c: CLASSC_STONE) is
+	display_info (c: CLASSC_STONE) is
 			-- Display flat form of 'c'.
 		do
 			text_window.process_text (flat_context_text (c))

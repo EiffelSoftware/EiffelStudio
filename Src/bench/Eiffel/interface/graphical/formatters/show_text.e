@@ -214,7 +214,7 @@ feature
 feature {NONE}
 
 	title_part: STRING is do Result := "" end;
-	display_info (i: INTEGER; d: STONE) is do end
+	display_info (d: STONE) is do end
 			-- Useless here
 
 end

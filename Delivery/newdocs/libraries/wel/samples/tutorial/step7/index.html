@@ -9,8 +9,8 @@
 
 	<BODY>
 		<H1>Tutorial Step 7</H1>
-		<P> This sample shows you how to set up your first <A HREF="/libraries/wel/support/wel_application_chart.html">WEL_APPLICATION</A> which consists of a <A HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A>. This
-		is one of the simplest WEL applications you can write, and the output is shown below:
+		<P>This sample builds on tutorial <A HREF="/libraries/wel/samples/tutorial/step5/index.html">step 5</A>, and also demonstrates the use of a <A CLASS="eclass" HREF="/libraries/wel/windows/support/wel_menu_chart.html">WEL_MENU</A>.
+		The output is shown below:
 		</P>
 		<CENTER><IMG SRC="step7.png" ALT="step7" /></CENTER><BR><BR>
 		<H2>Compiling</H2>
@@ -20,13 +20,21 @@
 		<UL>
 			<LI>Launch [BENCH].
 			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
-			<LI>Browse to <I>Eiffel50\examples\wel\tutorial\step1\</I>.
+			<LI>Browse to <I>Eiffel50\examples\wel\tutorial\step7\</I>.
 			<LI>Choose <I>Ace.ace</I>
 			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
 			<LI>Click <B>OK</B>.
 		</UL>
 		<H2>Running</H2>
+		<P>After launching the sample, you should see a <A CLASS="eclass" HREF="/Libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> displayed. By holding
+		down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. Selecting "Line_thickness" from the "Line"
+		menu, will bring up a <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_modal_dialog_chart.html">WEL_MODAL_DIALOG</A> which allows you to change the thickness of the line that is drawn.
+		If you select "Exit" from the "File" menu, you will be prompted if you wish to exit the application. The other menu options on the "File" menu do nothing in this example.
+		</P>
 		<H2>Under the Hood</H2>
+		<P>During the creation of <A CLASS="eclass" HREF="/libraries/wel/samples/tutorial/step7/root_cluster/main_window_chart.html">MAIN_WINDOW</A>, the menu is assigned to the window and <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_composite_window_chart.html#f_on_menu_command">on_menu_command</A> is
+		redefined to allow processing of the menu selctions.
+		</P>
 		
 		<P>This sample contains the following classes:
 			<UL>

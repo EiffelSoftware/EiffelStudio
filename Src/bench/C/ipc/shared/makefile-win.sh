@@ -9,7 +9,6 @@ JCFLAGS = $(CFLAGS) $ccflags $optimize
 
 OBJECTS = \
 	com.obj \
-	env.obj \
 	identify.obj \
 	lock.obj \
 	logfile.obj \

@@ -22,7 +22,6 @@ inherit
 			child_has_resized,
 			on_destroy,
 			make_with_coordinates,
-			set_default_position,
 			maximal_width,
 			maximal_height,
 			on_vertical_scroll_control,
@@ -42,6 +41,8 @@ inherit
 			wel_make as make_child,
 			unrealize as bulletin_unrealize
 		undefine
+			x,
+			set_default_position,
 			show,
 			set_enclosing_size,
 			resize_for_shell,

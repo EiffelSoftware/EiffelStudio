@@ -29,7 +29,7 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 					l_target_object := a_source.target_object
 					if l_target_object /= Void then
 						code_dom_generator.generate_expression_from_dom (l_target_object)
-						set_last_expression (create {CODE_DELEGATE_CREATE_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (l_delegate_type), last_expression.type.member_from_name (a_source.method_name), last_expression))
+						set_last_expression (create {CODE_DELEGATE_CREATE_EXPRESSION}.make (Type_reference_factory.type_reference_from_reference (l_delegate_type), a_source.method_name, last_expression))
 					else
 						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_target_object, ["delegate create expression"])
 					end

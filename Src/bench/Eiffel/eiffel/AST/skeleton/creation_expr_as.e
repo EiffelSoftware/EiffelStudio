@@ -381,7 +381,7 @@ feature -- Type check
 				create create_type.make (creation_type.type_i)
 			end
 
-			context.creation_types.insert (create_type)
+			context.creation_infos.insert (create_type)
 		end
 
 feature
@@ -391,11 +391,9 @@ feature
 		local
 			create_type: CREATE_TYPE
 			call_access: CALL_ACCESS_B
-			feature_b: FEATURE_B
-			creation_feature_call: CREATION_EXPR_CALL_B
 			the_call: like call
 		do
-			create Result.make
+			create Result
 
 			if default_call = Void or else default_call.feature_name.is_empty then
 				the_call := call
@@ -405,28 +403,22 @@ feature
 
 			if the_call /= Void then
 				call_access ?= the_call.byte_node
-				feature_b ?= call_access
-
-				if feature_b /= Void then
-					create {CREATION_FEATURE_B} creation_feature_call
-				else
-					create {CREATION_EXTERNAL_B} creation_feature_call
+				check
+					has_valid_call: call_access /= Void
 				end
-
-				creation_feature_call.fill_from (call_access)
-				Result.set_call (creation_feature_call)
+				Result.set_call (call_access)
 			end
 
 				-- Cannot be Void since the only thing that we put is of type CREATION_TYPE
 				-- for a CREATION_EXPR_B
-			create_type ?= context.creation_types.item
-			context.creation_types.forth
+			create_type ?= context.creation_infos.item
+			context.creation_infos.forth
 			check
 				create_type_not_void: create_type /= Void
 			end
 			
 			Result.set_info (create_type)
-
+			Result.set_type (create_type.type)
 			Result.set_line_number (line_number)
 		end
 

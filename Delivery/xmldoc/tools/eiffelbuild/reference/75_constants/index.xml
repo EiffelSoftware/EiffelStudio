@@ -97,18 +97,34 @@
 					<size>2</size>String constant
 				</heading>
 				<paragraph>A String constant represents an Eiffel STRING, and may be any valid STRING. For example, in the generated constants file, for a String constant named `modify_button_text', the following code is generated:</paragraph>
-				<code_block/>
+				<code_block>
+	<feature_name>modify_button_text</feature_name><symbol>:</symbol> <class_name>STRING</class_name> <keyword>is</keyword>
+			<comment>-- `Result' is STRING constant named modify_button_text.</comment>
+		<keyword>once</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> "<string>Modify</string>"
+		<keyword>end</keyword>
+</code_block>
 			</paragraph>
 			<heading>
 				<size>2</size>Integer constant
 			</heading>
 			<paragraph>A Integer constant represents an Eiffel INTEGER, and may be any valid INTEGER value. For example, in the generated constants file, for an Integer constant named `medium_padding', the following code is generated:</paragraph>
-			<code_block>							</code_block>
+<code_block>
+	<feature_name>medium_padding</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword>
+				<comment>-- `Result' is INTEGER constant named medium_padding.</comment>
+		<keyword>once</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> 8
+		<keyword>end</keyword></code_block>
 			<heading>
 				<size>2</size>Directory constant
 			</heading>
 			<paragraph>A Directory constant is an Eiffel representation of a directory, as a STRING value. For example, in the generated constants file, for a Directory constant named `pixmap_location', the following code is generated:</paragraph>
-			<code_block>			</code_block>
+			<code_block>
+	<feature_name>pixmap_location</feature_name><symbol>:</symbol> <class_name>STRING</class_name> <keyword>is</keyword>
+			<comment>-- `Result' is DIRECTORY constant named pixmap_location.</comment>
+		<keyword>once</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> "<string>C:\pixmaps</string>"
+		<keyword>end</keyword></code_block>
 		</paragraph>
 		<heading>
 			<size>2</size>Pixmap constant
@@ -117,11 +133,32 @@
 		<list ordered="false">
 			<item>
 				<bold>Absolute</bold> - The generated code contains a constant of type EV_PIXMAP, built from a single, absolute path, based on the location of the original pixmap on disk as follows:
-				<code_block>				</code_block>
+				<code_block>
+	<feature_name>main_pixmap</feature_name><symbol>:</symbol> <class_name>EV_PIXMAP</class_name> <keyword>is</keyword>
+			<comment>-- `Result' is PIXMAP constant named main_pixmap.</comment>
+		<keyword>local</keyword>
+			a_file_name<symbol>:</symbol> <class_name>FILE_NAME</class_name>
+		<keyword>once</keyword>
+			<keyword>create</keyword> Result
+			<keyword>create</keyword> <feature_name>a_file_name</feature_name>.<feature_name>make_from_string</feature_name> <symbol>(</symbol>"<string>C:\pixmaps\main_pixmap.png</string>"<symbol>)</symbol>
+				<comment>-- Now set `Result' based on `a_file_name'.</comment>
+			<feature_name>set_with_named_file</feature_name><symbol>(</symbol>Result, a_file_name<symbol>)</symbol>
+ 		<keyword>end</keyword></code_block>
 			</item>
 			<item>
 				<bold>Relative</bold> - The generated code contains a constant of type EV_PIXMAP, built from a file name and a directory constant. This type of pixmap constant is the most frequently used, as it is more flexible. By redefining the value of the directory constant on which it is based, your systems may easily account for the intallation location of the pixmap. A relative Pixmap constant is generated as follows:
-				<code_block>				</code_block>
+				<code_block>
+	<feature_name>main_pixmap</feature_name><symbol>:</symbol> <class_name>EV_PIXMAP</class_name> <keyword>is</keyword>
+			<comment>-- `Result' is PIXMAP constant named main_pixmap.</comment>
+		<keyword>local</keyword>
+			a_file_name<symbol>:</symbol> <class_name>FILE_NAME</class_name>
+		<keyword>once</keyword>
+			<keyword>create</keyword> Result
+			<keyword>create</keyword> <feature_name>a_file_name</feature_name>.<feature_name>make_from_string</feature_name> <symbol>(</symbol><feature_name>pixmap_location</feature_name><symbol>)</symbol>
+			<feature_name>a_file_name</feature_name>.<feature_name>set_file_name</feature_name><symbol>(</symbol>"<string>main_pixmap.png</string>"<symbol>)</symbol>
+				<comment>-- Now set `Result' based on `a_file_name'.</comment>
+			<feature_name>set_with_named_file</feature_name><symbol>(</symbol>Result, a_file_name<symbol>)</symbol>
+		 <keyword>end</keyword></code_block>
 				<paragraph>Where `pixmap_location' is the name of the Directory constant to which the pixmap is relative.</paragraph>
 			</item>
 		</list>
@@ -146,7 +183,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
 				<label>project settings</label>
-			</link>. For example, if you have specified the name "constants" for the constants, two classes are generated, CONSTANTS and the implementation, CONSTANTS_IMP.
+			</link>. For example, if you have specified the name "constants" for the constants, two classes are generated, <code><class_name>CONSTANTS</class_name></code> and the implementation, <code><class_name>CONSTANTS_IMP</class_name></code>.
 		</paragraph>
 		<paragraph>By default, all constant values are hard coded into the implementation class, but it is possible to set these to be loaded from an external file upon execution of the generated system. To do this, the "Load constants from file" setting of the 
 			<link>

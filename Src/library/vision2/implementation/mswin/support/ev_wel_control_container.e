@@ -16,6 +16,7 @@ inherit
 			make as wel_make,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
+			shown as displayed,
 			destroy as wel_destroy
 		undefine
 			window_process_message,
@@ -40,7 +41,9 @@ inherit
 			on_accelerator_command,
 			on_color_control,
  			on_wm_vscroll,
- 			on_wm_hscroll
+ 			on_wm_hscroll,
+			show,
+			hide
 		redefine
 			default_style,
 			default_ex_style
@@ -96,6 +99,15 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			Result := c_mouse_message_y (lparam)
+		end
+
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		do
+			cwin_show_window (hwnd, cmd_show)
 		end
 
 	get_wm_hscroll_code (wparam, lparam: INTEGER): INTEGER is

@@ -71,6 +71,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_SW_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	widget_make (an_interface: EV_WIDGET) is
@@ -159,7 +164,15 @@ feature -- Status report
 	insensitive: BOOLEAN is
 			-- Is current widget insensitive?
        	do
-      		Result := not enabled
+      			Result := not enabled
+		end
+
+	shown: BOOLEAN is
+			-- Is the widget shown?
+			-- Do not use the WEL feature because it can be shown and
+			-- displayed when the parent is not shown.
+		do
+			Result := flag_set (style, Ws_visible)
 		end
 
 feature -- Status setting
@@ -172,6 +185,25 @@ feature -- Status setting
 				parent_imp.remove_child (Current)
 			end
 			wel_destroy
+		end
+
+	show is
+			-- Show the window
+			-- Need to notify the parent.
+		do
+			show_window (item, Sw_show)
+			if parent_imp /= Void then
+				parent_imp.notify_change (1 + 2)
+			end
+		end
+
+	hide is
+			-- Hide the window
+		do
+			show_window (item, Sw_hide)
+			if parent_imp /= Void then
+				parent_imp.notify_change (1 + 2)
+			end
 		end
 
 	set_insensitive (flag: BOOLEAN) is
@@ -247,8 +279,7 @@ feature -- Status setting
 			-- Initialize the size of the widget.
 			-- Redefine by some widgets.
 		do
-			internal_set_minimum_width (0)
-			internal_set_minimum_height (0)
+			internal_set_minimum_size (0, 0)
 		end
 
 feature -- Element change
@@ -997,6 +1028,10 @@ feature -- Deferred features
 		deferred
 		end
 
+	item: POINTER is
+		deferred
+		end
+
 feature {NONE} -- Feature that should be directly implemented by externals
 
 	mouse_message_x (lparam: INTEGER): INTEGER is
@@ -1009,6 +1044,14 @@ feature {NONE} -- Feature that should be directly implemented by externals
 
 	mouse_message_y (lparam: INTEGER): INTEGER is
 			-- Encapsulation of the c_mouse_message_x function of
+			-- WEL_WINDOW. Normaly, we should be able to have directly
+			-- c_mouse_message_x deferred but it does not wotk because
+			-- it would be implemented by an external.
+		deferred
+		end
+
+	show_window (hwnd: POINTER; cmd_show: INTEGER) is
+			-- Encapsulation of the cwin_show_window function of
 			-- WEL_WINDOW. Normaly, we should be able to have directly
 			-- c_mouse_message_x deferred but it does not wotk because
 			-- it would be implemented by an external.

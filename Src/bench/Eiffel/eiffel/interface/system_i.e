@@ -1444,7 +1444,7 @@ end;
 			write_int (file_pointer, class_counter.total_count);
 				-- Write the profiler status
 			if Lace.ace_options.has_profile then
-				write_int (file_pointer, 1)
+				write_int (file_pointer, 3)
 			else
 				write_int (file_pointer, 0)
 			end
@@ -3158,9 +3158,9 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("();%N");
 
 				-- Do we need to collect GC data for the profiler?
-			Plug_file.putstring ("EIF_BOOLEAN eif_profiler_on = (EIF_BOOLEAN) ");
+			Plug_file.putstring ("EIF_INTEGER eif_profiler_level = (EIF_INTEGER) ");
 			if Lace.ace_options.has_profile then
-				Plug_file.putstring ("1;%N")
+				Plug_file.putstring ("3;%N")
 			else
 				Plug_file.putstring ("0;%N")
 			end
@@ -3361,7 +3361,7 @@ feature -- Main file generation
 
 			Main_file.putstring ("%
 				%%Teif_rtinit(argc, argv, envp);%N%
-				%%Tif (eif_profiler_on) initprf();%N%
+				%%Tif (prof_enabled) initprf();%N%
 				%%Temain(argc, argv);%N%
 				%%Treclaim();%N%
 				%%Texit(0);%N}%N");

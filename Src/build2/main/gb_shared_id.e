@@ -25,6 +25,8 @@ feature -- Basic operations
 		do
 			Result := internal_counter.item
 			set_current_id_counter (internal_counter.item + 1)
+		ensure
+			result_positive: Result > 0
 		end
 		
 	set_current_id_counter (value: INTEGER) is

@@ -89,7 +89,7 @@ feature -- Basic Operations
 						if Result.item (1) = '_' then
 							Result.prepend_character ('X')
 						end
-						Result := eiffel_format (Result)
+						Result := eiffel_format (Result, True)
 						Result.to_upper
 					end
 				end
@@ -155,7 +155,7 @@ feature -- Basic Operations
 				if Result.item (1) = '_' then
 					Result.prepend_character ('a')
 				end
-				Result := eiffel_format (Result)
+				Result := eiffel_format (Result, False)
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -205,7 +205,7 @@ feature -- Basic Operations
 						single_underscore_string)
 					Result.replace_substring_all (double_underscore_string,
 						single_underscore_string)
-					Result := eiffel_format (Result)
+					Result := eiffel_format (Result, True)
 				end
 			end
 		ensure
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 			trimmed: s.item (s.count) = '_'
 		end
 
-	eiffel_format (s: STRING): STRING is
+	eiffel_format (s: STRING; a_class_format: BOOLEAN): STRING is
 			-- Format from CamelCase to eiffel_case
 		require
 			non_void_value: s /= Void
@@ -332,7 +332,8 @@ feature {NONE} -- Implementation
 								put_us := (c.is_lower and n.is_lower) or (c.is_upper and n.is_lower)
 							end
 						elseif p.is_upper and c.is_upper and n.is_lower then
-							put_us := (i = 2 implies p /= 'I') or i > 2 -- allows IInterfaceName = IINTERFACE_NAME but FBar = F_BAR as per other rules, but allows UICues = UI_CUES
+							-- allows IInterfaceName = IINTERFACE_NAME, CClassName = CCLASS_NAME but FBar = F_BAR as per other rules, but allows UICues = UI_CUES
+							put_us := ((i = 2 and a_class_format) implies (p /= 'I' and p /= 'C')) or i > 2 
 						elseif p.is_lower and c.is_upper then
 							put_us := True
 						end

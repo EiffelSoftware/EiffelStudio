@@ -400,7 +400,11 @@ feature {NONE} -- Implementation
 				Result.append (Open_parenthesis)
 				Result.append (Eif_character)
 				Result.append (Asterisk)
-				Result.append (Close_parenthesis)		
+				Result.append (Close_parenthesis)
+			else
+				Result.append (Open_parenthesis)
+				Result.append (visitor.c_type)
+				Result.append (Close_parenthesis)
 			end
 
 			Result.append (out_value_set_up (position, vartype_namer.variant_field_name (visitor)))
@@ -558,7 +562,7 @@ feature {NONE} -- Implementation
 				Result.append (New_line_tab)
 				Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), name, visitor))
 
-			elseif (type = Vt_variant) then
+			elseif is_variant (type) then
 				Result.append (New_line_tab)
 				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), name, visitor))
 
@@ -687,16 +691,18 @@ feature {NONE} -- Implementation
 
 			if visitor.is_coclass then
 				Result.append (Iunknown_type)
-			elseif visitor.is_coclass_pointer then
+			elseif visitor.is_coclass_pointer or visitor.is_interface_pointer then
 				Result.append (IUnknown_pointer)
-			elseif visitor.is_coclass_pointer_pointer then
+			elseif visitor.is_coclass_pointer_pointer or visitor.is_interface_pointer_pointer then
 				Result.append (Iunknown_pointer)
 				Result.append (Asterisk)
 			else
-				Result.append (visitor.c_type)
-				if (visitor.vt_type = Vt_variant) then
+				if is_variant (visitor.vt_type) then
+					Result.append ("VARIANT")
 					Result.append (Space)
 					Result.append (Asterisk)
+				else
+					Result.append (visitor.c_type)
 				end
 			end
 			Result.append (Close_parenthesis)

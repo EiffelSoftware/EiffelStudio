@@ -250,14 +250,18 @@ feature {NONE} -- Implementation
 				-- Set up body
 				Result.append (variables)
 				Result.append (New_line_tab)
-				Result.append (Hresult_variable_name)
-				Result.append (Space_equal_space)
+				if not (func_desc.return_type.type = Vt_void) then
+					Result.append (Hresult_variable_name)
+					Result.append (Space_equal_space)
+				end
 				Result.append (Interface_variable_prepend)
 				Result.append (interface_name)
 				Result.append (Struct_selection_operator)
 				Result.append (func_desc.name)
 				Result.append (signature)
-				Result.append (examine_hresult (Hresult_variable_name))
+				if not (func_desc.return_type.type = Vt_void) then
+					Result.append (examine_hresult (Hresult_variable_name))
+				end
 				Result.append (out_value)
 				if not return_value.empty then
 					Result.append (New_line)
@@ -265,8 +269,10 @@ feature {NONE} -- Implementation
 				end
 			else
 				Result.append (New_line_tab)
-				Result.append (Hresult_variable_name)
-				Result.append (Space_equal_space)
+				if not (func_desc.return_type.type = Vt_void) then
+					Result.append (Hresult_variable_name)
+					Result.append (Space_equal_space)
+				end
 				Result.append (Interface_variable_prepend)
 				Result.append (interface_name)
 				Result.append (Struct_selection_operator)
@@ -275,7 +281,9 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
 				Result.append (New_line)
-				Result.append (examine_hresult (Hresult_variable_name))
+				if not (func_desc.return_type.type = Vt_void) then
+					Result.append (examine_hresult (Hresult_variable_name))
+				end
 			end
 		ensure
 			non_void_feature_body: Result /= Void

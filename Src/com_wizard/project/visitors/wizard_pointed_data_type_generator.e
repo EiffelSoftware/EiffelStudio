@@ -12,6 +12,8 @@ inherit
 
 	ECOM_VAR_TYPE
 
+	WIZARD_VARIABLE_NAME_MAPPER
+
 feature -- Basic operations
 
 	process (a_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR; 
@@ -25,6 +27,7 @@ feature -- Basic operations
 			pointed_descriptor: WIZARD_DATA_TYPE_DESCRIPTOR
 			a_type: INTEGER
 			local_counter: INTEGER
+			tmp_string: STRING
 		do
 			create pointed_visitor
 			pointed_visitor.visit (a_descriptor.pointed_data_type_descriptor)
@@ -93,7 +96,9 @@ feature -- Basic operations
 				ce_function_signature.append (Space)
 				ce_function_signature.append ("a_interface_pointer")
 
-				ce_function_body := ce_function_body_interface (eiffel_type)
+				tmp_string := clone (pointed_visitor.c_type)
+				tmp_string.append ("_impl")
+				ce_function_body := ce_function_body_interface (name_for_class (tmp_string, Tkind_coclass, True))
 				ce_function_return_type := clone (Eif_reference)
 
 				create ec_function_signature.make (0)

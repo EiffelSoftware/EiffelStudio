@@ -365,7 +365,7 @@ feature {NONE} -- Implementation
 				Result.append (Semicolon)
 
 			elseif type = Vt_void or is_hresult (type) or is_error (type) then 
-				Result := ("")
+				Result := (" ")
 			else
 				Result.append (Open_parenthesis)
 				Result.append (Eif_reference)
@@ -377,7 +377,11 @@ feature {NONE} -- Implementation
 					Result.append (Ce_mapper)
 				end
 				Result.append (Dot)
-				Result.append (visitor.ce_function_name)
+				if is_variant (type) then
+					Result.append ("ccom_ce_pointed_variant")
+				else
+					Result.append (visitor.ce_function_name)
+				end
 				Result.append (Space_open_parenthesis)
 				if visitor.is_interface or visitor.is_interface_pointer then
 					Result.append (Open_parenthesis)

@@ -27,6 +27,8 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current' and build widget structure.
+		local
+			label: EV_LABEL
 		do
 			create local_check_button.make_with_text ("attribute declarations grouped?")
 			extend (local_check_button)
@@ -34,6 +36,8 @@ feature {NONE} -- Initialization
 			extend (attributes_local_check_button)
 			create debugging_check_button.make_with_text ("Generate debugging information?")
 			extend (debugging_check_button)
+			create client_check_button.make_with_text ("client of EV_TITLED_WINDOW?")
+			extend (client_check_button)
 			is_initialized := True
 			disable_all_items (Current)
 			align_labels_left (Current)
@@ -65,6 +69,11 @@ feature -- Status setting
 			else
 				attributes_local_check_button.disable_select
 			end
+			if project_settings.client_of_window then
+				client_check_button.enable_select
+			else
+				client_check_button.disable_select
+			end
 		end
 		
 	save_attributes (project_settings: GB_PROJECT_SETTINGS) is
@@ -84,6 +93,11 @@ feature -- Status setting
 				project_settings.enable_attributes_local
 			else
 				project_settings.disable_attributes_local
+			end
+			if client_check_button.is_selected then
+				project_settings.enable_client_of_window
+			else
+				project_settings.disable_client_of_window
 			end
 		end	
 
@@ -108,5 +122,8 @@ feature {NONE} -- Implementation
 		
 	debugging_check_button: EV_CHECK_BUTTON
 		-- Should debugging information be generated for events?
+		
+	client_check_button: EV_CHECK_BUTTON
+		-- Should generated class be a client of EV_TITLED_WINDOW?
 
 end -- class GB_SYSTEM_GENERATION_TAB

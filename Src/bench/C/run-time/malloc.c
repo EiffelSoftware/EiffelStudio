@@ -809,7 +809,7 @@ rt_public EIF_REFERENCE special_malloc (uint32 flags, EIF_INTEGER nb, uint32 ele
 	if (flags & EO_COMP) {
 			/* It is a composite object, that is to say a special of expanded,
 			 * we need to initialize every entry properly. */
-		uint32 exp_dtype = eif_gen_param_id (-1, result, 1);
+		uint32 exp_dtype = eif_gen_param_id (-1, (int16) (flags & EO_TYPE), 1);
 		result = sp_init (result, exp_dtype, 0, nb - 1);
 	}
 	return result;

@@ -540,7 +540,7 @@ RT_LNK int fcount;
 		eif_compound_id((tp), (int16) (x),(y),(z))
 #define RTFCID(ct,x,y,z,u)	eif_final_id((ct),(x),(y), (int16) Dftype(z),(u))
 #define RTFCID2(ct,x,y,z,u)	eif_final_id((ct),(x),(y),(int16) (z),(u))
-#define RTGPTID(st,x,y)		eif_gen_param_id ((st),(x),(y))
+#define RTGPTID(st,x,y)		eif_gen_param_id ((st),(int16) Dftype(x),(y))
 #ifdef WORKBENCH
 #define RTID(x)	eif_id_for_typarr((int16) x)
 #else

@@ -428,19 +428,29 @@ DECIMAL * ecom_runtime_ec::ccom_ec_pointed_decimal (EIF_REFERENCE a_ref, DECIMAL
 {
 	EIF_OBJECT a_decimal = 0;
 	DECIMAL * c_decimal = 0;
+	EIF_TYPE_ID type_id = -1;
 
 	a_decimal = eif_protect (a_ref);
 
 	c_decimal = (DECIMAL *)eif_field(eif_access(a_decimal), "item", EIF_POINTER);
-	eif_wean (a_decimal);
+	
 
 	if (old != NULL)
 	{
 		memcpy (old, c_decimal, sizeof (DECIMAL));
+		eif_wean (a_decimal);
 		return NULL;
 	}
 	else
+	{
+		type_id = eif_type_id ("ECOM_DECIMAL");
+		EIF_PROCEDURE set_shared = NULL;
+		set_shared = eif_procedure ("set_shared", type_id);
+		(FUNCTION_CAST (void, (EIF_REFERENCE))set_shared) (eif_access (a_decimal));
+		eif_wean (a_decimal);
+
 		return c_decimal;
+	}
 };
 //----------------------------------------------------------------------------
 
@@ -658,19 +668,30 @@ CURRENCY * ecom_runtime_ec::ccom_ec_pointed_currency (EIF_REFERENCE a_ref, CURRE
 {
 	EIF_OBJECT a_currency = 0;
 	CURRENCY * c_currency = 0;
+	EIF_TYPE_ID type_id = -1;
+
 
 	a_currency = eif_protect (a_ref);
 
 	c_currency = (CURRENCY *)eif_field(eif_access(a_currency), "item", EIF_POINTER);
-	eif_wean (a_currency);
 
 	if (old != NULL)
 	{
 		memcpy (old, c_currency, sizeof (CURRENCY));
+		eif_wean (a_currency);
 		return NULL;
 	}
 	else
+	{
+		type_id = eif_type_id ("ECOM_CURRENCY");
+		EIF_PROCEDURE set_shared = NULL;
+		set_shared = eif_procedure ("set_shared", type_id);
+		(FUNCTION_CAST (void, (EIF_REFERENCE))set_shared) (eif_access (a_currency));
+		
+		eif_wean (a_currency);
+
 		return c_currency;
+	}
 };
 //----------------------------------------------------------------------------
 
@@ -791,18 +812,29 @@ VARIANT * ecom_runtime_ec::ccom_ec_pointed_variant (EIF_REFERENCE a_ref, VARIANT
 {
 	EIF_OBJECT a_variant = 0;
 	VARIANT * c_variant = 0;
+	
 
 	a_variant = eif_protect (a_ref);
 
 	c_variant = (VARIANT *)eif_field(eif_access(a_variant), "item", EIF_POINTER);
-	eif_wean (a_variant);
+	
 	if (old != NULL)
 	{
 		memcpy (old, c_variant, sizeof (VARIANT));
+		eif_wean (a_variant);
 		return NULL;
 	}
 	else
+	{
+		EIF_TYPE_ID type_id = -1;
+		type_id = eif_type_id ("ECOM_VARIANT");
+		EIF_PROCEDURE set_shared = NULL;
+		set_shared = eif_procedure ("set_shared", type_id);
+		(FUNCTION_CAST (void, (EIF_REFERENCE))set_shared) (eif_access (a_variant));
+		eif_wean (a_variant);
+
 		return c_variant;
+	}
 };
 //----------------------------------------------------------------------------
 

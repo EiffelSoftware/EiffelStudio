@@ -358,6 +358,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_variant (VARIANT * a_variant)
 	result = eif_create (eif_variant_id);
 	nstcall = 0;
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_POINTER))make) (eif_access (result), (EIF_POINTER)a_variant);
+	
+	EIF_PROCEDURE set_unshared = NULL;
+	set_unshared = eif_procedure ("set_unshared", eif_variant_id);
+	(FUNCTION_CAST (void, (EIF_REFERENCE))set_unshared) (eif_access (result));
+	
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
@@ -648,6 +653,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_currency (CURRENCY * a_currency)
 	nstcall = 0;
 	(FUNCTION_CAST ( void, (EIF_REFERENCE,
 	EIF_POINTER))currency_make)(eif_access (result), (EIF_POINTER)a_currency);
+	
+	EIF_PROCEDURE set_unshared = NULL;
+	set_unshared = eif_procedure ("set_unshared", eif_currency_id);
+	(FUNCTION_CAST (void, (EIF_REFERENCE))set_unshared) (eif_access (result));
+
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
@@ -666,6 +676,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_decimal (DECIMAL * a_decimal)
 
 	nstcall = 0;
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_POINTER))make)(eif_access (result), (EIF_POINTER)a_decimal);
+
+	EIF_PROCEDURE set_unshared = NULL;
+	set_unshared = eif_procedure ("set_unshared", eif_decimal_id);
+	(FUNCTION_CAST (void, (EIF_REFERENCE))set_unshared) (eif_access (result));
+
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
@@ -674,15 +689,20 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_record (void * a_record_pointer, 
 
 // Create Eiffel object from C structure
 {
-	EIF_OBJECT result = 0;
+	EIF_OBJECT result = NULL;
 	EIF_TYPE_ID type_id = -1;
-	EIF_PROCEDURE make = 0;
+	EIF_PROCEDURE make = NULL;
 
 	type_id = eif_type_id (a_class_name);
 	make = eif_procedure ("make_from_pointer", type_id);
 	result = eif_create (type_id);
 	nstcall = 0;
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))make) (eif_access (result), (EIF_POINTER)a_record_pointer);
+	
+	EIF_PROCEDURE set_unshared = NULL;
+	set_unshared = eif_procedure ("set_unshared", type_id);
+	(FUNCTION_CAST (void, (EIF_REFERENCE))set_unshared) (eif_access (result));
+	
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
@@ -721,6 +741,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long_long (LARGE_INTEGER * a_larg
 	nstcall = 0;
 	(FUNCTION_CAST ( void, (EIF_REFERENCE,
 			EIF_POINTER))large_integer_make) (eif_access (result), (EIF_POINTER)a_large_integer);
+			
+	EIF_PROCEDURE set_unshared = NULL;
+	set_unshared = eif_procedure ("set_unshared", eif_large_integer_id);
+	(FUNCTION_CAST (void, (EIF_REFERENCE))set_unshared) (eif_access (result));
+
 	return eif_wean (result);
 };
 //----------------------------------------------------------------------------
@@ -740,6 +765,11 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_ulong_long (ULARGE_INTEGER * an_u
 	nstcall = 0;
 	(FUNCTION_CAST ( void, (EIF_REFERENCE,
 			EIF_POINTER))ularge_integer_make)(eif_access (result), (EIF_POINTER)an_ularge_integer);
+
+	EIF_PROCEDURE set_unshared = NULL;
+	set_unshared = eif_procedure ("set_unshared", eif_ularge_integer_id);
+	(FUNCTION_CAST (void, (EIF_REFERENCE))set_unshared) (eif_access (result));
+
 	return eif_wean (result);
 };
 //----------------------------------------------------------------------------
@@ -2433,7 +2463,8 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_bstr (BSTR *a_string)
 	nstcall = 0;
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put)(eif_access (result), eif_access (eif_object));
 	return eif_wean(result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_date (DATE *a_date)
 {
@@ -2445,7 +2476,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_date (DATE *a_date)
 	nstcall = 0;
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put)(eif_access (result), eif_access (eif_object));
 	return eif_wean(result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_short (SAFEARRAY ** a_safearray)
 {
@@ -2463,7 +2496,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_short (SAFEARRAY ** a_s
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_long (SAFEARRAY ** a_safearray)
 {
@@ -2481,7 +2516,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_long (SAFEARRAY ** a_sa
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_float (SAFEARRAY ** a_safearray)
 {
@@ -2499,7 +2536,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_float (SAFEARRAY ** a_s
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_double (SAFEARRAY ** a_safearray)
 {
@@ -2517,7 +2556,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_double (SAFEARRAY ** a_
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_currency (SAFEARRAY ** a_safearray)
 {
@@ -2535,7 +2576,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_currency (SAFEARRAY ** 
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_date (SAFEARRAY ** a_safearray)
 {
@@ -2553,7 +2596,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_date (SAFEARRAY ** a_sa
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_bstr (SAFEARRAY ** a_safearray)
 {
@@ -2571,7 +2616,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_bstr (SAFEARRAY ** a_sa
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_hresult (SAFEARRAY ** a_safearray)
 {
@@ -2589,7 +2636,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_hresult (SAFEARRAY ** a
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_boolean (SAFEARRAY ** a_safearray)
 {
@@ -2607,7 +2656,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_boolean (SAFEARRAY ** a
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 	eif_wean (eif_object);
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_variant (SAFEARRAY ** a_safearray)
 {
@@ -2625,7 +2676,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_variant (SAFEARRAY ** a
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 	eif_wean (eif_object);
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_decimal (SAFEARRAY ** a_safearray)
 {
@@ -2643,7 +2696,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_decimal (SAFEARRAY ** a
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 	eif_wean (eif_object);
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_char (SAFEARRAY ** a_safearray)
 {
@@ -2661,7 +2716,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_char (SAFEARRAY ** a_sa
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 	eif_wean (eif_object);
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_dispatch (SAFEARRAY ** a_safearray)
 {
@@ -2679,7 +2736,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_dispatch (SAFEARRAY ** 
 	(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_REFERENCE))put_proc)(eif_access (result), eif_access (eif_object));
 	eif_wean (eif_object);
 	return eif_wean (result);
-}
+};
+//--------------------------------------------------------------------------------------------------------
+
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_safearray_unknown (SAFEARRAY ** a_safearray)
 {

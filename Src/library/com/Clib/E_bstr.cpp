@@ -42,5 +42,7 @@ EIF_OBJ bstr_to_eif_obj (BSTR BstrName)
 		string_make (eif_access (name), 0);
 	}
 	return name;
-}
+};
+//----------------------------------------------------------------------------
+
 

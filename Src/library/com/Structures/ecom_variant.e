@@ -314,6 +314,7 @@ feature -- Access
 			is_variant: is_variant (variable_type)
 		do
 			create Result.make_from_pointer (ccom_variant (item))
+			Result.set_unshared
 		end
 
 	unknown_interface: ECOM_UNKNOWN_INTERFACE is

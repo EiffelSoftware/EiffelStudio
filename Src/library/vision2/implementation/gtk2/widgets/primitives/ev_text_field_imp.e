@@ -18,7 +18,8 @@ inherit
 			interface,
 			visual_widget,
 			create_change_actions,
-			needs_event_box
+			needs_event_box,
+			on_key_event
 		end
 		
 	EV_FONTABLE_IMP
@@ -53,7 +54,7 @@ feature {NONE} -- Initialization
 			entry_widget := feature {EV_GTK_EXTERNALS}.gtk_entry_new
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (entry_widget)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (entry_widget, 40, -1)
-			--| Minimum sizes need to be similar on both platforms
+				--| Minimum sizes need to be similar on both platforms
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_vbox, entry_widget, False, False, 0)
 			set_text ("")
 		end
@@ -115,7 +116,11 @@ feature -- Status Report
 	caret_position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := feature {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1	
+			if in_change_action and not last_key_backspace then
+				Result := feature {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 2
+			else
+				Result := feature {EV_GTK_EXTERNALS}.gtk_editable_get_position (entry_widget) + 1
+			end
 		end
 
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -123,7 +128,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	create_return_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
 			create Result
-			real_signal_connect (entry_widget, "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
+			real_signal_connect_after (entry_widget, "activate", agent (App_implementation.gtk_marshal).text_field_return_intermediary (c_object), Void)
 		end
 		
 feature -- Status report
@@ -214,7 +219,14 @@ feature -- Basic operation
 		do
 			internal_set_caret_position (end_pos.max (start_pos) + 1)
 			select_region_internal (start_pos, end_pos)
+				-- Hack to ensure text field is selected 
+			internal_timeout ?= (create {EV_TIMEOUT}).implementation
+			internal_timeout.interface.actions.extend (agent select_region_internal (start_pos, end_pos))
+			internal_timeout.set_interval_kamikaze (0)
 		end	
+
+	internal_timeout: EV_TIMEOUT_IMP
+		-- Internal timeout used for select_region hack to ensure text is selected during change actions
 
 	select_region_internal (start_pos, end_pos: INTEGER) is
 			-- Select region
@@ -273,7 +285,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	create_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
 		do
 			create Result
-			real_signal_connect (entry_widget, "changed", agent  (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
+			real_signal_connect_after (entry_widget, "changed", agent  (App_implementation.gtk_marshal).text_component_change_intermediary (c_object), Void)
 		end
 
 	stored_text: STRING
@@ -283,18 +295,44 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	on_change_actions is
 			-- A change action has occurred.
 		do
+			in_change_action := True
 			if stored_text /= Void then
 				if not text.is_equal (stored_text) then
 						-- The text has actually changed
 					stored_text := text
-					change_actions_internal.call (Void)
+					if change_actions_internal /= Void then
+						change_actions_internal.call (Void)
+					end	
 				end
 			else
 				stored_text := text
-				change_actions_internal.call (Void)
+				if change_actions_internal /= Void then
+					change_actions_internal.call (Void)
+				end
 			end
+			in_change_action := False
 		end
-		
+
+	in_change_action: BOOLEAN
+		-- Is `Current' in the process of calling `on_change_actions'
+
+	last_key_backspace: BOOLEAN
+
+	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- A key event has occurred
+		do
+			if a_key_press then
+				if a_key /= Void then
+					if a_key.code = feature {EV_KEY_CONSTANTS}.key_back_space then
+						last_key_backspace := True	
+					else
+						last_key_backspace := False
+					end
+				end
+			end
+			Precursor {EV_TEXT_COMPONENT_IMP} (a_key, a_key_string, a_key_press)
+		end
+	
 feature {NONE} -- Implementation
 
 	entry_widget: POINTER

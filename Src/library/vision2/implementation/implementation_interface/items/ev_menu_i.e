@@ -42,6 +42,14 @@ feature -- Element change
 		deferred
 		end
 
+	set_text (txt: STRING) is
+		require
+			exists: not destroyed
+			valid_text: txt /= Void
+		deferred
+		end
+	
+
 end -- class EV_MENU_I
 
 --|----------------------------------------------------------------

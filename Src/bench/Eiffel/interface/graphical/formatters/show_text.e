@@ -1,34 +1,22 @@
 indexing
-
-	description:	
-		"Command to display text. %
-			%No warning or watch cursor.";
+	description:	"Command to display text. No warning or watch cursor.";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class SHOW_TEXT 
 
 inherit
-
-	SHARED_FORMAT_TABLES;
-	FORMATTER
-		rename
-			init as make,
-			display_header as format_display_header,
-			class_name as exception_class_name
-		redefine
-			format, file_name, display_temp_header
-		end;
 	FORMATTER
 		rename
 			init as make,
 			class_name as exception_class_name
 		redefine
 			format, display_header, file_name, display_temp_header
-		select
-			display_header
-		end;
+		end
+
 	SHARED_APPLICATION_EXECUTION
+
+	SHARED_FORMAT_TABLES
 
 creation
 

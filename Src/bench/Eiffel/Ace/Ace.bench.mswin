@@ -8,7 +8,7 @@ default
 	assertion (no)
 	dead_code_removal (yes)
 -- RTEA version
-	exception_trace (no)
+	exception_trace (yes)
 -- Full optimized version
 --	exception_trace (no)
 --	array_optimization (yes)

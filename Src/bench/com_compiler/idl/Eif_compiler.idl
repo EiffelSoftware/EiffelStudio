@@ -703,6 +703,12 @@ interface IEiffelProjectProperties: IDispatch
   [id (119), propget, helpstring ("Assemblies.")]
   HRESULT assemblies ([out, retval] IEiffelSystemAssemblies ** return_value);
 
+  [id (120), propget, helpstring ("Project working directory.")]
+  HRESULT working_directory ([out, retval] BSTR * return_value);
+
+  [id (120), propput, helpstring ("Project working directory.")]
+  HRESULT working_directory ([in] BSTR return_value);
+
   [id (131), helpstring ("Update the project Ace file according to the current settings.")]
   HRESULT update_project_ace_file ([in] BSTR project_ace_file_name);
 
@@ -761,10 +767,10 @@ interface IEiffelSystemAssemblies: IDispatch
   HRESULT store ();
 
   [helpstring ("Add a signed assembly to the project.")]
-  HRESULT add_signed_assembly ([in] BSTR assembly_identifier, [in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey);
+  HRESULT add_signed_assembly ([in] BSTR assembly_prefix, [in] BSTR assembly_identifier, [in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey);
 
   [helpstring ("Add a unsigned (local) assembly to the project.")]
-  HRESULT add_unsigned_assembly ([in] BSTR assembly_identifier, [in] BSTR a_path);
+  HRESULT add_unsigned_assembly ([in] BSTR assembly_prefix, [in] BSTR assembly_identifier, [in] BSTR a_path);
 
   [helpstring ("Remove an assembly from the project.")]
   HRESULT remove_assembly ([in] BSTR assembly_identifier);
@@ -790,7 +796,16 @@ interface IEiffelSystemAssemblies: IDispatch
   [helpstring ("Retrieves the identifier for a unsigned assembly in the project")]
   HRESULT identifier_from_unsigned_assembly ([in] BSTR a_path, [out, retval] BSTR * return_value);
 
-  [id (200), propget, helpstring ("Return all of the assemblies in an enumerator")]
+  [helpstring ("Is 'prefix' a valid assembly prefix")]
+  HRESULT is_valid_prefix ([in] BSTR assembly_prefix, [out, retval] VARIANT_BOOL * return_value);
+
+  [helpstring ("Has the 'prefix' already been allocated to another assembly")]
+  HRESULT is_prefix_allocated ([in] BSTR assembly_prefix, [out, retval] VARIANT_BOOL * return_value);
+
+  [helpstring ("Rename the assembly identifier")]
+  HRESULT rename_assembly ([in] BSTR assembly_new_identifier, [in] BSTR assembly_old_identifier);
+
+  [id (200), propget, helpstring ("Returns all of the assemblies in an enumerator")]
   HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
 };
 
@@ -928,14 +943,26 @@ interface IEiffelAssemblyProperties: IDispatch
   [id (203), propget, helpstring ("Assembly public key token")]
   HRESULT assembly_public_key ([out, retval] BSTR * return_value);
 
-  [id (204), propget, helpstring ("Assembly public key token")]
+  [id (204), propget, helpstring ("Assembly path")]
   HRESULT assembly_path ([out, retval] BSTR * return_value);
+
+  [id (204), propput, helpstring ("Assembly path")]
+  HRESULT assembly_path ([in] BSTR a_path);
 
   [id (205), propget, helpstring ("Is the assembly local")]
   HRESULT is_local ([out, retval] VARIANT_BOOL * a_bool);
 
+  [id (208), propget, helpstring ("Is the assembly local")]
+  HRESULT is_signed ([out, retval] VARIANT_BOOL * a_bool);
+
   [id (206), propget, helpstring ("Assembly identifier.")]
   HRESULT assembly_identifier ([out, retval] BSTR * return_value);
+
+  [id (207), propget, helpstring ("Prefix.")]
+  HRESULT assembly_prefix ([out, retval] BSTR * return_value);
+
+  [id (207), propput, helpstring ("Prefix.")]
+  HRESULT assembly_prefix ([in] BSTR a_prefx);
 
 };
 //---------------------------------------------------------------------

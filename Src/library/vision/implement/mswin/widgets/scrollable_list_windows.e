@@ -752,9 +752,9 @@ feature {NONE} -- Implementation
 			s := clone (i_th_text (pos))
 			wel_delete_string (pos)
 			if realized then
-				if fixed_size_flag then
+				a_font_windows ?= font.implementation
+   				if fixed_size_flag then
 					if private_scroll_width > wel_width then
-						a_font_windows ?= font.implementation
 						if not (a_font_windows.string_width (Current, s) < private_scroll_width) then
 							a_width := longest_string_width
 							set_horizontal_extent (a_width)

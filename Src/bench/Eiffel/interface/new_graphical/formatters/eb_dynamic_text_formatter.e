@@ -129,6 +129,8 @@ feature {NONE} -- Properties
 			Result := ""
 		end
 
+	post_fix: STRING is "dyt"
+
 	menu_name: STRING is
 			-- Name used in menu entry
 		do

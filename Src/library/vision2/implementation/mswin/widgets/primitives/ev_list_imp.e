@@ -340,16 +340,16 @@ feature {NONE} -- Implementation : WEL features
 			paint_dc: WEL_PAINT_DC
 			rect: WEL_RECT
 		do
-			if msg = Wm_erasebkgnd then
-				!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
-				!! rect.make_client (Current)
-				top := item_height * (count - top_index)
-				if top < rect.bottom then
-					rect.set_top (top)
-					paint_dc.fill_rect (rect, background_brush)
-				end
-				disable_default_processing
-			end
+--			if msg = Wm_erasebkgnd then
+--				!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
+--				!! rect.make_client (Current)
+--				top := item_height * (count - top_index)
+--				if top < rect.bottom then
+--					rect.set_top (top)
+--					paint_dc.fill_rect (rect, background_brush)
+--				end
+--				disable_default_processing
+--			end
  		end
 
 	wel_background_color: WEL_COLOR_REF is

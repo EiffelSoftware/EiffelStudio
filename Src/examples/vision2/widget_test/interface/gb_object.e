@@ -6,5 +6,13 @@ indexing
 
 class
 	GB_OBJECT
+	
+feature
+
+	output_name: STRING
+	
+	name: STRING
+	
+	type: STRING
 
 end -- class GB_OBJECT

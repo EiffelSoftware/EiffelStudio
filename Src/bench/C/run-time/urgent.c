@@ -7,13 +7,12 @@
  #    #  #   #   #    #  #       #   ##     #     ###    #    #
   ####   #    #   ####   ######  #    #     #     ###     ####
 
-	Urgent memory chunk handling. The purpose of urgent memory is to
-	let the run-time get some memory in situations where the garbage
-	collector cannot be called. A typical use would be getting a small
-	chunk to let one of the internal stacks grow.
+	Urgent memory chunk handling.
+*/
 
-	Given that the overhead of the urgent memory is really small, it is
-	allocated even if the package is optimized for memory.
+/*
+doc:<file name="urgent.c" header="eif_urgent.h" version="$Id$" summary="Urgent memory chunk handling">
+doc:	<summary>The purpose of urgent memory is to let the run-time get some memory in situations where the garbage collector cannot be called. A typical use would be getting a small chunk to let one of the internal stacks grow. Given that the overhead of the urgent memory is really small, it is allocated even if the package is optimized for memory.</summary>
 */
 
 #include "eif_portable.h"
@@ -28,8 +27,28 @@
  * This index is decreased each time the run-time requests a chunk, and it
  * reaches -1 when the array has no more chunks in stock.
  */
-rt_private char *urgent_mem[URGENT_NBR];		/* Array holding urgent chunks */
-rt_private int urgent_index = -1;				/* Last index with free chunk */
+/*
+doc:	<attribute name="urgent_mem" return_type="char * [URGENT_NBR]" export="private">
+doc:		<summary>Array of holding urgent chunks. The `urgent_index' variable gives the index in `urgent_mem' which holds the address of a free chunk of memory. This index is decreased each time the run-time requests a chunk, and it reaches -1 when the array has no more chunks in stock.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>A simple mutex seems enough.</fixme>
+doc:	</attribute>
+*/
+rt_private char *urgent_mem[URGENT_NBR];
+
+/*
+doc:	<attribute name="urgent_index" return_type="int" export="private">
+doc:		<summary>Last index with free chunk. The `urgent_index' variable gives the index in `urgent_mem' which holds the address of a free chunk of memory. This index is decreased each time the run-time requests a chunk, and it reaches -1 when the array has no more chunks in stock.</summary>
+doc:		<access>Read/Write</access>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>A simple mutex seems enough.</fixme>
+doc:	</attribute>
+*/
+rt_private int urgent_index = -1;
+
 /* Getting and releasing chunks */
 rt_shared void ufill(void);			/* Get as many chunks as possible */
 rt_shared char *uchunk(void);			/* Urgent allocation of a stack chunk */
@@ -86,4 +105,6 @@ rt_shared char *uchunk(void)
 	return (char *) 0;			/* No chunk is available */
 }
 
-
+/*
+doc:</file>
+*/

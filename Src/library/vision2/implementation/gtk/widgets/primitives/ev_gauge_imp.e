@@ -159,15 +159,21 @@ feature -- Element change
 				temp_value := value_range.lower
 			end
 			feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_lower (adjustment, value_range.lower)
-			feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (
-				adjustment,
-				value_range.upper
-			)
+			internal_set_upper
 			feature {EV_GTK_EXTERNALS}.gtk_adjustment_changed (adjustment)
 			internal_set_value (temp_value)
 		end
 
 feature {NONE} -- Implementation
+
+	internal_set_upper is
+			-- Set the upper value of the adjustment struct
+		do
+			feature {EV_GTK_EXTERNALS}.set_gtk_adjustment_struct_upper (
+				adjustment,
+				value_range.upper
+			)			
+		end
 
 	interface: EV_GAUGE
 

@@ -14,14 +14,31 @@ inherit
 	EV_DIALOG_I
 
 	EV_WINDOW_IMP
+		rename
+			set_parent as old_set_parent
 		undefine
 			set_default_options
+		select
+			old_set_parent
 		end
 
 creation
 	make,
 	make_with_owner
-	
+
+feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+			-- Redefined because we now allow container as parent.
+		local
+			win: EV_WINDOW
+		do
+			win ?= par
+			old_set_parent (win)
+		end
+
 end -- class EV_DIALOG_IMP
 
 --|----------------------------------------------------------------

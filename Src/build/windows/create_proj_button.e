@@ -10,7 +10,7 @@ inherit
 	LICENCE_COMMAND;
 	QUEST_POPUPER
 		redefine
-			continue_after_popdown
+			continue_after_question_popdown
 		end
 
 creation
@@ -54,16 +54,14 @@ feature {NONE}
 
 feature {NONE}
 
-	continue_after_popdown (box: QUESTION_BOX yes: BOOLEAN) is
+	continue_after_question_popdown (yes: BOOLEAN) is
 		local
 			pw: CREATE_PROJ_WIN;
 		do
-			if box = question_box then
-				if yes then
-					open_new_application
-				else
-					popup_window
-				end
+			if yes then
+				open_new_application
+			else
+				popup_window
 			end
 		end
 
@@ -86,5 +84,10 @@ feature {NONE}
 			!!pw.make (main_panel.base) 
 			pw.popup
 		end;
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := main_panel.base
+		end
 
 end

@@ -7,13 +7,10 @@ inherit
 	CONSTANTS;
 	WINDOWS;
 	SHARED_STORAGE_INFO;
-	ERROR_POPUPER
-		undefine
-			continue_after_popdown
-		end;
+	ERROR_POPUPER;
 	QUEST_POPUPER
-		undefine
-			continue_after_popdown
+		redefine
+			continue_after_question_popdown
 		end;
 
 feature 
@@ -70,16 +67,14 @@ feature
 			end
 		end;
 
-	continue_after_popdown (box: MESSAGE_D; yes: BOOLEAN) is
+	continue_after_question_popdown (yes: BOOLEAN) is
 		do
-			if box = question_box then
-				if yes then
-					retrieve_project (Environment.restore_directory)
-					history_window.set_unsaved_application;
-				else
-					retrieve_project (Environment.storage_directory);
-					history_window.set_saved_application;
-				end;
+			if yes then
+				retrieve_project (Environment.restore_directory)
+				history_window.set_unsaved_application;
+			else
+				retrieve_project (Environment.storage_directory);
+				history_window.set_saved_application;
 			end
 		end;	
 
@@ -123,5 +118,10 @@ feature {NONE}
 			main_panel.set_title (Environment.project_directory);
 			main_panel.set_project_initialized;
 		end;
+
+	popuper_parent: COMPOSITE is
+		do	
+			Result := main_panel.base
+		end
 
 end	

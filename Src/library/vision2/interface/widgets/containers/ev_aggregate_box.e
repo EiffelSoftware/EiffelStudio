@@ -38,7 +38,7 @@ feature {EV_ANY_I} -- Implementation
 	create_implementation is
 			-- Create implmentation of aggregate box.
 		do
-			create {EV_AGGREGATE_BOX_I} implementation.make (Current)
+			create {EV_AGGREGATE_BOX_IMP} implementation.make (Current)
 		end
 
 invariant
@@ -67,6 +67,9 @@ end -- class EV_AGGREGATE_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/02/15 19:18:31  rogers
+--| There is now an EV_AGGREGATE_BOX_IMP so create_implementation has been changed accordingly.
+--|
 --| Revision 1.2  2000/02/14 12:05:13  oconnor
 --| added from prerelease_20000214
 --|

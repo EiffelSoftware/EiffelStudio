@@ -10,19 +10,19 @@ class
 inherit
 	EV_MENU_ITEM_I
 		redefine
-			interface,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			interface
 		end
 
 	EV_ITEM_IMP
 		redefine
 			interface,
 			initialize,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			needs_event_box
+		end
+
+	EV_SENSITIVE_IMP
+		redefine
+			interface
 		end
 
 	EV_TEXTABLE_IMP
@@ -40,6 +40,8 @@ create
 feature {NONE} -- Initialization
 
 	needs_event_box: BOOLEAN is False
+	
+	is_dockable: BOOLEAN is False
 
 	make (an_interface: like interface) is
 			-- Create a menu.
@@ -51,10 +53,11 @@ feature {NONE} -- Initialization
 		end
 	
 	initialize is
-			-- Call to both precursors.
+			-- Initialize `Current'
 		local
 			box: POINTER
 		do
+			Precursor {EV_ITEM_IMP}
 			real_signal_connect (visual_widget, "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
 			textable_imp_initialize
 
@@ -67,7 +70,6 @@ feature {NONE} -- Initialization
 				feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, False, True, 0)
 			end
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, text_label, True, True, 0)
-			Precursor {EV_ITEM_IMP}
 		end
 
 feature -- Element change
@@ -91,12 +93,6 @@ feature -- Element change
 feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 
 	accelerators_enabled: BOOLEAN is True
-
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 	on_activate is
 		local

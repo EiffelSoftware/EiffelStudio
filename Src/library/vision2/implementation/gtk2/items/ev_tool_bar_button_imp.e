@@ -14,21 +14,26 @@ inherit
 		export
 			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} select_actions_internal
 		redefine
-			interface,
-			pointer_double_press_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_motion_actions_internal
+			interface
 		end
 
 	EV_ITEM_IMP
 		redefine
 			interface,
 			initialize,
-			pointer_double_press_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_motion_actions_internal,
 			event_widget,
 			set_pixmap,
+			needs_event_box
+		end
+
+	EV_DOCKABLE_SOURCE_IMP
+		redefine
+			interface
+		end
+
+	EV_SENSITIVE_IMP
+		redefine
+			interface,
 			sensitive_widget
 		end
 
@@ -64,6 +69,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Initialization of button box and events.
 		do
+			Precursor {EV_ITEM_IMP}
 			pixmapable_imp_initialize
 			textable_imp_initialize
 			feature {EV_GTK_EXTERNALS}.gtk_tool_button_set_icon_widget (visual_widget, pixmap_box)
@@ -71,7 +77,6 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_tool_button_set_label_widget (visual_widget, text_label)
 			Precursor {EV_ITEM_IMP}
 			initialize_events
-			connect_button_press_switch
 
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tool_item_set_is_important (visual_widget, True)
 			align_text_center
@@ -182,12 +187,6 @@ feature {NONE} -- Implmentation
 		do
 			Result := c_object
 		end
-
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-	
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-	
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 
 feature {EV_ANY_I} -- Implementation
 

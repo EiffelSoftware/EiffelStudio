@@ -16,8 +16,6 @@ inherit
 		rename
 			make as wel_make,
 			item as wel_item
-		redefine
-			insert_string
 		end
 
 feature {NONE} -- Initialization
@@ -312,17 +310,6 @@ feature {EV_ANY_I} -- Implementation
 			ev_children.go_to (cur)
 		end
 
-	insert_string (a_string: STRING; a_position, an_id: INTEGER) is
-			-- Insert `a_string' at zero-based `a_position' with
-			-- `an_id'.
-		local
-			a_wel_string: WEL_STRING
-		do
-			!! a_wel_string.make (a_string)
-			cwin_insert_menu (wel_item, a_position,
-				Mf_string + Mf_byposition, an_id, a_wel_string.item)
-		end
-
 end -- class EV_MENU_ITEM_LIST_IMP
 
 --!-----------------------------------------------------------------------------
@@ -346,6 +333,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/15 16:56:17  brendel
+--| Removed redefinition of insert_string, since the bug is fixed in WEL.
+--|
 --| Revision 1.7  2000/02/25 20:22:12  brendel
 --| Added redefine of insert_string, since there is a bug in WEL. Remove this
 --| redeclaration and fix WEL as soon as this is known to be the right fix.

@@ -115,8 +115,8 @@ feature
 			!!f.make (file_name);
 			f.open_write;
 
-			f.putstring ("#include %"portable.h%"%N%
-						%#include %"macros.h%"%N%N");
+			f.putstring ("#include %"eif_portable.h%"%N%
+						%#include %"eif_macros.h%"%N%N");
 
 			f.close
 		end

@@ -35,7 +35,7 @@ feature {NONE} -- Creation
 			managed: managed
 		end;
 
-	make_unmanaged (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create an unmanaged scrolled window with `a_name' as identifier
 			-- `a_parent' as parent.
 		require
@@ -65,6 +65,8 @@ feature -- Working Area
 	working_area: WIDGET is
 			-- Working area of window which will
 			-- be moved using scrollbars
+		require
+			exists: not destroyed
 		do
 			Result := implementation.working_area
 		end;
@@ -72,6 +74,7 @@ feature -- Working Area
 	set_working_area (a_widget: WIDGET) is
 			-- Set work area of windon to `a_widget'.
 		require
+			exists: not destroyed;
 			not_a_widget_void: not (a_widget = Void)
 		do
 			implementation.set_working_area (a_widget)

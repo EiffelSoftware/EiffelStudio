@@ -21,16 +21,16 @@ feature {NONE} -- Implementation
 	yy_build_parser_tables is
 			-- Build parser tables.
 		do
-			yytranslate ?= yytranslate_template
-			yyr1 ?= yyr1_template
-			yytypes1 ?= yytypes1_template
-			yytypes2 ?= yytypes2_template
-			yydefact ?= yydefact_template
-			yydefgoto ?= yydefgoto_template
-			yypact ?= yypact_template
-			yypgoto ?= yypgoto_template
-			yytable ?= yytable_template
-			yycheck ?= yycheck_template
+			yytranslate := yytranslate_template
+			yyr1 := yyr1_template
+			yytypes1 := yytypes1_template
+			yytypes2 := yytypes2_template
+			yydefact := yydefact_template
+			yydefgoto := yydefgoto_template
+			yypact := yypact_template
+			yypgoto := yypgoto_template
+			yytable := yytable_template
+			yycheck := yycheck_template
 		end
 
 	yy_create_value_stacks is
@@ -70,8 +70,6 @@ feature {NONE} -- Implementation
 			yyvsp27 := -1
 			yyvsp28 := -1
 			yyvsp29 := -1
-			yyvsp30 := -1
-			yyvsp31 := -1
 		end
 
 	yy_clear_value_stacks is
@@ -164,12 +162,6 @@ feature {NONE} -- Implementation
 			end
 			if yyvs29 /= Void then
 				yyvs29.clear_all
-			end
-			if yyvs30 /= Void then
-				yyvs30.clear_all
-			end
-			if yyvs31 /= Void then
-				yyvs31.clear_all
 			end
 		end
 
@@ -289,10 +281,6 @@ feature {NONE} -- Implementation
 				yyvsp28 := yyvsp28 - 1
 			when 29 then
 				yyvsp29 := yyvsp29 - 1
-			when 30 then
-				yyvsp30 := yyvsp30 - 1
-			when 31 then
-				yyvsp31 := yyvsp31 - 1
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: unknown type id: ")
@@ -792,9 +780,6 @@ feature {NONE} -- Semantic actions
 			when 161 then
 					--|#line <not available> "lace.y"
 				yy_do_action_161
-			when 162 then
-					--|#line <not available> "lace.y"
-				yy_do_action_162
 			else
 				debug ("GEYACC")
 					std.error.put_string ("Error in parser: unknown rule id: ")
@@ -944,15 +929,13 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-				create yyval15.initialize (yyvs31.item (yyvsp31).first, yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9))
-				yyvs31.item (yyvsp31).second.set_node (yyval15)
+				create yyval15.initialize (yyvs9.item (yyvsp9 - 2), yyvs9.item (yyvsp9 - 1), yyvs9.item (yyvsp9))
 			
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 4
 	yyvsp15 := yyvsp15 + 1
 	yyvsp1 := yyvsp1 -1
-	yyvsp31 := yyvsp31 -1
-	yyvsp9 := yyvsp9 -2
+	yyvsp9 := yyvsp9 -3
 	if yyvsp15 >= yyvsc15 then
 		if yyvs15 = Void then
 			debug ("GEYACC")
@@ -976,41 +959,6 @@ end
 	yy_do_action_6 is
 			--|#line <not available> "lace.y"
 		local
-			yyval31: PAIR [ID_SD, CLICK_AST]
-		do
---|#line <not available> "lace.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
-end
-
-yyval31 := new_clickable_id (yyvs9.item (yyvsp9)) 
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvsp31 := yyvsp31 + 1
-	yyvsp9 := yyvsp9 -1
-	if yyvsp31 >= yyvsc31 then
-		if yyvs31 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs31")
-			end
-			create yyspecial_routines31
-			yyvsc31 := yyInitial_yyvs_size
-			yyvs31 := yyspecial_routines31.make (yyvsc31)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs31")
-			end
-			yyvsc31 := yyvsc31 + yyInitial_yyvs_size
-			yyvs31 := yyspecial_routines31.resize (yyvs31, yyvsc31)
-		end
-	end
-	yyvs31.put (yyval31, yyvsp31)
-end
-		end
-
-	yy_do_action_7 is
-			--|#line <not available> "lace.y"
-		local
 			yyval9: ID_SD
 		do
 --|#line <not available> "lace.y"
@@ -1042,7 +990,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_8 is
+	yy_do_action_7 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1060,7 +1008,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_9 is
+	yy_do_action_8 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1094,7 +1042,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_10 is
+	yy_do_action_9 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1112,7 +1060,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_11 is
+	yy_do_action_10 is
 			--|#line <not available> "lace.y"
 		local
 			yyval20: LACE_LIST [CLUSTER_SD]
@@ -1130,7 +1078,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_12 is
+	yy_do_action_11 is
 			--|#line <not available> "lace.y"
 		local
 			yyval20: LACE_LIST [CLUSTER_SD]
@@ -1165,7 +1113,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_13 is
+	yy_do_action_12 is
 			--|#line <not available> "lace.y"
 		local
 			yyval20: LACE_LIST [CLUSTER_SD]
@@ -1203,7 +1151,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_14 is
+	yy_do_action_13 is
 			--|#line <not available> "lace.y"
 		local
 			yyval20: LACE_LIST [CLUSTER_SD]
@@ -1224,7 +1172,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_15 is
+	yy_do_action_14 is
 			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
@@ -1260,7 +1208,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_16 is
+	yy_do_action_15 is
 			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
@@ -1296,7 +1244,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_17 is
+	yy_do_action_16 is
 			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
@@ -1332,7 +1280,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_18 is
+	yy_do_action_17 is
 			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
@@ -1369,7 +1317,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_19 is
+	yy_do_action_18 is
 			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
@@ -1406,7 +1354,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_20 is
+	yy_do_action_19 is
 			--|#line <not available> "lace.y"
 		local
 			yyval6: CLUSTER_SD
@@ -1443,7 +1391,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_21 is
+	yy_do_action_20 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1477,7 +1425,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_22 is
+	yy_do_action_21 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1495,7 +1443,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_23 is
+	yy_do_action_22 is
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1536,7 +1484,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_24 is
+	yy_do_action_23 is
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1576,7 +1524,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_25 is
+	yy_do_action_24 is
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1615,7 +1563,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_26 is
+	yy_do_action_25 is
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1654,7 +1602,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_27 is
+	yy_do_action_26 is
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1692,7 +1640,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_28 is
+	yy_do_action_27 is
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1729,7 +1677,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_29 is
+	yy_do_action_28 is
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1765,7 +1713,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_30 is
+	yy_do_action_29 is
 			--|#line <not available> "lace.y"
 		local
 			yyval4: CLUST_PROP_SD
@@ -1800,7 +1748,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_31 is
+	yy_do_action_30 is
 			--|#line <not available> "lace.y"
 		local
 			yyval29: LACE_LIST [DEPEND_SD]
@@ -1818,7 +1766,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_32 is
+	yy_do_action_31 is
 			--|#line <not available> "lace.y"
 		local
 			yyval29: LACE_LIST [DEPEND_SD]
@@ -1853,7 +1801,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_33 is
+	yy_do_action_32 is
 			--|#line <not available> "lace.y"
 		local
 			yyval29: LACE_LIST [DEPEND_SD]
@@ -1891,7 +1839,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_34 is
+	yy_do_action_33 is
 			--|#line <not available> "lace.y"
 		local
 			yyval29: LACE_LIST [DEPEND_SD]
@@ -1912,7 +1860,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_35 is
+	yy_do_action_34 is
 			--|#line <not available> "lace.y"
 		local
 			yyval17: DEPEND_SD
@@ -1949,7 +1897,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_36 is
+	yy_do_action_35 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -1983,7 +1931,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_37 is
+	yy_do_action_36 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -2000,7 +1948,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_38 is
+	yy_do_action_37 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -2018,7 +1966,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_39 is
+	yy_do_action_38 is
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2052,7 +2000,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_40 is
+	yy_do_action_39 is
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2069,7 +2017,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_41 is
+	yy_do_action_40 is
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2087,7 +2035,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_42 is
+	yy_do_action_41 is
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2102,6 +2050,40 @@ if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp25 := yyvsp25 + 1
 	yyvsp1 := yyvsp1 -2
+	if yyvsp25 >= yyvsc25 then
+		if yyvs25 = Void then
+			debug ("GEYACC")
+				std.error.put_line ("Create yyvs25")
+			end
+			create yyspecial_routines25
+			yyvsc25 := yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.make (yyvsc25)
+		else
+			debug ("GEYACC")
+				std.error.put_line ("Resize yyvs25")
+			end
+			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
+			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
+		end
+	end
+	yyvs25.put (yyval25, yyvsp25)
+end
+		end
+
+	yy_do_action_42 is
+			--|#line <not available> "lace.y"
+		local
+			yyval25: LACE_LIST [FILE_NAME_SD]
+		do
+--|#line <not available> "lace.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 0
+	yyvsp25 := yyvsp25 + 1
 	if yyvsp25 >= yyvsc25 then
 		if yyvs25 = Void then
 			debug ("GEYACC")
@@ -2132,40 +2114,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 0
-	yyvsp25 := yyvsp25 + 1
-	if yyvsp25 >= yyvsc25 then
-		if yyvs25 = Void then
-			debug ("GEYACC")
-				std.error.put_line ("Create yyvs25")
-			end
-			create yyspecial_routines25
-			yyvsc25 := yyInitial_yyvs_size
-			yyvs25 := yyspecial_routines25.make (yyvsc25)
-		else
-			debug ("GEYACC")
-				std.error.put_line ("Resize yyvs25")
-			end
-			yyvsc25 := yyvsc25 + yyInitial_yyvs_size
-			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
-		end
-	end
-	yyvs25.put (yyval25, yyvsp25)
-end
-		end
-
-	yy_do_action_44 is
-			--|#line <not available> "lace.y"
-		local
-			yyval25: LACE_LIST [FILE_NAME_SD]
-		do
---|#line <not available> "lace.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
-end
-
 yyval25 := yyvs25.item (yyvsp25) 
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 1
@@ -2173,7 +2121,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_45 is
+	yy_do_action_44 is
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2191,7 +2139,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_46 is
+	yy_do_action_45 is
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2226,7 +2174,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_47 is
+	yy_do_action_46 is
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2260,6 +2208,27 @@ if yy_parsing_status = yyContinue then
 			yyvs25 := yyspecial_routines25.resize (yyvs25, yyvsc25)
 		end
 	end
+	yyvs25.put (yyval25, yyvsp25)
+end
+		end
+
+	yy_do_action_47 is
+			--|#line <not available> "lace.y"
+		local
+			yyval25: LACE_LIST [FILE_NAME_SD]
+		do
+--|#line <not available> "lace.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
+end
+
+				yyval25 := yyvs25.item (yyvsp25)
+				yyval25.extend (create {FILE_NAME_SD}.initialize (yyvs9.item (yyvsp9)))
+			
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 3
+	yyvsp9 := yyvsp9 -1
+	yyvsp1 := yyvsp1 -1
 	yyvs25.put (yyval25, yyvsp25)
 end
 		end
@@ -2274,27 +2243,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-				yyval25 := yyvs25.item (yyvsp25)
-				yyval25.extend (create {FILE_NAME_SD}.initialize (yyvs9.item (yyvsp9)))
-			
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 3
-	yyvsp9 := yyvsp9 -1
-	yyvsp1 := yyvsp1 -1
-	yyvs25.put (yyval25, yyvsp25)
-end
-		end
-
-	yy_do_action_49 is
-			--|#line <not available> "lace.y"
-		local
-			yyval25: LACE_LIST [FILE_NAME_SD]
-		do
---|#line <not available> "lace.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
-end
-
 				create yyval25.make (10)
 				yyval25.extend (create {FILE_NAME_SD}.initialize (yyvs9.item (yyvsp9)))
 			
@@ -2323,7 +2271,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_50 is
+	yy_do_action_49 is
 			--|#line <not available> "lace.y"
 		local
 			yyval25: LACE_LIST [FILE_NAME_SD]
@@ -2344,7 +2292,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_51 is
+	yy_do_action_50 is
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -2381,7 +2329,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_52 is
+	yy_do_action_51 is
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -2402,7 +2350,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_53 is
+	yy_do_action_52 is
 			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
@@ -2436,7 +2384,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_54 is
+	yy_do_action_53 is
 			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
@@ -2453,7 +2401,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_55 is
+	yy_do_action_54 is
 			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
@@ -2471,7 +2419,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_56 is
+	yy_do_action_55 is
 			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
@@ -2506,7 +2454,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_57 is
+	yy_do_action_56 is
 			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
@@ -2544,7 +2492,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_58 is
+	yy_do_action_57 is
 			--|#line <not available> "lace.y"
 		local
 			yyval19: LACE_LIST [CLUST_ADAPT_SD]
@@ -2565,7 +2513,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_59 is
+	yy_do_action_58 is
 			--|#line <not available> "lace.y"
 		local
 			yyval5: CLUST_ADAPT_SD
@@ -2601,7 +2549,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_60 is
+	yy_do_action_59 is
 			--|#line <not available> "lace.y"
 		local
 			yyval5: CLUST_ADAPT_SD
@@ -2638,7 +2586,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_61 is
+	yy_do_action_60 is
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -2675,7 +2623,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_62 is
+	yy_do_action_61 is
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -2696,7 +2644,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_63 is
+	yy_do_action_62 is
 			--|#line <not available> "lace.y"
 		local
 			yyval16: TWO_NAME_SD
@@ -2732,7 +2680,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_64 is
+	yy_do_action_63 is
 			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
@@ -2762,6 +2710,23 @@ if yy_parsing_status = yyContinue then
 			yyvs22 := yyspecial_routines22.resize (yyvs22, yyvsc22)
 		end
 	end
+	yyvs22.put (yyval22, yyvsp22)
+end
+		end
+
+	yy_do_action_64 is
+			--|#line <not available> "lace.y"
+		local
+			yyval22: LACE_LIST [D_OPTION_SD]
+		do
+--|#line <not available> "lace.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
+end
+
+yyval22 := yyvs22.item (yyvsp22) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
 	yyvs22.put (yyval22, yyvsp22)
 end
 		end
@@ -2778,30 +2743,13 @@ end
 
 yyval22 := yyvs22.item (yyvsp22) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs22.put (yyval22, yyvsp22)
-end
-		end
-
-	yy_do_action_66 is
-			--|#line <not available> "lace.y"
-		local
-			yyval22: LACE_LIST [D_OPTION_SD]
-		do
---|#line <not available> "lace.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
-end
-
-yyval22 := yyvs22.item (yyvsp22) 
-if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
 	yyvs22.put (yyval22, yyvsp22)
 end
 		end
 
-	yy_do_action_67 is
+	yy_do_action_66 is
 			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
@@ -2836,7 +2784,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_68 is
+	yy_do_action_67 is
 			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
@@ -2870,7 +2818,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_69 is
+	yy_do_action_68 is
 			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
@@ -2887,7 +2835,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_70 is
+	yy_do_action_69 is
 			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
@@ -2905,7 +2853,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_71 is
+	yy_do_action_70 is
 			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
@@ -2940,7 +2888,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_72 is
+	yy_do_action_71 is
 			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
@@ -2978,7 +2926,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_73 is
+	yy_do_action_72 is
 			--|#line <not available> "lace.y"
 		local
 			yyval22: LACE_LIST [D_OPTION_SD]
@@ -2999,7 +2947,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_74 is
+	yy_do_action_73 is
 			--|#line <not available> "lace.y"
 		local
 			yyval8: D_OPTION_SD
@@ -3035,7 +2983,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_75 is
+	yy_do_action_74 is
 			--|#line <not available> "lace.y"
 		local
 			yyval8: D_OPTION_SD
@@ -3071,7 +3019,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_76 is
+	yy_do_action_75 is
 			--|#line <not available> "lace.y"
 		local
 			yyval8: D_OPTION_SD
@@ -3108,7 +3056,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_77 is
+	yy_do_action_76 is
 			--|#line <not available> "lace.y"
 		local
 			yyval8: D_OPTION_SD
@@ -3144,7 +3092,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_78 is
+	yy_do_action_77 is
 			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
@@ -3179,7 +3127,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_79 is
+	yy_do_action_78 is
 			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
@@ -3214,7 +3162,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_80 is
+	yy_do_action_79 is
 			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
@@ -3249,7 +3197,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_81 is
+	yy_do_action_80 is
 			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
@@ -3284,7 +3232,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_82 is
+	yy_do_action_81 is
 			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
@@ -3319,7 +3267,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_83 is
+	yy_do_action_82 is
 			--|#line <not available> "lace.y"
 		local
 			yyval14: OPTION_SD
@@ -3358,7 +3306,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_84 is
+	yy_do_action_83 is
 			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
@@ -3396,7 +3344,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_85 is
+	yy_do_action_84 is
 			--|#line <not available> "lace.y"
 		local
 			yyval27: LACE_LIST [O_OPTION_SD]
@@ -3417,7 +3365,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_86 is
+	yy_do_action_85 is
 			--|#line <not available> "lace.y"
 		local
 			yyval12: O_OPTION_SD
@@ -3454,7 +3402,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_87 is
+	yy_do_action_86 is
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -3488,7 +3436,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_88 is
+	yy_do_action_87 is
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -3506,7 +3454,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_89 is
+	yy_do_action_88 is
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -3543,7 +3491,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_90 is
+	yy_do_action_89 is
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -3564,7 +3512,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_91 is
+	yy_do_action_90 is
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3598,7 +3546,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_92 is
+	yy_do_action_91 is
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3612,6 +3560,23 @@ yyval13 := yyvs13.item (yyvsp13)
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
+	yyvs13.put (yyval13, yyvsp13)
+end
+		end
+
+	yy_do_action_92 is
+			--|#line <not available> "lace.y"
+		local
+			yyval13: OPT_VAL_SD
+		do
+--|#line <not available> "lace.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
+end
+
+yyval13 := yyvs13.item (yyvsp13) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
 	yyvs13.put (yyval13, yyvsp13)
 end
 		end
@@ -3634,23 +3599,6 @@ end
 		end
 
 	yy_do_action_94 is
-			--|#line <not available> "lace.y"
-		local
-			yyval13: OPT_VAL_SD
-		do
---|#line <not available> "lace.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
-end
-
-yyval13 := yyvs13.item (yyvsp13) 
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs13.put (yyval13, yyvsp13)
-end
-		end
-
-	yy_do_action_95 is
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3685,7 +3633,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_96 is
+	yy_do_action_95 is
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3720,7 +3668,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_97 is
+	yy_do_action_96 is
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3755,7 +3703,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_98 is
+	yy_do_action_97 is
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3790,7 +3738,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_99 is
+	yy_do_action_98 is
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3825,7 +3773,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_100 is
+	yy_do_action_99 is
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3860,7 +3808,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_101 is
+	yy_do_action_100 is
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3895,7 +3843,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_102 is
+	yy_do_action_101 is
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3930,7 +3878,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_103 is
+	yy_do_action_102 is
 			--|#line <not available> "lace.y"
 		local
 			yyval13: OPT_VAL_SD
@@ -3965,7 +3913,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_104 is
+	yy_do_action_103 is
 			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
@@ -3999,7 +3947,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_105 is
+	yy_do_action_104 is
 			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
@@ -4017,7 +3965,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_106 is
+	yy_do_action_105 is
 			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
@@ -4052,7 +4000,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_107 is
+	yy_do_action_106 is
 			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
@@ -4090,7 +4038,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_108 is
+	yy_do_action_107 is
 			--|#line <not available> "lace.y"
 		local
 			yyval21: LACE_LIST [ASSEMBLY_SD]
@@ -4111,7 +4059,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_109 is
+	yy_do_action_108 is
 			--|#line <not available> "lace.y"
 		local
 			yyval7: ASSEMBLY_SD
@@ -4149,7 +4097,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_110 is
+	yy_do_action_109 is
 			--|#line <not available> "lace.y"
 		local
 			yyval7: ASSEMBLY_SD
@@ -4187,7 +4135,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_111 is
+	yy_do_action_110 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -4221,7 +4169,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_112 is
+	yy_do_action_111 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -4239,7 +4187,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_113 is
+	yy_do_action_112 is
 			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
@@ -4273,7 +4221,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_114 is
+	yy_do_action_113 is
 			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
@@ -4291,7 +4239,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_115 is
+	yy_do_action_114 is
 			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
@@ -4326,7 +4274,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_116 is
+	yy_do_action_115 is
 			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
@@ -4364,7 +4312,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_117 is
+	yy_do_action_116 is
 			--|#line <not available> "lace.y"
 		local
 			yyval26: LACE_LIST [LANG_TRIB_SD]
@@ -4385,7 +4333,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_118 is
+	yy_do_action_117 is
 			--|#line <not available> "lace.y"
 		local
 			yyval10: LANG_TRIB_SD
@@ -4422,7 +4370,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_119 is
+	yy_do_action_118 is
 			--|#line <not available> "lace.y"
 		local
 			yyval11: LANGUAGE_NAME_SD
@@ -4457,7 +4405,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_120 is
+	yy_do_action_119 is
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4487,6 +4435,24 @@ if yy_parsing_status = yyContinue then
 			yyvs1 := yyspecial_routines1.resize (yyvs1, yyvsc1)
 		end
 	end
+	yyvs1.put (yyval1, yyvsp1)
+end
+		end
+
+	yy_do_action_120 is
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
+		do
+--|#line <not available> "lace.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 2
+	yyvsp1 := yyvsp1 -1
 	yyvs1.put (yyval1, yyvsp1)
 end
 		end
@@ -4519,24 +4485,6 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
 end
 
-
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 2
-	yyvsp1 := yyvsp1 -1
-	yyvs1.put (yyval1, yyvsp1)
-end
-		end
-
-	yy_do_action_123 is
-			--|#line <not available> "lace.y"
-		local
-			yyval1: ANY
-		do
---|#line <not available> "lace.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
-end
-
 --		create $$.make (10)
 --		$$.extend ($1)
 	
@@ -4547,7 +4495,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_124 is
+	yy_do_action_123 is
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4567,7 +4515,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_125 is
+	yy_do_action_124 is
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4587,7 +4535,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_126 is
+	yy_do_action_125 is
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4621,7 +4569,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_127 is
+	yy_do_action_126 is
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -4635,6 +4583,23 @@ end
 if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 3
 	yyvsp1 := yyvsp1 -2
+	yyvs1.put (yyval1, yyvsp1)
+end
+		end
+
+	yy_do_action_127 is
+			--|#line <not available> "lace.y"
+		local
+			yyval1: ANY
+		do
+--|#line <not available> "lace.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
+end
+
+
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
 	yyvs1.put (yyval1, yyvsp1)
 end
 		end
@@ -4657,23 +4622,6 @@ end
 		end
 
 	yy_do_action_129 is
-			--|#line <not available> "lace.y"
-		local
-			yyval1: ANY
-		do
---|#line <not available> "lace.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
-end
-
-
-if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs1.put (yyval1, yyvsp1)
-end
-		end
-
-	yy_do_action_130 is
 			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
@@ -4707,7 +4655,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_131 is
+	yy_do_action_130 is
 			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
@@ -4724,7 +4672,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_132 is
+	yy_do_action_131 is
 			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
@@ -4742,7 +4690,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_133 is
+	yy_do_action_132 is
 			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
@@ -4777,7 +4725,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_134 is
+	yy_do_action_133 is
 			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
@@ -4815,7 +4763,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_135 is
+	yy_do_action_134 is
 			--|#line <not available> "lace.y"
 		local
 			yyval18: LACE_LIST [CLAS_VISI_SD]
@@ -4836,7 +4784,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_136 is
+	yy_do_action_135 is
 			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
@@ -4871,7 +4819,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_137 is
+	yy_do_action_136 is
 			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
@@ -4907,7 +4855,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_138 is
+	yy_do_action_137 is
 			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
@@ -4944,7 +4892,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_139 is
+	yy_do_action_138 is
 			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
@@ -4982,7 +4930,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_140 is
+	yy_do_action_139 is
 			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
@@ -5020,7 +4968,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_141 is
+	yy_do_action_140 is
 			--|#line <not available> "lace.y"
 		local
 			yyval3: CLAS_VISI_SD
@@ -5058,7 +5006,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_142 is
+	yy_do_action_141 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -5076,7 +5024,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_143 is
+	yy_do_action_142 is
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5106,6 +5054,23 @@ if yy_parsing_status = yyContinue then
 			yyvs23 := yyspecial_routines23.resize (yyvs23, yyvsc23)
 		end
 	end
+	yyvs23.put (yyval23, yyvsp23)
+end
+		end
+
+	yy_do_action_143 is
+			--|#line <not available> "lace.y"
+		local
+			yyval23: LACE_LIST [ID_SD]
+		do
+--|#line <not available> "lace.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
+end
+
+yyval23 := yyvs23.item (yyvsp23) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
 	yyvs23.put (yyval23, yyvsp23)
 end
 		end
@@ -5122,30 +5087,13 @@ end
 
 yyval23 := yyvs23.item (yyvsp23) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs23.put (yyval23, yyvsp23)
-end
-		end
-
-	yy_do_action_145 is
-			--|#line <not available> "lace.y"
-		local
-			yyval23: LACE_LIST [ID_SD]
-		do
---|#line <not available> "lace.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
-end
-
-yyval23 := yyvs23.item (yyvsp23) 
-if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
 	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
-	yy_do_action_146 is
+	yy_do_action_145 is
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5175,6 +5123,23 @@ if yy_parsing_status = yyContinue then
 			yyvs23 := yyspecial_routines23.resize (yyvs23, yyvsc23)
 		end
 	end
+	yyvs23.put (yyval23, yyvsp23)
+end
+		end
+
+	yy_do_action_146 is
+			--|#line <not available> "lace.y"
+		local
+			yyval23: LACE_LIST [ID_SD]
+		do
+--|#line <not available> "lace.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
+end
+
+yyval23 := yyvs23.item (yyvsp23) 
+if yy_parsing_status = yyContinue then
+	yyssp := yyssp - 1
 	yyvs23.put (yyval23, yyvsp23)
 end
 		end
@@ -5191,30 +5156,13 @@ end
 
 yyval23 := yyvs23.item (yyvsp23) 
 if yy_parsing_status = yyContinue then
-	yyssp := yyssp - 1
-	yyvs23.put (yyval23, yyvsp23)
-end
-		end
-
-	yy_do_action_148 is
-			--|#line <not available> "lace.y"
-		local
-			yyval23: LACE_LIST [ID_SD]
-		do
---|#line <not available> "lace.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'lace.y' at line <not available>")
-end
-
-yyval23 := yyvs23.item (yyvsp23) 
-if yy_parsing_status = yyContinue then
 	yyssp := yyssp - 2
 	yyvsp1 := yyvsp1 -1
 	yyvs23.put (yyval23, yyvsp23)
 end
 		end
 
-	yy_do_action_149 is
+	yy_do_action_148 is
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5248,7 +5196,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_150 is
+	yy_do_action_149 is
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5285,7 +5233,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_151 is
+	yy_do_action_150 is
 			--|#line <not available> "lace.y"
 		local
 			yyval23: LACE_LIST [ID_SD]
@@ -5306,7 +5254,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_152 is
+	yy_do_action_151 is
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -5340,7 +5288,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_153 is
+	yy_do_action_152 is
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -5357,7 +5305,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_154 is
+	yy_do_action_153 is
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -5375,7 +5323,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_155 is
+	yy_do_action_154 is
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -5412,7 +5360,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_156 is
+	yy_do_action_155 is
 			--|#line <not available> "lace.y"
 		local
 			yyval28: LACE_LIST [TWO_NAME_SD]
@@ -5433,7 +5381,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_157 is
+	yy_do_action_156 is
 			--|#line <not available> "lace.y"
 		local
 			yyval16: TWO_NAME_SD
@@ -5467,7 +5415,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_158 is
+	yy_do_action_157 is
 			--|#line <not available> "lace.y"
 		local
 			yyval16: TWO_NAME_SD
@@ -5503,7 +5451,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_159 is
+	yy_do_action_158 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -5538,7 +5486,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_160 is
+	yy_do_action_159 is
 			--|#line <not available> "lace.y"
 		local
 			yyval9: ID_SD
@@ -5573,7 +5521,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_161 is
+	yy_do_action_160 is
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -5607,7 +5555,7 @@ if yy_parsing_status = yyContinue then
 end
 		end
 
-	yy_do_action_162 is
+	yy_do_action_161 is
 			--|#line <not available> "lace.y"
 		local
 			yyval1: ANY
@@ -5651,7 +5599,7 @@ end
 			-- Execute error action.
 		do
 			inspect yy_act
-			when 286 then
+			when 285 then
 					-- End-of-file expected action.
 				report_eof_expected_error
 			else
@@ -5662,9 +5610,7 @@ end
 
 feature {NONE} -- Table templates
 
-	yytranslate_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yytranslate_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			    0,    2,    2,    2,    2,    2,    2,    2,    2,    2,
@@ -5700,37 +5646,33 @@ feature {NONE} -- Table templates
 			   25,   26,   27,   28,   29,   30,   31,   32,   33,   34,
 			   35,   36,   37,   38,   39,   40,   41,   42,   43,   44,
 
-			   45>>)
+			   45, yyDummy>>)
 		end
 
-	yyr1_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yyr1_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			    0,  113,  113,   46,   58,   70,  112,   59,   59,   60,
-			   60,   80,   80,   81,   81,   50,   50,   50,   50,   50,
-			   50,   57,   57,   48,   48,   48,   48,   48,   48,   48,
-			   48,  111,  111,  110,  110,   73,   56,   56,   55,   99,
-			   99,   98,   98,   96,   96,   95,   95,  100,  100,   97,
-			   97,   94,   94,   78,   78,   77,   77,   79,   79,   49,
-			   49,  109,  109,   72,   86,   86,   85,   85,  105,  105,
-			  104,  104,   84,   84,   52,   52,   52,   52,   69,   69,
-			   69,   69,   69,   69,  103,  103,   64,   92,   92,   93,
-			   93,   65,   65,   66,   66,   66,   67,   67,   67,   68,
+			    0,  112,  112,   46,   58,   70,   59,   59,   60,   60,
+			   80,   80,   81,   81,   50,   50,   50,   50,   50,   50,
+			   57,   57,   48,   48,   48,   48,   48,   48,   48,   48,
+			  111,  111,  110,  110,   73,   56,   56,   55,   99,   99,
+			   98,   98,   96,   96,   95,   95,  100,  100,   97,   97,
+			   94,   94,   78,   78,   77,   77,   79,   79,   49,   49,
+			  109,  109,   72,   86,   86,   85,   85,  105,  105,  104,
+			  104,   84,   84,   52,   52,   52,   52,   69,   69,   69,
+			   69,   69,   69,  103,  103,   64,   92,   92,   93,   93,
+			   65,   65,   66,   66,   66,   67,   67,   67,   68,   68,
 
-			   68,   68,   68,   68,   82,   82,   82,   83,   83,   51,
-			   51,   61,   61,  101,  101,  101,  102,  102,   62,   63,
-			  114,  114,  114,  116,  116,  117,  118,  118,  119,  119,
-			   76,   76,   75,   75,   74,   74,   47,   47,   47,   47,
-			   47,   47,   54,   91,   91,   90,   89,   89,   88,   87,
-			   87,   87,  108,  108,  107,  106,  106,   71,   71,   53,
-			   53,  115,  115>>)
+			   68,   68,   68,   82,   82,   82,   83,   83,   51,   51,
+			   61,   61,  101,  101,  101,  102,  102,   62,   63,  113,
+			  113,  113,  115,  115,  116,  117,  117,  118,  118,   76,
+			   76,   75,   75,   74,   74,   47,   47,   47,   47,   47,
+			   47,   54,   91,   91,   90,   89,   89,   88,   87,   87,
+			   87,  108,  108,  107,  106,  106,   71,   71,   53,   53,
+			  114,  114, yyDummy>>)
 		end
 
-	yytypes1_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yytypes1_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -5744,262 +5686,248 @@ feature {NONE} -- Table templates
 			    1,    1,    9,   23,   23,   28,    3,    1,    1,   13,
 			   12,    1,    9,    1,    1,    1,   17,    1,    9,   13,
 
-			    1,   13,    8,    1,    1,    5,   25,    9,   31,   22,
-			   27,   18,   22,   19,   25,    9,   16,   28,    9,   23,
-			   23,    9,   23,   23,   28,   28,   23,   23,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    9,   13,
-			   13,   13,    1,   23,    1,    1,    9,    9,    1,    1,
-			    1,   28,    1,    1,    1,    1,   19,    1,    9,    1,
-			   20,   18,   27,   22,   25,    1,    1,    1,   23,    1,
-			   28,    1,    9,   23,    1,    9,   16,   28,   22,    9,
-			    1,    9,    1,    1,    6,    9,   20,    1,    1,   21,
-			   18,   27,   19,    9,   16,    9,   28,    1,    1,    1,
+			    1,   13,    8,    1,    1,    5,   25,    9,   22,   27,
+			   18,   22,   19,   25,    9,   16,   28,    9,   23,   23,
+			    9,   23,   23,   28,   28,   23,   23,    1,    1,    1,
+			    1,    1,    1,    1,    1,    1,    1,    9,   13,   13,
+			   13,    1,   23,    1,    1,    9,    9,    1,    1,    1,
+			   28,    1,    1,    1,    1,   19,    1,    9,    1,   20,
+			   18,   27,   22,   25,    1,    1,    1,   23,    1,   28,
+			    1,    9,   23,    1,    9,   16,   28,   22,    9,    1,
+			    9,    1,    1,    6,    9,   20,    1,    1,   21,   18,
+			   27,   19,    9,   16,    9,   28,    1,    1,    1,    1,
 
-			    1,   27,    1,    9,    9,    9,    1,    1,    9,    6,
-			    7,    9,   21,    1,    1,   26,   18,   22,    1,    9,
-			    9,   16,   18,    9,    9,    9,    1,    1,    1,    1,
-			    7,    9,   10,   11,   26,    1,    1,    1,   27,    1,
-			    1,    1,    9,    9,    1,    1,    1,   10,   11,    1,
-			    1,    1,    1,   18,    9,    9,    4,    1,    1,    9,
-			   23,    1,    1,    1,    1,    1,    4,    4,    1,    9,
-			    9,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    9,    9,    1,    9,    9,    1,    1,    1>>)
+			   27,    1,    9,    9,    9,    1,    1,    9,    6,    7,
+			    9,   21,    1,    1,   26,   18,   22,    1,    9,    9,
+			   16,   18,    9,    9,    9,    1,    1,    1,    1,    7,
+			    9,   10,   11,   26,    1,    1,    1,   27,    1,    1,
+			    1,    9,    9,    1,    1,    1,   10,   11,    1,    1,
+			    1,    1,   18,    9,    9,    4,    1,    1,    9,   23,
+			    1,    1,    1,    1,    1,    4,    4,    1,    9,    9,
+			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+			    9,    9,    1,    9,    9,    1,    1,    1, yyDummy>>)
 		end
 
-	yytypes2_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yytypes2_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1>>)
+			    1,    1,    1,    1,    1,    1, yyDummy>>)
 		end
 
-	yydefact_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yydefact_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			    0,  161,    0,    0,  161,  161,  161,  161,  161,  161,
-			    1,    2,   39,    0,   30,   64,   68,   53,   43,  130,
-			   36,  160,  162,  159,  161,  136,  132,  133,   38,    4,
-			   82,   81,   80,   79,   78,   83,  161,   91,   70,   71,
-			  161,   41,   42,   51,  161,    0,   31,   32,  161,   45,
-			   46,   91,  161,   91,   66,   67,  161,    0,   55,   56,
-			   40,   43,    0,   64,   65,   68,   69,  130,   54,   64,
-			   44,   53,  131,   29,   37,   39,  134,  157,  149,  137,
-			  149,    0,  143,  152,  146,    0,  161,   84,    0,   87,
-			  161,   47,  161,   33,    0,    0,  161,   49,  161,   74,
+			    0,  160,    0,    0,  160,  160,  160,  160,  160,  160,
+			    1,    2,   38,    0,   29,   63,   67,   52,   42,  129,
+			   35,  159,  161,  158,  160,  135,  131,  132,   37,    4,
+			   81,   80,   79,   78,   77,   82,  160,   90,   69,   70,
+			  160,   40,   41,   50,  160,    0,   30,   31,  160,   44,
+			   45,   90,  160,   90,   65,   66,  160,    0,   54,   55,
+			   39,   42,    0,   63,   64,   67,   68,  129,   53,   63,
+			   43,   52,  130,   28,   36,   38,  133,  156,  148,  136,
+			  148,    0,  142,  151,  145,    0,  160,   83,    0,   86,
+			  160,   46,  160,   32,    0,    0,  160,   48,  160,   73,
 
-			   72,   77,  161,   57,    0,  161,   53,    6,    7,    0,
-			  130,   28,   68,   64,   43,    0,  155,  154,  150,  148,
-			  145,  142,  144,  146,  153,    0,  147,  152,  138,  135,
-			   96,   99,   97,  102,  101,  100,  103,   98,   95,    0,
-			   93,   94,    0,   86,   85,   48,   52,   35,   34,   50,
-			   75,    0,   73,    0,   59,   58,   64,    0,    9,  161,
-			  104,   27,  130,   68,   53,    0,  157,    0,  152,  139,
-			    0,   92,   89,   88,   76,    0,   61,   60,   68,    0,
-			    0,    5,    0,    0,  161,   21,   11,   12,  161,  113,
-			   26,  130,   64,  158,  156,  151,    0,  140,    0,    0,
+			   71,   76,  160,   56,    0,  160,   52,    6,    0,  129,
+			   27,   67,   63,   42,    0,  154,  153,  149,  147,  144,
+			  141,  143,  145,  152,    0,  146,  151,  137,  134,   95,
+			   98,   96,  101,  100,   99,  102,   97,   94,    0,   92,
+			   93,    0,   85,   84,   47,   51,   34,   33,   49,   74,
+			    0,   72,    0,   58,   57,   63,    0,    8,  160,  103,
+			   26,  129,   67,   52,    0,  156,    0,  151,  138,    0,
+			   91,   88,   87,   75,    0,   60,   59,   67,    0,    0,
+			    5,    0,    0,  160,   20,   10,   11,  160,  112,   25,
+			  129,   63,  157,  155,  150,    0,  139,    0,    0,    0,
 
-			    0,  130,    8,   10,   21,   21,   13,    0,    0,  161,
-			  161,    0,  105,  106,  161,  120,   25,   68,  141,   90,
-			   63,   62,   24,    0,    0,    0,    0,   14,  107,    0,
-			  161,  119,  161,    0,  114,  115,  161,    0,  130,    0,
-			    0,   22,   15,  111,  108,  116,    0,  161,  126,  122,
-			  121,  161,    3,   23,   17,   16,    0,    0,    0,  109,
-			  118,  117,    0,    0,  161,  123,    0,    0,   18,    0,
-			    0,  128,  129,    0,    0,  124,   20,   19,  112,    0,
-			  127,  125,    0,    0,  111,  110,    0,    0,    0>>)
+			  129,    7,    9,   20,   20,   12,    0,    0,  160,  160,
+			    0,  104,  105,  160,  119,   24,   67,  140,   89,   62,
+			   61,   23,    0,    0,    0,    0,   13,  106,    0,  160,
+			  118,  160,    0,  113,  114,  160,    0,  129,    0,    0,
+			   21,   14,  110,  107,  115,    0,  160,  125,  121,  120,
+			  160,    3,   22,   16,   15,    0,    0,    0,  108,  117,
+			  116,    0,    0,  160,  122,    0,    0,   17,    0,    0,
+			  127,  128,    0,    0,  123,   19,   18,  111,    0,  126,
+			  124,    0,    0,  110,  109,    0,    0,    0, yyDummy>>)
 		end
 
-	yydefgoto_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yydefgoto_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			   10,   24,   11,   56,  184,  210,   52,   35,   82,   12,
-			   75,  208,   13,  158,  181,  259,  232,  233,   36,   89,
-			  139,  140,  141,   37,   63,  116,  176,   44,   26,   72,
-			   73,   15,   69,   58,  160,  186,  189,  212,   54,   64,
-			   65,  119,  126,  127,   84,  123,  143,  173,   45,   17,
-			   71,   49,   18,   61,   41,  215,  234,   38,   66,   67,
-			  117,  124,  125,  177,   46,   20,  108,  286,  237,   27,
-			  250,  251,  263,  273>>)
+			   10,   24,   11,   56,  183,  209,   52,   35,   82,   12,
+			   75,  207,   13,  157,  180,  258,  231,  232,   36,   89,
+			  138,  139,  140,   37,   63,  115,  175,   44,   26,   72,
+			   73,   15,   69,   58,  159,  185,  188,  211,   54,   64,
+			   65,  118,  125,  126,   84,  122,  142,  172,   45,   17,
+			   71,   49,   18,   61,   41,  214,  233,   38,   66,   67,
+			  116,  123,  124,  176,   46,   20,  285,  236,   27,  249,
+			  250,  262,  272, yyDummy>>)
 		end
 
-	yypact_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yypact_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			   92,   45,    4,    4,  132,   45,   45,   45,  154,   45,
-			 -32768, -32768,  184,  185, -32768,  134,   90,  173,  182,   72,
-			  168, -32768, -32768, -32768,   52,   18,    4, -32768, -32768, -32768,
-			 -32768, -32768, -32768, -32768, -32768, -32768,   52,  178,  284, -32768,
-			   52,    4, -32768, -32768,   52,   78,    4, -32768,   52,    4,
-			 -32768,  178,   52,  178,  262, -32768,   52,  198,    4, -32768,
-			 -32768,  182,    4,  134, -32768,   90, -32768,   72, -32768,  134,
-			 -32768,  173, -32768, -32768, -32768,  184, -32768,    4,    4, -32768,
-			    4,    4,  195,  141,  169,  188,   52, -32768,   74,  193,
-			   52, -32768,   52, -32768,    4,    4,   52, -32768,   52,    8,
+			  106,   59,    3,    3,   45,   59,   59,   59,  283,   59,
+			 -32768, -32768,  167,  166, -32768,  133,  103,  159,  161,   79,
+			  165, -32768, -32768, -32768,   78,   19,    3, -32768, -32768, -32768,
+			 -32768, -32768, -32768, -32768, -32768, -32768,   78,  168,  297, -32768,
+			   78,    3, -32768, -32768,   78,   27,    3, -32768,   78,    3,
+			 -32768,  168,   78,  168,  261, -32768,   78,  183,    3, -32768,
+			 -32768,  161,    3,  133, -32768,  103, -32768,   79, -32768,  133,
+			 -32768,  159, -32768, -32768, -32768,  167, -32768,    3,    3, -32768,
+			    3,    3,  178,  126,  151,  172,   78, -32768,   84,  177,
+			   78, -32768,   78, -32768,    3,    3,   78, -32768,   78,    7,
 
-			 -32768, -32768,   52, -32768,    5,   52,  173, -32768,  175,  192,
-			   72, -32768,   90,  134,  182,  191, -32768,  183, -32768,  180,
-			  180, -32768, -32768,  169, -32768,  174, -32768,  141, -32768, -32768,
-			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,  152,
-			 -32768, -32768,    4, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
-			 -32768,  167, -32768,    4, -32768, -32768,  134,    4,  170,   24,
-			  172, -32768,   72,   90,  173,    4,    4,    4,  141, -32768,
-			  156, -32768, -32768,  157, -32768,  158, -32768,  138,   90,  124,
-			    4, -32768,    4,    4,   52,  113,   28, -32768,   45,  125,
-			 -32768,   72,  134, -32768, -32768, -32768,  127, -32768,    4,    4,
+			 -32768, -32768,   78, -32768,   61,   78,  159,  164,  176,   79,
+			 -32768,  103,  133,  161,  170, -32768,  163, -32768,  162,  162,
+			 -32768, -32768,  151, -32768,  153, -32768,  126, -32768, -32768, -32768,
+			 -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,  134, -32768,
+			 -32768,    3, -32768, -32768, -32768, -32768, -32768, -32768, -32768, -32768,
+			  152, -32768,    3, -32768, -32768,  133,    3,  157,   24,  160,
+			 -32768,   79,  103,  159,    3,    3,    3,  126, -32768,  143,
+			 -32768, -32768,  147, -32768,  145, -32768,  132,  103,  117,    3,
+			 -32768,    3,    3,   78,  115,   28, -32768,   59,  131, -32768,
+			   79,  133, -32768, -32768, -32768,  125, -32768,    3,    3,    3,
 
-			    4,   72, -32768, -32768,  113,  113, -32768,    4,  123,   52,
-			   52,  121,    4, -32768,   45,  106, -32768,   90, -32768, -32768,
-			 -32768, -32768, -32768,  116,  114,   86,    4, -32768, -32768,    4,
-			   52, -32768,   52,   91,    4, -32768,   45,  103,   72,    4,
-			    4, -32768,  111,   11, -32768, -32768,    4,   52,   89, -32768,
-			    4,   52, -32768, -32768,  111,  111,   88,    4,    4, -32768,
-			   85, -32768,   -3,   82,   52, -32768,   70,   65, -32768,   58,
-			   61, -32768, -32768,   34,    4, -32768, -32768, -32768, -32768,    4,
-			 -32768, -32768,   47,    4,   20, -32768,   37,   35, -32768>>)
+			   79, -32768, -32768,  115,  115, -32768,    3,  129,   78,   78,
+			  128,    3, -32768,   59,  114, -32768,  103, -32768, -32768, -32768,
+			 -32768, -32768,  123,  122,   94,    3, -32768, -32768,    3,   78,
+			 -32768,   78,  119,    3, -32768,   59,  111,   79,    3,    3,
+			 -32768,  158,   10, -32768, -32768,    3,   78,   99, -32768,    3,
+			   78, -32768, -32768,  158,  158,  102,    3,    3, -32768,  110,
+			 -32768,    0,  107,   78, -32768,   98,   95, -32768,   80,   63,
+			 -32768, -32768,   36,    3, -32768, -32768, -32768, -32768,    3, -32768,
+			 -32768,   48,    3,   -6, -32768,   33,   30, -32768, yyDummy>>)
 		end
 
-	yypgoto_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yypgoto_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			 -32768,  218, -104,  189,   57,   30,  187,   -1, -32768,  220,
-			 -32768, -149, -32768, -32768, -32768,  -53,    2, -200,  199,  -20,
-			 -32768, -32768, -32768,   12, -32768,   64,   29,  186, -32768,   17,
-			  -64,   -7,  -57, -32768, -32768, -32768, -32768, -32768, -32768,   13,
-			  -48,  147,  201,  100,  142, -32768, -32768, -32768,  -25,   -2,
-			  -43, -32768,    0,  145, -32768, -32768, -32768, -32768,    9,  -58,
-			 -32768,  -14, -108, -32768, -32768, -32768, -32768, -32768, -32768,  210,
-			 -32768,  -38, -32768, -32768>>)
+			 -32768,  202, -163,  181,   46,   15,  175,   -1, -32768,  203,
+			 -32768,  -99, -32768, -32768, -32768,  -61,   -8, -179,  173,  -17,
+			 -32768, -32768, -32768,   12, -32768,   43,   22,  174, -32768,   17,
+			  -55,   -7,  -60, -32768, -32768, -32768, -32768, -32768, -32768,   13,
+			  -47,  139,  184,   82,  124, -32768, -32768, -32768,  -51,  -11,
+			  -42, -32768,    6,  127, -32768, -32768, -32768, -32768,    9,  -62,
+			 -32768,  -10, -112, -32768, -32768, -32768, -32768, -32768,  209, -32768,
+			  -50, -32768, -32768, yyDummy>>)
 		end
 
-	yytable_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yytable_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			   25,   28,   29,  111,   40,   43,   48,  110,   57,   19,
-			   68,   85,   60,   16,  113,  109,   70,   14,  106,  170,
-			   53,  112,  258,   81,  150,   25,  272,   23,  183,  154,
-			   80,   99,  183,  101,   79,  288,  248,  287,   78,  153,
-			   92,  271,   77,   21,  257,   43,  161,   23,   98,  156,
-			  248,   23,   77,  257,  162,  223,  224,   57,  283,   70,
-			  196,  107,   22,   21,   68,  163,   53,   21,   23,  182,
-			  280,  164,  279,  182,  278,   60,  115,  118,  137,  118,
-			  121,  277,  136,   22,   21,  151,  276,  138,   95,   94,
-			   22,  135,  274,  146,  147,    9,   94,   23,  190,   68,
+			   25,   28,   29,  109,   40,   43,   48,   70,   57,   19,
+			   68,  112,  110,   16,  169,   85,  108,   14,   60,  106,
+			   53,  257,  111,  149,   81,   25,   23,  256,  182,  271,
+			  287,   80,  182,  286,   99,   79,  101,   95,   94,   78,
+			   92,   77,   21,  256,  270,   43,  155,   23,   98,  161,
+			   70,   23,   34,   77,  160,  195,  247,   57,   33,  282,
+			   32,  107,   22,   21,   68,  162,   53,   21,   23,  181,
+			  247,  163,  279,  181,  278,   31,  114,  117,  255,  117,
+			  120,   60,   23,   22,   21,  153,   30,  137,  136,  150,
+			  265,  266,  135,  145,  146,  152,  277,   22,   21,   68,
 
-			  134,  246,  133,  132,  268,  191,    8,  192,  178,  131,
-			    7,    6,   70,   21,    9,    1,  262,    5,  130,  252,
-			  201,    4,  241,    4,  240,    8,  239,  216,  236,    7,
-			    6,  229,    3,  226,    2,    1,    5,  222,  256,   34,
-			  207,  172,    4,  218,  217,   33,  214,   32,    8,  200,
-			  266,  267,  175,    2,    1,   23,  179,   68,  185,  238,
-			  202,   34,   31,  199,  193,  115,  195,   33,  198,   32,
-			   22,   21,  197,   30,  253,   77,    9,   23,  188,  203,
-			  180,  204,  205,  174,   31,  185,   51,  211,  171,   78,
-			  169,  167,   22,   21,  166,   30,  165,  219,  220,  175,
+			  190,  134,   70,  191,  222,  223,  189,   23,  177,    9,
+			  133,  276,  132,  131,  275,  200,   22,  273,  267,  130,
+			    8,   94,    1,   21,    7,    6,  261,  251,  129,  245,
+			  240,    5,  239,  238,    4,  215,  235,    4,  228,  225,
+			  171,  217,  206,  199,  216,  221,    3,    8,    2,    1,
+			  198,  174,  213,  201,  237,  178,   68,  184,  197,  196,
+			   77,    9,    9,  192,  114,  194,  187,  179,  173,  168,
+			  170,   78,    8,  166,  165,  164,    7,    6,  202,    7,
+			  203,  204,  252,    5,  184,  158,  210,  141,  127,    4,
+			   80,  156,    5,  104,  259,   88,  218,  219,  174,  263,
 
-			    7,  159,  157,  142,  128,   88,  225,   80,  104,    5,
-			    2,  211,  264,  231,   39,   42,   47,   50,   55,   59,
-			  114,  260,   62,  168,  122,  242,   83,  120,  243,  221,
-			  194,  285,   96,  231,   76,  231,  247,   90,  254,  255,
-			   74,  102,  230,  209,   86,   43,   87,  105,    0,  231,
-			   91,   19,    0,    0,   93,   16,  269,  270,   97,   14,
-			    0,    0,  100,   19,   19,    0,  103,   16,   16,   34,
-			    0,   14,   14,  281,    0,   33,    0,   32,  282,    0,
-			    0,    0,  284,    0,    0,   23,    0,    0,    0,    0,
-			    0,   34,   31,    0,   51,    0,  129,   33,    0,   32,
+			    2,    1,  113,   62,  167,  224,  121,    2,  193,   83,
+			  210,   90,  230,   39,   42,   47,   50,   55,   59,  119,
+			   96,  220,  284,   74,  241,  246,  229,  242,   86,  102,
+			    0,  208,  230,   76,  230,    0,    0,  253,  254,  105,
+			    0,    0,    0,    0,   43,   87,    0,    0,  230,   91,
+			   19,    0,    0,   93,   16,  268,  269,   97,   14,    0,
+			    0,  100,   19,   19,    0,  103,   16,   16,   34,    0,
+			   14,   14,  280,    0,   33,    0,   32,  281,    0,    0,
+			    0,  283,    0,    0,   23,    0,    0,    0,    0,    0,
+			   34,   31,    0,   51,    0,  128,   33,    0,   32,  143,
 
-			  144,   21,  145,   30,    0,    0,  148,   23,  149,    0,
-			    0,    0,  152,    0,   31,  155,    0,    0,    0,    0,
-			    0,    0,    0,   21,    0,   30,    0,    0,    0,    0,
+			   21,  144,   30,    0,   34,  147,   23,  148,    0,    0,
+			   33,  151,   32,   31,  154,   51,    0,    0,    0,    0,
+			   23,   22,   21,    0,   30,    0,    0,   31,    0,    0,
+			    0,    0,    0,    0,    0,    0,   21,    0,   30,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,    0,    0,  186,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,    0,    0,    0,    0,    0,  187,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,  206,    0,    0,    0,  213,    0,
+			    0,    0,  205,    0,    0,    0,  212,    0,    0,    0,
 
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,    0,    0,    0,    0,    0,  227,
-			  228,    0,    0,    0,  235,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,    0,    0,  226,  227,    0,
+			    0,    0,  234,    0,    0,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,    0,    0,    0,  243,    0,
+			  244,    0,    0,    0,  248,    0,    0,    0,    0,    0,
+			    0,    0,    0,    0,    0,  260,    0,    0,    0,  264,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-			  244,    0,  245,    0,    0,    0,  249,    0,    0,    0,
-			    0,    0,    0,    0,    0,    0,    0,  261,    0,    0,
-			    0,  265,    0,    0,    0,    0,    0,    0,    0,    0,
-			    0,    0,    0,    0,  275>>)
+			    0,    0,  274, yyDummy>>)
 		end
 
-	yycheck_template: ANY is
-			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
-			-- but once functions cannot be declared with anchored types.
+	yycheck_template: SPECIAL [INTEGER] is
 		once
 			Result := yyfixed_array (<<
-			    1,    2,    3,   67,    5,    6,    7,   65,    9,    0,
-			   17,   25,   12,    0,   71,   63,   18,    0,   61,  127,
-			    8,   69,   11,    5,   16,   26,   29,   23,    4,   24,
-			   12,   51,    4,   53,   16,    0,  236,    0,   20,   34,
-			   41,   44,   34,   39,   33,   46,  110,   23,   49,  106,
-			  250,   23,   34,   33,  112,  204,  205,   58,   11,   61,
-			  168,   62,   38,   39,   71,  113,   54,   39,   23,   45,
-			   36,  114,   11,   45,   16,   75,   77,   78,    4,   80,
-			   81,   16,    8,   38,   39,   99,   16,   88,   10,   11,
-			   38,   17,   10,   94,   95,    3,   11,   23,  162,  106,
+			    1,    2,    3,   65,    5,    6,    7,   18,    9,    0,
+			   17,   71,   67,    0,  126,   25,   63,    0,   12,   61,
+			    8,   11,   69,   16,    5,   26,   23,   33,    4,   29,
+			    0,   12,    4,    0,   51,   16,   53,   10,   11,   20,
+			   41,   34,   39,   33,   44,   46,  106,   23,   49,  111,
+			   61,   23,    7,   34,  109,  167,  235,   58,   13,   11,
+			   15,   62,   38,   39,   71,  112,   54,   39,   23,   45,
+			  249,  113,   36,   45,   11,   30,   77,   78,  241,   80,
+			   81,   75,   23,   38,   39,   24,   41,   88,    4,   99,
+			  253,  254,    8,   94,   95,   34,   16,   38,   39,  106,
 
-			   26,   10,   28,   29,   16,  163,   14,  164,  156,   35,
-			   18,   19,  114,   39,    3,   43,   27,   25,   44,   16,
-			  178,   31,   36,   31,   10,   14,   10,  191,   22,   18,
-			   19,   10,   40,   10,   42,   43,   25,  201,  242,    7,
-			   27,  142,   31,   16,  192,   13,   21,   15,   14,   11,
-			  254,  255,  153,   42,   43,   23,  157,  164,  159,  217,
-			   36,    7,   30,    5,  165,  166,  167,   13,   11,   15,
-			   38,   39,   16,   41,  238,   34,    3,   23,    6,  180,
-			   10,  182,  183,   16,   30,  186,   32,  188,   36,   20,
-			   16,   11,   38,   39,   11,   41,    5,  198,  199,  200,
+			  162,   17,  113,  163,  203,  204,  161,   23,  155,    3,
+			   26,   16,   28,   29,   16,  177,   38,   10,   16,   35,
+			   14,   11,   43,   39,   18,   19,   27,   16,   44,   10,
+			   36,   25,   10,   10,   31,  190,   22,   31,   10,   10,
+			  141,   16,   27,   11,  191,  200,   40,   14,   42,   43,
+			    5,  152,   21,   36,  216,  156,  163,  158,   11,   16,
+			   34,    3,    3,  164,  165,  166,    6,   10,   16,   16,
+			   36,   20,   14,   11,   11,    5,   18,   19,  179,   18,
+			  181,  182,  237,   25,  185,    9,  187,   10,   16,   31,
+			   12,   27,   25,   10,  245,   27,  197,  198,  199,  249,
 
-			   18,    9,   27,   10,   16,   27,  207,   12,   10,   25,
-			   42,  212,  250,  214,    4,    5,    6,    7,    8,    9,
-			   75,  246,   37,  123,   82,  226,   25,   80,  229,  200,
-			  166,  284,   46,  234,   24,  236,  234,   38,  239,  240,
-			   20,   54,  212,  186,   26,  246,   36,   58,   -1,  250,
-			   40,  242,   -1,   -1,   44,  242,  257,  258,   48,  242,
-			   -1,   -1,   52,  254,  255,   -1,   56,  254,  255,    7,
-			   -1,  254,  255,  274,   -1,   13,   -1,   15,  279,   -1,
-			   -1,   -1,  283,   -1,   -1,   23,   -1,   -1,   -1,   -1,
-			   -1,    7,   30,   -1,   32,   -1,   86,   13,   -1,   15,
+			   42,   43,   75,   37,  122,  206,   82,   42,  165,   25,
+			  211,   38,  213,    4,    5,    6,    7,    8,    9,   80,
+			   46,  199,  283,   20,  225,  233,  211,  228,   26,   54,
+			   -1,  185,  233,   24,  235,   -1,   -1,  238,  239,   58,
+			   -1,   -1,   -1,   -1,  245,   36,   -1,   -1,  249,   40,
+			  241,   -1,   -1,   44,  241,  256,  257,   48,  241,   -1,
+			   -1,   52,  253,  254,   -1,   56,  253,  254,    7,   -1,
+			  253,  254,  273,   -1,   13,   -1,   15,  278,   -1,   -1,
+			   -1,  282,   -1,   -1,   23,   -1,   -1,   -1,   -1,   -1,
+			    7,   30,   -1,   32,   -1,   86,   13,   -1,   15,   90,
 
-			   90,   39,   92,   41,   -1,   -1,   96,   23,   98,   -1,
-			   -1,   -1,  102,   -1,   30,  105,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   39,   -1,   41,   -1,   -1,   -1,   -1,
+			   39,   92,   41,   -1,    7,   96,   23,   98,   -1,   -1,
+			   13,  102,   15,   30,  105,   32,   -1,   -1,   -1,   -1,
+			   23,   38,   39,   -1,   41,   -1,   -1,   30,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   39,   -1,   41,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   -1,  158,   -1,   -1,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  159,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,  184,   -1,   -1,   -1,  188,   -1,
+			   -1,   -1,  183,   -1,   -1,   -1,  187,   -1,   -1,   -1,
 
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  209,
-			  210,   -1,   -1,   -1,  214,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   -1,  208,  209,   -1,
+			   -1,   -1,  213,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,  229,   -1,
+			  231,   -1,   -1,   -1,  235,   -1,   -1,   -1,   -1,   -1,
+			   -1,   -1,   -1,   -1,   -1,  246,   -1,   -1,   -1,  250,
 			   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			  230,   -1,  232,   -1,   -1,   -1,  236,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,   -1,   -1,   -1,  247,   -1,   -1,
-			   -1,  251,   -1,   -1,   -1,   -1,   -1,   -1,   -1,   -1,
-			   -1,   -1,   -1,   -1,  264>>)
+			   -1,   -1,  263, yyDummy>>)
 		end
 
 feature {NONE} -- Semantic value stacks
@@ -6352,33 +6280,9 @@ feature {NONE} -- Semantic value stacks
 	yyspecial_routines29: KL_SPECIAL_ROUTINES [LACE_LIST [DEPEND_SD]]
 			-- Routines that ought to be in SPECIAL [LACE_LIST [DEPEND_SD]]
 
-	yyvs30: SPECIAL [CLICK_AST]
-			-- Stack for semantic values of type CLICK_AST
-
-	yyvsc30: INTEGER
-			-- Capacity of semantic value stack `yyvs30'
-
-	yyvsp30: INTEGER
-			-- Top of semantic value stack `yyvs30'
-
-	yyspecial_routines30: KL_SPECIAL_ROUTINES [CLICK_AST]
-			-- Routines that ought to be in SPECIAL [CLICK_AST]
-
-	yyvs31: SPECIAL [PAIR [ID_SD, CLICK_AST]]
-			-- Stack for semantic values of type PAIR [ID_SD, CLICK_AST]
-
-	yyvsc31: INTEGER
-			-- Capacity of semantic value stack `yyvs31'
-
-	yyvsp31: INTEGER
-			-- Top of semantic value stack `yyvs31'
-
-	yyspecial_routines31: KL_SPECIAL_ROUTINES [PAIR [ID_SD, CLICK_AST]]
-			-- Routines that ought to be in SPECIAL [PAIR [ID_SD, CLICK_AST]]
-
 feature {NONE} -- Constants
 
-	yyFinal: INTEGER is 288
+	yyFinal: INTEGER is 287
 			-- Termination state id
 
 	yyFlag: INTEGER is -32768
@@ -6387,14 +6291,14 @@ feature {NONE} -- Constants
 	yyNtbase: INTEGER is 46
 			-- Number of tokens
 
-	yyLast: INTEGER is 474
+	yyLast: INTEGER is 472
 			-- Upper bound of `yytable' and `yycheck'
 
 	yyMax_token: INTEGER is 300
 			-- Maximum token id
 			-- (upper bound of `yytranslate'.)
 
-	yyNsyms: INTEGER is 120
+	yyNsyms: INTEGER is 119
 			-- Number of symbols
 			-- (terminal and nonterminal)
 

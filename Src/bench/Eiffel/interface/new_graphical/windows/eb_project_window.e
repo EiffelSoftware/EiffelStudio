@@ -47,7 +47,7 @@ feature -- Initialization
 
 --			base_make (Icon_id.out, a_screen)
 
-			add_destroy_command (tool.close_cmd, Void)
+			add_close_command (tool.close_cmd, Void)
 --			set_font_to_default
 --			set_default_position
 		end

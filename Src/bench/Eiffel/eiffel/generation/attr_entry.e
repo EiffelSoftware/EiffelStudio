@@ -56,4 +56,12 @@ feature
 			Result := skel.workbench_offset
 		end;
 
+feature -- DLE
+
+	was_used: BOOLEAN is
+			-- Was the attribute entry used in the extendible system?
+		do
+			Result := type_id <= System.dle_max_dr_type_id
+		end;
+
 end

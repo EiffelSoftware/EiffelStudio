@@ -35,9 +35,21 @@ feature
 		require
 			good_type_id: id <= System.static_type_id_counter.value;
 			good_body_id: body_id <= System.body_id_counter.value;
+		local
+			old_body_id: INTEGER
 		do
 			Result := Buffer;
-			eif000 ($Result, id, body_id);
+			if System.is_dynamic then
+				if System.in_final_mode then
+					old_body_id :=
+						System.dle_finalized_nobid_table.item (body_id)
+				else
+					old_body_id := System.dle_frozen_nobid_table.item (body_id)
+				end;
+				eif000 ($Result, id, old_body_id)
+			else
+				eif000 ($Result, id, body_id)
+			end
 		end;
 
 feature {NONE}
@@ -48,6 +60,7 @@ feature {NONE}
 			!!Result.make (7);
 			Result.append ("E000000");
 		end;
+
 feature {NONE} -- External features
 
 	eif000 (s: POINTER; i,j: INTEGER) is

@@ -295,13 +295,21 @@ feature -- Retrieval
 					xml_reader.Close
 				else
 					Result := Void 
-					support.create_error (error_messages.No_index, error_messages.No_index_message)
+					if reflection_support /= Void and then reflection_support.get_last_error /= Void and then reflection_support.get_last_error.get_name.equals_string (error_messages.Registry_key_not_registered) then
+						support.create_error (error_messages.Registry_key_not_registered, error_messages.Registry_key_not_registered_message)
+					else
+						support.create_error (error_messages.No_index, error_messages.No_index_message)
+					end
 					last_error := support.get_last_error
 					last_read_successful := False
 				end
 			else
 				Result := Void
-				support.create_error (error_messages.No_assembly, error_messages.No_assembly_message)
+				if reflection_support /= Void and then reflection_support.get_last_error /= Void and then reflection_support.get_last_error.get_name.equals_string (error_messages.Registry_key_not_registered) then
+					support.create_error (error_messages.Registry_key_not_registered, error_messages.Registry_key_not_registered_message)
+				else
+					support.create_error (error_messages.No_assembly, error_messages.No_assembly_message)
+				end
 				last_error := support.get_last_error
 				last_read_successful := False		
 				if read_lock_filename /= Void and then file.exists (read_lock_filename) then

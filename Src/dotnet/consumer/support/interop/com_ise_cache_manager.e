@@ -50,10 +50,10 @@ feature -- Basic Oprtations
 			non_void_version: aversion /= Void
 			non_void_culture: aculture /= Void
 			non_void_key: akey /= Void
-			non_empty_name: aname.get_length > 0
-			non_empty_version: aversion.get_length > 0
-			non_empty_culture: aculture.get_length > 0
-			non_empty_key: akey.get_length > 0
+			non_empty_name: aname.length > 0
+			non_empty_version: aversion.length > 0
+			non_empty_culture: aculture.length > 0
+			non_empty_key: akey.length > 0
 		local
 			name, version, culture, key: STRING
 		do	
@@ -86,30 +86,30 @@ feature -- Basic Oprtations
 			non_void_name: aname /= Void
 			non_void_version: aversion /= Void
 			non_void_culture: aculture /= Void
-			non_empty_name: aname.get_length > 0
-			non_empty_version: aversion.get_length > 0
-			non_empty_culture: aculture.get_length > 0
+			non_empty_name: aname.length > 0
+			non_empty_version: aversion.length > 0
+			non_empty_culture: aculture.length > 0
 		local
 			name, version, culture, key: STRING
 		do	
 			create name.make_from_cil (aname)
 			create version.make_from_cil (aversion)
 			create culture.make_from_cil (aculture)
-			if akey /= Void and akey.get_length > 0 then
+			if akey /= Void and akey.length > 0 then
 				create key.make_from_cil (akey)				
 			end
 			
 			Result := impl.relative_folder_name (name, version, culture, key).to_cil
 		ensure
 			non_void_result: Result /= Void
-			non_empty_result: Result.get_length > 0
+			non_empty_result: Result.length > 0
 		end
 		
 	assembly_info_from_assembly (apath: SYSTEM_STRING): COM_ASSEMBLY_INFORMATION is
 			-- retrieve a local assembly's information
 		require
 			non_void_path: apath /= Void
-			non_empty_path: apath.get_length > 0
+			non_empty_path: apath.length > 0
 		local
 			path: STRING
 		do

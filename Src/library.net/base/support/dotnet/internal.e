@@ -212,7 +212,7 @@ feature -- Access
 		do
 			m := get_members (type_id)
 			if m /= Void and then m.valid_index (i) then
-				create Result.make_from_cil (m.i_th (i).item.get_name.remove (0, 2))
+				create Result.make_from_cil (m.i_th (i).item.name.remove (0, 2))
 			end
 		end
 
@@ -250,9 +250,9 @@ feature -- Access
 				check
 					l_field_not_void: l_field /= Void
 				end
-				l_type := l_field.get_field_type
+				l_type := l_field.field_type
 				if abstract_types.contains (l_type) then
-					Result ?= abstract_types.get_item (l_type)
+					Result ?= abstract_types.item (l_type)
 				else
 						-- FIXME: BIT not supported
 					if
@@ -669,7 +669,7 @@ feature {NONE} -- Implementation
 			l_id_object: SYSTEM_OBJECT
 		do
 			l_types := known_types_id
-			l_id_object := l_types.get_item (t)
+			l_id_object := l_types.item (t)
 			if l_id_object = Void then
 				l_id := new_known_type_id
 				Result := l_id.item

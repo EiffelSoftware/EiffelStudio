@@ -27,17 +27,17 @@ feature {CACHE_READER} -- Access
 		do
 			if name.get_public_key_token /= Void then
 				key := encoded_key (name.get_public_key_token)				
-				create Result.make (name.get_name.get_length + name.get_version.to_string.get_length + name.get_culture_info.get_name.get_length + key.count + 4)
+				create Result.make (name.name.length + name.version.to_string.length + name.culture_info.name.length + key.count + 4)
 			else
-				create Result.make (name.get_name.get_length + name.get_version.to_string.get_length + name.get_culture_info.get_name.get_length + 4)
+				create Result.make (name.name.length + name.version.to_string.length + name.culture_info.name.length + 4)
 			end
 			--| FIXME IEK Refactor code so that both assembly_path functions call the same abstracted function.
 	
-			Result.append (create {STRING}.make_from_cil (name.get_name))
+			Result.append (create {STRING}.make_from_cil (name.name))
 			Result.append ("-")
-			Result.append (create {STRING}.make_from_cil (name.get_version.to_string.replace_character ('.', '_')))
+			Result.append (create {STRING}.make_from_cil (name.version.to_string.replace_character ('.', '_')))
 			Result.append ("-")
-			Result.append (create {STRING}.make_from_cil (name.get_culture_info.get_name))
+			Result.append (create {STRING}.make_from_cil (name.culture_info.name))
 			
 			-- local unsigned assemblies will not have this attribute, and so we must test to see if it is null or not
 			if key /= Void and then not key.is_empty then
@@ -116,8 +116,8 @@ feature {CACHE_READER} -- Access
 		local
 			path, type: STRING
 		do
-			path := relative_assembly_path (t.get_assembly.get_name)
-			type := create {STRING}.make_from_cil (t.get_full_name)
+			path := relative_assembly_path (t.assembly.get_name)
+			type := create {STRING}.make_from_cil (t.full_name)
 			create Result.make (path.count + Classes_path.count + type.count + 4)
 			Result.append (path)
 			Result.append (Classes_path)

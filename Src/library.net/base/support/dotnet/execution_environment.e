@@ -23,7 +23,7 @@ feature -- Access
 		local
 			e: ENVIRONMENT
 		do
-			Result := create {STRING}.make_from_cil (e.get_current_directory)
+			Result := create {STRING}.make_from_cil (e.current_directory)
 		end
 
 	default_shell: STRING is
@@ -118,7 +118,7 @@ feature -- Status setting
 			create si.make_from_file_name (nm)
 			np := feature {SYSTEM_DLL_PROCESS}.start_process_start_info (si)
 			np.wait_for_exit
-			return_code := np.get_exit_code
+			return_code := np.exit_code
 		end
 
 	launch (s: STRING) is

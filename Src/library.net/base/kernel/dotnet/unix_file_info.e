@@ -175,7 +175,7 @@ feature -- Element change
 			date := f.date
 			access_date := f.access_date
 			change_date := f.change_date
-			device := (fi.get_full_name.to_char_array @ 0).code - ('A').code
+			device := (fi.full_name.to_char_array @ 0).code - ('A').code
 			device_type := device
 			links := 1
 			owner_name := "0"

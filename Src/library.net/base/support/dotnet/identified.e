@@ -37,7 +37,7 @@ feature -- Access
 			if reference_list.valid_index (an_id) then
 				wr := reference_list.i_th (an_id).item
 				if wr /= Void then
-					Result ?= wr.get_target
+					Result ?= wr.target
 				end
 			end
 		ensure

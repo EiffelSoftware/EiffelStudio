@@ -57,7 +57,7 @@ feature -- Basic Operations
 					consumer.consume_from_name (aname)
 					
 					if not consumer.successful then
-						set_error (Consume_error, create {STRING}.make_from_cil (aname.get_name))
+						set_error (Consume_error, create {STRING}.make_from_cil (aname.name))
 					else
 						info := cr.info
 		 				info.add_assembly (Consumed_assembly_factory.consumed_assembly_from_name (aname))
@@ -65,7 +65,7 @@ feature -- Basic Operations
 					end
 				else
 					create l_string_tuple.make
-					l_string_tuple.put ("Up-to-date check: '" +	create {STRING}.make_from_cil (aname.get_full_name) + "' has not been modified since last consumption.%N", 1)
+					l_string_tuple.put ("Up-to-date check: '" +	create {STRING}.make_from_cil (aname.full_name) + "' has not been modified since last consumption.%N", 1)
 					status_printer.call (l_string_tuple)
 				end
 				
@@ -84,7 +84,7 @@ feature -- Basic Operations
 					end
 				end
 			else
-				set_error (Assembly_not_found_error, create {STRING}.make_from_cil (aname.get_name))
+				set_error (Assembly_not_found_error, create {STRING}.make_from_cil (aname.name))
 			end
 		rescue
 			retried := True
@@ -131,7 +131,7 @@ feature -- Basic Operations
 					i := i + 1
 				end
 			else
-				set_error (Remove_error, create {STRING}.make_from_cil (aname.get_name))
+				set_error (Remove_error, create {STRING}.make_from_cil (aname.name))
 			end
 		rescue
 			retried := True

@@ -50,7 +50,7 @@ feature -- Access
 	dotnet_name: STRING is
 			-- .NET name
 		do
-			create Result.make_from_cil (internal_method.get_name)
+			create Result.make_from_cil (internal_method.name)
 		end
 	
 	eiffel_name: STRING

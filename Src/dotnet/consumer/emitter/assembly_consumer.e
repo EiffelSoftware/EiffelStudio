@@ -81,7 +81,7 @@ feature -- Basic Operations
 				consume (ass)
 			else
 					-- An error occured
-				set_error (Assembly_not_found_error, create {STRING}.make_from_cil (aname.get_name))
+				set_error (Assembly_not_found_error, create {STRING}.make_from_cil (aname.name))
 			end
 		rescue
 			retried := True
@@ -106,7 +106,7 @@ feature -- Basic Operations
 			-- Set the default value for all conditions where the assembly date cannot be compared
 			Result := False
 				
-			create path_to_assembly.make_from_cil (ass.get_code_base)
+			create path_to_assembly.make_from_cil (ass.code_base)
 			if path_to_assembly.count > 8 and path_to_assembly.substring_index ("file:///", 1) = 1 then
 				path_to_assembly := path_to_assembly.substring (9, path_to_assembly.count)
 				create assembly_file.make (path_to_assembly)
@@ -228,7 +228,7 @@ feature {NONE} -- Implementation
 					list.after
 				loop
 					type_name := list.item
-					create dotnet_name.make_from_cil (type_name.internal_type.get_full_name)
+					create dotnet_name.make_from_cil (type_name.internal_type.full_name)
 					simple_name := formatted_type_name (dotnet_name, 0)
 					from
 						used_names.search (simple_name)
@@ -267,7 +267,7 @@ feature {NONE} -- Implementation
 					type_consumers.put (type_consumer, type_name.eiffel_name)
 					if status_printer /= Void then
 						l_string_tuple.put ("Analyzed " +
-							create {STRING}.make_from_cil (type_name.internal_type.get_full_name), 1)
+							create {STRING}.make_from_cil (type_name.internal_type.full_name), 1)
 						status_printer.call (l_string_tuple)
 					end
 					if status_querier /= Void then

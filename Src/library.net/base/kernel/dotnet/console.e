@@ -38,7 +38,7 @@ feature -- Initialization
 			-- Create an unix standard input file.
 		do
 			make (fn)
-			internal_sread := feature {SYSTEM_CONSOLE}.get_in
+			internal_sread := feature {SYSTEM_CONSOLE}.in
 			set_read_mode
 		end
 
@@ -46,7 +46,7 @@ feature -- Initialization
 			-- Create an unix standard output file.
 		do
 			make (fn)
-			internal_swrite := feature {SYSTEM_CONSOLE}.get_out
+			internal_swrite := feature {SYSTEM_CONSOLE}.out
 			set_write_mode
 		end
 
@@ -54,7 +54,7 @@ feature -- Initialization
 			-- Create an unix standard error file.
 		do
 			make (fn)
-			internal_swrite := feature {SYSTEM_CONSOLE}.get_error
+			internal_swrite := feature {SYSTEM_CONSOLE}.error
 			set_write_mode
 		end
 

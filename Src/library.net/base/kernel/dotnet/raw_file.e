@@ -52,7 +52,7 @@ feature -- Output
 	put_integer, putint (i: INTEGER) is
 			-- Write binary value of `i' at current position.
 		do
-			writer.write_integer_32 (i)
+			writer.write_integer (i)
 		end
 
 	put_boolean, putbool (b: BOOLEAN) is
@@ -135,12 +135,12 @@ feature -- Input
 			last_string.grow (nb_char)
 			last_string.fill_blank
 			create str_area.make (nb_char)
-			new_count := reader.read_integer_8_array_integer_32_integer_32 (str_area, 0, nb_char)
+			new_count := reader.read_integer_8_array_integer_integer (str_area, 0, nb_char)
 			
 			from
 				str_area_index := 0
 			until
-				str_area_index = str_area.get_length
+				str_area_index = str_area.length
 			loop
 				last_string.put (str_area.item (str_area_index).to_character, str_area_index + 1)
 				str_area_index := str_area_index + 1

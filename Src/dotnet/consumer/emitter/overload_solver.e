@@ -42,11 +42,11 @@ feature {NONE} -- Access
 			until
 				args = Void or else i = args.count
 			loop
-				Result.append (create {STRING}.make_from_cil (args.item (i).get_parameter_type.get_name))
+				Result.append (create {STRING}.make_from_cil (args.item (i).parameter_type.name))
 				i := i + 1
 			end
 			if return_type /= Void then
-				Result.append (create {STRING}.make_from_cil (return_type.get_name))
+				Result.append (create {STRING}.make_from_cil (return_type.name))
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -163,10 +163,10 @@ feature -- Basic Operations
 				loop
 					method := method_list.item
 					if eiffel_names.has (method.dotnet_name) then
-						eiffel_names.item (method.dotnet_name).put (method.eiffel_name, key_args (method.internal_method.get_parameters, method.internal_method.get_return_type))					
+						eiffel_names.item (method.dotnet_name).put (method.eiffel_name, key_args (method.internal_method.get_parameters, method.internal_method.return_type))					
 					else
 						create eiffel_args.make (1)
-						eiffel_args.put (method.eiffel_name, key_args (method.internal_method.get_parameters, method.internal_method.get_return_type))
+						eiffel_args.put (method.eiffel_name, key_args (method.internal_method.get_parameters, method.internal_method.return_type))
 						eiffel_names.put (eiffel_args, method.dotnet_name)
 					end
 					method_list.forth
@@ -290,9 +290,9 @@ feature {NONE} -- Internal Statur Setting
 			name: STRING
 		do
 			if get_property then
-				create name.make_from_cil (meth.get_name.substring (4))
+				create name.make_from_cil (meth.name.substring (4))
 			else
-				create name.make_from_cil (meth.get_name)
+				create name.make_from_cil (meth.name)
 			end	
 			method_table.search (name)
 			if not method_table.found then

@@ -47,6 +47,9 @@
 			<item>
 				<bold>EV_FILE_OPEN_DIALOG</bold> - Added features for retrieving multiple file names. The following additional features are now available: 'enable_multiple_selection', `disable_multiple_selection', `multiple_selection_enabled' and `file_names'.
 			</item>
+			<item>
+				<bold>EV_TEXT_COMPONENT</bold> - Removed `is_editable' precondition of `set_caret_position'.
+			</item>
 		</list>
 		<paragraph>
 			<bold>Bug fixes</bold>

@@ -52,19 +52,6 @@ feature -- Access
 	parent_imp: EV_MENU_HOLDER_IMP
 		-- Parent of the current menu.
 
---	count: INTEGER is
---			-- Number of items in the menu.
---		do
---			Result := ev_children.count
---		end
-
---	get_item (index: INTEGER): EV_MENU_ITEM is
---			-- Give the item of the list at the zero-base
---			-- `index'.
---		do
---			Result ?= (ev_children.i_th (index)).interface
---		end
-
 feature -- Status report
 
 	text: STRING is
@@ -96,6 +83,16 @@ feature -- Element change
 				show
 				gtk_object_unref (widget)
 			end
+		end
+
+	clear_items is
+			-- Clear all the items of the list.
+		do
+			-- clear the EiffelVision objects.
+			clear_ev_children
+
+			-- clear the gtk objects.
+			c_gtk_menu_remove_all_items (widget)
 		end
 
 feature {EV_MENU_HOLDER_IMP} -- Implementation
@@ -173,28 +170,6 @@ feature {NONE} -- Implementation
 			ev_children.prune_all (item_imp)
 		end
 	
-feature {EV_MENU_ITEM_IMP, EV_OPTION_BUTTON_IMP} -- Implementation
-
---	ev_children: ARRAYED_LIST [EV_MENU_ITEM_IMP]
---			-- List of the children
-
---	clear_ev_children is
---			-- Clear all the items of the list.
---		local
---			list: ARRAYED_LIST [EV_MENU_ITEM_IMP]
---		do
---			from
---				list := ev_children
---				list.start
---			until
---				list.after
---			loop
---				list.item.interface.remove_implementation
---				list.forth
---			end
---			list.wipe_out
---		end
-
 end -- class EV_MENU_IMP
 
 --|----------------------------------------------------------------

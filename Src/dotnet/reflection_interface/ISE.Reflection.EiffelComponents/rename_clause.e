@@ -1,13 +1,16 @@
 indexing
 	description: "Representation of a rename clause"
 	external_name: "ISE.Reflection.RenameClause"
-	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
+--	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
 
 class
 	RENAME_CLAUSE
 	
 inherit
  	INHERITANCE_CLAUSE
+ 		redefine
+ 			equals
+ 		end
  
 create
  	make,
@@ -67,6 +70,16 @@ feature -- Access
 		indexing
 			description: "Space"
 			external_name: "Space"
+		end
+
+feature -- Status Report
+
+	equals (obj: RENAME_CLAUSE): BOOLEAN is
+		indexing
+			description: "Is Current equals to `obj'?"
+			external_name: "Equals"
+		do
+			Result := source_name.to_lower.equals_string (obj.source_name.to_lower) and target_name.to_lower.equals_string (obj.target_name.to_lower)
 		end
 
 feature -- Status Setting

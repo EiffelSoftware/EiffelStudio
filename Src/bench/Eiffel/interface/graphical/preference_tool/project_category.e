@@ -41,6 +41,8 @@ feature {RESOURCES} -- Initialization
 					rt.get_boolean ("debugger_show_all_callers", False))
 			!! debugger_do_flat_in_breakpoints.make ("debugger_do_flat_in_breakpoints",
 					rt.get_boolean ("debugger_do_flat_in_breakpoints", True))
+			!! graphical_output_disabled.make ("graphical_output_disabled", 
+					rt.get_boolean ("graphical_output_disabled", False));
 		end
 
 feature -- Validation
@@ -68,7 +70,8 @@ feature -- Access
 			Result.extend (bottom_offset);
 			Result.extend (command_bar);
 			Result.extend (format_bar);
-			Result.extend (raise_on_error)
+			Result.extend (raise_on_error);
+			Result.extend (graphical_output_disabled)
 		end
 
 feature -- Resources
@@ -85,6 +88,6 @@ feature -- Resources
 	command_bar: BOOLEAN_RESOURCE;
 	format_bar: BOOLEAN_RESOURCE;
 	raise_on_error: BOOLEAN_RESOURCE;
-
+	graphical_output_disabled: BOOLEAN_RESOURCE;
 
 end -- class PROJECT_CATEGORY

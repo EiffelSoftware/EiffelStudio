@@ -49,6 +49,9 @@ feature -- Access
 						then
 							if l_last_string.item (1) = '[' then
 									-- If it contains some environment variables, they are translated.
+								if l_last_string.item (l_last_string.count) = 'o' then
+									l_last_string.remove (l_last_string.count)
+								end
 								l_last_string.remove (1)
 								l_last_string.remove (l_last_string.count)
 								Result := (create {ENV_INTERP}).interpreted_string (l_last_string)

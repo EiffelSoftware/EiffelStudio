@@ -37,15 +37,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_dimension_count: INTEGER; some_lower_indeces, some_element_counts: ARRAY [INTEGER]) is
+	make (a_dimension_count: INTEGER; some_lower_indices, some_element_counts: ARRAY [INTEGER]) is
 			-- Create `a_dimensional_count' dimensional array
-			-- with lower indeces in each dimension as described by `some_lower_indeces'
+			-- with lower indices in each dimension as described by `some_lower_indices'
 			-- and element count in each dimension as described by `some_element_counts'.
 		require
 			valid_dimension_count: a_dimension_count > 0
-			valid_lower_indeces: some_lower_indeces /= Void and then 
-					some_lower_indeces.count = a_dimension_count and
-					some_lower_indeces.lower = 1
+			valid_lower_indices: some_lower_indices /= Void and then 
+					some_lower_indices.count = a_dimension_count and
+					some_lower_indices.lower = 1
 			valid_element_count: some_element_counts /= Void and then
 					some_element_counts.count = a_dimension_count and
 					some_element_counts.lower = 1 and then
@@ -56,17 +56,17 @@ feature {NONE} -- Initialization
 		do
 			dimension_count := a_dimension_count
 			element_counts := clone (some_element_counts)
-			lower_indeces := clone (some_lower_indeces)
+			lower_indices := clone (some_lower_indices)
 			from
 				i := 1
-				create upper_indeces.make (1, dimension_count)
+				create upper_indices.make (1, dimension_count)
 				a_count := 1
 			variant
 				dimension_count - i + 1
 			until
 				i > dimension_count
 			loop
-				upper_indeces.put (element_counts.item (i) + lower_indeces.item (i) - 1, i)
+				upper_indices.put (element_counts.item (i) + lower_indices.item (i) - 1, i)
 				a_count := a_count * element_counts.item (i)
 				i := i + 1
 			end
@@ -75,32 +75,32 @@ feature {NONE} -- Initialization
 		ensure
 			valid_dimension_count: dimension_count >0
 			valid_element_counts: element_counts /= Void and then element_counts.count = dimension_count
-			valid_lower_indeces: lower_indeces /= Void and then lower_indeces.count = dimension_count
-			valid_upper_indeces: upper_indeces /= Void and then upper_indeces.count = dimension_count
+			valid_lower_indices: lower_indices /= Void and then lower_indices.count = dimension_count
+			valid_upper_indices: upper_indices /= Void and then upper_indices.count = dimension_count
 		end
 
-	make_from_array (a: ARRAY [G]; a_dimension_count: INTEGER; some_lower_indeces, some_element_counts: ARRAY [INTEGER]) is
+	make_from_array (a: ARRAY [G]; a_dimension_count: INTEGER; some_lower_indices, some_element_counts: ARRAY [INTEGER]) is
 			-- Create `a_dimensional_count' dimensional array
-			-- with lower indeces in each dimension as described by `some_lower_indeces'
+			-- with lower indices in each dimension as described by `some_lower_indices'
 			-- and element count in each dimension as described by `some_element_counts'.
 		require
 			valid_dimension_count: a_dimension_count > 0
-			valid_lower_indeces: some_lower_indeces /= Void and then 
-					some_lower_indeces.count = a_dimension_count and
-					some_lower_indeces.lower = 1
+			valid_lower_indices: some_lower_indices /= Void and then 
+					some_lower_indices.count = a_dimension_count and
+					some_lower_indices.lower = 1
 			valid_element_count: some_element_counts /= Void and then
 					some_element_counts.count = a_dimension_count and
 					some_element_counts.lower = 1 and then
 					are_element_counts_valid (some_element_counts)
 			valid_array_size: a.count = total_count (some_element_counts)
 		do
-			make (a_dimension_count, some_lower_indeces, some_element_counts)
+			make (a_dimension_count, some_lower_indices, some_element_counts)
 			area := a.area
 		ensure
 			valid_dimension_count: dimension_count >0
 			valid_element_counts: element_counts /= Void and then element_counts.count = dimension_count
-			valid_lower_indeces: lower_indeces /= Void and then lower_indeces.count = dimension_count
-			valid_upper_indeces: upper_indeces /= Void and then upper_indeces.count = dimension_count
+			valid_lower_indices: lower_indices /= Void and then lower_indices.count = dimension_count
+			valid_upper_indices: upper_indices /= Void and then upper_indices.count = dimension_count
 		end
 
 feature -- Initialization
@@ -119,7 +119,7 @@ feature -- Initialization
 			until
 				i > dimension_count
 			loop
-				an_index.put (lower_indeces.item (i), i)
+				an_index.put (lower_indices.item (i), i)
 				i := i + 1
 			end
 
@@ -135,12 +135,12 @@ feature -- Initialization
 
 feature -- Access
 
-	item (some_indeces: ARRAY [INTEGER]): G is
-			-- Entry at `some_indeces'
+	item (some_indices: ARRAY [INTEGER]): G is
+			-- Entry at `some_indices'
 		require
-			valid_indeces: are_indeces_valid (some_indeces)
+			valid_indices: are_indices_valid (some_indices)
 		do
-			Result := array_item (flat_index (some_indeces))
+			Result := array_item (flat_index (some_indices))
 		end
 
 feature -- Measurement
@@ -151,11 +151,11 @@ feature -- Measurement
 	element_counts: ARRAY [INTEGER]
 			-- Element count in each dimension
 
-	lower_indeces: ARRAY [INTEGER]
+	lower_indices: ARRAY [INTEGER]
 			-- Lower indedeces in each dimension
 
-	upper_indeces: ARRAY [INTEGER] 
-			-- Upper indeces in each dimension
+	upper_indices: ARRAY [INTEGER] 
+			-- Upper indices in each dimension
 
 feature -- Status report
 
@@ -183,13 +183,13 @@ feature -- Status report
 			end
 		end
 
-	are_indeces_valid (some_indeces: ARRAY [INTEGER]): BOOLEAN is
-			-- Are `some_indeces' valid indeces?
+	are_indices_valid (some_indices: ARRAY [INTEGER]): BOOLEAN is
+			-- Are `some_indices' valid indices?
 		local
 			i: INTEGER
 		do
 			Result := True
-			if some_indeces = Void or else some_indeces.count /= dimension_count then
+			if some_indices = Void or else some_indices.count /= dimension_count then
 				Result := False
 			else
 				from
@@ -199,8 +199,8 @@ feature -- Status report
 				until
 					i > dimension_count or not Result
 				loop
-					if some_indeces.item (i) < lower_indeces.item (i) or
-							some_indeces.item (i) > upper_indeces.item (i) then
+					if some_indices.item (i) < lower_indices.item (i) or
+							some_indices.item (i) > upper_indices.item (i) then
 						Result := False
 					end
 					i := i + 1
@@ -208,13 +208,13 @@ feature -- Status report
 			end
 		end
 
-	are_indeces_large_enough (some_indeces: ARRAY [INTEGER]): BOOLEAN is
-			-- Are `some_indeces' large enough?
+	are_indices_large_enough (some_indices: ARRAY [INTEGER]): BOOLEAN is
+			-- Are `some_indices' large enough?
 		local
 			i: INTEGER
 		do
 			Result := True
-			if some_indeces = Void or else some_indeces.count /= dimension_count then
+			if some_indices = Void or else some_indices.count /= dimension_count then
 				Result := False
 			else
 				from
@@ -224,7 +224,7 @@ feature -- Status report
 				until
 					i > dimension_count or not Result
 				loop
-					if some_indeces.item (i) < lower_indeces.item (i) then
+					if some_indices.item (i) < lower_indices.item (i) then
 						Result := False
 					end
 					i := i + 1
@@ -269,33 +269,33 @@ feature -- Status report
 			until
 				i > dimension_count or not Result
 			loop
-				Result := upper_indeces.item (i) - lower_indeces.item (i) + 1 = element_counts.item (i)
+				Result := upper_indices.item (i) - lower_indices.item (i) + 1 = element_counts.item (i)
 				i := i + 1
 			end
 		end
 
 feature -- Element change
 
-	put (v: like item; some_indeces: ARRAY [INTEGER]) is
-			-- Assign item `v' at indeces `some_indeces'.
+	put (v: like item; some_indices: ARRAY [INTEGER]) is
+			-- Assign item `v' at indices `some_indices'.
 		require
-			valid_indeces: are_indeces_valid (some_indeces)
+			valid_indices: are_indices_valid (some_indices)
 		do
-			array_put (v, flat_index (some_indeces))
+			array_put (v, flat_index (some_indices))
 		ensure
-			element_inserted: item (some_indeces) = v
+			element_inserted: item (some_indices) = v
 		end
 
-	force (v: like item; some_indeces: ARRAY [INTEGER]) is
-			-- Assign item `v' at indeces `some_indeces'.
+	force (v: like item; some_indices: ARRAY [INTEGER]) is
+			-- Assign item `v' at indices `some_indices'.
 			-- Resize if necesary.
 		require
-			valid_indeces: are_indeces_large_enough (some_indeces)
+			valid_indices: are_indices_large_enough (some_indices)
 		do
-			resize (some_indeces)
-			put (v, some_indeces)
+			resize (some_indices)
+			put (v, some_indices)
 		ensure
-			element_inserted: item (some_indeces) = v
+			element_inserted: item (some_indices) = v
 		end
 
 feature -- Removal
@@ -306,30 +306,30 @@ feature -- Removal
 			dimension_count := 0
 			upper := 0
 			element_counts := Void
-			lower_indeces := Void
-			upper_indeces := Void
+			lower_indices := Void
+			upper_indices := Void
 			Precursor
 		end
 
 feature -- Resizing
 
-	resize (n_upper_indeces: ARRAY [INTEGER]) is
-			-- Rearrange array so that it can accommodate `new_upper_indeces'
+	resize (n_upper_indices: ARRAY [INTEGER]) is
+			-- Rearrange array so that it can accommodate `new_upper_indices'
 			-- without losing any previously entered items
-			-- or changing their indeces;
+			-- or changing their indices;
 			-- do nothing if possible.
 		require
-			are_indeces_large_enough (n_upper_indeces)
+			are_indices_large_enough (n_upper_indices)
 		local
 			i, an_upper: INTEGER
-			new_upper_indeces, new_element_counts, an_index: ARRAY [INTEGER]
+			new_upper_indices, new_element_counts, an_index: ARRAY [INTEGER]
 			new: like Current
 			need_resize: BOOLEAN
 		do
 			from
 				i := 1
 				an_upper := 1
-				create new_upper_indeces.make (1, dimension_count)
+				create new_upper_indices.make (1, dimension_count)
 				create new_element_counts.make (1, dimension_count)
 				create an_index.make (1, dimension_count)
 			variant
@@ -337,22 +337,22 @@ feature -- Resizing
 			until
 				i > dimension_count
 			loop
-				if n_upper_indeces.item (i) > upper_indeces.item (i) then
-					new_upper_indeces.put (n_upper_indeces.item (i), i)
+				if n_upper_indices.item (i) > upper_indices.item (i) then
+					new_upper_indices.put (n_upper_indices.item (i), i)
 					new_element_counts.put 
-						(new_upper_indeces.item (i) - lower_indeces.item (i) + 1, i)
+						(new_upper_indices.item (i) - lower_indices.item (i) + 1, i)
 					need_resize := True
 				else
-					new_upper_indeces.put (upper_indeces.item (i), i)
+					new_upper_indices.put (upper_indices.item (i), i)
 					new_element_counts.put (element_counts.item (i), i)
 				end
 				an_upper := an_upper * new_element_counts.item (i)
-				an_index.put (lower_indeces.item (i), i)
+				an_index.put (lower_indices.item (i), i)
 				i := i + 1
 			end
 
 			if need_resize then
-				create new.make (dimension_count, lower_indeces, new_upper_indeces)
+				create new.make (dimension_count, lower_indices, new_upper_indices)
 
 				from
 					exhausted := False
@@ -362,7 +362,7 @@ feature -- Resizing
 					new.put (item (an_index), an_index)
 					next_index (an_index)
 				end
-				upper_indeces := new_upper_indeces
+				upper_indices := new_upper_indices
 				element_counts := new_element_counts
 				upper := an_upper
 				area := new.area
@@ -371,10 +371,10 @@ feature -- Resizing
 
 feature {NONE} -- Implementation
 
-	flat_index (some_indeces: ARRAY [INTEGER]): INTEGER is
+	flat_index (some_indices: ARRAY [INTEGER]): INTEGER is
 			-- Flattened index
 		require
-			valid_indeces: are_indeces_valid (some_indeces) 
+			valid_indices: are_indices_valid (some_indices) 
 		local
 			i, j, inter_dim: INTEGER
 		do
@@ -398,16 +398,16 @@ feature {NONE} -- Implementation
 					j := j + 1
 				end
 				Result := Result + 
-						(some_indeces.item (i) - lower_indeces.item (i)) * inter_dim
+						(some_indices.item (i) - lower_indices.item (i)) * inter_dim
 				i := i + 1
 			end
 		end
  
 
-	next_index (some_indeces: ARRAY [INTEGER]) is
+	next_index (some_indices: ARRAY [INTEGER]) is
 			-- Generate next index
 		require
-			valid_indeces: are_indeces_valid (some_indeces)
+			valid_indices: are_indices_valid (some_indices)
 		local
 			new_index: BOOLEAN
 			i: INTEGER
@@ -420,12 +420,12 @@ feature {NONE} -- Implementation
 			until
 				i = 0 or new_index
 			loop
-				if some_indeces.item (i) < upper_indeces.item (i) then
-					some_indeces.put (some_indeces.item (i) + 1, i)
+				if some_indices.item (i) < upper_indices.item (i) then
+					some_indices.put (some_indices.item (i) + 1, i)
 					new_index := True
 					exhausted := False
 				else
-					some_indeces.put (lower_indeces.item (i), i)
+					some_indices.put (lower_indices.item (i), i)
 					i := i - 1
 				end
 			end
@@ -435,8 +435,8 @@ feature {NONE} -- Implementation
 			-- Is structure exhausted?
 
 invariant
-	consistent_upper_indeces: upper_indeces.count = dimension_count
-	consistent_lower_indeces: lower_indeces.count = dimension_count
+	consistent_upper_indices: upper_indices.count = dimension_count
+	consistent_lower_indices: lower_indices.count = dimension_count
 	consistent_element_counts: are_element_counts_consistent
 	consistent_size: capacity = total_count (element_counts)
 	non_negative_count: count >= 0

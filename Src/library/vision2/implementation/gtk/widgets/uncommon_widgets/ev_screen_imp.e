@@ -73,25 +73,12 @@ feature -- Basic operation
 			a_event_base, a_error_base, a_maj_ver, a_min_ver: INTEGER
 		do
 			Result := C.x_test_query_extension (
-					x_display, 
+					C.gdk_display, 
 					$a_event_base,
 					$a_error_base,
 					$a_maj_ver,
 					$a_min_ver)
 			
-		end
-
-	x_display: POINTER is
-			-- Returns a pointer to the opne x display
-		local
-			a_display: POINTER
-			str: STRING
-		do
-			a_display := C.gdk_display
-			a_display := C.x_display_name (a_display)
-			create str.make_from_c (a_display)
-			print (str + "%N")
-			Result := C.x_open_display (a_display)
 		end
 
 	set_pointer_position (a_x, a_y: INTEGER) is
@@ -103,12 +90,9 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_display := x_display
-			--C.x_test_grab_control (a_display, True)
-			a_success_flag := C.x_test_fake_motion_event (a_display, -1, a_x, a_y, 0)
-			--C.x_test_grab_control (a_display, False)
+			a_success_flag := C.x_test_fake_motion_event (C.gdk_display, -1, a_x, a_y, 0)
 			check
-				pointer_set: a_success_flag
+				pointer_position_set: a_success_flag
 			end		
 		end
 
@@ -120,9 +104,9 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_success_flag := C.x_test_fake_button_event (x_display, a_button, True, 1000)
+			a_success_flag := C.x_test_fake_button_event (C.gdk_display, a_button, True, 1000)
 			check
-				pointer_set: a_success_flag
+				fake_pointer_button_press_success: a_success_flag
 			end		
 		end
 
@@ -134,9 +118,9 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_success_flag := C.x_test_fake_button_event (x_display, a_button, True, 0)
+			a_success_flag := C.x_test_fake_button_event (C.gdk_display, a_button, True, 0)
 			check
-				pointer_set: a_success_flag
+				fake_pointer_button_release_success: a_success_flag
 			end		
 		end
 
@@ -144,13 +128,15 @@ feature -- Basic operation
 			-- Fake key `a_key' press.
 		local
 			a_success_flag: BOOLEAN
+			a_gtk_key_code: INTEGER
 		do
 			check
 				x_test_capable: x_test_capable
 			end
-			a_success_flag := C.x_test_fake_key_event (x_display, a_key.code, True, 0)
+			a_gtk_key_code := key_constants.key_code_to_gtk (a_key.code)
+			a_success_flag := C.x_test_fake_key_event (C.gdk_display, a_gtk_key_code, True, 0)
 			check
-				pointer_set: a_success_flag
+				fake_key_press_success: a_success_flag
 			end		
 		end
 
@@ -158,14 +144,27 @@ feature -- Basic operation
 			-- Fake key `a_key' release.
 		local
 			a_success_flag: BOOLEAN
+			a_gtk_key_code: INTEGER
 		do
 			check
 				x_test_capable: x_test_capable
 			end
-			a_success_flag := C.x_test_fake_key_event (x_display, a_key.code, False, 0)
+			a_gtk_key_code := key_constants.key_code_to_gtk (a_key.code)
+			a_success_flag := C.x_test_fake_key_event (
+								C.gdk_display,
+								a_gtk_key_code,
+								False,
+								0
+					)
 			check
-				pointer_set: a_success_flag
+				fake_key_release_success: a_success_flag
 			end		
+		end
+
+	key_constants: EV_GTK_KEY_CONVERSION is
+			-- Utilities for converting X key codes.
+		do
+			create Result
 		end
 
 feature -- Measurement
@@ -215,6 +214,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/17 23:41:53  king
+--| Correcly implemented all XTest features
+--|
 --| Revision 1.11  2000/04/14 21:18:34  oconnor
 --| commented out x_test_grab_control, not working
 --|

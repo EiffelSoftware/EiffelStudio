@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 			previous_selection := selected_items
 			
 			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+			real_signal_connect_after (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
 		end
 
 	call_selection_action_sequences is
@@ -1004,6 +1004,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			a_pixbuf := pixmap_imp.pixbuf_from_drawable
 			a_list_iter := ev_children.i_th (a_row).list_iter.item
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_pixbuf (list_store, a_list_iter, 0, a_pixbuf)
+			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 		end
 
 	remove_row_pixmap (a_row: INTEGER) is

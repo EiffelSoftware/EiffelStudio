@@ -690,6 +690,7 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			pixmap_imp ?= a_pixmap.implementation
 			a_pixbuf := pixmap_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_set_pixbuf (tree_store, a_tree_node_imp.list_iter.item, 0, a_pixbuf)
+			feature {EV_GTK_EXTERNALS}.object_unref (a_pixbuf)
 		end
 
 	tree_store: POINTER

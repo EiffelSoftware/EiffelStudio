@@ -282,7 +282,7 @@ feature {NONE} -- Keywords
 	ti_False_keyword: KEYWORD_TEXT is
 			-- "false" keyword
 		once
-			!!Result.make ("false")
+			!!Result.make ("False")
 		end;
 
 	ti_Feature_keyword: KEYWORD_TEXT is
@@ -450,7 +450,7 @@ feature {NONE} -- Keywords
 	ti_True_keyword: KEYWORD_TEXT is
 			-- "true" keyword
 		once
-			!!Result.make ("true")
+			!!Result.make ("True")
 		end;
 
 	ti_Undefine_keyword: KEYWORD_TEXT is

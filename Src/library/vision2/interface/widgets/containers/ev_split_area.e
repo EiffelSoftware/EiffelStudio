@@ -394,20 +394,11 @@ feature {NONE} -- Implementation
 
 	splitter_position_from_screen_x_or_y (a_x, a_y: INTEGER): INTEGER is
 			-- Return splitter position given screen `a_y'.
-		local
-			mini, maxi: INTEGER
 		do
 			Result := select_from (a_x, a_y) - offset -
 				select_from (x_origin, y_origin)
-			mini := minimum_split_position
-			if Result < mini then
-				Result := mini
-			else
-				maxi := maximum_split_position
-				if Result > maxi then
-					Result := maxi
-				end
-			end
+			Result := Result.max (minimum_split_position)
+			Result := Result.min (maximum_split_position)
 		end
 
 	offset: INTEGER
@@ -437,8 +428,8 @@ feature {NONE} -- Implementation
 				scr_y - a_y,
 				scr_y - a_y - first_cell.height)
 			sep.enable_capture
-			sep.pointer_motion_actions.extend (~on_motion)
-			sep.pointer_button_release_actions.extend (~on_release)
+			sep.pointer_motion_actions.put_front (~on_motion)
+			sep.pointer_button_release_actions.put_front (~on_release)
 			draw_line (splitter_position_from_screen_x_or_y (scr_x, scr_y))
 		end
 
@@ -462,8 +453,10 @@ feature {NONE} -- Implementation
 				splitter_position_from_screen_x_or_y (scr_x, scr_y)
 			)
 			sep.disable_capture
-			sep.pointer_motion_actions.wipe_out
-			sep.pointer_button_release_actions.wipe_out
+			sep.pointer_motion_actions.go_i_th (1)
+			sep.pointer_motion_actions.remove
+			sep.pointer_button_release_actions.go_i_th (1)
+			sep.pointer_button_release_actions.remove
 		end
 
 feature {NONE} -- Implementation
@@ -480,24 +473,21 @@ feature {NONE} -- Implementation
 	draw_line (a_position: INTEGER) is
 			-- Draw line on `a_position'.
 		do
-			scr.draw_segment (
-				select_from (
+			if select_from (0, 1) = 0 then
+				scr.draw_segment (
 					a_position + x_origin + half_sep_dimension,
-					x_origin
-				),
-				select_from (
 					y_origin,
-					a_position + y_origin + half_sep_dimension
-				),
-				select_from (
 					a_position + x_origin + half_sep_dimension,
-					x_origin + sep.width
-				),
-				select_from (
-					y_origin + sep.height,
+					y_origin + sep.height
+				)
+			else
+				scr.draw_segment (
+					x_origin,
+					a_position + y_origin + half_sep_dimension,
+					x_origin + sep.width,
 					a_position + y_origin + half_sep_dimension
 				)
-			)
+			end
 			previous_split_position := a_position
 		end
 
@@ -564,6 +554,10 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/25 21:10:01  brendel
+--| Improved readibility of draw_lineand splitter_position_from_x_or_y.
+--| Improved action sequence handling of separator.
+--|
 --| Revision 1.32  2000/04/21 22:48:48  bonnard
 --| Fixed `maximum_split_position'.
 --| Changed `splitter_position_from_screen_x_or_y' to improve speed.

@@ -1142,7 +1142,7 @@ rt_public void reclaim(void)
 #if !defined HAS_SMART_MMAP && !defined HAS_SBRK
 		eif_free (c);	/* Previously allocated with eif_malloc. */
 #else
-		xfree ((EIF_REFERENCE) c);		/* Previously allocated with mmap or sbrk. */
+		eif_rt_xfree ((EIF_REFERENCE) c);		/* Previously allocated with mmap or sbrk. */
 #endif	/* !HAS_SMART_MMAP && !!HAS_SBRK */
 	}
 	cklst.ck_head = (struct chunk *) 0;
@@ -2493,7 +2493,7 @@ rt_private void clean_zones(void)
 			/* The 'to' space is empty -- Free the 'from' space but keep the
 			 * to zone for next scavenge (it's so hard to find). Before
 			 * freeing the scavenge zone, do not forget to set the B_BUSY
-			 * flag for xfree. The number of 'to' zones allocated is also
+			 * flag for eif_rt_xfree. The number of 'to' zones allocated is also
 			 * decreased by one, since its allocation is compensated by the
 			 * release of the from space (well, sort of).
 			 */
@@ -2595,16 +2595,16 @@ rt_private void split_to_block(void)
 	if (size != 0) {		/* Some objects were scavengend */
 
 		/* I'm faking a big block which will hold all the scavenged object,
-		 * so that split_block() will be fooled and correctly split the block
+		 * so that eif_rt_split_block() will be fooled and correctly split the block
 		 * after the last scavenged object--RAM. In fact, I'm restoring the
 		 * state the space was in when it was selected for a scavenge.
 		 * The malloc flags attached to the 'to' zone are restored. The two
-		 * which matters are B_LAST and B_CTYPE (needed by split_block).
+		 * which matters are B_LAST and B_CTYPE (needed by eif_rt_split_block).
 		 */
 
 		old_size = base->ov_size;			/* Save size of 1st block */
 		base->ov_size = ps_to.sc_flgs;		/* Malloc flags for whole space */
-		(void) split_block(base, size - OVERHEAD);
+		(void) eif_rt_split_block(base, size - OVERHEAD);
 		base->ov_size = old_size;			/* Restore 1st block integrity */
 
 #ifdef DEBUG
@@ -2615,7 +2615,7 @@ rt_private void split_to_block(void)
 		flush;
 #endif
 
-		/* Update accounting information: the split_block() routine only update
+		/* Update accounting information: the eif_rt_split_block() routine only update
 		 * the overhead usage, because it assumes the block it is splitting is
 		 * still "used", so the split only appears to add overhead. This is not
 		 * the case here. We also free some memory which was accounted as used.
@@ -2771,7 +2771,7 @@ rt_private int sweep_from_space(void)
 		/* Whenever we reach a "first" block which will be the first one in the
 		 * coalesced block, we MUST make sure it is marked B_BUSY. In the event
 		 * the whole coalesced block would be freed (e.g. when we reach a C
-		 * block), xfree() would be called and that would be a no-op if no
+		 * block), eif_rt_xfree() would be called and that would be a no-op if no
 		 * B_BUSY mark was carried. Of course, the 'flags' variable, which is
 		 * carrying the original version of the malloc flags is left
 		 * undisturbed.
@@ -2895,7 +2895,7 @@ rt_private int sweep_from_space(void)
 				return 0;					/* 'from' may become next 'to' */
 			else {							/* At least one C block */
 				zone->ov_size |= B_LAST;	/* Ensure malloc sees it as last */
-				xfree((EIF_REFERENCE) (zone + 1));	/* Back to free list */
+				eif_rt_xfree((EIF_REFERENCE) (zone + 1));	/* Back to free list */
 				return -1;					/* Space is spoilt */
 			}
 		}
@@ -2914,7 +2914,7 @@ rt_private int sweep_from_space(void)
 		 * This routine is a mess and needs rewriting--RAM.
 		 */
 
-		xfree((EIF_REFERENCE) (zone + 1));		/* Put block back to free list */
+		eif_rt_xfree((EIF_REFERENCE) (zone + 1));		/* Put block back to free list */
 		zone = next;					/* Reset coalescing base */
 	}
 	/* NOTREACHED */
@@ -3814,7 +3814,7 @@ rt_private EIF_REFERENCE gscavenge(EIF_REFERENCE root)
 			ret = epush (&rem_set, new);
 			if (ret == -1) {	/* Cannot record it */
 				gen_scavenge |= GS_STOP;		/* Mark failure */
-				xfree(new);						/* Back where we found it */
+				eif_rt_xfree(new);						/* Back where we found it */
 				return scavenge(root, &sc_to);	/* Simple scavenge */
 			}
 
@@ -4467,7 +4467,7 @@ rt_shared void gfree(register union overhead *zone)
 	flush;
 #endif
 
-	xfree((EIF_REFERENCE) (zone + 1));		/* Put object back to free-list */
+	eif_rt_xfree((EIF_REFERENCE) (zone + 1));		/* Put object back to free-list */
 }
 
 #endif
@@ -4587,7 +4587,7 @@ rt_shared EIF_REFERENCE *st_alloc(register struct stack *stk, register int size)
 	register3 EIF_REFERENCE *arena;				/* Address for the arena */
 	register4 struct stchunk *chunk;	/* Address of the chunk */
 
-	chunk = (struct stchunk *) xmalloc(size * REFSIZ, C_T, GC_OFF);
+	chunk = (struct stchunk *) eif_rt_xmalloc(size * REFSIZ, C_T, GC_OFF);
 	if (chunk == (struct stchunk *) 0)
 		return (EIF_REFERENCE *) 0;		/* Malloc failed for some reason */
 
@@ -4618,7 +4618,7 @@ rt_shared int st_extend(register struct stack *stk, register int size)
 	register3 EIF_REFERENCE *arena;				/* Address for the arena */
 	register4 struct stchunk *chunk;	/* Address of the chunk */
 
-	chunk = (struct stchunk *) xmalloc(size * REFSIZ, C_T, GC_OFF);
+	chunk = (struct stchunk *) eif_rt_xmalloc(size * REFSIZ, C_T, GC_OFF);
 	if (chunk == (struct stchunk *) 0)
 		return -1;		/* Malloc failed for some reason */
 
@@ -4682,7 +4682,7 @@ rt_shared void st_wipe_out(register struct stchunk *chunk)
 		chunk != (struct stchunk *) 0;
 		chunk = next, next = chunk ? chunk->sk_next : chunk
 	)
-		xfree((EIF_REFERENCE) chunk);
+		eif_rt_xfree((EIF_REFERENCE) chunk);
 }
 
 rt_public void st_reset(register1 struct stack *stk)
@@ -4697,8 +4697,8 @@ rt_public void st_reset(register1 struct stack *stk)
 	register3 struct stchunk *n;	/* Save next before freeing chunk */
 
 	for (k = stk->st_hd; k; k = n) {
-		n = k->sk_next;		/* This is not necessary given current xfree() */
-		xfree((EIF_REFERENCE) k);	/* But how do I know implementation won't change? */
+		n = k->sk_next;		/* This is not necessary given current eif_rt_xfree() */
+		eif_rt_xfree((EIF_REFERENCE) k);	/* But how do I know implementation won't change? */
 	}
 
 	memset (stk, 0, sizeof(struct stack));

@@ -101,7 +101,7 @@ feature -- Type check, byte code and dead code removal
 			else
 					-- Export validity
 				last_infix := l_infix
-				if not l_infix.is_exported_for (l_class) then
+				if not (context.is_ignoring_export or l_infix.is_exported_for (l_class)) then
 					create l_vuex
 					context.init_error (l_vuex)
 					l_vuex.set_static_class (l_class)

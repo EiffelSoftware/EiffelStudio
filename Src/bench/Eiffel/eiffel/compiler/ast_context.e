@@ -126,6 +126,10 @@ feature -- Access
 				feature {DEPEND_UNIT}.is_in_invariant_flag
 		end
 
+	is_ignoring_export: BOOLEAN
+			-- Do we ignore export validity for feature access ?
+			-- Useful for expression evaluation
+
 	level3: BOOLEAN
 			-- Level for analysis of feature rescue clause: usefull for
 			-- validating `retry' instruction
@@ -231,6 +235,14 @@ feature -- Setting
 			end
 		ensure
 			is_checking_invariant_set: is_checking_invariant = b
+		end
+
+	set_is_ignoring_export (b: BOOLEAN) is
+			-- Assign `b' to `is_ignoring_export'.
+		do
+			is_ignoring_export := b
+		ensure
+			is_ignoring_export_set: is_ignoring_export = b
 		end
 
 	set_level3 (b: BOOLEAN) is

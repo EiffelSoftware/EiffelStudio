@@ -101,7 +101,7 @@ feature -- Type check, byte code and dead code removal
 		require
 			good_argument: feat /= Void
 		do
-			Result := feat.is_exported_for (context.current_class)
+			Result := Context.is_ignoring_export or feat.is_exported_for (context.current_class)
 		end
 
 	access_type: TYPE_A is

@@ -39,8 +39,17 @@ feature -- Access
 				line_entry_type := single_line_entry
 			end
 			initialize_attribute_editor (Result)
-				create text_entry.make (Current, Result, text_string, Gb_ev_textable_text, Gb_ev_textable_text_tooltip,
+			create text_entry.make (Current, Result, text_string, Gb_ev_textable_text, Gb_ev_textable_text_tooltip,
 				agent set_text (?), agent validate_true (?), line_entry_type)
+				
+				-- Menu separators have the textable features not exported, to prevent
+				-- calling, so if the obejct represented by `Current' is a menu separator,
+				-- we must hide it, to prevent text modification. It must be created, and hidden
+				-- to fulfill postconditions on this routine.
+			if object.type.is_equal ("EV_MENU_SEPARATOR") then
+				text_entry.hide
+			end
+				
 			update_attribute_editor
 
 			disable_all_items (Result)

@@ -21,6 +21,12 @@
 extern "C" {
 #endif
 
+#ifndef EIF_THREADS
+#ifdef ISE_GC
+RT_LNK struct stack hec_stack;	/* Indirection table "hector" */
+#endif
+#endif
+
 /* Macros to remap cryptic names to meaningful ones. Note that the
  * interface defined in ETL uses the remaped names. Only this interface
  * is guaranteed.

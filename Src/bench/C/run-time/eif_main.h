@@ -23,6 +23,11 @@
 extern "C" {
 #endif
 
+#ifndef EIF_THREADS
+RT_LNK EIF_REFERENCE *EIF_once_values;	/* Once values for a thread */
+RT_LNK int in_assertion;	/* Value of the assertion level */
+#endif
+
 RT_LNK long EIF_once_count;			/* Nr. of once routines */
 RT_LNK int scount;					/* Maximum dtype */
 RT_LNK void eif_alloc_init(void);

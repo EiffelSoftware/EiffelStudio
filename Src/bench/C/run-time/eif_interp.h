@@ -22,6 +22,13 @@
 extern "C" {
 #endif
 
+#ifndef EIF_THREADS
+#ifdef WORKBENCH
+RT_LNK struct opstack cop_stack;	/* Operational stack */
+RT_LNK unsigned char *IC;			/* Interpreter Counter (like PC on a CPU) */
+#endif
+#endif
+
 /* Macros for easy reference */
 #define it_char		itu.itu_char
 #define it_int8		itu.itu_int8

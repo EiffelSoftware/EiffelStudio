@@ -22,9 +22,9 @@ doc:<file name="local.c" header="eif_local.h" version="$Id$" summary="Handling o
 #include "eif_urgent.h"
 #include "eif_local.h"
 #include "eif_hector.h"
-#include "eif_sig.h"
+#include "rt_sig.h"
 #ifdef WORKBENCH
-#include "eif_debug.h"
+#include "rt_debug.h"
 #endif
 
 #include <string.h>

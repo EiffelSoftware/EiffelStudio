@@ -29,7 +29,7 @@
 #include "ewbio.h"
 #include "stack.h"
 #include "idrf.h"
-#include "eif_debug.h"
+#include "rt_debug.h"
 #include "eif_except.h"
 #include "server.h"
 #include "rt_interp.h"
@@ -40,7 +40,6 @@
 #include "eif_eiffel.h"
 #include "rt_interp.h"
 #include "eif_memory.h"
-#include "eif_debug.h"
 #include "x2c.h"	/* For macro LNGPAD */
 #include "proto.h"
 #include "rt_assert.h"

@@ -17,7 +17,7 @@
 
 #include "eif_config.h"
 #include "eif_portable.h"
-#include "eif_debug.h"
+#include "rt_debug.h"
 #include "rt_interp.h"
 #include "rt_except.h"
 #include "eif_garcol.h"

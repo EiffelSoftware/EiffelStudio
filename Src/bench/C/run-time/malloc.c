@@ -45,7 +45,7 @@ doc:<file name="malloc.c" header="eif_malloc.h" version="$Id$" summary="Memory a
 #include "eif_plug.h"
 #include "x2c.h"			/* For macro LNGPAD */
 #include "eif_local.h"			/* For epop() */
-#include "eif_sig.h"
+#include "rt_sig.h"
 #include "eif_err_msg.h"
 #ifdef ISE_GC
 #endif

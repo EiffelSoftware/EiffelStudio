@@ -13,10 +13,14 @@
 #ifndef _rt_except_h_
 #define _rt_except_h_
 
-#include <eif_except.h>
+#include "eif_except.h"
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifndef EIF_THREADS
+extern struct xstack eif_trace;       /* Unsolved exception trace */
 #endif
 
 #ifdef EIF_WIN32

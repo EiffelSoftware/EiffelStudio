@@ -10,7 +10,7 @@ doc:<file name="object_id.c" header="eif_object_id.h" version="$Id$" summary="Ob
 #include "eif_macros.h"
 #include "eif_except.h"
 #include "eif_hector.h"
-#include "eif_sig.h"
+#include "rt_sig.h"
 #include "rt_garcol.h"
 #include "rt_object_id.h"
 #include "rt_assert.h"

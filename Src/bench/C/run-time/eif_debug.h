@@ -22,6 +22,12 @@
 extern "C" {
 #endif
 
+#ifndef EIF_THREADS
+#ifdef WORKBENCH
+RT_LNK struct dbinfo d_data;	/* Global debugger information */
+#endif
+#endif
+
 /* Execution status */
 #define DX_CONT		0			/* Continue until next breakpoint */
 #define DX_STEP		1			/* Advance one step */

@@ -26,6 +26,14 @@
 extern "C" {
 #endif
 
+#ifndef EIF_THREADS
+#ifdef ISE_GC
+RT_LNK struct stack loc_stack;	/* Local indirection stack */
+RT_LNK struct stack loc_set;	/* Local variable stack */
+#endif
+RT_LNK struct stack once_set;	/* Once functions */
+#endif
+
 /*
  * Eiffel flags -- edit with care.
  */

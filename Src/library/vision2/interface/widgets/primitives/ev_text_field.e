@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 	"EiffelVision text field. To query single line of text from the user"
 	status: "See notice at end of class"
@@ -11,7 +10,6 @@ class
 	EV_TEXT_FIELD
 
 inherit
-
 	EV_TEXT_COMPONENT
 		redefine
 			make,
@@ -20,7 +18,6 @@ inherit
 
 	EV_BAR_ITEM
 		redefine
-			make,
 			implementation
 		end
 
@@ -41,9 +38,9 @@ feature {NONE} -- Initialization
 feature -- Event - command association
 	
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Make 'cmd' the executed commands when the text
-			-- field is activated, ie when the user press the
-			-- enter key.
+			-- Add 'cmd' to the list of commands to be executed 
+			-- when the text field is activated, ie when the user
+			-- press the enter key.
 		require
 			exists: not destroyed
 			valid_command: cmd /= Void

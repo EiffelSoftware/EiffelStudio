@@ -15,14 +15,14 @@ class
 	EV_TOGGLE_BUTTON
 
 inherit
-
 	EV_BUTTON
 		redefine
 			make, make_with_text, implementation
 		end
 	
 creation
-	make, make_with_text
+	make,
+	make_with_text
 	
 feature {NONE} -- Initialization
 
@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 		-- Empty button
 		do
 			!EV_TOGGLE_BUTTON_IMP!implementation.make (par)
---			implementation.initialize (Current)
 			widget_make (par)
 		end	
 	
@@ -39,7 +38,6 @@ feature {NONE} -- Initialization
 			-- text label
 		do
 			!EV_TOGGLE_BUTTON_IMP!implementation.make_with_text (par, txt)
---			implementation.initialize (Current)
 			widget_make (par)
 		end			
 		
@@ -79,15 +77,14 @@ feature -- Status setting
 	
 feature -- Event - command association
 	
-	add_toggle_command ( command: EV_COMMAND; 
-			     arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the button is toggled
+	add_toggle_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add 'cmd' to the list of commands to be executed
+			-- when the button is toggled.
 		require
-			valid_command: command /= Void
+			exists: not destroyed
+			valid_command: cmd /= Void
 		do
-			implementation.add_toggle_command ( command, 
-							    arguments )
+			implementation.add_toggle_command (cmd, arg)
 		end	
 
 feature {NONE} -- Implementation

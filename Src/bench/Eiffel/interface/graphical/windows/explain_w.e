@@ -15,14 +15,16 @@ inherit
 			tool_name, hole, stone_type, 
 			process_any, build_menus,
 			update_boolean_resource,
-			update_integer_resource
+			update_integer_resource,
+			build_toolbar_menu
 		end;
 	BAR_AND_TEXT
 		redefine
 			build_format_bar, build_text_windows,
 			tool_name,  hole, stone_type, process_any, build_menus,
 			update_boolean_resource,
-			update_integer_resource
+			update_integer_resource,
+			build_toolbar_menu
 		end;
 	EB_CONSTANTS
 
@@ -105,6 +107,7 @@ feature -- Graphical Interface
 			!! menu_bar.make (new_name, global_form);
 			!! file_menu.make ("File", menu_bar);
 			!! edit_menu.make ("Edit", menu_bar);
+			!! special_menu.make ("Special", menu_bar);
 			!! preference_menu.make ("Preference", menu_bar);
 			!! window_menu.make ("Windows", menu_bar);
 			!! help_menu.make ("Help", menu_bar);
@@ -145,6 +148,17 @@ feature -- Graphical Interface
 			end;
 
 			set_mode_for_editing
+		end;
+
+	build_toolbar_menu is
+			-- Build the toolbar menu under the special sub menu.
+		local
+			toolbar_t: TOGGLE_B
+		do
+			!! toolbar_t.make (edit_bar.identifier, special_menu);
+			edit_bar.init_toggle (toolbar_t);
+			!! toolbar_t.make (format_bar.identifier, special_menu);
+			format_bar.init_toggle (toolbar_t)
 		end
 
 feature -- Window Properties

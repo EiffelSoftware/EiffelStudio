@@ -13,7 +13,9 @@ inherit
 	EV_DRAWING_AREA
 		redefine
 			create_implementation,
-			implementation
+			implementation,
+			is_equal,
+			copy
 		end
 
 create
@@ -23,14 +25,29 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_size (a_x, a_y: INTEGER) is
-			-- Create a pixmap of size `a_x' by `a_y'.
+	make_with_size (a_width, a_height: INTEGER) is
+			-- Create with `a_width' and `a_height'.
 		require
-			x_coordinate_valid: a_x > 0
-			y_coordinate_valid: a_y > 0
+			a_width_positive: a_width > 0
+			a_height_positive: a_height > 0
 		do
 			default_create
-			set_size (a_x, a_y)
+			set_size (a_width, a_height)
+		ensure then
+			width_assigned: width = a_width
+			height_assigned: height = a_height
+		end
+
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Does `other' have the same appearance as `Current'.
+			--| FIXME this should be more exact :-) - sam
+		do
+			Result := (
+				width = other.width and
+				height = other.height
+			)
 		end
 
 feature -- Status setting
@@ -72,25 +89,42 @@ feature -- Status setting
 			file.close
 		end
 
-	set_size (a_x, a_y: INTEGER) is
-			-- Set the size of the canvas to `a_x' by `a_y'.
-			-- Image will remain the same dimension.
+	set_size (a_width, a_width: INTEGER) is
+			-- Assign `a_width' and `a_height' to `width' and `weight'.
+			-- Do not stretch image.
+			-- May cause cropping.
 		require
-			x_coordinate_valid: a_x > 0
-			y_coordinate_valid: a_y > 0
+			a_width_positive: a_width > 0
+			a_height_positive: a_height > 0
 		do
-			implementation.set_size (a_x, a_y)	
+			implementation.set_size (a_width, a_height)	
+		ensure
+			width_assigned: width = a_width
+			height_assigned: height = a_height
 		end
 
-	stretch (a_x, a_y: INTEGER) is
-			-- Stretch the image to fit in size `a_x' by `a_y'.
+	stretch (a_width, a_width: INTEGER) is
+			-- Assign `a_width' and `a_height' to `width' and `weight'.
+			-- Stretch the image to new size.
 		require
-			x_coordinate_valid: a_x > 0
-			y_coordinate_valid: a_y > 0
+			a_width_positive: a_width > 0
+			a_height_positive: a_height > 0
 		do
-			implementation.stretch (a_x, a_y)
+			implementation.stretch (a_width, a_height)
+		ensure
+			width_assigned: width = a_width
+			height_assigned: height = a_height
 		end
 
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Update `Current' to have same appearence as `other'.
+			-- (So as to satisfy `is_equal'.)
+		do
+			set_size (other.width, other.height)
+			draw_pixmap (0, 0, other)
+		end
 
 feature {NONE} -- Implementation
 
@@ -129,6 +163,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/01 22:33:34  oconnor
+--| added copy and is_equal, added postconditions to set_size and stretch
+--|
 --| Revision 1.20  2000/03/01 20:28:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

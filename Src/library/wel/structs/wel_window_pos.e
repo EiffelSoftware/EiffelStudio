@@ -41,6 +41,14 @@ feature -- Access
 			Result := window_of_item (cwel_windowpos_get_hwndinsertafter (item))
 		end
 
+	hwindow_insert_after: POINTER is
+			-- Position of the window in Z order (front-to-back
+			-- position). This window can be the window behind
+			-- which this window is placed.
+		do
+			Result := cwel_windowpos_get_hwndinsertafter (item)
+		end
+
 	x: INTEGER is
 			-- Position of the left edge of the window
 		do
@@ -143,6 +151,12 @@ feature -- Element change
 			window_insert_after_set: window_insert_after = a_window
 		end
 
+	set_hwindow_insert_after (a_window: POINTER) is
+			-- Set `window_insert_after' with `a_window'.
+		do
+			cwel_windowpos_set_hwndinsertafter (item, a_window)
+		end
+
 	set_top is
 			-- Place the window at the top of the Z order.
 		do
@@ -162,8 +176,15 @@ feature -- Element change
 			-- Places the window above all non-topmost windows.
 			-- The window maintains its topmost position even when
 			-- it is deactivated.
+		local
+			p: POINTER
 		do
-			cwel_windowpos_set_hwndinsertafter (item, Hwnd_topmost)
+			p := cwel_windowpos_get_hwndinsertafter (item)
+			print (p)
+			cwel_windowpos_set_hwndinsertafter (item, p)
+	-- Hwnd_topmost)
+			p := cwel_windowpos_get_hwndinsertafter (item)
+			print (p)
 		end
 
 	set_no_topmost is

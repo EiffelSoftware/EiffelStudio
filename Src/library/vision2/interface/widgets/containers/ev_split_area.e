@@ -196,11 +196,13 @@ feature -- Status report
 			-- Maximum position the splitter can have.
 		local
 			sec_item_min_size: INTEGER
+			sec : EV_WIDGET
 		do
-			if second_cell.readable /= Void then
+			sec := second
+			if sec /= Void then
 				sec_item_min_size := select_from (
-					first.minimum_width,
-					first.minimum_height)
+					sec.minimum_width,
+					sec.minimum_height)
 			else
 				sec_item_min_size := 1
 			end
@@ -392,13 +394,19 @@ feature {NONE} -- Implementation
 
 	splitter_position_from_screen_x_or_y (a_x, a_y: INTEGER): INTEGER is
 			-- Return splitter position given screen `a_y'.
+		local
+			mini, maxi: INTEGER
 		do
 			Result := select_from (a_x, a_y) - offset -
 				select_from (x_origin, y_origin)
-			if Result < minimum_split_position then
-				Result := minimum_split_position
-			elseif Result > maximum_split_position then
-				Result := maximum_split_position
+			mini := minimum_split_position
+			if Result < mini then
+				Result := mini
+			else
+				maxi := maximum_split_position
+				if Result > maxi then
+					Result := maxi
+				end
 			end
 		end
 
@@ -556,6 +564,10 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/21 22:48:48  bonnard
+--| Fixed `maximum_split_position'.
+--| Changed `splitter_position_from_screen_x_or_y' to improve speed.
+--|
 --| Revision 1.31  2000/04/19 00:46:07  brendel
 --| Added FIXME.
 --|

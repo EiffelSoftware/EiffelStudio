@@ -99,7 +99,7 @@ public class AssemblyManagerInterface: IAssemblyManagerInterface
 		Descriptor.Make( Name, Version, Culture, PublicKey );
 		support = new ISE.AssemblyManager.Support();
 		support.Make();
-		Dependencies = support.DependanciesFromInfo( Descriptor );
+		Dependencies = ( AssemblyName [] )support.DependanciesFromInfo( Descriptor );
 		
 		assemblyDependencies = new String [Dependencies.Length * 5];
 		convert = new ConversionSupport();

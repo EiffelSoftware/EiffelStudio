@@ -16,6 +16,13 @@ feature -- Externals
 
 	Executable_suffix: STRING is external "C" alias "eif_exec_suffix" end;
 
+	Finish_freezing_script: STRING is 
+		external 
+			"C" 
+		alias 
+			"eif_finish_freezing" 
+		end;
+
 	Preobj: STRING is external "C" alias "eif_preobj" end;
 
 

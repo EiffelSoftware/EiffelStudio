@@ -7,6 +7,7 @@ inherit
 	SHARED_SERVER;
 	SHARED_FILES;
 	SHARED_WORKBENCH;
+	COMPILER_EXPORTER
 
 creation
 
@@ -51,7 +52,7 @@ feature
 			-- temporary server of polymorphic unit tables.
 		local
 			new_set, server_set: POLY_UNIT_TABLE [POLY_UNIT];
-			id: INTEGER;
+			id: ROUTINE_ID;
 		do
 			from
 				new_units.start
@@ -59,7 +60,7 @@ feature
 				new_units.after
 			loop
 				new_set := new_units.item_for_iteration;
-				id := new_set.id;
+				id := new_set.rout_id;
 				if Tmp_poly_server.has (id) then
 					server_set := Tmp_poly_server.item (id);
 					server_set.merge (new_set);

@@ -1,0 +1,188 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Generic Creation</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</head>
+
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Generic Creation</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../papers/index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+        <h1>Generic creation<br>
+        </h1>
+        <p>This technical note describes the mechanism for creating objects of
+        formal generic types, as present in ISE Eiffel release 4.3. With the
+        exception of an added Overview (section 1 below), it is identical to the
+        text of a language extension proposal submitted by ISE to the Nonprofit
+        International Consortium for Eiffel (NICE).
+        <p>Note that the examples use the new syntax for creation instructions
+        <ul>
+          <font color="#0000a0"><b>create</b> <i>x.make</i> (...)</font>
+        </ul>
+        <p>which is intended to replace the classical <font color="#0000a0">!! <i>x</i></font>.
+        Both forms will continue to be supported for several years.
+        <p>All page numbers refer to the current definition of Eiffel: the book <a href="http://www.eiffel.com/doc/page.html#etl"><i>Eiffel:
+        The Language</i></a>.</p>
+        <h2>1. Overview</h2>
+        The problem addressed by this extension is simple: how to create an
+        object of a type known only through a formal generic parameters. In a
+        class <font color="#0000a0"><i>C</i> [<i>G</i>]</font>, you may have
+        declared x of type <font color="#0000a0"><i>G</i></font>, and want to
+        execute a creation instruction
+        <ul>
+          <font color="#0000a0"><b>create</b> <i>x.make</i> (...)</font>
+        </ul>
+        <p>for some creation procedure <font color="#0000a0"><i>make</i></font>
+        of your choice.
+        <p>For this to be type-safe, however, we need to know a little more
+        about <font color="#0000a0"><i>G</i></font>, since in the most general
+        case it represents an arbitrary type, so we have no clue about what kind
+        of creation procedure it may require if any, and with what arguments.
+        For this reason such creation instructions have been prohibited in
+        Eiffel until now. You had to encapsulate the creation in a procedure on
+        the client side (where the actual generic parameter is known --
+        separately for each client).
+        <p>The new mechanism removes this limitation, due to the following
+        elegant idea (credit for which is entirely due to Mark Howard from Axa
+        Rosenberg, formerly Rosenberg Institutional Equity Management). It is
+        based on the Eiffel technique of constrained genericity. To guarantee
+        that the above creation instruction is valid, just make sure that <font color="#0000a0"><i>G</i></font>
+        is a constrained generic parameter, with a class declaration of the form
+        <ul>
+          <p><font color="#0000a0"><b>class</b> <i>C</i> [<i>G</i> -&gt;<i>
+          CONSTRAINT</i> <b>create</b> <i>make</i>, ...] ...</font></p>
+        </ul>
+        <p>listing <font color="#0000a0"><i>make</i></font> as one of the
+        applicable creation procedures. The rules are that
+        <ul>
+          <p>          <font color="#0000a0"><i>make</i></font> must be a procedure of the
+          constraining type, <font color="#0000a0"><i>CONSTRAINT</i></font>,
+          with of course the right argument types.
+          <p>When you use a generic derivation <font color="#0000a0"><i>C</i> [<i>T</i>]</font>,
+          where type <font color="#0000a0"><i>T</i></font> must conform to <font color="#0000a0"><i>CONSTRAINT</i></font>,
+          the version of <font color="#0000a0"><i>make</i></font> in <font color="#0000a0"><i>T</i></font>
+          (possibly renamed, redefined etc.) must be listed as a creation
+          procedure for <font color="#0000a0"><i>T</i></font>.</p>
+        </ul>
+        <p>This ensures type safety.
+        <p>The beauty of the scheme is that <font color="#0000a0"><i>make</i></font>,
+        or any of the other creation procedures used for entities of type <font color="#0000a0"><i>G</i></font>,
+        does not need to be a creation procedure in <font color="#0000a0"><i>CONSTRAINT</i></font>;
+        it simply needs to be a procedure with the appropriate arguments. Only
+        for descendants of <font color="#0000a0"><i>CONSTRAINT</i></font> used
+        as actual generic parameters does it matter that <font color="#0000a0"><i>make</i></font>
+        be a creation procedure.
+        <p>This allows in particular <font color="#0000a0"><i>CONSTRAINT</i></font>
+        to be a deferred class.
+        <p>This overview should be sufficient to any Eiffel user desiring to use
+        the mechanism. The detailed specification follows.</p>
+        <h2>2. Syntax</h2>
+        The production for <font color="#aa00ff">Constraint</font>, on page 201,
+        which reads
+        <ul>
+          <pre><font color="#aa00ff">
+Constraint == &quot;-&gt;&quot; Class_type
+</font></pre>
+        </ul>
+        becomes
+        <ul>
+          <pre><font color="#aa00ff">
+Constraint == &quot;-&gt;&quot; Class_type [Creation_constraint]
+</font>
+</pre>
+        </ul>
+        with (see page 285)
+        <pre>&nbsp;</pre>
+        <ul>
+          <font color="#aa00ff">
+          <pre>Creation_constraint == <b><font color="#0000a0">create</font></b> Feature_list <b><font color="#0000a0">end</font></b>
+</font>
+</pre>
+        </ul>
+        Note: in the syntax for <font color="#aa00ff">Creators</font>, page 285,
+        the keyword <b><font color="#0000a0">creation</font></b> will be
+        replaced by <b><font color="#0000a0">create</font></b> for simplicity.
+        (The older keyword will continue to be accepted by compilers.)
+        <h2>3. Validity</h2>
+        New validity rule VTCC, page 201:
+        <p>&nbsp;
+        <ul>
+          A <font color="#aa00ff">Constraint</font> is valid if and only if
+          every identifier listed in the <font color="#aa00ff">Feature_list</font>
+          of its <font color="#aa00ff">Generic_creators,</font> if any, is the
+          name of a procedure of the base class of its <font color="#aa00ff">Creator_type.</font>
+        </ul>
+        <p>Adaptation of VTCG, page 203 (with clause 3 already adapted for the
+        &quot;Generics in Constraints&quot; change) now reads:
+        <p>&nbsp;
+        <ul>
+          Let <font color="#0000a0"><i>C</i></font> be a constrained generic
+          class. A <font color="#aa00ff">Class_type</font> <font color="#0000a0"><i>CT</i></font>
+          having <font color="#0000a0"><i>C</i></font> as base class is valid if
+          and only if <font color="#0000a0"><i>CT</i></font> satisfies the
+          Unconstrained Genericity rule (VTUG, page 201) and in addition, for
+          any <font color="#aa00ff">Formal_generic</font> parameter <font color="#0000a0"><i>G</i></font>
+          in the declaration of <font color="#0000a0"><i>C</i></font> having a
+          constraint, then if <font color="#0000a0"><i>D</i></font> is the <font color="#aa00ff">Class_type</font>
+          listed in the constraint and <font color="#0000a0"><i>T</i></font>,
+          with base class <font color="#0000a0"><i>BT</i></font>, is the Type
+          corresponding to <font color="#0000a0"><i>G</i></font> in the <font color="#aa00ff">Actual_generics</font>
+          list of <font color="#0000a0"><i>CT</i></font>:
+          <ul>
+            <p>3. T conforms to the type obtained from <font color="#0000a0"><i>D</i></font>
+            by substituting any occurrence of a formal generic parameter of <font color="#0000a0"><i>C</i></font>
+            by the corresponding actual parameter.
+            <p>4. If the constraint for <font color="#0000a0"><i>G</i></font> has a
+            <font color="#aa00ff">Generic_creators</font> part, then the <font color="#0000a0"><i>C</i></font>
+            version of every procedure of <font color="#0000a0"><i>BT</i></font>
+            listed (as per rule VTCC, page 201) in that part is declared in <font color="#0000a0"><i>BT</i></font>
+            as a creation procedure.</p>
+          </ul>
+        </ul>
+        <p>In VGCC, page 286, replace clause 1 by
+        <p>&nbsp;
+        <ul>
+          If <font color="#0000a0"><i>T</i></font> is a <font color="#aa00ff">Formal_generic_name</font>
+          (that is to say, a formal parameter of the class where the instruction
+          appears), then the corresponding formal generic parameter has a <font color="#aa00ff">Constraint</font>
+          part with a <font color="#aa00ff">Generic_creators</font> part, and
+          the creation instruction has a Creators part whose feature is one of
+          the procedures listed (as per rule VTCC, page 201) listed in the <font color="#aa00ff">Generic_creators</font>
+          part. Cases 2 to 6 assume that <font color="#0000a0"><i>T</i></font>
+          is not a <font color="#aa00ff">Formal_generic_name.</font>
+        </ul>
+        <h2>4. Semantics</h2>
+        The semantics of a creation call of the form
+        <ul>
+          <pre><b><font color="#0000a0">create</font></b> <font color="#0000a0"><i>x.proc</i></font> (<font color="#0000a0"><i>arguments</i></font>)
+</pre>
+        </ul>
+        where the type of <font color="#0000a0"><i>x</i></font> is (as per VGCC
+        (1)) a formal generic parameter with a constraint listing <font color="#0000a0"><i>proc</i></font>
+        in its <font color="#aa00ff">Generic_creators</font> part, is to create
+        an object of the type <font color="#0000a0"><i>T</i></font> used as the
+        corresponding actual generic þarameter in the generic derivation
+        considered, using as creation procedure the version of <font color="#0000a0"><i>proc</i></font>
+        in the base class <font color="#0000a0"><i>BT</i></font> of <font color="#0000a0"><i>T</i></font>.
+        As per VGCC (3), <font color="#0000a0"><i>BT</i></font> must declare
+        that version as a creation procedure.
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+
+</html>

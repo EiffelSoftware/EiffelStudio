@@ -14,7 +14,6 @@ feature {NONE} -- Initialization
 		do
 			written_in := feat.written_in
 			body_index := feat.body_index
-			is_origin := feat.is_origin
 			has_postcondition := feat.has_postcondition
 			has_precondition := feat.has_precondition
 			precondition_count := feat.number_of_precondition_slots
@@ -48,9 +47,6 @@ feature -- Access
 			-- Number of postconditions
 			-- (inherited assertions are not taken into account)
 
-	is_origin: BOOLEAN
-			-- Is Current come from an origin feature?
-
 feature -- Comparison
 
 	same_as (other: like Current): BOOLEAN is
@@ -58,8 +54,7 @@ feature -- Comparison
 		do
 			Result := (has_precondition = other.has_precondition) and then
 					(has_postcondition = other.has_postcondition) and then
-					(body_index = other.body_index and
-					is_origin = other.is_origin)
+					(body_index = other.body_index)
 		end
 
 feature -- Debugging

@@ -195,7 +195,7 @@ feature
 						-- shared_include_set of the current class because this
 						-- shared set is a set and every item appears only once
 					if context.final_mode and (is_special_ext or has_include_list) then
-						if is_special_ext then
+						if is_special_ext and not ((special_id = dll16_id) or (special_id = dll32_id)) then
 							shared_include_set.extend (special_file_name);
 						end;
 						if has_include_list then
@@ -209,8 +209,32 @@ feature
 							end;
 						end;
 					end;
-					internal_name := external_name;
-					generated_file.putstring (internal_name);
+						-- Now generate the right name to call the external
+						-- In the case of a signature or a macro, the call will be direct
+						-- In the case of a dll, the encapsulation will be called (encoded name)
+					if (special_id = dll16_id) or (special_id = dll32_id) then
+						rout_table ?= entry;
+						internal_name := clone (rout_table.feature_name (typ.type_id));
+						generated_file.putstring (internal_name);
+					else
+						internal_name := external_name;
+						generated_file.putstring (internal_name);
+					end;
+						-- To avoid problems, the prototype of the function has to be added
+						-- to the .h file.
+						-- A prototype is added only if it's a dll, or if it's an external
+						-- for which there's no include file defining it.
+					if
+						context.final_mode
+					and then 
+						(special_id = dll16_id
+					or
+						 special_id = dll32_id
+					or
+						 (has_signature and not has_include_list and not is_special_ext))
+					then
+						Extern_declarations.add_routine (real_type (type).c_type, internal_name);
+					end;
 				else
 					internal_name := external_name;
 					generated_file.putstring (internal_name);
@@ -262,7 +286,8 @@ feature
 				loop
 					expr ?= parameters.item;	-- Cannot fail
 						-- add cast before parameter
-					if has_signature then
+					if has_signature
+						and then (special_id /= dll16_id) and (special_id /= dll32_id) then
 						generated_file.putchar ('(');
 						generated_file.putstring (arg_list.item (i));
 						generated_file.putstring (") ");

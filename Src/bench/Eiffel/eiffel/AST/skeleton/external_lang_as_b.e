@@ -188,12 +188,16 @@ feature -- Parsing
 								when '<' then
 									i := special_file_name.index_of ('>',1);
 								when '%"' then
-									i := special_file_name.index_of ('%"',2);
+									if special_file_name.count > 1 then
+										i := special_file_name.index_of ('%"',2);
+									else
+										i := 0;
+									end;
 								else
 										-- if no spaces then OK
-									i := special_file_name.count - special_file_name.index_of (' ',1);
 									special_file_name.precede ('%"');
 									special_file_name.append_character ('%"');
+									i := special_file_name.count - special_file_name.index_of (' ',1);
 								end;
 								if not (i = special_file_name.count) then
 									loc_begin := source.substring_index (special_file_name, 1);
@@ -221,7 +225,7 @@ feature -- Parsing
 																%(a %" may be missing)%N",loc_begin,loc_end);
 									end;
 								else
-									i := rest.index_of (' ',2);
+									i := rest.index_of (' ',1);
 									if i >= 2 then 
 										special_file_name := rest.substring (1, i - 1);
 										rest.tail (rest.count - i);
@@ -237,7 +241,16 @@ feature -- Parsing
 								end;
 								rest.left_adjust;
 								if rest.count /= 0 then
-									dll_arg := rest;
+									if not rest.has (' ') then
+										dll_arg := rest;
+									else
+											-- there's more than one argument, raise an error
+										loc_begin := source.substring_index (segment, 1);
+										loc_end := loc_begin + segment.count - 1;
+										raise_external_error ("Illegal dll declaration for external%N%
+																%(It must be of the form [dll16/dll32 filename aliasname/ordinal])%N",
+																loc_begin,loc_end);
+									end;
 								else
 										-- something is missing, raise an error
 									loc_begin := source.substring_index (segment, 1);
@@ -304,7 +317,7 @@ loc_end);
 						loop
 							place := segment.index_of (',',1);
 							if place = segment.count then
-								loc_begin := source.substring_index (segment, 1) + place - 1;
+								loc_begin := source.index_of (')', 1) - 1;
 								loc_end := loc_begin;
 									-- extra ',' at the end of signature
 								raise_external_error ("Extra comma at end of signature declaration%N", loc_begin, loc_end);
@@ -457,6 +470,14 @@ loc_begin, loc_end);
 					image.wipe_out;	-- nothing must be after include file declaration
 				end;
 
+					-- For DLL16/32 a signature is COMPULSORY; test it here
+				if ((special_id = dll16_id) or (special_id = dll32_id)) and then not has_signature 
+					and context.a_feature.argument_count > 0 then
+					loc_begin := 1;
+					loc_end := offset;
+					raise_external_error ("For DLL16 or DLL32, a signature must be specified%N",loc_begin,loc_end);
+				end;
+
 				if image.count > 0 then
 					loc_begin := source.substring_index (image,1);
 					loc_end := offset;
@@ -503,6 +524,11 @@ feature -- Debug
 					io.putstring ("Special file: ");
 					io.putstring (special_file_name);
 					io.new_line;
+					if (special_id = dll16_id) or (special_id = dll32_id) then
+						io.putstring ("dll arg: ");
+						io.putstring (dll_arg);
+						io.new_line;
+					end;
 				else
 					io.putstring ("No special declaration%N");
 				end;

@@ -100,6 +100,7 @@ feature -- Byte code
 			Result.set_dll_arg (language_name.dll_arg);
 			Result.set_special_file_name (language_name.special_file_name);
 			Result.set_arg_list (language_name.arg_list);
+			Result.set_include_list (language_name.include_list);
 			Result.set_return_type (language_name.return_type);
 			if language_name.is_special or language_name.has_signature then
 				Result.set_result_type (extern.type.actual_type.type_i);

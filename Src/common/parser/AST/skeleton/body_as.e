@@ -156,7 +156,9 @@ feature -- New feature description
 					!!extern_proc;
 					external_body ?= routine.routine_body;
 					ext_lang := external_body.language_name;
-					extern_proc.set_alias_name (external_body.external_name);
+					if external_body.alias_name /= Void then
+						extern_proc.set_alias_name (external_body.alias_name.value);
+					end;
 					extern_proc.set_special_id (ext_lang.special_id);
 					extern_proc.set_special_file_name (ext_lang.special_file_name);
 					extern_proc.set_arg_list (ext_lang.arg_list);
@@ -206,7 +208,9 @@ feature -- New feature description
 					!!extern_func;
 					external_body ?= routine.routine_body;
 					ext_lang := external_body.language_name;
-					extern_func.set_alias_name (external_body.external_name);
+					if external_body.alias_name /= Void then
+						extern_func.set_alias_name (external_body.alias_name.value);
+					end;
 					extern_func.set_special_id (ext_lang.special_id);
 					extern_func.set_special_file_name (ext_lang.special_file_name);
 					extern_func.set_arg_list (ext_lang.arg_list);

@@ -62,12 +62,12 @@ feature {NONE} -- Initialization
 			create tool_bar
 			create minimize_button
 			minimize_button.set_pixmap (clone (parent_area.minimize_pixmap))
-			minimize_button.select_actions.extend (agent minimize)
+			minimize_button.select_actions.extend (agent change_minimized_state)
 			minimize_button.set_tooltip (minimize_tooltip)
 			tool_bar.extend (minimize_button)
 			create maximize_button
 			maximize_button.set_pixmap (clone (parent_area.maximize_pixmap))
-			maximize_button.select_actions.extend (agent maximize)
+			maximize_button.select_actions.extend (agent change_maximized_state)
 			maximize_button.set_tooltip (maximize_tooltip)
 			tool_bar.extend (maximize_button)
 			create close_button
@@ -105,10 +105,7 @@ feature {NONE} -- Initialization
 			-- A dock has ended, so close dialog, and restore `Current'
 		local
 			dialog: EV_DOCKABLE_DIALOG
-			tool_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
-			box: EV_VERTICAL_BOX
 			original_position, new_position: INTEGER
-			above: BOOLEAN
 		do
 			parent_area.store_positions
 			original_position := parent_area.all_holders.index_of (Current, 1)
@@ -187,50 +184,58 @@ feature {MULTIPLE_SPLIT_AREA}-- Access
 	tool: EV_WIDGET
 		-- Tool in `Current'.
 		
-	minimized: BOOLEAN
+	is_minimized: BOOLEAN
 		-- Is `Current' minimized?
 		
-	maximized: BOOLEAN
+	is_maximized: BOOLEAN
 		-- Is `Current' maximized?
 		
 	disable_minimized is
 			-- Assign `False' to `minimized'.
 		do
-			minimized := False
+			is_minimized := False
+		ensure
+			not_minimized: not is_minimized
 		end
 		
 	enable_minimized is
 			-- Assign `True' to `m-nimized'.
 		do
-			minimized := True
+			is_minimized := True
+		ensure
+			minimized: is_minimized
 		end
 		
 	disable_maximized is
 			-- Assign `False' to `maximized'.
 		do
-			maximized := False
+			is_maximized := False
+		ensure
+			not_maximized: not is_maximized
 		end
 	
 	enable_maximized is
 			-- Assign `True' to `maximized'.
 		do
-			maximized := True
+			is_maximized := True
+		ensure
+			maximized: is_maximized
 		end
 		
 	disable_minimize_button is
-			--
+			-- Ensure `minimize_button' is non sensitive.
 		do
 			minimize_button.disable_sensitive
 		end
 		
 	enable_minimize_button is
-			--
+			-- Ensure `minimize_button' is sensitive.
 		do
 			minimize_button.enable_sensitive
 		end
 		
 	enable_close_button is
-			--
+			-- Ensure a close button is displayed for `Current'.
 		do
 			if close_button.parent = Void then
 				tool_bar.extend (close_button)
@@ -238,7 +243,7 @@ feature {MULTIPLE_SPLIT_AREA}-- Access
 		end
 		
 	disable_close_button is
-			--
+			-- Ensure no close button is displayed for `Current'.
 		do
 			if close_button.parent /= Void then
 				close_button.parent.prune_all (close_button)
@@ -349,10 +354,10 @@ feature {NONE} -- Implementation
 	tool_bar_cell: EV_CELL
 		-- A cell to hold `command_tool_bar'.
 
-	minimize is
+	change_minimized_state is
 			-- Minimize `Current' if not minimized, restore otherwise.
 		do
-			if not minimized then
+			if not is_minimized then
 				parent_area.minimize_item (tool)
 			else
 				parent_area.restore_item (tool)
@@ -367,10 +372,10 @@ feature {NONE} -- Implementation
 		
 		
 
-	maximize is
+	change_maximized_state is
 			-- Maximize `Current' if not maxamized, restore otherwise.
 		do
-			if maximized then
+			if is_maximized then
 				parent_area.restore_item (tool)
 			else
 				parent_area.maximize_item (tool)
@@ -382,19 +387,19 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 	silent_set_minimized is
 			--
 		do
-			minimized := True
+			is_minimized := True
 		end
 		
 	silent_remove_minimized is
 			--
 		do
-			minimized := False
+			is_minimized := False
 		end
 		
 	silent_remove_maximized is
 			--
 		do
-			maximized := False
+			is_maximized := False
 		end
 		
 

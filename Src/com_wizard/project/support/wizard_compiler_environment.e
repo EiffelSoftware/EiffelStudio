@@ -21,7 +21,7 @@ feature -- Access
 	Linker: STRING is "link"
 			-- Linker command name.
 	
-	Common_linker_options:STRING is " /DLL  /WARN:0 /RELEASE %"/INCREMENTAL:NO%""
+	Common_linker_options:STRING is " /DLL /RELEASE %"/INCREMENTAL:NO%""
 			-- Linker options.
 
 	Common_c_compiler_options: STRING is 

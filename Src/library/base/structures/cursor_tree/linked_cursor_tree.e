@@ -88,12 +88,13 @@ feature -- Element change
 		end;
 
 	put_root (v: G) is
-			-- Make `v' the root of an empty tree; set cursor to root.
+			-- Put `v' as root of an empty tree.
 		require
 			is_empty: empty
 		do
 			above_node.child_put_right (v);
-			active := above_node.first_child
+			active_parent := above_node;
+			active := active_parent.child
 		ensure
 			is_root: is_root;
 			count = 1

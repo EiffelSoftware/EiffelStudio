@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_LIST_ITEM}
-			pointer_button_press_actions.force_extend (agent start_animation)
+			pointer_button_press_actions.force_extend (agent start_animation (?, ?, ?))
 		end
 		
 
@@ -83,18 +83,23 @@ feature {GB_EV_CONTAINER} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	start_animation is
+	start_animation (x, y, button: INTEGER) is
 			-- Start animation on `layout_item' of `object'.
 		local
 			layout_item:GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
-			layout_item := object.layout_item
-			if not layout_item.is_animated then
-				layout_item.enable_animation
-				create timer.make_with_interval (25)
-				timer.actions.extend (agent animate)
-				original_pixmap := layout_item.pixmap
-				layout_constructor.ensure_object_visible (object)
+				-- Only animate item if left button is pressed.
+				-- We do not want to perform an animation if
+				-- a pick is started.
+			if button = 1 then
+				layout_item := object.layout_item
+				if not layout_item.is_animated then
+					layout_item.enable_animation
+					create timer.make_with_interval (25)
+					timer.actions.extend (agent animate)
+					original_pixmap := layout_item.pixmap
+					layout_constructor.ensure_object_visible (object)
+				end
 			end
 		end
 		

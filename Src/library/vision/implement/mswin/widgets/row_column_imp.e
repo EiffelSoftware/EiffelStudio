@@ -1,7 +1,7 @@
 indexing
-	description: "A row column implemented under MS Windows";
-	status: "See notice at end of class";
-	date: "$Date$";
+	description: "A row column implemented under MS Windows"
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -411,7 +411,9 @@ feature {NONE} -- Implementation
 						until
 							c.before
 						loop
-							total := total + c.item.width + spacing
+							if c.item.managed then
+								total := total + c.item.width + spacing
+							end
 							i := i + 1
 							if i = loop_count then
 								total := total - spacing

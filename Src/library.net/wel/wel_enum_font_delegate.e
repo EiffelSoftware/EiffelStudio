@@ -1,7 +1,7 @@
 indexing
 	description: "Delegate used by WEL_FONT_FAMILY_ENUMERATOR to enable callbacks from Win32 API to WEL managed code"
-	external_name: "ISE.Runtime.WEL_ENUM_FONT_DELEGATE"
-	assembly: "ISE.Runtime", "5.5.0.0", "neutral", "def26f296efef469"
+	external_name: "EiffelSoftware.Runtime.WEL_ENUM_FONT_DELEGATE"
+	assembly: "EiffelSoftware.Runtime", "5.5.0.0", "neutral", "def26f296efef469"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 	make (a_target: SYSTEM_OBJECT; function_ptr: POINTER) is
 			-- Create a new delegate object
 		external
-			"IL creator signature (System.Object, System.IntPtr) use ISE.Runtime.WEL_ENUM_FONT_DELEGATE"
+			"IL creator signature (System.Object, System.IntPtr) use EiffelSoftware.Runtime.WEL_ENUM_FONT_DELEGATE"
 		alias
 			".ctor"
 		end

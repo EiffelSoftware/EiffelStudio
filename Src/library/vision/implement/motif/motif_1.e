@@ -6,7 +6,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class MOTIF_1
+class 
+	MOTIF_1
 	
 feature -- Widget access
 
@@ -100,7 +101,7 @@ feature -- Widget access
 			!! Result.make (a_label_gadget, managed, oui_parent)
 		end; 
 
-	menu_b (a_menu_b: MENU_B; managed: BOOLEAN; oui_parent: COMPOSITE): MENU_B_M is
+	menu_b (a_menu_b: MENU_B; managed: BOOLEAN; oui_parent: MENU): MENU_B_M is
 			-- Motif implementation of menu button
 		do
 			!! Result.make (a_menu_b, managed, oui_parent)
@@ -148,7 +149,7 @@ feature -- Widget access
 			!! Result.make (a_prompt_dialog, oui_parent)
 		end; 
 
-	menu_pull (a_pulldown: MENU_PULL; managed: BOOLEAN; oui_parent: COMPOSITE): MENU_PULL_M is
+	menu_pull (a_pulldown: MENU_PULL; managed: BOOLEAN; oui_parent: MENU): MENU_PULL_M is
 			-- Motif implementation of `a_pulldown'
 		do
 			!! Result.make (a_pulldown, managed, oui_parent)

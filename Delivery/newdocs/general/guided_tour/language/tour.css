@@ -76,7 +76,7 @@ H1.bb-chapnonum, P.bb-chapnonum {
 	margin-bottom: 2pt;
 	margin-right: 0pt;
 	margin-left: 500px;
-	font-size: 2px;
+	font-size: 15px;
 	font-weight: Bold;
 	font-style: Regular;
 	text-decoration: none;
@@ -117,7 +117,7 @@ H1 {
 	margin-top:0em;
 }
 IMG {
-	border="0";
+	border=0px none;
 }
 LI.bb-chapter {
 	display: block;
@@ -203,7 +203,7 @@ P.book-title1 {
     vertical-align: baseline;
     text-transform: none;
 }
-P.copyright, P.bottom,P.top {
+p.copyright, p.bottom, p.top {
 	margin-top: 2pt;
 	margin-bottom: 0pt;
 	font-size: 90%;

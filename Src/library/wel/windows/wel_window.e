@@ -393,6 +393,15 @@ feature -- Status report
 			Result := cwin_get_window_long (item, Gwl_exstyle)
 		end
 
+	background_brush: WEL_BRUSH is
+			-- Current window background color used to refresh the window when
+			-- requested by the WM_ERASEBKGND windows message.
+			-- By default there is no background
+		do
+		ensure
+			new_object: Result /= background_brush
+		end
+
 	commands_enabled: BOOLEAN is
 			-- Is the commands execution enabled?
 		do
@@ -1263,6 +1272,29 @@ feature -- Messages
 		do
 		end
 
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		require
+			exists: exists
+		do
+		end
+
+	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		require
+			exists: exists
+		do
+		end
+
+	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttondblclk message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		require
+			exists: exists
+		do
+		end
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
@@ -1401,6 +1433,26 @@ feature -- Messages
 		do
 		end
 
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			-- May be redefined to paint something on
+			-- the `paint_dc'. `invalid_rect' defines
+			-- the invalid rectangle of the client area that
+			-- needs to be repainted.
+		local
+			bk_brush: WEL_BRUSH
+		do
+			bk_brush := background_brush
+			if bk_brush /= Void then
+				paint_dc.fill_rect (invalid_rect, bk_brush)
+				bk_brush.delete
+					--| Disable the default windows processing and return correct
+					--| value to Windows, i.e. nonzero value.
+				disable_default_processing
+				set_message_return_value (1)
+			end
+		end
+
 feature {WEL_WINDOW} -- Implementation
 
 	default_window_procedure: POINTER
@@ -1527,6 +1579,19 @@ feature {WEL_WINDOW} -- Implementation
 			on_notify (wparam, info)
 		end
 
+	on_wm_erase_background (wparam: INTEGER) is
+			-- Wm_erasebkgnd message.
+			-- A WEL_DC and WEL_PAINT_STRUCT are created and passed to the
+			-- `on_erase_background' routine.
+		require
+			exists: exists
+		local
+			paint_dc: WEL_PAINT_DC
+		do
+			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
+			on_erase_background (paint_dc, client_rect)
+		end
+
 	default_process_message (msg, wparam, lparam: INTEGER) is
 			-- Process `msg' which has not been processed by
 			-- `process_message'.
@@ -1575,6 +1640,18 @@ feature {WEL_DISPATCHER, WEL_WINDOW}
 				on_left_button_double_click (wparam,
 					c_mouse_message_x (lparam),
 					c_mouse_message_y (lparam))
+			when Wm_mbuttondown then
+				on_middle_button_down (wparam,
+					c_mouse_message_x (lparam),
+					c_mouse_message_y (lparam))
+			when Wm_mbuttonup then
+				on_middle_button_up (wparam,
+					c_mouse_message_x (lparam),
+					c_mouse_message_y (lparam))
+			when Wm_mbuttondblclk then
+				on_middle_button_double_click (wparam,
+					c_mouse_message_x (lparam),
+					c_mouse_message_y (lparam))
 			when Wm_rbuttondown then
 				on_right_button_down (wparam,
 					c_mouse_message_x (lparam),
@@ -1611,6 +1688,8 @@ feature {WEL_DISPATCHER, WEL_WINDOW}
 				on_wm_notify (wparam, lparam)
 			when Wm_destroy then
 				on_wm_destroy
+			when Wm_erasebkgnd then
+				on_wm_erase_background (wparam)
 			else
 				default_process_message (msg, wparam, lparam)
 			end

@@ -1,6 +1,5 @@
 indexing
 	description: "Integer values for generic conformance on Eiffel types"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,26 +8,32 @@ class
 
 feature -- Generic conformance access
 
-	Terminator_type: INTEGER is -1
-	Character_type: INTEGER is -2
-	Boolean_type: INTEGER is -3
-	Integer_32_type: INTEGER is -4
-	Real_type: INTEGER is -5
-	Double_type: INTEGER is -6
-	Bit_type: INTEGER is -7
-	Pointer_type: INTEGER is -8
-	None_type: INTEGER is -9
-	Internal_type: INTEGER is -10
-	Like_arg_type: INTEGER is -11
-	Like_current_type: INTEGER is -12
-	Like_pfeature_type: INTEGER is -13
-	Like_feature_type: INTEGER is -14
-	Tuple_type: INTEGER is -15
-	Integer_8_type: INTEGER is -16
-	Integer_16_type: INTEGER is -17
-	Integer_64_type: INTEGER is -18
-	Wide_char_type: INTEGER is -19
-	Formal_type: INTEGER is -32
-	Expanded_level: INTEGER is -256
+	Terminator_type: INTEGER_16 is 0xFFFF
+	None_type: INTEGER_16 is 0xFFFE
+	Like_arg_type: INTEGER is 0xFFFD
+	Like_current_type: INTEGER is 0xFFFC
+	Like_pfeature_type: INTEGER is 0xFFFB
+	Like_feature_type: INTEGER is 0xFFFA
+	Tuple_type: INTEGER_16 is 0xFFF9
+	Formal_type: INTEGER_16 is 0xFFF8
+	
+feature -- TUPLE code
+
+	reference_tuple_code: INTEGER_8 is 0x00
+	boolean_tuple_code: INTEGER_8 is 0x01
+	character_tuple_code: INTEGER_8 is 0x02
+	double_tuple_code: INTEGER_8 is 0x03
+	real_tuple_code: INTEGER_8 is 0x04
+	pointer_tuple_code: INTEGER_8 is 0x05
+	integer_8_tuple_code: INTEGER_8 is 0x06
+	integer_16_tuple_code: INTEGER_8  is 0x07
+	integer_32_tuple_code: INTEGER_8 is 0x08
+	integer_64_tuple_code: INTEGER_8 is 0x09
+	natural_8_tuple_code: INTEGER_8 is 0x0A
+	natural_32_tuple_code: INTEGER_8 is 0x0B
+	natural_16_tuple_code: INTEGER_8  is 0x0C
+	natural_64_tuple_code: INTEGER_8 is 0x0D
+	wide_character_tuple_code: INTEGER_8 is 0x0E
+			-- Code used to identify type in TUPLE.
 	
 end -- class SHARED_GEN_CONF_LEVEL

@@ -240,6 +240,7 @@ feature {NONE} -- Saving
 				-- RVA of `.text' and `.reloc'.
 			text_rva := pad_up (headers_size, Section_alignment)
 			reloc_rva := pad_up (text_rva + text_size_on_disk, Section_alignment)
+			code_rva := text_rva + iat.size + cli_header.size
 
 			import_directory_rva := text_rva + iat.size + cli_header.size + code_size + 
 				meta_data_size + import_table_padding
@@ -317,6 +318,9 @@ feature {NONE} -- Saving
 				-- Reloc section
 			reloc_section.set_data (text_rva + iat.size + cli_header.size + code_size +
 				meta_data_size + import_table_padding + import_table.size + entry_data.jump_size)
+				
+				-- Set method RVAs now.
+			method_writer.update_rvas (emitter, code_rva)
 		end
 		
 feature {NONE} -- Implementation

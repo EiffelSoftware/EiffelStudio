@@ -107,13 +107,13 @@ feature -- Access
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
 		do
-			Result := {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} Precursor (display_text, use_gray_icons)
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (display_text, use_gray_icons)
 			Result.select_actions.put_front (agent execute_from (Result))
 		end
 
 	new_menu_item: EB_COMMAND_MENU_ITEM is
 		do
-			Result := {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} Precursor
+			Result := Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND}
 			Result.select_actions.put_front (agent execute_from (Result))
 		end
 
@@ -265,6 +265,7 @@ feature -- Execution
 			l_il_env: IL_ENVIRONMENT
 			l_app_string: STRING
 		do
+			launch_program := False
 			if  (not Eiffel_project.system_defined) or else (Eiffel_System.name = Void) then
 				create wd.make_with_text (Warning_messages.w_No_system)
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
@@ -286,7 +287,7 @@ feature -- Execution
 	
 					if uf.exists then
 						if Eiffel_system.system.il_generation then
-							if feature {EXEC_MODES}.User_stop_points = Application.execution_mode then
+							if Application.execution_mode = feature {EXEC_MODES}.User_stop_points then
 								create l_il_env.make (Eiffel_system.System.clr_runtime_version)
 								l_app_string := l_il_env.Dotnet_debugger_path (dotnet_debugger)
 								if l_app_string /= Void then
@@ -295,24 +296,18 @@ feature -- Execution
 										(create {COMMAND_EXECUTOR}).execute_with_args
 											(l_app_string, 
 												"%"" + eiffel_system.application_name (True).out + "%" " + current_cmd_line_argument)
+										launch_program := True
 									elseif l_il_env.use_dbgclr (dotnet_debugger) then
 											-- Launch DbgCLR.exe.
 										(create {COMMAND_EXECUTOR}).execute_with_args 
 											(l_app_string,
 												"%"" + eiffel_system.application_name (True).out + "%"")
-									else
-										(create {COMMAND_EXECUTOR}).execute_with_args (eiffel_system.application_name (True),
-											current_cmd_line_argument)
-									end							
-								else
-									(create {COMMAND_EXECUTOR}).execute_with_args (eiffel_system.application_name (True),
-										current_cmd_line_argument)
+										launch_program := True
+									end
 								end
-							else
-								(create {COMMAND_EXECUTOR}).execute_with_args (eiffel_system.application_name (True),
-									current_cmd_line_argument)
 							end
-						else
+						end
+						if not launch_program then
 							if make_f.exists and then make_f.date > uf.date then
 									-- The Makefile file is more recent than the 
 									-- application
@@ -416,7 +411,11 @@ end
 					end
 				else
 						-- Something went wrong
-					create wd.make_with_text (Application.eiffel_timeout_message)
+					if Eiffel_system.system.il_generation then						
+						create wd.make_with_text (Application.eiffel_error_dotnet_initialization_message)
+					else
+						create wd.make_with_text (Application.eiffel_timeout_message)
+					end
 					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 					output_text.add_string ("Could not launch system")
 				end

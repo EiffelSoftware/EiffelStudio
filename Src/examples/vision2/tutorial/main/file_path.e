@@ -1,62 +1,104 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description:
+		" A class that gives all the paths needed in the%
+		% tutorial."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	FILE_PATHS
 
-feature {NONE}
+feature -- Access
 
-	main_path : STRING is
-			-- root directory for all tutorial files
+	class_name: STRING
+			-- Current name of the class
+
+	example_name: STRING
+			-- Current name of the example file
+	
+feature -- Basic operation
+
+	documentation_file: STRING is
+			-- Return the full name of the documentation file.
 		do
-			Result := "c:/Eiffel45/examples/vision2/tutorial/"
+			Result := clone (library_path)
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("documentation")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append (class_name)
+			Result.append (".txt")
 		end
+
+	class_file: STRING  is
+			-- Return the full name of the new class file.
+		do
+			Result := clone (library_path)
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("short_forms")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append (class_name)
+			Result.append (".txt")
+		end
+
+	example_file: STRING is
+			-- sets example path string
+		do
+			Result := clone (example_path)
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("demo_windows")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append (example_name)
+			Result.append (".e")
+		end
+
+feature {NONE} -- Implementation
 
 	library_path : STRING is
 			-- directory of all vision2 library short-form interfaces
-		do
-		--	Result := "c:/Eiffel45/library/vision2/short_forms/"
-			Result := "c:/Eiffel45/examples/vision2/tutorial/shortform/"
+		local
+			env: EXECUTION_ENVIRONMENT
+		once
+			create env
+			Result := env.get ("EIFFEL4")
+	--		Result := "d:\Eiffel45"
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("library")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("vision2")
 		end
 
 
-	example_path: STRING 
-			-- path of example class text
-	
-	docs_path: STRING 
-			-- path of documentation text
-
-	class_path: STRING 
-			-- path of class file text
-
-
-	set_example_path(fn: STRING) is
-			-- sets example path string
-		do
-			!!example_path.make(0)
-			example_path.append(main_path)
-			example_path.append(fn)
+	example_path: STRING is
+			-- path of example class text.
+		local
+			env: EXECUTION_ENVIRONMENT
+		once
+			create env
+			Result := env.get ("EIFFEL4")
+	--		Result := "d:\Eiffel45"
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("examples")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("vision2")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("tutorial")
 		end
 
-	set_docs_path(fn: STRING) is
-			-- sets example path string
-		do
-			!!docs_path.make(0)
-			docs_path.append(main_path)
-			docs_path.append(fn)
-			
-		end
+end -- class FILE_PATHS
 
-	set_class_path(fn: STRING) is
-			-- sets example path string
-		do
-			!!class_path.make(0)
-			class_path.append(library_path)
-			class_path.append(fn)
-			class_path.append(".txt")
-		end
-
-end -- class FILE_PATH
+--|----------------------------------------------------------------
+--| EiffelVision Tutorial: Example for the ISE EiffelVision library.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

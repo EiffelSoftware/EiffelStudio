@@ -2105,7 +2105,6 @@ feature -- Debugging
 			then
 				wc := written_class
 				Result := (not wc.is_basic)
-					and then (not wc.is_special)
 					and then (wc.has_types)
 			end
 		end

@@ -9,26 +9,43 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class MEM_INFO inherit
+class MEM_INFO
 
+inherit
+	MEMORY_STRUCTURE
+		rename
+			make as structure_make
+		export
+			{NONE} make_by_pointer, structure_make, item, shared
+		end
+	
 	MEM_CONST
 
 create
-
 	make
 
 feature -- Initialization
 
-	make, update (memory: INTEGER) is
+	make (memory: INTEGER) is
 			-- Update Current for `memory' type.
+		require
+			memory_valid: memory = Total_memory or memory = Eiffel_memory or memory = C_memory
 		do
-			mem_stat (memory)
-			type := memory
-			total := mem_info (1)
-			used := mem_info (2)
-			overhead := mem_info (3)
+			structure_make
+			update (memory)
 		ensure
-			Type_updated: type = memory
+			type_set: type = memory
+		end
+
+	update (memory: INTEGER) is
+			-- Update Current for `memory' type.
+		require
+			memory_valid: memory = Total_memory or memory = Eiffel_memory or memory = C_memory
+		do
+			mem_stat (item, memory)
+			type := memory
+		ensure
+			type_set: type = memory
 		end
 
 feature -- Access
@@ -38,13 +55,19 @@ feature -- Access
 
 feature -- Measurement
 
-	total: INTEGER
+	total: INTEGER is
 			-- Total number of bytes allocated for `type'
 			-- before last call to `update'
+		do
+			Result := c_ml_total (item)
+		end
 
-	used: INTEGER
+	used: INTEGER is
 			-- Number of bytes used for `type'
 			-- before last call to `update'
+		do
+			Result := c_ml_used (item)
+		end
 
 	free: INTEGER is
 			-- Number of bytes still free for `type'
@@ -55,24 +78,68 @@ feature -- Measurement
 			Computed: Result = total - used - overhead
 		end
 
-	overhead: INTEGER
+	overhead: INTEGER is
 			-- Number of bytes used by memory management
 			-- scheme for `type' before last call to `update'
-
+		do
+			Result := c_ml_over (item)
+		end
 
 feature {NONE} -- Implementation
 
-	mem_stat (mem: INTEGER) is
-			-- Initialize run-time buffer used by mem_info to retrieve the
+	mem_stat (a_ptr: POINTER; mem: INTEGER) is
+			-- Initialize `a_ptr' used by MEM_INFO to retrieve the
 			-- statistics frozen at the time of this call.
 		external
-			"C | %"eif_memory.h%""
+			"C use %"eif_memory.h%""
 		end
 
-	mem_info (field: INTEGER): INTEGER is
-			-- Read memory accounting structure, field by field.
+	structure_size: INTEGER is
+			-- Size of underlying C structure.
+		do
+			Result := c_sizeof_emallinfo
+		end
+		
+feature {NONE} -- C externals
+
+	c_ml_chunk (a_ptr: POINTER): INTEGER is
+			-- Access `ml_chunk' data member of `a_ptr' struct.
 		external
-			"C | %"eif_memory.h%""
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"((struct emallinfo *) $a_ptr)->ml_chunk"
+		end
+
+	c_ml_total (a_ptr: POINTER): INTEGER is
+			-- Access `ml_total' data member of `a_ptr' struct.
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"((struct emallinfo *) $a_ptr)->ml_total"
+		end
+
+	c_ml_used (a_ptr: POINTER): INTEGER is
+			-- Access `ml_used' data member of `a_ptr' struct.
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"((struct emallinfo *) $a_ptr)->ml_used"
+		end
+
+	c_ml_over (a_ptr: POINTER): INTEGER is
+			-- Access `ml_over' data member of `a_ptr' struct.
+		external
+			"C inline use %"eif_eiffel.h%""
+		alias
+			"((struct emallinfo *) $a_ptr)->ml_over"
+		end
+		
+	c_sizeof_emallinfo: INTEGER is
+			-- Size of struct `emallinfo'.
+		external
+			"C macro use %"eif_eiffel.h%""
+		alias
+			"sizeof(struct emallinfo)"
 		end
 
 invariant

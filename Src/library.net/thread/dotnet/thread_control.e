@@ -20,7 +20,6 @@ feature -- Basic operations
 			-- The calling thread waits for all other threads to terminate.
 		local
 			l_list: LIST [THREAD]
-			l_any: ANY
 			l_item: THREAD
 		do
 			debug ("EIFFEL_THREAD")

@@ -447,11 +447,7 @@ feature {EV_FONT_IMP} -- Implementation
 	addstyle_string: STRING is
 			-- Get standard string to represent addstyle.
 		do
-			if family = Family_sans then
-				Result := "sans"
-			else
-				Result := "*"
-			end
+			Result := "*"
 		end
 
 	try_string (a_name: STRING): STRING is

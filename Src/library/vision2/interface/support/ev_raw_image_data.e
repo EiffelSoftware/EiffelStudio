@@ -162,11 +162,11 @@ feature -- Element Change
 			a_color_not_void: a_color /= Void
 		do
 			set_character_from_integer (a_x, a_y, 1,
-				a_color.red_8_bit.ascii_char)
+				a_color.red_8_bit.to_character)
 			set_character_from_integer (a_x, a_y, 2,
-				a_color.green_8_bit.ascii_char)
+				a_color.green_8_bit.to_character)
 			set_character_from_integer (a_x, a_y, 3,
-				a_color.blue_8_bit.ascii_char)
+				a_color.blue_8_bit.to_character)
 			--set_character_from_integer (a_x, a_y, 4,
 			--	a_color.alpha_8_bit.ascii_char)
 		end
@@ -244,9 +244,9 @@ feature {NONE} -- Implementation
 			valid_code: a_code >= 0 and a_code <= 15
 		do
 			if a_code < 10 then
-				Result := (a_code + 48).ascii_char
+				Result := (a_code + 48).to_character
 			else
-				Result := (a_code + 55).ascii_char
+				Result := (a_code + 55).to_character
 			end
 		end
 

@@ -2428,7 +2428,7 @@ feature -- Final mode generation
 			deg_output: DEGREE_OUTPUT
 			local_classes: CLASS_C_SERVER
 		do
-			Eiffel_project.delete_f_code
+			Eiffel_project.delete_f_code_content
 			from
 				local_classes := classes
 				!FINAL_MAKER! makefile_generator.make

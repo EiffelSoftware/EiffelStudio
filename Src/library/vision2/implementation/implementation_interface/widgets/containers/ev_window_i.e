@@ -172,12 +172,6 @@ feature -- Status setting
 		deferred
 		end
 
-	remove_title is
-			-- Make `title' `Void'.
-		do
-			set_title ("")
-		end
-
 	set_menu_bar (a_menu_bar: EV_MENU_BAR) is
 			-- Set `menu_bar' to `a_menu_bar'.
 		require

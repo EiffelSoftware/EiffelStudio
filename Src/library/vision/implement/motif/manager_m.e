@@ -65,11 +65,6 @@ feature
 			Result := True;
 		end;
 
-	window: POINTER is
-		do
-			Result := Xt_window(screen_object);
-		end;
-
 end
 
 

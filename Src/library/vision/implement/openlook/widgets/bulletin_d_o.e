@@ -22,7 +22,7 @@ inherit
 			{NONE} all
 		undefine
 			real_x, real_y, set_managed,
-			define_cursor_if_shell,
+			define_cursor_if_shell, action_target,
 			undefine_cursor_if_shell
 		end;
 
@@ -42,7 +42,8 @@ feature
 			screen_object := create_bulletin_d ($ext_name, a_bulletin_d.parent.implementation.screen_object);
 			a_bulletin_d.set_dialog_imp (Current);
 			forbid_resize;
-			initialize (a_bulletin_d)
+			initialize (a_bulletin_d);
+			action_target := screen_object;
 		end
 
 feature {NONE} -- External features

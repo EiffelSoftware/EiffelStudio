@@ -41,6 +41,12 @@ feature
 	identifier: POINTER
 			-- X identifier of the resource
 
+
+	set_allocated (b: BOOLEAN) is
+		do
+			is_allocated := b;
+		end;
+
 end 
 
 

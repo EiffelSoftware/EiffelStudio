@@ -16,7 +16,7 @@ inherit
 
 	FONT_BOX_O
 		undefine
-			make, set_managed, real_x, real_y,
+			make, set_managed, real_x, real_y, action_target,
 			undefine_cursor_if_shell, define_cursor_if_shell
 		redefine
 			set_x, set_y, set_x_y
@@ -45,6 +45,7 @@ feature
 			screen_object := font_box_form (data);
 			a_font_box_dialog.set_dialog_imp (Current);
 			forbid_resize
+			action_target := screen_object;
 		end;
 
 feature 

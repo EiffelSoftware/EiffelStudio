@@ -23,7 +23,7 @@ inherit
 			real_x, real_y, set_managed,
 			define_cursor_if_shell,
 			undefine_cursor_if_shell,
-			make
+			make, action_target
 		redefine
 			set_x, set_y, set_x_y
 		end;
@@ -33,7 +33,7 @@ inherit
 			real_x, real_y, set_managed,
 			define_cursor_if_shell,
 			undefine_cursor_if_shell,
-			make
+			make, action_target
 		redefine
 			set_x, set_y, set_x_y,
 			execute
@@ -92,6 +92,7 @@ feature
 			popup_screen_object := xt_parent (screen_object);
 			dialog_initialize (a_form_dialog); --! initializes callbacks
 			-- TO FIX forbid_resize;
+			action_target := screen_object;
 		end; 
 
 	execute (argument: ANY) is

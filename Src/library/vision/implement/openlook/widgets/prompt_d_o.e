@@ -13,7 +13,7 @@ inherit
 
 	PROMPT_O
 		undefine
-			make, set_managed, real_x, real_y,
+			make, set_managed, real_x, real_y, action_target,
 			undefine_cursor_if_shell, define_cursor_if_shell
 		redefine
 			set_x, set_y, set_x_y,
@@ -39,6 +39,7 @@ feature -- Creation
 							a_prompt_dialog.parent);
 			a_prompt_dialog.set_dialog_imp (Current);
 			initialize (a_prompt_dialog)
+			action_target := screen_object;
 		end;
 
 feature

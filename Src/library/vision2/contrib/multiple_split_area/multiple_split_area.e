@@ -2152,7 +2152,6 @@ feature {NONE} -- Implementation
 --				end
 			end
 			linear_representation.go_to (cursor)
-			print ("%N")
 		end
 		ensure
 			index_not_changed: linear_representation.index = old linear_representation.index

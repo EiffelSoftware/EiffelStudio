@@ -114,11 +114,7 @@ feature -- Basic operation
 			create {ARRAYED_LIST [WIZARD_WRITER_ASSERTION]} assertions.make (20)
 			visitor := a_type.visitor 
 
-			if 
-				not visitor.is_basic_type and 
-				not is_boolean (visitor.vt_type) and 
-				not visitor.is_enumeration 
-			then
+			if not visitor.is_basic_type and not is_boolean (visitor.vt_type) and not visitor.is_enumeration then
 				tmp_writer := additional_postcondition (a_name, a_type, visitor, ret_val)
 				if tmp_writer /= Void then
 					assertions.extend (tmp_writer)				
@@ -192,13 +188,13 @@ feature {NONE}
 		do
 			pointed_descriptor ?= type
 			if pointed_descriptor /= Void  then
-				if  (visitor.vt_type = binary_or (Vt_ptr, Vt_byref)) then
+				if visitor.vt_type = binary_or (Vt_ptr, Vt_byref) or visitor.vt_type = binary_or (Vt_void, Vt_byref) then
 					create tmp_tag.make (100)
 					tmp_tag.append ("valid_")
 					tmp_tag.append (a_name)
 					if ret_val then
 						create tmp_body.make (100)
-						tmp_body.append (Result_keyword)
+						tmp_body.append ("Result")
 					else
 						create tmp_body.make (100)
 						tmp_body.append (a_name)
@@ -206,16 +202,13 @@ feature {NONE}
 					tmp_body.append (".item /= default_pointer")
 					create Result.make (tmp_tag, tmp_body)
 
-				elseif 
-					ret_val and 
-					visitor.is_structure_pointer
-				then
+				elseif ret_val and visitor.is_structure_pointer then
 					create tmp_tag.make (100)
 					tmp_tag.append ("valid_")
 					tmp_tag.append (a_name)
 					
 					create tmp_body.make (100)
-					tmp_body.append (Result_keyword)
+					tmp_body.append ("Result")
 					tmp_body.append (".item /= default_pointer")
 					create Result.make (tmp_tag, tmp_body)
 
@@ -230,7 +223,7 @@ feature {NONE}
 					tmp_tag.append (a_name)
 					if ret_val then
 						create tmp_body.make (100)
-						tmp_body.append (Result_keyword)
+						tmp_body.append ("Result")
 					else
 						create tmp_body.make (100)
 						tmp_body.append (a_name)
@@ -248,7 +241,7 @@ feature {NONE}
 				tmp_tag.append (a_name)
 				if ret_val then
 					create tmp_body.make (100)
-					tmp_body.append (Result_keyword)
+					tmp_body.append ("Result")
 				else
 					create tmp_body.make (100)
 					tmp_body.append (a_name)

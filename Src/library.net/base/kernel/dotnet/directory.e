@@ -102,7 +102,7 @@ feature -- Access
 			until
 				i = c or Result
 			loop
-				Result := en.compare_to (ent.item (i)) = 0
+				Result := ent.item (i).ends_with (en)
 				i := i + 1
 			end
 		end
@@ -165,17 +165,18 @@ feature -- Conversion
 			-- The entries, in sequential format.
 		local
 			ent: NATIVE_ARRAY [SYSTEM_STRING]
-			i, c: INTEGER
+			i, c, dc: INTEGER
 		do
 			ent := feature {SYSTEM_DIRECTORY}.get_file_system_entries (name.to_cil)
 			c := ent.count
+			dc := name.count
 			create Result.make (c)
 			from
 				
 			until
 				i = c
 			loop
-				Result.extend (create {STRING}.make_from_cil (ent.item (i)))
+				Result.extend (create {STRING}.make_from_cil (ent.item (i).remove (0, dc)))
 				i := i + 1
 			end
 		end

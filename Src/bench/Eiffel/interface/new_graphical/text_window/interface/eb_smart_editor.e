@@ -467,8 +467,10 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			completion_mode := (completion_mode - 1).max (0)
 		end
 
-	complete_feature_from_window (cmp: STRING; is_feature_signature: BOOLEAN) is
+	complete_feature_from_window (cmp: STRING; is_feature_signature: BOOLEAN; appended_character: CHARACTER) is
 			-- Insert `cmp' in the editor and switch to completion mode.
+			-- If `is_feature_signature' then try to complete arguments and remove the type.
+			-- `appended_character' is a character that should be appended after the feature. '%U' if none.
 		local
 			completed: STRING
 			ind: INTEGER
@@ -487,9 +489,12 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 			end
 			if completed.is_empty then
 				completion_mode := (completion_mode - 1).max (0)
+				if appended_character /= '%U' then
+					text_displayed.insert_char (appended_character)
+				end
 				--history.unbind_current_item_to_next
 			else
-				text_displayed.complete_feature_call (completed, is_feature_signature)
+				text_displayed.complete_feature_call (completed, is_feature_signature, appended_character)
 				if is_feature_signature then
 					if completed.last_index_of (')',completed.count) = completed.count then
 			--			completion_mode := completion_mode + 1
@@ -497,8 +502,13 @@ feature {EB_COMPLETION_CHOICE_WINDOW} -- automatic completion
 					else
 						completion_mode := (completion_mode - 1).max (0)
 						switch_auto_point := False
-						auto_point := True
-						auto_point_token := text_displayed.cursor.token
+						if appended_character = '%U' then
+							auto_point := True
+							auto_point_token := text_displayed.cursor.token
+						else
+							auto_point := False
+							auto_point_token := Void
+						end
 					end
 				else
 					completion_mode := (completion_mode - 1).max (0)

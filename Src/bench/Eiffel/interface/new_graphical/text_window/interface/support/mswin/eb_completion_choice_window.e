@@ -130,7 +130,7 @@ feature -- Status report
 	feature_mode: BOOLEAN
 			-- Is `Current' used to select feature names ?
 
-feature -- Events handling
+feature {NONE} -- Events handling
 
 	mouse_selection (x_pos, y_pos, button: INTEGER; unused1,unused2,unused3: DOUBLE; unused4,unused5:INTEGER) is
 			-- process mouse click in the list
@@ -138,6 +138,7 @@ feature -- Events handling
 			if 
 				button = 1 and choice_list.selected_item /= Void			
 			then
+				forced_complete := Void
 				close_and_complete
 			else
 				to_be_inserted.set_focus
@@ -149,6 +150,7 @@ feature -- Events handling
 		local
 			ix: INTEGER
 		do
+			forced_complete := Void
 			if ev_key /= Void then
 				inspect
 					ev_key.code
@@ -224,6 +226,11 @@ feature -- Events handling
 						current_meta_keys.is_equal (editor.Editor_preferences.ctrl_alt_shift_for_actions.item (1))
 					then
 						close_and_complete
+					else
+							-- Save the currently selected item.
+						if choice_list.selected_item /= Void then
+							forced_complete := sorted_names.item (choice_list.index_of (choice_list.selected_item, 1) + index_offset)
+						end
 					end
 				end
 			end
@@ -256,6 +263,8 @@ feature -- Events handling
 			-- process user entry
 		local
 			searched_w: STRING
+			last_selected: STRING
+			lc: CHARACTER
 		do
 			if not to_be_inserted.text.is_empty then
 				searched_w := to_be_inserted.text.out
@@ -263,7 +272,20 @@ feature -- Events handling
 			build_displayed_list (searched_w)
 			if not choice_list.is_empty then
 				choice_list.first.enable_select
-			end			
+			else
+				if searched_w /= Void and then not searched_w.is_empty then
+					lc := searched_w.item (searched_w.count)
+					if
+						(to_be_inserted.caret_position = to_be_inserted.text_length + 1) and then
+						(not lc.is_alpha) and (not lc.is_digit) and (lc /= '_')
+					then
+						character_to_append := lc
+						close_and_complete
+					end
+				end
+			end
+			forced_complete := Void
+			character_to_append := '%U'
 		end
 
 feature -- Basic operations
@@ -281,10 +303,16 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
+	character_to_append: CHARACTER
+			-- Character that should be appended after the completed feature in the editor.
+			-- '%U' if none.
 			
 	index_offset: INTEGER
 			-- Index in `sorted_names' of the first element in `choice_list'
-			
+	
+	forced_complete: EB_NAME_FOR_COMPLETION
+			-- Item that we force `close_and_complete' to use, if needed.
+	
 	build_displayed_list (name: STRING) is
 			--  
 		local
@@ -349,16 +377,28 @@ feature {NONE} -- Implementation
 		local
 			ix: INTEGER
 		do
-			if choice_list.selected_item /= Void then
+			if forced_complete /= Void then
+				if character_to_append = '(' then
+					character_to_append := '%U'
+				end
+				if forced_complete.has_dot then
+					editor.complete_feature_from_window (point_if_needed + forced_complete, True, character_to_append)
+				else
+					editor.complete_feature_from_window (" " + forced_complete, True, character_to_append)
+				end
+			elseif choice_list.selected_item /= Void then
+				if character_to_append = '(' then
+					character_to_append := '%U'
+				end
 				ix:= choice_list.index_of (choice_list.selected_item,1) + index_offset
 				if sorted_names.item (ix).has_dot then
-					editor.complete_feature_from_window (point_if_needed + sorted_names.item (ix), True)
+					editor.complete_feature_from_window (point_if_needed + sorted_names.item (ix), True, character_to_append)
 				else
-					editor.complete_feature_from_window (" " + sorted_names.item (ix), True)
+					editor.complete_feature_from_window (" " + sorted_names.item (ix), True, character_to_append)
 				end
 			else
 				if not to_be_inserted.text.is_empty then
-					editor.complete_feature_from_window (point_if_needed + to_be_inserted.text, False)
+					editor.complete_feature_from_window (point_if_needed + to_be_inserted.text, False, '%U')
 				end
 			end
 		end
@@ -385,7 +425,7 @@ feature {NONE} -- Implementation
 				is_closing := True
 				if before_complete /= void then
 					if feature_mode then
-						editor.complete_feature_from_window (point_if_needed + before_complete, False)
+						editor.complete_feature_from_window (point_if_needed + before_complete, False, character_to_append)
 					else
 						editor.complete_class_from_window (before_complete)
 					end
@@ -408,7 +448,7 @@ feature {NONE} -- Implementation
 			Result := <<ev_application.ctrl_pressed, ev_application.alt_pressed, ev_application.shift_pressed>>
 		end
 
-	pos_of_first_greater (table: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]; a_name:EB_NAME_FOR_COMPLETION): INTEGER is
+	pos_of_first_greater (table: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]; a_name: EB_NAME_FOR_COMPLETION): INTEGER is
 			--
 		local
 			low, up, mid: INTEGER

@@ -16,7 +16,9 @@ inherit
 	WEL_MULTIPLE_LINE_EDIT
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			set_parent as wel_set_parent,
+			background_color as wel_background_color,
+			foreground_color as wel_foreground_color,
 			font as wel_font,
 			set_font as wel_set_font,
 			destroy as wel_destroy
@@ -35,8 +37,8 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
-			background_color,
-			foreground_color
+			wel_background_color,
+			wel_foreground_color
 		redefine
 			default_style
 		end

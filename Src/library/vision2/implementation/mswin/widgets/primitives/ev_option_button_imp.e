@@ -13,7 +13,8 @@ inherit
 	EV_MENU_CONTAINER_IMP
 		undefine
 			on_draw,
-			add_menu
+			add_menu,
+			on_selection_changed
 		end
 
 	EV_BUTTON_IMP
@@ -34,8 +35,18 @@ feature {NONE} -- Initialization
 			-- Create the option button with `par' as parent.
 		do
 			{EV_BUTTON_IMP} Precursor (par)
-			!! ev_children.make
+			ev_children := parent_imp.menu_items
 			!! menu_container.make_track
+		end
+
+
+feature -- Event association
+
+	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
+			-- `sitem' has been selected'
+		do
+			set_text (sitem.text)
+			pixmap_imp := sitem.pixmap_imp
 		end
 
 feature {NONE} -- Basic operation

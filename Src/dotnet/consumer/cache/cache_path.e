@@ -135,8 +135,10 @@ feature {CACHE_READER} -- Access
 			l_registry_key: REGISTRY_KEY
 			l_obj: SYSTEM_OBJECT
 			l_file_info: FILE_INFO
+			l_dir_sep: CHARACTER
 		once
 			if not retried then
+				l_dir_sep := (create {OPERATING_ENVIRONMENT}).Directory_separator
 				if internal_eiffel_cache_path.item = Void then
 					Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_key)
 					if Result = Void then
@@ -160,6 +162,9 @@ feature {CACHE_READER} -- Access
 					check
 						Ise_eiffel_defined: Result /= Void
 					end
+					if Result.item (Result.count) /= l_dir_sep then
+						Result.append_character (l_dir_sep)
+					end
 					Result.append (eac_path)
 					
 						-- set internal EAC path to registry key
@@ -167,8 +172,8 @@ feature {CACHE_READER} -- Access
 				else
 					Result := internal_eiffel_cache_path.item
 				end
-				if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
-					Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+				if Result.item (Result.count) /= l_dir_sep then
+					Result.append_character (l_dir_sep)
 				end	
 			else
 					-- FIXME: Manu 05/14/2002: we should raise an error here.

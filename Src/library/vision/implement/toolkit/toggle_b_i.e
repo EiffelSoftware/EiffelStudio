@@ -70,10 +70,11 @@ feature
 feature
 
 	add_activate_action (a_command: COMMAND; argument: ANY) is
-		do
+		deferred
 		end;
+
 	remove_activate_action (a_command: COMMAND; argument: ANY) is
-		do
+		deferred
 		end;
 
 end --class TOGGLE_B_I

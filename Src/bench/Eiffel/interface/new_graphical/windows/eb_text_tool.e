@@ -57,13 +57,14 @@ feature -- Window Properties
 			-- History list for Current.
 
 	stone: STONE
-			-- Stone in tool
+			-- Stone in tool; can be Void.
 
 	text_area: EB_FORMATTED_TEXT
 			-- Text area attached to Current
 
 	reset_stone is
 			-- Reset the stone to Void.
+			-- As a consequence, reset display.
 		do
 			stone := Void
 		ensure
@@ -88,14 +89,11 @@ feature -- Window Properties
 			-- Button to represent Current's default hole.
 			--| Not implemented yet
 
---	history_window_title: STRING is
---			-- Title of the history window
---		do
---			Result := Interface_names.t_Empty
---		end
---| FIXME
---| Christophe (14 oct 1999)
---| History dialog not implemented yet.
+	history_dialog_title: STRING is
+			-- Title of the history dialog
+		do
+			Result := Interface_names.t_Empty
+		end
 
 feature -- Access
 
@@ -216,13 +214,13 @@ feature -- Status setting
 
 	set_stone (s: like stone) is
 			-- make `s' the new value of stone.
+			-- Changes display as a consequence, to preserve the fact
+			-- that the tool displays the content of the stone
+			-- (when there is a stone).
 		require
 --			valid_stone_type: s /= Void implies s.stone_type = stone_type
 		do
 			stone := s
-				--| FIXME
-				--| Christophe, 18 oct 1999
-				--| set_icon_name not implemented yet.
 --			if s = Void then
 --				set_icon_name (default_name)
 --			else
@@ -231,8 +229,12 @@ feature -- Status setting
 --					hole_button.set_full_symbol
 --				end
 --			end
+--| FIXME
+--| Christophe, 3 nov 1999
+--| `set_icon_name' not implemented
+
 		ensure
-			set: s = stone
+			set: s.same_as (stone)
 		end
 
 	set_font_to_default is
@@ -313,8 +315,12 @@ feature -- Element change
 			valid_history: history /= Void
 		do
 			history.add_stone (a_stone)
-		ensure
-			has_history: history.has (a_stone)
+--|		ensure
+--|			has_history: history.has (a_stone)
+--| FIXME
+--| Christophe, 10 nov 1999
+--| `a_stone' is not always added, therefore ensure clause is
+--| not true, we need to find another ensure clause.
 		end
 
 feature {NONE} -- Implementation
@@ -363,7 +369,9 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 	build_edit_menu (a_menu: EV_MENU_ITEM_HOLDER) is
 			-- Build standard edit menu entries in `a_menu'
-			-- Non fonctionnal yet.
+--| FIXME
+--| Christophe, 3 nov 1999
+--| Non fonctionnal yet.
 		require
 			a_menu_exits: a_menu /= Void
 		local
@@ -427,5 +435,8 @@ feature {NONE} -- Implementation
 
 	container: EV_VERTICAL_BOX
 			-- Form representing Current
+
+invariant
+	stone_meaningful: (stone /= Void) implies stone.is_valid
 
 end -- class EB_TEXT_TOOL

@@ -43,7 +43,7 @@ feature -- Basic operations
 				   a_directory_name_string.count >= 2 and then
 				   a_directory_name_string @ (a_directory_name_string.count - 1) /= ':'
 				then
-				   a_directory_name_string.head (a_directory_name_string.count - 1)
+				   a_directory_name_string.remove_tail (1)
 				end
 
 				create Result.make_from_string (a_directory_name_string)

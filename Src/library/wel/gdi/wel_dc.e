@@ -437,7 +437,7 @@ feature -- Status report
 			nb := cwin_get_text_face (item,
 				Max_text_face, a_wel_string.item)
 			Result := a_wel_string.string
-			Result.head (nb)
+			Result.keep_head (nb)
 		ensure
 			result_not_void: Result /= Void
 		end

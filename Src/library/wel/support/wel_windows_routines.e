@@ -95,7 +95,7 @@ feature -- Basic operations
 				wr_main_args.current_instance.item,
 				an_id, a_wel_string.item, Result.count)
 			Result := a_wel_string.string
-			Result.head (nb)
+			Result.keep_head (nb)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -179,7 +179,7 @@ feature -- Status report
 			create a_wel_string.make (Result)
 			nb := cwin_get_system_directory (a_wel_string.item, Result.count)
 			Result := a_wel_string.string
-			Result.head (nb)
+			Result.keep_head (nb)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -195,7 +195,7 @@ feature -- Status report
 			create a_wel_string.make (Result)
 			nb := cwin_get_windows_directory (a_wel_string.item, Result.count)
 			Result := a_wel_string.string
-			Result.head (nb)
+			Result.keep_head (nb)
 		ensure
 			result_not_void: Result /= Void
 		end

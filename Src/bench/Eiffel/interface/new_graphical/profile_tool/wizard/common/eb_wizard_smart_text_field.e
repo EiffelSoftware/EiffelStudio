@@ -348,7 +348,7 @@ feature {NONE} -- Implementation
 				if not start_directory.is_empty then
 					end_char := start_directory @ start_directory.count
 					if end_char = '\' or end_char = '/' then
-						start_directory.head (start_directory.count - 1)
+						start_directory.remove_tail (1)
 					end
 				end
 			end

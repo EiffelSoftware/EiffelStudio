@@ -767,7 +767,7 @@ feature {NONE} -- Commands
 			!! Result.make (0);
 			new_line_index := translat_string.index_of ('%N',1);
 			Result.append_string (translat_string.substring (1, new_line_index));
-			translat_string.tail (translat_string.count - new_line_index)
+			translat_string.remove_head (new_line_index)
 		end
 
 feature -- Access

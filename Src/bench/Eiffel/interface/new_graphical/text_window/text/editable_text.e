@@ -328,7 +328,7 @@ feature -- Basic Operations
 				end
 				indent := cursor.line.indentation.out
 				if cursor.x_in_characters <= indent.count then
-					indent.head (cursor.x_in_characters - 1)
+					indent.keep_head (cursor.x_in_characters - 1)
 				end
 				history.record_insert_eol (indent)
 			else
@@ -1249,7 +1249,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				if use_smart_indentation then
 					aux := ln.indentation
 					if cursor.x_in_characters <= aux.count then
-						aux.head (cursor.x_in_characters - 1)
+						aux.keep_head (cursor.x_in_characters - 1)
 					end
 					new_pos := aux.count + 1
 					lexer.execute (aux)
@@ -1277,7 +1277,7 @@ feature {UNDO_CMD} -- Basic Text changes
 				if use_smart_indentation then
 					aux := ln.indentation
 					if cursor.x_in_characters <= aux.count then
-						aux.head(cursor.x_in_characters - 1)
+						aux.keep_head (cursor.x_in_characters - 1)
 					end
 					new_pos := aux.count + 1
 					s.prepend (aux)

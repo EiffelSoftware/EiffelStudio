@@ -102,7 +102,7 @@ feature {NONE} -- Windows
 	question_box: QUESTION_BOX is
 		once
 			!! Result
-		end
+		end;
 
 feature {NONE} -- Window Manager
 

@@ -17,7 +17,11 @@ inherit
 				cursor, start, forth, after, item, empty,
 				finish, wipe_out, islast, first_element, last
 		end;
-	SHARED_RESCUE_STATUS
+	SHARED_RESCUE_STATUS;
+	SHARED_TEXT_ITEMS
+		export
+			{NONE} all
+		end
 
 creation
 
@@ -46,6 +50,7 @@ feature -- Element change
 	add (v: like item) is
 			-- Add item `v' to end.
 		require
+			v_not_void: v /= Void;
 			at_end: not empty implies islast
 		do
 			put_right (v);
@@ -57,6 +62,8 @@ feature -- Element change
 	insert_two (cur: CURSOR; v1, v2: like item) is
 			-- Insert at cursor position `cur' item `v1'
 			-- and `v2'.
+		require
+			v1_and_v2_not_void: v1 /= Void and then v2 /= Void;
 		do
 			go_to (cur);
 			put_right (v2);
@@ -262,6 +269,11 @@ feature -- Element change
 			add (l_item)
 		end;
 
+	add_indent is
+			-- Add an indentation.
+		do
+			add (ti_Tab1)
+		end;
 
 	add_class_syntax (syn: SYNTAX_ERROR; e_class: E_CLASS; str: STRING) is
 			-- Put `syn' for `e_class'.

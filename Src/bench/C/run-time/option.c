@@ -324,8 +324,10 @@ void prof_stack_free(void);					/* Free profile stack memory */
 void prof_stack_init(void);					/* Initialize stack */
 #ifdef HAS_GETRUSAGE						/* %%zs added */
 void prof_time(struct prof_rusage *a_time);						/* Get time */
-#else
+#elif defined(HAS_TIMES)
 void prof_time(double *usertime, double *systime);
+#elif defined(EIF_WIN32)
+void prof_time(SYSTEMTIME *a_time);
 #endif
 struct prof_info* prof_stack_top(void);		/* Top the stack */
 struct prof_info* prof_stack_pop(void);		/* Pop top off stack */

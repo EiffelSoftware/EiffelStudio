@@ -7,6 +7,8 @@ inherit
 
 	WINDOWS
 
+	ERROR_POPUPER
+
 creation
 
 	initialize
@@ -114,25 +116,40 @@ feature -- Font values
 								(default_font, widget);
 		end;
 
+feature -- Error popurer
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := presentation_window
+		end
+
 feature {NONE} -- Initialize font values
 
 	initialize_font_values (resource: RESOURCE_TABLE) is
 		do
 			focus_label_font := get_font (resource, "focus_label_font", Void);
-			default_font := get_font (resource, "default_font", Void);
+			default_font := get_font (resource, "default_font",
+				"MS Sans Serif,-9,400,,default,dontcare,ansi,0,0,0,draft,stroke,default");
 		end;
 
 	check_font_validity (font: FONT; widget: WIDGET): FONT is
 			-- Check `font' validity for `widget'. If font
 			-- is in valid return VOID
+		local
+			msg: STRING
 		do
 			if font /= Void then
 				if font.is_font_valid then
 					Result := Font;	
 				else
-					io.error.putstring ("Warning: cannot load font ");
-					io.error.putstring (font.name);
-					io.error.new_line;
+					!! msg.make (0)
+					msg.append ("Warning: cannot load font ")
+					msg.append (font.name)
+					msg.append ("%N")
+					error_box.popup (Current, msg, Void)
+					error_box.error_d.set_x_y (eb_screen.width // 2 -
+						error_box.error_d.width // 2,
+						eb_screen.height // 2 - error_box.error_d.height // 2)
 				end;
 			end;
 		ensure

@@ -91,7 +91,8 @@ LSRC = math.c malloc.c garcol.c local.c except.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
-	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c
+	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
+	console.c
 
 OTHER = main.c
 
@@ -100,6 +101,7 @@ WADD = debug.c interp.c option.c update.c wbench.c
 NETWORK = network.o
 
 WSRC = \
+	console.c \
 	wmath.c \
 	wmalloc.c \
 	wgarcol.c \
@@ -137,6 +139,7 @@ WSRC = \
 	wmain.c 
 
 ESRC = \
+	console.c \
 	wmath.c \
 	wmalloc.c \
 	wgarcol.c \
@@ -174,6 +177,7 @@ ESRC = \
 	bmain.c 
 
 LOBJ = \
+	console.o \
 	math.o \
 	malloc.o \
 	garcol.o \
@@ -212,6 +216,7 @@ LOBJ = \
 
 WOBJ = \
 	$(NETWORK) \
+	console.o \
 	wmath.o \
 	wmalloc.o \
 	wgarcol.o \
@@ -254,6 +259,7 @@ WOBJ = \
 	wbench.o 
 
 EOBJ = \
+	console.o \
 	wmath.o \
 	wmalloc.o \
 	wgarcol.o \

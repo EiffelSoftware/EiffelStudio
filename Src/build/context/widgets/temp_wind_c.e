@@ -24,7 +24,7 @@ inherit
 
 feature 
 
-    symbol: PIXMAP is
+	symbol: PIXMAP is
 	   do
 		  Result := Pixmaps.dialog_shell_pixmap
 	   end;
@@ -41,7 +41,7 @@ feature
 			!!widget.make (entity_name, a_parent);
 			widget.set_default_position (False);
 			if retrieved_node = Void then
-				disable_resize_policy (False);
+				resize_policy_disabled := True;
 				widget_set_title (entity_name);
 				set_size (300, 300);
 				default_position := True;
@@ -102,6 +102,18 @@ feature
 			create_command.execute (Result);
 		end;
 
+feature -- File name
+
+	base_file_name_without_dot_e: FILE_NAME is
+		local
+			tmp: STRING;
+		do
+			tmp := clone (entity_name);
+			tmp.to_lower;
+			tmp.replace_substring_all (Window_seed_to_lower,
+						Resources.temp_window_file_name)
+			!! Result.make_from_string (tmp);
+		end;
 
 feature {NONE}
 
@@ -127,10 +139,13 @@ feature {NONE}
 			Shared_window_list.go_to (cursor);
 		end;
 
+	Window_seed: STRING is "Temp_wind";
+
+	Window_seed_to_lower: STRING is "temp_wind";
 
 	namer: NAMER is
 		once
-			!!Result.make ("Temp_wind");
+			!!Result.make (Window_seed);
 		end;
 
 	widget_set_title (new_title: STRING) is
@@ -155,7 +170,7 @@ feature {NONE}
 			opt_list.put (Context_const.geometry_form_nbr,
 						Context_const.Geometry_format_nbr);
 			opt_list.put (Context_const.temp_wind_att_form_nbr,
-						Context_const.Geometry_format_nbr);
+						Context_const.attribute_format_nbr);
 		end;
 
 feature 

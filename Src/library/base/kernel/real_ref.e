@@ -308,14 +308,14 @@ feature {NONE} -- Implementation
 	c_outr (r: REAL): STRING is
 			-- Printable representation of real value
 		external
-			"C | <out.h>"
+			"C | %"eif_out.h%""
 		end;
 
 	c_truncated_to_integer (r: REAL): INTEGER is
 			-- Integer part of `r' (same sign, largest absolute
 			-- value no greater than `r''s)
 		external
-			"C | <misc.h>"
+			"C | %"eif_misc.h%""
 		alias
 			"conv_ri"
 		end;

@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 	sp_count (sp_obj: POINTER): INTEGER is
 			-- Count of the special object
 		external
-			"C | <plug.h>"
+			"C | %"eif_plug.h%""
 		end;
 
 	c_standard_is_equal (source, target: POINTER): BOOLEAN is
@@ -67,7 +67,7 @@ feature {NONE} -- Implementation
 			-- Returns True if `source' and `target' have the same count
 			-- and the same entries.
 		external
-			"C | <equal.h>"
+			"C | %"eif_equal.h%""
 		alias
 			"spequal"
 		end;
@@ -75,7 +75,7 @@ feature {NONE} -- Implementation
 	c_standard_copy (source, target: POINTER) is
 			-- Copy entries of `target' into `source'.
 		external
-			"C | <copy.h>"
+			"C | %"eif_copy.h%""
 		alias
 			"spcopy"
 		end;
@@ -83,7 +83,7 @@ feature {NONE} -- Implementation
 	c_standard_clone (other: POINTER): SPECIAL [T] is
 			-- New special object of size `count'
 		external
-			"C | <copy.h>"
+			"C | %"eif_copy.h%""
 		alias
 			"spclone"
 		end

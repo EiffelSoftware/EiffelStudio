@@ -1047,13 +1047,13 @@ feature {STRING} -- Implementation
 	str_code (c_string: POINTER; i: INTEGER): INTEGER is
 			-- Numeric code of `i'-th character in `c_string'
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	hashcode (c_string: POINTER; len: INTEGER): INTEGER is
 			-- Hash code value of `c_string'
 		external
-			"C | <tools.h>"
+			"C | %"eif_tools.h%""
 		end;
 
 	str_search (c_str: POINTER; c: CHARACTER; i, len: INTEGER): INTEGER is
@@ -1061,7 +1061,7 @@ feature {STRING} -- Implementation
 			-- equal or following `i'-th position
 			-- 0 if no occurrence
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_str (c_str, o_str: like area; clen, olen, i, fuzzy: INTEGER): INTEGER is
@@ -1083,28 +1083,28 @@ feature {STRING} -- Implementation
 	str_len (c_string: POINTER): INTEGER is
 			-- Length of the C string: `c_string'
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_ljustify (c_string: POINTER; length,cap: INTEGER) is
 			-- Left justify in a field of `capacity'
 			-- the `c_string' of length `length'
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_cjustify (c_string: POINTER; length,cap: INTEGER) is
 			-- Center justify in a field of `capacity'
 			-- the `c_string' of length `length'
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_rjustify (c_string: POINTER; length,cap: INTEGER) is
 			-- Right justify in a field of `capacity'
 			-- the `c_string' of length `length'
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_cmp (this, other: POINTER; this_len, other_len: INTEGER ): INTEGER is
@@ -1112,112 +1112,112 @@ feature {STRING} -- Implementation
 			-- 0 if equal, < 0 if `this' < `other',
 			-- > 0 if `this' > `other'
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_lower (c_string: POINTER; length: INTEGER) is
 			-- Convert `c_string' to lower case.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_upper (c_string: POINTER; length: INTEGER) is
 			-- Convert `c_string' to upper case.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_reverse (c_string: POINTER; length: INTEGER) is
 			-- In-place reverse string `c_string'.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_atoi (c_string: POINTER; length: INTEGER): INTEGER is
 			-- Value of integer in `c_string'
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_ator (c_string: POINTER; length: INTEGER): REAL is
 			-- Value of real in `c_string'
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_atod (c_string: POINTER; length: INTEGER): DOUBLE is
 			-- Value of double in `c_string'
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_isi (c_string: POINTER; length: INTEGER): BOOLEAN is
 			-- Is is an integer?
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_isr (c_string: POINTER; length: INTEGER): BOOLEAN is
 			-- Is is a real?
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_isd (c_string: POINTER; length: INTEGER): BOOLEAN is
 			-- Is is a double?
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_mirror (c_string, new_string: POINTER; length: INTEGER) is
 			-- Build a new string into `new_string' which is the
 			-- mirror copy of the original string held in `c_string'.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_cpy (to_str: POINTER; from_str: POINTER; length_from: INTEGER) is
 			-- Copy `length_from' characters from `from_str' into `to_str'.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_blank (c_string: POINTER; n: INTEGER) is
 			-- Fill `c_string' with `n' blanks.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_fill (c_string: POINTER; n: INTEGER; c: CHARACTER) is
 			-- Fill `c_string' with `n' `c's.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_tail (c_string: POINTER; n, length: INTEGER) is
 			-- Remove all characters in `c_string'
 			-- except for the last `n'.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_take (other_string, c_string: POINTER; n1, n2: INTEGER) is
 			-- Make `c_string' the substring of `other_string'
 			-- from `n1' .. `n2'.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_cprepend (c_string: POINTER; c: CHARACTER; length: INTEGER) is
 			-- Prepend `c' to `c_string'.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_append (c_str, other_str: POINTER; c_len, other_len: INTEGER) is
 			-- Append `other_str' to `c_str'.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_insert (c_string, other_string: POINTER; c_length, other_length,
@@ -1225,13 +1225,13 @@ feature {STRING} -- Implementation
 			-- Insert `other_string' into `c_string' at `position'.
 			-- Insertion occurs at the left of `position'.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_rmchar (c_string: POINTER; length, i: INTEGER) is
 			-- Remove `i'-th character from `c_string'.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_replace (c_string, other_string: POINTER; c_length, other_length,
@@ -1239,35 +1239,35 @@ feature {STRING} -- Implementation
 			-- Replace substring (`start_pos', `end_pos') from `c_string'
 			-- by `other_string'.
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_rmall (c_string: POINTER; c: CHARACTER; length: INTEGER): INTEGER is
 			-- Remove all occurrences of `c' in `c_string'.
 			-- Return new number of character making up `c_string'
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_left (c_string: POINTER; length: INTEGER): INTEGER is
 			-- Remove all leading whitespace from `c_string'.
 			-- Return the new number of characters making `c_string'
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_right (c_string: POINTER; length: INTEGER): INTEGER is
 			-- Remove all trailing whitespace from `c_string'.
 			-- Return the new number of characters making `c_string'
 		external
-			"C | <eif_str.h>"
+			"C | %"eif_str.h%""
 		end;
 
 	str_resize (a: POINTER; newsize: INTEGER): like area is
 			-- Area which can accomodate
 			-- at least `newsize' characters
 		external
-			"C | <malloc.h>"
+			"C | %"eif_malloc.h%""
 		alias
 			"sprealloc"
 		end;
@@ -1276,7 +1276,7 @@ feature {STRING} -- Implementation
 			-- Copy characters of `source' within bounds `s'
 			-- and `e' to `target' starting at index `i'.
 		external
-			"C | <copy.h>"
+			"C | %"eif_copy.h%""
 		end
 
 invariant

@@ -21,7 +21,7 @@ feature -- Access
 	current_working_directory: STRING is
 			-- Directory of current execution
 		external
-			"C | <dir.h>"
+			"C | %"eif_dir.h%""
 		alias
 			"dir_current"
 		end
@@ -119,25 +119,25 @@ feature {NONE} -- External
 	eif_getenv (s : POINTER): POINTER is
 			-- Value of environment variable `s'
 		external
-			"C | <misc.h>"
+			"C | %"eif_misc.h%""
 		end
 
 	eif_putenv (v, k: ANY): INTEGER is
 			-- Set `s' in the environment.
 		external
-			"C | <misc.h>"
+			"C | %"eif_misc.h%""
 		end
 
 	eif_chdir (s: ANY): INTEGER is
 			-- Set the current directory to `path'
 		external
-			"C | <dir.h>"
+			"C | %"eif_dir.h%""
 		end;
 
 	system_call (s : POINTER): INTEGER is
 			-- Pass to the operating system a request to execute `s'.
 		external
-			"C | <misc.h>"
+			"C | %"eif_misc.h%""
 		alias
 			"eif_system"
 		end
@@ -145,13 +145,13 @@ feature {NONE} -- External
 	eif_home_directory_name: STRING is
 			-- Directory name corresponding to the home directory
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 	eif_root_directory_name: STRING is
 			-- Directory name corresponding to the root directory
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 end -- class EXECUTION_ENVIRONMENT

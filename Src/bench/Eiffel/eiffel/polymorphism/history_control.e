@@ -26,7 +26,7 @@ feature
 			!!new_units.make (500);
 		end;
 
-	add_new (u: POLY_UNIT; rout_id: ROUTINE_ID; pattern_id: INTEGER) is
+	add_new (u: POLY_UNIT; rout_id: ROUTINE_ID; pattern_id: PATTERN_ID) is
 			-- Add a new unit for routine id `rout_id' to the controler
 		require
 			good_argument: u /= Void

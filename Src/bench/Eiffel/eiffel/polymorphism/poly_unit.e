@@ -37,7 +37,7 @@ feature
 			Result := id < other.id
 		end;
 
-	new_poly_table (pattern_id: INTEGER): POLY_UNIT_TABLE [POLY_UNIT] is
+	new_poly_table (pattern_id: PATTERN_ID): POLY_UNIT_TABLE [POLY_UNIT] is
 			-- New associated polymophic unit table
 		deferred
 		end;

@@ -17,7 +17,7 @@ feature
 			feature_id := i
 		end;
 
-	new_poly_table (pattern_id: INTEGER): ATTR_UNIT_TABLE is
+	new_poly_table (pattern_id: PATTERN_ID): ATTR_UNIT_TABLE is
 			-- New associated polymorhic table
 		do
 			!!Result.make

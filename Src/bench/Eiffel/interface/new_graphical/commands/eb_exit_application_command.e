@@ -47,11 +47,11 @@ feature -- Basic operations
 			cd: EV_CONFIRMATION_DIALOG
 		do
 			if Workbench.is_compiling then
-				create cd.make_with_text (Warning_messages.w_Stop_compilation)
-				cd.button ("OK").select_actions.extend (~confirm_and_exit)
+				create cd.make_with_text (Warning_messages.w_Exiting_stops_compilation)
+				cd.button ("OK").select_actions.extend (~confirm_stop_debug)
 				cd.show_modal_to_window (window_manager.last_focused_window.window)
 			else
-				confirm_and_exit
+				confirm_stop_debug
 			end
 		end
 
@@ -64,6 +64,20 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Callbacks
+
+	confirm_stop_debug is
+			-- Exit application. Ask the user to kill the debugger if it is running.
+		local
+			cd: EV_CONFIRMATION_DIALOG
+		do
+			if Application.is_running then
+				create cd.make_with_text (Warning_messages.w_Exiting_stops_debugger)
+				cd.button ("OK").select_actions.extend (~confirm_and_exit)
+				cd.show_modal_to_window (window_manager.last_focused_window.window)
+			else
+				confirm_and_exit
+			end
+		end
 
 	confirm_and_exit is
 			-- Ask to save files, to confirm if necessary and exit.

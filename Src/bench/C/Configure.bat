@@ -166,6 +166,7 @@ echo del %%1\*.bak >> cleanup.bat
 echo del %%1\*.zip >> cleanup.bat
 echo del %%1\*.pdb >> cleanup.bat
 echo del %%1\*.pch >> cleanup.bat
+echo del %%1\config.sh >> cleanup.bat
 echo del %%1\makefile >> cleanup.bat
 call cleanup extra\mswin\console
 call cleanup extra\mswin\desc

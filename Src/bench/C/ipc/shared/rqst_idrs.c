@@ -50,6 +50,9 @@ public bool_t idr_Request();
 	{ DUMPED, idr_Dumped },
 	{ DUMP, idr_Opaque },
 	{ INSPECT, idr_Opaque },
+	{ ADOPT, idr_Opaque },
+	{ ACCESS, idr_Opaque },
+	{ WEAN, idr_Opaque },
 	{ __dontcare__, idr_void },
 };
 

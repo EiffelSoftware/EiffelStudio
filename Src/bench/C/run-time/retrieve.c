@@ -193,7 +193,7 @@ long objectCount;
 
 		if (rt_kind == '\02') {
 			buffer_read (&trunc_ptr, sizeof (unsigned int));
-			oldadd = (long) trunc_ptr;
+			oldadd = (char *) trunc_ptr;
 		} else
 			buffer_read(&oldadd, (sizeof(char *)));
 #else

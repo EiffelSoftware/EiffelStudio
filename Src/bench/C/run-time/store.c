@@ -306,7 +306,7 @@ char *object;
 	/* Write address */
 #if PTRSIZ > 4
  
-	trunc_ptr = object & 0xffff;
+	trunc_ptr = (unsigned int)object & 0xffff;
 	buffer_write (&trunc_ptr, sizeof (unsigned int));
 #else
 	buffer_write(&object, sizeof(char *));

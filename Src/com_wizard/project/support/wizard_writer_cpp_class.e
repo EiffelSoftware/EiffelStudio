@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [WIZARD_WRITER]} ordered_elements.make
 			create {LINKED_LIST [WIZARD_WRITER_C_FUNCTION]} extern_functions.make
 			standard_include
+			conversion_include
 		end
 
 feature -- Access
@@ -67,19 +68,7 @@ feature -- Access
 				Result.append (New_line)
 			end
 
-			Result.append (Hash_if_def)
-			Result.append (Space)
-			Result.append (Cplusplus)
-			Result.append (New_line)
-			Result.append (Extern)
-			Result.append (Space)
-			Result.append (Double_quote)
-			Result.append ("C")
-			Result.append (Double_quote)
-			Result.append (Space)
-			Result.append (Open_curly_brace)
-			Result.append (New_line)
-			Result.append (Hash_end_if)
+			Result.append (cpp_protector_start)
 			Result.append (New_line)
 			Result.append (New_line)
 
@@ -171,13 +160,7 @@ feature -- Access
 			end
 
 			Result.append (New_line)
-			Result.append (Hash_if_def)
-			Result.append (Space)
-			Result.append (Cplusplus)
-			Result.append (New_line)
-			Result.append (Close_curly_brace)
-			Result.append (New_line)
-			Result.append (Hash_end_if)
+			Result.append (cpp_protector_end)
 		end
 	
 	generated_header_file: STRING is
@@ -207,20 +190,7 @@ feature -- Access
 			Result.append (header_protector (header_file_name))
 			Result.append (New_line)
 
-			Result.append (Hash_if_def)
-			Result.append (Space)
-			Result.append (Cplusplus)
-			Result.append (New_line)
-
-			Result.append (Extern)
-			Result.append (Space)
-			Result.append (Double_quote)
-			Result.append ("C")
-			Result.append (Double_quote)
-			Result.append (Space)
-			Result.append (Open_curly_brace)
-			Result.append (New_line)
-			Result.append (Hash_end_if)
+			Result.append (cpp_protector_start)
 			Result.append (New_line)
 			Result.append (New_line)
 
@@ -253,13 +223,7 @@ feature -- Access
 			end
 			Result.append (New_line)
 
-			Result.append (Hash_if_def)
-			Result.append (Space)
-			Result.append (Cplusplus)
-			Result.append (New_line)
-			Result.append (Close_curly_brace)
-			Result.append (New_line)
-			Result.append (Hash_end_if)
+			Result.append (cpp_protector_end)
 			Result.append (New_line)
 			Result.append (New_line)
 
@@ -278,20 +242,7 @@ feature -- Access
 				import_files.forth
 			end
 
-			Result.append (Hash_if_def)
-			Result.append (Space)
-			Result.append (Cplusplus)
-			Result.append (New_line)
-
-			Result.append (Extern)
-			Result.append (Space)
-			Result.append (Double_quote)
-			Result.append ("C")
-			Result.append (Double_quote)
-			Result.append (Space)
-			Result.append (Open_curly_brace)
-			Result.append (New_line)
-			Result.append (Hash_end_if)
+			Result.append (cpp_protector_start)
 			Result.append (New_line)
 			Result.append (New_line)
 
@@ -465,18 +416,9 @@ feature -- Access
 
 			Result.append (New_line)
 
-			Result.append (Hash_if_def)
-			Result.append (Space)
-			Result.append (Cplusplus)
-			Result.append (New_line)
-			Result.append (Close_curly_brace)
+			Result.append (cpp_protector_end)
 			Result.append (New_line)
 			Result.append (Hash_end_if)
-			Result.append (New_line)
-			Result.append (New_line)
-
-			Result.append (Sharp)
-			Result.append (Endif)
 		end
 
 	can_generate: BOOLEAN is

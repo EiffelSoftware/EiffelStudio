@@ -80,6 +80,10 @@ feature -- Basic Operations
 		do
 			if not shared_wizard_environment.abort then
 				message_output.initialize_log_file
+
+				if Eiffel4_location = Void or else Eiffel4_location.empty then
+					message_output.add_error (Current, message_output.Eiffel4_not_set)
+				end
 			end
 			
 			if 

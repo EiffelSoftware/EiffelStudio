@@ -103,7 +103,7 @@ feature -- Initalization
 			create feat_out
 			create bool_out
 			pm.completion_information.parse_source_for_expr ("my_feture (i: INTEGER): STRING is%N%T%Tdo%N%T%T%Tcreate {STRING}.make_empty", 3, 20, str_out, feat_out, bool_out)
-			feat ?= pm.completion_information.target_feature (str_out.item, "default_create", "E:\overloading_eiffel_test\application.e", false)
+		--	feat ?= pm.completion_information.target_feature (str_out.item, "default_create", "E:\overloading_eiffel_test\application.e", false)
 			print (str_out.item)
 		end
 		

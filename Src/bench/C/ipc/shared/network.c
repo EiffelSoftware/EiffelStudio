@@ -27,6 +27,7 @@
 #include <setjmp.h>
 #include <sys/types.h>
 #include "eif_globals.h"
+#include "rt_main.h"	/* for TIMEOUT */
 #include "rt_assert.h"
 
 #ifdef EIF_WIN32
@@ -40,7 +41,6 @@
 #include "ipcvms.h"
 #endif  /* EIF_VMS */
 
-extern unsigned TIMEOUT;		/* Time out on reads */
 
 #ifndef EIF_WIN32
 

@@ -3692,6 +3692,9 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_dispatch (EIF_REFERENCE a_ref)
 			an_element = ccom_ec_dispatch ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
 					(eif_access (eif_safe_array), eif_access (eif_index)));
 
+			if (an_element != NULL)
+				an_element->AddRef ();
+				
 			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
 			if (FAILED (hr))
 			{
@@ -3811,6 +3814,10 @@ SAFEARRAY * ecom_runtime_ec::ccom_ec_safearray_unknown (EIF_REFERENCE a_ref)
 			}
 			an_element = ccom_ec_unknown ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)
 					(eif_access (eif_safe_array), eif_access (eif_index)));
+			
+			if (an_element != NULL)
+				an_element->AddRef ();
+				
 			hr = SafeArrayPutElement(c_safe_array, c_index, &an_element);
 			if (FAILED (hr))
 			{

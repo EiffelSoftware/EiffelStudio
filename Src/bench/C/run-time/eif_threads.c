@@ -91,7 +91,7 @@ rt_public void eif_thr_register(void)
 
 	eif_global_context_t *eif_globals;
 
-	eif_globals = (eif_global_context_t *)eif_malloc(sizeof(eif_global_context_t));
+	eif_globals = (eif_global_context_t *) eif_malloc(sizeof(eif_global_context_t));
 	if (!eif_globals) eif_thr_panic("No more memory for thread context");
 	eif_init_context(eif_globals);
 	EIF_TSD_SET(eif_global_key,eif_globals,"Couldn't bind context to TSD.");
@@ -106,7 +106,7 @@ rt_public void eif_thr_register(void)
 	   * Also set value root thread id.
 	   */
 
-		EIF_once_values = (EIF_REFERENCE *) realloc (EIF_once_values, EIF_once_count * REFSIZ);
+		EIF_once_values = (EIF_REFERENCE *) eif_realloc (EIF_once_values, EIF_once_count * REFSIZ);
 			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
 		if (EIF_once_values == (EIF_REFERENCE *) 0) /* Out of memory */
 			enomem();
@@ -666,10 +666,6 @@ rt_public void eif_thr_exit(void)
 	*(eif_thr_context->addr_n_children) -= 1;
 
 	reclaim ();							/* Free all allocated memory chunks */
-	eif_free (eif_thr_context->tid);	/* Thread id of the current thread */
-	eif_free (eif_thr_context);			/* Thread context passed by parent */
-	eif_free (eif_globals);				/* Global variables specific to the current
-										 * thread of the run-time */
 
 #ifndef EIF_NO_CONDVAR
 	EIF_COND_BROADCAST(chld_cond, "Pbl cond_broadcast");
@@ -677,7 +673,7 @@ rt_public void eif_thr_exit(void)
 	EIF_MUTEX_UNLOCK(chld_mutex, "Unlock parent mutex");
 	EIF_THR_EXIT(0);
 	EIF_END_GET_CONTEXT
-}
+}	/* eif_thr_exit ().*/
 
 
 rt_private void eif_thr_unfreeze_dead(void)

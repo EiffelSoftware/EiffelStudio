@@ -627,6 +627,8 @@ rt_public typedef struct {
    be a pointer, that's why we use struct semaphore instead of SEM_ID
    because SEM_ID is equivalent to (struct semaphore *)
    */
+#define EIF_MUTEX_TYPE			struct semaphore
+
 #define EIF_TSD_VAL_TYPE        eif_global_context_t *
 /* Other definitions are in eif_threads.h */
 

@@ -12,7 +12,8 @@ class
 inherit
 	EV_LIST_I
 		redefine
-			interface
+			interface,
+			wipe_out
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -25,7 +26,8 @@ inherit
 			select_item,
 			deselect_item,
 			clear_selection,
-			on_item_clicked
+			on_item_clicked,
+			wipe_out
 		end	
 create
 	make
@@ -131,7 +133,27 @@ feature -- Status setting
 			Precursor {EV_LIST_ITEM_LIST_IMP}
 		end
 
-		
+feature -- Removal
+
+	wipe_out is
+			-- Remove all items.
+		local
+			item_imp: EV_LIST_ITEM_IMP
+		do
+			C.gtk_list_clear_items (list_widget, 0, -1)
+			from
+				start
+			until
+				index > count
+			loop
+				item_imp ?= item.implementation
+				item_imp.set_parent_imp (Void)
+				forth
+			end
+
+			index := 0
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	visual_widget: POINTER is

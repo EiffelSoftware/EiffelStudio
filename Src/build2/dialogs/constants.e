@@ -29,6 +29,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	small_padding: INTEGER is 
+			-- `Result' is INTEGER constant named small_padding.
+		once
+			Result := 4
+		end
+
 	new_button_text: STRING is
 			-- `Result' is STRING constant named `new_button_text'.
 		once
@@ -38,7 +44,7 @@ feature -- Access
 	png_location: STRING is
 			-- `Result' is DIRECTORY constant named `png_location'.
 		once
-			Result := (create {GB_SHARED_PIXMAPS}).png_location
+			Result := "D:\Eiffel54\build\bitmaps\png"
 		end
 
 	default_button_width: INTEGER is 
@@ -137,6 +143,12 @@ feature -- Access
 			Result := "Project Configuration"
 		end
 
+	import_project_title: STRING is
+			-- `Result' is STRING constant named `import_project_title'.
+		once
+			Result := "Import Completion Status"
+		end
+
 	close_text: STRING is
 			-- `Result' is STRING constant named `close_text'.
 		once
@@ -147,12 +159,6 @@ feature -- Access
 			-- `Result' is STRING constant named `ok_button_text'.
 		once
 			Result := "OK"
-		end
-
-	large_spacing_width: INTEGER is 
-			-- `Result' is INTEGER constant named large_spacing_width.
-		once
-			Result := 12
 		end
 
 	next_tip_text: STRING is
@@ -183,14 +189,14 @@ feature -- Access
 			Result := "Pixmap Selection"
 		end
 
-	small_padding: INTEGER is 
-			-- `Result' is INTEGER constant named small_padding.
-		once
-			Result := 4
-		end
-
 	large_padding: INTEGER is 
 			-- `Result' is INTEGER constant named large_padding.
+		once
+			Result := 12
+		end
+
+	large_spacing_width: INTEGER is 
+			-- `Result' is INTEGER constant named large_spacing_width.
 		once
 			Result := 12
 		end

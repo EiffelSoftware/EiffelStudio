@@ -24,8 +24,7 @@ inherit
 		redefine
 			minimum_width,
 			minimum_height,
-			set_minimum_width,
-			set_minimum_height,
+			set_minimum_size,
 			interface,
 			initialize,
 			destroy,
@@ -276,30 +275,43 @@ feature -- Element change
 			-- Set `maximum_width' to `max_width'.
 		do
 			-- to be tested
-			C.gdk_window_set_hints(C.gtk_widget_struct_window (c_object), x_position, y_position, minimum_width, minimum_height, max_width, maximum_height, 1)
+			C.gdk_window_set_hints (
+				C.gtk_widget_struct_window (c_object),
+				x_position,
+				y_position,
+				minimum_width,
+				minimum_height,
+				max_width,
+				maximum_height,
+				1
+			)
 			maximum_width := max_width
 		end 
-
-	set_minimum_width (min_width: INTEGER) is
-			-- Set `minimum_width' to `min_width'.
-		do
-			C.gdk_window_set_hints(C.gtk_widget_struct_window (c_object), x_position, y_position, min_width, minimum_height, maximum_width, maximum_height, 1)
-			minimum_width := min_width
-		end
 
 	set_maximum_height (max_height: INTEGER) is
 			-- Set `maximum_height' to `max_height'.
 		do
 			-- to be tested
-			C.gdk_window_set_hints (C.gtk_widget_struct_window (c_object), x_position, y_position, minimum_width, minimum_height, maximum_width, max_height, 1)
+			C.gdk_window_set_hints (
+				C.gtk_widget_struct_window (c_object),
+				x_position,
+				y_position,
+				minimum_width,
+				minimum_height,
+				maximum_width,
+				max_height,
+				1
+			)
 			maximum_height := max_height
 		end
 
-	set_minimum_height (min_height: INTEGER) is
-			-- Set `minimum_height' to `min_height'.
+	set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
+			-- Set the minimum horizontal size to `a_minimum_width'.
+			-- Set the minimum vertical size to `a_minimum_height'.
 		do
-			C.gdk_window_set_hints(C.gtk_widget_struct_window (c_object), x_position, y_position, minimum_width, min_height, maximum_width, maximum_height, 1)
-			minimum_height := min_height	
+			minimum_width := a_minimum_width
+			minimum_height := a_minimum_height
+			C.gtk_widget_set_usize (c_object, a_minimum_width, a_minimum_height)
 		end
 
 	set_title (new_title: STRING) is
@@ -446,6 +458,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/24 18:50:19  king
+--| Implemented set_minimum_size to avoid post-condition violation
+--|
 --| Revision 1.15  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

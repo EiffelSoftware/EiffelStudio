@@ -50,7 +50,15 @@ void ev_gtk_log (
 		level = "UNKNOWN";
 		fatal = TRUE;
 	}
-	snprintf (buf, 999, "%s-%s %s", log_domain, level, message);
+	if ( strlen (log_domain) + strlen (level) + strlen (message) + 2 > 999 ) {
+		if ( strlen (log_domain) + strlen (level) > 999 ) {
+			sprintf (buf, "%s-%s", log_domain, level);
+		} else {
+			sprintf (buf, "GTK-%s", level);
+		}
+	} else {
+		sprintf (buf, "%s-%s %s", log_domain, level, message);
+	}
 	printf ("%s\n", buf);
 	if (fatal) {
 		eraise (buf, EN_EXT);
@@ -83,6 +91,9 @@ void enable_ev_gtk_log (void)
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.3  2000/02/17 22:40:58  oconnor
+// modified eraise call to not need snprintf, NOt avalible on Solaris.
+//
 // Revision 1.2  2000/02/14 12:05:08  oconnor
 // added from prerelease_20000214
 //

@@ -37,7 +37,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
-			update_splitter
 			second_expandable := True
 			user_split_position := -1
 			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (container_widget, 0)
@@ -69,7 +68,6 @@ feature -- Access
 			feature {EV_GTK_EXTERNALS}.gtk_paned_pack1 (container_widget, item_imp.c_object, False, False)
 			first := an_item
 			set_item_resize (first, False)
-			update_splitter
 		end
 
 	set_second (an_item: like item) is
@@ -83,7 +81,6 @@ feature -- Access
 			feature {EV_GTK_EXTERNALS}.gtk_paned_pack2 (container_widget, item_imp.c_object, True, False)
 			second := an_item
 			set_item_resize (second, True)
-			update_splitter
 		end
 
 	prune (an_item: like item) is
@@ -111,7 +108,6 @@ feature -- Access
 						set_item_resize (first, True)
 					end
 				end
-				update_splitter
 			end
 		end
 
@@ -145,44 +141,6 @@ feature -- Access
 		do
 			flat_separator := False
 			--| Do nothing (Win32 Implementation only)
-		end
-
-	show_separator is
-			-- Make separator visible.
-		local
-			first_imp, second_imp: EV_WIDGET_IMP
-		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_paned_set_gutter_size (container_widget, splitter_width)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_paned_set_handle_size (container_widget, splitter_width)
-			
-				-- We know that both first and second are non Void.	
-			first_imp ?= first.implementation
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (first_imp.c_object)
-			feature {EV_GTK_EXTERNALS}.gtk_container_remove (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (first_imp.c_object), first_imp.c_object)
-			second_imp ?= second.implementation
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (second_imp.c_object)
-			feature {EV_GTK_EXTERNALS}.gtk_container_remove (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (second_imp.c_object), second_imp.c_object)
-			feature {EV_GTK_EXTERNALS}.gtk_paned_pack1 (container_widget, first_imp.c_object, first_expandable, False)
-			feature {EV_GTK_EXTERNALS}.gtk_paned_pack2 (container_widget, second_imp.c_object, second_expandable, False)
-		end
-
-	hide_separator is
-			-- Hide Separator.
-		local
-			item_imp: EV_WIDGET_IMP
-		do
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_paned_set_gutter_size (container_widget, 0)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_paned_set_handle_size (container_widget, 0)
-
-				-- If the separator is hidden, then `Current' can only contain at most, one widget.
-			if first /= Void then
-				item_imp ?= first.implementation
-			elseif second /= Void then
-				item_imp ?= second.implementation
-			end
-			if item_imp /= Void then
-				feature {EV_GTK_EXTERNALS}.gtk_widget_reparent (item_imp.c_object, c_object)
-			end
 		end
 
 feature {NONE} -- Implementation
@@ -224,24 +182,6 @@ feature {NONE} -- Implementation
 			end
 			set_gtk_paned_struct_child1_resize (container_widget, first_expandable)
 			set_gtk_paned_struct_child2_resize (container_widget, second_expandable)
-		end
-
-	update_splitter is
-			-- Update splitter to account for different configurations
-		do
-			if first /= Void and second = Void then
-				set_split_position (maximum_split_position)
-				hide_separator
-			elseif first = Void and second /= Void then
-				set_split_position (0)
-				hide_separator
-			elseif first = Void and second = Void then
-				set_split_position (0)
-				hide_separator
-			else
-				-- Both first and second are visible
-				show_separator
-			end
 		end
 
 feature {NONE} -- Externals.

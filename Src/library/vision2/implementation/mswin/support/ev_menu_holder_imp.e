@@ -60,7 +60,8 @@ feature -- Element change
 	add_menu (menu_imp: EV_MENU_IMP) is
 			-- Add `a_menu' into container.
 		local
-			cc: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+			cc: ARRAYED_LIST [EV_ITEM_IMP]
+			it: EV_MENU_ITEM_IMP
 		do
 			-- First, we add the menu here.
 			menu_container.append_popup (menu_imp, menu_imp.text)
@@ -77,7 +78,10 @@ feature -- Element change
 				until
 					cc.after
 				loop
-					item_handler.register_item (cc.item)
+					it ?= cc.item
+					if it /= Void then
+						item_handler.register_item (it)
+					end
 					cc.forth
 				end
 			end
@@ -86,7 +90,8 @@ feature -- Element change
 	remove_menu (menu_imp: EV_MENU_IMP) is
 			-- Remove menu_imp from the container.
 		local
-			cc: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+			cc: ARRAYED_LIST [EV_ITEM_IMP]
+			it: EV_MENU_ITEM_IMP
 		do
 			-- First, we remove the menu from here.
 			menu_container.delete_position (internal_get_index (menu_imp))
@@ -100,7 +105,10 @@ feature -- Element change
 				until
 					cc.after
 				loop
-					item_handler.unregister_item (cc.item)
+					it ?= cc.item
+					if it /= Void then
+						item_handler.unregister_item (it)
+					end
 					cc.forth
 				end
 			end

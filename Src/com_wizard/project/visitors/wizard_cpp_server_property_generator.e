@@ -133,6 +133,7 @@ feature {NONE} -- Implementation
 			end
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
+			Result.append (End_ecatch)
 			Result.append (Return)
 			Result.append (Space)
 			Result.append (S_ok)
@@ -150,6 +151,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 			Result.append (cecil_procedure (a_name, visitor))
 			Result.append (New_line_tab)
+			Result.append (End_ecatch)
 			Result.append (Return)
 			Result.append (Space)
 			Result.append (S_ok)

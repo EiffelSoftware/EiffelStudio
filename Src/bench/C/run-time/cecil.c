@@ -298,13 +298,14 @@ rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
 
 	int dtype = cid_to_dtype(cid);		/* Compute dynamic type from class ID */
 	struct ctable *ptr_table;			/* H table holding function pointers */
-	EIF_FN_REF *ref;
 #ifdef WORKBENCH
 	int32 *feature_ptr;
 	int32 rout_id;
 	uint32 body_id;
 	uint16 body_index;
 	int32 *cn_routids;
+#else
+	EIF_FN_REF *ref;
 #endif
 
 	if (dtype < 0)						/* Invalid type (not a reference) */
@@ -536,7 +537,7 @@ rt_public char eifibit(EIF_BIT bit, int i)
 	if (bit == (EIF_BIT) 0)			/* Null pointer */
 		return EIF_NO_BIT;			/* No bit then! */
 
-	if (i < 1 || i > bit->b_length)
+	if (i < 1 || (uint32) i > bit->b_length)
 		return EIF_NO_BIT;			/* Index out of range */
 
 	i--;			/* Run-time macros work with index starting at 0 */
@@ -553,7 +554,7 @@ rt_public int eifsibit(EIF_BIT bit, int i)
 	if (bit == (EIF_BIT) 0)			/* Null pointer */
 		return -1;					/* No action */
 
-	if (i < 1 || i > bit->b_length)
+	if (i < 1 || (uint32) i > bit->b_length)
 		return -1;					/* Index out of range */
 
 	i--;			/* Run-time macros work with index starting at 0 */
@@ -571,7 +572,7 @@ rt_public int eifribit(EIF_BIT bit, int i)
 	if (bit == (EIF_BIT) 0)			/* Null pointer */
 		return -1;					/* No action */
 
-	if (i < 1 || i > bit->b_length)
+	if (i < 1 || (uint32) i > bit->b_length)
 		return -1;					/* Index out of range */
 
 	i--;			/* Run-time macros work with index starting at 0 */

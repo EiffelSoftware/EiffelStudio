@@ -194,7 +194,7 @@ feature {NONE} -- WEL Implementation
  							gauge_exists: gauge.exists
  						end
 						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam), get_wm_vscroll_pos (wparam, lparam))
- 						--| FIXME gauge.execute_command (Cmd_gauge, Void)
+ 						gauge.interface.change_actions.call ([])
  					end
  				else
  					-- The message comes from a window scroll bar
@@ -222,7 +222,7 @@ feature {NONE} -- WEL Implementation
 	 						gauge_exists: gauge.exists
 	 					end
 						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam), get_wm_vscroll_pos (wparam, lparam))
-	 					--| FIXME gauge.execute_command (Cmd_gauge, Void)
+	 					gauge.interface.change_actions.call ([])
 	 				end
 				else
  					-- The message comes from a window scroll bar
@@ -359,6 +359,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/02/15 03:17:27  brendel
+--| Implemented call to action sequence of gauges.
+--|
 --| Revision 1.35  2000/02/14 11:40:42  oconnor
 --| merged changes from prerelease_20000214
 --|

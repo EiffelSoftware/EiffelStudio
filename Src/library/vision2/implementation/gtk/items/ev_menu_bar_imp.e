@@ -15,7 +15,7 @@ inherit
 	
 	EV_MENU_BAR_I
 		
-	EV_MENU_ITEM_CONTAINER_IMP
+	EV_MENU_HOLDER_IMP
 
 	EV_WIDGET_IMP
 	
@@ -25,12 +25,24 @@ creation
 
 feature {NONE} -- Initialization
 	
-        make (par: EV_CONTAINER) is
+        make is
                         -- Create a fixed widget. 
 		do
 			widget := gtk_menu_bar_new ()
 		end	
 	
+feature -- Element change	
+	
+	add_menu (menu_imp: EV_MENU_IMP) is
+			-- Add `menu_imp' in the container.
+		do
+		end
+
+	remove_menu (menu_imp: EV_MENU_IMP) is
+			-- Remove `menu_imp' from the container.
+		do
+		end
+
 feature {NONE} -- Implementation	
 
 	add_menu_item_pointer (item_p: POINTER) is

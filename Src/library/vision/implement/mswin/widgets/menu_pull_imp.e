@@ -10,7 +10,7 @@ inherit
 	PULLDOWN_IMP
 		redefine
 			realize_current, insensitive,
-			destroy
+			destroy, real_x, real_y, width, height
 		end
 
 	MENU_PULL_I
@@ -91,6 +91,50 @@ feature -- Element change
 				set_managed (True)
 			end
 		end
+
+feature -- Measurement
+
+ 	real_x: INTEGER is
+ 		require else
+ 			parent: parent /= Void
+		local
+			bar: BAR_IMP	
+			c: ARRAYED_LIST [WIDGET_IMP]
+		do
+			Result := parent.real_x
+			bar ?= parent
+			if bar /= Void then
+				c := bar.children_list
+				from
+					c.start
+					c.search (Current)
+					c.forth
+				until
+					c.after
+				loop
+					Result := Result + c.item.width
+					c.forth
+					c.forth
+				end
+			end
+		end
+ 
+ 	real_y: INTEGER is
+ 		require else
+ 			parent: parent /= Void
+ 		do
+ 			Result := parent.real_y
+ 		end
+
+	width: INTEGER is
+		do
+			Result := menu_button.width
+		end	
+
+	height: INTEGER is
+		do
+			Result := menu_button.height
+		end	
 
 feature -- Removal
 

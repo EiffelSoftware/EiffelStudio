@@ -11,51 +11,44 @@ deferred class
 	
 	EV_TEXT_CONTAINER_I
 
-inherit
-	
-	EV_FONTABLE_I
+
 feature -- Access
 
-        text: STRING is
-                        -- Text of current label
-                deferred
-                end
+ 	text: STRING is
+			-- Text of current label
+		deferred
+		end
 
 feature -- Status setting
 
-        set_center_alignment is
-                        -- Set text alignment of current label to center.
-                deferred
-                end
+	set_center_alignment is
+			-- Set text alignment of current label to center.
+		deferred
+		end
 
-        set_right_alignment is
-                -- Set text alignment of current label to right.
-                deferred
-                end
+	set_right_alignment is
+			-- Set text alignment of current label to right.
+		deferred
+		end
 
-        set_left_alignment is
-                        -- Set text alignment of current label to left.
-                deferred
-                end
+	set_left_alignment is
+			-- Set text alignment of current label to left.
+		deferred
+		end
 
 
 feature -- Element change
 
-        set_text (a_text: STRING) is
-                        -- Set text of current label to `a_text'.
-                require
-                        not_a_text_void: a_text /= Void
-                deferred
-                ensure
-                        set: text.is_equal (a_text)
-                end
+	set_text (a_text: STRING) is
+			-- Set text of current label to `a_text'.
+		require
+			not_a_text_void: a_text /= Void
+		deferred
+		ensure
+			set: text.is_equal (a_text)
+		end
 
-
-
-
-
-
-end
+end -- class EV_TEXT_CONTAINER_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

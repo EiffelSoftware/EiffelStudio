@@ -42,7 +42,7 @@ feature {TEXT_FILTER} -- Access
 	on_before_processing (f: TEXT_FILTER) is
 			-- `Current' is about to be processed.
 		do
-			f.set_keyword (kw_Tooltip, tooltip)
+			f.set_keyword (kw_Tooltip, f.escaped_text (tooltip))
 		end
 
 	on_after_processing (f: TEXT_FILTER) is

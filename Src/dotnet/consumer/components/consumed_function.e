@@ -29,8 +29,12 @@ feature {NONE} -- Initialization
 		do
 			method_make (en, dn, args, froz, static, defer)
 			return_type := ret
-			is_infix := inf
-			is_prefix := pref
+			if inf then
+				internal_flags := internal_flags | Is_infix_mask
+			end
+			if pref then
+				internal_flags := internal_flags | Is_prefix_mask				
+			end
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = dn
@@ -48,11 +52,23 @@ feature -- Access
 	return_type: CONSUMED_REFERENCED_TYPE
 			-- Function return type
 
-	is_infix: BOOLEAN
+	is_infix: BOOLEAN is
 			-- Is function an infix feature?
+		do
+			Result := internal_flags & Is_infix_mask = Is_infix_mask
+		end
 			
-	is_prefix: BOOLEAN
+	is_prefix: BOOLEAN is
 			-- Is function a prefix feature?
+		do
+			Result := internal_flags & Is_prefix_mask = Is_prefix_mask
+		end
+
+feature {NONE} -- Internal
+
+	is_infix_mask: INTEGER is 8
+	is_prefix_mask: INTEGER is 16
+			-- Additional mask from CONSUMED_PROCEDURE
 
 invariant
 	non_void_return_type: return_type /= Void

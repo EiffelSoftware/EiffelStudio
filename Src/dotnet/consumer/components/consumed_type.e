@@ -25,11 +25,21 @@ feature {NONE} -- Implementation
 		do
 			dotnet_name := dn
 			eiffel_name := en
-			is_interface := is_inter
-			is_deferred := is_abstract
-			is_frozen := is_sealed
-			is_expanded := is_value_type
-			is_enum := is_enumerator
+			if is_inter then
+				internal_flags := internal_flags | Is_interface_mask
+			end
+			if is_abstract then
+				internal_flags := internal_flags | Is_deferred_mask
+			end
+			if is_sealed then
+				internal_flags := internal_flags | Is_frozen_mask
+			end
+			if is_value_type then
+				internal_flags := internal_flags | Is_expanded_mask
+			end
+			if is_enumerator then
+				internal_flags := internal_flags | Is_enum_mask
+			end
 			parent := par
 			interfaces := inter
 		ensure
@@ -54,21 +64,6 @@ feature -- Access
 	eiffel_name: STRING
 			-- Eiffel class name
 
-	is_interface: BOOLEAN
-			-- Is .NET type an interface?
-
-	is_deferred: BOOLEAN
-			-- Is .NET type abstract?
-	
-	is_enum: BOOLEAN
-			-- Is .NET type an enum?
-	
-	is_frozen: BOOLEAN
-			-- Is .NET type sealed?
-
-	is_expanded: BOOLEAN
-			-- Is .NET type a value type?
-
 	constructors: ARRAY [CONSUMED_CONSTRUCTOR]
 			-- Class constructors
 
@@ -83,6 +78,36 @@ feature -- Access
 
 	interfaces: ARRAY [CONSUMED_REFERENCED_TYPE]
 			-- Implemented interfaces
+
+	is_interface: BOOLEAN is
+			-- Is .NET type an interface?
+		do
+			Result := internal_flags & Is_interface_mask = Is_interface_mask
+		end
+
+	is_deferred: BOOLEAN is
+			-- Is .NET type abstract?
+		do
+			Result := internal_flags & Is_deferred_mask = Is_deferred_mask
+		end
+	
+	is_enum: BOOLEAN is
+			-- Is .NET type an enum?
+		do
+			Result := internal_flags & Is_enum_mask = Is_enum_mask
+		end
+	
+	is_frozen: BOOLEAN is
+			-- Is .NET type sealed?
+		do
+			Result := internal_flags & Is_frozen_mask = Is_frozen_mask
+		end
+
+	is_expanded: BOOLEAN is
+			-- Is .NET type a value type?
+		do
+			Result := internal_flags & Is_expanded_mask = Is_expanded_mask
+		end
 
 feature {TYPE_CONSUMER} -- Element settings
 
@@ -125,7 +150,19 @@ feature {TYPE_CONSUMER} -- Element settings
 		ensure
 			constructors_set: constructors = cons
 		end
-	
+
+feature {NONE} -- Internal
+
+	internal_flags: INTEGER
+			-- Store status of current type.
+
+	is_deferred_mask: INTEGER is 1
+	is_enum_mask: INTEGER is 2
+	is_expanded_mask: INTEGER is 4
+	is_frozen_mask: INTEGER is 8
+	is_interface_mask: INTEGER is 16
+			-- Different mask.
+
 invariant
 	non_void_eiffel_name: eiffel_name /= Void
 	valid_eiffel_name: not eiffel_name.is_empty

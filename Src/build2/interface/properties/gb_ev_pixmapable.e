@@ -146,6 +146,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (pixmap_path_string)
 			if element_info /= Void then
+				info.enable_pixmaps_set
 				Result := pixmap_name + ".set_with_named_file (%"" + element_info.data + "%")"
 				if type_conforms_to (dynamic_type_from_string (info.type), dynamic_type_from_string (Ev_container_string)) then
 					Result := Result + indent + info.name + ".set_background_pixmap (" + pixmap_name + ")"

@@ -19,7 +19,8 @@ inherit
 
 create
 	default_create,
-	make_with_points
+	make_with_points,
+	make_for_test
 
 feature -- Initialization
 
@@ -44,6 +45,19 @@ feature -- Initialization
 		ensure
 			center_point_assigned: center_point = p1
 			corner_point_assigned: corner_point = p2
+		end
+
+	make_for_test is
+			-- Create interesting to display.
+		do
+			default_create
+			get_point_by_index (1).set_x (50)
+			get_point_by_index (1).set_y (100)
+			get_point_by_index (2).set_x (3)
+			get_point_by_index (2).set_y (20)
+			set_foreground_color (create {EV_COLOR}.make_with_rgb (0.5, 1.0, 0.5))
+			set_line_width (2)
+			set_side_count (7)
 		end
 
 feature -- Access

@@ -18,7 +18,8 @@ inherit
 
 create
 	default_create,
-	make_with_point_and_text
+	make_with_point_and_text,
+	make_for_test
 
 feature -- Initialization
 
@@ -39,6 +40,16 @@ feature -- Initialization
 			default_create
 			set_point (p)
 			set_text (txt)
+		end
+
+	make_for_test is
+			-- Create interesting to display.
+		do
+			default_create
+			get_point_by_index (1).set_x (3)
+			get_point_by_index (1).set_y (75)
+			set_foreground_color (create {EV_COLOR}.make_with_rgb (0.5, 1.0, 0.0))
+			set_text ("Eiffel Vision")
 		end
 
 feature -- Access

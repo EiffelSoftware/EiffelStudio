@@ -156,13 +156,4 @@ feature -- Assignment attempt
 			-- Do nothing
 		end
 
-	make_reverse_byte_code (ba: BYTE_ARRAY) is
-			-- Additional info for assignment
-			-- attempts with anchored types.
-		require
-			ba_not_void: ba /= Void
-		do
-			make_gen_type_byte_code (ba)
-		end
-
 end -- class CREATE_INFO

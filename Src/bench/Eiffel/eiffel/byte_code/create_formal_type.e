@@ -9,7 +9,7 @@ class
 inherit
 	CREATE_TYPE
 		redefine
-			generate, generate_gen_type_conversion,
+			generate, generate_gen_type_conversion, generate_reverse,
 			generate_cid, type_to_create, make_byte_code,
 			analyze, generate_il, type, is_explicit
 		end
@@ -44,6 +44,18 @@ feature -- C code generation
 			buffer.putchar (',')
 			buffer.putint (type.position)
 			buffer.putchar (')')
+			buffer.putchar (')')
+		end
+
+	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+			-- Generate computed type of creation for assignment attempt.
+		do
+			buffer.putstring ("RTGPTID(")
+			buffer.putint (context.current_type.generated_id (final_mode))
+			buffer.putchar (',')
+			context.current_register.print_register
+			buffer.putchar (',')
+			buffer.putint (type.position)
 			buffer.putchar (')')
 		end
 

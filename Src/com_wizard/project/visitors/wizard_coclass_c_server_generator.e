@@ -220,6 +220,14 @@ feature {NONE} -- Implementation
 			tmp_string.append (Close_parenthesis)
 			tmp_string.append (Semicolon)
 
+			if dispatch_interface then
+				tmp_string.append (New_line_tab)
+				tmp_string.append (Type_info_variable_name)
+				tmp_string.append (Space_equal_space)
+				tmp_string.append (Zero)
+				tmp_string.append (Semicolon)
+			end
+
 			if shared_wizard_environment.out_of_process_server then
 				tmp_string.append (New_line_tab)
 				tmp_string.append ("LockModule ();")

@@ -118,7 +118,7 @@ feature -- Access
 		
 	object: GB_OBJECT
 			-- Object referenced by `Current'. May be Void when generating code.
-		
+
 	type: STRING is
 			-- String representation of object_type modifyable by `Current'.
 		deferred
@@ -186,6 +186,8 @@ feature -- Status setting
 		
 	set_object (an_object: GB_OBJECT) is
 			-- Assign `an_object' to `object'.
+		require
+			an_object_not_void: an_object /= Void
 		do
 			object := an_object
 		ensure
@@ -270,7 +272,7 @@ feature {GB_CODE_GENERATOR} -- Status setting
 
 feature {GB_OBJECT} -- Status setting
 
-	set_up_user_events (vision2_object, an_object: like ev_type) is
+	set_up_user_events (actual_object: GB_OBJECT; vision2_object, an_object: like ev_type) is
 			-- Add events necessary for `vision2_object'.
 			-- Some objects such as EV_TOGGLE_BUTTON can be modified
 			-- by the user in the display window. We need to set up events

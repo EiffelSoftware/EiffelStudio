@@ -22,7 +22,8 @@ inherit
 			set_item_position,
 			remove,
 			resize,
-			set_item_span
+			set_item_span,
+			set_item_position_and_span
 		end
 		
 	EV_CONTAINER_IMP
@@ -381,6 +382,33 @@ feature -- Status settings
 				(table_child.top_attachment, table_child.left_attachment, table_child.top_attachment + row_span, table_child.left_attachment + column_span)
 			notify_change (2 + 1, Current)		
 		end
+		
+	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
+			-- Move `v' to `a_column', `a_row', and resize to occupy `column_span' columns and `row_span' rows.
+			local
+				a_col_ctr, a_row_ctr, a_cell_index: INTEGER
+				table_child: EV_TABLE_CHILD_IMP
+				child_imp: EV_WIDGET_IMP
+			do
+					-- Although `set_item_position' and `set_item_span' will handle everything, they rely
+					-- on the current table child information. For example, in `set_item_position', the item
+					-- row span is used which will case problems when you have an item spanning more than one column,
+					-- and then reposition it to the last column only. We cannot call `set_item_span' before
+					-- `set_item_position' to fix this, as the space for the span may not be available at the current position.
+					-- Therefore, we must update `table_child' internally before calling `set_item_position' and `set_item_span'
+					-- so that they will work correctly. Julian.
+				child_imp ?= v.implementation
+				check
+					valid_child: child_imp /= Void
+				end
+				table_child := find_widget_child (child_imp)
+				table_child.set_attachment
+				(a_row - 1, a_column - 1, a_row + row_span - 1, a_column + column_span - 1)
+				
+					-- Now actually perform the repositioning.
+				set_item_position (v, a_column, a_row)
+				set_item_span (v, column_span, row_span)
+			end
 
 feature -- Element change
 

@@ -28,11 +28,7 @@ feature {NONE} -- Initialization
 			-- Create the vertical range.
 		do
 			Precursor (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
-			visual_widget := feature {EV_GTK_EXTERNALS}.gtk_vscale_new (adjustment)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (visual_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, visual_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_scale_set_digits (visual_widget, 0)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vscale_new (adjustment))
 		end
 
 feature {EV_ANY_I} -- Implementation

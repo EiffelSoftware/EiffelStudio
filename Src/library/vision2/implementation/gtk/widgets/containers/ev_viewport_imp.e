@@ -34,15 +34,16 @@ create
 	make
 
 feature {NONE} -- Initialization
+
 	
 	make (an_interface: like interface) is
 			-- Initialize. 
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_viewport_new (NULL, NULL))
-			viewport := c_object
-			feature {EV_GTK_EXTERNALS}.gtk_viewport_set_shadow_type (c_object, feature {EV_GTK_EXTERNALS}.Gtk_shadow_none_enum)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 1, 1) -- Hack needed to prevent viewport resize on item resize.
+			viewport := feature {EV_GTK_EXTERNALS}.gtk_viewport_new (NULL, NULL)
+			set_c_object (viewport)
+			feature {EV_GTK_EXTERNALS}.gtk_viewport_set_shadow_type (viewport, feature {EV_GTK_EXTERNALS}.Gtk_shadow_none_enum)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (viewport, 1, 1) -- Hack needed to prevent viewport resize on item resize.
 		end
 		
 	initialize is

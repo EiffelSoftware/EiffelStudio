@@ -22,8 +22,7 @@ inherit
 			make
 		redefine
 			interface,
-			container_widget,
-			visual_widget
+			needs_event_box
 		end
 		
 	EV_FONTABLE_IMP
@@ -39,25 +38,15 @@ create
 
 feature {NONE} -- Initialization
 
+	needs_event_box: BOOLEAN is True
+
 	make (an_interface: like interface) is
 			-- Create frame.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
-			container_widget := feature {EV_GTK_EXTERNALS}.gtk_frame_new (NULL)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, container_widget)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_frame_new (NULL))
 			feature {EV_GTK_EXTERNALS}.gtk_frame_set_label (container_widget, NULL)
 			internal_alignment_code := feature {EV_GTK_EXTERNALS}.gtk_justify_left_enum
-		end
-
-	container_widget: POINTER
-			-- Pointer to the gtkframe widget as c_object is event box
-			
-	visual_widget: POINTER is
-			-- Pointer to the widget that user sees on the screen.
-		do
-			Result := container_widget
 		end
 
 feature -- Access

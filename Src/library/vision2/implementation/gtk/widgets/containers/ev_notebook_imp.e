@@ -24,7 +24,8 @@ inherit
 			on_new_item,
 			replace,
 			initialize,
-			remove_i_th
+			remove_i_th,
+			needs_event_box
 		end
 		
 	EV_FONTABLE_IMP
@@ -40,18 +41,20 @@ create
 	make
 
 feature {NONE} -- Initialization
+
+	needs_event_box: BOOLEAN is True
 	
 	make (an_interface: like interface) is
 			-- Create a fixed widget. 
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_notebook_new ())
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_border (c_object, 1)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_show_border (c_object, False)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_hborder (c_object, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_vborder (c_object, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_scrollable (c_object, True)
-			real_signal_connect (c_object, "switch-page", agent (App_implementation.gtk_marshal).on_notebook_page_switch_intermediary (c_object, ?), agent (App_implementation.gtk_marshal).page_switch_translate)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_border (visual_widget, 1)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_show_border (visual_widget, False)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_hborder (visual_widget, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_vborder (visual_widget, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_scrollable (visual_widget, True)
+			real_signal_connect (visual_widget, "switch-page", agent (App_implementation.gtk_marshal).on_notebook_page_switch_intermediary (c_object, ?), agent (App_implementation.gtk_marshal).page_switch_translate)
 		end
 
 	initialize is
@@ -74,7 +77,7 @@ feature -- Access
 			end
 			create Result.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_label_struct_label (
 				feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (
-					c_object,
+					visual_widget,
 					item_imp.c_object
 				)
 			))
@@ -92,7 +95,7 @@ feature -- Status report
 			if count > 0 then
 				pn := selected_item_index_internal - 1
 				p := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_nth_page (
-					c_object,
+					visual_widget,
 					pn
 				)
 				check
@@ -124,7 +127,7 @@ feature -- Status report
  		local
  			gtk_pos: INTEGER
  		do
- 			gtk_pos := feature {EV_GTK_EXTERNALS}.gtk_notebook_struct_tab_pos (c_object)
+ 			gtk_pos := feature {EV_GTK_EXTERNALS}.gtk_notebook_struct_tab_pos (visual_widget)
  			inspect
  				gtk_pos
  			when 0 then
@@ -154,7 +157,7 @@ feature -- Status setting
 			elseif a_tab_position = interface.Tab_bottom then
 				gtk_pos := 3
 			end
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_pos (c_object, gtk_pos)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_pos (visual_widget, gtk_pos)
 		end
 
 	select_item (an_item: like item) is
@@ -167,8 +170,8 @@ feature -- Status setting
 				an_item_has_implementation: item_imp /= Void
 			end
 			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_page (
-				c_object,
-				feature {EV_GTK_EXTERNALS}.gtk_notebook_page_num (c_object, item_imp.c_object)
+				visual_widget,
+				feature {EV_GTK_EXTERNALS}.gtk_notebook_page_num (visual_widget, item_imp.c_object)
 			)
 		end	
 	
@@ -179,7 +182,7 @@ feature -- Element change
 		do
 			Precursor {EV_WIDGET_LIST_IMP} (i)
 			if count > 0 then
-				selected_item_index_internal := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_current_page (c_object) + 1
+				selected_item_index_internal := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_current_page (visual_widget) + 1
 			else
 				selected_item_index_internal := 0
 			end
@@ -190,10 +193,10 @@ feature -- Element change
 		local
 			i: INTEGER
 		do
-			i := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_current_page (c_object)
+			i := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_current_page (visual_widget)
 			remove_i_th (index)
 			insert_i_th (v, index)
-			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_page (c_object, i)
+			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_page (visual_widget, i)
 		end
 
 	set_item_text (an_item: like item; a_text: STRING) is
@@ -208,7 +211,7 @@ feature -- Element change
 			end
 			create a_cs.make (a_text)
 			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label_text (
-				c_object,
+				visual_widget,
 				item_imp.c_object,
 				a_cs.item
 			)

@@ -33,10 +33,7 @@ feature {NONE} -- Initialization
 			-- Create a GTK vertical box.
 		do	
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)
-			container_widget := feature {EV_GTK_EXTERNALS}.gtk_vbox_new (Default_homogeneous, Default_spacing)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, container_widget)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (container_widget)
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vbox_new (Default_homogeneous, Default_spacing))
 		end
 
 feature {EV_ANY_I} -- Implementation

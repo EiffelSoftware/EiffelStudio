@@ -26,15 +26,10 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create the horizontal scroll bar.
-		local
-			hs: POINTER
 		do
 			base_make (an_interface)
 			adjustment := feature {EV_GTK_EXTERNALS}.gtk_adjustment_new (0, 0, 100 + 10, 1, 10, 10)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_event_box_new)		
-			hs := feature {EV_GTK_EXTERNALS}.gtk_hscrollbar_new (adjustment)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_show (hs)
-			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, hs)	
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_hscrollbar_new (adjustment))		
 		end
 
 feature {EV_ANY_I} -- Implementation

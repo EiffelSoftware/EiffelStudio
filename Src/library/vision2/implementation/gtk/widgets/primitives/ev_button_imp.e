@@ -22,7 +22,8 @@ inherit
 			make,
 			set_foreground_color,
 			foreground_color_pointer,
-			on_focus_changed
+			on_focus_changed,
+			needs_event_box
 		end
  
 	EV_PIXMAPABLE_IMP
@@ -60,6 +61,8 @@ create
 
 feature {NONE} -- Initialization
 
+	needs_event_box: BOOLEAN is True
+
 	make (an_interface: like interface) is
 			-- Connect interface and initialize `c_object'.
 		do
@@ -74,7 +77,7 @@ feature {NONE} -- Initialization
 			dummy_focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE
 		do
 			Precursor {EV_PRIMITIVE_IMP}
-			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (c_object, 0)
+			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (visual_widget, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_relief_normal_enum)
 			pixmapable_imp_initialize
 			textable_imp_initialize
@@ -177,41 +180,15 @@ feature -- Status Setting
 	enable_default_push_button is
 			-- Set the style of the button corresponding
 			-- to the default push button.
---		local
---			par_ptr: POINTER
 		do
 			enable_can_default
---			from
---				par_ptr := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (visual_widget)
---			until
---				GTK_IS_WINDOW (par_ptr) or else par_ptr = NULL
---			loop
---				par_ptr := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (par_ptr)
---			end
---			if par_ptr /= NULL then
---				feature {EV_GTK_EXTERNALS}.set_gtk_window_struct_default_widget (par_ptr, visual_widget)
---			end	
 		end
 
 	disable_default_push_button is
 			-- Remove the style of the button corresponding
 			-- to the default push button.
---		local
---			par_ptr: POINTER
 		do		
-			--| FIXME IEK Undraw default widget style.
-			is_default_push_button := False
---			from
---				par_ptr := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (visual_widget)
---			until
---				GTK_IS_WINDOW (par_ptr) or else par_ptr = NULL
---			loop
---				par_ptr := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_parent (par_ptr)
---			end
---
---			if par_ptr /= NULL then
---				feature {EV_GTK_EXTERNALS}.set_gtk_window_struct_default_widget (par_ptr, NULL)
---			end			
+			is_default_push_button := False		
 		end
 
 	enable_can_default is
@@ -266,29 +243,6 @@ feature {NONE} -- implementation
 			a_child_list := feature {EV_GTK_EXTERNALS}.gtk_container_children (visual_widget)
 			Result := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_child_list, 0)
 			feature {EV_GTK_EXTERNALS}.g_list_free (a_child_list)
-		end
-
-feature {NONE} -- Externals
-
-	gtk_is_window (a_widget: POINTER): BOOLEAN is
-		external
-			"C [macro <gtk/gtk.h>]: EIF_BOOLEAN"
-		alias
-			"GTK_IS_WINDOW"
-		end
-
-	gtk_widget_can_default (a_widget: POINTER): BOOLEAN is
-		external
-			"C [macro <gtk/gtk.h>]: EIF_BOOLEAN"
-		alias
-			"GTK_WIDGET_CAN_DEFAULT"
-		end
-
-	gtk_widget_has_default (a_widget: POINTER): BOOLEAN is
-		external
-			"C [macro <gtk/gtk.h>]: EIF_BOOLEAN"
-		alias
-			"GTK_WIDGET_HAS_DEFAULT"
 		end
 
 feature {EV_ANY_I} -- implementation

@@ -21,8 +21,7 @@ inherit
 	EV_WIDGET_LIST_IMP
 		redefine
 			interface,
-			container_widget,
-			visual_widget
+			needs_event_box
 		end
 
 feature -- Access
@@ -113,17 +112,9 @@ feature -- Status settings
 			)
 		end
 
-feature {NONE} -- Implementation
-
-	container_widget: POINTER
-	
-	visual_widget: POINTER is
-			-- Pointer to the viewable widget.
-		do
-			Result := container_widget
-		end
-
 feature {EV_ANY_I} -- Implementation
+
+	needs_event_box: BOOLEAN is True
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.

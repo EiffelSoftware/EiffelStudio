@@ -309,13 +309,16 @@ feature {EV_ANY} -- Contract support
 			-- Is `Current' in its default state.
 		do
 			Result := {EV_ANY} Precursor and then
-				-- family = Ev_font_family_sans and then
-				-- weight = Ev_font_weight_regular and then
-				-- shape = Ev_font_shape_regular and then
+				family = ev_default_fonts.Screen_font.family and then
+				weight = ev_default_fonts.Screen_font.weight and then
+				shape = ev_default_fonts.Screen_font.shape and then
+				height = ev_default_fonts.Screen_font.height and then
 				preferred_face = Void
-				--| Nothing about size since they are different
-				--| on each platform. (Win: 8; GTK: 11)
-				--| FIXME there should be a 
+		end
+
+	ev_default_fonts: EV_DEFAULT_FONTS is
+		once
+			create Result
 		end
 
 feature -- Obsolete
@@ -393,6 +396,10 @@ end -- class EV_FONT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/02/23 02:33:45  pichery
+--| Added class EV_DEFAULT_FONT which contains default fonts. Used this new
+--| class to improve contracts into EV_FONT (is_in_default_state)
+--|
 --| Revision 1.17  2000/02/22 21:22:32  pichery
 --| The default creation of EV_FONT under Windows now creates the
 --| WEL_DEFAULT_GUI_FONT and set family, weight and shape according to

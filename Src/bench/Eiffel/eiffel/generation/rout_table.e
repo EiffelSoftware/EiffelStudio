@@ -52,8 +52,8 @@ feature
 			first_body_index: INTEGER;
 			second_type_id: INTEGER;
 			entry: ROUT_ENTRY;
-			cl_type: CLASS_TYPE;
-			first_class: CLASS_C
+			cl_type: CLASS_TYPE
+			first_type: CLASS_TYPE
 			found, is_deferred: BOOLEAN;
 			i, nb, old_position: INTEGER
 			system_i: SYSTEM_I
@@ -78,8 +78,7 @@ feature
 					-- We never compute the value for this entry, so we need to do it
 				from
 					is_deferred := True
-					cl_type := system_i.class_type_of_id (type_id)
-					first_class := cl_type.associated_class
+					first_type := system_i.class_type_of_id (type_id)
 				until
 					Result or else i > nb
 				loop
@@ -89,7 +88,7 @@ feature
 						is_deferred := False
 					end
 					cl_type := system_i.class_type_of_id (second_type_id)
-					if cl_type.associated_class.simple_conform_to (first_class) then
+					if cl_type.conform_to (first_type) then
 						if entry.used then
 							if found then
 								Result := not (entry.body_index = first_body_index)
@@ -107,6 +106,34 @@ feature
 				end
 
 				position := old_position
+			else
+					-- It is the case of a routine alone in its table. It is possibly a routine
+					-- with one implementation which is an origin, or the implementation of a
+					-- deferred routine.
+				second_type_id := array_item (lower).type_id
+				if type_id = second_type_id then
+						-- Only one routine in table
+					Result := False
+				else
+						-- Case of a deferred routine with possibly one implementation. We can
+						-- only check if implementation is defined in a class type that conforms to
+						-- `type_id'.
+						-- FIXME: Manu 06/05/2003: If it does not then it is marked polymorphic
+						-- although the code generation should consider it as a non-implemented
+						-- deferred routine. However it does not matter because the generated
+						-- code will not be called anyway.
+					system_i := System
+					if
+						system_i.class_type_of_id (second_type_id).conform_to (
+						System_i.class_type_of_id (type_id))
+					then
+						Result := False
+					else
+							-- This is the case of a routine which has not implementation for
+							-- `type_id'.
+						Result := True
+					end
+				end
 			end
 		end
 

@@ -31,9 +31,9 @@ feature -- Initialization
 
 	on_click is
 		local
-			dlg: EV_DIALOG
+			dlg: EV_MESSAGE_DIALOG
 		do
-			create dlg
+			create dlg.make
 			dlg.show
 		end
 

@@ -12,8 +12,6 @@ inherit
 	CODE_SHARED_TYPE_REFERENCE_FACTORY
 		export
 			{NONE} all
-		undefine
-			is_equal
 		end
 
 create
@@ -40,47 +38,46 @@ feature -- Access
 			-- Eiffel code of primitive expression
 		local
 			l_string: STRING
+			l_system_string: SYSTEM_STRING
 			i: INTEGER
 		do
 			l_string := value.to_string
-			create Result.make (l_string.count + 10)			
-			Result.append ("(%"")
-			from
-				i := 1
-			until
-				i > l_string.count
-			loop
-				inspect 
-					l_string.item (i)
-				when '%R' then
-					Result.append ("%%R")
-				when '%T' then
-					Result.append ("%%T")
-				when '%"' then
-					Result.append ("%%%"")
-				when '%%' then
-					Result.append ("%%%%")
-				when '%'' then
-					Result.append ("%%%'")
-				when '%N' then
-					Result.append ("%%N")
-				else
-					Result.append_character (l_string.item (i))
+			l_system_string ?= value
+			if l_system_string /= Void then
+				create Result.make (l_string.count + 10)			
+				Result.append ("(%"")
+				from
+					i := 1
+				until
+					i > l_string.count
+				loop
+					inspect 
+						l_string.item (i)
+					when '%R' then
+						Result.append ("%%R")
+					when '%T' then
+						Result.append ("%%T")
+					when '%"' then
+						Result.append ("%%%"")
+					when '%%' then
+						Result.append ("%%%%")
+					when '%'' then
+						Result.append ("%%%'")
+					when '%N' then
+						Result.append ("%%N")
+					else
+						Result.append_character (l_string.item (i))
+					end
+					
+					i := i + 1
 				end
-				
-				i := i + 1
+				Result.append ("%").to_cil")
+			else
+				Result := l_string
 			end
-
-			Result.append ("%").to_cil")
 		end
 		
 feature -- Status Report
-
-	ready: BOOLEAN is
-			-- Is primitive expression ready to be generated?
-		do
-			Result := value /= Void
-		end
 
 	type: CODE_TYPE_REFERENCE is
 			-- Type

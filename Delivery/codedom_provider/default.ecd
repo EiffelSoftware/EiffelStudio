@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <configuration>
 	<general>
-		<fail_on_error>True</fail_on_error>
+		<fail_on_error>False</fail_on_error>
 		<log_level>1</log_level>
 		<log_source_name>System</log_source_name>
-		<log_server_name>localhost</log_server_name>
+		<log_server_name>.</log_server_name>
 		<log_name>Application</log_name>
 	</general>
 	<prefixes>

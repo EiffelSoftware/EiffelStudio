@@ -13,7 +13,7 @@ inherit
 		redefine
 			generate_il, analyze, unanalyze, register,
 			set_register, print_register, generate, enlarged,
-			make_byte_code
+			make_byte_code, pre_inlined_code
 		end
 
 create
@@ -189,6 +189,14 @@ feature -- C code generation
 			else
 				expr.print_register
 			end
+		end
+
+feature -- Inlining
+
+	pre_inlined_code: FORMAL_CONVERSION_B is
+			-- Modified byte code for inlining.
+		do
+			create Result.make (expr.pre_inlined_code, context.real_type (type), is_boxing)
 		end
 
 feature {NONE} -- Convenience

@@ -606,12 +606,14 @@ feature {NONE} -- Implementation
 			-- Resize table to accomodate `row_value' rows.
 		do
 			editor.set_rows (row_value)
+			update_editors
 		end
 		
 	set_columns (column_value: INTEGER) is
 			-- Resize table to accomodate `column_value' columns.
 		do
 			editor.set_columns (column_value)
+			update_editors
 		end
 		
 	set_rows_and_draw (row_value: INTEGER) is

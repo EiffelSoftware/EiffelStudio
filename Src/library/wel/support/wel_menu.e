@@ -56,8 +56,7 @@ feature -- Access
 			position_small_enough: position < count
 			popup_exists: popup_exists (position)
 		do
-			!! Result.make_by_pointer (cwin_get_sub_menu (item,
-				position))
+			create Result.make_by_pointer (cwin_get_sub_menu (item, position))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -75,9 +74,8 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make(a_string)
-			cwin_append_menu (item, Mf_string + Mf_bycommand,
-				an_id, a_wel_string.item)
+			create a_wel_string.make(a_string)
+			cwin_append_menu (item, Mf_string + Mf_bycommand, an_id, a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 			item_exists: item_exists (an_id)
@@ -96,11 +94,10 @@ feature -- Element change
 			a_wel_string: WEL_STRING
 		do
 			a_menu.set_shared
-			-- `a_menu' must be shared since Windows will
-			-- destroy it automatically with `Current'.
-			!! a_wel_string.make (a_title)
-			cwin_append_menu (item, Mf_popup,
-				a_menu.to_integer, a_wel_string.item)
+				-- `a_menu' must be shared since Windows will
+				-- destroy it automatically with `Current'.
+			create a_wel_string.make (a_title)
+			cwin_append_menu (item, Mf_popup, a_menu.to_integer, a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -110,8 +107,7 @@ feature -- Element change
 		require
 			exists: exists
 		do
-			cwin_append_menu (item, Mf_separator, 0,
-				default_pointer)
+			cwin_append_menu (item, Mf_separator, 0, default_pointer)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -129,13 +125,11 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make(a_string)
+			create a_wel_string.make(a_string)
 			if has_separator then
-				cwin_append_menu (item, Mf_string + Mf_bycommand + Mf_menubarbreak,
-					an_id, a_wel_string.item)
+				cwin_append_menu (item, Mf_string + Mf_bycommand + Mf_menubarbreak, an_id, a_wel_string.item)
 			else
-				cwin_append_menu (item, Mf_string + Mf_bycommand + Mf_menubreak,
-					an_id, a_wel_string.item)
+				cwin_append_menu (item, Mf_string + Mf_bycommand + Mf_menubreak, an_id, a_wel_string.item)
 			end
 		ensure
 			new_count: count = old count + 1
@@ -153,8 +147,7 @@ feature -- Element change
 			positive_id: an_id > 0
 			item_not_exists: not item_exists (an_id)
 		do
-			cwin_append_menu (item, Mf_bitmap + Mf_bycommand,
-				an_id, bitmap.item)
+			cwin_append_menu (item, Mf_bitmap + Mf_bycommand, an_id, bitmap.item)
 		ensure
 			new_count: count = old count + 1
 			item_exists: item_exists (an_id)
@@ -173,9 +166,8 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_string)
-			cwin_insert_menu (item, a_position,
-				Mf_string + Mf_byposition, an_id, a_wel_string.item)
+			create a_wel_string.make (a_string)
+			cwin_insert_menu (item, a_position, Mf_string + Mf_byposition, an_id, a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 			string_set: id_string (an_id).is_equal (a_string)
@@ -194,9 +186,8 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_title)
-			cwin_insert_menu (item, a_position,
-				Mf_popup + Mf_byposition, a_menu.to_integer, a_wel_string.item)
+			create a_wel_string.make (a_title)
+			cwin_insert_menu (item, a_position, Mf_popup + Mf_byposition, a_menu.to_integer, a_wel_string.item)
 		ensure
 			new_count: count = old count + 1
 			popup_menu_set: popup_menu (a_position).item = a_menu.item
@@ -209,9 +200,7 @@ feature -- Element change
 			a_position_large_enough: a_position >= 0
 			a_position_small_enough: a_position <= count
 		do
-			cwin_insert_menu (item, a_position,
-				Mf_separator + Mf_byposition, 0,
-				default_pointer)
+			cwin_insert_menu (item, a_position, Mf_separator + Mf_byposition, 0, default_pointer)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -228,8 +217,7 @@ feature -- Element change
 			positive_id: an_id > 0
 			item_not_exists: not item_exists (an_id)
 		do
-			cwin_insert_menu (item, a_position,
-				Mf_bitmap + Mf_byposition, an_id, bitmap.item)
+			cwin_insert_menu (item, a_position, Mf_bitmap + Mf_byposition, an_id, bitmap.item)
 		ensure
 			new_count: count = old count + 1
 		end
@@ -245,9 +233,8 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_string)
-			cwin_modify_menu (item, an_id,
-				Mf_string + Mf_bycommand, an_id, a_wel_string.item)
+			create a_wel_string.make (a_string)
+			cwin_modify_menu (item, an_id, Mf_string + Mf_bycommand, an_id, a_wel_string.item)
 		ensure
 			string_set: id_string (an_id).is_equal (a_string)
 		end
@@ -303,8 +290,7 @@ feature -- Basic operations
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
-			cwin_hilite_menu_item (window.item, item,
-				an_id, Mf_bycommand + Mf_hilite)
+			cwin_hilite_menu_item (window.item, item, an_id, Mf_bycommand + Mf_hilite)
 		end
 
 	unhilite_menu_item (window: WEL_COMPOSITE_WINDOW; an_id: INTEGER) is
@@ -317,8 +303,7 @@ feature -- Basic operations
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
-			cwin_hilite_menu_item (window.item, item,
-				an_id, Mf_bycommand + Mf_unhilite)
+			cwin_hilite_menu_item (window.item, item, an_id, Mf_bycommand + Mf_unhilite)
 		end
 
 	show_track (x, y: INTEGER; window: WEL_COMPOSITE_WINDOW) is
@@ -331,8 +316,7 @@ feature -- Basic operations
 			window_not_void: window /= Void
 			window_exists: window.exists
 		do
-			cwin_track_popup_menu (item, default_track_option,
-				x, y, 0, window.item, default_pointer)
+			cwin_track_popup_menu (item, default_track_option, x, y, 0, window.item, default_pointer)
 		end
 
 	show_track_with_option (x, y: INTEGER; window: WEL_COMPOSITE_WINDOW;
@@ -353,11 +337,9 @@ feature -- Basic operations
 			window_exists: window.exists
 		do
 			if rect /= Void then
-				cwin_track_popup_menu (item, option, x, y,
-					0, window.item, rect.item)
+				cwin_track_popup_menu (item, option, x, y, 0, window.item, rect.item)
 			else
-				cwin_track_popup_menu (item, option, x, y,
-					0, window.item, default_pointer)
+				cwin_track_popup_menu (item, option, x, y, 0, window.item, default_pointer)
 			end
 		end
 
@@ -382,8 +364,7 @@ feature -- Status setting
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
-			cwin_check_menu_item (item, an_id,
-				Mf_checked + Mf_bycommand)
+			cwin_check_menu_item (item, an_id, Mf_checked + Mf_bycommand)
 		ensure
 			item_checked: item_checked (an_id)
 		end
@@ -396,8 +377,7 @@ feature -- Status setting
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
-			cwin_check_menu_item (item, an_id,
-				Mf_unchecked + Mf_bycommand)
+			cwin_check_menu_item (item, an_id, Mf_unchecked + Mf_bycommand)
 		ensure
 			item_unchecked: not item_checked (an_id)
 		end
@@ -409,8 +389,7 @@ feature -- Status setting
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
-			cwin_enable_menu_item (item, an_id,
-				Mf_enabled + Mf_bycommand)
+			cwin_enable_menu_item (item, an_id, Mf_enabled + Mf_bycommand)
 		ensure
 			item_enabled: item_enabled (an_id)
 		end
@@ -422,8 +401,7 @@ feature -- Status setting
 			position_large_enough: position >= 0
 			position_small_enough: position < count
 		do
-			cwin_enable_menu_item (item, position,
-				Mf_enabled + Mf_byposition)
+			cwin_enable_menu_item (item, position, Mf_enabled + Mf_byposition)
 		ensure
 			position_enabled: position_enabled (position)
 		end
@@ -435,8 +413,7 @@ feature -- Status setting
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
-			cwin_enable_menu_item (item, an_id,
-				Mf_disabled + Mf_grayed + Mf_bycommand)
+			cwin_enable_menu_item (item, an_id, Mf_disabled + Mf_grayed + Mf_bycommand)
 		ensure
 			item_disabled: not item_enabled (an_id)
 		end
@@ -448,8 +425,7 @@ feature -- Status setting
 			position_large_enough: position >= 0
 			position_small_enough: position < count
 		do
-			cwin_enable_menu_item (item, position,
-				Mf_disabled + Mf_grayed + Mf_byposition)
+			cwin_enable_menu_item (item, position, Mf_disabled + Mf_grayed + Mf_byposition)
 		ensure
 			position_disabled: not position_enabled (position)
 		end
@@ -462,8 +438,7 @@ feature -- Status report
 			exists: exists
 			positive_id: an_id > 0
 		do
-			Result := cwin_get_menu_state (item, an_id,
-				Mf_bycommand) /= cwel_menu_item_not_found
+			Result := cwin_get_menu_state (item, an_id, Mf_bycommand) /= cwel_menu_item_not_found
 		end
 
 	item_checked (an_id: INTEGER): BOOLEAN is
@@ -473,8 +448,7 @@ feature -- Status report
 			positive_id: an_id > 0
 			item_exists: item_exists (an_id)
 		do
-			Result := flag_set (cwin_get_menu_state (item, an_id,
-				Mf_bycommand), Mf_checked)
+			Result := flag_set (cwin_get_menu_state (item, an_id, Mf_bycommand), Mf_checked)
 		end
 
 	item_enabled (an_id: INTEGER): BOOLEAN is
@@ -486,10 +460,8 @@ feature -- Status report
 		local
 			flags:INTEGER
 		do
-			flags := cwin_get_menu_state (item, an_id,
-				Mf_bycommand)
-			Result := not flag_set (flags, Mf_grayed) and
-						not flag_set (flags, Mf_disabled)
+			flags := cwin_get_menu_state (item, an_id, Mf_bycommand)
+			Result := not flag_set (flags, Mf_grayed) and not flag_set (flags, Mf_disabled)
 		end
 
 	position_enabled (position: INTEGER): BOOLEAN is
@@ -501,8 +473,7 @@ feature -- Status report
 		local
 			flags:INTEGER
 		do
-			flags := cwin_get_menu_state (item, position,
-				Mf_byposition)
+			flags := cwin_get_menu_state (item, position, Mf_byposition)
 			Result := not flag_set (flags, Mf_grayed) and not flag_set(flags, Mf_disabled)
 		end
 
@@ -516,11 +487,10 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			nb: INTEGER
 		do
-			!! Result.make (Max_name_length + 1)
+			create Result.make (Max_name_length + 1)
 			Result.fill_blank
-			!! a_wel_string.make (Result)
-			nb := cwin_get_menu_string (item, an_id,
-				a_wel_string.item, Max_name_length + 1, Mf_bycommand)
+			create a_wel_string.make (Result)
+			nb := cwin_get_menu_string (item, an_id, a_wel_string.item, Max_name_length + 1, Mf_bycommand)
 			Result := a_wel_string.string
 			Result.head (nb)
 		ensure
@@ -533,8 +503,7 @@ feature -- Status report
 			exists: exists
 			positive_position: position >= 0
 		do
-			Result := cwin_get_sub_menu (item,
-				position) /= default_pointer
+			Result := cwin_get_sub_menu (item, position) /= default_pointer
 		end
 
 feature -- Conversion

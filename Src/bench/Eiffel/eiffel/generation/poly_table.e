@@ -620,7 +620,7 @@ feature {NONE} -- Implementation
 	increase_size (n: INTEGER) is
 			-- Increase the current array of `n' elements.
 		do
-			area := arycpy ($area, upper - lower + 1 + n, 0, upper - lower + 1)
+			area := area.aliased_resized_area (count + n)
 			upper := upper + n
 		end
 

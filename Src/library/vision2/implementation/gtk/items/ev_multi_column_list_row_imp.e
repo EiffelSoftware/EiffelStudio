@@ -48,11 +48,6 @@ feature -- Status report
 
 feature -- Status setting
 
-	update is
-		do
-			--| FIXME IEK Implement to use idle handler
-		end
-
 	destroy is
 			-- Destroy actual object.
 		local
@@ -100,43 +95,8 @@ set_pointer_style (curs: EV_CURSOR) is do end
 
 feature -- Element Change
 
-	set_cell_text (column: INTEGER; a_text: STRING) is
-			-- Make `text ' the new label of the `column'-th
-			-- cell of the row.
-		local
-			txt: ANY
-			pix_imp: EV_PIXMAP_IMP
-		do
-			-- Prepare the pixmap and the text.
-			txt := a_text.to_c
-
-			if column = 1 and pixmap /= Void then
-				pix_imp ?= pixmap.implementation
-			end
-
-			-- Set the pixmap and the text in the given column.
-			if (pix_imp /= void and then parent_imp /= Void) then
-				C.c_gtk_clist_set_pixtext (
-					parent_imp.list_widget,
-					index - 1,
-					column - 1,
-					pix_imp.c_object,
-					$txt
-				)
-			elseif parent_imp /= Void then
-				C.c_gtk_clist_set_pixtext (
-					parent_imp.list_widget,
-					index - 1,
-					column - 1,
-					default_pointer,
-					$txt
-				)
-			end
-		end
-
 	set_pixmap (a_pix: EV_PIXMAP) is
 		do
-			set_cell_pixmap (1, a_pix)
 			pixmap := a_pix
 		end
 
@@ -144,53 +104,7 @@ feature -- Element Change
 
 	remove_pixmap is
 		do
-			unset_cell_pixmap (1)
-		end
-
-	set_cell_pixmap (column: INTEGER; pix: EV_PIXMAP) is
-			-- Sets the pixmap of the given column of `Current'.
-		local
-			pix_imp: EV_PIXMAP_IMP
-			txt: STRING
-			a: ANY
-			pixdata, mask, pixmap_pointer: POINTER
-		do
-			-- Prepare the pixmap and the text.
-			pix_imp ?= pix.implementation
-			txt := interface.i_th (column)
-			a := txt.to_c
-
-			-- Set the pixmap and the text in the given column.
-			if (pix_imp /= void and then parent_imp /= Void) then
-				C.gtk_pixmap_get (pix_imp.c_object, $pixdata, $mask)
-				pixmap_pointer := C.gtk_pixmap_new (pixdata, mask)
-				C.gtk_widget_show (pixmap_pointer)
-				C.c_gtk_clist_set_pixtext (
-					parent_imp.list_widget,
-					index - 1,
-					column - 1,
-					pixmap_pointer,
-					$a
-				)
-			elseif parent_imp /= Void then
-				C.c_gtk_clist_set_pixtext (
-					parent_imp.list_widget,
-					index - 1,
-					column - 1,
-					default_pointer,
-					$a
-				)
-			end
-		end
-
-	unset_cell_pixmap (column: INTEGER) is
-			-- Unsets pixmap of the given column of `Current'. 
-		do
-			C.c_gtk_clist_unset_pixmap (
-				parent_imp.list_widget,
-				index - 1,
-				column - 1
-			)
+			pixmap := Void
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -243,6 +157,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/03/25 01:51:44  king
+--| Removed old implementation
+--|
 --| Revision 1.39  2000/03/24 01:27:47  king
 --| Removed invalid destroyed feature, checking for void pixmap
 --|

@@ -2261,7 +2261,7 @@ feature {NONE} -- Implementation: generation
 			l_gen_type: GEN_TYPE_I
 			l_formal_type: FORMAL_I
 			l_type_i: TYPE_I
-			l_type_id: INTEGER
+			l_type_id, i, up: INTEGER
 		do
 			l_type_i := a_type_feature.type.actual_type.type_i
 
@@ -2307,6 +2307,7 @@ feature {NONE} -- Implementation: generation
 				implementation.generate_external_call (formal_type_class_name, "set_position",
 					Normal_type, <<integer_32_class_name>>, Void, True)
 			elseif l_type_id = class_type_id then
+					-- Non-generic class.
 				implementation.put_type_token (implementation_id_of (l_cl_type))
 				implementation.generate_external_call (class_type_class_name, "set_type",
 					Normal_type, <<type_handle_class_name>>, Void, True)
@@ -2315,9 +2316,39 @@ feature {NONE} -- Implementation: generation
 				implementation.generate_external_call (basic_type_class_name, "set_type",
 					Normal_type, <<type_handle_class_name>>, Void, True)
 			else
-				implementation.put_type_token (implementation_id_of (l_cl_type))
+				implementation.duplicate_top
+
+				put_integer_32_constant (l_gen_type.meta_generic.count)
+				implementation.generate_array_creation (type_id)
+
+				from
+					i := l_gen_type.true_generics.lower
+					check
+						i_start_at_one: i = 1
+					end
+					up := l_gen_type.true_generics.upper
+				until
+					i > up
+				loop
+					implementation.duplicate_top
+					put_integer_32_constant (i - 1)
+					l_gen_type.true_generics.item (i).generate_gen_type_il (Current, True)
+					implementation.generate_array_write (feature {IL_CONST}.il_ref)
+					i := i + 1
+				end
+
+				implementation.generate_external_call (generic_type_class_name, "set_type_array",
+					normal_type, <<type_array_class_name>>, void, True)
+				implementation.duplicate_top
+				implementation.put_type_token (implementation_id_of (l_gen_type))
 				implementation.generate_external_call (generic_type_class_name, "set_type",
-					Normal_type, <<type_handle_class_name>>, Void, True)
+					normal_type, <<type_handle_class_name>>, void, True)
+				implementation.duplicate_top
+				implementation.put_integer32_constant (l_gen_type.meta_generic.count)
+				implementation.generate_external_call (generic_type_class_name, "set_nb_generics",
+					normal_type, <<integer_32_class_name>>, void, True)
+					
+				implementation.pop
 			end
 			generate_return_value
 		end

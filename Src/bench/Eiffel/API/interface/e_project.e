@@ -478,26 +478,31 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
-			is_compiling_ref.set_item (True)
-			Workbench.recompile
+			if not Compilation_modes.is_precompiling then
+				is_compiling_ref.set_item (True)
+				Workbench.recompile
 
-			if successful then
-				Comp_system.prepare_before_saving (True)
---				if not (Compilation_modes.is_quick_melt and then not freezing_occurred) then
-					save_project
---				end
+				if successful then
+					Comp_system.prepare_before_saving (True)
+--					if not (Compilation_modes.is_quick_melt and then not freezing_occurred) then
+						save_project
+--					end
+	
+					if not freezing_occurred then
+							link_driver
+					end
 
-				if not freezing_occurred then
-					link_driver
+					if Application.has_debugging_information then
+						Application.resynchronize_breakpoints
+						Degree_output.put_resynchronizing_breakpoints_message
+					end
 				end
-
-				if Application.has_debugging_information then
-					Application.resynchronize_breakpoints
-					Degree_output.put_resynchronizing_breakpoints_message
-				end
+				Compilation_modes.reset_modes
+				is_compiling_ref.set_item (False)
+			else
+				Compilation_modes.reset_modes
+				precompile (false)
 			end
-			Compilation_modes.reset_modes
-			is_compiling_ref.set_item (False)
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved
@@ -512,15 +517,20 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
-			if 
-				System_defined and then 
-				Ace.successful and then
-				not Ace.date_has_changed and then
-				not Compilation_modes.need_melt
-			then
-				Compilation_modes.set_is_quick_melt
+			if not Compilation_modes.is_precompiling then
+				if 
+					System_defined and then 
+					Ace.successful and then
+					not Ace.date_has_changed and then
+					not Compilation_modes.need_melt
+				then
+					Compilation_modes.set_is_quick_melt
+				end
+				melt
+			else
+				Compilation_modes.reset_modes
+				precompile (false)
 			end
-			melt
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved
@@ -608,7 +618,7 @@ feature -- Update
 					save_precomp (licensed)
 				end
 			end
-			Compilation_modes.reset_modes
+			--Compilation_modes.reset_modes
 		ensure
 			was_saved: successful and then not error_occurred implies was_saved
 			error_implies: error_occurred implies save_error

@@ -1,122 +1,96 @@
--- Array of character used for storing interpreted datas
+indexing
+	description: "Array of character used for storing interpreted datas."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CHARACTER_ARRAY 
 
 inherit
-
 	TO_SPECIAL [CHARACTER]
 		export
 			{CHARACTER_ARRAY} area
-		end;
+		end
 
 creation
-
 	make
-	
-feature 
 
-	size: INTEGER;
-			-- Allocated size of the C character array `area'.
-
-	set_size (i: INTEGER) is
-			-- Assign `i' to `size'.
-		do
-			size := i;
-		end;
+feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
 			-- Allocate `n' characters
+		require
+			valid_n: n >= 0
 		do
-			make_area (n);
-			size := n;
+			make_area (n)
+			size := n
 		ensure
-			good_size: size = n;
-		end;
+			size_set: size = n
+		end
+
+feature -- Access
+
+	size: INTEGER
+			-- Allocated size of the C character array `area'.
+
+feature -- Store
+
+	store (file: RAW_FILE) is
+			-- Store C array in `file'.
+		require
+			good_argument: file /= Void
+			is_open_write: file.is_open_write
+		do
+			ca_store ($area, size, file.file_pointer)
+		end
+
+feature -- Resizing
 
 	resize (n: INTEGER) is
 			-- Reallocation for `n' characters
 		local
-			old_area: like area;
+			old_area: like area
 		do
-			old_area := area;
-			make_area (n);
-			ca_copy ($old_area, $area, size, 0);
-			size := n;
+			old_area := area
+			make_area (n)
+			ca_copy ($old_area, $area, size, 0)
+			size := n
 		ensure
-			good_size: size = n;
-		end;
+			good_size: size = n
+		end
 
-	put (c: CHARACTER; i: INTEGER) is
-			-- Put `c' at position `i'.
-		require
-			index_small_enough: i <= size;
-			index_large_enough: i > 0;
-		do
-			ca_put ($area, c, i - 1);
-		ensure
-			good_item: item (i) = c
-		end;
-
-	item (i: INTEGER): CHARACTER is
-			-- Character at position `i'.
-		require
-            index_small_enough: i <= size;
-            index_large_enough: i > 0;
-		do
-			Result := ca_item ($area, i - 1);
-		end;
-		
-	store (file: RAW_FILE) is
-			-- Store C array in `file'.
-		require
-			good_argument: file /= Void;
-			is_open_write: file.is_open_write;
-		do
-			ca_store ($area, size, file.file_pointer);
-		end; -- store
+feature -- Debug
 
 	trace is
 			-- Debug purpose
 		local
-			i: INTEGER;
+			i: INTEGER
 		do
 			from
-				i := 1
+				i := 0
 			until
-				i > size
+				i >= size
 			loop
-				io.error.putint (i - 1);
-				io.error.putstring (": ");
-				io.error.putchar (item (i));
-				io.error.new_line;
+				io.error.putint (i)
+				io.error.putstring (": ")
+				io.error.putchar (item (i))
+				io.error.new_line
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
 feature {NONE} -- External features
 
 	ca_store (ptr: POINTER; siz: INTEGER; fil: POINTER) is
 		external
 			"C"
-		end;
-
-	ca_item (ptr: POINTER; i: INTEGER): CHARACTER is
-		external
-			"C"
-		end;
-
-	ca_put (ptr: POINTER; val: CHARACTER; i: INTEGER) is
-		external
-			"C"
-		end;
+		end
 
 	ca_copy (fr, to: POINTER; nb_items, at: INTEGER) is
 		external
 			"C"
-		end;
+		end
 
 invariant
-
 	area_exists: area /= Void
 
-end
+end -- class CHARACTER_ARRAY

@@ -43,7 +43,6 @@ feature -- Basic operations
 				window_exist: window.exists
 			end
 			item := cwin_get_dc (hwindow)
-			release_dc := True
 		end
 
 	release is
@@ -56,7 +55,6 @@ feature -- Basic operations
 			unselect_all
 			cwin_release_dc (hwindow, item)
 			item := default_pointer
-			release_dc := False
 		end
 
 	quick_release is
@@ -68,7 +66,6 @@ feature -- Basic operations
 			end
 			cwin_release_dc (hwindow, item)
 			item := default_pointer
-			release_dc := False
 		end
 
 feature {NONE} -- Implementation
@@ -79,17 +76,15 @@ feature {NONE} -- Implementation
 feature {NONE} -- Removal
 
 	destroy_item is
+		local
+			p: POINTER
 		do
-			unselect_all
-			if release_dc then
+			if item /= p then
+				unselect_all
 				cwin_release_dc (hwindow, item)
+				item := p
 			end
-			item := default_pointer
 		end
-
-	release_dc: BOOLEAN
-			-- Flag in order to know if we have to release the DC
-			--| It should be done only after a `get'
 
 end -- class WEL_CLIENT_DC
 

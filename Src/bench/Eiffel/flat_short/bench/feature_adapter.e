@@ -291,7 +291,7 @@ feature {NONE} -- Implementation
 
 feature -- Case storage output
 
-	storage_info: S_FEATURE_DATA_R340 is
+	storage_info: S_FEATURE_DATA_R40 is
 			-- Storage information for Current
 		require else
 			valid_target_feature: target_feature /= Void

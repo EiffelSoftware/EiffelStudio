@@ -16,7 +16,6 @@
 /*#define MEMCHK /**/
 /*#define MEM_STAT /**/
 
-#include "timer.h"			/* For getcputime */
 #include "config.h"
 #include <errno.h>			/* For system calls error report */
 #include <sys/types.h>		/* For caddr_t */
@@ -29,6 +28,7 @@
 #include <signal.h>
 
 #include "eiffel.h"			/* For bcopy/memcpy */
+#include "timer.h"			/* For getcputime */
 #include "malloc.h"
 #include "garcol.h"			/* For Eiffel flags and function declarations */
 #include "except.h"			/* For exception raising */
@@ -687,7 +687,7 @@ rt_private char *malloc_free_list(unsigned int nbytes, union overhead **hlist, i
 			return result;				/* We must have it */
 
 		panic(MTC inconsistency);
-	}
+	} /* end if cc_for_speed */
 
 	/* Call garbage collector if it is not turned off and restart our
 	 * attempt from the beginning. We always call the partial scavenging
@@ -1018,38 +1018,44 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 		 * as the last option. Every failure is handled as a "no more memory"
 		 * condition.
 		 */
+
 #ifdef HAS_SMART_MMAP
+
 #if PTRSIZ > 4
 		oldbrk = (union overhead *) mmap (root_obj, asked, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_VARIABLE | MAP_PRIVATE, -1, 0);
 #else
 		oldbrk = (union overhead *) mmap (NULL, asked, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_VARIABLE | MAP_PRIVATE, -1, 0);
-
 #endif
+
 		if ((union overhead *) -1 != oldbrk)
 			break;							/* OK, we got it */
-#else
+
+#else /* !HAS_SMART_MMAP */
+
 #ifdef HAS_SBRK
 		oldbrk = (union overhead *) sbrk(asked);
+
 #ifdef DEBUG
 		dprintf(2)("add_core: kernel responded: %s (oldbrk: 0x%lx)\n",
 			((union overhead *) -1 == oldbrk) ? "no" : "ok", oldbrk);
 		flush;
 #endif
-
 		if ((union overhead *) -1 != oldbrk)
 			break;							/* OK, we got it */
-#else
-		oldbrk = (union overhead *) malloc(asked);
+#else /* !HAS_SBRK */
+
+		oldbrk = (union overhead *) malloc (asked); /* Use malloc() */
+
 #ifdef DEBUG
 		dprintf(2)("add_core: kernel responded: %s (oldbrk: 0x%lx)\n",
 			((union overhead *) 0 == oldbrk) ? "no" : "ok", oldbrk);
 		flush;
 #endif
-
 		if ((union overhead *) 0 != oldbrk)
 			break;							/* OK, we got it */
-#endif
-#endif
+
+#endif /* HAS_SBRK */
+#endif /* HAS_SMART_MMAP */
 
 	}
 
@@ -1548,7 +1554,7 @@ rt_public void xfree(register char *ptr)
 	}
 
 #ifdef DEBUG
-	dprintf(1)("free: on a %s %s block starting at 0x%lx (%d bytes)\n",
+	dprintf(1)("xfree: on a %s %s block starting at 0x%lx (%d bytes)\n",
 		(zone->ov_size & B_LAST) ? "last" : "normal",
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
@@ -1558,7 +1564,7 @@ rt_public void xfree(register char *ptr)
 		if (zone->ov_size & B_FWD)		/* Object was forwarded */
 			obj = zone->ov_fwd;
 		if (!(HEADER(obj)->ov_flags & EO_C))
-			printf("free: %s object [%d]\n",
+			printf("xfree: %s object [%d]\n",
 				System(Dtype(obj)).cn_generator, Dtype(obj));
 	}
 	flush;
@@ -1570,7 +1576,7 @@ rt_public void xfree(register char *ptr)
 	xfreeblock(zone, r);
 
 #ifdef DEBUG
-	dprintf(8)("free: %s %s block starting at 0x%lx holds %d bytes free\n",
+	dprintf(8)("xfree: %s %s block starting at 0x%lx holds %d bytes free\n",
 		(zone->ov_size & B_LAST) ? "last" : "normal",
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
@@ -1615,7 +1621,7 @@ rt_public void xfreechunk(char *ptr)
 		e_data.ml_used -= i;
 
 #ifdef DEBUG
-	dprintf(1)("free: on a %s %s block starting at 0x%lx (%d bytes)\n",
+	dprintf(1)("xfreechunk: on a %s %s block starting at 0x%lx (%d bytes)\n",
 		(zone->ov_size & B_LAST) ? "last" : "normal",
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
@@ -1625,7 +1631,7 @@ rt_public void xfreechunk(char *ptr)
 		if (zone->ov_size & B_FWD)		/* Object was forwarded */
 			obj = zone->ov_fwd;
 		if (!(HEADER(obj)->ov_flags & EO_C))
-			printf("free: %s object [%d]\n",
+			printf("xfreechunk: %s object [%d]\n",
 				System(Dtype(obj)).cn_generator, Dtype(obj));
 	}
 	flush;
@@ -1637,7 +1643,7 @@ rt_public void xfreechunk(char *ptr)
 	xfreeblock(zone, r);
 
 #ifdef DEBUG
-	dprintf(8)("free: %s %s block starting at 0x%lx holds %d bytes free\n",
+	dprintf(8)("xfreechunk: %s %s block starting at 0x%lx holds %d bytes free\n",
 		(zone->ov_size & B_LAST) ? "last" : "normal",
 		(zone->ov_size & B_CTYPE) ? "C" : "Eiffel",
 		ptr, zone->ov_size & B_SIZE);
@@ -2399,6 +2405,7 @@ rt_shared int full_coalesc(int chunk_type)
 	 * If ALL_T is used, then the whole memory is scanned and coalesced.
 	 */
 
+#if !defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (!gc_running) {
 			double utime, stime;
@@ -2409,7 +2416,7 @@ rt_shared int full_coalesc(int chunk_type)
 			started_here = 1;
 			gc_ran = 1;
 		}
-
+#endif
 	switch (chunk_type) {
 	case C_T:						/* Only walk through the C chunks */
 		c = cklst.cck_head;
@@ -2447,6 +2454,7 @@ rt_shared int full_coalesc(int chunk_type)
 	flush;
 #endif
 
+#if !defined CUSTOM || defined NEED_OPTION_H
 	if (prof_recording)
 		if (started_here) {			/* Keep track of this run */
 			double utime, stime;
@@ -2455,7 +2463,7 @@ rt_shared int full_coalesc(int chunk_type)
 			last_gc_time = (utime + stime) - last_gc_time;
 			gc_running = 0;
 		}
-
+#endif
 	return max_size;		/* Maximum size of coalesced block or 0 */
 
 	EIF_END_GET_CONTEXT

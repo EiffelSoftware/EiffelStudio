@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 			create a_cs.make ("Select file")
 			set_c_object
 				(feature {EV_GTK_EXTERNALS}.gtk_file_selection_new (a_cs.item))
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_modal (c_object, True)
 			filter := "*.*"
 			set_start_directory (".")
 		end

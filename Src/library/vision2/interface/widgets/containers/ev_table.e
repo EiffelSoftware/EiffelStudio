@@ -16,7 +16,7 @@ inherit
 
 	EV_CONTAINER
 		undefine
-			prune_all
+			prune_all, fill
 		redefine
 			implementation,
 			create_implementation,

@@ -14,6 +14,7 @@ inherit
 		undefine
 			extend,
 			prune_all,
+			fill,
 			put,
 			replace,
 			item,

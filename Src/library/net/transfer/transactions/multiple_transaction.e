@@ -21,7 +21,7 @@ inherit
 		rename
 			item as transaction
 		undefine
-			copy, is_equal, force, is_inserted, search, append
+			copy, is_equal, force, is_inserted, search, append, fill
 		end
 	
 	ARRAYED_LIST[TRANSACTION]

@@ -17,6 +17,8 @@ deferred class CHAIN [G] inherit
 	CURSOR_STRUCTURE [G]
 		undefine
 			prune_all
+		redefine
+			fill
 		select
 			put
 		end
@@ -27,6 +29,8 @@ deferred class CHAIN [G] inherit
 			put as put_i_th
 		undefine
 			prune_all
+		redefine
+			fill
 		end
 
 	SEQUENCE [G]
@@ -35,7 +39,7 @@ deferred class CHAIN [G] inherit
 		export
 			{NONE} sequence_put
 		redefine
-			index_of, has, off, occurrences
+			index_of, has, off, occurrences, fill, append
 		select
 			index_of, has, occurrences
 		end
@@ -51,7 +55,7 @@ deferred class CHAIN [G] inherit
 				sequential_index_of, sequential_has,
 				sequence_put
 		redefine
-			off
+			off, fill, append
 		end
 
 feature -- Access
@@ -282,6 +286,51 @@ feature -- Element change
 			go_to (pos)
 		end
 
+	append (s: SEQUENCE [G]) is
+			-- Append a copy of `s'.
+		local
+			l: like s
+			l_cursor: CURSOR
+		do
+			if s = Current then
+				l := s.twin
+			else
+				l := s
+			end
+			from
+				l_cursor := cursor
+				l.start
+			until
+				l.exhausted
+			loop
+				extend (l.item)
+				finish
+				l.forth
+			end
+			go_to (l_cursor)
+		end
+
+	fill (other: CONTAINER [G]) is
+			-- Fill with as many items of `other' as possible.
+			-- The representations of `other' and current structure
+			-- need not be the same.
+		local
+			lin_rep: LINEAR [G]
+			l_cursor: CURSOR
+		do
+			lin_rep := other.linear_representation
+			from
+				l_cursor := cursor
+				lin_rep.start
+			until
+				not extendible or else lin_rep.off
+			loop
+				extend (lin_rep.item)
+				finish
+				lin_rep.forth
+			end
+			go_to (l_cursor)
+		end
 feature -- Transformation
 
 	swap (i: INTEGER) is

@@ -54,7 +54,7 @@ A:hover {
 }
 
 .efeature {
-    COLOR: green;
+    COLOR: darkgreen;
     FONT-STYLE: italic;
 }
 
@@ -69,7 +69,7 @@ A:hover {
 }
 
 .elocal, .equoted {
-    COLOR: brown;
+    COLOR: darkred;
     FONT-STYLE: italic;
 }
 
@@ -85,7 +85,7 @@ A:hover {
 }
 
 .ecluster {
-    COLOR: crimson;
+    COLOR: maroon;
     FONT-VARIANT: small-caps;
     FONT-WEIGHT: bold;
 }

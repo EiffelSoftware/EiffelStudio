@@ -55,7 +55,7 @@ feature {STOPPED_HDLR} -- Initialization
 				-- Compute break position.
 			if e_feature /= Void then
 				break_index := debug_info.breakable_index 
-								(e_feature, Eiffel_system.type_of_dynamic_id (dt), offs);
+								(e_feature, Eiffel_system.type_of_dynamic_id (ot), offs);
 			else
 					--| This should eventually be removed, since the
 					--| feature must necessarily be found.

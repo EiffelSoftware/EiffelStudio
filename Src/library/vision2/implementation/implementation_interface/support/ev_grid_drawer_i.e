@@ -45,9 +45,6 @@ feature -- Basic operations
 --			a_width_positive: a_width >= 0
 --			a_height_positive: a_height >= 0
 		local
-			y: INTEGER
---			height: INTEGER
-			
 			virtual_x_position, virtual_y_position: INTEGER
 			vertical_buffer_offset: INTEGER
 			horizontal_buffer_offset: INTEGER

@@ -10,7 +10,9 @@
 extern "C" {
 #endif
 
+/* Commented for now, remove it later
 extern EIF_POINTER new_cordebug ();
+*/
 extern EIF_INTEGER get_cordebug (LPWSTR a_dbg_version, EIF_POINTER ** );
 
 extern EIF_INTEGER dbg_timer_id ();

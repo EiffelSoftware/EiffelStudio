@@ -35,7 +35,7 @@ cd ISE.Reflection.EiffelComponents
 cd ace_file
 gacutil -u ISE.Reflection.EiffelComponents
 del *.epr
-rd -q -s EIFGEN
+rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
 cd W_code
@@ -61,7 +61,7 @@ cd ISE.Reflection.EiffelAssemblyCacheNotifier
 cd ace_file
 gacutil -u ISE.Reflection.EiffelAssemblyCacheNotifier
 del *.epr
-rd -q -s EIFGEN
+rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
 cd W_code
@@ -87,7 +87,7 @@ cd ISE.Reflection.Support
 cd ace_file
 gacutil -u ISE.Reflection.Support
 del *.epr
-rd -q -s EIFGEN
+rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
 cd W_code
@@ -113,7 +113,7 @@ cd ISE.Reflection.EiffelAssemblyCacheHandler
 cd ace_file
 gacutil -u ISE.Reflection.EiffelAssemblyCacheHandler
 del *.epr
-rd -q -s EIFGEN
+rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
 cd W_code
@@ -140,7 +140,7 @@ cd ISE.Reflection.CodeGenerator
 cd ace_file
 gacutil -u ISE.Reflection.CodeGenerator
 del *.epr
-rd -q -s EIFGEN
+rd /q /s EIFGEN
 ec -ace ace.ace
 cd EIFGEN
 cd W_code
@@ -166,7 +166,7 @@ cd ISE.Reflection.ReflectionInterface
 cd ace_file
 gacutil -u ISE.Reflection.ReflectionInterface
 del *.epr
-rd -q -s EIFGEN
+rd /q /s EIFGEN
 ec -ace ace.ace 
 cd EIFGEN
 cd W_code
@@ -227,14 +227,13 @@ echo *************************************
 echo *  Generating `folder_browser.dll'  *
 echo *************************************
 
-gacutil -u folder_browser
 del *.epr
-rd -q -s EIFGEN
+rd /q /s EIFGEN
 ec -ace Ace.ace -finalize
 cd EIFGEN
 cd F_code
 finish_freezing
-gacutil -i folder_browser.dll
+regsvr32 folder_browser.dll
 copy .\folder_browser.dll ..\..\..\..\bin
 
 cd ..
@@ -289,12 +288,9 @@ cd assembly_manager
 cd ace_file
 gacutil -u ISE.AssemblyManager
 del *.epr
-rd -q -s EIFGEN
+rd /q /s EIFGEN
 ec -ace ace.ace
 cd EIFGEN
 cd W_code
 gacutil -i ISE.AssemblyManager.exe
 copy ISE.AssemblyManager.exe ..\..\..\..\bin
-
-regsvr32 folder_browser.dll
-

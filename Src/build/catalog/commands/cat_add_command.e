@@ -1,3 +1,9 @@
+indexing
+	description: "Command used to add a new kind of command %
+				% in the command catalog."
+	Id: "$Id$"
+	Date: "$Date$"
+	Revision: "$Revision$"
 
 class CAT_ADD_COMMAND 
 
@@ -21,6 +27,7 @@ inherit
 			undo, redo, catalog_work
 		end;
 	WINDOWS
+	SHARED_INSTANTIATOR
 	
 feature {NONE}
 
@@ -28,7 +35,7 @@ feature {NONE}
 
 	page: COMMAND_PAGE;
 
-	catalog: CMD_CATALOG is
+	catalog: COMMAND_CATALOG is
 		do
 			Result := command_catalog
 		end;
@@ -44,6 +51,7 @@ feature {NONE}
 	catalog_work is
 		do
 			parent_work;
+			command_instantiator.add_command (element)
 		end;
 
 feature
@@ -52,12 +60,14 @@ feature
 		do
 			parent_redo
 			element.recreate_class;
+			command_instantiator.add_command (element)
 		end;
 
 	undo is
 		do
 			parent_undo;
 			element.remove_class;
+			command_instantiator.remove_command (element)
 		end;
 			
 end

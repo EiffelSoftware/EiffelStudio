@@ -24,8 +24,8 @@ rt_public EIF_INTEGER fltoff(EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER)
 rt_public EIF_INTEGER ptroff(EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER);
 rt_public EIF_INTEGER i64off(EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER);
 rt_public EIF_INTEGER dbloff(EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER);
-rt_private EIF_INTEGER remainder(EIF_INTEGER x);
-rt_private EIF_INTEGER padding(EIF_INTEGER x, EIF_INTEGER y);
+rt_private EIF_INTEGER eif_remainder(EIF_INTEGER x);
+rt_private EIF_INTEGER eif_padding(EIF_INTEGER x, EIF_INTEGER y);
 
 
 /*
@@ -37,7 +37,7 @@ rt_public EIF_INTEGER chroff(EIF_INTEGER nb_ref)
 	/* Return offset of first character after `nb_ref' references
 	 */
 
-	return nb_ref * REFSIZ + padding(nb_ref * REFSIZ, (EIF_INTEGER)CHRSIZ);
+	return nb_ref * REFSIZ + eif_padding(nb_ref * REFSIZ, (EIF_INTEGER)CHRSIZ);
 }
 
 rt_public EIF_INTEGER i16off(EIF_INTEGER nb_ref, EIF_INTEGER nb_char)
@@ -47,7 +47,7 @@ rt_public EIF_INTEGER i16off(EIF_INTEGER nb_ref, EIF_INTEGER nb_char)
 	 */
 	EIF_INTEGER to_add = chroff(nb_ref) + nb_char *CHRSIZ;
 
-	return to_add + padding(to_add, (EIF_INTEGER) I16SIZ);
+	return to_add + eif_padding(to_add, (EIF_INTEGER) I16SIZ);
 }
 
 rt_public EIF_INTEGER lngoff(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGER nb_int16)
@@ -57,7 +57,7 @@ rt_public EIF_INTEGER lngoff(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGE
 	 */
 	EIF_INTEGER to_add = i16off(nb_ref, nb_char) + nb_int16 *I16SIZ;
 
-	return to_add + padding(to_add, (EIF_INTEGER) LNGSIZ);
+	return to_add + eif_padding(to_add, (EIF_INTEGER) LNGSIZ);
 }
 
 rt_public EIF_INTEGER fltoff(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGER nb_int16, EIF_INTEGER nb_int32)
@@ -67,7 +67,7 @@ rt_public EIF_INTEGER fltoff(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGE
 	 */
 	EIF_INTEGER to_add = lngoff(nb_ref,nb_char, nb_int16) + nb_int32 * LNGSIZ;
 
-	return to_add + padding(to_add, (EIF_INTEGER)FLTSIZ);
+	return to_add + eif_padding(to_add, (EIF_INTEGER)FLTSIZ);
 }
 
 rt_public EIF_INTEGER ptroff(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGER nb_int16, EIF_INTEGER nb_int32, EIF_INTEGER nb_flt)
@@ -77,7 +77,7 @@ rt_public EIF_INTEGER ptroff(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGE
 	 */
 	EIF_INTEGER to_add = fltoff(nb_ref,nb_char, nb_int16,nb_int32) + nb_flt * FLTSIZ;
 
-	return to_add + padding(to_add, (EIF_INTEGER)PTRSIZ);
+	return to_add + eif_padding(to_add, (EIF_INTEGER)PTRSIZ);
 }
 
 rt_public EIF_INTEGER i64off(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGER nb_int16, EIF_INTEGER nb_int32, EIF_INTEGER nb_flt, EIF_INTEGER nb_ptr)
@@ -89,7 +89,7 @@ rt_public EIF_INTEGER i64off(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGE
 	EIF_INTEGER to_add = ptroff(nb_ref,nb_char, nb_int16,nb_int32,nb_flt)
 					+ nb_ptr * PTRSIZ;
 
-	return to_add + padding(to_add, (EIF_INTEGER) I64SIZ);
+	return to_add + eif_padding(to_add, (EIF_INTEGER) I64SIZ);
 }
 
 rt_public EIF_INTEGER dbloff(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGER nb_int16, EIF_INTEGER nb_int32, EIF_INTEGER nb_flt, EIF_INTEGER nb_ptr, EIF_INTEGER nb_int64)
@@ -101,7 +101,7 @@ rt_public EIF_INTEGER dbloff(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGE
 	EIF_INTEGER to_add = i64off(nb_ref,nb_char, nb_int16,nb_int32,nb_flt, nb_ptr)
 					+ nb_int64 * I64SIZ;
 
-	return to_add + padding(to_add, (EIF_INTEGER) DBLSIZ);
+	return to_add + eif_padding(to_add, (EIF_INTEGER) DBLSIZ);
 }
 
 rt_public EIF_INTEGER objsiz(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGER nb_int16, EIF_INTEGER nb_int32, EIF_INTEGER nb_flt, EIF_INTEGER nb_ptr, EIF_INTEGER nb_int64, EIF_INTEGER nb_dbl)
@@ -113,19 +113,19 @@ rt_public EIF_INTEGER objsiz(EIF_INTEGER nb_ref, EIF_INTEGER nb_char, EIF_INTEGE
 	EIF_INTEGER to_add = dbloff(nb_ref,nb_char, nb_int16,nb_int32,nb_flt,nb_ptr, nb_int64)
 					+ nb_dbl * DBLSIZ;
 
-	return to_add + remainder(to_add);
+	return to_add + eif_remainder(to_add);
 }
 
 /*
  * Private functions definitions
  */
 
-rt_private EIF_INTEGER remainder(EIF_INTEGER x)
+rt_private EIF_INTEGER eif_remainder(EIF_INTEGER x)
 {
 	return ((x % ALIGN) ? (ALIGN -(x % ALIGN)) : 0);
 }
 
-rt_private EIF_INTEGER padding(EIF_INTEGER x, EIF_INTEGER y)
+rt_private EIF_INTEGER eif_padding(EIF_INTEGER x, EIF_INTEGER y)
 {
-	return remainder(x) % y;
+	return eif_remainder(x) % y;
 }

@@ -1677,7 +1677,7 @@ feature -- Features info
 						last_override_token := l_meth_token
 					end
 				end
-				if not is_override then
+				if not is_override and (not is_static or else l_is_attribute) then
 					create l_ca_factory
 					l_ca_factory.set_feature_custom_attributes (feat, l_meth_token)
 				end

@@ -738,7 +738,15 @@ feature -- Plug and Makefile file
 		require
 			buffer_exists: buffer /= Void
 		do
-			buffer.put_string ("%N%Tegc_int8_ref_dtype = ")
+			buffer.put_string ("%N%Tegc_uint8_ref_dtype = ")
+			buffer.put_type_id (system.natural_ref_type_id (8))
+			buffer.put_string (";%N%Tegc_uint16_ref_dtype = ")
+			buffer.put_type_id (system.natural_ref_type_id (16))
+			buffer.put_string (";%N%Tegc_uint32_ref_dtype = ")
+			buffer.put_type_id (system.natural_ref_type_id (32))
+			buffer.put_string (";%N%Tegc_uint64_ref_dtype = ")
+			buffer.put_type_id (system.natural_ref_type_id (64))
+			buffer.put_string (";%N%Tegc_int8_ref_dtype = ")
 			buffer.put_type_id (system.integer_ref_type_id (8))
 			buffer.put_string (";%N%Tegc_int16_ref_dtype = ")
 			buffer.put_type_id (system.integer_ref_type_id (16))
@@ -760,7 +768,15 @@ feature -- Plug and Makefile file
 			buffer.put_type_id (system.pointer_ref_type_id)
 			buffer.put_string (";%N");	
 
-			buffer.put_string ("%N%Tegc_int8_dtype = ")
+			buffer.put_string ("%N%Tegc_uint8_dtype = ")
+			buffer.put_type_id (uint8_c_type.type_id)
+			buffer.put_string (";%N%Tegc_uint16_dtype = ")
+			buffer.put_type_id (uint16_c_type.type_id)
+			buffer.put_string (";%N%Tegc_uint32_dtype = ")
+			buffer.put_type_id (uint32_c_type.type_id)
+			buffer.put_string (";%N%Tegc_uint64_dtype = ")
+			buffer.put_type_id (uint64_c_type.type_id)
+			buffer.put_string (";%N%Tegc_int8_dtype = ")
 			buffer.put_type_id (int8_c_type.type_id)
 			buffer.put_string (";%N%Tegc_int16_dtype = ")
 			buffer.put_type_id (int16_c_type.type_id)

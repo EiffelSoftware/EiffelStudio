@@ -35,6 +35,8 @@ inherit
 			class_path,
 			is_deferred,
 			is_external,
+			is_obsolete,
+			obsolete_message,
 			is_true_external,
 			is_generic,
 			is_library,
@@ -86,43 +88,40 @@ feature -- Access
 	description: STRING is
 			-- Class description.
 		do
-			create Result.make (50)
-			if is_deferred then
-				Result.append ("deferred ")
-			end
-			if is_generic then
-				Result.append ("generic ")
-			end
-			if is_external then
-				Result.append (".NET type ")
-			else
-				Result.append ("class ")
-			end
-			Result.append (name)
-			if is_external then
-				Result.append (" (")
-				Result.append (external_name)
-				Result.append (")")
-			end
-			if tool_tip /= Void and then not tool_tip.is_empty then
-				Result.append ("%N")
-				Result.append ("Description: ")
-				Result.append (tool_tip)
-			end
-			Result.prune_all ('%R')
-			Result.prune_all ('%T')
+			Result := tool_tip
 		end
 
 	tool_tip: STRING is
 			-- Class Tool Tip.
 		local
 			indexing_clause: INDEXING_CLAUSE_AS
+			l_res: STRING
+			l_lines: LIST [STRING]
 		do
 			if is_in_system then
 				if compiler_class.compiled_class.ast /= Void then
 					indexing_clause := compiler_class.compiled_class.ast.top_indexes
 					if indexing_clause /= Void then
-						Result := indexing_clause.description
+						l_res := indexing_clause.description
+						if l_res /= Void then
+							l_res.replace_substring_all ("%R", "")
+							l_lines := l_res.split ('%N')
+							create Result.make (l_res.count)
+							from
+								l_lines.start
+							until
+								l_lines.after
+							loop
+								l_lines.item.prune_all_leading ('%T')
+								l_lines.item.prune_all_leading (' ')
+								l_lines.item.prune_all_leading ('%T')
+								l_lines.item.prune_all_leading (' ')
+								l_lines.item.prune_all_trailing (' ')
+								Result.append (l_lines.item)
+								Result.append_character (' ')
+								l_lines.forth
+							end
+						end
 					end					
 				end
 			end
@@ -465,6 +464,24 @@ feature -- Access
 				Result := l_class_i /= Void
 			end
 		end
+		
+    is_obsolete: BOOLEAN is
+            -- Is obsolete feature?
+        do
+			if is_in_system then
+				Result := compiler_class.compiled_class.is_obsolete
+			end
+        end
+        
+    obsolete_message: STRING is
+            -- Obsolete message?
+        do
+			if is_in_system then
+				Result := compiler_class.compiled_class.obsolete_message
+			else
+				create Result.make_empty
+			end
+        end
 		
     is_true_external: BOOLEAN is
             -- Is true external class?

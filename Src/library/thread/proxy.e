@@ -6,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-expanded class
+class
 	PROXY [SHARED_OBJECT]
 
 inherit
@@ -56,7 +56,7 @@ feature -- Removal
 			-- Detach object from proxy.
 		do
 			if thread_is_owner and is_set then
-				dispose_proxy ($proxy_pointer)
+				dispose_proxy (proxy_pointer)
 				proxy_pointer := default_pointer
 			end
 		end

@@ -479,11 +479,13 @@ feature -- Element change
 
 	set_creation_routine_name (new_name: STRING) is
 			-- Set `a_creation_routine_name' as new creation routine.
-		require
-			new_name_exists: new_name /= Void
-			new_name_not_empty: not new_name.is_empty			
 		do
-			root_ast.root.set_creation_procedure_name (new_id_sd (new_name, False))
+			if new_name /= Void and not new_name.is_empty then
+				root_ast.root.set_creation_procedure_name (new_id_sd (new_name, False))				
+			else
+				root_ast.root.set_creation_procedure_name (Void)
+			end
+
 		end
 
 	set_assertions (evaluate_require, evaluate_ensure, evaluate_check, evaluate_loop, evaluate_invariant: BOOLEAN) is
@@ -570,7 +572,7 @@ feature -- Element change
 			if type = Il_generation_exe then
 				set_string_default(feature {FREE_OPTION_SD}.Msil_generation_type, "exe")
 			elseif type = Il_generation_dll then
-				set_string_default(feature {FREE_OPTION_SD}.Msil_generation_type, "exe")
+				set_string_default(feature {FREE_OPTION_SD}.Msil_generation_type, "dll")
 			end
 		end
 

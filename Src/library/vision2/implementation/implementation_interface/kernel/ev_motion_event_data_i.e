@@ -10,54 +10,131 @@ deferred class
 
 inherit	
 	EV_EVENT_DATA_I
-		redefine
-			print_contents
-		end	
+
+	EV_BIT_OPERATIONS_I
+		export
+			{NONE} all
+		end
 
 feature -- Access	
 	
 	x: INTEGER
-			-- x coordinate of mouse pointer 
+			-- x coordinate of mouse pointer relative to widget
 
 	y: INTEGER
-			-- y coordinate of mouse pointer 
+			-- y coordinate of mouse pointer relative to widget
 
-	state: INTEGER
-			-- State of the mouse buttons
-	
+	absolute_x: INTEGER is
+			-- absolute x of the mouse pointer
+		deferred
+		end
+
+	absolute_y: INTEGER is
+			-- absolute y of the mouse pointer
+		deferred
+		end
+
+	shift_key_pressed: BOOLEAN is
+			-- Is the shift key pressed during the event?
+		do
+			Result := bit_set (state, 1)
+		end
+
+	control_key_pressed: BOOLEAN is
+			-- Is the control key pressed during the event?
+		do
+			Result := bit_set (state, 2)
+		end
+
+	first_button_pressed: BOOLEAN is
+			-- Is the first button of the mouse pressed during the
+			-- event?
+		do
+			Result := bit_set (state, 4)
+		end
+
+	second_button_pressed: BOOLEAN is
+			-- Is the second button of the mouse pressed during the
+			-- event?
+		do
+			Result := bit_set (state, 8)
+		end
+
+	third_button_pressed: BOOLEAN is
+			-- Is the third button of the mouse pressed during the
+			-- event?
+		do
+			Result := bit_set (state, 16)
+		end
+
 feature -- Element change
+
+	set_all (wid: EV_WIDGET; a_x, a_y: INTEGER;
+			shift, control, first, second, third: BOOLEAN) is
+				-- Set all the parameters of the data.
+		do
+			set_widget (wid)
+			set_x (a_x)
+			set_y (a_y)
+			set_shift_key (shift)
+			set_control_key (control)
+			set_first_button (first)
+			set_second_button (second)
+			set_third_button (third)
+		end
 
 	set_x (value: INTEGER) is
 			-- Make `value' the new x.
 		do
 			x := value
 		end
-
+	
 	set_y (value: INTEGER) is
 			-- Make `value' the new y.
 		do
 			y := value
 		end
-
-	set_state (value: INTEGER) is
-			-- Make `value' the new state.
-		do
-			state := value
-		end
-
-feature -- Debug
 	
-	print_contents is
-			-- print the contents of the object
+	set_shift_key (flag: BOOLEAN) is
+			-- Make `flag' the new `shift_key_pressed' value.
 		do
-			io.put_string ("(X: ")
-			io.put_double (x)
-			io.put_string (", Y: ")			
-			io.put_double (y)
-			io.put_string (") State: ")			
-			io.put_double (State)
-			io.put_string ("%N")		
+			state := set_bit (state, 1, flag)
 		end
+
+	set_control_key (flag: BOOLEAN) is
+			-- Make `flag' the new `control_key_pressed' value.
+		do
+			state := set_bit (state, 2, flag)
+		end
+
+	set_first_button (flag: BOOLEAN) is
+			-- Make `flag' the new `first_button_pressed' value.
+		do
+			state := set_bit (state, 4, flag)
+		end
+
+	set_second_button (flag: BOOLEAN) is
+			-- Make `flag' the new `second_button_pressed' value.
+		do
+			state := set_bit (state, 8, flag)
+		end
+
+	set_third_button (flag: BOOLEAN) is
+			-- Make `flag' the new `third_button_pressed' value.
+		do
+			state := set_bit (state, 16, flag)
+		end
+
+feature {NONE} -- Implementation
+
+	state: INTEGER
+			-- Current state of the complementary keys and buttons.
+			-- Correspond to a binary number with :
+			--   bit 0 : shift_key_pressed
+			--	 bit 1 : control_key_pressed
+			--	 bit 2 : first_button_pressed
+			--	 bit 3 : second_button_pressed
+			--	 bit 4 : third_button_pressed
 
 end -- class EV_MOTION_EVENT_DATA_I
 

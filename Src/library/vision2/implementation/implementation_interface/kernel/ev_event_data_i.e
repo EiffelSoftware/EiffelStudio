@@ -14,21 +14,25 @@ feature -- Access
 			-- The mouse pointer was over this widget 
 			-- when event happened
 
+feature -- Status report
+
+	is_full: BOOLEAN
+			-- Has the data been filled by the system
+
+feature -- Status setting
+
+	set_full is
+			-- Mark the data has full.
+		do
+			is_full := True
+		end
+
 feature -- Element change
 
 	set_widget (wid: EV_WIDGET) is
 			-- Make `wid' the new widget.
 		do
 			widget := wid
-		end
-
-feature -- Debug
-	
-	print_contents is
-		do
-			io.put_string ("EV_EVENT_DATA: ")
-			print (widget)
-			io.put_string ("%N")
 		end
 
 end -- class EV_EVENT_DATA_I
@@ -48,6 +52,3 @@ end -- class EV_EVENT_DATA_I
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-
-			
-	

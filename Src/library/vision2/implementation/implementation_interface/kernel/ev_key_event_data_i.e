@@ -10,65 +10,129 @@ deferred class
 
 inherit
 	EV_EVENT_DATA_I	
-		redefine
-			print_contents
-		end	
 
-feature -- Access	
-	
-	state: INTEGER
-		-- To find
+	EV_BIT_OPERATIONS_I
+		export
+			{NONE} all
+		end
 
-	keyval: INTEGER
-		-- To find
+feature -- Access
 
-	length: INTEGER
-		-- to find
+	keycode: INTEGER
+			-- Server-dependent code corresponding to the keystroke
+
+	length: INTEGER is
+			-- length of the string returned by the system
+		do
+			Result := string.count
+		end
 
 	string: STRING
-		-- String given the char equivalent of the key
+			-- String given the char equivalent of the key
+
+--	repeat: INTEGER
+--			-- Number of times the action is repeat
+-- XX	To implement.
+
+	shift_key_pressed: BOOLEAN is
+			-- Is the shift key pressed during the event?
+		do
+			Result := bit_set (state, 1)
+		end
+
+	control_key_pressed: BOOLEAN is
+			-- Is the control key pressed during the event?
+		do
+			Result := bit_set (state, 2)
+		end
+
+	caps_lock_key_pressed: BOOLEAN is
+			-- Is the caps-lock key locked during the event?
+		do
+			Result := bit_set (state, 4)
+		end
+
+	num_lock_key_pressed: BOOLEAN is
+			-- Is the num-lock key locked during the event?
+		do
+			Result := bit_set (state, 8)
+		end
+
+	scroll_lock_key_pressed: BOOLEAN is
+			-- Is the scroll-lock key locked during the event?
+		do
+			Result := bit_set (state, 16)
+		end
 
 feature -- Element change
-	
-	set_state (value: INTEGER) is
-			-- Make `value' the new state.
+
+	set_all (wid: EV_WIDGET; a_keycode: INTEGER; str: STRING;
+				shift, control,	caps_lock, num_lock,
+				scroll_lock: BOOLEAN) is
+			-- Fill all the values of the data.
 		do
-			state := value
+			set_widget (wid)
+			set_keycode (a_keycode)
+			set_string (str)
+			set_shift_key (shift)
+			set_control_key (control)
+			set_caps_lock_key (caps_lock)
+			set_num_lock_key (num_lock)
+			set_scroll_lock_key (scroll_lock)
 		end
-	
-	set_keyval (value: INTEGER) is
+
+	set_keycode (value: INTEGER) is
 			-- Make `value' the new keyval.
 		do
-			keyval := value
+			keycode := value
 		end
-	
-	set_length (value: INTEGER) is
-			-- Make `value' the new length.
-		do
-			length := value
-		end
-	
+
 	set_string (str: STRING) is
 			-- Make `str' the new string.
 		do
 			string := str
 		end
 
-feature -- Debug
-	
-	print_contents is
-			-- print the contents of the object
+	set_shift_key (flag: BOOLEAN) is
+			-- Make `flag' the new `shift_key_pressed' value.
 		do
-			io.put_string ("State: ")			
-			io.put_integer (state)
-			io.put_string (" Keyval: ")			
-			io.put_integer (keyval)
-			io.put_string (" Length: ")			
-			io.put_integer (length)
-			io.put_string (" String: ")			
-			io.put_string (string)
-			io.put_string ("%N")		
+			state := set_bit (state, 1, flag)
 		end
+
+	set_control_key (flag: BOOLEAN) is
+			-- Make `flag' the new `control_key_pressed' value.
+		do
+			state := set_bit (state, 2, flag)
+		end
+
+	set_caps_lock_key (flag: BOOLEAN) is
+			-- Make `flag' the new `control_key_pressed' value.
+		do
+			state := set_bit (state, 4, flag)
+		end
+
+	set_num_lock_key (flag: BOOLEAN) is
+			-- Make `flag' the new `num_lock' value.
+		do
+			state := set_bit (state, 8, flag)
+		end
+
+	set_scroll_lock_key (flag: BOOLEAN) is
+			-- Make `flag' the new `scroll_lock' value.
+		do
+			state := set_bit (state, 16, flag)
+		end
+
+feature {NONE} -- Implementation
+
+	state: INTEGER
+			-- Current state of the complementary keys and buttons.
+			-- Correspond to a binary number with :
+			--   bit 0 : shift_key_pressed
+			--	 bit 1 : control_key_pressed
+			--	 bit 2 : caps-lock key
+			--	 bit 3 : num-lock key
+			--	 bit 4 : alt -- XX don't work yet on windows
 
 end -- class EV_KEY_EVENT_DATA_I
 

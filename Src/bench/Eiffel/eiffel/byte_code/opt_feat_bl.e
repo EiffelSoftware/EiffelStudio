@@ -34,6 +34,7 @@ feature
 			array_desc := f.array_desc.enlarged;
 			is_item := f.is_item
 			access_area := f.access_area;
+			precursor_type := f.precursor_type
 			enlarge_parameters
 		end
 

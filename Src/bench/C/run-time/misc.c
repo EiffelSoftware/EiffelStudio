@@ -333,7 +333,7 @@ struct eif_dll_info *eif_dll_table = (struct eif_dll_info *) 0;
 int eif_dll_capacity = EIF_DLL_CHUNK;
 int eif_dll_count = 0;
 
-HANDLE eif_load_dll(char *module_name)
+rt_public HANDLE eif_load_dll(char *module_name)
 {
 	HANDLE a_result;
 	char *m_name;
@@ -373,7 +373,7 @@ HANDLE eif_load_dll(char *module_name)
 	return a_result;
 }
 
-void eif_free_dlls(void)
+rt_public void eif_free_dlls(void)
 {
 	int i;
 	HINSTANCE module_ptr;

@@ -315,7 +315,7 @@ feature -- Figure drawing
 				if font_style.count = 0 then
 					font_style.append ("Roman")
 				end
-				add_ps ("/" + font_name.out + "-" + font_style.out + " findfont")
+				add_ps ("/" + font_name + "-" + font_style + " findfont")
 				add_ps (text_figure.font.height.out + " scalefont")
 				add_ps ("setfont")
 				add_ps (text_figure.point.x_abs.out + " " + (point_height-text_figure.point.y_abs-text_figure.font.ascent).out + " moveto")
@@ -359,7 +359,8 @@ feature {NONE} -- Implementation
 	add_ps (a_code: STRING) is
 			-- Add `a_code' to postscript data.
 		do
-			postscript_result.append (a_code + "%N")
+			postscript_result.append (a_code)
+			postscript_result.append_character ('%N')
 		end
 
 	append_line_styles (a_figure: EV_ATOMIC_FIGURE) is
@@ -482,9 +483,9 @@ feature {NONE} -- Implementation
 			add_ps ("gsave")
 			translate_to (0, 0)
 			add_ps ("newpath")
-			add_ps (a_line_width.out + " setlinewidth")
+			add_ps (a_line_width + " setlinewidth")
 			add_ps ("1 1 scale")
-			add_ps (a_color.out + " setrgbcolor")
+			add_ps (a_color + " setrgbcolor")
 			add_ps (point1.x_abs.out + " " + (point_height-point1.y_abs).out + " moveto")
 			add_ps (point2.x_abs.out + " " + (point_height-point2.y_abs).out + " lineto")
 			add_ps (point3.x_abs.out + " " + (point_height-point3.y_abs).out + " lineto")

@@ -13,7 +13,7 @@ inherit
 			copy, out, is_equal, setup, consistent
 		redefine
 			pass_address, is_id, good_integer, good_character,
-			record_dependances, string_value, simple_format
+			record_dependances
 		end;
 	STRING
 		rename
@@ -79,12 +79,6 @@ feature -- Conveniences
 			append (s);
 		end;
 
-	string_value: STRING is
-		do
-			!! Result.make (0);
-			Result.append (Current)
-		end
-
 feature -- Simple formatting
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
@@ -92,6 +86,12 @@ feature -- Simple formatting
 		do
 			ctxt.put_string (Current);
 		end;
+
+    string_value: STRING is
+        do
+            !! Result.make (0);
+            Result.append (Current)
+        end
 
 feature {NONE}
 

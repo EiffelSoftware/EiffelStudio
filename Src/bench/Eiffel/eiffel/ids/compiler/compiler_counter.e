@@ -1,10 +1,19 @@
-deferred class COMPILER_COUNTER [G -> COMPILER_ID]
+deferred class COMPILER_COUNTER
 
 inherit
 
-	HASH_TABLE [COMPILER_SUBCOUNTER [G], INTEGER]
+	HASH_TABLE [COMPILER_SUBCOUNTER, INTEGER]
+		rename
+			make as ht_make,
+			item as ht_item
+		end;
+	HASH_TABLE [COMPILER_SUBCOUNTER, INTEGER]
 		rename
 			make as ht_make
+		redefine
+			item 
+		select
+			item
 		end;
 	SHARED_WORKBENCH
 		undefine
@@ -37,7 +46,7 @@ feature -- Initialization
 			put (current_subcounter, compilation_id)
 		end
 
-	new_subcounter (compilation_id: INTEGER): COMPILER_SUBCOUNTER [G] is
+	new_subcounter (compilation_id: INTEGER): COMPILER_SUBCOUNTER is
 			-- New subcounter associated with `compilation_id'
 		deferred
 		ensure
@@ -50,7 +59,7 @@ feature -- Initialization
 		require
 			other_not_void: other /= Void
 		local
-			counter: COMPILER_SUBCOUNTER [G];
+			counter: COMPILER_SUBCOUNTER;
 			nb, compilation_id: INTEGER
 		do
 			nb := current_subcounter.offset;
@@ -64,12 +73,12 @@ feature -- Initialization
 				end;
 				other.forth
 			end;
-			current_subcounter.set_offset (nb);
+			current_subcounter.set_offset (nb)
 		end
 
 feature -- Access
 
-	next_id: G is
+	next_id: COMPILER_ID is
 			-- Next id
 		do
 			Result := current_subcounter.next_id
@@ -77,9 +86,15 @@ feature -- Access
 			id_not_void: Result /= Void
 		end
 
+	item (i: INTEGER): like current_subcounter is
+			-- Subcounter associted with compilation `i'
+		do
+			Result ?= ht_item (i)
+		end
+
 feature {NONE} -- Implementation
 
-	current_subcounter: COMPILER_SUBCOUNTER [G];
+	current_subcounter: COMPILER_SUBCOUNTER;
 			-- Current subcounter
 
 	Initial_size: INTEGER is 5;

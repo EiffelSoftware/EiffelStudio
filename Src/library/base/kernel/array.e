@@ -66,11 +66,19 @@ feature -- Initialization
 
 feature -- Access
 
-	frozen item, frozen infix "@", entry (i: INTEGER): G is
+	frozen item, frozen infix "@" (i: INTEGER): G is
 			-- Entry at index `i', if in index interval
 		do
 			Result := area.item (i - lower);
-		end;
+		end
+
+	entry (i: INTEGER): G is
+			-- Entry at index `i', if in index interval
+		require
+			valid_key: valid_index (i)
+		do
+			Result := item (i)
+		end
 
 	has (v: G): BOOLEAN is
 			-- Does `v' appear in array?
@@ -150,6 +158,16 @@ feature -- Measurement
 				end
 			end;
 		end;
+
+	index_set: INTEGER_INTERVAL is
+			-- Range of acceptable indexes
+		do
+			create Result.make (lower, upper)
+		ensure then
+			same_count: Result.count = count
+			same_bounds:
+				((Result.lower = lower) and (Result.upper = upper))
+		end
 
 feature -- Comparison
 
@@ -483,6 +501,9 @@ invariant
 
 	consistent_size: capacity = upper - lower + 1;
 	non_negative_count: count >= 0
+	index_set_has_same_count: index_set.count = count
+	-- index_set_has_same_bounds:
+			-- ((index_set.lower = lower) and (index_set.upper = upper))
 
 end -- class ARRAY
 

@@ -21,6 +21,7 @@ class ARRAYED_LIST [G] inherit
 			make as array_make,
 			put as put_i_th,
 			count as array_count,
+			index_set as array_index_set,
 			bag_put as put,
 			copy as array_copy
 		export
@@ -49,7 +50,7 @@ class ARRAYED_LIST [G] inherit
 			copy, put_left, merge_left,
 			merge_right, duplicate, prune_all
 		select
-			count, copy
+			count, index_set, copy
 		end;
 
 creation

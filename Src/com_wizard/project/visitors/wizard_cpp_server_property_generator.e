@@ -259,13 +259,6 @@ feature {NONE} -- Implementation
 				Result.append (Space)
 				Result.append (Tmp_variable_name)
 				Result.append (Space_equal_space)
-				Result.append (Open_parenthesis)
-				Result.append (Eif_boolean)
-				Result.append (Close_parenthesis)
-				Result.append (Ce_mapper)
-				Result.append (Dot)
-				Result.append (visitor.ec_function_name)
-				Result.append (Space_open_parenthesis)
 
 				Result.append ("(FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))")
 
@@ -275,7 +268,6 @@ feature {NONE} -- Implementation
 				Result.append (Eif_access)
 				Result.append (Space_open_parenthesis)
 				Result.append (Eiffel_object)
-				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
 
@@ -384,7 +376,7 @@ feature {NONE} -- Implementation
 			Result.append (Eiffel_object)
 			Result.append (Close_parenthesis)
 			Result.append (Comma_space)
-			if visitor.is_basic_type then
+			if visitor.is_basic_type or (visitor.vt_type = Vt_bool) then
 				Result.append (Tmp_variable_name)
 			else
 				Result.append (Eif_access)
@@ -396,7 +388,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 
 			-- eif_wean ('tmp_object')
-			if not visitor.is_basic_type then
+			if not (visitor.is_basic_type or (visitor.vt_type = Vt_bool)) then
 				Result.append (New_line_tab)
 				Result.append (Eif_wean)
 				Result.append (Space_open_parenthesis)

@@ -46,30 +46,5 @@ feature {GB_TYPE_SELECTOR_ITEM} -- Implementation
 				Result := True
 			end
 		end
-		
-feature {GB_OBJECT_HANDLER} -- Implementation
-		
-	add_child_object (an_object: GB_OBJECT; position: INTEGER) is
-			-- Add `an_object' to `Current' at position `position'.
-		local
-			tree_item: EV_TREE_ITEM
-		do
-			tree_item ?= an_object.object
-			check
-				object_is_a_tree_item: tree_item /= Void
-			end
-			object.go_i_th (position)
-			object.put_left (tree_item)
-			tree_item ?= an_object.display_object
-			check
-				display_object_is_a_tree_item: tree_item /= Void
-			end
-			display_object.go_i_th (position)
-			display_object.put_left (tree_item)
-			if not layout_item.has (an_object.layout_item) then
-				layout_item.go_i_th (position)
-				layout_item.put_left (an_object.layout_item)			
-			end
-		end
 
 end -- class GB_TREE_OBJECT

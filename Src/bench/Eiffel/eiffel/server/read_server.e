@@ -26,6 +26,10 @@ inherit
 			has as tbl_has,
 			remove as tbl_remove,
 			put as tbl_put
+		end;
+	COMPILER_EXPORTER
+		undefine
+			copy, is_equal
 		end
 
 feature
@@ -92,7 +96,7 @@ feature
 			if Result = Void then
 					-- Id not avaible in memory
 				info := tbl_item (real_id);
-				server_info := offsets.item (info.class_id);
+				server_info := offsets.item (info.class_id.id);
 				server_file := Server_controler.file_of_id (server_info.id);
 				if not server_file.is_open then
 					Server_controler.open_file (server_file);
@@ -123,7 +127,7 @@ feature
 		do
 			real_id := updated_id(an_id);
 			info := tbl_item (real_id);
-			server_info := offsets.item (info.class_id);
+			server_info := offsets.item (info.class_id.id);
 			server_file := Server_controler.file_of_id (server_info.id);
 			if not server_file.is_open then
 				Server_controler.open_file (server_file);

@@ -13,7 +13,7 @@ inherit
 
 feature
 
-	id: INTEGER;
+	id: CLASS_ID;
 			-- Id of the class associated to the current unit
 
 	type: TYPE_A;
@@ -25,7 +25,7 @@ feature
 			type := t
 		end;
 
-	set_id (i: INTEGER) is
+	set_id (i: CLASS_ID) is
 			-- Assign `i' to `id'.
 		do
 			id := i

@@ -7,7 +7,7 @@ inherit
 			make as et_make
 		end;
 
-	IDABLE
+	COMPILER_IDABLE
 		rename
 			id as class_id,
 			set_id as set_class_id
@@ -21,15 +21,15 @@ creation
 
 feature
 
-	class_id: INTEGER;
+	class_id: CLASS_ID;
 		-- Class id where features are replicated
 
-	set_class_id (i: INTEGER) is
+	set_class_id (i: CLASS_ID) is
 		do
 			class_id := i
 		end;
 
-	make (i: INTEGER; ci: INTEGER) is
+	make (i: INTEGER; ci: CLASS_ID) is
 			-- Make Current with `i' items and with
 			-- class_id `ci'.
 		do

@@ -70,7 +70,7 @@ feature
 				%/*%N%
 				% * make_area%N%
 				% */%Nvoid ");
-			encoded_name := Encoder.feature_name (id, feat.body_id);
+			encoded_name := Encoder.feature_name (id.id, feat.body_id);
 
 			System.used_features_log_file.add (Current, "make_area", encoded_name);
 
@@ -152,7 +152,7 @@ feature
 				file.putint (gen_type.type_id - 1);
 			else
 				file.putstring ("RTUD(");
-				file.putint (gen_type.associated_class_type.id - 1);
+				file.putint (gen_type.associated_class_type.id.id - 1);
 				file.putchar (')');
 			end;
 			if gen_param.is_reference then
@@ -264,7 +264,7 @@ feature
 				file.putstring (", Dtype(l[0])))");
 			else
 				file.putstring ("RTWA(");
-				file.putint (id - 1);
+				file.putint (id.id - 1);
 				file.putstring (", ");
 				file.putint (area_feature.feature_id);
 				file.putstring (", Dtype(l[0])))");

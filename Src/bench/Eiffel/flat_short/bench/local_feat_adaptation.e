@@ -368,7 +368,7 @@ feature {NONE} -- Implementation
 		do
 			Result := private_target_select_table;
 			if Result = Void then
-				Result := Feat_tbl_server.item (target_class.id).origin_table
+				Result := Feat_tbl_server.item (target_class.id.id).origin_table
 			end;
 		end;
 				
@@ -420,7 +420,8 @@ feature {NONE, GLOBAL_FEAT_ADAPTATION}
 			last_constrained: TYPE_A;
 			last_id: INTEGER;
 			old_cluster, type_cluster: CLUSTER_I;
-			last_class: CLASS_C
+			last_class: CLASS_C;
+			formal_type: FORMAL_A
 		do
 			Result ?= type;
 			check
@@ -428,14 +429,16 @@ feature {NONE, GLOBAL_FEAT_ADAPTATION}
 			end;
 			last_class := last_type.associated_class;
 			if last_type.is_formal then
+				formal_type ?= last_type;
 				last_constrained := 
-					last_class.constraint (last_type.base_type)
+					last_class.constraint (formal_type.position)
 			end;
 			if last_type.is_formal and then Result.is_formal then
 				old_cluster := Inst_context.cluster;
 				type_cluster := last_class.cluster;
 				Inst_context.set_cluster (type_cluster);
-				Result := last_constrained.generics.item (Result.base_type)
+				formal_type ?= Result;
+				Result := last_constrained.generics.item (formal_type.position)
 				Inst_context.set_cluster (old_cluster);
 			end;
 			Result := Result.conformance_type;
@@ -444,7 +447,8 @@ feature {NONE, GLOBAL_FEAT_ADAPTATION}
 			if Result.is_formal then
 					-- If result is format then get the
 					-- the constraint type from last_class.
-				Result := last_class.constraint (Result.base_type)
+				formal_type ?= Result;
+				Result := last_class.constraint (formal_type.position)
 			end;
 		end
 

@@ -14,7 +14,7 @@ inherit
 		rename
 			make as ll_make
 		end;
-	IDABLE
+	COMPILER_IDABLE
 
 creation
 
@@ -22,16 +22,16 @@ creation
 
 feature 
 
-	id: INTEGER;
+	id: CLASS_ID;
 
-	set_id (i:INTEGER) is
+	set_id (i: CLASS_ID) is
 		do
 			id := i
 		end;
 
-	make (class_id: INTEGER) is
+	make (class_id: CLASS_ID) is
 		require
-			valid_arg1: class_id > 0;
+			valid_arg1: class_id /= Void
 		do
 			ll_make;
 			id := class_id;

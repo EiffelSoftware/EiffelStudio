@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 				body_index := s_feat.body_index;
 				source_feature := s_feat;
 				target_feature := t_feat;
-				if (t_feat.written_in = s_feat.written_in) and then
+				if equal (t_feat.written_in, s_feat.written_in) and then
 					(t_feat.body_index = s_feat.body_index)
 				then
 						-- Only register if the target and source

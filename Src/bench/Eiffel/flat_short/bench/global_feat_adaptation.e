@@ -157,6 +157,7 @@ feature -- Transformation
 			arg_name: STRING
 			source_arguments: FEAT_ARG;
 			target_arguments: FEAT_ARG;
+			formal_type: FORMAL_A
 		do
 			if source_enclosing_feature /= Void then
 				if source_enclosing_feature.arguments /= Void then
@@ -173,11 +174,13 @@ feature -- Transformation
 							target_arguments := target_enclosing_feature.arguments;
 							s_type := source_arguments.i_th (i).actual_type;
 							if s_type.is_formal then
-								s_type := source_enclosing_class.constraint (s_type.base_type)
+								formal_type ?= s_type;
+								s_type := source_enclosing_class.constraint (formal_type.position)
 							end;
 							t_type := target_arguments.i_th (i).actual_type;
 							if t_type.is_formal then
-								t_type := target_enclosing_class.constraint (t_type.base_type)
+								formal_type ?= t_type;
+								t_type := target_enclosing_class.constraint (formal_type.position)
 							end;
 							!! Result;
 							Result.set_is_normal;
@@ -198,16 +201,19 @@ feature -- Transformation
 			-- with `Result' keyword
 		local
 			s_type, t_type: TYPE_A;
+			formal_type: FORMAL_A
 		do
 			if private_adapt_result = Void then
 			
 				s_type := source_enclosing_feature.type.actual_type;
 				if s_type.is_formal then
-			 		s_type := source_enclosing_class.constraint (s_type.base_type)
+					formal_type ?= s_type;
+			 		s_type := source_enclosing_class.constraint (formal_type.position)
 				end;
 				t_type := target_enclosing_feature.type.actual_type;
 				if t_type.is_formal then
-			 		t_type := target_enclosing_class.constraint (t_type.base_type)
+					formal_type ?= t_type;
+			 		t_type := target_enclosing_class.constraint (formal_type.position)
 				end;
 				!! private_adapt_result;
 				private_adapt_result.set_is_normal;
@@ -257,7 +263,8 @@ feature {FORMAT_CONTEXT} -- Implementation
 			old_written_in: INTEGER;
 			s_type, t_type: TYPE_A;
 			l_name: STRING;
-			local_info: LOCAL_INFO
+			local_info: LOCAL_INFO;
+			formal_type: FORMAL_A
 		do	
 			if not is_short then
 				old_cluster := Inst_context.cluster;
@@ -285,8 +292,9 @@ feature {FORMAT_CONTEXT} -- Implementation
 							else
 								s_type := local_info.type.actual_type;
 								if s_type.is_formal then
+									formal_type ?= s_type;
 				 					s_type := source_enclosing_class.constraint 
-													(s_type.base_type)
+													(formal_type.position)
 								end;
 							end;
 							source_locals.put (s_type, l_name);
@@ -318,15 +326,17 @@ feature {FORMAT_CONTEXT} -- Implementation
 								else
 									s_type := s_type.actual_type;
 									if s_type.is_formal then
+										formal_type ?= s_type;
 				 						s_type := source_enclosing_class.constraint 
-													(s_type.base_type)
+													(formal_type.position)
 									end;
 				 					t_type := t_type.instantiation_in 
 											(target_enclosing_class.actual_type,
 											source_enclosing_class.id).actual_type;
 									if t_type.is_formal then
+										formal_type ?= t_type;
 				 						t_type := target_enclosing_class.constraint 
-												(t_type.base_type)
+												(formal_type.position)
 									end
 								end;
 							end;

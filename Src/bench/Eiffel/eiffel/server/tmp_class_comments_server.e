@@ -31,7 +31,7 @@ feature -- Element change
 		do
 debug ("SERVER")
 	io.putstring ("Putting element of id: ");
-	io.putint (t.class_id);
+	io.putint (t.class_id.id);
 	io.putstring (" into");
 	io.putstring (generator);
 	io.new_line;

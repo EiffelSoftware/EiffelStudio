@@ -59,7 +59,7 @@ feature
 			adapter.set_target_type (d.actual_type);
 			new_pairs := clone (pairs);
 			if old_feat.written_class /= a then
-				feat_table := Feat_tbl_server.item (a.id);		
+				feat_table := Feat_tbl_server.item (a.id.id);		
 				from
 					new_pairs.start
 				until

@@ -39,7 +39,7 @@ feature
 			area_feature ?= feature_table.item ("area");
 			if 	(area_feature = Void)
 				or else
-				area_feature.written_in /= id
+				not equal (area_feature.written_in, id)
 				or else
 				not Area_type.is_deep_equal (area_feature.type.actual_type)
 			then
@@ -51,7 +51,7 @@ feature
 			make_area_feature ?= feature_table.item ("make_area");
 			if 	make_area_feature = Void
 				or else
-				make_area_feature.written_in /= id
+				not equal (make_area_feature.written_in, id)
 			then
 				!!special_error.make (Case_3, Current);
 				Error_handler.insert_error (special_error);
@@ -65,12 +65,12 @@ feature
 			gen: ARRAY [TYPE_A];
 		once
 			!!f;
-			f.set_base_type (1);
+			f.set_position (1);
 			!!gen.make (1, 1);
 			gen.put (f, 1);
 			!!Result;
 			Result.set_generics (gen);
-			Result.set_base_type (System.special_id);
+			Result.set_base_class_id (System.special_id);
 		end;
 
 	new_type (data: CL_TYPE_I): TO_SPECIAL_CLASS_TYPE is

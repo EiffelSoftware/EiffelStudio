@@ -10,6 +10,7 @@ class ASSERTION_SERVER
 inherit
 
 	SHARED_SERVER
+	COMPILER_EXPORTER
 
 creation
 
@@ -29,8 +30,7 @@ feature -- Initialization
 			body_id, f_body_id: INTEGER;
 			body_index: INTEGER;
 			i: INTEGER;
-			inh_ass: INH_ASSERT_INFO;
-			written_in: INTEGER
+			inh_ass: INH_ASSERT_INFO
 		do
 			!! precursors.make (f.count * 2);
 			!! assertions.make (f.count);
@@ -42,7 +42,6 @@ feature -- Initialization
 				feature_i := f.item_for_iteration;
 				f_body_id := feature_i.body_id;
 				assert_id_set := feature_i.assert_id_set;
-				written_in := feature_i.written_in; 
 				if 
 					(client = void
 						or else feature_i.is_exported_for (client))
@@ -103,7 +102,7 @@ feature -- Initialization
 			f_table: FEATURE_TABLE;
 			feat: FEATURE_I;
 			assertion: ROUTINE_ASSERTIONS;
-			written_in: INTEGER
+			written_in: CLASS_ID
 		do
 			assert_id_set := f.assert_id_set;
 			if assert_id_set /= Void then
@@ -116,7 +115,7 @@ feature -- Initialization
 				loop
 					inh_f := assert_id_set.item (i);
 					if inh_f.has_assertion then
-						if written_in = inh_f.written_in then
+						if equal (written_in, inh_f.written_in) then
 							!! assertion.make_for_feature (f, ast);
 							chained_assert.extend (assertion);
 						else
@@ -130,7 +129,7 @@ feature -- Initialization
 								other_feat_as := Rep_feat_server.item (body_id)
 							end;
 							if other_feat_as /= Void then
-								f_table := Feat_tbl_server.item (inh_f.written_in);
+								f_table := Feat_tbl_server.item (inh_f.written_in.id);
 								if f_table /= Void then
 									feat := f_table.feature_of_body_id (body_id);
 									if feat /= Void then

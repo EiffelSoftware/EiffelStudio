@@ -1,13 +1,17 @@
 -- Information for reading a feature in file ".AST"
 
 class READ_INFO 
+
+inherit
+
+	COMPILER_EXPORTER
 	
 feature 
 
 	offset: INTEGER;
 			-- Offset in file
 
-	class_id: INTEGER;
+	class_id: CLASS_ID;
 			-- Id of the class
 
 	object_count: INTEGER;
@@ -18,7 +22,7 @@ feature
 			io.error.putstring ("READ_INFO:%NOffset: ");
 			io.error.putint (offset);
 			io.error.putstring ("%NClass_id: ");
-			io.error.putint (class_id);
+			io.error.putint (class_id.id);
 			io.error.putstring ("%Nobject_count: ");
 			io.error.putint (object_count);
 			io.error.new_line;
@@ -36,7 +40,7 @@ feature
 			object_count := i;
 		end;
 
-	set_class_id (i: INTEGER) is
+	set_class_id (i: CLASS_ID) is
 			-- Assign `i' to `class_id'.
 		do
 			class_id := i;

@@ -31,7 +31,7 @@ feature
 		-- Pattern id of feature corresponding to Current
 		-- unit
 
-	written_in: INTEGER;
+	written_in: CLASS_ID;
 		-- Id of class in which the feature corresponding
 		-- to Current execution unit is written.
 		--|Note: for ATTRIBUTE_I it is the `generate_in' value.
@@ -118,7 +118,7 @@ feature
 	compound_name: STRING is
 			-- Compound C routine name
 		do
-			Result := Encoder.feature_name (class_type.id, body_id);
+			Result := Encoder.feature_name (class_type.id.id, body_id);
 		end;
 
 	generate_declaration (file: INDENT_FILE) is
@@ -156,7 +156,7 @@ feature -- Debug
 			io.error.putstring ("%NPattern id: ");
 			io.error.putint (pattern_id);
 			io.error.putstring ("%Nwritten_in: ");
-			io.error.putint (written_in);
+			io.error.putint (written_in.id);
 			io.error.putstring ("%NType: ");
 			type.trace;
 			io.error.new_line;

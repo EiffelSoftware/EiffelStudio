@@ -19,7 +19,7 @@ inherit
 
 	FEATURE_NAME_B
 		undefine
-			is_infix, is_valid, offset, simple_format
+			is_infix, is_valid, offset, simple_format, visual_name
 		redefine
 			main_feature_format, format
 		end

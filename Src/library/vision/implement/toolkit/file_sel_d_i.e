@@ -10,8 +10,17 @@ inherit
 
 	FILE_SELEC_I
 
-feature
+feature -- Status setting
 
+	set_open_file is
+			-- Set the dialog to an open file dialog
+		deferred
+		end
+
+    set_save_file is
+            -- Set the dialog to a save file dialog
+        deferred
+        end
 
 end --class FILE_SEL_D_I
 

@@ -11,6 +11,11 @@ deferred class
 inherit
 	WEL_APPLICATION_MAIN_WINDOW
 
+	WEL_GWL_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make is
@@ -74,13 +79,13 @@ feature -- Status report
 			Result := True
 		end
 
-	is_dialog: BOOLEAN is
-			-- Is the main window a dialog box?
-		local
-			d: WEL_DIALOG
+	is_dialog (hwnd: POINTER): BOOLEAN is
+			-- Is the window corresponding to `hwnd' a dialog box?
+			-- We call the function with a dialog box option,
+			-- if it is indeed a dialog, the result will always
+			-- be non zero, otherwise it is zero.
 		do
-			d ?= application_main_window
-			Result := d /= Void
+			Result := cwin_get_window_long (hwnd, Dwl_dlgproc) /= 0
 		end
 
 feature -- Status setting
@@ -172,7 +177,7 @@ feature {NONE} -- Implementation
 							done := True
 						else
 							dlg := cwin_get_last_active_popup (main_window.item)
-							if dlg /= main_window.item or is_dialog then
+							if is_dialog (dlg) then
 								msg.process_dialog_message (dlg)
 								if not msg.last_boolean_result then
 									msg.translate
@@ -208,15 +213,15 @@ feature {NONE} -- Implementation
 							done := True
 						else
 							dlg := cwin_get_last_active_popup (main_window.item)
-							if dlg /= main_window.item or is_dialog then
+							if is_dialog (dlg) then
 								msg.process_dialog_message (dlg)
 								if not msg.last_boolean_result then
 									msg.translate
 									msg.dispatch
 								end
 							else
-								msg.translate
-								msg.dispatch
+									msg.translate
+									msg.dispatch
 							end
 						end
 					else
@@ -251,6 +256,17 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HWND): EIF_POINTER"
 		alias
 			"GetLastActivePopup"
+		end
+
+	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): INTEGER is
+			-- SDK GetWindowLong
+			-- We give a BOOLEAN type to the result because we
+			-- are not interested in the given value, but only
+			-- if it is NULL to know if it is a dialog or not.
+		external
+			"C [macro <wel.h>] (HWND, int): EIF_INTEGER"
+		alias
+			"GetWindowLong"
 		end
 
 end -- class WEL_APPLICATION

@@ -200,7 +200,7 @@ void text_delete_text_callback(GtkEditable *editable,
 
 
 /* For List */
-void list_select_child_callback(GtkList *list,
+void list_selection_child_callback(GtkList *list,
 								GtkWidget *child,
 								gpointer data)
 {
@@ -466,10 +466,10 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 					(gpointer)pcbd));
 			}
 			else
-			if (strcmp(name, "select_child") == 0)
+			if ((strcmp(name, "select_child") == 0) || (strcmp(name, "unselect_child")) == 0)
 			{
 				return (gtk_signal_connect (widget, name, 
-					GTK_SIGNAL_FUNC(list_select_child_callback), 
+					GTK_SIGNAL_FUNC(list_selection_child_callback), 
 					(gpointer)pcbd));
 			}
 			else

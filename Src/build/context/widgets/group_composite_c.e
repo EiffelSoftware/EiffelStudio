@@ -124,6 +124,10 @@ feature
 				end;
 				child_forth
 			end;
+			other_editor := context_catalog.editor (Current, form_nr)
+			if other_editor /= Void then
+				other_editor.reset_current_form
+			end
 		end;
 
 	retrieve_oui_widget is

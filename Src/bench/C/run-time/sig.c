@@ -393,9 +393,8 @@ rt_private int dangerous(int sig)
 		(sig == SIGSEGV) || (sig == SIGTRAP)
 	) {
 		return 1;
-	}
-		
 #endif
+	}
 
 	return 0;			/* Signal is not dangerous for us */
 }

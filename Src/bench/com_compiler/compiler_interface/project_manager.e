@@ -161,8 +161,12 @@ feature -- Basic Operations
 						else
 							if not Eiffel_project.initialized then
 								open_project_file (file_name)
-								create {PROJECT_PROPERTIES} project_properties_internal.make
-								Valid_project_ref.set_item (True)
+								if not Eiffel_project.retrieval_error then
+									create {PROJECT_PROPERTIES} project_properties_internal.make
+									Valid_project_ref.set_item (True)
+								else
+									Valid_project_ref.set_item (False)
+								end
 							else
 								last_error_message := "Project has already been initialized"
 							end

@@ -82,7 +82,7 @@ void cwin_mask_blt(
 DWORD cwin_get_dll_version(char *pszDllName)
 	{
 	HINSTANCE hinstDll;
-	DWORD dwVersion = 0;
+	DWORD dwVersion = PACKVERSION (4,00); // 4.00 is the lowest value.
 
 	/* Load the dll library into memory in case it was not */
 	hinstDll = LoadLibrary(pszDllName);
@@ -98,7 +98,7 @@ DWORD cwin_get_dll_version(char *pszDllName)
 		 * DLL, the lack of a DllGetVersion function may
 		 * be a useful indicator of the version.
 		 */
-		if(pDllGetVersion)
+		if(pDllGetVersion != NULL)
 			{
 			DLLVERSIONINFO dvi;
 			HRESULT hr;
@@ -111,6 +111,21 @@ DWORD cwin_get_dll_version(char *pszDllName)
 			if(SUCCEEDED(hr))
 				{
 				dwVersion = PACKVERSION(dvi.dwMajorVersion, dvi.dwMinorVersion);
+				}
+			}
+		else
+			{
+			// pDllGetVersion not supported --> 4.00 or 4.70
+			// Note: 4.70 does not exist for Shell32.dll
+			//       Shlwapi.dll was first shiped with IE4 so its version start a 4.71.
+			if (stricmp(pszDllName, "comctl32.dll")==0)
+				{
+				FARPROC pDllImageList_Copy = GetProcAddress (hinstDll, "ImageList_Copy");
+				if (pDllImageList_Copy != NULL)
+					{
+					// ImageList_Copy is present on system, So we have version 4.70
+					dwVersion = PACKVERSION (4,70);
+					}
 				}
 			}
 

@@ -11,6 +11,15 @@ class
 
 inherit
 	EV_KEY_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_key_code
+		redefine
+			default_create,
+			out
+		end
+		
+	ANY
 		redefine
 			default_create,
 			out

@@ -11,6 +11,11 @@
 */
 
 #include "eif_config.h"
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
 #include "eif_portable.h"
 #include "x2c.header"
 #ifdef EIF_WINDOWS
@@ -18,15 +23,10 @@
 #else
 #include "eif_err_msg.h"
 #endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-
-#ifdef I_STRING
-#include <string.h>
-#else
-#include <strings.h>
-#endif
 
 #define NON_RECURSIVE	'0'
 #define RECURSIVE		'1'

@@ -104,7 +104,7 @@ feature -- Event handling
 		end
 		
 
-	focus_in_actions: EV_FOCUS_ACTION_SEQUENCE is
+	focus_in_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when keyboard focus is gained.
 		do
 			Result := implementation.focus_in_actions
@@ -113,7 +113,7 @@ feature -- Event handling
 		end
 
 
-	focus_out_actions: EV_FOCUS_ACTION_SEQUENCE is
+	focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Actions to be performed when keyboard focus is lost.
 		do
 			Result := implementation.focus_out_actions

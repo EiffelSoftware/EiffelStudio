@@ -14,7 +14,6 @@ class LEX_ARRAY [T] inherit
 			make as array_make
 		export
 			{ANY} lower, upper, item, put, resize;
-			{TEXT_FILLER} area, to_c
 		end
 
 create

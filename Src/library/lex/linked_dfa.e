@@ -25,8 +25,10 @@ class LINKED_DFA inherit
 		end
 
 create
-
 	make
+
+create {LINKED_DFA}
+	link_make
 
 feature -- Initialization
 

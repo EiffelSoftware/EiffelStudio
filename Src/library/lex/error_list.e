@@ -15,8 +15,10 @@ class ERROR_LIST inherit
 		end
 
 create
-
 	make
+
+create {ERROR_LIST}
+	linked_list_make
 
 feature -- Initialization
 

@@ -15,12 +15,14 @@ class FIXED_INTEGER_SET inherit
 			put as bool_string_put,
 			print as out_print
 		export
-			{NDFA} is_equal
+			{FIXED_INTEGER_SET, NDFA} is_equal
 		end
 
 create
-
 	make
+	
+create {FIXED_INTEGER_SET}
+	boolean_set_make
 
 feature -- Initialization
 

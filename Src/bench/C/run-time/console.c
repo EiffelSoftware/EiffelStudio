@@ -85,7 +85,7 @@ rt_public void console_pi(FILE *f, EIF_INTEGER number)
 	flush_buffer(f);
 }
 
-rt_public void console_pr(FILE *f, EIF_REAL number)
+rt_public void console_pr(FILE *f, EIF_REAL_32 number)
 {
 #ifdef EIF_WIN32
 	eif_show_console ();
@@ -111,7 +111,7 @@ rt_public void console_pc(FILE *f, EIF_CHARACTER c)
 	file_pc (f, c);
 }
 
-rt_public void console_pd(FILE *f, EIF_DOUBLE val)
+rt_public void console_pd(FILE *f, EIF_REAL_64 val)
 {
 #ifdef EIF_WIN32
 	eif_show_console ();
@@ -146,7 +146,7 @@ rt_public EIF_INTEGER console_readint(FILE *f)
 	return file_gi (f);
 }
 
-rt_public EIF_REAL console_readreal(FILE *f)
+rt_public EIF_REAL_32 console_readreal(FILE *f)
 {
 #ifdef EIF_WIN32
 	eif_show_console ();
@@ -154,7 +154,7 @@ rt_public EIF_REAL console_readreal(FILE *f)
 	return file_gr (f);
 }
 
-rt_public EIF_DOUBLE console_readdouble(FILE *f)
+rt_public EIF_REAL_64 console_readdouble(FILE *f)
 {
 #ifdef EIF_WIN32
 	eif_show_console ();

@@ -210,7 +210,7 @@ rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk 
 
 /* Getting constants */
 rt_private uint32 get_uint32(void);			/* Get an unsigned int32 */
-rt_private EIF_DOUBLE get_double(void);			/* Get a EIF_DOUBLE constant */
+rt_private EIF_REAL_64 get_double(void);			/* Get a EIF_REAL_64 constant */
 rt_private EIF_INTEGER get_long(void);				/* Get a long constant */
 rt_private EIF_INTEGER_64 get_int64(void);		/* Get an INTEGER_64 constant */
 rt_private EIF_INTEGER_16 get_short(void);				/* Get a short constant */
@@ -332,13 +332,13 @@ rt_public void metamorphose_top()
 			new_obj = RTLN(egc_int64_ref_dtype);
 			*(EIF_INTEGER_64 *) new_obj = last->it_int64;
 			break;
-		case SK_FLOAT:
-			new_obj = RTLN(egc_real_ref_dtype);
-			*(EIF_REAL *) new_obj = last->it_float;
+		case SK_REAL32:
+			new_obj = RTLN(egc_real32_ref_dtype);
+			*(EIF_REAL_32 *) new_obj = last->it_real32;
 			break;
-		case SK_DOUBLE:
-			new_obj = RTLN(egc_doub_ref_dtype);
-			*(EIF_DOUBLE *) new_obj = last->it_double;
+		case SK_REAL64:
+			new_obj = RTLN(egc_real64_ref_dtype);
+			*(EIF_REAL_64 *) new_obj = last->it_real64;
 			break;
 		case SK_POINTER:
 			new_obj = RTLN(egc_point_ref_dtype);
@@ -586,9 +586,9 @@ rt_private void interpret(int flag, int where)
 						case SK_INT8: last->it_int8 = *((EIF_INTEGER_8 *) PResult); break;
 						case SK_INT16: last->it_int16 = *((EIF_INTEGER_16 *) PResult); break;
 						case SK_INT32: last->it_int32 = *((EIF_INTEGER_32 *) PResult); break;
-						case SK_FLOAT: last->it_float = *((EIF_REAL *) PResult); break;
+						case SK_REAL32: last->it_real32 = *((EIF_REAL_32 *) PResult); break;
 						case SK_INT64: last->it_int64 = *((EIF_INTEGER_64 *) PResult); break;
-						case SK_DOUBLE: last->it_double = *((EIF_DOUBLE *) PResult); break;
+						case SK_REAL64: last->it_real64 = *((EIF_REAL_64 *) PResult); break;
 						case SK_POINTER: last->it_ptr = *((EIF_POINTER *) PResult); break;
 						case SK_BIT:
 						case SK_EXP:
@@ -633,17 +633,17 @@ rt_private void interpret(int flag, int where)
 								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_32));
 								*((EIF_INTEGER_32 *) PResult) = (EIF_INTEGER_32) 0;
 								break;
-						case SK_FLOAT:  
-								PResult = (void *) cmalloc (sizeof (EIF_REAL));
-								*((EIF_REAL *) PResult) = (EIF_REAL) 0;
+						case SK_REAL32:  
+								PResult = (void *) cmalloc (sizeof (EIF_REAL_32));
+								*((EIF_REAL_32 *) PResult) = (EIF_REAL_32) 0;
 								break;
 						case SK_INT64:    
 								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_64));
 								*((EIF_INTEGER_64 *) PResult) = (EIF_INTEGER_64) 0;
 								break;
-						case SK_DOUBLE: 
-								PResult = (void *) cmalloc (sizeof (EIF_DOUBLE));
-								*((EIF_DOUBLE *) PResult) = (EIF_DOUBLE) 0;
+						case SK_REAL64: 
+								PResult = (void *) cmalloc (sizeof (EIF_REAL_64));
+								*((EIF_REAL_64 *) PResult) = (EIF_REAL_64) 0;
 								break;
 						case SK_POINTER:
 								PResult = (void *) cmalloc (sizeof (EIF_POINTER));
@@ -931,22 +931,22 @@ rt_private void interpret(int flag, int where)
 		offset = get_long ();	/* Get integer size */
 		last = otop ();
 		switch (last->type & SK_HEAD) {
-			case SK_FLOAT:
+			case SK_REAL32:
 				switch (offset) {
-					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_float; break;
-					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_float; break;
-					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_float; break;
-					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_float; break;
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_real32; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_real32; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_real32; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_real32; break;
 					default:
 						eif_panic ("Illegal type");
 				}
 				break;
-			case SK_DOUBLE:
+			case SK_REAL64:
 				switch (offset) {
-					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_double; break;
-					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_double; break;
-					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_double; break;
-					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_double; break;
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_real64; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_real64; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_real64; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_real64; break;
 					default:
 						eif_panic ("Illegal type");
 				}
@@ -1025,26 +1025,26 @@ rt_private void interpret(int flag, int where)
 		last = otop ();
 		switch (last->type & SK_HEAD) {
 			case SK_INT8:
-				last->it_float = (EIF_REAL) last->it_int8;
+				last->it_real32 = (EIF_REAL_32) last->it_int8;
 				break;
 			case SK_INT16:
-				last->it_float = (EIF_REAL) last->it_int16;
+				last->it_real32 = (EIF_REAL_32) last->it_int16;
 				break;
 			case SK_INT32:
-				last->it_float = (EIF_REAL) last->it_int32;
+				last->it_real32 = (EIF_REAL_32) last->it_int32;
 				break;
 			case SK_INT64:
-				last->it_float = (EIF_REAL) last->it_int64;
+				last->it_real32 = (EIF_REAL_32) last->it_int64;
 				break;
-			case (SK_DOUBLE):
-				last->it_float = (EIF_REAL) last->it_double;
+			case (SK_REAL64):
+				last->it_real32 = (EIF_REAL_32) last->it_real64;
 				break;
-			case SK_FLOAT:
+			case SK_REAL32:
 				break;
 			default:
 				eif_panic (MTC "Illegal cast operation");
 			}
-		last->type = SK_FLOAT;
+		last->type = SK_REAL32;
 		break;
 
 	/*
@@ -1058,26 +1058,26 @@ rt_private void interpret(int flag, int where)
 		last = otop ();
 		switch (last->type & SK_HEAD) {
 			case SK_INT8:
-				last->it_double = (EIF_DOUBLE) last->it_int8;
+				last->it_real64 = (EIF_REAL_64) last->it_int8;
 				break;
 			case SK_INT16:
-				last->it_double = (EIF_DOUBLE) last->it_int16;
+				last->it_real64 = (EIF_REAL_64) last->it_int16;
 				break;
 			case SK_INT32:
-				last->it_double = (EIF_DOUBLE) last->it_int32;
+				last->it_real64 = (EIF_REAL_64) last->it_int32;
 				break;
 			case SK_INT64:
-				last->it_double = (EIF_DOUBLE) last->it_int64;
+				last->it_real64 = (EIF_REAL_64) last->it_int64;
 				break;
-			case SK_FLOAT:
-				last->it_double = (EIF_DOUBLE) last->it_float;
+			case SK_REAL32:
+				last->it_real64 = (EIF_REAL_64) last->it_real32;
 				break;
-			case SK_DOUBLE:
+			case SK_REAL64:
 				break;
 			default:
 				eif_panic (MTC "Illegal cast operation");
 			}
-		last->type = SK_DOUBLE;
+		last->type = SK_REAL64;
 		break;
 
 	/*
@@ -1129,8 +1129,8 @@ rt_private void interpret(int flag, int where)
 				case SK_INT16: *((EIF_INTEGER_16 *) PResult) = last->it_int16; break;
 				case SK_INT32: *((EIF_INTEGER_32 *) PResult) = last->it_int32; break;
 				case SK_INT64: *((EIF_INTEGER_64 *) PResult) = last->it_int64; break;
-				case SK_FLOAT: *((EIF_REAL*) PResult) = last->it_float; break;
-				case SK_DOUBLE: *((EIF_DOUBLE*) PResult) = last->it_double; break;
+				case SK_REAL32: *((EIF_REAL_32*) PResult) = last->it_real32; break;
+				case SK_REAL64: *((EIF_REAL_64*) PResult) = last->it_real64; break;
 				case SK_POINTER: *((EIF_POINTER *) PResult) = last->it_ptr; break;
 				case SK_BIT:
 				case SK_EXP:
@@ -1782,8 +1782,8 @@ rt_private void interpret(int flag, int where)
 					case SK_INT16: elem_size = sizeof(EIF_INTEGER_16); break;
 					case SK_INT32: elem_size = sizeof(EIF_INTEGER_32); break;
 					case SK_INT64: elem_size = sizeof(EIF_INTEGER_64); break;
-					case SK_REAL: elem_size = sizeof(EIF_REAL); break;
-					case SK_DOUBLE: elem_size = sizeof(EIF_DOUBLE); break;
+					case SK_REAL32: elem_size = sizeof(EIF_REAL_32); break;
+					case SK_REAL64: elem_size = sizeof(EIF_REAL_64); break;
 					case SK_POINTER: elem_size = sizeof(EIF_POINTER); break;
 					case SK_REF: elem_size = sizeof(EIF_REFERENCE); break;
 					default:
@@ -2174,8 +2174,8 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_FLOAT\n");
 #endif
 		last = iget();
-		last->type = SK_FLOAT;
-		last->it_float = (EIF_REAL) get_double();
+		last->type = SK_REAL32;
+		last->it_real32 = (EIF_REAL_32) get_double();
 		break;
 
 	/*
@@ -2186,8 +2186,8 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_DOUBLE\n");
 #endif
 		last = iget();
-		last->type = SK_DOUBLE;
-		last->it_double = get_double();
+		last->type = SK_REAL64;
+		last->it_real64 = get_double();
 		break;
 
 	/*
@@ -2456,8 +2456,8 @@ rt_private void interpret(int flag, int where)
 					case SK_INT16: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int16)); break;
 					case SK_INT32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int32)); break;
 					case SK_INT64: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int64)); break;
-					case SK_FLOAT: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_float)); break;
-					case SK_DOUBLE: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_double)); break;
+					case SK_REAL32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_real32)); break;
+					case SK_REAL64: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_real64)); break;
 					case SK_BIT: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_bit)); break;
 					case SK_POINTER: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_ptr)); break;
 					default:
@@ -2493,8 +2493,8 @@ rt_private void interpret(int flag, int where)
 			case SK_INT16: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int16)); break;
 			case SK_INT32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int32)); break;
 			case SK_INT64: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_int64)); break;
-			case SK_FLOAT: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_float)); break;
-			case SK_DOUBLE: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_double)); break;
+			case SK_REAL32: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_real32)); break;
+			case SK_REAL64: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_real64)); break;
 			case SK_BIT: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_bit)); break;
 			case SK_POINTER: last->it_ref = (EIF_REFERENCE) (&(pointed_object->it_ptr)); break;
 			default:
@@ -2618,11 +2618,11 @@ rt_private void interpret(int flag, int where)
 					case SK_INT64:
 						*((EIF_INTEGER_64 *) sp_area + curr_pos) = it->it_int64;
 						break;
-					case SK_FLOAT:
-						*((EIF_REAL *) sp_area + curr_pos) = it->it_float;
+					case SK_REAL32:
+						*((EIF_REAL_32 *) sp_area + curr_pos) = it->it_real32;
 						break;
-					case SK_DOUBLE:
-						*((EIF_DOUBLE *) sp_area + curr_pos) = it->it_double;
+					case SK_REAL64:
+						*((EIF_REAL_64 *) sp_area + curr_pos) = it->it_real64;
 						break;
 					case SK_POINTER:
 						*((EIF_POINTER *) sp_area + curr_pos) = it->it_ptr;
@@ -2714,11 +2714,11 @@ rt_private void interpret(int flag, int where)
 					case SK_INT64:
 						eif_put_integer_64_item(new_obj, curr_pos, it->it_int64);
 						break;
-					case SK_FLOAT:
-						eif_put_real_item(new_obj, curr_pos, it->it_float);
+					case SK_REAL32:
+						eif_put_real_32_item(new_obj, curr_pos, it->it_real32);
 						break;
-					case SK_DOUBLE:
-						eif_put_double_item(new_obj, curr_pos, it->it_double);
+					case SK_REAL64:
+						eif_put_real_64_item(new_obj, curr_pos, it->it_real64);
 						break;
 					case SK_POINTER:
 						eif_put_pointer_item(new_obj, curr_pos, it->it_ptr);
@@ -3253,10 +3253,10 @@ rt_private void interpret(int flag, int where)
 							CURPI32(tyc_last->it_int32, tyc_tmp); break;
 						case SK_INT64: 
 							CURPI64(tyc_last->it_int64, tyc_tmp); break;
-						case SK_FLOAT:
-							CURPR(tyc_last->it_float, tyc_tmp); break;
-						case SK_DOUBLE:
-							CURPD(tyc_last->it_double, tyc_tmp); break;
+						case SK_REAL32:
+							CURPR(tyc_last->it_real32, tyc_tmp); break;
+						case SK_REAL64:
+							CURPD(tyc_last->it_real64, tyc_tmp); break;
 						case SK_REF:
 							CURPSO(tyc_last->it_ref, tyc_tmp); break;
 						case SK_POINTER:
@@ -3283,8 +3283,8 @@ rt_private void interpret(int flag, int where)
 						case SK_INT16: 	last->it_int16 = CURGI16(0); break;
 						case SK_INT32: 	last->it_int32 = CURGI32(0); break;
 						case SK_INT64: 	last->it_int64 = CURGI64(0); break;
-						case SK_FLOAT: 	last->it_float = CURGR(0); break;
-						case SK_DOUBLE:	last->it_double = CURGD(0); break; 
+						case SK_REAL32: 	last->it_real32 = CURGR(0); break;
+						case SK_REAL64:	last->it_real64 = CURGD(0); break; 
 						case SK_REF: 	last->it_ref = CURGSO(0); break;
 						case SK_POINTER: last->it_ptr = CURGP(0); break;
 						case SK_BIT: 
@@ -3426,10 +3426,10 @@ rt_private void interpret(int flag, int where)
 							CURPI32(tyc_last->it_int32, tyc_tmp); break;
 						case SK_INT64: 
 							CURPI64(tyc_last->it_int64, tyc_tmp); break;
-						case SK_FLOAT:
-							CURPR(tyc_last->it_float, tyc_tmp); break;
-						case SK_DOUBLE:
-							CURPD(tyc_last->it_double, tyc_tmp); break;
+						case SK_REAL32:
+							CURPR(tyc_last->it_real32, tyc_tmp); break;
+						case SK_REAL64:
+							CURPD(tyc_last->it_real64, tyc_tmp); break;
 						case SK_REF:
 							CURPSO(tyc_last->it_ref, tyc_tmp); break;
 						case SK_POINTER:
@@ -3456,8 +3456,8 @@ rt_private void interpret(int flag, int where)
 						case SK_INT16: 	last->it_int16 = CURGI16(0); break;
 						case SK_INT32: 	last->it_int32 = CURGI32(0); break;
 						case SK_INT64: 	last->it_int64 = CURGI64(0); break;
-						case SK_FLOAT: 	last->it_float = CURGR(0); break;
-						case SK_DOUBLE:	last->it_double = CURGD(0); break; 
+						case SK_REAL32: 	last->it_real32 = CURGR(0); break;
+						case SK_REAL64:	last->it_real64 = CURGD(0); break; 
 						case SK_REF: 	last->it_ref = CURGSO(0); break;
 						case SK_POINTER:last->it_ptr = CURGP(0); break; 
 						case SK_BIT: 
@@ -3560,8 +3560,8 @@ rt_private void interpret(int flag, int where)
 						case SK_INT16: 	last->it_int16 = CURGI16(0); break;
 						case SK_INT32: 	last->it_int32 = CURGI32(0); break;
 						case SK_INT64: 	last->it_int64 = CURGI64(0); break;
-						case SK_FLOAT: 	last->it_float = CURGR(0); break;
-						case SK_DOUBLE:	last->it_double = CURGD(0); break; 
+						case SK_REAL32: 	last->it_real32 = CURGR(0); break;
+						case SK_REAL64:	last->it_real64 = CURGD(0); break; 
 						case SK_REF: 	last->it_ref = CURGSO(0); break;
 						case SK_POINTER:last->it_ptr = CURGP(0); break; 
 						case SK_BIT: 
@@ -3870,8 +3870,8 @@ rt_private void monadic_op(int code)
 		case SK_INT16:	first->it_int16 = -first->it_int16; break;
 		case SK_INT32:	first->it_int32 = -first->it_int32; break;
 		case SK_INT64:	first->it_int64 = -first->it_int64; break;
-		case SK_FLOAT:	first->it_float = -first->it_float; break;
-		case SK_DOUBLE:	first->it_double = -first->it_double; break;
+		case SK_REAL32:	first->it_real32 = -first->it_real32; break;
+		case SK_REAL64:	first->it_real64 = -first->it_real64; break;
 		default:
 			eif_panic(MTC RT_BOTCHED_MSG);
 		}
@@ -3976,8 +3976,8 @@ rt_private void diadic_op(int code)
 			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 - s->it_int16; break;
 			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 - s->it_int32; break;
 			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 - s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int8 - s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int8 - s->it_double; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int8 - s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int8 - s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
@@ -3987,8 +3987,8 @@ rt_private void diadic_op(int code)
 			case SK_INT16: f->it_int16 = f->it_int16 - s->it_int16; break;
 			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 - s->it_int32; break;
 			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 - s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int16 - s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int16 - s->it_double; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int16 - s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int16 - s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
@@ -3998,8 +3998,8 @@ rt_private void diadic_op(int code)
 			case SK_INT16: f->it_int32 = f->it_int32 - (EIF_INTEGER_32) s->it_int16; break;
 			case SK_INT32: f->it_int32 = f->it_int32 - s->it_int32; break;
 			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 - s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int32 - s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int32 - s->it_double; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int32 - s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int32 - s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
@@ -4009,30 +4009,30 @@ rt_private void diadic_op(int code)
 			case SK_INT16: f->it_int64 = f->it_int64 - (EIF_INTEGER_64) s->it_int16; break;
 			case SK_INT32: f->it_int64 = f->it_int64 - (EIF_INTEGER_64) s->it_int32; break;
 			case SK_INT64: f->it_int64 = f->it_int64 - s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int64 - s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int64 - s->it_double; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int64 - s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int64 - s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
-		case SK_FLOAT:
+		case SK_REAL32:
 			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_float = f->it_float - (EIF_REAL) s->it_int8; break;
-			case SK_INT16: f->it_float = f->it_float - (EIF_REAL) s->it_int16; break;
-			case SK_INT32: f->it_float = f->it_float - (EIF_REAL) s->it_int32; break;
-			case SK_INT64: f->it_float = f->it_float - (EIF_REAL) s->it_int64; break;
-			case SK_FLOAT: f->it_float = f->it_float - s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_float - s->it_double;break;
+			case SK_INT8: f->it_real32 = f->it_real32 - (EIF_REAL_32) s->it_int8; break;
+			case SK_INT16: f->it_real32 = f->it_real32 - (EIF_REAL_32) s->it_int16; break;
+			case SK_INT32: f->it_real32 = f->it_real32 - (EIF_REAL_32) s->it_int32; break;
+			case SK_INT64: f->it_real32 = f->it_real32 - (EIF_REAL_32) s->it_int64; break;
+			case SK_REAL32: f->it_real32 = f->it_real32 - s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_real32 - s->it_real64;break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
-		case SK_DOUBLE:
+		case SK_REAL64:
 			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_double = f->it_double - (EIF_DOUBLE) s->it_int8; break;
-			case SK_INT16: f->it_double = f->it_double - (EIF_DOUBLE) s->it_int16; break;
-			case SK_INT32: f->it_double = f->it_double - (EIF_DOUBLE) s->it_int32; break;
-			case SK_INT64: f->it_double = f->it_double - (EIF_DOUBLE) s->it_int64; break;
-			case SK_FLOAT: f->it_double = f->it_double - (EIF_DOUBLE) s->it_float; break;
-			case SK_DOUBLE: f->it_double = f->it_double - s->it_double; break;
+			case SK_INT8: f->it_real64 = f->it_real64 - (EIF_REAL_64) s->it_int8; break;
+			case SK_INT16: f->it_real64 = f->it_real64 - (EIF_REAL_64) s->it_int16; break;
+			case SK_INT32: f->it_real64 = f->it_real64 - (EIF_REAL_64) s->it_int32; break;
+			case SK_INT64: f->it_real64 = f->it_real64 - (EIF_REAL_64) s->it_int64; break;
+			case SK_REAL32: f->it_real64 = f->it_real64 - (EIF_REAL_64) s->it_real32; break;
+			case SK_REAL64: f->it_real64 = f->it_real64 - s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
@@ -4053,8 +4053,8 @@ rt_private void diadic_op(int code)
 			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 + s->it_int16; break;
 			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 + s->it_int32; break;
 			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 + s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int8 + s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int8 + s->it_double; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int8 + s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int8 + s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
@@ -4064,8 +4064,8 @@ rt_private void diadic_op(int code)
 			case SK_INT16: f->it_int16 = f->it_int16 + s->it_int16; break;
 			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 + s->it_int32; break;
 			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 + s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int16 + s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int16 + s->it_double; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int16 + s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int16 + s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
@@ -4075,8 +4075,8 @@ rt_private void diadic_op(int code)
 			case SK_INT16: f->it_int32 = f->it_int32 + (EIF_INTEGER_32) s->it_int16; break;
 			case SK_INT32: f->it_int32 = f->it_int32 + s->it_int32; break;
 			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 + s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int32 + s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int32 + s->it_double; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int32 + s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int32 + s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
@@ -4086,30 +4086,30 @@ rt_private void diadic_op(int code)
 			case SK_INT16: f->it_int64 = f->it_int64 + (EIF_INTEGER_64) s->it_int16; break;
 			case SK_INT32: f->it_int64 = f->it_int64 + (EIF_INTEGER_64) s->it_int32; break;
 			case SK_INT64: f->it_int64 = f->it_int64 + s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int64 + s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int64 + s->it_double; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int64 + s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int64 + s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
-		case SK_FLOAT:
+		case SK_REAL32:
 			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_float = f->it_float + (EIF_REAL) s->it_int8; break;
-			case SK_INT16: f->it_float = f->it_float + (EIF_REAL) s->it_int16; break;
-			case SK_INT32: f->it_float = f->it_float + (EIF_REAL) s->it_int32; break;
-			case SK_INT64: f->it_float = f->it_float + (EIF_REAL) s->it_int64; break;
-			case SK_FLOAT: f->it_float = f->it_float + s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_float + s->it_double;break;
+			case SK_INT8: f->it_real32 = f->it_real32 + (EIF_REAL_32) s->it_int8; break;
+			case SK_INT16: f->it_real32 = f->it_real32 + (EIF_REAL_32) s->it_int16; break;
+			case SK_INT32: f->it_real32 = f->it_real32 + (EIF_REAL_32) s->it_int32; break;
+			case SK_INT64: f->it_real32 = f->it_real32 + (EIF_REAL_32) s->it_int64; break;
+			case SK_REAL32: f->it_real32 = f->it_real32 + s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_real32 + s->it_real64;break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
-		case SK_DOUBLE:
+		case SK_REAL64:
 			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_double = f->it_double + (EIF_DOUBLE) s->it_int8; break;
-			case SK_INT16: f->it_double = f->it_double + (EIF_DOUBLE) s->it_int16; break;
-			case SK_INT32: f->it_double = f->it_double + (EIF_DOUBLE) s->it_int32; break;
-			case SK_INT64: f->it_double = f->it_double + (EIF_DOUBLE) s->it_int64; break;
-			case SK_FLOAT: f->it_double = f->it_double + (EIF_DOUBLE) s->it_float; break;
-			case SK_DOUBLE: f->it_double = f->it_double + s->it_double; break;
+			case SK_INT8: f->it_real64 = f->it_real64 + (EIF_REAL_64) s->it_int8; break;
+			case SK_INT16: f->it_real64 = f->it_real64 + (EIF_REAL_64) s->it_int16; break;
+			case SK_INT32: f->it_real64 = f->it_real64 + (EIF_REAL_64) s->it_int32; break;
+			case SK_INT64: f->it_real64 = f->it_real64 + (EIF_REAL_64) s->it_int64; break;
+			case SK_REAL32: f->it_real64 = f->it_real64 + (EIF_REAL_64) s->it_real32; break;
+			case SK_REAL64: f->it_real64 = f->it_real64 + s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
@@ -4124,74 +4124,74 @@ rt_private void diadic_op(int code)
 		switch (f->type & SK_HEAD) {
 			case SK_INT8:
 				switch (s->type & SK_HEAD) {
-				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_int8); break;
-				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_int16); break;
-				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_int32); break;
-				case SK_INT64: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_int64); break;
-				case SK_FLOAT: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, (EIF_DOUBLE)s->it_float); break;
-				case SK_DOUBLE: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int8, s->it_double); break;
+				case SK_INT8: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, (EIF_REAL_64)s->it_int8); break;
+				case SK_INT16: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, (EIF_REAL_64)s->it_int16); break;
+				case SK_INT32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, (EIF_REAL_64)s->it_int32); break;
+				case SK_INT64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, (EIF_REAL_64)s->it_int64); break;
+				case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, (EIF_REAL_64)s->it_real32); break;
+				case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int8, s->it_real64); break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 				break;
 			case SK_INT16:
 				switch (s->type & SK_HEAD) {
-				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_int8); break;
-				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_int16); break;
-				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_int32); break;
-				case SK_INT64: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_int64); break;
-				case SK_FLOAT: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, (EIF_DOUBLE)s->it_float); break;
-				case SK_DOUBLE: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int16, s->it_double); break;
+				case SK_INT8: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, (EIF_REAL_64)s->it_int8); break;
+				case SK_INT16: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, (EIF_REAL_64)s->it_int16); break;
+				case SK_INT32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, (EIF_REAL_64)s->it_int32); break;
+				case SK_INT64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, (EIF_REAL_64)s->it_int64); break;
+				case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, (EIF_REAL_64)s->it_real32); break;
+				case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int16, s->it_real64); break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 				break;
 			case SK_INT32:
 				switch (s->type & SK_HEAD) {
-				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_int8); break;
-				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_int16); break;
-				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_int32); break;
-				case SK_INT64: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_int64); break;
-				case SK_FLOAT: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, (EIF_DOUBLE)s->it_float); break;
-				case SK_DOUBLE: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int32, s->it_double); break;
+				case SK_INT8: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, (EIF_REAL_64)s->it_int8); break;
+				case SK_INT16: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, (EIF_REAL_64)s->it_int16); break;
+				case SK_INT32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, (EIF_REAL_64)s->it_int32); break;
+				case SK_INT64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, (EIF_REAL_64)s->it_int64); break;
+				case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, (EIF_REAL_64)s->it_real32); break;
+				case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int32, s->it_real64); break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 				break;
 			case SK_INT64:
 				switch (s->type & SK_HEAD) {
-				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_int8); break;
-				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_int16); break;
-				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_int32); break;
-				case SK_INT64: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_int64); break;
-				case SK_FLOAT: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, (EIF_DOUBLE)s->it_float); break;
-				case SK_DOUBLE: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_int64, s->it_double); break;
+				case SK_INT8: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, (EIF_REAL_64)s->it_int8); break;
+				case SK_INT16: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, (EIF_REAL_64)s->it_int16); break;
+				case SK_INT32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, (EIF_REAL_64)s->it_int32); break;
+				case SK_INT64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, (EIF_REAL_64)s->it_int64); break;
+				case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, (EIF_REAL_64)s->it_real32); break;
+				case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_int64, s->it_real64); break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 				break;
-			case SK_FLOAT:
+			case SK_REAL32:
 				switch (s->type & SK_HEAD) {
-				case SK_INT8: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_int8); break;
-				case SK_INT16: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_int16); break;
-				case SK_INT32: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_int32); break;
-				case SK_INT64: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_int64); break;
-				case SK_FLOAT: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, (EIF_DOUBLE)s->it_float); break;
-				case SK_DOUBLE: f->it_double = (EIF_DOUBLE) pow ((EIF_DOUBLE)f->it_float, s->it_double); break;
+				case SK_INT8: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, (EIF_REAL_64)s->it_int8); break;
+				case SK_INT16: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, (EIF_REAL_64)s->it_int16); break;
+				case SK_INT32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, (EIF_REAL_64)s->it_int32); break;
+				case SK_INT64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, (EIF_REAL_64)s->it_int64); break;
+				case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, (EIF_REAL_64)s->it_real32); break;
+				case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow ((EIF_REAL_64)f->it_real32, s->it_real64); break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 				break;
-			case SK_DOUBLE:
+			case SK_REAL64:
 				switch (s->type & SK_HEAD) {
-				case SK_INT8: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_int8); break;
-				case SK_INT16: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_int16); break;
-				case SK_INT32: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_int32); break;
-				case SK_INT64: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_int64); break;
-				case SK_FLOAT: f->it_double = (EIF_DOUBLE) pow (f->it_double, (EIF_DOUBLE)s->it_float); break;
-				case SK_DOUBLE: f->it_double = (EIF_DOUBLE) pow (f->it_double, s->it_double); break;
+				case SK_INT8: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, (EIF_REAL_64)s->it_int8); break;
+				case SK_INT16: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, (EIF_REAL_64)s->it_int16); break;
+				case SK_INT32: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, (EIF_REAL_64)s->it_int32); break;
+				case SK_INT64: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, (EIF_REAL_64)s->it_int64); break;
+				case SK_REAL32: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, (EIF_REAL_64)s->it_real32); break;
+				case SK_REAL64: f->it_real64 = (EIF_REAL_64) pow (f->it_real64, s->it_real64); break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 				break;
 		default:
 			eif_panic(MTC RT_BOTCHED_MSG);
 		}
-		f->type = SK_DOUBLE;
+		f->type = SK_REAL64;
 		break;
 
 	/* Multiplication operator. */
@@ -4204,8 +4204,8 @@ rt_private void diadic_op(int code)
 			case SK_INT16: f->it_int16 = (EIF_INTEGER_16) f->it_int8 * s->it_int16; break;
 			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int8 * s->it_int32; break;
 			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int8 * s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int8 * s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int8 * s->it_double; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int8 * s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int8 * s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
@@ -4215,8 +4215,8 @@ rt_private void diadic_op(int code)
 			case SK_INT16: f->it_int16 = f->it_int16 * s->it_int16; break;
 			case SK_INT32: f->it_int32 = (EIF_INTEGER_32) f->it_int16 * s->it_int32; break;
 			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int16 * s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int16 * s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int16 * s->it_double; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int16 * s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int16 * s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
@@ -4226,8 +4226,8 @@ rt_private void diadic_op(int code)
 			case SK_INT16: f->it_int32 = f->it_int32 * (EIF_INTEGER_32) s->it_int16; break;
 			case SK_INT32: f->it_int32 = f->it_int32 * s->it_int32; break;
 			case SK_INT64: f->it_int64 = (EIF_INTEGER_64) f->it_int32 * s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int32 * s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int32 * s->it_double; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int32 * s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int32 * s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
@@ -4237,30 +4237,30 @@ rt_private void diadic_op(int code)
 			case SK_INT16: f->it_int64 = f->it_int64 * (EIF_INTEGER_64) s->it_int16; break;
 			case SK_INT32: f->it_int64 = f->it_int64 * (EIF_INTEGER_64) s->it_int32; break;
 			case SK_INT64: f->it_int64 = f->it_int64 * s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int64 * s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int64 * s->it_double; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int64 * s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int64 * s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
-		case SK_FLOAT:
+		case SK_REAL32:
 			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_float = f->it_float * (EIF_REAL) s->it_int8; break;
-			case SK_INT16: f->it_float = f->it_float * (EIF_REAL) s->it_int16; break;
-			case SK_INT32: f->it_float = f->it_float * (EIF_REAL) s->it_int32; break;
-			case SK_INT64: f->it_float = f->it_float * (EIF_REAL) s->it_int64; break;
-			case SK_FLOAT: f->it_float = f->it_float * s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_float * s->it_double;break;
+			case SK_INT8: f->it_real32 = f->it_real32 * (EIF_REAL_32) s->it_int8; break;
+			case SK_INT16: f->it_real32 = f->it_real32 * (EIF_REAL_32) s->it_int16; break;
+			case SK_INT32: f->it_real32 = f->it_real32 * (EIF_REAL_32) s->it_int32; break;
+			case SK_INT64: f->it_real32 = f->it_real32 * (EIF_REAL_32) s->it_int64; break;
+			case SK_REAL32: f->it_real32 = f->it_real32 * s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_real32 * s->it_real64;break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
-		case SK_DOUBLE:
+		case SK_REAL64:
 			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_double = f->it_double * (EIF_DOUBLE) s->it_int8; break;
-			case SK_INT16: f->it_double = f->it_double * (EIF_DOUBLE) s->it_int16; break;
-			case SK_INT32: f->it_double = f->it_double * (EIF_DOUBLE) s->it_int32; break;
-			case SK_INT64: f->it_double = f->it_double * (EIF_DOUBLE) s->it_int64; break;
-			case SK_FLOAT: f->it_double = f->it_double * (EIF_DOUBLE) s->it_float; break;
-			case SK_DOUBLE: f->it_double = f->it_double * s->it_double; break;
+			case SK_INT8: f->it_real64 = f->it_real64 * (EIF_REAL_64) s->it_int8; break;
+			case SK_INT16: f->it_real64 = f->it_real64 * (EIF_REAL_64) s->it_int16; break;
+			case SK_INT32: f->it_real64 = f->it_real64 * (EIF_REAL_64) s->it_int32; break;
+			case SK_INT64: f->it_real64 = f->it_real64 * (EIF_REAL_64) s->it_int64; break;
+			case SK_REAL32: f->it_real64 = f->it_real64 * (EIF_REAL_64) s->it_real32; break;
+			case SK_REAL64: f->it_real64 = f->it_real64 * s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
@@ -4276,77 +4276,77 @@ rt_private void diadic_op(int code)
 		switch(f->type & SK_HEAD) {
 		case SK_INT8:
 			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_double = (EIF_DOUBLE) f->it_int8 / (EIF_DOUBLE) s->it_int8; break;
-			case SK_INT16: f->it_double = (EIF_DOUBLE) f->it_int8 / (EIF_DOUBLE) s->it_int16; break;
-			case SK_INT32: f->it_double = (EIF_DOUBLE) f->it_int8 / (EIF_DOUBLE) s->it_int32; break;
-			case SK_INT64: f->it_double = (EIF_DOUBLE) f->it_int8 / (EIF_DOUBLE) s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int8 / s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int8 / s->it_double; break;
+			case SK_INT8: f->it_real64 = (EIF_REAL_64) f->it_int8 / (EIF_REAL_64) s->it_int8; break;
+			case SK_INT16: f->it_real64 = (EIF_REAL_64) f->it_int8 / (EIF_REAL_64) s->it_int16; break;
+			case SK_INT32: f->it_real64 = (EIF_REAL_64) f->it_int8 / (EIF_REAL_64) s->it_int32; break;
+			case SK_INT64: f->it_real64 = (EIF_REAL_64) f->it_int8 / (EIF_REAL_64) s->it_int64; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int8 / s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int8 / s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
 		case SK_INT16:
 			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_double = (EIF_DOUBLE) f->it_int16 / (EIF_DOUBLE) s->it_int8; break;
-			case SK_INT16: f->it_double = (EIF_DOUBLE) f->it_int16 / (EIF_DOUBLE) s->it_int16; break;
-			case SK_INT32: f->it_double = (EIF_DOUBLE) f->it_int16 / (EIF_DOUBLE) s->it_int32; break;
-			case SK_INT64: f->it_double = (EIF_DOUBLE) f->it_int16 / (EIF_DOUBLE) s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int16 / s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int16 / s->it_double; break;
+			case SK_INT8: f->it_real64 = (EIF_REAL_64) f->it_int16 / (EIF_REAL_64) s->it_int8; break;
+			case SK_INT16: f->it_real64 = (EIF_REAL_64) f->it_int16 / (EIF_REAL_64) s->it_int16; break;
+			case SK_INT32: f->it_real64 = (EIF_REAL_64) f->it_int16 / (EIF_REAL_64) s->it_int32; break;
+			case SK_INT64: f->it_real64 = (EIF_REAL_64) f->it_int16 / (EIF_REAL_64) s->it_int64; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int16 / s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int16 / s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
 		case SK_INT32:
 			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_double = (EIF_DOUBLE) f->it_int32 / (EIF_DOUBLE) s->it_int8; break;
-			case SK_INT16: f->it_double = (EIF_DOUBLE) f->it_int32 / (EIF_DOUBLE) s->it_int16; break;
-			case SK_INT32: f->it_double = (EIF_DOUBLE) f->it_int32 / (EIF_DOUBLE) s->it_int32; break;
-			case SK_INT64: f->it_double = (EIF_DOUBLE) f->it_int32 / (EIF_DOUBLE) s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int32 / s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int32 / s->it_double; break;
+			case SK_INT8: f->it_real64 = (EIF_REAL_64) f->it_int32 / (EIF_REAL_64) s->it_int8; break;
+			case SK_INT16: f->it_real64 = (EIF_REAL_64) f->it_int32 / (EIF_REAL_64) s->it_int16; break;
+			case SK_INT32: f->it_real64 = (EIF_REAL_64) f->it_int32 / (EIF_REAL_64) s->it_int32; break;
+			case SK_INT64: f->it_real64 = (EIF_REAL_64) f->it_int32 / (EIF_REAL_64) s->it_int64; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int32 / s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int32 / s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
 		case SK_INT64:
 			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_double = (EIF_DOUBLE) f->it_int64 / (EIF_DOUBLE) s->it_int8; break;
-			case SK_INT16: f->it_double = (EIF_DOUBLE) f->it_int64 / (EIF_DOUBLE) s->it_int16; break;
-			case SK_INT32: f->it_double = (EIF_DOUBLE) f->it_int64 / (EIF_DOUBLE) s->it_int32; break;
-			case SK_INT64: f->it_double = (EIF_DOUBLE) f->it_int64 / (EIF_DOUBLE) s->it_int64; break;
-			case SK_FLOAT: f->it_float = (EIF_REAL) f->it_int64 / s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_int64 / s->it_double; break;
+			case SK_INT8: f->it_real64 = (EIF_REAL_64) f->it_int64 / (EIF_REAL_64) s->it_int8; break;
+			case SK_INT16: f->it_real64 = (EIF_REAL_64) f->it_int64 / (EIF_REAL_64) s->it_int16; break;
+			case SK_INT32: f->it_real64 = (EIF_REAL_64) f->it_int64 / (EIF_REAL_64) s->it_int32; break;
+			case SK_INT64: f->it_real64 = (EIF_REAL_64) f->it_int64 / (EIF_REAL_64) s->it_int64; break;
+			case SK_REAL32: f->it_real32 = (EIF_REAL_32) f->it_int64 / s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_int64 / s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
-		case SK_FLOAT:
+		case SK_REAL32:
 			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_float = f->it_float / (EIF_REAL) s->it_int8; break;
-			case SK_INT16: f->it_float = f->it_float / (EIF_REAL) s->it_int16; break;
-			case SK_INT32: f->it_float = f->it_float / (EIF_REAL) s->it_int32; break;
-			case SK_INT64: f->it_float = f->it_float / (EIF_REAL) s->it_int64; break;
-			case SK_FLOAT: f->it_float = f->it_float / s->it_float; break;
-			case SK_DOUBLE: f->it_double = (EIF_DOUBLE) f->it_float / s->it_double;break;
+			case SK_INT8: f->it_real32 = f->it_real32 / (EIF_REAL_32) s->it_int8; break;
+			case SK_INT16: f->it_real32 = f->it_real32 / (EIF_REAL_32) s->it_int16; break;
+			case SK_INT32: f->it_real32 = f->it_real32 / (EIF_REAL_32) s->it_int32; break;
+			case SK_INT64: f->it_real32 = f->it_real32 / (EIF_REAL_32) s->it_int64; break;
+			case SK_REAL32: f->it_real32 = f->it_real32 / s->it_real32; break;
+			case SK_REAL64: f->it_real64 = (EIF_REAL_64) f->it_real32 / s->it_real64;break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
-		case SK_DOUBLE:
+		case SK_REAL64:
 			switch (s->type & SK_HEAD) {
-			case SK_INT8: f->it_double = f->it_double / (EIF_DOUBLE) s->it_int8; break;
-			case SK_INT16: f->it_double = f->it_double / (EIF_DOUBLE) s->it_int16; break;
-			case SK_INT32: f->it_double = f->it_double / (EIF_DOUBLE) s->it_int32; break;
-			case SK_INT64: f->it_double = f->it_double / (EIF_DOUBLE) s->it_int64; break;
-			case SK_FLOAT: f->it_double = f->it_double / (EIF_DOUBLE) s->it_float; break;
-			case SK_DOUBLE: f->it_double = f->it_double / s->it_double; break;
+			case SK_INT8: f->it_real64 = f->it_real64 / (EIF_REAL_64) s->it_int8; break;
+			case SK_INT16: f->it_real64 = f->it_real64 / (EIF_REAL_64) s->it_int16; break;
+			case SK_INT32: f->it_real64 = f->it_real64 / (EIF_REAL_64) s->it_int32; break;
+			case SK_INT64: f->it_real64 = f->it_real64 / (EIF_REAL_64) s->it_int64; break;
+			case SK_REAL32: f->it_real64 = f->it_real64 / (EIF_REAL_64) s->it_real32; break;
+			case SK_REAL64: f->it_real64 = f->it_real64 / s->it_real64; break;
 			default: eif_panic(MTC RT_BOTCHED_MSG);
 			}
 			break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
-		if ((sk_type != SK_DOUBLE) && (sk_type != SK_FLOAT))
+		if ((sk_type != SK_REAL64) && (sk_type != SK_REAL32))
 		  		/* First type was before an integer that we divided with another
 				 * integer of a different size. In that case the return type is
 				 * always a DOUBLE. */
-			f->type = SK_DOUBLE;
+			f->type = SK_REAL64;
 		else
 			f->type = sk_type;
 		}
@@ -4460,8 +4460,8 @@ rt_private int eif_type_weight (uint32 sk_type) {
 		case SK_INT16: return 2L;
 		case SK_INT32: return 3L;
 		case SK_INT64: return 4L;
-		case SK_FLOAT: return 5L;
-		case SK_DOUBLE: return 6L;
+		case SK_REAL32: return 5L;
+		case SK_REAL64: return 6L;
 		default:
 			CHECK ("False", 0);
 			return 0L;
@@ -4487,8 +4487,8 @@ rt_private void eif_interp_gt(struct item *f, struct item *s) {
 		case SK_INT16: f->it_char = (EIF_INTEGER_16) f->it_int8 > s->it_int16; break;
 		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int8 > s->it_int32; break;
 		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int8 > s->it_int64; break;
-		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int8 > s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int8 > s->it_double; break;
+		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int8 > s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int8 > s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
@@ -4498,8 +4498,8 @@ rt_private void eif_interp_gt(struct item *f, struct item *s) {
 		case SK_INT16: f->it_char = f->it_int16 > s->it_int16; break;
 		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int16 > s->it_int32; break;
 		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int16 > s->it_int64; break;
-		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int16 > s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int16 > s->it_double; break;
+		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int16 > s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int16 > s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
@@ -4509,8 +4509,8 @@ rt_private void eif_interp_gt(struct item *f, struct item *s) {
 		case SK_INT16: f->it_char = f->it_int32 > (EIF_INTEGER_32) s->it_int16; break;
 		case SK_INT32: f->it_char = f->it_int32 > s->it_int32; break;
 		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int32 > s->it_int64; break;
-		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int32 > s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int32 > s->it_double; break;
+		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int32 > s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int32 > s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
@@ -4520,30 +4520,30 @@ rt_private void eif_interp_gt(struct item *f, struct item *s) {
 		case SK_INT16: f->it_char = f->it_int64 > (EIF_INTEGER_64) s->it_int16; break;
 		case SK_INT32: f->it_char = f->it_int64 > (EIF_INTEGER_64) s->it_int32; break;
 		case SK_INT64: f->it_char = f->it_int64 > (EIF_INTEGER_64) s->it_int64; break;
-		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int64 > s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int64 > s->it_double; break;
+		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int64 > s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int64 > s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
-	case SK_FLOAT:
+	case SK_REAL32:
 		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_float > (EIF_REAL) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_float > (EIF_REAL) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_float > (EIF_REAL) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_float > (EIF_REAL) s->it_int64; break;
-		case SK_FLOAT: f->it_char = f->it_float > s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_float > s->it_double; break;
+		case SK_INT8: f->it_char = f->it_real32 > (EIF_REAL_32) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_real32 > (EIF_REAL_32) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_real32 > (EIF_REAL_32) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_real32 > (EIF_REAL_32) s->it_int64; break;
+		case SK_REAL32: f->it_char = f->it_real32 > s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_real32 > s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
-	case SK_DOUBLE:
+	case SK_REAL64:
 		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_double > (EIF_DOUBLE) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_double > (EIF_DOUBLE) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_double > (EIF_DOUBLE) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_double > (EIF_DOUBLE) s->it_int64; break;
-		case SK_FLOAT: f->it_char = f->it_double > (EIF_DOUBLE) s->it_float; break;
-		case SK_DOUBLE: f->it_char = f->it_double > s->it_double; break;
+		case SK_INT8: f->it_char = f->it_real64 > (EIF_REAL_64) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_real64 > (EIF_REAL_64) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_real64 > (EIF_REAL_64) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_real64 > (EIF_REAL_64) s->it_int64; break;
+		case SK_REAL32: f->it_char = f->it_real64 > (EIF_REAL_64) s->it_real32; break;
+		case SK_REAL64: f->it_char = f->it_real64 > s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
@@ -4562,8 +4562,8 @@ rt_private void eif_interp_lt(struct item *f, struct item *s) {
 		case SK_INT16: f->it_char = (EIF_INTEGER_16) f->it_int8 < s->it_int16; break;
 		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int8 < s->it_int32; break;
 		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int8 < s->it_int64; break;
-		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int8 < s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int8 < s->it_double; break;
+		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int8 < s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int8 < s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
@@ -4573,8 +4573,8 @@ rt_private void eif_interp_lt(struct item *f, struct item *s) {
 		case SK_INT16: f->it_char = f->it_int16 < s->it_int16; break;
 		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int16 < s->it_int32; break;
 		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int16 < s->it_int64; break;
-		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int16 < s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int16 < s->it_double; break;
+		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int16 < s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int16 < s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
@@ -4584,8 +4584,8 @@ rt_private void eif_interp_lt(struct item *f, struct item *s) {
 		case SK_INT16: f->it_char = f->it_int32 < (EIF_INTEGER_32) s->it_int16; break;
 		case SK_INT32: f->it_char = f->it_int32 < s->it_int32; break;
 		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int32 < s->it_int64; break;
-		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int32 < s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int32 < s->it_double; break;
+		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int32 < s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int32 < s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
@@ -4595,30 +4595,30 @@ rt_private void eif_interp_lt(struct item *f, struct item *s) {
 		case SK_INT16: f->it_char = f->it_int64 < (EIF_INTEGER_64) s->it_int16; break;
 		case SK_INT32: f->it_char = f->it_int64 < (EIF_INTEGER_64) s->it_int32; break;
 		case SK_INT64: f->it_char = f->it_int64 < (EIF_INTEGER_64) s->it_int64; break;
-		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int64 < s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int64 < s->it_double; break;
+		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int64 < s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int64 < s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
-	case SK_FLOAT:
+	case SK_REAL32:
 		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_float < (EIF_REAL) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_float < (EIF_REAL) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_float < (EIF_REAL) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_float < (EIF_REAL) s->it_int64; break;
-		case SK_FLOAT: f->it_char = f->it_float < s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_float < s->it_double; break;
+		case SK_INT8: f->it_char = f->it_real32 < (EIF_REAL_32) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_real32 < (EIF_REAL_32) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_real32 < (EIF_REAL_32) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_real32 < (EIF_REAL_32) s->it_int64; break;
+		case SK_REAL32: f->it_char = f->it_real32 < s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_real32 < s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
-	case SK_DOUBLE:
+	case SK_REAL64:
 		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_double < (EIF_DOUBLE) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_double < (EIF_DOUBLE) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_double < (EIF_DOUBLE) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_double < (EIF_DOUBLE) s->it_int64; break;
-		case SK_FLOAT: f->it_char = f->it_double < (EIF_DOUBLE) s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_BOOLEAN) (f->it_double < s->it_double); break;
+		case SK_INT8: f->it_char = f->it_real64 < (EIF_REAL_64) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_real64 < (EIF_REAL_64) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_real64 < (EIF_REAL_64) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_real64 < (EIF_REAL_64) s->it_int64; break;
+		case SK_REAL32: f->it_char = f->it_real64 < (EIF_REAL_64) s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_BOOLEAN) (f->it_real64 < s->it_real64); break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
@@ -4638,8 +4638,8 @@ rt_private void eif_interp_eq (struct item *f, struct item *s) {
 		case SK_INT16: f->it_char = (EIF_INTEGER_16) f->it_int8 == s->it_int16; break;
 		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int8 == s->it_int32; break;
 		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int8 == s->it_int64; break;
-		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int8 == s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int8 == s->it_double; break;
+		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int8 == s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int8 == s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
@@ -4649,8 +4649,8 @@ rt_private void eif_interp_eq (struct item *f, struct item *s) {
 		case SK_INT16: f->it_char = f->it_int16 == s->it_int16; break;
 		case SK_INT32: f->it_char = (EIF_INTEGER_32) f->it_int16 == s->it_int32; break;
 		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int16 == s->it_int64; break;
-		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int16 == s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int16 == s->it_double; break;
+		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int16 == s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int16 == s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
@@ -4660,8 +4660,8 @@ rt_private void eif_interp_eq (struct item *f, struct item *s) {
 		case SK_INT16: f->it_char = f->it_int32 == (EIF_INTEGER_32) s->it_int16; break;
 		case SK_INT32: f->it_char = f->it_int32 == s->it_int32; break;
 		case SK_INT64: f->it_char = (EIF_INTEGER_64) f->it_int32 == s->it_int64; break;
-		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int32 == s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int32 == s->it_double; break;
+		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int32 == s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int32 == s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
@@ -4671,30 +4671,30 @@ rt_private void eif_interp_eq (struct item *f, struct item *s) {
 		case SK_INT16: f->it_char = f->it_int64 == (EIF_INTEGER_64) s->it_int16; break;
 		case SK_INT32: f->it_char = f->it_int64 == (EIF_INTEGER_64) s->it_int32; break;
 		case SK_INT64: f->it_char = f->it_int64 == (EIF_INTEGER_64) s->it_int64; break;
-		case SK_FLOAT: f->it_char = (EIF_REAL) f->it_int64 == s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_int64 == s->it_double; break;
+		case SK_REAL32: f->it_char = (EIF_REAL_32) f->it_int64 == s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_int64 == s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
-	case SK_FLOAT:
+	case SK_REAL32:
 		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_float == (EIF_REAL) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_float == (EIF_REAL) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_float == (EIF_REAL) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_float == (EIF_REAL) s->it_int64; break;
-		case SK_FLOAT: f->it_char = f->it_float == s->it_float; break;
-		case SK_DOUBLE: f->it_char = (EIF_DOUBLE) f->it_float == s->it_double; break;
+		case SK_INT8: f->it_char = f->it_real32 == (EIF_REAL_32) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_real32 == (EIF_REAL_32) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_real32 == (EIF_REAL_32) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_real32 == (EIF_REAL_32) s->it_int64; break;
+		case SK_REAL32: f->it_char = f->it_real32 == s->it_real32; break;
+		case SK_REAL64: f->it_char = (EIF_REAL_64) f->it_real32 == s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
-	case SK_DOUBLE:
+	case SK_REAL64:
 		switch (s->type & SK_HEAD) {
-		case SK_INT8: f->it_char = f->it_double == (EIF_DOUBLE) s->it_int8; break;
-		case SK_INT16: f->it_char = f->it_double == (EIF_DOUBLE) s->it_int16; break;
-		case SK_INT32: f->it_char = f->it_double == (EIF_DOUBLE) s->it_int32; break;
-		case SK_INT64: f->it_char = f->it_double == (EIF_DOUBLE) s->it_int64; break;
-		case SK_FLOAT: f->it_char = f->it_double == (EIF_DOUBLE) s->it_float; break;
-		case SK_DOUBLE: f->it_char = f->it_double == s->it_double; break;
+		case SK_INT8: f->it_char = f->it_real64 == (EIF_REAL_64) s->it_int8; break;
+		case SK_INT16: f->it_char = f->it_real64 == (EIF_REAL_64) s->it_int16; break;
+		case SK_INT32: f->it_char = f->it_real64 == (EIF_REAL_64) s->it_int32; break;
+		case SK_INT64: f->it_char = f->it_real64 == (EIF_REAL_64) s->it_int64; break;
+		case SK_REAL32: f->it_char = f->it_real64 == (EIF_REAL_64) s->it_real32; break;
+		case SK_REAL64: f->it_char = f->it_real64 == s->it_real64; break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 		}
 		break;
@@ -4727,8 +4727,8 @@ rt_private void eif_interp_generator (void)
 		case SK_INT16: first->it_ref = RTMS_EX("INTEGER_16", 10); break;
 		case SK_INT32: first->it_ref = RTMS_EX("INTEGER", 7); break;
 		case SK_INT64: first->it_ref = RTMS_EX("INTEGER_64", 10); break;
-		case SK_FLOAT: first->it_ref = RTMS_EX("REAL", 4); break;
-		case SK_DOUBLE: first->it_ref = RTMS_EX("DOUBLE", 6); break;
+		case SK_REAL32: first->it_ref = RTMS_EX("REAL", 4); break;
+		case SK_REAL64: first->it_ref = RTMS_EX("DOUBLE", 6); break;
 		case SK_POINTER: first->it_ref = RTMS_EX("POINTER", 7); break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
@@ -4761,8 +4761,8 @@ rt_private void eif_interp_min_max (int code)
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) EIF_MAX(first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_MAX(first->it_int32, second->it_int32); break;
 				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) EIF_MAX(first->it_int64, second->it_int64); break;
-				case SK_FLOAT: first->it_float = (EIF_REAL) EIF_MAX(first->it_float, second->it_float); break;
-				case SK_DOUBLE: first->it_double = (EIF_DOUBLE) EIF_MAX(first->it_double, second->it_double); break;
+				case SK_REAL32: first->it_real32 = (EIF_REAL_32) EIF_MAX(first->it_real32, second->it_real32); break;
+				case SK_REAL64: first->it_real64 = (EIF_REAL_64) EIF_MAX(first->it_real64, second->it_real64); break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 			break;
@@ -4774,8 +4774,8 @@ rt_private void eif_interp_min_max (int code)
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) EIF_MIN(first->it_int16, second->it_int16); break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_MIN(first->it_int32, second->it_int32); break;
 				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) EIF_MIN(first->it_int64, second->it_int64); break;
-				case SK_FLOAT: first->it_float = (EIF_REAL) EIF_MIN(first->it_float, second->it_float); break;
-				case SK_DOUBLE: first->it_double = (EIF_DOUBLE) EIF_MIN(first->it_double, second->it_double); break;
+				case SK_REAL32: first->it_real32 = (EIF_REAL_32) EIF_MIN(first->it_real32, second->it_real32); break;
+				case SK_REAL64: first->it_real64 = (EIF_REAL_64) EIF_MIN(first->it_real64, second->it_real64); break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 			break;
@@ -4811,8 +4811,8 @@ rt_private void eif_three_way_comparison (void)
 		case SK_INT16: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int16, second->it_int16); break;
 		case SK_INT32: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int32, second->it_int32); break;
 		case SK_INT64: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_int64, second->it_int64); break;
-		case SK_FLOAT: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_float, second->it_float); break;
-		case SK_DOUBLE: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_double, second->it_double); break;
+		case SK_REAL32: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_real32, second->it_real32); break;
+		case SK_REAL64: first->it_int32 = (EIF_INTEGER_32) EIF_THREE_WAY_COMPARISON(first->it_real64, second->it_real64); break;
 		default: eif_panic(MTC RT_BOTCHED_MSG);
 	}
 
@@ -4886,8 +4886,8 @@ rt_private void eif_interp_basic_operations (void)
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) 0; break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) 0; break;
 				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) 0; break;
-				case SK_FLOAT: first->it_float = (EIF_REAL) 0.0; break;
-				case SK_DOUBLE: first->it_double = (EIF_DOUBLE) 0.0; break;
+				case SK_REAL32: first->it_real32 = (EIF_REAL_32) 0.0; break;
+				case SK_REAL64: first->it_real64 = (EIF_REAL_64) 0.0; break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 			break;
@@ -4900,8 +4900,8 @@ rt_private void eif_interp_basic_operations (void)
 				case SK_INT16: first->it_int16 = (EIF_INTEGER_16) 1; break;
 				case SK_INT32: first->it_int32 = (EIF_INTEGER_32) 1; break;
 				case SK_INT64: first->it_int64 = (EIF_INTEGER_64) 1; break;
-				case SK_FLOAT: first->it_float = (EIF_REAL) 1.0; break;
-				case SK_DOUBLE: first->it_double = (EIF_DOUBLE) 1.0; break;
+				case SK_REAL32: first->it_real32 = (EIF_REAL_32) 1.0; break;
+				case SK_REAL64: first->it_real64 = (EIF_REAL_64) 1.0; break;
 				default: eif_panic(MTC RT_BOTCHED_MSG);
 				}
 			break;
@@ -5241,8 +5241,8 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 	case SK_INT16: last->it_int16 = *(EIF_INTEGER_16 *) (current + offset); break;
 	case SK_INT32: last->it_int32 = *(EIF_INTEGER_32 *) (current + offset); break;
 	case SK_INT64: last->it_int64 = *(EIF_INTEGER_64 *) (current + offset); break;
-	case SK_FLOAT: last->it_float = *(EIF_REAL *) (current + offset); break;
-	case SK_DOUBLE: last->it_double = *(EIF_DOUBLE *) (current + offset); break;
+	case SK_REAL32: last->it_real32 = *(EIF_REAL_32 *) (current + offset); break;
+	case SK_REAL64: last->it_real64 = *(EIF_REAL_64 *) (current + offset); break;
 	case SK_BIT: last->it_bit = (current + offset); break;
 	case SK_POINTER: last->it_ptr = *(EIF_POINTER *) (current + offset); break;
 	case SK_REF: last->it_ref = *(EIF_REFERENCE *) (current + offset); break;
@@ -5281,8 +5281,8 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 	case SK_INT16: last->it_int16 = *(EIF_INTEGER_16 *) (current + offset); break;
 	case SK_INT32: last->it_int32 = *(EIF_INTEGER_32 *) (current + offset); break;
 	case SK_INT64: last->it_int64 = *(EIF_INTEGER_64 *) (current + offset); break;
-	case SK_FLOAT: last->it_float = *(EIF_REAL *) (current + offset); break;
-	case SK_DOUBLE: last->it_double = *(EIF_DOUBLE *) (current + offset); break;
+	case SK_REAL32: last->it_real32 = *(EIF_REAL_32 *) (current + offset); break;
+	case SK_REAL64: last->it_real64 = *(EIF_REAL_64 *) (current + offset); break;
 	case SK_BIT: last->it_bit = (current + offset); break;
 	case SK_POINTER: last->it_ptr = *(EIF_POINTER *) (current + offset); break;
 	case SK_REF: last->it_ref = *(EIF_REFERENCE *) (current + offset); break;
@@ -5327,8 +5327,8 @@ rt_private void assign(long offset, uint32 type)
 	case SK_INT16: *(EIF_INTEGER_16 *)(i->it_ref + offset) = l->it_int16; break;
 	case SK_INT64: *(EIF_INTEGER_64 *)(i->it_ref + offset) = l->it_int64; break;
 	case SK_INT32: *(EIF_INTEGER_32 *)(i->it_ref + offset) = l->it_int32; break;
-	case SK_FLOAT: *(EIF_REAL *) (i->it_ref + offset) = l->it_float; break;
-	case SK_DOUBLE: *(EIF_DOUBLE *) (i->it_ref + offset) = l->it_double; break;
+	case SK_REAL32: *(EIF_REAL_32 *) (i->it_ref + offset) = l->it_real32; break;
+	case SK_REAL64: *(EIF_REAL_64 *) (i->it_ref + offset) = l->it_real64; break;
 	case SK_POINTER: *(EIF_POINTER *) (i->it_ref + offset) = l->it_ptr; break;
 	case SK_BIT: b_copy(l->it_bit, i->it_ref + offset); break;
 	case SK_REF:
@@ -5387,24 +5387,24 @@ rt_private void address(int32 fid, int stype, int for_rout_obj)
  * Get constants from byte code in an hopefully portable (slow) way--RAM.
  */
 
-rt_private EIF_DOUBLE get_double(void)
+rt_private EIF_REAL_64 get_double(void)
 {
-	/* Get EIF_DOUBLE stored at IC in byte code array. The value has been stored
+	/* Get EIF_REAL_64 stored at IC in byte code array. The value has been stored
 	 * correctly by the exchange driver between the workbench and the process.
 	 * The following should be highly portable--RAM.
 	 */
 	EIF_GET_CONTEXT
 	union {
-		char xtract[sizeof(EIF_DOUBLE)];
-		EIF_DOUBLE value;
+		char xtract[sizeof(EIF_REAL_64)];
+		EIF_REAL_64 value;
 	} xdouble;
 	char *p = (char *) &xdouble;
 	int i;
 
-	for (i = 0; i < sizeof(EIF_DOUBLE); i++)
+	for (i = 0; i < sizeof(EIF_REAL_64); i++)
 		*p++ = *IC++;
 
-	return *(EIF_DOUBLE *) &xdouble;	/* Correctly aligned by union */
+	return *(EIF_REAL_64 *) &xdouble;	/* Correctly aligned by union */
 }
 
 rt_private EIF_INTEGER get_long(void)
@@ -5632,8 +5632,8 @@ rt_private void init_var(struct item *ptr, long int type, EIF_REFERENCE current_
 	case SK_INT16:		ptr->it_int16 = (EIF_INTEGER_16) 0; break;
 	case SK_INT32:		ptr->it_int32 = (EIF_INTEGER_32) 0; break;
 	case SK_INT64:		ptr->it_int64 = (EIF_INTEGER_64) 0; break;
-	case SK_FLOAT:		ptr->it_float = (EIF_REAL) 0; break;
-	case SK_DOUBLE:		ptr->it_double = (EIF_DOUBLE) 0; break;
+	case SK_REAL32:		ptr->it_real32 = (EIF_REAL_32) 0; break;
+	case SK_REAL64:		ptr->it_real64 = (EIF_REAL_64) 0; break;
 	case SK_BIT:		ptr->it_ref = (EIF_REFERENCE)0; break;
 	case SK_EXP:		dtype = get_short ();
 						dtype = get_compound_id(MTC current_ref, (short) dtype);
@@ -6292,8 +6292,8 @@ rt_public struct item *ivalue(int code, int num, uint32 start)
 			case SK_INT16: result_item->it_int16 = *((EIF_INTEGER_16 *)(result_item->it_addr)); break;
 			case SK_INT32: result_item->it_int32 = *((EIF_INTEGER_32 *)(result_item->it_addr)); break;
 			case SK_INT64: result_item->it_int64 = *((EIF_INTEGER_64 *)(result_item->it_addr)); break;
-			case SK_FLOAT: result_item->it_float = *((EIF_REAL *)(result_item->it_addr)); break;
-			case SK_DOUBLE: result_item->it_double = *((EIF_DOUBLE *)(result_item->it_addr)); break;
+			case SK_REAL32: result_item->it_real32 = *((EIF_REAL_32 *)(result_item->it_addr)); break;
+			case SK_REAL64: result_item->it_real64 = *((EIF_REAL_64 *)(result_item->it_addr)); break;
 			case SK_POINTER: result_item->it_ptr = *((EIF_POINTER *)(result_item->it_addr)); break;
 			case SK_BIT: result_item->it_bit = *((EIF_REFERENCE *)(result_item->it_addr)); break;
 			case SK_EXP:

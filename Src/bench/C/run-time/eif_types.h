@@ -252,9 +252,13 @@ struct item {
 		EIF_WIDE_CHAR itu_wchar;	/* SK_WCHAR - a unicode character value */
 		EIF_INTEGER_16 itu_int16;	/* SK_INT16 = a 16 bits integer value */
 		EIF_INTEGER_32 itu_int32;	/* SK_INT32 - a 32 bits integer value */
-		EIF_REAL itu_float;			/* SK_FLOAT - a real value */
-		EIF_DOUBLE itu_double;		/* SK_DOUBLE - a double value */
+		EIF_REAL_32 itu_real32;		/* SK_REAL32 - a real value */
+		EIF_REAL_64 itu_real64;		/* SK_REAL64 - a double value */
 		EIF_INTEGER_64 itu_int64;	/* SK_INT64 - a 64 bits integer value */
+		EIF_NATURAL_8 itu_uint8;	/* SK_UINT8 - 8 bits unsigned integer value */
+		EIF_NATURAL_16 itu_uint16;	/* SK_UINT16 - 16 bits unsigned integer value */
+		EIF_NATURAL_32 itu_uint32;	/* SK_UINT32 - 32 bits unsigned integer value */
+		EIF_NATURAL_64 itu_uint64;	/* SK_UINT64 - 64 bits unsigned integer value */
 		EIF_REFERENCE itu_ref;		/* SK_REF / SK_STRING - a reference value */
 		EIF_REFERENCE itu_bit;		/* SK_BIT - a bit reference value */
 		EIF_POINTER itu_ptr;		/* SK_POINTER - a routine pointer */

@@ -874,8 +874,8 @@ rt_private void rec_inspect(EIF_REFERENCE object)
 		case SK_INT16: twrite (o_ref, sizeof(EIF_INTEGER_16)); break;
 		case SK_INT32: twrite (o_ref, sizeof(EIF_INTEGER_32)); break;
 		case SK_INT64: twrite (o_ref, sizeof(EIF_INTEGER_64)); break;
-		case SK_FLOAT: twrite (o_ref, sizeof(EIF_REAL)); break;
-		case SK_DOUBLE: twrite (o_ref, sizeof (EIF_DOUBLE)); break;
+		case SK_REAL32: twrite (o_ref, sizeof(EIF_REAL_32)); break;
+		case SK_REAL64: twrite (o_ref, sizeof (EIF_REAL_64)); break;
 		case SK_BIT:
 			{
 				char *buf = b_out (o_ref);
@@ -1015,10 +1015,10 @@ rt_private void rec_sinspect(EIF_REFERENCE object)
 				sk_type = SK_INT64;
 			else if (dtype == egc_sp_bool)
 				sk_type = SK_BOOL;
-			else if (dtype == egc_sp_real)
-				sk_type = SK_FLOAT;
-			else if (dtype == egc_sp_double)
-				sk_type = SK_DOUBLE;
+			else if (dtype == egc_sp_real32)
+				sk_type = SK_REAL32;
+			else if (dtype == egc_sp_real64)
+				sk_type = SK_REAL64;
 			else if (dtype == egc_sp_pointer)
 				sk_type = SK_POINTER;
 			else {
@@ -1043,8 +1043,8 @@ rt_private void rec_sinspect(EIF_REFERENCE object)
 				case SK_INT16: twrite (o_ref, sizeof(EIF_INTEGER_16)); break;
 				case SK_INT32: twrite (o_ref, sizeof(EIF_INTEGER_32)); break;
 				case SK_INT64: twrite (o_ref, sizeof(EIF_INTEGER_64)); break;
-				case SK_FLOAT: twrite (o_ref, sizeof(EIF_REAL)); break;
-				case SK_DOUBLE: twrite (o_ref, sizeof (EIF_DOUBLE)); break;
+				case SK_REAL32: twrite (o_ref, sizeof(EIF_REAL_32)); break;
+				case SK_REAL64: twrite (o_ref, sizeof (EIF_REAL_64)); break;
 				case SK_BIT:
 					{
 						char *buf = b_out (*(EIF_REFERENCE *) o_ref);
@@ -1148,15 +1148,15 @@ rt_private void rec_tinspect(EIF_REFERENCE object)
 					twrite (&sk_type, sizeof(uint32));
 					twrite (&eif_character_tuple_item(l_item), sizeof(EIF_CHARACTER));
 					break;
-				case EIF_DOUBLE_CODE:
-					sk_type = SK_DOUBLE;
+				case EIF_REAL_64_CODE:
+					sk_type = SK_REAL64;
 					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_double_tuple_item(l_item), sizeof(EIF_DOUBLE));
+					twrite (&eif_real_64_tuple_item(l_item), sizeof(EIF_REAL_64));
 					break;
-				case EIF_REAL_CODE:
-					sk_type = SK_REAL;
+				case EIF_REAL_32_CODE:
+					sk_type = SK_REAL32;
 					twrite (&sk_type, sizeof(uint32));
-					twrite (&eif_real_tuple_item(l_item), sizeof(EIF_REAL));
+					twrite (&eif_real_32_tuple_item(l_item), sizeof(EIF_REAL_32));
 					break;
 				case EIF_POINTER_CODE:
 					sk_type = SK_POINTER;
@@ -1301,11 +1301,11 @@ rt_private unsigned char smodify_attr(char *object, long attr_number, struct ite
 				case SK_INT64: /* Integer attribute */
 					*(EIF_INTEGER_64 *)o_ref = new_value->it_int64;
 					break;
-				case SK_FLOAT: /* Real attribute */
-					*(EIF_REAL *)o_ref = new_value->it_float;
+				case SK_REAL32: /* Real attribute */
+					*(EIF_REAL_32 *)o_ref = new_value->it_real32;
 					break;
-				case SK_DOUBLE: /* Double attribute */
-					*(EIF_DOUBLE *)o_ref = new_value->it_double;
+				case SK_REAL64: /* Double attribute */
+					*(EIF_REAL_64 *)o_ref = new_value->it_real64;
 					break;
 				case SK_BIT: /* Bit attribute */
 					/* FIXME ARNAUD: To do... */
@@ -1402,11 +1402,11 @@ rt_private unsigned char modify_attr(EIF_REFERENCE object, long attr_number, str
 			case SK_INT64: /* Integer attribute */
 				*(EIF_INTEGER_64 *)o_ref = new_value->it_int64;
 				break;
-			case SK_FLOAT: /* Real attribute */
-				*(EIF_REAL *)o_ref = new_value->it_float;
+			case SK_REAL32: /* Real attribute */
+				*(EIF_REAL_32 *)o_ref = new_value->it_real32;
 				break;
-			case SK_DOUBLE: /* Double attribute */
-				*(EIF_DOUBLE *)o_ref = new_value->it_double;
+			case SK_REAL64: /* Double attribute */
+				*(EIF_REAL_64 *)o_ref = new_value->it_real64;
 				break;
 			case SK_STRING:
 				*(char **)o_ref = RTMS(new_value->it_ref);

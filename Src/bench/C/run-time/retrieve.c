@@ -91,8 +91,8 @@ extern void print_object (EIF_REFERENCE object);
 #define OLD_CHARACTER_TYPE		-2
 #define OLD_BOOLEAN_TYPE		-3
 #define OLD_INTEGER_32_TYPE		-4
-#define OLD_REAL_TYPE			-5
-#define OLD_DOUBLE_TYPE			-6
+#define OLD_REAL_32_TYPE		-5
+#define OLD_REAL_64_TYPE		-6
 #define OLD_BIT_TYPE			-7
 #define OLD_POINTER_TYPE		-8
 #define OLD_TUPLE_TYPE			-15
@@ -106,8 +106,8 @@ extern void print_object (EIF_REFERENCE object);
 /* Constants used for TUPLE type identification in version 5.4 and older. */
 #define OLD_EIF_BOOLEAN_CODE	'b'
 #define OLD_EIF_CHARACTER_CODE	'c'
-#define OLD_EIF_DOUBLE_CODE		'd'
-#define OLD_EIF_REAL_CODE		'f'
+#define OLD_EIF_REAL_64_CODE	'd'
+#define OLD_EIF_REAL_32_CODE	'f'
 #define OLD_EIF_INTEGER_CODE	'i'
 #define OLD_EIF_INTEGER_32_CODE	'i'
 #define OLD_EIF_POINTER_CODE	'p'
@@ -1551,8 +1551,8 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 						case SK_CHAR: spec_size = sizeof (EIF_CHARACTER); break;
 						case SK_WCHAR: spec_size = sizeof (EIF_WIDE_CHAR); break;
 						case SK_BOOL: spec_size = sizeof (EIF_BOOLEAN); break;
-						case SK_FLOAT: spec_size = sizeof (EIF_REAL); break;
-						case SK_DOUBLE: spec_size = sizeof (EIF_DOUBLE); break;
+						case SK_REAL32: spec_size = sizeof (EIF_REAL_32); break;
+						case SK_REAL64: spec_size = sizeof (EIF_REAL_64); break;
 						case SK_POINTER: spec_size = sizeof (EIF_POINTER); break;
 						case SK_DTYPE:
 						case SK_REF: spec_size = sizeof (EIF_REFERENCE); break;
@@ -1725,8 +1725,8 @@ rt_public EIF_REFERENCE irt_nmake(long int objectCount)
 						case SK_CHAR: spec_size = sizeof (EIF_CHARACTER); break;
 						case SK_WCHAR: spec_size = sizeof (EIF_WIDE_CHAR); break;
 						case SK_BOOL: spec_size = sizeof (EIF_BOOLEAN); break;
-						case SK_FLOAT: spec_size = sizeof (EIF_REAL); break;
-						case SK_DOUBLE: spec_size = sizeof (EIF_DOUBLE); break;
+						case SK_REAL32: spec_size = sizeof (EIF_REAL_32); break;
+						case SK_REAL64: spec_size = sizeof (EIF_REAL_64); break;
 						case SK_POINTER: spec_size = sizeof (EIF_POINTER); break;
 						case SK_DTYPE:
 						case SK_REF: spec_size = sizeof (EIF_REFERENCE); break;
@@ -1886,8 +1886,8 @@ rt_private EIF_REFERENCE new_special_object (int new_type, uint32 crflags, uint3
 		case SK_CHAR:    spec_size = sizeof (EIF_CHARACTER);  break;
 		case SK_WCHAR:   spec_size = sizeof (EIF_WIDE_CHAR);  break;
 		case SK_BOOL:    spec_size = sizeof (EIF_BOOLEAN);    break;
-		case SK_FLOAT:   spec_size = sizeof (EIF_REAL);       break;
-		case SK_DOUBLE : spec_size = sizeof (EIF_DOUBLE);     break;
+		case SK_REAL32:   spec_size = sizeof (EIF_REAL_32);       break;
+		case SK_REAL64 : spec_size = sizeof (EIF_REAL_64);     break;
 		case SK_POINTER: spec_size = sizeof (EIF_POINTER);    break;
 		case SK_DTYPE:
 		case SK_REF:     spec_size = sizeof (EIF_REFERENCE);  break;
@@ -2797,9 +2797,9 @@ static char *type2name (long type)
 		case SK_INT8:    name = "INTEGER8";       break;
 		case SK_INT:     name = "INTEGER";        break;
 		case SK_INT16:   name = "INTEGER16";      break;
-		case SK_FLOAT:   name = "REAL";           break;
+		case SK_REAL32:  name = "REAL_32";        break;
 		case SK_WCHAR:   name = "WIDE_CHARACTER"; break;
-		case SK_DOUBLE:  name = "DOUBLE";         break;
+		case SK_REAL64:  name = "REAL_64";        break;
 		case SK_INT64:   name = "INTEGER64";      break;
 		case SK_BIT:     name = "BIT";            break;
 		case SK_POINTER: name = "POINTER";        break;
@@ -2912,9 +2912,9 @@ rt_shared char *generic_name (int32 gtype, int old_types)
 		case SK_INT8:    result = "INTEGER_8";      break;
 		case SK_INT:     result = "INTEGER";        break;
 		case SK_INT16:   result = "INTEGER_16";     break;
-		case SK_FLOAT:   result = "REAL";           break;
+		case SK_REAL32:  result = "REAL_32";        break;
 		case SK_WCHAR:   result = "WIDE_CHARACTER"; break;
-		case SK_DOUBLE:  result = "DOUBLE";         break;
+		case SK_REAL64:  result = "REAL_64";        break;
 		case SK_INT64:   result = "INTEGER_64";     break;
 		case SK_POINTER: result = "POINTER";        break;
 		case SK_REF:     result = "REFERENCE";      break;
@@ -3046,8 +3046,8 @@ rt_private int old_attribute_type_matched (int16 **gtype, int16 **atype)
 				case OLD_INTEGER_16_TYPE: result = (dftype == RTID(egc_int16_dtype)); break;
 				case OLD_INTEGER_32_TYPE: result = (dftype == RTID(egc_int32_dtype)); break;
 				case OLD_INTEGER_64_TYPE: result = (dftype == RTID(egc_int64_dtype)); break;
-				case OLD_REAL_TYPE: result = (dftype == RTID(egc_real_dtype)); break;
-				case OLD_DOUBLE_TYPE: result = (dftype == RTID(egc_doub_dtype)); break;
+				case OLD_REAL_32_TYPE: result = (dftype == RTID(egc_real32_dtype)); break;
+				case OLD_REAL_64_TYPE: result = (dftype == RTID(egc_real64_dtype)); break;
 				case OLD_POINTER_TYPE: result = (dftype == RTID(egc_point_dtype)); break;
 				case OLD_WIDE_CHAR_TYPE: result = (dftype == RTID(egc_wchar_dtype)); break;
 				default:
@@ -3839,8 +3839,8 @@ rt_private void rread_header (EIF_CONTEXT_NOARG)
 		dtypes[egc_int16_dtype] = egc_int16_dtype;
 		dtypes[egc_int32_dtype] = egc_int32_dtype;
 		dtypes[egc_int64_dtype] = egc_int64_dtype;
-		dtypes[egc_real_dtype] = egc_real_dtype;
-		dtypes[egc_doub_dtype] = egc_doub_dtype;
+		dtypes[egc_real32_dtype] = egc_real32_dtype;
+		dtypes[egc_real64_dtype] = egc_real64_dtype;
 		dtypes[egc_char_dtype] = egc_char_dtype;
 		dtypes[egc_wchar_dtype] = egc_wchar_dtype;
 		dtypes[egc_point_dtype] = egc_point_dtype;
@@ -4017,8 +4017,8 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 				case SK_INT32: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_32)); break;
 				case SK_INT64: buffer_read(object + attrib_offset, sizeof(EIF_INTEGER_64)); break;
 				case SK_WCHAR: buffer_read(object + attrib_offset, sizeof(EIF_WIDE_CHAR)); break;
-				case SK_FLOAT: buffer_read(object + attrib_offset, sizeof(EIF_REAL)); break;
-				case SK_DOUBLE: buffer_read(object + attrib_offset, sizeof(EIF_DOUBLE)); break;
+				case SK_REAL32: buffer_read(object + attrib_offset, sizeof(EIF_REAL_32)); break;
+				case SK_REAL64: buffer_read(object + attrib_offset, sizeof(EIF_REAL_64)); break;
 				case SK_BOOL:
 				case SK_CHAR:
 					buffer_read(object + attrib_offset, sizeof(EIF_CHARACTER));
@@ -4090,8 +4090,8 @@ rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uin
 						buffer_read(object, count*sizeof(EIF_CHARACTER));
 						break;
 					case SK_WCHAR: buffer_read(object, count*sizeof(EIF_WIDE_CHAR)); break;
-					case SK_FLOAT: buffer_read(object, count*sizeof(EIF_REAL)); break;
-					case SK_DOUBLE: buffer_read(object, count*sizeof(EIF_DOUBLE)); break;
+					case SK_REAL32: buffer_read(object, count*sizeof(EIF_REAL_32)); break;
+					case SK_REAL64: buffer_read(object, count*sizeof(EIF_REAL_64)); break;
 					case SK_EXP: {
 						uint32 old_flags, hflags;
 
@@ -4206,11 +4206,11 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 
 				case SK_WCHAR:
 					ridr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1);
 					break;
-				case SK_FLOAT:
-					ridr_multi_float ((EIF_REAL *) (object + attrib_offset), 1);
+				case SK_REAL32:
+					ridr_multi_float ((EIF_REAL_32 *) (object + attrib_offset), 1);
 					break;
-				case SK_DOUBLE:
-					ridr_multi_double ((EIF_DOUBLE *) (object + attrib_offset), 1);
+				case SK_REAL64:
+					ridr_multi_double ((EIF_REAL_64 *) (object + attrib_offset), 1);
 					break;
 				case SK_BIT:
 						{
@@ -4296,8 +4296,8 @@ rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 
 					case SK_BOOL:
 					case SK_CHAR: ridr_multi_char ((EIF_CHARACTER *) object, count); break;
 					case SK_WCHAR: ridr_multi_int32 ((EIF_INTEGER_32 *) object, count); break;
-					case SK_FLOAT: ridr_multi_float ((EIF_REAL *)object, count); break;
-					case SK_DOUBLE: ridr_multi_double ((EIF_DOUBLE *)object, count); break;
+					case SK_REAL32: ridr_multi_float ((EIF_REAL_32 *)object, count); break;
+					case SK_REAL64: ridr_multi_double ((EIF_REAL_64 *)object, count); break;
 					case SK_EXP: {
 						uint32  old_flags, hflags;
 
@@ -4488,22 +4488,22 @@ rt_private EIF_REFERENCE object_rread_attributes (
 					*(EIF_WIDE_CHAR *) old_value = value.vwchar;
 				}
 				break;
-			case SK_FLOAT:
+			case SK_REAL32:
 				ridr_multi_float (&value.vreal, 1);
 				if (attr_address != NULL)
-					*(EIF_REAL *) attr_address = value.vreal;
+					*(EIF_REAL_32 *) attr_address = value.vreal;
 				if (mismatched) {
-					old_value = RTLN (egc_real_ref_dtype);
-					*(EIF_REAL *) old_value = value.vreal;
+					old_value = RTLN (egc_real32_ref_dtype);
+					*(EIF_REAL_32 *) old_value = value.vreal;
 				}
 				break;
-			case SK_DOUBLE:
+			case SK_REAL64:
 				ridr_multi_double (&value.vdbl, 1);
 				if (attr_address != NULL)
-					*(EIF_DOUBLE *) attr_address = value.vdbl;
+					*(EIF_REAL_64 *) attr_address = value.vdbl;
 				if (mismatched) {
-					old_value = RTLN (egc_doub_ref_dtype);
-					*(EIF_DOUBLE *) old_value = value.vdbl;
+					old_value = RTLN (egc_real64_ref_dtype);
+					*(EIF_REAL_64 *) old_value = value.vdbl;
 				}
 				break;
 			case SK_POINTER:
@@ -4685,8 +4685,8 @@ rt_private EIF_REFERENCE object_rread_special (
 			case SK_BOOL:
 			case SK_CHAR:   ridr_multi_char   ((EIF_CHARACTER  *) addr, count); break;
 			case SK_WCHAR:  ridr_multi_int32  ((EIF_INTEGER_32 *) addr, count); break;
-			case SK_FLOAT:  ridr_multi_float  ((EIF_REAL       *) addr, count); break;
-			case SK_DOUBLE: ridr_multi_double ((EIF_DOUBLE     *) addr, count); break;
+			case SK_REAL32:  ridr_multi_float  ((EIF_REAL_32 *) addr, count); break;
+			case SK_REAL64: ridr_multi_double ((EIF_REAL_64     *) addr, count); break;
 
 			case SK_EXP:
 				result = object_rread_special_expanded (object, count);
@@ -4745,8 +4745,8 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 				case EIF_REFERENCE_CODE: ridr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
 				case EIF_BOOLEAN_CODE: ridr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
 				case EIF_CHARACTER_CODE: ridr_multi_char (&eif_character_tuple_item(l_item), 1); break;
-				case EIF_DOUBLE_CODE: ridr_multi_double (&eif_double_tuple_item(l_item), 1); break;
-				case EIF_REAL_CODE: ridr_multi_float (&eif_real_tuple_item(l_item), 1); break;
+				case EIF_REAL_64_CODE: ridr_multi_double (&eif_real_64_tuple_item(l_item), 1); break;
+				case EIF_REAL_32_CODE: ridr_multi_float (&eif_real_32_tuple_item(l_item), 1); break;
 				case EIF_INTEGER_8_CODE: ridr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
 				case EIF_INTEGER_16_CODE: ridr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
 				case EIF_INTEGER_32_CODE: ridr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
@@ -4764,8 +4764,8 @@ rt_private void object_rread_tuple (EIF_REFERENCE object, uint32 count)
 				case OLD_EIF_REFERENCE_CODE: ridr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
 				case OLD_EIF_BOOLEAN_CODE: ridr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
 				case OLD_EIF_CHARACTER_CODE: ridr_multi_char (&eif_character_tuple_item(l_item), 1); break;
-				case OLD_EIF_DOUBLE_CODE: ridr_multi_double (&eif_double_tuple_item(l_item), 1); break;
-				case OLD_EIF_REAL_CODE: ridr_multi_float (&eif_real_tuple_item(l_item), 1); break;
+				case OLD_EIF_REAL_64_CODE: ridr_multi_double (&eif_real_64_tuple_item(l_item), 1); break;
+				case OLD_EIF_REAL_32_CODE: ridr_multi_float (&eif_real_32_tuple_item(l_item), 1); break;
 				case OLD_EIF_INTEGER_8_CODE: ridr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
 				case OLD_EIF_INTEGER_16_CODE: ridr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
 				case OLD_EIF_INTEGER_32_CODE: ridr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
@@ -4995,8 +4995,8 @@ rt_private uint32 rt_id_read_cid (uint32 oflags)
 						case OLD_INTEGER_16_TYPE: ip[l_real_count] = egc_int16_dtype; l_real_count++; break;
 						case OLD_INTEGER_32_TYPE: ip[l_real_count] = egc_int32_dtype; l_real_count++; break;
 						case OLD_INTEGER_64_TYPE: ip[l_real_count] = egc_int64_dtype; l_real_count++; break;
-						case OLD_REAL_TYPE: ip[l_real_count] = egc_real_dtype; l_real_count++; break;
-						case OLD_DOUBLE_TYPE: ip[l_real_count] = egc_doub_dtype; l_real_count++; break;
+						case OLD_REAL_32_TYPE: ip[l_real_count] = egc_real32_dtype; l_real_count++; break;
+						case OLD_REAL_64_TYPE: ip[l_real_count] = egc_real64_dtype; l_real_count++; break;
 						case OLD_POINTER_TYPE: ip[l_real_count] = egc_point_dtype; l_real_count++; break;
 						case OLD_WIDE_CHAR_TYPE: ip[l_real_count] = egc_wchar_dtype; l_real_count++; break;
 						case OLD_BIT_TYPE:

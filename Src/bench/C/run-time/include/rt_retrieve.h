@@ -239,8 +239,8 @@ typedef union {
 	EIF_INTEGER_16	vint16;
 	EIF_INTEGER_32	vint32;
 	EIF_INTEGER_64	vint64;
-	EIF_REAL		vreal;
-	EIF_DOUBLE		vdbl;
+	EIF_REAL_32		vreal;
+	EIF_REAL_64		vdbl;
 	EIF_REFERENCE	vref;
 	EIF_POINTER		vptr;
 } multi_value;

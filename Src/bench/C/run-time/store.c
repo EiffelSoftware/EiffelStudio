@@ -1179,11 +1179,11 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 				case SK_CHAR:
 					buffer_write(object + attrib_offset, sizeof(EIF_CHARACTER));
 					break;
-				case SK_FLOAT:
-					buffer_write(object + attrib_offset, sizeof(EIF_REAL));
+				case SK_REAL32:
+					buffer_write(object + attrib_offset, sizeof(EIF_REAL_32));
 					break;
-				case SK_DOUBLE:
-					buffer_write(object + attrib_offset, sizeof(EIF_DOUBLE));
+				case SK_REAL64:
+					buffer_write(object + attrib_offset, sizeof(EIF_REAL_64));
 					break;
 				case SK_BIT:
 					{
@@ -1252,8 +1252,8 @@ rt_private void gen_object_write(char *object, uint32 fflags)
 						case SK_WCHAR: buffer_write(object, count*sizeof(EIF_WIDE_CHAR)); break;
 						case SK_BOOL:
 						case SK_CHAR: buffer_write(object, count*sizeof(EIF_CHARACTER)); break;
-						case SK_FLOAT: buffer_write(object, count*sizeof(EIF_REAL)); break;
-						case SK_DOUBLE: buffer_write(object, count*sizeof(EIF_DOUBLE)); break;
+						case SK_REAL32: buffer_write(object, count*sizeof(EIF_REAL_32)); break;
+						case SK_REAL64: buffer_write(object, count*sizeof(EIF_REAL_64)); break;
 						case SK_POINTER: buffer_write(object, count*sizeof(EIF_POINTER)); break;
 						case SK_BIT:
 							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
@@ -1329,8 +1329,8 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 			case EIF_REFERENCE_CODE: widr_multi_any ((char*) &eif_reference_tuple_item(l_item), 1); break;
 			case EIF_BOOLEAN_CODE: widr_multi_char (&eif_boolean_tuple_item(l_item), 1); break;
 			case EIF_CHARACTER_CODE: widr_multi_char (&eif_character_tuple_item(l_item), 1); break;
-			case EIF_DOUBLE_CODE: widr_multi_double (&eif_double_tuple_item(l_item), 1); break;
-			case EIF_REAL_CODE: widr_multi_float (&eif_real_tuple_item(l_item), 1); break;
+			case EIF_REAL_64_CODE: widr_multi_double (&eif_real_64_tuple_item(l_item), 1); break;
+			case EIF_REAL_32_CODE: widr_multi_float (&eif_real_32_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_8_CODE: widr_multi_int8 (&eif_integer_8_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_16_CODE: widr_multi_int16 (&eif_integer_16_tuple_item(l_item), 1); break;
 			case EIF_INTEGER_32_CODE: widr_multi_int32 (&eif_integer_32_tuple_item(l_item), 1); break;
@@ -1390,11 +1390,11 @@ rt_private void object_write(char * object, uint32 fflags)
 				case SK_WCHAR:
 					widr_multi_int32 ((EIF_INTEGER_32 *) (object + attrib_offset), 1);
 					break;
-				case SK_FLOAT:
-					widr_multi_float ((EIF_REAL *)(object + attrib_offset), 1);
+				case SK_REAL32:
+					widr_multi_float ((EIF_REAL_32 *)(object + attrib_offset), 1);
 					break;
-				case SK_DOUBLE:
-					widr_multi_double ((EIF_DOUBLE *)(object + attrib_offset), 1);
+				case SK_REAL64:
+					widr_multi_double ((EIF_REAL_64 *)(object + attrib_offset), 1);
 					break;
 				case SK_BIT:
 					{
@@ -1476,8 +1476,8 @@ rt_private void object_write(char * object, uint32 fflags)
 						case SK_INT64: widr_multi_int64 (((EIF_INTEGER_64 *)object), count); break;
 						case SK_POINTER: widr_multi_any (object, count); break;
 						case SK_WCHAR: widr_multi_int32 ((EIF_INTEGER_32 *) object, count); break;
-						case SK_FLOAT: widr_multi_float ((EIF_REAL *)object, count); break;
-						case SK_DOUBLE: widr_multi_double ((EIF_DOUBLE *)object, count); break;
+						case SK_REAL32: widr_multi_float ((EIF_REAL_32 *)object, count); break;
+						case SK_REAL64: widr_multi_double ((EIF_REAL_64 *)object, count); break;
 						case SK_BOOL:
 						case SK_CHAR: widr_multi_char ((EIF_CHARACTER *) object, count); break;
 						case SK_BIT:

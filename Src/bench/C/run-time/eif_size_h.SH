@@ -40,9 +40,9 @@ $spitshell >eif_size.h <<!GROK!THIS!
 
 /* Basic sizes */
 #define ALIGN	$alignbytes		/* Alignment restrictions */
-#define DBLSIZ	$doublesize		/* Size of double */
+#define R64SIZ	$doublesize		/* Size of double */
 #define I64SIZ	$integer_64_size	/* Size of integer 64 bits */
-#define FLTSIZ	$floatsize		/* Size of float */
+#define R32SIZ	$floatsize		/* Size of float */
 #define REFSIZ	$ptrsize		/* Size of char * */
 /* Should be \$longsize but for now it is 32 bits only. */
 #define LNGSIZ	$integer_32_size	/* Size of long */
@@ -72,9 +72,9 @@ $spitshell >>eif_size.h <<'!NO!SUBS!'
 #define CHRPAD(n) (((((n)*CHRSIZ)/ALIGN)+((((n)*CHRSIZ)%ALIGN)?1:0))*ALIGN)
 #define I16PAD(n) (((((n)*I16SIZ)/ALIGN)+((((n)*I16SIZ)%ALIGN)?1:0))*ALIGN)
 #define LNGPAD(n) (((((n)*LNGSIZ)/ALIGN)+((((n)*LNGSIZ)%ALIGN)?1:0))*ALIGN)
-#define FLTPAD(n) (((((n)*FLTSIZ)/ALIGN)+((((n)*FLTSIZ)%ALIGN)?1:0))*ALIGN)
+#define R32PAD(n) (((((n)*R32SIZ)/ALIGN)+((((n)*R32SIZ)%ALIGN)?1:0))*ALIGN)
 #define I64PAD(n) (((((n)*I64SIZ)/ALIGN)+((((n)*I64SIZ)%ALIGN)?1:0))*ALIGN)
-#define DBLPAD(n) (((((n)*DBLSIZ)/ALIGN)+((((n)*DBLSIZ)%ALIGN)?1:0))*ALIGN)
+#define R64PAD(n) (((((n)*R64SIZ)/ALIGN)+((((n)*R64SIZ)%ALIGN)?1:0))*ALIGN)
 #define PTRPAD(n) (((((n)*PTRSIZ)/ALIGN)+((((n)*PTRSIZ)%ALIGN)?1:0))*ALIGN)
 
 	/* Macros used to access fields in the object */
@@ -82,9 +82,9 @@ $spitshell >>eif_size.h <<'!NO!SUBS!'
 #define CHRACS(n) ((n)*CHRSIZ)
 #define I16ACS(n) ((n)*I16SIZ)
 #define LNGACS(n) ((n)*LNGSIZ)
-#define FLTACS(n) ((n)*FLTSIZ)
+#define R32ACS(n) ((n)*R32SIZ)
 #define I64ACS(n) ((n)*I64SIZ)
-#define DBLACS(n) ((n)*DBLSIZ)
+#define R64ACS(n) ((n)*R64SIZ)
 #define PTRACS(n) ((n)*PTRSIZ)
 
 #endif

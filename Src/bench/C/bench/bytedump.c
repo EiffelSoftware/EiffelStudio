@@ -280,7 +280,7 @@ static  EIF_INTEGER_32 blong (void);
 static  BODY_INDEX bbody_index (void);
 static  EIF_INTEGER_16 bshort (void);
 static  uint32  buint32 (void);
-static  EIF_DOUBLE  bdouble (void);
+static  EIF_REAL_64  bdouble (void);
 static  EIF_CHARACTER * bstr (int length);
 
 /*------------------------------------------------------------------*/
@@ -1234,8 +1234,8 @@ static  void    print_dtype (int cid, uint32 type)
 			case SK_INT16:   fprintf (ofp," [INTEGER_16]"); break;
 			case SK_INT32:   fprintf (ofp," [INTEGER]"); break;
 			case SK_INT64:   fprintf (ofp," [INTEGER_64]"); break;
-			case SK_FLOAT:  fprintf (ofp," [FLOAT]"); break;
-			case SK_DOUBLE: fprintf (ofp," [DOUBLE]"); break;
+			case SK_REAL32:  fprintf (ofp," [REAL_32]"); break;
+			case SK_REAL64: fprintf (ofp," [REAL_64]"); break;
 			case SK_POINTER:fprintf (ofp," [POINTER]"); break;
 			case SK_BIT:    fprintf (ofp," [BIT]"); break;
 			case SK_EXP:    fprintf (ofp,"ET %u", type & SK_DTYPE);
@@ -1347,11 +1347,11 @@ static  BODY_INDEX bbody_index (void)
 
 /*------------------------------------------------------------------*/
 
-static EIF_DOUBLE bdouble (void)
+static EIF_REAL_64 bdouble (void)
 {
-	EIF_DOUBLE result;
-	memcpy (&result, ip, sizeof(EIF_DOUBLE));
-	ip += sizeof(EIF_DOUBLE);
+	EIF_REAL_64 result;
+	memcpy (&result, ip, sizeof(EIF_REAL_64));
+	ip += sizeof(EIF_REAL_64);
 	
 	return result;
 }

@@ -83,7 +83,7 @@ __declspec(dllexport) EIF_CHARACTER  desc_call_dll32_character
 	return x;
 }
 
-__declspec(dllexport) EIF_DOUBLE  desc_call_dll32_double
+__declspec(dllexport) EIF_REAL_64  desc_call_dll32_double
 (
 	FARPROC ProcAddress,
 	EIF_INTEGER ArgCount,
@@ -92,8 +92,8 @@ __declspec(dllexport) EIF_DOUBLE  desc_call_dll32_double
 {
 	/* See `desc_call_dll32_boolean' routine comment. */
 
-	typedef EIF_DOUBLE  (* FN) (void);
-	EIF_DOUBLE x;
+	typedef EIF_REAL_64  (* FN) (void);
+	EIF_REAL_64 x;
 
 	PUSH_ALL
 
@@ -148,7 +148,7 @@ __declspec(dllexport) LPVOID  desc_call_dll32_pointer
 	return x;
 }
 
-__declspec(dllexport) EIF_REAL  desc_call_dll32_real
+__declspec(dllexport) EIF_REAL_32  desc_call_dll32_real
 (
 	FARPROC ProcAddress,
 	EIF_INTEGER ArgCount,
@@ -156,8 +156,8 @@ __declspec(dllexport) EIF_REAL  desc_call_dll32_real
 )
 {
 
-	typedef EIF_REAL  (* FN) (void);
-	EIF_REAL x;
+	typedef EIF_REAL_32  (* FN) (void);
+	EIF_REAL_32 x;
 
 	PUSH_ALL
 
@@ -283,11 +283,11 @@ __declspec(dllexport) int desc_get_size (int type)
 		case T_array: return sizeof (LPVOID);
 		case T_boolean: return sizeof (EIF_CHARACTER)*4;
 		case T_character: return sizeof (EIF_CHARACTER)*4;
-		case T_double: return sizeof (EIF_DOUBLE);
+		case T_real64: return sizeof (EIF_REAL_64);
 		case T_integer: return sizeof (EIF_INTEGER);
 		case T_no_type: return 0;
 		case T_pointer: return sizeof (LPVOID);
-		case T_real: return sizeof (EIF_REAL);
+		case T_real32: return sizeof (EIF_REAL_32);
 		case T_reference: return sizeof (LPVOID);
 		case T_short_integer: return sizeof (EIF_INTEGER);
 		case T_string: return sizeof (LPSTR);

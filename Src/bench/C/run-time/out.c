@@ -291,14 +291,14 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 				 *(EIF_INTEGER_64 *) o_ref);
 			write_out();
 			break;
-		case SK_FLOAT:
+		case SK_REAL32:
 			/* Real attribute */
-			sprintf(buffero, "REAL = %g\n", *(EIF_REAL *)o_ref);
+			sprintf(buffero, "REAL = %g\n", *(EIF_REAL_32 *)o_ref);
 			write_out();
 			break;
-		case SK_DOUBLE:
+		case SK_REAL64:
 			/* Double attribute */
-			sprintf(buffero, "DOUBLE = %.17g\n", *(EIF_DOUBLE *)o_ref);
+			sprintf(buffero, "DOUBLE = %.17g\n", *(EIF_REAL_64 *)o_ref);
 			write_out();
 			break;	
 		case SK_BIT:
@@ -445,11 +445,11 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 				} else if (dtype == egc_sp_bool) {
 					sprintf(buffero, "BOOLEAN = %s\n", (*o_ref ? "True" : "False"));
 					write_out();
-				} else if (dtype == egc_sp_real) {
-					sprintf(buffero, "REAL = %g\n", *(EIF_REAL *)o_ref);
+				} else if (dtype == egc_sp_real32) {
+					sprintf(buffero, "REAL = %g\n", *(EIF_REAL_32 *)o_ref);
 					write_out();
-				} else if (dtype == egc_sp_double) {
-					sprintf(buffero, "DOUBLE = %.17g\n", *(EIF_DOUBLE *)o_ref);
+				} else if (dtype == egc_sp_real64) {
+					sprintf(buffero, "DOUBLE = %.17g\n", *(EIF_REAL_64 *)o_ref);
 					write_out();
 				} else if (dtype == egc_sp_pointer) {
 					sprintf(buffero, "POINTER = C pointer 0x%" EIF_POINTER_DISPLAY "\n",
@@ -508,12 +508,12 @@ rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
 				write_char(eif_character_item(object,i), buffero);
 				write_out();
 				break;
-			case EIF_DOUBLE_CODE:
-				sprintf(buffero, "DOUBLE = %.17g\n", eif_double_item(object,i));
+			case EIF_REAL_64_CODE:
+				sprintf(buffero, "DOUBLE = %.17g\n", eif_real_64_item(object,i));
 				write_out();
 				break;
-			case EIF_REAL_CODE:
-				sprintf(buffero, "REAL = %g\n", eif_real_item(object,i));
+			case EIF_REAL_32_CODE:
+				sprintf(buffero, "REAL = %g\n", eif_real_32_item(object,i));
 				write_out();
 				break;
 			case EIF_INTEGER_32_CODE:
@@ -633,7 +633,7 @@ rt_public EIF_REFERENCE c_outi64(EIF_INTEGER_64 i)
 	return makestr(buffero, len);
 }
 
-rt_public EIF_REFERENCE c_outr(EIF_REAL f)
+rt_public EIF_REFERENCE c_outr32(EIF_REAL_32 f)
 {
 	RT_GET_CONTEXT
 	register int len;
@@ -641,7 +641,7 @@ rt_public EIF_REFERENCE c_outr(EIF_REAL f)
 	return makestr(buffero, len);
 }
 
-rt_public EIF_REFERENCE c_outd(EIF_DOUBLE d)
+rt_public EIF_REFERENCE c_outr64(EIF_REAL_64 d)
 {
 	RT_GET_CONTEXT
 	register int len;
@@ -711,11 +711,11 @@ rt_shared char *simple_out(struct item *val)
 	case SK_INT64:
 		sprintf(tagged_out, "INTEGER_64 = %" EIF_INTEGER_64_DISPLAY, val->it_int64);
 		break;
-	case SK_FLOAT:
-		sprintf(tagged_out, "REAL = %g", val->it_float);
+	case SK_REAL32:
+		sprintf(tagged_out, "REAL = %g", val->it_real32);
 		break;
-	case SK_DOUBLE:
-		sprintf(tagged_out, "DOUBLE = %.17g", val->it_double);
+	case SK_REAL64:
+		sprintf(tagged_out, "DOUBLE = %.17g", val->it_real64);
 		break;
 	case SK_BIT:
 		sprintf(tagged_out, "Bit object");

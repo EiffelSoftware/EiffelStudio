@@ -105,12 +105,12 @@ rt_public char *ei_field (long i, EIF_REFERENCE object)
 			*(EIF_INTEGER_64 *) new_obj = val;
 			return new_obj;
 		}
-	case SK_FLOAT:
+	case SK_REAL32:
 		{
-			EIF_REAL val = *(EIF_REAL *) o_ref;
+			EIF_REAL_32 val = *(EIF_REAL_32 *) o_ref;
 
-			new_obj = RTLN(egc_real_ref_dtype);
-			*(EIF_REAL *) new_obj = val;
+			new_obj = RTLN(egc_real32_ref_dtype);
+			*(EIF_REAL_32 *) new_obj = val;
 			return new_obj;
 		}
 	case SK_POINTER:
@@ -121,12 +121,12 @@ rt_public char *ei_field (long i, EIF_REFERENCE object)
 			*(EIF_POINTER *) new_obj = val;
 			return new_obj;
 		}
-	case SK_DOUBLE:
+	case SK_REAL64:
 		{
-			EIF_DOUBLE val = *(EIF_DOUBLE *) o_ref;
+			EIF_REAL_64 val = *(EIF_REAL_64 *) o_ref;
 
-			new_obj = RTLN(egc_doub_ref_dtype);
-			*(EIF_DOUBLE *) new_obj = val;
+			new_obj = RTLN(egc_real64_ref_dtype);
+			*(EIF_REAL_64 *) new_obj = val;
 			return new_obj;
 		}
 	case SK_REF:
@@ -163,8 +163,8 @@ rt_public long ei_field_type_of_type(long i, EIF_INTEGER type_id)
 	case SK_INT16:	return EIF_INTEGER_16_TYPE;
 	case SK_INT32:	return EIF_INTEGER_32_TYPE;
 	case SK_INT64:	return EIF_INTEGER_64_TYPE;
-	case SK_FLOAT:	return EIF_REAL_TYPE;
-	case SK_DOUBLE:	return EIF_DOUBLE_TYPE;
+	case SK_REAL32:	return EIF_REAL_32_TYPE;
+	case SK_REAL64:	return EIF_REAL_64_TYPE;
 	case SK_EXP:	return EIF_EXPANDED_TYPE;
 	case SK_BIT:	return EIF_BIT_TYPE;
 	default:		return EIF_POINTER_TYPE;
@@ -227,8 +227,8 @@ rt_public EIF_BOOLEAN eif_is_special_type (EIF_INTEGER dftype)
 		(dtype == egc_sp_int16) ||
 		(dtype == egc_sp_int32) ||
 		(dtype == egc_sp_int64) ||
-		(dtype == egc_sp_real) ||
-		(dtype == egc_sp_double) ||
+		(dtype == egc_sp_real32) ||
+		(dtype == egc_sp_real64) ||
 		(dtype == egc_sp_pointer) ||
 		(dtype == egc_sp_ref)
 		);

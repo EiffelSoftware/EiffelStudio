@@ -43,10 +43,10 @@ rt_private EIF_INTEGER_32 eif_abs_int32 (EIF_INTEGER_32 i) {
 rt_private EIF_INTEGER_64 eif_abs_int64 (EIF_INTEGER_64 i) {
 	return (i > 0 ? i : -i);
 }
-rt_private EIF_REAL eif_abs_real (EIF_REAL r) {
+rt_private EIF_REAL_32 eif_abs_real32 (EIF_REAL_32 r) {
 	return (r > 0 ? r : -r);
 }
-rt_private EIF_DOUBLE eif_abs_double (EIF_DOUBLE d) {
+rt_private EIF_REAL_64 eif_abs_real64 (EIF_REAL_64 d) {
 	return (d > 0 ? d : -d);
 }
 
@@ -69,10 +69,10 @@ rt_private EIF_CHARACTER eif_max_char (EIF_CHARACTER i, EIF_CHARACTER j) {
 rt_private EIF_WIDE_CHAR eif_max_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
 	return (i > j ? i : j);
 }
-rt_private EIF_REAL eif_max_real (EIF_REAL i, EIF_REAL j) {
+rt_private EIF_REAL_32 eif_max_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {
 	return (i > j ? i : j);
 }
-rt_private EIF_DOUBLE eif_max_double (EIF_DOUBLE i, EIF_DOUBLE j) {
+rt_private EIF_REAL_64 eif_max_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
 	return (i > j ? i : j);
 }
 
@@ -95,10 +95,10 @@ rt_private EIF_CHARACTER eif_min_char (EIF_CHARACTER i, EIF_CHARACTER j) {
 rt_private EIF_WIDE_CHAR eif_min_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
 	return (i < j ? i : j);
 }
-rt_private EIF_REAL eif_min_real (EIF_REAL i, EIF_REAL j) {
+rt_private EIF_REAL_32 eif_min_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {
 	return (i < j ? i : j);
 }
-rt_private EIF_DOUBLE eif_min_double (EIF_DOUBLE i, EIF_DOUBLE j) {
+rt_private EIF_REAL_64 eif_min_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
 	return (i < j ? i : j);
 }
 
@@ -121,10 +121,10 @@ rt_private EIF_CHARACTER eif_twc_char (EIF_CHARACTER i, EIF_CHARACTER j) {
 rt_private EIF_WIDE_CHAR eif_twc_wide_char (EIF_WIDE_CHAR i, EIF_WIDE_CHAR j) {
 	return (i < j ? -1 : (j < i) ? 1 : 0);
 }
-rt_private EIF_REAL eif_twc_real (EIF_REAL i, EIF_REAL j) {
+rt_private EIF_REAL_32 eif_twc_real32 (EIF_REAL_32 i, EIF_REAL_32 j) {
 	return (i < j ? -1.0f : (j < i) ? 1.0f : 0.0f);
 }
-rt_private EIF_DOUBLE eif_twc_double (EIF_DOUBLE i, EIF_DOUBLE j) {
+rt_private EIF_REAL_64 eif_twc_real64 (EIF_REAL_64 i, EIF_REAL_64 j) {
 	return (i < j ? -1.0 : (j < i) ? 1.0 : 0.0);
 }
 

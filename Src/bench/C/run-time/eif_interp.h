@@ -47,8 +47,12 @@ RT_LNK unsigned char *IC;			/* Interpreter Counter (like PC on a CPU) */
 #define it_wchar	itu.itu_wchar
 #define it_int32	itu.itu_int32
 #define it_int64	itu.itu_int64
-#define it_float	itu.itu_float
-#define it_double	itu.itu_double
+#define it_real32	itu.itu_real32
+#define it_real64	itu.itu_real64
+#define	it_uint8	itu.itu_uint8
+#define	it_uint16	itu.itu_uint16
+#define	it_uint32	itu.itu_uint32
+#define	it_uint64	itu.itu_uint64
 #define it_ref		itu.itu_ref
 #define it_ptr		itu.itu_ptr
 #define it_bit		itu.itu_bit

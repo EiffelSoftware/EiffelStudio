@@ -1848,22 +1848,22 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 					printf("\t%d: wide char %lu\n", i, lst->it_wchar);
 					break;
 				case SK_INT8:
-					printf("\t%d: int %ld\n", i, lst->it_int8);
+					printf("\t%d: int8 %ld\n", i, lst->it_int8);
 					break;
 				case SK_INT16:
-					printf("\t%d: int %ld\n", i, lst->it_int16);
+					printf("\t%d: int16 %ld\n", i, lst->it_int16);
 					break;
 				case SK_INT32:
-					printf("\t%d: int %ld\n", i, lst->it_int32);
+					printf("\t%d: int32 %ld\n", i, lst->it_int32);
 					break;
 				case SK_INT64:
-					printf("\t%d: int %ld\n", i, lst->it_int64);
+					printf("\t%d: int64 %ld\n", i, lst->it_int64);
 					break;
-				case SK_FLOAT:
-					printf("\t%d: float %f\n", i, lst->it_float);
+				case SK_REAL32:
+					printf("\t%d: real32 %f\n", i, lst->it_real32);
 					break;
-				case SK_DOUBLE:
-					printf("\t%d: double %lf\n", i, lst->it_double);
+				case SK_REAL64:
+					printf("\t%d: real64 %lf\n", i, lst->it_real64);
 					break;
 				case SK_BIT:
 					printf("\t%d: BITS\n", i);
@@ -1938,11 +1938,11 @@ rt_private void mark_op_stack(struct opstack *stk, MARKER marker, int move)
 				case SK_INT64:
 					printf("\t%d: int %ld\n", i, lst->it_int64);
 					break;
-				case SK_FLOAT:
-					printf("\t%d: float %f\n", i, lst->it_float);
+				case SK_REAL32:
+					printf("\t%d: real32 %f\n", i, lst->it_real32);
 					break;
-				case SK_DOUBLE:
-					printf("\t%d: double %lf\n", i, lst->it_double);
+				case SK_REAL64:
+					printf("\t%d: real64 %lf\n", i, lst->it_real64);
 					break;
 				case SK_BIT:
 					printf("\t%d: BITS\n", i);

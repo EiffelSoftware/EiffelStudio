@@ -175,13 +175,13 @@ rt_public void send_integer_64_value(EIF_INTEGER_64 value)
 }
 
 /* send a real value to the application */
-rt_public void send_real_value(EIF_REAL value)
+rt_public void send_real_value(EIF_REAL_32 value)
 {
 	struct item item;
 	
 	/* fill in the item to send */
-	item.type = SK_FLOAT;
-	item.it_float = value;
+	item.type = SK_REAL32;
+	item.it_real32 = value;
 	item.it_addr = NULL;
 	
 	/* send the request */
@@ -189,13 +189,13 @@ rt_public void send_real_value(EIF_REAL value)
 }
 
 /* send a double value to the application */
-rt_public void send_double_value(EIF_DOUBLE value)
+rt_public void send_double_value(EIF_REAL_64 value)
 {
 	struct item item;
 	
 	/* fill in the item to send */
-	item.type = SK_DOUBLE;
-	item.it_double = value;
+	item.type = SK_REAL64;
+	item.it_real64 = value;
 	item.it_addr = NULL;
 	
 	/* send the request */

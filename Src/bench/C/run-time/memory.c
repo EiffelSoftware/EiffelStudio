@@ -69,7 +69,6 @@ rt_public void mem_free(EIF_REFERENCE object)
 	 * irreversibly freed, which will have unpredictable consequences if some
 	 * other object still references it--RAM.
 	 */
-	RT_GET_CONTEXT
 	union overhead *zone = HEADER(object);
 #ifdef ISE_GC
 	uint32 flags = zone->ov_flags;
@@ -276,11 +275,13 @@ rt_public void gc_stat(EIF_POINTER item, EIF_INTEGER type)
 
 	memcpy (item, gs, sizeof(struct gacstat));
 
+	EIF_G_DATA_MUTEX_LOCK;
 	if (type == GST_PART) {
 		((struct gacstat *) item)->count = g_data.nb_full;
 	} else {
 		((struct gacstat *) item)->count = g_data.nb_partial;
 	}
+	EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 }
 
@@ -291,7 +292,11 @@ rt_public void gc_stat(EIF_POINTER item, EIF_INTEGER type)
 rt_public char gc_ison(void)
 {
 #ifdef ISE_GC
-	return (char) (g_data.status & GC_STOP ? '\0' : '\01');
+	char result;
+	EIF_G_DATA_MUTEX_LOCK;
+	result = (char) (g_data.status & GC_STOP ? '\0' : '\01');
+	EIF_G_DATA_MUTEX_UNLOCK;
+	return result;
 #else
 #ifdef BOEHM_GC
 	return EIF_TEST(GC_dont_gc != 0);

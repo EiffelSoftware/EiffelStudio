@@ -26,7 +26,7 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 #include "eif_local.h"
 #include "rt_urgent.h"
 #include "rt_sig.h"				/* For signal description */
-#include "eif_macros.h"
+#include "rt_macros.h"
 #include "rt_debug.h"
 #include "rt_err_msg.h"
 #include "rt_main.h"
@@ -739,17 +739,28 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 	 * must guarantee the garbage collector will NEVER be called within the
 	 * interruption or some dangling references may appear due to objects
 	 * moves--RAM.
+	 * Manu: 08/29/2003: Note that in MT mode, if while we are executing this
+	 * piece of code, another thread decide to change the collection status,
+	 * we might end-up in a state for the GC which is undeterministic. Therefore
+	 * we should possibly review this code, so that we ask for a full GC synchronization
+	 * when this code is executed, but I still don't know much about signals
+	 * and multithreading. This note is for the future reader to show him that
+	 * we saw a potential problem but did not know how best fix it.
 	 */
+	EIF_G_DATA_MUTEX_LOCK;
 	gc_status = g_data.status;		/* Save GC current status */
 	g_data.status |= GC_STOP;		/* Stop garbage collection anyway */
 	g_data.status |= GC_SIG;		/* Signals entering in signal handler */
+	EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 
 	trace = exget(&eif_trace);		/* Get a new execution vector */
 	if (trace == (struct ex_vect *) 0) {	/* Can't have it */
 		echmem |= MEM_FSTK;					/* Stack is full */
 #ifdef ISE_GC
+		EIF_G_DATA_MUTEX_LOCK;
 		g_data.status = gc_status;			/* Restore previous GC status */
+		EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 		enomem();							/* We ran out of memory */
 	}
@@ -767,7 +778,9 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 		expop(&eif_trace);					/* Remove EN_ILVL vector */
 		echlvl--;							/* We did not enter a new level */
 #ifdef ISE_GC
+		EIF_G_DATA_MUTEX_LOCK;
 		g_data.status = gc_status;			/* Restore previous GC status */
+		EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 		xraise(EN_MEM);						/* Non-critical exception */
 		return;								/* Which may be ignored */
@@ -783,7 +796,9 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 	if (setjmp(exenv)) {				/* Returning from an exception */
 		RTXSC;						/* Restore stack contexts */
 #ifdef ISE_GC
+		EIF_G_DATA_MUTEX_LOCK;
 		g_data.status = gc_status;	/* Restore previous GC status */
+		EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 		xraise(EN_HDLR);			/* Raise exception in signal handler */
 		return;						/* Exception ignored */
@@ -791,7 +806,9 @@ rt_shared void exhdlr(Signal_t (*handler)(int), int sig)
 	trace->ex_jbuf = &exenv;	/* Save setjmp buffer address */
 	(handler)(sig);					/* LISPish call to signal handler :-) */
 #ifdef ISE_GC
+	EIF_G_DATA_MUTEX_LOCK;
 	g_data.status = gc_status;		/* Restore saved GC status */
+	EIF_G_DATA_MUTEX_UNLOCK;
 #endif
 	expop(&eif_trace);				/* Remove EN_ILVL record */
 	expop(&eif_stack);				/* And EX_HDLR vector */

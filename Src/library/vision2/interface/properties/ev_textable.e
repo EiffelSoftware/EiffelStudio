@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision textable. Objects that have a text label."
+		"Abstraction for objects that have a text label."
 	status: "See notice at end of class"
 	keywords: "text, label, font, name, property"
 	date: "$Date$"
@@ -20,7 +20,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make_with_text (a_text: STRING) is
-			-- Create the textable and set `text' to `txt'
+			-- Create the textable and agging `a_text' to `text'
 		require
 			a_text_not_void: a_text /= Void
 			a_text_not_empty: a_text.count > 0
@@ -113,8 +113,7 @@ feature -- Obsolete
 feature {EV_TEXTABLE_I} -- Implementation
 
 	implementation: EV_TEXTABLE_I
-            -- Responsible for interaction with the underlying native graphics
-            -- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 invariant
 	text_not_void_implies_text_not_empty:
@@ -143,6 +142,9 @@ end -- class EV_TEXTABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.18  2000/03/01 22:44:02  brendel
 --| amd -> and
 --|
@@ -230,7 +232,6 @@ end -- class EV_TEXTABLE
 --|
 --| Revision 1.12.2.2  1999/11/02 17:20:12  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

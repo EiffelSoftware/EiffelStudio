@@ -1,7 +1,8 @@
 indexing	
 	description:
-		"Eiffel Vision radio peer. Ancestor for EV_RADIO_BUTTON, %N%
-		%EV_RADIO_MENU_ITEM and EV_TOOL_BAR_RADIO_BUTTON."
+		"Facilities for managing peer relations between radio buttons.%N%
+		%Base class for EV_RADIO_BUTTON, EV_RADIO_MENU_ITEM and%
+		%EV_TOOL_BAR_RADIO_BUTTON."
 	status: "See notice at end of class"
 	keywords: "radio, item, menu, check, select"
 	date: "$Date$"
@@ -27,8 +28,8 @@ feature -- Status report
 		end
 
 	peers: LINKED_LIST [like Current] is
-			-- List of all radio items in the group `Current' is in.
-			-- If not in group, returns list with only `Current' in it.
+			-- All radio items in the group `Current' is in.
+			-- Includes `Current'.
 		do
 			Result := implementation.peers
 		ensure
@@ -75,7 +76,7 @@ feature -- Contract support
 feature {NONE} -- Implementation
 
 	implementation: EV_RADIO_PEER_I
-			-- Platform dependent access.
+			-- Responsible for interaction with the native graphics toolkit.
 
 invariant
 	peers_not_void: peers /= Void
@@ -83,7 +84,7 @@ invariant
 	peers_returns_new_copy_of_list: peers /= peers
 	peers_has_current: peers.has (Current)
 	is_selected_equals_selected_peer_is_current:
-			is_selected = (selected_peer = Current)
+		is_selected = (selected_peer = Current)
 	one_radio_item_selected: selected_count = 1
 
 end -- class EV_RADIO_PEER
@@ -109,12 +110,14 @@ end -- class EV_RADIO_PEER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.2  2000/02/25 01:47:39  brendel
 --| Improved postcondition.
 --|
 --| Revision 1.1  2000/02/24 20:29:09  brendel
 --| Initial revision. Needed for rearranged radio-item inheritance structure.
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

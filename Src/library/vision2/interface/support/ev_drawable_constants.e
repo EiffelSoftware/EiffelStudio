@@ -1,7 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision drawable constants.%N%
-		%Used by EV_DRAWABLE. Inherit if you need the constants."
+		"Constants for use by and with EV_DRAWABLE."
 	note:
 		"With every drawing mode constant, a truth table is given.%N%
 		%S means the source. This is the color of the pixel that is about%N%
@@ -100,6 +99,9 @@ end -- class EV_DRAWABLE_CONSTANTS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.3  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

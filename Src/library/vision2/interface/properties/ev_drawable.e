@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision drawable. Objects that can be drawn on."
+		"Abstraction for objects onto which graphical primatives may be drawn."
 	note:
 		"When line style is dashed and line width is bigger than one,%N%
 		%lines are not guaranteed to be dashed on all platforms."
@@ -101,6 +101,7 @@ feature -- Element change
 		do
 			implementation.set_background_color (a_color)
 		ensure
+			--| FIXME why is this commented out? - sam
 			-- background_color_assigned: background_color.is_equal (a_color)
 		end
 
@@ -111,6 +112,7 @@ feature -- Element change
 		do
 			implementation.set_foreground_color (a_color)
 		ensure
+			--| FIXME why is this commented out? - sam
 			-- foreground_color_assigned: foreground_color.is_equal (a_color)
 		end
 
@@ -413,8 +415,11 @@ feature {EV_ANY} -- Contract support
 			-- Is `Current' in its default state.
 		do
 			Result := {EV_ANY} Precursor and then
-				--foreground_color.is_equal (create {EV_COLOR}.make_with_rgb (0, 0, 0)) and then
-				--background_color.is_equal (create {EV_COLOR}.make_with_rgb (1, 1, 1)) and then
+				--| FIXME why is this commented out? - sam
+				--foreground_color.is_equal (create {EV_COLOR}.make_with_rgb
+					--(0, 0, 0)) and then
+				--background_color.is_equal (create {EV_COLOR}.make_with_rgb
+					--(1, 1, 1)) and then
 				line_width = 1 and then
 				drawing_mode = Ev_drawing_mode_copy and then
 				clip_area = Void and then
@@ -472,6 +477,9 @@ end -- class EV_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/17 01:23:33  oconnor
+--| formatting and layout
+--|
 --| Revision 1.19  2000/02/21 18:13:54  brendel
 --| Added obsolete declaration of clear_rect, since, because the interfaces
 --| have been frozen, any feature that is being renamed has to be

@@ -1,6 +1,7 @@
 indexing
 	description:
-		"Eiffel Vision pixmap. Pixel image that can be modified and displayed."
+		"Graphical picture stored as a two dimensional map of pixels.%N%
+		%Can be modified and displayed."
 	status: "See notice at end of class"
 	keywords: "drawable, primitives, figures, buffer, bitmap, picture"
 	date: "$Date$"
@@ -58,7 +59,8 @@ feature -- Status setting
 	set_with_buffer (a_buffer: STRING) is
 			-- Load pixmap data from `a_buffer' in memory.
 			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
-			-- exceptions. --FIXME do this!
+			-- exceptions.
+			--|FIXME do this!
 		require
 			buffer_data_not_void: a_buffer /= Void
 			buffer_not_empty: a_buffer.count > 0
@@ -69,7 +71,8 @@ feature -- Status setting
 	set_with_file (a_file: IO_MEDIUM) is
 			-- Attempt to load pixmap data from data-medium `a_file'.
 			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
-			-- exceptions. --FIXME do this!
+			-- exceptions.
+			--|FIXME do this!
 		require
 			medium_data_readable: a_file.is_open_read
 			medium_data_is_binary: not a_file.is_plain_text
@@ -80,7 +83,8 @@ feature -- Status setting
 	set_with_named_file (file_name: STRING) is
 			-- Attempt to load pixmap data from a file specified by `file_name'.
 			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
-			-- exceptions. --FIXME do this!
+			-- exceptions.
+			--|FIXME do this!
 		require
 			file_name_not_void: file_name /= Void
 			file_name_not_empty: not file_name.empty
@@ -132,7 +136,7 @@ feature -- Duplication
 feature {NONE} -- Implementation
 
 	create_implementation is
-			-- Create implementation of pixmap with default size.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_PIXMAP_IMP} implementation.make (Current)
 		end
@@ -140,8 +144,7 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_PIXMAP_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 feature {NONE} -- Contract support
 
@@ -175,6 +178,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.24  2000/03/03 02:56:54  oconnor
 --| added make_for_test
 --|

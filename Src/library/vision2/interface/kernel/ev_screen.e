@@ -1,7 +1,6 @@
 indexing 
 	description:
-		"Eiffel Vision screen.%N%
-		%Drawable that provides for direct drawing on the screen."
+		"Facilities for direct drawing on the screen."
 	status: "See notice at end of class"
 	keywords: "screen, root, window, visual, top"
 	date: "$Date$"
@@ -43,7 +42,7 @@ feature -- Measurement
 feature {NONE} -- Implementation
 
 	create_implementation is
-			-- Create implementation of drawing area.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_SCREEN_IMP} implementation.make (Current)
 		end
@@ -51,6 +50,7 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_SCREEN_I
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_SCREEN
 
@@ -75,6 +75,9 @@ end -- class EV_SCREEN
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.7  2000/03/01 20:28:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|
@@ -116,7 +119,6 @@ end -- class EV_SCREEN
 --|
 --| Revision 1.4.2.2  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

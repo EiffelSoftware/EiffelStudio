@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision menu. Menu items that can have a submenu."
+		"Drop down menu containing EV_MENU_ITEMs"
 	status: "See notice at end of class"
 	keywords: "menu, bar, drop down, popup"
 	date: "$Date$"
@@ -31,12 +31,13 @@ create
 feature {NONE} -- Initialization
 
 	create_implementation is
-			-- Create implementation of menu.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_MENU_IMP} implementation.make (Current)
 		end
 
 	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_MENU_ITEM} Precursor
 			{EV_MENU_ITEM_LIST} Precursor
@@ -45,6 +46,7 @@ feature {NONE} -- Initialization
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_MENU_I	
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_MENU
 
@@ -69,6 +71,9 @@ end -- class EV_MENU
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.21  2000/02/29 18:09:11  oconnor
 --| reformatted indexing cluase
 --|

@@ -1,7 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description:
-		"EiffelVision status bar."
+		"Horizontal bar for display of status messages."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,12 +28,13 @@ create
 feature {NONE} -- Implementation
 
 	create_implementation is
-			-- Create implementation of status bar.
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_STATUS_BAR_IMP} implementation.make (Current)
 		end
 
 	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			{EV_PRIMITIVE} Precursor
 			{EV_ITEM_LIST} Precursor
@@ -43,7 +43,7 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_STATUS_BAR_I
-			-- Platform dependent access.
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_STATUS_BAR
 
@@ -68,6 +68,9 @@ end -- class EV_STATUS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.13  2000/03/01 20:28:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

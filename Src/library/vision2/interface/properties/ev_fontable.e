@@ -1,6 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision fontable, objects that have a font."
+		"Abstraction for objects that have a font property."
 	status: "See notice at end of class"
 	keywords: "font, name, property"
 	date: "$Date$"
@@ -42,8 +42,7 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	implementation: EV_FONTABLE_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+		-- Responsible for interaction with the native graphics toolkit.
 
 invariant
 	font_not_void: font /= Void
@@ -71,6 +70,9 @@ end -- class EV_FONTABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/17 01:23:34  oconnor
+--| formatting and layout
+--|
 --| Revision 1.9  2000/02/29 18:09:08  oconnor
 --| reformatted indexing cluase
 --|

@@ -36,7 +36,7 @@ feature -- Application initialization
 		local
 			pix: EV_PIXMAP
 		do
-			create pix.make_from_file (pixmap_path ("isepower.bmp"))
+			create pix.make_from_file (pixmap_path ("isepower"))
 			splash_pixmap (pix)
 		end
 

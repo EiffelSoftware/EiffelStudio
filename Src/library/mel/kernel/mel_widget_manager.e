@@ -19,6 +19,8 @@ inherit
 	HASH_TABLE [MEL_OBJECT, POINTER]
 		rename
 			make as hash_table_make
+		export
+			{NONE} put
 		end
 
 creation 
@@ -33,6 +35,51 @@ feature {NONE} -- Initialization
 		end;
 
 feature -- Miscellaneous
+
+	add (a_widget: MEL_OBJECT) is
+			-- Add `a_widget' to the manager.
+		require
+			widget_not_null: a_widget /= Void;
+			not_destroyed: not a_widget.is_destroyed;
+			parent_set: a_widget.parent /= Void;
+			has_parent: has (a_widget.parent.screen_object);
+			not_added: not has (a_widget.screen_object);
+		do
+			put (a_widget, a_widget.screen_object)
+		ensure
+			has_widget: has (a_widget.screen_object)
+		end;
+
+	add_popup_shell (a_popup: MEL_SHELL) is
+			-- Add a popup shell `a_shell' to the manager.
+		require
+			widget_not_null: a_popup /= Void;
+			not_destroyed: not a_popup.is_destroyed;
+			parent_set: a_popup.parent /= Void;
+			has_parent: has (a_popup.parent.screen_object);
+			not_added: not has (a_popup.screen_object);
+		local
+			a_parent: MEL_COMPOSITE
+		do
+			a_popup.parent.add_popup_child (a_popup);
+			put (a_popup, a_popup.screen_object)
+		ensure
+			has_widget: has (a_popup.screen_object);
+			has_popup_child: a_popup.parent.mel_popup_children.has (a_popup)
+		end;
+
+	add_without_parent (a_widget: MEL_OBJECT) is
+			-- Add `a_widget' to the manager without
+			-- checking the consistency of the `a_widget' parent.
+		require
+			widget_not_null: a_widget /= Void;
+			not_destroyed: not a_widget.is_destroyed;
+			not_added: not has (a_widget.screen_object)
+		do
+			put (a_widget, a_widget.screen_object)
+		ensure
+			has_widget: has (a_widget.screen_object)
+		end;
 
 	window_to_widget (a_display: POINTER; a_window: POINTER): MEL_WIDGET is
 			-- Mel widget associated with window `a_window' in

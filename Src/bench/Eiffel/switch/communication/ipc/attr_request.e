@@ -82,8 +82,8 @@ feature -- Update
 			l_cursor: DS_LINEAR_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
 			object_type_id := 0
-			send_rqst_3 (Rqst_sp_lower, 0, sp_lower, sp_upper)
-			send_rqst_3 (request_code, In_h_addr, 0, hex_to_integer (object_address))
+			send_rqst_3_integer (Rqst_sp_lower, 0, sp_lower, sp_upper)
+			send_rqst_3 (request_code, In_h_addr, 0, hex_to_pointer (object_address))
 			is_special := to_boolean (c_tread)
 			is_tuple := to_boolean (c_tread)
 			debug ("DEBUG_RECV")

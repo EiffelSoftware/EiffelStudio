@@ -58,7 +58,7 @@ feature -- Update
 				create status.make
 				Application.set_status(status)
 				send_breakpoints
-				send_rqst_3 (Rqst_resume, Resume_cont, Application.interrupt_number, Application.critical_stack_depth)
+				send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, Application.critical_stack_depth)
 				Application.status.set_is_stopped (False)
 			end
 		end

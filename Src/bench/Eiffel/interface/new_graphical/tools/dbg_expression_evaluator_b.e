@@ -1122,9 +1122,9 @@ feature -- Concrete evaluation
 					if f.written_class.is_precompiled then
 						par := par + 2
 						rout_info := System.rout_info_table.item (f.rout_id_set.first)
-						send_rqst_3 (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+						send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
 					else
-						send_rqst_3 (Rqst_dynamic_eval, f.feature_id, l_dyntype.static_type_id - 1, par)
+						send_rqst_3_integer (Rqst_dynamic_eval, f.feature_id, l_dyntype.static_type_id - 1, par)
 					end
 						-- Receive the Result.
 					c_recv_value (Current)

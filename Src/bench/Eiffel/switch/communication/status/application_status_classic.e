@@ -68,7 +68,7 @@ feature {STOPPED_HDLR} -- Initialization
 				cont_request := Application.imp_classic.cont_request
 				cont_request.send_breakpoints
 				set_is_stopped (False)
-				cont_request.send_rqst_3 (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
+				cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
 			end
 		ensure
 			valid_break_index: (break_index = 0 implies (reason = Pg_new_breakpoint or reason = Pg_raise)) or (break_index > 0)

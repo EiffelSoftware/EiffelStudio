@@ -23,7 +23,7 @@ feature -- Access
 			addr_not_void: addr /= Void
 		do
 			if not addr_table.has (addr) then
-				send_rqst_3 (Rqst_adopt, In_address, 0, hex_to_integer (addr));
+				send_rqst_3 (Rqst_adopt, In_address, 0, hex_to_pointer (addr));
 				addr_table.put (c_tread, addr)
 			end;
 			Result := addr_table.item (addr)
@@ -43,7 +43,7 @@ end
 		require
 			h_addr_not_void: h_addr /= Void
 		do
-			send_rqst_3 (Rqst_access, In_address, 0, hex_to_integer (h_addr));
+			send_rqst_3 (Rqst_access, In_address, 0, hex_to_pointer (h_addr));
 			Result := c_tread
 	
 debug ("HECTOR")
@@ -117,7 +117,7 @@ feature {NONE}
 		require
 			h_addr_not_void: h_addr /= Void
 		do
-			send_rqst_3 (Rqst_wean, In_address, 0, hex_to_integer (h_addr))
+			send_rqst_3 (Rqst_wean, In_address, 0, hex_to_pointer (h_addr))
 
 debug ("HECTOR")
 	io.error.put_string ("Wean Hector: ");

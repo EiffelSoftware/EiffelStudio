@@ -1096,7 +1096,7 @@ feature {NONE} -- Implementation
 			create rqst.make (rqst_cont)
 			rqst.send_breakpoints
 			Application.status.set_is_stopped (False)
-			rqst.send_rqst_3 (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
+			rqst.send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
 			on_application_resumed
 		end
 
@@ -1210,7 +1210,7 @@ feature {NONE} -- Implementation
 			set_critical_stack_depth (nb)
 			Application.set_critical_stack_depth (nb)
 			if Application.status /= Void and then Application.status.is_stopped then
-				send_rqst_3 (Rqst_overflow_detection, 0, 0, nb)
+				send_rqst_3_integer (Rqst_overflow_detection, 0, 0, nb)
 			end
 		end
 

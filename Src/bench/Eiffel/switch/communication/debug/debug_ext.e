@@ -20,10 +20,15 @@ feature
 			"C"
 		end;
 
-	send_rqst_3 (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: INTEGER) is
+	send_rqst_3 (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: POINTER) is
 		external
 			"C"
 		end;
+		
+	send_rqst_3_integer (code: INTEGER; info1: INTEGER; info2: INTEGER; info3: INTEGER) is
+		do
+			send_rqst_3 (code, info1, info2, integer_to_pointer (info3))
+		end
 
 	send_integer_value (value: INTEGER) is
 		external
@@ -98,5 +103,13 @@ feature
 		external
 			"C"
 		end;
+		
+	integer_to_pointer (i: INTEGER): POINTER is 
+			-- Convert integer value `i' in a valid `POINTER' value. 
+		external 
+			"C inline use <windows.h>" 
+		alias 
+			"(EIF_POINTER) $i"
+		end
 
 end

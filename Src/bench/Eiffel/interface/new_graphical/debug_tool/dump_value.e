@@ -710,9 +710,9 @@ feature {DUMP_VALUE} -- string_representation Implementation
 					if a_feat.written_class.is_precompiled then
 						par := par + 2
 						rout_info := Eiffel_system.system.rout_info_table.item (a_feat.rout_id_set.first)
-						send_rqst_3 (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
+						send_rqst_3_integer (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
 					else
-						send_rqst_3 (Rqst_dynamic_eval, a_feat.feature_id, l_dyntype.static_type_id - 1, par)
+						send_rqst_3_integer (Rqst_dynamic_eval, a_feat.feature_id, l_dyntype.static_type_id - 1, par)
 					end
 						-- Receive the Result.
 					c_recv_value (Current)
@@ -752,7 +752,7 @@ feature -- Action
 					send_string_value($value_string_c)
 				when Type_object, Type_expanded_object then
 					if value_address /= Void then
-						send_ref_value (Default_pointer + hex_to_integer (value_address))
+						send_ref_value (hex_to_pointer (value_address))
 					else
 						send_ref_value (Default_pointer)
 					end

@@ -67,7 +67,7 @@ feature -- Update
 					-- know it must stop to the next breakable statement
 					-- send a request for a "step-into" breakpoint
 				update_breakpoints(bpts)
-				send_rqst_3 (Rqst_break, 0, Break_set_stepinto,	0) -- as far as they are useless, body_id & offset are set to zero
+				send_rqst_3_integer (Rqst_break, 0, Break_set_stepinto,	0) -- as far as they are useless, body_id & offset are set to zero
 
 			when step_by_step then
 					-- Execution will stop to next breakable point where the callstack depth is
@@ -79,10 +79,10 @@ feature -- Update
 
 						-- set a stack breakpoint, set on the current stack depth plus one
 						-- (in run-time, the break is 'exec_stack < stack_bp', so we have to add 1 for step by step)
-						send_rqst_3 (Rqst_break, 0, Break_set_stack_depth, +1) -- body_id is useless, so it's set to zero
+						send_rqst_3_integer (Rqst_break, 0, Break_set_stack_depth, +1) -- body_id is useless, so it's set to zero
 					else
 						-- the user has pushed on the step-by-step button to launch the application. let's stop at the begginning
-						send_rqst_3 (Rqst_break, 0, Break_set_stepinto,	0) -- as far as they are useless, body_id & offset are set to zero
+						send_rqst_3_integer (Rqst_break, 0, Break_set_stepinto,	0) -- as far as they are useless, body_id & offset are set to zero
 					end
 				end
 
@@ -96,10 +96,10 @@ feature -- Update
 
 						-- set a stack breakpoint, set on the current stack depth
 						-- (in run-time, the break is 'exec_stack < stack_bp', so we dont have to substract 1 for step out)
-						send_rqst_3 (Rqst_break, 0, Break_set_stack_depth, 0 ) -- body_id is useless, so it's set to zero
+						send_rqst_3_integer (Rqst_break, 0, Break_set_stack_depth, 0 ) -- body_id is useless, so it's set to zero
 					else
 						-- the user has pushed on the step-out button to launch the application. let's stop at the begginning
-						send_rqst_3 (Rqst_break, 0, Break_set_stepinto,	0) -- as far as they are useless, body_id & offset are set to zero
+						send_rqst_3_integer (Rqst_break, 0, Break_set_stepinto,	0) -- as far as they are useless, body_id & offset are set to zero
 					end
 				end
 
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 					print(bp)
 					io.put_new_line
 				end
-				send_rqst_3 (Rqst_break, bp.real_body_id - 1, Break_remove, bp.breakable_line_number)
+				send_rqst_3_integer (Rqst_break, bp.real_body_id - 1, Break_remove, bp.breakable_line_number)
 				bp.set_application_not_set
 			elseif (bp_mode = bp.breakpoint_to_add) then
 				debug("DEBUGGER")
@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 					print(bp)
 					io.put_new_line
 				end
-				send_rqst_3 (Rqst_break, bp.real_body_id - 1, Break_set, bp.breakable_line_number)
+				send_rqst_3_integer (Rqst_break, bp.real_body_id - 1, Break_set, bp.breakable_line_number)
 				bp.set_application_set
 			end
 		end

@@ -75,7 +75,7 @@ feature -- Status Setting
 			open_clipboard (wel_window)
 			if clipboard_open then
 				empty_clipboard
-				local_text := clone (a_text)
+				local_text := a_text.twin
 				if local_text.substring_index ("%R%N", 1) = 0 then
 					local_text.replace_substring_all ("%N", "%R%N")
 				end

@@ -23,7 +23,7 @@ feature -- Access
 			if private_font = Void then
 				create Result
 				font_imp ?= Result.implementation
-				font_imp.set_by_wel_font (clone (private_wel_font))
+				font_imp.set_by_wel_font (private_wel_font.twin)
 				private_font := Result
 				private_wel_font := Void
 			else

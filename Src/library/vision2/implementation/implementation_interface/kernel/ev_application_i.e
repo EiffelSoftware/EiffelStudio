@@ -243,7 +243,7 @@ feature -- Events
 		local
 			snapshot: like once_idle_actions
 		do
-			snapshot := clone (once_idle_actions)
+			snapshot := once_idle_actions.twin
 			once_idle_actions.wipe_out
 			internal_idle_actions.prune_all (do_once_idle_actions_agent)
 			snapshot.call (Void)

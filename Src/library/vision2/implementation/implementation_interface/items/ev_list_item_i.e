@@ -64,7 +64,7 @@ feature {NONE} -- Contract support
 			combo_parent: EV_COMBO_BOX
 		do
 			if parent /= Void then
-				scaled_pixmap := clone (a_pixmap)
+				scaled_pixmap := a_pixmap.twin
 				list_parent ?= parent
 				if list_parent /= Void then
 					scaled_pixmap.stretch (list_parent.pixmaps_width, list_parent.pixmaps_height)

@@ -46,11 +46,6 @@ feature -- Status report
 		end
 
 feature -- Element Change
-
-	set_pixmap (a_pix: EV_PIXMAP) is
-			-- Set the rows `pixmap' to `a_pix'.
-		deferred
-		end
 		
 	pixmap: EV_PIXMAP is
 			-- `Result' is pixmap displayed in `Current'.
@@ -58,19 +53,16 @@ feature -- Element Change
 			-- the image must be stretched to fit the size allocated
 			-- by `parent'.
 		do
-			Result := clone (internal_pixmap)
-			if internal_pixmap /= Void and then parent /= Void and then internal_pixmap.width /= parent_imp.pixmaps_width and then internal_pixmap.height /= parent_imp.pixmaps_height then
-				Result.stretch (parent_imp.pixmaps_width, parent_imp.pixmaps_height)
-			end
+			if internal_pixmap /= Void then
+				Result := internal_pixmap.twin
+				if parent /= Void and then internal_pixmap.width /= parent_imp.pixmaps_width and then internal_pixmap.height /= parent_imp.pixmaps_height then
+					Result.stretch (parent_imp.pixmaps_width, parent_imp.pixmaps_height)
+				end
+			end			
 		end
 
 	internal_pixmap: EV_PIXMAP
 			-- Pixmap used at the start of the row.
-
-	remove_pixmap is
-			-- Remove the rows pixmap.
-		deferred			
-		end
 
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP is
 			-- Parent implementation of `Current'.
@@ -86,7 +78,7 @@ feature {NONE} -- Contract support
 			multi_column_list: EV_MULTI_COLUMN_LIST
 		do
 			if parent /= Void then
-				scaled_pixmap := clone (a_pixmap)
+				scaled_pixmap := a_pixmap.twin
 				multi_column_list ?= parent
 				scaled_pixmap.stretch (multi_column_list.pixmaps_width, multi_column_list.pixmaps_height)
 			else

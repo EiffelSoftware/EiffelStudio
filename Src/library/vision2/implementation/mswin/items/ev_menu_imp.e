@@ -253,7 +253,8 @@ feature {NONE} -- Implementation
 			wel_string: WEL_STRING
 			pos: INTEGER
 		do
-			real_text := clone (a_text)
+			
+			real_text := a_text.twin
 			if has_parent then
 				create wel_string.make (real_text)
 					-- Retrieve the index of `Current'.

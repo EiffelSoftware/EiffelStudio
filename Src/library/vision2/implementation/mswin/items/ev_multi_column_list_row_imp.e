@@ -104,7 +104,7 @@ feature {EV_ANY_I} -- Access
 	set_pixmap (a_pix: EV_PIXMAP) is
 			-- Set the rows `pixmap' to `a_pix'.
 		do
-			internal_pixmap := clone (a_pix)
+			internal_pixmap := a_pix.twin
 			if parent_imp /= Void then
 				parent_imp.set_row_pixmap (parent_imp.ev_children.index_of (Current, 1), a_pix)
 			end

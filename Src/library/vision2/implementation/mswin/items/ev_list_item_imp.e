@@ -80,13 +80,15 @@ feature -- Access
 	wel_set_text (a_string: STRING) is
 			-- Set the text of the item to `a_string'
 		do
-			internal_text := clone (a_string)	
+			internal_text := a_string.twin
 		end
 	
 	wel_text: STRING is
 			-- Text of the item.
 		do
-			Result := clone (internal_text)
+			if internal_text /= Void then
+				Result := internal_text.twin
+			end
 		end
 
 	text_length: INTEGER is
@@ -244,7 +246,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Pixmap Handling
 				private_pixmap.destroy
 				private_pixmap := Void
 			end
-			private_pixmap := clone (p)
+			private_pixmap := p.twin
 			has_pixmap := True
 
 				-- If the item is currently contained in the list then
@@ -310,7 +312,7 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Pixmap Handling
 	set_tooltip (a_tooltip: STRING) is
 			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
-			internal_tooltip_string := clone (a_tooltip)
+			internal_tooltip_string := a_tooltip.twin
 		end
 
 feature {EV_ITEM_LIST_I} -- Implementation

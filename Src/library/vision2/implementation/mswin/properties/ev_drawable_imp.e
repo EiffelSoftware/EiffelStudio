@@ -210,7 +210,7 @@ feature -- Element change
 		local
 			region: WEL_REGION
 		do
-			clip_area := clone (an_area)
+			clip_area := an_area.twin
 			create region.make_rect (clip_area.x, clip_area.y,
 				clip_area.width + clip_area.x,
 				clip_area.height + clip_area.y)

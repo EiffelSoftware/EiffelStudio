@@ -101,7 +101,7 @@ feature {NONE} -- Contract support
 			scaled_pixmap: EV_PIXMAP
 		do
 			if parent_tree /= Void then
-				scaled_pixmap := clone (a_pixmap)
+				scaled_pixmap := a_pixmap.TWIN
 				scaled_pixmap.stretch (parent_tree.pixmaps_width, parent_tree.pixmaps_height)
 			else
 				scaled_pixmap := a_pixmap

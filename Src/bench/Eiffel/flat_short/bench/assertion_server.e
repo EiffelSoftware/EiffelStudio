@@ -149,20 +149,26 @@ feature -- Element change
 					loop
 							-- Retrieve the inherited assertion info.
 						inh_f := assert_id_set.item (i)
-						inh_feat_adapter := feature_adapter_table.item (inh_f.body_index)
-
-						if inh_feat_adapter /= Void then
-							feat := inh_feat_adapter.source_feature
-							other_feat_as := inh_feat_adapter.ast
-							if
-								other_feat_as /= Void and then
-								not processed_features.has (feat.body_index)
-							then
-								create assertion.make_for_feature (feat, other_feat_as)
-								chained_assert.extend (assertion)
-								processed_features.extend (feat.body_index)
+						
+						if inh_f.body_index /= 0 then
+				
+							inh_feat_adapter := feature_adapter_table.item (inh_f.body_index)
+	
+							if inh_feat_adapter /= Void then
+								feat := inh_feat_adapter.source_feature
+								other_feat_as := inh_feat_adapter.ast
+								if
+									other_feat_as /= Void and then
+									not processed_features.has (feat.body_index)
+								then
+									create assertion.make_for_feature (feat, other_feat_as)
+									chained_assert.extend (assertion)
+									processed_features.extend (feat.body_index)
+								end
 							end
+							
 						end
+						
 							-- Prepare next iteration
 						i := i + 1
 					end

@@ -424,9 +424,6 @@ feature -- Setting
 			-- Initialize global_adapt with classes
 			-- `source' and `target'.
 			--| Used in the inherit clause.
-		require
-			both_void: source = Void implies target = Void
-			both_non_void: source /= Void implies target /= Void
 		do
 			create global_adapt.make_with_classes (source, target)
 			create local_adapt

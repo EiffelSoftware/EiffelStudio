@@ -126,6 +126,13 @@ feature {NONE} -- Initialization
 		do
 			create ctrl.make (default_parent, "EV_INTERNAL_TOOL_BAR_IMP")
 			wel_make (ctrl, 0)			
+			create radio_group.make
+			create new_item_actions.make ("new_item", <<"widget">>)
+			new_item_actions.extend (~add_radio_button)
+			new_item_actions.extend (~widget_parented)
+			create remove_item_actions.make ("remove_item", <<"widget">>)
+			remove_item_actions.extend (~remove_radio_button)
+			remove_item_actions.extend (~widget_orphaned)
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_HASH_TABLE_ITEM_HOLDER_IMP} Precursor
 			create ev_children.make (2)
@@ -179,6 +186,34 @@ feature -- Status setting
 				parent_imp.interface.prune (Current.interface)
 			end
 			bar.destroy
+		end
+
+	connect_radio_grouping (a_tool_bar: EV_TOOL_BAR) is
+			-- Join radio grouping of `a_container' to Current.
+		local
+			l: like radio_group
+			peer: EV_TOOL_BAR_IMP
+		do
+			peer ?= a_tool_bar.implementation
+			if peer = Void then
+				-- It's a widget that inherits from EV_CONTAINER,
+				-- but has implementation renamed.
+				-- If this is the case, on `a_container' this feature
+				-- had to be redefined.
+				a_tool_bar.merge_radio_button_groups (interface)
+			else
+				l := peer.radio_group
+				if l /= radio_group then
+					from
+						l.start
+					until
+						l.empty
+					loop
+						add_radio_button (l.item.interface)
+					end
+					peer.set_radio_group (radio_group)
+				end
+			end
 		end
 
 feature -- Element change
@@ -389,6 +424,81 @@ feature {NONE} -- Implementation
 				list.forth
 			end
 			ev_children.go_i_th (original_index)
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	widget_parented (w: EV_TOOL_BAR_BUTTON) is
+			-- Called every time a widget is added to the container.
+		require
+			w_not_void: w /= Void
+		local
+			w_imp: EV_TOOL_BAR_BUTTON_IMP
+		do
+			w_imp ?= w.implementation
+			w_imp.on_parented
+		end
+
+	widget_orphaned (w: EV_TOOL_BAR_BUTTON) is
+			-- Called every time a widget is removed from the container.
+		require
+			w_not_void: w /= Void
+		local
+			w_imp: EV_TOOL_BAR_BUTTON_IMP
+		do
+			w_imp ?= w.implementation
+			w_imp.on_orphaned
+		end
+
+	radio_group: LINKED_LIST [EV_TOOL_BAR_RADIO_BUTTON_IMP]
+			-- Radio items in this container.
+			-- `Current' shares reference with merged containers.
+
+	is_merged (other: EV_TOOL_BAR): BOOLEAN is
+			-- Is `Current' merged with `other'?
+		require
+			other_not_void: other /= Void
+		local
+			t_imp: EV_TOOL_BAR_IMP
+		do
+			t_imp ?= other.implementation
+			Result := t_imp.radio_group = radio_group
+		end
+
+	set_radio_group (rg: like radio_group) is
+			-- Set `radio_group' by reference. (Merge)
+		do
+			radio_group := rg
+		end
+
+	add_radio_button (w: EV_TOOL_BAR_RADIO_BUTTON) is
+			-- Called every time a widget is added to the container.
+		require
+			w_not_void: w /= Void
+		local
+			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+		do
+			r ?= w.implementation
+			if r /= Void then
+				if not radio_group.empty then
+					r.disable_select
+				end
+				r.set_radio_group (radio_group)
+			end
+		end
+
+	remove_radio_button (w: EV_TOOL_BAR_RADIO_BUTTON) is
+			-- Called every time a widget is removed from the container.
+		require
+			w_not_void: w /= Void
+		local
+			r: EV_TOOL_BAR_RADIO_BUTTON_IMP
+		do
+			r ?= w.implementation
+			if r /= Void then
+				r.remove_from_radio_group
+				r.enable_select
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -641,6 +751,11 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/04/04 17:24:07  rogers
+--| Added connect_radio_grouping, widget_parented, widget_orphaned,
+--| radio_group, is_merged, set_radio_group, add_radio_button,
+--| remove_radio_button.
+--|
 --| Revision 1.38  2000/03/31 19:04:05  rogers
 --| Implemented internal_propagate_pointer_press. Removed some
 --| redundent and commented code.

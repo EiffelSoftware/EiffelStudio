@@ -33,7 +33,9 @@ feature -- Execution
 				status := Application.status;
 				if status.e_feature /= Void then
 					Window_manager.routine_win_mgr.show_stoppoint
-								(status.e_feature, status.break_index)
+								(status.e_feature, status.break_index);
+					Project_tool.show_stoppoint
+						(status.e_feature, status.break_index)
 				end;
 				!! st.make;
 				status.display_status (st);

@@ -19,7 +19,7 @@ creation
 
 	make
 
-feature 
+feature {NONE}
 
 	focus_string: STRING is
 		do
@@ -39,6 +39,11 @@ feature
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.parent_pixmap
+		end;
+
+	full_symbol: PIXMAP is
+		do
+			Result := Pixmaps.parent_dot_pixmap
 		end;
 
 	source: WIDGET is
@@ -68,5 +73,29 @@ feature {NONE}
 			command_editor.remove_parent
 		end;
 
-	
+feature {CMD_EDITOR}
+
+	update_symbol is
+		do
+			if data = Void then
+				set_empty_symbol
+			else
+				set_full_symbol
+			end
+		end;
+
+	set_empty_symbol is
+		do
+			if pixmap /= symbol then
+				set_symbol (symbol)
+			end
+		end
+
+	set_full_symbol is
+		do
+			if pixmap /= full_symbol then
+				set_symbol (full_symbol)
+			end
+		end
+
 end

@@ -3562,13 +3562,6 @@ feature -- Pattern table generation
 											%#endif%N")
 
 
-			if final_mode then
-					-- Set C variable `scount'.
-				buffer.putstring ("%Tscount = ")
-				buffer.putint (type_id_counter.value)
-				buffer.putstring (";%N")
-			end
-
 			if has_separate then
 				buffer.putstring ("%Tif (argc < 2) {%N%
 					%%T%Tsprintf(crash_info, CURERR7, 1);%N%
@@ -3702,11 +3695,8 @@ feature -- Pattern table generation
 
 				buffer.generate_function_signature ("void", "egc_einit_init", True, buffer, <<"">>, <<"void">>)
 
-					-- Set C variable `scount'.
-				buffer.putstring ("%Tscount = ")
-				buffer.putint (type_id_counter.value)
 					-- Set C variable `ccount'.
-				buffer.putstring (";%N%Tccount = ")
+				buffer.putstring ("%Tccount = ")
 				buffer.putint (class_counter.total_count)
 					-- Set C variable `dcount'.
 				buffer.putstring (";%N%Tdcount = ")

@@ -64,7 +64,7 @@ struct idr_discrim {	/* Discrimination array for unions encoding */
 
 extern void idrmem_create(IDR *idrs, char *addr, int len, int i_op);	/* Initialize a memory IDR stream */
 extern void idrmem_destroy(IDR *idrs);	/* Destruction of the memory IDR stream */
-extern int idr_getpos(IDR *idrs);		/* Get position in stream */
+extern size_t idr_getpos(IDR *idrs);		/* Get position in stream */
 extern int idr_size(IDR *idrs, int *lp, int maxlength);			/* Retrieve/store a size (variable length) */
 extern bool_t idr_setpos(IDR *idrs, int pos);		/* Set position in stream */
 extern bool_t idr_void(IDR *idrs, void *ext);		/* Always return TRUE */

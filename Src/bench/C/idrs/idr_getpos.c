@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-rt_public int idr_getpos(IDR *idrs)
+rt_public size_t idr_getpos(IDR *idrs)
 {
 	/* Return the current position in the data stream */
 

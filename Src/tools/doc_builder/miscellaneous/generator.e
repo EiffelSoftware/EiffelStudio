@@ -256,7 +256,9 @@ feature {NONE} -- Implementation
 		do
 			create l_interval.make (start_time, create {TIME}.make_now)
 			last_generation_duration ?= l_interval.duration
-			progress_dialog.hide
+			if graphical_mode then
+				progress_dialog.hide	
+			end
 		end	
 
 end -- class GENERATOR

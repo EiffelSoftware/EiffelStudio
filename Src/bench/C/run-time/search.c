@@ -20,11 +20,11 @@ doc:<file name="search.c" header="rt_search.h" version="$Id$" summary="Search ta
 #include "rt_malloc.h"
 #include <string.h>
 
-rt_public struct s_table *s_create(uint32 size)
+rt_public struct s_table *s_create(size_t size)
 {
 	/* Returns new search table of size `size'. */
 
-	uint32 real_size;
+	size_t real_size;
 	char **keys;
 	struct s_table *result;
 
@@ -47,7 +47,7 @@ rt_public int s_put(struct s_table *tbl, char *object)
 	 * otherwise return `EIF_SEARCH_OK'.
 	 */
 
-	int32 pos; 		/* Table position */
+	size_t pos; 		/* Table position */
 
 	pos = s_search(tbl,object);
 	if (pos == EIF_SEARCH_FOUND)
@@ -63,17 +63,17 @@ rt_public int s_put(struct s_table *tbl, char *object)
 	}
 }
 
-rt_public int32 s_search(struct s_table *tbl, char *object)
+rt_public size_t s_search(struct s_table *tbl, char *object)
 {
 	/* Internal search of `object' in `tbl'. Return EIF_SEARCH_FOUND if found, otherwise
 	 * position where to insert it.
 	 */
 
 	size_t key = ((size_t) object) - 1;	/* Key for `object' */
-	register1 uint32 position;
-	register2 uint32 increment;
-	register4 uint32 size = tbl->s_size;			/* Table size */
-	register3 char **keys = tbl->s_keys;			/* Table keys */
+	size_t position;
+	size_t increment;
+	size_t size = tbl->s_size;			/* Table size */
+	char **keys = tbl->s_keys;			/* Table keys */
 	char *old_key;
 
 	increment = 1 + (key % (size - 1));
@@ -90,10 +90,10 @@ rt_public void s_resize(register struct s_table *tbl)
 {
 	/* Resize `tbl' to a bigger size */
 
-	int32 i, size;
-	register3 struct s_table *new;
-	register2 char *one_key;
-	register1 char **keys = tbl->s_keys;
+	size_t i, size;
+	struct s_table *new;
+	char *one_key;
+	char **keys = tbl->s_keys;
 
 	size = tbl->s_size;
 	new = s_create(3 * size / 2);

@@ -57,7 +57,7 @@ rt_private void free_structures(int n);	/* Free fuzzy shifting tables */
 rt_private char *qsearch(char *text, int tlen, char *pattern, int plen);		/* Sunday's Quick Search algorithm */
 rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int fuzzy);	/* Fuzzy version of Quick Search */
 
-rt_public int str_str(char *text, char *pattern, int tlen, int plen, int start, int fuzzy)
+rt_public EIF_INTEGER str_str(char *text, char *pattern, int tlen, int plen, int start, int fuzzy)
              		/* The text string */
                 	/* The pattern we are looking for */
          			/* Length of the text */
@@ -109,9 +109,9 @@ rt_private void compile(char *pattern, register int plen, uint32 *dtable)
 	 * string. This has to be done before searching occurs.
 	 */
 	
-	register1 int i;
-	register2 unsigned char *p, *pt;
-	register3 uint32 *dp = dtable;
+	int i;
+	unsigned char *p, *pt;
+	uint32 *dp = dtable;
 
 	plen++;		/* Increment to avoid doing it at each step of the loop */
 
@@ -193,10 +193,10 @@ rt_private char *qsearch(char *text, int tlen, char *pattern, int plen)
 	 * of the matching substring or a null pointer if not found.
 	 */
 	RT_GET_CONTEXT
-	register1 unsigned char *p;		/* Pattern string pointer */
-	register2 unsigned char *t;		/* Text pointer */
-	register4 unsigned char *tx;	/* Another text pointer (start of search) */
-	register3 int i;		/* Position within pattern string */
+	unsigned char *p;		/* Pattern string pointer */
+	unsigned char *t;		/* Text pointer */
+	unsigned char *tx;	/* Another text pointer (start of search) */
+	int i;		/* Position within pattern string */
 
 	tx = (unsigned char *)text;				/* Where we start scanning */
 	text += tlen;			/* First address beyond text string */
@@ -234,12 +234,12 @@ rt_private char *fuz_qsearch(char *text, int tlen, char *pattern, int plen, int 
 	 * mismatches are allowed.
 	 */
 	RT_GET_CONTEXT
-	register1 char *p;		/* Pattern string pointer */
-	register2 char *t;		/* Text pointer */
-	register4 char *tx;		/* Another text pointer (start of search) */
-	register3 int i;		/* Position within pattern string */
-	register5 int m;		/* Number of mismatches so far */
-	register6 int s;		/* Current shifting minimum */
+	char *p;		/* Pattern string pointer */
+	char *t;		/* Text pointer */
+	char *tx;		/* Another text pointer (start of search) */
+	int i;		/* Position within pattern string */
+	int m;		/* Number of mismatches so far */
+	int s;		/* Current shifting minimum */
 
 	tx = text;				/* Where we start scanning */
 	text += tlen;			/* First address beyond text string */

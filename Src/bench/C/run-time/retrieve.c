@@ -308,8 +308,8 @@ rt_private EIF_REFERENCE object_rread_attributes (EIF_REFERENCE object, uint32 n
 rt_private void object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 nflags);		/* read the individual attributes of the object*/
 rt_private void gen_object_read (EIF_REFERENCE object, EIF_REFERENCE parent, uint32 nflags);	/* read the individual attributes of the object*/
 
-rt_private int readline (register char *ptr, register int *maxlen);
-rt_private int buffer_read (register char *object, int size);
+rt_private size_t readline (register char *ptr, size_t maxlen);
+rt_private size_t buffer_read (register char *object, size_t size);
 rt_private uint32 rt_read_cid (uint32);
 rt_private uint32 rt_id_read_cid (uint32);
 rt_private struct cecil_info * cecil_info (type_descriptor *conv, char *name);
@@ -323,19 +323,19 @@ rt_private int (char_read) (char *, int);
 rt_private int (stream_read) (char *, int);
 
 /* read function declarations */
-rt_public int retrieve_read (void);
-rt_public int retrieve_read_with_compression (void);
+rt_public size_t retrieve_read (void);
+rt_public size_t retrieve_read_with_compression (void);
 
 #ifndef EIF_THREADS
 /*
-doc:	<attribute name="retrieve_read_func" return_type="int (*)(void)" export="shared">
+doc:	<attribute name="retrieve_read_func" return_type="size_t (*)(void)" export="shared">
 doc:		<summary>High level function to read storable file. It uses `char_read_func' to actually read bytes of the file.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_shared int (*retrieve_read_func)(void) = retrieve_read_with_compression;
+rt_shared size_t (*retrieve_read_func)(void) = retrieve_read_with_compression;
 
 /*
 doc:	<attribute name="char_read_func" return_type="int (*)(char *buf, int n)" export="shared">
@@ -348,14 +348,14 @@ doc:	</attribute>
 rt_shared int (*char_read_func)(char *, int) = char_read;
 
 /*
-doc:	<attribute name="old_retrieve_read_func" return_type="int (*)(void)" export="private">
+doc:	<attribute name="old_retrieve_read_func" return_type="size_t (*)(void)" export="private">
 doc:		<summary>Nice hack for compiler so that compiler can use a different `retrieve_read_func' for its modified use of store/retrieve. So each time we use the compiler one, at the end we restore the `old' one which is the default one for traditional store/retrieve.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private int (*old_retrieve_read_func)(void) = retrieve_read_with_compression;
+rt_private size_t (*old_retrieve_read_func)(void) = retrieve_read_with_compression;
 
 /*
 doc:	<attribute name="old_char_read_func" return_type="int (*)(char *, int)" export="private">
@@ -378,24 +378,24 @@ doc:	</attribute>
 rt_private char old_rt_kind;			/* Kind of storable */
 
 /*
-doc:	<attribute name="old_buffer_size" return_type="long" export="private">
+doc:	<attribute name="old_buffer_size" return_type="size_" export="private">
 doc:		<summary>Old buffer size.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private long old_buffer_size = RETRIEVE_BUFFER_SIZE;
+rt_private size_t old_buffer_size = RETRIEVE_BUFFER_SIZE;
 
 /*
-doc:	<attribute name="end_of_buffer" return_type="int" export="shared">
+doc:	<attribute name="end_of_buffer" return_type="size_t" export="shared">
 doc:		<summary>Size after decompression of decompressed data.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_shared int end_of_buffer = 0;
+rt_shared size_t end_of_buffer = 0;
 
 /*
  * Convenience functions
@@ -423,14 +423,14 @@ doc:	</attribute>
 rt_private int stream_buffer_position;
 
 /*
-doc:	<attribute name="stream_buffer_size" return_type="long" export="private">
+doc:	<attribute name="stream_buffer_size" return_type="size_t" export="private">
 doc:		<summary>Size of `stream_buffer'.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private long stream_buffer_size;
+rt_private size_t stream_buffer_size;
 
 /*
 doc:	<attribute name="cidarr" return_type="int16 [256]" export="private">
@@ -463,7 +463,7 @@ rt_shared void eif_retrieve_thread_init (void)
 
 /* Initialize retrieve function pointers and globals */
  
-rt_public void rt_init_retrieve(int (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size)
+rt_public void rt_init_retrieve(size_t (*retrieve_function) (void), int (*char_read_function)(char *, int), int buf_size)
 {
 		/* Storing the previous state of the retrieving operation before the new one start */
 	RT_GET_CONTEXT
@@ -1075,7 +1075,7 @@ rt_public EIF_REFERENCE portable_retrieve(int (*char_read_function)(char *, int)
 	return retrieved;
 }
 
-rt_public EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos, int (*retrieve_function) (void))
+rt_shared EIF_REFERENCE ise_compiler_retrieve (EIF_INTEGER f_desc, EIF_INTEGER a_pos, size_t (*retrieve_function) (void))
 {
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
@@ -1163,7 +1163,7 @@ rt_private void independent_retrieve_reset (void)
 }
 
 /* Create a hash table to hold `count' objects, each of `size'. */
-rt_private struct htable *create_hash_table (int32 count, size_t size)
+rt_private struct htable *create_hash_table (int32 count, int size)
 {
 	struct htable *result = (struct htable*)
 			eif_rt_xmalloc (sizeof (struct htable), C_T, GC_OFF);
@@ -1855,7 +1855,7 @@ rt_private void add_mismatch (EIF_REFERENCE object, EIF_REFERENCE old_values)
 rt_private void rt_dropped (register EIF_REFERENCE old, int16 old_type)
 {
 	RT_GET_CONTEXT
-	unsigned long key = (unsigned long) old - 1;
+	rt_uint_ptr key = ((rt_uint_ptr) old) - 1;
 	struct rt_struct *info = (struct rt_struct *) ht_first(rt_table, key);
 	info->rt_status = DROPPED;
 	info->rtu_data.old_type = old_type;
@@ -2079,7 +2079,7 @@ rt_private void rt_clean(void)
 
 	if (rt_table != (struct htable *) 0) {
 		struct rt_struct *rt_info = (struct rt_struct *) rt_table->h_values;
-		int32 count = rt_table->h_size;
+		size_t count = rt_table->h_size;
 
 		for (; count > 0; count--, rt_info++) {
 			if (rt_info->rt_status == UNSOLVED) {	/* Free cell list */
@@ -2134,9 +2134,9 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new_
 	 */
 
 	RT_GET_CONTEXT
-	unsigned long key = ((unsigned long) old) - 1;	/* Key in the hash table */
-	unsigned long solved_key;
-	long offset;
+	rt_uint_ptr key = ((rt_uint_ptr) old) - 1;	/* Key in the hash table */
+	rt_uint_ptr solved_key;
+	size_t offset;
 	struct rt_struct *rt_info, *rt_solved;
 	struct rt_cell *rt_unsolved, *next;
 	EIF_REFERENCE  client = NULL, supplier = NULL;
@@ -2300,7 +2300,7 @@ rt_private void rt_subupdate (EIF_REFERENCE old, EIF_REFERENCE reference, EIF_RE
 {
 	RT_GET_CONTEXT
 	struct rt_struct *rt_info;
-	unsigned long key = ((unsigned long) reference) - 1;
+	rt_uint_ptr key = ((rt_uint_ptr) reference) - 1;
 	EIF_REFERENCE supplier;
 
 	rt_info = (struct rt_struct *) ht_first(rt_table, key);
@@ -2327,7 +2327,7 @@ rt_private void rt_subupdate (EIF_REFERENCE old, EIF_REFERENCE reference, EIF_RE
 		if (new_cell == (struct rt_cell *)0)
 			xraise (EN_MEM);
 		new_cell->status = RTU_KEYED;
-		new_cell->u.key = ((unsigned long) old) - 1;
+		new_cell->u.key = ((rt_uint_ptr) old) - 1;
 		new_cell->offset = (long) (addr - parent);
 		old_cell = rt_info->rt_list;
 		new_cell->next = old_cell;
@@ -2354,7 +2354,7 @@ rt_private void update_reference (EIF_REFERENCE object, EIF_REFERENCE *location)
 {
 	RT_GET_CONTEXT
 	EIF_REFERENCE reference = *location;
-	unsigned long key = ((unsigned long) reference) - 1;
+	rt_uint_ptr key = ((rt_uint_ptr) reference) - 1;
 	struct rt_struct *rt_info = (struct rt_struct *) ht_first (rt_table, key);
 	if (rt_info->rt_status == SOLVED) {
 		/* Reference is already solved */
@@ -2403,7 +2403,8 @@ rt_private void read_header(char rt_type)
 	int nb_lines, i, k, old_count;
 	int dtype, new_dtype;
 	long size;
-	int nb_gen, bsize = 1024;
+	uint32 nb_gen;
+	size_t bsize = 1024;
 	char vis_name[512];
 	char * temp_buf;
 	jmp_buf exenv;
@@ -2422,7 +2423,7 @@ rt_private void read_header(char rt_type)
 		xraise (EN_MEM);
 
 	/* Read the old maximum dyn type */
-	if (readline(r_buffer, &bsize) <= 0)
+	if (readline(r_buffer, bsize) <= 0)
 		eise_io("General retrieve: unable to read number of different Eiffel types.");
 	if (sscanf(r_buffer,"%d\n", &old_count) != 1)
 		eise_io("General retrieve: unable to read number of different Eiffel types.");
@@ -2444,13 +2445,13 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 		memset (sorted_attributes, 0, scount * sizeof(unsigned int *));
 
 	/* Read the number of lines */
-	if (readline(r_buffer, &bsize) <= 0)
+	if (readline(r_buffer, bsize) <= 0)
 		eise_io("General retrieve: unable to read number of header lines.");
 	if (sscanf(r_buffer,"%d\n", &nb_lines) != 1)
 		eise_io("General retrieve: unable to read number of header lines.");
 
 	for(i=0; i<nb_lines; i++) {
-		if (readline(r_buffer, &bsize) <= 0)
+		if (readline(r_buffer, bsize) <= 0)
 			eise_io("General retrieve: unable to read current header line.");
 
 		temp_buf = r_buffer;
@@ -2465,7 +2466,7 @@ printf ("Allocating sorted_attributes (scount: %d) %lx\n", scount, sorted_attrib
 			struct cecil_info *info;
 			int32 *t;
 			int matched;
-			int j, index;
+			uint32 j, index;
 			long *gtype, sgtype[MAX_GENERICS];
 			int32 *itype, sitype[MAX_GENERICS];
 	
@@ -2552,7 +2553,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 	EIF_GET_CONTEXT
 	int nb_lines, i, k, old_count;
 	int dtype, new_dtype;
-	int nb_gen, bsize = 1024;
+	uint32 nb_gen, bsize = 1024;
 	char vis_name[512];
 	char * temp_buf;
 	uint32 num_attrib;
@@ -2576,7 +2577,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 		xraise (EN_MEM);
 
 	/* Read the old maximum dyn type */
-	if (idr_read_line(r_buffer, bsize) <= 0)
+	if (idr_read_line(r_buffer, bsize) == 0)
 		eise_io("Independent retrieve: unable to read number of different Eiffel types.");
 	if (sscanf(r_buffer,"%d\n", &old_count) != 1)
 		eise_io("Independent retrieve: unable to read number of different Eiffel types.");
@@ -2598,7 +2599,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 	spec_elm_size = (uint32 *) eif_rt_xmalloc (old_count * sizeof (uint32), C_T, GC_OFF);
 	if (spec_elm_size == (uint32 *)0)
 		xraise (EN_MEM);
-	if (idr_read_line(r_buffer, bsize) <= 0)
+	if (idr_read_line(r_buffer, bsize) == 0)
 		eise_io("Independent retrieve: unable to read OVERHEAD size.");
 	if (sscanf(r_buffer,"%d\n", &old_overhead) != 1)
 		eise_io("Independent retrieve: unable to read OVERHEAD size.");
@@ -2606,13 +2607,13 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 		xraise(EN_MEM);
 
 	/* Read the number of lines */
-	if (idr_read_line(r_buffer, bsize) <= 0)
+	if (idr_read_line(r_buffer, bsize) == 0)
 		eise_io("Independent retrieve: unable to read number of header lines.");
 	if (sscanf(r_buffer,"%d\n", &nb_lines) != 1)
 		eise_io("Independent retrieve: unable to read number of header lines.");
 
 	for(i=0; i<nb_lines; i++) {
-		if (idr_read_line(r_buffer, bsize) <= 0)
+		if (idr_read_line(r_buffer, bsize) == 0)
 			eise_io("Independent retrieve: unable to read current header line.");
 
 		temp_buf = r_buffer;
@@ -2627,7 +2628,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 			struct cecil_info *info;
 			int32 *t;
 			int matched;
-			int j, index;
+			uint32 j, index;
 			long *gtype, sgtype[MAX_GENERICS];
 			int32 *itype, sitype[MAX_GENERICS];
 	
@@ -2716,7 +2717,7 @@ rt_private void iread_header(EIF_CONTEXT_NOARG)
 				if (attrib_order == (int *)0)
 					xraise (EN_MEM);
 				for (; num_attrib > 0;) {
-					if (idr_read_line(r_buffer, bsize) <= 0) {
+					if (idr_read_line(r_buffer, bsize) == 0) {
 						eif_rt_xfree ((char *) attrib_order);
 						eise_io("Independent retrieve: unable to read attribute description.");
 					}
@@ -3229,7 +3230,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 		xraise (EN_MEM);
 
 	/* Read the old maximum dyn type */
-	if (idr_read_line (r_buffer, bsize) <= 0)
+	if (idr_read_line (r_buffer, bsize) == 0)
 		eise_io ("Independent retrieve: unable to read number of different Eiffel types.");
 	if (sscanf (r_buffer,"%d\n", &old_count) != 1)
 		eise_io ("Independent retrieve: unable to read number of different Eiffel types.");
@@ -3251,13 +3252,13 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 	spec_elm_size = (uint32 *) eif_rt_xmalloc (old_count * sizeof (uint32), C_T, GC_OFF);
 	if (spec_elm_size == NULL)
 		xraise (EN_MEM);
-	if (idr_read_line (r_buffer, bsize) <= 0)
+	if (idr_read_line (r_buffer, bsize) == 0)
 		eise_io ("Independent retrieve: unable to read OVERHEAD size.");
 	if (sscanf (r_buffer,"%d\n", &old_overhead) != 1)
 		eise_io ("Independent retrieve: unable to read OVERHEAD size.");
 
 	/* Read the number of lines */
-	if (idr_read_line (r_buffer, bsize) <= 0)
+	if (idr_read_line (r_buffer, bsize) == 0)
 		eise_io ("Independent retrieve: unable to read number of header lines.");
 	if (sscanf (r_buffer,"%d\n", &nb_lines) != 1)
 		eise_io ("Independent retrieve: unable to read number of header lines.");
@@ -3268,12 +3269,12 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 		attribute_detail *attributes = NULL;
 		int dtype, new_dtype = -1;
 		int num_attrib;
-		int nb_gen;
+		uint32 nb_gen;
 		char *temp_buf;
 		long j;
 		int m;
 
-		if (idr_read_line (r_buffer, bsize) <= 0)
+		if (idr_read_line (r_buffer, bsize) == 0)
 			eise_io ("Independent retrieve: unable to read current header line.");
 
 		temp_buf = r_buffer;
@@ -3308,7 +3309,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 		else {
 			/* Generic class */
 			struct cecil_info *info;
-			int j;
+			uint32 j;
 
 			/* Read meta-types */
 			conv->generics = (int32 *) eif_rt_xmalloc (nb_gen * sizeof (int32), C_T, GC_OFF);
@@ -3422,7 +3423,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 			conv->attributes = attributes;
 
 			for (j=num_attrib-1; j>=0; j--) {
-				if (idr_read_line (r_buffer, bsize) <= 0) {
+				if (idr_read_line (r_buffer, bsize) == 0) {
 					eif_rt_xfree ((char *) attributes);
 					eise_io ("Independent retrieve: unable to read attribute description.");
 				}
@@ -3712,11 +3713,8 @@ rt_private void rread_type (int type_index)
 	RT_GET_CONTEXT
 	char *vis_name;
 	type_descriptor *conv;
-	int16 nb_gen;
-	int16 num_attrib;
-	int16 name_length;
+	int16 nb_gen, num_attrib, name_length, dtype;
 	int32 flags;
-	int16 dtype;
 
 	ridr_multi_int16 (&name_length, 1);
 	vis_name = (char *) eif_rt_xmalloc (name_length + 1, C_T, GC_OFF);
@@ -3854,12 +3852,12 @@ rt_private void rread_header (EIF_CONTEXT_NOARG)
 	expop (&eif_stack);
 }
 
-rt_private int readline (register char *ptr, register int *maxlen)
+rt_private size_t readline (register char *ptr, size_t maxlen)
 {
-	int num_char, read_char;
+	size_t num_char, read_char;
 	char c;
 
-	for (num_char = 1; num_char < *maxlen; num_char ++) {
+	for (num_char = 1; num_char < maxlen; num_char ++) {
 		if ((read_char = buffer_read(&c, sizeof (char))) == (sizeof (char))) {
 			*ptr++ = c;
 			if (c == '\n') {
@@ -3868,14 +3866,14 @@ rt_private int readline (register char *ptr, register int *maxlen)
 		}
 		else if (read_char == 0) {
 			if (num_char == 1) {
-				return (0);
+				return 0;
 			}
 			else {
 				break;
 			}
 		}
 		else {
-			return (-1);
+			return 0;
 		}
 	}
 	*ptr = '\0';
@@ -3883,10 +3881,10 @@ rt_private int readline (register char *ptr, register int *maxlen)
 }
 		
 			
-rt_private int buffer_read (register char *ptr, int size)
+rt_private size_t buffer_read (register char *ptr, size_t size)
 {
 	RT_GET_CONTEXT
-	register int i;
+	size_t i;
  
 #if DEBUG & 2
 	printf ("Current position %d\n", current_position);
@@ -3910,7 +3908,7 @@ rt_private int buffer_read (register char *ptr, int size)
 	return (i);
 }
 
-rt_public int retrieve_read (void)
+rt_public size_t retrieve_read (void)
 {
 	RT_GET_CONTEXT
 	char * ptr = general_buffer;
@@ -3935,7 +3933,7 @@ rt_public int retrieve_read (void)
 	return (end_of_buffer);
 }
 
-rt_public int retrieve_read_with_compression (void)
+rt_public size_t retrieve_read_with_compression (void)
 {
 	RT_GET_CONTEXT
 	char* dcmps_in_ptr = (char *)0;
@@ -4793,7 +4791,7 @@ rt_private int char_read(char *pointer, int size)
 rt_private int stream_read(char *pointer, int size)
 {
 	RT_GET_CONTEXT
-	if (stream_buffer_size - stream_buffer_position < size) {
+	if (stream_buffer_size - stream_buffer_position < (size_t) size) {
 		stream_buffer_size += buffer_size;
 		stream_buffer = (char *) eif_realloc (stream_buffer, stream_buffer_size);
 	}	

@@ -20,6 +20,7 @@ doc:<file name="string.c" header="eif_string.h" version="$Id$" summary="External
 #include "eif_str.h"
 #include "rt_globals.h"
 #include "rt_constants.h"
+#include "rt_assert.h"
 #include <ctype.h>
 #include <string.h>
 
@@ -35,9 +36,9 @@ rt_private EIF_CHARACTER *make_string(EIF_CHARACTER *s, EIF_INTEGER length)
 	 */
 
 	
-	register1 int i;			/* To loop over the string */
-	register2 int l;			/* Length of string */
-	register3 EIF_CHARACTER c;	/* Character read from string */
+	int i;			/* To loop over the string */
+	int l;			/* Length of string */
+	EIF_CHARACTER c;	/* Character read from string */
 	
 #ifndef EIF_THREADS
 	static EIF_CHARACTER buffer [MAX_NUM_LEN + 1];
@@ -69,8 +70,8 @@ rt_public EIF_INTEGER str_left(register EIF_CHARACTER *str, EIF_INTEGER length)
 	 * Return the number of remaining characters.
 	 */
 
-	register2 int i;
-	register3 EIF_CHARACTER *s = str;
+	int i;
+	EIF_CHARACTER *s = str;
 
 	/* Find first non-space character starting from leftmost end */
 	for (i = 0; i < length; i++, s++)
@@ -95,8 +96,8 @@ rt_public void str_ljustify(register EIF_CHARACTER *str, EIF_INTEGER length, EIF
 	 * Pad the right side with spaces.
 	 */
 
-	register2 int i;
-	register3 EIF_CHARACTER *s = str;
+	int i;
+	EIF_CHARACTER *s = str;
 
 	/* Find first non-space character starting from leftmost end */
 	for (i = 0; i < length; i++, s++)
@@ -119,9 +120,9 @@ rt_public void str_rjustify(register EIF_CHARACTER *str, EIF_INTEGER length, EIF
 	 * Pad the left side with spaces.
 	 */
 
-	register2 int i;
-	register3 EIF_CHARACTER *s;
-	register4 EIF_CHARACTER *r;
+	int i;
+	EIF_CHARACTER *s;
+	EIF_CHARACTER *r;
 
 	for (s = str+length-1, i = length; i > 0; i--, s--)
 		if (!isspace(*s))
@@ -138,10 +139,10 @@ rt_public void str_cjustify(register EIF_CHARACTER *str, EIF_INTEGER length, EIF
 	 * Pad both sides with spaces.
 	 */
 
-	register2 int i;
-	register3 EIF_CHARACTER *s;
-	register4 EIF_CHARACTER *r;
-	register5 int offset;
+	int i;
+	EIF_CHARACTER *s;
+	EIF_CHARACTER *r;
+	int offset;
 
 	/* Set the right hand end to spaces */
 	str_ljustify (str, length, capacity);
@@ -165,14 +166,17 @@ rt_public EIF_INTEGER str_right(register EIF_CHARACTER *str, EIF_INTEGER length)
 	 * Return the new number of remaining characters.
 	 */
 
-	register2 EIF_CHARACTER *s;
+	EIF_CHARACTER *s;
+	rt_uint_ptr Result;
 
 	/* Find first non-space character starting from rightmost end */
 	for (s = str + length - 1; s >= str; s--)
 		if (!isspace(*s))
 			break;
 
-	return s >= str ? s - str + 1: 0;
+	Result = (s >= str ? s - str + 1: 0);
+	CHECK("Result not truncated", (EIF_INTEGER) Result == Result);
+	return (EIF_INTEGER) Result;
 }
 
 /*
@@ -193,9 +197,10 @@ rt_public void str_replace(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER s
 	 * 'str' arena to make the expansion, if necessary.
 	 */
 
-	register1 int i;		/* Length of replacement spot */
-	register2 EIF_CHARACTER *f;		/* From address for byte copy */
-	register3 EIF_CHARACTER *t;		/* To address for byte copy */
+	int i;		/* Length of replacement spot */
+	rt_uint_ptr j;
+	EIF_CHARACTER *f;		/* From address for byte copy */
+	EIF_CHARACTER *t;		/* To address for byte copy */
 
 	i = end - start + 1;	/* Characters in the replacement spot */
 
@@ -209,13 +214,14 @@ rt_public void str_replace(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER s
 		f = str + (string_length - 1);	/* Address of last character in string */
 		string_length += (new_len - i);	/* String gains that many characters */
 		t = str + (string_length - 1);	/* New address of last character */
-		for (i = f - (str + end - 1); i > 0; i--)
+		for (j = f - (str + end - 1); j > 0; j--) {
 			*t-- = *f--;
+		}
 	} else if (i > new_len) {
 		f = str + end;				/* First character after replacement spot */
 		t = str + (start - 1);		/* Address of first character replaced */
 		t += new_len;				/* Where first char after substring comes */
-		for (i = (str + string_length) - f; i > 0; i--)
+		for (j = (str + string_length) - f; j > 0; j--)
 			*t++ = *f++;
 	}
 
@@ -239,8 +245,8 @@ rt_public void str_insert(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER st
 	 */
 
 	register int i;			/* Number of character to shift */
-	register2 EIF_CHARACTER *f;		/* From address for byte copy */
-	register3 EIF_CHARACTER *t;		/* To address for byte copy */
+	EIF_CHARACTER *f;		/* From address for byte copy */
+	EIF_CHARACTER *t;		/* To address for byte copy */
 
 	/* First shift all the string from 'new_len' positions to the right,
 	 * starting at 'idx'.
@@ -270,8 +276,8 @@ rt_public void str_cprepend(EIF_CHARACTER *str, EIF_CHARACTER c, EIF_INTEGER l)
 {
 	/*  Prepend `c' to `str' */
 
-	register1 EIF_CHARACTER *f;	/* From */
-	register2 EIF_CHARACTER *t;	/* To */
+	EIF_CHARACTER *f;	/* From */
+	EIF_CHARACTER *t;	/* To */
 
 	for (f = str + l - 1, t = f + 1; l > 0; l--)
 		*t-- = *f--;
@@ -292,9 +298,9 @@ rt_public void str_rmchar(EIF_CHARACTER *str, EIF_INTEGER l, EIF_INTEGER i)
 	 * fill-in the hole.
 	 */
 
-	register1 int j;		/* Number of characters to shift */
-	register2 EIF_CHARACTER *f;		/* From address for copy */
-	register3 EIF_CHARACTER *t;		/* To address for copy */
+	rt_uint_ptr j;		/* Number of characters to shift */
+	EIF_CHARACTER *f;		/* From address for copy */
+	EIF_CHARACTER *t;		/* To address for copy */
 
 	f = str + i;			/* First character kept */
 	t = f - 1;				/* Shifting left from one EIF_CHARACTER */

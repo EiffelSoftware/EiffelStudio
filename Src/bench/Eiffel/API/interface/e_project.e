@@ -692,28 +692,7 @@ feature -- Output
 				end
 
 				create project_file.make_open_write (file_name)
-				project_file.putstring (info_flag_begin)
-				project_file.putstring (System.name)
-				project_file.new_line
-				project_file.putstring (version_number_tag)
-				project_file.putstring (":")
-				project_file.putstring (version_number)
-				project_file.new_line
-				project_file.putstring (precompilation_id_tag)
-				project_file.putstring (":")
-				project_file.putstring (Comp_system.compilation_id.out)
-				project_file.new_line
-				project_file.putstring (ace_file_path_tag)
-				project_file.putstring (":")
-				project_file.putstring (ace.file_name)
-				project_file.new_line
-				project_file.putstring (info_flag_end)
-				project_file.new_line
-
-					--| To store correctly the information after the project
-					--| header, we need to set the position, otherwise the
-					--| result is quite strange and won't be retrievable
-				project_file.go (project_file.count)
+				store_project_info (project_file)
 				compiler_store (project_file.descriptor, $Current)
 				project_file.close
 			else
@@ -746,6 +725,7 @@ feature -- Output
 				create precomp_info.make (Precompilation_directories, licensed)
 				create file.make (Precompilation_file_name)
 				file.open_write
+				store_project_info (file)
 				compiler_store (file.descriptor, $precomp_info)
 				file.close
 				set_file_status (read_only_status)
@@ -779,6 +759,36 @@ feature {APPLICATION_EXECUTION}
 		end
 
 feature {NONE} -- Retrieval
+
+	store_project_info (file: RAW_FILE) is
+			-- Store project specific info in project file `file'.
+		require
+			file_not_void: file /= Void
+			file_open_write: file.is_open_write
+		do
+			file.putstring (info_flag_begin)
+			file.putstring (System.name)
+			file.new_line
+			file.putstring (version_number_tag)
+			file.putstring (":")
+			file.putstring (version_number)
+			file.new_line
+			file.putstring (precompilation_id_tag)
+			file.putstring (":")
+			file.putstring (Comp_system.compilation_id.out)
+			file.new_line
+			file.putstring (ace_file_path_tag)
+			file.putstring (":")
+			file.putstring (ace.file_name)
+			file.new_line
+			file.putstring (info_flag_end)
+			file.new_line
+
+				--| To store correctly the information after the project
+				--| header, we need to set the position, otherwise the
+				--| result is quite strange and won't be retrievable
+			file.go (file.count)
+		end
 
 	retrieve is
 			-- Retrieve an existing Eiffel Project from `file.

@@ -88,6 +88,7 @@ feature
 			!!start_hidden.make (Widget_names.set_shown_name, Current, 
 					Temp_hidden_cmd, editor)
 
+			set_size (200, 200)
 			attach_left (title_label, 10)
 			attach_left (title, 100)
 			attach_right (title, 10)
@@ -100,7 +101,7 @@ feature
 			attach_top_widget (title, set_default_position_t, 15)
 			attach_top_widget (set_default_position_t, start_hidden, 15)
 			attach_top_widget (start_hidden, forbid_recomp, 15)
---			detach_bottom (forbid_recomp)
+			detach_bottom (forbid_recomp)
 			show_current
 		end
 

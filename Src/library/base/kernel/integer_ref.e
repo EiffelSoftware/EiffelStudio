@@ -265,7 +265,7 @@ feature -- Basic operations
 
 feature -- Bit operations
 
-	bit_and (i: INTEGER): like Current is
+	bit_and (i: INTEGER): INTEGER is
 			-- Bitwise and between Current' and `i'.
 		local
 			n, exp, src, res: INTEGER
@@ -283,8 +283,7 @@ feature -- Bit operations
 				exp := exp * 2
 				n := n + 1
 			end
-			create Result
-			Result.set_item (res)
+			Result := res
 		end
 
 feature -- Output

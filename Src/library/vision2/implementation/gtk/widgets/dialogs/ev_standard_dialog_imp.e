@@ -34,7 +34,6 @@ inherit
 			on_key_event,
 			initialize_client_area,
 			call_close_request_actions,
-			initialize,
 			has_wm_decorations
 		end
 
@@ -46,13 +45,6 @@ inherit
 		end
 	
 feature -- Initialization
-
-	initialize is
-			-- Initialize 'Current'
-		do
-			Precursor {EV_WINDOW_IMP}
-			set_size (400, 400)
-		end
 
 	initialize_client_area is
 			-- Initialize client area of Current

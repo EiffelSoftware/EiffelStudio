@@ -20,8 +20,7 @@ inherit
 			append as drawing_box_append
 		export
 			{NONE} all;
-			{ANY} enable_drawing, disable_drawing,
-			wipe_out
+			{ANY} enable_drawing, disable_drawing
 		redefine
 			execute
 		end;
@@ -66,7 +65,7 @@ feature
 			main_panel.cont_tree_t.set_toggle_off;
 			top_shell.hide
 		end;
-	
+
 feature -- Stone
 
 	data: CONTEXT;
@@ -442,8 +441,12 @@ feature -- Hole
 				if found then
 					a_composite_c ?= element.data;
 					if a_composite_c /= Void and then
-						not a_composite_c.is_in_a_group then
-						if not (context_type = Void) then
+						not a_composite_c.is_in_a_group and then
+						not a_composite_c.is_a_group
+					then
+						if context_type /= Void and then 
+							context_type.is_valid_parent (a_composite_c) 
+						then
 							new_context := context_type.create_context (a_composite_c);
 						end;
 					end
@@ -487,9 +490,12 @@ feature -- Hole
 				if found then
 					a_composite_c ?= element.data;
 					if a_composite_c /= Void and then
-						not a_composite_c.is_in_a_group 
+						not a_composite_c.is_in_a_group and then
+						not a_composite_c.is_a_group and then
+						context_stone.data.is_valid_parent (a_composite_c)
 					then
-						new_context := context_stone.data.create_context (a_composite_c);
+						new_context := context_stone.data.create_context 
+												(a_composite_c);
 					end
 				end
 			end;

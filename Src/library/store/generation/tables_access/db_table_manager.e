@@ -4,7 +4,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+class
 	DB_TABLE_MANAGER
 
 inherit
@@ -734,7 +734,7 @@ feature {NONE} -- Implementation
 			-- Columns to select from a selection statement.
 
 	order_by: STRING
-			-- SQL order by clause.
+			-- SQL 'order by' clause.
 
 	result_list: ARRAYED_LIST [DB_TABLE]
 			-- Last executed query result list.

@@ -19,6 +19,19 @@ inherit
 		redefine
 			implementation
 		end
+		
+feature {NONE} -- Initialization
+
+	make_with_text (a_text: STRING) is
+			-- Create `Current' and assign `a_text' to `text'
+		require
+			a_text_not_void: a_text /= Void
+		do
+			default_create
+			set_text (a_text)
+		ensure
+			text_assigned: text.is_equal (a_text) and text /= a_text
+		end
 
 feature -- Access
 

@@ -158,9 +158,12 @@ feature -- Store/Retrieve
 			end
 
 				-- Save combobox selections
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Msil_culture, 
-				culture_combo.selected_item.text.substring 
-					(1, culture_combo.selected_item.text.index_of (',', 1) - 1), False))
+			if not culture_combo.selected_item.text.substring 
+				(1, culture_combo.selected_item.text.index_of (',', 1) - 1).is_equal ("n/a") then
+					defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Msil_culture, 
+						culture_combo.selected_item.text.substring 
+						(1, culture_combo.selected_item.text.index_of (',', 1) - 1), False))
+			end			
 			defaults.extend (new_special_option_sd (feature 
 				{FREE_OPTION_SD}.Msil_assembly_compatibility, compatibility_combo.text, False))
 		end

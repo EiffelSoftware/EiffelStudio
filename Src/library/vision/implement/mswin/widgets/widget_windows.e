@@ -1533,7 +1533,7 @@ feature {NONE} -- Implementation
 			-- Object user interface widget associated with
 			-- current implementation
 		do
-			Result := widget_manager.screen_object_to_oui (screen_object)
+			Result := widget_manager.implementation_to_oui (Current)
 		end;
 
 	widget_index: INTEGER;

@@ -175,6 +175,32 @@ feature -- Access
 			Result := Ast_server.has (id)
 		end
 
+	generate_descriptors: BOOLEAN
+			-- Does `Current' have to generate its descriptor table?
+
+	must_be_recompiled: BOOLEAN
+			-- Does `Current' have to be regenerated at the C level?
+
+	set_must_be_recompiled (v: BOOLEAN) is
+			-- Make `Current' a class which needs to be regenerated at the C level.
+		do
+			must_be_recompiled := v
+		end
+
+	set_generate_descriptors (v: BOOLEAN) is
+			-- Make `Current' a class which needs to generate its descriptor table.
+		do
+			generate_descriptors := v
+		end
+
+	clear_compilation_flags is
+			-- Reset all the compilation flags `generate_descriptors' and
+			-- `must_be_recompiled'.
+		do
+			generate_descriptors := False
+			must_be_recompiled := False
+		end
+
 feature -- Action
 
 	build_ast: CLASS_AS is
@@ -350,6 +376,9 @@ end
 
 feature -- Conformance dependenies
 
+	conf_dep_table: ARRAY [BOOLEAN]
+			-- Table for quick lookup
+
 	conf_dep_classes : LINKED_LIST [CLASS_C]
 			-- Classes which depend on Current's conformance
 			-- to some other class.
@@ -359,14 +388,50 @@ feature -- Conformance dependenies
 			-- Do nothing if already there.
 		require
 			not_void : a_class /= Void
+		local
+			topid: INTEGER
+			loc_list: LINKED_LIST [CLASS_C]
+			loc_tab: ARRAY [BOOLEAN]
 		do
-			if conf_dep_classes = Void then
-				!!conf_dep_classes.make
+			topid := a_class.topological_id
+
+			if conf_dep_table = Void then
+				!! conf_dep_table.make (0, topid + 32)
+
+				if conf_dep_classes /= Void then
+					-- Topological ids have changed
+					-- Recreate lookup table
+
+					from
+						loc_list := conf_dep_classes
+						loc_tab := conf_dep_table
+						loc_list.start
+					until
+						loc_list.after
+					loop
+						loc_tab.force (True, loc_list.item.topological_id)
+						loc_list.forth
+					end
+				end
 			end
 
-			if not conf_dep_classes.has (a_class) then
-				conf_dep_classes.extend (a_class)
-				conf_dep_classes.forth
+			if conf_dep_classes = Void then
+				!! conf_dep_classes.make
+				!! conf_dep_table.make (0, topid + 32)
+			end
+
+			loc_list := conf_dep_classes
+			loc_tab := conf_dep_table
+
+			if topid > loc_tab.upper then
+					-- Table needs resizing
+				loc_tab.resize (0, topid + 32)
+			end
+
+			if not loc_tab.item (topid) then
+				loc_list.extend (a_class)
+				loc_list.forth
+				loc_tab.put (True, topid)
 			end
 		ensure
 			has_dep_class : has_dep_class (a_class)
@@ -380,6 +445,7 @@ feature -- Conformance dependenies
 		do
 			conf_dep_classes.start
 			conf_dep_classes.prune (a_class)
+			conf_dep_table.put (False, a_class.topological_id)
 		ensure
 			removed : not has_dep_class (a_class)
 		end
@@ -388,8 +454,16 @@ feature -- Conformance dependenies
 			-- Is `a_class' in `conf_dep_classes'?
 		require
 			not_void : a_class /= Void
+		local
+			topid: INTEGER
+			loc_tab: ARRAY [BOOLEAN]
 		do
-			Result := (conf_dep_classes /= Void) and then conf_dep_classes.has (a_class)
+			topid := a_class.topological_id
+			loc_tab := conf_dep_table
+
+			Result := (loc_tab /= Void)
+					and then (topid <= loc_tab.upper)
+					and then loc_tab.item (topid)
 		end
  
 feature -- Building conformance table
@@ -404,6 +478,7 @@ feature -- Building conformance table
 				-- Resize the table after the topological sort
 			conformance_table.resize (1, topological_id)
 			conformance_table.clear_all
+			conf_dep_table := Void
 			build_conformance_table_of (Current)
 		end
 
@@ -934,10 +1009,14 @@ end
 				melted_set.merge (melt_set)
 			end
 
-			if not melted_set.empty or else propagators.invariant_removed then
+			if not melted_set.empty then
 				System.melted_set.put (Current)
+				set_must_be_recompiled (True)
+				set_generate_descriptors (True)
+			elseif propagators.invariant_removed then
+				System.melted_set.put (Current)
+				set_generate_descriptors (True)
 			end
-
 		ensure
 			No_error: not Error_handler.has_error
 		rescue
@@ -1236,6 +1315,8 @@ feature -- Melting
 			end
 				-- Mark the class to be frozen later again.
 			System.melted_set.put (Current)
+			set_must_be_recompiled (True)
+			set_generate_descriptors (True)
 			pass4_controler.insert_new_class (Current)
 		end
 
@@ -1442,6 +1523,7 @@ io.error.new_line
 end
 
 						System.melted_set.put (Current)
+						set_generate_descriptors (True)
 					else
 debug ("SKELETON")
 io.error.putstring ("Skeleton has not changed:%N")
@@ -2387,11 +2469,14 @@ feature -- Order relation for inheritance and topological sort
 		require
 			good_argument: other /= Void
 			conformance_table_exists: conformance_table /= Void
+		local
+			otopid: INTEGER
 		do
-			Result := other.topological_id <= topological_id
+			otopid := other.topological_id
+			Result := otopid <= topological_id
 						-- A parent has necessarily a class id
 						-- less or equal than the one of the heir class
-					and then conformance_table.item (other.topological_id)
+					and then conformance_table.item (otopid)
 						-- Check conformance table
 		end
 
@@ -2401,25 +2486,27 @@ feature -- Order relation for inheritance and topological sort
 			good_argument: other /= Void
 			conformance_table_exists: conformance_table /= Void
 		local
-			dep_class : CLASS_C
-			must_add  : BOOLEAN
+			dep_class: CLASS_C
+			otopid: INTEGER
 		do
-			dep_class := System.current_class
-			must_add  := (dep_class /= Void) and then (dep_class /= Current)
-			must_add  := must_add and then (Current /= other)
-			must_add  := must_add and then not name_in_upper.is_equal ("NONE")
-			must_add  := must_add and then not other.name_in_upper.is_equal ("ANY")
+			Result := True
 
-			if must_add then
-				add_dep_class (dep_class)
-			end
-
-			Result := 	other.topological_id <= topological_id
+			if Current /= other then
+				otopid := other.topological_id
+				Result := otopid <= topological_id
 							-- A parent has necessarily a class id
 							-- less or equal than the one of the heir class
-						and then
+						and then conformance_table.item (otopid)
 							-- Check conformance table
-						conformance_table.item (other.topological_id)
+
+				if Result and then (not is_class_none) and then (not other.is_class_any) then
+					dep_class := System.current_class
+
+					if dep_class /= Void and then dep_class /= Current then
+						add_dep_class (dep_class)
+					end
+				end
+			end
 		end
 
 	valid_creation_procedure (fn: STRING): BOOLEAN is
@@ -3292,6 +3379,7 @@ end
 			!! melted_info.make (a_feature)
 			melted_set.put (melted_info)
 			System.melted_set.put (Current)
+			set_must_be_recompiled (True)
 		end
 
 feature -- Merging

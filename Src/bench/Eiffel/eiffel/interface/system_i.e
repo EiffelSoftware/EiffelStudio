@@ -461,6 +461,8 @@ end
 				-- not been generated. (we need a source file even if the
 				-- class is empty in terms of features written in it.).
 			melted_set.put (a_class)
+			a_class.set_must_be_recompiled (True)
+			a_class.set_generate_descriptors (True)
 		ensure
 			class_id_set: a_class.id /= Void
 		end
@@ -1370,6 +1372,7 @@ debug ("COUNT")
 end
 					deg_output.put_degree_1 (a_class, i)
 					a_class.melt_feature_and_descriptor_tables
+					a_class.set_generate_descriptors (False)
 					class_list.forth
 					i := i - 1
 				end
@@ -1902,6 +1905,8 @@ debug ("COUNT")
 end
 					a_class.generate_descriptor_tables
 					a_class.pass4
+						-- Reset the `generate_descriptors' and `must_be_recompiled' flags
+					a_class.clear_compilation_flags
 
 					i := i - 1
 					class_list.forth
@@ -1924,6 +1929,8 @@ debug ("COUNT")
 	io.error.putstring ("] ")
 end
 					a_class.generate_workbench_files
+						-- Reset the `generate_descriptors' and `must_be_recompiled' flags
+					a_class.clear_compilation_flags
 
 					i := i - 1
 					class_list.forth
@@ -1947,12 +1954,30 @@ end
 					if a_class /= Void then
 						deg_output.put_degree_minus_1 (a_class, i)
 						a_class.generate_descriptor_tables
-						a_class.pass4
+						if a_class.must_be_recompiled then
+							a_class.pass4
+							a_class.set_must_be_recompiled (False)
+						end
 					end
 					i := i - 1
 					class_list.forth
 				end
 			else
+				from
+					descriptors := m_desc_server.current_keys
+					i := 1
+					nb := descriptors.count
+				until
+					i > nb
+				loop
+					a_class := class_of_id (descriptors.item (i))
+					if a_class /= Void then
+						freeze_set.put (a_class)
+						a_class.set_generate_descriptors (True)
+					end
+					i := i + 1
+				end
+
 				from
 					class_list := freeze_set
 					i := class_list.count
@@ -1970,11 +1995,19 @@ debug ("COUNT")
 end
 					if a_class /= Void then
 						deg_output.put_degree_minus_1 (a_class, i)
-						a_class.generate_descriptor_tables
-						a_class.pass4
+						if a_class.generate_descriptors then
+							a_class.generate_descriptor_tables
+						end
+						
+						if a_class.must_be_recompiled then
+							a_class.pass4
+						end
+
 						if a_class.is_modifiable then
 							a_class.generate_feature_table
 						end
+							-- Reset the `generate_descriptors' and `must_be_recompiled' flags
+						a_class.clear_compilation_flags
 					end
 					i := i - 1
 					class_list.forth
@@ -2051,18 +2084,23 @@ end
 	update_valid_body_ids is
 		local
 			class_list: SEARCH_TABLE [CLASS_C]
+			a_class: CLASS_C
 		do
 				-- If we are not using any precompilation, ie classes.count = 1
 				-- which correspond to the classes.item (Normal_compilation),
 				-- we don't need to update the body ids at the first compilation
 			if not (First_compilation and then classes.ht_count = 1) then
 				from
-					class_list := melted_set
+					class_list := freeze_set
 					class_list.start
 				until
 					class_list.after
 				loop
-					class_list.item_for_iteration.update_valid_body_ids
+					a_class := class_list.item_for_iteration
+					if a_class.must_be_recompiled then
+						a_class.update_valid_body_ids
+						print ("%NUpdate body id")
+					end
 					class_list.forth
 				end
 			end

@@ -1,9 +1,9 @@
 OBJS =  server.o ser_list.o parameter.o ref_table.o concurrency.o print.o idle.o curerror.o subs.o stack.o sep_call.o sep_ser.o sep_obj.o
 WOBJS =  wserver.o ser_list.o parameter.o ref_table.o concurrency.o print.o idle.o curerror.o subs.o stack.o wsep_call.o sep_ser.o sep_obj.o
 TARGET = runtime.a wkbench.a
-CC = cc
-FLAG = -c  -DCONCURRENT_EIFFEL  -I../ -I../../
-WFLAG = -c  -DWORKBENCH -DCONCURRENT_EIFFEL  -I../  -I../../
+CC = gcc
+FLAG = -c  -ansi -DCONCURRENT_EIFFEL  -I../ -I../../
+WFLAG = -c  -ansi -DWORKBENCH -DCONCURRENT_EIFFEL  -I../  -I../../
 AR = ar rc
 RUNLIB = :
 LN = /usr/5bin/ln

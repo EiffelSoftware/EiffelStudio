@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 			new_object: GB_OBJECT
 		do
 			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
-			object_handler.add_object (object, new_object, object.layout_item.count + 1)
+			object_handler.add_object (object, new_object, object.children.count + 1)
 			modify_from_xml (element, new_object)
 		end
 		

@@ -532,6 +532,34 @@ feature {NONE} -- Implementation
 			tree_node_contents_alphabetical (tree_node_list)
 		end
 		
+	add_to_list_alphabetically (list: EV_LIST_ITEM_LIST; list_item: EV_LIST_ITEM) is
+			-- Add `tree_node' to `tree_node_list' at a position so that it is ordered alphabetically
+			-- by its `text'.
+		require
+			list_not_void: list /= Void
+			list_item_not_parented: list_item.parent = Void
+			list_item_has_text: not list_item.text.is_empty
+		local
+			l_text: STRING
+		do
+				-- Note that we always go from the final position to the start. This is because if we are building
+				-- a tree that is already in order we do not have to iterate all of the items  in a node to find
+				-- out that it needs to be the final node. This will optimize the loading in Build as it should
+				-- be saved in order.
+
+			l_text := list_item.text.as_lower
+			from
+				list.go_i_th (list.count)
+			until
+				list.off or else list.item.text.as_lower < l_text 
+			loop
+				list.back
+			end
+			list.put_right (list_item)
+		ensure
+			contained: list.has (list_item)
+		end
+		
 	tree_node_contents_alphabetical (tree_node_list: EV_TREE_NODE_LIST): BOOLEAN is
 			-- Are the `text' of all items contained ordered alphabetically?
 		require

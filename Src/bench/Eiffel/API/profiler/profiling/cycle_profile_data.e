@@ -56,7 +56,7 @@ feature {CYCLE_PROFILE_DATA} -- Attrbutes
 
 feature -- Adding
 
-	add_function (new_function: FUNCTION) is
+	add_function (new_function: LANGUAGE_FUNCTION) is
 			-- Add `new_function' to cycle.
 		require
 			valid_function: new_function /= Void;
@@ -82,7 +82,7 @@ feature -- Status report
 
 feature {NONE} -- Attributes
 
-	functions: LINKED_CIRCULAR [FUNCTION]
+	functions: LINKED_CIRCULAR [LANGUAGE_FUNCTION]
 		-- Functions in this cycle
 
 end -- class CYCLE

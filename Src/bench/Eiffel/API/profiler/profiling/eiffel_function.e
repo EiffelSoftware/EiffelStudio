@@ -12,7 +12,7 @@ inherit
 		undefine
 			out
 		end;
-	FUNCTION
+	LANGUAGE_FUNCTION
 		redefine
 			append_to
 		end

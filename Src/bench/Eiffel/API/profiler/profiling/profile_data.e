@@ -67,7 +67,7 @@ feature -- copy features
 
 feature -- Status report
 
-	function: FUNCTION is
+	function: LANGUAGE_FUNCTION is
 			-- The function where all is about.
 		deferred
 		end
@@ -89,7 +89,7 @@ feature -- attributes
 	percentage: REAL
 		-- Percentage of time spent in the function and the descendants.
 
-	int_function: FUNCTION
+	int_function: LANGUAGE_FUNCTION
 		-- The function where all is about.
 
 feature {PROFILE_SET} -- Spit Information (for debugging)

@@ -20,7 +20,7 @@ feature -- Creation
 
 feature -- Adding information
 
-	add_function_to_cycle (function: FUNCTION; number: INTEGER) is
+	add_function_to_cycle (function: LANGUAGE_FUNCTION; number: INTEGER) is
 			-- Add `function' to cycle with `number'.
 		require
 			valid_cycle: has_cycle (number)
@@ -155,7 +155,7 @@ feature -- All information
 
 feature {NONE} -- Attributes
 
-	cyclic_functions: LINKED_LIST [FUNCTION]
+	cyclic_functions: LINKED_LIST [LANGUAGE_FUNCTION]
 		-- All functions that are part of a cycle.
 		-- Containing Eiffel features and C functions.
 

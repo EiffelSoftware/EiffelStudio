@@ -796,7 +796,7 @@ feature {NONE} -- Attributes
 
 	is_cycle, is_eiffel, is_c: BOOLEAN;
 
-	cyclics: TWO_WAY_LIST [FUNCTION];
+	cyclics: TWO_WAY_LIST [LANGUAGE_FUNCTION];
 
 	Table_extension: STRING is "ftt";
 		-- Extension used to distinguish between compiler

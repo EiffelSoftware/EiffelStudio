@@ -8,7 +8,7 @@ indexing
 class CYCLE_FUNCTION
 
 inherit
-	FUNCTION
+	LANGUAGE_FUNCTION
 
 creation
 	make

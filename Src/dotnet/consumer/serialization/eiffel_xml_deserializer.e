@@ -36,8 +36,10 @@ feature -- Access
 
 feature -- Basic Operations
 
-	deserialize (path: STRING) is
+	deserialize (path: STRING; a_use_bin_if_avail: BOOLEAN) is
 			-- Deserialize object previously serialized in `path'.
+			-- Uses the binary deserialize if `a_use_bin_if_avail' is True and there is a binary
+			-- seralized version available.
 		require
 			non_void_path: path /= Void
 			valid_path: (create {RAW_FILE}.make (path)).exists
@@ -50,11 +52,14 @@ feature -- Basic Operations
 			l_so: SYSTEM_OBJECT
 		do
 			if not retried then
-				create bin_des
-				bin_des.deserialize (path)
-				if bin_des.deserialized_object /= Void then
-					deserialized_object := bin_des.deserialized_object
-				else
+				if a_use_bin_if_avail then
+					create bin_des
+					bin_des.deserialize (path)
+					if bin_des.deserialized_object /= Void then
+						deserialized_object := bin_des.deserialized_object
+					end					
+				end
+				if deserialized_object = Void then
 					if feature {SYSTEM_FILE}.exists (path.to_cil) then
 						last_error := No_error
 						last_error_context := Void
@@ -71,8 +76,10 @@ feature -- Basic Operations
 										-- ensure compatibility
 									read_next
 									deserialized_object := reference_from_xml
-									create ser
-									ser.serialize (deserialized_object, path)	
+									if a_use_bin_if_avail then
+										create ser
+										ser.serialize (deserialized_object, path)
+									end
 								else
 									last_error := Incompatible_xml_file_error
 									last_error_context := path.twin

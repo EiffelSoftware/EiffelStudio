@@ -5,12 +5,10 @@
 #===============================================================================
 
 all:
-	./gen_key_classes < keys.def
 	cd Clib ; finish_freezing -library
 	cd implementation/gtk/Clib ; finish_freezing -library
 
 clean:
-	make -C interface/events clean
 	make -C implementation/gtk/Clib clean
 
 #===============================================================================

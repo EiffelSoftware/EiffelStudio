@@ -776,8 +776,6 @@ feature {NONE} -- Attributes
 
 	profile_string: STRING
 
-	reals: ARRAY [REAL]
-
 	e_function: EIFFEL_FUNCTION
 
 	c_function: C_FUNCTION

@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 				-- Read key pair data from `a_file_name'
 			key_pair := read_key_pair_from_file (a_file_name)
 			
-			if not error_occurred then
+			if is_valid then
 					-- Read public key from `l_orig_key' key pair.
 				l_result := feature {MD_STRONG_NAME}.strong_name_get_public_key (default_pointer,
 					key_pair.item, key_pair.count, $l_ptr, $l_key_size)
@@ -62,12 +62,13 @@ feature -- Access
 	public_key_token: MANAGED_POINTER
 			-- Public key token of Current.
 
-	error_occurred: BOOLEAN
+	is_valid: BOOLEAN
 			-- Did an error occurred in `read_key_pair_from_file'?
 
 	public_key_token_string: STRING is
 			-- String representation of `public_key_token'.
 		require
+			key_is_valid: is_valid
 			public_key_token_not_void: public_key_token /= Void
 			public_key_token_not_empty: public_key_token.count > 0
 		local
@@ -99,7 +100,7 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 					-- Reset error condition
-				error_occurred := False
+				is_valid := True
 
 					-- Read key pair data from `a_file_name'.
 				create l_file.make_open_read (a_file_name)
@@ -108,7 +109,7 @@ feature {NONE} -- Implementation
 				l_file.close
 			else
 					-- We could not read key pair.
-				error_occurred := True
+				is_valid := False
 				
 					--| FIXME: Manu 05/21/2002: we need to generate an error.
 				check

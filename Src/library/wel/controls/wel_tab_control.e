@@ -96,8 +96,7 @@ feature -- Access
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-				Tcm_getitemcount, 0, 0)
+			Result := cwin_send_message_result (item,Tcm_getitemcount, 0, 0)
 		ensure
 			positive_result: Result >= 0
 		end
@@ -131,7 +130,7 @@ feature -- Access
 			-- Labeled index area of selected tab
 			-- (excluding the tab sheet)
 		do
-			!! Result.make (0, 0, 0, 0)
+			create Result.make (0, 0, 0, 0)
 			cwin_send_message (item, Tcm_getitemrect, current_selection, Result.to_integer)
 		end
 
@@ -142,8 +141,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			Result := cwin_send_message_result (item,
-				Tcm_getcursel, 0, 0)
+			Result := cwin_send_message_result (item, Tcm_getcursel, 0, 0)
 		ensure
 			consistent_result: Result /= -1 implies Result >= 0 and Result < count
 		end
@@ -157,7 +155,7 @@ feature -- Status report
 	get_item (index: INTEGER): WEL_TAB_CONTROL_ITEM is
 			-- Give the item at the zero-based index of tab.
 			-- As we must give a maximum size for the retrieving
-			-- of the label, we allow only 30 letters. If the
+			-- of the label, we allow only `buffer_size' letters. If the
 			-- label is longer, it will be cut.
 		require
 			exists: exists
@@ -199,6 +197,18 @@ feature -- Status setting
 		end			
 
 feature -- Element change
+
+	update_item (index: INTEGER; an_item: WEL_TAB_CONTROL_ITEM) is
+			-- Sets some or all of the `index'-th tab's attributes. Attributes values
+			-- are taken from `an_item'. See `an_item.mask' for selected attributes.
+		require
+			exists: exists
+			an_item_not_void: an_item /= Void
+			index_large_enough: index >= 0
+			index_small_enough: index <= count
+		do
+			cwin_send_message (item, Tcm_setitem, index, an_item.to_integer)
+		end
 
 	insert_item (index: INTEGER; an_item: WEL_TAB_CONTROL_ITEM) is
 			-- Insert `an_item' at the zero-based `index'.
@@ -464,7 +474,7 @@ feature {NONE} -- Implementation
 						+ Tcs_multiline
 		end
 
-	buffer_size: INTEGER is 30
+	buffer_size: INTEGER is 256
 			-- Windows text retrieval buffer size
 
   	on_wm_paint (wparam: INTEGER) is
@@ -475,7 +485,7 @@ feature {NONE} -- Implementation
 
 	dummy_tab_item: WEL_TAB_CONTROL_ITEM is
 		once
-			!! Result.make
+			create Result.make
 		end
 
 feature {NONE} -- Externals

@@ -29,6 +29,11 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_EVENT_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	INTERNAL
 		export
@@ -55,7 +60,6 @@ feature -- Access
 			
 			a_new_object := object_handler.build_object_from_string (xml_element.attribute_by_name (type_string).value)
 			object_handler.build_object (a_new_object)
-			object_handler.add_object_to_objects (a_new_object)
 			from
 				xml_element.start
 			until
@@ -72,10 +76,7 @@ feature -- Access
 						if current_name.is_equal (Internal_properties_string) then
 							a_new_object.modify_from_xml (current_element)
 						elseif current_name.is_equal (Events_string) then
-							-- I do not think we have to do anything when we find the internal properties
-							-- currently just a name, and as this is used for components, no name should be 
-							-- applied.
-							-- | FIXME, we do need to connect the events though.
+							extract_event_information (current_element, a_new_object)
 						else	
 							gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
 						
@@ -103,6 +104,7 @@ feature -- Access
 				end
 				xml_element.forth
 			end
+			deferred_builder.build
 			Result := a_new_object
 		end
 
@@ -121,7 +123,7 @@ feature -- Access
 			if is_component then
 				a_new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
 			else
-				a_new_object := object_handler.build_object_from_string_and_assign_id (element.attribute_by_name (type_string).value)
+				a_new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)--_and_assign_id (element.attribute_by_name (type_string).value)
 			end
 			
 			object_handler.add_object (object, a_new_object, object.children.count + 1)
@@ -165,6 +167,47 @@ feature -- Access
 
 							-- Call `modify_from_xml' which should modify the objects.
 						gb_ev_any.modify_from_xml (current_element)
+						end
+					end
+				end
+				element.forth
+			end
+		end
+		
+feature {NONE} -- Implementation
+
+	extract_event_information (element: XM_ELEMENT; object: GB_OBJECT) is
+			-- Generate event information into `object', from `element'.
+		require
+			element_not_void: element /= Void
+			element_type_is_events: element.name.is_equal (Events_string)
+		local
+			current_element: XM_ELEMENT
+			current_name: STRING
+			current_data_element: XM_CHARACTER_DATA
+			data: STRING
+		do
+			from
+				element.start
+			until
+				element.off
+			loop
+				current_element ?= element.item_for_iteration
+				if current_element /= Void then
+					current_name := current_element.name
+					if current_name.is_equal (Event_string) then
+						from
+							current_element.start
+						until
+							current_element.off
+						loop
+							current_data_element ?= current_element.item_for_iteration
+							if current_data_element /= Void then
+								data := current_data_element.content
+									-- Add data into `object'.
+								object.events.extend (string_to_action_sequence_info (data))
+							end
+							current_element.forth
 						end
 					end
 				end

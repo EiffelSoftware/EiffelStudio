@@ -88,6 +88,7 @@ fullrf %INSTALL_DIR\studio\wizards\new_projects\wizard.dsc
 fullrd %INSTALL_DIR\studio\wizards\new_projects\wizard
 remtrace C_library
 exprt -r %DEFAULT_CVS_TAG -d C_library Src/C_library
+fullrd C_library\.libs
 remtrace root
 exprt -l -r %DEFAULT_CVS_TAG Delivery/
 move Delivery\*.* . >>& %INSTALL_LOG
@@ -175,7 +176,7 @@ endiff
 
 iff not defined NO_DOCUMENTATION then
 	remtrace Recompile the documentation
-	make_documentation
+	call make_documentation
 	cdd %INIT_DIR
 	give_time_to compile the main documentation
 else

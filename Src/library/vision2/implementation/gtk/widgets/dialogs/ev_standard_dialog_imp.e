@@ -16,7 +16,9 @@ inherit
 	EV_GTK_WINDOW_IMP
 		redefine
 			interface,
-			has_wm_decorations
+			has_wm_decorations,
+			on_key_event,
+			initialize
 		end
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
@@ -24,6 +26,18 @@ inherit
 	EV_DIALOG_CONSTANTS
 		export
 			{NONE} all
+		end
+
+feature {NONE} -- Implementation
+
+	initialize is
+			-- Initialize dialog
+		local
+			on_key_event_intermediary_agent: PROCEDURE [EV_GTK_CALLBACK_MARSHAL, TUPLE [EV_KEY, STRING, BOOLEAN]]
+		do
+			Precursor {EV_GTK_WINDOW_IMP}	
+			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
+			real_signal_connect (event_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
 		end
 
 feature -- Access
@@ -107,8 +121,9 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
+			-- `a_key' has either been pressed or released
 		do
-			if a_key /= Void and then not a_key_press then
+			if a_key /= Void then
 				if a_key.code = app_implementation.Key_constants.key_escape then
 					on_cancel
 				else

@@ -16,6 +16,20 @@ inherit
 
 feature -- Pngs
 
+	Help_about_pixmap: EV_PIXMAP is
+			-- Full path name and file title of PNG used in the help about window.
+		local
+			file_name: FILE_NAME
+		once
+			create file_name.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
+			file_name.extend ("build")
+			file_name.extend ("bitmaps")
+			file_name.extend ("png")
+			file_name.extend ("bm_about.png")
+			create Result
+			Result.set_with_named_file (file_name)
+		end
+
 --	bm_About: EV_PIXMAP is
 --			-- Bitmap for the "About Dialog"
 --		once

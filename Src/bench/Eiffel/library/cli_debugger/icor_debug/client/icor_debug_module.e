@@ -30,7 +30,17 @@ feature {ICOR_EXPORTER} -- Access
 			Precursor
 			name := get_name
 			token := get_token
+			
 		end		
+
+	interface_md_import: like internal_md_import is
+			-- IMetaDataImport Interface current ICorDebugModule.
+		do
+			if internal_md_import = Void then
+				internal_md_import := get_md_import_interface
+			end
+			Result:= internal_md_import
+		end
 	
 feature {ICOR_EXPORTER} -- Access
 
@@ -49,7 +59,6 @@ feature {ICOR_EXPORTER} -- Access
 				Result := Result.substring (l_pos + 1, Result.count)			
 			end
 		end
-		
 	
 feature {ICOR_EXPORTER} -- Access
 
@@ -167,6 +176,18 @@ feature {ICOR_EXPORTER} -- Access
 			success: last_call_success = 0
 		end
 
+	get_md_import_interface: MD_IMPORT is
+			-- Return a meta data interface pointer that can be used to examine the
+			-- meta data for this module
+		local
+			p: POINTER
+		do
+			last_call_success := cpp_get_MetaDataImport_interface (item, $p)
+			if p /= default_pointer then
+				create Result.make_by_pointer (p)
+			end			
+		end
+		
 	get_token: INTEGER is
 		do
 			last_call_success := cpp_get_token (item, $Result)
@@ -298,6 +319,18 @@ feature {ICOR_EXPORTER} -- Implementation
 			"CreateBreakpoint"
 		end
 
+	frozen cpp_get_meta_data_interface (obj: POINTER; a_refiid: POINTER; a_result_p: POINTER): INTEGER is
+			--	 * Return a meta data interface pointer that can be used to examine the
+			--	 * meta data for this module.
+		external
+			"[
+				C++ ICorDebugModule signature(REFIID, IUnknown**): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"GetMetaDataInterface"
+		end	
+	
 	frozen cpp_get_token (obj: POINTER; a_p: POINTER): INTEGER is
 		external
 			"[
@@ -347,6 +380,26 @@ feature {ICOR_EXPORTER} -- Implementation
 		alias
 			"IsInMemory"
 		end	
+		
+feature {NONE} -- IID ...
 
+	cpp_get_MetaDataImport_interface (a_obj: POINTER; a_ptr: POINTER): INTEGER is
+			--	 * Return a MetaDataImport interface pointer that can be used to examine the
+			--	 * meta data for this module.
+		external
+			"[
+				C++ inline use "cli_headers.h"
+			]"
+		alias
+			"[
+   				((ICorDebugModule*)$a_obj)->GetMetaDataInterface(IID_IMetaDataImport,
+                                           (IUnknown**)$a_ptr)				
+			]"
+		end
+
+feature {NONE} -- Internal data
+
+	internal_md_import: MD_IMPORT
+		
 end -- class ICOR_DEBUG_MODULE
 

@@ -2,7 +2,9 @@ PROJ = wel_hook
 OBJS = $(PROJ).OBJ
 
 CFLAGS = $(CFLAGS) /DWIN32_LEAN_AND_MEAN /D_WIN32_WINNT=0x200
-LFLAGS =/DLL /SECTION:.shared,RWS 
+LFLAGS =/DLL /SECTION:.shared,RWS \
+        /EXPORT:hook_mouse /EXPORT:unhook_mouse
+
 
 LIBS =  /OUT:$(PROJ).dll kernel32.lib user32.lib advapi32.lib
 

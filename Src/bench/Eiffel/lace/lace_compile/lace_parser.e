@@ -31,7 +31,7 @@ feature
 			end
 		end;
 
-	parse_file (file_name: STRING) is
+	build_ast (file_name: STRING) is
 			-- Parse file named `file_name' and make built ast node
 			-- (void if failure) available through `ast'.
 		local
@@ -66,13 +66,12 @@ feature
 						copy_file.close;
 					end
 
-						-- Disable garbage collector before parsing
-					collection_off;
-
 					ptr := file.file_pointer;
-					ast := lp_file (ptr, $file_name);
 
+						-- Disable garbage collector before parsing
 						-- Enable garbage collector after parsing
+					collection_off;
+					ast := lp_file (ptr, $file_name);
 					collection_on;
 
 					file.close;
@@ -86,6 +85,64 @@ feature
 					file.close;
 				end;
 			end;
+		end;
+
+	parse_file (file_name: STRING) is
+			-- Parse file named `file_name' and make built ast node
+			-- (void if failure) available through `ast'.
+		local
+			retried: BOOLEAN
+			syntax_error: SYNTAX_ERROR
+		do
+			if not retried then
+				build_ast (file_name)
+			else
+				syntax_error ?= Error_handler.error_list.first;
+				check
+					syntax_error_not_void: syntax_error /= Void
+				end;
+				Error_handler.error_list.wipe_out;
+				set_last_syntax_error (syntax_error);
+				retried := False
+			end
+		rescue
+			if Rescue_status.is_error_exception then
+				Rescue_status.set_is_error_exception (False);
+				retried := True;
+				retry
+			end
+		end	
+
+feature -- Shared once
+
+	last_syntax_error: SYNTAX_ERROR is
+			-- Last syntax error generated after calling
+			-- routine `parse_ast'
+		do
+			Result := last_syntax_cell.item
+		end;
+
+	set_last_syntax_error (s: SYNTAX_ERROR) is
+			-- Put the last syntax error in last_syntax_error
+		do
+			last_syntax_cell.put (s)
+		end
+
+feature -- Removal
+
+	clear_syntax_error is
+			-- Clear the syntax error information.
+		do
+			last_syntax_cell.put (Void)
+		end;
+
+feature {NONE} -- Implementation
+
+	last_syntax_cell: CELL [SYNTAX_ERROR] is
+			-- Stored value of last generated syntax error generated calling
+			-- routine `parse_ast'
+		once
+			!! Result.put (Void)
 		end;
 
 feature {NONE} -- Externals

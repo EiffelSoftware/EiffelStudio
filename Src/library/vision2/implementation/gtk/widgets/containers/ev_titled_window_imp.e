@@ -26,6 +26,8 @@ inherit
 			screen_x,
 			screen_y
 		end
+		
+	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
 
 create
 	make

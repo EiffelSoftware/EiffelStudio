@@ -31,7 +31,7 @@ feature {NONE} -- Implementation
 
 	is_encapsulated_call: BOOLEAN
 			-- Is Current a feature encapsulation of something that we usually do
-			-- not generate (eg attribute)?
+			-- not generate (eg attribute or constant)?
 
 	internal_execution_unit (class_type: CLASS_TYPE): EXECUTION_UNIT is
 			-- Create new EXECUTION_UNIT corresponding to Current type.

@@ -105,18 +105,23 @@ feature -- Basic operations
 				l_assembly_path.append_character ('\')
 				l_assembly_path.append (get_assembly_name (a_args.name))
 				l_assembly_path.append (".dll")
-				Result := load_assembly (l_assembly_path)
-				if Result /= Void and not is_good_match (Result, a_args.name) then
-					Result := Void
+				if (create {RAW_FILE}.make (l_assembly_path)).exists then
+					Result := load_assembly (l_assembly_path)
+					if Result /= Void and then not is_good_match (Result, a_args.name) then
+						Result := Void
+					end	
 				end
 				if Result = Void then
 					l_assembly_path.keep_head (l_assembly_path.count - 3)
 					l_assembly_path.append ("exe")
-					Result := load_assembly (l_assembly_path)
-					if Result /= Void and not is_good_match (Result, a_args.name) then
-						Result := Void
+					if (create {RAW_FILE}.make (l_assembly_path)).exists then
+						Result := load_assembly (l_assembly_path)
+						if Result /= Void and then not is_good_match (Result, a_args.name) then
+							Result := Void
+						end
 					end
 				end
+				resolver_paths.forth
 			end
 		end
 		

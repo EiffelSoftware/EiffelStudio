@@ -98,6 +98,20 @@ feature
 						-- Simple type objects are metamorphosed
 					basic_i ?= actual_type;	
 					ba.append (Bc_metamorphose);
+				elseif not actual_type.same_as (target_type) then
+						-- A conversion integer => real, integer => double
+						-- or real => double is needed
+					if target_type.is_double then
+						if actual_type.is_long or else
+							actual_type.is_float
+						then
+							ba.append (Bc_cast_double)
+						end
+					elseif target_type.is_float and then
+						actual_type.is_long
+					then
+						ba.append (Bc_cast_float)
+					end
 				end;
 				expressions.back;
 			end;

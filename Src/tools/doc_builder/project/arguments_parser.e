@@ -110,6 +110,9 @@ feature -- Commands
 					else
 						args_ok := False
 					end
+				elseif count = Argument_count then
+						-- Last argument
+					project_file := argument (count)
 				elseif equal (first_char, "/") then
 					flag := argument (count).substring (2, argument (count).count);
 					if equal (flag, "xml2html") then
@@ -132,10 +135,7 @@ feature -- Commands
 						output_filter_type := op.envision_flag
 					elseif equal (flag, "all") then
 						output_filter_type := op.unfiltered_flag
-					end
-				elseif count = Argument_count then
-						-- Last argument
-					project_file := argument (count)			
+					end							
 				end
 				count := count + 1
 			end
@@ -156,7 +156,7 @@ feature -- Commands
 			io.putstring ("			/studio 	EiffelStudio specific content%N")
 			io.putstring ("			/envision	ENViSioN! specific content%N")
 			io.putstring ("			/all 		Unfiltered content (default)%N")
-			io.putstring ("	-t [/web /mshtml /vsip]%N")
+			io.putstring ("	-t [/web_tree /web_simple /mshtml /vsip]%N")
 			io.putstring ("		Types of Help generation:%N")
 			io.putstring ("			/web_tree 		HTML based help (tree toc)%N")
 			io.putstring ("			/web_simple 		HTML based help (simple toc)%N")

@@ -1,10 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description:
-		" EiffelVision window. Display a window that allows only one%
-		% child. Mswindows implementation."
+	description: "Eiffel Vision titled window. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -16,18 +13,13 @@ inherit
 		undefine
 			propagate_foreground_color,
 			propagate_background_color,
-			--|FIXME See last_call_was_destroy from
-			--|EV_WINDOW_IMP to see why this is
-			--|undefined below.
 			last_call_was_destroy
 		redefine
-			interface,
-			initialize
+			interface
 		end
 
 	EV_WINDOW_IMP
 		rename
-			-- Rename because the postconditions crashes.
 			maximize as wel_maximize,
 			minimize as wel_minimize
 		redefine
@@ -41,9 +33,7 @@ inherit
 			compute_minimum_size,
 			restore,
 			interface,
-			initialize,
-			on_accelerator_command,
-			destroy
+			on_accelerator_command
 		end
 
 create
@@ -52,50 +42,12 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create a window. Window does not have any
-			-- parents
-		local
-			e: EV_ENVIRONMENT
+			-- Create titled window.
 		do
 			base_make (an_interface)
 			title := ""
 			make_top ("EV_TITLED_WINDOW")
 		end
-
-	initialize is
-			-- Initialize Window
-		local
-			app_imp: EV_APPLICATION_IMP
-		do
-			{EV_WINDOW_IMP} Precursor
-			--| FIXME This should be in EV_WINDOW_IMP:
-			app_imp ?= (create {EV_ENVIRONMENT}).application.implementation
-			app_imp.add_root_window (interface)
-			destroy_feature := interface~destroy
-			interface.close_actions.extend (destroy_feature)
-			is_initialized := True
-			create accel_list.make (10)
-		end
-
-	destroy is
-			-- Destroy `Current'.
-		do
-			if not on_wm_close_executed then
-				-- If on_wm_close has not been called
-				--| See comment for on_wm_close_executed in class
-				--| EV_WINDOW_IMP
-				interface.close_actions.prune_all (destroy_feature)
-					-- Remove `destroy_feature' from
-					-- `interface.close_actions'."
-				interface.close_actions.call ([])
-					-- Call `interface.close_actions'
-			end
-			{EV_WINDOW_IMP} Precursor
-		end
-
-	destroy_feature: PROCEDURE [EV_TITLED_WINDOW, TUPLE []]
-		--| FIXME Rename to `destroy_agent'.
-		-- Holds the feature `interface.destroy'
 
 feature {EV_TITLED_WINDOW, EV_APPLICATION_IMP} -- Accelerators
 
@@ -176,7 +128,7 @@ feature {EV_TITLED_WINDOW, EV_APPLICATION_IMP} -- Accelerators
 			create_accelerators
 		end
 
-feature  -- Access
+feature -- Access
 
 	title: STRING
 			-- Application name to be displayed by
@@ -378,7 +330,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
-		-- Set with the option `Ws_clipchildren' to avoid flashing.
+			-- Set with the option `Ws_clipchildren' to avoid flashing.
 		do
 			Result := Ws_overlapped + Ws_dlgframe + Ws_thickframe
 					+ Ws_clipchildren + Ws_clipsiblings
@@ -448,27 +400,31 @@ feature {NONE} -- Implementation
 
 end -- class EV_TITLED_WINDOW_IMP
 
---|----------------------------------------------------------------
---| EiffelVision: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
---| All rights reserved. Duplication and distribution prohibited.
---| May be used only with ISE Eiffel, under terms of user license. 
---| Contact ISE for any other use.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.62  2000/04/19 00:44:24  brendel
+--| Revised. Moved some stuff into EV_WINDOW_IMP. Will also be needed for
+--| accelerator features.
+--|
 --| Revision 1.61  2000/04/13 19:40:26  brendel
 --| Added 2 FIXME's and removed 1.
 --|

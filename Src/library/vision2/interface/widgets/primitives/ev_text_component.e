@@ -45,6 +45,7 @@ feature -- Access
 			-- Currently selected text.
 		require
 			not_destroyed: not is_destroyed
+			has_selection: has_selection
 		do
 			Result := implementation.selected_text
 		ensure

@@ -626,9 +626,10 @@ feature {NONE} -- Translation
 			dir: STRING -- the directory
 			filename: STRING -- the filename of the sub makefile
 			number: INTEGER -- the number of the Eobj file
-			is_emain, is_E1_makefile: BOOLEAN
+			is_emain, is_E1_makefile, is_E1_structure: BOOLEAN
 			emain_line: STRING
 			min: INTEGER
+			dependency: STRING
 		do
 			debug ("progress")
 				io.put_string ("%Tdependencies%N")
@@ -648,6 +649,9 @@ feature {NONE} -- Translation
 					end
 				end
 
+				is_E1_makefile := False
+				is_E1_structure := False
+
 				-- get directory name and filename
 				dir_sep_pos := lastline.index_of (directory_separator.item (1), 1)
 				if dir_sep_pos = 0 then
@@ -657,7 +661,8 @@ feature {NONE} -- Translation
 				dir := lastline.substring (1, dir_sep_pos-1)
 				min := (lastline.index_of ('.', 1) - 1).min (lastline.index_of (':', 1) - 1)
 				filename := lastline.substring (dir_sep_pos+1, min)
-
+				dependency := lastline.substring (lastline.index_of (':', 1) + 1, lastline.count)
+				subst_dir_sep (dependency)
 
 				if filename.is_equal (options.get_string ("emain_text", Void)) then
 					makefile.put_string (dir)
@@ -684,6 +689,8 @@ feature {NONE} -- Translation
 					end
 				elseif filename.is_equal ("Makefile") and then dir.is_equal ("E1") then
 					is_E1_makefile := True
+				elseif filename.is_equal ("estructure") and then dir.is_equal ("E1") then
+					is_E1_structure := True
 				else
 					makefile.put_string (dir)
 					makefile.put_string (directory_separator)
@@ -699,10 +706,24 @@ feature {NONE} -- Translation
 					makefile.put_string (filename)
 					makefile.put_string (".")
 					makefile.put_string (options.get_string ("intermediate_file_ext", Void))
-					makefile.put_string (": Makefile%N")
+					makefile.put_string (":")
+					makefile.put_string (dependency)
+					makefile.put_new_line
 				end
 
-				if not is_E1_makefile then
+				if is_E1_makefile then
+					read_next
+				elseif is_E1_structure then
+					subst_dir_sep (lastline)
+					makefile.put_string (lastline)
+					makefile.put_new_line
+					read_next
+					lastline := makefile_sh.last_string.twin
+					subst_dir_sep (lastline)
+					makefile.put_string (lastline)
+					makefile.put_new_line
+					makefile.put_new_line
+				else
 					makefile.put_string ("%T")
 					makefile.put_string (options.get_string ("cd", Void))
 					makefile.put_string (" ")
@@ -741,14 +762,10 @@ feature {NONE} -- Translation
 					end
 
 					makefile.put_string ("%N%N")
-				else
-					is_E1_makefile := False
-					read_next
 				end
 
 				read_next
 				read_next
-	
 				lastline := makefile_sh.last_string.twin
 			end
 			

@@ -108,7 +108,7 @@ feature
 			feature_name: STRING;
 			f1, f2: FEATURE_I;
 			depend_unit: DEPEND_UNIT;
-			ext_i: EXTERNAL_I
+			ext_i, other_ext_i: EXTERNAL_I
 		do
 			from
 				start;
@@ -126,11 +126,6 @@ debug ("ACTIVITY")
 	io.error.putstring (" is not in the table.%N");
 end;
 					if f1.is_external then
-							-- FIXME
-							-- FIXME
-							-- FIXME
-							-- FIXME
-							--| TEMPORARY SOLUTION FOR 3.2.8 (3.3 beta)
 						ext_i ?= f1;
 						if ext_i.encapsulated then
 							System.set_freeze (True)
@@ -148,8 +143,16 @@ debug ("ACTIVITY")
 	io.error.putstring (" is not equiv.%N");
 end;
 						if f1.is_external then
-								-- The external definition has changed
-							System.set_freeze (True)
+								-- `f1' and `f2' can be "not equiv" because of the export status
+								-- We need to freeze only if the information specific to EXTERNAL_I
+								-- is not equiv
+							ext_i ?= f1;
+							if
+								not ext_i.freezing_equiv (f2)
+							then
+									-- The external definition has changed
+								System.set_freeze (True)
+							end
 						end
 						Result := False;
 						!!depend_unit.make (feat_tbl_id, f2.feature_id);;

@@ -159,11 +159,11 @@ feature -- Basic operations
 			if doc_string /= Void then
 				description.append (doc_string)
 			end
-			if not description.is_empty and then not (description.item (description.count) = '.') then
-				description.append_character ('.')
-			end
-			if help_file /= Void then
-				description.append (" Help file: ")
+			if help_file /= Void and then not help_file.is_empty then
+				if not description.is_empty and then not (description.item (description.count) = '.') then
+					description.append_character ('.')
+				end
+				description.append (" See: ")
 				description.append (help_file)
 			end
 		ensure

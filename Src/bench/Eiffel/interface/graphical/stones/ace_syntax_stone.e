@@ -7,7 +7,8 @@ inherit
 	SYNTAX_STONE
 		redefine
 			stone_type, stone_name
-		end
+		end;
+	INTERFACE_W
 
 creation
 
@@ -15,8 +16,14 @@ creation
 
 feature
 
-	stone_type: INTEGER is do Result := System_type end;
+	stone_type: INTEGER is 
+		do 
+			Result := System_type 
+		end;
 
-	stone_name: STRING is do Result := l_System end;
+	stone_name: STRING is 
+		do 
+			Result := l_System 
+		end;
 
 end

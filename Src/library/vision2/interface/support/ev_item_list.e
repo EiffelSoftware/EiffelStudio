@@ -148,6 +148,7 @@ feature -- Element change
 		ensure
 			item_inserted: has (v)
 			new_count: count = old count + 1
+			item_parent_is_current: v.parent = Current
 		end
 
 	replace (v: G) is
@@ -161,6 +162,7 @@ feature -- Element change
 			implementation.replace (v)
 		ensure
 			item_replaced: (not old has (v)) or old item = v implies item = v
+			item_parent_is_current: v.parent = Current
 		end
 
 	put_front (v: G) is
@@ -176,6 +178,7 @@ feature -- Element change
 			item_inserted: has (v)
 			new_count: count = old count + 1
 			item_inserted: first = v
+			item_parent_is_current: v.parent = Current
 		end
 
 	put_right (v: G) is
@@ -193,6 +196,7 @@ feature -- Element change
 			item_inserted: has (v)
 	 		new_count: count = old count + 1
 	 		same_index: index = old index
+			item_parent_is_current: v.parent = Current
 		end
 
 feature -- Removal
@@ -200,9 +204,11 @@ feature -- Removal
 	prune (v: G) is
 			-- Remove `v' if present.
 		do
-			if has (v) then
+			if v.parent = Current then
 				implementation.prune (v)
 			end
+		ensure then
+			removed_item_parent_is_void: old has (v) implies v.parent = Void
 		end
 
 	remove is
@@ -211,11 +217,12 @@ feature -- Removal
 			-- (or `after' if no right neighbor).
 		do
 			implementation.remove
+		ensure then
+			removed_item_parent_is_void: old item /= Void implies (old item).parent = Void
 		end
 
 	remove_left is
 			-- Remove item to the left of cursor position.
-			-- Do not move cursor.
 		do
 			implementation.remove_left
 		end
@@ -375,6 +382,9 @@ end -- class EV_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/08 21:44:13  king
+--| Added parent set post-conditions
+--|
 --| Revision 1.5  2000/03/03 22:04:25  king
 --| Implemented start to set index to 1
 --|

@@ -32,7 +32,6 @@ inherit
 			{GB_WINDOW_SELECTOR} store_layout_constructor, restore_layout_constructor, state_tree
 		end
 		
-	
 create
 	make_with_type,
 	make_with_type_and_object
@@ -269,6 +268,14 @@ feature -- Access
 			end
 		end
 		
+	update_representations is
+			-- Update any representations to ensure that they are consistent with `Current'.
+			-- Currently, only updates the layout items, but performs this recursively.
+		do
+			Object_handler.recursive_do_all (Current, agent expand_layout_item)
+		end
+		
+		
 feature {GB_WINDOW_SELECTOR_ITEM} -- Implementation
 		
 	set_window_selector_item (a_window_selector_item: GB_WINDOW_SELECTOR_ITEM) is
@@ -308,6 +315,16 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			create display_object.make_as_root_window (display_win)
 		ensure
 			window_set: display_object.child = display_win
+		end
+		
+feature {NONE} -- Implementation
+
+	expand_layout_item (an_object: GB_OBJECT) is
+			-- If `an_object' is expanded, expand `layout_item' of `an_object'.
+		do
+			if an_object.is_expanded then
+				an_object.layout_item.expand				
+			end
 		end
 
 end -- class GB_TITLED_WINDOW_OBJECT

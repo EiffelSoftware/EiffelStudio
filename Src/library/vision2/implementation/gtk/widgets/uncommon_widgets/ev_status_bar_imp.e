@@ -17,7 +17,9 @@ inherit
 		rename
 			make as wrong_make
 		redefine
-			parent_imp
+			parent_imp,
+			set_foreground_color,
+			set_background_color
 		end
 
 creation
@@ -87,6 +89,46 @@ feature -- Element change
 				ev_children.last.set_width (-1)
 			else
 				ev_children.remove
+			end
+		end
+
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		local
+			array: LINKED_LIST [EV_STATUS_BAR_ITEM_IMP]
+			child: EV_STATUS_BAR_ITEM_IMP
+		do
+			c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
+
+			from
+				array := ev_children
+				array.start
+			until
+				array.after
+			loop
+				child := array.item
+				child.set_background_color (color)
+				array.forth
+			end
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		local
+			array: LINKED_LIST [EV_STATUS_BAR_ITEM_IMP]
+			child: EV_STATUS_BAR_ITEM_IMP
+		do
+			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
+
+			from
+				array := ev_children
+				array.start
+			until
+				array.after
+			loop
+				child := array.item
+				child.set_foreground_color (color)
+				array.forth
 			end
 		end
 

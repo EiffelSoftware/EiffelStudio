@@ -21,37 +21,8 @@ feature {EV_PIXMAP_I} -- Access
 
 	save (raw_image_data: EV_RAW_IMAGE_DATA; a_filename: FILE_NAME) is
 			-- Save `raw_image_data' to file `a_filename' in PNG format.
-		local
-			a_fn, char_array: ANY
-			a_width, a_height: INTEGER
 		do
-			a_fn := a_filename.to_c
-			char_array := raw_image_data.to_c
-			if scale_height /= 0 then
-				a_height := scale_height
-			else
-				a_height := raw_image_data.height
-			end
-
-			if scale_width /= 0 then
-				a_width := scale_width
-			else
-				a_width := raw_image_data.width
-			end
-
-			c_ev_save_png ($char_array, $a_fn, raw_image_data.width, raw_image_data.height, a_width, a_height, color_mode)
-		end
-
-feature {NONE} -- External
-
-	c_ev_save_png (char_array, path: POINTER;
-			array_width,
-			array_height,
-			a_scale_width,
-			a_scale_height,
-			a_colormode: INTEGER) is
-		external
-			"C signature (char *, char *, int, int, int, int, int) use %"load_pixmap.h%""
+			-- Implemented in pixmap implementation
 		end
 
 end -- class EV_PNG_FORMAT

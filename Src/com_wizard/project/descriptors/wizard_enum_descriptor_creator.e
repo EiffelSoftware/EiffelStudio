@@ -35,6 +35,7 @@ feature -- Basic operations
 			name := clone (a_documentation.name)
 			description := clone (a_documentation.doc_string)
 			type_kind := a_type_info.type_attr.type_kind
+			create guid.make_from_guid (a_type_info.type_attr.guid)
 
 			tmp_type_lib := a_type_info.containing_type_lib
 			tmp_guid := tmp_type_lib.library_attributes.guid

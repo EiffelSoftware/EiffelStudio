@@ -51,10 +51,22 @@ feature {NONE} -- Initialization
 			-- Initialize some stuff useless to separators.
 		do
 			pixmapable_imp_initialize
+			initialize_pixmap_box
 			{EV_ITEM_IMP} Precursor
 		--| FIXME sementation violation?
 		--| 	set_minimum_width (12)
 			is_initialized := True
+		end
+
+	initialize_pixmap_box is
+			-- Give parent to pixmap item box.
+			--| This is just to satisfy pixmapable contracts.
+		local
+			box: POINTER
+		do
+			box := C.gtk_hbox_new (False, 0)
+			C.gtk_widget_hide (box)
+			C.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -84,6 +96,10 @@ end -- class EV_TOOL_BAR_SEPARATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/12 21:52:05  brendel
+--| Added to initialization: parent for pixmap box (to satisfy pixmapable
+--| invariants).
+--|
 --| Revision 1.13  2000/04/12 17:58:21  brendel
 --| Revised.
 --| Attempt to fix segmentation violation unsuccesful.

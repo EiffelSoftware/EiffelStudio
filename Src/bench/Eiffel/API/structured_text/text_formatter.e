@@ -66,7 +66,14 @@ feature {TEXT_ITEM} -- Implementation
 		end;
 
 	process_class_name_text (text: CLASS_NAME_TEXT) is
-			-- Process class name text `t'.
+			-- Process class name text `text'.
+		require
+			text_not_void: text /= Void
+		deferred
+		end;
+
+	process_cluster_name_text (text: CLUSTER_NAME_TEXT) is
+			-- Process cluster name text `text'.
 		require
 			text_not_void: text /= Void
 		deferred

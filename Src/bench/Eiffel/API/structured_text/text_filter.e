@@ -71,13 +71,16 @@ feature -- Access
 	image: STRING;
 			-- Filtered output text
 
-    Default_unknown_name: FILE_NAME is
+	file_name: FILE_NAME;
+			-- File name for output of Current filter
+
+	Default_unknown_name: FILE_NAME is
 			-- *** FIXME to be added to eiffel_env
-        once
-            !! Result.make_from_string (Eiffel3_dir_name);
-            Result.extend_from_array (<<"bench", "help", "defaults">>);
-            Result.set_file_name ("unknown");
-        end;
+		once
+			!! Result.make_from_string (Eiffel3_dir_name);
+			Result.extend_from_array (<<"bench", "help", "defaults">>);
+			Result.set_file_name ("unknown");
+		end;
 
 	file_suffix: STRING is
 			-- Suffix of the file name where the filtered output text is stored;
@@ -87,6 +90,16 @@ feature -- Access
 				Result := format_table.item (f_Suffix).item1
 			end
 		end;
+
+feature -- Status setting
+
+	set_file_name (f: like file_name) is
+			-- Set `file_name' to `f'. 
+		do
+			file_name := f
+		ensure
+			set: file_name = f
+		end
 
 feature -- Text processing
 
@@ -205,6 +218,83 @@ feature {NONE} -- Text processing
 			print_escaped_text (text.image_without_quotes);
 		end;
 
+	process_cluster_name_text (text: CLUSTER_NAME_TEXT) is
+		local
+			format: CELL2 [STRING, STRING];
+			last_character, current_character: CHARACTER;
+			format_item: STRING;
+			d_name: FILE_NAME;
+			i, format_item_count: INTEGER
+		do
+			if format_table.has (f_Class_name) then
+				format := format_table.item (f_Class_name);
+				from
+					format_item := format.item1;
+					format_item_count := format_item.count;
+					i := 1
+				until
+					i > format_item_count
+				loop
+					current_character := format_item.item (i);
+					if current_character = '$' then
+						if last_character = '%%' then
+							image.extend ('$')
+						else
+							d_name := text.cluster_i.document_file_name;
+							if d_name = Void then
+								image.append (Default_unknown_name)
+							else
+								image.append (relative_file_name (d_name))
+							end
+						end
+					else
+						if last_character = '%%' then
+							image.extend ('%%')
+						end;
+						image.extend (current_character)
+					end;
+					last_character := current_character;
+					i := i + 1
+				end;
+				if format.item2 /= Void then
+					print_escaped_text (text.image);
+					from
+						format_item := format.item2;
+						format_item_count := format_item.count;
+						last_character := '%U';
+						i := 1
+					until
+						i > format_item_count
+					loop
+						current_character := format_item.item (i);
+						if current_character = '$' then
+							if last_character = '%%' then
+								image.extend ('$')
+							else
+								if d_name = Void then
+									d_name := text.cluster_i.document_file_name;
+								end;
+								if d_name = Void then	
+									image.append (Default_unknown_name)
+								else
+									image.append (relative_file_name (d_name))
+								end
+							end
+						else
+							if last_character = '%%' then
+								image.extend ('%%')
+							end;
+							image.extend (current_character)
+						end;
+						last_character := current_character;
+						i := i + 1
+					end
+				end
+			else
+				print_escaped_text (text.image)
+			end
+		end;
+
 	process_class_name_text (text: CLASS_NAME_TEXT) is
 		local
 			format: CELL2 [STRING, STRING];
@@ -231,7 +321,7 @@ feature {NONE} -- Text processing
 							if d_name = Void then
 								image.append (Default_unknown_name)
 							else
-								image.append (d_name)
+								image.append (relative_file_name (d_name))
 							end
 						end
 					else
@@ -264,7 +354,7 @@ feature {NONE} -- Text processing
 								if d_name = Void then	
 									image.append (Default_unknown_name)
 								else
-									image.append (d_name)
+									image.append (relative_file_name (d_name))
 								end
 							end
 						else
@@ -446,6 +536,17 @@ feature {NONE} -- Text processing
 	process_before_class (text: BEFORE_CLASS) is
 			-- Process before class `t'.
 		do
+		end;
+
+feature {NONE} -- Implementation
+
+	relative_file_name (f_name: FILE_NAME): FILE_NAME is
+			-- Relative file name to `f_name' in relation to `file_name'
+			-- FIXME ***** At the moment returns `f_name'
+		require
+			valid_f_name: f_name /= Void
+		do
+			Result := f_name
 		end;
 
 invariant

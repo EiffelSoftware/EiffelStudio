@@ -200,6 +200,7 @@ feature {NONE} -- Implementation
 		local
 			windows_font: FONT_IMP
 			color_windows: COLOR_IMP
+			wel_color_ref: WEL_COLOR_REF
 		do
 			if font /= Void then
 				windows_font ?= font.implementation
@@ -208,12 +209,10 @@ feature {NONE} -- Implementation
 			color_windows ?= private_foreground_color.implementation
 			paint_dc.set_text_color (color_windows)
 			if private_background_color /= Void then
-				color_windows ?= private_background_color.implementation
-			end
-			if color_windows /= Void then
-				paint_dc.set_background_color (color_windows)
+				paint_dc.set_background_color (background_brush.color)
 			else
-				paint_dc.set_background_transparent
+				!! wel_color_ref.make_system (Color_btnface)
+				paint_dc.set_background_color (wel_color_ref)
 			end
 			paint_dc.draw_text (text, client_rect, alignment_type +
 				Dt_vcenter + Dt_singleline)

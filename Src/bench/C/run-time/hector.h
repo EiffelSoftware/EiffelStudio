@@ -38,6 +38,8 @@ extern void eufreeze();				/* Forget a frozen memory address */
 extern EIF_OBJ hrecord();			/* Record entry in hector table */
 extern EIF_OBJ henter();			/* Low-level entry in hector table */
 extern void hfree();				/* Low-level release from hector table */
+extern char *spfreeze();			/* Freeze special object's address */
+extern void spufreeze();			/* Put frozen spec obj back to GC control */
 
 #endif
 

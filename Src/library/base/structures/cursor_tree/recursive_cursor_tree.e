@@ -15,7 +15,7 @@ deferred class RECURSIVE_CURSOR_TREE [G] inherit
 
 	CURSOR_TREE [G]
 		redefine
-			empty, extendible, extend
+			is_empty, extendible, extend
 		end
 
 feature -- Access
@@ -78,7 +78,7 @@ feature -- Status report
 			end
 		end;
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is the tree empty?
 		do
 			Result := (above_node.arity = 0)
@@ -279,13 +279,13 @@ feature -- Removal
 			active.remove_child
 			active.child_back
 		ensure then
-			not_off_unless_empty: empty or else not off
+			not_off_unless_empty: is_empty or else not off
 		end;
 
 	wipe_out is
 			-- Remove all items.
 		do
-			if not empty then
+			if not is_empty then
 				above_node.child_start;
 				above_node.remove_child;
 			end;

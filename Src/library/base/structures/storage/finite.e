@@ -21,7 +21,7 @@ feature -- Measurement
 
 feature -- Status report
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is structure empty?
 		do
 			Result := (count = 0)
@@ -29,7 +29,7 @@ feature -- Status report
 
 invariant
 
-	empty_definition: empty = (count = 0);
+	empty_definition: is_empty = (count = 0);
 	non_negative_count: count >= 0
 
 end -- class FINITE

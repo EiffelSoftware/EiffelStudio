@@ -61,7 +61,7 @@ feature -- Removal
 invariant
 
 	writable_constraint: writable implies readable;
-	empty_constraint: empty implies (not readable) and (not writable)
+	empty_constraint: is_empty implies (not readable) and (not writable)
 
 end -- class ACTIVE
 

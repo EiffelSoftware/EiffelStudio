@@ -34,7 +34,7 @@ feature -- Initialization
 			active := above_node;
 		ensure
 			is_above: above;
-			is_empty: empty
+			is_empty: is_empty
 		end;
 
 	make_root (v: G) is
@@ -81,7 +81,7 @@ feature -- Element change
 	put_root (v: G) is
 			-- Put `v' as root of an empty tree.
 		require
-			is_empty: empty
+			is_empty: is_empty
 		do
 			above_node.child_put_right (v);
 			active_parent := above_node;

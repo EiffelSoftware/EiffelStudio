@@ -12,12 +12,12 @@ deferred class INFINITE [G] inherit
 
 	BOX [G]
 		redefine
-			empty
+			is_empty
 		end
 
 feature -- Status report
 
-	empty: BOOLEAN is false;
+	is_empty: BOOLEAN is false;
 			-- Is structure empty? (Answer: no.)
 
 	full: BOOLEAN is true;
@@ -25,7 +25,7 @@ feature -- Status report
 
 invariant
 
-	never_empty: not empty;
+	never_empty: not is_empty;
 	always_full: full
 
 end -- class INFINITE

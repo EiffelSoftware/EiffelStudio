@@ -13,9 +13,9 @@ feature -- access
 
 	handle_b: EV_RADIO_BUTTON
 
-	is_odbc: BOOLEAN is FALSE
+	is_odbc: BOOLEAN is False
 
-	is_oracle: BOOLEAN is TRUE
+	is_oracle: BOOLEAN is True
 
 	database_type: STRING is "oracle"
 

@@ -7,7 +7,7 @@ indexing
 
 class
 	GB_GENERATED_INFO
-
+	
 create
 	make_child,
 	make_root
@@ -92,6 +92,8 @@ feature -- Access
 			Result := ""
 		end
 		
+	is_root_object: BOOLEAN
+		-- Is object root of  agenerated window?
 	
 	id: INTEGER
 		-- Id of associated with object.
@@ -139,6 +141,13 @@ feature -- Status setting
 			name := a_name
 		end
 		
+	set_as_root_object is
+			-- Assign `True' to `is_root_object'.
+		do
+			is_root_object := True
+		end
+		
+	
 	set_element (an_element: XML_ELEMENT) is
 			-- Assign `an_element' to `element'.
 		do
@@ -162,8 +171,7 @@ feature -- Status setting
 		do
 			events.extend (event)
 		end
-		
-		
+
 	enable_fonts_set is
 			-- Make `fonts_set' not `is_empty'.
 		do
@@ -183,10 +191,6 @@ feature -- Status setting
 			fonts_set.wipe_out
 			pixmaps_set.wipe_out
 		end
-		
-		
-		
-		
 	
 feature -- Element change
 

@@ -385,13 +385,6 @@ end;
 										(tab_pos - tab_list.item, tab_pos - 1))
 			end;
 			tab_list.go_i_th (old_index)
-print ("Result count: ")
-print (Result.count)
-print (" i_count: ")
-print (i_count)
-print (" st_count: ")
-print (st_count)
-io.new_line
 		end;
 
 feature -- Text count
@@ -621,12 +614,9 @@ feature {NONE} -- Default callbacks
 			cursor_x, cursor_y: INTEGER;
 			start_posi: INTEGER
 		do
-print ("1%N")
 			if not internal_action and not in_execute then
-print ("2%N")
 				in_execute := True;
 				if argument = modify_event then
-print ("in modify%N")
 					modify_data ?= context_data;
 					if modify_data /= Void then
 						start_pos := modify_data.start_position;
@@ -681,7 +671,6 @@ end;
 						i_set_cursor_position (u_next_pos)
 					end
 				elseif argument = motion_event then
-print ("in motio%N")
 					motion_data ?= context_data;
 					if motion_data /= Void then
 						next_pos := motion_data.next_cursor_position;

@@ -410,6 +410,7 @@ feature -- Output
 		do
 			!!Result.make (50)
 			Result.append (name)
+			Result.to_upper
 			gens := generics
 			if gens /= Void then
 				old_cluster := Inst_context.cluster
@@ -421,12 +422,7 @@ feature -- Output
 					gens.after
 				loop
 					formal_dec ?= gens.item
-					Result.append (formal_dec.formal_name)
-					constraint_type := formal_dec.constraint
-					if constraint_type /= Void then
-						Result.append (" -> ")
-						Result.append (constraint_type.dump)
-					end
+					Result.append (formal_dec.constraint_string)
 					gens.forth
 					if not gens.after then
 						Result.append (", ")
@@ -435,7 +431,6 @@ feature -- Output
 				Inst_context.set_cluster (old_cluster)
 				Result.append ("]")
 			end
-			Result.to_upper
 		end
 
 	append_signature (st: STRUCTURED_TEXT) is
@@ -445,7 +440,6 @@ feature -- Output
 		local
 			formal_dec: FORMAL_DEC_AS_B
 			constraint_type: TYPE_B
-			c_name: STRING
 			old_cluster: CLUSTER_I
 			gens: like generics
 		do
@@ -462,16 +456,7 @@ feature -- Output
 					gens.after
 				loop
 					formal_dec ?= gens.item
-					c_name := clone (formal_dec.formal_name)
-					c_name.to_upper
-					st.add_string (c_name)
-					constraint_type := formal_dec.constraint
-					if constraint_type /= Void then
-						st.add (ti_Space)
-						st.add (ti_Constraint)
-						st.add (ti_Space)
-						constraint_type.append_to (st)
-					end
+					formal_dec.append_signature (st)
 					gens.forth
 					if not gens.after then
 						st.add (ti_Comma)

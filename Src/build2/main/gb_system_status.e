@@ -24,9 +24,6 @@ feature -- Access
 		-- Used to enable/disable the save button and other
 		-- operations dependent on the user having modified something.
 		
-	is_wizard_system: BOOLEAN
-		-- Is Build behaving as a wizard?
-		
 	tools_always_on_top: BOOLEAN
 		-- Should all windows containing tools be shown modelessly
 		-- to the main window. Otherwise, they are independent.
@@ -81,14 +78,6 @@ feature -- Status setting
 			-- Assign `False' to `project_modfied'.
 		do
 			project_modified := False
-		end
-		
-	enable_wizard_system is
-			-- Assign `True' to `is_wizard_system'.
-			-- There is no corresponding `disable', as
-			-- we set the status once at the start.
-		do
-			is_wizard_system := True
 		end
 		
 	enable_tools_always_on_top is

@@ -16,11 +16,5 @@ feature -- Access
 			create Result
 			Result.enable_tools_always_on_top
 		end
-	
-	visual_studio_information: VISUAL_STUDIO_INFORMATION is
-			-- Once access to information about visual studio.
-		once
-			create Result
-		end
 
 end -- class GB_ACCESSIBLE_SYSTEM_STATUS

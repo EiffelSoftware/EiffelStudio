@@ -184,7 +184,6 @@ feature -- Basic operation
 			-- Place tools in `Current'.
 		require
 			has_item: item /= Void
-			not_in_wizard_mode: not system_status.is_wizard_system
 		local
 			vertical_box: EV_VERTICAL_BOX
 		do
@@ -235,7 +234,6 @@ feature -- Basic operation
 			-- Remove tools from `Current'.
 		require
 			has_item: item /= Void
-			not_in_wizard_mode: not system_status.is_wizard_system
 		local
 			vertical_box: EV_VERTICAL_BOX
 			linear_rep: ARRAYED_LIST [EV_WIDGET]
@@ -317,7 +315,7 @@ feature -- Basic operation
 			else
 				temp_title := ""
 			end
-			if system_status.project_open and not visual_studio_information.is_visual_studio_wizard then
+			if system_status.project_open then
 					-- No project location is displayed for the visual studio wizard.
 				temp_title.append ("EiffelBuild - " + system_status.current_project_settings.project_location)
 			else
@@ -330,8 +328,6 @@ feature -- Basic operation
 
 	smart_disable_sensitive is
 			-- Disable all contents of `Current', except the status bar.
-		require
-			not_in_wizard_mode: not System_status.is_wizard_system
 		local
 			vertical_box: EV_VERTICAL_BOX
 		do
@@ -356,8 +352,6 @@ feature -- Basic operation
 		
 	smart_enable_sensitive is
 			-- Enable all contents of `Current', except the status bar.
-		require
-			not_in_wizard_mode: not System_status.is_wizard_system
 		local
 			vertical_box: EV_VERTICAL_BOX
 		do
@@ -492,16 +486,10 @@ feature {NONE} -- Implementation
 			menus_intitialized : menus_initialized
 		do
 			main_menu_bar.wipe_out
-				-- No file menu options are available
-				-- for the wizard.
-			if not system_status.is_wizard_system then
-				main_menu_bar.extend (file_menu)	
-			end
+			main_menu_bar.extend (file_menu)	
 			if system_status.project_open then
 				main_menu_bar.extend (view_menu)
-				if not system_status.is_wizard_system then
-					main_menu_bar.extend (project_menu)	
-				end
+				main_menu_bar.extend (project_menu)	
 			end
 			main_menu_bar.extend (help_menu)
 		end
@@ -577,14 +565,12 @@ feature {NONE} -- Implementation
 			horizontal_box.extend (docked_object_editor)
 			horizontal_box.disable_item_expand (docked_object_editor)
 			
-			if not system_status.is_wizard_system then
-				create vertical_box
-				extend (vertical_box)
-				create filler
-				vertical_box.extend (filler)
-				vertical_box.extend (status_bar)
-				vertical_box.disable_item_expand (status_bar)
-			end
+			create vertical_box
+			extend (vertical_box)
+			create filler
+			vertical_box.extend (filler)
+			vertical_box.extend (status_bar)
+			vertical_box.disable_item_expand (status_bar)
 		end
 		
 	widget_removed_from_multiple_split_area is
@@ -671,10 +657,7 @@ feature {NONE} -- Implementation
 		once
 			create Result
 			Result.extend (command_handler.delete_object_command.new_toolbar_item (True, False))
-				-- No save option in the wizard.
-			if not system_status.is_wizard_system then
-				Result.extend (command_handler.save_command.new_toolbar_item (True, False))	
-			end
+			Result.extend (command_handler.save_command.new_toolbar_item (True, False))	
 			Result.extend (command_handler.object_editor_command.new_toolbar_item (True, False))
 			create separator
 			Result.extend (separator)
@@ -683,15 +666,10 @@ feature {NONE} -- Implementation
 			Result.extend (command_handler.redo_command.new_toolbar_item (True, False))
 			create separator
 			Result.extend (separator)
-				-- No generation button or project settings for the wizard.
-				-- Project settings are reached by going back and forth in
-				-- the wizard.
-			if not system_status.is_wizard_system then
-				Result.extend (command_handler.generation_command.new_toolbar_item (True, False))		
-				create separator
-				Result.extend (separator)
-				Result.extend (command_handler.project_settings_command.new_toolbar_item (True, False))
-			end
+			Result.extend (command_handler.generation_command.new_toolbar_item (True, False))		
+			create separator
+			Result.extend (separator)
+			Result.extend (command_handler.project_settings_command.new_toolbar_item (True, False))
 			
 			Result.extend (command_handler.show_hide_builder_window_command.new_toolbar_item (True, False))
 			Result.extend (command_handler.show_hide_display_window_command.new_toolbar_item (True, False))

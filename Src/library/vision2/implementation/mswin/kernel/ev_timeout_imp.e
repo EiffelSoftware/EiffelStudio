@@ -41,8 +41,8 @@ feature -- Access
 	period: INTEGER
 			-- Period of the timeout in milli-seconde.
 
-	command: EV_COMMAND
-			-- Command associated with the timeout.
+--|	command: EV_COMMAND
+--|			-- Command associated with the timeout.
 
 --|FIXME	argument: EV_ARGUMENT
 			-- Argument associated with the timeout.
@@ -127,6 +127,9 @@ end -- class EV_TIMEOUT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/19 07:03:52  oconnor
+--| removed command
+--|
 --| Revision 1.5  2000/02/19 06:34:12  oconnor
 --| removed old command stuff
 --|

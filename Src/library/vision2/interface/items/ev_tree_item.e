@@ -115,6 +115,19 @@ feature -- Status setting
 			state_set: not is_expanded
 		end
 
+feature -- Event handling
+
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Actions performed when tree item is selected.
+
+	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Actions performed when tree item is deselected.
+
+	expand_actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Actions performed when tree item node is expanded.
+
+	collapse_actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Actions performed when tree item node is collapsed.
 
 feature -- Implementation
 
@@ -129,6 +142,10 @@ feature -- Implementation
 	create_action_sequences is
 		do
 			{EV_SIMPLE_ITEM} Precursor
+			create select_actions
+			create deselect_actions
+			create expand_actions
+			create collapse_actions
 		end
 
 end -- class EV_TREE_ITEM
@@ -155,6 +172,9 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/02/23 21:21:58  king
+--| Added action sequences
+--|
 --| Revision 1.28  2000/02/22 21:40:29  king
 --| Tidied up interface, now inherits from item_list
 --|

@@ -476,7 +476,7 @@ feature {NONE} -- Implementation, mouse button events
 		do
 			pt := client_to_screen (x_pos, y_pos)
 			pnd_press (x_pos, y_pos, 2, pt.x, pt.y)
-			interface.pointer_button_press_actions.call ([x_pos, y_pos, 2, 0, 0, 0, pt.x, pt.y])
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 2, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 	
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -488,8 +488,8 @@ feature {NONE} -- Implementation, mouse button events
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
-			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0, 0, 0, pt.x, pt.y])
+			--pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+			interface.pointer_button_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -513,7 +513,7 @@ feature {NONE} -- Implementation, mouse button events
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_button_release_actions.call ([x_pos, y_pos, 2, 0, 0, 0, pt.x, pt.y])
+			interface.pointer_button_release_actions.call ([x_pos, y_pos, 2, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -525,7 +525,7 @@ feature {NONE} -- Implementation, mouse button events
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_button_release_actions.call ([x_pos, y_pos, 3, 0, 0, 0, pt.x, pt.y])
+			interface.pointer_button_release_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
@@ -537,7 +537,7 @@ feature {NONE} -- Implementation, mouse button events
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_double_press_actions.call ([x_pos, y_pos, 1, 0, 0, 0, pt.x, pt.y])
+			interface.pointer_double_press_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_middle_button_double_click (keys, x_pos, y_pos: INTEGER) is
@@ -549,7 +549,7 @@ feature {NONE} -- Implementation, mouse button events
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_double_press_actions.call ([x_pos, y_pos, 2, 0, 0, 0, pt.x, pt.y])
+			interface.pointer_double_press_actions.call ([x_pos, y_pos, 2, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 	on_right_button_double_click (keys, x_pos, y_pos: INTEGER) is
@@ -561,7 +561,7 @@ feature {NONE} -- Implementation, mouse button events
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_double_press_actions.call ([x_pos, y_pos, 3, 0, 0, 0, pt.x, pt.y])
+			interface.pointer_double_press_actions.call ([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
 feature {NONE} -- Implementation, mouse move, enter and leave events
@@ -946,6 +946,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/03/09 21:10:05  rogers
+--| All calls to interface.pointer.button_***_actions are passes 0.0 instead of 0.
+--|
 --| Revision 1.52  2000/02/19 06:34:13  oconnor
 --| removed old command stuff
 --|

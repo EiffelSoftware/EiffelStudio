@@ -75,8 +75,29 @@ feature -- Access
 
 	height: INTEGER is
 			-- Character height
+		obsolete "Use `height_in_points' instead."
+		do
+			Result := height_in_points
+		end
+		
+	height_in_points: INTEGER is
+			-- Character height in points.
 		do
 			Result := cwel_charformat_get_yheight (item)
+		end
+		
+	height_in_pixels: INTEGER is
+			-- Character height in pixels
+		local
+			logical_pixels: INTEGER
+			screen_dc: WEL_SCREEN_DC
+		do
+			create screen_dc
+			screen_dc.get
+			logical_pixels := get_device_caps (screen_dc.item, logical_pixels_y)
+			screen_dc.release
+				-- 1440 is twips per inch.
+			Result := mul_div (logical_pixels, height_in_points, 1440)
 		end
 
 	offset: INTEGER is
@@ -120,7 +141,7 @@ feature -- Access
 			logical_pixels := get_device_caps (screen_dc.item, logical_pixels_y)
 			screen_dc.release
 				-- 1440 is twips per inch.
-			create Result.make ( - mul_div (logical_pixels, height, 1440), face_name)
+			create Result.make (- mul_div (logical_pixels, height_in_points, 1440), face_name)
 			Result.set_pitch_and_family (pitch_and_family)
 			if flag_set (effects, Cfm_bold) then
 				Result.set_weight (700)
@@ -184,6 +205,7 @@ feature -- Element change
 
 	set_height (a_height: INTEGER) is
 			-- Set `height' with `a_height' (height specified in points).
+			Obsolete "Use `set_height_in_pixels' instead"
 		do
 			add_mask (Cfm_size)
 				-- Set `yHeight' with `a_height * 20' since the expected
@@ -191,6 +213,34 @@ feature -- Element change
 			cwel_charformat_set_yheight (item, a_height * 20)
 		ensure
 			height_set: height = a_height * 20
+		end
+
+	set_height_in_pixels (a_height: INTEGER) is
+			-- Set `height_in_points' based on `a_height' in pixels.
+		local
+			logical_pixels: INTEGER
+			screen_dc: WEL_SCREEN_DC
+		do
+			create screen_dc
+			screen_dc.get
+			logical_pixels := get_device_caps (screen_dc.item, logical_pixels_y)
+			screen_dc.release
+			add_mask (Cfm_size)
+			cwel_charformat_set_yheight (item, (a_height * 1440) // logical_pixels)
+		ensure
+			height_set: height_in_pixels = a_height
+		end
+		
+	set_height_in_points (a_height: INTEGER) is
+			-- Set `height_in_points' based on `a_height' in points.
+		local
+			logical_pixels: INTEGER
+			screen_dc: WEL_SCREEN_DC
+		do
+			add_mask (Cfm_size)
+			cwel_charformat_set_yheight (item, a_height)
+		ensure
+			height_set: height_in_points = a_height
 		end
 
 	set_offset (an_offset: INTEGER) is

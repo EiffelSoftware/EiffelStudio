@@ -41,7 +41,7 @@ inherit
 	COMPILER_EXPORTER;
 	SHARED_ID;
 	SHARED_EIFFEL_PROJECT;
-	SHARED_RESOURCES
+	SHARED_CONFIGURE_RESOURCES
 
 feature -- Counters
 
@@ -99,6 +99,12 @@ feature -- Counters
 		end
 
 feature -- Properties
+
+	project_classes: ARRAY [CLASS_C] is
+			-- Classes in current system (doesn't include precompile classes)
+		once
+			Result := classes.item (Normal_compilation)
+		end 
 
 	changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, BODY_ID] is
 		once
@@ -3482,9 +3488,9 @@ feature -- Main file generation
 			end
 
 			if  creation_name /= Void then
-                if final_mode then
+				if final_mode then
 					rout_table ?= Eiffel_table.poly_table (rout_id);
-                    c_name := rout_table.feature_name (cl_type.id.id);
+					c_name := rout_table.feature_name (cl_type.id.id);
 					if root_feat.has_arguments then
 						Initialization_file.generate_protected_extern_declaration
 							("void", c_name, <<"EIF_REFERENCE", "EIF_REFERENCE">>)
@@ -4072,6 +4078,19 @@ feature -- Document processing
 
 	No_word: STRING is "no";
 
+	document_file_name: FILE_NAME is
+			-- File name specified for the cluster text generation
+			-- Void result implies no document generation
+		local
+			tmp: STRING
+		do
+			tmp := document_path;
+			if tmp /= Void then
+				!! Result.make_from_string (tmp);
+				Result.extend (system_name);
+			end
+		end;
+	
 	document_path: DIRECTORY_NAME is
 			-- Path specified for the documents directory for classes.
 			-- Void result implies no document generation
@@ -4337,7 +4356,7 @@ feature -- Concurrent Eiffel
 	Concurrent_eiffel: BOOLEAN is
 			-- Can this compiler generate Concurrent Eiffel code?
 		do
-			Result := Resources.get_boolean ("concurrent_eiffel", False)
+			Result := Configure_resources.get_boolean (r_Concurrent_eiffel, False)
 		end
 
 	has_separate: BOOLEAN

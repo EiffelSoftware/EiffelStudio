@@ -7,7 +7,7 @@
  */
 
 ;# Files used to build the application
-LIB = listen.c proto.c server.c
+LIB = app_listen.c app_proto.c app_server.c
 
 ;# Derived object file names
 OBJ = \

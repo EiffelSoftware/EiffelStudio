@@ -45,9 +45,9 @@ feature -- Access
 				until
 					a_descriptor.functions.off
 				loop
-					if a_descriptor.dual then
+					if a_descriptor.dispinterface then
 						func_generator.generate_dual (a_descriptor.functions.item)
-					elseif not a_descriptor.dispinterface then
+					else
 						func_generator.generate (a_descriptor.functions.item)
 					end
 					if not a_descriptor.dispinterface or a_descriptor.dual then

@@ -63,9 +63,16 @@ feature -- Initialization
 --			set_default_size
 --			set_default_format
 --			set_default_position
-			show
 			dynamic_lib_exports := Eiffel_dynamic_lib.dynamic_lib_exports
 		end
+
+	init_formatters is
+		do
+			create format_list.make (Current)
+			set_last_format (format_list.default_format)
+		end
+
+feature {EB_TOOL_MANAGER} -- Initialization
 
 	build_interface is
 		do
@@ -81,12 +88,7 @@ feature -- Initialization
 --			if resources.command_bar.actual_value = False then
 --				dynamic_lib_toolbar.hide
 --			end
-		end
-
-	init_formatters is
-		do
-			create format_list.make (Current)
-			set_last_format (format_list.default_format)
+			show
 		end
 
 feature -- Representation
@@ -361,11 +363,11 @@ feature -- Stone process
 				dynamic_lib_exports.forth
 			end
 
-			text_window.hide
+			text_window.freeze
    			text_window.clear_window
 			text_window.process_text (st)
 --			text_window.set_top_character_position (0)
- 			text_window.show
+ 			text_window.thaw
 			text_window.set_changed(False)
 		end
 

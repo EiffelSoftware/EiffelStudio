@@ -6,6 +6,25 @@ indexing
 class
 	C_DATE
 
+create
+	default_create,
+	make_utc
+
+feature {NONE} -- Initialization
+
+	make_utc is
+			-- Create an instance of C_DATE holding UTC values.
+		do
+			is_utc := True
+		ensure
+			is_utc: is_utc
+		end
+
+feature -- Access
+
+	is_utc: BOOLEAN
+			-- Is Current holding value in UTC format?
+
 feature -- Status
 
 	year_now: INTEGER is
@@ -118,15 +137,27 @@ feature {NONE} -- `struct tm' encapsulation
 			l_time: INTEGER
 		do
 			l_time := time (p)
-			Result := localtime ($l_time)
+			if is_utc then
+				Result := gmtime ($l_time)
+			else
+				Result := localtime ($l_time)
+			end
 		end
-		
+	
 	localtime (i: POINTER): POINTER is
 			-- Pointer to `struct tm' area.
 		external
 			"C macro signature (time_t *): EIF_POINTER use <time.h>"
 		alias
 			"localtime"
+		end
+
+	gmtime (i: POINTER): POINTER is
+			-- Pointer to `struct tm' area in UTC.
+		external
+			"C macro signature (time_t *): EIF_POINTER use <time.h>"
+		alias
+			"gmtime"
 		end
 		
 	get_tm_year (p: POINTER): INTEGER is

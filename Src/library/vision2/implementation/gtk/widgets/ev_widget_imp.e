@@ -373,34 +373,47 @@ feature -- Element change
 	set_pointer_style (a_cursor: like pointer_style) is
 			-- Assign `a_cursor' to `pointer_style'.
 		local
-			--a_cursor_imp: EV_PIXMAP_IMP
-			--src_pixmap, dest_bitmap, mask_ptr: POINTER
+			a_cursor_imp: EV_PIXMAP_IMP
+			bitmap_data: ARRAY [CHARACTER]
+			i: INTEGER
+			cur_pix, a_cursor_ptr, fg, bg: POINTER
+			a_cur_data: ANY
+			tempbool: BOOLEAN
 		do
 			pointer_style := clone (a_cursor)
-			--print ("%Nset pointer style needs implementing%N")
-			--a_cursor_imp ?= a_cursor.implementation
-			--check
-			--	a_cursor_imp_not_void: a_cursor_imp /= Void
-			--end
-			--dest_bitmap := C.gdk_pixmap_new (NULL, a_cursor_imp.width, a_cursor_imp.height, 1)
-			--C.gtk_pixmap_get (a_cursor_imp.gtk_pixmap, NULL, $src_pixmap)
-			--C.gdk_draw_pixmap (
-			--	dest_bitmap,
-			--	C.gtk_style_struct_white_gc (C.gtk_widget_struct_style (a_cursor_imp.gtk_pixmap)),
-			--	src_pixmap,
-			--	0, -- xsrc
-			--	0, -- ysrc
-			--	0, -- xdest
-			--	0, -- ydest
-			--	a_cursor_imp.width,
-			--	a_cursor_imp.height
-			--)
+			internal_set_pointer_style (a_cursor)
 		end
 		
 	internal_set_pointer_style (a_cursor: like pointer_style) is
 			-- Assign `a_cursor' to `pointer_style', used for PND
+		local
+			a_cursor_imp: EV_PIXMAP_IMP
+			bitmap_data: ARRAY [CHARACTER]
+			i: INTEGER
+			cur_pix, a_cursor_ptr, fg, bg: POINTER
+			a_cur_data: ANY
+			tempbool: BOOLEAN
 		do
-			--| FIXME Needs implementing to use set_pointer_style
+			fg := C.c_gdk_color_struct_allocate
+			C.set_gdk_color_struct_red (fg, 65535)
+			C.set_gdk_color_struct_green (fg, 65535)
+			C.set_gdk_color_struct_blue (fg, 65535)
+			tempbool := C.gdk_colormap_alloc_color (C.gdk_rgb_get_cmap, fg, False, True)
+			bg := C.c_gdk_color_struct_allocate
+			a_cursor_imp ?= a_cursor.implementation
+			check
+				a_cursor_imp_not_void: a_cursor_imp /= Void
+			end
+			bitmap_data := a_cursor_imp.bitmap_array
+			a_cur_data := bitmap_data.to_c
+			cur_pix := C.gdk_pixmap_create_from_data (NULL, $a_cur_data,  a_cursor_imp.width, a_cursor_imp.height, 1, bg, fg)
+
+			--| FIXME IEK If a_cursor_imp has no mask then routine seg faults.
+			a_cursor_ptr := C.gdk_cursor_new_from_pixmap (cur_pix, a_cursor_imp.mask, bg, fg, a_cursor.x_hotspot, a_cursor.y_hotspot)
+			c_free (fg)
+			c_free (bg)
+			C.gdk_window_set_cursor (C.gtk_widget_struct_window (c_object), a_cursor_ptr)
+			C.gdk_cursor_destroy (a_cursor_ptr)
 		end
 		
 	set_minimum_width (a_minimum_width: INTEGER) is

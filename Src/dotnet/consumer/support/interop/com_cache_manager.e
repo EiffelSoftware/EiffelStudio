@@ -58,11 +58,11 @@ feature -- Basic Exportations
 		do
 			clr_version := a_clr_version
 			eac_path := a_path
-			create cr.make (a_clr_version)
+			create cr
 			cr.set_internal_eiffel_cache_path (eac_path)
 			if not cr.is_initialized then
 				(create {EIFFEL_BINARY_SERIALIZER}).serialize (
-				create {CACHE_INFO}.make (a_clr_version),
+				create {CACHE_INFO}.make,
 				cr.absolute_info_path)
 			end
 			is_initialized := True
@@ -162,7 +162,8 @@ feature {NONE} -- Implementation
 			l_marshal: MARSHAL_CACHE_MANAGER
 			l_location: SYSTEM_STRING
 			l_full_name: SYSTEM_STRING
-			l_resolver: ASSEMBLY_RESOLVER
+			l_subscription: AR_RESOLVE_SUBSCRIBER
+			l_resolver: AR_RESOLVER
 		do
 			if internal_marshalled_cache_manager = Void then
 				check
@@ -192,8 +193,9 @@ feature {NONE} -- Implementation
 					-- it resides in the application base. However with Eiffel ENViSioN!
 					-- devenv location is the application base, which is not where the
 					-- consumer is installed to.
-				create l_resolver.make (feature {APP_DOMAIN}.current_domain)
-				l_resolver.add_resolver_path_from_assembly (to_dotnet.get_type.assembly)
+				create l_subscription.make
+				create l_resolver.make
+				l_subscription.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
 				
 				Result := l_inst_obj_handle
 				l_marshal ?= Result.unwrap
@@ -201,9 +203,8 @@ feature {NONE} -- Implementation
 					unwrapped: l_marshal /= Void
 				end
 				
-						-- clean up resolver because it's no longer needed
-				l_resolver.dispose
-				l_resolver := Void
+					-- clean up resolver because it's no longer needed
+				l_subscription.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
 	
 				if eac_path = Void then
 					l_marshal.initialize (clr_version)
@@ -242,13 +243,6 @@ feature {NONE} -- Implementation
 			-- app domain consumption is run in
 		indexing
 			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
-		end
-		
-	resolver: ASSEMBLY_RESOLVER is
-			-- an assembly resolver to load consumer when using COM interop.
-
-		once
-			create Result.make (feature {APP_DOMAIN}.current_domain)
 		end
 		
 end -- class COM_CACHE_MANAGER

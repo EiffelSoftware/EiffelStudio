@@ -13,6 +13,13 @@ feature -- C enums
 			"GTK_NO_WINDOW"
 		end
 
+	frozen Gtk_can_default_enum: INTEGER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"GTK_CAN_DEFAULT"
+		end
+
 	frozen Gdk_nothing_enum: INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"

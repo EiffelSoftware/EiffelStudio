@@ -59,14 +59,6 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := generating_type_evaluation_enabled_preference.value
 		end
 
-	default_displayed_string_size: INTEGER is
-			-- Default size of string to be retrieved from the application
-			-- when debugging (for instance size of `string_value' in ABSTRACT_REFERENCE_VALUE)
-			-- (Default value is 50)
-		do
-			Result := default_displayed_string_size_preference.value
-		end
-
 	min_slice: INTEGER is
 			-- From which attribute number should special objects be displayed?
 		do
@@ -123,7 +115,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	left_debug_layout_preference: ARRAY_PREFERENCE		
 	right_debug_layout_preference: ARRAY_PREFERENCE		
 	max_stack_depth_preference: INTEGER_PREFERENCE	
-	default_displayed_string_size_preference: INTEGER_PREFERENCE
 	
 feature -- Preference Strings
 
@@ -139,10 +130,9 @@ feature -- Preference Strings
 	max_slice_string: STRING is "debug_tool.max_slice"
 	main_splitter_position_string: STRING is "debug_tool.main_splitter_position"
 	local_vs_object_proportion_string: STRING is "debug_tool.proportion"					
-	max_stack_depth_string: STRING is "debug_tool.default_maximum_stack_depth"
-	default_displayed_string_size_string: STRING is "debug_tool.default_displayed_string_size"	
+	max_stack_depth_string: STRING is "debug_tool.default_maximum_stack_depth"	
 	left_debug_layout_string: STRING is "debug_tool.left_debug_layout"	
-	right_debug_layout_string: STRING is "debug_tool.right_debug_layout"
+	right_debug_layout_string: STRING is "debug_tool.right_debug_layout"	
 
 feature {NONE} -- Implementation
 
@@ -167,8 +157,7 @@ feature {NONE} -- Implementation
 			local_vs_object_proportion_preference := l_manager.new_string_resource_value (l_manager, local_vs_object_proportion_string, "0.5")					
 			max_stack_depth_preference := l_manager.new_integer_resource_value (l_manager, max_stack_depth_string, 100)
 			left_debug_layout_preference := l_manager.new_array_resource_value (l_manager, left_debug_layout_string, <<>>)
-			right_debug_layout_preference := l_manager.new_array_resource_value (l_manager, right_debug_layout_string, <<>>)
-			default_displayed_string_size_preference := l_manager.new_integer_resource_value (l_manager, default_displayed_string_size_string, 50)
+			right_debug_layout_preference := l_manager.new_array_resource_value (l_manager, right_debug_layout_string, <<>>)			
 		end
 	
 	preferences: PREFERENCES
@@ -190,7 +179,6 @@ invariant
 	local_vs_object_proportion_preference_not_void: local_vs_object_proportion_preference /= Void
 	left_debug_layout_preference_not_void: left_debug_layout_preference /= Void
 	right_debug_layout_preference_not_void: right_debug_layout_preference /= Void
-	max_stack_depth_preference_not_void: max_stack_depth_preference /= Void
-	default_displayed_string_size_preference_not_void: default_displayed_string_size_preference /= Void
+	max_stack_depth_preference_not_void: max_stack_depth_preference /= Void	
 
 end -- class EB_DEBUG_TOOL_DATA

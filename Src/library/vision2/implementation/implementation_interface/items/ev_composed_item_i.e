@@ -15,19 +15,6 @@ deferred class
 inherit
 	EV_ITEM_I
 
-
-
-feature {NONE} -- Initialization
-
---	make_with_text (txt: ARRAY [STRING]) is
---			-- Create a row with text in it.
---		require
---			valid_text: txt /= Void
---		deferred
---		ensure
---			text_set: text_set (txt)
---		end
-
 feature -- Access
 
 	count: INTEGER is
@@ -252,6 +239,9 @@ end -- class EV_COMPOSED_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/16 23:01:43  king
+--| Removed make_with_text
+--|
 --| Revision 1.8  2000/02/16 20:27:37  king
 --| Commented out no_parent in set_count
 --|

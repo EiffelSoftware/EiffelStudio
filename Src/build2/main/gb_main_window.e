@@ -49,6 +49,8 @@ feature {NONE} -- Initialization
 			build_widget_structure
 			set_up_first_window
 			set_minimum_size (640, 480)
+				-- When `Current' is closed, end the application.
+			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
 		end
 
 feature {NONE} -- Implementation
@@ -96,6 +98,7 @@ feature {NONE} -- Implementation
 			vertical_box.extend (horizontal_box)
 			horizontal_box.extend (split_area)
 			split_area.extend (type_selector)
+			type_selector.set_minimum_width (100)
 			create vertical_box1
 			split_area.extend (vertical_box1)
 			vertical_box1.extend (layout_constructor)

@@ -7,10 +7,11 @@
 /*********************************************************/
 
 #include <stdio.h>
+#include <eiffel.h>
 
-int col_nb;
-int lin_nb;
-int pos_in_s;
+EIF_INTEGER col_nb;
+EIF_INTEGER lin_nb;
+EIF_INTEGER pos_in_s;
 
 /* Set lin_nb and col_nb to 1. */
 void reset ()
@@ -25,16 +26,16 @@ void reset ()
  * of the buffer buf, and fill the other part of buf with the
  * characters of file f.
  */
-int fill_buf (f, buf, linarea, colarea, allowed, b, e, end)
+EIF_INTEGER fill_buf (f, buf, linarea, colarea, allowed, b, e, end)
 FILE *f;
 char *buf;
-int *linarea, *colarea;
+EIF_INTEGER *linarea, *colarea;
 char *allowed;
-int b, e, end;
+EIF_INTEGER b, e, end;
 {
-	int c;
-	int i = 0;
-	int n = e - b;
+	EIF_INTEGER c;
+	EIF_INTEGER i = 0;
+	EIF_INTEGER n = e - b;
 
 	if (b != 0)
 		while (i < n)
@@ -80,16 +81,16 @@ int b, e, end;
 	return (i - n);
 }
 
-int fill_f_s (s, buf, linarea, colarea, allowed, b, e, end)
+EIF_INTEGER fill_f_s (s, buf, linarea, colarea, allowed, b, e, end)
 char s [];
 char *buf;
-int *linarea, *colarea;
+EIF_INTEGER *linarea, *colarea;
 char *allowed;
-int b,e,end;
+EIF_INTEGER b,e,end;
 {
-	int c;
-	int i = 0;
-	int n = e - b;
+	EIF_INTEGER c;
+	EIF_INTEGER i = 0;
+	EIF_INTEGER n = e - b;
 
 	if (b != 0)
 		while (i < n)

@@ -30,6 +30,7 @@
 #include "eif_equal.h"	/* for xequal() */
 #include <math.h>
 #include "eif_main.h"
+#include "eif_gen_conf.h"
 #include "x2c.h"		/* For LNGPAD */
 
 #ifdef CONCURRENT_EIFFEL
@@ -69,6 +70,7 @@
 #define arg(n)		(*(iregs+3+locnum+(n)))		/* Arguments from 1 to argnum */
 #define nbregs		(locnum+argnum+SPECIAL_REG)	/* Total # of registers */
 #define icur_dtype	Dtype(icurrent->it_ref)		/* Dtype of current */
+#define icur_dftype	Dftype(icurrent->it_ref)		/* Dftype of current */
 /* Interpreter routine flag */
 #define INTERP_CMPD 1			/* Interpretation of a compound */
 #define INTERP_INVA	2			/* Interpretation of invariant */
@@ -142,6 +144,7 @@ rt_private long get_long(void);				/* Get a long constant */
 rt_private short get_short(void);				/* Get a short constant */
 rt_private fnptr get_fnptr(void);				/* Get a function pointer */
 rt_private char *get_address(void);			/* Get an address */
+rt_private short get_compound_id(EIF_CONTEXT char *obj, short dtype);			/* Get a compound type id */
 
 /* Writing constants */
 rt_private void write_long(char *where, long int value);				/* Write long constant */
@@ -333,8 +336,8 @@ rt_public void xinitint(EIF_CONTEXT_NOARG)
 }
 
 rt_private void interpret(EIF_CONTEXT int flag, int where)
-		 			/* Flag set to INTERP_INVA or INTERP_CMPD */
-		  			/* Are we checking invariant before or after compound? */
+					/* Flag set to INTERP_INVA or INTERP_CMPD */
+					/* Are we checking invariant before or after compound? */
 {
 	/* Interprets the byte-code starting at IC. For effeciency reasons, some
 	 * "globals" are used by the main interpreting loop, to save some precious
@@ -398,7 +401,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 	}
 
 	for (;;) {
-	
+
 #ifdef DEBUG
 	dprintf(2)("0x%lX: ", IC);
 #endif
@@ -549,7 +552,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			case SK_REF:			/* Lovely comment */
 			case SK_EXP:
 				epush(&loc_stack, (char *)(&ref));
-				last->it_ref = RTLN(get_short());
+				type = get_short ();
+				type = get_compound_id(MTC icurrent->it_ref, (short) type);
+				last->it_ref = RTLN(type);
 				epop(&loc_stack, 1);
 				last->type = SK_EXP;
 				ecopy(ref, last->it_ref);
@@ -1082,6 +1087,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 		type = get_short();			/* Get the reverse type */
 		last = opop();
+
+/* GENERIC CONFORMANCE */
+		type = get_compound_id(MTC icurrent->it_ref,(short) type);
+
 		if (!RTRA(type, last->it_ref))
 			iresult->it_ref = (char *) 0;
 		else
@@ -1110,6 +1119,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		code = get_short();			/* Get local number */
 		type = get_short();			/* Get the reverse type */
 		last = opop();
+
+/* GENERIC CONFORMANCE */
+		type = get_compound_id(MTC icurrent->it_ref, (short)type);
+
 		if (!RTRA(type, last->it_ref))
 			loc(code)->it_ref = (char *) 0;
 		else
@@ -1131,6 +1144,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			meta = get_uint32();		/* Get the attribute meta-type */
 			type = get_short();			/* Get the reverse type */
 			last = otop();
+
+/* GENERIC CONFORMANCE */
+			type = get_compound_id(MTC icurrent->it_ref,(short)type);
+
 			if (!RTRA(type, last->it_ref))
 				last->it_ref = (char *) 0;
 			assign(offset, code, meta);
@@ -1153,6 +1170,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			meta = get_uint32();		/* Get the attribute meta-type */
 			type = get_short();			/* Get the reverse type */
 			last = otop();
+
+/* GENERIC CONFORMANCE */
+			type = get_compound_id(MTC icurrent->it_ref,(short)type);
+
 			if (!RTRA(type, last->it_ref))
 				last->it_ref = (char *) 0;
 			passign(origin, ooffset, meta);
@@ -1434,16 +1455,21 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		switch (*IC++) {
 		case BC_CTYPE:				/* Hardcoded creation type */
 			type = get_short();
+/* GENERIC CONFORMANCE */
+			type = get_compound_id(MTC icurrent->it_ref,(short)type);
 			break;
 		case BC_CARG:				/* Like argument creation type */
 			type = get_short();		/* Default creation type if void arg.  */
+/* GENERIC CONFORMANCE */
+			type = get_compound_id(MTC icurrent->it_ref,(short)type);
 			code = get_short();		/* Argument position */
 			type = RTCA(arg(code)->it_ref, type);
 			break;
 		case BC_CLIKE:				/* Like feature creation type */
 			code = get_short();		/* Get the static type first */
 			offset = get_long();	/* Get the feature id of the anchor */
-			type = RTWT(code, offset, icur_dtype);
+/* GENERIC CONFORMANCE */
+			type = RTWCT(code, offset, icurrent->it_ref);
 			break;
 		case BC_PCLIKE:				/* Like feature creation type */
 			{
@@ -1451,11 +1477,12 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 
 			origin = get_long();			/* Get the origin class id */
 			ooffset = get_long();			/* Get the offset in origin */
-			type = RTWPT(origin, ooffset, icur_dtype);
+/* GENERIC CONFORMANCE */
+			type = RTWPCT(origin, ooffset, icurrent->it_ref);
 			break;
 			}
 		case BC_CCUR:				/* Like Current creation type */
-			type = icur_dtype;
+			type = icur_dftype;
 			break;
 		default:
 			eif_panic(MTC "creation type lost");
@@ -2251,6 +2278,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
  
 			stype = get_short();			/* Get the static type */
 			dtype = get_short();			/* Get the static type */
+
+/*GENERIC CONFORMANCE */
+			dtype = get_compound_id(MTC icurrent->it_ref,dtype);
+
 			feat_id = get_short();		  	/* Get the feature id */
 			nbr_of_items = get_long();	  	/* Number of items in array */
 			stagval = tagval;
@@ -2340,6 +2371,10 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			origin = get_long();		/* Get the origin class id */
 			ooffset = get_long();		/* Get the offset in origin */
 			dtype = get_short();			/* Get the static type */
+
+/*GENERIC CONFORMANCE */
+			dtype = get_compound_id(MTC icurrent->it_ref,dtype);
+
 			nbr_of_items = get_long();	  	/* Number of items in array */
 			stagval = tagval;
 			OLD_IC = IC;					/* Save IC counter */
@@ -2356,8 +2391,8 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			sp_area = *(char **) new_obj;
 			while ((curr_pos++) != nbr_of_items) {
 				/* Fill the special area with the expressions
-			 	* for the manifest array.
-			 	*/
+				* for the manifest array.
+				*/
 				it = opop();		/* Pop expression off stack */
 				switch (it->type & SK_HEAD) {
 					case SK_BOOL:
@@ -2454,7 +2489,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 		last = opop();
 		code = get_short();     /* Get the local number (from 1 to locnum) */
-	   	bcopy(last, loc(code), ITEM_SZ);
+		bcopy(last, loc(code), ITEM_SZ);
 		break;
 
 	/*
@@ -3334,7 +3369,7 @@ char *inv_mark_table;	/* Marking table to avoid checking the same
 
 rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct item *stop, int where)          
 					  		/* Current chunk (stack context) */
-				  			/* To save stack context */
+							/* To save stack context */
 		  					/* Invariant after or before */
 {
 	EIF_GET_CONTEXT
@@ -3422,7 +3457,7 @@ rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stoch
 		 		* invariant code is to call `xiinv' in order to initialize the
 		 		* calling context (which is not done by `interpret').
 		 		* `tagval' will therefore be set, but we have to 
-		 		* resynchronize the registers anyway. --ericb
+				* resynchronize the registers anyway. --ericb
 		 		*/
 				xiinv(MTC melt[body_id], where);
 
@@ -4610,6 +4645,69 @@ rt_private char *get_address(EIF_CONTEXT_NOARG)
 	EIF_END_GET_CONTEXT
 }
 
+rt_private short get_compound_id(EIF_CONTEXT char *Current, short dtype)
+{
+	/* Get array of short ints and convert it to a compound id. */
+	EIF_GET_CONTEXT
+	int16   gen_types [MAX_CID_SIZE+1], *gp, last;
+	int     cnt, pos;
+
+	gp  = gen_types;
+	cnt = 0;
+
+	do
+	{
+		*(gp++) = last = (int16) get_short();
+		++cnt;
+
+		/* Check for anchors */
+
+		switch (last)
+		{
+			case -11: /* like argument */
+						pos = (int) get_short();
+						*(gp++) = (int16) RTCA(arg(pos)->it_ref, -10);
+						++cnt;
+						break;
+			case -12: /* like Current */
+						*(gp++) = (int16) (icur_dftype);
+						++cnt;
+						break;
+			case -13: /* like feature - see BC_PCLIKE */
+						{
+							int32 origin, ooffset;
+
+							origin = get_long();			/* Get the origin class id */
+							ooffset = get_long();			/* Get the offset in origin */
+							*(gp++) = (int16) RTWPCT(origin, ooffset, icurrent->it_ref);
+							++cnt;
+						}
+						break;
+			case -14: /* like feature - see BC_CLIKE */
+						{
+							short code;
+							long  offset;
+
+							code = get_short();		/* Get the static type first */
+							offset = get_long();	/* Get the feature id of the anchor */
+							*(gp++) = RTWCT(code, offset, icurrent->it_ref);
+							++cnt;
+						}
+						break;
+			default:
+						break;
+		}
+
+		if (cnt >= MAX_CID_SIZE)
+			eif_panic(MTC "Too many generic paramters in compound type");
+
+	} while (last != -1);
+
+	return (short) RTCID(Current, (int16) dtype, gen_types);
+
+	EIF_END_GET_CONTEXT
+}
+
 /*
  * Write constants to byte code in an hopefully portable (slow) way--RAM.
  */
@@ -5509,7 +5607,7 @@ rt_public void idump(FILE *fd, char *start)
 
 		IC += sizeof (long);    /* Skip flag and reserved space */
 	}
-		
+		/*
 	switch (code = *IC++) {		/* Read current byte-code and advance IC */
 
 	/*
@@ -5616,7 +5714,7 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 		break;
 
 	/*
- 	 * End of rescue compound
+	 * End of rescue compound
  	 */
 	case BC_END_RESCUE:
 		fprintf(fd, "0x%lX %s\n", IC - 1, "BC_END_RECUE");
@@ -5741,6 +5839,11 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 	 */
 	case BC_RREVERSE:
 		type = get_short();			/* Get the reverse type */
+
+/* GENERIC CONFORMANCE */
+		while (get_short() != -1)
+			;
+
 		fprintf(fd, "0x%lX %s rt=%d\n", IC - sizeof(short) - 1,
 			"BC_RREVERSE", type);
 		break;
@@ -5751,6 +5854,9 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 	case BC_LREVERSE:
 		code = get_short();			/* Get local number */
 		type = get_short();			/* Get the reverse type */
+/* GENERIC CONFORMANCE */
+		while (get_short() != -1)
+			;
 		fprintf(fd, "0x%lX %s #%d, rt=%d\n", IC - 2 * sizeof(short) - 1,
 			"BC_LREVERSE", code, type);
 		break;
@@ -5765,6 +5871,9 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 			code = get_short();			/* Get the static type */
 			meta = get_uint32();		/* Get the attribute meta-type */
 			type = get_short();			/* Get the reverse type */
+/* GENERIC CONFORMANCE */
+			while (get_short() != -1)
+				;
 			fprintf(fd, "0x%lX %s fid=%d, st=%d, rt=%d\n",
 				IC - 2 * sizeof(short) - sizeof(long) - 1,
 				"BC_REVERSE", offset, code, type);
@@ -5783,6 +5892,9 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 			ooffset = get_long();		/* Get the offset in origin */
 			meta = get_uint32();		/* Get the attribute meta-type */
 			type = get_short();			/* Get the reverse type */
+/* GENERIC CONFORMANCE */
+			while (get_short() != -1)
+				;
 			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, rt=%d\n",
 				IC - 2 * sizeof(long) - sizeof(long) - 1,
 				"BC_PREVERSE", origin, ooffset, type);
@@ -5962,11 +6074,18 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 		switch (*IC++) {
 		case BC_CTYPE:				/* Hardcoded creation type */
 			type = get_short();
+/* GENERIC CONFORMANCE */
+			while (get_short() != -1)
+				;
+
 			fprintf(fd, "0x%lX BC_CREATE dt=%d\n", IC - sizeof(short) - 2,
 				type);
 			break;
 		case BC_CARG:				/* Like argument creation type */
 			type = get_short();		/* Default creation type if void arg.  */
+/* GENERIC CONFORMANCE */
+			while (get_short() != -1)
+				;
 			code = get_short();		/* Argument position */
 			fprintf(fd, "0x%lX BC_CREATE dt=%d, arg=%d\n",
 				IC - 2 * sizeof(short) - 2,
@@ -6036,6 +6155,11 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 			long nbr_of_items;
 			stype = get_short();		/* Get the static type*/
 			dtype = get_short();		/* Get the static type*/
+
+/*GENERIC CONFORMANCE */
+			while (get_short () != -1)
+				;
+
 			feat_id = get_short();		/* Get the feature id*/
 			nbr_of_items = get_long();	/* Get the nbr of items in array*/
 			fprintf(fd, "0x%lX %s, st=%d dt=%d fid=%d nbr=%d\n",
@@ -6056,6 +6180,10 @@ rt_private void iinternal_dump(FILE *fd, char *start)
 			origin = get_long();		/* Get the origin class id */
 			ooffset = get_long();		/* Get the offset in origin */
 			dtype = get_short();		/* Get the dynamic type*/
+
+/*GENERIC CONFORMANCE */
+			while (get_short () != -1)
+				;
 			nbr_of_items = get_long();	/* Get the nbr of items in array*/
 			fprintf(fd, "0x%lX %s, origin=%ld dt=%d offset=%ld nbr=%d\n",
 				 	IC - (sizeof(short)) - (3*sizeof(long)) - 1, 

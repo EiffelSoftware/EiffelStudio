@@ -187,7 +187,7 @@ rt_public char *ei_exp_type(long i, char *object)
 	int dtype = (HEADER(ei_oref(i,object))->ov_flags) & EO_TYPE;
 	char *s;
 
-	s = System(dtype).cn_generator;
+	s = System(Deif_bid(dtype)).cn_generator;
 	return makestr(s,strlen(s));
 }
 

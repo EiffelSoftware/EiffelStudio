@@ -28,6 +28,7 @@ extern "C" {
 	int egc_arr_dtype;				
 	int32 egc_disp_rout_id;			
 	int egc_bit_dtype;			
+	int egc_any_dtype;
 	int egc_sp_bool;			
 	int egc_sp_char;			
 	int egc_sp_int;			
@@ -46,6 +47,8 @@ extern "C" {
 	struct ctable egc_ce_gtype;			
 	struct cnode *egc_fsystem;	
 	struct conform **egc_fco_table;  
+	struct eif_par_types **egc_partab;
+	int    egc_partab_size;
 	void (*egc_system_mod_init) (void);	
 
 

@@ -101,6 +101,7 @@ rt_public char *bmalloc(long int size)
 	char *object;			/* Pointer to the freshly created bit object */
 	long nbytes;			/* Object's size */
 
+	(void) eif_register_bit_type (size);
 #ifdef DEBUG
 	printf ("bmalloc: %d bits requested.\n", size);
 #endif
@@ -295,9 +296,9 @@ rt_public char *b_clone(char *bit)
 }
 
 rt_public void b_put(char *bit, char value, int at)
-          				/* The Eiffel bit object */
-       					/* The position in the bit field (starting at 1) */
-           				/* The boolean value to be set */
+		  				/* The Eiffel bit object */
+	   					/* The position in the bit field (starting at 1) */
+		   				/* The boolean value to be set */
 {
 	/* Set the bit at the specified location. The bit field is viewed as an
 	 * array of bits, indexed from 1 (on the left side of the bit field).

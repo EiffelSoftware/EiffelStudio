@@ -254,8 +254,8 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
-rt_public char *emalloc(uint32 type)
-            				/* Dynamic type */
+rt_public char *emalloc(uint32 ftype)
+							/* Full dynamic type */
 {
 	/* Memory allocation for an Eiffel object. It either succeeds or raises the
 	 * "No more memory" exception. The routine returns the pointer on a new
@@ -264,6 +264,10 @@ rt_public char *emalloc(uint32 type)
 	EIF_GET_CONTEXT
 	char *object;				/* Pointer to the freshly created object */
 	unsigned int nbytes;		/* Object's size */
+	uint32 type, dtype;
+
+	dtype = (uint32) Deif_bid(ftype);
+	type  = (ftype & EO_UPPER) | dtype;
 
 #ifdef EMCHK
 	printf("--- Start of emalloc (DT %d) ---\n",type);
@@ -299,13 +303,13 @@ rt_public char *emalloc(uint32 type)
 #ifdef EMCHK
 			char *ret_val;
 
-			ret_val = eif_set(object, nbytes, type);	/* Set for Eiffel use */
+			ret_val = eif_set(object, nbytes, ftype);	/* Set for Eiffel use */
 			printf("--- End of emalloc (malloc_from_zone) ---\n");
 			memck(0);
 			printf("--- --------------------------------- ---\n\n");
 			return ret_val;
 #else
-			return eif_set(object, nbytes, type);		/* Set for Eiffel use */
+			return eif_set(object, nbytes, ftype);		/* Set for Eiffel use */
 #endif
 			}
 	}
@@ -322,13 +326,13 @@ rt_public char *emalloc(uint32 type)
 #ifdef EMCHK
 		rt_public char *ret_val;
 
-		ret_val = eif_set(object, nbytes, type | EO_NEW);	/* Set for Eiffel use */
+		ret_val = eif_set(object, nbytes, ftype | EO_NEW);	/* Set for Eiffel use */
 		printf("--- End of emalloc (xmalloc) ---\n");
 		memck(0);
 		printf("--- ------------------------ ---\n\n");
 		return ret_val;
 #else
-		return eif_set(object, nbytes, type | EO_NEW);		/* Set for Eiffel use */
+		return eif_set(object, nbytes, ftype | EO_NEW);		/* Set for Eiffel use */
 #endif
 		}
 
@@ -342,13 +346,13 @@ rt_public char *emalloc(uint32 type)
 #ifdef EMCHK
 		rt_public char *ret_val;
 
-		ret_val = eif_set(object, nbytes, type | EO_NEW);	/* Set for Eiffel use */
+		ret_val = eif_set(object, nbytes, ftype | EO_NEW);	/* Set for Eiffel use */
 		printf("--- End of emalloc (xmalloc after gen_scav) ---\n");
 		memck(0);
 		printf("--- --------------------------------------- ---\n\n");
 		return ret_val;
 #else
-		return eif_set(object, nbytes, type | EO_NEW);		/* Set for Eiffel use */
+		return eif_set(object, nbytes, ftype | EO_NEW);		/* Set for Eiffel use */
 #endif
 		}
 
@@ -384,8 +388,8 @@ rt_public char *spmalloc(unsigned int nbytes)
 }
 
 rt_public char *sprealloc(char *ptr, long int nbitems)
-          			/* Original pointer */
-             		/* New number of items wanted */
+		  			/* Original pointer */
+			 		/* New number of items wanted */
 {
 	/* Reallocation of a special object `ptr' for new count `nbitems' */
 	EIF_GET_CONTEXT
@@ -393,7 +397,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 	char  *(*init)(char *);			/* Initialization routine to be called */
 	char *ref, *object;
 	long count, elem_size;
-	int dtype;
+	int dtype, dftype;
 
 	/* At the end of the special object arena, there are two long values which
 	 * are kept up-to-date: the actual number of items held and the size in
@@ -456,7 +460,8 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 	if (zone->ov_flags & EO_COMP) {
 		 /* case of a special object of expanded structures */
 		char *addr = object + OVERHEAD;		/* Needed for that stupid gcc */
-		dtype = HEADER(addr)->ov_flags & EO_TYPE;
+		dftype = HEADER(addr)->ov_flags & EO_TYPE;
+		dtype = Deif_bid(dftype);
 		init = (char *(*) (char *)) XCreate(dtype);
 
 #ifdef MAY_PANIC
@@ -471,7 +476,7 @@ rt_public char *sprealloc(char *ptr, long int nbitems)
 		) {
 			zone = HEADER(ref);
 			zone->ov_size = ref - object;	/* For GC */
-			zone->ov_flags = dtype;			/* Expanded type */
+			zone->ov_flags = dftype;			/* Expanded type */
 			(init)(ref);					/* Call initialization routine */
 		}
 		zone = HEADER(object);				/* Restore malloc info zone */
@@ -540,9 +545,9 @@ rt_shared char *gmalloc(unsigned int nbytes)
 }
 
 rt_shared char *xmalloc(unsigned int nbytes, int type, int gc_flag)
-                    	/* Number of bytes requested */
-         				/* Type of block */
-            			/* Garbage collector on/off */
+						/* Number of bytes requested */
+		 				/* Type of block */
+						/* Garbage collector on/off */
 {
 	/* This routine is the main entry point for free-list driven memory
 	 * allocation. It allocates 'nbytes' of type 'type' (Eiffel or C) and
@@ -887,7 +892,7 @@ rt_shared char *get_to_from_core (unsigned int nbytes)
 }
 
 rt_private char *allocate_from_core(unsigned int nbytes, union overhead **hlist, char block_type)
-             	/* Eiffel object or memory chunk */
+			 	/* Eiffel object or memory chunk */
 {
 	/* Given a correctly padded size 'nbytes', we ask for some core to be
 	 * able to make a chunk capable of holding 'nbytes'. The chunk will be
@@ -1329,7 +1334,7 @@ rt_private int free_last_chunk(void)
 		return -1;						/* Propagate failure */
 	}
 #else
-    eif_free (last_chk);
+	eif_free (last_chk);
 #endif
 #endif
 
@@ -1709,8 +1714,8 @@ rt_public char *xcalloc(unsigned int nelem, unsigned int elsize)
 }
 
 rt_private void xfreeblock(union overhead *zone, uint32 r)
-                     		/* The to-be-freed zone */
-         					/* Size of block */
+					 		/* The to-be-freed zone */
+		 					/* Size of block */
 {
 	/* Put the memory block starting at 'zone' into the free_list.
 	 * Note that zone points at the beginning of the memory block
@@ -2804,7 +2809,7 @@ rt_shared char *eif_set(char *object, unsigned int nbytes, uint32 type)
 	 * is in charge of setting some other flags like EO_COMP and initializing
 	 * of expanded inter-references.
 	 */
-	init = (char *(*) (char *)) XCreate(type & EO_TYPE);
+	init = (char *(*) (char *)) XCreate(Deif_bid(type & EO_TYPE));
 	if (init != (char *(*)(char *)) 0)
 		((void (*)()) init)(object, object);
 
@@ -2980,7 +2985,7 @@ rt_private void check_ref(char *object)
 	zone = HEADER(object);
 	flags = zone->ov_flags;
 
-	if ((flags & EO_TYPE) > max_dtype) {
+	if (Deif_bid(flags & EO_TYPE) > max_dtype) {
 		printf("memck: object 0x%lx exceeds maximum dtype (%d), skipped.\n",
 			object, flags & EO_TYPE);
 		mempanic;
@@ -2997,7 +3002,7 @@ rt_private void check_ref(char *object)
 		else
 			size = sizeof(char *);
 	} else
-		refs = References(flags & EO_TYPE);
+		refs = References(Deif_bid(flags & EO_TYPE));
 	
 	for (; refs != 0; refs--, object += size) {
 		root = *(char **) object;
@@ -3033,12 +3038,13 @@ rt_private void check_flags(char *object, char *from)
 	 */
 	EIF_GET_CONTEXT
 
-	int dtype;
+	int dtype, dftype;
 	uint32 flags;
 	int num = 0;
 
-	flags = HEADER(object)->ov_flags;		/* Fetch Eiffel flags */
-	dtype = flags & EO_TYPE;
+	flags  = HEADER(object)->ov_flags;		/* Fetch Eiffel flags */
+	dftype = flags & EO_TYPE;
+	dtype  = Deif_bid(dftype);
 
 	if (flags & EO_C)						/* Not an Eiffel object */
 		return;;
@@ -3053,7 +3059,7 @@ rt_private void check_flags(char *object, char *from)
 		printf("memck: object 0x%lx exceeds maximum dynamic type (%d).\n",
 			object, dtype);
 	} else if (from == (char *) 0)
-		obj_use[flags & EO_TYPE]++;
+		obj_use[Deif_bid(flags & EO_TYPE)]++;
 
 	if (dtype <= max_dtype && !(flags & EO_SPEC) && !(flags & EO_EXP)) {
 		int mod;
@@ -3432,7 +3438,7 @@ rt_private void check_obj(char *object)
 	uint32 mflags;
 
 	flags = HEADER(object)->ov_flags;		/* Fetch Eiffel flags */
-	dtype = flags & EO_TYPE;
+	dtype = Deif_bid(flags & EO_TYPE);
 
 	if (flags & EO_C) {						/* Not an Eiffel object */
 		mflags = HEADER(object)->ov_size;
@@ -3441,16 +3447,16 @@ rt_private void check_obj(char *object)
 	}
 
 	if (dtype <= scount)
-		type_use[flags & EO_TYPE]++;
+		type_use[Deif_bid(flags & EO_TYPE)]++;
 
 	EIF_END_GET_CONTEXT
 }
 
 
 rt_private void inspect_chunk(register char *chunk, register char *arena, int type)
-                      		/* A struct chunk or struct sc_zone */
-                      		/* Arena were objects are stored */
-         					/* Type is either CHUNK_T or ZONE_T */
+					  		/* A struct chunk or struct sc_zone */
+					  		/* Arena were objects are stored */
+		 					/* Type is either CHUNK_T or ZONE_T */
 {
 	/* Consistency checks on the chunk's contents */
 

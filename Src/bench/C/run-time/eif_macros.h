@@ -24,6 +24,7 @@
 #include "eif_plug.h"				/* For struct bit declaration */
 #include "eif_hector.h"
 #include "eif_size.h"
+#include "eif_gen_conf.h"
 #if !defined CUSTOM || defined NEED_OPTION_H
 #include "eif_option.h"
 #endif
@@ -83,6 +84,8 @@ extern "C" {
 RT_LNK int fcount;
 #define RTUD(x) ((x)>=fcount?(x):egc_fdtypes[x])  /* Updated dynamic type */
 #define RTLX(x)   cr_exp(x)
+#else
+#define RTUD(x) (x) /* For convenience */
 #endif
 
 /* Macro used for object cloning:
@@ -93,7 +96,7 @@ RT_LNK int fcount;
 /* Macro used for object creation to get the proper creation type:
  *  RTCA(x,y) returns the dynamic type of 'x' if not void, otherwise 'y'
  */
-#define RTCA(x,y) ((x) == (char *) 0 ? (y) : Dtype(x))
+#define RTCA(x,y) ((x) == (char *) 0 ? (y) : Dftype(x))
 
 /* Macros used for assignments:
  *  RTAG(x) is true if 'x' is an old object not remembered
@@ -112,12 +115,12 @@ RT_LNK int fcount;
 
 /* Macros used by reverse assignments:
  *  RTRC(x,y) is true if type 'y' conforms to type 'x'
- *  RTRA(x,y) calls RTRC(x, Dtype(y)) if 'y' is not void
+ *  RTRA(x,y) calls RTRC(x, Dftype(y)) if 'y' is not void
  *  RTRV(x,y) returns 'y' if it conforms to type 'x', void otherwise
  *  RTRM(x,y) memorizes 'x' if not void and 'y' is old with 'x' new
  */
 #define RTRC(x,y) econfm(x,y)
-#define RTRA(x,y) ((y) == (char *) 0 ? 0 : RTRC((x),Dtype(y)))
+#define RTRA(x,y) ((y) == (char *) 0 ? 0 : RTRC((x),Dftype(y)))
 #define RTRV(x,y) (RTRA((x),(y)) ? (y) : (char *) 0)
 #define RTRM(x,y) ((x) == (char *) 0 ? 0 : RTAX(x,y))
 
@@ -125,7 +128,7 @@ RT_LNK int fcount;
  *	RTADTYPE(x) defines the variable for the dynamic type of `x'
  *	RTADOFFSETS(x) defines the variables for the offsets of area and lower of `x'
  *	RTAD(x) defines the variables for array optimization on `x'
- *	RTAITYPE(x,y) initializes the variable for Dtype on `x', `y'
+ *	RTAITYPE(x,y) initializes the variable for Dftype on `x', `y'
  *	RTAI(cast,x,y) initializes the variables for array optimization on `x', `y'
  *	RTAF(x, y) unfreeze `y' if frozen at this level
  *	RTAA(cast,x,i) gets the value at position `i' from `x' of type `cast'
@@ -140,7 +143,7 @@ RT_LNK int fcount;
 
 #define RTAD(x) char CAT2(x,_freeze) = 0; char* CAT2(x,_area); char* CAT2(x,_area_minus_lower)
 
-#define RTAITYPE(x,y) CAT2(x,_dtype) = Dtype(y)
+#define RTAITYPE(x,y) CAT2(x,_dtype) = Dftype(y)
 
 #define RTAIOFFSETS(x,y) \
 	if (y) { \
@@ -271,7 +274,15 @@ RT_LNK int fcount;
 #define RTOC(x)			onceset();
 
 /* Dynamic type of object. The name is not RTDT for historical reasons. */
-#define Dtype(x) (HEADER(x)->ov_flags & EO_TYPE)
+#define Dtype(x) (eif_cid_map[(HEADER(x)->ov_flags & EO_TYPE)])
+
+/* Dynamic (base) type (mapped through `eif_cid_map' */
+
+#define Deif_bid(x) (eif_cid_map[(x) & EO_TYPE])
+
+/* Full dynamic type of object - for generic conformance */
+
+#define Dftype(x) (HEADER(x)->ov_flags & EO_TYPE)
 
 /* Macros for assertion checking:
  *  RTCT(t,x) next assertion has tag 't' and is of type 'x'
@@ -451,6 +462,8 @@ RT_LNK int fcount;
  *  RTVPA(x,y,z,t) is a nested access to a precompiled attribute (dot expr)
  *  RTWT(x,y,z) fetches the creation type
  *  RTWPT(x,y,z) fetches the creation type of a precompiled feature
+ *  RTWCT(x,y,z) fetches the creation type of a generic features
+ *  RTWPCT(x,y,z) fetches the creation type of a precompiled generic feature
  *  RTWPP(x,y) returns the feature address ($ operator)
  *  RTWO(x) stores in a list the body id of the just called once routine
  */
@@ -464,6 +477,8 @@ RT_LNK int fcount;
 #define RTVPA(x,y,z,t) wpattr_inv(x,y,z,t)
 #define RTWT(x,y,z) wtype(x,y,z)
 #define RTWPT(x,y,z) wptype(x,y,z)
+#define RTWCT(x,y,z) wtype_gen(x,y,z)
+#define RTWPCT(x,y,z) wptype_gen(x,y,z)
 #define RTWPP(x,y) ((egc_address_table[x])[y])
 #define RTWO(x) onceadd(x)
 
@@ -478,6 +493,15 @@ RT_LNK int fcount;
 #define RTMT(x)		melt(x)				/* Byte code of body id (x) */
 
 #endif
+
+/* Generic conformance
+ *  RTCID(x,y,z) converts a type array into a single id
+ *  RTFCID(x,y,z) fetches the creation type of a generic feature in final mode
+*/
+
+#define RTCID(x,y,z) eif_compound_id((x),(y),(z))
+#define RTFCID(x,y,z) eif_final_id((x),(y),(z))
+#define RTGPTID(x,y) eif_gen_param_id ((x),(y))
 
 #ifdef WORKBENCH
 #define RTDT int current_call_level; char **saved_prof_top    /* Declare saved trace and profile */

@@ -33,6 +33,8 @@
  * `wpattr_inv (origin, offset, name, object)'
  * `wtype (static_type, feature_id, dyn_type)'
  * `wptype (origin, offset, dyn_type)'
+ * `wtype_gen (static_type, feature_id, object)'
+ * `wptype_gen (origin, offset, object)'
  * `wdisp (dyn_type)'
  */
 
@@ -350,10 +352,10 @@ rt_public long wpattr(int32 origin, int32 offset, int dyn_type)
 }
 
 rt_public long wattr_inv (int static_type, int32 feature_id, char *name, char *object)
-                
-                 
-             	/* Target object */
-           		/* Feature name to apply */
+				
+				 
+			 	/* Target object */
+		   		/* Feature name to apply */
 {
 	/* Offset of attribute of feature id `feature_id' in the class of
 	 * static type `static_type' in an object `object'.
@@ -389,9 +391,9 @@ rt_public long wattr_inv (int static_type, int32 feature_id, char *name, char *o
 }
 
 rt_public long wpattr_inv (int32 origin, int32 offset, char *name, char *object)
-                     
-             	/* Target object */
-           		/* Feature name to apply */
+					 
+			 	/* Target object */
+		   		/* Feature name to apply */
 {
 	/* Offset of precompiled attribute of origin class `origin', identified by
 	 * `offset' in that class, in an object `object'.
@@ -449,6 +451,42 @@ rt_public int wptype(int32 origin, int32 offset, int dyn_type)
 
 	type = RTUD(desc_tab[origin][dyn_type][offset].type);
 	return (type & SK_DTYPE);
+}
+
+/* GENERIC CONFORMANCE */
+
+rt_public int wtype_gen(int static_type, int32 feature_id, char *object)
+{
+	/* Type of a generic feature of routine id `rout_id' in the class of
+	 * dynamic type of `object'. Replaces formal generics by actual gen.
+	 * of `objectï. Returns an integer.
+	 */ 
+
+	int32   rout_id;
+	int     dyn_type;
+	int16   type, *gen_type;
+
+	dyn_type = Dtype(object);
+	rout_id = Routids(static_type)[feature_id];
+	CGENFeatType(type,gen_type,rout_id,dyn_type);
+
+	return (int) eif_compound_id (object, type, gen_type);
+}
+
+rt_public int wptype_gen(int32 origin, int32 offset, char *object)
+{
+	/* Type of a generic feature of routine identified by `offset' in 
+	 * its origin class `origin' and to be applied on `object'. Replaces
+	 * formal generics by actual gen. of `objectï. Returns an integer.
+	 */ 
+
+	struct desc_info    *desc;
+	int                 dyn_type;
+
+	dyn_type = Dtype(object);
+	desc = desc_tab[origin][dyn_type] + offset;
+
+	return (int) eif_compound_id (object, desc->type, desc->gen_type);
 }
 
 rt_public EIF_FN_REF wdisp(int dyn_type)

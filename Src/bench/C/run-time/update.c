@@ -38,12 +38,14 @@
 #include "eif_file.h"
 #include "eif_err_msg.h"
 #include "eif_main.h"
+#include "eif_gen_conf.h"
 
 #ifdef DEBUG
 #include "eif_interp.h"					/* For idump() */
 #endif
 
 rt_private void cecil_updt(void);			/* Cecil update */
+rt_private void parents_updt(void);			/* Partent table update */
 rt_private char **names_updt(short int count);		/* String array */
 rt_private void root_class_updt(void);		/* Update the root class info */
 rt_public long melt_count;				/* Size of melting table */
@@ -79,6 +81,7 @@ rt_public void update(char ignore_updt)
 
 	if (ignore_updt != (char) 0) {
 		init_desc();
+		eif_gen_conf_init (eif_par_table_size);
 		return;
 	}
 
@@ -134,6 +137,7 @@ rt_public void update(char ignore_updt)
 	if (c == '\0') {
 		init_desc();
 		fclose(fil);
+		eif_gen_conf_init (eif_par_table_size);
 		return;
 	}
 
@@ -179,7 +183,7 @@ rt_public void update(char ignore_updt)
 		enomem(MTC_NOARG);
 	bcopy(egc_fcall, ecall, scount * sizeof(int32 *));
 
-	/* FIXME: `ecall' is indexed by original (static) type id, not by dynamic type
+	/* FIX ME: `ecall' is indexed by original (static) type id, not by dynamic type
 	 * id. Therefore it should be resized using `scount' which is the number of
 	 * dynamic types in the system, but rather by the updated value of `fcount'
 	 * which is the number of static types (if some types have been removed
@@ -292,9 +296,21 @@ rt_public void update(char ignore_updt)
 #ifdef DEBUG
 	dprintf(1)("updating conformance table\n");
 #endif
-	conform_updt();
+		conform_updt();
 	}
 
+	/* Parent table if any */
+	wread (&c, 1);
+	if (c == '\01') {
+#ifdef DEBUG
+	dprintf(1)("updating parent table\n");
+#endif
+		parents_updt();
+	}
+	else
+	{
+		eif_gen_conf_init (eif_par_table_size);
+	}
 	/* Option table */
 	eoption = (struct eif_opt *)cmalloc(scount * sizeof(struct eif_opt));
 	if (eoption == (struct eif_opt *) 0)
@@ -589,6 +605,75 @@ rt_public void conform_updt(void)
 	cecil_updt();
 }
 
+rt_private void parents_updt(void)
+{
+	short   dtype, max_dtype;
+	struct  eif_par_types *pt, **pt2;
+
+	max_dtype = eif_par_table_size;
+
+	while ((dtype = wshort()) != -1)
+	{
+		pt = (struct eif_par_types *) cmalloc (sizeof (struct eif_par_types));
+
+		if (pt == (struct eif_par_types *) 0)
+			enomem(MTC_NOARG);
+
+		/* Number of generics */
+
+		pt->nb_generics = (int16) wshort ();
+
+		/* Read class name */
+
+		pt->class_name = wclass_name();
+
+		/* Is it expanded? */
+
+		wread(&(pt->is_expanded),1);
+
+		/* Parent types */
+
+		pt->parents = wtype_array ((int16 *)0);
+
+		if (dtype <= eif_par_table_size)
+		{
+			/* Simply replace old entry with this one */
+			eif_par_table [dtype] = pt;
+		}
+		else
+		{
+			/* Put it in the second table */
+			/* Create/expand second table if necessary */
+
+			if (dtype >= max_dtype)
+				max_dtype = dtype;
+
+			dtype -= eif_par_table_size;
+			pt2 = eif_par_table2;
+
+			if (dtype >= eif_par_table2_size)
+			{
+				/* Allocate or reallocate second table */
+
+				if (pt2 == (struct eif_par_types **)0)
+					eif_par_table2 = (struct eif_par_types **) cmalloc ((dtype+32)*sizeof(struct eif_par_types *));
+				else
+					eif_par_table2 = (struct eif_par_types **) crealloc ((char *) pt2, (dtype+32)*sizeof(struct eif_par_types *));
+
+				if (eif_par_table2 == (struct eif_par_types **)0)
+					enomem(MTC_NOARG);
+
+				pt2 = eif_par_table2;
+				eif_par_table2_size = dtype + 32;
+			}
+
+			pt2 [dtype] = pt;
+		}
+	}
+
+	eif_gen_conf_init (max_dtype);
+}
+
 rt_private void cecil_updt(void)
 {
 	/* Update high-level cecil structure. */
@@ -801,6 +886,8 @@ rt_public void desc_updt(void)
 				for (i=0; i<rout_count;i++) {
 					desc_ptr[i].info = wshort();
 					desc_ptr[i].type = wshort();
+/* GENCONF */
+					desc_ptr[i].gen_type = wtype_array((int16 *)0);
 				}
 #ifdef DEBUG
 	dprintf(4)("Melted descriptor\n\torigin = %d, dtype = %d, RTUD = %d, size = %d\n", 
@@ -856,6 +943,78 @@ rt_public uint32 wuint32(void)
 
 	wread((char *)(&result), sizeof(uint32));
 	return result;
+}
+
+rt_public int16 *wtype_array(int16 *target)
+{
+	/* Next array of type id's */
+	/* If `targetï is null, create new array */
+	int16   *tp, cid [MAX_CID_SIZE+1], last;
+	int     cnt;
+	
+	if (target == (int16 *)0)
+		tp = cid;
+	else
+		tp = target;
+
+	cnt = 0;
+
+	/* Read entries upto and including the terminator `-1ï*/
+	do
+	{
+		*(tp++) = last = (int16) wshort ();
+		++cnt;
+		if (cnt > MAX_CID_SIZE)
+			eif_panic(MTC "too many generic parameters in compound type id");
+
+	} while (last != -1);
+
+	if (target != (int16 *)0)
+		return target;
+
+	/* Do not create an array if id list is actually empty */
+	if (cnt == 1)
+		return (int16 *)0;
+
+	tp = (int16 *) cmalloc (cnt * sizeof (int16));
+
+	if (tp == (int16 *) 0)
+		enomem(MTC_NOARG);
+
+	bcopy(cid,tp,cnt*sizeof(int16));
+
+	return tp;
+}
+
+rt_public char *wclass_name(void)
+{
+	/* Next class name. Create new string. */
+	/* Maximum length is hardwired to 256. */
+	char *np, name [258], c;
+	int cnt;
+
+	np = name;
+	cnt = 0;
+
+	do
+	{
+		wread(&c, 1);
+		*(np++) = c;
+		++cnt;
+
+		if (cnt > 257)
+			eif_panic(MTC "class name longer than 256 characters");
+
+	} while (c);
+
+	np = (char *) cmalloc (cnt * sizeof (char));
+
+	if (np == (char *) 0)
+		enomem(MTC_NOARG);
+
+	bcopy(name,np,cnt*sizeof(char));
+
+	return np;
 }
 
 rt_private void write_long(char *where, long int value)

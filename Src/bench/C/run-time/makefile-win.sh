@@ -73,6 +73,7 @@ OBJECTS = \
 	"$(INDIR)\eif_cond_var.obj" \
 	"$(INDIR)\eif_once.obj" \
 	"$(INDIR)\eif_project.obj" \
+	"$(INDIR)\gen_conf.obj" \
 	"$(TOP)\ipc\shared\networku.obj" \
 	"$(TOP)\ipc\shared\shword.obj" \
 	"$(TOP)\console\econsole.lib" \
@@ -129,6 +130,7 @@ WOBJECTS = \
 	"$(INDIR)\weif_cond_var.obj" \
 	"$(INDIR)\weif_once.obj" \
 	"$(INDIR)\weif_project.obj" \
+	"$(INDIR)\wgen_conf.obj" \
 	"$(TOP)\idrs\idr.lib" \
 	"$(TOP)\console\econsole.lib" \
 	$extra_object_files
@@ -183,6 +185,7 @@ EOBJECTS = \
 	"$(INDIR)\weif_cond_var.obj" \
 	"$(INDIR)\weif_once.obj" \
 	"$(INDIR)\weif_project.obj" \
+	"$(INDIR)\wgen_conf.obj" \
 	"$(TOP)\ipc\shared\networku.obj" \
 	"$(TOP)\console\econsole.lib"
 
@@ -284,6 +287,9 @@ eif_portable.h : $(TOP)\eif_portable.h
 
 "$(RTSRC)\wgarcol.c" : garcol.c
 	$(LN) garcol.c wgarcol.c
+
+"$(RTSRC)\wgen_conf.c" : gen_conf.c
+	$(LN) gen_conf.c wgen_conf.c
 
 "$(RTSRC)\weif_threads.c" : eif_threads.c
 	$(LN) eif_threads.c weif_threads.c
@@ -463,6 +469,9 @@ eif_portable.h : $(TOP)\eif_portable.h
 "$(INDIR)\garcol.obj" :	"$(RTSRC)\garcol.c"
 	$(CC) $(JCFLAGS) "$(RTSRC)\garcol.c"
 
+"$(INDIR)\gen_conf.obj" :	"$(RTSRC)\gen_conf.c"
+	$(CC) $(JCFLAGS) "$(RTSRC)\gen_conf.c"
+
 "$(INDIR)\hash.obj" :	"$(RTSRC)\hash.c"
 	$(CC) $(JCFLAGS) "$(RTSRC)\hash.c"
 
@@ -606,6 +615,9 @@ eif_portable.h : $(TOP)\eif_portable.h
 
 "$(INDIR)\wgarcol.obj" :	"$(RTSRC)\wgarcol.c"
 	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wgarcol.c"
+
+"$(INDIR)\wgen_conf.obj" :	"$(RTSRC)\wgen_conf.c"
+	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\wgen_conf.c"
 
 "$(INDIR)\whash.obj" :	"$(RTSRC)\whash.c"
 	$(CC) $(JCFLAGS) -DWORKBENCH "$(RTSRC)\whash.c"
@@ -848,6 +860,9 @@ sram: sig.c
 			eif_urgent.h
 
 "$(INDIR)\object_id.obj" : eif_garcol.h eif_except.h eif_hector.h
+
+"$(INDIR)\gen_conf.obj" : eif_gen_conf.h eif_struct.h eif_macros.h
+"$(INDIR)\wgen_conf.obj" : eif_gen_conf.h eif_struct.h eif_macros.h
 
 "$(INDIR)\eif_threads.obj" : eif_threads.h eif_cond_var.h
 "$(INDIR)\eif_cond_var.obj" : eif_cond_var.h

@@ -38,8 +38,7 @@ feature -- initialization
 feature -- Access
 
 	item: EV_WIDGET
-			-- Current item
-
+			-- Current item.
 
 feature -- Element change
 

@@ -57,13 +57,13 @@
 		<heading>
 			<size>3</size>3.1. Global architecture
 		</heading>
-		<paragraph>The DataView cluster is based on 1 class called <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.html</url><label>DV_TABLE_COMPONENT</label></link> that represents the interface for 1 relational database table. An architecture using 
+		<paragraph>The DataView cluster is based on 1 class called <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> that represents the interface for 1 relational database table. An architecture using 
 			<italic>DataView</italic> is centered on database table structure rather than the GUI structure. The basic idea is to have:
 		</paragraph>
 		<list ordered="false">
 			<item>1 database relational table</item>
 			<item>1 GUI window or frame</item>
-			<item>1 <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.html</url><label>DV_TABLE_COMPONENT</label></link> object</item>
+			<item>1 <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> object</item>
 		</list>
 		<paragraph>This is then possible to adapt the code to have a GUI meeting the specifications, database structure can be totally abstracted in the interface, which might be more convenient for non-developer GUI users.</paragraph>
 		<heading>
@@ -88,9 +88,9 @@
 		<paragraph>The 
 			<bold>model</bold> cluster processes the information retrieved from the GUI and the database and update then both GUI and database.
 		</paragraph>
-		<paragraph>The cluster is based on the <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.html</url><label>DV_TABLE_COMPONENT</label></link> class which objects representsa database relational table (or view).</paragraph>
-		<paragraph>DV_TABLE_COMPONENT objects can be interconnected to match the table associations. The <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.html</url><label>DV_TABLE_COMPONENT</label></link> class has been designed to work with 3rd Normal Form relational databases. <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.html</url><label>DV_TABLE_COMPONENT</label></link> achieves most of the work to retrieve associated table rows for a 3NF database. For instance, when deleting a table row, the component ensures that every associated table row is also deleted.</paragraph>
-		<paragraph><link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.html</url><label>DV_TABLE_COMPONENT</label></link> objects can be customized by adding some subcomponents to it. Subcomponents enable to display table rows content on screen, to navigate among table rows and to perform different database queries.</paragraph>
+		<paragraph>The cluster is based on the <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> class which objects representsa database relational table (or view).</paragraph>
+		<paragraph>DV_TABLE_COMPONENT objects can be interconnected to match the table associations. The <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> class has been designed to work with 3rd Normal Form relational databases. <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> achieves most of the work to retrieve associated table rows for a 3NF database. For instance, when deleting a table row, the component ensures that every associated table row is also deleted.</paragraph>
+		<paragraph><link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> objects can be customized by adding some subcomponents to it. Subcomponents enable to display table rows content on screen, to navigate among table rows and to perform different database queries.</paragraph>
 		<paragraph>
 			<image>
 				<url>sub-component_objects.png</url>
@@ -128,9 +128,9 @@
 			<size>4</size>3.4.2. Strategy pattern
 		</heading>
 		<paragraph>DataView cluster provides the developer with a basic GUI implementation AND lets them customize their application. This is possible with a strategy pattern:</paragraph>
-		<paragraph>The developer assigns different subcomponents to a <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.html</url><label>DV_TABLE_COMPONENT</label></link> object to define its behavior. The component object only uses the interface of each subcomponent.</paragraph>
+		<paragraph>The developer assigns different subcomponents to a <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> object to define its behavior. The component object only uses the interface of each subcomponent.</paragraph>
 		<paragraph>A default implementation is written for each interface to let the user use the cluster as quick as possible. To adapt components behavior to their needs, the developer can then create a new subcomponent class inheriting from the abstract interface.</paragraph>
-		<paragraph>This BON diagram illustrates this for <link><url>../../reference/dataview/processing/DV_CREATOR_chart.html</url><label>DV_CREATOR</label></link> and <link><url>../../reference/dataview/processing/DV_SEARCHER_chart.html</url><label>DV_SEARCHER</label></link> subcomponents:</paragraph>
+		<paragraph>This BON diagram illustrates this for <link><url>../../reference/dataview/processing/DV_CREATOR_chart.xml</url><label>DV_CREATOR</label></link> and <link><url>../../reference/dataview/processing/DV_SEARCHER_chart.xml</url><label>DV_SEARCHER</label></link> subcomponents:</paragraph>
 		<paragraph>
 			<image>
 				<url>DV_TABLE_COMPONENT_strategy.png</url> 
@@ -144,25 +144,25 @@
 		</heading>
 		<paragraph>This part describes how to use the table component class and itssubcomponents classes:</paragraph>
 		<list ordered="false">
-			<item>The <link><url>../../reference/dataview/processing/DV_SEARCHER_chart.html</url><label>DV_SEARCHER</label></link> class to 
+			<item>The <link><url>../../reference/dataview/processing/DV_SEARCHER_chart.xml</url><label>DV_SEARCHER</label></link> class to 
 				<link>
 					<url>#dv_searcher</url>
 					<label>select table  rows from the database</label>
 				</link>.
 			</item>
-			<item>The <link><url>../../reference/dataview/processing/DV_TABLEROWS_NAVIGATOR_chart.html</url><label>DV_TABLEROW_NAVIGATOR</label></link> class to 
+			<item>The <link><url>../../reference/dataview/processing/DV_TABLEROWS_NAVIGATOR_chart.xml</url><label>DV_TABLEROW_NAVIGATOR</label></link> class to 
 				<link>
 					<url>#dv_tablerow_navigator</url>
 					<label>navigate  among selected table rows</label>
 				</link>.
 			</item>
-			<item>The <link><url>../../reference/dataview/processing/DV_CREATOR_chart.html</url><label>DV_CREATOR</label></link> class to 
+			<item>The <link><url>../../reference/dataview/processing/DV_CREATOR_chart.xml</url><label>DV_CREATOR</label></link> class to 
 				<link>
 					<url>#dv_creator</url>
 					<label>create new  table rows in the database</label>
 				</link>.
 			</item>
-			<item>The <link><url>../../reference/dataview/processing/DV_TABLEROW_FIELDS_chart.html</url><label>DV_TABLEROW_FIELDS</label></link> class to 
+			<item>The <link><url>../../reference/dataview/processing/DV_TABLEROW_FIELDS_chart.xml</url><label>DV_TABLEROW_FIELDS</label></link> class to 
 				<link>
 					<url>#dv_tablerow_fields</url>
 					<label>edit  a table row content</label>
@@ -173,7 +173,7 @@
 			<size>3</size>4.1. DV_TABLE_COMPONENT class
 		</heading>
 		<paragraph>This class is responsible for the management of a database table. Its behavior is determined by its assigned subcomponents.</paragraph>
-		<paragraph>To create a valid and functional <link><url>../../reference/dataview/processing/DV_TABLEROWS_COMPONENT_chart.html</url><label>DV_TABLE_COMPONENT</label></link> object, follow these steps:</paragraph>
+		<paragraph>To create a valid and functional <link><url>../../reference/dataview/processing/DV_TABLEROWS_COMPONENT_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> object, follow these steps:</paragraph>
 		<list ordered="true">
 			<item>Call set_tablecode to specify which table the component will deal with.</item>
 			<item>Specify 
@@ -216,7 +216,7 @@
 		<heading>
 			<size>4</size>4.1.1. Output handlers
 		</heading>
-		<paragraph>Output handlers are specific to the <link><url>../../reference/dataview/processing/DV_TABLEROWS_COMPONENT_chart.html</url><label>DV_TABLE_COMPONENT</label></link> object, that is, you can output messages in a different way within your GUI. However, the same handlers will be used for subcomponents.</paragraph>
+		<paragraph>Output handlers are specific to the <link><url>../../reference/dataview/processing/DV_TABLEROWS_COMPONENT_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> object, that is, you can output messages in a different way within your GUI. However, the same handlers will be used for subcomponents.</paragraph>
 		<paragraph>3 handlers can be set:</paragraph>
 		<list ordered="false">
 			<item>`status_handler' to display status information</item>
@@ -231,7 +231,7 @@
 		<heading>
 			<size>4</size>4.1.2. Database handler
 		</heading>
-		<paragraph>This handler is specific to the application. It must inherit from <code><class_name>ABSTRACT_DB_TABLE_MANAGER</class_name></code>. Since it is specific to the program, it can be set before creating any <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.html</url><label>DV_TABLE_COMPONENT</label></link> object through {DV_DATABASE_HANDLER}.set_database_handler.The <link><url>../../reference/generation/tables_access/DB_TABLE_MANAGER_chart.html</url><label>DB_TABLE_MANAGER</label></link> class is the default database handler for EiffelStore.</paragraph>
+		<paragraph>This handler is specific to the application. It must inherit from <code><class_name>ABSTRACT_DB_TABLE_MANAGER</class_name></code>. Since it is specific to the program, it can be set before creating any <link><url>../../reference/dataview/processing/DV_TABLE_COMPONENT_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> object through {DV_DATABASE_HANDLER}.set_database_handler.The <link><url>../../reference/generation/tables_access/DB_TABLE_MANAGER_chart.xml</url><label>DB_TABLE_MANAGER</label></link> class is the default database handler for EiffelStore.</paragraph>
 		<heading>4.1.3. Action controllers</heading>
 		<paragraph>No subcomponent is associated to 'write', 'refresh' and 'delete' actionssince these actions does not require specific behavioral choices.</paragraph>
 		<paragraph>To perform 'write', 'refresh' and 'delete' at runtime, a controller isassociated to each of these actions. This controller triggers the action when adetermined user event is grabbed, for instance, when the user clicks a button.</paragraph>
@@ -239,7 +239,7 @@
 			<link>
 				<url>#dv_s_control</url>
 				<label>Controllers</label>
-			</link> are implemented by the abstract class <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CONTROL_chart.html</url><label>DV_SENSITIVE_CONTROL</label></link> of cluster user_interactions (handle).
+			</link> are implemented by the abstract class <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CONTROL_chart.xml</url><label>DV_SENSITIVE_CONTROL</label></link> of cluster user_interactions (handle).
 		</paragraph>
 		<heading>
 			<size>4</size>4.1.4. Subcomponents
@@ -280,7 +280,7 @@
 		<heading>
 			<size>4</size>4.2.1. Overview
 		</heading>
-		<paragraph><link><url>../../reference/dataview/processing/DV_SEARCHER_chart.html</url><label>DV_SEARCHER</label></link> is responsible for retrieving table rows from the database. Letus see how it interacts with a table component:</paragraph>
+		<paragraph><link><url>../../reference/dataview/processing/DV_SEARCHER_chart.xml</url><label>DV_SEARCHER</label></link> is responsible for retrieving table rows from the database. Letus see how it interacts with a table component:</paragraph>
 		<paragraph>
 			<image> 
 				<url>component-search_relation.png</url>
@@ -291,15 +291,15 @@
 			<item>`display' assigns a set of table rows to the table component.</item>
 			<item>`refresh' asks to refresh the table rows from the same database query.</item>
 		</list>
-		<paragraph><link><url>../../reference/dataview/processing/DV_SEARCHER_chart.html</url><label>DV_SEARCHER</label></link> component does not afford an extended interface. This interface is defined in its descendants. The implemented <link><url>../../reference/dataview/processing/DV_SEARCHER_chart.html</url><label>DV_SEARCHER</label></link> descendants are:</paragraph>
+		<paragraph><link><url>../../reference/dataview/processing/DV_SEARCHER_chart.xml</url><label>DV_SEARCHER</label></link> component does not afford an extended interface. This interface is defined in its descendants. The implemented <link><url>../../reference/dataview/processing/DV_SEARCHER_chart.xml</url><label>DV_SEARCHER</label></link> descendants are:</paragraph>
 		<list ordered="false">
-			<item><link><url>../../reference/dataview/processing/DV_TYPED_SEARCHER_chart.html</url><label>DV_TYPED_SEARCHER</label></link> performs different 
+			<item><link><url>../../reference/dataview/processing/DV_TYPED_SEARCHER_chart.xml</url><label>DV_TYPED_SEARCHER</label></link> performs different 
 				<link>
 					<url>#dv_typed_searcher</url>
 					<label>basic  searches</label>
 				</link> used by the cluster.
 			</item>
-			<item><link><url>../../reference/dataview/processing/DV_INTERACTIVE_SEARCHER_chart.html</url><label>DV_INTERACTIVE_SEARCHER</label></link> enables to create a graphic interface to 
+			<item><link><url>../../reference/dataview/processing/DV_INTERACTIVE_SEARCHER_chart.xml</url><label>DV_INTERACTIVE_SEARCHER</label></link> enables to create a graphic interface to 
 				<link>
 					<url>#dv_interactive_searcher</url>
 					<label>let  user set search parameters</label>
@@ -323,7 +323,7 @@
 			<size>5</size>4.2.2.2. "ID selection" search
 		</heading>
 		<paragraph>Call read_from_tablerow to set table rows on the associated table component. Qualification ID is the ID of the table row in parameter. Table of row in parameter must be the table of rows to select.</paragraph>
-		<paragraph>This capability is used by DataView cluster in <link><url>../../reference/dataview/processing/DV_CHOICE_CREATOR_chart.html</url><label>DV_CHOICE_CREATOR</label></link> to select a just-created table row and display it on the table component.</paragraph>
+		<paragraph>This capability is used by DataView cluster in <link><url>../../reference/dataview/processing/DV_CHOICE_CREATOR_chart.xml</url><label>DV_CHOICE_CREATOR</label></link> to select a just-created table row and display it on the table component.</paragraph>
 		<heading>
 			<size>5</size>4.2.2.3. "Qualified selection" search
 		</heading>
@@ -333,7 +333,7 @@
 			<item>The location of the qualifying value in the table row passed in parameter  (set_row_attribute_code)</item>
 			<item>The qualifying attribute location in the table rows to select (set_criterion)</item>
 		</list>
-		<paragraph>This capability is used in <link><url>../../reference/dataview/processing/DV_TABLEROWS_COMPONENT_chart.html</url><label>DV_TABLE_COMPONENT</label></link> when a table row is selected to set associated table rows to slave components. Take a look at add_necessary_table and add_dependent_table.</paragraph>
+		<paragraph>This capability is used in <link><url>../../reference/dataview/processing/DV_TABLEROWS_COMPONENT_chart.xml</url><label>DV_TABLE_COMPONENT</label></link> when a table row is selected to set associated table rows to slave components. Take a look at add_necessary_table and add_dependent_table.</paragraph>
 		<heading>
 			<size>4</size>4.2.3. DV_INTERACTIVE_SEARCHER class
 		</heading>
@@ -370,7 +370,7 @@
 				</link> to set case sensitivity
 			</item>
 		</list>
-		<paragraph>Text input fields correspond to handle class <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.html</url><label>DV_SENSITIVE_STRING</label></link>, typed input fields corresponds to handle class <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_INTEGER_chart.html</url><label>DV_SENSITIVE_INTEGER</label></link> and Boolean input fields corresponds to handle class <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CHECK_chart.html</url><label>DV_SENSITIVE_CHECK</label></link>.</paragraph>
+		<paragraph>Text input fields correspond to handle class <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.xml</url><label>DV_SENSITIVE_STRING</label></link>, typed input fields corresponds to handle class <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_INTEGER_chart.xml</url><label>DV_SENSITIVE_INTEGER</label></link> and Boolean input fields corresponds to handle class <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CHECK_chart.xml</url><label>DV_SENSITIVE_CHECK</label></link>.</paragraph>
 		<heading>
 			<size>3</size>4.3. DV_TABLEROW_NAVIGATOR class
 		</heading>
@@ -384,7 +384,7 @@
 			</image>
 		</paragraph>
 		<paragraph>Basic relationship between table component class and navigation class</paragraph>
-		<paragraph><link><url>../../reference/dataview/processing/DV_CHOICE_CREATOR_chart.html</url><label>DV_CHOICE_CREATOR</label></link> also uses the class to enable to select associated table rows when creating a new table row (for instance, when creating a company, an existing country should be selected). Let us see how this is designed:</paragraph>
+		<paragraph><link><url>../../reference/dataview/processing/DV_CHOICE_CREATOR_chart.xml</url><label>DV_CHOICE_CREATOR</label></link> also uses the class to enable to select associated table rows when creating a new table row (for instance, when creating a company, an existing country should be selected). Let us see how this is designed:</paragraph>
 		<paragraph>
 			<image> 
 				<url>DV_TABLEROWS_NAVIGATOR_clients.png</url>
@@ -419,7 +419,7 @@
 			<link>
 				<url>#dv_tablerow_list</url>
 				<label> display list</label>
-			</link> to the navigator with a <link><url>../../reference/dataview/user_interactions/DV_TABLEROW_LIST_chart.html</url><label>DV_TABLEROW_LIST</label></link> component.
+			</link> to the navigator with a <link><url>../../reference/dataview/user_interactions/DV_TABLEROW_LIST_chart.xml</url><label>DV_TABLEROW_LIST</label></link> component.
 		</paragraph>
 		<heading>
 			<size>3</size>4.4. DV_CREATOR class
@@ -434,7 +434,7 @@
 			</image>
 		</paragraph>
 		<paragraph>Basic relationship between table component class and navigation class</paragraph>
-		<paragraph><link><url>../../reference/dataview/processing/DV_CREATOR_chart.html</url><label>DV_CREATOR</label></link> class contains minimum information to interact with <link><url>../../reference/dataview/processing/DV_TABLEROWS_COMPONENT_chart.html</url><label>DV_TABLE_COMPONENT</label></link>: when a table row is created, a creator component may display it on the table component. In this case, when the table component needs to refresh the table rows set, this refreshing action need to be managed by the creator component:</paragraph>
+		<paragraph><link><url>../../reference/dataview/processing/DV_CREATOR_chart.xml</url><label>DV_CREATOR</label></link> class contains minimum information to interact with <link><url>../../reference/dataview/processing/DV_TABLEROWS_COMPONENT_chart.xml</url><label>DV_TABLE_COMPONENT</label></link>: when a table row is created, a creator component may display it on the table component. In this case, when the table component needs to refresh the table rows set, this refreshing action need to be managed by the creator component:</paragraph>
 		<list ordered="false">
 			<item>`set_just_created' informs a table component that displayed table row set  comes from the creator component.</item>
 			<item>`refresh' lets the creation component refresh table component display.</item>
@@ -457,16 +457,16 @@
 				<url>DV_CHOICE_CREATOR_fkeys_selection.png</url>
 			</image>
 		</paragraph>
-		<paragraph><link><url>../../reference/dataview/processing/DV_CHOICE_CREATOR_chart.html</url><label>DV_CHOICE_CREATOR</label></link> suppliers for foreign keys selection</paragraph>
-		<paragraph><link><url>../../reference/dataview/processing/DV_TABLEROW_ID_PROVIDER_chart.html</url><label>DV_TABLEROW_ID_PROVIDER</label></link> inherits from <link><url>../../reference/dataview/processing/DV_TABLEROWS_COMPONENT_chart.html</url><label>DV_TABLEROWS_COMPONENT</label></link> to interface with <link><url>../../reference/dataview/processing/DV_TABLEROWS_NAVIGATOR_chart.html</url><label>DV_TABLEROWS_NAVIGATOR</label></link>.</paragraph>
-		<paragraph>Relation between <link><url>../../reference/dataview/processing/DV_CHOICE_CREATOR_chart.html</url><label>DV_CHOICE_CREATOR</label></link> and <link><url>../../reference/dataview/processing/DV_TABLEROW_ID_PROVIDER_chart.html</url><label>DV_TABLEROW_ID_PROVIDER</label></link> is basically:</paragraph>
+		<paragraph><link><url>../../reference/dataview/processing/DV_CHOICE_CREATOR_chart.xml</url><label>DV_CHOICE_CREATOR</label></link> suppliers for foreign keys selection</paragraph>
+		<paragraph><link><url>../../reference/dataview/processing/DV_TABLEROW_ID_PROVIDER_chart.xml</url><label>DV_TABLEROW_ID_PROVIDER</label></link> inherits from <link><url>../../reference/dataview/processing/DV_TABLEROWS_COMPONENT_chart.xml</url><label>DV_TABLEROWS_COMPONENT</label></link> to interface with <link><url>../../reference/dataview/processing/DV_TABLEROWS_NAVIGATOR_chart.xml</url><label>DV_TABLEROWS_NAVIGATOR</label></link>.</paragraph>
+		<paragraph>Relation between <link><url>../../reference/dataview/processing/DV_CHOICE_CREATOR_chart.xml</url><label>DV_CHOICE_CREATOR</label></link> and <link><url>../../reference/dataview/processing/DV_TABLEROW_ID_PROVIDER_chart.xml</url><label>DV_TABLEROW_ID_PROVIDER</label></link> is basically:</paragraph>
 		<paragraph>
 			<image>
 				<url>creator-provider_relation.png</url>
 			</image>
 		</paragraph>
 		<paragraph><code><class_name>DV_CHOICE_CREATOR/DV_TABLEROW_ID_PROVIDER</class_name></code> basic interactions</paragraph>
-		<paragraph>Creation process and <link><url>../../reference/dataview/processing/DV_CHOICE_CREATOR_chart.html</url><label>DV_CHOICE_CREATOR</label></link> objects creation procedure can help you use this class.</paragraph>
+		<paragraph>Creation process and <link><url>../../reference/dataview/processing/DV_CHOICE_CREATOR_chart.xml</url><label>DV_CHOICE_CREATOR</label></link> objects creation procedure can help you use this class.</paragraph>
 		<heading>
 			<size>5</size>4.4.2.2. Creation process
 		</heading>
@@ -479,7 +479,7 @@
 				</link> ("create")
 			</item>
 			<item> <code><class_name>DV_CHOICE_CREATOR</class_name></code>  creates a table row object</item>
-			<item> <code><class_name>DV_CHOICE_CREATOR </class_name></code> requests a first foreign key value to <link><url>../../reference/dataview/processing/DV_TABLEROW_ID_PROVIDER_chart.html</url><label>DV_TABLEROW_ID_PROVIDER</label></link> (through `select_from_table')</item>
+			<item> <code><class_name>DV_CHOICE_CREATOR </class_name></code> requests a first foreign key value to <link><url>../../reference/dataview/processing/DV_TABLEROW_ID_PROVIDER_chart.xml</url><label>DV_TABLEROW_ID_PROVIDER</label></link> (through `select_from_table')</item>
 			<item> <code><class_name>DV_TABLEROW_ID_PROVIDER </class_name></code> loads the available table rows that can be  referenced</item>
 			<item> <code><class_name>DV_TABLEROW_ID_PROVIDER</class_name></code> assigns the table rows to <code><class_name>DV_TABLEROWS_NAVIGATOR</class_name></code>  and  pops up the interface with the table rows</item>
 			<item>Table row selection is triggered by a 
@@ -542,7 +542,7 @@
 		<heading>
 			<size>4</size>4.5.2. DV_TABLEROW_FIELD class
 		</heading>
-		<paragraph>This class enables to edit a table row attribute value. The view is abstracted using the handle cluster <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.html</url><label>DV_SENSITIVE_STRING</label></link> class that 
+		<paragraph>This class enables to edit a table row attribute value. The view is abstracted using the handle cluster <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.xml</url><label>DV_SENSITIVE_STRING</label></link> class that 
 			<link>
 				<url>#dv_s_string</url>
 				<label>represents the editable text value</label>
@@ -552,7 +552,7 @@
 			<link>
 				<url>#dv_s_string</url>
 				<label>graphic fields</label>
-			</link> are provided. Notice that standard <link><url>../../reference/dataview/processing/DV_TABLEROW_FIELD_chart.html</url><label>DV_TABLEROW_FIELD</label></link> objects can be generated through the <link><url>../../reference/dataview/graphical/DV_FACTORY_chart.html</url><label>DV_FACTORY</label></link> class, which is a component factory.
+			</link> are provided. Notice that standard <link><url>../../reference/dataview/processing/DV_TABLEROW_FIELD_chart.xml</url><label>DV_TABLEROW_FIELD</label></link> objects can be generated through the <link><url>../../reference/dataview/graphical/DV_FACTORY_chart.xml</url><label>DV_FACTORY</label></link> class, which is a component factory.
 		</paragraph>
 		<heading>
 			<size>2</size>5. Handle cluster 
@@ -564,31 +564,31 @@
 			</link> design pattern. The cluster contains a set of interface classes to design this: 
 		</paragraph>
 		<list ordered="false">
-			<item>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CONTROL_chart.html</url><label>DV_SENSITIVE_CONTROL</label></link> class to 
+			<item>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CONTROL_chart.xml</url><label>DV_SENSITIVE_CONTROL</label></link> class to 
 				<link>
 					<url>#dv_s_control</url>
 					<label>let the user  trigger an action</label>
 				</link>.
 			</item>
-			<item>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.html</url><label>DV_SENSITIVE_STRING</label></link> class to 
+			<item>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.xml</url><label>DV_SENSITIVE_STRING</label></link> class to 
 				<link>
 					<url>#dv_s_string</url>
 					<label>input or output a  text value</label>
 				</link>.
 			</item>
-			<item>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.html</url><label>DV_SENSITIVE_INTEGER</label></link> class to 
+			<item>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.xml</url><label>DV_SENSITIVE_INTEGER</label></link> class to 
 				<link>
 					<url>#dv_s_integer</url>
 					<label>input or output  a quantity value</label>
 				</link>.
 			</item>
-			<item>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CHECK_chart.html</url><label>DV_SENSITIVE_CHECK</label></link> class to 
+			<item>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CHECK_chart.xml</url><label>DV_SENSITIVE_CHECK</label></link> class to 
 				<link>
 					<url>#dv_s_check</url>
 					<label>input or output a  tag value</label>
 				</link>.
 			</item>
-			<item>The <link><url>../../reference/dataview/user_interactions/DV_TABLEROW_LIST_chart.html</url><label>DV_TABLEROW_LIST</label></link> class to 
+			<item>The <link><url>../../reference/dataview/user_interactions/DV_TABLEROW_LIST_chart.xml</url><label>DV_TABLEROW_LIST</label></link> class to 
 				<link>
 					<url>#dv_tablerow_list</url>
 					<label>display a set of  table rows and grab events on it</label>
@@ -598,7 +598,7 @@
 		<heading>
 			<size>3</size>5.1. DV_SENSITIVE_CONTROL class
 		</heading>
-		<paragraph>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CONTROL_chart.html</url><label>DV_SENSITIVE_CONTROL</label></link> class lets a model class trigger a specific action on a determined user event. Furthermore, the model class lets the user know when its state enables to trigger the action, by setting the controller sensitivity (i.e. if the controller is insensitive, the action cannot be triggered).</paragraph>
+		<paragraph>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CONTROL_chart.xml</url><label>DV_SENSITIVE_CONTROL</label></link> class lets a model class trigger a specific action on a determined user event. Furthermore, the model class lets the user know when its state enables to trigger the action, by setting the controller sensitivity (i.e. if the controller is insensitive, the action cannot be triggered).</paragraph>
 		<note>
 			<bold>Note</bold>: sensitivity excepted, these controllers could have been implemented by Eiffel 
 			<italic>agents</italic>.
@@ -609,11 +609,11 @@
 			<italic>after</italic> trying to trigger the action that it was not possible(with a warning for instance): this is often less convenient.
 		</note>
 		<paragraph>The standard controllers are buttons or menu items: the specific action is triggered when button is clicked or menu item selected.</paragraph>
-		<paragraph> <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CONTROL_chart.html</url><label>DV_SENSITIVE_CONTROL</label></link> is inherited by <link><url>../../reference/dataview/graphical/DV_BUTTON_chart.html</url><label>DV_BUTTON</label></link> that implements an EiffelVision2 button. Other implementations can be added, such as a menu item.</paragraph>
+		<paragraph> <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_CONTROL_chart.xml</url><label>DV_SENSITIVE_CONTROL</label></link> is inherited by <link><url>../../reference/dataview/graphical/DV_BUTTON_chart.xml</url><label>DV_BUTTON</label></link> that implements an EiffelVision2 button. Other implementations can be added, such as a menu item.</paragraph>
 		<heading>
 			<size>3</size>5.2. DV_SENSITIVE_STRING class
 		</heading>
-		<paragraph>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.html</url><label>DV_SENSITIVE_STRING</label></link> class lets a model class input or output a text graphically. As for controllers, the model class lets the user know when a text value can be input by setting the widget sensitivity.</paragraph>
+		<paragraph>The <link><url>../../reference/dataview/user_interactions/DV_SENSITIVE_STRING_chart.xml</url><label>DV_SENSITIVE_STRING</label></link> class lets a model class input or output a text graphically. As for controllers, the model class lets the user know when a text value can be input by setting the widget sensitivity.</paragraph>
 		<paragraph>The standard graphical widgets to perform this are text fields, but several other widgets can be used:</paragraph>
 		<list ordered="false">
 			<item>A combo-box so that the interface can suggest different values.</item>
@@ -640,20 +640,20 @@
 		<heading>
 			<size>3</size>5.5. DV_TABLEROW_LIST class
 		</heading>
-		<paragraph>The <link><url>../../reference/dataview/user_interactions/DV_TABLEROW_LIST_chart.html</url><label>DV_TABLEROW_LIST</label></link> class provides an interface to display a set of tablerows so that the user can select a particular row.</paragraph>
+		<paragraph>The <link><url>../../reference/dataview/user_interactions/DV_TABLEROW_LIST_chart.xml</url><label>DV_TABLEROW_LIST</label></link> class provides an interface to display a set of tablerows so that the user can select a particular row.</paragraph>
 		<list ordered="false">
 			<item>The model can be informed of a row selection or deselection: the class  accepts actions (implemented by 
 				<italic>agents</italic>) that are triggered when a row  is selected or deselected.
 			</item>
 			<item>The model can retrieve the currently selected row: the class yields the  current index position in the list.</item>
 		</list>
-		<paragraph><link><url>../../reference/dataview/graphical/DV_TABLEROW_MULTILIST_chart.html</url><label>DV_TABLEROW_MULTILIST</label></link> implements DV_TABLEROW_LIST with an EiffelVision2 multi-column list.</paragraph>
+		<paragraph><link><url>../../reference/dataview/graphical/DV_TABLEROW_MULTILIST_chart.xml</url><label>DV_TABLEROW_MULTILIST</label></link> implements DV_TABLEROW_LIST with an EiffelVision2 multi-column list.</paragraph>
 		<note>
 			<bold>Note</bold>: This class is used for the 
 			<link>
 				<url>#dv_control_navigator</url>
 				<label>standard implementation</label>
-			</link> of <link><url>../../reference/dataview/processing/DV_TABLEROWS_NAVIGATOR_chart.html</url><label>DV_TABLEROW_NAVIGATOR</label></link> to 
+			</link> of <link><url>../../reference/dataview/processing/DV_TABLEROWS_NAVIGATOR_chart.xml</url><label>DV_TABLEROW_NAVIGATOR</label></link> to 
 			<link>
 				<url>#dv_tablerow_navigator</url>
 				<label>navigate among table rows</label>

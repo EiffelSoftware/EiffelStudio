@@ -13,7 +13,7 @@
 		</heading>
 		<paragraph>Vision2 ships with a number of samples provided to demonstrate different aspects of the library. If you are a new vision2 user then it is suggested that you first compile and run the
 			<link>
-				<url>/libraries/vision2/samples/widgets/index.html</url>
+				<url>/libraries/vision2/samples/widgets/index.xml</url>
 				<label>Widgets</label>
 			</link> sample. This will demonstrate both the appearence and behaviour of the available widgets.
 		</paragraph>
@@ -21,43 +21,43 @@
 			<list ordered="false">
 				<item>
 					<link>
-						<url>/libraries/vision2/samples/accelerator/index.html</url>
+						<url>/libraries/vision2/samples/accelerator/index.xml</url>
 						<label>Accelerator</label>
 					</link> - Demonstrates the use of an
 					<link>
-						<url>/libraries/vision2/reference/interface/kernel/ev_accelerator_chart.html</url>
+						<url>/libraries/vision2/reference/interface/kernel/ev_accelerator_chart.xml</url>
 						<label>EV_ACCELERATOR</label>
 					</link>.
 				</item>
 				<item>
 					<link>
-						<url>/libraries/vision2/samples/cursor/index.html</url>
+						<url>/libraries/vision2/samples/cursor/index.xml</url>
 						<label>Cursor</label>
 					</link> - Demonstrates how to modify the displayed
 					<link>
-						<url>/libraries/vision2/reference/interface/kernel/ev_cursor_chart.html</url>
+						<url>/libraries/vision2/reference/interface/kernel/ev_cursor_chart.xml</url>
 						<label>EV_CURSOR</label>
 					</link> for an
 					<link>
-						<url>/libraries/vision2/reference/interface/widgets/ev_widget.html</url>
+						<url>/libraries/vision2/reference/interface/widgets/ev_widget.xml</url>
 						<label>EV_WIDGET</label>
 					</link>.
 				</item>
 				<item>
 					<link>
-						<url>/libraries/vision2/samples/gauges/index.html</url>
+						<url>/libraries/vision2/samples/gauges/index.xml</url>
 						<label>Gauges</label>
 					</link> - Demonstrates different types of EV_GAUGE.
 				</item>
 				<item>
 					<link>
-						<url>/libraries/vision2/samples/standard_dialogs/index.html</url>
+						<url>/libraries/vision2/samples/standard_dialogs/index.xml</url>
 						<label>Standard_dialogs</label>
 					</link> - Demonstrates different types of EV_STANDARD_DIALOG.
 				</item>
 				<item>
 					<link>
-						<url>/libraries/vision2/samples/viewport/index.html</url>
+						<url>/libraries/vision2/samples/viewport/index.xml</url>
 						<label>Viewport</label>
 					</link> - Demonstrates EV_VIEWPORT.
 				</item>

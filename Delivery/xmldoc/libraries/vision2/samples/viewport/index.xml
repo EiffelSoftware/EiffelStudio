@@ -53,7 +53,7 @@
 			<line_break/>EV_SPIN_BUTTON
 			<line_break/>
 			<link>
-				<url>/libraries/vision2/reference/interface/widgets/primitives/ev_button_chart.html</url>
+				<url>/libraries/vision2/reference/interface/widgets/primitives/ev_button_chart.xml</url>
 				<label>EV_BUTTON</label>
 			</link>
 			<line_break/>

@@ -35,7 +35,7 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>A <link><url>../../reference/support/WEL_COLOR_CONTROL_chart.html</url><label>WEL_COLOR_CONTROL</label></link> is used to retrieve the color selection of the user through the feature rgb_result which returns an object of type <link><url>../../reference/gdi/WEL_COLOR_REF_chart.html</url><label>WEL_COLOR_REF</label></link>. </paragraph>
+		<paragraph>A <link><url>../../reference/support/WEL_COLOR_CONTROL_chart.xml</url><label>WEL_COLOR_CONTROL</label></link> is used to retrieve the color selection of the user through the feature rgb_result which returns an object of type <link><url>../../reference/gdi/WEL_COLOR_REF_chart.xml</url><label>WEL_COLOR_REF</label></link>. </paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
 				<item><code><class_name>CTLCOLOR_DEMO</class_name></code></item>

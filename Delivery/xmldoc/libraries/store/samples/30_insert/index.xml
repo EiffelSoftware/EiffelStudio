@@ -106,11 +106,11 @@ Object inserted
 				</heading>
 				<paragraph>            This sample showcases the use of the 
 					<link>
-						<url>../../reference/interface/db_store_chart.html</url>
+						<url>../../reference/interface/db_store_chart.xml</url>
 						<label>DB_STORE</label>
 					</link>        class to 
 					<link>
-						<url>../../content/10_interface_layer/50_data_object_coupling/index.html#insert</url>
+						<url>../../content/10_interface_layer/50_data_object_coupling/index.xml#insert</url>
 						<label> perform        database insertions</label>
 					</link> where the SQL language is totally        abstracted. 
 				</paragraph>
@@ -118,13 +118,13 @@ Object inserted
 				<list ordered="false">
 					<item>
 						<link>
-							<url>root_cluster/inserter_chart.html</url>
+							<url>root_cluster/inserter_chart.xml</url>
 							<label>INSERTER</label>
 						</link> for Oracle.
 					</item>
 					<item>
 						<link>
-							<url>root_cluster/inserter_odbc_chart.html</url>
+							<url>root_cluster/inserter_odbc_chart.xml</url>
 							<label>INSERTER_ODBC</label>
 						</link> for ODBC.
 					</item>

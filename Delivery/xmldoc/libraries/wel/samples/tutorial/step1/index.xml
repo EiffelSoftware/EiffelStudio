@@ -9,11 +9,11 @@
 	<paragraph>
 		<paragraph> This sample shows you how to set up your first 
 			<link>
-				<url>/libraries/wel/reference/support/wel_application_chart.html</url>
+				<url>/libraries/wel/reference/support/wel_application_chart.xml</url>
 				<label>WEL_APPLICATION</label>
 			</link> consisting of a single 
 			<link>
-				<url>/libraries/wel/reference/windows/wel_frame_window_chart.html</url>
+				<url>/libraries/wel/reference/windows/wel_frame_window_chart.xml</url>
 				<label>WEL_FRAME_WINDOW</label>
 			</link>. This is one of the simplest WEL applications you can write, and the output is shown below: 
 		</paragraph>
@@ -39,21 +39,21 @@
 		</heading>
 		<paragraph>Although this system does nothing except create and display a 
 			<link>
-				<url>/libraries/wel/reference/windows/wel_frame_window_chart.html</url>
+				<url>/libraries/wel/reference/windows/wel_frame_window_chart.xml</url>
 				<label>WEL_FRAME_WINDOW</label>
 			</link>, it shows how to set up your first 
 			<link>
-				<url>/libraries/wel/reference/support/wel_application_chart.html</url>
+				<url>/libraries/wel/reference/support/wel_application_chart.xml</url>
 				<label>WEL_APPLICATION</label>
 			</link>. 
 		</paragraph>
 		<paragraph>This sample only contains one class, 
 			<link>
-				<url>/libraries/wel/samples/tutorial/step1/root_cluster/tutorial_step1_chart.html</url>
+				<url>/libraries/wel/samples/tutorial/step1/root_cluster/tutorial_step1_chart.xml</url>
 				<label>TUTORIAL_STEP1</label>
 			</link> which inherits 
 			<link>
-				<url>/libraries/wel/reference/support/wel_application_chart.html</url>
+				<url>/libraries/wel/reference/support/wel_application_chart.xml</url>
 				<label>WEL_APPLICATION</label>
 			</link> and redefines <code><feature_name>main_window</feature_name></code>
 		</paragraph>
@@ -61,12 +61,12 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>/libraries/wel/content/common_concepts/inheriting_wel_application.html</url>
+				<url>/libraries/wel/content/common_concepts/inheriting_wel_application.xml</url>
 				<label>Inheriting WEL application</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/libraries/wel/content/common_concepts/redefining_main_window.html</url>
+				<url>/libraries/wel/content/common_concepts/redefining_main_window.xml</url>
 				<label>Redefining main_window</label>
 			</link>
 		</seealso>

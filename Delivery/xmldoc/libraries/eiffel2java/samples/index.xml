@@ -27,7 +27,7 @@ class test
 </code_block>
 		<paragraph>In order to run properly you need to read 
 			<link>
-				<url>../index.html</url>
+				<url>../index.xml</url>
 				<label>the library requirement</label>
 			</link>.
 		</paragraph>

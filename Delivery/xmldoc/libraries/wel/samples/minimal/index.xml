@@ -33,7 +33,7 @@
 		</heading> After launching the program, a window will be displayed as illustrated above. There is no other functionality, but clicking on the close icon (Cross in top right hand corner), will close the window. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading><code><class_name>MINIMAL_DEMO</class_name></code> inherits <link><url>../../reference/support/WEL_APPLICATION_chart.html</url><label>WEL_APPLICATION</label></link> and redefines <code><feature_name>main_window</feature_name></code> in order to display a <link><url>../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link>. 
+		</heading><code><class_name>MINIMAL_DEMO</class_name></code> inherits <link><url>../../reference/support/WEL_APPLICATION_chart.xml</url><label>WEL_APPLICATION</label></link> and redefines <code><feature_name>main_window</feature_name></code> in order to display a <link><url>../../reference/windows/WEL_FRAME_WINDOW_chart.xml</url><label>WEL_FRAME_WINDOW</label></link>. 
 		<paragraph>This sample contains only one class: 
 			<list ordered="false"><item><code><class_name>MINIMAL_DEMO</class_name></code></item></list>
 		</paragraph>
@@ -41,12 +41,12 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>/libraries/wel/samples/tutorial/step1/index.html</url>
+				<url>/libraries/wel/samples/tutorial/step1/index.xml</url>
 				<label>tutorial step 1</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/libraries/wel/reference/windows/wel_frame_window_chart.html</url>
+				<url>/libraries/wel/reference/windows/wel_frame_window_chart.xml</url>
 				<label>WEL_FRAME_WINDOW</label>
 			</link>
 		</seealso>

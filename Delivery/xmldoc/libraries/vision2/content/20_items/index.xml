@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  All Vision2 items inherit <link><url>../../reference/interface/items/EV_ITEM_chart.html</url><label>EV_ITEM</label></link>.  To view the classes contained in the items cluster, click 
+		<paragraph>  All Vision2 items inherit <link><url>../../reference/interface/items/EV_ITEM_chart.xml</url><label>EV_ITEM</label></link>.  To view the classes contained in the items cluster, click 
 			<link>
 				<url>/libraries/vision2/reference/interface/items/index.xml</url>
 				<label>here</label>
@@ -16,64 +16,64 @@
 		<heading>
 			<size>2</size>What is an item?
 		</heading>
-		<paragraph>  A Vision2 item is an object that is used to display information within certain primitives. For example, <link><url>../../reference/interface/widgets/primitives/EV_LIST_chart.html</url><label>EV_LIST</label></link>  may hold items of type <link><url>../../reference/interface/items/EV_LIST_ITEM_chart.html</url><label>EV_LIST_ITEM</label></link>. All  Vision2 items are descendants of <link><url>../../reference/interface/properties/EV_PIXMAPABLE_chart.html</url><label>EV_PIXMAPABLE</label></link> meaning they can  display an <link><url>../../reference/interface/widgets/primitives/EV_PIXMAP_chart.html</url><label>EV_PIXMAP</label></link>. </paragraph>
+		<paragraph>  A Vision2 item is an object that is used to display information within certain primitives. For example, <link><url>../../reference/interface/widgets/primitives/EV_LIST_chart.xml</url><label>EV_LIST</label></link>  may hold items of type <link><url>../../reference/interface/items/EV_LIST_ITEM_chart.xml</url><label>EV_LIST_ITEM</label></link>. All  Vision2 items are descendants of <link><url>../../reference/interface/properties/EV_PIXMAPABLE_chart.xml</url><label>EV_PIXMAPABLE</label></link> meaning they can  display an <link><url>../../reference/interface/widgets/primitives/EV_PIXMAP_chart.xml</url><label>EV_PIXMAP</label></link>. </paragraph>
 		<heading>
 			<size>2</size>Item holders
 		</heading>
 		<paragraph>  Below is a structure showing the Vision2 components and the items that they  accept, all the items types available in Vision2 are included:  
 			<list ordered="false">
-				<item><link><url>../../reference/interface/widgets/primitives/EV_LIST_chart.html</url><label>EV_LIST</label></link> accepts items of type:  
+				<item><link><url>../../reference/interface/widgets/primitives/EV_LIST_chart.xml</url><label>EV_LIST</label></link> accepts items of type:  
 					<list ordered="false">
-						<item><link><url>../../reference/interface/items/EV_LIST_ITEM_chart.html</url><label>EV_LIST_ITEM</label></link></item>
+						<item><link><url>../../reference/interface/items/EV_LIST_ITEM_chart.xml</url><label>EV_LIST_ITEM</label></link></item>
 					</list>
 				</item>
-				<item> <link><url>../../reference/interface/widgets/primitives/EV_COMBO_BOX_chart.html</url><label>EV_COMBO_BOX</label></link> accepts items of type:  
+				<item> <link><url>../../reference/interface/widgets/primitives/EV_COMBO_BOX_chart.xml</url><label>EV_COMBO_BOX</label></link> accepts items of type:  
 					<list ordered="false">
-						<item><link><url>../../reference/interface/items/EV_LIST_ITEM_chart.html</url><label>EV_LIST_ITEM</label></link></item>
+						<item><link><url>../../reference/interface/items/EV_LIST_ITEM_chart.xml</url><label>EV_LIST_ITEM</label></link></item>
 					</list>
 				</item>
-				<item><link><url>../../reference/interface/widgets/containers/EV_WINDOW_chart.html</url><label>EV_WINDOW</label></link> accepts items of type (Use set_menu_bar):  
+				<item><link><url>../../reference/interface/widgets/containers/EV_WINDOW_chart.xml</url><label>EV_WINDOW</label></link> accepts items of type (Use set_menu_bar):  
 					<list ordered="false">
-						<item><link><url>../../reference/interface/items/EV_MENU_BAR_chart.html</url><label>EV_MENU_BAR</label></link> accepts items of type:  
+						<item><link><url>../../reference/interface/items/EV_MENU_BAR_chart.xml</url><label>EV_MENU_BAR</label></link> accepts items of type:  
 							<list ordered="false">
-								<item><link><url>../../reference/interface/items/EV_MENU_chart.html</url><label>EV_MENU</label></link> accepts items of type:   
+								<item><link><url>../../reference/interface/items/EV_MENU_chart.xml</url><label>EV_MENU</label></link> accepts items of type:   
 									<list ordered="false">
-										<item><link><url>../../reference/interface/items/EV_MENU_chart.html</url><label>EV_MENU</label></link></item>
-										<item><link><url>../../reference/interface/items/EV_MENU_ITEM_chart.html</url><label>EV_MENU_ITEM</label></link></item>
-										<item><link><url>../../reference/interface/items/EV_MENU_SEPARATOR_chart.html</url><label>EV_MENU_SEPARATOR</label></link></item>
-										<item><link><url>../../reference/interface/items/EV_RADIO_MENU_ITEM_chart.html</url><label>EV_RADIO_MENU_ITEM</label></link></item>
-										<item><link><url>../../reference/interface/items/EV_CHECK_MENU_ITEM_chart.html</url><label>EV_CHECK_MENU_ITEM</label></link></item>
+										<item><link><url>../../reference/interface/items/EV_MENU_chart.xml</url><label>EV_MENU</label></link></item>
+										<item><link><url>../../reference/interface/items/EV_MENU_ITEM_chart.xml</url><label>EV_MENU_ITEM</label></link></item>
+										<item><link><url>../../reference/interface/items/EV_MENU_SEPARATOR_chart.xml</url><label>EV_MENU_SEPARATOR</label></link></item>
+										<item><link><url>../../reference/interface/items/EV_RADIO_MENU_ITEM_chart.xml</url><label>EV_RADIO_MENU_ITEM</label></link></item>
+										<item><link><url>../../reference/interface/items/EV_CHECK_MENU_ITEM_chart.xml</url><label>EV_CHECK_MENU_ITEM</label></link></item>
 									</list>
 								</item>
 							</list>
 						</item>
 					</list>
 				</item>
-				<item><link><url>../../reference/interface/widgets/primitives/EV_MULTI_COLUMN_LIST_chart.html</url><label>EV_MULTI_COLUMN_LIST</label></link> accepts items of type:  
+				<item><link><url>../../reference/interface/widgets/primitives/EV_MULTI_COLUMN_LIST_chart.xml</url><label>EV_MULTI_COLUMN_LIST</label></link> accepts items of type:  
 					<list ordered="false">
-						<item><link><url>../../reference/interface/items/EV_MULTI_COLUMN_LIST_ROW_chart.html</url><label>EV_MULTI_COLUMN_LIST_ROW</label></link></item>
+						<item><link><url>../../reference/interface/items/EV_MULTI_COLUMN_LIST_ROW_chart.xml</url><label>EV_MULTI_COLUMN_LIST_ROW</label></link></item>
 					</list>
 				</item>
-				<item><link><url>../../reference/interface/widgets/primitives/EV_TOOL_BAR_chart.html</url><label>EV_TOOL_BAR</label></link> accepts items of type:  
+				<item><link><url>../../reference/interface/widgets/primitives/EV_TOOL_BAR_chart.xml</url><label>EV_TOOL_BAR</label></link> accepts items of type:  
 					<list ordered="false">
-						<item><link><url>../../reference/interface/items/EV_TOOL_BAR_BUTTON_chart.html</url><label>EV_TOOL_BAR_BUTTON</label></link></item>
-						<item><link><url>../../reference/interface/items/EV_TOOL_BAR_RADIO_BUTTON_chart.html</url><label>EV_TOOL_BAR_RADIO_BUTTON</label></link></item>
-						<item><link><url>../../reference/interface/items/EV_TOOL_BAR_SEPARATOR_chart.html</url><label>EV_TOOL_BAR_SEPARATOR</label></link></item>
-						<item><link><url>../../reference/interface/items/EV_TOOL_BAR_TOGGLE_BUTTON_chart.html</url><label>EV_TOOL_BAR_TOGGLE_BUTTON</label></link></item>
+						<item><link><url>../../reference/interface/items/EV_TOOL_BAR_BUTTON_chart.xml</url><label>EV_TOOL_BAR_BUTTON</label></link></item>
+						<item><link><url>../../reference/interface/items/EV_TOOL_BAR_RADIO_BUTTON_chart.xml</url><label>EV_TOOL_BAR_RADIO_BUTTON</label></link></item>
+						<item><link><url>../../reference/interface/items/EV_TOOL_BAR_SEPARATOR_chart.xml</url><label>EV_TOOL_BAR_SEPARATOR</label></link></item>
+						<item><link><url>../../reference/interface/items/EV_TOOL_BAR_TOGGLE_BUTTON_chart.xml</url><label>EV_TOOL_BAR_TOGGLE_BUTTON</label></link></item>
 					</list>
 				</item>
 				<item>EV_TREE accepts items of type:  
 					<list ordered="false">
-						<item><link><url>../../reference/interface/items/EV_DYNAMIC_TREE_ITEM_chart.html</url><label>EV_DYNAMIC_TREE_ITEM</label></link> accepts items of type:   
+						<item><link><url>../../reference/interface/items/EV_DYNAMIC_TREE_ITEM_chart.xml</url><label>EV_DYNAMIC_TREE_ITEM</label></link> accepts items of type:   
 							<list ordered="false">
-								<item><link><url>../../reference/interface/items/EV_DYNAMIC_TREE_ITEM_chart.html</url><label>EV_DYNAMIC_TREE_ITEM</label></link></item>
-								<item><link><url>../../reference/interface/items/EV_TREE_ITEM_chart.html</url><label>EV_TREE_ITEM</label></link></item>
+								<item><link><url>../../reference/interface/items/EV_DYNAMIC_TREE_ITEM_chart.xml</url><label>EV_DYNAMIC_TREE_ITEM</label></link></item>
+								<item><link><url>../../reference/interface/items/EV_TREE_ITEM_chart.xml</url><label>EV_TREE_ITEM</label></link></item>
 							</list>
 						</item>
-						<item><link><url>../../reference/interface/items/EV_TREE_ITEM_chart.html</url><label>EV_TREE_ITEM</label></link> accepts items of type:   
+						<item><link><url>../../reference/interface/items/EV_TREE_ITEM_chart.xml</url><label>EV_TREE_ITEM</label></link> accepts items of type:   
 							<list ordered="false">
-								<item><link><url>../../reference/interface/items/EV_DYNAMIC_TREE_ITEM_chart.html</url><label>EV_DYNAMIC_TREE_ITEM</label></link></item>
-								<item><link><url>../../reference/interface/items/EV_TREE_ITEM_chart.html</url><label>EV_TREE_ITEM</label></link></item>
+								<item><link><url>../../reference/interface/items/EV_DYNAMIC_TREE_ITEM_chart.xml</url><label>EV_DYNAMIC_TREE_ITEM</label></link></item>
+								<item><link><url>../../reference/interface/items/EV_TREE_ITEM_chart.xml</url><label>EV_TREE_ITEM</label></link></item>
 							</list>
 						</item>
 					</list>

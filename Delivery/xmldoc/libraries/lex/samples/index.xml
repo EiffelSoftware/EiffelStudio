@@ -7,13 +7,13 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url>eiffel_scan/index.html</url>
+					<url>eiffel_scan/index.xml</url>
 					<label>Eiffel scanner</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>process/index.html</url>
+					<url>process/index.xml</url>
 					<label>Polynomial example language</label>
 				</link>
 			</item>

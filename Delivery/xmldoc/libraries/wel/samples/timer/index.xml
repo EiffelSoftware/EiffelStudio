@@ -33,7 +33,7 @@
 		</heading> After launching the program, a window will be displayed as illustarated above. Clicking on any of the push buttons marked "Start Timer" will start a timer running, and the hatched area immdiately above the push button will change its appearence to reflect the interval of the timer. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading> A <link><url>../../reference/windows/WEL_WINDOW_chart.html</url><label>WEL_WINDOW</label></link> supports multiple timers, set by set_timer which takes a unique id for each timer. The <code><feature_name>on_timer</feature_name></code> feature is called every time a timer interval is reached with an argument corresponding to the <code><feature_name>id</feature_name></code> of the timer. Within <code><class_name>MAIN_WINDOW</class_name></code>, <code><feature_name>on_timer</feature_name></code> has been redefined to update the appearence of the hatched areas. 
+		</heading> A <link><url>../../reference/windows/WEL_WINDOW_chart.xml</url><label>WEL_WINDOW</label></link> supports multiple timers, set by set_timer which takes a unique id for each timer. The <code><feature_name>on_timer</feature_name></code> feature is called every time a timer interval is reached with an argument corresponding to the <code><feature_name>id</feature_name></code> of the timer. Within <code><class_name>MAIN_WINDOW</class_name></code>, <code><feature_name>on_timer</feature_name></code> has been redefined to update the appearence of the hatched areas. 
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
 				<item><code><class_name>APPLICATION_IDS</class_name></code></item>

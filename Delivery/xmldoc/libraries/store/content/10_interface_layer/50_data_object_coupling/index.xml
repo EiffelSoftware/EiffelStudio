@@ -3,19 +3,19 @@
 	<paragraph>
 		<paragraph>A smart way to work with relational databases is to have Eiffel objects directly mapping relational tables. 3 EiffelStore main capabilities enable this coupling:</paragraph>
 		<list ordered="false">
-			<item><link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.html</url><label>DB_REPOSITORY</label></link> objects 
+			<item><link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.xml</url><label>DB_REPOSITORY</label></link> objects 
 				<link>
 					<url>#describe</url>
 					<label>describe a relational table</label>
 				</link> and enable to create Eiffel objects mapping database tables.
 			</item>
-			<item><link><url>/libraries/store/reference/interface/DB_STORE_flatshort.html</url><label>DB_STORE</label></link> enables to 
+			<item><link><url>/libraries/store/reference/interface/DB_STORE_flatshort.xml</url><label>DB_STORE</label></link> enables to 
 				<link>
 					<url>#insert</url>
 					<label>insert data into relational tables</label>
-				</link> using directly <link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.html</url><label>DB_REPOSITORY</label></link> objects.
+				</link> using directly <link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.xml</url><label>DB_REPOSITORY</label></link> objects.
 			</item>
-			<item><link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.html</url><label>DB_SELECTION</label></link> can 
+			<item><link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.xml</url><label>DB_SELECTION</label></link> can 
 				<link>
 					<url>#map</url>
 					<label>map a database query result into Eiffel objects</label>
@@ -25,7 +25,7 @@
 		<heading>
 			<size>2</size>Describing relational tables with DB_REPOSITORY
 		</heading>
-		<paragraph>A <link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.html</url><label>DB_REPOSITORY</label></link> object stores available information about a table. To access this information, you mainly have to give the table name and load the table description:</paragraph>
+		<paragraph>A <link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.xml</url><label>DB_REPOSITORY</label></link> object stores available information about a table. To access this information, you mainly have to give the table name and load the table description:</paragraph>
 <code_block>
 	<feature_name>repository</feature_name><symbol>:</symbol> <class_name>DB_REPOSITORY</class_name>
 	...
@@ -38,9 +38,9 @@
 		<tip>
 			<bold>Tip</bold>: Loading a table description is often a costly operation: table has to be fetched among existing tables then every table column description must be loaded. Hence it is better to store and reuse a repository (maybe with a HASH_TABLE) once it has been loaded.
 		</tip>
-		<paragraph>Using the table information, <link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.html</url><label>DB_REPOSITORY</label></link> then helps generating Eiffel classes mapping relational tables: </paragraph>
+		<paragraph>Using the table information, <link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.xml</url><label>DB_REPOSITORY</label></link> then helps generating Eiffel classes mapping relational tables: </paragraph>
 		<list ordered="false">
-			<item>You can directly use {<link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.html</url><label>DB_REPOSITORY</label></link>}.generate_class. Generated class may look like:
+			<item>You can directly use {<link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.xml</url><label>DB_REPOSITORY</label></link>}.generate_class. Generated class may look like:
 <code_block>
 	<keyword>class</keyword> <class_name>CONTACTS</class_name>
 
@@ -65,11 +65,11 @@
 		<heading>
 			<size>2</size>Inserting data in the database
 		</heading>
-		<paragraph><link><url>/libraries/store/reference/interface/DB_STORE_flatshort.html</url><label>DB_STORE</label></link> lets you easily insert rows into a table using: 
+		<paragraph><link><url>/libraries/store/reference/interface/DB_STORE_flatshort.xml</url><label>DB_STORE</label></link> lets you easily insert rows into a table using: 
 			<list ordered="false">
-				<item>the table description provided by <link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.html</url><label>DB_REPOSITORY</label></link>.</item>
+				<item>the table description provided by <link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.xml</url><label>DB_REPOSITORY</label></link>.</item>
 				<item>a class mapping the relational table. </item>
-			</list> This is straight-forward since you only have to give <link><url>/libraries/store/reference/interface/DB_STORE_flatshort.html</url><label>DB_STORE</label></link> the object filled with the table values. Suppose you want to add a contact into your database:
+			</list> This is straight-forward since you only have to give <link><url>/libraries/store/reference/interface/DB_STORE_flatshort.xml</url><label>DB_STORE</label></link> the object filled with the table values. Suppose you want to add a contact into your database:
 		</paragraph>
 <code_block>
 	<feature_name>storage</feature_name><symbol>:</symbol> <class_name>DB_STORE</class_name>
@@ -85,7 +85,7 @@
 		<heading>
 			<size>2</size>Accessing database content with Eiffel objects
 		</heading>
-		<paragraph><link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.html</url><label>DB_SELECTION</label></link> lets you map data retrieved from the database into Eiffel objects: Result column names must match object attributes names so you can use for instance classes created by <link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.html</url><label>DB_REPOSITORY</label></link>. Class <code><class_name>DB_ACTION</class_name></code> redefines ACTION and can be used to retrieve Eiffel objects directly into an ARRAYED_LIST:</paragraph>
+		<paragraph><link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.xml</url><label>DB_SELECTION</label></link> lets you map data retrieved from the database into Eiffel objects: Result column names must match object attributes names so you can use for instance classes created by <link><url>/libraries/store/reference/interface/DB_REPOSITORY_flatshort.xml</url><label>DB_REPOSITORY</label></link>. Class <code><class_name>DB_ACTION</class_name></code> redefines ACTION and can be used to retrieve Eiffel objects directly into an ARRAYED_LIST:</paragraph>
 <code_block>
 	<feature_name>selection</feature_name><symbol>:</symbol> <class_name>DB_SELECTION</class_name>
 	<feature_name>list_filling</feature_name><symbol>:</symbol> <class_name>DB_ACTION</class_name> <symbol>[</symbol><class_name>CONTACTS</class_name><symbol>]</symbol>
@@ -101,7 +101,7 @@
 	<keyword>end</keyword>
 </code_block>
 		<note>
-			<bold>Note</bold>: You can see how actions are used in <link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.html</url><label>DB_SELECTION</label></link>.
+			<bold>Note</bold>: You can see how actions are used in <link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.xml</url><label>DB_SELECTION</label></link>.
 		</note>
 		<line_break/>
 		<seealso>

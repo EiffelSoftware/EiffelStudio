@@ -1,7 +1,7 @@
 <document output="studio" title="Database control">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Use the <link><url>/libraries/store/reference/interface/DB_CONTROL_flatshort.html</url><label>DB_CONTROL</label></link> class to check or change database status and behavior. The main operations you are likely to use are:</paragraph>
+		<paragraph>Use the <link><url>/libraries/store/reference/interface/DB_CONTROL_flatshort.xml</url><label>DB_CONTROL</label></link> class to check or change database status and behavior. The main operations you are likely to use are:</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
@@ -26,7 +26,7 @@
 			<size>2</size>Handling database errors
 		</heading>
 		<paragraph>Every EiffelStore interface class has an is_ok feature. This enables to check directly if the last database operation has been successful.</paragraph>
-		<paragraph>When an error is detected, you can access through <link><url>/libraries/store/reference/interface/DB_CONTROL_flatshort.html</url><label>DB_CONTROL</label></link> further information about the error:</paragraph>
+		<paragraph>When an error is detected, you can access through <link><url>/libraries/store/reference/interface/DB_CONTROL_flatshort.xml</url><label>DB_CONTROL</label></link> further information about the error:</paragraph>
 		<list ordered="false">
 			<item>error_message provides a description of the error that occurred.</item>
 			<item>error_code returns a code corresponding to the error type. This code enables to handle specific errors within your code without parsing the error_message.</item>
@@ -36,7 +36,7 @@
 		<heading>
 			<size>2</size>Managing database connection
 		</heading>
-		<paragraph><link><url>/libraries/store/reference/interface/DB_CONTROL_flatshort.html</url><label>DB_CONTROL</label></link> lets you connect, check connection and disconnect from the database.</paragraph>
+		<paragraph><link><url>/libraries/store/reference/interface/DB_CONTROL_flatshort.xml</url><label>DB_CONTROL</label></link> lets you connect, check connection and disconnect from the database.</paragraph>
 		<paragraph>The following example sum up these capabilities:</paragraph>
 <code_block>
 	<feature_name>session_control</feature_name><symbol>:</symbol> <class_name>DB_CONTROL</class_name>

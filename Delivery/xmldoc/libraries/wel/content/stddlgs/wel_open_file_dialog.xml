@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  The <link><url>../../reference/stddlgs/WEL_OPEN_FILE_DIALOG_chart.html</url><label>WEL_OPEN_FILE_DIALOG</label></link> is an encapsulation of the  Win32 open file dialog, and provides a means of specifying a file to be opened. </paragraph>
+		<paragraph>  The <link><url>../../reference/stddlgs/WEL_OPEN_FILE_DIALOG_chart.xml</url><label>WEL_OPEN_FILE_DIALOG</label></link> is an encapsulation of the  Win32 open file dialog, and provides a means of specifying a file to be opened. </paragraph>
 		<heading>
 			<size>2</size>Appearance
 		</heading>

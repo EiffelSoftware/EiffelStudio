@@ -2,7 +2,7 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>If you have to execute database queries which only differ in the expression values, you can create a template query and then bind variables into this template for each execution.</paragraph>
-		<paragraph>This mechanism can be applied for requests with a result (<link><url>/libraries/store/reference/interface/DB_SELECTION_chart.html</url><label>DB_SELECTION</label></link>) or without (<link><url>/libraries/store/reference/interface/DB_CHANGE_chart.html</url><label>DB_CHANGE</label></link>). Hence both classes inherits from STRING_HDL that actually handle variable binding.</paragraph>
+		<paragraph>This mechanism can be applied for requests with a result (<link><url>/libraries/store/reference/interface/DB_SELECTION_chart.xml</url><label>DB_SELECTION</label></link>) or without (<link><url>/libraries/store/reference/interface/DB_CHANGE_chart.xml</url><label>DB_CHANGE</label></link>). Hence both classes inherits from STRING_HDL that actually handle variable binding.</paragraph>
 		<paragraph>To use variable binding:</paragraph>
 		<list ordered="false">
 			<item>
@@ -31,7 +31,7 @@
 	<feature_name>selection</feature_name>.<feature_name>set_query</feature_name> <symbol>(</symbol><string>"Select * from CONTACTS where Firstname = ':"</string> + <feature_name>Bind_var</feature_name> + <string>"'"</string><symbol>)</symbol>
 </code_block>
 		<note>
-			<bold>Note</bold>: The code example shows how to bind variables to a <link><url>/libraries/store/reference/interface/DB_SELECTION_chart.html</url><label>DB_SELECTION</label></link> object but the mechanism is exactly the same for <link><url>/libraries/store/reference/interface/DB_CHANGE_chart.html</url><label>DB_CHANGE</label></link> objects.
+			<bold>Note</bold>: The code example shows how to bind variables to a <link><url>/libraries/store/reference/interface/DB_SELECTION_chart.xml</url><label>DB_SELECTION</label></link> object but the mechanism is exactly the same for <link><url>/libraries/store/reference/interface/DB_CHANGE_chart.xml</url><label>DB_CHANGE</label></link> objects.
 		</note>
 		<heading>
 			<size>2</size>Binding variables to a query

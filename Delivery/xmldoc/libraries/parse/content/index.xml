@@ -139,7 +139,7 @@
 		<note>
 			<bold>Note</bold>: this notation for productions uses conventions similar to those of the book 
 			<link>
-				<url>http://vig.pearsoned.com/store/product/1,3498,store-3841_isbn-0132479257,00.xml</url>
+				<url>http://vig.pearsoned.com/store/product/1,3498,store-3841_isbn-0132479257,00.html</url>
 				<label>Eiffel: The Language</label>
 			</link>. Keywords are written in 
 			<bold>boldface italics</bold> and stand for themselves. Special symbols, such as the semicolon, are written in double quotes, as in ";". The [=] symbol means "is defined as" and is more accurate mathematically than plain =, which, however, is often used for this purpose (see "Introduction to the Theory of Programming Languages", Prentice Hall, 1991, for a more complete discussion of this issue).

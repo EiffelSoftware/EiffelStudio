@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>This sample demonstrates the use of a <link><url>../../../reference/gdi/WEL_CLIENT_DC_chart.html</url><label>WEL_CLIENT_DC</label></link> to display output in the <code><class_name>MAIN_WINDOW</class_name></code>. The ouput is shown below: </paragraph>
+		<paragraph>This sample demonstrates the use of a <link><url>../../../reference/gdi/WEL_CLIENT_DC_chart.xml</url><label>WEL_CLIENT_DC</label></link> to display output in the <code><class_name>MAIN_WINDOW</class_name></code>. The ouput is shown below: </paragraph>
 		<image> 
 			<url>step3.png</url> 
 			<alt_text>step3</alt_text>
@@ -20,11 +20,11 @@
 		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
 		<heading>
 			<size>2</size>Running
-		</heading> After launching the sample, you should see a <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link> displayed . If you click the left mouse button in the client area of the window, the coordinates of the click (Relative to the top left of the client area), will be displayed. Clicking the right mouse button in the client area will clear the window. 
+		</heading> After launching the sample, you should see a <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.xml</url><label>WEL_FRAME_WINDOW</label></link> displayed . If you click the left mouse button in the client area of the window, the coordinates of the click (Relative to the top left of the client area), will be displayed. Clicking the right mouse button in the client area will clear the window. 
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>This system is a demonstration of how to gain access to the client area of a window using a <link><url>../../../reference/gdi/WEL_CLIENT_DC_chart.html</url><label>WEL_CLIENT_DC</label></link>. The creation procedure of the DC takes a WEL_WINDOW as an argument, and in this sample, we pass the <code><class_name>MAIN_WINDOW</class_name></code>. Using this DC, it is a simple step to output the position of the mouse which is provided as arguments to <code><feature_name>on_left_button_down</feature_name></code>.</paragraph>
+		<paragraph>This system is a demonstration of how to gain access to the client area of a window using a <link><url>../../../reference/gdi/WEL_CLIENT_DC_chart.xml</url><label>WEL_CLIENT_DC</label></link>. The creation procedure of the DC takes a WEL_WINDOW as an argument, and in this sample, we pass the <code><class_name>MAIN_WINDOW</class_name></code>. Using this DC, it is a simple step to output the position of the mouse which is provided as arguments to <code><feature_name>on_left_button_down</feature_name></code>.</paragraph>
 		<paragraph><code><feature_name>on_right_button_down</feature_name></code> has also been redefined to call invalidate which clears the client area of the window. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
@@ -36,7 +36,7 @@
 				<bold>See Also</bold>
 				<line_break/>
 				<link>
-					<url>/libraries/wel/content/common_concepts/common_message_hooks.html#common_message_hooks</url>
+					<url>/libraries/wel/content/common_concepts/common_message_hooks.xml#common_message_hooks</url>
 					<label>Common message hooks</label>
 				</link>
 				<line_break/>

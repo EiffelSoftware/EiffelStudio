@@ -9,9 +9,9 @@
 	<paragraph>
 		<paragraph>This sample builds on tutorial 
 			<link>
-				<url>/libraries/wel/samples/tutorial/step5/index.html</url>
+				<url>/libraries/wel/samples/tutorial/step5/index.xml</url>
 				<label>step 5</label>
-			</link> by preventing the loss of the drawing when Windows re-draws the client area of the <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link>. The output is shown below: 
+			</link> by preventing the loss of the drawing when Windows re-draws the client area of the <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.xml</url><label>WEL_FRAME_WINDOW</label></link>. The output is shown below: 
 		</paragraph>
 		<image> 
 			<url>step6.png</url> 
@@ -26,7 +26,7 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the sample, you will see a <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link> displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. If you press the right mouse button, a <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.html</url><label>WEL_MODAL_DIALOG</label></link> will pop up which allows you to enter the thickness of the line that is drawn. If you re-size the window, then the drawing will be re-drawn.</paragraph>
+		<paragraph>After launching the sample, you will see a <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.xml</url><label>WEL_FRAME_WINDOW</label></link> displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. If you press the right mouse button, a <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.xml</url><label>WEL_MODAL_DIALOG</label></link> will pop up which allows you to enter the thickness of the line that is drawn. If you re-size the window, then the drawing will be re-drawn.</paragraph>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>

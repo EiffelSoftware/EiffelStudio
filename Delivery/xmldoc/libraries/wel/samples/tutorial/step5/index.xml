@@ -9,9 +9,9 @@
 	<paragraph>
 		<paragraph>The sample builds on tutorial 
 			<link>
-				<url>/libraries/wel/samples/tutorial/step4/index.html</url>
+				<url>/libraries/wel/samples/tutorial/step4/index.xml</url>
 				<label>step 4</label>
-			</link> and also demonstrates the use of a <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.html</url><label>WEL_MODAL_DIALOG</label></link>. The output is shown below: 
+			</link> and also demonstrates the use of a <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.xml</url><label>WEL_MODAL_DIALOG</label></link>. The output is shown below: 
 		</paragraph>
 		<image> 
 			<url>step5.png</url> 
@@ -25,15 +25,15 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After launching the sample, you will see a <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.html</url><label>WEL_FRAME_WINDOW</label></link> displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. If you press the right mouse button, a <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.html</url><label>WEL_MODAL_DIALOG</label></link> will pop up which allows you to enter the thickness of the line that is drawn.</paragraph>
+		<paragraph>After launching the sample, you will see a <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.xml</url><label>WEL_FRAME_WINDOW</label></link> displayed. By holding down the left mouse button, and moving the mouse (Within the client area of the window), you will be able to draw on the client are of the window. If you press the right mouse button, a <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.xml</url><label>WEL_MODAL_DIALOG</label></link> will pop up which allows you to enter the thickness of the line that is drawn.</paragraph>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
 		<paragraph>This sytem builds on tutorial 
 			<link>
-				<url>/libraries/wel/samples/tutorial/step4/index.html</url>
+				<url>/libraries/wel/samples/tutorial/step4/index.xml</url>
 				<label>step 4</label>
-			</link> by adding a <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.html</url><label>WEL_MODAL_DIALOG</label></link>. The class <code><class_name>LINE_THICKNESS_DIALOG</class_name></code> inherits <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.html</url><label>WEL_MODAL_DIALOG</label></link> and uses a WEL_SINGLE_LINE_EDIT to input the desired line width. 
+			</link> by adding a <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.xml</url><label>WEL_MODAL_DIALOG</label></link>. The class <code><class_name>LINE_THICKNESS_DIALOG</class_name></code> inherits <link><url>../../../reference/windows/WEL_MODAL_DIALOG_chart.xml</url><label>WEL_MODAL_DIALOG</label></link> and uses a WEL_SINGLE_LINE_EDIT to input the desired line width. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
 					<item><code><class_name>TUTORIAL_STEP5</class_name></code></item>

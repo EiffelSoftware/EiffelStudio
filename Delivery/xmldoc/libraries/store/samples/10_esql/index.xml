@@ -91,19 +91,19 @@ SQL>
 				<list ordered="false">
 					<item>
 						<link>
-							<url>../../reference/interface/db_control_chart.html</url>
+							<url>../../reference/interface/db_control_chart.xml</url>
 							<label>DB_CONTROL</label>
 						</link>            to connect and disconnect to your database.
 					</item>
 					<item>
 						<link>
-							<url>../../reference/interface/db_selection_chart.html</url>
+							<url>../../reference/interface/db_selection_chart.xml</url>
 							<label>DB_SELECTION</label>
 						</link>            to perform 'select' queries.
 					</item>
 					<item>
 						<link>
-							<url>../../reference/interface/db_change_chart.html</url>
+							<url>../../reference/interface/db_change_chart.xml</url>
 							<label>DB_CHANGE</label>
 						</link>            to perform SQL queries that output no result.
 					</item>
@@ -112,13 +112,13 @@ SQL>
 				<list ordered="false">
 					<item>
 						<link>
-							<url>root_cluster/esql_chart.html</url>
+							<url>root_cluster/esql_chart.xml</url>
 							<label>ESQL</label>
 						</link> for Oracle.
 					</item>
 					<item>
 						<link>
-							<url>root_cluster/esql_odbc_chart.html</url>
+							<url>root_cluster/esql_odbc_chart.xml</url>
 							<label>ESQL_ODBC</label>
 						</link> for            ODBC.
 					</item>

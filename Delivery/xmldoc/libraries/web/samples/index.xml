@@ -4,7 +4,7 @@
 		<paragraph>
 			<paragraph>The 
 				<link>
-					<url>basic/index.html</url>
+					<url>basic/index.xml</url>
 					<label>basic</label>
 				</link> sample will get you started        on the development of forms processing in Eiffel.
 			</paragraph>

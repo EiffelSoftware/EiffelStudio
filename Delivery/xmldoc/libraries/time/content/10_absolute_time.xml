@@ -1,23 +1,23 @@
 <document output="studio" title="Absolute time">
 	<meta_data/>
 	<paragraph>
-		<paragraph>The classes dealing with date and those dealing with time have almost the same construction. At the top of the hierarchy are the constants and the notion of value (<link><url>../reference/TIME_VALUE_chart.html</url><label>TIME_VALUE</label></link>, <link><url>../reference/DATE_VALUE_chart.html</url><label>DATE_VALUE</label></link>, <link><url>../reference/DATE_TIME_VALUE_chart.html</url><label>DATE_TIME_VALUE</label></link>). From this notion come two kinds of heirs which are the absolute notion of time (classes 
-			<link><url>../reference/DATE_chart.html</url><label>DATE</label></link>, 
-			<link><url>../reference/TIME_chart.html</url><label>TIME</label></link> and 
-			<link><url>../reference/DATE_TIME_chart.html</url><label>DATE_TIME</label></link>) and the notion of duration (classes <link><url>../reference/DATE_DURATION_chart.html</url><label>DATE_DURATION</label></link>, <link><url>../reference/TIME_DURATION_chart.html</url><label>TIME_DURATION</label></link>, 
-			<link><url>../reference/DATE_TIME_DURATION_chart.html</url><label>DATE_TIME_DURATION</label></link>).
+		<paragraph>The classes dealing with date and those dealing with time have almost the same construction. At the top of the hierarchy are the constants and the notion of value (<link><url>../reference/TIME_VALUE_chart.xml</url><label>TIME_VALUE</label></link>, <link><url>../reference/DATE_VALUE_chart.xml</url><label>DATE_VALUE</label></link>, <link><url>../reference/DATE_TIME_VALUE_chart.xml</url><label>DATE_TIME_VALUE</label></link>). From this notion come two kinds of heirs which are the absolute notion of time (classes 
+			<link><url>../reference/DATE_chart.xml</url><label>DATE</label></link>, 
+			<link><url>../reference/TIME_chart.xml</url><label>TIME</label></link> and 
+			<link><url>../reference/DATE_TIME_chart.xml</url><label>DATE_TIME</label></link>) and the notion of duration (classes <link><url>../reference/DATE_DURATION_chart.xml</url><label>DATE_DURATION</label></link>, <link><url>../reference/TIME_DURATION_chart.xml</url><label>TIME_DURATION</label></link>, 
+			<link><url>../reference/DATE_TIME_DURATION_chart.xml</url><label>DATE_TIME_DURATION</label></link>).
 		</paragraph>
 		<paragraph>
-			<link><url>../reference/DATE_chart.html</url><label>DATE</label></link>, 
-			<link><url>../reference/TIME_chart.html</url><label>TIME</label></link> and 
-			<link><url>../reference/DATE_TIME_chart.html</url><label>DATE_TIME</label></link> inherit from the deferred class <code><class_name>ABSOLUTE</class_name></code>. It implies that instances of these classes are used as absolutes. We can imagine an oriented axis on which are reported values. <code><class_name>ABSOLUTE </class_name></code>inherits <code><class_name>COMPARABLE</class_name></code>, there is a complete order inside the class and its heir. <code><class_name>ABSOLUTE</class_name></code> is a client of <code><class_name>DURATION</class_name></code>, so that each instance of <code><class_name>ABSOLUTE </class_name></code>is linked with the duration between the origin and itself.
+			<link><url>../reference/DATE_chart.xml</url><label>DATE</label></link>, 
+			<link><url>../reference/TIME_chart.xml</url><label>TIME</label></link> and 
+			<link><url>../reference/DATE_TIME_chart.xml</url><label>DATE_TIME</label></link> inherit from the deferred class <code><class_name>ABSOLUTE</class_name></code>. It implies that instances of these classes are used as absolutes. We can imagine an oriented axis on which are reported values. <code><class_name>ABSOLUTE </class_name></code>inherits <code><class_name>COMPARABLE</class_name></code>, there is a complete order inside the class and its heir. <code><class_name>ABSOLUTE</class_name></code> is a client of <code><class_name>DURATION</class_name></code>, so that each instance of <code><class_name>ABSOLUTE </class_name></code>is linked with the duration between the origin and itself.
 		</paragraph>
 		<paragraph>The default way to compare absolute objects is to compare their respective duration to each other.</paragraph>
 		<heading>
 			<size>2</size>TIME
 		</heading>
 		<paragraph>
-			<link><url>../reference/TIME_chart.html</url><label>TIME</label></link> deals with hour, minute and second. Is is possible to use more precision for time (there is no limit inside the class). See More precision in 
+			<link><url>../reference/TIME_chart.xml</url><label>TIME</label></link> deals with hour, minute and second. Is is possible to use more precision for time (there is no limit inside the class). See More precision in 
 			<code>
 				<class_name>TIME</class_name>
 			</code> for documentation. This section deals only with second.
@@ -38,15 +38,15 @@
 			<size>4</size>Comparison
 		</heading>
 		<paragraph>Instances of 
-			<link><url>../reference/TIME_chart.html</url><label>TIME </label></link>may be compared. Functions &lt;, + &gt; and &gt;= are available. Function is_equal must be use to test equality. = will compare references.
+			<link><url>../reference/TIME_chart.xml</url><label>TIME </label></link>may be compared. Functions &lt;, + &gt; and &gt;= are available. Function is_equal must be use to test equality. = will compare references.
 		</paragraph>
 		<heading>
 			<size>4</size>Measurement
 		</heading>
 		<paragraph>The duration linked to an instance of 
 			
-				<link><url>../reference/TIME_chart.html</url><label>TIME</label></link>
-			 (attribute duration) is an instance of <link><url>../reference/TIME_DURATION_chart.html</url><label>TIME_DURATION</label></link>. It is the duration from the origin until the current time. The function seconds returns the number of seconds since the origin. This function may be useful to get the number of seconds between two events.The feature - creates an interval between two instances of 
+				<link><url>../reference/TIME_chart.xml</url><label>TIME</label></link>
+			 (attribute duration) is an instance of <link><url>../reference/TIME_DURATION_chart.xml</url><label>TIME_DURATION</label></link>. It is the duration from the origin until the current time. The function seconds returns the number of seconds since the origin. This function may be useful to get the number of seconds between two events.The feature - creates an interval between two instances of 
 			<code>
 				<class_name>TIME</class_name>
 			</code>. The duration of this interval is given by the function duration. However, this duration is not canonical (See 

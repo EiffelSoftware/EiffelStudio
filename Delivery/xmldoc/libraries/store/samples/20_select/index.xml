@@ -120,7 +120,7 @@ Author? ('exit' to terminate):
 				</heading>
 				<paragraph>            This sample showcases the use of the 
 					<link>
-						<url>../../reference/interface/db_selection_chart.html</url>
+						<url>../../reference/interface/db_selection_chart.xml</url>
 						<label>DB_SELECTION</label>
 					</link>            class to perform smart 
 					<italic>select</italic> queries, using: 
@@ -128,13 +128,13 @@ Author? ('exit' to terminate):
 				<list ordered="false">
 					<item>
 						<link>
-							<url>../../content/10_interface_layer/50_data_object_coupling/index.html</url>
+							<url>../../content/10_interface_layer/50_data_object_coupling/index.xml</url>
 							<label>Database            data and Eiffel objects Coupling</label>
 						</link>.
 					</item>
 					<item>
 						<link>
-							<url>../../content/10_interface_layer/60_query_variables/index.html</url>
+							<url>../../content/10_interface_layer/60_query_variables/index.xml</url>
 							<label>Variables            Binding</label>
 						</link>.
 					</item>
@@ -143,13 +143,13 @@ Author? ('exit' to terminate):
 				<list ordered="false">
 					<item>
 						<link>
-							<url>root_cluster/selector_chart.html</url>
+							<url>root_cluster/selector_chart.xml</url>
 							<label>SELECTOR</label>
 						</link> for Oracle.
 					</item>
 					<item>
 						<link>
-							<url>root_cluster/selector_odbc_chart.html</url>
+							<url>root_cluster/selector_odbc_chart.xml</url>
 							<label>SELECTOR_ODBC</label>
 						</link> for ODBC.
 					</item>

@@ -16,7 +16,8 @@ inherit
 			process_object, process_breakable, process_class,
 			process_classi, compatible, process_feature,
 			process_class_syntax, process_ace_syntax, display,
-			process_call_stack, force_raise, resources
+			process_call_stack, force_raise, resources,
+			update_graphical_resources
 		end;
 	COMMAND;
 	BASE
@@ -146,16 +147,20 @@ feature -- Resource Update
 							split_window.set_height (real_project_height (implementation));
 						end
 					end
+				elseif old_res = pr.interrupt_every_n_instructions then
+					Application.set_interrupt_number (new.actual_value)
 				elseif old_res = General_resources.tab_step then
 					set_default_tab_length (new.actual_value);
 					Window_manager.routine_win_mgr.set_tab_length_to_default;
 					Window_manager.class_win_mgr.set_tab_length_to_default;
 					Window_manager.object_win_mgr.set_tab_length_to_default;
 					Window_manager.explain_win_mgr.set_tab_length_to_default;
-					System_tool.set_tab_length_to_default;
-					System_tool.update_save_symbol
-					if System_tool.text_window.is_graphical then	
-						System_tool.synchronize
+					if System_tool.realized then
+						System_tool.set_tab_length_to_default;
+						System_tool.update_save_symbol
+						if System_tool.text_window.is_graphical then	
+							System_tool.synchronize
+						end;
 					end;
 					if feature_part /= Void and then feature_form.managed then
 						feature_part.set_tab_length_to_default 
@@ -176,6 +181,20 @@ feature -- Resource Update
 				end;
 				old_res.update_with (new)
 			end
+		end;
+
+	update_graphical_resources is
+			-- Synchronize clickable elements with text, if possible
+			-- and update the graphical values in text window.
+		do
+			initialize_text_window_resources;
+			synchronize;
+			if feature_part /= Void then
+				feature_part.update_graphical_resources
+			end;
+			if object_part /= Void then
+				object_part.update_graphical_resources
+			end;
 		end
 	
 feature -- Access
@@ -565,7 +584,7 @@ feature -- Update
 							dynamic_class := call_stack.dynamic_class;
 							object_address := call_stack.object_address;
 						end;
-						!! new_stone.make (object_address, dynamic_class);
+						!! new_stone.make (object_address, call_stack.routine_name, dynamic_class);
 						if new_stone.same_as (object_part.stone) then
 							object_part.synchronize
 						else
@@ -926,7 +945,7 @@ feature -- Graphical Interface
 			classic_bar.attach_top (stop_points_button, 0);
 			classic_bar.attach_top (clear_bp_button, 0);
 
-			classic_bar.attach_right (quick_update_button, 20);
+			classic_bar.attach_right (quick_update_button, 0);
 			classic_bar.attach_top (quick_update_button, 0);
 			classic_bar.attach_top (update_button, 0);
 			classic_bar.attach_top (search_cmd_holder.associated_button, 0);
@@ -1028,7 +1047,7 @@ feature -- Graphical Interface
 
 			!! sep.make (new_name, debug_menu)
 
-			!! run_final_cmd;
+			!! run_final_cmd.make (Current);
 			!! run_final_menu_entry.make (run_final_cmd, debug_menu);
 
 			format_bar.attach_left (stop_button, 0);
@@ -1065,6 +1084,10 @@ feature -- Graphical Interface
 			finalize_menu_entry: EB_MENU_ENTRY;
 			precompile_cmd: PRECOMPILE_PROJECT;
 			precompile_menu_entry: EB_MENU_ENTRY;
+			c_compile_menu: MENU_PULL;
+			c_compilation: C_COMPILATION;
+			c_compilation_menu_entry: EB_MENU_ENTRY;
+			sep: SEPARATOR
 		do
 --			!! special_cmd.make (Current);
 --			!! special_cmd_holder.make_plain (special_cmd);
@@ -1084,6 +1107,14 @@ feature -- Graphical Interface
 			!! precompile_menu_entry.make (precompile_cmd, compile_menu);
 			!! precompile_cmd_holder.make_plain (precompile_cmd);
 			precompile_cmd_holder.set_menu_entry (precompile_menu_entry)
+
+			!! sep.make (Interface_names.t_Empty, compile_menu);
+
+			!! c_compile_menu.make (Interface_names.m_C_compilation, compile_menu);
+			!! c_compilation.make_workbench;
+			!! c_compilation_menu_entry.make_default (c_compilation, c_compile_menu);
+			!! c_compilation.make_final;
+			!! c_compilation_menu_entry.make_default (c_compilation, c_compile_menu);
 		end;
 
 	attach_all is

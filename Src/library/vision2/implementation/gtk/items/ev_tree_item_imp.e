@@ -9,15 +9,12 @@ class
 
 inherit
 	EV_TREE_ITEM_I
-		select
-			parent_imp
-		end
 	
 	EV_SIMPLE_ITEM_IMP
-		rename
-			parent_imp as old_parent_imp
 		export {NONE}
 			box
+		undefine
+			parent
 		redefine
 			make,
 			has_parent,

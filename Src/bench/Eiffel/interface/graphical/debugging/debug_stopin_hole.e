@@ -63,39 +63,44 @@ feature -- Access
 feature -- Execution
 
 	work (argument: ANY) is
+		local
+			st: STRUCTURED_TEXT
 		do
 			debug_window.clear_window;
+			!! st.make;
 			if 
 				Application.debugged_routines.empty and 
 				Application.removed_routines.empty 
 			then
-				debug_window.put_string ("No stop points.");
-				debug_window.new_line;
+				st.add_string ("No stop points.");
+				st.add_new_line;
 			else
 				if not Application.debugged_routines.empty then
-					Debug_window.put_string ("Active stop points:");
-					debug_window.new_line;
-					debug_window.new_line;
-					display_debuggable_routines (Application.debugged_routines)
+					st.add_string ("Active stop points:");
+					st.add_new_line;
+					st.add_new_line;
+					display_debuggable_routines (st, Application.debugged_routines)
 				end;
-				debug_window.new_line;
-				debug_window.put_string ("-------------");
-				debug_window.new_line;
-				debug_window.new_line;
+				st.add_new_line;
+				st.add_string ("-------------");
+				st.add_new_line;
+				st.add_new_line;
 				if not Application.removed_routines.empty then
-					debug_window.put_string ("Non-active stop points:");
-					debug_window.new_line;
-					debug_window.new_line;
-					display_debuggable_routines (Application.removed_routines)
+					st.add_string ("Non-active stop points:");
+					st.add_new_line;
+					st.add_new_line;
+					display_debuggable_routines (st, Application.removed_routines)
 				end;
 			end;
-			debug_window.new_line;
+			st.add_new_line;
+			debug_window.process_text (st);
 			debug_window.display
 		end;
 
 feature -- Output
 
-	display_debuggable_routines (routine_list: LINKED_LIST [E_FEATURE]) is
+	display_debuggable_routines (st: STRUCTURED_TEXT;
+			routine_list: LINKED_LIST [E_FEATURE]) is
 			-- Display either the list of routines whose stop points are
 			-- activated, or the list of routines whose stop points have been
 			-- deactivated.
@@ -107,8 +112,7 @@ feature -- Output
 			i, bp_count: INTEGER;
 			bp_list: LIST [INTEGER];
 			first_bp: BOOLEAN;
-			bp_text: STRING;
-			bp: BREAKABLE_STONE;
+			bt: BREAKPOINT_ITEM;
 		do
 			from
 				!! table.make (5);
@@ -135,19 +139,19 @@ feature -- Output
 				c := Eiffel_system.class_of_id (table.key_for_iteration);
 				from
 					stwl.start;
-					debug_window.put_class (c, c.name_in_upper);
-					debug_window.put_string (": ");
-					debug_window.new_line
+					st.add_classi (c.lace_class, c.name_in_upper);
+					st.add_string (": ");
+					st.add_new_line
 				until
 					stwl.after
 				loop
-					debug_window.put_one_indent;
-					debug_window.put_feature (stwl.item, stwl.item.name);
+					st.add_indent;
+					st.add_feature (stwl.item, stwl.item.name);
 					f := stwl.item;
 					bp_list := Application.breakpoints_set_for (f);
 					if not bp_list.empty then
 						from
-							debug_window.put_string (" [");
+							st.add_string (" [");
 							first_bp := True;
 							bp_list.start
 						until
@@ -155,18 +159,18 @@ feature -- Output
 						loop
 							i := bp_list.item;
 							if not first_bp then
-								debug_window.put_string (", ")
+								st.add_string (", ")
 							else
 								first_bp := False
 							end;
-							bp_text := i.out;
-							!! bp.make (f, i);
-							debug_window.put_breakpoint_stone (bp, bp_text);
+							!! bt.make (f, i);
+							bt.set_display_number;
+							st.add (bt);
 							bp_list.forth
 						end;
-						debug_window.put_string ("]")
+						st.add_string ("]")
 					end;
-					debug_window.new_line;
+					st.add_new_line;
 					stwl.forth
 				end;
 				table.forth

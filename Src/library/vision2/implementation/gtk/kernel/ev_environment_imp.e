@@ -28,6 +28,17 @@ feature {NONE} -- Initialization
 		do
 			is_initialized := True
 		end
+		
+feature -- Access
+		
+	supported_image_formats: LINEAR [STRING] is
+			-- `Result' contains all supported image formats
+			-- on current platform, in the form of their three letter extension.
+			-- e.g. PNG, BMP, ICO
+		do
+			Result := (<<"PNG">>).linear_representation
+			Result.compare_objects
+		end
 
 end -- class EV_ENVIRONMENT_IMP
 

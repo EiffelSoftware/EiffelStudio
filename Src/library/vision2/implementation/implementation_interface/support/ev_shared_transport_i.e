@@ -94,9 +94,37 @@ feature -- Access EV_DRAGABLE_SOURCE.
 		
 	remove_insert_label is
 				-- Remove `insert_label' from its current `parent'.
+				-- We must handle a special case for cells. If the parent is a cell,
+				-- then we remove the cell from its parent, and then restore it.
+				-- Otherwise, when the label, removed, the cell keeps it size, and cells
+				-- are normally used with `real_target' when the cell must
+				-- not be visible.
+			local
+				cell_parent: EV_CELL
+				box_cell_parent: EV_BOX
+				index: INTEGER
+				is_expanded: BOOLEAN
 			do
 				if insert_label.parent /= Void then
+					cell_parent ?= insert_label.parent
+						-- Unparent `insert_label'.
 					insert_label.parent.prune (insert_label)
+						-- Now, perform special processing if the parent of `insert_label'
+						-- was a cell.
+					if cell_parent.generating_type.is_equal ("EV_CELL") then
+						box_cell_parent ?= cell_parent.parent
+						if box_cell_parent /= Void then
+							index := box_cell_parent.index_of (cell_parent, 1)
+							is_expanded := box_cell_parent.is_item_expanded (cell_parent)
+							box_cell_parent.prune_all (cell_parent)
+							box_cell_parent.go_i_th (index)
+							box_cell_parent.put_left (cell_parent)
+							--box_cell_parent.insert_i_th (cell_parent, index)
+							if not is_expanded then
+								box_cell_parent.disable_item_expand (cell_parent)
+							end
+						end
+					end
 				end
 			ensure
 				not_parented: insert_label.parent = Void

@@ -665,7 +665,7 @@ feature {NONE} -- Drawing implementation
 			viewport.extend (vertical_box)
 			extend (horizontal_box)
 			viewport.resize_actions.extend (agent viewport_resized)
-			drawable.resize_actions.force_extend (agent drawer.partial_redraw)
+			drawable.expose_actions.force_extend (agent drawer.partial_redraw)
 			update_scroll_bar_spacer
 		end
 		
@@ -761,6 +761,7 @@ feature {NONE} -- Drawing implementation
 				(position - viewport.x_offset < 0) then
 				remove_resizing_line
 			else
+				
 					-- Draw line representing position in current divider style.
 				if is_resizing_divider_solid then
 					screen.disable_dashed_line_style
@@ -841,9 +842,8 @@ feature {NONE} -- Drawing implementation
 				new_width := viewport.item.width
 			end
 				-- Ensure that the height of the viewport's item always matches that of the viewport.
-			if viewport.item.height /= viewport.height then
-				new_height := viewport.height
-			end
+			new_height := viewport.height
+
 				-- Now actually perform size setting.
 			viewport.set_item_size (new_width, new_height)
 

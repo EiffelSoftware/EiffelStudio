@@ -79,12 +79,7 @@ feature
 			put (True, i);
 		end;
 
-	Conformance_file: INDENT_FILE is
-		do
-			Result := System.conformance_file
-		end;
-
-	generate is
+	generate (conformance_file: INDENT_FILE) is
 			-- Generates the current conformance table
 		require
 			Conformance_file.is_open_write;

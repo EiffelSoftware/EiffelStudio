@@ -222,7 +222,6 @@ feature -- Initialization
 			l_assembly_location, l_local_path: PATH_NAME
 			l_path: STRING
 			l_types_file, l_reference_file: FILE_NAME
-			l_location: FILE_NAME
 			
 			l_types: CONSUMED_ASSEMBLY_TYPES
 			l_referenced_assemblies: CONSUMED_ASSEMBLY_MAPPING
@@ -279,15 +278,12 @@ feature -- Initialization
 						l_class_name.prepend (prefix_name)
 					end
 					l_external_name := l_types.dotnet_names.item (i)
-					create l_location.make_from_string (clone (path))
-					l_location.extend (classes_directory)
-					l_location.set_file_name (l_external_name)
-					l_location.add_extension (xml_extension)
-					create l_class.make (l_class_name, l_external_name, l_location)
+					l_path := clone (l_external_name)
+					l_path.append (xml_extension)
+					create l_class.make (Current, l_class_name, l_external_name, l_path)
 					if not l_class.exists then
 						Error_handler.insert_error (create {VD62}.make (Current, l_class))
 					end
-					l_class.set_cluster (Current)
 					classes.put (l_class, l_class_name)
 					dotnet_classes.put (l_class, l_external_name)
 				end
@@ -466,9 +462,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constants
 
-	classes_directory: STRING is "classes"
 	type_list_file_name: STRING is "types.xml"
-	xml_extension: STRING is "xml"
+	xml_extension: STRING is ".xml"
 	neutral_string: STRING is "neutral"
 	null_key_string: STRING is "null"
 	referenced_assemblies_file_name: STRING is "referenced_assemblies.xml"

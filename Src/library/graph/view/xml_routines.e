@@ -62,7 +62,6 @@ feature {SHARED_XML_ROUTINES} -- Access
 			l_item: XM_ELEMENT
 			attr: XM_ATTRIBUTE
 		do
---			Result := 1
 			from
 				l_cursor := node.new_cursor
 				l_cursor.start
@@ -129,18 +128,6 @@ feature {SHARED_XML_ROUTINES} -- Processing
 				display_warning_message ("Element " + a_name + " expected but not found.")
 			end		
 			elem.forth
---			e := elem.element_by_name (a_name)
---			if e /= Void then
---				int_str := e.text
---				if int_str /= Void and then int_str.is_integer then
---					Result := int_str.to_integer
---					valid_tags_read
---				else
---					display_warning_message ("Value of element " + a_name + " is not valid.")
---				end
---			else
---				display_warning_message ("Element " + a_name + " expected but not found.")
---			end
 		end
 
 	xml_boolean (elem: XM_ELEMENT; a_name: STRING): BOOLEAN is
@@ -149,7 +136,6 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			e: XM_ELEMENT
 			bool_str: STRING
 		do
---			e := elem.element_by_name (a_name)
 			e ?= elem.item_for_iteration
 			if e /= Void and then e.name.is_equal (a_name) then
 				bool_str := e.text
@@ -171,7 +157,6 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			e: XM_ELEMENT
 			double_str: STRING
 		do
---			e := elem.element_by_name (a_name)
 			e ?= elem.item_for_iteration
 			if e /= Void and then e.name.is_equal (a_name) then
 				double_str := e.text
@@ -192,7 +177,6 @@ feature {SHARED_XML_ROUTINES} -- Processing
 		local
 			e: XM_ELEMENT
 		do
---			e := elem.element_by_name (a_name)
 			e ?= elem.item_for_iteration
 			if e /= Void and then e.name.is_equal (a_name) then
 				Result := e.text
@@ -213,7 +197,6 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			rescued: BOOLEAN
 		do
 			if not rescued then
---				e := elem.element_by_name (a_name)
 				e ?= elem.item_for_iteration
 				if e /= Void and then e.name.is_equal (a_name) then
 					s := e.text
@@ -231,6 +214,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 					valid_tags_read
 				else
 					display_warning_message ("Value of element " + a_name + " is not valid.")
+					create Result.make_with_8_bit_rgb (255, 255, 0)				
 				end
 			else
 				display_warning_message ("Retrieve default color.")
@@ -241,6 +225,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 		ensure
 			non_void_color: Result /= Void
 		rescue
+			rescued := True
 			retry
 		end
 

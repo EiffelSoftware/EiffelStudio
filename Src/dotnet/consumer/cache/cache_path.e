@@ -1,5 +1,5 @@
 indexing
-	description: "Path to various EAC files
+	description: "Path to various EAC files"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -173,4 +173,6 @@ feature {NONE} -- Implementation
 			exist: Result /= Void
 			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator
 		end
+		
+end
 

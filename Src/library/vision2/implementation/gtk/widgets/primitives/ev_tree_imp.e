@@ -92,11 +92,13 @@ feature {NONE} -- Initialization
 		end
 	
 	tree_width: INTEGER
+		-- Width of tree widget
 	
 	timer: EV_TIMEOUT
+		-- Timer used for refresh hack.
 	
 	on_time_out is
-			-- 
+			-- Called on a timer, needed to correctly refresh tree widget.
 		local
 			a_wid: INTEGER
 		do
@@ -111,7 +113,7 @@ feature {NONE} -- Initialization
 		end
 	
 	visual_widget: POINTER is
-			-- 
+			-- Visible widget on screen.
 		do
 			Result := list_widget
 		end
@@ -216,6 +218,7 @@ feature {NONE} -- Initialization
 		end
 
 	motion_handler (a_x, a_y: INTEGER; a_a, a_b, a_c: DOUBLE; a_d, a_e: INTEGER) is
+			-- Handle motion events on 'Current'
 		local
 			t: TUPLE [INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE, INTEGER, INTEGER]
 			a_row_imp: EV_TREE_NODE_IMP
@@ -499,6 +502,7 @@ feature -- Implementation
 			-- Implementation object of the current row if in PND transport.
 
 	temp_pebble: ANY
+			-- Temporary pebble holder used for PND implementation with nodes.
 
 	temp_pebble_function: FUNCTION [ANY, TUPLE [], ANY]
 			-- Returns data to be transported by PND mechanism.
@@ -694,7 +698,7 @@ feature {NONE} -- Implementation
 		end
 		
 	append (s: SEQUENCE [EV_TREE_ITEM]) is
-			-- 
+			-- Add 's' to 'Current'
 		do
 			feature {EV_GTK_EXTERNALS}.gtk_clist_freeze (list_widget)
 			Precursor (s)
@@ -714,7 +718,7 @@ feature {NONE} -- Implementation
 				ev_children.after
 			loop
 				item_imp := ev_children.item
-				item_imp.set_item_and_children (NULL)
+				item_imp.set_item_and_children (NULL, NULL)
 				item_imp.set_parent_imp (Void)
 				ev_children.forth
 			end
@@ -737,7 +741,7 @@ feature {NONE} -- Implementation
 			-- add_to_container (v, v_imp)
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
-			item_imp.set_item_and_children (NULL)
+			item_imp.set_item_and_children (NULL, NULL)
 			item_imp.check_branch_pixmaps
 			ev_children.force (item_imp)
 			
@@ -765,7 +769,7 @@ feature {NONE} -- Implementation
 
 				-- Remove from tree
 			feature {EV_GTK_EXTERNALS}.gtk_ctree_remove_node (list_widget, item_imp.tree_node_ptr)
-			item_imp.set_item_and_children (NULL)
+			item_imp.set_item_and_children (NULL, NULL)
 			item_imp.set_parent_imp (Void)
 
 				-- remove the row from the `ev_children'
@@ -806,12 +810,13 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			-- Spacing between pixmap and text.
 
 	row_height: INTEGER is
-			-- 
+			-- Height of rows in tree
 		do
 			Result := feature {EV_GTK_EXTERNALS}.gtk_clist_struct_row_height (list_widget)
 		end
 
 	insert_ctree_node (a_item_imp: EV_TREE_NODE_IMP; par_node, a_sibling: POINTER): POINTER is
+			-- Insert 'a_item_imp' in 'par_node' above 'a_sibling' sibling node.
 		local
 			text_ptr: POINTER
 			a_cs: C_STRING

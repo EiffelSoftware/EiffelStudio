@@ -255,7 +255,9 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			perform_delete := True
 			all_objects := objects
 			if a_directory.recursive_check_all (agent selector_item_is_referenced) then
-				create confirmation_dialog.make_with_text ("The directory struture of %"" + a_directory.name + "%" contains one or more objects that are still referenced by other objects within the system.%N%NDo you wish to continue deleting the directory, its contents and flatten all of these references?")
+				create confirmation_dialog.make_with_text ("The directory structure of %"" + a_directory.name + "%" contains one or more objects that are still referenced by other objects within the system.%NTo examine the current references of an object, open the client node of the object's representation within the Window Selector.%N%NDo you wish to continue deleting the directory, its contents and flatten all of these references?")
+				confirmation_dialog.set_icon_pixmap (icon_build_window @ 1)
+				confirmation_dialog.set_title ("Object still referenced")
 				confirmation_dialog.show_modal_to_window (parent_window (widget))
 				if confirmation_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 					a_directory.recursive_do_all (agent flatten_associated_instances)
@@ -1198,7 +1200,7 @@ feature {NONE} -- Implementation
 			create delete_window_object_command.make (an_object)
 			delete_window_object_command.execute
 		end
-		
+	
 	add_object_name_to_hash_table (an_object: GB_OBJECT; hash_table: HASH_TABLE [STRING, STRING]) is
 			-- Add `name' of `an_object' to `hash_table' as both key and corresponding item.
 		require

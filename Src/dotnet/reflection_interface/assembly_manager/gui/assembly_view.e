@@ -390,7 +390,7 @@ feature {NONE} -- Implementation
 			added := data_grid_table_style.get_grid_column_styles.extend (external_name_column_style)
 			
 			if not data_grid.get_Table_Styles.contains_data_grid_table_style (data_grid_table_style) then
-				added := data_grid.get_Table_Styles.Add (data_grid_table_style)
+				added := data_grid.get_Table_Styles.extend (data_grid_table_style)
 			end	
 			create on_cell_delegate.make_eventhandler (Current, $on_cell)
 			data_grid.add_current_cell_changed (on_cell_delegate)	

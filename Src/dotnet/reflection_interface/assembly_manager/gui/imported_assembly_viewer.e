@@ -1071,6 +1071,8 @@ feature {NONE} -- Implementation
 							end
 						end
 					end
+				else
+					sort_assemblies
 				end
 			else					
 				if reflection_interface.get_last_error /= Void then 

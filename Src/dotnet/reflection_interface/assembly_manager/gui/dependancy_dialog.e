@@ -206,7 +206,7 @@ feature {NONE} -- Implementation
 			added := data_grid_table_style.get_grid_column_styles.extend (assembly_public_key_column_style)
 			
 			if not data_grid.get_Table_Styles.contains_data_grid_table_style (data_grid_table_style) then
-				added := data_grid.get_Table_Styles.Add (data_grid_table_style)
+				added := data_grid.get_Table_Styles.extend (data_grid_table_style)
 			end	
 		end
 

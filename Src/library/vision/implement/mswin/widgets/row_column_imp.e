@@ -382,6 +382,8 @@ feature {NONE} -- Implementation
 
 	set_enclosing_free_size (managed_count, ew, eh: INTEGER; c: ARRAYED_LIST [WIDGET_IMP]) is
 			-- Set the enclosing size if not `same_size'.
+		require
+			not_same_size: not same_size
 		local
 			max_width, max_height, temp_height: INTEGER
 			i, j: INTEGER

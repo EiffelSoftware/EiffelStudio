@@ -25,10 +25,10 @@ creation
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_parent: COMPOSITE) is
 			-- Make a choice window.
 		do
-			os_make (a_name, a_parent);
+			os_make ("Choic Window", a_parent);
 			!! list.make (new_name, Current);
 			list.set_single_selection;
 			allow_resize;

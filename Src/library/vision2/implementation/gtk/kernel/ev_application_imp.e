@@ -14,19 +14,8 @@ inherit
 			export
 				{EV_PICK_AND_DROPABLE_IMP} captured_widget
 			end
-
-	IDENTIFIED
-		undefine
-			is_equal,
-			copy
-		end
-
-	EV_APPLICATION_ACTION_SEQUENCES_IMP
-
-	EXECUTION_ENVIRONMENT
-		rename
-			launch as ee_launch
-		end
+		
+	EV_GTK_DEPENDENT_APPLICATION_IMP
 
 create 
 	make
@@ -46,7 +35,7 @@ feature {NONE} -- Initialization
 			create locale_str.make_from_c (feature {EV_GTK_EXTERNALS}.gtk_set_locale)
 			
 			gtk_init
-			feature {EV_GTK_EXTERNALS}.gdk_rgb_init
+			gtk_dependent_initialize
 			
 			enable_ev_gtk_log (0)
 				-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
@@ -67,10 +56,8 @@ feature {NONE} -- Initialization
 			-- Display the first window, set up the post_launch_actions,
 			-- and start the event loop.
 		do
-			if gtk_maj_ver = 1 and then gtk_min_ver <= 2 and then gtk_mic_ver < 8 then
-				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + gtk_mic_ver.out + " and may cause some unexpected behavior%N")
-			end
-			
+			gtk_dependent_launch_initialize
+
 			main_loop			
 			-- Unhook marshal object.
 			gtk_marshal.destroy
@@ -96,19 +83,19 @@ feature {NONE} -- Initialization
 						main_running := feature {EV_GTK_EXTERNALS}.g_main_iteration (False)
 					end
 				else
-							-- There are no more events to handle so we must be in an idle state, therefore call idle actions.
-							-- All pending resizing has been performed at this point.
-						if not post_launch_actions_called and then feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0 then
-							interface.post_launch_actions.call (Void)
-							post_launch_actions_called := True
-						end
-						if not internal_idle_actions.is_empty or else
-							(idle_actions_internal /= Void and then not idle_actions_internal.is_empty) then
-								call_idle_actions
-						else
-									-- Block loop by running a gmain loop iteration with blocking enabled.
-							main_running := feature {EV_GTK_EXTERNALS}.g_main_iteration (True)
-						end
+						-- There are no more events to handle so we must be in an idle state, therefore call idle actions.
+						-- All pending resizing has been performed at this point.
+					if not post_launch_actions_called and then feature {EV_GTK_EXTERNALS}.gtk_events_pending = 0 then
+						interface.post_launch_actions.call (Void)
+						post_launch_actions_called := True
+					end
+					if not internal_idle_actions.is_empty or else
+						(idle_actions_internal /= Void and then not idle_actions_internal.is_empty) then
+							call_idle_actions
+					else
+								-- Block loop by running a gmain loop iteration with blocking enabled.
+						main_running := feature {EV_GTK_EXTERNALS}.g_main_iteration (True)
+					end
 				end				
 			end
 		end
@@ -378,7 +365,7 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 			temp_style: POINTER
 		once
 			temp_style := feature {EV_GTK_EXTERNALS}.gtk_widget_struct_style (default_gtk_window)
-			Result := feature {EV_GTK_EXTERNALS}.gdk_font_struct_ascent (feature {EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style)) + 1
+			Result := feature {EV_GTK_EXTERNALS}.gdk_font_struct_ascent (feature {EV_GTK_EXTERNALS}.gtk_style_get_font (temp_style))
 		end
 		
 	default_font_ascent: INTEGER is
@@ -424,8 +411,8 @@ feature {EV_ANY_I, EV_FONT_IMP} -- Implementation
 			feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (Result, 65535)
 			a_success := feature {EV_GTK_EXTERNALS}.gdk_colormap_alloc_color (feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap, Result, False, True)
 		end
-		
-feature -- External implementation
+
+feature {NONE} -- External implementation
 
 	enable_ev_gtk_log (a_mode: INTEGER) is
 			-- Connect GTK+ logging to Eiffel exception handler.
@@ -445,27 +432,6 @@ feature -- External implementation
 		alias
     		"gtk_init (&eif_argc, &eif_argv)"
 		end
-		
-	gtk_maj_ver: INTEGER is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"gtk_major_version"
-		end
-
-	gtk_min_ver: INTEGER is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"gtk_minor_version"
-		end
-		
-	gtk_mic_ver: INTEGER is
-		external
-			"C [macro <gtk/gtk.h>]"
-		alias
-			"gtk_micro_version"
-		end	
 
 invariant
 	window_oids_not_void: is_usable implies window_oids /= void

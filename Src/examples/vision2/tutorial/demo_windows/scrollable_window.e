@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	ta: EV_TEXT
-		-- A text area fot the demo
+		-- A text area for the demo
 
 end -- class SCROLLABLE_WINDOW
 

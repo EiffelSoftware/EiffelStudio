@@ -142,8 +142,9 @@ cpp='CC'
 cppflags='-DLANGUAGE_C -G 0 -xansi'
 cpp_stuff='1'
 defvoidused='15'
-#Check value for next 3
+#Check value for next 4
 eif_sgi='define'
+eif_solaris='undef'
 eif_win32='undef'
 eif_windows='undef'
 Mcc='Mcc'

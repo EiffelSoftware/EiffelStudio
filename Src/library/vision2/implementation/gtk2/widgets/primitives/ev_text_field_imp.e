@@ -226,9 +226,18 @@ feature -- Basic operation
 		do
 			internal_set_caret_position (end_pos.max (start_pos) + 1)
 			select_region_internal (start_pos, end_pos)
-				-- Hack to ensure text field is selected
-			app_implementation.do_once_on_idle (agent select_region_internal (start_pos, end_pos))
-		end	
+
+				-- Hack to ensure text field is selected when called from change actions
+			if a_timeout_imp = Void then
+				a_timeout_imp ?= (create {EV_TIMEOUT}).implementation
+			else
+				a_timeout_imp.interface.actions.wipe_out
+			end
+			a_timeout_imp.interface.actions.extend (agent select_region_internal (start_pos, end_pos))
+			a_timeout_imp.set_interval_kamikaze (0)
+		end
+
+	a_timeout_imp: EV_TIMEOUT_IMP
 
 	select_region_internal (start_pos, end_pos: INTEGER) is
 			-- Select region

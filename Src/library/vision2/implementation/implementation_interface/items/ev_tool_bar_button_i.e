@@ -11,7 +11,9 @@ deferred class
 inherit
 	EV_SIMPLE_ITEM_I
 		redefine
-			pixmap_size_ok
+			pixmap_size_ok,
+			parent,
+			parent_imp
 		end
 
 	EV_PND_SOURCE_I
@@ -20,10 +22,15 @@ inherit
 
 feature -- Access
 
-	parent_imp: EV_TOOL_BAR_IMP is
-			-- Parent implementation
-		deferred
+	parent: EV_TOOL_BAR is
+			-- The parent of the Current widget
+			-- Can be void.
+		do
+			Result ?= {EV_SIMPLE_ITEM_I} Precursor
 		end
+
+	parent_imp: EV_TOOL_BAR_IMP
+			-- Parent implementation
 
 feature -- Status report
 

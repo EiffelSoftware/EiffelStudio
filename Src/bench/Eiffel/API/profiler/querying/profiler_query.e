@@ -92,9 +92,29 @@ feature -- Status report
 			-- Image of all subqueries and operators.
 		local
 			sq: SUBQUERY;
-			i: INTEGER
+			i: INTEGER;
+			so: SUBQUERY_OPERATOR
 		do
-
+			from
+				i := 1;
+				!! Result.make (0)
+			until
+				i > subqueries.count
+			loop
+				sq := subquery_at (i);
+				Result.append (sq.column);
+				Result.extend (' ');
+				Result.append (sq.operator);
+				Result.extend (' ');
+				Result.append (sq.value);
+				if i < subquery_operators.count then
+					Result.extend (' ');
+					so := operator_at (i);
+					Result.append (so.actual_operator);
+					Result.append ("%R%N")
+				end
+				i := i + 1
+			end
 		end;
 
 	subquery_at (index: INTEGER): SUBQUERY is

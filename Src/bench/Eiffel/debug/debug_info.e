@@ -148,7 +148,7 @@ feature -- Debuggables (Byte code,...)
 			from
 				new_debuggables.start
 			until
-				new_debuggables.offright
+				new_debuggables.after
 			loop
 				ll := new_debuggables.item_for_iteration;	
 				from
@@ -571,7 +571,7 @@ feature -- Trace
 			from
 				dl.start
 			until
-				dl.offright
+				dl.after
 			loop
 				l := dl.item_for_iteration;
 				from

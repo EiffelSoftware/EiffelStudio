@@ -260,6 +260,8 @@ cluster
 
 	new_tty:		"$EIFFEL_SRC\Eiffel\interface\new_tty"
 
+	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
+
 external
 
 	include_path:
@@ -272,7 +274,8 @@ external
 		"$(EIFFEL_SRC)\C\bench",
 		"$(EIFFEL_SRC)\C\platform",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib"
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib",
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
@@ -288,6 +291,7 @@ external
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\$(ISE_C_COMPILER)\ecom.lib",
-		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom.lib"
-
+		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom.lib",
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
+		"corguids.lib"
 end

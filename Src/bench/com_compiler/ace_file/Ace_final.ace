@@ -119,7 +119,10 @@ cluster
 			"CVS"; 
 		end
 
-	all helpers:			"$EIFFEL_SRC\library\helpers";
+	all helpers:		"$EIFFEL_SRC/library/helpers"
+		exclude
+			"CVS"; 
+		end
 
 	switch:		"$EIFFEL_SRC\Eiffel\switch"
 
@@ -192,6 +195,7 @@ cluster
 
 	new_tty:		"$EIFFEL_SRC\Eiffel\interface\new_tty"
 
+	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 
 external
 	include_path:	"$(EIFFEL_SRC)\library\wel\spec\windows\include",
@@ -202,7 +206,8 @@ external
 			"$(EIFFEL_SRC)\library\encryption\Clib",
 			"$(EIFFEL_SRC)\C\bench",
 			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
-			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib"
+			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib",
+			"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
 
 	object: 	"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 			"$(EIFFEL_SRC)\library\time\spec\$(ISE_C_COMPILER)\lib\datetime.lib",
@@ -217,5 +222,7 @@ external
 			"$(EIFFEL_SRC)\C\platform\platform.lib",
 			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
 			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\$(ISE_C_COMPILER)\ecom.lib",
-			"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom_final.lib"
+			"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom_final.lib",
+			"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
+			"corguids.lib"
 end

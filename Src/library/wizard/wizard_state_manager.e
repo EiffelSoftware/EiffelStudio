@@ -16,6 +16,7 @@ feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD} -- Basic Operations
 			-- Go to the previous state.
 		require
 			possible: history.count > 1 and then not history.isfirst
+			can_move: can_go_back
 		do
 			first_window.lock_update
 			
@@ -34,6 +35,8 @@ feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD} -- Basic Operations
 	
 	next is
 			-- Go to the next step.
+		require
+			can_move: can_go_back
 		do
 			first_window.lock_update
 
@@ -114,6 +117,47 @@ feature {NONE} -- Internal Operations
 			a_window.display
 		ensure
 			new_state_accessed: history.count = old history.count + 1
+		end
+
+feature -- Validation
+
+	can_go_back: BOOLEAN is
+			-- can wizard move backwards?
+		do
+			Result := True
+		end
+		
+	can_go_next: BOOLEAN is
+			-- can wizard move forward?
+		do
+			Result := True
+		end
+		
+	can_cancel: BOOLEAN is
+			-- can wizard cancel?
+		do
+			Result := True
+		end
+		
+	check_wizard_status is
+			-- checks wizard status to see if it can back or next and enables
+			-- disables next and back navigation methods
+		do
+			if can_go_back then
+				first_window.enable_back_button
+			else
+				first_window.disable_back_button
+			end
+			if can_go_next then
+				first_window.enable_next_button
+			else
+				first_window.disable_next_button
+			end
+			if can_cancel then
+				first_window.enable_cancel_button
+			else
+				first_window.disable_cancel_button
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -22,11 +22,11 @@ feature -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the tab and initialise objects.
 		local
-			cmd1,cmd2: EV_ROUTINE_COMMAND
-		once
+			cmd1, cmd2: EV_ROUTINE_COMMAND
+		do
 			{ANY_TAB} Precursor (Void)
 				
-				-- Creates the objects and their commands
+			-- Creates the objects and their commands
 			create cmd1.make (~set_text1)
 			create cmd2.make (~get_text1)
 			create f1.make (Current, "Frame Text", cmd1, cmd2)
@@ -42,6 +42,12 @@ feature -- Access
 			Result:="Frame"
 		end
 
+	current_widget: EV_FRAME
+			-- Current widget we are working on.
+
+	f1: TEXT_FEATURE_MODIFIER
+			-- A modifier
+
 feature -- Execution feature
 
 	set_text1 (arg:EV_ARGUMENT; data: EV_EVENT_DATA) is
@@ -56,11 +62,4 @@ feature -- Execution feature
 			f1.set_text(current_widget.text)
 		end
 	
-feature -- Access
-
-	current_widget: EV_FRAME
-
-	f1:feature_modifier
-	
-
 end -- class FRAME_TAB

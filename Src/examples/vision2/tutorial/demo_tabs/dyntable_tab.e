@@ -14,7 +14,6 @@ inherit
 			current_widget
 		end
 
-
 creation
 	make
 
@@ -24,10 +23,10 @@ feature -- Initialization
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
-		once
+		do
 			{ANY_TAB} Precursor (Void)
 		
-				-- Creates the objects and their commands
+			-- Creates the objects and their commands
 			create cmd2.make (~get_row_layout)
 			create f1.make (Current, "Uses Row Layout?", cmd1, cmd2)
 			create cmd1.make (~set_finite_dimens)
@@ -53,6 +52,14 @@ feature -- Access
 			Result:="Dynamic Table"
 		end
 
+	current_widget: EV_DYNAMIC_TABLE
+			-- Current widget we are working on.
+
+	b1, b2:EV_BUTTON
+			-- Buttons.
+
+	f1, f2: TEXT_FEATURE_MODIFIER	
+			-- Some modifier.
 
 feature -- Execution feature  
 
@@ -94,11 +101,6 @@ feature -- Execution feature
 			f2.set_text(current_widget.finite_dimension.out)
 		end
 
-feature -- Access
-
-	current_widget: EV_DYNAMIC_TABLE
-	f1,f2:FEATURE_MODIFIER	
-	b1,b2:EV_BUTTON
 end -- class DYNTABLE_TAB
 
  

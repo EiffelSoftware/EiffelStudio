@@ -14,7 +14,6 @@ inherit
 			current_widget
 		end
 
-
 creation
 	make
 
@@ -24,18 +23,12 @@ feature -- Initialization
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
-		once
-			{ANY_TAB} Precursor (Void)
+		do
+			{ANY_TAB} Precursor (PAR)
 		
 				-- Creates the objects and their commands
 			create cmd2.make (~get_icon_name)
 			create f1.make (Current, "Icon Name", Void, cmd2)
-			
---			create cmd1.make (~set_spacing_val)
---			create cmd2.make (~get_spacing_val)
---			create f2.make (Current, "Spacing", cmd1, cmd2)
-
-			set_parent(par)
 		end
 
 feature -- Access
@@ -46,6 +39,11 @@ feature -- Access
 			Result:="Window"
 		end
 
+	current_widget: EV_WINDOW
+			-- Current widget we are working on.
+
+	f1: TEXT_FEATURE_MODIFIER
+			-- Some modifiers.
 
 feature -- Execution feature  
 
@@ -56,8 +54,4 @@ feature -- Execution feature
 			f1.set_text(current_widget.icon_name)
 		end
 
-feature -- Access
-
-	current_widget: EV_WINDOW
-	f1,f2:FEATURE_MODIFIER	
 end -- class WINDOW_TAB

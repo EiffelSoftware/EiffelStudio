@@ -23,8 +23,8 @@ feature -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the tab and initialise objects
 		local
-			cmd1,cmd2: EV_ROUTINE_COMMAND
-		once
+			cmd1, cmd2: EV_ROUTINE_COMMAND
+		do
 			{ANY_TAB} Precursor (Void)
 		
 				-- Creates the objects and their commands
@@ -48,6 +48,11 @@ feature -- Access
 			Result:="Split Area"
 		end
 
+	current_widget: EV_SPLIT_AREA
+			-- Current widget we are working on.
+
+	f1, f2, f3: TEXT_FEATURE_MODIFIER	
+			-- Some modifiers.
 
 feature -- Execution feature  
 
@@ -77,10 +82,6 @@ feature -- Execution feature
 			--f3.set_text(current_widget.maximum_position.out)
 		end
 	
-feature -- Access
-
-	current_widget: EV_SPLIT_AREA
-	f1,f2,f3:FEATURE_MODIFIER	
 end -- class SPLIT_AREA_TAB
 
 

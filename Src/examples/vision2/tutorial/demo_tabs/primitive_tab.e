@@ -23,11 +23,12 @@ feature -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the tab and initialise objects
-		once
+		local
+			f1: EV_LABEL
+		do
 			{ANY_TAB} Precursor (Void)
-		
-				-- Creates the objects and their commands
-			
+
+			-- Creates the objects and their commands
 			create f1.make_with_text(Current,"EV_PRIMITVE is a deferred class and therefore, there has no features that can be modified.")
 	
 			set_parent(par)
@@ -41,10 +42,8 @@ feature -- Access
 			Result:="Primitive"
 		end
 
-feature -- Access
-
 	current_widget: EV_PRIMITIVE
-	f1: EV_LABEL
-	
+			-- Current widget we are working on.
+
 end -- class BOX_TAB
 

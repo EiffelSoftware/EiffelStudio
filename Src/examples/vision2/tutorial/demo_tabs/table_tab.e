@@ -23,7 +23,7 @@ feature -- Initialization
 			-- Create the tab and initialise objects.
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
-		once
+		do
 			{ANY_TAB} Precursor (Void)
 				
 				-- Creates the objects and their commands
@@ -55,6 +55,15 @@ feature -- Access
 		do
 			Result:="Table"
 		end
+
+	current_widget: EV_TABLE
+			-- Current widget we are working on.
+
+	b1, b2: EV_BUTTON
+			-- Buttons.
+
+	f1, f2, f3, f4: TEXT_FEATURE_MODIFIER
+			-- Some modifiers.
 
 feature -- Execution feature
 
@@ -140,13 +149,4 @@ feature -- Execution feature
 			end
 		end
 
-feature -- Access
-
-	current_widget: EV_TABLE
-
-	f1,f2,f3,f4 :feature_modifier
-	
-	b1,b2: EV_BUTTON
-	
-	
 end -- class TABLE_TAB

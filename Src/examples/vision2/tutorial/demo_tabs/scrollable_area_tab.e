@@ -22,8 +22,8 @@ feature -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the tab and initialise objects.
 		local
-			cmd1,cmd2: EV_ROUTINE_COMMAND
-		once
+			cmd1, cmd2: EV_ROUTINE_COMMAND
+		do
 			{ANY_TAB} Precursor (Void)
 				--Create the objects and their commands
 			create cmd1.make (~set_horizontal_value)
@@ -46,8 +46,6 @@ feature -- Initialization
 			create f6.make (Current, "Vertical Leap", cmd1, cmd2)
 			--******* minimum and maximum
 			
-
-
 			set_parent(par)
 		end
 
@@ -59,8 +57,13 @@ feature -- Access
 			Result:="Scrollable"
 		end
 
-feature -- Execution feature
+	current_widget: EV_SCROLLABLE_AREA
+			-- Current widget we are working on.
 
+	f1, f2, f3, f4, f5, f6: TEXT_FEATURE_MODIFIER
+			-- Some modifiers.
+
+feature -- Execution feature
 
 	set_horizontal_value(arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Set the horizontal value of the scroll bar (%).
@@ -150,10 +153,4 @@ feature -- Execution feature
 			f6.set_text(current_widget.vertical_leap.out)
 		end
 	
-
-feature -- Access
-
-	current_widget: EV_SCROLLABLE_AREA
-	f1,f2,f3,f4,f5,f6: FEATURE_MODIFIER
-
 end -- class SCROLLABLE_AREA_TAB

@@ -231,7 +231,7 @@ feature -- Status report
 			ext_name: ANY
 		do
 			ext_name := file_name.to_c
-			Result := file_access (ext_name, 2);
+			Result := file_access ($ext_name, 2);
 		end;
 
 	is_access_executable: BOOLEAN is
@@ -240,7 +240,7 @@ feature -- Status report
 			ext_name: ANY
 		do
 			ext_name := file_name.to_c
-			Result := file_access (ext_name, 1);
+			Result := file_access ($ext_name, 1);
 		end;
 
 feature -- Element change

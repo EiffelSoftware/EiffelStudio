@@ -21,11 +21,6 @@ inherit
 		redefine
 			implementation
 		end
-		
-	EV_GRID_ACTION_SEQUENCES
-		undefine
-			copy, default_create
-		end
 
 feature -- Access
 

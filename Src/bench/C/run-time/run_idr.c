@@ -22,8 +22,8 @@
 #endif
 #endif
 #include "eiffel.h"
-#include "idrf.h"
 #include "bits.h"
+#include "../idrs/idrf.h"
 
 
 #define IDRF_SIZE 1024

@@ -92,7 +92,7 @@ LSRC = math.c malloc.c garcol.c local.c except.c store.c retrieve.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
-	console.c
+	console.c run_idr.c
 
 OTHER = main.c
 
@@ -136,7 +136,8 @@ WSRC = \
 	wargv.c \
 	wboolstr.c \
 	wsearch.c \
-	wmain.c 
+	wmain.c \
+	wrun_idr.c
 
 ESRC = \
 	console.c \
@@ -174,7 +175,8 @@ ESRC = \
 	wargv.c \
 	wboolstr.c \
 	wsearch.c \
-	bmain.c 
+	bmain.c \
+	wrun_idr.c
 
 LOBJ = \
 	console.o \
@@ -212,7 +214,8 @@ LOBJ = \
 	argv.o \
 	boolstr.o \
 	search.o \
-	main.o 
+	main.o \
+	run_idr.o
 
 WOBJ = \
 	$(NETWORK) \
@@ -256,7 +259,8 @@ WOBJ = \
 	interp.o \
 	option.o \
 	update.o \
-	wbench.o 
+	wbench.o \
+	wrun_idr.o
 
 EOBJ = \
 	console.o \
@@ -299,7 +303,9 @@ EOBJ = \
 	interp.o \
 	option.o \
 	update.o \
-	wbench.o 
+	wbench.o \
+	wrun_idr.o\
+	wrun_idr.o
 
 all:: size.h
 
@@ -442,6 +448,12 @@ wretrieve.c: retrieve.c
 	$(LN) retrieve.c wretrieve.c
 remove::
 	$(RM) wretrieve.c
+
+wrun_idr.c: run_idr.c
+	$(RM) wrun_idr.c
+	$(LN) run_idr.c wrun_idr.c
+remove::
+	$(RM) wrun_idr.c
 
 whash.c: hash.c
 	$(RM) whash.c
@@ -638,6 +650,10 @@ wstore.o: wstore.c
 
 wretrieve.o: wretrieve.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
+	$(RM) $*.c
+
+wrun_idr.o: wrun_idr.c
+	$(CC) -c $(JCFLAGS) -I../idrs -DWORKBENCH $*.c
 	$(RM) $*.c
 
 whash.o: whash.c

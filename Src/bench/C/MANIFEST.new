@@ -322,7 +322,8 @@ run-time/boolstr.c
 run-time/cecil.c
 run-time/cecil.h
 run-time/copy.c
-run-time/copy.h
+cun-time/copy.h
+cun-time/console.c
 run-time/debug.c
 run-time/debug.h
 run-time/dir.c
@@ -366,6 +367,8 @@ run-time/plug.c
 run-time/plug.h
 run-time/retrieve.c
 run-time/retrieve.h
+run-time/run_idr.c
+run-time/run_idr.h
 run-time/search.c
 run-time/search.h
 run-time/sig.c

@@ -29,7 +29,7 @@ all base(dev):					"$/base"
 external
 
 	include_path:
-		"$WS/vision2/implementation/gtk/Clib", "`gtk-config --cflags`";
+		"$WS/vision2/implementation/gtk/Clib `gtk-config --cflags`";
 	object:
 		"$(WS)/vision2/implementation/gtk/Clib/gtk_eiffel.o",
 		"`gtk-config --libs`"

@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"rror when the root cluster name is not in cluster list.";
+		"Error when the root cluster name is not in cluster list.";
 	date: "$Date$";
 	revision: "$Revision $"
 

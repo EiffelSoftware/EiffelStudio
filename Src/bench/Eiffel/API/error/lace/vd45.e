@@ -36,4 +36,4 @@ feature {PRECOMP_R} -- Setting
 			path := s;
 		end;
 
-end -- class VD41
+end -- class VD45

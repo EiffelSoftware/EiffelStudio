@@ -586,29 +586,9 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	--| IEK Reimplemented as an attribute to keep an explicit reference on parent container.
-	--| This coupling prevents the container from being unnecessarily disposed when the
-	--| parent container interface is not referenced from Eiffel and is unparented.
-	--| This unnecessary disposal would inturn force gtk to destroy `c_object'.
-	parent_imp: EV_CONTAINER_IMP-- is
+	parent_imp: EV_CONTAINER_IMP
 			-- Container widget that contains `Current'.
 			-- (Void if `Current' is not in a container)
-			--| Search back up through GtkWidget->parent to find a GtkWidget
-			--| with an EV_ANY_IMP attached.
---		local
---			c_parent: POINTER
---		do
---			from
---				c_parent := c_object
---			until
---				Result /= Void or c_parent = NULL
---			loop
---				c_parent := C.gtk_widget_struct_parent (c_parent)
---				if c_parent /= NULL then
---					Result ?= eif_object_from_c (c_parent)
---				end
---			end
---		end
 
 	top_level_window_imp: EV_WINDOW_IMP is
 		local

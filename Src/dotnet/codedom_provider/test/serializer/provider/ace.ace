@@ -19,7 +19,7 @@ default
 	il_verifiable (yes)
 	console_application (no)
 	line_generation (no)
-	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio\EiffelSoftware.EiffelVision2")
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.EiffelVision2")
 
 cluster 
 		-- The application
@@ -31,7 +31,7 @@ cluster
 
 	codedom_provider:		"$EIFFEL_SRC\dotnet\codedom_provider\common"
 		exclude
-			"CVS"; 
+			"code_shared_metadata_access.e"; "CVS";
 		end
 
 

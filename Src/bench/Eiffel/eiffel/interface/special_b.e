@@ -10,8 +10,6 @@ inherit
 
 	SPECIAL_CONST
 
-	SHARED_TYPES
-
 creation
 	make
 	

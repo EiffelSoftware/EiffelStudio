@@ -182,5 +182,12 @@ since the last version of 16-Nov-1999.
   previously there were few invariants and postconditions now there are many.
   Preconditions have been added wherever possible.
 
+ Keys
+ ----
+  Instead of taking an INTEGER, the key press/release actions now take EV_KEY.
+ The only attribute of EV_KEY is `code' and is guaranteed to give the same
+ integer value on all platforms. The possible values can be found in
+ EV_KEY_CONSTANTS.
+
  End of file
  -----------

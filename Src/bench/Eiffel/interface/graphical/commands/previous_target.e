@@ -91,7 +91,9 @@ feature {NONE} -- Implementation
 				warner (popup_parent).gotcha_call (Warning_messages.w_Beginning_of_history)
 			else
 				history.back;
-				tool.last_format.execute (history.item)
+				history.set_do_not_update (True);
+				tool.receive (history.item)
+				history.set_do_not_update (False);
 			end
 		end;
 

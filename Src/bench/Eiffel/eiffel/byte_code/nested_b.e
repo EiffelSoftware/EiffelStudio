@@ -133,6 +133,9 @@ feature -- IL code generation
 					-- pushed value, but because it is not a predefined entity
 					-- we need to do something special.
 				l_attr ?= target
+				if l_attr /= Void and then l_attr.need_address (True) then
+					il_generator.duplicate_top
+				end
 			end
 
 			if can_discard_target and is_target_generated then
@@ -143,24 +146,25 @@ feature -- IL code generation
 			l_call_access ?= message
 			if l_call_access /= Void then
 				l_call_access.generate_il_call (True)
-				if l_attr /= Void and then l_attr.need_address (True) then
-					l_type := Context.real_type (l_call_access.type)
-					if not l_type.is_void then
-						context.add_local (l_type)
-						local_number := context.local_list.count
-						il_generator.put_dummy_local_info (l_type, local_number)
-						il_generator.generate_local_assignment (local_number)
-					end
-					l_cl_type ?= l_attr.context_type
-					il_generator.generate_expanded_attribute_assignment (
-						il_generator.implemented_type (l_attr.written_in, l_cl_type),
-						l_attr.attribute_id)
-					if not l_type.is_void then
-						il_generator.generate_local (local_number)
-					end
-				end
 			else
 				message.generate_il
+			end
+			if l_attr /= Void and then l_attr.need_address (True) then
+				l_type := Context.real_type (message.type)
+				if not l_type.is_void then
+					context.add_local (l_type)
+					local_number := context.local_list.count
+					il_generator.put_dummy_local_info (l_type, local_number)
+					il_generator.generate_local_assignment (local_number)
+				end
+				l_cl_type ?= l_attr.context_type
+				il_generator.generate_expanded_attribute_assignment (
+					il_generator.implemented_type (l_attr.written_in, l_cl_type),
+					Context.real_type (l_attr.type),
+					l_attr.attribute_id)
+				if not l_type.is_void then
+					il_generator.generate_local (local_number)
+				end
 			end
 		end
 

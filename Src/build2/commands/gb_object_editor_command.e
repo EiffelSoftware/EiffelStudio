@@ -15,14 +15,34 @@ inherit
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_OBJECT_EDITORS
+		export
+			{NONE} all
+		end
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
+	
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -105,6 +125,7 @@ feature {NONE} -- Implementation
 				dialog: EV_INFORMATION_DIALOG
 			do
 				create dialog.make_with_text (Object_editor_button_warning)
+				dialog.set_icon_pixmap (Icon_build_window @ 1)
 				dialog.show_modal_to_window (main_window)
 			end
 

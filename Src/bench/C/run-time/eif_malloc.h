@@ -103,7 +103,6 @@ extern "C" {
 							 * scavenge zone. */
 #endif	/* VXWORKS */
 
-#endif	/* VXWORKS */
 #ifdef VXWORKS
 #define GS_ZONE_SZ_DEFAULT	2*PAGESIZE_VALUE
 #else

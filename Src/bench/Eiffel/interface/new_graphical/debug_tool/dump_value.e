@@ -226,6 +226,24 @@ feature {NONE} -- Implementation dotnet
 	
 	value_class_token: INTEGER
 	
+	value_class_name: STRING is
+			-- 
+		do
+			if not is_external_type and then dynamic_class/= Void then
+				Result := dynamic_class.name_in_upper
+			elseif is_dotnet_value and is_external_type then
+				if eifnet_debug_value.icd_value_info /= Void then
+					Result := eifnet_debug_value.icd_value_info.value_class_name
+				else
+					Result := "{Token=0x" + value_class_token.to_hex_string + "}"
+				end
+			end
+			if Result = Void then
+				Result := "Unknown Type"
+			end
+		ensure
+			Result /= Void
+		end
 	
 feature -- Status report
 
@@ -522,7 +540,7 @@ feature -- Access
 				end
 				Result.append (full_output)
 				if is_dotnet_value and then is_external_type then
-					Result.append (" -> Token=0x" + value_class_token.to_hex_string)
+					Result.append (" -> " + value_class_name)
 				end
 			else		
 				Result.append ("ANY ")			

@@ -54,12 +54,12 @@ int sval;
 	
 	hsize = nprime((5 * n) / 4);	/* Table's size */
 
-	array = calloc(hsize, sizeof(long));	/* Mallocs array of keys */
+	array = (char *) calloc(hsize, sizeof(long));	/* Mallocs array of keys */
 	if (array == (char *) 0)
 		return -1;					/* Malloc failed */
 	ht->h_keys = (unsigned long *) array;		/* Where array of keys is stored */
 
-	array = malloc(hsize * sval);			/* Mallocs array of values */
+	array = (char *) malloc(hsize * sval);			/* Mallocs array of values */
 	if (array == (char *) 0) {
 		free(ht->h_keys);			/* Free keys array */
 		return -1;					/* Malloc failed */

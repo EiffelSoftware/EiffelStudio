@@ -44,7 +44,7 @@ default
 cluster
 	all build2:				"$(EIFFEL_SRC)\build2"
 		exclude
-			"object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se";  "ve"
+			"object_editor"; "eifgen"; "EIFGEN"; "templates"; "Gtk"; "hact"; "se";  "ve"; "base"; "test"; "CVS"
 		end
 
 	dev:		"D:\work\library"
@@ -64,11 +64,6 @@ cluster
 	all base:				"$(EIFFEL_SRC)\library\base"
 		exclude
 			"table_eiffel3"; 
-		end
-
-	all gobo:				"$(EIFFEL_SRC)\build2\modified_libraries\gobo_16\library"
-		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; "test"; 
 		end
 
 	all wizard_library:		"$(EIFFEL_SRC)\library\wizard"

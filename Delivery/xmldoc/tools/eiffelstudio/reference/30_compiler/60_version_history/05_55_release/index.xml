@@ -5,8 +5,10 @@
 			<size>2</size>What's new
 		</heading>
 		<list ordered="false">
-			<item>Full support for new <code><keyword>convert</keyword></code>keyword.</item>
-			<item>Made <code><keyword>Void,</keyword></code> previously a feature of <code><class_name>ANY</class_name></code>, a keyword. This prevents the renaming of <code><feature_name>Void</feature_name></code> into <code><feature_name>not_void</feature_name></code> that was possible before when it was a routine of <code><class_name>ANY</class_name></code>.</item>
+			<item>Full support for new <code><keyword>convert</keyword></code> keyword.</item>
+			<item>Made <code><keyword>Void,</keyword></code> previously a feature of <code><class_name>ANY</class_name></code>, a keyword. This prevents the renaming of <code><feature_name>Void</feature_name></code> into <code><feature_name>not_void</feature_name></code> that was possible before when it was a routine of <code><class_name>ANY</class_name></code>.</item>			
+			<item>Added support for reference and expanded constraints on a formal generic parameter.</item>
+			<item>Added support for .NET 2.0 runtime.</item>
 		</list>
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
@@ -17,6 +19,7 @@
 			<size>2</size>Changes
 		</heading>
 		<list ordered="false">
+			<item></item>
 			<item>In multithreaded mode, fixed dead lock on Unix plaforms when evaluating global onces.</item>
 		</list>
 		<heading>

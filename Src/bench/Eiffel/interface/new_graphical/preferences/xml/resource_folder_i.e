@@ -16,9 +16,24 @@ feature -- Initialization
 			att_table: XML_ATTRIBUTE_TABLE
 		do
 			att_table := doc.attributes
-			att := att_table.item ("TOPIC_ID")
-			if att /= Void then
-				name := att.value
+			if att_table.has ("TOPIC_ID") then
+				att := att_table.item ("TOPIC_ID")
+				if att /= Void then
+					name := att.value
+				end
+			end
+			if att_table.has ("ICON") then
+				att := att_table.item ("ICON")
+				if att /= Void then
+					icon := att.value
+				end
+			end
+			is_visible := True
+			if att_table.has ("VISIBILITY") then
+				att := att_table.item ("VISIBILITY")
+				if att /= Void and then att.value /= Void and then att.value.is_equal ("hidden") then
+					is_visible := False
+				end
 			end
 			structure := struct
 			load_default_attributes (doc)
@@ -183,20 +198,26 @@ feature -- Status Report
 feature -- Access
 
 	name: STRING
-		-- Id of Current, it is unique.
+			-- Id of Current, it is unique.
+
+	icon: STRING
+			-- Icon name if any, Void otherwise
+
+	is_visible: BOOLEAN
+			-- Should this folder be displayed?
 
 	description: STRING
-		-- Description of Current.
-		-- Meant for providing a help message.
+			-- Description of Current.
+			-- Meant for providing a help message.
 
 	resource_list: LINKED_LIST [RESOURCE]
-		-- List of resources.
+			-- List of resources.
 
 	structure: RESOURCE_STRUCTURE
-		-- Structure Current is part of.
+			-- Structure Current is part of.
 
 	child_list: LINKED_LIST [like Current]
-		-- List of child folders.
+			-- List of child folders.
 
 feature -- Save
 
@@ -220,7 +241,7 @@ feature -- Interface creation
 feature -- Implementation
 
 	interface: RESOURCE_FOLDER
-		-- Interface of Current.
+			-- Interface of Current.
 
 feature {NONE} -- Implementation
 

@@ -31,6 +31,18 @@ feature -- Access
 			Result := implementation.description
 		end
 
+	icon: STRING is
+			-- Icon name of Current if any, Void otherwise
+		do
+			Result := implementation.icon
+		end
+
+	is_visible: BOOLEAN is
+			-- Should this folder be displayed?
+		do
+			Result := implementation.is_visible
+		end
+
 	resource_list: LINKED_LIST [RESOURCE] is
 			-- List of resources.
 		do

@@ -1,4 +1,4 @@
-test_name put_extend
+test_name list-put-extend
 test_description Correctness of `extend' and `put' of LINKED_LIST and ARRAYED_LIST
 
 define OUTPUT $TEST

@@ -16,7 +16,7 @@ inherit
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
-			{ANY} Eiffel_project
+			{ANY} Eiffel_project, Eiffel_system
 		end
 
 	EB_ERROR_MANAGER
@@ -41,15 +41,6 @@ feature {NONE} -- Initialization
 			displayed_string_size := 50
 			current_execution_stack_number := 1
 			critical_stack_depth := -1
-			
-			--| FIXME: JFIAT 
-			--| get rid of APPLICATION_STOPPED_CMD .. useless, even the execute is doing nothing special ..
-			
---			Application_notification_controller.on_before_stopped_actions.extend (agent on_application_before_stopped)
---			Application_notification_controller.on_after_stopped_actions.extend (agent on_application_after_stopped)
-
---			create {APPLICATION_STOPPED_CMD} before_stopped_command
---			create {APPLICATION_STOPPED_CMD} after_stopped_command
 		ensure
 			displayed_string_size: displayed_string_size = 50
 			current_execution_stack_number_is_one: current_execution_stack_number = 1
@@ -59,6 +50,8 @@ feature -- execution mode
 
 	is_dotnet: BOOLEAN is
 			-- Is this application a dotnet system ?
+		require
+			system_defined: Eiffel_system.workbench.system_defined			
 		do
 			Result := Eiffel_system.System.il_generation
 		end
@@ -79,7 +72,10 @@ feature -- load and save
 			end
 			debug_info.load (load_filename)
 
-			if is_dotnet then
+			if 
+				Eiffel_system.workbench.system_defined
+				and then is_dotnet 
+			then
 				imp_dotnet.load_dotnet_debug_info
 			end
 

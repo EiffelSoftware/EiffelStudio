@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision multi-column list row, mswindows implementation"
@@ -212,6 +211,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/02/19 05:44:59  oconnor
+--| released
+--|
 --| Revision 1.17  2000/02/17 00:23:59  brendel
 --| Commented out old command association code.
 --|

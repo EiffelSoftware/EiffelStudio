@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -128,6 +127,9 @@ end -- class EV_TIMEOUT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/19 05:44:59  oconnor
+--| released
+--|
 --| Revision 1.3  2000/02/19 04:34:55  oconnor
 --| removed command code, implemented deferred features
 --|

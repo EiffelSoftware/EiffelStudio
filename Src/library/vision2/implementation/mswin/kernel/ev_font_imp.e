@@ -1,4 +1,3 @@
---| FIXME Not for release
 indexing
 	description: "Eiffel Vision font. Mswindows implementation."
 	status: "See notice at end of class"
@@ -513,6 +512,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/19 05:44:59  oconnor
+--| released
+--|
 --| Revision 1.18  2000/02/15 17:36:18  brendel
 --| Changed re-creation of wel_font object to resetting using newly improved
 --| WEL_FONT.set_indirect.

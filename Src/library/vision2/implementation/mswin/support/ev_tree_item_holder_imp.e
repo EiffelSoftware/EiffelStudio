@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -97,6 +96,9 @@ end -- class EV_TREE_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/19 05:45:00  oconnor
+--| released
+--|
 --| Revision 1.6  2000/02/14 11:40:42  oconnor
 --| merged changes from prerelease_20000214
 --|

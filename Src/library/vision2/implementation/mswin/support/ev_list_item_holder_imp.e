@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision list-item container. %
@@ -238,6 +237,9 @@ end -- class EV_LIST_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/02/19 05:45:00  oconnor
+--| released
+--|
 --| Revision 1.18  2000/02/14 11:40:41  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -359,6 +358,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/02/19 05:45:01  oconnor
+--| released
+--|
 --| Revision 1.51  2000/02/14 22:26:34  oconnor
 --| merged from HACK-O-RAMA
 --|

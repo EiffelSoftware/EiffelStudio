@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -237,7 +236,7 @@ feature {NONE} -- Implementation
 				-- If there is no menu text then set one.
 				menu_imp.set_text ("")
 			end
-			{EV_MENU_HOLDER_IMP} Precursor (menu_imp)
+	--FIXME		{EV_MENU_ITEM_LIST_IMP} Precursor (menu_imp)
 			set_text (menu_imp.text)
 			menu := menu_imp
 		end 
@@ -245,7 +244,7 @@ feature {NONE} -- Implementation
 	remove_menu (menu_imp: EV_MENU) is
 			-- Remove the menu from the option button.
 		do
-			{EV_MENU_HOLDER_IMP} Precursor (menu_imp)
+	--FIXME		{EV_MENU_ITEM_LIST_IMP} Precursor (menu_imp)
 			remove_text
 		end
 
@@ -294,6 +293,9 @@ end -- class EV_OPTION_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/02/19 05:45:01  oconnor
+--| released
+--|
 --| Revision 1.19  2000/02/19 04:33:40  oconnor
 --| added deferred features
 --|

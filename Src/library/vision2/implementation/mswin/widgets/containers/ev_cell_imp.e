@@ -1,4 +1,3 @@
---| FIXME Not for release
 indexing
 	description: 
 		"Eiffel Vision cell, Mswindows implementation."
@@ -87,6 +86,9 @@ end -- class EV_CELL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/02/19 05:45:00  oconnor
+--| released
+--|
 --| Revision 1.2  2000/02/14 12:05:10  oconnor
 --| added from prerelease_20000214
 --|

@@ -1,4 +1,3 @@
---| FIXME Not for release
 indexing
 	description: "Eiffel Vision scrollable area, Mswindows implementation."
 	status: "See notice at end of class"
@@ -295,6 +294,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/19 05:45:01  oconnor
+--| released
+--|
 --| Revision 1.16  2000/02/14 11:40:43  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Some C routines of wel used in EiffelVision."
@@ -46,6 +45,9 @@ end -- class EV_C_ROUTINE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/02/19 05:45:00  oconnor
+--| released
+--|
 --| Revision 1.2  2000/02/14 11:40:41  oconnor
 --| merged changes from prerelease_20000214
 --|

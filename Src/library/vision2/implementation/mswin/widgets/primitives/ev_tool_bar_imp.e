@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision toolbar, mswindows implementation."
@@ -663,6 +662,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/02/19 05:45:01  oconnor
+--| released
+--|
 --| Revision 1.26  2000/02/14 11:40:45  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -1,5 +1,3 @@
-
---| FIXME Not for release
 indexing
 	description: "Eiffel Vision item id. Mswindows implementation."
 	status: "See notice at end of class."
@@ -55,6 +53,9 @@ end -- class EV_ID_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/19 05:45:00  oconnor
+--| released
+--|
 --| Revision 1.3  2000/02/14 11:40:41  oconnor
 --| merged changes from prerelease_20000214
 --|

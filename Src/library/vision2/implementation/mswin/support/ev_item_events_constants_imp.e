@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "This class is used by EV_ITEM_IMP. It gives%
@@ -62,6 +61,9 @@ end -- class EV_ITEM_EVENTS_CONSTANTS_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/19 05:45:00  oconnor
+--| released
+--|
 --| Revision 1.8  2000/02/14 11:40:41  oconnor
 --| merged changes from prerelease_20000214
 --|

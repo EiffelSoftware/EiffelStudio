@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision pixmap. Mswindows implementation"
@@ -406,6 +405,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/19 05:45:01  oconnor
+--| released
+--|
 --| Revision 1.15  2000/02/16 20:16:15  pichery
 --| - implemented set_size for EV_PIXMAP under windows.
 --|

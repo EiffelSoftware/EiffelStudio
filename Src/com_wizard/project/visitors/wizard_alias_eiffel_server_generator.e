@@ -23,6 +23,7 @@ feature -- Access
 				Shared_file_name_factory.create_file_name (Current, eiffel_writer)
 				eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 			end
+			eiffel_writer := Void
 		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is

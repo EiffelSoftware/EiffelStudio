@@ -440,7 +440,6 @@ feature -- Status Setting
 			external_name: "SetNamespace"
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: a_name.get_length > 0
 		do
 			namespace := a_name
 		ensure
@@ -464,11 +463,11 @@ feature -- Status Setting
 			full_external_name := a_full_name
 			name_elements := a_full_name.split (<<'.'>>)
 			set_external_name (name_elements.item (name_elements.count - 1))
-			if name_elements.count > 2 then
+			if name_elements.count > 1 then
 				create namespace_elements.make (name_elements.count -1 )
 				from
 				until
-					i = name_elements.count - 2
+					i > name_elements.count - 2
 				loop
 					namespace_elements.put (i, name_elements.item (i))
 					i := i + 1

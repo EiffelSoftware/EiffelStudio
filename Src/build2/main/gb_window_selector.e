@@ -777,7 +777,7 @@ feature {NONE} -- Implementation
 				-- We are allowed to drop windows and dialogs, so
 				-- this takes case of both cases, as dialogs inherit
 				-- windows.
-			Result :=  titled_window_object /= Void
+			Result :=  titled_window_object /= Void and then titled_window_object.layout_item = Void
 		end
 
 end -- class GB_WINDOW_SELECTOR

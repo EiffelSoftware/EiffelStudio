@@ -52,6 +52,7 @@ feature
 			!!filter_file.make (full_pathname);
 			if filter_file.exists and then filter_file.is_readable then
 				!!text_filter.make_from_filename (full_pathname);
+				file_suffix := text_filter.file_suffix;
 				context := filter_context (stone);
 				text_filter.process_text (context.text);
 				Result := text_filter.image
@@ -62,7 +63,8 @@ feature
 		end;
 
 	filtered_file_name (stone: STONE; filtername: STRING): STRING is
-			-- classname.filtername
+			-- Name of the file where the filtered output text will be stored
+			-- (classname.file_suffix or classname.filtername)
 		require
 			stone_not_void: stone /= Void;
 			filtername_not_void: filtername /= Void
@@ -76,11 +78,19 @@ feature
 					--| remove "e"
 				Result.remove (Result.count)
 			end;
-			Result.append (filtername)
+			if file_suffix /= Void then
+				Result.append (file_suffix)
+			else
+				Result.append (filtername)
+			end
 		end;
 
 	filter_name: STRING;
 			-- Name of the last filter applied
+
+	file_suffix: STRING;
+			-- Suffix of the file name where the filtered output text is stored;
+			-- Void if it has not been specified in the filter specification
 
 feature {NONE}
 

@@ -28,19 +28,16 @@ feature -- Access
 	
 feature -- Access
 
-	button1,
-	button2,
-	button3,
-	button4: EV_BUTTON
+	button1: EV_BUTTON
+	p1, p2: EV_PIXMAP
 			-- Push buttons
 feature -- Status setting
 	
 	set_widgets is
 		do
 			!!button1.make (main_widget)
-			!!button2.make (main_widget)
-			!!button3.make (main_widget)
-			!!button4.make (main_widget)
+			!! p1.make_from_file (main_widget, "../pixmaps/vision.xpm")
+			!! p2.make_from_file (main_widget, "../pixmaps/vision_tower.xpm")
 		end
 	
 feature -- Status setting
@@ -48,15 +45,10 @@ feature -- Status setting
 	set_values is
 		do
 			set_title ("Notebook demo")
-			button1.set_text ("1")
-			button2.set_text ("2")
-			button3.set_text ("3")
-			button3.set_height (40)
-			button4.set_text ("4")
-			main_widget.append_page (button1, "Page 1")
-			main_widget.append_page (button2, "Page 2")
-			main_widget.append_page (button3, "Page 3")
-			main_widget.append_page (button4, "Page 4")
+			button1.set_text ("Button")
+			main_widget.append_page (button1, "Button")
+			main_widget.append_page (p1, "Pixmap 1")
+			main_widget.append_page (p2, "Pixmap 2")
 		end
 
 

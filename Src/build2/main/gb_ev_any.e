@@ -64,13 +64,6 @@ inherit
 			default_create
 		end
 		
-	CDATA_HANDLER
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
-		
 	GB_GENERAL_UTILITIES
 		export
 			{NONE} all
@@ -419,7 +412,7 @@ feature {NONE} -- Implementation
 					constant ?= Constants.all_constants.item (element_info.data)
 					Result := constant.name
 				else
-					Result := "%"" + escape_special_characters (strip_cdata (element_info.data)) + "%""
+					Result := "%"" + escape_special_characters (element_info.data) + "%""
 				end
 			end	
 		ensure
@@ -440,7 +433,7 @@ feature {NONE} -- Implementation
 					constant ?= Constants.all_constants.item (element_info.data)
 					Result := constant.name
 				else
-					Result := strip_cdata (element_info.data)
+					Result := element_info.data
 				end
 			end				
 		end

@@ -116,4 +116,5 @@ feature {NONE} -- Externals
 		alias
 			"MAKELANGID"
 		end
+
 end -- class WEL_MSGBOXPARAMS

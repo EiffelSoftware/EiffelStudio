@@ -8,8 +8,9 @@ class CHAR_AS
 inherit
 	ATOMIC_AS
 		redefine
-			is_character, type_check, byte_node, value_i,
-			good_character, is_inspect_value, make_character
+			type_check, byte_node, value_i,
+			inspect_value,
+			is_valid_inspect_value
 		end
 
 	CHARACTER_ROUTINES
@@ -36,18 +37,6 @@ feature -- Properties
 
 	value: CHARACTER
 			-- Character value
-
-	is_character: BOOLEAN is True
-			-- Is the current value a character value ?
-
-	good_character: BOOLEAN is True
-			-- Is the current atomic a good character?
-
-	is_inspect_value (type: TYPE_A): BOOLEAN is
-			-- Is the atomic a good bound for multi-branch of the given `type'?
-		do
-			Result := type.is_character
-		end
 
 feature -- Comparison
 
@@ -78,8 +67,16 @@ feature -- Conveniences
 			Result.set_value (value)
 		end
 
-	make_character: CHAR_VAL_B is
-			-- Character value
+feature {COMPILER_EXPORTER} -- Multi-branch instruction processing
+
+	is_valid_inspect_value (value_type: TYPE_A): BOOLEAN is
+			-- Is the atomic a good bound for multi-branch of the given `value_type'?
+		do
+			Result := value_type.is_character
+		end
+
+	inspect_value (value_type: TYPE_A): CHAR_VAL_B is
+			-- Inspect value of the given `value_type'
 		do
 		   create Result.make (value)
 		end

@@ -38,6 +38,7 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do
+			set_root_window (Current)
 			create render_factory
 			create internal_selector_widgets.make (4)
 			shared_document_editor.initialize (document_editor, Current)
@@ -113,7 +114,6 @@ feature {NONE} -- Initialization
 
 				-- Initial setup
 			update_status_report (True, "No document loaded")			
-			set_root_window (Current)
 			initialize_path_constants
 			initialize_temp_directory
 			should_update := True

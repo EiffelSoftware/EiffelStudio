@@ -10,7 +10,7 @@ class
 inherit
 	GB_OBJECT
 		redefine
-			object, display_object, is_full, build_display_object
+			object, display_object, is_full, build_display_object, delete
 		end
 		
 	GB_PARENT_OBJECT
@@ -49,6 +49,25 @@ feature -- Basic operation
 			-- Is `Current' full?
 		do
 			Result := object.full
+		end
+		
+feature {GB_OBJECT} -- Delete
+
+	delete is
+			-- Perform any necessary processing for
+			-- a deletion of `Current' from the system.
+			-- We must unmerge any radio button groups
+			-- that are being deleted.
+		local
+			container: EV_CONTAINER
+		do
+				-- We must unmerge any radio groupings of the current container.
+			if object.merged_radio_button_groups /= Void then
+				container := object.merged_radio_button_groups @ 1
+				container.unmerge_radio_button_groups (object)
+				container := display_object.child.merged_radio_button_groups @ 1
+				container.unmerge_radio_button_groups (display_object.child)
+			end
 		end
 
 feature {NONE} -- Implementation

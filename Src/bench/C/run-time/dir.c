@@ -14,6 +14,7 @@
 #include "config.h"
 #include "portable.h"
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include "file.h"
 #include "dir.h"
@@ -156,4 +157,106 @@ EIF_OBJ path;
 	 */
 	return chdir (eif_access(path));
 }
+
+public EIF_BOOLEAN eif_dir_exists(name)
+char *name;
+{
+    /* Test whether file exists or not by checking the return from the stat()
+     * system call, hence letting the kernel run all the tests. Return true
+     * if the file exists.
+     * Stat is called directly, because failure is allowed here obviously.
+	 * Test to see if it is really a directory and not a palin text file.
+     */
+
+    struct stat buf;            /* Buffer to get file statistics */
+
+	if (stat(name, &buf) == -1)	/* Attempt to stat file */
+		return (EIF_BOOLEAN) 0;
+	else
+		return (buf.st_mode & S_IFDIR) ? (EIF_BOOLEAN) '\1' : (EIF_BOOLEAN) '\0';
+}
+
+public EIF_BOOLEAN eif_dir_is_readable(name)
+char *name;
+{
+	/* Is directory readable */
+#ifdef HAS_GETEUID
+	int uid, gid;				/* File owner and group */
+#endif
+
+#define ST_MODE     0x0fff      /* Keep only permission mode */
+
+	int mode;					/* Current mode */
+	struct stat buf;            /* Buffer to get file statistics */
+
+	stat(name, &buf);			/* Cannot fail (precondition) */
+	mode = buf.st_mode & ST_MODE;
+
+#ifdef HAS_GETEUID
+	uid = buf.st_uid;
+	gid = buf.st_gid;
+
+	if (uid == geteuid())
+		return (EIF_BOOLEAN) ((mode & S_IRUSR) ? '\01' : '\0');
+	else if (gid = getegid())
+		return (EIF_BOOLEAN) ((mode & S_IRGRP) ? '\01' : '\0');
+	else
+#endif
+		return (EIF_BOOLEAN) ((mode & S_IROTH) ? '\01' : '\0');
+}
+
+public EIF_BOOLEAN eif_dir_is_writable(name)
+char *name;
+{
+	/* Is directory writable */
+#ifdef HAS_GETEUID
+	int uid, gid;				/* File owner and group */
+#endif
+
+	int mode;					/* Current mode */
+	struct stat buf;            /* Buffer to get file statistics */
+
+	stat(name, &buf);			/* Cannot fail (precondition) */
+	mode = buf.st_mode & ST_MODE;
+
+#ifdef HAS_GETEUID
+	uid = buf.st_uid;
+	gid = buf.st_gid;
+
+	if (uid == geteuid())
+		return (EIF_BOOLEAN) ((mode & S_IWUSR) ? '\01' : '\0');
+	else if (gid = getegid())
+		return (EIF_BOOLEAN) ((mode & S_IWGRP) ? '\01' : '\0');
+	else
+#endif
+		return (EIF_BOOLEAN) ((mode & S_IWOTH) ? '\01' : '\0');
+}
+
+public EIF_BOOLEAN eif_dir_is_executable(name)
+char *name;
+{
+	/* Is directory executable */
+#ifdef HAS_GETEUID
+	int uid, gid;				/* File owner and group */
+#endif
+
+	int mode;					/* Current mode */
+	struct stat buf;            /* Buffer to get file statistics */
+
+	stat(name, &buf);			/* Cannot fail (precondition) */
+	mode = buf.st_mode & ST_MODE;
+
+#ifdef HAS_GETEUID
+	uid = buf.st_uid;
+	gid = buf.st_gid;
+
+	if (uid == geteuid())
+		return (EIF_BOOLEAN) ((mode & S_IXUSR) ? '\01' : '\0');
+	else if (gid = getegid())
+		return (EIF_BOOLEAN) ((mode & S_IXGRP) ? '\01' : '\0');
+	else
+#endif
+		return (EIF_BOOLEAN) ((mode & S_IXOTH) ? '\01' : '\0');
+}
+
 

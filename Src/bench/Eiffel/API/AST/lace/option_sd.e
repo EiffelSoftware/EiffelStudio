@@ -1,4 +1,9 @@
--- Description for option supported by Eiffel compiler 3
+indexing
+
+	description: 
+		"Description for option supported by Eiffel compiler 3";
+	date: "$Date$";
+	revision: "$Revision $"
 
 deferred class OPTION_SD
 
@@ -9,14 +14,14 @@ inherit
 			adapt as ast_adapt
 		end;
 
-feature
+feature -- Setting
 
 	set is
 			-- Yacc initialization
 		do
 		end
 
-feature -- Identfication
+feature -- Properties
 
 	option_name: STRING is
 			-- Name of the option
@@ -52,7 +57,6 @@ feature -- Identfication
 			-- Do nothing
 		end;
 
-
 feature -- Free options
 
 	is_valid: BOOLEAN is
@@ -80,7 +84,7 @@ feature -- Free options
 			-- Do nothing
 		end;
 
-feature -- Adapt
+feature -- Update
 
 	process_system_level_options (value: OPT_VAL_SD) is
 		do

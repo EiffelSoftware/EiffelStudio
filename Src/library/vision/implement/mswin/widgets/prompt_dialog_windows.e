@@ -54,6 +54,7 @@ feature {NONE} -- Initialization
 			shell_height := title_bar_height + 2 * dialog_window_frame_height +
 				window_border_height + window_frame_height
 			shell_width := 2 * window_frame_width
+			default_position := True
 		end
 
 feature -- Status report
@@ -111,10 +112,10 @@ feature -- Element change
 	set_selection_text (s: STRING) is
 			-- Set text for `selection_edit'
 		do
+			the_selection_text := clone (s)
 			if exists then
 				selection_edit.set_text (s)
 			end
-			the_selection_text := clone (s)
 		end
 
 	set_apply_label (s: STRING) is
@@ -184,6 +185,9 @@ feature {NONE} -- Implementation
 
 	apply_id: INTEGER is 4
 			-- Id for `apply_button'.
+
+	selection_edit_id: INTEGER is 4001
+			-- Id for `selection_edit'
 
 	selection_static: WEL_STATIC
 			-- Static for label
@@ -484,8 +488,11 @@ feature {NONE} -- Implementation
 
 	selection_edit_width: INTEGER is
 			-- Width of the `selection_edit'
+		local
+			s: STRING
 		do
-			Result := (text_width (selection_text, text_font)).max (Minimum_width)
+			s := selection_text
+			Result := (text_width (s, text_font)).max (Minimum_width)
 		end
 
 	selection_edit_height: INTEGER is
@@ -535,6 +542,8 @@ feature {NONE} -- Implementation
 				help_actions.execute (Current, Void)
 			when apply_id then
 				apply_actions.execute (Current, Void)
+			when selection_edit_id then
+				the_selection_text := selection_edit.text
 			else
 			end
 		end
@@ -584,7 +593,7 @@ feature {NONE} -- Implementation
 			if the_selection_text = Void then
 				the_selection_text := ""
 			end
-			!! selection_edit.make (Current, the_selection_text, 0, 0, 0, 0, 0)
+			!! selection_edit.make (Current, the_selection_text, 0, 0, 0, 0, selection_edit_id)
 			!! selection_static.make (Current, "", 0, 0, 0, 0, 0)
 			!! a_dc.make (selection_static)
 			a_dc.get

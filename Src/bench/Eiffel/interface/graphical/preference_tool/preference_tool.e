@@ -166,7 +166,7 @@ feature -- Display
 
 			attach_forms;
 
-			set_size (300, 500);
+			set_size (500, 550);
 
 			category_list.start;
 			category_list.forth;
@@ -254,25 +254,6 @@ feature -- Access
 
 	is_valid: BOOLEAN;
 			-- Are all categories valid?
-
-	save_resources (file: PLAIN_TEXT_FILE) is
-			-- Save all resources to `file'.
-		require
-			file_not_void: file /= Void;
-			file_is_open_write: file.is_open_write		
-		local
-			cats: like category_list
-		do
-			from
-				cats := category_list;
-				cats.start
-			until
-				cats.after
-			loop
-				cats.item.save_resources (file);
-				cats.forth
-			end
-		end;
 
 	apply_changes is
 			-- Apply all changes.

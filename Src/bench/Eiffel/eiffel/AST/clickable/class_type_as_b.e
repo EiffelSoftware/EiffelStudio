@@ -43,20 +43,26 @@ feature -- Conveniences
 			a_class: CLASS_C;
 			a_classi: CLASS_I;
 			gen_type: GEN_TYPE_A;
+			tuple_type : TUPLE_TYPE_A;
 			actual_generic: ARRAY [TYPE_A];
 			i, count: INTEGER;
 			type_a: TYPE_A;
 			abort: BOOLEAN
 		do
-			if generics = Void then
-				!! Result;
-			else
+			if class_name.string_value.is_equal ("tuple") then
+				!!tuple_type
+				Result := tuple_type
+			end
+
+			if generics /= Void then
+				if Result = Void then
+					!!gen_type
+					Result := gen_type
+				end
 				from
-					!! gen_type;
 					i := 1;
 					count := generics.count;
 					!!actual_generic.make (1, count);
-					gen_type.set_generics (actual_generic);
 				until
 					i > count or else abort
 				loop
@@ -68,11 +74,24 @@ feature -- Conveniences
 					end;
 					i := i + 1;
 				end;
-				Result := gen_type;
-			end;
+
+				if gen_type /= Void then
+					gen_type.set_generics (actual_generic);
+				else
+					tuple_type.set_generics (actual_generic);
+				end
+			else
+				if tuple_type /= Void then
+					tuple_type.set_generics (Void)
+				end
+			end
+
 			if abort then
 				Result := Void
 			else
+				if Result = Void then
+					!!Result
+				end
 				a_classi := Universe.class_named (class_name, Inst_context.cluster);
 				if a_classi /= Void and then a_classi.compiled_class /= Void then
 					a_class := a_classi.compiled_class;
@@ -90,18 +109,24 @@ feature -- Conveniences
 		local
 			a_class: CLASS_C;
 			gen_type: GEN_TYPE_A;
+			tuple_type : TUPLE_TYPE_A;
 			actual_generic: ARRAY [TYPE_A];
 			i, count: INTEGER;
 		do
-			if generics = Void then
-				!!Result;
-			else
+			if class_name.string_value.is_equal ("tuple") then
+				!!tuple_type
+				Result := tuple_type
+			end
+
+			if generics /= Void then
+				if Result = Void then
+					!!gen_type
+					Result := gen_type
+				end
 				from
-					!!gen_type;
 					i := 1;
 					count := generics.count;
 					!!actual_generic.make (1, count);
-					gen_type.set_generics (actual_generic);
 				until
 					i > count
 				loop
@@ -109,8 +134,21 @@ feature -- Conveniences
 						(generics.i_th (i).solved_type (feat_table, f), i);
 					i := i + 1;
 				end;
-				Result := gen_type;
-			end;
+				if gen_type /= Void then
+					gen_type.set_generics (actual_generic);
+				else
+					tuple_type.set_generics (actual_generic);
+				end
+			else
+				if tuple_type /= Void then
+					tuple_type.set_generics (Void)
+				end
+			end
+
+			if Result = Void then
+				!!Result
+			end
+
 			a_class :=
 		Universe.class_named (class_name, Inst_context.cluster).compiled_class;
 			Result.set_base_class_id (a_class.id);
@@ -168,6 +206,7 @@ feature -- Conveniences
 			a_class: CLASS_C;
 			a_class_i: CLASS_I;
 			gen_type: GEN_TYPE_A;
+			tuple_type : TUPLE_TYPE_A;
 			actual_generic: ARRAY [TYPE_A];
 			i, count: INTEGER;
 			a_cluster: CLUSTER_I;
@@ -177,23 +216,41 @@ feature -- Conveniences
 				-- Bug fix: `append_signature' can be called on invalid
 				-- types by the error mechanism
 			if a_class_i /= Void then
-				if generics = Void then
-					!!Result;
-				else
+				if class_name.string_value.is_equal ("tuple") then
+					!!tuple_type
+					Result := tuple_type
+				end
+
+				if generics /= Void then
+					if Result = Void then
+						!!gen_type
+						Result := gen_type
+					end
 					from
-						!!gen_type;
 						i := 1;
 						count := generics.count;
 						!!actual_generic.make (1, count);
-						gen_type.set_generics (actual_generic);
 					until
 						i > count
 					loop
 						actual_generic.put (generics.i_th (i).actual_type, i);
 						i := i + 1;
 					end;
-					Result := gen_type;
-				end;
+					if gen_type /= Void then
+						gen_type.set_generics (actual_generic);
+					else
+						tuple_type.set_generics (actual_generic);
+					end
+				else
+					if tuple_type /= Void then
+						tuple_type.set_generics (Void)
+					end
+				end
+
+				if Result = Void then
+					!!Result
+				end
+
 				a_class := a_class_i.compiled_class;
 				Result.set_base_class_id (a_class.id);
 						-- Base type class is expanded
@@ -324,7 +381,6 @@ feature -- Output
 	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
 		local
 			aclassi: CLASS_I;
-			eclass: CLASS_C
 		do
 				-- Check if we can find the class in the cluster.
 				-- If the class is not compiled anymore (or doesnot
@@ -333,7 +389,7 @@ feature -- Output
 			aclassi := Universe.class_named 
 						(class_name, reference_class.cluster);
 			if aclassi /= Void then
-				Result := aclassi.compiled_class
+				Result := aclassi.compiled_eclass
 			end
 		end;
 

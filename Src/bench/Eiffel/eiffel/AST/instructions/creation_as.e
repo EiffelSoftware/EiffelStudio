@@ -177,14 +177,10 @@ feature -- Type check, byte code and dead code removal
 			else
 				if type /= Void then
 						-- Check specified creation type
-					if type.has_like then
-							-- We need to evaluate `type' in context of current class
-							-- and current feature.
-						new_creation_type := creation_evaluator.evaluated_type (
-							type, Context.feature_table, Context.current_feature)
-					else
-						new_creation_type := type.actual_type
-					end
+						-- We need to evaluate `type' in context of current class
+						-- and current feature.
+					new_creation_type := creation_evaluator.evaluated_type (
+						type, Context.feature_table, Context.current_feature)
 					if new_creation_type /= Void then
 						if is_formal_creation then
 							create vgcc3

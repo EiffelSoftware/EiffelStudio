@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 			local
 				window_template_file, window_output_file: PLAIN_TEXT_FILE
 				window_template, file_name: FILE_NAME
-				a_class_name: STRING
+				a_class_name, temp_string: STRING
 			do
 				set_progress (0.6)
 					-- Build the file name for generation
@@ -432,16 +432,24 @@ feature {NONE} -- Implementation
 				
 					-- Add code for inheritance structure to `class_text'.
 				if project_settings.client_of_window then
-					add_generated_string (class_text, window_access, inheritance_tag)
+					temp_string := clone (window_access)
+					if not document_info.type.is_equal (Ev_titled_window_string)  then
+						temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
+					end
+					add_generated_string (class_text, temp_string,  inheritance_tag)
 				else
-					add_generated_string (class_text, window_inheritance, inheritance_tag)
+					temp_string := clone (window_inheritance)
+					if not document_info.type.is_equal (Ev_titled_window_string)  then
+						temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
+					end
+					add_generated_string (class_text, temp_string, inheritance_tag)
 				end
 				
 					-- Add code for Precursor call in `intialize'.
 				if project_settings.client_of_window then
 					add_generated_string (class_text, Void, precursor_tag)
 				else
-					add_generated_string (class_text, "Precursor {EV_TITLED_WINDOW}", precursor_tag)
+					add_generated_string (class_text, "Precursor {" + document_info.type + "}", precursor_tag)
 				end
 				
 					-- Add code for creation of widgets to `class_text'.
@@ -510,7 +518,11 @@ feature {NONE} -- Implementation
 			set_inherited_class_name (temp_string)
 			
 			if project_settings.client_of_window then
-				add_generated_string (class_text, redefined_creation, creation_tag)
+				temp_string := clone (redefined_creation)
+					if not document_info.type.is_equal (Ev_titled_window_string)  then
+						temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
+					end
+				add_generated_string (class_text, temp_string, creation_tag)
 			else
 				add_generated_string (class_text, Void, creation_tag)
 			end

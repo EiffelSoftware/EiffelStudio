@@ -27,35 +27,56 @@ feature -- Basic operations
 			p: EV_PIXMAP
 			dial: EV_FILE_SAVE_DIALOG
 			size: EV_RECTANGLE
+			test_file: RAW_FILE
+			error: BOOLEAN
+			wd: EB_WARNING_DIALOG
 		do
-			create dial
-			cd ?= tool.class_view
-			if cd = Void then
-				cld ?= tool.cluster_view
-				check cld /= Void end
-				cd := cld
-			end
-
-			dial.set_filter ("*.png")
-			if cld = Void then
-				dial.set_file_name (cd.center_class.name + ".png")
-			else
-				dial.set_file_name (cld.center_cluster.name + ".png")
-			end
-			dial.show_modal_to_window (tool.development_window.window)
-
-			if dial.file_name /= Void then
-				size := cd.bounds
-				create p.make_with_size (size.width, size.height)
-				p.draw_sub_pixmap (0, 0, tool.area_buffer, size)
-				if p /= Void then
-					create png_file.make_from_string (dial.file_name)
-					create png_format
-					tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
-					p.save_to_named_file (png_format, png_file)
-					tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
+			if not error then
+				create dial
+				cd ?= tool.class_view
+				if cd = Void then
+					cld ?= tool.cluster_view
+					check cld /= Void end
+					cd := cld
+				end
+	
+				dial.set_filter ("*.png")
+				if cld = Void then
+					dial.set_file_name (cd.center_class.name + ".png")
+				else
+					dial.set_file_name (cld.center_cluster.name + ".png")
+				end
+				dial.show_modal_to_window (tool.development_window.window)
+	
+				if dial.file_name /= Void then
+					size := cd.bounds
+					create p.make_with_size (size.width, size.height)
+					p.draw_sub_pixmap (0, 0, tool.area_buffer, size)
+					if p /= Void then
+						create png_file.make_from_string (dial.file_name)
+						create test_file.make_open_write (png_file)
+						if test_file.is_writable then
+							test_file.close
+							create png_format
+							tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
+							p.save_to_named_file (png_format, png_file)
+							tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
+						else
+							test_file.close
+							error := True
+						end
+					end
 				end
 			end
+			if error then
+				if dial.file_name /= Void then
+					create wd.make_with_text (Warning_messages.w_export_to_png_failed (dial.file_name))
+					wd.show_modal_to_window (tool.development_window.window)
+				end
+			end
+		rescue
+			error := True
+			retry
 		end
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is

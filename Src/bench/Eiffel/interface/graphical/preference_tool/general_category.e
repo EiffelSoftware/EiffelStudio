@@ -35,6 +35,7 @@ feature {TTY_RESOURCES} -- Initialization
 			-- Initialize all resources valid for Current.
 		do
 			!! regular_button.make ("regular_button_in_toolbar", rt, False)
+			!! close_button.make ("close_button_in_every_tool", rt, False)
 			!! acrobat_reader.make ("acrobat_reader", rt, "acrobat");
 			!! tab_step.make ("tab_step", rt, 4);
 			!! editor.make ("editor", rt, "vi");
@@ -68,6 +69,7 @@ feature -- Validation
 feature -- Resources
 
 	regular_button: BOOLEAN_RESOURCE;
+	close_button: BOOLEAN_RESOURCE
 	acrobat_reader: STRING_RESOURCE;
 	tab_step: INTEGER_RESOURCE;
 	editor: STRING_RESOURCE;

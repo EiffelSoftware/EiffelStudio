@@ -36,19 +36,20 @@ feature {NONE} -- Initialization
 			extend (frame)
 			create vertical_box
 			frame.extend (vertical_box)
+			create application_class_name_field
 			create project_radio_button.make_with_text ("Project")
+			project_radio_button.select_actions.extend (agent project_type_modified)
 			vertical_box.extend (project_radio_button)
 			create class_radio_button.make_with_text ("Class")
+			class_radio_button.select_actions.extend (agent project_type_modified)
 			vertical_box.extend (class_radio_button)
-			create label.make_with_text ("Window class name:")
+			create label.make_with_text (window_class_name_prompt)
 			extend (label)
 			create main_window_class_name_field
 			extend (main_window_class_name_field)
-			main_window_class_name_field.change_actions.extend (agent update_file_entry)
-			create label.make_with_text ("Window file name:")
+			create label.make_with_text (application_class_name_prompt)
 			extend (label)
-			create main_window_file_name_field
-			extend (main_window_file_name_field)
+			extend (application_class_name_field)
 
 			is_initialized := True
 			disable_all_items (Current)
@@ -67,7 +68,7 @@ feature -- Status setting
 			-- in `project_settings'.
 		do
 			main_window_class_name_field.set_text (project_settings.main_window_class_name)
-			main_window_file_name_field.set_text (project_settings.main_window_file_name)
+			application_class_name_field.set_text (project_settings.application_class_name)
 			if project_settings.complete_project then
 				project_radio_button.enable_select
 			else
@@ -79,7 +80,7 @@ feature -- Status setting
 			-- Save all attributes of `Current' into `project_settings'.
 		do
 			project_settings.set_main_window_class_name (main_window_class_name_field.text)
-			project_settings.set_main_window_file_name (main_window_file_name_field.text)
+			project_settings.set_application_class_name (application_class_name_field.text)
 			if project_radio_button.is_selected then
 				project_settings.enable_complete_project
 			else
@@ -93,42 +94,45 @@ feature {GB_SYSTEM_WINDOW} -- Implementation
 			-- Validate input fields of `Current'.
 		local
 			warning_dialog: EV_WARNING_DIALOG
+			invalid_text: STRING
+			application_name_lower, class_name_lower: STRING
 		do
 			validate_successful := True
-			if not valid_class_name (main_window_class_name_field.text) then
+			application_name_lower := application_class_name_field.text.as_lower
+			class_name_lower := main_window_class_name_field.text.as_lower
+			if not valid_class_name (application_name_lower) then
+				invalid_text := application_name_lower
+			elseif not valid_class_name (class_name_lower) then
+				invalid_text := class_name_lower
+			end
+			if invalid_text /= Void then
 				select_in_parent
-				create warning_dialog.make_with_text (main_window_class_name_field.text + Class_invalid_name_warning)
+				create warning_dialog.make_with_text (invalid_text + Class_invalid_name_warning)
 				warning_dialog.show_modal_to_window (main_window)
-				validate_successful := False
-			elseif main_window_file_name_field.text.is_empty then
+				validate_successful := False				
+			end
+			if application_name_lower.is_equal (class_name_lower) or 
+				application_name_lower.is_equal (class_name_lower + class_implementation_extension.as_lower) then
 				select_in_parent
-				create warning_dialog.make_with_text ("Please enter a file name.")
+				create warning_dialog.make_with_text (Matching_class_and_application_names_warning)
 				warning_dialog.show_modal_to_window (main_window)
 				validate_successful := False
 			end
 		end
 		
-
-feature {NONE} -- Implementation
-
-	update_file_entry is
-			-- Update the file name according to the class name.
-		local
-			str: STRING
+	project_type_modified is
+			-- Update sensitivity of `application_class_name_field'
+			-- dependent on state of `project_radio_button.
 		do
-			str := main_window_class_name_field.text
-			if str /= Void then
-				str.right_adjust
-				str.left_adjust
-			end
-			if str = Void or else str.is_empty then
-				main_window_file_name_field.remove_text
+			if project_radio_button.is_selected then
+				application_class_name_field.enable_sensitive
 			else
-				str.to_lower
-				str.append (".e")
-				main_window_file_name_field.set_text (str)
+				application_class_name_field.disable_sensitive
 			end
 		end
+		
+
+feature {NONE} -- Implementation
 
 	project_radio_button: EV_RADIO_BUTTON
 		-- Selects the generate project option.
@@ -139,7 +143,7 @@ feature {NONE} -- Implementation
 	main_window_class_name_field: EV_TEXT_FIELD
 		-- Holds the name used for the generated window class.
 	
-	main_window_file_name_field: EV_TEXT_FIELD
-		-- Holds the name used for gnerated window file name.
+	application_class_name_field: EV_TEXT_FIELD
+		-- Holds the name used for generated window file name.
 		
 end -- class GB_SYSTEM_BUILD_TAB

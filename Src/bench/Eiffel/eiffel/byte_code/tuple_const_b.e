@@ -13,7 +13,7 @@ inherit
 			pre_inlined_code, inlined_byte_code, generate_il
 		end
 
-	SHARED_NAMES_HEAP
+	PREDEFINED_NAMES
 		export
 			{NONE} all
 		end
@@ -75,7 +75,7 @@ feature -- IL generation
 			real_ty ?= context.real_type (type)
 
 				-- Retrieve info on `make' of TUPLE.
-			tuple_make := real_ty.base_class.feature_table.item_id (Names_heap.make_name_id)
+			tuple_make := real_ty.base_class.feature_table.item_id (make_name_id)
 
 				-- Retrieve info on ARRAY [ANY] and ARRAY [CHARACTER]
 				-- in order to create them.
@@ -99,7 +99,7 @@ feature -- IL generation
 			local_array_char := context.local_list.count
 			il_generator.put_dummy_local_info (array_char.type, local_array_char)
 			il_generator.put_integer_32_constant (expressions.count)
-			array_char.generate_il ("make")
+			array_char.generate_il (make_name_id)
 			il_generator.generate_local_assignment (local_array_char)
 
 				-- Creation of an ARRAY [ANY]
@@ -107,7 +107,7 @@ feature -- IL generation
 			local_array_any := context.local_list.count
 			il_generator.put_dummy_local_info (array_any.type, local_array_any)
 			il_generator.put_integer_32_constant (expressions.count)
-			array_any.generate_il ("make")
+			array_any.generate_il (make_name_id)
 			il_generator.generate_local_assignment (local_array_any)
 
 			from
@@ -131,7 +131,7 @@ feature -- IL generation
 						-- We generate a boxed version of type.
 					expr.generate_il_metamorphose (actual_type, True)
 				end
-				array_any.generate_il ("put")
+				array_any.generate_il (put_name_id)
 				i := i + 1
 				expressions.forth
 			end
@@ -161,7 +161,7 @@ feature -- Byte code generation
 			real_ty ?= context.real_type (type);
 			base_class := real_ty.base_class;
 			f_table := base_class.feature_table;
-			feat_i := f_table.item_id (Names_heap.make_name_id);
+			feat_i := f_table.item_id (make_name_id);
 				-- Need to insert expression into
 				-- the stack back to front in order
 				-- to be inserted into the area correctly

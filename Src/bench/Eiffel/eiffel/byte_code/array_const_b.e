@@ -13,7 +13,7 @@ inherit
 			pre_inlined_code, inlined_byte_code, generate_il
 		end
 
-	SHARED_NAMES_HEAP
+	PREDEFINED_NAMES
 		export
 			{NONE} all
 		end
@@ -94,7 +94,7 @@ feature -- IL generation
 			local_array := context.local_list.count
 			il_generator.put_dummy_local_info (class_type.type, local_array)
 			il_generator.put_integer_32_constant (expressions.count)
-			class_type.generate_il ("make")
+			class_type.generate_il (make_name_id)
 			il_generator.generate_local_assignment (local_array)
 
 			from
@@ -118,7 +118,7 @@ feature -- IL generation
 						-- We generate a boxed version of type.
 					expr.generate_il_metamorphose (actual_type, True)
 				end
-				class_type.generate_il ("put")
+				class_type.generate_il (put_name_id)
 				i := i + 1
 				expressions.forth
 			end
@@ -147,7 +147,7 @@ feature -- Byte code generation
 			target_type := real_ty.meta_generic.item (1);
 			base_class := real_ty.base_class;
 			f_table := base_class.feature_table;
-			feat_i := f_table.item_id (Names_heap.make_name_id);
+			feat_i := f_table.item_id (make_name_id);
 				-- Need to insert expression into
 				-- the stack back to front in order
 				-- to be inserted into the area correctly

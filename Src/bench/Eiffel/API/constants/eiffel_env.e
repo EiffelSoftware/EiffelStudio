@@ -304,8 +304,25 @@ feature -- Access: file name
 			Result.set_file_name (Eac_browser_file)
 		end
 		
-	eiffelsoftware_runtime_path: STRING is "$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"
+	eiffelsoftware_runtime_path: STRING is
 			-- Path to EiffelSoftware.Runtime.dll
+		local
+			l_separator: CHARACTER
+		once
+			l_separator := (create {OPERATING_ENVIRONMENT}).directory_separator
+			create Result.make (short_studio_name.count + 63)
+			Result.append ("$ISE_EIFFEL")
+			Result.append_character (l_separator)
+			Result.append (short_studio_name)
+			Result.append_character (l_separator)
+			Result.append ("spec")
+			Result.append_character (l_separator)
+			Result.append ("$ISE_PLATFORM")
+			Result.append_character (l_separator)
+			Result.append ("bin")
+			Result.append_character (l_separator)
+			Result.append ("EiffelSoftware.Runtime.dll")
+		end
 
 feature -- Access: command name
 

@@ -32,19 +32,17 @@ feature -- Status setting
         
 	set_widgets is
 		do
+			main_widget.set_multiple_selection
 			!!item1.make_with_text (main_widget, "item1")
-			!!item2.make (main_widget)
+			!!item2.make_with_text (main_widget, "item2")
 			!!item3.make_with_text (main_widget, "item3") 
-       	end
+	       	end
 
 	
 	set_values is
 		do
+			item2.set_selected (True)
 			set_title ("List demo")
-			item2.set_text ("item2")
-			item2.destroy
-			item3.set_selected (True)
-			main_widget.set_multiple_selection
 		end
 
 end

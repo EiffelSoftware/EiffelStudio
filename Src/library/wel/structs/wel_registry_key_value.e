@@ -17,12 +17,14 @@ inherit
 
 create
 	make,
-	make_with_value
+	make_with_data,
+	make_with_value,
+	make_with_dword_value
 	
 feature -- Initialization
 
 	make (t: like type; v: STRING) is
-			-- Create 
+			-- Create a new string key value.
 		require
 			v_not_void: v /= Void
 			t_valid: t = reg_sz
@@ -32,17 +34,32 @@ feature -- Initialization
 			type_set: type = reg_sz
 			string_value_set: string_value.is_equal (v)
 		end
-		
-	make_with_value (t: like type; v: like internal_value) is
-			-- Create 
+
+	make_with_data (t: like type; v: MANAGED_POINTER) is
+			-- Create a new key value using data `v'.
 		require
 			v_not_void: v /= Void
 		do
 			set_type (t)
-			internal_value := v
+			data := v
 		ensure
 			type_set: type = t
-			internal_value_set: internal_value = v
+			data_set: data = v
+		end
+		
+	make_with_value (t: like type; v: like internal_value) is
+			-- Create a new key value of type `t' using `v'.
+		obsolete
+			"Use `make_with_data', `make' or `make_with_dword_value' instead."
+		require
+			v_not_void: v /= Void
+		do
+			set_type (t)
+			create data.make (v.capacity)
+			data.item.memory_copy (v.item, v.capacity)
+		ensure
+			type_set: type = t
+			internal_value_set: internal_value.is_equal (v)
 		end
 		
 	make_with_dword_value (v: like dword_value) is
@@ -62,15 +79,45 @@ feature -- Access
 			-- See class WEL_REGISTRY_KEY_VALUE_TYPE for possible
 			-- values.
 			
-	internal_value: WEL_STRING
-			-- Storage for Current.
+	data: MANAGED_POINTER
+			-- Hold data for registry key value
 
-	value, string_value: STRING is
+	internal_value: WEL_STRING is
+			-- Storage for Current.
+		obsolete
+			"Use `string_value' or `dword_value' instead."
+		do
+			create Result.make_empty (data.count - 1)
+			Result.item.memory_copy (data.item, data.count)
+		end
+
+	value: STRING is
 			-- String data.
+		obsolete
+			"Use `string_value' instead."
 		require
 			valid_type: type = Reg_sz
 		do
-			Result := internal_value.string
+			Result := string_value
+		ensure
+			string_value_not_void: Result /= Void
+		end
+		
+	string_value: STRING is
+			-- String data.
+		require
+			valid_type: type = Reg_sz
+		local
+			l_count: INTEGER
+		do
+			l_count := data.count
+			create Result.make (l_count)
+			Result.from_c_substring (data.item, 1, l_count)
+			if Result.item (l_count) = '%U' then
+					-- Case where string was stored with its final null character,
+					-- so we don't want it in our actual string.
+				Result.remove (l_count)
+			end
 		ensure
 			string_value_not_void: Result /= Void
 		end
@@ -80,7 +127,7 @@ feature -- Access
 		require
 			valid_type: type = Reg_dword
 		do
-			($Result).memory_copy (internal_value.item, Integer_32_bytes)
+			($Result).memory_copy (data.item, Integer_32_bytes)
 		end
 
 feature -- Element Change
@@ -97,10 +144,16 @@ feature -- Element Change
 		
 	set_value (v: like value) is
 			-- Set `value' with `v'.
+		obsolete
+			"Use `set_string_value' instead'."
 		require
 			v_not_void: v /= Void
+		local
+			l_str: WEL_STRING
 		do
-			create internal_value.make (v)
+			create l_str.make (v)
+			create data.make (l_str.capacity)
+			data.item.memory_copy (l_str.item, l_str.capacity)
 		ensure
 			value_set: value.is_equal (v)
 		end
@@ -110,8 +163,8 @@ feature -- Element Change
 			-- Set `type' with `reg_dword'.
 		do
 			type := reg_dword
-			create internal_value.make_empty (integer_32_bytes)
-			internal_value.item.memory_copy ($v, integer_32_bytes)
+			create data.make (integer_32_bytes)
+			data.put_integer_32 (v, 0)
 		ensure
 			type_set: type = reg_dword
 			dword_value_set: dword_value = v
@@ -122,14 +175,18 @@ feature -- Element Change
 			-- Set `type' with `reg_sz'.
 		require
 			v_not_void: v /= Void
+		local
+			l_str: WEL_STRING
 		do
 			type := reg_sz
-			create internal_value.make (v)
+			create l_str.make (v)
+			create data.make (l_str.capacity)
+			data.item.memory_copy (l_str.item, l_str.capacity)
 		ensure
 			type_set: type = reg_sz
 			dword_value_set: string_value.is_equal (v)
 		end
-
+		
 end -- class WEL_REGISTRY_KEY_VALUE
 
 

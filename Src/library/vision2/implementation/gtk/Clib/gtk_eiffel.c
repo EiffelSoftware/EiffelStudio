@@ -125,6 +125,11 @@ void c_gtk_signal_disconnect (GtkObject *widget,
     gtk_signal_disconnect_by_data (widget, (gpointer)&cbd);
 }
 
+/* True, if widget is destroyed */
+int c_gtk_widget_destroyed (GtkWidget *widget)
+{
+    return (GTK_OBJECT_DESTROYED (GTK_OBJECT (widget)));
+}
 
 /* Create a pixmap widget from an xpm file */
 GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname) 

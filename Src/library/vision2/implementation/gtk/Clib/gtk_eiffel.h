@@ -56,6 +56,9 @@ void c_gtk_signal_disconnect (GtkObject *widget,
 			      EIF_OBJ object,
 			      EIF_OBJ argument);
 
+/* True, if widget is destroyed */
+int c_gtk_widget_destroyed (GtkWidget *widget);
+
 /* Create a pixmap widget from an xpm file */
 GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname);
 

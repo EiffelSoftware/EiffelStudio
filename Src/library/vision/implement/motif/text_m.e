@@ -101,6 +101,14 @@ feature -- Access
 			end
 		end;
 
+	coordinate (char_pos: INTEGER): COORD_XY is
+			-- Coordinate relative to the upper left corner
+			-- of Current text widget at character position `char_pos'.
+		do
+			!! Result;
+			Result.set (x_coordinate (char_pos), y_coordinate (char_pos))
+		end;
+
 feature -- Status report
 
 	is_multi_line_mode: BOOLEAN is

@@ -152,22 +152,8 @@ feature -- Access
 			-- Number of compiled classes in the system
 		require
 			classes_not_void: classes /= Void
-		local
-			id_array: like classes;
-			i: INTEGER
 		do
 			Result := System.nb_of_classes;
-			--id_array := classes;
-			--from
-				--i := id_array.lower
-			--until
-				--i > id_array.upper
-			--loop
-				--if id_array.item (i) /= Void then
-					--Result := Result + 1
-				--end;
-				--i := i + 1
-			--end
 		end;
 
 	class_of_id (i: CLASS_ID): E_CLASS is

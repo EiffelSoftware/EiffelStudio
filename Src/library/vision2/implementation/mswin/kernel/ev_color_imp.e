@@ -17,6 +17,22 @@ creation
 	make_rgb,
 	make_system
 
+feature -- Status report
+
+	destroyed: BOOLEAN is
+			-- Is Current object destroyed?  
+		do
+			Result := False
+		end
+
+feature -- Status setting
+
+	destroy is
+			-- Destroy actual object.
+			-- Nothing to do
+		do
+		end
+
 end -- class EV_COLOR_IMP
 
 --|----------------------------------------------------------------

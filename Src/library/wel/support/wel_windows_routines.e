@@ -116,10 +116,12 @@ feature -- Status report
 			hwnd_not_null: hwnd /= default_pointer
 			is_window_pointer: is_window (hwnd)
 		local
-			object_id: INTEGER
+			l_data, null: POINTER
 		do
-			object_id := cwin_get_window_long (hwnd, gwl_userdata)
-			Result := eif_id_object (object_id)
+			l_data := cwin_get_window_long (hwnd, gwl_userdata)
+			if l_data /= null then
+				Result := eif_id_object (feature {WEL_INTERNAL_DATA}.object_id (l_data))
+			end
 		ensure
 			is_wel_window: Result /= Void implies 
 				(create {INTERNAL}).type_conforms_to (
@@ -336,12 +338,12 @@ feature {NONE} -- Externals
 			"GetWindow"
 		end
 
-	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): INTEGER is
+	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): POINTER is
 			-- SDK GetWindowLong
 		external
 			"C [macro %"wel.h%"] (HWND, int): EIF_INTEGER"
 		alias
-			"GetWindowLong"
+			"GetWindowLongPtr"
 		end
 
 	cwin_redraw_window (hwnd, update_rectangle, update_region: POINTER; flags: INTEGER) is

@@ -32,7 +32,8 @@ feature -- Status report
 			window_not_void: window /= Void
 		do
 			if window.exists then
-				Result := eif_id_object (window.internal_data) /= Void
+				Result := eif_id_object (
+					feature {WEL_INTERNAL_DATA}.object_id (window.internal_data)) /= Void
 			else
 				Result := False
 			end
@@ -54,12 +55,12 @@ feature {NONE} -- Implementation
 			create Result.put (Void)
 		end
 
-	cwin_set_window_long (hwnd: POINTER; offset, value: INTEGER) is
-			-- SDK SetWindowLong
+	cwin_set_window_long (hwnd: POINTER; offset: INTEGER; value: POINTER) is
+			-- SDK SetWindowLongPtr
 		external
-			"C [macro %"wel.h%"] (HWND, int, LONG)"
+			"C [macro %"wel.h%"] (HWND, int, LONG_PTR)"
 		alias
-			"SetWindowLong"
+			"SetWindowLongPtr"
 		end
 
 end -- class WEL_WINDOW_MANAGER

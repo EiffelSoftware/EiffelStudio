@@ -157,9 +157,14 @@ feature -- Element change
 			gdkpix, gdkmask: POINTER
 			pixgc, maskgc: POINTER
 			loc_default_pointer: POINTER
+			foreg_clr: EV_COLOR
 		do
 			gdkpix := C.gdk_pixmap_new (default_gdk_window, a_x, a_y, Default_color_depth)
 			pixgc := C.gdk_gc_new (gdkpix)
+			C.gdk_gc_set_function (pixgc, C.GDK_COPY_INVERT_ENUM)
+			C.gdk_draw_rectangle (gdkpix, pixgc, 1, 0, 0, -1, -1)
+			C.gdk_gc_set_function (pixgc, C.GDK_COPY_ENUM)
+			
 			C.gdk_draw_pixmap (gdkpix, pixgc, drawable, 0, 0, 0, 0, width, height)
 			C.gdk_gc_unref (pixgc)
 
@@ -351,8 +356,7 @@ feature {NONE} -- Implementation
 			-- Exceptions "Unable to retrieve icon information",
 			--            "Unable to load the file"
 		require
-			valid_data_type: 
-			data_type = Loadpixmap_rgb_data
+			valid_data_type: data_type = Loadpixmap_rgb_data
 		local
 			gdkpix, gdkmask: POINTER
 		do

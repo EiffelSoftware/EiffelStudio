@@ -58,14 +58,16 @@ feature -- Output
 			l_name: STRING
 			l_type: TYPE_A
 		do
-			st.add_string ("In routine ")
-			associated_feature.append_name (st)
-			st.add_string (" from class ")
+			st.add_string ("Class: ")
 			associated_class.append_name (st)
+			st.add_new_line
+			st.add_string ("Feature: ")
+			associated_feature.append_name (st)
+			st.add_new_line
 			if unused_locals.count = 1 then
-				st.add_string (", unused local is: ")
+				st.add_string ("Unused local is: ")
 			else
-				st.add_string (", unused locals are: ")
+				st.add_string ("Unused locals are: ")
 			end
 			st.add_new_line
 			
@@ -87,7 +89,6 @@ feature -- Output
 				st.add_new_line
 				unused_locals.forth
 			end
-			st.add_new_line
 		end
 
 feature {COMPILER_EXPORTER}

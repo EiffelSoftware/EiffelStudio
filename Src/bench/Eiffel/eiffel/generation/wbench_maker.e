@@ -88,12 +88,12 @@ feature
 				cecil_basket.extend ("update.o"); cecil_basket.finish
 				cecil_basket.extend ("wbench.o"); cecil_basket.finish
 				cecil_basket.extend ("wrun_idr.o"); cecil_basket.finish
-				cecil_basket.extend ("compress.o"); cecil_basket.finish
-				cecil_basket.extend ("console.o"); cecil_basket.finish
+				cecil_basket.extend ("wcompress.o"); cecil_basket.finish
+				cecil_basket.extend ("wconsole.o"); cecil_basket.finish
 				cecil_basket.extend ("wpath_name.o"); cecil_basket.finish
 				cecil_basket.extend ("wobject_id.o"); cecil_basket.finish
 				cecil_basket.extend ("weif_threads.o"); cecil_basket.finish
-				cecil_basket.extend ("eif_rw_lock.o"); cecil_basket.finish
+				cecil_basket.extend ("weif_rw_lock.o"); cecil_basket.finish
 				cecil_basket.extend ("wgen_conf.o"); cecil_basket.finish
 				cecil_basket.extend ("weif_type_id.o"); cecil_basket.finish
 				cecil_basket.extend ("wrout_obj.o"); cecil_basket.finish
@@ -141,12 +141,12 @@ feature
 				cecil_basket.extend ("MTupdate.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwbench.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwrun_idr.o"); cecil_basket.finish
-				cecil_basket.extend ("MTcompress.o"); cecil_basket.finish
-				cecil_basket.extend ("MTconsole.o"); cecil_basket.finish
+				cecil_basket.extend ("MTwcompress.o"); cecil_basket.finish
+				cecil_basket.extend ("MTwconsole.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwpath_name.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwobject_id.o"); cecil_basket.finish
 				cecil_basket.extend ("MTweif_threads.o"); cecil_basket.finish
-				cecil_basket.extend ("MTeif_rw_lock.o"); cecil_basket.finish
+				cecil_basket.extend ("MTweif_rw_lock.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwgen_conf.o"); cecil_basket.finish
 				cecil_basket.extend ("MTweif_type_id.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwrout_obj.o"); cecil_basket.finish

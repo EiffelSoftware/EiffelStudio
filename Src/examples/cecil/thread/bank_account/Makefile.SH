@@ -1,4 +1,4 @@
-	cp $EIFFEL4/bench/spec/$PLATFORM/include/config.sh .
+	cp $ISE_EIFFEL/bench/spec/$ISE_PLATFORM/include/config.sh .
 	if test ! -f config.sh; then
 		(echo "Can't find config.sh."; exit 1)
 	fi 2>/dev/null
@@ -8,7 +8,7 @@ echo "Extracting "."/Makefile (with variable substitutions)"
 $spitshell >Makefile <<!GROK!THIS!
 SHELL = /bin/sh
 CC = $cc
-CFLAGS = $optimize $mtccflags $large -I\$(EIFFEL4)/bench/spec/\$(PLATFORM)/include -I. \$(INCLUDE_PATH)
+CFLAGS = $optimize $mtccflags $large -I\$(ISE_EIFFEL)/bench/spec/\$(ISE_PLATFORM)/include -I. \$(INCLUDE_PATH)
 LDFLAGS =  $windows_flags $mtldflags
 EIFLIB = EIFGEN/F_code/libbank_account.a 
 MAKE = $make

@@ -7,7 +7,7 @@ root
 
 default
 	assertion (all);
---	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision");
+--	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision");
 
 -- If you are not using the precompiled version of EiffelVision, 
 -- uncomment the `external' clause below. 
@@ -18,7 +18,7 @@ cluster
 
 -- EiffelBase:
 
-        base:                           "$EIFFEL4/library/base";
+        base:                           "$ISE_EIFFEL/library/base";
         structures(base):               "$/structures";
 
         kernel(base):                   "$/kernel";
@@ -40,7 +40,7 @@ cluster
 -- EiffelVision
 
 	-- Interface
-        vision:                 			"$EIFFEL4/library/vision2";
+        vision:                 			"$ISE_EIFFEL/library/vision2";
 	vision_kernel (vision):        			"$/interface/kernel";
 	vision_support (vision):       			"$/interface/support";
 	vision_properties (vision):			"$/interface/properties";
@@ -86,9 +86,9 @@ cluster
 external
 
 	include_path:
- 		"$EIFFEL4/library/vision2/implementation/gtk/Clib", "`gtk-config --cflags`";
+ 		"$ISE_EIFFEL/library/vision2/implementation/gtk/Clib", "`gtk-config --cflags`";
         object:
- 		"$(EIFFEL4)/library/vision2/implementation/gtk/spec/$(PLATFORM)/gtk_eiffel.o",
+ 		"$(ISE_EIFFEL)/library/vision2/implementation/gtk/spec/$(ISE_PLATFORM)/gtk_eiffel.o",
 		"`gtk-config --libs`"
 
 end

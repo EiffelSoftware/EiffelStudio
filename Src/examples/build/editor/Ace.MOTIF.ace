@@ -8,12 +8,12 @@ root
 default
 
 	assertion (require);
---	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision");
+--	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision");
 
 cluster
 
 -- EiffelBuild Library
-	build_library:			"$EIFFEL4/build/library";
+	build_library:			"$ISE_EIFFEL/build/library";
 	eb_command(build_library):	"$/command";
 	eb_control(build_library):	"$/control";
 	eb_widget(build_library):	"$/widget";
@@ -32,7 +32,7 @@ cluster
 
 
 -- EiffelBase:
-        base:                           "$EIFFEL4/library/base";
+        base:                           "$ISE_EIFFEL/library/base";
 	structures(base):               "$/structures";
 	
 	kernel(base):           	"$/kernel";
@@ -51,7 +51,7 @@ cluster
 
 
 -- MEL
-	mel:             		"$EIFFEL4/library/mel";
+	mel:             		"$ISE_EIFFEL/library/mel";
 	mel_callback_structs (mel):   	"$/callback_structs";
 	mel_constants (mel):          	"$/constants";
 	mel_events (mel):             	"$/events";
@@ -64,7 +64,7 @@ cluster
 
 
 -- EiffelVision
-        vision:                     "$EIFFEL4/library/vision";
+        vision:                     "$ISE_EIFFEL/library/vision";
     vision_kernel (vision):         "$/oui/kernel";
     vision_widgets (vision):        "$/oui/widgets";
     vision_context_data (vision):   "$/oui/context_data";
@@ -91,11 +91,11 @@ cluster
 
 
 external
-	include_path: "\$(EIFFEL4)/library/mel/Clib";
+	include_path: "\$(ISE_EIFFEL)/library/mel/Clib";
 
 	object:
-		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
-		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
+		"$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libMel.a",
+		"$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libXpm.a",
 		"-lXm -lXt -lX11";
 
 end

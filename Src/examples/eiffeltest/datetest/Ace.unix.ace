@@ -6,20 +6,20 @@ root
 
 default
 	assertion (all)
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
 	root_cluster:	"."
 
-	all time:	"$EIFFEL4/library/time"
+	all time:	"$ISE_EIFFEL/library/time"
 		exclude
 			"german"; "french"
 		end
 
-	all eiffeltest: "$EIFFEL4/library/eiffeltest"
+	all eiffeltest: "$ISE_EIFFEL/library/eiffeltest"
 
 external
 	object:
-		"\$(EIFFEL4)/library/time/spec/\$(PLATFORM)/lib/libdatetime.a"
+		"\$(ISE_EIFFEL)/library/time/spec/\$(ISE_PLATFORM)/lib/libdatetime.a"
 
 end

@@ -1,7 +1,7 @@
 CC = cc
-ES4 = $(EIFFEL4)/bench/spec/$(PLATFORM)/bin/es4
-FINISH_FREEZING = $(EIFFEL4)/bench/spec/$(PLATFORM)/bin/finish_freezing
-INCLUDE_PATH = $(EIFFEL4)/bench/spec/$(PLATFORM)/include
+ES4 = $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/bin/es4
+FINISH_FREEZING = $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/bin/finish_freezing
+INCLUDE_PATH = $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/include
 CFLAGS = 
 LN = /bin/ln
 RM = /bin/rm

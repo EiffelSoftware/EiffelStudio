@@ -8,12 +8,12 @@ root
 default
 
 	assertion (require);
---	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\vision");
+--	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\vision");
 
 cluster
 
 -- EiffelBuild Library
-	build_library:			"$EIFFEL4\build\library";
+	build_library:			"$ISE_EIFFEL\build\library";
 	eb_command(build_library):	"$\command";
 	eb_control(build_library):	"$\control";
 	eb_widget(build_library):	"$\widget";
@@ -32,7 +32,7 @@ cluster
 
 
 -- EiffelBase:
-	base:                           "$EIFFEL4\library\base";
+	base:                           "$ISE_EIFFEL\library\base";
 	structures(base):               "$\structures";
 	
 	kernel(base):           	"$\kernel";
@@ -50,19 +50,19 @@ cluster
 	tree(structures):   		"$\tree";
 
 -- WEL
-	wel_constants:		"$EIFFEL4\library\wel\consts";
-	wel_controls:		"$EIFFEL4\library\wel\controls";
-	wel_gdi:		"$EIFFEL4\library\wel\gdi";
-	wel_gdi_stocks: 	"$EIFFEL4\library\wel\gdistock";
-	wel_messages:		"$EIFFEL4\library\wel\messages";
-	wel_standard_dialogs:	"$EIFFEL4\library\wel\stddlgs";
-	wel_structures: 	"$EIFFEL4\library\wel\structs";
-	wel_support:		"$EIFFEL4\library\wel\support";
-	wel_windows:		"$EIFFEL4\library\wel\windows";
+	wel_constants:		"$ISE_EIFFEL\library\wel\consts";
+	wel_controls:		"$ISE_EIFFEL\library\wel\controls";
+	wel_gdi:		"$ISE_EIFFEL\library\wel\gdi";
+	wel_gdi_stocks: 	"$ISE_EIFFEL\library\wel\gdistock";
+	wel_messages:		"$ISE_EIFFEL\library\wel\messages";
+	wel_standard_dialogs:	"$ISE_EIFFEL\library\wel\stddlgs";
+	wel_structures: 	"$ISE_EIFFEL\library\wel\structs";
+	wel_support:		"$ISE_EIFFEL\library\wel\support";
+	wel_windows:		"$ISE_EIFFEL\library\wel\windows";
 
 
 -- Eiffelvision
-	vision:                        	"$EIFFEL4\library\vision";
+	vision:                        	"$ISE_EIFFEL\library\vision";
 	vision_kernel (vision):   			"$\oui\kernel";
 	vision_widgets (vision):			"$\oui\widgets";
 	vision_context_data (vision):   	"$\oui\context_data";
@@ -87,7 +87,7 @@ cluster
 
 
 external
-	include_path:		"$(EIFFEL4)\library\wel\spec\windows\include";
-	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
+	include_path:		"$(ISE_EIFFEL)\library\wel\spec\windows\include";
+	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
 
 end

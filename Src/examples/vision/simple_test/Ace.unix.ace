@@ -7,16 +7,16 @@ root
 
 default
 
---	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision");
+--	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision");
 
 	assertion (all);
 cluster
 
-	ROOT_CLUSTER: 		"$EIFFEL4/examples/vision/simple_test";
+	ROOT_CLUSTER: 		"$ISE_EIFFEL/examples/vision/simple_test";
 				-- If you intend to modify any of the examples,
-				-- copy all the files of $EIFFEL4/examples/vision/simple_test
+				-- copy all the files of $ISE_EIFFEL/examples/vision/simple_test
 				-- into one of your directories, and replace
-				-- $EIFFEL4/examples/vision/simple_test by the name of that 
+				-- $ISE_EIFFEL/examples/vision/simple_test by the name of that 
 				-- directory on the above line.
 
 -- If you are not using the precompiled version of EiffelVision, 
@@ -24,19 +24,19 @@ cluster
 
 -- EiffelBase:
 
-   all base: 		"$EIFFEL4\library\base"
+   all base: 		"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3";
 			"desc"
 		end	
 
 -- MEL
-   all  mel:                            "$EIFFEL4/library/mel/";
+   all  mel:                            "$ISE_EIFFEL/library/mel/";
                   
                         
 -- EiffelVision
 
-        vision:                 	"$EIFFEL4/library/vision";
+        vision:                 	"$ISE_EIFFEL/library/vision";
 	vision_kernel (vision):         "$/oui/kernel";
 	vision_widgets (vision):        "$/oui/widgets";
 	vision_context_data (vision):	"$/oui/context_data";
@@ -64,11 +64,11 @@ cluster
 external
 
         include_path:
-                "\$(EIFFEL4)/library/mel/Clib";
+                "\$(ISE_EIFFEL)/library/mel/Clib";
 
         object:
-                "$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
-                "$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
+                "$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libMel.a",
+                "$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libXpm.a",
                 "-lXm -lXt -lX11 -lXext -lXp"
 
 end

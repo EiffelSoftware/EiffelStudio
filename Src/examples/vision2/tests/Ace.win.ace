@@ -19,7 +19,7 @@ cluster
 
 	root_cluster:				"."
 
-	all base:					"$EIFFEL4\library\base"
+	all base:					"$ISE_EIFFEL\library\base"
 		exclude
 			"table_eiffel3"
 		end
@@ -37,7 +37,7 @@ external
         include_path:
 			"c:\work\wel\spec\windows\include"
         object:
-			"c:\work\wel\spec\$(COMPILER)\lib\wel.lib"
+			"c:\work\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
 
 end
 

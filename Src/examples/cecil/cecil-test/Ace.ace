@@ -11,21 +11,21 @@ default
     -- console_application (yes);
     -- Comment the next line, if you do not want to use
     -- a precompiled Eiffel Base library.
---    precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+--    precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
 
-        root_cluster:           "$EIFFEL4/examples/cecil/cecil-test"
+        root_cluster:           "$ISE_EIFFEL/examples/cecil/cecil-test"
                 -- If you intend to modify any part of the example,
-                -- copy all the files of $EIFFEL4/examples/cecil/cecil-test
+                -- copy all the files of $ISE_EIFFEL/examples/cecil/cecil-test
                 -- into one of your directories, and replace
-                -- $EIFFEL4/examples/cecil/cecil-test by the name of
+                -- $ISE_EIFFEL/examples/cecil/cecil-test by the name of
                 -- that directory on the above line.
             visible
                 MAIN;
             end
 
-        all base :          "$EIFFEL4/library/base"
+        all base :          "$ISE_EIFFEL/library/base"
 			exclude
 			   	"desc";"table_eiffel3";
 			visible

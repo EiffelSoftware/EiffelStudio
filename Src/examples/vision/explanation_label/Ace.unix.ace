@@ -7,21 +7,21 @@ root
 
 default
 	assertion (all);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision")
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision")
 
 cluster
 
-	root_cluster:			"$EIFFEL4/examples/vision/explanation_label";
+	root_cluster:			"$ISE_EIFFEL/examples/vision/explanation_label";
 
 
 external
 
         include_path:
-                "\$(EIFFEL4)/library/mel/Clib";
+                "\$(ISE_EIFFEL)/library/mel/Clib";
 
         object:
-                "$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
-                "$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
+                "$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libMel.a",
+                "$(ISE_EIFFEL)/library/mel/spec/$(ISE_PLATFORM)/lib/libXpm.a",
                 "-lXm -lXt -lX11 -lXext -lXp"
 
 end

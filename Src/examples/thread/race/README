@@ -20,7 +20,7 @@ this precompile mt-library (or another one containing it), you should first
 precompile the base library in multihreaded mode and once it is done, 
 compile the  race example with it. This way, you will be able to reuse the
 base-mt library for other multithreaded applications. Note that the base-mt
-library is located in the $EIFFEL4/precomp/spec/$PLATFORM/base-mt directory
+library is located in the $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base-mt directory
 but this name could be mt-base or mtbase depending on the deliveries. In this 
 case, just replace the name in the Ace.ace file at the line calling the 
 precompiled library `precompiled(...)'.

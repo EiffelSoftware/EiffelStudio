@@ -9,19 +9,19 @@ root
 default
 
 	assertion (require);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
 
-	ROOT_CLUSTER: 		"$EIFFEL4/examples/base/support";
+	ROOT_CLUSTER: 		"$ISE_EIFFEL/examples/base/support";
 				-- If you intend to modify any part of the example,
-				-- copy all the files of $EIFFEL4/examples/base/structures
+				-- copy all the files of $ISE_EIFFEL/examples/base/structures
 				-- into one of your directories, and replace
-				-- $EIFFEL4/examples/base/structures by the name of
+				-- $ISE_EIFFEL/examples/base/structures by the name of
 				-- that directory on the above line.
 
 		-- EiffelBase:
-	all base:		"$EIFFEL4/library/base"
+	all base:		"$ISE_EIFFEL/library/base"
 		exclude
 			"desc";"table_eiffel3"
 		end

@@ -10,21 +10,21 @@ default
 	assertion (all); -- On Eiffel4.2 , assertion are not MT-safe.
 	multithreaded(yes);
 	-- Uncomment the next line if you have the base-mt precompilation
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base-mt");
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base-mt");
 
 cluster
 	
-	root_cluster: "$EIFFEL4/examples/thread/procucer_consumer";
+	root_cluster: "$ISE_EIFFEL/examples/thread/procucer_consumer";
 				-- If you intend to modify any part of the example,
-				-- copy all the files of $EIFFEL4/examples/thread/procucer_consumer"
+				-- copy all the files of $ISE_EIFFEL/examples/thread/procucer_consumer"
 				-- into one of your directories, and replace
-				-- $EIFFEL4/examples/thread/procucer_consumer" by the name of
+				-- $ISE_EIFFEL/examples/thread/procucer_consumer" by the name of
 				-- that directory on the above line.
 
-	all base:		"$EIFFEL4/library/base"
+	all base:		"$ISE_EIFFEL/library/base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
-	thread:			"$EIFFEL4/library/thread";
+	thread:			"$ISE_EIFFEL/library/thread";
 end

@@ -6,7 +6,7 @@ root
 
 default
 	assertion (require);
-	precompiled ("$EIFFEL4\precomp\spec\windows\wel");
+	precompiled ("$ISE_EIFFEL\precomp\spec\windows\wel");
 
 cluster
 
@@ -15,39 +15,39 @@ cluster
 
 -- Base
 	
-	kernel:		"$EIFFEL4\library\base\kernel";
-	support:	"$EIFFEL4\library\base\support";
-	access:		"$EIFFEL4\library\base\structures\access";
-	cursors:	"$EIFFEL4\library\base\structures\cursors";
-	cursor_tree:"$EIFFEL4\library\base\structures\cursor_tree";
-	dispenser:	"$EIFFEL4\library\base\structures\dispenser";
-	iteration:	"$EIFFEL4\library\base\structures\iteration";
-	list:		"$EIFFEL4\library\base\structures\list";
-	set:		"$EIFFEL4\library\base\structures\set";
-	sort:		"$EIFFEL4\library\base\structures\sort";
-	storage:	"$EIFFEL4\library\base\structures\storage";
-	table:		"$EIFFEL4\library\base\structures\table";
-	traversing:	"$EIFFEL4\library\base\structures\traversing";
-	tree:		"$EIFFEL4\library\base\structures\tree";
+	kernel:		"$ISE_EIFFEL\library\base\kernel";
+	support:	"$ISE_EIFFEL\library\base\support";
+	access:		"$ISE_EIFFEL\library\base\structures\access";
+	cursors:	"$ISE_EIFFEL\library\base\structures\cursors";
+	cursor_tree:"$ISE_EIFFEL\library\base\structures\cursor_tree";
+	dispenser:	"$ISE_EIFFEL\library\base\structures\dispenser";
+	iteration:	"$ISE_EIFFEL\library\base\structures\iteration";
+	list:		"$ISE_EIFFEL\library\base\structures\list";
+	set:		"$ISE_EIFFEL\library\base\structures\set";
+	sort:		"$ISE_EIFFEL\library\base\structures\sort";
+	storage:	"$ISE_EIFFEL\library\base\structures\storage";
+	table:		"$ISE_EIFFEL\library\base\structures\table";
+	traversing:	"$ISE_EIFFEL\library\base\structures\traversing";
+	tree:		"$ISE_EIFFEL\library\base\structures\tree";
 
 -- WEL
 
-	wel_constants:		"$EIFFEL4\library\wel\consts";
-	wel_controls:		"$EIFFEL4\library\wel\controls";
-	wel_gdi:			"$EIFFEL4\library\wel\gdi";
-	wel_gdi_stocks: 	"$EIFFEL4\library\wel\gdistock";
-	wel_messages:		"$EIFFEL4\library\wel\messages";
-	wel_standard_dialogs:"$EIFFEL4\library\wel\stddlgs";
-	wel_structures: 	"$EIFFEL4\library\wel\structs";
-	wel_support:		"$EIFFEL4\library\wel\support"
+	wel_constants:		"$ISE_EIFFEL\library\wel\consts";
+	wel_controls:		"$ISE_EIFFEL\library\wel\controls";
+	wel_gdi:			"$ISE_EIFFEL\library\wel\gdi";
+	wel_gdi_stocks: 	"$ISE_EIFFEL\library\wel\gdistock";
+	wel_messages:		"$ISE_EIFFEL\library\wel\messages";
+	wel_standard_dialogs:"$ISE_EIFFEL\library\wel\stddlgs";
+	wel_structures: 	"$ISE_EIFFEL\library\wel\structs";
+	wel_support:		"$ISE_EIFFEL\library\wel\support"
 		visible
 			WEL_REGISTRY;
 		end;
-	wel_windows:		"$EIFFEL4\library\wel\windows";
+	wel_windows:		"$ISE_EIFFEL\library\wel\windows";
 
 -- COM
 
-	ecom_auto:		"$EIFFEL4\library\com\ecom_automation"
+	ecom_auto:		"$ISE_EIFFEL\library\com\ecom_automation"
 		visible
 			EOLE_DISPATCH;
 			EOLE_PICTURE_DISP;
@@ -55,7 +55,7 @@ cluster
 			EOLE_PICTURE_DISP;
 			EOLE_FONT_DISP;
 		end;
-	ecom_basic:		"$EIFFEL4\library\com\ecom_basic"
+	ecom_basic:		"$ISE_EIFFEL\library\com\ecom_basic"
 		visible
 			EOLE_CALL_DISPATCHER;
 			EOLE_UNKNOWN;
@@ -67,19 +67,19 @@ cluster
 			EOLE_PERSIST;
 			EOLE_PROVIDE_CLASS_INFO;
 		end;
-	ecom_enum:		"$EIFFEL4\library\com\ecom_enumerators"
+	ecom_enum:		"$ISE_EIFFEL\library\com\ecom_enumerators"
 		visible
 			EOLE_ENUM_UNKNOWN;
 			EOLE_ENUM_CONNECTIONS;
 			EOLE_ENUM_CONNECTION_POINTS;
 		end;
-	ecom_flags:		"$EIFFEL4\library\com\ecom_flags";
-	ecom_storage:	"$EIFFEL4\library\com\ecom_storage"
+	ecom_flags:		"$ISE_EIFFEL\library\com\ecom_flags";
+	ecom_storage:	"$ISE_EIFFEL\library\com\ecom_storage"
 		visible
 			EOLE_STREAM;
 			EOLE_STORAGE;
 		end;
-	ecom_structure:	"$EIFFEL4\library\com\ecom_structures"
+	ecom_structure:	"$ISE_EIFFEL\library\com\ecom_structures"
 		visible
 			EOLE_BSTR;
 			EOLE_CONNECTDATA;
@@ -100,9 +100,9 @@ cluster
 
 external
 
-	include_path:	"$(EIFFEL4)\library\com\spec\windows\include",
-				"$(EIFFEL4)\library\wel\spec\windows\include";
+	include_path:	"$(ISE_EIFFEL)\library\com\spec\windows\include",
+				"$(ISE_EIFFEL)\library\wel\spec\windows\include";
 
-	object:		"$(EIFFEL4)\library\com\spec\$(COMPILER)\lib\eifole.lib",
-				"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
+	object:		"$(ISE_EIFFEL)\library\com\spec\$(ISE_COMPILER)\lib\eifole.lib",
+				"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
 end

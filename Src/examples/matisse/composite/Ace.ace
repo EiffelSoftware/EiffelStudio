@@ -9,26 +9,26 @@ default
 	
 cluster
 
-	root_cluster: "$EIFFEL4\examples\matisse\composite";
+	root_cluster: "$ISE_EIFFEL\examples\matisse\composite";
 				-- If you intend to modify any part of the example,
-				-- copy all the files of $EIFFEL4\examples\matisse\composite
+				-- copy all the files of $ISE_EIFFEL\examples\matisse\composite
 				-- into one of your directories, and replace
-				-- $EIFFEL4\examples\matisse\composite by the name of
+				-- $ISE_EIFFEL\examples\matisse\composite by the name of
 				-- that directory on the above line.
 
 	-- EiffelBase
-	all base:		"$EIFFEL4\library\base"
+	all base:		"$ISE_EIFFEL\library\base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
 	-- EiffelTime
-	time:	"$EIFFEL4\library\time";
+	time:	"$ISE_EIFFEL\library\time";
 	time_format (time):	"$\format";
 	time_local_settings (time):	"$\format\english";
 
 	-- MATISSE-Eiffel Binding
-	eif_matisse(root_cluster):	"$EIFFEL4\library\matisse";
+	eif_matisse(root_cluster):	"$ISE_EIFFEL\library\matisse";
 	matisse_retrieval(eif_matisse):	"$\matisse_retrieval"
 		visible
 			MT_LINKED_STACK   creation "make" export "make" end;
@@ -53,8 +53,8 @@ cluster
 
 external
 	object:	
-		"$EIFFEL4\library\time\spec\msc\lib\datetime.lib",
+		"$ISE_EIFFEL\library\time\spec\msc\lib\datetime.lib",
 		"$MTS_ROOT\lib\matisse.lib",
-		"$EIFFEL4\library\matisse\matisse_externals\Clib\mt_support.lib";
+		"$ISE_EIFFEL\library\matisse\matisse_externals\Clib\mt_support.lib";
 
 end

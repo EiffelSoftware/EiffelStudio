@@ -6,13 +6,13 @@ root
 
 default
 	assertion (no)
-	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\wel")
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
 
 cluster
-	root_cluster:	"$EIFFEL4/examples/vision/test_all_widgets"
+	root_cluster:	"$ISE_EIFFEL/examples/vision/test_all_widgets"
 
 		-- EiffelVision
-    all vision:        	"$EIFFEL4\library\vision"
+    all vision:        	"$ISE_EIFFEL\library\vision"
 		exclude
 			"motif"
 			"x"
@@ -21,9 +21,9 @@ cluster
 
 external
 	include_path:
-		"$(EIFFEL4)\library\wel\spec\windows\include";
+		"$(ISE_EIFFEL)\library\wel\spec\windows\include";
 
 	object:
- 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib";
+ 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib";
 
 end

@@ -16,7 +16,7 @@ feature -- Access
 			env: EXECUTION_ENVIRONMENT
 		do
 			create env
-			Result := env.get ("EIFFEL4")
+			Result := env.get ("ISE_EIFFEL")
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append ("bench")
 			Result.append_character (Operating_environment.directory_separator)

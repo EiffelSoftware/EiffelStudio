@@ -8,14 +8,14 @@ root
 
 default
 
-	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\vision2")
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\vision2")
 	assertion (all)
 
 cluster
 
 --------------- Tutorial clusters
 
-	tutorial:					"$EIFFEL4\examples\vision2\tutorial"
+	tutorial:					"$ISE_EIFFEL\examples\vision2\tutorial"
 	main (tutorial):			"$\main"
 	demo_items (tutorial):		"$\demo_items"
 	demo_windows (tutorial):	"$\demo_windows"

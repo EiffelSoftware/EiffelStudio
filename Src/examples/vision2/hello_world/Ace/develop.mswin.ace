@@ -7,19 +7,19 @@ root
 
 default
 
-	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\vision2")
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\vision2")
 	assertion (all)
 
 cluster
 
 --------------- Example clusters
 
-	ROOT_CLUSTER: "$EIFFEL4\examples\vision2\hello_world"
+	ROOT_CLUSTER: "$ISE_EIFFEL\examples\vision2\hello_world"
 
 
 ------------------------ EiffelBase:
 
-	base: "$EIFFEL4\library\base"
+	base: "$ISE_EIFFEL\library\base"
 	structures(base):			"$\structures"
 	kernel(base):				"$\kernel"
 	support(base):				"$\support"
@@ -39,7 +39,7 @@ cluster
 
 ------------------------ Wel:
 
-	wel: "$EIFFEL4\library\wel"
+	wel: "$ISE_EIFFEL\library\wel"
 	wel_constants(wel):			"$\consts"
 	wel_controls(wel):			"$\controls"
 	wel_gdi(wel):				"$\gdi"
@@ -52,7 +52,7 @@ cluster
                         
 ------------------------ EiffelVision
 
-  	vision:	"$EIFFEL4\library\vision2\interface"
+  	vision:	"$ISE_EIFFEL\library\vision2\interface"
 	vision_support (vision):						"$\support"
 	vision_kernel (vision): 	       				"$\kernel"
 	vision_properties (vision):						"$\properties"
@@ -66,7 +66,7 @@ cluster
 	vision_uncommon_widgets (vision_widgets):		"$\uncommon_widgets"
 
 	-- Implementation Interface
-	vision_ii: "$EIFFEL4\library\vision2\implementation\implementation_interface"
+	vision_ii: "$ISE_EIFFEL\library\vision2\implementation\implementation_interface"
 	vision_ii_kernel (vision_ii): 	       			"$\kernel"
 	vision_ii_support (vision_ii):					"$\support"
 	vision_ii_properties (vision_ii):				"$\properties"
@@ -79,7 +79,7 @@ cluster
 	vision_ii_uncommon_widgets (vision_ii_widgets):	"$\uncommon_widgets"
 
 	-- Implementation clusters for MS Windows
-	vision_imp: "$EIFFEL4\library\vision2\implementation\mswin"
+	vision_imp: "$ISE_EIFFEL\library\vision2\implementation\mswin"
 	vision_imp_kernel (vision_imp): 	       			"$\kernel"
 	vision_imp_support (vision_imp):					"$\support"
 	vision_imp_properties (vision_imp):					"$\properties"
@@ -93,7 +93,7 @@ cluster
 
 external
         include_path:
-           	"$EIFFEL4\library\wel\spec\windows\include"
+           	"$ISE_EIFFEL\library\wel\spec\windows\include"
         object:
-			"$EIFFEL4\library\wel\spec\$(COMPILER)\lib\wel.lib"
+			"$ISE_EIFFEL\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib"
 end

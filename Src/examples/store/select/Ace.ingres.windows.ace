@@ -11,37 +11,37 @@ default
 
 cluster
 
-	root_cluster:		"$EIFFEL4/examples/store/select";
-	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
-	ingres_handle:		"$EIFFEL4/examples/store/Utilities/ingres";
+	root_cluster:		"$ISE_EIFFEL/examples/store/select";
+	estore_examples_objects:"$ISE_EIFFEL/examples/store/Utilities";
+	ingres_handle:		"$ISE_EIFFEL/examples/store/Utilities/ingres";
 
 -- EiffelBase
 
-	all base:			"$EIFFEL4/library/base"
+	all base:			"$ISE_EIFFEL/library/base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
 -- EiffelStore
 
-	estore_support:		"$EIFFEL4/library/store/support";
-	estore_interface:	"$EIFFEL4/library/store/interface";
-	estore_ingres:		"$EIFFEL4/library/store/dbms/rdbms/ingres";
-	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
-	estore_converter:	"$EIFFEL4/library/store/converter";
+	estore_support:		"$ISE_EIFFEL/library/store/support";
+	estore_interface:	"$ISE_EIFFEL/library/store/interface";
+	estore_ingres:		"$ISE_EIFFEL/library/store/dbms/rdbms/ingres";
+	estore_db_support:	"$ISE_EIFFEL/library/store/dbms/support";
+	estore_converter:	"$ISE_EIFFEL/library/store/converter";
 
 -- EiffelTime
 	
-	time:				"$EIFFEL4/library/time";
-	time_format: 		"$EIFFEL4/library/time/format";
-	time_english:		"$EIFFEL4/library/time/format/english";
+	time:				"$ISE_EIFFEL/library/time";
+	time_format: 		"$ISE_EIFFEL/library/time/format";
+	time_english:		"$ISE_EIFFEL/library/time/format/english";
 
 external
 
 	object:		
-		"$EIFFEL4/library/store/spec/$(COMPILER)/lib/support.lib",
-		"$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib",
-		"$EIFFEL4/library/store/spec/$(COMPILER)/lib/ingres_store.lib",
+		"$ISE_EIFFEL/library/store/spec/$(ISE_COMPILER)/lib/support.lib",
+		"$(ISE_EIFFEL)/library/time/spec/$(ISE_COMPILER)/lib/datetime.lib",
+		"$ISE_EIFFEL/library/store/spec/$(ISE_COMPILER)/lib/ingres_store.lib",
 		"$(II_SYSTEM)/ingres/lib/ingres.lib"
 
 end

@@ -124,7 +124,7 @@ feature -- Basic operation
 	pixname (a_name: STRING): STRING is
 			-- Return the complete path of the given pixmap : root/../pixmaps/name
 		do
---			Result := get ("$EIFFEL4")
+--			Result := get ("$ISE_EIFFEL")
 			Result := "d:\Eiffel43"
 			Result.append ("\examples\vision2\test_all_widgets\pixmaps\")
 			Result.append (a_name)

@@ -11,6 +11,6 @@ cluster
 	root_cluster:		"."
 
 		-- EiffelBase
-	all base:		"$EIFFEL5\library\base.net"
+	all base:		"$ISE_EIFFEL\library\base.net"
 
 end

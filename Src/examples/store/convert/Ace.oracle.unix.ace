@@ -5,43 +5,43 @@ root
 
 default
 	assertion (all);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
-	root_cluster:				"$EIFFEL4/examples/store/convert";
-	estore_examples_objects:	"$EIFFEL4/examples/store/Utilities";
-	oracle_handle:			"$EIFFEL4/examples/store/Utilities/oracle";
+	root_cluster:				"$ISE_EIFFEL/examples/store/convert";
+	estore_examples_objects:	"$ISE_EIFFEL/examples/store/Utilities";
+	oracle_handle:			"$ISE_EIFFEL/examples/store/Utilities/oracle";
 
 -- EiffelBase
-	all base:			"$EIFFEL4/library/base"
+	all base:			"$ISE_EIFFEL/library/base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
 -- EiffelStore
 
-	estore_support:		"$EIFFEL4/library/store/support";
-	estore_interface:		"$EIFFEL4/library/store/interface";
-	estore_convert:		"$EIFFEL4/library/store/converter";
-	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
-	estore_oracle:		"$EIFFEL4/library/store/dbms/rdbms/oracle";
+	estore_support:		"$ISE_EIFFEL/library/store/support";
+	estore_interface:		"$ISE_EIFFEL/library/store/interface";
+	estore_convert:		"$ISE_EIFFEL/library/store/converter";
+	estore_db_support:	"$ISE_EIFFEL/library/store/dbms/support";
+	estore_oracle:		"$ISE_EIFFEL/library/store/dbms/rdbms/oracle";
 
 -- EiffelTime
-	time:						"$EIFFEL4/library/time";
+	time:						"$ISE_EIFFEL/library/time";
 	time_format(time):				"$/format";
 	english_format(time_format):	"$/english";
  
 -- EiffelLex
-	lexical:			"$EIFFEL4/library/lex";
+	lexical:			"$ISE_EIFFEL/library/lex";
 
 external
-	include_path: "$(EIFFEL4)/library/store/dbms/rdbms/oracle/Clib",
+	include_path: "$(ISE_EIFFEL)/library/store/dbms/rdbms/oracle/Clib",
 --Specify the path
 		"$(ORACLE_HOME)/rdbms/public"
 
-	object: "$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib/libsupport.a",
-		"$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib/liboracle.a",
-		"$(EIFFEL4)/library/time/spec/$(PLATFORM)/lib/libdatetime.a",
+	object: "$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib/libsupport.a",
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_PLATFORM)/lib/liboracle.a",
+		"$(ISE_EIFFEL)/library/time/spec/$(ISE_PLATFORM)/lib/libdatetime.a",
 -- Specify the path
 		"-L$(ORACLE_HOME)/lib/ -lclntsh";
 

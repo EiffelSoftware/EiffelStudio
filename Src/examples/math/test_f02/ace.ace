@@ -6,28 +6,28 @@ root
 	
 default
 	assertion (all);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
 	root_cluster:	".";
 
-	bvp:		"$EIFFEL4\library\math\bvp";
-	eifmath:	"$EIFFEL4\library\math\eifmath";
-	integrat:	"$EIFFEL4\library\math\integrat";
-	interpol:	"$EIFFEL4\library\math\interpol";
-	linear:		"$EIFFEL4\library\math\linear";
-	ode:		"$EIFFEL4\library\math\ode";
-	optima: 	"$EIFFEL4\library\math\optima";
-	random: 	"$EIFFEL4\library\math\random";
-	regress:	"$EIFFEL4\library\math\regress";
-	roots:		"$EIFFEL4\library\math\roots";
-	special:	"$EIFFEL4\library\math\special";
-	transp:		"$EIFFEL4\library\math\transp";
-	tsa:		"$EIFFEL4\library\math\tsa";
+	bvp:		"$ISE_EIFFEL\library\math\bvp";
+	eifmath:	"$ISE_EIFFEL\library\math\eifmath";
+	integrat:	"$ISE_EIFFEL\library\math\integrat";
+	interpol:	"$ISE_EIFFEL\library\math\interpol";
+	linear:		"$ISE_EIFFEL\library\math\linear";
+	ode:		"$ISE_EIFFEL\library\math\ode";
+	optima: 	"$ISE_EIFFEL\library\math\optima";
+	random: 	"$ISE_EIFFEL\library\math\random";
+	regress:	"$ISE_EIFFEL\library\math\regress";
+	roots:		"$ISE_EIFFEL\library\math\roots";
+	special:	"$ISE_EIFFEL\library\math\special";
+	transp:		"$ISE_EIFFEL\library\math\transp";
+	tsa:		"$ISE_EIFFEL\library\math\tsa";
 
 External
-	Include_path: "$(NAGCL04_32)\include", "$(EIFFEL4)\library\math\clib";
-	Object: "$(EIFFEL4)\library\math\clib\eifmathc.lib", "$(NAGCL04_32)\dll\nagcl04.lib";
+	Include_path: "$(NAGCL04_32)\include", "$(ISE_EIFFEL)\library\math\clib";
+	Object: "$(ISE_EIFFEL)\library\math\clib\eifmathc.lib", "$(NAGCL04_32)\dll\nagcl04.lib";
 		
 end
 

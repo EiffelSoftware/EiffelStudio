@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 			env: EXECUTION_ENVIRONMENT
 		once
 			create env
-			Result := env.get ("EIFFEL4")
+			Result := env.get ("ISE_EIFFEL")
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append ("library")
 			Result.append_character (Operating_environment.directory_separator)
@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 			env: EXECUTION_ENVIRONMENT
 		once
 			create env
-			Result := env.get ("EIFFEL4")
+			Result := env.get ("ISE_EIFFEL")
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append ("examples")
 			Result.append_character (Operating_environment.directory_separator)

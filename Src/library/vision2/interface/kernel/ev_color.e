@@ -36,9 +36,28 @@ inherit
 
 create
 	default_create,
+	make_with_8_bit_rgb,
 	make_with_rgb
 
 feature -- Initialization
+
+	make_with_8_bit_rgb (an_8_bit_red, an_8_bit_green, an_8_bit_blue: INTEGER) is
+			-- Create with `a_red', `a_green', `a_blue', and default name.
+		require
+			red_within_range: an_8_bit_red >= 0 and an_8_bit_red <= Max_8_bit
+			green_within_range: an_8_bit_green >= 0 and
+				 an_8_bit_green <= Max_8_bit
+			blue_within_range: an_8_bit_blue >= 0 and an_8_bit_blue <= Max_8_bit
+		do
+			default_create
+			set_red_with_8_bit (an_8_bit_red)
+			set_green_with_8_bit (an_8_bit_green)
+			set_blue_with_8_bit (an_8_bit_blue)
+		ensure
+			red_assigned: red_8_bit = an_8_bit_red
+			green_assigned: green_8_bit = an_8_bit_green
+			blue_assigned: blue_8_bit = an_8_bit_blue
+		end
 
 	make_with_rgb (a_red, a_green, a_blue: REAL) is
 			-- Create with `a_red', `a_green', `a_blue', and default name.
@@ -710,12 +729,14 @@ end -- class EV_COLOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.19  2000/06/07 17:28:06  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--| Revision 1.20  2000/06/09 02:00:04  manus
+--| Merged version 1.9.2.9 from DEVEL branch to trunc
 --|
---| Revision 1.18  2000/05/12 20:59:54  pichery
---| Added feature `Lightness', `Hue' and `Saturation'.
---| the "set" features will follow soon.
+--| Revision 1.9.2.9  2000/06/07 23:56:12  bonnard
+--| Renamed `make_with_rgb_with_8_bits' as `make_with_8_bit_rgb'.
+--|
+--| Revision 1.9.2.8  2000/06/07 20:08:09  bonnard
+--| Added `make_with_rgb_with_8_bits' creation function.
 --|
 --| Revision 1.9.2.7  2000/06/04 21:34:23  manus
 --| Fixed some bad RGC color assignment that set `blue' field with `green' instead of `blue'.

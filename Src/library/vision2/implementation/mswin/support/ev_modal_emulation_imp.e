@@ -174,20 +174,18 @@ feature {NONE} -- Implementation
 	authorized_messages: ARRAY[INTEGER] is 
 		once
 			create Result.make (0, 10)
-			Result.put (Wm_paint, 0)
-			Result.put (Wm_erasebkgnd, 1)
-			Result.put (Wm_setredraw, 2)
-			Result.put (Wm_initmenupopup, 3)
-			Result.put (Wm_initdialog, 4)
-			Result.put (Wm_timer, 5)
-			Result.put (Wm_initmenu, 6)
---			Result.put (Wm_syscommand, 7)
---			Result.put (Wm_enable, 8)
+			Result.put (Wm_paint,           0)
+			Result.put (Wm_erasebkgnd,      1)
+			Result.put (Wm_setredraw,       2)
+			Result.put (Wm_initmenupopup,   3)
+			Result.put (Wm_initdialog,      4)
+			Result.put (Wm_timer,           5)
+			Result.put (Wm_initmenu,        6)
 		end
 
 	unauthorized_messages: ARRAY[INTEGER] is 
 		once
-			create Result.make (0, 25)
+			create Result.make (0, 30)
 			Result.put (Wm_mousemove,       0)
 			Result.put (Wm_nchittest,       1)
 			Result.put (Wm_ncmousemove,     2)
@@ -219,6 +217,8 @@ feature {NONE} -- Implementation
 			Result.put (Wm_deadchar,        28)
 			Result.put (Wm_hscroll,         29)
 			Result.put (Wm_vscroll,         30)
+			Result.put (Wm_syscommand,      31)
+			Result.put (Wm_enable,          32)
 		end
 
 feature {NONE} -- EV_ANY_I compliance

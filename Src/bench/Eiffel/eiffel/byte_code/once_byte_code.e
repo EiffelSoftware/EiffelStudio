@@ -131,52 +131,11 @@ feature -- C code generation
 			-- Generate end of global once block.
 		local
 			l_buf: like buffer
-			l_mutex_name: STRING
 		do
-			l_mutex_name := mutex_name (a_name)
 			l_buf := context.buffer
-			l_buf.exdent
-			l_buf.put_character ('}')
-			l_buf.put_new_line
-			l_buf.put_string ("finished = EIF_TRUE;")
-			l_buf.put_new_line
-			l_buf.put_string ("eif_thr_mutex_unlock (")
-			l_buf.put_string (l_mutex_name)
+			l_buf.put_string ("RTOPE (");
+			l_buf.put_string (mutex_name (a_name))
 			l_buf.put_string (");")
-			l_buf.put_new_line
-			l_buf.exdent
-			l_buf.put_string ("} else {")
-			l_buf.put_new_line
-			l_buf.indent
-			l_buf.put_string ("if (!finished) {")
-			l_buf.put_new_line
-			l_buf.indent
-			l_buf.put_string ("if (thread_id != eif_thr_thread_id()) {")
-			l_buf.put_new_line
-			l_buf.indent
-				-- We need to let the GC know that we are potentially stopped
-			l_buf.put_string ("EIF_ENTER_C;")
-			l_buf.put_new_line
-			l_buf.put_string ("eif_thr_mutex_lock (")
-			l_buf.put_string (l_mutex_name)
-			l_buf.put_string (");")
-			l_buf.put_new_line
-			l_buf.put_string ("EIF_EXIT_C;")
-			l_buf.put_new_line
-			l_buf.put_string ("RTGC;")
-			l_buf.put_new_line
-			l_buf.put_string ("eif_thr_mutex_unlock (")
-			l_buf.put_string (l_mutex_name)
-			l_buf.put_string (");")
-			l_buf.exdent
-			l_buf.put_new_line
-			l_buf.put_character ('}')
-			l_buf.exdent
-			l_buf.put_new_line
-			l_buf.put_character ('}')
-			l_buf.exdent
-			l_buf.put_new_line
-			l_buf.put_character ('}')
 			l_buf.put_new_line
 		end
 		
@@ -208,36 +167,13 @@ feature {NONE} -- Implementation
 			is_global_once: internal_is_global_once
 			name_not_void: name /= Void
 		local
-			type_i: TYPE_I
 			buf: like buffer
-			l_mutex_name: STRING
 		do
-			type_i := real_type (result_type)
-			l_mutex_name := mutex_name (name)
-
 			buf := buffer
-			buf.put_string ("if (!done) {")
-			buf.put_new_line
-			buf.indent
-				-- We need to let the GC know that we are potentially stopped
-			buf.put_string ("EIF_ENTER_C;")
-			buf.put_new_line
-			buf.put_string ("eif_thr_mutex_lock (")
-			buf.put_string (l_mutex_name)
+			buf.put_string ("RTOPP (")
+			buf.put_string (mutex_name (name))
 			buf.put_string (");")
 			buf.put_new_line
-			buf.put_string ("EIF_EXIT_C;")
-			buf.put_new_line
-			buf.put_string ("RTGC;")
-			buf.put_new_line
-				-- Double-Checked Locking on `done' is safe, because
-				-- `done' is marked volatile.
-			buf.put_string ("if (!done) {")
-			buf.put_new_line
-			buf.indent
-			buf.put_string ("thread_id = eif_thr_thread_id();")
-			buf.put_new_line
-			buf.put_string ("done = EIF_TRUE;")
 
 			if context.result_used then
 				if real_type(result_type).c_type.is_pointer then

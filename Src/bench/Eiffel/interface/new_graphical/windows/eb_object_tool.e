@@ -16,21 +16,15 @@ inherit
 			make, init_commands,
 --			hole,
  close_windows,
-			empty_tool_name, build_interface,
+			empty_tool_name,
 			set_default_format,
 			stone, synchronize, -- process_object,
 			destroy, reset, format_list,
--- create_toolbar,
---			set_title,
  history_window_title,
--- help_index,
- icon_id
+			build_special_menu
 		end
 
 	EB_OBJECT_TOOL_DATA
-		rename
-			Object_resources as resources
-		end			
 
 	SHARED_APPLICATION_EXECUTION
 
@@ -81,28 +75,6 @@ feature {NONE} -- Initialization
 --			!! history_list_cmd.make (Current)
 		end
 
-feature {EB_TOOL_MANAGER} -- Initialize
-
-	build_interface is
-		do
-			precursor
-
---			if not is_in_project_tool then
---				build_menus
---			end
---			build_object_toolbar
---			if not is_in_project_tool then
---				fill_menus
---			end
---			build_toolbar_menu
---			set_last_format (default_format)
-
---			if resources.command_bar.actual_value = False then
---				object_toolbar.remove
---			end
-
-		end
-
 feature -- Window Properties
 
 	empty_tool_name: STRING is
@@ -121,11 +93,11 @@ feature -- Window Properties
 
 --	help_index: INTEGER is 4
 
-	icon_id: INTEGER is
-			-- Icon id of Current window (only for windows)
-		do
-			Result := Interface_names.i_Object_id
-		end
+--	icon_id: INTEGER is
+--			-- Icon id of Current window (only for windows)
+--		do
+--			Result := Interface_names.i_Object_id
+--		end
 
 	format_bar_is_used: BOOLEAN is False
 
@@ -188,6 +160,28 @@ feature -- Status seting
 		end
 
 feature -- Update
+
+	register is
+		do
+			register_to ("object_tool_bar")
+		end
+
+	update is
+		do
+			if object_tool_bar then
+				object_toolbar.show
+			else
+				object_toolbar.hide
+			end
+			if edit_bar_menu_item /= Void then
+				edit_bar_menu_item.set_selected (object_tool_bar)
+			end
+		end
+
+	unregister is
+		do
+			unregister_to ("object_tool_bar")
+		end
 
 	hang_on is
 			-- Make object addresses unclickable.
@@ -412,6 +406,8 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 			create i.make_with_text (a_menu, Interface_names.m_Previous_target)
 			i.add_select_command (previous_target_cmd, Void)
+
+			Precursor (a_menu)
 		end
 
 end -- class EB_OBJECT_TOOL

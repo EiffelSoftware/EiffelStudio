@@ -1,0 +1,57 @@
+<html>
+	<head>	
+		<title>GC_INFO</title>
+		<link rel="stylesheet" href="../.\..\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\base/reference/kernel/classic/gc_info_chart.html">GC_INFO</a>
+
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">base.kernel.classic</span>
+	<span class="itag">description</span><span class="symbol">:</span> 
+		<span class="string">"Garbage collector statistics.</span>
+		<span class="string">This class may be used as ancestor by classes needing its facilities.</span>
+		<span class="string">Time accounting is relevant only if `</span><a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_enable_time_accounting">enable_time_accounting</a><span class="string">' </span>
+		<span class="string">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/memory_chart.html">MEMORY</a><span class="string">) has been called."</span>
+	<span class="itag">create</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_make">make</a>
+
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\base/reference/kernel/mem_const_chart.html">MEM_CONST</a>
+	<a class="class" href="\libraries\base/reference/support/memory_structure_chart.html">MEMORY_STRUCTURE</a>
+
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\base/reference/kernel/mem_const_flatshort.html#f_c_memory">C_memory</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_collected">collected</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_collected_average">collected_average</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_cpu_interval_time">cpu_interval_time</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/double_chart.html">DOUBLE</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_cpu_interval_time_average">cpu_interval_time_average</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/double_chart.html">DOUBLE</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_cpu_time">cpu_time</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/double_chart.html">DOUBLE</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_cpu_time_average">cpu_time_average</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/double_chart.html">DOUBLE</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_cycle_count">cycle_count</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/mem_const_flatshort.html#f_eiffel_memory">Eiffel_memory</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/mem_const_flatshort.html#f_full_collector">Full_collector</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/mem_const_flatshort.html#f_incremental_collector">Incremental_collector</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_memory_used">memory_used</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_real_interval_time">real_interval_time</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_real_interval_time_average">real_interval_time_average</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_real_time">real_time</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_real_time_average">real_time_average</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_sys_interval_time">sys_interval_time</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/double_chart.html">DOUBLE</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_sys_interval_time_average">sys_interval_time_average</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/double_chart.html">DOUBLE</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_sys_time">sys_time</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/double_chart.html">DOUBLE</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_sys_time_average">sys_time_average</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/double_chart.html">DOUBLE</a>
+	<a class="feature" href="\libraries\base/reference/kernel/mem_const_flatshort.html#f_total_memory">Total_memory</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_type">type</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_make">make</a> <span class="symbol">(</span><span class="local">memory</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/gc_info_flatshort.html#f_update">update</a> <span class="symbol">(</span><span class="local">memory</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+
+
+		</pre>
+	</body>
+</html>

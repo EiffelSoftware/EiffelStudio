@@ -1,0 +1,66 @@
+<html>
+	<head>	
+		<title>MEMORY</title>
+		<link rel="stylesheet" href="../.\..\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\base/reference/kernel/classic/memory_chart.html">MEMORY</a>
+
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">base.kernel.classic</span>
+	<span class="itag">description</span><span class="symbol">:</span> 
+		<span class="string">"Facilities for tuning up the garbage collection mechanism.</span>
+		<span class="string">This class may be used as ancestor by classes needing its facilities."</span>
+
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\base/reference/kernel/mem_const_chart.html">MEM_CONST</a>
+
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\base/reference/kernel/mem_const_flatshort.html#f_c_memory">C_memory</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_chunk_size">chunk_size</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_coalesce_period">coalesce_period</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_collecting">collecting</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_collection_period">collection_period</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/mem_const_flatshort.html#f_eiffel_memory">Eiffel_memory</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/mem_const_flatshort.html#f_full_collector">Full_collector</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_gc_statistics">gc_statistics</a> <span class="symbol">(</span><span class="local">collector_type</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/gc_info_chart.html">GC_INFO</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_generation_object_limit">generation_object_limit</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/mem_const_flatshort.html#f_incremental_collector">Incremental_collector</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_is_in_final_collect">is_in_final_collect</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_largest_coalesced_block">largest_coalesced_block</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_max_mem">max_mem</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_memory_statistics">memory_statistics</a> <span class="symbol">(</span><span class="local">memory_type</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/mem_info_chart.html">MEM_INFO</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_memory_threshold">memory_threshold</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_objects_instance_of">objects_instance_of</a> <span class="symbol">(</span><span class="local">an_object</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/special_chart.html">SPECIAL</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a><span class="symbol">]</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_referers">referers</a> <span class="symbol">(</span><span class="local">an_object</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/special_chart.html">SPECIAL</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a><span class="symbol">]</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_scavenge_zone_size">scavenge_zone_size</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_tenure">tenure</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/mem_const_flatshort.html#f_total_memory">Total_memory</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_allocate_compact">allocate_compact</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_allocate_fast">allocate_fast</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_allocate_tiny">allocate_tiny</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_collect">collect</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_collection_off">collection_off</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_collection_on">collection_on</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_disable_time_accounting">disable_time_accounting</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_dispose">dispose</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_enable_time_accounting">enable_time_accounting</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_free">free</a> <span class="symbol">(</span><span class="local">object</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_full_coalesce">full_coalesce</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_full_collect">full_collect</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_mem_free">mem_free</a> <span class="symbol">(</span><span class="local">addr</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_set_coalesce_period">set_coalesce_period</a> <span class="symbol">(</span><span class="local">value</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_set_collection_period">set_collection_period</a> <span class="symbol">(</span><span class="local">value</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_set_max_mem">set_max_mem</a> <span class="symbol">(</span><span class="local">value</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/memory_flatshort.html#f_set_memory_threshold">set_memory_threshold</a> <span class="symbol">(</span><span class="local">value</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+
+
+		</pre>
+	</body>
+</html>

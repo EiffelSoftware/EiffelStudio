@@ -1,0 +1,58 @@
+<html>
+	<head>	
+		<title>EV_ARROWED_FIGURE</title>
+		<link rel="stylesheet" href="../.\..\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">indexing</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Figure that is can have an arrowhead at its start or endpoint."</span>
+	<span class="itag">status</span><span class="symbol">:</span> <span class="string">"See notice at end of class"</span>
+	<span class="itag">keywords</span><span class="symbol">:</span> <span class="string">"figure, line, arrow"</span>
+	<span class="itag">date</span><span class="symbol">:</span> <span class="string">"$Date$"</span>
+	<span class="itag">revision</span><span class="symbol">:</span> <span class="string">"$Revision$"</span>
+
+<span class="keyword">deferred</span> <span class="keyword">class</span> <span class="keyword">interface</span>
+	<a class="class" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html">EV_ARROWED_FIGURE</a>
+
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Access</span>
+
+	<a name="f_arrow_size"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html#f_arrow_size">Arrow_size</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a> <span class="keyword">is</span> <span class="number">10</span>
+
+	<a name="f_is_end_arrow"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html#f_is_end_arrow">is_end_arrow</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Does </span><span class="quoted">point_b</span><span class="comment"> have an arrow?</span>
+
+	<a name="f_is_start_arrow"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html#f_is_start_arrow">is_start_arrow</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Does </span><span class="quoted">point_a</span><span class="comment"> have an arrow?</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Status setting</span>
+
+	<a name="f_disable_end_arrow"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html#f_disable_end_arrow">disable_end_arrow</a>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html#f_is_end_arrow">is_end_arrow</a><span class="comment"> </span><span class="quoted">False</span><span class="comment">.</span>
+
+	<a name="f_disable_start_arrow"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html#f_disable_start_arrow">disable_start_arrow</a>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html#f_is_start_arrow">is_start_arrow</a><span class="comment"> </span><span class="quoted">False</span><span class="comment">.</span>
+
+	<a name="f_enable_end_arrow"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html#f_enable_end_arrow">enable_end_arrow</a>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html#f_is_end_arrow">is_end_arrow</a><span class="comment"> </span><span class="quoted">True</span><span class="comment">.</span>
+
+	<a name="f_enable_start_arrow"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html#f_enable_start_arrow">enable_start_arrow</a>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html#f_is_start_arrow">is_start_arrow</a><span class="comment"> </span><span class="quoted">True</span><span class="comment">.</span>
+
+	<a name="f_line_width"><a class="feature" href="\libraries\vision2/reference/interface/figures/ev_arrowed_figure_flatshort.html#f_line_width">line_width</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a>
+	
+<span class="keyword">invariant</span>
+
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+
+<span class="keyword">end</span> -- <span class="comment">class </span>EV_ARROWED_FIGURE
+		</pre>
+	</body>
+</html>

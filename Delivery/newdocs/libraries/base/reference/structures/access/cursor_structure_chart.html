@@ -1,58 +1,54 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>CURSOR_STRUCTURE Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>CURSOR_STRUCTURE</title>
+		<link rel="stylesheet" href="../.\..\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">deferred</span> <span class="keyword">class</span>
+	<a class="class" href="\libraries\base/reference/structures/access/cursor_structure_chart.html">CURSOR_STRUCTURE</a> <span class="symbol">[</span><span class="generic">G</span><span class="symbol">]</span>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../../base/reference/structures/access/cursor_structure_chart.html">CURSOR_STRUCTURE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">base.structures.access</span>
+	<span class="itag">description</span><span class="symbol">:</span> 
+		<span class="string">"Active structures, which always have a current position</span>
+		<span class="string">accessible through a cursor."</span>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../base/reference/structures/access/index.html">base.structures.access</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> 
-		<SPAN CLASS="estring">"Active structures, which always have a current position</SPAN>
-		<SPAN CLASS="estring">accessible through a cursor."</SPAN>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\base/reference/structures/access/active_chart.html">ACTIVE</a> <span class="symbol">[</span><span class="generic">G</span><span class="symbol">]</span>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../../base/reference/structures/access/active_chart.html">ACTIVE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\base/reference/structures/access/container_flatshort.html#f_changeable_comparison_criterion">changeable_comparison_criterion</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/cursor_structure_flatshort.html#f_cursor">cursor</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/structures/cursors/cursor_chart.html">CURSOR</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/collection_flatshort.html#f_extendible">extendible</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/container_flatshort.html#f_has">has</a> <span class="symbol">(</span><span class="local">v</span><span class="symbol">:</span> <span class="generic">G</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/container_flatshort.html#f_is_empty">is_empty</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/collection_flatshort.html#f_is_inserted">is_inserted</a> <span class="symbol">(</span><span class="local">v</span><span class="symbol">:</span> <span class="generic">G</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/active_flatshort.html#f_item">item</a><span class="symbol">:</span> <span class="generic">G</span>
+	<a class="feature" href="\libraries\base/reference/structures/access/container_flatshort.html#f_linear_representation">linear_representation</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/structures/traversing/linear_chart.html">LINEAR</a> <span class="symbol">[</span><span class="generic">G</span><span class="symbol">]</span>
+	<a class="feature" href="\libraries\base/reference/structures/access/container_flatshort.html#f_object_comparison">object_comparison</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/bag_flatshort.html#f_occurrences">occurrences</a> <span class="symbol">(</span><span class="local">v</span><span class="symbol">:</span> <span class="generic">G</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/collection_flatshort.html#f_prunable">prunable</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/active_flatshort.html#f_readable">readable</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/cursor_structure_flatshort.html#f_valid_cursor">valid_cursor</a> <span class="symbol">(</span><span class="local">p</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/structures/cursors/cursor_chart.html">CURSOR</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/active_flatshort.html#f_writable">writable</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`changeable_comparison_criterion' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`cursor' is declared in `Current'"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/cursor_structure.html#f_cursor">cursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/structures/cursors/cursor_chart.html">CURSOR</A></SPAN>
-	<SPAN TITLE="`extendible' was declared in COLLECTION"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_extendible">extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`has' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`is_empty' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`is_inserted' was declared in COLLECTION"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_is_inserted">is_inserted</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`item' was declared in ACTIVE"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/active.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN>
-	<SPAN TITLE="`linear_representation' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/structures/traversing/linear_chart.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN>
-	<SPAN TITLE="`object_comparison' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_object_comparison">object_comparison</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`occurrences' was declared in BAG"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/bag.html#f_occurrences">occurrences</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`prunable' was declared in COLLECTION"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_prunable">prunable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`readable' was declared in ACTIVE"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/active.html#f_readable">readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`valid_cursor' is declared in `Current'"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/cursor_structure.html#f_valid_cursor">valid_cursor</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/structures/cursors/cursor_chart.html">CURSOR</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`writable' was declared in ACTIVE"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/active.html#f_writable">writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\base/reference/structures/access/container_flatshort.html#f_compare_objects">compare_objects</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/container_flatshort.html#f_compare_references">compare_references</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/bag_flatshort.html#f_extend">extend</a> <span class="symbol">(</span><span class="local">v</span><span class="symbol">:</span> <span class="generic">G</span><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/structures/access/collection_flatshort.html#f_fill">fill</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/structures/access/container_chart.html">CONTAINER</a> <span class="symbol">[</span><span class="generic">G</span><span class="symbol">]</span><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/structures/access/cursor_structure_flatshort.html#f_go_to">go_to</a> <span class="symbol">(</span><span class="local">p</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/structures/cursors/cursor_chart.html">CURSOR</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/structures/access/collection_flatshort.html#f_prune">prune</a> <span class="symbol">(</span><span class="local">v</span><span class="symbol">:</span> <span class="generic">G</span><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/structures/access/collection_flatshort.html#f_prune_all">prune_all</a> <span class="symbol">(</span><span class="local">v</span><span class="symbol">:</span> <span class="generic">G</span><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/structures/access/collection_flatshort.html#f_put">put</a> <span class="symbol">(</span><span class="local">v</span><span class="symbol">:</span> <span class="generic">G</span><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/structures/access/active_flatshort.html#f_remove">remove</a>
+	<a class="feature" href="\libraries\base/reference/structures/access/active_flatshort.html#f_replace">replace</a> <span class="symbol">(</span><span class="local">v</span><span class="symbol">:</span> <span class="generic">G</span><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/structures/access/collection_flatshort.html#f_wipe_out">wipe_out</a>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`compare_objects' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_compare_objects">compare_objects</A></SPAN>
-	<SPAN TITLE="`compare_references' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/container.html#f_compare_references">compare_references</A></SPAN>
-	<SPAN TITLE="`extend' was declared in BAG"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/bag.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`fill' was declared in COLLECTION"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_fill">fill</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/structures/access/container_chart.html">CONTAINER</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`go_to' is declared in `Current'"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/cursor_structure.html#f_go_to">go_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../base/reference/structures/cursors/cursor_chart.html">CURSOR</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`prune' was declared in COLLECTION"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_prune">prune</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`prune_all' was declared in COLLECTION"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_prune_all">prune_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`put' was declared in COLLECTION"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`remove' was declared in ACTIVE"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/active.html#f_remove">remove</A></SPAN>
-	<SPAN TITLE="`replace' was declared in ACTIVE"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/active.html#f_replace">replace</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`wipe_out' was declared in COLLECTION"><A CLASS="efeature" HREF="../../../../base/reference/structures/access/collection.html#f_wipe_out">wipe_out</A></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

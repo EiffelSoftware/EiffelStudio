@@ -1,46 +1,42 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_APPLICATION Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_APPLICATION</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">deferred</span> <span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_application_chart.html">WEL_APPLICATION</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_application_chart.html">WEL_APPLICATION</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.support</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"General notions of a Windows application. All WEL applications must define its own descendant of </span><a class="class" href="\libraries\wel/reference/support/wel_application_chart.html">WEL_APPLICATION</a><span class="string">."</span>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/support/index.html">wel.support</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"General notions of a Windows application. All WEL applications must define its own descendant of </SPAN><A CLASS="eclass" HREF="../../../wel/reference/support/wel_application_chart.html">WEL_APPLICATION</A><SPAN CLASS="estring">."</SPAN>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_application_main_window_chart.html">WEL_APPLICATION_MAIN_WINDOW</a>
+	<a class="class" href="\libraries\wel/reference/consts/wel_gwl_constants_chart.html">WEL_GWL_CONSTANTS</a>
+	<a class="class" href="\libraries\wel/reference/support/wel_windows_routines_chart.html">WEL_WINDOWS_ROUTINES</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_application_main_window_chart.html">WEL_APPLICATION_MAIN_WINDOW</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_gwl_constants_chart.html">WEL_GWL_CONSTANTS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_windows_routines_chart.html">WEL_WINDOWS_ROUTINES</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_flatshort.html#f_accelerators">Accelerators</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/support/wel_accelerators_chart.html">WEL_ACCELERATORS</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_main_window_flatshort.html#f_application">application</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/support/wel_application_chart.html">WEL_APPLICATION</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_main_window_flatshort.html#f_application_main_window">application_main_window</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_flatshort.html#f_default_show_command">Default_show_command</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_flatshort.html#f_idle_action_enabled">idle_action_enabled</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_main_window_flatshort.html#f_is_application_main_window">is_application_main_window</a> <span class="symbol">(</span><span class="local">window</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_flatshort.html#f_is_dialog">is_dialog</a> <span class="symbol">(</span><span class="local">hwnd</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_flatshort.html#f_main_window">main_window</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_flatshort.html#f_runable">runable</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`accelerators' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application.html#f_accelerators">Accelerators</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_accelerators_chart.html">WEL_ACCELERATORS</A></SPAN>
-	<SPAN TITLE="`application' was declared in WEL_APPLICATION_MAIN_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application_main_window.html#f_application">application</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_application_chart.html">WEL_APPLICATION</A></SPAN>
-	<SPAN TITLE="`application_main_window' was declared in WEL_APPLICATION_MAIN_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application_main_window.html#f_application_main_window">application_main_window</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</A></SPAN>
-	<SPAN TITLE="`default_show_command' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application.html#f_default_show_command">Default_show_command</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`idle_action_enabled' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application.html#f_idle_action_enabled">idle_action_enabled</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`is_application_main_window' was declared in WEL_APPLICATION_MAIN_WINDOW"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application_main_window.html#f_is_application_main_window">is_application_main_window</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">window</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`is_dialog' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application.html#f_is_dialog">is_dialog</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">hwnd</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`main_window' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application.html#f_main_window">main_window</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</A></SPAN>
-	<SPAN TITLE="`runable' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application.html#f_runable">runable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_flatshort.html#f_disable_idle_action">disable_idle_action</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_flatshort.html#f_enable_idle_action">enable_idle_action</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_flatshort.html#f_idle_action">idle_action</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_application_flatshort.html#f_run">run</a>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`disable_idle_action' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application.html#f_disable_idle_action">disable_idle_action</A></SPAN>
-	<SPAN TITLE="`enable_idle_action' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application.html#f_enable_idle_action">enable_idle_action</A></SPAN>
-	<SPAN TITLE="`idle_action' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application.html#f_idle_action">idle_action</A></SPAN>
-	<SPAN TITLE="`run' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_application.html#f_run">run</A></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

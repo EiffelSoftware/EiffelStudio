@@ -1,60 +1,56 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_IMAGE_LIST Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_IMAGE_LIST</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/structs/wel_image_list_chart.html">WEL_IMAGE_LIST</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_image_list_chart.html">WEL_IMAGE_LIST</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.structs</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Object that holds a list of images (Bitmaps or Icons)"</span>
+	<span class="itag">create</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_make_by_pointer">make_by_pointer</a><span class="symbol">,</span> <a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_make">make</a>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/structs/index.html">wel.structs</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Object that holds a list of images (Bitmaps or Icons)"</SPAN>
-	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_make_by_pointer">make_by_pointer</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_make">make</A>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_any_chart.html">WEL_ANY</a>
+	<a class="class" href="\libraries\wel/reference/consts/wel_ilc_constants_chart.html">WEL_ILC_CONSTANTS</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_any_chart.html">WEL_ANY</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_ilc_constants_chart.html">WEL_ILC_CONSTANTS</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_bitmaps_height">bitmaps_height</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_bitmaps_width">bitmaps_width</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_count">count</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_exists">exists</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_get_background_color">get_background_color</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_get_icon">get_icon</a> <span class="symbol">(</span><span class="local">index</span><span class="symbol">,</span> <span class="local">flags</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/support/wel_icon_chart.html">WEL_ICON</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_last_position">last_position</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_shared">shared</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_to_integer">to_integer</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_use_masked_bitmap">use_masked_bitmap</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`bitmaps_height' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_bitmaps_height">bitmaps_height</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`bitmaps_width' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_bitmaps_width">bitmaps_width</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`count' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`get_background_color' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_get_background_color">get_background_color</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A></SPAN>
-	<SPAN TITLE="`get_icon' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_get_icon">get_icon</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_icon_chart.html">WEL_ICON</A></SPAN>
-	<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
-	<SPAN TITLE="`last_position' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_last_position">last_position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`use_masked_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_use_masked_bitmap">use_masked_bitmap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_add_bitmap">add_bitmap</a> <span class="symbol">(</span><span class="local">bitmap_to_add</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_add_color_masked_bitmap">add_color_masked_bitmap</a> <span class="symbol">(</span><span class="local">bitmap_to_add</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</a><span class="symbol">;</span> <span class="local">mask_color</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_add_icon">add_icon</a> <span class="symbol">(</span><span class="local">icon_to_add</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/support/wel_graphical_resource_chart.html">WEL_GRAPHICAL_RESOURCE</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_add_masked_bitmap">add_masked_bitmap</a> <span class="symbol">(</span><span class="local">bitmap_to_add</span><span class="symbol">,</span> <span class="local">bitmap_mask</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_destroy">destroy</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_dispose">dispose</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_make">make</a> <span class="symbol">(</span><span class="local">given_width</span><span class="symbol">,</span> <span class="local">given_height</span><span class="symbol">,</span> <span class="local">color_depth</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">;</span> <span class="local">masked_bitmap</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_remove_all_images">remove_all_images</a> <span class="symbol">(</span><span class="local">index</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_remove_image">remove_image</a> <span class="symbol">(</span><span class="local">index</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_replace_bitmap">replace_bitmap</a> <span class="symbol">(</span><span class="local">bitmap_to_add</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</a><span class="symbol">;</span> <span class="local">index</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_replace_icon">replace_icon</a> <span class="symbol">(</span><span class="local">icon_to_add</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/support/wel_graphical_resource_chart.html">WEL_GRAPHICAL_RESOURCE</a><span class="symbol">;</span> <span class="local">index</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_replace_masked_bitmap">replace_masked_bitmap</a> <span class="symbol">(</span><span class="local">bitmap_to_add</span><span class="symbol">,</span> <span class="local">bitmap_mask</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</a><span class="symbol">;</span> <span class="local">index</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_image_list_flatshort.html#f_set_background_color">set_background_color</a> <span class="symbol">(</span><span class="local">new_color</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_item">set_item</a> <span class="symbol">(</span><span class="local">an_item</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_shared">set_shared</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_unshared">set_unshared</a>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`add_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_add_bitmap">add_bitmap</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">bitmap_to_add</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`add_color_masked_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_add_color_masked_bitmap">add_color_masked_bitmap</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">bitmap_to_add</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">mask_color</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`add_icon' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_add_icon">add_icon</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">icon_to_add</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_graphical_resource_chart.html">WEL_GRAPHICAL_RESOURCE</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`add_masked_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_add_masked_bitmap">add_masked_bitmap</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">bitmap_to_add</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">bitmap_mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`destroy' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_destroy">destroy</A></SPAN>
-	<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN>
-	<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">given_width</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">given_height</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">color_depth</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">masked_bitmap</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`remove_all_images' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_remove_all_images">remove_all_images</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`remove_image' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_remove_image">remove_image</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`replace_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_replace_bitmap">replace_bitmap</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">bitmap_to_add</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`replace_icon' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_replace_icon">replace_icon</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">icon_to_add</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/support/wel_graphical_resource_chart.html">WEL_GRAPHICAL_RESOURCE</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`replace_masked_bitmap' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_replace_masked_bitmap">replace_masked_bitmap</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">bitmap_to_add</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">bitmap_mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_bitmap_chart.html">WEL_BITMAP</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_background_color' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_image_list.html#f_set_background_color">set_background_color</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">new_color</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/gdi/wel_color_ref_chart.html">WEL_COLOR_REF</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN>
-	<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

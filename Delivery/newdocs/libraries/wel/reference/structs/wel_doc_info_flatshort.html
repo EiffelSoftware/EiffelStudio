@@ -1,0 +1,365 @@
+<html>
+	<head>	
+		<title>WEL_DOC_INFO</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">indexing</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Contains the input filename used by `</span><span class="quoted">start_doc</span><span class="string">' in </span><a class="class" href="\libraries\wel/reference/gdi/wel_printer_dc_flatshort.html">WEL_PRINTER_DC</a><span class="string">."</span>
+	<span class="itag">status</span><span class="symbol">:</span> <span class="string">"See notice at end of class."</span>
+	<span class="itag">date</span><span class="symbol">:</span> <span class="string">"$Date$"</span>
+	<span class="itag">revision</span><span class="symbol">:</span> <span class="string">"$Revision$"</span>
+
+<span class="keyword">class</span> <span class="keyword">interface</span>
+	<a class="class" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html">WEL_DOC_INFO</a>
+
+<span class="keyword">create</span> 
+
+	<a name="f_make"><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_make">make</a> <span class="symbol">(</span><span class="local">a_document_name</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Make doc info structure with </span><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_document_name">document_name</a><span class="comment">,</span>
+		<span class="keyword">ensure</span>
+			<span class="tag">document_name_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_document_name">document_name</a><span class="dot">.</span><a class="feature" href="\libraries\base/reference/kernel/classic/string_flatshort.html#f_is_equal">is_equal</a> <span class="symbol">(</span><span class="local">a_document_name</span><span class="symbol">)</span>
+
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Access</span>
+
+	<a name="f_document_name"><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_document_name">document_name</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a>
+			<span class="comment">--</span><span class="comment"> Name of the document</span>
+		<span class="keyword">ensure</span>
+			<span class="tag">result_not_void</span><span class="symbol">:</span> <span class="reserved">Result</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_generating_type"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_generating_type">generating_type</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a>
+			<span class="comment">--</span><span class="comment"> Name of current object's generating type</span>
+			<span class="comment">--</span><span class="comment"> (type of which it is a direct instance)</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+
+	<a name="f_generator"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_generator">generator</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a>
+			<span class="comment">--</span><span class="comment"> Name of current object's generating class</span>
+			<span class="comment">--</span><span class="comment"> (base class of the type of which it is a direct instance)</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+
+	<a name="f_item"><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_flatshort.html">POINTER</a>
+			<span class="comment">--</span><span class="comment"> Generic Windows handle or structure pointer.</span>
+			<span class="comment">--</span><span class="comment"> Can be a HWND, HICON, RECT *, WNDCLASS *, etc...</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a><span class="comment">)</span>
+
+	<a name="f_output"><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_output">output</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a>
+			<span class="comment">--</span><span class="comment"> Name of the output file</span>
+		<span class="keyword">require</span>
+			<span class="tag">default_output_not_set</span><span class="symbol">:</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">not</a> <a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_default_output_set">default_output_set</a>
+		<span class="keyword">ensure</span>
+			<span class="tag">result_not_void</span><span class="symbol">:</span> <span class="reserved">Result</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Measurement</span>
+
+	<a name="f_structure_size"><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_structure_size">structure_size</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a>
+			<span class="comment">--</span><span class="comment"> Size to allocate (in bytes)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\wel/reference/structs/wel_structure_flatshort.html">WEL_STRUCTURE</a>
+			<span class="tag">positive_result</span><span class="symbol">:</span> <span class="reserved">Result</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;&quot;">&gt;</a> <span class="number">0</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Comparison</span>
+
+	<a name="f_deep_equal"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_deep_equal">deep_equal</a> <span class="symbol">(</span><span class="local">some</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="symbol">;</span> <span class="local">other</span><span class="symbol">:</span> <span class="keyword">like</span> <span class="local">some</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Are </span><span class="quoted">some</span><span class="comment"> and </span><span class="quoted">other</span><span class="comment"> either both void</span>
+			<span class="comment">--</span><span class="comment"> or attached to isomorphic object structures?</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">shallow_implies_deep</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_equal">standard_equal</a> <span class="symbol">(</span><span class="local">some</span><span class="symbol">,</span> <span class="local">other</span><span class="symbol">)</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">implies</a> <span class="reserved">Result</span>
+			<span class="tag">both_or_none_void</span><span class="symbol">:</span> <span class="symbol">(</span><span class="local">some</span> <span class="symbol">=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a><span class="symbol">)</span> <span class="keyword">implies</span> <span class="symbol">(</span><span class="reserved">Result</span> <span class="symbol">=</span> <span class="symbol">(</span><span class="local">other</span> <span class="symbol">=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a><span class="symbol">)</span><span class="symbol">)</span>
+			<span class="tag">same_type</span><span class="symbol">:</span> <span class="symbol">(</span><span class="reserved">Result</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">and</a> <span class="symbol">(</span><span class="local">some</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a><span class="symbol">)</span><span class="symbol">)</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">implies</a> <span class="local">some</span><span class="dot">.</span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_same_type">same_type</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">)</span>
+			<span class="tag">symmetric</span><span class="symbol">:</span> <span class="reserved">Result</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">implies</a> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_deep_equal">deep_equal</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">,</span> <span class="local">some</span><span class="symbol">)</span>
+
+	<a name="f_equal"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_equal">equal</a> <span class="symbol">(</span><span class="local">some</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="symbol">;</span> <span class="local">other</span><span class="symbol">:</span> <span class="keyword">like</span> <span class="local">some</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Are </span><span class="quoted">some</span><span class="comment"> and </span><span class="quoted">other</span><span class="comment"> either both void or attached</span>
+			<span class="comment">--</span><span class="comment"> to objects considered equal?</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">definition</span><span class="symbol">:</span> <span class="reserved">Result</span> <span class="symbol">=</span> <span class="symbol">(</span><span class="local">some</span> <span class="symbol">=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a> <span class="keyword">and</span> <span class="local">other</span> <span class="symbol">=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a><span class="symbol">)</span> <span class="keyword">or else</span> <span class="symbol">(</span><span class="symbol">(</span><span class="local">some</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a> <span class="keyword">and</span> <span class="local">other</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a><span class="symbol">)</span> <span class="keyword">and then</span> <span class="local">some</span><span class="dot">.</span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_is_equal">is_equal</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">)</span><span class="symbol">)</span>
+
+	<a name="f_is_equal"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_is_equal">is_equal</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Is </span><span class="quoted">other</span><span class="comment"> attached to an object considered</span>
+			<span class="comment">--</span><span class="comment"> equal to current object?</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">other_not_void</span><span class="symbol">:</span> <span class="local">other</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">symmetric</span><span class="symbol">:</span> <span class="reserved">Result</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">implies</a> <span class="local">other</span><span class="dot">.</span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_is_equal">is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+			<span class="tag">consistent</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">)</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">implies</a> <span class="reserved">Result</span>
+
+	<a name="f_standard_equal"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_equal">standard_equal</a> <span class="symbol">(</span><span class="local">some</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="symbol">;</span> <span class="local">other</span><span class="symbol">:</span> <span class="keyword">like</span> <span class="local">some</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Are </span><span class="quoted">some</span><span class="comment"> and </span><span class="quoted">other</span><span class="comment"> either both void or attached to</span>
+			<span class="comment">--</span><span class="comment"> field-by-field identical objects of the same type?</span>
+			<span class="comment">--</span><span class="comment"> Always uses default object comparison criterion.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">definition</span><span class="symbol">:</span> <span class="reserved">Result</span> <span class="symbol">=</span> <span class="symbol">(</span><span class="local">some</span> <span class="symbol">=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a> <span class="keyword">and</span> <span class="local">other</span> <span class="symbol">=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a><span class="symbol">)</span> <span class="keyword">or else</span> <span class="symbol">(</span><span class="symbol">(</span><span class="local">some</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a> <span class="keyword">and</span> <span class="local">other</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a><span class="symbol">)</span> <span class="keyword">and then</span> <span class="local">some</span><span class="dot">.</span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">)</span><span class="symbol">)</span>
+
+	<a name="f_standard_is_equal"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Is </span><span class="quoted">other</span><span class="comment"> attached to an object of the same type</span>
+			<span class="comment">--</span><span class="comment"> as current object, and field-by-field identical to it?</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">other_not_void</span><span class="symbol">:</span> <span class="local">other</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">same_type</span><span class="symbol">:</span> <span class="reserved">Result</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">implies</a> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_same_type">same_type</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">)</span>
+			<span class="tag">symmetric</span><span class="symbol">:</span> <span class="reserved">Result</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">implies</a> <span class="local">other</span><span class="dot">.</span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Status report</span>
+
+	<a name="f_conforms_to"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Does type of current object conform to type</span>
+			<span class="comment">--</span><span class="comment"> of </span><span class="quoted">other</span><span class="comment"> (as per Eiffel: The Language, chapter 13)?</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">other_not_void</span><span class="symbol">:</span> <span class="local">other</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+
+	<a name="f_default_output_set"><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_default_output_set">default_output_set</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Is the default output set?</span>
+
+	<a name="f_exists"><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_exists">exists</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Does the </span><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="comment"> exist?</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a>
+			<span class="reserved">Result</span> <span class="symbol">=</span> <span class="symbol">(</span><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_default_pointer">default_pointer</a><span class="symbol">)</span>
+
+	<a name="f_same_type"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_same_type">same_type</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Is type of current object identical to type of </span><span class="quoted">other</span><span class="comment">?</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">other_not_void</span><span class="symbol">:</span> <span class="local">other</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">definition</span><span class="symbol">:</span> <span class="reserved">Result</span> <span class="symbol">=</span> <span class="symbol">(</span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">)</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">and</a> <span class="local">other</span><span class="dot">.</span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span><span class="symbol">)</span>
+
+	<a name="f_shared"><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_shared">shared</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Is </span><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="comment"> shared by another object?</span>
+			<span class="comment">--</span><span class="comment"> If False (by default), </span><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="comment"> will</span>
+			<span class="comment">--</span><span class="comment"> be destroyed by </span><a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_destroy_item">destroy_item</a><span class="comment">.</span>
+			<span class="comment">--</span><span class="comment"> If True, </span><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="comment"> will not be destroyed.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a><span class="comment">)</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Status setting</span>
+
+	<a name="f_set_shared"><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_shared">set_shared</a>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_shared">shared</a><span class="comment"> to True.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a>
+			<span class="tag">shared</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_shared">shared</a>
+
+	<a name="f_set_unshared"><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_unshared">set_unshared</a>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_shared">shared</a><span class="comment"> to False.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a>
+			<span class="tag">unshared</span><span class="symbol">:</span> <a class="keyword" href="\libraries\base/reference/kernel/classic/boolean_ref_flatshort.html#f_feature">not</a> <a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_shared">shared</a>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Element change</span>
+
+	<a name="f_set_default_output"><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_set_default_output">set_default_output</a>
+			<span class="comment">--</span><span class="comment"> Set the output to the default system value.</span>
+		<span class="keyword">ensure</span>
+			<span class="tag">default_output_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_default_output_set">default_output_set</a>
+
+	<a name="f_set_document_name"><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_set_document_name">set_document_name</a> <span class="symbol">(</span><span class="local">a_document_name</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_document_name">document_name</a><span class="comment"> with </span><span class="quoted">a_document_name</span><span class="comment">.</span>
+		<span class="keyword">require</span>
+			<span class="tag">a_document_name_not_void</span><span class="symbol">:</span> <span class="local">a_document_name</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+		<span class="keyword">ensure</span>
+			<span class="tag">document_name_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_document_name">document_name</a><span class="dot">.</span><a class="feature" href="\libraries\base/reference/kernel/classic/string_flatshort.html#f_is_equal">is_equal</a> <span class="symbol">(</span><span class="local">a_document_name</span><span class="symbol">)</span>
+
+	<a name="f_set_item"><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_item">set_item</a> <span class="symbol">(</span><span class="local">an_item</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_flatshort.html">POINTER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="comment"> with </span><span class="quoted">an_item</span><span class="comment"></span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a>
+			<span class="tag">item_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a> <span class="symbol">=</span> <span class="local">an_item</span>
+
+	<a name="f_set_output"><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_set_output">set_output</a> <span class="symbol">(</span><span class="local">an_output</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Set </span><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_output">output</a><span class="comment"> with </span><span class="quoted">an_output</span><span class="comment">.</span>
+		<span class="keyword">require</span>
+			<span class="tag">an_output_not_void</span><span class="symbol">:</span> <span class="local">an_output</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+		<span class="keyword">ensure</span>
+			<span class="tag">output_set</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_output">output</a><span class="dot">.</span><a class="feature" href="\libraries\base/reference/kernel/classic/string_flatshort.html#f_is_equal">is_equal</a> <span class="symbol">(</span><span class="local">an_output</span><span class="symbol">)</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Removal</span>
+
+	<a name="f_dispose"><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_dispose">dispose</a>
+			<span class="comment">--</span><span class="comment"> Destroy the inner structure of </span><span class="quoted">Current</span><span class="comment">.</span>
+			<span class="comment">--</span>
+			<span class="comment">--</span><span class="comment"> This function should be called by the GC when the</span>
+			<span class="comment">--</span><span class="comment"> object is collected or by the user if </span><span class="quoted">Current</span><span class="comment"> is</span>
+			<span class="comment">--</span><span class="comment"> no more usefull.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a><span class="comment">)</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Conversion</span>
+
+	<a name="f_to_integer"><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_to_integer">to_integer</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a>
+			<span class="comment">--</span><span class="comment"> Converts </span><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="comment"> to an integer.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\wel/reference/support/wel_any_flatshort.html">WEL_ANY</a>
+			<span class="reserved">Result</span> <span class="symbol">=</span> <a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_cwel_pointer_to_integer">cwel_pointer_to_integer</a> <span class="symbol">(</span><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="symbol">)</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Duplication</span>
+
+	<a name="f_clone"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_clone">clone</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="symbol">)</span><span class="symbol">:</span> <span class="keyword">like</span> <span class="local">other</span>
+			<span class="comment">--</span><span class="comment"> Void if </span><span class="quoted">other</span><span class="comment"> is void; otherwise new object</span>
+			<span class="comment">--</span><span class="comment"> equal to </span><span class="quoted">other</span><span class="comment"></span>
+			<span class="comment">--</span>
+			<span class="comment">--</span><span class="comment"> For non-void </span><span class="quoted">other</span><span class="comment">, </span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_clone">clone</a><span class="comment"> calls </span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_copy">copy</a><span class="comment">;</span>
+			<span class="comment">--</span><span class="comment"> to change copying/cloning semantics, redefine </span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_copy">copy</a><span class="comment">.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">equal</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_equal">equal</a> <span class="symbol">(</span><span class="reserved">Result</span><span class="symbol">,</span> <span class="local">other</span><span class="symbol">)</span>
+
+	<a name="f_copy"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_copy">copy</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Update current object using fields of object attached</span>
+			<span class="comment">--</span><span class="comment"> to </span><span class="quoted">other</span><span class="comment">, so as to yield equal objects.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">other_not_void</span><span class="symbol">:</span> <span class="local">other</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+			<span class="tag">type_identity</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_same_type">same_type</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">is_equal</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_is_equal">is_equal</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">)</span>
+
+	<a name="f_deep_clone"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_deep_clone">deep_clone</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="symbol">)</span><span class="symbol">:</span> <span class="keyword">like</span> <span class="local">other</span>
+			<span class="comment">--</span><span class="comment"> Void if </span><span class="quoted">other</span><span class="comment"> is void: otherwise, new object structure</span>
+			<span class="comment">--</span><span class="comment"> recursively duplicated from the one attached to </span><span class="quoted">other</span><span class="comment"></span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">deep_equal</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_deep_equal">deep_equal</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">,</span> <span class="reserved">Result</span><span class="symbol">)</span>
+
+	<a name="f_deep_copy"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_deep_copy">deep_copy</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Effect equivalent to that of:</span>
+			<span class="comment">--</span><span class="comment"> 		</span><span class="quoted">temp</span><span class="comment"> := </span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_deep_clone">deep_clone</a><span class="comment"> (</span><span class="quoted">other</span><span class="comment">);</span>
+			<span class="comment">--</span><span class="comment">		</span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_copy">copy</a><span class="comment"> (</span><span class="quoted">temp</span><span class="comment">)</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">other_not_void</span><span class="symbol">:</span> <span class="local">other</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">deep_equal</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_deep_equal">deep_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">,</span> <span class="local">other</span><span class="symbol">)</span>
+
+	<a name="f_standard_clone"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_clone">standard_clone</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="symbol">)</span><span class="symbol">:</span> <span class="keyword">like</span> <span class="local">other</span>
+			<span class="comment">--</span><span class="comment"> Void if </span><span class="quoted">other</span><span class="comment"> is void; otherwise new object</span>
+			<span class="comment">--</span><span class="comment"> field-by-field identical to </span><span class="quoted">other</span><span class="comment">.</span>
+			<span class="comment">--</span><span class="comment"> Always uses default copying semantics.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">equal</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_equal">standard_equal</a> <span class="symbol">(</span><span class="reserved">Result</span><span class="symbol">,</span> <span class="local">other</span><span class="symbol">)</span>
+
+	<a name="f_standard_copy"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_copy">standard_copy</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Copy every field of </span><span class="quoted">other</span><span class="comment"> onto corresponding field</span>
+			<span class="comment">--</span><span class="comment"> of current object.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">other_not_void</span><span class="symbol">:</span> <span class="local">other</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+			<span class="tag">type_identity</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_same_type">same_type</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">is_standard_equal</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">)</span>
+
+	<a name="f_standard_twin"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_twin">standard_twin</a><span class="symbol">:</span> <span class="keyword">like</span> <span class="reserved">Current</span>
+			<span class="comment">--</span><span class="comment"> New object field-by-field identical to </span><span class="quoted">other</span><span class="comment">.</span>
+			<span class="comment">--</span><span class="comment"> Always uses default copying semantics.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+		<span class="keyword">ensure</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+			<span class="tag">standard_twin_not_void</span><span class="symbol">:</span> <span class="reserved">Result</span> <span class="symbol">/=</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a>
+			<span class="tag">equal</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_equal">standard_equal</a> <span class="symbol">(</span><span class="reserved">Result</span><span class="symbol">,</span> <span class="reserved">Current</span><span class="symbol">)</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Basic operations</span>
+
+	<a name="f_default"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_default">default</a><span class="symbol">:</span> <span class="keyword">like</span> <span class="reserved">Current</span>
+			<span class="comment">--</span><span class="comment"> Default value of object's type</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+
+	<a name="f_default_create"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_default_create">default_create</a>
+			<span class="comment">--</span><span class="comment"> Process instances of classes with no creation clause.</span>
+			<span class="comment">--</span><span class="comment"> (Default: do nothing.)</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+
+	<a name="f_default_pointer"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_default_pointer">default_pointer</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_flatshort.html">POINTER</a>
+			<span class="comment">--</span><span class="comment"> Default value of type </span><a class="class" href="\libraries\base/reference/kernel/classic/pointer_flatshort.html">POINTER</a><span class="comment"></span>
+			<span class="comment">--</span><span class="comment"> (Avoid the need to write </span><span class="quoted">p</span><span class="comment">.</span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_default">default</a><span class="comment"> for</span>
+			<span class="comment">--</span><span class="comment"> some </span><span class="quoted">p</span><span class="comment"> of type </span><a class="class" href="\libraries\base/reference/kernel/classic/pointer_flatshort.html">POINTER</a><span class="comment">.)</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+
+	<a name="f_default_rescue"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_default_rescue">default_rescue</a>
+			<span class="comment">--</span><span class="comment"> Process exception for routines with no Rescue clause.</span>
+			<span class="comment">--</span><span class="comment"> (Default: do nothing.)</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+
+	<a name="f_do_nothing"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_do_nothing">do_nothing</a>
+			<span class="comment">--</span><span class="comment"> Execute a null action.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+
+	<a name="f_initialize"><a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_initialize">initialize</a>
+			<span class="comment">--</span><span class="comment"> Fill Current with zeros.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/structs/wel_structure_flatshort.html">WEL_STRUCTURE</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\wel/reference/structs/wel_structure_flatshort.html">WEL_STRUCTURE</a>
+			<span class="tag">exists</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_exists">exists</a>
+
+	<a name="f_initialize_with_character"><a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_initialize_with_character">initialize_with_character</a> <span class="symbol">(</span><span class="local">a_character</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/character_flatshort.html">CHARACTER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Fill current with </span><span class="quoted">a_character</span><span class="comment">.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/structs/wel_structure_flatshort.html">WEL_STRUCTURE</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\wel/reference/structs/wel_structure_flatshort.html">WEL_STRUCTURE</a>
+			<span class="tag">exists</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_exists">exists</a>
+
+	<a name="f_memory_copy"><a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_memory_copy">memory_copy</a> <span class="symbol">(</span><span class="local">source_pointer</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_flatshort.html">POINTER</a><span class="symbol">;</span> <span class="local">length</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Copy </span><span class="quoted">length</span><span class="comment"> bytes from </span><span class="quoted">source_pointer</span><span class="comment"> to </span><a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="comment">.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\wel/reference/structs/wel_structure_flatshort.html">WEL_STRUCTURE</a><span class="comment">)</span>
+		<span class="keyword">require</span> <span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\wel/reference/structs/wel_structure_flatshort.html">WEL_STRUCTURE</a>
+			<span class="tag">length_small_enough</span><span class="symbol">:</span> <span class="local">length</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&lt;=&quot;">&lt;=</a> <a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_structure_size">structure_size</a>
+			<span class="tag">length_large_enough</span><span class="symbol">:</span> <span class="local">length</span> <a class="symbol" href="\libraries\base/reference/kernel/comparable_flatshort.html#f_infix &quot;&gt;&quot;">&gt;</a> <span class="number">0</span>
+			<span class="tag">exists</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_exists">exists</a>
+
+	<a name="f_void"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_void">void</a><span class="symbol">:</span> NONE
+			<span class="comment">--</span><span class="comment"> Void reference</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Implementation</span>
+
+	<a name="f_str_document_name"><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_str_document_name">str_document_name</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/structs/wel_string_flatshort.html">WEL_STRING</a>
+			<span class="comment">--</span><span class="comment"> C string to save the document name</span>
+
+	<a name="f_str_output"><a class="feature" href="\libraries\wel/reference/structs/wel_doc_info_flatshort.html#f_str_output">str_output</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/structs/wel_string_flatshort.html">WEL_STRING</a>
+			<span class="comment">--</span><span class="comment"> C string to save the output</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Output</span>
+
+	<a name="f_io"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_io">io</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/std_files_flatshort.html">STD_FILES</a>
+			<span class="comment">--</span><span class="comment"> Handle to standard file setup</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+
+	<a name="f_out"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_out">out</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a>
+			<span class="comment">--</span><span class="comment"> New string containing terse printable representation</span>
+			<span class="comment">--</span><span class="comment"> of current object</span>
+			<span class="comment">--</span><span class="comment"> Was declared in </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment"> as synonym of </span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_tagged_out">tagged_out</a><span class="comment">.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+
+	<a name="f_print"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_print">print</a> <span class="symbol">(</span><span class="local">some</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Write terse external representation of </span><span class="quoted">some</span><span class="comment"></span>
+			<span class="comment">--</span><span class="comment"> on standard output.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+
+	<a name="f_tagged_out"><span class="keyword">frozen</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_tagged_out">tagged_out</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a>
+			<span class="comment">--</span><span class="comment"> New string containing terse printable representation</span>
+			<span class="comment">--</span><span class="comment"> of current object</span>
+			<span class="comment">--</span><span class="comment"> Was declared in </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment"> as synonym of </span><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_out">out</a><span class="comment">.</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Platform</span>
+
+	<a name="f_operating_environment"><a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_operating_environment">operating_environment</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/support/classic/operating_environment_flatshort.html">OPERATING_ENVIRONMENT</a>
+			<span class="comment">--</span><span class="comment"> Objects available from the operating system</span>
+			<span class="comment">--</span> <span class="comment">(from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a><span class="comment">)</span>
+	
+<span class="keyword">invariant</span>
+
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+
+<span class="keyword">end</span> -- <span class="comment">class </span>WEL_DOC_INFO
+		</pre>
+	</body>
+</html>

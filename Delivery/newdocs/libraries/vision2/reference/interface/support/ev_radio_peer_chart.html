@@ -1,51 +1,47 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
-		
-<TITLE>EV_RADIO_PEER Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>EV_RADIO_PEER</title>
+		<link rel="stylesheet" href="../.\..\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">deferred</span> <span class="keyword">class</span>
+	<a class="class" href="\libraries\vision2/reference/interface/support/ev_radio_peer_chart.html">EV_RADIO_PEER</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">deferred</SPAN> <SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_radio_peer_chart.html">EV_RADIO_PEER</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">vision2.interface.support</span>
+	<span class="itag">description</span><span class="symbol">:</span> 
+		<span class="string">"Facilities for managing peer relations between radio buttons.</span>
+		<span class="string">Base class for </span><a class="class" href="\libraries\vision2/reference/interface/widgets/primitives/ev_radio_button_chart.html">EV_RADIO_BUTTON</a><span class="string">, </span><a class="class" href="\libraries\vision2/reference/interface/items/ev_radio_menu_item_chart.html">EV_RADIO_MENU_ITEM</a><span class="string"> andEV_TOOL_BAR_RADIO_BUTTON."</span>
+	<span class="itag">keywords</span><span class="symbol">:</span> <span class="string">"radio, item, menu, check, select"</span>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../../libraries/vision2/reference/interface/support/index.html">vision2.interface.support</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> 
-		<SPAN CLASS="estring">"Facilities for managing peer relations between radio buttons.</SPAN>
-		<SPAN CLASS="estring">Base class for </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/widgets/primitives/ev_radio_button_chart.html">EV_RADIO_BUTTON</A><SPAN CLASS="estring">, </SPAN><A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/items/ev_radio_menu_item_chart.html">EV_RADIO_MENU_ITEM</A><SPAN CLASS="estring"> andEV_TOOL_BAR_RADIO_BUTTON."</SPAN>
-	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"radio, item, menu, check, select"</SPAN>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\vision2/reference/interface/kernel/ev_any_chart.html">EV_ANY</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any_chart.html">EV_ANY</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_data">data</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_is_destroyed">is_destroyed</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/support/ev_radio_peer_flatshort.html#f_is_selected">is_selected</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/support/ev_radio_peer_flatshort.html#f_peers">peers</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/structures/list/linked_list_chart.html">LINKED_LIST</a> <span class="symbol">[</span><span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\vision2/reference/interface/support/ev_radio_peer_chart.html">EV_RADIO_PEER</a><span class="symbol">]</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/support/ev_radio_peer_flatshort.html#f_selected_peer">selected_peer</a><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\vision2/reference/interface/support/ev_radio_peer_chart.html">EV_RADIO_PEER</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`data' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_data">data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A></SPAN>
-	<SPAN TITLE="`is_destroyed' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`is_selected' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_radio_peer.html#f_is_selected">is_selected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`peers' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_radio_peer.html#f_peers">peers</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_radio_peer_chart.html">EV_RADIO_PEER</A><SPAN CLASS="esymbol">]</SPAN></SPAN>
-	<SPAN TITLE="`selected_peer' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_radio_peer.html#f_selected_peer">selected_peer</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_radio_peer_chart.html">EV_RADIO_PEER</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_copy">copy</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\vision2/reference/interface/support/ev_radio_peer_chart.html">EV_RADIO_PEER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_destroy">destroy</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/support/ev_radio_peer_flatshort.html#f_enable_select">enable_select</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_set_data">set_data</a> <span class="symbol">(</span><span class="local">some_data</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_data">data</a><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a><span class="symbol">)</span>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`copy' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/support/ev_radio_peer_chart.html">EV_RADIO_PEER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`destroy' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_destroy">destroy</A></SPAN>
-	<SPAN TITLE="`enable_select' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/support/ev_radio_peer.html#f_enable_select">enable_select</A></SPAN>
-	<SPAN TITLE="`set_data' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_set_data">set_data</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_data">data</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+<span class="keyword">Constraints</span>
+	<span class="tag">peers not void</span>
+	<span class="tag">selected peer not void</span>
+	<span class="tag">peers returns new copy of list</span>
+	<span class="tag">peers has current</span>
+	<span class="tag">is selected equals selected peer is current</span>
+	<span class="tag">one radio item selected</span>
 
-<SPAN CLASS="ekeyword">Constraints</SPAN>
-	<SPAN CLASS="etag">peers not void</SPAN>
-	<SPAN CLASS="etag">selected peer not void</SPAN>
-	<SPAN CLASS="etag">peers returns new copy of list</SPAN>
-	<SPAN CLASS="etag">peers has current</SPAN>
-	<SPAN CLASS="etag">is selected equals selected peer is current</SPAN>
-	<SPAN CLASS="etag">one radio item selected</SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

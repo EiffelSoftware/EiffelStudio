@@ -1,0 +1,47 @@
+<html>
+	<head>	
+		<title>WEL_UNC_PATH_MAPPER</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">indexing</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Objects that map a networking path to a local drive"</span>
+	<span class="itag">status</span><span class="symbol">:</span> <span class="string">"See notice at end of class."</span>
+	<span class="itag">date</span><span class="symbol">:</span> <span class="string">"$Date$"</span>
+	<span class="itag">revision</span><span class="symbol">:</span> <span class="string">"$Revision$"</span>
+
+<span class="keyword">class</span> <span class="keyword">interface</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_unc_path_mapper_flatshort.html">WEL_UNC_PATH_MAPPER</a>
+
+<span class="keyword">create</span> 
+
+	<a name="f_make"><a class="feature" href="\libraries\wel/reference/support/wel_unc_path_mapper_flatshort.html#f_make">make</a> <span class="symbol">(</span><span class="local">a_path</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a><span class="symbol">)</span>
+			<span class="comment">--</span><span class="comment"> Map the networking path </span><span class="quoted">a_path</span><span class="comment"> to a temporary path</span>
+
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Access</span>
+
+	<a name="f_access_name"><a class="feature" href="\libraries\wel/reference/support/wel_unc_path_mapper_flatshort.html#f_access_name">access_name</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_flatshort.html">STRING</a>
+			<span class="comment">--</span><span class="comment"> Local access to the mapped path.</span>
+			<span class="comment">--</span><span class="comment"> Example: "I:"</span>
+	
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Removal</span>
+
+	<a name="f_destroy"><a class="feature" href="\libraries\wel/reference/support/wel_unc_path_mapper_flatshort.html#f_destroy">destroy</a>
+			<span class="comment">--</span><span class="comment"> Unmap the network path</span>
+	
+<span class="keyword">invariant</span>
+
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+
+<span class="keyword">end</span> -- <span class="comment">class </span>WEL_UNC_PATH_MAPPER
+		</pre>
+	</body>
+</html>

@@ -1,0 +1,74 @@
+<html>
+	<head>	
+		<title>UNIX_SIGNALS</title>
+		<link rel="stylesheet" href="../.\..\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\base/reference/kernel/classic/unix_signals_chart.html">UNIX_SIGNALS</a>
+
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">base.kernel.classic</span>
+	<span class="itag">description</span><span class="symbol">:</span> 
+		<span class="string">"Constants used for signal handling.</span>
+		<span class="string">This class may be used as ancestor by classes needing its facilities."</span>
+
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a>
+
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_is_defined">is_defined</a> <span class="symbol">(</span><span class="local">sig</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_is_ignored">is_ignored</a> <span class="symbol">(</span><span class="local">sig</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_meaning">meaning</a> <span class="symbol">(</span><span class="local">sig</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigabrt">Sigabrt</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigalrm">Sigalrm</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigbus">Sigbus</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigchld">Sigchld</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigcld">Sigcld</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigcont">Sigcont</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigemt">Sigemt</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigfpe">Sigfpe</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sighup">Sighup</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigill">Sigill</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigint">Sigint</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigio">Sigio</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigiot">Sigiot</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigkill">Sigkill</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_siglost">Siglost</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_signal">signal</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigphone">Sigphone</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigpipe">Sigpipe</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigpoll">Sigpoll</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigprof">Sigprof</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigpwr">Sigpwr</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigquit">Sigquit</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigsegv">Sigsegv</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigstop">Sigstop</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigsys">Sigsys</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigterm">Sigterm</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigtrap">Sigtrap</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigtstp">Sigtstp</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigttin">Sigttin</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigttou">Sigttou</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigurg">Sigurg</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigusr1">Sigusr1</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigusr2">Sigusr2</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigvtalarm">Sigvtalarm</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigwinch">Sigwinch</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigwind">Sigwind</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigxcpu">Sigxcpu</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_sigxfsz">Sigxfsz</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_catch">catch</a> <span class="symbol">(</span><span class="local">sig</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_ignore">ignore</a> <span class="symbol">(</span><span class="local">sig</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_reset_all_default">reset_all_default</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/unix_signals_flatshort.html#f_reset_default">reset_default</a> <span class="symbol">(</span><span class="local">sig</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+
+
+		</pre>
+	</body>
+</html>

@@ -1,39 +1,35 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_INPUT_EVENT Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_INPUT_EVENT</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_input_event_chart.html">WEL_INPUT_EVENT</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_input_event_chart.html">WEL_INPUT_EVENT</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.support</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Objects to synthesize keystrokes, mouse motions and button clicks."</span>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/support/index.html">wel.support</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Objects to synthesize keystrokes, mouse motions and button clicks."</SPAN>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\wel/reference/consts/new_consts/wel_input_constants_chart.html">WEL_INPUT_CONSTANTS</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/new_consts/wel_input_constants_chart.html">WEL_INPUT_CONSTANTS</A>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_input_event_flatshort.html#f_send_keyboard_key_down">send_keyboard_key_down</a> <span class="symbol">(</span><span class="local">virtual_key_code</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_input_event_flatshort.html#f_send_keyboard_key_up">send_keyboard_key_up</a> <span class="symbol">(</span><span class="local">virtual_key_code</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_input_event_flatshort.html#f_send_mouse_absolute_move">send_mouse_absolute_move</a> <span class="symbol">(</span><span class="local">a_x</span><span class="symbol">,</span> <span class="local">a_y</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_input_event_flatshort.html#f_send_mouse_left_button_down">send_mouse_left_button_down</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_input_event_flatshort.html#f_send_mouse_left_button_up">send_mouse_left_button_up</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_input_event_flatshort.html#f_send_mouse_middle_button_down">send_mouse_middle_button_down</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_input_event_flatshort.html#f_send_mouse_middle_button_up">send_mouse_middle_button_up</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_input_event_flatshort.html#f_send_mouse_relative_move">send_mouse_relative_move</a> <span class="symbol">(</span><span class="local">a_x</span><span class="symbol">,</span> <span class="local">a_y</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_input_event_flatshort.html#f_send_mouse_right_button_down">send_mouse_right_button_down</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_input_event_flatshort.html#f_send_mouse_right_button_up">send_mouse_right_button_up</a>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`send_keyboard_key_down' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_input_event.html#f_send_keyboard_key_down">send_keyboard_key_down</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">virtual_key_code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`send_keyboard_key_up' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_input_event.html#f_send_keyboard_key_up">send_keyboard_key_up</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">virtual_key_code</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`send_mouse_absolute_move' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_input_event.html#f_send_mouse_absolute_move">send_mouse_absolute_move</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`send_mouse_left_button_down' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_input_event.html#f_send_mouse_left_button_down">send_mouse_left_button_down</A></SPAN>
-	<SPAN TITLE="`send_mouse_left_button_up' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_input_event.html#f_send_mouse_left_button_up">send_mouse_left_button_up</A></SPAN>
-	<SPAN TITLE="`send_mouse_middle_button_down' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_input_event.html#f_send_mouse_middle_button_down">send_mouse_middle_button_down</A></SPAN>
-	<SPAN TITLE="`send_mouse_middle_button_up' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_input_event.html#f_send_mouse_middle_button_up">send_mouse_middle_button_up</A></SPAN>
-	<SPAN TITLE="`send_mouse_relative_move' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_input_event.html#f_send_mouse_relative_move">send_mouse_relative_move</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_x</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">a_y</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`send_mouse_right_button_down' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_input_event.html#f_send_mouse_right_button_down">send_mouse_right_button_down</A></SPAN>
-	<SPAN TITLE="`send_mouse_right_button_up' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_input_event.html#f_send_mouse_right_button_up">send_mouse_right_button_up</A></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

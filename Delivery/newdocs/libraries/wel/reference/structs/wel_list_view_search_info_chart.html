@@ -1,76 +1,72 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_LIST_VIEW_SEARCH_INFO Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_LIST_VIEW_SEARCH_INFO</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/structs/wel_list_view_search_info_chart.html">WEL_LIST_VIEW_SEARCH_INFO</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_list_view_search_info_chart.html">WEL_LIST_VIEW_SEARCH_INFO</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.structs</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Information on how to search a list view"</span>
+	<span class="itag">create</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_make">make</a>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/structs/index.html">wel.structs</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Information on how to search a list view"</SPAN>
-	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_make">make</A>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_bit_operations_chart.html">WEL_BIT_OPERATIONS</a>
+	<a class="class" href="\libraries\wel/reference/consts/wel_lvfi_constants_chart.html">WEL_LVFI_CONSTANTS</a>
+	<a class="class" href="\libraries\wel/reference/consts/wel_lvfi_constants_chart.html">WEL_LVFI_CONSTANTS</a>
+	<a class="class" href="\libraries\wel/reference/structs/wel_structure_chart.html">WEL_STRUCTURE</a>
+	<a class="class" href="\libraries\wel/reference/consts/wel_vk_constants_chart.html">WEL_VK_CONSTANTS</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_bit_operations_chart.html">WEL_BIT_OPERATIONS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_lvfi_constants_chart.html">WEL_LVFI_CONSTANTS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_lvfi_constants_chart.html">WEL_LVFI_CONSTANTS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/structs/wel_structure_chart.html">WEL_STRUCTURE</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_vk_constants_chart.html">WEL_VK_CONSTANTS</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_bit_operations_flatshort.html#f_clear_flag">clear_flag</a> <span class="symbol">(</span><span class="local">flags</span><span class="symbol">,</span> <span class="local">mask</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_downwards">downwards</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_exists">exists</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_bit_operations_flatshort.html#f_flag_set">flag_set</a> <span class="symbol">(</span><span class="local">flags</span><span class="symbol">,</span> <span class="local">mask</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_flags">flags</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_lvfi_constants_flatshort.html#f_is_valid_list_view_flag">is_valid_list_view_flag</a> <span class="symbol">(</span><span class="local">a_flag</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_left">left</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_lparam">lparam</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_lvfi_constants_flatshort.html#f_lvfi_nearestxy">Lvfi_nearestxy</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_lvfi_constants_flatshort.html#f_lvfi_param">Lvfi_param</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_lvfi_constants_flatshort.html#f_lvfi_partial">Lvfi_partial</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_lvfi_constants_flatshort.html#f_lvfi_string">Lvfi_string</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/consts/wel_lvfi_constants_flatshort.html#f_lvfi_wrap">Lvfi_wrap</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_right">right</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_bit_operations_flatshort.html#f_set_flag">set_flag</a> <span class="symbol">(</span><span class="local">flags</span><span class="symbol">,</span> <span class="local">mask</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_shared">shared</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_starting_position">starting_position</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/structs/wel_point_chart.html">WEL_POINT</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_target">target</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_to_integer">to_integer</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_upwards">upwards</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`clear_flag' was declared in WEL_BIT_OPERATIONS"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_bit_operations.html#f_clear_flag">clear_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`downwards' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_downwards">downwards</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`flag_set' was declared in WEL_BIT_OPERATIONS"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_bit_operations.html#f_flag_set">flag_set</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`flags' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_flags">flags</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`is_valid_list_view_flag' was declared in WEL_LVFI_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_lvfi_constants.html#f_is_valid_list_view_flag">is_valid_list_view_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_flag</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
-	<SPAN TITLE="`left' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_left">left</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`lparam' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_lparam">lparam</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`lvfi_nearestxy' was declared in WEL_LVFI_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_lvfi_constants.html#f_lvfi_nearestxy">Lvfi_nearestxy</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`lvfi_param' was declared in WEL_LVFI_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_lvfi_constants.html#f_lvfi_param">Lvfi_param</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`lvfi_partial' was declared in WEL_LVFI_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_lvfi_constants.html#f_lvfi_partial">Lvfi_partial</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`lvfi_string' was declared in WEL_LVFI_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_lvfi_constants.html#f_lvfi_string">Lvfi_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`lvfi_wrap' was declared in WEL_LVFI_CONSTANTS"><A CLASS="efeature" HREF="../../../wel/reference/consts/wel_lvfi_constants.html#f_lvfi_wrap">Lvfi_wrap</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`right' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_right">right</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`set_flag' was declared in WEL_BIT_OPERATIONS"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_bit_operations.html#f_set_flag">set_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">flags</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">mask</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`starting_position' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_starting_position">starting_position</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_point_chart.html">WEL_POINT</A></SPAN>
-	<SPAN TITLE="`target' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_target">target</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
-	<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`upwards' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_upwards">upwards</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_add_flag">add_flag</a> <span class="symbol">(</span><span class="local">a_flag</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_flags">flags</a><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_dispose">dispose</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_initialize">initialize</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_initialize_with_character">initialize_with_character</a> <span class="symbol">(</span><span class="local">a_character</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/character_chart.html">CHARACTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_memory_copy">memory_copy</a> <span class="symbol">(</span><span class="local">source_pointer</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">;</span> <span class="local">length</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_set_downwards">set_downwards</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_set_flags">set_flags</a> <span class="symbol">(</span><span class="local">a_flags</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_flags">flags</a><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_item">set_item</a> <span class="symbol">(</span><span class="local">an_item</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_set_left">set_left</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_set_lparam">set_lparam</a> <span class="symbol">(</span><span class="local">a_lparam</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_lparam">lparam</a><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_set_right">set_right</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_shared">set_shared</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_set_starting_position">set_starting_position</a> <span class="symbol">(</span><span class="local">a_starting_position</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_starting_position">starting_position</a><span class="symbol">]</span> <a class="class" href="\libraries\wel/reference/structs/wel_point_chart.html">WEL_POINT</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_set_target">set_target</a> <span class="symbol">(</span><span class="local">a_target</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_target">target</a><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_unshared">set_unshared</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_list_view_search_info_flatshort.html#f_set_upwards">set_upwards</a>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`add_flag' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_add_flag">add_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_flag</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_flags">flags</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN>
-	<SPAN TITLE="`initialize' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize">initialize</A></SPAN>
-	<SPAN TITLE="`initialize_with_character' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`memory_copy' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_downwards' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_set_downwards">set_downwards</A></SPAN>
-	<SPAN TITLE="`set_flags' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_set_flags">set_flags</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_flags">flags</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_left' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_set_left">set_left</A></SPAN>
-	<SPAN TITLE="`set_lparam' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_set_lparam">set_lparam</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_lparam</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_lparam">lparam</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_right' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_set_right">set_right</A></SPAN>
-	<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN>
-	<SPAN TITLE="`set_starting_position' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_set_starting_position">set_starting_position</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_starting_position</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_starting_position">starting_position</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/structs/wel_point_chart.html">WEL_POINT</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_target' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_set_target">set_target</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_target</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_target">target</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN>
-	<SPAN TITLE="`set_upwards' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_list_view_search_info.html#f_set_upwards">set_upwards</A></SPAN>
+<span class="keyword">Constraints</span>
+	<span class="tag">valid direction</span>
 
-<SPAN CLASS="ekeyword">Constraints</SPAN>
-	<SPAN CLASS="etag">valid direction</SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

@@ -1,60 +1,57 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.1.7">
-		
-<TITLE>WEL_CHOOSE_FOLDER_DIALOG Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>WEL_CHOOSE_FOLDER_DIALOG</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_chart.html">WEL_CHOOSE_FOLDER_DIALOG</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog_chart.html">WEL_CHOOSE_FOLDER_DIALOG</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">wel.stddlgs</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Browse for folder dialog."</span>
+	<span class="itag">create</span><span class="symbol">:</span> <a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_make">make</a>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../wel/reference/stddlgs/index.html">wel.stddlgs</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Browse for folder dialog."</SPAN>
-	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_make">make</A>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\wel/reference/consts/wel_bif_constants_chart.html">WEL_BIF_CONSTANTS</a>
+	<a class="class" href="\libraries\wel/reference/support/wel_bit_operations_chart.html">WEL_BIT_OPERATIONS</a>
+	<a class="class" href="\libraries\wel/reference/stddlgs/wel_standard_dialog_chart.html">WEL_STANDARD_DIALOG</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../wel/reference/consts/wel_bif_constants_chart.html">WEL_BIF_CONSTANTS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/support/wel_bit_operations_chart.html">WEL_BIT_OPERATIONS</A>
-	<A CLASS="eclass" HREF="../../../wel/reference/stddlgs/wel_standard_dialog_chart.html">WEL_STANDARD_DIALOG</A>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_exists">exists</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_flags">flags</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_folder_name">folder_name</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_has_flag">has_flag</a> <span class="symbol">(</span><span class="local">a_flags</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_item">item</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_standard_dialog_flatshort.html#f_selected">selected</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_shared">shared</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_starting_folder">starting_folder</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_structure_size">Structure_size</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_title">title</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_to_integer">to_integer</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`exists' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`flags' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_flags">flags</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`folder_name' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_folder_name">folder_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
-	<SPAN TITLE="`has_flag' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_has_flag">has_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A></SPAN>
-	<SPAN TITLE="`selected' was declared in WEL_STANDARD_DIALOG"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_standard_dialog.html#f_selected">selected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
-	<SPAN TITLE="`starting_folder' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_starting_folder">starting_folder</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
-	<SPAN TITLE="`structure_size' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_structure_size">Structure_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`title' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_title">title</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A></SPAN>
-	<SPAN TITLE="`to_integer' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_to_integer">to_integer</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_activate">activate</a> <span class="symbol">(</span><span class="local">a_parent</span><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_add_flag">add_flag</a> <span class="symbol">(</span><span class="local">a_flags</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_cwel_sh_browse_for_folder">cwel_sh_browse_for_folder</a> <span class="symbol">(</span><span class="local">p</span><span class="symbol">,</span> <span class="local">str</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_dispose">dispose</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_initialize_with_character">initialize_with_character</a> <span class="symbol">(</span><span class="local">a_character</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/character_chart.html">CHARACTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_make">make</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_memory_copy">memory_copy</a> <span class="symbol">(</span><span class="local">source_pointer</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">;</span> <span class="local">length</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_remove_flag">remove_flag</a> <span class="symbol">(</span><span class="local">a_flags</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_set_default_title">set_default_title</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_set_flags">set_flags</a> <span class="symbol">(</span><span class="local">a_flags</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_item">set_item</a> <span class="symbol">(</span><span class="local">an_item</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/pointer_chart.html">POINTER</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_shared">set_shared</a>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_set_starting_folder">set_starting_folder</a> <span class="symbol">(</span><span class="local">a_folder_name</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/stddlgs/wel_choose_folder_dialog_flatshort.html#f_set_title">set_title</a> <span class="symbol">(</span><span class="local">a_title</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/string_chart.html">STRING</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\wel/reference/support/wel_any_flatshort.html#f_set_unshared">set_unshared</a>
+	<a class="feature" href="\libraries\wel/reference/structs/wel_structure_flatshort.html#f_initialize">structure_initialize</a>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`activate' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_activate">activate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_parent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../wel/reference/windows/wel_composite_window_chart.html">WEL_COMPOSITE_WINDOW</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`add_flag' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_add_flag">add_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`dispose' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_dispose">dispose</A></SPAN>
-	<SPAN TITLE="`initialize_with_character' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize_with_character">initialize_with_character</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_character</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/character_chart.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_make">make</A></SPAN>
-	<SPAN TITLE="`memory_copy' was declared in WEL_STRUCTURE"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_memory_copy">memory_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">source_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`remove_flag' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_remove_flag">remove_flag</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_default_title' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_set_default_title">set_default_title</A></SPAN>
-	<SPAN TITLE="`set_flags' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_set_flags">set_flags</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_flags</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_item' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer_chart.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_shared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_shared">set_shared</A></SPAN>
-	<SPAN TITLE="`set_starting_folder' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_set_starting_folder">set_starting_folder</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_folder_name</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_title' is declared in `Current'"><A CLASS="efeature" HREF="../../../wel/reference/stddlgs/wel_choose_folder_dialog.html#f_set_title">set_title</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_title</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string_chart.html">STRING</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_unshared' was declared in WEL_ANY"><A CLASS="efeature" HREF="../../../wel/reference/support/wel_any.html#f_set_unshared">set_unshared</A></SPAN>
-	<SPAN TITLE="`structure_initialize' was declared in WEL_STRUCTURE as `initialize'"><A CLASS="efeature" HREF="../../../wel/reference/structs/wel_structure.html#f_initialize">structure_initialize</A></SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

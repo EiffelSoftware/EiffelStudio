@@ -1,50 +1,46 @@
-<HTML>
-	<HEAD>
-		
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
-		
-<TITLE>EV_TIMEOUT Chart</TITLE>
-		
-<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+<html>
+	<head>	
+		<title>EV_TIMEOUT</title>
+		<link rel="stylesheet" href="../.\..\..\..\..\default.css" type="text/css">
+	</head>
 
-	</HEAD>
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\vision2/reference/interface/kernel/ev_timeout_chart.html">EV_TIMEOUT</a>
 
-	<BODY>
-<PRE><SPAN CLASS="ekeyword">class</SPAN>
-	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_timeout_chart.html">EV_TIMEOUT</A>
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">vision2.interface.kernel</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"Repeatedly executes a sequence of `</span><span class="quoted">actions</span><span class="string">' at a regular `</span><span class="quoted">interval</span><span class="string">'."</span>
+	<span class="itag">keywords</span><span class="symbol">:</span> <span class="string">"timout, delay, timer, background"</span>
+	<span class="itag">create</span><span class="symbol">:</span> <a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_timeout_flatshort.html#f_make_with_interval">make_with_interval</a><span class="symbol">,</span> <a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_default_create">default_create</a>
 
-<SPAN CLASS="ekeyword">General</SPAN>
-	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../../../libraries/vision2/reference/interface/kernel/index.html">vision2.interface.kernel</A>
-	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Repeatedly executes a sequence of `</SPAN><SPAN CLASS="equoted">actions</SPAN><SPAN CLASS="estring">' at a regular `</SPAN><SPAN CLASS="equoted">interval</SPAN><SPAN CLASS="estring">'."</SPAN>
-	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"timout, delay, timer, background"</SPAN>
-	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_timeout.html#f_make_with_interval">make_with_interval</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_default_create">default_create</A>
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\vision2/reference/interface/kernel/ev_any_chart.html">EV_ANY</a>
 
-<SPAN CLASS="ekeyword">Ancestors</SPAN>
-	<A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any_chart.html">EV_ANY</A>
+<span class="keyword">Action sequences</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_timeout_flatshort.html#f_actions">actions</a><span class="symbol">:</span> <a class="class" href="\libraries\vision2/reference/interface/events/ev_notify_action_sequence_chart.html">EV_NOTIFY_ACTION_SEQUENCE</a>
 
-<SPAN CLASS="ekeyword">Action sequences</SPAN>
-	<SPAN TITLE="`actions' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_timeout.html#f_actions">actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/events/ev_notify_action_sequence_chart.html">EV_NOTIFY_ACTION_SEQUENCE</A></SPAN>
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_timeout_flatshort.html#f_count">count</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_data">data</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_timeout_flatshort.html#f_interval">interval</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_is_destroyed">is_destroyed</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
 
-<SPAN CLASS="ekeyword">Queries</SPAN>
-	<SPAN TITLE="`count' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_timeout.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`data' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_data">data</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A></SPAN>
-	<SPAN TITLE="`interval' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_timeout.html#f_interval">interval</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A></SPAN>
-	<SPAN TITLE="`is_destroyed' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_is_destroyed">is_destroyed</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_copy">copy</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\vision2/reference/interface/kernel/ev_timeout_chart.html">EV_TIMEOUT</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_destroy">destroy</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_timeout_flatshort.html#f_reset_count">reset_count</a>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_set_data">set_data</a> <span class="symbol">(</span><span class="local">some_data</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_any_flatshort.html#f_data">data</a><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a><span class="symbol">)</span>
+	<a class="feature" href="\libraries\vision2/reference/interface/kernel/ev_timeout_flatshort.html#f_set_interval">set_interval</a> <span class="symbol">(</span><span class="local">an_interval</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a><span class="symbol">)</span>
 
-<SPAN CLASS="ekeyword">Commands</SPAN>
-	<SPAN TITLE="`copy' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_timeout_chart.html">EV_TIMEOUT</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`destroy' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_destroy">destroy</A></SPAN>
-	<SPAN TITLE="`reset_count' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_timeout.html#f_reset_count">reset_count</A></SPAN>
-	<SPAN TITLE="`set_data' was declared in EV_ANY"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_set_data">set_data</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">some_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_any.html#f_data">data</A><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/any_chart.html">ANY</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
-	<SPAN TITLE="`set_interval' is declared in `Current'"><A CLASS="efeature" HREF="../../../../../libraries/vision2/reference/interface/kernel/ev_timeout.html#f_set_interval">set_interval</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_interval</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../../../libraries/base/reference/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN></SPAN>
+<span class="keyword">Constraints</span>
+	<span class="tag">interval not negative</span>
+	<span class="tag">count not negative</span>
+	<span class="tag">actions not void</span>
 
-<SPAN CLASS="ekeyword">Constraints</SPAN>
-	<SPAN CLASS="etag">interval not negative</SPAN>
-	<SPAN CLASS="etag">count not negative</SPAN>
-	<SPAN CLASS="etag">actions not void</SPAN>
 
-</PRE>
-
-</BODY>
-
-</HTML>
+		</pre>
+	</body>
+</html>

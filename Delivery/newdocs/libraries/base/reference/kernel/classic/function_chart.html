@@ -1,0 +1,46 @@
+<html>
+	<head>	
+		<title>FUNCTION</title>
+		<link rel="stylesheet" href="../.\..\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">class</span>
+	<a class="class" href="\libraries\base/reference/kernel/classic/function_chart.html">FUNCTION</a> <span class="symbol">[</span><span class="generic">BASE_TYPE</span><span class="symbol">,</span> <span class="generic">OPEN_ARGS</span> <span class="symbol">-&gt;</span> <a class="class" href="\libraries\base/reference/kernel/classic/tuple_chart.html">TUPLE</a> <span class="keyword">create</span> default_create <span class="keyword">end</span><span class="symbol">,</span> <span class="generic">RESULT_TYPE</span><span class="symbol">]</span>
+
+<span class="keyword">General</span>
+	<span class="itag">cluster</span><span class="symbol">:</span> <span class="cluster">base.kernel.classic</span>
+	<span class="itag">description</span><span class="symbol">:</span> 
+		<span class="string">"Objects representing delayed calls to a function,</span>
+		<span class="string">with some arguments possibly still open."</span>
+
+<span class="keyword">Ancestors</span>
+	<a class="class" href="\libraries\base/reference/kernel/classic/routine_chart.html">ROUTINE</a> <span class="symbol">[</span><span class="generic">BASE_TYPE</span><span class="symbol">,</span> <span class="generic">OPEN_ARGS</span> <span class="symbol">-&gt;</span> <a class="class" href="\libraries\base/reference/kernel/classic/tuple_chart.html">TUPLE</a> <span class="keyword">create</span> default_create <span class="keyword">end</span><span class="symbol">]</span>
+
+<span class="keyword">Queries</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_callable">callable</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_hash_code">hash_code</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/function_flatshort.html#f_is_equal">is_equal</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/classic/function_chart.html">FUNCTION</a> <span class="symbol">[</span><span class="generic">BASE_TYPE</span><span class="symbol">,</span> <span class="generic">OPEN_ARGS</span><span class="symbol">,</span> <span class="generic">RESULT_TYPE</span><span class="symbol">]</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/kernel/hashable_flatshort.html#f_is_hashable">is_hashable</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/function_flatshort.html#f_item">item</a> <span class="symbol">(</span><span class="local">args</span><span class="symbol">:</span> <span class="generic">OPEN_ARGS</span><span class="symbol">)</span><span class="symbol">:</span> <span class="generic">RESULT_TYPE</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/function_flatshort.html#f_last_result">last_result</a><span class="symbol">:</span> <span class="generic">RESULT_TYPE</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_open_count">open_count</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_chart.html">INTEGER</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_operands">operands</a><span class="symbol">:</span> <span class="generic">OPEN_ARGS</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_postcondition">postcondition</a> <span class="symbol">(</span><span class="local">args</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_operands">operands</a><span class="symbol">]</span> <span class="generic">OPEN_ARGS</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_precondition">precondition</a> <span class="symbol">(</span><span class="local">args</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_operands">operands</a><span class="symbol">]</span> <span class="generic">OPEN_ARGS</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_target">target</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_valid_operands">valid_operands</a> <span class="symbol">(</span><span class="local">args</span><span class="symbol">:</span> <span class="generic">OPEN_ARGS</span><span class="symbol">)</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_chart.html">BOOLEAN</a>
+
+<span class="keyword">Commands</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_adapt">adapt</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/routine_chart.html">ROUTINE</a> <span class="symbol">[</span><a class="class" href="\libraries\base/reference/kernel/classic/any_chart.html">ANY</a><span class="symbol">,</span> <span class="generic">OPEN_ARGS</span><span class="symbol">]</span><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/function_flatshort.html#f_apply">apply</a>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_call">call</a> <span class="symbol">(</span><span class="local">args</span><span class="symbol">:</span> <span class="generic">OPEN_ARGS</span><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/function_flatshort.html#f_copy">copy</a> <span class="symbol">(</span><span class="local">other</span><span class="symbol">:</span> <span class="symbol">[</span><span class="keyword">like</span> <span class="reserved">Current</span><span class="symbol">]</span> <a class="class" href="\libraries\base/reference/kernel/classic/function_chart.html">FUNCTION</a> <span class="symbol">[</span><span class="generic">BASE_TYPE</span><span class="symbol">,</span> <span class="generic">OPEN_ARGS</span><span class="symbol">,</span> <span class="generic">RESULT_TYPE</span><span class="symbol">]</span><span class="symbol">)</span>
+	<a class="feature" href="\libraries\base/reference/kernel/classic/routine_flatshort.html#f_set_operands">set_operands</a> <span class="symbol">(</span><span class="local">args</span><span class="symbol">:</span> <span class="generic">OPEN_ARGS</span><span class="symbol">)</span>
+
+
+		</pre>
+	</body>
+</html>

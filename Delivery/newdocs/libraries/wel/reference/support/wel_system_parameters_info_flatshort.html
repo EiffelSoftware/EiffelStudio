@@ -1,0 +1,58 @@
+<html>
+	<head>	
+		<title>WEL_SYSTEM_PARAMETERS_INFO</title>
+		<link rel="stylesheet" href="../.\..\..\..\default.css" type="text/css">
+	</head>
+
+	<body>		
+		<pre>
+			
+<span class="keyword">indexing</span>
+	<span class="itag">description</span><span class="symbol">:</span> <span class="string">"System Parameters and configuration settings informations."</span>
+	<span class="itag">date</span><span class="symbol">:</span> <span class="string">"$Date$"</span>
+	<span class="itag">revision</span><span class="symbol">:</span> <span class="string">"$Revision$"</span>
+
+<span class="keyword">class</span> <span class="keyword">interface</span>
+	<a class="class" href="\libraries\wel/reference/support/wel_system_parameters_info_flatshort.html">WEL_SYSTEM_PARAMETERS_INFO</a>
+
+<span class="keyword">feature</span> <span class="comment">--</span><span class="comment"> Status</span>
+
+	<a name="f_get_non_client_metrics"><a class="feature" href="\libraries\wel/reference/support/wel_system_parameters_info_flatshort.html#f_get_non_client_metrics">get_non_client_metrics</a><span class="symbol">:</span> <a class="class" href="\libraries\wel/reference/structs/wel_non_client_metrics_flatshort.html">WEL_NON_CLIENT_METRICS</a>
+			<span class="comment">--</span><span class="comment"> Retrieves the metrics associated with the nonclient area of</span>
+			<span class="comment">--</span><span class="comment"> nonminimized windows.</span>
+			<span class="comment">--</span>
+			<span class="comment">--</span><span class="comment"> Void if an error occurred.</span>
+
+	<a name="f_get_wheel_scroll_lines"><a class="feature" href="\libraries\wel/reference/support/wel_system_parameters_info_flatshort.html#f_get_wheel_scroll_lines">get_wheel_scroll_lines</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/integer_flatshort.html">INTEGER</a>
+			<span class="comment">--</span><span class="comment"> Retrieves the number of lines that will be scrolled when the mouse wheel is rotated.</span>
+
+	<a name="f_has_drag_full_windows"><a class="feature" href="\libraries\wel/reference/support/wel_system_parameters_info_flatshort.html#f_has_drag_full_windows">has_drag_full_windows</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Determines whether dragging of full windows is enabled.</span>
+			<span class="comment">--</span><span class="comment"> The pvParam parameter must point to a BOOL variable that</span>
+			<span class="comment">--</span><span class="comment"> receives TRUE if enabled, or FALSE otherwise.</span>
+			<span class="comment">--</span>
+			<span class="comment">--</span><span class="comment"> Windows 95: This flag is supported only if Windows Plus!</span>
+			<span class="comment">--</span><span class="comment"> is installed. See SPI_GETWINDOWSEXTENSION.</span>
+
+	<a name="f_has_flat_menu"><a class="feature" href="\libraries\wel/reference/support/wel_system_parameters_info_flatshort.html#f_has_flat_menu">has_flat_menu</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Determines whether native User menus have flat menu appearance</span>
+
+	<a name="f_has_windows95_plus"><a class="feature" href="\libraries\wel/reference/support/wel_system_parameters_info_flatshort.html#f_has_windows95_plus">has_windows95_plus</a><span class="symbol">:</span> <a class="class" href="\libraries\base/reference/kernel/classic/boolean_flatshort.html">BOOLEAN</a>
+			<span class="comment">--</span><span class="comment"> Windows 95 only: Indicates whether the Windows extension,</span>
+			<span class="comment">--</span><span class="comment"> Windows Plus!, is installed. Set the uiParam parameter to 1.</span>
+			<span class="comment">--</span><span class="comment"> The pvParam parameter is not used. The function returns TRUE</span>
+			<span class="comment">--</span><span class="comment"> if the extension is installed, or FALSE if it is not.</span>
+	
+<span class="keyword">invariant</span>
+
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+		<span class="comment">--</span> <span class="comment">from </span><a class="class" href="\libraries\base/reference/kernel/classic/any_flatshort.html">ANY</a>
+	<span class="tag">reflexive_equality</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_standard_is_equal">standard_is_equal</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+	<span class="tag">reflexive_conformance</span><span class="symbol">:</span> <a class="feature" href="\libraries\base/reference/kernel/classic/any_flatshort.html#f_conforms_to">conforms_to</a> <span class="symbol">(</span><span class="reserved">Current</span><span class="symbol">)</span>
+
+<span class="keyword">end</span> -- <span class="comment">class </span>WEL_SYSTEM_PARAMETERS_INFO
+		</pre>
+	</body>
+</html>

@@ -41,7 +41,8 @@ inherit
 			set_default_minimum_size,
 			initialize,
 			on_size,
-			enable_sensitive, disable_sensitive
+			enable_sensitive, disable_sensitive,
+			background_color
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -1191,6 +1192,18 @@ feature {NONE} -- WEL Implementation
 
 				disable_default_processing
 				set_message_return_value (1)
+			end
+		end
+		
+	background_color: EV_COLOR is
+			-- Color used for the background of `Current'.
+			-- This has been redefined as the background color of
+			-- text components is white, or `Color_read_write' by default.
+		do
+			if background_color_imp /= Void then
+				Result ?= background_color_imp.interface
+			else
+				Result := (create {EV_STOCK_COLORS}).Color_read_write
 			end
 		end
 	

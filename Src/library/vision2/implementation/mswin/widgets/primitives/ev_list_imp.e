@@ -32,7 +32,7 @@ inherit
 			set_foreground_color
 		redefine
 			make, on_key_down, on_mouse_move, set_default_minimum_size,
-			initialize, interface, on_size, enable_sensitive, disable_sensitive
+			initialize, interface, on_size, enable_sensitive, disable_sensitive, background_color
 		end
 
  	WEL_LIST_VIEW
@@ -780,6 +780,18 @@ feature {EV_ANY_I} -- Implementation
 			else
 					-- There are no children , so erase all of `reg'.
 				paint_dc.fill_region (reg, brush)
+			end
+		end
+		
+	background_color: EV_COLOR is
+			-- Color used for the background of `Current'.
+			-- This has been redefined as the background color of
+			-- text components is white, or `Color_read_write' by default.
+		do
+			if background_color_imp /= Void then
+				Result ?= background_color_imp.interface
+			else
+				Result := (create {EV_STOCK_COLORS}).Color_read_write
 			end
 		end
 

@@ -78,6 +78,7 @@ feature {NONE} -- Initialization
 			set_feature_type (a_feature_type)
 			create {ARRAYED_LIST [PARAMETER_ENUMERATOR]} overloads_parameters.make (0)
 			create {ARRAYED_LIST [STRING]} overloads_return_types.make (0)
+			create {ARRAYED_LIST [STRING]} overloads_descriptions.make (0)
 		end
 		
 	make_with_return_type (a_name: like name; a_arguments: like arguments_internal; a_return_type: like return_type; a_feature_type: INTEGER; a_description: like description; a_file_name: like file_name; a_start_position: like start_position) is
@@ -148,6 +149,9 @@ feature -- Access
 	description: STRING
 			-- Feature description.
 
+	overloads_descriptions: LIST [STRING]
+			-- Feature overloaded descriptions.
+
 	signature: STRING is
 			-- Main feature signature
 		do
@@ -209,18 +213,21 @@ feature -- Access
 
 feature -- Basic Operations
 	
-	add_overload (a_parameters: PARAMETER_ENUMERATOR; a_return_type: STRING) is
+	add_overload (a_parameters: PARAMETER_ENUMERATOR; a_return_type: STRING; a_description: STRING) is
 			-- 	Add a new overload to this feature
 		require
 			non_void_parameters: a_parameters /= Void
 			non_void_return_type: a_return_type /= Void
+			non_void_description: a_description /= Void
 		do
 			overloads_parameters.extend (a_parameters)
 			overloads_return_types.extend (a_return_type)
+			overloads_descriptions.extend (a_description)
 			overloads_count := overloads_count + 1
 		ensure
 			overloads_count_increased: overloads_count = old overloads_count + 1
 			parameters_added: overloads_parameters.has (a_parameters)
+			description_added: overloads_descriptions.has (a_description)
 			return_type_added: overloads_return_types.has (a_return_type)
 		end
 		

@@ -123,7 +123,7 @@ feature -- Basic operations
 						if use_overloading and id_table /= Void then
 							id_table.search (table.key_for_iteration)
 							if id_table.found then
-								feature_name := Names_heap.item (id_table.found_item)
+								feature_name := clone (Names_heap.item (id_table.found_item))
 							else
 								feature_name := fi.feature_name
 							end	

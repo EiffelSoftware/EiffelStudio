@@ -36,9 +36,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_font_box: FONT_BOX) is
+	make (a_font_box: FONT_BOX; man: BOOLEAN) is
 			-- Create a motif font box.
 		local
 			ext_name: ANY
@@ -47,7 +47,7 @@ feature -- Creation
 			ext_name := a_font_box.identifier.to_c;
 			data := font_box_create ($ext_name,
 					parent_screen_object (a_font_box, widget_index),
-					False);
+					False, man);
 			screen_object := font_box_form (data)
 		end;
 
@@ -191,7 +191,7 @@ feature
 		require else
 			a_font_exists: not (a_font = Void)
 		do
-			font_box_set_font (a_font.n_ame.to_c, data)
+			font_box_set_font (a_font.name.to_c, data)
 		end;
 
 	show_apply_button is
@@ -269,7 +269,8 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	font_box_create (b_name: ANY; scr_obj: POINTER; value: BOOLEAN): POINTER is
+	font_box_create (b_name: ANY; scr_obj: POINTER; 
+			is_dial, man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

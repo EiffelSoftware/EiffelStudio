@@ -11,34 +11,80 @@ inherit
 	EV_TREE_ITEM_I
 	
 	EV_ITEM_IMP
---		undefine
---			set_label_widget,
---			label_widget
---		end
-
-	EV_TREE_ITEM_CONTAINER_IMP
 		rename
-			make as old_make,
+			set_parent as widget_set_parent
+		redefine
+			make,
+			make_with_text,
+			parent_imp
+		end
+
+	EV_TREE_ITEM_HOLDER_IMP
+		rename
 			interface as widget_interface,
 			set_interface as set_widget_interface,
 			add_double_click_command as old_add_dblclk,
-			remove_double_click_commands as old_remove_dblclk
+			remove_double_click_commands as old_remove_dblclk,
+			set_parent as widget_set_parent
+		redefine
+			parent_imp
 		end
 
 creation
-	make_with_text
+	make,
+	make_with_text,
+	make_with_pixmap,
+	make_with_all
 
 feature {NONE} -- Initialization
 
-	make_with_text (par: EV_TREE_ITEM_CONTAINER; txt: STRING) is
-			-- Create a tree-item with `txt' as label and
-			-- `par' as parent.
+	make is
+			-- Create an item with an empty name.
+		do
+			widget := gtk_tree_item_new
+			gtk_object_ref (widget)
+		end
+	
+	make_with_text (txt: STRING) is
+			-- Create an item with `txt' as label.
 		local
 			a: ANY
 		do
 			a ?= txt.to_c
 			widget := gtk_tree_item_new_with_label ($a)
+			gtk_object_ref (widget)
 		end
+
+	make_with_pixmap (pix: EV_PIXMAP) is
+			-- Create an item with `par' as parent and `pix'
+			-- as pixmap.
+		do
+			make
+			-- Not implemented
+		end
+
+	make_with_all (txt: STRING; pix: EV_PIXMAP) is
+			-- Create an item with `par' as parent, `txt' as text
+			-- and `pix' as pixmap.
+		do
+			make_with_text (txt)
+			-- Not implemented
+		end
+
+feature -- Acces
+
+	parent: EV_TREE_ITEM_HOLDER is
+			-- Parent of the current item.
+		do
+			if parent_imp /= Void then
+				Result ?= parent_imp.interface
+			else
+				Result := Void
+			end
+		end
+
+	parent_imp: EV_TREE_ITEM_HOLDER_IMP
+			-- Parent implementation
 
 feature -- Status report
 
@@ -54,6 +100,31 @@ feature -- Status report
 			-- is the item expanded ?
 		do
 			Result := c_gtk_tree_item_expanded (widget)
+		end
+
+feature -- Element change
+
+	set_parent (par: EV_TREE_ITEM_HOLDER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
+		local
+			par_imp: EV_TREE_ITEM_HOLDER_IMP
+		do
+			if parent_imp /= Void then
+				gtk_object_ref (widget)
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				show
+				par_imp ?= par.implementation
+				check
+					parent_not_void: par_imp /= Void
+				end
+				parent_imp ?= par_imp
+				par_imp.add_item (Current)
+				gtk_object_unref (widget)
+			end
 		end
 
 feature -- Event : command association
@@ -75,31 +146,30 @@ feature -- Event -- removing command association
 			check False end
 		end
 
-feature {EV_TREE_ITEM} -- Implementation
+feature {NONE} -- Implementation
 
-	add_item (item: EV_TREE_ITEM) is
+	add_item (item_imp: EV_TREE_ITEM_IMP) is
 			-- Add `item' to the list
 		local
-			item_imp: EV_TREE_ITEM_IMP
 			p: POINTER
 		do
-			item_imp ?= item.implementation
-			check
-				correct_imp: item_imp /= Void
-			end
 			if GTK_TREE_ITEM_SUBTREE(widget) = default_pointer then
 				p := gtk_tree_new
-				--gtk_widget_show (p)
 				gtk_tree_item_set_subtree (widget, p)
 			end
 			gtk_tree_append (GTK_TREE_ITEM_SUBTREE(widget), item_imp.widget)
-			gtk_widget_show (item_imp.widget)
+		end
+
+	remove_item (item_imp: EV_TREE_ITEM_IMP) is
+			-- Remove `item_imp' from the list.
+		do
+			gtk_tree_remove_item (GTK_TREE_ITEM_SUBTREE(widget), item_imp.widget)
 		end
 
 end -- class EV_TREE_ITEM_IMP
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

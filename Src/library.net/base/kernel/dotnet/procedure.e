@@ -16,7 +16,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	PROCEDURE [BASE_TYPE, OPEN_ARGS ->TUPLE create make end]
+	PROCEDURE [BASE_TYPE, OPEN_ARGS ->TUPLE create default_create end]
 
 inherit
 	ROUTINE [BASE_TYPE, OPEN_ARGS]

@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ROUTINE [BASE_TYPE, OPEN_ARGS -> TUPLE create make end]
+	ROUTINE [BASE_TYPE, OPEN_ARGS -> TUPLE create default_create end]
 
 inherit
 	HASHABLE
@@ -44,7 +44,7 @@ feature -- Access
 			l_item: SYSTEM_OBJECT
 			l_internal: like internal_operands
 		do
-			create Result.make
+			create Result
 			l_open_map := open_map
 			if l_open_map /= Void then
 				from

@@ -54,10 +54,12 @@ feature {NONE} -- Implementation
 			format_storage: E_STORE_CASE_INFO;
 			mp: MOUSE_PTR
 		do
-			!! mp.set_watch_cursor;
-			!! format_storage.make (Error_window, Project_tool.progress_dialog);
-			format_storage.execute;
-			mp.restore
+			if project_tool.initialized then
+				!! mp.set_watch_cursor;
+				!! format_storage.make (Error_window, Project_tool.progress_dialog);
+				format_storage.execute;
+				mp.restore
+			end
 		end;
 	
 end -- class CASE_STORAGE

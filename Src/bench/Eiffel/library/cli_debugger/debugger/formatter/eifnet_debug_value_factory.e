@@ -16,6 +16,10 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	SK_CONST
+	
+	REFACTORING_HELPER
 
 feature -- Access
 
@@ -37,41 +41,54 @@ feature -- Access
 			l_icd_prepared := a_prepared_icd
 			if l_icd_prepared /= Void then -- and then l_icd_prepared.last_call_succeed then
 				l_type := l_icd_prepared.get_type
+				fixme ("Use NATURAL_xxx when ready")
+				
 				inspect l_type
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_boolean then
-					create {EIFNET_DEBUG_BASIC_VALUE [BOOLEAN]} Result.make (a_icd, Edv_formatter.prepared_icor_debug_value_as_boolean (l_icd_prepared))
+					create {EIFNET_DEBUG_BASIC_VALUE [BOOLEAN]} Result.make (a_icd, sk_bool, 
+								Edv_formatter.prepared_icor_debug_value_as_boolean (l_icd_prepared))
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_char then
-					create {EIFNET_DEBUG_CHARACTER_VALUE} Result.make (a_icd, Edv_formatter.prepared_icor_debug_value_as_character (l_icd_prepared))
---				when feature {MD_SIGNATURE_CONSTANTS}.element_type_pinned then
+					create {EIFNET_DEBUG_CHARACTER_VALUE} Result.make (a_icd, sk_char,
+								Edv_formatter.prepared_icor_debug_value_as_character (l_icd_prepared))
 				when
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_i,
 					feature {MD_SIGNATURE_CONSTANTS}.element_type_u
 				then
-					create {EIFNET_DEBUG_BASIC_VALUE [POINTER]} Result.make (a_icd, Edv_formatter.prepared_icor_debug_value_as_pointer (l_icd_prepared))
-				when 
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_i1,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_u1 
-				then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_8]} Result.make (a_icd, Edv_formatter.prepared_icor_debug_value_as_integer_8 (l_icd_prepared))
-				when 
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_i2,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_u2 
-				then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_16]} Result.make (a_icd, Edv_formatter.prepared_icor_debug_value_as_integer_16 (l_icd_prepared))
-				when 
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_i4,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_u4
-				then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER]} Result.make (a_icd, Edv_formatter.prepared_icor_debug_value_as_integer (l_icd_prepared))
-				when 
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_i8,
-					feature {MD_SIGNATURE_CONSTANTS}.element_type_u8
-				then
-					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_64]} Result.make (a_icd, Edv_formatter.prepared_icor_debug_value_as_integer_64 (l_icd_prepared))
+					create {EIFNET_DEBUG_BASIC_VALUE [POINTER]} Result.make (a_icd, sk_pointer, 
+								Edv_formatter.prepared_icor_debug_value_as_pointer (l_icd_prepared))
+								
+				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u1 then
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_8]} Result.make (a_icd, sk_uint8, 
+								Edv_formatter.prepared_icor_debug_value_as_natural_8 (l_icd_prepared))
+				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u2 then
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_16]} Result.make (a_icd, sk_uint16, 
+								Edv_formatter.prepared_icor_debug_value_as_natural_16 (l_icd_prepared))
+				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u4 then
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER]} Result.make (a_icd, sk_uint32, 
+								Edv_formatter.prepared_icor_debug_value_as_natural_32 (l_icd_prepared))
+				when feature {MD_SIGNATURE_CONSTANTS}.element_type_u8 then
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_64]} Result.make (a_icd, sk_uint64, 
+								Edv_formatter.prepared_icor_debug_value_as_natural_64 (l_icd_prepared))
+
+				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i1 then
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_8]} Result.make (a_icd, sk_int8, 
+								Edv_formatter.prepared_icor_debug_value_as_integer_8 (l_icd_prepared))
+				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i2 then
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_16]} Result.make (a_icd, sk_int16, 
+								Edv_formatter.prepared_icor_debug_value_as_integer_16 (l_icd_prepared))
+				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i4 then
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER]} Result.make (a_icd, sk_int32, 
+								Edv_formatter.prepared_icor_debug_value_as_integer_32 (l_icd_prepared))
+				when feature {MD_SIGNATURE_CONSTANTS}.element_type_i8 then
+					create {EIFNET_DEBUG_BASIC_VALUE [INTEGER_64]} Result.make (a_icd, sk_int64, 
+								Edv_formatter.prepared_icor_debug_value_as_integer_64 (l_icd_prepared))
+								
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_r4 then
-					create {EIFNET_DEBUG_BASIC_VALUE [REAL]} Result.make (a_icd, Edv_formatter.prepared_icor_debug_value_as_real (l_icd_prepared))
+					create {EIFNET_DEBUG_BASIC_VALUE [REAL]} Result.make (a_icd, sk_real32, 
+								Edv_formatter.prepared_icor_debug_value_as_real (l_icd_prepared))
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_r8 then
-					create {EIFNET_DEBUG_BASIC_VALUE [DOUBLE]} Result.make (a_icd, Edv_formatter.prepared_icor_debug_value_as_double (l_icd_prepared))
+					create {EIFNET_DEBUG_BASIC_VALUE [DOUBLE]} Result.make (a_icd, sk_real64, 
+								Edv_formatter.prepared_icor_debug_value_as_double (l_icd_prepared))
 
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_byref then
 					create {EIFNET_DEBUG_REFERENCE_VALUE} Result.make (a_icd, l_icd_prepared)
@@ -88,28 +105,18 @@ feature -- Access
 				when feature {MD_SIGNATURE_CONSTANTS}.element_type_szarray then
 					create {EIFNET_DEBUG_NATIVE_ARRAY_VALUE} Result.make (a_icd, l_icd_prepared)
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_ptr then
---					do_nothing
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_end then
-----					do_nothing
-----				when feature {MD_SIGNATURE_CONSTANTS}.element_type_sentinel then
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_void then
-----					do_nothing
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_array then
-----					do_nothing
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_typedbyref then
-----					do_nothing
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_fnptr then
-----					do_nothing
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_cmod_reqd then
-----					do_nothing
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_cmod_opt then
-----					do_nothing
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_internal then
-----					do_nothing
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_max then
-----					do_nothing
 --				when feature {MD_SIGNATURE_CONSTANTS}.element_type_modifier then
-----					do_nothing
+--				when feature {MD_SIGNATURE_CONSTANTS}.element_type_sentinel then
+--				when feature {MD_SIGNATURE_CONSTANTS}.element_type_pinned then
 				else
 					create {EIFNET_DEBUG_UNKNOWN_TYPE_VALUE} Result.make (a_icd, l_icd_prepared)
 				end

@@ -186,37 +186,37 @@ feature {NONE} -- Implementation
 				inspect
 					sk_type
 				when Sk_bool then
-					create {DEBUG_VALUE [BOOLEAN]} attr.make_attribute (attr_name, e_class, to_boolean (c_tread))
+					create {DEBUG_VALUE [BOOLEAN]} attr.make_attribute (sk_type, attr_name, e_class, to_boolean (c_tread))
 				when Sk_char then
-					create {CHARACTER_VALUE} attr.make_attribute (attr_name, e_class, to_character (c_tread))
+					create {CHARACTER_VALUE} attr.make_attribute (sk_type, attr_name, e_class, to_character (c_tread))
 				when Sk_wchar then
-					create {DEBUG_VALUE [WIDE_CHARACTER]} attr.make_attribute (attr_name, e_class, to_wide_char (c_tread))
+					create {DEBUG_VALUE [WIDE_CHARACTER]} attr.make_attribute (sk_type, attr_name, e_class, to_wide_char (c_tread))
 				when Sk_uint8 then
 					fixme ("Use NATURAL when compiler is bootstrapped")
-					create {DEBUG_VALUE [INTEGER_8]} attr.make_attribute (attr_name, e_class, to_natural_8 (c_tread))
+					create {DEBUG_VALUE [INTEGER_8]} attr.make_attribute (sk_type, attr_name, e_class, to_natural_8 (c_tread))
 				when Sk_uint16 then
 					fixme ("Use NATURAL when compiler is bootstrapped")
-					create {DEBUG_VALUE [INTEGER_16]} attr.make_attribute (attr_name, e_class, to_natural_16 (c_tread))
+					create {DEBUG_VALUE [INTEGER_16]} attr.make_attribute (sk_type, attr_name, e_class, to_natural_16 (c_tread))
 				when Sk_uint32 then
 					fixme ("Use NATURAL when compiler is bootstrapped")
-					create {DEBUG_VALUE [INTEGER]} attr.make_attribute (attr_name, e_class, to_natural_32 (c_tread))
+					create {DEBUG_VALUE [INTEGER]} attr.make_attribute (sk_type, attr_name, e_class, to_natural_32 (c_tread))
 				when Sk_uint64 then
 					fixme ("Use NATURAL when compiler is bootstrapped")
-					create {DEBUG_VALUE [INTEGER_64]} attr.make_attribute (attr_name, e_class, to_natural_64 (c_tread))
+					create {DEBUG_VALUE [INTEGER_64]} attr.make_attribute (sk_type, attr_name, e_class, to_natural_64 (c_tread))
 				when Sk_int8 then
-					create {DEBUG_VALUE [INTEGER_8]} attr.make_attribute (attr_name, e_class, to_integer_8 (c_tread))
+					create {DEBUG_VALUE [INTEGER_8]} attr.make_attribute (sk_type, attr_name, e_class, to_integer_8 (c_tread))
 				when Sk_int16 then
-					create {DEBUG_VALUE [INTEGER_16]} attr.make_attribute (attr_name, e_class, to_integer_16 (c_tread))
+					create {DEBUG_VALUE [INTEGER_16]} attr.make_attribute (sk_type, attr_name, e_class, to_integer_16 (c_tread))
 				when Sk_int32 then
-					create {DEBUG_VALUE [INTEGER]} attr.make_attribute (attr_name, e_class, to_integer (c_tread))
+					create {DEBUG_VALUE [INTEGER]} attr.make_attribute (sk_type, attr_name, e_class, to_integer (c_tread))
 				when Sk_int64 then
-					create {DEBUG_VALUE [INTEGER_64]} attr.make_attribute (attr_name, e_class, to_integer_64 (c_tread))
+					create {DEBUG_VALUE [INTEGER_64]} attr.make_attribute (sk_type, attr_name, e_class, to_integer_64 (c_tread))
 				when Sk_real32 then
-					create {DEBUG_VALUE [REAL]} attr.make_attribute (attr_name, e_class, to_real (c_tread))
+					create {DEBUG_VALUE [REAL]} attr.make_attribute (sk_type, attr_name, e_class, to_real (c_tread))
 				when Sk_real64 then
-					create {DEBUG_VALUE [DOUBLE]} attr.make_attribute (attr_name, e_class, to_double (c_tread))
+					create {DEBUG_VALUE [DOUBLE]} attr.make_attribute (sk_type, attr_name, e_class, to_double (c_tread))
 				when Sk_pointer then
-					create {DEBUG_VALUE [POINTER]} attr.make_attribute (attr_name, e_class, to_pointer (c_tread))
+					create {DEBUG_VALUE [POINTER]} attr.make_attribute (sk_type, attr_name, e_class, to_pointer (c_tread))
 				when Sk_bit then
 					create {BITS_VALUE} attr.make_attribute (attr_name, e_class, c_tread)
 				when Sk_exp then

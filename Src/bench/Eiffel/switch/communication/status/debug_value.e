@@ -13,24 +13,25 @@ inherit
 		undefine
 			is_equal
 		end
-	
+
 create {RECV_VALUE, ATTR_REQUEST,CALL_STACK_ELEMENT, DEBUG_VALUE_EXPORTER}
 	make, make_attribute
 	
 feature {NONE} -- Initialization
 
-	make (v: like value) is
+	make (a_sk_type: INTEGER; v: like value) is
 			-- 	Set `value' to `v'.
 		require
 			v_not_void: v /= Void
 		do
 			set_default_name
 			value := v
+			sk_type := a_sk_type
 		ensure
 			value_set: value = v
 		end
 
-	make_attribute (attr_name: like name; a_class: like e_class; v: like value) is
+	make_attribute (a_sk_type: INTEGER; attr_name: like name; a_class: like e_class; v: like value) is
 			-- Set `attr_name' to `name' and `value' to `v'.
 		require
 			not_attr_name_void: attr_name /= Void
@@ -42,11 +43,14 @@ feature {NONE} -- Initialization
 				is_attribute := True
 			end
 			value := v
+			sk_type := a_sk_type			
 		ensure
 			value_set: value = v
 		end
 		
 feature -- Access
+
+	sk_type: INTEGER
 
 	value: G
 			-- Value of object.
@@ -59,34 +63,23 @@ feature -- Access
 		once
 			l_name := value.generator
 			system := Eiffel_system.system
-			if l_name.is_equal (natural_8_name) then
-				Result := system.natural_8_class.compiled_class
-			elseif l_name.is_equal (natural_16_name) then
-				Result := system.natural_16_class.compiled_class
-			elseif l_name.is_equal (natural_32_name) then
-				Result := system.natural_32_class.compiled_class
-			elseif l_name.is_equal (natural_64_name) then
-				Result := system.natural_64_class.compiled_class
-			elseif l_name.is_equal (Integer_8_name) then
-				Result := system.Integer_8_class.compiled_class
-			elseif l_name.is_equal (Integer_16_name) then
-				Result := system.Integer_16_class.compiled_class
-			elseif l_name.is_equal (Integer_32_name) then
-				Result := system.Integer_32_class.compiled_class
-			elseif l_name.is_equal (Integer_64_name) then
-				Result := system.Integer_64_class.compiled_class
-			elseif l_name.is_equal (Boolean_name) then
-				Result := system.Boolean_class.compiled_class
-			elseif l_name.is_equal (Character_name) then
-				Result := system.Character_class.compiled_class
-			elseif l_name.is_equal (Wide_char_name) then
-				Result := system.Wide_char_class.compiled_class
-			elseif l_name.is_equal (Double_name) then
-				Result := system.real_64_class.compiled_class
-			elseif l_name.is_equal (Real_name) then
-				Result := system.real_32_class.compiled_class
-			elseif l_name.is_equal (Pointer_name) then
-				Result := system.Pointer_class.compiled_class
+			inspect sk_type
+			when sk_uint8   then Result := system.natural_8_class.compiled_class				
+			when sk_uint16  then Result := system.natural_16_class.compiled_class
+			when sk_uint32  then Result := system.natural_32_class.compiled_class
+			when sk_uint64  then Result := system.natural_64_class.compiled_class
+			when sk_int8    then Result := system.Integer_8_class.compiled_class
+			when sk_int16   then Result := system.Integer_16_class.compiled_class
+			when sk_int32   then Result := system.Integer_32_class.compiled_class
+			when sk_int64   then Result := system.Integer_64_class.compiled_class
+			when sk_bool    then Result := system.Boolean_class.compiled_class
+			when sk_char    then Result := system.Character_class.compiled_class
+			when sk_wchar   then Result := system.Wide_char_class.compiled_class
+			when sk_real32  then Result := system.real_32_class.compiled_class
+			when sk_real64  then Result := system.real_64_class.compiled_class
+			when sk_pointer then Result := system.Pointer_class.compiled_class
+			else
+				check known_type: False	end
 			end
 		ensure then
 			non_void_result: Result /= Void
@@ -95,75 +88,73 @@ feature -- Access
 	dump_value: DUMP_VALUE is
 			-- Dump_value corresponding to `Current'.
 		local
+			uint8val: INTEGER_8_REF
+			uint16val: INTEGER_16_REF
+			uint32val: INTEGER_REF
+			uint64val: INTEGER_64_REF
+
 			int8val: INTEGER_8_REF
 			int16val: INTEGER_16_REF
-			intval: INTEGER_REF
+			int32val: INTEGER_REF
 			int64val: INTEGER_64_REF
+			
 			realval: REAL_REF
 			dblval: DOUBLE_REF
-			wcval: WIDE_CHARACTER_REF
 			cval: CHARACTER_REF
 			ptrval: POINTER_REF
 			bval: BOOLEAN_REF
-			val: ANY
-			syst: SYSTEM_I
+--			wcval: WIDE_CHARACTER_REF
 		do
-			val := value
-			intval ?= val
-			syst := Eiffel_system.System
-			if intval /= Void then
-				create Result.make_integer (intval.item, Dynamic_class)
+			fixme ("Use NATURAL_XX instead when compiler support them.")
+			
+			inspect sk_type
+			when sk_uint8   then
+				uint8val ?= value
+				create Result.make_integer_32 (uint8val.item.to_integer, Dynamic_class)
+			when sk_uint16  then
+				uint16val ?= value
+				create Result.make_integer_32 (uint16val.item.to_integer, Dynamic_class)
+			when sk_uint32  then
+				uint32val ?= value
+				create Result.make_integer_32 (uint32val.item, Dynamic_class)
+			when sk_uint64  then
+				uint64val ?= value
+				create Result.make_integer_64 (uint64val.item, Dynamic_class)
+				
+			when sk_int8    then
+				int8val ?= value
+				create Result.make_integer_32 (int8val.item.to_integer, Dynamic_class)
+			when sk_int16   then
+				int16val ?= value
+				create Result.make_integer_32 (int16val.item.to_integer, Dynamic_class)
+			when sk_int32   then
+				int32val ?= value
+				create Result.make_integer_32 (int32val.item, Dynamic_class)
+			when sk_int64   then
+				int64val ?= value
+				create Result.make_integer_64 (int64val.item, Dynamic_class)
+				
+			when sk_bool    then
+				bval ?= value
+				create Result.make_boolean (bval.item, Dynamic_class)
+			when sk_char    then
+				cval ?= value
+				create Result.make_character (cval.item, Dynamic_class)
+			when sk_wchar   then
+					--| FIXME XR: Why is there no conversion feature in WIDE_CHARACTER?!!!
+--				wcval ?= value
+				create Result.make_character ('%U', Dynamic_class)
+			when sk_real32  then
+				realval ?= value
+				create Result.make_real (realval.item, Dynamic_class)
+			when sk_real64  then
+				dblval ?= value
+				create Result.make_double (dblval.item, Dynamic_class)
+			when sk_pointer then
+				ptrval ?= value
+				create Result.make_pointer (ptrval.item, Dynamic_class)
 			else
-				bval ?= val
-				if bval /= Void then
-					create Result.make_boolean (bval.item, Dynamic_class)
-				else
-					ptrval ?= val
-					if ptrval /= Void then
-						create Result.make_pointer (ptrval.item, Dynamic_class)
-					else
-						dblval ?= val
-						if dblval /= Void then
-							create Result.make_double (dblval.item, Dynamic_class)
-						else
-							realval ?= val
-							if realval /= Void then
-								create Result.make_real (realval.item, Dynamic_class)
-							else
-								int8val ?= val
-								if int8val /= Void then
-									create Result.make_integer (int8val.to_integer, Dynamic_class)
-								else
-									int16val ?= val
-									if int16val /= Void then
-										create Result.make_integer (int16val.to_integer, Dynamic_class)
-									else
-										int64val ?= val
-										if int64val /= Void then
-											create Result.make_integer_64 (int64val.item, Dynamic_class)
-										else
-											wcval ?= val
-											if wcval /= Void then
-												--| FIXME XR: Why is there no conversion feature in WIDE_CHARACTER?!!!
-												create Result.make_character ('%U', Dynamic_class)
-											else
-												cval ?= val
-												if cval /= Void then
-													create Result.make_character (cval.item, Dynamic_class)
-												else
-													check
-														False
-														-- Unknown basic type?!
-													end
-												end
-											end
-										end
-									end
-								end
-							end
-						end
-					end
-				end
+				check known_type: False	end
 			end
 		end
 
@@ -220,21 +211,4 @@ feature -- ouput
 			Result := Immediate_value
 		end
 
-feature {NONE} -- Class constants
-
-	Boolean_name: STRING is "BOOLEAN"
-	Character_name: STRING is "CHARACTER"
-	Wide_char_name: STRING is "WIDE_CHARACTER"
-	natural_8_name: STRING is "NATURAL_8"
-	natural_16_name: STRING is "NATURAL_16"
-	natural_32_name: STRING is "NATURAL_32"
-	natural_64_name: STRING is "NATURAL_64"
-	Integer_8_name: STRING is "INTEGER_8"
-	Integer_16_name: STRING is "INTEGER_16"
-	Integer_32_name: STRING is "INTEGER_32"
-	Integer_64_name: STRING is "INTEGER_64"
-	Double_name: STRING is "DOUBLE"
-	Real_name: STRING is "REAL"
-	Pointer_name: STRING is "POINTER"
-	
 end -- class DEBUG_VALUE

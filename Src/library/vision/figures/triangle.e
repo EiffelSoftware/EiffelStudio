@@ -13,7 +13,7 @@ inherit
 			make
 		redefine
 			set_number_of_sides,
-			is_surimposable
+			is_superimposable
 		end
 
 creation
@@ -45,18 +45,19 @@ feature -- Modification & Insertion
 
 feature -- Status report
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the current triangle surimposable to `other' ?
+	is_superimposable (other: like Current): BOOLEAN is
+			-- Is the current triangle superimposable to `other' ?
 			--| not finished
 		require else
-			other_exists: not (other = Void)
+			other_exists: other /= Void
 		do
-			Result := center.is_surimposable (other.center) and (radius = other.radius) and (orientation = other.orientation)
+			Result := center.is_superimposable (other.center) and 
+				(radius = other.radius) and (orientation = other.orientation)
 		end;
 
-	invariant
+invariant
 
-	number_of_sides = 3
+	side_constraint: number_of_sides = 3
 
 end -- class TRIANGLE 
 

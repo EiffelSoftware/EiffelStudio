@@ -154,7 +154,7 @@ feature -- Modification & Insertion
 	set_origin (p: like origin) is
 			-- Set `origin' to `p'.
 		require else
-			p_exists: not (p = Void)
+			p_exists: p /= Void
 		do
 			origin := p
 		ensure then
@@ -361,7 +361,7 @@ feature {WORLD} -- Modification & Insertion
 		do
 			origin := Void
 		ensure then
-			(origin = Void)
+			no_origin: origin = Void
 		end;
 
 feature {WORLD} -- Cursor
@@ -381,9 +381,6 @@ feature {WORLD} -- Cursor
 				al_item.go_to (linked_list_cursor)
 			end
 		end;
-
-invariant
-
 
 end --  class WORLD
 

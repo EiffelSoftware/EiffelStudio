@@ -125,7 +125,7 @@ feature -- Modification & Insertion
 		do
 			origin_user_type := 3;
 		ensure then
-			origin.is_surimposable (center)
+			origin.is_superimposable (center)
 		end;
 
 	set_origin_to_upper_left is
@@ -133,13 +133,13 @@ feature -- Modification & Insertion
 		do
 			origin_user_type := 2;
 		ensure
-			origin.is_surimposable (upper_left)
+			origin.is_superimposable (upper_left)
 		end;
 
 	set_upper_left (a_point: like upper_left) is
 			-- Set `upper_left' to `a_point'.
 		require
-			a_point_exists: not (a_point = Void)
+			a_point_exists: a_point /= Void
 		do
 			upper_left := a_point;
 			set_conf_modified
@@ -215,12 +215,13 @@ feature -- Output
 
 feature -- Status report
 	
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the current rectangle surimposable to `other' ?
+	is_superimposable (other: like Current): BOOLEAN is
+			-- Is the current rectangle superimposable to `other' ?
 		require else
-			other_exists: not (other = Void)
+			other_exists: other /= Void
 		do
-			Result := upper_left.is_surimposable (other.upper_left) and (width = other.width) and (height = other.height)
+			Result := upper_left.is_superimposable (other.upper_left) and 
+				(width = other.width) and (height = other.height)
 		end;
 
 feature {CONFIGURE_NOTIFY} -- Updating
@@ -254,12 +255,12 @@ feature {NONE} -- Access
 
 invariant
 
-	origin_user_type <= 3;
-	orientation < 360;
-	orientation >= 0;
-	width >= 0;
-	height >= 0;
-	not (upper_left = Void)
+	origin_user_type_constraint: origin_user_type <= 3;
+	orientation_small_enough: orientation < 360;
+	orientation_large_enough: orientation >= 0;
+	non_negative_width: width >= 0;
+	non_negative_height: height >= 0;
+	upper_left_exists: upper_left /= Void
 
 end -- class RECTANGLE
 

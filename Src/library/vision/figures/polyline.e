@@ -221,7 +221,7 @@ feature  -- Modification & Insertion
 		require else
 			a_smaller_than_360: a < 360;
 			a_positive: a >= 0.0;
-			point_exists: not (p = Void)
+			point_exists: p /= Void
 		local
 			keep_cursor: CURSOR;
 		do
@@ -242,7 +242,7 @@ feature  -- Modification & Insertion
 			-- Scale figure by `f' relative to `p'.
 		require else
 			scale_factor_positive: f > 0.0;
-			point_exists: not (p = Void)
+			point_exists: p /= Void
 		local
 			keep_cursor: CURSOR;
 		do
@@ -265,7 +265,7 @@ feature  -- Modification & Insertion
 		require else
 			a_smaller_than_360: a < 360;
 			a_positive: a >= 0.0;
-			origin_exists: not (origin = Void)
+			origin_exists: origin /= Void
 		local
 			keep_cursor: CURSOR;
 		do
@@ -286,7 +286,7 @@ feature  -- Modification & Insertion
 			-- Scale figure by `f' relative to `origin'.
 		require else
 			scale_factor_positive: f > 0.0;
-			origin_exists: not (origin = Void)
+			origin_exists: origin /= Void
 		local
 			keep_cursor: CURSOR;
 		do
@@ -307,17 +307,17 @@ feature  -- Modification & Insertion
 	set_origin (p: like origin) is
 			-- Set `origin' to `p'.
 		require else
-			p_exists: not (p = Void)
+			p_exists: p /= Void
 		do
 			origin := p
 		ensure then
-			origin = p
+			origin_set: origin = p
 		end;
 
 	translate (v: VECTOR) is
 			-- Translate current figure by `v'.
 		require else
-			vector_exists: not (v = Void)
+			vector_exists: v /= Void
 		local
 			keep_cursor: CURSOR;
 		do
@@ -409,7 +409,7 @@ feature -- Output
 	draw is
 			-- Draw the figure in `drawing'.
 		require else
-			a_drawing_attached: not (drawing = Void);
+			a_drawing_attached: drawing /= Void;
 			one_segment_at_least: count > 1
 		local
 			p1, p2: POINT;
@@ -454,8 +454,8 @@ feature -- Output
 
 feature -- Status report
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the figure surimposable to `other' ?
+	is_superimposable (other: like Current): BOOLEAN is
+			-- Is the figure superimposable to `other' ?
 		local
 			keep_cursor: CURSOR;
 			other_keep_cursor: CURSOR;
@@ -469,7 +469,7 @@ feature -- Status report
 			until
 				not Result or off or other.off
 			loop
-				Result := Result and item.is_surimposable (other.item);
+				Result := Result and item.is_superimposable (other.item);
 				forth;
 				other.forth;
 			end;
@@ -485,7 +485,7 @@ feature {NONE} -- Modification & Insertion
 		do
 			origin := Void
 		ensure then
-			(origin = Void)
+			no_origin: origin = Void
 		end;
 
 feature {NONE} -- Updating

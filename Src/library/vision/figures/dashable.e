@@ -19,7 +19,7 @@ feature -- Modification & Insertion
 	set_dash_pattern (a_dash: DASH) is
 			-- Set pattern of dash to be used to draw lines.
 		require
-			a_dash_exists: not (a_dash = Void);
+			a_dash_exists: a_dash /= Void;
 			a_dash_valid: not a_dash.empty
 		do
 			dash_pattern := a_dash;
@@ -85,7 +85,7 @@ feature {NONE} -- Access
 
 invariant
 
-	(not (dash_pattern = Void)) implies (not dash_pattern.empty)
+	pattern_when_exists: dash_pattern /= Void implies (not dash_pattern.empty)
 
 end -- class DASHABLE
 

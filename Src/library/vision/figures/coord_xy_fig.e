@@ -89,25 +89,25 @@ feature -- Basic operation
 	infix "-" (other: like Current): VECTOR is
             		-- Current point translated by -`other'
         	require
-            		other_exists: not (other = Void)
+            		other_exists: other /= Void
         	do
             		!! Result;
             		Result.set (x - other.x, y - other.y)
         	ensure
-            		Result.x = x - other.x;
-            		Result.y = y - other.y
+            		x_set: Result.x = x - other.x;
+            		y_set: Result.y = y - other.y
         	end;
 
     	infix "+" (other: VECTOR): like Current is
             		-- Current point translated by `other'
         	require
-            		other_exists: not (other = Void)
+            		other_exists: other /= Void
         	do
             		!! Result;
             		Result.set (x + other.x, y + other.y)
         	ensure
-            		Result.x = x + other.x;
-            		Result.y = y + other.y
+            		x_set: Result.x = x + other.x;
+            		y_set: Result.y = y + other.y
         	end;
 
 	prefix "-": like Current is
@@ -116,8 +116,8 @@ feature -- Basic operation
             		!! Result;
             		Result.set (-x, -y)
         	ensure
-            		Result.x = -x;
-            		Result.y = -y
+            		x_set: Result.x = -x;
+            		y_set: Result.y = -y
         	end;
 
     	prefix "+": like Current is
@@ -126,7 +126,7 @@ feature -- Basic operation
             		!! Result;
             		Result.set (x, y)
         	ensure
-            		Result.is_surimposable (Current)
+            		superimposable_result: Result.is_superimposable (Current)
         	end;
 
 
@@ -139,7 +139,7 @@ feature -- Duplication
             		!! Result;
             		Result.set (x, y)
         	ensure
-        	    	Result.is_surimposable (Current)
+        	    	superimposable_result: Result.is_superimposable (Current)
         	end;
 
 
@@ -148,40 +148,40 @@ feature -- Modification & Insertion
 	add (v: VECTOR) is
             		-- add `v' to the two_coord.
         	require
-            		vector_exists: not (v = Void)
+            		vector_exists: v /= Void
         	do
             		x := x + v.x;
             		y := y + v.y;
 					set_conf_modified
         	ensure
-            		x = old x + v.x;
-            		y = old y + v.y
+            		updated_x: x = old x + v.x;
+            		updated_y: y = old y + v.y
         	end;
       	
     	set_max (other: like Current) is
             		-- Set both coordinates to the maximum between current and `other'.
         	require
-            		other_exists: not (other = Void)
+            		other_exists: other /= Void
         	do
             		x := max (x, other.x);
             		y := max (y, other.y);
 					set_conf_modified
         	ensure
-            		x =  max (old x, other.x);
-            		y =  max (old y, other.y)
+            	max_x: x =  max (old x, other.x);
+            	max_y: y =  max (old y, other.y)
         	end;
 
     	set_min (other: like Current) is
             		-- Set both coordinates to the minimum between current and `other'.
         	require
-            		other_exists: not (other = Void)
+            		other_exists: other /= Void
         	do
             		x := min (x, other.x);
             		y := min (y, other.y);
 					set_conf_modified
         	ensure
-            		x =  min (old x, other.x);
-            		y =  min (old y, other.y)
+            		min_x: x =  min (old x, other.x);
+            		min_y: y =  min (old y, other.y)
         	end;
 
     	set_origin_to_himself is
@@ -196,7 +196,7 @@ feature -- Modification & Insertion
             		x := x1;
 					set_conf_modified
         	ensure
-            		x = x1
+            	x_set: x = x1
         	end;
 
     	set_y (y1: INTEGER) is
@@ -205,20 +205,20 @@ feature -- Modification & Insertion
             		y := y1;
 					set_conf_modified
         	ensure
-            		y = y1
+            		y_set: y = y1
         	end;
 
     	subtract (other: VECTOR) is
             		-- Translate current point by -`other'.
         	require
-            		other_exists: not (other = Void)
+            		other_exists: other /= Void
         	do
             		x := x - other.x;
             		y := y - other.y;
 					set_conf_modified
         	ensure
-            		x = old x - other.x;
-            		y = old y - other.y
+            		updated_x: x = old x - other.x;
+            		updated_y: y = old y - other.y
         	end;
 
     	xyrotate (a: REAL; px,py: INTEGER) is
@@ -259,15 +259,15 @@ feature -- Modification & Insertion
             		y := y + vy;
 					set_conf_modified
         	ensure then
-            		x = old x + vx;
-            		y = old y + vy
+            		x_translated: x = old x + vx;
+            		y_translated: y = old y + vy
         	end;
 
 feature -- Status report
 
 		
-    	is_surimposable (other: like Current): BOOLEAN is
-            		-- Is the point surimposable to `other' ?
+    	is_superimposable (other: like Current): BOOLEAN is
+            		-- Is the point superimposable to `other' ?
         	do
             		Result := (x=other.x) and (y=other.y)
         	end;
@@ -280,7 +280,7 @@ feature {NONE} -- Modification & Insertion
 
 invariant
 
-    	origin_user_type <= 2
+    	origin_user_type_constraint: origin_user_type <= 2
 
 end -- COORD_XY_FIG
 

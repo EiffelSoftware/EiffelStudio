@@ -214,7 +214,6 @@ invariant
 	less_than_max_plane: plane < max_plane;
 	plane_same_as_parent: (conf_notified /= Void) implies (conf_notified.plane = plane)
 
-
 end -- class FIGURE
 
 

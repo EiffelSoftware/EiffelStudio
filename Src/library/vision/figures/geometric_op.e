@@ -38,7 +38,9 @@ feature -- Modification & Insertion
 			-- Rotate figure by `a' relative to `p'.
 			-- Angle `a' is measured in degrees.
 		require
-			point_exists: not (p = Void)
+			point_exists: p /= Void
+			angle_large_enough: a >= 0
+			angle_small_enough: a <= 360
 		do
 			xyrotate (a, p.x, p.y)
 		end;
@@ -47,7 +49,7 @@ feature -- Modification & Insertion
 			-- Scale figure by `f' relative to `p'.
 		require
 			scale_factor_positive: f > 0.0;
-			point_exists: not (p = Void)
+			point_exists: p = Void
 		do
 			xyscale (f, p.x, p.y)
 		end;
@@ -56,7 +58,9 @@ feature -- Modification & Insertion
 			-- Rotate figure by `a' relative to `origin'.
 			-- Angle is measured in degrees.
 		require
-			origin_exists: not (origin = Void)
+			origin_exists: origin /= Void
+			angle_large_enough: a >= 0
+			angle_small_enough: a < 360
 		do
 			xyrotate (a, origin.x, origin.y)
 		end;
@@ -64,7 +68,7 @@ feature -- Modification & Insertion
 	self_scale (f: REAL) is
 			-- Scale figure by `f' relative to `origin'.
 		require
-			origin_exists: not (origin = Void);
+			origin_exists: origin /= Void;
 			scale_factor_positive: f > 0.0
 		do
 			xyscale (f, origin.x, origin.y)
@@ -79,7 +83,7 @@ feature -- Modification & Insertion
 	set_origin (an_origin: like origin) is
 			-- Set `origin' to `an_origin'.
 		require
-			an_origin_exists: not (an_origin = Void)
+			an_origin_exists: an_origin /= Void
 		do
 			origin_user_type := 1;
 			origin_user := an_origin
@@ -88,7 +92,7 @@ feature -- Modification & Insertion
 	translate (v: VECTOR) is
 			-- Translate current figure by `v'.
 		require
-			vector_exists: not (v = Void)
+			vector_exists: v /= Void
 		do
 			xytranslate (v.x, v.y)
 		end;
@@ -116,9 +120,17 @@ feature -- Modification & Insertion
 
 feature -- Status report
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the figure surimposable to `other' ?
+	is_superimposable (other: like Current): BOOLEAN is
+			-- Is the figure able to be superimposed on `other' ?
 		deferred
+		end
+
+	is_surimposable (other: like Current): BOOLEAN is
+			-- Is the figure superimposable to `other' ?
+		obsolete
+			"Use is_superimposable instead."
+		do
+			Result := is_superimposable (other)
 		end;
 
 
@@ -135,8 +147,8 @@ feature {NONE} -- Access
 
 invariant
 
-	origin_user_type >= 0;
-	(origin_user_type = 1) implies (not (origin_user = Void))
+	origin_user_type_constraint: origin_user_type >= 0;
+	user_origin_constraint: (origin_user_type = 1) implies origin_user /= Void
 
 end -- GEOMETRIC_OP
 

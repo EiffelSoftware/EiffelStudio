@@ -12,7 +12,7 @@ inherit
 		rename 	
 			make as ell_make
 		redefine
-			draw, is_surimposable
+			draw, is_superimposable
 		end;
 
 	ANGLE_ROUT
@@ -80,11 +80,11 @@ feature -- Output
 			-- Draw the slice.
 		do
 			if drawing.is_drawable then
-				if not (interior = Void) then
+				if interior /= Void then
 					interior.set_drawing_attributes (drawing);
 					drawing.fill_arc (center, radius1, radius2, angle1, angle2, orientation, arc_style)
 				end;
-				if not (path = Void) then
+				if path /= Void then
 					path.set_drawing_attributes (drawing);
 					drawing.draw_arc (center, radius1, radius2, angle1, angle2, orientation, arc_style)
 				end
@@ -93,23 +93,26 @@ feature -- Output
 
 feature -- Status report
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the current slice surimposable to `other' ?
+	is_superimposable (other: like Current): BOOLEAN is
+			-- Is the current slice superimposable to `other' ?
 			--| not finished
 		require else
-			other_exists: not (other = Void)
+			other_exists: other /= Void
 		do
-			Result := center.is_surimposable (other.center) and (radius1 = other.radius1) and (radius2 = other.radius2) and (orientation = other.orientation) and (angle1 = other.angle1) and (angle2 = other.angle2)
+			Result := center.is_superimposable (other.center) and 
+				(radius1 = other.radius1) and (radius2 = other.radius2) and
+				(orientation = other.orientation) and (angle1 = other.angle1)
+				and (angle2 = other.angle2)
 		end;
 
 
 invariant
 
-	angle1 < 360;
-	angle1 >= 0;
-	angle2 <= 360;
-	angle2 >= 0;
-	angle2 /= angle1
+	angle1_small_enough: angle1 < 360;
+	angle1_large_enough: angle1 >= 0;
+	angle2_small_enough: angle2 <= 360;
+	angle2_large_enough: angle2 >= 0;
+	angles_not_equal: angle2 /= angle1
 
 end -- class SLICE
 

@@ -19,7 +19,7 @@ feature -- Modification & Insertion
 	set_foreground_color (a_color: COLOR) is
 			-- Set `foreground_color' to `a_color'.
 		require
-			color_not_void: not (a_color = Void)
+			color_not_void: a_color /= Void
 		do
 			foreground_color := a_color;
 		end;

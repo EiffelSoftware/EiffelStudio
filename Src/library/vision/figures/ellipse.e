@@ -70,12 +70,12 @@ feature -- Modification & Insertion
 	set_center (a_point: like center) is
             		-- Set `center' to `a_point'.
         	require
-            		a_point_exits: not (a_point = Void)
+            		a_point_exits: a_point /= Void
         	do
-            		center := a_point;
-			set_conf_modified
+            	center := a_point;
+				set_conf_modified
         	ensure
-            		center = a_point
+            	center_set: center = a_point
         	end;
 
     	set_orientation (an_orientation: like orientation) is
@@ -95,7 +95,7 @@ feature -- Modification & Insertion
         	do
             		origin_user_type := 2;
         	ensure then
-            		origin.is_surimposable (center)
+            		origin.is_superimposable (center)
         	end;
 
     	set_radius1 (new_radius1: like radius1) is
@@ -153,12 +153,12 @@ feature -- Output
             		-- Draw the ellipse.
         	do
             		if drawing.is_drawable then
-                		if not (interior = Void) then
+                		if interior /= Void then
                     			interior.set_drawing_attributes (drawing);
                     			drawing.fill_arc (center, radius1, radius2, 0, 360,
 								orientation, 0)
                 		end;
-                		if not (path = Void) then
+                		if path /= Void then
                     			path.set_drawing_attributes (drawing);
                     			drawing.draw_arc (center, radius1, radius2, 0, 360,
 								orientation, -1)
@@ -185,26 +185,24 @@ feature -- Updating
 
 feature -- Status report
 
-    	is_surimposable (other: like Current): BOOLEAN is
-            		-- Is the current ellipse surimposable to `other' ?
+    	is_superimposable (other: like Current): BOOLEAN is
+            		-- Is the current ellipse superimposable to `other' ?
             		--| not finished
-        	require else
-            		other_exists: not (other = Void)
         	do
-            		Result := center.is_surimposable (other.center) and (radius1 =
-				other.radius1) and (radius2 = other.radius2) and
-				(orientation = other.orientation)
+            		Result := center.is_superimposable (other.center) and
+					 (radius1 = other.radius1) and (radius2 = other.radius2)
+					 and (orientation = other.orientation)
         	end;
 
 
 invariant
 
-    	origin_user_type <= 2;
-    	radius1 >= 0;
-    	radius2 >= 0;
-    	orientation < 360;
-    	orientation >= 0;
-    	not (center = Void)
+    	origin_user_type_constraint: origin_user_type <= 2;
+    	meaningful_radius1: radius1 >= 0;
+    	meaningful_radius2: radius2 >= 0;
+    	orientation_small_enough: orientation < 360;
+    	orientation_large_enough: orientation >= 0;
+    	center_exists: center /= Void
 
 end -- class ELLIPSE
 

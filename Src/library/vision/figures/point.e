@@ -67,7 +67,7 @@ feature -- Duplication
 			Result := coord_duplicate;
 			Result.set_foreground_color (foreground_color)
 		ensure then
-			Result.is_surimposable (Current);
+			Result.is_superimposable (Current);
 			Result.foreground_color = foreground_color
 		end;
 

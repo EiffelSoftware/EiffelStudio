@@ -63,10 +63,6 @@ feature -- Modification & Insertion
 	rotate (a: REAL; p: like origin) is
 			-- Rotate figure by `a' relative to `p'.
 			-- Angle `a' is measured in degrees.
-		require else
-			a_smaller_than_360: a < 360;
-			a_positive: a >= 0.0;
-			point_exists: not (p = Void)
 		do
 			composite_mark;
 			from
@@ -83,9 +79,6 @@ feature -- Modification & Insertion
 
 	scale (f: REAL; p: like origin) is
 			-- Scale figure by `f' relative to `p'.
-		require else
-			scale_factor_positive: f > 0.0;
-			point_exists: not (p = Void)
 		do
 			composite_mark;
 			from
@@ -103,10 +96,6 @@ feature -- Modification & Insertion
 	self_rotate (a: REAL) is
 			-- Rotate figure by `a' relative to `origin'.
 			-- Angle is measured in degrees.
-		require else
-			a_smaller_than_360: a < 360;
-			a_positive: a >= 0.0;
-			origin_exists: not (origin = Void)
 		do
 			composite_mark;
 			from
@@ -123,9 +112,6 @@ feature -- Modification & Insertion
 
 	self_scale (f: REAL) is
 			-- Scale figure by `f' relative to `origin'.
-		require else
-			scale_factor_positive: f > 0.0;
-			origin_exists: not (origin = Void)
 		do
 			composite_mark;
 			from
@@ -142,8 +128,6 @@ feature -- Modification & Insertion
 
 	translate (v: VECTOR) is
 			-- Translate current figure by `v'.
-		require else
-			vector_exists: not (v = Void)
 		do
 			composite_mark;
 			from
@@ -298,8 +282,8 @@ feature -- Status report
 		deferred
 		end;
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the figure surimposable to `other' ?
+	is_superimposable (other: like Current): BOOLEAN is
+			-- Is the figure superimposable to `other' ?
 		do
 			composite_mark;
 			from
@@ -309,7 +293,7 @@ feature -- Status report
 			until
 				not Result or off or other.off
 			loop
-				Result := Result and item.is_surimposable (other.item);
+				Result := Result and item.is_superimposable (other.item);
 				forth;
 				other.forth;
 			end;
@@ -336,11 +320,6 @@ feature {WORLD,FIGURE,CONFIGURE_NOTIFY} -- Modification & Insertion
 			composite_return;
 			set_conf_modified_with (surround_box)
 		end;
-
-
-
-invariant
-
 
 end --  class COMPOSITE_FIG
 

@@ -38,7 +38,7 @@ feature -- Access
 	contains (p: COORD_XY_FIG): BOOLEAN is
 			-- Is `p' on segment?
 		require else
-			point_exists: not (p = Void)
+			point_exists: p /= Void
 		local
 			t, rsq, dx, dy, dpx, dpy: REAL;
 		do
@@ -62,8 +62,8 @@ feature -- Modification & Insertion
 	set (o1, o2: like p1) is
 			-- Set the two end points of the line.
 		require else
-			o1_exists: not (o1 = Void);
-			o2_exists: not (o2 = Void)
+			o1_exists: o1 /= Void;
+			o2_exists: o2 /= Void
 		do
 			p1 := o1;
 			p2 := o2;
@@ -76,7 +76,7 @@ feature -- Modification & Insertion
 	set_p1 (p: like p1) is
 			-- Set the first point.
 		require else
-			p_exists: not (p = Void)
+			p_exists: p /= Void
 		do
 			p1 := p;
 			set_conf_modified
@@ -87,7 +87,7 @@ feature -- Modification & Insertion
 	set_p2 (p: like p2) is
 			-- Set the second point.
 		require else
-			p_exists: not (p = Void)
+			p_exists: p /= Void
 		do
 			p2 := p;
 			set_conf_modified
@@ -112,18 +112,19 @@ feature -- Status report
 	is_null: BOOLEAN is
 			-- Is the segment null ?
 		do
-			Result := p1.is_surimposable (p2)
+			Result := p1.is_superimposable (p2)
 		end;
 
-	is_surimposable (other: like Current): BOOLEAN is
-			-- Is the line surimposable to `other' ?
+	is_superimposable (other: like Current): BOOLEAN is
+			-- Is the line superimposable to `other' ?
 		require else
-			other_exists: not (other = Void)
+			other_exists: other /= Void
 		do
-			Result := (p1.is_surimposable (other.p1) and p2.is_surimposable (other.p2)) or else (p1.is_surimposable (other.p2) and p2.is_surimposable (other.p1))
+			Result := (p1.is_superimposable (other.p1) and 
+				p2.is_superimposable (other.p2)) or else 
+				(p1.is_superimposable (other.p2) and
+				p2.is_superimposable (other.p1))
 		end;
-
-
 
 end -- class SEGMENT
 

@@ -26,13 +26,9 @@ feature {NONE} -- Creation
 			-- Create a motif bulletin.
 		do
 			widget := gtk_fixed_new
-			widget_index := widget_manager.last_inserted_position			
---			mc ?= oui_parent.implementation;
---			widget_index := widget_manager.last_inserted_position;
---XX			bulletin_make (a_bulletin.identifier, mc, man);
---			set_margin_width (0);
---			set_margin_height (0);
-		end;
+			
+			common_widget_make (man, oui_parent)
+		end
 
 feature -- Status setting
 

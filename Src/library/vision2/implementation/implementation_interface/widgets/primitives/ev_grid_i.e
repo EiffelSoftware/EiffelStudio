@@ -412,7 +412,7 @@ feature -- Measurements
 	row_count: INTEGER
 			-- Number of rows in Current
 
-feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
+feature {EV_GRID_COLUMN_I, EV_GRID_I} -- Implementation
 
 	index_of_column (a_column: EV_GRID_COLUMN): INTEGER is
 			-- index of column `a_column'.
@@ -423,7 +423,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 			Result := grid_columns.key_for_iteration
 		end
 
-feature {EV_GRID_COLUMN_I, EV_GRID_I} -- Implementation
+feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 
 	enlarge_row_list (new_count: INTEGER) is
 			-- Enlarge the row list to to count `new_count'
@@ -482,6 +482,11 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I} -- Implementation
 
 	visible_column_count: INTEGER
 		-- Number of visible columns present in the grid.
+		
+feature {EV_GRID_DRAWER_I} -- Implementation
+
+	drawable: EV_DRAWING_AREA
+		-- Drawing area for `Current' on which all drawing operations are performed.
 
 feature {NONE} -- Implementation
 
@@ -547,9 +552,6 @@ feature {NONE} -- Implementation
 	viewport: EV_VIEWPORT
 		-- Viewport containing `header' and `drawable', permitting the header to be offset
 		-- correctly in relation to the horizontal scroll bar.
-
-	drawable: EV_DRAWING_AREA
-		-- Drawing area for `Current' on which all drawing operations are performed.
 		
 	header: EV_HEADER
 		-- Header displayed at top of `Current'.

@@ -12,6 +12,8 @@ inherit
 			process_element
 		end
 
+	UTILITY_FUNCTIONS
+
 create
 	make_with_document
 
@@ -28,12 +30,6 @@ feature -- Access
 
 	process_element (e: XM_ELEMENT) is
 			-- Process element `e'.
-		local
-			cnt: INTEGER
-			l_text: STRING
-			typer: XM_NODE_TYPER
-			a_cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
-			l_el: XM_ELEMENT
 		do	
 			if link_tag_names.has (e.name) then
 				extract_url_from_link (e)
@@ -59,21 +55,28 @@ feature {NONE} -- Commands
 			-- Extract url value from `e' if it exists
 		local
 			l_element: XM_ELEMENT
-			l_file: RAW_FILE
 			l_url: STRING
 			l_link: DOCUMENT_LINK
 			l_el_name, l_new_link: STRING
 		do
 			l_el_name := "url"
 			l_element ?= e.element_by_name (l_el_name)
-			if l_element /= Void then			
+			if l_element /= Void then
 				l_url := l_element.text
 				if l_url /= Void and then not l_url.is_empty then
+					l_url := tidied_string (l_url)
+							-- Create document link based on `document' and `e' link
 					create l_link.make (document.name, l_url)
 					if document.do_update_link then
+								-- Check link in `l_link' matches link to update
 						if l_link.matches (old_link) then
 							l_element.wipe_out
-							l_new_link := new_link.format (l_link.format_type)
+									-- Create the new link required, but using `document' so
+									-- we know location
+							create new_link.make (document.name, new_link.url)
+									-- Get the url string to replace old link by formatting
+									-- according to current old link formatting (relative, absolute, etc.)
+							l_new_link := clone (new_link.format (l_link.format_type))
 							if l_new_link /= Void then
 								l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, l_new_link))	
 							end
@@ -83,6 +86,21 @@ feature {NONE} -- Commands
 					end					
 				end
 			end
+--			if l_element /= Void then
+--				l_url := l_element.text
+--				if l_url /= Void and then not l_url.is_empty then
+--					if 
+--						file_type (l_url).is_equal ("htm") or
+--						file_type (l_url).is_equal ("html")
+--					then
+--						l_element.wipe_out
+--						l_new_link := file_no_extension (l_url) + ".xml"
+--						if l_new_link /= Void then
+--							l_element.put_first (create {XM_CHARACTER_DATA}.make (l_element, l_new_link))	
+--						end
+--					end
+--				end
+--			end
 		end
 
 feature {NONE} -- Implementation

@@ -8,9 +8,9 @@ class
 	CUSTOM_XML
 
 inherit
-	DOCUMENT_XML
-
 	SHARED_OBJECTS
+	
+	XML_ROUTINES
 
 create
 	make_from_xml
@@ -21,11 +21,10 @@ feature -- Creation
 			-- Initialize with `a_xml'
 		require
 			xml_not_void: a_xml /= Void
-			xml_valid: (create {XML_VALIDATOR}).is_valid_xml_text (a_xml)
+			is_valid_xml (a_xml)
 		do
 			document := deserialize_text (a_xml)
 			add_hierarchy_links
-			text := document_text (document)
 		end	
 		
 feature -- Access

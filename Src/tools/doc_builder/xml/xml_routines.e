@@ -21,7 +21,7 @@ feature -- Access
 		local
 			retried: BOOLEAN
 			l_formatter: XM_ESCAPED_FORMATTER
-		do
+		do				
 			if not retried then
 				create l_formatter.make
 				l_formatter.process_document (a_doc)
@@ -32,6 +32,9 @@ feature -- Access
 			io.putstring ("Unable to read file.")
 			retry
 		end
+
+	error_description: STRING
+			-- Error string
 
 feature -- Status Setting
 
@@ -123,8 +126,7 @@ feature -- Status Setting
 						l_child_element.parent.delete (l_child_element)
 					else
 						l_child_element.put_first (create {XM_CHARACTER_DATA}.make (l_child_element, a_value))
-					end
-					
+					end					
 				end
 			end
 		end
@@ -148,9 +150,10 @@ feature -- Commands
 			end
 		end
 
-	deserialize_document (a_doc_name: FILE_NAME): XM_DOCUMENT is
+	deserialize_document (a_doc_name: STRING): XM_DOCUMENT is
 			-- Retrieve xml document associated to file with
-			-- name 'a_doc_name'.  If deserialization fails, return Void.
+			-- name 'a_doc_name'.  If deserialization fails, return Void and
+			-- put error in `error_descirption'.
 		require
 			doc_name_not_void: a_doc_name /= Void
 		local
@@ -172,16 +175,58 @@ feature -- Commands
 					if l_parser.is_correct then
 						Result := l_tree_pipe.document
 					else
-						io.putstring ("File " + a_doc_name + " is corrupted")
+						error_description := l_parser.last_error_extended_description
 						Result := Void
 					end
 				else
-					io.putstring ("File " + a_doc_name + " cannot not be open")
+					error_description :=  "File " + a_doc_name + " cannot not be open"
 				end
 			else
-				io.putstring ("Try to deserialize unexisting file :%N" + a_doc_name)
+				error_description := "Try to deserialize unexisting file :%N" + a_doc_name
 			end
 		end
+
+feature -- Query
+
+	is_valid_xml (xml: STRING): BOOLEAN is
+			-- Is `xml' valid xml?
+		require
+			xml_not_void: xml /= Void
+		local
+			l_xm_doc: XM_DOCUMENT
+		do
+			l_xm_doc := deserialize_text (xml)
+			Result := l_xm_doc /= Void
+		end		
+
+feature -- Access
+
+	pretty_xml (a_xml: STRING): STRING is
+			-- Pretty formatted XML of `a_xml'
+		require
+			xml_not_void: a_xml /= Void
+		local
+			retried: BOOLEAN
+			l_parser: XM_EIFFEL_PARSER
+			l_filter: XM_PRETTY_FORMATTER
+		do
+			if not retried then		
+				create Result.make_empty
+				create l_parser.make
+				create l_filter.make (Result)
+				l_parser.set_callbacks (standard_callbacks_pipe (<<l_filter>>))
+				l_parser.parse_from_string (a_xml)
+				check
+					ok_parsing: l_parser.is_correct
+				end
+				if not l_parser.is_correct then
+					Result := l_parser.last_error_extended_description
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end	
 
 feature -- Storage
 

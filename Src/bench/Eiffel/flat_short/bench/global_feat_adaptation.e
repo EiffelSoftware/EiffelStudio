@@ -256,18 +256,21 @@ feature {FORMAT_CONTEXT} -- Implementation
 			old_written_in: INTEGER;
 			s_type, t_type: TYPE_A;
 			l_name: STRING;
+			local_info: LOCAL_INFO
 		do	
 			if not is_short then
 				old_cluster := Inst_context.cluster;
 				Inst_context.set_cluster (source_enclosing_class.cluster);
 				System.set_current_class (source_enclosing_class);
 					-- When evaluating like feature
-				s_locals := body.local_table (source_enclosing_feature);
+				s_locals := body.local_table_for_format (source_enclosing_feature);
 				System.set_current_class (target_enclosing_class);
 				if s_locals = Void then
 					Inst_context.set_cluster (old_cluster);
 				else
-					if source_enclosing_class = target_enclosing_class then
+					if (source_enclosing_class = target_enclosing_class) or else
+						source_enclosing_feature = Void
+					then
 						from
 							!! source_locals.make (s_locals.count);
 							s_locals.start;
@@ -275,9 +278,15 @@ feature {FORMAT_CONTEXT} -- Implementation
 							s_locals.after
 						loop
 							l_name := s_locals.key_for_iteration;
-							s_type := s_locals.item_for_iteration.type.actual_type;
-							if s_type.is_formal then
-				 				s_type := source_enclosing_class.constraint (s_type.base_type)
+							local_info := s_locals.item_for_iteration;
+							if local_info = Void then
+								s_type := Void
+							else
+								s_type := local_info.type.actual_type;
+								if s_type.is_formal then
+				 					s_type := source_enclosing_class.constraint 
+													(s_type.base_type)
+								end;
 							end;
 							source_locals.put (s_type, l_name);
 							s_locals.forth;
@@ -292,20 +301,33 @@ feature {FORMAT_CONTEXT} -- Implementation
 							s_locals.after
 						loop
 							l_name := s_locals.key_for_iteration;
-							s_type := s_locals.item_for_iteration.type;
-							t_type := Local_evaluator.evaluated_type 
+							local_info := s_locals.item_for_iteration;
+							if local_info = Void then
+								s_type := Void;
+								t_type := Void
+							else
+								s_type := s_locals.item_for_iteration.type;
+								t_type := Local_evaluator.evaluated_type_for_format
 										(s_type,
 										target_feature_table,
 										target_enclosing_feature);
-							s_type := s_type.actual_type;
-							if s_type.is_formal then
-				 				s_type := source_enclosing_class.constraint (s_type.base_type)
-							end;
-				 			t_type := t_type.instantiation_in 
-									(target_enclosing_class.actual_type,
-									source_enclosing_class.id).actual_type;
-							if t_type.is_formal then
-				 				t_type := target_enclosing_class.constraint (t_type.base_type)
+								if t_type = Void then
+									s_type := Void;
+									t_type := Void
+								else
+									s_type := s_type.actual_type;
+									if s_type.is_formal then
+				 						s_type := source_enclosing_class.constraint 
+													(s_type.base_type)
+									end;
+				 					t_type := t_type.instantiation_in 
+											(target_enclosing_class.actual_type,
+											source_enclosing_class.id).actual_type;
+									if t_type.is_formal then
+				 						t_type := target_enclosing_class.constraint 
+												(t_type.base_type)
+									end
+								end;
 							end;
 							source_locals.put (s_type, l_name);
 							target_locals.put (t_type, l_name);
@@ -314,7 +336,6 @@ feature {FORMAT_CONTEXT} -- Implementation
 					end;
 					Inst_context.set_cluster (old_cluster);
 				end;
-				
 			end;
 		end
 

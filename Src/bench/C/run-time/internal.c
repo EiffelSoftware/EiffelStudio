@@ -18,7 +18,6 @@
 
 #include <string.h>
 
-rt_private char *ei_oref(long, EIF_REFERENCE);		/* Offset in object */
 
 rt_public char *ei_field (long i, EIF_REFERENCE object)
 {
@@ -156,48 +155,6 @@ rt_public long ei_field_type_of_type(long i, EIF_INTEGER type_id)
 	}
 }
 
-rt_public char ei_char_field(long i, EIF_REFERENCE object)
-{
-	/* Returns character value of i-th value */
-
-	return *(EIF_REFERENCE) ei_oref(i,object);
-}
-
-rt_public char ei_bool_field(long i, EIF_REFERENCE object)
-{
-	/* Returns boolean value of i-th value */
-
-	return *(EIF_REFERENCE) ei_oref(i, object);
-}
-
-rt_public long ei_int_field(long i, EIF_REFERENCE object)
-{
-	/* Returns integer value of i-th value */
-
-	return *(long *) ei_oref(i, object);
-}
-
-rt_public EIF_REAL ei_float_field(long i, EIF_REFERENCE object)
-{
-	/* Returns float value of i-th value */
-
-	return *(EIF_REAL *) ei_oref(i, object);
-}
-
-rt_public EIF_POINTER ei_ptr_field(long i, EIF_REFERENCE object)
-{
-	/* Returns pointer value of i-th value */
-
-	return *(EIF_POINTER *) ei_oref(i,object);
-}
-
-rt_public EIF_DOUBLE ei_double_field(long i, EIF_REFERENCE object)
-{
-	/* Returns double value of i-th value */
-
-	return *(EIF_DOUBLE *) ei_oref(i,object);
-}
-
 rt_public char *ei_exp_type(long i, EIF_REFERENCE object)
 {
 	/* Returns the class name of the i-th expanded field of `object'. */
@@ -233,20 +190,13 @@ rt_public char ei_special(EIF_REFERENCE object)
 	return ((HEADER(object)->ov_flags) & EO_SPEC) ? (char) 1 : (char) 0;
 }
 
-rt_public long ei_offset(long i, EIF_REFERENCE object)
-{
-	/* Returns offset of i-th field of `object'. */
-
-	return (long) (ei_oref(i, object) - object);
-}
-
-rt_private char *ei_oref(long i, EIF_REFERENCE object)
+rt_public void * ei_oref(long i, EIF_REFERENCE object)
 {
 	/* Returns character value of i-th value */
 
 	struct cnode *obj_desc;
 	int dtype = Dtype(object);
-	EIF_REFERENCE o_ref;
+	void * o_ref;
 #ifdef WORKBENCH
 	long offset;
 #endif
@@ -260,40 +210,3 @@ rt_private char *ei_oref(long i, EIF_REFERENCE object)
 #endif
 	return o_ref;
 }
-
-rt_public void ei_set_reference_field (EIF_INTEGER i, EIF_REFERENCE object, EIF_REFERENCE value)
-{
-	RTAR(value,object);
-	*(EIF_POINTER *) ei_oref(i,object) = value;
-}
-
-rt_public void ei_set_double_field(EIF_INTEGER i, EIF_REFERENCE object, EIF_DOUBLE value)
-{
-	*(EIF_DOUBLE *) ei_oref(i,object) = value;
-}
-
-rt_public void ei_set_char_field(EIF_INTEGER i, EIF_REFERENCE object, EIF_CHARACTER value)
-{
-	*(EIF_CHARACTER *) ei_oref(i,object) = value;
-}
-
-rt_public void ei_set_boolean_field(EIF_INTEGER i, EIF_REFERENCE object, EIF_BOOLEAN value)
-{
-	*(EIF_BOOLEAN *) ei_oref(i,object) = value;
-}
-
-rt_public void ei_set_integer_field(EIF_INTEGER i, EIF_REFERENCE object, EIF_INTEGER value)
-{
-	*(EIF_INTEGER *) ei_oref(i,object) = value;
-}
-
-rt_public void ei_set_float_field(EIF_INTEGER i, EIF_REFERENCE object, EIF_REAL value)
-{
-	*(EIF_REAL *) ei_oref(i,object) = value;
-}
-
-rt_public void ei_set_pointer_field(EIF_INTEGER i, EIF_REFERENCE object, EIF_POINTER value)
-{
-	*(EIF_POINTER *) ei_oref(i,object) = value;
-}
-

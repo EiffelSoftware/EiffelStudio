@@ -258,8 +258,9 @@ feature -- Type check, byte code and dead code removal
 				-- Intialization of the access line, multi-type line
 				-- and interval line
 			context.start_lines
-
+			context.set_has_loop (False)
 			Result := body.byte_node
+			Result.set_has_loop (context.has_loop)
 		end
 
 	new_feature: FEATURE_I is

@@ -90,8 +90,6 @@ feature -- Output
 		local
 			new_count: INTEGER
 			str_area: ANY
-			a_boolean: BOOLEAN
-			debugg, debugg2: INTEGER
 		do
 			create last_string.make (count)
 			str_area := last_string.area

@@ -1,9 +1,14 @@
--- Constant for byte code.
--- Those character values have to match C values defined in "interp.h"
+indexing
+	description: "[
+		Constant for byte code.
+		Those character values have to match C values defined in "interp.h".
+		]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class BYTE_CONST
 	
-feature {NONE}
+feature -- Access
 
 	Bc_start: 			CHARACTER is '%/000/';
 	Bc_precond:			CHARACTER is '%/001/';

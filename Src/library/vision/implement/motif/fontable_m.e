@@ -23,9 +23,22 @@ feature {NONE}
 			set_motif_font (screen_object, font_ptr, ext_name)
 		end;
 
+	font_list_pointer: POINTER is
+		local
+			ext_name: ANY;
+		do
+			ext_name := resource_name.to_c;
+			Result := get_default_font (screen_object, ext_name)
+		end
+
 feature {NONE} -- external feature
 
 	set_motif_font (scr_obj: POINTER; font_ptr: POINTER; resource: ANY) is
+		external
+			"C"
+		end; 
+
+	get_default_font (scr_obj: POINTER; resource: ANY): POINTER is
 		external
 			"C"
 		end; 

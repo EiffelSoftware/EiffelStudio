@@ -1950,7 +1950,16 @@ feature -- Final mode generation
 			Tmp_poly_server.clear
 			Tmp_opt_byte_server.flush
 			Tmp_opt_byte_server.clear
+			Eiffel_table.wipe_out
+			History_control.wipe_out
 			successful := False
+
+				-- Restore previous value.
+			remover_off := old_remover_off
+			exception_stack_managed := old_exception_stack_managed
+			inlining_on := old_inlining_on
+			array_optimization_on := old_array_optimization_on
+
 			if rescue_status.is_error_exception then
 				retried := True
 				if not compilation_modes.is_precompiling then
@@ -3224,16 +3233,18 @@ feature -- Dispose routine
 				-- from MEMORY.
 			entry ?= Eiffel_table.poly_table (memory_dispose_id)
 
-				-- We are using `header_generation_buffer' for the generation
-				-- because this is used for routine tables (look at
-				-- `generate_routine_table').
-				-- We are using `routine_id_counter.dispose_rout_id' and not
-				-- `memory_dispose_id' to generate the table, because we are not
-				-- generating a standard polymorphic table and so, we cannot reuse the
-				-- one which could have been generated if there was any polymorphic
-				-- call on `dispose'.
-			entry.generate_dispose_table (routine_id_counter.dispose_rout_id,
-											header_generation_buffer)
+			if entry /= Void then
+					-- We are using `header_generation_buffer' for the generation
+					-- because this is used for routine tables (look at
+					-- `generate_routine_table').
+					-- We are using `routine_id_counter.dispose_rout_id' and not
+					-- `memory_dispose_id' to generate the table, because we are not
+					-- generating a standard polymorphic table and so, we cannot reuse the
+					-- one which could have been generated if there was any polymorphic
+					-- call on `dispose'.
+				entry.generate_dispose_table (routine_id_counter.dispose_rout_id,
+												header_generation_buffer)
+			end
 		end 
 
 feature -- Pattern table generation

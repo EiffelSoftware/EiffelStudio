@@ -304,8 +304,8 @@ feature -- Behavior
 			when Cmd_file_open then
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
-					file_extension := clone (open_file_dialog.file_name)
-					file_extension.tail (file_extension.count - open_file_dialog.file_extension_offset + 1)
+					file_extension := open_file_dialog.file_name.twin
+					file_extension.keep_tail (file_extension.count - open_file_dialog.file_extension_offset + 1)
 
 					if file_extension.is_equal ("rc") or file_extension.is_equal ("RC")then
 						do_analyze (Current, open_file_dialog)
@@ -505,7 +505,7 @@ feature {NONE} -- Implementation
 				folder.create_dir
 			end
 
-			filename := clone (a_open_file.file_name)
+			filename := a_open_file.file_name.twin
 
 				-- Prepare saving of current working directory
 				-- and change to directory where file is opened from
@@ -514,12 +514,12 @@ feature {NONE} -- Implementation
 			directory_name.subcopy (filename, 1, a_open_file.file_name_offset - 3, 1)
 			set_working_directory (directory_name)
 
-			temp_filename := clone (Tmp_directory)
+			temp_filename := Tmp_directory.twin
 			temp_filename.append ("Temp_file.rc")
 			!! temp_file.make_open_write (temp_filename)
 
 			!! preprocessor.make (temp_file)
-			preprocessor.convert (filename)
+			preprocessor.convert_definition (filename)
 			temp_file.close
 
 			set_define_table (preprocessor.define_table)
@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 			end
 
 			if not has_error then
-				filename.tail (filename.count - a_open_file.file_name_offset + 1)
+				filename.keep_tail (filename.count - a_open_file.file_name_offset + 1)
 
 				create_tree_view_control (client_window, filename)
 
@@ -559,14 +559,14 @@ feature {NONE} -- Implementation
 			file: RAW_FILE
 			filename: STRING
 		do
-			filename := clone (a_open_file.file_name)
+			filename := a_open_file.file_name.twin
 
 			!! file.make_open_read (filename)
 			!! the_tds.retrieve_tds (file)
 
 			set_tds (the_tds)
 
-			filename.tail (filename.count - a_open_file.file_name_offset + 1)
+			filename.keep_tail (filename.count - a_open_file.file_name_offset + 1)
 			create_tree_view_control (client_window, filename)
 
 			if (properties_window /= Void) and then (properties_window.exists) then

@@ -16,15 +16,22 @@ inherit
 		end
 
 	TABLE_OF_SYMBOLS
+		undefine
+			is_equal, copy
+		end
 
 	TDS_CONSTANTS
 		export	
 			{NONE} all
+		undefine
+			is_equal, copy
 		end
 
 	TDS_CONTROL_CONSTANTS
 		export	
 			{NONE} all
+		undefine
+			is_equal, copy
 		end
 
 creation
@@ -50,19 +57,19 @@ feature
 				tds.identifier_type
 
 	 		when Dialog_x then
-				dialog.set_x (tds.convert (token.string_value))
+				dialog.set_x (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Dialog_y)
 
 			when Dialog_y then
-				dialog.set_y (tds.convert (token.string_value))
+				dialog.set_y (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Dialog_width)
 
 			when Dialog_width then
-				dialog.set_width (tds.convert (token.string_value))
+				dialog.set_width (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Dialog_height)
 
 			when Dialog_height then
-				dialog.set_height (tds.convert (token.string_value))
+				dialog.set_height (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Normal)
 
 
@@ -87,7 +94,7 @@ feature
 				tds.current_resource.options.set_style (tds.last_style)
 	        
 			when Option_font_size then
-				tds.current_resource.options.set_font_size (tds.convert(token.string_value))
+				tds.current_resource.options.set_font_size (tds.convert_identifier(token.string_value))
 				tds.set_identifier_type (Option_font_type)
 
 			when Option_font_type then
@@ -95,7 +102,7 @@ feature
 				tds.set_identifier_type (Option_font_weight)
 
 			when Option_font_weight then
-				tds.current_resource.options.set_font_weight (tds.convert(token.string_value))
+				tds.current_resource.options.set_font_weight (tds.convert_identifier(token.string_value))
 				tds.set_identifier_type (Option_font_italic)
 
 			when Option_font_italic then
@@ -123,19 +130,19 @@ feature
 				tds.set_identifier_type (Control_x)
 
 			when Control_x then
-				dialog.current_control.set_x (tds.convert (token.string_value))
+				dialog.current_control.set_x (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Control_y)
 
 			when Control_y then
-				dialog.current_control.set_y (tds.convert (token.string_value))
+				dialog.current_control.set_y (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Control_width)
 
 			when Control_width then
-				dialog.current_control.set_width (tds.convert (token.string_value))
+				dialog.current_control.set_width (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Control_height)
 
 			when Control_height then
-				dialog.current_control.set_height (tds.convert (token.string_value))
+				dialog.current_control.set_height (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Control_style)
 
 			when Control_style then
@@ -165,19 +172,19 @@ feature
 				dialog.current_control.set_style (tds.last_style)
 
 			when Generic_Control_x then
-				dialog.current_control.set_x (tds.convert (token.string_value))
+				dialog.current_control.set_x (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Generic_Control_y)
 
 			when Generic_Control_y then
-				dialog.current_control.set_y (tds.convert (token.string_value))
+				dialog.current_control.set_y (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Generic_Control_width)
 
 			when Generic_Control_width then
-				dialog.current_control.set_width (tds.convert (token.string_value))
+				dialog.current_control.set_width (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Generic_Control_height)
 
 			when Generic_Control_height then
-				dialog.current_control.set_height (tds.convert (token.string_value))
+				dialog.current_control.set_height (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Generic_Control_exstyle)
 
 			when Generic_Control_exstyle then
@@ -225,11 +232,11 @@ feature
 
 
 			when Toolbar_width then
-				toolbar.set_width (tds.convert (token.string_value))
+				toolbar.set_width (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Toolbar_height)
 
 			when Toolbar_height then
-				toolbar.set_height (tds.convert (token.string_value))
+				toolbar.set_height (tds.convert_identifier (token.string_value))
 				tds.set_identifier_type (Normal)
 
 			else

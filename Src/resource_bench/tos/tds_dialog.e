@@ -14,6 +14,9 @@ inherit
 		end
 
 	TDS_DEFINE_TABLE
+		undefine
+			is_equal, copy
+		end
 
 creation
 	make
@@ -110,7 +113,7 @@ feature -- Element change
 			a_class_name_not_void: a_class_name /= Void
 			a_class_name_exists: a_class_name.count > 0
 		do
-			inherited_class := clone (a_class_name)
+			inherited_class := a_class_name.twin
 		ensure
 			inherited_class_set: inherited_class.is_equal (a_class_name)
 		end
@@ -302,7 +305,6 @@ feature -- Code generation
 		local
 			text_file: PLAIN_TEXT_FILE
 			a_filename: STRING
-			control_list: TDS_CONTROL_STATEMENT
 		do
 			from 
 				start

@@ -72,7 +72,7 @@ feature -- Code generation
 				icon ?= item
 
 				icon.id.generate_resource_file (a_resource_file)
-				a_resource_file.putstring (" ICON ")
+				a_resource_file.putstring (" BITMAP ")
 
 
 				if (icon.load_and_mem_attributes /= Void) then
@@ -80,6 +80,7 @@ feature -- Code generation
 				end                
 
 				a_resource_file.putstring (icon.filename)
+				a_resource_file.put_new_line
 				forth
 			end
 

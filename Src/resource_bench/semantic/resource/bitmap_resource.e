@@ -15,6 +15,9 @@ inherit
 		end
 
 	TABLE_OF_SYMBOLS
+		undefine
+			is_equal, copy
+		end
 
 creation
 	make

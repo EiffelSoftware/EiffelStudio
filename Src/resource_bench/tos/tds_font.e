@@ -80,6 +80,7 @@ feature -- Code generation
 				end                
 
 				a_resource_file.putstring (font.filename)
+				a_resource_file.put_new_line
 				forth
 			end
 

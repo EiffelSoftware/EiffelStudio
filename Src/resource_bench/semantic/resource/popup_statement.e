@@ -14,10 +14,15 @@ inherit
 		end
 
 	TABLE_OF_SYMBOLS
+		undefine
+			is_equal, copy
+		end
 
 	TDS_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			is_equal, copy
 		end
 
 creation

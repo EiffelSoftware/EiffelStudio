@@ -12,7 +12,7 @@ inherit
 
 	RESOURCE_SCRIPT_LEX
 		undefine
-			is_equal, copy, consistent, setup
+			is_equal, copy
 		end
 
 	INTERFACE_MANAGER
@@ -26,8 +26,6 @@ feature -- Initialization
 
 	make is
 			-- create the resource file analyzer
-		local
-			the_file: PLAIN_TEXT_FILE
 		do  
 			interface.display_text (std_out, "Building the grammar...")
 
@@ -48,7 +46,7 @@ feature -- Initialization
 	--		deep_copy (grammar)
 			copy (grammar)
 			resource_script_file.document.deep_copy (grammar.doc)
-			resource_script_file.document.set_lexical (deep_clone (grammar.doc.analyzer))
+			resource_script_file.document.set_lexical (grammar.doc.analyzer.deep_twin)
 			rsf_copy.document.deep_copy (grammar.doc)
 		end
 
@@ -123,13 +121,13 @@ feature
 			toto: INPUT
 			titi: LINKED_LIST [CONSTRUCT]
 		do
-			toto := deep_clone (resource_script_file.document)
-			doc := deep_clone (toto)
+			toto := resource_script_file.document.deep_twin
+			doc := toto.deep_twin
 
-			titi := deep_clone (resource_script_file.production)
-			production := deep_clone (titi)
+			titi := resource_script_file.production.deep_twin
+			production := titi.deep_twin
 
-			rsf_copy := deep_clone (resource_script_file)
+			rsf_copy := resource_script_file.deep_twin
 
 			basic_store (a_file)
 		end
@@ -139,7 +137,7 @@ feature
 		do
 			resource_script_file.deep_copy (rsf_copy)
 			resource_script_file.document.deep_copy (doc)
-			resource_script_file.document.set_lexical (deep_clone (doc.analyzer))
+			resource_script_file.document.set_lexical (doc.analyzer.deep_twin)
 
 			resource_script_file.production.standard_copy (production)
 		end

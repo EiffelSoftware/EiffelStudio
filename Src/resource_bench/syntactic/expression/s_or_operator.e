@@ -12,6 +12,9 @@ inherit
 	TERMINAL
 	
 	LEX_CONSTANTS
+		undefine
+			is_equal, copy
+		end
 
 feature
 

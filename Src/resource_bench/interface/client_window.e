@@ -114,7 +114,6 @@ feature {NONE} -- Implementation
 			properties_window_exists: properties_window.exists
 		local
 			dialog: TDS_DIALOG
-			bitmap: TDS_BITMAP
 		do
 			dialog ?= current_resource
 			if (dialog /= Void) then

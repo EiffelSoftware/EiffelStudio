@@ -61,7 +61,7 @@ feature -- Messages
 	invalid_xml_file_warning: STRING is 
 			-- Text in context is not XMl valid
 		once
-			Result := "The text not valid XML"	
+			Result := "The text is not valid XML"	
 		end
 
 	invalid_project_name: STRING is
@@ -139,9 +139,8 @@ feature -- Messages
 			-- Warning when attempting to auto-format tag containing 'pre' text
 		once
 			Result := "The text selected for formatting contains tags which %N%
-				%apply there own formatting.  If you continue this formatting will%N%
-				%lost (Trust me, this could be very annoying later on).  Do you wish%N%
-				%to continue anyway?"
+				%apply their own formatting options.  If you continue this formatting will%N%
+				%lost.  Do you wish to continue anyway?"
 		end
 
 feature -- Command prompt messages

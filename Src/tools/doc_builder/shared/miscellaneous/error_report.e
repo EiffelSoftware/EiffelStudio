@@ -115,6 +115,9 @@ feature -- Commands
 	show is
 			-- Show error
 		do
+			if is_empty then
+				append_error (no_error_string, 0,0)
+			end
 			if Shared_constants.Application_constants.is_gui_mode then
 				show_as_message_dialog
 			else
@@ -136,7 +139,7 @@ feature {NONE} -- Commands
 			-- Show error (s) on command prompt.
 		local
 			l_output_file: PLAIN_TEXT_FILE
-		do
+		do			
 			io.put_string (title)
 			io.put_new_line
 			io.putstring (messages_text)
@@ -149,7 +152,7 @@ feature {NONE} -- Commands
 
 	show_as_message_dialog is
 			-- 	Show error in message dialog with OK button
-		do
+		do			
 			Shared_dialogs.error_dialog.set_error_list (messages)
 			Shared_dialogs.Error_dialog.set_title (title)
 			if action /= Void then
@@ -168,6 +171,8 @@ feature {NONE} -- Implementation
 		once
 			Result := Application_window
 		end		
+
+	no_error_string: STRING is "No errors found"
 
 invariant
 	has_title: title /= Void

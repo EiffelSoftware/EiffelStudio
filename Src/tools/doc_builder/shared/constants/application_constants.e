@@ -8,13 +8,6 @@ class
 
 inherit
 	EXECUTION_ENVIRONMENT
-	
-	CONSTANTS
-		rename
-			pixmap_directory as icon_resources_directory
-		redefine
-			icon_resources_directory
-		end			
 
 feature -- Directory Paths
 
@@ -22,13 +15,12 @@ feature -- Directory Paths
 			-- Root working directory for application
 		local
 			l_path: STRING
-		once
-			l_path := get ("ISE_DOC_BUILDER")
-			if l_path = Void then
-				l_path := get ("ISE_EIFFEL")
-			end
+		once			
+			l_path := get ("EIFFEL_SRC")			
 			if l_path /= Void then
-				create Result.make_from_string (l_path)				
+				create Result.make_from_string (l_path)		
+				Result.extend ("tools")
+				Result.extend ("doc_builder")						
 			end
 		end
 
@@ -81,6 +73,13 @@ feature -- Directory Paths
 			Result.extend ("HTML")
 		end
 		
+	temporary_xml_directory: DIRECTORY_NAME is
+			-- Directory location for temporary XML
+		once
+			create Result.make_from_string (Temporary_directory)
+			Result.extend ("XML")
+		end
+		
 	temporary_help_directory: DIRECTORY_NAME is
 			-- Directory location for temporary help files
 		once
@@ -117,29 +116,6 @@ feature -- Display Constants
 		once
 			create Result.make_with_rgb (0.0, 0.8, 0.0)
 		end
-		
-	output_filter: INTEGER
-			-- Current output filter (default: all)
-
-feature -- XSL Preferences
-
-	is_studio: BOOLEAN is
-			-- Is output filter for EiffelStudio?
-		do
-			Result := output_filter = Studio_filter
-		end
-		
-	is_envision: BOOLEAN is
-			-- Is output filter for Eiffel ENViSioN!?
-		do
-			Result := output_filter = Envision_filter
-		end
-		
-	is_all: BOOLEAN is
-			-- Is output filter unfiltered?
-		do
-			Result := output_filter = All_filter or (not is_studio or not is_envision)
-		end
 
 feature -- Schema preferences			
 
@@ -164,20 +140,6 @@ feature -- Table of Contents Preferences
 
 	html_location: STRING
 			-- Location of HTML from which TOC is generated
-
-	make_root_from_index: BOOLEAN
-			-- Should TOC generation automatically make root nodes out of
-			-- files matching `index_file_name'
-		
-	include_empty_directories: BOOLEAN
-			-- Should TOC generation automatically skip empty directories
-			-- and thus not include them in the final TOC?
-
-	include_directories_no_index: BOOLEAN
-			-- Should TOC generation automatically skip directories without index file?
-			
-	include_skipped_sub_directories: BOOLEAN
-			-- Should sub-directories of not included directories in TOC be processed?
 			
 feature -- Status Setting
 
@@ -199,50 +161,12 @@ feature -- Status Setting
 			synchronize_document_widgets := a_flag
 		end
 
-	set_include_empty_directories (a_flag: BOOLEAN) is
-			-- Set `include_empty_directories'
-		do
-			include_empty_directories := a_flag
-		end
-	
-	set_include_skipped_sub_directories (a_flag: BOOLEAN) is
-			-- Set `include_skipped_sub_directories'
-		do
-			include_skipped_sub_directories := a_flag
-		end
-		
-	set_include_directories_no_index (a_flag: BOOLEAN) is
-			-- Set `include_directories_no_index'
-		do
-			include_directories_no_index := a_flag
-		end
-	
-	set_make_index_root (a_flag: BOOLEAN) is
-			-- Set `make_root_from_index'
-		do
-			make_root_from_index := a_flag
-		end
-
 	set_index_file_name (a_name: STRING) is
 			-- Set `index_file_name'
 		require
 			name_valid: a_name /= Void and then not a_name.is_empty
 		do
 			index_file_name := a_name
-		end		
-
-	set_output_filter (a_filter: INTEGER) is
-			-- Set output filter
-		require
-			valid_filter: a_filter = all_filter or a_filter = studio_filter or a_filter = envision_filter
-		do
-			if a_filter = all_filter then
-				output_filter := all_filter
-			elseif a_filter = studio_filter then				
-				output_filter := studio_filter
-			elseif a_filter = envision_filter then
-				output_filter := envision_filter
-			end
 		end		
 
 	set_auto_validation (flag: BOOLEAN) is
@@ -273,8 +197,30 @@ feature -- Document
 	tags_uppercase: BOOLEAN
 			-- Should element tags be uppercase?			
 
-feature -- Implementation
+feature -- Platform
 
-	all_filter, studio_filter, envision_filter: INTEGER is unique
+	set_mode (a_mode: STRING) is
+			-- Set `mode'
+		require
+			mode_not_void: a_mode /= Void
+			mode_valid: available_modes.has (a_mode)
+		once
+			mode := a_mode
+		ensure
+			mode_is_mode: mode = A_mode
+		end
+
+	mode: STRING
+			-- Platform mode
+
+	available_modes: ARRAYED_LIST [STRING] is
+			-- Available platform modes
+		once
+			create Result.make (3)
+			Result.compare_objects
+			Result.extend ("unix")
+			Result.extend ("classic")
+			Result.extend (".net")
+		end
 
 end -- class APPLICATION_CONSTANTS

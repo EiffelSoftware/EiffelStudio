@@ -20,9 +20,8 @@ feature -- Access
 	is_web_help: BOOLEAN
 			-- Help for web page content?
 			
-	help_toc_location: DIRECTORY_NAME
-			-- Directory containing table of contents hierarchy from which to
-			-- generate new help project
+	toc: XML_TABLE_OF_CONTENTS
+			-- Table of Contents
 			
 	help_project_name: STRING
 			-- Name chosen for help project
@@ -46,11 +45,26 @@ feature -- Path Locations
 			Result.extend ("toc")
 		end
 		
-	help_compiler: FILE_NAME is
+	help_compiler_location: FILE_NAME is
 			-- Location of HTML Help 1.x compiler executable
+		local
+			l_registry: WEL_REGISTRY
+			l_key_value: WEL_REGISTRY_KEY_VALUE
+			l_reg_key_ptr: POINTER
 		do
-			create Result.make_from_string (Bin_directory)
-			Result.extend ("hhc.exe")
+			create l_registry
+			l_reg_key_ptr := l_registry.open_key (feature {WEL_HKEY}.hkey_local_machine, "Software\Microsoft\Windows\CurrentVersion", feature {WEL_REGISTRY_ACCESS_MODE}.key_query_value)
+			l_key_value := l_registry.key_value (l_reg_key_ptr, "ProgramFilesDir")
+			if l_key_value /= void then
+				create Result.make_from_string (l_key_value.string_value)
+				Result.extend ("HTML Help Workshop")
+			end
+		end		
+		
+	help_compiler_name: STRING is
+			-- Name of HTML Help 1.x compiler executable
+		once
+			Result := "hhc.exe"
 		end		
 		
 feature -- XML Tags
@@ -84,11 +98,10 @@ feature -- Status Setting
 			help_directory_cell.put (a_dir)		
 		end
 	
-	set_help_toc_location (a_location: STRING) is
-			-- Set directory containing table of contents hierarchy from which to
-			-- generate new help project
+	set_help_toc (a_toc: like toc) is
+			-- Set Table of Contents
 		do
-			create help_toc_location.make_from_string (a_location)
+			toc := a_toc
 		end
 		
 	set_help_project_name (a_name: STRING) is

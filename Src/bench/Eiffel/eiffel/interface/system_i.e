@@ -3116,7 +3116,7 @@ feature -- Plug and Makefile file
 			Plug_file.putstring ("extern void ");
 			Plug_file.putstring (set_count_name);
 			Plug_file.putstring ("();%N");
-			if Concurrent_eiffel then
+			if has_separate then
 				to_c_feat := string_cl.feature_table.item ("to_c");
 				to_c_name := to_c_feat.body_id.feature_name (id)
 				Plug_file.putstring ("extern void ");
@@ -3208,7 +3208,7 @@ feature -- Plug and Makefile file
 			Plug_file.putstring (set_count_name);
 			Plug_file.putstring (";%N");
 
-			if Concurrent_eiffel then
+			if has_separate then
 					--Pointer on `to_c' of class STRING
 				Plug_file.putstring ("void (*eif_strtoc)() = ");
 				Plug_file.putstring (to_c_name);
@@ -3262,7 +3262,7 @@ feature -- Plug and Makefile file
 			generate_dynamic_ref_type;
 
 				-- Specific info for Concurrent Eiffel
-			if Concurrent_eiffel then
+			if has_separate then
 					-- Location of the config file
 				Plug_file.putstring ("char eif_concurrent_config_file[] = %"");
 				Plug_file.putstring ("put file name here");
@@ -3327,7 +3327,7 @@ feature -- Main file generation
 				%#include %"option.h%"%N%
 				%extern void emain();%N%
 				%extern void reclaim();%N");
-			if Concurrent_Eiffel then
+			if has_separate then
 				Main_file.putstring ("#include %"curserver.h%"%N")
 			else
 				Main_file.putstring ("extern void failure();%N")
@@ -3349,7 +3349,7 @@ feature -- Main file generation
 				%%Texvect = exset((char *) 0, 0, (char *) 0);%N%
 				%%Texvect->ex_jbuf = (char *) exenv;%N%
 				%%Tif (echval = setjmp(exenv))%N");
-			if Concurrent_Eiffel then
+			if has_separate then
 				Main_file.putstring ("%T%Tdefault_rescue();%N%N")
 			else
 				Main_file.putstring ("%T%Tfailure();%N%N")
@@ -3437,7 +3437,7 @@ feature -- Main file generation
 				Initialization_file.putstring (";%N%N");
 			end;
 
-			if Concurrent_Eiffel then
+			if has_separate then
 				Initialization_file.putstring ("#include %"curextern.h%"%N%N")
 
 				Initialization_file.putstring ("extern ");
@@ -3452,7 +3452,7 @@ feature -- Main file generation
 					nb := class_counter.item (classes.key_for_iteration).count
 					from i := 1 until i > nb loop
 						a_class := class_array.item (i);
-						if a_class.actual_type.type_i.is_separate then
+						if a_class /= Void and then a_class.actual_type.type_i.is_separate then
 							Initialization_file.putstring ("extern ");
 							Initialization_file.putstring (a_class.actual_type.associated_class.class_name);
 							Initialization_file.putstring ("case(); %N");
@@ -3488,7 +3488,7 @@ feature -- Main file generation
 				Initialization_file.putstring (";%N");
 			end;
 
-			if Concurrent_Eiffel then
+			if has_separate then
 				Initialization_file.putstring ("%Tif (argc < 2) {%N%
 					%%T%Tsprintf(crash_info, CURERR7, 1);%N%
 					%%T%Tdefault_rescue();%N%
@@ -3511,7 +3511,7 @@ feature -- Main file generation
 					-- The last line Only for Workbench Mode
 			end
 
-			Initialization_file.putstring ("%Troot_obj = RTLN(");
+			Initialization_file.putstring ("%T%Troot_obj = RTLN(");
 			if final_mode then
 				Initialization_file.putint (dtype);
 			else
@@ -3519,7 +3519,7 @@ feature -- Main file generation
 			end;
 			Initialization_file.putstring (");%N");
 
-			if Concurrent_Eiffel then
+			if has_separate then
 				Initialization_file.putstring ("%T%TCURIS(%"conf%", root_obj);%N");
 			end
 
@@ -3529,7 +3529,7 @@ feature -- Main file generation
 					Initialization_file.putstring (c_name);
 					Initialization_file.putstring ("(root_obj");
 					if root_feat.has_arguments then
-						if Concurrent_Eiffel then
+						if has_separate then
 							Initialization_file.putstring (", argarr(argc-1, root_argv)");
 						else
 							Initialization_file.putstring (", argarr(argc, argv)");
@@ -3538,7 +3538,7 @@ feature -- Main file generation
 					Initialization_file.putstring (");%N");
 				end;
 			else
-				if Concurrent_Eiffel then
+				if has_separate then
 					Initialization_file.putstring ("%T%Tif (rcorigin != -1)%N%
 						%%T%T%Tif (rcarg)%N%
 						%%T%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc-1, root_argv));%N%
@@ -3553,7 +3553,7 @@ feature -- Main file generation
 				end
 			end;
 
-			if Concurrent_Eiffel then
+			if has_separate then
 				Initialization_file.putstring ("%T%Tserver_execute(");
 				Initialization_file.putstring (root_class_name);
 				Initialization_file.putstring (");%N");

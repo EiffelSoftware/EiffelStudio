@@ -445,8 +445,12 @@ feature -- Generation, Header
 			generate_include_path;
 			Make_file.putstring ("%
 				%SHELL = /bin/sh%N%
-				%CC = $cc%N%
-				%CFLAGS = $optimize $ccflags $large ");
+				%CC = $cc%N");
+			if System.has_separate then
+				Make_file.putstring ("CFLAGS = $optimize $ccflags $large -DCONCURRENT_EIFFEL ");
+			else
+				Make_file.putstring ("CFLAGS = $optimize $ccflags $large ");
+			end;
 			generate_specific_defines;
 			Make_file.putstring ("-I%H$(EIFFEL3)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N%
 				%LDFLAGS = $ldflags%N%

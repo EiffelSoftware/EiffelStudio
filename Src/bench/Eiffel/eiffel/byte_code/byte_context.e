@@ -644,6 +644,9 @@ feature
 			current_used := false;
 			need_gc_hook_computed := false;
 			label := 0;
+			if System.has_separate then
+				reservation_label :=0;
+			end;
 			is_prec_first_block := False;
 			non_gc_reg_vars := 0;
 			non_gc_tmp_vars := 0;
@@ -840,7 +843,11 @@ feature
 			-- setting the entries (beneficial both in code size and execution
 			-- time
 				-- Current is needed only if used
-			nb_refs := ref_var_used;
+			if system.has_separate then
+				nb_refs := 2 * ref_var_used ;
+			else
+				nb_refs := ref_var_used;
+			end;
 				-- The hooks are only needed if there is at least one reference
 			if nb_refs > 0 then
 				if compound_or_post or else byte_code.rescue_clause = Void then
@@ -851,6 +858,9 @@ feature
 				generated_file.putint (nb_refs);
 				generated_file.putstring (gc_rparan_comma);
 				generated_file.new_line;
+				if system.has_separate then
+					reset_added_gc_hooks;
+				end;
 				from
 					hash_table := local_index_table;
 					associated := associated_register_table;
@@ -1080,6 +1090,46 @@ feature -- Inlining
 	set_inlined_current_register (r: REGISTRABLE) is
 		do
 			inlined_current_register := r
+		end
+
+feature -- Concurrent Eiffel
+	
+	print_concurrent_label is
+			-- Print label number `cur_label'.
+		do
+			generated_file.putstring ("cur_label_");
+			generated_file.putint (label);
+		end
+                                                          
+	reset_added_gc_hooks is 
+		local
+			i: INTEGER;
+		do
+			from 
+				i := ref_var_used - 1;
+			until
+				i < 0
+			loop
+				generated_file.putstring ("l[");
+				generated_file.putint (ref_var_used + i);
+				generated_file.putstring ("] = ");
+				generated_file.putstring ("(char *) 0;")
+				generated_file.new_line;
+				i := i - 1;
+			end;
+		end
+
+	reservation_label: INTEGER
+
+	inc_reservation_label is
+		do
+			reservation_label := reservation_label + 1
+		end
+
+	print_reservation_label is
+		do
+			generated_file.putstring ("res_label_");
+			generated_file.putint (reservation_label);
 		end
 
 end

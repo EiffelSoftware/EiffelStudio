@@ -128,12 +128,12 @@ feature
 				if call /= Void then
 					if target_type.is_separate then
 						generate_creation_for_separate_object(target_type);
-						generated_file.putstring ("reserve_sep_obj(");
+						generated_file.putstring ("while (CURRSO(");
 						print_register;
-						generated_file.putstring (");");
+						generated_file.putstring (")) {};");
 						generated_file.new_line;
 						call.generate;
-						generated_file.putstring ("free_sep_obj(");
+						generated_file.putstring ("CURFSO(");
 						print_register;
 						generated_file.putstring (");");
 						generated_file.new_line;
@@ -182,12 +182,12 @@ feature
 				if target_type.is_separate then
 					generate_creation_for_separate_object(target_type);
 					if call /= Void then
-						generated_file.putstring ("reserve_sep_obj(");
+						generated_file.putstring ("while (CURRSO(");
 						print_register;
-						generated_file.putstring (");");
+						generated_file.putstring (")) {};");
 						generated_file.new_line;
 						call.generate_creation_call;
-						generated_file.putstring ("free_sep_obj(");
+						generated_file.putstring ("CURFSO(");
 						print_register;
 						generated_file.putstring (");");
 						generated_file.new_line;

@@ -38,5 +38,9 @@ extern double math_power ();
 
 #endif
 
+#ifdef CONCURRENT_EIFFEL
+#include "curextern.h"
+#endif
+
 
 

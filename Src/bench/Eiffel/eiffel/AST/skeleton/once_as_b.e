@@ -27,6 +27,7 @@ feature -- Access
 			if compound /= Void then
 				Result.set_compound (compound.byte_node);
 			end;
+			Result.record_separate_calls_on_arguments
 		end;
 
 end -- class ONCE_AS_B

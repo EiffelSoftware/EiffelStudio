@@ -12,7 +12,7 @@ inherit
 			is_unsafe, optimized_byte_node,
 			calls_special_features, is_special_feature,
 			size, pre_inlined_code, inlined_byte_code,
-			has_separate_call
+			has_separate_call, reset_added_gc_hooks
 		end;
 	SHARED_TABLE;
 	SHARED_SERVER
@@ -385,48 +385,47 @@ feature -- Concurrent Eiffel
 					Result or parameters.after
 				loop
 					p ?= parameters.item;
-					-- can't fail
-					Result := p.expression.has_separate_call;
+					-- can't fail but it failed for class RESOURCE_STRING_LEX
+					if p /= Void and then p.expression /= Void then
+						Result := p.expression.has_separate_call;
+					end;
 					parameters.forth;
 				end;
 			end;
 		end
 
-	restore_current is
-		local
-			reg: REGISTRABLE;
-			changed: BOOLEAN;
-			para: PARAMETER_B;
-			tmp: INTEGER;
-		do
-			reg := context.associated_register_table.item("Current");
-			if reg = Void then
-			else
-				if parameters /= Void then
-					changed := False;
-					from
-						parameters.start;
-						tmp := 0;
-					until
-						changed or parameters.after
-					loop
-						tmp := tmp + 1;
-						para ?= parameters.item; 
-						if para /= Void then
-							changed := para.current_has_been_changed;
-						end;
-						parameters.forth;
-					end;
-					if changed then
-						reg.print_register_by_name;
-						generated_file.putstring (" = ");
-						generated_file.putstring ("l[");
-						generated_file.putint (context.ref_var_used);
-						generated_file.putstring ("];");
-						generated_file.new_line;
-					end;
-				end
-			end;
-		end
-
+	    reset_added_gc_hooks is
+        local
+            expr: PARAMETER_B;
+            para_type: TYPE_I;
+            loc_idx: INTEGER
+        do
+            if system.has_separate and  parameters /= Void then
+                from
+                    parameters.start;
+                until
+                    parameters.after
+                loop
+                    expr ?= parameters.item;    -- Cannot fail
+                    if expr /= Void then
+                        para_type := real_type(expr.attachment_type);
+                        if para_type.is_separate then
+                            if expr.stored_register.register_name /= Void then
+                                loc_idx := context.local_index (expr.stored_register.register_name);
+                            else
+                                loc_idx := -1;
+                            end;
+                            if loc_idx /= -1 then
+                                generated_file.putstring ("l[");
+                                generated_file.putint (context.ref_var_used + loc_idx);
+                                generated_file.putstring ("] = (char *)0;");
+                                generated_file.new_line;
+                            end
+                        end
+                    end
+                    parameters.forth;
+                end;
+            end
+        end
+                                             
 end

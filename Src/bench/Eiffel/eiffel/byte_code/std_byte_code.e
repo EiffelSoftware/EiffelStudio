@@ -11,6 +11,10 @@ inherit
 			calls_special_features, size,
 			inlined_byte_code, pre_inlined_code
 		end;
+	SHARED_AST_CONTEXT
+		rename
+			context as ast_context
+		end
 
 feature 
 
@@ -178,6 +182,13 @@ feature
 				-- Eiffel local variables, Result, temporary registers...
 			generate_execution_declarations;
 			generate_locals;
+			if system.has_separate then
+				search_for_separate_call_in_precondition;
+			end;
+			if has_separate_call_in_precondition then
+				generated_file.putstring ("CURDSFC;");
+				generated_file.new_line;
+			end;
 				-- If necessary, generate the once stuff (i.e. checks for
 				-- the internal done flag). That way we do not enter the body
 				-- of the once if it has already been done. Preconditions,
@@ -199,8 +210,10 @@ feature
 			if context.workbench_mode then
 				generate_save_assertion_level;
 			end;
-				-- Reserve separate parameters
-			reserve_separate_parameters;
+			if system.has_separate then
+					-- Reserve separate parameters
+				reserve_separate_parameters;
+			end;
 				-- Precondition check generation
 			generate_precondition;
 			if 
@@ -231,8 +244,10 @@ feature
 			generate_compound;
 				-- Now the postcondition
 			generate_postcondition;
-                -- Free separate parameters
-			free_separate_parameters;
+			if system.has_separate then
+	               	-- Free separate parameters
+				free_separate_parameters;
+			end;
 			if not result_type.is_void then
 					-- Function returns something. So generate the return
 					-- expression, if necessary. Otherwise, have some mercy
@@ -691,8 +706,14 @@ feature
 					generated_file.indent;
 				end;
 				generate_invariant_before;
-				generated_file.putstring ("check_sep_pre:");
-				generated_file.new_line;
+				if has_separate_call_in_precondition then
+					generated_file.exdent;
+					generated_file.putstring ("check_sep_pre:");
+					generated_file.indent;
+					generated_file.new_line;
+					generated_file.putstring ("CURCSFC;");
+					generated_file.new_line;
+				end;
 				if precondition /= Void then
 					context.set_is_prec_first_block (True);
 					Context.inc_label;
@@ -700,6 +721,14 @@ feature
 					generated_file.putstring ("RTJB;");
 					generated_file.new_line;
 					generated_file.exdent;
+					if has_separate_call_in_precondition then
+						context.print_concurrent_label;
+						generated_file.putchar (':');
+						generated_file.indent;
+						generated_file.putstring (" CURSSFC;");
+						generated_file.new_line;
+						generated_file.exdent;
+					end;
 					context.print_current_label;
 					generated_file.putchar (':');
 					generated_file.new_line;
@@ -707,17 +736,32 @@ feature
 				end;
 				
 				if inh_assert.has_precondition then
+
+					inh_assert.set_has_separate_call_in_precondition (has_separate_call_in_precondition)
+					inh_assert.set_std_obj (Current);
 					inh_assert.generate_precondition
 				end;
 
-				if has_separate_call_in_condition(precondition) then
-					-- free separate parameters
-					free_separate_parameters;
-					-- Reserve separate parameters
-					reserve_separate_parameters;
+				if has_separate_call_in_precondition then
+					generated_file.putstring ("if (!CURSFC) {");
+					generated_file.new_line;
+					generated_file.indent;
+					generated_file.putstring ("RTCF;");
+					generated_file.new_line;
+					generated_file.exdent;
+					generated_file.putstring ("} else {");
+					generated_file.new_line;
+					generated_file.indent;
 					generated_file.putstring ("RTCK;");
 					generated_file.new_line;
+						-- free separate parameters
+					free_separate_parameters;
+						-- Reserve separate parameters
+					reserve_separate_parameters;
 					generated_file.putstring ("CURCSPF;");
+					generated_file.new_line;
+					generated_file.exdent;
+					generated_file.putstring ("}");
 				else
 					generated_file.putstring ("RTCF;");
 				end;
@@ -735,23 +779,6 @@ feature
 				generate_invariant_before
 			end;
 		end;
-
-	has_separate_call_in_condition(l: BYTE_LIST [BYTE_NODE]): BOOLEAN is
-		do
-			if System.has_separate then
-			Result := False;
-			if l /= Void then
-				from
-					l.start
-				until
-					l.after or Result
-				loop
-					Result := l.item.has_separate_call;
-					l.forth;
-				end;
-			end;
-			end
-		end
 
 	generate_postcondition is
 			-- Generate postcondition check if needed
@@ -1293,66 +1320,111 @@ feature -- Inlining
 
 feature -- Concurrent Eiffel
 
+	has_separate_call_in_precondition: BOOLEAN 
+			-- is there separate feature call in the prtecondition?
+
+	search_for_separate_call_in_precondition is
+		local
+			tmp: BOOLEAN;
+			inh_pre: LINKED_LIST [BYTE_LIST [BYTE_NODE]];
+			inh_assert: INHERITED_ASSERTION;
+		do
+			if precondition /= Void then
+				tmp := precondition.has_separate_call;
+			else
+				tmp := False;
+			end;
+			inh_assert := Context.inherited_assertion;
+			if inh_assert.has_precondition then
+				from
+					inh_pre := inh_assert.precondition_list;
+					inh_pre.start;
+				until
+					tmp or inh_pre.after
+				loop
+					tmp := inh_pre.item.has_separate_call;		
+					inh_pre.forth;
+				end;
+			end;
+			has_separate_call_in_precondition := tmp;
+		end
+
+			-- generate codes for reserving separate parameters of a feature
+			-- whose indexes are less than "idx".
 	reserve_separate_parameters is
-		-- generate codes for reserving separate parameters of a feature
+			-- generate codes for reserving separate parameters of a feature
 		local
 			i, count: INTEGER;
 			var_name: STRING;
 			reg: REGISTRABLE
 		do
-			if system.has_separate then
-			-- Reserve separate parameters
-			!!var_name.make(10);
-			if arguments /= Void then
+				-- Reserve separate parameters
+			if arguments /= Void and then has_separate_call_in_the_feature then
+				generated_file.exdent;
+				Context.inc_reservation_label;
+				Context.print_reservation_label;
+				generated_file.putstring (":")
+				generated_file.indent;
+				generated_file.new_line;
+				!!var_name.make(10);
 				from 
 					!!var_name.make(10);
 					i := arguments.lower;
-					count := arguments.count;
+					count := arguments.count + i - 1;
 				until
 					i > count
 				loop
-					if real_type(arguments.item(i)).is_separate then
+					if real_type(arguments.item(i)).is_separate 
+						and then separate_call_on_argument (i) then
 						var_name.wipe_out;
 						var_name.append("arg");
 						var_name.append(i.out);							
 						reg := context.associated_register_table.item(var_name);
 						if reg /= Void then
-							generated_file.putstring ("reserve_sep_obj(");
+							generated_file.putstring ("if (CURRSO(");
 							reg.print_register_by_name;
-							generated_file.putstring (");")
+							generated_file.putstring (")) {")
+							generated_file.indent;
+							generated_file.new_line;
+							free_partial_sep_paras (i);
+							generated_file.putstring ("goto ")
+							Context.print_reservation_label;
+							generated_file.putstring (";")
+							generated_file.new_line;
+							generated_file.exdent;
+							generated_file.putstring ("}")
+							generated_file.new_line;
 						end
-						generated_file.new_line;
 					end
 					i := i + 1;
 				end;
 			end;
-			end
 		end
 
 	free_separate_parameters is 
-		-- generate codes for freeing separate parameters of a feature
+			-- generate codes for freeing separate parameters of a feature
 		local
 			i, count: INTEGER;
 			var_name: STRING;
 			reg: REGISTRABLE
 		do
-			if system.has_separate then
-            -- Free separate parameters
+            	-- Free separate parameters
 			!!var_name.make(10);
             if arguments /= Void then
                 from 
                     i := arguments.lower;
-                    count := arguments.count;
+                    count := arguments.count + i - 1;
                 until
                     i > count
                 loop
-                    if real_type(arguments.item(i)).is_separate then
+                    if real_type(arguments.item(i)).is_separate 
+						and then separate_call_on_argument (i) then
                         var_name.wipe_out;
                         var_name.append("arg");
                         var_name.append(i.out);                            
                         reg := context.associated_register_table.item(var_name);
                         if reg /= Void then
-	                        generated_file.putstring ("free_sep_obj(");
+	                        generated_file.putstring ("CURFSO(");
                             reg.print_register_by_name;
                         	generated_file.putstring (");")
                         end
@@ -1361,6 +1433,85 @@ feature -- Concurrent Eiffel
                     i := i + 1;
                 end;
             end;
+		end
+
+	free_partial_sep_paras (idx: INTEGER) is 
+			-- generate codes for freeing separate parameters of a feature
+			-- whose indexes are less than "idx".
+		local
+			i, count: INTEGER;
+			var_name: STRING;
+			reg: REGISTRABLE
+		do
+            	-- Free separate parameters
+			!!var_name.make(10);
+            if arguments /= Void then
+                from 
+                    i := arguments.lower;
+                    count := arguments.count + i - 1;
+                until
+                    i >= idx or i > count
+                loop
+                    if real_type(arguments.item(i)).is_separate 
+						and then separate_call_on_argument (i) then
+                        var_name.wipe_out;
+                        var_name.append("arg");
+                        var_name.append(i.out);                            
+                        reg := context.associated_register_table.item(var_name);
+                        if reg /= Void then
+	                        generated_file.putstring ("CURFSO(");
+                            reg.print_register_by_name;
+                        	generated_file.putstring (");")
+                        	generated_file.new_line;
+                        end
+                    end
+                    i := i + 1;
+                end;
+            end;
+		end
+
+	separate_call_on_argument (i: INTEGER): BOOLEAN is
+            -- Is argument `i' used in a separate call?
+		local
+			s: like separate_calls
+        do
+			s := separate_calls
+            if s /= Void and then i>= s.lower and i <= s.upper then
+                Result := s @ i
+            end
+        end
+
+	separate_calls: ARRAY [BOOLEAN]
+			-- Record separate calls on arguments
+
+	record_separate_calls_on_arguments is
+			-- Record separate calls on arguments
+		local
+			ast_sep_call: ARRAY [BOOLEAN]
+		do
+			if System.has_separate then
+				ast_sep_call := Ast_context.separate_calls
+				if not ast_sep_call.empty then
+					separate_calls := clone (ast_sep_call)
+				end
+			end
+		end
+
+	has_separate_call_in_the_feature: BOOLEAN is
+		local
+			i: INTEGER;
+			s: like separate_calls
+		do
+			s := separate_calls
+			if s /= Void then
+				i := s.lower
+			end
+			from 
+			until
+				Result or (s = Void or else i > s.upper)
+			loop
+				Result := s @ i
+				i := i + 1
 			end
 		end
 

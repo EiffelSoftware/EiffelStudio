@@ -6,7 +6,12 @@ root
 
 default
 
-	assertion (require);
+	--assertion (require);
+	--exception_stack_managed(yes);
+	--fail_on_rescue (yes);
+	--debug("RESOURCES");
+	--debug("storer");
+	--precompiled ("$LOCAL_PRECOMPILE");
 
 cluster
 
@@ -19,6 +24,7 @@ cluster
 	constants:		"$BUILD/Constants";
 	shared:			"$BUILD/Shared";
 	icon:			"$BUILD/Icon";
+	resources:		"$BUILD/resources";
 	structures:		"$BUILD/Structures";
 	windows:		"$BUILD/Windows";
 	windowMgr:		"$BUILD/WindowMgr";
@@ -31,8 +37,7 @@ cluster
 
 	generation:		"$BUILD/Generation";
 
-	transport_common:	"$BUILD/Transport/common";
-	transport_specific:	"$BUILD/Transport/$TOOLKIT";
+	transporter:	"$BUILD/Transport/common";
 
 	context_commands:   "$BUILD/Context/Commands";
 	context_editor:	 	"$BUILD/Context/Editor";

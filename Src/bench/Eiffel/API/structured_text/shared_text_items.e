@@ -655,12 +655,6 @@ feature {NONE} -- Basic text
 			!! Result.make
 		end;
 
-	ti_Breakpoint: BREAKPOINT_ITEM is
-			-- Breakpoint item 
-		once
-			!! Result
-		end;
-
 	ti_Current: BASIC_TEXT is
 			-- Breakpoint item 
 		once

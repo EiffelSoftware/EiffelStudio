@@ -13,7 +13,7 @@
 	executable.
 */
 
-#include "config.h"
+#include "eif_config.h"
 
 #ifdef I_STRING
 #include <string.h>
@@ -22,15 +22,15 @@
 #endif
 
 
-#include "garcol.h"
-#include "malloc.h"
-#include "cecil.h"
-#include "macros.h"					/* for BIT_PACKSIZE, BIT_UNIT */
-#include "bits.h"
-#include "local.h"
-#include "plug.h"
-#include "except.h"
-#include "lmalloc.h"				/* for malloc() */
+#include "eif_garcol.h"
+#include "eif_malloc.h"
+#include "eif_cecil.h"
+#include "eif_macros.h"					/* for BIT_PACKSIZE, BIT_UNIT */
+#include "eif_bits.h"
+#include "eif_local.h"
+#include "eif_plug.h"
+#include "eif_except.h"
+#include "eif_lmalloc.h"				/* for malloc() */
 
 /* Bit shifting */
 rt_private char *b_left_shift(char *bit, long int s);		/* Shift bit field to the left */

@@ -10,16 +10,8 @@
 		Option queries, profiler core, tracer core
 */
 
-#include "config.h"
-#include "struct.h"
-#include "option.h"
-#include "hashin.h"
-#include "malloc.h"
-#include "macros.h"
-#include "except.h"
-#include "timer.h"
-#include "tools.h"		/* For hashcode() */
 #include <stdio.h>
+#include "eif_config.h"
 #ifdef I_STRING
 #include <string.h>
 #else
@@ -30,7 +22,18 @@
 #include <sys/param.h>      /* For value of HZ */
 #endif
 #endif
-#include "err_msg.h"
+#ifdef _CRAY
+#include <sys/machd.h>
+#endif
+#include "eif_struct.h"
+#include "eif_option.h"
+#include "eif_hashin.h"
+#include "eif_malloc.h"
+#include "eif_macros.h"
+#include "eif_except.h"
+#include "eif_timer.h"
+#include "eif_tools.h"		/* For hashcode() */
+#include "eif_err_msg.h"
 
 
 
@@ -40,7 +43,7 @@ rt_public int trace_call_level = 0;	/* call level for E-TRACE
 
 rt_public struct stack *prof_stack;
 
-EIF_INTEGER prof_enabled;
+extern EIF_INTEGER prof_enabled;
 
 /* INTERNAL TRACE VARIABLES */
 

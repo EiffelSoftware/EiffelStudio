@@ -10,22 +10,22 @@
 	Eiffel retrieve mechanism.
 */
 
-#include "config.h"
-#include "portable.h"
-#include "macros.h"
-#include "malloc.h"
-#include "garcol.h"
-#include "except.h"
-#include "hector.h"
-#include "cecil.h"
-#include "retrieve.h"
-#include "store.h"
-#include "bits.h"
-#include "run_idr.h"
-#include "error.h"
-#include "rtlimits.h"
-#include "traverse.h"
-#include "compress.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_macros.h"
+#include "eif_malloc.h"
+#include "eif_garcol.h"
+#include "eif_except.h"
+#include "eif_hector.h"
+#include "eif_cecil.h"
+#include "eif_retrieve.h"
+#include "eif_store.h"
+#include "eif_bits.h"
+#include "eif_run_idr.h"
+#include "eif_error.h"
+#include "eif_rtlimits.h"
+#include "eif_traverse.h"
+#include "eif_compress.h"
 
 #include <ctype.h>					/* For isspace() */
 
@@ -41,7 +41,7 @@
 
 #ifdef EIF_WIN32
 #include <io.h>		/* %%ss added for read */
-#include "winsock.h"
+#include <winsock.h>
 #endif
 
 #ifdef __VMS
@@ -934,7 +934,7 @@ rt_private void rt_update1 (register char *old, register EIF_OBJ new)
 		rt_unsolved = next;	
 	}
 
-	/* Put the new hector pointer as a olved reference in the hash table */
+	/* Put the new hector pointer as a solved reference in the hash table */
 	rt_info->rt_status = SOLVED;
 	rt_info->rt_obj = new;
 }

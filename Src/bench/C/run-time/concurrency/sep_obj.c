@@ -1,8 +1,8 @@
-#include "net.h"
-#include "curextern.h"
-#include "sig.h"
+#include "eif_net.h"
+#include "eif_curextern.h"
+#include "eif_sig.h"
 
-/* The folowing macros will be moved into "constant.h" when the source file
+/* The folowing macros will be moved into "eif_constant.h" when the source file
  * is integrated into CEC's run-time.
  * Now, we define a SEP_OBJ's data as: 
  *		EIF_INTEGER sep_obj[constant_sep_obj_size]

@@ -10,8 +10,8 @@
 # $Id$
 #
 # $Log$
-# Revision 1.2  1997/10/04 05:36:57  grator
-# *** empty log message ***
+# Revision 1.3  1997/10/06 19:13:22  paulv
+# Renaming of all Eiffel include files (foo.h -> eif_foo.h)
 #
 
 # _setjmp and _longjmp do not work properly!!

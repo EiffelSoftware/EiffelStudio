@@ -11,7 +11,7 @@
 
 */
 
-#include "config.h"
+#include "eif_config.h"
 #ifdef I_STRING
 #include <string.h>
 #else

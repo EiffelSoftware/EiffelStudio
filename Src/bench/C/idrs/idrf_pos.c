@@ -14,8 +14,8 @@
 	input and the output structure.
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include "idrf.h"
 
 rt_public void idrf_pos(IDRF *idrf)

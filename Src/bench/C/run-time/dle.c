@@ -14,18 +14,18 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-#include "macros.h"
-#include "struct.h"
-#include "hashin.h"
-#include "except.h"
-#include "cecil.h"
-#include "misc.h"
-#include "file.h"
-#include "err_msg.h"
-#include "dle.h"
+#include "eif_macros.h"
+#include "eif_struct.h"
+#include "eif_hashin.h"
+#include "eif_except.h"
+#include "eif_cecil.h"
+#include "eif_misc.h"
+#include "eif_file.h"
+#include "eif_err_msg.h"
+#include "eif_dle.h"
 
 #ifdef WORKBENCH
-#include "update.h"
+#include "eif_update.h"
 #endif
 #ifdef I_DLFCN
 #include <dlfcn.h>

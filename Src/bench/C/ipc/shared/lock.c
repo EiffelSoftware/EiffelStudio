@@ -10,8 +10,8 @@
 	Lock file handling.
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>

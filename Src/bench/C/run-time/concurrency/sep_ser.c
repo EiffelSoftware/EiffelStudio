@@ -5,8 +5,8 @@ direct(also called raw or unprotected) address; use EIF_REFERENCE
 to indicate indirect(also called Eiffel or protected) address.
 *****************************************************************/
 
-#include "net.h"
-#include "curextern.h"
+#include "eif_net.h"
+#include "eif_curextern.h"
 #define tSTOP_GC
 
 #define STOP_GC

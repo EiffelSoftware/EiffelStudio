@@ -10,11 +10,11 @@
 	Hash table handling (indexed by integer keys).
 */
 
-#include "config.h"
-#include "tools.h"
-#include "hashin.h"
-#include "malloc.h"
-#include "except.h"	/* for panic() */
+#include "eif_config.h"
+#include "eif_tools.h"
+#include "eif_hashin.h"
+#include "eif_malloc.h"
+#include "eif_except.h"	/* for panic() */
 
 #ifdef I_STRING
 #include <string.h>		/* For memset(), bzero() */

@@ -9,7 +9,7 @@
 #include <stdio.h>
 
 /* Original skeleton (flex 2.4.7) modified for OS2 port */
-#include "config.h"
+#include "eif_config.h"
  
 #ifdef EIF_OS2
 #include <io.h>
@@ -592,10 +592,10 @@ char *xxtext_ptr;
 	Lace lex analyzer description
 */
 
-#include "config.h"
+#include "eif_config.h"
 #include "lace_y.h"
-#include "rtlimits.h"
-#include "err_msg.h"
+#include "eif_rtlimits.h"
+#include "eif_err_msg.h"
 #include <ctype.h>
 
 /* private functions for lex */

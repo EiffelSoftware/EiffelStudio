@@ -25,8 +25,8 @@ $startsh
 #  Licence as specified in the README file that comes with dist.
 #
 # $Log$
-# Revision 1.2  1997/10/04 05:31:58  grator
-# *** empty log message ***
+# Revision 1.3  1997/10/06 19:12:35  paulv
+# Renaming of all Eiffel include files (foo.h -> eif_foo.h)
 #
 # Revision 2.8  91/07/08  13:27:17  ram
 # 3.0 alpha baseline.

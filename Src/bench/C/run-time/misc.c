@@ -11,19 +11,19 @@
 
 */
 
-#include "config.h"
+#include "eif_config.h"
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-#include <file.h>
+#include <eif_file.h>
 #endif
 
 #include <signal.h>
 #include <stdlib.h>
 #include <string.h>
-#include "misc.h"
-#include "malloc.h"
-#include "macros.h"
+#include "eif_misc.h"
+#include "eif_malloc.h"
+#include "eif_macros.h"
 
 #include <ctype.h>			/* For toupper(), is_alpha(), ... */
 #include <stdio.h>
@@ -212,7 +212,7 @@ rt_public EIF_INTEGER eif_putenv (EIF_OBJ v, EIF_OBJ k)
 	strcpy (lower_k, eif_access(k));
 	CharLowerBuff (lower_k, key_len);
 
-	strcpy (key, "Software\\ISE\\Eiffel4\\");
+	strcpy (key, "Software\\ISE\\Eiffel42\\");
 	strncat (key, rindex(modulename, '\\')+1, appl_len);
 
 	if (RegCreateKeyEx (HKEY_CURRENT_USER, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS) {
@@ -278,7 +278,7 @@ rt_public EIF_OBJ eif_getenv (EIF_OBJ k)
 	strcpy (lower_k, k);
 	CharLowerBuff (lower_k, key_len);
 
-	strcpy (key, "Software\\ISE\\Eiffel4\\");
+	strcpy (key, "Software\\ISE\\Eiffel42\\");
 	strncat (key, rindex(modulename, '\\')+1, appl_len);
 
 	if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {

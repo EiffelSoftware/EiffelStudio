@@ -20,11 +20,11 @@
 #include <sys/ioctl.h>
 #include <signal.h>
 #endif
-#include "portable.h"
+#include "eif_portable.h"
 */
 
 
-#include "config.h"
+#include "eif_config.h"
 #include <stdio.h>
 #include <sys/types.h>
 #include <errno.h>
@@ -38,7 +38,7 @@
 #define EWOULDBLOCK WSAEWOULDBLOCK
 #define EINPROGRESS WSAEINPROGRESS
 #include <stdio.h>
-#include "except.h"
+#include "eif_except.h"
 #else
 #include <pwd.h>
 #endif
@@ -54,7 +54,7 @@
 #ifndef EIF_WIN32
 #include <sys/ioctl.h>
 #endif
-#include "cecil.h"
+#include "eif_cecil.h"
 #ifdef I_SYS_SOCKET
 #include <sys/socket.h>
 #include <netdb.h>

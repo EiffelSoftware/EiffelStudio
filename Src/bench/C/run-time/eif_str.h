@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-#include "portable.h"
+#include "eif_portable.h"
 
 extern int str_left(register char *str, int length);
 extern void str_ljustify(register char *str, int length, int capacity);

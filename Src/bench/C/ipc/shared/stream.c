@@ -21,8 +21,8 @@
 
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include "stream.h"
 
 #define MAX_FILE_DESC	64		/* To be Configured--FIXME */

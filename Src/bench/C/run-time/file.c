@@ -11,13 +11,15 @@
 
 */
 
-#include "config.h"
+#include "eif_config.h"
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
-
+#ifdef _CRAY
+#include <sys/param.h>
+#endif
 /* #include <stdio.h>	*/	/* %%zs here, moved <stdio.h> into file.h */
 #include <errno.h>
 #include <ctype.h>
@@ -53,7 +55,7 @@
 #include <processes.h>		/* for system() */
 #endif
 
-#include "err_msg.h"
+#include "eif_err_msg.h"
 #ifdef I_PWD
 #include <pwd.h>
 #endif
@@ -80,13 +82,13 @@
 #include <sys/file.h>
 #endif
 
-#include "portable.h"
-#include "except.h"
-#include "plug.h"
-#include "error.h"
-#include "dir.h"
+#include "eif_portable.h"
+#include "eif_except.h"
+#include "eif_plug.h"
+#include "eif_error.h"
+#include "eif_dir.h"
 
-#include "file.h"
+#include "eif_file.h"
 
 #define FS_START	0			/* Beginning of file for `fseek' */
 #define FS_CUR		1			/* Current position for `fseek' */
@@ -234,7 +236,7 @@ rt_public EIF_POINTER file_binary_reopen(char *name, int how, FILE *old)
 }
 
 #ifdef EIF_WINDOWS
-#include "windows.h"
+#include <windows.h>
 #endif
 
 rt_private char *file_fopen(char *name, char *type)

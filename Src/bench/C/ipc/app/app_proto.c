@@ -10,9 +10,9 @@
 	Protocol handling. Send requests and wait for answers.
 */
 
-#include "config.h"
-#include "portable.h"
-#include "err_msg.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_err_msg.h"
 #include <sys/types.h>
 
 #ifdef EIF_WIN32
@@ -29,14 +29,14 @@
 #include "ewbio.h"
 #include "stack.h"
 #include "idrf.h"
-#include "debug.h"
-#include "except.h"
+#include "eif_debug.h"
+#include "eif_except.h"
 #include "server.h"
-#include "interp.h"
+#include "eif_interp.h"
 #include "select.h"
-#include "hector.h"
-#include "bits.h"
-#include "eiffel.h"
+#include "eif_hector.h"
+#include "eif_bits.h"
+#include "eif_eiffel.h"
 
 #ifdef EIF_WIN32
 #include "stream.h"
@@ -477,6 +477,7 @@ rt_private void once_inspect(int s, Opaque *what)
 	 * its result may be ask by ewb.
 	 */
 
+	int arg_num;
 	uint32 body_id = (uint32) what->op_third;	/* Body_id of once routine */
 
 	switch (what->op_first) {		/* First value describes request */
@@ -487,9 +488,8 @@ rt_private void once_inspect(int s, Opaque *what)
 			twrite("false", 5);
 		break;
 	case OUT_RESULT:			/* Result of already called once function */
-		send_once_result(s, body_id, what->op_second);	/* Send result back to ewb */
-														/* the last argument is the number of 
-														/* arguments to be passed */
+		arg_num = what->op_second;	/* Number of arguments to be passed */
+		send_once_result(s, body_id, arg_num);	/* Send result back to ewb */
 		break;
 	default:
 		panic("BUG once inspect");

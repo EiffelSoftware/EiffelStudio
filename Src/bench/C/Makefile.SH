@@ -94,7 +94,7 @@ local_realclean:: local_clean
 	$(RM) -r UU
 
 local_clobber:: local_realclean
-	$(RM) config.sh config.h
+	$(RM) config.sh eif_config.h
 	$(RM) -r .config
 	$(RM) Makefile
 

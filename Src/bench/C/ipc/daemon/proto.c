@@ -10,14 +10,14 @@
 	Protocol handling. Wait for requests and dispatch them,
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 
 #ifdef EIF_WIN32
 #include <file.h>
 #define print_err_msg fprintf
 #else
-#include "err_msg.h"
+#include "eif_err_msg.h"
 #endif
 
 #include <sys/types.h>

@@ -6,7 +6,7 @@
  * to a token structure. Due to gperf constraints, the structure has to
  * be declared here and in lex and cannot be held in an include file--RAM.
  */
-#include "macros.h"
+#include "eif_macros.h"
 #include "parser.h"
 struct token {
 	char *name;		/* The name is imposed by gperf */

@@ -15,8 +15,8 @@
 #ifndef _idr_h_
 #define _idr_h_
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include <sys/types.h>
 
 #ifdef I_NETINET_IN

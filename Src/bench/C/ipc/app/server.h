@@ -13,7 +13,7 @@
 #ifndef _server_h_
 #define _server_h_
 
-#include "cecil.h" 	/* %%ss added for EIF_OBJ */
+#include "eif_cecil.h" 	/* %%ss added for EIF_OBJ */
 
 extern void dserver(void);		/* Main entry point into server mode */
 extern void dinterrupt(void);	/* Wonder if application has been interrupted */

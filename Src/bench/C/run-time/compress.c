@@ -94,7 +94,7 @@ clearness. In this example there are six padding bits.
 #ifdef DEBUG_CMPS
 #include <assert.h>
 #endif
-#include "compress.h"
+#include "eif_compress.h"
 
 /*
  *   eif_compress
@@ -109,10 +109,7 @@ clearness. In this example there are six padding bits.
  *
  */
 
-/* future ANSI function signature definition
 void eif_compress (unsigned char* in_buf, unsigned long in_size, unsigned char* out_buf, unsigned long* pout_size)
-*/
-void eif_compress (unsigned char *in_buf, long unsigned int in_size, unsigned char *out_buf, long unsigned int *pout_size)
 {
  unsigned char* in_ptr = NULL;
  unsigned char* out_ptr = NULL;
@@ -224,10 +221,7 @@ void eif_compress (unsigned char *in_buf, long unsigned int in_size, unsigned ch
  *
  */
 
-/* future ANSI function signature definition
  void eif_decompress (unsigned char* in_buf, unsigned long in_size, unsigned char* out_buf, unsigned long* pout_size)
-*/
-void eif_decompress (unsigned char *in_buf, long unsigned int in_size, unsigned char *out_buf, long unsigned int *pout_size)
 {
  unsigned char* in_ptr = NULL;
  unsigned char* out_ptr = NULL;
@@ -330,10 +324,7 @@ void eif_decompress (unsigned char *in_buf, long unsigned int in_size, unsigned 
  *
  */
 
-/* future ANSI function signature definition
 void eif_cmps_read_u32_from_char_buf (unsigned char* in_buf, uint32* pout_value)
-*/
-void eif_cmps_read_u32_from_char_buf (unsigned char *in_buf, uint32 *pout_value)
 {
 #ifdef DEBUG_CMPS
  assert (in_buf != NULL);
@@ -357,10 +348,7 @@ void eif_cmps_read_u32_from_char_buf (unsigned char *in_buf, uint32 *pout_value)
  *
  */
 
-/* future ANSI function signature definition
 void eif_cmps_write_u32_to_char_buf (uint32 in_value, unsigned char* out_buf)
-*/
-void eif_cmps_write_u32_to_char_buf (uint32 in_value, unsigned char *out_buf)
 {
 #ifdef DEBUG_CMPS
  assert (out_buf != NULL);

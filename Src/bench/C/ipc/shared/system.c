@@ -10,8 +10,8 @@
 	Implementations of some non-standard system routines.
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 
 #include <sys/types.h>
 #include "timehdr.h"

@@ -4,14 +4,14 @@
 
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include <stdio.h>
 
-#include "file.h"
+#include "eif_file.h"
 
 #ifdef EIF_WIN32
-#include "econsole.h"									/* console */
+#include "eif_econsole.h"									/* console */
 #endif
 
 rt_public EIF_POINTER file_def(int file)

@@ -4,8 +4,8 @@
  * running Configure.
  *
  * Feel free to modify any of this as the need arises.  Note, however,
- * that running config.h.SH again will wipe out any changes you've made.
- * For a more permanent change edit config.sh and rerun config.h.SH.
+ * that running eif_config.h.SH again will wipe out any changes you've made.
+ * For a more permanent change edit config.sh and rerun eif_config.h.SH.
  *
  * $Id$
  */
@@ -589,7 +589,7 @@
  *
  *	The package designer should define VOIDUSED to indicate the requirements
  *	of the package.  This can be done either by #defining VOIDUSED before
- *	including config.h, or by defining defvoidused in Myinit.U.  If the
+ *	including eif_config.h, or by defining defvoidused in Myinit.U.  If the
  *	latter approach is taken, only those flags will be tested.  If the
  *	level of void support necessary is not present, defines void to int.
  */

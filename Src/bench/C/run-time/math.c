@@ -10,8 +10,8 @@
 	Externals for class SINGLE_MATH (mathematical operation on REAL).
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include <math.h>
 
 rt_public float math_rcos(float v)

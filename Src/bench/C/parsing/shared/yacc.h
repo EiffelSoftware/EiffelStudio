@@ -10,10 +10,10 @@
 	Include file for basics of Eiffel-Yacc interface
 */
 
-#include "macros.h"
-#include "struct.h"
+#include "eif_macros.h"
+#include "eif_struct.h"
 #include "typenode.h"
-#include "rtlimits.h"
+#include "eif_rtlimits.h"
 
 /*
  * Eiffel object (Abstract Systac Nodes0 creation

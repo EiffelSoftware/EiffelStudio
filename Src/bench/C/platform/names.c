@@ -3,7 +3,7 @@
 #include <windows.h>
 #endif
 
-#include "eiffel.h"
+#include "eif_eiffel.h"
 
 rt_public EIF_REFERENCE eif_dot_e (void)
 {

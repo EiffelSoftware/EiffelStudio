@@ -10,8 +10,8 @@
 	Transfer routines between ewb and app via ised.
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include <sys/types.h>
 #include "logfile.h"
 #include "shared.h"

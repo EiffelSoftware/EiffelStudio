@@ -10,17 +10,17 @@
 	Partial store mechanism
 */
 
-#include "config.h"
-#include "portable.h"
-#include "macros.h"
-#include "traverse.h"
-#include "garcol.h"
-#include "except.h"
-#include "store.h"
-#include "garcol.h"
-#include "memory.h"
-#include "error.h"
-#include "compress.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_macros.h"
+#include "eif_traverse.h"
+#include "eif_garcol.h"
+#include "eif_except.h"
+#include "eif_store.h"
+#include "eif_garcol.h"
+#include "eif_memory.h"
+#include "eif_error.h"
+#include "eif_compress.h"
 
 #ifdef EIF_OS2
 #include <io.h>

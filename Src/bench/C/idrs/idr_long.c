@@ -19,7 +19,7 @@
 */
 
 #include "idr.h"
-#include "size.h"
+#include "eif_size.h"
 
 rt_public bool_t idr_long(IDR *idrs, long int *lp)
 {

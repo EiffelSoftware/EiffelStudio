@@ -8,6 +8,7 @@ make='$compiler_path\bin\make'
 #
 #-- MT debug
 #-----------
+#optimize='-O2'
 #ccflags='-N -M -w- -v -tWM -DEIF_THREADS'
 #
 #-- MT no debug

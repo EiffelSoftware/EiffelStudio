@@ -10,8 +10,8 @@
 	Network handling of debugging requests, when application is stopped.
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include "proto.h"
 #include "ewbio.h"
 #include "stream.h"

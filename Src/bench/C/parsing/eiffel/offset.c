@@ -10,7 +10,7 @@
 	Primitves for attribute offsets evaluation 
 */
 
-#include "macros.h"
+#include "eif_macros.h"
 
 /*
  * Declarations

@@ -11,11 +11,11 @@
 
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include "eif_globals.h"
 #include <stdio.h>
-#include "err_msg.h"
+#include "eif_err_msg.h"
 #include <sys/types.h>
 #ifdef I_NETINET_IN
 #include <netinet/in.h>
@@ -24,16 +24,16 @@
 #include <sys/in.h>
 #endif
 #endif
-#include "eiffel.h"
-#include "bits.h"
+#include "eif_eiffel.h"
+#include "eif_bits.h"
 #if !defined(CUSTOM) || defined(NEED_RETRIEVE_H)
-#include "retrieve.h"
+#include "eif_retrieve.h"
 #endif
 #if !defined(CUSTOM) || defined(NEED_STORE_H)
-#include "store.h"
+#include "eif_store.h"
 #endif
-#include "error.h"
-#include "run_idr.h"
+#include "eif_error.h"
+#include "eif_run_idr.h"
 #include "../idrs/idrf.h"
 #ifdef EIF_OS2
 #include <io.h>
@@ -443,14 +443,15 @@ rt_public void widr_multi_char (char *obj, int num)
 
 		while (count) {
 			check_capacity (&idrf.i_encode, cap);
-                	bcopy (obj, idrf.i_encode.i_ptr, cap);
+			bcopy (obj, idrf.i_encode.i_ptr, cap);
 			obj += cap;
-                	idrf.i_encode.i_ptr += cap;
+			idrf.i_encode.i_ptr += cap;
 			count--;
 		}
+
 		check_capacity (&idrf.i_encode, left_over);
-                bcopy (obj, idrf.i_encode.i_ptr, left_over);
-                idrf.i_encode.i_ptr += left_over;
+		bcopy (obj, idrf.i_encode.i_ptr, left_over);
+		idrf.i_encode.i_ptr += left_over;
 
 	}
 }

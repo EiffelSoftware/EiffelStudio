@@ -18,8 +18,8 @@
 	dexit(int status) to disconnect with the provided status.
 */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include "request.h"
 #include "com.h"
 #include "stream.h"

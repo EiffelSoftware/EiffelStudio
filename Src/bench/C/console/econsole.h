@@ -3,7 +3,7 @@
 
 */
 
-#include "eiffel.h"
+#include "eif_eiffel.h"
 
 extern void eif_console_next_line(void);
 extern void eif_console_putint(EIF_INTEGER);

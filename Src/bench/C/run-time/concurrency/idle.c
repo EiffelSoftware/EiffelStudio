@@ -1,5 +1,5 @@
-#include "net.h"
-#include "curextern.h"
+#include "eif_net.h"
+#include "eif_curextern.h"
 
 /* if we want that a processor can release all resources(separate objects)
  * currently held by itself when it can't get another resource, we should

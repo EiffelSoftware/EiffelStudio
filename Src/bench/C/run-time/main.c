@@ -14,26 +14,26 @@
 #include <stdlib.h>
 #include <signal.h>
 
-#include "config.h"
+#include "eif_config.h"
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
-#include "portable.h"
-#include "urgent.h"
-#include "garcol.h"
-#include "except.h"
-#include "sig.h"
+#include "eif_portable.h"
+#include "eif_urgent.h"
+#include "eif_garcol.h"
+#include "eif_except.h"
+#include "eif_sig.h"
 
 #ifdef WORKBENCH
-#include "wbench.h"		/* %%ss added for create_desc */
-#include "interp.h"
-#include "update.h"
+#include "eif_wbench.h"		/* %%ss added for create_desc */
+#include "eif_interp.h"
+#include "eif_update.h"
 #include "server.h"						/* ../ipc/app */
 #endif /* WORKBENCH */
 
-#include "err_msg.h"
+#include "eif_err_msg.h"
 
 #ifdef EIF_WINDOWS
 #define WIN32_LEAN_AND_MEAN
@@ -43,16 +43,16 @@
 #endif
 
 #if !defined CUSTOM || defined NEED_UMAIN_H
-#include "umain.h"
+#include "eif_umain.h"
 #endif
 
 #if !defined CUSTOM || defined NEED_ARGV_H
-#include "argv.h"
+#include "eif_argv.h"
 #endif
 
-#include "malloc.h"
-#include "main.h"
-#include "project.h"					/* for einit() */
+#include "eif_malloc.h"
+#include "eif_main.h"
+#include "eif_project.h"					/* for einit() */
 
 #define null (char *) 0					/* Null pointer */
 

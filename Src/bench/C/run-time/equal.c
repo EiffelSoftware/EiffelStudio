@@ -10,14 +10,14 @@
 		Equality C externals
 */
 
-#include "config.h"
-#include "eiffel.h"			/* For standard macros */
-#include "equal.h"			/* For Eiffel boolean */
-#include "struct.h"			/* For skeleton structure */
-#include "traverse.h"		/* For traversing objects */
-#include "macros.h"			/* For macro LNGPAD */
-#include "tools.h"			/* For `nprime' */
-#include "search.h"
+#include "eif_config.h"
+#include "eif_eiffel.h"			/* For standard macros */
+#include "eif_equal.h"			/* For Eiffel boolean */
+#include "eif_struct.h"			/* For skeleton structure */
+#include "eif_traverse.h"		/* For traversing objects */
+#include "eif_macros.h"			/* For macro LNGPAD */
+#include "eif_tools.h"			/* For `nprime' */
+#include "eif_search.h"
 
 #define dprintf(n) if (DEBUG & n) printf
 
@@ -291,7 +291,7 @@ rt_public int ediso(char *target, char *source)
 	result = rdeepiso(target,source);	/* Recursive isomorphism test */
 	g_data.status = g_status;			/* Restore GC status */
 	xfree((char *) (table->s_keys));	/* Free search table keys */
-	xfree((char *) table);						/* Free search table descriptor */
+	xfree((char *) table);				/* Free search table descriptor */
 	return result;
 	EIF_END_GET_CONTEXT
 }

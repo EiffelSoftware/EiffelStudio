@@ -10,10 +10,10 @@
 	External C routine for Eiffel syntax analysis
 */
 
-#include "config.h"
-#include "macros.h"
+#include "eif_config.h"
+#include "eif_macros.h"
 #include "eiffel_c.h"
-#include "plug.h"
+#include "eif_plug.h"
 #include <stdio.h>
 
 /*

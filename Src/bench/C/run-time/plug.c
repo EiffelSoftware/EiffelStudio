@@ -10,22 +10,22 @@
 	A set of routines to plug the run-time in the generated C code.
 */
 
-#include "config.h"
-#include "eiffel.h"
-#include "plug.h"
-#include "malloc.h"
+#include "eif_config.h"
+#include "eif_eiffel.h"
+#include "eif_plug.h"
+#include "eif_malloc.h"
 #if !defined CUSTOM || defined NEED_OPTION_H
-#include "option.h"
+#include "eif_option.h"
 #endif
-#include "macros.h"
-#include "except.h"
-#include "local.h"
-#include "interp.h"
+#include "eif_macros.h"
+#include "eif_except.h"
+#include "eif_local.h"
+#include "eif_interp.h"
 #if !defined CUSTOM || defined NEED_HASHIN_H
-#include "hashin.h"
+#include "eif_hashin.h"
 #endif
-#include "bits.h"
-#include "project.h"		/* for bit_dtype */
+#include "eif_bits.h"
+#include "eif_project.h"		/* for bit_dtype */
 
 
 #ifndef lint

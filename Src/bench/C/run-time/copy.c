@@ -10,20 +10,20 @@
 	Multiple copy routines.
 */
 
-#include "config.h"
-#include "eiffel.h"
-#include "copy.h"
-#include "traverse.h"		/* For deep copies */
+#include "eif_config.h"
+#include "eif_eiffel.h"
+#include "eif_copy.h"
+#include "eif_traverse.h"		/* For deep copies */
 
 #if ! defined CUSTOM || defined NEED_HASH_H
-#include "hash.h"			/* For deep copies */
+#include "eif_hash.h"			/* For deep copies */
 #endif
 
-#include "struct.h"
-#include "except.h"
-#include "local.h"
-#include "hector.h"
-#include "garcol.h"
+#include "eif_struct.h"
+#include "eif_except.h"
+#include "eif_local.h"
+#include "eif_hector.h"
+#include "eif_garcol.h"
 
 #define SHALLOW		1		/* Copy first level only */
 #define DEEP		2		/* Recursive copy */

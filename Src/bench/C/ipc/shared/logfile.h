@@ -15,7 +15,7 @@
 #ifdef USE_ADD_LOG
 
 #include <sys/types.h>
-#include "config.h"
+#include "eif_config.h"
 
 
 /* Routine defined by logging package */

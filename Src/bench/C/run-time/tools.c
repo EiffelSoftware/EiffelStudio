@@ -11,7 +11,7 @@
 	Eiffel library classes.
 */
 
-#include "tools.h"
+#include "eif_tools.h"
 
 #ifndef lint
 rt_private char *rcsid =

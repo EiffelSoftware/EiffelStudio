@@ -1,4 +1,4 @@
-#include "eiffel.h"
+#include "eif_eiffel.h"
 
 rt_public EIF_INTEGER eif_packet_size (void)
 {

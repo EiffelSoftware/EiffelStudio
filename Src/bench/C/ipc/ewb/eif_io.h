@@ -12,8 +12,8 @@
 #ifndef _eif_io_h_
 #define _eif_io_h_
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include <stdio.h>     	 /* For error reports */
 #include <sys/types.h>
 #include "request.h"

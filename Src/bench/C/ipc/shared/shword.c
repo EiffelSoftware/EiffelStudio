@@ -15,8 +15,8 @@
 			command args "'hello" "'godbye"
  */
 
-#include "config.h"
-#include "portable.h"
+#include "eif_config.h"
+#include "eif_portable.h"
 #include "shword.h"
 
 #ifdef EIF_WIN32

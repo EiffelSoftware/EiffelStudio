@@ -2,7 +2,7 @@
 /* Command-line: gperf -D -p -t -l -k 1,$,4 -N in_word_set2 lace.gperf  */
 
 
-#include "eiffel.h"
+#include "eif_eiffel.h"
 #include "lace_y.h"
 struct token {
 	char *name;

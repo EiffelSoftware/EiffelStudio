@@ -15,11 +15,11 @@
 	ACM, volume 35, number 4, April 1992 (Technical Correspondance).
 */
 
-#include "config.h"
-#include "portable.h"
-#include "malloc.h"
-#include "hector.h"
-#include "except.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_malloc.h"
+#include "eif_hector.h"
+#include "eif_except.h"
 #include "eif_globals.h"
 
 

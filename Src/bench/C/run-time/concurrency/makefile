@@ -22,56 +22,56 @@ runtime.a:	$(OBJS)
 	$(AR) $@ $(OBJS)
 	$(RUNLIB) $@
 
-server.o:	server.c ../curserver.h ../net.h ../constant.h ../curerrmsg.h ../curglb.h ../curextf.h
+server.o:	server.c ../eif_curserver.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curglb.h ../eif_curextf.h
 		$(CC) $(FLAG) server.c
 
 wserver.c: server.c
 		$(RM) wserver.c
 		$(LN) server.c wserver.c
 
-wserver.o:	wserver.c ../curserver.h ../net.h ../constant.h ../curerrmsg.h ../curglb.h ../curextf.h
+wserver.o:	wserver.c ../eif_curserver.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curglb.h ../eif_curextf.h
 		$(CC) $(WFLAG) wserver.c
 
-subs.o:	subs.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+subs.o:	subs.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(FLAG) subs.c
 
-concurrency.o:	concurrency.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+concurrency.o:	concurrency.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(FLAG) concurrency.c
 
-parameter.o:	parameter.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+parameter.o:	parameter.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(FLAG) parameter.c
 
-ser_list.o:	ser_list.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+ser_list.o:	ser_list.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(FLAG) ser_list.c
 
-ref_table.o:	ref_table.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+ref_table.o:	ref_table.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(FLAG) ref_table.c
 
-print.o:	print.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+print.o:	print.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(FLAG) print.c
 
-curerror.o:	curerror.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+curerror.o:	curerror.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(FLAG) curerror.c
 
-idle.o:	idle.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+idle.o:	idle.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(FLAG) idle.c
 
-stack.o:	stack.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+stack.o:	stack.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(FLAG) stack.c
 
-sep_ser.o:	sep_ser.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+sep_ser.o:	sep_ser.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(FLAG) sep_ser.c
 
-wsep_call.o:	wsep_call.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+wsep_call.o:	wsep_call.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(WFLAG) wsep_call.c
 
 wsep_call.c: sep_call.c
 		$(RM) wsep_call.c
 		$(LN) sep_call.c wsep_call.c
 
-sep_call.o:	sep_call.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+sep_call.o:	sep_call.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(FLAG) sep_call.c
 
-sep_obj.o:	sep_obj.c ../curextern.h ../net.h ../constant.h ../curerrmsg.h ../curextg.h ../curextf.h
+sep_obj.o:	sep_obj.c ../eif_curextern.h ../eif_net.h ../eif_constant.h ../eif_curerrmsg.h ../eif_curextg.h ../eif_curextf.h
 		$(CC) $(FLAG) sep_obj.c
 

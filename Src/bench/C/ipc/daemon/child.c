@@ -10,9 +10,9 @@
 	Child spawning and comforting.
 */
 
-#include "config.h"
-#include "portable.h"
-#include "err_msg.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_err_msg.h"
 
 #include <sys/types.h>
 #include "logfile.h"
@@ -55,10 +55,11 @@ rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
 
 /* Function declaration */
 rt_private int comfort_child(STREAM *sp);	/* Reassure child, make him confident */
-extern char **shword(char *cmd);			/* Shell word parsing of command string */
 #ifndef EIF_WIN32
 rt_private void close_on_exec(int fd);	/* Ensure this file will be closed by exec */
 #endif
+
+extern char **shword(char *cmd);			/* Shell word parsing of command string */
 
 #ifdef EIF_WIN32
 rt_public STREAM *spawn_child(char *cmd, HANDLE *child_pid)
@@ -175,6 +176,19 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 		dexit (1);
 	}
 
+	/* Set up members of STARTUPINFO structure. */
+
+	siStartInfo.cb = sizeof(STARTUPINFO);
+	siStartInfo.lpTitle = NULL;
+	siStartInfo.lpReserved = NULL;
+	siStartInfo.lpReserved2 = NULL;
+	siStartInfo.cbReserved2 = 0;
+	siStartInfo.lpDesktop = NULL;
+	siStartInfo.dwFlags = STARTF_USESTDHANDLES;
+	siStartInfo.hStdOutput = pup[1];
+	siStartInfo.hStdInput =  pdn[0];
+	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
+
 	cmd2 = strdup(cmd);
 	/* Find the name of the command and place it in cmd2 */
 	/* Find the args and place them in cmdline */
@@ -217,20 +231,6 @@ rt_public STREAM *spawn_child(char *cmd, Pid_t *child_pid)
 #ifdef USE_ADD_LOG
 		add_log(20, "Command line: %s %s", cmd2, cmdline);
 #endif
-
-	/* Set up members of STARTUPINFO structure. */
-
-	siStartInfo.cb = sizeof(STARTUPINFO);
-	siStartInfo.lpTitle = NULL;
-	siStartInfo.lpReserved = NULL;
-	siStartInfo.lpReserved2 = NULL;
-	siStartInfo.cbReserved2 = 0;
-	siStartInfo.lpDesktop = NULL;
-	siStartInfo.dwFlags = STARTF_USESTDHANDLES;
-	siStartInfo.hStdOutput = pup[1];
-	siStartInfo.hStdInput =  pdn[0];
-	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
-
 	fSuccess = CreateProcess (cmd2,	/* Command 	*/
 		cmdline,		/* Command line */
 		NULL,			/* Process security attribute */

@@ -17,10 +17,10 @@ to indicate indirect(also called Eiffel or protected) address.
 #include <sys/types.h>
 #else
 #ifdef TEST_CON
-#include "curserver.h"
+#include "eif_curserver.h"
 #else
-#include "net.h"
-#include "curextern.h"
+#include "eif_net.h"
+#include "eif_curextern.h"
 #endif
 
 /*    The following two macros basically do the same thing, they are  

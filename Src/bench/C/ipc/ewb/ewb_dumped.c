@@ -15,8 +15,8 @@
 		Simplified version from Unix using STREAM *sp from transfer.c:tpipe().
 */
 
-#include "macros.h"
-#include "interp.h"
+#include "eif_macros.h"
+#include "eif_interp.h"
 #include "request.h"
 #include "stack.h"
 #include "eif_io.h"

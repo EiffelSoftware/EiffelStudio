@@ -10,13 +10,13 @@
 	Partial retrieve mechanism
 */
 
-#include "portable.h"
-#include "macros.h"
-#include "malloc.h"
-#include "garcol.h"
-#include "retrieve.h"
-#include "store.h"
-#include "error.h"
+#include "eif_portable.h"
+#include "eif_macros.h"
+#include "eif_malloc.h"
+#include "eif_garcol.h"
+#include "eif_retrieve.h"
+#include "eif_store.h"
+#include "eif_error.h"
 #include "eif_globals.h"
 
 #ifdef EIF_OS2
@@ -29,7 +29,7 @@ char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)
 	/* Return `nb_obj' retrieved in file `file_ptr' read at `position'. */
 	char *result;
 
-	rt_init_retrieve(retrieve_read_with_compression, char_read, 0);
+	rt_init_retrieve(old_retrieve_read_with_compression, char_read, 0);
 
 	rt_kind = '\0';
 	r_fides = (int)f_desc;
@@ -52,7 +52,7 @@ char *retrieve_all(EIF_INTEGER f_desc, long position)
 	 * position. */
 	char *result;
 
-	rt_init_retrieve(retrieve_read_with_compression, char_read, 0);
+	rt_init_retrieve(old_retrieve_read_with_compression, char_read, 0);
 
 	rt_kind = '\0';
 	r_fides = (int)f_desc;

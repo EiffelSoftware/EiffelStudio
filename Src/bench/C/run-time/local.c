@@ -15,21 +15,21 @@
 
 #include <stdio.h>
 
-#include "config.h"
+#include "eif_config.h"
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
-#include "malloc.h"
-#include "garcol.h"
-#include "except.h"
-#include "urgent.h"
-#include "local.h"
-#include "hector.h"
-#include "sig.h"
+#include "eif_malloc.h"
+#include "eif_garcol.h"
+#include "eif_except.h"
+#include "eif_urgent.h"
+#include "eif_local.h"
+#include "eif_hector.h"
+#include "eif_sig.h"
 #ifdef WORKBENCH
-#include "debug.h"
+#include "eif_debug.h"
 #endif
 
 #ifdef I_STDARG
@@ -39,7 +39,7 @@
 #include <varargs.h>
 #endif
 #endif
-#include "main.h" /* for eif_alloc_init() */
+#include "eif_main.h" /* for eif_alloc_init() */
 
 #define dprintf(n)		if (DEBUG & (n)) printf
 

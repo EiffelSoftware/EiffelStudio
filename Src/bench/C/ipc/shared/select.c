@@ -22,11 +22,12 @@
 		Only one event will be triggered at a time so we call the callback on that one.
   */
 
-#include "config.h"
-#include "portable.h"
+#include <sys/types.h> /* for Cray */
+#include <errno.h>
+#include "eif_config.h"
+#include "eif_portable.h"
 #include "timehdr.h" 	/* %%ss moved */
 #include "select.h"
-#include <errno.h>
 /* #include "timehdr.h" */
 
 #ifdef EIF_WIN32

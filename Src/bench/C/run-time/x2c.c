@@ -10,12 +10,12 @@
 	Pre-computes offsets in generated C code to avoid cpp indigestion.
 */
 
-#include "config.h"
-#include "size.h"
+#include "eif_config.h"
+#include "eif_size.h"
 #ifdef EIF_WINDOWS
 #define print_err_msg fprintf		/* %%zs modified - was 'printf' before... (incorrect because trying print_err_msg(stderr,"..."); line 96 and others ! */
 #else
-#include "err_msg.h"
+#include "eif_err_msg.h"
 #endif
 #include <stdio.h>
 #include <stdlib.h>

@@ -11,19 +11,19 @@
 */
 
 
-#include "config.h"
+#include "eif_config.h"
 #ifdef I_STRING
 #include <string.h>
 #else
 #include <strings.h>
 #endif
-#include "portable.h"
-#include "malloc.h"
-#include "garcol.h"
-#include "except.h"
-#include "macros.h"
-#include "main.h"
-#include "memory.h"
+#include "eif_portable.h"
+#include "eif_malloc.h"
+#include "eif_garcol.h"
+#include "eif_except.h"
+#include "eif_macros.h"
+#include "eif_main.h"
+#include "eif_memory.h"
 
 
 rt_public void mem_free(char *object)

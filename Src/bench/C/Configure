@@ -6,7 +6,7 @@
 # (If you are trying to port this package to a machine without sh,
 # I would suggest you have a look at the prototypical config_h.SH file
 # and edit it to reflect your system. Some packages may include samples
-# of config.h for certain machines, so you might look for one of those.)
+# of eif_config.h for certain machines, so you might look for one of those.)
 #
 # Yes, you may rip this off to use in other distribution packages. This
 # script belongs to the public domain and cannot be copyrighted.
@@ -578,7 +578,7 @@ for file in $*; do
 	esac
 done
 if test -f config_h.SH; then
-	if test ! -f config.h; then
+	if test ! -f eif_config.h; then
 	: oops, they left it out of MANIFEST, probably, so do it anyway.
 	. ./config_h.SH
 	fi
@@ -1039,7 +1039,7 @@ This installation script affects things in two ways:
 
 1) it may do direct variable substitutions on some of the files included
    in this kit.
-2) it builds a config.h file for inclusion in C programs.  You may edit
+2) it builds a eif_config.h file for inclusion in C programs.  You may edit
    any of these files as the need arises after running this script.
 
 If you make a mistake on a question, there is no easy way to back up to it
@@ -4980,7 +4980,7 @@ elif $contains 'Reiser' cpp_stuff.out >/dev/null 2>&1; then
 else
 	$cat >&4 <<EOM
 Hmm, I don't seem to be able to catenate tokens with your cpp.  You're going
-to have to edit the values of CAT[2-5] in config.h...
+to have to edit the values of CAT[2-5] in eif_config.h...
 EOM
 	cpp_stuff="/* Help! How do we handle cpp_stuff? */*/"
 fi

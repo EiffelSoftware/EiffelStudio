@@ -11,12 +11,12 @@
 	Lace lexical parsing, looking for classes inside file.
 */
 
-#include "config.h"
-#include "portable.h"
-#include "macros.h"
+#include "eif_config.h"
+#include "eif_portable.h"
+#include "eif_macros.h"
 
 #include "lace_y.h"
-#include "rtlimits.h"
+#include "eif_rtlimits.h"
 #include <ctype.h>
 
 /* private functions for lex */

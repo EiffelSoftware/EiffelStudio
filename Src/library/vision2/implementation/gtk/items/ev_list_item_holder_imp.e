@@ -6,24 +6,10 @@ indexing
     revision: "$Revision$"
 
 deferred class
-    EV_LIST_ITEM_HOLDER_IMP
+	EV_LIST_ITEM_HOLDER_IMP
 
 inherit
-    EV_ITEM_HOLDER_IMP
-
-feature -- Element change
-
-	clear_items is
-			-- Clear all the items of the list.
-		do
-		end
-
-feature -- Basic operations
-
-	find_item_by_data (data: ANY): EV_ITEM is
-			-- Find a child with data equal to `data'.
-		do
-		end
+	EV_ITEM_HOLDER_IMP
 
 end -- class EV_LIST_ITEM_HOLDER_IMP
 

@@ -79,7 +79,7 @@ feature {NONE} -- Implementation
 						if class_i = Void then
 							tool.show_file (f);
 						elseif class_i.compiled then
-							!! classc_stone.make (class_i.compiled_eclass)
+							!! classc_stone.make (class_i.compiled_class)
 							tool.process_class (classc_stone);
 						else
 							!! classi_stone.make (class_i)

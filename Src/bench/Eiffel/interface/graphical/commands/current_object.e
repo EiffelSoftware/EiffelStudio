@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Retarget the object tool with the current object if any.
 		local
-			e_class: E_CLASS;
+			e_class: CLASS_C;
 			address: STRING;
 			stone: OBJECT_STONE;
 			status: APPLICATION_STATUS

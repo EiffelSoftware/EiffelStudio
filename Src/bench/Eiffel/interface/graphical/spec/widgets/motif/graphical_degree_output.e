@@ -275,7 +275,7 @@ feature -- Output on per class
 			processed := processed + 1
 		end
 
-	put_degree_5, put_degree_4 (a_class: E_CLASS nbr_to_go: INTEGER) is
+	put_degree_5, put_degree_4 (a_class: CLASS_C nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during a degree four and five pass with `nbr_to_go' 
 			-- classes to go.
@@ -289,7 +289,7 @@ feature -- Output on per class
 			processed := processed + 1
 		end
 
-	put_degree_3 (a_class: E_CLASS nbr_to_go: INTEGER) is
+	put_degree_3 (a_class: CLASS_C nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during a degree pass with `nbr_to_go'
 			-- classes to go.
@@ -311,7 +311,7 @@ feature -- Output on per class
 	put_degree_minus_2, 
 	put_degree_minus_3,
 	put_degree_minus_4, 
-	put_degree_minus_5 (a_class: E_CLASS nbr_to_go: INTEGER) is
+	put_degree_minus_5 (a_class: CLASS_C nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during a degree pass with `nbr_to_go' 
 			-- classes to go.
@@ -349,7 +349,7 @@ feature -- Output on per class
 			process_events
 		end
 
-	put_case_class_message, put_class_document_message (a_class: E_CLASS) is
+	put_case_class_message, put_class_document_message (a_class: CLASS_C) is
 			-- Put message to indicate that `a_class' is being
 			-- generated for documentation.
 		local

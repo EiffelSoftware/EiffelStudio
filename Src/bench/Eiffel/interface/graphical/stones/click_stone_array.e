@@ -20,7 +20,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (list: CLICK_LIST; ref_class: E_CLASS) is
+	make (list: CLICK_LIST; ref_class: CLASS_C) is
 			-- Create a click_stone array from `list' 
 			-- with reference class `ref_class'.
 		local

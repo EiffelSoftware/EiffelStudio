@@ -97,10 +97,10 @@ feature -- Properties
 			-- Only in that case can we request the locals
 			-- and the arguments.
 
-	dynamic_class: E_CLASS;
+	dynamic_class: CLASS_C;
 			-- Dynamic class where routine is called from
 
-	origin_class: E_CLASS;
+	origin_class: CLASS_C;
 			-- Class where routine is written in
 
 	routine: E_FEATURE is
@@ -227,7 +227,7 @@ feature -- Output
 	display_feature (st: STRUCTURED_TEXT) is
 			-- Display information about associated routine.
 		local
-			c, oc: E_CLASS;
+			c, oc: CLASS_C;
 			ef: E_FEATURE;
 			ft: FEATURE_TABLE;
 			last_pos: INTEGER

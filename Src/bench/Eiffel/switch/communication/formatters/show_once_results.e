@@ -67,7 +67,7 @@ feature {NONE} -- Properties
 			once_request: ONCE_REQUEST;
 			arguments: E_FEATURE_ARGUMENTS;
 			e_feature: E_FEATURE;
-			dynamic_class: E_CLASS;
+			dynamic_class: CLASS_C;
 			type_name: STRING;
 			status: APPLICATION_STATUS;	
 			cs: CLASSC_STONE;

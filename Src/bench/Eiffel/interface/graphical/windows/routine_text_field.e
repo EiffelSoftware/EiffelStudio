@@ -79,7 +79,7 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 	execute (arg: ANY) is
 			-- Execute the command.
 		local
-			e_class: E_CLASS;
+			e_class: CLASS_C;
 			rname, cname, feat_name: STRING;
 			temp: STRING;
 			f_table: E_FEATURE_TABLE;
@@ -111,7 +111,7 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 					if not rname.empty then
 						e_class := stone.e_class;	
 						if e_class /= Void then
-							f_table := e_class.feature_table;
+							f_table := e_class.api_feature_table;
 							!! pattern.make (0);
 							pattern.append (rname);
 							if pattern.has_wild_cards then

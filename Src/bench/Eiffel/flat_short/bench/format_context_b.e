@@ -36,7 +36,7 @@ creation
 
 feature -- Initialization
 
-	make (c: E_CLASS) is
+	make (c: CLASS_C) is
 			-- Initialize Current for bench.
 		require
 			valid_c: c /= Void
@@ -135,7 +135,7 @@ feature -- Properties
 			-- Is the Current format doing a flat-short?
 		local
 			f: FEATURE_I;
-			written_in: E_CLASS
+			written_in: CLASS_C
 		do
 			Result := is_short;
 			if not Result then
@@ -723,7 +723,7 @@ feature {NONE} -- Implementation
 			item: BASIC_TEXT;
 			f_name: STRING;
 			adapt: like local_adapt;
-			c: E_CLASS
+			c: CLASS_C
 		do
 			if format.dot_needed then
 				text.add (ti_Dot)
@@ -783,7 +783,7 @@ feature {NONE} -- Implementation
 			f_name: STRING;
 			adapt: like local_adapt;
 			is_key: BOOLEAN;
-			c: E_CLASS
+			c: CLASS_C
 		do
 			adapt := local_adapt;
 			f_name := adapt.final_name;
@@ -846,7 +846,7 @@ feature {NONE} -- Implementation
 			item: BASIC_TEXT;
 			ot: OPERATOR_TEXT
 			is_key: BOOLEAN;
-			c: E_CLASS
+			c: CLASS_C
 		do
 			f_name := adapt.final_name;
 				-- Use source feature for stone.

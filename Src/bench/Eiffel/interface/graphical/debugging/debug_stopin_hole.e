@@ -108,7 +108,7 @@ feature -- Output
 			table: EXTEND_TABLE [PART_SORTED_TWO_WAY_LIST[E_FEATURE], CLASS_ID];
 			stwl: PART_SORTED_TWO_WAY_LIST[E_FEATURE];
 			f: E_FEATURE;
-			c: E_CLASS;
+			c: CLASS_C;
 			i, bp_count: INTEGER;
 			bp_list: LIST [INTEGER];
 			first_bp: BOOLEAN;

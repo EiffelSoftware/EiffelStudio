@@ -63,9 +63,9 @@ feature -- Properties
 
 feature -- Access
 
-	dynamic_class: E_CLASS is
+	dynamic_class: CLASS_C is
 		do
-			Result := Eiffel_system.special_class.compiled_eclass
+			Result := Eiffel_system.special_class.compiled_class
 		end;
 
 feature -- Output
@@ -116,7 +116,7 @@ feature -- Output
 
 	append_type_and_value (st: STRUCTURED_TEXT) is
 		local
-			ec: E_CLASS
+			ec: CLASS_C
 		do
 			if address = Void then
 				st.add_string ("NONE = Void")

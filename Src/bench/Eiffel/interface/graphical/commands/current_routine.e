@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Retarget the feature tool with the current routine if any.
 		local
-			e_class: E_CLASS;
+			e_class: CLASS_C;
 			status: APPLICATION_STATUS;
 			st: FEATURE_STONE;
 		do

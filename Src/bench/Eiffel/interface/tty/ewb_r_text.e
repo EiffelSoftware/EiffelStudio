@@ -34,7 +34,7 @@ feature {NONE} -- Implementation
 			end
 		end;
 
-	process_feature (e_feature: E_FEATURE; e_class: E_CLASS) is
+	process_feature (e_feature: E_FEATURE; e_class: CLASS_C) is
 			-- Process feature `e_feature' defined in `e_class'.
 		local
 			text: STRUCTURED_TEXT;

@@ -20,9 +20,9 @@ feature -- Values
 
 	e_feature: E_FEATURE;
 
-	dynamic_class: E_CLASS;
+	dynamic_class: CLASS_C;
 
-	origin_class: E_CLASS;
+	origin_class: CLASS_C;
 
 	break_index: INTEGER;
 

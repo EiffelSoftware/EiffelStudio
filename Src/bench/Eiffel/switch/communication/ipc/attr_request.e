@@ -104,7 +104,7 @@ end
 
 feature {NONE} -- Implementation
 
-	recv_attributes (attr_list: LINKED_LIST [DEBUG_VALUE]; e_class: E_CLASS) is
+	recv_attributes (attr_list: LINKED_LIST [DEBUG_VALUE]; e_class: CLASS_C) is
 			-- Receive `e_class attribute info from application and 
 			-- store it in `attr_list'.
 		local

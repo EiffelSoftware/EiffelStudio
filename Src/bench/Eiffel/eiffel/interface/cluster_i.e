@@ -1138,7 +1138,7 @@ feature -- Output
 		require
 			valid_st: st /= Void
 		local
-			c: E_CLASS;
+			c: CLASS_C;
 			list: SORTED_TWO_WAY_LIST [CLASS_I]
 		do
 			st.add (ti_Before_cluster_declaration);
@@ -1151,7 +1151,7 @@ feature -- Output
 			until
 				classes.after
 			loop
-				c := classes.item_for_iteration.compiled_eclass;
+				c := classes.item_for_iteration.compiled_class;
 				if c /= Void then
 					list.put_front (c.lace_class)
 				end;
@@ -1163,7 +1163,7 @@ feature -- Output
 			until
 				list.after
 			loop
-				c := list.item.compiled_eclass;
+				c := list.item.compiled_class;
 				st.add_indent;
 				st.add_classi (c.lace_class, c.name_in_upper);
 				st.add_new_line

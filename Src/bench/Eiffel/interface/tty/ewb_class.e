@@ -52,7 +52,7 @@ feature {NONE} -- Execution
 			-- Execute Current command.
 		local
 			class_i: CLASS_I;
-			e_class: E_CLASS;
+			e_class: CLASS_C;
 			id: IDENTIFIER;
 			at_pos: INTEGER;
 			cluster_name: STRING;
@@ -125,7 +125,7 @@ feature {NONE} -- Execution
 			end
 			if class_i /= Void then
 				if want_compiled_class (class_i) then
-					e_class := class_i.compiled_eclass;
+					e_class := class_i.compiled_class;
 					if e_class = Void then
 						class_name.to_upper;
 						io.error.putstring (class_name);
@@ -142,7 +142,7 @@ feature {NONE} -- Execution
 			name_cleared: class_name = Void
 		end;
 
-	process_compiled_class (e_class: E_CLASS) is
+	process_compiled_class (e_class: CLASS_C) is
 			-- Process compiled class `e_class'.
 			-- (Do nothing by default).
 		require

@@ -223,7 +223,7 @@ feature -- Element change
 			end
 		end;
 
-	super_melt_class (c: E_CLASS; insert_breakpoint: BOOLEAN) is
+	super_melt_class (c: CLASS_C; insert_breakpoint: BOOLEAN) is
 			-- Super melt all features written in class `c'.
 		require
 			valid_c: c /= Void
@@ -356,7 +356,7 @@ feature -- Removal
 			not_has_f: not has_feature (f)
 		end;
 
-	remove_class (c: E_CLASS) is
+	remove_class (c: CLASS_C) is
 			-- Remove debugging information for features written in `c'.
 		require
 			valid_c: c /= Void

@@ -130,7 +130,7 @@ feature -- Merging
 			end;
 			other.go_to (old_cursor);
 				-- Merge contents of common classes only here because
-				-- descencant classes (in E_CLASS) must have already
+				-- descencant classes (in CLASS_C) must have already
 				-- been inserted into the server. 
 			from common_classes.start until common_classes.after loop
 				other_class_array := common_classes.item_for_iteration;

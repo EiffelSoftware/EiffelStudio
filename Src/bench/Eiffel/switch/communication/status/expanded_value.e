@@ -48,7 +48,7 @@ feature -- Output
 	append_to (st: STRUCTURED_TEXT; indent: INTEGER) is
 			-- Append `Current' to `st' with `indent' tabs the left margin.
 		local
-			ec: E_CLASS;
+			ec: CLASS_C;
 		do
 			append_tabs (st, indent);
 			st.add_feature_name (name, e_class)

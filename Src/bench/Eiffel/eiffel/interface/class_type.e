@@ -51,7 +51,7 @@ feature
 			-- Type of the class: it includes meta-instantiation of
 			-- possible generic parameters
 
-	associated_eclass: E_CLASS is
+	associated_eclass: CLASS_C is
 			-- Associated class
 		require
 			type_exists: type /= Void

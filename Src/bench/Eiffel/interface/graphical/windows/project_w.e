@@ -648,7 +648,7 @@ feature -- Update
 			new_stone: OBJECT_STONE
 			call_stack: CALL_STACK_ELEMENT
 			object_address: STRING
-			dynamic_class: E_CLASS
+			dynamic_class: CLASS_C
 			status: APPLICATION_STATUS
 		do
 			if Application.is_running and then 

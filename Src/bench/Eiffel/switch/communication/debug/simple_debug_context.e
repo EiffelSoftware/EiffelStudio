@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	e_class: E_CLASS;
+	e_class: CLASS_C;
 			-- Class where feature is defined
 
 	e_feature: E_FEATURE;

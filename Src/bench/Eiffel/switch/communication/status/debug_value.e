@@ -21,7 +21,7 @@ feature -- Properties
 	is_attribute: BOOLEAN;
 			-- Is current value an attribute
 
-	e_class: E_CLASS;
+	e_class: CLASS_C;
 			-- Class where attribute is defined
 			-- (Void for if not attribute)
 
@@ -30,7 +30,7 @@ feature -- Properties
 
 feature -- Access
 
-	dynamic_class: E_CLASS is
+	dynamic_class: CLASS_C is
 			-- Return class of value
 		deferred
 		end;
@@ -134,9 +134,9 @@ feature {NONE} -- Implementation
 			name := "default"
 		end
 
-	Any_class: E_CLASS is
+	Any_class: CLASS_C is
 		once
-			Result := Eiffel_system.any_class.compiled_eclass
+			Result := Eiffel_system.any_class.compiled_class
 		end
 
 invariant

@@ -172,7 +172,7 @@ feature -- Update
 	
 feature -- Stone process
 
-	process (d_class:E_CLASS; d_creation:E_FEATURE; 
+	process (d_class:CLASS_C; d_creation:E_FEATURE; 
 			 d_routine:E_FEATURE; d_index:INTEGER) is
 		do
 			if d_routine.is_attribute then
@@ -196,7 +196,7 @@ feature -- Stone process
  
 	process_class (s: CLASSC_STONE) is
 		local
-			e_class: E_CLASS
+			e_class: CLASS_C
 		do
 			e_class := s.e_class
 			editable_text_window.put_string (e_class.name)

@@ -26,7 +26,7 @@ feature -- Execution
 			e_feature: E_FEATURE;
 			break_index: INTEGER;
 			object_address: STRING;
-			dynamic_class: E_CLASS;
+			dynamic_class: CLASS_C;
 		do
 			!! mp.do_nothing;
 			if Application.is_stopped then

@@ -135,7 +135,7 @@ feature -- Access
 					new_cluster.classes.has_item (class_i)
 				then
 					if class_i.compiled then
-						!CLASSC_STONE! Result.make (class_i.compiled_eclass)
+						!CLASSC_STONE! Result.make (class_i.compiled_class)
 					else
 						!CLASSI_STONE! Result.make (class_i)
 					end

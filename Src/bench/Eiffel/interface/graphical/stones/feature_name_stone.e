@@ -31,7 +31,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (f_name: STRING; ec: E_CLASS) is
+	make (f_name: STRING; ec: CLASS_C) is
 		require
 			valid_f_name: f_name /= Void;
 		do

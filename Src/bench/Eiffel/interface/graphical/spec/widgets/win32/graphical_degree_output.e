@@ -283,7 +283,7 @@ feature -- Per entity output
 			process_messages
 		end
 
-	put_degree_5, put_degree_4 (a_class: E_CLASS nbr_to_go: INTEGER) is
+	put_degree_5, put_degree_4 (a_class: CLASS_C nbr_to_go: INTEGER) is
 			-- Put message indicating that `a_class' is being
 			-- compiled during `current_degree' with `nbr_to_go'
 			-- classes to go.
@@ -299,7 +299,7 @@ feature -- Per entity output
 			process_messages
 		end
 
-	put_degree_3 (a_class: E_CLASS nbr_to_go: INTEGER) is
+	put_degree_3 (a_class: CLASS_C nbr_to_go: INTEGER) is
 			-- Put message to inidcate that `a_class' is_being
 			-- compiled during `current_degree' with `nbr_to_go'
 			-- classes to go.
@@ -321,7 +321,7 @@ feature -- Per entity output
 	put_degree_minus_2,
 	put_degree_minus_3,
 	put_degree_minus_4,
-	put_degree_minus_5 (a_class: E_CLASS nbr_to_go: INTEGER) is
+	put_degree_minus_5 (a_class: CLASS_C nbr_to_go: INTEGER) is
 			-- Put message to inidcate that `a_class' is_being
 			-- compiled during `current_degree' with `nbr_to_go'
 			-- classes to go.
@@ -365,7 +365,7 @@ feature -- Per entity output
 			process_messages
 		end
 
-	put_class_document_message, put_case_class_message (a_class: E_CLASS) is
+	put_class_document_message, put_case_class_message (a_class: CLASS_C) is
 			-- Put message to indicate that `a_class' is being
 			-- analyzed for ECase.
 		local

@@ -44,9 +44,9 @@ feature -- Property
 
 feature -- Access
 
-	dynamic_class: E_CLASS is
+	dynamic_class: CLASS_C is
 		do
-			Result := Eiffel_system.pointer_class.compiled_eclass
+			Result := Eiffel_system.pointer_class.compiled_class
 		ensure then
 			non_void_result: Result /= Void
 		end

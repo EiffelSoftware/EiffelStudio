@@ -126,12 +126,9 @@ feature -- Status setting
 					--| Set prelight state color.
 				color := feature {EV_GTK_EXTERNALS}.gtk_style_struct_bg (style)
 					 + (feature {EV_GTK_EXTERNALS}.gTK_STATE_PRELIGHT_ENUM * feature {EV_GTK_EXTERNALS}.c_gdk_color_struct_size)
-				nr := (r * Prelight_scale).rounded
-				ng := (g * Prelight_scale).rounded
-				nb := (b * Prelight_scale).rounded
-				if nr > m then nr := m end
-				if ng > m then ng := m end
-				if nb > m then nb := m end
+				nr := (r * Prelight_scale).rounded.min (m)
+				ng := (g * Prelight_scale).rounded.min (m)
+				nb := (b * Prelight_scale).rounded.min (m)
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_red (color, nr)
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (color, ng)
 				feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (color, nb)

@@ -72,6 +72,11 @@ feature -- Access
 
 	tooltip: STRING is
 			-- Text displayed when user moves mouse over widget.
+			--| FIXME Can this be implmented for all widgets?
+			--| Would it be more appropriate to have somthing like
+			--| EV_TOOLTIPABLE ? (set_tooltip, remove_tooltip)
+			--| That could be inherited by items as well?
+			--| Sam 20000308
 		do
 			Result := implementation.tooltip
 		ensure
@@ -105,30 +110,6 @@ feature -- Status report
 			Result := implementation.is_displayed
 		ensure
 			bridge_ok: Result = implementation.is_displayed
-		end
-
-	--| FIXME is_managed   (I know it's not a function but who cares)
-	managed: BOOLEAN
-			-- Is the geometry of current widget managed by its 
-			-- container? This is the case always unless 
-			-- parent.manager = False (Always true except 
-			-- when the container is EV_FIXED). This is 
-			-- set in the procedure set_default
-
-	is_horizontally_resizable: BOOLEAN is
-			-- Should `width' change when widget is resized?
-		do
-			--FIXME Result := implementation.is_horizontally_resizable
-		ensure
-			--FIXME Result_assigned: Result = implementation.is_horizontally_resizable
-		end
-
-	is_vertically_resizable: BOOLEAN is
-			-- Should `height' change when widget is resized?
-		do
-			--FIXME Result := implementation.is_vertically_resizable
-		ensure	
-			--FIXME Result_assigned: Result = implementation.is_vertically_resizable	
 		end
 
 	has_focus: BOOLEAN is
@@ -279,6 +260,7 @@ feature -- Element change
 
 	set_tooltip (a_text: STRING) is
 			-- Set `tooltip' to `a_text'.
+			--| FIXME see `tooltip' above.
 		require
 			a_text_not_void: a_text /= Void
 		do
@@ -289,6 +271,7 @@ feature -- Element change
 
 	remove_tooltip is
 			-- Set `tooltip' to `Void'.
+			--| FIXME see `tooltip' above.
 		do
 			implementation.remove_tooltip
 		ensure
@@ -487,6 +470,23 @@ feature {EV_ANY} -- Contract support
 		end
 
 feature -- Obsolete
+
+	is_horizontally_resizable: BOOLEAN is obsolete "dont use it"
+			-- Should `width' change when widget is resized?
+		do
+		end
+
+	is_vertically_resizable: BOOLEAN is obsolete "dont use it"
+			-- Should `height' change when widget is resized?
+		do
+		end
+
+	managed: BOOLEAN is obsolete "dont use it" do end
+			-- Is the geometry of current widget managed by its 
+			-- container? This is the case always unless 
+			-- parent.manager = False (Always true except 
+			-- when the container is EV_FIXED). This is 
+			-- set in the procedure set_default
 	
 	make_with_parent (a_parent: EV_CONTAINER) is
 			-- Create the widget with `par' as parent.
@@ -759,6 +759,13 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.70  2000/03/09 01:29:54  oconnor
+--| Obsoleted:
+--|        is_horizontally_resizable: BOOLEAN
+--|        is_vertically_resizable: BOOLEAN
+--|        managed: BOOLEAN
+--| Added fixmes and comments about tooltip.
+--|
 --| Revision 1.69  2000/03/02 17:47:11  king
 --| Changed Contract_support to Contract Support
 --|
@@ -807,7 +814,9 @@ end -- class EV_WIDGET
 --| added --| FIXME Not for release
 --|
 --| Revision 1.64.2.1.2.44  2000/01/26 19:18:43  rogers
---| width_not_less_than_minimum_width and height_not_less_than_minimum_height have been commented out with a FIXME and a detailed description of why.
+--| width_not_less_than_minimum_width and
+--| height_not_less_than_minimum_height have been commented out with a
+--| FIXME and a detailed description of why.
 --|
 --| Revision 1.64.2.1.2.43  2000/01/25 17:17:55  king
 --| Added absolute screen coord features

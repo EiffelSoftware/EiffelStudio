@@ -15,7 +15,7 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_COMPONENT_C_GENERATOR
+	WIZARD_GUID_GENERATOR
 		rename
 			coclass as dictionary_coclass
 		export

@@ -11,6 +11,7 @@ inherit
 	EV_TITLED_WINDOW
 
 	SHARED_RESOURCES
+--	RESOURCE_MANAGER
 		undefine
 			default_create
 		end
@@ -30,7 +31,7 @@ feature -- Initialization
 		do
 			default_create
 			set_title ("Preferences")
-			set_size (400, 300)
+			set_size (500, 300)
 
 			create menu
 			set_menu_bar (menu)
@@ -50,6 +51,7 @@ feature -- Initialization
 
 			create right_list
 			right_list.set_column_titles (<<"Short Name","Litteral Value">>)
+			right_list.set_column_widths (<<150, 400>>)
 			v2.extend (right_list)
 			right_list.select_actions.extend (~right_select)
 
@@ -70,7 +72,9 @@ feature -- Initialization
 			
 			fill_list
 			fill_menu
+			close_actions.extend (~destroy)
 			show
+			split.set_split_position (200)
 		end
 
 	make_then_direct_to (folder_name: STRING) is
@@ -211,38 +215,48 @@ feature --Menu
 			it: EV_MENU_ITEM
 			itt: EV_MENU
 		do	
-			create itt.make_with_text ("File")
+			create itt.make_with_text ("&File")
 			menu.extend (itt)
 
-			create it.make_with_text ("Save%TCTRL+S")
-			itt.extend (it)
-			it.select_actions.extend (~save)
+--			create it.make_with_text ("Save%TCTRL+S")
+--			itt.extend (it)
+--			it.select_actions.extend (~save)
 
-			create it.make_with_text ("OK")
-			itt.extend (it)
-			it.select_actions.extend (~ok)
+--|FIXME XR: There should be a menu to save the defaults.
 
-			create it.make_with_text ("Apply")
+			create it.make_with_text ("&Load defaults")
+			itt.extend (it)
+			it.select_actions.extend (~reinitialize)
+
+			create it.make_with_text ("&Save")
 			itt.extend (it)
 			it.select_actions.extend (~apply)
 
-			create it.make_with_text ("Exit Tool")
+			create it.make_with_text ("&Exit && Save")
+			itt.extend (it)
+			it.select_actions.extend (~ok)
+
+			create it.make_with_text ("E&xit no save")
 			itt.extend (it)
 			it.select_actions.extend (~destroy)
-
- 			create itt.make_with_text ("Help")
-			menu.extend (itt)
 		end
 
 	save is
 			-- Save Current Selection.
 		do
-			resources.save
+			-- Should save as default.
 		end 
 
 	apply is
 		do
+			resources.save
 --			resources.reinitialize
+		end
+
+	reinitialize is
+			-- Load the defaults.
+		do
+			resources.load_defaults
 		end
 
 	ok is

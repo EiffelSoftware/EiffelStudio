@@ -118,6 +118,27 @@ EIF_INTEGER c_select_poll_with_timeout(EIF_INTEGER fd,
 	return (FD_ISSET(fd, &fdmask));
 }
 
+EIF_INTEGER c_check_exception_with_timeout(EIF_INTEGER fd, 
+									       EIF_INTEGER timeout)
+	/*x Get exception status for socket fd within `timeout' seconds */
+{
+	fd_set fdmask;
+	struct timeval tmout;
+	int res;
+
+	tmout.tv_sec = (unsigned long) timeout;
+	tmout.tv_usec = (long) 0;
+
+	FD_ZERO(&fdmask);
+	FD_SET(fd, &fdmask);
+
+	res = select(fd + 1, (fd_set *) 0, (fd_set *) 0, &fdmask, &tmout);
+
+	if (res < 0)
+		eio();
+	return (FD_ISSET(fd, &fdmask));
+}
+
 EIF_INTEGER c_is_blocking(EIF_INTEGER fd)
 	/*x attempt to get blocking status of socket */
 	/*x BIG BUG UNDER HP-UX !!! => couldn't get actual blocking status */

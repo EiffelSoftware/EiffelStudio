@@ -31,6 +31,11 @@ feature {NONE}
 		do
 			Result :=Command_names.app_cut_state_cmd_name
 		end;
+
+	popuper_parent: COMPOSITE is
+		do
+			Result := App_editor
+		end;
 	
 feature 
 
@@ -142,9 +147,7 @@ feature {NONE}
 			figures: APP_FIGURES;
 			void_circle: STATE_CIRCLE;
 		do
-			if
-				selected
-			then
+			if selected then
 				app_editor.set_selected (void_circle)
 			end;
 			transitions := app_editor.transitions;
@@ -156,9 +159,7 @@ feature {NONE}
 				figures.remove
 			end;
 			state_editor := circle.data.func_editor;
-			if
-				not (state_editor = Void)
-			then
+			if state_editor /= Void then
 				state_editor.clear
 			end;
 			perform_update_display;

@@ -1,5 +1,5 @@
 <document title="11 RECOMPILING AND EDITING" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>
 			<link>
@@ -119,17 +119,9 @@
 				<size>2</size>
 				<content>Recompiling and executing after a change</content>
 			</heading>
-			<paragraph>Next compile again, using the Compilation button (shown on the figure 
-				<link>
-					<label>here</label>
-					<url>index.xml</url><anchor_name>COMPILATION BUTTON</anchor_name>
-				</link> ).  Some "degree" messages appear quickly; EiffelStudio has found out what class has changed and deduced what exactly to recompile -- only a subset of the whole system.  So this again will proceed very quickly.
+			<paragraph>Next compile again, using the Compilation button.  Some "degree" messages appear quickly; EiffelStudio has found out what class has changed and deduced what exactly to recompile -- only a subset of the whole system.  So this again will proceed very quickly.
 			</paragraph>
-			<paragraph>Execute the system again now, using one of the execution buttons (shown on the figure 
-				<link>
-					<label>here</label>
-					<url>index.xml</url><anchor_name>ORIGINAL FIGURE WITH RUN BUTTONS</anchor_name>
-				</link> ), with or without breakpoints, on the right in the bottom Project toolbar.  You will see that the message output by the execution has changed to include the added string.
+			<paragraph>Execute the system again now, using one of the execution buttons, with or without breakpoints, on the right in the bottom Project toolbar.  You will see that the message output by the execution has changed to include the added string.
 			</paragraph>
 		</div>
 		<div>
@@ -137,11 +129,7 @@
 				<size>2</size>
 				<content>Views in the Editing Tool</content>
 			</heading>
-			<paragraph>In studying the Context Tool we discovered a number of views of a class text ( 
-				<link>
-					<label>here</label>
-					<url>index-08.xml</url><anchor_name>76845</anchor_name>
-				</link> ).  For convenience, you can also display a number of these views in the Editing Tool, although only the basic Text view is editable.  A row of buttons next to the Class and Feature fields lets you choose between them:
+			<paragraph>In studying the Context Tool we discovered a number of views of a class text.  For convenience, you can also display a number of these views in the Editing Tool, although only the basic Text view is editable.  A row of buttons next to the Class and Feature fields lets you choose between them:
 			</paragraph>
 			<div>
 				<image_link>
@@ -392,7 +380,7 @@
 				<paragraph>The 
 					<code>
 						<keyword>Search for</keyword>
-					</code> field has an associated menu, so that you can reuse a recently entered search string without retyping it.
+					</code> field has an associated drop-down list, so that you can reuse a recently entered search string without retyping it.
 				</paragraph>
 			</div>
 			<div>
@@ -670,10 +658,10 @@
 				</paragraph>
 				<list ordered="false">
 					<item>
-						<span>Vim</span>, for Vi iMproved, an extension of Vi available on both Unix/Linux and Windows -- see www.vim.  org
+						<span>Vim</span>, for Vi iMproved, an extension of Vi available on both Unix/Linux and Windows -- see www.vim.org
 					</item>
 					<item>
-						<span>Emacs</span> -- see www.emacs.  org.
+						<span>Emacs</span> -- see www.emacs.org.
 					</item>
 					<item>
 						<span>Editeur</span>, a Windows syntax highlighting editor -- see www.studioware.com.

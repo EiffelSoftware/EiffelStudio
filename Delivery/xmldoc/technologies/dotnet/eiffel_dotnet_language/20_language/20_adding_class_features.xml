@@ -11,13 +11,13 @@
 	<paragraph>
 		<paragraph>The 
 			<link>
-				<url/>
+				<url></url>
 				<label>features</label>
 			</link> of a class make it useful. They are the things that objects which are instances of the class have and can do.
 		</paragraph>
 		<paragraph>It is during the process of adding class features that we relate a class we are producing to other classes via the 
 			<link>
-				<url/>
+				<url></url>
 				<label>client/supplier relationship</label>
 			</link>.
 		</paragraph>
@@ -39,7 +39,7 @@
 		</heading>
 		<paragraph>You remember the example class from 
 			<link>
-				<url>../../eiffel_dotnet_language/20_language/10_eiffel_classes.xml</url>
+				<url>10_eiffel_classes.xml</url>
 				<label>Eiffel Classes</label>
 			</link>:
 			<code_block>
@@ -129,41 +129,41 @@
 		</heading>
 		<paragraph>Whenever we are building a class in Eiffel, we are potential 
 			<link>
-				<url/>
+				<url></url>
 				<label>reuse producers</label>
 			</link>. As such, we can categorize the features of a class based on the three types of feature implementation:
 		</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
-					<url/>
+					<url></url>
 					<label>Attribute</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url/>
+					<url></url>
 					<label>Function</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url/>
+					<url></url>
 					<label>Procedure</label>
 				</link>
 			</item>
 		</list>
 		<paragraph>Attributes are those features which occupy storage in an instance. When you code an attribute in a class that you are producing, that class becomes a 
 			<link>
-				<url/>
+				<url></url>
 				<label>client</label>
 			</link> to the class of the attribute. This is the most common way to establish a 
 			<link>
-				<url/>
+				<url></url>
 				<label>client/supplier relationship</label>
 			</link> between the classses. Client/supplier is one of the two 
 			<link>
-				<url/>
+				<url></url>
 				<label>relationships</label>
 			</link> that can exist between classes.
 		</paragraph>
@@ -197,7 +197,7 @@
 		<list ordered="false">
 			<item>
 				<link>
-					<url/>
+					<url></url>
 					<label>Query</label>
 				</link>
 				<list ordered="false">
@@ -207,7 +207,7 @@
 			</item>
 			<item>
 				<link>
-					<url/>
+					<url></url>
 					<label>Command</label>
 				</link>
 				<list ordered="false">
@@ -217,7 +217,7 @@
 		</list>
 		<paragraph>Queries are features that, when applied to an instance, provide a value in response. Commands instruct an intance to take some action, but do not return a value. Seeing features as either queries or commands is of primary interest to 
 			<link>
-				<url/>
+				<url></url>
 				<label>reuse consumers</label>
 			</link>. But as producers there are important reasons for ensuring that when we implement a feature, we implement it as a query or as a command, but not both. We will see more about this in 
 			<link>
@@ -413,11 +413,11 @@
 </code_block>
 		<paragraph>Although the feature's header comment is optional, most Eiffel programmers and their technical  managers feel that it should never be omitted. Header comments are included by some language processing tools in specialized views of classes. Header comments are almost always short, usually no more than a few lines. Header comments serve to provide a natural language description of what the feature will do (in the case of features that are 
 			<link>
-				<url/>
+				<url></url>
 				<label>commands</label>
 			</link>) or what information it provides (in the case of 
 			<link>
-				<url/>
+				<url></url>
 				<label>queries</label>
 			</link>).
 		</paragraph>
@@ -432,7 +432,7 @@
 				<keyword>obsolete</keyword>
 			</code> clause. This works much like the obsolete part for classes that we saw in 
 			<link>
-				<url>../../eiffel_dotnet_language/20_language/10_eiffel_classes.xml</url>
+				<url>10_eiffel_classes.xml</url>
 				<label>Eiffel Classes</label>
 			</link>: the keyword " 
 			<code>
@@ -557,7 +557,7 @@
 </code_block>
 		<paragraph>As we learned in 
 			<link>
-				<url>../../eiffel_dotnet_language/20_language/10_eiffel_classes.xml </url>
+				<url>10_eiffel_classes.xml</url>
 				<label>Eiffel Classes</label>
 			</link> a deferred routine has specification, but no implementation. We will investigate deferred classes and features further in 
 			<link>
@@ -712,7 +712,7 @@
 </code_block>
 		<paragraph>We discussed creation procedures and the process of bringing new objects into being in 
 			<link>
-				<url>../../eiffel_dotnet_language/20_language/10_eiffel_classes.xml</url>
+				<url>10_eiffel_classes.xml</url>
 				<label>Eiffel Classes</label>
 			</link>. A creation instruction starts with the keyword " 
 			<code>
@@ -820,15 +820,15 @@
 		</paragraph>
 		<paragraph>The rule is clear enough ... if you know what "conform" means. In the presence of mechanisms like 
 			<link>
-				<url/>
+				<url></url>
 				<label>expanded types</label>
 			</link>, 
 			<link>
-				<url/>
+				<url></url>
 				<label>inheritance</label>
 			</link>, and 
 			<link>
-				<url/>
+				<url></url>
 				<label>genericity</label>
 			</link>, a precise definition of conformance is lengthy.
 		</paragraph>
@@ -849,13 +849,13 @@
 				<feature_name>y</feature_name>
 			</code> are 
 			<link>
-				<url/>
+				<url></url>
 				<label>expanded classes</label>
 			</link>, you'd be correct. They conform only if they are the same class.
 		</paragraph>
 		<paragraph>But for 
 			<link>
-				<url/>
+				<url></url>
 				<label>reference types</label>
 			</link>, that constraint is unnecessarily restrictive. So, for reference types, the class of 
 			<code>

@@ -1,5 +1,5 @@
 <document title="10 RETARGETING THROUGH PICK-AND-DROP" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>You now know quite a few ways of retargeting a Development Window to a "development object" -- a class or a feature -- but haven't yet seen one of the most important: "Pick-and-Drop", which lets you pick a development object that you have spotted anywhere in the display, and retarget the current tool, or another, to it.  </paragraph>
 		<div>
@@ -21,14 +21,15 @@
 					<keyword>Feature </keyword>
 				</code>Tab.
 			</paragraph>
-			<paragraph>If for some reason the window doesn't look like the next figure, it's easy to reconstruct it: make sure both the Cluster tree and the Feature tree are visible (if not, click the corresponding buttons as recalled on 
+			<paragraph>If for some reason the window doesn't look like the next figure, it's easy to reconstruct it: make sure both the Cluster tree and the Feature tree are visible (if not, click the corresponding buttons as detailed 
 				<link>
 					<label>here</label>
-					<url>index.xml</url><anchor_name>CLUSTERS/FEATURES BUTTON</anchor_name>
+					<url>index.xml</url>
 				</link> ); target the tool to class 
 				<code>
 					<string>LIST</string>
-				</code> ; target it further to its feature 
+				</code>
+				 ; target  further to its feature 
 				<code>
 					<string>forth</string>
 				</code> by clicking that feature name in the Feature tree; make sure both the top-right Editing Tool and the bottom-right Context Tool are visible; in the Context Tool, select the 
@@ -36,7 +37,7 @@
 					<keyword>Feature</keyword>
 				</code> Tab and its 
 				<code>
-					<keyword>Ancestor versions </keyword>
+					<keyword>Descendant versions </keyword>
 				</code>format.
 			</paragraph>
 			<div>
@@ -106,7 +107,7 @@
 				</code> from 
 				<code>
 					<string>ARRAYED_CIRCULAR</string>
-				</code> .  The retargeting affects both the Editing Tool and the Context Tool, which keeps its current view ( 
+				</code> .  The retargeting affects both the Editing Tool and the Context Tool (assuming the Link Content View option is selected on the toolbar, see below for more information), which keeps its current view ( 
 				<code>
 					<keyword>Ancestor versions</keyword>
 				</code> in the 

@@ -1,5 +1,5 @@
 <document title="12 HANDLING SYNTAX AND VALIDITY ERRORS" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>
 			<link>
@@ -144,37 +144,6 @@
 						<label>Eiffel: The Language</label>
 					</link>
 				</span>.
-			</paragraph>
-		</div>
-		<div>
-			<heading>
-				<size>2</size>
-				<content>Avoiding "Gotcha" dialogs</content>
-			</heading>
-			<paragraph>This syntax error message also illustrates a user interface principle present throughout EiffelStudio.  At ISE, we believe that you have better things to do than spending your days clicking on 
-				<code>
-					<keyword>OK</keyword>
-				</code> buttons.  Almost all messages that may appear to signal errors, display warnings, or request confirmation are of one of two kinds:
-			</paragraph>
-			<list ordered="false">
-				<item>Whenever possible, they give you 
-					<bold>two</bold> or more possibilities.  A dialog with just one possibility is not much of a dialog.  (We'll resist the temptation to be pompous here by recalling the original Greek meaning of "
-					<span>dia</span>" in "dialog".  )
-				</item>
-				<item>If EiffelStudio cannot give two possibilities -- as in the case of an error message, for which it must let the user proceed after making sure the message has been seen -- EiffelStudio doesn't force you, like many of today's user interfaces, to acknowledge your sins by clicking an 
-					<code>
-						<keyword>OK</keyword>
-					</code> button.  You simply correct the error and move on.
-				</item>
-			</list>
-			<paragraph>In the case of our syntax error there 
-				<span>is</span> an 
-				<code>
-					<keyword>OK</keyword>
-				</code> button and you may click it, but you don't have to.  It is there mostly to avoid troubling people (almost everyone, that is) who are used to the "Gotcha!" dialogs of the dominant user interfaces.  Once you get used to the EiffelStudio style, you won't bother clicking 
-				<code>
-					<keyword>OK</keyword>
-				</code> for a syntax error: you will correct the error, and when you click Save again the dialog will go away like a bad dream.
 			</paragraph>
 		</div>
 		<div>

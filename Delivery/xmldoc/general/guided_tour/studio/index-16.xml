@@ -1,5 +1,5 @@
 <document title="15 GRAPHICS-BASED DESIGN" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>
 			<link>
@@ -10,7 +10,7 @@
 		<paragraph>So far the project modifications that we have made used the text editor in the Editing Tool.  We used graphics, but as a way to reflect system structures, not to build them (
 			<link>
 				<label>See "A Peek at Diagrams" in STARTING TO BROWSE</label>
-				<url>index-07.xml</url><anchor_name>46460</anchor_name>
+				<url>index-07.xml</url>
 			</link>, and subsequent discussions).
 		</paragraph>
 		<paragraph>In line with the principles of seamlessness and reversibility recalled at the beginning of this Tour, EiffelStudio's text-diagram interaction is bi-directional.  When you make a textual modification, the next incremental recompilation will update the diagram; but you can also work directly from the diagram, and the text will be generated or updated after each graphical operation.  </paragraph>
@@ -20,11 +20,7 @@
 				<size>2</size>
 				<content>Displaying a cluster view</content>
 			</heading>
-			<paragraph>We are going to play with the root cluster.  Make sure the Cluster tree and the Context Tool are up.  Also make sure that the Context tool is in Isolate rather than Linked behavior ( 
-				<link>
-					<label>click here</label>
-					<url>index-11.xml</url><anchor_name>89659</anchor_name>
-				</link> ); you can see this by going to the 
+			<paragraph>We are going to play with the root cluster.  Make sure the Cluster tree and the Context Tool are up.  Also make sure that the Context tool is in Isolate rather than Linked behavior; you can see this by going to the 
 				<code>
 					<keyword>Edit menu</keyword>
 				</code>: if there is an entry 
@@ -71,7 +67,7 @@
 			</div>
 			<paragraph>Make sure to answer 
 				<code>
-					<keyword>No</keyword>
+					<keyword>Cancel</keyword>
 				</code> to that confirmation request (you want to keep the class even though it wouldn't be a catastrophe to lose it) and instead pick-and-drop the 
 				<code>
 					<string>INVALID</string>
@@ -93,7 +89,7 @@
 			<paragraph>You can try undoing this change, then redoing it:</paragraph>
 			<div>
 				<image_link>
-					<url>index-116png</url>
+					<url>index-116.png</url>
 					<target>screenshots</target>
 					<image>
 						<url>index-116.png</url>
@@ -311,7 +307,7 @@
 				</code> as the next relation to make links (the link creation buttons were shown on page 
 				<link>
 					<label>click here</label>
-					<url>index.xml</url><anchor_name>LINK CREATION</anchor_name>
+					<url>index.xml</url>
 				</link> ).  Pick-and-drop from the 
 				<code>
 					<string>TESTROOT</string>
@@ -339,16 +335,7 @@
 				</code> an attribute of type 
 				<code>
 					<string>HEIR2</string>
-				</code>.  In the 
-				<code>
-					<keyword>feature</keyword>
-				</code> clause, which will indicate its export status, replace the default choice 
-				<code>
-					<string>NONE</string>
-				</code> by 
-				<code>
-					<string>ANY</string>
-				</code>, so that the attribute will be public.  For its feature category, keep the choice currently displayed, 
+				</code>.   For its feature category, keep the choice currently displayed, 
 				<code>
 					<string>Access</string>
 				</code>.  For its name, replace the default, 
@@ -452,7 +439,7 @@
 				<size>2</size>
 				<content>Updating the diagram from the text</content>
 			</heading>
-			<paragraph>In this tour of the diagram facilities we have, so far, worked on the diagram and see the text updated immediately.  Of course we want full reversibility.  So let's make a change in the text and check the diagram.  </paragraph>
+			<paragraph>In this tour of the diagram facilities we have, so far, worked on the diagram and seen the text updated immediately.  Of course we want full reversibility.  So let's make a change in the text and check the diagram.  </paragraph>
 			<paragraph>The change will be very simple.  We'll make 
 				<code>
 					<string>TESTROOT</string>
@@ -551,18 +538,7 @@
 				<code>
 					<keyword>Create</keyword>
 				</code> at the bottom of the dialog.
-			</paragraph>
-			<paragraph>This technique only allows you to create a new cluster as a subcluster of an existing one.  You can create a top-level cluster by going through 
-				<code>
-					<keyword>Project</keyword>
-				</code>
-				<code>
-					<symbol>--&gt;</symbol>
-				</code>
-				<code>
-					<keyword>Project settings</keyword>
-				</code>
-			</paragraph>
+			</paragraph>			
 			<paragraph>Recompile the project and bring up the cluster diagram again.  It shows the subcluster:</paragraph>
 			<div>
 				<image_link>
@@ -777,11 +753,7 @@
 					<keyword>View</keyword>
 				</code> field.
 			</paragraph>
-			<paragraph>You may remember that when we generated HTML documentation, the dialog (page 
-				<link>
-					<label>click here</label>
-					<url>index.xml</url><anchor_name>DOCUMENTATION VIEW</anchor_name>
-				</link> ) asked you to select a view among the available ones.  You can choose a different view for each cluster.
+			<paragraph>You may remember that when we generated HTML documentation, the dialog asked you to select a view among the available ones.  You can choose a different view for each cluster.
 			</paragraph>
 		</div>
 		<div>

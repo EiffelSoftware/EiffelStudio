@@ -1,5 +1,5 @@
 <document title="13 DEBUGGING AND RUN-TIME MONITORING" output="studio">
-	<meta_data/>	
+	<meta_data></meta_data>	
 	<paragraph>
 		<paragraph>
 			<link>
@@ -258,22 +258,13 @@
 					<bold>once functions</bold>, executed at most once -- the first time they are called -- in a given session, and from then on always returning the same value.  Here the once function 
 					<code>
 						<string>io</string>
-					</code> has been called, returning an object of type 
+					</code> has not yet been called, but when it is it will return an object of type 
 					<code>
 						<string>STD_FILES</string>
-					</code>, but 
-					<code>
-						<string>operating_environment</string>
-					</code> (coming, like 
-					<code>
-						<string>io</string>
-					</code>, from the top-level class 
-					<code>
-						<string>ANY</string>
-					</code> ) has not yet been called.
+					</code>.
 				</item>
 			</list>
-			<paragraph>The execution-time objects that you may display in an Object Editor are our latest kind of EiffelStudio "development object", along with classes, features, explanations, clusters; notice their distinctive icon, a rectangular mesh suggestion an object's division into fields.  It appears colored for actual objects, gray for void references such as 
+			<paragraph>The execution-time objects that you may display in an Object Editor are our latest kind of EiffelStudio "development object", along with classes, features, explanations, clusters; notice the distinctive icon, a rectangular mesh shape suggestive of an object's division into fields.  It appears colored for actual objects and gray for Void references such as 
 				<code>
 					<string>operating_environment.  </string>
 				</code>

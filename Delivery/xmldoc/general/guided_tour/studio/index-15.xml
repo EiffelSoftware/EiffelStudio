@@ -1,5 +1,5 @@
 <document title="14 COMPUTING PROJECT METRICS" output="studio">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
 		<paragraph>
 			<link>
@@ -375,7 +375,7 @@
 				</code> this time, and click 
 				<code>
 					<keyword>+</keyword>
-				</code> again.  The expression for the sumappears in the bottom field:
+				</code> again.  The expression for the sum appears in the bottom field:
 			</paragraph>
 			<div>
 				<image_link>
@@ -617,7 +617,7 @@
 			</heading>
 			<paragraph>Click the button labeled 
 				<code>
-					<keyword>Manage metrics</keyword>
+					<keyword>Reorder, delete and import metrics</keyword>
 				</code> on the last figure.  This brings up the metric management dialog:
 			</paragraph>
 			<div>

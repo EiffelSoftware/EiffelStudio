@@ -35,9 +35,23 @@ feature {NONE} -- Initialization
 			-- Create a list widget with `par' as
 			-- parent and `col_nb' columns.
 			-- By default, a list allow only one selection.
+		local
+			i: INTEGER
 		do
 			widget := gtk_clist_new (col_nb)
 			gtk_object_ref (widget)
+
+			-- We need to specify a width for the columns
+			-- otherwise the value given by gtk would be wrong.
+			from
+				i := 0
+			until
+				i = col_nb
+			loop
+				gtk_clist_set_column_width (widget, i, 80)
+				i := i +1
+			end
+
 			show_title_row
 			!! ev_children.make (0)
 		end
@@ -148,6 +162,13 @@ feature -- Status report
 			-- True if the title row is shown.
 			-- False if the title row is not shown.
 		do
+			Result := c_gtk_clist_title_shown (widget)
+		end
+
+	get_column_width (column: INTEGER): INTEGER is
+			-- Width of column `column' in pixel.
+		do
+			Result := c_gtk_clist_column_width (widget, column - 1)
 		end
 
 feature -- Status setting

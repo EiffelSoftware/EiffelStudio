@@ -37,13 +37,15 @@
 		<list ordered="false">
 			<item>Changed signature of <code><feature_name>subarray</feature_name></code> in <code><class_name>ARRAY</class_name></code> to match ELKS specification. It now returns an <code><class_name>ARRAY [G]</class_name></code> instead of <code><keyword>like Current</keyword></code>.</item>
 			<item>Changed signature of <code><feature_name>infix "+"</feature_name></code> in <code><class_name>STRING</class_name></code> to match ELKS specification. It now returns <code><keyword>like Current</keyword></code> instead of <code><class_name>STRING</class_name></code>.</item>
+			<item>Added implementation query <code><feature_name>new_string</feature_name></code> in <code><class_name>STRING</class_name></code>. Descendants of <code><class_name>STRING</class_name></code> may need to update their inheritance clause.</item>
 			<item>Made implementations of <code><feature_name>cursor</feature_name></code> in descendants of <code><class_name>CURSOR_STRUCTURE</class_name></code> return a precise <code><class_name>CURSOR</class_name></code> type.</item>
 			<item>Reduced feature exportation of routines also used as creation procedures of <code><class_name>CURSOR</class_name></code> descendants to <code><class_name>NONE</class_name></code>.</item>
-			<item>Removed <code><feature_name>array_valid_index</feature_name></code> from <code><class_name>ARRAYED_LIST</class_name></code>. As a consequence descendants of <code><class_name>ARRAYED_LIST</class_name></code> may need to update their inheritance clause. This fixes ability to use <code><feature_name>put_i_th</feature_name></code> with indexes that may violate the invariant of <code><class_name>ARRAYED_LIST</class_name></code>, for example the code below should trigger a precondition and not violate the invariant of <code><class_name>ARRAYED_LIST</class_name></code>:
+			<item>Removed <code><feature_name>array_valid_index</feature_name></code> from <code><class_name>ARRAYED_LIST</class_name></code>. Descendants of <code><class_name>ARRAYED_LIST</class_name></code> may need to update their inheritance clause. This fixes ability to use <code><feature_name>put_i_th</feature_name></code> with indexes that may violate the invariant of <code><class_name>ARRAYED_LIST</class_name></code>, for example the code below should trigger a precondition and not violate the invariant of <code><class_name>ARRAYED_LIST</class_name></code>:
 <code_block>list: <class_name>ARRAYED_LIST</class_name> [<class_name>INTEGER</class_name>]
 
 <keyword>create</keyword> list.<feature_name>make</feature_name> (5)
 list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
+			<item>Added implementation query <code><feature_name>new_filled_list</feature_name></code> in <code><class_name>ARRAYED_LIST</class_name></code>. Descendants of <code><class_name>ARRAYED_LIST</class_name></code> may need to update their inheritance clause.</item>
 			<item>Removed <code><feature_name>make_sublist</feature_name></code> from <code><class_name>TWO_WAY_LIST</class_name></code> public creation procedures.</item>
 			<item>Made <code><feature_name>file_prunable</feature_name></code> from <code><class_name>FILE</class_name></code> obsolete. Use <code><feature_name>prunable</feature_name></code> instead.</item>
 		</list>

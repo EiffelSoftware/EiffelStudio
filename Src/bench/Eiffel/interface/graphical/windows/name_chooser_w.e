@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			else
 				!! mp.set_watch_cursor;
 				if not project_tool.initialized then
-					discard_licence;
+					discard_licenses;
 					exit
 				end;
 			end

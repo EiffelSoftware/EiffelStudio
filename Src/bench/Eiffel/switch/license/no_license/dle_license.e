@@ -1,7 +1,7 @@
 class DLE_LICENSE
 
 inherit
-	DUMMY_LICENCE
+	DUMMY_LICENSE
 
 creation
 	make

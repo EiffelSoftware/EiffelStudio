@@ -1,7 +1,7 @@
-class BENCH_LICENCE
+class BENCH_LICENSE
 
 inherit
-	ISE_LICENCE
+	ISE_LICENSE
 
 creation
 	make

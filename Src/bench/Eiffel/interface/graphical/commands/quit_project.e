@@ -16,7 +16,7 @@ inherit
 		rename
 			init as make
 		redefine
-			licence_checked
+			license_checked
 		end;
 	SHARED_DEBUG;
 	WARNER_CALLBACKS
@@ -39,7 +39,7 @@ feature -- Callbacks
 			if Application.is_running then
 				Application.kill;
 			end;
-			discard_licence;
+			discard_licenses;
 			exit
 		end;
 
@@ -48,9 +48,9 @@ feature -- Callbacks
 			do_exit := false
 		end;
 
-feature -- Licence managment
+feature -- License managment
 	
-	licence_checked: BOOLEAN is True;
+	license_checked: BOOLEAN is True;
 			-- Is the license checked.
 
 feature -- Properties
@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 						"Do you really want to exit?", "Exit");
 				end
 			else
-				discard_licence;
+				discard_licenses;
 				exit
 			end;
 		end;

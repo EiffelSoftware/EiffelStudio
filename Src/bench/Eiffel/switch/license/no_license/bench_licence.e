@@ -1,7 +1,7 @@
-class BENCH_LICENCE
+class BENCH_LICENSE
 
 inherit
-	DUMMY_LICENCE
+	DUMMY_LICENSE
 
 creation
 	make
@@ -12,4 +12,4 @@ feature
 		do
 		end
 
-end -- class BENCH_LICENCE
+end -- class BENCH_LICENSE

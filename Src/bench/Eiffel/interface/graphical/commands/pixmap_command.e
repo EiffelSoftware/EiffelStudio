@@ -14,7 +14,7 @@ inherit
 			execute
 		end;
 	NAMER;
-	LICENCED_COMMAND
+	LICENSED_COMMAND
 		rename
 			parent_window as Project_tool
 		end
@@ -43,7 +43,7 @@ feature -- Execute
 					not last_warner.destroyed then
 				last_warner.popdown
 			end;
-			execute_licenced (argument);
+			execute_licensed (argument);
 		end;
 	
 invariant

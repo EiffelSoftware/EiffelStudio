@@ -56,7 +56,7 @@ feature -- Callbacks
 				-- the window as it was before the modifications.
 			old_do_format := do_format;
 			do_format := true;
-			execute_licenced (formatted);
+			execute_licensed (formatted);
 			do_format := old_do_format;
 			tool.history.extend (tool.stone);
 			mp.restore
@@ -79,7 +79,7 @@ feature -- Execution
 				formatted ?= argument
 			end;
 			if not text_window.changed then
-				execute_licenced (formatted)
+				execute_licensed (formatted)
 			else
 				warner (popup_parent).call (Current, Warning_messages.w_File_changed)
 			end

@@ -50,8 +50,11 @@ feature -- Access
 			-- use assignment attempt.
 			-- Will raise an exception (code `Retrieve_exception')
 			-- if content is not a stored Eiffel structure.
+		local
+			size: INTEGER
 		do
-			Result := c_retrieved (buffer, buffer_size, 0, $object_stored_size)
+			Result := c_retrieved (buffer, buffer_size, 0, $size)
+			object_stored_size := size
 		end
 
 feature -- Element change
@@ -60,8 +63,11 @@ feature -- Element change
 			-- Produce an external representation of the
 			-- entire object structure reachable from `object'.
 			-- Retrievable within current system only.
+		local
+			size: INTEGER
 		do
-			buffer_size := c_stream_basic_store (buffer, buffer_size, $object, $object_stored_size)
+			buffer_size := c_stream_basic_store (buffer, buffer_size, $object, $size)
+			object_stored_size := size
 		end;
 
 	general_store (object: ANY) is
@@ -72,8 +78,11 @@ feature -- Element change
 			--| This feature may use a visible name of a class written
 			--| in the `visible' clause of the Ace file. This makes it
 			--| possible to overcome class name clashes.
+		local
+			size: INTEGER
 		do
-			buffer_size := c_stream_general_store (buffer, buffer_size, $object, $object_stored_size)
+			buffer_size := c_stream_general_store (buffer, buffer_size, $object, $size)
+			object_stored_size := size
 		end
 
 	independent_store (object: ANY) is
@@ -81,8 +90,11 @@ feature -- Element change
 			-- entire object structure reachable from `object'.
 			-- Retrievable from other systems for the same or other
 			-- platform (machine architecture).
+		local
+			size: INTEGER
 		do
-			buffer_size := c_stream_independent_store (buffer, buffer_size, $object, $object_stored_size)
+			buffer_size := c_stream_independent_store (buffer, buffer_size, $object, $size)
+			object_stored_size := size
 		end
 
 	set_additional_size (new_size: INTEGER) is

@@ -442,7 +442,8 @@ feature {NONE} -- Implementation
 						-- Reflect changes in all editors.
 					update_editors_for_name_change (object.object, Current)
 				end
-			else
+			elseif not object.edited_name.is_equal (object.name) then
+				
 					-- This is a command so it is added to the history. Pressing Return
 					-- does accept the name, even though we still have the focus in the text field
 					-- and are editing it.

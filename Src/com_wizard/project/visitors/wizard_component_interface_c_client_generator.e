@@ -75,6 +75,7 @@ feature -- Basic operations
 			end
 		end
 
+
 end -- class WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
 
 --|----------------------------------------------------------------

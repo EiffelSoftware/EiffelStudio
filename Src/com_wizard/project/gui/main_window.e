@@ -440,13 +440,11 @@ feature {NONE} -- Implementation
 			-- Run Code generation manager.
 		local
 			wizard_manager: WIZARD_MANAGER
-			mem_info: MEM_INFO
 		do
 			create wizard_manager
 			wizard_manager.run
 			wizard_manager := Void
 			full_collect
-			mem_info := memory_statistics (0)
 		end
 
 	open_project (a_project: STRING) is

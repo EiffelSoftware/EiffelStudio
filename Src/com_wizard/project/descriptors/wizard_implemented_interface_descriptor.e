@@ -11,6 +11,9 @@ inherit
 	WIZARD_COMPONENT_DESCRIPTOR
 
 	WIZARD_VARIABLE_NAME_MAPPER
+		export
+			{NONE} all
+		end
 
 create
 	make_from_interface
@@ -28,12 +31,9 @@ feature -- Initialization
 			name.append ("_impl")
 			c_type_name := clone (name)
 			
-			eiffel_class_name := name_for_class (name, type_kind, Shared_wizard_environment.client)
+			eiffel_class_name := name_for_class (name, type_kind, True)
 
-			create c_header_file_name.make (100)
-			c_header_file_name.append ("ecom_")
-			c_header_file_name.append (name)
-			c_header_file_name.append (".h")
+			c_header_file_name := header_name (name)
 
 			description := "Implemented "
 			description.append (Back_quote)
@@ -47,13 +47,14 @@ feature -- Initialization
 feature -- Access
 
 	interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
+			-- Interface descriptor.
 
 	creation_message: STRING is
 			-- Creation message for wizard output
 		do
 			Result := clone (Processed)
 			Result.append (Space)
-			Result.append (Implemented_word)
+ 			Result.append (Implemented_word)
 			Result.append (Space)
 			if interface_descriptor.dispinterface then
 				Result.append (Dispinterface_string)
@@ -71,6 +72,70 @@ feature -- Basic operations
 			-- Call back `a_visitor' with appropriate feature.
 		do
 			a_visitor.process_implemented_interface (Current)
+		end
+
+	set_impl_names (is_client: BOOLEAN) is
+			-- Set implementation names.
+		do
+			c_type_name := impl_c_type_name (is_client)
+			eiffel_class_name := impl_eiffel_class_name (is_client)
+			c_header_file_name := impl_c_header_file_name (is_client)
+		end
+
+	impl_c_type_name (is_client: BOOLEAN): STRING is
+			-- Implementation C type name.
+		require
+			non_void_name: name /= Void
+			valid_name: not name.empty
+		do
+			Result := impl_name (is_client)
+		ensure
+			non_void_c_type_name: Result /= Void
+			valid_c_type_name: not Result.empty
+		end
+
+	impl_eiffel_class_name (is_client: BOOLEAN): STRING is
+			-- Implementation Eiffel class name.
+		require
+			non_void_name: name /= Void
+			valid_name: not name.empty
+		do
+			Result := to_eiffel_name (impl_name (is_client))
+			Result.to_upper
+		ensure
+			non_void_class_name: Result /= Void
+			valid_class_name: not Result.empty
+		end
+
+	impl_c_header_file_name (is_client: BOOLEAN): STRING is
+			-- Implementation header file name.
+		require
+			non_void_name: name /= Void
+			valid_name: not name.empty
+		do
+			Result := header_name (impl_name (is_client))
+		ensure
+			non_void_header: Result /= Void
+			valid_header: not Result.empty
+		end
+
+feature {NONE} -- implementation
+
+	impl_name (is_client: BOOLEAN): STRING is
+			-- Implementation name.
+		require
+			non_void_name: name /= Void
+			valid_name: not name.empty
+		do
+			Result := clone (name)
+			if is_client then
+				Result.append ("_proxy")
+			else
+				Result.append ("_stub")
+			end
+		ensure
+			non_void_name: Result /= Void
+			valid_name: not Result.empty
 		end
 
 invariant

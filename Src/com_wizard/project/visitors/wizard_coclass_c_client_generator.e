@@ -403,7 +403,6 @@ feature {NONE} -- Implementation
 			valid_co_initialize: not Result.empty
 		end
 
-
 end -- class WIZARD_COCLASS_C_CLIENT_GENERATOR
 
 --|----------------------------------------------------------------

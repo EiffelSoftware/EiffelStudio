@@ -721,25 +721,28 @@ feature -- Generation (Linking rules)
 			-- Generate rule to produce simple executable, linked in
 			-- with `run_time' archive.
 		do
-			make_file.putstring (system_name)
-			make_file.putstring (": ")
+			make_file.putstring ("OBJECTS= ")
 			generate_objects_macros
 			make_file.putchar (' ')
 			generate_system_objects_macros
+			make_file.putstring ("%N") 
+
+			make_file.putstring (system_name)
+			make_file.putstring (": ")
+			make_file.putstring ("$(OBJECTS) ")
 			make_file.putchar (' ')
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("/emain.o Makefile%N%T$(RM) ")
+			make_file.putstring ("/emain.o Makefile%N%T$(RM) ") 
 			make_file.putstring (system_name)
 			make_file.new_line
 			if System.makefile_names /= Void then
 				generate_makefile_names
 			end
-			make_file.putstring ("%T$(C")
 			if System.externals.has_cpp_externals then
-				make_file.putstring ("PP")
+				make_file.putstring ("%T$(CPP")
 			else
-				make_file.putstring ("C")
+				make_file.putstring ("%T$(CC")
 			end
 			make_file.putstring (") -o ")
 			make_file.putstring (system_name)
@@ -749,13 +752,10 @@ feature -- Generation (Linking rules)
 				make_file.putstring ("PP")
 			end
 			make_file.putstring ("FLAGS) $(LDFLAGS) ")
-			generate_objects_macros
-			make_file.putchar (' ')
-			generate_system_objects_macros
-			make_file.putchar (' ')
+			make_file.putstring (" $(OBJECTS) ")
 			make_file.putstring (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("/emain.o ")
+			make_file.putstring ("/emain.o ") 
 			make_file.putchar (Continuation)
 			make_file.new_line
 			generate_other_objects

@@ -52,7 +52,24 @@ feature
 			end
 		end;
 
+feature -- Address table
+
+	address_table_name (class_typeid, feature_id: INTEGER): STRING is
+			-- Name of a table of function pointers used by the
+			-- $ operator
+		do
+			Result := Address_table_buffer;
+			eif000 ($Result, class_typeid, feature_id);
+		end;
+
 feature {NONE}
+
+	Address_table_buffer: STRING is
+			-- String buffer
+		once
+			!! Result.make (7)
+			Result.append ("e000000");
+		end;
 
 	Buffer: STRING is
 			-- String buffer

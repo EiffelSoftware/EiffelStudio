@@ -26,12 +26,12 @@ feature {NONE} -- Initialization
 			-- Create menu item
 		do
 			widget := gtk_check_menu_item_new
+			show
 			gtk_check_menu_item_set_show_toggle (widget, True)
 			initialize
 			create_text_label (txt)
 			gtk_misc_set_alignment (label_widget, 0.0, 0.5)
 			gtk_misc_set_padding (label_widget, 21, 0)
-			show
 		end		
 
 feature -- Status report

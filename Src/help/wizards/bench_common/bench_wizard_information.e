@@ -4,28 +4,34 @@ indexing
 	date		: "$Date$"
 	revision	: "$Revision$"
 
-class
+deferred class
 	BENCH_WIZARD_INFORMATION
 
 inherit
 	WIZARD_SHARED
-
-creation
-	make
 
 feature {NONE} -- Initialization
 
 	make is
 			-- Assign default values
 		do
-			if not platform_is_unix then
-				project_location := "C:\projects\my_project"
-			else
-				project_location := Home + "/my_project"
-			end
+			project_name := clone (Default_project_name)
 			compile_project := True
-			project_name := "my_project"
 			ace_location := ""
+
+			if Eiffel_projects_directory /= Void then
+				project_location := clone (Eiffel_projects_directory)
+			else
+				if not platform_is_unix then
+					project_location := "C:\projects"
+				else
+					project_location := Home
+				end
+			end
+			if project_location @ project_location.count /= Operating_environment.Directory_separator then
+				project_location.append_character (Operating_environment.Directory_separator)
+			end
+			project_location.append (project_name)
 		end
 
 feature -- Setting
@@ -76,5 +82,12 @@ feature {NONE} -- Implementation
 		once
 			Result := (create {EXECUTION_ENVIRONMENT}).get ("HOME")
 		end
-
+		
+	Default_project_name: STRING is
+			-- Default project name
+		deferred
+		ensure
+			valid_result: Result /= Void and then not Result.is_empty
+		end
+		
 end -- class BENCH_WIZARD_INFORMATION

@@ -78,6 +78,7 @@ feature -- Status setting
 				end
 				realize_children
 				set_enclosing_size
+				resize_shell_children (width, height)
 				show
 			end
 		end
@@ -183,7 +184,7 @@ feature {NONE} -- Implementation
 					set_title (title_before_iconise)
 					title_before_iconise := Void
 				end
-				resize_shell_children (a_width, a_height)					
+				resize_shell_children (a_width, a_height)
 			end
 			if size_type = Size_minimized then
 				shown := False
@@ -202,7 +203,7 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the window
 		do
-			Result := Ws_overlappedwindow + ws_visible
+			Result := Ws_overlappedwindow
 			if private_iconic_state then
 				Result := Result + ws_minimize
 			end

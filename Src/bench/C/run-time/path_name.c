@@ -7,12 +7,10 @@
 
 
 #include "eif_project.h"
-#define implement
 #include "eif_config.h"
 #include "eif_path_name.h"	/* this includes eif_portable.h */
 
 #ifdef EIF_WINDOWS
-#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
 
@@ -30,6 +28,8 @@
 #include "eif_macros.h"
 #include "eif_plug.h"
 #include "eif_eiffel.h"			/* For Windows and OS2 */
+#include "eif_lmalloc.h"
+
 
 #if defined EIF_WINDOWS || defined EIF_OS2
 rt_public EIF_BOOLEAN eif_is_file_valid (EIF_POINTER);
@@ -133,9 +133,9 @@ rt_public EIF_BOOLEAN eif_is_volume_name_valid (EIF_POINTER p)
 			}
 	return EIF_FALSE;
 #elif defined EIF_OS2
-	implement
+	/* To implement */
 #elif defined (__VMS)
-	implement
+	/* To implement */
 #else
 		/* Unix */
 	return (*p == '\0');
@@ -162,7 +162,7 @@ rt_public EIF_BOOLEAN eif_is_file_name_valid (EIF_POINTER p)
 
 	return EIF_TRUE;
 #elif defined (__VMS)
-	implement
+	/* To implement */
 #else
 		/* Unix implement */
 	return EIF_TRUE;
@@ -179,7 +179,7 @@ rt_public EIF_BOOLEAN eif_is_extension_valid (EIF_POINTER p)
 
 	return eif_is_file_name_valid (p);
 #elif defined (__VMS)
-	implement
+	/* To implement */
 #else
 		/* Unix implement */
 	return EIF_TRUE;
@@ -210,7 +210,7 @@ rt_public EIF_BOOLEAN eif_is_file_valid (EIF_POINTER p)
 		return EIF_FALSE;
 	return eif_is_directory_valid (s);
 #elif defined (__VMS)
-	implement
+	/* To implement */
 #else
 		/* Unix implement */
 	return EIF_TRUE;
@@ -408,13 +408,14 @@ rt_public EIF_REFERENCE eif_volume_name(EIF_POINTER p)
 	/* Returns p's volume name as an EIFFEL string */
  
 #if defined EIF_WINDOWS || defined EIF_OS2
-	implement
+	/* To implement */
 #elif defined (__VMS)
-	implement
+	/* To implement */
 #else
 	/* Unix */
-	implement
+	/* To implement */
 #endif
+	return (EIF_REFERENCE) 0;
 }
  
 rt_public EIF_REFERENCE eif_extracted_paths(EIF_POINTER p)
@@ -428,13 +429,14 @@ rt_public EIF_REFERENCE eif_extracted_paths(EIF_POINTER p)
 	epush(&loc_stack, (char *) (&array));
  
 #if defined EIF_WINDOWS || defined EIF_OS2
-	implement
+	/* To implement */
 #elif defined (__VMS)
-	implement
+	/* To implement */
 #else
 	/* Unix */
-	implement
+	/* To implement */
 #endif
+	return (EIF_REFERENCE) 0;
 	EIF_END_GET_CONTEXT
 }
 

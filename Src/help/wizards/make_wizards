@@ -18,6 +18,7 @@ if [ $rep = y ]; then
 	cd EIFGEN/F_code
 	finish_freezing
 	# Copy the file.
+	mkdir -p $ISE_EIFFEL/studio/wizards/new_projects/vision2/spec/$ISE_PLATFORM/
 	cp -d wizard $ISE_EIFFEL/studio/wizards/new_projects/vision2/spec/$ISE_PLATFORM/
 	cd ../../..
 	echo Vision2 wizard Built!
@@ -37,6 +38,7 @@ if [ $rep = y ]; then
 	cd EIFGEN/F_code
 	finish_freezing
 	# Copy the file.
+	mkdir -p $ISE_EIFFEL/studio/wizards/new_projects/wizard/spec/$ISE_PLATFORM/
 	cp -d wizard $ISE_EIFFEL/studio/wizards/new_projects/wizard/spec/$ISE_PLATFORM/
 	cd ../../..
 	echo Wizard wizard Built!
@@ -56,6 +58,7 @@ if [ $rep = y ]; then
 	cd EIFGEN/F_code
 	finish_freezing
 	# Copy the file.
+	mkdir $ISE_EIFFEL/studio/wizards/precompile/spec/$ISE_PLATFORM/
 	cp -d wizard $ISE_EIFFEL/studio/wizards/precompile/spec/$ISE_PLATFORM/
 	cd ../../..
 	echo Precompilation wizard Built!

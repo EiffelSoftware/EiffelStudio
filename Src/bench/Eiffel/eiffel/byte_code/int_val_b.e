@@ -59,7 +59,7 @@ feature -- Byte code generation
 			-- Generate byte code for an integer constant in an
 			-- interval
 		do
-			ba.append (Bc_int)
+			ba.append (Bc_int32)
 			ba.append_integer (generation_value)
 		end
 

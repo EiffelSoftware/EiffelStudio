@@ -102,7 +102,7 @@ feature -- Generation
 			
 					-- Finally copy the images referenced in `a_doc' so they are still visible from new file. FIXME: Do copy actual images.
 			if a_doc.is_valid_xml then				
-				create l_link_manager.make_with_documents (shared_project.documents)
+				create l_link_manager
 				l_images := l_link_manager.document_images (a_doc)
 				from
 					l_images.start

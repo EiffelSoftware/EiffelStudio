@@ -27,19 +27,8 @@ inherit
 		undefine
 			has_valid_display
 		redefine
-			display
+			display, dispose
 		end;
-
-	MEMORY
-		rename
-			free as gc_free
-		export
-			{NONE} all
-		undefine
-			is_equal
-		redefine
-			dispose
-		end
 
 creation
 
@@ -234,7 +223,7 @@ feature {NONE} -- Implementation
 			-- Free color resource.
 		do
 			if is_real_allocated then
-				free
+				destroy
 			end;
 			is_allocated := False;
 			is_real_allocated := False;

@@ -1,0 +1,52 @@
+system
+	Web_wizard
+
+root
+	WIZARD_PROJECT_MANAGER(wizard_tool): "make_and_launch"
+
+default
+	assertion (no)
+	multithreaded (no)
+	console_application (no)
+	dynamic_runtime (no)
+	dead_code_removal (yes)
+	profile (no)
+	line_generation (no)
+	debug  (no)
+	array_optimization (no)
+	inlining (no)
+	inlining_size ("4")
+
+
+cluster
+	
+	root_cluster: "D:\Eiffel_Projects\Wizards\eweb";
+	src(root_cluster): "$\src"
+
+		-- EiffelBase
+	all base:						"$EIFFEL4\library\base"
+		exclude
+			"desc";"table_eiffel3"
+		end
+
+	all vision2: 			"$EIFFEL4\library\new_vision"
+		exclude
+			"gtk"
+			"test"
+		end
+
+	all Events:				"$EIFFEL4\library\events"
+
+	all wel: 				"$EIFFEL4\library\new_wel"
+
+	all wizard_tool:				"$EIFFEL4\tools\wizard"
+
+
+external
+	include_path:	
+			"$EIFFEL4\library\new_wel\spec\windows\include"
+
+	object:
+			"$EIFFEL4\library\new_wel\spec\msc\lib\wel.lib"
+
+end

@@ -23,6 +23,12 @@ if [ ! -e PorterPackage_enterprise.tar ]; then
 fi
 cp -f PorterPackage_enterprise.tar ~/
 
+#Let's compile for PPC on lisbon in background
+/bin/sh make_linuxppc local &
+
+#Let's compile for Solaris on mosis in background
+/bin/sh make_solaris local &
+
 #Let's do the Linux version
 rm -rf PorterPackage
 
@@ -47,10 +53,3 @@ cd PorterPackage
 /bin/sh compile_exes
 /bin/sh make_images
 cd ..
-
-#Let's compile for PPC on lisbon in background
-/bin/sh make_linuxppc local &
-
-#Let's compile for Solaris on mosis in background
-/bin/sh make_solaris local &
-

@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			Result.append ("\library\com\spec\windows\include ")
 		end
 
-	workbench_c_compiler_flags_addition: STRING is "/Zi /DWORKBENCH"
+	workbench_c_compiler_flags_addition: STRING is "/Ox /DWORKBENCH"
 			-- C compiler options.
 
 	finalize_c_compiler_flags_addition: STRING is "/Ox"

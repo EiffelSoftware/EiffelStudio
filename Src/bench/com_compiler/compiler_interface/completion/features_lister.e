@@ -51,10 +51,10 @@ feature -- Basic Operations
 						loop
 							l_desc := l_features.item (i)
 							from
-								j := 1
+								j := 0
 								renames_count := rename_sources.count
 							until
-								j > renames_count
+								j >= renames_count
 							loop
 								if rename_sources.item (j).is_equal (l_desc.name) then
 									l_desc.set_name (rename_targets.item (j))

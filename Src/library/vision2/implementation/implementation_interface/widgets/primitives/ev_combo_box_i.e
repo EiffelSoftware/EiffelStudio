@@ -52,17 +52,7 @@ feature -- Status report
 
 feature -- Element change
 
---	remove_element (index: INTEGER) is
-			-- Remove the element at the zero-based
-			-- `index' position of the combo-box.
---		require
---			exists: not destroyed
---			index_large_enough: index >= 0
---			index_small_enough: index < count
---		deferred
---		end
-
-	remove_all_elements is
+	clear_items is
 			-- Remove all the elements of the combo-box.
 		require
 			exists: not destroyed

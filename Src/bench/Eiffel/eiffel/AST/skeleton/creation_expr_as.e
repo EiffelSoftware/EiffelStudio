@@ -306,7 +306,7 @@ feature -- Type check
 							vgcc5.set_creation_feature (a_feature)
 							Error_handler.insert_error (vgcc5)
 						else
-							if context.level4 then
+							if context.is_checking_precondition then
 								context_export := context.current_feature.export_status
 								if not context_export.is_subset (export_status) then
 									create vape

@@ -26,6 +26,7 @@ extern void eif_thr_panic(char *);
 extern void eif_thr_init_root(void);
 extern void eif_thr_register(void);
 extern void eif_thr_create(EIF_OBJ current_obj, EIF_PROC init_func);
+extern void eif_thr_exit(void);
 
 /* Imported functions */
 extern char *efreeze(EIF_OBJ object);

@@ -25,6 +25,7 @@ feature {NONE} -- Initialization
 			valid_argument: f /= Void
 		do
 			feature_id := f.feature_id
+			routine_id := f.rout_id_set.first
 			feature_name_id := f.feature_name_id
 			class_id := System.current_class.class_id
 		end
@@ -33,6 +34,9 @@ feature -- Properties
 
 	feature_name_id: INTEGER
 			-- Feature name ID of anchor
+
+	routine_id: INTEGER
+			-- Routine ID of anchor in context of `class_id'.
 
 	feature_name: STRING is
 			-- Final name of anchor.
@@ -59,7 +63,7 @@ feature -- Access
 		do
 			other_like_feat ?= other
 			Result := 	other_like_feat /= Void
-					and then other_like_feat.rout_id = rout_id
+					and then other_like_feat.routine_id = routine_id
 					and then other_like_feat.feature_id = feature_id
 		end
 
@@ -81,15 +85,15 @@ feature -- Output
 			ec: CLASS_C
 		do
 			ec := Eiffel_system.class_of_id (class_id)
-			st.add (ti_L_bracket)
-			st.add (ti_Like_keyword)
+			st.add (ti_l_bracket)
+			st.add (ti_like_keyword)
 			st.add_space
 			if ec.has_feature_table then
 				st.add_feature (ec.feature_with_name (feature_name), feature_name)
 			else
 				st.add_feature_name (feature_name, ec)
 			end
-			st.add (ti_R_bracket)
+			st.add (ti_r_bracket)
 			st.add_space
 			actual_type.ext_append_to (st, f)
 		end
@@ -125,8 +129,8 @@ end
 				if orig_feat = Void then
 					raise_veen (f)
 				end
-				rout_id := orig_feat.rout_id_set.first
-				anchor_feature := origin_table.item (rout_id)
+				routine_id := orig_feat.rout_id_set.first
+				anchor_feature := origin_table.item (routine_id)
 debug
 	if anchor_feature = Void then
 		io.error.putstring ("Void feature%N")
@@ -143,7 +147,7 @@ end
 				if anchor_feature = Void then
 					raise_veen (f)
 				end
-				rout_id := anchor_feature.rout_id_set.first
+				routine_id := anchor_feature.rout_id_set.first
 debug
 	if anchor_feature = Void then
 		io.error.putstring ("Void feature%N")
@@ -152,11 +156,11 @@ end
 			end
 			anchor_type := anchor_feature.type
 			Like_control.on
-			if Like_control.has (rout_id) then
+			if Like_control.has (routine_id) then
 				Like_control.raise_error
 			else
 					-- Update anchored type controler
-				Like_control.put (rout_id)
+				Like_control.put (routine_id)
 					-- Re-processing of the anchored type
 				Result := clone (Current)
 				Result.set_actual_type
@@ -190,7 +194,7 @@ end
 				--| `feature_name' (or its renamed version) in different contexts (eg a
 				--| descendant class). To do that, we need to search in current class
 				--| being processed by compiler the feature_id of feature of routine id
-				--| `rout_id'.
+				--| `routine_id'.
 				--| If feature_table does not exist, it means that we are in current
 				--| class and it is enough to take stored `feature_id'.
 			if System.in_pass3 then
@@ -201,7 +205,7 @@ end
 				end
 			end
 			if feat_tbl /= Void then
-				feat_i := feat_tbl.feature_of_rout_id (rout_id)
+				feat_i := feat_tbl.feature_of_rout_id (routine_id)
 				if feat_i /= Void then
 					updated_feature_id := feat_i.feature_id
 				else
@@ -211,7 +215,7 @@ end
 				updated_feature_id := feature_id
 			end
 
-			create Result.make (updated_feature_id, feature_name_id)
+			create Result.make (updated_feature_id, routine_id)
 		end
 
 feature -- Comparison
@@ -219,7 +223,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-			Result := rout_id = other.rout_id and then
+			Result := routine_id = other.routine_id and then
 				class_id = other.class_id and then
 				feature_id = other.feature_id and then
 				equivalent (actual_type, other.actual_type) and then

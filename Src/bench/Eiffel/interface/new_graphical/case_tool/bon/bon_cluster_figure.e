@@ -368,6 +368,8 @@ feature -- Status setting
 		local
 			new_x, new_y: REAL
 		do
+				-- FIXME: Manu 09/12/2003: This code is not used, if you use it
+				-- makes sur it works properly.
 			p.change_origin (center_point)
 			new_x := body_width.max (body_height) * cosine (angle)
 			new_y := body_width.max (body_height) * sine (angle)

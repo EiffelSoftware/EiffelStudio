@@ -109,7 +109,6 @@ feature {NONE} -- Implementation
 			-- Initialize the windowing environment.
 		do
 			if project_tool = Void then end;
-			if name_chooser = Void then end;
 			project_tool.popup_file_selection;
 		end
  

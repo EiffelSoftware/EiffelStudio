@@ -2,7 +2,7 @@ system es3
 
 root
 
-	es (root_cluster): "make"
+	es: "make"
 
 cluster
 
@@ -151,9 +151,14 @@ cluster
 external
 
 	object:
-		"$(BENCH)/C/parsing/eiffel/libweiffel.a",
-		"$(BENCH)/C/parsing/lace/liblace.a",
-		"$(BENCH)/C/parsing/shared/libparsing.a",
-		"$(BENCH)/C/platform/libplatform.a"
+		"$(BENCH)/C/parsing/eiffel/libweiffel.a";
+		"$(BENCH)/C/parsing/lace/liblace.a";
+		"$(BENCH)/C/parsing/shared/libparsing.a";
+		"$(BENCH)/C/platform/libplatform.a";
+		"$(BENCH)/C/liman/lm/liblm.a";
+		"$(BENCH)/C/liman/shared/libshared.a";
+		"$(EIFFEL3)/bench/spec/$(PLATFORM)/lib/libwkbench.a";
+		"$(BENCH)/C/idrs/libidr.a";
+		"$(EIFFEL3)/library/net/spec/$(PLATFORM)/lib/libnet.a"
 
 end

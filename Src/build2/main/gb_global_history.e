@@ -167,7 +167,7 @@ feature -- Basic operation
 			set_current_position (0)
 		ensure
 			history_empty: command_list.is_empty
-			history_dialog_empty: history_dialog.history_list.is_empty
+			history_dialog_empty: history_dialog.history_list.count = 1
 		end
 		
 

@@ -972,6 +972,11 @@ feature -- Icons
 		once
 			Result := build_classic_pixmap ("delete_very_small")
 		end
+		
+	Icon_numeric_format_very_small: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("numeric_format_very_small")
+		end
 
 	Icon_delete_measure: ARRAY [EV_PIXMAP] is
 		once

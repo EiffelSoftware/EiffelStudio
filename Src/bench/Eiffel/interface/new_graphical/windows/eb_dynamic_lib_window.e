@@ -1277,7 +1277,7 @@ feature {NONE} -- Implementation: Properties dialog
 			hb.disable_item_expand (cancelb)
 			mainvb.extend (hb)
 			
-			properties_dialog.set_minimum_height (properties_dialog.height)
+			properties_dialog.set_maximum_height (properties_dialog.height)
 			properties_dialog.set_default_cancel_button (cancelb)
 			if for_modification then
 				properties_dialog.set_default_push_button (okb)

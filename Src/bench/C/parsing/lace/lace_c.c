@@ -16,16 +16,11 @@
 #include "hector.h"
 #include "plug.h"
 
-extern Malloc_t malloc();
-
 /*
  * Declarations 
  */
 
-char *file_name;
-
 static char *id_string;		/* Eiffel string buffer (instance of ID_SD) */
-static char *id_object;		/* Eiffel instance od ID_SD */
 static char *id_pchar;		/* Pointer associated to `id_string' */
 
 /*
@@ -44,9 +39,6 @@ void lp_init()
 	/* Allocation of an Eiffel ID */
 	id_string = create_node(ID_SD);
 	id_string = eif_freeze(&id_string);	/* Object shouldn't move */
-
-	id_object = create_node(ID_SD);
-	id_object = eif_freeze(&id_object);
 
 	/* Initialization of the buffer with Eiffel routine 'make' of
 	 * class ID_SD.

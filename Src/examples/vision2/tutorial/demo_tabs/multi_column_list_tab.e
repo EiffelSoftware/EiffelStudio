@@ -23,6 +23,7 @@ feature -- Initialization
 			-- Create the tab and initialise objects
 		local
 			cmd1,cmd2: EV_ROUTINE_COMMAND
+			h1: EV_HORIZONTAL_SEPARATOR
 		do
 			{ANY_TAB} Precursor (par)
 
@@ -40,19 +41,24 @@ feature -- Initialization
 
 			create cmd1.make (~set_right_alignment)
 			create f5.make (Current, 4, 0, "Set Right Alignment", cmd1, cmd1)
+			create h1.make (Current)
+			set_child_position (h1, 5, 0, 6, 3)
 
 			create cmd1.make (~multiple_or_single)
-			create b1.make_with_text (Current,"Currently Single Selection. Click to change.")
+			create b1.make_with_text (Current,"Multiple Selection")
 			b1.add_click_command (cmd1, Void)
 			b1.set_vertical_Resize (False)
+			set_child_position (b1, 6, 0, 7, 1)
 			create cmd1.make (~clear_selection)
 			create b2.make_with_text (Current, "Clear Selection")
 			b2.add_click_command (cmd1, Void)
 			b2.set_vertical_resize (False)
+			set_child_position (b2, 6, 1, 7, 2)
 			create cmd1.make (~toggle_title_row)
 			create b3.make_with_text (Current, "Hide Title Row")
 			b3.add_click_command (cmd1, Void)
 			b3.set_vertical_resize (False)
+			set_child_position (b3, 6, 2, 7, 3)
 		end
 
 feature -- Access
@@ -92,10 +98,10 @@ feature -- Execution Feature
 		do
 			if current_widget.is_multiple_selection then
 				current_widget.set_single_selection
-				b1.set_text ("Currently Single Selection. Click to change.")
+				b1.set_text ("Multiple Selection")
 			else
 				current_widget.set_multiple_selection
-				b1.set_text ("Currently Multiple selection. Click to change.")
+				b1.set_text ("Single Selection")
 
 			end
 		end

@@ -560,6 +560,7 @@ feature -- Menu mnenomics
 	m_New_context_tool: STRING is		"New con&text window"
 	m_Object: STRING is					"&Object"
 	m_Object_tools: STRING is			"&Object tools"
+	m_Open_eac_browser: STRING is		"EAC Browser"
 	m_Pretty_print: STRING is			"Expand an object"
 	m_Project: STRING is				"&Project"
 	m_Quick_compile: STRING is			"&Quick compile"

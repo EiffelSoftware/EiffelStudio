@@ -15,12 +15,13 @@ inherit
 			process_text as old_process_text
 		redefine
 			process_filter_item, process_after_class,
-			process_class_name_text
+			process_class_name_text, process_comment_text
 		end;
 	TEXT_FORMATTER
 		redefine
 			process_filter_item, process_after_class,
-			process_class_name_text, process_text
+			process_class_name_text, process_text,
+			process_comment_text
 		select
 			process_text
 		end;
@@ -68,7 +69,8 @@ feature -- Access
 			-- Filtered output text
 
 	file_suffix: STRING is
-			-- Suffix of the file name where the filtered output text is stored;			-- Void if it has not been specified in the filter specification
+			-- Suffix of the file name where the filtered output text is stored;
+			-- Void if it has not been specified in the filter specification
 		do
 			if format_table.has (f_Suffix) then
 				Result := format_table.item (f_Suffix).item1
@@ -104,8 +106,6 @@ feature {NONE} -- Text processing
 				elseif text.is_special and format_table.has (f_Symbol) then
 					format := format_table.item (f_Symbol)
 				end
-			elseif text.is_comment and format_table.has (f_Comment) then
-				format := format_table.item (f_Comment)
 			end;
 			if format /= Void then
 				image.append (format.item1);
@@ -117,6 +117,29 @@ feature {NONE} -- Text processing
 				print_escaped_text (text.image)
 			end
 		end;
+
+	process_comment_text (text: COMMENT_TEXT) is
+			-- Process the quoted text within a comment.
+		local
+			format: CELL2 [STRING, STRING];
+		do
+			if format_table.has (f_Comment) then
+				format := format_table.item (f_Comment)
+				image.append (format.item1);
+				if format.item2 /= Void then
+					print_escaped_text (text.image);
+					image.append (format.item2)
+				end
+			else
+				print_escaped_text (text.image);
+			end
+		end;
+
+    process_quoted_text (text: QUOTED_TEXT) is
+            -- Process the quoted `text' within a comment.
+        do
+			print_escaped_text (text.image_without_quotes);
+        end;
 
 	process_class_name_text (text: CLASS_NAME_TEXT) is
 		local
@@ -257,14 +280,13 @@ feature {NONE} -- Text processing
 
 	process_after_class (text: AFTER_CLASS) is
 		local
-			item: BASIC_TEXT
+			item: COMMENT_TEXT
 		do
 			print_escaped_text (" ");
 			process_basic_text (ti_Dashdash);
 			print_escaped_text (" ");
-			!!item.make ("class ");
-			item.set_is_comment;
-			process_basic_text (item);
+			!! item.make ("class ");
+			process_comment_text (item);
 			print_escaped_text (text.class_name)
 		end;
 

@@ -291,3 +291,60 @@ char *s;
 
 	return -1;
 }
+
+public void ei_set_reference_field(i, object, value)
+EIF_INTEGER i;
+EIF_POINTER object;
+EIF_POINTER value;
+{
+	*(EIF_POINTER *) ei_oref(i,object) = value;
+}
+
+public void ei_set_double_field(i, object, value)
+EIF_INTEGER i;
+EIF_POINTER object;
+EIF_DOUBLE value;
+{
+	*(EIF_DOUBLE *) ei_oref(i,object) = value;
+}
+
+public void ei_set_char_field(i, object, value)
+EIF_INTEGER i;
+EIF_POINTER object;
+EIF_CHARACTER value;
+{
+	*(EIF_CHARACTER *) ei_oref(i,object) = value;
+}
+
+public void ei_set_boolean_field(i, object, value)
+EIF_INTEGER i;
+EIF_POINTER object;
+EIF_BOOLEAN value;
+{
+	*(EIF_BOOLEAN *) ei_oref(i,object) = value;
+}
+
+public void ei_set_integer_field(i, object, value)
+EIF_INTEGER i;
+EIF_POINTER object;
+EIF_INTEGER value;
+{
+	*(EIF_INTEGER *) ei_oref(i,object) = value;
+}
+
+public void ei_set_float_field(i, object, value)
+EIF_INTEGER i;
+EIF_POINTER object;
+EIF_REAL value;
+{
+	*(EIF_REAL *) ei_oref(i,object) = value;
+}
+
+public void ei_set_pointer_field(i, object, value)
+EIF_INTEGER i;
+EIF_POINTER object;
+EIF_POINTER value;
+{
+	*(EIF_POINTER *) ei_oref(i,object) = value;
+}
+

@@ -282,7 +282,8 @@ feature {NONE} -- Initialization
 				until
 					i > nb
 				loop
-					parent_type := internal_type_from_consumed_type (True, external_class.interfaces.item (i))
+					parent_type := internal_type_from_consumed_type (True,
+						external_class.interfaces.item (i))
 					pars.extend (parent_type)
 					parent_class := parent_type.associated_class
 					parent_class.add_descendant (Current)
@@ -293,7 +294,8 @@ feature {NONE} -- Initialization
 			parents := pars
 		ensure
 			parents_not_void: parents /= Void
-			parents_filled: Current /= System.system_object_class.compiled_class implies parents.count > 0
+			parents_filled:
+				Current /= System.system_object_class.compiled_class implies parents.count > 0
 		end
 
 	process_syntax_features (a_features: ARRAY [CONSUMED_ENTITY]) is
@@ -328,7 +330,8 @@ feature {NONE} -- Initialization
 					until
 						j > k
 					loop
-						l_external_type := internal_type_from_consumed_type (True, l_args.item (j).type)
+						l_external_type := internal_type_from_consumed_type (True,
+							l_args.item (j).type)
 						add_syntactical_supplier (l_external_type)
 						l := l + 1
 						j := j + 1
@@ -362,7 +365,6 @@ feature {NONE} -- Initialization
 			l_external: EXTERNAL_I
 			l_constant: CONSTANT_I
 			l_ext: IL_EXTENSION_I
-			l_rout_id_set: ROUT_ID_SET
 			l_all_export: EXPORT_ALL_I
 			l_none_export: EXPORT_NONE_I
 			l_feat_arg: FEAT_ARG
@@ -491,29 +493,8 @@ feature {NONE} -- Initialization
 					l_ext.set_alias_name_id (l_names_heap.found_item)
 				end
 
-				create l_rout_id_set.make (1)
-				if l_member.is_attribute then
-					l_rout_id_set.put (Routine_id_counter.next_attr_id)
-				else
-					l_rout_id_set.put (Routine_id_counter.next_rout_id)
-				end
-
-				l_feat.set_rout_id_set (l_rout_id_set)
-				l_feat.set_feature_name (l_member.eiffel_name)
-				l_feat.set_feature_id (feature_id_counter.next)
-
-				l_written_type := internal_type_from_consumed_type (True, l_member.declared_type)
-				l_feat.set_written_in (l_written_type.class_id)
-				l_feat.set_origin_class_id (l_written_type.class_id)
-				l_feat.set_written_feature_id (l_feat.feature_id)
-
-				if l_written_type.class_id = class_id then
-					l_feat.set_is_origin (True)
-				end
-
 				if l_member.has_return_value then
 					l_external_type := internal_type_from_consumed_type (True, l_member.return_type)
-					add_syntactical_supplier (l_external_type)
 
 					l_feat.set_type (l_external_type)
 
@@ -536,7 +517,8 @@ feature {NONE} -- Initialization
 					until
 						j > k
 					loop
-						l_external_type := internal_type_from_consumed_type (True, l_args.item (j).type)
+						l_external_type := internal_type_from_consumed_type (True,
+							l_args.item (j).type)
 						l_feat_arg.put_i_th (l_external_type, l + 1)
 						l_names_heap.put (l_args.item (j).eiffel_name)
 						l_feat_arg.argument_names.put (l_names_heap.found_item, l)
@@ -544,7 +526,6 @@ feature {NONE} -- Initialization
 						l_names_heap.put (l_args.item (j).type.name)
 						l_arg_ids.put (l_names_heap.found_item, l + 1)
 
-						add_syntactical_supplier (l_external_type)
 						l := l + 1
 						j := j + 1
 					end
@@ -556,6 +537,27 @@ feature {NONE} -- Initialization
 					l_proc.set_arguments (l_feat_arg)
 				end
 
+				l_feat.set_is_frozen (l_member.is_frozen)
+				l_feat.set_feature_name (l_member.eiffel_name)
+				l_feat.set_feature_id (feature_id_counter.next)
+
+				l_written_type := internal_type_from_consumed_type (True, l_member.declared_type)
+				l_feat.set_written_in (l_written_type.class_id)
+				l_feat.set_origin_class_id (l_written_type.class_id)
+				l_feat.set_written_feature_id (l_feat.feature_id)
+
+				if l_written_type.class_id = class_id then
+					l_feat.set_is_origin (True)
+				end
+
+					-- Let's find the right routine id, i.e. reuse one
+					-- because current feature is a redefinition or create
+					-- a new one.
+				compute_rout_id_set (a_feat_tbl, l_feat, l_member)
+
+				check
+					not_already_inserted: not a_feat_tbl.has_id (l_feat.feature_name_id)
+				end
 				a_feat_tbl.put (l_feat, l_feat.feature_name_id)
 				l_orig_tbl.put (l_feat, l_feat.rout_id_set.first)
 				i := i + 1
@@ -580,6 +582,197 @@ feature {NONE} -- Initialization
 			end
 		end
 
+feature {NONE} -- Implementation
+
+	compute_rout_id_set (a_feat_tbl: FEATURE_TABLE; a_feat: FEATURE_I; a_member: CONSUMED_ENTITY) is
+			-- Compute a new `rout_id_set' for `a_feat' based on
+			-- info of current class and parent classes.
+		require
+			a_feat_tbl_not_void: a_feat_tbl /= Void
+			a_feat_tbl_has_origin_table: a_feat_tbl.origin_table /= Void
+			a_feat_not_void: a_feat /= Void
+			a_feat_with_no_rout_id_set: a_feat.rout_id_set = Void
+			a_member_not_void: a_member /= Void
+		local
+			l_rout_id_set: ROUT_ID_SET
+			l_feat: FEATURE_I
+			l_parent_class: CLASS_C
+		do
+				-- We need to look up parents of current class to find if some routine IDs
+				-- have been assigned or not. At this stage `a_feat' contains valid data,
+				-- only `rout_id_set' of `a_feat' has not yet been set.
+				-- 
+				-- Note: Manu 08/13/2002
+				-- In most cases the below alogorithm is going to find an inherited
+				-- routine id, however in the case where a MethodImpl has been done in current
+				-- class, we do not get a routine because it is private, or if it is public
+				-- we cannot yet trace back to which inherited feature/class MethodImpl has been
+				-- done, so we will create a new routine id, we will not do a merge, which seems to
+				-- be the .NET behavior anyway.
+
+			create l_rout_id_set.make (1)
+				
+			if not a_member.is_virtual then
+					-- Either it is a new feature of current or an inherited one,
+					-- in the first case we create a new routine id, otherwise we reuse the
+					-- parent one.
+				if a_feat.written_class /= Current then
+					l_feat := matching_external_feature_in (a_feat, a_feat.written_class, a_member)
+					check
+						l_feat_not_void: l_feat /= Void
+					end
+					l_rout_id_set.merge (l_feat.rout_id_set)
+				end
+			else
+					-- It is virtual, we need to find out from where we are coming.
+					-- We first check on all interfaces of current class, and only when
+					-- we do not find any matching routine, then we check the main parent.
+				from
+					parents.start
+				until
+					parents.after
+				loop
+					if parents.item.associated_class.is_interface then
+						l_feat := matching_external_feature_in (a_feat,
+							parents.item.associated_class, a_member)
+						if l_feat /= Void then
+							l_rout_id_set.merge (l_feat.rout_id_set)
+						end
+					else
+						check
+							no_parent_found_yet: l_parent_class = Void
+						end
+						l_parent_class := parents.item.associated_class
+					end
+					parents.forth
+				end
+			end
+		
+			if l_feat = Void and l_parent_class /= Void then
+					-- Let's check the main parent now.
+				l_feat := matching_external_feature_in (a_feat, l_parent_class, a_member)
+				if l_feat /= Void then
+					l_rout_id_set.merge (l_feat.rout_id_set)
+				end
+			end
+
+			if l_rout_id_set.is_empty then
+					-- No existing routine id has been found, let's create a new one.
+				if a_feat.is_attribute then
+					l_rout_id_set.put (Routine_id_counter.next_attr_id)
+				else
+					l_rout_id_set.put (Routine_id_counter.next_rout_id)
+				end
+			end
+
+				-- Insert the computed routine IDs.
+			a_feat.set_rout_id_set (l_rout_id_set)
+		ensure
+			a_feat_updated: a_feat.rout_id_set /= Void and then not a_feat.rout_id_set.is_empty
+			not_already_inserted:
+				not a_feat.rout_id_set.linear_representation.there_exists (
+					agent (a_feat_tbl.origin_table).has)
+		end
+
+	matching_external_feature_in (
+			a_feat: FEATURE_I; a_class: CLASS_C; a_member: CONSUMED_ENTITY): FEATURE_I
+		is
+			-- Look up a feature whose external name is `a_name_id' in `a_class'.
+		require
+			a_feat_not_void: a_feat /= Void
+			a_class_not_void: a_class /= Void
+			a_class_is_true_external: a_class.is_true_external
+			a_member_not_void: a_member /= Void
+		local
+			l_feat_tbl: FEATURE_TABLE
+			l_feat: FEATURE_I
+			l_found: BOOLEAN
+			i, nb: INTEGER
+			l_other_ext, l_feat_ext: IL_EXTENSION_I
+		do
+			l_feat_ext ?= a_feat.extension
+
+			if l_feat_ext = Void then
+					-- If it does not have an extension is either means that `a_feat' is either:
+					-- 1 - a constant
+					-- 2 - an artificially added feature such as `from_integer', `infix "|"' and
+					--     `to_integer' on all enum types.
+					--
+					-- In those cases, we can safely assume that because the aboves features
+					-- are frozen, that generating a new routine id is not going to be harmfull.
+				check
+					frozen_feature: a_feat.is_frozen or a_feat.is_constant
+				end
+			else
+					-- Let's find a matching inherited feature.
+				l_feat_tbl := a_class.feature_table
+				from
+					l_feat_tbl.start
+					l_found := False
+				until
+					l_feat_tbl.after or else Result /= Void
+				loop
+					l_feat := l_feat_tbl.item_for_iteration
+					l_other_ext ?= l_feat.extension
+						-- We only analyze an inherited routine `l_feat' when it makes sense:
+						-- 1 - `l_feat' should be defined in a class that is an ancestor of the
+						--      class where `a_feat' is defined.
+						-- 2 - It should have an extension part, since `a_feat' has one.
+						-- 3 - It should have the same external name
+						-- 4 - Both routines seems to be coming from the same class, otherwise
+						--     the parent one should not be frozen (as it makes no sense to be
+						--     able to redefine a frozen feature.
+					if
+						a_feat.written_class.simple_conform_to (l_feat.written_class) and then
+						l_other_ext /= Void and then
+						l_other_ext.alias_name_id = l_feat_ext.alias_name_id and then
+						(a_feat.written_class = l_feat.written_class or else not l_feat.is_frozen)
+					then
+							-- We found a routine, let's check that is the right one
+							-- by comparing their return type and their arguments type.
+						if
+							l_feat.type.same_as (a_feat.type) and then
+							l_feat.argument_count = a_feat.argument_count
+						then
+							if l_feat.argument_count = 0 then
+								l_found := True
+							else
+								from
+									i := l_other_ext.argument_types.lower
+									nb := l_other_ext.argument_types.upper
+									l_found := True
+								until
+									i > nb or not l_found
+								loop
+									l_found := l_other_ext.argument_types.item (i) =
+										l_feat_ext.argument_types.item (i)
+									
+									i := i + 1
+								end
+							end
+							if l_found then
+									-- We found an inherited feature matching current.
+									-- If we are in an interface and that a parent interface
+									-- already define the same feature, then we have to create
+									-- a new routine ID.
+								if is_interface then
+									if
+										not a_feat.is_deferred or else
+										a_feat.written_class = l_feat.written_class
+									then
+										Result := l_feat
+									end
+								else
+									Result := l_feat
+								end
+							end
+						end
+					end
+					l_feat_tbl.forth
+				end
+			end
+		end
+		
 	internal_type_from_consumed_type (
 			force_compilation: BOOLEAN; c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A
 		is
@@ -768,6 +961,8 @@ feature {NONE} -- Initialization
 
 invariant
 	il_generation: System.il_generation
+	is_external_set: is_external
+	is_true_external_set: is_true_external
 	valid_enclosing_class: is_nested implies enclosing_class /= Void
 
 end -- class EXTERNAL_CLASS_C

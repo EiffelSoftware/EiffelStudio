@@ -69,6 +69,9 @@ char *win_eif_getenv (char *k, char *app)
 			}
 		} else {
 			if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS) {
+					/* Could not read from HKCU entry, so let's close it before opening
+					 * the one possibly in HKLM */
+				RegCloseKey (hkey);
 				if (RegOpenKeyEx (HKEY_LOCAL_MACHINE, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
 					free (key);
 					free (lower_k);

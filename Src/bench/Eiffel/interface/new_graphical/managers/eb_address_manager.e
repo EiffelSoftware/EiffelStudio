@@ -2074,6 +2074,7 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			create a_screen
 			address_dialog.set_position (start_x.max (0).min (a_screen.width - address_dialog.minimum_width), header_info.screen_y.max (0).min (a_screen.height - address_dialog.height))
 			address_dialog.set_width ((start_x + header_info.width).min (a_screen.width) - start_x.max(0))
+			address_dialog.set_height (header_info.height)
 			address_dialog.show
 			if output_line /= Void then
 				output_line.set_foreground_color (editor_preferences.error_text_color)

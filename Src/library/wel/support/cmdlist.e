@@ -26,6 +26,25 @@ feature -- Element change
 			extend (exec)
 		end
 
+	remove_command (command: WEL_COMMAND; argument: ANY) is
+			-- Remove all `command' with `argument' from the list of commands.
+		require
+			command_not_void: command /= Void
+		do
+			from
+				start
+			until
+				after
+			loop
+				if item.command = command and then
+					equal (item.argument, argument) then
+					remove
+				else
+					forth
+				end
+			end
+		end
+
 feature -- Execution
 
 	execute (argument: ANY) is

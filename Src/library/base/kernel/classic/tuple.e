@@ -18,6 +18,11 @@ inherit
 			is_empty, count
 		end
 
+	ANY
+		undefine
+			is_equal, copy
+		end
+
 create
 	make
 

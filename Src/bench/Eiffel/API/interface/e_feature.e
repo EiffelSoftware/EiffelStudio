@@ -465,9 +465,9 @@ feature -- Access
 			Result := f.number_of_breakpoint_slots
 		end
 		
-	number_of_precondition_slots: INTEGER is
+	number_of_all_precondition_slots: INTEGER is
 			-- Number of preconditions
-			-- (inherited assertions are not taken into account)
+			-- (including inherited assertions)
 		local
 			f: FEATURE_I
 		do
@@ -475,7 +475,7 @@ feature -- Access
 			check
 				feature_upto_date: f /= Void
 			end
-			Result := f.number_of_precondition_slots
+			Result := f.number_of_all_precondition_slots
 		end		
 
 feature -- Comparison

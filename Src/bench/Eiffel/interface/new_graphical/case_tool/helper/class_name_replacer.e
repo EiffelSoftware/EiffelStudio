@@ -98,8 +98,6 @@ feature -- Status report
 			-- Is `a_name' valid for a new class name or generic?
 		require
 			a_name_not_void: a_name /= Void
-		local
-			i: INTEGER
 		do
 			Result := (create {IDENTIFIER_CHECKER}).is_valid (a_name)
 			--| FIXME May not be a formal generic in any of the classes involved.

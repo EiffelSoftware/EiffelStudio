@@ -16,6 +16,8 @@ inherit
 		redefine
 			implementation,
 			is_in_default_state
+		select
+			default_create
 		end
 
 	INTERACTIVE_LIST [STRING]
@@ -24,16 +26,6 @@ inherit
 		redefine
 			on_item_added,
 			on_item_removed
-		end
-
-	EV_PIXMAPABLE
-		undefine
-			initialize, copy, is_equal
-		redefine
-			implementation,
-			is_in_default_state
-		select
-			default_create
 		end
 
 	EV_DESELECTABLE
@@ -59,8 +51,7 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_ITEM} and Precursor {EV_PIXMAPABLE} and
-				Precursor {EV_DESELECTABLE}
+			Result := Precursor {EV_ITEM} and Precursor {EV_DESELECTABLE}
 		end
 
 feature {EV_ANY_I} -- Implementation

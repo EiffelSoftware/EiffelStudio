@@ -9,6 +9,10 @@ class
 	
 inherit
 	EV_TREE_ITEM
+		redefine
+			extend,
+			prune_all
+		end
 	
 	GB_XML_UTILITIES
 		export
@@ -60,10 +64,11 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			set_text (a_name)
-			set_pixmap (((create {GB_SHARED_PIXMAPS}).icon_directory) @ 1)
+			set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_cluster_symbol_gray"))
 			drop_actions.extend (agent add_object)
 			drop_actions.set_veto_pebble_function (agent restrict_drop_to_valid_types)
 			set_pebble (Current)
+			is_grayed_out := True
 		ensure
 			name_set: a_name.is_equal (text)
 		end	
@@ -95,6 +100,33 @@ feature {GB_XML_LOAD, GB_XML_IMPORT} -- Implementation
 				set_text (element_info.data)
 			end
 		end
+		
+feature {GB_WINDOW_SELECTOR} -- Implementation
+
+	is_grayed_out: BOOLEAN
+		-- Is current represent with a gray icon?
+		
+	display_in_color is
+			-- Ensure `Current' is represented in color.
+		do
+			if is_grayed_out then
+				set_pixmap (((create {GB_SHARED_PIXMAPS}).icon_directory) @ 1)
+				is_grayed_out := False
+			end
+		ensure
+			not_grayed_out: not is_grayed_out
+		end
+		
+	display_in_gray is
+			-- Ensure `Current' is represented in gray.
+		do
+			if not is_grayed_out then
+				set_pixmap ((create {GB_SHARED_PIXMAPS}).pixmap_by_name ("icon_cluster_symbol_gray"))
+				is_grayed_out := True
+			end
+		ensure
+			is_grayed_out: is_grayed_out
+		end
 
 feature -- Implementation
 
@@ -117,6 +149,20 @@ feature -- Implementation
 			item_contained: has (an_item)
 		end
 		
+	extend (v: like item) is
+			-- Add `v' to end. Do not move cursor.
+		do
+			Precursor {EV_TREE_ITEM} (v)
+			window_selector.item_added_to_directory (Current, v)
+		end
+		
+	prune_all (v: like item) is
+			-- Remove all occurrences of `v'.
+		do
+			Precursor {EV_TREE_ITEM} (v)
+			window_selector.item_removed_from_directory (Current, v)
+		end	
+
 feature -- Implementation
 	
 	add_object (an_object: GB_OBJECT) is

@@ -933,23 +933,34 @@ feature -- comments
 		do
 			begin;
 			if comment /= void then
-				if comment.count > 0 
-					and comment.text.item (1).item (1) /= '|'
-				then
-					put_text_item (ti_Dashdash);
-					put_comment_text (comment.text.item (1));
+				from
 					from
-						i := 2
+						i := 1
 					until
-						i > comment.count
-						or else comment.text.item (i).item (1) = '|'
+						i > comment.count or else
+						comment.text.item (i).empty or else
+						comment.text.item (i).item (1) /= '|'
 					loop
+						i := i + 1
+					end;
+					if i <= comment.count then
+						put_text_item (ti_Dashdash);
+						put_comment_text (comment.text.item (i))
+					end;
+					i := i + 1
+				until
+					i > comment.count
+				loop
+					if 
+						comment.text.item (i).empty or else
+						comment.text.item (i).item (1) /= '|' 
+					then
 						next_line;
 						put_text_item (ti_Dashdash);
-						put_comment_text (comment.text.item (i));
-						i := i + 1;
+						put_comment_text (comment.text.item (i))
 					end;
-				end;
+					i := i + 1
+				end
 			end;
 			commit;
 		end;

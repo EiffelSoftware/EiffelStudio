@@ -153,18 +153,25 @@ feature
 			entry: POLY_TABLE [ENTRY];
 			internal_name, table_name: STRING;
 			i: INTEGER;
+			is_boolean: BOOLEAN
 		do
 			check
 				final_mode: context.final_mode
 			end;
+			is_boolean :=  type.is_boolean;
 			entry := Eiffel_table.poly_table (rout_id);
 			if entry.is_polymorphic (typ.type_id) then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
 				table_name := rout_id.table_name;
-				generated_file.putchar ('(');
-				real_type (type).c_type.generate_function_cast (generated_file);
+
+				if is_boolean then
+					generated_file.putstring ("EIF_TEST((");
+				else
+					generated_file.putchar ('(');
+					real_type (type).c_type.generate_function_cast (generated_file);
+				end;
 				generated_file.putchar ('(');
 				generated_file.putstring (table_name);
 				generated_file.putchar ('-');
@@ -185,7 +192,11 @@ feature
 					-- Remember external routine table declaration
 				Extern_declarations.add_routine_table (table_name);
 			else
-				context.real_type (type).c_type.generate_cast (generated_file);
+				if is_boolean then
+					generated_file.putstring ("EIF_TEST(");
+				else
+					context.real_type (type).c_type.generate_cast (generated_file);
+				end;
 					-- The call is not polymorphic in the given context,
 					-- so the name can be hardwired.
 				if encapsulated then
@@ -299,6 +310,10 @@ feature
 					-- Close parenthesis opened by metamorphosis code
 				generated_file.putchar (')');
 			end;
+			if type.is_boolean then
+					-- macro EIF_TEST was generated
+				generated_file.putchar (')');
+			end
 			release_hector_protection;
 		end;
 		

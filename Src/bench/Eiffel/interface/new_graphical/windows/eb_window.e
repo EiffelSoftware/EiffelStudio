@@ -195,20 +195,39 @@ feature -- Status setting
 			--
 			-- Note: The window cannot be moved while update is locked.
 		do
-			if (create {EV_ENVIRONMENT}).application.locked_window = Void then
-				window.lock_update
-			end			
+			if lock_level = 0 then
+				if (create {EV_ENVIRONMENT}).application.locked_window = Void then
+					window.lock_update
+					unlock_needed := True
+				else
+					unlock_needed := False
+				end
+			end
+			lock_level := lock_level + 1
+		ensure
+			lock_level_incremented: lock_level = old lock_level - 1
 		end
 
 	unlock_update is
 			-- Unlock updates for this window on certain platforms.
+		require
+			lock_level_positive: lock_level > 0
 		do
-			if (create {EV_ENVIRONMENT}).application.locked_window = window then
+			lock_level := lock_level - 1
+			if unlock_needed and then lock_level = 0 and then (create {EV_ENVIRONMENT}).application.locked_window = window then
 				window.unlock_update
 			end
+		ensure
+			lock_level_decremented: lock_level = old lock_level - 1
 		end
 
 feature -- Window management / Status Report
+
+	unlock_needed: BOOLEAN
+			-- Should call to `unlock_update' have an effect?
+
+	lock_level: INTEGER
+			-- Number of times `lock_update' has been called. So that `unlock_update' is only called once.
 
 	destroyed: BOOLEAN
 			-- Is Current destroyed?
@@ -547,6 +566,9 @@ feature -- Obsolete
 		do
 			Result := window.is_show_requested
 		end
+
+invariant
+	lock_level_nonnegative: lock_level >= 0
 
 end -- class EB_WINDOW
 

@@ -2674,6 +2674,7 @@ end
 			Skeleton_file := Skeleton_f (final_mode)
 			Skeleton_file.open_write
 
+			Skeleton_file.putstring ("#include %"eif_project.h%"%N") --JOCE
 			Skeleton_file.putstring ("#include %"eif_struct.h%"%N")
 			if final_mode then
 				Skeleton_file.putstring ("#include %"")
@@ -2877,6 +2878,7 @@ end
 
 			Cecil_file := cecil_f (final_mode)
 			Cecil_file.open_write
+			Cecil_file.putstring ("#include %"eif_project.h%"%N")
 			Cecil_file.putstring ("#include %"eif_cecil.h%"%N")
 			if final_mode then
 				Cecil_file.putstring ("#include %"ececil.h%"%N")
@@ -3240,6 +3242,7 @@ feature -- Plug and Makefile file
 			Plug_file := plug_f (final_mode)
 			Plug_file.open_write_c
 
+			Plug_file.putstring ("#include %"eif_project.h%"%N%N")
 			Plug_file.putstring ("#include %"eif_macros.h%"%N%N")
 
 				-- Extern declarations
@@ -3296,12 +3299,11 @@ feature -- Plug and Makefile file
 			Plug_file.putstring (arr_make_name)
 			Plug_file.putstring ("();%N")
 
-				-- Do we need to collect GC data for the profiler?
-			Plug_file.putstring ("EIF_INTEGER egc_prof_enabled = (EIF_INTEGER) ")
-			if Lace.ace_options.has_profile then
-				Plug_file.putstring ("3;%N")
+			if final_mode and then array_optimization_on then
+				array_optimizer.generate_plug_declarations (Plug_file, Table_prefix)
 			else
-				Plug_file.putstring ("0;%N")
+				Plug_file.putstring ("long *eif_area_table = (long *)0;%N%
+										%long *eif_lower_table = (long *)0;%N")
 			end
 
 			if final_mode then
@@ -3328,59 +3330,12 @@ feature -- Plug and Makefile file
 				Plug_file.putstring ("[])();%N%N")
 			end
 
-			if final_mode and then array_optimization_on then
-				array_optimizer.generate_plug_declarations (Plug_file, Table_prefix)
-			else
-				Plug_file.putstring ("long *eif_area_table = (long *)0;%N%
-										%long *eif_lower_table = (long *)0;%N")
-			end
-
-				-- Pointer on creation feature of class STRING
-			Plug_file.putstring ("void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER) = ")
-			Plug_file.putstring (str_make_name)
-			Plug_file.putstring (";%N")
-				-- Pointer on creation feature of class ARRAY[ANY]
-			Plug_file.putstring ("void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER) = ")
-			Plug_file.putstring (arr_make_name)
-			Plug_file.putstring (";%N")
-
-				--Pointer on `set_count' of class STRING
-			Plug_file.putstring ("void (*egc_strset)(EIF_REFERENCE, EIF_INTEGER) = ")
-			Plug_file.putstring (set_count_name)
-			Plug_file.putstring (";%N")
-
 			if has_separate then
 					--Pointer on `to_c' of class STRING
 				Plug_file.putstring ("void (*eif_strtoc)() = ")
 				Plug_file.putstring (to_c_name)
 				Plug_file.putstring (";%N")
 			end
-
-				-- Dynamic type of class STRING
-			Plug_file.putstring ("int egc_str_dtype = ")
-			Plug_file.putint (str_type_id - 1)
-			Plug_file.putstring (";%N")
-
-				-- Dynamic type of class ARRAY[ANY]
-			Plug_file.putstring ("int egc_arr_dtype = ")
-			Plug_file.putint (arr_type_id - 1)
-			Plug_file.putstring (";%N")
-
-				-- Dispose routine id from class MEMORY (if compiled) 
-			Plug_file.putstring ("int32 egc_disp_rout_id = ")
-			if memory_class /= Void then
-				Plug_file.putint (memory_dispose_id.id)
-			else
-				Plug_file.putstring ("-1")
-			end
-			Plug_file.putstring (";%N")
-
-				-- Dynamic type of class BIT_REF
-			bit_cl := class_of_id (bit_id)
-			type_id := bit_cl.types.first.type_id
-			Plug_file.putstring ("int egc_bit_dtype = ")
-			Plug_file.putint (type_id - 1)
-			Plug_file.putstring (";%N")
 
 			if final_mode then
 					-- Initialization routines
@@ -3397,10 +3352,67 @@ feature -- Plug and Makefile file
 				Plug_file.putstring (";%N")
 
 			end
+--JOCE
+				-- Declaration and definition of the egc_init_plug function.
+			Plug_file.putstring ("extern void egc_init_plug (void); ")
+			Plug_file.putstring ("void egc_init_plug (void)%N{")
+--EGC_INIT_PLUG : BEGIN ----------------------
+				-- Do we need to collect GC data for the profiler?
+			Plug_file.putstring ("egc_prof_enabled = (EIF_INTEGER) ")
+			if Lace.ace_options.has_profile then
+				Plug_file.putstring ("3;%N")
+			else
+				Plug_file.putstring ("0;%N")
+			end
+
+				-- Pointer on creation feature of class STRING
+			Plug_file.putstring ("(egc_strmake) = ")
+			Plug_file.putstring (str_make_name)
+			Plug_file.putstring (";%N")
+				-- Pointer on creation feature of class ARRAY[ANY]
+			Plug_file.putstring ("(egc_arrmake) = ")
+			Plug_file.putstring (arr_make_name)
+			Plug_file.putstring (";%N")
+
+				--Pointer on `set_count' of class STRING
+			Plug_file.putstring ("(egc_strset) = ")
+			Plug_file.putstring (set_count_name)
+			Plug_file.putstring (";%N")
+
+
+				-- Dynamic type of class STRING
+			Plug_file.putstring ("egc_str_dtype = ")
+			Plug_file.putint (str_type_id - 1)
+			Plug_file.putstring (";%N")
+
+				-- Dynamic type of class ARRAY[ANY]
+			Plug_file.putstring ("egc_arr_dtype = ")
+			Plug_file.putint (arr_type_id - 1)
+			Plug_file.putstring (";%N")
+
+				-- Dispose routine id from class MEMORY (if compiled) 
+			Plug_file.putstring ("egc_disp_rout_id = ")
+			if memory_class /= Void then
+				Plug_file.putint (memory_dispose_id.id)
+			else
+				Plug_file.putstring ("-1")
+			end
+			Plug_file.putstring (";%N")
+
+				-- Dynamic type of class BIT_REF
+			bit_cl := class_of_id (bit_id)
+			type_id := bit_cl.types.first.type_id
+			Plug_file.putstring ("egc_bit_dtype = ")
+			Plug_file.putint (type_id - 1)
+			Plug_file.putstring (";%N")
+
 
 			special_cl ?= special_class.compiled_class
 			special_cl.generate_dynamic_types (plug_file)
 			generate_dynamic_ref_type
+
+--EGC_INIT_PLUG : END ----------------------
+			Plug_file.putstring ("%N}")
 
 			Plug_file.close_c
 		end
@@ -3453,62 +3465,6 @@ feature -- Pattern table generation
 			pattern_table.generate_in_finalized_mode
 		end
 
-<<<<<<< system_i.e
-=======
-feature -- Main file generation
-
-	generate_main_file is
-		local
-			Main_file: INDENT_FILE
-		do
-			Main_file := Main_f (byte_context.final_mode)
-			Main_file.open_write_c
-
-			Main_file.putstring ("%N%
-				%#include %"eif_macros.h%"%N%
-				%#include %"eif_sig.h%"%N%N")
-
-			Main_file.generate_extern_declaration
-				("void", "emain", <<"int", "char **">>)
-
-			if has_separate then
-				Main_file.putstring ("#include %"eif_curextern.h%"%N")
-			end
-
-			Main_file.generate_function_signature
-				("int", "main", True, Main_file,
-						<<"argc", "argv", "envp">>, <<"int", "char **", "char **" >>)
-
-			Main_file.move (-7) -- ss MT: 7 = len("%TGTCX%N") in INDENT_FILE
-			Main_file.putstring ("%
-				%%N#ifdef EIF_THREADS%N%
-				%%Teif_thr_init_root();%N%
-				%#endif%N{%N%TGTCX%N%
-				%%Tstruct ex_vect *exvect;%N%
-				%%Tjmp_buf exenv;%N%N%
-				%%Tinitsig();%N%
-				%%Tinitstk();%N%
-				%%Texvect = exset((char *) 0, 0, (char *) 0);%N%
-				%%Texvect->ex_jbuf = (char *) exenv;%N%
-				%%Tif (echval = setjmp(exenv))%N")
-			if has_separate then
-				Main_file.putstring ("%T%Tdefault_rescue();%N%N")
-			else
-				Main_file.putstring ("%T%Tfailure();%N%N")
-			end
-
-			Main_file.putstring ("%
-				%%Teif_rtinit(argc, argv, envp);%N%
-				%%Tif (egc_prof_enabled) initprf();%N%
-				%%Temain(argc, argv);%N%
-				%%Treclaim();%N%
-				%%Texit(0);%N%
-				%}%N}%N")
-
-			Main_file.close_c
-		end
-
->>>>>>> 1.153
 	generate_init_file is
 			-- Generation of the main file
 		local
@@ -3558,6 +3514,7 @@ feature -- Main file generation
 			Initialization_file.open_write_c
 
 			Initialization_file.putstring ("%
+				%#include %"eif_project.h%"%N%
 				%#include %"eif_macros.h%"%N%
 				%#include %"eif_struct.h%"%N%N")
 
@@ -3566,13 +3523,13 @@ feature -- Main file generation
 				static_type_id_counter.generate_offsets (Initialization_file)
 				execution_table.counter.generate_offsets (Initialization_file)
 				dispatch_table.counter.generate_offsets (Initialization_file)
-				Initialization_file.putstring ("int32 egc_rcorigin = ")
+				Initialization_file.putstring ("egc_rcorigin = ")
 				Initialization_file.putint (rcorigin)
-				Initialization_file.putstring (";%Nint egc_rcdt = ")
+				Initialization_file.putstring (";%Negc_rcdt = ")
 				Initialization_file.putint (dtype)
-				Initialization_file.putstring (";%Nint32 egc_rcoffset = ")
+				Initialization_file.putstring (";%Negc_rcoffset = ")
 				Initialization_file.putint (rcoffset)
-				Initialization_file.putstring (";%Nint egc_rcarg = ")
+				Initialization_file.putstring (";%Negc_rcarg = ")
 				if has_argument then
 					Initialization_file.putstring ("1")
 				else
@@ -3843,6 +3800,7 @@ feature --Workbench option file generation
 		do
 			Option_file.open_write
 
+			Option_file.putstring ("#include %"eif_project.h%"N")
 			Option_file.putstring ("#include %"eif_struct.h%"%N%N")
 
 				-- First debug keys

@@ -50,32 +50,33 @@ feature -- Basic Operation
 	build is 
 			-- Build entries.
 		local
-			up_label, down_label: EV_LABEL
-			up_box, down_box: EV_HORIZONTAL_BOX
 			add_button_box: EV_VERTICAL_BOX
 			remove_button_box: EV_VERTICAL_BOX
 			import_button_box: EV_HORIZONTAL_BOX
 			padding_cell: EV_CELL
+			references_to_add_box: EV_HORIZONTAL_BOX
+			added_references_box: EV_HORIZONTAL_BOX
+			default_column_widths: ARRAY [INTEGER]
 		do 
-				-- Create labels.
-			create up_label.make_with_text ("Imported assemblies")
-			up_label.align_text_left
-
-			create down_label.make_with_text ("Selected assemblies")
-			down_label.align_text_left
-			
+				-- Compute default width for columns and column names
+			default_column_widths := <<
+				Dialog_unit_to_pixels(157), 
+				Dialog_unit_to_pixels(70), 
+				Dialog_unit_to_pixels(70), 
+				Dialog_unit_to_pixels(100)>>
+				
 				-- Create tables.
 			create references_to_add
-			references_to_add.set_column_titles (<< "Name", "Version", "Culture", "Public Key" >>)
-			references_to_add.set_column_widths (<<157, 70, 70, 100>>)
-			references_to_add.set_minimum_height (110)
+			references_to_add.set_column_titles (<< "Available assemblies Name", "Version", "Culture", "Public Key" >>)
+			references_to_add.set_column_widths (default_column_widths)
+			references_to_add.set_minimum_height (Dialog_unit_to_pixels(110))
 			references_to_add.select_actions.extend (agent update_buttons_state)
 			references_to_add.deselect_actions.extend (agent update_buttons_state)
 			
 			create added_references
-			added_references.set_column_titles (<< "Name", "Version", "Culture", "Public Key" >>)
-			added_references.set_column_widths (<<157, 70, 70, 100>>)
-			added_references.set_minimum_height (80)
+			added_references.set_column_titles (<< "Selected assemblies Name", "Version", "Culture", "Public Key" >>)
+			added_references.set_column_widths (default_column_widths)
+			added_references.set_minimum_height (Dialog_unit_to_pixels(70))
 			added_references.select_actions.extend (agent update_buttons_state)
 			added_references.deselect_actions.extend (agent update_buttons_state)
 			fill_lists
@@ -92,7 +93,8 @@ feature -- Basic Operation
 			create import_button.make_with_text ("ISE Assembly manager")
 			import_button.select_actions.extend (agent import_assembly)
 			set_default_size_for_button (import_button)
-			
+
+				-- Layout buttons						
 			create add_button_box
 			add_button_box.extend (add_button)
 			add_button_box.disable_item_expand (add_button)
@@ -104,43 +106,27 @@ feature -- Basic Operation
 			remove_button_box.extend (create {EV_CELL})
 
 			create import_button_box
+			import_button_box.extend (create {EV_CELL})
 			import_button_box.extend (import_button)
 			import_button_box.disable_item_expand (import_button)
-			import_button_box.extend (create {EV_CELL})
 			
-			create up_box
-			up_box.set_padding (Small_padding_size)
-			up_box.extend (references_to_add)
-			up_box.extend (add_button_box)
-			up_box.disable_item_expand (add_button_box)
+				-- Layout Tables with their resp. "Add/Remove" buttons.
+			create references_to_add_box
+			references_to_add_box.set_padding (Small_padding_size)
+			references_to_add_box.extend (references_to_add)
+			references_to_add_box.extend (add_button_box)
+			references_to_add_box.disable_item_expand (add_button_box)
 			
-			create down_box
-			down_box.set_padding (Small_padding_size)
-			down_box.extend (added_references)
-			down_box.extend (remove_button_box)
-			down_box.disable_item_expand (remove_button_box)
+			create added_references_box
+			added_references_box.set_padding (Small_padding_size)
+			added_references_box.extend (added_references)
+			added_references_box.extend (remove_button_box)
+			added_references_box.disable_item_expand (remove_button_box)
 			
 				-- Add widgets to `choice_box'.
-			choice_box.extend (up_label)
-			create padding_cell
-			padding_cell.set_minimum_height (Small_border_size)
-			choice_box.extend (padding_cell)
-			choice_box.extend (up_box)
-			
-			create padding_cell
-			padding_cell.set_minimum_height (Small_padding_size)
-			choice_box.extend (padding_cell)
-			
-			choice_box.extend (down_label)
-			create padding_cell
-			padding_cell.set_minimum_height (Small_border_size)
-			choice_box.extend (padding_cell)
-			choice_box.extend (down_box)
-
-			create padding_cell
-			padding_cell.set_minimum_height (Small_padding_size)
-			choice_box.extend (padding_cell)
-			
+			choice_box.set_padding (Small_padding_size)
+			choice_box.extend (references_to_add_box)
+			choice_box.extend (added_references_box)
 			choice_box.extend (import_button_box)
 			
 			if not references_to_add.is_empty then
@@ -154,13 +140,11 @@ feature -- Basic Operation
 		end
 
 	proceed_with_current_info is 
-		local
-			next_window: WIZARD_FINAL_STATE
+			-- Commit current info
 		do
 			Precursor
+			proceed_with_new_state (create {WIZARD_FINAL_STATE}.make (wizard_information))
 			message_box.show
-			create next_window.make (wizard_information)
-			proceed_with_new_state (next_window)
 		end
 
 	update_state_information is
@@ -169,22 +153,27 @@ feature -- Basic Operation
 			Precursor
 		end
 
-
 feature {NONE} -- Vision2 controls
 
 	references_to_add: EV_MULTI_COLUMN_LIST
+			-- List of all available assembly.
 
 	added_references: EV_MULTI_COLUMN_LIST
+			-- List of all selected assembly.
 
 	add_button: EV_BUTTON
+			-- Button to select an assembly
 
 	remove_button: EV_BUTTON
+			-- Button to remove a selected assembly
 	
 	import_button: EV_BUTTON
+			-- Button labeled "ISE Assemblies manager"
 	
 feature {NONE} -- Implementation
 
 	display_state_text is
+			-- Disable the caption text for this state.
 		do
 			title.set_text ("Assembly selection")
 			subtitle.set_text ("Choose the external assemblies the Eiffel project should include")
@@ -342,6 +331,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+		
 	input_pipe_input_handle: INTEGER
 			-- Input pipe input handle
 

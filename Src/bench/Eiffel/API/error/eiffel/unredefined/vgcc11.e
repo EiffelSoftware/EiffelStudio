@@ -1,37 +1,40 @@
 indexing
+	description: "Error in creation instruction when applied to a formal generic parameter"
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
-	description: 
-		"Error the feature called after a creation is not a creation procedure.";
-	date: "$Date$";
-	revision: "$Revision $"
-
-class VGCC5 
+class
+	VGCC11
 
 inherit
-
-	VGCC
+	VGCC1
 		redefine
 			subcode, build_explain
 		end
 
 feature -- Properties
 
-	subcode: INTEGER is 6
+	subcode: INTEGER is 8
 
+ 
 	creation_feature: E_FEATURE;
 			-- Creation feature involved
 
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
+			-- Build the error message
 		do
-			print_name (st);
+			st.add_string ("Creation of: ");
+			st.add_string (target_name);
+			st.add_new_line;
 			st.add_string ("Feature name: ");
 			if creation_feature /= Void then
 				creation_feature.append_signature (st);
 			end;
 			st.add_new_line;
-		end;
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -43,4 +46,4 @@ feature {COMPILER_EXPORTER}
 			end
 		end;
 
-end -- class VGCC5
+end -- class VGCC11

@@ -9,7 +9,7 @@ class EWB_EDIT
 
 inherit
 
-	SHARED_RESOURCES;
+	SHARED_BENCH_RESOURCES;
 
 feature -- Element change
 

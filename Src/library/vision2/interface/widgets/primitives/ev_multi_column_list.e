@@ -32,12 +32,12 @@ create
 
 feature -- Access
 
-	columns: INTEGER is
+	column_count: INTEGER is
 			-- Column count.
 		do
-			Result := implementation.columns
+			Result := implementation.column_count
 		ensure
-			bridge_ok: Result = implementation.columns
+			bridge_ok: Result = implementation.column_count
 		end
 
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
@@ -98,7 +98,7 @@ feature -- Status report
 	column_width (a_column: INTEGER): INTEGER is
 			-- Width of `a_column' in pixels.
 		require
-			a_column_within_range: a_column >= 1 and a_column <= columns
+			a_column_within_range: a_column >= 1 and a_column <= column_count
 		do
 			Result := implementation.column_width (a_column)
 		ensure
@@ -171,7 +171,7 @@ feature -- Status setting
 			-- Display text of `a_column' left aligned.
 			-- First column is always left aligned.
 		require
-			a_column_withing_range: a_column > 1 and a_column <= columns
+			a_column_withing_range: a_column > 1 and a_column <= column_count
 		do
 			implementation.align_text_left (a_column)
 		end
@@ -180,7 +180,7 @@ feature -- Status setting
 			-- Display text of `a_column' centered.
 			-- First column is always left aligned.
 		require
-			a_column_within_range: a_column > 1 and a_column <= columns
+			a_column_within_range: a_column > 1 and a_column <= column_count
 		do
 			implementation.align_text_center (a_column)
 		end
@@ -189,7 +189,7 @@ feature -- Status setting
 			-- Display text of `a_column' right aligned.
 			-- First column is always left aligned.
 		require
-			a_column_within_range: a_column > 1 and a_column <= columns
+			a_column_within_range: a_column > 1 and a_column <= column_count
 		do
 			implementation.align_text_right (a_column)
 		end
@@ -219,7 +219,7 @@ feature -- Element change
 	set_column_width (a_width: INTEGER; a_column: INTEGER) is
 			-- Assign `a_width' `column_width'(`a_column').
 		require
-			a_column_within_range: a_column > 0 and a_column <= columns
+			a_column_within_range: a_column > 0 and a_column <= column_count
 			a_width_positive: a_width > 0
 		do
 			implementation.set_column_width (a_width, a_column)
@@ -231,7 +231,7 @@ feature -- Element change
 			-- Assign `widths' to column widths in order.
 		require
 			widths_not_void: widths /= Void
-			widths_count_is_columns: widths.count = columns
+			widths_count_is_column_count: widths.count = column_count
 		do
 			implementation.set_column_widths (widths)
 		end
@@ -340,7 +340,14 @@ feature -- Obsolete
 				inapplicable: False
 			end
 		ensure
-			columns_assigned: columns = a_column_count					
+			columns_assigned: column_count = a_column_count					
+		end
+
+	columns: INTEGER is
+		obsolete
+			"Use: column_count"
+		do
+			Result := implementation.column_count
 		end
 
 end -- class EV_MULTI_COLUMN_LIST
@@ -366,6 +373,10 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/03/27 17:16:09  brendel
+--| columns -> column_count.
+--| Declared columns obsolete.
+--|
 --| Revision 1.46  2000/03/25 01:12:13  brendel
 --| Revised.
 --| `set_columns' is now obsolete.

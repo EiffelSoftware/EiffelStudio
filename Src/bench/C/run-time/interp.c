@@ -16,6 +16,7 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 #include "eif_portable.h"
 #include "eif_project.h"
 #include "rt_interp.h"
+#include "rt_bc_reader.h"
 #include "rt_malloc.h"
 #include "eif_plug.h"
 #include "eif_eiffel.h"
@@ -87,7 +88,7 @@ doc:<file name="interp.c" header="eif_interp.h" version="$Id$" summary="Byte cod
 
 /* Access to precursor type */
 
-#define GET_PTYPE   (get_short ())
+#define GET_PTYPE   (get_int16(&IC))
 
 #ifndef EIF_THREADS
 
@@ -209,11 +210,6 @@ rt_private void icheck_inv(EIF_REFERENCE obj, struct stochunk *scur, struct item
 rt_private void irecursive_chkinv(int dtype, EIF_REFERENCE obj, struct stochunk *scur, struct item *stop, int where);		/* Recursive invariant check */
 
 /* Getting constants */
-rt_private uint32 get_uint32(void);			/* Get an unsigned int32 */
-rt_private EIF_REAL_64 get_double(void);			/* Get a EIF_REAL_64 constant */
-rt_private EIF_INTEGER get_long(void);				/* Get a long constant */
-rt_private EIF_INTEGER_64 get_int64(void);		/* Get an INTEGER_64 constant */
-rt_private EIF_INTEGER_16 get_short(void);				/* Get a short constant */
 rt_private short get_compound_id(EIF_REFERENCE obj, short dtype);			/* Get a compound type id */
 rt_private int get_creation_type(void);		/* Get a creation type id */
 
@@ -512,7 +508,7 @@ rt_private void interpret(int flag, int where)
 	if (*IC++)
 	{
 		is_once  = 1;
-		once_key = get_long ();
+		once_key = get_int32(&IC);
 	}
 
 	for (;;) {
@@ -530,10 +526,10 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_START\n");
 #endif
-		rout_id = (int32) get_long();	/* Get the routine id */
-		body_id = (BODY_INDEX) get_long();	/* Get the body id */
-		rtype = get_long();				/* Get the result type */
-		argnum = get_short();			/* Get the argument number */
+		rout_id = (int32) get_int32(&IC);	/* Get the routine id */
+		body_id = (BODY_INDEX) get_int32(&IC);	/* Get the body id */
+		rtype = get_int32(&IC);				/* Get the result type */
+		argnum = get_int16(&IC);			/* Get the argument number */
 	
 		if (is_once) {				/* If it is a once */
 				/* Put pointer to 'result' in 'PResult' */
@@ -666,14 +662,14 @@ rt_private void interpret(int flag, int where)
 								/* called once routines */
 		}
 
-		locnum = get_short();		/* Get the local number */
+		locnum = get_int16(&IC);		/* Get the local number */
 		init_registers(MTC);		/* Initialize the registers */
 
 		/* Expanded clone of arguments (if any) */
 		while (*IC++ != BC_NO_CLONE_ARG) {
 			EIF_REFERENCE ref;
 
-			code = get_short();		/* Get the argument number to clone */
+			code = get_int16(&IC);		/* Get the argument number to clone */
 			last = arg(code);
 			ref = last->it_ref;
 			if (ref == NULL)
@@ -682,7 +678,7 @@ rt_private void interpret(int flag, int where)
 			case SK_REF:			/* Lovely comment */
 			case SK_EXP:
 				RT_GC_PROTECT(ref);
-				type = get_short ();
+				type = get_int16(&IC);
 				type = get_compound_id(MTC icurrent->it_ref, (short) type);
 				last->it_ref = RTLN(type);
 				RT_GC_WEAN(ref);
@@ -691,7 +687,7 @@ rt_private void interpret(int flag, int where)
 				break;
 			case SK_BIT:
 				RT_GC_PROTECT(ref);
-				last->it_bit = RTLB(get_long());
+				last->it_bit = RTLB(get_int32(&IC));
 				RT_GC_WEAN(ref);
 				b_copy(ref, last->it_bit);
 				break;
@@ -702,9 +698,8 @@ rt_private void interpret(int flag, int where)
 
 		switch(flag) {				/* What are we interpreting? */
 		case INTERP_CMPD:			/* A compound (i.e. Eiffel feature) */
-			string = IC;			/* Get the feature name */
-			IC += strlen((char *) IC) + 1;
-			code = get_short();		/* Dynamic type where feature is written */
+			string = get_string8(&IC, -1);
+			code = get_int16(&IC);		/* Dynamic type where feature is written */
 
 			/* Get an execution vector for the current feature, and link it
 			 * with the current debugging calling context. It is important to
@@ -746,7 +741,7 @@ rt_private void interpret(int flag, int where)
 
 		rescue = NULL;		/* No rescue */
 		if (*IC++) {
-			offset = get_long();	/* Fetch rescue offset */
+			offset = get_int32(&IC);	/* Fetch rescue offset */
 			rescue = IC + offset;	/* Compute rescue start */
 		}
 
@@ -883,7 +878,7 @@ rt_private void interpret(int flag, int where)
 		in_assertion = saved_assertion;		/* restore saved assertion checking because
 											 * we might have reached this code from
 											 * an assertion checking code. */
-		offset = get_long();				/* Get the retry offset */
+		offset = get_int32(&IC);				/* Get the retry offset */
 		IC += offset;
 		exvect = exret(MTC exvect);			/* Retries a routine */
 		break;
@@ -895,7 +890,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_PRECOND\n");
 #endif
-		offset = get_long();
+		offset = get_int32(&IC);
 		if (!(~in_assertion & WASC(icur_dtype) & CK_REQUIRE))	/* No precondition check? */
 			IC += offset;						/* Skip preconditions */
 
@@ -909,7 +904,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_POSTCOND\n");
 #endif
-		offset = get_long();
+		offset = get_int32(&IC);
 		if (!(~in_assertion & WASC(icur_dtype) & CK_ENSURE))	/* No postcondition check? */
 			IC += offset;						/* Skip postconditions */
 		break;
@@ -918,19 +913,165 @@ rt_private void interpret(int flag, int where)
 	 * Cast of a numeric type
 	 */
 
-	case BC_CAST_INTEGER:
-#ifdef DEBUG
-		dprintf(2)("BC_CAST_INTEGER\n");
-#endif
-		offset = get_long ();	/* Get integer size */
+	case BC_CAST_NATURAL:
+		offset = get_int32(&IC);	/* Get natural size */
 		last = otop ();
 		switch (last->type & SK_HEAD) {
 			case SK_BOOL:
 				switch (offset) {
-					case 8: last->it_int8 = (last->it_char ? 1 : 0); break;
-					case 16: last->it_int16 = (last->it_char ? 1 : 0); break;
-					case 32: last->it_int32 = (last->it_char ? 1 : 0); break;
-					case 64: last->it_int64 = (last->it_char ? 1 : 0); break;
+					case 8: last->it_uint8 = (EIF_NATURAL_8) (last->it_char ? 1 : 0); break;
+					case 16: last->it_uint16 = (EIF_NATURAL_16) (last->it_char ? 1 : 0); break;
+					case 32: last->it_uint32 = (EIF_NATURAL_32) (last->it_char ? 1 : 0); break;
+					case 64: last->it_uint64 = (EIF_NATURAL_64) (last->it_char ? 1 : 0); break;
+					default:
+						eif_panic ("Illegal type");
+				}
+			case SK_CHAR:
+				switch (offset) {
+					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_char; break;
+					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_char; break;
+					case 32: last->it_uint32 = (EIF_NATURAL_32) last->it_char; break;
+					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_char; break;
+					default:
+						eif_panic ("Illegal type");
+				}
+			case SK_WCHAR:
+				switch (offset) {
+					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_wchar; break;
+					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_wchar; break;
+					case 32: last->it_uint32 = (EIF_NATURAL_32) last->it_wchar; break;
+					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_wchar; break;
+					default:
+						eif_panic ("Illegal type");
+				}
+			case SK_UINT8:
+				switch (offset) {
+					case 8: break;
+					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_uint8; break;
+					case 32: last->it_uint32 = (EIF_NATURAL_32) last->it_uint8; break;
+					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_uint8; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_UINT16:
+				switch (offset) {
+					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_uint16; break;
+					case 16: break;
+					case 32: last->it_uint32 = (EIF_NATURAL_32) last->it_uint16; break;
+					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_uint16; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_UINT32:
+				switch (offset) {
+					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_uint32; break;
+					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_uint32; break;
+					case 32: break;
+					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_uint32; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_UINT64:
+				switch (offset) {
+					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_uint64; break;
+					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_uint64; break;
+					case 32: last->it_uint32 = (EIF_NATURAL_32) last->it_uint64; break;
+					case 64: break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_INT8:
+				switch (offset) {
+					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_int8; break;
+					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_int8; break;
+					case 32: last->it_uint32 = (EIF_NATURAL_32) last->it_int8; break;
+					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_int8; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_INT16:
+				switch (offset) {
+					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_int16; break;
+					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_int16; break;
+					case 32: last->it_uint32 = (EIF_NATURAL_32) last->it_int16; break;
+					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_int16; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_INT32:
+				switch (offset) {
+					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_int32; break;
+					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_int32; break;
+					case 32: last->it_uint32 = (EIF_NATURAL_32) last->it_int32; break;
+					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_int32; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_INT64:
+				switch (offset) {
+					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_int64; break;
+					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_int64; break;
+					case 32: last->it_uint32 = (EIF_NATURAL_32) last->it_int64; break;
+					case 64: last->it_uint64 = (EIF_NATURAL_32) last->it_int64; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_REAL32:
+				switch (offset) {
+					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_real32; break;
+					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_real32; break;
+					case 32: last->it_uint32 = (EIF_NATURAL_32) last->it_real32; break;
+					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_real32; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_REAL64:
+				switch (offset) {
+					case 8: last->it_uint8 = (EIF_NATURAL_8) last->it_real64; break;
+					case 16: last->it_uint16 = (EIF_NATURAL_16) last->it_real64; break;
+					case 32: last->it_uint32 = (EIF_NATURAL_32) last->it_real64; break;
+					case 64: last->it_uint64 = (EIF_NATURAL_64) last->it_real64; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+
+			default:
+				eif_panic (MTC "Illegal cast operation");
+			}
+		switch (offset) {
+			case 8: last->type = SK_UINT8; break;
+			case 16: last->type = SK_UINT16; break;
+			case 32: last->type = SK_UINT32; break;
+			case 64: last->type = SK_UINT64; break;
+			default:
+				eif_panic ("Illegal type");
+		}
+		break;
+
+
+	case BC_CAST_INTEGER:
+#ifdef DEBUG
+		dprintf(2)("BC_CAST_INTEGER\n");
+#endif
+		offset = get_int32(&IC);	/* Get integer size */
+		last = otop ();
+		switch (last->type & SK_HEAD) {
+			case SK_BOOL:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) (last->it_char ? 1 : 0); break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) (last->it_char ? 1 : 0); break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) (last->it_char ? 1 : 0); break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) (last->it_char ? 1 : 0); break;
 					default:
 						eif_panic ("Illegal type");
 				}
@@ -952,6 +1093,46 @@ rt_private void interpret(int flag, int where)
 					default:
 						eif_panic ("Illegal type");
 				}
+			case SK_UINT8:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_uint8; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_uint8; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_uint8; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_uint8; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_UINT16:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_uint16; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_uint16; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_uint16; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_uint16; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_UINT32:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_uint32; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_uint32; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_uint32; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_uint32; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
+			case SK_UINT64:
+				switch (offset) {
+					case 8: last->it_int8 = (EIF_INTEGER_8) last->it_uint64; break;
+					case 16: last->it_int16 = (EIF_INTEGER_16) last->it_uint64; break;
+					case 32: last->it_int32 = (EIF_INTEGER_32) last->it_uint64; break;
+					case 64: last->it_int64 = (EIF_INTEGER_64) last->it_uint64; break;
+					default:
+						eif_panic ("Illegal type");
+				}	
+				break;
 			case SK_INT8:
 				switch (offset) {
 					case 8: break;
@@ -1171,7 +1352,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_LASSIGN\n");
 #endif
-		code = get_short();		/* Get the local number (from 1 to locnum) */
+		code = get_int16(&IC);		/* Get the local number (from 1 to locnum) */
 		memcpy (loc (code) , opop(), ITEM_SZ);
 		break;
 
@@ -1182,7 +1363,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_LBIT_ASSIGN\n");
 #endif
-		code = get_short();		/* Get the local number (from 1 to locnum) */
+		code = get_int16(&IC);		/* Get the local number (from 1 to locnum) */
 		last = opop();
 		if ((last->type & SK_HEAD) != SK_BIT)
 			/*
@@ -1204,7 +1385,7 @@ rt_private void interpret(int flag, int where)
 
 			if (ref == NULL)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
-			code = get_short();		/* Get the local # (from 1 to locnum) */
+			code = get_int16(&IC);		/* Get the local # (from 1 to locnum) */
 			eif_std_ref_copy(ref, loc(code)->it_ref);		/* Copy */
 		}
 		break;
@@ -1219,9 +1400,9 @@ rt_private void interpret(int flag, int where)
 		{
 			uint32 type;
 
-			offset = get_long();		/* Get the feature id */
-			code = get_short();			/* Get the static type */
-			type = get_uint32();		/* Get attribute meta-type */
+			offset = get_int32(&IC);		/* Get the feature id */
+			code = get_int16(&IC);			/* Get the static type */
+			type = get_uint32(&IC);		/* Get attribute meta-type */
 			assign(RTWA(code, offset, icur_dtype), type);
 		}
 		break;
@@ -1237,9 +1418,9 @@ rt_private void interpret(int flag, int where)
 			int32 origin, ooffset;
 			uint32 type;
 
-			origin = get_long();		/* Get the origin class id */
-			ooffset = get_long();		/* Get the offset in origin */
-			type = get_uint32();		/* Get attribute meta-type */
+			origin = get_int32(&IC);		/* Get the origin class id */
+			ooffset = get_int32(&IC);		/* Get the offset in origin */
+			type = get_uint32(&IC);		/* Get attribute meta-type */
 			assign(RTWPA(origin, ooffset, icur_dtype), type);
 		}
 		break;
@@ -1258,9 +1439,9 @@ rt_private void interpret(int flag, int where)
 			ref = opop()->it_ref;		/* Expression type */
 			if (ref == (EIF_REFERENCE) 0)
 				xraise(EN_VEXP);		/* Void assigned to expanded */
-			offset = get_long();		/* Get the feature id */
-			code = get_short();			/* Get the static type */
-			type = get_uint32();		/* Get attribute meta-type */
+			offset = get_int32(&IC);		/* Get the feature id */
+			code = get_int16(&IC);			/* Get the static type */
+			type = get_uint32(&IC);		/* Get attribute meta-type */
 			offset = RTWA(code, offset, icur_dtype);
 			eif_std_ref_copy (ref, icurrent->it_ref + offset);
 		}
@@ -1281,9 +1462,9 @@ rt_private void interpret(int flag, int where)
 			ref = opop()->it_ref;		/* Expression type */
 			if (ref == (EIF_REFERENCE) 0)
 				xraise(EN_VEXP);		/* Void assigned to expanded */
-			origin = get_long();		/* Get the origin class id */
-			ooffset = get_long();		/* Get the offset in origin */
-			type = get_uint32();		/* Get attribute meta-type */
+			origin = get_int32(&IC);		/* Get the origin class id */
+			ooffset = get_int32(&IC);		/* Get the offset in origin */
+			type = get_uint32(&IC);		/* Get attribute meta-type */
 			offset = RTWPA(origin, ooffset, icur_dtype);
 			eif_std_ref_copy (ref, icurrent->it_ref + offset);
 		}
@@ -1331,7 +1512,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_LREVERSE\n");
 #endif
-		code = get_short();			/* Get local number */
+		code = get_int16(&IC);			/* Get local number */
 		type = get_creation_type ();
 		last = opop();
 
@@ -1351,9 +1532,9 @@ rt_private void interpret(int flag, int where)
 		{
 			uint32 meta;
 
-			offset = get_long();		/* Get the feature id */
-			code = get_short();			/* Get the static type */
-			meta = get_uint32();		/* Get the attribute meta-type */
+			offset = get_int32(&IC);		/* Get the feature id */
+			code = get_int16(&IC);			/* Get the static type */
+			meta = get_uint32(&IC);		/* Get the attribute meta-type */
 			type = get_creation_type ();
 			last = otop();
 
@@ -1374,9 +1555,9 @@ rt_private void interpret(int flag, int where)
 			int32 origin, ooffset;
 			uint32 meta;
 
-			origin = get_long();		/* Get the origin class id */
-			ooffset = get_long();		/* Get the offset in origin */
-			meta = get_uint32();		/* Get the attribute meta-type */
+			origin = get_int32(&IC);		/* Get the origin class id */
+			ooffset = get_int32(&IC);		/* Get the offset in origin */
+			meta = get_uint32(&IC);		/* Get the attribute meta-type */
 			type = get_creation_type ();
 			last = otop();
 
@@ -1438,7 +1619,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_CHECK\n");
 #endif
-		offset = get_long();	/* Jump offset in assertion is not checked */
+		offset = get_int32(&IC);	/* Jump offset in assertion is not checked */
 		if (!(~in_assertion & WASC(icur_dtype) & CK_CHECK))
 			/* Check assertions are not checked */
 			IC += offset;
@@ -1451,7 +1632,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_LOOP\n");
 #endif
-		offset = get_long();	/* Jump offset if assertion is not checked */
+		offset = get_int32(&IC);	/* Jump offset if assertion is not checked */
 		if (!(~in_assertion & WASC(icur_dtype) & CK_LOOP))
 			/* Loop assertions are not checked */
 			IC += offset;
@@ -1477,8 +1658,7 @@ rt_private void interpret(int flag, int where)
 		}
 		switch (*IC++) {				
 		case BC_TAG:				/* Assertion tag */
-			string = IC;
-			IC += strlen((char *) IC) + 1;
+			string = get_string8(&IC, -1);
 			if ((assert_type == EX_CINV) || (assert_type == EX_INVC))
 				RTIT((char *) string, icurrent->it_ref);
 			else
@@ -1522,7 +1702,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_END_FST_PRE\n");
 #endif
-		offset = get_long();		/* get the offset to the precondition
+		offset = get_int32(&IC);		/* get the offset to the precondition
 									 * block's corresponding "BC_GOTO_BODY"
 									*/
 		code = (int) opop()->it_char;	
@@ -1555,7 +1735,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_GOTO_BODY\n");
 #endif
 		{
-			offset = get_long(); 	/* Get offset to skip remaining 
+			offset = get_int32(&IC); 	/* Get offset to skip remaining 
 									 * chained assertions.
 									 */
 			if (pre_success){ 
@@ -1579,7 +1759,7 @@ rt_private void interpret(int flag, int where)
 		{
 			long old_val;				/* Old variant value */
 
-			code = get_short();		/* Get the local variant index */
+			code = get_int16(&IC);		/* Get the local variant index */
 			last = loc(code);
 			offset = opop()->it_int32;	/* Get the new variant value */
 			old_val = last->it_int32;	/* Get the old variant value */
@@ -1600,7 +1780,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_INIT_VARIANT\n");
 #endif
-		code = get_short();
+		code = get_int16(&IC);
 		loc(code)->it_int32 = -1;
 		break;
 
@@ -1611,20 +1791,17 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_DEBUG\n");
 #endif
-		offset = get_long();	/* Number of keys */
+		offset = get_int32(&IC);	/* Number of keys */
 		if (offset == 0L)
 			code = WDBG(icur_dtype, NULL);		/* No debug key */
 		else {
 			int i;
-			int length;
 			for (i = 0, code = 0; i < offset; i++) {
-				length = get_long ();	/* Get the length of the manifest string */
-				string = IC;						/* Get a debug key */
-				IC += (length + 1);
+				string = get_string8(&IC, get_int32(&IC));
 				code |= WDBG(icur_dtype, (char *) string);
 			}
 		}
-		offset = get_long();	/* Get the jump value */
+		offset = get_int32(&IC);	/* Get the jump value */
 		if (!code)
 			IC += offset;
 		break;
@@ -1654,9 +1831,9 @@ rt_private void interpret(int flag, int where)
 			EIF_REFERENCE args, open, closed;
 
 			args = open = closed = (EIF_REFERENCE) 0;
-			has_args = get_short(); /* Do we have an argument tuple? */
-			has_open = get_short(); /* Do we have an open map array? */
-			type = get_short();
+			has_args = get_int16(&IC); /* Do we have an argument tuple? */
+			has_open = get_int16(&IC); /* Do we have an open map array? */
+			type = get_int16(&IC);
 			type = get_compound_id(MTC icurrent->it_ref,(short)type);
 			true_addr = opop();  /* True address of routine */
 			addr = opop();  /* Address of routine */
@@ -1707,7 +1884,7 @@ rt_private void interpret(int flag, int where)
 
 			++IC;
 			last = iget();
-			realcount = get_uint32();
+			realcount = get_uint32(&IC);
 			new_obj = RTLB(realcount);			/* Creation */
 			last->type = SK_BIT + realcount;
 			last->it_bit = new_obj;
@@ -1769,10 +1946,10 @@ rt_private void interpret(int flag, int where)
 
 			if (is_expanded) {
 					/* Need local since RTUD evaluates twice its argument. */
-				exp_type = get_short();
+				exp_type = get_int16(&IC);
 				elem_size = OVERHEAD + EIF_Size(RTUD(exp_type));
 			} else {
-				switch (get_uint32() & SK_HEAD) {
+				switch (get_uint32(&IC) & SK_HEAD) {
 					case SK_CHAR: elem_size = sizeof(EIF_CHARACTER); break;
 					case SK_WCHAR: elem_size = sizeof(EIF_WIDE_CHAR); break;
 					case SK_BOOL: elem_size = sizeof(EIF_BOOLEAN); break;
@@ -1809,7 +1986,7 @@ rt_private void interpret(int flag, int where)
 			opush (last);				/* We need to push object on stack to check invariants */
 
 			if (is_bit) {
-				bit_size = get_uint32();
+				bit_size = get_uint32(&IC);
 				for (i = 0; i < nb; i++) {
 					*((EIF_REFERENCE *) new_obj + i) = RTLB(bit_size);
 					RTAR(new_obj, *((EIF_REFERENCE *) new_obj + i));
@@ -1831,7 +2008,7 @@ rt_private void interpret(int flag, int where)
 			upper = opop();				/* Get the upper bound */
 			lower = opop();				/* Get the lower bound */
 			last = otop();				/* Get the inspect expression value */
-			offset = get_long();		/* Get the jump value */
+			offset = get_int32(&IC);		/* Get the jump value */
 			switch (last->type) {
 			case SK_UINT8: if (lower->it_uint8 <= last->it_uint8 && last->it_uint8 <= upper->it_uint8) { IC += offset; } break;
 			case SK_UINT16: if (lower->it_uint16 <= last->it_uint16 && last->it_uint16 <= upper->it_uint16) { IC += offset; } break;
@@ -1885,8 +2062,8 @@ rt_private void interpret(int flag, int where)
 	 */
 	case BC_EXTERN:
 	case BC_FEATURE:
-		offset = get_long();				/* Get the feature id */
-		code = get_short();					/* Get the static type */
+		offset = get_int32(&IC);				/* Get the feature id */
+		code = get_int16(&IC);					/* Get the static type */
 		nstcall = 0;						/* Invariant check turned off */
 		if (icall(MTC (int)offset, code, GET_PTYPE))
 			sync_registers(MTC scur, stop);
@@ -1901,8 +2078,8 @@ rt_private void interpret(int flag, int where)
 		{
 			int32 origin, offset;
 
-			origin = get_long();			/* Get the origin class id */
-			offset = get_long();			/* Get the offset in origin */
+			origin = get_int32(&IC);			/* Get the origin class id */
+			offset = get_int32(&IC);			/* Get the offset in origin */
 			nstcall = 0;					/* Invariant check turned off */
 			if (ipcall(MTC origin, offset, GET_PTYPE))
 				sync_registers(MTC scur, stop);
@@ -1915,12 +2092,11 @@ rt_private void interpret(int flag, int where)
 	 */
 	case BC_EXTERN_INV:
 	case BC_FEATURE_INV:
-		string = IC;					/* Get the feature name */
-		IC += strlen((char *) IC) + 1;
+		string = get_string8(&IC, -1);	/* Get the feature name. */
 		if (otop()->it_ref == (char *) 0)	/* Called on a void reference? */
 			eraise((char *) string, EN_VOID);		/* Yes, raise exception */
-		offset = get_long();				/* Get the feature id */
-		code = get_short();					/* Get the static type */
+		offset = get_int32(&IC);				/* Get the feature id */
+		code = get_int16(&IC);					/* Get the static type */
 
 		nstcall = 1;					/* Invariant check turned on */
 		if (icall(MTC (int)offset, code, GET_PTYPE))
@@ -1936,12 +2112,11 @@ rt_private void interpret(int flag, int where)
 		{
 			int32 offset, origin;
 
-			string = IC;					/* Get the feature name */
-			IC += strlen((char *) IC) + 1;
+			string = get_string8(&IC, -1);	/* Get the feature name. */
 			if (otop()->it_ref == (EIF_REFERENCE) 0)/* Called on a void reference? */
 				eraise((char *) string, EN_VOID);	/* Yes, raise exception */
-			origin = get_long();			/* Get the origin class id */
-			offset = get_long();			/* Get the offset in origin */
+			origin = get_int32(&IC);			/* Get the origin class id */
+			offset = get_int32(&IC);			/* Get the offset in origin */
 			nstcall = 1;					/* Invariant check turned on */
 			if (ipcall(MTC origin, offset, GET_PTYPE))
 				sync_registers(MTC scur, stop);
@@ -1958,9 +2133,9 @@ rt_private void interpret(int flag, int where)
 		{
 			uint32 type;
 
-			offset = get_long();				/* Get feature id */
-			code = get_short();					/* Get static type */
-			type = get_uint32();				/* Get attribute meta-type */
+			offset = get_int32(&IC);				/* Get feature id */
+			code = get_int16(&IC);					/* Get static type */
+			type = get_uint32(&IC);				/* Get attribute meta-type */
 			interp_access((int)offset, code, type);
 		}
 		break;
@@ -1976,9 +2151,9 @@ rt_private void interpret(int flag, int where)
 			int32 origin, ooffset;
 			uint32 type;
 
-			origin = get_long();		/* Get the origin class id */
-			ooffset = get_long();		/* Get the offset in origin */
-			type = get_uint32();		/* Get attribute meta-type */
+			origin = get_int32(&IC);		/* Get the origin class id */
+			ooffset = get_int32(&IC);		/* Get the offset in origin */
+			type = get_uint32(&IC);		/* Get attribute meta-type */
 			interp_paccess(origin, ooffset, type);
 		}
 		break;
@@ -1992,14 +2167,12 @@ rt_private void interpret(int flag, int where)
 #endif
 		{
 			uint32 type;
-
-			string = IC;					/* Get the attribute name */
-			IC += strlen((char *) IC) + 1;			
+			string = get_string8(&IC, -1);	/* Get the attribute name */
 			if (otop()->it_ref == (char *) 0)
 				eraise((char *) string, EN_VOID);
-			offset = get_long();			/* Get feature id */
-			code = get_short();				/* Get static type */
-			type = get_uint32();			/* Get attribute meta-type */
+			offset = get_int32(&IC);			/* Get feature id */
+			code = get_int16(&IC);				/* Get static type */
+			type = get_uint32(&IC);			/* Get attribute meta-type */
 			interp_access((int)offset, code, type);
 		}
 		break;
@@ -2016,13 +2189,12 @@ rt_private void interpret(int flag, int where)
 			int32 origin, ooffset;
 			uint32 type;
 
-			string = IC;					/* Get the attribute name */
-			IC += strlen((char *) IC) + 1;			
+			string = get_string8(&IC, -1);	/* Get the attribute name */
 			if (otop()->it_ref == (char *) 0)
 				eraise((char *) string, EN_VOID);
-			origin = get_long();			/* Get the origin class id */
-			ooffset = get_long();			/* Get the offset in origin */
-			type = get_uint32();			/* Get attribute meta-type */
+			origin = get_int32(&IC);			/* Get the origin class id */
+			ooffset = get_int32(&IC);			/* Get the offset in origin */
+			type = get_uint32(&IC);			/* Get attribute meta-type */
 			interp_paccess(origin, ooffset, type);
 		}
 		break;
@@ -2040,7 +2212,7 @@ rt_private void interpret(int flag, int where)
 			struct item *new;			/* Where value is to be copied */
 			struct opstack op_context;  /* To save stack's context */
 
-			code = get_short() - 1;
+			code = get_int16(&IC) - 1;
 			new = opop();
 			memcpy (&prev, new, ITEM_SZ);
 
@@ -2088,7 +2260,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		last = iget();
 		last->type = SK_WCHAR;
-		last->it_wchar = (EIF_WIDE_CHAR) get_long ();
+		last->it_wchar = (EIF_WIDE_CHAR) get_int32(&IC);
 		break;
 
 	/*
@@ -2121,7 +2293,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		last = iget();
 		last->type = SK_INT16;
-		last->it_int16 = (EIF_INTEGER_16) get_short();
+		last->it_int16 = (EIF_INTEGER_16) get_int16(&IC);
 		break;
 
 	case BC_INT32:
@@ -2130,7 +2302,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		last = iget();
 		last->type = SK_INT32;
-		last->it_int32 = (EIF_INTEGER_32) get_long();
+		last->it_int32 = (EIF_INTEGER_32) get_int32(&IC);
 		break;
 
 	case BC_INT64:
@@ -2139,7 +2311,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		last = iget();
 		last->type = SK_INT64;
-		last->it_int64 = get_int64();
+		last->it_int64 = get_int64(&IC);
 		break;
 
 	/*
@@ -2151,7 +2323,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		last = iget();
 		last->type = SK_REAL32;
-		last->it_real32 = (EIF_REAL_32) get_double();
+		last->it_real32 = (EIF_REAL_32) get_real64(&IC);
 		break;
 
 	/*
@@ -2163,7 +2335,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		last = iget();
 		last->type = SK_REAL64;
-		last->it_real64 = get_double();
+		last->it_real64 = get_real64(&IC);
 		break;
 
 	/*
@@ -2195,7 +2367,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_LOCAL\n");
 #endif
-		code = get_short();				/* Get number (from 1 to locnum) */
+		code = get_int16(&IC);				/* Get number (from 1 to locnum) */
 		last = iget();
 		memcpy (last, loc(code), ITEM_SZ);
 		break;
@@ -2207,7 +2379,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_ARG\n");
 #endif
-		code = get_short();				/* Get number (from 1 to argnum) */
+		code = get_int16(&IC);				/* Get number (from 1 to argnum) */
 		last = iget();
 		memcpy (last, arg(code), ITEM_SZ);
 		break;
@@ -2219,7 +2391,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_AND_THEN\n");
 #endif
-		offset = get_long();
+		offset = get_int32(&IC);
 		last = otop();
 		if (!last->it_char)
 			IC += offset;
@@ -2232,7 +2404,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_OR_ELSE\n");
 #endif
-		offset = get_long();
+		offset = get_int32(&IC);
 		last = otop();
 		if (last->it_char)
 			IC += offset;
@@ -2351,9 +2523,9 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_ADDR\n");
 #endif
-		offset = get_long();			/* Get the feature id */
-		code = get_short();				/* Get the static type */
-		address((int32)offset, code, (int) get_short());
+		offset = get_int32(&IC);			/* Get the feature id */
+		code = get_int16(&IC);				/* Get the static type */
+		address((int32)offset, code, (int) get_int16(&IC));
 		break;
 
 	/*
@@ -2372,18 +2544,18 @@ rt_private void interpret(int flag, int where)
 		{
 		struct item * volatile pointed_object = NULL;
 	 	EIF_BOOLEAN is_attribute = EIF_FALSE;
-		uint32 value_offset = get_uint32();
+		uint32 value_offset = get_uint32(&IC);
 #ifdef DEBUG
 		dprintf(2)("BC_OBJECT_ADDR\n");
 #endif
 
 		switch(*IC++) {
 			case BC_LOCAL:
-				code = get_short();		/* Get number (from 1 to locnum) */
+				code = get_int16(&IC);		/* Get number (from 1 to locnum) */
 				pointed_object = loc(code);
 				break;
 			case BC_ARG:
-				code = get_short();		/* Get number (from 1 to argnum) */
+				code = get_int16(&IC);		/* Get number (from 1 to argnum) */
 				pointed_object = arg(code);
 				break;
 			case BC_RESULT:
@@ -2393,9 +2565,9 @@ rt_private void interpret(int flag, int where)
 				switch (*IC++) {
 				case BC_ATTRIBUTE:
 					is_attribute = EIF_TRUE;
-					offset = get_long();		/* Get feature id */
-					code = get_short();			/* Get static type */
-					type = get_uint32();		/* Get attribute meta-type */
+					offset = get_int32(&IC);		/* Get feature id */
+					code = get_int16(&IC);			/* Get static type */
+					type = get_uint32(&IC);		/* Get attribute meta-type */
 					offset = RTWA(code, (int)offset, Dtype(icurrent->it_ref));
 					break;
 				case BC_PATTRIBUTE:
@@ -2403,9 +2575,9 @@ rt_private void interpret(int flag, int where)
 					int32 origin, ooffset;
 
 					is_attribute = EIF_TRUE;
-					origin = get_long();		/* Get the origin class id */
-					ooffset = get_long();		/* Get the offset in origin */
-					type = get_uint32();		/* Get attribute meta-type */
+					origin = get_int32(&IC);		/* Get the origin class id */
+					ooffset = get_int32(&IC);		/* Get the offset in origin */
+					type = get_uint32(&IC);		/* Get attribute meta-type */
 					offset = RTWPA(origin, ooffset, Dtype(icurrent->it_ref));
 					break;
 					}
@@ -2458,8 +2630,8 @@ rt_private void interpret(int flag, int where)
 		uint32 ptr_pos, value_pos;
 		struct item *pointed_object;
 
-		ptr_pos = get_uint32();
-		value_pos = get_uint32();
+		ptr_pos = get_uint32(&IC);
+		value_pos = get_uint32(&IC);
 
 		pointed_object = oitem(value_pos);
 		last = oitem(ptr_pos);
@@ -2495,7 +2667,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_POP\n");
 #endif
 		{
-		uint32 i, nb_uint32 = get_uint32();
+		uint32 i, nb_uint32 = get_uint32(&IC);
 		for (i = 0; i < nb_uint32; i++)
 			opop();
 		}
@@ -2527,14 +2699,14 @@ rt_private void interpret(int flag, int where)
 			unsigned char *OLD_IC;
  
 			if (code == BC_PARRAY) {
-				origin = get_long();		/* Get the origin class id */
-				ooffset = get_long();		/* Get the offset in origin */
-				dtype = get_short();			/* Get the static type */
+				origin = get_int32(&IC);		/* Get the origin class id */
+				ooffset = get_int32(&IC);		/* Get the offset in origin */
+				dtype = get_int16(&IC);			/* Get the static type */
 
 					/*GENERIC CONFORMANCE */
 				dtype = get_compound_id(MTC icurrent->it_ref,dtype);
 
-				nbr_of_items = get_long();	  	/* Number of items in array */
+				nbr_of_items = get_int32(&IC);	  	/* Number of items in array */
 				stagval = tagval;
 				OLD_IC = IC;					/* Save IC counter */
 	 
@@ -2542,14 +2714,14 @@ rt_private void interpret(int flag, int where)
 				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
 				((void (*)()) RTWPF(origin, ooffset, Dtype(new_obj))) (new_obj, 1L, nbr_of_items);
 			} else {
-				stype = get_short();			/* Get the static type */
-				dtype = get_short();			/* Get the static type */
+				stype = get_int16(&IC);			/* Get the static type */
+				dtype = get_int16(&IC);			/* Get the static type */
 
 					/*GENERIC CONFORMANCE */
 				dtype = get_compound_id(MTC icurrent->it_ref,dtype);
 
-				feat_id = get_short();		  	/* Get the feature id */
-				nbr_of_items = get_long();	  	/* Number of items in array */
+				feat_id = get_int16(&IC);		  	/* Get the feature id */
+				nbr_of_items = get_int32(&IC);	  	/* Number of items in array */
 				stagval = tagval;
 				OLD_IC = IC;					/* Save IC counter */
 	 
@@ -2627,13 +2799,13 @@ rt_private void interpret(int flag, int where)
 			unsigned char *OLD_IC;
 			EIF_BOOLEAN is_atomic;
  
-			dtype = get_short();			/* Get the static type */
+			dtype = get_int16(&IC);			/* Get the static type */
 
 				/*GENERIC CONFORMANCE */
 			dtype = get_compound_id(MTC icurrent->it_ref,dtype);
 
-			nbr_of_items = get_long();	  	/* Number of items in tuple */
-			is_atomic = EIF_TEST(get_long());
+			nbr_of_items = get_int32(&IC);	  	/* Number of items in tuple */
+			is_atomic = EIF_TEST(get_int32(&IC));
 			stagval = tagval;
 			OLD_IC = IC;					/* Save IC counter */
 	 
@@ -2685,7 +2857,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_RETRIEVE_OLD\n");
 #endif
-		code = get_short();             /* Get number (from 1 to locnum) */
+		code = get_int16(&IC);             /* Get number (from 1 to locnum) */
 		last = iget();
 		memcpy (last, loc(code), ITEM_SZ);
 		break;
@@ -2698,7 +2870,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_START_EVAL_OLD\n");
 #endif
 		
-		offset = get_long();		/* Get offset for skipping old evaluation block */
+		offset = get_int32(&IC);		/* Get offset for skipping old evaluation block */
 		if (~in_assertion & WASC(icur_dtype) & CK_ENSURE) {
 			in_assertion = ~0;
 		} else {
@@ -2725,7 +2897,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_OLD\n");
 #endif
 		last = opop();
-		code = get_short();     /* Get the local number (from 1 to locnum) */
+		code = get_int16(&IC);     /* Get the local number (from 1 to locnum) */
 		if ((last->type & SK_HEAD) == SK_EXP) {
 				/* Case of an expanded, then we need to copy its original value. */
 			eif_std_ref_copy(last->it_ref, loc(code)->it_ref);
@@ -2741,8 +2913,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_ADD_STRIP\n");
 #endif
-		string = IC;
-		IC += strlen((char *) IC) + 1;
+		string = get_string8(&IC, -1);
 		last = iget();
 		last->type = SK_REF;
 		last->it_ref = (EIF_REFERENCE) string;
@@ -2762,8 +2933,8 @@ rt_private void interpret(int flag, int where)
 			unsigned long stagval;
 
 			stagval = tagval;
-			d_type = get_short();           /* Get the dynamic type */
-			nbr_of_items = get_long();
+			d_type = get_int16(&IC);           /* Get the dynamic type */
+			nbr_of_items = get_int32(&IC);
 			temp = nbr_of_items;
 			stripped = (EIF_REFERENCE *) cmalloc(sizeof(EIF_REFERENCE) * nbr_of_items);
 			if (stripped == NULL)
@@ -2796,12 +2967,10 @@ rt_private void interpret(int flag, int where)
 			int32 length;	/* length of once manifest string */
  
 			stagval = tagval;
-			body_index = get_long ();	/* Get routine body index */
-			number = get_long ();	/* Get number of the once manifest string in the routine body */
-			length = get_long ();	/* Get the length of the manifest string */
-			string = IC;
-			IC += (length + 1);		/* Increment the byte code pointer to
-									 * the end of the string */
+			body_index = get_int32(&IC);	/* Get routine body index */
+			number = get_int32(&IC);	/* Get number of the once manifest string in the routine body */
+			length = get_int32(&IC);
+			string = get_string8(&IC, length);	/* Get string of specified length. */
 
 			last = iget();
 			last->type = SK_REF;
@@ -2826,8 +2995,8 @@ rt_private void interpret(int flag, int where)
 			int32 count;	/* total number of the once manifest strings in routine body */
  
 			stagval = tagval;
-			body_index = get_long ();	/* Get routine body index */
-			count = get_long ();	/* Get total number of the once manifest string in the routine body */
+			body_index = get_int32(&IC);	/* Get routine body index */
+			count = get_int32(&IC);	/* Get total number of the once manifest string in the routine body */
 
 			RTAOMS (body_index, count);
 			if (tagval != stagval) {
@@ -2849,10 +3018,8 @@ rt_private void interpret(int flag, int where)
 			int32 length;
  
 			stagval = tagval;
-			length = get_long ();	/* Get the length of the manifest string */
-			string = IC;
-			IC += (length + 1);		/* Increment the byte code pointer to
-									 * the end of the string */
+			length = get_int32(&IC);
+			string = get_string8(&IC, length);	/* Get string of specified length. */
 			last = iget();
 			last->type = SK_INT32;		/* Protect empty cell from GC */
  
@@ -2886,13 +3053,13 @@ rt_private void interpret(int flag, int where)
 			uint32 *addr;
 
 			last = iget();
-			realcount = get_uint32();
-			bcount = get_uint32();			/* Read bit count */
+			realcount = get_uint32(&IC);
+			bcount = get_uint32(&IC);			/* Read bit count */
 			new_obj = RTLB(realcount);			/* Creation */
 			addr = ARENA(new_obj);
 			nb_uint32 = BIT_NBPACK(bcount);
 			while (nb_uint32--)	/* Write bit count and value in `new_obj' */ 
-				*addr++ = get_uint32();
+				*addr++ = get_uint32(&IC);
 			last->type = SK_BIT + bcount; /* bcount or realcount ??*/
 			last->it_bit = new_obj;
 		}
@@ -2905,7 +3072,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_JMP_F\n");
 #endif
-		offset = get_long();	/* Get jump offset */
+		offset = get_int32(&IC);	/* Get jump offset */
 		code = (int) opop()->it_char;
 		if (!code)
 			IC += offset;		/* Jump */
@@ -2918,7 +3085,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_JMP_T\n");
 #endif
-		offset = get_long();	/* Get jump offset */
+		offset = get_int32(&IC);	/* Get jump offset */
 		code = (int) opop()->it_char;
 		if (code)
 			IC += offset;		/* Jump */
@@ -2931,7 +3098,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_JMP\n");
 #endif
-		offset = get_long();	/* Because get_long() updates IC on the fly */
+		offset = get_int32(&IC);	/* Because get_int32(&IC) updates IC on the fly */
 		IC += offset;
 		break;
 
@@ -2942,7 +3109,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_HOOK\n");
 #endif
-		offset = get_long();		/* retrieve the parameter of BC_HOOK: line number */
+		offset = get_int32(&IC);		/* retrieve the parameter of BC_HOOK: line number */
 		saved_scur = scur;			/* save feature context */
 		saved_stop = stop;			/* save feature context */
 		dstop(dtop()->dc_exec,offset);	/* Debugger hook , dtop->dc_exec returns the current execution vector */
@@ -2957,7 +3124,7 @@ rt_private void interpret(int flag, int where)
 #ifdef DEBUG
 		dprintf(2)("BC_NHOOK\n");
 #endif
-		offset = get_long();		/* retrieve the parameter of BC_NHOOK: line number */
+		offset = get_int32(&IC);		/* retrieve the parameter of BC_NHOOK: line number */
 		saved_scur = scur;			/* save feature context */
 		saved_stop = stop;			/* save feature context */
 		dstop_nested(dtop()->dc_exec,offset);	/* Debugger hook - stop point reached */
@@ -4206,115 +4373,11 @@ rt_private void address(int32 fid, int stype, int for_rout_obj)
 		last->it_ptr = (EIF_POINTER) RTWPP(stype, fid);
 }
 
-
-/*
- * Get constants from byte code in an hopefully portable (slow) way--RAM.
- */
-
-rt_private EIF_REAL_64 get_double(void)
-{
-	/* Get EIF_REAL_64 stored at IC in byte code array. The value has been stored
-	 * correctly by the exchange driver between the workbench and the process.
-	 * The following should be highly portable--RAM.
-	 */
-	EIF_GET_CONTEXT
-	union {
-		char xtract[sizeof(EIF_REAL_64)];
-		EIF_REAL_64 value;
-	} xdouble;
-	char *p = (char *) &xdouble;
-	int i;
-
-	for (i = 0; i < sizeof(EIF_REAL_64); i++)
-		*p++ = *IC++;
-
-	return *(EIF_REAL_64 *) &xdouble;	/* Correctly aligned by union */
-}
-
-rt_private EIF_INTEGER get_long(void)
-{
-	/* Get EIF_INTEGER stored at IC in byte code array. The value has been stored
-	 * correctly by the exchange driver between the workbench and the process.
-	 * The following should be highly portable--RAM.
-	 */
-	EIF_GET_CONTEXT
-	union {
-		char xtract[sizeof(EIF_INTEGER)];
-		EIF_INTEGER value;
-	} xlong;
-	char *p = (char *) &xlong;
-	int i;
-
-	for (i = 0; i < sizeof(EIF_INTEGER); i++)
-		*p++ = *IC++;
-	
-	return *(EIF_INTEGER *) &xlong;		/* Correctly aligned by union */
-}
-
-rt_private EIF_INTEGER_64 get_int64(void)
-{
-	/* Get long int stored at IC in byte code array. The value has been stored
-	 * correctly by the exchange driver between the workbench and the process.
-	 * The following should be highly portable--RAM.
-	 */
-	EIF_GET_CONTEXT
-	union {
-		char xtract[sizeof(EIF_INTEGER_64)];
-		EIF_INTEGER_64 value;
-	} xint64;
-	char *p = (char *) &xint64;
-	int i;
-
-	for (i = 0; i < sizeof(EIF_INTEGER_64); i++)
-		*p++ = *IC++;
-	
-	return *(EIF_INTEGER_64 *) &xint64;		/* Correctly aligned by union */
-}
-
-rt_private EIF_INTEGER_16 get_short(void)
-{
-	/* Get EIF_INTEGER_16 stored at IC in byte code array. The value has been stored
-	 * correctly by the exchange driver between the workbench and the process.
-	 * The following should be highly portable--RAM.
-	 */
-	EIF_GET_CONTEXT
-	union {
-		char xtract[sizeof(EIF_INTEGER_16)];
-		EIF_INTEGER_16 value;
-	} xshort;
-	char *p = (char *) &xshort;
-	int i;
-
-	for (i = 0; i < sizeof(EIF_INTEGER_16); i++)
-		*p++ = *IC++;
-	
-	return *(EIF_INTEGER_16 *) &xshort;		/* Correctly aligned by union */
-}
-
-rt_private uint32 get_uint32(void)
-{
-	/* Get uint32 stored at IC in byte code array. The value has been stored
-	 * correctly by the exchange driver between the workbench and the process.
-	 * The following should be highly portable--RAM.
-	 */
-	EIF_GET_CONTEXT
-	union {
-		char xtract[sizeof(uint32)];
-		uint32 value;
-	} xuint32;
-	char *p = (char *) &xuint32;
-	int i;
-
-	for (i = 0; i < sizeof(uint32); i++)
-		*p++ = *IC++;
-
-	return *(uint32 *) &xuint32;	  /* Correctly aligned by union */
-}
-
 rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
 {
 	/* Get array of short ints and convert it to a compound id. */
 	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
 	int16   gen_types [MAX_CID_SIZE+1], *gp, last;
 	int     cnt, pos;
 
@@ -4323,7 +4386,7 @@ rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
 
 	do
 	{
-		*(gp++) = last = (int16) get_short();
+		*(gp++) = last = (int16) get_int16(&IC);
 		++cnt;
 
 		/* Check for anchors */
@@ -4331,7 +4394,7 @@ rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
 		switch (last)
 		{
 			case LIKE_ARG_TYPE: /* like argument */
-						pos = (int) get_short();
+						pos = (int) get_int16(&IC);
 						*(gp - 1) = RTID(RTCA(arg(pos)->it_ref, -10));
 						break;
 			case LIKE_CURRENT_TYPE: /* like Current */
@@ -4342,9 +4405,9 @@ rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
 							short stype;
 							int32 origin, ooffset;
 
-							stype = get_short();			/* Get static type of caller */
-							origin = get_long();			/* Get the origin class id */
-							ooffset = get_long();			/* Get the offset in origin */
+							stype = get_int16(&IC);			/* Get static type of caller */
+							origin = get_int32(&IC);			/* Get the origin class id */
+							ooffset = get_int32(&IC);			/* Get the offset in origin */
 							*(gp - 1) = RTID(RTWPCT(stype, origin, ooffset, icurrent->it_ref));
 						}
 						break;
@@ -4353,8 +4416,8 @@ rt_private short get_compound_id(EIF_REFERENCE Current, short dtype)
 							short code;
 							long  offset;
 
-							code = get_short();		/* Get the static type first */
-							offset = get_long();	/* Get the feature id of the anchor */
+							code = get_int16(&IC);		/* Get the static type first */
+							offset = get_int32(&IC);	/* Get the feature id of the anchor */
 							*(gp - 1) = RTID(RTWCT(code, offset, icurrent->it_ref));
 						}
 						break;
@@ -4385,20 +4448,20 @@ rt_private int get_creation_type (void)
 	
 	switch (*IC++) {
 	case BC_CTYPE:				/* Hardcoded creation type */
-		type = get_short();
+		type = get_int16(&IC);
 /* GENERIC CONFORMANCE */
 		type = get_compound_id(MTC icurrent->it_ref,(short)type);
 		break;
 	case BC_CARG:				/* Like argument creation type */
-		type = get_short();		/* Default creation type if void arg.  */
+		type = get_int16(&IC);		/* Default creation type if void arg.  */
 /* GENERIC CONFORMANCE */
 		type = get_compound_id(MTC icurrent->it_ref,(short)type);
-		code = get_short();		/* Argument position */
+		code = get_int16(&IC);		/* Argument position */
 		type = RTCA(arg(code)->it_ref, type);
 		break;
 	case BC_CLIKE:				/* Like feature creation type */
-		code = get_short();		/* Get the static type first */
-		offset = get_long();	/* Get the feature id of the anchor */
+		code = get_int16(&IC);		/* Get the static type first */
+		offset = get_int32(&IC);	/* Get the feature id of the anchor */
 /* GENERIC CONFORMANCE */
 		type = RTWCT(code, offset, icurrent->it_ref);
 		break;
@@ -4407,9 +4470,9 @@ rt_private int get_creation_type (void)
 		short stype;
 		int32 origin, ooffset;
 
-		stype = get_short();			/* Get static type of caller */
-		origin = get_long();			/* Get the origin class id */
-		ooffset = get_long();			/* Get the offset in origin */
+		stype = get_int16(&IC);			/* Get static type of caller */
+		origin = get_int32(&IC);			/* Get the origin class id */
+		ooffset = get_int32(&IC);			/* Get the offset in origin */
 /* GENERIC CONFORMANCE */
 		type = RTWPCT(stype, origin, ooffset, icurrent->it_ref);
 		break;
@@ -4422,8 +4485,8 @@ rt_private int get_creation_type (void)
 		short current_type;
 		int32 formal_position;
 
-		current_type = get_short ();		/* Get static type of caller */
-		formal_position = get_long ();	/* Get position of formal generic
+		current_type = get_int16(&IC);		/* Get static type of caller */
+		formal_position = get_int32(&IC);	/* Get position of formal generic
 										   we want to create */
 		type = (int) RTGPTID(current_type, icurrent->it_ref, formal_position);
 		}
@@ -4443,6 +4506,8 @@ rt_private int get_creation_type (void)
 
 rt_private void init_var(struct item *ptr, long int type, EIF_REFERENCE current_ref)
 {
+	EIF_GET_CONTEXT
+
 	/* Initializes variable 'ptr' to be of type 'type' */
 	short dtype;
 
@@ -4463,7 +4528,7 @@ rt_private void init_var(struct item *ptr, long int type, EIF_REFERENCE current_
 	case SK_REAL32:		ptr->it_real32 = (EIF_REAL_32) 0; break;
 	case SK_REAL64:		ptr->it_real64 = (EIF_REAL_64) 0; break;
 	case SK_BIT:		ptr->it_ref = (EIF_REFERENCE)0; break;
-	case SK_EXP:		dtype = get_short ();
+	case SK_EXP:		dtype = get_int16(&IC);
 						dtype = get_compound_id(MTC current_ref, (short) dtype);
 						ptr->type = (type & EO_UPPER) | ((uint32) dtype);
 						ptr->it_ref = (EIF_REFERENCE) 0;
@@ -4485,6 +4550,7 @@ rt_private void init_registers(void)
 	 */
 
 	RT_GET_CONTEXT
+	EIF_GET_CONTEXT
 	int n;				/* # of locals/arguments to be fetched */
 	struct item **reg;	/* Pointer in register array */
 	struct item *last;	/* Initialization of stack frame */
@@ -4517,7 +4583,7 @@ rt_private void init_registers(void)
 	reg = iregs + SPECIAL_REG;				/* Start of locals */
 	for (n = 0; n < locnum; n++, reg++) {	/* Pushed in order */
 		last = iget();
-		init_var(last, get_long(), current);			/* Initialize to zero */
+		init_var(last, get_int32(&IC), current);			/* Initialize to zero */
 		*reg = last;						/* Save pointer in stack */
 	}
 

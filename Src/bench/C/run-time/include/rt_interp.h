@@ -153,6 +153,7 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_GOTO_BODY		106
 #define BC_NOT_REC			107
 #define BC_END_PRE			108
+#define BC_CAST_NATURAL		109
 #define BC_CAST_INTEGER    	110
 #define BC_CAST_REAL_32    	111
 #define BC_CAST_REAL_64  	112
@@ -215,10 +216,10 @@ extern struct opstack op_stack;               /* Operational stack */
 #define BC_ONCE_STRING		(unsigned char) 144
 #define BC_ALLOCATE_ONCE_STRINGS	(unsigned char) 145
 
-#define BC_NOTUSED_150		(unsigned char) 150
-#define BC_NOTUSED_151		(unsigned char) 151
-#define BC_NOTUSED_152		(unsigned char) 152
-#define BC_NOTUSED_153		(unsigned char) 153
+#define BC_UINT8			(unsigned char) 150
+#define BC_UINT16			(unsigned char) 151
+#define BC_UINT32			(unsigned char) 152
+#define BC_UINT64			(unsigned char) 153
 #define BC_NOTUSED_154		(unsigned char) 154
 #define BC_NOTUSED_155		(unsigned char) 155
 #define BC_NOTUSED_156		(unsigned char) 156

@@ -429,6 +429,14 @@ rt_private char *rcsid =
 #endif
 
 #ifdef BOEHM_GC
+/*
+doc:	<routine name="boehm_dispose" export="private">
+doc:		<summary>Record `dispose' routine for Boehm GC</summary>
+doc:		<param name="header" type="union overhead *">Zone allocated by Boehm GC which needs to be recorded so that `dispose' is called by Boehm GC when collectin `header'.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</routine>
+*/
+
 rt_private void boehm_dispose (union overhead *header)
 	/* Record `dispose' routine fro Boehm GC. */
 {
@@ -439,6 +447,18 @@ rt_private void boehm_dispose (union overhead *header)
 #endif
 
 #if defined(BOEHM_GC) || defined(NO_GC)
+/*
+doc:	<routine name="external_allocation" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Allocate new object using an external allocator such as `Boehm GC' or `standard malloc'.</summary>
+doc:		<param name="atomic" type="int">Is object to be allocated empty of references to other objects?</param>
+doc:		<param name="has_dispose" type="int">Has object to be allocated a `dispose' routine to be called when object will be collected?</param>
+doc:		<param name="nbytes" type="uint32">Size in bytes of object to be allocated.</param>
+doc:		<return>A newly allocated object of size `nbytes'.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Performed by external allocator</synchronization>
+doc:	</routine>
+*/
+
 rt_private EIF_REFERENCE external_allocation (int atomic, int has_dispose, uint32 nbytes)
 {
 	unsigned int real_nbytes;	/* Real object size */
@@ -489,6 +509,17 @@ rt_private EIF_REFERENCE external_allocation (int atomic, int has_dispose, uint3
 		}
 	}
 }
+
+/*
+doc:	<routine name="external_reallocation" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Reallocate a given object with a  bigger size using external allocator.</summary>
+doc:		<param name="obj" type="EIF_REFERENCE">Object to be reallocated</param>
+doc:		<param name="nbytes" type="uint32">New size in bytes of `obj'.</param>
+doc:		<return>A reallocated object of size `nbytes'.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Performed by external allocator</synchronization>
+doc:	</routine>
+*/
 
 rt_private EIF_REFERENCE external_reallocation (EIF_REFERENCE obj, uint32 nbytes) {
 	unsigned int real_nbytes;	/* Real object size */
@@ -543,6 +574,15 @@ rt_public EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex = NULL;
 #define EIF_GC_GSZ_UNLOCK EIF_LW_MUTEX_UNLOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex")
 #endif
 
+/*
+doc:	<routine name="smart_emalloc" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Perform smart allocation of either a TUPLE object or a normal object. It does not take into account SPECIAL or BIT creation as a size is required for those. See `emalloc' comments for me details.</summary>
+doc:		<param name="ftype" type="uint32">Full dynamic type used to determine if we are creating a TUPLE or a normal object.</param>
+doc:		<return>A newly allocated object if successful, otherwise throw an exception</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:	</routine>
+*/
+
 rt_public EIF_REFERENCE smart_emalloc (uint32 ftype)
 {
 	int32 type = (int32) Deif_bid(ftype);
@@ -553,22 +593,35 @@ rt_public EIF_REFERENCE smart_emalloc (uint32 ftype)
 	}
 }
 
+/*
+doc:	<routine name="emalloc" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Perform allocation of normal object (i.e. not a BIT, SPECIAL or TUPLE object) based on `ftype' full dynamic type which is used to find out object's size in bytes. Note that the size of all the Eiffel objects is correctly padded, but do not take into account the header's size.</summary>
+doc:		<param name="ftype" type="uint32">Full dynamic type used to determine if we are creating a TUPLE or a normal object.</param>
+doc:		<return>A newly allocated object if successful, otherwise throw an exception.</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:	</routine>
+*/
+
 rt_public EIF_REFERENCE emalloc (uint32 ftype)
 {
-	/* Fetch object's size in bytes. Note that the size of all the Eiffel
-	 * objects is correctly padded, but do not account for the header's size.
-	 */
 	uint32 type = (uint32) Deif_bid(ftype);
 	return emalloc_size (ftype, type, EIF_Size(type));
 }
 
+/*
+doc:	<routine name="emalloc_size" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Memory allocation for a normal Eiffel object (i.e. not BIT, SPECIAL or TUPLE).</summary>
+doc:		<param name="ftype" type="uint32">Full dynamic type used to initialize full dynamic type overhead part of Eiffel object.</param>
+doc:		<param name="type" type="uint32">Dynamic type used to initialize flags overhead part of Eiffel object, mostly used if type is a deferred one, or if it is an expanded one, or if it has a dispose routine.</param>
+doc:		<param name="nbytes" type="uint32">Number of bytes to allocate for this type.</param>
+doc:		<return>A newly allocated object holding at least `nbytes' if successful, otherwise throw an exception.</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</routine>
+*/
+
 rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
-							/* Full dynamic type */
 {
-	/* Memory allocation for an Eiffel object. It either succeeds or raises the
-	 * "No more memory" exception. The routine returns the pointer on a new
-	 * object holding at least 'nbytes'.
-	 */
 	RT_GET_CONTEXT
 	EIF_REFERENCE object;				/* Pointer to the freshly created object */
 	
@@ -693,11 +746,17 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	return (EIF_REFERENCE) 0;				/* They chose to ignore EN_MEN */
 }
 
+/*
+doc:	<routine name="sp_init" export="public">
+doc:		<summary>Initialize special object of expanded `obj' from `lower' position to `upper' position. I.e. creating new instances of expanded objects and assigning them from `obj [lower]' to `obj [upper]'.</summary>
+doc:		<param name="obj" type="EIF_REFERENCE">Special object of expanded which will be initialized.</param>
+doc:		<param name="dftype" type="uint32">Dynamic type of expanded object to create for each entry of special object `obj'.</param>
+doc:		<param name="lower" type="EIF_INTEGER">Lower bound of `obj'.</param>
+doc:		<param name="upper" type="EIF_INTEGER">Upper bound of `obj'.</param>
+doc:	</routine>
+*/
+
 rt_public void sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF_INTEGER upper)
-	/* Initialize special object of expanded `obj' from `lower' position to
-	 * `upper' position. I.e. creating new instances of expanded objects and
-	 * assigning them from `obj [lower]' to `obj [upper]'.
-	 */
 {
 	EIF_GET_CONTEXT
 
@@ -725,7 +784,17 @@ rt_public void sp_init (EIF_REFERENCE obj, uint32 dftype, EIF_INTEGER lower, EIF
 	RT_GC_WEAN(obj);
 }
 
-rt_public EIF_REFERENCE tuple_malloc (uint32 ftype) {
+/*
+doc:	<routine name="tuple_malloc" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Allocated new TUPLE object of type `ftype'. It internally calls `tuple_malloc_specific' therefore it computes `count' of TUPLE to create as wekl as determines if TUPLE is atomic or not.</summary>
+doc:		<param name="ftype" type="uint32">Dynamic type of TUPLE object to create.</param>
+doc:		<return>A newly allocated TUPLE object of type `ftype' if successful, otherwise throw an exception.</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:	</routine>
+*/
+
+rt_public EIF_REFERENCE tuple_malloc (uint32 ftype)
+{
 	unsigned int i, count;
 	EIF_BOOLEAN is_atomic = EIF_TRUE;
 	int16 dftype = (int16) ftype;
@@ -749,10 +818,18 @@ rt_public EIF_REFERENCE tuple_malloc (uint32 ftype) {
 	return tuple_malloc_specific(ftype, count, is_atomic);
 }
 
+/*
+doc:	<routine name="tuple_malloc_specific" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Allocated new TUPLE object of type `ftype', of count `count' and `atomic'. TUPLE is alloated through `spmalloc', but the element size is the one of TUPLE element, i.e. sizeof (EIF_TYPED_ELEMENT).</summary>
+doc:		<param name="ftype" type="uint32">Dynamic type of TUPLE object to create.</param>
+doc:		<param name="count" type="uint32">Number of elements in TUPLE object to create.</param>
+doc:		<param name="atomic" type="EIF_BOOLEAN">Does current TUPLE object to create has reference or not? True means no.</param>
+doc:		<return>A newly allocated TUPLE object if successful, otherwise throw an exception.</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:	</routine>
+*/
+
 rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_BOOLEAN atomic)
-	/* Allocate memory for a TUPLE instance. TUPLE are allocated through `spmalloc'
-	 * but the element size is the one of TUPLE element, i.e. sizeof (EIF_TYPED_ELEMENT).
-	 */
 {
 	EIF_REFERENCE object;
 	REQUIRE("Is a tuple type", Deif_bid(ftype) == egc_tup_dtype);
@@ -786,13 +863,18 @@ rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_B
 	return object;
 }
 
+/*
+doc:	<routine name="spmalloc" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Memory allocation for an Eiffel special object. It either succeeds or raises the "No more memory" exception. The routine returns the pointer on a new special object holding at least 'nbytes'. `atomic' means that it is a special object without references.
+doc:		<param name="nbytes" type="unsigned int">Number of bytes to allocate.</param>
+doc:		<param name="atomic" type="EIF_BOOLEAN">Does current special object to create has reference or not? True means no.</param>
+doc:		<return>A newly allocated TUPLE object if successful, otherwise throw an exception.</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:	</routine>
+*/
+
 rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 {
-	/* Memory allocation for an Eiffel special object. It either succeeds or
-	 * raises the "No more memory" exception. The routine returns the pointer
-	 * on a new special object holding at least 'nbytes'.
-	 * `atomic' means that it is a special object without references.
-	 */
 
 	EIF_REFERENCE object;		/* Pointer to the freshly created special object */
 	
@@ -850,11 +932,18 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 #endif
 }
 
+/*
+doc:	<routine name="sprealloc" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Reallocate a special object `ptr' so that it can hold at least `nbitems'.</summary>
+doc:		<param name="ptr" type="EIF_REFERENCE">Special object which will be reallocated.</param>
+doc:		<param name="nbitems" type="long int">New number of items wanted.</param>
+doc:		<return>A newly allocated special object if successful, otherwise throw an exception.</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:	</routine>
+*/
+
 rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
-		  			/* Original pointer */
-			 		/* New number of items wanted */
 {
-		/* Reallocation of a string object `ptr' for new count `nbitems' */
 	EIF_GET_CONTEXT
 	union overhead *zone;		/* Malloc information zone */
 	EIF_REFERENCE ref, object;
@@ -1089,13 +1178,17 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	return object;
 }
 
+/*
+doc:	<routine name="bmalloc" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Allocate a new object of type BIT `size'.</summary>
+doc:		<param name="size" type="long int">Required size of bit type to allocated.</param>
+doc:		<return>A newly allocated BIT object if successful, otherwise throw an exception.</return>
+doc:		<exception>"No more memory" when it fails</exception>
+doc:	</routine>
+*/
+
 rt_public EIF_REFERENCE bmalloc(long int size)
 {
-	/* Memory allocation for an Eiffel bit structure. It either succeeds
-	 * or raises the "No more memory" exception. `size' is the required size
-	 * of the bit type, in bits.
-	 */
-
 	EIF_REFERENCE object;			/* Pointer to the freshly created bit object */
 	unsigned int nbytes;			/* Object's size */
 
@@ -1146,14 +1239,16 @@ rt_public EIF_REFERENCE bmalloc(long int size)
 	return (0); /* NOTREACHED */
 }
 
+/*
+doc:	<routine name="cmalloc" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Memory allocation for a C object. This is the same as the traditional malloc routine, excepted that the memory management is done by the Eiffel run time, so Eiffel keeps a kind of control over this memory. Memory is `zeroed'.</summary>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes to allocated.</param>
+doc:		<return>Upon success, it returns a pointer on a new free zone holding at least 'nbytes' free. Otherwise, a null pointer is returned.</return>
+doc:	</routine>
+*/
+
 rt_public EIF_REFERENCE cmalloc(unsigned int nbytes)
 {
-	/* Memory allocation for a C object. This is the same as the traditional
-	 * malloc routine, excepted that the memory management is done by the
-	 * Eiffel run time, so Eiffel keeps a kind of control over this memory.
-	 * Upon success, it returns a pointer on a new free zone holding at least
-	 * 'nbytes' free. Otherwise, a null pointer is returned.
-	 */
 
 #ifdef ISE_GC
 	EIF_REFERENCE arena;		/* C arena allocated */
@@ -1175,20 +1270,28 @@ rt_public EIF_REFERENCE cmalloc(unsigned int nbytes)
 }
 
 #ifdef ISE_GC
+/*
+doc:	<routine name="gmalloc" return_type="EIF_REFERENCE" export="shared">
+doc:		<summary>Requests 'nbytes' from the free-list (Eiffel if possible), garbage collection turned off. This entry point is used by some garbage collector routines, so it is really important to turn the GC off. This routine being called from within the garbage collector, there is no need to make it a critical section with SIGBLOCK / SIGRESUME.</summary>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes to allocated.</param>
+doc:		<return>Upon success, it returns a pointer on a new free zone holding at least 'nbytes' free. Otherwise, a null pointer is returned.</return>
+doc:	</routine>
+*/
+
 rt_shared EIF_REFERENCE gmalloc(unsigned int nbytes)
 {
-	/* Requests 'nbytes' from the free-list (Eiffel if possible), garbage
-	 * collection turned off. This entry point is used by some garbage collector
-	 * routines, so it is really important to turn the GC off.
-	 * This routine being called from within the garbage collector, there is no
-	 * need to make it a critical section with SIGBLOCK / SIGRESUME.
-	 */
 	
 	return eif_rt_internal_xmalloc (nbytes, EIFFEL_T, GC_OFF);
 }
 #endif
 
 #ifdef EIF_THREADS
+/*
+doc:	<routine name="eif_rt_xmalloc" return_type="EIF_REFERENCE" export="shared">
+doc:		<summary>Wrapper around `eif_rt_internal_xmalloc' in multithreaded mode. Cf `eif_rt_internal_xmalloc' for documentation.</summary>
+doc:	</routine>
+*/
+
 rt_shared EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_flag)
 {
 #ifdef ISE_GC
@@ -1210,20 +1313,21 @@ rt_shared EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_fla
 #endif
 }
 
+/*
+doc:	<routine name="eif_rt_internal_xmalloc" return_type="EIF_REFERENCE" export="shared">
+doc:		<summary>This routine is the main entry point for free-list driven memory allocation. It allocates 'nbytes' of type 'type' (Eiffel or C) and will call the garbage collector if necessary, unless it is turned off. The function returns a pointer to the free location found, or a null pointer if there is no memory available.</summary>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
+doc:		<param name="type" type="int">Type of block (C_T or EIFFEL_T).</param>
+doc:		<param name="gc_flag" type="int">Is GC on or off?</param>
+doc:		<return>New block of memory if successful, otherwise a null pointer.</return>
+doc:	</routine>
+*/
+
 rt_private EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, int gc_flag)
 #else
 rt_shared EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, int gc_flag)
 #endif
-						/* Number of bytes requested */
-		 				/* Type of block */
-						/* Garbage collector on/off */
 {
-	/* This routine is the main entry point for free-list driven memory
-	 * allocation. It allocates 'nbytes' of type 'type' (Eiffel or C) and
-	 * will call the garbage collector if necessary, unless it is turned off.
-	 * The function returns a pointer to the free location found, or a null
-	 * pointer if there is no memory available.
-	 */
 #ifdef ISE_GC
 	int mod;			/* Remainder for padding */
 	EIF_REFERENCE result;		/* Pointer to the free memory location we found */
@@ -1273,13 +1377,18 @@ rt_shared EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, i
 }
 
 #ifdef ISE_GC
+/*
+doc:	<routine name="malloc_free_list" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Find an aligned block of `nbytes'. The free list described by 'hlist' is used and the garbage collector called, if gc_flag is on. It is assumed that 'nbytes' is a correctly padded number.</summary>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
+doc:		<param name="hlist" type="union overhead **">List from which we try to find a free block or allocated a new block.</param>
+doc:		<param name="gc_flag" type="int">Is GC on or off?</param>
+doc:		<return>An aligned block of 'nbytes' bytes or null if no more memory is available.</return>
+doc:	</routine>
+*/
+
 rt_private EIF_REFERENCE malloc_free_list(unsigned int nbytes, union overhead **hlist, int gc_flag)
 {
-	/* Returns an aligned block of 'nbytes' bytes or null if no more
-	 * memory is available. The free list described by 'hlist' is used
-	 * and the garbage collector called, if gc_flag is on. It is assumed
-	 * that 'nbytes' is a correctly padded number.
-	 */
 	EIF_REFERENCE result;					/* Location of the malloc'ed block */
 
 	/* We keep an acoounting of the amount of memory allocated for Eiffel in
@@ -1458,12 +1567,17 @@ rt_private int chunk_free (struct chunk *ck)
 
 #endif
 
+/*
+doc:	<routine name="allocate_free_list" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Given a correctly padded size 'nbytes', we try to find a free block from the free list described in 'hlist'.</summary>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
+doc:		<param name="hlist" type="union overhead **">List from which we try to find a free block.</param>
+doc:		<return>Return the address of the (splited) block if found, a null pointer otherwise.</return>
+doc:	</routine>
+*/
+
 rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, register union overhead **hlist)
 {
-	/* Given a correctly padded size 'nbytes', we try to allocate from the
-	 * free list described in 'hlist'. Return the address of the (splited)
-	 * block if found, a null pointer otherwise.
-	 */
 	RT_GET_CONTEXT
 	register2 uint32 i;					/* Index in hlist */
 	register3 union overhead *selected = (union overhead *) 0;	
@@ -1577,22 +1691,33 @@ rt_private EIF_REFERENCE allocate_free_list(register unsigned int nbytes, regist
 	return set_up(selected, nbytes);
 }
 
+/*
+doc:	<routine name="get_to_from_core" return_type="EIF_REFERENCE" export="shared">
+doc:		<summary>For the partial scavenging algorithm, gets a new free chunk for the to_space.</summary>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
+doc:		<return>New block if successful, otherwise a null pointer.</return>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:	</routine>
+*/
+
 rt_shared EIF_REFERENCE get_to_from_core (unsigned int nbytes)
 {
-	/* For the partial scavenging algorithm, gets a new free chunk for
-	 * the to_space.
-	 */
 	return allocate_from_core (nbytes, e_hlist, MB_CHUNK);
 }
 
+/*
+doc:	<routine name="allocate_from_core" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Given a correctly padded size 'nbytes', we ask for some core to be able to make a chunk capable of holding 'nbytes'. The chunk will be placed in the specified `hlist'.</summary>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
+doc:		<param name="hlist" type="union overhead **">List in which we try to allocated a free block.</param>
+doc:		<param name="block_type" type="char">Type of block to allocated (MB_EO or MB_CHUNK).</param>
+doc:		<return>Address of new block, or null if no more core is available.</return>
+doc:	</routine>
+*/
+
 rt_private EIF_REFERENCE allocate_from_core(unsigned int nbytes, union overhead **hlist, char block_type)
-			 	/* Eiffel object or memory chunk */
 {
-	/* Given a correctly padded size 'nbytes', we ask for some core to be
-	 * able to make a chunk capable of holding 'nbytes'. The chunk will be
-	 * placed in the specified H list. The function returns the address of
-	 * the new block or null if no more core is available.
-	 */
 	RT_GET_CONTEXT
 	register2 union overhead *selected;		/* The selected block */
 	register1 struct chunk *chkbase;		/* Base address of new chunk */
@@ -1670,19 +1795,17 @@ rt_private EIF_REFERENCE allocate_from_core(unsigned int nbytes, union overhead 
 		return set_up_chunk(selected, nbytes);
 }
 
+/*
+doc:	<routine name="add_core" return_type="union overhead *" export="private">
+doc:		<summary>Get more core from kernel, increasing the data segment of the process by calling mmap() or sbrk() or. We try to request at least CHUNK bytes to allow for efficient scavenging. If more than that amount is requested, the value is padded to the nearest multiple of the system page size. If less than that amount are requested but the system call fails, successive attempts are made, decreasing each time by one system page size. A pointer to a new chunk suitable for at least 'nbytes' bytes is returned, or a null pointer if no more memory is available. The chunk is linked in the main list, but left out of any free list.</summary>
+doc:		<param name="nbytes" type="unsigned int">Number of bytes requested.</param>
+doc:		<param name="type" type="int">Type of block to allocated (EIFFEL_T or C_T).</param>
+doc:		<return>Address of new block of `nbytes' bytes, or null if no more core is available.</return>
+doc:	</routine>
+*/
+
 rt_private union overhead *add_core(register unsigned int nbytes, int type)
 {
-	/* Get more core from kernel, increasing the data segement of the process
-	 * by calling mmap() or sbrk() or. We try to request at least CHUNK bytes 
-	 * to allow for efficient scavenging. 
-	 * If more than that amount is requested, the value
-	 * is padded to the nearest multiple of the system page size. If less than
-	 * that amount are requested but the system call fails, successive attempts
-	 * are made, decreasing each time by one system page size. A pointer to a
-	 * new chunk suitable for at least 'nbytes' bytes is returned, or a null
-	 * pointer if no more memory is available. The chunk is linked in the main
-	 * list, but left out of any free list.
-	 */
 	RT_GET_CONTEXT	
 #if defined HAS_SMART_MMAP || defined HAS_SBRK
 	register1 union overhead *oldbrk = (union overhead *) -1;
@@ -1871,30 +1994,32 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 	return oldbrk;			/* Pointer to new free zone */
 }
 
+/*
+doc:	<routine name="rel_core" export="shared">
+doc:		<summary>Release core if possible, giving pages back to the kernel. This will shrink the size of the process accordingly. To release memory, we need at least two free chunks at the end (i.e. near the break), and of course, a chunk not reserved for next partial scavenging as a 'to' zone.</summary>
+doc:		<thread_safety>Not safe<thread_safety>
+doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:	</routine>
+*/
+
 rt_shared void rel_core(void)
 {
-	/* Release core if possible, giving pages back to the kernel. This will
-	 * shrink the size of the process accordingly. To release memory, we need
-	 * at least two free chunks at the end (i.e. near the break), and of course,
-	 * a chunk not reserved for next partial scavenging as a 'to' zone.
-	 */
 
 	while (free_last_chunk() == 0)		/* Free last chunk (all you can eat) */
 		;
 }
 
+/*
+doc:	<routine name="free_last_chunk" return_type="int" export="private">
+doc:		<summary>The last chunk in memory is freed (i.e. given back to the kernel) and the break value is updated. The status from sbrk() is returned. Great care is taken to ensure that the last chunk does not contain anything referenced by the process (otherwise, you get a free ticket for a memory fault)--RAM. Only called by `rel_core'.</summary>
+doc:		<return>An error condition of -2 means the last chunk is not near the break for whatever reason and hence cannot be wiped out from the process, sorry. A -3 means that there is no way the last chunk can be freed. -4 is returned when there are no more chunks to be freed</return>
+doc:		<thread_safety>Not safe<thread_safety>
+doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:	</routine>
+*/
+
 rt_private int free_last_chunk(void)
 {
-	/* The last chunk in memory is freed (i.e. given back to the kernel) and
-	 * the break value is updated. The status from sbrk() is returned. An error
-	 * condition of -2 means the last chunk is not near the break for whatever
-	 * reason and hence cannot be wiped out from the process, sorry. A -3 means
-	 * that there is no way the last chunk can be freed. -4 is returned when
-	 * there are no more chunks to be freed.
-	 * Great care is taken to ensure that the last chunk does not contain
-	 * anything referenced by the process (otherwise, you get a free ticket for
-	 * a memory fault)--RAM.
-	 */
 	RT_GET_CONTEXT
 	int nbytes;				/* Number of bytes to be freed */
 	union overhead *arena;	/* The address of the arena enclosed in chunk */
@@ -2121,13 +2246,17 @@ rt_private int free_last_chunk(void)
 #endif	/* !HAS_SMART_MMAP && HAS_SBRK && !HAS_SMART_SBRK */
 }
 
+/*
+doc:	<routine name="set_up" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Given a 'selected' block which may be too big to hold 'nbytes', we set it up to, updating memory accounting infos and setting the correct flags in the malloc info zone (header). We then return the address the user will know (points to the first datum byte).</summary>
+doc:		<param name="selected" type="union overhead *">Block of memory which is too big to hold `nbytes'.</param>
+doc:		<param name="nbytes" type="unsigned int">Size in bytes of block we should return.</param>
+doc:		<return>Address of location of object of size `nbytes' in `selected'.</return>
+doc:	</routine>
+*/
+
 rt_private EIF_REFERENCE set_up(register union overhead *selected, unsigned int nbytes)
 {
-	/* Given a 'selected' block which may be too big to hold 'nbytes',
-	 * we set it up to, updating memory accounting infos and setting the
-	 * correct flags in the malloc info zone (header). We then return the
-	 * address the user will know (points to the first datum byte).
-	 */
 	RT_GET_CONTEXT
 	register2 uint32 r;		/* For temporary storage */
 	register3 uint32 i;		/* To store true size */
@@ -2190,11 +2319,17 @@ rt_private EIF_REFERENCE set_up(register union overhead *selected, unsigned int 
 	return (EIF_REFERENCE) (selected + 1);		/* Free data space */
 }
 
+/*
+doc:	<routine name="set_up_chunk" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Same as set_up() but for memory chunk when they are explicitely allocated from core for the partial scavenging.</summary>
+doc:		<param name="selected" type="union overhead *">Block of memory which is too big to hold `nbytes'.</param>
+doc:		<param name="nbytes" type="unsigned int">Size in bytes of block we should return.</param>
+doc:		<return>Address of location of object of size `nbytes' in `selected'.</return>
+doc:	</routine>
+*/
+
 rt_private EIF_REFERENCE set_up_chunk(register union overhead *selected, unsigned int nbytes)
 {
-	/* Same as set_up() but for memory chunk when they are explicitely
-	 * allocated from core for the partial scavenging.
-	 */
 	RT_GET_CONTEXT
 	register2 uint32 r;		/* For temporary storage */
 	register3 uint32 i;		/* To store true size */
@@ -2251,6 +2386,12 @@ rt_private EIF_REFERENCE set_up_chunk(register union overhead *selected, unsigne
 #endif /* ISE_GC */
 
 #ifdef EIF_THREADS
+/*
+doc:	<routine name="eif_rt_xfree" export="public">
+doc:		<summary>Wrapper around `eif_rt_internal_xfree' in multithreaded mode. Cf `eif_rt_internal_xfree' for documentation.</summary>
+doc:	</routine>
+*/
+
 rt_public void eif_rt_xfree(register EIF_REFERENCE ptr)
 {
 #ifdef ISE_GC
@@ -2270,17 +2411,18 @@ rt_public void eif_rt_xfree(register EIF_REFERENCE ptr)
 #endif
 }
 
+/*
+doc:	<routine name="eif_rt_internal_xfree" export="public">
+doc:		<summary>Frees the memory block which starts at 'ptr'. This has to be a pointer returned by eif_rt_xmalloc, otherwise impredictable results will follow... The contents of the block are preserved, though one should not rely on this as it may change without notice.</summary>
+doc:		<param name="ptr" type="EIF_REFERENCE">Address of memory to be freed.</param>
+doc:	</routine>
+*/
+
 rt_private void eif_rt_internal_xfree(register EIF_REFERENCE ptr)
 #else
 rt_public void eif_rt_internal_xfree(register EIF_REFERENCE ptr)
 #endif
 {
-	/* Frees the memory block which starts at 'ptr'. This has
-	 * to be a pointer returned by malloc, otherwise impredictable
-	 * results will follow...
-	 * The contents of the block are preserved, though one should not
-	 * rely on this as it may change without notice.
-	 */
 #ifdef ISE_GC
 	uint32 r;					/* For shifting purposes */
 	union overhead *zone;		/* The to-be-freed zone */
@@ -2348,17 +2490,17 @@ rt_public void eif_rt_internal_xfree(register EIF_REFERENCE ptr)
 }
 
 #ifdef ISE_GC
-rt_public void xfreechunk(EIF_REFERENCE ptr)
+/*
+doc:	<routine name="xfreechunk" export="shared">
+doc:		<summary>Frees the memory chunk which starts at 'ptr'. This has to be a pointer returned by malloc, otherwise impredictable results will follow... The contents of the block are preserved, though one should not rely on this as it may change without notice. The only difference with the eif_rt_xfree() routine is that the Eiffel memory used is updated if the block is not a block freed by partial scavenging (as the objects it was holding have already been counted).</summary>
+doc:		<param name="ptr" type="EIF_REFERENCE">Chunk of memory to be freed.</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:	</routine>
+*/
+
+rt_shared void xfreechunk(EIF_REFERENCE ptr)
 {
-	/* Frees the memory chunk which starts at 'ptr'. This has
-	 * to be a pointer returned by malloc, otherwise impredictable
-	 * results will follow...
-	 * The contents of the block are preserved, though one should not
-	 * rely on this as it may change without notice.
-	 * The only difference with the eif_rt_xfree() routine is that the Eiffel 
-	 * memory used is updated if the block is not a block freed by partial
-	 * scavenging (as the objects it was holding have already been counted).
-	 */
 	uint32 r;					/* For shifting purposes */
 	union overhead *zone;		/* The to-be-freed zone */
 	uint32 i;					/* Index in hlist */
@@ -2413,13 +2555,18 @@ rt_public void xfreechunk(EIF_REFERENCE ptr)
 }
 #endif
 
+/*
+doc:	<routine name="eif_rt_xcalloc" export="public">
+doc:		<summary>Allocate space for 'nelem' elements of 'elsize' bytes and set the new space with zeros. This is NEVER used by the Eiffel run time but it is provided to keep the C interface with the standard malloc package.</summary>
+doc:		<param name="nelem" type="unsigned int">Number of elements to allocate.</param>
+doc:		<param name="elsize" type="unsigned int">Size of element.</param>
+doc:		<return>New block of memory of size nelem * elsize if successful, otherwise null pointer.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:	</routine>
+*/
+
 rt_public EIF_REFERENCE eif_rt_xcalloc(unsigned int nelem, unsigned int elsize)
 {
-	/* Allocate space for 'nelem' elements of 'elsize' bytes and set the new
-	 * space with zeros. This is NEVER used by the Eiffel run time but it is
-	 * provided to keep the C interface with the standard malloc package.
-	 */
-	
 #ifdef ISE_GC
 	register1 unsigned int nbytes;	/* Number of bytes requested */
 	register2 EIF_REFERENCE allocated;		/* Address of new arena */
@@ -2438,14 +2585,16 @@ rt_public EIF_REFERENCE eif_rt_xcalloc(unsigned int nelem, unsigned int elsize)
 }
 
 #ifdef ISE_GC
+/*
+doc:	<routine name="xfreeblock" export="private">
+doc:		<summary>Put the memory block starting at 'zone' into the free_list. Note that zone points at the beginning of the memory block (beginning of the header) and not at an object data area.
+doc:		<param name="zone" type="union overhead *">Zone to be freed.</param>
+doc:		<param name="r" type="uint32">Size of block.</param>
+doc:	</routine>
+*/
+
 rt_private void xfreeblock(union overhead *zone, uint32 r)
-					 		/* The to-be-freed zone */
-		 					/* Size of block */
 {
-	/* Put the memory block starting at 'zone' into the free_list.
-	 * Note that zone points at the beginning of the memory block
-	 * (beginning of the header) and not at an object data area.
-	 */
 	RT_GET_CONTEXT
 	register2 uint32 i;					/* Index in hlist */
 #ifndef EIF_MALLOC_OPTIMIZATION
@@ -2481,13 +2630,18 @@ rt_private void xfreeblock(union overhead *zone, uint32 r)
 }
 #endif
 
-rt_public EIF_REFERENCE crealloc(EIF_REFERENCE ptr, unsigned int nbytes)
+/*
+doc:	<routine name="crealloc" return_type="EIF_REFERENCE" export="shared">
+doc:		<summary>This is the C interface with xrealloc, which is fully compatible with the realloc() function in the standard C library (excepted that no storage compaction is done). The function simply calls xrealloc with garbage collection turned on.</summary>
+doc:		<param name="ptr" type="EIF_REFERENCE">Address that will be reallocated.</param>
+doc:		<param name="nbytes" type="unsigned int">New size in bytes of `ptr'.</param>
+doc:		<return>New block of memory of size `nbytes', otherwise null pointer or throw an exception.</return>
+doc:		<exception>"No more memory" exception</exception>
+doc:	</routine>
+*/
+
+rt_shared EIF_REFERENCE crealloc(EIF_REFERENCE ptr, unsigned int nbytes)
 {
-	/* This is the C interface with xrealloc, which is fully compatible with
-	 * the realloc() function in the standard C library (excepted that no
-	 * storage compaction is done). The function simply calls xrealloc with
-	 * garbage collection turned on.
-	 */
 	
 #ifdef ISE_GC
 	return xrealloc(ptr, nbytes, GC_ON);
@@ -2496,16 +2650,19 @@ rt_public EIF_REFERENCE crealloc(EIF_REFERENCE ptr, unsigned int nbytes)
 #endif
 }
 
-rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned int nbytes, int gc_flag)
+/*
+doc:	<routine name="xrealloc" return_type="EIF_REFERENCE" export="shared">
+doc:		<summary>Modify the size of the block pointed to by 'ptr' to 'nbytes'. The 'storage compaction' mechanism mentionned in the old malloc man page is not implemented (i.e the 'ptr' block has to be an allocated block, and not a freed block). If 'gc_flag' is GC_ON, then the GC is called when mallocing a new block. If GC_FREE is activated, then no free is performed: the GC will take care of the object (this is crucial when reallocing an object which is part of the moved set).</summary>
+doc:		<param name="ptr" type="EIF_REFERENCE">Address that will be reallocated.</param>
+doc:		<param name="nbytes" type="unsigned int">New size in bytes of `ptr'.</param>
+doc:		<param name="gc_flag" type="nbytes">New size in bytes of `ptr'.</param>
+doc:		<return>New block of memory of size `nbytes', otherwise null pointer or throw an exception.</return>
+doc:		<exception>"No more memory" exception</exception>
+doc:	</routine>
+*/
+
+rt_shared EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned int nbytes, int gc_flag)
 {
-	/* Modify the size of the block pointed to by 'ptr' to 'nbytes'.
-	 * The 'storage compaction' mechanism mentionned in the old malloc man
-	 * page is not implemented (i.e the 'ptr' block has to be an allocated
-	 * block, and not a freed block). If 'gc_flag' is GC_ON, then the GC is
-	 * called when mallocing a new block. If GC_FREE is activated, then no
-	 * free is performed: the GC will take care of the object (this is crucial
-	 * when reallocing an object which is part of the moved set).
-	 */
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
 #ifdef ISE_GC
@@ -2742,14 +2899,17 @@ rt_public EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned i
 }
 
 #ifdef ISE_GC
+/*
+doc:	<routine name="emallinfo" return_type="struct emallinfo *" export="public">
+doc:		<summary>Return the pointer to the static data held in m_data. The user must not corrupt these data. It will be harmless to malloc, however, but may fool the garbage collector. Type selects the kind of information wanted.
+doc:		<param name="type" type="int">Type of memory (M_C or M_EIFFEL or M_ALL) to get info from.</param>
+doc:		<return>Pointer to an internal structure used by `malloc.c'.</return>
+doc:		<thread_safety>Not Safe</thread_safety>
+doc:	</routine>
+*/
+
 rt_public struct emallinfo *meminfo(int type)
 {
-	/* Return the pointer to the static data held in m_data.
-	 * The user must not corrupt these data. It will be harmless
-	 * to malloc, however, but may fool the garbage collector.
-	 * Type selects the kind of information wanted.
-	 */
-
 	switch(type) {
 	case M_C:
 		return &c_data;		/* Pointer to static data */
@@ -2760,19 +2920,17 @@ rt_public struct emallinfo *meminfo(int type)
 	return &m_data;		/* Pointer to static data */
 }
 
+/*
+doc:	<routine name="eif_rt_split_block" return_type="int" export="shared">
+doc:		<summary>The block 'selected' may be too big to hold only 'nbytes', so it is split and the new block is put in the free list. At the end, 'selected' will hold only 'nbytes'. From the accounting point's of vue, only the overhead is incremented (the split block is assumed to be already free). The function returns -1 if no split occurred, or the length of the split block otherwise (which means it must fit in a signed int, argh!!--RAM). Caller is responsible for issuing a SIGBLOCK before any call to this critical routine.</summary>
+doc:		<param name="selected" type="union overhead *">Selected block from which we try to extract a block of `nbytes' bytes.</param>
+doc:		<param name="nbytes" type="uint32">Size of block we should retur</param>
+doc:		<return>Address of location of object of size `nbytes' in `selected'.</return>
+doc:	</routine>
+*/
+
 rt_shared int eif_rt_split_block(register union overhead *selected, register uint32 nbytes)
 {
-	/* The block 'selected' may be too big to hold only 'nbytes',
-	 * so it is split and the new block is put in the free list.
-	 * At the end, 'selected' will hold only 'nbytes'.
-	 * From the accounting point's of vue, only the overhead is
-	 * incremented (the split block is assumed to be already free).
-	 * The function returns -1 if no split occurred, or the length of
-	 * the split block otherwise (which means it must fit in a signed
-	 * int, argh!!--RAM).
-	 * Caller is responsible for issuing a SIGBLOCK before any call to
-	 * this critical routine.
-	 */
 	register5 uint32 flags;				/* Flags of original block */
 	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in free list */
@@ -2830,18 +2988,16 @@ rt_shared int eif_rt_split_block(register union overhead *selected, register uin
 	return r & B_SIZE;			/* Length of split block */
 }
 
+/*
+doc:	<routine name="coalesc" return_type="int" export="private">
+doc:		<summary>Given a zone to be freed, test whether we can do some coalescing with the next block, if it happens to be free. Overhead accounting is updated. It is up to the caller to put the coalesced block back to the free list (in case this is called by a free operation). It is up to the caller to issue a SIGBLOCK prior any call to this critical routine.</summary>
+doc:		<param name="zone" type="union overhead *">Starting block from which we are trying to coalesc next block to it, if next block is free.</param>
+doc:		<return>Number of new free bytes available (i.e. the size of the coalesced block plus the overhead) or 0 if no coalescing occurred.</return>
+doc:	</routine>
+*/
+
 rt_private int coalesc(register union overhead *zone)
 {
-	/* Given a zone to be freed, test whether we can do some coalescing
-	 * with the next block, if it happens to be free. Overhead accounting
-	 * is updated. It is up to the caller to put the coalesced block
-	 * back to the free list (in case this is called by a free operation).
-	 * The function returns the number of new free bytes available (i.e.
-	 * the size of the coalesced block plus the overhead) or 0 if no
-	 * coalescing occurred.
-	 * It is up to the caller to issue a SIGBLOCK prior any call to this
-	 * critical routine.
-	 */
 	register1 uint32 r;					/* For shifting purposes */
 	register2 uint32 i;					/* Index in hlist */
 	register3 union overhead *next;		/* Pointer to next block */
@@ -2897,18 +3053,16 @@ rt_private int coalesc(register union overhead *zone)
 	return (i & B_SIZE) + OVERHEAD;		/* Number of coalesced free bytes */
 }
 		
+/*
+doc:	<routine name="connect_free_list" export="private">
+doc:		<summary>The block 'zone' is inserted in the free list #i. This list is sorted by increasing addresses. Although this costs in case of insertions, it can drastically improve performances, because as the malloc routine uses a frist fit in the free list, the objects won't get sparsed in the whole memory. This should limit swapping overhead and enable the process to give memory back to the kernel. It is up to the caller to ensure signal exceptions are blocked when entering in this critical routine.</summary>
+doc:		<param name="zone" type="union overhead *">Block to insert in free list #`i'.</param>
+doc:		<param name="i" type="uint32">Free list index to insert `zone'.</param>
+doc:	</routine>
+*/
+
 rt_private void connect_free_list(register union overhead *zone, register uint32 i)
 {
-	/* The block 'zone' is inserted in the free list #i. This list
-	 * is sorted by increasing addresses. Although this costs in case
-	 * of insertions, it can drastically improve performances, because
-	 * as the malloc routine uses a frist fit in the free list, the
-	 * objects won't get sparsed in the whole memory. This should limit
-	 * swapping overhead and enable the process to give memory back to
-	 * the kernel.
-	 * It is up to the caller to ensure signal exceptions are blocked when
-	 * entering in this critical routine.
-	 */
 	register1 union overhead *last;		/* Pointer to last block */
 	register2 union overhead *p;		/* To walk along free list */
 	register4 union overhead **hlist;	/* The free list */
@@ -2979,15 +3133,16 @@ rt_private void connect_free_list(register union overhead *zone, register uint32
 	blist[i] = zone;						/* Record last insertion point */
 }
 
+/*
+doc:	<routine name="disconnect_free_list" export="private">
+doc:		<summary>Removes block pointed to by 'next' from free list #i. Note that we do not take advantage of the sorting of the free list, because the block has to be found. If it is not, then the free list has been corrupted. It is up to the caller to ensure signal exceptions are blocked when entering in this critical routine.</summary>
+doc:		<param name="next" type="union overhead *">Block to remove from free list #`i'.</param>
+doc:		<param name="i" type="uint32">Free list index to remove `next'.</param>
+doc:	</routine>
+*/
+
 rt_private void disconnect_free_list(register union overhead *next, register uint32 i)
 {
-	/* Removes block pointed to by 'next' from free list #i.
-	 * Note that we do not take advantage of the sorting of the free list,
-	 * because the block has to be found. If it is not, then the free list
-	 * has been corrupted.
-	 * It is up to the caller to ensure signal exceptions are blocked when
-	 * entering in this critical routine.
-	 */
 	register3 union overhead *p;		/* To walk along free list */
 	register4 union overhead **hlist;	/* The free list */
 	register5 union overhead **blist;	/* Associated buffer cache */
@@ -3039,28 +3194,37 @@ rt_private void disconnect_free_list(register union overhead *next, register uin
 	}
 }
 
+/*
+doc:	<routine name="lxtract" export="shared">
+doc:		<summary>Remove 'next' from the free list. This routine is used by the garbage collector, and thus it is visible from the outside world, hence the cryptic name for portability--RAM. Note that the garbage collector performs with signal exceptions blocked.</summary>
+doc:		<param name="next" type="union overhead *">Block to remove from free list.</param>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:	</routine>
+*/
+
 rt_shared void lxtract(union overhead *next)
 {
-	/* Remove 'next' from the free list. This routine is used by the
-	 * garbage collector, and thus it is visible from the outside world,
-	 * hence the cryptic name for portability--RAM.
-	 * Note that the garbage collector performs with signal exceptions blocked.
-	 */
-
 	register1 uint32 r;				/* For shifting purposes */
 	register2 uint32 i;				/* Index in H-list (free list) */
 
 	r = next->ov_size & B_SIZE;		/* Pure size of block */
-	i = HLIST_INDEX(r);							/* Compute hash index */
+	i = HLIST_INDEX(r);				/* Compute hash index */
 	disconnect_free_list(next, i);	/* Remove from free list */
 }
 
+/*
+doc:	<routine name="chunk_coalesc" return_type="int" export="shared">
+doc:		<summary>Do block coalescing inside the chunk wherever possible.</summary>
+doc:		<param name="c" type="struct chunk *">Block to remove from free list.</param>
+doc:		<return>Size of the largest coalesced block or 0 if no coalescing occurred.</return>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:	</routine>
+*/
+
 rt_shared int chunk_coalesc(struct chunk *c)
 {
-	/* Do bloc coalescing inside the chunk wherever possible. The function
-	 * returns the size of the largest coalesced block or 0 if no coalescing
-	 * occurred.
-	 */
 	RT_GET_CONTEXT
 	register3 union overhead *zone;	/* Malloc info zone */
 	register4 uint32 flags;			/* Malloc flags */
@@ -3142,13 +3306,18 @@ rt_shared int chunk_coalesc(struct chunk *c)
 	return max_size;		/* Maximum size of coalesced block or 0 */
 }
 
+/*
+doc:	<routine name="full_coalesc" return_type="int" export="shared">
+doc:		<summary>Walks through the designated chunk list (type 'chunk_type') and do block coalescing wherever possible.</summary>
+doc:		<param name="chunk_type" type="int">Type of chunk on which we perform coalescing (C_T, EIFFEL_T or ALL_T).</param>
+doc:		<return>Size of the largest block made available by coalescing, or 0 if no coalescing ever occurred.</return>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if called by thread which requested synchronization when GC is synchronized.</synchronization>
+doc:	</routine>
+*/
+
 rt_shared int full_coalesc(int chunk_type)
 {
-	/* Walks through the designated chunk list (type 'chunk_type') and
-	 * do block coalescing wherever possible. The function returns the
-	 * size of the largest block made available by coalescing, or 0 if
-	 * no coalescing ever occurred.
-	 */
 	register1 struct chunk *c;		/* To walk along chunk list */
 	register2 int max_size = 0;		/* Size of biggest coalesced block */
 	register3 int max_coalesced;	/* Size of coalesced block in a chunk */
@@ -3197,11 +3366,16 @@ rt_shared int full_coalesc(int chunk_type)
 	return max_size;		/* Maximum size of coalesced block or 0 */
 }
 
+/*
+doc:	<routine name="malloc_from_zone" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Try to allocate 'nbytes' in the scavenge zone. Returns a pointer to the object's location or a null pointer if an error occurred.</summary>
+doc:		<param name="nbytes" type="unsigned int">Size in bytes of zone to allocated.</param>
+doc:		<return>Address of a block in scavenge zone if successful, null pointer otherwise.</return>
+doc:	</routine>
+*/
+
 rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 {
-	/* Try to allocate 'nbytes' in the scavenge zone. Returns a pointer to the
-	 * object's location or a null pointer if an error occurred.
-	 */
 	RT_GET_CONTEXT
 	EIF_REFERENCE object;			/* Address of the allocated object */
 	uint32 mod;				/* Remainder for padding */
@@ -3305,13 +3479,15 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	return (EIF_REFERENCE) (((union overhead *) object ) + 1);	/* Free data space */
 }
 
+/*
+doc:	<routine name="create_scavenge_zones" return_type="int" export="private">
+doc:		<summary>Attempt creation of two scavenge zones: the 'from' zone and the 'to' zone. The routine updates the structures accordingly..</summary>
+doc:		<return>0 if the two zones are created, -1 otherwise.</return>
+doc:	</routine>
+*/
+
 rt_private int create_scavenge_zones(void)
 {
-	/* Attempt creation of two scavenge zones: the 'from' zone and the 'to'
-	 * zone. The routine updates the structures accordingly. Either the two
-	 * zones are created and the routine returns 0 or no zone is allocated at
-	 * all and -1 is returned.
-	 */
 	RT_GET_CONTEXT
 	EIF_REFERENCE from;		/* From zone */
 	EIF_REFERENCE to;		/* To zone */
@@ -3349,14 +3525,15 @@ rt_private int create_scavenge_zones(void)
 	return 0;					/* Allocation was ok */
 }
 
+/*
+doc:	<routine name="explode_scavenge_zones" export="private">
+doc:		<summary>Take a scavenge zone and destroy it letting all the objects held in it go back under the free-list management scheme. The memory accounting has to be done exactely: all the zone was handled as being in use for the statistics, but now we have to account for the overhead used by each stored object...</summary>
+doc:		<param name="sc" type="struct sc_zone *">Zone to be freed. Usually the from zone of the 2 scavenge zones.</param>
+doc:	</routine>
+*/
+
 rt_private void explode_scavenge_zone(struct sc_zone *sc)
 {
-	/* Take a scavenge zone and destroy it letting all the objects held
-	 * in it go back under the free-list management scheme. The memory
-	 * accounting has to be done exactely: all the zone was handled as being
-	 * in use for the statistics, but now we have to account for the overhead
-	 * used by each stored object...
-	 */
 	RT_GET_CONTEXT
 	register1 uint32 flags;				/* Store some flags */
 	register2 union overhead *zone;		/* Malloc info zone */
@@ -3465,10 +3642,14 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 	SIGRESUME;							/* End of critical section */
 }
 
-rt_public void sc_stop(void)
-{
-	/* Stop the scavenging process by freeing the zones */
+/*
+doc:	<routine name="sc_stop" export="shared">
+doc:		<summary>Stop the scavenging process by freeing the zones.</summary>
+doc:	</routine>
+*/
 
+rt_shared void sc_stop(void)
+{
 	gen_scavenge = GS_OFF;				/* Generation scavenging is off */
 	eif_rt_xfree(sc_to.sc_arena);				/* This one is completely eif_free */
 	explode_scavenge_zone(&sc_from);	/* While this one has to be exploded */
@@ -3477,15 +3658,17 @@ rt_public void sc_stop(void)
 #endif
 
 /*
- * Set an Eiffel object for public use.
- */
+doc:	<routine name="eif_set" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Set an Eiffel object for use: reset the zone with zeros, and try to record the object inside the moved set, if necessary. The function returns the address of the object (it may move if a GC cycle is raised).</summary>
+doc:		<param name="object" type="EIF_REFERENCE">Object to setup.</param>
+doc:		<param name="dftype" type="uint32">Full dynamic type of object to setup.</param>
+doc:		<param name="dtype" type="uint32">Dynamic type of object to setup.</param>
+doc:		<return>New value of `object' as this routine can trigger a GC cycle</return>
+doc:	</routine>
+*/
 
 rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dtype)
 {
-	/* Set an Eiffel object for use: reset the zone with zeros, and try to
-	 * record the object inside the moved set, if necessary. The function
-	 * returns the address of the object (it may move if a GC cycle is raised).
-	 */
 	RT_GET_CONTEXT
 	register3 union overhead *zone = HEADER(object);		/* Object's header */
 	register4 void *(*init)(EIF_REFERENCE, EIF_REFERENCE);	/* The optional initialization */
@@ -3555,16 +3738,17 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dty
 	return object;
 }
 
+/*
+doc:	<routine name="eif_spset" return_type="EIF_REFERENCE" export="private">
+doc:		<summary>Set the special Eiffel object for use: reset the zone with zeros. If special object not allocated in scavenge zone, we also try to remember the object (has to be in the new generation outside scavenge zone). The dynamic type of the special object is left blank. It is up to the caller of spmalloc() to set a proper dynamic type. The function returns the location of the object (it may move if a GC cycle has been raised to remember the object).</summary>
+doc:		<param name="object" type="EIF_REFERENCE">Special object to setup.</param>
+doc:		<param name="in_scavenge" type="EIF_BOOLEAN">Is new special object in scavenge zone?</param>
+doc:		<return>New value of `object' as this routine can trigger a GC cycle</return>
+doc:	</routine>
+*/
+
 rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge)
 {
-	/* Set the special Eiffel object for use: reset the zone with zeros.
-	 * If special object not allocated in scavenge zone, we also try to
-	 * remember the object (has to be in the new generation outside
-	 * scavenge zone). The dynamic type of the special object is left blank. It
-	 * is up to the caller of spmalloc() to set a proper dynamic type.
-	 * The function returns the location of the object (it may move if a GC
-	 * cycle has been raised to remember the object).
-	 */
 	RT_GET_CONTEXT
 	register3 union overhead *zone = HEADER(object);		/* Malloc info zone */
 
@@ -3613,8 +3797,14 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 }
 
 #ifdef ISE_GC
+/*
+doc:	<routine name="set_memory_object" export="private">
+doc:		<summary>Add `object' into `memory_set'.</summary>
+doc:		<param name="object" type="EIF_REFERENCE">Object to add in `memory_set'.</param>
+doc:	</routine>
+*/
+
 rt_private void set_memory_object (EIF_REFERENCE object)
-	/* Add `object' into `memory_set'. */
 {
 	RT_GET_CONTEXT
 	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
@@ -3634,13 +3824,16 @@ rt_private void set_memory_object (EIF_REFERENCE object)
 	}
 }
 	
-rt_private int32 compute_hlist_index (int32 size) {
-	/* Quickly compute the index in the hlist array where we have a
-	 * chance to find the right block. The idea is to do a right
-	 * logical shift until the register is zero. The number of shifts
-	 * done is the base 2 logarithm of 'nbytes'.
-	 */
+/*
+doc:	<routine name="compute_hlist_index" return_type="int32" export="private">
+doc:		<summary>Quickly compute the index in the hlist array where we have a chance to find the right block. The idea is to do a right logical shift until the register is zero. The number of shifts done is the base 2 logarithm of 'nbytes'.</summary>
+doc:		<param name="size" type="int32">Size of block from which we want to find its associated index in free list.</param>
+doc:		<return>Index of free list where block of size `size' will be found.</return>
+doc:	</routine>
+*/
 
+rt_private int32 compute_hlist_index (int32 size)
+{
 	int32 i = HLIST_INDEX_LIMIT;
 	int32 n = size;
 

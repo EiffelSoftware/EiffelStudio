@@ -15,6 +15,8 @@ feature {NONE} -- Constants for FTP
 
 	Ftp_password_command: STRING is "PASS"
 
+	Ftp_text_mode_command: STRING is "TYPE A"
+
 	Ftp_binary_mode_command: STRING is "TYPE I"
 
 	Ftp_port_command: STRING is "PORT"

@@ -18,7 +18,7 @@ doc:<file name="cecil.c" header="eif_cecil.h" version="$Id$" summary="C-Eiffel C
 #include "eif_portable.h"
 #include "rt_malloc.h"
 #include "eif_garcol.h"
-#include "eif_cecil.h"
+#include "rt_cecil.h"
 #include "eif_hector.h"
 #include "rt_struct.h"
 #include "eif_tools.h"
@@ -42,8 +42,8 @@ doc:<file name="cecil.c" header="eif_cecil.h" version="$Id$" summary="C-Eiffel C
 doc:	<attribute name="eif_visible_is_off" return_type="char" export="shared">
 doc:		<summary>If set to True, we will not throw an exception if feature cannot be found or is not visible.</summary>
 doc:		<access>Read/Write</access>
-doc:		<thread_safety>Safe as access is done through `cecil_lock'.</thread_safety>
-doc:		<synchronization>cecil_lock</synchronization>
+doc:		<thread_safety>Safe as access is done through `eif_cecil_mutex'.</thread_safety>
+doc:		<synchronization>eif_cecil_mutex</synchronization>
 doc:	</attribute>
 */
 rt_shared unsigned char eif_visible_is_off = (unsigned char) 1;
@@ -62,18 +62,16 @@ rt_private void *eif_default_pointer = NULL;
  */
 #ifdef EIF_THREADS
 /*
-doc:	<attribute name="cecil_lock" return_type="EIF_LW_MUTEX_TYPE *" export="private">
+doc:	<attribute name="eif_cecil_mutex" return_type="EIF_LW_MUTEX_TYPE *" export="shared">
 doc:		<summary>To protect multithreaded access to `eif_visible_is_off'.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:	</attribute>
 */
-rt_private EIF_LW_MUTEX_TYPE *cecil_lock = (EIF_LW_MUTEX_TYPE *) 0;
+rt_shared EIF_LW_MUTEX_TYPE *eif_cecil_mutex = (EIF_LW_MUTEX_TYPE *) 0;
 
 rt_shared  void eif_cecil_init ();
-#define EIF_CECIL_LOCK	\
-	EIF_LW_MUTEX_LOCK (cecil_lock, "Couldn't lock cecil mutex");
-#define EIF_CECIL_UNLOCK	\
-	EIF_LW_MUTEX_UNLOCK (cecil_lock, "Couldn't unlock cecil mutex");
+#define EIF_CECIL_LOCK EIF_LW_MUTEX_LOCK (eif_cecil_mutex, "Couldn't lock cecil mutex");
+#define EIF_CECIL_UNLOCK EIF_LW_MUTEX_UNLOCK (eif_cecil_mutex, "Couldn't unlock cecil mutex");
 
 #else	/* EIF_THREADS */
 
@@ -101,7 +99,7 @@ rt_public void eifvisex (void) {
     /* Enable the visible exception */
 
 #ifdef EIF_THREADS
-	REQUIRE ("Cecil mutex created", cecil_lock);
+	REQUIRE ("Cecil mutex created", eif_cecil_mutex);
 #endif
 	EIF_CECIL_LOCK;
     eif_visible_is_off = (unsigned char) 0;
@@ -112,7 +110,7 @@ rt_public void eifuvisex (void)  {
     /* Disable visible exception */
 
 #ifdef EIF_THREADS
-	REQUIRE ("Cecil mutex created", cecil_lock);
+	REQUIRE ("Cecil mutex created", eif_cecil_mutex);
 #endif
 	EIF_CECIL_LOCK;
     eif_visible_is_off = (unsigned char) 1;
@@ -625,22 +623,6 @@ rt_shared char *ct_value(struct ctable *ct, register char *key)
 /*----------------------------------------*/
 
 #ifdef EIF_THREADS
-rt_shared void eif_cecil_init () {
-	/* Initialize cecil lock for concurrent access. */
-	REQUIRE ("Root thread", eif_thr_is_root ());
-	REQUIRE ("Cecil mutex not created", !cecil_lock);
-
-	EIF_LW_MUTEX_CREATE(cecil_lock, -1, "Couldn't create cecil lock");
-}
-
-rt_shared void eif_cecil_reclaim () {
-	/* Reclaim cecil lock. */
-	REQUIRE ("Root thread", eif_thr_is_root ());
-	REQUIRE ("Cecil mutex created", cecil_lock);
-
-	EIF_LW_MUTEX_DESTROY(cecil_lock, "Couldn't destroy cecil mutex");
-}
-
 rt_shared void eif_set_thr_context () {
 	/* Initialize thread context for non Eiffel Threads.
      * There is not much to initialize, but this is necessary

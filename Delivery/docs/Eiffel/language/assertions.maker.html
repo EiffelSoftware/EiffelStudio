@@ -1,0 +1,430 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>An Invitation to Eiffel: Assertions</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css">
+</head>
+
+<body>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
+      <TR>
+              <TD><IMG SRC="../../images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
+                      BORDER="0"><IMG SRC="../../images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
+                      BORDER="0"></TD>
+      </TR>
+</TABLE>
+
+<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<tr><td>
+
+<H1><A HREF="exceptions.maker.html"><IMG SRC="fm2html-next.gif" ALT="Next page" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" ALT="Table of Contents" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="types.maker.html"><IMG SRC="fm2html-previous.gif" ALT="Previous section" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A NAME="REF98317"></A>AN INVITATION TO EIFFEL </H1>
+
+<P>
+<HR><!-- This file was created with the fm2html filter.
+The filter is copyright Norwegian Telecom Research and
+was programmed by Jon Stephenson von Tetzchner. -->
+
+<H3><A NAME="HDR0"></A>5 ASSERTIONS </H3>
+
+<P>If classes are to deserve their definition as abstract data type implementations,
+they must be known not just by the available operations, but also by the
+formal properties of these operations, which did not appear in the above
+example. </P>
+
+<H4><A NAME="HDR1"></A>5.1 The role of assertions</H4>
+
+<P>Eiffel encourages software developers to express formal properties of
+classes by writing <B>assertions</B>, which may in particular appear in
+the following roles: </P>
+
+<UL>
+<LI>Routine <B>preconditions</B> express the requirements that clients
+must satisfy whenever they call a routine. For example the designer of
+<I>ACCOUNT</I> may wish to permit a withdrawal operation only if it keeps
+the account's balance at or above the minimum. Preconditions are introduced
+by the keyword <B><FONT COLOR="#0000FF">require</FONT></B>. <BR>
+<BR>
+</LI>
+
+<LI>Routine <B>postconditions</B>, introduced by the keyword <B><FONT COLOR="#0000FF">ensure</FONT></B>,
+express conditions that the routine (the supplier) guarantees on return,
+if the precondition was satisfied on entry.<BR>
+<BR>
+</LI>
+
+<LI>A class <B>invariant</B> must be satisfied by every instance of the
+class whenever the instance is externally accessible: after creation, and
+after any call to an exported routine of the class. The invariant appears
+in a clause introduced by the keyword <B><FONT COLOR="#0000FF">invariant</FONT></B>,
+and represents a general consistency constraint imposed on all routines
+of the class. <BR>
+</LI>
+</UL>
+
+<P>With appropriate assertions, the <I>ACCOUNT</I> class becomes: </P>
+
+<UL>
+<DL>
+<DT><B><FONT COLOR="#0000FF">class </FONT></B><I>ACCOUNT </I><B><FONT COLOR="#0000FF">creation
+</FONT></B><BR>
+<BR>
+</DT>
+
+<DD><I>make </I><BR>
+</DD>
+
+<DT><B><FONT COLOR="#0000FF">feature </FONT></B><BR>
+<BR>
+</DT>
+
+<DD><FONT COLOR="#FF0000"><I>... </I>Attributes as before: </FONT><I>balance,
+minimum_balance, owner, open .<FONT COLOR="#FF0000">.. </FONT></I><BR>
+<BR>
+</DD>
+
+<DD><I>deposit (sum: INTEGER) </I><B><FONT COLOR="#0000FF">is </FONT></B></DD>
+
+<DL>
+<DL>
+<DL>
+<DT><FONT COLOR="#FF0000"><B><I>-- </I></B>Deposit </FONT><I>sum</I><FONT COLOR="#FF0000">
+into the account.<I> </I></FONT></DT>
+</DL>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">require </FONT></B></DD>
+
+<DL>
+<DD><I>sum &gt;= 0 </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">do </FONT></B></DD>
+
+<DL>
+<DD><I>add (sum) </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">ensure </FONT></B></DD>
+
+<DL>
+<DD><I>balance = <B><FONT COLOR="#0000FF">old</FONT></B> balance + sum
+</I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">end</FONT></B><I>; </I></DD>
+</DL>
+
+<P><BR>
+</P>
+
+<DD><I>withdraw (sum: INTEGER) </I><B><FONT COLOR="#0000FF">is<I> </I></FONT></B></DD>
+
+<DL>
+<DL>
+<DL>
+<DT><FONT COLOR="#FF0000"><I>-- </I>Withdraw</FONT> <I>sum</I> <FONT COLOR="#FF0000">from
+the account.<I> </I></FONT></DT>
+</DL>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">require </FONT></B></DD>
+
+<DL>
+<DD><I>sum &gt;= 0 </I></DD>
+
+<DD><I>sum &lt;= balance - minimum_balance </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">do </FONT></B></DD>
+
+<DL>
+<DD><I>add (-sum) </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">ensure </FONT></B></DD>
+
+<DL>
+<DD><I>balance = </I><B><FONT COLOR="#0000FF">old </FONT></B><I>balance
+- sum </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">end</FONT></B><I>; </I><BR>
+<BR>
+<BR>
+</DD>
+</DL>
+
+<DD><I>may_withdraw ... </I>-- As before<I> </I><BR>
+<BR>
+</DD>
+
+<DL><I></I></DL>
+
+<DT><B><FONT COLOR="#0000FF">feature </FONT></B><I>{NONE} </I><BR>
+<BR>
+</DT>
+
+<DL>
+<DD><I>add<FONT COLOR="#FF0000"> ... </FONT></I><FONT COLOR="#FF0000">--
+As before<I> </I></FONT><BR>
+<BR>
+</DD>
+
+<DD><I>make (initial: INTEGER) <B><FONT COLOR="#0000FF">is </FONT></B></I></DD>
+
+<DL>
+<DL>
+<DL>
+<DT><FONT COLOR="#FF0000"><I>-- </I>Initialize account with balance</FONT>
+<I>initial</I><FONT COLOR="#FF0000">.<I> </I></FONT></DT>
+</DL>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">require </FONT></B></DD>
+
+<DL>
+<DD><I>initial &gt;= minimum_balance </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">do </FONT></B></DD>
+
+<DL>
+<DD><I>balance := initial </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">end </FONT></B></DD>
+</DL>
+
+<DT><B><FONT COLOR="#0000FF">invariant </FONT></B><BR>
+<BR>
+</DT>
+
+<DL>
+<DD><I>balance &gt;= minimum_balance</I></DD>
+<I></I></DL>
+
+<DT><B><FONT COLOR="#0000FF">end </FONT></B><I>-- </I>class<I> ACCOUNT
+</I></DT>
+</DL>
+</DL>
+</UL>
+
+<P>The notation <B><FONT COLOR="#0000FF">old</FONT> </B><I>attribute_name</I>
+may only be used in a routine postcondition. It denotes the value the attribute
+had on routine entry. </P>
+
+<H4><A NAME="HDR2"></A>5.2 Creation procedures</H4>
+
+<P>In its last version above, the class now includes a creation procedure,
+<I>make</I>. With the first version of <I>ACCOUNT</I>, clients used creation
+instructions such as !! <I>acc1</I> to create accounts; but then the default
+initialization, setting balance to zero, violated the invariant. By having
+one or more creation procedures, listed in the <B><I><FONT COLOR="#0000FF">creation</FONT></I></B>
+clause at the beginning of the class text, a class offers a way to override
+the default initializations. The effect of <BR>
+<BR>
+</P>
+
+<UL>
+<DL>
+<DT>!!<I> acc1.make (5_500)</I> </DT>
+</DL>
+</UL>
+
+<P>is to allocate the object (as with the default creation) and to call
+procedure <I>make</I> on this object, with the argument given. This call
+is correct since it satisfies the precondition; it will ensure the invariant.
+(The underscore _ in the integer constant <I>5_500</I> has no semantic
+effect. The general rule is that you can group digits by sets of three
+from the right to improve the readability of integer constants.) </P>
+
+<P>A procedure listed in the <B><FONT COLOR="#0000FF">creation </FONT></B>clause,
+such as <I>make</I>, otherwise enjoys the same properties as other routines,
+especially for calls. Here the procedure <I>make</I> is secret since it
+appears in a clause starting with <B><FONT COLOR="#0000FF">feature </FONT></B>{<I>NONE</I>};
+so it would be invalid for a client to include a call such as <BR>
+</P>
+
+<UL>
+<DL>
+<DT><I>acc.make (8_000)</I> </DT>
+</DL>
+</UL>
+
+<P>To make such a call valid, it would suffice to move the declaration
+of <I>make</I> to the first <B><FONT COLOR="#0000FF">feature </FONT></B>clause
+of class <I>ACCOUNT</I>, which carries no export restriction. Such a call
+does not create any new object, but simply resets the balance of a previously
+created account. </P>
+
+<H4><A NAME="HDR3"></A>5.3 Design by Contract</H4>
+
+<P>Syntactically, assertions are boolean expressions, with a few extensions
+such as the <B><FONT COLOR="#0000FF">old </FONT></B>notation. The semicolon
+(see the precondition to <I>withdraw</I>) is equivalent to an &quot;and&quot;,
+but permits individual identification of the components. </P>
+
+<P>Assertions play a central part in the Eiffel method for building reliable
+object-oriented software. They serve to make explicit the assumptions on
+which programmers rely when they write software elements that they believe
+are correct. Writing assertions, in particular preconditions and postconditions,
+amounts to spelling out the terms of the <B>contract</B> which governs
+the relationship between a routine and its callers. The precondition binds
+the callers; the postcondition binds the routine. </P>
+
+<P>The underlying theory of <I>Design by Contract</I>, the centerpiece
+of the Eiffel method, views software construction as based on contracts
+between clients (callers) and suppliers (routines), relying on mutual obligations
+and benefits made explicit by the assertions. </P>
+
+<H4><A NAME="REF82906"></A>5.4 The short form</H4>
+
+<P>Assertions are also an indispensable tool for the documentation of reusable
+software components: one cannot expect large-scale reuse without a precise
+documentation of what every component expects (precondition), what it guarantees
+in return (postcondition) and what general conditions it maintains (invariant).
+</P>
+
+<P>Documentation tools in EiffelBench use assertions to produce information
+for client programmers, describing classes in terms of observable behavior,
+not implementation. In particular the <B>short form</B> of a class, which
+serves as its interface documentation, is obtained from the full text by
+removing all non-exported features and all implementation information such
+as <B><I><FONT COLOR="#0000FF">do</FONT></I></B> clauses of routines, but
+keeping interface information and in particular assertions. Here is the
+short form of the above class: </P>
+
+<UL>
+<DL>
+<DT><B><FONT COLOR="#0000FF">class interface </FONT></B><I>ACCOUNT </I><B><FONT COLOR="#0000FF">creation
+</FONT></B><BR>
+<BR>
+</DT>
+
+<DD><I>make </I><BR>
+<BR>
+</DD>
+
+<DT><B><FONT COLOR="#0000FF">feature </FONT></B><BR>
+<BR>
+</DT>
+
+<DD><I>balance: INTEGER; </I><BR>
+</DD>
+
+<DD><I><FONT COLOR="#FF0000">... </FONT></I><BR>
+<BR>
+</DD>
+
+<DD><I>deposit (sum: INTEGER) </I><B><FONT COLOR="#0000FF">is </FONT></B></DD>
+
+<DL>
+<DL>
+<DL>
+<DT><FONT COLOR="#FF0000"><I>-- </I>Deposit </FONT><I>sum</I> i<FONT COLOR="#FF0000">nto
+the account.<I> </I></FONT></DT>
+</DL>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">require </FONT></B></DD>
+
+<DL>
+<DD><I>sum &gt;= 0 </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">ensure </FONT></B></DD>
+
+<DL>
+<DD><I>balance = </I><B><FONT COLOR="#0000FF">old </FONT></B><I>balance
++ sum </I><BR>
+<BR>
+</DD>
+</DL>
+</DL>
+
+<DD><I>withdraw (sum: INTEGER) </I><B><FONT COLOR="#0000FF">is </FONT></B></DD>
+
+<DL>
+<DL>
+<DL>
+<DT><FONT COLOR="#FF0000"><I>-- </I>Withdraw </FONT><I>sum</I> f<FONT COLOR="#FF0000">rom
+the account.<I> </I></FONT></DT>
+</DL>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">require </FONT></B></DD>
+
+<DL>
+<DD><I>sum &gt;= 0; </I></DD>
+
+<DD><I>sum &lt;= balance - minimum_balance </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">ensure </FONT></B></DD>
+
+<DL>
+<DD><I>balance = </I><B><FONT COLOR="#0000FF">old </FONT></B><I>balance
+- sum </I></DD>
+</DL>
+</DL>
+<I></I>
+<DD><I>may_withdraw ... </I></DD>
+<I></I></DL>
+
+<DT><B><FONT COLOR="#0000FF">end </FONT></B><I>--</I> class<I> ACCOUNT
+</I></DT>
+</UL>
+
+<P>This is not actual Eiffel, only documentation of Eiffel classes, hence
+the use of slightly different syntax to avoid any confusion (<B><FONT COLOR="#0000FF">class
+interface </FONT></B>rather than <B><FONT COLOR="#0000FF">class</FONT></B>).
+In accordance with observations made above, the output for <I>balance</I>
+would be the same if this feature were a function rather than an attribute.
+</P>
+
+<P>In the ISE Eiffel environment, the short form is produced by automatic
+tools described in the book <A HREF="/doc/documentation.html#aooe">An Object-Oriented
+Environment: Principles and Application</A>; you can get a flavor for them
+in the on-line Web <A HREF="/doc/manuals/bench/tour/index.html">``Guided
+Tour'' of EiffelBench </A>(see the <A HREF="/doc/manuals/bench/tour/page33.html#short">mention
+of the Short button</A> of the Class Tool of EiffelBench, as part of the
+<A HREF="/doc/manuals/bench/tour/page23.html">discussion of browsing facilities</A>).
+It serves as the primary form of class documentation. A variant, the flat-short
+form, takes inheritance into account by including inherited features along
+with those introduced in the class itself. </P>
+
+<P>It is also possible to evaluate assertions at run time, so as to uncover
+potential errors (&quot;bugs&quot;). The implementation provides several
+levels of assertion monitoring: preconditions only, postconditions etc.
+When monitoring is on, an assertion which evaluates to true has no further
+effect on the execution. An assertion which evaluates to false will trigger
+an exception, as described next; unless the software developer has written
+an appropriate exception handler, the exception will cause an error message
+and termination with a precise message and a call trace. </P>
+
+<P>This ability to check assertions provides a powerful testing and debugging
+mechanism, in particular because the classes of the EiffelBase Libraries,
+widely used in Eiffel software development, are protected by carefully
+written assertions. </P>
+
+<P>Run-time checking, however, is only one application of assertions, whose
+role as design and documentation aids, as part of the theory of Design
+by Contract, exerts a pervasive influence on the Eiffel style of software
+development. </P>
+
+<CENTER><P><A HREF="types.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A><A HREF="types.maker.html">Previous
+Chapter</A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A><A HREF="BOOK.maker.html">Table
+of Contents</A> <A HREF="exceptions.maker.html"><IMG SRC="fm2html-next.gif" HEIGHT=16 WIDTH=16></A><A HREF="exceptions.maker.html">Next
+</CENTER>
+
+</td></tr></table>
+</BODY>
+</HTML>

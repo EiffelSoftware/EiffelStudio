@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>An Invitation to Eiffel: Putting everything together</TITLE>
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.0Gold (X11; I; SunOS 4.1.3 sun4c) [Netscape]">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<P><LINK REV="made" HREF="mailto:webmaster@eiffel.com"></P>
+
+<H5><A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" ALT="Table ofContents" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="deferred.maker.html"><IMG SRC="fm2html-previous.gif" ALT="Previous section" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A NAME="REF98317"></A>AN INVITATION TO EIFFEL </H5>
+
+<P>
+<HR><!-- This file was created with the fm2html filter.
+The filter is copyright Norwegian Telecom Research and
+was programmed by Jon Stephenson von Tetzchner. --></P>
+
+<H3><A NAME="REF79353"></A>12 PUTTING A SYSTEM TOGETHER</H3>
+
+<P>This discussion has focused so far on individual classes. This is consistent
+with the Eiffel method, which emphasizes reusability and, as a consequence,
+the construction of autonomous modules. </P>
+
+<P>To execute software, you will need to group classes into executable
+compounds. Such a compound is called a <B>system</B> -- the Eiffel concept
+closest to the traditional notion of program -- and is defined by the following
+elements: </P>
+
+<UL>
+<LI>1 A set of classes, called a <B>universe</B>.<BR>
+<BR>
+</LI>
+
+<LI>2. The designation of one of these classes as the system's <B>root
+class</B>. <BR>
+<BR>
+</LI>
+
+<LI>3. The designation of one of the creation procedures of the root class
+as the <B>root creation procedure</B>. </LI>
+</UL>
+
+<P><BR>
+</P>
+
+<P>To execute such a system is to create one direct instance of the root
+class (the <B>root object</B> for the current execution), and to apply
+to it the root creation procedure -- which will usually create other objects,
+call other routines and so on. </P>
+
+<P>For simplicity and conformance to the method (which uses the class as
+the fundamental form of module) ISE Eiffel assumes that you store the text
+of each class in a separate file, called its class file. The default convention
+is to use file names of the form <I>name.<B>e</B></I>. For clarity, <I>name</I>
+should normally be the class name, but because DOS and Windows limit file
+names to 8 characters (plus the extension) you may have to truncate that
+name, for example by storing a class <I>BINARY_SEARCH_TREE</I> into a file
+called <I>binstree.<B>e</B></I>. </P>
+
+<P>The Eiffel method also suggests grouping related classes -- typically
+5 to 40 classes -- into collections called <B>clusters</B>. Since each
+class is stored in a file, it is natural to associate each cluster with
+a directory. </P>
+
+<P>These observations yield the mechanism that you will use to specify
+a universe (item 1 in the above list): you specify a list of directories,
+which yields a list of clusters; the classes contained in the <B><I>.e</I></B>
+files of the directories constitute the universe. </P>
+
+<P>The classes of a system will include its root class and all the classes
+that it <B>needs</B> directly or indirectly, where a class is said to need
+another if it is one of its heirs or clients. </P>
+
+<P>To specify a system you will need to state, in addition to the list
+of directories, the name of the root class (which must be one of the classes
+of the universe) and of the root creation procedure (which must be one
+of the creation procedures of the root class). </P>
+
+<P>Here is an example of such a system specification. This text is <B>not</B>
+written in Eiffel, although it definitely has an Eiffel-like flavor. It
+is called an Ace (for Assembly of Classes in Eiffel) and is written in
+a notation called Lace (Language for the Assembly of Classes in Eiffel).
+As elsewhere in this book, the vertical bar character | is a placeholder
+for the path separator used on your operating system; replace it by / on
+Unix, \ on Windows, or the equivalent convention for specifying path names
+on VMS and other platforms. </P>
+
+<UL>
+<DL>
+<DT><B><FONT COLOR="#0000FF">system </FONT></B></DT>
+
+<DD><I>example </I></DD>
+
+<DT><B><FONT COLOR="#0000FF">root </FONT></B></DT>
+
+<DD><I>CALCULATOR (my_cluster1): &quot;make&quot; </I></DD>
+
+<DT><B><FONT COLOR="#0000FF">default </FONT></B></DT>
+
+<DD><B><FONT COLOR="#0000FF">assertion </FONT></B><I>(</I><B><FONT COLOR="#0000FF">ensure</FONT></B><I>);
+</I></DD>
+
+<DD><B><FONT COLOR="#0000FF">precompiled </FONT></B><I>(&quot;$EIFFEL4|precomp|spec|$PLATFORM|base&quot;)
+</I></DD>
+
+<DT><B><FONT COLOR="#0000FF">cluster </FONT></B></DT>
+
+<DD><I>my_cluster1: &quot;mydir|project1|subdir&quot;; </I></DD>
+
+<DD><I>her_cluster2: &quot;herdir|project2|subdir1|subdir2&quot;</I></DD>
+
+<DT><B><FONT COLOR="#0000FF">end </FONT></B></DT>
+</DL>
+</UL>
+
+<P>You will need an Ace to compile any system, but except for advanced
+uses you do not have to learn the details of Lace, which are simple anyway:
+the installation contains plenty of example Aces that you will be able
+to copy and adapt for your own use. Look in particular in the <B><I>examples</I></B>
+subdirectory of the delivery directory. </P>
+
+<P>The subset of Lace illustrated by the above Ace suffices for basic uses
+of Eiffel. The <B><FONT COLOR="#0000FF">system </FONT></B>clause gives
+a name to the system, here <I>example</I>; the environment will use this
+name for the executable file generated as the result of compilation. The
+<B><FONT COLOR="#0000FF">root </FONT></B>clause gives the name of the root
+class, here <I>CALCULATOR</I>, and its creation procedure, here <I>make</I>;
+the name of the cluster to which <I>CALCULATOR</I> belongs, appearing in
+parentheses, is optional if no other cluster contains a class of that name.
+This Ace, by the way, is adapted from a small digital calculator system,
+one of the examples included in the delivery -- hence the name of the root
+class. </P>
+
+<P>The clusters themselves are specified in the last clause, <B><FONT COLOR="#0000FF">cluster</FONT></B>,
+here listing only two clusters, each with a cluster name (<I>my_cluster1</I>,
+<I>her_cluster2</I>) and the associated directory in double quotes. The
+cluster name, an identifier, will be used to refer to the cluster elsewhere
+in the Ace, for example here in the reference to <I>my_cluster1 </I>appearing
+in the <B><FONT COLOR="#0000FF">root </FONT></B>clause as seen above. A
+system may have as many clusters as desired. </P>
+
+<P>The <B><FONT COLOR="#0000FF">default </FONT></B>clause serves to specify
+compilation options. The above Ace relies on the EiffelBase library, precompiled;
+hence the <B><FONT COLOR="#0000FF">precompiled </FONT></B>clause, which
+specifies the standard directory for storing this library, as explained
+in more detail in the COMPILE.TXT on-line document). Because of the presence
+of EiffelBase, with its dozens of clusters, a system with such an Ace as
+above might actually be a significant system even with just two clusters
+of its own. </P>
+
+<P>The other compilation option specified above is<B><I> </I><FONT COLOR="#0000FF">assertion
+</FONT></B>(<B><FONT COLOR="#0000FF">ensure</FONT></B>) which states that
+the generated code must at run time monitor assertions up to the postcondition
+(<B><FONT COLOR="#0000FF">ensure</FONT></B>) level. The possible levels
+include <B><FONT COLOR="#0000FF">require </FONT></B>(preconditions only,
+the default), <B><FONT COLOR="#0000FF">ensure </FONT></B>and <B><FONT COLOR="#0000FF">invariant</FONT></B>;
+each of them implies the previous ones. </P>
+
+<P>You can also specify various levels of assertion monitoring separately
+for a cluster, or for a specific class. For details, see the full description
+of Lace: appendix D of the book <A HREF="/doc/documentation.html#etl">Eiffel:
+The Language </A></P>
+
+<P><A HREF="deferred.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A><A HREF="deferred.maker.html">Previous
+Chapter</A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A><A HREF="BOOK.maker.html">Table
+of Contents</A></P>
+
+<CENTER>
+<IMG SRC="rainban.gif" ALT="" HEIGHT=5 WIDTH=558> <!-- ICON BAR --><A HREF="/frames/topright.html"><IMG SRC="/icons/home.gif" ALT="Home" BORDER=0 HEIGHT=26 WIDTH=57></A>
+</CENTER>
+
+<CENTER><P><B><FONT SIZE=-1>- Copyright &copy; 985-1996 ISE Inc. <A HREF="mailto:info@eiffel.com">&lt;info@eiffel.com&gt;</A>
+- <BR>
+</FONT></B><FONT SIZE=-1>Please send comments to <A HREF="mailto:webmaster@eiffel.com">&lt;webmaster@eiffel.com&gt;</A>
+<BR>
+Last update: December 1996 </FONT><!-- END COPYRIGHT --><!-- END FOOTER --></P></CENTER>
+
+</BODY>
+</HTML>

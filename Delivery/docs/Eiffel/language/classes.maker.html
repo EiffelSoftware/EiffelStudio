@@ -1,0 +1,355 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>An Invitation to Eiffel: Classes</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css">
+</head>
+
+<body>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
+      <TR>
+              <TD><IMG SRC="../../images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
+                      BORDER="0"><IMG SRC="../../images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
+                      BORDER="0"></TD>
+      </TR>
+</TABLE>
+
+<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<tr><td>
+
+<P>&nbsp;</P>
+
+<H1><A HREF="types.maker.html"><IMG SRC="fm2html-next.gif" ALT="Next page" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" ALT="Table ofContents" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="design.maker.html"><IMG SRC="fm2html-previous.gif" ALT="Previous section" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A NAME="REF98317"></A>AN INVITATION TO EIFFEL </H1>
+
+<P>
+<HR><!-- This file was created with the fm2html filter.
+The filter is copyright Norwegian Telecom Research and
+was programmed by Jon Stephenson von Tetzchner. -->
+
+<H3><A NAME="HDR0"></A>3 CLASSES </H3>
+
+<P>A class, it was said above, is an implementation of an abstract data
+type. This means that it describes a set of run-time objects, characterized
+by the <B>features</B> (operations) applicable to them, and by the formal
+properties of these features. </P>
+
+<P>Such objects are called the <B>direct instances</B> of the class. Classes
+and objects should not be confused: &quot;class&quot; is a compile-time
+notion, whereas objects only exist at run time. This is similar to the
+difference that exists in classical programming between a program and one
+execution of that program, or between a type and a run-time value of that
+type. </P>
+
+<P>&quot;Object-Oriented&quot; is a misnomer; &quot;Class-Oriented Analysis,
+Design and Programming&quot; would be a more accurate description of the
+method. </P>
+
+<P>To see what a class looks like, let us look at a simple example, <I>ACCOUNT</I>,
+which describes bank accounts. But before exploring the class itself it
+is useful to study how it may be used by other classes, called its <B>clients</B>.
+</P>
+
+<P>A class <I>X</I> may become a client of <I>ACCOUNT</I> by declaring
+one or more <B>entities</B> of type <I>ACCOUNT</I>. Such a declaration
+is of the form: </P>
+
+<UL>
+<DL>
+<DT><I>acc</I>: <I>ACCOUNT</I> </DT>
+</DL>
+</UL>
+
+<P>The term &quot;entity&quot; generalizes the more common notion of &quot;variable&quot;.
+An entity declared of a reference type, such as <I>acc</I>, may at any
+time during execution become &quot;attached to&quot; an object; the type
+rules imply that this object must be a direct instance of <I>ACCOUNT</I>
+-- or, as seen below, of a &quot;descendant&quot; of that class. </P>
+
+<CENTER><P><IMG SRC="classes.maker.fig_1.gif" HEIGHT=133 WIDTH=379> </P></CENTER>
+
+<H3 ALIGN=CENTER><B><I>An entity and the attached object</I></B></H3>
+
+<P>An entity is said to be void if it is not attached to any object. By
+default, entities are void at initialization. To obtain objects at run-time,
+a routine <I>r</I> appearing in the client class <I>X</I> may use a <B>creation
+instruction</B> of the form </P>
+
+<UL>
+<DL>
+<DT>!! <I>acc</I> </DT>
+</DL>
+</UL>
+
+<P>which creates a new direct instance of <I>ACCOUNT</I>, attaches <I>acc</I>
+to that instance, and initializes all its fields to default values. A variant
+of this notation, studied below, makes it possible to override the default
+initializations. </P>
+
+<P>Once the client has attached <I>acc</I> to an object, it may call on
+this object the features defined in class <I>ACCOUNT</I>. Here is an extract
+with some feature calls using <I>acc</I> as their target: </P>
+
+<UL>
+<DL>
+<DT><I>acc.open </I>(<I>&quot;Jill&quot;)</I></DT>
+
+<DT><I>acc.deposit (5000) </I></DT>
+
+<DT><B><FONT COLOR="#0000FF">if </FONT></B><I>acc.may_withdraw (3000) </I><B><FONT COLOR="#0000FF">then
+</FONT></B></DT>
+
+<DD><I>acc.withdraw (3000); print(acc.balance) </I></DD>
+
+<DT><B><FONT COLOR="#0000FF">end </FONT></B></DT>
+</DL>
+</UL>
+
+<P>These feature calls use dot notation, of the form <I>target.feature_name</I>,
+possibly followed by a list of arguments in parentheses. Features are of
+two kinds: </P>
+
+<UL>
+<LI><B>Routines</B> (such as <I>open</I>, <I>deposit</I>, <I>may_withdraw</I>,
+<I>withdraw</I>) represent computations applicable to instances of the
+class. <BR>
+</LI>
+
+<LI><B>Attributes</B> represent data items associated with these instances.
+<BR>
+</LI>
+</UL>
+
+<P>Routines are further divided into <B>procedures</B> (commands, which
+do not return a value) and <B>functions</B> (queries, returning a value).
+Here <I>may_withdraw</I> is a function returning a boolean; the other three
+routines called are procedures. </P>
+
+<P>The above extract of class <I>X</I> does not show whether, in class
+<I>ACCOUNT</I>, <I>balance</I> is an attribute or a function without argument.
+This ambiguity is intentional. A client of <I>ACCOUNT</I>, such as <I>X</I>,
+does not need to know how a balance is obtained: the balance could be stored
+as attribute of every account object, or computed by a function from other
+attributes. Choosing between these techniques is the business of class
+<I>ACCOUNT</I>, not anybody else's. Because such implementation choices
+are often changed over the lifetime of a project, it is essential to protect
+clients against their effects. </P>
+
+<P>So much for how client classes will typically use <I>ACCOUNT. </I>Below
+is a first sketch of how class <I>ACCOUNT</I> itself might look. Line segments
+beginning with -- are comments. The class includes two <B><FONT COLOR="#0000FF">feature
+</FONT></B>clauses, introducing its features. The first begins with just
+the keyword <B><FONT COLOR="#0000FF">feature </FONT></B>, without further
+qualification; this means that the features declared in this clause are
+available (or &quot;exported&quot;) to all clients of the class. The second
+clause is introduced by<BR>
+</P>
+
+<DL>
+<DL>
+<P><B><FONT COLOR="#0000FF">feature </FONT></B>{<I>NONE</I>}<I> </I></P>
+</DL>
+</DL>
+
+<P>to indicate that the feature that follows, called <I>add</I>, is available
+to no client. What appears between the braces is a list of client classes
+to which the corresponding features are available; <I>NONE</I> is a special
+class of the Kernel Library, which has no instances, so that <I>add</I>
+is in effect a secret feature, available only locally to the other routines
+of class <I>ACCOUNT</I>. So in a client class such as <I>X</I>, the call
+<I>acc.add </I>(<I>-3000</I>) would be invalid. </P>
+
+<UL>
+<DL>
+<DT><B><FONT COLOR="#0000FF">class </FONT></B><I>ACCOUNT </I><B><FONT COLOR="#0000FF">feature
+</FONT></B><BR>
+<BR>
+</DT>
+
+<DD><I>balance: INTEGER </I><BR>
+</DD>
+
+<DD><I>owner: PERSON</I><BR>
+</DD>
+
+<DD><I>minimum_balance: INTEGER </I><B><FONT COLOR="#0000FF">is </FONT></B><I>1000</I><BR>
+<BR>
+</DD>
+
+<DD><I>open (who: PERSON) </I><B><FONT COLOR="#0000FF">is </FONT></B></DD>
+
+<DL>
+<DL>
+<DL>
+<DT><FONT COLOR="#FF0000">-- Assign the account to owner</FONT> <I>who<FONT COLOR="#FF0000">.
+</FONT></I></DT>
+</DL>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">do </FONT></B></DD>
+
+<DL>
+<DD><I>owner := who </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">end</FONT></B><BR>
+<BR>
+</DD>
+</DL>
+
+<DD><I>deposit (sum: INTEGER) <B>is </B></I></DD>
+
+<DL>
+<DL>
+<DT><FONT COLOR="#FF0000"><I>-- </I>Deposit </FONT><I>sum</I> <FONT COLOR="#FF0000">into
+the account.<I> </I></FONT></DT>
+</DL>
+
+<DD><B><FONT COLOR="#FF0000">do </FONT></B></DD>
+
+<DL>
+<DD><B>add </B><I>(sum) </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">end</FONT></B></DD>
+</DL>
+
+<P><BR>
+<BR>
+</P>
+
+<DD><I>withdraw (sum: INTEGER) </I><B>is </B></DD>
+
+<DL>
+<DL>
+<DD><FONT COLOR="#FF0000"><I>-- </I>Withdraw </FONT><I>sum</I><FONT COLOR="#FF0000">
+from the account.<I> </I></FONT></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">do </FONT></B></DD>
+
+<DL>
+<DD><I>add (-sum) </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">end </FONT></B></DD>
+<I></I></DL>
+
+<DD><I>may_withdraw (sum: INTEGER): BOOLEAN </I><B>is </B></DD>
+
+<DL>
+<DL>
+<DD><FONT COLOR="#FF0000"><I>-- </I>Is there enough money to withdraw</FONT>
+<I>sum</I><FONT COLOR="#FF0000">?<I> </I></FONT></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">do </FONT></B></DD>
+
+<DL>
+<DD><I>Result := (balance &gt;= sum + minimum_balance) </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">end </FONT></B></DD>
+<B></B></DL>
+
+<DT><B>feature </B><I>{NONE} </I><BR>
+<BR>
+</DT>
+
+<DD><I>add (sum: INTEGER) <B>is </B></I></DD>
+
+<DL>
+<DL>
+<DD><FONT COLOR="#FF0000"><I>-- </I>Add</FONT> <I>sum</I> <FONT COLOR="#FF0000">to
+the balance.<I> </I></FONT></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">do </FONT></B></DD>
+
+<DL>
+<DD><I>balance := balance + sum </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">end </FONT></B></DD>
+</DL>
+
+<DT><B><FONT COLOR="#0000FF">end </FONT></B><I>-- </I>class<I> ACCOUNT
+</I></DT>
+</DL>
+</UL>
+
+<P>Let us examine the features in sequence. The<I> </I><B><FONT COLOR="#0000FF">is
+</FONT></B><I>... </I><B><FONT COLOR="#0000FF">do </FONT></B><I>...</I><B><FONT COLOR="#0000FF">end
+</FONT></B>distinguishes routines from attributes. So here the class has
+implemented <I>balance</I> as an attribute, although, as noted, a function
+would also have been acceptable. Feature <I>owner</I> is also an attribute.
+</P>
+
+<P>The language definition guarantees automatic initialization, so that
+the initial balance of an account object will be zero after a creation
+instruction. Each type has a default initial value, used for initialization:
+zero for <I>INTEGER</I> and <I>REAL</I>, false for <I>BOOLEAN</I>, null
+character for <I>CHARACTER</I>, and a void reference for reference types.
+The class designer may also provide clients with different initialization
+options, as will be shown below in a revised version of this example. </P>
+
+<P>The other public features, <I>open, deposit, withdraw</I> and <I>may_withdraw</I>
+are straightforward routines. The special entity <I>Result</I>, used in
+<I>may_withdraw</I>, denotes the function result; it is initialized on
+function entry to the default value of the function's result type. </P>
+
+<P>The secret procedure <I>add</I> serves for the implementation of the
+public procedures <I>deposit</I> and <I>withdraw</I>; the designer of <I>ACCOUNT</I>
+judged it too general to be exported by itself. The clause <I><B>is</B>
+1000</I> introduces <I>minimum_balance</I> as a constant attribute, which
+will not occupy any space in instances of the class; in contrast, every
+instance has a field for every non-constant attribute such as <I>balance</I>.
+</P>
+
+<P>In Eiffel's object-oriented programming style any operation is relative
+to a certain object. In a client invoking the operation, this object is
+specified by writing the corresponding entity on the left of the dot, as
+<I>acc</I> in <I>acc.open</I> (<I>&quot;Jill&quot;</I>). Within the class,
+however, the &quot;current&quot; instance to which operations apply usually
+remains implicit, so that unqualified feature names, such as <I>owner</I>
+in procedure <I>open</I> or <I>add</I> in <I>deposit</I>, mean &quot;the
+<I>owner</I> attribute or <I>add</I> routine relative to the current instance&quot;.
+</P>
+
+<P>If you need to denote the current object explicitly, you may use the
+special entity <I>Current</I>. For example the unqualified occurrences
+of <I>add</I> appearing in the above class are equivalent to <I>Current.add</I>.
+</P>
+
+<P>In some cases, infix or prefix notation will be more convenient than
+dot notation. For example, if a class <I>VECTOR</I> offers an addition
+routine, most people will feel more comfortable with calls of the form
+<I>v + w</I> than with the dot-notation call <I>v.plus </I>(<I>w</I>).
+To make this possible it suffices to give the routine a name of the form
+<B><FONT COLOR="#0000FF">infix </FONT></B>&quot;+&quot; rather than <I>plus</I>;
+internally, however, the operation is still a normal routine call. Prefix
+operators are similarly available. </P>
+
+<P>The above simple example has shown the basic structuring mechanism of
+the language: the class. A class describes a data structure, accessible
+to clients through an official interface comprising some of the class features.
+Features are implemented as attributes or routines; the implementation
+of exported features may rely on other, secret ones. </P>
+
+<center>
+<P><A HREF="design.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A><B><A HREF="design.maker.html">Previous
+Chapter</A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A><A HREF="BOOK.maker.html">Table
+of Contents</A> <A HREF="types.maker.html"><IMG SRC="fm2html-next.gif" HEIGHT=16 WIDTH=16></A><A HREF="types.maker.html">Next
+Chapter</A>
+</center>
+
+</td></tr></table>
+</BODY>
+</HTML>

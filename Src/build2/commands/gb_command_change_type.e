@@ -39,6 +39,8 @@ feature -- Basic Operation
 	execute is
 			-- Execute `Current'.
 		do
+				-- Call delete on object.
+			layout_item.object.delete
 				-- We do not call `mark_as_deleted' here, as this would
 				-- mark all the children as deleted also. Only the
 				-- actual object should be marked as deleted.

@@ -564,6 +564,7 @@ feature {HASH_TABLE} -- Implementation: search attributes
 
 	iteration_position: INTEGER
 			-- Cursor for iteration primitives
+
 	position: INTEGER
 			-- Hash table cursor, updated after each operation:
 			-- put, remove, has, replace, force, change_key...

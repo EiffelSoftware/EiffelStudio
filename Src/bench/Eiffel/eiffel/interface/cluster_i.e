@@ -936,7 +936,8 @@ feature {COMPILER_EXPORTER} -- Element change
 				end
 			end
 		ensure
-			read_class_name_in_file_in_upper: Result /= Void implies (Result.is_equal (Result.as_upper))
+			read_class_name_in_file_in_upper:
+				Result /= Void implies (Result.is_equal (Result.as_upper))
 		end
 
 	restore_compiled_class (new_class, old_class: CLASS_I) is
@@ -1116,8 +1117,8 @@ feature {COMPILER_EXPORTER} -- Element change
 								-- Move compiled info from one override cluster to another one
 							restore_compiled_class (l_classes.first, l_class)
 						else
-								-- Class has only been moved to a non-override cluster. We restore the CLASS_C
-								-- information only for the first one found.
+								-- Class has only been moved to a non-override cluster.
+								-- We restore the CLASS_C information only for the first one found.
 							restore_compiled_class (l_overriden_classes.first, l_class)
 								-- Now remove all overriden classes of universe.
 							from
@@ -1644,8 +1645,9 @@ feature {NONE} -- Implementation
 									-- Move compiled info from one override cluster to another one
 								restore_compiled_class (l_classes.first, old_class)
 							else
-									-- Class has only been moved to a non-override cluster. We restore the CLASS_C
-									-- information only for the first one found.
+									-- Class has only been moved to a non-override cluster.
+									-- We restore the CLASS_C information only for the first
+									-- one found.
 								restore_compiled_class (l_overriden_classes.first, old_class)
 									-- Now remove all overriden classes of universe.
 								from

@@ -1,0 +1,247 @@
+//--------------------------------------------------------------------------
+//
+//  EiffelCOM
+//  Copyright (C) Interactive Software Engineering, 2001.
+//
+//  File: control_container.idl
+//
+//
+//
+//--------------------------------------------------------------------------
+
+import "oaidl.idl";
+import "ocidl.idl";
+import "atliface.idl";
+import "servprov.idl";
+import "mshtmhst.idl";
+
+
+[
+  uuid(BDE3247E-6BC6-47f4-A46F-E5AEA4F8DF39),
+  helpstring ("Control interfaces"),
+  version (1.0)
+]
+library control_library
+{
+  importlib ("stdole2.tlb");
+  
+  interface IAdviseSink;
+  interface IAdviseSink2;
+  interface IAdviseSinkEx;
+
+
+//  interface IConnectionPoint;
+//  interface IConnectionPointContainer;  
+//  interface IClassFactory2;
+
+  interface IDataAdviseHolder;
+  interface IDataObject;
+  
+  interface IDocHostUIHandlerDispatch;
+  
+  interface IDropSource;
+  interface IDropTarget;
+
+  interface IEnumConnections;
+  interface IEnumConnectionPoints;
+  interface IEnumFORMATETC;
+  interface IEnumMoniker;
+  interface IEnumOleDocumentViews;
+  interface IEnumOleUndoUnits;
+  interface IEnumOLEVERB;
+  interface IEnumSTATDATA;
+  interface IErrorLog;
+  interface IExternalConnection;
+
+  interface IObjectWithSite;
+  interface IOleAdviseHolder;
+  interface IOleCache;
+  interface IOleCache2;
+  interface IOleCacheControl;
+  interface IOleCacheControl;
+  interface IOleClientSite;
+  interface IOleCommandTarget;
+  interface IOleComponent;
+  interface IOleComponentManager;
+  interface IOleComponentUIManager;
+  interface IOleContainer;
+  interface IOleControl;
+  interface IOleControlSite;
+  interface IOleDocument;
+  interface IOleDocumentSite;
+  interface IOleDocumentView;
+  
+  interface IDropTarget;
+  interface IDropSource;
+  
+  interface IOleInPlaceActiveObject;  
+  interface IOleInPlaceComponent;
+  interface IOleInPlaceComponentUIManager;
+  interface IOleInPlaceFrame;
+  interface IOleInPlaceObject;
+  interface IOleInPlaceObjectWindowless;
+  interface IOleInPlaceSite;
+  interface IOleInPlaceSiteEx;
+  interface IOleInPlaceSiteWindowless;
+  interface IOleInPlaceUIWindow;
+
+  interface IOleItemContainer;
+  
+  interface IOleLink;
+  interface IOleObject;
+
+  interface IOleParentUndoUnit;
+  
+  interface IOleUILinkContainer;
+  interface IOleUILinkInfo;
+  interface IOleUIObjInfo;
+  interface IOleUndoManager;
+  interface IOleUndoUnit;
+  interface IOleWindow;
+
+  interface IPerPropertyBrowsing;
+
+  interface IPersistFile;
+  interface IPersistFileFormat;
+  interface IPersistMemory;
+  interface IPersistPropertyBag;
+  interface IPersistPropertyBag2;
+  interface IPersistStorage;
+  interface IPersistStreamInit;
+
+  interface IPointerInactive;
+
+  interface IPropertyBag;
+  interface IPropertyBag2;
+  interface IPropertyPage;
+  interface IPropertyPage2;
+  interface IPropertyPageSite;
+  interface IPropertyNotifySink;
+
+  interface IProvideClassInfo;
+  interface IProvideClassInfo2;
+  interface IProvideMultipleClassInfo;
+  
+  interface IRunningObjectTable;
+
+  interface ISimpleFrameSite;
+  interface ISpecifyPropertyPages;
+  interface ISelectionContainer;
+  interface IServiceProvider;
+  
+  interface IViewObject;
+  interface IViewObject2;
+  interface IViewObjectEx;
+  interface IEnumOleUndoUnits;
+  
+  interface IQuickActivate;
+
+   
+  //--------------------------------------------------------------------------
+  
+  [
+    uuid (7D6698BC-5649-4757-AAFF-296ADBCCA906),
+    noncreatable,
+    helpstring ("OLE Control Container Frame.")
+  ]
+  coclass frame_window
+  {
+    interface IOleInPlaceFrame;
+    interface IOleInPlaceUIWindow;
+    interface IOleWindow;
+  };
+  
+  [
+    uuid (54F4830E-F26A-4bfe-B17A-715043550433),
+    noncreatable,
+    helpstring ("Document")
+  ]
+  coclass document
+  {
+    interface IOleInPlaceUIWindow;
+    interface IOleWindow;
+  }
+  
+  [
+    uuid (3DCE6182-49EC-4033-B65A-58354857F9B5),
+    noncreatable,
+    helpstring ("Control Site")
+  ]
+  coclass control_site
+  {
+    interface IDispatch;
+    interface IAxWinHostWindow;
+    interface IOleClientSite;
+    interface IOleInPlaceSiteWindowless;
+    interface IOleInPlaceSiteEx;
+    interface IOleInPlaceSite;
+    interface IOleWindow;
+    interface IOleControlSite;
+    interface IOleContainer;
+    interface IObjectWithSite;
+//    interface IServiceProvider;
+    interface IPropertyNotifySink;
+    interface IAxWinAmbientDispatch;
+    interface IDocHostUIHandler;
+    interface IAdviseSink;
+  }
+  
+//  [
+//    uuid (12384F24-31A6-437d-9B62-762060E5E0E7),
+//    noncreatable,
+//    helpstring ("")
+//  ]
+//  coclass control_object
+//  {
+//    interface IQuickActivate;
+//    interface IOleObject;
+//    interface IViewObjectEx;
+//    interface IPersistMemory;
+//    interface IPersistStreamInit;
+//    interface IOleControl;
+//    interface IOleInPlaceObject;
+//    interface IDataObject;
+//    interface IViewObject2;
+//    interface IOleCache2;
+//    interface IRunnableObject;
+//    interface ISpecifyPropertyPages;
+//    
+//  }
+//BEGIN_INTERFACE_MAP(COleControl, CCmdTarget)
+//  INTERFACE_PART(COleControl, IID_IQuickActivate, QuickActivate)
+//  INTERFACE_PART(COleControl, IID_IOleObject, OleObject)
+//  INTERFACE_PART(COleControl, IID_IViewObjectEx, ViewObject)
+//  INTERFACE_PART(COleControl, IID_IPersistMemory, PersistMemory)
+//  INTERFACE_PART(COleControl, IID_IPersistStreamInit, PersistStreamInit)
+//  INTERFACE_PART(COleControl, IID_IProvideClassInfo2, ProvideClassInfo)
+//  INTERFACE_PART(COleControl, IID_IConnectionPointContainer, ConnPtContainer)
+//  INTERFACE_PART(COleControl, IID_IOleControl, OleControl)
+//  INTERFACE_PART(COleControl, IID_IOleInPlaceObject, OleInPlaceObject)
+//  INTERFACE_PART(COleControl, IID_IOleInPlaceObjectWindowless, OleInPlaceObject)
+//  INTERFACE_PART(COleControl, IID_IOleInPlaceActiveObject, OleInPlaceActiveObject)
+//  INTERFACE_PART(COleControl, IID_IDispatch, Dispatch)
+//  INTERFACE_PART(COleControl, IID_IOleCache, OleCache)
+//  INTERFACE_PART(COleControl, IID_IViewObject, ViewObject)
+//  INTERFACE_PART(COleControl, IID_IViewObject2, ViewObject)
+//  INTERFACE_PART(COleControl, IID_IDataObject, DataObject)
+//  INTERFACE_PART(COleControl, IID_IPersistPropertyBag, PersistPropertyBag)
+//  INTERFACE_PART(COleControl, IID_ISpecifyPropertyPages, SpecifyPropertyPages)
+//  INTERFACE_PART(COleControl, IID_IPerPropertyBrowsing, PerPropertyBrowsing)
+//  INTERFACE_PART(COleControl, IID_IProvideClassInfo, ProvideClassInfo)
+//  INTERFACE_PART(COleControl, IID_IPersist, PersistStorage)
+//  INTERFACE_PART(COleControl, IID_IPersistStorage, PersistStorage)
+//END_INTERFACE_MAP()  
+//  [
+//    uuid (EACFC3B1-3E35-456f-924D-A50DAB73341D),
+//    noncreatable,
+//    helpstring ("")
+//  ]
+//  coclass in_place_active_object
+//  {
+//    interface IOleInPlaceActiveObject;
+//    interface IViewObject;
+//    interface IOleObject;
+//  }
+  
+  
+}

@@ -1,0 +1,482 @@
+# ecom.lib - Makefile for Microsoft C
+
+MV = copy
+CC = cl
+OUTPUT_CMD = -Fo
+CFLAGS = -W0 -Ox -D_WIN32_DCOM -c -I..\..\client\include -I..\..\server\include -I..\..\common\include -I$(ISE_EIFFEL)\bench\spec\windows\include -I$(ISE_EIFFEL)\library\com\spec\windows\include 
+
+OBJ = ecom_control_library_iadvisesink2_impl_proxy_s.obj \
+ecom_control_library_iadvisesinkex_impl_proxy_s.obj \
+ecom_control_library_iadvisesink_impl_proxy_s.obj \
+ecom_control_library_iaxwinambientdispatch_impl_proxy_s.obj \
+ecom_control_library_iaxwinhostwindow_impl_proxy_s.obj \
+ecom_control_library_ibindctx_impl_proxy_s.obj \
+ecom_control_library_ibindhost_impl_proxy_s.obj \
+ecom_control_library_ibinding_impl_proxy_s.obj \
+ecom_control_library_ibindstatuscallback_impl_proxy_s.obj \
+ecom_control_library_iconnectionpointcontainer_impl_proxy_s.obj \
+ecom_control_library_iconnectionpoint_impl_proxy_s.obj \
+ecom_control_library_icontinue_impl_proxy_s.obj \
+ecom_control_library_idataadviseholder_impl_proxy_s.obj \
+ecom_control_library_idataobject_impl_proxy_s.obj \
+ecom_control_library_idochostuihandlerdispatch_impl_proxy_s.obj \
+ecom_control_library_idochostuihandler_impl_proxy_s.obj \
+ecom_control_library_idropsource_impl_proxy_s.obj \
+ecom_control_library_idroptarget_impl_proxy_s.obj \
+ecom_control_library_ienumconnectionpoints_impl_proxy_s.obj \
+ecom_control_library_ienumconnections_impl_proxy_s.obj \
+ecom_control_library_ienumformatetc_impl_proxy_s.obj \
+ecom_control_library_ienummoniker_impl_proxy_s.obj \
+ecom_control_library_ienumoleundounits_impl_proxy_s.obj \
+ecom_control_library_ienumoleverb_impl_proxy_s.obj \
+ecom_control_library_ienumstatdata_impl_proxy_s.obj \
+ecom_control_library_ienumstatstg_impl_proxy_s.obj \
+ecom_control_library_ienumstring_impl_proxy_s.obj \
+ecom_control_library_ienumunknown_impl_proxy_s.obj \
+ecom_control_library_ierrorlog_impl_proxy_s.obj \
+ecom_control_library_iexternalconnection_impl_proxy_s.obj \
+ecom_control_library_imoniker_impl_proxy_s.obj \
+ecom_control_library_iobjectwithsite_impl_proxy_s.obj \
+ecom_control_library_iolecache2_impl_proxy_s.obj \
+ecom_control_library_iolecachecontrol_impl_proxy_s.obj \
+ecom_control_library_iolecache_impl_proxy_s.obj \
+ecom_control_library_ioleclientsite_impl_proxy_s.obj \
+ecom_control_library_iolecommandtarget_impl_proxy_s.obj \
+ecom_control_library_iolecontainer_impl_proxy_s.obj \
+ecom_control_library_iolecontrolsite_impl_proxy_s.obj \
+ecom_control_library_iolecontrol_impl_proxy_s.obj \
+ecom_control_library_ioleinplaceactiveobject_impl_proxy_s.obj \
+ecom_control_library_ioleinplaceframe_impl_proxy_s.obj \
+ecom_control_library_ioleinplaceobjectwindowless_impl_proxy_s.obj \
+ecom_control_library_ioleinplaceobject_impl_proxy_s.obj \
+ecom_control_library_ioleinplacesiteex_impl_proxy_s.obj \
+ecom_control_library_ioleinplacesitewindowless_impl_proxy_s.obj \
+ecom_control_library_ioleinplacesite_impl_proxy_s.obj \
+ecom_control_library_ioleinplaceuiwindow_impl_proxy_s.obj \
+ecom_control_library_ioleitemcontainer_impl_proxy_s.obj \
+ecom_control_library_iolelink_impl_proxy_s.obj \
+ecom_control_library_ioleobject_impl_proxy_s.obj \
+ecom_control_library_ioleparentundounit_impl_proxy_s.obj \
+ecom_control_library_ioleundomanager_impl_proxy_s.obj \
+ecom_control_library_ioleundounit_impl_proxy_s.obj \
+ecom_control_library_iolewindow_impl_proxy_s.obj \
+ecom_control_library_iparsedisplayname_impl_proxy_s.obj \
+ecom_control_library_iperpropertybrowsing_impl_proxy_s.obj \
+ecom_control_library_ipersistfile_2_impl_proxy_s.obj \
+ecom_control_library_ipersistmemory_impl_proxy_s.obj \
+ecom_control_library_ipersistpropertybag2_impl_proxy_s.obj \
+ecom_control_library_ipersistpropertybag_impl_proxy_s.obj \
+ecom_control_library_ipersiststorage_impl_proxy_s.obj \
+ecom_control_library_ipersiststreaminit_impl_proxy_s.obj \
+ecom_control_library_ipersiststream_impl_proxy_s.obj \
+ecom_control_library_ipersist_impl_proxy_s.obj \
+ecom_control_library_ipointerinactive_impl_proxy_s.obj \
+ecom_control_library_ipropertybag2_impl_proxy_s.obj \
+ecom_control_library_ipropertybag_impl_proxy_s.obj \
+ecom_control_library_ipropertynotifysink_impl_proxy_s.obj \
+ecom_control_library_ipropertypage2_impl_proxy_s.obj \
+ecom_control_library_ipropertypagesite_impl_proxy_s.obj \
+ecom_control_library_ipropertypage_impl_proxy_s.obj \
+ecom_control_library_iprovideclassinfo2_impl_proxy_s.obj \
+ecom_control_library_iprovideclassinfo_impl_proxy_s.obj \
+ecom_control_library_iprovidemultipleclassinfo_impl_proxy_s.obj \
+ecom_control_library_iquickactivate_impl_proxy_s.obj \
+ecom_control_library_irunnableobject_impl_proxy_s.obj \
+ecom_control_library_irunningobjecttable_impl_proxy_s.obj \
+ecom_control_library_isequentialstream_impl_proxy_s.obj \
+ecom_control_library_iserviceprovider_impl_proxy_s.obj \
+ecom_control_library_isimpleframesite_impl_proxy_s.obj \
+ecom_control_library_ispecifypropertypages_impl_proxy_s.obj \
+ecom_control_library_istorage_impl_proxy_s.obj \
+ecom_control_library_istream_impl_proxy_s.obj \
+ecom_control_library_itypecomp_impl_proxy_s.obj \
+ecom_control_library_itypeinfo_2_impl_proxy_s.obj \
+ecom_control_library_itypelib_2_impl_proxy_s.obj \
+ecom_control_library_iviewobject2_impl_proxy_s.obj \
+ecom_control_library_iviewobjectex_impl_proxy_s.obj \
+ecom_control_library_iviewobject_impl_proxy_s.obj \
+
+
+WOBJ = wecom_control_library_iadvisesink2_impl_proxy_s.obj \
+wecom_control_library_iadvisesinkex_impl_proxy_s.obj \
+wecom_control_library_iadvisesink_impl_proxy_s.obj \
+wecom_control_library_iaxwinambientdispatch_impl_proxy_s.obj \
+wecom_control_library_iaxwinhostwindow_impl_proxy_s.obj \
+wecom_control_library_ibindctx_impl_proxy_s.obj \
+wecom_control_library_ibindhost_impl_proxy_s.obj \
+wecom_control_library_ibinding_impl_proxy_s.obj \
+wecom_control_library_ibindstatuscallback_impl_proxy_s.obj \
+wecom_control_library_iconnectionpointcontainer_impl_proxy_s.obj \
+wecom_control_library_iconnectionpoint_impl_proxy_s.obj \
+wecom_control_library_icontinue_impl_proxy_s.obj \
+wecom_control_library_idataadviseholder_impl_proxy_s.obj \
+wecom_control_library_idataobject_impl_proxy_s.obj \
+wecom_control_library_idochostuihandlerdispatch_impl_proxy_s.obj \
+wecom_control_library_idochostuihandler_impl_proxy_s.obj \
+wecom_control_library_idropsource_impl_proxy_s.obj \
+wecom_control_library_idroptarget_impl_proxy_s.obj \
+wecom_control_library_ienumconnectionpoints_impl_proxy_s.obj \
+wecom_control_library_ienumconnections_impl_proxy_s.obj \
+wecom_control_library_ienumformatetc_impl_proxy_s.obj \
+wecom_control_library_ienummoniker_impl_proxy_s.obj \
+wecom_control_library_ienumoleundounits_impl_proxy_s.obj \
+wecom_control_library_ienumoleverb_impl_proxy_s.obj \
+wecom_control_library_ienumstatdata_impl_proxy_s.obj \
+wecom_control_library_ienumstatstg_impl_proxy_s.obj \
+wecom_control_library_ienumstring_impl_proxy_s.obj \
+wecom_control_library_ienumunknown_impl_proxy_s.obj \
+wecom_control_library_ierrorlog_impl_proxy_s.obj \
+wecom_control_library_iexternalconnection_impl_proxy_s.obj \
+wecom_control_library_imoniker_impl_proxy_s.obj \
+wecom_control_library_iobjectwithsite_impl_proxy_s.obj \
+wecom_control_library_iolecache2_impl_proxy_s.obj \
+wecom_control_library_iolecachecontrol_impl_proxy_s.obj \
+wecom_control_library_iolecache_impl_proxy_s.obj \
+wecom_control_library_ioleclientsite_impl_proxy_s.obj \
+wecom_control_library_iolecommandtarget_impl_proxy_s.obj \
+wecom_control_library_iolecontainer_impl_proxy_s.obj \
+wecom_control_library_iolecontrolsite_impl_proxy_s.obj \
+wecom_control_library_iolecontrol_impl_proxy_s.obj \
+wecom_control_library_ioleinplaceactiveobject_impl_proxy_s.obj \
+wecom_control_library_ioleinplaceframe_impl_proxy_s.obj \
+wecom_control_library_ioleinplaceobjectwindowless_impl_proxy_s.obj \
+wecom_control_library_ioleinplaceobject_impl_proxy_s.obj \
+wecom_control_library_ioleinplacesiteex_impl_proxy_s.obj \
+wecom_control_library_ioleinplacesitewindowless_impl_proxy_s.obj \
+wecom_control_library_ioleinplacesite_impl_proxy_s.obj \
+wecom_control_library_ioleinplaceuiwindow_impl_proxy_s.obj \
+wecom_control_library_ioleitemcontainer_impl_proxy_s.obj \
+wecom_control_library_iolelink_impl_proxy_s.obj \
+wecom_control_library_ioleobject_impl_proxy_s.obj \
+wecom_control_library_ioleparentundounit_impl_proxy_s.obj \
+wecom_control_library_ioleundomanager_impl_proxy_s.obj \
+wecom_control_library_ioleundounit_impl_proxy_s.obj \
+wecom_control_library_iolewindow_impl_proxy_s.obj \
+wecom_control_library_iparsedisplayname_impl_proxy_s.obj \
+wecom_control_library_iperpropertybrowsing_impl_proxy_s.obj \
+wecom_control_library_ipersistfile_2_impl_proxy_s.obj \
+wecom_control_library_ipersistmemory_impl_proxy_s.obj \
+wecom_control_library_ipersistpropertybag2_impl_proxy_s.obj \
+wecom_control_library_ipersistpropertybag_impl_proxy_s.obj \
+wecom_control_library_ipersiststorage_impl_proxy_s.obj \
+wecom_control_library_ipersiststreaminit_impl_proxy_s.obj \
+wecom_control_library_ipersiststream_impl_proxy_s.obj \
+wecom_control_library_ipersist_impl_proxy_s.obj \
+wecom_control_library_ipointerinactive_impl_proxy_s.obj \
+wecom_control_library_ipropertybag2_impl_proxy_s.obj \
+wecom_control_library_ipropertybag_impl_proxy_s.obj \
+wecom_control_library_ipropertynotifysink_impl_proxy_s.obj \
+wecom_control_library_ipropertypage2_impl_proxy_s.obj \
+wecom_control_library_ipropertypagesite_impl_proxy_s.obj \
+wecom_control_library_ipropertypage_impl_proxy_s.obj \
+wecom_control_library_iprovideclassinfo2_impl_proxy_s.obj \
+wecom_control_library_iprovideclassinfo_impl_proxy_s.obj \
+wecom_control_library_iprovidemultipleclassinfo_impl_proxy_s.obj \
+wecom_control_library_iquickactivate_impl_proxy_s.obj \
+wecom_control_library_irunnableobject_impl_proxy_s.obj \
+wecom_control_library_irunningobjecttable_impl_proxy_s.obj \
+wecom_control_library_isequentialstream_impl_proxy_s.obj \
+wecom_control_library_iserviceprovider_impl_proxy_s.obj \
+wecom_control_library_isimpleframesite_impl_proxy_s.obj \
+wecom_control_library_ispecifypropertypages_impl_proxy_s.obj \
+wecom_control_library_istorage_impl_proxy_s.obj \
+wecom_control_library_istream_impl_proxy_s.obj \
+wecom_control_library_itypecomp_impl_proxy_s.obj \
+wecom_control_library_itypeinfo_2_impl_proxy_s.obj \
+wecom_control_library_itypelib_2_impl_proxy_s.obj \
+wecom_control_library_iviewobject2_impl_proxy_s.obj \
+wecom_control_library_iviewobjectex_impl_proxy_s.obj \
+wecom_control_library_iviewobject_impl_proxy_s.obj \
+
+
+all:: ecom.lib ecom_final.lib
+
+ecom.lib: $(WOBJ)
+	if exist $@ del $@
+	lib -OUT:$@ $(WOBJ)
+	del *.obj
+	if not exist msc mkdir msc
+	$(MV) $@ msc
+	del $@
+
+ecom_final.lib: $(OBJ)
+	if exist $@ del $@
+	lib -OUT:$@ $(OBJ)
+	del *.obj
+	if not exist msc mkdir msc
+	$(MV) $@ msc
+	del $@
+
+.cpp.obj:
+	$(CC) $(CFLAGS) $<
+
+wecom_control_library_iadvisesink2_impl_proxy_s.obj: ecom_control_library_iadvisesink2_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iadvisesinkex_impl_proxy_s.obj: ecom_control_library_iadvisesinkex_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iadvisesink_impl_proxy_s.obj: ecom_control_library_iadvisesink_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iaxwinambientdispatch_impl_proxy_s.obj: ecom_control_library_iaxwinambientdispatch_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iaxwinhostwindow_impl_proxy_s.obj: ecom_control_library_iaxwinhostwindow_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ibindctx_impl_proxy_s.obj: ecom_control_library_ibindctx_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ibindhost_impl_proxy_s.obj: ecom_control_library_ibindhost_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ibinding_impl_proxy_s.obj: ecom_control_library_ibinding_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ibindstatuscallback_impl_proxy_s.obj: ecom_control_library_ibindstatuscallback_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iconnectionpointcontainer_impl_proxy_s.obj: ecom_control_library_iconnectionpointcontainer_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iconnectionpoint_impl_proxy_s.obj: ecom_control_library_iconnectionpoint_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_icontinue_impl_proxy_s.obj: ecom_control_library_icontinue_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_idataadviseholder_impl_proxy_s.obj: ecom_control_library_idataadviseholder_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_idataobject_impl_proxy_s.obj: ecom_control_library_idataobject_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_idochostuihandlerdispatch_impl_proxy_s.obj: ecom_control_library_idochostuihandlerdispatch_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_idochostuihandler_impl_proxy_s.obj: ecom_control_library_idochostuihandler_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_idropsource_impl_proxy_s.obj: ecom_control_library_idropsource_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_idroptarget_impl_proxy_s.obj: ecom_control_library_idroptarget_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ienumconnectionpoints_impl_proxy_s.obj: ecom_control_library_ienumconnectionpoints_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ienumconnections_impl_proxy_s.obj: ecom_control_library_ienumconnections_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ienumformatetc_impl_proxy_s.obj: ecom_control_library_ienumformatetc_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ienummoniker_impl_proxy_s.obj: ecom_control_library_ienummoniker_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ienumoleundounits_impl_proxy_s.obj: ecom_control_library_ienumoleundounits_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ienumoleverb_impl_proxy_s.obj: ecom_control_library_ienumoleverb_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ienumstatdata_impl_proxy_s.obj: ecom_control_library_ienumstatdata_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ienumstatstg_impl_proxy_s.obj: ecom_control_library_ienumstatstg_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ienumstring_impl_proxy_s.obj: ecom_control_library_ienumstring_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ienumunknown_impl_proxy_s.obj: ecom_control_library_ienumunknown_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ierrorlog_impl_proxy_s.obj: ecom_control_library_ierrorlog_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iexternalconnection_impl_proxy_s.obj: ecom_control_library_iexternalconnection_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_imoniker_impl_proxy_s.obj: ecom_control_library_imoniker_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iobjectwithsite_impl_proxy_s.obj: ecom_control_library_iobjectwithsite_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iolecache2_impl_proxy_s.obj: ecom_control_library_iolecache2_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iolecachecontrol_impl_proxy_s.obj: ecom_control_library_iolecachecontrol_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iolecache_impl_proxy_s.obj: ecom_control_library_iolecache_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleclientsite_impl_proxy_s.obj: ecom_control_library_ioleclientsite_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iolecommandtarget_impl_proxy_s.obj: ecom_control_library_iolecommandtarget_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iolecontainer_impl_proxy_s.obj: ecom_control_library_iolecontainer_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iolecontrolsite_impl_proxy_s.obj: ecom_control_library_iolecontrolsite_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iolecontrol_impl_proxy_s.obj: ecom_control_library_iolecontrol_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleinplaceactiveobject_impl_proxy_s.obj: ecom_control_library_ioleinplaceactiveobject_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleinplaceframe_impl_proxy_s.obj: ecom_control_library_ioleinplaceframe_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleinplaceobjectwindowless_impl_proxy_s.obj: ecom_control_library_ioleinplaceobjectwindowless_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleinplaceobject_impl_proxy_s.obj: ecom_control_library_ioleinplaceobject_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleinplacesiteex_impl_proxy_s.obj: ecom_control_library_ioleinplacesiteex_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleinplacesitewindowless_impl_proxy_s.obj: ecom_control_library_ioleinplacesitewindowless_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleinplacesite_impl_proxy_s.obj: ecom_control_library_ioleinplacesite_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleinplaceuiwindow_impl_proxy_s.obj: ecom_control_library_ioleinplaceuiwindow_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleitemcontainer_impl_proxy_s.obj: ecom_control_library_ioleitemcontainer_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iolelink_impl_proxy_s.obj: ecom_control_library_iolelink_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleobject_impl_proxy_s.obj: ecom_control_library_ioleobject_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleparentundounit_impl_proxy_s.obj: ecom_control_library_ioleparentundounit_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleundomanager_impl_proxy_s.obj: ecom_control_library_ioleundomanager_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ioleundounit_impl_proxy_s.obj: ecom_control_library_ioleundounit_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iolewindow_impl_proxy_s.obj: ecom_control_library_iolewindow_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iparsedisplayname_impl_proxy_s.obj: ecom_control_library_iparsedisplayname_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iperpropertybrowsing_impl_proxy_s.obj: ecom_control_library_iperpropertybrowsing_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipersistfile_2_impl_proxy_s.obj: ecom_control_library_ipersistfile_2_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipersistmemory_impl_proxy_s.obj: ecom_control_library_ipersistmemory_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipersistpropertybag2_impl_proxy_s.obj: ecom_control_library_ipersistpropertybag2_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipersistpropertybag_impl_proxy_s.obj: ecom_control_library_ipersistpropertybag_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipersiststorage_impl_proxy_s.obj: ecom_control_library_ipersiststorage_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipersiststreaminit_impl_proxy_s.obj: ecom_control_library_ipersiststreaminit_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipersiststream_impl_proxy_s.obj: ecom_control_library_ipersiststream_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipersist_impl_proxy_s.obj: ecom_control_library_ipersist_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipointerinactive_impl_proxy_s.obj: ecom_control_library_ipointerinactive_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipropertybag2_impl_proxy_s.obj: ecom_control_library_ipropertybag2_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipropertybag_impl_proxy_s.obj: ecom_control_library_ipropertybag_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipropertynotifysink_impl_proxy_s.obj: ecom_control_library_ipropertynotifysink_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipropertypage2_impl_proxy_s.obj: ecom_control_library_ipropertypage2_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipropertypagesite_impl_proxy_s.obj: ecom_control_library_ipropertypagesite_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ipropertypage_impl_proxy_s.obj: ecom_control_library_ipropertypage_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iprovideclassinfo2_impl_proxy_s.obj: ecom_control_library_iprovideclassinfo2_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iprovideclassinfo_impl_proxy_s.obj: ecom_control_library_iprovideclassinfo_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iprovidemultipleclassinfo_impl_proxy_s.obj: ecom_control_library_iprovidemultipleclassinfo_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iquickactivate_impl_proxy_s.obj: ecom_control_library_iquickactivate_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_irunnableobject_impl_proxy_s.obj: ecom_control_library_irunnableobject_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_irunningobjecttable_impl_proxy_s.obj: ecom_control_library_irunningobjecttable_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_isequentialstream_impl_proxy_s.obj: ecom_control_library_isequentialstream_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iserviceprovider_impl_proxy_s.obj: ecom_control_library_iserviceprovider_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_isimpleframesite_impl_proxy_s.obj: ecom_control_library_isimpleframesite_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_ispecifypropertypages_impl_proxy_s.obj: ecom_control_library_ispecifypropertypages_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_istorage_impl_proxy_s.obj: ecom_control_library_istorage_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_istream_impl_proxy_s.obj: ecom_control_library_istream_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_itypecomp_impl_proxy_s.obj: ecom_control_library_itypecomp_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_itypeinfo_2_impl_proxy_s.obj: ecom_control_library_itypeinfo_2_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_itypelib_2_impl_proxy_s.obj: ecom_control_library_itypelib_2_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iviewobject2_impl_proxy_s.obj: ecom_control_library_iviewobject2_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iviewobjectex_impl_proxy_s.obj: ecom_control_library_iviewobjectex_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+
+wecom_control_library_iviewobject_impl_proxy_s.obj: ecom_control_library_iviewobject_impl_proxy_s.cpp
+	$(CC) $(CFLAGS) -DWORKBENCH	$(OUTPUT_CMD)$@ $?
+

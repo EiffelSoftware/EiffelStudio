@@ -1,0 +1,35 @@
+system test
+
+root
+	test (root_cluster): "make"
+
+default
+
+	assertion(all);
+
+cluster
+
+	root_cluster:		"$CLUSTER";
+	kernel:			"$KERNEL";
+	support:		"$SUPPORT";
+	access:			"$ACCESS";
+	cursors:		"$CURSORS";
+	cursor_tree:		"$CURSOR_TREE";
+	dispenser:		"$DISPENSER";
+	iteration:		"$ITERATION";
+	list:			"$LIST";
+	set:			"$SET";
+	sort:			"$SORT";
+	storage:		"$STORAGE";
+	table:			"$TABLE";
+	traversing:		"$TRAVERSING";
+	tree:			"$TREE";
+	
+	time:			"$TIME";
+	format:			"$TIME_FORMAT";
+	english:		"$TIME_ENGLISH";
+
+external
+	include_path: "$TIME_INCLUDE";
+	object: "$TIME_OBJECT";
+end

@@ -15,13 +15,21 @@ inherit
 
 	EV_TEXT_IMP
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 create
 	make
 
 feature -- Status Report
+
+	initialize is
+			-- Initialize current
+		do
+			create tab_positions
+			Precursor {EV_TEXT_IMP}
+		end
 
 	create_file_access_actions: EV_INTEGER_ACTION_SEQUENCE is
 			-- Create a file access action sequence.
@@ -85,11 +93,13 @@ feature -- Status Report
 			-- If more than one format is contained in the selection, `Result'
 			-- is the first of these formats.
 		do
+			create Result
 		end
 
 	selected_character_format: EV_CHARACTER_FORMAT is
 			--
 		do
+			create Result
 		end
 
 	internal_paragraph_format, paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
@@ -151,11 +161,13 @@ feature -- Status Report
  	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE is
  			-- Create a caret move action sequence.
  		do
+ 			create Result
  		end
  			
  	create_selection_change_actions: EV_NOTIFY_ACTION_SEQUENCE is
  			-- Create a selection change action sequence.
  		do
+ 			create Result
  		end
  
  
@@ -174,11 +186,13 @@ feature -- Status Report
 	position_from_index (an_index: INTEGER): EV_COORDINATE is
 			-- Position of character at index `an_index'.
 		do
+			create Result.set (0, 0)
 		end
 		
 	character_displayed (an_index: INTEGER): BOOLEAN is
 			-- Is character `an_index' currently visible in `Current'?
 		do
+			Result := True
 		end
 	
 feature -- Status report
@@ -186,6 +200,7 @@ feature -- Status report
 	character_format (character_index: INTEGER): EV_CHARACTER_FORMAT is
 			-- `Result' is character format of character `character_index'.
 		do
+			create Result.make_with_font (create {EV_FONT})
 		end
 
 feature -- Status setting
@@ -207,13 +222,23 @@ feature -- Status setting
 			-- To apply buffer contents to `Current', call `flush_append_buffer' or
 			-- `flush_append_buffer_to'.
 		do
+			if offscreen_buffer = Void then
+				create offscreen_buffer.make (10)
+			end
+			offscreen_buffer.append (a_text)
 		end
+
+	offscreen_buffer: STRING
 		
 	flush_buffer is
 			-- Flush contents of buffer.
 			-- If `buffer_locked_for_append' then replace contents of `Current' with buffer contents.
 			-- If `buffer_locked_for_format' then apply buffered formatting to contents of `Current'.
 		do
+			if offscreen_buffer /= Void then
+				set_text (offscreen_buffer)
+				offscreen_buffer := Void				
+			end
 		end
 		
 	flush_buffer_to (start_position, end_position: INTEGER) is
@@ -221,6 +246,7 @@ feature -- Status setting
 			-- contents of buffer, since it was last flushed. If `start_position' and `end_position'
 			-- are equal, insert the contents of the buffer at caret position `start_position'.
 		do
+			flush_buffer
 		end
 
 	set_tab_width (a_width: INTEGER) is
@@ -231,6 +257,7 @@ feature -- Status setting
 	tab_width: INTEGER is
 			-- Default width in pixels of each tab in `Current'.
 		do
+			Result := 40
 		end
 		
 feature {NONE} -- Implementation

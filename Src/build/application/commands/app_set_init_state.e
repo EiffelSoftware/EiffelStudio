@@ -50,7 +50,9 @@ feature {NONE}
 	worked_on: STRING is
 		do
 			!!Result.make (0);
-			Result.append (init_state.label);
+			if init_state /= Void then
+				Result.append (init_state.label);
+			end
 		end;
 
 end

@@ -51,7 +51,6 @@ rt_public void c_recv_rout_info (EIF_OBJ target)
  */
 
 {
-	static int sleep_delay = 30;
 	Request pack;
 #ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd [EWBOUT];

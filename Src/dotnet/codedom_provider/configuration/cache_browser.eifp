@@ -28,7 +28,7 @@
         {
         "RootClass" = "ANY"
         "CreationRoutine" = ""
-        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build\\ISE.Base\\obj\\Debug"
+        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build_envision\\EiffelSoftware.EiffelBase\\obj\\Debug"
         "OptimizeCode" = "false"
         "GenerateCLSCompliantCode" = "true"
         "GenerateVerifiableCode" = "true"
@@ -48,7 +48,7 @@
         {
         "RootClass" = "ANY"
         "CreationRoutine" = ""
-        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build\\ISE.Base\\obj\\Release"
+        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build_envision\\EiffelSoftware.EiffelBase\\obj\\Release"
         "OptimizeCode" = "true"
         "GenerateCLSCompliantCode" = "true"
         "GenerateVerifiableCode" = "true"

@@ -1,17 +1,17 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "ISE.EiffelCodeDomProvider", "ISE.EiffelCodeDomProvider\ISE.EiffelCodeDomProvider.eifp", "{20573E76-C33E-4DD2-927A-6E869AD60569}"
+Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "EiffelSoftware.CodeDom", "EiffelSoftware.CodeDom\EiffelSoftware.CodeDom.eifp", "{20573E76-C33E-4DD2-927A-6E869AD60569}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "ISE.Base", "ISE.Base\ISE.Base.eifp", "{0256E70A-BA15-40CE-B3E8-0C72F72CC806}"
+Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "EiffelSoftware.EiffelBase", "EiffelSoftware.EiffelBase\EiffelSoftware.EiffelBase.eifp", "{0256E70A-BA15-40CE-B3E8-0C72F72CC806}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "ISE.EiffelVision2", "ISE.EiffelVision2\ISE.EiffelVision2.eifp", "{AB56DE0A-3A15-40FE-B3E8-0C72F72CC806}"
+Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "EiffelSoftware.EiffelVision2", "EiffelSoftware.EiffelVision2\EiffelSoftware.EiffelVision2.eifp", "{AB56DE0A-3A15-40FE-B3E8-0C72F72CC806}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "ISE.CacheBrowser", "ISE.CacheBrowser\ISE.CacheBrowser.eifp", "{F5967D50-9543-4A62-9356-B51F3B534B66}"
+Project("{22569018-37EF-4DD1-B9E0-5434A5E953AC}") = "EiffelSoftware.CacheBrowser", "EiffelSoftware.CacheBrowser\EiffelSoftware.CacheBrowser.eifp", "{F5967D50-9543-4A62-9356-B51F3B534B66}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

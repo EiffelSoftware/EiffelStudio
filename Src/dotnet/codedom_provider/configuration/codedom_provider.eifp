@@ -28,7 +28,7 @@
         {
         "RootClass" = "ECD_PROVIDER"
         "CreationRoutine" = "default_create"
-        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build\\ISE.CacheBrowser\\obj\\Debug"
+        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build_envision\\EiffelSoftware.CacheBrowser\\obj\\Debug"
         "OptimizeCode" = "false"
         "GenerateCLSCompliantCode" = "true"
         "GenerateVerifiableCode" = "true"
@@ -48,7 +48,7 @@
         {
         "RootClass" = "ECD_PROVIDER"
         "CreationRoutine" = "default_create"
-        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build\\ISE.CacheBrowser\\obj\\Release"
+        "PrecompiledLibrary" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\build_envision\\EiffelSoftware.CacheBrowser\\obj\\Release"
         "OptimizeCode" = "true"
         "GenerateCLSCompliantCode" = "true"
         "GenerateVerifiableCode" = "true"
@@ -128,7 +128,7 @@
     "wel"
     {
     "RelPath" = "${EIFFEL_SRC}\\library\\wel"
-    "Namespace" = ""
+    "Namespace" = "EiffelSoftware.Library.WEL"
     "Library" = "true"
     "IncSubDir" = "true"
     "Override" = "false"
@@ -144,7 +144,7 @@
     "wel_net"
     {
     "RelPath" = "${EIFFEL_SRC}\\library.net\\wel"
-    "Namespace" = ""
+    "Namespace" = "EiffelSoftware.Library.WELNet"
     "Library" = "true"
     "IncSubDir" = "true"
     "Override" = "false"
@@ -160,7 +160,7 @@
     "interface"
     {
     "RelPath" = "${EIFFEL_SRC}\\dotnet\\codedom_provider\\interface"
-    "Namespace" = ""
+    "Namespace" = "EiffelSoftware.CodeDom"
     "Library" = "false"
     "IncSubDir" = "true"
     "Override" = "false"

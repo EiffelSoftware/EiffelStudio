@@ -20,7 +20,7 @@ rt_public long ei_dtype (char *object)
 {
 	/* Returns dynamic type of `object' */
 
-	return (long) Dtype(object);
+	return (long) Dftype(object);
 }
 
 rt_public long ei_count_field (char *object)

@@ -64,28 +64,6 @@ feature -- Access
 	resource_name: STRING
 			-- Name of the resource relative to `Current' in the preferences.
 
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
 feature -- Basic operations
 
 	is_boolean_resource (s: STRING): BOOLEAN is
@@ -98,8 +76,6 @@ feature -- Basic operations
 			r ?= resources.item (s)
 			Result := r /= Void
 		end
-
-feature -- Obsolete
 
 feature -- Inapplicable
 

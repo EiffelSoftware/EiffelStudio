@@ -36,15 +36,17 @@ feature
 			-- Generate attribute access in a `typ' context
 		local
 			is_nested: BOOLEAN;
+			type_i: TYPE_i;
+			type_c: TYPE_C
 		do
 			is_nested := not is_first;
-
-			if not typ.is_expanded then
+			type_i := real_type (type);
+			type_c := type.c_type;
+			if not type_i.is_expanded and then not type_c.is_bit then
 					-- For dereferencing, we need a star...
 				generated_file.putchar ('*');
 					-- ...followed by the appropriate access cast
-				real_type (type).c_type.generate_access_cast
-					(generated_file);
+				type_c.generate_access_cast (generated_file);
 			end;
 			generated_file.putchar ('(');
 			reg.print_register;

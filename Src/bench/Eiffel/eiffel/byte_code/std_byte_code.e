@@ -244,8 +244,8 @@ feature
 					generated_file.putchar (';');
 				else
 					type_i := real_type (result_type);
-					type_i.c_type.generate_cast (generated_file);
-					generated_file.putstring ("0;");
+					type_i.c_type.generate_initial_value (generated_file);
+					generated_file.putchar (';');
 				end;
 				generated_file.new_line;
 			end;
@@ -396,8 +396,8 @@ feature
 							generated_file.putstring ("loc");
 							generated_file.putint (i);
 							generated_file.putstring (" = ");
-							type_i.c_type.generate_cast (generated_file);
-							generated_file.putstring ("0;");
+							type_i.c_type.generate_initial_value (generated_file);
+							generated_file.putchar (';');
 							generated_file.new_line;
 						end;
 					end;
@@ -492,8 +492,8 @@ feature
 				ctype.generate (generated_file);
 				generated_file.putstring ("Result");
 				generated_file.putstring (" = ");
-				ctype.generate_cast (generated_file);
-				generated_file.putstring ("0;");
+				ctype.generate_initial_value (generated_file);
+				generated_file.putchar (';');
 				generated_file.new_line;
 			end;
 		end;

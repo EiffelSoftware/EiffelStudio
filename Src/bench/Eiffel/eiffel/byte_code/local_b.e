@@ -10,7 +10,8 @@ inherit
 			make_byte_code, register_name,
 			creation_access,
 			assign_code, expanded_assign_code, reverse_code,
-			make_end_assignment, make_end_reverse_assignment
+			make_end_assignment, make_end_reverse_assignment,
+			bit_assign_code
 		end
 	
 feature 
@@ -88,6 +89,12 @@ feature -- Byte code generation
 			-- Finish the assignment to the current access
 		do
 			ba.append_short_integer (position);
+		end;
+
+	bit_assign_code: CHARACTER is
+			-- Bits assignment code 
+		do
+			Result := Bc_lbit_assign;
 		end;
 
 	assign_code: CHARACTER is

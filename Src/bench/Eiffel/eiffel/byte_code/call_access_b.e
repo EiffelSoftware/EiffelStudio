@@ -48,14 +48,6 @@ feature
 			make_code (ba, True);
 		end;
 
-	require_metamorphosis (con_type: TYPE_I): BOOLEAN is
-			-- Does `con_type' require metamorphosis?
-		do
-			Result := con_type.is_basic
-					and then not con_type.is_bit;
-			
-		end;
-
 	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
 			-- Generate byte code for a feature call. 
 			-- If not `flag', generate
@@ -64,8 +56,7 @@ feature
 		deferred
 		end;
 
-	standard_make_code (ba: BYTE_ARRAY; flag: BOOLEAN; 
-				meta: BOOLEAN; instant_context_type: TYPE_I) is
+	standard_make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
 			-- Generate byte code for a feature call. If not `flag', generate
 			-- an invariant check before the call.
 			-- if `meta', metamorphose the feature call.
@@ -77,19 +68,33 @@ feature
 			real_feat_id: INTEGER;
 			associated_class: CLASS_C;
 			feat_tbl: FEATURE_TABLE;
+			inst_cont_type: TYPE_I;
+			metamorphosed: BOOLEAN;
 		do
-			real_feat_id := feature_id;
-			if meta then
-				basic_type ?= instant_context_type;
-				static_type := basic_type.associated_dtype;
-					-- Process the feature id of `feature_name' in the
-					-- associated reference type
-				associated_class :=
-							basic_type.associated_reference.associated_class;
-				feat_tbl := associated_class.feature_table;
-				real_feat_id := feat_tbl.item (feature_name).feature_id;
+			inst_cont_type := context_type;
+			metamorphosed := inst_cont_type.is_basic 
+							and then not inst_cont_type.is_bit;
+			if metamorphosed then
+				if is_feature_special then
+					make_special_byte_code (ba)
+				else
+					basic_type ?= inst_cont_type;
+						-- Process the feature id of `feature_name' in the
+						-- associated reference type
+					associated_class :=
+								basic_type.associated_reference.associated_class;
+					feat_tbl := associated_class.feature_table;
+					real_feat_id := feat_tbl.item (feature_name).feature_id;
+					if parameters /= Void then
+						ba.append (Bc_rotate);
+						ba.append_short_integer (parameters.count + 1);
+					end;
+					ba.append (Bc_metamorphose);
+					static_type := basic_type.associated_reference.id - 1;
+					make_end_byte_code (ba, flag, real_feat_id, static_type);
+				end;
 			else
-				cl_type ?= instant_context_type;
+				cl_type ?= inst_cont_type;
 				if cl_type.is_expanded then
 						-- Feature `type_id' of CL_TYPE_I needs the
 						-- the attribute `expanded' to be False
@@ -97,20 +102,26 @@ feature
 					cl_type.set_is_expanded (False);
 				end;
 				static_type := cl_type.associated_class_type.id - 1;
-			end;
-			if is_first then
-				ba.append (Bc_current);
-			else
-				if parameters /= Void then
-					ba.append (Bc_rotate);
-					ba.append_short_integer (parameters.count + 1);
+				real_feat_id := feature_id;
+				if is_first then 
+						--! Cannot melt basic calls hence is_first
+						--! is not used in the above if meta statement.
+					ba.append (Bc_current);
+				else
+					if parameters /= Void then
+						ba.append (Bc_rotate);
+						ba.append_short_integer (parameters.count + 1);
+					end;
 				end;
-				if meta then
-					ba.append (Bc_metamorphose);
-					static_type := basic_type.associated_reference.id - 1;
-				end;
-			end;
-			if is_first or flag then
+				make_end_byte_code (ba, flag, real_feat_id, static_type);
+			end
+		end;
+
+	make_end_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN; 
+					real_feat_id: INTEGER; static_type: INTEGER) is
+			-- Make final portion of the standard byte code.
+		do
+			if 	is_first or flag then
 				ba.append (code_first);
 			else
 				ba.append (code_next);
@@ -120,6 +131,13 @@ feature
 				-- Generate feature id
 			ba.append_integer (real_feat_id);
 			ba.append_short_integer (static_type);
+		end;
+
+	make_special_byte_code (ba: BYTE_ARRAY) is
+			-- Make byte code for special calls.
+			-- (To be redefined in FEATURE_B).
+		do
+			-- Do nothing
 		end;
 
 	real_feature_id: INTEGER is

@@ -136,7 +136,7 @@ feature -- Byte code generation
 	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
 			-- Generate byte code for an access to an attribute
 		local
-			inst_con_type, r_type: TYPE_I;
+			r_type: TYPE_I;
 		do
 			r_type := Context.real_type (type);
 			if r_type.is_none then
@@ -145,10 +145,7 @@ feature -- Byte code generation
 				end;
 				ba.append (Bc_void);
 			else
-				inst_con_type := context_type;
-				standard_make_code (ba, flag, 
-					require_metamorphosis (inst_con_type),
-					inst_con_type);
+				standard_make_code (ba, flag);
 				ba.append_uint32_integer (r_type.sk_value);
 			end;
 		end;

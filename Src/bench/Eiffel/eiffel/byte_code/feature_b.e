@@ -8,7 +8,7 @@ inherit
 		redefine
 			is_feature, set_parameters, 
 			parameters, enlarged,
-			is_feature_special
+			is_feature_special, make_special_byte_code
 		end;
 
 feature 
@@ -92,21 +92,19 @@ feature -- Byte code generation
 	make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
 			-- Generate byte code for a feature call. If not `flag', generate
 			-- an invariant check before the call.
-		local
-			inst_cont_type: TYPE_I;
-			metamorphosed: BOOLEAN;
 		do
 			if parameters /= Void then
 				parameters.make_byte_code (ba);
 			end;
-			inst_cont_type := context_type;
-			metamorphosed := require_metamorphosis (inst_cont_type);
-			if metamorphosed and is_feature_special then
-				ba.append (special_routines.bc_code);
-			else
-				standard_make_code (ba, flag, metamorphosed, inst_cont_type);
-			end;
+			standard_make_code (ba, flag);
 		end;
+
+	make_special_byte_code (ba: BYTE_ARRAY) is
+            -- Make byte code for special calls.
+        do
+			ba.append (special_routines.bc_code);
+        end;
+
 
 	code_first: CHARACTER is
 			-- Code when Eiffel call is first (no invariant)

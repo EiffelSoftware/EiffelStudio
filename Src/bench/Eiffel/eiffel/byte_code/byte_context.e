@@ -732,6 +732,7 @@ feature
 			position: INTEGER;
 			reg: REGISTRABLE;
 			argument_b: ARGUMENT_B;
+			bit_i: BIT_I
 		do
 			-- if more than, say, 20 local variables are to be initialized,
 			-- then it might be worthy to call bzero() instead of manually
@@ -766,7 +767,7 @@ feature
 						-- Expanded cloning protocol
 						generated_file.putstring ("if (RTIE(");
 						generated_file.putstring (rname);
-						generated_file.putstring (") {");
+						generated_file.putstring (")) {");
 						generated_file.new_line;
 						generated_file.indent;
 						nb_exp := expanded_number (argument_b.position);
@@ -802,13 +803,20 @@ feature
 						generated_file.putstring ("l[");
 						generated_file.putint (position);
 						generated_file.putstring ("] = ");
-						if 	(reg.is_predefined or reg.is_temporary)
+						if 	((reg.is_predefined or reg.is_temporary)
 							and not (reg.is_current or reg.is_argument)
-							and not (reg.is_result and compound_or_post)
+							and not (reg.is_result and compound_or_post))
 						then
-							generated_file.putstring ("(char *) 0");
+							reg.c_type.generate_initial_value (generated_file);
 						else
-							generated_file.putstring (rname);
+							if (reg.c_type.is_bit) and (reg.is_argument) then
+								-- Clone argument if it is bit
+								generated_file.putstring ("RTCB(");	
+								generated_file.putstring (rname);
+								generated_file.putchar (')');	
+							else
+								generated_file.putstring (rname);
+							end;
 						end;
 						generated_file.putchar (';');
 					end;

@@ -26,10 +26,10 @@ feature {NONE}
 		end; 
 
 	watch_shaped: BOOLEAN_REF is
+			-- Has the mouse pointer a watch shape?
 		once
 			!! Result
 		end;
-			-- Has the mouse pointer a watch shape?
 	
 feature 
 

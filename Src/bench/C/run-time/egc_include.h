@@ -29,7 +29,7 @@ extern "C" {
 #endif
 
 extern struct ctable egc_ce_type_init;
-extern struct ctable egc_ce_gtype_init;
+extern struct ctable egc_ce_exp_type_init;
 extern struct cnode egc_fsystem_init [];
 extern struct conform *egc_fco_table_init [];
 extern void egc_system_mod_init_init (void);

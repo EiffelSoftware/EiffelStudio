@@ -13,10 +13,7 @@ inherit
 
 	PROMPT_D_I;
 
-	DIALOG_M
-		redefine
-			screen_object
-		end;
+	DIALOG_M;
 
 	PROMPT_M
 		rename
@@ -25,9 +22,9 @@ inherit
 			lower, raise, hide,
 			show, destroy, selection_make,
 			define_cursor_if_shell, undefine_cursor_if_shell,
-			is_stackable, clean_up, create_widget
+			is_stackable, created_dialog_automatically, create_widget
 		redefine
-			screen_object
+			parent
 		end;
 
 	MEL_PROMPT_DIALOG
@@ -42,11 +39,11 @@ inherit
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
 			screen as mel_screen,
-            is_shown as shown
+			is_shown as shown
 		undefine
 			raise, lower, show, hide
 		redefine
-			screen_object
+			parent
 		select
 			selection_make_no_auto_unmanage
 		end
@@ -59,19 +56,20 @@ feature {NONE} -- Initialization
 
 	make (a_prompt_dialog: PROMPT_D; oui_parent: COMPOSITE) is
 			-- Create a motif prompt dialog.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_prompt_d_no_auto (a_prompt_dialog.identifier,
-				mel_parent (a_prompt_dialog, widget_index));
+			mel_prompt_d_no_auto (a_prompt_dialog.identifier, mc);
 			a_prompt_dialog.set_dialog_imp (Current);
-			action_target := screen_object;
-			initialize (dialog_shell)
+			initialize (parent)
 		end;
 
 feature -- Access
 
-	screen_object: POINTER
-			-- Associated C widget pointer
+	parent: MEL_DIALOG_SHELL
+			-- Dialog shell of the working dialog
 
 end -- class PROMPT_D_M
 

@@ -5,47 +5,59 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class POPUP_M 
+class 
+	POPUP_M 
 
 inherit
 
 	POPUP_I;
 
 	MENU_M
-        rename
-            is_shown as shown
+		rename
+			is_shown as shown
 		undefine
 			create_callback_struct
+		redefine
+			parent
 		end;
 
 	MEL_POPUP_MENU
-        rename
-            make as popup_make,
-            foreground_color as mel_foreground_color,
-            set_foreground_color as mel_set_foreground_color,
-            background_color as mel_background_color,
-            background_pixmap as mel_background_pixmap,
-            set_background_color as mel_set_background_color,
-            set_background_pixmap as mel_set_background_pixmap,
-            destroy as mel_destroy,
-            screen as mel_screen,
-            is_shown as shown
-        end
+		rename
+			make as popup_make,
+			foreground_color as mel_foreground_color,
+			set_foreground_color as mel_set_foreground_color,
+			background_color as mel_background_color,
+			background_pixmap as mel_background_pixmap,
+			set_background_color as mel_set_background_color,
+			set_background_pixmap as mel_set_background_pixmap,
+			destroy as mel_destroy,
+			screen as mel_screen,
+			is_shown as shown
+		redefine
+			parent
+		end
 
 creation
 
 	make
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_popup: POPUP; oui_parent: COMPOSITE) is
 			-- Create a motif popup menu.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-            popup_make (a_popup.identifier,
-                    mel_parent (a_popup, widget_index));
+			popup_make (a_popup.identifier, mc);
 			abstract_menu := a_popup
 		end;
+
+feature -- Access
+
+	parent: MEL_MENU_SHELL
+			-- Parent of popup
 
 feature -- Display
 

@@ -12,7 +12,12 @@ class
         
 inherit
     EV_BUTTON_I
-        
+ 
+	EV_PRIMITIVE_IMP
+		redefine
+			wel_window
+		end
+       
 	EV_BAR_ITEM_IMP
 		redefine
 			wel_window
@@ -20,38 +25,69 @@ inherit
         
 	EV_TEXT_CONTAINER_IMP
 		redefine
-			wel_window
+			set_default_size
 		end
 	
-creation
+	EV_FONTABLE_IMP
 
-        make_with_label
+creation
+        make_with_text
+
 
 feature {NONE} -- Initialization
 
-		make (par: EV_CONTAINER) is
-			do
-				make_with_label (par, "")
-			end
+	make (par: EV_CONTAINER) is
+		do
+		end
 
-        make_with_label (par: EV_CONTAINER; txt: STRING) is
+
+	make_with_text (par: EV_CONTAINER; txt: STRING) is
         		-- Create a wel push button.
 		local
-			cont_imp: EV_CONTAINER_IMP
+			par_imp: EV_CONTAINER_IMP
 		do
-			cont_imp ?= par.implementation
+			par_imp ?= par.implementation
 			check
-				valid_container: cont_imp /= Void
+				valid_container: par_imp /= Void
 			end
-
-			!!wel_window.make (cont_imp.wel_window, txt, 0, 0, 10, 10, 0)
+			!WEL_PUSH_BUTTON!wel_window.make (par_imp.wel_window, txt, 0, 0, 0, 0, 0)
 			set_font (font)
 			set_default_size
+		end
+
+feature -- Basic operation
+
+	set_default_size is
+		-- Resize to a default size.
+		local
+			fw: EV_FONT_IMP
+		do
+			fw ?= font.implementation
+			check
+				font_not_void: fw /= Void
+			end
+			set_minimum_width (fw.string_width (Current, text) + Extra_width)
+			set_minimum_height (7 * fw.string_height (Current, text) // 4 - 2)
+			set_size (minimum_width, minimum_height)
+		end
+
+	Extra_width: INTEGER is 10
+
+feature -- Event - command association
+	
+	add_click_command ( command: EV_COMMAND; 
+			    arguments: EV_ARGUMENTS) is	
+		do
+			add_button_press_command (1, command, arguments)
 		end
 		
 feature {NONE} -- Implementation	
 	
-	wel_window: WEL_PUSH_BUTTON
+	wel_window: WEL_BUTTON
+			-- Current wel_window
+			-- We can't use directly a wel_push_button here,
+			-- because of the descendants classes that use 
+			-- other kind of wel_button
 end
 
 --|----------------------------------------------------------------
@@ -69,5 +105,3 @@ end
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-
-

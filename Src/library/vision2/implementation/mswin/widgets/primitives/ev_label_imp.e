@@ -18,27 +18,52 @@ inherit
 
 	EV_TEXT_CONTAINER_IMP
 		redefine
-			wel_window
+			set_default_size
 		end
 
+	EV_FONTABLE_IMP
+
 creation
-	make
+	make_with_text
 
 feature {NONE} -- Initialization
 
-	make (parent: EV_CONTAINER) is
+	make (par: EV_CONTAINER) is
+		do
+		end
+
+	make_with_text (parent: EV_CONTAINER; txt: STRING) is
 				-- Create a wel_static (i.e.: a mswin label)
 		local
-			cont_imp: EV_CONTAINER_IMP
+			par_imp: EV_CONTAINER_IMP
 		do
-			cont_imp ?= parent.implementation
+			par_imp ?= parent.implementation
 			check
-				valid_container: cont_imp /= Void
+				valid_container: par_imp /= Void
 			end
-			!!wel_window.make (cont_imp.wel_window, "", 0, 0, 0, 0, 0)
+			!!wel_window.make (par_imp.wel_window, txt, 0, 0, 0, 0, 0)
 			set_font (font)
 			set_default_size
 		end				
+
+feature -- Basic operation
+
+	set_default_size is
+		-- Resize to a default size.
+		local
+			fw: EV_FONT_IMP
+		do
+			fw ?= font.implementation
+			check
+				font_not_void: fw /= Void
+			end
+			set_minimum_width (fw.string_width (Current, text) + Extra_width)
+			set_minimum_height (7 * fw.string_height (Current, text) // 4 - 2)
+			set_size (minimum_width, minimum_height)
+		end
+
+	Extra_width: INTEGER is 10
+
 
 feature -- Implementation
 

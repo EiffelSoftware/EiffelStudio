@@ -403,6 +403,30 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				current_position.go_to (3)
 				last_token := TE_OLD
 			}
+-- We need to make the distinction between once keywords followed
+-- by a manifest string and once keywords introducing a once-routine
+-- because otherwise we would need to have two look-ahead tokens
+-- to figure out that the first once keyword in the following example
+-- in part of a once manifest string expression and the second is
+-- part of the compound of the once routine:
+--   f is
+--      require
+--         once "foo" /= Void
+--      once
+--         do_nothing
+--      end
+[oO][nN][cC][eE]/\"	{
+				current_position.go_to (text_count)
+				last_token := TE_ONCE_STRING
+			}
+[oO][nN][cC][eE][ \t\r\n]+/\"	{
+				current_position.go_to (text_count)
+				last_token := TE_ONCE_STRING
+			}
+[oO][nN][cC][eE]([ \t\r\n]|"--".*\n)+/\"	{
+				current_position.go_to (text_count)
+				last_token := TE_ONCE_STRING
+			}
 [oO][nN][cC][eE]	{
 				current_position.go_to (4)
 				last_token := TE_ONCE
@@ -422,6 +446,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [rR][eE][dD][eE][fF][iI][nN][eE]	{
 				current_position.go_to (8)
 				last_token := TE_REDEFINE
+			}
+[rR][eE][fF][eE][rR][eE][nN][cC][eE] {
+				current_position.go_to (9)
+				last_token := TE_REFERENCE
 			}
 [rR][eE][nN][aA][mM][eE]	{
 				current_position.go_to (6)
@@ -479,6 +507,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				current_position.go_to (7)
 				last_token := TE_VARIANT
 			}
+[vV][oO][iI][dD] {
+				current_position.go_to (4)
+				last_token := TE_VOID
+			}
 [wW][hH][eE][nN]	{
 				current_position.go_to (4)
 				last_token := TE_WHEN
@@ -495,9 +527,6 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 					-- Note: Identifiers are converted to lower-case.
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)
-				if not Case_sensitive then
-					token_buffer.to_lower
-				end
 				current_position.go_to (token_buffer.count)
 				last_token := TE_ID
 			}

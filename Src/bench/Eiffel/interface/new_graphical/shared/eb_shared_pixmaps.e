@@ -1149,6 +1149,11 @@ feature -- Icons
 			Result := pixmap_file_content ("icon_green_arrow")
 		end
 
+	Icon_arrow_empty: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_arrow_empty")
+		end
+
 	Icon_green_tick: EV_PIXMAP is
 		once
 			Result := pixmap_file_content ("icon_green_tick")

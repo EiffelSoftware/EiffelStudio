@@ -18,6 +18,8 @@ inherit
 	GB_ACCESSIBLE_XML_HANDLER
 	
 	GB_ACCESSIBLE_SYSTEM_STATUS
+	
+	GB_ACCESSIBLE_OBJECT_EDITOR
 
 create
 	make
@@ -49,6 +51,7 @@ feature -- Basic operations
 		execute is
 				-- Execute `Current'.
 			do
+				force_name_change_completion_on_all_editors
 				system_status.current_project_settings.save
 				xml_handler.save
 					-- Notify the system that the saved version is now up to date.

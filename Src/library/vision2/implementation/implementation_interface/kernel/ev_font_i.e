@@ -189,7 +189,7 @@ feature -- Status report
 			Result := [cur_width, cur_height]
 		end
 
-feature {EV_FONT_I} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	interface: EV_FONT
 
@@ -205,8 +205,8 @@ invariant
 	weight_valid: is_initialized implies valid_weight (weight)
 	shape_valid: is_initialized implies valid_shape (shape)
 	height_bigger_than_zero: is_initialized implies height > 0
-	ascent_bigger_than_zero: is_initialized implies ascent > 0
-	descent_bigger_than_zero: is_initialized implies descent > 0
+	ascent_not_negative: is_initialized implies ascent >= 0
+	descent_not_negative: is_initialized implies descent >= 0
 	width_of_empty_string_equals_zero: is_initialized implies string_width("") = 0
 
 	--| FIXME  IEK Does not hold true in gtk for all fonts.

@@ -47,6 +47,8 @@ feature {NONE} -- Initialization
 			init_commands
 			object_split_position := 300
 			create observers.make (10)
+			create kept_objects.make
+			kept_objects.compare_objects			
 		end
 
 feature -- Access
@@ -527,8 +529,6 @@ feature -- Debugging events
 			output_manager.clear
 			output_manager.display_application_status
 				-- Update `Current'.
-			create kept_objects.make
-			kept_objects.compare_objects
 				-- Raise debugging tools.
 			raise
 				-- Modify the debugging window display.

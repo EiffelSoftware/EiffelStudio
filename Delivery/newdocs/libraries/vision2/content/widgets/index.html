@@ -14,8 +14,8 @@
         components such as Windows, Buttons and Labels are examples of such.&nbsp;
         The widget set of Vision2 provide you with the flexibility to easily create powerful
         graphical applications.&nbsp; All widgets in
-        Vision2 inherit from <a href="../../reference/interface/widgets/ev_widget_chart.html"> EV_WIDGET</a> and the features provided in
-        <a CLASS="eclass" href="../../reference/interface/widgets/ev_widget_chart.html"><SPAN Class="eclass"> EV_WIDGET</SPAN></a>
+        Vision2 inherit from <a href="/libraries/vision2/reference/interface/widgets/ev_widget_chart.html"> EV_WIDGET</a> and the features provided in
+        <a CLASS="eclass" href="/libraries/vision2/reference/interface/widgets/ev_widget_chart.html"><SPAN Class="eclass"> EV_WIDGET</SPAN></a>
         may be called on any widget.
 			</P>
         <P>&nbsp;
@@ -27,11 +27,11 @@
 			<UL>
 				<LI><A HREF="/libraries/vision2/content/widgets/primitives/index.html">Primitives</A>
                   -- These are elements of the user interface that are mainly
-                  responsible for interaction with the user, such as an
-                  EV_BUTTON.
+                  responsible for interaction with the user, such as an <a href="../../reference/interface/widgets/primitives/ev_button_chart.html">EV_BUTTON</a>.
 				<LI><A HREF="/libraries/vision2/content/widgets/containers/index.html">Containers</A>
                   -- These are used to contain other widgets and position them
-                  in a certain way, such as an EV_VERTICAL_BOX that stacks its
+                  in a certain way, such as an <a href="../../reference/interface/widgets/containers/ev_vertical_box_chart.html"> EV_VERTICAL_BOX
+                  </a> that stacks its
                   children one by one vertically.
 				<LI><A HREF="/libraries/vision2/content/widgets/common_dialogs/index.html">Common_dialogs</A>
                   -- These are Operating System dependant popup dialog windows
@@ -41,7 +41,7 @@
         <h2>How do I create a widget?</h2>
         <p>All widgets in Vision2 are based around the default_create mechanism
         in Eiffel, this means that all that needs to be done to create a widget
-        is to declare a reference to a type (such as EV_BUTTON) and then call
+        is to declare a reference to a type (such as <a href="../../reference/interface/widgets/primitives/ev_button_chart.html">EV_BUTTON</a>) and then call
         create on that reference.&nbsp; An example of this is as follows.</p>
         <blockquote>
         <SPAN Class ="code"><SPAN Class="efeature">a_button:</SPAN> <SPAN Class="eclass">EV_BUTTON</SPAN><BR>
@@ -51,20 +51,25 @@
         <p>Along with the default creation, Vision2 also includes a few
         convenience creation functions.&nbsp; Examples of this are
         make_with_text for all widgets that may have text associated with them
-        (those that inherit from EV_TEXTABLE), this saves a call to set_text
+        (those that inherit from <a href="../../reference/interface/properties/ev_textable_chart.html"> EV_TEXTABLE</a>), this saves a call to set_text
         upon default creation of the textable widget.</p>
   
         <p><SPAN Class="ekeyword"> &nbsp;&nbsp;&nbsp;</SPAN>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <SPAN Class ="code">create <SPAN Class="efeature">a_button.make_with_text
-        (&quot;Click Me&quot;)</SPAN></SPAN></p>
+        <SPAN Class="code">create <SPAN Class="efeature">a_button.make_with_text
+        (<SPAN Class="estring">&quot;Click Me&quot;</SPAN>)</SPAN></SPAN></p>
     
         <p>This would be in place of</p>
         <blockquote>
         <SPAN Class ="code"><SPAN Class="ekeyword">create</SPAN> <SPAN Class="efeature">a_button</SPAN><BR>
-        <SPAN Class="efeature">a_button.set_text (&quot;Click Me&quot;)</SPAN></SPAN>
+        <SPAN Class="efeature">a_button.set_text (<SPAN Class="estring">&quot;Click Me&quot;</SPAN>)</SPAN></SPAN>
        
        
           </blockquote>
+          
+        <p Class="note">Note: When a widget is created no extra initialization has to be
+        performed, <b>the only exception is for a window where you have to call
+        show in order for it to be displayed on screen</b>.</p>
+        <p>&nbsp;</p>
           
 <H2>Sizing</H2>
         <P>
@@ -75,14 +80,15 @@
         <P>&nbsp;
 		</P>
         <P>The minimum size of a widget is the smallest possible size that it
-        can possibly be inside its parent container.&nbsp; If an EV_BUTTON was
+        can possibly be inside its parent container.&nbsp; If an <a href="../../reference/interface/widgets/primitives/ev_button_chart.html">EV_BUTTON</a>
+        was
         created and set with a minimum_size of width/height (100, 100), if this
-        button was inserted in to an EV_HORIZONTAL_BOX, then the box's size
+        button was inserted in to an <a href="../../reference/interface/widgets/containers/ev_horizontal_box_chart.html"> EV_HORIZONTAL_BOX</a>, then the box's size
         could never be below (100, 100) or it would break the minimum size of
         the button.&nbsp; <b>The size of a container must always be greater or
         equal to the minimum sizes of its children.</b>
 		</P>
-		<P CLASS="note"><B>Note:</B>In Vision2, there is no way to set the current size of the primitive. The current size is dependent on the size of the <A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/ev_widget.html#f_parent">parent</A> or the minimum_size.</P>
+		<P CLASS="note"><B>Note: </B>In Vision2, there is no way to set the current size of the primitive. The current size is dependent on the size of the <A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/ev_widget.html#f_parent">parent</A> or the minimum_size.</P>
 		
         <h2>Now what do I do?</h2>
     	&nbsp; Now that you can create a widget, you will need to actually make it

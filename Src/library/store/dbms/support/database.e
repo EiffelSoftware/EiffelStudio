@@ -62,7 +62,7 @@ feature -- For DATABASE_CHANGE
 		do
 		end
 
-	pre_immediate (descriptor, i: INTEGER): INTEGER is
+	pre_immediate (descriptor, i: INTEGER) is
 			-- In IMMEDIATE EXECUTE mode, if the performed SQL statement is
 			-- a call to a stored procedure, allocate some area used by the
 			-- stored procedure

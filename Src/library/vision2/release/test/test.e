@@ -35,6 +35,7 @@ feature
 			--  Create one of each Vision widget in a notebook.
 		local
 			box: EV_BOX
+			hb: EV_HORIZONTAL_BOX
 			scroll: EV_SCROLLABLE_AREA
 			menu_bar: EV_MENU_BAR
 			object_menu: EV_MENU
@@ -48,10 +49,13 @@ feature
 			create object_menu.make_with_text ("Other objects")
 			menu_bar.extend (object_menu)
 			create {EV_VERTICAL_BOX} box
+			create hb
+			hb.extend (non_widgets_frame)
 			first_window.extend (box)
+			box.extend (hb)
 			create scroll
-			scroll.set_minimum_size (700,500)
-			box.extend (scroll)
+			scroll.set_minimum_size (700, 500)
+			hb.extend (scroll)
 			scroll.extend (widgets_frame)
 			create description_frame.make_with_text ("Description")
 			box.extend (description_frame)
@@ -134,6 +138,57 @@ feature
 			widgets.go_to (c)
 		end
 
+	non_widgets_frame: EV_FRAME is
+			-- Frame with a combo box from which the user can select a non-widget.
+			-- That class then performs a test and display the result on the area below
+			-- the combo box.
+		local
+			vb: EV_VERTICAL_BOX
+			nw_combo: EV_COMBO_BOX
+			client_area: EV_CELL
+			combo_item: EV_LIST_ITEM
+		do
+			create Result.make_with_text ("Non-widget tests")
+			create vb
+			Result.extend (vb)
+			create nw_combo
+			vb.extend (nw_combo)
+			vb.disable_item_expand (nw_combo)
+			create client_area
+			vb.extend (client_area)
+			from
+				non_widgets.start
+			until
+				non_widgets.after
+			loop
+				create combo_item.make_with_text (non_widgets.item.generating_type)
+				nw_combo.extend (combo_item)
+				combo_item.select_actions.extend (~display_test (client_area, non_widgets.item))
+				non_widgets.forth
+			end
+		end
+
+	display_test (an_area: EV_CELL; any_object: ANY) is
+			-- Display `a_testable'.`test_widget' on `an_area'.
+		require
+			an_area_not_void: an_area /= Void
+		local
+			a_testable: EV_TESTABLE_NON_WIDGET
+		do
+			widget_label.set_text (
+				any_object.generating_type + "%N" +
+				class_descriptions.item (
+					any_object.generating_type
+				)
+			)
+			a_testable ?= any_object
+			if a_testable /= Void then
+				an_area.put (a_testable.test_widget)
+			else
+				an_area.put (create {EV_LABEL}.make_with_text ("(no test available yet)"))
+			end
+		end
+
 	widget_label: EV_LABEL is
 		once
 			create Result.make_with_text ("Click on one of the blue labels above to see a widget description.")
@@ -206,18 +261,18 @@ feature
 		once
 			create Result.make
 			Result.extend (create {EV_FIGURE_ARC})
-			Result.extend (create {EV_FIGURE_DOT})
+			Result.extend (create {EV_FIGURE_DOT}.make_for_test)
 --|FIXME		Result.extend (create {EV_FIGURE_DRAWER})
-			Result.extend (create {EV_FIGURE_ELLIPSE})
+			Result.extend (create {EV_FIGURE_ELLIPSE}.make_for_test)
 			Result.extend (create {EV_FIGURE_EQUILATERAL})
 			Result.extend (create {EV_FIGURE_GROUP})
-			Result.extend (create {EV_FIGURE_LINE})
+			Result.extend (create {EV_FIGURE_LINE}.make_for_test)
 			Result.extend (create {EV_FIGURE_MATH})
 			Result.extend (create {EV_FIGURE_PICTURE})
 			Result.extend (create {EV_FIGURE_PIE_SLICE})
 			Result.extend (create {EV_FIGURE_POLYGON})
 			Result.extend (create {EV_FIGURE_POLYLINE})
-			Result.extend (create {EV_FIGURE_RECTANGLE})
+			Result.extend (create {EV_FIGURE_RECTANGLE}.make_for_test)
 			Result.extend (create {EV_FIGURE_TEXT})
 			Result.extend (create {EV_FIGURE_TRIANGLE})
 			Result.extend (create {EV_FIGURE_WORLD})
@@ -350,6 +405,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/25 23:16:16  brendel
+--| Added test area for non-widgets.
+--|
 --| Revision 1.20  2000/04/20 18:16:21  oconnor
 --| made self destruct delay longer
 --|

@@ -8,7 +8,8 @@ inherit
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS;
 	SHARED_LACE_PARSER;
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
+	SHARED_EIFFEL_PROJECT
 
 feature
 
@@ -119,6 +120,7 @@ end;
 					else
 						!! sys;
 						Workbench.set_system (sys)
+						Eiffel_project.init_system;
 						sys.make;
 					end
 				else

@@ -85,7 +85,7 @@ end;
 				-- Read exception code.
 			read_int;
 
-				-- Read asertion tag.
+				-- Read assertion tag.
 			read_string;
 
 if enabled_debug_trace then

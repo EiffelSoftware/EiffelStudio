@@ -200,6 +200,7 @@ feature -- Comparison
 	{
 		bool Result = false;
 		FieldInfo [] l_attributes;
+		Type l_other_type;
 		object l_attr;
 
 		#if ASSERTIONS
@@ -208,23 +209,34 @@ feature -- Comparison
 	
 		if (Current == null) {
 			generate_call_on_void_target_exception ();
-		} else {
+		} else{
 			Result = (Current == other);
-			if ((!Result) && (Current.GetType ().Equals (other.GetType ()))) {
-				l_attributes = other.GetType().GetFields (
-					BindingFlags.Instance | BindingFlags.Public |
-					BindingFlags.NonPublic);
+			if (!Result) {
+				l_other_type = other.GetType();
+				if (Current.GetType ().Equals (l_other_type)) {
+					l_attributes = l_other_type.GetFields (
+						BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
-				foreach (FieldInfo attribute in l_attributes) {
-					l_attr = attribute.GetValue (other);
-					if (l_attr is ValueType) {
-						Result = Equals (l_attr, attribute.GetValue (Current));
-					} else {
-						Result = l_attr == attribute.GetValue (Current);
-					}
-					if (!Result) {
-							// Force exit from loop as objects are not identical.
-						return Result;
+					foreach (FieldInfo attribute in l_attributes) {
+						l_attr = attribute.GetValue (other);
+						if (l_attr is ValueType) {
+							Result = Equals (l_attr, attribute.GetValue (Current));
+						} else {
+							Result = (l_attr == attribute.GetValue (Current));
+							if (!Result) {
+									/* Special case here where we check whether or not `l_attr' corresponds
+									* to the special runtime field `$$____type' used to store the generic type
+									* information. If it is the case, we simply ignore it. To identify
+									* it we use the name of the attribute as well as its type which needs
+									* to be of type GENERIC_TYPE. */
+								Result = (!attribute.Name.Equals ("$$____type") ||
+									((l_attr == null) || typeof(GENERIC_TYPE).IsInstanceOfType(l_attr)));
+							}
+						}
+						if (!Result) {
+								// Force exit from loop as objects are not identical.
+							return Result;
+						}
 					}
 				}
 			}

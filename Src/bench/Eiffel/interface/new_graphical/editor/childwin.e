@@ -64,6 +64,7 @@ feature -- Initialization
 				dc.select_font(current_font)
 				space_size := dc.string_size(" ")
 				line_increment := space_size.height + 1
+				line_height := space_size.height
 				dc.unselect_font
 				dc.release
 
@@ -279,8 +280,11 @@ feature {NONE} -- Display functions
 		local
 			curr_x		: INTEGER
 			curr_y		: INTEGER
+			new_curr_x	: INTEGER
 			cursor_line : BOOLEAN -- Is the cursor present in the current line?
 			curr_token	: EDITOR_TOKEN
+			width_cursor: INTEGER
+			start_cursor: INTEGER
 		do
 			curr_x := d_x
 			curr_y := (a_line - first_line_displayed)*line_increment
@@ -293,13 +297,29 @@ feature {NONE} -- Display functions
 			loop
 				curr_token := line.item
 
-					-- display the token
-				curr_x := curr_token.display(curr_x, curr_y, dc)
+					-- Display the token.
+				new_curr_x := curr_token.display(curr_x, curr_y, dc)
 
-					-- display the cursor (if needed)
+					-- Display the cursor (if needed).
 				if cursor_line and then cursor.token = curr_token then
-					dc.text_out(cursor.x_in_pixels, curr_y, "#")
+						-- Compute the start pixel of the cursor.
+					start_cursor := curr_x + curr_token.get_substring_width(cursor.pos_in_token)
+						-- Compute the width of the pixel depending whether we are
+						-- in Insertion mode or not (small or plain cursor)
+					if insert_mode then
+						width_cursor := curr_token.get_substring_width(cursor.pos_in_token + 1) - curr_token.get_substring_width(cursor.pos_in_token)
+						width_cursor := width_cursor.max(2)
+					else
+						width_cursor := 2
+					end
+						-- Draw the cursor
+					dc.select_brush(black_brush)
+					dc.pat_blt(start_cursor, curr_y, width_cursor, line_height, Blackness)
+					dc.unselect_brush
 				end
+
+					-- prepare next iteration
+				curr_x := new_curr_x
 				line.forth
 			end
 		end
@@ -307,6 +327,8 @@ feature {NONE} -- Display functions
 
 feature {NONE} -- Status Report
 	
+	insert_mode: BOOLEAN
+
 	first_line_displayed: INTEGER
 		-- First line currently displayed on the screen.
 
@@ -335,10 +357,21 @@ feature {NONE} -- Constants & Text Attributes
 	line_increment: INTEGER
 		-- Height in pixel of a line + an interline.
 
+	line_height: INTEGER
+		-- Height in pixel of a line.
+
 feature {NONE} -- Implementation
 
 	current_font: WEL_FONT
 		-- Current font used to display the text.
+
+	black_brush: WEL_BRUSH is
+		local
+			black_color: WEL_COLOR_REF
+		once
+			create black_color.make_rgb(0,0,0)
+			create Result.make_solid(black_color)
+		end
 
 	initialized: BOOLEAN
 		-- Has initialisations been performed?

@@ -30,7 +30,7 @@ feature -- Initialisation
 				image.append_character('%T')
 				i := i + 1
 			end
-			length := editor_preferences.tabulation_spaces * number_of_tabs
+			length := number_of_tabs
 		end
 
 feature -- Miscellaneous

@@ -42,7 +42,9 @@ feature -- Miscellaneous
 			dc.unselect_font
 		end
 
+-- FIXME ARNAUD: Seems to return a zero based value
 	retrieve_position_by_width(a_width: INTEGER): INTEGER is
+-- FIXME ARNAUD: Seems to return a zero based value
 			-- Return the character situated under the `a_width'-th
 			-- pixel.
 		local

@@ -24,11 +24,11 @@ feature -- Access
 			p: PARAMETER_INFO
 			t: TYPE
 		do
-			create Result.make (1, info.get_parameters.get_length)
+			create Result.make (1, info.get_parameters.count)
 			params := info.get_parameters
 			from
 				i := 0
-				count := params.get_length
+				count := params.count
 			until
 				i >= count
 			loop

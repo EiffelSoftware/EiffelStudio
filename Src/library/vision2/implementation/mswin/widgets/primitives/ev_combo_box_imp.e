@@ -45,6 +45,7 @@ inherit
 			on_right_button_down,
 			on_middle_button_down,
 			on_left_button_down,
+			on_left_button_up,
 			pnd_press
 		redefine
 			set_minimum_width_in_characters,
@@ -735,6 +736,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.76  2000/04/27 23:24:04  rogers
+--| Undefined on_left_button_up from EV_TEXT_COMPONENT_IMP.
+--|
 --| Revision 1.75  2000/04/21 01:20:17  pichery
 --| Commented check.
 --|

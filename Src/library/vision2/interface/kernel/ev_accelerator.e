@@ -7,6 +7,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
+--| FIXME Feature names in this class should be propogated to the _I.
+
 class
 	EV_ACCELERATOR
 
@@ -220,6 +222,9 @@ end -- class EV_ACCELERATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/16 01:08:06  oconnor
+--| reinserted accidently removed FIXME
+--|
 --| Revision 1.9  2000/03/15 23:04:46  brendel
 --| Fixed compiler errors.
 --|

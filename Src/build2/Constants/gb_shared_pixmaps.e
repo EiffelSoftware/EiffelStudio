@@ -359,6 +359,12 @@ feature {NONE} -- Update
 		
 feature {NONE} -- Implementation
 
+	all_missing_files: HASH_TABLE [STRING, STRING] is
+			-- All pixmaps that have been found to be missing so far.
+		once
+			create Result.make (10)
+		end
+
 	pixmap_warning_dialog: EV_WARNING_DIALOG is
 			-- Dialog to be displayed, when a pixmap is
 			-- missing from the installation.
@@ -376,9 +382,12 @@ feature {NONE} -- Implementation
 			new_line_index: INTEGER 
 		do
 			if not pixmap_warning_dialog.is_destroyed then
-				new_line_index := pixmap_warning_dialog.text.last_index_of ('%N', pixmap_warning_dialog.text.count)
-				pixmap_warning_dialog.set_text (pixmap_warning_dialog.text.substring (1, new_line_index - 1) + "%N" +
-					new_text + pixmap_warning_dialog.text.substring (new_line_index, pixmap_warning_dialog.text.count))
+				if not all_missing_files.has (new_text) then
+					all_missing_files.put (new_text, new_text)
+					new_line_index := pixmap_warning_dialog.text.last_index_of ('%N', pixmap_warning_dialog.text.count)
+					pixmap_warning_dialog.set_text (pixmap_warning_dialog.text.substring (1, new_line_index - 1) + "%N" +
+						new_text + pixmap_warning_dialog.text.substring (new_line_index, pixmap_warning_dialog.text.count))
+				end
 			end
 		end
 		

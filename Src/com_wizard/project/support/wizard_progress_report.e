@@ -33,29 +33,12 @@ feature -- Element Change
 			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make (feature {WIZARD_PROGRESS_EVENT_ID}.Title, a_title)])
 		end
 
-	set_task_title (a_title: STRING) is
-			-- Set `title' with `a_title'.
-		require
-			non_void_title: a_title /= Void
-			valid_title: not a_title.is_empty
-		do
-			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make (feature {WIZARD_PROGRESS_EVENT_ID}.Task_title, a_title)])
-		end
-
 	set_range (a_range: INTEGER) is
 			-- Set `range' with `a_range'.
 		require
 			valid_range: a_range >= 0
 		do
 			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make (feature {WIZARD_PROGRESS_EVENT_ID}.Set_range, a_range)])
-		end
-
-	set_task_range (a_range: INTEGER) is
-			-- Set `range' with `a_range'.
-		require
-			valid_range: a_range >= 0
-		do
-			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make (feature {WIZARD_PROGRESS_EVENT_ID}.Set_task_range, a_range)])
 		end
 
 	step is
@@ -76,6 +59,7 @@ feature -- Basic Operations
 			-- Terminate report (i.e. terminate dialog)
 		do
 			event_raiser.call ([create {WIZARD_PROGRESS_EVENT}.make (feature {WIZARD_PROGRESS_EVENT_ID}.Finish, Void)])
+			event_raiser.call ([create {EV_THREAD_EVENT}.make (0, feature {EV_THREAD_SEVERITY_CONSTANTS}.Stop, Void)])
 		end
 
 feature {NONE} -- Implementation

@@ -46,14 +46,14 @@ feature
 			if real_type (type).is_none then
 				generated_file.putstring ("(char *) 0")
 			else
-				{ATTRIBUTE_B} precursor
+				{ATTRIBUTE_B} Precursor
 			end
 		end
 
 	free_register is
 			-- Free registers
 		do
-			{ATTRIBUTE_B} precursor	
+			{ATTRIBUTE_B} Precursor	
 			if basic_register /= Void then
 				basic_register.free_register
 			end
@@ -111,7 +111,7 @@ end
 			-- Generation of access
 		do
 			if not real_type (type).is_none then
-				{ATTRIBUTE_B} precursor
+				{ATTRIBUTE_B} Precursor
 			end
 		end
 
@@ -171,16 +171,11 @@ end
 			if type.is_none then
 				generated_file.putstring ("(char *) 0")
 			else
-				generate_real_attribute (reg)
+					-- Generate attribute
+				do_generate (reg)
 			end
 		end
 
-	generate_real_attribute (reg: REGISTRABLE) is
-			-- Generate attribute
-		do
-			do_generate (reg)
-		end
-	
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
 			-- Generate attribute in a `typ' context
 		local

@@ -7,9 +7,10 @@ inherit
 	COMMAND_W;
 	LICENSE_WINDOW
 		rename
-			make as license_window_make
+			make as license_window_make,
+			dot as cursor_dot
 		undefine
-			execute
+			execute, watch_cursor
 		end;
 
 creation

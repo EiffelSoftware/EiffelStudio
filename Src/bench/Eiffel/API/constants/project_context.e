@@ -27,7 +27,7 @@ feature {NONE} -- Status report
 	is_project_writable: BOOLEAN is
 			-- May the project be both compiled and used for browsing?
 		local
-			w_code_dir, f_code_dir, comp_dir: RAW_FILE;
+			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
 			project_file: RAW_FILE
 		do
 			!! w_code_dir.make (Workbench_generation_path);
@@ -52,7 +52,7 @@ feature {NONE}
 		once
 			!!file_name.make_from_string (Workbench_generation_path);
 			file_name.set_file_name (Updt);
-			!!Result.make (file_name.path)
+			!!Result.make (file_name)
 		end;
 
 	Project_directory: PROJECT_DIR is
@@ -81,7 +81,7 @@ feature {NONE}
 		once
 			!!directory_name.make_from_string (Project_directory_name);
 			directory_name.extend_from_array (<<Casegen , Case_storage>>);
-			Result := directory_name.path
+			Result := directory_name
 		end;
 
 	Case_gen_path: STRING is
@@ -90,7 +90,7 @@ feature {NONE}
 		once
 			!!directory_name.make_from_string (Project_directory_name);
 			directory_name.extend (Casegen);
-			Result := directory_name.path
+			Result := directory_name
 		end;
 
 	Create_case_storage_directory is
@@ -113,7 +113,7 @@ feature {NONE}
 		once
 			!!dir_name.make_from_string (Project_directory_name);
 			dir_name.extend (Eiffelgen);
-			Result := dir_name.path
+			Result := dir_name
 		end;
 
 	Create_eiffel_gen_directory is
@@ -132,7 +132,7 @@ feature {NONE}
 		once
 			!!dir_name.make_from_string (Project_directory_name);
 			dir_name.extend_from_array (<<Eiffelgen, W_code>>);
-			Result := dir_name.path
+			Result := dir_name
 		end;
 
 	Final_generation_path: STRING is
@@ -141,7 +141,7 @@ feature {NONE}
 		once
 			!!dir_name.make_from_string (Project_directory_name);
 			dir_name.extend_from_array (<<Eiffelgen, F_code>>);
-			Result := dir_name.path
+			Result := dir_name
 		end;
 
 	Create_generation_directory is
@@ -166,7 +166,7 @@ feature {NONE}
 		once
 			!!dir_name.make_from_string (Project_directory_name);
 			dir_name.extend_from_array (<<Eiffelgen, Comp>>);
-			Result := dir_name.path
+			Result := dir_name
 		end;
 
 	Create_compilation_directory is
@@ -189,7 +189,7 @@ feature {NONE}
 			!!file_name.make_from_string (Project_directory_name);
 			file_name.extend (Eiffelgen);
 			file_name.set_file_name (Dot_workbench);
-			Result := file_name.path
+			Result := file_name
 		end;
 
 	Precompilation_path: STRING is
@@ -199,7 +199,7 @@ feature {NONE}
 		once
 			!!dir_name.make_from_string (Precompilation_directory.name);
 			dir_name.extend_from_array (<<Eiffelgen, Comp>>);
-			Result := dir_name.path
+			Result := dir_name
 		end;
 
 	Precompilation_file_name: STRING is
@@ -211,7 +211,7 @@ feature {NONE}
 			!!file_name.make_from_string (Precompilation_directory.name);
 			file_name.extend (Eiffelgen);
 			file_name.set_file_name (Dot_workbench);
-			Result := file_name.path
+			Result := file_name
 		end;
 
 	Precompilation_preobj: STRING is
@@ -222,7 +222,7 @@ feature {NONE}
 			!!file_name.make_from_string (Precompilation_directory.name);
 			file_name.extend_from_array (<<Eiffelgen, W_code>>);
 			file_name.set_file_name (Preobj);
-			Result := file_name.path
+			Result := file_name
 		end;
 
 	Precompilation_driver: STRING is
@@ -233,7 +233,7 @@ feature {NONE}
 			!!file_name.make_from_string (Precompilation_directory.name);
 			file_name.extend_from_array (<<Eiffelgen, W_code>>);
 			file_name.set_file_name (Driver);
-			Result := file_name.path
+			Result := file_name
 		end;
 
 end

@@ -29,7 +29,8 @@ inherit
 			on_mouse_move,
 			on_key_down,
 			interface,
-			pnd_press
+			pnd_press,
+			initialize
 		end
 
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
@@ -107,9 +108,22 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (default_parent, 0, 0, 0, 0, 0)
+		end
+
+	initialize is
+			-- Do post creation initialization.
+		do
+			{EV_PRIMITIVE_IMP} Precursor
 			!! all_ev_children.make (1)
 			create ev_children.make (1)
+			create image_list.make (16, 16, Ilc_color24, True)
+				-- Create image list with all images 16 by 16 pixels
+			set_image_list(image_list)
+
+				-- Associate the image list with the tree.
+			is_initialized := True
 		end
+
 
 feature {EV_TREE_ITEM_IMP} -- implementation
 
@@ -338,6 +352,13 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_ANY_I} -- WEL Implementation
 
+	image_list: WEL_IMAGE_LIST
+			-- WEL image list to store all images required by items.
+
+	current_image_list_images: HASH_TABLE [INTEGER, INTEGER]
+			-- A list of all individual images in `image_list'
+			-- [Position in image list, windows pointer]
+
 	internal_propagate_pointer_press (keys, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `keys', `x_pos' and `y_pos' to the appropriate item event.
 		local
@@ -560,6 +581,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.52  2000/03/24 00:19:34  rogers
+--| Added initialize which creates and sets the image list of the tree. Added image_list and current_image_list which is a record of images in the list.
+--|
 --| Revision 1.51  2000/03/22 20:18:53  rogers
 --| Added pnd_press, added functions relating to PND status of object and children.Not complete implementation of PND so more work needs to be undertaken.
 --|

@@ -70,24 +70,34 @@ feature -- Status report
 	widget_at_position (x, y: INTEGER): EV_WIDGET is
 			-- Widget at position (`x', `y') if any.
 		local
+			l_window: WEL_WINDOW
 			wel_point: WEL_POINT
 			widget_imp: EV_WIDGET_IMP
 			internal_combo_box: EV_INTERNAL_COMBO_BOX_IMP
+			internal_combo_field: EV_INTERNAL_COMBO_FIELD_IMP
 		do
 				-- Assign the cursor position to `wel_point'.
 			create wel_point.make (x, y)
 				-- Retrieve WEL_WINDOW at `wel_point'.
-			widget_imp ?= wel_point.window_at
+			l_window := wel_point.window_at
+			
 				-- If there is a window at `wel_point'.
+			widget_imp ?= l_window
 			if widget_imp /= Void then
 					-- Result is interface of `widget_imp'.
 				Result := widget_imp.interface
-			end
-				-- Combo boxes must be handled as a special case, as
-				-- they are comprised of two widgets.
-			internal_combo_box ?= wel_point.window_at
-			if internal_combo_box /= Void then
-				Result := internal_combo_box.parent.interface
+			else
+					-- Combo boxes must be handled as a special case, as
+					-- they are comprised of two widgets.
+				internal_combo_box ?= l_window
+				if internal_combo_box /= Void then
+					Result := internal_combo_box.parent.interface
+				else
+					internal_combo_field ?= l_window
+					if internal_combo_field /= Void then
+						Result := internal_combo_field.parent.interface
+					end
+				end
 			end
 		end
 

@@ -10,7 +10,7 @@ class
 inherit
 	EV_TITLED_WINDOW
 		redefine
-			initialize
+			initialize, is_in_default_state
 		end
 
 feature {NONE} -- Initialization
@@ -33,6 +33,17 @@ feature {NONE} -- Initialization
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
+		end
+
+
+feature {NONE} -- Implementation
+
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			-- Re-implement if you wish to enable checking
+			-- for `Current'.
+			Result := True
 		end
 
 end -- class <CLASS_NAME>

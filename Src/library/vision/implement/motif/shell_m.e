@@ -90,11 +90,10 @@ feature
 			-- by window manager of parent widget if `flag', disable it
 			-- otherwise.
 		do
-			managed := flag
 		end;
 
-	managed: BOOLEAN;
-			-- Is Current Shell managed ?
+	managed: BOOLEAN is True;
+			-- Is Current Shell managed ? (Always true)
 
 feature {ALL_CURS_X}
 

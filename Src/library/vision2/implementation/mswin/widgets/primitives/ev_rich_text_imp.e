@@ -183,6 +183,19 @@ inherit
 		end
 		
 	EV_RICH_TEXT_ACTION_SEQUENCES_IMP
+		export
+			{NONE} all
+		end
+	
+	EV_RICH_TEXT_BUFFERING_STRUCTURES_I
+		export
+			{NONE} all
+		end
+	
+	EV_RICH_TEXT_CONSTANTS_I
+		export
+			{NONE} all
+		end
 	
 create
 	make
@@ -869,8 +882,8 @@ feature -- Status setting
 				is_current_format_italic := False
 				current_vertical_offset := 0
 				initialize_buffering_structures
-				color_text := "{\colortbl ;"
-				font_text := "{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl"
+				color_text := color_table_start.twin
+				font_text := font_table_start.twin
 			end
 			hashed_character_format := format.hash_value
 			if not hashed_formats.has (hashed_character_format) then
@@ -885,46 +898,48 @@ feature -- Status setting
 			end
 
 			format_index := format_offsets.item (hashed_character_format)
-			temp_string := "\highlight"
+				
+					-- Must clone otherwise we will always be modifying `highlight_string'.
+			temp_string := highlight_string.twin
 			temp_string.append (back_color_offset.i_th (format_index).out)
-			temp_string.append ("\cf")
+			temp_string.append (color_string)
 			temp_string.append (color_offset.i_th (format_index).out)
 			
 			format_underlined := formats.i_th (format_index).effects.is_underlined
 			if not is_current_format_underlined and format_underlined then
-				temp_string.append ("\ul")
+				temp_string.append (start_underline_string)
 				is_current_format_underlined := True
 			elseif is_current_format_underlined and not format_underlined then
-				temp_string.append ("\ul0")
+				temp_string.append (end_underline_string)
 				is_current_format_underlined := False
 			end
 			format_striked := formats.i_th (format_index).effects.is_striked_out
 			if not is_current_format_striked_through and format_striked then
-				temp_string.append ("\strike")
+				temp_string.append (start_strikeout_string)
 				is_current_format_striked_through := True
 			elseif is_current_format_striked_through and not format_striked then
-				temp_string.append ("\strike0")
+				temp_string.append (end_strikeout_string)
 				is_current_format_striked_through := False
 			end
 			format_bold := formats.i_th (format_index).font.weight = feature {EV_FONT_CONSTANTS}.weight_bold
 			if not is_current_format_bold and format_bold then
-				temp_string.append ("\b")
+				temp_string.append (start_bold_string)
 				is_current_format_bold := True
 			elseif is_current_format_bold and not format_bold then
-				temp_string.append ("\b0")
+				temp_string.append (end_bold_string)
 				is_current_format_bold := False
 			end
 			format_italic := formats.i_th (format_index).font.shape = feature {EV_FONT_CONSTANTS}.shape_italic
 			if not is_current_format_italic and format_italic then
-				temp_string.append ("\i")
+				temp_string.append (start_italic_string)
 				is_current_format_italic := True
 			elseif is_current_format_italic and not format_italic then
-				temp_string.append ("\i0")
+				temp_string.append (end_italic_string)
 				is_current_format_italic := False
 			end
 			vertical_offset := formats.i_th (format_index).effects.vertical_offset
 			if vertical_offset /= current_vertical_offset then
-				temp_string.append ("\up")
+				temp_string.append (start_vertical_offset)
 					-- Create a screen DC for access to metrics
 					-- We must specify the vertical offset in half points.
 				create screen_dc
@@ -934,11 +949,11 @@ feature -- Status setting
 				current_vertical_offset := vertical_offset
 			end
 			
-			temp_string.append ("\f")
+			temp_string.append (font_string)
 			temp_string.append (font_offset.i_th (format_index).out)
-			temp_string.append ("\fs")
+			temp_string.append (font_size_string)
 			temp_string.append (heights.i_th (format_index).out)
-			temp_string.append (" ")
+			temp_string.append (space_string)
 			internal_text.append (temp_string)
 			from
 				counter := 1
@@ -947,13 +962,13 @@ feature -- Status setting
 			loop
 				character := a_text.item (counter)
 				if character = '%N' then
-					internal_text.append ("\par%N")
+					internal_text.append (rtf_newline)
 				elseif character = '\' then
-					internal_text.append ("\\")
+					internal_text.append (rtf_backslash)
 				elseif character = '{' then
-					internal_text.append ("\{")	
+					internal_text.append (rtf_open_brace)	
 				elseif character = '}' then
-					internal_text.append ("\}")
+					internal_text.append (rtf_close_brace)
 				else
 					internal_text.append_character (a_text.item (counter))
 				end
@@ -1037,13 +1052,13 @@ feature -- Status setting
 					
 				buffered_text := text.twin
 					-- Generate an insertion string to use for default font
-				default_font_format := "\cf1\highlight2\f0\fs"
+				default_font_format := default_font
 				default_font_format.append ((font.height * 2).out)
-				default_font_format.append (" ")
+				default_font_format.append (space_string)
 				
 					-- Generate FRT Header corresponding to all fonts used in formatting.			
 					--{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl{\f0\fnil\fcharset0 MS Shell Dlg;}{\f1\fswiss\fcharset0 Arial;}}
-				font_text := "{\rtf1\ansi\ansicpg1252\deff0\deflang1033{\fonttbl"
+				font_text := font_table_start.twin
 
 					-- Add the default font of `Current' as the first in the font table.
 				font_text.append (generate_font_heading (font, 0))
@@ -1061,7 +1076,7 @@ feature -- Status setting
 					
 					-- Generate RTF Header corresponding to all colors used in formatting.
 					--	{\colortbl ;\red255\green0\blue0;\red0\green255\blue0;}
-				color_text := "{\colortbl ;"
+				color_text := color_table_start.twin
 
 					-- Now perform buffering of colors.
 				from
@@ -1089,56 +1104,56 @@ feature -- Status setting
 				loop
 					if start_formats.item (counter) /= Void then
 						format_index := formats_index.item (counter)
-						temp_string := "\highlight"
+						temp_string := highlight_string.twin
 						
 						temp_string.append (back_color_offset.i_th (format_index).out)
-						temp_string.append ("\cf")
+						temp_string.append (color_string)
 						temp_string.append (color_offset.i_th (format_index).out)
 						format_underlined := formats.i_th (format_index).effects.is_underlined
 						if not is_current_format_underlined and format_underlined then
-							temp_string.append ("\ul")
+							temp_string.append (start_underline_string)
 							is_current_format_underlined := True
 						elseif is_current_format_underlined and not format_underlined then
-							temp_string.append ("\ul0")
+							temp_string.append (end_underline_string)
 							is_current_format_underlined := False
 						end
 						format_striked := formats.i_th (format_index).effects.is_striked_out
 						if not is_current_format_striked_through and format_striked then
-							temp_string.append ("\strike")
+							temp_string.append (start_strikeout_string)
 							is_current_format_striked_through := True
 						elseif is_current_format_striked_through and not format_striked then
-							temp_string.append ("\strike0")
+							temp_string.append (end_strikeout_string)
 							is_current_format_striked_through := False
 						end
 						format_bold := formats.i_th (format_index).font.weight = feature {EV_FONT_CONSTANTS}.weight_bold
 						if not is_current_format_bold and format_bold then
-							temp_string.append ("\b")
+							temp_string.append (start_bold_string)
 							is_current_format_bold := True
 						elseif is_current_format_bold and not format_bold then
-							temp_string.append ("\b0")
+							temp_string.append (end_bold_string)
 							is_current_format_bold := False
 						end						
 						format_italic := formats.i_th (format_index).font.shape = feature {EV_FONT_CONSTANTS}.shape_italic
 						if not is_current_format_italic and format_italic then
-							temp_string.append ("\i")
+							temp_string.append (start_italic_string)
 							is_current_format_italic := True
 						elseif is_current_format_italic and not format_italic then
-							temp_string.append ("\i0")
+							temp_string.append (end_italic_string)
 							is_current_format_italic := False
 						end
 						vertical_offset := formats.i_th (format_index).effects.vertical_offset
 						if vertical_offset /= current_vertical_offset then
-							temp_string.append ("\up")
+							temp_string.append (start_vertical_offset)
 								-- We must specify the vertical offset in half points.
 							temp_string.append ((pixel_to_point (screen_dc, vertical_offset) * 2).out)
 							current_vertical_offset := vertical_offset
 						end
 						
-						temp_string.append ("\f")
+						temp_string.append (font_string)
 						temp_string.append (format_index.out)
-						temp_string.append ("\fs")
+						temp_string.append (font_size_string)
 						temp_string.append (heights.i_th (format_index).out)
-						temp_string.append (" ")
+						temp_string.append (space_string)
 						internal_text.append_string (temp_string)
 						screen_dc.release
 					end
@@ -1146,7 +1161,7 @@ feature -- Status setting
 						internal_text.append_string (default_font_format)
 					end
 					if buffered_text.item (counter).is_equal ('%N') then
-						internal_text.append_string ("\par%N")
+						internal_text.append_string (rtf_newline)
 					else
 						internal_text.append_character (buffered_text.item (counter))
 					end
@@ -1256,11 +1271,11 @@ feature -- Status setting
 			hashed_color, hashed_back_color: STRING
 		do
 			color := a_format.color
-			hashed_color := ("\red")
+			hashed_color := rtf_red.twin
 			hashed_color.append (color.red_8_bit.out)
-			hashed_color.append ("\green")
+			hashed_color.append (rtf_green)
 			hashed_color.append (color.green_8_bit.out)
-			hashed_color.append ("\blue")
+			hashed_color.append (rtf_blue)
 			hashed_color.append (color.blue_8_bit.out)
 			hashed_color.append (";")
 
@@ -1278,11 +1293,11 @@ feature -- Status setting
 			end
 			
 			back_color := a_format.background_color
-			hashed_back_color := ("\red")
+			hashed_back_color := rtf_red.twin
 			hashed_back_color.append (back_color.red_8_bit.out)
-			hashed_back_color.append ("\green")
+			hashed_back_color.append (rtf_green)
 			hashed_back_color.append (back_color.green_8_bit.out)
-			hashed_back_color.append ("\blue")
+			hashed_back_color.append (rtf_blue)
 			hashed_back_color.append (back_color.blue_8_bit.out)
 			hashed_back_color.append (";")
 
@@ -1610,12 +1625,6 @@ feature {EV_CONTAINER_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	is_current_format_underlined: BOOLEAN
-	is_current_format_striked_through: BOOLEAN
-	is_current_format_bold: BOOLEAN
-	is_current_format_italic: BOOLEAN
-	current_vertical_offset: INTEGER
-
 	default_string_size: INTEGER is 50000
 		-- Default size used for all internal strings for buffering.
 		-- This reduces the need to resize the string as the formatting is applied.
@@ -1640,9 +1649,6 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (10)
 		end
-
-	view_text: STRING is "\viewkind4\uc1\pard"
-		-- A STRING constant representing the view type of the RTF document.
 		
 	internal_text: STRING
 		-- Internal representation of text, built as RTF. This is built and then
@@ -1781,54 +1787,6 @@ feature {NONE} -- Implementation
 				Result := internal_text_length
 			end
 		end
-
-feature {NONE} -- Implementation
-
-			-- These attributes are used to stop multiple versions of the same color being
-			-- generated in the RTF.
-
-	hashed_colors: HASH_TABLE [INTEGER, STRING]
-			-- All colors currently stored for buffering, accessible via the
-			-- actual RTF output, in the form ";\red255\green0\blue0". The integer `item'
-			-- corresponds to the offset of the color in `colors'.
-		
-	color_offset: ARRAYED_LIST [INTEGER]
-			-- All color indexes to use for foreground colors in document,
-			-- indexed by their corresponding character format index.
-			-- So, for example, item 20 would correspond to the color offset to use from
-			-- the color table for the 20th character format.
-		
-	back_color_offset: ARRAYED_LIST [INTEGER]
-			-- All color indexes to use for background colors in document,
-			-- indexed by their corresponding character format index.
-			-- So, for example, item 20 would correspond to the color offset to use from
-			-- the color table for the 20th character format.
-			
-	color_count: INTEGER
-		-- Number of colors currently buffered.		
-	
-	color_text: STRING
-		-- The RTF string correponding to all colors in the document.
-		
-			-- These attributes are used to stop multiple versions of the same font being
-			-- generate in the RTF.
-			
-	hashed_fonts: HASH_TABLE [INTEGER, STRING]
-			-- All fonts currently stored for buffering, accessible via the
-			-- actual RTF output, in the form "\froman\fcharset0 System". The integer `item'
-			-- corresponds to the offset of the font in `fonts'.
-	
-	font_offset: ARRAYED_LIST [INTEGER]
-			-- All font indexes  in document,
-			-- indexed by their corresponding character format index.
-			-- So, for example, item 20 would correspond to the font offset to use from
-			-- the font table for the 20th character format.
-	
-	font_count: INTEGER
-		-- Number of fonts currently buffered.
-	
-	font_text:STRING
-		-- The RTF string corresponding to all fonts in the document.
 
 feature {EV_ANY_I} -- Implementation
 

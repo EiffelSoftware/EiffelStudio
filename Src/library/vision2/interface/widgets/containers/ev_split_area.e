@@ -1,7 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision split area. Contains two items either side of a%N%
-		%separator. The user can adjust separator by dragging it."
+		"Contains two widgets either side of an adjustable separator."
 	status: "See notice at end of class"
 	keywords: "container, split, devide"
 	date: "$Date$"
@@ -46,6 +45,7 @@ inherit
 feature {NONE} -- Initialization
 
 	initialize is
+			--|FIXME comment
 		do
 			check
 				split_box_not_void: split_box /= Void
@@ -289,10 +289,11 @@ feature -- Status setting
 		end
 
 	set_split_position (a_split_position: INTEGER) is
-			-- Make `a_split_position' the new position of the splitter in pixels.
+			-- Make `a_split_position' the position of the splitter in pixels.
 		require
 			position_in_valid_range:
-				(a_split_position >= minimum_split_position and a_split_position <= maximum_split_position)
+				(a_split_position >= minimum_split_position
+				and a_split_position <= maximum_split_position)
 		local
 			fcd, scd: INTEGER
 		do
@@ -308,21 +309,24 @@ feature -- Status setting
 			end
 		ensure
 			--split_position = a_split_position
-			--| FIXME IEK This doesn't always hold true as GTK may not resize the
-			--| split area immediately, this is true when shrinking min size of first cell.
+--| FIXME IEK This doesn't always hold true as GTK may not resize the
+--| split area immediately, this is true when shrinking min size of first cell.
 		end
 
 	set_proportion (a_proportion: REAL) is
-			-- Move the separator position to be relative to the size of the split area.
-			-- 0.5 = middle of split area, providing the user can do this manually anyway.
-			-- A value of 1 will move the separator to its upmost position, zero its smallest.
+			--|FIXME reword this! 
+			-- Move the separator position to be relative to the size of the
+			-- split area 0.5 = middle of split area, providing the user can do
+			-- this manually anyway. A value of 1 will move the separator to
+			-- its upmost position, zero its smallest.
 		require
 			proportion_in_valid_range:
 				(a_proportion >= 0 and a_proportion <= 1)
 		local
 			current_proportion: INTEGER	
 		do
-			current_proportion := (a_proportion * select_from (split_box.width, split_box.height)).rounded
+			current_proportion := (a_proportion *
+				select_from (split_box.width, split_box.height)).rounded
 			if current_proportion < minimum_split_position then
 				set_split_position (minimum_split_position)
 			elseif current_proportion > maximum_split_position then
@@ -442,7 +446,9 @@ feature {NONE} -- Implementation
 			-- End of the drag.
 		do
 			remove_line
-			set_split_position (splitter_position_from_screen_x_or_y (scr_x, scr_y))
+			set_split_position (
+				splitter_position_from_screen_x_or_y (scr_x, scr_y)
+			)
 			sep.disable_capture
 			sep.pointer_motion_actions.wipe_out
 			sep.pointer_button_release_actions.wipe_out
@@ -489,7 +495,7 @@ feature {NONE} -- Implementation
 			-- Current cursor position.
 
 	previous_split_position: INTEGER
-		-- Previous split_position
+		-- Previous split_position.
 
 	first_cell, second_cell: EV_CELL
 		-- Two client areas.
@@ -503,12 +509,14 @@ feature {NONE} -- Implementation
 	scr: EV_SCREEN
 		-- Used for drawing guideline on screen.
 
+	implementation: EV_AGGREGATE_WIDGET_I
+			-- Responsible for interaction with the native graphics toolkit.
+
 	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_AGGREGATE_WIDGET_IMP} implementation.make (Current)
 		end
-
-	implementation: EV_AGGREGATE_WIDGET_I
 
 invariant
 	split_box_not_void: is_useable implies split_box /= Void
@@ -516,8 +524,10 @@ invariant
 	first_cell_not_void: is_useable implies first_cell /= Void
 	second_cell_not_void: is_useable implies second_cell /= Void
 	split_box_has_three_items: is_useable implies split_box.count = 3
-	split_box_first_is_first_cell: is_useable implies split_box.first = first_cell
-	split_box_last_is_second_cell: is_useable implies split_box.last = second_cell
+	split_box_first_is_first_cell:
+		is_useable implies split_box.first = first_cell
+	split_box_last_is_second_cell:
+		is_useable implies split_box.last = second_cell
 
 end -- class EV_SPLIT_AREA
 
@@ -542,6 +552,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/18 00:52:23  oconnor
+--| formatting, layout and comment tweaks
+--|
 --| Revision 1.25  2000/03/09 16:12:24  brendel
 --| Replaced obsolete call width disable_item_expand.
 --|
@@ -599,7 +612,8 @@ end -- class EV_SPLIT_AREA
 --| released
 --|
 --| Revision 1.10.6.11  2000/01/28 16:46:38  oconnor
---| changed first_item to first and second_item to second in line with CHAIN.first -- Item at first position
+--| changed first_item to first and second_item to second in line with
+--| CHAIN.first -- Item at first position
 --|
 --| Revision 1.10.6.10  2000/01/27 19:30:52  oconnor
 --| added --| FIXME Not for release
@@ -611,7 +625,8 @@ end -- class EV_SPLIT_AREA
 --| Changed position features to split_position
 --|
 --| Revision 1.10.6.7  2000/01/25 17:19:26  king
---| Added assertions to set_position, removed positioning postcondition as it doesn't hold in gtk when the minimum size is shrunk
+--| Added assertions to set_position, removed positioning postcondition as it
+--| doesn't hold in gtk when the minimum size is shrunk
 --|
 --| Revision 1.10.6.6  2000/01/21 23:10:59  oconnor
 --| fixed postcond on extend

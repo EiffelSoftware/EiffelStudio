@@ -1,6 +1,13 @@
 indexing
 	description:
-		"Eiffel Vision scrollable area."
+		"Displays a single widget that may be larger that the container.%
+		%Scroll bars allow the user to select the area displayed."
+	appearance:
+		"---------------%N%
+		%|           |^|%N%
+		%|   `item'  | |%N%
+		%|___________|v|%N%
+		%|<_________>|_|"
 	status: "See notice at end of class"
 	keywords: "container, scroll, scrollbar, viewport"
 	date: "$Date$"
@@ -23,12 +30,8 @@ create
 
 feature {NONE} -- Initialization
 
-	create_implementation is
-		do
-			create {EV_SCROLLABLE_AREA_IMP} implementation.make (Current)
-		end
-
 	make_for_test is
+			-- Create and perform tests.
 		local
 			pixmap: EV_PIXMAP
 		do
@@ -77,7 +80,7 @@ feature -- Access
 feature -- Element change
 
 	set_horizontal_step (a_step: INTEGER) is
-			-- Set `horizontal_step' to `a_step'.
+			-- Assign `a_step' to `horizontal_step'.
 		require
 			a_step_positive: a_step > 0
 		do
@@ -87,7 +90,7 @@ feature -- Element change
 		end
 
 	set_vertical_step (a_step: INTEGER) is
-			-- Set `vertical_step' to `a_step'.
+			-- Assign `a_step' to `vertical_step'.
 		require
 			a_step_positive: a_step > 0
 		do
@@ -131,6 +134,13 @@ feature -- Element change
 feature {NONE} -- Implementation
 
 	implementation: EV_SCROLLABLE_AREA_I
+			-- Responsible for interaction with the native graphics toolkit.
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_SCROLLABLE_AREA_IMP} implementation.make (Current)
+		end
 
 invariant
 	horizontal_step_positive: is_useable implies horizontal_step > 0
@@ -159,6 +169,9 @@ end -- class EV_SCROLLABLE_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/18 00:52:23  oconnor
+--| formatting, layout and comment tweaks
+--|
 --| Revision 1.13  2000/03/03 02:56:00  oconnor
 --| pux pixmap in area in make_with_test
 --|
@@ -178,7 +191,8 @@ end -- class EV_SCROLLABLE_AREA
 --| added is_useable to invariants
 --|
 --| Revision 1.8.6.6  2000/02/12 01:04:32  king
---| Corrected is_vertical_scrollbar_visible due to careless cutting and pasting, doh Vincent
+--| Corrected is_vertical_scrollbar_visible due to careless cutting and
+--| pasting, doh Vincent
 --|
 --| Revision 1.8.6.5  2000/01/28 20:00:14  oconnor
 --| released
@@ -201,7 +215,6 @@ end -- class EV_SCROLLABLE_AREA
 --|
 --| Revision 1.8.2.3  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

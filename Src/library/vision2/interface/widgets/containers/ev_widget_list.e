@@ -1,6 +1,6 @@
 indexing
 	description: 
-		"EiffelVision container that contains a list of widgets."
+		"Multiple widget container accessible as a list."
 	status: "See notice at end of class"
 	keywords: "widget list, container"
 	date: "$Date$"
@@ -67,11 +67,16 @@ feature {NONE} -- Initialization
 				create radio.make_with_text ("radio item " + i.out)
 				extend (radio)
 				inspect i
-					when 1 then radio.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.2,0.2))
-					when 2 then radio.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.7,0.2))
-					when 3 then radio.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.2))
-					when 4 then radio.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.7,0.7))
-					when 5 then radio.set_background_color (create {EV_COLOR}.make_with_rgb (0.2,0.2,0.7))
+					when 1 then radio.set_background_color
+						(create {EV_COLOR}.make_with_rgb (0.7,0.2,0.2))
+					when 2 then radio.set_background_color
+						(create {EV_COLOR}.make_with_rgb (0.7,0.7,0.2))
+					when 3 then radio.set_background_color
+						(create {EV_COLOR}.make_with_rgb (0.2,0.7,0.2))
+					when 4 then radio.set_background_color
+						(create {EV_COLOR}.make_with_rgb (0.2,0.7,0.7))
+					when 5 then radio.set_background_color
+						(create {EV_COLOR}.make_with_rgb (0.2,0.2,0.7))
 				end
 				i := i + 1
 			end
@@ -301,8 +306,7 @@ feature {NONE} -- Inapplicable
 feature {NONE} -- Implementation
 
 	implementation: EV_WIDGET_LIST_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_WIDGET_LIST
 
@@ -327,6 +331,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/18 00:52:23  oconnor
+--| formatting, layout and comment tweaks
+--|
 --| Revision 1.16  2000/03/17 23:47:16  oconnor
 --| Moved uniqueness and parenting invariants from widget_list to container.
 --|

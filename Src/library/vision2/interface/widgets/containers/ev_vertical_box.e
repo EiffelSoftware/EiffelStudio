@@ -1,6 +1,20 @@
 indexing
 	description: 
-		"EiffelVision vertical box."
+		"Horizontal linear widget container"
+	appearance:
+		"---------------%N%
+		%|             |%N%
+		%|   'first'   |%N%
+		%|             |%N%
+		%|-------------|%N%
+		%|             |%N%
+		%|     ...     |%N%
+		%|             |%N%
+		%|-------------|%N%
+		%|             |%N%
+		%|   `last'    |%N%
+		%|             |%N%
+		%---------------"
 	status: "See notice at end of class"
 	keywords: "container, box, vertical"
 	date: "$Date$"
@@ -19,17 +33,18 @@ create
 	default_create,
 	make_for_test
 
-feature {NONE} -- Implementation
-
-	create_implementation is
-			-- Create implementation of vbox.
-		do
-			create {EV_VERTICAL_BOX_IMP} implementation.make (Current)
-		end
-
 feature {EV_ANY_I} -- Implementation
    
 	implementation: EV_VERTICAL_BOX_I
+			-- Responsible for interaction with the native graphics toolkit.
+
+feature {NONE} -- Implementation
+
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
+		do
+			create {EV_VERTICAL_BOX_IMP} implementation.make (Current)
+		end
 
 end -- class EV_VERTICAL_BOX
 
@@ -54,6 +69,9 @@ end -- class EV_VERTICAL_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/18 00:52:23  oconnor
+--| formatting, layout and comment tweaks
+--|
 --| Revision 1.10  2000/03/01 20:07:36  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|
@@ -73,7 +91,8 @@ end -- class EV_VERTICAL_BOX
 --| added --| FIXME Not for release
 --|
 --| Revision 1.6.6.3  1999/12/17 19:47:35  rogers
---| redefined implementation to be a a more refined type. Implementation is now exported to EV_ANY_I.
+--| redefined implementation to be a a more refined type. Implementation is
+--| now exported to EV_ANY_I.
 --|
 --| Revision 1.6.6.2  1999/12/15 18:33:05  oconnor
 --| formatting
@@ -83,7 +102,6 @@ end -- class EV_VERTICAL_BOX
 --|
 --| Revision 1.6.2.3  1999/11/02 17:20:13  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

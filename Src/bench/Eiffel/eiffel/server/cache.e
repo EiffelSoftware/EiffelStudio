@@ -6,68 +6,37 @@ indexing
 deferred class CACHE [T -> IDABLE]
 
 inherit
-	
-	TO_SPECIAL [ARRAY [H_CELL[T]]]
-
 	SHARED_CONFIGURE_RESOURCES
-
 
 feature -- Initialisation
 
 	make is
 			-- Creates a table of Cache_size hash_entry
 		local
-			i: INTEGER
-			array: ARRAY [H_CELL[T]]
-			s: INTEGER
+			i, n: INTEGER
+			l_array: SPECIAL [H_CELL[T]]
 		do
-			s := Cache_size
-			count := 0
-			size := s
-			make_area (s)
-			create array_count.make (0, s - 1)
-			create history.make (s)
-			create index.make (0, s - 1)
-			from 
-			until
-				i = s
-			loop
-				create array.make (1, 5)
-				area.put (array, i)
-				i := i + 1
-			end
-		end
-
-	make_i (n : INTEGER)  is
-			-- Creates a table of n hash_entry
-		local
-			i: INTEGER
-			array: ARRAY [H_CELL[T]]
-		do
+			n := cache_size
 			size := n
 			count := 0
-			make_area (n)
-			create array_count.make (0, n - 1)
+			create area.make (n)
+			create array_count.make (n)
 			create history.make (n)
-			create index.make (0, n - 1)
+			create index.make (n)
 			from 
 			until
 				i = n
 			loop
-				create array.make (1, 5)
-				area.put (array, i)
+				create l_array.make (5)
+				area.put (l_array, i)
 				i := i + 1
 			end
 		end
 
 	cache_size: INTEGER is
 			-- Cache size
-		local
-			s: STRING
 		do
-			s := generator
-			s.to_lower
-			Result := Configure_resources.get_integer (s, default_value)
+			Result := Configure_resources.get_integer (generator.as_lower, default_value)
 
 			debug ("CACHE_SERVER")
 				io.error.put_string ("Size of ")
@@ -89,7 +58,7 @@ feature -- Initialisation
 		deferred
 		end;
 
-	array_count: ARRAY [INTEGER]
+	array_count: SPECIAL [INTEGER]
 		-- number of element in each sub-array
 
 feature -- Cache manipulations
@@ -99,12 +68,11 @@ feature -- Cache manipulations
 		require
 			not_void: id /= 0
 		local
-			i, j, k: INTEGER			
+			i, j: INTEGER			
 			found: BOOLEAN
-			l_array: ARRAY [H_CELL[T]]
+			l_array: SPECIAL [H_CELL[T]]
 		do
-			k := id
-			i := k \\ Size
+			i := id \\ size
 			from
 				l_array := area.item (i)
 				j := array_count.item (i)
@@ -117,10 +85,10 @@ feature -- Cache manipulations
 			Result := found
 
 			debug ("CACHE")
-				if Size < 500 then
+				if size < 500 then
 					from 
 						i :=  0
-						j := Size
+						j := size
 					until
 						i = j
 					loop
@@ -168,17 +136,15 @@ feature -- Cache manipulations
 		require
 			not_void: id /= 0
 		local
-			i, j, k: INTEGER			
+			i, j: INTEGER			
 			found: BOOLEAN
-			l_array: ARRAY [H_CELL[T]]
+			l_array: SPECIAL [H_CELL[T]]
 			tmp: H_CELL[T]
 		do
-			k := id
-			i := k \\ Size
+			i := id \\ size
 			from
 				l_array := area.item (i)
-				k := array_count.item (i)
-				j := k
+				j := array_count.item (i)
 			until
 				j = 0 or else found
 			loop
@@ -197,10 +163,10 @@ feature -- Cache manipulations
 			end
 
 			debug ("CACHE")
-				if Size < 500 then
+				if size < 500 then
 					from 
 						i :=  0
-						j := Size
+						j := size
 					until
 						i = j
 					loop
@@ -248,11 +214,10 @@ feature -- Cache manipulations
 		local
 			i, j, k: INTEGER			
 			found: BOOLEAN
-			l_array: ARRAY [H_CELL[T]]
+			l_array: SPECIAL [H_CELL[T]]
 			tmp: H_CELL[T]
 		do
-			k := id
-			i := k \\ Size
+			i := id \\ size
 			from
 				l_array := area.item (i)
 				j := array_count.item (i)
@@ -289,11 +254,11 @@ feature -- Cache manipulations
 			not_void: e /= Void
 		local
 			i, t: INTEGER
-			l_array: array [H_CELL[T]]
+			l_array: SPECIAL [H_CELL[T]]
 			h_cell: H_CELL[T]
 			to_remove: T
 		do	
-			i := e.id \\ Size
+			i := e.id \\ size
 			l_array := area.item (i)
 			history.add (e)
 			create h_cell.make (e, history.younger)
@@ -304,12 +269,13 @@ feature -- Cache manipulations
 				last_removed_item := Void
 				count := count + 1
 			end
-			t := array_count.item (i)
-			if l_array.count = t then	
-				l_array.grow (2 * t)
+			t := array_count.item (i) + 1
+			array_count.put (t, i)
+			if l_array.capacity = t then	
+				l_array := l_array.resized_area (2 * t)
+				area.put (l_array, i)
 			end
-			array_count.put (t + 1, i)
-			l_array.put (h_cell, t + 1)
+			l_array.put (h_cell, t)
 		end
 		
 	is_full: BOOLEAN is
@@ -330,15 +296,15 @@ feature -- Cache manipulations
 			s: INTEGER
 		do
 			from 
-				s := Size 
+				s := size 
 			until 	
 				s = 0
 			loop
 				s := s - 1
-				area.item(s).discard_items
+				area.item(s).clear_all
 			end
 			history.wipe_out
-			array_count.discard_items
+			array_count.clear_all
 			count := 0
 			after := True
 		end
@@ -356,7 +322,7 @@ feature -- Cache manipulations
 	history: CACHE_HISTORY[T]
 			-- history of the arrivals in the cache
 
-	index: ARRAY[INTEGER]
+	index: SPECIAL[INTEGER]
 			-- index of each item in the history
 
 	count: INTEGER
@@ -385,7 +351,7 @@ feature -- linear iteration
 				loop
 					item_array := item_array + 1
 				end
-				if item_array = Size then
+				if item_array = size then
 					after := True
 				else
 					after := False
@@ -402,7 +368,7 @@ feature -- linear iteration
 			-- put item_for_iteration on the next element of the cache
 		local
 			item_array, item_number, limit: INTEGER
-			array_current: ARRAY [H_CELL[T]]
+			array_current: SPECIAL [H_CELL[T]]
 			found: BOOLEAN
 		do
 			from
@@ -445,17 +411,20 @@ feature -- linear iteration
 
 feature {NONE}
 
-	last_item_array: ARRAY [H_CELL[T]]
-		-- the array in which the last searched item 
-		-- was found
+	last_item_array: SPECIAL [H_CELL[T]]
+			-- the array in which the last searched item 
+			-- was found
 
 	last_item_pos: INTEGER
-		-- the position in which the last
-		-- searched item was found
+			-- the position in which the last
+			-- searched item was found
 
 	last_item_array_number: INTEGER
-		-- the number of last_item_array	
+			-- the number of last_item_array	
 							
+	area: SPECIAL [SPECIAL [H_CELL[T]]]
+			-- Storage
+
 feature {NONE} -- to implement force
 
 	internal_remove (e: T) is
@@ -467,10 +436,10 @@ feature {NONE} -- to implement force
 			i, j, k: INTEGER			
 			found: BOOLEAN
 			id: INTEGER
-			l_array: ARRAY [H_CELL[T]]
+			l_array: SPECIAL [H_CELL[T]]
 		do
 			id := e.id
-			i := id \\ Size
+			i := id \\ size
 			from
 				l_array := area.item (i)
 				j := array_count.item (i)

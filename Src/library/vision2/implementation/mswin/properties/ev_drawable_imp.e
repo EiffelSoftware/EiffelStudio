@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Set some default values.
 		do
-			create font
+			create internal_font
 			create foreground_color.make_with_rgb (0, 0, 0)
 			create background_color.make_with_rgb (1, 1, 1)
 
@@ -138,8 +138,11 @@ feature -- Access
 	dashed_line_style: BOOLEAN
 			-- Are lines drawn dashed?
 
-	font: EV_FONT
+	font: EV_FONT is
 			-- Character appearance.
+		do
+			Result := internal_font
+		end
 
 feature {NONE} -- Implementation
 
@@ -273,8 +276,8 @@ feature -- Element change
 		local
 			font_imp: EV_FONT_IMP
 		do
-			font.copy (a_font)
-			font_imp ?= a_font.implementation
+			internal_font := a_font
+			font_imp ?= internal_font.implementation
 			if dc.font_selected then
 				dc.unselect_font
 			end
@@ -672,7 +675,14 @@ feature {NONE} -- Implementation
 		end
 
 
---| Internal buffered pens & brush
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_DRAWABLE
+
+feature {EV_DRAWABLE_IMP} -- Internal datas.
+
+	internal_font: EV_FONT
+			-- Font used to draw text.
 
 	internal_background_brush: WEL_BRUSH
 			-- Buffered background brush. Created in order to
@@ -723,10 +733,6 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	interface: EV_DRAWABLE
-
 end -- class EV_DRAWABLE_IMP
 
 --|----------------------------------------------------------------
@@ -750,6 +756,12 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/02/24 05:05:19  pichery
+--| Efficiency improvement. `set_font' do not copy the content of the font
+--| passed in parameter anymore. Now we do a direct assignment.
+--| The feature `font' now return a clone of our internal font. So the user
+--| is still not able to change the aspect of the font without using `set_font'.
+--|
 --| Revision 1.20  2000/02/20 20:29:44  pichery
 --| created a factory that build WEL objects (pens & brushes). This factory
 --| keeps created objects into an hashtable in order to avoid multiple object

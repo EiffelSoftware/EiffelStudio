@@ -331,12 +331,12 @@ feature {NONE} -- Byte code generation
 				i > nb
 			loop
 				cl_name := l_keys.item (i)
-				if cl_name = Void or else cl_name.count > ba.max_string_count then
-					if cl_name /= Void then
-						fixme ("Report that class name is too long.")
-					end
+				if cl_name = Void then
 					ba.append_short_integer (0)
 				else
+					check
+						class_name_not_too_long: cl_name.count <= ba.max_string_count
+					end
 					ba.append_string (cl_name)
 				end
 				i := i + 1

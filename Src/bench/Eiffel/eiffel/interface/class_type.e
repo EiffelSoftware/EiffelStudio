@@ -1723,11 +1723,6 @@ feature -- Byte code generation
 
 				-- 2. generator string
 			class_name := associated_class.name
-			if class_name.count > ba.max_string_count then
-				fixme ("Report that class name is too long.")
-				class_name := class_name.substring (1, ba.max_string_count - 3)
-				class_name.append_string ("...")
-			end
 			check
 				class_name_not_too_long: class_name.count <= ba.max_string_count
 			end

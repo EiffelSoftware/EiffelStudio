@@ -22,13 +22,8 @@ feature
 		end;
 
 	create_oui_widget (a_parent: COMPOSITE) is
-		local
-			parent_perm_wind: PERM_WIND
 		do
-			parent_perm_wind ?= a_parent
-			if parent_perm_wind /= Void then
-				!! widget.make_unmanaged (entity_name, parent_perm_wind.top_shell)
-			end
+			!! widget.make_unmanaged (entity_name, a_parent)
 				--| The next lines are needed on Motif platforms.
 --			forbid_recompute_size;
 --			set_size (40, 40);

@@ -73,6 +73,20 @@ feature -- Status setting
                         state_is_true: pressed = not old pressed
                 end
 
+	
+feature -- Event - command association
+	
+	add_toggle_command ( command: EV_COMMAND; 
+			     arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to be
+			-- executed when the button is toggled
+		require
+			valid_command: command /= Void
+		do
+			implementation.add_toggle_command ( command, 
+							    arguments )
+		end	
+
 feature {NONE} -- Implementation
 
 	implementation: EV_TOGGLE_BUTTON_I

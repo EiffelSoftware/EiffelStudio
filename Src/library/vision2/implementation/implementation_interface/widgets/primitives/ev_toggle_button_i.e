@@ -44,6 +44,12 @@ feature -- Status setting
                         state_is_true: pressed = not old pressed
                 end
 
+feature -- Event - command association
+	
+	add_toggle_command ( command: EV_COMMAND; 
+			    arguments: EV_ARGUMENTS) is	
+		deferred
+		end	
 	
 end -- class EV_TOGGLE_BUTTON_I
 

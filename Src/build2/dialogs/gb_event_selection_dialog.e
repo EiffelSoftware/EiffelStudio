@@ -464,11 +464,11 @@ feature {NONE} -- Implementation
 		do
 			current_text_field := all_text_fields @ index
 			if valid_class_name (current_text_field.text) or current_text_field.text.is_empty then
-				if object_handler.string_is_object_name (current_text_field.text, Void) or (reserved_words.has (current_text_field.text.as_lower)) or 
+				if object_handler.string_is_object_name (current_text_field.text, object, True) or (reserved_words.has (current_text_field.text.as_lower)) or 
 				(build_reserved_words.has (current_text_field.text.as_lower)) then
 					current_text_field.set_foreground_color (red)
-				elseif object_handler.string_is_feature_name (current_text_field.text, Void) then
-					if object_handler.existing_feature_matches (current_text_field.text, all_types @ index) then
+				elseif object_handler.string_is_feature_name (current_text_field.text, object) then
+					if object_handler.existing_feature_matches (current_text_field.text, all_types @ index, object) then
 						current_text_field.set_foreground_color (black)
 					else
 						current_text_field.set_foreground_color (red)
@@ -724,7 +724,7 @@ feature {NONE} -- Implementation
 						elseif build_reserved_words.has (current_text_field.text.as_lower) then
 							create warning_dialog.make_with_text ("You are using a name for`"+ all_names @ (counter) + "' which will clash with inherited features in the generated code.%NPlease enter a valid feature name or uncheck the action sequence.")
 							warning_dialog.show_modal_to_window (Current)
-						elseif object_handler.string_is_object_name (current_text_field.text, Void) then
+						elseif object_handler.string_is_object_name (current_text_field.text, object, True) then
 							-- Name has already been used as an object name.
 							create warning_dialog.make_with_text ("The feature name you have specified for `"+ all_names @ (counter) + "'%N is already in use as the name of an object in the system.%NPlease specify a unique name or uncheck this action sequence.")
 							warning_dialog.show_modal_to_window (Current)

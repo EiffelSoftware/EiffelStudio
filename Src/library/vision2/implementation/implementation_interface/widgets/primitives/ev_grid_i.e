@@ -26,6 +26,7 @@ feature -- Access
 			-- Row `a_row'
 		require
 			a_row_positive: a_row > 0
+			a_row_not_greater_than_row_count: a_row <= row_count
 		do
 			to_implement ("EV_GRID_I.row")
 		ensure
@@ -36,7 +37,7 @@ feature -- Access
 			-- Column number `a_column'
 		require
 			a_column_positive: a_column > 0
-			a_column_less_than_column_count: a_column <= column_count
+			a_column_not_greater_than_column_count: a_column <= column_count
 		do
 			Result := grid_columns @ a_column
 		ensure
@@ -50,8 +51,27 @@ feature -- Access
 			a_row_less_than_row_count: a_row <= row_count
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
+		local
+			grid_row: SPECIAL [EV_GRID_ITEM]
+			a_item: EV_GRID_ITEM
+			a_grid_column: EV_GRID_COLUMN
 		do
-			to_implement ("EV_GRID_I.item")
+			grid_row :=  row_list @ (a_row - 1)
+			if grid_row = Void then
+					insert_new_row (a_row)
+					grid_row := row_list @ (a_row - 1)
+			end
+			if a_column > grid_row.count then
+				enlarge_row (a_row, a_column)
+			end
+			
+			Result := grid_row @ (a_column - 1)
+			
+			if Result = Void  then
+				create a_item
+				grid_row.put (a_item, (a_column - 1))
+				Result := a_item
+			end
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -252,8 +272,17 @@ feature -- Element change
 			i_positive: a_index > 0
 		local
 			a_grid_row: EV_GRID_ROW
+			a_row_data: SPECIAL [EV_GRID_ITEM]
 		do
-			create a_grid_row.make_with_grid_i (Current)
+			create a_grid_row
+			a_grid_row.implementation.set_grid_i (Current)
+			
+			create a_row_data.make (1)
+			if a_row_data.count < a_index then
+				enlarge_row_list (a_index)
+			end
+			row_list.put (a_row_data, a_index - 1)
+			
 			grid_rows.put (a_grid_row, a_index)
 			row_count := row_count + 1
 		ensure
@@ -281,8 +310,10 @@ feature -- Element change
 		local
 			a_column: EV_GRID_COLUMN
 		do
-			create a_column.make_with_grid_i (Current)
-			a_column.set_index (a_index)
+			create a_column
+			a_column.implementation.set_grid_i (Current)
+			a_column.implementation.set_index (a_index)
+			a_column.implementation.set_physical_index (column_count)
 			grid_columns.put (a_column, a_index)
 			column_count := column_count + 1
 		ensure
@@ -328,11 +359,19 @@ feature -- Element change
 			a_grid_col :=  grid_columns @ a_column
 			if a_grid_col = Void then
 				insert_new_column (a_column)
+				a_grid_col := grid_columns @ a_column
 			end
 			a_grid_row := grid_rows @ a_row
 			if a_grid_row = Void then
 				insert_new_row (a_row)
+				a_grid_row := grid_rows @ a_row
 			end
+			if a_grid_row.count < a_column then
+				enlarge_row (a_row, a_column)
+			end
+			
+			row_list.item (a_row - 1).put (a_item, a_row)
+			
 		ensure
 			inserted: column (a_column).item (a_row) = a_item
 		end
@@ -373,7 +412,7 @@ feature -- Measurements
 	row_count: INTEGER
 			-- Number of rows in Current
 
-feature {EV_GRID_COLUMN, EV_GRID_I} -- Implementation
+feature {EV_GRID_COLUMN_I, EV_GRID_I} -- Implementation
 
 	index_of_column (a_column: EV_GRID_COLUMN): INTEGER is
 			-- index of column `a_column'.
@@ -384,10 +423,53 @@ feature {EV_GRID_COLUMN, EV_GRID_I} -- Implementation
 			Result := grid_columns.key_for_iteration
 		end
 
-feature {EV_GRID_COLUMN, EV_GRID_I} -- Implementation
+feature {EV_GRID_COLUMN_I, EV_GRID_I} -- Implementation
+
+	enlarge_row_list (new_count: INTEGER) is
+			-- Enlarge the row list to to count `new_count'
+		require
+			valid_new_count: new_count > row_list.count
+		do
+			row_list := row_list.aliased_resized_area (new_count)
+			row_count := new_count
+		ensure
+			count_increased: row_list.count = new_count
+		end
+
+	enlarge_row (a_index, new_count: INTEGER) is
+			-- Enlarge the row at index `a_index' to `new_count'.
+		require
+			row_exists: row_list @ (a_index - 1) /= Void
+			row_can_expand: (row_list @ a_index).count < new_count
+		local
+			a_row: SPECIAL [EV_GRID_ITEM]
+		do
+			a_row := row_list @ (a_index - 1)
+			a_row := a_row.aliased_resized_area (new_count)
+			row_list.put (a_row, (a_index - 1))
+		end
 
 	row_list: SPECIAL [SPECIAL [EV_GRID_ITEM]]
 		-- Array of individual row's data, row by row
+		-- The row data returned from `row_list' @ i may be Void for optimization purposes
+		-- If the row data returned is not Void, some of the contents of this returned row data may be Void
+		-- The row data stored in `row_list' @ i may not necessarily be in the order of logical columns
+		-- The actual ordering is queried from `logical_to_physical_mapping'
+
+	visible_physical_column_indexes: SPECIAL [INTEGER] is
+			-- Phy
+		local
+			i: INTEGER
+		do
+			create Result.make (column_count)
+			from
+				i := 1
+			until
+				i > column_count
+			loop
+				Result.put (i, i)
+			end
+		end
 	
 	grid_rows: HASH_TABLE [EV_GRID_ROW, INTEGER]
 		-- Hash table returning the appropriate EV_GRID_ROW from a given index

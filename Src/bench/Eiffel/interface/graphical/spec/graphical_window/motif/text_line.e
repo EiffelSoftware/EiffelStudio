@@ -12,10 +12,6 @@ inherit
 	ARRAYED_LIST [TEXT_FIGURE]
 		rename
 			make as list_make
-		end;
-	GRAPHICAL_CONSTANTS
-		undefine
-			setup, copy
 		end
 
 creation
@@ -221,17 +217,21 @@ feature -- Setting
 
 feature -- Output
 
-	update_highlighted_line (d: DRAWING_X; b: BOOLEAN; x_offset, y_offset: INTEGER) is
+	update_highlighted_line (d: DRAWING_X; 
+			values: GRAPHICAL_VALUES; 
+			b: BOOLEAN; x_offset, y_offset: INTEGER) is
 			-- Select line if `b' is True. Otherwize, deselect it.
 		do
 			if b /= is_in_highlighted_line then
 				set_is_in_highlighted_line (b);
-				highlight_line (d, b, x_offset, y_offset)
-				draw (d, x_offset, y_offset)
+				highlight_line (d, values, b, x_offset, y_offset)
+				draw (d, values, x_offset, y_offset)
 			end;
 		end;
 
-	draw (d: DRAWING_X; x_offset, y_offset: INTEGER) is
+	draw (d: DRAWING_X; 
+			values: GRAPHICAL_VALUES; 
+			x_offset, y_offset: INTEGER) is
 			-- Draw all the text in Current line.
 		local
 			a: like area;
@@ -241,7 +241,7 @@ feature -- Output
 		do
 			b := is_in_highlighted_line;
 			if b then
-				highlight_line (d, True, x_offset, y_offset)
+				highlight_line (d, values, True, x_offset, y_offset)
 			end;
 			from
 				c := count;
@@ -250,22 +250,23 @@ feature -- Output
 			until
 				i = c
 			loop
-				a.item (i).draw (d, b, x_offset, y_offset);
+				a.item (i).draw (d, values, b, x_offset, y_offset);
 				i := i + 1
 			end;
 		end;
 
 feature {NONE} -- Implementation
 
-	highlight_line (d: DRAWING_X; is_highlighted: BOOLEAN; 
-				x_offset, y_offset: INTEGER) is
+	highlight_line (d: DRAWING_X; 
+			values: GRAPHICAL_VALUES;
+			is_highlighted: BOOLEAN; x_offset, y_offset: INTEGER) is
 			-- Draw the current highlighted text line.
 		local
 			padded_width: INTEGER;
 			bp: BREAKABLE_FIGURE
 		do
 			if is_highlighted then
-				d.set_foreground_gc_color (g_Highlighted_line_bg_color);
+				d.set_foreground_gc_color (values.highlighted_line_bg_color);
 				if count > 0 then
 					bp ?= first;
 					if bp /= Void then
@@ -273,7 +274,7 @@ feature {NONE} -- Implementation
 					end;
 				end;
 			else
-				d.set_foreground_gc_color (g_Bg_color);
+				d.set_foreground_gc_color (values.text_background_color);
 			end;
 				-- Coords are upper left corner for mel
 			d.mel_fill_rectangle (d, 

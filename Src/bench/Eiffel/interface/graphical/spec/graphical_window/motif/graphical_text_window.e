@@ -50,15 +50,13 @@ inherit
 		end;
 
 creation
-
 	make
 
 feature {NONE}
 
-	make (a_name: STRING; a_tool: TOOL_W) is
+	make (a_name: STRING; a_parent: COMPOSITE) is
 		do
-			old_make (a_name, a_tool.global_form);
-			tool := a_tool;
+			old_make (a_name, a_parent);
 			initialize_transport;
 			list_make (30);
 			set_action ("!c<Btn3Down>", Current, new_tooler_action)
@@ -66,9 +64,19 @@ feature {NONE}
 			highlighted_line := Void;
 			selected_clickable_text := Void;
 			!! text.make (0);
-			init_values (false);
-			clear_window;
-			old_set_background_color (g_Bg_color);
+			init_graphical_values;
+			old_set_background_color (text_background_color);
+			clear_window
+		end;
+
+	init_resource_values is
+			-- Initialize the resource values.
+		do
+			init_graphical_values;
+			if background_color /= text_background_color then
+				old_set_background_color (text_background_color);
+			end;
+			clear_window; -- Will initialize the values
 		end;
 
 feature -- Properties
@@ -143,7 +151,6 @@ feature -- Status setting
 			vertical_scrollbar.set_background_color (a_color);
 			horizontal_scrollbar.set_background_color (a_color);
 			parent.set_background_color (a_color);
-			old_set_background_color (g_Bg_color)
 		end;
 
 	set_tab_length (i: INTEGER) is
@@ -156,13 +163,7 @@ feature -- Status setting
 			!! tab_spaces.make (0);
 			tab_spaces.extend (' ');
 			tab_spaces.multiply (i);
-			tab_pixel_length := g_Default_text_font.width_of_string (tab_spaces)
-			if not text.empty then
-				cur := cursor;
-				last_format := tool.last_format;
-				last_format.execute (tool.stone);
-				go_to (cur)
-			end
+			tab_pixel_length := default_text_font.width_of_string (tab_spaces)
 		end;
 
 	set_changed (b: BOOLEAN) is
@@ -183,6 +184,26 @@ feature -- Status setting
 	set_editable is
 			-- Allow editing of text.
 		do
+		end;
+
+feature -- Element change
+
+	copy_text is
+			-- Copy the highlighted text.
+		do
+			-- Do nothing (this will be implicitly done through the selection mechanism)
+		end;
+ 
+	cut_text is
+			-- Cut the highlighted text.
+		do
+			-- Do nothing
+		end;
+ 
+	paste_text is
+			-- Paste the highlighted text.
+		do
+			-- Do nothing
 		end;
 
 feature -- Output
@@ -258,11 +279,11 @@ end
 		do
 			if selected_clickable_text /= Void then
 				selected_clickable_text.unselect_clickable 
-					(drawing, x_offset, y_offset)
+					(drawing, Current, x_offset, y_offset)
 				if highlighted_line /= Void and then 
 					highlighted_line.has (selected_clickable_text) 
 				then
-					highlighted_line.draw (drawing, x_offset, y_offset)
+					highlighted_line.draw (drawing, Current, x_offset, y_offset)
 				end;
 				selected_clickable_text := Void
 			end
@@ -270,6 +291,13 @@ end
 
 	set_cursor_position (a_position: INTEGER) is
 			-- Set `cursor_position' to `a_position' if the new position
+			-- is not out of bounds.
+		do	
+			-- Not called here (only for editable text)
+		end;
+
+	set_top_character_position (a_position: INTEGER) is
+			-- Set top_cursor_position to `a_position' if the new position
 			-- is not out of bounds.
 		do	
 			-- Not called here (only for editable text)
@@ -285,11 +313,13 @@ end
 			-- Highlight text line text with `button_data' coordinates.
 		do
 			if highlighted_line /= Void then
-				highlighted_line.update_highlighted_line (drawing, False, x_offset, y_offset)
+				highlighted_line.update_highlighted_line 
+					(drawing, Current, False, x_offset, y_offset)
 			end;
 			find_line (button_data);
 			if highlighted_line /= Void then
-				highlighted_line.update_highlighted_line (drawing, True, x_offset, y_offset)
+				highlighted_line.update_highlighted_line
+					(drawing, Current, True, x_offset, y_offset)
 			end;
 		end;
 
@@ -303,7 +333,7 @@ feature -- Update
 			find_clickable_figure_with_stone (a_stone)
 			if selected_clickable_text /= Void then
 				selected_clickable_text.select_clickable 
-					(drawing, x_offset, y_offset)
+					(drawing, Current, x_offset, y_offset)
 			end
 		end;
 
@@ -326,8 +356,8 @@ feature -- Update
 			deselect_all;
 			find_clickable (but_data);
 			if selected_clickable_text /= Void then
-				selected_clickable_text.select_clickable (drawing,
-					x_offset, y_offset)
+				selected_clickable_text.select_clickable 
+					(drawing, Current, x_offset, y_offset)
 			end;
 		end;
 
@@ -398,14 +428,14 @@ debug ("DRAWING")
 	io.error.putint (i + 1);
 	io.error.new_line;
 end
-						line.draw (drawing, x_offset, y_offset);
+						line.draw (drawing, Current, x_offset, y_offset);
 					end;
 					i := i + 1
 				end
 			end;
 			if selected_clickable_text /= Void then
 				selected_clickable_text.select_clickable 
-					(drawing, x_offset, y_offset)
+					(drawing, Current, x_offset, y_offset)
 			end;
 				-- Flush the drawing queue
 			drawing.display.flush;
@@ -436,8 +466,8 @@ feature {TOOL_W} -- Updating
 			b_l_y: INTEGER
 		do
 			if highlighted_line /= Void then
-				highlighted_line.update_highlighted_line (drawing, false,
-						x_offset, y_offset);
+				highlighted_line.update_highlighted_line
+					(drawing, Current, false, x_offset, y_offset);
 				highlighted_line := Void
 			end;
 			old_clickable_text := selected_clickable_text;
@@ -458,11 +488,12 @@ feature {TOOL_W} -- Updating
 					update_text -- This will highlight the line
 				end;
 				if highlighted_line /= Void then
-					highlighted_line.draw (drawing, x_offset, y_offset)
+					highlighted_line.draw 
+						(drawing, Current, x_offset, y_offset)
 				end;
 				if selected_clickable_text /= Void then
 					selected_clickable_text.draw 
-						(drawing, False, x_offset, y_offset)
+						(drawing, Current, False, x_offset, y_offset)
 				end;
 			end;
 			selected_clickable_text := old_clickable_text

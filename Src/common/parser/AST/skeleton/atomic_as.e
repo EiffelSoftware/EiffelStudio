@@ -55,4 +55,10 @@ feature -- Type check and dead code removal
 		do
 		end;
 
+feature -- Output
+
+	string_value: STRING is
+		deferred
+		end;
+
 end -- class ATOMIC_AS

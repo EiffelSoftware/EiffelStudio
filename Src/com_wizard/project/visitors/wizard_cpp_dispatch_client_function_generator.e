@@ -40,6 +40,9 @@ feature -- Basic operations
 			create result_type_visitor
 			result_type_visitor.visit (a_descriptor.return_type)
 			ccom_feature_writer.set_result_type (result_type_visitor.c_type)
+			if  result_type_visitor.c_header_file /= Void and then not  result_type_visitor.c_header_file.empty then
+				c_header_files.extend (result_type_visitor.c_header_file)
+			end
 
 			-- Set arguments and precondition for eiffel code
 			if func_desc.argument_count > 0 then
@@ -78,6 +81,9 @@ feature {NONE} -- Implementation
 				loop
 					create visitor
 					visitor.visit (arguments.item.type)
+					if  visitor.c_header_file /= Void and then not  visitor.c_header_file.empty then
+						c_header_files.extend (visitor.c_header_file)
+					end
 
 					if is_paramflag_fout (arguments.item.flags) then
 						tmp_string.append (Beginning_comment_paramflag)
@@ -86,6 +92,9 @@ feature {NONE} -- Implementation
 						end
 						tmp_string.append ("out")
 						tmp_string.append (End_comment_paramflag)
+						if  visitor.c_header_file /= Void and then not  visitor.c_header_file.empty then
+							c_header_files.extend (visitor.c_header_file)
+						end
 
 						if visitor.is_basic_type then
 							add_warning (Current, Not_pointer_type)

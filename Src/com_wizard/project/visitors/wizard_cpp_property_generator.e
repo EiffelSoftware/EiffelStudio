@@ -27,6 +27,7 @@ feature -- Access
 
 	c_header_file: STRING 
 			-- C header file name.
+			-- Header file describing property type.
 
 feature {NONE} -- Implementation
 
@@ -244,7 +245,7 @@ feature {NONE} -- Implementation
 			c_setting_feature.set_body (tmp_body)
 		end
 
-end -- class WIZARD_C_PROPERTY_GENERATOR
+end -- class WIZARD_CPP_PROPERTY_GENERATOR
 
 --|----------------------------------------------------------------
 --| EiffelCOM: library of reusable components for ISE Eiffel.

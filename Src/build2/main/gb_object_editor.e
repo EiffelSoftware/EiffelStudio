@@ -383,7 +383,8 @@ feature {NONE} -- Implementation
 			end
 			
 				-- Now we add the button which will bring up the events window.
-			create event_selection_button.make_with_text ("Select events")
+			create event_selection_button--.make_with_text ("Select events")
+			update_event_selection_button_text
 			attribute_editor_box.extend (event_selection_button)
 			attribute_editor_box.disable_item_expand (event_selection_button)
 			event_selection_button.select_actions.extend (agent show_event_dialog)
@@ -403,7 +404,20 @@ feature {NONE} -- Implementation
 		do
 			create event_dialog.make_with_object (object)
 			event_dialog.show_modal_to_window (parent_window (Current))
+			update_event_selection_button_text
 		end
+		
+	update_event_selection_button_text is
+			-- Change text displayed on `event_selection_button',
+			-- dependent on number of items in events from `object'.
+		do
+			if object.events.is_empty then
+				event_selection_button.set_text (Event_selection_text)
+			else
+				event_selection_button.set_text (Event_modification_text)
+			end
+		end
+		
 		
 		
 	update_visual_representations_on_name_change is

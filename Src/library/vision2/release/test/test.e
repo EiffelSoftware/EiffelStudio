@@ -293,12 +293,12 @@ feature
 			Result.extend (create {EV_FIGURE_LINE}.make_for_test)
 			Result.extend (create {EV_FIGURE_MATH})
 			Result.extend (create {EV_FIGURE_PICTURE}.make_for_test)
-			Result.extend (create {EV_FIGURE_PIE_SLICE})
-			Result.extend (create {EV_FIGURE_POLYGON})
+			Result.extend (create {EV_FIGURE_PIE_SLICE}.make_for_test)
+			Result.extend (create {EV_FIGURE_POLYGON}.make_for_test)
 			Result.extend (create {EV_FIGURE_POLYLINE})
 			Result.extend (create {EV_FIGURE_RECTANGLE}.make_for_test)
 			Result.extend (create {EV_FIGURE_TEXT}.make_for_test)
-			Result.extend (create {EV_FIGURE_TRIANGLE})
+			Result.extend (create {EV_FIGURE_TRIANGLE}.make_for_test)
 			Result.extend (create {EV_FIGURE_WORLD})
 --|FIXME		Result.extend (create {EV_PROJECTION})
 --|FIXME		Result.extend (create {EV_RELATIVE_POINT})
@@ -429,6 +429,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/26 00:50:01  brendel
+--| Some none widgets are now created with make_for_test.
+--|
 --| Revision 1.22  2000/04/25 23:38:42  brendel
 --| Started implementation of splash screen.
 --|

@@ -21,6 +21,10 @@
 #include "cecil.h"
 #include "misc.h"
 
+#ifdef __WATCOMC__
+#include "windows.h"
+#endif
+
 private void cnode_updt();			/* Update a cnode structure */
 private void routid_updt();			/* Update routine id array */
 private void conform_updt();		/* Update a conformance table */
@@ -72,16 +76,24 @@ char ignore_updt;
 #ifdef __WATCOMC__
 #define UPDTLEN 10
 #define UPDT_NAME "\\melted.eif"
+
+inipath = eif_getenv ("ES3INI");
+GetPrivateProfileString   ("Environment", "MELT_PATH", "", buf, 128, inipath);
+WritePrivateProfileString ("Environment", "MELT_PATH",NULL, inipath);
+if (strlen(buf)){
 #else
 #define UPDTLEN 5
 #define UPDT_NAME "/.UPDT"
-#endif
-
 meltpath = eif_getenv ("MELT_PATH");
-if (meltpath) 
+if (meltpath) {
+#endif
+	meltpath = buf;
 	filename = (char *)cmalloc (strlen (meltpath) + UPDTLEN + 2);
-else
+	}
+else {
+	meltpath = NULL;
 	filename = (char *)cmalloc (UPDTLEN + 3);
+	}
 if (filename == (char *)0){
 	enomem();	
 	exit (0);	
@@ -96,7 +108,7 @@ strcat(filename, UPDT_NAME);
 #endif
 
 if ((fil = fopen(filename, "r")) == (FILE *) 0) {
-	fprintf(stderr, "Error: could not open Eiffel .UPDT file\n");
+	fprintf(stderr, "Error: could not open Eiffel update file\n");
 	exit(0);
 }
 	xfree (filename);
@@ -236,7 +248,7 @@ int nbytes;
 	dprintf(8)("Reading %d bytes at %d%\n", nbytes, ftell(fil));
 #endif
 	if (nbytes != fread(buffer, sizeof(char), nbytes, fil)) {
-		fprintf(stderr, "Error: could not read Eiffel .UPDT file\n");
+		fprintf(stderr, "Error: could not read Eiffel update file\n");
 		exit(0);
 	}
 #ifdef DEBUG
@@ -412,6 +424,8 @@ private void cnode_updt()
 	node->static_id = wint32();			/* Static id of Class */
 	wread(&node->cn_disposed, 1);		/* Dispose flag */ 
 #ifdef DEBUG
+	dprintf(4)("\tdeferred = %ld\n", node->cn_deferred);
+	dprintf(4)("\tcomposite = %ld\n", node->cn_composite);
 	dprintf(4)("\tcreation_id = %ld\n", node->cn_creation_id);
 	dprintf(4)("\tstatic_id = %ld\n", node->static_id);
 	dprintf(4)("\tdispose_id = %ld\n", node->cn_disposed);
@@ -721,7 +735,7 @@ private void desc_updt()
 	{
 		int i;
 		for (i=0;i<rout_count;i++)
-			printf ("\t%d: body_index = %d, type = %d\n", i, desc_ptr[i].info, desc_ptr[i].type);
+			dprintf(4) ("\t%d: body_index = %d, type = %d\n", i, desc_ptr[i].info, desc_ptr[i].type);
 	}
 #endif
 				IMDSC(desc_ptr, org_id, RTUD(type_id-1));

@@ -340,7 +340,7 @@ long objectCount;
 		if (rt_kind =='\02') {
 			object_read (newadd, newadd);
 		} else {
-			buffer_read(newadd, (sizeof(char) * nb_char));
+			buffer_read(newadd, (int)(sizeof(char) * nb_char));
 		}
 
 		/* Update fileds: the garbage collector should not be called
@@ -536,7 +536,7 @@ update:
 				long offset = reference - old;
 	
 				if (rt_kind == '\02') {
-					new_offset = get_expanded_pos (flags & EO_TYPE, total_ref - nb_references);
+					new_offset = get_expanded_pos (flags & EO_TYPE, (uint32)(total_ref - nb_references));
 				} else
 					new_offset = offset;
 	
@@ -769,7 +769,13 @@ register char * object;
 int size;
 {
 	register i;
-	
+
+#ifdef DEBUG
+	printf ("Current position %d\n", current_position);
+	printf ("Size %d\n", size);
+	printf ("end_of_buffer %d\n", end_of_buffer);
+#endif
+
 	if (current_position + size >= end_of_buffer) {
 		for (i = 0; i < size ; i++) {
 			if (current_position >= end_of_buffer)

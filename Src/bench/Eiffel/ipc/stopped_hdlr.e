@@ -182,7 +182,7 @@ feature -- Display
 			temp: STRING;
 			ll: LINKED_LIST [STRING];
 			fi, ofi: FEATURE_I;
-			rid: INTEGER;
+--			rid: INTEGER;
 			ft: FEATURE_TABLE
 		do
 			debug_window.clear_window;
@@ -207,12 +207,23 @@ feature -- Display
 				oc :=  Run_info.origin_type.associated_class;
 				if oc /= c then	
 					ofi := Run_info.feature_i;
-					rid := ofi.rout_id_set.first;
-					if rid < 0 then
-						rid := - rid
-					end;
+--					rid := ofi.rout_id_set.first;
+--					if rid < 0 then
+--						rid := - rid
+--					end;
 					ft := c.feature_table;
-					fi := ft.origin_table.item (rid);
+--					fi := ft.origin_table.item (rid);
+-- The previous implementation was looking for the routine of class `c'
+-- used during the dynamic binding in place of the routine `ofi' of
+-- the original class `oc'. What is of interest here is the name of the
+-- routine in class `c' whose implementation was introduced in class
+-- `oc' as the body of the original feature `ofi'.
+-- The new implemenetation is nevertheless not perfect since two (or
+-- more) synonym routines in class `c' share the same body as `ofi'.
+-- So the routine name in `c' is not unique but the answer is more
+-- acceptable than the previous one since even if the wrong name is
+-- given, its body is the one we were lookink for.
+					fi := ft.feature_of_body_id (ofi.body_id);
 
 					if fi /= Void then
 						fi.append_clickable_name (debug_window, c);

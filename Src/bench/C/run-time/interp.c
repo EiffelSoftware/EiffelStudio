@@ -2390,9 +2390,9 @@ int code;
 			break;
 		case SK_DOUBLE:
 			switch (second->type & SK_HEAD) {
-			case SK_INT: f->it_char = f->it_double <= (double) s->it_long; b;
-			case SK_FLOAT: f->it_char = f->it_double <= (double) s->it_float; b;
-			case SK_DOUBLE: f->it_char = f->it_double <= s->it_double; b;
+			case SK_INT: f->it_char = f->it_double < (double) s->it_long; b;
+			case SK_FLOAT: f->it_char = f->it_double < (double) s->it_float; b;
+			case SK_DOUBLE: f->it_char = f->it_double < s->it_double; b;
 			default: panic(botched);
 			}
 			break;

@@ -84,15 +84,21 @@ char **envp;
 	 */
 
 #ifdef __WATCOMC__
-		_fmode = O_BINARY;
-		_grow_handles (25);
-		ename = rindex(argv[0], '\\');		/* Only last name if '\' found */
+	extern int _argc;
+	extern char **_argv;
+
+	_fmode = O_BINARY;
+	_grow_handles (40);
+	ename = rindex(_argv[0], '\\');		/* Only last name if '\' found */
+
+	if (ename++ == (char *) 0)			/* There was no '/' in the name */
+		ename = _argv[0];				/* Program name is the filename */
 #else
 	ename = rindex(argv[0], '/');		/* Only last name if '/' found */
-#endif
 
 	if (ename++ == (char *) 0)			/* There was no '/' in the name */
 		ename = argv[0];				/* Program name is the filename */
+#endif
 
 	ufill();							/* Get urgent memory chunks */
 
@@ -133,8 +139,13 @@ char **envp;
 		char temp = 0;
 		int i;
 
+#ifdef __WATCOMC__
+		for (i=1;i<_argc;i++) {
+			if (0 == strcmp (_argv[i], "-ignore_updt")) {
+#else
 		for (i=1;i<argc;i++) {
 			if (0 == strcmp (argv[i], "-ignore_updt")) {
+#endif
 				temp = (char) 1;	
 				break;
 			}
@@ -159,8 +170,13 @@ char **envp;
 #endif
 #endif
 
+#ifdef __WATCOMC__
+	umain(_argc, _argv, envp);			/* User's initializations */
+	arg_init(_argc, _argv);				/* Save copy for class ARGUMENTS */
+#else
 	umain(argc, argv, envp);			/* User's initializations */
 	arg_init(argc, argv);				/* Save copy for class ARGUMENTS */
+#endif
 }
 
 public void failure()

@@ -18,7 +18,11 @@
 #include "config.h"
 #endif
 
+#ifndef __WATCOMC__
 #include "confmagic.h"
+#else
+#include "confmagc.h"
+#endif
 
 /*
  * Standard types

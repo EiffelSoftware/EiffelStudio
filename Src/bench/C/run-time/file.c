@@ -84,9 +84,7 @@ char mode;
 
 	type[3] = '\0';
 	type[2] = '\0';
-#ifndef __WATCOMC__
 	if (how >= 10) how -= 10;
-#endif
 	switch (how) {
 	case 0: 
 	case 3: type[0] = 'r'; break;
@@ -112,7 +110,10 @@ int how;
 	/* Open file `name' with the corresponding type 'how'. */
 
 #ifdef __WATCOMC__
-	return (fnptr) file_fopen(name, file_open_mode(how,'t'));
+	if (how < 10)
+		return (fnptr) file_fopen(name, file_open_mode(how,'b'));
+	else
+		return (fnptr) file_fopen(name, file_open_mode(how,'t'));
 #else
 	return (fnptr) file_fopen(name, file_open_mode(how,'\0'));
 #endif
@@ -125,7 +126,10 @@ int how;
 	/* Open file `fd' with the corresponding type 'how'. */
 
 #ifdef __WATCOMC__
-	return (fnptr) file_fdopen(fd, file_open_mode(how,'t'));
+	if (how < 10)
+		return (fnptr) file_fdopen(fd, file_open_mode(how,'b'));
+	else
+		return (fnptr) file_fdopen(fd, file_open_mode(how,'t'));
 #else
 	return (fnptr) file_fdopen(fd, file_open_mode(how,'\0'));
 #endif
@@ -142,7 +146,10 @@ FILE *old;
 	 */
 
 #ifdef __WATCOMC__
-	return (fnptr) file_freopen(name, file_open_mode(how,'t'), old);
+	if (how < 10)
+		return (fnptr) file_freopen(name, file_open_mode(how,'b'), old);
+	else
+		return (fnptr) file_freopen(name, file_open_mode(how,'t'), old);
 #else
 	return (fnptr) file_freopen(name, file_open_mode(how,'\0'), old);
 #endif

@@ -73,12 +73,12 @@ feature {NONE}-- Initialization
 	initialize_customizable_commands is
 			-- Create array of customizable commands.
 		do
-			create customizable_commands.make (2, 6)
-			customizable_commands.put (~search, 2)
-			customizable_commands.put (~replace, 3)
-			customizable_commands.put (~find_selection, 4)
-			customizable_commands.put (~find_next, 5)
-			customizable_commands.put (~find_previous, 6)
+			create customizable_commands.make (3, 7)
+			customizable_commands.put (~search, 3)
+			customizable_commands.put (~replace, 4)
+			customizable_commands.put (~find_selection, 5)
+			customizable_commands.put (~find_next, 6)
+			customizable_commands.put (~find_previous, 7)
 		end
 
 	build_editor_area is

@@ -56,9 +56,9 @@ feature -- Status
 	valid_function_type (type: INTEGER): BOOLEAN is
 			-- Is `f' a valid function type supported by Current.
 		do
-			Result := type >= 1 and type <= 26
+			Result := type >= min_type_id and type <= max_type_id
 		ensure
-			valid: Result implies (type >= 1 and type <= 26)
+			valid: Result implies (type >= min_type_id and type <= max_type_id)
 		end
 
 feature -- Byte code special generation
@@ -155,8 +155,16 @@ feature -- C special code generation
 			when default_type then
 				generate_default (buffer, type_of (basic_type))
 			when bit_and_type..bit_test_type then
-				check integer_type: type_of (basic_type) = integer_type end
+				check
+					integer_type: type_of (basic_type) = integer_type
+				end
 				generate_bit_operation (buffer, function_type, target, parameter)
+			when set_bit_with_mask_type then
+				check
+					integer_type: type_of (basic_type) = integer_type
+					parameters_not_void: parameters /= Void
+				end
+				generate_set_bit_with_mask (buffer, target, parameters)
 			when zero_type then
 				generate_zero (buffer, type_of (basic_type))
 			when one_type then
@@ -208,6 +216,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (memory_copy, feature {PREDEFINED_NAMES}.memory_copy_name_id)
 			Result.put (memory_move, feature {PREDEFINED_NAMES}.memory_move_name_id)
 			Result.put (memory_set, feature {PREDEFINED_NAMES}.memory_set_name_id)
+			Result.put (set_bit_with_mask_type, feature {PREDEFINED_NAMES}.set_bit_with_mask_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
@@ -251,6 +260,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 
 feature {NONE} -- Fast access to feature name
 
+	min_type_id: INTEGER is 1
 	equal_type: INTEGER is 1
 	set_item_type: INTEGER is 2
 	out_type: INTEGER is 3
@@ -277,6 +287,8 @@ feature {NONE} -- Fast access to feature name
 	to_integer_8_type: INTEGER is 24
 	to_integer_16_type: INTEGER is 25
 	to_integer_64_type: INTEGER is 26
+	set_bit_with_mask_type: INTEGER is 27
+	max_type_id: INTEGER is 27
 
 feature {NONE} -- Byte code generation
 
@@ -678,6 +690,32 @@ feature {NONE} -- C code generation
 				buffer.putchar (',')
 				parameter.print_register
 			end
+			buffer.putchar (')')
+
+				-- Add `eif_misc.h' for C compilation where all bit functions are declared.
+			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_misc_header_name_id)
+		end
+
+	generate_set_bit_with_mask (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameters: BYTE_LIST [EXPR_B]) is
+			-- Generate fast wrapper for call on `bit_xxx' where target and parameter
+			-- are both basic types of type INTEGER.
+		require
+			buffer_not_void: buffer /= Void
+			target_not_void: target /= Void
+			parameters_not_void: parameters /= Void
+			valid_parameters: parameters.count = 2
+		do
+			buffer.putchar ('(')
+			parameters.i_th (1).print_register
+			buffer.putchar ('?')
+			generate_bit_operation (buffer, bit_or_type, target, parameters.i_th (2))	
+			buffer.putchar (':')
+			buffer.putstring ("eif_bit_and(")
+			target.print_register
+			buffer.putstring (", eif_bit_not(")
+			parameters.i_th (2).print_register
+			buffer.putchar (')')
+			buffer.putchar (')')
 			buffer.putchar (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.

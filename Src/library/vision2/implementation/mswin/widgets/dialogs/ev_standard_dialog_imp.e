@@ -12,11 +12,6 @@ inherit
 	EV_STANDARD_DIALOG_I
 
 	EV_STANDARD_DIALOG_ACTION_SEQUENCES_IMP
-	
-	EV_DIALOG_CONSTANTS
-		export
-			{NONE} all
-		end
 
 feature -- Access
 
@@ -40,7 +35,7 @@ feature -- Status setting
 			activate (modal_to)
 			set_blocking_window (Void)
 			if selected then
-				selected_button := ev_ok
+				selected_button := internal_accept
 				if ok_actions_internal /= Void then
 					ok_actions_internal.call ([])
 				end

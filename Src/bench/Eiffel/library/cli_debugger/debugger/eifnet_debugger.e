@@ -137,6 +137,7 @@ feature -- Initialization
 					init_dbg_synchronisation
 					enable_estudio_callback
 					start_dbg_timer
+					create_monitoring_of_process_termination_on_exit
 					is_debugging := True
 				end
 			else
@@ -153,6 +154,27 @@ feature -- Initialization
 			-- Does Call back "ExitProcess" occurred ?
 			--| This could be during evaluation ...
 			
+feature -- Termination monitoring ...
+
+	timer_monitor_process_termination_on_exit: EV_TIMEOUT
+			-- Timer used to check if debugging is finished.
+
+	create_monitoring_of_process_termination_on_exit is
+			-- Create and start the timer to check if the debugging is done
+		do
+			create timer_monitor_process_termination_on_exit.make_with_interval (1000)
+			timer_monitor_process_termination_on_exit.actions.extend (agent monitor_process_termination_on_exit)
+		end
+		
+	monitor_process_termination_on_exit is
+			-- Check if the debugging is done and continue the termination
+		do
+			if exit_process_occurred and then not is_dbg_synchronizing then
+				timer_monitor_process_termination_on_exit.destroy
+				Application.process_termination
+			end
+		end
+
 feature -- Termination ...
 
 	terminate_debugger_session is
@@ -167,6 +189,7 @@ feature -- Termination ...
 	terminate_debugger is
 			-- Terminate the debugging session
 		require
+			
 			is_debugging: is_debugging
 		local
 			l_icor_dbg_pro: ICOR_DEBUG_PROCESS
@@ -191,7 +214,7 @@ feature -- Termination ...
 			Eifnet_debugger_info.icd.terminate
 			eif_debug_display ("[EIFDBG] execution exiting")
 			is_debugging := False
-			Application.process_termination
+			terminate_debugger_session
 		ensure
 			not is_debugging
 		end

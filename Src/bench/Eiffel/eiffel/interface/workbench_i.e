@@ -198,7 +198,7 @@ feature -- Commands
 				compilation_counter := compilation_counter + 1
 			end
 		ensure
-			increment_compilation_counter: compilation_counter = old compilation_counter + 1
+			increment_compilation_counter: successful implies compilation_counter = old compilation_counter + 1
 		rescue
 			if Rescue_status.is_error_exception then
 				if not Compilation_modes.is_precompiling then

@@ -25,21 +25,19 @@ feature -- Access
 
 feature -- Element change
 
-	set_x_offset (a_x: INTEGER) is
-			-- Set `x_offset' to `a_x'.
+	set_x_offset (an_x: INTEGER) is
+			-- Assign `an_x' to `x_offset'.
 		require
-			a_x_within_bounds: a_x >= 0 and then
-				a_x <= (item.width - width)
+			an_x_within_bounds: an_x >= 0
 		deferred
 		ensure
-			assigned: x_offset = a_x
+			assigned: x_offset = an_x
 		end
 
 	set_y_offset (a_y: INTEGER) is
-			-- Set `y_offset' to `a_y'.
+			-- Assign `a_y' to `y_offset'.
 		require
-			a_y_within_bounds: a_y >= 0 and then
-				a_y <= (item.height - height)
+			a_y_within_bounds: a_y >= 0
 		deferred
 		ensure
 			assigned: y_offset = a_y
@@ -68,6 +66,9 @@ end -- class EV_VIEWPORT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/04/21 22:01:56  brendel
+--| Complies with interface.
+--|
 --| Revision 1.3  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

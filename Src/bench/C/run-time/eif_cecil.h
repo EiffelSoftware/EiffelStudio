@@ -303,12 +303,6 @@ RT_LNK int eiflocate(EIF_OBJECT object, char *name); /* Return the index of attr
 RT_LNK void  failure(void);					/* The Eiffel exectution failed */
 RT_LNK void eif_rtinit(int argc, char **argv, char **envp);				/* Eiffel run-time initialization */
 
-#ifndef WORKBENCH
-#define Cecil(x)	egc_ce_rname[x]			/* Final mode acces to hash table */
-#else
-#define Cecil(x)	System(x).cn_cecil	/* Workbench mode access */
-#endif
-
 extern char *ct_value(struct ctable *ct, register char *key);				/* Hash table query */
 
 #ifdef EIF_THREADS
@@ -316,7 +310,7 @@ extern char *ct_value(struct ctable *ct, register char *key);				/* Hash table q
  * Initialization in MT mode. 
  */
 
-RT_LNK void  eif_cecil_init ();	
+RT_LNK void eif_cecil_init ();	
 RT_LNK void eif_cecil_reclaim ();
 
 /*

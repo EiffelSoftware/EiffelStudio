@@ -1,31 +1,99 @@
+#include <errno.h>
+#include <sys/types.h>
 
 #include "store.h"
 #include "retrieve.h"
 #include "compress.h"
+#include "except.h"
+#include "error.h"
 
 #ifdef EIF_WIN32
 #include "winsock.h"
+#else
+#include <unistd.h>
+#include <sys/time.h>
 #endif
- 
+
+#define SOCKET_UNAVAILLABLE_FOR_WRITING "Socket unavaillable for writing"
+#define SOCKET_UNAVAILLABLE_FOR_READING "Socket unavaillable for reading"
+
+int write_to_socket (const void *buf, unsigned int nbytes)
+{
+	int i = 0;
+	struct timeval tm;
+	fd_set fdset;
+
+	errno = 0;
+
+	/* Maximum time we should wait for the socket to be ready */
+	tm.tv_sec = 10;
+	tm.tv_usec = 0;
+
+	FD_ZERO (&fdset);
+	FD_SET (fides, &fdset);
+	
+	/* Wait until the socket is ready for writing*/
+	if (select (fides + 1, NULL, &fdset, NULL, &tm) == -1) {
+		eio();
+	}
+
+	if (FD_ISSET (fides, &fdset)) {
+		errno = 0;
+#ifdef EIF_WIN32
+		i = send (fides, buf, nbytes, 0);
+#else
+		i = write(fides, buf, nbytes);
+#endif
+	} else {
+				/* The desired socket is not
+                                   ready. Raise an exception. */
+		eraise(SOCKET_UNAVAILLABLE_FOR_WRITING, EN_RETR);
+	}
+	return i;
+}
+
 int net_char_read(char *pointer, int size)
 {
+	int i = 0;
+	struct timeval tm;
+	fd_set fdset;
+
+	errno = 0;
+
+	/* Maximum time we should wait for the socket to be ready */
+	tm.tv_sec = 10;	
+	tm.tv_usec = 0;
+
+	FD_ZERO (&fdset);
+	FD_SET (r_fides, &fdset);
+	
+	/* Wait until the socket is ready for reading */
+	if (select (r_fides + 1,  &fdset, NULL, NULL, &tm) == -1) {
+		eio();
+	}
+
+	if (FD_ISSET (r_fides, &fdset)) {
+		errno = 0;
 #ifdef EIF_WIN32
-	return recv(r_fides, pointer, size, 0);
+		i = recv(r_fides, pointer, size, 0);
 #else
-	return read(r_fides, pointer, size);
+		i = read(r_fides, pointer, size);
 #endif
+	} else {
+		/* The desired socket is not ready. Raise an
+		   exception. */
+		eraise(SOCKET_UNAVAILLABLE_FOR_READING, EN_RETR);
+	}
+
+	return i;
 }
  
 int net_char_write(char *pointer, int size)
 {
-#ifdef EIF_WIN32
-	return send (fides, pointer, size, 0);
-#else
-	return write(fides, pointer, size);
-#endif
+	return write_to_socket(pointer, size);
 }
 
-void net_store_write()
+void net_store_write(void)
 {
 	char* cmps_in_ptr = (char *)0;
 	char* cmps_out_ptr = (char *)0;
@@ -48,11 +116,8 @@ void net_store_write()
 	number_left = cmps_out_size + EIF_CMPS_HEAD_SIZE;
 
 	while (number_left > 0) {
-#ifdef EIF_WIN32
-		number_writen = send (fides, ptr, number_left, 0);
-#else
-		number_writen = write (fides, ptr, number_left);
-#endif
+		number_writen = write_to_socket (ptr, number_left);
+
 		if (number_writen <= 0)
 			eio();
 		number_left -= number_writen;
@@ -90,4 +155,3 @@ rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 	sstore (file_desc, object);
 	rt_reset_store();
 }
-

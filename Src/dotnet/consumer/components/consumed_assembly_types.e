@@ -92,7 +92,7 @@ feature -- Access
 			loop
 				name := dotnet_names.item (i)
 				l_index := name.substring_index (namespace_name, 1)
-				if l_index = 1 then
+				if l_index = 1 and then name.substring (namespace_name.count, name.count).occurrences ('.') = 1 then
 					l_types_index.extend (i)
 					types_count := types_count + 1
 				end

@@ -20,7 +20,7 @@ feature -- Access
 			Result.extend ("select_actions")
 			Result.extend ("deselect_actions")
 			Result.extend ("column_title_click_actions")
-			Result.extend ("column_resize_actions")
+			Result.extend ("column_resized_actions")
 		end
 		
 	

@@ -70,7 +70,7 @@ stats */
 	/*------------*/
 	/*  malloc.c  */
 	/*------------*/
-#define NBLOCKS			26		/* Number of block lists (max size is 2^27-1) */
+#define NBLOCKS			27		/* Number of block lists (max size is 2^27-1) */
 
 
 	/*-------------*/

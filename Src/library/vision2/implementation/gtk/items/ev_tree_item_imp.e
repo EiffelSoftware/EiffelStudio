@@ -781,14 +781,14 @@ feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation
 
 feature {EV_TREE_ITEM_HOLDER_IMP} -- Implementation - constant
 
-	tree_subtree_id: INTEGER is 35
+	tree_subtree_id: INTEGER is 37
 			-- Constant just needed in this class.
 			-- Used in `update_commands' when an item
 			-- has been expanded or collapsed.
 			-- (This signal does not exist in GTK).
 			-- The value has been chosen regarding
-			-- tree_select_row_id = 33 and
-			-- tree_unselect_row_id = 34.
+			-- tree_select_row_id = 35 and
+			-- tree_unselect_row_id = 36.
 	
 end -- class EV_TREE_ITEM_IMP
 

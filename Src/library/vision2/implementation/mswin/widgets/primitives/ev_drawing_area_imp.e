@@ -16,12 +16,7 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			clear, clear_rectangle, draw_point, draw_text_top_left,
-			draw_segment, draw_straight_line, draw_arc,
-			draw_pixmap, draw_sub_pixmap, draw_rectangle,
-			draw_ellipse, draw_polyline, draw_pie_slice,
-			fill_rectangle, fill_ellipse, fill_polygon,
-			fill_pie_slice,	initialize, interface, destroy
+			initialize, interface, destroy, get_dc, release_dc
 		end
 
 	EV_PRIMITIVE_IMP
@@ -78,7 +73,6 @@ feature {NONE} -- Initialization
 			internal_paint_dc.get
 			Precursor {EV_DRAWABLE_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
-			internal_paint_dc.release
 		end	
 
 feature -- Access
@@ -105,30 +99,37 @@ feature {NONE} -- Implementation
 	release_dc is
 			-- Release the dc if not already released
 		do
-			if internal_paint_dc.exists then
-				internal_paint_dc.release
-			end
+			if not in_paint then
+				if internal_paint_dc.exists then
+					internal_paint_dc.release
+				end
 
-			internal_initialized_font := False
-			internal_initialized_text_color := False
+				internal_initialized_font := False
+				internal_initialized_text_color := False
+			end
 		end
 
 	get_dc is
 			-- Get the dc if not already get.
 		do
-			if not internal_paint_dc.exists then
-				internal_paint_dc.get
-				internal_paint_dc.set_background_transparent
-				if internal_pen /= Void then
-					internal_paint_dc.select_pen (internal_pen)
-				else
-					internal_paint_dc.select_pen (empty_pen)
-				end
-
-				if internal_brush /= Void then
-					internal_paint_dc.select_brush (internal_brush)
-				else
-					internal_paint_dc.select_brush (empty_brush)
+			if not in_paint then
+				if not internal_paint_dc.exists then
+					internal_paint_dc.get
+					internal_paint_dc.set_background_transparent
+					if internal_pen /= Void then
+						internal_paint_dc.select_pen (internal_pen)
+					else
+						internal_paint_dc.select_pen (empty_pen)
+					end
+	
+					if internal_brush /= Void then
+						internal_paint_dc.select_brush (internal_brush)
+					else
+						internal_paint_dc.select_brush (empty_brush)
+					end
+					if valid_rop2_constant (wel_drawing_mode) then
+						internal_paint_dc.set_rop2 (wel_drawing_mode)	
+					end
 				end
 			end
 		end
@@ -354,254 +355,6 @@ feature {NONE} -- Feature that should be directly implemented by externals.
 			cwin_show_window (hwnd, cmd_show)
 		end
 
-feature -- Drawing primitives
-
-	clear is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor
-				release_dc
-			else
-				Precursor
-			end
-		end
-
-	clear_rectangle (x1, y1, a_width, a_height: INTEGER) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (x1, y1, a_width, a_height)
-				release_dc
-			else
-				Precursor (x1, y1, a_width, a_height)
-			end
-		end
-
-	draw_point (a_x, a_y: INTEGER) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (a_x, a_y)
-				release_dc
-			else
-				Precursor (a_x, a_y)
-			end
-		end
-
-	draw_text_top_left (a_x, a_y: INTEGER; a_text: STRING) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (a_x, a_y, a_text)
-				release_dc
-			else
-				Precursor (a_x, a_y, a_text)
-			end
-		end
-
-	draw_segment (x1, y1, x2, y2: INTEGER) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (x1, y1, x2, y2)
-				release_dc
-			else
-				Precursor (x1, y1, x2, y2)
-			end
-		end
-
-	draw_straight_line (x1, y1, x2, y2: INTEGER) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (x1, y1, x2, y2)
-				release_dc
-			else
-				Precursor (x1, y1, x2, y2)
-			end
-		end
-
-	draw_arc (
-		a_x, 
-		a_y,
-		a_vertical_radius,
-		a_horizontal_radius: INTEGER;
-		a_start_angle,
-		an_aperture: REAL) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (
-					a_x,
-					a_y,
-					a_vertical_radius,
-					a_horizontal_radius,
-					a_start_angle,
-					an_aperture
-				)
-				release_dc
-			else
-				Precursor (
-					a_x,
-					a_y,
-					a_vertical_radius,
-					a_horizontal_radius,
-					a_start_angle,
-					an_aperture
-				)
-			end
-		end
-
-	draw_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (a_x, a_y, a_pixmap)
-				release_dc
-			else
-				Precursor (a_x, a_y, a_pixmap)
-			end
-		end
-
-	draw_sub_pixmap (a_x, a_y: INTEGER; a_pixmap: EV_PIXMAP; area: EV_RECTANGLE) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (a_x, a_y, a_pixmap, area)
-				release_dc
-			else
-				Precursor (a_x, a_y, a_pixmap, area)
-			end
-		end
-
-	draw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (a_x, a_y, a_width, a_height)
-				release_dc
-			else
-				Precursor (a_x, a_y, a_width, a_height)
-			end
-		end
-
-	draw_ellipse (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
-				release_dc
-			else
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
-			end
-		end
-
-	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (points, is_closed)
-				release_dc
-			else
-				Precursor (points, is_closed)
-			end
-		end
-
-	draw_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER;
-				   	a_start_angle, an_aperture: REAL) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius,
-							a_start_angle, an_aperture)
-				release_dc
-			else
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius,
-							a_start_angle, an_aperture)
-			end
-		end
-
-	fill_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (a_x, a_y, a_width, a_height)
-				release_dc
-			else
-				Precursor (a_x, a_y, a_width, a_height)
-			end
-		end
-
-	fill_ellipse (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
-				release_dc
-			else
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius)
-			end
-		end
-
-	fill_polygon (points: ARRAY [EV_COORDINATE]) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (points)
-				release_dc
-			else
-				Precursor (points)
-			end
-		end
-
-	fill_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER;
-				   	a_start_angle, an_aperture: REAL) is
-			-- Lock the device context, call precursor
-			-- and release the device context.
-		do
-			if not in_paint then
-				get_dc
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, 
-							a_start_angle, an_aperture)
-				release_dc
-			else
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius,
-							a_start_angle, an_aperture)
-			end
-		end
 
 feature {NONE} -- Implementation
 

@@ -1,0 +1,16 @@
+?MAKE:i_netns_ns: Inhdr
+?MAKE:	-pick add $@ %<
+?S:i_netns_ns:
+?S:	This variable conditionally defines the I_NETNS_NS symbol, and indicates
+?S:	whether a C program should include <netns/ns.h>.
+?S:.
+?C:I_NETNS_NS:
+?C:	This symbol, if defined, indicates to the C program that it should
+?C:	include <netns/ns.h>.
+?C:.
+?H:#$i_netns_ns I_NETNS_NS		/**/
+?H:.
+?LINT:set i_netns_ns
+set netns/ns.h i_netns_ns
+eval $inhdr
+

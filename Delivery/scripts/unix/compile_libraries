@@ -20,7 +20,6 @@ else
 		echo Here are the available makefiles:
 		ls scripts
 		echo "What is the extension of the makefile that should be used?"
-		read rep
 		while [ ! -f "scripts/makefile.$rep" ]; do
 			echo "scripts/makefile.$rep doesn't exist... Try another one"
 			read rep

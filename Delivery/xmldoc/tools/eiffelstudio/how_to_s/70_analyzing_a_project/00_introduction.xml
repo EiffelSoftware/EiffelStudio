@@ -2,10 +2,10 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>The metric tab in the context tool allows project analyzing. Built on a suitable metric theory, this tool provides a set of elementary metrics that can be evaluated to test projects design and implementation.</paragraph>
-		<paragraph>The metric tool provides the following interface to evaluate measures, save them or delete some of them when no longerneeded.</paragraph>
+		<paragraph>The metric tool provides the following interface to evaluate measures, save them or delete some of them when no longer needed.</paragraph>
 		<image>
 			<url>/images/eiffelstudio/metrics_png/metric_tool.png</url>
-		</image>See section:
+		</image><line_break></line_break>See section:
 		<list ordered="false">
 			<item>
 				<link>

@@ -146,6 +146,7 @@ feature {NONE} -- Basic operations
 			end
 			response:= response.substring (1, 3)
 			smtp_code_number := response.to_integer
+			smtp_reply := response
 		end
 
 	send_command (s: STRING; expected_code: INTEGER) is

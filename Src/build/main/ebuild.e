@@ -9,7 +9,7 @@ class EBUILD
 inherit
 	EV_APPLICATION
 		redefine
-			make
+			initialize
 		end
 
 	WINDOWS
@@ -34,7 +34,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	first_window: EV_UNTITLED_WINDOW is
+		do
+			Result := main_window
+		end
+
+	initialize is
 		local
 			init: INIT_CHECK
 			error: BOOLEAN
@@ -46,13 +51,13 @@ feature {NONE} -- Initialization
 				if init.error then
 					error := True
 				elseif init_license then
+					splash_pixmap (Pixmaps.presentation_pixmap)
 						-- Initialize the resources
-					presentation_window.show
 					if resources = Void then end
+					init_project
 					if argument_count > 0 then
 						project_directory := argument (1)
 					end
-					{EV_APPLICATION} Precursor
 					discard_license
 				end
 			else

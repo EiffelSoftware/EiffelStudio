@@ -13,7 +13,9 @@ inherit
 			propagate_foreground_color,
 			propagate_background_color
 		redefine
-			interface
+			interface,
+			lock_update,
+			unlock_update
 		end
 
 	EV_CONTAINER_IMP
@@ -675,6 +677,26 @@ feature {NONE} -- Implementation
 	vbox: POINTER
 			-- Vertical_box to have a possibility for a menu on the
 			-- top and a status bar at the bottom.
+			
+feature {EV_ANY_I} -- Implementation
+			
+	lock_update is
+			-- Lock drawing updates for `Current'
+		do
+			Precursor {EV_WINDOW_I}
+			event_mask := feature {EV_GTK_EXTERNALS}.gdk_window_get_events (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object))
+			feature {EV_GTK_EXTERNALS}.gdk_window_set_events (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
+		end
+		
+	event_mask: INTEGER
+		-- Current events mask of GdkWindow
+		
+	unlock_update is
+			-- Restore drawing updates for `Current'
+		do
+			Precursor {EV_WINDOW_I}
+			feature {EV_GTK_EXTERNALS}.gdk_window_set_events (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), event_mask)
+		end
 
 feature {EV_INTERMEDIARY_ROUTINES}
 

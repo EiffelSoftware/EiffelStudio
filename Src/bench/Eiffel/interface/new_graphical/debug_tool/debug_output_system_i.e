@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Objects that helps to manage DEBUG_OUTPUT.debug_output feature ..."
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -55,7 +55,7 @@ feature -- Access
 		end
 
 	debug_output_feature: E_FEATURE is
-			-- E_feature that corresponds to DEBUG_OUTPUT::debug_output.
+			-- E_feature that corresponds to {DEBUG_OUTPUT}.debug_output.
 		do
 			if
 				internal_debug_output_feature.item = Void

@@ -11,7 +11,8 @@ deferred class
 inherit
 	EV_ITEM_I
 		redefine
-			interface
+			interface,
+			parent_imp
 		end
 
 	EV_PICK_AND_DROPABLE_I
@@ -72,7 +73,33 @@ feature -- Basic operations
 
 	update is
 			-- Layout of row has been changed.
+		local
+			app: EV_APPLICATION_I
+		do
+			if parent_imp /= Void then
+				update_needed := True
+				app := (create {EV_ENVIRONMENT}).application.implementation
+				if not app.once_idle_actions.has (
+						parent_imp.update_children_agent) then
+					app.once_idle_actions.extend (
+						parent_imp.update_children_agent)
+				end
+			end
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	parent_imp: EV_MULTI_COLUMN_LIST_IMP is
 		deferred
+		end
+
+	update_needed: BOOLEAN
+			-- Mark `Current' as dirty.
+
+	update_performed is
+			-- Mark `Current' as up to date.
+		do
+			update_needed := False
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -102,6 +129,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/24 17:29:34  brendel
+--| Moved platform independent update code here.
+--|
 --| Revision 1.34  2000/03/23 19:20:05  king
 --| Made toggle platform independent
 --|

@@ -44,11 +44,11 @@ creation
 %token		TE_CHECK TE_CLASS TE_CURRENT TE_DEBUG TE_DEFERRED TE_DO
 %token		TE_ELSE TE_ELSEIF TE_END TE_ENSURE TE_EXPANDED TE_EXPORT
 %token		TE_EXTERNAL TE_FEATURE TE_FROM TE_FROZEN TE_IF TE_INDEXING
-%token		TE_IN_END TE_INFIX TE_INHERIT TE_INSPECT TE_INVARIANT TE_IS
+%token		TE_INFIX TE_INHERIT TE_INSPECT TE_INVARIANT TE_IS
 %token		TE_LIKE TE_LOCAL TE_LOOP TE_OBSOLETE TE_ONCE TE_PRECURSOR
 %token		TE_PREFIX TE_REDEFINE TE_RENAME TE_REQUIRE TE_RESCUE
 %token		TE_RESULT TE_RETRY TE_SELECT TE_SEPARATE TE_THEN TE_UNDEFINE
-5token		TE_UNIQUE TE_UNTIL TE_VARIANT TE_WHEN TE_QUESTION TE_CURLYTILDE
+%token		TE_UNIQUE TE_UNTIL TE_VARIANT TE_WHEN TE_QUESTION TE_CURLYTILDE
 %token		TE_BOOLEAN_ID TE_CHARACTER_ID TE_DOUBLE_ID TE_INTEGER_ID
 %token		TE_NONE_ID TE_POINTER_ID TE_REAL_ID TE_EMPTY_STRING
 
@@ -200,51 +200,35 @@ Clickable_identifier: Clickable_id
 	;
 
 Clickable_id: TE_ID
-			{
-				$$ := new_clickable_id (new_id_as (token_buffer))
-			}
+			{ $$ := new_clickable_id (new_id_as (token_buffer)) }
 	;
 
 Clickable_boolean: TE_BOOLEAN_ID
-			{
-				$$ := new_clickable_id (new_boolean_id_as)
-			}
+			{ $$ := new_clickable_id (new_boolean_id_as) }
 	;
 
 Clickable_character: TE_CHARACTER_ID
-			{
-				$$ := new_clickable_id (new_character_id_as)
-			}
+			{ $$ := new_clickable_id (new_character_id_as) }
 	;
 
 Clickable_double: TE_DOUBLE_ID
-			{
-				$$ := new_clickable_id (new_double_id_as)
-			}
+			{ $$ := new_clickable_id (new_double_id_as) }
 	;
 
 Clickable_integer: TE_INTEGER_ID
-			{
-				$$ := new_clickable_id (new_integer_id_as)
-			}
+			{ $$ := new_clickable_id (new_integer_id_as) }
 	;
 
 Clickable_none: TE_NONE_ID
-			{
-				$$ := new_clickable_id (new_none_id_as)
-			}
+			{ $$ := new_clickable_id (new_none_id_as) }
 	;
 
 Clickable_pointer: TE_POINTER_ID
-			{
-				$$ := new_clickable_id (new_pointer_id_as)
-			}
+			{ $$ := new_clickable_id (new_pointer_id_as) }
 	;
 
 Clickable_real: TE_REAL_ID
-			{
-				$$ := new_clickable_id (new_real_id_as)
-			}
+			{ $$ := new_clickable_id (new_real_id_as) }
 	;
 
 
@@ -252,17 +236,11 @@ Clickable_real: TE_REAL_ID
 
 
 Indexing: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_INDEXING Index_list
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	|	TE_INDEXING 
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	;
 
 Index_list: Index_clause
@@ -278,17 +256,13 @@ Index_list: Index_clause
 	;
 
 Index_clause: Index Index_terms ASemi
-			{
-				$$ := new_index_as ($1, $2)
-			}
+			{ $$ := new_index_as ($1, $2) }
 	;
 
 Index: Identifier TE_COLON
 			{ $$ := $1 }
 	|	-- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	;
 
 Index_terms: Index_value
@@ -349,13 +323,9 @@ Header_mark: -- Empty
 
 
 Obsolete: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_OBSOLETE Manifest_string
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 
@@ -363,9 +333,7 @@ Obsolete: -- Empty
  
 
 Features: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	Feature_clause_list
 			{
 				$$ := $1
@@ -388,13 +356,9 @@ Feature_clause_list: Feature_clause
 	;
 
 Feature_clause: Feature_client_clause
-			{
-				$$ := Void
-			}
+			-- { $$ := Void }
 	|	Feature_client_clause Feature_declaration_list
-			{
-				$$ := new_feature_clause_as ($1, $2, fclause_pos)
-			}
+			{ $$ := new_feature_clause_as ($1, $2, fclause_pos) }
 	;
 
 Feature_client_clause: TE_FEATURE
@@ -403,19 +367,13 @@ Feature_client_clause: TE_FEATURE
 				fclause_pos := current_position.end_position
 			}
 		Clients
-			{
-				$$ := $3
-			}
+			{ $$ := $3 }
 	;
 
 Clients: -- Empty
-			{
-				$$ := Void
-			}
+			-- { $$ := Void }
 	|	Client_list
-			{
-				$$ := new_client_as ($1)
-			}
+			{ $$ := new_client_as ($1) }
 	;
 
 Client_list: TE_LCURLY TE_RCURLY
@@ -424,9 +382,7 @@ Client_list: TE_LCURLY TE_RCURLY
 				$$.extend (new_none_id_as)
 			}
 	|	TE_LCURLY Class_list TE_RCURLY
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Class_list: Identifier
@@ -458,15 +414,11 @@ ASemi: -- Empty
 	;
 
 Feature_declaration: New_feature_list Declaration_body ASemi
-			{
-				$$ := new_feature_declaration ($1, $2)
-			}
+			{ $$ := new_feature_declaration ($1, $2) }
 	;
 
 New_feature_list: New_feature
-			{
-				$$ := new_clickable_feature_name_list ($1, Initial_new_feature_list_size)
-			}
+			{ $$ := new_clickable_feature_name_list ($1, Initial_new_feature_list_size) }
 	|	New_feature_list TE_COMMA New_feature
 			{
 				$$ := $1
@@ -475,25 +427,17 @@ New_feature_list: New_feature
 	;
 
 New_feature: Feature_name_mark Feature_name
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Feature_name_mark: -- Empty
-			{
-				is_frozen := False
-			}
+			{ is_frozen := False }
 	|	TE_FROZEN
-			{
-				is_frozen := True
-			}
+			{ is_frozen := True }
 	;
 
 Feature_name: Clickable_identifier
-			{
-				$$ := new_clickable_feature_name ($1)
-			}
+			{ $$ := new_clickable_feature_name ($1) }
 	|	Infix
 			{ $$ := $1 }
 	|	Prefix
@@ -501,42 +445,28 @@ Feature_name: Clickable_identifier
 	;
 
 Infix: TE_INFIX Infix_operator
-			{
-				$$ := new_clickable_infix ($2)
-			}
+			{ $$ := new_clickable_infix ($2) }
 	;
 
 
 Prefix: TE_PREFIX Prefix_operator
-			{
-				$$ := new_clickable_prefix ($2)
-			}
+			{ $$ := new_clickable_prefix ($2) }
 	;
 
 Declaration_body: Formal_arguments Type_mark Constant_or_routine
-			{
-				$$ := new_declaration_body ($1, $2, $3)
-			}
+			{ $$ := new_declaration_body ($1, $2, $3) }
 	;
 
 Constant_or_routine: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_IS Feature_value
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Feature_value: Manifest_constant
-			{
-				$$ := new_constant_as (new_value_as ($1))
-			}
+			{ $$ := new_constant_as (new_value_as ($1)) }
 	|	TE_UNIQUE
-			{
-				$$ := new_constant_as (new_value_as (new_unique_as))
-			}
+			{ $$ := new_constant_as (new_value_as (new_unique_as)) }
 	|	Routine
 			{ $$ := $1 }
 	;
@@ -546,17 +476,11 @@ Feature_value: Manifest_constant
 
 
 Inheritance: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_INHERIT Parent_list
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	|	TE_INHERIT ASemi
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	;
 
 Parent_list: Parent
@@ -617,14 +541,8 @@ Parent_clause: Clickable_identifier Generics_opt
 			}
 	;
 
-Rename: TE_RENAME
-			{
-				-- $$ := Void
-			}
-	|	TE_RENAME Rename_list
-			{
-				$$ := $2
-			}
+Rename: TE_RENAME Rename_list
+			{ $$ := $2 }
 	;
 
 Rename_list: Rename_pair
@@ -640,27 +558,19 @@ Rename_list: Rename_pair
 	;
 
 Rename_pair: Feature_name TE_AS Feature_name
-			{
-				$$ := new_rename_pair ($1, $3)
-			}
+			{ $$ := new_rename_pair ($1, $3) }
 	;
 
 New_exports_opt: -- Empty
-			{
-				-- $$  := Void
-			}
+			-- { $$  := Void }
 	|	New_exports
 			{ $$ := $1 }
 	;
 
 New_exports: TE_EXPORT New_export_list
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	|	TE_EXPORT ASemi
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	;
 
 New_export_list: New_export_item
@@ -676,19 +586,13 @@ New_export_list: New_export_item
 	;
 
 New_export_item: Client_list Feature_set ASemi
-			{
-				$$ := new_export_item_as (new_client_as ($1), $2)
-			}
+			{ $$ := new_export_item_as (new_client_as ($1), $2) }
 	;
 
 Feature_set: TE_ALL
-			{
-				$$ := new_all_as
-			}
+			{ $$ := new_all_as }
 	|	Feature_list
-			{
-				$$ := new_feature_list_as ($1)
-			}
+			{ $$ := new_feature_list_as ($1) }
 	;
 
 Feature_list: Feature_name
@@ -704,57 +608,39 @@ Feature_list: Feature_name
 	;
 
 Undefine_opt: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	Undefine
 			{ $$ := $1 }
 	;
 
 Undefine: TE_UNDEFINE
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_UNDEFINE Feature_list
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Redefine_opt: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	Redefine
 			{ $$ := $1 }
 	;
 
 Redefine: TE_REDEFINE
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_REDEFINE Feature_list
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Select_opt: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	Select
 			{ $$ := $1 }
 	;
 
 Select: TE_SELECT
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_SELECT Feature_list
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 
@@ -762,19 +648,13 @@ Select: TE_SELECT
 
 
 Formal_arguments: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_LPARAN Entity_declaration_list_opt TE_RPARAN
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Entity_declaration_list_opt: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	Entity_declaration_list
 			{ $$ := $1 }
 	;
@@ -792,9 +672,7 @@ Entity_declaration_list: Entity_declaration_group
 	;
 
 Entity_declaration_group: Identifier_list TE_COLON Type ASemi
-			{
-				$$ := new_type_dec_as ($1, $3)
-			}
+			{ $$ := new_type_dec_as ($1, $3) }
 	;
 
 Identifier_list: Identifier
@@ -810,32 +688,22 @@ Identifier_list: Identifier
 	;
 
 Strip_identifier_list: -- Empty
-			{
-				$$ := new_eiffel_list_id_as (0)
-			}
+			{ $$ := new_eiffel_list_id_as (0) }
 	|	Identifier_list
 			{ $$ := $1 }
 	;
 
 Type_mark: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_COLON Type
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Routine: Obsolete
-			{
-				fbody_pos := current_position.start_position
-			} 
+			{ fbody_pos := current_position.start_position } 
 		Precondition Local_declarations
 		Routine_body Postcondition Rescue TE_END
-			{
-				$$ := new_routine_as ($1, $3, $4, $5, $6, $7, fbody_pos)
-			}
+			{ $$ := new_routine_as ($1, $3, $4, $5, $6, $7, fbody_pos) }
 	;
 
 Routine_body: Internal
@@ -843,65 +711,41 @@ Routine_body: Internal
 	|	External
 			{ $$ := $1 }
 	|	TE_DEFERRED
-			{
-				$$ := new_deferred_as
-			}
+			{ $$ := new_deferred_as }
 	;
 
 External: TE_EXTERNAL External_language External_name
-			{
-				$$ := new_external_as ($2, $3)
-			}
+			{ $$ := new_external_as ($2, $3) }
 	;
 
 External_language:
-			{
-				set_position (current_position)
-			}
+			{ set_position (current_position) }
 		Non_empty_string
-			{
-				$$ := new_external_lang_as ($2, yacc_position)
-			}
+			{ $$ := new_external_lang_as ($2, yacc_position) }
 	;
 
 External_name: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_ALIAS Non_empty_string
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Internal: TE_DO Compound
-			{
-				$$ := new_do_as ($2)
-			}
+			{ $$ := new_do_as ($2) }
 	|	TE_ONCE Compound
-			{
-				$$ := new_once_as ($2)
-			}
+			{ $$ := new_once_as ($2) }
 	;
 
 Local_declarations: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_LOCAL Entity_declaration_list_opt
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Compound: Opt_Semi
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	Opt_Semi Instruction_list
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Instruction_list: Instruction
@@ -917,9 +761,7 @@ Instruction_list: Instruction
 	;
 
 Instruction: Set_position Instruction_impl Opt_Semi
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Opt_Semi: -- Empty
@@ -949,22 +791,16 @@ Instruction_impl: Creation
 	;
 
 Precondition: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_REQUIRE
-			{
-				id_level := Assert_level
-			}
+			{ id_level := Assert_level }
 		Assertion
 			{
 				id_level := Normal_level
 				$$ := new_require_as ($3)
 			}
 	|	TE_REQUIRE TE_ELSE
-			{
-				id_level := Assert_level
-			}
+			{ id_level := Assert_level }
 		Assertion
 			{
 				id_level := Normal_level
@@ -973,22 +809,16 @@ Precondition: -- Empty
 	;
 
 Postcondition: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_ENSURE
-			{
-				id_level := Assert_level
-			}
+			{ id_level := Assert_level }
 		Assertion
 			{
 				id_level := Normal_level
 				$$ := new_ensure_as ($3)
 			}
 	|	TE_ENSURE TE_THEN
-			{
-				id_level := Assert_level
-			}
+			{ id_level := Assert_level }
 		Assertion
 			{
 				id_level := Normal_level
@@ -997,9 +827,7 @@ Postcondition: -- Empty
 	;
 
 Assertion: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	Assertion_list
 			{
 				$$ := $1
@@ -1022,23 +850,15 @@ Assertion_list: Assertion_clause
 	;
 
 Assertion_clause: Set_position Assertion_clause_impl ASemi
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Assertion_clause_impl: Expression
-			{
-				$$ := new_tagged_as (Void, $1, yacc_position)
-			}
+			{ $$ := new_tagged_as (Void, $1, yacc_position) }
 	|	Identifier TE_COLON Expression
-			{
-				$$ := new_tagged_as ($1, $3, yacc_position)
-			}
+			{ $$ := new_tagged_as ($1, $3, yacc_position) }
 	|	Identifier TE_COLON 
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	;
 
 
@@ -1052,77 +872,43 @@ Type: Class_type
 	;
 
 Non_class_type: TE_EXPANDED Clickable_identifier Generics_opt
-			{
-				$$ := new_expanded_type ($2, $3)
-			}
+			{ $$ := new_expanded_type ($2, $3) }
 	|	TE_SEPARATE Clickable_identifier Generics_opt
-			{
-				$$ := new_separate_type ($2, $3)
-			}
+			{ $$ := new_separate_type ($2, $3) }
 	|	TE_BIT Integer_constant
-			{
-				$$ := new_bits_as ($2)
-			}
+			{ $$ := new_bits_as ($2) }
 	|	TE_BIT Identifier
-			{
-				$$ := new_bits_symbol_as ($2)
-			}
+			{ $$ := new_bits_symbol_as ($2) }
 	|	TE_LIKE Identifier
-			{
-				$$ := new_like_id_as ($2)
-			}
+			{ $$ := new_like_id_as ($2) }
 	|	TE_LIKE TE_CURRENT
-			{
-				$$ := new_like_current_as
-			}
+			{ $$ := new_like_current_as }
 	;
 
 Class_type: Clickable_id Generics_opt
-			{
-				$$ := new_class_type ($1, $2)
-			}
+			{ $$ := new_class_type ($1, $2) }
 	|	Clickable_boolean Generics_opt
-			{
-				$$ := new_boolean_type ($1.second, $2 /= Void)
-			}
+			{ $$ := new_boolean_type ($1.second, $2 /= Void) }
 	|	Clickable_character Generics_opt
-			{
-				$$ := new_character_type ($1.second, $2 /= Void)
-			}
+			{ $$ := new_character_type ($1.second, $2 /= Void) }
 	|	Clickable_double Generics_opt
-			{
-				$$ := new_double_type ($1.second, $2 /= Void)
-			}
+			{ $$ := new_double_type ($1.second, $2 /= Void) }
 	|	Clickable_integer Generics_opt
-			{
-				$$ := new_integer_type ($1.second, $2 /= Void)
-			}
+			{ $$ := new_integer_type ($1.second, $2 /= Void) }
 	|	Clickable_none Generics_opt
-			{
-				$$ := new_none_type ($1.second, $2 /= Void)
-			}
+			{ $$ := new_none_type ($1.second, $2 /= Void) }
 	|	Clickable_pointer Generics_opt
-			{
-				$$ := new_pointer_type ($1.second, $2 /= Void)
-			}
+			{ $$ := new_pointer_type ($1.second, $2 /= Void) }
 	|	Clickable_real Generics_opt
-			{
-				$$ := new_real_type ($1.second, $2 /= Void)
-			}
+			{ $$ := new_real_type ($1.second, $2 /= Void) }
 	;
 
 Generics_opt: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_LSQURE TE_RSQURE
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_LSQURE Type_list TE_RSQURE
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Type_list: Type
@@ -1142,19 +928,13 @@ Type_list: Type
 
 
 Formal_generics:
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_LSQURE Formal_generic_list_opt TE_RSQURE
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Formal_generic_list_opt: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	Formal_generic_list
 			{ $$ := $1 }
 	;
@@ -1173,9 +953,7 @@ Formal_generic_list: Formal_generic
 
 Formal_generic:
 		TE_ID
-			{
-				formal_parameters.extend (new_id_as (token_buffer))
-			}
+			{ formal_parameters.extend (new_id_as (token_buffer)) }
 		Constraint Creation_constraint
 			{
 				check formal_exists: not formal_parameters.empty end
@@ -1184,23 +962,15 @@ Formal_generic:
 	;
 
 Constraint: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_CONSTRAIN Class_type 
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Creation_constraint: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_CREATION Feature_list TE_END
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 
@@ -1215,9 +985,7 @@ Conditional: Position TE_IF Expression TE_THEN Compound Elseif_list_opt Else_par
 	;
 
 Elseif_list_opt: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	Elseif_list
 			{ $$ := $1 }
 	;
@@ -1235,19 +1003,13 @@ Elseif_list: Elseif_part
 	;
 
 Elseif_part: TE_ELSEIF Expression TE_THEN Compound
-			{
-				$$ := new_elseif_as ($2, $4, yacc_line_number)
-			}
+			{ $$ := new_elseif_as ($2, $4, yacc_line_number) }
 	;
 
 Else_part: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_ELSE Compound 
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Multi_branch: Position TE_INSPECT Expression When_part_list_opt Inspect_default TE_END
@@ -1258,9 +1020,7 @@ Multi_branch: Position TE_INSPECT Expression When_part_list_opt Inspect_default 
 	;
 
 When_part_list_opt: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	When_part_list
 			{ $$ := $1 }
 	;
@@ -1278,9 +1038,7 @@ When_part_list: When_part
 	;
 
 When_part: TE_WHEN Choices TE_THEN Compound
-			{
-				$$ := new_case_as ($2, $4, yacc_line_number)
-			}
+			{ $$ := new_case_as ($2, $4, yacc_line_number) }
 	;
 
 Choices: Choice
@@ -1296,51 +1054,29 @@ Choices: Choice
 	;
 
 Choice: Integer_constant
-			{
-				$$ := new_interval_as ($1, Void)
-			}
+			{ $$ := new_interval_as ($1, Void) }
 	|	Character_constant
-			{
-				$$ := new_interval_as ($1, Void)
-			}
+			{ $$ := new_interval_as ($1, Void) }
 	|	Identifier
-			{
-				$$ := new_interval_as ($1, Void)
-			}
+			{ $$ := new_interval_as ($1, Void) }
 	|	Integer_constant TE_DOTDOT Integer_constant
-			{
-				$$ := new_interval_as ($1, $3)
-			}
+			{ $$ := new_interval_as ($1, $3) }
 	|	Integer_constant TE_DOTDOT Identifier
-			{
-				$$ := new_interval_as ($1, $3)
-			}
+			{ $$ := new_interval_as ($1, $3) }
 	|	Identifier TE_DOTDOT Integer_constant
-			{
-				$$ := new_interval_as ($1, $3)
-			}
+			{ $$ := new_interval_as ($1, $3) }
 	|	Identifier TE_DOTDOT Identifier
-			{
-				$$ := new_interval_as ($1, $3)
-			}
+			{ $$ := new_interval_as ($1, $3) }
 	|	Character_constant TE_DOTDOT Character_constant
-			{
-				$$ := new_interval_as ($1, $3)
-			}
+			{ $$ := new_interval_as ($1, $3) }
 	|	Identifier TE_DOTDOT Character_constant
-			{
-				$$ := new_interval_as ($1, $3)
-			}
+			{ $$ := new_interval_as ($1, $3) }
 	|	Character_constant TE_DOTDOT Identifier
-			{
-				$$ := new_interval_as ($1, $3)
-			}
+			{ $$ := new_interval_as ($1, $3) }
 	;
 
 Inspect_default: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_ELSE Compound
 			{
 				$$ := $2
@@ -1358,23 +1094,15 @@ Loop: Position TE_FROM Compound Invariant Variant TE_UNTIL Expression TE_LOOP Co
 	;
 
 Invariant: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_INVARIANT Assertion
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Class_invariant: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_INVARIANT
-			{
-				id_level := Invariant_level
-			}
+			{ id_level := Invariant_level }
 		Assertion
 			{
 				id_level := Normal_level
@@ -1384,17 +1112,11 @@ Class_invariant: -- Empty
 	;
 
 Variant: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_VARIANT Identifier TE_COLON Expression
-			{
-				$$ := new_variant_as ($2, $4, yacc_position)
-			}
+			{ $$ := new_variant_as ($2, $4, yacc_position) }
 	|	TE_VARIANT Expression
-			{
-				$$ := new_variant_as (Void, $2, yacc_position)
-			}
+			{ $$ := new_variant_as (Void, $2, yacc_position) }
 	;
 
 Debug: Position TE_DEBUG Debug_keys Compound TE_END 
@@ -1405,17 +1127,11 @@ Debug: Position TE_DEBUG Debug_keys Compound TE_END
 	;
 
 Debug_keys: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_LPARAN TE_RPARAN
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_LPARAN Debug_key_list TE_RPARAN
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Debug_key_list: Non_empty_string
@@ -1431,15 +1147,11 @@ Debug_key_list: Non_empty_string
 	;
 
 Retry: TE_RETRY
-			{
-				$$ := new_retry_as (yacc_line_number)
-			}
+			{ $$ := new_retry_as (yacc_line_number) }
 	;
 
 Rescue: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_RESCUE Compound 
 			{
 				$$ := $2
@@ -1450,29 +1162,19 @@ Rescue: -- Empty
 	;
 
 Assignment: Identifier TE_ASSIGN Expression
-			{
-				$$ := new_assign_as (new_access_id_as ($1, Void), $3, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_assign_as (new_access_id_as ($1, Void), $3, yacc_position, yacc_line_number) }
 	|	TE_RESULT TE_ASSIGN Expression
-			{
-				$$ := new_assign_as (new_result_as, $3, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_assign_as (new_result_as, $3, yacc_position, yacc_line_number) }
     ;
 
 Reverse_assignment: Identifier TE_ACCEPT Expression
-			{
-				$$ := new_reverse_as (new_access_id_as ($1, Void), $3, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_reverse_as (new_access_id_as ($1, Void), $3, yacc_position, yacc_line_number) }
 	|	TE_RESULT TE_ACCEPT Expression
-			{
-				 $$ := new_reverse_as (new_result_as, $3, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_reverse_as (new_result_as, $3, yacc_position, yacc_line_number) }
     ;
 
 Creators: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	Creation_clause_list
 			{ $$ := $1 }
 	;
@@ -1507,41 +1209,25 @@ Creation_clause: TE_CREATION
 	;
 
 Delayed_call: Delayed_qualifier Identifier Delayed_actuals
-			{
-				$$ := new_routine_creation_as ($1, $2, $3)
-			}
+			{ $$ := new_routine_creation_as ($1, $2, $3) }
 	;
 
 Delayed_qualifier: Identifier TE_TILDE
-			{
-				$$ := new_operand_as (Void, $1, Void)
-			}
+			{ $$ := new_operand_as (Void, $1, Void) }
 	|	TE_LPARAN Expression TE_RPARAN TE_TILDE
-			{
-				$$ := new_operand_as (Void, Void, $2)
-			}
+			{ $$ := new_operand_as (Void, Void, $2) }
 	|	TE_LCURLY Type TE_CURLYTILDE
-			{
-				$$ := new_operand_as ($2, Void, Void)
-			}
+			{ $$ := new_operand_as ($2, Void, Void) }
 	|	TE_QUESTION TE_TILDE
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_TILDE
-			{
-				$$ := new_operand_as (Void, Void, Void)
-			}
+			{ $$ := new_operand_as (Void, Void, Void) }
 	;
 
 Delayed_actuals: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_LPARAN Delayed_actual_list TE_RPARAN
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Delayed_actual_list: Delayed_actual
@@ -1557,101 +1243,59 @@ Delayed_actual_list: Delayed_actual
 	;
 
 Delayed_actual: TE_QUESTION
-			{
-				$$ := new_operand_as (Void, Void, Void)
-			}
+			{ $$ := new_operand_as (Void, Void, Void) }
 	|	Actual_parameter
-			{
-				$$ := new_operand_as (Void, Void, $1)
-			}
+			{ $$ := new_operand_as (Void, Void, $1) }
 	|	TE_LCURLY Clickable_id Generics_opt TE_RCURLY
-			{
-				$$ := new_operand_as (new_class_type ($2, $3), Void, Void)
-			}
+			{ $$ := new_operand_as (new_class_type ($2, $3), Void, Void) }
 	|	TE_LCURLY Clickable_boolean Generics_opt TE_RCURLY
-			{
-				$$ := new_operand_as (new_boolean_type ($2.second, $3 /= Void), Void, Void)
-			}
+			{ $$ := new_operand_as (new_boolean_type ($2.second, $3 /= Void), Void, Void) }
 	|	TE_LCURLY Clickable_character Generics_opt TE_RCURLY
-			{
-				$$ := new_operand_as (new_character_type ($2.second, $3 /= Void), Void, Void)
-			}
+			{ $$ := new_operand_as (new_character_type ($2.second, $3 /= Void), Void, Void) }
 	|	TE_LCURLY Clickable_double Generics_opt TE_RCURLY
-			{
-				$$ := new_operand_as (new_double_type ($2.second, $3 /= Void), Void, Void)
-			}
+			{ $$ := new_operand_as (new_double_type ($2.second, $3 /= Void), Void, Void) }
 	|	TE_LCURLY Clickable_integer Generics_opt TE_RCURLY
-			{
-				$$ := new_operand_as (new_integer_type ($2.second, $3 /= Void), Void, Void)
-			}
+			{ $$ := new_operand_as (new_integer_type ($2.second, $3 /= Void), Void, Void) }
 	|	TE_LCURLY Clickable_none Generics_opt TE_RCURLY
-			{
-				$$ := new_operand_as (new_none_type ($2.second, $3 /= Void), Void, Void)
-			}
+			{ $$ := new_operand_as (new_none_type ($2.second, $3 /= Void), Void, Void) }
 	|	TE_LCURLY Clickable_pointer Generics_opt TE_RCURLY
-			{
-				$$ := new_operand_as (new_pointer_type ($2.second, $3 /= Void), Void, Void)
-			}
+			{ $$ := new_operand_as (new_pointer_type ($2.second, $3 /= Void), Void, Void) }
 	|	TE_LCURLY Clickable_real Generics_opt TE_RCURLY
-			{
-				$$ := new_operand_as (new_real_type ($2.second, $3 /= Void), Void, Void)
-			}
+			{ $$ := new_operand_as (new_real_type ($2.second, $3 /= Void), Void, Void) }
 	|	TE_LCURLY Non_class_type TE_RCURLY
-			{
-				$$ := new_operand_as ($2, Void, Void)
-			}
+			{ $$ := new_operand_as ($2, Void, Void) }
 	;
 
 Creation: TE_BANG Creation_type TE_BANG Creation_target Creation_call
-			{
-				$$ := new_creation_as ($2, $4, $5, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_creation_as ($2, $4, $5, yacc_position, yacc_line_number) }
 	|	TE_CREATION Creation_target Creation_call
-			{
-				$$ := new_creation_as (Void, $2, $3, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_creation_as (Void, $2, $3, yacc_position, yacc_line_number) }
 	|	TE_CREATION TE_LCURLY Type TE_RCURLY Creation_target Creation_call
-			{
-				$$ := new_creation_as ($3, $5, $6, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_creation_as ($3, $5, $6, yacc_position, yacc_line_number) }
 	;
 
 Creation_expression: TE_CREATION TE_LCURLY Type TE_RCURLY Creation_call
-			{
-				$$ := new_creation_expr_as ($3, $5)
-			}
+			{ $$ := new_creation_expr_as ($3, $5) }
 	|	TE_BANG Type TE_BANG Creation_call
-			{
-				$$ := new_creation_expr_as ($2, $4)
-			}
+			{ $$ := new_creation_expr_as ($2, $4) }
 	;
 
 Creation_type: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	Type
 			{ $$ := $1 }
 	;
 
 Creation_target: Identifier
-			{
-				$$ := new_access_id_as ($1, Void)
-			}
+			{ $$ := new_access_id_as ($1, Void) }
 	|	TE_RESULT
-			{
-				$$ := new_result_as
-			}
+			{ $$ := new_result_as }
 	;
 
 Creation_call: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_DOT Identifier Parameters
-			{
-				$$ := new_access_inv_as ($2, $3)
-			}
+			{ $$ := new_access_inv_as ($2, $3) }
 	;
 
 
@@ -1659,33 +1303,19 @@ Creation_call: -- Empty
 
  
 Call: A_feature
-			{
-				$$ := new_instr_call_as ($1, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
 	|	Call_on_result
-			{
-				$$ := new_instr_call_as ($1, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
 	|	Call_on_feature
-			{
-				$$ := new_instr_call_as ($1, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
 	|	Call_on_current
-			{
-				$$ := new_instr_call_as ($1, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
 	|	Call_on_expression
-			{
-				$$ := new_instr_call_as ($1, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
 	|	A_precursor
-			{
-				$$ := new_instr_call_as ($1, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
 	|	Call_on_precursor
-			{
-				$$ := new_instr_call_as ($1, yacc_position, yacc_line_number)
-			}
+			{ $$ := new_instr_call_as ($1, yacc_position, yacc_line_number) }
 	;
 
 Check: Position TE_CHECK Assertion TE_END
@@ -1700,157 +1330,85 @@ Check: Position TE_CHECK Assertion TE_END
  
 
 Expression: Expression_constant
-			{
-				$$ := new_value_as ($1)
-			}
+			{ $$ := new_value_as ($1) }
 	|	Manifest_array
-			{
-				$$ := new_value_as ($1)
-			}
+			{ $$ := new_value_as ($1) }
 	|	Manifest_tuple
-			{
-				$$ := new_value_as ($1)
-			}
+			{ $$ := new_value_as ($1) }
 	|	Feature_call
-			{
-				$$ := new_expr_call_as ($1)
-			}
+			{ $$ := new_expr_call_as ($1) }
 	|	Delayed_call
 			{ $$ := $1 }
 	|	TE_LPARAN Expression TE_RPARAN
-			{
-				$$ := new_paran_as ($2)
-			}
+			{ $$ := new_paran_as ($2) }
 	|	Expression TE_PLUS Expression
-			{
-				$$ := new_bin_plus_as ($1, $3)
-			}
+			{ $$ := new_bin_plus_as ($1, $3) }
 	|	Expression TE_MINUS Expression
-			{
-				$$ := new_bin_minus_as ($1, $3)
-			}
+			{ $$ := new_bin_minus_as ($1, $3) }
 	|	Expression TE_STAR Expression
-			{
-				$$ := new_bin_star_as ($1, $3)
-			}
+			{ $$ := new_bin_star_as ($1, $3) }
 	|	Expression TE_SLASH Expression
-			{
-				$$ := new_bin_slash_as ($1, $3)
-			}
+			{ $$ := new_bin_slash_as ($1, $3) }
 	|	Expression TE_MOD Expression
-			{
-				$$ := new_bin_mod_as ($1, $3)
-			}
+			{ $$ := new_bin_mod_as ($1, $3) }
 	|	Expression TE_DIV Expression
-			{
-				$$ := new_bin_div_as ($1, $3)
-			}
+			{ $$ := new_bin_div_as ($1, $3) }
 	|	Expression TE_POWER Expression
-			{
-				$$ := new_bin_power_as ($1, $3)
-			}
+			{ $$ := new_bin_power_as ($1, $3) }
 	|	Expression TE_AND Expression
-			{
-				$$ := new_bin_and_as ($1, $3)
-			}
+			{ $$ := new_bin_and_as ($1, $3) }
 	|	Expression TE_AND TE_THEN Expression %prec TE_AND
-			{
-				$$ := new_bin_and_then_as ($1, $4)
-			}
+			{ $$ := new_bin_and_then_as ($1, $4) }
 	|	Expression TE_OR Expression
-			{
-				$$ := new_bin_or_as ($1, $3)
-			}
+			{ $$ := new_bin_or_as ($1, $3) }
 	|	Expression TE_OR TE_ELSE Expression %prec TE_OR
-			{
-				$$ := new_bin_or_else_as ($1, $4)
-			}
+			{ $$ := new_bin_or_else_as ($1, $4) }
 	|	Expression TE_IMPLIES Expression
-			{
-				$$ := new_bin_implies_as ($1, $3)
-			}
+			{ $$ := new_bin_implies_as ($1, $3) }
 	|	Expression TE_XOR Expression
-			{
-				$$ := new_bin_xor_as ($1, $3)
-			}
+			{ $$ := new_bin_xor_as ($1, $3) }
 	|	Expression TE_GE Expression
-			{
-				$$ := new_bin_ge_as ($1, $3)
-			}
+			{ $$ := new_bin_ge_as ($1, $3) }
 	|	Expression TE_GT Expression
-			{
-				$$ := new_bin_gt_as ($1, $3)
-			}
+			{ $$ := new_bin_gt_as ($1, $3) }
 	|	Expression TE_LE Expression
-			{
-				$$ := new_bin_le_as ($1, $3)
-			}
+			{ $$ := new_bin_le_as ($1, $3) }
 	|	Expression TE_LT Expression
-			{
-				$$ := new_bin_lt_as ($1, $3)
-			}
+			{ $$ := new_bin_lt_as ($1, $3) }
 	|	Expression TE_EQ Expression
-			{
-				$$ := new_bin_eq_as ($1, $3)
-			}
+			{ $$ := new_bin_eq_as ($1, $3) }
 	|	Expression TE_NE Expression
-			{
-				$$ := new_bin_ne_as ($1, $3)
-			}
+			{ $$ := new_bin_ne_as ($1, $3) }
 	|	Expression Free_operator Expression %prec TE_FREE
-			{
-				$$ := new_bin_free_as ($1, $2, $3)
-			}
+			{ $$ := new_bin_free_as ($1, $2, $3) }
 	|	TE_MINUS Expression %prec TE_NOT
-			{
-				$$ := new_un_minus_as ($2)
-			}
+			{ $$ := new_un_minus_as ($2) }
 	|	TE_PLUS Expression %prec TE_NOT
-			{
-				$$ := new_un_plus_as ($2)
-			}
+			{ $$ := new_un_plus_as ($2) }
 	|	TE_NOT Expression
-			{
-				$$ := new_un_not_as ($2)
-			}
+			{ $$ := new_un_not_as ($2) }
 	|	TE_OLD Expression
-			{
-				$$ := new_un_old_as ($2)
-			}
+			{ $$ := new_un_old_as ($2) }
 	|	Free_operator Expression %prec TE_NOT
-			{
-				$$ := new_un_free_as ($1, $2)
-			}
+			{ $$ := new_un_free_as ($1, $2) }
 	|	TE_STRIP TE_LPARAN Strip_identifier_list TE_RPARAN
-			{
-				$$ := new_un_strip_as ($3)
-			}
+			{ $$ := new_un_strip_as ($3) }
 	;
 
 Actual_parameter: Expression
 			{ $$ := $1 }
 	|	TE_ADDRESS Feature_name
-			{
-				$$ := new_address_as ($2.first)
-			}
+			{ $$ := new_address_as ($2.first) }
 	|	TE_ADDRESS TE_LPARAN Expression TE_RPARAN
-			{
-				$$ := new_expr_address_as ($3)
-			}
+			{ $$ := new_expr_address_as ($3) }
 	|	TE_ADDRESS TE_CURRENT
-			{
-				$$ := new_address_current_as
-			}
+			{ $$ := new_address_current_as }
 	|	TE_ADDRESS TE_RESULT
-			{
-				$$ := new_address_result_as
-			}
+			{ $$ := new_address_result_as }
 	;
 
 Free_operator: TE_FREE
-			{
-				$$ := new_id_as (token_buffer)
-			}
+			{ $$ := new_id_as (token_buffer) }
 	;
 
 
@@ -1864,13 +1422,9 @@ Feature_call: Call_on_current
 	|	Call_on_feature
 			{ $$ := $1 }
 	|	TE_CURRENT
-			{
-				$$ := new_current_as
-			}
+			{ $$ := new_current_as }
 	|	TE_RESULT
-			{
-				$$ := new_result_as
-			}
+			{ $$ := new_result_as }
 	|	A_feature
 			{ $$ := $1 }
 	|	Call_on_expression
@@ -1884,79 +1438,47 @@ Feature_call: Call_on_current
 	;
 
 Call_on_current: TE_CURRENT TE_DOT Remote_call
-			{
-				$$ := new_nested_as (new_current_as, $3)
-			}
+			{ $$ := new_nested_as (new_current_as, $3) }
 	;
 
 Call_on_result: TE_RESULT TE_DOT Remote_call
-			{
-				$$ := new_nested_as (new_result_as, $3)
-			}
+			{ $$ := new_nested_as (new_result_as, $3) }
 	;
 
 Call_on_feature: A_feature TE_DOT Remote_call
-			{
-				$$ := new_nested_as ($1, $3)
-			}
+			{ $$ := new_nested_as ($1, $3) }
 	;
 
 Call_on_expression: TE_LPARAN Expression TE_RPARAN TE_DOT Remote_call
-			{
-				$$ := new_nested_expr_as ($2, $5)
-			}
+			{ $$ := new_nested_expr_as ($2, $5) }
 	;
 
 Call_on_precursor: A_precursor TE_DOT Remote_call
-			{
-				$$ := new_nested_as ($1, $3)
-			}
+			{ $$ := new_nested_as ($1, $3) }
 	;
 
 A_precursor: TE_PRECURSOR Parameters
-			{
-				$$ := new_precursor_as (Void, $2)
-			}
+			{ $$ := new_precursor_as (Void, $2) }
 	|	TE_LCURLY TE_LCURLY Clickable_identifier TE_RCURLY TE_RCURLY TE_PRECURSOR Parameters
-			{
-				$$ := new_precursor ($3, $7)
-			}
+			{ $$ := new_precursor ($3, $7) }
 	|	TE_PRECURSOR TE_LCURLY Clickable_identifier TE_RCURLY Parameters
-			{
-				$$ := new_precursor ($3, $5)
-			}
+			{ $$ := new_precursor ($3, $5) }
 	|	TE_LCURLY Clickable_id TE_RCURLY TE_PRECURSOR Parameters
-			{
-				$$ := new_precursor ($2, $5)
-			}
+			{ $$ := new_precursor ($2, $5) }
 	|	TE_LCURLY Clickable_boolean TE_RCURLY TE_PRECURSOR Parameters
-			{
-				$$ := new_precursor ($2, $5)
-			}
+			{ $$ := new_precursor ($2, $5) }
 	|	TE_LCURLY Clickable_character TE_RCURLY TE_PRECURSOR Parameters
-			{
-				$$ := new_precursor ($2, $5)
-			}
+			{ $$ := new_precursor ($2, $5) }
 	|	TE_LCURLY Clickable_double TE_RCURLY TE_PRECURSOR Parameters
-			{
-				$$ := new_precursor ($2, $5)
-			}
+			{ $$ := new_precursor ($2, $5) }
 	|	TE_LCURLY Clickable_integer TE_RCURLY TE_PRECURSOR Parameters
-			{
-				$$ := new_precursor ($2, $5)
-			}
+			{ $$ := new_precursor ($2, $5) }
 	|	TE_LCURLY Clickable_none TE_RCURLY TE_PRECURSOR Parameters
-			{
-				$$ := new_precursor ($2, $5)
-			}
+			{ $$ := new_precursor ($2, $5) }
 	|	TE_LCURLY Clickable_pointer TE_RCURLY TE_PRECURSOR Parameters
-			{
-				$$ := new_precursor ($2, $5)
-			}
+			{ $$ := new_precursor ($2, $5) }
 	|	TE_LCURLY Clickable_real TE_RCURLY TE_PRECURSOR Parameters
-			{
-				$$ := new_precursor ($2, $5)
-			}
+			{ $$ := new_precursor ($2, $5) }
 	;
 
 Remote_call: Call_on_feature_access
@@ -1966,13 +1488,9 @@ Remote_call: Call_on_feature_access
 	;
 
 Call_on_feature_access: Feature_access TE_DOT Feature_access
-			{
-				$$ := new_nested_as ($1, $3)
-			}
+			{ $$ := new_nested_as ($1, $3) }
 	|	Feature_access TE_DOT Call_on_feature_access
-			{
-				$$ := new_nested_as ($1, $3)
-			}
+			{ $$ := new_nested_as ($1, $3) }
 	;
 
 A_feature: Identifier Parameters
@@ -1989,23 +1507,15 @@ A_feature: Identifier Parameters
 	;
 
 Feature_access: Identifier Parameters
-			{
-				$$ := new_access_feat_as ($1, $2)
-			}
+			{ $$ := new_access_feat_as ($1, $2) }
 	;
 
 Parameters: -- Empty
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_LPARAN TE_RPARAN
-			{
-				-- $$ := Void
-			}
+			-- { $$ := Void }
 	|	TE_LPARAN Parameter_list TE_RPARAN
-			{
-				$$ := $2
-			}
+			{ $$ := $2 }
 	;
 
 Parameter_list: Actual_parameter
@@ -2021,9 +1531,7 @@ Parameter_list: Actual_parameter
 	;
 
 Expression_list_opt: -- Empty
-			{
-				$$ := new_eiffel_list_expr_as (0)
-			}
+			{ $$ := new_eiffel_list_expr_as (0) }
 	|	Expression_list
 			{ $$ := $1 }
 	;
@@ -2045,37 +1553,21 @@ Expression_list: Expression
  
 
 Identifier: TE_ID
-			{
-				$$ := new_id_as (token_buffer)
-			}
+			{ $$ := new_id_as (token_buffer) }
 	|	TE_BOOLEAN_ID
-			{
-				$$ := new_boolean_id_as
-			}
+			{ $$ := new_boolean_id_as }
 	|	TE_CHARACTER_ID
-			{
-				$$ := new_character_id_as
-			}
+			{ $$ := new_character_id_as }
 	|	TE_DOUBLE_ID
-			{
-				$$ := new_double_id_as
-			}
+			{ $$ := new_double_id_as }
 	|	TE_INTEGER_ID
-			{
-				$$ := new_integer_id_as
-			}
+			{ $$ := new_integer_id_as }
 	|	TE_NONE_ID
-			{
-				$$ := new_none_id_as
-			}
+			{ $$ := new_none_id_as }
 	|	TE_POINTER_ID
-			{
-				$$ := new_pointer_id_as
-			}
+			{ $$ := new_pointer_id_as }
 	|	TE_REAL_ID
-			{
-				$$ := new_real_id_as
-			}
+			{ $$ := new_real_id_as }
 	;
 
 Manifest_constant: Boolean_constant
@@ -2107,9 +1599,7 @@ Expression_constant: Boolean_constant
 				end
 			}
 	|	TE_REAL
-			{
-				$$ := new_real_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_real_as (cloned_string (token_buffer)) }
 	|	Bit_constant
 			{ $$ := $1 }
 	|	Manifest_string
@@ -2117,13 +1607,9 @@ Expression_constant: Boolean_constant
 	;
 
 Boolean_constant: TE_FALSE
-			{
-				$$ := new_boolean_as (False)
-			}
+			{ $$ := new_boolean_as (False) }
 	|	TE_TRUE
-			{
-				$$ := new_boolean_as (True)
-			}
+			{ $$ := new_boolean_as (True) }
 	;
 
 Character_constant: TE_CHAR
@@ -2167,13 +1653,9 @@ Integer_constant: TE_INTEGER
 	;
 
 Real_constant: TE_REAL
-			{
-				$$ := new_real_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_real_as (cloned_string (token_buffer)) }
 	|	TE_PLUS TE_REAL
-			{
-				$$ := new_real_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_real_as (cloned_string (token_buffer)) }
 	|	TE_MINUS TE_REAL
 			{
 				token_buffer.precede ('-')
@@ -2182,217 +1664,119 @@ Real_constant: TE_REAL
 	;
 
 Bit_constant: TE_A_BIT
-			{
-				$$ := new_bit_const_as (new_id_as (token_buffer))
-			}
+			{ $$ := new_bit_const_as (new_id_as (token_buffer)) }
 	;
 
 Manifest_string: Non_empty_string
-			{
-				$$ := $1
-			}
+			{ $$ := $1 }
 	|	TE_EMPTY_STRING
-			{
-				$$ := new_empty_string_as
-			}
+			{ $$ := new_empty_string_as }
 	;
 
 Non_empty_string: TE_STRING
-			{
-				$$ := new_string_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_string_as (cloned_string (token_buffer)) }
 	|	TE_STR_LT
-			{
-				$$ := new_lt_string_as
-			}
+			{ $$ := new_lt_string_as }
 	|	TE_STR_LE
-			{
-				$$ := new_le_string_as
-			}
+			{ $$ := new_le_string_as }
 	|	TE_STR_GT
-			{
-				$$ := new_gt_string_as
-			}
+			{ $$ := new_gt_string_as }
 	|	TE_STR_GE
-			{
-				$$ := new_ge_string_as
-			}
+			{ $$ := new_ge_string_as }
 	|	TE_STR_MINUS
-			{
-				$$ := new_minus_string_as
-			}
+			{ $$ := new_minus_string_as }
 	|	TE_STR_PLUS
-			{
-				$$ := new_plus_string_as
-			}
+			{ $$ := new_plus_string_as }
 	|	TE_STR_STAR
-			{
-				$$ := new_star_string_as
-			}
+			{ $$ := new_star_string_as }
 	|	TE_STR_SLASH
-			{
-				$$ := new_slash_string_as
-			}
+			{ $$ := new_slash_string_as }
 	|	TE_STR_MOD
-			{
-				$$ := new_mod_string_as
-			}
+			{ $$ := new_mod_string_as }
 	|	TE_STR_DIV
-			{
-				$$ := new_div_string_as
-			}
+			{ $$ := new_div_string_as }
 	|	TE_STR_POWER
-			{
-				$$ := new_power_string_as
-			}
+			{ $$ := new_power_string_as }
 	|	TE_STR_AND
-			{
-				$$ := new_string_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_string_as (cloned_string (token_buffer)) }
 	|	TE_STR_AND_THEN
-			{
-				$$ := new_string_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_string_as (cloned_string (token_buffer)) }
 	|	TE_STR_IMPLIES
-			{
-				$$ := new_string_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_string_as (cloned_string (token_buffer)) }
 	|	TE_STR_OR
-			{
-				$$ := new_string_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_string_as (cloned_string (token_buffer)) }
 	|	TE_STR_OR_ELSE
-			{
-				$$ := new_string_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_string_as (cloned_string (token_buffer)) }
 	|	TE_STR_XOR
-			{
-				$$ := new_string_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_string_as (cloned_string (token_buffer)) }
 	|	TE_STR_NOT
-			{
-				$$ := new_string_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_string_as (cloned_string (token_buffer)) }
 	|	TE_STR_FREE
-			{
-				$$ := new_string_as (cloned_string (token_buffer))
-			}
+			{ $$ := new_string_as (cloned_string (token_buffer)) }
 	;
 
 Prefix_operator: TE_STR_MINUS
-			{
-				$$ := new_clickable_string (new_minus_string_as)
-			}
+			{ $$ := new_clickable_string (new_minus_string_as) }
 	|	TE_STR_PLUS
-			{
-				$$ := new_clickable_string (new_plus_string_as)
-			}
+			{ $$ := new_clickable_string (new_plus_string_as) }
 	|	TE_STR_NOT
-			{
-				$$ := new_clickable_string (new_not_string_as)
-			}
+			{ $$ := new_clickable_string (new_not_string_as) }
 	|	TE_STR_FREE
-			{
-				$$ := new_clickable_string (new_string_as (cloned_lower_string (token_buffer)))
-			}
+			{ $$ := new_clickable_string (new_string_as (cloned_lower_string (token_buffer))) }
 	;
 
 Infix_operator: TE_STR_LT
-			{
-				$$ := new_clickable_string (new_lt_string_as)
-			}
+			{ $$ := new_clickable_string (new_lt_string_as) }
 	|	TE_STR_LE
-			{
-				$$ := new_clickable_string (new_le_string_as)
-			}
+			{ $$ := new_clickable_string (new_le_string_as) }
 	|	TE_STR_GT
-			{
-				$$ := new_clickable_string (new_gt_string_as)
-			}
+			{ $$ := new_clickable_string (new_gt_string_as) }
 	|	TE_STR_GE
-			{
-				$$ := new_clickable_string (new_ge_string_as)
-			}
+			{ $$ := new_clickable_string (new_ge_string_as) }
 	|	TE_STR_MINUS
-			{
-				$$ := new_clickable_string (new_minus_string_as)
-			}
+			{ $$ := new_clickable_string (new_minus_string_as) }
 	|	TE_STR_PLUS
-			{
-				$$ := new_clickable_string (new_plus_string_as)
-			}
+			{ $$ := new_clickable_string (new_plus_string_as) }
 	|	TE_STR_STAR
-			{
-				$$ := new_clickable_string (new_star_string_as)
-			}
+			{ $$ := new_clickable_string (new_star_string_as) }
 	|	TE_STR_SLASH
-			{
-				$$ := new_clickable_string (new_slash_string_as)
-			}
+			{ $$ := new_clickable_string (new_slash_string_as) }
 	|	TE_STR_MOD
-			{
-				$$ := new_clickable_string (new_mod_string_as)
-			}
+			{ $$ := new_clickable_string (new_mod_string_as) }
 	|	TE_STR_DIV
-			{
-				$$ := new_clickable_string (new_div_string_as)
-			}
+			{ $$ := new_clickable_string (new_div_string_as) }
 	|	TE_STR_POWER
-			{
-				$$ := new_clickable_string (new_power_string_as)
-			}
+			{ $$ := new_clickable_string (new_power_string_as) }
 	|	TE_STR_AND
-			{
-				$$ := new_clickable_string (new_and_string_as)
-			}
+			{ $$ := new_clickable_string (new_and_string_as) }
 	|	TE_STR_AND_THEN
-			{
-				$$ := new_clickable_string (new_and_then_string_as)
-			}
+			{ $$ := new_clickable_string (new_and_then_string_as) }
 	|	TE_STR_IMPLIES
-			{
-				$$ := new_clickable_string (new_implies_string_as)
-			}
+			{ $$ := new_clickable_string (new_implies_string_as) }
 	|	TE_STR_OR
-			{
-				$$ := new_clickable_string (new_or_string_as)
-			}
+			{ $$ := new_clickable_string (new_or_string_as) }
 	|	TE_STR_OR_ELSE
-			{
-				$$ := new_clickable_string (new_or_else_string_as)
-			}
+			{ $$ := new_clickable_string (new_or_else_string_as) }
 	|	TE_STR_XOR
-			{
-				$$ := new_clickable_string (new_xor_string_as)
-			}
+			{ $$ := new_clickable_string (new_xor_string_as) }
 	|	TE_STR_FREE
-			{
-				$$ := new_clickable_string (new_string_as (cloned_lower_string (token_buffer)))
-			}
+			{ $$ := new_clickable_string (new_string_as (cloned_lower_string (token_buffer))) }
 	;
 
 Manifest_array: TE_LARRAY Expression_list_opt TE_RARRAY
-			{
-				$$ := new_array_as ($2)
-			}
+			{ $$ := new_array_as ($2) }
 	;
 
 Manifest_tuple: TE_LSQURE Expression_list_opt TE_RSQURE
-			{
-				$$ := new_tuple_as ($2)
-			}
+			{ $$ := new_tuple_as ($2) }
 	;
 
 Set_position: -- Empty
-			{
-				set_position (current_position)
-			}
+			{ set_position (current_position) }
 	;
 
 Position: -- Empty
-			{
-				$$ := clone (current_position)
-			}
+			{ $$ := clone (current_position) }
 	;
 
 %%

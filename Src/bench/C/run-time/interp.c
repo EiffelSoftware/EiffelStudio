@@ -28,6 +28,7 @@
 #include "bits.h"
 #include "equal.h"	/* for xequal() */
 #include <math.h>
+#include "oncekeys.h"
 
 #ifdef CONCURRENT_EIFFEL
 #include "curextern.h"
@@ -357,12 +358,13 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 	char pre_success;				/* Flag for precondition success */ 
 	char in_first_block;			/* Flag for chained preconditions */ 
 	long rtype;						/* Result type */
-	char *once_done = (char *) 0;	/* Address of the once mark */
 	char *rvar;						/* Result address for once */
 	int32 rout_id;					/* Routine id */
 	int32 body_id;					/* Body id of once routine */
 	int current_trace_level;		/* Saved call level for trace, only needed when routine is retried */
 	char **saved_prof_top;			/* Saved top of `prof_stack' */
+	long once_key;			/* Index in once table */
+	int  is_once;			/* Is it a once routine? */
 	RTSN;							/* Save nested flag */
  
 #ifdef CONCURRENT_EIFFEL
@@ -381,6 +383,13 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 #endif
 
+	is_once = 0;
+
+	if (*IC++)
+	{
+		is_once  = 1;
+		once_key = get_long ();
+	}
 
 	for (;;) {
 	
@@ -413,77 +422,115 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		rtype = get_long();				/* Get the result type */
 		argnum = get_short();			/* Get the argument number */
 	
-		if (*IC++) {				/* If it is a once */
-			once_done = IC++;
+		if (is_once) {				/* If it is a once */
 			body_id = (uint32) get_long();	/* Get the body id */
-			rvar = IC;					/* Result address */
-			if (*once_done) {			/* Once already done */
-				npop(argnum + 1);		/* Pop Current and the arguments */
-				if ((rtype & SK_HEAD) != SK_VOID) {
-					last = iget();			/* Leave result on stack */
+
+				/* Put pointer to 'result' in 'rvar' */
+
+				/* MTOG = MT Once Get */
+			if (MTOG((char *),EIF_once_keys[once_key], rvar))
+			{
+				/* Already executed. 'rvar' points to result */
+
+				npop(argnum + 1);       /* Pop Current and the arguments */
+
+				/* Retrieve value and then return */
+
+				if ((rtype & SK_HEAD) != SK_VOID) 
+				{
+					last = iget();          /* Leave result on stack */
 					last->type = rtype;
-					switch (rtype & SK_HEAD) {
-					case SK_BOOL:
-					case SK_CHAR: 	last->it_char = *rvar; break;
-					case SK_INT:	last->it_long = get_long(); break;
-					case SK_FLOAT:	last->it_float = get_float(); break;
-					case SK_DOUBLE:	last->it_double = get_double(); break;
-					case SK_POINTER:last->it_ptr = (char *) get_fnptr(); break;
-					case SK_BIT:
-					case SK_EXP:
-					case SK_REF:
+
+					switch (rtype & SK_HEAD) 
+					{
+						case SK_BOOL:
+						case SK_CHAR:   
+								last->it_char = *rvar;
+								break;
+						case SK_INT:    
+								last->it_long = *((long*)rvar);
+								break;
+						case SK_FLOAT:  
+								last->it_float = *((float*)rvar);
+								break;
+						case SK_DOUBLE: 
+								last->it_double = *((double*)rvar);
+								break;
+						case SK_POINTER:
+								last->it_ptr = *((char**) rvar);
+								break;
+						case SK_BIT:
+						case SK_EXP:
+						case SK_REF:
+						/* %%zs Obsolete comment: */
 						/* Once access is done via an hector pointer, since
 						 * the address where the value is stored might not be
 						 * suitably aligned, therefore making it impossible to
 						 * use onceset.
 						 */
-						last->it_ref = eif_access(get_address());
-						break;
-					default:		panic(MTC "invalid result type");
+/* PLEASE CHECK if we need an 'eif_access' here!!! */
+								last->it_ref = eif_access(*((char**)rvar));
+								break;
+						default:
+								panic(MTC "invalid result type");
 					}
 				}
+
 				return;
 			}
+			else
+			{
+				/* Allocate space for 'result' then thread-specific (if MT
+				   mode) store it via the key table. */
 
-			/* When dealing with a reference-type once, we need to record its
-			 * address for the garbage collector to enventually update the
-			 * value should the object be moved. We cannot use onceset() here
-			 * since the once 'rvar' pointer is within the byte code and might
-			 * not be suitably aligned. Therefore, we get an EIF_OBJ pointer
-			 * and write it in place--RAM.
-			 */
-			switch (rtype & SK_HEAD) {
-				case SK_BIT:
-				case SK_EXP:
-				case SK_REF:
+				if ((rtype & SK_HEAD) != SK_VOID) 
 				{
-					EIF_OBJ ptr = henter((char *) 0);	/* Now always alive */
-					write_address(rvar, (char *) ptr);	/* Write hector address */
+					switch (rtype & SK_HEAD) 
+					{
+						case SK_BOOL:
+						case SK_CHAR:   
+								rvar = cmalloc (sizeof (char));
+								break;
+						case SK_INT:    
+								rvar = (char *) cmalloc (sizeof (long));
+								break;
+						case SK_FLOAT:  
+								rvar = (char *) cmalloc (sizeof (float));
+								break;
+						case SK_DOUBLE: 
+								rvar = (char *) cmalloc (sizeof (double));
+								break;
+						case SK_POINTER:
+								rvar = (char *) cmalloc (sizeof (char *));
+								break;
+						case SK_BIT:
+						case SK_EXP:
+						case SK_REF:    
+							/*	rvar = (char *) cmalloc (sizeof (char *)); */
+							/* %%zs rvar allocated in hector stack */
+								rvar = henter((char *) 0);
+								break;
+					default:        
+								panic(MTC "invalid result type");
+					}
 				}
+				else
+				{
+					/* It's a procedure - allocate space for a char */
+					/* %%zs we need only to store something != 0 */
+					rvar = (char *) 1;	/* cmalloc (sizeof (char)) */
+				}
+
+				/* %%zs MTOS = MT Once Set */
+				MTOS(EIF_once_keys[once_key], rvar);
 			}
 
-			*once_done = '\01';	/* Mark the once done */
 			onceadd(body_id);	/* Add this routine to the list of already */
 								/* called once routines */
-
-			/* Skip the result storage location */
-			switch (rtype & SK_HEAD) {
-			case SK_BOOL:
-			case SK_CHAR: 		IC += sizeof(char); break;
-			case SK_INT: 		IC += sizeof(long); break;
-			case SK_FLOAT: 		IC += sizeof(float); break;
-			case SK_DOUBLE: 	IC += sizeof(double); break;
-			case SK_POINTER:	IC += sizeof(fnptr); break;
-			case SK_BIT:
-			case SK_EXP:
-			case SK_REF:		IC += sizeof(char *); break;
-			case SK_VOID:		break;
-			default:			panic(MTC botched);
-			}
 		}
-	
+
 		locnum = get_short();		/* Get the local number */
-		init_registers(MTC);			/* Initialize the registers */
+		init_registers(MTC);		/* Initialize the registers */
 
 		/* Expanded clone of arguments (if any) */
 		while (*IC++ != BC_NO_CLONE_ARG) {
@@ -609,28 +656,25 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				last->type = SK_EXP;
 				if (tagval != stagval)
 					sync_registers(MTC scur, stop);
-				if (once_done != (char *) 0) {
+				if (is_once) {
 					/* If the Result is an expanded, then we have an hector pointer
 					 * in place of the result.
 					 */
-				string = IC;	/* Save IC value */
-				IC = rvar;		/* Where hector pointer is recorded */
-				eif_access(get_address()) = last->it_ref;
-				IC = string;	/* Restore IC value */
+/* PLEASE CHECK if we need an 'eif_access' here!!! */
+
+				eif_access(*((char**)rvar)) = last->it_ref;	/* %%zs was last_it_ref */
 				}
 				break;
 			case SK_BIT:
 				last->type = SK_POINTER;    /* GC: wait for malloc */
 				last->it_bit = RTLB(type & SK_BMASK);
 				last->type = type;
-				if (once_done != (char *) 0) {
+				if (is_once) {
 					/* If the Result is a bit, then we have an hector pointer
 					* in place of the result.
 					*/
-					string = IC;	/* Save IC value */
-					IC = rvar;		/* Where hector pointer is recorded */
-					eif_access(get_address()) = last->it_bit;
-					IC = string;	/* Restore IC value */
+/* PLEASE CHECK if we need an 'eif_access' here!!! */
+					eif_access(*((char**)rvar)) = last->it_bit;  /* %%zs was last_it_bit */
 				}
 				break;
 			default:
@@ -830,26 +874,37 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		 * whenever the Result is changed, in case the once calls another
 		 * feature which is going to call this once feature again.
 		 */
-		if (once_done != (char *) 0) {
+		if (is_once) {
 			last = iresult;
-			switch (rtype & SK_HEAD) {	/* Result type held in rtype */
-			case SK_BOOL:
-			case SK_CHAR: 	*rvar = last->it_char; break;
-			case SK_INT:	write_long(rvar, last->it_long); break;
-			case SK_FLOAT:	write_float(rvar, last->it_float); break;
-			case SK_DOUBLE:	write_double(rvar, last->it_double); break;
-			case SK_POINTER:write_fnptr(rvar, (fnptr) last->it_ptr); break;
-			case SK_BIT:
-			case SK_EXP:
-			case SK_REF:	/* See below */ 
-				/* If the Result is a reference, then we have an hector pointer
-				 * in place of the result.
+			switch (rtype & SK_HEAD) 
+			{
+				case SK_BOOL:
+				case SK_CHAR:   
+						*rvar = last->it_char;
+						break;
+				case SK_INT:    
+						*((long*)rvar) = last->it_long;
+						break;
+				case SK_FLOAT:  
+						*((float*)rvar) = last->it_float; 
+						break;
+				case SK_DOUBLE: 
+						*((double*)rvar) = last->it_double;
+						break;
+				case SK_POINTER:
+						*((char**) rvar) = last->it_ptr;
+						break;
+				case SK_BIT:
+				case SK_EXP:
+				case SK_REF:
+				/* Once access is done via an hector pointer, since
+				 * the address where the value is stored might not be
+				 * suitably aligned, therefore making it impossible to
+				 * use onceset.
 				 */
-				string = IC;	/* Save IC value */
-				IC = rvar;		/* Where hector pointer is recorded */
-				eif_access(get_address()) = last->it_ref;
-				IC = string;	/* Restore IC value */
-				break;
+/*PLEASE CHECK if we need an 'eif_access' here!!! */
+						eif_access(*((char**)rvar)) = last->it_ref;
+						break;
 			}
 		}
 		break;
@@ -867,7 +922,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
 			ecopy(ref, iresult->it_ref);
 
-			if (once_done != (char *) 0) {
+			if (is_once) {
 				last = iresult;
 				switch (rtype & SK_HEAD) {	/* Result type held in rtype */
 				case SK_BIT:
@@ -875,11 +930,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				case SK_REF:	/* See below */ 
 					/* If the Result is a reference, then we have an hector pointer
 				 	* in place of the result.
-				 	*/
-					string = IC;	/* Save IC value */
-					IC = rvar;		/* Where hector pointer is recorded */
-					eif_access(get_address()) = last->it_ref;
-					IC = string;	/* Restore IC value */
+					*/
+/* PLEASE CHECK if we need an 'eif_access' here!!! */
+					eif_access(*((char**)rvar)) = last->it_ref; /* %%zs was last_it_ref */
 					break;
 				}
 			}
@@ -1039,15 +1092,13 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		 * whenever the Result is changed, in case the once calls another
 		 * feature which is going to call this once feature again.
 		 */
-		if (once_done != (char *) 0) {
+		if (is_once) {
 			last = iresult;
 				/* If the Result is a reference, then we have an hector pointer
 				 * in place of the result.
 				 */
-			string = IC;	/* Save IC value */
-			IC = rvar;		/* Where hector pointer is recorded */
-			eif_access(get_address()) = last->it_ref;
-			IC = string;	/* Restore IC value */
+/* PLEASE CHECK if we need an 'eif_access' here!!! */
+			eif_access(*((char**)rvar)) = last->it_ref; /* %%zs was last_it_ref */
 		}
 		break;
 
@@ -2144,7 +2195,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 #endif
 		{
 		uint32 ptr_pos, value_pos;
-        struct item *pointed_object;
+		struct item *pointed_object;
 
 		ptr_pos = get_uint32();
 		value_pos = get_uint32();
@@ -2404,8 +2455,8 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		dprintf(2)("BC_OLD\n");
 #endif
 		last = opop();
-        code = get_short();     /* Get the local number (from 1 to locnum) */
-       	bcopy(last, loc(code), ITEM_SZ);
+		code = get_short();     /* Get the local number (from 1 to locnum) */
+	   	bcopy(last, loc(code), ITEM_SZ);
 		break;
 
 	/*
@@ -2712,9 +2763,9 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			} else if (tyc_command == BC_SEP_PFEATURE) {
 				dprintf(2)("BC_SEP_PFEATURE\n");
 			} else if (tyc_command == BC_SEP_EXTERN) {
-                dprintf(2)("BC_SEP_EXTERN\n");
+				dprintf(2)("BC_SEP_EXTERN\n");
 			} else if (tyc_command == BC_SEP_PEXTERN) {
-                dprintf(2)("BC_SEP_PEXTERN\n");
+				dprintf(2)("BC_SEP_PEXTERN\n");
 			}
 #endif
 			nb_of_paras = get_short();	/* number of parameters */
@@ -3284,9 +3335,9 @@ char *inv_mark_table;	/* Marking table to avoid checking the same
 #endif /* EIF_THREADS */
 
 rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct item *stop, int where)          
-                      		/* Current chunk (stack context) */
-                  			/* To save stack context */
-          					/* Invariant after or before */
+					  		/* Current chunk (stack context) */
+				  			/* To save stack context */
+		  					/* Invariant after or before */
 {
 	EIF_GET_CONTEXT
 	/* Check invariant on non-void object `obj' */
@@ -3309,11 +3360,11 @@ rt_private void icheck_inv(EIF_CONTEXT char *obj, struct stochunk *scur, struct 
 }
 
 rt_private void irecursive_chkinv(EIF_CONTEXT int dtype, char *obj, struct stochunk *scur, struct item *stop, int where)
-          
-          
-                      		/* Current chunk (stack context) */
-                  			/* To save stack context */
-          					/* Invariant after or before */
+		  
+		  
+					  		/* Current chunk (stack context) */
+				  			/* To save stack context */
+		  					/* Invariant after or before */
 {
 	/* Recursive invariant check. */
 
@@ -4008,9 +4059,9 @@ rt_private void diadic_op(int code)
  */
 
 rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern)
-        				/* Feature ID */
-          				/* Static type (entity where feature is applied) */
-              			/* Is it an external or an Eiffel feature */
+						/* Feature ID */
+		  				/* Static type (entity where feature is applied) */
+			  			/* Is it an external or an Eiffel feature */
 {
 	/* This is the interpreter dispatcher for routine calls. Depending on the
 	 * routine's temperature, the snow version (i.e. C code) is called and the
@@ -4080,9 +4131,9 @@ rt_private int icall(EIF_CONTEXT int fid, int stype, int is_extern)
 }
 
 rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern)
-             			/* Origin class ID of the feature.*/
-             			/* offset of the feature in the origin class */
-              			/* Is it an external or an Eiffel feature */
+			 			/* Origin class ID of the feature.*/
+			 			/* offset of the feature in the origin class */
+			  			/* Is it an external or an Eiffel feature */
 {
 	/* This is the interpreter dispatcher for precompiled routine calls.
 	 * Depending on the routine's temperature, the snow version (i.e. C code)
@@ -4149,9 +4200,9 @@ rt_private int ipcall(EIF_CONTEXT int32 origin, int32 offset, int is_extern)
 }
 
 rt_private void interp_access(int fid, int stype, uint32 type)
-        				/* Feature ID */
-          				/* Static type (entity where feature is applied) */
-            			/* Get attribute meta-type */
+						/* Feature ID */
+		  				/* Static type (entity where feature is applied) */
+						/* Get attribute meta-type */
 {
 	/* Fetch the attribute value of feature identified by 'fid', in the
 	 * static type context 'stype', with Current being place on top of the
@@ -4185,9 +4236,9 @@ rt_private void interp_access(int fid, int stype, uint32 type)
 }
 
 rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
-             			/* Origin class ID of the attribute.*/
-               			/* offset of the feature in the origin class */
-            			/* Get attribute meta-type */
+			 			/* Origin class ID of the attribute.*/
+			   			/* offset of the feature in the origin class */
+						/* Get attribute meta-type */
 {
 	/* Fetch the attribute value of offset 'offset' in the origin class
 	 * 'origin', with Current being place on top of the operational stack.
@@ -4221,9 +4272,9 @@ rt_private void interp_paccess(int32 origin, int32 f_offset, uint32 type)
 }
 
 rt_private void assign(EIF_CONTEXT long int fid, int stype, uint32 type)
-         				/* Feature ID */
-          				/* Static type (entity where feature is applied) */
-            			/* Attribute meta-type */
+		 				/* Feature ID */
+		  				/* Static type (entity where feature is applied) */
+						/* Attribute meta-type */
 {
 	/* Assign the value on top of the stack to the attribute described by its
 	 * name (fid) and the static type where it is declared (stype). The value
@@ -4288,9 +4339,9 @@ rt_private void assign(EIF_CONTEXT long int fid, int stype, uint32 type)
 }
 
 rt_private void passign(EIF_CONTEXT int32 origin, int32 f_offset, uint32 type)
-             			/* Origin class ID of the attribute.*/
-               			/* offset of the feature in the origin class */
-            			/* Attribute meta-type */
+			 			/* Origin class ID of the attribute.*/
+			   			/* offset of the feature in the origin class */
+						/* Attribute meta-type */
 {
 	/* Assign the value on top of the stack to the attribute described by its
 	 * origin class `origin' and with offset `offset' in that class. The value
@@ -4369,8 +4420,8 @@ void call_disp(EIF_CONTEXT uint32 dtype, char *object)
 }
 
 rt_private void address(int32 fid, int stype)
-          				/* Feature ID */
-          				/* Static type (entity where feature is applied) */
+		  				/* Feature ID */
+		  				/* Static type (entity where feature is applied) */
 {
 	/* Get the address of a routine identified by 'fid', in the static type
 	 * context 'stype', with Current being place on top of the operational
@@ -4778,8 +4829,8 @@ rt_private void allocate_registers(EIF_CONTEXT_NOARG)
 }
 
 rt_shared void sync_registers(EIF_CONTEXT struct stochunk *stack_cur, struct item *stack_top)
-                           		/* Saved current chunk of op stack */
-                       			/* Saved top of op stack */
+						   		/* Saved current chunk of op stack */
+					   			/* Saved top of op stack */
 {
 	/* Whenever an interpreted function is called, the register array is
 	 * reset to match registers for the new function. When we regain control
@@ -4883,7 +4934,7 @@ rt_private void pop_registers(EIF_CONTEXT_NOARG)
  */
 
 rt_private struct item *stack_allocate(EIF_CONTEXT register int size)
-                   					/* Initial size */
+				   					/* Initial size */
 {
 	/* The operational stack is created, with size 'size'.
 	 * Return the arena value (bottom of stack).
@@ -4965,7 +5016,7 @@ rt_public struct item *opush(EIF_CONTEXT register struct item *val)
 }
 
 rt_private int stack_extend(EIF_CONTEXT register int size)
-                   					/* Size of new chunk to be added */
+				   					/* Size of new chunk to be added */
 {
 	/* The operational stack is extended and the stack structure is updated.
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
@@ -5193,7 +5244,7 @@ rt_private void stack_truncate(EIF_CONTEXT_NOARG)
 }
 
 rt_private void wipe_out(register struct stochunk *chunk)
-                                	/* First chunk to be freed */
+									/* First chunk to be freed */
 {
 	/* Free all the chunks after 'chunk' */
 
@@ -5218,8 +5269,8 @@ rt_private void wipe_out(register struct stochunk *chunk)
 
 /* VARARGS1 */
 rt_public struct item *ivalue(EIF_CONTEXT int code, int num)
-         		/* Request code */
-        		/* Additional info for local and arguments */
+		 		/* Request code */
+				/* Additional info for local and arguments */
 {
 	/* Extract information from the interpreter's registers. For local and
 	 * arguments, a range checking is performmed and a null pointer returned
@@ -5430,9 +5481,19 @@ rt_public void idump(FILE *fd, char *start)
 	uint32 body_id;
 	int has_rescue = 0;
 	int i;
+	int is_once;
 
 	IC = start;
 
+	is_once = 0;
+
+	if (*IC++)  /* Check once flag */
+	{
+		is_once = 1;
+
+		IC += sizeof (long);    /* Skip flag and reserved space */
+	}
+		/*
 	switch (code = *IC++) {		/* Read current byte-code and advance IC */
 
 	/*
@@ -5456,53 +5517,10 @@ rt_public void idump(FILE *fd, char *start)
 		code = get_short();				/* Get the argument number */
 		fprintf(fd, "0x%lX %s %d\n", IC - sizeof(short), "ARGS", code);
 
-		if (*IC++) {				/* If it is a once */
-			fprintf(fd, "0x%lX %s\n", IC - 1, "once flag");
-			fprintf(fd, "0x%lX %s\n", IC++, "once done");
-
+		if (is_once) {				/* If it is a once */
 			body_id = (uint32) get_long();  /* Get the body id */
 			fprintf(fd, "0x%lX %s 0x%lx\n", IC - sizeof(long), "Body id", body_id);
 
-			if ((offset & SK_HEAD) != SK_VOID) {
-				switch (offset & SK_HEAD) {
-				case SK_BOOL:
-					fprintf(fd, "0x%lX %s\n", IC++, "SK_BOOL");
-					break;
-				case SK_CHAR:
-					fprintf(fd, "0x%lX %s\n", IC++, "SK_CHAR");
-					break;
-				case SK_INT:
-					fprintf(fd, "0x%lX %s\n", IC, "SK_INT");
-					IC += sizeof(long);
-					break;
-				case SK_FLOAT:
-					fprintf(fd, "0x%lX %s\n", IC, "SK_FLOAT");
-					IC += sizeof(float);
-					break;
-				case SK_DOUBLE:
-					fprintf(fd, "0x%lX %s\n", IC, "SK_DOUBLE");
-					IC += sizeof(double);
-					break;
-				case SK_POINTER:
-					fprintf(fd, "0x%lX %s\n", IC, "SK_POINTER");
-					IC += sizeof(fnptr);
-					break;
-				case SK_REF:
-					fprintf(fd, "0x%lX %s\n", IC, "SK_REF");
-					IC += sizeof(char *);
-					break;
-				case SK_BIT:	
-					fprintf(fd, "0x%lX %s\n", IC, "SK_BIT");
-					IC += sizeof(char *);
-					break;
-				case SK_EXP:
-					fprintf(fd, "0x%lX %s\n", IC, "SK_EXP");
-					IC += sizeof(char *);
-					break;
-				default:
-					fprintf(fd, "0x%lX %s\n", IC++, "UNKNOWN");
-				}
-			}
 		} else
 			fprintf(fd, "0x%lX %s\n", IC - 1, "not once");
 

@@ -65,7 +65,6 @@ feature
 		require else
 			a_widget_exists: not (a_widget = Void);
 			a_widget_realized: a_widget.realized
-		
 		local
 			a_screen_object: POINTER
 		do
@@ -191,7 +190,7 @@ feature
 	pixel (a_screen: SCREEN_I): POINTER is
 			-- Pixel value of color for `a_screen'
 		require
-			a_screen_exists: not (a_screen = Void)
+			a_screen_exists: a_screen /= Void
 		local
 			a_resource: RESOURCE_X
 		do
@@ -268,8 +267,8 @@ feature
 		do
 			the_pixel := pixel_value;
 			n_ame := Void;
-			free_resources;
-			update_widgets;
+			--free_resources;
+			--update_widgets;
 			pixel_set := True
 		ensure then
 			n_ame = Void;

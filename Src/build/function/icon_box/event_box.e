@@ -3,7 +3,7 @@ indexing
 				% the event associated with a behavior. It %
 				% should be used with a COM_BOX."
 
-class EV_BOX 
+class EVENT_BOX 
 
 inherit
 
@@ -48,4 +48,5 @@ feature {NONE}
 
 	new_icon: FUNC_EV_IS 
 
-end
+end -- class EVENT_BOX
+

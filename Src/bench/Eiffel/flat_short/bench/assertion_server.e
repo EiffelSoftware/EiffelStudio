@@ -22,66 +22,14 @@ feature -- Initialization
 			-- Initialize Current assertion server with
 			-- features from feature_table `f' that is exported to 
 			-- `client'.
-		local
-			feature_i: FEATURE_I;
-			assert_id_set: ASSERT_ID_SET;
-			chained_assert: CHAINED_ASSERTIONS;
-			precursor: LINKED_LIST [CHAINED_ASSERTIONS];
-			body_index: BODY_INDEX;
-			i: INTEGER;
-			inh_ass: INH_ASSERT_INFO
 		do
-			!! precursors.make (f.count * 2);
-			!! assertions.make (f.count);
-			from
-				f.start
-			until
-				f.after
-			loop
-				feature_i := f.item_for_iteration;
-				assert_id_set := feature_i.assert_id_set;
-				if 
-					(client = void
-						or else feature_i.is_exported_for (client))
-					and assert_id_set /= void 
-					and then not assert_id_set.empty
-				then
-					!! chained_assert.make;
-					assertions.put (chained_assert, feature_i.feature_id);
-					from
-						i := 1
-					until
-						i > assert_id_set.count
-					loop
-						inh_ass := assert_id_set.item (i);
-						if inh_ass.has_assertion then
-							body_index := inh_ass.body_index;
-							precursor := precursors.item (body_index);
-							if precursor = Void then
-									-- Precursor body_id has not
-									-- been recorded. Update precursor
-									-- table.
-								!! precursor.make;
-								precursors.put (precursor, body_index);
-									-- if a Precursor body_index have been
-									-- found then it means more than one
-									-- routine is referencing the body
-									-- assertion.
-							end;
-							precursor.extend (chained_assert);
-						end;
-						i := i + 1;
-					end;
-				end;
-				f.forth;
-			end;
+			!! feature_adapter_table.make (f.count);
 		end;			
 
 	make_for_class_only is 
 			-- Initialize structures for processing one class.
 		do
-			!! assertions.make (0);
-			!! precursors.make (0);
+			!! feature_adapter_table.make (0);
 		end;
 
 	make_for_feature (f: FEATURE_I; ast: FEATURE_AS_B) is
@@ -100,7 +48,9 @@ feature -- Initialization
 			f_table: FEATURE_TABLE;
 			feat: FEATURE_I;
 			assertion: ROUTINE_ASSERTIONS;
-			written_in: CLASS_ID
+			written_in: CLASS_ID;
+			true_assertion: ROUTINE_ASSERTIONS;
+			origin_assertion_found: BOOLEAN
 		do
 			assert_id_set := f.assert_id_set;
 			if assert_id_set /= Void then
@@ -112,137 +62,154 @@ feature -- Initialization
 					i > assert_id_set.count
 				loop
 					inh_f := assert_id_set.item (i);
-					if inh_f.has_assertion then
-						if equal (written_in, inh_f.written_in) then
-							!! assertion.make_for_feature (f, ast);
-							chained_assert.extend (assertion);
-						else
-							body_id := System.body_index_table.item 
-								(inh_f.body_index);
-							if Tmp_body_server.has (body_id) then
-								other_feat_as := Tmp_body_server.item (body_id)
-							elseif Body_server.has (body_id) then
-								other_feat_as := Body_server.item (body_id)
-							elseif Rep_feat_server.has (body_id) then
-								other_feat_as := Rep_feat_server.item (body_id)
-							end;
+					body_id := System.body_index_table.item (inh_f.body_index);
+					f_table := Feat_tbl_server.item (inh_f.written_in);
+					if f_table /= Void then
+						feat := f_table.feature_of_body_id (body_id);
+						if feat /= Void and then feat.has_assertion then
+							other_feat_as := feat.body;
 							if other_feat_as /= Void then
-								f_table := Feat_tbl_server.item (inh_f.written_in);
-								if f_table /= Void then
-									feat := f_table.feature_of_body_id (body_id);
-									if feat /= Void then
-										!! assertion.make_for_feature 
-												(feat, other_feat_as);
-										chained_assert.extend (assertion);
-									end
-								end;
-							end;
+								!! assertion.make_for_feature (feat, other_feat_as);
+								chained_assert.put_front (assertion);
+							end
+							if feat.is_origin then
+								true_assertion := Void;
+								origin_assertion_found := True
+									--| Found an origin with an assertion
+							end
+						elseif feat /= Void and then feat.is_origin then
+							!! true_assertion.make_for_feature (feat, Void);
+								--| AST is Void, thus this is an origin
+								--| without an assertion
 						end;
 					end;
 					i := i + 1;
 				end;
-				!! assertions.make (1);
-				assertions.put (chained_assert, f.feature_id)	
+				if true_assertion /= Void and then not origin_assertion_found then
+					chained_assert.put_front (true_assertion)
+						--| There is no origin with an assertion.
+						--| We put the last origin without an assertion up front
+						--| to be able to travers faster while formatting preconditions.
+				end;
+				if f.has_assertion then
+					!! assertion.make_for_feature (f, ast);
+					chained_assert.extend (assertion)
+				end;
+				current_assertion := chained_assert
 			end
 		end;
 
 feature -- Properties
 						
-	assertions: EXTEND_TABLE [CHAINED_ASSERTIONS, INTEGER];
-			-- Chained assertion for a feature hashed 
-			-- on feature_id
+	current_assertion: CHAINED_ASSERTIONS;
+			-- Chained assertion for a feature 
 
-	precursors: EXTEND_TABLE [LINKED_LIST [CHAINED_ASSERTIONS], BODY_INDEX];
-			-- List of precursor assertion hashed on feature body_index.
-			-- An assertion of a body can be chained
-			-- with a number of other routines, hence the need
-			-- for the list for a given body_index. An object of 
-			-- chained_assert will be referenced in the
-			-- assertions table. 
-
-feature -- Access
-
-	chained_assertion_of_fid (fid: INTEGER): CHAINED_ASSERTIONS is
-			-- Chained assertion for feature id `fid'
-		do
-			Result := assertions.item (fid)
-		end;
+	feature_adapter_table: EXTEND_TABLE [FEATURE_ADAPTER, BODY_INDEX];
+			-- Feature adapters hash on `body_index'
 
 feature -- Element change
 
-	register (feat_adapter: FEATURE_ADAPTER) is
-			-- Register precondition and postcondition of `feat_adapter'.
+	register_adapter (feat_adapter: FEATURE_ADAPTER) is
+			-- Register adapter `feat_adapter'.
 		require
 			valid_adapter: feat_adapter /= Void
-		local
-			precursor: LINKED_LIST [CHAINED_ASSERTIONS];
-			assertion: ROUTINE_ASSERTIONS;
 		do
 			if feat_adapter.body_index /= Void then
-				precursor := precursors.item (feat_adapter.body_index);
-				if precursor /= Void then
-						-- Add a routine assertion for all precursor
-						-- chained_assertion for `body_id'.
-					!! assertion.make (feat_adapter);
+				feature_adapter_table.put (feat_adapter, feat_adapter.body_index);
+			end;
+		end
+
+	update_current_assertion (feat_adapter: FEATURE_ADAPTER) is
+			-- Update `current_assertion' from `feat_adapter'.
+		require
+			valid_adapter: feat_adapter /= Void;
+			valid_body_index: feat_adapter.body_index /= Void
+		local
+			assert_id_set: ASSERT_ID_SET;
+			i: INTEGER;
+			inh_f: INH_ASSERT_INFO;
+			body_id: BODY_ID;
+			chained_assert: CHAINED_ASSERTIONS;
+			other_feat_as: FEATURE_AS_B;
+			f_table: FEATURE_TABLE;
+			feat: FEATURE_I;
+			source_feature: FEATURE_I;
+			assertion: ROUTINE_ASSERTIONS;
+			written_in: CLASS_ID
+			chained_assertions: CHAINED_ASSERTIONS;
+			target_feat: FEATURE_I;
+			inh_feat_adapter: FEATURE_ADAPTER;
+			true_assertion: ROUTINE_ASSERTIONS;
+			origin_assertion_found: BOOLEAN
+		do
+			if feat_adapter.body_index /= Void then
+				target_feat := feat_adapter.target_feature;
+				assert_id_set := target_feat.assert_id_set;
+				!! chained_assert.make;
+				if assert_id_set /= Void then
 					from
-						precursor.start
+						i := 1
 					until
-						precursor.after
+						i > assert_id_set.count
 					loop
-						precursor.item.extend (assertion);
-							-- As a result of referencing object, corresponding
-							-- chained_assert objects will be updated in
-							-- the assertions table.
-						precursor.forth;
+						inh_f := assert_id_set.item (i);
+						inh_feat_adapter := feature_adapter_table.item 
+								(inh_f.body_index);
+						if inh_feat_adapter /= Void then
+							feat := inh_feat_adapter.source_feature;
+							if feat.has_assertion then
+								other_feat_as := inh_feat_adapter.ast;
+								!! assertion.make_for_feature (feat, other_feat_as);
+								chained_assert.put_front (assertion);
+								if feat.is_origin then
+									true_assertion := Void;
+									origin_assertion_found := True
+										--| Found an origin with an assertion
+								end
+							elseif feat.is_origin then
+								!! true_assertion.make_for_feature (feat, Void);
+									--| AST is Void, thus
+									--| this is an origin without an assertion
+							end
+						end;
+						i := i + 1;
 					end;
 				end;
-			end;
+				if true_assertion /= Void and not origin_assertion_found then
+					chained_assert.put_front (true_assertion)
+						--| There is no origin with an assertion.
+						--| We put the last origin without an assertion up front
+						--| to be able to travers faster while formatting preconditions.
+				end;
+				source_feature := feat_adapter.source_feature;
+				if source_feature.has_assertion then
+					!! assertion.make_for_feature (source_feature, feat_adapter.ast);
+					chained_assert.extend (assertion)
+				end;
+				current_assertion := chained_assert
+			end
 		end;
 
-feature -- Removal
-
-	wipe_out is
+	reset_current_assertion is
+			-- Reset `current_assertion' to Void.
 		do
-			assertions.clear_all;
-			precursors.clear_all;
+			current_assertion := Void
 		end;
 
 feature -- Debug
 
 	trace is
 		do	
-			io.error.putstring ("*** assertions ***%N");
+			io.error.putstring ("*** Feature Table ***%N");
 			from
-				assertions.start
+				feature_adapter_table.start
 			until
-				assertions.after
+				feature_adapter_table.after
 			loop
-				io.error.putstring ("feature id: ");
-				io.error.putint (assertions.key_for_iteration);
+				io.error.putstring ("body id: ");
+				io.error.putstring (feature_adapter_table.key_for_iteration.out);
 				io.error.new_line;
-				assertions.item_for_iteration.trace;
-				io.error.new_line;
-				assertions.forth
-			end
-			io.error.putstring ("%N*** Precursors ***%N");
-			from
-				precursors.start
-			until
-				precursors.after
-			loop
-				io.error.putstring ("body index: ");
-				precursors.key_for_iteration.trace;
-				io.error.new_line;
-				from
-					precursors.item_for_iteration.start
-				until
-					precursors.item_for_iteration.after
-				loop
-					precursors.item_for_iteration.forth
-					precursors.item_for_iteration.item.trace;
-					io.error.new_line;
-				end
-				precursors.forth
+				feature_adapter_table.forth
 			end
 		end
 			

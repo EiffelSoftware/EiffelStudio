@@ -453,13 +453,13 @@ feature -- Basic Operations
 								cls_c := current_class_c
 								token := Void
 							else
-								insertion.put (token.image.out, 1)
+								insertion.put (token.image, 1)
 								is_create := create_before_position (cursor.line, token)
 								is_static := static_call_before_position (cursor.line, token)
 							end
 						else
 								-- token is beginning of feature name
-							insertion.put (token.image.out, 2)
+							insertion.put (token.image, 2)
 							token := token.previous
 							if is_beginning_of_expression (token) then
 								exploring_current_class := True
@@ -475,7 +475,7 @@ feature -- Basic Operations
 										cls_c := current_class_c
 										token := Void
 									else
-										insertion.put (token.image.out, 1)
+										insertion.put (token.image, 1)
 										is_create := create_before_position (cursor.line, token)
 										is_static := static_call_before_position (cursor.line, token)
 									end
@@ -700,7 +700,7 @@ feature -- Class names completion
 					show_all := True
 				elseif token /= Void and then token.is_text then
 					if not token_image_is_in_array (token, Feature_call_separators) then
-						insertion.put (token.image.out, 2)
+						insertion.put (token.image, 2)
 						token := token.previous
 						if
 							is_beginning_of_expression (token) or
@@ -900,8 +900,7 @@ feature {NONE} -- Completion implementation
 						Result := complete_expression_type (exp)
 					end
 				else
-					name := current_token.image.out
-					name.to_lower
+					name := current_token.image.as_lower
 					if name.is_equal ("precursor") then
 						go_to_next_token
 						if token_image_is_same_as_word (current_token, "{") then
@@ -978,8 +977,7 @@ feature {NONE} -- Completion implementation
 			until
 				error or else after_searched_token
 			loop
-				name := current_token.image.out
-				name.to_lower
+				name := current_token.image.as_lower
 				processed_class := Result.associated_class
 				error := True
 				if processed_class /= Void and then processed_class.has_feature_table then

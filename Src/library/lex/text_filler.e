@@ -19,7 +19,9 @@ feature -- Access
 	file_name : STRING is
 			-- Name of input file
 		do
-			Result := file.name
+			if source_is_file then
+				Result := file.name
+			end
 		end; 
 
 	line_nb_array: LEX_ARRAY [INTEGER];

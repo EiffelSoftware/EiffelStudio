@@ -8,10 +8,13 @@ class
 
 feature -- Access
 
-	Configurations_key: STRING is "Software\ISE\EiffelCodeDomProvider\Configs"
+	Configurations_key: STRING is "Software\ISE\Eiffel Codedom Provider\Configurations"
 			-- Key holding configuration path values
 	
-	Setup_key: STRING is "Software\ISE\EiffelCodeDomProvider\Setup"
+	Applications_key: STRING is "Software\ISE\Eiffel Codedom Provider\Applications"
+			-- Key holding process guids
+			
+	Setup_key: STRING is "Software\ISE\Eiffel Codedom Provider\Setup"
 			-- Key holding installation path value
 	
 	Installation_dir_value: STRING is "InstallDir"

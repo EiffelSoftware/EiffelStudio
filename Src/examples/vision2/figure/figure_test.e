@@ -15,6 +15,11 @@ inherit
 			default_create
 		end
 
+	EV_DRAWABLE_CONSTANTS
+		undefine
+			default_create
+		end
+
 create
 	make_and_launch
 
@@ -25,6 +30,7 @@ feature -- Initialization
 		local
 			pos: EV_RELATIVE_POINT
 			pixmap: EV_PIXMAP
+			f: RAW_FILE
 		do
 			-- First, create the world.
 			-- Like every figure-group, has origin (0, 0) by default.
@@ -54,16 +60,10 @@ feature -- Initialization
 			-- on the controlled position. We do not use the controlled position as
 			-- this point. This is to make it easier to change something later on.
 			create ellipse
-			ellipse.set_point_a (
-				create {EV_RELATIVE_POINT}.make_with_origin_and_position (
-					my_world.point, 100, 5
-				)
-			)
-			ellipse.set_point_b (
-				create {EV_RELATIVE_POINT}.make_with_origin_and_position (
-					controlled_position, 0, 0
-				)
-			)
+			create pos.make_with_origin_and_position (my_world.point, 100, 5)
+			ellipse.set_point_a (pos)
+			create pos.make_with_origin_and_position (controlled_position, 0, 0)
+			ellipse.set_point_b (pos)
 			ellipse.set_foreground_color (create {EV_COLOR}.make_with_rgb (1, 0, 0))
 			my_world.extend (ellipse)
 
@@ -72,29 +72,28 @@ feature -- Initialization
 			-- resized and rotated by the values in controlled_position which are propagated
 			-- through depending points.
 			create rectangle
-			rectangle.set_point_a (
-				create {EV_RELATIVE_POINT}.make_with_origin_and_position (
-					controlled_position, 20, 30
-				)
-			)
-			rectangle.set_point_b (
-				create {EV_RELATIVE_POINT}.make_with_origin_and_position (
-					rectangle.point_a, 10, 50
-				)
-			)
+			create pos.make_with_origin_and_position (controlled_position, 20, 30)
+			rectangle.set_point_a (pos)
+			create pos.make_with_origin_and_position (rectangle.point_a, 10, 50)
+			rectangle.set_point_b (pos)
 			my_world.extend (rectangle)
 
-		--	create picture
-		--	create pixmap
-		--	pixmap.set_with_file (create {RAW_FILE}.make_open_read ("/var/sw/EiffelBLEEDING/bench/bitmaps/xpm/save.xpm"))
-		--	picture.set_pixmap (pixmap)
-		--	picture.point.set_origin (my_world.point)
+			create picture
+			create pixmap
+			create f.make_open_read ("/var/sw/EiffelBLEEDING/bench/bitmaps/xpm/isepower.xpm")
+			pixmap.set_with_file (f)
+			picture.set_pixmap (pixmap)
+			picture.point.set_origin (my_world.point)
+			picture.point.set_position (200, 200)
+			my_world.extend (picture)
 
-		--	create text
-		--	text.set_text ("EV_FIGURE_TEXT")
-		--	text.font.set_height (50)
-		--	text.point.set_origin (my_world.point)
-		--	text.point.set_position (20, 250)
+			create text
+			text.set_text ("EV_FIGURE_TEXT")
+			text.font.set_height (40)
+			text.font.set_family (Ev_font_family_roman)
+			text.point.set_origin (my_world.point)
+			text.point.set_position (20, 250)
+			my_world.extend (text)
 
 			-- This is where it all comes together:
 			create my_device

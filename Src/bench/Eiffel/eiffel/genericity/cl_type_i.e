@@ -98,9 +98,10 @@ feature
 	description: ATTR_DESC is
 			-- Type description for skeletons
 		local
-			exp: EXPANDED_DESC;
-			types: TYPE_LIST;
-			pos: INTEGER;
+			exp: EXPANDED_DESC
+			types: TYPE_LIST
+			pos: INTEGER
+			ref: REFERENCE_DESC
 		do
 			if is_expanded then
 				!!exp;
@@ -121,6 +122,11 @@ feature
 			else
 				Result := c_type.description;
 			end;
+
+			ref ?= Result
+			if ref /= Void then
+				ref.set_class_type_i (Current)
+			end
 		end;
 
 	c_type: TYPE_C is
@@ -153,8 +159,30 @@ feature
 			file.putstring (s);
 		end;
 
+	has_associated_class_type: BOOLEAN is
+			-- Has `Current' an associated class type?
+		local
+			types : TYPE_LIST
+		do
+			types := base_class.types
+
+			if is_expanded then
+				is_expanded := false
+				Result := types.has_type (Current)
+				is_expanded := true
+			elseif is_separate then
+				is_separate := false
+				Result := types.has_type (Current)
+				is_separate := true
+			else
+				Result := types.has_type (Current)
+			end
+		end
+
 	associated_class_type: CLASS_TYPE is
 			-- Associated class type
+		require
+			has: has_associated_class_type
 		local
 			types: TYPE_LIST;
 			pos: INTEGER;
@@ -177,6 +205,7 @@ feature
 			-- Associated expanded class type
 		require
 			is_expanded: is_expanded
+			has: has_associated_class_type
 		do
 			is_expanded := false;
 			Result := associated_class_type;
@@ -187,6 +216,7 @@ feature
 			-- Associated separate class type
 		require
 			is_separate: is_separate
+			has: has_associated_class_type
 		do
 			is_separate := false;
 			Result := associated_class_type;

@@ -8,7 +8,7 @@ indexing
 	
 class
 	EV_WINDOW_IMP
-	
+
 inherit
 	EV_WINDOW_I
 		

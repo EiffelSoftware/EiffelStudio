@@ -14,10 +14,13 @@ inherit
 
 	EV_BAR_ITEM
 		redefine
-			make
+			make, implementation
 		end
 	
 	EV_TEXT_CONTAINER
+		redefine
+			make, implementation
+		end
 	
 creation
 	
@@ -25,7 +28,7 @@ creation
 
 feature {NONE} -- Initialization
 
-        make (parent: CONTAINER) is
+        make (parent: EV_CONTAINER) is
                         -- Create a label with, `parent' as
                         -- parent
 		do
@@ -34,5 +37,9 @@ feature {NONE} -- Initialization
 		end
 		
 
-		
+feature {NONE} -- Implementation
+
+	implementation: EV_LABEL_I
+			-- Implementation of label
+	
 end -- class EV_LABEL

@@ -1369,7 +1369,7 @@ feature -- Access
 			compound_set: Result.compound = c
 		end
 
-	new_result_operand_as (c: TYPE; t: ID_AS; e: EXPR_AS): OPERAND_AS is
+	new_result_operand_as: OPERAND_AS is
 			-- New OPERAND AST node
 		do
 			create Result
@@ -1591,7 +1591,21 @@ feature -- Access
 			f_not_void: f /= Void
 		do
 			create Result
-			Result.initialize (t, f, o)
+			Result.initialize (t, f, o, True)
+		ensure
+			routine_creation_as_not_void: Result /= Void
+			target_set: Result.target = t
+			feature_name_set: Result.feature_name = f
+			operands_set: Result.operands = o
+		end
+
+	new_unqualified_routine_creation_as (t: OPERAND_AS; f: ID_AS; o: EIFFEL_LIST [OPERAND_AS]): ROUTINE_CREATION_AS is
+			-- New ROUTINE_CREATION AST node where target is not specified.
+		require
+			f_not_void: f /= Void
+		do
+			create Result
+			Result.initialize (t, f, o, False)
 		ensure
 			routine_creation_as_not_void: Result /= Void
 			target_set: Result.target = t

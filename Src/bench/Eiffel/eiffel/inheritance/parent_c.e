@@ -18,7 +18,7 @@ feature
 	parent_type: CL_TYPE_A;
 			-- Actual type of the parent
 
-	renaming: EXTEND_TABLE [STRING, STRING];
+	renaming: HASH_TABLE [STRING, STRING];
 			-- Rename pairs
 
 	redefining: SEARCH_TABLE [STRING];
@@ -97,7 +97,7 @@ feature
 	parent_id: INTEGER is
 			-- Parent class id
 		do
-			Result := parent_type.base_class_id
+			Result := parent_type.class_id
 		end;
 
 	has_renamed (feature_name: STRING): BOOLEAN is
@@ -159,7 +159,7 @@ feature
 			vhrc5: VHRC5;
 			old_name, new_name: STRING;
 			f: FEATURE_I;
-			local_renaming: EXTEND_TABLE [STRING, STRING]
+			local_renaming: HASH_TABLE [STRING, STRING]
 		do
 			local_renaming := renaming
 			if local_renaming /= Void then
@@ -375,7 +375,7 @@ feature
 			good_argument: feature_name /= Void;
 		local
 			new_name: STRING;
-			local_renaming: EXTEND_TABLE [STRING, STRING]
+			local_renaming: HASH_TABLE [STRING, STRING]
 		do
 			local_renaming := renaming
 			if local_renaming /= Void then

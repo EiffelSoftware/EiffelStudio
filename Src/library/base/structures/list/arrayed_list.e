@@ -100,6 +100,7 @@ feature -- Initialization
 			valid_number_of_items: n >= 0
 		do
 			array_make (1, n)
+			count := n
 		ensure
 			correct_position: before
 		end;

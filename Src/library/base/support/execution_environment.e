@@ -26,6 +26,12 @@ feature -- Access
 			"dir_current"	
 		end
 
+	change_working_directory (path: STRING) is
+			-- Set the current directory to `path'
+		do
+			return_code := eif_chdir (path.to_c)
+		end
+
 	default_shell: STRING is
 		once
 			Result := get ("SHELL")
@@ -105,6 +111,12 @@ feature {NONE} -- External
 		external
 			"C"	
 		end
+
+	eif_chdir (s: ANY): INTEGER is
+			-- Set the current directory to `path'
+		external
+			"C"
+		end;
 
 	system_call (s : ANY): INTEGER is
 			-- Pass to the operating system a request to execute `s'.

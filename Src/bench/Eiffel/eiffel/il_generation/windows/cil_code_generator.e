@@ -4418,6 +4418,10 @@ feature {NONE} -- Once per modules being generated.
 	remap_external_token is
 			-- Recompute all tokens in context of newly created module.
 		do
+			mscorlib_token := 0
+			object_type_token := 0
+			math_type_token := 0
+			system_exception_token := 0
 			compute_mscorlib_token
 			compute_mscorlib_type_tokens
 			compute_power_method_token

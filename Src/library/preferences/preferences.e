@@ -221,33 +221,6 @@ feature -- Resource
 			all_resources_default: True
 		end		
 		
-	register_resource_widget (a_resource_widget: PREFERENCE_WIDGET) is
-			-- Register `a_resource_widget'.
-		require
-			resource_widget_not_void: a_resource_widget /= Void
-		do
-			if not resource_widgets.has (a_resource_widget.graphical_type) then				
-				resource_widgets.put (a_resource_widget, a_resource_widget.graphical_type)	
-			end
-		ensure
-			is_registered: resource_widgets.has (a_resource_widget.graphical_type)
-		end	
-		
-feature {PREFERENCE, PREFERENCE_VIEW} -- Graphical
-
-	resource_widget (a_resource: PREFERENCE): PREFERENCE_WIDGET is
-			-- Return the widget required to display `a_resource'.
-		require
-			resource_not_void: a_resource /= Void
-		do
-			if resource_widgets.has (a_resource.generating_resource_type) then				
-				Result := resource_widgets.item (a_resource.generating_resource_type)					
-				Result.set_resource (a_resource)
-			end
-		ensure
-			has_result_if_known: resource_widgets.has (a_resource.generating_resource_type) implies Result /= Void
-		end
-		
 feature {PREFERENCE_FACTORY, PREFERENCE_MANAGER, PREFERENCE_VIEW} -- Implementation
 
 	default_values: HASH_TABLE [TUPLE [STRING, STRING], STRING] is
@@ -287,28 +260,6 @@ feature {NONE} -- Implementation
 	resource_structure: PREFERENCE_STRUCTURE	
 			-- Underlying resource structure.
 		
-	resource_widgets: HASH_TABLE [PREFERENCE_WIDGET, STRING] is
-			-- Hash table of resource widgets identified by the type of resource associated with the widget.
-		local
-			l_brw: BOOLEAN_PREFERENCE_WIDGET
-			l_srw: STRING_PREFERENCE_WIDGET
-			l_frw: FONT_PREFERENCE_WIDGET
-			l_crw: COLOR_PREFERENCE_WIDGET
-		once			
-			create Result.make (4)
-			Result.compare_objects
-			create l_brw.make
-			create l_srw.make
-			create l_frw.make
-			create l_crw.make
-			Result.put (l_brw, l_brw.graphical_type)
-			Result.put (l_srw, l_srw.graphical_type)
-			Result.put (l_frw, l_frw.graphical_type)
-			Result.put (l_crw, l_crw.graphical_type)
-		ensure
-			resource_widgets_not_void: Result /= Void
-		end		
-		
 	extract_default_values is
 			-- Extract from the default file the default values.  If a resource however exists in `resources'
 			-- (i.e. saved in a previous session), then take this one instead.  Therefore the resulting list of
@@ -322,6 +273,7 @@ feature {NONE} -- Implementation
 			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
 			l_concat_filter: XM_CONTENT_CONCATENATOR
 			xml_data: XM_ELEMENT
+			has_error: BOOLEAN
 		do			
 			create parser.make
 			create l_tree_pipe.make
@@ -333,11 +285,13 @@ feature {NONE} -- Implementation
 			if l_file.is_open_read then				
 				parser.parse_from_stream (l_file)
 				l_file.close			
-		  	else
-		  		error_message := "%"" + defaults_file_name + "%" does not exist."
+		  	else		  		
+		  		has_error := True
 			end
 		
-    		if l_tree_pipe.error.has_error then
+    		if has_error then
+    			error_message := "%"" + defaults_file_name + "%" does not exist."	
+    		elseif l_tree_pipe.error.has_error then
     			error_message := defaults_file_name + "is not a valid preference file%N"    			
     		else
     			xml_data := l_tree_pipe.document.root_element

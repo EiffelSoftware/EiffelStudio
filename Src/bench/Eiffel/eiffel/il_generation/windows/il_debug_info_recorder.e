@@ -119,6 +119,15 @@ feature {IL_CODE_GENERATOR} -- Access
 
 feature -- Queries : eStudio data from debugger data
 
+	has_info_about_module (a_module_filename: STRING): BOOLEAN is
+			-- Do we have information for Module identified by `a_module_filename' ?
+		require
+			module_filename_valid: a_module_filename /= Void
+								and then not a_module_filename.is_empty
+		do
+			Result := info_from_module_if_exists (a_module_filename) /= Void
+		end
+
 	has_class_info_about_module_class_token (a_module_filename: STRING; a_class_token: INTEGER): BOOLEAN is
 			-- Do we have information for Class identified by `a_module_filename' and `a_class_token' ?
 		require
@@ -896,68 +905,6 @@ feature {NONE} -- Debugger Info List Access
 		ensure
 			(Result = Void) implies (not a_create_if_not_found)
 		end
-		
-	internal_module_key (a_mod_key: STRING): STRING is
-			-- 
-		require
-			a_mod_key_not_void: a_mod_key /= Void
-			a_mod_key_is_lower_case: a_mod_key.as_lower.is_equal (a_mod_key)
-		local
-			l_module_id: STRING
-			l_pos_dll, l_pos_sep: INTEGER
-			l_item: IL_DEBUG_INFO_FROM_MODULE
-			l_item_mod_id: STRING
-		do
-			if dbg_info_modules.has (a_mod_key) then
-				Result := a_mod_key
-			else
-				if internal_module_key_table.has (a_mod_key) then
-					Result := internal_module_key_table.item (a_mod_key)
-				else
-						--| FIXME JFIAT 2004/05/19 : issue if 2 assemblies with same filename.dll
-						--|   Then we have an issue, but at worst we will see Eiffel type name
-						--|   as dotnet type name
-						
-						--| Get an potential identifier for module						
-					l_pos_dll := a_mod_key.substring_index (".dll", 1)
-					if l_pos_dll > 0 then
-						l_pos_sep := a_mod_key.last_index_of (Operating_environment.Directory_separator, l_pos_dll)
-						if l_pos_sep > 0 then
-							l_module_id := a_mod_key.substring (l_pos_sep + 1, l_pos_dll + 3) 
-						end
-					end
-					if l_module_id /= Void then
-							--| Search in the known module, which one could match `a_mod_key'
-						from
-							dbg_info_modules.start
-						until
-							dbg_info_modules.after or Result /= Void
-						loop
-							l_item := dbg_info_modules.item_for_iteration
-							l_item_mod_id := l_item.module_name
-							l_item_mod_id.to_lower
-							if l_item_mod_id.is_equal (l_module_id) then
-								last_info_from_module := l_item
-								Result := last_info_from_module.module_filename --| Should contain .dll
-								internal_module_key_table.force (Result, a_mod_key)
-							end
-							dbg_info_modules.forth
-						end
-					end
-					if Result = Void then
-						Result := a_mod_key							
-						internal_module_key_table.force (Result, a_mod_key)
-					end	
-				end
-			end
-		ensure
-			result_not_void: Result /= Void
-		end
-		
-	internal_module_key_table: HASH_TABLE [STRING, STRING]
-			-- Table to make relation between external module name, 
-			-- and internal key for module
-		
 
 feature {NONE} -- Debugger Info List
 
@@ -1235,16 +1182,82 @@ feature {NONE}-- Implementation for save and load task
 			a_info_module.update_module_filename (module_key (precompilation_module_filename (a_info_module.system_name)))
 		end
 
-feature {NONE} -- Module indexer
+feature {NONE} -- Module indexer implementation
 
 	module_key (a_mod_filename: STRING): STRING is
 			-- Module key for `a_mod_filename' used for indexation
 		require
 			mod_name_valid: a_mod_filename /= Void and then not a_mod_filename.is_empty
 		do
-			Result := a_mod_filename.as_lower -- So this is a twin lowered 
+			Result := a_mod_filename.as_lower -- So this is a twin lowered
 		ensure
 			Result_valid: Result /= Void and then not Result.is_empty
 		end
+
+	internal_module_key (a_mod_key: STRING): STRING is
+			-- Module key used in the internal structure.
+			-- as opposed to external module key
+			-- which comes from dotnet debugger
+		require
+			a_mod_key_not_void: a_mod_key /= Void
+			a_mod_key_is_lower_case: a_mod_key.as_lower.is_equal (a_mod_key)
+		local
+			l_module_id: STRING
+			l_pos_dll, l_pos_sep: INTEGER
+			l_item: IL_DEBUG_INFO_FROM_MODULE
+			l_item_mod_id: STRING
+		do
+			if dbg_info_modules.has (a_mod_key) then
+				Result := a_mod_key
+			else
+				if internal_module_key_table.has (a_mod_key) then
+					Result := internal_module_key_table.item (a_mod_key)
+				else
+						--| FIXME JFIAT 2004/05/19 : issue if 2 assemblies with same filename.dll
+						--|   Then we have an issue, but at worst we will see Eiffel type name
+						--|   as dotnet type name
+						--|
+						--|   How does estudio manage 2 assemblies with the same filename ? 
+						--|   When it copies them into EIFGEN/W_code/assemblies ??
+						
+						--| Get an potential identifier for module						
+					l_pos_dll := a_mod_key.substring_index (".dll", 1)
+					if l_pos_dll > 0 then
+						l_pos_sep := a_mod_key.last_index_of ((create {OPERATING_ENVIRONMENT}).Directory_separator, l_pos_dll)
+						if l_pos_sep > 0 then
+							l_module_id := a_mod_key.substring (l_pos_sep + 1, l_pos_dll + 3) 
+						end
+					end
+					if l_module_id /= Void then
+							--| Search in the known module, which one could match `a_mod_key'
+						from
+							dbg_info_modules.start
+						until
+							dbg_info_modules.after or Result /= Void
+						loop
+							l_item := dbg_info_modules.item_for_iteration
+							l_item_mod_id := l_item.module_name
+							l_item_mod_id.to_lower
+							if l_item_mod_id.is_equal (l_module_id) then
+								last_info_from_module := l_item
+								Result := last_info_from_module.module_filename --| Should contain .dll
+								internal_module_key_table.force (Result, a_mod_key)
+							end
+							dbg_info_modules.forth
+						end
+					end
+					if Result = Void then
+						Result := a_mod_key							
+						internal_module_key_table.force (Result, a_mod_key)
+					end	
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+	internal_module_key_table: HASH_TABLE [STRING, STRING]
+			-- Table to make relation between external module name, 
+			-- and internal key for module
 
 end -- class IL_DEBUG_INFO_RECORDER

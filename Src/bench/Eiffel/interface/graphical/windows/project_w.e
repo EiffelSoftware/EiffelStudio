@@ -68,7 +68,6 @@ feature -- Initialization
 			base_make (Icon_id.out, a_screen)
 			!! history.make
 			register
-			forbid_resize
 			set_title (Interface_names.t_Project)
 			set_icon_name (tool_name)
 			if Pixmaps.bm_Project_icon.is_valid then

@@ -9,7 +9,7 @@ class
 
 feature -- Access
 
-	Hdf_center: INTEGER is
+	frozen Hdf_center: INTEGER is
 			-- Centers the contents of the item. 
 		external
 			"C [macro %"cctrl.h%"]"
@@ -17,7 +17,7 @@ feature -- Access
 			"HDF_CENTER"
 		end
 
-	Hdf_left: INTEGER is
+	frozen Hdf_left: INTEGER is
 			-- Left aligns the contents of the item. 
 		external
 			"C [macro %"cctrl.h%"]"
@@ -25,7 +25,7 @@ feature -- Access
 			"HDF_LEFT"
 		end
 
-	Hdf_right: INTEGER is
+	frozen Hdf_right: INTEGER is
 			-- Right aligns the contents of the item. 
 		external
 			"C [macro %"cctrl.h%"]"
@@ -33,7 +33,7 @@ feature -- Access
 			"HDF_RIGHT"
 		end
 
-	Hdf_justify_mask: INTEGER is
+	frozen Hdf_justify_mask: INTEGER is
 			-- You can use this mask to isolate the text justification 
 			-- portion of the fmt member. 
 		external
@@ -42,7 +42,7 @@ feature -- Access
 			"HDF_JUSTIFYMASK"
 		end
 
-	Hdf_owner_draw: INTEGER is
+	frozen Hdf_owner_draw: INTEGER is
 			-- The owner window of the header control draws the item.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -50,7 +50,7 @@ feature -- Access
 			"HDF_OWNERDRAW"
 		end
 
-	Hdf_bitmap: INTEGER is
+	frozen Hdf_bitmap: INTEGER is
 			-- The item displays a bitmap.
 		external
 			"C [macro %"cctrl.h%"]"
@@ -58,7 +58,7 @@ feature -- Access
 			"HDF_BITMAP"
 		end
 
-	Hdf_string: INTEGER is
+	frozen Hdf_string: INTEGER is
 			-- The item displays a string. 
 		external
 			"C [macro %"cctrl.h%"]"
@@ -74,7 +74,7 @@ feature -- Access
 			"HDF_IMAGE"
 		end
 
-	Hdf_rtl_reading: INTEGER is
+	frozen Hdf_rtl_reading: INTEGER is
 			-- In addition, on Hebrew or Arabic systems you can specify this flag 
 			-- to display text using right-to-left reading order. 
 		external

@@ -1,87 +1,119 @@
+indexing
+	description: "Context that represents a menu (EV_MENU)."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class MENU_C 
+class
+	MENU_C
 
 inherit
-
-	COMPOSITE_C
-		rename
-			copy_attributes as old_copy_attributes,
-			reset_modified_flags as old_reset_modified_flags
+	MENU_ITEM_HOLDER_C
 		redefine
-			context_initialization, widget,
-			intermediate_name
-		end;
-
-	COMPOSITE_C
-		redefine
-			context_initialization, reset_modified_flags, copy_attributes, 
-			widget, intermediate_name
-		select
-			copy_attributes, reset_modified_flags
+			gui_object,
+			create_context
 		end
 
-feature 
+feature -- Type data
 
-	widget: MENU;
-
-	title: STRING is
+	symbol: EV_PIXMAP is
 		do
-			Result := widget.title
-		end;
+			create Result.make_with_size (0, 0)
+		end
 
-feature -- Default event
-	default_event: MOUSE_ENTER_EV is
+	type: CONTEXT_TYPE is
 		do
-			Result := mouse_enter_ev
-		end	
+			Result := context_catalog.menu_page.menu_type
+		end
 
-feature {NONE}
+feature -- Context creation
 
-	title_modified: BOOLEAN;
-
-feature 
-
-	intermediate_name: STRING is
+	create_context (a_parent: MENU_HOLDER_C): like Current is
+			-- Create a context of the same type.
 		do
-			Result := parent.intermediate_name;
-		end;
+			Result ?= Precursor (a_parent)
+			a_parent.append (Result)
+		end
 
-	set_title (new_title: STRING) is
+feature -- GUI object creation
+
+	create_gui_object (a_parent: EV_MENU_HOLDER) is
 		do
-			title_modified := True;
-			if (new_title = Void) or else new_title.empty then
-				widget.remove_title;
-			else
-				widget.set_title (new_title);
-			end;
-		end;
+			create gui_object.make (a_parent)
+		end
 
-	reset_modified_flags is
+feature -- Status report
+
+	shown: BOOLEAN is
 		do
-			old_reset_modified_flags;
-			title_modified := False;
-		end;
+--			Result := gui_object.parent /= Void
+		end
 
-	
-feature {NONE}
+feature -- Status setting
+
+	show is
+		local
+			a_tree_item: MENU_HOLDER_C
+		do
+--			a_tree_item ?= parent
+--			gui_object.set_parent (a_tree_item.gui_object)
+		end
+
+	hide is
+		do
+--			gui_object.set_parent (Void)
+		end
+
+feature {NONE} 
 
 	copy_attributes (other_context: like Current) is
+			-- Copy the attributes of Current to `other_context'.
 		do
-			if title_modified then
-				other_context.set_title (title);
-			end;
-			old_copy_attributes (other_context);
-		end;
+		end
 
-	
-feature {CONTEXT}
+feature {NONE} -- Callbacks
 
-	context_initialization (context_name: STRING): STRING is
+	add_gui_callbacks is
+			-- Define the general behavior of the GUI object.
 		do
-			!!Result.make (0);
-			if title_modified and then not (title = Void) then
-				function_string_to_string (Result, context_name, "set_title", title)
-			end;
-		end;
+		end
 
-end
+	initialize_transport is
+			-- Initialize the mechanism through which
+			-- the current context may be dragged and
+			-- dropped.
+		do
+		end
+
+	remove_gui_callbacks is
+			-- Remove callbacks.
+			-- (Need to only remove callbacks part of a list
+			-- since set_action will overwrite previous callbacks).
+		do
+		end
+
+feature {NONE} -- Internal namer
+
+	namer: NAMER is
+		once
+			create Result.make ("Menu")
+		end
+
+feature -- Code generation
+
+	eiffel_type: STRING is
+		do
+			Result := "EV_MENU"
+		end
+
+	full_type_name: STRING is
+		do
+			Result := "Menu"
+		end
+
+feature -- Implementation
+
+	gui_object: EV_MENU
+
+end -- class MENU_C
+

@@ -1,51 +1,21 @@
+indexing
+	description: "Primitive context."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class PRIMITIVE_C 
+deferred class
+	PRIMITIVE_C 
 
 inherit
-
-	CONTEXT
+	WIDGET_C
 		redefine
-			widget
+			gui_object
 		end
 
-feature 
+feature -- Implementation
 
-	widget: PRIMITIVE;
+	gui_object: EV_PRIMITIVE
 
-	set_fg_color_name (a_name: STRING) is
-		local
-			a_color: COLOR;
-		do
-			if a_name = Void or else a_name.empty then
-				fg_color_modified := False;
-				fg_color_name := Void;
-				a_color := default_foreground_color;
-				if a_color /= Void then
-					widget.set_foreground_color (a_color)
-				end
-			else
-				if fg_color_name = Void then
-					save_default_foreground_color
-				end;
-				fg_color_name := a_name;
-				fg_color_modified := True;
-				!!a_color.make;
-				a_color.set_name (a_name);
-				widget.set_foreground_color (a_color)
-			end;
-		end;
+end -- class PRIMITIVE_C
 
-	save_default_foreground_color is
-		do
-			if default_foreground_color = Void then
-		   		default_foreground_color := widget.foreground_color
-			end
-		end;
-
-	reset_default_foreground_color is
-		do
-			widget.set_foreground_color (default_foreground_color);
-		end;
-
-
-end

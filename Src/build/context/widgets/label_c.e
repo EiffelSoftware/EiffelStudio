@@ -1,94 +1,105 @@
+indexing
+	description: "Context that represents a label (EV_LABEL)."
+	author: ""
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LABEL_C 
 
 inherit
-	
-	LABEL_TEXT_C
+	PRIMITIVE_C
 		redefine
-			widget, stored_node
+			gui_object --, stored_node
 		end
 
-feature 
+feature -- Type data
 
-	widget: LABEL;
-
-feature -- Default event
-
-	default_event: MOUSE_ENTER_EV is
+	symbol: EV_PIXMAP is
 		do
-			Result := mouse_enter_ev
+			Result := Pixmaps.ev_label_pixmap
 		end
-
-feature {NONE}
-
-	namer: NAMER is
-		once
-			!!Result.make ("Label");
-		end;
-
-feature 
-
-	eiffel_type: STRING is "LABEL";
-
-	full_type_name: STRING is "Label"
 
 	type: CONTEXT_TYPE is
 		do
-			Result := context_catalog.label_type
-		end;
+			Result := context_catalog.primitive_page.label_type
+		end
 
-	symbol: PIXMAP is
-		do
-			Result := Pixmaps.ev_label_pixmap
-		end;
+feature -- GUI object creation
 
-	create_oui_widget (a_parent: COMPOSITE) is
+	create_gui_object (a_parent: EV_CONTAINER) is
 		do
-			!!widget.make_unmanaged (entity_name, a_parent);
-			disable_resize_policy (True);
-		end;
+			create gui_object.make (a_parent)
+		end
 
-	text: STRING is
-		do
-			Result := widget.text
-		end;
- 
-feature {NONE}
+feature -- Default event
 
-	forbid_recompute_size is
-		do
-			widget.forbid_recompute_size
-		end;
- 
-	allow_recompute_size is
-		do
-			widget.allow_recompute_size
-		end;
- 
-	widget_set_text (s: STRING) is
-		do
-			widget.set_text (s);
-		end;
+-- 	default_event: MOUSE_ENTER_EV is
+-- 		do
+-- 			Result := mouse_enter_ev
+-- 		end
 
-	widget_set_center_alignment is
-		do
-			widget.set_center_alignment
-		end;
+feature {NONE} -- Internal namer
 
-	widget_set_left_alignment is
-		do
-			widget.set_left_alignment
-		end;
+	namer: NAMER is
+		once
+			create Result.make ("Label")
+		end
 
--- ****************
--- Storage features
--- ****************
-	
-feature 
+feature -- Code generation
 
-	stored_node: S_LABEL is
-		do
-			!!Result.make (Current);
-		end;
+	eiffel_type: STRING is "LABEL"
 
-end
+	full_type_name: STRING is "Label"
+
+-- feature -- Status report
+-- 
+-- 	text: STRING is
+-- 		do
+-- 			Result := gui_object.text
+-- 		end
+--  
+-- feature {NONE}
+-- 
+-- 	forbid_recompute_size is
+-- 		do
+-- 			widget.forbid_recompute_size
+-- 		end
+--  
+-- 	allow_recompute_size is
+-- 		do
+-- 			widget.allow_recompute_size
+-- 		end
+--  
+-- 	widget_set_text (s: STRING) is
+-- 		do
+-- 			widget.set_text (s)
+-- 		end
+-- 
+-- 	widget_set_center_alignment is
+-- 		do
+-- 			widget.set_center_alignment
+-- 		end
+-- 
+-- 	widget_set_left_alignment is
+-- 		do
+-- 			widget.set_left_alignment
+-- 		end
+-- 
+
+feature --  Implementation
+
+	gui_object: EV_LABEL
+
+-- -- ****************
+-- -- Storage features
+-- -- ****************
+-- 	
+-- feature 
+-- 
+-- 	stored_node: S_LABEL is
+-- 		do
+-- 			!!Result.make (Current)
+-- 		end
+
+end -- class LABEL_C
+

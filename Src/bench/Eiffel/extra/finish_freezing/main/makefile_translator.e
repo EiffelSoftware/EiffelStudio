@@ -641,7 +641,6 @@ feature {NONE} -- Translation
 				read_next
 
 				if is_emain then
-					read_next
 					makefile.putstring ("%N%T$(RM) ")
 					makefile.putstring (dir)
 					makefile.putstring (directory_separator)

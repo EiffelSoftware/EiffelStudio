@@ -52,7 +52,16 @@ feature {NONE} -- GTK C functions for label
 	gtk_label_get (l: POINTER; text: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
-	
+
+	gtk_misc_set_alignment (widget: POINTER; x_align, y_aligne: REAL) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_misc_set_padding (widget: POINTER; x_pad, y_pad: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+
 feature {NONE} -- GTK C functions for toolbars
 
 	gtk_toolbar_new (o, s: INTEGER): POINTER is
@@ -160,11 +169,15 @@ feature {NONE} -- GTK C functions for gtktext
 	gtk_text_get_length (text: POINTER): INTEGER is
 		external "C | <gtk/gtk.h>"
 		end
-	
-	gtk_text_insert (text, font, fore_color, back_color, txt: POINTER; len: INTEGER) is
+
+	gtk_text_backward_delete (text: POINTER; nchar: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
-	
+
+	c_gtk_text_insert (widget: POINTER; txt: POINTER) is
+		external "C | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- GTK C functions for menu
  
 	gtk_menu_new: POINTER is
@@ -210,6 +223,80 @@ feature {NONE} -- GTK C functions for list
 		end
 
 	gtk_list_set_selection_mode (list: POINTER; mode: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+feature {NONE} -- GTK C functions for multi-column list
+
+	gtk_clist_new (column: INTEGER): POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_set_selection_mode (list: POINTER; mode: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_column_titles_show (list: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_column_titles_hide (list: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_column_titles_active (list: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_column_titles_passive (list: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_set_column_title (list: POINTER; column: INTEGER; title: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_set_column_justification (list: POINTER; column: INTEGER; justification: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_set_column_width (list: POINTER; column: INTEGER; width: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_set_row_height (list: POINTER; height: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_set_text (list: POINTER; row, column: INTEGER; text: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_set_foreground (list: POINTER; row: INTEGER; color: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_set_background (list: POINTER; row: INTEGER; color: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+	
+	gtk_clist_insert (list: POINTER; row: INTEGER; text: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_remove (list: POINTER; row: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_select_row (list: POINTER; row, column: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_unselect_row (list: POINTER; row, column: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_clist_clear (list: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
 
@@ -262,8 +349,9 @@ feature {NONE} -- code in the glue library
 	-- list
 
 	c_gtk_add_list_item (list: POINTER; item: POINTER) is
-		external "C | %"gtk_eiffel.h%""
-		end
+		external
+			"C | %"gtk_eiffel.h%""
+		end	
 
 feature {NONE} -- Implementation
 	

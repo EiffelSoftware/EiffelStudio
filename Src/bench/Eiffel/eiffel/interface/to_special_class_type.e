@@ -147,8 +147,7 @@ feature
 
 				-- Set dynamic type
 
-			!!gen_type;
-			gen_type.set_base_id (System.special_id);
+			create gen_type.make (System.special_id);
 			gen_type.set_meta_generic (clone (type.meta_generic));
 			gen_type.set_true_generics (clone (type.true_generics));
 

@@ -35,8 +35,7 @@ feature -- Status
 		local
 			any_type: CL_TYPE_I
 		do
-			create any_type
-			any_type.set_base_id (System.any_id)
+			create any_type.make (System.any_id)
 			Result := first_generic.same_as (any_type)
 		end
 

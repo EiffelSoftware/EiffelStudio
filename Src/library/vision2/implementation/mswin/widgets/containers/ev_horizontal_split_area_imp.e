@@ -66,7 +66,7 @@ feature -- Element change
 	set_default_minimum_size is
 			-- Initialize the size of the widget.
 		do
-			set_minimum_height (size)
+			set_minimum_width (size)
 		end
 
 feature {NONE} -- Basic operation

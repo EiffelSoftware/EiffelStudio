@@ -60,9 +60,12 @@ feature -- Status report
 
 	pointer_position: EV_COORDINATES is
 			-- Position of the screen pointer.
+		local
+			a_x, a_y: INTEGER
+			temp_pointer: POINTER
 		do
-			--|FIXME
-			check fixme: false end
+			temp_pointer := C.gdk_window_get_pointer (Default_pointer, $a_x, $a_y, Default_pointer)
+			create Result.set (a_x, a_y)
 		end
 
 feature -- Basic operation
@@ -216,6 +219,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/25 18:39:22  king
+--| Implemented pointer_position
+--|
 --| Revision 1.14  2000/04/21 20:22:18  oconnor
 --| Fixed button relase faking
 --|

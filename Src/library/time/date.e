@@ -38,7 +38,8 @@ create
 	make_from_string_default_with_base,
 	make_from_string,
 	make_from_string_with_base,
-	make_by_compact_date
+	make_by_compact_date,
+	make_by_ordered_compact_date
 
 feature -- Initialization
 
@@ -182,13 +183,26 @@ feature -- Initialization
 
 	make_by_compact_date (c_d: INTEGER) is
 			-- Initialize from a `compact_date'.
+		obsolete
+			"Use `make_by_ordered_compact_date' instead. But be carreful in your update %
+			%since `compact_date' and `ordered_compact_date' do not have the same %
+			%encoding."
 		require
-			c_d_not_void: c_d /= Void
 			c_d_valid: compact_date_valid (c_d)
 		do
-			compact_date := c_d
+			set_internal_compact_date (c_d)
 		ensure
 			compact_date_set: compact_date = c_d
+		end
+
+	make_by_ordered_compact_date (c_d: INTEGER) is
+			-- Initialize from a `ordered_compact_date'.
+		require
+			c_d_valid: ordered_compact_date_valid (c_d)
+		do
+			set_internal_ordered_compact_date (c_d)
+		ensure
+			ordered_compact_date_set: ordered_compact_date = c_d
 		end
 
 feature -- Access
@@ -203,12 +217,17 @@ feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is the current date before `other'?
+		local
+			l_current, l_other: INTEGER
 		do
-			Result := year < other.year or else
-				(year = other.year and then
-				(month < other.month or else
-				(month = other.month and then
-				(day < other.day))))
+			l_current := ordered_compact_date
+			l_other := other.ordered_compact_date
+			if l_current >= 0 and l_other >= 0 then
+					-- There was no sign issue so we can safely compate the integer values
+				Result := l_current < l_other
+			else
+				Result := year < other.year and (l_current & 0x0000FFFF) < (l_other & 0x0000FFFF)
+			end
 		end
 
 feature -- Measurement

@@ -73,7 +73,13 @@ feature -- Generation
 			filtered_document := Shared_project.filter_manager.filtered_document (a_doc)
 				
 					-- Now convert the filtered document to HTML
-			l_html := Shared_project.filter_manager.convert_to_html (filtered_document)			
+			if filtered_document.text.is_empty then
+				l_html := "Error: After filtering the document the content is empty.%N%
+					%If this is not what you were expecting check your filter settings%
+					%and document filter tags and try again."
+			else
+				l_html := Shared_project.filter_manager.convert_to_html (filtered_document)	
+			end					
 
 			create l_filename.make_from_string (target.name)
 			l_filename.extend (file_no_extension (short_name (a_doc.name)))

@@ -364,6 +364,13 @@ feature -- IL Generation
 		deferred
 		end
 
+	generate_finalize_feature (feature_id: INTEGER) is
+			-- Generate code for `Finalize' feature.
+		require
+			positive_feature_id: feature_id > 0
+		deferred
+		end
+			
 	generate_method_impl (feature_id, parent_type_id, parent_feature_id: INTEGER) is
 			-- Generate a MethodImpl from `parent_type_id' and `parent_feature_id'
 			-- to `current_class_type' and `feature_id'.

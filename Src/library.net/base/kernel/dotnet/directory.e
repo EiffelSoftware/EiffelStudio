@@ -63,7 +63,7 @@ feature -- Initialization
 				if feature {SYSTEM_DIRECTORY}.exists (l_sub_dir.to_cil) then
 					di := feature {SYSTEM_DIRECTORY}.create_directory (l_full_path.to_cil)
 				else
-					feature {EXCEPTION_MANAGER}.raise (create {IOEXCEPTION}.make)
+					feature {ISE_RUNTIME}.raise (create {IOEXCEPTION}.make)
 				end
 			end
 		end

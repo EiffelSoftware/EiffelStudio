@@ -1,7 +1,9 @@
 midl folder_browser.idl
-sn -k Key1
-tlbimp /keyfile:Key1 folder_browser.tlb
 
-csc /t:module FolderDialog.cs /r:FolderBrowser.dll
-sn -k Key2
-al folderdialog.netmodule /keyfile:Key2 /out:FolderDialog.dll
+if exist folder_browser.key goto key_exists
+sn -k folder_browser.key
+:key_exists
+
+tlbimp /keyfile:folder_browser.key folder_browser.tlb
+
+call make_folder_dialog.bat

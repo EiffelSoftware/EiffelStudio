@@ -22,26 +22,7 @@
 
 
 
-/* Make an Eiffel array from a C array: 
- * `eif_array' is the direct reference to the Eiffel array.
- * `c_array' is the C array.
- * `nelts' the number of elements to copy in the Eiffel array, it has to
- * be equal to `eif_array.count'.
- * type is an Eiffel type.
- * Preconditions 1: Size of arrays in bytes must match.
- * Preconditions 2: Number of elements must match.
- */
-#define eif_make_from_c(eif_array, c_array, nelts, type) \
-	{ \
-		EIF_REFERENCE area = eif_field (eif_array, \
-							"area", EIF_REFERENCE); \
-		assert (((HEADER (area)->ov_size & B_SIZE) - LNGPAD_2) \
-							== nelts * sizeof (type));\
-		assert (*(long *) (area + (HEADER (area)->ov_size & B_SIZE) \
-							- LNGPAD_2) == nelts);\
-		memcpy ((type *) area, c_array, nelts * sizeof (type));\
-	}
-	
+
 
 #define ccom_c_array_element(_c_array_, _index_, _type_) (*((_type_ *)_c_array_ + _index_))
 

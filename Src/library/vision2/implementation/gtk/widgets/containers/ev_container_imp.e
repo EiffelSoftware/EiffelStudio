@@ -110,7 +110,7 @@ feature -- Status setting
 	connect_radio_grouping (a_container: EV_CONTAINER) is
 			-- Join radio grouping of `a_container' to `Current'.
 		local
-			l: LINKED_LIST [POINTER]
+			l: ARRAYED_LIST [POINTER]
 			peer: EV_CONTAINER_IMP
 		do
 			peer ?= a_container.implementation

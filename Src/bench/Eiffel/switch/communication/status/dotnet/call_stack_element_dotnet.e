@@ -291,10 +291,12 @@ feature {NONE} -- Implementation
 				end
 				--| Current and Arguments |--
 				set_private_current_object (internal_current_object)
-				private_current_object.set_name ("Current")
-				object_address := private_current_object.address
-				display_object_address := object_address
-				initialized_current_object := True
+				if private_current_object /= Void then
+					private_current_object.set_name ("Current")
+					object_address := private_current_object.address
+					display_object_address := object_address
+				end
+				initialized_current_object := True					
 
 				debug ("debugger_trace_callstack_data") 
 					io.put_string ("<stop> " + generator + ".initialize_stack_for_current_object %N")

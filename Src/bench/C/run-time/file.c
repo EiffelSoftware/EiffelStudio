@@ -1352,10 +1352,23 @@ char *path;
 		*ptr = '\0';
 	else
 		strcpy (temp, ".");
-	
+
+		/* Does the parent exist? */
+	if (!file_exists(temp))
+		return (EIF_BOOLEAN) '\0';
+
 	file_stat(temp, &buf);
 	if (buf.st_mode & S_IFDIR != 0)	/* Is parent a directory? */
-		return (EIF_BOOLEAN) ((-1 != access(temp, W_OK)) ? '\01' : '\0');
+		if (file_eaccess(&buf, 1)) {	/* Check for write permissions */
+				/* Check if a non writable file `path' exists */
+			if (file_exists(path)) {
+				file_stat(path, &buf);
+				return (file_eaccess(&buf, 1)); /* Check for write permissions to re create it */
+			}
+
+			return (EIF_BOOLEAN) '\01';
+		}
+
 	return (EIF_BOOLEAN) '\0';
 }
 

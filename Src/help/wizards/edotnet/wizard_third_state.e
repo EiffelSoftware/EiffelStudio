@@ -105,10 +105,10 @@ feature -- Basic Operation
 			remove_button_box.disable_item_expand (remove_button)
 			remove_button_box.extend (create {EV_CELL})
 
-			create import_button_box
-			import_button_box.extend (create {EV_CELL})
+			create import_button_box			
 			import_button_box.extend (import_button)
 			import_button_box.disable_item_expand (import_button)
+			import_button_box.extend (create {EV_CELL})
 			
 				-- Layout Tables with their resp. "Add/Remove" buttons.
 			create references_to_add_box

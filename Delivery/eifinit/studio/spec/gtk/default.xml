@@ -286,8 +286,8 @@
 						<TEXT DESCRIPTION="Use default autocomplete">use_default_else<BOOLEAN>True</BOOLEAN></TEXT>
 						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_else_space<STRING> $cursor$</STRING></TEXT>
 						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_else_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_elseif_space_later<STRING> $cursor$</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_elseif_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_else_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_else_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="inspect" ICON="icon_preferences_folder">
 						<HEAD>inspect</HEAD>

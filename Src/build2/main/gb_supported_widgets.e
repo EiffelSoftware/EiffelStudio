@@ -115,6 +115,7 @@ feature {NONE} -- Implementation
 			gb_ev_widget: GB_EV_WIDGET
 			gb_ev_gauge: GB_EV_GAUGE
 			gb_ev_notebook: GB_EV_NOTEBOOK
+			gb_ev_text_component: GB_EV_TEXT_COMPONENT
 		do
 		end
 

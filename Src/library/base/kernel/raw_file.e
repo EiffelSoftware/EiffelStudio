@@ -58,6 +58,13 @@ feature -- Output
 			file_pdb (file_pointer, d)
 		end
 
+	put_data (p: POINTER; size: INTEGER) is
+			-- Put `data' of length `size' pointed by `p' at
+			-- current position.
+		do
+			file_ps (file_pointer, p, size)
+		end
+
 feature -- Input
 
 	read_integer, readint is

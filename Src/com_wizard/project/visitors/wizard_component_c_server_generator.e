@@ -20,11 +20,6 @@ inherit
 			{NONE} all
 		end
 
-feature -- Access
-
-	dispatch_interface_name: STRING
-			-- Name for a dispatch interface.
-
 feature -- Basic operations
 
 	generate_functions_and_properties (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR;

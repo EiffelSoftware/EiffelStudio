@@ -297,12 +297,12 @@ feature
 			-- Set editing for multiline text.
 		deferred
 		end;
- 
+
 	is_multi_line_mode: BOOLEAN is
 			-- Is Current editing a multiline text?
 		deferred
 		end;
- 
+
 	is_cursor_position_visible: BOOLEAN is
 			-- Is the insert cursor position marked
 			-- by a blinking text cursor?

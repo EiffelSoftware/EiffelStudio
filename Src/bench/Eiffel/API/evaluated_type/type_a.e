@@ -299,6 +299,15 @@ feature {COMPILER_EXPORTER} -- Access
 			Result := internal_conform_to (other, True)
 		end
 
+	convert_to (a_class: CLASS_C; other: TYPE_A): BOOLEAN is
+			-- Does current convert to `other' in context of `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			other_not_void: other /= Void
+		do
+			Result := False
+		end
+		
 	has_formal_generic: BOOLEAN is
 			-- Has the current type formal generic parameter in its type ?
 		do

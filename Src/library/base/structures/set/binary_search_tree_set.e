@@ -187,7 +187,7 @@ feature -- Comparison
 			-- Is current structure a subset of `other'?
 		do
 			if other.tree /= Void then
-				Result := tree /= Void and then
+				Result := tree = Void or else
 					tree.is_subset (other.tree)
 			else
 				Result := true

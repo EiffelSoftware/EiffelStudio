@@ -36,7 +36,7 @@ feature -- Initialization
 			non_negative_argument: n >= 0
 		do
 			!!fl.make (0, n);
-				-- One entry is kept free
+				-- One entry is kept free (the last one in the list)
 		ensure
 			capacity_expected: capacity = n 
 		end;
@@ -68,7 +68,7 @@ feature -- Access
 							i := i + 1
 						end;
 						from
-							i := 1
+							i := 0
 						until
 							Result or i >= in_index
 						loop
@@ -97,7 +97,7 @@ feature -- Access
 						i := i + 1
 					end;
 					from
-						i := 1
+						i := 0
 					until
 						Result or i >= in_index
 					loop

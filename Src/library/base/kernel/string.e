@@ -298,6 +298,25 @@ feature -- Element change
 		   new_count: count = old count + s.count - end_pos + start_pos -1
 		end;
 
+	replace_substring_all (original, new: like Current) is
+			-- Replace every occurence of `original' with `new'.
+		require
+			original_exists: original /= Void
+			new_exists: new /= Void
+			original_not_empty: not original.empty
+		local
+			change_pos, i :INTEGER
+		do
+			from
+				change_pos := substring_index (original, 1)
+			until
+				change_pos = 0
+			loop
+				replace_substring (new, change_pos, change_pos + original.count - 1)
+				change_pos := substring_index (original, change_pos + new.count - 1)
+			end
+		end; 
+
 	fill_blank is
 			-- Fill with blanks.
 		do
@@ -363,7 +382,7 @@ feature -- Element change
 			area := other.area;
 			count := other.count;
 		ensure
-			sHAred_count: other.count = count;
+			shared_count: other.count = count;
 			-- sharing: For every `i' in 1..`count', `Result'.`item' (`i') = `item' (`i')
 		end;
 

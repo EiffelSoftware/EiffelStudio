@@ -21,22 +21,21 @@ class PART_SORTED_SET [G -> PART_COMPARABLE] inherit
 		redefine
 			disjoint, symdif
 		select
-			extend, prune
+			extend, prune, put
 		end;
 
 	PART_SORTED_TWO_WAY_LIST [G]
 		rename
 			extend as pstwl_extend,
-			prune as pstwl_prune
+			prune as pstwl_prune,
+			put as pstwl_put
 		export
 			{ANY}
-				put, merge, duplicate
+				merge, duplicate
 			{PART_SORTED_SET} 
 				forth, item, after, start,
 				put_left, finish 
 			{NONE} all
-		undefine
-			put
 		redefine
 			merge, duplicate
 		end;

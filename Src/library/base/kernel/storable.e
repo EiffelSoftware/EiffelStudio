@@ -24,6 +24,7 @@ feature -- Access
 			file_not_void: file /= Void;
 			file_exists: file.exists;
 			file_is_open_read: file.is_open_read
+			file_is_binary: file.is_binary
 		do
 			Result := c_retrieved (file.file_pointer)
 		ensure
@@ -41,6 +42,7 @@ feature -- Element change
 			file_not_void: file /= Void;
 			file_exists: file.exists;
 			file_is_open_write: file.is_open_write
+			file_is_binary: file.is_binary
 		do
 			c_basic_store (file.file_pointer, $Current)
 		end;
@@ -57,6 +59,7 @@ feature -- Element change
 			file_not_void: file /= Void;
 			file_exists: file.exists;
 			file_is_open_write: file.is_open_write
+			file_is_binary: file.is_binary
 		do
 			c_general_store (file.file_pointer, $Current)
 		end

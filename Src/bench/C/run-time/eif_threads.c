@@ -56,7 +56,7 @@ rt_public void eif_thr_proxy_dispose(EIF_POINTER);
 rt_private void eif_init_context(eif_global_context_t *);
 rt_private EIF_THR_ENTRY_TYPE eif_thr_entry(EIF_THR_ENTRY_ARG_TYPE);
 
-RT_LNK EIF_TSD_TYPE eif_global_key;
+rt_public EIF_TSD_TYPE eif_global_key;
 /* rt_public EIF_MUTEX_TYPE *eif_rmark_mutex; */
 
 rt_public void eif_thr_init_root(void) 

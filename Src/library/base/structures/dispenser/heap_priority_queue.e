@@ -1,8 +1,5 @@
 indexing
-
-	description:
-		"Priority queues implemented as heaps"
-
+	description: "Priority queues implemented as heaps"
 	status: "See notice at end of class"
 	names: sorted_priority_queue, dispenser, heap;
 	representation: heap;
@@ -36,14 +33,13 @@ class HEAP_PRIORITY_QUEUE [G -> COMPARABLE] inherit
 			{HEAP_PRIORITY_QUEUE}
 				put_i_th
 		redefine
-			full, prunable,
-			put, extendible,
+			full, prunable, prune,
+			put, extendible, wipe_out,
 			linear_representation,
-			index_set
+			index_set, is_equal
 		end
 
 create
-
 	make
 
 feature -- Initialization
@@ -59,7 +55,7 @@ feature -- Access
 	item: G is
 			-- Entry at top of heap.
 		do
-			Result := area.item (0)
+			Result := i_th (1)
 		end
 
 feature -- Measurement
@@ -92,24 +88,162 @@ feature -- Status report
 	prunable: BOOLEAN is True
 			-- May items be removed? (Answer: yes.)
 
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+		local
+			l_current, l_other: like Current
+		do
+			if other = Current then
+				Result := True
+			elseif
+				object_comparison = other.object_comparison and then
+				count = other.count
+			then
+				l_current := duplicate (count)
+				l_other := other.duplicate (count)
+				from
+					Result := True
+				until
+					not Result or l_current.is_empty
+				loop
+					if object_comparison then
+						Result := equal (l_current.item, l_other.item)
+					else
+						Result := l_current.item = l_other.item
+					end
+					l_current.remove
+					l_other.remove
+				end
+			end
+		end
+
 feature -- Element change
 
-	force, put (v: like item) is
+	force (v: like item) is
+			-- Add item `v' at its proper position.
+		do
+			if full then
+				auto_resize (1, count + additional_space)
+			end
+			put (v)
+		end
+		
+	put (v: like item) is
 			-- Insert item `v' at its proper position.
+		local
+			i: INTEGER
 		do
 			count := count + 1
-			array_force (v, count)
-			up_heap
+			from
+				i := count
+			until
+				i <= 1 or else i_th (i // 2) >= v
+			loop
+				put_i_th (i_th (i // 2), i)
+				i := i // 2
+			end
+			put_i_th (v, i)
 		end
 
 feature -- Removal
 
 	remove is
 			-- Remove item of highest value.
+		local
+			l_default: G
+			i, j: INTEGER
+			up: like item
+			stop: BOOLEAN
 		do
-			put_i_th (i_th (count), 1)
 			count := count - 1
-			down_heap
+			if count > 0 then
+				from
+					i := 1
+					up := i_th (count + 1)
+				until
+					stop or i > count // 2
+				loop
+					j := 2 * i
+					if (j < count) and i_th (j) < i_th (j + 1) then
+						j := j + 1
+					end
+					stop := i_th (j) <= up
+					if not stop then
+						put_i_th (i_th (j), i)
+						i := j
+					end
+				end
+				put_i_th (up, i)
+			end
+			put_i_th (l_default, count + 1)
+		end
+
+	prune (v: G) is
+			-- Remove first occurrence of `v' if any.
+		local
+			i, nb: INTEGER
+			l_tmp: ARRAYED_LIST [G]
+			l_item: G
+			l_done: BOOLEAN
+		do
+				--| Create an ARRAYED_LIST with all items of Current except first
+				--| occurrence of `v'. Then recreate current with items from ARRAYED_LIST
+				--| if `v' was found.
+			create l_tmp.make (count)
+			if object_comparison then
+				from
+					i := 1
+					nb := count
+				until
+					i > nb
+				loop
+					l_item := i_th (i)
+					if not l_done and l_item.is_equal (v) then
+						l_done := True
+					else
+						l_tmp.extend (l_item)
+					end
+					i := i + 1
+				end
+			else
+				from
+					i := 1
+					nb := count
+				until
+					i > nb
+				loop
+					l_item := i_th (i)
+					if not l_done and l_item = v then
+						l_done := True
+					else
+						l_tmp.extend (l_item)
+					end
+					i := i + 1
+				end
+			end
+			
+			if l_tmp.count = count - 1 then
+					--| Item was found, we can update `Current'.
+				from
+					l_tmp.start
+					wipe_out
+				until
+					l_tmp.after
+				loop
+					put (l_tmp.item)
+					l_tmp.forth
+				end
+			end
+		end
+
+	wipe_out is
+			-- Remove all items.
+		do
+			count := 0
+			discard_items
 		end
 
 feature -- Conversion
@@ -118,62 +252,53 @@ feature -- Conversion
 			-- Representation as a linear structure
 			-- (Sorted according to decreasing priority)
 		local
-			i: INTEGER
+			l_current: like Current
 		do
 			from
+				l_current := clone (Current)
 				create Result.make (count)
 			until
-				is_empty
+				l_current.is_empty
 			loop
-				Result.extend (item)
-				remove
-			end
-			from
-				i := 1
-			until
-				i > Result.count
-			loop
-				put_i_th (Result.i_th (i), i)
-				i := i + 1
+				Result.extend (l_current.item)
+				l_current.remove
 			end
 		end
 
 feature -- Duplication
 
 	duplicate (n: INTEGER): like Current is
-			-- New priority queue containing the `n' greatest items
+			-- New priority queue containing `n' greatest items of Current.
+		require
+			n_positive: n >= 0
+			n_in_bounds: n <= count
 		local
-			temp: ARRAY [G]
-			i, j: INTEGER
+			l_current: like Current
+			l_tmp: ARRAYED_LIST [G]
+			i: INTEGER
 		do
+				--| Extract `n' greatest items of Current.
 			from
-				create temp.make (1, n)
-				i := 1
-			until
-				i <= n
-			loop
-				temp.put (item, i)
-				remove
-				i := i + 1
-			end
-			from
-				i := count
-				j := i + n - 1
-			until
-				i < 1
-			loop
-				area.put (area.item (i), j)
-				i := i - 1
-				j := j - 1
-			end
-			from
-				create Result.make (n)
+				l_current := clone (Current)
+				create l_tmp.make (n)
 				i := 1
 			until
 				i > n
 			loop
-				Result.put_i_th (temp.item (i), i)
-				put_i_th (temp.item (i), i)
+				l_tmp.extend (l_current.item)
+				l_current.remove
+				i := i + 1
+			end
+
+				--| Insert `n' greatest items into new queue.
+			from
+				create Result.make (n)
+				l_tmp.start
+			until
+				l_tmp.after
+			loop
+				Result.put (l_tmp.item)
+				l_tmp.forth
 			end
 		end
 
@@ -181,72 +306,6 @@ feature {NONE} -- Inapplicable
 
 	replace (v: like item) is
 		do
-		end
-
-feature {NONE} -- Implementation
-
-	down_heap is
-		-- Move the heap downwards.
-		local
-			i, j, k: INTEGER
-			up, left, right: like item
-			stop: BOOLEAN
-		do
-			from
-				up := area.item (0)
-			until
-				stop
-			loop
-				j := 2 * i + 1
-				if j < count - 1 then
-					left := area.item (j)
-					k := j + 1
-					right := area.item (k)
-					if right > left then
-						j := k
-						left := right
-					end
-				elseif j = count - 1 then
-					left := area.item (j)
-				else
-					stop := True
-				end
-				if not stop then
-					if left > up then
-						area.put (left, i)
-						i := j
-					else
-						stop := True
-					end
-				end
-			end
-			area.put (up, i)
-		end
-
-
-	up_heap is
-			-- Move the heap downwards.
-		local
-			i, j: INTEGER
-			up, down: like item
-			stop: BOOLEAN
-		do
-			from
-				i := count - 1
-				down := area.item (i)
-			until
-				stop or i = 0
-			loop
-				j := (i - 1) // 2
-				up := area.item (j)
-				if up < down then
-					area.put (up, i)
-					i := j
-				else
-					stop := True
-				end
-			end
-			area.put (down, i)
 		end
 
 invariant

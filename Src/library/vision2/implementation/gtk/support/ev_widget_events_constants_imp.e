@@ -129,6 +129,18 @@ feature -- Event for text components and combo boxes
 	changed_id: INTEGER is 19
 			-- the selection has changed
  
+feature -- Event for selection dialog
+
+	ok_clicked_id: INTEGER is 19
+			-- `ok' button has been clicked.
+ 
+	cancel_clicked_id: INTEGER is 20
+			-- `cancel' button has been clicked.
+ 
+	help_clicked_id: INTEGER is 21
+			-- `help' button has been clicked.
+			-- Event only for color selection dialog.
+ 
 feature -- Upper constants value
 
 	command_count: INTEGER is 23

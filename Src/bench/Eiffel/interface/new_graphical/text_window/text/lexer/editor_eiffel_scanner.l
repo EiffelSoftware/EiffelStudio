@@ -11,6 +11,8 @@ inherit
 
 	EDITOR_SCANNER
 
+	SHARED_EIFFEL_PROJECT
+
 create
 	make
 %}
@@ -27,7 +29,7 @@ create
 					update_token_list
 					}
 [\t]+				{
-					create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count, tab_size_cell)
+					create {EDITOR_TOKEN_TABULATION} curr_token.make(text_count)
 					update_token_list
 					}
 \n+					{
@@ -44,7 +46,7 @@ create
 
 "--"				{ 
 						-- comments
-					create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					update_token_list
 					in_comments := True
 					}
@@ -65,9 +67,14 @@ create
 "$"					{
 						-- Symbols
 					if not in_comments then
-						create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
+						if not in_verbatim_string then
+							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_STRING} curr_token.make(text)
+						end
+						
 					else
-						create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					}
@@ -93,9 +100,14 @@ create
 "<"					{ 
 						-- Operator Symbol
 					if not in_comments then
-						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text, tab_size_cell)
+						if not in_verbatim_string then
+							create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_STRING} curr_token.make(text)
+						end
+						
 					else
-						create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					}
@@ -164,9 +176,14 @@ create
 [xX][oO][rR]							{
 										-- Keyword
 										if not in_comments then
-											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text, tab_size_cell)
+											if not in_verbatim_string then
+												create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+											else
+												create {EDITOR_TOKEN_STRING} curr_token.make(text)
+											end
+											
 										else
-											create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
 										update_token_list
 										}
@@ -176,13 +193,18 @@ create
 
 [A-Z][A-Z0-9_]*							{
 										if not in_comments then
-											if not Eiffel_universe.classes_with_name (text).is_empty then
-												create {EDITOR_TOKEN_CLASS} curr_token.make(text, tab_size_cell)
+											if not in_verbatim_string then
+												if not Eiffel_universe.classes_with_name (text).is_empty then
+												create {EDITOR_TOKEN_CLASS} curr_token.make(text)
 											else
-												create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
+												create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 											end
+											else
+												create {EDITOR_TOKEN_STRING} curr_token.make(text)
+											end
+											
 										else
-											create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
 										update_token_list
 										}
@@ -190,9 +212,14 @@ create
 
 [a-zA-Z][a-zA-Z0-9_]*					{
 										if not in_comments then
-											create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
+											if not in_verbatim_string then
+												create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+											else
+												create {EDITOR_TOKEN_STRING} curr_token.make(text)
+											end
+											
 										else
-											create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
 										update_token_list
 										}
@@ -202,9 +229,14 @@ create
 
 [@#|&][^%" \t\r\n]*						{
 										if not in_comments then
-											create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
+											if not in_verbatim_string then
+												create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+											else
+												create {EDITOR_TOKEN_STRING} curr_token.make(text)
+											end
+											
 										else
-											create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
 										update_token_list
 										}
@@ -237,24 +269,34 @@ create
 \'%<\'				|
 \'%>\'				{
 					if not in_comments then
-						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text, tab_size_cell)
+						if not in_verbatim_string then
+							create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_STRING} curr_token.make(text)
+						end
+
 					else
-						create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					}
 
 \'%\/[0-9]+\/\'		{
 					if not in_comments then
-						code_ := text_substring (4, text_count - 2).to_integer
-						if code_ > feature {CHARACTER}.Max_value then
-							-- Character error. Consedered as text.
-							create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
+						if not in_verbatim_string then
+							code_ := text_substring (4, text_count - 2).to_integer
+							if code_ > feature {CHARACTER}.Max_value then
+								-- Character error. Consedered as text.
+								create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+							else
+								create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+							end
 						else
-							create {EDITOR_TOKEN_CHARACTER} curr_token.make(text, tab_size_cell)
+							create {EDITOR_TOKEN_STRING} curr_token.make(text)
 						end
+						
 					else
-						create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					}
@@ -263,9 +305,13 @@ create
 \'%\/[0-9]+(\/)?	{
 					-- Character error. Catch-all rules (no backing up)
 					if not in_comments then
-						create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
+						if not in_verbatim_string then
+							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_STRING} curr_token.make(text)
+						end
 					else
-						create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					}
@@ -282,13 +328,29 @@ create
 --     the special character such as %N, %T,... we have to list all of
 --     them in the second expression.
 
+\"[^\n"%]*\[/[ \t\r]* {
+					-- Verbatim string opener.				
+				create {EDITOR_TOKEN_STRING} curr_token.make(text)
+				update_token_list
+				in_verbatim_string := True
+			}
+			
+[ \t\r]*\][^%\n"]*\" 	{
+					-- Verbatim string closer, possibly.				
+				create {EDITOR_TOKEN_STRING} curr_token.make(text)
+				update_token_list
+				--if is_verbatim_string_closer then
+					in_verbatim_string := False
+				--end
+			}
+
 [%\"]([^\n\"]|%\")*(\"|%)	|
 [%\"]([^\n\"\%]|%\"|%A|%B|%C\%D|%F|%H|%L|%N|%Q|%R|%S|%T|%U|%V|%%|%\'|%\(|%\)|%<|%>|%\/[0-9]{1,3}\/)*		{
 					-- Eiffel String
-					if not in_comments then
-						create {EDITOR_TOKEN_STRING} curr_token.make(text, tab_size_cell)
+					if not in_comments then						
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)
 					else
-						create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					}
@@ -298,9 +360,14 @@ create
 [0-1]+[bB]			{
 					-- Eiffel Bit
 					if not in_comments then
-						create {EDITOR_TOKEN_NUMBER} curr_token.make(text, tab_size_cell)
+						if not in_verbatim_string then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_STRING} curr_token.make(text)
+						end	
+						
 					else
-						create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					}
@@ -311,18 +378,28 @@ create
 [0-9]{1,3}(_[0-9]{3})+	{
 						-- Eiffel Integer
 						if not in_comments then
-							create {EDITOR_TOKEN_NUMBER} curr_token.make(text, tab_size_cell)
+							if not in_verbatim_string then
+								create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+							else
+								create {EDITOR_TOKEN_STRING} curr_token.make(text)
+							end
+							
 						else
-							create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 						end
 						update_token_list
 						}
 [0-9_]+					{
 						-- Eiffel Integer Error (considered as text)
 						if not in_comments then
-							create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
+							if not in_verbatim_string then
+								create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+							else
+								create {EDITOR_TOKEN_STRING} curr_token.make(text)
+							end						
+
 						else
-							create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 						end
 						update_token_list
 						}
@@ -336,10 +413,14 @@ create
 [0-9]{1,3}(_[0-9]{3})*\.([0-9]{1,3}(_[0-9]{3})*)?[eE][+-]?[0-9]{1,3}(_[0-9]{3})*	|
 ([0-9]{1,3}(_[0-9]{3})*)?\.[0-9]{1,3}(_[0-9]{3})*([eE][+-]?[0-9]{1,3}(_[0-9]{3})*)?	{
 							-- Eiffel reals & doubles
-						if not in_comments then
-							create {EDITOR_TOKEN_NUMBER} curr_token.make(text, tab_size_cell)
+						if not in_comments then							
+							if not in_verbatim_string then
+								create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+							else
+								create {EDITOR_TOKEN_STRING} curr_token.make(text)
+							end
 						else
-							create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 						end
 						update_token_list
 						}
@@ -351,7 +432,7 @@ create
 ----------/** Comments enable/disable **/-----------------------------------------
 
 \`[^%\n']+\'					{
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
+					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					update_token_list
 					}
 
@@ -361,9 +442,14 @@ create
 .				{
 					-- Error (considered as text)
 				if not in_comments then
-					create {EDITOR_TOKEN_TEXT} curr_token.make(text, tab_size_cell)
+					if not in_verbatim_string then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					end
+
 				else
-					create {EDITOR_TOKEN_COMMENT} curr_token.make(text, tab_size_cell)
+					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 				end
 				update_token_list
 				}

@@ -1,7 +1,7 @@
 indexing	
 	description: "Eiffel Vision check menu item."
 	status: "See notice at end of class"
-	keywords: "menu, item, dropdown, popup, check, select"
+	keywords: "menu, item, check, select, deselect, uncheck"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +9,7 @@ class
 	EV_CHECK_MENU_ITEM
 
 inherit
-	EV_MENU_ITEM
+	EV_SELECT_MENU_ITEM
 		redefine
 			implementation,
 			create_implementation
@@ -18,26 +18,8 @@ inherit
 create
 	default_create,
 	make_with_text
-	
-feature -- Status report
-
-	is_selected: BOOLEAN is
-			-- Is this menu item checked?
-		do
-			Result := implementation.is_selected
-		ensure
-			bridge_ok: Result = implementation.is_selected
-		end
 
 feature -- Status setting
-
-	enable_select is
-			-- Select this menu item.
-		do
-			implementation.enable_select
-		ensure
-			is_selected: is_selected
-		end
 
 	disable_select is
 			-- Deselect this menu item.
@@ -88,6 +70,10 @@ end -- class EV_CHECK_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/02/24 20:30:27  brendel
+--| Removed features `is_selected' and `enable_select', since they are now
+--| defined in EV_SELECT_MENU_ITEM.
+--|
 --| Revision 1.14  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

@@ -1,6 +1,14 @@
 indexing	
 	description:
 		"Item for use in EV_MENU."
+	note:
+		"Single ampersands in text are not shown in the actual%N%
+		%widget. If you need an ampersand in your text,%N%
+		%use && instead. The character following the & may%N%
+		%be a shortcut to this widget (combined with Alt)%N%
+		%&File -> File (Alt+F = shortcut)%N%
+		%Fish && Chips -> Fish & Chips (no shortcut).%N%
+		%N.B.: Not implemented on Unix platform."
 	status: "See notice at end of class"
 	keywords: "menu, item, dropdown, popup"
 	date: "$Date$"
@@ -49,8 +57,7 @@ feature -- Status setting
 
 feature -- Event handling
 
-	press_actions: EV_NOTIFY_ACTION_SEQUENCE
-		--| FIXME change to select_actions
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when selected.
 
 feature {EV_ANY_I} -- Implementation
@@ -70,9 +77,21 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_action_sequences'.
 		do
 			Precursor
-			create press_actions
+			create select_actions
 		end
 
+feature -- Obsolete
+
+	press_actions: EV_NOTIFY_ACTION_SEQUENCE is
+		obsolete
+			"use select_actions"
+		do
+			Result := select_actions
+		end
+
+invariant
+	select_actions_not_void: select_actions /= Void
+ 
 end -- class EV_MENU_ITEM
 
 --!-----------------------------------------------------------------------------
@@ -96,6 +115,10 @@ end -- class EV_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/27 18:02:48  brendel
+--| Added note about ampersands in `text'.
+--| Replaced press_actions with select_actions.
+--|
 --| Revision 1.34  2000/03/23 01:40:33  oconnor
 --| comments, formatting
 --|

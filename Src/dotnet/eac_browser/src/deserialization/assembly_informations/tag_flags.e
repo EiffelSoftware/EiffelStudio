@@ -50,5 +50,6 @@ feature -- Access
 	file_str: STRING is "file"
 	path_str: STRING is "path"
 	type_str: STRING is "type"
-	
+	lang_str: STRING is "langword"
+
 end -- class TAG_FLAGS

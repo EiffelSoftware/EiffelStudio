@@ -62,7 +62,7 @@ feature -- Properties
 
 	address: STRING;
 			-- Address of object
-			--| Because the socket is already busy we can not ask the 
+			--| Because the socket is already busy we cannot ask the 
 			--| application for the hector address during the object
 			--| inspection. This should be done latter with `set_hector_addr'.)
 

@@ -66,6 +66,14 @@ feature -- Access
 				create Result.make_with_8_bit_rgb (col.red, col.green, col.blue)
 			else
 				Result := stored_color
+				if Result = Void then
+						--| FIXME, this is always returned as black.
+						--| There appears to be no solution to this in the API.
+						--| It is due to the fact that `Current' will return only the
+						--| initially selected color which in this case is black.
+					create col.make_by_color (cwel_choose_color_get_rgbresult (item))
+					create Result.make_with_8_bit_rgb (col.red, col.green, col.blue)
+				end
 			end
 		end
 

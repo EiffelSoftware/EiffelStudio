@@ -537,6 +537,8 @@ feature {NONE} -- Initialization
 					l_proc.set_arguments (l_feat_arg)
 				end
 
+				l_feat.set_is_infix (l_member.is_infix)
+				l_feat.set_is_prefix (l_member.is_prefix)
 				l_feat.set_is_frozen (l_member.is_frozen)
 				l_feat.set_feature_name (l_member.eiffel_name)
 				l_feat.set_feature_id (feature_id_counter.next)

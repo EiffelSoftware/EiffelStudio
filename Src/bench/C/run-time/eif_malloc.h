@@ -89,7 +89,12 @@ extern "C" {
 #else
 #define GS_ZONE_SZ_DEFAULT	300*1024	/* Size of a scavenge zone (300 K) */
 #endif
-#define GS_FLOATMARK (eif_scavenge_size * .40)	/* Leave that much free */
+#define GS_FLOATMARK (eif_scavenge_size >> 2 + \
+					  eif_scavenge_size >> 3 + \
+					  eif_scavenge_size >> 5)	/* Leave that much free, this is
+												 * equal to x * 0.40625
+												 * We are doing this to improve the 
+												 * preformance of the computation */
 #define GS_WATERMARK (eif_scavenge_size - 1024)	/* Collect to be run after this */
 
 /*

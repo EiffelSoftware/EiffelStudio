@@ -970,11 +970,13 @@ feature -- Function Evaluation
 				--| Get related tokens
 			l_once_info_tokens := Il_debug_info_recorder.once_feature_tokens_for_feat_and_class_type (a_feat.associated_feature_i, a_adapted_class_type)
 			l_done_token := l_once_info_tokens.integer_item (1)
-			l_result_token := l_once_info_tokens.integer_item (2)	
+			l_result_token := l_once_info_tokens.integer_item (2)
 			
-
 				--| Check if already called (_done)
-			if l_done_token /= 0 then
+			if 
+				l_icd_frame /= Void and then 
+				l_done_token /= 0 
+			then
 				l_icd_debug_value := a_icd_class.get_static_field_value (l_done_token, l_icd_frame)
 				if l_icd_debug_value /= Void then
 					l_icd_debug_value := Edv_formatter.prepared_debug_value (l_icd_debug_value)
@@ -990,8 +992,9 @@ feature -- Function Evaluation
 			end
 		end
 
+feature -- GC related
+
 --| FIXME jfiat [2004/03/19] : not yet ready, to be continued
---feature -- GC related
 --
 --	keep_alive (addr: STRING) is
 --		local

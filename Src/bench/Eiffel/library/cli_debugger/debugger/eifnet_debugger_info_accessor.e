@@ -100,13 +100,6 @@ feature -- Access
 			Result := Eifnet_debugger_info.icd_thread
 		end
 
-feature {NONE} -- Change by ref
-
-	set_icor_debug_by_ref (p: POINTER) is
-		do
-			Eifnet_debugger_info.set_last_icd_process (p)
-		end
-
 feature {NONE} -- Change by pointer
 
 	set_last_icor_debug_by_pointer (p: POINTER) is
@@ -176,13 +169,6 @@ feature {NONE} -- reset
 			end
 		end
 
-	reset_last_breakpoint_by_pointer (p: POINTER) is
-		do
-			if Eifnet_debugger_info.last_p_icd_breakpoint.is_equal (p) then
-				set_last_breakpoint_by_pointer (Default_pointer)
-			end
-		end
-
 feature {EIFNET_EXPORTER} -- Stepping Access
 
 	set_last_control_mode_is_continue is
@@ -197,7 +183,6 @@ feature {EIFNET_EXPORTER} -- Stepping Access
 		do
 			Eifnet_debugger_info.set_last_control_mode (Cst_control_kill)
 		end
-
 	set_last_control_mode_is_next is
 		do
 			Eifnet_debugger_info.set_last_control_mode (Cst_control_step_next)

@@ -226,6 +226,8 @@ extern void idump();
 #define BC_RESERVE			(char) 130
 #define BC_POP				(char) 131
 
+#define BC_REF_TO_PTR		(char) 132
+
 #ifdef CONCURRENT_EIFFEL
 /* Instructions for Concurrent Eiffel */
 #define BC_SEP_SET			(char) 150

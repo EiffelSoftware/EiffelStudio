@@ -24,6 +24,11 @@ inherit
 		export
 			{NONE} assembly_info_make, set_culture, set_version, set_public_key_token
 		end
+		
+	SHARED_IL_EMITTER
+		export
+			{NONE} all
+		end
 
 create
 	make_from_ast,
@@ -39,6 +44,7 @@ feature {NONE} -- Initialization
 		local
 			l_assembly_location: PATH_NAME
 			l_emitter: IL_EMITTER
+			l_vd61: VD61
 		do
 				-- Initialize assembly info.
 			cluster_name := a.cluster_name
@@ -47,9 +53,13 @@ feature {NONE} -- Initialization
 				set_version (a.version)
 				set_culture (a.culture)
 				set_public_key_token (a.public_key_token)
-				l_emitter := new_il_emitter
+				l_emitter := il_emitter
 				if l_emitter /= Void then
 					consumed_folder_name := l_emitter.relative_folder_name (assembly_name, version, culture, public_key_token)
+					if consumed_folder_name = Void then
+						create l_vd61.make (Current)
+						Error_handler.insert_error (l_vd61)
+					end
 				end
 			else
 				is_local := True
@@ -322,7 +332,7 @@ feature -- Initialization
 			l_dir: DIRECTORY
 			l_names: STRING
 		do
-			l_emitter := new_il_emitter
+			l_emitter := il_emitter
 			if l_emitter /= Void then			
 					-- And call emitter to generate XML file if needed.
 				create l_dir.make (Local_assembly_path)
@@ -356,8 +366,8 @@ feature {NONE} -- Implementation
 		local
 			l_emitter: IL_EMITTER
 		do
-				l_emitter := new_il_emitter
-				if l_emitter /= Void then
+			l_emitter := il_emitter
+			if l_emitter /= Void then
 				l_emitter.consume_assembly (assembly_name, version, culture, public_key_token)
 			end
 		end
@@ -381,7 +391,7 @@ feature {NONE} -- Implementation
 				create l_vd63.make (an_assembly, environ.interpreted_string (an_assembly))
 				Error_handler.insert_error (l_vd63)
 			else
-				l_emitter := new_il_emitter
+				l_emitter := il_emitter
 				if l_emitter /= Void then
 					l_emitter.retrieve_assembly_info (environ.interpreted_string (an_assembly))
 					if not l_emitter.assembly_found then
@@ -405,59 +415,6 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
-		end
-	
-	assembly_cache_folder: DIRECTORY_NAME is
-			-- Absolute path to path of EAC
-		once
-			if system.metadata_cache_path /= Void and then not system.metadata_cache_path.is_empty then
-				create Result.make_from_string (environ.interpreted_string (system.metadata_cache_path))
-			else
-				create Result.make_from_string (environ.interpreted_string ((create {EIFFEL_ENV}).assemblies_path))
-			end
-		ensure
-			result_not_void: Result /= Void
-			result_not_empty: not Result.is_empty
-		end
-
-	versioned_assembly_cache_folder: DIRECTORY_NAME is
-			-- Absolute path to versioned path of EAC
-		once
-			Result := assembly_cache_folder.twin
-			Result.extend (system.clr_runtime_version)
-		end
-		
-	new_il_emitter: IL_EMITTER is
-			-- Creates a new IL_EMITTER
-		local
-			l_dir: DIRECTORY
-			l_vd64: VD64
-			l_vd67: VD67
-		once
-			create l_dir.make (assembly_cache_folder)
-			if l_dir.exists then
-				create Result.make (versioned_assembly_cache_folder, system.clr_runtime_version)
-				if not Result.exists then
-						-- IL_EMITTER component could not be loaded.
-					create l_vd64
-					Error_handler.insert_error (l_vd64)
-					Result := Void
-				else
-					if not Result.is_initialized then
-							-- Path to cache is not valid
-						create l_vd67.make (assembly_cache_folder)
-						Error_handler.insert_error (l_vd67)
-						Result := Void
-					end
-				end
-			else
-					-- Path to cache is not valid
-				create l_vd67.make (assembly_cache_folder)
-				Error_handler.insert_error (l_vd67)
-				Result := Void					
-			end
-		ensure
-			valid_result: Result /= Void implies Result.exists and then Result.is_initialized
 		end
 
 feature {NONE} -- Constants

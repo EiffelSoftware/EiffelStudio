@@ -16,20 +16,53 @@ inherit
 			interface
 		end
 
-	EV_RADIO_PEER_IMP
+	EV_RADIO [EV_TOOL_BAR_BUTTON]
 		redefine
 			interface
 		end
 
 	EV_TOOL_BAR_SELECT_BUTTON_IMP
 		redefine
+			make,
 			interface,
 			connect_signals
 		end
+
 create
 	make
 
+feature {NONE} -- Initialization
+
+	make (an_interface: like interface) is
+			-- Make a radio button with a default of selected.
+		do
+			Precursor (an_interface)
+			enable_select
+		end
+
+feature -- Status report
+
+	peers: LINKED_LIST [like interface] is
+			-- List of all radio items in the group `Current' is in.
+		do
+			create Result.make
+			Result.extend (interface)
+			--| FIXME IEK To be implemented.
+		end
+
+	selected_peer: like interface is
+			-- Radio item that is currently selected.
+		do
+			Result := create {EV_TOOL_BAR_RADIO_BUTTON}
+		end
+
 feature {NONE} -- Implementation
+
+	disable_select is
+			-- Unselect the radio button.
+		do
+			C.gtk_toggle_button_set_active (c_object, False)
+		end
 
 	connect_signals is
 			-- Connect on_activate to toggled signal
@@ -40,38 +73,31 @@ feature {NONE} -- Implementation
 	on_activate is
 			-- The button has been activated by the user (pushed).
 		do		
-			--if group /= Void then
-			--	if  is_selected then
-			--			-- The radio button has been depressed.
-			--		if not group.just_selected (Current) then
-			--			interface.press_actions.call ([])
-			--		end
-			--		group.set_last_selected(Current)
-			--		group.set_selection_at_no_event (Current)
-			--	else
-			--			-- The radio button has been deselected.
-			--		if group.just_selected (Current) then
-			--			-- The button has been reselected
-			--			set_selected (True)
-			--			-- This will make GTK recall the on_activate callback									
-			--		end
-			--	end
-			--end
+			if group /= Void then
+				if  is_selected then
+						-- The radio button has been depressed.
+					if not group.just_selected (Current) then
+						interface.press_actions.call ([])
+					end
+					group.set_last_selected(Current)
+					group.set_selection_at_no_event (Current)
+				else
+						-- The radio button has been deselected.
+					if group.just_selected (Current) then
+						-- The button has been reselected
+						enable_select
+						-- This will make GTK recall the on_activate callback									
+					end
+				end
+			end
 		end
 
-	--on_unselect (an_item: EV_RADIO [EV_TOOL_BAR_RADIO_BUTTON]) is
+	on_unselect (an_item: EV_RADIO [EV_TOOL_BAR_RADIO_BUTTON]) is
 			-- Button's selected state set to flag.
-	--	do
+		do
 			--if is_selected and not group.just_selected (Current) then
 			--	set_selected(False)
 			--end	
-	--	end
-
-feature {EV_ANY_I} -- Implementation
-
-	gslist: POINTER is
-		do
-			Result := C.gtk_radio_button_group (c_object)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -101,6 +127,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/10 17:38:29  king
+--| Made compilable
+--|
 --| Revision 1.13  2000/04/07 23:19:52  brendel
 --| Commented function that takes EV_RADIO (obsolete) as argument.
 --|

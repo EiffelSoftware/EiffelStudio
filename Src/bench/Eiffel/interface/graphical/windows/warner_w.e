@@ -13,7 +13,10 @@ inherit
 		redefine
 			display, clear_window
 		end;
-	COMMAND_W;
+	COMMAND_W
+		redefine
+			execute
+		end;
 	NAMER;
 	WARNING_D
 		rename
@@ -176,6 +179,11 @@ feature {NONE} -- Properties
 			-- Window to which the warning will apply
 
 feature {NONE} -- Implementation
+
+	execute (argument: ANY) is
+		do
+			work (argument)
+		end;
 
 	work (argument: ANY) is
 		do

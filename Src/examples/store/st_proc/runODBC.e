@@ -80,38 +80,39 @@ feature {NONE}
 
 			!! proc.make (Proc_name)
 			proc.load
-
+			proc.set_arguments (<<"author">>,
+						<<author>>)
 			if proc.exists then
 				io.putstring ("Stored procedure text: ")
 				io.putstring (proc.text)
 				io.new_line
 			else
-				proc.set_arguments (<<"author">>,
-							<<author>>)
 				proc.store (Select_text)
-				io.putstring ("Procedure created.%N")
 				proc.load
 			end
+			if proc.exists then
+				from
+					io.putstring ("Procedure created.%N")
+					io.putstring ("Author? ('exit' to terminate):")
+					io.readline
+					base_selection.set_action (Current)
+				until
+					io.laststring.is_equal ("exit")
+				loop
+					author := clone (io.laststring)
+					io.putstring ("Seeking for books whose author's name match: ")
+					io.putstring (author)
+					io.new_line
 
-			from
-				io.putstring ("Author? ('exit' to terminate):")
-				io.readline
-				base_selection.set_action (Current)
-			until
-				io.laststring.is_equal ("exit")
-			loop
-				author := clone (io.laststring)
-				io.putstring ("Seeking for books whose author's name match: ")
-				io.putstring (author)
-				io.new_line
-
-				base_selection.set_map_name (author, "author")
-				proc.execute (base_selection)
-				base_selection.load_result
-				base_selection.unset_map_name ("author")
-				io.new_line
- 				io.putstring ("Author? ('exit' to terminate):")
-				io.readline
+				--	base_selection.set_map_name (author, "author")
+					base_selection.set_map_name (author, "?")
+					proc.execute (base_selection)
+					base_selection.load_result
+					base_selection.unset_map_name ("?")
+					io.new_line
+ 					io.putstring ("Author? ('exit' to terminate):")
+					io.readline
+				end
 			end
 		end
 	
@@ -126,7 +127,7 @@ feature {NONE}
 feature {NONE}
 
 	Select_text: STRING is
-		" select * from db_book where author = :author "
+		" select * from DB_BOOK where author = :author "
 
 	Table_name: STRING is
 		"DB_BOOK"

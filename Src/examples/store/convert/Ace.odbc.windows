@@ -25,7 +25,9 @@ cluster
 
 -- EiffelTime
 	
-	time:				"$EIFFEL4/library/time/time";
+	time:				"$EIFFEL4/library/time";
+	time_format:		"$EIFFEL4/library/time/format";
+	time_english:		"$EIFFEL4/library/time/format/english";
 	
 -- EiffelLex
 

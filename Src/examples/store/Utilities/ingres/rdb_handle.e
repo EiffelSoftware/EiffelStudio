@@ -1,6 +1,6 @@
 class RDB_HANDLE inherit
 
-	INGRES_APPL
+	DATABASE_APPL [INGRES]
 
 feature
 

@@ -1,6 +1,6 @@
 class RDB_HANDLE inherit
 
-	SYBASE_APPL
+	DATABASE_APPL [SYBASE]
 
 feature
 

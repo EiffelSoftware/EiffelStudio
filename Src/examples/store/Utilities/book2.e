@@ -19,7 +19,7 @@ feature
 
 	quantity: INTEGER
 
-	price: REAL
+	price: DOUBLE
 
 	year: DATE_TIME
 
@@ -64,7 +64,7 @@ feature
 		end
 
 
-	set_price (p: REAL) is
+	set_price (p: DOUBLE) is
             		-- Set `price' with `p'
 	        do
 			price := p
@@ -74,6 +74,22 @@ feature
 			-- set `double_value' with `d'
 		do
 			double_value := d
+		end
+
+	set_from_array (v:  ARRAY [ANY]) is
+		local
+			q: INTEGER_REF
+			p, d: DOUBLE_REF
+		do
+			title ?= v.item (1)
+			author ?= v.item (2)
+			year ?= v.item (3)
+			q ?= v.item (4)
+			p ?= v.item (5)
+			d ?= v.item (6)
+			quantity := q.item
+			price := p.item
+			double_value := d.item
 		end
 
 	make is

@@ -40,20 +40,17 @@ cluster
 	estore_converter:	"$EIFFEL4/library/store/converter";
 
 -- EiffelTime
-	
+
 	time:				"$EIFFEL4/library/time";
-	
--- EiffelLex
-
-	lexical:			"$EIFFEL4/library/lex";
-
-
+	time_format:		"$EIFFEL4/library/time/format";
+	time_english:		"$EIFFEL4/library/time/format/english";		
+		
 external
 
 	object:
 		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/support.lib",
 		"$(EIFFEL4)/library/time/spec/$(COMPILER)/lib/datetime.lib",
 		"$(EIFFEL4)/library/store/spec/$(COMPILER)/lib/sybase_store.lib",
-		"libsybdb.lib" -- Specify the correct path
+		"$(SYBASE)/lib/libsybdb.lib"
 
 end

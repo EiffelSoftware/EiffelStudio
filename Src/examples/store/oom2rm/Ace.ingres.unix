@@ -1,34 +1,57 @@
-system parser
+system sample
 
 root
 	
-	parser (root_cluster): "make"
+	sample (root_cluster): "make"
 
 default
 
 	assertion (all);
-	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	multithreaded (yes)
 
 cluster
 
-	root_cluster:		"$EIFFEL4/examples/store/convert";
+	root_cluster:		"$EIFFEL4/examples/store/oom2rm";
 	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
 	ingres_handle:		"$EIFFEL4/examples/store/Utilities/ingres";
+
+-- EiffelBase
+	kernel: 		"$EIFFEL4/library/base/kernel";
+	support:		"$EIFFEL4/library/base/support";
+	access: 		"$EIFFEL4/library/base/structures/access";
+	cursors:		"$EIFFEL4/library/base/structures/cursors";
+	cursor_tree:	"$EIFFEL4/library/base/structures/cursor_tree";
+	dispenser:		"$EIFFEL4/library/base/structures/dispenser";
+	iteration:		"$EIFFEL4/library/base/structures/iteration";
+	list:			"$EIFFEL4/library/base/structures/list";
+	set:			"$EIFFEL4/library/base/structures/set";
+	sort:			"$EIFFEL4/library/base/structures/sort";
+	storage:		"$EIFFEL4/library/base/structures/storage";
+	table:			"$EIFFEL4/library/base/structures/table";
+	traversing:		"$EIFFEL4/library/base/structures/traversing";
+	tree:			"$EIFFEL4/library/base/structures/tree";
 
 -- EiffelStore
 
 	estore_support:		"$EIFFEL4/library/store/support";
 	estore_interface:	"$EIFFEL4/library/store/interface";
-	estore_date:		"$EIFFEL4/library/store/date_and_time";
-	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
 	estore_ingres:		"$EIFFEL4/library/store/dbms/rdbms/ingres";
+	estore_db_support:	"$EIFFEL4/library/store/dbms/support";
+	estore_converter:	"$EIFFEL4/library/store/converter";
+
+-- EiffelTime
+	
+	time:				"$EIFFEL4/library/time";
+	time_format: 		"$EIFFEL4/library/time/format";
+	time_english:		"$EIFFEL4/library/time/format/english";
 
 external
 
 	object: "-L$(EIFFEL4)/library/store/spec/$(PLATFORM)/lib";
-		"-lsys_time";
 		"-lsupport";
 		"-lingres_store";
+		"-L$(EIFFEL4)/library/time/spec/$(PLATFORM)/lib";
+		"-ldatetime";
 		"-L$(II_SYSTEM)/ingres/lib"; 
 		"-lingres"
 

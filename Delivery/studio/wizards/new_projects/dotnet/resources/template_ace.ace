@@ -12,8 +12,8 @@ default
 	msil_generation (yes)
 	msil_generation_type ("<FL_APPLICATION_TYPE>")
 	console_application (<FL_CONSOLE_APPLICATION>)
-	msil_clr_version ("<FL_CLR_VERSION>")
 	line_generation (yes)
+	<FL_CLR_VERSION>	
 
 cluster
 		-- The application

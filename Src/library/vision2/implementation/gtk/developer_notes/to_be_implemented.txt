@@ -69,4 +69,12 @@ DATE: 	19990908
 WHO:	king
 set_first_area_shrinkable
 set_second_area_shrinkable
+==========================================================================
+CLASS: ev_font_imp
+DATE:	19990909
+WHO:	king
+set_name
+set_width
+set_height
+set_weight
 

@@ -94,7 +94,7 @@ feature {NONE} -- implementation
 			!! a_dc.make (message_static)
 			a_dc.get
 			!! local_color.make_system (Color_window)
-			a_dc.set_bk_color (local_color)
+			a_dc.set_background_color (local_color)
 			a_dc.release
 			set_message (message)
 		end

@@ -65,6 +65,7 @@ feature {NONE} -- Initialization
 				pixmap_name.is_equal("Information") or
 				pixmap_name.is_equal("Error") or
 				pixmap_name.is_equal("Question") or
+				pixmap_name.is_equal("Vision2") or
 				pixmap_name.is_equal("Warning")
 		do
 			default_create
@@ -216,6 +217,9 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/05/03 00:25:28  pichery
+--| Updated valid_default_pixmap.
+--|
 --| Revision 1.31  2000/04/28 16:33:04  pichery
 --| Added feature `set_with_default' To load a default
 --| pixmap.

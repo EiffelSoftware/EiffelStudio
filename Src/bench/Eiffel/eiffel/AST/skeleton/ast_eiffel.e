@@ -46,6 +46,16 @@ feature -- Type check, byte code and dead code removal
 			-- Do nothing
 		end
 
+feature -- Formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconsitute text according to context.
+		require
+			valid_ctxt: ctxt /= Void
+		do
+			simple_format (ctxt)
+		end
+
 feature -- Debugger
  
 	find_breakable is
@@ -83,17 +93,7 @@ feature -- Comparison
 					o1.is_equivalent (o2)
 			end
 		end
-
-feature -- Formatter
-
-	format (ctxt: FORMAT_CONTEXT) is
-			-- Reconsitute text according to context.
-		require
-			valid_ctxt: ctxt /= Void
-		do
-			simple_format (ctxt)
-		end
-		
+	
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is

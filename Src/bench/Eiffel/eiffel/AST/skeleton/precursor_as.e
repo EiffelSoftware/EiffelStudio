@@ -93,9 +93,8 @@ feature -- Type check, byte code and dead code removal
 			vupr3: VUPR3
 			pre_table: LINKED_LIST [PAIR[CL_TYPE_A, INTEGER]]
 			feature_i: FEATURE_I
-			e_feature: E_FEATURE
 			parent_type: CL_TYPE_A
-			parent_c: CLASS_C
+			parent_class: CLASS_C
 			feat_ast: FEATURE_AS
 		do
 				-- Check that we're in the body of a routine (vupr1).
@@ -162,9 +161,13 @@ feature -- Type check, byte code and dead code removal
 				-- Table has exactly one entry.
 			pre_table.start
 			parent_type := pre_table.item.first
-			parent_c := parent_type.associated_class
-			e_feature := parent_c.feature_with_rout_id (pre_table.item.second)
-			feature_i := e_feature.associated_feature_i
+			parent_class := parent_type.associated_class
+			feature_i := parent_class.feature_table.feature_of_rout_id (pre_table.item.second)
+			
+				-- Update signature of parent `feature_i' in context of its instantiation
+				-- in current class.
+			feature_i := feature_i.duplicate
+			feature_i.instantiate (parent_type)
 
 				-- Update type stack.
 			context.replace (access_type (parent_type, feature_i))

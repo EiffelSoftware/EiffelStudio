@@ -42,7 +42,7 @@ feature -- Basic operations
 	change_dialog: EV_DIALOG is
 			-- Dialog to change the value.
 		do
-			if internal_change_dialog = void then
+			if internal_change_dialog = Void then
 				create internal_change_dialog
 				internal_change_dialog.disable_user_resize
 				if change_item_widget = Void then
@@ -56,13 +56,13 @@ feature -- Basic operations
 	destroy is
 			-- Destroy all graphical objects.
 		do
-			if internal_change_dialog /= void then
+			if internal_change_dialog /= Void then
 				internal_change_dialog.wipe_out
 			end
 			if change_item_widget /= Void then
 				change_item_widget.destroy
 			end
-			if internal_change_dialog /= void then
+			if internal_change_dialog /= Void then
 				internal_change_dialog.destroy
 			end
 		end

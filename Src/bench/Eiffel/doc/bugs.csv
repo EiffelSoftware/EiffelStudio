@@ -1,0 +1,79 @@
+,,,EiffelStudio bugs,,,,,,,
+
+
+Category,Criticality (1-5),Frequency (1-5),Description,Additional info,Submitter,Fixer,Est. time (days),Status,"ID (FMT, EDT, INT, DBG, CMP)",Date of submission
+Interface,,,,,,,,,,
+,5,1,Opening 29 development windows at the same time kills EiffelStudio,,Julian,,,,INT0001,11/16/2001
+,2,2,"Create an inheritance cycle, recompile, display an invalid flat in the editor, pick a class in the error, drop in the editor => weird things happen",,Julian,,,,INT0002,11/16/2001
+,3,2,The new feature wizard doesn't work during debug sessions,,Xavier,,,,INT0003,11/16/2001
+,3,1,Clean up the code of EB_DEVELOPMENT_WINDOW::set_stone,,Xavier,,,,INT0004,11/16/2001
+
+
+
+
+
+
+
+
+
+Formats,,,,,,,,,,
+,2,2,"Some complex calling structures are not pickable in formats (such as a.b(create{TOTO}.make(titi.tata.tutu)) or (""This"").works)",,Xavier,,,,FMT0001,11/16/2001
+,2,2,The callers format is messed up by Precursors,,Xavier,,,,FMT0002,11/16/2001
+,2,1,"When a feature makes a call in a precondition, it is displayed twice in the callers",,Xavier,,,,FMT0003,11/16/2001
+,3,2,Really hide the implementation of precompiled classes when it is required (including descendants),,Xavier,,,,FMT0004,11/16/2001
+,2,3,"When searching for the comments of an attribute, the search goes one line too far",,Xavier,,,,FMT0005,11/16/2001
+,3,2,"When a feature was undefined, the written-in class still is the class of the parent feature",,Xavier,,,,FMT0006,11/16/2001
+
+
+
+
+
+Editor,,,,,,,,,,
+,3,1,The editor doesn't support more than 32000 lines of text (scrollbars jump to the top),,Julian,,,,EDT0001,11/16/2001
+,4,1,"Writing 256 times ""io.putstring (""A message"");"" on the same line messes up the editor",,Julian,,,,EDT0002,11/16/2001
+,5,3,"When dropping a dragged selection at the start of a line, EiffelStudio is frozen",,Xavier,,,,EDT0003,11/16/2001
+
+
+
+
+
+
+
+
+
+
+
+Debugger,,,,,,,,,,
+,3,2,"There are sometimes 2 breakpoints at the same line, which causes strange behaviors",,Xavier,,,,DBG0001,11/16/2001
+,3,2,Implement a deferred feature without preconditions in a descendant and add a precondition => breakpoints are messed up,,Xavier,,,,DBG0002,11/16/2001
+,5,2,t: EV_TREE_ITEM; n: EV_TREE_NODE; create t; n?=t.item => crash at run-time,,Xavier,,,,DBG0003,11/16/2001
+,5,2,"Freeze, run, cancel, end freeze, run => EiffelStudio is frozen",,Julian,,,,DBG0004,11/16/2001
+
+
+
+
+
+
+Compiler,,,,,,,,,,
+,2,2,"When a compilation is interrupted (or fails) during degree 6, the command line arguments are not used if the project is run.",,Xavier,,,,CMP0001,11/16/2001
+,2,2,"After an error ""local has same name as feature"", the returned line index is sometimes wrong (it is if the error message includes ""character position"")",,Julian,,,,CMP0002,11/16/2001
+
+
+
+
+
+
+
+
+Metrics,,,,,,,,,,
+,1,4,"When importing metrics, the multi-column list is shrunk",,Xavier,,,,MET0001,11/16/2001
+
+
+
+
+
+
+
+Wizards,,,,,,,,,,
+,5,3,"Using a clickable editor in the profiler is very bad: Ctrl F crashes, pick and drop makes the profiler disappear, no way to sort the lines",,Julian,,,,WIZ0001,11/16/2001
+,3,3,"In the documentation generation, make sure there are no unwanted """,,Xavier,,,,WIZ0002,11/16/2001

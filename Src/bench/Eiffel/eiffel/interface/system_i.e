@@ -30,8 +30,6 @@ inherit
 
 	SHARED_TIME
 	SHARED_CECIL
-	SHARED_ROUT_ID
-	SHARED_BODY_ID
 	SHARED_USED_TABLE
 
 	SHARED_BYTE_CONTEXT
@@ -267,8 +265,6 @@ feature -- Properties
 	cecil_file: INDENT_FILE
 
 	skeleton_file: INDENT_FILE
-
-	conformance_file: INDENT_FILE
 
 	array_make_name: STRING
 			-- Name of the C routine corresponding to the
@@ -2004,6 +2000,7 @@ end
 			t: AUXILIARY_FILES
 			degree_message: STRING
 		do
+			!! t.make (Current, byte_context)
 			degree_message := "Generation of auxiliary files"
 			deg_output := Degree_output
 
@@ -2014,12 +2011,11 @@ end
 			generate_cecil
 
 			deg_output.display_degree_output (degree_message, 9, 12)
-			generate_conformance_table
+			t.generate_conformance_table
 			is_conformance_table_melted := False
 			melted_conformance_table := Void
 
 			deg_output.display_degree_output (degree_message, 8, 12)
-			!! t.make (Current, byte_context)
 			t.generate_plug
 			--generate_plug
 
@@ -2418,6 +2414,7 @@ feature -- Generation
 			t: AUXILIARY_FILES
 			degree_message: STRING
 		do
+			!! t.make (Current, byte_context)
 			degree_message := "Generation of auxiliary files"
 			deg_output := Degree_output
 
@@ -2443,7 +2440,7 @@ feature -- Generation
 
 				-- Generation of the conformance table
 			deg_output.display_degree_output (degree_message, 5, 11)
-			generate_conformance_table
+			t.generate_conformance_table
 
 				-- Routine table generation
 			deg_output.display_degree_output (degree_message, 4, 11)
@@ -2454,7 +2451,6 @@ feature -- Generation
 				-- table for `dle_max_min_used' to be initialized when
 				-- using DLE stuff.
 			deg_output.display_degree_output (degree_message, 3, 11)
-			!! t.make (Current, byte_context)
 			t.generate_plug
 			--generate_plug
 
@@ -2672,6 +2668,7 @@ end
 				-- cltype_array is indexed by `id' not by `type_id'
 				-- as `class_types'
 			cltype_array: ARRAY [CLASS_TYPE]
+	--		skeleton_file: INDENT_FILE
 		do
 			nb := Type_id_counter.value
 			final_mode := byte_context.final_mode
@@ -2766,7 +2763,7 @@ end
 				cl_type := class_types.item (i)
 					-- Classes could be removed
 if cl_type /= Void then
-				cl_type.generate_skeleton1
+				cl_type.generate_skeleton1 (skeleton_file)
 				if not final_mode then
 						-- Doesn't use `cl_type' as first argument:
 						-- LINKED_LIST [INTEGER] introduced in two precompiled projects
@@ -2791,7 +2788,7 @@ end
 			loop
 				cl_type := class_types.item (i)
 if cl_type /= Void then
-				cl_type.generate_skeleton2
+				cl_type.generate_skeleton2 (skeleton_file)
 else
 		-- FIXME
 	if final_mode then
@@ -3030,54 +3027,6 @@ end
 			end
 		end
 
-	generate_conformance_table is
-			-- Generates conformance tables.
-		local
-			i, nb: INTEGER
-			cl_type: CLASS_TYPE
-		do
-			Conformance_file := conformance_f (byte_context.final_mode)
-			Conformance_file.open_write
-
-			Conformance_file.putstring ("#include %"eif_project.h%"%N%
-										%#include %"eif_struct.h%"%N%N")
-
-			from
-				i := 1
-				nb := Type_id_counter.value
-			until
-				i > nb
-			loop
-				cl_type := class_types.item (i)
-if cl_type /= Void then
-		-- FIXME
-				cl_type.generate_conformance_table
-end
-				i := i + 1
-			end
-
-			Conformance_file.putstring ("struct conform *egc_fco_table[] = {%N")
-
-			from
-				i := 1
-			until
-				i > nb
-			loop
-				cl_type := class_types.item (i)
-if cl_type /= Void then
-				Conformance_file.putstring ("&conf")
-				Conformance_file.putint (cl_type.type_id)
-else
-		-- FIXME
-	Conformance_file.putstring ("(struct conform *)0")
-end
-				Conformance_file.putstring (",%N")
-				i := i + 1
-			end
-			Conformance_file.putstring ("};%N")
-			Conformance_file.close
-			Conformance_file := Void
-		end
 
 	generate_initialization_table is
 			-- Generate table of initialization routines
@@ -3089,7 +3038,7 @@ end
 		do
 			from
 				rout_table := new_special_table
-				rout_table.set_rout_id (Initialization_rout_id)
+				rout_table.set_rout_id (routine_id_counter.initialization_rout_id)
 				i := 1
 				nb := Type_id_counter.value
 			until
@@ -3102,7 +3051,7 @@ if class_type /= Void then
 					!!rout_entry
 					rout_entry.set_type_id (i)
 					rout_entry.set_written_type_id (i)
-					rout_entry.set_body_id (Initialization_body_id)
+					rout_entry.set_body_id (body_id_counter.initialization_body_id)
 					rout_table.extend (rout_entry)
 				end
 end
@@ -3193,7 +3142,7 @@ feature -- Dispose routine
 		do
 			from
 				rout_table := new_special_table
-				rout_table.set_rout_id (Dispose_rout_id)
+				rout_table.set_rout_id (routine_id_counter.dispose_rout_id)
 				i := 1
 				nb := Type_id_counter.value
 			until

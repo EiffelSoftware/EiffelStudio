@@ -6,6 +6,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
+	--| FIXME Known problem about combination viewport/split area:
+	--| When split area is partially visible, the splitter is still
+	--| drawn entirely.
+
 deferred class
 	EV_SPLIT_AREA
 
@@ -552,6 +556,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/19 00:46:07  brendel
+--| Added FIXME.
+--|
 --| Revision 1.30  2000/04/10 19:43:56  brendel
 --| Removed inheritance from FIXED.
 --|

@@ -22,7 +22,7 @@ inherit
 
 creation
 	make,
-	make_with_bitmap,
+	make_from_bitmap,
 	make_by_predefined_id
 
 feature {NONE} -- Initialization
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			bitmap_id_set: bitmap_id = a_bitmap_id
 		end
 
-	make_with_bitmap (a_bitmap: WEL_BITMAP) is
+	make_from_bitmap (a_bitmap: WEL_BITMAP) is
 			-- Create a toolbar bitmap with a common bitmap.
 		require
 			bitmap_not_void: a_bitmap /= Void

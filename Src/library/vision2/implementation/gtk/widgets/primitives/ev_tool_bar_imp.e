@@ -58,6 +58,11 @@ feature -- Basic operations
 		do
 		end
 
+feature -- Implementation
+ 
+ 	ev_children: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
+ 			-- List of the children.
+
 end -- class EV_TOOL_BAR_IMP
 
 --|----------------------------------------------------------------

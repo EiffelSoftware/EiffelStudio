@@ -51,24 +51,18 @@ feature {NONE} -- Execution
 			ctxt: CLASS_TEXT_FORMATTER;
 			filter: TEXT_FILTER
 		do
-			if e_class.lace_class.hide_implementation then
-				output_window.put_string 
-					("Not able to show precompiled text (implementation is hidden)");
-				output_window.new_line;
+			!! ctxt;
+			ctxt.set_one_class_only;
+			ctxt.set_order_same_as_text;
+			ctxt.format (e_class);
+			if filter = Void or else filter_name.is_empty then
+				output_window.put_string (ctxt.text.image);
 			else
-				!! ctxt;
-				ctxt.set_one_class_only;
-				ctxt.set_order_same_as_text;
-				ctxt.format (e_class);
-				if filter = Void or else filter_name.is_empty then
-					output_window.put_string (ctxt.text.image);
-				else
-					!! filter.make (filter_name);
-					filter.process_text (ctxt.text);
-					output_window.put_string (filter.image);
-				end;
-				output_window.new_line;
-			end
+				!! filter.make (filter_name);
+				filter.process_text (ctxt.text);
+				output_window.put_string (filter.image);
+			end;
+			output_window.new_line;
 		end;
 
 	process_uncompiled_class (class_i: CLASS_I) is

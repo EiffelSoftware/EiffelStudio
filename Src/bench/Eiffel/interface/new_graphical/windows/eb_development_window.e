@@ -1754,23 +1754,19 @@ feature -- Stone process
 		do
 			set_default_format
 			e_class := s.e_feature.written_class
-			if e_class.lace_class.hide_implementation then
-				set_stone (s)
-			else
-				create cl_stone.make (e_class)
-				set_stone (cl_stone)
-				editor_tool.text_area.deselect_all
-				pos := s.error_position
-				txt := text
-				if txt.count > pos then
-					if txt.item (pos) = '%N' then	
-						end_pos := txt.index_of ('%N', pos + 1)
-					else
-						end_pos := txt.index_of ('%N', pos)
-					end
-					if pos /= 0 then
-						editor_tool.text_area.highlight_selected (pos, end_pos)
-					end
+			create cl_stone.make (e_class)
+			set_stone (cl_stone)
+			editor_tool.text_area.deselect_all
+			pos := s.error_position
+			txt := text
+			if txt.count > pos then
+				if txt.item (pos) = '%N' then	
+					end_pos := txt.index_of ('%N', pos + 1)
+				else
+					end_pos := txt.index_of ('%N', pos)
+				end
+				if pos /= 0 then
+					editor_tool.text_area.highlight_selected (pos, end_pos)
 				end
 			end
 		end

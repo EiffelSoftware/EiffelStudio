@@ -41,6 +41,11 @@ inherit
 			{NONE} all
 		end
 		
+	GB_SHARED_STATUS_BAR	
+		export
+			{NONE} all
+		end
+		
 create
 	make_with_name
 	
@@ -135,6 +140,13 @@ feature -- Implementation
 			object_stone_not_void: object_stone /= Void
 		do
 			Result := True
+			if Result then
+					-- Only clear the status bar if a drop is permitted.
+					-- Without this line, holding an object above a window selector item that did
+					-- not accept the object and then moving over `Current', did not
+					-- clear the status bar and the old message was displayed even though a drop was now permitted.
+				clear_status_bar
+			end
 		end
 		
 	path: ARRAYED_LIST [STRING] is

@@ -14,17 +14,44 @@ inherit
 			{NONE} all
 		end
 	
-feature 
+feature -- Access
 
-	ascent (a_widget: WIDGET_I): INTEGER is
-			-- Ascent value in pixel of the font loaded for `a_widget'.
+	is_valid: BOOLEAN is
+			-- Is the font valid?
 		require
-			a_widget_exists: not (a_widget = Void);
+			font_specified: is_specified
+		deferred
+		end;
+
+	ascent: INTEGER is
+			-- Ascent value in pixel of the font loaded 
+		require
 			font_specified: is_specified;
-			font_valid_for_a_widget: is_valid (a_widget)
+			valid_font: is_valid 
 		deferred
 		ensure
-			Result >= 0
+			non_negative_result: Result >= 0
+		end;
+
+	descent: INTEGER is
+			-- Descent value in pixel of the font loaded for `a_widget'.
+		require
+			font_specified: is_specified;
+			valid_font: is_valid 
+		deferred
+		ensure
+			non_negative_result: Result >= 0
+		end;
+
+	width_of_string (a_text: STRING): INTEGER is
+			-- Width in pixel of `a_text' in the current font loaded for `a_widget'.
+		require
+			a_text_exists: a_text /= Void;
+			font_specified: is_specified;
+			valid_font: is_valid 
+		deferred
+		ensure
+			non_negative_result: Result >= 0
 		end;
 
 	average_width: INTEGER is
@@ -45,17 +72,6 @@ feature
 		deferred
 		ensure
 			not (Result = Void)
-		end;
-
-	descent (a_widget: WIDGET_I): INTEGER is
-			-- Descent value in pixel of the font loaded for `a_widget'.
-		require
-			a_widget_exists: not (a_widget = Void);
-			font_specified: is_specified;
-			font_valid_for_a_widget: is_valid (a_widget)
-		deferred
-		ensure
-			Result >= 0
 		end;
 
 	family: STRING is
@@ -108,13 +124,6 @@ feature
 		deferred
 		end;
 
-	is_valid (a_widget: WIDGET_I): BOOLEAN is
-			-- Is the font valid in `a_widget''s display ?
-		require
-			font_specified: is_specified
-		deferred
-		end;
-
 	name: STRING is
 			-- Name of the font
 		require
@@ -147,7 +156,7 @@ feature
 	set_name (a_name: STRING) is
 			-- Set `n_ame' to `a_name'.
 		require
-			a_name_exists: not (a_name = Void)
+			a_name_exists: a_name /= Void
 		deferred
 		ensure
 			is_specified implies a_name.is_equal (a_name)
@@ -159,18 +168,6 @@ feature
 			font_specified: is_specified;
 			font_standard: is_standard
 		deferred
-		end;
-
-	string_width (a_widget: WIDGET_I; a_text: STRING): INTEGER is
-			-- Width in pixel of `a_text' in the current font loaded for `a_widget'.
-		require
-			a_widget_exists: not (a_widget = Void);
-			a_text_exists: not (a_text = Void);
-			font_specified: is_specified;
-			font_valid_for_a_widget: is_valid (a_widget)
-		deferred
-		ensure
-			Result >= 0
 		end;
 
 	vertical_resolution: INTEGER is

@@ -4624,7 +4624,7 @@ rt_shared void gfree(register union overhead *zone)
  * following to properly record itself.
  */
 
-rt_public EIF_REFERENCE onceset(void)
+rt_public EIF_REFERENCE * onceset(void)
 {
 	/* Record result of once functions onto the once_set stack, so that the
 	 * run-time may update the address should the result be moved around by
@@ -4640,7 +4640,7 @@ rt_public EIF_REFERENCE onceset(void)
 	if (-1 == epush(&once_set, (EIF_REFERENCE) 0 ))
 		eraise("once function recording", EN_MEM);
 
-	return (EIF_REFERENCE) (once_set.st_top - 1);
+	return once_set.st_top - 1;
 }
 
 rt_public void new_onceset(EIF_REFERENCE address)

@@ -195,22 +195,18 @@ feature -- Basic operation
 		require
 			new_object_not_void: new_object /= Void
 			old_object_not_Void: old_object /= Void
-				-- Not true, as replacing the type means we have a layout item.
-			--new_object_empty: new_object.layout_item.count = 0
-			new_object_not_a_primitive: not is_instance_of (new_object, dynamic_type_from_string (gb_primitive_object_class_name))
-			old_object_not_a_primitive: not is_instance_of (old_object, dynamic_type_from_string (gb_primitive_object_class_name))
+			new_object_is_parent_object_type: is_instance_of (new_object, dynamic_type_from_string (gb_parent_object_class_name))
+			old_object_is_parent_object_type: is_instance_of (old_object, dynamic_type_from_string (gb_parent_object_class_name))
 		local
-			cell_object: GB_CELL_OBJECT
-			container_object: GB_CONTAINER_OBJECT
+			parent_object: GB_PARENT_OBJECT
 			child_object: GB_OBJECT
 			children: ARRAYED_LIST [GB_OBJECT]
 		do
-			cell_object ?= new_object
-			container_object ?= new_object
-			check
-				new_object_is_cell_or_container: cell_object /= Void or container_object /= Void
-			end
 			children := old_object.children.twin
+			parent_object ?= new_object
+			check
+				object_was_parent_object: parent_object /= Void
+			end
 
 			from
 				children.start
@@ -219,12 +215,7 @@ feature -- Basic operation
 			loop
 				child_object := children.item
 				old_object.remove_child (child_object)
-			
-				if cell_object /= Void then
-					cell_object.add_child_object (child_object, 1)	
-				else
-					container_object.add_child_object (child_object, container_object.object.count + 1)
-				end
+				parent_object.add_child_object (child_object, parent_object.children.count + 1)
 				children.forth
 			end
 		end
@@ -1059,10 +1050,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 					-- construct `new_object' from `element.
 				
 					
-				if not is_instance_of (new_object, dynamic_type_from_string (gb_primitive_object_class_name)) then
-						-- Only transfer object contents if the object is not a primitive and
-						-- may therefore hold other widgets. Although some primitives hold items, the
-						-- size is not affected by the items, and `reset_object' will not be called.
+				if is_instance_of (new_object, dynamic_type_from_string (gb_parent_object_class_name)) then
 					move_object_contents (new_object, an_object, False)
 				end
 				

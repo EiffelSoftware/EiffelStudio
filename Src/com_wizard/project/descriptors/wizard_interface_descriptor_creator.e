@@ -148,7 +148,7 @@ feature -- Basic operations
 			c_type_name.append (name)
 			system_descriptor.add_c_type (name)
 
-			if not name.is_equal (Iunknown_type) and not name.is_equal (Idispatch_type) then
+			if not is_well_known_interface_guid (guid) then
 				namespace := namespace_name (type_library_descriptor.name)
 				eiffel_class_name := name_for_class (name, type_kind, False)
 

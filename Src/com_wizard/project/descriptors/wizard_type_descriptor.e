@@ -28,6 +28,11 @@ inherit
 			{ANY} system_descriptor
 		end
 
+	WIZARD_GUIDS
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	eiffel_class_name: STRING
@@ -75,6 +80,12 @@ feature -- Access
 	is_idispatch: BOOLEAN
 			-- Does this descriptor correspond to interface IDispatch?
 	
+	is_well_known_interface: BOOLEAN is
+			-- Does this descriptor correspond to a well known interface?
+		do
+			Result := is_iunknown or is_idispatch or (guid /= Void and then guid.is_equal (Itypeinfo_guid))
+		end
+
 feature -- Basic Operations
 
 	set_name (a_name: STRING) is

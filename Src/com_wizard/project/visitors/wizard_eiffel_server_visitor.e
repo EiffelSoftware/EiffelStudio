@@ -59,11 +59,9 @@ feature -- Processing
 			-- every function of interface
 		local
 			l_generator: WIZARD_IMPLEMENTED_INTERFACE_EIFFEL_SERVER_GENERATOR
-			l_interface: WIZARD_INTERFACE_DESCRIPTOR
 		do
 			Precursor (a_descriptor)
-			l_interface := a_descriptor.interface_descriptor
-			if not l_interface.is_iunknown and not l_interface.is_idispatch then
+			if not a_descriptor.interface_descriptor.is_well_known_interface then
 				create l_generator
 				l_generator.generate (a_descriptor)
 			end
@@ -80,7 +78,7 @@ feature -- Processing
 		do
 			Precursor (a_descriptor)
 			if not environment.is_eiffel_interface then
-				if not a_descriptor.is_iunknown and not a_descriptor.is_idispatch then
+				if not a_descriptor.is_well_known_interface then
 					create l_generator
 					l_generator.generate (a_descriptor)
 				end

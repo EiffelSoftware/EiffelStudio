@@ -798,7 +798,7 @@ feature {NONE} -- Implementation
 			Result.append (struct_creator (tchar_creator (l_string_two), "0", tchar_creator (interface_descriptor.functions_count.out), "TRUE"))
 
 			l_interface := interface_descriptor.inherited_interface
-			if not l_interface.is_iunknown and not l_interface.is_idispatch then
+			if not l_interface.is_well_known_interface then
 				Result.append (universal_marshaling_interface_registration_code (l_interface))
 			end
 		end

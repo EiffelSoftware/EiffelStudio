@@ -671,9 +671,6 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
-		local
-			insert_buffer: POINTER
-			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			Precursor {EV_TEXT_IMP} (a_key, a_key_string, a_key_press)
 			if current_format /= Void and a_key_press and then a_key /= Void then
@@ -685,16 +682,11 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 		end
 
-	format_insertion_mark: POINTER
-
 	on_text_mark_changed (a_text_iter, a_text_mark: POINTER) is
 			-- Called when a text mark within `text_buffer' has been set.
 		local
 			a_caret_position: INTEGER
 			a_selection_start, a_selection_end: INTEGER
-			a_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
-			a_cs: EV_GTK_C_STRING
-			insert_buffer: POINTER
 		do
 			if not (a_text_mark = feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)) then
 				a_selection_start := selection_start_internal

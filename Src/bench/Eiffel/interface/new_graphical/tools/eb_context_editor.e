@@ -82,8 +82,7 @@ feature {NONE} -- Initialization
 			area.resize_actions.extend (~on_resizing)
 			create empty_world
 			empty_world.drop_actions.extend (agent tool.launch_stone)
-			create {EV_DRAWING_AREA_PROJECTOR} projector.make_with_buffer (
-				empty_world, area_buffer, area)
+			create projector.make_with_buffer (empty_world, area)
 			update_size (Void)
 			create border_frame
 			create vertical_box
@@ -243,8 +242,10 @@ feature -- Access
 			-- Container for `area' and `vertical_scrollbar'.
 
 	horizontal_scrollbar: EV_HORIZONTAL_SCROLL_BAR
+			-- horizontal scroll bar for the diagram
 
 	vertical_scrollbar: EV_VERTICAL_SCROLL_BAR
+			-- vertical scroll bar for the diagram
 
 	history: EB_HISTORY_DIALOG
 			-- History of undoable commands.
@@ -280,7 +281,7 @@ feature -- Access
 			position_not_void: Result /= Void
 		end
 
-	projector: EV_WIDGET_PROJECTOR
+	projector: ES_PROJECTOR
 			-- Responsible for drawing views.
 
 	class_view: BON_CLASS_DIAGRAM
@@ -329,49 +330,49 @@ feature -- Status setting
 					class_stone /= Void and then class_stone.class_i /= fs.class_i) or
 				fs = Void then
 
-						if is_building then
-							last_build_cancelled := True
-							Progress_dialog.hide
-							if class_view /= Void then
-								class_view.cancel
-							end
-							if cluster_view /= Void then
-								cluster_view.cancel
-							end
-						end
-							-- Save current diagram.
-						if not last_build_cancelled then
-							store
-						end
-	
-						horizontal_box.wipe_out
-						if projector /= Void then
-							projector.widget.pointer_motion_actions.wipe_out
-							projector.widget.pointer_button_press_actions.wipe_out
-							projector.widget.pointer_double_press_actions.wipe_out
-							projector.widget.pointer_button_release_actions.wipe_out
-							projector.widget.pointer_leave_actions.wipe_out
-						end
-						projector := Void
+				if is_building then
+					last_build_cancelled := True
+					Progress_dialog.hide
+					if class_view /= Void then
+						class_view.cancel
+					end
+					if cluster_view /= Void then
+						cluster_view.cancel
+					end
+				end
+					-- Save current diagram.
+				if not last_build_cancelled then
+					store
+				end
 
-						if area /= Void then
-							area.destroy
-						end
-						area := Void
-						if class_view /= Void then
-							class_view.recycle
-						end
-						class_view := Void
-						if cluster_view /= Void then
-							cluster_view.recycle
-						end
-						cluster_view := Void
-			
-						class_stone ?= a_stone
-						cluster_stone ?= a_stone			
-						if tool.is_diagram_selected then
-							on_select
-						end
+				horizontal_box.wipe_out
+				if projector /= Void then
+					projector.widget.pointer_motion_actions.wipe_out
+					projector.widget.pointer_button_press_actions.wipe_out
+					projector.widget.pointer_double_press_actions.wipe_out
+					projector.widget.pointer_button_release_actions.wipe_out
+					projector.widget.pointer_leave_actions.wipe_out
+				end
+				projector := Void
+
+				if area /= Void then
+					area.destroy
+				end
+				area := Void
+				if class_view /= Void then
+					class_view.recycle
+				end
+				class_view := Void
+				if cluster_view /= Void then
+					cluster_view.recycle
+				end
+				cluster_view := Void
+	
+				class_stone ?= a_stone
+				cluster_stone ?= a_stone			
+				if tool.is_diagram_selected then
+					on_select
+				end
 			end
 		end
 
@@ -429,8 +430,8 @@ feature -- Status setting
 				horizontal_box.extend (area)
 				horizontal_box.extend (vertical_scrollbar)
 				horizontal_box.disable_item_expand (vertical_scrollbar)
-				create {EV_DRAWING_AREA_PROJECTOR} projector.make_with_buffer (l_class_view, area_buffer, area)
-				l_class_view.set_drawable (area_buffer)
+				create {ES_PROJECTOR} projector.make_with_buffer (l_class_view,area)-- area_buffer, area)
+				l_class_view.set_drawable_cell_and_position (projector.drawable_cell, projector.drawable_position)
 				l_class_view.set_projector (projector)
 			
 				progress_dialog.set_value (1)
@@ -492,8 +493,8 @@ feature -- Status setting
 				horizontal_box.extend (area)
 				horizontal_box.extend (vertical_scrollbar)
 				horizontal_box.disable_item_expand (vertical_scrollbar)
-				create {EV_DRAWING_AREA_PROJECTOR} projector.make_with_buffer (l_cluster_view, area_buffer, area)
-				l_cluster_view.set_drawable (area_buffer)
+				create projector.make_with_buffer (l_cluster_view, area)
+				l_cluster_view.set_drawable_cell_and_position (projector.drawable_cell, projector.drawable_position)
 				l_cluster_view.set_projector (projector)
 					
 				progress_dialog.set_value (1)
@@ -516,13 +517,13 @@ feature -- Status setting
 			is_building := False
 			area.enable_sensitive
 
-			rescue
-				class_view := Void
-				cluster_view := Void
-				cancelled := True
-				Error_handler.error_list.wipe_out
-				progress_dialog.hide
-				retry
+		rescue
+			class_view := Void
+			cluster_view := Void
+			cancelled := True
+			Error_handler.error_list.wipe_out
+			progress_dialog.hide
+			retry
 		end
 
 	synchronize is
@@ -727,7 +728,11 @@ feature {CONTEXT_DIAGRAM, EB_CONTEXT_DIAGRAM_COMMAND, DIAGRAM_COMPONENT} -- Stat
 					new_x.max (0) + cd.point.x,
 					new_y.max (0) + cd.point.y)
 			end
-			if r.width + r.x > area_buffer.width or r.height + r.y > area_buffer.height then
+			if 
+				r.width + r.x > visible_width
+					or
+				r.height + r.y > visible_height
+			then
 				update_size (cd)
 			end
 		end		
@@ -743,17 +748,22 @@ feature {CONTEXT_DIAGRAM, EB_CONTEXT_DIAGRAM_COMMAND, DIAGRAM_COMPONENT} -- Stat
 			else
 				create t.set (1, 1)
 			end
-			area_buffer.set_size (t.width.max (area.width), t.height.max (area.height))
+			visible_width := t.width.max (area.width)
+			visible_height := t.height.max (area.height)
 			leap_x := area.width
 			leap_y := area.height
 
-			horizontal_scrollbar.value_range.resize_exactly (0,
-					(area_buffer.width - 1 - leap_x).max (1))
+			horizontal_scrollbar.value_range.resize_exactly (
+				0,		
+				(visible_width - 1 - leap_x).max (1)
+			)
 			horizontal_scrollbar.set_leap (leap_x)
 			horizontal_scrollbar.set_value (horizontal_scrollbar.value_range.lower)
 
-			vertical_scrollbar.value_range.resize_exactly (0,
-					(area_buffer.height - 1 - leap_y).max (1))
+			vertical_scrollbar.value_range.resize_exactly (
+				0,
+				(visible_height	- 1 - leap_y).max (1)
+			)
 			vertical_scrollbar.set_leap (leap_y)
 			vertical_scrollbar.set_value (vertical_scrollbar.value_range.lower)
 		end
@@ -902,7 +912,10 @@ feature {CLASS_TEXT_MODIFIER, INHERITANCE_FIGURE, CONTEXT_DIAGRAM, EB_CONTEXT_DI
 feature {EB_DEVELOPMENT_WINDOW} -- Commands with global accelerators
 
 	undo_cmd: EB_UNDO_DIAGRAM_COMMAND
+			-- Command to undo last action
+			
 	redo_cmd: EB_REDO_DIAGRAM_COMMAND
+			-- Command to redo last undone action
 
 feature {NONE} -- Implementation
 
@@ -910,27 +923,57 @@ feature {NONE} -- Implementation
 			-- The agent that is called when the project is closed.
 
 	create_class_cmd: EB_CREATE_CLASS_DIAGRAM_COMMAND
+			-- Command to create new classes.
+			
 	delete_cmd: EB_DELETE_DIAGRAM_ITEM_COMMAND
+			-- Command to remove an element from the system.
+
 	create_new_links_cmd: EB_CREATE_LINK_COMMAND
+			-- Command to select the type of new links.
+
 	center_diagram_cmd: EB_CENTER_DIAGRAM_COMMAND
+			-- Command to target the diagram to a class or a cluster.
+
 	super_cluster_cmd: EB_SUPER_CLUSTER_DIAGRAM_COMMAND
+			-- Command to target the diagram to the super cluster of current class or cluster.
+	
 --	create_inherit_cmd: EB_CREATE_INHERIT_COMMAND	
 --	create_supplier_cmd: EB_CREATE_SUPPLIER_COMMAND	
 --	create_aggregate_cmd: EB_CREATE_AGGREGATE_COMMAND	
 
 	change_color_cmd: EB_CHANGE_COLOR_COMMAND
+			-- Command to change the color of a class or all the classes.
+			
 	trash_cmd: EB_DELETE_FIGURE_COMMAND
+			-- Command to hide an element.
+
 	change_header_cmd: EB_CLASS_HEADER_COMMAND
+			-- Command to rename classes.
+
 	toggle_inherit_cmd: EB_TOGGLE_INHERIT_COMMAND
+			-- Command to show/hide inheritance links.
+			
 	toggle_supplier_cmd: EB_TOGGLE_SUPPLIER_COMMAND
+			-- Command to show/hide supplier links.
+			
 	toggle_labels_cmd: EB_TOGGLE_LABELS_COMMAND
+			-- Command to show/hide labels.
+			
 	select_depth_cmd: EB_SELECT_DEPTH_COMMAND
+			-- Command to select the depth of the diagram.
+
 	link_tool_cmd: EB_LINK_TOOL_COMMAND
+
 	fill_cluster_cmd: EB_FILL_CLUSTER_COMMAND
+
 	history_cmd: EB_DIAGRAM_HISTORY_COMMAND
+
 	zoom_in_cmd: EB_ZOOM_IN_COMMAND
+
 	zoom_out_cmd: EB_ZOOM_OUT_COMMAND
+
 	delete_view_cmd: EB_DELETE_VIEW_COMMAND
+
 	diagram_to_ps_cmd: EB_DIAGRAM_TO_PS_COMMAND
 
 	Pixmaps: EB_SHARED_PIXMAPS is
@@ -994,8 +1037,7 @@ feature {CONTEXT_DIAGRAM, EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			horizontal_box.disable_item_expand (vertical_scrollbar)
 			create empty_world
 			empty_world.drop_actions.extend (agent tool.launch_stone)
-			create {EV_DRAWING_AREA_PROJECTOR} projector.make_with_buffer (
-				empty_world, area_buffer, area)
+			create {ES_PROJECTOR} projector.make_with_buffer (empty_world, area)
 			update_size (Void)
 			projector.full_project
 		end
@@ -1058,26 +1100,21 @@ feature {NONE} -- Events
 			-- Update scrollbars.
 		local
 			max, old_value: INTEGER
-			
 		do
 			if area /= Void then
-				if area_buffer /= Void then
-					if area.width > area_buffer.width or area.height > area_buffer.height then
-						area_buffer.set_size (area_buffer.width.max (area.width), area_buffer.height.max (area.height))
-					end
-					old_value := horizontal_scrollbar.value
-					max := (area_buffer.width - 1 - area.width.max (1)).max (1)
-					horizontal_scrollbar.value_range.resize_exactly (0, max)
-					horizontal_scrollbar.set_leap (area.width.max (1))
-					horizontal_scrollbar.set_value (old_value.min (max).max (0))
-					
-					old_value := vertical_scrollbar.value
-					max := (area_buffer.height - 1 - area.height.max (1)).max (1)
-					vertical_scrollbar.value_range.resize_exactly (0, max)
-					vertical_scrollbar.set_leap (area.height.max (1))
-					vertical_scrollbar.set_value (old_value.min (max).max (0))
-				--	reset_scrollbars
-				end
+				visible_width := visible_width.max (area.width) 
+				visible_height := visible_height.max (area.height)
+				old_value := horizontal_scrollbar.value
+				max := (visible_width - 1 - area.width.max (1)).max (1)
+				horizontal_scrollbar.value_range.resize_exactly (0, max)
+				horizontal_scrollbar.set_leap (area.width.max (1))
+				horizontal_scrollbar.set_value (old_value.min (max).max (0))
+				
+				old_value := vertical_scrollbar.value
+				max := (visible_height - 1 - area.height.max (1)).max (1)
+				vertical_scrollbar.value_range.resize_exactly (0, max)
+				vertical_scrollbar.set_leap (area.height.max (1))
+				vertical_scrollbar.set_value (old_value.min (max).max (0))
 				if projector /= Void then
 					projector.update_rectangle (create {EV_RECTANGLE}.make (0, 0, area.width, area.height), 0, 0)
 				end
@@ -1194,10 +1231,11 @@ feature {DIAGRAM_COMPONENT} -- Events
 						(cursor_x - 40).max (0).min (horizontal_scrollbar.value_range.upper))
 				else
 					offset := (40 - cursor_x).max (40)
-					area_buffer.set_size (area_buffer.width - cursor_x + offset, area_buffer.height)
+					visible_width := visible_width - cursor_x + offset
 					horizontal_scrollbar.value_range.resize_exactly (
-							0,
-							(area_buffer.width - 1 - area.width.max (1)).max (1))
+						0,
+						(visible_width - 1 - area.width.max (1)).max (1)
+					)
 					if class_view /= Void then
 						class_view.point.set_x (class_view.x_to_grid (class_view.point.x + offset))
 					elseif cluster_view /= Void then
@@ -1213,10 +1251,11 @@ feature {DIAGRAM_COMPONENT} -- Events
 						(cursor_y - 40).max (0).min (vertical_scrollbar.value_range.upper))
 				else
 					offset := (40 - cursor_y).max (40)
-					area_buffer.set_size (area_buffer. width, area_buffer.height + offset)
+					visible_height := visible_height + offset
 					vertical_scrollbar.value_range.resize_exactly (
-							0,
-							(area_buffer.height - 1 - area.height.max (1)).max (1))
+						0,
+						(visible_height - 1 - area.height.max (1)).max (1)
+					)
 					if class_view /= Void then
 						class_view.point.set_y (class_view.y_to_grid (class_view.point.y + offset)) 
 					elseif cluster_view /= Void then
@@ -1227,27 +1266,31 @@ feature {DIAGRAM_COMPONENT} -- Events
 				end
 			end
 			if cursor_x >= horizontal_scrollbar.value + area.width - 40 then
-				if cursor_x + 40 <= area_buffer.width then
+				if cursor_x + 40 <= visible_width
+				then
 					horizontal_scrollbar.set_value (
 						(horizontal_scrollbar.value + 40).max (0).min (horizontal_scrollbar.value_range.upper))
 				else
-					offset := (40 + cursor_x - area_buffer.width).max (40)
-					area_buffer.set_size (area_buffer.width + offset, area_buffer.height)
+					offset := (40 + cursor_x -visible_width).max (40)
+					visible_width := visible_width + offset
 					horizontal_scrollbar.value_range.resize_exactly (
-							0,
-							(area_buffer.width - 1 - area.width.max (1)).max (1))
+						0,
+						(visible_width - 1 - area.width.max (1)).max (1)
+					)
 				end
 			end
 			if cursor_y >= vertical_scrollbar.value + area.height - 40 then
-				if cursor_y + 40 <= area_buffer.height then
+				if cursor_y + 40 <= visible_height
+				then
 					vertical_scrollbar.set_value (
 						(vertical_scrollbar.value + 40).max (0).min (vertical_scrollbar.value_range.upper))
 				else
-					offset := (40 + cursor_y - area_buffer.height).max (40)
-					area_buffer.set_size (area_buffer.width, area_buffer.height + offset)
+					offset := (40 + cursor_y -	visible_height).max (40)
+					visible_height := visible_height + offset
 					vertical_scrollbar.value_range.resize_exactly (
 							0,
-							(area_buffer.height - 1 - area.height.max (1)).max (1))
+							(visible_height - 1 - area.height.max (1)).max (1)
+					)
 				end
 			end
 			projector.update_rectangle (create {EV_RECTANGLE}.make (0, 0, area.width, area.height), 0, 0)
@@ -1332,6 +1375,12 @@ feature {EB_CONTEXT_TOOL} -- XML Output
 			retried := True
 			retry
 		end
+		
+	visible_width: INTEGER
+			-- width of the part of the diagram that is visible
+	
+	visible_height: INTEGER
+			-- height of the part of the diagram that is visible
 		
 end -- class EB_CONTEXT_EDITOR
 

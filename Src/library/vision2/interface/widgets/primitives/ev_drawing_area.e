@@ -4,8 +4,7 @@ indexing
 		%Primatives are drawn directly onto the screen without buffering.%
 		%(When buffering is required use {EV_PIXMAP}.)"
 	status: "See notice at end of class"
-	keywords: "drawable, expose, repaint, primitive, figure, canvas, draw, %
-		%paint, graphic, picture, image"
+	keywords: "drawable, expose, primitive, figure, draw, paint, image"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -138,6 +137,9 @@ end -- class EV_DRAWING_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/03/21 02:35:12  oconnor
+--| indexing
+--|
 --| Revision 1.17  2000/03/21 02:09:23  oconnor
 --| comments and formatting
 --|

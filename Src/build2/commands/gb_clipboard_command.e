@@ -27,6 +27,26 @@ inherit
 		export
 			{NONE} all
 		end
+		
+	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
+		end
+		
+	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		end
+		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		end
+		
+	GB_SHARED_OBJECT_HANDLER
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -35,9 +55,6 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create `Current'.
-		local
-			acc: EV_ACCELERATOR
-			key: EV_KEY
 		do
 			Precursor {EB_STANDARD_CMD}
 			set_tooltip ("Clipboard")
@@ -54,8 +71,13 @@ feature -- Access
 
 	executable: BOOLEAN is
 			-- May `execute' be called on `Current'?
+		local
+			object: GB_OBJECT
+			component: GB_COMPONENT
 		do
-			Result := not clipboard.is_empty
+			object ?= system_status.pick_and_drop_pebble
+			component ?= system_status.pick_and_drop_pebble
+			Result := (not clipboard.is_empty) or (object /= Void) or (component /= Void)
 		end
 
 feature -- Basic operations
@@ -63,54 +85,71 @@ feature -- Basic operations
 		execute is
 				-- Execute `Current'.
 			local
-				layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-				cut_object: GB_OBJECT
-				global_status: GB_GLOBAL_STATUS
 				dialog: EV_DIALOG
 				vertical_box: EV_VERTICAL_BOX
 				text: EV_TEXT
 				cancel_button: EV_BUTTON
-				application_element, window_element,
-				new_type_element: XM_ELEMENT
 				namespace: XM_NAMESPACE
-				constants_list: HASH_TABLE [GB_CONSTANT, STRING]
 				document: XM_DOCUMENT
 				formater: XM_FORMATTER
 				last_string: KL_STRING_OUTPUT_STREAM
 				string: STRING
 			do
-				create namespace.make_default
-				create document.make
-				document.set_root_element (clipboard.contents_cell.item)
-				create last_string.make ("")
-				create formater.make
-				formater.set_output (last_string)
-				formater.process_document (document)
+				new_clipboard_object := clipboard.internal_object
+				insert_into_window (new_clipboard_object.object, clipboard_dialog)
+				clipboard_dialog.show_modal_to_window (main_window)
 				
-				create dialog
-				dialog.set_minimum_size (400, 600)
-				create vertical_box
-				dialog.extend (vertical_box)
-				create text
-				vertical_box.extend (text)
-				create cancel_button.make_with_text ("Cancel")
-				vertical_box.extend (cancel_button)
-				vertical_box.disable_item_expand (cancel_button)
-				cancel_button.select_actions.extend (agent dialog.destroy)
-				dialog.set_default_cancel_button (cancel_button)
-				string := last_string.string
-				process_xml_string (string)
-				text.set_text (string)
-				dialog.show_modal_to_window (main_window)
+				if system_status.is_in_debug_mode then
+					create namespace.make_default
+					create document.make
+					document.set_root_element (clipboard.contents_cell.item)
+					create last_string.make ("")
+					create formater.make
+					formater.set_output (last_string)
+					formater.process_document (document)
+
+					create dialog
+					dialog.set_minimum_size (400, 600)
+					create vertical_box
+					dialog.extend (vertical_box)
+					create text
+					vertical_box.extend (text)
+					create cancel_button.make_with_text ("Cancel")
+					vertical_box.extend (cancel_button)
+					vertical_box.disable_item_expand (cancel_button)
+					cancel_button.select_actions.extend (agent dialog.destroy)
+					dialog.set_default_cancel_button (cancel_button)
+					string := last_string.string
+					process_xml_string (string)
+					text.set_text (string)
+					dialog.show_relative_to_window (main_window)
+				end
 			end
 			
+	close_dialog is
+			-- Destroy `a_dialog' and 
+		local
+			all_children: ARRAYED_LIST [GB_OBJECT]
+		do
+			clipboard_dialog.hide
+			create all_children.make (20)
+			new_clipboard_object.all_children_recursive (all_children)
+			all_children.extend (new_clipboard_object)
+			from
+				all_children.start
+			until
+				all_children.off
+			loop
+				all_children.item.destroy
+				all_children.forth
+			end
+		end
+
 	drop_object (an_object: GB_OBJECT) is
 			-- Place representation of `an_object' within clipboard.
 		require
 			an_object_not_void: an_object /= Void
 		local
-			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-			cut_object: GB_OBJECT
 			global_status: GB_GLOBAL_STATUS
 		do
 			create global_status
@@ -121,15 +160,20 @@ feature -- Basic operations
 		
 	pick_object: GB_OBJECT is
 				-- Execute `Current'.
-			local
-				layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-				cut_object: GB_OBJECT
-				global_status: GB_GLOBAL_STATUS
-				layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-				command_add: GB_COMMAND_ADD_OBJECT
-				parent_object: GB_PARENT_OBJECT
 			do
 				Result := clipboard.object
 			end
+			
+	new_clipboard_object: GB_OBJECT
+			
+	clipboard_dialog: EV_DIALOG is
+			-- Dialog to display contents of `clipboard'.
+		once
+			create Result
+			Result.set_title ("Clipboard Contents")
+			Result.set_icon_pixmap (icon_clipboard @ 1)
+			fake_cancel_button (Result, agent close_dialog)
+		end
+		
 
 end -- class GB_CLIPBOARD_COMMAND

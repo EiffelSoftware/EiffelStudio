@@ -28,7 +28,9 @@ inherit
 			interface,
 			add_to_container,
 			remove_item_from_position,
-			reorder_child
+			reorder_child,
+			count,
+			item
 		end
 
 	EV_PICK_AND_DROPABLE_IMP
@@ -46,7 +48,6 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_tree_item_new)
-			list_widget := C.gtk_tree_new
 		end
 
 	initialize is
@@ -61,29 +62,24 @@ feature {NONE} -- Initialization
 			connect_signal_to_actions ("expand", interface.expand_actions)
 			is_initialized := True
 			align_text_left
-
-				-- Connect events to items own tree.
-			real_signal_connect (list_widget, "select_child", ~select_callback)
-			real_signal_connect (list_widget, "unselect_child", ~deselect_callback)
-
 		end
 
 	select_callback (a_tree_item: POINTER) is
 			-- Called when a tree item is selected.
 		local
-			t_item: EV_TREE_ITEM
+			t_item: EV_TREE_ITEM_IMP
 		do
-		 	t_item ?= eif_object_from_c (a_tree_item).interface
-			t_item.select_actions.call ([])
+		 	t_item ?= eif_object_from_c (a_tree_item)
+			t_item.interface.select_actions.call ([])
 		end
 
 	deselect_callback (a_tree_item: POINTER) is
 			-- Called when a tree item is deselected.
 		local
-			t_item: EV_TREE_ITEM
+			t_item: EV_TREE_ITEM_IMP
 		do
-		 	t_item ?= eif_object_from_c (a_tree_item).interface
-			t_item.deselect_actions.call ([])	
+		 	t_item ?= eif_object_from_c (a_tree_item)
+			t_item.interface.deselect_actions.call ([])	
 		end
 
 	initialize_item_box is
@@ -104,10 +100,19 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	parent_tree: EV_TREE is
+	item: EV_TREE_ITEM is
+			-- Item at current position.
 		do
-			if tree_widget_imp /= Void then
-				Result := tree_widget_imp.interface
+			if list_widget /= Default_pointer then
+				Result := Precursor
+			end
+		end
+
+	count: INTEGER is
+			-- Number of items
+		do
+			if list_widget /= Default_pointer then
+				Result := Precursor	
 			end
 		end
 
@@ -147,28 +152,50 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+	sub_tree: POINTER is
+		do
+			Result := C.gtk_tree_new
+				-- Connect events to items own tree.
+			real_signal_connect (Result, "select_child", ~select_callback)
+			real_signal_connect (Result, "unselect_child", ~deselect_callback)
+		end
+
 	add_to_container (v: like item) is
 			-- Add `v' to tree items tree.
 		local
 			item_imp: EV_TREE_ITEM_IMP
+			item_subtree: POINTER
 		do
-			if count = 0 and then not subtree_set then
-				C.gtk_tree_item_set_subtree (c_object, list_widget)
-				subtree_set := True
-			end
 			item_imp ?= v.implementation
 			C.gtk_widget_show (item_imp.c_object)
-			C.gtk_tree_append (list_widget, item_imp.c_object)
-			item_imp.set_tree_widget_imp (tree_widget_imp)
+			item_subtree := C.gtk_tree_item_struct_subtree (c_object)
+
+			if list_widget = Default_pointer then
+				set_dummy_list_widget (sub_tree)
+			end
+
+			if item_subtree /= Default_pointer then
+				C.gtk_tree_append (item_subtree, item_imp.c_object)
+			else
+				C.gtk_tree_append (dummy_list_widget, item_imp.c_object)
+				if parent /= Void then
+					C.gtk_tree_item_set_subtree (c_object, dummy_list_widget)
+					set_dummy_list_widget (Default_pointer)
+				end
+			end
+
+			if item_imp.dummy_list_widget /= Default_pointer then
+				C.gtk_tree_item_set_subtree (
+					item_imp.c_object,
+					item_imp.dummy_list_widget
+				)
+				item_imp.set_dummy_list_widget (Default_pointer)
+			end
 		end
 
 	remove_item_from_position (a_position: INTEGER) is
 			-- Remove item at `a_position'
-		local
-			item_imp: EV_TREE_ITEM_IMP
-		do
-			item_imp ?= interface.i_th (a_position).implementation
-			item_imp.set_tree_widget_imp (Void)	
+		do	
 			Precursor (a_position)
 		end
 
@@ -202,40 +229,28 @@ feature {NONE} -- Implementation
 		-- Redefined to avoid seg faults from invariant calling
 		-- invalid features for items.
 
-	subtree_set: BOOLEAN
-		-- Flag to designate whether the items subtree has been assigned
-		-- to the item.
+feature {EV_ITEM_LIST_IMP} -- Implementation
 
-feature {EV_TREE_IMP} -- Implementation
+	set_dummy_list_widget (list_wid: POINTER) is
+		do
+			dummy_list_widget := list_wid
+		end
 
-	list_widget: POINTER
-		-- Pointer to the items own gtktree.
+	dummy_list_widget: POINTER
+			-- Used to temporary store list widget if not in parent.
+
+	list_widget: POINTER is
+			-- Pointer to the items own gtktree.
+		do
+			Result := C.gtk_tree_item_struct_subtree (c_object)
+			if Result = Default_pointer then
+				Result := dummy_list_widget
+			end
+		end
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TREE_ITEM
-
-	tree_widget_imp: EV_TREE_IMP
-
-	set_tree_widget_imp (a_tree_imp: EV_TREE_IMP) is
-			-- Set the root tree imp for current.
-		local
-			temp_subtree_set: BOOLEAN
-		do
-			temp_subtree_set := subtree_set
-
-			if a_tree_imp /= Void and count > 0 then
-				C.gtk_tree_item_set_subtree (c_object, list_widget)
-				subtree_set := True
-			end
-
-			if a_tree_imp = Void and temp_subtree_set then
-				C.gtk_tree_item_remove_subtree (c_object)
-				subtree_set := False
-			end
-
-			tree_widget_imp := a_tree_imp
-		end
 	
 end -- class EV_TREE_ITEM_IMP
 
@@ -260,8 +275,8 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.37  2000/02/25 17:49:15  king
---| Corrected calling of action_sequences, using real_signal_connect
+--| Revision 1.38  2000/02/26 01:27:46  king
+--| Implemented to contain children even if item has no parent
 --|
 --| Revision 1.36  2000/02/24 20:52:13  king
 --| Inheriting from pick and dropable

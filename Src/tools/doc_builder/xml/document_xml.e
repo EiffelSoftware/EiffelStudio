@@ -11,18 +11,6 @@ inherit
 		rename
 			text as xm_text
 		end
-	
-	SHARED_OBJECTS
-		undefine
-			copy,
-			is_equal
-		end
-		
-	UTILITY_FUNCTIONS
-		undefine
-			copy,
-			is_equal
-		end
 		
 	XML_ROUTINES
 		undefine
@@ -31,29 +19,61 @@ inherit
 		end
 	
 create
+	make_from_file,
+	make_from_text,
 	make_from_document
 	
 feature {DOCUMENT} -- Creation
 
-	make_from_document (a_document: DOCUMENT) is
-			-- Set `internal_document'
+	make_from_file (a_filename: STRING) is
+			-- Create from `a_filename'
 		require
-			document_not_void: a_document /= Void
+			filename_not_void: a_filename /= Void
 		local
 			l_xml: XM_DOCUMENT
 		do
 			make
-			internal_document := a_document
-			l_xml := deserialize_text (internal_document.text)
+			name := a_filename
+			l_xml := deserialize_document (a_filename)
 			if l_xml /= Void and then not l_xml.is_empty then
 				set_root_element (l_xml.root_element)
 				valid := True
 			end				
 		ensure
-			has_document: internal_document /= Void
+			has_name: name /= Void
+		end
+
+	make_from_text (a_text: STRING) is
+			-- Create from `a_text'
+		require
+			text_not_void: a_text /= Void
+		local
+			l_xml: XM_DOCUMENT
+		do
+			make
+			l_xml := deserialize_text (a_text)
+			if l_xml /= Void and then not l_xml.is_empty then
+				set_root_element (l_xml.root_element)
+				valid := True
+			end	
 		end
 	
+	make_from_document (a_doc: DOCUMENT) is
+			-- Make from a document
+		require
+			document_not_void: a_doc /= Void
+		do
+			document := a_doc
+			name := document.name
+			make_from_text (a_doc.text)						
+		ensure
+			has_name: name /= Void
+		end		
+	
 feature -- Access
+
+	document: DOCUMENT
+			-- Document, if any
 
 	text: STRING is
 			-- Text
@@ -64,54 +84,18 @@ feature -- Access
 	valid: BOOLEAN
 			-- Valid XML?
 	
+	name: STRING
+			-- Filename
+	
 feature {DOCUMENT} -- Status Setting
 
-	add_custom_elements is
-			-- Add custom elements to xml structure
+	pre_process is
+			-- Pre-process Current
 		local
-			l_path: STRING
-			l_parent: XM_ELEMENT
+			l_processor: XML_PRE_PROCESSOR
 		do			
-			l_parent := element_by_name ("document")
-			if l_parent /= Void then
-				l_parent := l_parent.element_by_name ("meta_data")
-				if l_parent /= Void then
-					l_path := stylesheet_path (internal_document.name, True)
-					if l_path /= Void then
-						create stylesheet_tag.make_child (l_parent, "stylesheet", Void)
-						stylesheet_tag.put_last (create {XM_CHARACTER_DATA}.make (stylesheet_tag, l_path))
-						l_parent.put_last (stylesheet_tag)
-					end
-				end
-			end					
+			create l_processor.make (Current)
+			l_processor.process
 		end
-
-	remove_custom_elements is
-			-- Remove custom elements
-		local
-			l_element: XM_ELEMENT
-		do
-			l_element := element_by_name ("document")
-			if l_element /= Void then
-				l_element := l_element.element_by_name ("meta_data")
-				if l_element /= Void then
-					l_element := l_element.element_by_name ("stylesheet")
-					if l_element /= Void then
-						l_element.parent.delete (l_element)
-					end	
-				end
-			end			
-		end		
-	
-feature -- Custom Tags
-
-	stylesheet_tag: XM_ELEMENT
-			-- Tag representing stylesheet, if any	
-
-	internal_document: DOCUMENT
-			-- Actual document
-
-invariant
-	has_document: internal_document /= Void
 
 end -- class DOCUMENT_XML

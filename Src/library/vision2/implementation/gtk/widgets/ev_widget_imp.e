@@ -219,8 +219,8 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 					if resize_actions_internal /= Void then
 						resize_actions_internal.call ([a_x, a_y, a_width, a_height])
 					end
-					if widget_in_fixed then
-					--	parent_imp.on_size_allocate (a_x, a_y, 
+					if parent_imp /= Void then
+						parent_imp.child_has_resized (Current)
 					end
 					last_width := a_width
 					last_height := a_height

@@ -83,7 +83,7 @@ feature -- Basic operations
 						first_column_index := column_offsets.index - 1
 						first_column_index_set := True
 					end
-					if first_column_index_set then
+					if first_column_index_set and grid.column_displayed (column_offsets.index - 1) then
 						Result.extend (column_offsets.index - 1)
 					end
 					if not last_column_index_set and then invalid_x_end < i then
@@ -463,8 +463,11 @@ feature -- Basic operations
 						until
 							visible_column_indexes.off
 						loop
+							check
+								lists_same_length: visible_column_indexes.count = visible_physical_column_indexes.count
+							end
 							current_column_index := visible_column_indexes.item
-							current_physical_column_index := visible_physical_column_indexes.item (current_column_index - 1)
+							current_physical_column_index := visible_physical_column_indexes.item (visible_column_indexes.index - 1)
 							
 							
 								-- Assume that there is no grid item at the current position.

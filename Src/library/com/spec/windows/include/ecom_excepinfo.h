@@ -33,8 +33,6 @@
 #include "ecom_rt_globals.h"
 
 #ifdef __cplusplus
-extern "C" {
-#endif
 
 #define ccom_excepinfo_w_code(_ptr_) (EIF_INTEGER)(USHORT)(((EXCEPINFO *)_ptr_)->wCode)
 
@@ -71,8 +69,7 @@ extern "C" {
 #define ccom_excepinfo_scode(_ptr_) (EIF_REFERENCE)(rt_ce.ccom_ce_hresult (((EXCEPINFO *)_ptr_)->scode))
 
 #define ccom_excepinfo_set_scode(_ptr_, _field_) ((((EXCEPINFO *)_ptr_)->scode) = rt_ec.ccom_ec_hresult (eif_access (_field_)))
-#ifdef __cplusplus
-}
+
 #endif
 
 #endif

@@ -39,8 +39,7 @@ extern "C" {
 #include "ecom_rt_globals.h"
 
 #ifdef __cplusplus
-extern "C" {
-#endif
+
 
 #define ccom_dispparams_rgvarg(_ptr_) (EIF_REFERENCE)(rt_ce.ccom_ce_pointed_variant (((DISPPARAMS *)_ptr_)->rgvarg))
 
@@ -57,8 +56,7 @@ extern "C" {
 #define ccom_dispparams_c_named_args(_ptr_) (EIF_INTEGER)(UINT)(((DISPPARAMS *)_ptr_)->cNamedArgs)
 
 #define ccom_dispparams_set_c_named_args(_ptr_, _field_) ((((DISPPARAMS *)_ptr_)->cNamedArgs) = (UINT)_field_)
-#ifdef __cplusplus
-}
+
 #endif
 
 #endif

@@ -13,8 +13,6 @@ deferred class
 inherit
 	EV_PRIMITIVE_I
 	
-	EV_BAR_ITEM_I
-	
 	EV_TEXTABLE_I
 
 	EV_FONTABLE_I

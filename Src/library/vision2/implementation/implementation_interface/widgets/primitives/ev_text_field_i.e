@@ -12,8 +12,6 @@ deferred class
 inherit
 	EV_TEXT_COMPONENT_I
 
-	EV_BAR_ITEM_I
-
 feature {NONE} -- Initialization
 
 	make_with_text (txt: STRING) is

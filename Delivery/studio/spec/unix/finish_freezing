@@ -1,12 +1,22 @@
 #!/bin/sh
 arg=none
 
-if [ "`uname`" = "Linux" ] ; then
+case `uname` in
+    Linux)
 	if [ -f /proc/cpuinfo ] ; then
 		ncpus=`grep processor /proc/cpuinfo | wc -l`
 	fi
+	;;
+    IRIX*)
+	ncpus=`hinv | awk '/^[0-9]+ [0-9]+ MHZ/ {print $1}'`
+	;;
+esac
+if [ -z "$ncpus" ]; then ncpus=1; fi
+
+if make --version 2>/dev/null | grep GNU >/dev/null 2>&1; then
+    make_args="-j $ncpus"
 else
-	ncpus=1
+    make_args=
 fi
 
 if [ $# -gt 0 ]; then
@@ -19,7 +29,7 @@ fi
 
 if [ "$arg" != "-library" ]; then
 	echo "Preparing C compilation ..."
-	quick_finalize . o
+	$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/quick_finalize . o
 else
 	echo "Generating C libraries ..."
 fi
@@ -31,7 +41,7 @@ sh Makefile.SH
 
 if [ "$arg"  = cecil -o "$arg" = "-cecil" ] ; then
 	echo Generating CECIL library ...
-	make -j $ncpus cecil && echo "C compilation completed"
+	make $make_args cecil && echo "C compilation completed"
 else
-	make -j $ncpus && echo "C compilation completed"
+	make $make_args && echo "C compilation completed"
 fi

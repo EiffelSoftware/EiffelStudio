@@ -104,6 +104,17 @@ feature -- Access
 			end
 		end
 
+	c_string_id: INTEGER is
+			-- String generated for the type.
+		do
+			inspect size
+			when 8 then Result := String_integer_8_id
+			when 16 then Result := String_integer_16_id
+			when 32 then Result := String_integer_32_id
+			when 64 then Result := String_integer_64_id
+			end
+		end
+
 	union_tag: STRING is
 			-- Union name to specify type for Agents
 		do
@@ -217,6 +228,26 @@ feature {NONE} -- Constants for generation
 	String_integer_16: STRING is "EIF_INTEGER_16"
 	String_integer_32: STRING is "EIF_INTEGER_32"
 	String_integer_64: STRING is "EIF_INTEGER_64"
+
+	String_integer_8_id: INTEGER is
+		once
+			Result := Names_heap.eif_integer_8_name_id
+		end
+		
+	String_integer_16_id: INTEGER is
+		once
+			Result := Names_heap.eif_integer_16_name_id
+		end
+
+	String_integer_32_id: INTEGER is
+		once
+			Result := Names_heap.eif_integer_32_name_id
+		end
+
+	String_integer_64_id: INTEGER is
+		once
+			Result := Names_heap.eif_integer_64_name_id
+		end
 
 	Union_tag_8: STRING is "i8arg"
 	Union_tag_16: STRING is "i16arg"

@@ -91,6 +91,16 @@ feature -- Access
 			end
 		end
 
+	c_string_id: INTEGER is
+			-- String ID generated for the type.
+		do
+			if is_wide then
+				Result := Wide_char_string_id
+			else
+				Result := Character_string_id
+			end
+		end
+
 	union_tag: STRING is
 		do
 			if is_wide then
@@ -205,6 +215,16 @@ feature {NONE} -- Constants
 	Character_string: STRING is "EIF_CHARACTER"
 	Wide_char_string: STRING is "EIF_WIDE_CHAR"
 
+	Character_string_id: INTEGER is
+		once
+			Result := Names_heap.eif_char_name_id
+		end
+
+	Wide_char_string_id: INTEGER is
+		once
+			Result := Names_heap.eif_wide_char_name_id
+		end
+	
 	Union_character_tag: STRING is "carg"
 	Union_wide_char_tag: STRING is "wcarg"
 

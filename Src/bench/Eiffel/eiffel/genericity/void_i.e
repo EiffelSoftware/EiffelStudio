@@ -69,6 +69,12 @@ feature
 
 	c_string: STRING is "void"
 			-- String generated for the type.
+			
+	c_string_id: INTEGER is
+			-- String ID generated for type.
+		once
+			Result := Names_heap.void_name_id
+		end
 
 	union_tag: STRING is "rarg"
 

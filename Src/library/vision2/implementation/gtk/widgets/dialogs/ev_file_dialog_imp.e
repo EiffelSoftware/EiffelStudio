@@ -9,14 +9,32 @@ deferred class
 
 inherit
 	EV_FILE_SELECTION_DIALOG_I
-	EV_STANDARD_DIALOG_IMP
+
+	EV_SELECTION_DIALOG_IMP
 
 feature -- Access
 
 	file: STRING is
 			-- Path and name of the currently selected file
 			-- (including path).
+		local
+			p: POINTER
 		do
+			create Result.make (0)
+			p := gtk_file_selection_get_filename (widget)
+			Result.from_c (p)
+		end
+
+	ok_widget: POINTER is
+			-- Pointer to the gtk_button `OK' of the dialog.
+		do
+			Result := c_gtk_file_selection_get_ok_button (widget)
+		end
+
+	cancel_widget: POINTER is
+			-- Pointer to the gtk_button `Cancel' of the dialog.
+		do
+			Result := c_gtk_file_selection_get_cancel_button (widget)
 		end
 
 feature -- Status report
@@ -24,17 +42,38 @@ feature -- Status report
 	file_name: STRING is
 			-- Name of the currently selected file
 			-- (without path).
+		local
+			p: POINTER
 		do
+			p := c_gtk_file_selection_get_file_name (widget)
+			create Result.make (0)
+			Result.from_c (p)
 		end
 
 	directory: STRING is
 			-- Path of the current selected file
+		local
+			p: POINTER
 		do
+			p := c_gtk_file_selection_get_dir_name (widget)
+			create Result.make (0)
+			Result.from_c (p)
 		end
 
 	selected_filter: STRING is
 			-- Currently selected filter
 		do
+			check
+				not_implemented: False
+			end
+		end
+
+	selected_filter_name: STRING is
+			-- Name of the currently selected filter
+		do
+			check
+				not_implemented: False
+			end
 		end
 
 feature -- Status setting
@@ -42,6 +81,17 @@ feature -- Status setting
 	select_filter (filter: STRING) is
 			-- Select `filter' in the list of filter.
 		do
+			check
+				not_implemented: False
+			end
+		end
+
+	select_filter_by_name (name: STRING) is
+			-- Select the filter called `name'.
+		do
+			check
+				not_implemented: False
+			end
 		end
 
 feature -- Element change
@@ -50,6 +100,9 @@ feature -- Element change
 			-- Make `path' the base directory in detrmining files
 			-- to be displayed.
 		do
+			check
+				not_implemented: False
+			end
 		end
 
 	set_default_extension (extension: STRING) is
@@ -58,6 +111,9 @@ feature -- Element change
 			-- This extension will be automatically added to the
 			-- file name if the user fails to type an extension.
 		do
+			check
+				not_implemented: False
+			end
 		end
 
 	set_filter (filter_names, filter_patterns: ARRAY [STRING]) is
@@ -69,6 +125,18 @@ feature -- Element change
 			--	filter_names = <<"Text file", "All file">>
 			--	filter_patterns = <<"*.txt", "*.*">>
 		do
+			check
+				not_implemented: False
+			end
+		end
+
+	set_file (name: STRING) is
+			-- Make the file named `name' the new selected file.
+		local
+			a: ANY
+		do
+                        a := name.to_c
+			gtk_file_selection_set_filename (widget, $a)
 		end
 
 feature -- Event - command association
@@ -77,14 +145,23 @@ feature -- Event - command association
 			-- Add `cmd' to the list of commands to be executed when
 			-- the "OK" button is pressed.
 			-- If there is no "OK" button, the event never occurs.
+		local
+			ok_close_command: EV_COMMAND
+			list_com: EV_GTK_COMMAND_LIST
 		do
-		end
+			-- We have to remove the close command and put it back
+			-- to have it executed after all commands.
 
-	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed when
-			-- the "Cancel" button is pressed.
-			-- If there is no "Cancel" button, the event never occurs.
-		do
+			-- Remove the close command.
+			(event_command_array @ ok_clicked_id).finish
+			ok_close_command := (event_command_array @ ok_clicked_id).command_list.item
+			remove_single_command (ok_widget, ok_clicked_id, ok_close_command)
+
+			-- Add the command.
+			add_command (ok_widget, "clicked", cmd, arg)
+
+			-- re-add a new close command.
+			add_dialog_close_command (ok_widget)
 		end
 
 feature -- Event -- removing command association
@@ -93,12 +170,11 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- "OK" button is pressed.
 		do
-		end
+			-- remove commands
+			remove_commands (ok_widget, ok_clicked_id)
 
-	remove_cancel_commands is
-			-- Empty the list of commands to be executed when
-			-- "Cancel" button is pressed.
-		do
+			-- re-add a new close command.
+			add_dialog_close_command (ok_widget)
 		end
 
 end -- class EV_FILE_SELECTION_DIALOG_IMP

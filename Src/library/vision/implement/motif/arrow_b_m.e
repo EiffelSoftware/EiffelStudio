@@ -19,22 +19,27 @@ inherit
 		end;
 
 	BUTTON_M
+		rename
+			clean_up as button_clean_up
 		export
 			{NONE} all
 		redefine
-            text, set_text, 
+			text, set_text, 
 			set_left_alignment, set_center_alignment
 		end
 
+	BUTTON_M
+		export
+			{NONE} all
+		redefine
+			text, set_text, clean_up,
+			set_left_alignment, set_center_alignment
+		select
+			clean_up
+		end
 creation
 
 	make
-
-feature {NONE}
-
-	activate_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when current arrow button
-			-- is activated
 
 feature 
 
@@ -74,12 +79,6 @@ feature
 			release_actions.add (a_command, argument)
 		end;
 
-feature {NONE}
-
-	arm_actions: EVENT_HAND_M;
-			-- An event handler to manage call-backs when current arrow button
-			-- is armed
-
 feature 
 
 	make (an_arrow_b: ARROW_B) is
@@ -87,8 +86,10 @@ feature
 		local
 			ext_name_arrow: ANY
 		do
+			widget_index := widget_manager.last_inserted_position;
 			ext_name_arrow := an_arrow_b.identifier.to_c;
-			screen_object := create_arrow_b ($ext_name_arrow, an_arrow_b.parent.implementation.screen_object)
+			screen_object := create_arrow_b ($ext_name_arrow, 
+					parent_screen_object (an_arrow_b, widget_index));
 		end;
 
 	down: BOOLEAN is
@@ -152,6 +153,28 @@ feature {NONE}
 	release_actions: EVENT_HAND_M;
 			-- An event handler to manage call-backs when current arrow button
 			-- is released
+
+	arm_actions: EVENT_HAND_M;
+			-- An event handler to manage call-backs when current arrow button
+			-- is armed
+
+	activate_actions: EVENT_HAND_M;
+			-- An event handler to manage call-backs when current arrow button
+			-- is activated
+
+	clean_up is
+		do
+			button_clean_up;
+			if arm_actions /= Void then
+				arm_actions.free_cdfd
+			end;
+			if release_actions /= Void then
+				release_actions.free_cdfd
+			end;
+			if activate_actions /= Void then
+				activate_actions.free_cdfd
+			end;
+		end
 
 feature 
 

@@ -172,11 +172,8 @@ feature -- Basic routine
 		do
 			buf := buffer
 
-			if not result_type.is_void or else has_return_type then
+			if has_return_type or else not result_type.is_void then
 				buf.putstring ("return ");
-			end
-
-			if has_return_type then
 				result_type.c_type.generate_cast (buf)
 			end
 

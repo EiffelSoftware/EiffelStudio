@@ -22,7 +22,8 @@ feature -- Routines for externals
 	is_special: BOOLEAN is
 			-- Does the external declaration include a macro or a Dll --JOCE--
 		do
-			Result := extension /= Void and then (extension.is_macro or extension.is_dll)
+			Result := extension /= Void and then
+				(extension.is_macro or extension.is_struct or extension.is_dll)
 		end;
 
 	has_signature: BOOLEAN is

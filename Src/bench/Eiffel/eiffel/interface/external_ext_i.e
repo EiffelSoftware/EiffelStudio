@@ -34,6 +34,10 @@ feature
 		do
 		end
 
+	is_struct: BOOLEAN is
+		do
+		end
+
 	has_signature: BOOLEAN is
 		do
 			Result := has_arg_list or has_return_type

@@ -9,23 +9,14 @@ class CPP_EXTENSION_I
 
 inherit
 	EXTERNAL_EXT_I
-		rename
-			is_equal as ext_is_equal,
-			generate_header_files as old_generate_header_files
-		redefine
-			is_cpp, has_standard_prototype, generate_external_name,
-			generate_parameter_list
-		end
-	EXTERNAL_EXT_I
 		redefine
 			is_equal, is_cpp, generate_header_files,
 			has_standard_prototype, generate_external_name,
 			generate_parameter_list
-		select
-			is_equal, generate_header_files
 		end
+
 	SHARED_CPP_CONSTANTS
-		redefine
+		undefine
 			is_equal
 		end
 
@@ -63,7 +54,7 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 		do
-			Result := ext_is_equal (other) and then
+			Result := Precursor {EXTERNAL_EXT_I} (other) and then
 				class_name.is_equal (other.class_name) and then
 				class_header_file.is_equal (other.class_header_file) and then
 				type = other.type
@@ -83,7 +74,7 @@ feature -- Code generation
 	generate_header_files is
 			-- Generate header files for the extension.
 		do
-			old_generate_header_files
+			Precursor {EXTERNAL_EXT_I}
 			if not shared_include_queue.has (class_header_file) then
 				shared_include_queue.extend (class_header_file)
 			end

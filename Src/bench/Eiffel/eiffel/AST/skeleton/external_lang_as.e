@@ -87,17 +87,15 @@ feature {NONE} -- Implementation
 	parse is
 			-- Parse external declaration
 		local
-			source: STRING
-			image: STRING
+			source, image: STRING
 			ext_language_name: STRING
 			special_part: STRING
 			special_type: STRING
 			signature_part: STRING
-
 			dll_ext: C_DLL_EXTENSION_AS
 			start_special_part, end_special_part: INTEGER
 			valid_language_name: BOOLEAN
-			done: BOOLEAN
+			done, is_cpp_extension: BOOLEAN
 			pos: INTEGER
 			index_pos: INTEGER
 			dll_index: INTEGER
@@ -193,53 +191,55 @@ end
 								source.index_of ('[', 1) + 1,
 								source.index_of (']', 1) - 1)
 						else
-							if ext_language_name.is_equal ("C++") then
-									-- C++
-								!CPP_EXTENSION_AS!extension
-							else
-									-- C
-								special_type := special_part.substring (1, pos - 1)
-								special_type.to_lower
+								-- Is it a C++ external?
+							is_cpp_extension := ext_language_name.is_equal ("C++")
 
-								dll_index := -1
-								from
-									done :=false
-									nb := special_type.count
-									index_pos := 1
-								until
-									index_pos > nb or else done
-								loop
-									inspect
-										special_type.item (index_pos)
-									when '@' then
-										done := True
-										dll_index := special_type.substring(index_pos + 1,special_type.count).to_integer
-									else
-										index_pos := index_pos + 1
-									end
-								end
-								special_type := special_type.substring (1, index_pos-1)
-								if special_type.is_equal (macro_string) then
-									!C_MACRO_EXTENSION_AS!extension
-								elseif special_type.is_equal (dll16_string) then
-									!! dll_ext
-									dll_ext.set_dll_type (dll16_type)
-									extension := dll_ext
-								elseif special_type.is_equal (dll32_string) then
-									!! dll_ext
-									dll_ext.set_dll_type (dll32_type)
-									dll_ext.set_dll_index (dll_index) 
-									extension := dll_ext
-								elseif special_type.is_equal (dllwin32_string) then
-									!! dll_ext
-									dll_ext.set_dll_type (dllwin32_type)
-									dll_ext.set_dll_index (dll_index) 
-									extension := dll_ext
+								-- C
+							special_type := special_part.substring (1, pos - 1)
+							special_type.to_lower
+
+							dll_index := -1
+							from
+								done :=false
+								nb := special_type.count
+								index_pos := 1
+							until
+								index_pos > nb or else done
+							loop
+								inspect
+									special_type.item (index_pos)
+								when '@' then
+									done := True
+									dll_index := special_type.substring(index_pos + 1,special_type.count).to_integer
 								else
-									!C_EXTENSION_AS!extension
+									index_pos := index_pos + 1
 								end
-								special_part := special_part.substring (pos + 1, special_part.count)
 							end
+							special_type := special_type.substring (1, index_pos-1)
+							if special_type.is_equal (macro_string) then
+								create {MACRO_EXTENSION_AS} extension.make (is_cpp_extension)
+							elseif special_type.is_equal (struct_string) then
+								create {STRUCT_EXTENSION_AS} extension.make (is_cpp_extension)
+							elseif special_type.is_equal (dll16_string) then
+								!! dll_ext
+								dll_ext.set_dll_type (dll16_type)
+								extension := dll_ext
+							elseif special_type.is_equal (dll32_string) then
+								!! dll_ext
+								dll_ext.set_dll_type (dll32_type)
+								dll_ext.set_dll_index (dll_index) 
+								extension := dll_ext
+							elseif special_type.is_equal (dllwin32_string) then
+								!! dll_ext
+								dll_ext.set_dll_type (dllwin32_type)
+								dll_ext.set_dll_index (dll_index) 
+								extension := dll_ext
+							elseif is_cpp_extension then
+								create {CPP_EXTENSION_AS} extension
+							else
+								create {C_EXTENSION_AS} extension
+							end
+							special_part := special_part.substring (pos + 1, special_part.count)
 
 								-- Remove special type from special_part
 							special_part.left_adjust
@@ -288,7 +288,7 @@ end
 						if ext_language_name.is_equal ("C++") then
 							raise_external_error ("Missing special part", 1, 1)
 						else
-							!C_EXTENSION_AS!extension
+							create {C_EXTENSION_AS} extension
 						end
 					end
 				end

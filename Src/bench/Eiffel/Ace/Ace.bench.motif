@@ -30,6 +30,7 @@ default
 	--debug ("PASS3")
 	--debug ("CACHE")
 	--debug ("DEAD_CODE_REMOVAL")
+	--debug ("SPLIT")
 
 cluster
 

@@ -179,8 +179,8 @@ copy cleanup.bat parsing\shared\
 copy cleanup.bat platform\
 copy cleanup.bat idrs\
 copy cleanup.bat run-time\
-copy cleanup.bat run-time\OBJDIR
-copy cleanup.bat LIB\
+copy cleanup.bat run-time\OBJDIR\
+copy cleanup.bat run-time\LIB\
 
 cd console
 call cleanup
@@ -208,9 +208,9 @@ cd ..\run-time
 call cleanup
 cd OBJDIR
 call cleanup
-cd ..\..\LIB
+cd ..\LIB
 call cleanup
-cd ..
+cd ..\..
 
 del parsing\lace\lace_y.c
 del parsing\lace\lace_y.h

@@ -23,6 +23,7 @@ feature {LACE_AST_FACTORY} -- Initialization
 		do
 			option := o
 			value := v
+			check_valid_free_options
 		ensure
 			option_set: option = o
 			value_set: value = v
@@ -33,29 +34,20 @@ feature {NONE} -- Initialization
 	set is
 			-- Yacc initialization
 		local
-			free_option: FREE_OPTION_SD;
-			vd32: VD32;
+			free_option: FREE_OPTION_SD
+			vd32: VD32
 		do
-			option ?= yacc_arg (0);
-			value ?= yacc_arg (1);
-
-			free_option ?= option;
-			if free_option /= Void and then
-				not free_option.is_valid
-			then
-				!!vd32;
-				vd32.set_option_name (free_option.option_name);
-				Error_handler.insert_error (vd32);
-				-- see also ETL p526 (VDOC error message)	
-			end;
+			option ?= yacc_arg (0)
+			value ?= yacc_arg (1)
+			check_valid_free_options
 		end;
 
 feature -- Properties
 
-	option: OPTION_SD;
+	option: OPTION_SD
 			-- Option name
 
-	value: OPT_VAL_SD;
+	value: OPT_VAL_SD
 			-- option value
 
 feature {NONE} -- Implementation
@@ -66,11 +58,12 @@ feature {NONE} -- Implementation
 			vd32: VD32;
 		do
 			if option.is_free_option then
-				free_option ?= option;
+				free_option ?= option
 				if not free_option.is_valid then
-					!!vd32;
-					vd32.set_option_name (free_option.option_name);
-					Error_handler.insert_error (vd32);
+						-- see also ETL p526 (VDOC error message)	
+					create vd32
+					vd32.set_option_name (free_option.option_name)
+					Error_handler.insert_error (vd32)
 				end;
 			end;
 		end;
@@ -80,14 +73,14 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 	process_system_level_options is
 		do
 			if option.is_valid and then option.is_system_level then
-				option.process_system_level_options (value);
-			end;
-		end;
+				option.process_system_level_options (value)
+			end
+		end
 
 	adapt is
 			-- Cluster adaptation
 		do
 			option.adapt (value, context.current_cluster.classes, Void) 
-		end;
+		end
 
 end -- class D_OPTION_SD

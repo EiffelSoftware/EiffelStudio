@@ -39,27 +39,28 @@ feature -- Initialization
 			--is_creatable: project_dir.is_creatable
 			prev_read_write_error: not read_write_error
 		do
-			Project_directory.make_from_string (project_dir.name)
+			project_directory := project_dir
+			Project_directory_name.make_from_string (project_directory.name)
 			Create_compilation_directory
 			Create_generation_directory
 			Workbench.make
 			Workbench.init
 			set_is_initialized
- 			Execution_environment.change_working_directory (project_dir.name)
+ 			Execution_environment.change_working_directory (project_directory.name)
 		ensure
 			initialized: initialized
 		end
 
-	retrieve (project_dir: PROJECT_DIRECTORY) is
+	retrieve is
 			-- Retrieve an existing Eiffel Project from `file.
 			-- (If a read-write error occured you must exit from
 			-- application).
 		require
-			non_void_project_dir: project_dir /= Void
-			project_dir_exists: project_dir.exists
-			file_readable: project_dir.is_readable
+			non_void_project_dir: project_directory /= Void
+			project_dir_exists: project_directory.exists
+			file_readable: project_directory.is_readable
 			not_initialized: not initialized
-			project_eif_ok: project_dir.valid_project_eif
+			project_eif_ok: project_directory.valid_project_eif
 			prev_read_write_error: not read_write_error
 		local
 			precomp_r: PRECOMP_R
@@ -73,11 +74,11 @@ feature -- Initialization
 		do
 			set_error_status (Ok_status)
 
-			check_existence (project_dir)
+			check_existence
 
 			if not error_occurred then
 
-				p_eif := project_dir.project_eif_file
+				p_eif := project_directory.project_eif_file
 				e_project := p_eif.retrieved_project
 				if p_eif.error then
 					if p_eif.is_corrupted then
@@ -90,7 +91,7 @@ feature -- Initialization
 					end
 				else
 --!! FIXME: check Concurrent_Eiffel license
-					Project_directory.make_from_string (project_dir.name)
+					Project_directory_name.make_from_string (project_directory.name)
 					system := e_project.system
 					Workbench.copy (e_project.saved_workbench)
 					Workbench.init
@@ -107,7 +108,7 @@ feature -- Initialization
 							precomp_dirs.forth
 						end
 						Precompilation_directories.copy (precomp_dirs)
-						!! remote_dir.make (project_dir.name)
+						!! remote_dir.make (project_directory.name)
 						remote_dir.set_licensed (Comp_system.licensed_precompilation)
 						remote_dir.set_system_name (Comp_system.system_name)
 						Precompilation_directories.force
@@ -126,11 +127,11 @@ feature -- Initialization
 					Comp_system.server_controler.init
 					Universe.update_cluster_paths
 					
-					check_permissions (project_dir)
+					check_permissions
 
 					if not error_occurred then
 						set_is_initialized
-						Execution_environment.change_working_directory (project_dir.name)
+						Execution_environment.change_working_directory (project_directory.name)
 					end
 				end
 			end
@@ -149,15 +150,18 @@ feature -- Properties
 			!! Result
 		end
 
+	project_directory: PROJECT_DIRECTORY
+			-- Information about the project files structures
+
 	system: E_SYSTEM
 			-- Eiffel system
 
 	name: DIRECTORY_NAME is
 			-- Path of eiffel project
 		do
-			Result := Project_directory
+			Result := Project_directory_name
 		ensure
-			is_project_dir: Result = Project_directory
+			is_project_dir: Result = Project_directory_name
 		end
 
 	error_displayer: ERROR_DISPLAYER is
@@ -250,8 +254,9 @@ feature -- Access
 			-- Is the Current Project new?
 		local
 			proj_dir: PROJECT_DIRECTORY
+			p: PROJECT_EIFFEL_FILE
 		do	
-			!! proj_dir.make (Project_directory)
+			!! proj_dir.make (Project_directory_name, p)
 			Result := proj_dir.is_new
 		end
 
@@ -465,6 +470,7 @@ feature -- Update
 					Degree_output.put_resynchronizing_breakpoints_message
 				end
 			end
+			Compilation_modes.reset_modes
 			is_compiling_ref.set_item (False)
 		ensure
 			was_saved: successful and then not
@@ -589,6 +595,7 @@ feature -- Update
 					save_precomp (licensed)
 				end
 			end
+			Compilation_modes.reset_modes
 		ensure
 			was_saved: successful and then not error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
@@ -605,41 +612,54 @@ feature -- Output
 			compilation_successful: successful
 		local
 			retried: BOOLEAN
-			file: RAW_FILE
-			tfile: PLAIN_TEXT_FILE
+			file_name: FILE_NAME
+			project_name: STRING
+			project_file: RAW_FILE
 		do
 			if not retried then
 				error_status_mode.set_item (Ok_status)
-				!! tfile.make (Project_txt_name)
-				tfile.open_write
-				tfile.putstring ("-- System name is ")
-				tfile.putstring (System.name)
-				tfile.new_line
-				tfile.putstring (version_number_tag)
-				tfile.putstring (": %"")
-				tfile.putstring (version_number)
-				tfile.putchar ('"')
-				tfile.new_line
-				tfile.putstring (storable_version_number_tag)
-				tfile.putstring (": %"")
-				tfile.putstring (storable_version_number)
-				tfile.putchar ('"')
-				tfile.new_line
-				tfile.putstring (precompilation_id_tag)
-				tfile.putstring (": %"")
-				tfile.putint (Comp_system.compilation_id)
-				tfile.putchar ('"')
-				tfile.new_line
-				tfile.close
-				!! file.make (Project_file_name)
+
+					--| Prepare informations to store
 				Comp_system.server_controler.wipe_out
-				file.open_write
 				saved_workbench := workbench
-				file.independent_store (Current)
-				file.close
+
+
+				!! file_name.make_from_string (Project_directory.name);
+				if Compilation_modes.is_precompiling then 
+					file_name.extend (eiffelgen);
+					file_name.set_file_name (dot_workbench)
+				else
+					project_name := clone (System.name)
+					project_name.append (Project_extension)
+					file_name.set_file_name (project_name)
+				end
+
+				!! project_file.make_open_write (file_name)
+				project_file.putstring ("-- System name is ")
+				project_file.putstring (System.name)
+				project_file.new_line
+				project_file.putstring (version_number_tag)
+				project_file.putstring (":")
+				project_file.putstring (version_number)
+				project_file.putstring ("%N")
+				project_file.putstring (storable_version_number_tag)
+				project_file.putstring (":")
+				project_file.putstring (storable_version_number)
+				project_file.putstring ("%N")
+				project_file.putstring (precompilation_id_tag)
+				project_file.putstring (":")
+				project_file.putstring (Comp_system.compilation_id.out)
+				project_file.putstring ("%N-- end of info%N")
+
+					--| To store correctly the information after the project
+					--| header, we need to set the position, otherwise the
+					--| result is quite strange and won't be retrievable
+				project_file.go (project_file.count)
+				project_file.independent_store (Current)
+				project_file.close
 			else
-				if file /= Void and then not file.is_closed then
-					file.close
+				if project_file /= Void and then not project_file.is_closed then
+					project_file.close
 				end
 				retried := False
 				set_error_status (Save_error_status)
@@ -711,25 +731,25 @@ feature {APPLICATION_EXECUTION}
 
 feature {NONE} -- Implementation
 
-	check_existence (project_dir: PROJECT_DIRECTORY) is
-			-- Check the permissions of `project_dir' before to retrieve
+	check_existence is
+			-- Check the permissions of `project_directory' before to retrieve
 			-- the project.
 		require
-			valid_project_dir: project_dir /= Void
+			valid_project_dir: project_directory /= Void
 			status_ok: not error_occurred
 		do
-			if not project_dir.exists then
+			if not project_directory.exists then
 				set_error_status (file_error_status)
 			end
 		end
 
-	check_permissions (project_dir: PROJECT_DIRECTORY) is
-			-- Check the permissions of `project_dir' after the retrieving
+	check_permissions is
+			-- Check the permissions of `project_directory' after the retrieving
 			-- of the project.
 		do
-			if not System.is_precompiled and then project_dir.is_writable then
+			if not System.is_precompiled and then project_directory.is_writable then
 				set_file_status (write_status)
-			elseif project_dir.is_readable then
+			elseif project_directory.is_readable then
 				set_file_status (read_only_status)
 			else
 				set_error_status (file_error_status)

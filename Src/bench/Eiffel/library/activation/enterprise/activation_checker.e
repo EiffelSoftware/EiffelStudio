@@ -1,30 +1,19 @@
 indexing
-	description:	"[
-						Check whether product is correctly activated,
-						decrement remaining executions counter otherwise.
-						When counter reaches 0, product must be activated.
-					]"
-	revision:	"$$"
-	date:		"$$"
+	description: "[
+		Check whether product is correctly activated,
+		decrement remaining executions counter otherwise.
+		When counter reaches 0, product must be activated.
+		]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ACTIVATION_CHECKER
-	
+
 inherit
-	EV_APPLICATION
+	ACTIVATION_CHECKER_I
 
-	PRODUCT_INFO
-		rename
-			Name as Product_name,
-			Version as Product_version
-		export
-			{NONE} all
-		undefine
-			default_create,
-			copy
-		end
-
-feature -- Basic Operations
+feature
 
 	check_activation is
 			-- Check whether product can be started.
@@ -33,32 +22,41 @@ feature -- Basic Operations
 			-- Set `can_run' to `True' if product can
 			-- be started, `False' otherwise.
 		local
-			engine: KG_ENGINE
 			validator_window: ACTIVATION_KEY_VALIDATOR_WINDOW
+			l_app: EV_APPLICATION
 		do
-			can_run := False
-			create engine.make (Product_name, Product_version)
-			if engine.is_initialized then
-				can_run := engine.is_activated
-				if not can_run then
-					create validator_window.make (agent set_can_run (True))
-					validator_window.show
-					launch
-				end
+			check_license
+			if is_evaluating then
+				create l_app
+				create validator_window.make (agent set_can_run (True), agent l_app.destroy)
+				validator_window.show
+				l_app.launch
 			end
+			launch_gc_cycle
 		end
 
-	can_run: BOOLEAN
-			-- Can product be run?
-
+	check_activation_while_running (a_next_action: PROCEDURE [ANY, TUPLE]) is
+			-- Check whether product can be started.
+			-- Decrement remaining execution count
+			-- if not activated.
+			-- Set `can_run' to `True' if product can
+			-- be started, `False' otherwise.
+		local
+			validator_window: ACTIVATION_KEY_VALIDATOR_WINDOW
+		do
+			check_license
+			if is_evaluating then
+				create validator_window.make (agent set_can_run (True), a_next_action)
+				validator_window.show
+			end
+			launch_gc_cycle
+		end
+	
 feature {NONE} -- Implementation
 
-	set_can_run (l_can_run: BOOLEAN) is
-			-- Set `can_run' with `l_can_run'.
+	report_engine_not_initialized is
+			-- Action to be performed when engine is not initialized.
 		do
-			can_run := l_can_run
-		ensure
-			can_run_set: can_run = l_can_run
 		end
 
 end -- class ACTIVATION_CHECKER

@@ -684,7 +684,8 @@ feature {GB_OBJECT_EDITOR, GB_GENERAL_UTILITIES} -- Implementation
 	cancel_edited_name is
 			-- Assign `name' to `edited_name'.
 		do
-			set_name (name)
+			edited_name := name
+			layout_item.set_text (name_and_type_from_object (Current))
 		end
 
 	output_name: STRING is

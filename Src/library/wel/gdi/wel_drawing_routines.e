@@ -90,7 +90,7 @@ feature {NONE} -- Externals
 		end
 
 	cwin_draw_state (hdc, hbrush, callback: POINTER; lparam, wparam, x, y, cx, cy, flag: INTEGER) is
-			-- The flag is a combinaison of a type and a state.
+			-- The flag is a combination of a type and a state.
 		external
 			"C [macro <windows.h>] (HDC, HBRUSH, DRAWSTATEPROC, LPARAM, WPARAM, int, int, int, int, UINT)"
 		alias

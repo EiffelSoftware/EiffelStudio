@@ -841,7 +841,7 @@ feature {NONE} -- Implementation
 
 invariant
 
---	tree_consistent: child /= Void implies child.parent = Current
+	tree_consistency: child_readable implies child.parent = Current
 	leaf_definition: is_leaf = (arity = 0)
 	child_off_definition: child_off = child_before or child_after
 	child_before_definition: child_before = (child_index = 0)

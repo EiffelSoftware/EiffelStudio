@@ -40,7 +40,7 @@ feature -- Initialization
 
 			list.key_press_actions.extend (agent key_actions)
 
-			create exit_b.make_with_text_and_action (Interface_names.b_Cancel, agent destroy)
+			create exit_b.make_with_text_and_action (Interface_names.b_Cancel, agent destroy_dialog)
 
 			create vb
 			vb.set_padding (3)
@@ -125,7 +125,7 @@ feature
 			p: INTEGER
 		do
 			p := list.index_of (it, 1)
-			destroy
+			destroy_dialog
 			if callback /= Void then
 				callback.call ([p])
 			end
@@ -171,6 +171,20 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
+	destroy_dialog is
+			-- Destroy in a safe manner current dialog.
+		require
+			list_not_void: list /= Void
+		do
+			if not is_destroyed then
+					-- Because call to destroy may cause a call to the focus_out actions
+					-- we make sure there are none that could be triggered.
+				list.focus_out_actions.wipe_out
+				focus_out_actions.wipe_out
+				destroy
+			end
+		end
+
 	Key_csts: EV_KEY_CONSTANTS is
 			-- Default key constants.
 		once
@@ -178,14 +192,14 @@ feature {NONE} -- Implementation
 		end
 
 	key_actions (k: EV_KEY) is
-			-- Call `execute' if k = Enter, `destroy' if k = Esc.
+			-- Call `execute' if k = Enter, `destroy_dialog' if k = Esc.
 		do
 			if k.code = Key_csts.Key_enter then
 				if list.selected_item /= Void then
 					execute (list.selected_item)
 				end
 			elseif k.code = Key_csts.Key_escape then
-				destroy
+				destroy_dialog
 			end
 		end
 
@@ -199,7 +213,7 @@ feature {NONE} -- Implementation
 				not is_destroyed and then
 				not has_focus
 			then
-				destroy
+				destroy_dialog
 			end
 		end
 

@@ -1089,7 +1089,7 @@ feature {NONE} -- Externals
 			x_end, y_end: INTEGER) is
 			-- SDK Arc
 		external
-			"C [macro <wel.h>] (HDC, int, int, int,%
+			"C [macro <wel.h>] (HDC, int, int, int, %
 				%int, int, int, int, int)"
 		alias
 			"Arc"
@@ -1099,7 +1099,7 @@ feature {NONE} -- Externals
 			x_end, y_end: INTEGER) is
 			-- SDK Chord
 		external
-			"C [macro <wel.h>] (HDC, int, int, int,%
+			"C [macro <wel.h>] (HDC, int, int, int, %
 				%int, int, int, int, int)"
 		alias
 			"Chord"
@@ -1109,7 +1109,7 @@ feature {NONE} -- Externals
 			x_end, y_end: INTEGER) is
 			-- SDK Pie
 		external
-			"C [macro <wel.h>] (HDC, int, int, int,%
+			"C [macro <wel.h>] (HDC, int, int, int, %
 				%int, int, int, int, int)"
 		alias
 			"Pie"
@@ -1128,7 +1128,7 @@ feature {NONE} -- Externals
 			hdc_src: POINTER; x_src, y_src, rop: INTEGER) is
 			-- SDK BitBlt
 		external
-			"C [macro <wel.h>] (HDC, int, int, int, int, HDC,%
+			"C [macro <wel.h>] (HDC, int, int, int, int, HDC, %
 				%int, int, DWORD)"
 		alias
 			"BitBlt"
@@ -1139,7 +1139,7 @@ feature {NONE} -- Externals
 			lpbmi: POINTER; color_use, rop: INTEGER) is
 			-- SDK StretchDIBits
 		external
-			"C [macro <wel.h>] (HDC,int, int, int, int, int, int,%
+			"C [macro <wel.h>] (HDC,int, int, int, int, int, int, %
 				%int, int, void *, LPBITMAPINFO, UINT, DWORD)"
 		alias
 			"StretchDIBits"
@@ -1150,7 +1150,7 @@ feature {NONE} -- Externals
 			width_src, height_src, rop: INTEGER) is
 			-- SDK StretchBlt
 		external
-			"C [macro <wel.h>] (HDC, int, int, int, int, HDC,%
+			"C [macro <wel.h>] (HDC, int, int, int, int, HDC, %
 				%int, int, int, int, DWORD)"
 		alias
 			"StretchBlt"
@@ -1226,7 +1226,7 @@ feature {NONE} -- Externals
 			init_data: POINTER): POINTER is
 			-- SDK CreateDC
 		external
-			"C [macro <wel.h>] (LPCSTR, LPCSTR, LPCSTR,%
+			"C [macro <wel.h>] (LPCSTR, LPCSTR, LPCSTR, %
 				%void *): EIF_POINTER"
 		alias
 			"CreateDC"

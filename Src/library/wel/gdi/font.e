@@ -53,8 +53,8 @@ feature {NONE} -- Implementation
 			face: POINTER): POINTER is
 			-- SDK CreateFont
 		external
-			"C [macro <wel.h>] (int, int, int, int, int, DWORD,%
-				%DWORD, DWORD, DWORD, DWORD, DWORD, DWORD,%
+			"C [macro <wel.h>] (int, int, int, int, int, DWORD, %
+				%DWORD, DWORD, DWORD, DWORD, DWORD, DWORD, %
 				%DWORD, LPCSTR): EIF_POINTER"
 		alias
 			"CreateFont"

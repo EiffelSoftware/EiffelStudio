@@ -22,7 +22,7 @@ creation
 feature {NONE} -- Initialization
 
 	make_compatible (a_dc: WEL_DC; a_width, a_height: INTEGER) is
-			-- initialize current bitmap to be compatible
+			-- Initialize current bitmap to be compatible
 			-- with `a_dc' and with `a_width' as `width',
 			-- `a_height' as `height'.
 		require
@@ -120,7 +120,7 @@ feature {NONE} -- Externals
 				bits, infodib: POINTER; mode: INTEGER): POINTER is
 			-- SDK CreateDIBitmap
 		external
-			"C [macro <wel.h>] (HDC, BITMAPINFOHEADER *, DWORD,%
+			"C [macro <wel.h>] (HDC, BITMAPINFOHEADER *, DWORD, %
 				%void *, BITMAPINFO *, UINT): EIF_POINTER"
 		alias
 			"CreateDIBitmap"
@@ -130,7 +130,7 @@ feature {NONE} -- Externals
 			 bits, info: POINTER; mode: INTEGER) is
 			-- SDK SetDIBits
 		external
-			"C [macro <wel.h>] (HDC, HBITMAP, UINT, UINT, void *,%
+			"C [macro <wel.h>] (HDC, HBITMAP, UINT, UINT, void *, %
 				%BITMAPINFO *, UINT)"
 		alias
 			"SetDIBits"

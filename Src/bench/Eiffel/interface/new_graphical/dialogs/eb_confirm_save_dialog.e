@@ -6,9 +6,6 @@ indexing
 class
 	EB_CONFIRM_SAVE_DIALOG
 
--- Warning: All the clients of this class have a bug.
--- If they are called twice, the confirmer is not called.
-
 inherit
 	EV_WARNING_DIALOG
 
@@ -24,14 +21,11 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_and_launch (ed: EB_EDITOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	make_and_launch (ed: EB_EDITOR; a_caller: EB_CONFIRM_SAVE_CALLBACK) is
 			-- Initialize and popup the dialog
-			-- (number of arguments can be reduced from 3 to 2,
-			-- if all callers are made EB_EDITOR_COMMAND)
 		do
 			init_command (ed)
-			command := cmd
-			argument := arg
+			caller := a_caller
 			make_with_text (ed.parent, Interface_names.t_Warning, Warning_messages.w_File_changed)
 			show_yes_no_cancel_buttons
 			add_yes_command (Current, Ok_to_save)
@@ -44,11 +38,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	command: EV_COMMAND
-		-- command to be executed on success
-
-	argument: EV_ARGUMENT
-		-- argument to be passed to the command
+	caller: EB_CONFIRM_SAVE_CALLBACK
+		-- object whose `process' feature will be executed on success
 
 feature {NONE} -- Constants
 
@@ -70,7 +61,7 @@ feature -- Execution
 				if arg = Ok_to_save then
 					tool.save_text
 				end
-				command.execute (argument, Void)
+				caller.process
 			end
 			destroy
 		end

@@ -68,7 +68,7 @@ feature -- Element change
 			a_height_not_smaller_than_minimum_height:
 				a_height >= a_widget.minimum_height
 		do
-			set_item_size (a_widget, a_widget.width, height)
+			set_item_size (a_widget, a_widget.width, a_height)
 		end
 
 	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is

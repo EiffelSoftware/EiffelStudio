@@ -21,6 +21,8 @@ inherit
 	PREFERENCE_CATEGORY
 		rename
 			make as rc_make
+		redefine
+			init_colors
 		end
 
 creation
@@ -35,15 +37,30 @@ feature {NONE} -- Initialization
 		do
 			tool := a_tool;
 			!! resources.make;
+
+			!! parse_class_after_saving.make 
+							(associated_category.parse_class_after_saving, Current)
+			!! default_window_position.make (associated_category.default_window_position, Current);
 			!! str_temporary_dir.make (associated_category.temporary_dir, Current);
 			!! str_profiler_dir.make (associated_category.profiler_dir, Current);
 			!! str_filter_dir.make (associated_category.filter_dir,	Current);
 			!! int_history_size.make (associated_category.history_size, Current)
 
+			resources.extend (default_window_position);
+			resources.extend (parse_class_after_saving);
 			resources.extend (str_profiler_dir);
 			resources.extend (str_filter_dir);
 			resources.extend (str_temporary_dir);
 			resources.extend (int_history_size);
+		end;
+
+	init_colors is
+			-- Initialize the colors of the page.
+		local
+			att: WINDOW_ATTRIBUTES
+		do
+			!! att;
+			att.set_composite_attributes (Current)
 		end
 
 feature {PREFERENCE_TOOL} -- Initialization
@@ -63,10 +80,6 @@ feature {PREFERENCE_TOOL} -- Initialization
 			rc_make (name, a_parent)
 		end
 
-feature -- Access
-
-	resources: LINKED_LIST [PREFERENCE_RESOURCE]
-
 feature -- Properties
 
 	name: STRING is "System preferences"
@@ -84,45 +97,12 @@ feature -- Properties
 			full_path: FILE_NAME
 		once
 			Result := bm_System_dot
-		end;
-
-feature -- User Interface
-
-	display is
-			-- Display Current
-			--| This feature is used to initialize `resources'.
-		do
-			holder.set_selected (True);
-			if been_displayed then
-				manage
-			else
-				from
-					resources.start
-				until
-					resources.after
-				loop
-					resources.item.display;
-					resources.forth
-				end;
-				been_displayed := True
-			end
-		end;
-
-	undisplay is
-			-- Undisplay Current
-			--| This only updates the pixmap on the button
-		do
-			holder.set_selected (False);
-			unmanage
 		end
-
-feature {NONE} -- Properties
-
-	been_displayed: BOOLEAN;
-			-- Has Current already been displayed?
 
 feature {NONE} -- Resources
 
+	parse_class_after_saving: BOOLEAN_PREF_RES;
+	default_window_position: BOOLEAN_PREF_RES;
 	str_temporary_dir: STRING_PREF_RES;
 	str_profiler_dir: STRING_PREF_RES;
 	str_filter_dir: STRING_PREF_RES;

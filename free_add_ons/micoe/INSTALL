@@ -1,0 +1,69 @@
+Prerequisites
+============
+
+Unix
+----
+
+Before trying to compile mico/E make sure you have installed the
+following software packages:
+
+   o make (required)
+   o C compiler and library (required):
+        - gcc 2.7.2.1 or newer
+   o ISE Eiffelcompiler 4.3 or newer (required)
+
+Installation
+============
+
+The mico/E source release is shipped as a tar'ed and gzip'ed archive called
+
+  micoe-<version>.tar.gz
+
+Unpack the archive using the following command:
+
+  gzip -dc micoe-<version>.tar.gz | tar xf -
+
+You are left with a new directory micoe containing the mico/E sources.  To
+save you the hassle of manually editing Makefile's and such, mico/E comes 
+with a configuration script that checks your system for required programs and
+other configuration issues. The script, called configure, supports several
+important command line options:
+
+--help
+     Gives an overview of all supported command line options.
+
+--prefix=<install-directory>
+     With this options you tell configure where the mico/E programs and
+     libraries should be installed after compilation. This defaults
+     to /usr/local.
+
+--disable-precomp
+     do not precompile Eiffel Libs
+
+--disable-idl2eif
+     do not compile idl2eif
+
+--with-precomp=DIR
+     use DIR for precompiled libs. This defaults to $EIFFEL4/precomp/spec/$PLATFORM.
+
+--with-eiflib=DIR
+     use DIR for Eiffel libs. This defaults to $EIFFEL4/local/library.
+
+--disable-optimize
+     do not use flag -O2 to compile eifadt.a and micoe.a
+
+--enable
+     use flag -g to compile eifadt.a and micoe.a
+
+Now you should run configure with the proper command line options you need,
+e.g.:
+
+  cd micoe
+  ./configure
+
+Use make to start compilation and install the programs and libraries,
+possibly becoming root before installation:
+
+  make
+  make install
+

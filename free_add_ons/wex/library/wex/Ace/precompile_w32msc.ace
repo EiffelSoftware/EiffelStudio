@@ -1,0 +1,74 @@
+system
+	precompile
+
+root 
+	ANY
+
+default
+	precompiled("$EIFFEL4\precomp\spec\windows\wel"); -- Wel
+	--precompiled("$EIFFEL4\precomp\spec\windows\wel-mt"); -- Wel Multithreaded
+
+cluster 
+
+-- WEX
+	wex_mci_devices:	"$EIFFEL4\library\WeX\MCI_devices";
+	wex_mci_consts:		"$EIFFEL4\library\WeX\MCI_constants";
+	wex_mci_structs:	"$EIFFEL4\library\WeX\MCI_structures";
+	wex_mci_support:	"$EIFFEL4\library\WeX\MCI_support";
+	wex_windows:		"$EIFFEL4\library\WeX\Windows";
+	wex_splash:		"$EIFFEL4\library\WeX\Splash";
+	wex_Window_extras:	"$EIFFEL4\library\WeX\Window_Extras";
+	wex_framework:		"$EIFFEL4\library\WeX\FrameWork";
+	
+
+-- EiffelBase
+	kernel: 		"$EIFFEL4\library\base\kernel";
+	support:		"$EIFFEL4\library\base\support";
+	access: 		"$EIFFEL4\library\base\structures\access";
+	cursors:		"$EIFFEL4\library\base\structures\cursors";
+	cursor_tree:	"$EIFFEL4\library\base\structures\cursor_tree";
+	dispenser:		"$EIFFEL4\library\base\structures\dispenser";
+	iteration:		"$EIFFEL4\library\base\structures\iteration";
+	list:			"$EIFFEL4\library\base\structures\list";
+	set:			"$EIFFEL4\library\base\structures\set";
+	sort:			"$EIFFEL4\library\base\structures\sort";
+	storage:		"$EIFFEL4\library\base\structures\storage";
+	table:		"$EIFFEL4\library\base\structures\table";
+	traversing:	"$EIFFEL4\library\base\structures\traversing";
+	tree:			"$EIFFEL4\library\base\structures\tree";
+
+-- WEL
+	wel_constants:			"$EIFFEL4\library\wel\consts";
+	wel_controls:			"$EIFFEL4\library\wel\controls";
+	wel_gdi:				"$EIFFEL4\library\wel\gdi";
+	wel_gdi_stocks: 		"$EIFFEL4\library\wel\gdistock";
+	wel_messages:			"$EIFFEL4\library\wel\messages";
+	wel_standard_dialogs:	"$EIFFEL4\library\wel\stddlgs";
+	wel_structures: 		"$EIFFEL4\library\wel\structs";
+	wel_support:			"$EIFFEL4\library\wel\support";
+	wel_windows:			"$EIFFEL4\library\wel\windows";
+
+external
+	include_path:		"$(EIFFEL4)\library\Wex\spec\windows\include",
+					"$(EIFFEL4)\library\Wex\clib",
+					"$(EIFFEL4)\library\Wel\spec\windows\include";
+	object:				"$(wex_vc_lib)\winmm.lib",
+					"$(EIFFEL4)\library\Wex\clib\cwex.lib",
+					"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib";
+
+end -- system precompile
+
+--|-------------------------------------------------------------------------
+--| WEX, Windows Eiffel library eXtension
+--| Copyright (C) 1998  Robin van Ommeren, Andreas Leitner
+--| See the file forum.txt included in this package for licensing info.
+--|
+--| Comments, Questions, Additions to this library? please contact:
+--|
+--| Robin van Ommeren						Andreas Leitner
+--| Eikenlaan 54M								Arndtgasse 1/3/5
+--| 7151 WT Eibergen							8010 Graz
+--| The Netherlands							Austria
+--| email: robin.van.ommeren@wxs.nl		email: andreas.leitner@teleweb.at
+--| web: http://home.wxs.nl/~rommeren	web: about:blank
+--|-------------------------------------------------------------------------

@@ -1,0 +1,23 @@
+#! /bin/sh
+
+case `uname` in
+Linux) ADDR=inet:`hostname -f`:12345 ;;
+*)     ADDR=inet:`hostname`:12345    ;;
+esac
+# give the user a chance to say how long to wait before starting client
+
+case $# in
+0) SLEEPTIME=3;; # a good empirical default value
+*) SLEEPTIME=$1
+esac
+
+(cd server; startserver $ADDR&)
+# give the server time to get up and running before starting the client
+echo "Server started; give it "$SLEEPTIME"s. to get up and running"
+
+sleep $SLEEPTIME
+
+server_pid=`ps|awk '/[s]erver/ {print$1}'`
+trap "kill $server_pid" 0
+
+(cd client; startclient $ADDR)

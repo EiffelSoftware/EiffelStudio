@@ -1,0 +1,57 @@
+#!/bin/sh
+
+RELEASEDIR=micoe-release
+SRCDIR=`pwd`
+VERSION=`cat VERSION`
+MANIFEST=`pwd`/MANIFEST
+MKDIRS=`pwd`/admin/mkinstalldirs
+MKBOOK=`pwd`/admin/mkbook
+DATE=`date +"%b %e"`
+TAR=tar
+
+DOCS="doc/manual/manual.ps idl/doc/doc.ps adt/doc/doc.ps"
+
+for i in `echo $PATH | tr : ' '`; do
+  if test -f $i/gtar; then
+    TAR=gtar
+  fi
+done
+
+mktarfiles () {
+  for i in `grep -v ./privat/ ${MANIFEST} | grep -v ./doc/ | cut -f1`; do
+    echo micoe/$i
+  done
+  for i in ${DOCS}; do
+    echo micoe/$i.gz
+    #echo micoe/$i-book.gz
+  done
+}
+
+echo "installing doc files ..."
+(
+make docs
+for i in ${DOCS}; do
+  # Make the booklet version
+  #${MKBOOK} $i.ps $i-book.ps
+  gzip -f $i
+  #gzip -f $i-book.ps
+done
+)
+
+
+# copy tarred sources
+
+echo "installing sources ..."
+(
+cd ..
+mkdir ${RELEASEDIR}
+mktarfiles > /tmp/mkrelease.$$
+$TAR cfT - /tmp/mkrelease.$$ | gzip > ${RELEASEDIR}/micoe-${VERSION}.tar.gz
+zip ${RELEASEDIR}/micoe-${VERSION}.zip -q -@ < /tmp/mkrelease.$$
+rm -f /tmp/mkrelease.$$
+)
+
+# doc files
+
+
+echo "done."

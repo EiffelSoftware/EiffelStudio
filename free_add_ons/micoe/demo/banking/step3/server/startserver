@@ -1,0 +1,14 @@
+# shell script for starting my CORBA server
+
+if test -e EIFGEN/F_code/server
+then
+    cd EIFGEN/F_code
+else
+    cd EIFGEN/W_code
+fi
+
+case $# in
+0) echo 'Usage: startserver <server-address>' 1>&2; exit 2
+esac
+
+exec server -ORBNoIIOPProxy -ORBNoCodeSets -ORBIIOPAddr $1 -ORBTrace /tmp/servertrace

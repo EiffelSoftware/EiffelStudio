@@ -1,0 +1,12 @@
+#! /bin/sh -f
+# shell script to start CORBA client
+
+if test -e EIFGEN/F_code/client
+then
+    cd EIFGEN/F_code
+else
+    cd EIFGEN/W_code
+fi
+
+client -ORBNoIIOPServer -ORBNoCodeSets -ORBTrace /tmp/clienttrace -ORBBindAddr $1
+

@@ -1,0 +1,14 @@
+system  standalone
+
+class STANDALONE
+
+creation make
+
+assertion all
+
+cluster     $EIFFEL4/library/base/kernel
+cluster     $EIFFEL4/library/base/support
+
+
+
+

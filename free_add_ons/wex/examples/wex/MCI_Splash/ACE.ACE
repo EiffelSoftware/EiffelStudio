@@ -1,0 +1,34 @@
+system
+	app
+
+root 
+	APPLICATION (root_cluster): "make"
+
+default
+	assertion (all);
+      	precompiled ("$EIFFEL4\precomp\spec\windows\wel");
+      	precompiled ("$EIFFEL4\library\wex\ace");
+
+cluster 
+	root_cluster:		"$EIFFEL4\examples\wex\MCI_Splash";
+
+	wex_mci_devices:	"$EIFFEL4\library\wex\Mci_devices";
+	wex_mci_consts:		"$EIFFEL4\library\wex\Mci_constants";
+	wex_mci_support:	"$EIFFEL4\library\wex\Mci_support";
+	wex_mci_structs:	"$EIFFEL4\library\wex\Mci_structures";
+	wex_splash:		"$EIFFEL4\library\wex\splash";
+	wex_windows:		"$EIFFEL4\library\wex\windows";
+	wex_window_extras:	"$EIFFEL4\library\wex\window_extras";
+
+
+external
+	include_path:	"$(EIFFEL4)\library\wel\spec\windows\include",
+				"$(EIFFEL4)\library\wex\spec\windows\include";
+	-- Modify the line below to point to your installation of VC++
+	-- It is recommended not to use long filenames.
+	object:	"$(wex_vc_lib)\winmm.lib",
+	--"c:\progra~1\devstudio\vc\lib\winmm.lib",
+				"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib";
+
+
+end -- system app

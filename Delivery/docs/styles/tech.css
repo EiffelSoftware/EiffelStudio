@@ -9,7 +9,7 @@ margin-top: 0;
 
 P,UL,OL,TABLE {
 font-family: Arial, Helvetica;
-font-size: x-small;
+font-size: small;
 }
 
 PRE {
@@ -20,7 +20,6 @@ font-size: x-small;
 LI {
 	font-family: Arial, Helvetica;
 	font-size: x-small;
-	margin-top: 10;
 	}
 
 LI.small {
@@ -44,7 +43,7 @@ background-repeat: repeat-x, repeat-y;
 
 H2 {
 font-family: arial, helvetica;
-font-size: large;
+font-size: medium;
 font-weight: bold;
 color: navy;
 }
@@ -54,3 +53,18 @@ font-family: arial, helvetica;
 font-size: medium;
 }
 
+
+SPAN.emphasis {
+font-weight: bold;
+color: 007700;
+}
+
+SPAN.eiffelid {
+font-style: italic;
+color: 0000a0;
+}
+
+SPAN.eiffelkeyword {
+font-weight: bold;
+color: 0000a0;
+}

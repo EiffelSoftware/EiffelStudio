@@ -38,6 +38,15 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 feature {ANY} -- Not permanent exportation
+
+	routine_win_mgr: EB_FEATURE_TOOL_LIST is
+		obsolete
+			"Used as synonym to `feature_tool_mgr' for transition from%
+			%old to new vision"
+		do
+			Result := feature_tool_mgr
+		end
+
 	feature_tool_mgr: EB_FEATURE_TOOL_LIST
 		-- Manager for feature tools 
 

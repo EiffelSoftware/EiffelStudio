@@ -278,14 +278,14 @@ feature -- Plug and Makefile file
 
 			else
 					-- Initialization routines
-				Plug_file.putstring ("egc_ecreate = ")
+				Plug_file.putstring ("%Tegc_ecreate = ")
 				Plug_file.putstring ("(char *(**)()) ")
 				Plug_file.putstring (table_prefix)
 				Plug_file.putstring (init_name)
 				Plug_file.putstring (";%N")
 
 					-- Dispose routines
-				Plug_file.putstring ("egc_edispose = ")
+				Plug_file.putstring ("%Tegc_edispose = ")
 				Plug_file.putstring ("(void (**)()) ")
 				Plug_file.putstring (table_prefix)
 				Plug_file.putstring (dispose_name)

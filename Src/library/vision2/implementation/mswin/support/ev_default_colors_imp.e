@@ -26,6 +26,24 @@ feature -- Access
 			Result.set_implementation (color_imp)
 		end
 
+	Color_read_only: EV_COLOR is
+			-- Color usely used for the background of editable
+			-- when they are read_only
+		local
+			color_imp: EV_COLOR_IMP
+		do
+			!! color_imp.make_system (Color_inactiveborder)
+			!! Result.make
+			Result.set_implementation (color_imp)
+		end
+
+	Color_read_write: EV_COLOR is
+			-- Color usely used for the background of editable
+			-- when they are in read / write mode
+		do
+			!! Result.make_rgb (255, 255, 255)
+		end
+
 end -- class EV_DEFAULT_COLORS_IMP
 
 --|----------------------------------------------------------------

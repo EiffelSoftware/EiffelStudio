@@ -67,6 +67,12 @@ feature -- Access
 			Result := ccom_is_compiled (initializer)
 		end
 
+	project_has_updated: BOOLEAN is
+			-- Has the project updated since last compilation?
+		do
+			Result := ccom_project_has_updated (initializer)
+		end
+
 	system_browser: IEIFFEL_SYSTEM_BROWSER_INTERFACE is
 			-- System Browser.
 		do
@@ -156,6 +162,12 @@ feature {NONE}  -- Externals
 
 	ccom_is_compiled (cpp_obj: POINTER): BOOLEAN is
 			-- Has system been compiled?
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_project_has_updated (cpp_obj: POINTER): BOOLEAN is
+			-- Has the project updated since last compilation?
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelProject_impl_proxy %"ecom_eiffel_compiler_IEiffelProject_impl_proxy_s.h%"](): EIF_BOOLEAN"
 		end

@@ -285,6 +285,29 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProject_impl_stub::is_compiled(  /* [o
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelProject_impl_stub::project_has_updated(  /* [out, retval] */ VARIANT_BOOL * return_value )
+
+/*-----------------------------------------------------------
+	Has the project updated since last compilation?
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_boolean_function ("project_has_updated", type_id);
+	EIF_BOOLEAN tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "project_has_updated", EIF_BOOLEAN);
+	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelProject_impl_stub::system_browser(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemBrowser * * return_value )
 
 /*-----------------------------------------------------------
@@ -304,7 +327,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProject_impl_stub::system_browser(  /*
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_11 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_12 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -334,7 +357,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelProject_impl_stub::project_properties(
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_14 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_15 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

@@ -100,6 +100,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	Has the project updated since last compilation?
+	-----------------------------------------------------------*/
+	STDMETHODIMP project_has_updated(  /* [out, retval] */ VARIANT_BOOL * return_value );
+
+
+	/*-----------------------------------------------------------
 	System Browser.
 	-----------------------------------------------------------*/
 	STDMETHODIMP system_browser(  /* [out, retval] */ ecom_eiffel_compiler::IEiffelSystemBrowser * * return_value );

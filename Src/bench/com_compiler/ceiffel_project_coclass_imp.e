@@ -62,6 +62,13 @@ feature -- Access
 			Result := compiler_kernel.is_compiled
 		end
 		
+	project_has_updated: BOOLEAN is
+			-- Has project been updated since last compilation?
+		do
+			Result := compiler_kernel.project_has_updated
+		end
+		
+		
 	last_error_message: STRING is
 			-- Last error message.
 		do

@@ -73,6 +73,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	project_has_updated_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `project_has_updated'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	system_browser_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `system_browser'.
 			-- Redefine in descendants if needed.
@@ -160,6 +167,14 @@ feature -- Basic Operations
 			-- Has system been compiled?
 		require
 			is_compiled_user_precondition: is_compiled_user_precondition
+		deferred
+
+		end
+
+	project_has_updated: BOOLEAN is
+			-- Has the project updated since last compilation?
+		require
+			project_has_updated_user_precondition: project_has_updated_user_precondition
 		deferred
 
 		end

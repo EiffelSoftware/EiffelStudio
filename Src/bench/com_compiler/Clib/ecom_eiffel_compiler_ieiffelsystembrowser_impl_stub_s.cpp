@@ -49,7 +49,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_classe
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_classes = grt_ec_Eif_compiler.ccom_ec_pointed_interface_23 (eif_access (tmp_object));
+		*some_classes = grt_ec_Eif_compiler.ccom_ec_pointed_interface_24 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -102,7 +102,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::system_cluste
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_clusters = grt_ec_Eif_compiler.ccom_ec_pointed_interface_27 (eif_access (tmp_object));
+		*some_clusters = grt_ec_Eif_compiler.ccom_ec_pointed_interface_28 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -160,7 +160,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::cluster_descr
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_31 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_32 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -197,7 +197,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::class_descrip
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_34 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_35 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -239,7 +239,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::feature_descr
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_37 (eif_access (tmp_object));
+		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_38 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -279,7 +279,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::search_classe
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_classes = grt_ec_Eif_compiler.ccom_ec_pointed_interface_23 (eif_access (tmp_object));
+		*some_classes = grt_ec_Eif_compiler.ccom_ec_pointed_interface_24 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else
@@ -317,7 +317,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemBrowser_impl_stub::search_featur
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*some_features = grt_ec_Eif_compiler.ccom_ec_pointed_interface_40 (eif_access (tmp_object));
+		*some_features = grt_ec_Eif_compiler.ccom_ec_pointed_interface_41 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

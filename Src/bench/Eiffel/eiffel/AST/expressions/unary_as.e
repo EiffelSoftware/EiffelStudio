@@ -178,7 +178,6 @@ io.putstring (">%N"); end
 				ctxt.need_dot
 				ctxt.prepare_for_prefix (prefix_feature_name)
 				ctxt.put_current_feature
-				ctxt.put_space
 				if ctxt.last_was_printed then
 					ctxt.commit
 				else

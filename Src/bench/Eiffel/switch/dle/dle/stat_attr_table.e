@@ -64,7 +64,8 @@ feature -- Status report
 							entry := item;
 							cl_type := System.class_type_of_id (entry.type_id);
 							if
-								cl_type.associated_class.conform_to(first_class)							then
+								cl_type.associated_class.conform_to(first_class)
+							then
 								Result := item.used
 							end;
 							forth

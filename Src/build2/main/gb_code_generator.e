@@ -236,15 +236,14 @@ feature -- Basic operation
 								window_element ?= current_element.item_for_iteration
 								if window_element /= Void then
 									current_name := window_element.name
-									if current_name.is_equal (Internal_properties_string)  then
+									if current_name.is_equal (Internal_properties_string) then
 										full_information := get_unique_full_info (window_element)
 										element_info := full_information @ (name_string)
-										
+
+										parent_directories.extend (element_info.data)
 										if preferences.boolean_resource_value (Preferences.generate_empty_directories, False) then
 											create_directory_from_path (parent_directories)
 										end
-
-										parent_directories.extend (element_info.data)
 									end
 								end
 								current_element.forth

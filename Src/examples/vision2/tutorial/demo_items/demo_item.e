@@ -180,6 +180,7 @@ feature {DEMO_ITEM} -- Execution commands
 			else
 				demo_window.set_parent (demo_page)
 			end
+			demo_window.set_tabs
 			current_demo.put (demo_window)
 
 			-- Finally, we set the button and the action

@@ -181,6 +181,8 @@ feature {NONE}
 
 	w_Class_not_in_universe: STRING is "Class is not in the universe";
 
+	w_Clear_breakpoints: STRING is "Do you wish to clear the breakpoints?";
+
 	w_Directory_not_exist (dir_name: STRING): STRING is
 		require
 			dir_name_not_void: dir_name /= Void

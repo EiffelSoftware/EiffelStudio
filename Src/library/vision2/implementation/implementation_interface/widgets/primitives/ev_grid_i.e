@@ -51,7 +51,7 @@ feature -- Access
 		local
 			a_col_i: EV_GRID_COLUMN_I
 		do
-			a_col_i := grid_columns @ i
+			a_col_i := columns @ i
 			if a_col_i /= Void then
 				Result := a_col_i.interface
 			end
@@ -514,14 +514,14 @@ feature -- Status setting
 			add_columns: BOOLEAN
 		do
 			from
-				add_columns := a_column_count > grid_columns.count
+				add_columns := a_column_count > columns.count
 			until
-				grid_columns.count = a_column_count
+				columns.count = a_column_count
 			loop
 				if add_columns then
-					add_column_at (grid_columns.count + 1, True)
+					add_column_at (columns.count + 1, True)
 				else
-					remove_column (grid_columns.count)
+					remove_column (columns.count)
 				end
 			end
 			recompute_horizontal_scroll_bar
@@ -642,12 +642,12 @@ feature -- Element change
 		do
 				--Retrieve row at position `i' and remove from list
 			a_row := row_internal (i)
-			grid_rows.go_i_th (i)
-			grid_rows.remove
+			rows.go_i_th (i)
+			rows.remove
 			
 				-- Insert retrieved row at position `j'
-			grid_rows.go_i_th (j)
-			grid_rows.put_left (a_row)
+			rows.go_i_th (j)
+			rows.put_left (a_row)
 			
 			internal_row_data.go_i_th (i)
 			a_row_data := internal_row_data.item
@@ -676,12 +676,12 @@ feature -- Element change
 		do
 				--Retrieve column at position `i' and remove from list
 			a_col := column_internal (i)
-			grid_columns.go_i_th (i)
-			grid_columns.remove
+			columns.go_i_th (i)
+			columns.remove
 			
 				-- Insert retrieved column at position `j'
-			grid_columns.go_i_th (j)
-			grid_columns.put_left (a_col)
+			columns.go_i_th (j)
+			columns.put_left (a_col)
 			
 				-- Remove column from header and insert at the appropriate position
 			fixme ("EV_GRID_I:move_column  add column header removal and redraw")
@@ -738,15 +738,15 @@ feature -- Removal
 			a_col_i := column_internal (a_column)
 			a_physical_index := a_col_i.physical_index
 			
-			grid_columns.go_i_th (a_column)
-			grid_columns.remove
+			columns.go_i_th (a_column)
+			columns.remove
 			
 			if a_col_i.is_visible then
 				visible_column_count := visible_column_count - 1
 			end
 			
 				-- Remove association of column with `Current'
-			a_col_i.remove_parent_grid_i
+			a_col_i.remove_parent_i
 			
 			to_implement ("EV_GRID_I:remove_column removal of header, redraw and blanking of items")
 		ensure
@@ -765,9 +765,9 @@ feature -- Removal
 				-- Retrieve row from the grid
 			a_row_i := row_internal (a_row)
 			
-				-- Remove row and its corresponding data from `grid_rows' and `internal_row_data'
-			grid_rows.go_i_th (a_row)
-			grid_rows.remove
+				-- Remove row and its corresponding data from `rows' and `internal_row_data'
+			rows.go_i_th (a_row)
+			rows.remove
 			
 			internal_row_data.go_i_th (a_row)
 			internal_row_data.remove
@@ -788,8 +788,8 @@ feature -- Measurements
 	column_count: INTEGER is
 			-- Number of columns in Current
 		do
-			if grid_columns /= Void then
-				Result := grid_columns.count
+			if columns /= Void then
+				Result := columns.count
 			end
 		end
 
@@ -879,10 +879,10 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			index_valid: Result >= 0 and then Result < column_count
 		end
 
-	grid_rows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
+	rows: EV_GRID_ARRAYED_LIST [EV_GRID_ROW_I]
 		-- Arrayed list returning the appropriate EV_GRID_ROW from a given logical index
 		
-	grid_columns: EV_GRID_ARRAYED_LIST [EV_GRID_COLUMN_I]
+	columns: EV_GRID_ARRAYED_LIST [EV_GRID_COLUMN_I]
 		-- Arrayed list returning the appropriate EV_GRID_COLUMN from a given logical index
 
 	physical_column_count: INTEGER
@@ -893,7 +893,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			-- `an_index' to `row_count'.
 		require
 			an_index_valid: an_index >= 0 and an_index <= row_count
-			pop: grid_rows.count >= an_index
+			pop: rows.count >= an_index
 		local
 			i, j, k: INTEGER
 			current_item: EV_GRID_ROW_I
@@ -906,21 +906,21 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 				if row_offsets = Void then
 					create row_offsets.make
 					row_offsets.extend (0)
-					grid_rows.start
+					rows.start
 				else
 					i := row_offsets @ (an_index)
-					grid_rows.go_i_th (an_index)
+					rows.go_i_th (an_index)
 				end
 				
-				if row_offsets.count < grid_rows.count then
-					row_offsets.resize (grid_rows.count + 1)
+				if row_offsets.count < rows.count then
+					row_offsets.resize (rows.count + 1)
 				end
 				
 				from
 				until
-					grid_rows.off
+					rows.off
 				loop
-					current_item := grid_rows.item
+					current_item := rows.item
 					old_i := i
 					if current_item /= Void and not is_row_height_fixed then
 						i := i + current_item.height
@@ -930,7 +930,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					end
 					if current_item.subrow_count > 0 and not current_item.is_expanded then
 						from
-							j := grid_rows.index + 1
+							j := rows.index + 1
 							k := j + current_item.subnode_count_recursive
 						until
 							j = k
@@ -938,18 +938,18 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 							row_offsets.put_i_th (old_i, j)
 							j := j + 1
 						end
-						grid_rows.go_i_th (k - 1)
+						rows.go_i_th (k - 1)
 						i := old_i
 					else
-						row_offsets.put_i_th (i, grid_rows.index + 1)
-						grid_rows.forth
+						row_offsets.put_i_th (i, rows.index + 1)
+						rows.forth
 					end
 				end
 			else
 				row_offsets := Void
 			end
 		ensure
-			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count = grid_rows.count + 1
+			offsets_consistent_when_not_fixed: not is_row_height_fixed implies row_offsets.count = rows.count + 1
 		end
 		
 	total_row_height: INTEGER is
@@ -1190,8 +1190,8 @@ feature {NONE} -- Drawing implementation
 			is_row_height_fixed := True
 			
 			create internal_row_data.make
-			create grid_columns.make
-			create grid_rows.make
+			create columns.make
+			create rows.make
 			
 			create internal_selected_rows.make (0)
 			create internal_selected_items.make (0)
@@ -1256,13 +1256,13 @@ feature {NONE} -- Drawing implementation
 			create column_offsets.make (column_count)
 			column_offsets.extend (0)
 			from
-				grid_columns.start
+				columns.start
 			until
-				grid_columns.off
+				columns.off
 			loop
-				i := i + grid_columns.item.width
+				i := i + columns.item.width
 				column_offsets.extend (i)
-				grid_columns.forth
+				columns.forth
 			end
 		ensure
 			counts_equal: column_offsets.count = column_count + 1
@@ -1541,25 +1541,25 @@ feature {NONE} -- Implementation
 		do
 			a_column_i := (create {EV_GRID_COLUMN}).implementation
 			
-			if a_index > grid_columns.count then
+			if a_index > columns.count then
 				if replace_existing_item then
-					grid_columns.resize (a_index)
+					columns.resize (a_index)
 				else
 						-- Resize to new count minus 1 as we are inserting a new item, when item is inserted then count will be increased
-					grid_columns.resize (a_index - 1)
+					columns.resize (a_index - 1)
 				end
 			end
 
-			grid_columns.go_i_th (a_index)
+			columns.go_i_th (a_index)
 			if replace_existing_item then
-				grid_columns.replace (a_column_i)
+				columns.replace (a_column_i)
 			else
-				grid_columns.put_left (a_column_i)
+				columns.put_left (a_column_i)
 			end
 
 				-- Set column's internal data
 			a_column_i.set_physical_index (physical_column_count)
-			a_column_i.set_grid_i (Current)
+			a_column_i.set_parent_i (Current)
 			physical_column_count := physical_column_count + 1
 
 			show_column (a_index)
@@ -1598,21 +1598,21 @@ feature {NONE} -- Implementation
 				end
 			end
 
-			grid_rows.go_i_th (a_index)
+			rows.go_i_th (a_index)
 			internal_row_data.go_i_th (a_index)
 			if replace_existing_item then
 				internal_row_data.replace (a_row_data)
-				grid_rows.replace (grid_row_i)
+				rows.replace (grid_row_i)
 				grid_row_i.set_internal_index (a_index)
 			else
 				internal_row_data.put_left (a_row_data)
-				grid_rows.put_left (grid_row_i)
-					-- Update the index of `grid_row_i' and subsequent rows in `grid_rows'
+				rows.put_left (grid_row_i)
+					-- Update the index of `grid_row_i' and subsequent rows in `rows'
 				update_grid_row_indices (a_index)
 			end
 
 				-- Set grid of `grid_row' to `Current'
-			grid_row_i.set_grid_i (Current)
+			grid_row_i.set_parent_i (Current)
 
 			recompute_row_offsets (a_index)
 			if do_not_compute_scroll_bar then
@@ -1629,11 +1629,11 @@ feature {NONE} -- Implementation
 				-- Set subsequent indexes to their new values
 			from
 				i := a_index
-				a_row_count := grid_rows.count
+				a_row_count := rows.count
 			until
 				i > a_row_count
 			loop
-				row_i := grid_rows @ i
+				row_i := rows @ i
 				if row_i /= Void then
 					row_i.set_internal_index (i)
 				end
@@ -1647,11 +1647,11 @@ feature {NONE} -- Implementation
 			valid_new_count: new_count >= 0
 		do
 			internal_row_data.resize (new_count)
-			grid_rows.resize (new_count)
+			rows.resize (new_count)
 		ensure
-			grid_rows_count_resized: grid_rows.count = new_count
+			rows_count_resized: rows.count = new_count
 			internal_row_data_count_resized: internal_row_data.count = new_count
-			counts_equal: grid_rows.count = internal_row_data.count
+			counts_equal: rows.count = internal_row_data.count
 		end
 		
 	maximum_header_width: INTEGER is 10000
@@ -1677,15 +1677,15 @@ feature {NONE} -- Implementation
 		require
 			a_column_positive: a_column > 0
 		do
-			if a_column > grid_columns.count then
+			if a_column > columns.count then
 				from
 				until
-					grid_columns.count = a_column
+					columns.count = a_column
 				loop
-					add_column_at (grid_columns.count + 1, True)
+					add_column_at (columns.count + 1, True)
 				end
 			end
-			Result := grid_columns @ a_column
+			Result := columns @ a_column
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -1695,12 +1695,12 @@ feature {NONE} -- Implementation
 		require
 			a_row_positive: a_row > 0
 		do
-			if a_row <= grid_rows.count then
-				Result := grid_rows @ a_row
+			if a_row <= rows.count then
+				Result := rows @ a_row
 			end
 			if Result = Void then
 				add_row_at (a_row, True)
-				Result := grid_rows @ a_row
+				Result := rows @ a_row
 			end
 		ensure
 			row_not_void: Result /= Void
@@ -1811,7 +1811,7 @@ invariant
 	internal_client_x_valid_while_horizontal_scrollbar_hidden: is_initialized and then not horizontal_scroll_bar.is_show_requested implies internal_client_x = 0
 	internal_client_x_valid_while_horizontal_scrollbar_shown: is_initialized and then horizontal_scroll_bar.is_show_requested implies internal_client_x >= 0
 	row_heights_fixed_implies_row_offsets_void: is_row_height_fixed implies row_offsets = Void
-	row_lists_count_equal: is_initialized implies internal_row_data.count = grid_rows.count
+	row_lists_count_equal: is_initialized implies internal_row_data.count = rows.count
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
 	single_item_selection_enabled_implies_only_single_item_selected: single_item_selection_enabled implies selected_items.count <= 1
 	single_item_selected_enabled_implies_no_rows_selected: single_item_selection_enabled implies selected_rows.count = 0

@@ -252,8 +252,11 @@ rt_private int run_idr_read (IDR *bu)
 
 	amount_left = read_size;
 	while (total_read < read_size) {
-		if ((part_read = char_read_func (ptr, amount_left)) < 0)
+		if ((part_read = char_read_func (ptr, amount_left)) <= 0) {
+				/* If we read 0 bytes, it means that we reached the end of file,
+				 * so we are missing something, instead of going further we stop */
 			eio();
+		}
 		total_read += part_read;
 		ptr += part_read;
 		amount_left -= part_read;

@@ -12,8 +12,6 @@ indexing
 class 
 	EV_APPLICATION
 
---|FIXME Add mechanism for dealing with file/pipe/socket events.
-
 inherit
 	EV_ANY
 		redefine

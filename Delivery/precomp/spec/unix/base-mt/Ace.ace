@@ -14,6 +14,6 @@ cluster
 			"desc";"table_eiffel3"
 		end
 
-	thread:	"$ISE_EIFFEL/library/thread"
+	all thread:	"$ISE_EIFFEL/library/thread"
 
 end

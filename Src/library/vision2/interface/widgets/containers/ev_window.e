@@ -131,7 +131,7 @@ feature -- Status report
 			Result := False
 		end
 
-	has (v: like item): BOOLEAN is
+	has (v: EV_WIDGET): BOOLEAN is
 			-- Does structure include `v'?
 		do
 			Result := implementation.has (v)	

@@ -38,7 +38,7 @@ feature -- Access
 
 feature -- Status report
 
-	has (v: like item): BOOLEAN is
+	has (v: EV_WIDGET): BOOLEAN is
 			-- Does structure include `v'?
 		do
 			check
@@ -146,7 +146,7 @@ feature -- Status report
 
 feature -- Element change
 
-	put, extend (an_item: like item) is
+	put, extend (an_item: EV_WIDGET) is
 			-- Assign `an_item' to `first_item' if not already assigned or to
 			-- `second_item' otherwise.
 		do
@@ -159,7 +159,7 @@ feature -- Element change
 			has_an_item: has (an_item)
 		end
 
-	set_first (an_item: like item) is
+	set_first (an_item: EV_WIDGET) is
 			-- Assign `an_item' to `first'.
 		require
 			not_destroyed: not is_destroyed
@@ -174,7 +174,7 @@ feature -- Element change
 			an_item_not_expanded: not is_item_expanded (an_item)
 		end
 		
-	set_second (an_item: like item) is
+	set_second (an_item: EV_WIDGET) is
 			-- Assign `an_item' to `second'.
 		require
 			not_destroyed: not is_destroyed
@@ -268,7 +268,7 @@ feature -- Status setting
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: EV_WIDGET) is
 			-- Remove one occurrence of `v' if any.
 		do
 			check
@@ -293,7 +293,7 @@ feature -- Removal
 
 feature -- Conversion
 
-	linear_representation: LINEAR [like item] is
+	linear_representation: LINEAR [EV_WIDGET] is
 			-- Representation as a linear structure
 		do
 			check

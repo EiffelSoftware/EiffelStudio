@@ -40,7 +40,7 @@ create
 
 feature -- Element change
 
-	set_item_x_position (a_widget: like item; an_x: INTEGER) is
+	set_item_x_position (a_widget: EV_WIDGET; an_x: INTEGER) is
 			-- Assign `an_x' to `a_widget.x_position'.
 		require
 			not_destroyed: not is_destroyed
@@ -52,7 +52,7 @@ feature -- Element change
 			an_item_x_position_assigned: a_widget.x_position = an_x
 		end
 
-	set_item_y_position (a_widget: like item; a_y: INTEGER) is
+	set_item_y_position (a_widget: EV_WIDGET; a_y: INTEGER) is
 			-- Assign `a_y' to `a_widget.y_position'.
 		require
 			not_destroyed: not is_destroyed
@@ -64,7 +64,7 @@ feature -- Element change
 			an_item_y_position_assigned: a_widget.y_position = a_y
 		end
 
-	set_item_position (a_widget: like item; an_x, a_y: INTEGER) is
+	set_item_position (a_widget: EV_WIDGET; an_x, a_y: INTEGER) is
 			-- Assign `an_x' to `a_widget.x_position'.
 			-- Assign `a_y' to `a_widget.y_position'.
 		require
@@ -79,7 +79,7 @@ feature -- Element change
 			an_item_y_position_assigned: a_widget.y_position = a_y
 		end
 
-	set_item_width (a_widget: like item; a_width: INTEGER) is
+	set_item_width (a_widget: EV_WIDGET; a_width: INTEGER) is
 			-- Assign `a_width' to `a_widget.width'.
 		require
 			not_destroyed: not is_destroyed
@@ -92,7 +92,7 @@ feature -- Element change
 			an_item_width_assigned: a_widget.width = a_width
 		end
 
-	set_item_height (a_widget: like item; a_height: INTEGER) is
+	set_item_height (a_widget: EV_WIDGET; a_height: INTEGER) is
 			-- Assign `a_height' to `a_widget.height'.
 		require
 			not_destroyed: not is_destroyed
@@ -105,7 +105,7 @@ feature -- Element change
 			an_item_height_assigned: a_widget.height = a_height
 		end
 
-	set_item_size (a_widget: like item; a_width, a_height: INTEGER) is
+	set_item_size (a_widget: EV_WIDGET; a_width, a_height: INTEGER) is
 			-- Assign `_width' to `a_widget.width'.
 			-- Assign `a_height' to `a_widget.height'.
 		require

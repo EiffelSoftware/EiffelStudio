@@ -26,7 +26,7 @@ create
 
 feature -- Access
 
-	has (v: like item): BOOLEAN is
+	has (v: EV_WIDGET): BOOLEAN is
 			-- Does `Current' include `v'?
 		do
 			Result := not is_destroyed and
@@ -67,7 +67,7 @@ feature -- Status report
 
 feature -- Removal
 
-	prune (v: like item) is
+	prune (v: EV_WIDGET) is
 			-- Remove `v' if contained.
 		do
 			if item = v then

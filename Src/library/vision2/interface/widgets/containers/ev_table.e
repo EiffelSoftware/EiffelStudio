@@ -347,7 +347,7 @@ feature -- Status settings
 
 feature -- Element change
 
-	put, add (v: like item; a_column, a_row, column_span, row_span: INTEGER) is
+	put, add (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
 			-- Set the position of the widgets in one-based coordinates. 
 			--
 			--           1         2

@@ -38,7 +38,7 @@ create
 
 feature -- Access 
 
-	item_text (an_item: like item): STRING is
+	item_text (an_item: EV_WIDGET): STRING is
 			-- Label of `an_item'.
 		require
 			not_destroyed: not is_destroyed
@@ -52,7 +52,7 @@ feature -- Access
 
 feature -- Status report
 
-	selected_item: like item is
+	selected_item: EV_WIDGET is
 			-- Page displayed topmost.
 		require
 			not_destroyed: not is_destroyed
@@ -140,7 +140,7 @@ feature -- Status setting
 			tab_position_set: tab_position = a_tab_position
 		end
 
-	select_item (an_item: like item) is
+	select_item (an_item: EV_WIDGET) is
 			-- Display `an_item' above all others.
 		require
 			not_destroyed: not is_destroyed
@@ -167,7 +167,7 @@ feature -- Constants
 
 feature -- Element change
 
-	set_item_text (an_item: like item; a_text: STRING) is
+	set_item_text (an_item: EV_WIDGET; a_text: STRING) is
 			-- Assign `a_text' to label of `an_item'.
 		require
 			not_destroyed: not is_destroyed

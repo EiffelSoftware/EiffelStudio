@@ -33,8 +33,8 @@ feature {NONE} -- Implementation
 			char: CHARACTER;
 			default_name: FILE_NAME
 		do
-			if text_window.file_name /= Void then
-				file_name := text_window.file_name;
+			if tool.file_name /= Void then
+				file_name := tool.file_name;
 			else
 				!! default_name.make_from_string (Project_directory);
 				default_name.set_file_name ("Ace");
@@ -48,17 +48,17 @@ feature {NONE} -- Implementation
 				(new_file.exists) and then (not new_file.is_plain)
 			then
 				aok := False;
-				warner (text_window).gotcha_call (w_Not_a_plain_file (new_file.name))
+				warner (popup_parent).gotcha_call (w_Not_a_plain_file (new_file.name))
 			elseif
 				new_file.exists and then (not new_file.is_writable)
 			then
 				aok := False;
-				warner (text_window).gotcha_call (w_Not_writable (new_file.name))
+				warner (popup_parent).gotcha_call (w_Not_writable (new_file.name))
 			elseif
 				(not new_file.exists) and then (not new_file.is_creatable)
 			then
 				aok := False;
-				warner (text_window).gotcha_call (w_Not_creatable (new_file.name))
+				warner (popup_parent).gotcha_call (w_Not_creatable (new_file.name))
 			end;
 
 			if aok then
@@ -71,15 +71,14 @@ feature {NONE} -- Implementation
 					new_file.new_line
 				end; 
 				new_file.close;
-				show_text ?= text_window.last_format.associated_command;
+				show_text ?= tool.last_format.associated_command;
 				if show_text /= Void then
 					--| Only set the file name if it is an Ace file
 					--| (and not the show_clusters file name).
-					Eiffel_project.set_lace_file_name (file_name);
+					Eiffel_ace.set_file_name (file_name);
 				end;
-				text_window.clear_clickable;
-				text_window.set_changed (false);
-				text_window.tool.update_save_symbol;
+				text_window.disable_clicking;
+				tool.update_save_symbol;
 			end
 		end;
 

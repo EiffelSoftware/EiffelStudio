@@ -206,12 +206,12 @@ feature -- Basic operations
 			end
 		end
 
-	expand_tree_recursive (tree: EV_TREE) is
-			-- Ensure that every node of `tree' is expanded.
+	expand_tree_recursive (tree_node_list: EV_TREE_NODE_LIST) is
+			-- Ensure that every node of `tree_node_list' is expanded.
 		require
-			tree_not_void: tree /= Void
+			tree_node_list_not_void: tree_node_list /= Void
 		do
-			tree.recursive_do_all (agent expand_node)
+			tree_node_list.recursive_do_all (agent expand_node)
 		end
 		
 	collapse_tree_recursive (tree: EV_TREE) is

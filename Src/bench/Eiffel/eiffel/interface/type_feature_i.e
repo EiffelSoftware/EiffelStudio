@@ -1,8 +1,10 @@
 indexing
 	description: "[
-		Representation of a formal generic parameter from the point of view of
+		Representation of a feature used to represent the type of either a
+		formal generic parameter or an anchored type from the point of view of
 		inheritance. Instances of TYPE_FEATURE_I are used in CLASS_C.
 		
+		In the case of a formal generic parameter:
 		A class that has a formal generic parameter or that inherits one
 		(i.e. class B which inherits from class A [STRING], in B it inherits
 		the formal generic parameter from A even though B is not generic) will
@@ -35,21 +37,21 @@ inherit
 				set_origin_feature_id, set_feature_name_id,
 				instantiate, duplicate, new_rout_id
 			redefine
-			new_entry, is_formal_attribute
+			new_entry, is_type_feature
 		end
 	
 feature -- Access
 
 	type: TYPE_A
-			-- Type of current formal generic parameter.
+			-- Type of current.
 			
 	position: INTEGER
-			-- Position of formal the first time it introduced.
+			-- Position of formal first time it introduced.
 
 feature -- Status report
 
-	is_formal_attribute: BOOLEAN is True
-			-- Current represents a formal attribute.
+	is_type_feature: BOOLEAN is True
+			-- Current represents a type feature.
 			
 	is_formal: BOOLEAN is
 			-- Is `type' a formal generic parameter?
@@ -85,7 +87,7 @@ feature -- Settings
 feature -- Polymorphism
 
 	new_entry (rout_id: INTEGER): ATTR_ENTRY is
-			-- New formal attribute unit.
+			-- New type feature unit.
 		do
 			create Result
 			Result.set_type_a (type.actual_type)

@@ -86,11 +86,9 @@ feature
 
 			if	(not final_mode) or else assertion_level.check_precond then
 				if not final_mode then
-					file.putstring
-						("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
+					file.putstring ("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
 				else
-					file.putstring
-						("%Tif (~in_assertion) {%N");
+					file.putstring ("%Tif (~in_assertion) {%N");
 				end;
 				file.putstring ("%
 					%%TRTCT(%"index_large_enough%", EX_PRE);%N%
@@ -107,11 +105,8 @@ feature
 					%%T%TRTCK;%N%
 					%%T} else {%N%
 					%%T%TRTCF;%N%T}%N");
-				if not final_mode then
-					file.putstring ("%T}%N");
-				else
-					file.putstring ("%T}%N");
-				end;
+
+				file.putstring ("%T}%N");
 			end;
 
 			if is_expanded then
@@ -135,32 +130,25 @@ feature
 				inspect
 					type_c.level
 				when C_char then
-					file.putstring
-					("%T*(Current + arg2 * sizeof(char)) = arg1;");
+					file.putstring ("%T*(Current + arg2 * sizeof(char)) = arg1;");
 				when C_long then
-					file.putstring
-					("%T*(long *)(Current + arg2 * sizeof(long)) = arg1;");
+					file.putstring ("%T*(long *)(Current + arg2 * sizeof(long)) = arg1;");
 				when C_float then
-					file.putstring
-					("%T*(float *)(Current + arg2 * sizeof(float)) = arg1;");
+					file.putstring ("%T*(float *)(Current + arg2 * sizeof(float)) = arg1;");
 				when C_double then
-					file.putstring
-					("%T*(double *)(Current + arg2 * sizeof(double)) = arg1;");
+					file.putstring ("%T*(double *)(Current + arg2 * sizeof(double)) = arg1;");
 				when C_ref then
 					--! Could be bit or ref
 					file.putstring ("%TRTAS(arg1, Current);%N");
-					file.putstring
-					("%T*(char **)(Current + arg2 * "); 
+					file.putstring ("%T*(char **)(Current + arg2 * "); 
 					type_c.generate_size (file);
 					file.putstring (") = arg1;");
 				when C_pointer then
-					file.putstring
-					("%T*(char **)(Current + arg2 * sizeof(char *)) = arg1;");
+					file.putstring ("%T*(char **)(Current + arg2 * sizeof(char *)) = arg1;");
 				end;
-				file.new_line;
 			end;
 
-			file.putstring ("%TEDCX%N}%N%N"); -- ss MT
+			file.putstring ("%N}%N%N");
 
 		end;
 
@@ -205,11 +193,9 @@ feature
 
 			if (not final_mode) or else assertion_level.check_precond then
 				if not final_mode then
-					file.putstring
-						("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
+					file.putstring ("%Tif (~in_assertion & WASC(Dtype(Current)) & CK_REQUIRE) {%N");
 				else
-					file.putstring
-						("%Tif (~in_assertion) {%N");
+					file.putstring ("%Tif (~in_assertion) {%N");
 				end;
 				file.putstring ("%
 					%%TRTCT(%"index_large_enough%", EX_PRE);%N%
@@ -226,11 +212,8 @@ feature
 					%%T%TRTCK;%N%
 					%%T } else {%N%
 					%%T%TRTCF;%N%T}%N");
-				if not final_mode then
-					file.putstring ("%T}%N");
-				else
-					file.putstring ("%T}%N");
-				end;
+
+				file.putstring ("%T}%N");
 			end;
 
 			if is_expanded then
@@ -254,31 +237,24 @@ feature
 				inspect
 					type_c.level
 				when C_char then
-					file.putstring
-					("%Treturn *(Current + arg1 * sizeof(char));");
+					file.putstring ("%Treturn *(Current + arg1 * sizeof(char));");
 				when C_long then
-					file.putstring
-					("%Treturn *(long *)(Current + arg1 * sizeof(long));");
+					file.putstring ("%Treturn *(long *)(Current + arg1 * sizeof(long));");
 				when C_float then
-					file.putstring
-					("%Treturn *(float *)(Current + arg1 * sizeof(float));");
+					file.putstring ("%Treturn *(float *)(Current + arg1 * sizeof(float));");
 				when C_double then
-					file.putstring
-					("%Treturn *(double *)(Current + arg1 * sizeof(double));");
+					file.putstring ("%Treturn *(double *)(Current + arg1 * sizeof(double));");
 				when C_ref then
 					--! Could be bit or ref
-					file.putstring
-					("%Treturn *(char **)(Current + arg1 * ");
+					file.putstring ("%Treturn *(char **)(Current + arg1 * ");
 					type_c.generate_size (file);
 					file.putstring (");");
 				when C_pointer then
-					file.putstring
-					("%Treturn *(char **)(Current + arg1 * sizeof(char *));");
+					file.putstring ("%Treturn *(char **)(Current + arg1 * sizeof(char *));");
 				end;
-				file.new_line;
 			end;
 
-			file.putstring ("%TEDCX%N}%N%N"); -- ss MT
+			file.putstring ("%N}%N%N");
 
 		end;
 

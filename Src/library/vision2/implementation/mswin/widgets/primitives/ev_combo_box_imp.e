@@ -37,7 +37,8 @@ inherit
 			set_default_minimum_size,
 			move_and_resize,
 			set_editable,
-			on_key_down
+			on_key_down--,
+--			on_key_up
 		end
 		
 	WEL_DROP_DOWN_COMBO_BOX_EX
@@ -446,13 +447,13 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 					counter := counter + 1
 				end
 			else
-				if selected and equal (text, selected_item.text) then
+				if selected and equal (text, selected_item.text) and (virtual_key /= 9) then
 					clear_selection
 					execute_command (Cmd_unselect, Void)
 				end
 			end
 		end
-	
+
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is

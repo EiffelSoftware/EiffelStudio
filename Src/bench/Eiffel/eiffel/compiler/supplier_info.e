@@ -6,7 +6,6 @@ creation
 
 	make
 
-	
 feature 
 
 	supplier: CLASS_C;

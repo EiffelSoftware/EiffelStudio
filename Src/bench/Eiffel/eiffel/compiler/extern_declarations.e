@@ -59,7 +59,7 @@ feature
 		end;
 
 	add_type_table (type_table: STRING) is
-			-- Add one type table to the current extenr declarations.
+			-- Add one type table to the current extern declarations.
 		require
 			type_table_exists: type_table /= Void
 		do

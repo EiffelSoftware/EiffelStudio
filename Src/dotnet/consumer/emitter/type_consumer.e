@@ -296,14 +296,29 @@ feature {NONE} -- Implementation
 			non_void_property_info: info /= Void
 		local
 			dotnet_name: STRING
+			l_info: METHOD_INFO
 		do
+			l_info := info.get_get_method
+			if l_info = Void then
+				l_info := info.get_get_method_boolean (True)
+				if l_info = Void then
+					l_info := info.get_set_method
+					if l_info = Void then
+						l_info := info.get_set_method_boolean (True)
+					end
+				end
+			end
+			check
+				is_property: l_info /= Void
+			end
 			create dotnet_name.make_from_cil (info.get_name)
 			create Result.make (
 				formatted_feature_name (dotnet_name),
 				dotnet_name,
-				True,
 				info.get_can_read,
 				info.get_can_write,
+				l_info.get_is_public,
+				l_info.get_is_static,
 				referenced_type_from_type (info.get_property_type),
 				referenced_type_from_type (info.get_declaring_type))				
 		ensure

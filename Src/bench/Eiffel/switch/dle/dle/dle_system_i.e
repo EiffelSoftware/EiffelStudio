@@ -762,7 +762,8 @@ feature -- Generation
 			final_mode := byte_context.final_mode
 			Cecil_file := cecil_f (final_mode)
 			Cecil_file.open_write
-			Cecil_file.putstring ("#include %"eif_cecil.h%"%N")
+			Cecil_file.putstring ("#include %"eif_project.h%"%N%
+								  %#include %"eif_cecil.h%"%N")
 			if final_mode then
 				Cecil_file.putstring ("#include %"eif_ececil.h%"%N")
 			end

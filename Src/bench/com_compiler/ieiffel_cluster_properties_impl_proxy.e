@@ -110,7 +110,7 @@ feature -- Access
 		end
 
 	subclusters: IENUM_CLUSTER_PROP_INTERFACE is
-			-- List of subclusters (list of IEiffelClusterProperties*).
+			-- List subclusters (list of IEiffelClusterProperties*).
 		do
 			Result := ccom_subclusters (initializer)
 		end
@@ -143,32 +143,6 @@ feature -- Access
 			-- Cluster namespace.
 		do
 			Result := ccom_cluster_namespace (initializer)
-		end
-
-feature -- Status Report
-
-	last_error_code: INTEGER is
-			-- Last error code.
-		do
-			Result := ccom_last_error_code (initializer)
-		end
-
-	last_error_description: STRING is
-			-- Last error description.
-		do
-			Result := ccom_last_error_description (initializer)
-		end
-
-	last_error_help_file: STRING is
-			-- Last error help file.
-		do
-			Result := ccom_last_error_help_file (initializer)
-		end
-
-	last_source_of_exception: STRING is
-			-- Last source of exception.
-		do
-			Result := ccom_last_source_of_exception (initializer)
 		end
 
 feature -- Basic Operations
@@ -383,7 +357,7 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_subclusters (cpp_obj: POINTER): IENUM_CLUSTER_PROP_INTERFACE is
-			-- List of subclusters (list of IEiffelClusterProperties*).
+			-- List subclusters (list of IEiffelClusterProperties*).
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
@@ -440,30 +414,6 @@ feature {NONE}  -- Externals
 			-- Item
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"]():EIF_POINTER"
-		end
-
-	ccom_last_error_code (cpp_obj: POINTER): INTEGER is
-			-- Last error code
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"]():EIF_INTEGER"
-		end
-
-	ccom_last_error_description (cpp_obj: POINTER): STRING is
-			-- Last error description
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"]():EIF_REFERENCE"
-		end
-
-	ccom_last_error_help_file (cpp_obj: POINTER): STRING is
-			-- Last error help file
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"]():EIF_REFERENCE"
-		end
-
-	ccom_last_source_of_exception (cpp_obj: POINTER): STRING is
-			-- Last source of exception
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelClusterProperties_impl_proxy %"ecom_eiffel_compiler_IEiffelClusterProperties_impl_proxy_s.h%"]():EIF_REFERENCE"
 		end
 
 end -- IEIFFEL_CLUSTER_PROPERTIES_IMPL_PROXY

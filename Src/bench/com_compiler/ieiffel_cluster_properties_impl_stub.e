@@ -97,7 +97,7 @@ feature -- Access
 		end
 
 	subclusters: IENUM_CLUSTER_PROP_INTERFACE is
-			-- List of subclusters (list of IEiffelClusterProperties*).
+			-- List subclusters (list of IEiffelClusterProperties*).
 		do
 			-- Put Implementation here.
 		end

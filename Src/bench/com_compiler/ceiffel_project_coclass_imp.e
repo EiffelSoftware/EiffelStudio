@@ -73,12 +73,6 @@ feature -- Access
     do
       Result := compiler_kernel.last_exception
     end
-    
-  last_error_message: STRING is
-      -- Last error message.
-    do
-      Result := compiler_kernel.last_error_message
-    end
 
   compiler: IEIFFEL_COMPILER_INTERFACE is
       -- Compiler.
@@ -131,21 +125,6 @@ feature -- Basic Operations
       -- `a_project_directory_path' [in].  
     do
       compiler_kernel.create_eiffel_project (a_ace_file_name, a_project_directory_path)
-    end
-
-  retrieve_project (project_file_name1: STRING) is
-      -- Retrieve project.
-      -- `project_file_name1' [in].  
-    do
-      compiler_kernel.retrieve_project (project_file_name1)
-    end
-
-  create_project (ace_file_name1: STRING; project_directory_path: STRING) is
-      -- Create new project.
-      -- `ace_file_name1' [in].  
-      -- `project_directory_path' [in].  
-    do
-      compiler_kernel.create_project (ace_file_name1, project_directory_path)
     end
     
 feature {NONE}  -- Externals

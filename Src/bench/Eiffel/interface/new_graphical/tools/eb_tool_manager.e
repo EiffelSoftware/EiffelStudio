@@ -99,17 +99,11 @@ feature {EB_TOOL_MANAGER} -- Initialization
 			init_tools_list
 			build_tools
 
-				-- Create the controls.
-			build_toolbars_area
-			
 			-- Build the layout -------------------------------------------
 
-				-- First add the toolbar.
-			container.extend (toolbars_area)
-			container.disable_item_expand (toolbars_area)
 				-- Add an empty cell for space.
 			create cell
-			cell.set_minimum_height (3)
+			cell.set_minimum_height (1)
 			container.extend (cell)
 			container.disable_item_expand (cell)
 				-- And finally the content of the window (left bar + right cell).

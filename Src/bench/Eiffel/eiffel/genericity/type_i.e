@@ -298,6 +298,7 @@ feature -- Comparison
 
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
+			-- Takes meta generics into account.
 		require
 			good_argument: other /= Void
 		do
@@ -336,7 +337,8 @@ feature -- Code generation
 
 	cecil_value: INTEGER is
 			-- Generate type value for cecil (byte_code)
-		deferred
+		do
+			Result := sk_value
 		end
 		
 	tuple_code: INTEGER_8 is

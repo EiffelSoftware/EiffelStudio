@@ -5,7 +5,7 @@ inherit
 		redefine
 			is_boolean,
 			same_as, element_type,
-			description, hash_code, sk_value, generate_cecil_value,
+			description, hash_code, sk_value,
 			default_create, tuple_code
 		end
 
@@ -55,12 +55,6 @@ feature
 			-- Type description for skeleton
 		do
 			create Result
-		end
-
-	generate_cecil_value (buffer: GENERATION_BUFFER) is
-			-- Generate cecil type value
-		do
-			buffer.putstring ("SK_BOOL")
 		end
 
 	c_string: STRING is "EIF_BOOLEAN"

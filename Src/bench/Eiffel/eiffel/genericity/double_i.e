@@ -7,7 +7,7 @@ inherit
 			is_double,
 			is_numeric,
 			same_as, element_type, il_convert_from,
-			description, sk_value, generate_cecil_value, hash_code,
+			description, sk_value, hash_code,
 			generate_byte_code_cast, default_create, tuple_code
 		end
 
@@ -80,12 +80,6 @@ feature
 			-- Type description for skeleton
 		do
 			create Result
-		end
-
-	generate_cecil_value (buffer: GENERATION_BUFFER) is
-			-- Generate Cecil type value.
-		do
-			buffer.putstring ("SK_DOUBLE")
 		end
 
 	c_string: STRING is "EIF_DOUBLE"

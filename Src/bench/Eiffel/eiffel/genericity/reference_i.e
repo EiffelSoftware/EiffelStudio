@@ -74,7 +74,7 @@ feature
 	generate_cecil_value (f: GENERATION_BUFFER) is
 			-- Generate Cecil type value.
 		do
-			f.putstring ("SK_DTYPE")
+			generate_sk_value (f)
 		end
 
 	c_string: STRING is "EIF_REFERENCE"
@@ -94,11 +94,6 @@ feature
 			Result := Sk_ref
 		end
 	
-	cecil_value: INTEGER is
-		do
-			Result := Sk_dtype
-		end
-
 	generate_union (buffer: GENERATION_BUFFER) is
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `buffer'.

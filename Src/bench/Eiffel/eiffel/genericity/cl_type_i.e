@@ -200,7 +200,7 @@ feature -- Access
 	associated_class_type: CLASS_TYPE is
 			-- Associated class type
 		require
-		--	has: has_associated_class_type
+			has: has_associated_class_type
 		do
 			Result := base_class.types.search_item (Current)
 		end
@@ -218,15 +218,6 @@ feature -- Access
 				Result := Sk_exp | (type_id - 1)
 			else
 				Result := Sk_ref | (type_id - 1)
-			end
-		end
-
-	cecil_value: INTEGER is
-		do
-			if not is_expanded then
-				Result := Sk_dtype
-			else
-				Result := Sk_exp | class_id
 			end
 		end
 
@@ -456,11 +447,11 @@ feature -- C generation
 			-- Generate cecil value
 		do
 			if not is_expanded then
-				buffer.putstring ("SK_DTYPE")
+				buffer.putstring ("SK_REF + (uint32) ")
 			else
 				buffer.putstring ("SK_EXP + (uint32) ")
-				buffer.putint (associated_class_type.type_id - 1)
 			end
+			buffer.putint (associated_class_type.type_id - 1)
 		end
 
 feature -- Array optimization

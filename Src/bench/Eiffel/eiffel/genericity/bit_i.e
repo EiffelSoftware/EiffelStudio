@@ -4,7 +4,7 @@ inherit
 	BASIC_I
 		redefine
 			is_bit, same_as,
-			description, sk_value, generate_cecil_value, hash_code,
+			description, sk_value, hash_code,
 			is_pointer, 
 			metamorphose,
 			generate_cid, make_gen_type_byte_code,
@@ -79,13 +79,6 @@ feature
 		do
 			create Result
 			Result.set_value (size)
-		end
-
-	generate_cecil_value (buffer: GENERATION_BUFFER) is
-			-- Generate Cecil type value.
-		do
-			buffer.putstring ("SK_BIT + (uint32) ")
-			buffer.putint (size)
 		end
 
 	c_string: STRING is "EIF_REFERENCE"

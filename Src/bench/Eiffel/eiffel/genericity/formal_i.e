@@ -236,10 +236,4 @@ feature {NONE} -- Not applicable
 			False
 		end
 
-	cecil_value: INTEGER is
-		do
-		ensure then
-			False
-		end
-
 end -- class FORMAL_I

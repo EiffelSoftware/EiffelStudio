@@ -265,6 +265,20 @@ feature -- Basic operation
 		ensure
 			not_in_objects: not objects.has (an_object)
 		end
+		
+	set_up_drop_actions_for_all_objects is
+			-- Check state of shift key, and set up drop actions
+			-- to accept `pebble' ready for the transport.
+		local
+			environment: EV_ENVIRONMENT
+		do
+			create environment
+			if environment.application.shift_pressed then
+				for_all_objects_build_shift_drop_actions_for_new_object
+			else
+				for_all_objects_build_drop_actions_for_new_object
+			end
+		end
 	
 	for_all_objects_build_drop_actions_for_new_object is
 			-- For every GB_OBJECT in `objects', initialize their

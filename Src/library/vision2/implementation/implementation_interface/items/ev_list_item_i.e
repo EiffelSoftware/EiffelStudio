@@ -9,10 +9,15 @@ deferred class
 	EV_LIST_ITEM_I
 	
 inherit
-	EV_SIMPLE_ITEM_I
+	EV_ITEM_I
 		redefine
 			interface,
 			parent		
+		end
+
+	EV_TEXTABLE_I
+		redefine
+			interface
 		end
 
 feature -- Status report
@@ -100,6 +105,9 @@ end -- class EV_LIST_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/07 20:48:56  brendel
+--| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
+--|
 --| Revision 1.31  2000/03/29 20:22:43  brendel
 --| Modified in compliance with interface.
 --|

@@ -21,15 +21,19 @@ feature
 
 	soc1: NETWORK_STREAM_SOCKET
 
-	make is
+	make (argv: ARRAY [STRING]) is
 			-- Establish communication with server, and exchange messages.
-			-- You need to replace "hostname" with the name of the machine
-			-- running the server program.
 		do
-			!!soc1.make_client_by_port (2001, "prague")
-			soc1.connect
-			process -- See below
-			soc1.cleanup
+			if argv.count /= 3 then
+                                io.error.putstring ("Usage: ")
+                                io.error.putstring (argv.item (0))
+                                io.error.putstring (" hostname portnumber%N")
+                        else
+				!!soc1.make_client_by_port (argv.item (2).to_integer, argv.item (1))
+				soc1.connect
+				process -- See below
+				soc1.cleanup
+			end
 		rescue
 			soc1.cleanup
 		end

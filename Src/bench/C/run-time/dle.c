@@ -200,13 +200,7 @@ EIF_REFERENCE obj, dle_path;
 
 /* TO DO: need to be freed more carefully */
 /* (melted descriptors) */
-	{
-		int i;
-		for (i = 0; i < old_ccount; i++)
-			if (desc_tab[i] != (struct desc_info **) 0)
-				xfree(desc_tab[i]);
-		xfree(desc_tab);
-	}
+	xfree(desc_tab);
 
 
 			/*** Free memory for variable `dle_melt' ***/

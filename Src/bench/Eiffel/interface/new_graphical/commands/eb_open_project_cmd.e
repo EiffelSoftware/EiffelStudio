@@ -49,30 +49,25 @@ feature -- Initialization
 
 feature -- Callbacks
 
-	exit_bench is
-			-- Exit from EiffelBench
-		do
-		end
-
-	open_project (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
-			-- Open the project.
-		require else
-			project_directory_exists: project_dir /= Void
-		local
-			fod: EV_FILE_OPEN_DIALOG
-		do
-			if not project_tool.initialized then
-				if choose_again then
-					fod.show
-					choose_again := False
-				elseif redo_project then
-					-- create_project --FIXME 
-				elseif has_project_name then
-				else
-					retrieve_project
-				end
-			end
-		end
+--	open_project (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+--			-- Open the project.
+--		require else
+--			project_directory_exists: project_dir /= Void
+--		local
+--			fod: EV_FILE_OPEN_DIALOG
+--		do
+--			if not project_tool.initialized then
+--				if choose_again then
+--					fod.show
+--					choose_again := False
+--				elseif redo_project then
+--					-- create_project --FIXME 
+--				elseif has_project_name then
+--				else
+--					retrieve_project
+--				end
+--			end
+--		end
 
 feature -- License managment
 	
@@ -130,7 +125,7 @@ feature {NONE} -- Implementation
 					fod.set_base_directory (last_directory_opened.substring(1,last_directory_opened.index_of(';',1) -1 ))
 				end
 				fod.set_title (Interface_names.t_Select_a_file)
-				fod.set_filter (<<"Eiffel Project File (*.epr)">>, <<"*.epr">>)
+--				fod.set_filter (<<"Eiffel Project File (*.epr)">>, <<"*.epr">>)
 				create arg.make (fod)
 				fod.add_ok_command (Current, arg)
 --				if not has_limited_license then
@@ -149,7 +144,7 @@ feature {NONE} -- Implementation
 					create wd.make_default (Project_tool.parent, Interface_names.t_Warning,
 							Warning_messages.w_file_not_exist (file_name))
 				else
-					!! file.make (valid_file_name (file_name))
+					create file.make (valid_file_name (file_name))
 					if not file.exists or else file.is_directory then
 						choose_again := True
 						create wd.make_default (Project_tool.parent, Interface_names.t_Warning,
@@ -170,40 +165,19 @@ feature {NONE} -- Implementation
 
 feature -- Project Initialization
 
-	open_from_ebench is
-			-- To open a project from `ebench'.
-		require
-			open_from_name: has_project_name
-			project_file_name_exists: project_file_name /= Void
-		local
-			file: RAW_FILE
-			wd: EV_WARNING_DIALOG
-		do
-			create file.make (valid_file_name (project_file_name))
-			if not file.exists or else file.is_directory then
-				create wd.make_default (Project_tool.parent, Interface_names.t_Warning,
-					Warning_messages.w_file_not_exist (project_file_name))
-			else
-				open_project_file (project_file_name)
-			end
-		end
-
 	open_project_file (file_name: STRING) is
 			-- Initialize project as a new one or retrieving
 			-- existing data in the valid directory `project_dir'.
 		require
-			project_directory_exist: project_dir /= Void
+			file_name_non_void: file_name /= Void
 		local
 			dir_name: STRING
 	 		root_class_name: STRING
 			root_class_c: CLASS_C
 		do
---			if has_project_name then
-				dir_name := file_name.substring (1, file_name.last_index_of
-							(directory_separator, file_name.count) - 1)
---			else
---				dir_name := clone (last_name_chooser.directory)
---			end
+			dir_name := file_name.substring (1, file_name.last_index_of
+				(directory_separator, file_name.count) - 1)
+				-- of course we could have chosen to take the directory from the file open dialog.
 
 				--| Retrieve existing project
 			create project_file.make (file_name)
@@ -215,7 +189,7 @@ feature -- Project Initialization
 			retrieve_project
 	
 			-- We print text in the project_tool text concerning the system.
-			debug_tool.display_system_info	
+			debug_tool.display_system_info
 		end
 
 	retrieve_project is
@@ -313,7 +287,7 @@ feature -- Project Initialization
 			e_displayer: BENCH_ERROR_DISPLAYER
 --			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
 		do
-			!! e_displayer.make (Error_window)
+			create e_displayer.make (Error_window)
 			Eiffel_project.set_error_displayer (e_displayer)
 			Application.set_interrupt_number (Debug_resources.interrupt_every_n_instructions.actual_value)
 --			if not Project_resources.graphical_output_disabled.actual_value then
@@ -397,5 +371,8 @@ feature {NONE} -- Implementation
 				Result := file_name	
 			end
 		end
+
+invariant
+	has_project_name_definition: has_project_name implies (project_file_name /= Void)
 
 end -- class EB_OPEN_PROJECT_CMD

@@ -367,9 +367,14 @@ feature {NONE} -- Implementation
 			file_location := get ("ISE_VISION2_TOUR")
 			if file_location = Void then
 				file_location := get ("ISE_EIFFEL")
+				if file_location /= Void then
+					create file_name.make_from_string (file_location)
+					file_name.extend ("vision2_tour")
+				end
+			else
+				create file_name.make_from_string (file_location)
 			end
 			if file_location /= Void then
-				create file_name.make_from_string (file_location)
 				file_name.extend ("bitmaps")
 				file_name.extend (image_extension)
 				file_name.extend (a_name + "." + image_extension)

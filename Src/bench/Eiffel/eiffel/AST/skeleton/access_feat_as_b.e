@@ -186,6 +186,13 @@ feature -- Type check, byte code and dead code removal
 					vuex.set_feature_name (feature_name);
 					Error_handler.insert_error (vuex);
 				end;
+				if a_feature.is_obsolete then
+					io.error.putstring ("%TWarning: ");
+					io.error.putstring (a_feature.feature_name);
+					io.error.putstring (" is obsolete: ");
+					io.error.putstring (a_feature.obsolete_message);
+					io.error.new_line;
+				end;
 					-- Access managment
 				access_b := a_feature.access (Result.type_i);
 				context.access_line.insert (access_b);

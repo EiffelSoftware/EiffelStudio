@@ -17,6 +17,8 @@ inherit
 		end;	
 
 	INSTRUCTION_AS_B
+		undefine
+			number_of_stop_points
 		redefine
 			type_check, byte_node,
 			find_breakable, fill_calls_list, 

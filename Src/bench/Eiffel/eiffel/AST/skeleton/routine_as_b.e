@@ -21,7 +21,7 @@ inherit
 		undefine
 			is_require_else, is_ensure_then,
 			has_rescue, has_precondition, has_postcondition,
-			check_local_names
+			check_local_names, number_of_stop_points
 		redefine
 			type_check, byte_node, find_breakable, 
 			fill_calls_list, replicate, local_table, format,

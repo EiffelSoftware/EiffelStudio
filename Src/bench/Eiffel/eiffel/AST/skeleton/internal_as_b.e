@@ -9,7 +9,8 @@ inherit
 
 	ROUT_BODY_AS_B
 		undefine
-			has_instruction, index_of_instruction
+			has_instruction, index_of_instruction,
+			number_of_stop_points
 		redefine
 			type_check, byte_node,
 			find_breakable, 

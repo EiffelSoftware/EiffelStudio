@@ -8,7 +8,10 @@ deferred class AST_EIFFEL_B
 
 inherit
 
-	AST_EIFFEL;
+	AST_EIFFEL
+		undefine
+			number_of_stop_points
+		end;
 
 	AST_YACC;
 

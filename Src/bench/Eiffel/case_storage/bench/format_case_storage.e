@@ -86,7 +86,8 @@ feature -- Execution
 					output_window.display
 				end;
 			else
-				rescued := False
+				rescued := False;
+				output_window.display
 			end
 		rescue
 			Case_file_server.remove_tmp_files;

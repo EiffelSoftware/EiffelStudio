@@ -12,7 +12,9 @@ inherit
 	EV_TITLED_WINDOW_I
 		undefine
 			propagate_foreground_color,
-			propagate_background_color
+			propagate_background_color,
+			lock_update,
+			unlock_update
 		redefine
 			interface
 		end

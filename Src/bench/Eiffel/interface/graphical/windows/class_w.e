@@ -18,14 +18,13 @@ inherit
 			attach_all as default_attach_all,
 			build_edit_bar as old_build_edit_bar,
 			reset as old_reset, 
-			execute as old_execute,
 			close_windows as old_close_windows
 		redefine
 			text_window, build_format_bar, hole,
 			tool_name, open_command, save_command,
 			save_as_command, quit_command, editable,
 			create_edit_buttons, set_default_position,
-			set_default_size, build_widgets
+			set_default_size, build_widgets, resize_action
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -33,11 +32,11 @@ inherit
 			tool_name, open_command, save_command,
 			save_as_command, quit_command, editable,
 			build_edit_bar, create_edit_buttons, reset,
-			set_default_position, make, execute,
+			set_default_position, make,
 			set_default_size, build_widgets, attach_all,
-			close_windows
+			close_windows, resize_action
 		select
-			build_edit_bar, reset, make, execute, attach_all,
+			build_edit_bar, reset, make, attach_all,
 			close_windows
 		end
 
@@ -50,9 +49,7 @@ feature
 	make (a_screen: SCREEN) is
 			-- Create a class tool.
 		do
-			normal_create (a_screen);
-			if resize_action /= Void then end;
-			set_action ("<Configure>", Current, resize_action);
+			normal_create (a_screen)
 		end;
 
 	text_window: CLASS_TEXT;
@@ -171,19 +168,14 @@ feature {NONE}
 	save_as_command: SAVE_AS_FILE;
 	quit_command: QUIT_FILE; 
 
-	resize_action: ANY is
-		once
-			!! Result
-		end;
-
-	execute (argument: ANY) is
+	resize_action is 
+			-- If the window is moved or resized, raise
+			-- popups with an exclusive grab.
+			-- Move also the choice window and update the text field.
 		do
-			if argument = resize_action then
-				change_class_command.update_text;
-				change_class_command.choice.update_position
-			else
-				old_execute (argument)
-			end
+			raise_grabbed_popup;
+			change_class_command.update_text;
+			change_class_command.choice.update_position
 		end;
 
 	create_edit_buttons is
@@ -213,6 +205,10 @@ feature {NONE}
 			!! previous_target.make (command_bar, text_window);
 			command_bar.attach_left (previous_target, 0);
 			command_bar.attach_bottom_widget (next_target, previous_target, 0);
+			!! filter_command.make (command_bar, text_window);
+			command_bar.attach_left (filter_command, 0);
+			command_bar.attach_right (filter_command, 0);
+			command_bar.attach_bottom_widget (previous_target, filter_command, 10);
 		end;
 
 	build_format_bar is
@@ -299,7 +295,8 @@ feature {NONE}
 	shell_command: SHELL_COMMAND;
 	current_target: CURRENT_CLASS;
 	previous_target: PREVIOUS_TARGET;
-	next_target: NEXT_TARGET
+	next_target: NEXT_TARGET;
+	filter_command: FILTER_COMMAND
 
 feature -- Formats
 

@@ -1,7 +1,7 @@
-# Requires environment variable LIBRARY and EIFFEL4.
+# Requires environment variable LIBRARY and ISE_EIFFEL.
 
 CC = cl
-CFLAGS = -c -Zi -DEIF_THREADS -MT -D "_WIN32_DCOM" -I$(EIFFEL4)\bench\spec\windows\include\ -I..\spec\windows\include -c -Tp
+CFLAGS = -c -Zi -DEIF_THREADS -MT -D "_WIN32_DCOM" -I$(ISE_EIFFEL)\bench\spec\windows\include\ -I..\spec\windows\include -c -Tp
 
 OBJ = E_variant.obj E_IRootStorage.obj E_IStorage.obj E_IStream.obj E_statstg.obj E_wide_string.obj E_IEnumSTATSTG.obj E_Routines.obj ecom_exception.obj E_arraydesc.obj E_custdata.obj E_bstr.obj E_IType_lib.obj E_IType_Info.obj E_IType_Comp.obj E_guid.obj E_Currency.obj E_Decimal.obj E_generic_interface.obj E_automation_interface.obj ecom_font_impl_proxy.obj ecom_ienumvariant_impl_proxy.obj ecom_ifont_impl_proxy.obj ecom_picture_impl_proxy.obj 
 

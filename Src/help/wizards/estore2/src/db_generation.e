@@ -15,11 +15,6 @@ inherit
 			build
 		end
 
-	WIZARD_SHARED
-		undefine
-			default_create
-		end
-
 create
 	make
 
@@ -28,23 +23,24 @@ feature -- basic Operations
 	build is 
 			-- Build Page entries.
 		do 
-			Create generate_all_tables.make_with_text("Generate All tables/views")
-			Create generate_specific_tables.make_with_text("Generate Specific tables/views")
+			create generate_all_tables.make_with_text ("Generate All tables/views")
+			create generate_specific_tables.make_with_text ("Generate Specific tables/views")
+			choice_box.extend (create {EV_CELL})
+			choice_box.extend (generate_all_tables)
+			generate_all_tables.set_minimum_height (20)
+			choice_box.disable_item_expand (generate_all_tables)
+			choice_box.extend (generate_specific_tables)
+			generate_specific_tables.set_minimum_height (20)
+			choice_box.disable_item_expand (generate_specific_tables)
+			choice_box.extend (create {EV_CELL})
+
 			if wizard_information.generate_every_table then
 				generate_all_tables.enable_select
 			else
 				generate_specific_tables.enable_select
 			end
-			choice_box.extend(Create {EV_CELL})
-			choice_box.extend(generate_all_tables)
-			generate_all_tables.set_minimum_height (20)
-			choice_box.disable_item_expand (generate_all_tables)
-			choice_box.extend(generate_specific_tables)
-			generate_specific_tables.set_minimum_height (20)
-			choice_box.disable_item_expand (generate_specific_tables)
-			choice_box.extend(Create {EV_CELL})
 
-			set_updatable_entries(<<generate_all_tables.select_actions,
+			set_updatable_entries (<<generate_all_tables.select_actions,
 									generate_specific_tables.select_actions>>)
 		end
 
@@ -53,9 +49,9 @@ feature -- basic Operations
 		do
 			precursor
 			if generate_all_tables.is_selected then
-				proceed_with_new_state(Create {DB_GENERATION_TYPE}.make(wizard_information))
+				proceed_with_new_state (create {DB_GENERATION_TYPE}.make (wizard_information))
 			else
-				proceed_with_new_state(Create {DB_TABLE_SELECTION}.make(wizard_information))
+				proceed_with_new_state (create {DB_TABLE_SELECTION}.make (wizard_information))
 			end
 		end
 
@@ -64,11 +60,11 @@ feature -- basic Operations
 		local
 			cl_name: CLASS_NAME
 		do
-			Create cl_name.make
-			if is_oracle then
-				unselected_table_list := db_manager.load_list_with_select ("select TABLE_NAME from USER_TABLES",cl_name)
-			elseif is_odbc then
-				unselected_table_list := db_manager.load_list_with_select ("Sqltables()",cl_name)
+			create cl_name.make
+			if is_oracle (wizard_information.dbms_code) then
+				unselected_table_list := db_manager (wizard_information.dbms_code).load_list_with_select ("select TABLE_NAME from USER_TABLES",cl_name)
+			elseif is_odbc (wizard_information.dbms_code) then
+				unselected_table_list := db_manager (wizard_information.dbms_code).load_list_with_select ("Sqltables ()",cl_name)
 			else
 				create unselected_table_list.make (0)
 			end

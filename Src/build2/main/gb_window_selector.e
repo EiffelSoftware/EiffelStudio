@@ -782,9 +782,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			selector_item: GB_WINDOW_SELECTOR_ITEM
 		do
 			create selector_item.make_with_object (window_object)
-				-- Ensure that when the item is selected, the layout constructor is updated
-				-- to reflect this.
-			selector_item.select_actions.extend (agent selected_window_changed (selector_item))
 			
 			extend (selector_item)
 			selector_item.enable_select

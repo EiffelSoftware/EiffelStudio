@@ -31,6 +31,8 @@ feature -- Basic operations
 			test_file: RAW_FILE
 			error: INTEGER
 			wd: EB_WARNING_DIALOG
+			env: EXECUTION_ENVIRONMENT
+			current_directory: STRING
 		do
 			if error = 0 then
 				create dial
@@ -47,8 +49,12 @@ feature -- Basic operations
 				else
 					dial.set_file_name (cld.center_cluster.name + ".png")
 				end
+				create env
+				current_directory := env.current_working_directory
 				dial.show_modal_to_window (tool.development_window.window)
-	
+					-- EA: added this to prevent working directory changes by file dialog.
+					-- Will maybe be fixed in Vision 2
+				env.change_working_directory (current_directory)
 				if dial.file_name /= Void then
 					error := 1
 					size := cd.bounds

@@ -516,7 +516,7 @@ feature -- Element change
 			append (d.out);
 		end;
 
-	extend (c: CHARACTER) is
+	append_character, extend (c: CHARACTER) is
 			-- Append `c' at end.
 		do
 			if count = capacity then
@@ -641,17 +641,17 @@ feature -- Resizing
 		end;
 
 	resize (newsize: INTEGER) is
-			-- Reallocate space to accommodate
-			-- `newsize' characters.
-			-- May discard some characters if `newsize' is
-			-- lower than the current number of characters.
+			-- Rearrange string so that it can accommodate
+			-- at least `newsize' characters.
+			-- Do not lose any previously entered characters.
 		require
 			new_size_non_negative: newsize >= 0
 		do
-			area := str_resize ($area, newsize);
-			if capacity < count then
-				count := capacity;
-			end;
+			if newsize >= count then
+				area := str_resize ($area, newsize);
+			else
+				area := str_resize ($area, count);
+			end
 		end;
 
 	grow (newsize: INTEGER) is

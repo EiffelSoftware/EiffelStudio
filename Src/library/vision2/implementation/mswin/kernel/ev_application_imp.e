@@ -156,6 +156,7 @@ feature -- Basic operation
 			splash.set_style (Ws_popup + Ws_overlapped + Ws_clipchildren + Ws_clipsiblings)
 			splash.move ((metric.full_screen_client_area_width - pix.width) // 2, (metric.full_screen_client_area_height - pix.height) // 2)
 			splash.set_minimum_size (pix.width, pix.height)
+			splash.set_maximum_size (metric.screen_width, metric.screen_height)
 			splash_screen := splash
 			splash.show
 		end

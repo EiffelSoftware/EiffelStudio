@@ -494,6 +494,28 @@ feature {NONE} -- Implementation
 			end
 		end
 		
+	add_font_element (element: XM_ELEMENT; name: STRING; font: EV_FONT) is
+			-- Add an element containing an EV_FONT to `element' with value `current_value'.
+			-- if no constant is specified, of the value of the constant
+			-- in another constant element, if the current setting is represented by a constant.
+		require
+			element_not_void: element /= Void
+			name_not_void: name /= Void
+			current_value_not_void: font /= Void
+		do
+			if uses_constant (name) then
+				add_element_containing_integer_constant (element, name, object.constants.item (type + name).constant.name)
+			else
+				add_element_containing_integer (element, font_family_string, font.family)
+				add_element_containing_integer (element, font_weight_string, font.weight)
+				add_element_containing_integer (element, font_shape_string, font.shape)
+				add_element_containing_integer (element, font_height_points_string, font.height_in_points)
+				if not font.preferred_families.is_empty then
+					add_element_containing_string (element, font_preferred_family_string, font.preferred_families @ 1)	
+				end
+			end
+		end
+		
 	add_string_element (element: XM_ELEMENT; name: STRING; current_value: STRING) is
 			-- Add an element containing a STRING to `element', with name `name' and
 			-- value `current_value' if no constant is specified, of the value of the constant

@@ -3,10 +3,17 @@
 class REVERSE_BL 
 
 inherit
-
+	REVERSE_B
+		undefine
+			make_byte_code, find_assign_result, mark_last_instruction,
+			last_all_in_result, analyze, generate_il, generate
+		end
+		
 	ASSIGN_BL
 		rename
 			target_propagated as register_propagated
+		undefine
+			enlarged
 		redefine
 			analyze, generate_regular_assignment,
 			generate_last_assignment, source_print_register
@@ -90,7 +97,6 @@ feature
 	generate_regular_assignment (how: INTEGER) is
 			-- Generate assignment
 		local
-			cl_type_i: CL_TYPE_I;
 			gen_type: GEN_TYPE_I
 			cr_info: CREATE_INFO
 			buf: GENERATION_BUFFER
@@ -103,8 +109,9 @@ feature
 			source.generate;
 			generate_special (how);
 
-			cl_type_i ?= Context.creation_type (target.type);   -- Cannot fail
-			gen_type  ?= cl_type_i;
+			cr_info := info
+
+			gen_type  ?= cr_info.type_to_create
 
 			if gen_type /= Void then
 				-- We need a new C block with new locals.
@@ -147,28 +154,10 @@ feature
 				buf.putstring (" = ");
 			end;
 			if how /= None_assignment then
-				if not cl_type_i.is_explicit then
-					cr_info := cl_type_i.cr_info
-				end
-
 				buf.putstring ("RTRV(");
 
 				if gen_type = Void then
-					if context.final_mode then
-						if cr_info = Void then
-							buf.putint (cl_type_i.type_id - 1);
-						else
-							cr_info.generate_reverse (buf, True)
-						end
-					else
-						if cr_info = Void then
-							buf.putstring ("RTUD(");
-							buf.generate_type_id (cl_type_i.associated_class_type.static_type_id)
-							buf.putchar (')');
-						else
-							cr_info.generate_reverse (buf, False)
-						end
-					end;
+					cr_info.generate_reverse (buf, context.final_mode)
 				else
 					buf.putstring ("typres");
 				end;

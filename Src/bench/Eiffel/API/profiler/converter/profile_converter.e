@@ -231,8 +231,8 @@ end;
 			if config.get_function_time_column = column_nr then
 				function_time := token_string.to_real;
 				columns_seen := columns_seen + 1
-			elseif config.get_descendent_time_column = column_nr then
-				descendent_time := token_string.to_real;
+			elseif config.get_descendant_time_column = column_nr then
+				descendant_time := token_string.to_real;
 				columns_seen := columns_seen + 1
 			elseif config.get_percentage_column = column_nr then
 				percentage := token_string.to_real;
@@ -416,26 +416,26 @@ end;
 		do
 			if config.get_config_name.is_equal ("win32_ms") then
 					-- Currently ONLY win32_ms prints total_time rather than
-					-- descendent_time only. To get the descendent_time
+					-- descendant_time only. To get the descendant_time
 					-- we subtract the function_time at this point, because
 					-- here it is guaranteed that we know the function_time.
-				descendent_time := descendent_time - function_time
+				descendant_time := descendant_time - function_time
 			end;
 
 			if is_eiffel then
-				!! e_data.make (number_of_calls, percentage, function_time, descendent_time, e_function);
+				!! e_data.make (number_of_calls, percentage, function_time, descendant_time, e_function);
 				profile_information.insert_eiffel_profiling_data (e_data)
 
 			elseif is_c then
-				!! c_data.make (number_of_calls, percentage, function_time, descendent_time, c_function);
+				!! c_data.make (number_of_calls, percentage, function_time, descendant_time, c_function);
 				if function_name.is_equal ("main") then
-					total_time := function_time + descendent_time;
+					total_time := function_time + descendant_time;
 					profile_information.set_total_execution_time (total_time)
 				end;
 				profile_information.insert_c_profiling_data (c_data)
 
 			elseif is_cycle then
-				!! cy_data.make (number_of_calls, percentage, function_time, descendent_time, cycle_function);
+				!! cy_data.make (number_of_calls, percentage, function_time, descendant_time, cycle_function);
 				profile_information.insert_cycle_profiling_data (cy_data)
 			end;
 
@@ -664,8 +664,9 @@ feature {NONE} -- Commands
 						-- ***** FIXME *****
 
 				!! file.make (filename);
-				!! table_name.make_from_string (Profiler_path);
-				table_name.set_file_name (filename);
+--				!! table_name.make_from_string (Profiler_path);
+				!! table_name.make_from_string (filename);
+--				table_name.set_file_name (filename);
 				table_name.add_extension (Table_extension);
 				!! table_file.make (table_name);
 
@@ -796,7 +797,7 @@ feature {NONE} -- Attributes
 
 	cyclics: TWO_WAY_LIST [FUNCTION];
 
-	Table_extension: STRING is ".ftt";
+	Table_extension: STRING is "ftt";
 		-- Extension used to distinguish between compiler
 		-- created TRANSLAT file and function table
 
@@ -823,7 +824,7 @@ feature {NONE} -- Attributes
 
 	function_time: REAL;
 
-	descendent_time: REAL;
+	descendant_time: REAL;
 
 	percentage: REAL;
 

@@ -15,8 +15,8 @@
 		<heading>
 			<size>2</size>General consideration
 		</heading>
-		<paragraph>As ISE's technology relies heavily on the use of a C/C++ ANSI compiler, you have to be sure to always put the correct signature of an external C/C++ routine. If it was not the case, the C compilation of your system could fail. Most of the time a C compiler is more comprehensive than a C++ compiler and most type errors won't cause you any harm, but C++ compilers are not as lax as C compilers and they will mostly generate errors.</paragraph>
-		<paragraph>The section concerning 
+		<paragraph>As Eiffel Software's technology relies heavily on the use of a C/C++ ANSI compiler, you have to be sure to always put the correct signature of an external C/C++ routine. If it was not the case, the C compilation of your system could fail. Most of the time a C compiler is more comprehensive than a C++ compiler and most type errors won't cause you any harm, but C++ compilers are not as lax as C compilers and they will mostly generate errors.</paragraph>
+		<paragraph>The sections concerning 
 			<link>
 				<url>#macros</url>
 				<label>Macros</label>
@@ -24,49 +24,166 @@
 			<link>
 				<url>#structs</url>
 				<label>Structs</label>
-			</link> are also available for C++, i.e. if the macro or the struct is defined in a C++ header file.
+			</link> are also available for C++ if the macro or the struct is defined in a C++ header file.
 		</paragraph>
 		<heading>
 			<size>2</size>C routines
 		</heading>
 		<paragraph>You can encapsulate routines that are defined in a C header file. We will take some examples and will show you how to write wrappers in Eiffel.</paragraph>
 		<paragraph>If in a header file called `my_header.h', you have the following declaration:</paragraph>
-		<code_block>/* Routine with no parameter */extern void no_param(void);/* Routine with one parameter */extern void one_param(int j);/* Routine returning a value with no parameter */extern size_t no_param_return(void);/* Routine returning a value with one parameter */extern size_t one_param_return(FILE *f);</code_block>
+		<code_block>
+	/* Routine with no parameter */
+extern void no_param(void);
+
+	/* Routine with one parameter */
+extern void one_param(int j);
+
+	/* Routine returning a value with no parameter */
+extern size_t no_param_return(void);
+
+	/* Routine returning a value with one parameter */
+extern size_t one_param_return(FILE *f);</code_block>
 		<paragraph>Here is the corresponding Eiffel code:</paragraph>
-		<code_block>c_no_param is-- Encapsulation of a C routine with no parameter.external"C | %"my_header.h%""alias"no_param"endc_one_param (i: INTEGER) is-- Encapsulation of a C routine with one parameter.external"C (int) | %"my_header.h%""alias"one_param"endc_no_param_return: INTEGER is-- Encapsulation of a C routine with no parameter-- returning an INTEGERexternal"C (): EIF_INTEGER| %"my_header.h%""alias"no_param_return"endc_one_param_return (p: POINTER): INTEGER is-- Encapsulation of a C routine with one parameter-- returning an INTEGERexternal"C (FILE *): EIF_INTEGER| %"my_header.h%""alias"one_param_return"end</code_block>
+		<code_block>
+	<feature_name>c_no_param</feature_name> <keyword>is</keyword>
+			<comment>-- Encapsulation of a C routine with no parameter.</comment>
+		<keyword>external</keyword>
+			"C | %"my_header.h%""
+		<keyword>alias</keyword>
+			"no_param"
+		<keyword>end</keyword>
+		
+	<feature_name>c_one_param</feature_name> (i: <class_name>INTEGER</class_name>) <keyword>is</keyword>
+			<comment>-- Encapsulation of a C routine with one parameter.</comment>
+		<keyword>external</keyword>
+			"C (int) | %"my_header.h%""
+		<keyword>alias</keyword>
+			"one_param"
+		<keyword>end</keyword>
+		
+	<feature_name>c_no_param_return</feature_name>: <class_name>INTEGER</class_name> <keyword>is</keyword>
+			<comment>-- Encapsulation of a C routine with no parameter
+			-- returning an INTEGER</comment>
+		<keyword>external</keyword>
+			"C (): EIF_INTEGER| %"my_header.h%""
+		<keyword>alias</keyword>
+			"no_param_return"
+		<keyword>end</keyword>
+		
+	<feature_name>c_one_param_return</feature_name> (p: <class_name>POINTER</class_name>): <class_name>INTEGER</class_name> <keyword>is</keyword>
+			<comment>-- Encapsulation of a C routine with one parameter
+			-- returning an INTEGER</comment>
+		<keyword>external</keyword>
+			"C (FILE *): EIF_INTEGER| %"my_header.h%""
+		<keyword>alias</keyword>
+			"one_param_return"
+		<keyword>end</keyword></code_block>
 		<heading>
 			<size>2</size>Macros
 		</heading>
 		<paragraph>If in a header file called `my_header.h', you have the following declaration:</paragraph>
-		<code_block>/* Predefined constants */#define ID_MENU128#define ID_MENU_CHARACTER'c'/* Access the `i'-th element of `a' where `a' * is an array of EIF_INTEGER */#define i_th(a,i)((a) + (i)*sizeof(EIF_INTEGER))</code_block>
+		<code_block>
+	/* Predefined constants */
+#define ID_MENU		128
+#define ID_MENU_CHARACTER	'c'
+
+	/* Access the `i'-th element of `a' where `a' * is an array of EIF_INTEGER */
+#define i_th(a,i)((a) + (i)*sizeof(EIF_INTEGER))</code_block>
 		<paragraph>Then, the corresponding Eiffel code will look like:</paragraph>
-		<code_block>menu_id: INTEGER is-- `ID_MENU' C encapsulation.external"C [macro %"my_header.h%"] : EIF_INTEGER"alias"ID_MENU"endmenu_id_character: CHARACTER is-- `ID_MENU_CHARACTER' C encapsulation.external"C [macro %"my_header.h%"] : EIF_CHARACTER"alias"ID_MENU_CHARACTER"endi_th (p: POINTER; i: INTEGER): INTEGER is-- Access the `i'-th element of `p', array of C EIF_INTEGER.external"C [macro %"my_header.h%"] (EIF_INTEGER *, EIF_INTEGER): EIF_INTEGER"alias"i_th"end</code_block>
+		<code_block>
+	<code><feature_name>menu_id</feature_name></code>: <code><class_name>INTEGER</class_name></code> <code><keyword>is</keyword></code>
+			<comment>-- `ID_MENU' C encapsulation.</comment>
+		<code><keyword>external</keyword></code>
+			"C [macro %"my_header.h%"] : EIF_INTEGER"
+		<code><keyword>alias</keyword></code>
+			"ID_MENU"
+		<code><keyword>end</keyword></code>
+			
+	<code><feature_name>menu_id_character</feature_name></code>: <code><class_name>CHARACTER</class_name></code> <code><keyword>is</keyword></code>
+			<comment>-- `ID_MENU_CHARACTER' C encapsulation.</comment>
+		<code><keyword>external</keyword></code>
+			"C [macro %"my_header.h%"] : EIF_CHARACTER"
+		<code><keyword>alias</keyword></code>
+			"ID_MENU_CHARACTER"
+		<code><keyword>end</keyword></code>
+		
+	<code><feature_name>i_th</feature_name></code> (p: <code><class_name>POINTER</class_name></code>; i: <code><class_name>INTEGER</class_name></code>): <code><class_name>INTEGER</class_name></code> <code><keyword>is</keyword></code>
+			<comment>-- Access the `i'-th element of `p', array of C EIF_INTEGER.</comment>
+		<code><keyword>external</keyword></code>
+			"C [macro %"my_header.h%"] (EIF_INTEGER *, EIF_INTEGER): EIF_INTEGER"
+		<code><keyword>alias</keyword></code>
+			"i_th"
+		<code><keyword>end</keyword></code></code_block>
 		<heading>
 			<size>2</size>Structs
 		</heading>
 		<paragraph>The struct encapsulation enables you to wrap C/C++ structures easily without having to write any additional code in a C header file as it was the case until ISE introduced this new keyword in the external specification with ISE EiffelBench 4.5. With the struct encapsulation you can set and retrieve the value of a certain field of a struct.</paragraph>
 		<paragraph>If in a header file called `my_header.h', you have the following declaration of the `Point' structure whose `x' and `y' fields we want to access and set:</paragraph>
-		<code_block>/* Definition of `Point' */typdef struct point {int x;int y;} Point;</code_block>
+		<code_block>
+	/* Definition of `Point' */
+typdef struct point {
+	int x;
+	int y;
+} Point;</code_block>
 		<paragraph>Then, the corresponding Eiffel code will look like:</paragraph>
-		<code_block>x (p: POINTER): INTEGER is-- Access field x of struct pointed by `p'.external"C [struct %"my_header.h%"] (Point): EIF_INTEGER"alias"x"endy (p: POINTER): INTEGER is-- Access field y of struct pointed by `p'.external"C [struct %"my_header.h%"] (Point): EIF_INTEGER"alias"y"endset_x (p: POINTER; v: INTEGER) is-- Set field x of struct pointed by `p'.external"C [struct %"my_header.h%"] (Point, int)"alias"x"endset_y (p: POINTER: v: INTEGER) is-- Set field y of struct pointed by `p' with `v'.external"C [struct %"my_header.h%"] (Point, int)"alias"y"end</code_block>
+		<code_block>
+	<code><feature_name>x</feature_name></code> (p: <code><class_name>POINTER</class_name></code>): <code><class_name>INTEGER</class_name></code> <code><keyword>is</keyword></code>
+			<comment>-- Access field x of struct pointed by `p'.</comment>
+		<code><keyword>external</keyword></code>
+			"C [struct %"my_header.h%"] (Point): EIF_INTEGER"
+		<code><keyword>alias</keyword></code>
+			"x"
+		<code><keyword>end</keyword></code>
+		
+	<code><feature_name>y</feature_name></code> (p: <code><class_name>POINTER</class_name></code>): <code><class_name>INTEGER</class_name></code> <code><keyword>is</keyword></code>
+			<comment>-- Access field y of struct pointed by `p'.</comment>
+		<code><keyword>external</keyword></code>
+			"C [struct %"my_header.h%"] (Point): EIF_INTEGER"
+		<code><keyword>alias</keyword></code>
+			"y"
+		<code><keyword>end</keyword></code>
+
+	<code><feature_name>set_x</feature_name></code> (p: <code><class_name>POINTER</class_name></code>; v:<code><class_name> INTEGER</class_name></code>) <code><keyword>is</keyword></code>
+			<comment>-- Set field x of struct pointed by `p'.</comment>
+		<code><keyword>external</keyword></code>
+			"C [struct %"my_header.h%"] (Point, int)"
+		<code><keyword>alias</keyword></code>
+			"x"
+		<code><keyword>end</keyword></code>
+
+	<code><feature_name>set_y</feature_name></code> (p: <code><class_name>POINTER</class_name></code>: v:<code><class_name> INTEGER</class_name></code>) <code><keyword>is</keyword></code>
+			<comment>-- Set field y of struct pointed by `p' with `v'.</comment>
+		<code><keyword>external</keyword></code>
+			"C [struct %"my_header.h%"] (Point, int)"
+		<code><keyword>alias</keyword></code>
+			"y"
+		<code><keyword>end</keyword></code></code_block>
 		<heading>
 			<size>2</size>Windows externals
 		</heading>
 		<heading>
 			<size>3</size>DLLs
 		</heading>
-		<paragraph>With ISE EiffelStudio you now have two different ways to call C routines exported in a DLL. Why two, because Windows provides two ways to call a C routine in a DLL:</paragraph>
+		<paragraph>With EiffelStudio you now have two different ways to call C routines exported in a DLL. Why two, because Windows provides two ways to call a C routine in a DLL:</paragraph>
 		<list ordered="false">
 			<item>_cdecl: referred to as the standard way</item>
 			<item>__stdcall referred to as the Pascal way</item>
 		</list>
-		<paragraph>Therefore if you want to call an external routine defined in a DLL supposed to be called using the `_cdecl' method, you have to use the ` 
-			<span>
-				<bold>dll32</bold>'
-			</span> sub-language option. For `__stdcall' you need to use the ` 
-			<bold>dllwin32</bold>' sub-language option. Here is an example:
+		<paragraph>Therefore if you want to call an external routine defined in a DLL supposed to be called using the `_cdecl' method, you have to use the <bold>dll32</bold> 
+			sub-language option. For `__stdcall' you need to use the <bold>dllwin32</bold> sub-language option. Here is an example:
 		</paragraph>
-		<code_block>my_cdecl_routine (a: INTEGER): POINTER is-- Encapsulation of a dll function with the `_cdecl' call mechanism.external"C [dll32 %"my_dll.dll%"] (int): EIF_POINTER"endmy_stdcall_routine (a: INTEGER): POINTER is-- Encapsulation of a dll function with the `_stdcall' call mechanism.external"C [dllwin32 %"my_dll.dll%"] (int): EIF_POINTER"end</code_block>
+		<code_block>
+	<code><feature_name>my_cdecl_routine</feature_name></code> (a: <code><class_name>INTEGER</class_name></code>): <code><class_name>POINTER</class_name></code> <code><keyword>is</keyword></code>
+			<comment>-- Encapsulation of a dll function with the `_cdecl' call mechanism.</comment>
+		<code><keyword>external</keyword></code>
+			"C [dll32 %"my_dll.dll%"] (int): EIF_POINTER"
+		<code><keyword>end</keyword></code>
+		
+	<code><feature_name>my_stdcall_routine</feature_name></code> (a: <code><class_name>INTEGER</class_name></code>): <code><class_name>POINTER</class_name></code> <code><keyword>is</keyword></code>
+			<comment>-- Encapsulation of a dll function with the `_stdcall' call mechanism.</comment>
+		<code><keyword>external</keyword></code>
+			"C [dllwin32 %"my_dll.dll%"] (int): EIF_POINTER"
+		<code><keyword>end</keyword></code></code_block>
 		<warning>
 			<bold>Caution</bold>: Using wrongly 
 			<bold>dll32</bold> instead of 
@@ -75,11 +192,26 @@
 		<heading>
 			<size>3</size>Windows API
 		</heading>
-		<paragraph>As described in the previous section concerning routines exported in a DLL, the Windows API is using the `__stdcall' convention. As a consequence, you cannot use the standard external mechanism to wrap them because it is using the `_cdecl' convention. However, you can easily wrap those function by using the` 
-			<bold>macro</bold>' sub-language.
+		<paragraph>As described in the previous section concerning routines exported in a DLL, the Windows API is using the `__stdcall' convention. As a consequence, you cannot use the standard external mechanism to wrap them because it is using the `_cdecl' convention. However, you can easily wrap those function by using the 
+			<bold>macro</bold> sub-language.
 		</paragraph>
 		<paragraph>Here is an example that has been taken from WEL, the Windows Eiffel Library, to encapsulate the Windows `SendMessage' function:</paragraph>
-		<code_block>Windows defined SendMessage as:LRESULT SendMessage(HWND hWnd,      // handle to destination windowUINT Msg,       // messageWPARAM wParam,  // first message parameterLPARAM lParam   // second message parameter);In WEL, the encapsulation is written as:cwin_send_message (hwnd: POINTER; msg, wparam, param: INTEGER) is-- SDK SendMessage (without the result)external"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"alias"SendMessage"end</code_block>
+		Windows defined SendMessage as:
+		<code_block>LRESULT SendMessage(
+	HWND hWnd,      // handle to destination window
+	UINT Msg,       // message
+	WPARAM wParam,  // first message parameter
+	LPARAM lParam   // second message parameter
+);</code_block>
+In WEL, the encapsulation is written as:
+		<code_block>
+	<code><feature_name>cwin_send_message</feature_name></code> (hwnd: <code><class_name>POINTER</class_name></code>; msg, wparam, param: <code><class_name>INTEGER</class_name></code>) <code><keyword>is</keyword></code>
+			<comment>-- SDK SendMessage (without the result)</comment>
+		<code><keyword>external</keyword></code>
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
+		<code><keyword>alias</keyword></code>
+			"SendMessage"
+		<code><keyword>end</keyword></code></code_block>
 		<seealso>
 			<bold>See also</bold>
 			<line_break/>

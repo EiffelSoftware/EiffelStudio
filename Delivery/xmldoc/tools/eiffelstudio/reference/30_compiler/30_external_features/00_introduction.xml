@@ -1,7 +1,7 @@
 <document title="Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<paragraph>With ISE EiffelStudio you can encapsulate features written in 
+		<paragraph>With EiffelStudio you can encapsulate features written in 
 			<link>
 				<url>10_c_externals.xml</url>
 				<label>C</label>

@@ -70,32 +70,34 @@ feature -- Generation
 
 				f.generate_static_declaration ("void", "build_desc", <<"void">>);
 
-				f.putstring (precomp_C_string)
+				descriptor_generate_precomp (f)
 			else
-				f.new_line;
-				f.putstring (C_string)
+				f.new_line
+				descriptor_generate (f)
 			end;
 
-			generate_init_function (f);
+			generate_init_function (f)
 
 			f.close
 		end;
 
-	C_string: STRING is
+	descriptor_generate (f: INDENT_FILE) is
 			-- C code of corresponding to run-time
 			-- structure of Current descriptor
+		require
+			file_not_void: f /= Void
+			file_exists: f.exists
 		do
-			!! Result.make (0);
-			Result.append ("static struct desc_info desc[] = {%N");
+			f.putstring ("static struct desc_info desc[] = {%N");
 
 			if (invariant_entry = Void) then
-				Result.append ("%T{(uint16) ");
-				Result.append_integer (Invalid_index);
-				Result.append (", (int16) -1},%N")
+				f.putstring ("%T{(uint16) ");
+				f.putint (Invalid_index);
+				f.putstring (", (int16) -1},%N")
 			else
-				Result.append ("%T{(uint16) ");
-				Result.append_integer (invariant_entry.real_body_index.id - 1);
-				Result.append (", (int16) -1},%N");
+				f.putstring ("%T{(uint16) ");
+				f.putint (invariant_entry.real_body_index.id - 1);
+				f.putstring (", (int16) -1},%N");
 			end;
 
 			from
@@ -103,35 +105,33 @@ feature -- Generation
 			until
 				after
 			loop
-				Result.append (item_for_iteration.C_string);
+				item_for_iteration.generate (f)
 				forth
-			end;
-			Result.put ('%N', Result.count - 1);
-			Result.put ('}', Result.count);
-			Result.append (";%N")
+			end
+
+			f.putstring ("%N};%N")
 		end;
 
-	precomp_C_string: STRING is
+	descriptor_generate_precomp (f: INDENT_FILE) is
 			-- C code of corresponding to run-time
 			-- structure of Current precompiled descriptor
 		local
 			i: INTEGER
 		do
-			!! Result.make (0);
-			Result.append ("static struct desc_info desc");
-			Result.append ("[")
-			Result.append_integer (table_size)
-			Result.append ("];%N%Nstatic void build_desc (void) {%N")
+			f.putstring ("static struct desc_info desc");
+			f.putstring ("[")
+			f.putint (table_size)
+			f.putstring ("];%N%Nstatic void build_desc (void) {%N")
 
 			if (invariant_entry = Void) then
-				Result.append ("%Tdesc[0].info = (uint16) ");
-				Result.append_integer (Invalid_index);
-				Result.append (";%N")
-				Result.append ("%Tdesc[0].type = (int16) -1;%N")
+				f.putstring ("%Tdesc[0].info = (uint16) ")
+				f.putint (Invalid_index)
+				f.putstring (";%N")
+				f.putstring ("%Tdesc[0].type = (int16) -1;%N")
 			else
-				Result.append ("%Tdesc[0].info = (uint16) (");
-				Result.append (invariant_entry.real_body_index.generated_id);
-				Result.append (");%N%Tdesc[0].type = (int16) -1;%N");
+				f.putstring ("%Tdesc[0].info = (uint16) (")
+				f.putstring (invariant_entry.real_body_index.generated_id)
+				f.putstring (");%N%Tdesc[0].type = (int16) -1;%N")
 			end;
 
 			from
@@ -140,11 +140,11 @@ feature -- Generation
 			until
 				after
 			loop
-				Result.append (item_for_iteration.precomp_C_string (i));
+				item_for_iteration.generate_precomp (f,i)
 				i := i + item_for_iteration.count
 				forth
 			end;
-			Result.append ("}%N");
+			f.putstring ("}%N");
 		end;
 
 	generate_init_function (f: INDENT_FILE) is

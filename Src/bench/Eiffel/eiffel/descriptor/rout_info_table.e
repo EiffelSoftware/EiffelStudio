@@ -153,44 +153,47 @@ feature -- Query features
 
 feature -- Generation
 
-	C_string: STRING is
-				-- C code of run-time structure representing Current
+	generate (f: INDENT_FILE) is
+			-- C code of run-time structure representing Current
+		require
+			file_not_void: f /= Void
+			file_exists: f.exists
 		local
 			rout_infos: ARRAY [ROUT_INFO];
 			nb_elements: INTEGER;
 			i: INTEGER;
 			ri: ROUT_INFO
 		do
-			rout_infos := renumbered_table;
-			nb_elements := rout_infos.count;
-			!!Result.make (0);
-			Result.append ("#include %"eif_macros.h%"%N%N");
-			Result.append ("struct rout_info forg_table[] = {%N");
+			rout_infos := renumbered_table
+			nb_elements := rout_infos.count
+
+			f.putstring ("#include %"eif_macros.h%"%N%N")
+			f.putstring ("struct rout_info forg_table[] = {%N")
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
-			Result.append ("%T{(int16) -1, (int16) -1},%N");
+			f.putstring ("%T{(int16) -1, (int16) -1},%N")
 				-- Entry for the invariant "routine"
-			Result.append ("%T{(int16) 0, (int16) 0},%N");
+			f.putstring ("%T{(int16) 0, (int16) 0},%N")
+
 			from
 				i := 2	
 			until
 				i > nb_elements
 			loop
-				ri := rout_infos.item (i);
+				ri := rout_infos.item (i)
 				if ri /= Void then
-					Result.append ("%T{(int16) ");
-					Result.append_integer (ri.origin.id);
-					Result.append (", (int16) ");
-					Result.append_integer (ri.offset);
-					Result.append ("},%N");
+					f.putstring ("%N%T{(int16) ")
+					f.putint (ri.origin.id)
+					f.putstring (", (int16) ")
+					f.putint (ri.offset)
+					f.putstring ("},")
 				else
-					Result.append ("%T{(int16) -1, (int16) -1},%N")
+					f.putstring ("%N%T{(int16) -1, (int16) -1},")
 				end;
 				i := i + 1
 			end;
-			Result.put ('%N', Result.count - 1);
-			Result.put ('}', Result.count);
-			Result.append (";%N");
+
+			f.putstring ("%N};%N")
 		end;
 
 feature -- Melting
@@ -206,42 +209,42 @@ feature -- Melting
 			i: INTEGER;
 			ri: ROUT_INFO
 		do
-			rout_infos := renumbered_table;
-			nb_elements := rout_infos.count;
+			rout_infos := renumbered_table
+			nb_elements := rout_infos.count
 
 				-- Clear the byte array
-			Byte_array.clear;
+			Byte_array.clear
 
 				-- Number of elements
-			Byte_array.append_uint32_integer (nb_elements + 1);
+			Byte_array.append_uint32_integer (nb_elements + 1)
 
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
-			Byte_array.append_short_integer (-1);
-			Byte_array.append_short_integer (-1);
+			Byte_array.append_short_integer (-1)
+			Byte_array.append_short_integer (-1)
 
 				-- Entry for the invariant "routine"
-			Byte_array.append_short_integer (0);
-			Byte_array.append_short_integer (0);
+			Byte_array.append_short_integer (0)
+			Byte_array.append_short_integer (0)
 
 			from
 				i := 2	
 			until
 				i > nb_elements
 			loop
-				ri := rout_infos.item (i);
+				ri := rout_infos.item (i)
 				if ri /= Void then
-					Byte_array.append_short_integer (ri.origin.id);
-					Byte_array.append_short_integer (ri.offset);
+					Byte_array.append_short_integer (ri.origin.id)
+					Byte_array.append_short_integer (ri.offset)
 				else
-					Byte_array.append_short_integer (-1);
-					Byte_array.append_short_integer (-1);
-				end;
+					Byte_array.append_short_integer (-1)
+					Byte_array.append_short_integer (-1)
+				end
 				i := i + 1
-			end;
+			end
 
 				-- Return correctly sized structure.
-			Result := Byte_array.character_array;
+			Result := Byte_array.character_array
 			Byte_array.clear
 		end;
 
@@ -272,9 +275,11 @@ feature -- Trace
 
 feature -- DLE
 
-	dle_C_string: STRING is
+	generate_dle (f: INDENT_FILE) is
 			-- C code of run-time structure representing Current
 		require
+			file_not_void: f /= Void
+			file_exists: f.exists
 			dynamic_syatem: System.is_dynamic
 		local
 			rout_infos: ARRAY [ROUT_INFO];
@@ -282,16 +287,17 @@ feature -- DLE
 			i: INTEGER;
 			ri: ROUT_INFO
 		do
-			rout_infos := renumbered_table;
-			nb_elements := rout_infos.count;
-			!!Result.make (0);
-			Result.append ("#include %"eif_macros.h%"%N%N");
-			Result.append ("static struct rout_info Dforg_table[] = {%N");
+			rout_infos := renumbered_table
+			nb_elements := rout_infos.count
+
+			f.putstring ("#include %"eif_macros.h%"%N%N")
+			f.putstring ("static struct rout_info Dforg_table[] = {%N");
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
-			Result.append ("%T{(int16) -1, (int16) -1},%N");
+			f.putstring ("%T{(int16) -1, (int16) -1},%N")
 				-- Entry for the invariant "routine"
-			Result.append ("%T{(int16) 0, (int16) 0},%N");
+			f.putstring ("%T{(int16) 0, (int16) 0},%N")
+
 			from
 				i := 2	
 			until
@@ -299,19 +305,18 @@ feature -- DLE
 			loop
 				ri := rout_infos.item (i);
 				if ri /= Void then
-					Result.append ("%T{(int16) ");
-					Result.append_integer (ri.origin.id);
-					Result.append (", (int16) ");
-					Result.append_integer (ri.offset);
-					Result.append ("},%N");
+					f.putstring ("%N%T{(int16) ")
+					f.putint (ri.origin.id)
+					f.putstring (", (int16) ")
+					f.putint (ri.offset)
+					f.putstring ("},")
 				else
-					Result.append ("%T{(int16) -1, (int16) -1},%N")
+					f.putstring ("%N%T{(int16) -1, (int16) -1},")
 				end;
 				i := i + 1
 			end;
-			Result.put ('%N', Result.count - 1);
-			Result.put ('}', Result.count);
-			Result.append (";%N%Nvoid dle_ecall(void)%N%
+			
+			f.putstring ("%N};%N%Nvoid dle_ecall(void)%N%
 					%{%N%Teorg_table = Dforg_table;%N}%N")
 		end;
 

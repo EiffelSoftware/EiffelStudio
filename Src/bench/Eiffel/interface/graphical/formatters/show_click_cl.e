@@ -125,7 +125,11 @@ feature {NONE}
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			text_window.display_header ("Switching to clickable format...")
+			if text_window.last_format = Current then
+				text_window.display_header ("Producing clickable format...")
+			else
+				text_window.display_header ("Switching to clickable format...")
+			end
 		end;
 
 	post_fix: STRING is "clk";

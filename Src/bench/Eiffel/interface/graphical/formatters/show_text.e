@@ -74,7 +74,7 @@ feature {NONE}
 	display_temp_header (stone: STONE) is
 			-- Display a temporary header during the format processing.
 		do
-			if text_window.root_stone = Void then
+			if text_window.last_format = Current then
 				text_window.display_header ("Producing text format...")
 			else
 				text_window.display_header ("Switching to text format...")

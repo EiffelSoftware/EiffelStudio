@@ -33,7 +33,7 @@ feature -- Basic operations
 		require
 			not_already_connected: not is_connected
 		do
-			handle.status.set (implementation.connect)
+			implementation.connect
 			if is_ok then
 				handle.status.set_connect (true)
 			end
@@ -47,7 +47,7 @@ feature -- Basic operations
 			connection_exists: is_connected
 		do
 			handle.status.reset
-			handle.status.set (implementation.disconnect)
+			implementation.disconnect
 			handle.status.set_connect (false)
 		ensure
 			no_connection: not is_connected
@@ -60,7 +60,7 @@ feature -- Basic operations
 			connection_exists: is_connected
 			transaction_exists: transaction_count >= 0
 		do
-			handle.status.set (implementation.commit)
+			implementation.commit
 		end
 
 	rollback is
@@ -69,7 +69,7 @@ feature -- Basic operations
 			connection_exists: is_connected
 			transaction_exists: transaction_count >= 0
 		do
-			handle.status.set (implementation.rollback)
+			implementation.rollback
 		end
 
 	raise_error is
@@ -77,7 +77,7 @@ feature -- Basic operations
 		do
 			if not is_ok then
 				io.error.putstring ("EiffelStore Error")
-				if error_code /= 1 then
+				if error_code /= 0 then
 					io.error.putstring (" <")
 					io.error.putint (error_code)
 					io.error.putchar ('>')

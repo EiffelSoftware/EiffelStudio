@@ -73,6 +73,13 @@ feature -- Externals
 			"check_assert"
 		end
 
+	frozen initialize_assertions (t: RUNTIME_TYPE_HANDLE) is
+		external
+			"IL static signature (System.RuntimeTypeHandle) use ISE.Runtime.RUN_TIME"
+		alias
+			"assertion_initialize"
+		end
+		
 	frozen conforms_to (obj1, obj2: SYSTEM_OBJECT): BOOLEAN is
 			-- Generating type name of object `o'.
 			-- (type of which it is a direct instance)

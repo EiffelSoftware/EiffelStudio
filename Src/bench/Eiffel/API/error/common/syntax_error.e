@@ -103,7 +103,9 @@ feature -- Output
 			end;
 			file.close;
 
-			st.add_string ("Syntax error at line ");
+			st.add_string ("Syntax error number `")
+			st.add_int (error_code)
+			st.add_string ("' at line ");
 			st.add_int (line_number);
 			if Lace.parsed then
 				if Lace.successful then
@@ -111,6 +113,11 @@ feature -- Output
 					st.add_string (" in class ");
 					st.add_class_syntax (Current, System.current_class, 
 							System.current_class.signature)
+					if error_message /= Void then
+						st.add_new_line;
+						st.add_string (error_message)
+						st.add_new_line;
+					end
 				else
 						-- Error happened while parsing a "use" file
 					st.add_string (" in Cluster_properties %"Use%" file")

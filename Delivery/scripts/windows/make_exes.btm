@@ -25,7 +25,7 @@ remtrace Compile the non-commercial run-times
 remtrace Compile a run-time for Borland
 exprt -r %DEFAULT_CVS_TAG -d C runtime
 cd C\run-time
-sed -e "s/\/\*\#define NON_COMMERCIAL\*\//#define NON_COMMERCIAL/g" main.c >> new_main.c
+sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
 move new_main.c main.c
 cd ..
 alias pause echo
@@ -38,14 +38,14 @@ remtrace Compile a dynamic run-time
 fullrd C
 exprt -r %DEFAULT_CVS_TAG -d C runtime
 cd C\run-time
-sed -e "s/\/\*\#define NON_COMMERCIAL\*\//#define NON_COMMERCIAL/g" main.c >> new_main.c
+sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
 move new_main.c main.c
 cd ..
 sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
 move new_config.msh config.msh
 sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-DISE_GC\ \-W3/g" config.msh >> new_config.msh
 move new_config.msh config.msh
-sed -e "s/standard mtstandard/dll mtdll/g" config.msh >> new_config.msh
+sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.msh >> new_config.msh
 move new_config.msh config.msh
 alias pause echo
 call configure win32 m >>& %INSTALL_LOG
@@ -59,7 +59,7 @@ remtrace Compile a run-time for Microsoft
 fullrd C
 exprt -r %DEFAULT_CVS_TAG -d C runtime
 cd C\run-time
-sed -e "s/\/\*\#define NON_COMMERCIAL\*\//#define NON_COMMERCIAL/g" main.c >> new_main.c
+sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
 move new_main.c main.c
 cd ..
 sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
@@ -95,7 +95,7 @@ sed -e "s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g" config.msh >> new_config.msh
 move new_config.msh config.msh
 sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-DISE_GC\ \-W3/g" config.msh >> new_config.msh
 move new_config.msh config.msh
-sed -e "s/standard mtstandard/dll mtdll/g" config.msh >> new_config.msh
+sed -e "s/standard\ mtstandard/dll\ mtdll/g" config.msh >> new_config.msh
 move new_config.msh config.msh
 alias pause echo
 call configure win32 m >>& %INSTALL_LOG
@@ -183,16 +183,17 @@ iff not defined NO_NEW_EC then
 
 	remtrace Student edition
 	cdd %EIFFEL_SRC\Eiffel\API\constants
-	sed -e "s/	has_metrics: BOOLEAN is True/	has_metrics: BOOLEAN is False/g" eiffel_env.e >> new_eiffel_env.e
+	sed -e "s/\	has_metrics:\ BOOLEAN\ is\ True/\	has_metrics:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
 	move new_eiffel_env.e eiffel_env.e
-	sed -e "s/	has_documentation_generation: BOOLEAN is True/	has_documentation_generation: BOOLEAN is False/g" eiffel_env.e >> new_eiffel_env.e
+	sed -e "s/\	has_documentation_generation:\ BOOLEAN\ is\ True/\	has_documentation_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
 	move new_eiffel_env.e eiffel_env.e
-	sed -e "s/	has_profiler: BOOLEAN is True/	has_profiler: BOOLEAN is False/g" eiffel_env.e >> new_eiffel_env.e
+	sed -e "s/\	has_profiler:\ BOOLEAN\ is\ True/\	has_profiler:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
 	move new_eiffel_env.e eiffel_env.e
-	sed -e "s/	has_xmi_generation: BOOLEAN is True/	has_xmi_generation: BOOLEAN is False/g" eiffel_env.e >> new_eiffel_env.e
+	sed -e "s/\	has_xmi_generation:\ BOOLEAN\ is\ True/\	has_xmi_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
 	move new_eiffel_env.e eiffel_env.e
-	sed -e "s/	has_dll_generation: BOOLEAN is True/	has_dll_generation: BOOLEAN is False/g" eiffel_env.e >> new_eiffel_env.e
+	sed -e "s/\	has_dll_generation:\ BOOLEAN\ is\ True/\	has_dll_generation:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
 	move new_eiffel_env.e eiffel_env.e
+	cdd %FINALIZATION_DIR
 	clean_project
 	finalize finalizedbench.ace
 	fff
@@ -205,8 +206,9 @@ iff not defined NO_NEW_EC then
 
 	remtrace Home edition
 	cdd %EIFFEL_SRC\Eiffel\API\constants
-	sed -e "s/	has_case: BOOLEAN is True/	has_case: BOOLEAN is False/g" eiffel_env.e >> new_eiffel_env.e
+	sed -e "s/\	has_case:\ BOOLEAN\ is\ True/\	has_case:\ BOOLEAN\ is\ False/g" eiffel_env.e >> new_eiffel_env.e
 	move new_eiffel_env.e eiffel_env.e
+	cdd %FINALIZATION_DIR
 	clean_project
 	finalize finalizedbench.ace
 	fff
@@ -219,10 +221,11 @@ iff not defined NO_NEW_EC then
 
 	remtrace Professional edition
 	cdd %EIFFEL_SRC\Eiffel\API\constants
-	sed -e "s/	has_documentation_generation: BOOLEAN is False/	has_documentation_generation: BOOLEAN is True/g" eiffel_env.e >> new_eiffel_env.e
+	sed -e "s/\	has_documentation_generation:\ BOOLEAN\ is\ False/\	has_documentation_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
 	move new_eiffel_env.e eiffel_env.e
-	sed -e "s/	has_dll_generation: BOOLEAN is False/	has_dll_generation: BOOLEAN is True/g" eiffel_env.e >> new_eiffel_env.e
+	sed -e "s/\	has_dll_generation:\ BOOLEAN\ is\ False/\	has_dll_generation:\ BOOLEAN\ is\ True/g" eiffel_env.e >> new_eiffel_env.e
 	move new_eiffel_env.e eiffel_env.e
+	cdd %FINALIZATION_DIR
 	clean_project
 	finalize finalizedbench.ace
 	fff

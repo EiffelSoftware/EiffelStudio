@@ -33,7 +33,7 @@ feature -- Initialization
 			-- Create a feature tool.
 		do
 			is_in_project_tool := False
-			{BAR_AND_TEXT} precursor (a_screen)
+			{BAR_AND_TEXT} Precursor (a_screen)
 		end
 
 	form_create (a_form: FORM file_m, edit_m, format_m, special_m: MENU_PULL) is
@@ -73,7 +73,7 @@ feature -- Update Resources
 				stop_cmd ?= showstop_frmt_holder.associated_command
 				stop_cmd.set_format_mode (new_res.actual_value)
 			end
-			{BAR_AND_TEXT} precursor (old_res, new_res)
+			{BAR_AND_TEXT} Precursor (old_res, new_res)
 		end
 
 feature -- Window Properties
@@ -117,7 +117,7 @@ feature -- Resetting
 	reset is
 			-- Reset the window contents
 		do
-			{BAR_AND_TEXT} precursor
+			{BAR_AND_TEXT} Precursor
 			-- class_hole.set_empty_symbol
 			class_text_field.clear
 			routine_text_field.clear
@@ -195,7 +195,7 @@ feature -- Update
 		local
 			ss: SEARCH_STRING
 		do
-			{BAR_AND_TEXT} precursor
+			{BAR_AND_TEXT} Precursor
 			routine_text_field.close_choice_window
 			class_text_field.close_choice_window
 		end

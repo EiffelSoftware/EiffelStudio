@@ -1,8 +1,8 @@
 indexing
 
 	description:	
-		"Command to display flat form of a class.";
-	date: "$Date$";
+		"Command to display flat form of a class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class SHOW_FLAT 
@@ -29,32 +29,32 @@ feature -- Properties
 	symbol: PIXMAP is 
 		once 
 			Result := Pixmaps.bm_Showflat 
-		end;
+		end
  
 feature {NONE} -- Properties
 
 	name: STRING is
 		do
 			Result := Interface_names.f_Showflat
-		end;
+		end
 
 	menu_name: STRING is
 			-- Name used in menu entry
 		do
 			Result := Interface_names.m_Showflat
-		end;
+		end
 
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-		end;
+		end
 
 	title_part: STRING is
 		do
 			Result := Interface_names.t_Flat_form_of
-		end;
+		end
 	
-	post_fix: STRING is "fla";
+	post_fix: STRING is "fla"
 
 feature {NONE} -- Implementation
 
@@ -62,6 +62,6 @@ feature {NONE} -- Implementation
 			-- Display a temporary header during the format processing.
 		do
 			tool.set_title ("Exploring ancestors to produce flat form...")
-		end;
+		end
 
 end -- class SHOW_FLAT

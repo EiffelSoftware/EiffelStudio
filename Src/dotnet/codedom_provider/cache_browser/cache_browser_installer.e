@@ -37,6 +37,11 @@ feature -- Basic Operations
 			if Default_metadata_cache_path /= Void and l_framework_path /= Void and l_framework_version /= Void then
 				create l_cache_manager.make_with_path (Default_metadata_cache_path, l_framework_version)
 				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Web.Services.dll")
+				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Windows.Forms.dll")
+				l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Design.dll")
+				if not l_framework_version.equals (("v1.0.3705").to_cil) then
+					l_cache_manager.consume_assembly_from_path (l_framework_path + "System.Web.Mobile.dll")
+				end
 			end
 		end
 	

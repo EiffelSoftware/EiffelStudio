@@ -156,7 +156,6 @@ feature -- Element change.
 				extend (cluster_legend)
 			end
 			if is_right_angles then
-				update
 				apply_right_angles
 			end
 		end
@@ -357,29 +356,7 @@ feature -- Element change.
 				i := i + 1
 			end
 		end
-		
---	add_link (a_link: EG_LINK) is
---			-- Add view of `a_link' to `Current'.
---		local
---			link_fig: EG_LINK_FIGURE
---			e_item: ES_ITEM
---			scsc: EG_CLUSTER_FIGURE
---		do
---			Precursor {EG_FIGURE_WORLD} (a_link)
---			link_fig ?= figure_from_model (a_link)
---			if link_fig.source /= Void and then link_fig.target /= Void then
---				e_item ?= a_link
---				if e_item = Void or else e_item.is_needed_on_diagram then
---					scsc := smallest_common_supercluster (link_fig.source, link_fig.target)
---					if scsc /= Void and then not scsc.has (link_fig) then
---						scsc.go_i_th (scsc.number_of_figures)
---						scsc.put_right (link_fig)			
---						scsc.request_update
---					end
---				end
---			end
---		end
-		
+
 feature {EB_CONTEXT_EDITOR} -- Status settings
 		
 	show_anchors is
@@ -1295,6 +1272,5 @@ invariant
 	current_view_not_void: current_view /= Void
 	available_views_not_void: available_views /= Void
 	available_views_compare_objects: available_views.object_comparison
---	cluster_legend_not_Void: cluster_legend /= Void
 		
 end -- class EIFFEL_WORLD

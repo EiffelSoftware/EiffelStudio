@@ -17,7 +17,7 @@ inherit
 			launch_c_compilation, 
 			confirm_and_compile,
 			name, menu_name, accelerator,
-			compilation_allowed, perform_compilation,
+			perform_compilation,
 			execute_warner_help
 		end;
 	UPDATE_PROJECT
@@ -28,12 +28,11 @@ inherit
 			launch_c_compilation,
 			confirm_and_compile,
 			name, menu_name, accelerator,
-			compilation_allowed, perform_compilation,
+			perform_compilation,
 			freeze_now, execute_warner_help
 		select
 			freeze_now
 		end;
-	SHARED_MELT_ONLY
  
 creation
 
@@ -126,12 +125,6 @@ feature {NONE} -- Attributes
 
 	warner_was_popped_up: BOOLEAN;
 			-- Was the warner popped up?
-
-	compilation_allowed: BOOLEAN is
-			-- Is compilation allowed?
-		do
-			Result := not melt_only
-		end
 
 	name: STRING is
 			-- Name of the command.

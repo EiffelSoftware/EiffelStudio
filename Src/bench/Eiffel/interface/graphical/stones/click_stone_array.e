@@ -20,8 +20,7 @@ creation
 	
 feature {NONE} -- Initialization
 
-	make (list: CLICK_LIST; 
-			ref_class: E_CLASS) is
+	make (list: CLICK_LIST; ref_class: E_CLASS) is
 			-- Create a click_stone array from `list' 
 			-- with reference class `ref_class'.
 		local
@@ -29,14 +28,14 @@ feature {NONE} -- Initialization
 			a_click_ast: CLICK_AST;
 			clickable: CLICKABLE_AST;
 			new_click_stone: CLICK_STONE;
-			list_area: SPECIAL [CLICK_AST];
 			c: INTEGER;
 			stone: STONE;
+			local_copy: like Current
 		do
 			if list = Void then
 				array_make (1, 0);
 			else
-				list_area := list.area;
+				local_copy := Current
 				c := list.count;
 				array_make (1, c);
 				from
@@ -44,7 +43,7 @@ feature {NONE} -- Initialization
 				until
 					pos > c
 				loop
-					a_click_ast := list_area.item (pos - 1);
+					a_click_ast := list.i_th (pos);
 					clickable := a_click_ast.node;
 					if clickable.is_class or else clickable.is_precursor then
 						!CLASSC_STONE! stone.make 
@@ -58,7 +57,7 @@ feature {NONE} -- Initialization
 						(stone,
 						a_click_ast.start_position,
 						a_click_ast.end_position);
-					put (new_click_stone, pos);
+					local_copy.put (new_click_stone, pos);
 					pos := pos + 1;
 				end
 			end

@@ -87,6 +87,7 @@ feature
 			max_type_id \\ Char_size = 0;
 		local
 			i, nb, j, val: INTEGER;
+			local_copy: like Current
 		do
 debug
 Conformance_file.putstring ("/* Conformance table for ");
@@ -99,20 +100,21 @@ end;
 			Conformance_file.putint (type_id);
 			Conformance_file.putstring ("[] = {%N");
 			from
+				local_copy := Current
 				i := min_type_id;
 				nb := max_type_id;
 			until
 				i > nb
 			loop
 				val := 0;
-				if item (i) 	then val := 128;		end;
-				if item (i + 1) then val := val + 64; 	end;
-				if item (i + 2) then val := val + 32; 	end;
-				if item (i + 3) then val := val + 16; 	end;
-				if item (i + 4) then val := val + 8; 	end;
-				if item (i + 5) then val := val + 4; 	end;
-				if item (i + 6) then val := val + 2;	end;
-				if item (i + 7) then val := val + 1;	end;
+				if local_copy.item (i) 	then val := 128;		end;
+				if local_copy.item (i + 1) then val := val + 64; 	end;
+				if local_copy.item (i + 2) then val := val + 32; 	end;
+				if local_copy.item (i + 3) then val := val + 16; 	end;
+				if local_copy.item (i + 4) then val := val + 8; 	end;
+				if local_copy.item (i + 5) then val := val + 4; 	end;
+				if local_copy.item (i + 6) then val := val + 2;	end;
+				if local_copy.item (i + 7) then val := val + 1;	end;
 				Conformance_file.putstring ("(char) ");
 				Conformance_file.putint (val);
 				Conformance_file.putstring (",%N");
@@ -137,6 +139,7 @@ end;
 			max_type_id \\ Char_size = 0;
 		local
 			val, i, nb: INTEGER;
+			local_copy: like Current
 		do		
 				-- Dynamic type associated to the table
 			ba.append_short_integer (type_id - 1);
@@ -145,20 +148,21 @@ end;
 				-- Max type id of the table
 			ba.append_short_integer (max_type_id - 1);
 			from
+				local_copy := Current
 				i := min_type_id;
 				nb := max_type_id;
 			until
 				i > nb
 			loop
 				val := 0;
-				if item (i)	 then val := 128;			end;
-				if item (i + 1) then val := val + 64;   end;
-				if item (i + 2) then val := val + 32;   end;
-				if item (i + 3) then val := val + 16;   end;
-				if item (i + 4) then val := val + 8;	end;
-				if item (i + 5) then val := val + 4;	end;
-				if item (i + 6) then val := val + 2;	end;
-				if item (i + 7) then val := val + 1;	end;
+				if local_copy.item (i)	 then val := 128;			end;
+				if local_copy.item (i + 1) then val := val + 64;   end;
+				if local_copy.item (i + 2) then val := val + 32;   end;
+				if local_copy.item (i + 3) then val := val + 16;   end;
+				if local_copy.item (i + 4) then val := val + 8;	end;
+				if local_copy.item (i + 5) then val := val + 4;	end;
+				if local_copy.item (i + 6) then val := val + 2;	end;
+				if local_copy.item (i + 7) then val := val + 1;	end;
 				ba.append (charconv(val));
 				i := i + Char_size;
 			end;

@@ -51,17 +51,18 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		local
 			i, nb: INTEGER
+			local_copy: like Current
 		do
 			nb := other.count
 			if count = nb then
 				from
+					local_copy := Current
 					i := 1
 					Result := True
 				until
 					not Result or else i > nb
 				loop
-					Result := equivalent (item (i),
-						other.item (i))
+					Result := equivalent (local_copy.item (i), other.item (i))
 					i := i + 1
 				end
 			end
@@ -73,15 +74,17 @@ feature -- Output
 			-- Dump trace
 		local
 			i: INTEGER
+			local_copy: like Current
 		do
 			!!Result.make (10 * count)
 			Result.append ("<<")
 			from
+				local_copy := Current
 				i := 1
 			until
 				i > count
 			loop
-				Result.append (item (i).dump)
+				Result.append (local_copy.item (i).dump)
 				if i /= count then
 					Result.append (", ")
 				end
@@ -93,14 +96,16 @@ feature -- Output
 	append_to (st: STRUCTURED_TEXT) is
 		local
 			i: INTEGER
+			local_copy: like Current
 		do
 			st.add_string ("<<")
 			from
+				local_copy := Current
 				i := 1
 			until
 				i > count
 			loop
-				item (i).append_to (st)
+				local_copy.item (i).append_to (st)
 				if i /= count then
 					st.add_string (", ")
 				end
@@ -116,7 +121,8 @@ feature {COMPILER_EXPORTER}
 		local
 			gen_type: GEN_TYPE_A
 			i: INTEGER
-			generic_param: TYPE_A
+			generic_param, type_a: TYPE_A
+			local_copy: like Current
 		do
 			gen_type ?= other
 			if	gen_type /= Void
@@ -125,14 +131,16 @@ feature {COMPILER_EXPORTER}
 			then
 				generic_param := gen_type.generics.item (1)
 				from
+					local_copy := Current
 					Result := True
 					i := 1
 				until
 					(i > count) or else
 					(not Result)
 				loop
-					Result := item (i).conform_to (generic_param) 
-								and then not (item(i).is_expanded 
+					type_a := local_copy.item (i)
+					Result := type_a.conform_to (generic_param) 
+								and then not (type_a.is_expanded 
 									and not generic_param.is_expanded)
 					i := i + 1
 				end

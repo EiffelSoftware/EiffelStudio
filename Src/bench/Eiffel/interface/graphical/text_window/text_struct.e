@@ -6,7 +6,7 @@ inherit
 			make as array_create
 		export
 			{NONE} all
-			{ANY} empty, area
+			{ANY} empty, area, item, put
 		end
 
 feature 

@@ -24,7 +24,6 @@ inherit
         end;
 
 creation
-
 	init
 	
 feature
@@ -41,7 +40,7 @@ feature
 		do
 			i := hash_size - 1;
 			make (0, i);
-			!!values.make (0, i);
+			!! values.make (0, i);
 		end;
 
 	primes: PRIMES is
@@ -68,8 +67,12 @@ feature
 		local
 			increment, key, position, try, hash_size: INTEGER;
 			stop: BOOLEAN;
+			local_copy: like Current
+			local_values: like values
 		do
 			from
+				local_copy := Current
+				local_values := values
 				hash_size := count;
 				key := s.hash_code;
 				position := key \\ hash_size;
@@ -77,10 +80,10 @@ feature
 			until
 				try >= hash_size or else stop
 			loop
-				if array_item (position) = Void then
+				if local_copy.array_item (position) = Void then
 						-- Found a free location
-					array_put (s, position);
-					values.put (f, position);
+					local_copy.array_put (s, position);
+					local_values.put (f, position);
 					stop := True;
 				end;
 				position := (position + increment) \\ hash_size;

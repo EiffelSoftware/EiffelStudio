@@ -4,7 +4,6 @@
 class DESC_UNIT
 
 inherit
-
 	ARRAY [ENTRY]
 		rename
 			make as array_make
@@ -19,7 +18,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Creation
@@ -46,17 +44,21 @@ feature -- Generation
 			file_not_void: f /= Void
 			file_exists: f.exists
 		local
-			i: INTEGER;
-			re: ROUT_ENTRY;
+			i: INTEGER
+			re: ROUT_ENTRY
 			ae: ATTR_ENTRY
+			entry_item: ENTRY
+			local_copy: like Current
 		do
 			from
+				local_copy := Current
 				i := lower
 			until
 				i > upper
 			loop
-				if item (i) /= Void then
-					re ?= item (i);
+				entry_item := local_copy.item (i)
+				if entry_item /= Void then
+					re ?= entry_item
 					if re /= Void then
 							-- The entry corresponds to a routine.
 							-- Write the body index of the routine (index
@@ -68,7 +70,7 @@ feature -- Generation
 						f.putint (re.static_feature_type_id - 1);
 						f.putstring ("},");
 					else
-						ae ?= item (i);
+						ae ?= entry_item
 						if ae /= Void then
 								-- The entry corresponds to an attribute.
 								-- Write the offset of the attribute in the 
@@ -108,15 +110,19 @@ feature -- Generation
 			re: ROUT_ENTRY;
 			ae: ATTR_ENTRY
 			nb: INTEGER
+			entry_item: ENTRY
+			local_copy: like Current
 		do
 			from
 				i := lower
 			until
 				i > upper
 			loop
+				local_copy := Current
 				nb := i + start
-				if item (i) /= Void then
-					re ?= item (i);
+				entry_item := local_copy.item (i)
+				if entry_item /= Void then
+					re ?= entry_item
 					if re /= Void then
 							-- The entry corresponds to a routine.
 							-- Write the body index of the routine (index
@@ -132,7 +138,7 @@ feature -- Generation
 						f.putstring (re.generated_static_feature_type_id);
 						f.putstring (");%N")
 					else
-						ae ?= item (i);
+						ae ?= entry_item
 						if ae /= Void then
 								-- The entry corresponds to an attribute.
 								-- Write the offset of the attribute in the 
@@ -177,6 +183,8 @@ feature -- Melting
 			i: INTEGER;
 			re: ROUT_ENTRY;
 			ae: ATTR_ENTRY
+			local_copy: like Current
+			entry_item: ENTRY
 		do
 				-- Append the id of the origin class
 			ba.append_short_integer (class_id.id);
@@ -186,12 +194,14 @@ feature -- Melting
 
 				-- Append the descriptor entries
 			from
+				local_copy := Current
 				i := lower
 			until
 				i > upper
 			loop
-				if item (i) /= Void then
-					re ?= item (i);
+				entry_item := local_copy.item (i)
+				if entry_item /= Void then
+					re ?= entry_item
 					if re /= Void then
 							-- The entry corresponds to a routine.
 							-- Write the body index of the routine (index
@@ -200,7 +210,7 @@ feature -- Melting
 						ba.append_short_integer (re.real_body_index.id - 1);
 						ba.append_short_integer (re.static_feature_type_id -1);
 					else
-						ae ?= item (i);
+						ae ?= entry_item
 						if ae /= Void then
 								-- The entry corresponds to an attribute.
 								-- Write the offset of the attribute in the 

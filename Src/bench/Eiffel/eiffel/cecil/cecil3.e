@@ -10,7 +10,6 @@ inherit
 		end
 
 creation
-
 	init
 	
 feature 
@@ -22,15 +21,17 @@ feature
 			i: INTEGER
 			gen_type: GEN_TYPE_I
 			types: TYPE_LIST
+			local_values: like values
 		do
 			generate_keys
+			local_values := values
 
 			from
 				i := lower
 			until
 				i > upper
 			loop
-				a_class := values.item (i)
+				a_class := local_values.item (i)
 				if a_class /= Void and then
 					a_class.has_types
 				then
@@ -76,12 +77,9 @@ feature
 			until
 				i > upper
 			loop
-				a_class := values.item (i)
-				if (a_class = Void) or else
-					not a_class.has_types
-				then
-					Cecil_file.putstring
-									("{(int) 0, (int32 *) 0, (int16 *) 0}")
+				a_class := local_values.item (i)
+				if (a_class = Void) or else not a_class.has_types then
+					Cecil_file.putstring ("{(int) 0, (int32 *) 0, (int16 *) 0}")
 				else
 					Cecil_file.putstring ("{(int) ")
 					Cecil_file.putint (a_class.generics.count)
@@ -118,15 +116,17 @@ feature
 			a_class: CLASS_C
 			types: TYPE_LIST
 			gen_type: GEN_TYPE_I
+			local_values: like values
 		do
 			ba.append_short_integer (upper - lower + 1)
 			make_key_byte_code (ba)
 			from
+				local_values := values
 				i := lower
 			until
 				i > upper
 			loop
-				a_class := values.item (i)
+				a_class := local_values.item (i)
 				if a_class = Void then
 						-- No generics
 					ba.append_short_integer (0)

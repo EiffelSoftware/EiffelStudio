@@ -28,6 +28,7 @@ feature
 			empty_function_ptr_string: STRING
 			function_ptr_cast_string: STRING
 			exists: BOOLEAN
+			local_copy: like Current
 		do
 			empty_function_ptr_string := "(char *(*)()) 0,%N"
 			function_ptr_cast_string := "(char *(*)()) "
@@ -47,11 +48,12 @@ feature
 					goto_used (i);
 					index := position
 				end
+				local_copy := Current
 			until
 				i > nb
 			loop
 				if exists then
-					entry := array_item (index);
+					entry := local_copy.array_item (index);
 					if (index <= upper) and then i = entry.type_id then
 						r_name := entry.routine_name;
 						file.putstring (function_ptr_cast_string);

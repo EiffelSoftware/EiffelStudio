@@ -25,16 +25,18 @@ feature
 			class_type, written_type: CLASS_TYPE;
 			actual_type: TYPE_A;
 			formal_type: FORMAL_A
+			local_values: like values
 		do
 			file.putstring ("static char *(*cr");
 			file.putint (type_id);
 			file.putstring ("[])() = {%N");
 			from
 				i := 0;
+				local_values := values
 			until
 				i > upper
 			loop
-				feat := values.item (i);
+				feat := local_values.item (i);
 				if 
 					(feat = Void) or else 
 					feat.is_external or else
@@ -87,16 +89,18 @@ end;
 		local
 			i: INTEGER;
 			feat: FEATURE_I;
+			local_values: like values
 		do
 			file.putstring ("uint32 cr");
 			file.putint (class_id.id);
 			file.putstring ("[] = {%N");
 			from
+				local_values := values
 				i := 0
 			until
 				i > upper
 			loop
-				feat := values.item (i);
+				feat := local_values.item (i);
 				file.putstring ("(uint32) ");
 				if feat = Void then
 					file.putchar ('0');
@@ -115,16 +119,18 @@ end;
 		local
 			i: INTEGER;
 			feat: FEATURE_I;
+			local_values: like values
 		do
 			file.putstring ("uint32 cr");
 			file.putint (class_id.id);
 			file.putstring ("[] = {%N");
 			from
+				local_values := values
 				i := 0
 			until
 				i > upper
 			loop
-				feat := values.item (i);
+				feat := local_values.item (i);
 				file.putstring ("(uint32) ");
 				if feat = Void then
 					file.putchar ('0');
@@ -145,21 +151,23 @@ end;
 			i: INTEGER;
 			str: STRING;
 			feat: FEATURE_I;
+			local_copy: like Current
 		do
 			file.putstring ("char *cl");
 			file.putint (id.id);
 			file.putstring (" [] = {%N");
 			from
+				local_copy := Current
 				i := 0;
 			until
 				i > upper
 			loop
-				str := array_item (i);
+				str := local_copy.array_item (i);
 				if str = Void then
 					file.putstring ("(char *) 0");
 				else
 					file.putchar ('"');
-					file.putstring (array_item (i));
+					file.putstring (str);
 					file.putstring ("%"");
 				end;
 				file.putstring (",%N");
@@ -175,8 +183,10 @@ end;
 		local
 			i: INTEGER;
 			feat: FEATURE_I;
+			local_values: like values
 		do
 			ba.append_integer (upper + 1);
+			local_values := values
 
 				-- First names array
 			from
@@ -184,7 +194,7 @@ end;
 			until
 				i > upper
 			loop
-				feat := values.item (i);
+				feat := local_values.item (i);
 				if feat = Void then
 					ba.append_short_integer (0);
 				else
@@ -198,7 +208,7 @@ end;
 			until
 				i > upper
 			loop
-				feat := values.item (i);
+				feat := local_values.item (i);
 				if feat = Void then
 					ba.append_uint32_integer (0);
 				else
@@ -219,16 +229,18 @@ feature -- Concurrent Eiffel
 			feat: FEATURE_I;
 			written_class: CLASS_C;
 			class_type, written_type: CLASS_TYPE;
+			local_values: like values
 		do
 			file.putstring ("static EIF_INTEGER cpatid");
 			file.putint (type_id);
 			file.putstring ("[] = {%N");
 			from
+				local_values := values
 				i := 0;
 			until
 				i > upper
 			loop
-				feat := values.item (i);
+				feat := local_values.item (i);
 				if 
 					(feat = Void) or else 
 					feat.is_external or else

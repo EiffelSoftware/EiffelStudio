@@ -42,16 +42,18 @@ feature
 		local
 			i: INTEGER
 			a_class: CLASS_C
+			local_values: like values
 		do
 			generate_keys
 
 			Cecil_file.putstring ("static uint32 type_val[] = {%N")
 			from
+				local_values := values
 				i := lower
 			until
 				i > upper
 			loop
-				a_class := values.item (i)
+				a_class := local_values.item (i)
 				if a_class = Void then
 					Cecil_file.putstring ("(uint32) 0")
 				else
@@ -76,16 +78,18 @@ feature
 		local
 			i: INTEGER
 			cl_name: STRING
+			local_copy: like Current
 		do
 			Cecil_file.putstring ("static char *")
 			Cecil_file.putstring (key_name)
 			Cecil_file.putstring ("[] = {%N")
 			from
+				local_copy := Current
 				i := lower
 			until
 				i > upper
 			loop
-				cl_name := array_item (i)
+				cl_name := local_copy.array_item (i)
 				if cl_name = Void then
 					Cecil_file.putstring ("(char *) 0")
 				else
@@ -110,15 +114,17 @@ feature
 		local
 			i: INTEGER
 			a_class: CLASS_C
+			local_values: like values
 		do
 			ba.append_short_integer (upper - lower + 1)
 			make_key_byte_code (ba)
 			from
+				local_values := values
 				i := lower
 			until
 				i > upper
 			loop
-				a_class := values.item (i)
+				a_class := local_values.item (i)
 				if a_class = Void then
 					ba.append_uint32_integer (0)
 				else
@@ -134,13 +140,15 @@ feature
 		local
 			i: INTEGER
 			cl_name: STRING
+			local_copy: like Current
 		do
 			from
+				local_copy := Current
 				i := lower
 			until
 				i > upper
 			loop
-				cl_name := array_item (i)
+				cl_name := local_copy.array_item (i)
 				if cl_name = Void then
 					ba.append_short_integer (0)
 				else

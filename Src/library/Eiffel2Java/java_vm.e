@@ -7,121 +7,167 @@ indexing
 class
 	JAVA_VM
 
-inherit
-	EXCEPTIONS
-
-create
+create {SHARED_JNI_ENVIRONMENT}
 	make
 
-feature
+feature {NONE} -- Initialization
 
-	make is 
-			-- Create a Java VM
-		do
-			default_vm_args := get_default_vm_args
-		end
-
-	create_vm (class_path: STRING): JNI_ENVIRONMENT is
+	make (class_path: STRING) is 
 			-- Create a JVM execution environment and specify a CLASSPATH
 		require
 			class_path_valid: class_path /= Void
 		local
 			err: INTEGER
-			class_path_to_c: ANY
+			l_envp, l_jvmp: POINTER
+			l_options: ARRAY [JAVA_VM_OPTION]
+			l_option: JAVA_VM_OPTION
+			l_ex: EXCEPTIONS
 		do
-			class_path_to_c := class_path.to_c
-			err := create_jvm ($jvmp, $envp, default_vm_args, $class_path_to_c)
+			create default_vm_args.make
+			default_vm_args.set_version (feature {JAVA_VM_INIT_ARGS}.Jni_version_1_4)
+			
+			create l_options.make (1, 1)
+			create l_option.make
+			l_option.set_option_string ("-Djava.class.path=" + class_path)
+			l_options.put (l_option, 1)
+			
+			default_vm_args.set_options (l_options)
+			
+				-- Store attribute into local variable as `$' operator is safer on
+				-- local variables and not on attributes.
+			l_envp := envp
+			l_jvmp := jvmp
+			err := c_create_jvm ($l_jvmp, $l_envp, default_vm_args.item)
+			envp := l_envp
+			jvmp := l_jvmp
+			
 			if err /= 0 then
-				io.putstring ("*** Failed to load JVM=")
-				io.putint (err)
-				io.putstring ("  *** CLASSPATH=")
-				io.putstring (class_path)
-				io.new_line
-				raise ("failed to load java VM")
+				debug ("java_vm")
+					io.error.putstring ("*** Failed to load JVM=")
+					io.error.putint (err)
+					io.error.putstring ("  *** CLASSPATH=")
+					io.error.putstring (class_path)
+					io.error.new_line
+				end
+				
+				create l_ex
+				l_ex.raise ("Failed to load java VM")
 			else
-				!!Result.make (envp, Current)
-				debug ("java")
-					io.putstring ("Created a Java VM OK.%N")
+				create jni.make (Current)
+				debug ("java_vm")
+					io.error.putstring ("Created a Java VM OK.%N")
 				end
 			end
 		end
 
+feature {SHARED_JNI_ENVIRONMENT} -- Access
+
+	jni: JNI_ENVIRONMENT
+			-- Java environment information.
+
+feature {JNI_ENVIRONMENT} -- Access
+
+	envp: POINTER
+			-- Environment pointer.
+
+feature -- Disposal
+
 	destroy_vm is
-			-- destroy the JVM
+			-- Destroy the JVM
 		local
 			err: INTEGER
 		do
-			err := destroy_jvm ($jvmp)
+			err := c_destroy_jvm (jvmp)
 			if err /= 0 then
-				io.putstring ("*** Failed to destroy JVM=")
-				io.putint (err)
-				io.new_line
-			else
-				io.putstring ("*** JVM destroyed%N")
+				debug ("java_vm")
+					io.error.putstring ("*** Failed to destroy JVM=")
+					io.error.putint (err)
+					io.error.new_line
+				end
 			end
 		end
 
+feature -- Thread
+
 	attach_current_thread is
+			-- Attach to current thread of execution.
 		local
 			err: INTEGER
+			l_envp: POINTER
 		do
-			err := c_attach_current_thread ($jvmp, $envp, default_vm_args)
+			l_envp := envp
+			err := c_attach_current_thread (jvmp, $l_envp, default_vm_args.item)
+			envp := l_envp
 			if err /= 0 then
-				io.putstring ("Could not attach the current thread, err = ")
-				io.putint (err)
-				io.new_line
+				debug ("java_vm")
+					io.error.putstring ("Could not attach the current thread, err = ")
+					io.error.putint (err)
+					io.error.new_line
+				end
 			else
-				io.putstring ("Current thead attached successfully!!!")
-				io.new_line
+				debug ("java_vm")
+					io.error.putstring ("Current thead attached successfully!!!")
+					io.error.new_line
+				end
 			end
 		end
 
 	detach_current_thread is
+			-- Detach from current thread of execution.
 		local
 			err: INTEGER
 		do
-			err := c_detach_current_thread ($jvmp, $envp, default_vm_args)
+			err := c_detach_current_thread (jvmp)
 			if err /= 0 then
-				io.putstring ("Could not detach the current thread, err = ")
-				io.putint (err)
-				io.new_line
+				debug ("java_vm")
+					io.error.putstring ("Could not detach the current thread, err = ")
+					io.error.putint (err)
+					io.error.new_line
+				end
 			else
-				io.putstring ("Current thead detached successfully!!!")
-				io.new_line
+				debug ("java_vm")
+					io.error.putstring ("Current thead detached successfully!!!")
+					io.error.new_line
+				end
 			end
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
-	default_vm_args: POINTER
-			-- pointer to the default arguments for the JVM
+	default_vm_args: JAVA_VM_INIT_ARGS
+			-- Pointer to default arguments for JVM.
 
 	jvmp: POINTER 
-			-- pointer to this JVM
-
-	envp: POINTER
-			-- environment pointer
+			-- Pointer to current JVM.
 
 feature {NONE} -- externals
 
-	get_default_vm_args: POINTER is
-		external "C"
+	c_create_jvm (jvm: POINTER; env: POINTER; args: POINTER): INTEGER is
+		external
+			"C signature (JavaVM **, void **, void *): EIF_INTEGER use %"jni.h%""
+		alias
+			"JNI_CreateJavaVM"
 		end
 
-	create_jvm (jvm: POINTER; env: POINTER; args: POINTER; class_path: POINTER): INTEGER is
-		external "C"
-		end
-
-	destroy_jvm (jvm: POINTER): INTEGER is
-		external "C"
+	c_destroy_jvm (jvm: POINTER): INTEGER is
+		external
+			"C++ JavaVM use %"jni.h%""
+		alias
+			"DestroyJavaVM"
 		end
 
 	c_attach_current_thread (jvm: POINTER; env: POINTER; args: POINTER): INTEGER is
-		external "C"
+		external
+			"C++ JavaVM signature (void **, void *): EIF_INTEGER use %"jni.h%""
+		alias
+			"AttachCurrentThread"
 		end
 
-	c_detach_current_thread (jvm: POINTER; env: POINTER; args: POINTER): INTEGER is
-		external "C"
+	c_detach_current_thread (jvm: POINTER): INTEGER is
+		external
+			"C++ JavaVM use %"jni.h%""
+		alias
+			"DetachCurrentThread"
 		end
 
 end

@@ -10,35 +10,53 @@ inherit
 	JAVA_ARRAY
 
 create
-	make
+	make,
+	make_from_pointer
 	
-feature
+feature -- Initialization
 
 	make (size: INTEGER) is
-			-- create a new Java array and an Eiffel accessor object
+			-- Create a new Java array and an Eiffel accessor object
 			-- Note: Java arrays are indexed from zero
 		require
 			size_ok: size > 0		
 		do
-			jarray := c_new_float_array (jni.envp, size)
+			jarray := jni.new_float_array (size)
+			create jvalue.make
 		ensure
 			array_ok: jarray /= default_pointer	
 		end
 
+feature -- Access
+
 	item (index: INTEGER): REAL is
-			-- item at "index"
+			-- Item at `index'.
 		require
-			valid_index (index)
+			valid_index: valid_index (index)
+		local
+			l_array_ptr: POINTER
 		do
-			Result := c_get_float_array_element (jni.envp, jarray, index )					
+			l_array_ptr := jni.get_float_array_elements (jarray, default_pointer)
+			jvalue.make_by_pointer (l_array_ptr + index * sizeof_jfloat)
+			Result := jvalue.float_value
+			jni.release_float_array_elements (jarray, l_array_ptr, 0)
 		end
 
-	put (litem: REAL; index: INTEGER) is
-			-- replace item at "index"
+feature -- Element change
+
+	put (an_item: REAL; index: INTEGER) is
+			-- Put `an_item' at `index'. 
 		require
-			valid_index (index)
+			valid_index: valid_index (index)
+		local
+			l_array_ptr: POINTER
 		do
-			c_set_float_array_element (jni.envp, jarray, index, litem)
+			l_array_ptr := jni.get_float_array_elements (jarray, default_pointer)
+			jvalue.make_by_pointer (l_array_ptr + index * sizeof_jfloat)
+			jvalue.set_float_value (an_item)
+			jni.release_float_array_elements (jarray, l_array_ptr, 0)
+		ensure
+			inserted: item (index) = an_item
 		end
 
 end

@@ -10,35 +10,53 @@ inherit
 	JAVA_ARRAY 
 
 create
-	make
+	make,
+	make_from_pointer
 	
-feature
+feature -- Initialization
 
 	make (size: INTEGER) is
-			-- create a new Java array and an Eiffel accessor object
+			-- Create a new Java array and an Eiffel accessor object
 			-- Note: Java arrays are indexed from zero
 		require
 			size_ok: size > 0		
 		do
-			jarray := c_new_long_array (jni.envp, size)
+			jarray := jni.new_long_array (size)
+			create jvalue.make
 		ensure
 			array_ok: jarray /= default_pointer	
 		end
 
+feature -- Access
+
 	item (index: INTEGER): INTEGER_64 is
-			-- item at "index"
+			-- Item at `index'.
 		require
-			valid_index (index)
+			valid_index: valid_index (index)
+		local
+			l_array_ptr: POINTER
 		do
-			Result := c_get_long_array_element (jni.envp, jarray, index )					
+			l_array_ptr := jni.get_long_array_elements (jarray, default_pointer)
+			jvalue.make_by_pointer (l_array_ptr + index * sizeof_jlong)
+			Result := jvalue.long_value
+			jni.release_long_array_elements (jarray, l_array_ptr, 0)
 		end
 
-	put (litem: INTEGER_64; index: INTEGER) is
-			-- put item at "index"
+feature -- Element change
+
+	put (an_item: INTEGER_64; index: INTEGER) is
+			-- Put `an_item' at `index'. 
 		require
-			valid_index (index)
+			valid_index: valid_index (index)
+		local
+			l_array_ptr: POINTER
 		do
-			c_set_long_array_element (jni.envp, jarray, index, litem)
+			l_array_ptr := jni.get_long_array_elements (jarray, default_pointer)
+			jvalue.make_by_pointer (l_array_ptr + index * sizeof_jlong)
+			jvalue.set_long_value (an_item)
+			jni.release_long_array_elements (jarray, l_array_ptr, 0)
+		ensure
+			inserted: item (index) = an_item
 		end
 
 end

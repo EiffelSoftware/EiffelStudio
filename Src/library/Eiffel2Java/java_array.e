@@ -1,5 +1,5 @@
 indexing
-	description: "parent of all Java array classes that contains the %
+	description: "Parent of all Java array classes that contains the %
                  %common routines to all arrays. Not to be used directly,%
                  % instead use the class with array of specific type."
 	date: "$Date$"
@@ -11,7 +11,7 @@ class
 inherit
 	SHARED_JNI_ENVIRONMENT
 
-	JAVA_EXTERNALS
+	JAVA_SIZES
 
 create {NONE}
 	make_from_pointer
@@ -19,34 +19,43 @@ create {NONE}
 feature {NONE} -- Initialization
 
 	make_from_pointer (p: POINTER) is
-			-- make an Eiffel array accessor out of a pointer to a 
-			-- Java array
+			-- Make an Eiffel array accessor out of a pointer to a 
+			-- Java array.
 		require
 			valid: p /= default_pointer
 		do
 			jarray := p
+			create jvalue.make
 		end
 
 feature -- Status report
 
-	count : INTEGER is
-			-- number of cells in this array
+	count: INTEGER is
+			-- Number of cells in this array
 		do
-			Result := c_get_array_length (jni.envp,jarray)
+			Result := jni.get_array_length (jarray)
+		ensure
+			positive_count: Result >= 0
 		end
 
 	valid_index (index: INTEGER): BOOLEAN is
-			-- index is valid if it's between 0..count-1
+			-- Index is valid if it's between 0..count-1
 		do
 			Result := (index >= 0) and (index < count)
 		end
 
-feature {JAVA_ARGS}
+feature {JAVA_ARGS} -- Access
 
 	jarray: POINTER
+			-- Pointer to internal java array.
+
+feature {NONE} -- Implementation
+
+	jvalue: JAVA_VALUE
+			-- Internal storage for writing/reading from a java array.
 
 invariant
-	jarray /= default_pointer
+	jarray_not_null: jarray /= default_pointer
 
 end  --class
 

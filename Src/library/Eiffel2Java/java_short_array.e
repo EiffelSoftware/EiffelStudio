@@ -11,35 +11,53 @@ inherit
 	JAVA_ARRAY
 
 create
-	make
+	make,
+	make_from_pointer
 	
-feature
+feature -- Initialization
 
-	make (size: INTEGER ) is
-			-- create a new Java array and an Eiffel accessor object
+	make (size: INTEGER) is
+			-- Create a new Java array and an Eiffel accessor object
 			-- Note: Java arrays are indexed from zero
 		require
 			size_ok: size > 0		
 		do
-			jarray := c_new_short_array (jni.envp, size)
+			jarray := jni.new_short_array (size)
+			create jvalue.make
 		ensure
 			array_ok: jarray /= default_pointer	
 		end
 
-	item (index: INTEGER): INTEGER is
-			-- item at "index"
+feature -- Access
+
+	item (index: INTEGER): INTEGER_16 is
+			-- Item at `index'.
 		require
-			valid_index (index)
+			valid_index: valid_index (index)
+		local
+			l_array_ptr: POINTER
 		do
-			Result := c_get_short_array_element (jni.envp, jarray, index -1)					
+			l_array_ptr := jni.get_short_array_elements (jarray, default_pointer)
+			jvalue.make_by_pointer (l_array_ptr + index * sizeof_jshort)
+			Result := jvalue.short_value
+			jni.release_short_array_elements (jarray, l_array_ptr, 0)
 		end
 
-	put (litem: INTEGER; index: INTEGER) is
-			-- put item at "index"
+feature -- Element change
+
+	put (an_item: INTEGER_16; index: INTEGER) is
+			-- Put `an_item' at `index'. 
 		require
-			valid_index (index)
+			valid_index: valid_index (index)
+		local
+			l_array_ptr: POINTER
 		do
-			c_set_short_array_element (jni.envp, jarray, index-1, litem)
+			l_array_ptr := jni.get_short_array_elements (jarray, default_pointer)
+			jvalue.make_by_pointer (l_array_ptr + index * sizeof_jshort)
+			jvalue.set_short_value (an_item)
+			jni.release_short_array_elements (jarray, l_array_ptr, 0)
+		ensure
+			inserted: item (index) = an_item
 		end
 
 end

@@ -50,7 +50,9 @@ inherit
 			make_top as wel_make_top,
 			set_menu as wel_set_menu,
 			menu as wel_menu,
-			make as wel_make
+			make as wel_make,
+			font as wel_control_font,
+			set_font as wel_control_set_font
 		undefine
 			class_background,
 			background_brush,

@@ -33,7 +33,6 @@ feature -- Access
 	color_resource_value (s: STRING): EV_COLOR is
 			-- Color resource. Can be Void if no color resource called `s' exists.
 		local
-			s1: STRING
 			r: COLOR_RESOURCE
 		do
 			r ?= resources.item (s)
@@ -58,7 +57,6 @@ feature -- Access
 
 	font_resource_value (s: STRING): EV_FONT is
 		local
-			s1: STRING
 			r: FONT_RESOURCE
 		do
 			r ?= resources.item (s)

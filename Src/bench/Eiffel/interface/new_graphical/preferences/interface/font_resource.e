@@ -72,7 +72,6 @@ feature -- Status Setting
 		local
 			s: STRING
 			i: INTEGER
-			syntax_is_bad: BOOLEAN
 		do
 			value := new_value
 			s := clone (value)

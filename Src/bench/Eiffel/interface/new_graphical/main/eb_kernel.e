@@ -87,20 +87,21 @@ feature {NONE} -- Initialization
 					(argument (1).is_equal ("-bench") or
 					else argument (1).is_equal ("-from_bench"))
 				then
+					Eiffel_project.set_batch_mode (False)
+
+						-- Initialize debugger communication
+					if argument (1).is_equal ("-bench") then
+							-- True is for binary
+						init_connection (False)
+					end
+
+						-- Formatting includes breakpoints
+					set_is_with_breakable
+	
 						-- Check then for the license and make sure that we are allowed to launch the
 						-- product.
 					if init_license then
-						Eiffel_project.set_batch_mode (False)
-	
-							-- Initialize debugger communication
-						if argument (1).is_equal ("-bench") then
-								-- True is for binary
-							init_connection (False)
-						end
-	
-							-- Formatting includes breakpoints
-						set_is_with_breakable
-	
+
 						create graphic_compiler.make_and_launch
 					end
 				else

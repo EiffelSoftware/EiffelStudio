@@ -169,7 +169,6 @@ feature -- Access
 		local
 			cur_width, cur_height: INTEGER
 			screen_dc: WEL_SCREEN_DC
-			bounding_rect: WEL_RECT
 			size: WEL_SIZE
 			text_metric: WEL_TEXT_METRIC
 		do

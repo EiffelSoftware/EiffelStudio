@@ -259,7 +259,7 @@ feature {NONE} -- Implementation: access
 			put ("to_integer") check found_item = to_integer_name_id end
 			put ("to_character") check found_item = to_character_name_id end
 			put ("ascii_char") check found_item = ascii_char_name_id end
-			put ("internal_clone") check found_item = internal_clone_name_id end
+			put ("internal_duplicate") check found_item = internal_duplicate_name_id end
 			put ("internal_copy") check found_item = internal_copy_name_id end
 			put ("put_value_at") check found_item = put_value_at_name_id end
 			put ("set_bit_with_mask") check found_item = set_bit_with_mask_name_id end

@@ -26,6 +26,8 @@ LN = $ln
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
 RANLIB = $ranlib
+MKDIR = $mkdir -p
+MV = $mv
 RM = $rm -f
 ########################################################################
 # Automatically generated parameters -- do not edit
@@ -37,9 +39,13 @@ NET_LIBS = libnet.a libmtnet.a libnet.so libmtnet.so
 # New suffixes and associated building rules -- edit with care
 
 
-all: \$(NET_LIBS)
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
+
+all: $(NET_LIBS)
+	$(MKDIR) ../spec/$(ISE_PLATFORM)/lib
+	$(MV) $? ../spec/$(ISE_PLATFORM)/lib
+	make clobber
 
 SMODE = local.c network.c network_r.c storable.c
 

@@ -16,8 +16,9 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 	
 	EV_BAR_ITEM_IMP
-
-	
+		undefine
+			initialize_colors
+		end	
                 
 creation
 
@@ -41,6 +42,12 @@ feature -- Access
 			p := gtk_entry_get_text (widget)
 			!!Result.make (0)
 			Result.from_c (p)
+		end
+
+	text_length: INTEGER is
+			-- Length of the text of the widget
+		do
+			Result := text.count
 		end
 
 feature -- Status setting

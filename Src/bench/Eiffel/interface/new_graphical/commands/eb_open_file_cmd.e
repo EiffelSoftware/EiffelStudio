@@ -15,25 +15,24 @@ inherit
 	EB_SHARED_INTERFACE_TOOLS
 	NEW_EB_CONSTANTS
 
-creation
+	EB_CONFIRM_SAVE_CALLBACK
 
+creation
 	make
 	
-feature -- Callbacks
+feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
 
---	save_changes (argument: ANY) is
---			-- The user has eventually been warned that he will lose his stuff
---		local
---			chooser: NAME_CHOOSER_W
---		do
---			if tool.save_cmd /= Void then
---				tool.save_cmd.execute (Void, Void)
---			end
---
---			chooser := name_chooser (popup_parent)
---			chooser.set_open_file
---			chooser.call (Current) 
---		end
+	process is
+		local
+			fod: EV_FILE_OPEN_DIALOG
+			arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]
+		do
+			create fod.make (tool.parent)
+--			fod.set_filter (<<"Eiffel Class File (*.e)">>, <<"*.e">>)
+			create arg.make (fod)
+			fod.add_ok_command (Current, arg)
+			fod.show
+		end
 	
 feature -- Properties
 
@@ -51,9 +50,7 @@ feature {NONE} -- Implementation
 			fn: FILE_NAME
 			f: PLAIN_TEXT_FILE
 			temp: STRING	
-			fod: EV_FILE_OPEN_DIALOG
-			arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]
-			qd: EV_QUESTION_DIALOG
+			wd: EV_WARNING_DIALOG
 			csd: EB_CONFIRM_SAVE_DIALOG
 			class_i: CLASS_I
 			classi_stone: CLASSI_STONE
@@ -62,17 +59,12 @@ feature {NONE} -- Implementation
 			if argument = Void then
 				-- First click on open
 				if tool.text_window.changed then
-					create csd.make_and_launch (tool, Current, argument)
+					create csd.make_and_launch (tool, Current)
 				else
-					create fod.make (tool.parent)
---					fod.set_filter (<<"Eiffel Class File (*.e)">>, <<"*.e">>)
-					create arg.make (fod)
-					fod.add_ok_command (Current, arg)
-					fod.show
+					process
 				end
 			else
-				fod := argument.first
-				create fn.make_from_string (fod.file)
+				create fn.make_from_string (argument.first.file)
 				if not fn.empty then
 					create f.make (fn)
 					if
@@ -93,15 +85,24 @@ feature {NONE} -- Implementation
 							end
 						end
 					elseif f.exists and then not f.is_plain then
-						create qd.make_default (tool.parent, Interface_names.t_Warning, 
+						create wd.make_default (tool.parent, Interface_names.t_Warning, 
 							Warning_messages.w_Not_a_file_retry (fn))
+						wd.show_ok_cancel_buttons
+						wd.add_ok_command (Current, Void)
+						wd.show
 					else
-						 create qd.make_default (tool.parent, Interface_names.t_Warning,
-						Warning_messages.w_Cannot_read_file_retry (fn))
+						create wd.make_default (tool.parent, Interface_names.t_Warning,
+							Warning_messages.w_Cannot_read_file_retry (fn))
+						wd.show_ok_cancel_buttons
+						wd.add_ok_command (Current, Void)
+						wd.show
 					end
 				else
-					 create qd.make_default (tool.parent, Interface_names.t_Warning,
+					 create wd.make_default (tool.parent, Interface_names.t_Warning,
 						Warning_messages.w_Not_a_file_retry (fn))
+					wd.show_ok_cancel_buttons
+					wd.add_ok_command (Current, Void)
+					wd.show
 				end
 			end
 		end
@@ -109,6 +110,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- Attributes
 
 	tool: EB_CLASS_TOOL
+--	tool: EB_EDITOR
 
 --	name: STRING is
 --			-- Name of the command.

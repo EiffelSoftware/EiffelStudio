@@ -15,9 +15,25 @@ inherit
 	EB_SHARED_INTERFACE_TOOLS
 	NEW_EB_CONSTANTS
 
+	EB_CONFIRM_SAVE_CALLBACK
+
 creation
 	make
 
+feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
+
+	process is
+		local
+			fod: EV_FILE_OPEN_DIALOG
+			arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]
+		do
+			create fod.make (tool.parent)
+--			fod.set_filter (<<"System File (*.ace)">>, <<"*.ace">>)
+			create arg.make (fod)
+			fod.add_ok_command (Current, arg)
+			fod.show
+		end
+	
 feature {NONE} -- Implementation
 
 	execute (argument: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]; data: EV_EVENT_DATA) is
@@ -26,20 +42,15 @@ feature {NONE} -- Implementation
 			fn: STRING
 			f: PLAIN_TEXT_FILE
 			temp: STRING
-			fod: EV_FILE_OPEN_DIALOG
+			wd: EV_WARNING_DIALOG
 			csd: EB_CONFIRM_SAVE_DIALOG
-			arg: EV_ARGUMENT1 [EV_FILE_OPEN_DIALOG]
 		do
 			if argument = Void then
 					-- First click on open
 				if tool.text_window.changed then
-					create csd.make_and_launch (tool, Current, argument)
+					create csd.make_and_launch (tool, Current)
 				else
-					create fod.make (tool.parent)
-					fod.set_filter (<<"System File (*.ace)">>, <<"*.ace">>)
-					create arg.make (fod)
-					fod.add_ok_command (Current, arg)
-					fod.show
+					process
 				end
 			else
 				fn := argument.first.file
@@ -51,15 +62,24 @@ feature {NONE} -- Implementation
 						tool.show_file (f)
 						Eiffel_ace.set_file_name (fn)
 					elseif f.exists and then not f.is_plain then
---						warner (popup_parent).custom_call (Current,
---							Warning_messages.w_Not_a_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel)
+						create wd.make_with_text (tool.parent, Interface_names.t_Warning,
+							Warning_messages.w_Not_a_file_retry (fn))
+						wd.show_ok_cancel_buttons
+						wd.add_ok_command (Current, Void)
+						wd.show
 					else
---						warner (popup_parent).custom_call (Current, 
---						Warning_messages.w_Cannot_read_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel)
+						create wd.make_with_text (tool.parent, Interface_names.t_Warning,
+							Warning_messages.w_Cannot_read_file_retry (fn))
+						wd.show_ok_cancel_buttons
+						wd.add_ok_command (Current, Void)
+						wd.show
 					end
 				else
---					warner (popup_parent).custom_call (Current,
---						Warning_messages.w_Not_a_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel)
+					create wd.make_with_text (tool.parent, Interface_names.t_Warning,
+						Warning_messages.w_Not_a_file_retry (fn))
+					wd.show_ok_cancel_buttons
+					wd.add_ok_command (Current, Void)
+					wd.show
 				end
 			end
 		end

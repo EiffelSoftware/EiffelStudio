@@ -152,26 +152,30 @@ feature {NONE} -- Implementation
 			filter_patterns: ARRAY [STRING]
 			filter_info: TUPLE [STRING, STRING]
 		do
-				-- Filters are now connected before showing the window based
-				-- on the current contents of `filters', as they do not need
-				-- to be updated dynamically.
-			create filter_names.make (1, filters.count)
-			create filter_patterns.make (1, filters.count)
-			from
-				filters.start
-			until
-				filters.off
-			loop
-				filter_info := filters.item
-				filter_pattern ?= filter_info.item (1)
-				filter_name ?= filter_info.item (2)
-				
-				filter_patterns.put (filter_pattern, filters.index)
-				filter_names.put (filter_name, filters.index)
-				filters.forth
+				--| FIXME when `set_filter' is removed, this check for
+				--| being non empty may be removed. Julian.
+			if not filters.is_empty then
+					-- Filters are now connected before showing the window based
+					-- on the current contents of `filters', as they do not need
+					-- to be updated dynamically.
+				create filter_names.make (1, filters.count)
+				create filter_patterns.make (1, filters.count)
+				from
+					filters.start
+				until
+					filters.off
+				loop
+					filter_info := filters.item
+					filter_pattern ?= filter_info.item (1)
+					filter_name ?= filter_info.item (2)
+					
+					filter_patterns.put (filter_pattern, filters.index)
+					filter_names.put (filter_name, filters.index)
+					filters.forth
+				end
+				wel_set_filter (filter_names, filter_patterns)
+				wel_set_filter_index (0)
 			end
-			wel_set_filter (filter_names, filter_patterns)
-			wel_set_filter_index (0)
 			
 				-- Now show the dialog in the standard fashion.
 			Precursor {EV_STANDARD_DIALOG_IMP} (a_window)	

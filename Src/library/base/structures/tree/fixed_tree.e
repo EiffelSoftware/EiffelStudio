@@ -92,7 +92,6 @@ class FIXED_TREE [G] inherit
 		end
 
 create
-
 	make
 
 feature -- Initialization
@@ -102,11 +101,11 @@ feature -- Initialization
 		require
 			valid_number_of_children: n >= 0
 		do
-			fl_make_filled (n)
+			fl_make (n)
 			replace (v)
 		ensure
 			node_item: item = v
-			node_arity: arity = n
+			node_arity: arity = 0
 		end
 
 feature -- Access
@@ -192,7 +191,23 @@ feature -- Element change
 			item_put: right_sibling.item = v
 		end
 
-	put_child, replace_child (n: like parent) is
+	put_child (n: like parent) is
+			-- Make `n' the node's child.
+		do
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
+			arity := arity + 1
+			child_index := arity
+			force_i_th (n, arity)
+			n.attach_to_parent (Current)
+		ensure then
+			child_replaced: n.parent = Current
+		end
+		
+	replace_child (n: like parent) is
 			-- Make `n' the node's child.
 		do
 			if object_comparison then
@@ -387,7 +402,6 @@ feature {NONE} -- Implementation
 
 	extendible: BOOLEAN is False;
 			-- May new items be added?
-
 
 indexing
 

@@ -34,24 +34,6 @@ feature
 	emitted: BOOLEAN;
 			-- Have leading tabs already been emitted ?
 
-feature -- Open, close features for C files
-
-	open_write_c is
-			-- Open-write a C-file with the extern C declaration
-			-- in case a C++ compiler is used.
-		do
-			open_write
-			put_string ("#ifdef __cplusplus%Nextern %"C%" {%N#endif%N%N")
-		end
-
-	close_c is
-			-- Close a C-file with the extern C declaration
-			-- in case a C++ compiler is used.
-		do
-			put_string ("%N#ifdef __cplusplus%N}%N#endif%N")
-			close
-		end
-
 feature 
 
 	indent is

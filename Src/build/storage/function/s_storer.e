@@ -4,19 +4,20 @@ indexing
 	Date: "$Date$"
 	Revision: "$Revision$"
 
-class S_STORER 
+class S_STORER
 
 inherit
-
 	STORABLE_HDL
+
 	SHARED_APPLICATION
+
 	SHARED_STORAGE_INFO
 
-feature {S_STORER}
+feature {S_STORER} -- Attributes
 
 	stored_data: LINKED_LIST [S_STATE]
-	
-feature 
+
+feature -- Access
 
 	retrieved_data: LINKED_LIST [BUILD_STATE]
 
@@ -35,30 +36,6 @@ feature
 			stored_data := Void
 		end
 
-	
-feature {NONE}
-
-	build_stored_data is
-		local
-			s: S_STATE
-			state_list: LINKED_LIST [BUILD_STATE]
-		do
-			!!stored_data.make
-			from
-				state_list := Shared_app_graph.states
-				state_list.start
-			until
-				state_list.after
-			loop
-				!!s.make (state_list.item)
-				stored_data.extend (s)
-				state_list.forth
-			end
-		end
-
-	
-feature 
-
 	retrieve (dir_name: STRING) is
 		local
 			sb: S_STATE
@@ -66,7 +43,7 @@ feature
 		do
 			retrieve_by_name (dir_name)
 			stored_data := retrieved.stored_data
-			!!retrieved_data.make
+			create retrieved_data.make
 			from
 				stored_data.start
 			until
@@ -80,4 +57,25 @@ feature
 			end
 		end
 
-end
+feature {NONE} -- Implementation
+
+	build_stored_data is
+		local
+			s: S_STATE
+			state_list: LINKED_LIST [BUILD_STATE]
+		do
+			create stored_data.make
+			from
+				state_list := Shared_app_graph.states
+				state_list.start
+			until
+				state_list.after
+			loop
+				create s.make (state_list.item)
+				stored_data.extend (s)
+				state_list.forth
+			end
+		end
+
+end -- class S_STORER
+

@@ -67,10 +67,10 @@ feature
 			!! Result.make
 		end
 
-	reset_to_zero_cmd: RESET_TO_ZERO_CMD is
-		once
-			!! Result.make
-		end
+--	reset_to_zero_cmd: RESET_TO_ZERO_CMD is
+--		once
+--			!! Result.make
+--		end
 
 	clear_cmd: CLEAR_CMD is
 		once

@@ -14,11 +14,11 @@ feature {NONE}
 			!!Result.make
 		end;
 
-	Shared_group_list: LINKED_LIST [GROUP] is
-			-- list of groups
-        once
-            !!Result.make
-        end;
+-- 	Shared_group_list: LINKED_LIST [GROUP] is
+-- 			-- list of groups
+-- 		once
+-- 			!!Result.make
+-- 		end;
 
 end -- class SHARED_CONTEXT
 

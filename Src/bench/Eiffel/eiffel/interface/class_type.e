@@ -917,7 +917,7 @@ feature -- Generation
 					--| to generate. Remember that `True' is used in the generation of attributes
 					--| table in Final mode.
 				skeleton.generate(buffer, False)
-				buffer.putstring(")->ov_flags = egc_bit_dtype;")
+				buffer.putstring(")->ov_flags = egc_bit_dtype | EO_EXP;")
 				buffer.new_line
 				buffer.putstring ("*(uint32 *) (Current")
 				bits_desc ?= skeleton.item; 	-- Cannot fail

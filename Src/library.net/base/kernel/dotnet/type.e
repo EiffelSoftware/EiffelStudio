@@ -14,9 +14,7 @@ feature -- Conversion
 	to_cil: SYSTEM_TYPE is
 			-- Extract associated .NET type from Current
 		do
-			check
-				False -- Not implemented yet for non manifest type yet.
-			end
+			Result := {ISE_RUNTIME}.type_of_generic (Current, 1).dotnet_type
 		end
 
 end

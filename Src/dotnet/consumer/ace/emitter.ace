@@ -38,6 +38,8 @@ cluster
 		exclude
 			"CVS"; "EIFGEN"; 
 		visible
+			local_cache_reader
+				end
 			com_ise_cache_manager
 				end
 			com_assembly_information

@@ -155,12 +155,14 @@ feature -- Basic commands
 		require else
 			socket_exists: exists 
 		do
-			c_shutdown (descriptor, 2);
-			c_close_socket (descriptor);
-			descriptor := -2;
-			descriptor_available := False;
-			is_open_read := False;
-			is_open_write := False
+			if is_open_read or is_open_write then
+				c_shutdown (descriptor, 2);
+				c_close_socket (descriptor);
+				descriptor := -2;
+				descriptor_available := False;
+				is_open_read := False;
+				is_open_write := False
+			end
 		end;
 
 	is_closed: BOOLEAN is

@@ -18,11 +18,11 @@ inherit
 --			execute
 --		end
 	SHARED_CONFIGURE_RESOURCES
-	WARNER_CALLBACKS
-		rename
-			execute_warner_ok as save_changes,
-			execute_warner_help as loose_changes
-		end
+--	WARNER_CALLBACKS
+--		rename
+--			execute_warner_ok as save_changes,
+--			execute_warner_help as loose_changes
+--		end
 	NEW_EB_CONSTANTS
 
 feature -- Properties
@@ -85,10 +85,6 @@ feature -- Execution
 --		local
 --			mp: MOUSE_PTR
 --		do
---			if last_warner /= Void then
---				last_warner.popdown
---			end
---
 --			if argument.first = tool then
 --				formatted ?= tool.stone
 --			else
@@ -183,10 +179,13 @@ feature -- Filters; Implementation
 		require
 			filtername_not_void: filtername /= Void
 			current_format: tool.last_format = Current
+		local
+			wd: EV_WARNING_DIALOG
 		do
---			if tool.stone /= Void then
---				warner (popup_parent).gotcha_call (Warning_messages.w_Not_a_filterable_format)
---			end
+			if tool.stone /= Void then
+				create wd.make_default (tool.parent, Interface_names.t_Warning,
+					Warning_messages.w_Not_a_filterable_format)
+			end
 		end
 
 feature {FORMAT_BUTTON} -- Properties
@@ -241,7 +240,7 @@ feature {FORMAT_BUTTON} -- Properties
 			end
 		end
 
-feature {FEATURE_TOOL} -- Implementation
+feature {EB_FEATURE_TOOL} -- Implementation
 
 	display_header (stone: STONE) is
 			-- Show header for 'stone'.

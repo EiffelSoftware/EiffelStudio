@@ -58,7 +58,8 @@ feature -- Filtering Properties
 			wd: EV_WARNING_DIALOG
 		do
 			if filtername.empty then
---				warner (popup_parent).gotcha_call (Warning_messages.w_No_filter_selected)
+				create wd.make_default (tool.parent, Interface_names.t_Warning,
+					Warning_messages.w_No_filter_selected)
 			else
 				!! full_pathname.make_from_string (filter_path)
 				full_pathname.set_file_name (filtername)
@@ -71,8 +72,8 @@ feature -- Filtering Properties
 					text_filter.process_text (tmp_text)
 					Result := text_filter.image
 				else
---					warner (popup_parent).gotcha_call 
---						(Warning_messages.w_Cannot_read_filter (full_pathname))
+					create wd.make_default (tool.parent, Interface_names.t_Warning,
+						Warning_messages.w_Cannot_read_filter (full_pathname))
 				end
 			end
 		end

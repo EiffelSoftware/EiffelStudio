@@ -78,6 +78,7 @@ feature {NONE} -- Initialization
 			{EV_ITEM_LIST_IMP} Precursor
 			C.gtk_container_add (c_object, pixmap_box)
 			C.gtk_container_add (c_object, text_label)
+			tooltip := ""
 			is_initialized := True
 		end
 
@@ -91,7 +92,6 @@ feature -- Status report
 
 	is_expanded: BOOLEAN
 			-- is the item expanded?
-
 
 feature -- Status setting
 
@@ -133,6 +133,8 @@ feature -- Status setting
 
 feature -- Tooltipable
 
+	--| FIXME IEK Implement either a hack or redo with new tree widget in gtk+ 2.0
+	
 	tooltip: STRING
 
 	set_tooltip (a_string: STRING) is
@@ -140,7 +142,10 @@ feature -- Tooltipable
 			tooltip := clone (a_string)
 		end
 
-	remove_tooltip is do end
+	remove_tooltip is
+		do
+			tooltip := ""
+		end
 
 feature -- PND
 

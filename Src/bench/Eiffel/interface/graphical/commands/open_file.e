@@ -10,6 +10,7 @@ class OPEN_FILE
 
 inherit
 
+	SHARED_EIFFEL_PROJECT;
 	PIXMAP_COMMAND
 		rename
 			init as make
@@ -54,19 +55,31 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Open a file.
 		local
-			fn: STRING;
+			fn: FILE_NAME;
 			f: PLAIN_TEXT_FILE;
 			temp: STRING;	
-			chooser: NAME_CHOOSER_W
+			chooser: NAME_CHOOSER_W;
+			class_i: CLASS_I;
+			classi_stone: CLASSI_STONE;
+			classc_stone: CLASSC_STONE
 		do
 			if argument /= Void and then argument = last_name_chooser then
-				fn := clone (last_name_chooser.selected_file);
+				!! fn.make_from_string (last_name_chooser.selected_file);
 				if not fn.empty then
 					!! f.make (fn);
 					if
 						f.exists and then f.is_readable and then f.is_plain
 					then
-						tool.show_file (f);
+						class_i := Eiffel_universe.class_with_file_name (fn)
+						if class_i = Void then
+							tool.show_file (f);
+						elseif class_i.compiled then
+							!! classc_stone.make (class_i.compiled_eclass)
+							tool.process_class (classc_stone);
+						else
+							!! classi_stone.make (class_i)
+							tool.process_classi (classi_stone);
+						end
 					elseif f.exists and then not f.is_plain then
 						warner (popup_parent).custom_call (Current, 
 							Warning_messages.w_Not_a_file_retry (fn), Interface_names.b_Ok, Void, Interface_names.b_Cancel);

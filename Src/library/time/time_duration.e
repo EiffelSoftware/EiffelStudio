@@ -43,7 +43,7 @@ feature -- Initialization
 
 	make_fine (h, m: INTEGER; s: DOUBLE) is
 			-- Set `hour, `minute' and `second' to `h', `m' and truncated to integer part of `s' respectively.
-			-- Set `fractionnal_second' to the fractionnal part of `s'.
+			-- Set `fractional_second' to the fractional part of `s'.
 		do
 			hour := h;
 			minute := m;
@@ -85,7 +85,7 @@ feature -- Initialization
 feature -- Access 
 
 	fine_seconds_count: DOUBLE is
-			-- Number of seconds and fractionnals of seconds of the current duration
+			-- Number of seconds and fractionals of seconds of the current duration
 		do
 			Result := hour * Seconds_in_hour + minute * Seconds_in_minute + fine_second
 		end;
@@ -118,7 +118,7 @@ feature -- Attributes
 
 	fine_second: DOUBLE 
 
-	fractionnal_second: DOUBLE is
+	fractional_second: DOUBLE is
 		do
 			Result := fine_second - second
 		end;
@@ -144,11 +144,11 @@ feature -- Status report
 			--	If duration is positive then
 			--		`hour' positive,
 			--		`minute' and `second' between 0 and 59,
-			--		`fractionnal_second' between 0 and 999?
+			--		`fractional_second' between 0 and 999?
 			--	If duration is negative then
 			--		`hour' negative,
 			--		`minute' and `second' between -59 and 0,
-			--		`fractionnal_second' between -999 and 0?
+			--		`fractional_second' between -999 and 0?
 		do
 			if fine_seconds_count >= 0 then
 				Result := fine_second < Seconds_in_minute and then fine_second >= 0 
@@ -163,7 +163,7 @@ feature -- Element Change
 
 	set_second (s: INTEGER) is 
 			-- Set `second' to `s'.
-			-- `fractionnal_second' is cut down to 0.
+			-- `fractional_second' is cut down to 0.
 		do
 			fine_second := s
 		end
@@ -175,7 +175,7 @@ feature -- Element Change
 		end
 
 	set_fractionals (f: DOUBLE) is
-			-- Set `fractionnal_second' to `f'.
+			-- Set `fractional_second' to `f'.
 			-- `f' must have the same sign as `second'.
 		do
 			fine_second := second + f
@@ -205,7 +205,7 @@ feature -- Basic operations
 
 	fine_second_add (s: DOUBLE) is
 			-- Add `s' seconds to the current time.
-			-- if `s' has decimals, `fractionnal_second' is modifed.
+			-- if `s' has decimals, `fractional_second' is modifed.
 		do
 			fine_second:= fine_second + s;
 		end;
@@ -286,9 +286,9 @@ feature -- Conversion
 		end;
 
 invariant
-	fractionnals_large_enough: fractionnal_second > -1;
-	fractionnals_small_enough: fractionnal_second < 1;
-	fractionnal_and_second_same_sign: second * fractionnal_second >= 0
+	fractionals_large_enough: fractional_second > -1;
+	fractionals_small_enough: fractional_second < 1;
+	fractional_and_second_same_sign: second * fractional_second >= 0
 
 end -- class TIME_DURATION
 

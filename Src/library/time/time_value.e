@@ -33,7 +33,7 @@ feature -- Access
 		end;
 
 	fractional_second: DOUBLE 
-			-- Fractionnal part of `fine_second'
+			-- Fractional part of `fine_second'
 
 	compact_time: INTEGER 
 			-- Hour, minute, second coded.

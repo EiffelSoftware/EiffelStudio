@@ -10,18 +10,13 @@ class
 inherit
 	
 	GB_EV_ANY
+		undefine
+			attribute_editor
 		redefine
-			attribute_editor,
-			ev_type,
 			modify_from_xml_after_build
 		end
 		
-	GB_XML_UTILITIES
-		export
-			{NONE} all
-		undefine
-			default_create
-		end
+	GB_EV_CONTAINER_EDITOR_CONSTRUCTOR
 		
 	INTERNAL
 		export
@@ -50,195 +45,9 @@ inherit
 		undefine
 			default_create
 		end
-
-feature -- Access
-
-
-	ev_type: EV_CONTAINER
-		-- Vision2 type represented by `Current'.
-		
-	type: STRING is "EV_CONTAINER"
-		-- String representation of object_type modifyable by `Current'.
-		
-	attribute_editor: GB_OBJECT_EDITOR_ITEM is
-			-- A vision2 component to enable modification
-			-- of items held in `objects'.
-		local
-			label: EV_LABEL
-			editor_item: GB_OBJECT_EDITOR_ITEM
-			hbox1, hbox2: EV_HORIZONTAL_BOX
-			vbox1, vbox2: EV_VERTICAL_BOX
-			frame1, frame2: EV_FRAME
-			button1, button2: EV_BUTTON
-			new_button1, new_button2: EV_BUTTON
-		do
-			Result := Precursor {GB_EV_ANY}
-			create label.make_with_text (gb_ev_container_radio_groups)
-			label.set_tooltip (gb_ev_container_radio_groups_tooltip)
-			Result.extend (label)
-			create merged_list
-			merged_list.set_tooltip (gb_ev_container_radio_groups_tooltip)
-			merged_list.set_minimum_height (100)
-			merged_list.drop_actions.extend (agent new_merge)
-			merged_list.drop_actions.set_veto_pebble_function (agent veto_merge (?))
-			Result.extend (merged_list)
-			create propagate_foreground_color.make_with_text (gb_ev_container_propagate_foreground_color)
-			create propagate_background_color.make_with_text (gb_ev_container_propagate_background_color)
-			propagate_background_color.set_tooltip (gb_ev_container_propagate_background_color_tooltip)
-			propagate_foreground_color.set_tooltip (gb_ev_container_propagate_foreground_color_tooltip)
-			propagate_foreground_color.select_actions.extend (agent for_all_objects (agent {EV_CONTAINER}.propagate_foreground_color))
-			propagate_background_color.select_actions.extend (agent for_all_objects (agent {EV_CONTAINER}.propagate_background_color))
-				-- We now modify the editor item corresponding to
-				-- GB_EV_COLORIZABLE. It is much nicer, if the
-				-- propagate buttons are placed here, along with the color
-				-- selection.
-			editor_item := parent_editor.editor_item_by_type ("EV_COLORIZABLE")
-			check
-				colorizable_controls_not_changed: editor_item /= Void
-			end
-			frame1 ?= editor_item @ 1
-			frame2 ?= editor_item @ 2
-			check
-				colorizable_controls_not_changed: frame1 /= Void and frame2 /= Void
-			end
-			
-			
-				-- Note that as we rebuild the colorizable control,
-				-- we must rebuild one of the buttons, as we have no
-				-- way of restoring it back to its original size.
-			
-				-- Firstly rebuild the background_color
-			vbox1 ?= frame1.item
-			hbox1 ?= vbox1.i_th (vbox1.count)
-			button1 ?= hbox1.i_th (1)
-			create new_button1
-			new_button1.set_text (button1.text)
-			new_button1.select_actions.append (button1.select_actions)
-			button1.destroy
-			hbox1.extend (new_button1)
-			hbox1.extend (propagate_background_color)
-			
-			
-				-- Secondly rebuild the foreground_color
-			vbox2 ?= frame2.item
-			hbox2 ?= vbox2.i_th (vbox2.count)
-			button2 ?= hbox2.i_th (1)
-			create new_button2
-			new_button2.set_text (button2.text)
-			new_button2.select_actions.append (button2.select_actions)
-			button2.destroy
-			hbox2.extend (new_button2)
-			hbox2.extend (propagate_foreground_color)
-			
-			update_attribute_editor
-			disable_all_items (Result)
-			align_labels_left (Result)
-		end
-		
-		new_merge (an_object: GB_OBJECT) is
-				-- Merge radio group of `an_object' with `Current'.
-			local
-				container: EV_CONTAINER
-				other_groups: ARRAYED_LIST [EV_CONTAINER]
-				counter: INTEGER
-				radio_group_link: GB_RADIO_GROUP_LINK
-				other_object: GB_OBJECT
-			do
-				create radio_group_link
-				radio_group_link.set_pebble (radio_group_link)
-				radio_group_link.set_object (an_object)
-				radio_group_link.set_gb_ev_container (Current)
-				
-				merged_list.extend (radio_group_link)				
-					-- We must now create a new addition for all containers that
-					-- were already linked to `an_object'.
-				container ?= an_object.object
-				other_groups := container.merged_radio_button_groups
-					-- `other' may not be merged to any other groups.
-				if other_groups /= Void then
-					from
-						counter := 1
-					until
-						counter > other_groups.count
-					loop
-						other_object := object_handler.object_from_display_widget (other_groups @ counter)
-						check
-							object_not_void: other_object /= Void
-						end
-						create radio_group_link
-						radio_group_link.set_object (other_object)
-						radio_group_link.set_gb_ev_container (Current)
-						radio_group_link.set_pebble (radio_group_link)
-						merged_list.extend (radio_group_link)
-						counter := counter + 1
-					end
-				end
-					-- We cannot use `for_all_objects' as we need to pass a different argument
-					-- to each object.
-				link_to_object (an_object)
-			end
-			
-	update_attribute_editor is
-			-- Update status of `attribute_editor' to reflect information
-			-- from `objects.first'.
-		local
-			groups: ARRAYED_LIST [EV_CONTAINER]
-			container: EV_CONTAINER
-			counter: INTEGER
-			radio_group_link: GB_RADIO_GROUP_LINK
-			other_object: GB_OBJECT
-		do
-			container ?= first
-			check
-				first_is_container: container /= Void
-			end
-			groups := container.merged_radio_button_groups
-			if groups /= Void then
-				if groups.count = merged_list.count then
-					update_linked_names	
-				else
-				merged_list.wipe_out
-				from
-					counter := 1
-				until
-					counter > groups.count
-				loop
-					other_object := object_handler.object_from_display_widget (groups @ counter)
-					create radio_group_link
-					radio_group_link.set_object (other_object)
-					radio_group_link.set_gb_ev_container (Current)
-					radio_group_link.set_pebble (radio_group_link)
-					merged_list.extend (radio_group_link)
-					counter := counter + 1
-				end
-				end
-			end
-		end
-		
-	update_linked_names is
-			-- For all items in `merged_list', update
-			-- their texts to reflect the current state of
-			-- associated object names.
-		local
-			radio_group_link: GB_RADIO_GROUP_LINK
-		do
-			from
-				merged_list.start
-			until
-				merged_list.off
-			loop
-				radio_group_link ?= merged_list.item
-				check
-					item_was_radio_group: radio_group_link /= Void
-				end
-				radio_group_link.update_displayed_text
-				merged_list.forth
-			end
-		end
 		
 feature {GB_XML_STORE} -- Output
 
-	
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		local
@@ -353,6 +162,72 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 		end
 
 feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
+
+		new_merge (an_object: GB_OBJECT) is
+				-- Merge radio group of `an_object' with `Current'.
+			local
+				container: EV_CONTAINER
+				other_groups: ARRAYED_LIST [EV_CONTAINER]
+				counter: INTEGER
+				radio_group_link: GB_RADIO_GROUP_LINK
+				other_object: GB_OBJECT
+			do
+				create radio_group_link
+				radio_group_link.set_pebble (radio_group_link)
+				radio_group_link.set_object (an_object)
+				radio_group_link.set_gb_ev_container (Current)
+				
+				merged_list.extend (radio_group_link)				
+					-- We must now create a new addition for all containers that
+					-- were already linked to `an_object'.
+				container ?= an_object.object
+				other_groups := container.merged_radio_button_groups
+					-- `other' may not be merged to any other groups.
+				if other_groups /= Void then
+					from
+						counter := 1
+					until
+						counter > other_groups.count
+					loop
+						other_object := object_handler.object_from_display_widget (other_groups @ counter)
+						check
+							object_not_void: other_object /= Void
+						end
+						create radio_group_link
+						radio_group_link.set_object (other_object)
+						radio_group_link.set_gb_ev_container (Current)
+						radio_group_link.set_pebble (radio_group_link)
+						merged_list.extend (radio_group_link)
+						counter := counter + 1
+					end
+				end
+					-- We cannot use `for_all_objects' as we need to pass a different argument
+					-- to each object.
+				link_to_object (an_object)
+			end
+			
+		update_linked_names is
+			-- For all items in `merged_list', update
+			-- their texts to reflect the current state of
+			-- associated object names.
+		local
+			radio_group_link: GB_RADIO_GROUP_LINK
+		do
+			from
+				merged_list.start
+			until
+				merged_list.off
+			loop
+				radio_group_link ?= merged_list.item
+				check
+					item_was_radio_group: radio_group_link /= Void
+				end
+				radio_group_link.update_displayed_text
+				merged_list.forth
+			end
+		end
+
+feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 		
 	unlink_group (group_link: GB_RADIO_GROUP_LINK) is
 			--
@@ -420,63 +295,42 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 				editors.forth
 			end
 		end
-
-feature {NONE} -- Implementation
-
-	veto_merge (an_object: GB_OBJECT): BOOLEAN is
-			-- Stop invalid radio_group_merges.
-			-- An object may not be dropped if it is the same object that
-			-- `Current' represents, or it is already merged to the object
-			-- that current represents.
-			-- Also, may only drop, if object is a container.
+		
+	update_attribute_editor is
+			-- Update status of `attribute_editor' to reflect information
+			-- from `objects.first'.
 		local
-			container_object: GB_CONTAINER_OBJECT
+			groups: ARRAYED_LIST [EV_CONTAINER]
+			container: EV_CONTAINER
+			counter: INTEGER
+			radio_group_link: GB_RADIO_GROUP_LINK
+			other_object: GB_OBJECT
 		do
-			if an_object.object /= Void then
-				container_object ?= an_object
-				if container_object /= Void and then parent_editor.object /= an_object then
-					if (first.merged_radio_button_groups = Void) then
-						Result := True
-					elseif not first.merged_radio_button_groups.has (container_object.object) then
-						Result := True
-					end
+			container ?= first
+			check
+				first_is_container: container /= Void
+			end
+			groups := container.merged_radio_button_groups
+			if groups /= Void then
+				if groups.count = merged_list.count then
+					update_linked_names	
+				else
+				merged_list.wipe_out
+				from
+					counter := 1
+				until
+					counter > groups.count
+				loop
+					other_object := object_handler.object_from_display_widget (groups @ counter)
+					create radio_group_link
+					radio_group_link.set_object (other_object)
+					radio_group_link.set_gb_ev_container (Current)
+					radio_group_link.set_pebble (radio_group_link)
+					merged_list.extend (radio_group_link)
+					counter := counter + 1
+				end
 				end
 			end
 		end
-		
-
-	link_to_object (an_object: GB_OBJECT) is
-			-- Perform a merging of `Current' and `an_object'.
-		local
-			container: EV_CONTAINER
-			display_object: GB_DISPLAY_OBJECT
-		do
-				-- First set up display object.
-			container ?= an_object.object
-			check
-				object_was_container: container /= Void
-			end
-			if first.merged_radio_button_groups = Void or not first.merged_radio_button_groups.has (container) then
-				first.merge_radio_button_groups (container)			
-			end
-				
-				-- Now set up the builder object.
-			display_object ?= an_object.display_object
-			check
-				object_was_a_contained: display_object /= Void
-			end
-			if (objects @ 2).merged_radio_button_groups = Void or not (objects @ 2).merged_radio_button_groups.has (display_object.child) then
-				(objects @ 2).merge_radio_button_groups (display_object.child)	
-			end
-				-- Now update the project status, as something has changed.
-			enable_project_modified
-		end
-		
-
-	merged_list: EV_LIST
-		-- Representation of all containers linked to
-		-- this one for radio button grouping.
-		
-	propagate_foreground_color, propagate_background_color: EV_BUTTON
 
 end -- class GB_EV_CONTAINER

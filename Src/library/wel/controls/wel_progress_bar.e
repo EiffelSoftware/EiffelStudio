@@ -80,8 +80,7 @@ feature -- Element change
 	set_range (min, max: INTEGER) is
 			-- Set the range with `minimum' and `maximum'.
 		do
-			cwin_send_message (item, Pbm_setrange, 0,
-				cwin_make_long (min, max))
+			cwin_send_message (item, Pbm_setrange, 0, cwin_make_long (min, max))
 		end
 
 	set_step (step: INTEGER) is

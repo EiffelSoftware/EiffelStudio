@@ -83,7 +83,6 @@ feature -- Initialization
 			-- Make the frame.
 		local
 			wlf: WEL_LOG_FONT
-			wel_font: WEL_FONT
 		do
 			!! wlf.make (1, "Arial")
 			!! box_text_font.make_indirect (wlf)
@@ -94,8 +93,6 @@ feature -- Initialization
 
 	realize is
 			-- Realize current frame and set the enclosing size.
-		local	
-			wc: WEL_COMPOSITE_WINDOW
 		do
 			if not exists then
 				realize_current
@@ -228,7 +225,6 @@ feature {NONE} -- Implementation
 			-- Set size of the child
 		local
 			l: LIST [WIDGET_IMP]
-			a: ANY
 		do
 			if realized then
 				l := children_list

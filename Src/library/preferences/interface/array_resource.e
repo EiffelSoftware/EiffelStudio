@@ -15,7 +15,6 @@ inherit
 			set_value, value
 		end
 
-
 creation
 	make, 
 	make_from_string
@@ -46,7 +45,18 @@ feature -- Access
 			-- Value of the resource 
 
 	actual_value: ARRAY [STRING]
-			-- The array, as reprensented by `value'.
+			-- The array, as represented by `value'.
+
+	selected_value: STRING is
+			-- The value of the selected item from 'value', if any, otherwise void.
+		local
+			l_item: STRING
+			l_items: LIST [STRING]
+			found: BOOLEAN
+		do
+			l_items := value.split (';')
+			Result := l_items.first
+		end
 
 feature -- Setting
 

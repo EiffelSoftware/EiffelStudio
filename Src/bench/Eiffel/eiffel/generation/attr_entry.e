@@ -18,10 +18,10 @@ feature
 
 feature -- previously in ATTR_UNIT
 
-	new_poly_table: ATTR_TABLE is
+	new_poly_table (routine_id: ROUTINE_ID): ATTR_TABLE is
 			-- New associated polymorhic table
 		do
-			!!Result
+			!! Result.make (routine_id)
 		end;
 
 	entry (class_type: CLASS_TYPE): ATTR_ENTRY is

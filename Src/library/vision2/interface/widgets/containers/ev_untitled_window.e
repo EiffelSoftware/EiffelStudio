@@ -194,6 +194,31 @@ feature -- Status setting
 			implementation.show
 		end
 
+feature -- Miscellaneous
+
+	WINDOW_POSITION_NONE: INTEGER is
+			-- Constant to use to have the window first displayed
+			-- at .
+		do
+			Result := implementation.window_position_none
+		end
+
+
+	WINDOW_POSITION_CENTER: INTEGER is
+			-- Constant to use to have the window first displayed
+			-- at the center of the screen.
+		do
+			Result := implementation.window_position_center
+		end
+
+
+	WINDOW_POSITION_MOUSE: INTEGER is
+			-- Constant to use to have the window first displayed
+			-- at the mouse position.
+		do
+			Result := implementation.window_position_mouse
+		end
+
 feature -- Event - command association
 
 	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

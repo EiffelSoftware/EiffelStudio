@@ -934,6 +934,9 @@ feature {NONE} -- Implementation
 	Initial_occupation: INTEGER is 66
 			-- Filling percentage for initial requested occupation
 
+	Extra_space: INTEGER is 50
+			-- Percentage of extra positions when resizing
+
 	Impossible_position: INTEGER is -1
 			-- Position outside the array indices
 
@@ -1002,7 +1005,6 @@ feature {NONE} -- Implementation
 			in_bounds: i >= 0 and i < capacity
 		do
 			deleted_marks.put (True, i)
-
 		ensure
 			deleted: deleted (i)
 		end	
@@ -1288,13 +1290,14 @@ feature {NONE} -- Implementation
 	add_space is
 			-- Increase capacity.
 		do
-			accommodate (count)
+				-- Be pessimistic: plan for more growth by allocating
+				-- Extra_space percent more slots.
+			accommodate ((count * (100 + Extra_space)) // 100)
 		ensure
 			count_not_changed: count = old count
 			slot_count_same_as_count: used_slot_count = count
 			breathing_space: count * 100 < capacity * Initial_occupation
 		end
-
 
 	Minimum_capacity : INTEGER is 5
 
@@ -1335,6 +1338,7 @@ invariant
 	count_no_more_than_slot_count: count <= used_slot_count
 	slot_count_big_enough: 0 <= count
 	slot_count_small_enough: used_slot_count <= capacity
+	extra_space_non_negative: Extra_space >= 0
 							
 end -- class HASH_TABLE
 

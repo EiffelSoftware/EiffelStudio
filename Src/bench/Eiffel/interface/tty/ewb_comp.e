@@ -218,6 +218,11 @@ feature -- Compilation
 			file_name: FILE_NAME;
 		do
 			if not melt_only and then System.uses_precompiled then
+-- FIXME: check Makefile.SH
+-- FIXME: check Makefile.SH
+-- FIXME: check Makefile.SH
+-- FIXME: check Makefile.SH
+
 					-- Target
 				!!file_name.make_from_string (Workbench_generation_path);
 				app_name := clone (System.system_name);

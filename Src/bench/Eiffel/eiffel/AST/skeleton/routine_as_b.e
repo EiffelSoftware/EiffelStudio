@@ -24,7 +24,8 @@ inherit
 			check_local_names
 		redefine
 			type_check, byte_node, find_breakable, 
-			fill_calls_list, replicate, local_table, format
+			fill_calls_list, replicate, local_table, format,
+			local_table_for_format
 		end;
 
 	SHARED_INSTANTIATOR;
@@ -379,6 +380,65 @@ feature -- Type check, byte code and dead code removal
 			!!Result.make (1)
 		end;
 
+feature -- Format Context
+
+	local_table_for_format (a_feature: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
+			-- Local table for format context
+		local
+			feat_tbl: FEATURE_TABLE;
+			id_list: EIFFEL_LIST_B [ID_AS_B];
+			solved_type: TYPE_A;
+			local_info: LOCAL_INFO;
+			local_name: STRING;
+			local_type: TYPE_B;
+		do
+			if locals /= Void then
+				from
+					!! Result.make (2 * locals.count);
+					if a_feature /= Void then
+						feat_tbl := a_feature.written_class.feature_table;
+					end;
+					locals.start
+				until
+					locals.after
+				loop
+					local_type := locals.item.type;
+					id_list := locals.item.id_list;
+					if feat_tbl /= Void then
+						Local_evaluator.set_local_name (id_list.first);
+						solved_type := Local_evaluator.evaluated_type_for_format
+										(local_type, feat_tbl, a_feature);
+					elseif not local_type.has_like then
+						solved_type := local_type.solved_type (Void, Void)
+					end;
+					if solved_type = Void then
+						from
+							id_list.start;
+						until
+							id_list.after
+						loop
+							local_name := id_list.item;
+							Result.put (Void, local_name);
+							id_list.forth;
+						end;
+					else
+						from
+							id_list.start;
+						until
+							id_list.after
+						loop
+							local_name := id_list.item;
+							!!local_info;
+							local_info.set_type (solved_type);
+							Result.put (local_info, local_name);
+							id_list.forth;
+						end;
+					end;
+					locals.forth;
+				end;
+			end;
+		end;
+
 feature -- Debugger
  
 	find_breakable is
@@ -439,9 +499,12 @@ feature -- Context format
 	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Format routine ast to `ctxt'.
 		local
-			chained_assert: CHAINED_ASSERTIONS
+			chained_assert: CHAINED_ASSERTIONS;
+			comments: EIFFEL_COMMENTS
 		do
-			if not ctxt.is_short then
+			if ctxt.is_short then
+				ctxt.new_line
+			else
 				ctxt.put_space;
 				ctxt.put_text_item_without_tabs (ti_Is_keyword);
 				ctxt.new_line;
@@ -456,8 +519,9 @@ feature -- Context format
 			end;
 			ctxt.indent;
 			ctxt.indent;
-			if comment /= void then
-				ctxt.put_comment (comment);
+			comments := ctxt.feature_comments;
+			if comments /= Void then
+				ctxt.put_comments (comments);
 			end;
 			ctxt.put_origin_comment;
 			ctxt.exdent;
@@ -516,11 +580,6 @@ feature -- Case storage
 			-- Store pre and post information into `f'.
 		require
 			valid_f: f /= Void
-		local
-			text: ARRAY [STRING];
-			i: INTEGER;
-			feature_comments: S_FREE_TEXT_DATA
-			c: like comment
 		do
 			if precondition /= Void and then 
 									precondition.assertions /= Void then
@@ -530,22 +589,6 @@ feature -- Case storage
 									postcondition.assertions /= Void then
 				f.set_postconditions (postcondition.storage_info);
 			end;
-			c := comment;
-			if c /= Void and c.count > 0 then
-				text := c.text;
-				!! feature_comments.make (c.count)
-				from
-					i := 1;
-					feature_comments.start
-				until
-					i > c.count
-				loop
-					feature_comments.replace (clone (text.item (i)));
-					feature_comments.forth
-					i := i + 1
-				end
-				f.set_comments (feature_comments)
-			end
 		end;
 
 end -- class ROUTINE_AS_B

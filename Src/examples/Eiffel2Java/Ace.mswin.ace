@@ -22,7 +22,7 @@ cluster
 
 external
 	object:
-		"$ISE_EIFFEL\library\Eiffel2Java\Clib\e2j.obj",
+		"$ISE_EIFFEL\library\Eiffel2Java\spec\$ISE_C_COMPILER\lib\e2j.obj",
 		"D:\apps\jdk1.1.8\lib\javai.lib"
 		
 

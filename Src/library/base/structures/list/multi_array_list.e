@@ -191,7 +191,9 @@ feature -- Cursor movement
 				loop
 					counter := counter - current_array.count
 					cell := cell.right
-					if cell /= Void then current_array := cell.item end
+					if cell /= Void then
+						current_array := cell.item
+					end
 				end
 				if cell = Void then
 					cell := last_element
@@ -209,12 +211,16 @@ feature -- Cursor movement
 				loop
 					counter := counter - current_array.count
 					cell := cell.left
-					if cell /= Void then current_array := cell.item end
+					if cell /= Void then
+						current_array := cell.item
+					end
 				end
 				if counter = current_array.count then
 					counter := 0
 					cell := cell.left
-					if cell /= Void then current_array := cell.item end
+					if cell /= Void then
+						current_array := cell.item
+					end
 				end
 				if cell = Void then
 					cell := first_element
@@ -339,14 +345,16 @@ feature -- Element change
 				pos := -1
 			end
 			first_array.start
+				-- `count' is updated in `put_left'.
 			put_left (v)
 			if pos > 0 then
 				first_array.go_i_th	(pos + 1)
 			elseif pos = 0 then
 				first_array.go_i_th (0)
 			end
-			if not before then index := index + 1 end
-			count := count + 1
+			if not before then
+				index := index + 1
+			end
 		end
 
 	put_left (v: like item) is
@@ -424,6 +432,7 @@ feature -- Removal
 			-- Remove current item
 		local
 			current_array: ARRAYED_LIST [G]
+			new_active:  like active
 		do
 			current_array := active.item
 			current_array.remove
@@ -432,13 +441,21 @@ feature -- Removal
 					if active /= last_element then
 						first_element := active.right
 						first_element.forget_left
+						active := first_element
+						active.item.start
 					end
 				elseif active = last_element then
 					last_element := active.left
 					last_element.forget_right
+					active := last_element
+					active.item.finish
 				else
+						-- `put_left' modifies `active.right', so we need to remeber it
+						-- as it will become the new value for `active'.
+					new_active := active.right
 					active.right.put_left (active.left)
-					active := active.right
+					active := new_active
+					active.item.start
 				end
 			elseif current_array.after then
 				if active /= last_element then
@@ -465,6 +482,7 @@ feature -- Removal
 	prune_all (v: like item) is
 		local
 			cell: like active
+			new_active: like active
 			array: ARRAYED_LIST [G]
 		do
 			from
@@ -495,8 +513,11 @@ feature -- Removal
 						last_element.forget_right
 						cell := Void
 					else
+							-- `put_left' modifies `cell.right', so we need to remeber it
+							-- as it will become the new value for `cell'.
+						new_active := cell.right
 						cell.right.put_left (cell.left)
-						cell := cell.right
+						cell := new_active
 					end
 				else
 					cell := cell.right

@@ -100,7 +100,7 @@ feature -- Output
 		do
 			Result := clone (free_text_name);
 
-			-- TUPLEs may have zero generics
+				-- TUPLEs may have zero generics
 			if generics /= Void then
 				Result.append (" [");
 				from

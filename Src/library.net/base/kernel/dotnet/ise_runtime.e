@@ -4,7 +4,7 @@ indexing
 		To be used at your own risk. 
 		]"
 	external_name: "ISE.Runtime.RUN_TIME"
-	assembly: "ISE.Runtime", "5.3.0.0", "neutral", "def26f296efef469"
+	assembly: "ISE.Runtime", "5.5.0.0", "neutral", "def26f296efef469"
 	date: "$Date$"
 	revision: "$Revision$"
 

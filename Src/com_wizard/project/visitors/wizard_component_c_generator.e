@@ -32,10 +32,11 @@ feature -- Basic operations
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			create Result.make (1000)
+			create Result.make (100)
 			Result.append (Iid_type)
 			Result.append ("_")
 			Result.append (a_name)
+			Result.append ("_")
 		ensure
 			non_void_declaration: Result /= Void
 			valid_declaration: not Result.empty
@@ -73,6 +74,7 @@ feature -- Basic operations
 			create Result.make (100)
 			Result.append ("LIBID_")
 			Result.append (name)
+			Result.append ("_")
 		end
 
 	libid_definition (name: STRING; guid: ECOM_GUID): STRING is

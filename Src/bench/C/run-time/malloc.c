@@ -1453,9 +1453,9 @@ rt_private char *set_up(register union overhead *selected, unsigned int nbytes)
 	r = selected->ov_size;
 #ifdef EIF_TID 
 #ifdef EIF_THREADS
-    selected->ovs_tid = thread_id; /* tid from eif_thr_context */
+    selected->ovs_tid = eif_thr_id; /* tid from eif_thr_context */
 #else
-    selected->ovs_tid = (EIF_THR_TYPE *) 0; /* In non-MT-mode, it is NULL by convention */
+    selected->ovs_tid = NULL; /* In non-MT-mode, it is NULL by convention */
 #endif  /* EIF_THREADS */
 #endif  /* EIF_TID */
 
@@ -2838,9 +2838,9 @@ rt_shared char *eif_spset(char *object, unsigned int nbytes)
 	zone = HEADER(object);				/* Object's header */
 #ifdef EIF_TID 
 #ifdef EIF_THREADS
-    zone->ovs_tid = thread_id; /* tid from eif_thr_context */
+    zone->ovs_tid = eif_thr_id; /* tid from eif_thr_context */
 #else
-    zone->ovs_tid = (EIF_THR_TYPE *) 0; /* In non-MT-mode, it is NULL by convention */
+    zone->ovs_tid = NULL; /* In non-MT-mode, it is NULL by convention */
 #endif  /* EIF_THREADS */
 #endif  /* EIF_TID */
 

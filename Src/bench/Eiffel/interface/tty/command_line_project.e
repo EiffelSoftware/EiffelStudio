@@ -11,6 +11,8 @@ class COMMAND_LINE_PROJECT
 inherit
 	SHARED_EIFFEL_PROJECT
 
+	SHARED_ERROR_BEHAVIOR
+
 	PROJECT_CONTEXT
 
 	WINDOWS
@@ -119,15 +121,23 @@ feature -- Project Initialization
 			!! d.make (d_name)
 			if d.exists then
 					-- A Project exist
-				io.error.putstring ("In `")
-				io.error.putstring (project_dir.name)
-				io.error.putstring ("' an Eiffel project already exists.%N")
-				io.error.putstring ("Do you wish to overwrite it (Y-yes or N-no)? %N")
-				io.read_line
-				answer := io.last_string
-				answer.to_lower
-				error_occurred := not (answer.is_equal ("y") or answer.is_equal ("yes"))
-				io.error.new_line
+				if stop_on_error then
+					error_occurred := stop_on_error
+					io.error.putstring ("In `")
+					io.error.putstring (project_dir.name)
+					io.error.putstring ("' an Eiffel project already exists%N")
+					io.error.putstring ("Compilation aborted due to `-batch' or `-stop' option.%N")
+				else
+					io.error.putstring ("In `")
+					io.error.putstring (project_dir.name)
+					io.error.putstring ("' an Eiffel project already exists.%N")
+					io.error.putstring ("Do you wish to overwrite it (Y-yes or N-no)? %N")
+					io.read_line
+					answer := io.last_string
+					answer.to_lower
+					error_occurred := not (answer.is_equal ("y") or answer.is_equal ("yes"))
+					io.error.new_line
+				end
 			end
 
 			project_is_new := True

@@ -15,8 +15,6 @@ inherit
 
 	SHARED_CONFIGURE_RESOURCES
 
-	SHARED_ERROR_BEHAVIOR
-
 	SHARED_EWB_HELP
 
 	SHARED_EWB_CMD_NAMES
@@ -87,6 +85,8 @@ feature {NONE} -- Initialization
 						print_option_error
 					elseif help_only then
 						print_help
+					elseif version_only then
+						print_version
 					elseif not file_error then
 						if output_window = Void then
 							command.set_output_window (error_window)
@@ -149,13 +149,16 @@ feature -- Properties
 	help_only: BOOLEAN
 			-- Print help information?
 
+	version_only: BOOLEAN
+			-- Print version information?
+
 	option: STRING
 			-- Current option being analyzed
 
 	help_messages: EXTEND_TABLE [STRING, STRING] is
 			-- Help message table
 		once
-			!!Result.make (22)
+			!!Result.make (25)
 			Result.put (ace_help, ace_cmd_name)
 			Result.put (ancestors_help, ancestors_cmd_name)
 			Result.put (aversions_help, aversions_cmd_name)
@@ -176,6 +179,8 @@ feature -- Properties
 			Result.put (short_help, short_cmd_name)
 			Result.put (stop_help, stop_cmd_name)
 			Result.put (suppliers_help, suppliers_cmd_name)
+			Result.put (version_help, version_cmd_name)
+			Result.put (batch_help, batch_cmd_name)
 			add_help_special_cmds
 		end
 
@@ -236,7 +241,7 @@ feature -- Output
 		do
 			io.putstring ("Usage:%N%T")
 			io.putstring (argument (0))
-			io.putstring (" [-help | ")
+			io.putstring (" [-help | -version | -batch ")
 			add_usage_special_cmds
 			io.putstring ("%
 				%-loop | -quick_melt | -clients [-filter filtername] class |%N%
@@ -254,6 +259,12 @@ feature -- Output
 				%%T-callers [-filter filtername] [-show_all] class feature |%N%
 				%%T[-stop] [-ace Ace] [-project Project_file_name]|%N%
 				%%T[-project_path Project_directory_path] [-file File]]%N")
+		end
+
+	print_version is
+			-- Print Version Number
+		do
+			io.put_string ("ISE EiffelBench version " + Version_number + "%N")
 		end
 
 	print_help is
@@ -353,6 +364,8 @@ feature -- Update
 				else
 					command := loop_cmd
 				end
+			elseif option.is_equal ("-version") then
+				version_only := True
 			elseif option.is_equal ("-quick_melt") then
 				!EWB_QUICK_MELT! command 
 			elseif option.is_equal ("-implementers") then
@@ -681,8 +694,9 @@ feature -- Update
 				else
 					option_error := True
 				end
-			elseif option.is_equal ("-stop") then
-					-- The compiler stops on errors
+			elseif option.is_equal ("-stop") or else option.is_equal ("-batch") then
+					-- The compiler stops on errors, useful for batch compilation without
+					-- user intervention.
 				set_stop_on_error (True)
 			elseif option.is_equal ("-file") then
 				if current_option < argument_count then

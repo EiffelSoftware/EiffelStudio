@@ -15,12 +15,15 @@ feature -- Access
 		do
 			Result := clone (char_to_string (char, False))
 		ensure
+			char_text_not_void: Result /= Void
 			refactoring_correct: Result.is_equal (old_char_text (char))
 		end
 
 	eiffel_string (s: STRING): STRING is
 			-- "eiffel" representation of `s'
 			-- Translation of special characters
+		require
+			s_not_void: s /= Void
 		local
 			value_area: SPECIAL [CHARACTER];
 			i, value_count: INTEGER;
@@ -34,7 +37,9 @@ feature -- Access
 			loop
 				Result.append (char_to_string (value_area.item (i), True));
 				i := i + 1
-			end;
+			end
+		ensure
+			eiffel_string_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -73,6 +78,8 @@ feature {NONE} -- Implementation
 					Result := char.out
 				end
 			end
+		ensure
+			char_to_string_not_void: Result /= Void
 		end
 
 	special_chars: HASH_TABLE [STRING, CHARACTER] is
@@ -87,6 +94,8 @@ feature {NONE} -- Implementation
 			Result.put ("%%B", '%B')
 			Result.put ("%%'", '%'')
 			Result.put ("%%%"", '"')
+		ensure
+			special_chars_not_void: Result /= Void
 		end
 
 	old_char_text (char: CHARACTER): STRING is
@@ -124,6 +133,8 @@ feature {NONE} -- Implementation
 					Result := char.out
 				end
 			end
+		ensure
+			old_char_text_not_void: Result /= Void
 		end
 
 end -- class CHARACTER_ROUTINES

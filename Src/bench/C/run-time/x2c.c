@@ -13,7 +13,7 @@
 #include "config.h"
 #include "size.h"
 #ifdef EIF_WINDOWS
-#define print_err_msg printf
+#define print_err_msg fprintf		/* %%zs modified - was 'printf' before... (incorrect because trying print_err_msg(stderr,"..."); line 96 and others ! */
 #else
 #include "err_msg.h"
 #endif
@@ -63,8 +63,8 @@ void	print_usage(void);
 FILE *input_file, *output_file;
 
 int main(int argc, char **argv)	/* DEC C will complain if declared as type void */
-         
-            
+
+
 {
 	/* Pre-process input (stdin) and outputs new form with resolved offset
 	 * macros (introduced by '@') on stdout. C strings and C chars are skipped
@@ -246,7 +246,7 @@ void getarg(int n, char *name)
 			for (; i < n; i++)
 				a[i] = 0;
 			break;
-		} 
+		}
 		a[i] = val;
 	}
 

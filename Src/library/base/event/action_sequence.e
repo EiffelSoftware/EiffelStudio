@@ -124,6 +124,7 @@ feature -- Access
 	dummy_event_data: EVENT_DATA is
 			-- Attribute of the generic type.
 			-- Useful for introspection and use in like statements.
+		obsolete "Not implemented. To be removed"
 		do
 			if dummy_event_data_internal = Void then
 				create dummy_event_data_internal.make
@@ -133,6 +134,7 @@ feature -- Access
 
 	event_data_names: ARRAY [STRING] is
 			-- Textual description of each event datum.
+		obsolete "Not implemented. To be removed"
 		do
 			Result := deep_clone (event_data_names_internal)
 		ensure

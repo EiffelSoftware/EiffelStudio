@@ -34,7 +34,7 @@ feature -- Event handling
 	pick_ended_actions: EV_PND_FINISHED_ACTION_SEQUENCE is
 			-- Actions to be performed when a transport from `Current' ends.
 		do
-			Result := implementation.transport_finished_actions
+			Result := implementation.pick_ended_actions
 		ensure
 			not_void: Result /= Void
 		end

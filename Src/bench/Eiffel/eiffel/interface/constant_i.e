@@ -169,7 +169,7 @@ feature -- C code generation
 							-- Real body id to be stored in the id list of 
 							-- already called once routines.
 						file.putstring ("RTWO(");
-						file.putint (real_body_id.id - 1);
+						file.putstring (real_body_id.generated_id);
 						file.putstring (");");
 						file.new_line
 					end;

@@ -90,6 +90,7 @@ feature -- Access
 	Bc_spcreate:		CHARACTER is '%/076/';
 	Bc_notused_77:		CHARACTER is '%/077/';
 	Bc_jmp_t:			CHARACTER is '%/078/';
+	Bc_notused_79:		CHARACTER is '%/079/';
 	Bc_rescue: 			CHARACTER is '%/080/';
 	Bc_end_rescue:		CHARACTER is '%/081/';
 	Bc_retry:			CHARACTER is '%/082/';
@@ -119,6 +120,7 @@ feature -- Access
 	Bc_goto_body:		CHARACTER is '%/106/';
 	Bc_not_rec:			CHARACTER is '%/107/';
 	Bc_end_pre:			CHARACTER is '%/108/';
+	bc_cast_natural:	CHARACTER is '%/109/';
 	Bc_cast_integer:	CHARACTER is '%/110/';
 	Bc_cast_real32:		CHARACTER is '%/111/';
 	Bc_cast_real64:		CHARACTER is '%/112/';
@@ -180,11 +182,13 @@ feature -- Access
 	Bc_once_string:		CHARACTER is '%/144/'
 	Bc_allocate_once_strings:	CHARACTER is '%/145/'
 
+		-- NATURAL constants
+	Bc_uint8:			CHARACTER is '%/150/'; 
+	Bc_uint16:			CHARACTER is '%/151/'; 
+	Bc_uint32:			CHARACTER is '%/152/'; 
+	Bc_uint64:			CHARACTER is '%/153/'; 
+
 		-- Unused opcode
-	Bc_notused_150:		CHARACTER is '%/150/'; 
-	Bc_notused_151:		CHARACTER is '%/151/'; 
-	Bc_notused_152:		CHARACTER is '%/152/'; 
-	Bc_notused_153:		CHARACTER is '%/153/'; 
 	Bc_notused_154:		CHARACTER is '%/154/'; 
 	Bc_notused_155:		CHARACTER is '%/155/'; 
 	Bc_notused_156:		CHARACTER is '%/156/';

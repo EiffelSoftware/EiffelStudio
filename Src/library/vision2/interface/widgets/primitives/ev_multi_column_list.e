@@ -232,12 +232,13 @@ feature -- Element change
 			implementation.set_columns_title (txt)
 		end
 
-	set_column_width (value: INTEGER; column: INTEGER) is
-			-- Make `value' the new width of the one-based column.
+	set_column_width (a_width: INTEGER; column: INTEGER) is
+			-- Make `a_width' the new width of the one-based column.
 		require
+			valid_width: a_width >= 1
 			column_exists: column >= 1 and column <= columns
 		do
-			implementation.set_column_width (value, column)
+			implementation.set_column_width (a_width, column)
 		end
 
 	set_columns_width (value: ARRAY [INTEGER]) is         
@@ -321,6 +322,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/03/03 21:26:24  king
+--| Added valid_width precond to set_column_width
+--|
 --| Revision 1.36  2000/03/03 18:22:59  king
 --| Renamed get_column_width -> column_width, added column_title
 --|

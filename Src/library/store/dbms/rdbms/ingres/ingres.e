@@ -16,6 +16,9 @@ inherit
 			proc_args
 		end
 
+creation
+	do_nothing
+
 feature -- For DATABASE_STATUS
 
 	is_ok_mat: BOOLEAN

@@ -26,6 +26,8 @@ inherit
 			is_integer as string_is_integer,
 			is_double as string_is_double,
 			is_boolean as string_is_boolean
+		undefine
+			clear_all
 		end
 
 	DB_FORMAT

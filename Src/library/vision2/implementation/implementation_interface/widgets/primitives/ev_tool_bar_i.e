@@ -19,7 +19,14 @@ inherit
 			interface
 		end
 
-feature {NONE} -- Implementation
+feature -- Status setting
+
+	connect_radio_grouping (a_tool_bar: EV_TOOL_BAR) is
+			-- Join radio grouping of `a_container' to Current.
+		require
+			a_tool_bar_not_void: a_tool_bar /= Void
+		deferred
+		end
 
 feature -- Status setting
 
@@ -57,6 +64,9 @@ end -- class EV_TOOL_BAR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/04/04 17:05:08  rogers
+--| Added connect_radio_grouping.
+--|
 --| Revision 1.10  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

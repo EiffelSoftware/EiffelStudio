@@ -591,16 +591,14 @@ feature -- Status setting
 	set_selection (first, last: INTEGER) is
 			-- Highlight the substring between `first' and `last' positions
 			-- leave the caret at `first'
-		local
-			top_pos: INTEGER
 		do
 			private_begin_selection := first
 			private_end_selection := last
 			if exists then
-				top_pos := top_character_position
+				enable_scroll_caret_at_selection
 				wel_set_selection (eiffel_position_to_windows
 					(first), eiffel_position_to_windows (last))
-				set_top_character_position (top_pos)
+				disable_scroll_caret_at_selection
 			end
 		end
 

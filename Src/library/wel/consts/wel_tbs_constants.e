@@ -93,6 +93,13 @@ feature -- Access
 			"TBS_NOTHUMB"
 		end
 
+	Tbs_tooltips: INTEGER is
+		external
+			"C [macro %"cctrl.h%"]"
+		alias
+			"TBS_TOOLTIPS"
+		end
+
 end -- class WEL_TBS_CONSTANTS
 
 --|----------------------------------------------------------------

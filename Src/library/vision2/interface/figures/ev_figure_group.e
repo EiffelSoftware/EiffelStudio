@@ -52,6 +52,9 @@ inherit
 create
 	default_create,
 	make_with_point
+	
+create {EV_FIGURE_GROUP}
+	make_filled
 
 feature {NONE} -- Initialization
 

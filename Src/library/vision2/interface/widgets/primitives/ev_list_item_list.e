@@ -123,7 +123,9 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST}
 		end
-		
+
+feature -- Contract support
+
 	is_parent_recursive (a_list_item: EV_LIST_ITEM): BOOLEAN is
 			-- Is `a_list_item' a parent of `Current'?
 		do
@@ -132,7 +134,7 @@ feature {NONE} -- Contract support
 			Result := False
 		end
 
-feature {EV_ANY_I, EV_LIST_ITEM_LIST} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_LIST_ITEM_LIST_I
 			-- Responsible for interaction with native graphics toolkit.

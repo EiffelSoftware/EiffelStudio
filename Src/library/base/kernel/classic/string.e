@@ -179,7 +179,7 @@ feature -- Initialization
 			-- Object of a type conforming to the type of `s',
 			-- initialized with attributes from `s'
 		do
-			create Result.make (0)
+			Result := new_string (0)
 			Result.share (s)
 		end
 
@@ -229,7 +229,7 @@ feature -- Access
 	True_constant: STRING is "true"
 			-- Constant string "true"
 
-	shared_with (other: like Current): BOOLEAN is
+	shared_with (other: STRING): BOOLEAN is
 			-- Does string share the text of `other'?
 		do
 			Result := (other /= Void) and then (area = other.area)
@@ -311,7 +311,7 @@ feature -- Access
 			Result := str_str ($area, $a, end_pos, other.count, start_pos, 0)
 		ensure
 			correct_place: Result > 0 implies
-				substring (Result, Result + other.count - 1).is_equal (other)
+				other.is_equal (substring (Result, Result + other.count - 1))
 			-- forall x : start_pos..Result
 			--	not substring (x, x+other.count -1).is_equal (other)
 		end
@@ -920,7 +920,7 @@ feature -- Element change
 				 (item (count) /= '%N'))
 		end
 
-	share (other: like Current) is
+	share (other: STRING) is
 			-- Make current string share the text of `other'.
 			-- Subsequent changes to the characters of current string
 			-- will also affect `other', and conversely.
@@ -1028,13 +1028,13 @@ feature -- Element change
 			-- appended: For every `i' in 1..`s'.`count', `item' (old `count'+`i') = `s'.`item' (`i')
 		end
 
-	infix "+" (s: STRING): STRING is
+	infix "+" (s: STRING): like Current is
 			-- Append a copy of 's' at the end of a copy of Current,
 			-- Then return the Result.
 		require
 			argument_not_void: s /= Void	
 		do
-			create Result.make (count + s.count)
+			Result := new_string (count + s.count)
 			Result.append_string (Current)
 			Result.append_string (s)
 		ensure
@@ -1709,13 +1709,13 @@ feature -- Duplication
 			other_area: like area
 		do
 			if (1 <= start_index) and (start_index <= end_index) and (end_index <= count) then
-				create Result.make (end_index - start_index + 1)
+				Result := new_string (end_index - start_index + 1)
 				other_area := Result.area;
 				other_area.base_address.memory_copy (
 					area.item_address (start_index - 1), end_index - start_index + 1)
 				Result.set_count (end_index - start_index + 1)
 			else
-				create Result.make (0)
+				Result := new_string (0)
 			end
 		ensure
 			new_result_count: Result.count = end_index - start_index + 1 or Result.count = 0
@@ -1797,6 +1797,20 @@ feature {NONE} -- Empty string implementation
 			internal_hash_code := v
 		ensure
 			internal_hash_code_set: internal_hash_code = v
+		end
+
+feature {NONE} -- Implementation
+
+	new_string (n: INTEGER): like Current is
+			-- New instance of current with space for at least `n' characters.
+		require
+			n_non_negative: n >= 0
+		do
+			create Result.make (n)
+		ensure
+			new_string_not_void: Result /= Void
+			new_string_empty: Result.is_empty
+			new_string_area_big_enough: Result.capacity >= n
 		end
 
 feature {NONE} -- Transformation

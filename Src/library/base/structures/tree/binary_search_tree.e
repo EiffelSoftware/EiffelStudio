@@ -28,21 +28,25 @@ class BINARY_SEARCH_TREE [G -> COMPARABLE] inherit
 		end
 
 create
-
 	make
-
-feature -- Initialization
+	
+create {BINARY_SEARCH_TREE}
+	bt_make
+	
+feature {NONE} -- Initialization
 
 	make (v: like item) is
 			-- Create single node with item `v'.
 		require
-			item_exists: v /= Void
+			v_not_void: v /= Void
 		do
 			bt_make (v)
 		ensure
-			node_item: item = v
-			no_child: (left_child = Void) and (right_child = Void)
+			item_set: item = v
+			is_root: is_root
+			is_leaf: is_leaf
 		end
+		
 
 feature -- Access
 

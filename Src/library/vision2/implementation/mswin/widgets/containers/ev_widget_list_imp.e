@@ -178,7 +178,7 @@ feature {EV_ANY_I} -- WEL Implementation
 		end
 		
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_WIDGET_LIST
 

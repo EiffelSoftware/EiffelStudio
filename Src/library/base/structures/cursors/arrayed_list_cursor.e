@@ -13,10 +13,9 @@ class ARRAYED_LIST_CURSOR inherit
 	CURSOR
 
 create
-
 	make
 
-feature {ARRAYED_LIST, FIXED_LIST, BINARY_TREE} -- Initialization
+feature {NONE} -- Initialization
 
 	make (current_index: INTEGER) is
 			-- Create a cursor and set it up on `current_index'.

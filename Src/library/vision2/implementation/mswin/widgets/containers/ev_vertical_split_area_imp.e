@@ -404,7 +404,7 @@ feature {NONE} -- WEL internal
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_VERTICAL_SPLIT_AREA
 

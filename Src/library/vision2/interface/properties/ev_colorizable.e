@@ -71,7 +71,7 @@ feature -- Status setting
 			implementation.set_default_colors
 		end	
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 	
 	implementation: EV_COLORIZABLE_I
 			-- Responsible for interaction with native graphics toolkit.

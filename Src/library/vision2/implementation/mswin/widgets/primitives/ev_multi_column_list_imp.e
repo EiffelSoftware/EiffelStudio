@@ -1348,7 +1348,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			cwin_show_window (hwnd, cmd_show)
 		end
 
-feature {NONE} -- Interface
+feature {EV_ANY, EV_ANY_I} -- Interface
 
 	interface: EV_MULTI_COLUMN_LIST
 

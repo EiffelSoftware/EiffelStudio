@@ -86,7 +86,7 @@ feature -- Status setting
 			not_multiple_selection_enabled: not multiple_selection_enabled
 		end
 		
-feature {EV_ANY_I, EV_LIST} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_LIST_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -199,7 +199,7 @@ feature -- Element change
 			icon_pixmap_assigned: icon_pixmap.is_equal (an_icon)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TITLED_WINDOW_I
 			-- Responsible for interaction with native graphics toolkit.

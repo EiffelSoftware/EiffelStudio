@@ -17,7 +17,7 @@ inherit
 
 	COMPARABLE
 		redefine
-			out, three_way_comparison, is_equal
+			out, is_equal
 		end
 
 	HASHABLE
@@ -89,17 +89,6 @@ feature -- Comparison
 			-- as current object and identical to it?
 		do
 			Result := other.item = item
-		end
-
-	three_way_comparison (other: INTEGER_16_REF): INTEGER is
-			-- If current object equal to `other', 0
-			-- if smaller, -1; if greater, 1
-		do
-			if item < other.item then
-				Result := -1
-			elseif other.item < item then
-				Result := 1
-			end
 		end
 
 feature -- Element change

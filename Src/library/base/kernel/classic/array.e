@@ -296,7 +296,7 @@ feature -- Element change
 			higher_count: count >= old count
 		end
 
-	subcopy (other: like Current; start_pos, end_pos, index_pos: INTEGER) is
+	subcopy (other: ARRAY [G]; start_pos, end_pos, index_pos: INTEGER) is
 			-- Copy items of `other' within bounds `start_pos' and `end_pos'
 			-- to current array starting at index `index_pos'.
 		require
@@ -553,7 +553,7 @@ feature -- Duplication
 			equal_areas: area.is_equal (other.area)
 		end
 
-	subarray (start_pos, end_pos: INTEGER): like Current is
+	subarray (start_pos, end_pos: INTEGER): ARRAY [G] is
 			-- Array made of items of current array within
 			-- bounds `start_pos' and `end_pos'.
 		require

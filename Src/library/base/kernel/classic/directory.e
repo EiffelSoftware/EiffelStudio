@@ -11,7 +11,7 @@ class DIRECTORY
 inherit
 	DISPOSABLE
 		export
-			{NONE} all
+			{DIRECTORY} all
 		end
 
 create

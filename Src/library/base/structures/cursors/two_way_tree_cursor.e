@@ -1,24 +1,23 @@
 indexing
-
-	description:
-		"Cursors for two-way cursor trees"
-
+	description: "Cursors for two-way trees"
 	status: "See notice at end of class"
-	names: two_way_tree_cursor, cursor;
+	names: two_way_tree, cursor;
 	contents: generic;
 	date: "$Date$"
 	revision: "$Revision$"
 
-class TWO_WAY_TREE_CURSOR [G] inherit
+class TWO_WAY_TREE_CURSOR [G]
 
-	RECURSIVE_TREE_CURSOR [G]
-		export
-			{TWO_WAY_CURSOR_TREE} make
+inherit
+	TWO_WAY_LIST_CURSOR [G]
 		redefine
 			active
 		end
 
-feature {TWO_WAY_CURSOR_TREE} -- Access
+create
+	make
+
+feature {TWO_WAY_TREE} -- Access
 
 	active: TWO_WAY_TREE [G];
 			-- Current node

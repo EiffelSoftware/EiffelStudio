@@ -479,7 +479,7 @@ feature {NONE} -- Contract support
 			Result := implementation.delta
 		end
 
-feature {EV_ANY_I, EV_STOCK_COLORS_IMP} -- Implementation
+feature {EV_ANY, EV_ANY_I, EV_STOCK_COLORS_IMP} -- Implementation
 
 	implementation: EV_COLOR_I
 			-- Responsible for interaction with native graphics toolkit.

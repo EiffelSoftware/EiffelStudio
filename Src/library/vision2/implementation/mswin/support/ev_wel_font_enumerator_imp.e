@@ -14,8 +14,6 @@ inherit
 	WEL_FONT_FAMILY_ENUMERATOR
 		rename
 			make as process
-		export
-			{NONE} all
 		end
 
 create

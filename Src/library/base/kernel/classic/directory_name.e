@@ -16,6 +16,9 @@ inherit
 create
 	make, make_from_string
 
+create {DIRECTORY_NAME}
+	string_make
+
 feature
 
 	is_valid: BOOLEAN is
@@ -27,6 +30,14 @@ feature
 			Result := eif_is_directory_valid ($any)
 		end
 
+feature {NONE} -- Implementation
+
+	new_string (n: INTEGER): like Current is
+			-- New instance of current with space for at least `n' characters.
+		do
+			create Result.string_make (n)
+		end
+		
 feature {NONE} -- Externals
 
 	eif_is_directory_valid (p: POINTER): BOOLEAN is

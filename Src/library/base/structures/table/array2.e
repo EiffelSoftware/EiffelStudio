@@ -24,10 +24,10 @@ class ARRAY2 [G] inherit
 			wipe_out as array_wipe_out
 		export
 			{NONE}
-				array_make, array_item, array_force,
+				array_make, array_force,
 				array_resize, array_wipe_out
 			{ARRAY2}
-				array_put
+				array_put, array_item
 			{ANY}
 				copy, is_equal, area, to_c
 		end

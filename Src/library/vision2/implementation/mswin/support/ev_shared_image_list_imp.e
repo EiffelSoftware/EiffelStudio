@@ -7,6 +7,8 @@ class
 	EV_SHARED_IMAGE_LIST_IMP
 
 inherit
+	ANY
+
 	WEL_ILC_CONSTANTS
 		export {NONE}
 			all

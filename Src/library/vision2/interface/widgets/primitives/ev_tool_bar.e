@@ -88,7 +88,9 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_PRIMITIVE} and Precursor {EV_ITEM_LIST} and has_vertical_button_style
 		end
-		
+	
+feature -- Constract support
+
 	is_parent_recursive (a_tool_bar_item: EV_TOOL_BAR_ITEM): BOOLEAN is
 			-- Is `a_tool_bar_item' a parent of `Current'?
 		do
@@ -97,7 +99,7 @@ feature {NONE} -- Contract support
 			Result := False
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TOOL_BAR_I
 			-- Platform dependent access.

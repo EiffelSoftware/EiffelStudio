@@ -50,7 +50,7 @@ feature {NONE} -- Contract support
 				Precursor {EV_FONTABLE} and is_center_aligned
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_LABEL_I
 			-- Responsible for interaction with native graphics toolkit.

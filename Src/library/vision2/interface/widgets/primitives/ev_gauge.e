@@ -201,7 +201,7 @@ feature {EV_ANY} -- Contract support
 			Result := (value_range.upper - value_range.lower) / (step * 10000)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_GAUGE_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -34,7 +34,7 @@ feature {NONE} -- Contract support
 			Result := Precursor {EV_WIDGET} and Precursor {EV_TOOLTIPABLE}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_PRIMITIVE_I
 	

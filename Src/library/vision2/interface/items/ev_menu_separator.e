@@ -14,7 +14,7 @@ class
 inherit
 	EV_MENU_ITEM
 		export
-			{NONE} all
+			{EV_MENU_ITEM} all
 		redefine
 			implementation,
 			create_implementation

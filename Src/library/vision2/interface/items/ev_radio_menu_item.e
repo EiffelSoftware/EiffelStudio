@@ -52,7 +52,7 @@ feature {NONE} -- Contract support
 				and then Precursor {EV_RADIO_PEER}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_RADIO_MENU_ITEM_I
 		-- Responsible for interaction with native graphics toolkit.

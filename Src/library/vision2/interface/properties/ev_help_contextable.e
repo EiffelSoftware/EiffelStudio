@@ -51,7 +51,7 @@ feature -- Element change
 			no_help_context: help_context = Void
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 	
 	implementation: EV_HELP_CONTEXTABLE_I
 			-- Responsible for interaction with native graphics toolkit.

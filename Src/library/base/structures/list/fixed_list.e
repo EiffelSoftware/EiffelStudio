@@ -62,7 +62,7 @@ class FIXED_LIST [G] inherit
 				area,
 				has
 			{FIXED_LIST, FIXED_TREE}
-				array_make
+				array_make, lower, upper, subarray
 		undefine
 			count, linear_representation, put, resizable, fill,
 			for_all, there_exists, do_all, do_if
@@ -125,10 +125,10 @@ feature -- Access
 			Result := area.item (count - 1)
 		end
 
-	cursor: CURSOR is
+	cursor: ARRAYED_LIST_CURSOR is
 			-- Current cursor position
 		do
-			create {ARRAYED_LIST_CURSOR} Result.make (index)
+			create Result.make (index)
 		end
 
 feature -- Measurement

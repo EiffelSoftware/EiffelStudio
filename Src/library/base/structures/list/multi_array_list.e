@@ -76,11 +76,10 @@ feature -- Access
 	index: INTEGER
 			-- Current cursor index
 
-	cursor: CURSOR is
+	cursor: MULTAR_LIST_CURSOR [G] is
 			-- Current cursor position
 		do
-			create {MULTAR_LIST_CURSOR [G]} Result.make
-				(active, active.item.index, index)
+			create Result.make (active, active.item.index, index)
 		end
 
 	first_element: BI_LINKABLE [ARRAYED_LIST [G]]

@@ -50,7 +50,7 @@ feature -- Status setting
 			is_selected: is_selected
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 	
 	implementation: EV_SELECTABLE_I
 			-- Responsible for interaction with native graphics toolkit.

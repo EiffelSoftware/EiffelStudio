@@ -55,7 +55,7 @@ feature -- Status report
 			height_set: pixmaps_height = a_height
 		end
 		
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_ITEM_PIXMAP_SCALER_I
 		-- Responsible for interaction with native graphics toolkit.

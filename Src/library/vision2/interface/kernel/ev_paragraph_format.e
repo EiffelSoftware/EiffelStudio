@@ -199,7 +199,7 @@ feature -- Contract Support
 				an_alignment = feature {EV_PARAGRAPH_CONSTANTS}.alignment_justified
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_PARAGRAPH_FORMAT_I
 			-- Implementation of the current object

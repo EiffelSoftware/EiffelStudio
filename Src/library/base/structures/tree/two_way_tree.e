@@ -94,14 +94,16 @@ class TWO_WAY_TREE [G] inherit
 			child_isfirst, valid_cursor_index,
 			is_equal
 		redefine
-			first_child, child_islast, last_child, new_cell
+			first_child, child_islast, last_child, new_cell, child_cursor
 		select
 			is_leaf
 		end
 
 create
-
 	make
+	
+create {TWO_WAY_TREE}
+	twl_make, make_sublist
 
 feature -- Initialization
 
@@ -121,6 +123,12 @@ feature -- Access
 			-- Leftmost child
 
 	last_child: like parent
+	
+	child_cursor: TWO_WAY_TREE_CURSOR [G] is
+			-- Current cursor position
+		do
+			create Result.make (child, child_after, child_before)
+		end
 
 feature -- Status report
 
@@ -273,7 +281,7 @@ feature -- Element change
 			end
 		end
 
-feature {LINKED_TREE} -- Implementation
+feature {TWO_WAY_TREE} -- Implementation
 
 	new_cell (v: like item): like first_child is
 			-- New cell containing `v'

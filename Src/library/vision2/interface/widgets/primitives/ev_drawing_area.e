@@ -99,7 +99,7 @@ feature {EV_ANY} -- Contract support
 				and then Precursor {EV_DRAWABLE}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_DRAWING_AREA_I
 		-- Responsible for interaction with native graphics toolkit.

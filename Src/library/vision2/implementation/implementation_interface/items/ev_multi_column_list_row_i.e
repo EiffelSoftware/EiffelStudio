@@ -90,9 +90,8 @@ feature -- Element change
 		ensure
 			tooltip_removed: tooltip.is_empty
 		end 
-		
 
-feature {NONE} -- Contract support
+feature -- Contract support
 
 	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
 			-- Is `a_pixmap' equal to `pixmap'?
@@ -122,7 +121,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 		deferred
 		end
 		
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST_ROW
 

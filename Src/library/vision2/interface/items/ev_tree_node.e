@@ -123,8 +123,6 @@ feature -- Contract support
 		deferred
 		end
 		
-feature {EV_TREE_NODE} -- Contract support
-
 	is_parent_recursive (a_list: EV_TREE_NODE): BOOLEAN is
 			-- Is `a_list' `parent' or recursively `parent' of `parent'?
 		local
@@ -145,7 +143,7 @@ feature {NONE} -- Contract support
 			Precursor {EV_TREE_NODE_LIST} and is_expanded = False
 		end
 
-feature {EV_ANY_I}-- Implementation
+feature {EV_ANY, EV_ANY_I}-- Implementation
 
 	implementation: EV_TREE_NODE_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -70,7 +70,7 @@ feature -- Status setting
 			item_is_not_checked: not is_item_checked (tree_item)
 		end
 
-feature {EV_ANY_I, EV_TREE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_CHECKABLE_TREE_I
 			-- Responsible for interaction with native graphics toolkit.

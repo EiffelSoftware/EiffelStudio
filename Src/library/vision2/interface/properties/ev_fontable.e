@@ -41,7 +41,7 @@ feature -- Element change
 			font_assigned: font.is_equal (a_font) and font /= a_font
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_FONTABLE_I
 		-- Responsible for interaction with native graphics toolkit.

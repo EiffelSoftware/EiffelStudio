@@ -16,7 +16,7 @@ class TWO_WAY_CURSOR_TREE [G] inherit
 	RECURSIVE_CURSOR_TREE [G]
 		redefine
 			put_right, subtree,
-			active, cursor_anchor, is_leaf
+			active, cursor, is_leaf
 		end
 
 create
@@ -58,6 +58,14 @@ feature -- Status report
 			end
 		end
 
+feature -- Access
+
+	cursor: TWO_WAY_CURSOR_TREE_CURSOR [G] is
+			-- Current cursor position
+		do
+			create Result.make (active, active_parent, after, before, below)
+		end
+		
 feature -- Element change
 
 	put_right (v: G) is
@@ -120,9 +128,6 @@ feature {LINKED_CURSOR_TREE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-
-	cursor_anchor: TWO_WAY_TREE_CURSOR [G]
-			-- Anchor for definitions concerning cursors
 
 	active: TWO_WAY_TREE [G];
 			-- Current node

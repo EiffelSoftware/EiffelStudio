@@ -25,9 +25,12 @@ class LINKED_STACK [G] inherit
 			put as ll_put
 		export
 			{NONE} all
+			{LINKED_STACK}
+				cursor, start, forth, go_to, index, first_element,
+				last_element, valid_cursor
 			{ANY}
 				count, readable, writable, extendible,
-				make, wipe_out
+				make, wipe_out, off, after
 		undefine
 			readable, writable, fill,
 			append, linear_representation,

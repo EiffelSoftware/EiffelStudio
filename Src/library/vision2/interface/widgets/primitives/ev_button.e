@@ -115,7 +115,7 @@ feature {NONE} -- Contract support
 				Precursor {EV_PIXMAPABLE}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_BUTTON_I
 		-- Responsible for interaction with native graphics toolkit.

@@ -462,11 +462,6 @@ feature {NONE} -- Inapplicable
 			extend (v)
 		end
 
-	set_extend (v: like item) is
-		do
-			extend (v)
-		end
-
 	dl_replace (v: like item) is
 		do
 			replace (v)
@@ -499,7 +494,14 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_DYNAMIC_LIST} -- Inapplicable
+
+	set_extend (v: like item) is
+		do
+			extend (v)
+		end
+
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_DYNAMIC_LIST_I [G]
 			-- Responsible for interaction with native graphics

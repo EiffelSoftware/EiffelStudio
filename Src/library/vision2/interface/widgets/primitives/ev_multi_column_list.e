@@ -425,7 +425,9 @@ feature {NONE} -- Contract support
 				i := i + 1
 			end
 		end
-		
+	
+feature -- Contract support
+
 	is_parent_recursive (a_row: EV_MULTI_COLUMN_LIST_ROW): BOOLEAN is
 			-- Is `a_row' a parent of `Current'?
 		do
@@ -434,7 +436,7 @@ feature {NONE} -- Contract support
 			Result := False
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 	
 	implementation: EV_MULTI_COLUMN_LIST_I
 			-- Responsible for interaction with native graphics toolkit.

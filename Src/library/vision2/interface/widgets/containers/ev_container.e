@@ -364,7 +364,7 @@ feature -- Contract support
 			Result := l_window = Void
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_CONTAINER_I
 			-- Responsible for interaction with native graphics toolkit.

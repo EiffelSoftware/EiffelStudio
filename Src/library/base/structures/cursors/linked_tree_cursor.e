@@ -1,24 +1,23 @@
 indexing
-
-	description:
-		"Cursors for linked trees"
-
+	description: "Cursors for linked trees"
 	status: "See notice at end of class"
 	names: linked_tree_cursor, cursor;
 	contents: generic;
 	date: "$Date$"
 	revision: "$Revision$"
 
-class LINKED_TREE_CURSOR [G] inherit
+class LINKED_TREE_CURSOR [G]
 
-	RECURSIVE_TREE_CURSOR [G]
-		export
-			{LINKED_CURSOR_TREE} make
+inherit
+	LINKED_LIST_CURSOR [G]
 		redefine
 			active
 		end
 
-feature {LINKED_CURSOR_TREE} -- Access
+create
+	make
+
+feature {LINKED_TREE} -- Access
 
 	active: LINKED_TREE [G];
 			-- Current node

@@ -74,7 +74,7 @@ feature -- Status setting
 			implementation.end_document
 		end
 	
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_PRINTER_I
 			-- Responsible for interaction with the native graphics toolkit.

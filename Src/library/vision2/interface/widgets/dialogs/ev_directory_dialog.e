@@ -57,7 +57,7 @@ feature -- Element change
 			assigned: start_directory.is_equal (a_path)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_DIRECTORY_DIALOG_I
 		-- Responsible for interaction with native graphics toolkit.

@@ -125,10 +125,10 @@ feature -- Access
 			Result := list.item
 		end
 
-	cursor: CURSOR is
+	cursor: CIRCULAR_CURSOR is
 			-- Current cursor position
 		do
-			create {CIRCULAR_CURSOR} Result.make (list.cursor, internal_exhausted, starter)
+			create Result.make (list.cursor, internal_exhausted, starter)
 		end
 
 feature -- Status report

@@ -58,7 +58,7 @@ feature {NONE} -- Contract support
 				Precursor {EV_PICK_AND_DROPABLE}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_ITEM_I
 			-- Responsible for interaction with native graphics toolkit.

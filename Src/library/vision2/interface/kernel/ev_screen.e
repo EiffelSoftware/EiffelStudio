@@ -138,7 +138,7 @@ feature -- Measurement
 			positive: Result > 0
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_SCREEN_I
 			-- Responsible for interaction with native graphics toolkit.

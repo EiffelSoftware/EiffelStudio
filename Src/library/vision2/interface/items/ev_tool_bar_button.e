@@ -135,7 +135,7 @@ feature {NONE} -- Contract support
 				and Precursor {EV_SENSITIVE} and Precursor {EV_DOCKABLE_SOURCE}
 		end
 		
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TOOL_BAR_BUTTON_I
 			-- Responsible for interaction with native graphics toolkit.

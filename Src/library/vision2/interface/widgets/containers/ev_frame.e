@@ -88,7 +88,7 @@ feature {NONE} -- Contract support
 				and Precursor {EV_FONTABLE}
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_FRAME_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -69,6 +69,7 @@ class LINKED_TREE [G] inherit
 			make as ll_make,
 			merge_left as ll_merge_left,
 			merge_right as ll_merge_right,
+			new_chain as new_tree,
 			off as child_off,
 			prune as ll_prune,
 			put as child_put,
@@ -94,7 +95,7 @@ class LINKED_TREE [G] inherit
 			child_isfirst, child_islast, valid_cursor_index,
 			copy, is_equal
 		redefine
-			first_child, new_cell
+			first_child, new_cell, new_tree, child_cursor
 		select
 			is_leaf
 		end
@@ -135,6 +136,12 @@ feature -- Access
 					Result := Result.right_sibling
 				end
 			end
+		end
+		
+	child_cursor: LINKED_TREE_CURSOR [G] is
+			-- Current cursor position
+		do
+			create Result.make (child, child_after, child_before)
 		end
 
 feature {RECURSIVE_CURSOR_TREE} -- Element change
@@ -276,6 +283,7 @@ feature {NONE} -- Inapplicable
 
 feature {LINKED_TREE} -- Implementation
 
+		
 	new_cell (v: like item): like first_child is
 			-- New cell containing `v'
 		do
@@ -290,7 +298,6 @@ feature {LINKED_TREE} -- Implementation
 		do
 			create Result.make (item)
 		end
-
 
 	cut_off_node is
 			-- Cut off all links from current node.

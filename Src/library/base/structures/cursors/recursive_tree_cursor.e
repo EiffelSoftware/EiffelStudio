@@ -13,11 +13,10 @@ class RECURSIVE_TREE_CURSOR [G] inherit
 
 	CURSOR
 
-create {RECURSIVE_CURSOR_TREE}
-
+create
 	make
 
-feature {RECURSIVE_CURSOR_TREE} -- Initialization
+feature {NONE} -- Initialization
 
 	make (active_node, parent_of_active: like active;
 			aft, bef, bel: BOOLEAN) is

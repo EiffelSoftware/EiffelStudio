@@ -10,6 +10,8 @@ class
 	EV_SYSTEM_PEN_IMP
 
 inherit
+	ANY
+
 	WEL_PS_CONSTANTS
 		export
 			{NONE} all

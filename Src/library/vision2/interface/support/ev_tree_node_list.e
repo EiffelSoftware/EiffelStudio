@@ -72,7 +72,7 @@ feature -- Basic operation
 			implementation.recursive_do_all (action)
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TREE_NODE_LIST_I
 			-- Responsible for interaction with native graphics toolkit.

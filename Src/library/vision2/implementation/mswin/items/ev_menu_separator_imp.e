@@ -145,7 +145,7 @@ feature {EV_ANY_I} -- Implementation
 			Result := (menu_font.string_height ("W") // 2) + 2
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_MENU_SEPARATOR
 

@@ -43,7 +43,7 @@ feature {NONE} -- Contract support
 				text.is_equal ("0")
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_SPIN_BUTTON_I
 			-- Responsible for interaction with native graphics toolkit.

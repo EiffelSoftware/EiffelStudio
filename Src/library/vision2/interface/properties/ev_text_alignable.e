@@ -87,7 +87,7 @@ feature -- Status setting
 			alignment_set: is_left_aligned
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_TEXT_ALIGNABLE_I
 	

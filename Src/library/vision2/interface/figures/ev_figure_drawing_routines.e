@@ -10,6 +10,8 @@ deferred class
 	EV_FIGURE_DRAWING_ROUTINES
 
 inherit
+	ANY
+
 	EV_FIGURE_MATH
 		export
 			{NONE} all

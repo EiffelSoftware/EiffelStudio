@@ -170,7 +170,7 @@ feature -- Contract Support
 			Result := implementation.valid_file_title (a_title)
 		end
 
-feature {EV_ANY_I} -- implementation
+feature {EV_ANY, EV_ANY_I} -- implementation
 
 	implementation: EV_FILE_DIALOG_I
 		-- Responsible for interaction with native graphics toolkit.

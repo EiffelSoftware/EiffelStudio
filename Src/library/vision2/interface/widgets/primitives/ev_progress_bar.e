@@ -61,7 +61,7 @@ feature {NONE} -- Contract support
 			Result := Precursor {EV_GAUGE} and is_segmented
 		end
 
-feature {NONE} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_PROGRESS_BAR_I
 			-- Responsible for interaction with native graphics toolkit.

@@ -76,7 +76,7 @@ feature -- Status setting
 			item_is_not_checked: not is_item_checked (list_item)
 		end
 		
-feature {EV_ANY_I, EV_LIST} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_CHECKABLE_LIST_I
 			-- Responsible for interaction with native graphics toolkit.

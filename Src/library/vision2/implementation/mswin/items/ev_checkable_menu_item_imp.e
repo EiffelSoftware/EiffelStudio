@@ -9,6 +9,8 @@ deferred class
 	EV_CHECKABLE_MENU_ITEM_IMP
 	
 inherit
+	ANY
+
 	WEL_CONSTANTS
 		export
 			{NONE} all

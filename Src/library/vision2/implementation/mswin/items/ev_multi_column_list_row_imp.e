@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 	internal_tooltip_string: STRING
 		-- Internal text of tooltip assigned to `Current'.
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_MULTI_COLUMN_LIST_ROW
 

@@ -30,9 +30,10 @@ class ARRAYED_LIST [G] inherit
 			{NONE}
 				all
 			{ARRAYED_LIST}
-				array_make, subcopy
+				array_make, subcopy, area, all_default, upper, lower,
+				same_items, subarray
 			{ANY}
-				capacity
+				capacity, array_valid_index
 		undefine
 			linear_representation, prunable, put, is_equal,
 			prune, occurrences, extendible, fill,
@@ -61,6 +62,9 @@ class ARRAYED_LIST [G] inherit
 
 create
 	make, make_filled, make_from_array
+
+create {ARRAYED_LIST}
+	array_make
 
 feature -- Initialization
 
@@ -137,10 +141,10 @@ feature -- Access
 	index: INTEGER
 			-- Index of `item', if valid.
 
-	cursor: CURSOR is
+	cursor: ARRAYED_LIST_CURSOR is
 			-- Current cursor position
 		do
-			create {ARRAYED_LIST_CURSOR} Result.make (index)
+			create Result.make (index)
 		end
 
 	has (v: like item): BOOLEAN is
@@ -579,10 +583,10 @@ feature -- Duplication
 			end_pos: INTEGER
 		do
 			if after then
-				create Result.make (0)
+				Result := new_filled_list (0)
 			else
 				end_pos := count.min (index + n - 1)
-				create Result.make_filled (end_pos - index + 1)
+				Result := new_filled_list (end_pos - index + 1)
 				Result.subcopy (Current, index, end_pos, 1)
 			end
 		end
@@ -619,6 +623,19 @@ feature {NONE} -- Implementation
 			-- Set `count' to `new_count'
 		do
 			count := new_count			
+		end
+
+	new_filled_list (n: INTEGER): like Current is
+			-- New list with `n' elements.
+		require
+			n_non_negative: n >=0 
+		do
+			create Result.make_filled (n)
+		ensure
+			new_filled_list_not_void: Result /= Void
+			new_filled_list_count_set: Result.count = n
+			new_filled_list_full: Result.full
+			new_filled_list_before: Result.before
 		end
 
 invariant

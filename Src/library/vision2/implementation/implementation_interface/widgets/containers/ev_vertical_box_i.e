@@ -35,7 +35,7 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 			Result := height
 		end
 		
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: EV_VERTICAL_BOX
 

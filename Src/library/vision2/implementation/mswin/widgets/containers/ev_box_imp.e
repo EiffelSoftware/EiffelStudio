@@ -365,7 +365,7 @@ feature -- from EV_INVISIBLE_CONTAINER_IMP FIXME!!!
 			Result := ev_children.has (a_child)
 		end
 
-feature {EV_ANY_I} -- Interface
+feature {EV_ANY, EV_ANY_I} -- Interface
 
 	interface: EV_BOX
 

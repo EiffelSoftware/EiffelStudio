@@ -26,6 +26,9 @@ class ARRAYED_SET [G] inherit
 			put as al_put,
 			prune as al_prune
 		export
+			{ANY} valid_cursor_index, readable, writable
+			{ARRAYED_SET} go_to, area, cursor, full, i_th, lower, upper,
+				subcopy, array_valid_index, valid_cursor, subarray
 			{NONE} all
 		undefine
 			is_inserted,
@@ -33,8 +36,10 @@ class ARRAYED_SET [G] inherit
 		end
 
 create 
-
 	make
+	
+create {ARRAYED_SET}
+	make_filled
 
 feature -- Element change
 

@@ -32,17 +32,19 @@ class PART_SORTED_SET [G -> PART_COMPARABLE] inherit
 			merge as pstwl_merge
 		export
 			{ANY}
-				duplicate,
-				forth, item, after, start,
-				put_left, finish
+				duplicate, forth, item, after, start,
+				put_left, finish, readable, writable, valid_cursor_index
+			{PART_SORTED_SET} cursor, go_to, first_element, last_element, valid_cursor
 			{NONE} all
 		redefine
 			duplicate
 		end
 
 create
-
 	make
+	
+create {PART_SORTED_SET}
+	make_sublist
 
 feature -- Element change
 

@@ -144,7 +144,7 @@ feature {NONE} -- Contract support
 				y_offset = 0
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_VIEWPORT_I
 			-- Responsible for interaction with native graphics toolkit.

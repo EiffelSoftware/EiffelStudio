@@ -572,7 +572,7 @@ feature {NONE} -- Implementation
 			p1, p2: like Current
 			t1_stack, t2_stack: LINKED_STACK [like Current]
 			orgidx1_stack, orgidx2_stack: LINKED_STACK [INTEGER]
-			l_current_cursor, l_other_cursor: CURSOR
+			l_current_cursor, l_other_cursor: like child_cursor
 		do
 			l_current_cursor := t1.child_cursor
 			l_other_cursor := t2.child_cursor

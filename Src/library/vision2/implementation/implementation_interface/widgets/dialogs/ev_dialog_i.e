@@ -9,8 +9,6 @@ deferred class
 
 inherit
 	EV_TITLED_WINDOW_I
-		export
-			{NONE} set_default_colors
 		redefine
 			interface
 		end

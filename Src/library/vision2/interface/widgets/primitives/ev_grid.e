@@ -101,10 +101,12 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 
-	clear_selection is
-			-- Clear the selected rows or items if any
+	remove_selection is
+			-- Ensure that `selected_items' and `selected_rows' are empty.
+		require
+			not_destroyed: not is_destroyed
 		do
-			implementation.clear_selection
+			implementation.remove_selection
 		ensure
 			selected_items_empty: selected_items.is_empty
 			selected_rows_empty: selected_rows.is_empty

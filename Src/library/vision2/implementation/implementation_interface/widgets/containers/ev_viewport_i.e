@@ -49,6 +49,35 @@ feature -- Element change
 			assigned: x_offset = an_x
 			assigned: y_offset = a_y
 		end
+		
+	set_item_width (a_width: INTEGER) is
+			-- Set `a_widget.width' to `a_width'.
+		require
+			a_width_not_smaller_than_minimum_width:
+				a_width >= item.minimum_width
+		do
+			set_item_size (a_width, item.height)
+		end
+
+	set_item_height (a_height: INTEGER) is
+			-- Set `a_widget.height' to `a_height'.
+		require
+			a_height_not_smaller_than_minimum_height:
+				a_height >= item.minimum_height
+		do
+			set_item_size (item.width, a_height)
+		end
+
+	set_item_size (a_width, a_height: INTEGER) is
+			-- Set `a_widget.width' to `a_width'.
+			-- Set `a_widget.height' to `a_height'.
+		require
+			a_width_not_smaller_than_minimum_width:
+				a_width >= item.minimum_width
+			a_height_not_smaller_than_minimum_height:
+				a_height >= item.minimum_height
+		deferred
+		end
 
 end -- class EV_VIEWPORT_I
 

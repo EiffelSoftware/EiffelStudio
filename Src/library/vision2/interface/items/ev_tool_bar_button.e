@@ -44,6 +44,37 @@ feature -- Access
 			Result ?= {EV_SIMPLE_ITEM} Precursor
 		end
 
+	gray_pixmap: EV_PIXMAP is
+			-- Gray image displayed when the button is not hot
+			-- i.e. when the mouse cursor is not over it.
+		do
+			Result := implementation.gray_pixmap
+		ensure
+			bridge_ok: (Result = Void and implementation.gray_pixmap = Void) or
+				Result.is_equal (implementation.gray_pixmap)
+		end
+
+feature -- Element change
+
+	set_gray_pixmap (a_gray_pixmap: EV_PIXMAP) is
+			-- Assign `a_gray_pixmap' to `gray_pixmap'.
+		require
+			gray_pixmap_not_void: a_gray_pixmap /= Void
+		do
+			implementation.set_gray_pixmap (a_gray_pixmap)
+		ensure
+			pixmap_assigned: a_gray_pixmap.is_equal (gray_pixmap) and 
+							 gray_pixmap /= a_gray_pixmap
+		end
+
+	remove_gray_pixmap is
+			-- Make `gray_pixmap' `Void'.
+		do
+			implementation.remove_gray_pixmap
+		ensure
+			gray_pixmap_remove: gray_pixmap = Void
+		end
+
 feature -- Status report
 
 	is_sensitive: BOOLEAN is
@@ -124,6 +155,12 @@ end -- class EV_TOOL_BAR_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/20 23:07:53  pichery
+--| Added the notion of gray pixmap, as well as the features `set_gray_pixmap'
+--| and `remove_gray_pixmap' to set and remove the gray pixmap.
+--| The gray pixmap is displayed in the toolbar when the cursor is not over
+--| the button.
+--|
 --| Revision 1.10  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

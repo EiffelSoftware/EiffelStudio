@@ -14,18 +14,9 @@ feature
 	shell_window: SHELL_W;
 
 	command_shell_name: STRING is
-		local
-			edit_command: STRING
 		once
-			edit_command := Execution_environment.get ("EIF_COMMAND");
-			!!Result.make (0);
-			if (edit_command = Void) or else (edit_command.empty) then
-					-- EIF_COMMAND was not set then use 
-					-- use default command (vi editor)
-				Result := resources.get_string (r_Shell_command, "xterm -geometry 80x40 -e vi +$line $target")
-			else
-				Result.append (edit_command);
-			end;
+				-- use default command (vi editor)
+			Result := resources.get_string (r_Shell_command, "xterm -geometry 80x40 -e vi +$line $target")
 		end;
 
 	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
@@ -56,12 +47,11 @@ feature {NONE}
 				fs ?= text_window.root_stone;
 				routine_text ?= text_window;
 				class_text ?= text_window;
-				!!cmd_string.make (0);
-				cmd_string.append ("line=");
+				cmd_string := clone (command_shell_name);
 				if routine_text /= Void then
 					-- routine text window
 					feature_stone ?= fs; -- Cannot fail
-					cmd_string.append_integer (feature_stone.line_number);
+					cmd_string.replace_substring_all ("$line", feature_stone.line_number.out)
 				elseif
 					class_text /= Void and then (
 					class_text.last_format = class_text.tool.showtext_command or
@@ -81,25 +71,19 @@ feature {NONE}
 						end;
 						i := i + 1
 					end;
-					cmd_string.append_integer (line_nb)
+					cmd_string.replace_substring_all ("$line", line_nb.out)
 				else
-					cmd_string.append_integer (1);	
+					cmd_string.replace_substring_all ("$line", "1")
 				end;
-				cmd_string.append (";");
+				cmd_string.replace_substring_all ("$target", fs.file_name);
 				!!req;
-				cmd_string.append ("target=");
-				cmd_string.append (fs.file_name);
-				cmd_string.append ("; export target line;");
-				cmd_string.append (command_shell_name);
 				req.set_command_name (cmd_string);
 				req.send;		-- execute the command
 			elseif text_window.file_name /= Void then
+				cmd_string := clone (command_shell_name);
+				cmd_string.replace_substring_all ("$line", "1");
+				cmd_string.replace_substring_all ("$target", text_window.file_name);
 				!!req;
-				!!cmd_string.make (0);
-				cmd_string.append ("line=1;target=");
-				cmd_string.append (text_window.file_name);
-				cmd_string.append ("; export target line;");
-				cmd_string.append (command_shell_name);
 				req.set_command_name (cmd_string);
 				req.send;       -- execute the command
 			end;

@@ -960,28 +960,18 @@ feature {NONE} -- Implementation
 		local
 			l_right: INTEGER
 		do
-			if commands.is_show_requested or else queries.is_show_requested then
-				l_right := names.bounding_box.right
-				if commands.is_show_requested then
-					l_right := l_right.max (commands.bounding_box.right)
-					if queries.is_show_requested then
-						l_right := l_right.max (queries.bounding_box.right)
-					end
-				else
-					l_right := l_right.max (queries.bounding_box.right)
-				end
-				if 
-					l_right > right or else
-					right > l_right + border 
-				then
-					l_right := l_right + border
-					rectangle.set_point_b_position (l_right, rectangle.point_b_y)
-					queries_line.set_point_a_position (queries_line.point_a_x, queries_line.point_a_y)
-					queries_line.set_point_b_position (l_right, queries_line.point_a_y)
-					
-					commands_line.set_point_a_position (commands_line.point_a_x, commands_line.point_a_y)
-					commands_line.set_point_b_position (l_right, commands_line.point_a_y)
-				end
+			l_right := names.bounding_box.right
+			if commands.is_show_requested then
+				l_right := l_right.max (commands.bounding_box.right)
+			end
+			if queries.is_show_requested then
+				l_right := l_right.max (queries.bounding_box.right)
+			end
+			if 
+				rectangle.point_b_x < l_right or else
+				rectangle.point_b_x > l_right + border
+			then
+				update_positions
 			end
 		end
 		

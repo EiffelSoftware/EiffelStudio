@@ -13,6 +13,7 @@ class
 inherit
 	WEL_CONTROL
 		redefine
+			set_text,
 			text,
 			text_length
 		end
@@ -38,7 +39,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW; an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; an_id: INTEGER) is
 			-- Create a status window with `a_parent' as parent and
 			-- `an_id' as id.
 		require
@@ -366,6 +367,11 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Inapplicable
+
+	set_text (a_text: STRING) is
+			-- Set the window text.
+		do
+		end
 
 	text: STRING is
 			-- Window text

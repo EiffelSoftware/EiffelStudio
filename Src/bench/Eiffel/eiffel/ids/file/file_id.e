@@ -3,8 +3,8 @@
 class FILE_ID
 
 inherit
+	COMPILER_ID
 
-	COMPILER_ID;
 	PROJECT_CONTEXT
 
 creation
@@ -22,7 +22,7 @@ feature -- Access
 	file_name: STRING is
 			-- Server file basename
 		do
-			!! Result.make (6)
+			!! Result.make (7)
 			Result.extend ('E')
 			Result.append_integer (internal_id)
 		end

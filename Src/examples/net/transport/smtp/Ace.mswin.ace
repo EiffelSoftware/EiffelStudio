@@ -1,0 +1,44 @@
+system
+	"smtp_client"
+
+root
+	smtp_client: make
+
+default
+	il_verifiable (no)
+	msil_generation_type ("exe")
+	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base")
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	disabled_debug (yes)
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	check_vape (yes)
+	console_application (no)
+	syntax_warning (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	exception_trace (no)
+	inlining (no)
+
+
+cluster
+	root_cluster:		"$ISE_EIFFEL\examples\net\transport\smtp"
+
+
+	all net:		"$ISE_EIFFEL\library\net"
+
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"desc"; "table_eiffel3"; 
+		end
+
+external
+
+	object:
+		"$(ISE_EIFFEL)\library\net\spec\$(ISE_C_COMPILER)\lib\net.lib"
+
+end

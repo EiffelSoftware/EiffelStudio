@@ -1,0 +1,27 @@
+system
+	smtp_client
+
+root
+	SMTP_CLIENT (root_cluster): "make"
+
+default
+	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
+
+cluster
+	root_cluster: 	"$ISE_EIFFEL/examples/net/transport/smtp"
+
+		-- EiffelNet
+	all net:				"$ISE_EIFFEL/library/net"
+
+		-- EiffelBase
+	all base:			"$ISE_EIFFEL/library/base"
+		exclude
+			"desc";"table_eiffel3"
+		end
+
+external
+		-- External EiffelNet library 
+	object:
+		"$(ISE_EIFFEL)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a"
+
+end

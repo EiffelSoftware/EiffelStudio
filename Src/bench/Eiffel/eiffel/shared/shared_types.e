@@ -44,14 +44,14 @@ feature {NONE}
 			create Result.make (True)
 		end
 
-	Real_type: REAL_A is
-			-- Actual real type
+	Real_32_type: REAL_32_A is
+			-- Actual real 32 bits type
 		once
 			create Result
 		end
 
-	Double_type: DOUBLE_A is
-			-- Actual double type
+	Real_64_type: REAL_64_A is
+			-- Actual real 64 bits type
 		once
 			create Result
 		end

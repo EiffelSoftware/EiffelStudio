@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-class LONG_I
+class INTEGER_I
 
 inherit
 	BASIC_I
@@ -126,7 +126,7 @@ feature -- Access
 		local
 			l_long: like Current
 		do
-			if other.is_double or other.is_float then
+			if other.is_real_64 or other.is_real_32 then
 				Result := other
 			else
 				if other.is_long then

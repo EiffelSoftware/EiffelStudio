@@ -100,8 +100,7 @@ feature -- Access
 		end
 
 	c_type: TYPE_C is
-			-- Corresponding C type: either LONG_I, CHAR_I, DOUBLE_I,
-			-- REFERENCE_I, FLOAT_I
+			-- Corresponding C type
 		deferred
 		ensure
 			result_not_void: Result /= Void
@@ -187,14 +186,14 @@ feature -- Status report
 			-- Do nothing
 		end
 
-	is_float: BOOLEAN is
-			-- Is the type a float type ?
+	is_real_32: BOOLEAN is
+			-- Is the type a REAL_32 type ?
 		do
 			-- Do nothing
 		end
 
-	is_double: BOOLEAN is
-			-- is the type a double type ?
+	is_real_64: BOOLEAN is
+			-- is the type a REAL_64 type ?
 		do
 			-- Do nothing
 		end

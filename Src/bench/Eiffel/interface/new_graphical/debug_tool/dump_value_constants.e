@@ -13,8 +13,8 @@ feature -- Type identifiant in context of DUMP_VALUE
 	Type_boolean		: INTEGER is 1
 	Type_character		: INTEGER is 2
 	Type_integer		: INTEGER is 3
-	Type_real			: INTEGER is 4
-	Type_double			: INTEGER is 5
+	Type_real_32		: INTEGER is 4
+	Type_real_64		: INTEGER is 5
 	Type_bits			: INTEGER is 6
 	Type_pointer		: INTEGER is 7
 	Type_object			: INTEGER is 8

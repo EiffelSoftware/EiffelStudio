@@ -141,7 +141,7 @@ feature -- Properties
 	type: TYPE_I is
 			-- Integer type
 		do
-			create {LONG_I} Result.make (size)
+			create {INTEGER_I} Result.make (size)
 		end
 
 feature -- Evaluation

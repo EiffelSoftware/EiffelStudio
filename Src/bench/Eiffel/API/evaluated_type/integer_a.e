@@ -69,13 +69,13 @@ feature {COMPILER_EXPORTER}
 	is_numeric: BOOLEAN is True
 			-- Is the current type a numeric type ?
 
-	type_i: LONG_I is
+	type_i: INTEGER_I is
 			-- C type
 		do
 			inspect size
 			when 8 then Result := int8_c_type
 			when 16 then Result := int16_c_type
-			when 32 then Result := long_c_type
+			when 32 then Result := int32_c_type
 			when 64 then Result := int64_c_type
 			end
 		end

@@ -121,11 +121,11 @@ feature -- Code generation
 			class_type: CLASS_TYPE
 			gen_type: GEN_TYPE_I
 			gen_param: TYPE_I
-			int_i: LONG_I
+			int_i: INTEGER_I
 			char_i: CHAR_I
 			dtype, char_dtype, int8_dtype, int16_dtype,
 			int32_dtype, int64_dtype, wchar_dtype,
-			float_dtype, double_dtype,
+			real32_dtype, real64_dtype,
 			pointer_dtype, boolean_dtype, ref_dtype: INTEGER
 		do
 			from
@@ -135,8 +135,8 @@ feature -- Code generation
 				int16_dtype := -1
 				int32_dtype := -1
 				int64_dtype := -1
-				float_dtype := -1
-				double_dtype := -1
+				real32_dtype := -1
+				real64_dtype := -1
 				boolean_dtype := -1
 				pointer_dtype := -1
 				ref_dtype := -1
@@ -163,10 +163,10 @@ feature -- Code generation
 					when 32 then int32_dtype := dtype
 					when 64 then int64_dtype := dtype
 					end
-				elseif gen_param.is_float then
-					float_dtype := dtype
-				elseif gen_param.is_double then
-					double_dtype := dtype
+				elseif gen_param.is_real_32 then
+					real32_dtype := dtype
+				elseif gen_param.is_real_64 then
+					real64_dtype := dtype
 				elseif gen_param.is_boolean then
 					boolean_dtype := dtype
 				elseif gen_param.is_feature_pointer then
@@ -190,10 +190,10 @@ feature -- Code generation
 			buffer.put_integer (int32_dtype)
 			buffer.put_string (";%N%Tegc_sp_int64 = (uint32)")
 			buffer.put_integer (int64_dtype)
-			buffer.put_string (";%N%Tegc_sp_real = (uint32)")
-			buffer.put_integer (float_dtype)
-			buffer.put_string (";%N%Tegc_sp_double = (uint32)")
-			buffer.put_integer (double_dtype)
+			buffer.put_string (";%N%Tegc_sp_real32 = (uint32)")
+			buffer.put_integer (real32_dtype)
+			buffer.put_string (";%N%Tegc_sp_real64 = (uint32)")
+			buffer.put_integer (real64_dtype)
 			buffer.put_string (";%N%Tegc_sp_pointer = (uint32)")
 			buffer.put_integer (pointer_dtype)
 			buffer.put_string (";%N%Tegc_sp_ref = (uint32)")

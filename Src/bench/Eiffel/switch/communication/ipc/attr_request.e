@@ -194,9 +194,9 @@ feature {NONE} -- Implementation
 					create {DEBUG_VALUE [INTEGER]} attr.make_attribute (attr_name, e_class, to_integer (c_tread))
 				when Sk_int64 then
 					create {DEBUG_VALUE [INTEGER_64]} attr.make_attribute (attr_name, e_class, to_integer_64 (c_tread))
-				when Sk_float then
+				when Sk_real32 then
 					create {DEBUG_VALUE [REAL]} attr.make_attribute (attr_name, e_class, to_real (c_tread))
-				when Sk_double then
+				when Sk_real64 then
 					create {DEBUG_VALUE [DOUBLE]} attr.make_attribute (attr_name, e_class, to_double (c_tread))
 				when Sk_pointer then
 					create {DEBUG_VALUE [POINTER]} attr.make_attribute (attr_name, e_class, to_pointer (c_tread))

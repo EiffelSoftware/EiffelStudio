@@ -23,7 +23,6 @@ feature
 				-- Let's finish C code generation of current block.
 			current_buffer.end_c_specific_code
 
-			file.put_string ("#include %"eif_macros.h%"%N");
 			file.put_string ("#include %"");
 			file.put_string (Epoly);
 			file.put_integer (file_counter);
@@ -39,9 +38,10 @@ feature
 			packet_number, n: INTEGER
 		do
 			current_buffer.clear_all
-
-			Extern_declarations.generate_header (current_buffer);
+			current_buffer.put_string ("#include %"eif_eiffel.h%"%N");
+			current_buffer.start_c_specific_code
 			Extern_declarations.generate (current_buffer);
+			current_buffer.end_c_specific_code
 			Extern_declarations.wipe_out;
 
 			temp := Epoly.twin

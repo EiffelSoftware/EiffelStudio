@@ -1184,7 +1184,7 @@ feature {NONE}-- Implementation
 				nb ?= token
 				if nb /= Void then
 					if nb.image.occurrences('.') > 0 then
-						create {DOUBLE_A} Result
+						create {REAL_64_A} Result
 					else
 						create {INTEGER_A} Result.make (8)
 					end

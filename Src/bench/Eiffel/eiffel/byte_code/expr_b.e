@@ -142,7 +142,7 @@ feature -- Il code generation
 			-- Can IL promote expression type to a type with higher precision?
 		local
 			real_expr_type: TYPE_I
-			long: LONG_I
+			long: INTEGER_I
 		do
 			real_expr_type := real_type (type)
 			if real_expr_type.is_long then
@@ -254,7 +254,7 @@ feature -- C generation
 			-- Can C promote expression type to a type with higher precision?
 		local
 			real_expr_type: TYPE_I
-			long: LONG_I
+			long: INTEGER_I
 		do
 			real_expr_type := real_type (type)
 			if real_expr_type.is_long then

@@ -349,9 +349,9 @@ feature {NONE} -- Implementation
 					inspect dmv.type 
 					when feature {DUMP_VALUE_CONSTANTS}.type_integer then
 						Result := eifnet_evaluator.icdv_reference_integer_from_icdv_integer (new_active_icd_frame, Result)
-					when feature {DUMP_VALUE_CONSTANTS}.type_real then
+					when feature {DUMP_VALUE_CONSTANTS}.type_real_32 then
 						Result := eifnet_evaluator.icdv_reference_real_from_icdv_real (new_active_icd_frame, Result)							
-					when feature {DUMP_VALUE_CONSTANTS}.type_double then
+					when feature {DUMP_VALUE_CONSTANTS}.type_real_64 then
 						Result := eifnet_evaluator.icdv_reference_double_from_icdv_double (new_active_icd_frame, Result)	
 					when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
 						Result := eifnet_evaluator.icdv_reference_boolean_from_icdv_boolean (new_active_icd_frame, Result)
@@ -369,9 +369,9 @@ feature {NONE} -- Implementation
 					inspect dmv.type 
 					when feature {DUMP_VALUE_CONSTANTS}.type_integer then
 						Result := eifnet_evaluator.new_reference_i4_evaluation (new_active_icd_frame, dmv.value_integer)
-					when feature {DUMP_VALUE_CONSTANTS}.type_real then
+					when feature {DUMP_VALUE_CONSTANTS}.type_real_32 then
 						Result := eifnet_evaluator.new_reference_real_evaluation (new_active_icd_frame, dmv.value_real )
-					when feature {DUMP_VALUE_CONSTANTS}.type_double then
+					when feature {DUMP_VALUE_CONSTANTS}.type_real_64 then
 						Result := eifnet_evaluator.new_reference_double_evaluation (new_active_icd_frame, dmv.value_double )
 					when feature {DUMP_VALUE_CONSTANTS}.type_boolean then
 						Result := eifnet_evaluator.new_reference_boolean_evaluation (new_active_icd_frame, dmv.value_boolean )

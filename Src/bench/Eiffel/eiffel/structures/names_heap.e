@@ -192,8 +192,8 @@ feature {NONE} -- Implementation: access
 			put ("EIF_WIDE_CHAR") check found_item = eif_wide_char_name_id end
 			put ("EIF_BOLLEAN") check found_item = eif_boolean_name_id end
 			put ("EIF_POINTER") check found_item = eif_pointer_name_id end
-			put ("EIF_REAL") check found_item = eif_real_name_id end
-			put ("EIF_DOUBLE") check found_item = eif_double_name_id end
+			put ("EIF_REAL_32") check found_item = eif_real_32_name_id end
+			put ("EIF_REAL_64") check found_item = eif_real_64_name_id end
 			put ("%"eif_plug.h%"") check found_item = eif_plug_header_name_id end
 			put ("%"eif_misc.h%"") check found_item = eif_misc_header_name_id end
 			put ("%"eif_out.h%"") check found_item = eif_out_header_name_id end
@@ -290,6 +290,7 @@ feature {NONE} -- Implementation: access
 			put ("get_hash_code") check found_item = get_hash_code_name_id end
 			put ("equals") check found_item = equals_name_id end
 			put ("three_way_comparison") check found_item = three_way_comparison_name_id end
+			put ("<ctype.h>") check found_item = ctype_header_name_id end
 		end
 		
 invariant

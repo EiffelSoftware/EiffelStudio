@@ -59,14 +59,14 @@ feature -- Status report
 			-- Do nothing
 		end
 
-	is_real: BOOLEAN is
-			-- is the constant a real constant ?
+	is_real_32: BOOLEAN is
+			-- is the constant a real 32 bits constant ?
 		do
 			-- Do nothing
 		end
 
-	is_double: BOOLEAN is
-			-- Is the constant a double constant ?
+	is_real_64: BOOLEAN is
+			-- Is the constant a real 64 bits constant ?
 		do
 			-- Do nothing
 		end
@@ -91,9 +91,9 @@ feature -- Status report
 	is_numeric: BOOLEAN is
 			-- Is current a numeric value?
 		do
-			Result := is_integer or is_real or is_double
+			Result := is_integer or is_real_32 or is_real_64
 		ensure
-			is_numeric_definition: is_integer or is_real or is_double
+			is_numeric_definition: is_integer or is_real_32 or is_real_64
 		end
 		
 

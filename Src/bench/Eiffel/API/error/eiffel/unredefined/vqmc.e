@@ -75,8 +75,8 @@ feature {COMPILER_EXPORTER} -- Setting
 				constant_type := Boolean_type
 			elseif a_const.is_character then
 				constant_type := Character_type
-			elseif a_const.is_double or a_const.is_real then
-				constant_type := Double_type
+			elseif a_const.is_real_64 or a_const.is_real_32 then
+				constant_type := Real_64_type
 			elseif a_const.is_integer then
 				l_int ?= a_const
 				inspect

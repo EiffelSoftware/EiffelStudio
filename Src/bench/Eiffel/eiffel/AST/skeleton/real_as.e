@@ -53,13 +53,13 @@ feature -- Type check and byte code
 	value_i: REAL_VALUE_I is
 			-- Interface value
 		do
-			create Result.make_double (value.to_double)
+			create Result.make_real_64 (value.to_double)
 		end
 
 	type_check is
 			-- Type check a real type
 		do
-			context.put (Double_type)
+			context.put (Real_64_type)
 		end
 
 	byte_node: REAL_CONST_B is

@@ -26,13 +26,13 @@ feature
 	C_int32: INTEGER is 5
 			-- Internal code for long, same as `C_long'
 	
-	C_float: INTEGER is 6
-			-- Internal code for float
+	C_real32: INTEGER is 6
+			-- Internal code for REAL_32
 
 	C_int64: INTEGER is 7
 			-- Internal code for 64 bits integer
 	
-	C_double: INTEGER is 8
+	C_real64: INTEGER is 8
 			-- Internal code for double
 	
 	C_ref: INTEGER is 9

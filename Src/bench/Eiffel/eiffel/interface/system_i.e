@@ -379,8 +379,8 @@ feature -- Properties
 
 			local_workbench.change_class (string_class)
 
-			local_workbench.change_class (double_class)
-			local_workbench.change_class (real_class)
+			local_workbench.change_class (real_64_class)
+			local_workbench.change_class (real_32_class)
 			local_workbench.change_class (integer_8_class)
 			local_workbench.change_class (integer_16_class)
 			local_workbench.change_class (integer_32_class)
@@ -410,8 +410,8 @@ feature -- Properties
 				system_value_type_class.compiled_class.record_precompiled_class_in_system
 			end
 			any_class.compiled_class.record_precompiled_class_in_system
-			double_class.compiled_class.record_precompiled_class_in_system
-			real_class.compiled_class.record_precompiled_class_in_system
+			real_64_class.compiled_class.record_precompiled_class_in_system
+			real_32_class.compiled_class.record_precompiled_class_in_system
 			integer_8_class.compiled_class.record_precompiled_class_in_system
 			integer_16_class.compiled_class.record_precompiled_class_in_system
 			integer_32_class.compiled_class.record_precompiled_class_in_system
@@ -1176,8 +1176,8 @@ end
 				system_value_type_class.compiled_class.mark_class (marked_classes)
 			end
 			any_class.compiled_class.mark_class (marked_classes)
-			double_class.compiled_class.mark_class (marked_classes)
-			real_class.compiled_class.mark_class (marked_classes)
+			real_64_class.compiled_class.mark_class (marked_classes)
+			real_32_class.compiled_class.mark_class (marked_classes)
 			integer_8_class.compiled_class.mark_class (marked_classes)
 			integer_16_class.compiled_class.mark_class (marked_classes)
 			integer_32_class.compiled_class.mark_class (marked_classes)
@@ -2613,11 +2613,11 @@ feature -- Dead code removal
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference REAL'
-			l_class := real_class.compiled_class
+			l_class := real_32_class.compiled_class
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference DOUBLE'
-			l_class := double_class.compiled_class
+			l_class := real_64_class.compiled_class
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.set_item_name_id), l_class)
 
 				-- Protection of feature `set_item' of `reference INTEGER_8'
@@ -2937,8 +2937,7 @@ end
 
 				i := 1
 				nb := type_id_counter.value
-				buffer.put_string ("#include %"eif_macros.h%"%N%
-								%#include %"eif_malloc.h%"%N%
+				buffer.put_string ("#include %"eif_eiffel.h%"%N%
 								%%Nlong egc_fsize_init[] = {%N")
 			until
 				i > nb
@@ -3099,13 +3098,10 @@ end
 			buffer := generation_buffer
 			buffer.clear_all
 
-			buffer.put_string ("#include %"eif_project.h%"%N%
-								%#include %"eif_struct.h%"%N%
-								%#include %"eif_malloc.h%"%N")
+			buffer.put_string ("#include %"eif_eiffel.h%"%N")
 
 			if not final_mode then
 					-- Hash table extern declaration in workbench mode
-				buffer.put_string ("#include %"eif_macros.h%"")
 				buffer.put_new_line
 				buffer.start_c_specific_code
 				
@@ -3368,12 +3364,11 @@ end
 
 			final_mode := byte_context.final_mode
 
-			buffer.put_string ("#include %"eif_project.h%"%N")
+			buffer.put_string ("#include %"eif_eiffel.h%"%N")
 			buffer.put_string ("#include %"eif_cecil.h%"%N")
 			if final_mode then
 				buffer.put_string ("#include %"ececil.h%"%N")
 			end
-			buffer.put_string ("#include %"eif_struct.h%"%N%N")
 			
 			buffer.start_c_specific_code
 
@@ -3392,8 +3387,10 @@ end
 
 			if final_mode then
 					-- Extern declarations for previous file
-				Extern_declarations.generate_header (header_buffer)
+				header_buffer.put_string ("#include %"eif_eiffel.h%"%N%N")
+				header_buffer.start_c_specific_code
 				Extern_declarations.generate (header_buffer)
+				header_buffer.end_c_specific_code
 				Extern_declarations.wipe_out
 
 					-- Generation in file (we need to create the subdirectory
@@ -3689,10 +3686,7 @@ feature -- Pattern table generation
 				rout_id := root_feat.rout_id_set.first
 			end
 
-			buffer.put_string ("%
-				%#include %"eif_project.h%"%N%
-				%#include %"eif_macros.h%"%N%
-				%#include %"eif_struct.h%"%N%N")
+			buffer.put_string ("#include %"eif_eiffel.h%"%N%N")
 
 			buffer.start_c_specific_code
 			
@@ -3922,8 +3916,7 @@ feature --Workbench option file generation
 			buffer := generation_buffer
 			buffer.clear_all
 
-			buffer.put_string ("#include %"eif_project.h%"%N%
-								%#include %"eif_struct.h%"%N%
+			buffer.put_string ("#include %"eif_eiffel.h%"%N%
 								%#include %"eif_option.h%"%N%N")
 
 			buffer.start_c_specific_code

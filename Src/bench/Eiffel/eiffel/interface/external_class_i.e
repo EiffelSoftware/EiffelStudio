@@ -105,9 +105,9 @@ feature -- Status Report
 						elseif l_name.is_equal ("System.IntPtr") or l_name.is_equal ("System.UIntPtr") then
 							Result := System.pointer_class
 						elseif l_name.is_equal ("System.Double") then
-							Result := System.double_class
+							Result := System.real_64_class
 						elseif l_name.is_equal ("System.Single") then
-							Result := System.real_class
+							Result := System.real_32_class
 						elseif l_name.is_equal ("System.Char") then
 							Result := System.character_class
 						elseif l_name.is_equal ("System.Boolean") then

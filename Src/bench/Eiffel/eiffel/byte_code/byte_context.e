@@ -1163,8 +1163,8 @@ feature -- Access
 				buf.put_string ("EIF_REFERENCE tp")
 				buf.put_integer (num)
 				buf.put_string (" = NULL")
-			when C_float then
-				buf.put_string ("EIF_REAL tf")
+			when C_real32 then
+				buf.put_string ("EIF_REAL_32 tr32_")
 				buf.put_integer (num)
 			when C_char then
 				buf.put_string ("EIF_CHARACTER tc")
@@ -1172,8 +1172,8 @@ feature -- Access
 			when C_wide_char then
 				buf.put_string ("EIF_WIDE_CHAR twc")
 				buf.put_integer (num)
-			when C_double then
-				buf.put_string ("EIF_DOUBLE td")
+			when C_real64 then
+				buf.put_string ("EIF_REAL_64 tr64_")
 				buf.put_integer (num)
 			when C_pointer then
 				if has_rescue then

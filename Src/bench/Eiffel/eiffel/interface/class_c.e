@@ -1831,12 +1831,12 @@ feature -- Class initialization
 				if
 					Current /= System.boolean_class.compiled_class and then
 					Current /= System.character_class.compiled_class and then
-					Current /= System.double_class.compiled_class and then
+					Current /= System.real_64_class.compiled_class and then
 					Current /= System.integer_8_class.compiled_class and then
 					Current /= System.integer_16_class.compiled_class and then
 					Current /= System.integer_32_class.compiled_class and then
 					Current /= System.integer_64_class.compiled_class and then
-					Current /= System.real_class.compiled_class and then
+					Current /= System.real_32_class.compiled_class and then
 					Current /= System.pointer_class.compiled_class and then
 					Current /= System.typed_pointer_class.compiled_class
 				then

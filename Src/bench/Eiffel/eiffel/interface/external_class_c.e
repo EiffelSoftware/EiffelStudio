@@ -1213,8 +1213,8 @@ feature {NONE} -- Implementation
 			Result.put (System.integer_64_class, "System.UInt64")
 			Result.put (System.pointer_class, "System.IntPtr")
 			Result.put (System.pointer_class, "System.UIntPtr")
-			Result.put (System.real_class, "System.Single")
-			Result.put (System.double_class, "System.Double")
+			Result.put (System.real_32_class, "System.Single")
+			Result.put (System.real_64_class, "System.Double")
 		ensure
 			basic_type_mapping_not_void: Result /= Void
 		end
@@ -1236,14 +1236,14 @@ feature {NONE} -- Implementation
 			l_string_value: STRING_VALUE_I
 			l_int32: INTEGER
 			l_int64: INTEGER_64
-			l_double: DOUBLE
-			l_real: REAL
+			l_real64: DOUBLE
+			l_real32: REAL
 			i: INTEGER
 			n: INTEGER
 			c: CHARACTER
 			h: INTEGER
 		do
-			if a_external_type.is_double then
+			if a_external_type.is_real_64 then
 					-- Read hexadecimal representation in little-endian byte order
 				from
 					n := a_value.count.min (16)
@@ -1269,9 +1269,9 @@ feature {NONE} -- Implementation
 					l_int64 := l_int64 + h.to_integer_64 |<< ((i + (i & 1) |<< 1 - 2) * 4)
 					i := i + 1
 				end
-				($l_double).memory_copy ($l_int64, 8)
-				create {REAL_VALUE_I} l_value.make_double (l_double)
-			elseif a_external_type.is_real then
+				($l_real64).memory_copy ($l_int64, 8)
+				create {REAL_VALUE_I} l_value.make_real_64 (l_real64)
+			elseif a_external_type.is_real_32 then
 					-- Read hexadecimal representation in little-endian byte order
 				from
 					n := a_value.count.min (8)
@@ -1297,8 +1297,8 @@ feature {NONE} -- Implementation
 					l_int32 := l_int32 + h |<< ((i + (i & 1) |<< 1 - 2) * 4)
 					i := i + 1
 				end
-				($l_real).memory_copy ($l_int32, 4)
-				create {REAL_VALUE_I} l_value.make_real (l_real)
+				($l_real32).memory_copy ($l_int32, 4)
+				create {REAL_VALUE_I} l_value.make_real_32 (l_real32)
 			elseif a_external_type.is_integer then
 				if a_value.item (1) = '-' then
 					l_val := a_value.substring (2, a_value.count)

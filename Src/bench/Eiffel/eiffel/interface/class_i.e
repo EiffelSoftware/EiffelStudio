@@ -439,10 +439,10 @@ feature {COMPILER_EXPORTER} -- Compiled class
 				create {INTEGER_B} Result.make (Current, 32)
 			elseif Current = local_system.integer_64_class then
 				create {INTEGER_B} Result.make (Current, 64)
-			elseif Current = local_system.real_class then
-				create {REAL_B} Result.make (Current)
-			elseif Current = local_system.double_class then
-				create {DOUBLE_B} Result.make (Current)
+			elseif Current = local_system.real_32_class then
+				create {REAL_32_B} Result.make (Current)
+			elseif Current = local_system.real_64_class then
+				create {REAL_64_B} Result.make (Current)
 			elseif Current = local_system.pointer_class then
 				create {POINTER_B} Result.make (Current, False)
 			elseif Current = local_system.typed_pointer_class then

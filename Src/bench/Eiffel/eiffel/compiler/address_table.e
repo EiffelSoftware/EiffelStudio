@@ -172,11 +172,12 @@ end
 					-- Generate the extern declarations
 
 				buffer.clear_all
-				buffer.put_string ("#include %"eif_eiffel.h%"%N")
-				buffer.put_string ("#include %"eif_rout_obj.h%"%N")
+				buffer.put_string ("#include %"eif_eiffel.h%"%N%
+									%#include %"eif_rout_obj.h%"%N")
 
-				Extern_declarations.generate_header (buffer)
+				buffer.start_c_specific_code
 				Extern_declarations.generate (buffer)
+				buffer.end_c_specific_code
 				Extern_declarations.wipe_out
 
 				create address_file.make_open_write (final_file_name ("eaddress", Dot_h, 1))

@@ -11,25 +11,19 @@ deferred class
 	EV_TOOL_BAR_RADIO_BUTTON_I
 
 inherit
-	EV_TOOL_BAR_TOGGLE_BUTTON_I
-
-feature -- Status report
-
-	is_peer (peer: EV_TOOL_BAR_RADIO_BUTTON): BOOLEAN is
-			-- Is this item in same group as peer
-		require
-		deferred
+	EV_TOOL_BAR_SELECT_BUTTON_I
+		redefine
+			interface
 		end
 
-feature -- Status Setting
-
-	set_peer (peer: EV_TOOL_BAR_RADIO_BUTTON) is
-			-- Put in same group as peer
-		require
-		deferred
-		ensure
-			same_group: is_peer (peer)
+	EV_RADIO_PEER_I
+		redefine
+			interface
 		end
+
+feature {AV_ANY_I} -- Implementation
+
+	interface: EV_TOOL_BAR_RADIO_BUTTON
 
 end -- class EV_TOOL_BAR_RADIO_BUTTON_I
 
@@ -54,6 +48,10 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/04/04 17:12:35  rogers
+--| Now inherits EV_TOOL_BAR_SELECT_BUTTON_I, EV_RADIO_PEER_I.
+--| Removed is_peer and set_peer.
+--|
 --| Revision 1.5  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

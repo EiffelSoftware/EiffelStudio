@@ -150,6 +150,18 @@ feature -- Assertions
 	}
 
 /*
+feature -- Exceptions
+*/
+	public static Exception last_exception;
+		// Last raised exception in `rescue' clause.
+
+	public static void raise (Exception e)
+		// Throw an exception `e'.
+	{
+		throw e;
+	}
+	 
+/*
 feature {NONE} -- Implementation
 */
 	private static Hashtable assertion_levels;

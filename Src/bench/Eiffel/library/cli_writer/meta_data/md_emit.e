@@ -168,6 +168,22 @@ feature -- Definition: creation
 			result_valid: Result > 0
 		end
 
+	define_parameter (in_method_token: INTEGER; param_name: UNI_STRING;
+			param_pos: INTEGER; param_flags: INTEGER): INTEGER
+		is
+			-- Create a new parameter specification token for method `in_method_token'.
+		require
+			valid_in_method_token: in_method_token /= 0
+			param_name_not_void: param_name /= Void
+			valid_pos: param_pos >= 0
+		do
+			last_call_success := c_define_param (item, in_method_token, param_pos,
+				param_name.item, param_flags, 0, default_pointer, 0, $Result)
+		ensure
+			success: last_call_success = 0
+			result_valid: Result > 0
+		end
+
 	define_field (field_name: UNI_STRING; in_class_token: INTEGER;
 			field_flags: INTEGER; signature: MD_FIELD_SIGNATURE): INTEGER
 		is
@@ -192,11 +208,14 @@ feature -- Definition: creation
 		do
 			last_call_success := c_define_signature (item, signature.item.item,
 				signature.size, $Result)
+			if last_call_success = feature {MD_ERRORS}.meta_s_duplicate then
+				last_call_success := 0
+			end
 		ensure
 			success: last_call_success = 0
 			result_valid: Result > 0
 		end
-		
+
 	define_string (str: UNI_STRING): INTEGER is
 			-- Define a new token for `str'.
 		require
@@ -254,93 +273,18 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	c_query_assembly_emit (an_item: POINTER): POINTER is
-			-- Call `QueryInterface(IID_IMetaDataAssemblyEmit, (void **)&imda)' on `an_item'.
-		external
-			"C use %"cli_writer.h%""
-		end
-
-	c_set_module_props (an_item, name: POINTER): INTEGER is
-			-- Call `IMetaDataEmit->SetModuleProps'.
-		external
-			"C++ IMetaDataEmit signature (LPCWSTR): EIF_INTEGER use <cor.h>"
-		alias
-			"SetModuleProps"
-		end
-
-	c_save (an_item, file_name: POINTER; save_flags: INTEGER): INTEGER is
-			-- Call `IMetaDataEmit->Save'.
-		external
-			"C++ IMetaDataEmit signature (LPCWSTR, DWORD): EIF_INTEGER use <cor.h>"
-		alias
-			"Save"
-		end
-
-	c_save_to_memory (an_item, memory: POINTER; memory_length: INTEGER): INTEGER is
-			-- Call `IMetaDataEmit->SaveToMemory'.
-		external
-			"C++ IMetaDataEmit signature (void *, ULONG): EIF_INTEGER use <cor.h>"
-		alias
-			"SaveToMemory"
-		end
-
-	c_save_to_stream (an_item, stream: POINTER; save_flags: INTEGER): INTEGER is
-			-- Call `IMetaDataEmit->SaveToStream'.
-		external
-			"C++ IMetaDataEmit signature (IStream *, DWORD): EIF_INTEGER use <cor.h>"
-		alias
-			"SaveToStream"
-		end
-
-	c_get_save_size (an_item: POINTER; size_query: INTEGER; returned_size: POINTER): INTEGER is
-			-- Call `IMetaDataEmit->SaveToStream'.
-			-- If `size_query' equals 0, then accurate computation, if 1 quick computation.
-		external
-			"C++ IMetaDataEmit signature (CorSaveSize, DWORD *): EIF_INTEGER use <cor.h>"
-		alias
-			"GetSaveSize"
-		end
-
-	c_define_type_def (an_item, type_name: POINTER; type_flags: INTEGER; extend: INTEGER;
-			implements: POINTER; type_def: POINTER): INTEGER
+	c_define_custom_attribute (an_item: POINTER; owner, constructor: INTEGER;
+			blob: POINTER; blobl_len: INTEGER; ca_token: POINTER): INTEGER
 		is
-			-- Call `IMetaDataEmit->DefineTypeDef'.
-		external
-			"C++ IMetaDataEmit signature (LPCWSTR, DWORD, mdToken, mdToken *, mdTypeDef *): EIF_INTEGER use <cor.h>"
-		alias
-			"DefineTypeDef"
-		end
-
-	c_define_type_ref_by_name (an_item: POINTER; scope: INTEGER; name: POINTER; type_token: POINTER): INTEGER is
-			-- Call `IMetaDataEmit->DefineTypeRefByName'.
-		external
-			"C++ IMetaDataEmit signature (mdToken, LPCWSTR, mdTypeRef *): EIF_INTEGER use <cor.h>"
-		alias
-			"DefineTypeRefByName"
-		end
-
-	c_set_rva (an_item: POINTER; a_token, an_rva: INTEGER): INTEGER is
-			-- Call `IMetaDataEmit->SetRVA'.
-		external
-			"C++ IMetaDataEmit signature (mdToken, ULONG): EIF_INTEGER use <cor.h>"
-		alias
-			"SetRVA"
-		end
-
-	c_define_method (an_item: POINTER; type_token: INTEGER; name: POINTER;
-			flags: INTEGER; signature: POINTER; sig_length: INTEGER;
-			code_rva: INTEGER; impl_flags: INTEGER; method_token: POINTER): INTEGER
-		is
-			-- Call `IMetaDataEmit->DefineMethod'.
+			-- Call `IMetaDataEmit->DefineCustomAttribute'.
 		external
 			"[
 				C++ IMetaDataEmit signature
-					(mdTypeDef, LPCWSTR, DWORD, PCCOR_SIGNATURE, ULONG,
-					ULONG, DWORD, mdMethodDef *): EIF_INTEGER
+					(mdToken, mdToken, void *, ULONG, mdCustomAttribute *): EIF_INTEGER
 				use <cor.h>
 			]"
 		alias
-			"DefineMethod"
+			"DefineCustomAttribute"
 		end
 
 	c_define_field (an_item: POINTER; type_token: INTEGER; name: POINTER;
@@ -375,6 +319,39 @@ feature {NONE} -- Implementation
 			"DefineMemberRef"
 		end
 
+	c_define_method (an_item: POINTER; type_token: INTEGER; name: POINTER;
+			flags: INTEGER; signature: POINTER; sig_length: INTEGER;
+			code_rva: INTEGER; impl_flags: INTEGER; method_token: POINTER): INTEGER
+		is
+			-- Call `IMetaDataEmit->DefineMethod'.
+		external
+			"[
+				C++ IMetaDataEmit signature
+					(mdTypeDef, LPCWSTR, DWORD, PCCOR_SIGNATURE, ULONG,
+					ULONG, DWORD, mdMethodDef *): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"DefineMethod"
+		end
+
+	c_define_param (an_item: POINTER; meth_token: INTEGER; param_number: INTEGER;
+			name: POINTER; flags: INTEGER; default_value_type: INTEGER;
+			default_value_data: POINTER; default_value_data_length: INTEGER;
+			param_token: POINTER): INTEGER
+		is
+			-- Call `IMetaDataEmit->DefineParam'.
+		external
+			"[
+				C++ IMetaDataEmit signature
+					(mdMethodDef, ULONG, LPCWSTR, DWORD, DWORD,
+					void *, ULONG, mdParamDef *): EIF_INTEGER
+				use <cor.h>
+			]"
+		alias
+			"DefineParam"
+		end
+
 	c_define_signature (an_item: POINTER; signature: POINTER;
 			sig_length: INTEGER; sig_token: POINTER): INTEGER
 		is
@@ -402,19 +379,77 @@ feature {NONE} -- Implementation
 			"DefineUserString"
 		end
 
-	c_define_custom_attribute (an_item: POINTER; owner, constructor: INTEGER;
-			blob: POINTER; blobl_len: INTEGER; ca_token: POINTER): INTEGER
+	c_define_type_def (an_item, type_name: POINTER; type_flags: INTEGER; extend: INTEGER;
+			implements: POINTER; type_def: POINTER): INTEGER
 		is
-			-- Call `IMetaDataEmit->DefineCustomAttribute'.
+			-- Call `IMetaDataEmit->DefineTypeDef'.
 		external
-			"[
-				C++ IMetaDataEmit signature
-					(mdToken, mdToken, void *, ULONG, mdCustomAttribute *): EIF_INTEGER
-				use <cor.h>
-			]"
+			"C++ IMetaDataEmit signature (LPCWSTR, DWORD, mdToken, mdToken *, mdTypeDef *): EIF_INTEGER use <cor.h>"
 		alias
-			"DefineCustomAttribute"
+			"DefineTypeDef"
 		end
 
+	c_define_type_ref_by_name (an_item: POINTER; scope: INTEGER; name: POINTER; type_token: POINTER): INTEGER is
+			-- Call `IMetaDataEmit->DefineTypeRefByName'.
+		external
+			"C++ IMetaDataEmit signature (mdToken, LPCWSTR, mdTypeRef *): EIF_INTEGER use <cor.h>"
+		alias
+			"DefineTypeRefByName"
+		end
+
+	c_get_save_size (an_item: POINTER; size_query: INTEGER; returned_size: POINTER): INTEGER is
+			-- Call `IMetaDataEmit->SaveToStream'.
+			-- If `size_query' equals 0, then accurate computation, if 1 quick computation.
+		external
+			"C++ IMetaDataEmit signature (CorSaveSize, DWORD *): EIF_INTEGER use <cor.h>"
+		alias
+			"GetSaveSize"
+		end
+
+	c_query_assembly_emit (an_item: POINTER): POINTER is
+			-- Call `QueryInterface(IID_IMetaDataAssemblyEmit, (void **)&imda)' on `an_item'.
+		external
+			"C use %"cli_writer.h%""
+		end
+
+	c_save (an_item, file_name: POINTER; save_flags: INTEGER): INTEGER is
+			-- Call `IMetaDataEmit->Save'.
+		external
+			"C++ IMetaDataEmit signature (LPCWSTR, DWORD): EIF_INTEGER use <cor.h>"
+		alias
+			"Save"
+		end
+
+	c_save_to_memory (an_item, memory: POINTER; memory_length: INTEGER): INTEGER is
+			-- Call `IMetaDataEmit->SaveToMemory'.
+		external
+			"C++ IMetaDataEmit signature (void *, ULONG): EIF_INTEGER use <cor.h>"
+		alias
+			"SaveToMemory"
+		end
+
+	c_save_to_stream (an_item, stream: POINTER; save_flags: INTEGER): INTEGER is
+			-- Call `IMetaDataEmit->SaveToStream'.
+		external
+			"C++ IMetaDataEmit signature (IStream *, DWORD): EIF_INTEGER use <cor.h>"
+		alias
+			"SaveToStream"
+		end
+
+	c_set_module_props (an_item, name: POINTER): INTEGER is
+			-- Call `IMetaDataEmit->SetModuleProps'.
+		external
+			"C++ IMetaDataEmit signature (LPCWSTR): EIF_INTEGER use <cor.h>"
+		alias
+			"SetModuleProps"
+		end
+
+	c_set_rva (an_item: POINTER; a_token, an_rva: INTEGER): INTEGER is
+			-- Call `IMetaDataEmit->SetRVA'.
+		external
+			"C++ IMetaDataEmit signature (mdToken, ULONG): EIF_INTEGER use <cor.h>"
+		alias
+			"SetRVA"
+		end
 
 end -- class MD_EMIT

@@ -90,6 +90,47 @@ feature -- Access
 				end
 			end
 		end
+		
+	object_stone: GB_CLIPBOARD_OBJECT_STONE is
+				-- Execute `Current'.
+			local
+				contents: XM_ELEMENT
+				element_info: ELEMENT_INFORMATION
+				full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+				all_instances: ARRAYED_LIST [XM_ELEMENT]
+				data: XM_CHARACTER_DATA
+			do
+				check
+					clipboard_not_empty: contents_cell.item /= Void
+				end
+				create Result
+				
+					-- Now determine if the top level object is an instance of another
+					-- object and if so, set the associated object for `Result'.
+				contents ?= contents_cell.item.first
+				contents ?= child_element_by_name (contents, internal_properties_string)
+				full_information := get_unique_full_info (contents)
+				element_info := full_information @ (reference_id_string)
+				if element_info /= Void then
+					Result.set_associated_top_level_object (element_info.data.to_integer)
+				end
+				
+					-- Now return `all_contained_instances' of `Result' so that we can
+					-- correctly determine if a drop is permitted.
+				contents ?= contents_cell.item.first
+				all_instances := all_elements_by_name (contents, reference_id_string)
+				from
+					all_instances.start
+				until
+					all_instances.off
+				loop
+					data ?= all_instances.item.first
+					if data /= Void then
+						Result.all_contained_instances.put (data.content.to_integer, data.content.to_integer)
+					end
+					all_instances.forth
+				end
+			end
 
 	object_type: STRING
 			-- Type of `object' or Void if `is_empty'.
@@ -111,7 +152,7 @@ feature {GB_CLIPBOARD_COMMAND} -- Implementation
 			-- Used when you simply need a copy of the clipboard's contents for viewing.
 		do
 			if contents_cell.item /= Void then
-			
+				(create {GB_GLOBAL_STATUS}).block	
 				if system_status.is_in_debug_mode then
 					show_element (contents_cell.item, main_window)
 				end				
@@ -123,6 +164,7 @@ feature {GB_CLIPBOARD_COMMAND} -- Implementation
 
 				Result := new_object (contents_cell.item, True)
 					-- Modify id of `Result' so that it is not the same as that of `Current'.
+				(create {GB_GLOBAL_STATUS}).resume
 			end
 		end
 

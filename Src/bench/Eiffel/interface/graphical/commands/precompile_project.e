@@ -8,22 +8,26 @@ class PRECOMPILE_PROJECT
 inherit
 	UPDATE_PROJECT
 		rename
+			choose_template as execute_warner_help,
 			warner_ok as update_project_warner_ok
 		redefine
 			launch_c_compilation, 
 			confirm_and_compile,
+			execute_warner_help,
 			name, menu_name, accelerator,
 			perform_compilation, is_precompiling
 		end
 
 	UPDATE_PROJECT
 		rename
+			choose_template as execute_warner_help,
 			warner_ok as precompile_now
 		redefine
 			launch_c_compilation,
 			confirm_and_compile,
 			name, menu_name, accelerator,
 			perform_compilation,
+			execute_warner_help,
 			precompile_now, is_precompiling
 		select
 			precompile_now
@@ -44,6 +48,14 @@ feature -- Callbacks
 			end
 		end
 
+	execute_warner_help is
+			-- Process the call back of the help button,
+			-- which is in fact the (no C comp) button
+		do
+			start_c_compilation := False
+			compile (last_warner)
+		end
+
 feature {NONE} -- Implementation
 
 	confirm_and_compile (argument: ANY) is
@@ -56,7 +68,9 @@ feature {NONE} -- Implementation
 			then
 				warner (popup_parent).custom_call
 							(Current, Warning_messages.w_Precompile_warning,
-							Interface_names.b_Precompile_now, Void, Interface_names.b_Cancel)
+							Interface_names.b_Precompile_now,
+							Interface_names.b_Precompile_now_but_no_C,
+							Interface_names.b_Cancel)
 			elseif (argument /= Void and then argument = last_warner) then
 					precompile_now (argument)
 			elseif 

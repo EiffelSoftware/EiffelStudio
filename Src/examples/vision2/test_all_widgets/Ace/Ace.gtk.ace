@@ -6,13 +6,11 @@ root
 	example (ROOT_CLUSTER): "make"
 
 default
-
+	assertion (all);
 --	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision");
 
 -- If you are not using the precompiled version of EiffelVision, 
 -- uncomment the `external' clause below. 
-
-	assertion (all);
 
 cluster
 
@@ -26,8 +24,6 @@ cluster
 
         kernel(base):                   "$/kernel";
         support(base):                  "$/support";
---	routines(base):			"$/routines";
-
         access(structures):             "$/access";
         cursors(structures):            "$/cursors";
         cursor_tree(structures):        "$/cursor_tree";
@@ -90,10 +86,8 @@ cluster
 
 external
 
-include_path:
-
+	include_path:
  		"/boston/aitkaci/vision2/implementation/gtk/Clib `gtk-config --cflags`";
-
         object:
  		"/boston/aitkaci/vision2/implementation/gtk/Clib/gtk_eiffel.o",
 		"`gtk-config --libs`"

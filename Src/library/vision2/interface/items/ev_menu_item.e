@@ -11,7 +11,7 @@ class
 	EV_MENU_ITEM
 
 inherit
-	EV_ITEM
+	EV_SIMPLE_ITEM
 		redefine
 			implementation,
 			parent
@@ -50,7 +50,7 @@ feature -- Access
 	parent: EV_MENU_ITEM_HOLDER is
 			-- Parent of the current item.
 		do
-			Result ?= {EV_ITEM} Precursor
+			Result ?= {EV_SIMPLE_ITEM} Precursor
 		end
 
 feature -- Status report
@@ -90,16 +90,16 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_parent (par: EV_MENU_ITEM_HOLDER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		require
-			exists: not destroyed
-		do
-			implementation.set_parent (par)
-		ensure
-			parent_set: parent = par
-		end
+--	set_parent (par: EV_MENU_ITEM_HOLDER) is
+--			-- Make `par' the new parent of the widget.
+--			-- `par' can be Void then the parent is the screen.
+--		require
+--			exists: not destroyed
+--		do
+--			implementation.set_parent (par)
+--		ensure
+--			parent_set: parent = par
+--		end
 
 feature -- Assertion
 
@@ -118,6 +118,29 @@ feature -- Assertion
 			valid_grand_parent: grand_parent_is_option_button
 		do
 			Result := implementation.is_selected
+		end
+
+feature -- Event : command association
+
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is activated.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_activate_command (cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is activated.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_activate_commands			
 		end
 
 feature -- Implementation

@@ -42,24 +42,6 @@ feature {NONE} -- Initialization
 			set_parent (par)
 		end
 
---	make_with_pixmap (par: EV_MENU_ITEM_HOLDER; pix: EV_PIXMAP) is
---			-- Create an item with `par' as parent and `pix'
---			-- as pixmap.
---		do
---			!EV_CHECK_MENU_ITEM_IMP! implementation.make_with_pixmap (pix)
---			implementation.set_interface (Current)
---			set_parent (par)
---		end
-
---	make_with_all (par: EV_MENU_ITEM_HOLDER; txt: STRING; pix: EV_PIXMAP) is
---			-- Create an item with `par' as parent, `txt' as text
---			-- and `pix' as pixmap.
---		do
---			!EV_CHECK_MENU_ITEM_IMP! implementation.make_with_all (txt, pix)
---			implementation.set_interface (Current)
---			set_parent (par)
---		end
-
 feature -- Status report
 	
 	state: BOOLEAN is
@@ -91,6 +73,29 @@ feature -- Status setting
 			set_state (not state)
 		ensure
 			state_is_true: state = not old state
+		end
+
+feature -- Event : command association
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is unactivated.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_deactivate_command (cmd, arg)		
+		end
+
+feature -- Event -- removing command association
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is deactivated.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_deactivate_commands	
 		end
 
 feature -- Implementation

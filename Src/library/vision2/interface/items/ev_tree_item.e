@@ -13,7 +13,7 @@ class
 	EV_TREE_ITEM
 
 inherit
-	EV_ITEM
+	EV_SIMPLE_ITEM
 		redefine
 			implementation,
 			parent
@@ -52,7 +52,7 @@ feature -- Access
 	parent: EV_TREE_ITEM_HOLDER is
 			-- Parent of the current item.
 		do
-			Result ?= {EV_ITEM} Precursor
+			Result ?= {EV_SIMPLE_ITEM} Precursor
 		end
 
 feature -- Status setting
@@ -118,20 +118,40 @@ feature -- Status report
 
 feature -- Element change
 
-	set_parent (par: EV_TREE_ITEM_HOLDER) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-			-- Can be used only if the item has no children
-		require
-			exists: not destroyed
-			not_parent: not is_parent
-		do
-			implementation.set_parent (par)
-		ensure
-			parent_set: parent = par
-		end
+--	set_parent (par: EV_TREE_ITEM_HOLDER) is
+--			-- Make `par' the new parent of the widget.
+--			-- `par' can be Void then the parent is the screen.
+--			-- Can be used only if the item has no children
+--		require
+--			exists: not destroyed
+--			not_parent: not is_parent
+--		do
+--			implementation.set_parent (par)
+--		ensure
+--			parent_set: parent = par
+--		end
 
 feature -- Event : command association
+
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is activated.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_activate_command (cmd, arg)
+		end	
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the item is unactivated.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_deactivate_command (cmd, arg)		
+		end
 
 	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
@@ -143,7 +163,36 @@ feature -- Event : command association
 			implementation.add_subtree_command (cmd, arg)
 		end
 
+	add_right_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the user select the item with the right button
+			-- of the mouse.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_right_selection_command (cmd, arg)
+		end
+
 feature -- Event -- removing command association
+
+	remove_activate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is activated.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_activate_commands			
+		end	
+
+	remove_deactivate_commands is
+			-- Empty the list of commands to be executed when
+			-- the item is deactivated.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_deactivate_commands	
+		end
 
 	remove_subtree_commands is
 			-- Empty the list of commands to be executed when
@@ -152,6 +201,16 @@ feature -- Event -- removing command association
 			exists: not destroyed
 		do
 			implementation.remove_subtree_commands
+		end
+
+	remove_right_selection_commands is
+			-- Empty the list of commands to be executed when
+			-- the user select the item with the right button
+			-- of the mouse.
+		require
+			exists: not destroyed
+		do
+			implementation.remove_right_selection_commands
 		end
 
 feature {EV_TREE_ITEM_HOLDER, EV_TREE_ITEM_HOLDER_I} -- Implementation

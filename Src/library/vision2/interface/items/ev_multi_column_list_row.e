@@ -11,7 +11,15 @@ class
 	EV_MULTI_COLUMN_LIST_ROW
 
 inherit
-	EV_ANY
+--	EV_ANY
+--		redefine
+--			implementation
+--		end
+
+	EV_COMPOSED_ITEM
+		rename
+			count as columns,
+			set_count as set_columns
 		redefine
 			implementation
 		end
@@ -64,19 +72,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	parent: EV_MULTI_COLUMN_LIST is
-			-- List that container this row
-		do
-			Result := implementation.parent
-		end
+--	parent: EV_MULTI_COLUMN_LIST is
+--			-- List that container this row
+--		do
+--			Result := implementation.parent
+--		end
 
-	columns: INTEGER is
-			-- Number of columns in the row
-		require
-			exists: not destroyed
-		do
-			Result := implementation.columns
-		end
+--	columns: INTEGER is
+--			-- Number of columns in the row
+--		require
+--			exists: not destroyed
+--		do
+--			Result := implementation.columns
+--		end
 
 	index: INTEGER is
 			-- Index of the row in the list
@@ -87,22 +95,22 @@ feature -- Access
 			Result := implementation.index
 		end
 
-	text: LINKED_LIST [STRING] is
-			-- Return the text of the row
-		require
-			exists: not destroyed
-		do
-			Result := implementation.text
-		end
+--	text: LINKED_LIST [STRING] is
+--			-- Return the text of the row
+--		require
+--			exists: not destroyed
+--		do
+--			Result := implementation.text
+--		end
 
-	cell_text (column: INTEGER): STRING is
-			-- Return the text of the cell number `column' 
-		require
-			exists: not destroyed
-			valid_column: column >= 1 and column <= columns
-		do
-			Result := implementation.cell_text (column)
-		end
+--	cell_text (column: INTEGER): STRING is
+--			-- Return the text of the cell number `column' 
+--		require
+--			exists: not destroyed
+--			valid_column: column >= 1 and column <= columns
+--		do
+--			Result := implementation.cell_text (column)
+--		end
 
 feature -- Status report
 	
@@ -146,51 +154,51 @@ feature -- Status setting
 			implementation.toggle
 		end
 
-	set_columns (value: INTEGER) is
-			-- Set the number of columns of the row.
-			-- When there is a parent, the row has the
-			-- same number of column than it.
-		require
-			exists: not destroyed
-			no_parent: parent = Void
-			valid_value: value > 0
-		do
-			implementation.set_columns (value)
-		end
+--	set_columns (value: INTEGER) is
+--			-- Set the number of columns of the row.
+--			-- When there is a parent, the row has the
+--			-- same number of column than it.
+--		require
+--			exists: not destroyed
+--			no_parent: parent = Void
+--			valid_value: value > 0
+--		do
+--			implementation.set_columns (value)
+--		end
 
 feature -- Element Change
 
-	set_parent (par: EV_MULTI_COLUMN_LIST) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		require
-			exists: not destroyed
-			valid_size: par /= Void implies (columns = par.columns)
-		do
-			implementation.set_parent (par)
-		ensure
-			parent_set: parent = par
-		end
+--	set_parent (par: EV_MULTI_COLUMN_LIST) is
+--			-- Make `par' the new parent of the widget.
+--			-- `par' can be Void then the parent is the screen.
+--		require
+--			exists: not destroyed
+--			valid_size: par /= Void implies (columns = par.columns)
+--		do
+--			implementation.set_parent (par)
+--		ensure
+--			parent_set: parent = par
+--		end
 
-	set_cell_text (column: INTEGER; a_text: STRING) is
-			-- Make `text ' the new label of the `column'-th
-			-- cell of the row.
-		require
-			exists: not destroyed
-			valid_column: column >= 1 and column <= columns
-			valid_text: a_text /= Void
-		do
-			implementation.set_cell_text (column, a_text)
-		end
+--	set_cell_text (column: INTEGER; a_text: STRING) is
+--			-- Make `text ' the new label of the `column'-th
+--			-- cell of the row.
+--		require
+--			exists: not destroyed
+--			valid_column: column >= 1 and column <= columns
+--			valid_text: a_text /= Void
+--		do
+--			implementation.set_cell_text (column, a_text)
+--		end
 
-	set_text (a_text: ARRAY[STRING]) is
-		require
-			exists: not destroyed
-			valid_text: a_text /= Void
-			valid_text_length: a_text.count = columns
-		do
-			implementation.set_text (a_text)
-		end
+--	set_text (a_text: ARRAY[STRING]) is
+--		require
+--			exists: not destroyed
+--			valid_text: a_text /= Void
+--			valid_text_length: a_text.count = columns
+--		do
+--			implementation.set_text (a_text)
+--		end
 
 feature -- Event : command association
 

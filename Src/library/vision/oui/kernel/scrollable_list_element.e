@@ -14,6 +14,10 @@ feature -- Access
 		deferred
 		end
 
+invariant
+
+	value_not_void: value /= Void
+
 end -- class SCROLLABLE_LIST_ELEMENT
 
 

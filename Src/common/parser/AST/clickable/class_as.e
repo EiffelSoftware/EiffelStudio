@@ -162,11 +162,12 @@ feature -- formatting
 				ctxt.put_space
 			end;
 			ctxt.put_text_item (ti_Class_keyword);
-			ctxt.put_space;
 			if ctxt.is_short then
-				ctxt.put_text_item (ti_Interface_keyword);
-				ctxt.put_space
+				ctxt.put_space;
+				ctxt.put_text_item (ti_Interface_keyword)
 			end;
+			ctxt.indent_one_more;
+			ctxt.next_line;
 			ctxt.put_name_of_class;	
 			ctxt.put_text_item (ti_After_class_header);
 
@@ -180,6 +181,7 @@ feature -- formatting
 				ctxt.put_text_item (ti_R_bracket);
 				ctxt.put_text_item (ti_After_formal_generics)
 			end;
+			ctxt.indent_one_less;
 			ctxt.next_line;
 			ctxt.next_line;
 			if ctxt.is_clickable_format and obsolete_message /= Void then

@@ -21,15 +21,6 @@ MKDIR codedom
 CD codedom
 REM in delivery\codedom
 
-MKDIR manager
-CD manager
-REM in delivery\codedom\manager
-COPY ..\..\..\checkout\dotnet\codedom_provider\build_studio\ecdpman\EIFGEN\F_code\ecdpman.exe .
-MKDIR icons
-XCOPY ..\..\..\checkout\dotnet\codedom_provider\manager\icons icons\ /E
-
-CD ..
-REM in delivery\codedom
 MKDIR configs
 COPY ..\..\default.ecd configs\
 
@@ -40,6 +31,9 @@ COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomB
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomBase\EIFGEN\F_code\libEiffelSoftware.CodeDomBase.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomVision2\EIFGEN\F_code\EiffelSoftware.CodeDomVision2.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomVision2\EIFGEN\F_code\libEiffelSoftware.CodeDomVision2.dll bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\ecdpman\EIFGEN\F_code\ecdpman.exe bin\
+MKDIR bin\icons
+XCOPY ..\..\..\checkout\dotnet\codedom_provider\manager\icons bin\icons\ /E
 
 SET CODEDOM_BUILT=1
 

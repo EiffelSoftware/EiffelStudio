@@ -34,26 +34,26 @@ feature {NONE}
 			group_name: LABEL
 			text: TEXT_FIELD
 		do
-			!!group_hole.make (Current)
-			!!scrolled_w.make (Widget_names.scrolledwindow, Current)
-			!!icon_box.make (Widget_names.icon_box, scrolled_w)
+			!! group_hole.make (Current)
+			group_hole.set_background_color (background_color) 
+			!! scrolled_w.make (Widget_names.scrolledwindow, Current)
+			!! icon_box.make (Widget_names.icon_box, scrolled_w)
 			icon_box.set_column_layout
 			icon_box.set_preferred_count (5)
 
-			!!group_name.make (Widget_names.group_name, Current)
-
-			!!text.make (Widget_names.textfield, Current)
+			!! group_name.make (Widget_names.group_name, Current)
+			group_name.set_background_color (background_color)	
+			!! text.make (Widget_names.textfield, Current)
 
 			text.set_size (80, 20)
 			text.add_activate_action (group_hole, text)
 
-			set_fraction_base (2)
 			attach_top (scrolled_w, 1)
 			attach_left (scrolled_w, 1)
 			attach_right (scrolled_w, 1)
-			attach_top_widget (scrolled_w, group_hole, 5)
-			attach_top_widget (scrolled_w,group_name, 7)
-			attach_top_widget (scrolled_w, text, 5)
+			attach_top_widget (scrolled_w, group_hole, 15)
+			attach_top_widget (scrolled_w,group_name, 17)
+			attach_top_widget (scrolled_w, text, 15)
 
 			attach_left (group_hole, 0)
 			attach_left_widget (group_hole, group_name, 10)

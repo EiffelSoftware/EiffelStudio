@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 			combo.set_extended_height (400)
 			combo.set_editable (False)
 			create cmd.make (~changed_execute)
-			combo.add_selection_command (cmd, Void)
+			combo.add_select_command (cmd, Void)
 			create key.make
 
 			-- The NONE item

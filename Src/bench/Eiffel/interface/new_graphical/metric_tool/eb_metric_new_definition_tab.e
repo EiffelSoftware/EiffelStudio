@@ -171,7 +171,9 @@ feature -- Action
 				combobox.after
 			loop
 				if equal (combobox.item.text, text) then
+					combobox.select_actions.block
 					combobox.item.enable_select
+					combobox.select_actions.resume
 				end
 				combobox.forth
 			end

@@ -198,10 +198,10 @@ feature -- Status setting
 				if application.is_dotnet then
 					if application.imp_dotnet.know_about_kept_object (l_addr) then
 						l_dv := Application.imp_dotnet.kept_object_item (l_addr)					
-					end						
+					end
 					if l_dv /= Void then
 						current_dump_value := l_dv.dump_value
-					end					
+					end
 				else
 					create current_dump_value.make_object (l_addr, current_object.dynamic_class)				
 				end
@@ -240,6 +240,7 @@ feature -- Status setting
 		require
 			not is_destroyed
 		do
+			clean_dialog_data			
 			window.destroy
 			window := Void
 			parent.remove_dialog (Current)
@@ -251,6 +252,13 @@ feature -- Status setting
 	--| FIXME XR: Anyway they wouldn't be used at the moment.
 
 feature {NONE} -- Implementation
+
+	clean_dialog_data is
+			-- Clean current data, useless if dialog closed or destroyed
+		do
+			current_dump_value := Void
+			current_object := Void
+		end		
 
 	text: STRUCTURED_TEXT
 			-- Text that is displayed in the editor.
@@ -349,6 +357,7 @@ feature {NONE} -- Event handling
 	close_action is
 			-- Close dialog
 		do
+			clean_dialog_data			
 			window.destroy
 			window := Void
 			parent.remove_dialog (Current)
@@ -361,4 +370,3 @@ invariant
 	valid_stone: has_object implies is_stone_valid (current_object)
 
 end -- class EB_PRETTY_PRINT_DIALOG
-

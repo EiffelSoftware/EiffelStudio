@@ -182,10 +182,12 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 	associated_reference_type: CONSUMED_REFERENCED_TYPE is
 			-- Reference type of `Current'.
 		do
-			create Result.make (dotnet_name, 1)
-			-- FIXME IEK The assembly id of 1 has to be checked
+			if internal_associated_reference_type = Void then
+				create internal_associated_reference_type.make (dotnet_name, 1)
+				-- FIXME IEK The assembly id of 1 has to be checked
+			end
+			Result := internal_associated_reference_type
 		end
-		
 
 	consumed_constructors: ARRAYED_LIST [CONSUMED_ENTITY] is
 			-- All constructors implemented by type/
@@ -227,7 +229,7 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			until
 				i > procedures.count or else procedures.item (i) = Void
 			loop
-				if not procedures.item (i).is_property_or_event and functions.item (i).declared_type.is_equal (associated_reference_type) then
+				if not procedures.item (i).is_property_or_event and procedures.item (i).declared_type.is_equal (associated_reference_type) then
 					Result.extend (procedures @ i)
 				end
 				i := i + 1
@@ -238,7 +240,7 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			until
 				i > events.count or else events.item (i) = Void
 			loop
-				if functions.item (i).declared_type.is_equal (associated_reference_type) then
+				if events.item (i).declared_type.is_equal (associated_reference_type) then
 					Result.extend (events @ i)
 				end
 				i := i + 1
@@ -256,8 +258,28 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 			end
 		ensure
 			entities_not_void: Result /= Void
-		end		
+		end
 
+	ancestors: ARRAYED_LIST [CONSUMED_REFERENCED_TYPE] is
+			-- All interfaces and base classes implemented/inherited by `Current'.
+		local
+			a_cache_reader: CACHE_READER
+			i: INTEGER
+		do
+			create Result.make (0)
+			if interfaces /= Void then
+				Result.fill (interfaces)
+			end
+			if parent /= Void then
+				Result.extend (parent)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	internal_associated_reference_type: CONSUMED_REFERENCED_TYPE
+		-- Reference type of `Current'.
+			
 feature {NONE} -- Internal
 
 	internal_flags: INTEGER

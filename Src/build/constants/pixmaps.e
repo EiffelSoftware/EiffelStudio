@@ -180,6 +180,11 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("font.bm")
 		end;
 
+	Full_help_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("fullhelp.bm")
+		end;
+
 	General_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("general.bm")

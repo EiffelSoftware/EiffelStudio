@@ -27,7 +27,8 @@ inherit
 			set_editable_text_window, has_editable_text, read_only_text_window,
 			set_read_only_text_window,
 			update_boolean_resource,
-			update_integer_resource
+			update_integer_resource,
+			close, set_title
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -43,7 +44,8 @@ inherit
 			set_editable_text_window, has_editable_text, read_only_text_window,
 			set_read_only_text_window,
 			update_boolean_resource,
-			update_integer_resource
+			update_integer_resource,
+			close, set_title
 		select
 			reset, close_windows, set_stone
 		end;
@@ -146,6 +148,15 @@ feature -- Access
 		end;
 
 feature -- Status setting
+
+	set_title (s: STRING) is
+			-- Set `title' to `s'.
+		do
+			if is_a_shell then
+				eb_shell.set_title (s);
+				Project_tool.change_class_entry (Current)
+			end
+		end;
  
 	set_stone (s: like stone) is
 		local
@@ -274,6 +285,14 @@ feature -- Update
 		end;
 
 feature -- Window Settings
+
+	close is
+			-- Close Current
+		do
+			Project_tool.remove_class_entry (Current);
+			hide;
+			reset
+		end;
 
 	close_windows is
 			-- Close sub-windows.

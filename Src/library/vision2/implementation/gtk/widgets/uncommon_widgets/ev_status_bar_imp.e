@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Eiffel Vision status bar."
@@ -79,6 +80,9 @@ end -- class EV_STATUS_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/28 22:10:08  brendel
+--| Unreleased.
+--|
 --| Revision 1.18  2000/04/26 21:07:33  brendel
 --| Added redefinitoin of insert_i_th that sets the internal width of a
 --| status bar item when the user set it before it was parented.

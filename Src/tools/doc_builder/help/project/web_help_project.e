@@ -293,10 +293,16 @@ feature {NONE} -- File
 		once
 			create Result.make (3)
 			Result.extend ("icon_toc_file.gif")
+			Result.extend ("icon_toc_file_top.gif")
+			Result.extend ("icon_toc_file_bottom.gif")
 			Result.extend ("icon_toc_folder_closed.gif")
+			Result.extend ("icon_toc_folder_closed_top.gif")
+			Result.extend ("icon_toc_folder_open_top.gif")			
 			Result.extend ("icon_toc_folder_open.gif")
-			Result.extend ("10x10spacer.png")
-			Result.extend ("icon_page_loading.gif")		
+			Result.extend ("spacer.gif")
+			Result.extend ("spacer_line.gif")
+			Result.extend ("icon_page_loading.gif")
+			Result.extend ("sync_button.gif")
 		end
 
 	root_resource_files: ARRAYED_LIST [STRING] is

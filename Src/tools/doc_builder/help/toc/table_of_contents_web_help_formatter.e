@@ -10,7 +10,7 @@ inherit
 	TABLE_OF_CONTENTS_FORMATTER
 	
 create
-	make
+	make		
 
 feature -- Access
 
@@ -32,28 +32,53 @@ feature -- Processing
 			l_anchor,
 			l_icon: STRING
 			l_util: UTILITY_FUNCTIONS
-			l_has_child: BOOLEAN
+			l_has_child,
+			l_is_last_node,
+			l_parent_has_sibling: BOOLEAN
 		do
 			create l_util
 			l_has_child := a_node.has_child
 			
-			Result := ("<table border=0><tr><td><img src=%"")
-			Result.append ("10x10spacer.png")
-			Result.append ("%"></td><td>")
+			if a_node.has_parent then
+				l_is_last_node := a_node.parent.children.index = a_node.parent.children.count								
+				if a_node.parent.has_parent then					
+					l_parent_has_sibling := a_node.parent.parent.children.index < a_node.parent.parent.children.count									
+				end
+			end
+			
+			Result := "<table border=%"0%" cellpadding=%"0%" cellspacing=%"0%"><tr><td "
+			if l_parent_has_sibling then
+				Result.append ("background=%"spacer_line.gif%"")
+				Result.append ("><img src=%"spacer_line.gif%"></td><td>")
+			else				
+				Result.append ("><img src=%"spacer.gif%"></td><td>")
+			end
 
 				-- This is the toggle image
 			if a_node.icon /= Void then				
-					-- Note: a custom icon assumes exitence of corresponding gif for web display
+					-- Note: a custom icon assumes existence of corresponding gif for web display
 				l_icon := l_util.file_no_extension (a_node.icon) + ".gif"				
 			elseif l_has_child then
-				l_icon := "icon_toc_folder_closed.gif"
+				if not first_node_processed then					
+					l_icon := "icon_toc_folder_closed_top.gif"
+					first_node_processed := True					
+				else	
+					l_icon := "icon_toc_folder_closed.gif"	
+				end
 			else
-				l_icon := "icon_toc_file.gif"
+				if not first_node_processed then
+					l_icon := "icon_toc_file_top.gif"
+					first_node_processed := True
+				elseif l_is_last_node then
+					l_icon := "icon_toc_file_bottom.gif"
+				else										
+					l_icon := "icon_toc_file.gif"					
+				end
 			end
 			if l_has_child then
-				Result.append ("<a onClick=%"Toggle(this)%">")
+				Result.append ("<a onClick=%"toggle(this)%">")
 			end
-			Result.append ("<img src=%"" + l_icon + "%">")			
+			Result.append ("<img src=%"" + l_icon + "%" align=%"top%">")			
 			if l_has_child then
 				Result.append ("</a>")
 			end
@@ -101,5 +126,10 @@ feature -- Processing
 			
 			Result.append ("</div></td></tr></table>")
 		end		
+
+feature {NONE} -- Implmentation
+
+	first_node_processed: BOOLEAN
+			-- Has the very first tree node been processed?
 
 end -- class TABLE_OF_CONTENTS_WEB_HELP_FORMATTER

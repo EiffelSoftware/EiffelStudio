@@ -45,6 +45,15 @@ feature -- File
 				write_option_value ("Compiled file", Shared_constants.Help_constants.Compiled_file_tag, element, Result)
 				write_option_value ("Contents file", Shared_constants.Help_constants.Toc_file_tag, element, Result)
 				write_option_value ("Error log file", Shared_constants.Help_constants.Log_file_tag, element, Result)
+				Result.put_string ("Binary TOC=Yes")
+				Result.put_string ("Compatibility=1.1 or later")
+				Result.put_string ("Default Window=EDHC")
+				Result.put_string ("Default topic=index.html")
+				Result.put_string ("Display compile progress=No")
+				Result.put_string ("Full text search stop list file=stop_words.stp")
+				Result.put_string ("Full-text search=Yes")
+				Result.put_string ("Language=0x409 English (United States)")
+				Result.put_string ("Title=Eiffel Developer Help Center")
 				Result.close
 			end		
 		end

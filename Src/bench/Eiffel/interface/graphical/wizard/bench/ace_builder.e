@@ -11,7 +11,8 @@ inherit
 	WIZARD_ACTION;
 	EIFFEL_ENV;
 	PROJECT_CONTEXT;
-	WINDOWS
+	WINDOWS;
+	WINDOW_ATTRIBUTES
 
 creation
 	make
@@ -163,6 +164,7 @@ feature -- Graphical User Interface
 
 			dialog.set_next_label ("Create project");
 			dialog.set_next_sensitive;
+			set_composite_attributes (dialog)
 		end;
 
 feature -- Useless stuff

@@ -24,7 +24,6 @@ inherit
 			default_create
 		end
 
-	
 feature -- Access
 
 	ev_type: EV_WIDGET
@@ -84,7 +83,7 @@ feature -- Access
 			Result.disable_item_expand (label)
 			create horizontal_box
 			horizontal_box.set_padding_width (object_editor_padding_width)
-			create minimum_width_entry.make_without_label (Current, horizontal_box, minimum_width_string, gb_ev_widget_minimum_width_tooltip,
+			create minimum_width_entry.make (Current, horizontal_box, minimum_width_string, "", gb_ev_widget_minimum_width_tooltip,
 				agent set_minimum_width (?), agent valid_minimum_dimension (?))
 			create reset_width_button.make_with_text ("Reset")
 			reset_width_button.select_actions.extend (agent reset_width)
@@ -97,7 +96,7 @@ feature -- Access
 			Result.disable_item_expand (label)
 			create horizontal_box
 			horizontal_box.set_padding_width (object_editor_padding_width)
-			create minimum_height_entry.make_without_label (Current, horizontal_box, minimum_height_string, gb_ev_widget_minimum_height_tooltip,
+			create minimum_height_entry.make (Current, horizontal_box, minimum_height_string, "", gb_ev_widget_minimum_height_tooltip,
 				agent set_minimum_height (?), agent valid_minimum_dimension (?))
 			create reset_height_button.make_with_text ("Reset")
 			reset_height_button.select_actions.extend (agent reset_height)
@@ -198,6 +197,7 @@ feature {NONE} -- Implementation
 			actual_reset_height (object)
 			for_all_instance_referers (object, agent actual_reset_height)
 				-- Reset the object referenced by `Current'
+			minimum_width_entry.update_constant_display (first.height.out)
 			parent_editor.set_object (object_handler.object_from_id (original_id))
 				-- Update `parent_editor' to reflect the change.
 		end

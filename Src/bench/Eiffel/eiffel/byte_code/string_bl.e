@@ -84,11 +84,13 @@ feature
 		do
 				-- RTMS_EX is the macro used to create Eiffel strings from C ones
 			buf := buffer
-			buf.putstring ("RTMS_EX(%"")
-			buf.escape_string (buffer,value)
+			buf.putstring ("RTMS_EX_H(%"")
+			buf.escape_string (buffer, value)
 			buf.putchar('"')
 			buf.putchar(',')
 			buf.putint(value.count)
+			buf.putchar(',')
+			buf.putint (value.hash_code)
 			buf.putchar(')')
 		end
 

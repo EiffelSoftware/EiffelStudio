@@ -415,6 +415,12 @@ feature {NONE} -- Keywords
 			!!Result.make ("once")
 		end;
 
+	ti_Precursor_keyword: KEYWORD_TEXT is
+			-- "precursor" keyword
+		once
+			!!Result.make ("precursor")
+		end;
+
 	ti_Prefix_keyword: KEYWORD_TEXT is
 			-- "prefix" keyword
 		once

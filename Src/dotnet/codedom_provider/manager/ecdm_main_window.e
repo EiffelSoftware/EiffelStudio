@@ -115,6 +115,9 @@ feature {NONE} -- Initialization
 				if l_config.precompile /= Void then
 					precompile_combo.extend (create {EV_LIST_ITEM}.make_with_text (l_config.precompile))
 				end
+				if l_config.metadata_cache /= Void then
+					metadata_cache_combo.extend (create {EV_LIST_ITEM}.make_with_text (l_config.metadata_cache))
+				end
 				l_configs.forth
 			end
 			configurations_list.first.enable_select
@@ -127,6 +130,9 @@ feature {NONE} -- Initialization
 			fill_combo (precompile_combo, saved_precompiled_paths)
 			fill_combo (metadata_cache_combo, saved_metadata_cache_paths)
 			show_actions.extend (agent on_column_resize (1))
+			precompile_box.hide -- No precompiled library in this version
+			precompile_label.hide
+			set_clean
 		end
 
 feature -- Access
@@ -392,7 +398,7 @@ feature {NONE} -- Events
 		do
 			if active_configuration /= Void then
 				l_precomp := precompile_combo.text
-				if not l_precomp.is_empty then
+				if not (l_precomp.is_empty or l_precomp.is_equal ("(none)")) then
 					if active_configuration.precompile = Void or else not l_precomp.is_equal (active_configuration.precompile) then
 						active_configuration.set_precompile (l_precomp)
 						set_dirty
@@ -410,6 +416,7 @@ feature {NONE} -- Events
 		local
 			l_dialog: EV_FILE_OPEN_DIALOG
 			l_path: STRING
+			l_index: INTEGER
 		do
 			if active_configuration /= Void then
 				create l_dialog.make_with_title ("Find Precompiled Library")
@@ -417,6 +424,10 @@ feature {NONE} -- Events
 				l_dialog.show_modal_to_window (Current)
 				l_path := l_dialog.file_name
 				if not l_path.is_empty then
+					l_index := l_path.last_index_of ((create {OPERATING_ENVIRONMENT}).Directory_separator, l_path.count)
+					if l_index > 0 then
+						l_path.keep_head (l_index - 1)
+					end
 					precompile_combo.extend (create {EV_LIST_ITEM}.make_with_text (l_path))
 					precompile_combo.set_text (l_path)
 					save_precompiled_paths (precompile_combo.strings)
@@ -431,7 +442,7 @@ feature {NONE} -- Events
 		do
 			if active_configuration /= Void then
 				l_metadata_cache := metadata_cache_combo.text
-				if not l_metadata_cache.is_empty then
+				if not (l_metadata_cache.is_empty or l_metadata_cache.is_equal ("(none)")) then
 					if active_configuration.metadata_cache = Void or else not l_metadata_cache.is_equal (active_configuration.metadata_cache) then
 						active_configuration.set_metadata_cache (l_metadata_cache)
 						set_dirty
@@ -532,8 +543,15 @@ feature {NONE} -- Events
 	on_about is
 			-- Called by `select_actions' of `about_menu_item'.
 			-- Display about dialog box.
+		local
+			l_retried: BOOLEAN
 		do
-			(create {ECDM_ABOUT_DIALOG}).show_modal_to_window (Current)
+			if not l_retried then
+				(create {ECDM_ABOUT_DIALOG}).show_modal_to_window (Current)
+			end
+		rescue
+			l_retried := True
+			retry
 		end
 	
 	on_close is
@@ -549,7 +567,7 @@ feature {NONE} -- Events
 				save_y_pos (y_position)
 				save_show_text (show_text_menu_item.is_selected)
 				save_show_tooltip (show_tooltips_menu_item.is_selected)
-				(create {EV_APPLICATION}).destroy
+				(create {EV_ENVIRONMENT}).application.destroy
 			end
 		end
 
@@ -705,6 +723,11 @@ feature {NONE} -- Implementation
 				else
 					precompile_combo.remove_text
 				end
+				if l_config.metadata_cache /= Void then
+					metadata_cache_combo.set_text (l_config.metadata_cache)
+				else
+					metadata_cache_combo.remove_text
+				end
 				if not compiler_frame.is_show_requested then
 					compiler_frame.show
 				end
@@ -790,6 +813,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_combo: a_combo /= Void
 		do
+			a_combo.extend (create {EV_LIST_ITEM}.make_with_text ("(none)"))
 			if a_list /= Void then
 				from
 					a_list.start

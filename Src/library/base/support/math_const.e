@@ -2,9 +2,11 @@ indexing
 
 	description:
 		"Basic mathematical constants. %
-		%This class may be used as ancestor by classes needing its facilities.";
-
+		%This class may be used as ancestor by classes needing its %
+		%facilities."
 	status: "See notice at end of class"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MATH_CONST

@@ -952,7 +952,7 @@ feature -- Input
 			if analyzer = Void then
 				!! analyzer.make
 			end;
-			!! retrieved_file.make_binary_open_read (file_name);
+			!! retrieved_file.make_open_binary_read (file_name);
 			analyzer ?= analyzer.retrieved (retrieved_file);
 			retrieved_file.close
 		end;
@@ -969,7 +969,7 @@ feature -- Output
 			if analyzer = Void then
 				!! analyzer.make
 			end;
-			!! store_file.make_binary_open_write (file_name);
+			!! store_file.make_open_binary_write (file_name);
 			analyzer.basic_store (store_file);
 			store_file.close
 		end;

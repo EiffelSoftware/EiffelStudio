@@ -46,7 +46,6 @@ feature
 			add_ok_action (Current, Void);
 			add_apply_action (Current, apply_it);
 			add_cancel_action (Current, cancel_it);
-			set_width (200);
 			run := cmd;
 		end;
 	

@@ -21,6 +21,7 @@ feature -- Access
 			-- with all containers visible.
 		once
 			Create Result
+			Result.set_size (400, 300)
 		end
 		
 	type_selector: GB_TYPE_SELECTOR is

@@ -1337,21 +1337,26 @@ void odbc_disconnect ()
       odbc_terminate_order (count);
     }
   rc = SQLDisconnect(hdbc);
+
   // Added for multiple connection
-  if (number_connection>1) {
-	  number_connection=number_connection-1;}
-  else {
-  if (rc)
-	odbc_error_handler(NULL,14);
-  //rc = SQLFreeConnect(hdbc);
-	rc = SQLFreeHandle (SQL_HANDLE_DBC, hdbc);
-  if (rc)
-	odbc_error_handler(NULL,15);
-  //rc = SQLFreeEnv(henv);
-	rc = SQLFreeHandle (SQL_HANDLE_ENV, henv);
-    if (rc)
-	  odbc_error_handler(NULL,16);
-  odbc_tranNumber = 0;}
+  number_connection=number_connection-1;
+  // odbc_tranNumber was originally set to 0 only if number_connection <= 1:
+  // this is not consistent with EiffelStore  so all transactions are ended
+  // when disconnecting. Anyway, odbc_tranNumber <= 1.
+  // Cedric
+  odbc_tranNumber = 0;
+  if (number_connection <= 1) {
+	  if (rc)
+		odbc_error_handler(NULL,14);
+	  //rc = SQLFreeConnect(hdbc);
+	  rc = SQLFreeHandle (SQL_HANDLE_DBC, hdbc);
+	  if (rc)
+		odbc_error_handler(NULL,15);
+	  //rc = SQLFreeEnv(henv);
+	  rc = SQLFreeHandle (SQL_HANDLE_ENV, henv);
+	  if (rc)
+		odbc_error_handler(NULL,16);
+	  }
 }
 
 /*****************************************************************/

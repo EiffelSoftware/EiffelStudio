@@ -551,7 +551,7 @@ feature {NONE} -- Initialization
 			generation_combo.disable_edit
 
 			create dotnet_name.make_from_string (Eiffel_installation_dir_name)
-			dotnet_name.set_file_name ("dotnet")
+			dotnet_name.set_file_name ("library.net")
 			create dotnet_file.make (dotnet_name)
 			if not dotnet_file.exists then
 				generation_combo.disable_sensitive

@@ -77,7 +77,7 @@ feature -- Event - command association
 			exists: not destroyed
 			valid_command: cmd /= Void
 		do
-			implementation.add_expose_command (cmd, arg)
+			implementation.add_paint_command (cmd, arg)
 		end
 
 feature -- Event - command removal
@@ -97,7 +97,7 @@ feature -- Event - command removal
 		require
 			exists: not destroyed
 		do
-			implementation.remove_expose_commands
+			implementation.remove_paint_commands
 		end
 
 feature -- Implementation

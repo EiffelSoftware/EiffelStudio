@@ -11,6 +11,7 @@
 #include <windows.h>
 
 #include "eif_argcargv.h"
+#include "eif_econsole.h"
 #include "eif_lmalloc.h"
 #include "eif_except.h"		/* For `eraise' */
 
@@ -19,11 +20,11 @@
 EIF_CLEANUP eif_fn_table [EIF_CLEANUP_TABLE_SIZE];
 int eif_fn_count = 0;
 
-HANDLE ghInstance;
-HINSTANCE eif_hInstance;
-HINSTANCE eif_hPrevInstance;
-LPSTR eif_lpCmdLine;
-int eif_nCmdShow;
+RT_LNK HANDLE ghInstance;
+RT_LNK HINSTANCE eif_hInstance;
+RT_LNK HINSTANCE eif_hPrevInstance;
+RT_LNK LPSTR eif_lpCmdLine;
+RT_LNK int eif_nCmdShow;
 
 static char *temp = NULL;
 rt_private void shword(char *cmd, int *argc, char ***argvp);
@@ -48,7 +49,7 @@ rt_public void get_argcargv (int *argc, char ***argv)
 	shword (temp, argc, argv);
 }
 
-rt_public void free_argv(char argc, char ***argv)
+rt_public void free_argv(int argc, char ***argv)
 {
 	eif_free((*argv)[0]);
 	eif_free(*argv);

@@ -24,6 +24,64 @@ feature -- Access
 		deferred
 		end;
 
+	retrieved: ANY is
+			-- Retrieved object structure
+			-- To access resulting object under correct type,
+			-- use assignment attempt.
+			-- Will raise an exception (code `Retrieve_exception')
+			-- if content is not a stored Eiffel structure.
+		require
+			exists: exists;
+			is_open_read: is_open_read
+			support_storable: support_storable
+		deferred
+		ensure
+			Result_exists: Result /= Void
+		end
+
+feature -- Element change
+
+	basic_store (object: ANY) is
+			-- Produce an external representation of the
+			-- entire object structure reachable from `object'.
+			-- Retrievable within current system only.
+		require
+			object_not_void: object /= Void;
+			exists: exists;
+			is_open_write: is_open_write
+			support_storable: support_storable
+		deferred
+		end;
+ 
+	general_store (object: ANY) is
+			-- Produce an external representation of the
+			-- entire object structure reachable from `object'.
+			-- Retrievable from other systems for same platform
+			-- (machine architecture).
+			--| This feature may use a visible name of a class written
+			--| in the `visible' clause of the Ace file. This makes it
+			--| possible to overcome class name clashes.
+		require
+			object_not_void: object /= Void;
+			exists: exists;
+			is_open_write: is_open_write
+			support_storable: support_storable
+		deferred
+		end
+ 
+	independent_store (object: ANY) is
+			-- Produce an external representation of the
+			-- entire object structure reachable from `object'.
+			-- Retrievable from other systems for the same or other
+			-- platform (machine architecture).
+		require
+			object_not_void: object /= Void;
+			exists: exists;
+			is_open_write: is_open_write
+			support_storable: support_storable
+		deferred
+		end
+ 
 feature -- Status report
 
 	handle: INTEGER is
@@ -109,6 +167,11 @@ feature -- Status report
 
 	is_closed: BOOLEAN is
 			-- Is the I/O medium open
+		deferred
+		end;
+
+	support_storable: BOOLEAN is
+			-- Can medium be used to store an Eiffel object?
 		deferred
 		end;
 
@@ -266,16 +329,6 @@ feature -- Obsolete
 		do
 			Result := last_double
 		end;
-
-feature {STORABLE} -- Implementation 
-
-	storage_type: CHARACTER is
-			-- Type for storage mechanism
-			-- F for File, S for Socket
-		deferred
-		ensure
-			valid_result: Result /= '%U'
-		end
 
 end -- class IO_MEDIUM
 

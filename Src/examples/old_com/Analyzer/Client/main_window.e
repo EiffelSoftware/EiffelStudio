@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 		do
 			if co_initialize = S_ok then
 				!! analyzer
-				analyzer.create
+				analyzer.initialize (Clsctx_local_server)
 				analyzer.show
 				make_top (Title)
 				set_menu (main_menu)

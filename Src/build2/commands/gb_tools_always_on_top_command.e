@@ -79,11 +79,26 @@ feature -- Execution
 	update_tool (tool_window: EV_DIALOG) is
 			-- Toggle display status of `tool_window' between
 			-- regular and display relative to `main_window'.
+		local
+			iconable_tool: GB_ICONABLE_TOOL
 		do
+			iconable_tool ?= tool_window
+				-- All iconable tools must be windows.
+			check
+				iconable_tool /= Void
+			end
+
+				-- Note that we must also update the icons on the windows,
+				-- dependent on whether they are relative of not.
+				-- This is because on Windows, if we have multiple windows
+				-- show relative, they all share the same icon. Therefore,
+				-- we need to set it to an appropriate one.
 			if tool_window.is_show_requested and not tool_window.is_relative then
 				tool_window.show_relative_to_window (main_window)
+				iconable_tool.set_default_icon
 			elseif tool_window.is_show_requested and tool_window.is_relative then
 				tool_window.show
+				iconable_tool.restore_icon
 			end
 		end
 

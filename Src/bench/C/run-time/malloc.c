@@ -343,8 +343,10 @@ rt_private int32 compute_hlist_index (int32 size);
 rt_shared EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_flag);					/* General free-list allocation */
 #ifdef EIF_THREADS
 rt_private EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, int gc_flag);					/* General free-list allocation */
+rt_private void eif_rt_internal_xfree(EIF_REFERENCE);
 #else
 #define eif_rt_internal_xmalloc eif_rt_xmalloc
+#define eif_rt_internal_xfree eif_rt_xfree
 #endif
 rt_shared void rel_core(void);					/* Release core to kernel */
 rt_private union overhead *add_core(register unsigned int nbytes, int type);		/* Get more core from kernel */
@@ -536,8 +538,8 @@ rt_public EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex = NULL;
 #define EIF_GC_GSZ_LOCK \
 	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_GC_GSZ); \
 	EIF_LW_MUTEX_LOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex"); \
-	RTGC; \
-	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING);
+	GC_THREAD_PROTECT(gc_thread_status = EIF_THREAD_RUNNING); \
+	RTGC; 
 #define EIF_GC_GSZ_UNLOCK EIF_LW_MUTEX_UNLOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex")
 #endif
 
@@ -2248,7 +2250,30 @@ rt_private EIF_REFERENCE set_up_chunk(register union overhead *selected, unsigne
 }
 #endif /* ISE_GC */
 
+#ifdef EIF_THREADS
 rt_public void eif_rt_xfree(register EIF_REFERENCE ptr)
+{
+#ifdef ISE_GC
+	RT_GET_CONTEXT
+	if (gc_thread_status == EIF_THREAD_GC_RUNNING) {
+			/* Allocation is done from the thread that is collecting,
+			 * therefore we do not need to perform a synchronization again
+			 */
+		eif_rt_internal_xfree (ptr);
+	} else {
+		GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
+		eif_rt_internal_xfree (ptr);
+		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
+	}
+#else
+	free (ptr);
+#endif
+}
+
+rt_private void eif_rt_internal_xfree(register EIF_REFERENCE ptr)
+#else
+rt_public void eif_rt_internal_xfree(register EIF_REFERENCE ptr)
+#endif
 {
 	/* Frees the memory block which starts at 'ptr'. This has
 	 * to be a pointer returned by malloc, otherwise impredictable

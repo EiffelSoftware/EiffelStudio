@@ -21,7 +21,7 @@ creation
 
 feature {NONE}
 
-	init_toolkit: MS_WINDOWS is
+	init_toolkit: EBENCH_MS_WINDOWS is
 		once
 			!!Result.make ("ebench")
 		end;

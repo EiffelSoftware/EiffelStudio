@@ -271,6 +271,17 @@ feature -- Element change
 			implementation.clear_items
 		end
 
+feature -- Basic operation
+
+	find_item_by_data (data: ANY): EV_MULTI_COLUMN_LIST_ROW is
+			-- Find a child with data equal to `data'.
+		require
+			exists: not destroyed
+			valid_data: data /= Void
+		do
+			Result := implementation.find_item_by_data (data)
+		end
+
 feature -- Event : command association
 
 	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	

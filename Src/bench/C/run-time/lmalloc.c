@@ -149,6 +149,7 @@ rt_private int lm_put (void *ptr, char *file, int line) {
 
 	ne->ptr = ptr;
 	strncpy (ne->file, file, EIF_FSZ);
+	ne->file [EIF_FSZ - 1] = '\0';
 	ne->line = line;
 	ne->next = *lm;
 	*lm = ne;
@@ -198,6 +199,9 @@ rt_private int lm_remove (void *ptr) {
 	while (tmp)	{
 		if (tmp->ptr == ptr) {
 			cur->next = tmp->next;
+#ifdef LMALLOC_DEBUG
+			fprintf (stderr, "(allocated at %s:%d) ", tmp->file, tmp->line);
+#endif
 			free (tmp);
 			EIF_LM_UNLOCK
 			return 0;
@@ -300,7 +304,7 @@ rt_public Malloc_t eiffel_malloc (register unsigned int nbytes)
 
 	ret = (Malloc_t) malloc (nbytes);
 	if (lm_put (ret, file, line))	
-		fprintf (stderr, "*** Warning: cannot lm malloc %d bytes\n", nbytes);
+		fprintf (stderr, "*** Warning: cannot lm malloc %d bytes at %s:%d\n", nbytes, file, line);
 #ifdef LMALLOC_DEBUG
 #ifdef EIF_THREADS
 	fprintf (stderr, "EIF_MALLOC: 0x%lx\t(%d bytes) in thread %lx\n", (unsigned long) ret, nbytes, EIF_THR_SELF);	
@@ -324,7 +328,7 @@ rt_public Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize)
 	Malloc_t ret;
 	ret = (Malloc_t) calloc (nelem, elsize);
 	if (lm_put (ret, file, line))	
-		fprintf (stderr, "*** Warning: cannot lm calloc %d * %d \n", (unsigned int) nelem, (unsigned int) elsize);
+		fprintf (stderr, "*** Warning: cannot lm calloc %d * %d at %s:%d\n", (unsigned int) nelem, (unsigned int) elsize, file, line);
 #ifdef LMALLOC_DEBUG
 #ifdef EIF_THREADS
 	fprintf (stderr, "EIF_CALLOC: 0x%lx\t(%d elts * %d bytes = %d bytes) in thread %lx\n", (unsigned long) ret, nelem, elsize, nelem*elsize, EIF_THR_SELF);	
@@ -350,9 +354,9 @@ rt_public Malloc_t eiffel_realloc (register void *ptr, register unsigned int nby
 	ret = (Malloc_t) realloc (ptr, nbytes);
 	if (ptr != ret) {
 	if (lm_remove (ptr))	
-		fprintf (stderr, "*** Warning: cannot lm remove-realloc 0x%x\n", (size_t) ptr);
+		fprintf (stderr, "*** Warning: cannot lm remove-realloc 0x%x while reallocating at %s:%d\n", (size_t) ptr, file, line);
 	if (lm_put (ret, file, line))	
-		fprintf (stderr, "*** Warning: cannot lm realloc 0x%x with %d bytes\n", (size_t) ptr, nbytes);
+		fprintf (stderr, "*** Warning: cannot lm realloc 0x%x with %d bytes while reallocating at %s:%d\n", (size_t) ptr, nbytes, file, line);
 	}
 #ifdef LMALLOC_DEBUG
 #ifdef EIF_THREADS
@@ -368,7 +372,7 @@ rt_public Malloc_t eiffel_realloc (register void *ptr, register unsigned int nby
 }
 
 #if defined LMALLOC_CHECK || defined LMALLOC_DEBUG
-void eiffel_free(register void *ptr, char *date, int line)
+void eiffel_free(register void *ptr, char *file, int line)
 #else
 void eiffel_free(register void *ptr)
 #endif
@@ -376,7 +380,7 @@ void eiffel_free(register void *ptr)
 #ifdef LMALLOC_CHECK
 	free (ptr);
 	if (lm_remove (ptr))	
-		fprintf (stderr, "*** Warning: cannot lm free 0x%lx\n", (unsigned long) ptr);
+		fprintf (stderr, "*** Warning: cannot lm free 0x%lx at %s:%d\n", (unsigned long) ptr, file, line);
 #ifdef LMALLOC_DEBUG
 #ifdef EIF_THREADS
 	fprintf (stderr, "EIF_FREE: 0x%lx in thread %lx\n", (unsigned long) ptr, EIF_THR_SELF);	

@@ -94,7 +94,6 @@ feature
 				cecil_basket.extend ("console.o"); cecil_basket.finish
 				cecil_basket.extend ("wpath_name.o"); cecil_basket.finish
 				cecil_basket.extend ("wobject_id.o"); cecil_basket.finish
-				cecil_basket.extend ("wdle.o"); cecil_basket.finish
 				cecil_basket.extend ("weif_threads.o"); cecil_basket.finish
 				cecil_basket.extend ("eif_rw_lock.o"); cecil_basket.finish
 				cecil_basket.extend ("wgen_conf.o"); cecil_basket.finish
@@ -149,7 +148,6 @@ feature
 				cecil_basket.extend ("MTconsole.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwpath_name.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwobject_id.o"); cecil_basket.finish
-				cecil_basket.extend ("MTwdle.o"); cecil_basket.finish
 				cecil_basket.extend ("MTweif_threads.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_rw_lock.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwgen_conf.o"); cecil_basket.finish

@@ -12,7 +12,6 @@ inherit
 
 	FILTERABLE
 		rename
-			init_from_tool as make,
 			create_structured_text as clickable_context_text
 		redefine
 			dark_symbol, tool, format, display_temp_header,

@@ -147,7 +147,6 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			valid_caret_position: valid_caret_position (a_caret_position)
-			is_editable: is_editable
 		do
 			implementation.set_caret_position (a_caret_position)
 		ensure

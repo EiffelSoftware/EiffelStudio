@@ -113,7 +113,8 @@ inherit
 			set_y_position,
 			set_x_position,
 			show,
-			hide
+			hide,
+			class_requires_icon
 		end
 
 	WEL_CONSTANTS
@@ -1109,6 +1110,14 @@ feature {EV_PND_TRANSPORTER_IMP, EV_WIDGET_IMP}
 			-- `Result' is border width of `Current'.
 		do
 			Result := window_border_width
+		end
+		
+	class_requires_icon: BOOLEAN is
+			-- Does `Current' require an icon to be registered?
+			-- If `True' `register_class' assigns a class icon, otherwise
+			-- no icon is assigned.
+		do
+			Result := False
 		end
 
 feature {NONE} -- Features that should be directly implemented by externals

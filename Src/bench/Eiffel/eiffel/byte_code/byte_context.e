@@ -35,12 +35,16 @@ feature -- Initialization
 
 feature -- Access
 
-	once_index : INTEGER
+	once_index: INTEGER
 			-- Index of current once routine
 			
 	global_onces: ARRAYED_LIST [INTEGER]
 			-- List of body indexes which represent all global onces for current
 			-- generated type
+
+	is_once_twofold: BOOLEAN
+			-- Is once routine generated in two functions to avoid
+			-- overhead caused by exception interception?
 
 	workbench_mode: BOOLEAN
 			-- Mode of generation: if set to True, generation of C code
@@ -669,6 +673,18 @@ feature -- Access
 		do
 			class_type := t
 			current_type := t.type
+				-- Decide whether once routines should be generated as two functions
+				-- to avoid performance penalty caused by inefficient code generated
+				-- for functions with exception handling
+			if
+				workbench_mode or else system.has_multithreaded or else
+				assertion_level.check_precond or else
+				assertion_level.check_invariant or else assertion_level.check_postcond
+			then
+				is_once_twofold := False
+			else
+				is_once_twofold := True
+			end
 		end
 
 	set_current_feature (f: FEATURE_I) is
@@ -1306,9 +1322,13 @@ feature -- Access
 			vars: INTEGER
 			buf: GENERATION_BUFFER
 		do
+			buf := buffer
+			if byte_code.rescue_clause /= Void then
+				buf.put_string ("RTEOK;")
+				buf.put_new_line
+			end
 			vars := ref_var_used
 			if vars > 0 then
-				buf := buffer
 				if byte_code.rescue_clause /= Void then
 					buf.put_string ("RTXE;")
 					buf.put_new_line

@@ -40,7 +40,7 @@ feature
 			--  Create one of each Vision widget in a notebook.
 		local
 			box: EV_BOX
-			hb: EV_HORIZONTAL_BOX
+			notebook: EV_NOTEBOOK
 			scroll: EV_SCROLLABLE_AREA
 			menu_bar: EV_MENU_BAR
 			object_menu: EV_MENU
@@ -54,15 +54,21 @@ feature
 			create object_menu.make_with_text ("Other objects")
 			menu_bar.extend (object_menu)
 			create {EV_VERTICAL_BOX} box
-			create hb
-			hb.extend (non_widgets_frame)
-			hb.disable_item_expand (non_widgets_frame)
 			first_window.extend (box)
-			box.extend (hb)
+			create notebook
+
 			create scroll
 			scroll.set_minimum_size (700, 500)
-			hb.extend (scroll)
+			notebook.extend (scroll)
+			notebook.set_item_text (scroll, "Widgets")
 			scroll.extend (widgets_frame)
+
+			create scroll
+			scroll.set_minimum_size (700, 500)
+			notebook.extend (scroll)
+			notebook.set_item_text (scroll, "Other classes")
+			scroll.extend (non_widgets_frame)
+
 			create description_frame.make_with_text ("Description")
 			box.extend (description_frame)
 			widget_label.align_text_left
@@ -205,106 +211,79 @@ feature
 
 	widgets_frame: EV_FRAME is
 			-- Frame containing one instance of each widget.
+		once
+			Result := test_frame (widgets.count, widgets~i_th)
+		end
+
+	non_widgets_frame: EV_FRAME is
+			-- Frame containing one instance of each non-widget.
+		once
+			Result := test_frame (non_widgets.count, ~non_widgets_i_th)
+		end
+
+	non_widgets_i_th (an_index: INTEGER): EV_WIDGET is
+			-- `test_widget' from `non_widgets' at `an_index'.
 		local
-			i, j: INTEGER
+			testable: EV_TESTABLE_NON_WIDGET
+		do
+			testable ?= non_widgets.i_th (an_index)
+			if testable /= Void then
+				Result := testable.test_widget
+			end
+		end
+
+	test_frame (a_count: INTEGER; a_i_th: FUNCTION [ANY, TUPLE [INTEGER], EV_WIDGET]): EV_FRAME is
+			-- Frame containing one instance of each widget.
+		local
+			i, j, n: INTEGER
+			test_subject: EV_WIDGET
 			vbox, wbox: EV_VERTICAL_BOX
 			hbox: EV_HORIZONTAL_BOX
 			l: EV_LABEL
 			c: CURSOR
-		once
+		do
 			create Result.make_with_text ("Widgets")
 			create vbox
 			vbox.set_padding (10)
 			Result.extend (vbox)
-			c := widgets.cursor
 			from
-				widgets.start
+				n := 1
 			until
-				widgets.after
+				n > a_count
 			loop
 				create hbox
 				hbox.set_padding (10)
 				hbox.enable_homogeneous
 				vbox.extend (hbox)
-				from i := 1 until i > 3 or widgets.after loop
-					create wbox
-					wbox.set_padding (3)
-					hbox.extend (wbox)
-					create l.make_with_text (
-						widgets.item.generating_type
-					)
-					l.pointer_button_press_actions.force_extend (
-						widget_label~set_text (
-							widgets.item.generating_type + "%N" +
-							class_descriptions.item (
-								widgets.item.generating_type
+				from i := 1 until i > 3 or n > a_count loop
+					test_subject := a_i_th (n)
+					if test_subject /= Void then
+						create wbox
+						wbox.set_padding (3)
+						hbox.extend (wbox)
+						create l.make_with_text (
+							test_subject.generating_type
+						)
+						l.pointer_button_press_actions.force_extend (
+							widget_label~set_text (
+								test_subject.generating_type + "%N" +
+								class_descriptions.item (
+									widgets.item.generating_type
+									)
 							)
 						)
-					)
-					l.set_background_color (create {EV_COLOR}.make_with_rgb (0.7, 0.7, 1.0))
-					wbox.extend (l)
-					wbox.extend (widgets.item)
-					widgets.item.set_pebble (widgets.item)
-					if widgets.index \\ 2 = 0 then
-						widgets.item.set_target_menu_mode
+						l.set_background_color (create {EV_COLOR}.make_with_rgb (0.7, 0.7, 1.0))
+						wbox.extend (l)
+						wbox.extend (test_subject)
+						test_subject.set_pebble (test_subject)
+						if n \\ 2 = 0 then
+							test_subject.set_target_menu_mode
+						end
+						wbox.disable_item_expand (l)
+						i := i + 1
 					end
-					wbox.disable_item_expand (l)
-					widgets.forth
-					i := i + 1
+					n := n + 1
 				end
-			end
-			widgets.go_to (c)
-		end
-
-	non_widgets_frame: EV_FRAME is
-			-- Frame with a combo box from which the user can select a non-widget.
-			-- That class then performs a test and display the result on the area below
-			-- the combo box.
-		local
-			vb: EV_VERTICAL_BOX
-			nw_combo: EV_COMBO_BOX
-			combo_item: EV_LIST_ITEM
-			testable: EV_TESTABLE_NON_WIDGET
-		once
-			create Result.make_with_text ("Non-widget tests")
-			create vb
-			Result.extend (vb)
-			create nw_combo
-			vb.extend (nw_combo)
-			vb.disable_item_expand (nw_combo)
-			create non_widget_test_area
-			vb.extend (non_widget_test_area)
-			from
-				non_widgets.start
-			until
-				non_widgets.after
-			loop
-				testable ?= non_widgets.item
-				if testable /= Void then
-					create combo_item.make_with_text (testable.generating_type)
-					nw_combo.extend (combo_item)
-					combo_item.select_actions.extend (~display_test (testable))
-				end
-				non_widgets.forth
-			end
-		end
-
-	display_test (any_object: ANY) is
-			-- Display `any_object's test on `non_widget_test_area'.
-		local
-			a_testable: EV_TESTABLE_NON_WIDGET
-		do
-			widget_label.set_text (
-				any_object.generating_type + "%N" +
-				class_descriptions.item (
-					any_object.generating_type
-				)
-			)
-			a_testable ?= any_object
-			if a_testable /= Void then
-				non_widget_test_area.put (a_testable.test_widget)
-			else
-				non_widget_test_area.put (create {EV_LABEL}.make_with_text ("(no test available yet)"))
 			end
 		end
 
@@ -526,6 +505,10 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/04/26 23:11:43  brendel
+--| Removed non_widgets_frame.
+--| Started new implementation of non-widgets test similar to widget frame.
+--|
 --| Revision 1.34  2000/04/26 22:09:38  oconnor
 --| Snow II, the return!
 --|

@@ -86,7 +86,7 @@ while (<>) {
 	}
 }
 
-print "EV_KEY_CONSTANTS\n"
+print "EV_KEY_CONSTANTS\n";
 
 open (OH, ">" . "interface/kernel/ev_key_constants.e");
 print OH <<EOT;
@@ -140,7 +140,7 @@ end -- class EV_KEY_CONSTANTS
 EOT
 close (OH);
 
-print "EV_WEL_KEY_CONVERSION\n"
+print "EV_WEL_KEY_CONVERSION\n";
 
 open (OH, ">" . "implementation/mswin/support/ev_wel_key_conversion.e");
 print OH <<EOT;
@@ -219,7 +219,7 @@ end -- class EV_WEL_KEY_CONVERSION
 EOT
 close (OH);
 
-print "EV_GTK_KEY_CONVERSION\n"
+print "EV_GTK_KEY_CONVERSION\n";
 
 open (OH, ">" . "implementation/gtk/support/ev_gtk_key_conversion.e");
 print OH <<EOT;
@@ -303,6 +303,9 @@ close (OH);
 #===============================================================================
 #
 # $Log$
+# Revision 1.11  2000/04/12 19:25:27  brendel
+# Semicolons! (PERL, remember...?)
+#
 # Revision 1.10  2000/04/12 19:03:11  brendel
 # Added output of classnames.
 #

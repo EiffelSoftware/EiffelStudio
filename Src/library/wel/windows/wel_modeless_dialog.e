@@ -21,16 +21,6 @@ feature -- Basic operations
 			-- Terminate the dialog with `a_result'.
 			-- `result_id' will contain `a_result'.
 		do
-			from
-				dialog_children.start
-			until
-				dialog_children.off
-			loop
-				dialog_children.item.set_exists (False)
-				unregister_window (dialog_children.item)
-				dialog_children.item.set_item (default_pointer)
-				dialog_children.forth
-			end
 			result_id := a_result
 			cwin_destroy_window (item)
 		end
@@ -45,7 +35,6 @@ feature {NONE} -- Implementation
 			common_controls_dll: WEL_COMMON_CONTROLS_DLL
 		do
 			item := cwel_temp_dialog_value
-			exists := True
 			register_window (Current)
 
 				-- Initialise the common controls
@@ -67,12 +56,11 @@ feature {NONE} -- Implementation
 					cwel_dialog_procedure_address)
 			end
 			if item /= default_pointer then
-				exists := True
 				if not shown then
 					show
 				end
 			else
-				exists := False
+				destroy_item
 			end
 		end
 

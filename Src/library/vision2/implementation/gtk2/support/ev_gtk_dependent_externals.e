@@ -1852,16 +1852,38 @@ feature -- Externals
 			"C signature (char*, GError**): GdkPixbuf* use <gtk/gtk.h>"
 		end
 
-	frozen g_locale_to_utf8 (a_string: POINTER; a_length: INTEGER; byte_read, bytes_written, gerror: TYPED_POINTER [INTEGER]): POINTER is
+	frozen g_locale_to_utf8 (a_string: POINTER; a_length: INTEGER; bytes_read, bytes_written: TYPED_POINTER [INTEGER]; gerror: TYPED_POINTER [POINTER]; a_result: TYPED_POINTER [POINTER]) is
 		external
-			"C signature (gchar*, gssize, gsize*, gsize*, GError**): gchar* use <gtk/gtk.h> "
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					gsize temp_bytes_read;
+					gsize temp_bytes_written;
+					*$a_result = g_locale_to_utf8 ((gchar*) $a_string, (gssize) $a_length, &temp_bytes_read, &temp_bytes_written, (GError**) $gerror);
+					*$bytes_read = (EIF_INTEGER) temp_bytes_read;
+					*$bytes_written = (EIF_INTEGER) temp_bytes_written;
+				}
+			]"
+					
 		end
 
-	frozen g_filename_to_utf8 (a_string: POINTER; a_length: INTEGER; byte_read, bytes_written, gerror: TYPED_POINTER [INTEGER]): POINTER is
+	frozen g_filename_to_utf8 (a_string: POINTER; a_length: INTEGER; bytes_read, bytes_written: TYPED_POINTER [INTEGER]; gerror: TYPED_POINTER [POINTER]; a_result: TYPED_POINTER [POINTER]) is
 		external
-			"C signature (gchar*, gssize, gsize*, gsize*, GError**): gchar* use <gtk/gtk.h> "
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					gsize temp_bytes_read;
+					gsize temp_bytes_written;
+					*$a_result = g_filename_to_utf8 ((gchar*) $a_string, (gssize) $a_length, &temp_bytes_read, &temp_bytes_written, (GError**) $gerror);
+					*$bytes_read = (EIF_INTEGER) temp_bytes_read;
+					*$bytes_written = (EIF_INTEGER) temp_bytes_written;
+				}
+			]"
+					
 		end
-	
+
 	frozen g_utf8_strlen (a_utf8_string: POINTER; maximum: INTEGER): INTEGER is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -1876,14 +1898,35 @@ feature -- Externals
 			"g_utf8_validate ((gchar*) $a_utf8_string, (gssize) $maximum, (const gchar**) $a_end)"
 		end
 
-	frozen g_locale_from_utf8 (a_string: POINTER; a_length: INTEGER; byte_read, bytes_written, gerror: TYPED_POINTER [INTEGER]): POINTER is
+	frozen g_locale_from_utf8 (a_string: POINTER; a_length: INTEGER; bytes_read, bytes_written: TYPED_POINTER [INTEGER]; gerror: TYPED_POINTER [POINTER]; a_result: TYPED_POINTER [POINTER]) is
 		external
-			"C signature (gchar*, gssize, gsize*, gsize*, GError**): gchar* use <gtk/gtk.h> "
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					gsize temp_bytes_read;
+					gsize temp_bytes_written;
+					*$a_result = g_locale_from_utf8 ((gchar*) $a_string, (gssize) $a_length, &temp_bytes_read, &temp_bytes_written, (GError**) $gerror);
+					*$bytes_read = (EIF_INTEGER) temp_bytes_read;
+					*$bytes_written = (EIF_INTEGER) temp_bytes_written;
+				}
+			]"
+					
 		end
 
-	frozen g_filename_from_utf8 (a_string: POINTER; a_length: INTEGER; byte_read, bytes_written, gerror: TYPED_POINTER [INTEGER]): POINTER is
+	frozen g_filename_from_utf8 (a_string: POINTER; a_length: INTEGER; bytes_read, bytes_written: TYPED_POINTER [INTEGER]; gerror: TYPED_POINTER [POINTER]; a_result: TYPED_POINTER [POINTER]) is
 		external
-			"C signature (gchar*, gssize, gsize*, gsize*, GError**): gchar* use <gtk/gtk.h> "
+			"C inline use <gtk/gtk.h>"
+		alias
+			"[
+				{
+					gsize temp_bytes_read;
+					gsize temp_bytes_written;
+					*$a_result = g_filename_from_utf8 ((gchar*) $a_string, (gssize) $a_length, &temp_bytes_read, &temp_bytes_written, (GError**) $gerror);
+					*$bytes_read = (EIF_INTEGER) temp_bytes_read;
+					*$bytes_written = (EIF_INTEGER) temp_bytes_written;
+				}
+			]"
 		end
 
 	frozen gtk_settings_get_default: POINTER is

@@ -22,7 +22,7 @@ feature -- Event handling
 		do
 			create Result
 			real_signal_connect (
-					c_object,
+					event_widget,
 					"motion-notify-event",
 					agent (App_implementation.gtk_marshal).pointer_motion_action_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
 					App_implementation.default_translate
@@ -47,7 +47,7 @@ feature -- Event handling
 		do
 			create Result
 			real_signal_connect (
-					c_object,
+					event_widget,
 					"button-release-event",
 					agent (App_implementation.gtk_marshal).pointer_button_release_action_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?),
 					App_implementation.default_translate
@@ -60,7 +60,7 @@ feature -- Event handling
 		do
 			create Result
 			real_signal_connect (
-				c_object,
+				event_widget,
 				"enter-notify-event", 
 				agent (App_implementation.gtk_marshal).pointer_enter_actions_intermediary (c_object),
 				App_implementation.default_translate
@@ -73,7 +73,7 @@ feature -- Event handling
 		do
 			create Result
 			real_signal_connect (
-				c_object,
+				event_widget,
 				"leave-notify-event",
 				agent (App_implementation.gtk_marshal).pointer_leave_action_intermediary (c_object),
 				App_implementation.default_translate
@@ -123,6 +123,14 @@ feature -- Event handling
 		do
 			create Result
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	event_widget: POINTER is
+			-- Pointer to the gtk event widget 
+		deferred
+		end
+		
 
 end
 

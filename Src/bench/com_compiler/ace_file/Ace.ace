@@ -1,12 +1,13 @@
 system
-	"ISE.Compiler.exe"
+	"ISE_Compiler.exe"
 
 root
-	ECOM_EIF_COMPILER_REGISTRATION: make
+	ECOM_ISE_REGISTRATION: make
 
 default
 	assertion (no)
 	arguments (" ")
+	arguments ("/regserver")
 	disabled_debug (yes)
 	disabled_debug ("activity")
 	disabled_debug ("actual_replication")
@@ -99,7 +100,7 @@ cluster
 				end
 			ieiffel_cluster_properties_impl_proxy
 				end
-			ecom_eif_compiler_registration
+			ecom_ise_registration
 				end
 			ceiffel_project_coclass_imp
 				end
@@ -328,7 +329,6 @@ cluster
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 
-
 external
 
 	include_path:
@@ -361,4 +361,5 @@ external
 		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom.lib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
 		"corguids.lib"
+
 end

@@ -1,7 +1,5 @@
 <document title="Build Tab" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Build Tab
@@ -17,7 +15,7 @@
 		<paragraph>
 			<image>
 				<url>/images/eiffelbuild/screenshots/project_build_class.png</url>
-			</image>&gt;
+			</image>
 		</paragraph>
 		<paragraph>The options available in this tab are as as follows:
 			<list ordered="false">
@@ -44,7 +42,7 @@
 				</item>
 			</list>
 		</paragraph>
-		<paragraph>
+		<seealso>
 			<bold>See Also</bold>
 			<line_break></line_break>
 			<link>
@@ -67,6 +65,6 @@
 				<label>Generation tab</label>
 			</link>
 			<line_break></line_break>
-		</paragraph>
+		</seealso>
 	</paragraph>
 </document>

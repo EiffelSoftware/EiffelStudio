@@ -1,7 +1,5 @@
 <document title="General Tab" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>General Tab
@@ -12,7 +10,7 @@
 				<url>/images/eiffelbuild/screenshots/project_general.png</url>
 			</image>
 		</paragraph>
-		<paragraph>
+		<seealso>
 			<bold>See Also</bold>
 			<line_break></line_break>
 			<link>
@@ -35,6 +33,6 @@
 				<label>Generation tab</label>
 			</link>
 			<line_break></line_break>
-		</paragraph>
+		</seealso>
 	</paragraph>
 </document>

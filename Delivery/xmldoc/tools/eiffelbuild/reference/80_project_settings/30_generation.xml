@@ -1,7 +1,5 @@
 <document title="Generation Tab" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Generation Tab
@@ -11,7 +9,7 @@
 		<paragraph>
 			<image>
 				<url>/images/eiffelbuild/screenshots/project_generation.png</url>
-			</image>&gt;
+			</image>
 		</paragraph>
 		<paragraph>The options available in this tab are as follows:</paragraph>
 		<list ordered="false">
@@ -41,7 +39,7 @@
 				<paragraph>If selected, then the generated window will be a client of EV_TITLED_WINDOW, otherwise it will be a direct descendent.</paragraph>
 			</item>
 		</list>
-		<paragraph>
+		<seealso>
 			<bold>See Also</bold>
 			<line_break></line_break>
 			<link>
@@ -64,6 +62,6 @@
 				<label>Build tab</label>
 			</link>
 			<line_break></line_break>
-		</paragraph>
+		</seealso>
 	</paragraph>
 </document>

@@ -175,7 +175,6 @@ feature -- Basic operations
 			exists: exists
 		local
 			new_pos: INTEGER
-			old_pos: INTEGER
 		do
 			new_pos := position
 			if scroll_code = Sb_pagedown then

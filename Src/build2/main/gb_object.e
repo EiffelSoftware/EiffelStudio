@@ -187,8 +187,6 @@ feature -- Access
 			-- `a_list'.
 		require
 			a_list_not_void: a_list /= Void
-		local
-			current_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 			from
 				children.start
@@ -196,7 +194,7 @@ feature -- Access
 				children.off
 			loop
 				a_list.extend (children.item)
-				current_item.object.all_children_recursive (a_list)
+				children.item.all_children_recursive (a_list)
 				children.forth
 			end
 		end

@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 			list_item: EV_LIST_ITEM
 			counter: INTEGER
 			font: EV_FONT
-			tree: EV_TREE_ITEM
 		do
 				-- Initialize color display to black.
 			update_color ((create {EV_STOCK_COLORS}).black)
@@ -78,8 +77,6 @@ feature {NONE} -- Initialization
 			create accelerator.make_with_key_combination (create {EV_KEY}.make_with_code ((create {EV_KEY_CONSTANTS}).key_d), False, True, False)
 			accelerators.extend (accelerator)
 			accelerator.actions.extend (agent random_test)
-			rich_text.set_text ("one%None%None lsdkfj lkjsdfl ksdlfk sdlfkjsdflkjsdflksjd flksjdf lskdjf lsdkfjlsdk fjsdf%None%None")
-			rich_text.set_caret_position (5)
 			create timer.make_with_interval (2000)
 			timer.actions.extend (agent check_line_positions)
 			
@@ -92,9 +89,6 @@ feature {NONE} -- Event handling
 		local
 			format: EV_CHARACTER_FORMAT
 			font: EV_FONT
-			contiguous: BOOLEAN
-			counter: INTEGER
-			selection_end: INTEGER
 			char_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
 		do
 			if rich_text.has_selection then
@@ -126,7 +120,6 @@ feature {NONE} -- Event handling
 		local
 			format: EV_CHARACTER_FORMAT
 			font: EV_FONT
-			selection_end: INTEGER
 			char_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
 		do
 			if rich_text.has_selection then
@@ -251,7 +244,6 @@ feature {NONE} -- Event handling
 			-- Called by `select_actions' of `underlined_button'.
 		local
 			format: EV_CHARACTER_FORMAT
-			font: EV_FONT
 			char_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			underlined: BOOLEAN
 			effects: EV_CHARACTER_FORMAT_EFFECTS
@@ -285,7 +277,6 @@ feature {NONE} -- Event handling
 			-- Called by `select_actions' of `striked_through_button'.
 		local
 			format: EV_CHARACTER_FORMAT
-			font: EV_FONT
 			char_info: EV_CHARACTER_FORMAT_RANGE_INFORMATION
 			strike_through: BOOLEAN
 			effects: EV_CHARACTER_FORMAT_EFFECTS
@@ -313,6 +304,18 @@ feature {NONE} -- Event handling
 				format.set_effects (effects)
 				rich_text.set_current_format (format)
 			end
+		end
+		
+	word_wrapping_toggled is
+			-- Called by `select_actions' of `word_wrapping_menu_item'.
+		do
+			lock_update
+			if word_wrapping_menu_item.is_selected then
+				rich_text.enable_word_wrapping
+			else
+				rich_text.disable_word_wrapping
+			end
+			unlock_update
 		end
 
 feature {NONE} -- Implementation
@@ -568,6 +571,10 @@ feature {NONE} -- To be removed
 			substring: STRING
 			color: EV_COLOR
 		do
+			print ("Lines : " + rich_text.line_count.out + "%N")
+			if rich_text.text.item (rich_text.text_length) = '%N' then
+				print ("Last letter is newline%N")
+			end
 			a_text := rich_text.text
 			from
 				counter := 1

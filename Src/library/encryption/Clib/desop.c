@@ -47,7 +47,7 @@ rt_public void des_decrypt(char *buf, int size)
 {
 	/* In place decryption of data held in 'buf' */
 
-	desop(buf, size, dedes);		/* DES decryption */
+	desop(buf, size, ise_dedes);		/* DES decryption */
 }
 
 rt_public void des_encrypt(char *buf, int size)
@@ -56,6 +56,6 @@ rt_public void des_encrypt(char *buf, int size)
 {
 	/* In place encryption of data held in 'buf' */
 	
-	desop(buf, size, endes);		/* DES encryption */
+	desop(buf, size, ise_endes);		/* DES encryption */
 }
 

@@ -166,13 +166,13 @@ static char p32i[] = {
 };
 /* End of DES-defined tables */
 
-/* Lookup tables initialized once only at startup by desinit() */
+/* Lookup tables initialized once only at startup by ise_desinit() */
 static int32 (*sp)[64];		/* Combined S and P boxes */
 
 static char (*iperm)[16][8];	/* Initial and final permutations */
 static char (*fperm)[16][8];
 
-/* 8 6-bit subkeys for each of 16 rounds, initialized by setkey() */
+/* 8 6-bit subkeys for each of 16 rounds, initialized by ise_setkey() */
 static unsigned char (*kn)[8];
 
 /* bit 0 is left-most in byte */
@@ -197,7 +197,7 @@ rt_private int spinit();
  * mode == 2: DEA without permutations and with 128-byte key (completely
  *            independent subkeys for each round)
  */
-int desinit(int mode)
+int ise_desinit(int mode)
 {
 #ifdef __VMS	/* why? this belongs in a header! And, it's wrong to boot. */
 	/* s.b. void* malloc(size_t); */
@@ -243,7 +243,7 @@ int desinit(int mode)
 	return 0;
 }
 /* Free up storage used by DES */
-void desdone()
+void ise_desdone()
 {
 	if(sp == NULL)
 		return;	/* Already done */
@@ -261,7 +261,7 @@ void desdone()
 	kn = NULL;
 }
 /* Set key (initialize key schedule array) */
-void setkey(char *key)
+void ise_setkey(char *key)
 	 /* 64 bits (will use only 56) */
 {
 	char pc1m[56];		/* place to modify pc1 into */
@@ -310,7 +310,7 @@ void setkey(char *key)
 	}
 }
 /* In-place encryption of 64-bit block */
-void endes(char *block)
+void ise_endes(char *block)
 {
 	register int i;
 	uint32 work[2]; 		/* Working data storage */
@@ -339,7 +339,7 @@ void endes(char *block)
 }
 
 /* In-place decryption of 64-bit block */
-void dedes(char *block)
+void ise_dedes(char *block)
 {
 	register int i;
 	uint32 work[2];	/* Working data storage */

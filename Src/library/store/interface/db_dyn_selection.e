@@ -39,7 +39,7 @@ feature -- Initialization
 	make is
 			-- Create an interface objet to query active base.
 		do
-			!! ht.make (name_table_size)
+			create ht.make (name_table_size)
 			implementation := handle.database.db_dyn_selection
 			implementation.set_ht (ht)
 			init

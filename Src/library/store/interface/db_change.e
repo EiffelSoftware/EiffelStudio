@@ -77,7 +77,7 @@ feature {NONE} -- Initialization
 			-- Create an interface object to change active base.
 		do
 			implementation := handle.database.db_change
-			!! ht.make (name_table_size)
+			create ht.make (name_table_size)
 			implementation.set_ht (ht)
 		end
 	

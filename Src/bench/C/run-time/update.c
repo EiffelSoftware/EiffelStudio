@@ -624,7 +624,7 @@ rt_private void parents_updt(void)
 		pt2 [dtype] = pt;
 	}
 
-	eif_par_table2_size = tsize;
+	eif_par_table2_size = tsize - 1;
 	eif_gen_conf_init (max_dtype);
 
 		/* Cecil Update computed only when parent table has been modified and

@@ -65,11 +65,6 @@ feature -- Initialization
 		deferred
 		end
 
-	on_parented is
-			-- `Current' has just been added to a container
-		do
-		end
-
 feature  -- Duplication
 
 	copy_pixmap(other: EV_PIXMAP) is
@@ -103,6 +98,9 @@ end -- class EV_PIXMAP_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/14 20:56:45  brendel
+--| Removed on_parented since it is now in EV_WIDGET_I.
+--|
 --| Revision 1.17  2000/04/12 02:16:29  oconnor
 --| made on_parent concrete
 --|

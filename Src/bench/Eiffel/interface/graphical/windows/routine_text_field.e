@@ -30,7 +30,7 @@ feature -- Initialization
 		do
 			text_field_make (name, a_parent);
 			add_activate_action (Current, Void);
-			init_from_tool (a_tool)
+			init (a_tool)
 		end;
 
 feature -- Properties
@@ -90,7 +90,7 @@ feature {ROUTINE_CLASS_TEXT_FIELD} -- Implementation
 			pattern: STRING_PATTERN
 		do
 			if (choice /= Void) and then arg = choice then
-				if choice.position /= 1 then
+				if choice.position /= 0 then
 					set_text (choice.selected_item);
 					stone := classc_stone;
 					classc_stone := Void;

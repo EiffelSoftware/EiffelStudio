@@ -24,6 +24,9 @@ feature -- Properties
 		deferred
 		end
 
+	is_dotnet_mode: BOOLEAN
+			-- Is Current class a .NET class? 		
+
 feature -- Status setting
 
 	enable_breakpoints is
@@ -86,6 +89,16 @@ feature -- Status setting
 			class_set: (a_class /= Void and then a_class.has_feature_table) implies (a_class = associated_class)
 			cmd_created_if_possible: (a_class = Void or else not a_class.has_feature_table) = (class_cmd = Void)
 		end
+
+	set_dotnet_mode (a_flag: BOOLEAN) is
+			-- Set whether formatting in .NET mode to 'a_flag'
+		require
+			flag_not_void: a_flag /= Void
+		do
+			is_dotnet_mode := a_flag
+		ensure
+			mode_is_flag: is_dotnet_mode = a_flag
+		end	
 
 feature -- Formatting
 
@@ -167,7 +180,12 @@ feature {NONE} -- Implementation
 			Result := clone (Interface_names.l_Working_formatter)
 			Result.append (command_name)
 			Result.append (Interface_names.l_Of_class)
-			Result.append (associated_class.name)
+			if associated_class /= Void then
+				Result.append (associated_class.name)
+			else
+				
+			end
+			
 			Result.append (Interface_names.l_Three_dots)
 		end
 

@@ -10,6 +10,7 @@ default
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
 	assertion (no)
+	
 	console_application (no)
 
 cluster
@@ -18,6 +19,8 @@ cluster
 			"EIFGEN"; "to_replace"; "generated"; "cvs"; "Clib"; "ace_file"; "idl"; "Client_Only"; "generated_client"; 
 		visible
 			ieiffel_compiler_events_impl_proxy
+				end
+			ieiffel_html_documentation_events_impl_proxy
 				end
 			ieiffel_project_impl_proxy
 				end
@@ -43,6 +46,8 @@ cluster
 				end
 			ceiffel_compiler_coclass_imp
 				end
+			ceiffel_html_documentation_generator_coclass_imp
+				end
 			ieiffel_project_impl_stub
 				end
 			ieiffel_compiler_impl_stub
@@ -66,8 +71,6 @@ cluster
 			ieiffel_system_assemblies_impl_stub
 				end
 			ieiffel_assembly_properties_impl_stub
-				end
-			ieiffel_html_documentation_generator_impl_stub
 				end
 			ieiffel_exception_impl_stub
 				end
@@ -118,12 +121,6 @@ cluster
 			completion_information
 				end
 			html_doc_generator
-				end
-			ieiffel_html_documentation_events_impl_stub
-				end
-			ieiffel_html_documentation_events_impl_proxy
-				end
-			ieiffel_html_documentation_events_interface
 				end
 			variable_descriptor
 				end

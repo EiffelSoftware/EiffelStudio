@@ -64,15 +64,16 @@
 extern "C" {
 #endif
 
+#ifdef EIF_WIN32
+extern void eif_cleanup(void); /* %%ss added. In extra/win32/console/argcargv.c */
+#endif
+
 #ifdef ISE_GC
 
 #ifdef EIF_ASSERTIONS
 extern EIF_BOOLEAN has_object (struct stack *, EIF_REFERENCE); 
 #endif
 
-#ifdef EIF_WIN32
-extern void eif_cleanup(void); /* %%ss added. In extra/win32/console/argcargv.c */
-#endif
 
 /* Select recursive marking is none is choosen */
 #ifndef HYBRID_MARKING
@@ -904,19 +905,23 @@ rt_public void reclaim(void)
 		/* Mark final collection */
 	eif_is_in_final_collect = EIF_TRUE;
 
-#ifdef ISE_GC
-
 #if ! defined CUSTOM || defined NEED_OPTION_H
 	if (egc_prof_enabled)
 		exitprf();			/* Store profile information */
 #endif
 
+#ifdef ISE_GC
 	if (eif_no_reclaim || (g_data.status & GC_STOP))	/* Does user want no reclaim? */
+#else
+	if (eif_no_reclaim)
+#endif
 		return;	
+
 #ifdef RECLAIM_DEBUG
 	fprintf(stderr, "reclaim: collecting all objects...\n");
 #endif
 
+#ifdef ISE_GC
 	if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
 		sc_stop();					/* Free 'to' and explode 'from' space */
 
@@ -936,7 +941,10 @@ rt_public void reclaim(void)
 	if (special_rem_set)
 		spt_free (special_rem_set);	/* Free special_rem_set */
 #endif
+#endif
+
 	eif_free (EIF_once_values); /* have been allocated with eif_malloc */
+
 #ifdef EIF_THREADS 
 	CHECK ("Root thread", eif_thr_is_root ());
 #endif	/* EIF_THREADS */
@@ -946,6 +954,7 @@ rt_public void reclaim(void)
 	eif_cleanup(); 
 #endif /* EIF_WIN32 */
 
+#ifdef ISE_GC
 	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn) {
 		cn = c->ck_next;
 #if !defined HAS_SMART_MMAP && !defined HAS_SBRK
@@ -955,17 +964,19 @@ rt_public void reclaim(void)
 #endif	/* !HAS_SMART_MMAP && !!HAS_SBRK */
 	}
 	cklst.ck_head = (struct chunk *) 0;
+#endif
 
 #ifdef EIF_WINDOWS 
 	eif_free_dlls();
 #endif
 
+#ifdef ISE_GC
 #ifdef LMALLOC_CHECK
 		eif_lm_display ();
 		eif_lm_free ();
 #endif	/* LMALLOC_CHECK */
+#endif
 
-#endif /* ISE_GC */
 		/* Final collection terminated, unmark the flag */
 	eif_is_in_final_collect = EIF_FALSE;
 }

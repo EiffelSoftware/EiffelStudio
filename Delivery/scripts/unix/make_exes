@@ -4,7 +4,7 @@
 remtrace Update all source files.
 cd $EIFFEL_SRC
 exprt -r $DEFAULT_CVS_TAG -d Eiffel Eiffel
-exprt -r $DEFAULT_CVS_TAG -d C Src/bench/C
+exprt -r $DEFAULT_CVS_TAG -d C runtime
 exprt -r $DEFAULT_CVS_TAG -d C_library Src/C_library
 
 # These directories should already have been created by make_delivery. Whatever...

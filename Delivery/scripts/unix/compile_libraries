@@ -12,10 +12,12 @@ if [ "$ISE_PLATFORM" = "linux-glibc" -o "$ISE_PLATFORM" = "linux-glibc2.1" ]; th
 	cp scripts/makefile.linux .
 	make -f makefile.linux
 else
-	echo "Wake up and give the extension for the makefile that should be used!"
+	echo Here are the available makefiles:
+	ls scripts
+	echo "What is the extension of the makefile that should be used?"
 	read rep
 	while [ ! -f "scripts/makefile.$rep" ]; do
-		echo "scripts/makefile.$rep doesn't exist... Try again!"
+		echo "scripts/makefile.$rep doesn't exist... Try another one"
 		read rep
 	done
 	cp scripts/makefile.$rep .
@@ -28,6 +30,9 @@ make
 
 
 remtrace Compile the Eiffel libraries C code
+remtrace event
+cd $INITIAL_DIR/library/event/Clib
+default_make
 remtrace exml
 cd $INITIAL_DIR/library/exml/compiler_specific/ise/clib
 default_make
@@ -42,7 +47,7 @@ cd $INITIAL_DIR/library/vision2/Clib
 default_make
 cd $INITIAL_DIR/library/vision2/implementation/gtk/Clib
 default_make
-remtrace wel
+remtrace gel
 cd $INITIAL_DIR/library/gel/glib
 configure
 cd $INITIAL_DIR

@@ -419,7 +419,7 @@ interface IEiffelProjectProperties: IDispatch
   HRESULT clusters ([out, retval] VARIANT * return_value);
 
   [id (113), helpstring ("Add a cluster to the project.")]
-  HRESULT add_cluster ([in] BSTR cluster_name, [in] BSTR cluster_path);
+  HRESULT add_cluster ([in] BSTR cluster_name, [in] BSTR parent_name, [in] BSTR cluster_path);
   
   [id (114), helpstring ("Remove a cluster from the project.")]
   HRESULT remove_cluster ([in] BSTR cluster_name);

@@ -71,7 +71,7 @@ feature -- Access
 	size_of_side: INTEGER is
 			-- Size of a side
 		do
-			Result := real_to_integer (2*radius/(cos (180.0/number_of_sides)))
+			Result := (2*radius/(cos (180.0/number_of_sides))).truncated_to_integer
 		end;
 
 feature -- Modification & Insertion
@@ -135,7 +135,7 @@ feature -- Modification & Insertion
 		require
 			a_size_positive: a_size >= 0
 		do
-			radius := real_to_integer (a_size*cos (180.0/number_of_sides)/2);
+			radius := (a_size*cos (180.0/number_of_sides)/2).truncated_to_integer;
 			set_conf_modified
 			--io.putint (a_size)
 			--io.putstring ("<- a_size size_of_side ->")
@@ -159,7 +159,7 @@ feature -- Modification & Insertion
 		require else
 			scale_factor_positive: f > 0.0
 		do
-			radius := real_to_integer (f*radius);
+			radius := (f*radius).truncated_to_integer;
 			center.xyscale (f, px, py);
 			set_conf_modified
 		end;
@@ -190,11 +190,11 @@ feature -- Output
 					i >= number_of_sides
 				loop
 					!! a_point;
-					angle := i*(360//number_of_sides)+real_to_integer (orientation);
+					angle := i*(360//number_of_sides)+(orientation).truncated_to_integer;
 					a_point.set (	center.x+
-									real_to_integer (radius*cosine (double_to_real(Pi*angle/180.0))), 
+									(radius*cosine ((Pi*angle/180.0).truncated_to_real)).truncated_to_integer,
 									center.y+
-									real_to_integer (radius*sine (double_to_real(Pi*angle/180.0))));
+									(radius*sine ((Pi*angle/180.0).truncated_to_real)).truncated_to_integer);
 					if polygon.off then
 						polygon.add (a_point)
 					else

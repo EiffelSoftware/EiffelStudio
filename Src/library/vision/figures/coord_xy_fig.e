@@ -65,7 +65,7 @@ feature -- Access
         	do
             		xr := other.x - x;
             		yr := other.y - y;
-            		Result := real_to_integer(sqrt(xr * xr + yr	* yr));
+            		Result := (sqrt(xr * xr + yr	* yr)).truncated_to_integer;
         	end;
 
 feature -- Comparison
@@ -161,12 +161,12 @@ feature -- Modification & Insertion
         	require
             		other_exists: other /= Void
         	do
-            		x := max (x, other.x);
-            		y := max (y, other.y);
+            		x := x.max (other.x);
+            		y := y.max (other.y);
 					set_conf_modified
         	ensure
-            	max_x: x =  max (old x, other.x);
-            	max_y: y =  max (old y, other.y)
+            	max_x: x =  other.x.max (old x);
+            	max_y: y =  other.y.max (old y)
         	end;
 
     	set_min (other: like Current) is
@@ -174,12 +174,12 @@ feature -- Modification & Insertion
         	require
             		other_exists: other /= Void
         	do
-            		x := min (x, other.x);
-            		y := min (y, other.y);
+            		x := x.min (other.x);
+            		y := y.min (other.y);
 					set_conf_modified
         	ensure
-            		min_x: x =  min (old x, other.x);
-            		min_y: y =  min (old y, other.y)
+            		min_x: x =  other.x.min (old x);
+            		min_y: y =  other.y.min (old y)
         	end;
 
     	set_origin_to_himself is
@@ -230,8 +230,8 @@ feature -- Modification & Insertion
                 		yr := y - py;
                 		cosinus := cos (a);
                 		sinus := sin (a);
-                		x := px+real_to_integer (xr*cosinus)+real_to_integer (yr*sinus);
-                		y := py+real_to_integer (yr*cosinus)-real_to_integer (xr*sinus);
+                		x := px+(xr*cosinus).truncated_to_integer+(yr*sinus).truncated_to_integer;
+                		y := py+(yr*cosinus).truncated_to_integer-(xr*sinus).truncated_to_integer;
 						set_conf_modified
 		        end;
         	end;
@@ -243,8 +243,8 @@ feature -- Modification & Insertion
         	do
             		x := x - px;
             		y := y - py;
-            		x := real_to_integer (f * x);
-            		y := real_to_integer (f * y);
+            		x := (f * x).truncated_to_integer;
+            		y := (f * y).truncated_to_integer;
             		x := x + px;
             		y := y + py;
 					set_conf_modified

@@ -22,7 +22,7 @@ feature {NONE}
 			-- Convert `angle' in an integer in 64th of degree
 			-- (angle_x (360) = 360*64)
 		do
-			Result := real_to_integer (64*angle);
+			Result := (64*angle).truncated_to_integer;
 			if Result > 23040 then
 				Result := Result \\ 23040
 			end
@@ -92,19 +92,19 @@ feature
 		do
 			if radius1 = radius2 then
 				if arc_style /= -1 then
-					x0 := real_to_integer (center.x+radius1*d_cos (angle1+orientation));
-					y0 := real_to_integer (center.y-radius1*d_sin (angle1+orientation));
-					x1 := real_to_integer (center.x+radius1*d_cos (angle1+orientation+angle2));
-					y1 := real_to_integer (center.y-radius1*d_sin (angle1+orientation+angle2));
+					x0 := (center.x+radius1*d_cos (angle1+orientation)).truncated_to_integer;
+					y0 := (center.y-radius1*d_sin (angle1+orientation)).truncated_to_integer;
+					x1 := (center.x+radius1*d_cos (angle1+orientation+angle2)).truncated_to_integer;
+					y1 := (center.y-radius1*d_sin (angle1+orientation+angle2)).truncated_to_integer;
 					join_lines (center, x0, y0, x1, y1, arc_style)
 				end;
 				x_draw_arc (display_pointer, window_object, graphic_context, center.x-radius1, center.y-radius1, 2*radius1, 2*radius1, angle_x (angle1+orientation), angle_x (angle2))
 			elseif orientation = 0.0 then
 				if arc_style /= -1 then
-					x0 := real_to_integer (center.x+radius1*d_cos (angle1));
-					y0 := real_to_integer (center.y-radius2*d_sin (angle1));
-					x1 := real_to_integer (center.x+radius1*d_cos (angle1+angle2));
-					y1 := real_to_integer (center.y-radius2*d_sin (angle1+angle2));
+					x0 := (center.x+radius1*d_cos (angle1)).truncated_to_integer;
+					y0 := (center.y-radius2*d_sin (angle1)).truncated_to_integer;
+					x1 := (center.x+radius1*d_cos (angle1+angle2)).truncated_to_integer;
+					y1 := (center.y-radius2*d_sin (angle1+angle2)).truncated_to_integer;
 					join_lines (center, x0, y0, x1, y1, arc_style)
 				end;
 				x_draw_arc (display_pointer, window_object, graphic_context, center.x-radius1, center.y-radius2, 2*radius1, 2*radius2, angle_x (angle1), angle_x (angle2))
@@ -204,7 +204,7 @@ feature
 				elseif (orientation = 90.0) or (orientation = 270.0) then
 				x_draw_rectangle (display_pointer, window_object, graphic_context, center.x-(r_height // 2), center.y-(r_width // 2), r_height-1, r_width-1)
 			else
-				c_draw_rectangle (display_pointer, window_object, graphic_context, center.x, center.y, r_width // 2, r_height // 2, real_to_integer (orientation*64))
+				c_draw_rectangle (display_pointer, window_object, graphic_context, center.x, center.y, r_width // 2, r_height // 2, (orientation*64).truncated_to_integer)
 			end
 		end;
 
@@ -305,7 +305,7 @@ feature
 				elseif (orientation = 90.0) or (orientation = 270.0) then
 				x_fill_rectangle (display_pointer, window_object, graphic_context, center.x-half_height, center.y-half_width, r_height, r_width)
 			else
-				c_fill_rectangle (display_pointer, window_object, graphic_context, center.x, center.y, half_width, half_height, real_to_integer (orientation*64))
+				c_fill_rectangle (display_pointer, window_object, graphic_context, center.x, center.y, half_width, half_height, (orientation*64).truncated_to_integer)
 			end
 		end;
 

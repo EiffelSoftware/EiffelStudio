@@ -46,7 +46,7 @@ feature -- Access
 			converted: INTEGER
 		do 
 			pointX := p.x; pointY := p.y; 
-			converted := real_to_integer (size_of_side/2);
+			converted := (size_of_side/2).truncated_to_integer;
 			x0 := center.x - converted; 
 			y0 := center.y - converted; 
 			x1 := x0 + size_of_side; 

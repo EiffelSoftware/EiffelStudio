@@ -68,7 +68,9 @@ feature -- Access
 			half_width := width // 2;
 			half_height := height // 2;
 			!! Result;
-			Result.set (upper_left.x+real_to_integer (half_width*v_cos+half_height*v_sin), upper_left.y-real_to_integer (half_width*v_sin-half_height*v_cos))
+			Result.set (
+				upper_left.x+(half_width*v_cos+half_height*v_sin).truncated_to_integer,
+				upper_left.y-(half_width*v_sin-half_height*v_cos).truncated_to_integer)
 		end;
 
 	height: INTEGER;
@@ -183,8 +185,8 @@ feature -- Modification & Insertion
 		require else
 			scale_factor_positive: f > 0.0
 		do
-			width := real_to_integer (f*width);
-			height := real_to_integer (f*height);
+			width := (f*width).truncated_to_integer;
+			height := (f*height).truncated_to_integer;
 			upper_left.xyscale (f, px, py);
 			set_conf_modified
 		end;

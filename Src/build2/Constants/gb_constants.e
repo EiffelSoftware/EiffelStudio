@@ -348,6 +348,8 @@ feature -- Warning Dialogs
 		%alphanumeric characters or underscores,%Nand start with an alphabetic character.%N%
 		%please select a different component name."
 		
+	Event_feature_name_warning: STRING is "Please correct invalid feature names (highlighted in red).%N%NPossible causes include :-%N   Name already used as object name in system.%N   Name already used as feature name in system%N   Name is an Eiffel reserved word."
+		
 	Component_identical_name_warning: STRING is " is already used as a component name.%NPlease enter a unique component name."
 	
 	Windows_unsupported_pixmap_type: STRING is "File type not supported. BMP, ICO and PNG file types supported."

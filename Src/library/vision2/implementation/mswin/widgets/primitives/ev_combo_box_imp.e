@@ -59,7 +59,7 @@ inherit
 	WEL_DROP_DOWN_COMBO_BOX_EX
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			set_font as wel_set_font,
@@ -141,6 +141,19 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
+		end
 
 	text_field: EV_INTERNAL_COMBO_FIELD_IMP
 			-- An internal text field that forwards the events to the
@@ -698,6 +711,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.71  2000/04/17 17:29:05  rogers
+--| Added wel_window_parent fix.
+--|
 --| Revision 1.70  2000/04/11 19:01:29  rogers
 --| Moved creation of ev_children into make.
 --|

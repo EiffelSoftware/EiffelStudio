@@ -28,7 +28,7 @@ XCOPY /Y Delivery\vision2_tour\bitmaps\ico\properties.ico .\bitmaps\ico\
 XCOPY /Y Delivery\vision2_tour\bitmaps\ico\size_down.ico .\bitmaps\ico\
 XCOPY /Y Delivery\vision2_tour\bitmaps\ico\size_up.ico .\bitmaps\ico\
 XCOPY /Y Delivery\vision2_tour\bitmaps\png\image1.png .\bitmaps\png\
-XCOPY /Y Delivery\vision2_tour\bitmaps\png\image1.png .\bitmaps\png\
+XCOPY /Y Delivery\vision2_tour\bitmaps\png\image2.png .\bitmaps\png\
 
 
 REM Copy modified vision2 interface files needed.

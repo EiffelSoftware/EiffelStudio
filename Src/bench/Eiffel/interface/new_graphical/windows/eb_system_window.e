@@ -188,8 +188,14 @@ feature -- Content initialization
 
 	reset_content is
 			-- Delete all entered information.
+		local
+			l_tab_list: like tab_list
 		do
-			tab_list.do_all ({EB_SYSTEM_TAB}~reset)
+			l_tab_list := tab_list
+			l_tab_list.do_all ({EB_SYSTEM_TAB}~reset)
+			if Workbench.is_already_compiled then
+				l_tab_list.do_all ({EB_SYSTEM_TAB}~disable_set_only_once_widgets)
+			end
 			is_content_valid := False
 		end
 

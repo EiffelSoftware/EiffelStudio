@@ -345,7 +345,6 @@ feature {NONE} -- Initialization
 			extend (finalized_options_frame ("Finalization options"))
 
 				-- Add C specific widgets
-			c_specific_widgets.extend (address_expression_check)
 			c_specific_widgets.extend (dynamic_rt_check)
 			c_specific_widgets.extend (mt_runtime_check)
 			c_specific_widgets.extend (shared_library_check)
@@ -355,6 +354,12 @@ feature {NONE} -- Initialization
 			c_specific_widgets.extend (dead_code_removal_check)
 			c_specific_widgets.extend (inlining_check)
 			c_specific_widgets.extend (inlining_size_field)
+			
+				-- Add widgets that can be set only once
+			set_only_once_widgets.extend (address_expression_check)
+			set_only_once_widgets.extend (dynamic_rt_check)
+			set_only_once_widgets.extend (mt_runtime_check)
+			set_only_once_widgets.extend (vape_check)
 		end
 	
 	ace_frame (st: STRING): EV_FRAME is

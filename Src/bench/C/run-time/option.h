@@ -24,9 +24,10 @@ struct dbg_opt {
 };
 
 struct eif_opt {
-	int16 assert_level;			  /* Assertion level */
-	int16 trace_level;			  /* Tracing level */
-	struct dbg_opt debug_level;	  /* Debug level */
+	int16 assert_level;			/* Assertion level */
+	int16 trace_level;			/* Tracing level */
+	int16 profile_level;			/* Profiling level */
+	struct dbg_opt debug_level;	  	/* Debug level */
 };
 
 /* Assertion flags for tests */
@@ -52,13 +53,41 @@ struct eif_opt {
 #define AS_CHECK	  		(AS_LOOP+CK_CHECK)
 #define AS_ALL				AS_CHECK
 
-/* Debug level values */
-#define DB_NO				0		 /* No debug */
-#define DB_ALL				1		 /* Debug all */
+/* Option level values for debugging, tracing and profiling */
+#define OPT_NO				0		 /* No option */
+#define OPT_ALL				1		 /* Yes/all option */
 
 extern struct eif_opt foption[];	/* Frozen option table */
 extern struct eif_opt *eoption;		/* Melted option table */
 
 extern int is_debug();		/* Debug level query */
+
+/*
+ * Options for E-PROFILE && E-TRACE
+ */
+
+extern int trace_call_level;			/* Call level to report at E-TRACE output */
+
+struct profile_stack *prof_stack;	/* Stack that maintains profile information
+					 * IMPORTANT: This stack is needed for
+					 *	      recursive features during internal profiling
+					 */
+
+extern void check_options();			/* Dispatches to start_profile and start_trace */
+extern void check_options_stop();		/* Dispatches to stop_profile and stop_trace */
+
+extern void start_trace();			/* Prints entering feature ... */
+extern void stop_trace();			/* Prints leaving feature ... */
+
+extern void initprf();				/* Generates table for profiling */
+extern void exitprf();				/* Saves table as textfile */
+
+extern void start_profile();			/* Starts profiling of a certain feature */
+extern void stop_profile();			/* Stops profiling of a certain feature */
+
+extern void p_rewind();				/* Stops all timer counts in the stack items,
+						 * updates the table, and
+						 * pops the items from the stack
+						 */
 
 #endif

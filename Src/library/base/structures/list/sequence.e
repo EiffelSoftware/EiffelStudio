@@ -16,7 +16,7 @@ deferred class SEQUENCE [G] inherit
 
 	ACTIVE [G]
 		redefine
-				prune_all
+			prune_all
 		end
 
 	BILINEAR [G]

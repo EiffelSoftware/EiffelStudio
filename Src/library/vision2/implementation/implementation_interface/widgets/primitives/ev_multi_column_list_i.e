@@ -184,6 +184,9 @@ feature -- Element change
 				column_titles.extend (clone (a_title))
 			end
 			column_title_changed (a_title, a_column)
+			if column_titles.count > column_count then
+				expand_column_count_to (column_titles.count)
+			end
 		ensure
 			a_title_assigned: a_title.is_equal (column_title (a_column))
 		end
@@ -215,6 +218,9 @@ feature -- Element change
 				column_title_changed ("", i)
 				i := i + 1
 				old_count := old_count - 1
+			end
+			if column_titles.count > column_count then
+				expand_column_count_to (column_titles.count)
 			end
 		end
 
@@ -448,6 +454,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/04/07 17:34:55  king
+--| Implemented set_column* to expand column_count
+--|
 --| Revision 1.45  2000/03/29 01:43:41  king
 --| Added pixmapping functionality
 --|

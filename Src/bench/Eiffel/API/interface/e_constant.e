@@ -9,7 +9,7 @@ class E_CONSTANT
 
 inherit
 
-	E_ROUTINE
+	E_FEATURE
 		redefine
 			is_constant, type
 		end

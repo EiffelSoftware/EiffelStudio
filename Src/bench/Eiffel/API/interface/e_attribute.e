@@ -9,7 +9,7 @@ class E_ATTRIBUTE
 
 inherit
 
-	E_ROUTINE
+	E_FEATURE
 		redefine
 			is_attribute, type
 		end

@@ -206,7 +206,9 @@ feature {NONE} -- Execution
 			column1_width: INTEGER
 			list_width: INTEGER
 		do
-			if not inside_on_resize_right_list_column then
+			if not ((create {PLATFORM}).is_windows) then
+				right_list.remove_selection
+			elseif  not inside_on_resize_right_list_column then
 				inside_on_resize_right_list_column := True
 				column1_width := right_list.column_width (1)
 				column2_width := right_list.column_width (2)
@@ -218,8 +220,6 @@ feature {NONE} -- Execution
 					right_list.set_column_width ((list_width - column1_width - 2).max (1), 2)
 				end
 				resize_actions.resume
-				clear
-				right_list.remove_selection
 				inside_on_resize_right_list_column := False
 			end
 		end
@@ -243,6 +243,8 @@ feature {NONE} -- Execution
 		do
 			clear
 			it ?= l_item
+			if it /= Void then
+
 			check
 				correct_type: it /= Void
 			end
@@ -262,6 +264,7 @@ feature {NONE} -- Execution
 			current_edition_window.set_position (edition_window_x, edition_window_y)
 			current_edition_window.set_size (column2_width - 2, right_list.row_height - 5)
 			current_edition_window.show_relative_to_window (Current)
+			end
 		end
 		
 	on_window_move_and_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER) is

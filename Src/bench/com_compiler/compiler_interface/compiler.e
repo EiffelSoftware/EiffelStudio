@@ -14,6 +14,9 @@ inherit
 			compile,
 			finalize,
 			precompile,
+			compile_to_pipe,
+			finalize_to_pipe,
+			precompile_to_pipe,
 			freezing_occurred,
 			compiler_version,
 			generate_msil_keyfile,
@@ -21,7 +24,10 @@ inherit
 			freeze_command_arguments,
 			remove_file_locks,
 			has_signable_generation,
-			expand_path
+			expand_path,
+			is_output_piped,
+			output_pipe_name,
+			set_output_pipe_name
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -30,6 +36,11 @@ inherit
 		end
 
 	SYSTEM_CONSTANTS
+		export
+			{NONE} all
+		end
+		
+	SHARED_PROJECT_PROPERTIES
 		export
 			{NONE} all
 		end
@@ -53,6 +64,8 @@ feature {NONE} -- Initialization
 			Eiffel_project.set_error_displayer (e_displayer)
 			is_successful := False
 			create last_error_message.make_from_string ("System has not been compiled")
+			
+			set_compiler (Current)
 		end
 
 feature -- Access
@@ -68,6 +81,12 @@ feature -- Access
 		do
 			Result := Version_number
 		end
+		
+	is_output_piped: BOOLEAN
+		-- is compiler output piped?
+		
+	output_pipe_name: STRING
+		-- name of pipe for output
 
 	expand_path (a_path: STRING): STRING is
 			-- Epxand all env vars in the given path
@@ -149,12 +168,20 @@ feature -- Basic Operations
 			-- Compile.
 		local
 			rescued: BOOLEAN
+			l_pipe: WEL_PIPE
 		do
 			is_successful := False
 			if not rescued then
 				if not Eiffel_project.is_compiling then
-					Eiffel_project.melt
-
+					if is_output_piped then
+						create l_pipe.make_named (output_pipe_name, feature {WEL_PIPE}.outbound)
+						Eiffel_project.set_degree_output (create {COM_PIPED_DEGREE_OUTPUT}.make (l_pipe))
+						Eiffel_project.melt
+						l_pipe.close
+					else
+						Eiffel_project.set_degree_output (create {COM_DEGREE_OUTPUT}.make (current))
+						Eiffel_project.melt
+					end
 				if Eiffel_project.Workbench.successful then
 						is_successful := True					
 					else
@@ -168,15 +195,37 @@ feature -- Basic Operations
 			retry
 		end
 		
+	compile_to_pipe is
+			-- compile to pipe - returns pipe name
+		require
+			non_void_output_pipe_name: output_pipe_name /= Void
+			valid_output_pipe_name: not output_pipe_name.is_empty
+		do
+			output_pipe_name := Eiffel_ace.file_name
+			is_output_piped := True
+			main_window.process_compile
+		ensure
+			output_is_piped: is_output_piped
+		end
+		
 	finalize is
 			-- Finalize
 		local
 			rescued: BOOLEAN
+			l_pipe: WEL_PIPE
 		do
 			is_successful := False
 			if not rescued then
 				if not Eiffel_project.is_compiling then
-					Eiffel_project.finalize (False)
+					if is_output_piped then
+						create l_pipe.make_named (output_pipe_name, feature {WEL_PIPE}.outbound)
+						Eiffel_project.set_degree_output (create {COM_PIPED_DEGREE_OUTPUT}.make (l_pipe))
+						Eiffel_project.finalize (False)
+						l_pipe.close
+					else
+						Eiffel_project.set_degree_output (create {COM_DEGREE_OUTPUT}.make (current))
+						Eiffel_project.finalize (False)
+					end
 				end
 			else
 				event_output_string ("Compilation stopped%N")
@@ -186,15 +235,36 @@ feature -- Basic Operations
 			retry
 		end
 		
+	finalize_to_pipe is
+			-- finalize to pipe - returns pipe name
+		require
+			non_void_output_pipe_name: output_pipe_name /= Void
+			valid_output_pipe_name: not output_pipe_name.is_empty
+		do
+			is_output_piped := True
+			main_window.process_finalize
+		ensure
+			output_is_piped: is_output_piped
+		end
+		
 	precompile is
 			-- Precompile
 		local
 			rescued: BOOLEAN
+			l_pipe: WEL_PIPE
 		do
 			is_successful := False
 			if not rescued then
 				if not Eiffel_project.is_compiling then
-					Eiffel_project.precompile (true)
+					if is_output_piped then
+						create l_pipe.make_named (output_pipe_name, feature {WEL_PIPE}.outbound)
+						Eiffel_project.set_degree_output (create {COM_PIPED_DEGREE_OUTPUT}.make (l_pipe))
+						Eiffel_project.precompile (True)
+						l_pipe.close
+					else
+						Eiffel_project.set_degree_output (create {COM_DEGREE_OUTPUT}.make (current))
+						Eiffel_project.precompile (True)
+					end
 				end
 			else
 				event_output_string ("Compilation stopped%N")
@@ -202,6 +272,18 @@ feature -- Basic Operations
 		rescue
 			rescued := True
 			retry
+		end
+		
+	precompile_to_pipe is
+			-- precompile to pipe - returns pipe name
+		require
+			non_void_output_pipe_name: output_pipe_name /= Void
+			valid_output_pipe_name: not output_pipe_name.is_empty
+		do
+			is_output_piped := True
+			main_window.process_precompile
+		ensure
+			output_is_piped: is_output_piped
 		end
 		
 	generate_msil_keyfile (filename: STRING) is
@@ -257,5 +339,19 @@ feature -- Basic Operations
 				Eiffel_system.System.server_controler.wipe_out
 			end
 		end
+		
+feature -- Element Change
+
+	set_output_pipe_name (a_name: STRING) is
+			-- set 'output_pipe_name' to 'a_name'
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+		do
+			output_pipe_name := a_name.clone (a_name)
+		ensure
+			output_pipe_name_set: output_pipe_name.is_equal (a_name)
+		end
+		
 		
 end -- class COMPILER

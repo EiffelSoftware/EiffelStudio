@@ -71,6 +71,18 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	output_pipe_name: STRING is
+			-- Output pipe's name
+		do
+			-- Put Implementation here.
+		end
+
+	is_output_piped: BOOLEAN is
+			-- Is compiler output sent to pipe `output_pipe_name'
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
 
 	create_item is
@@ -97,6 +109,24 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
+	compile_to_pipe is
+			-- Compile with piped output.
+		do
+			-- Put Implementation here.
+		end
+
+	finalize_to_pipe is
+			-- Finalize with piped output.
+		do
+			-- Put Implementation here.
+		end
+
+	precompile_to_pipe is
+			-- Precompile with piped output.
+		do
+			-- Put Implementation here.
+		end
+
 	expand_path (a_path: STRING): STRING is
 			-- Takes a path and expands it using the env vars.
 			-- `a_path' [in].  
@@ -113,6 +143,13 @@ feature -- Basic Operations
 
 	remove_file_locks is
 			-- Remove file locks
+		do
+			-- Put Implementation here.
+		end
+
+	set_output_pipe_name (return_value: STRING) is
+			-- Set output pipe's name
+			-- `return_value' [in].  
 		do
 			-- Put Implementation here.
 		end

@@ -30,9 +30,24 @@ feature {NONE} -- Initialization
 			Compile_c := True
 			Compile_eiffel := True
 			stop_on_error := True
+			new_eiffel_project := False
 		end
 
 feature -- Access
+
+	raw_file_name: STRING is
+			-- Intermediate file for IDL generator
+		once
+			Result := clone (destination_folder)
+			Result.append ("\idl\e2idl.output")
+	
+		end
+
+	eiffel_class_name: STRING
+			-- Eiffel class name to generate IDL
+
+	eiffel_project_name: STRING
+			-- Eiffel project name
 
 	in_process_server: BOOLEAN
 			-- Should in process server code be generated?
@@ -51,6 +66,9 @@ feature -- Access
 	
 	project_name: STRING
 			-- Project name
+
+	new_eiffel_project: BOOLEAN
+			-- Is new EiffelCOM project from Eiffel class?
 
 	idl: BOOLEAN
 			-- Is definition file an IDL file?
@@ -130,6 +148,28 @@ feature -- Element Change
 			out_of_process_server_set: out_of_process_server = a_boolean
 		end
 
+	set_eiffel_class_name (c_name: like eiffel_class_name) is
+			-- Set 'eiffel_class_name' to 'c_name'.
+		require
+			non_void_name: c_name /= Void
+			valid_name: not c_name.empty
+		do
+			eiffel_class_name := clone (c_name)
+		ensure
+			name_set: eiffel_class_name.is_equal (c_name)
+		end
+
+	set_eiffel_project_name (p_name: like eiffel_project_name) is
+			-- Set 'eiffel_project_name' to 'p_name'.
+		require
+			non_void_name: p_name /= Void
+			valid_name: not p_name.empty
+		do
+			eiffel_project_name := clone (p_name)
+		ensure
+			name_set: eiffel_project_name.is_equal (p_name)
+		end
+
 	set_destination_folder (a_folder: like destination_folder) is
 			-- Set `destination_folder' with `a_folder'.
 		require
@@ -189,6 +229,14 @@ feature -- Element Change
 			type_library_file_name := clone (a_type_library_file_name)
 		ensure
 			type_library_file_name_set: type_library_file_name.is_equal (a_type_library_file_name)
+		end
+
+	set_new_eiffel_project (l_bool: BOOLEAN) is
+			-- Set 'new_eiffel_project' to 'l_bool'.
+		do
+			new_eiffel_project := l_bool
+		ensure
+			new_eiffel_project_set: new_eiffel_project = l_bool
 		end
 	
 	set_idl (a_boolean: BOOLEAN) is

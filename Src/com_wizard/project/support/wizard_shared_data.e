@@ -63,6 +63,9 @@ feature -- Access
 	Eiffel_compilation_error: INTEGER is -101
 			-- Eiffel compilation error
 
+	Idl_generation_error: INTEGER is -102
+			-- Eiffel generation error
+
 	Generated_files_file_name: STRING is "generated.txt"
 			-- File including list of generated files
 

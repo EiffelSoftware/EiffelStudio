@@ -23,6 +23,8 @@
 #define Wizard0_Bitmap                  124
 #define Splash_screen_dialog            125
 #define Splash_bitmap                   127
+#define Wizard_Eiffel_Project_Dialog    129
+#define Wizard_Eiffel_Project_File_Dialog 129
 #define Definition_File_Edit            1007
 #define Definition_File_Input_Static    1008
 #define Browse_Button                   1009
@@ -44,6 +46,7 @@
 #define Destination_Folder_Static       1044
 #define Title_Question_Static           1044
 #define Progress_Bar                    1045
+#define Definition_File_Static2         1045
 #define Progress_Static                 1046
 #define Eiffel_Code_Compilation_Static  1047
 #define Title_Static                    1048
@@ -51,7 +54,9 @@
 #define Open_Project_Check              1049
 #define C_Code_Compilation_Check        1049
 #define Create_Project_Check            1050
+#define Create_Project_From_COM_Check   1050
 #define Definition_File_Browse_Button   1051
+#define Create_Project_From_Eiffel_Check 1051
 #define Code_Type_Static                1052
 #define Component_Type_Static           1054
 #define Marshalling_Question_Static     1056
@@ -64,14 +69,17 @@
 #define Client_radio                    1061
 #define Stop_check                      1062
 #define Server_radio                    1062
+#define Project_File_Edit               1064
+#define Project_File_Browse_Button      1065
+#define Eiffel_Class_Edit               1066
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        128
+#define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         40014
-#define _APS_NEXT_CONTROL_VALUE         1063
+#define _APS_NEXT_CONTROL_VALUE         1066
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

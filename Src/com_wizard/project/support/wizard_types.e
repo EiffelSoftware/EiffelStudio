@@ -103,6 +103,8 @@ feature -- COM/C types
 
 	Variant_bool: STRING is "VARIANT_BOOL"
 
+	Variant_bool_pointer: STRING is "VARIANT_BOOL *"
+
 	Date_c_keyword, Com_date_type: STRING is "DATE"
 
 	Hresult: STRING is "HRESULT"
@@ -122,6 +124,8 @@ feature -- COM/C types
 	Bstr: STRING is "BSTR"
 
 	Com_char_type: STRING is "CHAR"
+
+	Com_character_pointer: STRING is "CHAR *"
 
 	Olechar: STRING is "OLECHAR"
 
@@ -167,11 +171,19 @@ feature -- COM/C types
 
 	Com_float_type: STRING is "FLOAT"
 
+	Com_float_pointer: STRING is "FLOAT *"
+
 	Double_c_keyword: STRING is "double"
 
 	Unsigned_int: STRING is "unsigned int"
 
+	Com_integer_type: STRING is "INT"
+
+	Com_integer_pointer: STRING is "INT *"
+
 	Carray: STRING is "CARRAY"
+
+	Com_double_pointer: STRING is "DOUBLE *"
 
 feature -- Cecil types
 

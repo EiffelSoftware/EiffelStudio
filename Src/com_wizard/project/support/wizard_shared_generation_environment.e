@@ -44,11 +44,17 @@ feature -- Access
 			Result := progress_report_cell.item
 		end
 
-	Ce_mapper: STRING is "rt_ce"
+	Ce_mapper: STRING is 
 			-- C++ class holding C to Eiffel mappers
+		do
+			Result := "rt_ce"
+		end
 
-	Generated_ce_mapper: STRING is "rt_generated_ce"
+	Generated_ce_mapper: STRING is 
 			-- C++ class holding generated C to Eiffel mappers, object name.
+		do
+			Result := "rt_generated_ce"
+		end
 
 	Generated_ce_class_name: STRING is "ecom_generated_ce"
 			-- C++ class name for generated mapper functions C to Eiffel.

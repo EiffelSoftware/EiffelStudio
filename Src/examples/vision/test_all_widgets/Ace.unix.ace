@@ -1,0 +1,75 @@
+system
+	test_all_widgets
+
+root
+
+	demo (ROOT_CLUSTER): "make"
+
+default
+
+--	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/vision")
+
+	assertion (all);
+
+cluster
+
+	ROOT_CLUSTER: ".";
+
+-- If you are not using the precompiled version of EiffelVision, 
+-- uncomment the `external' clause below. 
+
+-- EiffelBase:
+
+	all base: 		"$EIFFEL4\library\base"
+		exclude
+			"table_eiffel3";
+			"desc"
+		end
+
+-- MEL
+    all mel:                            "$EIFFEL4/library/mel/";
+                        
+                        
+-- EiffelVision
+
+    vision:                 	"$EIFFEL4/library/vision";
+	vision_kernel (vision):         "$/oui/kernel";
+	vision_widgets (vision):        "$/oui/widgets";
+	vision_context_data (vision):	"$/oui/context_data";
+
+	vision_figures (vision):	"$/figures";
+	vision_tools (vision):		"$/tools";
+
+	-- Toolkit
+	vision_toolkit (vision):		"$/implement/toolkit";
+	vision_toolkit_kernel (vision_toolkit):	"$/kernel";
+	vision_toolkit_widgets (vision_toolkit):	"$/widgets";
+	vision_toolkit_support (vision_toolkit):	"$/support";
+
+
+	-- Implementation clusters for x/Motif
+	vision_imp (vision):          		"$/implement/motif";
+	vision_imp_kernel (vision_imp):         "$/kernel";
+	vision_imp_widgets (vision_imp):        "$/widgets";
+	vision_imp_support (vision_imp):        "$/support";
+
+    vision_imp_x (vision):      		"$/implement/x";
+    vision_imp_x_kernel (vision_imp_x):  	"$/kernel";
+--        vision_imp_x_widgets (vision_imp_x):    "$/widgets";
+    vision_imp_x_support (vision_imp_x):    "$/support";
+
+    vision_obsolete_motif (vision): "$/obsolete/motif";
+    vision_obsolete_oui (vision):   "$/obsolete/oui";
+    vision_obsolete_toolkit (vision):"$/obsolete/toolkit";
+
+external
+
+        include_path:
+                "\$(EIFFEL4)/library/mel/Clib";
+
+        object:
+                "$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a",
+                "$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libXpm.a",
+                "-lXm -lXt -lX11 -lXext -lXp"
+
+end

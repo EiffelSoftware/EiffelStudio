@@ -292,33 +292,37 @@ feature -- Pattern generation
 		end;
 
 	generate_separate_pattern (id: INTEGER; file: INDENT_FILE) is
+		local
+			f_name: STRING
 		do
-			file.putstring ("static void sepcall");
-			file.putint (id);
+			f_name := "sepcall";
+			f_name.append_integer (id);
+
+			file.generate_function_signature ("void", f_name, False, file,
+					<<"ptr", "is_extern">>,
+					<<"fnptr", "int">>);
+
 			file.putstring ("%
-				%(ptr, is_extern)%N%
-				%fnptr ptr;%N%
-				%int is_extern;%N%
-				%{%N");
-			file.putstring ("%TEIF_REFERENCE Current;%N");
+				%{%N%
+				%%TEIF_REFERENCE Current;%N");
 			if not result_type.is_void then
 				file.putchar ('%T');
 				result_type.generate (file);
 				file.putstring ("result;%N%Tstruct item *it;%N");
 			end;
 			generate_argument_declaration (1, file);
-			generate_toc_pop (file);
+			generate_separate_get (file);
 			file.putstring ("%Tif (is_extern)%N%T%T");
 			generate_routine_call (True, file);
 			file.putstring ("%Telse%N%T%T");
 			generate_routine_call (False, file);
-			if not result_type.is_void then
-				file.putstring ("%Tit = iget();%N");
-				file.putstring ("%Tit->type = ");
-				result_type.generate_sk_value (file);
-				file.putstring (";%N%Tit->");
-				result_type.generate_union (file);
-				file.putstring (" = result;%N");
+			if result_type.is_void then
+				file.putstring ("CURSPA(_concur_current_client->sock, ack);%N")
+			else
+				file.putstring (result_type.separate_send_macro);
+				file.putstring ("(result, %"name%", ");
+				file.putstring (result_type.c_string);
+				file.putstring ("));%N");
 			end;
 			file.putstring ("}%N%N");
 		end;
@@ -331,7 +335,7 @@ feature -- Pattern generation
 			f_name := "toc";
 			f_name.append_integer (id);
 
-			file.generate_function_signature ("void", f_name, "static", file,
+			file.generate_function_signature ("void", f_name, False, file,
 					<<"ptr", "is_extern">>,
 					toc_arg_types);
 			file.putstring ("%
@@ -374,7 +378,7 @@ feature -- Pattern generation
 			arg_types := argument_type_array (True);
 
 			file.generate_function_signature
-				(result_string, f_name, "static", file,
+				(result_string, f_name, False, file,
 				 argument_name_array, arg_types);
 
 			file.putstring ("{%N%Tstruct item *it;%N");
@@ -439,6 +443,28 @@ feature -- Pattern generation
 				file.putstring (";%N");
 				i := i - 1;
 			end;
+		end;
+
+	generate_separate_get (file: INDENT_FILE) is
+			-- Generate get instructions for pattern for separate call
+		local
+			i: INTEGER
+		do
+			file.putstring ("%TCurrent = eif_separate_id_object(sep_oid);%N");
+			from
+				i := argument_count;
+			until
+				i < 1
+			loop
+				file.putstring ("%Targ");
+				file.putint (i);
+				file.putstring (" = ");
+				file.putstring (argument_types.item (i).separate_get_macro);
+				file.putchar ('(');
+				file.putint (i);
+				file.putstring (");%N");
+				i := i - 1;
+			end
 		end;
 
 	generate_routine_call (is_extern: BOOLEAN; file: INDENT_FILE) is

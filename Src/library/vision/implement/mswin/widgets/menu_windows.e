@@ -70,7 +70,7 @@ feature -- Status setting
 			-- by window manager of parent widget if `flag', disable it
 			-- otherwise.
 		local
-			m: MENU_PULL_WINDOWS
+			m: MENU_WINDOWS
 		do
 			if realized then
 				if parent /= Void and parent.realized and then parent.exists then
@@ -79,16 +79,17 @@ feature -- Status setting
 						m ?= parent
 						m.manage_item (Current)
 					elseif managed and then not flag then
+						managed := flag
 						m ?= parent
 						m.unmanage_item (Current)
 					end
 				end
+				managed := flag
 			else
 				managed := flag
 				realize
 			end
 		end
-
 
 	check_widget (widget: TOGGLE_B_WINDOWS) is
 		local
@@ -255,6 +256,7 @@ feature -- Element change
 		local
 			ba: BAR_WINDOWS
 			mp: MENU_PULL_WINDOWS
+			m: MENU_WINDOWS
 			b: BUTTON_WINDOWS
 			s: SEPARATOR_WINDOWS
 		do
@@ -280,16 +282,14 @@ feature -- Element change
 					mp ?= w
 					if mp /= Void then
 						mp.create
-						--ba ?= mp.parent
-						--if ba /= Void then
-							mp.put_children_in_menu (associated_root)
-							append_popup (mp, mp.menu_button.text)
-						--else
-						--	-- Add popup to menupull XXX
-						--end
+						mp.put_children_in_menu (associated_root)
+						m ?= w.parent
+						m.insert_popup (mp, index_of (mp) -
+								unmanaged_count (mp) - 1, mp.menu_button.text)
 					end
 				end
 			end
+			associated_shell.wel_draw_menu
 		end
 
 	unmanage_item (w: WIDGET_WINDOWS) is
@@ -315,20 +315,17 @@ feature -- Element change
 				if s /= Void then
 					-- Delete separator from menu XXX
 				else
-					mp ?= w
-					if mp /= Void then
-						mp.destroy_item
-						--ba ?= mp.parent
-						--if ba /= Void then
-						--	ba.remove_popup (mp)
-						--else
-						--	cwin_delete_menu (wel_item, index_of (mp) - unmanaged_count (mp) - 1, Mf_byposition)
-						--	delete_item (id_children.item (mp))
-						--	id_children.remove (mp)
-						--end
+					ba ?= w.parent
+					if ba /= Void then
+						ba.remove_popup (w)
+					else
+						cwin_delete_menu (wel_item, index_of (w) - unmanaged_count (w), Mf_byposition)
+						--delete_item (id_children.item (mp))
+						--id_children.remove (mp)
 					end
 				end
 			end
+			associated_shell.wel_draw_menu
 		end
 
 feature -- Removal
@@ -342,6 +339,62 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
+	unmanaged_count (w: WIDGET_WINDOWS): INTEGER is
+			-- Number of unmanaged widgets before `w'.
+			--| Excluding MENU_BUTTON_WINDOWS because they
+			--| come with MENU_PULL_WINDOWS
+		require
+			widget_not_void: w /= Void
+		local
+			c: ARRAYED_LIST [WIDGET_WINDOWS]
+			mb: MENU_BUTTON_WINDOWS
+		do
+			c := children_list
+			from
+				c.start
+				c.search (w)
+			until
+				c.after
+			loop
+				mb ?= c.item
+				if mb = Void then
+					if not c.item.managed then
+						Result := Result + 1
+					end
+				end
+				c.forth
+			end
+		end
+
+	index_of (w: WIDGET_WINDOWS): INTEGER is
+			-- The index of the popup `w' in the `button_list'.
+			--| Excluding MENU_BUTTON_WINDOWS because they
+			--| come with MENU_PULL_WINDOWS
+		require
+			widget_not_void: w /= Void
+			widget_in_list: children_list.has (w)
+		local
+			c: ARRAYED_LIST [WIDGET_WINDOWS]
+			mb: MENU_BUTTON_WINDOWS
+			widget_found: BOOLEAN
+		do
+			from
+				c := children_list
+				c.finish
+			until
+				widget_found or else c.before
+			loop
+				if c.item = w then
+					widget_found := True
+				end
+				mb ?= c.item
+				if mb = Void then
+					Result := Result + 1
+				end
+				c.back
+			end
+		end
+			
 	associated_shell: WM_SHELL_WINDOWS is
 		local
 			p : COMPOSITE_WINDOWS

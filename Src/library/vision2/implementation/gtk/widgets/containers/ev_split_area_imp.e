@@ -55,11 +55,11 @@ feature
 			check item_imp_not_void: item_imp /= Void end
 			C.gtk_container_set_resize_mode (c_object, C.gtk_resize_immediate_enum)
 			C.gtk_paned_pack1 (c_object, item_imp.c_object, False, False)
-			update_child_requisition (item_imp.c_object)
+			C.gtk_container_set_resize_mode (c_object, C.gtk_resize_parent_enum)
+		--	update_child_requisition (item_imp.c_object)
 			first := an_item
 			set_item_resize (first, False)
 			update_splitter
-			C.gtk_container_set_resize_mode (c_object, C.gtk_resize_parent_enum)
 		end
 
 	set_second (an_item: like item) is
@@ -71,11 +71,11 @@ feature
 			check item_imp_not_void: item_imp /= Void end
 			C.gtk_container_set_resize_mode (c_object, C.gtk_resize_immediate_enum)
 			C.gtk_paned_pack2 (c_object, item_imp.c_object, True, False)
-			update_child_requisition (item_imp.c_object)
+			C.gtk_container_set_resize_mode (c_object, C.gtk_resize_parent_enum)
+	--		update_child_requisition (item_imp.c_object)
 			second := an_item
 			set_item_resize (second, True)
 			update_splitter
-			C.gtk_container_set_resize_mode (c_object, C.gtk_resize_parent_enum)
 		end
 
 	prune (an_item: like item) is
@@ -252,6 +252,9 @@ end -- class EV_SPLIT_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2001/07/12 18:08:57  etienne
+--| Fixed infinite loop problem in `set_first'/`set_second'.
+--|
 --| Revision 1.16  2001/07/12 16:32:24  etienne
 --| Corrected oversight of last commit.
 --|

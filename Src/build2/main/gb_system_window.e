@@ -14,11 +14,18 @@ inherit
 		end
 	
 	EV_LAYOUT_CONSTANTS
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
 		
 	GB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
 		
 	GB_SHARED_SYSTEM_STATUS
 		undefine
@@ -26,7 +33,10 @@ inherit
 		end
 		
 	GB_SHARED_COMMAND_HANDLER
-	
+		export
+			{NONE} all
+		end
+		
 	GB_WIDGET_UTILITIES
 		undefine
 			default_create, copy, is_equal

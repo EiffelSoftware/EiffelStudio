@@ -26,6 +26,8 @@ inherit
 	GB_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			default_create, is_equal, copy
 		end
 		
 	GB_WIDGET_UTILITIES

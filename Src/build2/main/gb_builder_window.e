@@ -18,6 +18,8 @@ inherit
 	GB_CONSTANTS
 		export
 			{NONE} all
+		undefine
+			default_create, copy, is_equal
 		end
 		
 	GB_COMMAND_HANDLER

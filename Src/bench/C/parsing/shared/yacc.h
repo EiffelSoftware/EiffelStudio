@@ -10,6 +10,9 @@
 	Include file for basics of Eiffel-Yacc interface
 */
 
+#ifndef _yacc_h_
+#define _yacc_h_
+
 #include "eif_macros.h"
 #include "eif_struct.h"
 #include "typenode.h"
@@ -123,3 +126,5 @@ extern struct location *current_location;
 
 extern char *rn_ast;					/* Result of a parsing */
 extern void internal_error(char *s);	/* Internal error */
+
+#endif /* _yacc_h_ */

@@ -14,14 +14,6 @@ inherit
 	GB_SHARED_COMMAND_HANDLER
 	
 	GB_SHARED_TOOLS
-	
-	WIZARD_SHARED
-		rename
-			pixmap as wizard_pixmap,
-			history as wizard_history
-		export
-			{NONE} all
-		end
 
 create
 	default_create

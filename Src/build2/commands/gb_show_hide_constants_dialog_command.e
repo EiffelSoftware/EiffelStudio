@@ -14,14 +14,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
-	WIZARD_SHARED
-		rename
-			pixmap as wizard_pixmap
-		export
-			{NONE} all
-		end
-		
+
 create
 	make
 

@@ -567,8 +567,9 @@ feature {NONE} -- Implementation
 		require
 			ev_any_not_void: ev_any /= Void
 			window_not_void: window /= Void
-			window_empty: window.is_empty
-			window_has_no_menu_bar: window.menu_bar = Void
+				-- Not really complete, but better than no check.
+				-- We really need to check the type of the incoming object.
+			window_empty: window.is_empty or window.menu_bar = Void
 		local
 			widget: EV_WIDGET
 			an_item: EV_ITEM

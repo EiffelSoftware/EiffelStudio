@@ -96,6 +96,7 @@ Formats,,,,,,,
 
 
 
+
 debugger,,,,,,,
 ,5,Feature evaluation,Arnaud,DBG0001,Xavier,10,Done
 ,4,debug_output feature used to display objects in the debugger,Xavier,DBG0002,Xavier,3,Done
@@ -107,7 +108,7 @@ debugger,,,,,,,
 ,3,Edit and Continue: Modifications are taken into account without killing and restarting the application,Xavier,DBG0008,,,
 ,3,Object/local edition,Xavier,DBG0009,,,
 ,4,"Conditional breakpoints, feature-triggered breakpoints, counter breakpoint",Xavier,DBG0010,Xavier,2,Done
-,4,Do not collapse the object tree at each step,Xavier,DBG0011,Xavier,2,
+,4,Do not collapse the object tree at each step,Xavier,DBG0011,,,
 ,3,Know the static type of Void objects,Manus,DBG0012,,,
 ,3,Breakpoints in editor mode,Arnaud,DBG0013,,,
 ,4,"Improve invariant support (know which class the invariant comes from, have the invariant in the call stack)",Xavier,DBG0014,,,

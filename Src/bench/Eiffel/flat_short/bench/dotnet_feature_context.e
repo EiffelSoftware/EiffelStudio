@@ -338,9 +338,9 @@ feature {NONE} -- Element Change
 			end
 			
 			if l_constructor /= void then
-				l_member_info := assembly_info.find_feature (l_namespace_name, l_parsed_arguments)
+				l_member_info := assembly_info.find_feature (assembly_name, l_namespace_name, l_parsed_arguments)
 			else
-				l_member_info := assembly_info.find_feature (l_namespace_name, current_feature.dotnet_name + l_parsed_arguments)
+				l_member_info := assembly_info.find_feature (assembly_name, l_namespace_name, current_feature.dotnet_name + l_parsed_arguments)
 			end
 			
 			if l_member_info /= Void then

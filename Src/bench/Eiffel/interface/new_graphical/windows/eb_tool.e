@@ -32,13 +32,13 @@ feature {NONE} -- Initialization
 		do
 				-- Linking with manager
 			manager := man
-			parent := manager.tool_parent
+--			parent := manager.tool_parent (Current)
 			parent_window := manager.associated_window
 
 			register
 			init_commands
 		ensure
-			parent_set: parent /= Void
+--			parent_set: parent /= Void
 		end
 
 	init_commands is
@@ -59,7 +59,10 @@ feature {EB_TOOL_MANAGER} -- Initialization
 
 feature -- Tool Properties
 
-	parent: EV_CONTAINER
+	parent: EV_CONTAINER is
+		do
+			Result := manager.tool_parent (Current)
+		end
 			-- Parent of Current
 
 	parent_window: EV_WINDOW
@@ -229,16 +232,18 @@ feature {EB_TOOL_MANAGER} -- Widget Implementation
 			destroyed: destroyed
 		end
 
-feature {NONE} -- Implementation
-
-	manager: EB_TOOL_MANAGER
-			-- Object containing Current
+feature --
 
 	container: EV_CONTAINER is
 			-- Form representing Current
 			-- most of the time an EV_VERTICAL_BOX
 		deferred
 		end
+
+feature {NONE} -- Implementation
+
+	manager: EB_TOOL_MANAGER
+			-- Object containing Current
 
 	raise_grabbed_popup is
 			-- Raise tool

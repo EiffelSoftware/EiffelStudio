@@ -16,7 +16,14 @@ inherit
 			reader as text_reader,
 			writer as text_writer
 		redefine
-			close
+			read_stream, 
+			readstream,
+			put_string, 
+			putstring,
+			put_character, 
+			putchar,
+			close--,
+			--copy_to
 		end
 
 create
@@ -82,8 +89,64 @@ feature -- Output
 				i := i + 1
 			end
 		end
+		
+	put_string, putstring (s: STRING) is
+			-- 
+		local
+			byte_array: NATIVE_ARRAY [INTEGER_8]
+			str_index: INTEGER
+		do
+			create byte_array.make (s.count)
+			from
+				str_index := 0
+			until
+				str_index = byte_array.count
+			loop
+				byte_array.put (str_index, s.item (str_index + 1).code.to_integer_8)
+				str_index := str_index + 1
+			end
+			writer.write_integer_8_array (byte_array)
+		end
+		
+	put_character, putchar (c: CHARACTER) is
+			-- Write `c' at current position.
+		local
+			i: INTEGER_8
+		do
+			writer.write_integer_8 (c.code.to_integer.to_integer_8)
+		end
+		
+		
 
 feature -- Input
+
+	read_stream, readstream (nb_char: INTEGER) is
+			-- Read a string of at most `nb_char' bound characters
+			-- or until end of file.
+			-- Make result available in `last_string'.
+		require else
+			is_readable: file_readable
+		local
+			new_count: INTEGER
+			str_area: NATIVE_ARRAY [INTEGER_8]
+			str_area_index: INTEGER
+		do
+			create last_string.make (nb_char)
+			last_string.grow (nb_char)
+			last_string.fill_blank
+			create str_area.make (nb_char)
+			new_count := reader.read_integer_8_array_integer_32_integer_32 (str_area, 0, nb_char)
+			
+			from
+				str_area_index := 0
+			until
+				str_area_index = str_area.get_length
+			loop
+				last_string.put (str_area.item (str_area_index).to_character, str_area_index + 1)
+				str_area_index := str_area_index + 1
+			end
+			internal_end_of_file := reader.peek_char = -1
+		end
 
 	read_integer, readint is
 			-- Read the binary representation of a new integer
@@ -92,6 +155,7 @@ feature -- Input
 			buf: SPECIAL [CHARACTER]
 		do
 			last_integer := reader.read_int_32
+			internal_end_of_file := reader.peek_char = -1
 		end
 
 
@@ -100,6 +164,7 @@ feature -- Input
 			-- from file. Make result available in `last_real'.
 		do
 			last_real := reader.read_single
+			internal_end_of_file := reader.peek_char = -1
 		end
 
 	read_double, readdouble is
@@ -107,6 +172,7 @@ feature -- Input
 			-- from file. Make result available in `last_double'.
 		do
 			last_double := reader.read_double
+			internal_end_of_file := reader.peek_char = -1
 		end
 	
 	read_data (p: POINTER; nb_bytes: INTEGER) is
@@ -126,8 +192,9 @@ feature -- Input
 				feature {MARSHAL}.write_byte (p + i, byte)
 				i := i + 1
 			end
+			internal_end_of_file := reader.peek_char = -1
 		end
-
+		
 feature {NONE} -- Implementation
 
 	c_open_modifier: INTEGER is 32768

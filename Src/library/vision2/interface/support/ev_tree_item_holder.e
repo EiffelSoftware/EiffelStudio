@@ -20,6 +20,17 @@ feature -- Implementation
 	implementation: EV_TREE_ITEM_HOLDER_I
 			-- Platform dependent access.
 
+feature -- Status report
+
+	find_item_recursively_by_data (data: ANY): EV_TREE_ITEM is
+			-- If `data' contained in a tree item at any level then
+			-- assign this item to `Result'.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.find_item_recursively_by_data (data)
+		end
+
 feature {NONE} -- Implementation
 
 	item_type: EV_TREE_ITEM is

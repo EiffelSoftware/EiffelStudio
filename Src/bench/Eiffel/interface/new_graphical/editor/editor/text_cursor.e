@@ -26,7 +26,7 @@ inherit
 		end
 
 create
-	make_from_absolute_pos
+	make_from_absolute_pos, make_from_relative_pos
 
 feature -- Initialization
 
@@ -40,6 +40,15 @@ feature -- Initialization
 			whole_text := a_window.text_displayed
 			set_y_in_lines (y)
 			set_x_in_pixels (x)
+		end
+
+	make_from_relative_pos (a_line: EDITOR_LINE; a_token: EDITOR_TOKEN;
+				pos: INTEGER; a_window: CHILD_WINDOW) is
+		do
+			associated_window := a_window
+			whole_text := a_window.text_displayed
+			set_line (a_line)
+			set_current_char (a_token, pos)
 		end
 
 feature -- Access
@@ -65,12 +74,22 @@ feature -- Access
 
 feature -- Element change
 
+	set_line (a_line: EDITOR_LINE) is
+			-- Make `a_line' the new value of `line'.
+		require
+			a_line_exists: a_line /= Void
+		do
+			line := a_line
+			y_in_lines := line.index
+			update_current_char
+		end
+
 	set_current_char (a_token: EDITOR_TOKEN; a_position: INTEGER) is
 			-- Make `a_token' be the new value for `token'.
 			-- Set the value of `pos_in_token' to `a_position'.
 			-- Update `x_in_pixels' accordingly.
 		require
-			token_not_void: a_token /= Void
+			a_token_exists: a_token /= Void
 			a_position_positive_not_null: a_position >= 0
 		local
 			current_width: INTEGER
@@ -331,7 +350,7 @@ feature -- Transformation
 	delete_previous is
 		do
 			if (line.previous /= Void) or else (token.previous /= Void)
-					or else (pos_in_token = 1) then
+					or else (pos_in_token > 1) then
 				go_left_char
 				delete_char
 			end
@@ -393,6 +412,11 @@ feature -- Transformation
 			update_current_char
 		end
 
+--	delete_before_cursor is
+--			-- Erase from beginning of line until cursor (non included).
+--		local
+--		do
+--		end
 
 feature {NONE} -- Implementation
 

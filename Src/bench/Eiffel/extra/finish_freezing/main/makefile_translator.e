@@ -1660,9 +1660,9 @@ feature {NONE} -- Implementation
 				end
 				Result := replacement
 			else
-				Result := env.get (word).twin
+				Result := env.get (word)
 				if Result /= Void and then not Result.is_empty then
-					Result := short_path (Result)
+					Result := short_path (Result.twin)
 				end
 			end
 		end

@@ -55,7 +55,6 @@ extern "C" {
 
 extern char *eif_typename (int16);
 extern int  eif_typename_len (int16);
-extern int eif_gen_count_with_dftype (int16 dftype);
 extern char eif_gen_typecode_with_dftype (int16 dftype, int pos);
 
 #ifdef __cplusplus

@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: " EiffelVision Toolbar button, mswindows implementation."
 	note: " Menu-items have even ids and tool-bar buttons have%
@@ -205,6 +204,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/04/24 21:23:15  rogers
+--| Removed FIXME_NOT_REVIEWED.
+--|
 --| Revision 1.24  2000/04/21 21:56:19  rogers
 --| Removed set_capture, release_capture, set_heavy_capture and
 --| release_heavy_capture.

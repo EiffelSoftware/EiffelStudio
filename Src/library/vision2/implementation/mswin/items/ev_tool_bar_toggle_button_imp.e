@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "EiffelVision toogle tool bar, mswindows implementation."
 	status: "See notice at end of class."
@@ -78,6 +77,9 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/04/24 21:23:58  rogers
+--| Removed FIXME_NOT_REVIEWED.
+--|
 --| Revision 1.15  2000/04/07 00:14:00  rogers
 --| Added interface. Both inerited interfaces are now redefined.
 --| Formatting.

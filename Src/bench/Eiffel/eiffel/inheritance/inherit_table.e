@@ -930,7 +930,7 @@ end;
 				end;
 			elseif
 				system.il_generation and then
-				Result.private_external_name = Void
+				Result.private_external_name_id = 0
 			then
 					-- Get external name of a pure Eiffel feature if any.
 				l_ext_name := yacc_feature.external_name

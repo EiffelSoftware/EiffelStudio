@@ -39,14 +39,14 @@ feature -- Debug
 			i: INTEGER
 		do
 			io.error.put_string ("Click list is:%N")
-			io.error.put_string (tagged_out)
+			io.error.put_string (out)
 			io.error.put_string ("Content is:%N")
 			from
 			until
 				i = count
 			loop
 				i := i + 1
-				io.error.put_string (i_th (i).tagged_out)
+				io.error.put_string (i_th (i).out)
 			end
 		end
 

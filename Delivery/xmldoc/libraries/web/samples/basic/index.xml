@@ -1,0 +1,73 @@
+<document output="studio" title="EiffelWeb Sample">
+	<meta_data/>
+	<paragraph>
+		<paragraph> This sample shows how to retrieve and display information from a            basic form on a web page.</paragraph>
+		<paragraph>
+			<note>
+				<bold>Note:</bold> This sample requires a web server supporting CGI in            order to be run. Both the Internet Information Services web server            from Microsoft and the GNU Apache server may be used.
+				<heading>
+					<size>2</size>Compiling
+				</heading>
+				<paragraph> To compile the example: </paragraph>
+				<list ordered="false">
+					<item>Launch EiffelStudio. </item>
+					<item>Select 
+						<bold>Use existing Ace (control file)</bold> and click 
+						<bold>OK</bold>. 
+					</item>
+					<item>Browse to 
+						<italic>Eiffel52\examples\web\basic\</italic>. 
+					</item>
+					<item>Choose 
+						<italic>Ace.ace</italic> on Windows platforms or 
+						<italic>Ace.ace</italic> on Unix platforms. 
+					</item>
+					<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
+					<item>Click 
+						<bold>OK</bold>.
+					</item>
+				</list>
+				<paragraph>
+					<heading>
+						<size>2</size>Installing
+					</heading>
+					<paragraph>The workbench version of the example (i.e. the version        compiled either by melting or freezing) relies on the file 
+						<italic>        web_demo.melted</italic> to execute properly. However the process is        launched by the web server which means that this file will not be in the        
+						<italic>path</italic> of the application. It is possible to set a registry entry        that will tell the Eiffel runtime where to find this file. The sample includes the file 
+						<italic>web.reg</italic>        that you can edit by replacing the line:
+					</paragraph>
+					<code>"MELT_PATH"="c:\\eiffel52\\examples\\web\\basic\\eifgen\\w_code"</code>
+					<paragraph>        with the path to the 
+						<italic>W_Code</italic> folder where you have compiled the        example (the 
+						<italic>W_Code</italic> folder is located underneath the 
+						<italic>Eifgen</italic>        folder). Once you have edited the file, simply double click it to        register the changes in the registry (click 
+						<italic>Yes </italic>when prompted).
+					</paragraph>
+					<paragraph>        You should then copy the file 
+						<italic>web_demo.exe</italic> in the 
+						<italic>cgi_bin</italic>        directory of your web server and the file 
+						<italic>sample.html</italic> in a        directory on the web server.
+					</paragraph>
+					<heading>
+						<size>2</size>        Running
+					</heading>
+					<paragraph>        To run the example, access the page 
+						<italic>sample.html</italic> that you copied        on the web server with a web browser (typically 
+						<italic>        http://localhost/sample.html</italic>). Fill in the text field with a        username and click 
+						<italic>Submit</italic>. You should see a page displaying the        name you jsut entered. Although not earth-shattering, this sample shows        the basis for building more complex forms processing in Eiffel.
+					</paragraph>
+					<heading>
+						<size>2</size>Under the Hood
+					</heading>
+					<paragraph> This basic sample has just one class SAMPLE which inherits from CGI_INTERFACE. SAMPLE implements execute which retrieves the name entered in the form and creates a new HTML page with it. </paragraph>
+					<paragraph> </paragraph>
+					<paragraph> See the 
+						<link>
+							<url>root_cluster/index.html</url>
+							<label>reference</label>
+						</link> for the class interfaces. 
+					</paragraph>
+				</paragraph>
+			</note>
+		</paragraph>
+	</paragraph></document>

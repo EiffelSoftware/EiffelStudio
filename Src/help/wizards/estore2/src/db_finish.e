@@ -79,12 +79,14 @@ feature -- basic Operations
 	launch_operations is
 			-- Generate the classes and the example. Modified by Cedric R.
 		local
-			li: LINKED_LIST[CLASS_NAME]
+			li: ARRAYED_LIST [CLASS_NAME]
 			dir: DIRECTORY
 			fi: PLAIN_TEXT_FILE
 			b: BOOLEAN
 			f_name: FILE_NAME
 			class_number: INTEGER
+			s: STRING
+			rep: DB_REPOSITORY
 		do
 			if not b then
 				if wizard_information.compile_project then
@@ -97,7 +99,8 @@ feature -- basic Operations
 			end
 
 			li := wizard_information.table_list
-			total := li.count
+				-- 2 classes are generated for a db table.
+			total := 2 * li.count
 			if wizard_information.new_project then	
 				total := total + 8
 				if is_oracle then
@@ -109,8 +112,9 @@ feature -- basic Operations
 			else
 				total := total + 2
 			end
-			create repositories.make
-			create class_generator
+			create repositories.make (10)
+			create table_class_generator
+			create table_constraints_generator
 			template_db_table_content := retrieve_resource_file_content (Template_db_table_name)
 			template_db_table_descr_content := retrieve_resource_file_content (Template_db_table_descr_name)
 			from
@@ -121,11 +125,20 @@ feature -- basic Operations
 			until
 				li.after
 			loop
-				generate_class (li.item.table_name, class_number, template_db_table_content, Db_table_suffix)
-				generate_class (li.item.table_name, class_number, template_db_table_descr_content, Db_table_descr_suffix)
+				s := clone (li.item.table_name)
+				s.replace_substring_all (" ","_")
+				notify_user ("generating class " + s)
+				create rep.make (s)
+				rep.load
+				repositories.extend (rep)
+				generate_class (rep, class_number, Container_type)
+				generate_class (rep, class_number, Description_type)
 				class_number := class_number + 1
 				li.forth
 			end
+			generate_access_class
+			
+			
 				-- Modified by Cedric R.
 			if wizard_information.new_project then
 				generate_ace_file
@@ -158,77 +171,66 @@ feature -- basic Operations
 
 feature {NONE} -- Processing
 
-	generate_class (s: STRING; class_number: INTEGER; template, suffix: STRING) is
+	generate_access_class is
+			-- Generate class enabling to access database table class descriptions.
+		local
+			access_class_generator: DB_ACCESS_CLASS_GENERATOR
+				-- Tool used to generate class giving access to database table
+				-- description classes.
+			template_db_table_access_content: STRING
+				-- Content of the resource template for the class enabling access
+				-- to database table descriptions.
+		do
+			create access_class_generator
+			template_db_table_access_content := retrieve_resource_file_content (Template_db_table_access_name)
+			if template_db_table_access_content /= Void then
+				access_class_generator.set_template_content (template_db_table_access_content)
+				access_class_generator.set_table_names (repositories)
+				access_class_generator.generate_file
+				generate_file (Template_db_table_access_name, access_class_generator.generated_file_content)
+			else
+				-- Add error handling.
+			end
+		end
+		
+	generate_class (rep: DB_REPOSITORY; class_number: INTEGER; generation_type: INTEGER) is
 			-- Generate class according to class whose name is `s'.
 		require
-			s /= Void
+			repository_not_void: rep /= Void
 		local
-			rep: DB_REPOSITORY
-			fi: PLAIN_TEXT_FILE
-			f_name: FILE_NAME
 			filename: STRING
 			generated_class_content: STRING
+			template, suffix: STRING
 		do
-			s.replace_substring_all (" ","_")
-			notify_user ("generating class " + s)
-			create rep.make (s)
-			rep.load
-			repositories.extend (rep)
-			class_generator.set_template_content (template)
-			class_generator.set_table_description (rep)
-			class_generator.generate_file
-			if class_generator.is_ok then
-				generated_class_content := class_generator.generated_file_content
+			if generation_type = Container_type then
+				template := template_db_table_content
+				suffix := Db_table_suffix
+			elseif generation_type = Description_type then
+				template := template_db_table_descr_content
+				suffix := Db_table_descr_suffix
+			else
+				check
+					valid_generation_type: False
+				end
+			end
+			table_class_generator.set_template_content (template)
+			table_class_generator.set_table_description (rep)
+			table_class_generator.generate_file
+			if table_class_generator.is_ok then
+				generated_class_content := table_class_generator.generated_file_content
 				generated_class_content.replace_substring_all (Class_number_tag, class_number.out)
-				create f_name.make_from_string (wizard_information.location)
-				filename := rep.repository_name
+				if generation_type = Description_type then
+					table_constraints_generator.set_repository (rep)
+					table_constraints_generator.generate
+					generated_class_content.replace_substring_all (Id_code_tag, table_constraints_generator.id_name)
+					generated_class_content.replace_substring_all (To_create_htable_tag, table_constraints_generator.to_create_htable)
+					generated_class_content.replace_substring_all (To_delete_htable_tag, table_constraints_generator.to_delete_htable)
+				end
+				filename := clone (rep.repository_name)
 				filename.to_lower
 				filename.append (suffix)
-				f_name.set_file_name (filename)
-				create fi.make (f_name)
-				if fi.exists then
-					fi.wipe_out
-					fi.open_write
-				else
-					fi.open_append
-				end
-				fi.putstring (generated_class_content)
-				fi.close
+				generate_file (filename, generated_class_content)
 			end
---			s1 := clone (s)
---			s1.to_lower
---			normalize (s1)
---			f_name.extend (s1)
---			f_name.add_extension ("e")
---			create f.make_open_write (f_name)
---			rep.generate_class (f)
---			f.close
---			create f.make_open_read_write (f_name)
---			f.read_stream (f.count)
---			s_f:= clone (f.last_string)
---			specific_code (s_f)
---			f.close
---			f.wipe_out
---
---			create f.make_open_read_write (f_name)
---			f.put_string (s_f)
---			f.close
---			
---				-- Added by Cedric R 
---			if wizard_information.new_project and wizard_information.vision_example then
---				create f.make_open_read_write (f_name)
---				f.read_stream (f.count)
---				s_f:= clone (f.last_string)
---					-- Add the inheritance from 'queryable' containing tags.
---				add_get_feature (s_f)
---					-- Replace tags (for inheritance) owing to rep.
---				replace_tags (s_f, rep)
---				f.close
---				f.wipe_out
---				create f.make_open_read_write (f_name)
---				f.put_string (s_f)
---				f.close
---			end
 		end
 
 	specific_code (s: STRING) is
@@ -387,12 +389,12 @@ feature {NONE} -- Processing
 		local
 			f_name: FILE_NAME
 		do
-			notify_user ("Importing database_manager ...")
-			copy_database_manager
+--			notify_user ("Importing database_manager ...")
+--			copy_database_manager
 			notify_user ("Importing db_action ...")
 			copy_class ("db_action")
 			notify_user ("Importing db_shared ...")
-			copy_class ("db_shared")
+			copy_db_shared
 			notify_user ("Importing db_action_dyn ...")
 			copy_class ("db_action_dyn")
 			notify_user ("Importing parameter_hdl ...")
@@ -412,7 +414,6 @@ feature {NONE} -- Processing
 				copy_class ("select_window")
 				copy_class ("sel_res_window")
 				copy_class ("insert_window")
-				copy_class ("queryable")
 				copy_class ("my_db_info")
 				copy_class("db_connection")
 			else
@@ -421,7 +422,7 @@ feature {NONE} -- Processing
 			end
 		end
 
-	copy_database_manager is
+	copy_db_shared is
 		local
 			f1,f_name: FILE_NAME
 			fi: PLAIN_TEXT_FILE
@@ -429,7 +430,7 @@ feature {NONE} -- Processing
 		do
 			create f1.make_from_string(wizard_resources_path)
 			f_name := clone(f1)
-			f_name.extend("database_manager")
+			f_name.extend("db_shared")
 			f_name.add_extension("e")
 			create fi.make_open_read(f_name)
 			fi.read_stream(fi.count)
@@ -442,7 +443,7 @@ feature {NONE} -- Processing
 			end
 			fi.close
 			create f_name.make_from_string(wizard_information.location)
-			f_name.extend("database_manager")
+			f_name.extend("db_shared")
 			f_name.add_extension("e")
 			create fi.make_open_write(f_name)
 			fi.put_string(new_s)
@@ -716,7 +717,7 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	repositories: LINKED_LIST [DB_REPOSITORY]
+	repositories: ARRAYED_LIST [DB_REPOSITORY]
 		-- Repositories relative to Current DB.
 
 	to_compile: BOOLEAN
@@ -729,6 +730,10 @@ feature {NONE} -- Implementation
 	Template_db_table_descr_name: STRING is "template_db_table_descr.e"
 		-- Name of the resource template for the class containing information
 		-- on a specific database table.
+
+	Template_db_table_access_name: STRING is "db_specific_tables_access.e"
+		-- Name of the resource template for the class enabling access
+		-- to database table descriptions.
 
 	template_db_table_content: STRING
 		-- Content of the resource template for the class storing information
@@ -746,12 +751,35 @@ feature {NONE} -- Implementation
 		-- Suffix for the class containing information
 		-- on a specific database table.
 
-	Class_number_tag: STRING is "<CI>"	
+	Class_number_tag: STRING is "<CI>"
 		-- Tag representing class number.
 
-	class_generator: DB_CLASS_GENERATOR
-		-- Tool used to generate classes related to a specific database table.
+	Id_code_tag: STRING is "<IC>"
+		-- Tag representing ID code.
+		
+	To_create_htable_tag: STRING is "<CH>"
+		-- Tag representing content of hash table enabling
+		-- to create table rows.
+		
+	To_delete_htable_tag: STRING is "<DH>"
+		-- Tag representing content of hash table enabling
+		-- to delete table rows.
+		
+	Container_type: INTEGER is 1
+		-- Type of generation for `generate_class':
+		-- class to generate carries values of corresponding database table rows.
 
+	Description_type: INTEGER is 2
+		-- Type of generation for `generate_class':
+		-- class to generate carries description and access features of
+		-- corresponding database table.
+
+	table_class_generator: DB_TABLE_CLASS_GENERATOR
+		-- Generates classes related to a specific database table.
+
+	table_constraints_generator: TABLE_CONSTRAINTS_GENERATOR
+		-- Generates specific table constraints description.
+		
 	retrieve_resource_file_content (file_name: STRING): STRING is
 			-- Return content of resource file named `file_name'.
 		local
@@ -759,7 +787,7 @@ feature {NONE} -- Implementation
 			fi: PLAIN_TEXT_FILE
 		do
 			create f_name.make_from_string (wizard_resources_path)
-			f_name.set_file_name (Template_db_table_name)
+			f_name.set_file_name (file_name)
 			create fi.make (f_name)
 			if fi.exists and then fi.is_readable then
 				fi.open_read
@@ -772,6 +800,26 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			Result_not_void: Result /= Void
+		end
+		
+	generate_file (file_name, file_content: STRING) is
+			-- Generate `file_name' at location indicated by the
+			-- user. Fill file with `file_content'.
+		local
+			f_name: FILE_NAME
+			fi: PLAIN_TEXT_FILE
+		do
+			create f_name.make_from_string (wizard_information.location)
+			f_name.set_file_name (file_name)
+			create fi.make (f_name)
+			if fi.exists then
+				fi.wipe_out
+				fi.open_write
+			else
+				fi.open_append
+			end
+			fi.putstring (file_content)
+			fi.close
 		end
 		
 end -- class DB_FINISH

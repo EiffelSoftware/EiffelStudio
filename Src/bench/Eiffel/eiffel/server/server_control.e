@@ -3,12 +3,21 @@
 class SERVER_CONTROL
 
 inherit
-
 	CACHE [SERVER_FILE, FILE_ID]
-		rename
-			make as cache_make
 		redefine
-			wipe_out
+			make, wipe_out
+		end
+
+creation
+	make
+
+feature -- Initialization
+
+	make is
+		do
+			{CACHE} precursor
+			!! files.make (Chunk)
+			!! file_counter.make
 		end
 
 feature
@@ -23,31 +32,24 @@ feature
 	last_computed_id: FILE_ID;
 			-- Last new computed server file id
 
-	make is
-		do
-			cache_make;
-			!! files.make (Chunk);
-			!! file_counter.make
-		end;
-
 	Chunk: INTEGER is 50;
 			-- Array chunk
 
 	compute_new_id is
 			-- Compute a new server file id and assign it to `last_computed_id'.
 		local
-			new_file: SERVER_FILE;
+			new_file: SERVER_FILE
 			id: FILE_ID
 		do
-			id := new_id;
-			!! new_file.make (id);
-			files.put (new_file, id);
+			id := new_id
+			!! new_file.make (id)
+			files.put (new_file, id)
+			last_computed_id := id
 debug ("SERVER")
-	io.error.put_string ("Creating new file: ");
-	io.error.put_string (id.file_name);
-	io.error.new_line;
+	io.error.put_string ("Creating new file: ")
+	io.error.put_string (id.file_name)
+	io.error.new_line
 end;
-			last_computed_id := id;
 		end;
 
 	forget_file (f: SERVER_FILE) is
@@ -254,11 +256,11 @@ feature -- Merging
 			
 feature -- SERVER_FILE sizes
 
-	chunk_size: INTEGER;
+	block_size: INTEGER;
 
-	set_chunk_size (s: INTEGER) is
+	set_block_size (s: INTEGER) is
 		do
-			chunk_size := s
+			block_size := s
 		end
 
 feature -- Debug

@@ -3,14 +3,12 @@
 class TMP_POLY_SERVER
 
 inherit
-
 	DELAY_SERVER [POLY_UNIT_TABLE [POLY_UNIT], ROUTINE_ID]
 		redefine
 			clear
 		end
 
 creation
-
 	make
 
 feature
@@ -29,14 +27,9 @@ feature
 
 	Delayed: SEARCH_TABLE [ROUTINE_ID] is
 			-- Cache for delayed items
-		local
-			csize: INTEGER
 		once
-			csize := Cache.cache_size;
-			!!Result.make ((3 * csize) // 2);
-		end;
-
-	Size_limit: INTEGER is 20;
+			!!Result.make ((3 * Cache.cache_size) // 2)
+		end
 
 	clear is
 			-- Clear deletes the files in tmp_poly_server
@@ -64,5 +57,13 @@ feature
 			cache.wipe_out;
 			set_current_id;
 		end;
+
+feature -- Server parameters
+
+	Size_limit: INTEGER is 100
+			-- Size of the TMP_POLY_SERVER file (100 Ko)
+
+	Chunk: INTEGER is 150
+			-- Size of a HASH_TABLE block
 
 end

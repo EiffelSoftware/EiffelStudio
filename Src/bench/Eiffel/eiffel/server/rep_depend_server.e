@@ -70,6 +70,10 @@ feature
 			Result := server_has (an_id) or else Tmp_rep_depend_server.has (an_id);
 		end;
 
-	Size_limit: INTEGER is 15;
+	Size_limit: INTEGER is 75
+			-- Size of the REP_DEPEND_SERVER file (75 Ko)
+
+	Chunk: INTEGER is 150
+			-- Size of a HASH_TABLE block
 
 end

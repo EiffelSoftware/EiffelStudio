@@ -3,13 +3,10 @@
 class M_FEAT_TBL_SERVER 
 
 inherit
-
 	COMPILER_SERVER [MELTED_FEATURE_TABLE, TYPE_ID]
 
 creation
-
 	make
-
 	
 feature 
 
@@ -22,9 +19,13 @@ feature
 	Cache: M_FEAT_TBL_CACHE is
 			-- Cache for routine tables
 		once
-			!!Result.make;
-		end;
+			!! Result.make;
+		end
 
-	Size_limit: INTEGER is 1;
+	Size_limit: INTEGER is 50
+			-- Size of the M_FEAT_TBL_SERVER file (50 Ko)
+
+	Chunk: INTEGER is 50
+			-- Size of a HASH_TABLE block
 
 end

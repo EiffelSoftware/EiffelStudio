@@ -5,11 +5,9 @@
 class TMP_REP_DEPEND_SERVER 
 
 inherit
-
 	DELAY_SERVER [REP_CLASS_DEPEND, CLASS_ID]
 
 creation
-
 	make
 	
 feature 
@@ -28,12 +26,10 @@ feature
 
 	Delayed: SEARCH_TABLE [CLASS_ID] is
 			-- Cache for delayed items
-		local
-			csize: INTEGER
+			-- Cache for delayed items
 		once
-			csize := Cache.cache_size;
-			!!Result.make ((3 * csize) // 2);
-		end;
+			!!Result.make ((3 * Cache.cache_size) // 2)
+		end
 
 	update (table: EXTEND_TABLE [REP_CLASS_DEPEND, CLASS_ID]) is
 			-- Update server using `table'
@@ -48,6 +44,10 @@ feature
 			end
 		end;
 
-	Size_limit: INTEGER is 10;
+	Size_limit: INTEGER is 75
+			-- Size of the TMP_REP_DEPEND_SERVER file (75 Ko)
+
+	Chunk: INTEGER is 150
+			-- Size of a HASH_TABLE block
 
 end

@@ -12,7 +12,8 @@ inherit
 			{ANY} server_item, merge
 		redefine
 			ontable, updated_id, trace
-		end;
+		end
+
 	READ_SERVER [FEATURE_AS_B, BODY_ID]
 		redefine
 			item, ontable, updated_id, change_id, trace

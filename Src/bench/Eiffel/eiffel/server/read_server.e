@@ -3,17 +3,6 @@
 deferred class READ_SERVER [T -> IDABLE, H -> COMPILER_ID]
 
 inherit
-
-	SHARED_SERVER
-		export
-			{ANY} all
-		undefine
-			copy, is_equal
-		end;
-	SHARED_SCONTROL
-		undefine
-			copy, is_equal
-		end;
 	EXTEND_TABLE [READ_INFO, H]
 		rename
 			make as tbl_make,
@@ -21,8 +10,21 @@ inherit
 			has as tbl_has,
 			remove as tbl_remove,
 			put as tbl_put
-		end;
+		end
+
 	COMPILER_EXPORTER
+		undefine
+			copy, is_equal
+		end
+
+	SHARED_SERVER
+		export
+			{ANY} all
+		undefine
+			copy, is_equal
+		end
+
+	SHARED_SCONTROL
 		undefine
 			copy, is_equal
 		end

@@ -5,14 +5,12 @@
 class TMP_BYTE_SERVER 
 
 inherit
-
 	DELAY_SERVER [BYTE_CODE, BODY_ID]
 		redefine
 			ontable, updated_id
 		end
 
 creation
-
 	make
 	
 feature 
@@ -26,10 +24,10 @@ feature
 			Result := System.onbidt
 		end;
 
-    updated_id (i: BODY_ID): BODY_ID is
-        do
-            Result := ontable.item (i)
-        end;
+	updated_id (i: BODY_ID): BODY_ID is
+		do
+			Result := ontable.item (i)
+		end
 
 	id (t: BYTE_CODE): BODY_ID is
 			-- Id associated with `t'
@@ -45,13 +43,14 @@ feature
 
 	Delayed: SEARCH_TABLE [BODY_ID] is
 			-- Cache for delayed items
-		local
-			csize: INTEGER
 		once
-			csize := Cache.cache_size;
-			!!Result.make ((3 * csize) // 2);
-		end;
+			!!Result.make ((3 * Cache.cache_size) // 2)
+		end
 
-	Size_limit: INTEGER is 15;
+	Size_limit: INTEGER is 100
+			-- Size of the TMP_BYTE_SERVER file (100 Ko)
+
+	Chunk: INTEGER is 150
+			-- Size of a HASH_TABLE block
 
 end

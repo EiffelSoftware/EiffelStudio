@@ -3,11 +3,9 @@
 class M_FEATURE_SERVER 
 
 inherit
-
 	COMPILER_SERVER [MELT_FEATURE, REAL_BODY_ID]
 
 creation
-
 	make
 	
 feature 
@@ -21,9 +19,13 @@ feature
 	Cache: M_FEATURE_CACHE is
 			-- Cache for routine tables
 		once
-			!!Result.make;
-		end;
+			!! Result.make
+		end
 
-	Size_limit: INTEGER is 2;
+	Size_limit: INTEGER is 50
+			-- Size of the M_FEATURE_SERVER file (50 Ko)
+
+	Chunk: INTEGER is 50
+			-- Size of a HASH_TABLE block
 
 end

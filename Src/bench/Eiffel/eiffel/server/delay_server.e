@@ -1,8 +1,6 @@
-
 deferred class DELAY_SERVER [T -> IDABLE, H -> COMPILER_ID]
 
 inherit
-
 	COMPILER_SERVER [T, H]
 		redefine
 			put, flush, item, has, remove,

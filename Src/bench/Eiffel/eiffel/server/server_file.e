@@ -3,27 +3,22 @@
 class SERVER_FILE
 
 inherit
-
-	RAW_FILE
-		rename
-			make as file_make,
-			close as basic_close
-		end;
 	RAW_FILE
 		rename
 			make as file_make
 		redefine
 			close
-		select
-			close
-		end;
-	IDABLE;
-	SHARED_FILES;
-	SHARED_SCONTROL;
+		end
+
+	IDABLE
+
+	PROJECT_CONTEXT
+
+	SHARED_SCONTROL
+
 	SHARED_EIFFEL_PROJECT
 
 creation
-
 	make
 
 feature
@@ -74,8 +69,8 @@ feature
 					-- will delete the previous content
 					--| Re-finalization after a crash: the COMP
 					--| directory doesn't grow and grow and grow
-				open_write;
-				basic_close
+				open_write
+				close
 			end;
 			id := i;
 debug ("SERVER")
@@ -139,8 +134,8 @@ end;
 		require else
 			is_open: is_open
 		do
-			basic_close;
-			is_open := False;
+			{RAW_FILE} precursor
+			is_open := False
 debug ("SERVER")
 	io.error.put_string ("Closing file ");
 	io.error.put_string (id.file_name);
@@ -216,9 +211,9 @@ feature -- Debug
 			io.error.putint (occurence)
 			io.error.putstring ("%Nsize: ")
 			io.error.putint (count)
-		--	io.error.putstring ("%Nneed_purging: ")
-		--	io.error.putbool (need_purging)
-		--	io.error.new_line
+			io.error.putstring ("%Nneed_purging: ")
+			io.error.putbool (need_purging)
+			io.error.new_line
 		end
 
 end -- class SERVER_FILE

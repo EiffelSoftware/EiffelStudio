@@ -69,6 +69,10 @@ feature
 			Result := server_has (an_id) or else Tmp_inv_byte_server.has (an_id);
 		end;
 
-	Size_limit: INTEGER is 1;
+	Size_limit: INTEGER is 40
+			-- Size of the INV_BYTE_SERVER file (40 Ko)
+
+	Chunk: INTEGER is 100
+			-- Size of a HASH_TABLE block
 
 end

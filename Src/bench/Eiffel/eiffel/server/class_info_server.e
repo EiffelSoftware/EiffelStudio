@@ -70,6 +70,11 @@ feature
 			end;
 		end;
 
-	Size_limit: INTEGER is 10;
+	Size_limit: INTEGER is 50
+			-- Size of the CLASS_INFO_SERVER file (50 Ko)
+
+	Chunk: INTEGER is 150
+			-- Size of a HASH_TABLE block
+
 
 end

@@ -43,6 +43,8 @@ feature -- Access
 								Result := ""
 							end
 						end
+					else
+						Result := ""
 					end
 				end
 				Current_selected_cmd_line_argument.put (Result)

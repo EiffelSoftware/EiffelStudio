@@ -33,6 +33,17 @@ inherit
 			default_create, is_equal, copy
 		end	
 
+	EB_DEBUGGER_OBSERVER
+		export
+			{NONE} all
+		undefine
+			default_create, is_equal, copy
+		redefine
+			on_application_killed,
+			on_application_launched,
+			on_application_stopped
+		end
+
 creation
 	make,
 	default_create
@@ -47,6 +58,7 @@ feature {NONE} -- Initialization
 			cmd_not_void: cmd /= Void
 		do		
 			make_with_title ("Execution Control")
+			Debugger_manager.observers.extend (Current)
 			run := cmd
 			
 				-- Build Dialog GUI
@@ -158,13 +170,6 @@ feature {NONE} -- Implementation
 	on_window_focused is
 			-- Acion to be taken when window gains focused.
 		do
-			if not Debugger_manager.Application.is_running then
-				run_button.enable_sensitive
-				run_and_close_button.enable_sensitive
-			else
-				run_button.disable_sensitive
-				run_and_close_button.disable_sensitive
-			end
 			arguments_control.current_argument.set_focus
 		end
 		
@@ -192,8 +197,6 @@ feature {NONE} -- Implementation
 				if arg = Apply_and_run_it then
 					arguments_control.store_arguments (Void)
 					run.call ([])
-					run_button.disable_sensitive
-					run_and_close_button.disable_sensitive
 				end
 			end
 		end
@@ -206,6 +209,41 @@ feature {NONE} -- Implementation
 					run.call ([])
 					hide
 				end
+			end
+		end
+
+feature {NONE} -- Observing event handling.
+
+	on_application_killed is
+			-- Action to take when the application is killed.
+		do
+			if not run_button.is_sensitive then
+				run_button.enable_sensitive				
+			end
+			if not run_and_close_button.is_sensitive then
+				run_and_close_button.enable_sensitive				
+			end
+		end
+	
+	on_application_launched is
+			-- Action to take when the application is launched.
+		do
+			if run_button.is_sensitive then
+				run_button.disable_sensitive				
+			end
+			if run_and_close_button.is_sensitive then
+				run_and_close_button.disable_sensitive				
+			end
+		end
+		
+	on_application_stopped is
+			-- Action to take when the application is stopped.
+		do
+			if not run_button.is_sensitive then
+				run_button.enable_sensitive				
+			end
+			if not run_and_close_button.is_sensitive then
+				run_and_close_button.enable_sensitive				
 			end
 		end
 		

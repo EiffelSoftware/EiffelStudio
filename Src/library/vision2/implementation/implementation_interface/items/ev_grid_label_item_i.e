@@ -8,9 +8,6 @@ class
 	
 inherit
 	EV_GRID_ITEM_I
-		undefine
-			background_color,
-			set_background_color
 		redefine
 			interface
 		end
@@ -21,11 +18,6 @@ inherit
 		end
 
 	EV_TEXTABLE_I
-		redefine
-			interface
-		end
-		
-	EV_COLORIZABLE_I
 		redefine
 			interface
 		end
@@ -43,18 +35,6 @@ feature -- Access
 			else
 				Result := ""
 			end
-		end
-		
-	background_color: EV_COLOR is
-			-- Color used for the background of `Current'.
-		do
-			to_implement ("EV_GRID_LABEL_ITEM_I.background_color")
-		end
-
-	foreground_color: EV_COLOR is
-			-- Color used for the foreground of `Current'.
-		do
-			to_implement ("EV_GRID_LABEL_ITEM_I.foreground_color")
 		end
 		
 	font: EV_FONT is
@@ -75,18 +55,6 @@ feature -- Element change
 			internal_text := a_text.twin
 		end
 		
-	set_background_color (color: EV_COLOR) is
-			-- Make `color' the new `background_color'
-		do
-			to_implement ("EV_GRID_LABEL_ITEM_I.set_background_color")
-		end
-
-	set_foreground_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'
-		do
-			to_implement ("EV_GRID_LABEL_ITEM_I.set_foreground_color")
-		end
-		
 	set_font (ft: EV_FONT) is
 			-- Make `ft' new font of `Current'.
 		do
@@ -100,14 +68,6 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 
 	internal_font: EV_FONT
 		-- Font used to display `text' on screen
-		
-feature {NONE} -- Implementation
-
-	set_default_colors is
-			-- Set foreground and background color to their default values.
-		do
-			to_implement ("EV_GRID_LABEL_ITEM_I.set_default_colors")
-		end
 
 feature {EV_ANY_I} -- Implementation
 

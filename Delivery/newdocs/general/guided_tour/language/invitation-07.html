@@ -1,0 +1,446 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 6  DESIGN BY CONTRACT AND ASSERTIONS</TITLE>
+</HEAD>
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-06.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation-00.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-08.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-445192"></A>6  <A NAME="marker-445191"></A>DESIGN BY CONTRACT AND ASSERTIONS</H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-445193"></A>If classes are to deserve their definition as abstract data type implementations, they must be known not just by the available operations, but also by the formal properties of these operations, which did not yet appear in the preceding example.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-445194"></A>The role of assertions</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-445195"></A>Eiffel encourages software developers to express formal properties of classes by writing <SPAN CLASS="ff-bold">
+assertions</SPAN>
+, which may in particular appear in the following roles:
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-445197"></A>Routine <SPAN CLASS="ff-bold">
+preconditions</SPAN>
+<A NAME="marker-445196"></A> express the requirements that clients must satisfy whenever they call a routine. For example the designer of <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+ may wish to permit a withdrawal operation only if it keeps the account's balance at or above the minimum. Preconditions are introduced by the keyword <SPAN CLASS="ee-keyword">
+require</SPAN>
+. 
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-445199"></A>Routine <SPAN CLASS="ff-bold">
+postconditions</SPAN>
+<A NAME="marker-445198"></A>, introduced by the keyword <SPAN CLASS="ee-keyword">
+ensure</SPAN>
+, express conditions that the routine (the supplier) guarantees on return, if the precondition was satisfied on entry. 
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-445203"></A>A class <SPAN CLASS="ff-bold">
+invariant</SPAN>
+<A NAME="marker-445200"></A> mu<A NAME="marker-445201"></A>st be satisfied by every <A NAME="marker-445202"></A>instance of the class whenever the instance is externally accessible: after creation, and after any call to an exported routine of the class. The invariant appears in a clause introduced by the keyword <SPAN CLASS="ee-keyword">
+invariant</SPAN>
+<A NAME="marker-445204"></A>, and represents a general consistency constraint imposed on all routines of the class. 
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-445250"></A>With appropriate assertions, the class <SPAN CLASS="ee-text">
+ACCOUNT </SPAN>
+becomes:
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-452621"></A><SPAN CLASS="ee-keyword">
+class</SPAN>
+ ACCOUNT <SPAN CLASS="ee-keyword">
+create</SPAN>
+<A NAME="marker-452620"></A>
+<P CLASS="ee-text">
+<A NAME="pgfId-452622"></A>&nbsp;&nbsp;&nbsp;&nbsp;make
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-452632"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-452633"></A>&nbsp;&nbsp;&nbsp;&nbsp;... Attributes as before:<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-text">
+balance</SPAN>
+, <SPAN CLASS="ee-text">
+minimum_balance</SPAN>
+, <SPAN CLASS="ee-text">
+owner</SPAN>
+, <SPAN CLASS="ee-text">
+open</SPAN>
+ ... 
+<P CLASS="ee-text">
+<A NAME="pgfId-452635"></A>&nbsp;&nbsp;&nbsp;&nbsp;deposit (sum: INTEGER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-452636"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Deposit sum into the account.
+<P CLASS="ee-text">
+<A NAME="pgfId-452638"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+require</SPAN>
+<A NAME="marker-452637"></A>
+<P CLASS="ee-text">
+<A NAME="pgfId-452639"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum &gt;= 0
+<P CLASS="ee-text">
+<A NAME="pgfId-452640"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-452641"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add (sum)
+<P CLASS="ee-text">
+<A NAME="pgfId-452643"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+ensure</SPAN>
+<A NAME="marker-452642"></A>
+<P CLASS="ee-text">
+<A NAME="pgfId-452645"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance = <SPAN CLASS="ee-keyword">
+old</SPAN>
+<A NAME="marker-452644"></A> balance + sum
+<P CLASS="ee-text">
+<A NAME="pgfId-452675"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</SPAN>
+
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445225"></A>&nbsp;&nbsp;&nbsp;&nbsp;withdraw (sum: INTEGER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-445226"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Withdraw sum from the account.
+<P CLASS="ee-text">
+<A NAME="pgfId-445227"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+require</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-452680"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum &gt;= 0
+<P CLASS="ee-text">
+<A NAME="pgfId-445228"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum &lt;= balance - minimum_balance
+<P CLASS="ee-text">
+<A NAME="pgfId-445230"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445231"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;add (-sum)
+<P CLASS="ee-text">
+<A NAME="pgfId-445232"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+ensure</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445233"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance = <SPAN CLASS="ee-keyword">
+old</SPAN>
+ balance - sum
+<P CLASS="ee-text">
+<A NAME="pgfId-452687"></A><SPAN CLASS="ee-keyword">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445234"></A>&nbsp;&nbsp;&nbsp;&nbsp;may_withdraw ...  -- As before
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-459495"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+ {NONE}
+<P CLASS="ee-text">
+<A NAME="pgfId-459496"></A>&nbsp;&nbsp;&nbsp;&nbsp;add ... -- As before
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445238"></A>&nbsp;&nbsp;&nbsp;&nbsp;make (initial: INTEGER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-445240"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Initialize account with balance initial.
+<P CLASS="ee-text">
+<A NAME="pgfId-445241"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+require</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445242"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initial &gt;= minimum_balance
+<P CLASS="ee-text">
+<A NAME="pgfId-445243"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+do</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445244"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance := initial
+<P CLASS="ee-text">
+<A NAME="pgfId-445245"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+end</SPAN>
+
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445247"></A><SPAN CLASS="ee-keyword">
+invariant</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445248"></A>&nbsp;&nbsp;&nbsp;&nbsp;balance &gt;= minimum_balance
+<P CLASS="ee-text">
+<A NAME="pgfId-445249"></A><SPAN CLASS="ee-keyword">
+end</SPAN>
+ -- class ACCOUNT 
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445252"></A>The notation <SPAN CLASS="ee-keyword">
+old</SPAN>
+<A NAME="marker-445251"></A> <SPAN CLASS="ee-text">
+expression </SPAN>
+is only valid in a routine postcondition. It denotes the value the <SPAN CLASS="ee-text">
+expression </SPAN>
+had on routine entry. 
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-445254"></A>C<A NAME="marker-445253"></A>reation procedures</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-445255"></A>In its last version above, the class now includes a creation procedure, <SPAN CLASS="ee-text">
+make</SPAN>
+. With the first version , clients used creation instructions such as <SPAN CLASS="ee-keyword">
+create</SPAN>
+ <SPAN CLASS="ee-text">
+acc1</SPAN>
+ to create accounts; but then the default initialization, setting balance to zero, violated the invariant. By having one or more creation procedures, listed in the <SPAN CLASS="ee-keyword">
+create</SPAN>
+ clause at the beginning of the class text, a class offers a way to override the default initializations. The effect of 
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445258"></A><SPAN CLASS="ee-keyword">
+create</SPAN>
+<SPAN CLASS="ee-text">
+ acc1</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+make </SPAN>
+(<SPAN CLASS="ee-text">
+5_500</SPAN>
+)
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445259"></A>is to allocate the object (as with the default creation) and to call procedure <SPAN CLASS="ee-text">
+make</SPAN>
+ on this object, with the argument given. This call is correct since it satisfies the precondition; it will ensure the invariant.
+<P CLASS="jj-small">
+<A NAME="pgfId-491244"></A>The underscore <SPAN CLASS="ee-text">
+_</SPAN>
+ in the integer constant <SPAN CLASS="ee-text">
+5_500</SPAN>
+ has no semantic effect. The general rule is that you can group digits by sets of three from the right to improve the readability of integer constants.
+<P CLASS="nn-first">
+<A NAME="pgfId-445260"></A>Note that the same keyword, <SPAN CLASS="ee-keyword">
+create</SPAN>
+, serves both to introduce creation instructions and the creation clause listing creation procedures at the beginning of the class.
+<P CLASS="nn-normal">
+<A NAME="pgfId-512413"></A>A procedure listed in the creation clause, such as <SPAN CLASS="ee-text">
+make</SPAN>
+, otherwise enjoys the same properties as other routines, especially for calls. Here the procedure <SPAN CLASS="ee-text">
+make</SPAN>
+ is secret since it appears in a clause starting with <SPAN CLASS="ee-keyword">
+feature</SPAN>
+ <SPAN CLASS="ee-comment">
+{</SPAN>
+<SPAN CLASS="ee-text">
+NONE</SPAN>
+<SPAN CLASS="ee-comment">
+}</SPAN>
+; so it would be invalid for a client to include a call such as
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-512416"></A><SPAN CLASS="ee-text">
+acc</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+make </SPAN>
+(<SPAN CLASS="ee-text">
+8_000</SPAN>
+)<SPAN CLASS="ee-text">
+ </SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-512417"></A>To make such a call valid, it would suffice to move the declaration of <SPAN CLASS="ee-text">
+make</SPAN>
+ to the first <SPAN CLASS="ee-keyword">
+feature</SPAN>
+ clause of class <SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+, which carries no export restriction. Such a call does not create any new object, but simply resets the balance of a previously created account.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-445266"></A>Design by Contract</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-445268"></A>Syntactically<A NAME="marker-445267"></A>, assertions are boolean expressions, with a few extensions such as the <SPAN CLASS="ee-keyword">
+old</SPAN>
+ notation. Also, you may split an assertion into two or more clauses, as here with the precondition of <SPAN CLASS="ee-text">
+withdraw</SPAN>
+; this is as if you had separated the clauses with an <SPAN CLASS="ee-keyword">
+and</SPAN>
+, but makes the assertion clearer, especially if it includes many conditions.
+<P CLASS="nn-normal">
+<A NAME="pgfId-445269"></A>Assertions play a central part in the Eiffel method for building reliable object-oriented software. They serve to make explicit the assumptions on which programmers rely when they write software elements that they believe are correct. Writing assertions amounts to spelling out the terms of the <SPAN CLASS="ff-bold">
+contract</SPAN>
+<A NAME="marker-445270"></A> which governs the relationship between a routine and its callers. The precondition binds the callers; the postcondition binds the routine. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445271"></A>The underlying theory of <SPAN CLASS="ff-italics">
+Design by Contract</SPAN>
+<SPAN CLASS="superscript">
+TM</SPAN>
+, the centerpiece of the Eiffel method, views software construction as based on contracts between clients (callers) and suppliers (routines), relying on mutual obligations and benefits made explicit by the assertions.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-445274"></A><A NAME="82906"></A>The <A NAME="marker-445273"></A>Contract Form</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-445275"></A>Assertions are also an indispensable tool for the documentation of reusable software components: one cannot expect large-scale reuse without a precise documentation of what every component expects (precondition), what it guarantees in return (postcondition) and what general conditions it maintains (invariant). 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445276"></A>Documentation tools in EiffelBench use assertions to produce information for client programmers, describing classes in terms of observable behavior, not implementation. In particular the <SPAN CLASS="ff-bold">
+Contract Form</SPAN>
+ of a class, also called its &quot;<SPAN CLASS="ff-italics">
+short form</SPAN>
+&quot;, which serves as its interface documentation, is obtained from the full text by removing all non-exported features and all implementation information such as <SPAN CLASS="ee-keyword">
+do</SPAN>
+ clauses of routines, but keeping interface information and in particular assertions. Here is the Contract Form of the above class:
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-452540"></A><SPAN CLASS="ee-keyword">
+class interface </SPAN>
+ACCOUNT <SPAN CLASS="ee-keyword">
+create</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-452541"></A>&nbsp;&nbsp;&nbsp;&nbsp;make
+<P CLASS="ee-text">
+<A NAME="pgfId-452542"></A><SPAN CLASS="ee-keyword">
+feature</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-452543"></A>&nbsp;&nbsp;&nbsp;&nbsp;balance: INTEGER
+<P CLASS="ee-comment">
+<A NAME="pgfId-452544"></A>&nbsp;&nbsp;&nbsp;&nbsp;...
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-452558"></A>&nbsp;&nbsp;&nbsp;&nbsp;deposit (sum: INTEGER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-452559"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Deposit sum into the account.
+<P CLASS="ee-text">
+<A NAME="pgfId-452560"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+require</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-452561"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum &gt;= 0
+<P CLASS="ee-text">
+<A NAME="pgfId-452562"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+ensure</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-452563"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance = <SPAN CLASS="ee-keyword">
+old</SPAN>
+ balance + sum
+</TD>
+</TR>
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445290"></A>&nbsp;&nbsp;&nbsp;&nbsp;withdraw (sum: INTEGER) <SPAN CLASS="ee-keyword">
+is</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-445291"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-- Withdraw sum from the account.
+<P CLASS="ee-text">
+<A NAME="pgfId-445292"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+require</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-452698"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum &gt;= 0
+<P CLASS="ee-text">
+<A NAME="pgfId-445293"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sum &lt;= balance - minimum_balance
+<P CLASS="ee-text">
+<A NAME="pgfId-445295"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ee-keyword">
+ensure</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-445296"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;balance = <SPAN CLASS="ee-keyword">
+old</SPAN>
+ balance - sum
+<P CLASS="ee-text">
+<A NAME="pgfId-452837"></A>&nbsp;
+<P CLASS="ee-text">
+<A NAME="pgfId-445297"></A>&nbsp;&nbsp;&nbsp;&nbsp;may_withdraw ... 
+<P CLASS="ee-text">
+<A NAME="pgfId-445298"></A><SPAN CLASS="ee-keyword">
+end </SPAN>
+-- class ACCOUNT 
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445299"></A>This is not actual Eiffel, only documentation of Eiffel classes, hence the use of slightly different syntax to avoid any confusion (<SPAN CLASS="ee-keyword">
+class interface</SPAN>
+ rather than <SPAN CLASS="ee-keyword">
+class</SPAN>
+). In accordance with the Uniform Access Principle (page <A HREF="invitation-05.html#Uniform Access Principle" CLASS="XRef"><SPAN CLASS="ww-crossref">
+7</SPAN>
+</A>), the output for <SPAN CLASS="ee-text">
+balance</SPAN>
+ would be the same if this feature were a function rather than an attribute.
+<P CLASS="nn-normal">
+<A NAME="pgfId-445300"></A>You will find in ISE's EiffelStudio automatic tools to produce the Contract Form of a class. You can also get the <SPAN CLASS="ff-bold">
+Flat Contract</SPAN>
+ form, based on the same ideas but including inherited features along with those introduced in the class itself. EiffelStudio can produce these forms, and other documentation views of a class, in a variety of output formats including HTML, so that collaborative projects can automatically post the latest versions of their class interfaces on the Internet or an Intranet.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-491310"></A>Contracts for testing and debugging</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-445301"></A>Under EiffelStudio you may also set up compilation options, for the whole system or specific classes only, to evaluate assertions at run time, to uncover potential errors (&quot;bugs&quot;). EiffelStudio provides several levels of assertion monitoring: preconditions only, postconditions etc. When monitoring is on, an assertion which evaluates to true has no further effect on the execution. An assertion that evaluates to false will trigger an exception, as described next; unless you have written an appropriate exception handler, the exception will cause an error message and termination with a precise message and a call trace. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445302"></A>This ability to check assertions provides a powerful testing and debugging mechanism, in particular because the classes of the EiffelBase Libraries, widely used in Eiffel software development, are protected by carefully written assertions. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445303"></A>Run-time monitoring, however, is only one application of assertions, whose role as design and documentation aids, as part of the theory of Design by Contract, <A NAME="marker-445304"></A>exerts a pervasive influence on the Eiffel style of software developm<A NAME="marker-445305"></A>ent. <A NAME="marker-445306"></A>
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-06.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation-00.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-08.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

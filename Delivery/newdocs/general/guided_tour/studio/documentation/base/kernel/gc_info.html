@@ -1,0 +1,245 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="TTTGarbage collector statistics.R TTTThis class may be used as ancestor by classes needing its facilities.R TTTTime accounting is relevant only if `enable_time_accounting' R TTT(from MEMORY) has been called.">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>GC_INFO Text</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="gc_info_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="gc_info_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="gc_info_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="gc_info_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="gc_info_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="GC_INFO"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Garbage collector statistics.</SPAN>
+<SPAN CLASS="estring">			This class may be used as ancestor by classes needing its facilities.</SPAN>
+<SPAN CLASS="estring">			Time accounting is relevant only if `</SPAN><SPAN CLASS="equoted">enable_time_accounting</SPAN><SPAN CLASS="estring">' </SPAN>
+<SPAN CLASS="estring">			(from </SPAN><A CLASS="eclass" HREF="../../base/kernel/memory.html">MEMORY</A><SPAN CLASS="estring">) has been called.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../../base/kernel/gc_info.html">GC_INFO</A>
+
+<SPAN CLASS="ekeyword">inherit</SPAN>
+	<A CLASS="eclass" HREF="../../base/kernel/mem_const.html">MEM_CONST</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+	<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN>
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">memory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill in statistics for </SPAN><SPAN CLASS="equoted">memory</SPAN><SPAN CLASS="ecomment"> type</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/gc_info.html">GC_INFO</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_stat">gc_stat</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">memory</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cycle_count">cycle_count</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_memory_used">memory_used</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_collected">collected</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">2</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_collected_average">collected_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">3</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_real_time">real_time</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">4</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_real_time_average">real_time_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">5</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_real_interval_time">real_interval_time</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">6</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_real_interval_time_average">real_interval_time_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">7</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cpu_time">cpu_time</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">8</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cpu_time_average">cpu_time_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">9</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cpu_interval_time">cpu_interval_time</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">10</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cpu_interval_time_average">cpu_interval_time_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">11</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_sys_time">sys_time</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">12</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_sys_time_average">sys_time_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">13</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_sys_interval_time">sys_interval_time</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">14</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_sys_interval_time_average">sys_interval_time_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">15</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_update"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">memory</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill in statistics for </SPAN><SPAN CLASS="equoted">memory</SPAN><SPAN CLASS="ecomment"> type</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../base/kernel/gc_info.html">GC_INFO</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_make">make</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_stat">gc_stat</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">memory</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cycle_count">cycle_count</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_memory_used">memory_used</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_collected">collected</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">2</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_collected_average">collected_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">3</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_real_time">real_time</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">4</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_real_time_average">real_time_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">5</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_real_interval_time">real_interval_time</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">6</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_real_interval_time_average">real_interval_time_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">7</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cpu_time">cpu_time</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">8</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cpu_time_average">cpu_time_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">9</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cpu_interval_time">cpu_interval_time</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">10</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cpu_interval_time_average">cpu_interval_time_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">11</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_sys_time">sys_time</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">12</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_sys_time_average">sys_time_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">13</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_sys_interval_time">sys_interval_time</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">14</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_sys_interval_time_average">sys_interval_time_average</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">15</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_type"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Collector type (Full, Collect),</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_cycle_count"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cycle_count">cycle_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of collection cycles for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_memory_used"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_memory_used">memory_used</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Total number of bytes used (counting overhead)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> after last cycle for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_collected"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_collected">collected</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of bytes collected by the last cycle,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_collected_average"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_collected_average">collected_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Average number of bytes collected by a cycle,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_real_time"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_real_time">real_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Real time in centi-seconds used by last cycle</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment">, before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment">;</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> this may not be accurate on systems which do not</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> provide a sub-second accuracy clock (typically</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> provided on BSD).</SPAN>
+
+	<A NAME="f_real_time_average"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_real_time_average">real_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Average amount of real time, in centi-seconds,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> spent in collection cycle,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_real_interval_time"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_real_interval_time">real_interval_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Real interval time (as opposed to CPU time) between</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> two automatically raised cycles, in centi-seconds,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_real_interval_time_average"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_real_interval_time_average">real_interval_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Average real interval time between two automatic</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> cycles, in centi-seconds,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_cpu_time"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cpu_time">cpu_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Amount of CPU time, in seconds, spent in cycle,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_cpu_time_average"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cpu_time_average">cpu_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Average amount of CPU time spent in cycle,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> in seconds, for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_cpu_interval_time"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cpu_interval_time">cpu_interval_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Amount of CPU time elapsed since between last</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> and penultimate cycles for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_cpu_interval_time_average"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_cpu_interval_time_average">cpu_interval_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Average amount of CPU time between two cycles,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_sys_time"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_sys_time">sys_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Amount of kernel time, in seconds, spent in cycle,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_sys_time_average"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_sys_time_average">sys_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Average amount of kernel time spent in cycle,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_sys_interval_time"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_sys_interval_time">sys_interval_time</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Amount of kernel time elapsed since between</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the last and the penultimate cycle,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_sys_interval_time_average"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_sys_interval_time_average">sys_interval_time_average</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Average amount of kernel time between two cycles,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_type">type</A><SPAN CLASS="ecomment"> before last call to </SPAN><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_update">update</A><SPAN CLASS="ecomment"></SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN>
+
+	<A NAME="f_gc_stat"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_stat">gc_stat</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">mem</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialize run-time buffer used by gc_info to retrieve the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> statistics frozen at the time of this call.</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C | %"eif_memory.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_gc_info"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_info">gc_info</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">field</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read GC accounting structure, field by field.</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C | %"eif_memory.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_gc_infod"><A CLASS="efeature" HREF="../../base/kernel/gc_info.html#f_gc_infod">gc_infod</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">field</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double.html">DOUBLE</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Read GC accounting structure, field by field.</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C | %"eif_memory.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>GC_INFO<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="gc_info_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="gc_info_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="gc_info_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="gc_info_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="gc_info_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="GC_INFO"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

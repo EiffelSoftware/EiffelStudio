@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 4  COMPILING AND EXECUTING A SYSTEM</TITLE>
+</HEAD>
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-04.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-06.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-258371"></A>4  <A NAME="25663"></A>COMPILING AND EXECUTING A SYSTEM</H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<P CLASS="nn-first">
+<A NAME="pgfId-8320"></A>EiffelStudio first comes up with a window and a dialog on top of it; the dialog looks like this (from here on the look-and-feel will be different on non-Windows platform, but the contents will be the same): 
+<DIV>
+<MAP NAME="index-2">
+</MAP>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-2.png"><IMG WIDTH="100" SRC="index-2.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-333715"></A>As this is our first project we want to <SPAN CLASS="ee-keyword">
+Create a new project.</SPAN>
+ The three possibilities are:
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-404290"></A>&quot;<SPAN CLASS="ee-keyword">
+Create a new project</SPAN>
+&quot;, which would let you select one among the common schemes -- basic application, graphical Windows application, graphical multi-platform application, Microsoft .NET application -- and set up everything for you.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-404331"></A>&quot;<SPAN CLASS="ee-keyword">
+Open existing Ace (control file)</SPAN>
+&quot;, which finds the setup in a control file, called an Assembly of Classes in Eiffel or Ace.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-444744"></A>&quot;<SPAN CLASS="ee-keyword">
+Open compiled project</SPAN>
+&quot;, which will work once you have compiled a project.
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-404332"></A>In future sessions you'll probably use the first option for a new project, as it takes care of generating everything for you, and the third option for an existing project. Right now, though, we want you (like an expert EiffelStudio user!) to use an existing Ace that exists precisely for the purpose of this Tour. So please select the second option
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-404335"></A><SPAN CLASS="ee-keyword">
+Open existing Ace (control file)</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-404302"></A>and click <SPAN CLASS="ee-keyword">
+Next</SPAN>
+. This brings up a File Explorer inviting you to select an Ace file. The file you want is, depending on your platform, one of
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-333730"></A><SPAN CLASS="ee-keyword">
+$ISE_EIFFEL&#92;examples&#92;bench&#92;tour&#92;Ace.mswin.ace</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-333733"></A><SPAN CLASS="ee-keyword">
+$ISE_EIFFEL/examples/bench/tour/Ace.unix.ace</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-333746"></A>(the first one for Windows, the second for Unix; remember that <SPAN CLASS="ee-keyword">
+$ISE_EIFFEL</SPAN>
+ stands for the location of the Eiffel installation, such as <SPAN CLASS="ee-keyword">
+C:&#92;Eiffel50</SPAN>
+; Ace files are normally marked by the <SPAN CLASS="ee-keyword">
+.ace</SPAN>
+ file extension). For VMS, select the Unix variant.
+<P CLASS="nn-normal">
+<A NAME="pgfId-333747"></A>Use the File Explorer to go to the directory <SPAN CLASS="ee-keyword">
+$ISE_EIFFEL/examples/bench/tour/</SPAN>
+ and select the appropriate file, <SPAN CLASS="ee-keyword">
+mswin.ace</SPAN>
+ or <SPAN CLASS="ee-keyword">
+unix.ace</SPAN>
+, for your platform. A confirmation window comes up:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-3.png"><IMG WIDTH="100" SRC="index-3.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-333759"></A>Click <SPAN CLASS="ee-keyword">
+OK</SPAN>
+ to confirm. This selects the Ace file and starts compilation of your project.
+<P CLASS="nn-normal">
+<A NAME="pgfId-496375"></A>During Eiffel compilation, a progress bar displays the successive compilation steps, or &quot;degrees&quot;. The bulk of our little project is the EiffelBase library, which the EiffelStudio installation procedure has precompiled; so just now there's only a few extra classes to compile, and the process is almost instantaneous on a state-of-the-art computer. Even if you had to compile the EiffelBase classes, EiffelStudio compilation is so fast that you would hardly have the time to read the &quot;degree&quot; messages; you can see them later in compilations of bigger classes and systems.
+<P CLASS="jj-small">
+<A NAME="pgfId-496376"></A>On an IBM Thinkpad, Pentium III 850 MHz, 256 MB, running Windows 2000 Professional, Eiffel compilation takes about 9 seconds for the entire Guided Tour system including non-precompiled EiffelBase.
+<P CLASS="nn-first">
+<A NAME="pgfId-496382"></A>After Eiffel compilation completes you will see the message
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-496379"></A><SPAN CLASS="ee-keyword">
+System had to be frozen to include new externals.</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-496380"></A><SPAN CLASS="ee-keyword">
+Eiffel compilation system recompiled.</SPAN>
+
+<P CLASS="ee-text">
+<A NAME="pgfId-496381"></A><SPAN CLASS="ee-keyword">
+Background C compilation launched</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-496383"></A>At this stage you can start using EiffelStudio, e.g. for browsing, but since C compilation won't take long either (about 15 seconds on our test machine), it's just as well to let it finish. C compilation messages will appear:
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-333778"></A>On Windows, in a new console.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-333779"></A>On Unix, in the window from which you launched EiffelStudio.
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-333780"></A>Why C compilation? ISE Eiffel under some circumstances uses C as intermediate code for its compiler's generated code, and relies on a C compiler to process the result. On Windows you will by default use the command-line Borland compiler (included with the ISE Eiffel delivery); you may replace it by another, such as Visual C/C++ from Microsoft (available directly from ISE) if you wish. On Unix you will use the resident C compiler.
+<P CLASS="nn-normal">
+<A NAME="pgfId-333781"></A>EiffelStudio reports that the C compilation has terminated:
+<DIV>
+<p>
+<ul>
+<!----><IMG SRC="index-4.png">
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-333788"></A>Congratulations! You have successfully compiled your first Eiffel project. More precisely it's been both &quot;melted&quot; and &quot;frozen&quot;. Strange terminology, you may think; in a little while we'll see why these compilation steps are called that way.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-333808"></A>Executing the system</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-333812"></A>The system doesn't do anything exciting, but let's execute it anyway. Find the execution icon (&quot;Run with breakpoints&quot;) at the top of the EiffelStudio window:
+<DIV>
+<MAP NAME="index-5">
+</MAP>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-5.png"><IMG WIDTH="100" SRC="index-5.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-370842"></A>It would be OK too to use the neighboring icon to the left, &quot;Run without breakpoints&quot;, since we haven't set any breakpoints. Click either icon to execute the system.
+<P CLASS="nn-normal">
+<A NAME="pgfId-437338"></A>This little application doesn't use graphics or anything fancy but simply creates some objects and displays some information. Output done using the default EIffel I/O (from the EiffelBase classes <SPAN CLASS="ee-text">
+ANY </SPAN>
+and <SPAN CLASS="ee-text">
+STANDARD_FILES</SPAN>
+) goes to a console. On Unix/Linux and VMS it's the window from which you started EiffelStudio. On Windows it's by default a new console window that comes up when and if the system does its first output operation, and stays up:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-6.png"><IMG WIDTH="100" SRC="index-6.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-437368"></A><BR>
+The message &quot;<SPAN CLASS="ee-keyword">
+Press Return to finish the execution</SPAN>
+&quot; would not appear if you executed the system from outside of EiffelStudio, for example from a command line. Its purpose within EiffelStudio is clear: to let you see the console output; without it, the console would go away at the end of execution. (None of this applies to Unix/Linux/VMS since there is no new console window to get rid of.)
+<P CLASS="nn-normal">
+<A NAME="pgfId-437375"></A>If before closing the console window you look at the main EiffelStudio window (by moving away the console window) you will notice that it looks different from before, since it now shows the fields useful in monitoring execution and debugging. But we'll look at this later. For the moment just dismiss the console by following the advice to &quot;<SPAN CLASS="ee-keyword">
+Press Return</SPAN>
+&quot;: hit the Return or Enter key.
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-04.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-06.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

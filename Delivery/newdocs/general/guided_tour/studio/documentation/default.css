@@ -1,0 +1,112 @@
+BODY {
+	BACKGROUND-COLOR: white;
+}
+
+A {
+    TEXT-DECORATION: none;
+}
+
+A:hover {
+    TEXT-DECORATION: underline;
+}
+
+.eclass {
+    COLOR: blue;
+    FONT-STYLE: italic;
+}
+
+.neclass {
+    COLOR: black;
+    FONT-STYLE: italic;
+}
+
+.ekeyword {
+    COLOR: navy;
+    FONT-WEIGHT: bold;
+}
+
+.esymbol {
+    COLOR: navy;
+}
+
+.eitag {
+    COLOR: sienna;
+    FONT: 91% "Courier New", serif;
+}
+
+.estring {
+    COLOR: indigo;
+    FONT: 91% "Courier New", serif;
+}
+
+.echar {
+    COLOR: indigo;
+    FONT-WEIGHT: bold;
+}
+
+.enumber {
+    COLOR: indigo;
+    FONT-WEIGHT: bold;
+}
+
+.etag {
+    COLOR: sienna;
+}
+
+.efeature {
+    COLOR: darkgreen;
+    FONT-STYLE: italic;
+}
+
+.nefeature {
+    COLOR: black;
+    FONT-STYLE: italic;
+}
+
+.ecomment {
+    COLOR: red;
+    FONT: 80% "Courier New", serif;
+}
+
+.elocal, .equoted {
+    COLOR: darkred;
+    FONT-STYLE: italic;
+}
+
+.ereserved {
+    COLOR: darkgreen;
+    FONT-STYLE: italic;
+    FONT-WEIGHT: bold;
+}
+
+.egeneric {
+    FONT-STYLE: italic;
+	COLOR: dodgerblue;
+}
+
+.ecluster {
+    COLOR: maroon;
+    FONT-VARIANT: small-caps;
+    FONT-WEIGHT: bold;
+}
+
+.necluster {
+    COLOR: black;
+    FONT-VARIANT: small-caps;
+    FONT-WEIGHT: bold;
+}
+
+.link1 {
+	BACKGROUND-COLOR: #006633;
+	COLOR: white;
+}
+
+.link2 {
+	BACKGROUND-COLOR: #330066;
+	COLOR: white;
+}
+
+.nolink1, .nolink2 {
+	BACKGROUND-COLOR: #FFCC00;
+	COLOR: #330066;
+}

@@ -1,0 +1,224 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+<META NAME="instructions" CONTENT="TTUse features inherited from LIST to add/remove actions.R TTAn action is a procedure of ANY class that takes EVENT_DATA.R TTWhen `call' is called the actions in the list will be executedR TTin order stating at `first'.R TTAn action may call `abort' which will cause `call' to stop executingR TTactions in the sequence. (Until the next call to `call').R TTDescendants may redefine `initialize' to arrange for `call' toR TTbe called by an event source.R TTUse `block', `pause', `flush' and `resume' to change the behaviorR TTof `call'.R TTeg.R TT birthday_data: TUPLE [INTEGER, STRING] -- (age, name)R TT birthday_actions: ACTIONS_SEQUENCE [like birthday_data]R TT create birthday_actions.make (birthday, <<age,name>>)R TT send_card (age: INTEGER, name, from: STRING) is ...R TT buy_gift (age: INTEGER, name, gift, from: STRING) is ...R TT birthday_actions.extend (~send_card (?, ?, Sam)R TT birthday_actions.extend (~buy_gift (?, ?, Wine, Sam)R TT birthday_actions.call ([35, Julia])R TT causes call to: send_card (35, Julia, Sam)R TT                 buy_gift (35, Julia, Wine, Sam)">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="keywords" CONTENT="Eiffel class, event, action">
+<META NAME="description" CONTENT="A sequence of actions to be performed on `call'">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>ACTION_SEQUENCE Contracts</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="action_sequence_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="action_sequence_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="action_sequence.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="action_sequence_flat.html">Flat</A></TD>
+<TD CLASS="nolink2">Contracts</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="action_sequence_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="ACTION_SEQUENCE"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"A sequence of actions to be performed on `</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="estring">'"</SPAN>
+	<SPAN CLASS="eitag">instructions</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">		Use features inherited from </SPAN><A CLASS="eclass" HREF="../../base/structures/list/list_short.html">LIST</A><SPAN CLASS="estring"> to add/remove actions.</SPAN>
+<SPAN CLASS="estring">		An action is a procedure of </SPAN><A CLASS="eclass" HREF="../../base/kernel/any_short.html">ANY</A><SPAN CLASS="estring"> class that takes EVENT_DATA.</SPAN>
+<SPAN CLASS="estring">		When `</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="estring">' is called the actions in the list will be executed</SPAN>
+<SPAN CLASS="estring">		in order stating at `</SPAN><A CLASS="efeature" HREF="../../base/structures/list/linked_list_short.html#f_first">first</A><SPAN CLASS="estring">'.</SPAN>
+<SPAN CLASS="estring">		An action may call `</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_abort">abort</A><SPAN CLASS="estring">' which will cause `</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="estring">' to stop executing</SPAN>
+<SPAN CLASS="estring">		actions in the sequence. (Until the next call to `</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="estring">').</SPAN>
+<SPAN CLASS="estring">		Descendants may redefine `</SPAN><SPAN CLASS="equoted">initialize</SPAN><SPAN CLASS="estring">' to arrange for `</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="estring">' to</SPAN>
+<SPAN CLASS="estring">		be called by an event source.</SPAN>
+<SPAN CLASS="estring">		Use `</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_block">block</A><SPAN CLASS="estring">', `</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_pause">pause</A><SPAN CLASS="estring">', `</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_flush">flush</A><SPAN CLASS="estring">' and `</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_resume">resume</A><SPAN CLASS="estring">' to change the behavior</SPAN>
+<SPAN CLASS="estring">		of `</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="estring">'.</SPAN>
+<SPAN CLASS="estring">		eg.</SPAN>
+<SPAN CLASS="estring">		 birthday_data: </SPAN><A CLASS="eclass" HREF="../../base/kernel/tuple_short.html">TUPLE</A><SPAN CLASS="estring"> [</SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_short.html">INTEGER</A><SPAN CLASS="estring">, </SPAN><A CLASS="eclass" HREF="../../base/kernel/string_short.html">STRING</A><SPAN CLASS="estring">] -- (age, name)</SPAN>
+<SPAN CLASS="estring">		 birthday_actions: ACTIONS_SEQUENCE [like birthday_data]</SPAN>
+<SPAN CLASS="estring">		 create birthday_actions.make ("birthday", &lt;&lt;"age","name"&gt;&gt;)</SPAN>
+<SPAN CLASS="estring">		 send_card (age: </SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_short.html">INTEGER</A><SPAN CLASS="estring">, name, from: </SPAN><A CLASS="eclass" HREF="../../base/kernel/string_short.html">STRING</A><SPAN CLASS="estring">) is ...</SPAN>
+<SPAN CLASS="estring">		 buy_gift (age: </SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_short.html">INTEGER</A><SPAN CLASS="estring">, name, gift, from: </SPAN><A CLASS="eclass" HREF="../../base/kernel/string_short.html">STRING</A><SPAN CLASS="estring">) is ...</SPAN>
+<SPAN CLASS="estring">		 birthday_actions.extend (~send_card (?, ?, "Sam")</SPAN>
+<SPAN CLASS="estring">		 birthday_actions.extend (~buy_gift (?, ?, "Wine", "Sam")</SPAN>
+<SPAN CLASS="estring">		 birthday_actions.call ([35, "Julia"])</SPAN>
+<SPAN CLASS="estring">		 causes call to: send_card (35, "Julia", "Sam")</SPAN>
+<SPAN CLASS="estring">		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buy_gift (35, "Julia", "Wine", "Sam")</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"event, action"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../base/event/action_sequence_short.html">ACTION_SEQUENCE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">EVENT_DATA</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../base/kernel/tuple_short.html">TUPLE</A> <SPAN CLASS="ekeyword">create</SPAN> make <SPAN CLASS="ekeyword">end</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+	<A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_default_create">default_create</A><SPAN CLASS="esymbol">,</SPAN>
+	<A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN>
+
+	<A NAME="f_call"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">event_data</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">EVENT_DATA</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Call each procedure in order unless </SPAN><SPAN CLASS="equoted">is_blocked</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If </SPAN><SPAN CLASS="equoted">is_paused</SPAN><SPAN CLASS="ecomment"> delay execution until </SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_resume">resume</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Stop at current point in list on </SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_abort">abort</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">is_aborted_stack_unchanged</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">old</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_is_aborted_stack">is_aborted_stack</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/list/list_short.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_is_aborted_stack">is_aborted_stack</A><SPAN CLASS="esymbol">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_name"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_name">name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_short.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Textual description.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">equal_to_name_internal</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string_short.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_name_internal">name_internal</A><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_dummy_event_data"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_dummy_event_data">dummy_event_data</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">EVENT_DATA</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Attribute of the generic type.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Useful for introspection and use in like statements.</SPAN>
+</A>
+	<A NAME="f_event_data_names"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_event_data_names">event_data_names</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/array_short.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/string_short.html">STRING</A><SPAN CLASS="esymbol">]</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Textual description of each event datum.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">equal_to_event_data_names_internal</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_short.html#f_deep_equal">deep_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_event_data_names_internal">event_data_names_internal</A><SPAN CLASS="esymbol">)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_abort"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_abort">abort</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Abort the current </SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (The current item.call will be completed.)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">call_is_underway</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call_is_underway">call_is_underway</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">is_aborted_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_is_aborted_stack">is_aborted_stack</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/dispenser/linked_stack_short.html#f_item">item</A>
+</A>
+	<A NAME="f_block"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_block">block</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Ignore subsequent </SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="ecomment">s.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">blocked_state</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_state">state</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_blocked_state">blocked_state</A>
+</A>
+	<A NAME="f_pause"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_pause">pause</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Buffer subsequent </SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="ecomment">s for later execution.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If </SPAN><SPAN CLASS="equoted">is_blocked</SPAN><SPAN CLASS="ecomment"> calls will simply be ignored.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">paused_state</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_state">state</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_paused_state">paused_state</A>
+</A>
+	<A NAME="f_resume"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_resume">resume</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Used after </SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_block">block</A><SPAN CLASS="ecomment"> or </SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_pause">pause</A><SPAN CLASS="ecomment"> to resume normal </SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> execution. &nbsp;Executes any buffered </SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="ecomment">s.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">normal_state</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_state">state</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_normal_state">normal_state</A>
+</A>
+	<A NAME="f_flush"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_flush">flush</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Discard any buffered </SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="ecomment">s.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">call_buffer_empty</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call_buffer">call_buffer</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/storage/finite_short.html#f_is_empty">is_empty</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_state"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_state">state</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_short.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> One of </SPAN><SPAN CLASS="equoted">Normal_state</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">Paused_state</SPAN><SPAN CLASS="ecomment"> or </SPAN><SPAN CLASS="equoted">Blocked_state</SPAN><SPAN CLASS="ecomment"></SPAN>
+
+	<A NAME="f_normal_state"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_normal_state">Normal_state</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_short.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+
+	<A NAME="f_paused_state"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_paused_state">Paused_state</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_short.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+
+	<A NAME="f_blocked_state"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_blocked_state">Blocked_state</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_short.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">3</SPAN></A>
+
+	<A NAME="f_call_is_underway"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call_is_underway">call_is_underway</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_short.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call">call</A><SPAN CLASS="ecomment"> currently being executed?</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_short.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_is_aborted_stack">is_aborted_stack</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/storage/finite_short.html#f_is_empty">is_empty</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element Change</SPAN>
+
+	<A NAME="f_prune_when_called"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_prune_when_called">prune_when_called</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_action</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../base/structures/list/linked_list_short.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove </SPAN><SPAN CLASS="equoted">an_action</SPAN><SPAN CLASS="ecomment"> after the next time it is called.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<A CLASS="efeature" HREF="../../base/structures/list/chain_short.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_action</SPAN><SPAN CLASS="esymbol">)</SPAN>
+</A>
+	<A NAME="f_merge_left"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_merge_left">merge_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Merge </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"> into current structure after cursor</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> position. Do not move cursor. Empty </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN>
+</A>
+	<A NAME="f_merge_right"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_merge_right">merge_right</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Merge </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"> into current structure before cursor</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> position. Do not move cursor. Empty </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"></SPAN>
+</A>
+	<A NAME="f_wipe_out"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_wipe_out">wipe_out</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove all items.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Event handling</SPAN>
+
+	<A NAME="f_not_empty_actions"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_not_empty_actions">not_empty_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/structures/list/linked_list_short.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/procedure_short.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/any_short.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../base/kernel/tuple_short.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions to be performed on transition from </SPAN><A CLASS="efeature" HREF="../../base/structures/storage/finite_short.html#f_is_empty">is_empty</A><SPAN CLASS="ecomment"> to not </SPAN><A CLASS="efeature" HREF="../../base/structures/storage/finite_short.html#f_is_empty">is_empty</A><SPAN CLASS="ecomment">.</SPAN>
+
+	<A NAME="f_empty_actions"><A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_empty_actions">empty_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/structures/list/linked_list_short.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/procedure_short.html">PROCEDURE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/any_short.html">ANY</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="eclass" HREF="../../base/kernel/tuple_short.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">]</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions to be performed on transition from not </SPAN><A CLASS="efeature" HREF="../../base/structures/storage/finite_short.html#f_is_empty">is_empty</A><SPAN CLASS="ecomment"> to </SPAN><A CLASS="efeature" HREF="../../base/structures/storage/finite_short.html#f_is_empty">is_empty</A><SPAN CLASS="ecomment">.</SPAN>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">is_aborted_stack_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_is_aborted_stack">is_aborted_stack</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_short.html#f_void">void</A>
+	<SPAN CLASS="etag">call_buffer_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call_buffer">call_buffer</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_short.html#f_void">void</A>
+	<SPAN CLASS="etag">not_has_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_short.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../base/structures/list/chain_short.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/any_short.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">valid_state</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_state">state</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_normal_state">normal_state</A> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_state">state</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_paused_state">paused_state</A> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_state">state</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_blocked_state">blocked_state</A>
+	<SPAN CLASS="etag">call_buffer_consistent</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_state">state</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_normal_state">normal_state</A> <SPAN CLASS="ekeyword">implies</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_call_buffer">call_buffer</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/storage/finite_short.html#f_is_empty">is_empty</A>
+	<SPAN CLASS="etag">not_empty_actions_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_not_empty_actions">not_empty_actions</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_short.html#f_void">void</A>
+	<SPAN CLASS="etag">empty_actions_not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/event/action_sequence_short.html#f_empty_actions">empty_actions</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_short.html#f_void">void</A>
+
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>ACTION_SEQUENCE<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="action_sequence_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="action_sequence_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="action_sequence.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="action_sequence_flat.html">Flat</A></TD>
+<TD CLASS="nolink2">Contracts</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="action_sequence_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="ACTION_SEQUENCE"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

@@ -1,0 +1,603 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 11  RECOMPILING AND EDITING</TITLE>
+</HEAD>
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-11.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-13.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-515538"></A>11  RECOMPILING AND EDITING</H1>
+<P CLASS="nn-first">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="tour-help.html">Help reading this manual</a>
+<P CLASS="nn-first">
+<A NAME="pgfId-515539"></A>So far we have relied on existing class texts. Fascinating as it may be to explore excellent software such as EiffelBase, you probably want to write your own too (with the help of the reusable components in the Eiffel libraries). EiffelStudio provides a built-in editor -- as well as the ability to use some other editor if you prefer -- and sophisticated compilation mechanisms.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515652"></A>Recompiling</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515653"></A>When we started, we compiled the example system. Let's recompile it, just to see. We'll see compilation entries in the <SPAN CLASS="ee-keyword">
+Project</SPAN>
+ menu, but the easiest for the moment is to use the compilation button in the Project toolbar, the lower toolbar in the Development Window:
+<DIV>
+<MAP NAME="index-65">
+</MAP>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-65.png"><IMG WIDTH="100" SRC="index-65.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-515658"></A>Click this button. You haven't changed anything in the project since it was compiled (you were not supposed to!), so EiffelStudio will very quickly detect this and finish compilation. On our test platform this takes less than a second. Now of course we should see what happens if you do change something.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515661"></A>Editing</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515662"></A>We don't want to touch EiffelBase classes (and in fact can't, since it is used in precompiled form), so let's focus on classes of our small root cluster. In the Cluster tree on the left, expand cluster <SPAN CLASS="ee-keyword">
+root_cluster</SPAN>
+ and click class <SPAN CLASS="ee-keyword">
+PARENT</SPAN>
+ to retarget the Development Window to it.
+<P CLASS="nn-normal">
+<A NAME="pgfId-515663"></A>Make sure that the Editing Tool is big enough to display the text of the class:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-66.png"><IMG WIDTH="100" SRC="index-66.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-515674"></A>The Editing Tool hosts a text editor which you can use to change the class text. Here the routine <SPAN CLASS="ee-text">
+display</SPAN>
+ starts by outputting a simple message; let's precede it by another line of display to check that we affected the outcome. We'll want to add the following two lines just after the <SPAN CLASS="ee-keyword">
+do</SPAN>
+, before the first two instructions of the routine:
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-comment">
+<A NAME="pgfId-515684"></A><SPAN CLASS="ee-text">
+io</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+put_string </SPAN>
+<SPAN CLASS="ee-comment">
+(&quot;</SPAN>
+<SPAN CLASS="ee-text">
+THIS IS SOME ADDED TEXT</SPAN>
+<SPAN CLASS="ee-comment">
+  &quot;)</SPAN>
+
+<P CLASS="ee-comment">
+<A NAME="pgfId-515695"></A><SPAN CLASS="ee-text">
+io</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+<SPAN CLASS="ee-text">
+new_line</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-515677"></A>They are very similar to the current first two lines of the routine, so you can just use copy-paste: select the first two lines with the mouse, copy them using CTRL-<SPAN CLASS="ee-keyword">
+C</SPAN>
+ (or <SPAN CLASS="ee-keyword">
+Copy</SPAN>
+ from the <SPAN CLASS="ee-keyword">
+Edit</SPAN>
+ menu), then paste them just after the <SPAN CLASS="ee-keyword">
+do</SPAN>
+ using CTRL-<SPAN CLASS="ee-keyword">
+V</SPAN>
+ (or <SPAN CLASS="ee-keyword">
+Paste</SPAN>
+ from the <SPAN CLASS="ee-keyword">
+Edit</SPAN>
+ menu). Add or remove tabs to align with the rest of the routine, and change the string to <SPAN CLASS="ee-text">
+THIS IS SOME ADDED TEXT </SPAN>
+so that the result will look like what's shown on the next figure. This is all there is to change; the second line remains untouched. Please check the result and be careful not to introduce any mistakes; in the next section we'll study how EiffelStudio will report syntax and other errors, but right now we want to see what happens when everything is right!
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-67.png"><IMG WIDTH="100" SRC="index-67.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-515730"></A>Now save your changes; you may indifferently use CTRL-<SPAN CLASS="ee-keyword">
+S</SPAN>
+, the <SPAN CLASS="ee-keyword">
+Save</SPAN>
+ entry from the <SPAN CLASS="ee-keyword">
+Edit</SPAN>
+ menu, or the Save button highlighted on the figure. (If you forget to save, the next compilation will tell you so, and ask you if from now on you want all non-saved class edits to be saved automatically.)
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515742"></A>Recompiling and executing after a change</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515733"></A>Next compile again, using the Compilation button (shown on the figure page <A HREF="index.html#COMPILATION BUTTON" CLASS="XRef"><SPAN CLASS="ww-crossref">
+71</SPAN>
+</A>). Some &quot;degree&quot; messages appear quickly; EiffelStudio has found out what class has changed and deduced what exactly to recompile -- only a subset of the whole system. So this again will proceed very quickly.
+<P CLASS="nn-normal">
+<A NAME="pgfId-515741"></A>Execute the system again now, using one of the execution buttons (shown on the figure on page <A HREF="index.html#ORIGINAL FIGURE WITH RUN BUTTONS" CLASS="XRef"><SPAN CLASS="ww-crossref">
+13</SPAN>
+</A>), with or without breakpoints, on the right in the bottom Project toolbar. You will see that the message output by the execution has changed to include the added string.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-520691"></A>Views in the Editing Tool</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-520692"></A>In studying the Context Tool we discovered a number of views of a class text (<A HREF="index-08.html#76845" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;CLASS VIEWS&quot;,  7, page 30</SPAN>
+</A>). For convenience, you can also display a number of these views in the Editing Tool, although only the basic Text view is editable. A row of buttons next to the Class and Feature fields lets you choose between them:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-68.png"><IMG WIDTH="100" SRC="index-68.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-520710"></A>You can try some of these view now, although there is nothing exciting to show about class <SPAN CLASS="ee-text">
+PARENT</SPAN>
+. Make sure to come back to the <SPAN CLASS="ee-keyword">
+Text</SPAN>
+ view -- through the leftmost of these buttons -- so that we can continue exploring the editing facilities.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515743"></A>Basic editing facilities</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515744"></A>The editing facilities in the Editing Tool are provided by the EiffelStudio Editor, a specialized tool supporting the development and update of Eiffel texts. As we'll see next, if you have a preferred editor you can use it instead, but the EiffelStudio Editor is worth knowing.
+<P CLASS="nn-normal">
+<A NAME="pgfId-515747"></A>The online documentation provides many more details about editing functions. Here are the essentials.
+<P CLASS="nn-normal">
+<A NAME="pgfId-515748"></A>First, the key property of any interactive system: <SPAN CLASS="ff-bold">
+Undo</SPAN>
+. You can cancel the latest editing command, or any earlier one performed during the current session, by choosing <SPAN CLASS="ee-keyword">
+Undo</SPAN>
+ from the <SPAN CLASS="ee-keyword">
+Edit</SPAN>
+ menu, or typing CTRL-<SPAN CLASS="ee-keyword">
+Z</SPAN>
+. To cancel more than one command, apply Undo repetitively; there is no limit to the number of undoable commands within a session. (When you exit EiffelStudio, however, the editing history is lost.) To redo an undone command, use <SPAN CLASS="ee-keyword">
+Redo</SPAN>
+ from the <SPAN CLASS="ee-keyword">
+Edit</SPAN>
+ menu or CTRL-<SPAN CLASS="ee-keyword">
+Y</SPAN>
+.
+<P CLASS="jj-small">
+<A NAME="pgfId-515871"></A>Since right now we don't need to do any actual editing to continue this Guided Tour, we suggest that you don't change the text of class <SPAN CLASS="ee-keyword">
+PARENT</SPAN>
+ but simply look up the menu entries described next, without actually selecting them. If you do make a change, voluntary or not, you should at the end of this editor discussion perform enough Undo commands to get the text of class <SPAN CLASS="ee-keyword">
+PARENT</SPAN>
+ back to its original state.
+<P CLASS="nn-first">
+<A NAME="pgfId-515841"></A>To <SPAN CLASS="ff-bold">
+copy</SPAN>
+, <SPAN CLASS="ff-bold">
+cut</SPAN>
+ and <SPAN CLASS="ff-bold">
+paste</SPAN>
+ use the corresponding entries in the <SPAN CLASS="ee-keyword">
+Edit</SPAN>
+ menu or the familiar keyboard shortcuts CTRL-<SPAN CLASS="ee-keyword">
+C</SPAN>
+, CTRL-<SPAN CLASS="ee-keyword">
+X</SPAN>
+ and CTRL-<SPAN CLASS="ee-keyword">
+V</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-515772"></A>When you edit text, it will be automatically <SPAN CLASS="ff-bold">
+indented</SPAN>
+ according to standard Eiffel style rules. If you prefer to remain in charge of your own indenting, you can disable this facility through <SPAN CLASS="ee-keyword">
+Tools </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Preferences </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Editor</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-515821"></A>To indent a sequence of lines, select the lines, then use <SPAN CLASS="ee-keyword">
+Edit </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Advanced </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Indent selection</SPAN>
+. You can also use the Tab key, but only if the selection consists of one or more entire lines; otherwise typing Tab will simply replace the selected text with a Tab character. Shift-Tab will similarly decrease indentation by one step.
+<P CLASS="nn-normal">
+<A NAME="pgfId-515822"></A>To <SPAN CLASS="ff-bold">
+comment out</SPAN>
+ a sequence of lines, select them and use <SPAN CLASS="ee-keyword">
+Edit </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Advanced </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Comment</SPAN>
+ or CTRL-<SPAN CLASS="ee-keyword">
+K</SPAN>
+. Conversely, CTRL-Shift-<SPAN CLASS="ee-keyword">
+K</SPAN>
+ will uncomment. Also in the <SPAN CLASS="ee-keyword">
+Edit </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Advanced</SPAN>
+ menu are &quot;set to upper case&quot;, with the keyboard shortcut CTRL-<SPAN CLASS="ee-keyword">
+U</SPAN>
+, and to lower case, CTRL-Shift-<SPAN CLASS="ee-keyword">
+U</SPAN>
+.
+<P CLASS="nn-normal">
+<A NAME="pgfId-515844"></A>Other useful facilities of the <SPAN CLASS="ee-keyword">
+Edit </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Advanced</SPAN>
+ menu are:
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-519786"></A><SPAN CLASS="ee-keyword">
+Embed in &quot;if&quot;</SPAN>
+, or CTRL-<SPAN CLASS="ee-keyword">
+I</SPAN>
+, which will create a conditional instruction and include the selected instructions in it.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-519790"></A><SPAN CLASS="ee-keyword">
+Embed in &quot;debug&quot;</SPAN>
+, CTRL-<SPAN CLASS="ee-keyword">
+D</SPAN>
+, which will include the selected instructions in a <SPAN CLASS="ee-keyword">
+debug </SPAN>
+<SPAN CLASS="tt-nsymbol">
+&#8230; </SPAN>
+<SPAN CLASS="ee-keyword">
+end</SPAN>
+ instruction, so that their execution becomes conditional on a Debug compilation option.
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-515856"></A>Search and replace</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-519762"></A>The editor lets you search for text and replace occurrences, individually or globally. We assume you have seen a text search facility before, so we'll just emphasize some of the less obvious features.
+<P CLASS="nn-normal">
+<A NAME="pgfId-519767"></A>To start a search, make sure the Search Tool is active by clicking the Search button in the top toolbar (this one we'll let you find), using the <SPAN CLASS="ee-keyword">
+Edit </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Find</SPAN>
+ menu entry, or type CTRL-<SPAN CLASS="ee-keyword">
+F</SPAN>
+ in a Text or Context Tool.
+<P CLASS="jj-small">
+<A NAME="pgfId-519802"></A>Note that although we are studying Search as part of the Editor, this function also applies to any textual form displayed in the Context Tool; make sure to start a Search from the tool that you want to search.
+<P CLASS="nn-first">
+<A NAME="pgfId-519803"></A>The Search Tool presents a number of self-explanatory options:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-69.png"><IMG WIDTH="100" SRC="index-69.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-519809"></A>If you select <SPAN CLASS="ee-keyword">
+Use wildcards</SPAN>
+, two characters will be treated specially in the <SPAN CLASS="ee-keyword">
+Search for</SPAN>
+ field: a question mark <SPAN CLASS="ee-keyword">
+?</SPAN>
+ will match any character, and an asterisk <SPAN CLASS="ee-symbol">
+&#8727; </SPAN>
+will match any sequence of characters.
+<P CLASS="nn-normal">
+<A NAME="pgfId-519810"></A>If you check the <SPAN CLASS="ee-keyword">
+Replace with</SPAN>
+ box, a replacement field will appear:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-70.png"><IMG WIDTH="100" SRC="index-70.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-519815"></A>Having filled the two fields, you can elect to replace the last found occurrence, or all occurrences at once.
+<P CLASS="nn-normal">
+<A NAME="pgfId-519816"></A>The <SPAN CLASS="ee-keyword">
+Search for</SPAN>
+ field has an associated menu, so that you can reuse a recently entered search string without retyping it.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-519761"></A>Let the editor do the typing</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-515855"></A>Particularly interesting are the editor's <SPAN CLASS="ff-bold">
+automatic completion</SPAN>
+ facilities. Well, particularly interesting for <SPAN CLASS="ff-italics">
+most</SPAN>
+ people: maybe you like your editor to do the gruntwork for you, or maybe you don't. In the latter case -- if you prefer to be in control of all the details -- don't worry: through <SPAN CLASS="ee-keyword">
+Tools </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Preferences </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Editor</SPAN>
+ you can easily disable any facility that you don't like. The behavior described here is the default.
+<P CLASS="nn-normal">
+<A NAME="pgfId-515885"></A>The EiffelStudio Editor knows about Eiffel syntax and will recognize syntactic elements as you type them. It will color them according to standard conventions: basic elements in black, keywords in blue, comments in dark red. You can change these conventions through Preferences.
+<P CLASS="nn-normal">
+<A NAME="pgfId-515890"></A>If you start typing a control structure through its opening keyword, such as <SPAN CLASS="ee-keyword">
+if</SPAN>
+, or <SPAN CLASS="ee-keyword">
+from</SPAN>
+ for a loop, the editor will automatically display the structure of the whole construct. Here for example is the result if you type the <SPAN CLASS="ee-keyword">
+from</SPAN>
+ followed by Return/Enter at the beginning of our example routine:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-71.png"><IMG WIDTH="100" SRC="index-71.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-515898"></A>This has produced the structure of an Eiffel loop: <SPAN CLASS="ee-keyword">
+from </SPAN>
+<SPAN CLASS="tt-nsymbol">
+&#8230; </SPAN>
+<SPAN CLASS="ee-keyword">
+until </SPAN>
+<SPAN CLASS="tt-nsymbol">
+&#8230; </SPAN>
+<SPAN CLASS="ee-keyword">
+loop </SPAN>
+<SPAN CLASS="tt-nsymbol">
+&#8230; </SPAN>
+<SPAN CLASS="ee-keyword">
+end</SPAN>
+. You can then fill in the blanks with the appropriate expression and instructions. The generated lines start with the appropriate number of Tab characters to support the standard Eiffel indenting conventions. If you want a more compact style, follow the <SPAN CLASS="ee-keyword">
+from</SPAN>
+ with a space rather than Return. Typing <SPAN CLASS="ee-keyword">
+if </SPAN>
+followed by Return or a space will similarly produce the outline of a conditional instruction.
+<P CLASS="nn-normal">
+<A NAME="pgfId-520177"></A>To start a routine, type the routine name followed by the keyword <SPAN CLASS="ee-keyword">
+is</SPAN>
+ and a Return. The editor generates the basic structure of a routine text:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-72.png"><IMG WIDTH="100" SRC="index-72.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-520184"></A>This prompts you to enter the header comment (no self-respecting Eiffel developer even <SPAN CLASS="ff-italics">
+thinks</SPAN>
+ of writing a feature without a header comment). At the end of the header comment, type Return if the header comment continues, otherwise type a down arrow to continue with the indentation for the beginning of the routine, with one of the keywords <SPAN CLASS="ee-keyword">
+require</SPAN>
+, <SPAN CLASS="ee-keyword">
+local</SPAN>
+, <SPAN CLASS="ee-keyword">
+do</SPAN>
+, <SPAN CLASS="ee-keyword">
+external</SPAN>
+, <SPAN CLASS="ee-keyword">
+once</SPAN>
+. Once you type <SPAN CLASS="ee-keyword">
+do</SPAN>
+, followed by a Return or space, the completion mechanism will insert the appropriate <SPAN CLASS="ee-keyword">
+end</SPAN>
+, but other than that it doesn't try to produce an entire routine structure because there are too many syntactical choices (precondition or not, postcondition or not, locals or not etc.).<SPAN CLASS="ee-keyword">
+</SPAN>
+
+<P CLASS="nn-normal">
+<A NAME="pgfId-515915"></A>Also interesting is <SPAN CLASS="ff-bold">
+feature completion</SPAN>
+, using the <SPAN CLASS="ff-bold">
+CTRL-SPACE</SPAN>
+ key. It works at two levels:
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515974"></A>You can type the beginning of the name of a feature of the current class, then CTRL-SPACE to get possible completions.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515975"></A>Once you have typed the name of a query (attribute or function), either all by yourself or aided by the previous completion technique, you can type a period followed by CTRL-SPACE to get the list of possible features to be applied, deduced from the list of features in the corresponding class (the type of the query).
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-515925"></A>In both cases, if more than one completion is possible, you will get a menu of the possibilities. You can scroll through it with the up and down arrow keys, or the mouse, and select one through Enter or double-click. You can also or give up through the Escape key.
+<P CLASS="nn-normal">
+<A NAME="pgfId-515931"></A>Here for example is the menu you will see in the body of our example routine if you type <SPAN CLASS="ee-text">
+io</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+ followed by CTRL-SPACE, where <SPAN CLASS="ee-text">
+io</SPAN>
+ is the feature, coming from class <SPAN CLASS="ee-text">
+ANY</SPAN>
+, that provides access to standard input and output facilities:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-73.png"><IMG WIDTH="100" SRC="index-73.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-515937"></A>The following properties enhance the convenience of the completion mechanisms:
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515938"></A>If only one completion is possible, no menu appears; the completion is selected.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515952"></A>If the cursor is just after the name of a query (which you have fully typed, or obtained through completion), typing CTRL-SPACE once more will produce a period, as if you had typed it.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515957"></A>When a menu of possible completions is displayed, typing CTRL-SPACE will select the first of them.
+</UL>
+<P CLASS="nn-first">
+<A NAME="pgfId-515963"></A>The combination of these facilities means that you can often obtain what you want simply by typing CTRL-SPACE repeatedly.
+<P CLASS="nn-normal">
+<A NAME="pgfId-515964"></A>Also note the following properties of automatic feature completion:
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515978"></A>The mechanism will only work for queries that were present at the time of the last successful compilation. So if you add an attribute, say <SPAN CLASS="ee-text">
+attr</SPAN>
+, to the current class, and do not recompile, typing <SPAN CLASS="ee-text">
+a</SPAN>
+-CTRL-SPACE will not display <SPAN CLASS="ee-text">
+attr</SPAN>
+. To make sure that it's included in completion proposals, save and recompile. (Remember, incremental compilation is fast in EiffelStudio, so there is nothing wrong in compiling early and often.) The same rule holds for features of <SPAN CLASS="ff-italics">
+other</SPAN>
+ classes, those that will appear in proposed completions after a period.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515983"></A>Automatic completion is applicable to features, not local entities or formal arguments.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-515984"></A>The features proposed for automatic completion include all features of the class: those declared in the class itself, or <SPAN CLASS="ff-italics">
+immediate</SPAN>
+ features, and those <SPAN CLASS="ff-italics">
+inherited</SPAN>
+ from proper ancestors, direct or indirect, with one exception: by default the list will not include features from the universal class <SPAN CLASS="ee-text">
+ANY</SPAN>
+, which serves as ancestor to all classes and provides many features for comparison, copying, input-output, reflection etc. Including <SPAN CLASS="ee-text">
+ANY's</SPAN>
+ features would clutter all menus with too many features. So for example typing <SPAN CLASS="ee-text">
+i</SPAN>
+ followed by CTRL-SPACE will not suggest <SPAN CLASS="ee-text">
+io</SPAN>
+ among the possible completions. You can change this policy through Preferences. The policy does not apply to remote feature completion for an entity <SPAN CLASS="ee-text">
+x</SPAN>
+ declared of type <SPAN CLASS="ee-text">
+ANY</SPAN>
+: typing CTRL-SPACE after <SPAN CLASS="ee-text">
+x</SPAN>
+<SPAN CLASS="ee-dot">
+.</SPAN>
+will produce the list of <SPAN CLASS="ee-text">
+ANY</SPAN>
+'s features.
+</UL>
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-516013"></A>Using your own editor</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-516014"></A>You may have a favorite editor and prefer to use it, at least in some cases. The EiffelStudio incremental compilation mechanism, to be studied shortly, recognizes that files have been modified outside of EiffelStudio (by checking their time stamps) and will without any fuss take their modified versions into account.
+<P CLASS="nn-normal">
+<A NAME="pgfId-516015"></A>You can also call an outside editor on a class from within EiffelStudio. Just use <SPAN CLASS="ee-keyword">
+File </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ External Editor</SPAN>
+ or the corresponding button in the top toolbar:
+<DIV>
+<p>
+<ul>
+<A TARGET="screenshots" HREF="index-74.png"><IMG WIDTH="100" SRC="index-74.png"></A>
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-519700"></A>This will call the editor of your choice. The default is Notepad on Windows and Vi on Unix and Linux. You can easily change this to any editor by entering the desired editor command in <SPAN CLASS="ee-keyword">
+Tools </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Preferences </SPAN>
+<SPAN CLASS="ee-symbol">
+--></SPAN>
+<SPAN CLASS="ee-keyword">
+ Global Preferences</SPAN>
+. In this command text you can use the two special notations <SPAN CLASS="ee-keyword">
+$target </SPAN>
+and <SPAN CLASS="ee-keyword">
+$line</SPAN>
+; when EiffelStudio calls the selected command, it will replace any occurrence of <SPAN CLASS="ee-keyword">
+$target</SPAN>
+ by the name of the file where the current class resides, and <SPAN CLASS="ee-keyword">
+$line</SPAN>
+ by the line number at which the Editing Tool is currently scrolled. If you include one or both of these markers at the appropriate argument positions for the command, this will enable you -- assuming the editor supports the appropriate options -- to make sure it starts at exactly the right place. For example the default editor command under Unix is
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-519720"></A><SPAN CLASS="ee-keyword">
+vi +$line $target</SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-556674"></A>meaning: start the Vi editor on the <SPAN CLASS="ee-keyword">
+$target</SPAN>
+ file, initially positioned at line <SPAN CLASS="ee-keyword">
+$line </SPAN>
+(the <SPAN CLASS="ee-keyword">
++</SPAN>
+<SPAN CLASS="ee-text">
+line_number </SPAN>
+command-line option of Vi directs it to start at line <SPAN CLASS="ee-text">
+line_number</SPAN>
+).
+<P CLASS="nn-normal">
+<A NAME="pgfId-556675"></A>If you start an external editor on a class, then exit the editor after possibly making changes, EiffelStudio will immediately update the class text in the Editing Tool. More generally, note that EiffelStudio will detect changes made separately on the same class, and warn you of possible conflicts.
+<P CLASS="nn-normal">
+<A NAME="pgfId-519722"></A>Several important text editors from various providers have <SPAN CLASS="ff-bold">
+Eiffel modes</SPAN>
+, which support the syntax-directed editing of Eiffel texts. They include:
+<UL>
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-519738"></A><SPAN CLASS="ff-italics">
+Vim</SPAN>
+, for Vi iMproved, an extension of Vi available on both Unix/Linux and Windows -- see www.vim.org
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-519730"></A><SPAN CLASS="ff-italics">
+Emacs</SPAN>
+ -- see www.emacs.org.
+<p class="nn-first"><img src="greenball.gif" alt="+">
+<A NAME="pgfId-519751"></A><SPAN CLASS="ff-italics">
+Editeur</SPAN>
+, a Windows syntax highlighting editor -- see www.studioware.com.
+</UL>
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="index-11.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="index.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="index-13.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

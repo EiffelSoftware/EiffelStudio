@@ -97,6 +97,7 @@ feature -- Properties
 	msil_generation,
 	msil_generation_type,
 	msil_key_file_name,
+	msil_use_optimized_precompile,
 	namespace,
 	il_verifiable,
 	cls_compliant,
@@ -205,6 +206,7 @@ feature {NONE} -- Codes and names.
 			Result.force (msil_generation, "msil_generation")
 			Result.force (msil_generation_type, "msil_generation_type")
 			Result.force (msil_key_file_name, "msil_key_file_name")
+			Result.force (msil_use_optimized_precompile, "msil_use_optimized_precompile")
 			Result.force (multithreaded, "multithreaded")
 			Result.force (namespace, "namespace")
 			Result.force (override_cluster, "override_cluster")
@@ -489,6 +491,15 @@ feature {COMPILER_EXPORTER}
 				when msil_key_file_name then
 					if value.is_name then
 						System.set_msil_key_file_name (value.value)	
+					else
+						error_found := True
+					end
+					
+				when msil_use_optimized_precompile then
+					if value.is_no then
+						System.set_msil_use_optimized_precompile (False)
+					elseif value.is_yes then
+						System.set_msil_use_optimized_precompile (True)
 					else
 						error_found := True
 					end

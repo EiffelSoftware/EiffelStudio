@@ -114,6 +114,7 @@ end;
 			columns_seen := 0;
 			columns_of_interest := config.columns_of_interest;
 			get_next_column
+			is_conversion_ok := False
 		end;
 
 	end_analyse is
@@ -125,8 +126,8 @@ end;
 			a: ANY
 		do
 			redo_cyclics;
-			io.putstring ("Ready with analysis.%N%N");
 debug("PROFILE_CONVERT")
+	io.error.putstring ("Ready with analysis.%N%N");
 	io.error.putstring ("Cyclics are re-done.");
 	io.error.new_line;
 	io.error.putstring ("About to store the information on disk.");
@@ -167,6 +168,8 @@ end;
 				a := ("write permission failure").to_c;
 				eraise ($a, Io_exception)
 			end
+
+			is_conversion_ok := True
 		end;
 
 	redo_cyclics is
@@ -767,6 +770,11 @@ feature {NONE} -- Commands
 			Result.append_string (translat_string.substring (1, new_line_index));
 			translat_string.tail (translat_string.count - new_line_index)
 		end
+
+feature -- Access
+
+	is_conversion_ok: BOOLEAN
+		-- Has the conversion worked properly?
 
 feature {NONE} -- Attributes
 

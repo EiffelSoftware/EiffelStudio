@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 				Void
 			)
 			enable_closeable
-			disable_user_resize
+			forbid_resize
 			is_initialized := True
 		end
 

@@ -807,6 +807,7 @@ feature {NONE} -- Implementation
 					choice.set_title (Interface_names.t_Select_cluster)
 					choice.set_list (cluster_names)
 					choice.set_position (cluster_address.screen_x, cluster_address.screen_y + cluster_address.height)
+					choice.set_width (cluster_address.width)
 					must_show_choice := True
 				end
 			else
@@ -863,6 +864,7 @@ feature {NONE} -- Implementation
 					choice.set_title (Interface_names.t_Select_class)
 					choice.set_list (class_names)
 					choice.set_position (class_address.screen_x, class_address.screen_y + class_address.height)
+					choice.set_width (class_address.width)
 					must_show_choice := True
 				end
 			else
@@ -903,6 +905,7 @@ feature {NONE} -- Implementation
 					choice.set_title (Interface_names.t_Select_feature)
 					choice.set_list (feature_names)
 					choice.set_position (feature_address.screen_x, feature_address.screen_y + feature_address.height)
+					choice.set_width (feature_address.width)
 					must_show_choice := True
 				end
 			else

@@ -20,15 +20,23 @@ inherit
 	COMMON_PATH
 
 	SHARED_ASSEMBLY_MAPPING
-
-	SHARED_CONSUMED_ASSEMBLY_FACTORY
-
+	
 	NAME_FORMATTER
 
-	SHARED_CONSUMED_ASSEMBLY_FACTORY
-
 create
-	default_create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_writer: CACHE_WRITER) is
+			-- create new assembly consumer
+		require
+			non_void_writer: a_writer /= Void
+		do
+			cache_writer := a_writer
+		ensure
+			cache_writer_set: cache_writer = a_writer
+		end		
 
 feature -- Basic Operations
 
@@ -47,89 +55,16 @@ feature -- Basic Operations
 			reset_assembly_mapping
 			count := referenced_assemblies.count
 			create assembly_ids.make
-			ca := Consumed_assembly_factory.consumed_assembly (ass)
+			ca := cache_writer.consumed_assembly_from_path (ass.location)
 			last_index := 1
 			assembly_ids.extend (ca)
-			assembly_mapping.put (last_index, ca.out)
+			assembly_mapping.put (last_index, ass.full_name)
 			assembly_mapping.compare_objects
 			build_referenced_assemblies (ass)
 			prepare_consumed_types (ass)
 			serialize_consumed_types			
 		end
-
-	is_newer_tool (a_path: STRING): BOOLEAN is
-			-- is prior consumed assembly in `a_path' out of date because of an updated consumer tool?
-		require
-			non_void_path: a_path /= Void
-			valid_path: not a_path.is_empty
-		local
-			l_tool: RAW_FILE
-			l_directory: DIRECTORY
-			l_args: ARGUMENTS
-		do
-			create l_args
-			create l_tool.make (l_args.argument (0))
-			create l_directory.make (a_path)
-			
-			if l_tool.exists and then l_directory.exists then
-				Result := l_tool.date > (create {RAW_FILE}.make (l_directory.name)).date			
-			elseif not l_directory.exists then
-					-- tool is newer
-				Result := True
-			end
-		end
-
-	does_consumed_assembly_require_reconsume (ass: ASSEMBLY; a_path: STRING): BOOLEAN is
-			-- does the assembly `ass' related to `a_path' require reconsuming?
-		require
-			non_void_assembly: ass /= Void
-			non_void_path: a_path /= Void
-		local
-			assembly_file: RAW_FILE
-			path_to_assembly: STRING
-			consumed_path: STRING
-			consumed_path_timestamp: INTEGER
-			assembly_file_timestamp: INTEGER
-			consumed_folder: DIRECTORY
-			l_consume_status: ASSEMBLY_CONSUMER_COMPLETION_STATUS
-		do
-			consumed_path := a_path.twin
-
-			-- Set the default value for all conditions where the assembly date cannot be compared
-			Result := False
-				
-			create path_to_assembly.make_from_cil (ass.code_base)
-			create consumed_folder.make (consumed_path)
-			if path_to_assembly.count > 8 and path_to_assembly.substring_index ("file:///", 1) = 1 then
-				path_to_assembly := path_to_assembly.substring (9, path_to_assembly.count)
-				create assembly_file.make (path_to_assembly)
-				
-				if consumed_folder.exists and then assembly_file.exists then
-					consumed_path.prune_all_trailing ((create {OPERATING_ENVIRONMENT}).directory_separator)
-
-					consumed_path_timestamp := (create {RAW_FILE}.make (consumed_path)).date
-					assembly_file_timestamp := assembly_file.date
-					
-					Result := (consumed_path_timestamp < assembly_file_timestamp)
-				elseif not consumed_folder.exists and then assembly_file.exists then
-					Result := True
-				end
-			end
-			
-			-- Check to see if consumed folder is empty
-			if not Result then
-				Result := not (consumed_folder.exists implies not consumed_folder.linear_representation.is_empty)
-			end
-			
-			-- Check if assembly was only partially consumed
-			if not Result then
-				create l_consume_status.make_from_consumed_path (consumed_path)
-				Result := not l_consume_status.is_completed
-			end
-		ensure
-			non_void_result : Result /= Void
-		end
-		
+	
 feature -- Access
 
 	file_name (type: CONSUMED_TYPE): STRING is
@@ -143,6 +78,9 @@ feature -- Access
 
 	destination_path: STRING
 			-- Path where XML files are generated
+			
+	cache_writer: CACHE_WRITER
+			-- Cache writer used to write consumed assembly information to cache
 
 feature -- Element Settings
 
@@ -185,11 +123,11 @@ feature {NONE} -- Implementation
 				check
 					non_void_referenced_assembly: l_ref_ass /= Void
 				end
-				ca := Consumed_assembly_factory.consumed_assembly_from_name (l_ref_ass.get_name)
-				if not assembly_mapping.has (ca.out) then
+				ca := cache_writer.consumed_assembly_from_path (l_ref_ass.location)
+				if not assembly_mapping.has (l_ref_ass.full_name) then
 					last_index := last_index + 1
 					assembly_ids.extend (ca)
-					assembly_mapping.put (last_index, ca.out)
+					assembly_mapping.put (last_index, l_ref_ass.full_name)
 						-- add also referenced assemblies of assembly referenced.
 					build_referenced_assemblies (l_ref_ass)
 				end
@@ -328,17 +266,14 @@ feature {NONE} -- Implementation
 			l_string_tuple: like string_tuple
 			l_empty_tuple: like empty_tuple
 			l_is_delegate, l_is_value_type: BOOLEAN
-			l_completion_status: ASSEMBLY_CONSUMER_COMPLETION_STATUS
 		do
 			create_consumed_assembly_folders
-			
-			create l_completion_status.make (Current)
-			l_completion_status.started_consumption
 			
 			create serializer
 			create types.make (type_consumers.count)			
 			l_string_tuple := string_tuple
 			l_empty_tuple := empty_tuple
+			
 			from
 				type_consumers.start
 			until
@@ -391,12 +326,10 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
-			end
+			end		
 			create mapping.make (assembly_ids)
 			serializer.serialize (types, destination_path + Assembly_types_file_name)
 			serializer.serialize (mapping, destination_path + Assembly_mapping_file_name)
-			
-			l_completion_status.finished_consumption (True)
 		end
 		
 	create_consumed_assembly_folders is
@@ -409,9 +342,14 @@ feature {NONE} -- Implementation
 			l_dir: DIRECTORY
 		do
 			create l_dir.make (destination_path)
-			l_dir.create_dir
+			if not l_dir.exists then
+				l_dir.create_dir	
+			end
 			create l_dir.make (destination_path + Classes_path)
-			l_dir.create_dir	
+			if not l_dir.exists then
+				l_dir.create_dir	
+			end
+			
 		end		
 
 	type_consumers: HASH_TABLE [TYPE_CONSUMER, STRING]

@@ -17,11 +17,11 @@ inherit
 		export
 			{NONE} all
 		undefine
-			setup, copy
+			is_equal, copy
 		end;
 	SHARED_APPLICATION_EXECUTION
 		undefine
-			setup, copy
+			is_equal, copy
 		end
 
 creation {RUN_INFO, APPLICATION_STATUS}

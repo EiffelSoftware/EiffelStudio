@@ -21,22 +21,49 @@ creation
 	
 feature {NONE} -- Initialization
 	
-	make (interf: EV_APPLICATION) is
-		local
-			w: EV_WINDOW
+	make is
+			-- Create the application
 		do
 			init_windowing
-			w := interf.main_window
-			check
-				valid_main_window: w /= Void
-			end
-			main_window ?= w.implementation
-			check
-				valid_implementation: main_window /= Void
-			end
-			main_window.connect_to_application ($exit_from_main_window, $Current)
 		end
-	
+
+	launch (interface: EV_APPLICATION) is
+			-- Launch the main window and the application.
+		do
+			main_window ?= interface.main_window.implementation
+			main_window.connect_to_application ($exit_from_main_window, $Current)
+		ensure then
+			valid_window: main_window /= Void
+		end
+
+feature -- Access
+
+	main_window: EV_WINDOW_IMP
+			-- Implementation of the main window of
+			-- the application.
+
+feature -- Accelerators - command association
+
+	add_accelerator_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when `acc' is completed by the user.
+		do
+		end
+
+	remove_accelerator_commands (acc: EV_ACCELERATOR) is
+			-- Empty the list of commands to be executed when
+			-- `acc' is completed by the user.
+		do
+		end
+
+feature -- Basic operation
+
+	exit is
+			-- Exit
+		do
+			gtk_main_quit
+		end	
+
 feature {NONE} -- Implementation
 	
 	init_windowing is
@@ -52,12 +79,6 @@ feature {NONE} -- Implementation
                         gtk_main
                 end
 
-	exit is
-			-- Exit
-		do
-			gtk_main_quit
-		end	
-
 	exit_from_main_window is
 			-- Exit the application after the user
 			-- closed the main window.
@@ -66,10 +87,6 @@ feature {NONE} -- Implementation
 				exit
 			end
 		end
-
-	main_window: EV_WINDOW_IMP
-			-- Implementation of the main window of
-			-- the application.
 
 end -- class EV_APPLICATION_IMP
 

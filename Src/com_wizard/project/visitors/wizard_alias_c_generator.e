@@ -21,8 +21,7 @@ feature -- Access
 			included_name: STRING
 			header: STRING
 		do
-			create c_writer.make
-			c_writer.set_header_file_name (alias_descriptor.c_header_file_name)
+			c_writer := Alias_c_writer
 			a_data_type_descriptor := alias_descriptor.type_descriptor
 
 			create a_data_visitor
@@ -52,11 +51,6 @@ feature -- Access
 			type_definition.append (Semicolon)
 
 			c_writer.add_other (type_definition)
-
-			create header.make (0)
-			header.append (Wizard_note)
-			header.append (alias_descriptor.creation_message)
-			c_writer.set_header (header)
 		end
 
 end -- class WIZARD_ALIAS_C_GENERATOR

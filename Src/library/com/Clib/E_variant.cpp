@@ -198,7 +198,7 @@ void ecom_variant::ccom_set_unsigned_integer(EIF_INTEGER a_value)
 void ecom_variant::ccom_set_unsigned_integer_reference (EIF_OBJECT a_value)
 {
 	V_VT(variant) = VT_UINT|VT_BYREF;
-	V_UINTREF(variant) = (UINT *)rt_ec.ccom_ec_pointed_long(a_value, NULL);
+	V_UINTREF(variant) = (UINT *)rt_ec.ccom_ec_pointed_long(eif_access(a_value), NULL);
 }
 
 EIF_REAL ecom_variant::ccom_real4 ()
@@ -242,7 +242,7 @@ void ecom_variant::ccom_set_real8 (EIF_DOUBLE a_value)
 void ecom_variant::ccom_set_real8_reference (EIF_OBJECT a_value)
 {
 	V_VT(variant) = VT_R8|VT_BYREF;
-	V_R8REF(variant) = (DOUBLE *)rt_ec.ccom_ec_pointed_real(eif_access (a_value), NULL);
+	V_R8REF(variant) = (DOUBLE *)rt_ec.ccom_ec_pointed_double (eif_access (a_value), NULL);
 }
 
 EIF_BOOLEAN ecom_variant::ccom_bool ()
@@ -316,9 +316,9 @@ EIF_REFERENCE ecom_variant::ccom_decimal ()
 	return rt_ce.ccom_ce_decimal (V_DECIMAL(variant));
 }
 
-EIF_REFERENCE ecom_variant::ccom_decimal_reference ()
+EIF_POINTER ecom_variant::ccom_decimal_reference ()
 {
-	return rt_ce.ccom_ce_pointed_decimal (V_DECIMALREF(variant));
+	return (EIF_POINTER) V_DECIMALREF(variant);
 }
 
 void ecom_variant::ccom_set_decimal (DECIMAL * a_value)
@@ -338,9 +338,9 @@ EIF_REFERENCE ecom_variant::ccom_currency ()
 	return rt_ce.ccom_ce_currency (V_CY(variant));
 }
 
-EIF_REFERENCE ecom_variant::ccom_currency_reference ()
+EIF_POINTER ecom_variant::ccom_currency_reference ()
 {
-	return rt_ce.ccom_ce_pointed_currency (V_CYREF(variant));
+	return (EIF_POINTER) V_CYREF(variant);
 }
 
 void ecom_variant::ccom_set_currency (CY *a_value)

@@ -641,7 +641,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			parent_imp := a_container_imp
 		end
 		
-feature {EV_ANY_IMP} -- Implementation
+feature {EV_ANY_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	destroy is
 			-- Destroy `Current'

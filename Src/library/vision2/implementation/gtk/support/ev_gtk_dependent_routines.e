@@ -21,4 +21,16 @@ feature -- Implementation
 			Result := a_c_object
 		end
 
+        horizontal_resolution_internal: INTEGER is
+                        -- Number of pixels per inch along horizontal axis 
+                do
+                        Result := 75
+                end
+
+        vertical_resolution_internal: INTEGER is
+                        -- Number of pixels per inch along vertical axis
+                do
+                        Result := 75
+                end
+
 end -- class EV_GTK_DEPENDENT_ROUTINES

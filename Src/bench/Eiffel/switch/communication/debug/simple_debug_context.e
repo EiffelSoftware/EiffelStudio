@@ -28,7 +28,7 @@ inherit
 
 	SHARED_WORKBENCH
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			e_class := a_feat.associated_class;
 			e_feature := a_feat;	
 			ast := a_feat.ast;	
-			!! eiffel_file.make_with_positions 
+			create eiffel_file.make_with_positions 
 				(a_feat.written_class.file_name, 
 					ast.start_position, ast.end_position);
 			eiffel_file.set_current_feature (ast);

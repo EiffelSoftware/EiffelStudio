@@ -131,7 +131,7 @@ end
 			-- the key is the physical addr of the object, the item is
 			-- its hector addr (with indirection)
 		once
-			!! Result.make (40);
+			create Result.make (40);
 			Result.compare_objects
 		end;
 

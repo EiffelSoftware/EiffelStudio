@@ -9,7 +9,7 @@ class
 inherit
 	EDIT_ITEM
 
-creation
+create
 	default_create
 
 feature -- Initialisation / Creation

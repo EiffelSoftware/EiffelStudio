@@ -15,7 +15,7 @@ inherit
 			execute
 		end
 
-creation
+create
 	make
 
 feature -- Execution
@@ -28,7 +28,7 @@ feature -- Execution
 		do
 			if not retried then
 				e_feature := a_target_feat
-				{FORMAT_FEAT_CONTEXT} Precursor (a_target_feat)
+				Precursor {FORMAT_FEAT_CONTEXT} (a_target_feat)
 			else
 				create text.make
 				text.add_string ("No text could be generated.")
@@ -72,7 +72,7 @@ feature {NONE}
 			else
 				text.add (ti_padded_debug_mark)
 			end
-			{FORMAT_FEAT_CONTEXT} Precursor
+			Precursor {FORMAT_FEAT_CONTEXT}
 		end
 
 end	 -- class DEBUG_CONTEXT

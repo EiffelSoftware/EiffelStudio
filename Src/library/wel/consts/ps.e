@@ -58,6 +58,20 @@ feature -- Access
 			"PS_INSIDEFRAME"
 		end
 
+feature -- Status report
+
+	valid_pen_style_constant (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid pen style constant?
+		do
+			Result := c = Ps_solid or else
+				c = Ps_dash or else
+				c = Ps_dot or else
+				c = Ps_dashdot or else
+				c = Ps_dashdotdot or else
+				c = Ps_null or else
+				c = Ps_insideframe
+		end
+
 end -- class WEL_PS_CONSTANTS
 
 --|-------------------------------------------------------------------------

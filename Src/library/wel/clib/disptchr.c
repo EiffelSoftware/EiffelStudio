@@ -15,6 +15,7 @@
  */
 
 #include "wel_globals.h"
+#include "eif_object_id.h"
 
 /* Temporary external used to get around genericity problem in Vision2. */
 EIF_REFERENCE generize (EIF_OBJECT g_item)
@@ -50,7 +51,21 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 			(EIF_INTEGER) wparam,
 			(EIF_INTEGER) lparam));
 	else
-		return DefWindowProc (hwnd, msg, wparam, lparam);
+		switch (msg) {
+			case WM_DESTROY:
+				{
+				  		/* Object is destroyed during call to `dispose' we need
+						 * to call `eif_object_id_free' to reset entry in GC, otherwise
+						 * it will crash at the next collection trying to find dead object
+						 */
+					EIF_INTEGER object_id = GetWindowLong (hwnd, GWL_USERDATA);	
+					if (object_id > 0) {
+						eif_object_id_free (object_id);
+					}
+				}
+			default:
+				return DefWindowProc (hwnd, msg, wparam, lparam);
+		}
 }
 
 BOOL CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
@@ -121,6 +136,18 @@ void wel_release_dispatcher_object()
 {
 	WGTCX
 	eif_wean (dispatcher);
+}
+
+void wel_set_dispatcher_pointer(EIF_POINTER _addr_)
+{
+	WGTCX
+	dispatcher = (EIF_OBJ) _addr_;	
+}
+
+EIF_POINTER wel_dispatcher_pointer()
+{
+	WGTCX
+	return (EIF_POINTER) dispatcher;
 }
 
 #endif

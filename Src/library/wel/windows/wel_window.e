@@ -9,6 +9,9 @@ deferred class
 
 inherit
 	WEL_ANY
+		rename
+			destroy_item as gc_destroy_item
+		end
 
 	WEL_WINDOW_MANAGER
 		export
@@ -1775,7 +1778,7 @@ feature {WEL_BLOCKING_DISPATCHER, WEL_WINDOW} -- Properties
 
 feature {NONE} -- Removal
 
-	destroy_item is
+	frozen destroy_item is
 			-- At this stage, the window has been already destroyed
 			-- by Windows (see `on_wm_destroy').
 			-- Reset C and WEL structure that keep track of Current.
@@ -1784,6 +1787,36 @@ feature {NONE} -- Removal
 
 				-- Clean `item' C pointer.
 			item := default_pointer
+		end
+	
+	frozen gc_destroy_item is
+			-- Called by GC and `item' is still not equal to default_pointer,
+			-- meaning that `destroy' has not been called. We need to call it.
+		local
+			p, null: POINTER
+			i: INTEGER
+		do
+			i := internal_data
+
+				-- `internal_data' can be 0 when the Window has currently been
+				-- destroyed by Windows. In that case in `disptchr.c' we already
+				-- called `eif_object_id_free' and no need to do anything else.
+			if i > 0 then
+				eif_object_id_free (i)
+
+					-- Save protected reference to `dispatcher' object.
+				p := cwel_dispatcher_pointer
+
+					-- No more `dispatcher' object is called from C code of WEL,
+					-- avoiding to go through Eiffel when destroying the window.
+				cwel_set_dispatcher_pointer (null)
+
+					-- Destroying the window.
+				cwin_destroy_window (item)
+
+					-- Restore `dispatcher' object so that dispatching can proceed.
+				cwel_set_dispatcher_pointer (p)
+			end
 		end
 
 feature {NONE} -- Constants
@@ -2164,6 +2197,16 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (HWND, int, LONG)"
 		alias
 			"SetClassLong"
+		end
+
+	cwel_set_dispatcher_pointer (dispatcher_ptr: POINTER) is
+		external
+			"C [macro %"disptchr.h%"]"
+		end
+
+	cwel_dispatcher_pointer: POINTER is
+		external
+			"C [macro %"disptchr.h%"]"
 		end
 
 end -- class WEL_WINDOW

@@ -18,7 +18,7 @@ default
 	array_optimization (no)
 	inlining (no)
 	inlining_size ("4")
-	arguments ("C:\50dev\help\wizards\ewizard -callback c:\test.txt")
+	arguments ("e:\eiffel50\bench\wizards\new_projects\wizard -callback c:\test.txt")
 
 cluster
 		-- Root cluster

@@ -146,6 +146,7 @@ a ?= o
 		<keyword>end</keyword>
 <keyword>end</keyword>
 </code_block>would print<code_block>expanded C [STRING]</code_block>instead of<code_block>expanded C [ANY]</code_block></item>
+			<item>Fixed issue where you could get a bogus reference when trying to get a reference to the object associated to an ID (obtained through the <code><class_name>IDENTIFIED</class_name></code> class).</item>
 		</list>
 		<heading>
 			<size>3</size>.NET issues

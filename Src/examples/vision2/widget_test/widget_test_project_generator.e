@@ -12,6 +12,8 @@ class
 	
 inherit
 	EXECUTION_ENVIRONMENT
+	
+	GENERATION_CONSTANTS
 
 feature -- Access
 
@@ -21,6 +23,7 @@ feature -- Access
 			project_name, project_location, test_name: STRING
 
 		do
+			current_generation_directory := directory
 			test_name := test_class_name.as_upper
 			project_name := test_class_name
 			generate_ace_file (project_name)
@@ -52,7 +55,9 @@ feature {NONE} -- Implementation
 			ace_text := ace_template_file.last_string
 			ace_template_file.close
 			add_generated_string (ace_text, project_name, "<PROJECT_NAME>")
-			create ace_template_file.make ("C:\ace.ace")
+			create filename.make_from_string (current_generation_directory.name)
+			filename.extend (ace_file_name)
+			create ace_template_file.make (filename.out)
 			ace_template_file.open_write
 			ace_template_file.start
 			ace_template_file.putstring (ace_text)
@@ -60,7 +65,7 @@ feature {NONE} -- Implementation
 		end
 		
 	generate_application_file (test_name: STRING) is
-			--
+			-- Generate an application file for thsi project.
 		local
 			application_template_file: PLAIN_TEXT_FILE
 			filename: FILE_NAME
@@ -75,7 +80,9 @@ feature {NONE} -- Implementation
 			application_text := application_template_file.last_string
 			application_template_file.close
 			add_generated_string (application_text, test_name, "<TEST_NAME>")
-			create application_template_file.make ("C:\application.e")
+			create filename.make_from_string (current_generation_directory.name)
+			filename.extend (Application_file_name)
+			create application_template_file.make (filename.out)
 			application_template_file.open_write
 			application_template_file.start
 			application_template_file.putstring (application_text)
@@ -83,7 +90,7 @@ feature {NONE} -- Implementation
 		end
 		
 	generate_test_file (test_name, widget_type: STRING) is
-			--
+			-- generate the file containing the test.
 		local
 			test_template_file: PLAIN_TEXT_FILE
 			filename: FILE_NAME
@@ -98,7 +105,9 @@ feature {NONE} -- Implementation
 			test_template_file.read_stream (test_template_file.count)
 			test_text := test_template_file.last_string
 			test_template_file.close
-			create test_template_file.make ("C:\" + test_name + ".e")
+			create filename.make_from_string (current_generation_directory.name)
+			filename.extend (test_name + ".e")
+			create test_template_file.make (filename.out)
 			test_template_file.open_write
 			test_template_file.start
 			test_template_file.putstring (test_text)
@@ -119,5 +128,8 @@ feature {NONE} -- Implementation
 			a_class_text.replace_substring_all (tag, "")
 			a_class_text.insert_string (new, temp_index)
 		end
+		
+	current_generation_directory: DIRECTORY
+		-- Directory in which to perform generation
 
 end -- class WIDGET_TEST_PROJECT_GENERATOR

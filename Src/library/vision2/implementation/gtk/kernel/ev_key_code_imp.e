@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "Code that represent the keys of the keyboard."
@@ -681,6 +682,9 @@ end -- class EV_KEY_CODE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/15 18:53:32  brendel
+--| Unreleased.
+--|
 --| Revision 1.5  2000/02/22 18:39:35  oconnor
 --| updated copyright date and formatting
 --|

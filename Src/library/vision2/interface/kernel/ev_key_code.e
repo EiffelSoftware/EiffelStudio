@@ -1,3 +1,4 @@
+--| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
@@ -691,6 +692,9 @@ end -- class EV_KEY_CODE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/15 18:53:32  brendel
+--| Unreleased.
+--|
 --| Revision 1.5  2000/02/29 18:09:08  oconnor
 --| reformatted indexing cluase
 --|

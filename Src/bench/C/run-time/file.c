@@ -113,9 +113,9 @@ int how;
 
 #ifdef __WATCOMC__
 	if (how < 10)
-		return (EIF_POINTER) file_fopen(name, file_open_mode(how,'b'));
-	else
 		return (EIF_POINTER) file_fopen(name, file_open_mode(how,'t'));
+	else
+		return (EIF_POINTER) file_fopen(name, file_open_mode(how,'b'));
 #else
 	return (EIF_POINTER) file_fopen(name, file_open_mode(how,'\0'));
 #endif
@@ -129,9 +129,9 @@ int how;
 
 #ifdef __WATCOMC__
 	if (how < 10)
-		return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'b'));
-	else
 		return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'t'));
+	else
+		return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'b'));
 #else
 	return (EIF_POINTER) file_fdopen(fd, file_open_mode(how,'\0'));
 #endif
@@ -149,9 +149,9 @@ FILE *old;
 
 #ifdef __WATCOMC__
 	if (how < 10)
-		return (EIF_POINTER) file_freopen(name, file_open_mode(how,'b'), old);
-	else
 		return (EIF_POINTER) file_freopen(name, file_open_mode(how,'t'), old);
+	else
+		return (EIF_POINTER) file_freopen(name, file_open_mode(how,'b'), old);
 #else
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'\0'), old);
 #endif

@@ -36,16 +36,10 @@ inherit
 			implementation
 		end
 
-	FIXED [EV_WIDGET]
-		undefine
-			default_create,
-			changeable_comparison_criterion
-		end
-
 feature {NONE} -- Initialization
 
 	initialize is
-			--|FIXME comment
+			-- Initialize internal widgets and values.
 		do
 			check
 				split_box_not_void: split_box /= Void
@@ -81,8 +75,6 @@ feature -- Access
 			elseif index = 2 then
 				Result := second_cell.item
 			end
-		ensure then
-			not_void: Result /= Void
 		end
 
 	first: EV_WIDGET is
@@ -140,26 +132,34 @@ feature -- Status report
 			end
 		end
 
+	empty: BOOLEAN is
+			-- Is structure empty?
+		do
+			Result := not (second_cell.readable or first_cell.readable)
+		end
+
+	extendible: BOOLEAN is
+			-- Is structure not full yet?
+		do
+			Result := not second_cell.readable
+		end
+
+	full: BOOLEAN is
+			-- Is structure filled to capacity?
+		do
+			Result := second_cell.readable
+		end
+
 	readable: BOOLEAN is
 			-- Is there a current item that may be read?
 		do
-			if index = 1 then
-				Result := first_cell.readable
-			elseif index = 2 then
-				Result := second_cell.readable
-			end
+			Result := item /= Void
 		end
 
 	writable: BOOLEAN is
 			-- Is there a current item that may be modified?
 		do
 			Result := item /= Void
-		end
-
-	extendible: BOOLEAN is
-			-- Items may be added.
-		do
-			Result := first = Void or second = Void
 		end
 
 	prunable: BOOLEAN is True
@@ -220,9 +220,6 @@ feature -- Measurement
 		do
 			Result := implementation.box.client_height
 		end
-
-	capacity: INTEGER is 2
-			-- Number of items that may be stored.
 
 feature -- Element change
 
@@ -555,6 +552,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/10 19:43:56  brendel
+--| Removed inheritance from FIXED.
+--|
 --| Revision 1.29  2000/03/21 00:15:01  king
 --| Added aggregate cell, now redefining item to avoid seg faults from invariant
 --|

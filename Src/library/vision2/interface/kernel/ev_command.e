@@ -20,7 +20,7 @@ feature -- Basic operations
 		deferred
 		end
 
-feature {EV_EVENT_HANDLER_IMP} -- Implementation
+feature {EV_EVENT_HANDLER_IMP, EV_TIMEOUT_IMP} -- Implementation
 
 	execute_address: POINTER is
 			-- Address of feature execute 

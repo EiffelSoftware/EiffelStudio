@@ -146,6 +146,14 @@ EIF_INTEGER c_call_static_int_method (JNIEnv *env, jclass cls, jmethodID methodI
 	return (EIF_INTEGER)j;
 }
 
+EIF_INTEGER_64 c_call_static_long_method (JNIEnv *env, jclass cls, jmethodID methodID, jvalue *args)
+{
+	jlong j;
+	j = (*env)->CallStaticLongMethodA (env, cls, methodID, args);
+	c_check_for_exceptions (env);
+	return (EIF_INTEGER_64) j;
+}
+
 EIF_REAL c_call_static_float_method (JNIEnv *env, jclass cls, jmethodID methodID, jvalue *args)
 {
 	jfloat j;
@@ -273,6 +281,16 @@ EIF_INTEGER c_call_int_method (JNIEnv *env, jclass cls, jmethodID methodID, jval
 	return (EIF_INTEGER) i;
 }
 
+EIF_INTEGER_64 c_call_long_method (JNIEnv *env, jclass cls, jmethodID methodID, jvalue *args) {
+	jlong i;
+
+	char *id = my_thread_id ();
+
+	i = (*env)->CallLongMethodA (env, cls, methodID, args);
+	c_check_for_exceptions (env);
+	return (EIF_INTEGER_64) i;
+}
+
 EIF_INTEGER c_call_short_method  (JNIEnv *env, jclass cls, jmethodID methodID, jvalue *args)
 {
 	jshort s;
@@ -338,16 +356,29 @@ jfieldID c_get_static_field_id (JNIEnv *env, jclass cls, const char *name, const
 }
 
 /* Get the value of an integer field */
-jint c_get_integer_field (JNIEnv *env, jobject oid, jfieldID fid) {
+EIF_INTEGER c_get_integer_field (JNIEnv *env, jobject oid, jfieldID fid) {
 	jint value = (*env)->GetIntField (env, oid, fid);
 	c_check_for_exceptions (env);
-	return (value);
+	return (EIF_INTEGER) value;
 }
 
-jint c_get_static_integer_field (JNIEnv *env, jobject oid, jfieldID fid) {
+EIF_INTEGER c_get_static_integer_field (JNIEnv *env, jobject oid, jfieldID fid) {
 	jint value = (*env)->GetStaticIntField (env, oid, fid);
 	c_check_for_exceptions (env);
-	return (value);
+	return (EIF_INTEGER) value;
+}
+
+/* Get the value of an integer_64 field */
+EIF_INTEGER_64 c_get_long_field (JNIEnv *env, jobject oid, jfieldID fid) {
+	jlong value = (*env)->GetLongField (env, oid, fid);
+	c_check_for_exceptions (env);
+	return (EIF_INTEGER_64) value;
+}
+
+EIF_INTEGER_64 c_get_static_long_field (JNIEnv *env, jobject oid, jfieldID fid) {
+	jlong value = (*env)->GetStaticLongField (env, oid, fid);
+	c_check_for_exceptions (env);
+	return (EIF_INTEGER_64) value;
 }
 
 EIF_OBJ c_get_string_field (JNIEnv *env, jobject oid, jfieldID fid) {
@@ -467,14 +498,26 @@ jobject c_get_static_object_field (JNIEnv *env, jobject oid, jfieldID fid) {
 /* Setting Field 							  */
 /*--------------------------------------------*/
 
-void c_set_integer_field ( JNIEnv *env, jobject oid, jfieldID fid, jint value) {
+void c_set_integer_field ( JNIEnv *env, jobject oid, jfieldID fid, EIF_INTEGER value) {
 	(*env)->SetIntField(env, oid, fid, value);
 	c_check_for_exceptions (env);
 	return;
 }
 
-void c_set_static_integer_field ( JNIEnv *env, jobject oid, jfieldID fid, jint value) {
+void c_set_static_integer_field ( JNIEnv *env, jobject oid, jfieldID fid, EIF_INTEGER value) {
 	(*env)->SetStaticIntField (env, oid, fid, value);
+	c_check_for_exceptions (env);
+	return;
+}
+
+void c_set_long_field ( JNIEnv *env, jobject oid, jfieldID fid, EIF_INTEGER_64 value) {
+	(*env)->SetLongField(env, oid, fid, value);
+	c_check_for_exceptions (env);
+	return;
+}
+
+void c_set_static_long_field ( JNIEnv *env, jobject oid, jfieldID fid, EIF_INTEGER_64 value) {
+	(*env)->SetStaticLongField (env, oid, fid, value);
 	c_check_for_exceptions (env);
 	return;
 }
@@ -603,6 +646,10 @@ void c_put_double_arg (JNIEnv *env,jvalue args[],EIF_DOUBLE value,int pos) {
 
 void c_put_int_arg (JNIEnv *env, jvalue args[], EIF_INTEGER value, int pos) {
 	args[pos].i = (jint) value;
+}
+
+void c_put_long_arg (JNIEnv *env, jvalue args[], EIF_INTEGER_64 value, int pos) {
+	args[pos].i = (jlong) value;
 }
 
 void c_put_short_arg (JNIEnv *env, jvalue args[], EIF_INTEGER value, int pos) {
@@ -736,6 +783,28 @@ EIF_INTEGER c_get_int_array_element (JNIEnv *env, jintArray array, int indx) {
 	return (EIF_INTEGER) jc;
 }
 
+void c_set_long_array_element (JNIEnv *env, jlongArray array, int indx, EIF_INTEGER_64 jc) {
+	jlong *c;
+	jboolean copy;
+
+	c = (*env)->GetLongArrayElements (env, array, &copy);
+	c[indx] = (jlong) jc;
+	(*env)->ReleaseLongArrayElements (env, array, c, 0);
+	c_check_for_exceptions (env);
+}
+
+EIF_INTEGER_64 c_get_long_array_element (JNIEnv *env, jlongArray array, int indx) {
+	jlong *c;
+	jboolean copy;
+	jlong jc;
+
+	c = (*env)->GetLongArrayElements (env, array, &copy);
+	jc = c[indx];
+	if (copy == JNI_TRUE) (*env)->ReleaseLongArrayElements (env, array, c, JNI_ABORT);
+	c_check_for_exceptions (env);
+	return (EIF_INTEGER_64) jc;
+}
+
 jbooleanArray c_new_boolean_array (JNIEnv *env,jsize len) {
 	jbooleanArray ja = (*env)->NewBooleanArray (env,len);
 	c_check_for_exceptions (env);
@@ -820,8 +889,8 @@ EIF_REAL c_get_float_array_element (JNIEnv *env, jfloatArray array, int indx) {
 	return (EIF_REAL) jc;
 }
 
-jintArray c_new_double_array (JNIEnv *env,jsize len) {
-	jintArray ja = (*env)->NewDoubleArray (env,len);
+jdoubleArray c_new_double_array (JNIEnv *env,jsize len) {
+	jdoubleArray ja = (*env)->NewDoubleArray (env,len);
 	c_check_for_exceptions (env);
 	return ja;
 }

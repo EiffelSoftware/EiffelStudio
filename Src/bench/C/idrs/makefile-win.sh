@@ -1,4 +1,6 @@
 TOP = ..
+OUTDIR= .
+INDIR= .
 CC = $cc
 JCFLAGS = $ccflags $optimize -I$(TOP)
 MV = copy

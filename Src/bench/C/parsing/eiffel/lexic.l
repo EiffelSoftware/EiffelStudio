@@ -48,10 +48,6 @@ extern int inherit_context;		/* Flag for context sensitivity of
 extern int 	start_position,
 			end_position;		/* Position marks */
 
-extern int string_input();		/* Input in string mode */
-extern void string_unput();		/* Unput in string mode */
-extern int string_mode;
-
 extern char token_str[];		/* Buffer for ids and strings */
 
 struct token {					/* For gperf */
@@ -65,13 +61,22 @@ extern struct token *in_word_set();		/* Pointer to static data */
  * Macros for lexical analyzer input 
  */
 
-#undef input
-#define input()	(string_mode?string_input():(((yytchar=yysptr>yysbuf?U(*--yysptr):getc(yyin))==10?(yylineno++,yytchar):yytchar)==EOF?\
-						(inherit_context ? '\001': 0): \
-						yytchar))
+#ifdef FLEX_SCANNER
 
-#undef unput
-#define unput(c) {yytchar=(c);if(!string_mode){if(yytchar=='\n')yylineno--;*yysptr++=yytchar;}else string_unput(yytchar) ;}
+#define YY_INPUT(buf,result,max_size) \
+	{ \
+	int c = getc( yyin ); \
+	result = c == EOF ? (inherit_context ? '\001': 0) : 1; \
+	buf[0] = (char) c; \
+	}
+
+#else
+
+#undef input
+#define input()	(((yytchar=yysptr>yysbuf?U(*--yysptr):getc(yyin))==10?(yylineno++,yytchar):yytchar)==EOF?\
+						(inherit_context ? '\001': 0): \
+						yytchar)
+#endif
 
 %}
 
@@ -370,4 +375,14 @@ char c;
 		}
 		/* NOTREACHED */
 	}
+}
+
+void reset_eiffel_lex_parser()
+{
+#ifdef FLEX_SCANNER
+	yyrestart (yyin);
+#else
+	/* Reset lex buffer: no more lookahead tokens */
+	yysptr = yysbuf;
+#endif
 }

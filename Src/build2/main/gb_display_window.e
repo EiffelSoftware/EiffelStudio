@@ -15,15 +15,11 @@ inherit
 		end
 		
 	GB_CONSTANTS
-		undefine
-			default_create, copy, is_equal
-		end
 		
 	GB_COMMAND_HANDLER
 		undefine
 			default_create, copy
 		end
-	
 
 feature -- Initialization
 

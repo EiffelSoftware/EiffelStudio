@@ -16,7 +16,7 @@ inherit
 		
 	GB_ACCESSIBLE_XML_HANDLER
 		undefine
-			default_create, copy, is_equal
+			default_create, copy
 		end
 
 create

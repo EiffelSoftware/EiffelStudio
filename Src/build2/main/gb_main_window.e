@@ -19,8 +19,6 @@ inherit
 	GB_CONSTANTS
 		export
 			{NONE} all
-		undefine
-			default_create, copy, is_equal
 		end
 		
 	GB_ACCESSIBLE
@@ -37,13 +35,10 @@ inherit
 	
 	GB_ACCESSIBLE_XML_HANDLER
 		undefine
-			default_create, copy, is_equal
+			default_create, copy
 		end
 
 	GB_ACCESSIBLE_COMMAND_HANDLER
-		undefine
-			default_create, copy, is_equal
-		end
 		
 	GB_ACCESSIBLE_SYSTEM_STATUS
 		undefine

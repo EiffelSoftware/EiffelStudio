@@ -9,6 +9,8 @@ class
 	
 inherit
 	
+	ANY
+	
 	GB_CONSTANTS
 
 create

@@ -28,9 +28,6 @@ inherit
 		end
 		
 	GB_CONSTANTS
-		undefine
-			default_create, copy, is_equal
-		end
 
 create
 	default_create

@@ -18,13 +18,10 @@ inherit
 	
 	GB_ACCESSIBLE_SYSTEM_STATUS
 		undefine
-			is_equal, copy, default_create
+			default_create, copy, is_equal
 		end
 		
 	GB_CONSTANTS
-		undefine
-			is_equal, copy, default_create
-		end
 
 feature {NONE} -- Initialization
 

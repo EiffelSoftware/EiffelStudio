@@ -15,7 +15,7 @@ inherit
 	
 	GB_COMMAND_HANDLER
 		undefine
-			default_create, copy
+			copy, default_create
 		end
 
 feature {NONE} -- Implementation

@@ -70,7 +70,7 @@ feature -- Element change
 				cwel_pointer_to_integer (a_font.item),
 				cwin_make_long (1, 0))
 		ensure
-			font_set: font.item = a_font.item
+			font_set: not has_system_font implies font.item = a_font.item
 		end
 
 feature -- Status report

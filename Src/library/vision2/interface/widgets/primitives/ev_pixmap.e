@@ -74,7 +74,6 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Does `other' have the same appearance as `Current'.
-			--| FIXME this should be more exact :-) - sam
 		do
 			if other /= Void then
 					-- Images are proportional.
@@ -135,7 +134,6 @@ feature -- Duplication
 			not_destroyed: not is_destroyed
 			a_format_not_void: a_format /= Void
 			a_filename_not_void: a_filename /= Void
-			--| FIXME IEK Add file is unique precond
 		do
 			implementation.save_to_named_file (a_format, a_filename)
 		end

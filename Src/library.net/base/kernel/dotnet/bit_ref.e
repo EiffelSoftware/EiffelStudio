@@ -14,8 +14,12 @@ class BIT_REF inherit
 	ANY
 		redefine
 			out,
-			is_equal
+			is_equal,
+			default_create
 		end
+
+create
+	default_create
 
 create {BIT_REF}
 	make, make_initialized
@@ -24,6 +28,12 @@ convert
 	to_reference: {BIT_REF}
 	
 feature {NONE} -- Initialization
+
+	default_create is
+			-- Default initialization, with 32 bits.
+		do
+			make (32)
+		end
 
 	make (n: INTEGER) is
 			-- Initialize space for `n' bits.

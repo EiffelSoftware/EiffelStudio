@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			-- Create a cursor with the default appearance.
 		do
 			base_make (an_interface)
-			gdk_cursor := C.gdk_cursor_new ((create {EV_CURSOR_CODE_IMP}).standard)
+			c_object := C.gdk_cursor_new ((create {EV_CURSOR_CODE_IMP}).standard)
 		end
 
 	initialize is
@@ -32,14 +32,8 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Used as pointer cursor.
-		do
-			check
-				to_be_implemented: False
-			end
-		end
-
 	code: INTEGER
 			-- Toolkit pointer identification code.
 
@@ -47,10 +41,35 @@ feature -- Element change
 
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set `pixmap' to `a_pixmap'.
+		local
+			pix_imp: EV_PIXMAP_IMP
+			pix_mask: POINTER
+			pix_val: POINTER
+			fg, bg: POINTER
 		do
-			check
-				to_be_implemented: False
+			create pixmap
+			pixmap.copy (a_pixmap)
+			code := 0
+
+			if c_object /= Default_pointer then
+				C.gdk_cursor_destroy (c_object)
 			end
+
+			pix_imp ?= a_pixmap.implementation
+
+			C.gtk_pixmap_get (pix_imp.c_object, $pix_val, $pix_mask)
+
+			fg := C.c_gdk_color_struct_allocate
+			bg := C.c_gdk_color_struct_allocate
+			C.set_gdk_color_struct_red (fg, 65535)
+			C.set_gdk_color_struct_green (fg, 65535)
+			C.set_gdk_color_struct_blue (fg, 65535)
+
+			c_object := C.gdk_cursor_new_from_pixmap (pix_mask, pix_mask, $fg, $bg, 0, 0)
+
+			C.c_gdk_color_struct_free (fg)
+			C.c_gdk_color_struct_free (bg)
+			
 		end
 
 	set_code (a_code: INTEGER) is
@@ -58,25 +77,22 @@ feature -- Element change
 		--| FIXME need precondition
 		do
 			code := a_code
---| FIXME			if gdk_cursor /= Default_pointer then
---| FIXME				C.gdk_cursor_unref (gdk_cursor)
---| FIXME			end
-			if gdk_cursor /= Default_pointer then
-				C.gdk_cursor_destroy (gdk_cursor)
+			if c_object /= Default_pointer then
+				C.gdk_cursor_destroy (c_object)
 			end
-			gdk_cursor := C.gdk_cursor_new (a_code)
+			c_object := C.gdk_cursor_new (a_code)
+			pixmap := Void
 		end
 
 	destroy is
 		do
---| FIXME			if gdk_cursor /= Default_pointer then
---| FIXME				C.gdk_cursor_unref (gdk_cursor)
---| FIXME			end
-			if gdk_cursor /= Default_pointer then
-				C.gdk_cursor_destroy (gdk_cursor)
+			if c_object /= Default_pointer then
+				C.gdk_cursor_destroy (c_object)
 			end
 			is_destroyed := True
 			destroy_just_called := True
+			code := 0
+			pixmap := Void
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -89,7 +105,8 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CURSOR
 
-	gdk_cursor: POINTER
+	c_object: POINTER
+		-- Pointer to the gdk cursor.
 
 end -- class EV_CURSOR_IMP
 
@@ -114,6 +131,9 @@ end -- class EV_CURSOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/15 22:44:05  king
+--| Revised cursor imp, implemented pixmap functionality
+--|
 --| Revision 1.7  2000/02/22 18:39:35  oconnor
 --| updated copyright date and formatting
 --|

@@ -127,11 +127,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	--FIXME Should no longer be required as is now in item_list.
-	--item: EV_MULTI_COLUMN_LIST_ROW is
-	--	do
-	--	end
-
 	last_column_width_setting: INTEGER
 		-- The width that the last column was set to by the user.
 
@@ -222,10 +217,17 @@ feature -- Status report
 	
 	column_title (column: INTEGER): STRING is
 			-- Title of the one-based `column'
+		local
+			c: WEL_LIST_VIEW_COLUMN
 		do
 			check
 				to_be_implemented: False
 			end
+			--|FIXME This appears to be a bug in WEL.
+			--|It appears that the correct parameters are passed.
+			create c.make
+			cwin_send_message (wel_item, Lvm_getcolumn, column , c.to_integer)
+			Result := c.text
 		end
 
 feature -- Status setting
@@ -515,6 +517,7 @@ feature -- Event -- removing command association
 --|FIXME		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
+
 
 	item_type: EV_MULTI_COLUMN_LIST_ROW_IMP is
 			-- An empty feature to give a type.
@@ -867,6 +870,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/03/04 00:09:35  rogers
+--| Removed commented item, implemented seemingly correct code for column_title which currently does not work. Appears to be a WEL bug.
+--|
 --| Revision 1.41  2000/03/03 19:33:19  rogers
 --| renamed get_column_width -> column_width and changed all internal calls accordingly, added column_title which is still to be implemented.
 --|

@@ -18,7 +18,7 @@ feature
 
 	eiffel_type: STRING is "Build_open_cmd";
 
-	label: STRING is "Open";
+	label: STRING is "Open window";
 
 	identifier: INTEGER is
 		do

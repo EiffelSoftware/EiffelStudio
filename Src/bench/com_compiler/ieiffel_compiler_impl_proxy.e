@@ -43,12 +43,6 @@ feature -- Access
 			Result := ccom_compiler_version (initializer)
 		end
 
-	ise_eiffel: STRING is
-			-- Return ISE_EIFFEL environment var.
-		do
-			Result := ccom_ise_eiffel (initializer)
-		end
-
 	freeze_command_name: STRING is
 			-- Eiffel Freeze command name
 		do
@@ -210,12 +204,6 @@ feature {NONE}  -- Externals
 
 	ccom_compiler_version (cpp_obj: POINTER): STRING is
 			-- Compiler version.
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_REFERENCE"
-		end
-
-	ccom_ise_eiffel (cpp_obj: POINTER): STRING is
-			-- Return ISE_EIFFEL environment var.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end

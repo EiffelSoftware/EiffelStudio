@@ -77,6 +77,15 @@ feature -- Basic Operations
 			ccom_add_assembly (initializer, assembly_prefix, cluster_name, a_name, a_version, a_culture, a_publickey)
 		end
 
+	add_local_assembly (assembly_prefix: STRING; cluster_name: STRING; a_path: STRING) is
+			-- Add a local assembly to the project.
+			-- `assembly_prefix' [in].  
+			-- `cluster_name' [in].  
+			-- `a_path' [in].  
+		do
+			ccom_add_local_assembly (initializer, assembly_prefix, cluster_name, a_path)
+		end
+
 	remove_assembly (assembly_identifier: STRING) is
 			-- Remove an assembly from the project.
 			-- `assembly_identifier' [in].  
@@ -146,13 +155,6 @@ feature -- Basic Operations
 			Result := ccom_is_valid_prefix (initializer, assembly_prefix)
 		end
 
-	is_prefix_allocated (assembly_prefix: STRING): BOOLEAN is
-			-- Has the 'prefix' already been allocated to another assembly
-			-- `assembly_prefix' [in].  
-		do
-			Result := ccom_is_prefix_allocated (initializer, assembly_prefix)
-		end
-
 feature {NONE}  -- Implementation
 
 	delete_wrapper is
@@ -173,6 +175,12 @@ feature {NONE}  -- Externals
 			-- Add a signed assembly to the project.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
+		end
+
+	ccom_add_local_assembly (cpp_obj: POINTER; assembly_prefix: STRING; cluster_name: STRING; a_path: STRING) is
+			-- Add a local assembly to the project.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT,EIF_OBJECT,EIF_OBJECT)"
 		end
 
 	ccom_remove_assembly (cpp_obj: POINTER; assembly_identifier: STRING) is
@@ -225,12 +233,6 @@ feature {NONE}  -- Externals
 
 	ccom_is_valid_prefix (cpp_obj: POINTER; assembly_prefix: STRING): BOOLEAN is
 			-- Is 'prefix' a valid assembly prefix
-		external
-			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT): EIF_BOOLEAN"
-		end
-
-	ccom_is_prefix_allocated (cpp_obj: POINTER; assembly_prefix: STRING): BOOLEAN is
-			-- Has the 'prefix' already been allocated to another assembly
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemAssemblies_impl_proxy_s.h%"](EIF_OBJECT): EIF_BOOLEAN"
 		end

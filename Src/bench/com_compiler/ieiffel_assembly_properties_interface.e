@@ -45,13 +45,6 @@ feature -- Status Report
 			Result := True
 		end
 
-	is_signed_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `is_signed'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
 	assembly_cluster_name_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `assembly_cluster_name'.
 			-- Redefine in descendants if needed.
@@ -111,14 +104,6 @@ feature -- Basic Operations
 			-- Is the assembly local
 		require
 			is_local_user_precondition: is_local_user_precondition
-		deferred
-
-		end
-
-	is_signed: BOOLEAN is
-			-- Is the assembly local
-		require
-			is_signed_user_precondition: is_signed_user_precondition
 		deferred
 
 		end

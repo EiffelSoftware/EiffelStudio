@@ -72,8 +72,8 @@ feature -- Access
 	fields: ARRAY [CONSUMED_FIELD]
 			-- Class fields
 
-	methods: ARRAY [CONSUMED_METHOD]
-			-- Class methods
+	procedures: ARRAY [CONSUMED_PROCEDURE]
+			-- Class procedures
 
 	functions: ARRAY [CONSUMED_FUNCTION]
 			-- Class functions
@@ -93,14 +93,14 @@ feature {TYPE_CONSUMER} -- Element settings
 			fields_set: fields = fi
 		end
 	
-	set_methods (meth: like methods) is
-			-- set `methods' with `meth'.
+	set_procedures (meth: like procedures) is
+			-- set `procedures' with `meth'.
 		require
-			non_void_methods: meth /= Void
+			non_void_procedures: meth /= Void
 		do
-			methods := meth
+			procedures := meth
 		ensure
-			methods_set: methods = meth
+			procedures_set: procedures = meth
 		end
 	
 	set_functions (func: like functions) is

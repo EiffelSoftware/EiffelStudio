@@ -33,7 +33,7 @@ VDRD, chapter 10 (Feature adaptation), page 163
         7 If either one of `f'  and  `g'  is  an  External
           routine, so is the other.
 
-        8 (ISE Eiffel 5 temporary limitation)  For  every 
+        8 (ISE Eiffel temporary limitation)  For  every 
           element  `a'  of the signature of `f', if `b' is
           the  corresponding  signature  element  in  `g', 
           the  types  of  `a'  and  `b'  are  either  both 

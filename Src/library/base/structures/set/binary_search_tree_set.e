@@ -37,6 +37,11 @@ feature -- Access
 			-- based on `object_comparison'.)
 		do
 			if tree /= Void then
+				if object_comparison then
+					tree.compare_objects
+				else
+					tree.compare_references
+				end
 				Result := tree.has (v)
 			end
 		end;
@@ -224,7 +229,7 @@ feature -- Basic operations
 
 	intersect (other: like Current) is
 			-- Remove all items not in `other'.
-		require
+		require else
 			set_exists: other /= Void
 		local
 			m: like tree;
@@ -237,8 +242,7 @@ feature -- Basic operations
 				end;
 				if tree.has_right then
 					tree.right_child.intersect (other.tree)
-				end;
-				tree.right_child.intersect (other.tree);
+				end; 
 				if not other.has (tree.item) then
 					if not tree.has_left then
 						tree := tree.right_child
@@ -255,19 +259,18 @@ feature -- Basic operations
 
 	subtract (other: like Current) is
 			-- Remove all items also in `other'.
-		require
+		require else
 			set_exists: other /= Void
 		local
 			m: like tree;
 		do
 			if other.tree /= Void and tree /= Void then
 				if tree.has_left then
-					tree.left_child.substract (other.tree)
+					tree.left_child.subtract (other.tree)
 				end;
 				if tree.has_right then
-					tree.right_child.substract (other.tree)
+					tree.right_child.subtract (other.tree)
 				end;
-				tree.right_child.intersect (other.tree);
 				if other.has (tree.item) then
 					if not tree.has_left then
 						tree := tree.right_child

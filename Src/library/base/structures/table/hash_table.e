@@ -47,15 +47,9 @@ feature -- Initialization
 			!! keys.make (0, table_size - 1);
 			!! deleted_marks.make (0, table_size - 1);
 		ensure
-			keys_big_enough: 		keys.capacity >= n
-										and
-										keys.capacity >= 5;
-			content_big_enough: 	content.capacity >= n
-									  	and
-										content.capacity >= 5;
-			deleted_marks_big_enough: 	deleted_marks.capacity >= n
-									  	and
-										deleted_marks.capacity >= 5
+			keys_big_enough: keys.capacity >= n and keys.capacity >= 5;
+			content_big_enough: content.capacity >= n and content.capacity >= 5;
+			deleted_marks_big_enough: deleted_marks.capacity >= n and deleted_marks.capacity >= 5
 		end;
 
 feature -- Access
@@ -78,19 +72,31 @@ feature -- Access
 		end;
 
 	has_item (v: G): BOOLEAN is
-				-- Does structure include `v'?
+			-- Does structure include `v'?
 			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		local
 			i, bound: INTEGER
 		do
-			from
-				bound := content.upper
-			until
-				i > bound or else Result
-			loop
-				Result := content.item (i) = v;
-				i := i + 1
+			bound := content.upper
+			if object_comparison then
+				if v /= Void then
+					from
+					until
+						i > bound or else Result
+					loop
+						Result := content.item (i) /= Void and then v.is_equal (content.item (i))
+						i := i + 1
+					end
+				end
+			else
+				from
+				until
+					i > bound or else Result
+				loop
+					Result := content.item (i) = v;
+					i := i + 1
+				end
 			end;
 		end;
 
@@ -99,8 +105,6 @@ feature -- Access
 		do	
 			if n >=0 and n < keys.count  then	
 				Result := keys.item (n);
-			else
-				Result := void;
 			end;
 		end;
 
@@ -151,6 +155,12 @@ feature -- Measurement
 
 	count: INTEGER;
 			-- Number of elements in table
+
+	capacity: INTEGER is
+			-- Number of items that may be stored.
+		do
+			Result := keys.count
+		end;
 
 feature -- Comparison
  
@@ -283,7 +293,7 @@ feature -- Element change
 			else
 				control := Not_found_constant
 			end
-		ensure
+		ensure 
 			insertion_done: control = Changed_constant implies item (key) = new
 		end;
 

@@ -14,6 +14,9 @@ indexing
 deferred class QUEUE [G] inherit
 
 	DISPENSER [G]
+		export
+			{NONE} prune, prune_all
+		end
 
 feature
 

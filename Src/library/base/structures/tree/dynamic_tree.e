@@ -295,6 +295,7 @@ feature {DYNAMIC_TREE} -- Implementation
 invariant
 
 	extendible_definition: extendible;
+	child_after_definition: child_after = (child_index = arity + 1);
 
 end -- class DYNAMIC_TREE
 

@@ -14,6 +14,9 @@ indexing
 deferred class
 	TREE [G]
 
+inherit
+	CONTAINER [G]
+
 feature -- Access
 
 	parent: TREE [G];
@@ -53,7 +56,7 @@ feature -- Access
 			-- Index of current child
 		deferred
 		ensure
-			Result >= 0 and Result <= arity + 1
+			valid_index: Result >= 0 and Result <= arity + 1
 		end;
 
 	first_child: like parent is
@@ -76,8 +79,8 @@ feature -- Access
 			is_not_root: not is_root
 		deferred
 		ensure
-			is_sibling (Result);
-			(Result /= Void) implies (Result.right_sibling = Current);
+			is_sibling: is_sibling (Result);
+			right_is_current: (Result /= Void) implies (Result.right_sibling = Current);
 		end;
 
 	right_sibling: like parent is
@@ -86,8 +89,8 @@ feature -- Access
 			is_not_root: not is_root
 		deferred
 		ensure
-			is_sibling (Result);
-			(Result /= Void) implies (Result.left_sibling = Current)
+			is_sibling: is_sibling (Result);
+			left_is_current: (Result /= Void) implies (Result.left_sibling = Current)
 		end;
 
 	has (v: G): BOOLEAN is
@@ -95,7 +98,11 @@ feature -- Access
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		do
-			Result := v = item or else subtree_has (v)
+			if object_comparison then
+				Result := (v /= Void) and then (item /= Void) and then (v.is_equal (item) or else subtree_has (v))
+			else
+				Result := v = item or else subtree_has (v)
+			end
 		end;
 		
 	is_sibling (other: like parent): BOOLEAN is
@@ -188,7 +195,7 @@ feature -- Status report
 		do
 			Result := not is_leaf and child_index = 1
 		ensure
-			Result implies (not is_leaf)
+			not_is_leaf: Result implies (not is_leaf)
 		end;
 
 	child_islast: BOOLEAN is
@@ -196,7 +203,7 @@ feature -- Status report
 		do
 			Result := not is_leaf and child_index = arity
 		ensure
-			Result implies (not is_leaf)
+			not_is_leaf: Result implies (not is_leaf)
 		end;
 
 	valid_cursor_index (i: INTEGER): BOOLEAN is
@@ -219,7 +226,6 @@ feature -- Cursor movement
 		deferred
 		ensure then
 			is_first_child: not is_leaf implies child_isfirst;
-			after_if_leaf: is_leaf implies child_after
 		end;
 
 	child_finish is
@@ -227,7 +233,6 @@ feature -- Cursor movement
 		deferred
 		ensure then
 			is_last_child: not is_leaf implies child_islast;
-			before_if_leaf: is_leaf  implies child_before
 		end; -- child_finish
 
 	child_forth is
@@ -294,7 +299,7 @@ feature -- Element change
 			is_child: n.parent = Current
 		deferred
 		ensure
-			n.is_root
+			n_is_root: n.is_root
 		end;
 		
 	fill (other: TREE [G]) is
@@ -395,14 +400,21 @@ feature {TREE} -- Implementation
 			-- Do children include `v'?
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
+		local
+			cursor : CURSOR
 		do
+			cursor := child_cursor
 			from
 				child_start
 			until
 				child_off or else Result
 			loop
 				if child /= Void then
-					Result := v.is_equal (child_item)
+					if object_comparison then
+						Result := (v /= Void) and then (child_item /= Void) and then v.is_equal (child_item)
+					else
+						Result := v = child_item
+					end
 				end;
 				child_forth
 			end;
@@ -416,6 +428,7 @@ feature {TREE} -- Implementation
 				end;
 				child_forth
 			end
+			child_go_to (cursor)
 		end;
 
 	subtree_count: INTEGER is
@@ -484,12 +497,11 @@ feature {NONE} -- Implementation
 invariant
 
 	leaf_definition: is_leaf = (arity = 0);
-	leaf_constraint: is_leaf implies child_off;
 	child_off_definition: child_off = child_before or child_after;
 	child_before_definition: child_before = (child_index = 0);
 	child_isfirst_definition: child_isfirst = (not is_leaf and child_index = 1);
 	child_islast_definition: child_islast = (not is_leaf and child_index = arity);
-	child_after_definition: child_after = (child_index = arity + 1);
+	child_after_definition: child_after = (child_index >= arity + 1);
 	child_consistency: child_readable implies child.parent = Current
 
 end -- class TREE

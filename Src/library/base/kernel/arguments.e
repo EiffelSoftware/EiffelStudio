@@ -15,18 +15,24 @@ feature -- Access
 			-- Command line argument number `i'
 			-- (the command name if `i' = 0)
 		require
-			0 <= i ; i < argument_count
+			0 <= i ; i <= argument_count
 		do
 			Result := arg_option (i) 
+		end;
+
+	command_name: STRING is
+			-- Name of command that started application
+		once	
+			Result := arg_option (0)
 		end;
 
 feature -- Measurement
 
 	argument_count: INTEGER is
 			-- Number of arguments on the command line
-			-- (including command name)
+			-- (not including command name)
 		once
-			Result := arg_number
+			Result := arg_number - 1
 		end;
 
 feature {NONE} -- Implementation

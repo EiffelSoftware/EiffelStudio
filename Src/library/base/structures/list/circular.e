@@ -31,7 +31,7 @@ feature -- Access
 			pos := standard_index;
 			start;
 			Result := item;
-			move (pos)
+			move (pos-1)
 		end;
 
 	index: INTEGER is
@@ -39,15 +39,18 @@ feature -- Access
 			-- currently defined as first
 		local
 			first_ind, std_ind: INTEGER
+			std_int_exhausted: BOOLEAN
 		do
 			std_ind := standard_index;
+			std_int_exhausted := internal_exhausted
 			start;
 			first_ind := standard_index;
 			Result := std_ind - first_ind + 1;
 			if Result < 0 then
 				Result := count + Result
 			end;
-			move (Result)
+			move (Result-1)
+			internal_exhausted := std_int_exhausted
 		end
 		
 
@@ -59,7 +62,8 @@ feature -- Access
 			pos := standard_index;
 			finish;
 			Result := item;
-			start; move (pos)
+			start; 
+			move (pos-1)
 		end;
 
 feature -- Status report
@@ -69,7 +73,7 @@ feature -- Status report
 		do
 			Result := (i >= 0) and (i <= count)
 		ensure then
-			valid_cursor_index_definition: Result = (i >= 0) and (i <= count)
+			valid_cursor_index_definition: Result = ((i >= 0) and (i <= count))
 		end;
 
 	after: BOOLEAN is
@@ -77,7 +81,7 @@ feature -- Status report
 		do
 			Result := empty and standard_after
 		ensure then
-			Result = empty and standard_after
+			empty_and_std_after: Result = (empty and standard_after)
 		end;
 	
 	before: BOOLEAN is
@@ -85,7 +89,7 @@ feature -- Status report
 		do
 			Result := empty and standard_before
 		ensure then
-			Result = empty and standard_before
+			empty_and_std_before: Result = (empty and standard_before)
 		end;
 
 	off: BOOLEAN is
@@ -114,6 +118,8 @@ feature -- Cursor movement
 			if standard_after then
 				standard_start
 			end;
+		ensure then
+			moved_forth_at_end: (old index = count) implies (index = 1)
 		end;
 
 	back is
@@ -134,10 +140,10 @@ feature -- Cursor movement
 		local
 			real_move, counter: INTEGER
 		do
-			if i /= 0 then
+			if i /= 0 and count > 0 then
 				real_move := i \\ count;
 				if real_move < 0 then
-					real_move := count - real_move
+					real_move := count + real_move
 				end
 				from
 				until
@@ -155,7 +161,8 @@ feature -- Cursor movement
 			index_big_enough: i>=1;
 			not_empty: not empty
 		do
-			start; move (i - 1)
+			start; 
+			move (i - 1)
 		end;
 
 	set_start is

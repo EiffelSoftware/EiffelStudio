@@ -13,48 +13,25 @@ indexing
 
 deferred class SET [G] inherit
 
-	COLLECTION [G]
-		redefine
-			changeable_comparison_criterion
-		end;
+	UNIQUE_COLLECTION [G]
 
-feature -- Measurement
+feature -- Basic operations
 
-	count: INTEGER is
-			-- Number of elements
+	intersect (other: like Current) is
+			-- Remove all items not in `other'.
+		require
+			set_exists: other /= Void
+			same_rule: object_comparison = other.object_comparison
 		deferred
-		end;
+		end
 
-feature -- Element change
-
-	extend, put (v: G) is
-			-- Ensure that set includes `v'.
+	subtract (other: like Current) is
+			-- Remove all items also in `other'
+		require
+			set_exists: other /= Void
+			same_rule: object_comparison = other.object_comparison
 		deferred
-		ensure then
-			in_set_already: old has (v) implies (count = old count);
-	 		added_to_set: not old has (v) implies (count = old count + 1)
-		end;
-
-feature -- Removal
-
-	prune (v: G) is
-			-- Remove `v' if present.
-		deferred
-		ensure then
-	 		removed_count_change: old has (v) implies (count = old count - 1);
-	 		not_element_no_count_change: not old has (v) implies (count = old count);
-			item_deleted: not has (v)
-		end;
-		
-	changeable_comparison_criterion: BOOLEAN is
-			-- May `object_comparison' be changed?
-			-- (Answer: only if set empty; otherwise insertions
-			-- might introduce duplicates, negating the set property.)
-		do
-			Result := empty
-		ensure then
-			only_on_empty: Result = empty
-		end;
+		end
 
 end -- class SET
 

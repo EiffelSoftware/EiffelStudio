@@ -123,8 +123,11 @@ feature -- Status report
 			Result := not off
 		end;
 
-	extendible: BOOLEAN is true;
+	extendible: BOOLEAN is 
 			-- May new items be added?
+		do
+			Result := not above 
+		end
 
 	is_leaf: BOOLEAN is
 			-- Is cursor on a leaf?
@@ -237,13 +240,13 @@ feature -- Cursor movement
 			not_before: not before;
 			not_after: not after;
 			not_below: not below;
-			valid_cursor_index: valid_cursor_index (i)
+			valid_cursor_index: (above and i = 0) or else valid_cursor_index (i)
 		deferred
 		ensure then
-			(i = 0) implies before;
-			(i = old arity + 1) implies after;
-			((i > 0) and (i <= old arity)) implies not off;
-			((old arity) = 0) implies below
+			gone_before: (i = 0) implies before;
+			--gone_after: (i = old arity + 1) implies after;
+			--gone_down: ((i > 0) and (i <= old arity)) implies not off;
+			--gone_below: ((old arity) = 0) implies below
 		end;
 
 
@@ -377,7 +380,7 @@ feature -- Element change
 			-- Put `v' as `first_child' if `below' and place
 			-- cursor `before'.
 		require else
-			not_above: not above;
+			--not_above: not above;
 			only_one_root: (level = 1) implies empty;
 		local
 			pos: CURSOR;

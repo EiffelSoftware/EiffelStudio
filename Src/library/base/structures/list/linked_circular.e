@@ -15,63 +15,141 @@ class LINKED_CIRCULAR [G] inherit
 
 	DYNAMIC_CIRCULAR [G]
 		undefine
-			readable, isfirst, islast
+			readable, isfirst
 		redefine
-			start
+			start, islast
 		select
-			search, remove,
-			start, finish, back, forth, move, go_i_th,
-			after, before, off,
-			isfirst, islast, index,
-			remove_left, remove_right
+			remove, go_i_th, after, before, off,
+			prune_all, prune, first
 		end;
 
-	LINKED_LIST [G]
+	LIST [G]
 		rename
-			after as standard_after,
-			back as standard_back,
-			before as standard_before,
-			finish as standard_finish,
-			forth as standard_forth,
-			go_i_th as standard_go_i_th,
-			index as standard_index,
-			isfirst as standard_isfirst,
-			islast as standard_islast,
-			move as standard_move,
-			off as standard_off,
-			remove as standard_remove,
-			remove_left as standard_remove_left,
-			remove_right as standard_remove_right,
-			search as standard_search,
-			start as standard_start
+			after as l_after,
+			before as l_before,
+			remove as l_remove,
+			first as l_first,
+			off as l_off, 
+			prune as l_prune,
+			prune_all as l_prune_all,
+			go_i_th as l_go_i_th
 		export {NONE}
-			standard_after, standard_back, standard_before,
-			standard_finish, standard_forth, standard_go_i_th,
-			standard_index, standard_isfirst, standard_islast,
-			standard_move, standard_off, standard_remove,
-			standard_remove_left, standard_remove_right, standard_search,
-			standard_start
+			l_after, l_before, l_remove, l_first,
+			l_off, l_prune, l_prune_all, l_go_i_th
 		undefine
-			valid_cursor_index, first, last, exhausted, wipe_out,
-			duplicate
-		redefine
-		 	new_chain
-		end;
+			last, exhausted, move, valid_cursor_index,
+			isfirst, readable, islast, start
+		end
 
 creation
 
 	make
 
+feature -- Initialization
+
+	make is
+			-- Create an empty list
+		do
+			!!list.make
+		end
+
+feature -- Measurement
+
+	count : INTEGER is
+			-- Number of items
+		do
+			Result := list.count
+		end
+
+feature -- Element change
+
+	replace (v : G) is
+			-- Replace current item by `v'.
+		do
+			list.replace (v)
+		end
+
+	merge_right (other: like Current) is
+			-- Merge `other' into current structure after cursor
+			-- position. Do not move cursor. Empty `other'.
+		do
+			list.merge_right (other.list)
+		end
+	
+	put_right (v : like item) is
+			-- Put `v' to the right of cursor position.
+			-- Do not move cursor.
+		do
+			list.put_right(v)
+		end
+
+	put_front (v : like item) is
+			-- Add `v' to beginning.
+			-- Do not move cursor.
+		do
+			list.put_front (v)
+		end
+
+	extend (v : like item) is
+			-- Add `v' to end.
+			-- Do not move cursor.
+		do
+			list.extend (v)
+		end
+
+	merge_left (other : like Current) is
+			-- Merge `other' into current structure before cursor
+			-- position. Do not move cursor. Empty `other'.
+		do
+			list.merge_left (other.list)
+		end
+
+	put_left (v : like item) is
+			-- Put `v' to the left of cursor position.
+			-- Do not move cursor.
+		do
+			list.put_left (v)
+		end
+	
+feature --  Access 
+
+	item : G is
+			-- Current item
+		do
+			Result := list.item
+		end
+
+	cursor : CURSOR is
+			-- Current cursor position
+		do
+			Result := list.cursor
+		end
+
 feature -- Status report
+
+	full : BOOLEAN is false;
+		-- Is structured filled to capacity? (Answer: no.)
+
+	readable : BOOLEAN is
+			-- Is there a current item that may be read?
+		do
+			Result := list.readable
+		end
+
+	valid_cursor (p : CURSOR): BOOLEAN is
+			-- Can the cursor be moved to position `p'?
+		do
+			Result := list.valid_cursor(p)
+		end
 
 	isfirst: BOOLEAN is
 			-- Is cursor on first item?
 		do
 			if not empty then
-				if starter = Void then
-					Result := (active = first_element)
+				if starter = 0 then
+					Result := list.isfirst
 				else
-					Result := (active = starter)
+					Result := (standard_index = starter)
 				end
 			end
 		end;
@@ -80,36 +158,38 @@ feature -- Status report
 			-- Is cursor on last item?
 		do
 			if not empty then
-				if (starter = Void) or (starter = first_element) then
+				if (starter = 0) or (starter = 1) then
 					Result := standard_islast
 				else
-					Result := (active.right = starter)
+					Result := (standard_index = starter-1)
 				end
 			end
 		end;
 
 feature -- Cursor movement
 
+	go_to (p : CURSOR) is
+			-- Move cursor to position `p'.
+		do
+			list.go_to(p)
+		end
+
 	set_start is
 			-- Select current item as the first.
 		do
-			starter := active
+			starter := standard_index
+			internal_exhausted := false
 		end;
 
 	start is
 			-- Move to position currently selected as first.
 		do
-			if starter = Void then
+			internal_exhausted := false
+			if starter = 0 then
 				standard_start;
-				starter := first_element
+				starter := 1
 			else
-				from
-					standard_start
-				until
-					standard_off or else (active = starter)
-				loop
-					standard_forth
-				end;
+				standard_go_i_th (starter)
 				if standard_off then standard_start end
 			end
 		end
@@ -136,7 +216,9 @@ feature -- Element removal
 			count > 1
 		do
 			if standard_islast then
-				standard_start; remove; finish
+				standard_start; 
+				remove;
+				finish
 			else
 				standard_remove_right
 			end
@@ -147,17 +229,19 @@ feature {LINKED_CIRCULAR} -- Implementation
 	fix_start_for_remove is
 			-- Before deletion, update starting position if necessary.
 		do
-			if starter = active then
+			if count = 1 then
+				starter := 0
+			elseif starter = standard_index then
 				if standard_islast then
-					starter := first_element
+					starter := 1
 				else
-					starter := starter.right
+					starter := starter + 1
 				end
 			end
 		end;
 		
-	starter: like first_element;
-			-- The cell currently selected as first
+	starter: INTEGER
+			-- The position currently selected as first
 
 	new_chain: like Current is
 			-- A newly created instance of the same type.
@@ -166,10 +250,88 @@ feature {LINKED_CIRCULAR} -- Implementation
 		do
 			!! Result.make
 		end;
+	
+	list : LINKED_LIST[G]
+ 
+	standard_after : BOOLEAN is
+			do
+				Result := list.after
+			end
 
-invariant
+	standard_back is
+			do
+				list.back
+			end
 
-	(active = Void) implies empty
+	standard_before : BOOLEAN is
+			do
+				Result := list.before
+			end
+
+	standard_finish is
+			do
+				list.finish
+			end
+
+	standard_forth is
+			do
+				list.forth
+			end
+
+	standard_go_i_th (i : INTEGER) is
+			do
+				list.go_i_th (i)
+			end
+
+	standard_index : INTEGER is
+			do
+				Result := list.index
+			end
+
+	standard_isfirst: BOOLEAN is
+			do
+				Result := list.isfirst
+			end
+
+	standard_islast: BOOLEAN is
+			do
+				Result := list.islast
+			end
+
+	standard_move (i : INTEGER) is
+			do
+				list.move (i)
+			end
+
+	standard_off : BOOLEAN is
+			do
+				Result := list.off
+			end
+
+	standard_remove is
+			do
+				list.remove
+			end
+
+	standard_remove_left is
+			do
+				list.remove_left
+			end
+
+	standard_remove_right is
+			do
+				list.remove_right
+			end
+
+	standard_search (v: G) is
+			do
+				list.search (v)
+			end
+
+	standard_start is
+			do
+				list.start
+			end
 
 end -- class LINKED_CIRCULAR
 

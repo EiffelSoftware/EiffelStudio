@@ -234,16 +234,16 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Set operations
 			end
 		end;
 
-	substract (other: BINARY_SEARCH_TREE [G]) is
+	subtract (other: BINARY_SEARCH_TREE [G]) is
 			-- Remove all items also in `other'.
 		require
 			set_exists: other /= Void
 		do
 			if right_child /= Void then
-				right_child.substract (other)
+				right_child.subtract (other)
 			end;
 			if left_child /= Void then
-				left_child.substract (other)
+				left_child.subtract (other)
 			end;
 			if other.has (item) then
 				remove_node
@@ -272,6 +272,9 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Set operations
 		do
 			is_left_child := Current = parent.left_child;
 			if not has_right then
+				if left_child /= Void then
+					left_child.attach_to_parent (Void)
+				end
 				if is_left_child then
 					parent.put_left_child (left_child)
 				else
@@ -279,6 +282,9 @@ feature {BINARY_SEARCH_TREE, BINARY_SEARCH_TREE_SET} -- Set operations
 				end;
 				parent := Void;
 			elseif not has_left then
+				if right_child /= Void then
+					right_child.attach_to_parent (Void)
+				end
 				if is_left_child then
 					parent.put_left_child (right_child)
 				else

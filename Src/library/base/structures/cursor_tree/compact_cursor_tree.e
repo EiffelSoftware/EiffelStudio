@@ -18,7 +18,7 @@ class COMPACT_CURSOR_TREE [G] inherit
 		rename
 			index as linear_index
 		redefine
-			put_left, put_right, extend
+			put_left, put_right, extend, has, occurrences
 		end
 
 creation
@@ -31,18 +31,44 @@ feature -- Initialization
 			-- Create an empty tree.
 			-- `i' is an estimate of the number of nodes.
 		do
-			last := 0;
-			active := 0;
+			last := 1;
+			active := 1;
 			above := true;
-			!! item_table.make (1, i);
-			!! next_sibling_table.make (1, i);
-			!! first_child_table.make (1, i)
+			!! item_table.make (1, i+1);
+			!! next_sibling_table.make (1, i+1);
+			!! first_child_table.make (1, i+1)
 		ensure
 			is_above: above;
 			is_empty: empty
 		end;
 
 feature -- Access
+
+	has (v: like item): BOOLEAN is
+			--  Does structure include an occurrence of `v'?
+			--  (Reference or object equality,
+			--  based on `object_comparison'.)
+		do
+			if object_comparison then
+				item_table.compare_objects
+			else
+				item_table.compare_references
+			end
+			Result := item_table.has (v)
+		end
+
+	occurrences (v: G): INTEGER is
+			--  Number of times `v' appears.
+			--  (Reference or object equality,
+			--  based on `object_comparison'.)
+		do
+			if object_comparison then
+				item_table.compare_objects
+			else
+				item_table.compare_references
+			end
+			Result := item_table.occurrences (v)
+		end
 
 	item: G is
 			-- Current item
@@ -251,6 +277,9 @@ feature -- Cursor movement
 			index := first_child_table.item (active);
 			if above then
 				above := false
+				below := empty
+				before := true
+				after := false
 			elseif index <= 0 then
 				below := true;
 				if i = 0 then
@@ -260,7 +289,7 @@ feature -- Cursor movement
 				end
 			else
 				from
-					counter := 1;
+					--counter := 1;
 					next := next_sibling_table.item (index)
 				until
 					counter = i or next <= 0
@@ -291,6 +320,7 @@ feature -- Cursor movement
 			after := temp.after;
 			before := temp.before;
 			below := temp.below
+			above := temp.above
 		end;
 
 feature -- Element change
@@ -414,11 +444,15 @@ feature -- Element change
 			new, index, next: INTEGER;
 		do
 			new := new_cell_index;
+			item_table.put (v, new)
 			if below then
-				item_table.put (v, new);
 				first_child_table.put (0, new);
 				next_sibling_table.put (-active, new);
+				if first_child_table.item (active) = 0 then
+					first_child_table.put (new, active)
+				end
 				active := new
+				--below := false
 			else
 				from
 					index := active;
@@ -539,11 +573,14 @@ feature -- Removal
 	wipe_out is
 			-- Remove all elements.
 		do
-			item_table.wipe_out;
-			next_sibling_table.wipe_out;
-			first_child_table.wipe_out;
-			last := 0;
-			active := 0;
+			item_table.resize (1, Block_threshold + 1)
+			next_sibling_table.resize (1, Block_threshold + 1)
+			first_child_table.resize (1, Block_threshold + 1)
+			item_table.clear_all;
+			next_sibling_table.clear_all;
+			first_child_table.clear_all;
+			last := 1;
+			active := 1;
 			free_list_count := 0;
 			free_list_index := 0;
 			above := true;
@@ -552,6 +589,7 @@ feature -- Removal
 			below := false;
 		ensure then
 			cursor_above: above
+			is_empty: empty
 		end;
 
 feature {COMPACT_CURSOR_TREE} -- Implementation

@@ -15,7 +15,18 @@ deferred class INDEXABLE [G, H -> INTEGER] inherit
 	TABLE [G, H]
 		rename
 			valid_key as valid_index
+		redefine
+			put
 		end
+
+feature -- Element change
+
+	put (v: G; k: H) is
+			-- Associate value `v' with key `k'.
+		deferred
+		ensure then
+			insertion_done: item (k) = v
+		end;
 
 end -- class INDEXABLE
 

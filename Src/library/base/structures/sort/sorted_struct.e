@@ -102,8 +102,7 @@ feature -- Transformation
 			is_sorted: sorted
 		end;
 
-feature {} -- compiler stuff .
-			-- FIX ME
+feature {NONE} -- Inapplicable
 
 	putt (v: like item) is
 		do

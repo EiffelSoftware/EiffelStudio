@@ -39,8 +39,11 @@ feature -- Measurement
 
 feature -- Status report
 
-	resizable: BOOLEAN is true;
+	resizable: BOOLEAN is 
 			-- May `capacity' be changed? (Answer: yes.)
+		do
+			Result := true
+		end;
 
 feature -- Resizing
 

@@ -85,13 +85,27 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			from
-				i := lower
-			until
-				i > upper or else (item (i) = v)
-			loop
-				i := i + 1;
-			end;
+			if object_comparison then
+				if v = void then
+					i := upper + 1
+				else
+					from
+						i := lower
+					until
+						i > upper or else (item (i) /= Void and then item (i).is_equal(v))
+					loop
+						i := i + 1;
+					end;
+				end
+			else
+				from
+					i := lower
+				until
+					i > upper or else (item (i) = v)
+				loop
+					i := i + 1;
+				end;
+			end
 			Result := not (i > upper);
 		end;
 
@@ -116,16 +130,31 @@ feature -- Measurement
 		local
 			i: INTEGER
 		do
-			from
-				i := lower
-			until
-				i > upper
-			loop
-				if item (i) = v then
-					Result := Result +1
-				end;
-				i := i + 1
-			end
+			if object_comparison then
+				if v /= Void then
+					from
+						i := lower
+					until
+						i > upper
+					loop
+						if item (i) /= Void and then v.is_equal (item (i)) then
+							Result := Result + 1
+						end
+						i := i + 1
+					end
+				end
+			else
+				from	
+					i := lower
+				until
+					i > upper
+				loop
+					if item (i) = v then
+						Result := Result +1
+					end;
+					i := i + 1
+				end
+			end;
 		end;
 
 feature -- Element change

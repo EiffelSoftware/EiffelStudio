@@ -182,7 +182,9 @@ feature -- Cursor movement
 				below := false
 			else
 				active := active_parent;
-				active_parent := active_parent.parent;
+				if active_parent /= Void then
+					active_parent := active_parent.parent;
+				end
 				corresponding_child;
 			end;
 			after := false;

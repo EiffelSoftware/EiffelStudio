@@ -17,13 +17,14 @@ class LINKED_SET [G] inherit
 		undefine
 			prune_all
 		select
-			extend, put
+			extend, put, prune
 		end;
 
 	 LINKED_LIST [G]
 		rename
 			extend as ll_extend,
-			put as ll_put
+			put as ll_put,
+			prune as ll_prune
 		export
 			{NONE} all
 			{LINKED_SET} forth, item, off, start
@@ -76,6 +77,14 @@ feature -- Element change
 				other.forth
 			end
 		end;
+feature -- Removal
+
+	prune (v : like item) is			
+		-- Remove `v' if present.
+		do	
+			start
+			ll_prune (v)
+		end
 
 feature -- Basic operations
 

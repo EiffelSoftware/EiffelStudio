@@ -40,8 +40,6 @@ feature -- Element change
 		require
 			valid_key: valid_key (k)
 		deferred
-		ensure
-			insertion_done: item (k) = v
 		end;
 
 feature {NONE} -- Inapplicable

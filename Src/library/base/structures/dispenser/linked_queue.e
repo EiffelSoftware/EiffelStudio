@@ -74,6 +74,8 @@ feature -- Element change
 			-- Add `v' as newest element.
 		do
 			put_front (v)
+			before := false
+			after := true
 		ensure then
 			(old empty) implies (item = v);
 		end;
@@ -147,7 +149,7 @@ feature {NONE} -- Not applicable
 
 invariant
 
-	is_always_after: after
+	is_always_after: not empty implies after
 
 end -- class LINKED_QUEUE
 

@@ -22,7 +22,8 @@ class BINARY_TREE [G] inherit
 				subtree_has,
 				subtree_count,
 				fill_list,
-				child_remove
+				child_remove,
+				child_after
 			end
 
 creation
@@ -129,6 +130,12 @@ feature -- Access
 
 feature -- Status report
 
+	child_after: BOOLEAN is
+			-- Is there no valid child position to the right of cursor?
+		do
+			Result := child_index >= arity + 1
+		end;
+
 	is_leaf, has_none: BOOLEAN is
 			-- Are there no children?
 		do
@@ -159,24 +166,28 @@ feature -- Element change
 	put_left_child (n: like parent) is
 			-- Set `left_child' to `n'.
 		require
-			no_parent: n.is_root
+			no_parent: n = Void or else n.is_root
 		do
 			if left_child /= Void then
 				left_child.attach_to_parent (Void)
 			end;
-			n.attach_to_parent (Current);
+			if n /= Void then
+				n.attach_to_parent (Current);
+			end
 			left_child := n
 		end;
 		
 	put_right_child (n: like parent) is
 			-- Set `right_child' to `n'.
 		require
-			no_parent: n.is_root
+			no_parent: n = Void or else n.is_root
 		do
 			if right_child /= Void then
 				right_child.attach_to_parent (Void)
 			end;
-			n.attach_to_parent (Current);
+			if n /= Void then
+				n.attach_to_parent (Current);
+			end
 			right_child := n
 		end;
 		
@@ -259,7 +270,7 @@ feature	-- Cursor movement
 	child_finish is
 			-- Move cursor to last child.
 		do
-			child_index := 3
+			child_index := 2
 		end;
 		
 	child_forth is

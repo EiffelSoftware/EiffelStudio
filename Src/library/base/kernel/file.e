@@ -27,14 +27,6 @@ feature -- Access
 			Result := lastchar
 		end;
 
-	readint is
-			-- Read a new integer.
-			-- Make result available in `lastint'.
-		require
-			is_readable: file_readable;
-		deferred
-		end;
-
 feature -- Measurement
 
 	count: INTEGER is
@@ -273,6 +265,14 @@ feature -- Input
 	readchar is
 			-- Read a new character.
 			-- Make result available in `lastchar'.
+		require
+			is_readable: file_readable;
+		deferred
+		end;
+
+	readint is
+			-- Read a new integer.
+			-- Make result available in `lastint'.
 		require
 			is_readable: file_readable;
 		deferred

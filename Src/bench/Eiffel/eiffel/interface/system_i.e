@@ -135,7 +135,10 @@ feature -- Properties
 			-- Tool to process the generic derivations
 
 	externals: EXTERNALS
+	il_c_externals: IL_C_EXTERNALS
 			-- Table of external names currently used by the system
+			-- First one in normal generation, second one for IL code
+			-- generation.
 
 	executable_directory: STRING
 			-- Directory for the executable file
@@ -293,6 +296,7 @@ feature -- Properties
 
 				-- External table creation
 			create externals.make
+			create il_c_externals.make (10)
 
 				-- Pattern table creation
 			create pattern_table.make
@@ -714,7 +718,6 @@ feature -- Recompilation
 			-- Incremetal recompilation of the system.
 		local
 			root_class_c: CLASS_C
-			il_generator: IL_GENERATOR
 		do
 				-- Recompilation initialization
 			if Compilation_modes.is_precompiling then
@@ -879,8 +882,7 @@ end
 				private_freeze := False
 			end
 			if il_generation then
-				create il_generator.make (Degree_output)
-				il_generator.generate
+				generate_il
 			end
 			first_compilation := False
 		end
@@ -1557,6 +1559,32 @@ end
 			mem.full_coalesce
 		end
 
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code
+		require
+			il_generation: il_generation
+		local
+			il_generator: IL_GENERATOR
+		do
+			create il_generator.make (Degree_output)
+			il_generator.generate
+			if il_c_externals.count > 0 then
+				if in_final_mode then
+					create {FINAL_MAKER} makefile_generator.make
+				else
+					create {WBENCH_MAKER} makefile_generator.make
+				end
+				open_log_files
+				freezing_occurred := True
+				il_c_externals.generate_il
+				close_log_files
+
+				makefile_generator.generate_il
+			end
+		end
+
 feature -- Freeezing
 
 	freeze_system is
@@ -1868,7 +1896,7 @@ feature {NONE} -- Implementation
 						ftable.after
 					loop
 						f := ftable.item_for_iteration
-						if f.is_external and then f.written_in = id then
+						if f.is_c_external and then f.written_in = id then
 							ext ?= f
 								-- If the external is encapsulated then it was not added to
 								-- the list of new externals in inherit_table. Same thing
@@ -1879,6 +1907,10 @@ feature {NONE} -- Implementation
 						end
 						ftable.forth
 					end
+				end
+
+				if il_generation then
+					Il_c_externals.remove (id)
 				end
 
 					-- Remove class `a_class' from the lists of changed classes

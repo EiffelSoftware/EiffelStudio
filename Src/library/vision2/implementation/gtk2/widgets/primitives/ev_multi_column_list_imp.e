@@ -78,8 +78,6 @@ feature {NONE} -- Initialization
 			-- Create a list widget with `par' as
 			-- parent and `col_nb' columns.
 			-- By default, a list allow only one selection.
-		local
-			a_selection: POINTER
 		do
 			base_make (an_interface)
 			scrollable_area := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
@@ -94,18 +92,6 @@ feature {NONE} -- Initialization
 			tree_view := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_new
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (scrollable_area, tree_view)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
-	
-			resize_model_if_needed (25)
-				-- Create our model with 25 columns to avoid recomputation each time the column count increases
-			create_list (2)
-			
-			set_row_height (App_implementation.default_font_size + 9)
-				-- We explicitly set the row height to be proportional to the default gtk application font
-			
-			previous_selection := selected_items
-			
-			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
 		end
 
 	initialize is
@@ -114,10 +100,44 @@ feature {NONE} -- Initialization
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
 			Precursor {EV_MULTI_COLUMN_LIST_I}
+			resize_model_if_needed (25)
+				-- Create our model with 25 columns to avoid recomputation each time the column count increases
+			create_list (2)
+			
+			set_row_height (App_implementation.default_font_size + 9)
+				-- We explicitly set the row height to be proportional to the default gtk application font
+			
+			previous_selection := selected_items
 			initialize_pixmaps
 			connect_button_press_switch
 			disable_multiple_selection
+			connect_selection_actions
 		end
+
+	connect_selection_actions is
+			-- Connect the selection signal
+		local
+			a_selection: POINTER
+		do
+			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+			real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+			selection_signal_id := last_signal_connection_id
+		end
+
+	disconnect_selection_actions is
+			-- Disconnect the selection signal
+		local
+			a_selection: POINTER
+		do
+			if selection_signal_id /= 0 then
+				a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+				feature {EV_GTK_EXTERNALS}.signal_disconnect (a_selection, last_signal_connection_id)
+				selection_signal_id := 0				
+			end
+		end
+
+	selection_signal_id: INTEGER
+		-- Signal id used for the selection changed event
 
 feature {NONE} -- Implementation
 
@@ -128,6 +148,7 @@ feature {NONE} -- Implementation
 			newly_selected_items: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW_IMP]
 			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
+			disconnect_selection_actions
 			new_selection := selected_items
 			create newly_selected_items.make (0)
 			from
@@ -148,12 +169,7 @@ feature {NONE} -- Implementation
 				previous_selection.off
 			loop
 				an_item ?= previous_selection.item.implementation
-				if an_item.deselect_actions_internal /= Void then
-					an_item.deselect_actions_internal.call (Void)
-				end
-				if deselect_actions_internal /= Void then
-					deselect_actions_internal.call ([an_item.interface])
-				end
+				call_deselect_actions (an_item)
 				previous_selection.forth
 			end
 			
@@ -162,16 +178,11 @@ feature {NONE} -- Implementation
 			until
 				newly_selected_items.off
 			loop
-				if newly_selected_items.item.select_actions_internal /= Void then
-					newly_selected_items.item.select_actions_internal.call (Void)
-				end
-				if select_actions_internal /= Void then
-					select_actions_internal.call ([newly_selected_items.item.interface])
-				end
+				call_selection_actions (newly_selected_items.item)
 				newly_selected_items.forth
 			end
-			
 			previous_selection := new_selection
+			connect_selection_actions
 		end
 
 	previous_selection: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
@@ -209,12 +220,6 @@ feature {NONE} -- Implementation
 				if pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
 				end
-				if
-					clicked_row /= Void and then 
-					clicked_row.pointer_button_press_actions_internal /= Void
-				then
-					clicked_row.pointer_button_press_actions_internal.call (t)
-				end
 			elseif a_type = feature {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then
 				if pointer_double_press_actions_internal /= Void then
 					pointer_double_press_actions_internal.call (t)
@@ -227,6 +232,32 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+	call_selection_actions (clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+			-- Call the selections actions for `clicked_row'
+		do
+			if not previous_selection.has (clicked_row.interface) then
+					print ("Calling select actions on " + clicked_row.interface.i_th(1) + "%N")
+					if clicked_row.select_actions_internal /= Void then
+						clicked_row.select_actions_internal.call (void)
+					end
+					if select_actions_internal /= Void then
+						select_actions_internal.call ([clicked_row.interface])
+					end
+			end
+		end
+
+	call_deselect_actions (deselected_row: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+			-- Call deselect actions for `deselected_row'
+		do
+				if deselected_row.deselect_actions_internal /= Void then
+					deselected_row.deselect_actions_internal.call (Void)
+				end
+				if deselect_actions_internal /= Void then
+					deselect_actions_internal.call ([deselected_row.interface])
+				end
+		end
+		
 
 	resize_model_if_needed (a_columns: INTEGER) is
 			-- 
@@ -283,7 +314,6 @@ feature {NONE} -- Implementation
 			a_cell_renderer: POINTER
 			a_column: POINTER
 			old_column_count: INTEGER
-			a_label: POINTER
 		do
 			old_column_count := column_count	
 			resize_model_if_needed (a_columns)
@@ -295,28 +325,23 @@ feature {NONE} -- Implementation
 			loop
 
 				a_column := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_new
-				create a_gtk_c_str.make ("")
-				a_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (a_gtk_c_str.item)
-				feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_label)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_resizable (a_column, True)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_clickable (a_column, True)
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_widget (a_column, a_label)
-				real_signal_connect (a_label, "size_allocate", agent (app_implementation.gtk_marshal).mcl_column_resize_callback (object_id, [i - 1]), Void)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_sizing (a_column, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_fixed_enum)
-				real_signal_connect (a_column, "clicked", agent (app_implementation.gtk_marshal).mcl_column_click_callback (object_id, [i - 1]), Void)
 				
 				if i = 1 then
 					a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_pixbuf_new
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)
-					create a_gtk_c_str.make ("pixbuf")
+					a_gtk_c_str := "pixbuf"
 					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, 0)
 				end
 				
 				a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_text_new
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, True)				
-				create a_gtk_c_str.make ("text")
+				a_gtk_c_str := "text"
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, i)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_insert_column (tree_view, a_column, i - 1)
+
 
 				if column_titles /= Void and then
 					column_titles.valid_index (i) and then
@@ -356,6 +381,8 @@ feature {NONE} -- Implementation
 					column_alignment_changed (temp_alignment, i)
 				end
 				
+				real_signal_connect (a_column, "notify::width", agent (app_implementation.gtk_marshal).mcl_column_resize_callback (object_id, i), Void)
+				real_signal_connect (a_column, "clicked", agent (app_implementation.gtk_marshal).mcl_column_click_callback (object_id, i), Void)
 				i := i + 1
 			end
 		end
@@ -557,18 +584,28 @@ feature -- Status setting
 			-- Select an item at the one-based `index' of the list.
 		local
 			a_selection: POINTER
+			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_select_iter (a_selection, (ev_children @ an_index).list_iter.item)
+			if selection_signal_id = 0 then
+				a_row_imp := ev_children.i_th (an_index)
+				call_selection_actions (a_row_imp)
+			end
 		end
 
 	deselect_item (an_index: INTEGER) is
 			-- Unselect the item at the one-based `index'.
 		local
 			a_selection: POINTER
+			a_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_selection_unselect_iter (a_selection, (ev_children @ an_index).list_iter.item)
+			if selection_signal_id = 0 then
+				a_row_imp := ev_children.i_th (an_index)
+				call_deselect_actions (a_row_imp)
+			end
 		end
 
 	clear_selection is
@@ -596,7 +633,6 @@ feature -- Element change
 		local
 			a_cs: EV_GTK_C_STRING
 			a_column_ptr: POINTER
-			a_label: POINTER
 		do
 			if a_column > column_count then
 				expand_column_count_to (a_column)
@@ -605,9 +641,7 @@ feature -- Element change
 			check
 				a_column_not_null: a_column_ptr /= default_pointer
 			end
-			a_label := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_get_widget (a_column_ptr)
-			create a_cs.make (a_txt)
-			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (a_label, a_cs.item)
+			a_cs := a_txt
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_title (a_column_ptr, a_cs.item)
 		end
 
@@ -617,9 +651,11 @@ feature -- Element change
 		local
 			a_column_ptr: POINTER
 		do
-			a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
-			--feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (a_column_ptr, value)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (a_column_ptr, value)
+			if column_widths /= Void then
+				a_column_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, a_column - 1)
+				--feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_min_width (a_column_ptr, value)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_set_fixed_width (a_column_ptr, value)				
+			end
 		end
 
 	column_alignment_changed (an_alignment: EV_TEXT_ALIGNMENT; a_column: INTEGER) is

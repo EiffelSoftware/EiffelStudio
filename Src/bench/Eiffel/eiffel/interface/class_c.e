@@ -3376,6 +3376,8 @@ end
 						-- Insertion of the new class type
 					types.extend (new_class_type)
 					System.insert_class_type (new_class_type)
+				else
+					new_class_type := types.found_item
 				end
 
 					-- Propagation along the filters since we have a new type
@@ -3390,7 +3392,7 @@ end
 				loop
 						-- Instantiation of the filter with `data'
 					if l_gen_type /= Void then
-						filter := filters.item.instantiation_in (l_gen_type)
+						filter := filters.item.instantiation_in (new_class_type)
 					else
 						filter := filters.item
 					end
@@ -3464,32 +3466,36 @@ end
 
 feature -- Meta-type
 
-	meta_type (class_type: CL_TYPE_I): CL_TYPE_I is
-			-- Meta type of the class in the context of `class_type'.
+	meta_type (class_type: CLASS_TYPE): CLASS_TYPE is
+			-- Associated class type of Current class in the context
+			-- of descendant type `class_type'.
 		require
 			good_argument: class_type /= Void
-			conformance: class_type.base_class.conform_to (Current)
+			conformance: class_type.associated_class.conform_to (Current)
 		local
 			actual_class_type, written_actual_type: CL_TYPE_A
-			gen_type: GEN_TYPE_I
+			l_type: CL_TYPE_I
 		do
 			if generics = Void then
 					-- No instantiation for non-generic class
-				Result := types.first.type
+				Result := types.first
 			else
-				actual_class_type := class_type.base_class.actual_type
+				actual_class_type := class_type.associated_class.actual_type
 					-- General instantiation of the actual class type where
 					-- the feature is written in the context of the actual
 					-- type of the base class of `class_type'.
 				written_actual_type ?= actual_type.instantiation_in
 											(actual_class_type, class_id)
 					-- Ask for the meta-type
-				Result := written_actual_type.type_i
+				l_type := written_actual_type.type_i
 					-- Meta instantiation
-				if Result.has_formal then
-					gen_type ?= class_type
-					Result ?= Result.instantiation_in (gen_type)
+				if l_type.has_formal then
+					check
+						class_type_is_generic: class_type.is_generic
+					end
+					l_type := l_type.instantiation_in (class_type)
 				end
+				Result := l_type.associated_class_type
 			end
 		ensure
 			meta_type_not_void: Result /= Void

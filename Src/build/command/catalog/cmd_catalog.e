@@ -103,7 +103,6 @@ feature
 
 	current_page: COMMAND_PAGE;
 
-	
 feature {NONE}
 
 	page_used: COMMAND_PAGE is
@@ -132,15 +131,24 @@ feature
 
 feature {NONE}
 
-	shell: TOP_SHELL;
+	shell: EB_TOP_SHELL;
 
-	
 feature 
 
-	hide is do shell.hide end;
-	show is do shell.show end;
-	shown: BOOLEAN is do Result := shell.shown end;
+	hide is 
+		do 
+			shell.hide 
+		end;
 
+	show is 
+		do 
+			shell.show 
+		end;
+
+	shown: BOOLEAN is 
+		do 
+			Result := shell.shown 
+		end;
 	
 feature {NONE}
 
@@ -160,6 +168,11 @@ feature
 			!! del_com.make (Current);
 			shell.set_delete_command (del_com);
 			catalog_make (Widget_names.form, shell);
+			shell.set_x_y (Resources.cmd_cat_x,
+					Resources.cmd_cat_y);
+			shell.set_size (Resources.cmd_cat_width,
+					Resources.cmd_cat_height);
+			shell.initialize_window_attributes
 		end;
 
 	create_interface is 

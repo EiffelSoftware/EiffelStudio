@@ -11,6 +11,7 @@
 */
 
 #include "eif_project.h" /* for egc... */
+#include <assert.h>			/* For assertions checkings. */
 #include "eif_config.h"
 #include "eif_eiffel.h"
 #include "eif_plug.h"
@@ -245,13 +246,24 @@ rt_public EIF_REFERENCE makestr(register char *s, register int len)
  * Special object count
  */
 
-rt_public long sp_count(EIF_REFERENCE spobject)
+rt_public EIF_INTEGER sp_count(EIF_REFERENCE spobject)
 {
 	/* Return the count of a special object */
 
-	EIF_REFERENCE ref = spobject + (HEADER(spobject)->ov_size & B_SIZE) - LNGPAD_2;
+	EIF_REFERENCE ref; 
 
-	return *(long *)ref;
+	/*** Preconditions. ***/
+	assert (spobject != (EIF_REFERENCE) 0);			/* Not Null. */
+	assert (HEADER (spobject)->ov_flags & EO_SPEC);	/* Must be a special object. */
+	/*** End of preconditions. ***/
+
+	ref = spobject + (HEADER(spobject)->ov_size & B_SIZE) - LNGPAD_2;
+
+	/*** Postconditions. ***/
+	assert (*(EIF_INTEGER *) ref >= 0);				/* Must be positive. */
+	/*** End of Postconditions. ***/
+
+	return *(EIF_INTEGER *)ref;
 }
 
 

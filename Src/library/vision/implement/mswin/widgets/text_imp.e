@@ -400,7 +400,7 @@ feature -- Status setting
 				char_format.set_text_color (windows_color)
 				text_count := text.count
 				if text_count > 1 then
-					set_selection (1, text_count)
+					set_selection (0, text_count - 1)
 					set_character_format_selection (char_format)
 					unselect
 					set_cursor_position (text_count)

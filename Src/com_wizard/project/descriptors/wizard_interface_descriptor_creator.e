@@ -52,10 +52,11 @@ feature -- Basic operations
 			description := clone (a_documentation.doc_string)
 			type_kind := a_type_info.type_attr.type_kind
 
-			if a_type_info.type_attr.type_kind = Tkind_dispatch then
+			if type_kind = Tkind_dispatch then
 				dispinterface := True
 			end
-			if a_type_info.type_attr.flags = typeflag_fdual then
+			flags := a_type_info.type_attr.flags
+			if is_typeflag_fdual (flags) then
 				dual := True
 			end
 
@@ -87,7 +88,6 @@ feature -- Basic operations
 
 				lcid := tmp_type_attr.lcid
 				vtbl_size := tmp_type_attr.vtbl_size
-				flags := tmp_type_attr.flags
 
 				if a_type_info.type_attr.count_implemented_types > 0 then
 					create_inherited_interface (a_type_info)

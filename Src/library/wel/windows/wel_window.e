@@ -75,6 +75,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_ESB_CONSTANTS
+		export
+			{NONE} all
+		end
+
 	WEL_HWND_CONSTANTS
 		export
 			{NONE} all
@@ -930,6 +935,38 @@ feature -- Basic operations
 			exists: exists
 		do
 			cwin_show_scroll_bar (item, Sb_horz, False)
+		end
+
+	disable_horizontal_scroll_bar is
+			-- Disable the horizontal scroll bar.
+		require
+			exists: exists
+		do
+			cwin_enable_scroll_bar (item, Sb_horz, Esb_disable_both)
+		end
+
+	enable_horizontal_scroll_bar is
+			-- Enable the horizontal scroll bar.
+		require
+			exists: exists
+		do
+			cwin_enable_scroll_bar (item, Sb_horz, Esb_enable_both)
+		end
+
+	disable_vertical_scroll_bar is
+			-- Disable the vertical scroll bar.
+		require
+			exists: exists
+		do
+			cwin_enable_scroll_bar (item, Sb_vert, Esb_disable_both)
+		end
+
+	enable_vertical_scroll_bar is
+			-- Enable the vertical scroll bar.
+		require
+			exists: exists
+		do
+			cwin_enable_scroll_bar (item, Sb_vert, Esb_enable_both)
 		end
 
 	message_box (a_text, a_title: STRING; a_style: INTEGER): INTEGER is
@@ -1872,6 +1909,14 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (HWND, int, BOOL)"
 		alias
 			"ShowScrollBar"
+		end
+
+	cwin_enable_scroll_bar (hwnd: POINTER; wsbflags, warrows: INTEGER) is
+			-- SDK EnableScrollBar
+		external
+			"C [macro %"wel.h%"] (HWND, int, int)"
+		alias
+			"EnableScrollBar"
 		end
 
 	cwin_scroll_window (hwnd: POINTER; a_x, a_y: INTEGER;

@@ -239,7 +239,7 @@ feature -- Replication
 		do
 			Result := clone (Current);
 			Result.set_id (System.feature_as_counter.next_id);
-			!!new_feature_names.make (1);
+			!! new_feature_names.make_filled (1);
 			new_feature_names.go_i_th (1);
 			new_feature_names.replace (ctxt.replicated_name);
 			Result.set_feature_names (new_feature_names);

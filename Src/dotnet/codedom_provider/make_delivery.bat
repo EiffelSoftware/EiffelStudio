@@ -1,24 +1,19 @@
-@echo off
+@ECHO OFF
 
 REM Setup Eiffel CodeDom Provider delivery, result is put in folder "delivery"
-REM "make.bat" must be called first
 
-if not exist build call make.bat
+IF EXIST build_studio GOTO :STUDIO
+IF EXIST build_envision GOTO :ENVISION
+CALL build_studio.bat
 
-cd build
+IF EXIST delivery RD /Q /S delivery
+MKDIR delivery
+MKDIR delivery\gac
+MKDIR delivery\system32
 
-devenv /RootSuffix Exp codedom_provider.sln /build Release
-
-cd ..
-
-if exist delivery rd /q /s delivery
-mkdir delivery
-mkdir delivery\bin
-mkdir delivery\system32
-
-copy build\ISE.Base\bin\Release\ISE.Base.dll delivery\bin\
-copy build\ISE.Base\bin\Release\libISE.Base.dll delivery\system32\
-copy build\ISE.EiffelVision2\bin\Release\ISE.EiffelVision2.dll delivery\bin\
-copy build\ISE.EiffelVision2\bin\Release\libISE.EiffelVision2.dll delivery\system32\
-copy build\ISE.CacheBrowser\bin\Release\ISE.CacheBrowser.dll delivery\bin\
-copy build\ISE.EiffelCodeDomProvider\bin\Release\ISE.EiffelCodeDomProvider.dll delivery\bin\
+COPY build_studio\EiffelSoftware.EiffelBase\bin\Release\EiffelSoftware.EiffelBase.dll delivery\gac\
+COPY build_studio\EiffelSoftware.EiffelBase\bin\Release\libEiffelSoftware.EiffelBase.dll delivery\system32\
+COPY build_studio\EiffelSoftware.EiffelVision2\bin\Release\EiffelSoftware.EiffelVision2.dll delivery\gac\
+COPY build_studio\EiffelSoftware.EiffelVision2\bin\Release\libEiffelSoftware.EiffelVision2.dll delivery\system32\
+COPY build_studio\EiffelSoftware.CacheBrowser\bin\Release\EiffelSoftware.CacheBrowser.dll delivery\gac\
+COPY build_studio\EiffelSoftware.CodeDom\bin\Release\EiffelSoftware.CodeDom.dll delivery\gac\

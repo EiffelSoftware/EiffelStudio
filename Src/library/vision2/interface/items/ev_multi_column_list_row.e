@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 
 	create_action_sequences is
 		do
-			{EV_COMPOSED_ITEM} Precursor
+			{EV_ITEM} Precursor
 			create select_actions
 			create deselect_actions
 		end
@@ -123,6 +123,24 @@ feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_MULTI_COLUMN_LIST_ROW_I
 			-- Platform dependent access.
+
+feature -- Obsolete
+
+	columns: INTEGER is
+		obsolete
+			"Use count"
+		do
+			Result := count
+		end
+
+	set_columns (c: INTEGER) is
+		obsolete
+			"Not applicable anymore."
+		do
+			check
+				to_be_implemented: False
+			end
+		end
 
 end -- class EV_MULTI_COLUMN_LIST_ROW
 
@@ -147,6 +165,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/23 18:17:03  brendel
+--| Added columns and set_solumns as obsolete.
+--|
 --| Revision 1.32  2000/03/23 18:01:38  brendel
 --| Revised.
 --|

@@ -61,24 +61,67 @@ feature {NONE} -- Code generation
 	generate_eiffel_text (precondition_text: STRING): STRING is
 			-- Select what kind of expression `precondition_text' is.
 		local
-			i: INTEGER
+			i, operator_index: INTEGER
+			found: BOOLEAN
 		do
+			
 			!! Result.make (0)
-			i := precondition_text.substring_index (implies_keyword, 1)
+			i := precondition_text.substring_index (or_else_keyword, 1)
 			if i > 0 then
-				Result.append (generated_with_operator (precondition_text, implies_keyword, i))
-			else
+				found := True
+				operator_index := or_else_index
+			end
+			if not found then
+				i := precondition_text.substring_index (and_then_keyword, 1)
+				if i > 0 then
+					found := True
+					operator_index := and_then_index
+				end
+			end
+			if not found then
 				i := precondition_text.substring_index (or_keyword, 1)
 				if i > 0 then
-					Result.append (generated_with_operator (precondition_text, or_keyword, i))
-				else
-					i := precondition_text.substring_index (and_keyword, 1)
-					if i > 0 then
-						Result.append (generated_with_operator (precondition_text, or_keyword, i))
-					else
-						Result.append (generated_from_simple_expression (precondition_text))
-					end
+					found := True
+					operator_index := or_index
 				end
+			end
+			if not found then
+				i := precondition_text.substring_index (and_keyword, 1)
+				if i > 0 then
+					found := True
+					operator_index := and_index
+				end
+			end
+			if not found then
+				i := precondition_text.substring_index (xor_keyword, 1)
+				if i > 0 then
+					found := True
+					operator_index := xor_index
+				end
+			end
+			if not found then
+				i := precondition_text.substring_index (implies_keyword, 1)
+				if i > 0 then
+					found := True
+					operator_index := implies_index
+				end
+			end
+			inspect
+				operator_index
+			when or_else_index then
+				Result.append (generated_with_operator (precondition_text, or_else_keyword, i))
+			when and_then_index then
+				Result.append (generated_with_operator (precondition_text, and_then_keyword, i))
+			when or_index then
+				Result.append (generated_with_operator (precondition_text, or_keyword, i))
+			when and_index then
+				Result.append (generated_with_operator (precondition_text, and_keyword, i))
+			when xor_index then
+				Result.append (generated_with_operator (precondition_text, xor_keyword, i))
+			when implies_index then
+				Result.append (generated_with_operator (precondition_text, implies_keyword, i))
+			else
+				Result.append (generated_from_simple_expression (precondition_text))
 			end
 		end
 
@@ -128,6 +171,8 @@ feature {NONE} -- Code generation
 						or temp_word.is_equal ("void") 
 						or temp_word.is_equal ("not")
 						or temp_word.is_equal ("Not")
+						or temp_word.is_equal ("default_pointer")
+						or temp_word.is_equal ("Default_pointer")
 					then
 						Result.append (temp_word)
 					else
@@ -165,13 +210,42 @@ feature {NONE} -- Code generation
 			end
 		end
 
-	implies_keyword: STRING is "implies"
-			-- Boolean operator `implies'
+feature {NONE} -- Boolean operators
 
 	or_keyword: STRING is "or"
 			-- Boolean operator `or'
 
+	or_index: INTEGER is unique
+			-- Index for operator `or'
+
 	and_keyword: STRING is "and"
 			-- Boolean operator `and'
+
+	and_index: INTEGER is unique
+			-- Index for operator `and'
+
+	xor_keyword: STRING is "xor"
+			-- Boolean operator `xor'
+
+	xor_index: INTEGER is unique
+			-- Index for operator `xor'
+
+	implies_keyword: STRING is "implies"
+			-- Boolean operator `implies'
+
+	implies_index: INTEGER is unique
+			-- Index for operator `implies'
+
+	or_else_keyword: STRING is "or else"
+			-- Boolean operator `or else'
+
+	or_else_index: INTEGER is unique
+			-- Index for operator `or else'
+
+	and_then_keyword: STRING is "and then"
+			-- Boolean operator `and then'.
+
+	and_then_index: INTEGER is unique
+			-- Index for operator `and then'
 
 end -- class APPLICATION_PRECONDITION

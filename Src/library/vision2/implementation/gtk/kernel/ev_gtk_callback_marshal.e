@@ -15,17 +15,6 @@ inherit
 			copy,
 			is_equal
 		end
-
-	EV_C_UTIL
-		undefine
-			default_create
-		end
-
-	INTERNAL
-		undefine
-			default_create,
-			is_equal
-		end
 		
 	EV_GTK_KEY_CONVERSION
 		undefine
@@ -78,8 +67,8 @@ feature {EV_ANY_IMP} -- Access
 			if t /= empty_tuple then
 				if
 					--| FIXME IEK This needs to be optimized.
-					t /= Void and then type_conforms_to (
-						dynamic_type (an_agent),
+					t /= Void and then internal.type_conforms_to (
+						internal.dynamic_type (an_agent),
 						f_of_tuple_type_id
 					)
 				then
@@ -92,7 +81,7 @@ feature {EV_ANY_IMP} -- Access
 			else
 				gdk_event := gtk_value_pointer (args)
 				if 
-					gdk_event = NULL or else
+					gdk_event = default_pointer or else
 					feature {EV_GTK_EXTERNALS}.gdk_event_any_struct_type (gdk_event) /= feature {EV_GTK_EXTERNALS}.GDK_3BUTTON_PRESS_ENUM
 				then
 					print ("FIXME " + an_agent.generating_type + " in " + generating_type + " not called%N")
@@ -320,17 +309,17 @@ feature {NONE} -- Implementation
 		require
 			action_not_void: action /= Void
 			n_args_not_negative: n_args >= 0
-			args_not_null: n_args > 0 implies args /= NULL
+			args_not_null: n_args > 0 implies args /= default_pointer
 		do
-			if type_conforms_to (dynamic_type (action), f_of_tuple_type_id) then
+			if internal.type_conforms_to (internal.dynamic_type (action), f_of_tuple_type_id) then
 				-- `action' isn't a translation agent and the open operands are TUPLE [TUPLE]
 				-- Direct call of ACTION_SEQUENCE.call (?).
-				action.call (empty_tuple_tuple)
+				action.call (Void)
 			else
 				-- `action' is a translation agent, call with TUPLE [INTEGER, POINTER].
 				-- In most cases, translate_and_call (an_agent, translate, ?, ?)
 				check
-					not_for_empty_tuple: not type_conforms_to (dynamic_type (action), f_of_tuple_type_id)
+					not_for_empty_tuple: not internal.type_conforms_to (internal.dynamic_type (action), f_of_tuple_type_id)
 				end
 				integer_pointer_tuple.put (n_args, 1)
 				integer_pointer_tuple.put (args, 2)
@@ -340,7 +329,7 @@ feature {NONE} -- Implementation
 
 	f_of_tuple_type_id: INTEGER is
 		once
-			Result := dynamic_type (create {PROCEDURE [ANY, TUPLE [TUPLE]]})
+			Result := internal.dynamic_type (create {PROCEDURE [ANY, TUPLE [TUPLE]]})
 		end
 	
 feature {EV_ANY_IMP} -- Tuple optimizations.
@@ -388,6 +377,12 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 		end
 
 feature {NONE} -- Externals
+
+	internal: INTERNAL is
+			-- Internal feature access
+		once
+			create Result
+		end
 
 	frozen c_ev_gtk_callback_marshal_init (
 		object: EV_GTK_CALLBACK_MARSHAL; a_marshal: POINTER

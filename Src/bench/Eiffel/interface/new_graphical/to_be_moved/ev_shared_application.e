@@ -18,6 +18,14 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
+		
+	process_events_and_idle is
+			-- Call `process_events' and `idle_actions' on `ev_application'.
+		do
+			ev_application.process_events
+			ev_application.idle_actions.call (Void)
+		end
+		
 
 end -- class EV_SHARED_APPLICATION
 

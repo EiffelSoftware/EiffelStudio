@@ -237,21 +237,15 @@ feature -- Basic Operations
 	        cluster_sd: CLUSTER_SD
 	        parent_id: ID_SD
 	        cluster_prop: CLUSTER_PROPERTIES
-	        temp_cluster_path: STRING
 	        parent_cluster: CLUSTER_PROPERTIES
 	    do
-	        --| Fix Me PAUL
-	        temp_cluster_path := clone (cluster_path)
-	        if temp_cluster_path.is_empty then
-	            temp_cluster_path := "."
-	        end
 	        if parent_name /= Void and then not parent_name.is_empty then
 	            parent_id := new_id_sd (parent_name, False)
 	            parent_cluster := clusters_table.item (parent_name)
 	        end
 	        create cluster_sd.initialize (new_id_sd (cluster_name, True), 
 	                                    parent_id,
-	                                    new_id_sd (temp_cluster_path, True),
+	                                    new_id_sd (cluster_path, True),
 	                                    Void, False, False)
 	        create cluster_prop.make_with_cluster_sd_and_ace_accesser (cluster_sd, parent_cluster, ace_accesser)
 	        if parent_name /= Void and then not parent_name.is_empty then

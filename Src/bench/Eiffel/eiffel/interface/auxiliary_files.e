@@ -413,7 +413,7 @@ feature -- Plug and Makefile file
 			-- Generate plug with run-time
 		local
 			any_cl, string_cl, bit_cl, array_cl, rout_cl: CLASS_C
-			arr_type_id, str_type_id, tup_type_id, type_id: INTEGER
+			arr_type_id, str_type_id, type_id: INTEGER
 			id: INTEGER
 			to_c_feat, set_count_feat, set_make_feat: FEATURE_I
 			creation_feature, correct_mismatch_feat: FEATURE_I

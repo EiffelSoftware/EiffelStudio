@@ -58,11 +58,7 @@ feature -- Access
 
 	value: INTEGER is
 			-- Current value of the gauge
-		local
-i: INTEGER
 		do
-i := minimum
-i := maximum
 			Result := gtk_spin_button_get_value_as_int (widget)
 		end
 

@@ -82,6 +82,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "eiffel_derivation.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "eiffel_type_info.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "exception.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

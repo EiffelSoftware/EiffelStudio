@@ -130,16 +130,10 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				Externals.adapt;
 			end;
 
--- FIXME
--- FIXME
--- FIXME
--- FIXME
--- FIXME: incrementality with precompiled (object clause not duplicated)
-
-			no_change := deep_equal (c_file_names, System.c_file_names) and
-							deep_equal (include_paths, System.include_paths) and
-							deep_equal (object_file_names, System.object_file_names) and
-							deep_equal (makefile_names, System.makefile_names)
+			no_change := is_subset (c_file_names, System.c_file_names) and
+							is_subset (include_paths, System.include_paths) and
+							is_subset (object_file_names, System.object_file_names) and
+							is_subset (makefile_names, System.makefile_names)
 			if not no_change then
 				System.set_freeze (True)
 			end
@@ -401,6 +395,31 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 		do
 			Result := root.compile_all_classes
 		end;
+
+feature {NONE} -- Incrementality
+
+	is_subset (original_list, new_list: LIST [STRING]): BOOLEAN is
+			-- Is `new_list' a subset of `original_list'?
+			--| allows Void arguments
+			--| Used for incrementality on externals
+		do
+			if original_list = Void then
+				Result := new_list = Void
+			elseif new_list = Void then
+				Result := True
+			else
+				from
+					Result := True
+					new_list.compare_objects
+					new_list.start
+				until
+					new_list.after or else not Result
+				loop
+					Result := original_list.has (new_list.item)
+					new_list.forth
+				end
+			end
+		end
 
 feature {COMPILER_EXPORTER} -- DLE
 

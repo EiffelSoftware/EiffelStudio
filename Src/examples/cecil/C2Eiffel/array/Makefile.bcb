@@ -11,7 +11,7 @@ EIFLIB = EIFGEN\W_code\libtst.lib
 LIBS = 
 OBJECT = main.obj
 
-all: main.obj compile_eiffel compile_c test.exe
+all: main.obj compile_eiffel compile_c cecil.exe
 
 compile_eiffel:
 	$(EC) -freeze
@@ -25,7 +25,7 @@ compile_c:
 main.obj: main.c
 	$(CC) -I$(INCLUDE_PATH) -c main.c 
 
-test.exe: main.obj EIFGEN\W_code\libtst.lib
+cecil.exe: main.obj EIFGEN\W_code\libtst.lib
 	$(LN) EIFGEN\W_code\tst.melted tst.melted
 	ilink32 -ap -c -Tpe main.obj c0w32.obj, $@,,\
 		EIFGEN\W_code\libtst.lib CW32 IMPORT32 OLE2w32,,

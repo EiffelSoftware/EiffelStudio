@@ -12,7 +12,7 @@ CFLAGS = -DEIF_WIN32
 LIBS = 
 OBJECT = main.obj
 
-all: main.obj compile_eiffel compile_c test.exe
+all: main.obj compile_eiffel compile_c cecil.exe
 
 compile_eiffel:
 	$(EC) -freeze
@@ -26,7 +26,7 @@ compile_c:
 main.obj: main.c
 	$(CC) -I$(INCLUDE_PATH) -c main.c 
 
-test.exe: main.obj EIFGEN\W_code\libtst.lib
+cecil.exe: main.obj EIFGEN\W_code\libtst.lib
 	$(LN) EIFGEN\W_code\tst.melted tst.melted
 	link -SUBSYSTEM:CONSOLE -out:$@ main.obj EIFGEN\W_code\libtst.lib \
 		USER32.lib WSOCK32.lib ADVAPI32.lib GDI32.lib SHELL32.lib\

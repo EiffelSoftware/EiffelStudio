@@ -1,5 +1,5 @@
 system
-	tst 
+	cecil
 
 root
 	ROOT_CLASS (ROOT_CLUSTER): "make"

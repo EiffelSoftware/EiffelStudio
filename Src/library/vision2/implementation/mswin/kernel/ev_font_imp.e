@@ -16,7 +16,7 @@ creation
 	make_by_name,
 	make_by_wel
 
-feature  -- Initialization
+feature {EV_FONTABLE_IMP} -- Initialization
 
 	make (a_font: EV_FONT) is
 			-- Create a font
@@ -42,14 +42,6 @@ feature  -- Initialization
 			!! wel_log_font.make_by_font (wel_font)
 		end
 			
-feature -- Access
-
-	wel_font: WEL_FONT
-			-- WEL font
-
-	wel_log_font: WEL_LOG_FONT
-			-- WEL_LOG_FONT to hold details
-
 feature -- Status report
 
 	destroyed: BOOLEAN is
@@ -598,6 +590,14 @@ feature -- Status setting
 				wel_log_font.set_width (0)
 			end
 		end
+
+feature -- Implementation
+
+	wel_font: WEL_FONT
+			-- WEL font
+
+	wel_log_font: WEL_LOG_FONT
+			-- WEL_LOG_FONT to hold details
 
 feature {NONE} -- Implementation
 

@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 	show_about_dialog is
 			-- Display an about dialog.
 		local
-			about_dialog: ABOUT_DIALOG
+			about_dialog: GB_ABOUT_DIALOG
 		do
 			create about_dialog.make
 			about_dialog.show_modal_to_window (Current)

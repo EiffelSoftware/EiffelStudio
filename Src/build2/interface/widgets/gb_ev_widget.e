@@ -80,7 +80,7 @@ feature {GB_XML_STORE} -- Output
 				-- Therefore, there is a bug where querying `is_show_requested' for an item that is not
 				-- in the selected tab returns `False' when it should not.
 				-- We check that the item is not parented in a notebook before saving it as hidden. This does
-				-- not let you hide an item within a notebookm, but it definitely is better than the behaviour
+				-- not let you hide an item within a notebook, but it definitely is better than the behaviour
 				-- of items being hidden. Julian.
 			
 			if not objects.first.is_show_requested and not is_instance_of (first, dynamic_type_from_string ("EV_WINDOW")) and notebook_parent = Void then

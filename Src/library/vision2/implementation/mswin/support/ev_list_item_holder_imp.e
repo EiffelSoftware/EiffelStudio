@@ -159,6 +159,11 @@ feature -- Basic operations
 			Result := ev_children.index_of (item_imp, 1) - 1
 		end
 
+	set_pointer_style (c: EV_CURSOR) is
+			-- Assign `c' to mouse pointer.
+		deferred
+		end
+
 feature {NONE} -- Implementation
 
 	item_type: EV_LIST_ITEM_IMP is
@@ -249,6 +254,9 @@ end -- class EV_LIST_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/21 01:30:32  rogers
+--| Added deferred feature, set_pointer_style.
+--|
 --| Revision 1.22  2000/03/01 18:32:12  rogers
 --| Re-implemented internal_get_index.
 --|

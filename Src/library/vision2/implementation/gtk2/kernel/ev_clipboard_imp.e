@@ -37,7 +37,11 @@ feature {NONE}-- Initialization
 			cs: C_STRING
 		do
 			create cs.make ("CLIPBOARD")
-			clipboard_clipboard := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
+			clipboard := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
+							feature {EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
+			)
+			create cs.make ("PRIMARY")
+			primary := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_get (
 							feature {EV_GTK_EXTERNALS}.gdk_atom_intern (cs.item, 1)
 			)
 			is_initialized := True
@@ -48,6 +52,12 @@ feature -- Access
 	text: STRING is
 			-- `Result' is current clipboard content.
 		do
+			if feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_is_text_available (clipboard) then
+				create Result.make_from_c (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_wait_for_text (clipboard))
+			else
+				Result := ""
+					-- We return an empty string if there is nothing present in the clipboard.
+			end
 		end
 
 feature -- Status Setting
@@ -55,13 +65,18 @@ feature -- Status Setting
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to clipboard.
 		local
+			a_cs: C_STRING
 		do
-
+			create a_cs.make (a_text)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (clipboard, a_cs.item, -1)
+			
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_clipboard_set_text (primary, a_cs.item, -1)
+				-- We also set the primary selection as there is no windows equivalent.
 		end
 		
 feature {NONE} -- Implementation
 
-	clipboard_clipboard, clipboard_primary: POINTER
+	clipboard, primary: POINTER
 			-- Pointers to the CLIPBOARD and PRIMARY Gtk clipboards
 
 feature {EV_ANY_I}

@@ -32,6 +32,11 @@
 #include <strings.h>
 #endif
 
+#ifdef __VMS
+ #define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR
+ #include <errno.h>	/* redefine cma$tis... to caps before this include! */
+#endif
+
 /*#define DEBUG_GENERAL_STORE	/**/
 
 /*#define DEBUG 1 /**/
@@ -63,11 +68,18 @@ private char * r_buffer = (char *) 0;		/*buffer for make_header*/
 
 /* Public data declarations */
 
+#ifndef __VMS		/* r_fides declared in garcol.c for vms */
 public int r_fides;			/* File descriptor use for retrieve */
+#endif
 
 /*
  * Function declations
  */
+extern void eio();			/* prototypes were missing TNH */
+extern void allocate_gen_buffer();
+extern int idr_read_line();
+extern long get_alpha_offset(uint32 o_type, uint32 attrib_num);
+
 public char *irt_make();			/* Do the independant retrieve */
 public char *grt_make();			/* Do the general retrieve (3.3 and later) */
 public char *irt_nmake();			/* Retrieve n objects  independent form*/

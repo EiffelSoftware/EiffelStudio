@@ -14,6 +14,12 @@ if echo "$ISE_PLATFORM" | grep "linux" >/dev/null 2>&1; then
 elif [ "$ISE_PLATFORM" = "solaris-2.5+" ]; then
 	cp scripts/makefile.solaris .
 	make -f makefile.solaris
+elif [ "$ISE_PLATFORM" = "hpux-11" ]; then
+	cp scripts/makefile.hpux .
+	make -f makefile.hpux
+elif [ "$ISE_PLATFORM" = "alpha" ]; then
+	cp scripts/makefile.dec .
+	make -f makefile.dec
 else
 	rep=$ISE_PLATFORM
 	if [ ! -f "scripts/makefile.$rep" ]; then

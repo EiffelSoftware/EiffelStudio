@@ -54,10 +54,9 @@ feature -- Element change
 			imp: EV_WIDGET_IMP
 		do
 			i := item
-			item := v
 			if i /= Void then
-				on_removed_item (i)
 				imp ?= i.implementation
+				on_removed_item (imp)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (imp.c_object)
 				feature {EV_GTK_EXTERNALS}.gtk_container_remove (container_widget, imp.c_object)
 			end
@@ -67,6 +66,7 @@ feature -- Element change
 				imp.update_request_size
 				on_new_item (imp)
 			end
+			item := v
 		end
 
 feature {EV_ANY_I} -- Implementation

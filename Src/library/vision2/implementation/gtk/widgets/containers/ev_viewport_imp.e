@@ -215,10 +215,10 @@ feature {NONE} -- Implementation
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, temp_width, temp_height)
 		end
 
-	on_removed_item (an_item: EV_WIDGET) is
+	on_removed_item (a_widget_imp: EV_WIDGET_IMP) is
 			-- Reset minimum size.
 		do
-			Precursor (an_item)
+			Precursor (a_widget_imp)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (container_widget, -1, -1)
 			set_x_offset (0)
 			set_y_offset (0)

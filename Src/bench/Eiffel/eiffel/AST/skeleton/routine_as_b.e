@@ -9,7 +9,8 @@ inherit
 			is_require_else, is_ensure_then,
 			has_precondition, has_postcondition, has_rescue,
 			type_check, byte_node, check_local_names,
-			find_breakable, format
+			find_breakable, format,
+			fill_calls_list, replicate, local_table
 		end;
 	SHARED_INSTANTIATOR;
 	SHARED_CONSTRAINT_ERROR;
@@ -230,6 +231,8 @@ feature -- Type check, byte code and dead code removal
 			-- Check validity of local declarations: a local variable
 			-- name cannot be a final name of the current feature table or
 			-- an argument name of the current analyzed feature.
+			-- Also an external or a deferred routine cannot have
+			-- locals.
 		local
 			id_list: EIFFEL_LIST [ID_AS];
 			local_type: TYPE;
@@ -249,141 +252,148 @@ feature -- Type check, byte code and dead code removal
 			vtec2: VTEC2;
 			vtgg3: VTGG3;
 			vreg2: VREG2;
+			curr_feat: FEATURE_I;
 		do
-			from
-				context_class := context.a_class;
-				track_local :=
-					context.a_feature.written_in = context_class.id;
-				--	and then
-				--	context_class.changed;
-				context_locals := context.locals;
-				locals.start
-			until
-				locals.after
-			loop
+			if 
+				(is_deferred or is_external)
+				and then not locals.empty 
+			then
+				io.error.putstring ("VRRR error on class ");
+				io.error.putstring (context_class.class_name);
+				io.error.new_line;
+			else
 				from
-					id_list := locals.item.id_list;
-					local_type := locals.item.type;
-
-						-- Compute actual type for local
-					Local_evaluator.set_local_name (id_list.first);
-					solved_type := Local_evaluator.evaluated_type
-						(local_type, context.feature_table, context.a_feature);
-					check	
-							-- If anchored type cannot be evaluated, the
-							-- argument type evaluator will trigger an
-							-- exception
-						solved_type_exists: solved_type /= Void;
-					end;
-
-					id_list.start;
+					context_class := context.a_class;
+					curr_feat := context.a_feature;
+					track_local :=
+						curr_feat.written_in = context_class.id;
+					--	and then
+					--	context_class.changed;
+					context_locals := context.locals;
+					locals.start
 				until
-					id_list.after
+					locals.offright
 				loop
-					local_name := id_list.item;
-					if 
-						context.a_feature.has_argument_name (local_name)
-					then
-							-- The local name is an argument name of the
-							-- current analyzed feature
-						!!vrle2;
-						context.init_error (vrle2);
-						vrle2.set_feature_name (context.a_feature.feature_name);
-						vrle2.set_local_name (local_name);
-						Error_handler.insert_error (vrle2);
-					elseif
-						context.feature_table.has (local_name)
-					then
-							-- The local name is a feature name of the
-							-- current analyzed class.
-						!!vrle1;
-						context.init_error (vrle1);
-						vrle1.set_feature_name (context.a_feature.feature_name);
-						vrle1.set_feature (context.feature_table.item (local_name));
-						Error_handler.insert_error (vrle1);
-					end;
-						-- Build the local table in the context
-					counter := counter + 1;
-					!!local_info;
-						-- Check an expanded local type
-					if 	solved_type.has_expanded then
-						if	solved_type.expanded_deferred then
-							!!vtec1;
-							vtec1.set_class_id (context_class.id);
-							vtec1.set_body_id (context.a_feature.body_id);
-							vtec1.set_type (solved_type);
-							vtec1.set_entity_name (local_name);
-							Error_handler.insert_error (vtec1);
-						elseif not solved_type.valid_expanded_creation then
-							!!vtec2;
-							vtec2.set_class_id (context_class.id);
-							vtec2.set_body_id (context.a_feature.body_id);
-							vtec2.set_type (solved_type);
-							vtec2.set_entity_name (local_name);
-							Error_handler.insert_error (vtec2);
+					from
+						id_list := locals.item.id_list;
+						local_type := locals.item.type;
+	
+							-- Compute actual type for local
+						Local_evaluator.set_local_name (id_list.first);
+						solved_type := Local_evaluator.evaluated_type
+							(local_type, context.feature_table, curr_feat);
+						check	
+								-- If anchored type cannot be evaluated, the
+								-- argument type evaluator will trigger an
+								-- exception
+							solved_type_exists: solved_type /= Void;
 						end;
-					end;
-						-- Check a generic local type
-					if not solved_type.good_generics then
-						!!vtug3;
-						vtug3.set_class_id (context_class.id);
-						vtug3.set_body_id (context.a_feature.body_id);
-						vtug3.set_entity_name (local_name);
-						vtug3.set_type (solved_type);
-						Error_handler.insert_error (vtug3);
-							-- Cannot go on here
-						Error_handler.raise_error;
-					end;
-						-- Check constraint genericity
-					solved_type.check_constraints (context.a_class);
-					if not Constraint_error_list.empty then
-						!!vtgg3;
-						vtgg3.set_class_id (context_class.id);
-						vtgg3.set_body_id (context.a_feature.body_id);
-						vtgg3.set_entity_name (local_name);
-						vtgg3.set_error_list
-							(deep_clone (Constraint_error_list));
-						Error_handler.insert_error (vtgg3);
-					end;
-
-					local_info.set_type (solved_type);
-					local_info.set_position (counter);
-					if context_locals.has (local_name) then
-							-- Error: two locals withe the same name
-						!!vreg2;
-						vreg2.set_local_name (local_name);
-						context.init_error (vreg2);
-						Error_handler.insert_error (vreg2);
-					else
-						context_locals.put (local_info, local_name);
-					end;
-						-- Update instantiator for changed class
-					if track_local then
-						gen_type ?= solved_type.actual_type;
-						if gen_type /= Void then
-							Instantiator.dispatch (gen_type, context_class);
+	
+						id_list.start;
+					until
+						id_list.offright
+					loop
+						local_name := id_list.item;
+						if 
+							curr_feat.has_argument_name (local_name)
+						then
+								-- The local name is an argument name of the
+								-- current analyzed feature
+							!!vrle2;
+							context.init_error (vrle2);
+							vrle2.set_local_name (local_name);
+							Error_handler.insert_error (vrle2);
+						elseif
+							context.feature_table.has (local_name)
+						then
+								-- The local name is a feature name of the
+								-- current analyzed class.
+							!!vrle1;
+							context.init_error (vrle1);
+							vrle1.set_local_name (local_name);
+							Error_handler.insert_error (vrle1);
 						end;
+							-- Build the local table in the context
+						counter := counter + 1;
+						!!local_info;
+							-- Check an expanded local type
+						if 	solved_type.has_expanded then
+							if	solved_type.expanded_deferred then
+								!!vtec1;
+								vtec1.set_class_id (context_class.id);
+								vtec1.set_body_id (curr_feat.body_id);
+								vtec1.set_type (solved_type);
+								vtec1.set_entity_name (local_name);
+								Error_handler.insert_error (vtec1);
+							elseif not solved_type.valid_expanded_creation then
+								!!vtec2;
+								vtec2.set_class_id (context_class.id);
+								vtec2.set_body_id (curr_feat.body_id);
+								vtec2.set_type (solved_type);
+								vtec2.set_entity_name (local_name);
+								Error_handler.insert_error (vtec2);
+							end;
+						end;
+							-- Check a generic local type
+						if not solved_type.good_generics then
+							!!vtug3;
+							vtug3.set_class_id (context_class.id);
+							vtug3.set_body_id (curr_feat.body_id);
+							vtug3.set_entity_name (local_name);
+							vtug3.set_type (solved_type);
+							Error_handler.insert_error (vtug3);
+								-- Cannot go on here
+							Error_handler.raise_error;
+						end;
+							-- Check constraint genericity
+						solved_type.check_constraints (context.a_class);
+						if not Constraint_error_list.empty then
+							!!vtgg3;
+							vtgg3.set_class_id (context_class.id);
+							vtgg3.set_body_id (curr_feat.body_id);
+							vtgg3.set_entity_name (local_name);
+							vtgg3.set_error_list
+								(deep_clone (Constraint_error_list));
+							Error_handler.insert_error (vtgg3);
+						end;
+	
+						local_info.set_type (solved_type);
+						local_info.set_position (counter);
+						if context_locals.has (local_name) then
+								-- Error: two locals withe the same name
+							!!vreg2;
+							vreg2.set_local_name (local_name);
+							context.init_error (vreg2);
+							Error_handler.insert_error (vreg2);
+						else
+							context_locals.put (local_info, local_name);
+						end;
+							-- Update instantiator for changed class
+						if track_local then
+							gen_type ?= solved_type.actual_type;
+							if gen_type /= Void then
+								Instantiator.dispatch (gen_type, context_class);
+							end;
+						end;
+						id_list.forth;
 					end;
-					id_list.forth;
+	
+					local_class_c := solved_type.associated_class;
+					if local_class_c /= Void then
+							-- Add the supplier in the feature_dependance list
+						context.supplier_ids.add_supplier (local_class_c);
+					end;
+	
+					if solved_type /= Void then
+						solved_type.check_for_obsolete_class (context_class)
+					end;
+					locals.forth;
 				end;
-
-				local_class_c := solved_type.associated_class;
-				if local_class_c /= Void then
-						-- Add the supplier in the feature_dependance list
-					context.supplier_ids.add_supplier (local_class_c);
-				end;
-
-				if solved_type /= Void then
-					solved_type.check_for_obsolete_class (context_class)
-				end;
-				locals.forth;
 			end;
 		end;
 
 	local_table (a_feature: FEATURE_I): EXTEND_TABLE [LOCAL_INFO, STRING] is
 			-- Local table for dead code removal
-		require
-			good_argument: a_feature /= Void;
 		local
 			feat_tbl: FEATURE_TABLE;
 			id_list: EIFFEL_LIST [ID_AS];
@@ -398,7 +408,7 @@ feature -- Type check, byte code and dead code removal
 					feat_tbl := a_feature.written_class.feature_table;
 					locals.start
 				until
-					locals.after
+					locals.offright
 				loop
 					from
 						local_type := locals.item.type;
@@ -515,13 +525,88 @@ feature -- Formatter
 				end;
 			end;
 			if rescue_clause /= void then
+				ctxt.put_keyword ("rescue");
+				ctxt.indent_one_more;
+				ctxt.next_line;
 				rescue_clause.format (ctxt);
+				ctxt.indent_one_less;
 				ctxt.next_line;
 			end;
 			if not ctxt.no_internals then
 				ctxt.put_keyword("end");
 			end;
 			ctxt.commit;
+		end;
+
+feature	-- Replication
+	
+	fill_calls_list (l: CALLS_LIST) is
+			-- find call to Current
+		do
+			if precondition /= void then
+				precondition.fill_calls_list (l);
+			end;
+			if locals /= void then
+				locals.fill_calls_list (l);
+				--| adapt the like
+			end;
+			routine_body.fill_calls_list (l);
+			if postcondition /= void then
+				postcondition.fill_calls_list (l)
+			end;
+			if rescue_clause /= void then
+				rescue_clause.fill_calls_list (l)
+			end
+		end;
+
+	replicate (ctxt: REP_CONTEXT): like Current is
+			-- adapt to replication
+		do
+			Result := twin;
+			if precondition /= void then
+				Result.set_precondition	(
+					precondition.replicate (ctxt))
+			end;
+			if locals /= void then
+				Result.set_locals (
+					locals.replicate (ctxt))
+			end;
+			Result.set_routine_body (routine_body.replicate (ctxt));
+			if postcondition /= void then
+				Result.set_postcondition (
+					postcondition.replicate (ctxt))
+			end;
+			if rescue_clause /= void then
+				Result.set_rescue_clause (
+					rescue_clause.replicate (ctxt))
+			end;
+		end;
+
+feature	{ROUTINE_AS}	-- Replication
+
+	set_precondition (p: like precondition) is
+		do
+			precondition := p
+		end;
+
+	set_locals (l: like locals) is
+		do
+			locals := l
+		end;
+
+	set_routine_body (r: like routine_body) is
+		do
+			routine_body := r
+		end;
+
+	set_postcondition (p: like postcondition) is
+		do
+			postcondition := p
+		end;
+
+	set_rescue_clause (r: like rescue_clause) is
+		do	
+			rescue_clause := r
 		end;
 
 end

@@ -61,7 +61,7 @@ feature -- Access
 		end
 
 	all_callers: IENUM_FEATURE_INTERFACE is
-			-- List of all feature callers, includding callers of ancestor and descendant versions.
+			-- List of all feature callers, including callers of ancestor and descendant versions.
 		do
 			-- Put Implementation here.
 		end

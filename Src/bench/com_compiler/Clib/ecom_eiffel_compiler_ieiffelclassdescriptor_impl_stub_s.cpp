@@ -309,6 +309,112 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::flat_featur
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::inherited_features(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features )
+
+/*-----------------------------------------------------------
+	List of class inherited features.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("inherited_features", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "inherited_features", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_55 (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*some_features = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::inherited_feature_count(  /* [out, retval] */ ULONG * return_value )
+
+/*-----------------------------------------------------------
+	Number of inherited features.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_INTEGER_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_integer_function ("inherited_feature_count", type_id);
+	EIF_INTEGER tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "inherited_feature_count", EIF_INTEGER);
+	*return_value = (ULONG)tmp_value;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::creation_routines(  /* [out, retval] */ ecom_eiffel_compiler::IEnumFeature * * some_features )
+
+/*-----------------------------------------------------------
+	List of class creation routines.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("creation_routines", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "creation_routines", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*some_features = grt_ec_ISE.ccom_ec_pointed_interface_55 (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*some_features = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::creation_routine_count(  /* [out, retval] */ ULONG * return_value )
+
+/*-----------------------------------------------------------
+	Number of creation routines.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_INTEGER_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_integer_function ("creation_routine_count", type_id);
+	EIF_INTEGER tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_INTEGER, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "creation_routine_count", EIF_INTEGER);
+	*return_value = (ULONG)tmp_value;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelClassDescriptor_impl_stub::clients(  /* [out, retval] */ ecom_eiffel_compiler::IEnumEiffelClass * * some_clients )
 
 /*-----------------------------------------------------------

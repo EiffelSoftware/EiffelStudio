@@ -717,6 +717,18 @@ interface IEiffelClassDescriptor: IUnknown
   [helpstring ("Number of flat class features.")]
   HRESULT flat_feature_count ([out, retval] ULONG * return_value);
 
+  [helpstring ("List of class inherited features.")]
+  HRESULT inherited_features ([out, retval] IEnumFeature ** some_features);
+
+  [helpstring ("Number of inherited features.")]
+  HRESULT inherited_feature_count ([out, retval] ULONG * return_value);
+
+  [helpstring ("List of class creation routines.")]
+  HRESULT creation_routines ([out, retval] IEnumFeature ** some_features);
+
+  [helpstring ("Number of creation routines.")]
+  HRESULT creation_routine_count ([out, retval] ULONG * return_value);
+
   [helpstring ("List of class clients.")]
   HRESULT clients ([out, retval] IEnumEiffelClass ** some_clients);
 
@@ -787,7 +799,7 @@ interface IEiffelFeatureDescriptor: IEiffelCompletionEntry
   HRESULT feature_location (  [in, out] BSTR * file_path,
                 [in, out] ULONG * line_number);
 
-  [helpstring ("List of all feature callers, includding callers of ancestor and descendant versions.")]
+  [helpstring ("List of all feature callers, including callers of ancestor and descendant versions.")]
   HRESULT all_callers ([out, retval] IEnumFeature ** some_callers);
 
   [helpstring ("Number of all callers.")]

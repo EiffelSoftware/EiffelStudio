@@ -74,7 +74,7 @@ feature -- Access
 		end
 
 	all_callers: IENUM_FEATURE_INTERFACE is
-			-- List of all feature callers, includding callers of ancestor and descendant versions.
+			-- List of all feature callers, including callers of ancestor and descendant versions.
 		do
 			Result := ccom_all_callers (initializer)
 		end
@@ -323,7 +323,7 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_all_callers (cpp_obj: POINTER): IENUM_FEATURE_INTERFACE is
-			-- List of all feature callers, includding callers of ancestor and descendant versions.
+			-- List of all feature callers, including callers of ancestor and descendant versions.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end

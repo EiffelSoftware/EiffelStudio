@@ -1,0 +1,40 @@
+/*
+ *  @(#)presidency.odl	1.1 06/22/98
+ *
+ * Copyright (c) 1998 ADB. All Rights Reserved.
+ *
+ *	
+ * Persistent Data Model for Query Example	
+ *	
+ *	
+ */
+
+interface PERSON : persistent
+{
+   attribute String last_name mt_make_entry "make-full-text-entry";
+   attribute Char middle_initial = '\0';
+   attribute String first_name mt_make_entry "make-entry";
+
+   relationship Set<PERSON> spouse [0, 1]
+	inverse PERSON::spouse;
+
+   relationship Set<PRESIDENCY> is_in_charge_of
+	inverse PRESIDENCY::is_served_by;
+
+   mt_index PersonFullName criteria 
+	{PERSON::last_name MT_ASCEND 16},
+        {PERSON::first_name MT_ASCEND 16},
+	{PERSON::middle_initial MT_ASCEND};
+};
+
+
+interface PRESIDENCY : persistent
+{
+   attribute Long number mt_make_entry "make-entry";
+   attribute Long starting_year;
+   attribute Long ending_year;
+
+   relationship PERSON is_served_by
+	inverse PERSON::is_in_charge_of;
+
+};

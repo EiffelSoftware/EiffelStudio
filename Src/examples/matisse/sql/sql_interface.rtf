@@ -1,0 +1,168 @@
+{\rtf1\ansi \deff4\deflang1033{\fonttbl{\f4\froman\fcharset0\fprq2 Times New Roman;}{\f8\froman\fcharset0\fprq2 Times;}{\f13\fswiss\fcharset0\fprq2 Geneva{\*\falt Arial};}}{\colortbl;\red0\green0\blue0;\red0\green0\blue255;
+\red0\green255\blue255;\red0\green255\blue0;\red255\green0\blue255;\red255\green0\blue0;\red255\green255\blue0;\red255\green255\blue255;\red0\green0\blue128;\red0\green128\blue128;\red0\green128\blue0;\red128\green0\blue128;\red128\green0\blue0;
+\red128\green128\blue0;\red128\green128\blue128;\red192\green192\blue192;}{\stylesheet{\qj\fi360\sa140\widctlpar \f4\fs22 \snext0 Normal;}{\s3\qj\fi360\sb240\sa60\keepn\widctlpar \b\f8 \sbasedon0\snext0 heading 3;}{\*\cs10 \additive 
+Default Paragraph Font;}{\s15\qj\fi360\sa140\widctlpar\tqc\tx4320\tqr\tx8640 \f4\fs22 \sbasedon0\snext15 header;}{\s16\sb120\sa120\widctlpar \b\f8\fs36\cf1\lang1024 \snext16 section;}{\s17\sb120\sa120\widctlpar \b\f8\fs28\cf1\lang1024 \snext17 
+sub-section;}{\s18\fi-720\li720\widctlpar \f13\fs18\cf1\lang1024 \snext18 ODL;}{\s19\li360\widctlpar\tx900\tx1440\tx1980\tx2520\tx3060\tx3600 \i\f8\fs20\lang1024 \snext19 Eiffel code;}{\s20\qj\fi360\sa140\widctlpar \i\f4\fs22\cf1 \sbasedon0\snext20 
+Implement Issue;}{\s21\qj\fi360\sa140\widctlpar\tqc\tx4320\tqr\tx8640 \f4\fs22 \sbasedon0\snext21 footer;}{\*\cs22 \additive\sbasedon10 page number;}{\s23\li360\sl-160\slmult0\widctlpar\tx720\tx1152\tx1584\tx2016\tx2448\tx2880\tx3312\tx3744 
+\i\f8\fs18\lang1024 \sbasedon19\snext23 Eiffel code in Appendix;}{\s24\qj\fi720\widctlpar \b\f8\fs20\cf1 \sbasedon0\snext24 Table of contents;}{\s25\qj\fi-1350\li1710\sa140\widctlpar\tx1710 \f4\fs22 \sbasedon0\snext25 command;}{\s26\sb120\sa120\widctlpar 
+\b\f8\cf1\lang1024 \sbasedon17\snext26 sub-sub-section;}}{\info{\title Mechanism of storing and retrieving objects between MATISSE and Eiffel}{\author Microsoft}{\operator Jeri Edwards}{\creatim\yr1998\mo10\dy23\hr17\min39}
+{\revtim\yr1998\mo10\dy23\hr17\min34}{\version2}{\edmins2}{\nofpages4}{\nofwords608}{\nofchars3470}{\*\company ADB, Inc.}{\vern57431}}\widowctrl\ftnbj\aenddoc\hyphcaps0\formshade \fet0\sectd 
+\pgnrestart\linex0\headery709\footery709\colsx709\endnhere\titlepg {\header \pard\plain \s15\qr\fi360\sa140\widctlpar\tqc\tx4320\tqr\tx8640 \f4\fs22 {\i\fs16\ul MATISSE-Eiffel Binding}
+\par }{\footer \pard\plain \s21\qj\fi360\sa140\widctlpar\tqc\tx4320\tqr\tx8640\pvpara\phmrg\posxc\posy0 \f4\fs22 {\field{\*\fldinst {\cs22 PAGE  }}{\fldrslt {\cs22\lang1024 4}}}{\cs22 
+\par }\pard \s21\qc\fi360\ri360\sa140\widctlpar\tqc\tx4320\tqr\tx8640 
+\par }{\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl2\pnucltr\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl3\pndec\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang{\pntxta )}}{\*\pnseclvl5
+\pndec\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl6\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl7\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl8\pnlcltr\pnstart1\pnindent720\pnhang
+{\pntxtb (}{\pntxta )}}{\*\pnseclvl9\pnlcrm\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}\pard\plain \s16\sb120\sa120\widctlpar \b\f8\fs36\cf1\lang1024 {\f4 
+\par }{\f4\fs40 Using SQL in MATISSE-Eiffel Binding}{\f13\fs20 
+\par }\pard\plain \qr\fi360\sa140\widctlpar \f4\fs22 {\f13\fs20\cf1 
+\par }\pard \fi360\sa140\widctlpar {\f13\fs20\cf1 
+\par }\pard\plain \s17\sb120\sa120\widctlpar \b\f8\fs28\cf1\lang1024 1st Edition - August 1998{\fs20 
+\par }\pard\plain \fi360\sa140\widctlpar \f4\fs22 {\f13\fs20\cf1 
+\par 
+\par 
+\par 
+\par 
+\par }\pard \qj\fi360\widctlpar {\fs18 Contact: nakao@matisse.com
+\par }\pard \fi360\sa140\widctlpar {\fs18\cchs256 \'a9}{\fs18  1998 Tokyo Gas Co., Ltd.}{\f13\fs20\cf1 
+\par \page 
+\par }\pard \qj\fi360\sa140\widctlpar This note shows how to use MATISSE SQL through the MATISSE-Eiffel Binding.
+\par 
+\par The two classes, MT_SQL_STATEMENT and MT_SQL_RESULT_SET, provide interface to execute a SQL statement and obtain the results.
+\par 
+\par \pard\plain \s26\sb120\sa120\widctlpar \b\f8\cf1\lang1024 MT_SQL_STATEMENT
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 This class allows to execute a SQL statement and to obtain the {\f8\fs20 results produced by the statement. You call the function }{\i\f8\fs20 execute_query}{\f8\fs20 
+ with an argument which is a SQL statement as shown in the following example.
+\par 
+\par }\pard\plain \s19\li360\widctlpar\tx900\tx1440\tx1980\tx2520\tx3060\tx3600 \i\f8\fs20\lang1024 local
+\par \tab sql_statement: MT_SQL_STATEMENT
+\par \tab sql_result: MT_SQL_RESULT_SET
+\par do
+\par \tab !!sql_statement.make
+\par \tab sql_result := sql_statement.execute_query(\ldblquote SELECT * FROM PRESIDENCY WHERE number = 1\rdblquote )
+\par \tab ...
+\par end
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 {\f8\fs20 
+\par }\pard\plain \s26\sb120\sa120\widctlpar \b\f8\cf1\lang1024 MT_SQL_RESULT_SET
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 {\f8\fs20 This class provides access to the set of objects generated by a SQL statement execution. 
+It maintains a cursor to its current object. The next example shows how to access the U.S. presidents who served for consecutive 8 years.
+\par 
+\par }\pard\plain \s19\li360\widctlpar\tx900\tx1440\tx1980\tx2520\tx3060\tx3600 \i\f8\fs20\lang1024 local
+\par \tab sql_statement: MT_SQL_STATEMENT
+\par \tab sql_result: MT_SQL_RESULT_SET
+\par \tab a_president: PERSON
+\par do
+\par \tab !!sql_statement.make
+\par \tab sql_result := sql_statement.execute_query(\ldblquote SELECT is_served_by FROM PRESIDENCY WHERE ending_year - starting_year = 8\rdblquote )
+\par \tab from
+\par \tab \tab sql_result.start
+\par \tab until
+\par \tab \tab sql_result.exhausted
+\par \tab loop
+\par \tab \tab a_president?= sql_result.item
+\par \tab \tab ... -- do something on a_president
+\par \tab \tab sql_result.forth
+\par \tab end
+\par \tab sql_result.close
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 {\f8\fs20 
+\par }\pard\plain \s26\sb120\sa120\widctlpar \b\f8\cf1\lang1024 Features of class MT_SQL_RESULT_SET
+\par \pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 The following is an extraction of the \ldblquote short\rdblquote  form of the class MT_SQL_RESULT_SET.
+\par \pard\plain \s19\li360\widctlpar\tx900\tx1440\tx1980\tx2520\tx3060\tx3600 \i\f8\fs20\lang1024 feature -- Initialization
+\par \tab make_from_selection (a_selection_name: STRING)
+\par \tab \tab \tab {\i0 -- This initializes the SQL result from a valid named selection}.
+\par \tab \tab \tab {\i0 -- A selection result of a SELECT statement can be named with the
+\par \tab \tab \tab -- keyword INTO.}
+\par 
+\par feature -- Accessing
+\par \tab item: MT_STORABLE
+\par \tab \tab \tab {\i0 -- This function returns the current object available through the
+\par \tab \tab \tab -- SQL result selection.
+\par \tab \tab \tab -- Was declared in MT_SQL_RESULT_SET as synonym of `item' and `object'.}
+\par \tab \tab require
+\par \tab \tab \tab not_off: not off
+\par 
+\par \tab selection_name: STRING
+\par \tab \tab \tab {\i0 -- This returns the name of the SQL result selection.
+\par \tab \tab \tab -- If it is not named, an mepty string is returned.
+\par 
+\par }feature -- Cursor movement
+\par \tab start
+\par \tab \tab \tab {\i0 -- This procedure initializes the internal selection stream to access
+\par \tab \tab \tab -- the objects available through the SQL result selection.
+\par }
+\par \tab forth
+\par \tab \tab \tab {\i0 -- This procedure moves current cursor to the next object
+\par \tab \tab \tab -- available through the SQL result selection.}
+\par \tab \tab require
+\par \tab \tab \tab not_off: not off
+\par {\i0 
+\par }feature -- Status\tab 
+\par \tab close
+\par \tab \tab \tab {\i0 -- This procedure closes the SQL result selection if it is not named.
+\par \tab \tab \tab -- The closed SQL result selection cannot be used anymore.}
+\par \tab \tab require
+\par \tab \tab \tab started: started
+\par 
+\par \tab free_selection
+\par \tab \tab \tab {\i0 -- This procedure frees a named selection result. When it has been
+\par \tab \tab \tab -- called, you cannnot anymore access the selection with a new
+\par \tab \tab \tab -- MT_SQL_RESULT_SET.
+\par \tab \tab \tab -- A named selection can be created with the keyword INTO in a
+\par \tab \tab \tab -- SELECT statement.}
+\par \tab \tab require
+\par \tab \tab \tab stream_closed: not started
+\par 
+\par feature -- Status report
+\par \tab off: BOOLEAN
+\par \tab \tab \tab {\i0 -- Is there no current object?}
+\par 
+\par \tab exhausted: BOOLEAN
+\par \tab \tab \tab {\i0 -- This function tests whether or not the end of the cursor
+\par \tab \tab \tab -- has been reached.}
+\par \tab \tab require
+\par \tab \tab \tab started: started
+\par 
+\par \tab started: BOOLEAN
+\par \tab \tab \tab {\i0 -- Is a stream on the reuslt set open and is the stream started?}
+\par 
+\par feature -- Measurement
+\par 
+\par \tab count: INTEGER
+\par \tab \tab \tab {\i0 --} {\i0 This function returns the number of objects contained in the
+\par \tab \tab \tab -- SQL result selection.
+\par }\tab 
+\par end -- class MT_SQL_RESULT_SET
+\par \pard\plain \fi360\sa140\widctlpar \f4\fs22 {\f13\fs20\cf1 
+\par 
+\par 
+\par }\pard\plain \s26\sb120\sa120\widctlpar \b\f8\cf1\lang1024 Appendix  - ODL definition for example code
+\par \pard\plain \s18\fi-720\li720\widctlpar \f13\fs18\cf1\lang1024 interface PERSON : persistent
+\par \{
+\par    attribute String last_name mt_make_entry "make-full-text-entry";
+\par    attribute Char middle_initial = '\\0';
+\par    attribute String first_name mt_make_entry "make-entry";
+\par 
+\par    relationship Set<PERSON> spouse [0, 1]
+\par \tab inverse PERSON::spouse;
+\par 
+\par    relationship Set<PRESIDENCY> is_in_charge_of
+\par \tab inverse PRESIDENCY::is_served_by;
+\par 
+\par    mt_index PersonFullName criteria 
+\par \tab \{PERSON::last_name MT_ASCEND 16\},
+\par         \{PERSON::first_name MT_ASCEND 16\},
+\par \tab \{PERSON::middle_initial MT_ASCEND\};
+\par \};
+\par 
+\par 
+\par interface PRESIDENCY : persistent
+\par \{
+\par    attribute Long number mt_make_entry "make-entry";
+\par    attribute Long starting_year;
+\par    attribute Long ending_year;
+\par 
+\par    relationship PERSON is_served_by
+\par \tab inverse PERSON::is_in_charge_of;
+\par 
+\par \};{\fs20 
+\par }\pard\plain \qj\fi360\sa140\widctlpar \f4\fs22 
+\par }

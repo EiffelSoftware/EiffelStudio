@@ -1922,9 +1922,10 @@ feature {NONE} -- Once per modules being generated.
 				-- Define `ise_check_invariant_token'.
 			l_meth_sig.reset
 			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
-			l_meth_sig.set_parameter_count (1)
+			l_meth_sig.set_parameter_count (2)
 			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0) 
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0) 
 			ise_check_invariant_token := md_emit.define_member_ref (
 				create {UNI_STRING}.make ("check_invariant"), ise_runtime_type_token, l_meth_sig)
 

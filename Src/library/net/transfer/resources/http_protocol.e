@@ -6,8 +6,9 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class HTTP_PROTOCOL inherit
+class HTTP_PROTOCOL 
 
+inherit
 	NETWORK_RESOURCE
 		redefine
 			is_writable, location
@@ -131,10 +132,18 @@ feature -- Status setting
 			end
 			str.extend (' ')
 			str.append (Http_version)
+			str.append (Http_end_of_header_line)
+	
+			str.append (Http_host_header + ": " + address.host + ":" + address.port.out)
+			if not address.username.is_empty then
+				str.append (Http_end_of_header_line)
+				str.append (Http_Authorization_header + ": Basic " 
+						+ base64_encoded (address.username + ":" + address.password))
+			end
 			str.append (Http_end_of_command)
 			if not error then
 				main_socket.put_string (str)
-					debug
+					debug ("eiffelnet")
 						Io.error.put_string (str)
 					end
 				get_headers
@@ -188,11 +197,13 @@ feature {NONE} -- Implementation
 				if not error then
 					main_socket.read_line
 					str := main_socket.last_string.twin
-						debug
+						debug ("eiffelnet")
 							Io.error.put_string (str)
 							Io.error.put_new_line
 						end
-					if not str.is_empty then headers.extend (str) end
+					if not str.is_empty then 
+						headers.extend (str) 
+					end
 				end
 			end
 			check_error
@@ -248,6 +259,65 @@ feature {NONE} -- Implementation
 					headers.forth
 				end
 			end
+		end
+
+feature {NONE} -- Encoder Implementation
+
+	base64_encoded (s: STRING): STRING is
+			-- base64 encoded value of `s'.
+		local
+			l1: ARRAY [INTEGER]
+			i : INTEGER
+			c: INTEGER
+			f, w: STRING
+			ch: CHARACTER
+			chars: STRING
+		do
+			chars := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-"
+			create l1.make (1, s.count)
+			from
+				f := ""
+				i := l1.lower
+			until
+				i > l1.upper
+			loop
+				c := s.item (i).code
+				w := ""
+				l1.put (c, i)
+				if c.bit_test (7) then w.extend ('1') else w.extend ('0') end
+				if c.bit_test (6) then w.extend ('1') else w.extend ('0') end
+				if c.bit_test (5) then w.extend ('1') else w.extend ('0') end
+				if c.bit_test (4) then w.extend ('1') else w.extend ('0') end
+				if c.bit_test (3) then w.extend ('1') else w.extend ('0') end
+				if c.bit_test (2) then w.extend ('1') else w.extend ('0') end
+				if c.bit_test (1) then w.extend ('1') else w.extend ('0') end
+				if c.bit_test (0) then w.extend ('1') else w.extend ('0') end
+				f.append (w)
+				i := i + 1
+			end
+			from
+				i := f.count \\ 6
+				if i /= 0 then
+					f.append (("000000").substring (1, 6 - i))
+				end
+				i := 1
+				Result := ""
+			until
+				i > f.count
+			loop
+				c := 0
+				if f.item (i + 0).is_equal ('1') then c := c + 0x20 end
+				if f.item (i + 1).is_equal ('1') then c := c + 0x10 end
+				if f.item (i + 2).is_equal ('1') then c := c + 0x8 end
+				if f.item (i + 3).is_equal ('1') then c := c + 0x4 end
+				if f.item (i + 4).is_equal ('1') then c := c + 0x2 end
+				if f.item (i + 5).is_equal ('1') then c := c + 0x1 end
+				ch := chars.item (c + 1)
+				Result.extend (ch)
+				i := i + 6
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 invariant

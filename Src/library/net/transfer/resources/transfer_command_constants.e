@@ -32,6 +32,12 @@ feature {NONE} -- Constants for HTTP
 	Http_get_command: STRING is "GET"
 
 	Http_version: STRING is "HTTP/1.0"
+	
+	Http_host_header: STRING is "Host"
+	
+	Http_Authorization_header: STRING is "Authorization"
+
+	Http_end_of_header_line: STRING is "%R%N"
 
 	Http_end_of_command: STRING is "%R%N%R%N"
 

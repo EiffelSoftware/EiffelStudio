@@ -807,14 +807,14 @@ feature -- Element change
 	has_system_window_locked: BOOLEAN is
 			-- Is there any window locked ?
 		local
-			b: BOOLEAN
+			c_result: BOOLEAN
 		do
 			Result := not c_lock_window_update (item)
 			if not Result then
-					b := c_lock_window_update (default_pointer)
-					check
-						success:b
-					end
+				c_result := c_lock_window_update (default_pointer)
+				check
+					success: c_result
+				end
 			end
 		end
 		
@@ -828,9 +828,6 @@ feature -- Element change
 			success : BOOLEAN
 		do
 			success := c_lock_window_update (item)
-			check
-				-- success: success
-			end
 		ensure
 			has_system_window_locked
 		end
@@ -843,9 +840,6 @@ feature -- Element change
 			success : BOOLEAN
 		do
 			success := c_lock_window_update (default_pointer)
-			check
-				-- success: success
-			end
 		end
 
 feature -- Basic operations

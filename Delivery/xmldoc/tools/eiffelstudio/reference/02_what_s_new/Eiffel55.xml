@@ -9,6 +9,10 @@
 				<item>Added full configuration of colors used in editor</item>
 				<item>Added docking facilities for various tools. It permits the re-ordering of tools within the interface, including making them "float" externally.</item>
 			</list>
+			<heading><size>3</size>Bug fixes</heading>
+			<list ordered="false">
+				<item>Fixed a crash when performing feature completion on classes with errors.</item>
+			</list>
 		<heading><size>2</size>Debugger</heading>
 			<list ordered="false">
 				<item>Enabled conditional breakpoing and expression evaluation for .NET</item>
@@ -21,7 +25,7 @@
 			<item>Click <link><url>../30_compiler/60_version_history/05_55_release/index.xml</url><label>here</label></link> for the compiler release notes.</item>
 		</list>
 		<heading><size>2</size>Libraries</heading>
-		<heading><size>2</size>CECIL</heading>
+		<heading><size>3</size>CECIL</heading>
 		<list ordered="false">
 			<item>Added ability to query type of a generic class where an actual generic parameter is expanded although its base class is not. It suffices to prefix the class name with "expanded ". Reciprocally, you can use the reference version of an expanded class by prefixing with "reference ".</item>
 		</list>
@@ -30,6 +34,23 @@
 			<item>Removed <code><feature_name>consistent</feature_name></code> and <code><feature_name>setup</feature_name></code> from <code><class_name>ANY</class_name></code></item>
 			<item>Removed <code><feature_name>Void</feature_name></code> from <code><class_name>ANY</class_name></code> as <code><keyword>Void</keyword></code> is now a keyword.</item>
 			<item>Added <feature_name>for_all</feature_name>, <feature_name>do_all</feature_name>, <feature_name>do_if</feature_name> and <feature_name>there_exists</feature_name> to <class_name>ARRAY</class_name>. As a consequence descendants of <class_name>ARRAY</class_name> which also inherit from <class_name>LINEAR</class_name> have to select the proper version of those routines as they also appear in <class_name>LINEAR</class_name>.</item>
+		</list>
+		<heading><size>3</size>EiffelTime</heading>
+		<list ordered="false">
+			<item>Fixed incorrect display of the short year format when using the following code:<code_block>l_date: <class_name>DATE_TIME</class_name>
+...
+<keyword>create</keyword> l_date.<feature_name>make_now</feature_name>
+<feature_name>print</feature_name> (l_date.<feature_name>formatted_out</feature_name> ("[0]mm/[0]dd/yy"))
+</code_block>
+			</item>
+		</list>
+		<heading><size>3</size>EiffelThread</heading>
+		<list ordered="false">
+			<item>Added a new C routine <feature_name>eif_thread_fork</feature_name> for Unix based system for users who would like to use a forking mechanism in a multithreaded system, as the default version of <feature_name>fork</feature_name> will most likely causes some deadlock.</item>
+		</list>
+		<heading><size>3</size>EiffelVision2</heading>
+		<list ordered="false">
+			<item><link><label>Click here for EiffelVision2 release notes.</label><url>../../../../libraries/vision2/content/0-_revisions/index.xml</url></link></item>
 		</list>
 	</paragraph>
 </document>

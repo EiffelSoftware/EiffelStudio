@@ -62,42 +62,12 @@ feature {NONE} -- Implementation
 
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
-		local
-			v_imp: EV_ANY_IMP
-		do
-			v_imp ?= v.implementation
-			check
-				v_imp_not_void: v_imp /= Void
-			end
-			C.gtk_container_add (list_widget, v_imp.c_object)
-			if i <= count then
-				gtk_reorder_child (list_widget, v_imp.c_object, i - 1)
-			end
-		--	new_item_actions.call ([v])
+		deferred
 		end
 
 	remove_i_th (i: INTEGER) is
 			-- Remove item at `i'-th position.
-		local
-			p: POINTER
-			v_imp: EV_WIDGET_IMP
-		do
-			p := C.g_list_nth_data (
-				C.gtk_container_children (list_widget),
-				i - 1)
-			v_imp ?= eif_object_from_c (p)
-			check
-				v_imp_not_void: v_imp /= Void
-			end
-		--	remove_item_actions.call ([v_imp.interface])
-			--| FIXME VB To be checked by Sam.
-			--| ref comes from item list and not in widget list?
-			--| Is it necessary?
-			C.gtk_widget_ref (p)
-			C.gtk_container_remove (list_widget, p)
-			C.set_gtk_widget_struct_parent (p, Default_pointer)
-			--v_imp.set_parent_imp (Void)
-			C.gtk_widget_unref (p)
+		deferred
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -112,6 +82,18 @@ feature {EV_ANY_I} -- Implementation
 			-- GtkWidget that holds the list.
 		do
 			Result := c_object
+		end
+
+feature -- Event handling
+
+	new_item_actions: ACTION_SEQUENCE [TUPLE [G]] is
+			-- Actions to be performed after an item is added.
+		deferred
+		end
+			
+	remove_item_actions: ACTION_SEQUENCE [TUPLE [G]] is
+			-- Actions to be performed before an item is removed.
+		deferred
 		end
 
 feature {NONE} -- Implementation
@@ -147,6 +129,9 @@ end -- class EV_DYNAMIC_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/05/02 17:30:52  king
+--| Made *_i_th deferred, added deferred *_item_actions
+--|
 --| Revision 1.6  2000/04/12 18:51:59  oconnor
 --| formatting
 --|

@@ -2,13 +2,15 @@
  * Jmakefile for shared files
  */
 
+#include "../../U/runtime.H"
+
+>JMTCFLAGS
+
 /* We build a libshared.a archive for shared routines needed by both the
  * daemon and the client.
  */
 
-LIBRUN = ../../run-time
-LIBIDR = ../../idrs
-DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBIDR)
+DPFLAGS = -I$(TOP) -I$(TOP)/run-time -I$(TOP)/idrs -I$(TOP)/run-time/include
 CFLAGS = $(DPFLAGS) -DWORKBENCH
 
 LSRC = com.c identify.c lock.c logfile.c network.c select.c shword.c stack.c \
@@ -20,6 +22,22 @@ LOBJ = \
 	!f:\.c=.o \
 -expand \\
 
-NormalLibraryTarget(ipc,$(LSRC),$(LOBJ))
+MT_LOBJ = \
+|expand f!$(LSRC)!
+	MT!f:\.c=.o \
+-expand \\
+
+|expand f!$(LSRC)!
+MT!f:\.c=.o: !f
+        $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+-expand
+
+NormalObjectRule()
+AddSource($(LSRC))
+
+CustomLibraryTarget(ipc,$(LOBJ))
+CustomLibraryTarget(mtipc,$(MT_LOBJ))
+
 DependTarget()
 LintTarget()

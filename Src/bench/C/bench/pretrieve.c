@@ -19,8 +19,10 @@
 #include "eif_error.h"
 #include "eif_globals.h"
 
-#ifdef EIF_OS2
+#ifdef EIF_WIN32
 #include <io.h>
+#else
+#include "unistd.h"
 #endif
 
 char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)

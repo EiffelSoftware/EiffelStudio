@@ -8,20 +8,15 @@ indexing
 	
 class
 	EV_WINDOW_IMP
-	
+
 inherit
 	EV_WINDOW_I
-		rename
-			expandable as never_displayed
 		redefine
 			set_expand
 		end
 					
 	EV_CONTAINER_IMP
-		rename
-			expandable as never_displayed
 		export
-			{NONE} never_displayed
 			{NONE} set_expand
 		undefine
 			set_width,
@@ -61,12 +56,12 @@ inherit
 			on_char,
 			on_key_up,
 			on_menu_command,
+			background_brush,
 			on_draw_item
 		redefine
 			set_menu,
 			default_style,
 			default_ex_style,
-			background_brush,
 			on_size,
 			on_get_min_max_info,
 			on_destroy,
@@ -111,12 +106,18 @@ feature {EV_WINDOW} -- Initialization
 
 	plateform_build (par: EV_CONTAINER_I) is
 			-- Initialize few variables
+			-- We create `child_cell' and `initialize_list'
+			-- because a window doesn't use widget_make.
+			-- We reset the variable already_displayed to
+			-- False, because it is different for a window.
 		do
 			{EV_CONTAINER_IMP} Precursor (par)
+			!! child_cell
+			initialize_list (command_count)
 			resize_type := 3
 			set_maximum_width (system_metrics.screen_width)
 			set_maximum_height (system_metrics.screen_height)
-			never_displayed := True
+			already_displayed := False
 		end
 		
 feature  -- Access
@@ -217,18 +218,34 @@ feature -- Status setting
 
 	forbid_resize is
 			-- Forbid the resize of the window.
+		local
+			new_style: INTEGER
 		do
-			resize_type := 0
---			max_track.set_x_y (width, height)
---			min_track.set_x_y (width, height)
+			if shown then
+				new_style := style
+				new_style := clear_flag (new_style, Ws_maximizebox)
+				new_style := clear_flag (new_style, Ws_minimizebox)
+				new_style := clear_flag (new_style, Ws_sizebox)
+				set_style (new_style)
+				hide
+				show
+			end
 		end
 
 	allow_resize is
 			-- Allow the resize of the window.
+		local
+			new_style: INTEGER
 		do
-			resize_type := 3
---			min_track.set_x_y (minimum_width, minimum_height)
---			max_track.set_x_y (maximum_width, maximum_height)
+			if shown then
+				new_style := style
+				new_style := set_flag (new_style, Ws_maximizebox)
+				new_style := set_flag (new_style, Ws_minimizebox)
+				new_style := set_flag (new_style, Ws_sizebox)
+				set_style (new_style)
+				hide
+				show
+			end
 		end
 
 	set_iconic_state is
@@ -275,31 +292,49 @@ feature -- Element change
 
 	set_minimum_width (value: INTEGER) is
 			-- Make `value' the new `minimum_width'.
-			-- Must be bigger than the mswin minimum, or it does nothing
+			-- If the Current size is smaller, the size
+			-- change.
 		do
-			minimum_width := value --.max (system_metrics.window_minimum_width)
+			minimum_width := value 
+			if value > width then
+				resize (value, height)
+			end
 --			min_track.set_x (value)
 		end
 
 	set_minimum_height (value: INTEGER) is
 			-- Make `value' the new `minimum_height'.
-			-- Must be bigger than the mswin minimum
+			-- If the Current size is smaller, the size
+			-- change.
 		do
-			minimum_height := value --.max (system_metrics.window_minimum_height)
+			minimum_height := value
+			if value > height then
+				resize (width, value)
+			end
 --			min_track.set_y (value)
 		end
 
 	set_maximum_width (value: INTEGER) is
 			-- Make `value' the new maximum width.
+			-- If the Current size is larger, the size
+			-- change.
 		do
 			maximum_width := value
+			if value < width then
+				resize (value, height)
+			end
 --			max_track.set_x (value)
 		end
 
 	set_maximum_height (value: INTEGER) is
 			-- Make `value' the new maximum height.
+			-- If the Current size is larger, the size
+			-- change.
 		do
 			maximum_height := value
+			if value < height then
+				resize (width, value)
+			end
 --			max_track.set_y (value)
 		end
 
@@ -381,9 +416,6 @@ feature {EV_WIDGET_IMP} -- Implementation
 			-- resize of the child
 		do
 			set_minimum_width (value + 2*system_metrics.window_frame_width)
-			if minimum_width > width then
-				set_size (minimum_width, height)
-			end
 		end
 
 	child_minheight_changed (value: INTEGER; the_child: EV_WIDGET_IMP) is
@@ -398,19 +430,6 @@ feature {EV_WIDGET_IMP} -- Implementation
 				set_minimum_height (value + system_metrics.title_bar_height
 					+ system_metrics.window_border_height 
 					+ 2 * system_metrics.window_frame_height)
-			end
-			if minimum_height > height then
-				set_size (width, minimum_height)
-			end
-		end
-
-	parent_ask_resize (new_width, new_height: INTEGER) is
-			-- When the parent asks the resize, it's not 
-			-- necessary to send him back the information
-		do
-			{EV_CONTAINER_IMP} Precursor (new_width, new_height)
-			if child /= Void then
-				child.parent_ask_resize (client_width, client_height)
 			end
 		end
 
@@ -444,33 +463,23 @@ feature {NONE} -- Implementation
 					+ Ws_ex_ltrreading
 		end
 
-	background_brush: WEL_BRUSH is
-			-- Current window background color used to refresh the window when
-			-- requested by the WM_ERASEBKGND windows message.
-			-- By default there is no background
-		do
-			if background_color /= Void then
-				!! Result.make_solid (background_color_imp)
-			end
-		end
-
 	on_show is
 			-- When the window receive the on_show message,
 			-- it resizes the window at the size of the child.
 			-- And it send the message to the child because wel
 			-- don't
 		do
-			if child /= Void and never_displayed then
+			if child /= Void and not already_displayed then
 				child.on_first_display
-				set_size (child.width + 2*system_metrics.window_frame_width,
-							child.height + system_metrics.title_bar_height
-							+ system_metrics.window_border_height 
-							+ 2 * system_metrics.window_frame_height)
+				set_size (child.minimum_width + 2*system_metrics.window_frame_width,
+					child.minimum_height + system_metrics.title_bar_height
+					+ system_metrics.window_border_height 
+					+ 2 * system_metrics.window_frame_height)
 			end
 			if has_menu then
 				draw_menu
 			end
-			never_displayed := False
+			already_displayed := True
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
@@ -478,7 +487,7 @@ feature {NONE} -- Implementation
 			-- Resize the child if it exists.
 		do
 			execute_command (Cmd_size, Void)
-			if shown and then child /= Void then
+			if child /= Void then
 				child.parent_ask_resize (client_width, client_height)
 			end
 		end
@@ -540,8 +549,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
-
 feature {EV_STATIC_MENU_BAR_IMP} -- implementation
 
 	set_menu (a_menu: WEL_MENU) is
@@ -572,6 +579,13 @@ feature {NONE} -- Inapplicable
 			check
 				Inapplicable: False
 			end
+		end
+
+	parent_ask_resize (a_width, a_height: INTEGER) is
+			-- When the parent asks the resize, it's not
+			-- necessary to send him back the information
+			-- Do nothing for a window
+		do
 		end
 
 end -- class EV_WINDOW_IMP

@@ -1,7 +1,7 @@
 indexing
-	description	: "Tool to view features for current edited class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	description: "Tool to view features for current edited class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_FEATURES_TOOL
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 	build_interface is
 			-- Build all the tool's widgets.
 		do
-			create tree.make (Current, true)
+			create tree.make (Current, True)
 			create widget
 			widget.set_background_color ((create {EV_STOCK_COLORS}).White)
 			widget.extend (tree)
@@ -79,13 +79,13 @@ feature -- Access
 	title: STRING is
 			-- Title of the tool
 		do
-			Result := Interface_names.t_Features_tool
+			Result := Interface_names.t_features_tool
 		end
 
 	menu_name: STRING is
 			-- Name as it may appear in a menu.
 		do
-			Result := Interface_names.m_Features_tool
+			Result := Interface_names.m_features_tool
 		end
 
 	pixmap: ARRAY [EV_PIXMAP] is
@@ -162,11 +162,17 @@ feature -- Element change
 							end
 							Eiffel_system.System.set_current_class (Void)
 							widget.extend (tree)
+							if not tree.is_empty then
+								tree.ensure_item_visible (tree.first)
+							end
 						end
 					elseif classc_stone.class_i.is_external_class then
-							-- Special processing for a .NET type since has no 'ast' in the normal sense.
+							-- Special processing for a .NET type since has no 'ast' in the normal
+							-- sense.
 						external_classc ?= classc_stone.e_class
-						if external_classc /= current_compiled_class and external_classc /= Void then
+						if
+							external_classc /= current_compiled_class and external_classc /= Void
+						then
 							Eiffel_system.System.set_current_class (classc_stone.e_class)
 									-- Build the tree
 							if tree.selected_item /= Void then
@@ -216,7 +222,8 @@ feature {EB_FEATURES_TREE} -- Status setting
 				if s = Void then
 					s := development_window.editor_tool.text_area.text
 				end
-				development_window.editor_tool.text_area.display_line_at_top_when_ready (character_line (a_clause.end_position, s))
+				development_window.editor_tool.text_area.display_line_at_top_when_ready (
+					character_line (a_clause.end_position, s))
 			end
 		end
 

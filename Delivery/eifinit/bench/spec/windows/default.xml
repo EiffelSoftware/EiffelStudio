@@ -100,6 +100,7 @@
 			<HEAD>Diagram tool preferences</HEAD>
 			<TEXT>excluded_class_figures<LIST_STRING>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST_STRING></TEXT>
 			<TEXT>ignore_excluded_class_figures<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT>use_diagram_double_buffer<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Graphics">

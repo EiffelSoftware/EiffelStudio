@@ -87,13 +87,13 @@ feature {NONE}
 		do
 			!!user_defined_commands1.make (1, Current)
 			!!user_defined_commands2.make (2, Current)
-			!!user_defined_commands3.make (3, Current)
+			!!generated_commands.make (3, Current)
 			!!command_templates.make (Current)
 			!!window_commands.make (Current)
 			!!file_commands.make (Current)
 			add_page (user_defined_commands1)
 			add_page (user_defined_commands2)
-			add_page (user_defined_commands3)
+			add_page (generated_commands)
 			add_page (file_commands)
 			add_page (window_commands)
 			add_page (command_templates)
@@ -117,11 +117,11 @@ feature {NONE} -- Attributes
 	separator: THREE_D_SEPARATOR
 			-- Separator between the column row and the list of commands
 
-feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT}
+feature {CMD_ADD_ARGUMENT, CMD_CUT_ARGUMENT, GENERATE_OBJECT_TOOL_CMD}
 
 	user_defined_commands1: USER_DEF_CMDS
 	user_defined_commands2: USER_DEF_CMDS
-	user_defined_commands3: USER_DEF_CMDS
+	generated_commands: GENERATED_CMDS
 
 feature -- Implementation
 

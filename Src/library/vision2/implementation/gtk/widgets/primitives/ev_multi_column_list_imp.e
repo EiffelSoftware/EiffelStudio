@@ -16,7 +16,8 @@ inherit
 			initialize,
 			item,
 			call_pebble_function,
-			update_child
+			update_child,
+			wipe_out
 		end
 
 	EV_PRIMITIVE_IMP
@@ -51,7 +52,8 @@ inherit
 			list_widget,
 			interface,
 			visual_widget,
-			disconnect_all_signals
+			disconnect_all_signals,
+			wipe_out
 		end
 
 	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
@@ -117,7 +119,7 @@ feature {NONE} -- Initialization
 				then
 					clicked_row.pointer_button_press_actions_internal.call (t)
 				end
-			elseif a_type = C.GDK_2BUTTON_PRESS_ENUM and not is_transport_enabled then
+			elseif a_type = C.GDK_2BUTTON_PRESS_ENUM then --and not is_transport_enabled then
 				if pointer_double_press_actions_internal /= Void then
 					pointer_double_press_actions_internal.call (t)
 				end
@@ -606,6 +608,31 @@ feature -- Element change
 				C.gtk_clist_clear (list_widget)
 			end
 		end
+		
+	wipe_out is
+			-- Remove all items.
+		local
+			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
+		do
+				-- Remove all items (GTK part)
+			C.gtk_clist_clear (list_widget)
+			from
+				ev_children.start
+			until
+				ev_children.after
+			loop
+				item_imp := ev_children.item
+				item_imp.set_parent_imp (Void)
+				ev_children.forth
+			end
+
+				-- Remove all items (Eiffel part)
+			ev_children.wipe_out
+			index := 0
+
+			update_pnd_status
+		end
+
 
 feature {EV_APPLICATION_IMP} -- Implementation
 

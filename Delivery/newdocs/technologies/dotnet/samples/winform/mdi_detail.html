@@ -7,43 +7,43 @@
 	</style>
 		<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
 		<meta name="ProgId" content="FrontPage.Editor.Document">
-		<LINK REL="StyleSheet" HREF="../../../../default.css">
+		<LINK REL="StyleSheet" HREF="/default.css">
 	</head>
 	<body>
 		<h1>Using Multiple Document Interface Applications</h1>
-		<p>Multiple Document Interface (MDI) applications have a single, primary window 
-			(the parent window) that contains a set of windows within its client region 
-			(child windows). Each child window is a form that is constrained to appear only 
-			within the parent. Children typically share the menu bar, tool bar, and other 
-			parts of the parent's interface. Secondary windows like dialog boxes are not 
+		<p>Multiple Document Interface (MDI) applications have a single, primary window
+			(the parent window) that contains a set of windows within its client region
+			(child windows). Each child window is a form that is constrained to appear only
+			within the parent. Children typically share the menu bar, tool bar, and other
+			parts of the parent's interface. Secondary windows like dialog boxes are not
 			constrained to the parent window's client region.</p>
 		<h2>Creating an MDI Application</h2>
 		<p>You can create an MDI application by following these steps:
 		</p>
 		<ol>
 			<li>
-				Create a <b>Form</b> (<b>MainForm</b>) that represents the MDI parent window 
-				and set its <b>IsMdiContainer</b> property to <b>true</b>. The following code 
+				Create a <b>Form</b> (<b>MainForm</b>) that represents the MDI parent window
+				and set its <b>IsMdiContainer</b> property to <b>true</b>. The following code
 				demonstrates how to set this property.<pre><span class="eFeature">set_is_mdi_container</span> (<span class="eKeyword">True</span>)</pre>
 			<li>
-				Create child forms and set the <b>MdiParent</b> property of each form to 
-				reference the parent form. The following code demonstrates setting the MDI 
+				Create child forms and set the <b>MdiParent</b> property of each form to
+				reference the parent form. The following code demonstrates setting the MDI
 				parent for an instance of a child form.
 				<br>
 				<pre>doc.<span class="eFeature">set_mdi_parent</span> (<span class="eKeyword">Current</span>)</pre>
 			</li>
 		</ol>
-		<p>If you have different types of data to display, you can have multiple types of 
-			child forms. To display a child form, create an instance of the child form and 
+		<p>If you have different types of data to display, you can have multiple types of
+			child forms. To display a child form, create an instance of the child form and
 			call its <b>Show</b> method.
 		</p>
 		<p>&nbsp;</p>
 		<h2>Standard MDI Menus</h2>
-		<p>Typically, an MDI application has a <b>Windows</b> menu that allows the user to 
-			arrange the open child windows through tiling or cascading. The <b>Windows</b> menu 
+		<p>Typically, an MDI application has a <b>Windows</b> menu that allows the user to
+			arrange the open child windows through tiling or cascading. The <b>Windows</b> menu
 			also allows you to navigate to any of the open child windows. To create a <b>Windows</b>
-			menu, add the menu items for tiling and cascading to a <b>Windows</b> menu in 
-			your parent form and set the <b>MdiList</b> property to <b>true</b> for the 
+			menu, add the menu items for tiling and cascading to a <b>Windows</b> menu in
+			your parent form and set the <b>MdiList</b> property to <b>true</b> for the
 			top-level <b>Windows</b> menu. The following code demonstrates how to create a <b>Windows</b>
 			menu in an MDI application.</p>
 		<pre><span class="eLocal">mi_window</span>: <span class="eClass">WINFORMS_MENU_ITEM</span></pre>
@@ -55,7 +55,7 @@ dummy := <span class="eLocal">mi_window</span>.<span class="eFeature">get_menu_i
 		<p>&nbsp;</p>
 		<p>&nbsp;</p>
 		<h2>Child Window Activation</h2>
-		<p>If you want your parent form to be notified when a child window is activated by 
+		<p>If you want your parent form to be notified when a child window is activated by
 			the user, you can register an event-handling method for the <b>MdiChildActivate</b>
 			event. You can determine which child window is active by using the <b>ActiveMdiChild</b>
 			property of the <b>Form</b> class. For example, the following code updates a <b>StatusBar</b>

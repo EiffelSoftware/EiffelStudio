@@ -15,7 +15,12 @@ feature
 				init_project;
 				if not error_occurred then
 					if project_is_new then
-						make_new_project
+						get_precompilation_directory;
+						if precompiled_project_name /= Void then
+							retrieve_precompiled_project
+						else
+							make_new_project
+						end;
 					else
 						retrieve_project
 					end

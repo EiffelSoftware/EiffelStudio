@@ -117,20 +117,6 @@ feature -- Initialization
 			init_work: INIT_WORKBENCH;
 			workbench_file: UNIX_FILE;
 		do
-				-- Needs to be done more elegantly
-				-- A system needs to remember that it was using precompiled
-				-- information.
-			if precompiled_project_name /= Void then
-				!! project_dir.make (precompiled_project_name); 
-				if project_dir.valid and project_dir.exists then
-					init_precompilation_directory := project_dir;
-					if Precompilation_directory /= Precompilation_directory then end;
-				else
-					io.error.putstring (precompiled_project_name);
-					io.error.putstring (" is not a valid project name%N");
-					error_occurred := True;
-				end;
-			end;
 			!!workb;
 			!!workbench_file.make_open_read (Project_file_name);
 			workb ?= workb.retrieved (workbench_file);
@@ -138,6 +124,21 @@ feature -- Initialization
 			Workbench.init;
 			if Workbench /= Void then
 				Workbench.lace.set_file_name (Ace_name);
+				if System.uses_precompiled then
+					get_precompilation_directory;
+					if precompiled_project_name /= Void then
+						!! project_dir.make (precompiled_project_name); 
+						if project_dir.valid and project_dir.exists then
+							init_precompilation_directory := project_dir;
+							if Precompilation_directory /= 
+									Precompilation_directory then end;
+						else
+							io.error.putstring (precompiled_project_name);
+							io.error.putstring (" is not a valid project name%N");
+							error_occurred := True;
+						end;
+					end;
+				end;
 				System.server_controler.init;
 			else
 				error_occurred := True;
@@ -177,6 +178,53 @@ feature -- Compilation
 				else
 					exit := True
 				end
+			end;
+		end;
+
+feature -- Precompilation
+
+	get_precompilation_directory is
+		local
+			f: UNIX_FILE;
+			fn: STRING;
+			i, j: INTEGER;
+		do
+			fn := Project_name.duplicate;
+			from
+				i := 1
+			until
+				i > fn.count
+			loop
+				if (fn.item (i) = '/') then
+					j := i
+				end;
+				i := i + 1
+			end;
+			fn.replace_substring (".precomp", j+1,fn.count);
+			!!f.make (fn);
+			if f.exists and then f.is_readable then
+				f.open_read;
+				if not f.empty then
+					f.readline;
+					precompiled_project_name := f.laststring.duplicate;
+				end;
+				f.close
+			else
+				suggest_precompilation_retrieval
+			end;
+		end;
+
+	suggest_precompilation_retrieval is
+		do
+			io.putstring ("Do you wish to include precompiled information?[y/n] ") ;
+			io.readline;
+			if (io.laststring.item (1) = 'y') then
+				io.putstring ("Name of precompiled project (full path): ");
+				io.readline;
+				precompiled_project_name := io.laststring.duplicate;
+				io.putstring ("Importing precompiled information from: ");
+				io.putstring (precompiled_project_name);
+				io.new_line;
 			end;
 		end;
 

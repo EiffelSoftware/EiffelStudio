@@ -3,6 +3,10 @@
 
 class WINDOWS
 
+inherit
+
+	SHARED_STATUS
+
 feature {NONE}
 
 --	project_tool: PROJECT_W is
@@ -41,19 +45,33 @@ end;
 			!!Result.make (project_tool)
 		end;
 
-	error_window: TEXT_WINDOW is
+	error_window: CLICK_WINDOW is
 			-- Error window
+		do
+			if batch_mode then
+				Result := term_error_window
+			else
+				Result := bench_error_window
+			end;
+		end;
+
+	bench_error_window: TEXT_WINDOW is
 		do
 			Result := project_tool.text_window
 		end;
 
-	info_window: TEXT_WINDOW is
+	term_error_window: TERM_WINDOW is
+		once
+			!!Result
+		end;
+
+	info_window: CLICK_WINDOW is
 			-- Info window
 		do
 			Result := error_window
 		end;
 
-	debug_window: TEXT_WINDOW is
+	debug_window: CLICK_WINDOW is
 			-- Debug window
 		do
 			Result := error_window

@@ -18,7 +18,10 @@ inherit
 
 	DRAWING_I;
 
-	G_CONTEXT_X;
+	G_CONTEXT_X
+		rename
+			gc_logical_mode as logical_mode
+		end;
 
 	MEL_DRAWING
 		rename
@@ -67,10 +70,10 @@ feature -- Output
 			bitmap_implementation: PIXMAP_X
 		do
 			bitmap_implementation ?= a_pixmap.implementation;
-			copy_area (bitmap_implementation, Current,
-					0, 0, bitmap_implementation.width, 
-					bitmap_implementation.height,
-					a_point.x, a_point.y)
+            x_copy_area (display_handle, 
+				bitmap_implementation.identifier, window, graphic_context,
+                0, 0, bitmap_implementation.width, bitmap_implementation.height, 
+				a_point.x, a_point.y)
 		end;
 
 	draw_arc (center: COORD_XY; radius1, radius2: INTEGER; 

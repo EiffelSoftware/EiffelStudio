@@ -7,12 +7,11 @@ class
 	CODE_GENERATED_TYPE
 	
 inherit
-	CODE_TYPE
+	CODE_NAMED_ENTITY
 		redefine
-			code,
-			make
+			is_equal
 		end
-	
+
 create
 	make
 
@@ -22,21 +21,29 @@ feature {NONE} -- Initialization
 			-- | Call Precursor {CODE_TYPE}
 			-- Initialize attributes
 		do
-			Precursor {CODE_TYPE} (a_type)
+			name := a_type.name
+			eiffel_name := a_type.eiffel_name
 			create {ARRAYED_LIST [CODE_INDEXING_CLAUSE]} indexing_clauses.make (4)
 			create parents.make (4)
 			create creation_routines.make (1)
 			create features.make (20)
+			create dotnet_features.make (20)
 			create implementation_features.make (20)
-		ensure then
+		ensure
+			name_set: name /= Void
+			eiffel_name_set: eiffel_name /= Void
 			non_void_indexing_clauses: indexing_clauses /= Void
 			non_void_parents: parents /= Void
 			non_void_creation_routines: creation_routines /= Void
 			non_void_features: features /= Void
+			non_void_dotnet_features: dotnet_features /= Void
 			non_void_implementation_features: implementation_features /= Void
 		end
 		
 feature -- Access
+
+	eiffel_name: STRING
+			-- Eiffel name
 
 	indexing_clauses: LIST [CODE_INDEXING_CLAUSE]
 			-- Type indexing clauses
@@ -59,11 +66,11 @@ feature -- Access
 			-- Value: feature
 			-- Key: feature eiffel name
 			
-	implementation_features: HASH_TABLE [CODE_FEATURE, STRING]
+	implementation_features: HASH_TABLE [CODE_TRY_CATCH_IMPLEMENTATION_FEATURE, STRING]
 			-- Type implementation features
-			-- These features are added during code generation (for example for try/catch statements)
+			-- These features are added during code generation
 			-- Value: feature
-			-- Key: feature eiffel name
+			-- Key: feature name
 			
 	parent (a_name: STRING): CODE_PARENT is
 			-- Parent with full Eiffel name `a_name' if any
@@ -85,6 +92,7 @@ feature -- Access
 		local
 			l_header, l_body, l_footer: STRING
 		do
+			set_current_generated_type (Current)
 			l_body := body
 			l_header := header
 			l_footer := footer
@@ -92,6 +100,7 @@ feature -- Access
 			Result.append (l_header)
 			Result.append (l_body)
 			Result.append (l_footer)
+			set_current_generated_type (Void)
 		end
 
 feature -- Element Settings
@@ -137,14 +146,14 @@ feature -- Element Settings
 			dotnet_feature_added: dotnet_features.has (a_feature.name)
 		end
 
-	add_implementation_feature (a_feature: CODE_FEATURE) is
+	add_implementation_feature (a_feature: CODE_TRY_CATCH_IMPLEMENTATION_FEATURE) is
 			-- Add `a_feature' to `implementation_features'.
 		require
 			non_void_feature: a_feature /= Void
 		do
-			implementation_features.put (a_feature, a_feature.eiffel_name)
+			implementation_features.put (a_feature, a_feature.name)
 		ensure
-			feature_added: features.has (a_feature.eiffel_name)
+			feature_added: features.has (a_feature.name)
 		end
 
 	add_creation_routine (a_creation_routine: CODE_CREATION_ROUTINE) is
@@ -152,6 +161,9 @@ feature -- Element Settings
 		require
 			non_void_creation_routine: a_creation_routine /= Void
 		do
+			if not features.has ("constructor_called") then
+				features.extend (create {CODE_SNIPPET_FEATURE}.make ("constructor_called", "constructor_called: BOOLEAN%N"), "constructor_called")
+			end
 			creation_routines.put (a_creation_routine, a_creation_routine.eiffel_name)
 		ensure
 			creation_routine_added: creation_routines.has (a_creation_routine.eiffel_name)
@@ -169,7 +181,7 @@ feature -- Element Settings
 			if l_parent /= Void then
 				l_parent.add_undefine_clause (create {CODE_UNDEFINE_CLAUSE}.make (a_routine, a_parent))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.full_name + ")", eiffel_name + "(" + name + ")"])
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.name + ")", eiffel_name + "(" + name + ")"])
 			end			
 		end
 		
@@ -185,7 +197,7 @@ feature -- Element Settings
 			if l_parent /= Void then
 				l_parent.add_redefine_clause (create {CODE_REDEFINE_CLAUSE}.make (a_routine, a_parent))
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.full_name + ")", eiffel_name + "(" + name + ")"])
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.name + ")", eiffel_name + "(" + name + ")"])
 			end			
 		end
 	
@@ -206,7 +218,7 @@ feature -- Code generation
 
 			-- Eiffel code of type header (from indexing clause to creation routine declaration)
 		require
-			ready: ready
+			is_in_code_generation: current_state = Code_generation
 		do	
 			create Result.make (5000)
 				-- indexing
@@ -235,8 +247,8 @@ feature -- Code generation
 
 			-- Indexing clauses code (include `indexing' keyword)
 		require
-			ready: ready
 			not_empty_indexing_clauses: indexing_clauses.count > 0
+			is_in_code_generation: current_state = Code_generation
 		local
 			l_indexing_clause: CODE_INDEXING_CLAUSE
 		do
@@ -255,7 +267,6 @@ feature -- Code generation
 				end
 				indexing_clauses.forth
 			end
-			Result.append_character ('%N')
 		ensure
 			a_clause_generated: Result /= Void and Result.count > 0
 		end
@@ -263,7 +274,7 @@ feature -- Code generation
 	class_declaration: STRING is 
 			-- Class declaration (including class name and qualifiers like deferred, expanded or frozen)
 		require
-			ready: ready
+			is_in_code_generation: current_state = Code_generation
 		do
 			create Result.make (9 + eiffel_name.count)
 			Result.append ("class%N%T")
@@ -279,8 +290,8 @@ feature -- Code generation
 
 			-- Parents code (include `inherit' keyword, parent names and associated inheritance clauses)
 		require
-			ready: ready
 			not_empty_parents: parents.count > 0
+			is_in_code_generation: current_state = Code_generation
 		do
 			create Result.make (200)
 			if snippet_inherit_clause = Void then
@@ -301,13 +312,14 @@ feature -- Code generation
 	creation_clause: STRING is 
 			-- Code of creation clause
 		require
-			ready: ready
+			is_in_code_generation: current_state = Code_generation
 		do
 			create Result.make (100)
 			if creation_routines.count = 0 then
 				Result.append ("create {NONE}%N%N")
 			else
-				Result.append ("create%N%T")
+				Result.append ("create%N")
+				Result.append (tabulation_string)
 				from
 					creation_routines.start
 					if not creation_routines.after then
@@ -319,17 +331,18 @@ feature -- Code generation
 				loop
 					Result.append_character (',')
 					Result.append (creation_routines.item_for_iteration.eiffel_name)
-					Result.append ("%N%T")
+					Result.append ("%N")
+					Result.append (tabulation_string)
 					creation_routines.forth
 				end
-				Result.append_character ('%N')
+				Result.append ("%N%N")
 			end			
 		end
 
 	body: STRING is
 			-- Eiffel code of type body
 		require
-			ready: ready
+			is_in_code_generation: current_state = Code_generation
 		do
 			create Result.make (100)
 			if creation_routines.count > 0 then
@@ -339,7 +352,15 @@ feature -- Code generation
 				Result.append (features_code (features))
 			end
 			if implementation_features.count > 0 then
-				Result.append (features_code (implementation_features))
+				Result.append ("%Nfeature {NONE} -- Try/Catch Implementation%N")
+				from
+					implementation_features.start
+				until
+					implementation_features.after
+				loop
+					Result.append (implementation_features.item_for_iteration.code)
+					implementation_features.forth
+				end
 			end
 		ensure
 			body_generated: Result /= Void
@@ -349,6 +370,7 @@ feature -- Code generation
 			-- Code corresponding to features `a_features'
 		require
 			non_void_features: a_features /= Void
+			is_in_code_generation: current_state = Code_generation
 		local
 			l_clauses: HASH_TABLE [LIST [CODE_FEATURE], STRING]
 			l_features: LIST [CODE_FEATURE]
@@ -361,10 +383,10 @@ feature -- Code generation
 				l_clauses.after
 			loop
 				l_features := l_clauses.item_for_iteration
+				Result.append (l_clauses.key_for_iteration)
 				from
 					l_features.start
 					if not l_features.after then
-						Result.append (l_clauses.key_for_iteration)
 						Result.append (l_features.item.code)
 						l_features.forth
 					end
@@ -383,7 +405,7 @@ feature -- Code generation
 
 			-- Eiffel code of type footer (from `invariant' keyword to end of type)
 		require
-			ready: ready
+			is_in_code_generation: current_state = Code_generation
 		do
 			create Result.make (eiffel_name.count + 8)
 			Result.append ("%Nend -- ")
@@ -396,6 +418,7 @@ feature -- Code generation
 			-- Features ordered per feature clause
 		require
 			non_void_features: a_features /= Void
+			is_in_code_generation: current_state = Code_generation
 		local
 			l_clause: STRING
 		do
@@ -419,11 +442,23 @@ feature -- Code generation
 			non_void_result: Result /= Void
 		end
 
+feature -- Comparison
+
+	is_equal (other: CODE_GENERATED_TYPE): BOOLEAN is
+			-- Is `other' attached to an object considered
+			-- equal to current object?
+			-- We consider that CodeDom has the same limitation as C# where
+			-- two namespaces with the same name cannot have types with the same name
+		do
+			Result := other.name.is_equal (name)
+		end
+		
 invariant
 	non_void_indexing_clauses: indexing_clauses /= Void
 	non_void_parents: parents /= Void
 	non_void_creation_routines: creation_routines /= Void
 	non_void_features: features /= Void
+	non_void_dotnet_features: dotnet_features /= Void
 
 end -- class CODE_GENERATED_TYPE
 

@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_TEST
+	EV_TEST2
 
 feature -- Basic operation
 
@@ -49,6 +49,9 @@ end -- class EV_TEST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/03/09 02:17:21  oconnor
+--| renamed class
+--|
 --| Revision 1.1  2000/03/01 00:41:33  brendel
 --| Base class for vision2 test classes.
 --|

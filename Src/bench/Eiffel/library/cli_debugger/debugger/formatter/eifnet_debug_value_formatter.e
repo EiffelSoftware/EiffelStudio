@@ -95,6 +95,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_boolean (0)
 		end
+
 	prepared_icor_debug_value_as_character (a_data: ICOR_DEBUG_VALUE): CHARACTER is
 		local
 			l_mp: MANAGED_POINTER
@@ -102,6 +103,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_character (0)
 		end
+
 	prepared_icor_debug_value_as_integer_8 (a_data: ICOR_DEBUG_VALUE): INTEGER_8 is
 		local
 			l_mp: MANAGED_POINTER
@@ -109,6 +111,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_integer_8 (0)
 		end
+
 	prepared_icor_debug_value_as_integer_16 (a_data: ICOR_DEBUG_VALUE): INTEGER_16 is
 		local
 			l_mp: MANAGED_POINTER
@@ -116,6 +119,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_integer_16 (0)
 		end
+
 	prepared_icor_debug_value_as_integer (a_data: ICOR_DEBUG_VALUE): INTEGER is -- INTEGER_32
 		local
 			l_mp: MANAGED_POINTER
@@ -123,6 +127,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_integer_32 (0)
 		end
+
 	prepared_icor_debug_value_as_integer_64 (a_data: ICOR_DEBUG_VALUE): INTEGER_64 is
 		local
 			l_mp: MANAGED_POINTER
@@ -130,6 +135,7 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_integer_64 (0)
 		end
+
 	prepared_icor_debug_value_as_real (a_data: ICOR_DEBUG_VALUE): REAL is
 		local
 			l_mp: MANAGED_POINTER
@@ -137,12 +143,21 @@ feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_real (0)
 		end
+
 	prepared_icor_debug_value_as_double (a_data: ICOR_DEBUG_VALUE): DOUBLE is
 		local
 			l_mp: MANAGED_POINTER
 		do
 			l_mp := value_data_pointer (a_data)
 			Result := l_mp.read_double (0)
+		end
+
+	prepared_icor_debug_value_as_pointer (a_data: ICOR_DEBUG_VALUE): POINTER is
+		local
+			l_mp: MANAGED_POINTER
+		do
+			l_mp := value_data_pointer (a_data)
+			Result := l_mp.read_pointer (0)
 		end
 
 	prepared_icor_debug_value_as_reference_to_string (a_data: ICOR_DEBUG_VALUE): STRING is

@@ -130,7 +130,7 @@ feature -- Status setting
 		require
 			exists: not destroyed
 			index_large_enough: index > 0
-			index_small_enough: index <= columns
+			index_small_enough: index <= count
 		do
 			implementation.select_item (index)
 		end
@@ -140,7 +140,7 @@ feature -- Status setting
 		require
 			exists: not destroyed
 			index_large_enough: index > 0
-			index_small_enough: index <= columns
+			index_small_enough: index <= count
 		do
 			implementation.deselect_item (index)
 		end

@@ -46,6 +46,12 @@ feature -- Access
 			-- Generates NM_CUSTOMDRAW notification messages when
 			-- it processes WM_ERASEBKGND.
 
+	Tbstyle_transparent: INTEGER is 0x00008000
+			-- Version 4.71. Creates a transparent toolbar. In a transparent toolbar,
+			-- the toolbar is transparent but the buttons are not. Button text appears
+			-- under button bitmaps. To prevent repainting problems, this style should
+			-- be set before the toolbar control becomes visible.
+
 -- A button in a toolbar can have a combination of the following styles.
 
 	Tbstyle_button: INTEGER is 0

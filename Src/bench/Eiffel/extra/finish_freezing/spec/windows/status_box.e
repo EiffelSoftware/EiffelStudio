@@ -14,7 +14,7 @@ feature -- Initialization
 			icon: INTEGER
 			
 		do
-			title := ("Es4sh Status").to_c
+			title := ("Finish Freezing Status").to_c
 			
 			if error then
 				icon := Mb_iconexclamation
@@ -28,6 +28,8 @@ feature -- Initialization
 				if c_error then
 					icon := Mb_iconexclamation
 					append_c_error_msg(make_util, msg_string)
+				else
+					msg_string.append("C-compilation completed successfully.%N")
 				end
 			end
 			
@@ -89,4 +91,3 @@ feature {NONE} -- Externals
 			"MB_TOPMOST"
 		end	
 end -- class STATUS_BOX
-

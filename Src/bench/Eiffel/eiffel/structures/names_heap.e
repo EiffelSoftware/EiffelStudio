@@ -40,7 +40,8 @@ feature -- Access
 		do
 			Result := area.item (i)
 		ensure
-			Result_not_void: Result /= Void
+			Result_not_void: i > 0 implies Result /= Void
+			Result_void: i = 0 implies Result = Void
 		end
 
 	found_item: INTEGER
@@ -81,7 +82,7 @@ feature -- Status report
 	valid_index (i: INTEGER): BOOLEAN is
 			-- Is `i' within bounds?
 		do
-			Result := i > 0 and then i < top_index
+			Result := i >= 0 and then i < top_index
 		end
 
 	search (s: STRING) is

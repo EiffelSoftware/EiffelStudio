@@ -30,7 +30,7 @@ feature -- Button texts
 	b_Close: STRING is					"Close";
 	b_Compile: STRING is				"Compile";
 	b_Create: STRING is					"Create";
-	b_Descendent_time: STRING is		"Descendent time";
+	b_Descendant_time: STRING is		"Descendant time";
 	b_Discard_assertions: STRING is		"Discard assertions";
 	b_Display: STRING is				" Display ";
 	b_Eiffel_features: STRING is		"Eiffel features";
@@ -74,8 +74,8 @@ feature -- Graphical degree output
 	d_Features_processed: STRING is		"Features done: ";
 	d_Features_to_go: STRING is			"Features to go: ";
 	d_Generating: STRING is				"Generating: ";
-	d_Resynchronizing_breakpoints: STRING is "Resynchronzing breakpoints";
-	d_Resynchronizing_tools: STRING is	"Resynchronzing tools";
+	d_Resynchronizing_breakpoints: STRING is "Resynchronizing breakpoints";
+	d_Resynchronizing_tools: STRING is	"Resynchronizing tools";
 	d_Reverse_engineering: STRING is	"Reverse Engineering Project";
 
 feature -- Help text
@@ -180,7 +180,7 @@ feature -- Accelerator, focus label and menu name
 	m_Next_target: STRING is			"N&ext";
 	f_Non_clickable_showstops: STRING is "Non clickable stop points";
 	m_Non_clickable_showstops: STRING is "&Non clickable stop points";
-	m_Ok: STRING is					"&Ok";
+	m_Ok: STRING is						"&Ok";
 	a_Open: STRING is					"Ctrl<Key>o";
 	f_Open: STRING is					"Open";
 	m_Open: STRING is					"&Open%TCtrl+O";
@@ -198,7 +198,7 @@ feature -- Accelerator, focus label and menu name
 	m_Profile_tool: STRING is			"Pro&file tool";
 	f_Previous_target: STRING is		"Previous";
 	m_Previous_target: STRING is		"&Previous";
-	a_Quick_update: STRING is			"CtrlKey>q";
+	a_Quick_update: STRING is			"Ctrl<Key>q";
 	f_Quick_update: STRING is			"Quick melt";
 	m_Quick_update: STRING is			"&Quick Melt%TCtrl+Q";
 	f_Raise_all_tools: STRING is		"Raise all tools";
@@ -305,7 +305,7 @@ feature -- Menu mnenomics
 	m_Feature: STRING is				"&Feature";
 	m_Feature_tools: STRING is			"&Feature tools";
 	m_File: STRING is					"&File";
-	m_Formats: STRING is				"&Formats";
+	m_Formats: STRING is				"F&ormats";
 	m_Object: STRING is					"&Object";
 	m_Object_tools: STRING is			"&Object tools";
 	m_Special: STRING is				"&Special";
@@ -315,7 +315,7 @@ feature -- Label texts
 
 	l_Cluster: STRING is				"Cluster:";
 	l_Compile_type: STRING is			"Compile type";
-	l_File_name: STRING is					"File name: ";
+	l_File_name: STRING is				"File name: ";
 	l_Input_file: STRING is				"Input file";
 	l_Language_type: STRING is			"Language type";
 	l_Non_clickable_showstops: STRING is "Non clickable stop points";

@@ -93,7 +93,8 @@ feature -- Access
 				font_names.forth
 			end
 			
-			font_imp.set_face_name (selected_font_name)
+			font_imp.set_face_name (selected_font_name.twin)
+			font_imp.preferred_families.extend (selected_font_name.twin)
 
 			split_values := font_desc.split (' ')
 			split_values.compare_objects

@@ -189,6 +189,7 @@ feature -- Project Initialization
 				--| Retrieve existing project
 			!! project_file.make (file_name)
 			!! project_dir.make (dir_name, project_file)
+			Project_directory_name.wipe_out
 			Project_directory_name.set_directory (dir_name)
 
 			Eiffel_project.make (project_dir)

@@ -135,10 +135,13 @@ feature {NONE} -- Implementation
 			ace_file_name := clone (generated_path)
 			ace_file_name.extend ("build_ace.ace")
 					-- Store `ace_text'.
-			create ace_output_file.make_open_write (ace_file_name)
-			ace_output_file.start
-			ace_output_file.putstring (ace_text)
-			ace_output_file.close
+			create ace_output_file.make (ace_file_name)
+			if not ace_output_file.exists or project_settings.rebuild_ace_file then
+				ace_output_file.open_write
+				ace_output_file.start
+				ace_output_file.putstring (ace_text)
+				ace_output_file.close
+			end
 		end
 		
 		

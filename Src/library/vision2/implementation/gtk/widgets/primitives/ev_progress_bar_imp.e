@@ -40,22 +40,34 @@ feature -- Access
 	value: INTEGER is
 			-- Current value of the gauge
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 	step: INTEGER is
 			-- Step of the scrolling
 			-- ie : the user clicks on an arrow
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 	minimum: INTEGER is
 			-- Minimum value
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 	maximum: INTEGER is
 			-- Maximum value
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 feature -- Status report

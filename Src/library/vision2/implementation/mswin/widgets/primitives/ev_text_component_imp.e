@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
-			internal_set_minimum_size (30, wel_font.log_font.height + 7)
+			internal_set_minimum_size (30, wel_font.log_font.height.abs + 7)
 		end
 
 feature -- Status report
@@ -280,6 +280,9 @@ end -- class EV_TEXT_COMPONENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/04/21 01:23:24  pichery
+--| Fixed bug (log_font.height can be negative !!!)
+--|
 --| Revision 1.28  2000/02/19 06:34:13  oconnor
 --| removed old command stuff
 --|

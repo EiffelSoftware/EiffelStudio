@@ -1782,11 +1782,11 @@ rt_private void add_mismatch (EIF_REFERENCE object, EIF_REFERENCE old_values)
 
 	spec = eif_access (mismatches->values);
 	((EIF_REFERENCE *) spec)[mismatches->count] = old_values;
-	RTAS_OPT (old_values, mismatches->count, spec);
+	RTAR(spec, old_values);
 
 	spec = eif_access (mismatches->objects);
 	((EIF_REFERENCE *) spec)[mismatches->count] = object;
-	RTAS_OPT (object, mismatches->count, spec);
+	RTAR(spec, object);
 
 	++mismatches->count;
 }
@@ -2112,7 +2112,7 @@ rt_private void rt_update1 (register EIF_REFERENCE old, register EIF_OBJECT new_
 #endif
 		offset = rt_unsolved->offset;	/* Offset in the solved object */
 		*(EIF_REFERENCE *) (client + offset) = supplier;
-		RTAS(supplier, client);					/* Age check */
+		RTAR(client, supplier);					/* Age check */
 
 		eif_rt_xfree((char *) rt_unsolved);		/* Free reference solving cell */
 		rt_info->rt_list = next;			/* Unlink from list */
@@ -2254,7 +2254,7 @@ rt_private void rt_subupdate (EIF_REFERENCE old, EIF_REFERENCE reference, EIF_RE
 		/* Reference is already solved */
 		supplier = eif_access(rt_info->rt_obj);
 		*(EIF_REFERENCE *) addr = supplier;			/* Attachment */
-		RTAS(supplier, new_obj);					/* Age check */
+		RTAR(new_obj, supplier);					/* Age check */
 	} else {
 		/* Reference is stil unsolved */
 		struct rt_cell *new_cell, *old_cell;
@@ -2296,7 +2296,7 @@ rt_private void update_reference (EIF_REFERENCE object, EIF_REFERENCE *location)
 		/* Reference is already solved */
 		EIF_REFERENCE supplier = eif_access (rt_info->rt_obj);
 		*location = supplier;			/* Attachment */
-		RTAS(supplier, object);
+		RTAR(object, supplier);
 	} else {
 		/* Reference is still unsolved */
 		struct rt_cell *new_cell, *old_cell;
@@ -4200,7 +4200,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 			if (comp_values == NULL)
 				xraise (EN_MEM);
 			((EIF_REFERENCE *) comp_values)[new_num_attrib] = old_values;
-			RTAS_OPT (old_values, i, comp_values);
+			RTAR (comp_values, old_values);
 		}
 	}
 
@@ -4358,7 +4358,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 							xraise (EN_MEM);
 					}
 					((EIF_REFERENCE *) comp_values)[new_attrib_index] = old_vals;
-					RTAS_OPT (old_vals, i, comp_values);
+					RTAR (comp_values, old_vals);
 				}
 				break;
 			}
@@ -4370,7 +4370,7 @@ rt_private EIF_REFERENCE object_rread_attributes (
 			if ((old_attrib_type & SK_HEAD) == SK_REF)
 				update_reference (old_values, (EIF_REFERENCE *) old_values + i);
 			else
-				RTAS_OPT (old_value, i, old_values);
+				RTAR (old_values, old_value);
 		}
 	}
 	if (comp_values != NULL)
@@ -4412,7 +4412,7 @@ rt_private EIF_REFERENCE object_rread_special_expanded (
 		if (old_values != NULL) {
 			CHECK ("Mismatch consistency", old_values != NULL);
 			((EIF_REFERENCE *) result)[i] = old_values;
-			RTAS_OPT (old_values, i, result);
+			RTAR (result, old_values);
 		}
 	}
 	return result;

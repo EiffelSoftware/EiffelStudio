@@ -158,7 +158,7 @@ feature -- Output
 			start_pos: INTEGER
 		do
 			if not is_empty then
-				start_pos := current_feature_clause.position;
+				start_pos := current_feature_clause.end_position;
 				Result := extract_comments_from (start_pos, end_position);
 			end
 		end
@@ -255,7 +255,7 @@ end
 			if next_feature /= Void then
 				Result := next_feature.start_position
 			elseif next_feature_clause /= Void then
-				Result := next_feature_clause.position
+				Result := next_feature_clause.end_position
 			else
 				Result := file_end_position
 			end
@@ -264,7 +264,7 @@ end
 						Result = next_feature.start_position
 			check_next_feature_clause: next_feature = Void and then
 							next_feature_clause /= Void implies 
-						Result = next_feature_clause.position
+						Result = next_feature_clause.end_position
 			check_file_end_position: next_feature = Void and then next_feature_clause = Void
 							implies Result = file_end_position
 			positive_result: Result >= 0 and then Result <= file_end_position

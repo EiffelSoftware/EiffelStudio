@@ -785,8 +785,8 @@ feature -- Modification
 			if f_clause /= Void then
 				if f_clause.features.is_empty then
 					remove_code (
-						f_clause.position - 7,
-						text.substring_index ("%N", f_clause.position) + 1)
+						f_clause.end_position - 7,
+						text.substring_index ("%N", f_clause.end_position) + 1)
 					reparse
 				end
 			end
@@ -1039,7 +1039,7 @@ feature {CLASS_NAME_REPLACER} -- Implementation
 	feature_insert_position (f: FEATURE_CLAUSE_AS): INTEGER is
 			-- Insertion position for `f'.
 		do
-			Result := f.position
+			Result := f.end_position
 			Result := text.index_of ('%N', Result) + 1
 			Result := text.index_of ('%N', Result) + 1
 		end
@@ -1097,7 +1097,7 @@ feature {CLASS_NAME_REPLACER} -- Implementation
 						c := l.item.comment (text)
 						c.prune_all_trailing ('%R')
 						if not lcs.has (c) then
-							insertion_position := text.last_index_of ('%N', l.item.position) + 1
+							insertion_position := text.last_index_of ('%N', l.item.end_position) + 1
 						end
 						l.forth
 					end

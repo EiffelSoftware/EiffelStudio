@@ -75,7 +75,7 @@ feature {AST_EIFFEL} -- Element change
 		do
 			comments := eiffel_file.current_feature_clause_comments;
 			if comments /= Void then
-				class_comments.put (comments, feature_clause.position);
+				class_comments.put (comments, feature_clause.end_position);
 			end
 		end;
 

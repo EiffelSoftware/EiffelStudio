@@ -195,12 +195,12 @@ feature {EB_FEATURES_TREE} -- Status setting
 		local
 			s: STRING
 		do
-			if a_clause.position > 0 then
+			if a_clause.end_position > 0 then
 				s := current_compiled_class.text
 				if s = Void then
 					s := development_window.editor_tool.text_area.text
 				end
-				development_window.editor_tool.text_area.display_line_at_top_when_ready (character_line (a_clause.position, s))
+				development_window.editor_tool.text_area.display_line_at_top_when_ready (character_line (a_clause.end_position, s))
 			end
 		end
 

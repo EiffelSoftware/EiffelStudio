@@ -13,7 +13,8 @@ inherit
 	SHARED_SERVER;
 	SHARED_INST_CONTEXT;
 	SHARED_EVALUATOR;
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
+	SHARED_ARG_TYPES
 
 creation
 
@@ -48,6 +49,8 @@ feature -- Initialization
 			source_enclosing_class := source.written_class;
 			target_enclosing_class := target_class;
 			target_feature_table := target_class.feature_table;
+				-- Initialize the target arguments for evaluating arguments. 
+			Argument_types.init1 (target);
 debug ("FLAT_SHORT")
 	io.error.putstring ("%Tsource feature: ");
 	io.error.putstring (source.feature_name);

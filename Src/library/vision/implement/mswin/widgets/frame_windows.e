@@ -9,24 +9,6 @@ class
 
 inherit
 	MANAGER_WINDOWS
-		rename
-			realize as old_realize
-		export
-			{NONE} all
-		redefine
-			child_has_resized,
-			height,
-			on_size,
-			set_form_height,
-			set_form_width,
-			set_size,
-			set_width,
-			set_height,
---			set_enclosing_size,
-			width
-		end
-
-	MANAGER_WINDOWS
 		redefine
 			child_has_resized,
 			height,
@@ -37,10 +19,7 @@ inherit
 			set_size,
 			set_width,
 			set_height,
-			set_enclosing_size,
 			width
-		select
-			realize
 		end
 
 	FRAME_I
@@ -73,6 +52,8 @@ inherit
 			release_capture as wel_release_capture,
 			item as wel_item
 		undefine
+			on_show,
+			on_hide,
 			on_draw_item,
 			on_right_button_up,
 			on_menu_command,
@@ -204,12 +185,6 @@ feature -- Status setting
 			end
 		end
 
---	set_enclosing_size is
---			-- Adjust size of child
---		do
---			set_child_size
---		end
-
 	child_has_resized is
 			-- Adjust size of child
 		local
@@ -260,9 +235,12 @@ feature {NONE} -- Implementation
 		require else
 			box_not_void: private_box /= Void
 			box_exists: private_box.exists
+		local
+			resize_data: RESIZE_CONTEXT_DATA
 		do
+			!! resize_data.make (owner, new_width, new_height, code)
 			private_box.resize ((new_width).max (0), (new_height).max (0))
-			resize_actions.execute (Current, Void)
+			resize_actions.execute (Current, resize_data)
 		end
 
 	class_name: STRING is

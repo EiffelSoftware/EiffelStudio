@@ -15,9 +15,9 @@ feature -- Constants for SMTP Protocol
 
 	Data: STRING is "DATA"
 
-	Mail_from: STRING is "MAIL FROM:"
+	Mail_from: STRING is "MAIL FROM: "
 
-	Mail_to: STRING is "RCPT TO:"
+	Mail_to: STRING is "RCPT TO: "
 
 	Mail_cc: STRING is "RCPT CC:"
 

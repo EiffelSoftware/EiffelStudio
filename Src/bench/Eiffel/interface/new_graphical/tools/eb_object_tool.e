@@ -422,13 +422,34 @@ feature -- Status setting
 	update is
 			-- Display current execution status.
 			--| Deferred implementation for optimization purposes.
+		local
+			l_status: APPLICATION_STATUS
 		do
-			ev_application.idle_actions.prune_all (update_agent)
+			cancel_process_real_update_on_idle
 			stack_objects_tree.wipe_out
 			objects_tree.wipe_out
-			ev_application.idle_actions.extend (update_agent)
+			l_status := application.status
+			if l_status /= Void then
+				process_real_update_on_idle (l_status.is_stopped)
+			end
 		end
 
+	update_agent_call_on_stopped_state: BOOLEAN
+	
+	process_real_update_on_idle (a_dbg_stopped: BOOLEAN) is
+			-- Call `real_update' on idle action
+		do
+			update_agent_call_on_stopped_state := a_dbg_stopped
+			ev_application.idle_actions.extend (update_agent)			
+		end
+	
+	cancel_process_real_update_on_idle is
+			-- cancel any calls to `real_update' on idle action	
+		do
+			update_agent_call_on_stopped_state := False
+			ev_application.idle_actions.prune_all (update_agent)			
+		end	
+		
 	set_debugger_manager (a_manager: like debugger_manager) is
 			-- Affect `a_manager' to `debugger_manager'.
 		do
@@ -578,7 +599,7 @@ feature {NONE} -- Implementation
 				stack_objects_tree.wipe_out
 				objects_tree.wipe_out
 				if status.is_stopped then
-					if 
+					if
 						status.has_valid_call_stack
 						and then status.has_valid_current_eiffel_call_stack_element
 					then

@@ -256,7 +256,7 @@ feature -- Status setting
 			if application.status.current_thread_id /= tid then
 				application.status.set_current_thread_id (tid)
 				application.status.reload_current_call_stack
-				real_update
+				update
 			end
 		end
 
@@ -294,16 +294,36 @@ feature -- Status setting
 
 	update is
 			-- Refresh `Current's display.
+		local
+			l_status: APPLICATION_STATUS			
 		do
+			cancel_process_real_update_on_idle
 			stack_list.wipe_out
-			if Application.status /= Void then
+			l_status := application.status
+			if l_status /= Void then			
 				display_stop_cause
 				refresh_threads_info
 				extra_stack_info.remove_text
+
+				process_real_update_on_idle (l_status.is_stopped)
 			end
-			ev_application.idle_actions.prune_all (update_agent)
-			ev_application.idle_actions.extend (update_agent)
 		end
+
+	update_agent_call_on_stopped_state: BOOLEAN
+	
+	process_real_update_on_idle (a_dbg_stopped: BOOLEAN) is
+			-- Call `real_update' on idle action
+		do
+			update_agent_call_on_stopped_state := a_dbg_stopped
+			ev_application.idle_actions.extend (update_agent)			
+		end
+	
+	cancel_process_real_update_on_idle is
+			-- cancel any calls to `real_update' on idle action	
+		do
+			update_agent_call_on_stopped_state := False
+			ev_application.idle_actions.prune_all (update_agent)			
+		end		
 
 	change_manager (a_manager: EB_TOOL_MANAGER; an_explorer_bar: like explorer_bar) is
 			-- Change the window and explorer bar `Current' is in.
@@ -350,10 +370,8 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			stack: EIFFEL_CALL_STACK
-			tmp_list: ARRAYED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			l_row: EV_MULTI_COLUMN_LIST_ROW
-			e_st_elt: EIFFEL_CALL_STACK_ELEMENT
-			rows_to_disable: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW]
+			l_tooltipable_row: EB_MULTI_COLUMN_LIST_ROW
 			l_status: APPLICATION_STATUS
 		do
 			ev_application.idle_actions.prune_all (update_agent)
@@ -363,34 +381,34 @@ feature {NONE} -- Implementation
 				display_stop_cause
 				refresh_threads_info
 				stack_list.wipe_out
-				stack := l_status.call_stack (l_status.current_thread_id)
 				if
-					l_status.is_stopped and then
-					stack /= Void
+					l_status.is_stopped
 				then
-					refresh_extra_stack_info
-					
-					create tmp_list.make (stack.count)
-					save_call_stack_cmd.enable_sensitive
-					from
-						stack.start
-						create rows_to_disable.make
-						i := 1
-					until
-						stack.after
-					loop
-						l_row := element_to_row (stack.item, i)
-						tmp_list.extend (l_row)
-						e_st_elt ?= stack
-						if e_st_elt = Void then
-							rows_to_disable.extend (l_row)
+					stack := l_status.current_call_stack					
+					if stack /= Void then
+						refresh_extra_stack_info
+						save_call_stack_cmd.enable_sensitive
+						from
+							stack.start
+							i := 1
+						until
+							stack.after
+						loop
+							l_row := element_to_row (stack.item, i)
+							stack_list.extend (l_row)
+							if not stack.item.is_eiffel_call_stack_element then
+								l_row.disable_select
+							end
+							i := i + 1
+							stack.forth
 						end
-						i := i + 1
-						stack.forth
-					end
-					stack_list.append (tmp_list)
-					if not rows_to_disable.is_empty then
-						rows_to_disable.do_all (agent {EV_MULTI_COLUMN_LIST_ROW}.disable_select )
+					else
+						create l_tooltipable_row
+						l_tooltipable_row.extend ("Unable to get call stack data")
+						l_tooltipable_row.set_tooltip ("Double click to refresh call stack")
+						l_tooltipable_row.set_pixmap (Pixmaps.warning_pixmap)
+						l_tooltipable_row.pointer_double_press_actions.force_extend (agent update)
+						stack_list.extend (l_tooltipable_row)
 					end
 				else
 					save_call_stack_cmd.disable_sensitive
@@ -471,7 +489,7 @@ feature {NONE} -- Implementation
 		end		
 		
 	refresh_threads_info is
-			-- 
+			-- Refresh thread info according to debugger data
 		local
 			ctid: INTEGER
 		do
@@ -481,7 +499,8 @@ feature {NONE} -- Implementation
 		end
 		
 	refresh_extra_stack_info is
-			-- 
+			-- Refresh data corresponding to any extra data
+			-- the debugger might have (ie module for dotnet debugging)
 		local
 			cse_dotnet: CALL_STACK_ELEMENT_DOTNET
 		do
@@ -539,7 +558,7 @@ feature {NONE} -- Implementation
 			Result.append (" Tag: ")
 			s := l_status.exception_tag
 			if s /= Void then
-				Result.append_string (s)				
+				Result.append_string (s)
 			end
 
 -- FIXME JFIAT: 2003/03/12 : what for this postcondition limitation ?
@@ -583,7 +602,6 @@ feature {NONE} -- Implementation
 			create l_tooltip.make (10)
 			
 			e_cse ?= elem
-
 				--| Routine name
 			l_feature_info := elem.routine_name.twin
 			l_tooltip.append_string (l_feature_info)

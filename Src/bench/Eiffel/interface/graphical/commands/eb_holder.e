@@ -22,14 +22,10 @@ feature -- Initialization
 	make (a_command: like associated_command; a_button: like associated_button; a_menu_entry: like associated_menu_entry) is
 			-- Initialize Current, with `associated_command' as `a_command',
 			-- and `associated_button' as `a_button'.
-		require else
-			non_void_command: a_command /= Void
 		do
-			associated_command := a_command;
-			a_command.set_holder (Current);
 			associated_button := a_button;
 			associated_menu_entry := a_menu_entry;
-			is_sensitive := True;
+			make_plain (a_command);
 		ensure then
 			command_set: associated_command.is_equal (a_command)
 		end;
@@ -38,8 +34,6 @@ feature -- Initialization
 			-- Initialize Current, with `associated_command' as `a_command'.
 		do
 			associated_command := a_command;
-			a_command.set_holder (Current);
-			is_sensitive := True
 		end;
 
 feature -- Execution
@@ -77,24 +71,6 @@ feature -- Setting
 			b: like associated_button;
 			m: like associated_menu_entry
 		do
-			b := associated_button;
-			m := associated_menu_entry
-			if sensitivity then
-				if b /= Void then
-					b.set_sensitive
-				end;
-				if m /= Void then
-					m.set_sensitive
-				end
-			else
-				if b /= Void then
-					b.set_insensitive
-				end;
-				if m /= Void then
-					m.set_insensitive
-				end
-			end;
-			is_sensitive := sensitivity
 		end;
 
 feature -- Properties

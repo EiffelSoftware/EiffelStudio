@@ -76,7 +76,7 @@ feature -- Basic operations
 	infix "^" (s: INTEGER): like Current is
 			-- Result of shifting bit sequence by `s' positions
 			-- (Positive `s' shifts right, negative `s' shifts left;
-			-- bits failling off the sequence's bounds are lost.)
+			-- bits falling off the sequence's bounds are lost.)
 		do
 			Result := b_shift ($Current, s)
 		end;

@@ -16,7 +16,6 @@ feature -- Access
 	area: SPECIAL [T];
 			-- Special data zone
 
-
 feature {NONE} -- Initialization
 
 	make_area (n: INTEGER) is

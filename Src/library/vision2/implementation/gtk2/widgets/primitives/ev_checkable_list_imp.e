@@ -42,7 +42,7 @@ feature -- Initialization
 			
 			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_toggle_new
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)				
-			create a_gtk_c_str.make ("active")
+			a_gtk_c_str :=  "active"
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, boolean_tree_model_column)
 			
 			real_signal_connect (a_cell_renderer, "toggled", agent (app_implementation.gtk_marshal).boolean_cell_renderer_toggle_intermediary (internal_id, ?, ?), agent (App_implementation.gtk_marshal).gtk_args_to_tuple)

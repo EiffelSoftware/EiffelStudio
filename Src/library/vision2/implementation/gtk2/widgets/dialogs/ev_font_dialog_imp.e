@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			a_cs: EV_GTK_C_STRING
 		do
 			base_make (an_interface)
-			create a_cs.make ("Font Selection Dialog")
+			a_cs := "Font Selection Dialog"
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_font_selection_dialog_new (
 						a_cs.item
 					))

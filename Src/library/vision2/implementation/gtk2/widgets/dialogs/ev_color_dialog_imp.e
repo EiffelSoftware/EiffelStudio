@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 
 			-- Create the gtk object.
-			create a_cs.make ("Color selection dialog")
+			a_cs := "Color selection dialog"
 			set_c_object (
 				feature {EV_GTK_EXTERNALS}.gtk_color_selection_dialog_new (
 					a_cs.item

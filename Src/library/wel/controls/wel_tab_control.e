@@ -384,78 +384,81 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			r_addr: INTEGER
 			l_item: POINTER
 		do
-				--| Disable the default windows processing and return correct
-				--| value to Windows, i.e. nonzero value.
-			disable_default_processing
-			set_message_return_value (1)
-
-				-- Find out where tabs are located.
-			cur_style := style
-			is_bottom := flag_set (cur_style, Tcs_bottom)
-			is_vertical := flag_set (cur_style, Tcs_vertical)
-			is_right := flag_set (cur_style, Tcs_right)
-
-				-- Create the region as the invalid area of `Current' that
-				-- needs to be redrawn.
-			create main_region.make_rect_indirect (invalid_rect)
-			create r.make (0, 0, 0, 0)
-			r_addr := r.to_integer
-
-				-- Remove from region the area corresponding to tabs.
-				-- For a non selected tab, the area returned is too big, we need
-				-- to make it smaller because only the text will be updated,
-				-- not the part that is close to the notebook area.
-				-- For a selected tab, the area returned is too small, we need
-				-- to make it bigger to avoid the tab of flickering.
-			from
-				i := 0
-				a_count := count
-				sel := current_selection
-				l_item := item
-			until
-				i = a_count
-			loop
-				cwin_send_message (l_item, Tcm_getitemrect, i, r_addr)
-				if i /= sel then
-					if is_bottom then
-						r.set_top (r.top + 2)
-					elseif is_vertical then
-						if is_right then
-							r.set_left (r.left + 2)
-						else
-							r.set_right (r.right - 2)
-						end
-					else
-						r.set_bottom (r.bottom - 2)
-					end
-				else
-					if is_bottom then
-						r.set_bottom (r.bottom + 2)
-					elseif is_vertical then
-						if is_right then
-							r.set_right (r.right + 2)
-						else
-							r.set_left (r.left - 2)
-						end
-					else
-						r.set_top (r.top - 2)
-					end
-				end
-				create tmp_region.make_rect_indirect (r)
-				new_region := main_region.combine (tmp_region, Rgn_diff)
-				tmp_region.delete
-				main_region.delete
-				main_region := new_region
-				i := i + 1
-			end
-
-				-- Fill the remaining region, `main_region'.
 			bk_brush := background_brush
-			paint_dc.fill_region (main_region, bk_brush)
 
-				-- Clean up GDI objects
-			bk_brush.delete
-			main_region.delete
+			if bk_brush /= Void then
+					--| Disable the default windows processing and return correct
+					--| value to Windows, i.e. nonzero value.
+				disable_default_processing
+				set_message_return_value (1)
+	
+					-- Find out where tabs are located.
+				cur_style := style
+				is_bottom := flag_set (cur_style, Tcs_bottom)
+				is_vertical := flag_set (cur_style, Tcs_vertical)
+				is_right := flag_set (cur_style, Tcs_right)
+	
+					-- Create the region as the invalid area of `Current' that
+					-- needs to be redrawn.
+				create main_region.make_rect_indirect (invalid_rect)
+				create r.make (0, 0, 0, 0)
+				r_addr := r.to_integer
+	
+					-- Remove from region the area corresponding to tabs.
+					-- For a non selected tab, the area returned is too big, we need
+					-- to make it smaller because only the text will be updated,
+					-- not the part that is close to the notebook area.
+					-- For a selected tab, the area returned is too small, we need
+					-- to make it bigger to avoid the tab of flickering.
+				from
+					i := 0
+					a_count := count
+					sel := current_selection
+					l_item := item
+				until
+					i = a_count
+				loop
+					cwin_send_message (l_item, Tcm_getitemrect, i, r_addr)
+					if i /= sel then
+						if is_bottom then
+							r.set_top (r.top + 2)
+						elseif is_vertical then
+							if is_right then
+								r.set_left (r.left + 2)
+							else
+								r.set_right (r.right - 2)
+							end
+						else
+							r.set_bottom (r.bottom - 2)
+						end
+					else
+						if is_bottom then
+							r.set_bottom (r.bottom + 2)
+						elseif is_vertical then
+							if is_right then
+								r.set_right (r.right + 2)
+							else
+								r.set_left (r.left - 2)
+							end
+						else
+							r.set_top (r.top - 2)
+						end
+					end
+					create tmp_region.make_rect_indirect (r)
+					new_region := main_region.combine (tmp_region, Rgn_diff)
+					tmp_region.delete
+					main_region.delete
+					main_region := new_region
+					i := i + 1
+				end
+	
+					-- Fill the remaining region, `main_region'.
+				paint_dc.fill_region (main_region, bk_brush)
+	
+					-- Clean up GDI objects
+				bk_brush.delete
+				main_region.delete
+			end
 		end
 
 feature {NONE} -- Implementation

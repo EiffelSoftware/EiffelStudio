@@ -1,0 +1,162 @@
+#!/bin/sh
+
+
+
+# quick_configure generate run-times libraries for the platforms given as 
+# arguments.
+
+usage () {
+    cat <<EOF
+Usage: quick_configure [platform run-time] 
+EOF
+}
+
+
+help () {
+cat <<EOF
+quick_configure only generates the run-times libraries
+
+run-time:
+	all -> all libraries (not only run-times)
+	<nothing>-> all run-times 
+	lib<name>.{a,so} -> this run-time
+	shared -> static shared library
+	mt ->only MT static libraries
+	mtshared -> MT shared libraries
+
+platforms:
+	default -> $PLATFORM
+	linux-glibc 
+	solaris
+	unixware
+	sgi
+	unicos-c90
+	unicos-t3d
+	hpux-9
+	hpux-10
+	alpha
+	...
+
+EOF
+
+}
+
+skiplep () {
+
+cd parsing/eiffel
+
+cp parser.cwn parser.c
+cp parser.hwn  parser.h
+rm -f lexic.c
+cvs update lexic.c
+touch *.[ch]
+cd ../..
+
+cd parsing/lace
+
+cp lace_y.hwn lace_y.h
+cp lace_y.cwn lace_y.c
+touch *.[ch]
+}
+
+echo quick_configure begins...
+
+allmakefiles=yes
+
+if [ $# -gt 2 ] ; then
+	echo Too many arguments
+	usage
+	exit
+fi
+
+if [ $# = 0 ]; then
+	echo Default platform is $PLATFORM
+	echo Default library is all
+	platform=$PLATFORM
+	runtimes=all
+elif [ $# = 1 ]; then
+	runtimes=all
+elif [ $# = 2 ]; then
+	runtimes=$2
+fi
+if [ $runtimes = all ]; then
+	echo Skip lex/yacc? [y]?
+	read rep
+	if [ $rep != y ]; then 
+		echo Will generate file with lex/yacc 
+	else
+		echo Skipping lex/yacc
+		skiplex
+	fi
+fi
+if [ $# -gt 0 ]; then
+	if [ $1 = -help ]; then
+		help
+		exit
+	else
+		platform=$1
+		cd CONFIGS
+		if [ -f $platform ]; then
+			#Run compilation	
+			echo Compiling run-time for $platform
+			cd ..
+		else
+			# No corresponding platform
+			echo No $platform in CONFIGS directory
+			usage
+			exit
+		fi
+	fi
+fi
+
+
+if [ -f Makefile ]; then
+	echo Makefile exists, make clobber [y]?
+	read rep
+	if [ $rep != y ]; then
+		echo Regenerate all Makefiles? [y]
+		read rep
+		if [ $rep != y ]; then
+			echo Only regenerate run-time/Makefile
+			cd run-time; sh Makefile.SH; cd ..
+			allmakefiles=no
+			echo clean run-time [y]?
+			read rep
+			if [ $rep != y ]; then
+				echo No cleaning
+			else
+				cd run-time; make clean; cd ..
+			fi
+		else
+			echo Regenerate all Makefiles
+		fi
+	else	
+		make clobber
+		
+	fi
+fi	
+
+
+if [ -f config.sh ]; then
+	rm -f config.sh
+fi
+cp CONFIGS/$platform config.sh
+if [ $allmakefiles != no ]; then
+	Configure -S
+fi
+
+if [ $runtimes = all ]; then
+	cp mkdep.unix mkdep; make depend
+	make
+else
+	cd run-time; make $2 
+	cd ..
+
+fi
+if [ -f run-time/config.sh ]; then
+	echo No link done.
+else
+	cd run-time; make link; cd ..
+fi
+
+echo quick_configure terminated.

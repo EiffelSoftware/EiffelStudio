@@ -11,9 +11,9 @@ inherit
 
 	COMMAND_W;
 	NAMER;
-	PROMPT_D
+	SEARCH_REPLACE_DIALOG
 		rename
-			make as prompt_dialog_create
+			make as srd_make
 		end;
 	WINDOW_ATTRIBUTES
 
@@ -24,19 +24,23 @@ creation
 feature -- Initialization
 
 	make (a_tool: TOOL_W) is
-			-- Create a file selection dialog
+			-- Create a search and replace dialog.
+		require
+			a_tool_not_void: a_tool /= Void
 		local
 			void_argument: ANY
 		do
 			tool := a_tool;
-			prompt_dialog_create (l_Search, a_tool.popup_parent);
-			set_title (l_Search);
-			set_selection_label ("Search");
-			hide_apply_button;
-			hide_help_button;
-			set_width (200);
-			set_ok_label ("Next");
-			add_ok_action (Current, ok_it);
+			srd_make (Interface_names.n_X_resource_name, a_tool.popup_parent);
+			set_title (Interface_names.t_Search);
+			if a_tool.has_editable_text then
+				set_replace
+			else
+				set_search
+			end;
+			add_find_action (Current, find_it);
+			add_replace_action (Current, replace_it);
+			add_replace_all_action (Current, replace_it_all);
 			add_cancel_action (Current, cancel_it);
 			set_composite_attributes (Current)
 		end;
@@ -62,14 +66,26 @@ feature -- Access
 
 feature {NONE} -- Properties
 
-	ok_it: ANY is
-			-- Argument for `work' if ok button pressed
+	find_it: ANY is
+			-- Argument for `work' if find button pressed
 		once
 			!! Result
 		end;
 
 	cancel_it: ANY is
 			-- Argument for `work' if cancel button pressed
+		once
+			!! Result
+		end;
+
+	replace_it: ANY is
+			-- Argument for `work' if replace button pressed
+		once
+			!! Result
+		end;
+
+	replace_it_all: ANY is
+			-- Argument for `work' if replace all button pressed
 		once
 			!! Result
 		end;
@@ -84,10 +100,14 @@ feature {NONE} -- Implementation
 			if last_warner /= Void then
 				last_warner.popdown
 			end;
-			if argument = ok_it then
-				tool.text_window.search (selection_text);
+			if argument = find_it then
+				tool.text_window.search (search_text)
 			elseif argument = cancel_it then
 				popdown
+			elseif argument = replace_it then
+				tool.text_window.replace_text (search_text, replace_text, False)
+			elseif argument = replace_it_all then
+				tool.text_window.replace_text (search_text, replace_text, True)
 			end
 		end;
 

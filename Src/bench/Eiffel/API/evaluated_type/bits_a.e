@@ -105,7 +105,7 @@ feature {COMPILER_EXPORTER}
 					Result := other_bits.bit_count >= bit_count
 				end
 			else
-				Result := {BASIC_A} precursor (other, False)
+				Result := {BASIC_A} Precursor (other, False)
 			end
 		end
 

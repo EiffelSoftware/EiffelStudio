@@ -7,6 +7,12 @@ indexing
 class
 	GD_ARC
 
+inherit
+	
+	GD_COLORABLE
+
+	GD_FIGURE
+
 creation
 	make
 
@@ -48,10 +54,6 @@ feature {NONE} -- Implementation
 
 	starting_deg, ending_deg: INTEGER
 		-- Degree where the arc initiates, and where it ends.
-
-	image: GD_IMAGE
-
-	color_index: INTEGER
 
 feature {NONE} -- Externals
 

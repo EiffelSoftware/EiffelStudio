@@ -9,7 +9,7 @@ class CONVERTER inherit
 
 	EC_TYPES
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 
@@ -17,10 +17,10 @@ feature -- Initialization
 
 	make is
 		do
-			!! lex.make;
-			!! parse;
-			!! container.make (1, 5);
-			!! tmps.make (0)
+			create lex.make;
+			create parse;
+			create container.make (1, 5);
+			create tmps.make (0)
 		end;
 
 feature -- Status report
@@ -77,7 +77,7 @@ feature -- Status setting
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			!! f.make (fn);
+			create f.make (fn);
 			set_file (f)
 		end;
 

@@ -18,7 +18,7 @@ inherit
 			store_object
 		end
 
-creation -- Creation procedures
+create -- Creation procedures
 
 	make
 
@@ -27,8 +27,8 @@ feature -- Initialization
 	make is
 		do
 			converter_make;
-			!! store.make;
-			!! control.make
+			create store.make;
+			create control.make
 		end;
 
 feature -- Status setting

@@ -11,7 +11,7 @@ class EC_DESCRIPTOR inherit
 
 	EXT_INTERNAL
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 
@@ -19,7 +19,7 @@ feature  -- Initilization
 
 	make is
 		do
-			!! ecd_fields.make (1, 10);
+			create ecd_fields.make (1, 10);
 			ecd_clear
 		end;
 
@@ -87,7 +87,7 @@ feature -- Status setting
 			if ecd_index < ecd_min_index then
 				ecd_min_index := ecd_index
 			end;
-			!!f.make;
+			create f.make;
 			f.set_field (type, n);
 			ecd_fields.force (f, ecd_index)
 		end;
@@ -130,7 +130,7 @@ feature -- Status setting
 			ra, da: ARRAY [BOOLEAN]  -- Referenced and Declared array
 		do
 			ecd_error := False;
-			!!tmps.make(0);
+			create tmps.make(0);
 			nb_fields := field_count (ref);
 			if ecd_min_index /= 1 then
 				tmps.wipe_out;
@@ -150,8 +150,8 @@ feature -- Status setting
 				tmps.append(".%N");
 				set_ecd_error(tmps)
 			end;
-			!!ra.make(1,nb_fields);
-			!!da.make(1,nb_fields);
+			create ra.make(1,nb_fields);
+			create da.make(1,nb_fields);
 			from 
 				i:=1
 			until
@@ -226,7 +226,7 @@ feature -- Status setting
 			tmps:STRING
 		do
 			ecd_error := False;
-			!!tmps.make(5);
+			create tmps.make(5);
 			nb_fields := field_count (ref);
 			ecd_clear;
 			from 
@@ -281,7 +281,7 @@ feature {NONE} -- Status setting
 			tmps:STRING;
 			tmpb:BOOLEAN
 		do
-			!!tmps.make(5);
+			create tmps.make(5);
 			f_type := field_type (i, o);
 			f_name := field_name (i, o);
 			if f.field_name.is_equal(f_name) then

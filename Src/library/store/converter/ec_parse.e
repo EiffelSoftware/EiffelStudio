@@ -21,7 +21,7 @@ feature -- Status report
 	ecp_message: STRING is
 			-- Error message if `sql_parsed' is false
 		once
-			!! Result.make (0)
+			create Result.make (0)
 		end
 
 	ecp_token_array: ARRAY [TOKEN]
@@ -93,7 +93,7 @@ feature {NONE} -- Status report
 	tmps: STRING is
 			-- Temporary buffer
 		once
-			!! Result.make (0)
+			create Result.make (0)
 		end;
 
 feature {NONE} -- Status setting
@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 						end;
 						tst := field_copy (ecp_field.field_rank, ecp_reference, tmp_b)
 					when String_ttype then 
-						!!tmp_s.make (0);
+						create tmp_s.make (0);
 						tmp_s.append (token_string.substring
 								(2, token_string.count-1));
 						tst := field_copy (ecp_field.field_rank, ecp_reference, tmp_s)

@@ -7,7 +7,7 @@ indexing
 
 class EC_FIELD 
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 

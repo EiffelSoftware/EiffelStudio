@@ -84,8 +84,6 @@ feature -- Implementation
 
 	initialize_components is
 			--
-		local
-			l_array: NATIVE_ARRAY [SYSTEM_STRING]
 		do
 			create components.make
 			create label_3.make
@@ -313,8 +311,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_sender: sender /= Void
 			non_void_args: args /= Void
-		local
-			res_comp: INTEGER
 		do
 			if feature {SYSTEM_DATE_TIME}.compare (dtp_min_date.value, dtp_max_date.value) < 0 then
 				error_min.set_error (dtp_min_date, "")

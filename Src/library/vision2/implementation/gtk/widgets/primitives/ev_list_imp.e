@@ -18,6 +18,7 @@ inherit
 		undefine
 			set_default_colors
 		redefine
+			initialize,
 			interface,
 			make
 		end
@@ -59,6 +60,47 @@ feature {NONE} -- Initialization
 			disable_multiple_selection
 			C.gtk_widget_show (list_widget)
 			C.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
+		end
+
+	initialize is
+		do
+			{EV_PRIMITIVE_IMP} Precursor
+			real_signal_connect (list_widget, "select_child", ~select_callback)
+			real_signal_connect (list_widget, "unselect_child", ~deselect_callback)
+		end
+
+	select_callback (a_list_item: POINTER) is
+			-- Called when a list item is selected
+		local
+			l_item: EV_LIST_ITEM_IMP
+		do
+		 	l_item ?= eif_object_from_c (a_list_item)
+
+			if previous_selected_item /= Void and then
+			previous_selected_item.parent = interface and then
+			previous_selected_item /= l_item.interface then
+				previous_selected_item.deselect_actions.call ([])
+			end
+			
+			if l_item.is_selected then
+				l_item.interface.select_actions.call ([])
+				interface.select_actions.call ([l_item.interface])
+				previous_selected_item := l_item.interface
+			else
+				interface.deselect_actions.call ([l_item.interface])
+				previous_selected_item := Void
+			end		
+		end
+
+	deselect_callback (a_list_item: POINTER) is
+			-- Called when a list item is deselected.
+		local
+			l_item: EV_LIST_ITEM_IMP
+		do
+			l_item ?= eif_object_from_c (a_list_item)
+			l_item.interface.deselect_actions.call ([])
+			interface.deselect_actions.call ([l_item.interface])
+			previous_selected_item := Void
 		end
 
 feature -- Status report
@@ -127,6 +169,9 @@ feature -- Status setting
 
 feature {EV_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
+	previous_selected_item: EV_LIST_ITEM
+		-- Item that was selected previously.
+
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
@@ -167,6 +212,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/07 01:27:23  king
+--| Added event handling
+--|
 --| Revision 1.29  2000/03/03 23:55:07  king
 --| Indented c externals
 --|

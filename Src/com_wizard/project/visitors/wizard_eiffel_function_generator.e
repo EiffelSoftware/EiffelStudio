@@ -58,9 +58,12 @@ feature {NONE} -- Implementation
 
 				if is_paramflag_fretval (arguments.item.flags) then
 					pointed_descriptor ?= arguments.item.type
+					create visitor
+
 					if pointed_descriptor /= Void then
-						create visitor
 						visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
+					else
+						visitor.visit (arguments.item.type)
 					end
 					feature_writer.set_result_type (visitor.eiffel_type)
 				else
@@ -79,11 +82,6 @@ feature {NONE} -- Implementation
 
 			-- Eiffel will not have result type if the result type is "void" or "HRESULT"
 			if not is_hresult (visitor.vt_type) and then not is_void (visitor.vt_type) then
-				pointed_descriptor ?= func_desc.return_type
-				if pointed_descriptor /= Void then
-					create visitor
-					visitor.visit (pointed_descriptor.pointed_data_type_descriptor)
-				end
 				feature_writer.set_result_type (visitor.eiffel_type)
 			end
 

@@ -21,9 +21,11 @@ feature {NONE} -- Implementation
 	dispatch_interface: BOOLEAN
 			-- Is coclass has dispinterface?
 
-	add_default_features is
+	add_default_features (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR) is
 			-- Add default features,
 			-- e.g. make, constructor, destructor, delete wrapper etc.
+		require
+			non_void_descriptor: a_component_descriptor /= Void
 		deferred
 		end
 

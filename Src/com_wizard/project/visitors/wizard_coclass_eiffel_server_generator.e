@@ -43,7 +43,7 @@ feature -- Access
 			Precursor {WIZARD_COCLASS_EIFFEL_GENERATOR} (a_descriptor)
 			coclass_descriptor := a_descriptor
 
-			add_default_features
+			add_default_features (a_descriptor)
 
 			check
 				valid_writer: eiffel_writer.can_generate
@@ -80,7 +80,7 @@ feature {NONE} -- Implementation
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
 		end
 
-	add_default_features is
+	add_default_features (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate process dependent feature.
 		do
 			if shared_wizard_environment.in_process_server then

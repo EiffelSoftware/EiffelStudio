@@ -38,7 +38,6 @@ feature -- Basic operations
 
 			dispatch_interface := (a_descriptor.interface_descriptor.dispinterface or a_descriptor.interface_descriptor.dual)
 
-			implemented_interface_descriptor := a_descriptor
 			eiffel_writer.set_class_name (a_class_name)
 			eiffel_writer.set_description (a_descriptor.description)
 
@@ -49,7 +48,7 @@ feature -- Basic operations
 
 			set_default_ancestors (eiffel_writer)
 			add_creation
-			add_default_features
+			add_default_features (a_descriptor)
 
 			if dispatch_interface then
 				eiffel_writer.add_feature (last_error_code_feature, Status_report)
@@ -77,9 +76,6 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	implemented_interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
-			-- Implemented interface descriptor
-
 	add_creation is
 			-- Add creation routines.
 		do
@@ -87,13 +83,13 @@ feature {NONE} -- Implementation
 			eiffel_writer.add_creation_routine (Make_from_pointer)
 		end
 
-	add_default_features is
+	add_default_features (an_implemented_interface_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR) is
 			-- Add default features,
 			-- e.g. make, constructor, destructor, delete wrapper etc.
 		local
 			a_coclass_name: STRING
 		do
-			a_coclass_name := name_for_feature (clone (implemented_interface_descriptor.eiffel_class_name))
+			a_coclass_name := name_for_feature (clone (an_implemented_interface_descriptor.eiffel_class_name))
 
 			create ccom_create_from_pointer_feature_name.make (0)
 			ccom_create_from_pointer_feature_name.append (Ccom_clause)
@@ -106,10 +102,10 @@ feature {NONE} -- Implementation
 			ccom_delete_feature_name.append ("delete_")
 			ccom_delete_feature_name.append (a_coclass_name)
 
-			eiffel_writer.add_feature (delete_coclass_feature (implemented_interface_descriptor), Externals)
+			eiffel_writer.add_feature (delete_coclass_feature (an_implemented_interface_descriptor), Externals)
 			eiffel_writer.add_feature (delete_wrapper_feature, Implementation)
-			eiffel_writer.add_feature (create_coclass_from_pointer_feature (implemented_interface_descriptor), Externals)
-			eiffel_writer.add_feature (ccom_item_feature (implemented_interface_descriptor), Externals)
+			eiffel_writer.add_feature (create_coclass_from_pointer_feature (an_implemented_interface_descriptor), Externals)
+			eiffel_writer.add_feature (ccom_item_feature (an_implemented_interface_descriptor), Externals)
 			eiffel_writer.add_feature (make_from_pointer_feature, Initialization)
 
 		end

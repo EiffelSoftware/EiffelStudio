@@ -39,7 +39,11 @@ feature -- Basic operations
 
 			create result_type_visitor
 			result_type_visitor.visit (a_descriptor.return_type)
-			ccom_feature_writer.set_result_type (result_type_visitor.c_type)
+			if result_type_visitor.is_basic_type then
+				ccom_feature_writer.set_result_type (result_type_visitor.cecil_type)
+			else
+				ccom_feature_writer.set_result_type (Eif_reference)
+			end
 			if  result_type_visitor.c_header_file /= Void and then not  result_type_visitor.c_header_file.empty then
 				c_header_files.extend (result_type_visitor.c_header_file)
 			end
@@ -50,6 +54,9 @@ feature -- Basic operations
 				set_signature
 			end
 
+			if (result_type_visitor.vt_type = Vt_variant) then
+				result_type_visitor.set_ce_function_name ("ccom_ce_pointed_variant")
+			end
 			ccom_feature_writer.set_body (feature_body (interface_name, guid, lcid, result_type_visitor))
 		ensure
 			function_descriptor_set: func_desc /= Void
@@ -202,6 +209,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 			Result.append (Return_variant_variable)
 			Result.append (New_line_tab)
+			Result.append (New_line)
 			Result.append (initialize_excepinfo)
 			Result.append (New_line_tab)
 			Result.append ("unsigned int nArgErr")
@@ -209,7 +217,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 
 			-- Set up arguments
-			if func_desc.argument_count > 0 then
+			if (func_desc.argument_count > 0) then
 				Result.append ("args.cArgs")
 				Result.append (Space_equal_space)
 				Result.append_integer (func_desc.argument_count)
@@ -273,13 +281,13 @@ feature {NONE} -- Implementation
 					arguments.forth
 					counter := counter - 1			
 				end
-			end
 
-			Result.append (New_line_tab)
-			Result.append ("args.rgvarg")
-			Result.append (Space_equal_space)
-			Result.append (Arguments_name)
-			Result.append (Semicolon)
+				Result.append (New_line_tab)
+				Result.append ("args.rgvarg")
+				Result.append (Space_equal_space)
+				Result.append (Arguments_name)
+				Result.append (Semicolon)
+			end
 
 			Result.append (New_line)
 			Result.append (New_line_tab)
@@ -502,6 +510,20 @@ feature {NONE} -- Implementation
 				Result.append (New_line_tab)
 				Result.append (argument_value_set_up (position, vartype_namer.variant_field_name (visitor), name, visitor))
 
+			elseif (type = Vt_variant) then
+				tmp_value := clone (Ec_mapper)
+				tmp_value.append (Dot)
+				tmp_value.append ("ccom_ec_pointed_variant")
+				tmp_value.append (Space_open_parenthesis)
+				tmp_value.append (Eif_access)
+				tmp_value.append (Space_open_parenthesis)
+				tmp_value.append (name)
+				tmp_value.append (Close_parenthesis)
+				tmp_value.append (Comma_space)
+				tmp_value.append (Null)
+				tmp_value.append (Close_parenthesis)
+				Result.append (argument_value_set_up (position,  vartype_namer.variant_field_name (visitor), tmp_value, visitor))
+
 			else
 				if is_byref (type) then
 					tmp_value := clone (Tmp_clause)
@@ -595,6 +617,10 @@ feature {NONE} -- Implementation
 			Result.append (Space_equal_space)
 			Result.append (Open_parenthesis)
 			Result.append (visitor.c_type)
+			if (visitor.vt_type = Vt_variant) then
+				Result.append (Space)
+				Result.append (Asterisk)
+			end
 			Result.append (Close_parenthesis)
 			Result.append (value)
 			Result.append (Semicolon)

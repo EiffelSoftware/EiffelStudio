@@ -51,12 +51,10 @@ feature -- Basic operations
 
 			external_feature_writer.add_argument (default_pointer_argument)
 
-			if func_desc.argument_count > 0 then
-				set_feature_result_type_and_arguments
+			set_feature_result_type_and_arguments
 
-				-- Argument for external feature
-				set_external_feature_result_type_and_arguments
-			end
+			-- Argument for external feature
+			set_external_feature_result_type_and_arguments
 
 			-- Set description, function body
 			feature_writer.set_effective
@@ -189,7 +187,7 @@ feature {NONE} -- Implementation
 			create visitor
 			visitor.visit (func_desc.return_type)
 
-			if not visitor.c_type.is_equal (Hresult) then
+			if not is_void (visitor.vt_type) and not is_hresult (visitor.vt_type) then
 				return_type.append (Colon)
 				return_type.append (Space)
 
@@ -269,7 +267,8 @@ feature {NONE} -- Implementation
 			create visitor
 			visitor.visit (func_desc.return_type)
 
-			if not is_hresult (visitor.vt_type) and
+			if 
+				not is_hresult (visitor.vt_type) and
 				not is_void (visitor.vt_type)
 			then
 				pointed_descriptor ?= func_desc.return_type
@@ -360,7 +359,10 @@ feature {NONE} -- Implementation
 			create visitor
 			visitor.visit (func_desc.return_type)
 
-			if not visitor.c_type.is_equal (Hresult) then
+			if 
+				not is_hresult (visitor.vt_type) and
+				not is_void (visitor.vt_type)
+			then
 				tmp_string.prepend (Result_clause)
 			end
 

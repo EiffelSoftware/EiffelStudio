@@ -38,10 +38,8 @@ feature -- Basic operation
 			feature_writer.set_name (func_desc.interface_eiffel_name)
 
 			-- Set arguments and precondition
-			if func_desc.argument_count > 0 then
-				set_feature_result_type_and_arguments
-				set_feature_assertions
-			end
+			set_feature_result_type_and_arguments
+			set_feature_assertions
 			precondition_writer := user_defined_precondition (func_desc.interface_eiffel_name)
 
 			if func_desc.arguments /= Void and not func_desc.arguments.empty then

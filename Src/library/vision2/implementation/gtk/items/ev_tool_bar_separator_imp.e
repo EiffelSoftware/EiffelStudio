@@ -10,8 +10,14 @@ class
 
 inherit
 	EV_TOOL_BAR_SEPARATOR_I
+		select
+			parent_imp
+		end
 
 	EV_SEPARATOR_ITEM_IMP
+		rename
+			parent_imp as old_parent_imp
+		end
 
 create
 	make
@@ -31,12 +37,6 @@ feature -- Access
 		end
 
 feature -- Element change
-
-	set_parent (par: EV_TOOL_BAR) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		do
-		end
 
 	set_index (pos: INTEGER) is
 			-- Make `pos' the new index of the item in the

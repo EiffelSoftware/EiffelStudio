@@ -71,9 +71,9 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, gtk_pixmap)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (gtk_pixmap)
 
-				-- Initialize the Graphical Context
-				
 			drawable := feature {EV_GTK_EXTERNALS}.gtk_pixmap_struct_pixmap (gtk_pixmap)
+			
+				-- Initialize the Graphical Context
 			gc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (drawable)
 			feature {EV_GTK_EXTERNALS}.gdk_gc_set_function (gc, feature {EV_GTK_EXTERNALS}.GDK_COPY_ENUM)
 			initialize_graphical_context

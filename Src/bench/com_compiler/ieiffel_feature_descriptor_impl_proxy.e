@@ -239,8 +239,8 @@ feature -- Basic Operations
 
 	feature_location (file_path: CELL [STRING]; line_number: INTEGER_REF) is
 			-- Feature location, full path to file and line number
-			-- `file_path' [in, out].  
-			-- `line_number' [in, out].  
+			-- `file_path' [out].  
+			-- `line_number' [out].  
 		do
 			ccom_feature_location (initializer, file_path, line_number)
 		end

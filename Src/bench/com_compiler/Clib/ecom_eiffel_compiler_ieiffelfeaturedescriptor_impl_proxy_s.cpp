@@ -318,7 +318,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_re
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_feature_location(  /* [in, out] */ EIF_OBJECT file_path,  /* [in, out] */ EIF_OBJECT line_number )
+void ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_feature_location(  /* [out] */ EIF_OBJECT file_path,  /* [out] */ EIF_OBJECT line_number )
 
 /*-----------------------------------------------------------
 	Feature location, full path to file and line number

@@ -19,14 +19,14 @@
       </TR>
 </TABLE>
 
-<table cols="1" width="800" cellpadding="0" cellspacing="0" border="0">
+<table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
 
 <h1>Unix/Linux Users:</h1>
 <p>ISE EiffelBench supports `gcc' on most of platforms and the native `cc'
 compiler if it is an ANSI C compiler.</p>
 <p>&nbsp;</p>
-<h1>Microsoft Visual C++ Users:</h1>
+<h1><a name="microsoft">Microsoft Visual C++ Users:</a></h1>
 <p>ISE EiffelBench supports only version 5.0 or higher of the Microsoft Visual C++
 environment. You can still use older version of the Microsoft C++ environment (version 4.1 and 4.2), but this won't be supported by ISE.<br>
 <br>
@@ -34,7 +34,7 @@ If you are still planning to use version 4.2 or 4.1 or Microsoft Developer Studi
 `$EIFFEL\Docs' directory to $EIFFEL4\bench\spec\windows\config\msc where $EIFFEL4 represents the installation directory of ISE Eiffel.</p>
 <p>
 
-<h1>Borland C++ Users:</h1>
+<h1><a name="borland">Borland C++ Users:</a></h1>
 
 <p>
 ISE EiffelBench only supports version 4.52 and higher of Borland C++. In order to make the Borland tools work with the ISE EiffelBench environment,
@@ -51,9 +51,18 @@ In addition you need to define the environment variable EIF_BORLAND to denote th
 
 <h1>Borland C++ Builder Users:</h1>
 <p>In the delivery of ISE EiffelBench you will find all the needed files to support Borland C++ Builder 4.0 or higher.
-<p>C++ Builder is, however, not a supported environment because of what appears to be a bug in the Borland C++ Builder delivery.
-<p>We are sorry about this issue and awaiting an answer from Borland/Inprise as to how long it will take to fix the problem.
-<p>In the meantime, we recommend that you either upgrade to Microsoft Visual C++ 6.0 or downgrade to Borland C++ 4.52 or higher.
+C++ Builder is, however, not a supported environment because of what appears to be a bug in the Borland C++ Builder delivery.
+We are sorry about this issue and awaiting an answer from Borland/Inprise as to how long it will take to fix the problem.
+<p>In the meantime, we recommend that you either upgrade to <a href="#microsoft"> Microsoft Visual C++ 6.0</a> or downgrade to
+<a href="#borland"> Borland C++ 4.52 or higher</a>.
+<p>&nbsp;
+<h1>Cygwin Users:</h1>
+<p>In the delivery of ISE EiffelBench you will find all the needed files to
+support the GNU gcc port for Windows. However, ISE does not support it because
+of what appears to be a bug in the cygwin delivery with the bin utils. We are
+sorry about this issue and awaiting for a fix from the GNU community.
+<p>In the meantime, we recommend that you choose <a href="#microsoft"> Microsoft Visual C++ 6.0</a> or
+<a href="#borland">Borland C++ 4.52 or higher</a>.
 
 </td></tr></table>
 </body>

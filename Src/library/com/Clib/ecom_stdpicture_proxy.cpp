@@ -21,7 +21,7 @@ StdPicture::StdPicture()
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	p_unknown = NULL;
@@ -31,13 +31,13 @@ StdPicture::StdPicture()
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	if (FAILED (hr2))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr2), HRESULT_CODE (hr2));
 	};
 	p_unknown = a_qi.pItf;
@@ -57,14 +57,14 @@ StdPicture::StdPicture( IUnknown * a_pointer )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	hr = a_pointer->QueryInterface(IID_IUnknown, (void **)&p_unknown);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 
@@ -557,7 +557,7 @@ EIF_INTEGER StdPicture::ccom_ipicture_handle(  )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -588,7 +588,7 @@ EIF_INTEGER StdPicture::ccom_ipicture_h_pal(  )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -619,7 +619,7 @@ EIF_INTEGER StdPicture::ccom_ipicture_type(  )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -650,7 +650,7 @@ EIF_INTEGER StdPicture::ccom_ipicture_width(  )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -681,7 +681,7 @@ EIF_INTEGER StdPicture::ccom_ipicture_height(  )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -711,7 +711,7 @@ void StdPicture::ccom_ipicture_render(  /* [in] */ EIF_INTEGER hdc,  /* [in] */ 
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -738,7 +738,7 @@ void StdPicture::ccom_ipicture_set_h_pal(  /* [in] */ EIF_INTEGER phpal )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -766,7 +766,7 @@ EIF_INTEGER StdPicture::ccom_cur_dc(  )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -800,7 +800,7 @@ void StdPicture::ccom_select_picture(  /* [in] */ EIF_INTEGER hdc_in,  /* [out] 
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	rt_ce.ccom_ce_pointed_integer ((INT *)tmp_phdc_out, phdc_out);
@@ -830,7 +830,7 @@ EIF_BOOLEAN StdPicture::ccom_keep_original_format(  )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -860,7 +860,7 @@ void StdPicture::ccom_set_keep_original_format(  /* [in] */ EIF_BOOLEAN pfkeep )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -886,7 +886,7 @@ void StdPicture::ccom_picture_changed()
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};	
 };
@@ -914,7 +914,7 @@ void StdPicture::ccom_save_as_file(  /* [in] */ EIF_POINTER pstm,  /* [in] */ EI
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	rt_ce.ccom_ce_pointed_long ((LONG *)tmp_pcb_size, pcb_size);
@@ -943,7 +943,7 @@ EIF_INTEGER StdPicture::ccom_attributes(  )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -973,7 +973,7 @@ void StdPicture::ccom_set_hdc(  /* [in] */ EIF_INTEGER hdc )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	

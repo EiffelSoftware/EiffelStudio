@@ -49,7 +49,7 @@ public:
 	EIF_REFERENCE ccom_ce_bstr (BSTR a_bstr);
 	EIF_REFERENCE ccom_ce_hresult (HRESULT a_hresult);
 	EIF_BOOLEAN ccom_ce_boolean (VARIANT_BOOL a_bool);
-	EIF_REFERENCE ccom_ce_lpstr (LPSTR a_string);
+	EIF_REFERENCE ccom_ce_lpstr (LPSTR a_string, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_lpwstr (LPWSTR a_wstring);
 	EIF_REFERENCE ccom_ce_currency (CURRENCY a_currency);
 	EIF_REFERENCE ccom_ce_decimal (DECIMAL a_decimal);
@@ -139,6 +139,12 @@ public:
 	EIF_REFERENCE ccom_ce_array_ulong_long (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_array_dispatch (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_array_unknown (EIF_POINTER an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object);
+
+	EIF_REFERENCE ccom_ce_array_unsigned_short (unsigned short * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object);
+	EIF_REFERENCE ccom_ce_array_unsigned_long (unsigned long * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object);
+	EIF_REFERENCE ccom_ce_array_unsigned_character (unsigned char * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object);
+	EIF_REFERENCE ccom_ce_array_unsigned_integer (unsigned int * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object);
+	EIF_REFERENCE ccom_ce_array_integer (int * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object);
 
 	// User Defined
 

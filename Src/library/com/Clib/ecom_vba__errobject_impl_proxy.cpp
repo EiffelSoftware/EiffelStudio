@@ -13,7 +13,7 @@ VBA__ErrObject_impl::VBA__ErrObject_impl( IUnknown * a_pointer )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 
@@ -21,7 +21,7 @@ VBA__ErrObject_impl::VBA__ErrObject_impl( IUnknown * a_pointer )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 
@@ -58,7 +58,7 @@ EIF_INTEGER VBA__ErrObject_impl::ccom_number()
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -89,7 +89,7 @@ void VBA__ErrObject_impl::ccom_number12(  /* [in] */ EIF_INTEGER arg_1 )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -118,7 +118,7 @@ EIF_REFERENCE VBA__ErrObject_impl::ccom_source()
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -150,7 +150,7 @@ void VBA__ErrObject_impl::ccom_source13(  /* [in] */ EIF_OBJECT arg_1 )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -179,7 +179,7 @@ EIF_REFERENCE VBA__ErrObject_impl::ccom_description()
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -211,7 +211,7 @@ void VBA__ErrObject_impl::ccom_description14(  /* [in] */ EIF_OBJECT arg_1 )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -240,7 +240,7 @@ EIF_REFERENCE VBA__ErrObject_impl::ccom_help_file()
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -272,7 +272,7 @@ void VBA__ErrObject_impl::ccom_help_file15(  /* [in] */ EIF_OBJECT arg_1 )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -301,7 +301,7 @@ EIF_INTEGER VBA__ErrObject_impl::ccom_help_context()
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -332,7 +332,7 @@ void VBA__ErrObject_impl::ccom_help_context16(  /* [in] */ EIF_INTEGER arg_1 )
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -360,7 +360,7 @@ void VBA__ErrObject_impl::ccom_raise(  /* [in] */ EIF_INTEGER a_number,  /* [in]
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	
@@ -387,7 +387,7 @@ void VBA__ErrObject_impl::ccom_clear()
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 };
@@ -414,7 +414,7 @@ EIF_INTEGER VBA__ErrObject_impl::ccom_last_dll_error()
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024)),HRESULT_CODE (hr) - 1024);
+			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	};
 	

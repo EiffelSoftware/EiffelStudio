@@ -169,27 +169,40 @@ EIF_BOOLEAN ecom_runtime_ce::ccom_ce_boolean (VARIANT_BOOL a_bool)
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpstr (LPSTR a_string)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpstr (LPSTR a_string, EIF_OBJECT an_object)
 
 // Create Eiffel STRING from LPSTR
 {
-	EIF_OBJECT name = 0;
+	EIF_OBJECT result = 0;
 	EIF_TYPE_ID eif_string_id = -1;
 	EIF_PROCEDURE string_make = 0;
+	EIF_PROCEDURE from_c = 0;
 
-	if (a_string != NULL)
+	eif_string_id = eif_type_id ("STRING");
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 	{
-		name = henter (RTMS (a_string));
+		if (a_string != NULL)
+		{
+			result = henter (RTMS (a_string));
+		}
+		else
+		{
+			string_make = eif_procedure ("make", eif_string_id);
+			result = eif_create (eif_string_id);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER))string_make) (eif_access (result), 0);
+		}
 	}
 	else
 	{
-		eif_string_id = eif_type_id ("STRING");
-		string_make = eif_procedure ("make", eif_string_id);
-		name = eif_create (eif_string_id);
-		nstcall = 0;
-		(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER))string_make) (eif_access (name), 0);
+		if (a_string != NULL)
+		{
+			from_c = eif_procedure ("from_c", eif_string_id);
+			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))from_c) (eif_access (an_object), a_string);
+		}
 	}
-	return eif_wean (name);
+	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
 
@@ -643,10 +656,119 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_short
 	else
 		return NULL;
 };
+//----------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unsigned_short
+		(unsigned short * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
+
+// Create Eiffel ARRAY from C array of short.
+{
+	int i = 0, element_number = 0;
+	EIF_INTEGER * c_array = 0;
+	EIF_OBJECT result = 0;
+
+	// Conver array of short into array of EIF_INTEGER
+	element_number = ccom_element_number (dim_count, element_count);
+	c_array = (EIF_INTEGER *)calloc (element_number, sizeof (EIF_INTEGER));
+
+	for (i = 0; i < element_number; i++)
+	{
+		c_array[i] = (EIF_INTEGER)an_array[i];
+	}
+
+	// Create Eiffel array and initialize it to C array.
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = ccom_create_array ("INTEGER", dim_count, element_count);
+	else
+		result = an_object;
+
+	nstcall = 0;
+	eif_make_from_c (eif_access (result), c_array, (EIF_INTEGER)element_number, EIF_INTEGER);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
 //-------------------------------------------------------------------------
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_long
 		(long * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
+
+// Create Eiffel ARRAY from C array of long.
+{
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0;
+
+	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = ccom_create_array ("INTEGER", dim_count, element_count);
+	else
+		result = an_object;
+
+	nstcall = 0;
+	eif_make_from_c (eif_access (result), an_array, element_number, EIF_INTEGER);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unsigned_long
+		(unsigned long * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
+
+// Create Eiffel ARRAY from C array of long.
+{
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0;
+
+	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = ccom_create_array ("INTEGER", dim_count, element_count);
+	else
+		result = an_object;
+
+	nstcall = 0;
+	eif_make_from_c (eif_access (result), an_array, element_number, EIF_INTEGER);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_integer
+		(int * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
+
+// Create Eiffel ARRAY from C array of long.
+{
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0;
+
+	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = ccom_create_array ("INTEGER", dim_count, element_count);
+	else
+		result = an_object;
+
+	nstcall = 0;
+	eif_make_from_c (eif_access (result), an_array, element_number, EIF_INTEGER);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unsigned_integer
+		(unsigned int * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of long.
 {
@@ -722,6 +844,31 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_double
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_character
 		(char * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
+
+// Create Eiffel ARRAY from C array of char.
+{
+	EIF_INTEGER element_number = 0;
+	EIF_OBJECT result = 0;
+
+	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		result = ccom_create_array ("CHARACTER", dim_count, element_count);
+	else
+		result = an_object;
+
+	nstcall = 0;
+	eif_make_from_c (eif_access (result), an_array, element_number, EIF_CHARACTER);
+
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+		return eif_wean (result);
+	else
+		return NULL;
+};
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_unsigned_character
+		(unsigned char * an_array, EIF_INTEGER dim_count, EIF_INTEGER * element_count, EIF_OBJECT an_object)
 
 // Create Eiffel ARRAY from C array of char.
 {
@@ -1412,7 +1559,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpstr
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (LPSTR )((ccom_c_array_element (an_array, i, LPSTR)));
-		eif_object_buf = eif_protect (ccom_ce_lpstr ((LPSTR)an_array_element));
+		eif_object_buf = eif_protect (ccom_ce_lpstr ((LPSTR)an_array_element, NULL));
 		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
 				EIF_INTEGER))put)(eif_access (intermediate_array), eif_access (eif_object_buf), i + 1);
 		eif_wean (eif_object_buf);

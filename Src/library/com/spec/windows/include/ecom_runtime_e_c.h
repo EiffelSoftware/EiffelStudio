@@ -40,7 +40,7 @@ class ecom_runtime_ec
 		DECIMAL ccom_ec_decimal (EIF_REFERENCE a_ref);
 		CURRENCY ccom_ec_currency (EIF_REFERENCE a_ref);
 		BSTR ccom_ec_bstr (EIF_REFERENCE a_ref);
-		LPSTR ccom_ec_lpstr (EIF_REFERENCE a_ref);
+		LPSTR ccom_ec_lpstr (EIF_REFERENCE a_ref, LPSTR old);
 		LPWSTR ccom_ec_lpwstr (EIF_REFERENCE a_ref);
 		VARIANT ccom_ec_variant (EIF_REFERENCE a_ref);
 
@@ -86,6 +86,11 @@ class ecom_runtime_ec
 		LPWSTR * ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimension, LPWSTR * old);
 		LPSTR * ccom_ec_array_lpstr (EIF_REFERENCE a_ref, int dimension, LPSTR * old);
 		BSTR * ccom_ec_array_bstr (EIF_REFERENCE a_ref, int dimension, BSTR * old);
+		unsigned char * ccom_ec_array_unsigned_character (EIF_REFERENCE a_ref, int dimension, unsigned char * old);
+		unsigned long * ccom_ec_array_unsigned_long (EIF_REFERENCE a_ref, int dimension, unsigned long * old);
+		unsigned short * ccom_ec_array_unsigned_short (EIF_REFERENCE a_ref, int dimension, unsigned short * old);
+		int * ccom_ec_array_integer (EIF_REFERENCE a_ref, int dimension, int * old);
+		unsigned int * ccom_ec_array_unsigned_integer (EIF_REFERENCE a_ref, int dimension, unsigned int * old);
 
 		// SAFEARRAY
 		SAFEARRAY * ccom_ec_safearray_char (EIF_REFERENCE a_ref);

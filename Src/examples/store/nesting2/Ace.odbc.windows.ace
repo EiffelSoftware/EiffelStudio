@@ -12,6 +12,10 @@ cluster
 
 	root_cluster:		"$EIFFEL4/examples/store/nesting2";
 	estore_examples:	"$EIFFEL4/examples/store/Utilities";
+	odbc_handle:		"$EIFFEL4/examples/store/Utilities/odbc";
+		exclude 
+			"action_1_i.e";"action_2_i.e"
+		end
 
 -- EiffelBase
 

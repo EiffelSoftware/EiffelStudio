@@ -13,7 +13,10 @@ cluster
 
 	root_cluster:		"$EIFFEL4/examples/store/nesting2";
 	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
-	--ingres_handle:		"$EIFFEL4/examples/store/Utilities/ingres";
+	ingres_handle:		"$EIFFEL4/examples/store/Utilities/ingres"
+		exclude 
+			"action_1_i.e";"action_2_i.e"
+		end
 
 -- EiffelBase
 

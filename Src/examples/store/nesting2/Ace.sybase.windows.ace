@@ -14,7 +14,7 @@ cluster
 	estore_examples_objects:"$EIFFEL4/examples/store/Utilities";
 	sybase_handle:		"$EIFFEL4/examples/store/Utilities/sybase"
 		exclude
-				"action_1_i.e"
+				"action_1_i.e";"action_2_i.e"
 		end;
 
 -- EiffelBase

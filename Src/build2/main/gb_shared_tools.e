@@ -126,6 +126,84 @@ feature -- Access
 			Result.extend (history_dialog)
 		end
 		
+	tool_by_name (name: STRING): EV_WIDGET is
+			-- `Result' is tool corresponding to `name'.
+		require
+			name_valid: valid_tool_name (name)
+		do
+			if name.is_equal (tool_name_as_storable (Type_selector_name)) then
+				Result := Type_selector
+			elseif name.is_equal (tool_name_as_storable (Component_selector_name)) then
+				Result := Component_selector
+			elseif name.is_equal (tool_name_as_storable (Window_selector_name)) then
+				Result := window_selector
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+	name_by_tool (a_widget: EV_WIDGET): STRING is
+			-- Result is STRING representation of tool `a_widget'
+			-- Will be displayed with tool.
+		require
+			a_widget_not_void: a_widget /= Void
+		do
+			if a_widget = Type_selector then
+				Result := Type_selector_name
+			elseif a_widget = Component_selector then
+				Result := Component_selector_name
+			elseif a_widget = Window_selector then
+				Result := Window_selector_name
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+	storable_name_by_tool (a_widget: EV_WIDGET): STRING is
+			-- Result is a string representation of tool `a_widget'.
+			-- Used in the preferences representation.
+		require
+			a_widget_not_void: a_widget /= Void
+		do
+			Result := tool_name_as_storable (name_by_tool (a_widget))
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	Component_selector_name: STRING is "Component selector"
+		-- String representation for component selector.
+	
+	Type_selector_name: STRING is "Type selector"
+		-- String representation for type selector.
+	
+	Window_selector_name: STRING is "Window selector"
+		-- String representation for window selector.
+	
+	valid_tool_name (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a valid tool name?
+			-- Case sensitive.
+		require
+			name_not_void: a_name /= Void
+		do
+			if a_name.is_equal (tool_name_as_storable (Component_selector_name)) or 
+				a_name.is_equal (tool_name_as_storable (Type_selector_name)) or
+				a_name.is_equal (tool_name_as_storable (Window_selector_name)) then
+				Result := True	
+			end
+		end
+		
+feature {NONE} -- Implementation
+
+	tool_name_as_storable (a_name: STRING): STRING is
+			-- `Result' is representation of `a_name' without
+			-- spaces, and all lower case.
+		require
+			name_not_void: a_name /= Void
+		do
+			Result := clone (a_name)
+			Result.to_lower
+			Result.prune_all (' ')
+		end
 		
 
 end -- class GB_ACCESSIBLE

@@ -6,7 +6,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_COORDINATES
+	EV_COORDINATE
 
 inherit
 	ANY

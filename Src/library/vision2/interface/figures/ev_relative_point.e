@@ -141,7 +141,7 @@ feature -- Access
 			Result_assigned: Result = last_y_abs
 		end
 
-	absolute_coordinates: EV_COORDINATES is
+	absolute_coordinates: EV_COORDINATE is
 			-- Coordinates relative to (0, 0). Updates if necessary.
 		do
 			calculate_absolute_position

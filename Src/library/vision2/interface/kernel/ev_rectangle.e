@@ -72,7 +72,7 @@ feature -- Access
 
 feature -- Status report
 
-	upper_left: EV_COORDINATES is
+	upper_left: EV_COORDINATE is
 			-- Upper-left corner of the clip area.
 		do
 			create Result.set (left, top)
@@ -81,7 +81,7 @@ feature -- Status report
 			Result_assigned: Result.x = x and then Result.y = y
 		end
 
-	upper_right: EV_COORDINATES is
+	upper_right: EV_COORDINATE is
 			-- Upper-right corner of the clip area.
 		do
 			create Result.set (right, top)
@@ -90,7 +90,7 @@ feature -- Status report
 			Result_assigned: Result.x = x + width and then Result.y = y
 		end
 
-	lower_left: EV_COORDINATES is
+	lower_left: EV_COORDINATE is
 			-- Lower-left corner of the clip area.
 		do
 			create Result.set (left, bottom)
@@ -99,7 +99,7 @@ feature -- Status report
 			Result_assigned: Result.x = x and then Result.y = y + height
 		end
 
-	lower_right: EV_COORDINATES is
+	lower_right: EV_COORDINATE is
 			-- Lower-right corner of the clip area.
 		do
 			create Result.set (right, bottom)
@@ -116,7 +116,7 @@ feature -- Status report
 			Result := width = 0 and height = 0
 		end
 
-	has (c: EV_COORDINATES): BOOLEAN is
+	has (c: EV_COORDINATE): BOOLEAN is
 			-- Is `c' inside `Current'?
 		require
 			c_not_void: c /= Void
@@ -163,7 +163,7 @@ feature -- Status report
 
 feature -- Element change
 
-	include_point (c: EV_COORDINATES) is
+	include_point (c: EV_COORDINATE) is
 			-- Enlarge so that `c' is in `Current'.
 		require
 			c_not_void: c /= Void

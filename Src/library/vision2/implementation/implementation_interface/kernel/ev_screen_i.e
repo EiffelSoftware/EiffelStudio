@@ -16,7 +16,7 @@ inherit
 
 feature -- Status report
 
-	pointer_position: EV_COORDINATES is
+	pointer_position: EV_COORDINATE is
 			-- Position of the screen pointer.
 		deferred
 		end
@@ -96,6 +96,9 @@ end -- class EV_SCREEN_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2001/06/14 18:24:19  rogers
+--| Renamed EV_COORDINATES to EV_COORDINATE.
+--|
 --| Revision 1.8  2001/06/07 23:08:11  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

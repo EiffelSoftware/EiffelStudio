@@ -47,7 +47,7 @@ feature -- Access
 		deferred
 		end
 
-	pointer_position: EV_COORDINATES is
+	pointer_position: EV_COORDINATE is
             -- Position of the screen pointer relative to `Current'.
 		deferred
 		end
@@ -259,6 +259,9 @@ end -- class EV_WIDGET_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.71  2001/06/14 18:24:41  rogers
+--| Renamed EV_COORDINATES to EV_COORDINATE.
+--|
 --| Revision 1.70  2001/06/07 23:08:09  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

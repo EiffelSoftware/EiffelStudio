@@ -97,7 +97,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	pointer_position: EV_COORDINATES is
+	pointer_position: EV_COORDINATE is
 			-- Position of the screen pointer relative to `Current'.
 		local
 			wel_point: WEL_POINT
@@ -1073,6 +1073,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.81  2001/06/14 18:26:16  rogers
+--| Renamed EV_COORDINATES to EV_COORDINATE.
+--|
 --| Revision 1.80  2001/06/14 00:41:07  rogers
 --| Fixed process_standard_key_press so that when a user attempts to switch
 --| between applications using alt-tab while a pick and drop is executing,

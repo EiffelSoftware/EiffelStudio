@@ -251,7 +251,7 @@ feature -- Figure drawing
 	draw_figure_star (star: EV_FIGURE_STAR) is
 			-- Draw a standard representation of `star' to the canvas.
 		local
-				coord_array: LINEAR [EV_COORDINATES]
+				coord_array: LINEAR [EV_COORDINATE]
 		do
 			if star.is_show_requested then
 				coord_array := star.polygon_array.linear_representation
@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	draw_polygon (coord_array: LINEAR [EV_COORDINATES]) is
+	draw_polygon (coord_array: LINEAR [EV_COORDINATE]) is
 		do
 			from
 				coord_array.start
@@ -450,7 +450,7 @@ feature {NONE} -- Implementation
 
 	draw_polyline (a_polyline: EV_ATOMIC_FIGURE; closed: BOOLEAN) is
 		local
-			coord_array: LINEAR [EV_COORDINATES]
+			coord_array: LINEAR [EV_COORDINATE]
 		do
 			coord_array := a_polyline.point_array.linear_representation
 			add_ps ("gsave")

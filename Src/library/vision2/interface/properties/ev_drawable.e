@@ -327,7 +327,7 @@ feature -- Drawing operations
 				a_bounding_height)
 		end
 
-	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
+	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN) is
 			-- Draw line segments between subsequent points in
 			-- `points'. If `is_closed' draw line segment between first
 			-- and last point in `points'.
@@ -382,7 +382,7 @@ feature -- Drawing operations (filled)
 				a_bounding_height)
 		end
 
-	fill_polygon (points: ARRAY [EV_COORDINATES]) is
+	fill_polygon (points: ARRAY [EV_COORDINATE]) is
 			-- Draw filled polygon between subsequent points in `points'.
 		require
 			not_destroyed: not is_destroyed

@@ -200,7 +200,7 @@ feature -- Access
 			end
 		end
 
-	pointer_position: EV_COORDINATES is
+	pointer_position: EV_COORDINATE is
 			-- Position of the screen pointer relative to `Current'.
 		local
 			x, y, s: INTEGER
@@ -833,6 +833,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.70  2001/06/14 18:25:26  rogers
+--| Renamed EV_COORDINATES to EV_COORDINATE.
+--|
 --| Revision 1.69  2001/06/07 23:08:05  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

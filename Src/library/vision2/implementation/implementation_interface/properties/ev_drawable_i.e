@@ -220,7 +220,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
+	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN) is
 			-- Draw line segments between subsequent points in
 			-- `points'. If `is_closed' draw line segment between first
 			-- and last point in `points'.
@@ -264,7 +264,7 @@ feature -- Drawing operations (filled)
 		deferred
 		end
 
-	fill_polygon (points: ARRAY [EV_COORDINATES]) is
+	fill_polygon (points: ARRAY [EV_COORDINATE]) is
 			-- Draw line segments between subsequent points in `points'.
 			-- Fill with `background_color'.
 		require
@@ -313,6 +313,9 @@ end -- class EV_DRAWABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2001/06/14 18:24:29  rogers
+--| Renamed EV_COORDINATES to EV_COORDINATE.
+--|
 --| Revision 1.22  2001/06/07 23:08:09  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

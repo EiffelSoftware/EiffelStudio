@@ -83,7 +83,7 @@ feature -- Access
 				(parent /= Void and then parent.is_parent_recursive (a_widget))
 		end
 
-	pointer_position: EV_COORDINATES is
+	pointer_position: EV_COORDINATE is
 			-- Position of the screen pointer relative to `Current'.
 		require
 			not_destroyed: not is_destroyed

@@ -298,7 +298,7 @@ feature -- Drawing operations
 			update_display
 		end
 
-	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
+	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN) is
 			-- Draw line segments between subsequent points in
 			-- `points'. If `is_closed' draw line segment between first
 			-- and last point in `points'.
@@ -352,7 +352,7 @@ feature -- Filling operations
 			update_display
 		end
 
-	fill_polygon (points: ARRAY [EV_COORDINATES]) is
+	fill_polygon (points: ARRAY [EV_COORDINATE]) is
 			-- Draw line segments between subsequent points in `points'.
 			-- Fill all enclosed area's with `foreground_color'.
 		do
@@ -724,6 +724,9 @@ end -- class EV_PIXMAP_IMP_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2001/06/14 18:26:17  rogers
+--| Renamed EV_COORDINATES to EV_COORDINATE.
+--|
 --| Revision 1.12  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -130,7 +130,7 @@ feature -- Implementation
 			Result := between (x, x1, x2) and then between (y, y1, y2)
 		end
 
-	point_on_polygon (x, y: INTEGER; points: ARRAY [EV_COORDINATES]): BOOLEAN is
+	point_on_polygon (x, y: INTEGER; points: ARRAY [EV_COORDINATE]): BOOLEAN is
 			-- Is the point (`x', `y') contained in the polygon with `points'?
 			-- Based on code by Hanpeter van Vliet.
 		local

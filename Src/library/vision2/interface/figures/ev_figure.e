@@ -102,7 +102,7 @@ feature -- Access
 			end
 		end
 
-	point_array: ARRAY [EV_COORDINATES] is
+	point_array: ARRAY [EV_COORDINATE] is
 			-- `points' as absolute coordinates.
 		local
 			n: INTEGER

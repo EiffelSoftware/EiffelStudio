@@ -23,13 +23,13 @@ create
 
 feature -- Events
 
-	polygon_array: ARRAY [EV_COORDINATES] is
+	polygon_array: ARRAY [EV_COORDINATE] is
 			-- Return an array with the four absolute corner points.
 		local
 			sin_a, cos_a: DOUBLE
 			w, h: INTEGER
 			xa, ya: INTEGER
-			c: EV_COORDINATES
+			c: EV_COORDINATE
 		do
 			sin_a := sine (point_a.angle_abs)
 			cos_a := cosine (point_a.angle_abs)
@@ -105,7 +105,7 @@ feature -- Status report
 			end
 		end
 
-	center: EV_COORDINATES is
+	center: EV_COORDINATE is
 			-- get the center point of the rectangle.
 		do
 			create Result.set (
@@ -113,7 +113,7 @@ feature -- Status report
 				(point_a.y_abs + point_b.y_abs) // 2)
 		end
 
-	top_left: EV_COORDINATES is
+	top_left: EV_COORDINATE is
 			-- Get the top-left coordinates of the rectangle.
 		local
 			top, left: INTEGER

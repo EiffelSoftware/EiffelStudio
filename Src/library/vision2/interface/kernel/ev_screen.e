@@ -21,7 +21,7 @@ create
 
 feature -- Status report
 
-	pointer_position: EV_COORDINATES is
+	pointer_position: EV_COORDINATE is
 			-- Position of the screen pointer.
 		require
 			not_destroyed: not is_destroyed

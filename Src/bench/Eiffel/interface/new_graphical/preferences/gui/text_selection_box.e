@@ -35,9 +35,16 @@ feature -- Display
 	
 	display (new_resource: like resource) is
 			-- Display Current with title 'txt' and content 'new_value'.
+		local
+			tmpstr: STRING
 		do
 			Precursor (new_resource)
-			text_f.set_text (new_resource.value)
+			tmpstr := new_resource.value
+			if tmpstr /= Void and then not tmpstr.empty then
+				text_f.set_text (tmpstr)
+			else
+				text_f.remove_text
+			end
 			text_f.set_focus
 		end
 

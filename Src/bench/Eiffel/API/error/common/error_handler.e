@@ -18,7 +18,7 @@ feature -- Attributes
 	error_list: LINKED_LIST [ERROR];
 			-- Error list
 
-	warning_list: LINKED_LIST [ERROR];
+	warning_list: LINKED_LIST [WARNING];
 			-- Warning list
 
 feature -- Creation feature
@@ -46,7 +46,7 @@ end;
 			error_list.put_right (e);
 		end;
 
-	insert_warning (w: ERROR) is
+	insert_warning (w: WARNING) is
 			-- Insert `w' in `warning_list'.
 		require
 			good_argument: w /= Void
@@ -197,6 +197,7 @@ feature -- Debug purpose
 			until
 				warning_list.offright
 			loop
+				io.error.putstring ("%T");
 				warning_list.item.trace;
 				io.error.putstring ("------------------------------%N");
 				warning_list.forth;

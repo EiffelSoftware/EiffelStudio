@@ -128,8 +128,7 @@ feature -- Type check, byte code and dead code removal
 				if count /= a_feature.argument_count then
 					!!vuar1;
 					context.init_error (vuar1);
-					vuar1.set_call_body_id (a_feature.body_id);
-					vuar1.set_call_written_in (a_feature.written_in);
+					vuar1.set_feature_i (a_feature);
 					Error_handler.insert_error (vuar1);
 						-- Cannot go on here: too dangerous
 					Error_handler.raise_error;
@@ -158,8 +157,7 @@ feature -- Type check, byte code and dead code removal
 						if not current_item.conform_to (arg_type) then
 							!!vuar2;
 							context.init_error (vuar2);
-							vuar2.set_call_body_id (a_feature.body_id);
-							vuar2.set_call_written_in(a_feature.written_in);
+							vuar2.set_feature_i (a_feature);
 							vuar2.set_argument_name
 									(a_feature.argument_names.i_th (i));
 							vuar2.set_formal_type (arg_type);

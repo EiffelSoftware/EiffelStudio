@@ -49,6 +49,15 @@ feature -- Initialization
 			Result.set_base_type (System.any_id);
 		end;
 
+	equiv (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to `Current'
+			-- Incrementality of the generic parameters
+		require
+			good_argument: other /= Void
+		do
+			 Result := constraint_type.same_as (other.constraint_type)
+		end;
+
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 
@@ -61,7 +70,7 @@ feature -- Initialization
 			s.append_character (charconv (charcode ('F') + position));
 			ctxt.put_string(s);
 			if constraint /= void then
-				ctxt.put_special(" <- ");
+				ctxt.put_special(" -> ");
 				constraint.format (ctxt);
 				ctxt.always_succeed;
 			end;

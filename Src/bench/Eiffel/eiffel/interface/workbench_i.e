@@ -101,8 +101,10 @@ feature -- Commands
 			end;
 		rescue
 			if exception = Programmer_exception then
+io.error.putstring ("Workbench retry%N");
 				error_happened := True;
 				Error_handler.trace;
+				System.set_current_class (Void);
 				retry
 			end
 		end;

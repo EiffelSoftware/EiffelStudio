@@ -60,7 +60,8 @@ extern struct token *in_word_set2();
 ([a-z]|[A-Z])([a-z]|_|[A-Z]|[0-9])*		return process_name(LAC_IDENTIFIER);
 .										{	/* Unknown character */
 											start_position = end_position;
-											end_position += yyleng;}
+											end_position += yyleng;
+											xxerror ((char *) 0);}
 
 %%
 

@@ -46,6 +46,15 @@ feature -- Type check, byte code and dead code removal
 			end;
 		end;
 
+	check_local_names is
+			-- Check conflicts between local names and feature names
+		do
+			if content /= Void then
+					-- i.e: if it not the content of an attribute
+				content.check_local_names;
+			end;
+		end;
+
 	byte_node: BYTE_CODE is
 			-- Associated byte code
 		do

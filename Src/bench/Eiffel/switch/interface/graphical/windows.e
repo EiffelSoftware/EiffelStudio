@@ -47,6 +47,18 @@ end;
 			Result := project_tool.text_window
 		end;
 
+	info_window: TEXT_WINDOW is
+			-- Info window
+		do
+			Result := error_window
+		end;
+
+	debug_window: TEXT_WINDOW is
+			-- Debug window
+		do
+			Result := error_window
+		end;
+
 	explain_window: EXPLAIN_W is
 			-- Explanation window
 		once

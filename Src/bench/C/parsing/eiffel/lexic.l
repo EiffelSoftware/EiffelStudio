@@ -129,7 +129,8 @@ W		[ \t\n]
 \"							{return get_string();}
 \'							{return get_char();}
 .							{	start_position = end_position;
-								end_position += yyleng;}
+								end_position += yyleng;
+								yyerror ((char *) 0);}
 %%
 
 /*

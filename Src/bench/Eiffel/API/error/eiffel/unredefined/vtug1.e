@@ -19,4 +19,10 @@ feature
 			body_id := i;
 		end;
 
+	code: STRING is
+			-- Error code
+		do
+			Result := "VTUG1";
+		end;
+
 end

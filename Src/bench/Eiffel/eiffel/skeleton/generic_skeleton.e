@@ -58,4 +58,21 @@ feature
 			go (pos);
 		end;
 
+
+	trace is
+			-- Debug purpose
+		do
+			from
+				start
+			until
+				offright
+			loop
+				io.error.putstring (item.attribute_name);
+				io.error.putstring (": ");
+				item.trace;
+				io.error.new_line;
+				forth;
+			end;
+		end;
+
 end

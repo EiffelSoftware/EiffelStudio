@@ -44,16 +44,25 @@ feature
 		do
 			written_class := System.class_of_id (written_in);
 			written_type :=	class_type.written_type (written_class);
-			if written_type /= Void then
-				Result :=
-					Pattern_table.c_pattern_id (pattern_id, written_type) - 1;
-			end;
+			Result := Pattern_table.c_pattern_id (pattern_id, written_type) - 1;
 		end;
 
 	is_valid: BOOLEAN is
 			-- Is the executino unit still valid ?
+		local
+			written_type: CL_TYPE_I;
+			written_class: CLASS_C
 		do
 			Result := Body_server.has (body_id);
+			written_class := System.class_of_id (written_in);
+			if written_class = Void then
+				Result := False
+			else
+				written_type :=	class_type.written_type (written_class);
+				if written_type = Void then
+					Result := False
+				end;
+			end;
 		end;
 
 	is_external: BOOLEAN is

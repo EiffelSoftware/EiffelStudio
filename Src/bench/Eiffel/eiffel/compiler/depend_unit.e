@@ -31,4 +31,15 @@ feature
 			Result := id < other.id;
 		end; -- infix "<"
 
+feature -- Debug
+
+	trace is
+		do
+			io.error.putstring ("Class id: ");
+			io.error.putint (id);
+			io.error.putstring (" feature id: ");
+			io.error.putint (feature_id);
+			io.error.new_line;
+		end;
+
 end

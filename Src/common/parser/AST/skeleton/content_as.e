@@ -70,4 +70,9 @@ feature -- Type check and byte code
 			False
         end;
 
+	check_local_names is
+			-- Check conflicts between local names and feature names
+		do
+		end;
+
 end

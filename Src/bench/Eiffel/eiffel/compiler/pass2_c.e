@@ -4,6 +4,7 @@ inherit
 
 	COMP_PASS_C;
 	SHARED_SERVER;
+	SHARED_PASS;
 	SHARED_ERROR_HANDLER;
 	SHARED_INHERITED
 		rename
@@ -22,6 +23,9 @@ feature
 	deferred_modified: BOOLEAN;
 		-- The deferred status of the class has been modified
 
+	supplier_status_modified: BOOLEAN;
+		-- The status of a supplier has changed
+
 	set_expanded_modified is
 			-- Set `expanded_modifed' to `True'.
 		do
@@ -34,13 +38,18 @@ feature
 			deferred_modified := True
 		end;
 
+	set_supplier_status_modified is
+			-- Set `supplier_status_modified' to `True'.
+		do
+			supplier_status_modified := True
+		end;
+
 	execute is
 		do
 			if  (associated_class.changed or else associated_class.changed2)
 			then
 					-- Analysis of inheritance for a class
-				analyzer.set_a_class (associated_class);
-				analyzer.pass2 (Current);
+				analyzer.pass2 (Current, supplier_status_modified);
 
 					-- No error happened: set the compilation status
 					-- of `associated_class'
@@ -61,34 +70,102 @@ feature
 			-- and `pass2_control'
 		local
 			different_feature_tables: BOOLEAN;
-			propagate_pass2: BOOLEAN;
-			propagate_pass3: BOOLEAN;
+			do_pass2: BOOLEAN;
+			do_pass3: BOOLEAN;
 		do
 					-- Incremetality test: asked the compiler to apply at
 					-- least the second pass to the direct descendants
 					-- of the class `associated_class'.
 			different_feature_tables := not resulting_table.equiv (feature_table);
-			propagate_pass3 := pass2_control.propagate_pass3;
-			propagate_pass2 := different_feature_tables or else expanded_modified or else deferred_modified;
+			do_pass2 := different_feature_tables or else expanded_modified
+					or else deferred_modified;
 
 			if pass2_control.propagate_pass3 then
-				propagate_pass2 := True;
-				propagate_pass3 := True;
+				do_pass2 := True;
+				do_pass3 := True;
 			end;
 
-			if propagate_pass2 then
+			if do_pass2 then
 					-- Propagation of second pass in order to update
 					-- feature table of direct descendants
-				associated_class.propagate_pass2;
-				if different_feature_tables then
-					associated_class.set_skeleton (resulting_table.skeleton);
+				propagate_pass2;
+				if do_pass3 then
+					-- Propagation of third pass in order to type check
+					-- clients of the current class
+					propagate_pass3 (pass2_control, expanded_modified or deferred_modified);
+				end;
+				associated_class.set_skeleton (resulting_table.skeleton);
+				if not System.freeze then
 					resulting_table.melt;
 				end;
 			end;
-			if propagate_pass3 then
-				-- Propagation of third pass in order to type check
-				-- clients of the current class
-				associated_class.propagate_pass3 (pass2_control, expanded_modified or deferred_modified);
+		end;
+
+feature -- Propagation of second pass
+	
+	propagate_pass2 is
+			-- Ask the compiler to recalculate the feature table for the
+			-- direct descendants. The feature table of the current
+			-- class  has varied between two compilations, the feature
+			-- tables of the direct descendants must be recalculated.
+		local
+			descendant: CLASS_C;
+			local_cursor: LINKABLE [CLASS_C];
+			types: LINKED_LIST [CLASS_TYPE];
+		do
+			from
+				associated_class.set_changed2 (True);
+				local_cursor := associated_class.descendants.first_element;
+			until
+				local_cursor = Void
+			loop
+				descendant := local_cursor.item;
+					-- Mark the descendant so if it is not syntactically
+					-- `changed', its feature table will be at least
+					-- recalculated.
+				descendant.set_changed2 (True);
+					-- Insert the descendant in the changed classes list
+					-- of the system if not present.
+				pass2_controler.insert_new_class (descendant);
+				if expanded_modified then
+					pass2_controler.set_expanded_modified (descendant);
+				end;
+				pass3_controler.insert_new_class (descendant);
+				pass4_controler.insert_new_class (descendant);
+
+				local_cursor := local_cursor.right
+			end;
+		end;
+
+feature -- Propagation of third pass
+
+	propagate_pass3 (pass2_control: PASS2_CONTROL; status_modified: BOOLEAN) is
+			-- Ask to the compiler to execute the third pass on all
+			-- the clients of the class
+		require
+			good_argument: pass2_control /= Void;
+			good_context: pass2_control.propagate_pass3;
+		local
+			client: CLASS_C;
+			local_cursor: LINKABLE [CLASS_C];
+		do
+			from
+				local_cursor := associated_class.clients.first_element
+			until
+				local_cursor = Void
+			loop
+				client := local_cursor.item;
+					-- Remember the cause for type checking `client'.
+				client.propagators.update (pass2_control);
+				if status_modified then
+					client.propagators.add_changed_status (associated_class.id);
+				end;
+					-- Insert the client in the changed classes list
+					-- of the system if not present
+				pass3_controler.insert_new_class (client);
+				pass4_controler.insert_new_class (client);
+
+				local_cursor := local_cursor.right
 			end;
 		end;
 

@@ -5,9 +5,6 @@ class VTEC
 inherit
 
 	VTUG
-		redefine
-			code
-		end
 	
 feature 
 

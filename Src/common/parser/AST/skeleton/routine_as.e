@@ -8,7 +8,7 @@ inherit
 		redefine
 			is_require_else, is_ensure_then,
 			has_precondition, has_postcondition, has_rescue,
-			type_check, byte_node,
+			type_check, byte_node, check_local_names,
 			find_breakable, format
 		end;
 	SHARED_INSTANTIATOR;
@@ -182,6 +182,45 @@ feature -- Type check, byte code and dead code removal
 			end;
 		end;
 
+	check_local_names is
+			-- Check conflicts between local names and feature names
+		local
+			id_list: EIFFEL_LIST [ID_AS];
+			f_table: FEATURE_TABLE;
+			vrle1: VRLE1;
+			local_name: ID_AS;
+		do
+			if locals /= Void then
+				from
+					f_table := context.feature_table;
+					locals.start
+				until
+					locals.offright
+				loop
+					from
+						id_list := locals.item.id_list;
+						id_list.start;
+					until
+						id_list.offright
+					loop
+						local_name := id_list.item;
+						if
+							f_table.has (local_name)
+						then
+								-- The local name is a feature name of the
+								-- current analyzed class.
+							!!vrle1;
+							context.init_error (vrle1);
+							vrle1.set_local_name (local_name);
+							Error_handler.insert_error (vrle1);
+						end;
+						id_list.forth;
+					end;
+					locals.forth;
+				end;
+			end;
+		end;
+
 	check_locals is
 			-- Check validity of local declarations: a local variable
 			-- name cannot be a final name of the current feature table or
@@ -203,7 +242,6 @@ feature -- Type check, byte code and dead code removal
 			vtug3: VTUG3;
 			vtec1: VTEC1;
 			vtec2: VTEC2;
-			vtec3: VTEC3;
 			vtgg3: VTGG3;
 			vreg2: VREG2;
 		do
@@ -255,7 +293,7 @@ feature -- Type check, byte code and dead code removal
 						!!vrle1;
 						context.init_error (vrle1);
 						vrle1.set_local_name (local_name);
-						Error_handler.insert_warning (vrle1);
+						Error_handler.insert_error (vrle1);
 					end;
 						-- Build the local table in the context
 					counter := counter + 1;
@@ -325,7 +363,7 @@ feature -- Type check, byte code and dead code removal
 				local_class_c := solved_type.associated_class;
 				if local_class_c /= Void then
 						-- Add the supplier in the feature_dependance list
-					context.supplier_ids.add_supplier (local_class_c.id);
+					context.supplier_ids.add_supplier (local_class_c);
 				end;
 
 				if solved_type /= Void then

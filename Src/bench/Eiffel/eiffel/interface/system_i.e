@@ -238,6 +238,9 @@ feature
 			-- Current compiler pass
 			-- Useful for `current_class'
 
+	current_class: CLASS_C;
+			-- Current processed class
+
 	make is
 			-- Create the system.
 		do
@@ -397,11 +400,10 @@ end;
 			parents: FIXED_LIST [CL_TYPE_A];
 			compiled_root_class: CLASS_C;
 			descendants, suppliers, clients: LINKED_LIST [CLASS_C];
-			void_class, supplier: CLASS_C;
+			supplier: CLASS_C;
 			supplier_clients: LINKED_LIST [CLASS_C];
 			id: INTEGER;
 			types: TYPE_LIST;
-			Void_class_type: CLASS_TYPE;
 			local_cursor: LINKABLE [SUPPLIER_CLASS];
 		do
 debug ("ACTIVITY");
@@ -424,7 +426,7 @@ end;
 			pass4_controler.remove_class (a_class);
 
 				-- Mark the class to remove uncompiled
-			a_class.lace_class.set_compiled_class (void_class);
+			a_class.lace_class.set_compiled_class (Void);
 
 				-- Remove its types
 			from
@@ -433,7 +435,7 @@ end;
 			until
 				types.offright
 			loop
-				class_types.put (Void_class_type, types.item.type_id);
+				class_types.put (Void, types.item.type_id);
 				types.forth;
 			end;
 
@@ -492,7 +494,7 @@ end;
 				local_cursor := local_cursor.right
 			end;
 		end;
-	
+
 	class_of_id (id: INTEGER): CLASS_C is
 			-- Class of id `id'.
 		require
@@ -855,6 +857,7 @@ end;
 				a_class := local_cursor.item.associated_class;
 debug ("ACTIVITY")
 io.error.putstring ("%T");
+io.error.putint (a_class.id);
 io.error.putstring (a_class.class_name);
 io.error.putstring ("%N");
 end;
@@ -900,6 +903,11 @@ end;
 				local_cursor = Void
 			loop
 				a_class := local_cursor.item.associated_class;
+debug
+	io.error.putstring ("Check expanded on ");
+	io.error.putstring (a_class.class_name);
+	io.error.new_line;
+end;
 				from
 					types := a_class.types;
 					type_cursor := types.first_element;
@@ -908,6 +916,11 @@ end;
 				loop
 					class_type := type_cursor.item;
 					if class_type.is_changed then
+debug
+	io.error.putstring ("Check expanded on type of ");
+	io.error.putstring (a_class.class_name);
+	io.error.new_line;
+end;
 						Expanded_checker.set_current_type (class_type);
 						Expanded_checker.check_expanded;
 						class_type.set_is_changed (False);
@@ -934,6 +947,7 @@ end;
 				-- Melt features
 				-- Open the file for writing on disk feature byte code
 			process_pass (pass4_controler);
+			current_pass := Void;
 
 				-- The dispatch and execution tables are know updated.
 
@@ -1089,6 +1103,7 @@ end;
 				a_class := class_of_id (class_id);
 debug ("ACTIVITY")
 io.error.putstring ("melting routine id array of ");
+io.error.putint (class_id);
 io.error.putstring (a_class.class_name);
 io.error.new_line;
 end;
@@ -1274,12 +1289,6 @@ end;
 
 				-- Clear the instantiator
 			Instantiator.wipe_out;
-
-				-- Clear the pass controlers
-			pass1_controler.wipe_out;
-			pass2_controler.wipe_out;
-			pass3_controler.wipe_out;
-			pass4_controler.wipe_out;
 		end;
 
 feature  -- Freeezing
@@ -2582,16 +2591,17 @@ feature
 		do
 			current_pass := a_pass;
 			a_pass.execute;
-			a_pass.wipe_out
 		end;
 
-	current_class: CLASS_C is
-			-- Current compiled class
-		require
-			not_void: current_pass /= Void;
-			not_off: not current_pass.changed_classes.off;
+	set_current_class (a_class: CLASS_C) is
 		do
-			Result := current_pass.changed_classes.item.associated_class;
+			current_class := a_class
+		end;
+
+	in_pass3: BOOLEAN is
+			-- Is `pass3' the current pass ?
+		do
+			Result := (current_pass = pass3_controler)
 		end;
 
 	clear is

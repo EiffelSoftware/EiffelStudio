@@ -115,6 +115,14 @@ debug ("ACTIVITY")
 end;
 					forth
 				end;
+				if Result then
+					Result := origin_table.equiv (other.origin_table);
+debug ("ACTIVITY")
+	if not Result then
+		io.error.putstring ("%TOrigin table is not equivalent%N");
+	end;
+end;
+				end;
 			end; 
 		end;
 
@@ -123,6 +131,14 @@ end;
 			-- `other' and the current one.
 		require
 			good_argument: other /= Void;
+		do
+			!!Result.make;
+			fill_pass2_control (Result, other);
+		end;
+
+	fill_pass2_control (pass_control: PASS2_CONTROL; other: like Current) is
+			-- Process the interface changes between the new feature table
+			-- `other' and the current one.
 		local
 			old_feature_i, new_feature_i: FEATURE_I;
 			feature_name: STRING;
@@ -135,10 +151,9 @@ end;
 				-- Iteration on the features of the current feature
 				-- table.
 			from
-				!!Result.make;
-				propagators := Result.propagators;
-				melted_propagators := Result.melted_propagators;
-				removed_features := Result.removed_features;
+				propagators := pass_control.propagators;
+				melted_propagators := pass_control.melted_propagators;
+				removed_features := pass_control.removed_features;
 				start;
 			until
 				offright
@@ -171,7 +186,7 @@ end;
 					if old_feature_i.is_external then
 							-- Delete one occurence of an external feature
 						external_i ?= old_feature_i;
-						Result.remove_external (external_i.external_name);
+						pass_control.remove_external (external_i.external_name);
 					end;
 					if 	new_feature_i = Void
 						or else
@@ -179,6 +194,11 @@ end;
 					then
 							-- A feature written in the associated class
 							-- disapear
+debug ("ACTIVITY")
+	io.error.putstring ("Removed feature: ");
+	io.error.putstring (old_feature_i.feature_name);
+	io.error.new_line;
+end;
 						removed_features.put (old_feature_i);
 						propagate_feature := True;
 					end;
@@ -203,6 +223,11 @@ end;
 					if depend_unit = Void then
 						!!depend_unit.make (feat_tbl_id, old_feature_i.feature_id);
 					end;
+debug ("ACTIVITY")
+	io.error.putstring ("Melted propagators: ");
+	io.error.putstring (old_feature_i.feature_name);
+	io.error.new_line;
+end;
 					melted_propagators.put (depend_unit);
 				end;
 

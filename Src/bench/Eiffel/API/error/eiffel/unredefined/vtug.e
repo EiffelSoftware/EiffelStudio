@@ -1,6 +1,6 @@
 -- Error when a generic type has not the exact number of generic parameters
 
-class VTUG 
+deferred class VTUG 
 
 inherit
 
@@ -15,12 +15,6 @@ feature
 			-- Assign `t' to `type'.
 		do
 			type := t;
-		end;
-
-	code: STRING is
-			-- Error code
-		do
-			Result := "VTUG";
 		end;
 
 end

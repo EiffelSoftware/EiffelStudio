@@ -36,6 +36,14 @@ feature
 			generics: ARRAY [TYPE_A];
 			insertion_list: LINKED_LIST [GEN_TYPE_I];
 		do
+debug
+	io.error.putstring ("Dispatch: ");
+	io.error.putstring (a_class.clasS_name);
+	io.error.putint (a_class.id);
+	io.error.new_line;
+	io.error.putstring (generic_type.dump);
+	io.error.new_line;
+end;
 				-- Evaluation of a type class
 			type_i := generic_type.type_i;
 				-- In case of expanded
@@ -83,18 +91,44 @@ feature
 		local
 			data: GEN_TYPE_I;
 			local_cursor: LINKABLE [GEN_TYPE_I];
+			i, nb: INTEGER
 		do
+				-- Check array class
+			check_array_class;
+debug
+	io.error.putstring ("Instantiator: Process%N");
+end;
+				-- First clean the list, i.e. remove the elements associated
+				-- with a removed class
+			from
+				start
+			until
+				after
+			loop
+				if item.base_class = Void then
+debug
+	io.error.putstring ("Removing data (class id: ");
+	io.error.putint (item.base_id);
+	io.error.putstring (")%N");
+end;
+					remove
+				end;
+				forth
+			end;
 			from
 				local_cursor := first_element
 			until
 				local_cursor = Void
 			loop
 				data := local_cursor.item;
+debug
+	io.error.putstring ("Adding data%N");
+	data.dump (io.error);
+	io.error.new_line;
+end;
 				data.base_class.update_types (data);
 				local_cursor := local_cursor.right;
 			end;
-				-- Check array class
-			check_array_class;
 		end;
 
 feature {NONE}

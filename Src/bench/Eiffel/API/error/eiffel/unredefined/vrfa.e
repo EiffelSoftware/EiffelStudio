@@ -5,9 +5,6 @@ class VRFA
 inherit
 
 	EIFFEL_ERROR
-		redefine
-			Error_string
-		end;
 	
 feature 
 
@@ -30,11 +27,6 @@ feature
 			-- Assign `s' to `argument_name'.
 		do
 			argument_name := s;
-		end;
-
-	Error_string: STRING is
-		do
-			Result := "Warning "
 		end;
 
 end

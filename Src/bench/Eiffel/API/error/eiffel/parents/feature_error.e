@@ -29,9 +29,12 @@ feature
 				a_clickable.put_string ("%Tin invariant%N");
 			else
 				a_clickable.put_string ("%Tin feature `");
-				a_clickable.put_clickable_string (
-					System.class_of_id (class_id).feature_named (feature_name),
-					feature_name);
+-- FIXME
+-- 				Should be a feature stone
+--				a_clickable.put_clickable_string (
+--					System.class_of_id (class_id).feature_named (feature_name),
+--					feature_name);
+				a_clickable.put_string (feature_name);
 				a_clickable.put_string ("'%N")
 			end
 		end

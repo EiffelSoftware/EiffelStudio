@@ -252,10 +252,10 @@ feature
 			other_cache: CACHE [T];
 			old_server_file: SERVER_FILE;
 		do
+			other.flush;
 			removed_ids.merge (other.removed_ids);
 			remove_from_disk;
 			other.remove_from_disk;
-			other.flush;
 			from
 				other.start
 			until

@@ -81,6 +81,13 @@ feature -- Type check, byte code and dead code removal
 			body.type_check;
 		end;
 
+	check_local_names is
+			-- Check the name conflicts between local variables and
+			-- feature names
+		do
+			body.check_local_names
+		end;
+
 	byte_node: BYTE_CODE is
 			-- Byte code of the feature
 		do

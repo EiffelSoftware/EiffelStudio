@@ -215,6 +215,23 @@ feature -- Incrementality
 						same_signature (other);
 		end;
 
+	select_table_equiv (other: FEATURE_I): BOOLEAN is
+			-- Incrementality of the select table
+		require
+			good_argumnet: other /= Void
+
+		do
+			Result :=	written_in = other.written_in
+						and then	
+						rout_id_set.same_as (other.rout_id_set)
+						and then
+						is_origin = other.is_origin
+						and then
+						body_index = other.body_index
+						and then
+						deep_equal (type, other.type);
+		end;
+
 	same_interface (other: FEATURE_I): BOOLEAN is
 			-- Has `other' the same interface than Current ?
 			-- [Semnatic for second pass is `old_feat.same_interface (new)']
@@ -435,27 +452,20 @@ feature -- Export checking
 			Result := export_status.valid_for (client);
 		end;
 
-feature -- Check
-
-	type_check is
-			-- Third pass on current feature
+	record_suppliers (feat_depend: FEATURE_DEPENDANCE) is
+			-- Record the suppliers ids in `feat_depend'
 		require
-			in_pass3
+			good_arg: feat_depend /= Void;
 		local
 			type_a: TYPE_A;
 			a_class: CLASS_C;
-			body: FEATURE_AS;
-				-- Body of the feature
 		do
-				-- Take the body in the body server
-			body := Body_server.item (body_id);
-				-- make the type check
-			body.type_check;
+				-- Create the supplier set for the feature
 			type_a ?= type;
 			if type_a /= Void then
 				a_class := type_a.associated_class;
 				if a_class /= Void then
-					context.supplier_ids.add_supplier (a_class.id);
+					feat_depend.add_supplier (a_class);
 				end;
 			end;
 			if has_arguments then
@@ -467,11 +477,50 @@ feature -- Check
 					type_a ?= arguments.item;
 					a_class := type_a.associated_class;
 					if a_class /= Void then
-						context.supplier_ids.add_supplier (a_class.id);
+						feat_depend.add_supplier (a_class);
 					end;
 					arguments.forth;
 				end;
 			end;
+		end;
+
+	suppliers: SORTED_SET [INTEGER] is
+			-- Class ids of all the suppliers of the feature
+		require
+			Tmp_depend_server.has (written_in) or else
+			Depend_server.has (written_in)
+		local
+			class_dependance: CLASS_DEPENDANCE
+		do
+			if Tmp_depend_server.has (written_in) then
+				class_dependance := Tmp_depend_server.item (written_in)
+			else
+				class_dependance := Depend_server.item (written_in)
+			end;
+			Result := class_dependance.item (feature_name).suppliers
+		end;
+
+feature -- Check
+
+	type_check is
+			-- Third pass on current feature
+		require
+			in_pass3
+		local
+			body: FEATURE_AS;
+				-- Body of the feature
+		do
+			record_suppliers (context.supplier_ids);
+				-- Take the body in the body server
+			body := Body_server.item (body_id);
+				-- make the type check
+			body.type_check;
+		end;
+
+	check_local_names is
+			-- Check the conflicts between local names and feature names
+			-- for an unchanged feature
+		do
 		end;
 
 	in_pass3: BOOLEAN is
@@ -523,7 +572,10 @@ feature -- Byte code computation
 
 			melted_feature := Byte_array.melted_feature;
 			melted_feature.set_body_id (dispatch.real_body_id);
-			M_feature_server.put (melted_feature);
+	
+			if not System.freeze then
+				M_feature_server.put (melted_feature);
+			end;
 
 			Dispatch_table.mark_melted (dispatch);
 			Execution_table.mark_melted (exec);
@@ -692,7 +744,7 @@ feature -- Signature checking
 					vrfa.set_class_id (written_in);
 					vrfa.set_body_id (body_id);
 					vrfa.set_argument_name (arg_id);
-					Error_handler.insert_warning (vrfa);
+					Error_handler.insert_error (vrfa);
 				end;
 				arg_names.forth
 			end;
@@ -1302,6 +1354,7 @@ feature -- Debug purpose
 
 	trace_signature is
 			-- Trace signature of current feature
+		obsolete "Use append_clickable_signature"
 		local
 			i, nb: INTEGER;
 		do
@@ -1357,6 +1410,7 @@ feature -- PS
 		end;
 
 	signature: STRING is
+		obsolete "Use append_clickable_signature"
 			-- Signature of Current feature
 		do
 			!!Result.make (50);
@@ -1382,6 +1436,46 @@ feature -- PS
 				Result.append (": ");
 				Result.append (type.dump)
 			end
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+			-- Append the signature of current feature in `a_clickable'
+		do
+			append_clickable_name (a_clickable);
+			if arguments /= Void then
+				a_clickable.put_string (" (");
+				from
+					arguments.start
+				until
+					arguments.offright
+				loop
+					a_clickable.put_string (arguments.argument_names.i_th (arguments.position));
+					a_clickable.put_string (": ");
+io.error.putstring ("Clickable signature dump type%N");
+					a_clickable.put_string (arguments.item.actual_type.dump);
+					arguments.forth;
+					if not arguments.offright then
+						a_clickable.put_string (", ")
+					end
+				end;
+				a_clickable.put_string (")")
+			end;
+			if not type.is_void then
+				a_clickable.put_string (": ");
+				a_clickable.put_string (type.dump)
+			end
+		end;
+
+	append_clickable_name (a_clickable: CLICK_WINDOW) is
+			-- Append the name of the feature in `a_clickable'
+		do
+			a_clickable.put_clickable_string (stone (0, 0), feature_name);
+io.error.putstring ("Clickable feature_i with position 0/0%N");
+		end;
+
+	stone (start_pos, end_pos: INTEGER): FEATURE_STONE is
+		do
+			!!Result.make (Current, start_pos, end_pos);
 		end;
 
 feature -- Debugging

@@ -9,14 +9,14 @@ inherit
 			duplicate,
 			has_postcondition, has_precondition, is_ensure_then,
 			is_require_else, is_procedure, argument_names, arguments,
-			obsolete_message
+			obsolete_message, check_local_names
 		end;
 	FEATURE_I
 		redefine
 			transfer_to, duplicate,
 			has_postcondition, has_precondition, is_ensure_then,
 			is_require_else, is_procedure, argument_names, arguments,
-			obsolete_message
+			obsolete_message, check_local_names
 		select
 			transfer_to
 		end
@@ -166,6 +166,16 @@ feature
 			other.set_obsolete_message (obsolete_message);
 			other.set_has_precondition (has_precondition);
 			other.set_has_postcondition (has_postcondition);
+		end;
+
+	check_local_names is
+			-- Check the conflicts between local names and feature names
+			-- for an unchanged feature
+		local
+			body: FEATURE_AS;
+		do
+			body := Body_server.item (body_id);
+			body.check_local_names;
 		end;
 
 end

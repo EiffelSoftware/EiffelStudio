@@ -572,22 +572,22 @@ feature -- Plug and Makefile file
 			end
 
 				-- Pointer on creation feature of class STRING
-			buffer.putstring ("%Tegc_strmake = ")
+			buffer.putstring ("%Tegc_strmake = (void (*)(EIF_REFERENCE, EIF_INTEGER)) ")
 			buffer.putstring (str_make_name)
 			buffer.putstring (";%N")
 
 				-- Pointer on creation feature of class ARRAY[ANY]
-			buffer.putstring ("%Tegc_arrmake = ")
+			buffer.putstring ("%Tegc_arrmake = (void (*)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER)) ")
 			buffer.putstring (arr_make_name)
 			buffer.putstring (";%N")
 
 				-- Pointer on creation feature of class TUPLE
-			buffer.putstring ("%Tegc_tupmake = ")
+			buffer.putstring ("%Tegc_tupmake = (void (*)(EIF_REFERENCE)) ")
 			buffer.putstring (tup_make_name)
 			buffer.putstring (";%N")
 
 				--Pointer on `set_count' of class STRING
-			buffer.putstring ("%Tegc_strset = ")
+			buffer.putstring ("%Tegc_strset = (void (*)(EIF_REFERENCE, EIF_INTEGER)) ")
 			buffer.putstring (set_count_name)
 			buffer.putstring (";%N")
 

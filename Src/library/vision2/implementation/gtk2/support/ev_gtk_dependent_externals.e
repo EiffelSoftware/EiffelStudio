@@ -8,6 +8,63 @@ class
 
 feature -- Externals
 
+	frozen gtk_tree_view_scroll_to_cell (a_tree_view, a_tree_path, a_tree_column: POINTER; use_align: BOOLEAN; x_align, y_align: REAL) is
+		external
+			"C signature (GtkTreeView*, GtkTreePath*, GtkTreeViewColumn*, gboolean, gfloat, gfloat) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_widget_style_get_integer (a_widget, a_property: POINTER; a_int_ptr: TYPED_POINTER [INTEGER]) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_widget_style_get ((GtkWidget*) $a_widget, (gchar*) $a_property, (gint*) $a_int_ptr, NULL)"
+		end
+
+	frozen gdk_display_get_default: POINTER is
+		external
+			"C signature (): GdkDisplay* use <gtk/gtk.h>"
+		end
+
+	frozen gdk_display_supports_cursor_alpha (a_display: POINTER): BOOLEAN is
+		external
+			"C signature (GdkDisplay*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen gdk_display_supports_cursor_color (a_display: POINTER): BOOLEAN is
+		external
+			"C signature (GdkDisplay*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen gdk_cursor_new_from_pixbuf (a_display, a_pixbuf: POINTER; a_x, a_y: INTEGER): POINTER is
+		external
+			"C signature (GdkDisplay*, GdkPixbuf*, gint, gint): GdkCursor* use <gtk/gtk.h>"
+		end
+
+	frozen gtk_tool_item_set_tooltip (a_tool_item, a_tooltips, a_tip_text, a_tip_private: POINTER) is
+		external
+			"C signature (GtkToolItem*, GtkTooltips*, gchar*, gchar*) use <gtk/gtk.h>"
+		end	
+
+	frozen gtk_tree_view_get_expander_column (a_tree_view: POINTER): POINTER is
+		external
+			"C signature (GtkTreeView*): GtkTreeViewColumn* use <gtk/gtk.h>"
+		end
+
+	frozen gdk_pixbuf_add_alpha (a_pixbuf: POINTER; substitute_color: BOOLEAN; r, g, b: CHARACTER): POINTER is
+		external
+			"C signature (GdkPixbuf*, gboolean, guchar, guchar, guchar): GdkPixbuf* use <gtk/gtk.h>"
+		end
+
+	frozen gdk_draw_pixbuf (a_drawable, a_gc, a_pixbuf: POINTER; src_x, src_y, dest_x, dest_y, a_width, a_height, a_dither, x_dither, y_dither: INTEGER) is
+		external
+			"C signature (GdkDrawable*, GdkGC*, GdkPixbuf*, gint, gint, gint, gint, gint , gint, gint, gint, gint) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_tree_path_new_from_string (a_string: POINTER): POINTER is
+		external
+			"C signature (gchar*): GtkTreePath* use <gtk/gtk.h>"
+		end
+
 	frozen gtk_separator_tool_item_new: POINTER is
 		external
 			"C signature (): GtkToolItem* use <gtk/gtk.h>"
@@ -21,6 +78,11 @@ feature -- Externals
 	frozen gtk_toolbar_set_show_arrow (a_toolbar: POINTER; show_arrow: BOOLEAN) is
 		external
 			"C signature (GtkToolbar*, gboolean) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_tool_item_set_is_important (a_toolitem: POINTER; is_important: BOOLEAN) is
+		external
+			"C signature (GtkToolItem*, gboolean) use <gtk/gtk.h>"
 		end
 
 	frozen gtk_toggle_tool_button_set_active (a_button: POINTER; a_active: BOOLEAN) is
@@ -41,6 +103,16 @@ feature -- Externals
 	frozen gtk_toolbar_set_style (a_toolbar: POINTER; a_style: INTEGER) is
 		external
 			"C signature (GtkToolbar*, GtkToolbarStyle) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_toolbar_get_style (a_toolbar: POINTER): INTEGER is
+		external
+			"C signature (GtkToolbar*): GtkToolbarStyle use <gtk/gtk.h>"
+		end
+
+	frozen gtk_toolbar_unset_style (a_toolbar: POINTER) is
+		external
+			"C signature (GtkToolbar*) use <gtk/gtk.h>"
 		end
 
 	frozen gtk_toolbar_new: POINTER is
@@ -404,7 +476,14 @@ feature -- Externals
 			"C inline use <gtk/gtk.h>"
 		alias
 			"gtk_tree_store_clear ((GtkTreeStore*) $a_tree_store)"
-		end		
+		end
+
+	frozen gtk_list_store_clear (a_list_store: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_list_store_clear ((GtkListStore*) $a_list_store)"
+		end	
 
 	frozen gtk_tree_view_get_headers_visible (a_tree_view: POINTER): BOOLEAN is
 		external
@@ -518,6 +597,41 @@ feature -- Externals
 			"gtk_tree_model_get_iter ((GtkTreeModel*) $a_tree_model, (GtkTreeIter*) $a_tree_iter, (GtkTreePath*) $a_tree_path)"
 		end
 
+	frozen gtk_tree_model_get_path (a_tree_model, a_tree_iter: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_model_get_path ((GtkTreeModel*) $a_tree_model, (GtkTreeIter*) $a_tree_iter)"
+		end
+
+	frozen gtk_tree_model_get_value (a_tree_model, a_tree_iter: POINTER; a_column: INTEGER; a_value: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_model_get_value ((GtkTreeModel*) $a_tree_model, (GtkTreeIter*) $a_tree_iter, (gint) $a_column, (GValue*) $a_value)"
+		end
+
+	frozen gtk_tree_view_row_expanded (a_tree_view, a_tree_path: POINTER): BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_row_expanded ((GtkTreeView*) $a_tree_view, (GtkTreePath*) $a_tree_path)"
+		end
+
+	frozen gtk_tree_view_expand_row (a_tree_view, a_tree_path: POINTER; open_all: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_expand_row ((GtkTreeView*) $a_tree_view, (GtkTreePath*) $a_tree_path, (gboolean) $open_all)"
+		end
+
+	frozen gtk_tree_view_collapse_row (a_tree_view, a_tree_path: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_collapse_row ((GtkTreeView*) $a_tree_view, (GtkTreePath*) $a_tree_path)"
+		end
+
 	frozen gtk_tree_view_get_column (a_tree_view: POINTER; a_index: INTEGER): POINTER is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -609,6 +723,18 @@ feature -- Externals
 			"gtk_cell_renderer_pixbuf_new()"
 		end
 
+	frozen gtk_cell_renderer_get_size (a_cell_renderer, a_widget, a_cell_area, a_x_offset, a_y_offset, a_width, a_height: POINTER) is
+		external
+			"C signature (GtkCellRenderer*, GtkWidget*, GdkRectangle*, gint*, gint*, gint*, gint*) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_cell_renderer_toggle_new: POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_cell_renderer_toggle_new()"
+		end
+
 	frozen gtk_tree_view_insert_column (a_tree_view: POINTER; a_column: POINTER; a_position: INTEGER) is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -644,6 +770,12 @@ feature -- Externals
 			"gtk_tree_view_column_pack_start ((GtkTreeViewColumn*) $a_tree_column, (GtkCellRenderer*) $a_cell_renderer, (gboolean) $a_expand)"
 		end
 
+	frozen gtk_tree_view_column_pack_end (a_tree_column, a_cell_renderer: POINTER; a_expand: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_column_pack_end ((GtkTreeViewColumn*) $a_tree_column, (GtkCellRenderer*) $a_cell_renderer, (gboolean) $a_expand)"
+		end
 
 	frozen g_type_string: INTEGER is
 		external
@@ -715,6 +847,20 @@ feature -- Externals
 			"g_value_set_int ((GValue*) $a_value, (gint) $a_int)"
 		end
 
+	frozen g_value_set_boolean (a_value: POINTER; a_boolean: BOOLEAN) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_value_set_boolean ((GValue*) $a_value, (gboolean) $a_boolean)"
+		end
+
+	frozen g_value_get_boolean (a_value: POINTER): BOOLEAN is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_value_get_boolean ((GValue*) $a_value)"
+		end
+
 	frozen g_value_set_pointer (a_value: POINTER; a_pointer: POINTER) is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -774,11 +920,25 @@ feature -- Externals
 			"gtk_tree_store_newv ((gint) $n_columns, (GType*) $types)"
 		end
 
+	frozen gtk_list_store_newv (n_columns: INTEGER; types: POINTER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_list_store_newv ((gint) $n_columns, (GType*) $types)"
+		end
+
 	frozen gtk_tree_store_append (a_tree_store, a_tree_iter, a_parent_iter: POINTER) is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"gtk_tree_store_append ((GtkTreeStore*) $a_tree_store, (GtkTreeIter*) $a_tree_iter, (GtkTreeIter*) $a_parent_iter)"
+		end
+
+	frozen gtk_list_store_append (a_list_store, a_tree_iter: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_list_store_append ((GtkListStore*) $a_list_store, (GtkTreeIter*) $a_tree_iter)"
 		end
 
 	frozen gtk_tree_store_insert (a_tree_store, a_tree_iter, a_parent_iter: POINTER; a_index: INTEGER) is
@@ -788,11 +948,25 @@ feature -- Externals
 			"gtk_tree_store_insert ((GtkTreeStore*) $a_tree_store, (GtkTreeIter*) $a_tree_iter, (GtkTreeIter*) $a_parent_iter, (gint) $a_index)"
 		end
 
+	frozen gtk_list_store_insert (a_list_store, a_tree_iter: POINTER; a_index: INTEGER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_list_store_insert ((GtkListStore*) $a_list_store, (GtkTreeIter*) $a_tree_iter, (gint) $a_index)"
+		end
+
 	frozen gtk_tree_store_remove (a_tree_store, a_tree_iter: POINTER) is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"gtk_tree_store_remove ((GtkTreeStore*) $a_tree_store, (GtkTreeIter*) $a_tree_iter)"
+		end
+
+	frozen gtk_list_store_remove (a_list_store, a_tree_iter: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_list_store_remove ((GtkListStore*) $a_list_store, (GtkTreeIter*) $a_tree_iter)"
 		end
 
 	frozen gtk_tree_store_set_value (a_tree_store, a_tree_iter: POINTER; a_index: INTEGER; a_value: POINTER) is
@@ -802,11 +976,25 @@ feature -- Externals
 			"gtk_tree_store_set_value ((GtkTreeStore*) $a_tree_store, (GtkTreeIter*) $a_tree_iter, (gint) $a_index, (GValue*) $a_value)"
 		end
 
+	frozen gtk_list_store_set_value (a_list_store, a_tree_iter: POINTER; a_index: INTEGER; a_value: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_list_store_set_value ((GtkListStore*) $a_list_store, (GtkTreeIter*) $a_tree_iter, (gint) $a_index, (GValue*) $a_value)"
+		end
+
 	frozen gtk_tree_store_set_pixbuf (a_tree_store, a_tree_iter: POINTER; a_index: INTEGER; a_pixbuf: POINTER) is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"gtk_tree_store_set ((GtkTreeStore*) $a_tree_store, (GtkTreeIter*) $a_tree_iter, (gint) $a_index, (GdkPixbuf*) $a_pixbuf, -1)"
+		end
+
+	frozen gtk_list_store_set_pixbuf (a_list_store, a_tree_iter: POINTER; a_index: INTEGER; a_pixbuf: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_list_store_set ((GtkListStore*) $a_list_store, (GtkTreeIter*) $a_tree_iter, (gint) $a_index, (GdkPixbuf*) $a_pixbuf, -1)"
 		end
 
 	frozen pango_underline_none_enum: INTEGER is

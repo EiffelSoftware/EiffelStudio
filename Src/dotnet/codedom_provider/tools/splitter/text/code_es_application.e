@@ -7,7 +7,7 @@ class
 	CODE_ES_APPLICATION
 
 inherit
-	CODE_ES_SEVERITY_CONSTANTS
+	EV_THREAD_SEVERITY_CONSTANTS
 		export
 			{NONE} all
 		end

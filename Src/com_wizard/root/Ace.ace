@@ -56,21 +56,15 @@ cluster
 		end;
 
 	-- EiffelBase
-	base_kernel:						"$EIFFEL_SRC\library\base\kernel"
-		visible
-			ARRAY;
-			STRING;
-		end;
-
-	all base_desc:					"$EIFFEL_SRC\library\base\desc"
-
-	all base_structures:				"$EIFFEL_SRC\library\base\structures"
+	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"table_eiffel3";
-			"desc"
+			"table"; "desc"; "CVS"; 
+		visible
+			array
+				end
+			string
+				end
 		end
-
-	all base_support:					"$EIFFEL_SRC\library\base\support"
 
 	-- WEL
 	all wel:						"$EIFFEL_SRC\library\wel"

@@ -13,12 +13,12 @@ inherit
 		end
 
 	EXECUTION_ENVIRONMENT
-		rename
-			return_code as exec_return_code
 		export
 			{NONE} all
 		end
 
+	WIZARD_ERRORS
+	
 create
 	make
 
@@ -48,25 +48,25 @@ feature -- Access
 			-- Should standard marshaller be generated?
 
 	eiffel_class_name: STRING
-			-- Eiffel class name to generate IDL.
+			-- Eiffel class name to generate IDL
 
 	class_cluster_name: STRING
-			-- Cluster to which Eiffel class belongs.
+			-- Cluster to which Eiffel class belongs
 
 	eiffel_project_name: STRING
-			-- Eiffel project name.
+			-- Eiffel project name
 
 	ace_file_name: STRING
-			-- Eiffel Ace file.
+			-- Eiffel Ace file
 
 	idl_file_name: STRING
-			-- Path to definition file.
+			-- Path to definition file
 	
 	proxy_stub_file_name: STRING
-			-- Path to Proxy/Stub dll.
+			-- Path to Proxy/Stub dll
 
 	type_library_file_name: STRING
-			-- Path to type library.
+			-- Path to type library
 
 	is_in_process: BOOLEAN
 			-- Should in process server code be generated?
@@ -75,10 +75,10 @@ feature -- Access
 			-- Should out of process server code be generated?
 
 	destination_folder: STRING
-			-- Path to destination folder.
+			-- Path to destination folder
 	
 	project_name: STRING
-			-- Project name.
+			-- Project name
 
 	idl: BOOLEAN
 			-- Is definition file an IDL file?
@@ -86,8 +86,11 @@ feature -- Access
 	abort: BOOLEAN
 			-- Should code generation be aborted?
 
-	return_code: INTEGER
-			-- Last return code.
+	error_code: INTEGER
+			-- Last error code
+
+	error_data: STRING
+			-- Error data if any
 
 	compile_eiffel: BOOLEAN
 			-- Should generated eiffel code be compiled?
@@ -102,12 +105,18 @@ feature -- Access
 	backup: BOOLEAN
 			-- Should wizard backup existing files?
 
-feature -- Basic Operations
-
-	save_values is
-			-- Save profile values
+	error_message: STRING is
+			-- Error message
+		require
+			has_error: abort and is_valid_error_code (error_code)
 		do
-			
+			Result := error_title (error_code).twin
+			if error_data /= Void then
+				Result.append (":%N")
+				Result.append (error_data)
+			end
+		ensure
+			non_void_message: Result /= Void
 		end
 		
 feature -- Element Change
@@ -120,6 +129,7 @@ feature -- Element Change
 			is_eiffel_interface := True
 			is_new_component := False
 			is_client := False
+			update_idl_file_name
 		ensure
 			is_eiffel_interface: is_eiffel_interface
 			not_is_new_component: not is_new_component
@@ -200,17 +210,9 @@ feature -- Element Change
 		require
 			non_void_name: c_name /= Void
 			valid_name: not c_name.is_empty
-		local
-			l_idl_file_name: STRING
 		do
 			eiffel_class_name := c_name.as_upper
-			if destination_folder /= Void then
-				l_idl_file_name := destination_folder.twin
-				l_idl_file_name.append ("idl\")
-				l_idl_file_name.append (eiffel_class_name.as_lower)
-				l_idl_file_name.append (".idl")
-				set_idl_file_name (l_idl_file_name)
-			end
+			update_idl_file_name
 		ensure
 			name_set: eiffel_class_name /= Void and then not eiffel_class_name.is_empty
 		end
@@ -242,20 +244,12 @@ feature -- Element Change
 		require
 			non_void_folder: a_folder /= Void
 			valid_folder: not a_folder.is_empty
-		local
-			l_idl_file_name: STRING
 		do
 			destination_folder := expanded_path (a_folder)
 			if destination_folder.item (destination_folder.count) /= Directory_separator then
 				destination_folder.append_character (Directory_separator)
 			end
-			if is_eiffel_interface and eiffel_class_name /= Void then
-				l_idl_file_name := destination_folder.twin
-				l_idl_file_name.append ("idl\")
-				l_idl_file_name.append (eiffel_class_name.as_lower)
-				l_idl_file_name.append (".idl")
-				set_idl_file_name (l_idl_file_name)
-			end
+			update_idl_file_name
 		end
 
 	set_project_name (a_name: like project_name) is
@@ -319,15 +313,23 @@ feature -- Element Change
 			idl_set: idl = a_boolean
 		end
 	
-	set_abort (a_return_code: like return_code) is
+	set_abort (a_error_code: like error_code) is
 			-- Set `abort' to `True'.
-			-- Set `return_code' with `a_return_code'.
+			-- Set `error_code' with `a_error_code'.
 		do
 			abort := True
-			return_code := a_return_code
+			error_code := a_error_code
 		ensure
 			abort: abort
-			return_code_set: return_code = a_return_code
+			error_code_set: error_code = a_error_code
+		end
+
+	set_error_data (a_error_data: like error_data) is
+			-- Set `error_data' with `a_error_data'.
+		do
+			error_data := a_error_data
+		ensure
+			error_data_set: error_data = a_error_data
 		end
 
 	set_no_abort is
@@ -417,6 +419,20 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_expanded_path: Result /= Void
 			expanded_path: not Result.has ('$')
+		end
+
+	update_idl_file_name is
+			-- Update `idl_file_name' according to `is_eiffel_interface', `destination_folder' and `eiffel_class_name'.
+		local
+			l_idl_file_name: STRING
+		do
+			if is_eiffel_interface and destination_folder /= Void and eiffel_class_name /= Void then
+				l_idl_file_name := destination_folder.twin
+				l_idl_file_name.append ("idl\")
+				l_idl_file_name.append (eiffel_class_name.as_lower)
+				l_idl_file_name.append (".idl")
+				set_idl_file_name (l_idl_file_name)
+			end
 		end
 
 invariant

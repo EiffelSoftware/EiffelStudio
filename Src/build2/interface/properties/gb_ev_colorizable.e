@@ -28,6 +28,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_SHARED_SYSTEM_STATUS
+		undefine
+			default_create
+		end
 
 feature {GB_XML_STORE} -- Output
 
@@ -87,7 +92,16 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (foreground_color_string)
 			if element_info /= Void then
 				temp_color := build_color_from_string (element_info.data)
-				Result := Result + indent + info.name + ".set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))"
+					--| FIXME This is a special case for windows, as they are the root object, and when not generating as
+					--| a client, only the first name will be pruned from `Result'. Hence we do not apply a second name if
+					--| we are are a root object and not generating as a client of the window. The best solution will be to
+					--| change type of `Result' to an ARRAYED_LIST [STRING], one item for each line, without formatting and a name,
+					--| and have the code generator add this information. To do at some point.
+				if not system_status.current_project_settings.client_of_window and info.is_root_object then
+					Result := Result + indent + "set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))"
+				else
+					Result := Result + indent + Client_window_string + ".set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))"
+				end
 			end
 			Result := strip_leading_indent (Result)
 		end

@@ -64,9 +64,49 @@ DWORD CALLBACK cwel_editstream_callback (DWORD dwCookie, LPBYTE pbBuff, LONG cb,
 	{
 		return (DWORD) 0;
 	}
-
-	WEDCX
 }
+
+#ifdef EIF_THREADS
+
+
+void wel_set_editstream_procedure_address(EIF_POINTER _value_) 
+{
+		WGTCX
+		wel_editstream_procedure = (EIF_EDITSTREAM_PROCEDURE) _value_;
+}
+
+void wel_set_editstream_object(EIF_OBJ _value_) 
+{
+		WGTCX
+		wel_editstream_object = (EIF_OBJ) eif_adopt (_value_);
+}
+
+void wel_release_editstream_object() 
+{
+		WGTCX
+		eif_wean (wel_editstream_object);
+}
+
+void wel_set_editstream_buffer(EIF_POINTER _value_) 
+{
+		WGTCX
+		wel_editstream_buffer = (EIF_POINTER) _value_;
+}
+
+void wel_set_editstream_buffer_size(EIF_INTEGER _value_) 
+{
+		WGTCX
+		wel_editstream_buffer_size = (EIF_INTEGER) _value_;
+}
+
+void wel_set_editstream_in(EIF_BOOLEAN _value_) 
+{
+		WGTCX
+		wel_editstream_in = (EIF_BOOLEAN) _value_;
+}
+
+
+#endif
 
 /*
 --|-------------------------------------------------------------------------

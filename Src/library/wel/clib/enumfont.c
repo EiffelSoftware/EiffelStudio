@@ -43,6 +43,30 @@ int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT * lpelf, NEWTEXTMETRIC * 
 	WEDCX
 }
 
+#ifdef EIF_THREADS
+
+void wel_set_enum_font_fam_procedure_address(EIF_POINTER _addr_)
+{
+		WGTCX
+		wel_enum_font_fam_procedure = (EIF_ENUM_FONT_FAMILY_PROCEDURE) _addr_;
+}
+
+void wel_set_font_family_enumerator_object(EIF_POINTER _addr_)
+{
+		WGTCX
+		font_family_enumerator = eif_adopt ((EIF_OBJ) _addr_);
+}
+
+EIF_OBJ wel_release_font_family_enumerator_object ()
+{
+		WGTCX
+		return eif_wean (font_family_enumerator);
+}
+
+
+#endif
+
+
 /*
 --|-------------------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.

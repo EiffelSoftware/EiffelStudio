@@ -49,14 +49,12 @@ feature
 					generated_file.putchar ('0');
 				end;
 			end;
-			generated_file.putchar (';');
-			generated_file.new_line;
+			generated_file.putstring (";%N");
 			generated_file.exdent;
 				-- Detach this block
 			generated_file.new_line;
 			if context.result_used then
-				if real_type(result_type).c_type.is_pointer
-				then
+				if real_type(result_type).c_type.is_pointer then
 						-- Record once by allocating room in once_set stack.
 						-- This room will be updated to point to Result,
 						-- only if it is a reference. This will raise an
@@ -71,7 +69,7 @@ feature
 					-- directly, since it might be 0...)
 					generated_file.putstring ("PResult = (");
 					type_i.c_type.generate (generated_file);
-					generated_file.putstring ("*) malloc(sizeof(");
+					generated_file.putstring ("*) cmalloc(sizeof(");
 					type_i.c_type.generate (generated_file);
 					generated_file.putstring ("*));");
 				end;

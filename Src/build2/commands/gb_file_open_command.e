@@ -105,11 +105,15 @@ feature {NONE} -- Implementation
 
 	valid_file_name (file_name: STRING): BOOLEAN is
 			-- Is `file_name' the name of an existing file?
+		require
+			file_name_not_void: file_name /= Void
 		local
 			file: RAW_FILE
 		do
-			create file.make (file_name)
-			Result := file.exists
+			if not file_name.is_empty then
+				create file.make (file_name)
+				Result := file.exists
+			end
 		end
 
 end -- class GB_FILE_OPEN_COMMAND

@@ -48,8 +48,17 @@ end;
 		local
 			new_date: like date;
 			ptr: ANY;
+			file: PLAIN_TEXT_FILE;
+			vd22: VD22
 		do
 			ptr := file_name.to_c;
+			!!file.make (file_name);
+			if not file.exists then
+				!!vd22;
+				vd22.set_file_name (file_name);
+				Error_handler.insert_error (vd22);
+				Error_handler.raise_error
+			end
 			new_date := eif_date ($ptr);
 			if new_date /= date then
 				do_recompilation;

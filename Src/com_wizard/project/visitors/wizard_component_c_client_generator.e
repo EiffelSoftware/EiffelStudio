@@ -15,6 +15,8 @@ inherit
 
 	WIZARD_CPP_WRITER_GENERATOR
 
+	WIZARD_COMPONENT_CLIENT_GENERATOR
+
 feature -- Basic operations
 
 	generate_functions_and_properties (a_desc: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -137,6 +139,150 @@ feature {NONE} -- Implementation
 
 		end
 
+	ccom_last_error_code_function: WIZARD_WRITER_C_FUNCTION is
+			-- `ccom_last_error_code' function.
+
+		local
+			function_body: STRING
+		do
+			create Result.make
+			Result.set_name (ccom_last_error_code_name)
+			Result.set_comment ("Last error code")
+			Result.set_result_type  (Eif_integer)
+
+			create function_body.make (0)
+			function_body.append (tab)
+
+			-- return (EIF_INTEGER) excepinfo->wCode;
+
+			function_body.append (Return)
+			function_body.append (Space)
+			function_body.append (Open_parenthesis)
+			function_body.append (Eif_integer)
+			function_body.append (Close_parenthesis)
+			function_body.append (Space)
+			function_body.append (Excepinfo_access)
+			function_body.append (Wcode_field)
+			function_body.append (Semicolon)
+
+			Result.set_body (function_body)
+
+		ensure
+			non_void_function: Result /= Void
+			non_void_function_name: Result.name /= Void
+			non_void_function_body: Result.body /= Void
+		end
+
+	ccom_last_source_of_exception_function: WIZARD_WRITER_C_FUNCTION is
+			-- `ccom_last_source_of_exception' function.
+		local
+			function_body: STRING
+		do
+			create Result.make
+			Result.set_name (ccom_last_error_code_name)
+			Result.set_comment ("Last source of exception")
+			Result.set_result_type  (Eif_reference)
+
+			create function_body.make (0)
+			function_body.append (tab)
+
+			-- return (EIF_INTEGER) excepinfo->wCode;
+
+			function_body.append (Return)
+			function_body.append (Space)
+			function_body.append (Open_parenthesis)
+			function_body.append (Eif_reference)
+			function_body.append (Close_parenthesis)
+			function_body.append (Space)
+			function_body.append ("ccom_ce_bstr")
+			function_body.append (Space)
+			function_body.append (Open_parenthesis)
+			function_body.append (Excepinfo_access)
+			function_body.append (Bstr_source_field)
+			function_body.append (Close_parenthesis)
+			function_body.append (Semicolon)
+
+			Result.set_body (function_body)
+
+		ensure
+			non_void_function: Result /= Void
+			non_void_function_name: Result.name /= Void
+			non_void_function_body: Result.body /= Void
+		end
+
+	ccom_last_error_description_function: WIZARD_WRITER_C_FUNCTION is
+			-- `ccom_last_error_description' function.
+		local
+			function_body: STRING
+		do
+			create Result.make
+			Result.set_name (ccom_last_error_code_name)
+			Result.set_comment ("Last error description")
+			Result.set_result_type  (Eif_reference)
+
+			create function_body.make (0)
+			function_body.append (tab)
+
+			-- return (EIF_INTEGER) excepinfo->wCode;
+
+			function_body.append (Return)
+			function_body.append (Space)
+			function_body.append (Open_parenthesis)
+			function_body.append (Eif_reference)
+			function_body.append (Close_parenthesis)
+			function_body.append (Space)
+			function_body.append ("ccom_ce_bstr")
+			function_body.append (Space)
+			function_body.append (Open_parenthesis)
+			function_body.append (Excepinfo_access)
+			function_body.append (Bstr_description_field)
+			function_body.append (Close_parenthesis)
+			function_body.append (Semicolon)
+
+			Result.set_body (function_body)
+
+		ensure
+			non_void_function: Result /= Void
+			non_void_function_name: Result.name /= Void
+			non_void_function_body: Result.body /= Void
+		end
+
+	ccom_last_error_help_file_function: WIZARD_WRITER_C_FUNCTION is
+			-- `ccom_last_error_help_file' function.
+		local
+			function_body: STRING
+		do
+			create Result.make
+			Result.set_name (ccom_last_error_code_name)
+			Result.set_comment ("Last error help file")
+			Result.set_result_type  (Eif_reference)
+
+			create function_body.make (0)
+			function_body.append (tab)
+
+			-- return (EIF_INTEGER) excepinfo->wCode;
+
+			function_body.append (Return)
+			function_body.append (Space)
+			function_body.append (Open_parenthesis)
+			function_body.append (Eif_reference)
+			function_body.append (Close_parenthesis)
+			function_body.append (Space)
+			function_body.append ("ccom_ce_bstr")
+			function_body.append (Space)
+			function_body.append (Open_parenthesis)
+			function_body.append (Excepinfo_access)
+			function_body.append (Bstr_help_file_field)
+			function_body.append (Close_parenthesis)
+			function_body.append (Semicolon)
+
+			Result.set_body (function_body)
+
+		ensure
+			non_void_function: Result /= Void
+			non_void_function_name: Result.name /= Void
+			non_void_function_body: Result.body /= Void
+		end
 
 end -- class WIZARD_COMPONENT_C_CLIENT_GENERATOR
 

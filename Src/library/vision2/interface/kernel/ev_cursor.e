@@ -17,8 +17,8 @@ inherit
 
 creation
 	make,
-	make_by_code
---	make_by_pixmap
+	make_by_code,
+	make_by_filename
 
 feature {NONE} -- Initialization
 
@@ -37,12 +37,15 @@ feature {NONE} -- Initialization
 			implementation.set_interface (current)
 		end
 
---	make_by_pixmap (pix: EV_PIXMAP) is
---			-- Create a cursor with `pix' as appearance
---		do
---			create {EV_CURSOR_IMP} implementation.make_by_pixmap (pix)
---			implementation.set_interface (current)
---		end
+	make_by_filename (filename: STRING) is
+			-- Create a cursor from the given file path
+		require
+			valid_filename: filename /= Void
+			filename_exists: file_exists (filename)
+		do
+			create {EV_CURSOR_IMP} implementation.make_by_filename (filename)
+			implementation.set_interface (current)
+		end
 
 feature -- Implementation
 

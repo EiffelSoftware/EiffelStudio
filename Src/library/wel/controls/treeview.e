@@ -1,0 +1,130 @@
+indexing
+	description: "Control that displays a hierarchical list of items."
+	note: "The common controls dll (WEL_COMMON_CONTROLS_DLL) needs to %
+		%be loaded to use this control."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	WEL_TREE_VIEW
+
+inherit
+	WEL_CONTROL
+
+	WEL_TVS_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_TVM_CONSTANTS
+		export
+			{NONE} all
+		end
+
+creation
+	make,
+	make_by_id
+
+feature {NONE} -- Initialization
+
+	make (a_parent: WEL_COMPOSITE_WINDOW; a_x, a_y, a_width, a_height,
+				an_id: INTEGER) is
+			-- Make a tree view control.
+		require
+			a_parent_not_void: a_parent /= Void
+		do
+			internal_window_make (a_parent, Void,
+				default_style, a_x, a_y, a_width, a_height,
+				an_id, default_pointer)
+			id := an_id
+		ensure
+			exists: exists
+			parent_set: parent = a_parent
+			id_set: id = an_id
+		end
+
+feature -- Access
+
+	last_item: INTEGER
+			-- Handle of the last item inserted
+
+feature -- Status report
+
+
+	count: INTEGER is
+			-- Number of items in the tree view window
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item, Tvm_getcount,
+				0, 0)
+		ensure
+			positive_result: Result >= 0
+		end
+
+	visible_count: INTEGER is
+			-- Number of items that will fit into the tree
+			-- view window
+		require
+			exists: exists
+		do
+			Result := cwin_send_message_result (item,
+				Tvm_getvisiblecount, 0, 0)
+		ensure
+			positive_result: Result >= 0
+		end
+
+feature -- Element change
+
+	insert_item (an_item: WEL_TREE_VIEW_INSERT_STRUCT) is
+			-- Insert `an_item'.
+		require
+			exists: exists
+			an_item_not_void: an_item /= Void
+		do
+			last_item := cwin_send_message_result (item,
+				Tvm_insertitem, 0, an_item.to_integer)
+		ensure
+			new_count: count = old count + 1
+		end
+
+feature {NONE} -- Implementation
+
+	class_name: STRING is
+			-- Window class name to create
+		once
+			!! Result.make (0)
+			Result.from_c (cwin_wc_treeview)
+		end
+
+	default_style: INTEGER is
+			-- Default style used to create the control
+		once
+			Result := Ws_visible + Ws_child + Ws_group +
+				Ws_tabstop + Ws_border + Tvs_haslines +
+				Tvs_hasbuttons + Tvs_linesatroot
+		end
+
+feature {NONE} -- Externals
+
+	cwin_wc_treeview: POINTER is
+		external
+			"C [macro <cctrl.h>]"
+		alias
+			"WC_TREEVIEW"
+		end
+
+end -- class WEL_TREE_VIEW
+
+--|-------------------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-------------------------------------------------------------------------

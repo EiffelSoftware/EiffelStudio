@@ -22,12 +22,13 @@ inherit
 	EV_TITLED_WINDOW_IMP
 		undefine
 			class_name,
-			on_wm_control_id_command
+			on_wm_control_id_command,
+			on_wm_nc_destroy
 		redefine
 			interface, process_message,
 			wel_move_and_resize,
 			wel_destroy_window,
-			on_wm_destroy, on_wm_command,
+			on_wm_command,
 			forbid_resize, allow_resize,
 			window_on_wm_activate
 		select
@@ -79,8 +80,7 @@ inherit
 		redefine
 			setup_dialog,
 			process_message,
-			wel_move_and_resize,
-			on_wm_destroy
+			wel_move_and_resize
 		end
 			
 	WEL_ID_CONSTANTS
@@ -595,8 +595,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	on_wm_destroy is
-			-- Wm_destroy message.
+	on_wm_ncdestroy is
+			-- Wm_nc_destroy message.
 			--| Redefined in order not to post a WM_QUIT message.
 		do
 			on_destroy

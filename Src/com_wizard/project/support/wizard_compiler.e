@@ -502,6 +502,8 @@ feature {NONE} -- Implementation
 
 				cluster_info.input_from_file (input_file)
 
+				insert_visible_class
+
 				if not cluster_info.clusters.empty then
 					from
 						cluster_info.clusters.start
@@ -514,9 +516,9 @@ feature {NONE} -- Implementation
 							str_buffer.prepend ("%"")
 							str_buffer.append ("%"")
 							cluster_info.clusters.item.replace_substring_all ("%".%"", str_buffer)		
-						else
-							Result.append (cluster_info.clusters.item)
 						end
+						Result.append (cluster_info.clusters.item)
+
 						Result.append (New_line)
 						Result.append (Tab_tab)
 						cluster_info.clusters.forth
@@ -684,58 +686,84 @@ feature {NONE} -- Implementation
 	Common_cluster: STRING is "all common"
 			-- Common cluster
 
+	Standard_clusters: LINKED_LIST[STRING] is
+			-- Standard clusters.
+		once
+			create Result.make
+			Result.extend (
+					"	-- BASE%N%
+					%	all base:						%"$EIFFEL4\library\base%"%N%
+					%		exclude%N%
+					%			%"table_eiffel3%";%N%
+					%			%"desc%"%N%
+					%		visible%N%
+					%			INTEGER_REF;%N%
+					%			CHARACTER_REF;%N%
+					%			BOOLEAN_REF;%N%
+					%			REAL_REF;%N%
+					%			DOUBLE_REF;%N%
+					%			CELL;%N%
+					%			STRING;%N%
+					%			ARRAY;%N%
+					%		end;%N%N")
+
+			Result.extend (
+					"	-- WEL%N%
+					%	all wel:						%"$EIFFEL4\library\wel%"%N%N")
+
+			Result.extend (
+					"	-- TIME%N%
+					%	all time: 						%"$EIFFEL4\library\time%"%N%
+					%		exclude%N%
+					%			%"french%";%N%
+					%			%"german%"%N%
+					%		visible%N%
+					%			DATE_TIME;%N%
+					%		end;%N%N")
+
+			Result.extend (
+					"	-- COM%N%
+					%	all ecom:						%"$EIFFEL4\library\com%"%N%
+					%		visible%N%
+					%			ECOM_DECIMAL;%N%
+					%			ECOM_CURRENCY;%N%
+					%			ECOM_ARRAY;%N%
+					%			ECOM_VARIANT;%N%
+					%			ECOM_GUID;%N%
+					%			ECOM_EXCEP_INFO;%N%
+					%			ECOM_DISP_PARAMS;%N%
+					%			ECOM_STATSTG;%N%
+					%			ECOM_STREAM;%N%
+					%			ECOM_STORAGE;%N%
+					%			ECOM_ROOT_STORAGE;%N%
+					%			ECOM_ENUM_STATSTG;%N%
+					%			ECOM_HRESULT;%N%
+					%			ECOM_WIDE_STRING;%N%
+					%			ECOM_LARGE_INTEGER;%N%
+					%			ECOM_ULARGE_INTEGER;%N%
+					%			ECOM_UNKNOWN_INTERFACE;%N%
+					%			ECOM_AUTOMATION_INTERFACE;%N%
+					%		end;%N%N")
+
+		end
+
 	Partial_ace_file_part_two: STRING is
 			-- Ace file used to precompile generated Eiffel system
-		"	-- BASE%N%
-		%	all base:						%"$EIFFEL4\library\base%"%N%
-		%		exclude%N%
-		%			%"table_eiffel3%";%N%
-		%			%"desc%"%N%
-		%		visible%N%
-		%			INTEGER_REF;%N%
-		%			CHARACTER_REF;%N%
-		%			BOOLEAN_REF;%N%
-		%			REAL_REF;%N%
-		%			DOUBLE_REF;%N%
-		%			CELL;%N%
-		%			STRING;%N%
-		%			ARRAY;%N%
-		%		end;%N%N%
-		%	-- WEL%N%
-		%	all wel:						%"$EIFFEL4\library\wel%"%N%N%
-		%	-- TIME%N%
-		%	all time: 						%"$EIFFEL4\library\time%"%N%
-		%		exclude%N%
-		%			%"french%";%N%
-		%			%"german%"%N%
-		%		visible%N%
-		%			DATE_TIME;%N%
-		%		end;%N%N%
-		%	-- COM%N%
-		%	all ecom:						%"$EIFFEL4\library\com%"%N%
-		%		visible%N%
-		%			ECOM_DECIMAL;%N%
-		%			ECOM_CURRENCY;%N%
-		%			ECOM_ARRAY;%N%
-		%			ECOM_VARIANT;%N%
-		%			ECOM_GUID;%N%
-		%			ECOM_EXCEP_INFO;%N%
-		%			ECOM_DISP_PARAMS;%N%
-		%			ECOM_STATSTG;%N%
-		%			ECOM_STREAM;%N%
-		%			ECOM_STORAGE;%N%
-		%			ECOM_ROOT_STORAGE;%N%
-		%			ECOM_ENUM_STATSTG;%N%
-		%			ECOM_HRESULT;%N%
-		%			ECOM_WIDE_STRING;%N%
-		%			ECOM_LARGE_INTEGER;%N%
-		%			ECOM_ULARGE_INTEGER;%N%
-		%			ECOM_UNKNOWN_INTERFACE;%N%
-		%			ECOM_AUTOMATION_INTERFACE;%N%
-		%		end;%N%N%
-		%external%N%
-		%	include_path:	%"$EIFFEL4\library\wel\spec\windows\include%",%N%
-		%			%"$EIFFEL4\library\com\spec\windows\include%",%N"
+		do
+			create Result.make (0)
+			from
+				Standard_clusters.start
+			until
+				Standard_clusters.after
+			loop
+				Result.append (Standard_clusters.item)
+				Standard_clusters.forth
+			end
+			Result.append (
+					"external%N%
+					%	include_path:	%"$EIFFEL4\library\wel\spec\windows\include%",%N%
+					%			%"$EIFFEL4\library\com\spec\windows\include%",%N")
+		end
 
 	End_ace_file: STRING is
 			-- End of ace file used to precompile generated Eiffel system
@@ -799,5 +827,68 @@ feature {NONE} -- Implementation
 
 	Resource_file_extension: STRING is ".rc"
 			-- Resource file extension
+
+	if_class_cluster_insert_visible (a_cluster: STRING) is
+			-- If `a_cluster' is `class_cluster_name' from WIZARD_ENVIRONMENT then
+			-- insert into visible clause `eiffel_class_name'
+		require
+			non_void_cluster: a_cluster /= Void
+			valid_cluster: not a_cluster.empty
+		local
+			a_cluster_name_index, a_colon_index, a_class_index, a_class_index_before, a_class_index_after: INTEGER
+		do
+			a_cluster_name_index := a_cluster.substring_index (shared_wizard_environment.class_cluster_name, 1)
+			a_colon_index := a_cluster.index_of (':', 1)
+			if  (a_cluster_name_index> 0) and (a_cluster_name_index < a_colon_index) then
+				if (a_cluster.substring_index ("visible", 1) > 0) then
+					a_class_index := a_cluster.substring_index (shared_wizard_environment.eiffel_class_name, 1)
+					a_class_index_before := a_class_index - 1
+					a_class_index_after := a_class_index + shared_wizard_environment.eiffel_class_name.count
+					if 
+						(a_class_index = 0) or else not
+						(((a_cluster.item (a_class_index_before) = ' ' ) or 
+						(a_cluster.item (a_class_index_before) = '%T')) and
+						((a_cluster.item (a_class_index_after) = ' ') or 
+						(a_cluster.item (a_class_index_after) = ';') or
+						(a_cluster.item (a_class_index_after) = '%N')))
+					then
+						a_cluster.insert (
+							"%N%T%T%T" + shared_wizard_environment.eiffel_class_name+ ";",
+							a_cluster.substring_index ("visible", 1) + 7)
+					end
+				else
+					a_cluster.insert (
+						"%N%T%Tvisible%N%
+						%%T%T%T" + shared_wizard_environment.eiffel_class_name + ";%N%
+						%%T%Tend", 
+						a_cluster.count)
+				end
+			end
+		end
+
+	insert_visible_class is
+			-- Insrt visible clause into correct cluster.
+		require
+			non_void_cluster_info: cluster_info /= Void
+			non_void_clusters: cluster_info.clusters /= Void
+		do
+			from
+				standard_clusters.start
+			until
+				standard_clusters.after
+			loop
+				if_class_cluster_insert_visible (standard_clusters.item)
+				standard_clusters.forth
+			end
+
+			from
+				cluster_info.clusters.start
+			until
+				cluster_info.clusters.after
+			loop
+				if_class_cluster_insert_visible (cluster_info.clusters.item)
+				cluster_info.clusters.forth
+			end
+		end
 
 end -- class WIZARD_IDL_COMPILER

@@ -409,7 +409,7 @@ feature -- Access
 		do
 			if type.has_true_formal then
 				gen_type ?= current_type
-				Result := type.creation_instantiation_in (gen_type)
+				Result := type.complete_instantiation_in (gen_type)
 			else
 				Result := type
 			end

@@ -105,13 +105,13 @@ feature -- Element Change
 
 feature -- Event : command association
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make `cmd' the executed command when the item is 
 			-- activated.
 		deferred
 		end	
 
-	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make `cmd' the executed command when the item is
 			-- unactivated.
 		deferred

@@ -1,6 +1,6 @@
 indexing 
 	description: "EiffelVision Combo-box. Implementation interface"
-	note: "We cannot cahnge the feature `set_style' of wel_window%
+	note: "We cannot chAnge the feature `set_style' of wel_window%
 		% to switch from editable to non editable because it%
 		% doesn't for this kind of style changing."
 	status: "See notice at end of class"
@@ -150,14 +150,14 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
 			-- when the selection has changed.
 		do
 			add_command (Cmd_selection, cmd, arg)
 		end
 
-	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when the text in the field is activated, i.e. the
 			-- user press the enter key.

@@ -191,7 +191,7 @@ feature -- Element change
 
 feature -- Event - command association
 	
-	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed
 			-- the a page is switch in the notebook.
 		do

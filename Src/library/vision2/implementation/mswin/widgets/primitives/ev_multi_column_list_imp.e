@@ -45,7 +45,7 @@ inherit
 			set_column_title,
 			set_column_width,
 			on_lvn_columnclick,
-			on_lvn_itemchanged 
+			on_lvn_itemchanged
 		end
 		
 creation
@@ -250,14 +250,14 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is	
+	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
 			-- when the selection has changed.
 		do
 			add_command (Cmd_selection, cmd, arg)
 		end
 
-	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when a column is clicked.
 		do
@@ -303,7 +303,6 @@ feature {NONE} -- WEL Implementation
 					item_imp.execute_command (Cmd_item_deactivate, Void)
 				end
 			end
-			disable_default_processing
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

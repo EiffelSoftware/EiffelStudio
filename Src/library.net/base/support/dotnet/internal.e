@@ -36,13 +36,17 @@ feature -- Conformance
 			child: TYPE
 			l_types: like known_types
 		do
-			l_types := known_types
-			l_types.search (type1)
-			if l_types.found then
-				child := l_types.found_item.item
-				l_types.search (type2)
+			if type1 = type2 then
+				Result := True
+			else
+				l_types := known_types
+				l_types.search (type1)
 				if l_types.found then
-					Result := child.is_subclass_of (l_types.found_item.item)
+					child := l_types.found_item.item
+					l_types.search (type2)
+					if l_types.found then
+						Result := child.is_subclass_of (l_types.found_item.item)
+					end
 				end
 			end
 		end

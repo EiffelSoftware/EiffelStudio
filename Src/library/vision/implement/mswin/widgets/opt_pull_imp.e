@@ -240,7 +240,6 @@ feature {NONE} -- Implementation
 			button_list.search (b)
 			if not button_list.exhausted then
 				from
-					button_list.start
 				until
 					button_list.before
 				loop

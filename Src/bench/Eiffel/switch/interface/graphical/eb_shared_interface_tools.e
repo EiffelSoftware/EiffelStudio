@@ -29,21 +29,27 @@ feature {NONE} -- Shared tools access
 			-- Unique assembly tool
 		once
 			!! Result.make (ewb_display)
-			is_system_tool_created := True
+			is_system_tool_cell.set_item (True)
 		end
 
-	is_system_tool_created: BOOLEAN
+	is_system_tool_created: BOOLEAN is
 			-- To know if the system tool has been created.
+		do
+			Result := is_system_tool_cell.item
+		end
 
 	Dynamic_lib_tool: DYNAMIC_LIB_W is
 			-- Unique assembly tool
 		once
 			!! Result.make (ewb_display)
-			is_dynamic_lib_tool_created := True
+			is_dynamic_lib_tool_cell.set_item (True)
 		end
 
-	is_dynamic_lib_tool_created: BOOLEAN
+	is_dynamic_lib_tool_created: BOOLEAN is
 			-- To know if the Dynamic_lib tool has been created.
+		do
+			Result := is_dynamic_lib_tool_cell.item
+		end
 
 	name_chooser (popup_parent: COMPOSITE): NAME_CHOOSER_W is
 			-- File selection window
@@ -273,6 +279,18 @@ feature {NONE} -- Implementation
 			else
 				!! Result.make (Void)
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	is_system_tool_cell: BOOLEAN_REF is
+		once
+			create Result
+		end
+
+	is_dynamic_lib_tool_cell: BOOLEAN_REF is
+		once
+			create Result
 		end
 
 end -- class EB_SHARED_INTERFACE_TOOLS

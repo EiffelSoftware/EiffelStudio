@@ -43,12 +43,13 @@ feature -- Initialization
 			key := a_key
 			text_label.set_text (a_label)
 			initialize_combo (text_combo, key)
+			-- Trigger validity checking
 			if text_combo.text.is_empty then
-				-- Trigger validity checking
 				create l_default.make_with_text (default_text)
 				text_combo.extend (l_default)
 				l_default.enable_select
 			end
+			on_select
 			if not excluded then
 				Profile_manager.active_profile_change_actions.extend (agent on_profile_change)
 				Profile_manager.active_profile_save_actions.extend (agent profile_item)

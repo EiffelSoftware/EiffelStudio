@@ -5,19 +5,6 @@ indexing
 
 deferred class EIFFEL_CALL_STACK
 
---inherit
---
---	TWO_WAY_LIST [CALL_STACK_ELEMENT]
---		rename
---			make as list_make
---		end;
-
-
---create {RUN_INFO, APPLICATION_STATUS}
---
---	make, dummy_make
---
-
 feature -- Fake inherit from TWO_WAY_LIST
 
 	count: INTEGER is

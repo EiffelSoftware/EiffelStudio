@@ -57,15 +57,17 @@ feature {NONE} -- Initialization
 			end
 			should_update := True
 			create schema_validator
-			set_font (shared_document_editor.preferences.font)
+			if shared_document_editor.preferences.font /= Void then
+				set_font (shared_document_editor.preferences.font)
+			end			
 			if not shared_document_editor.preferences.word_wrap_on then
 				disable_word_wrapping
 			end
 			
 				-- Agents
-			change_actions.extend (agent update_subject)
-			key_release_actions.force_extend (agent update_subject)
-			pointer_button_release_actions.force_extend (agent update_subject)
+			change_actions.extend (agent internal_update_subject)
+			key_release_actions.extend (agent update_subject)
+			pointer_button_release_actions.force_extend (agent internal_update_subject)
 			pointer_button_release_actions.force_extend (agent pointer_released)
 			pointer_button_press_actions.extend (agent pointer_pressed (?,?,?,?,?,?,?,?))		
 			drop_actions.extend (agent pebble_dropped)
@@ -267,17 +269,49 @@ feature -- Status Setting
 			end
 		end
 
-	update_subject is
+	update_subject (a_key: EV_KEY) is
 			-- Update the observed subjects of changes so it can update
 			-- all of it observers
+		local
+			l_cnt,
+			l_tab_count: INTEGER
+			l_string: STRING
+			done: BOOLEAN
+			l_char: CHARACTER
 		do
 			should_update := False
-			document.set_text (text)
---			if not text.is_empty then				
---				document.insert_character (text.item (caret_position - 1), caret_position - 1 )	
---			end
-			update_line_display
-			should_update := True
+			if a_key.code = (create {EV_KEY_CONSTANTS}).key_enter then
+				l_string := line (current_line_number - 1)
+				if l_string /= Void and then not l_string.is_empty then
+					from
+						l_cnt := 1
+					until
+						l_cnt > l_string.count or done
+					loop
+						l_char := l_string.item (l_cnt)
+						if l_char = tab_char then
+							l_tab_count := l_tab_count + 1
+						else
+							done := True
+						end
+						l_cnt := l_cnt + 1
+					end
+					if l_tab_count > 0 then
+						from
+							l_cnt := 1
+							l_string := ""
+						until
+							l_cnt > l_tab_count
+						loop
+							l_string.append ("%T")
+							l_cnt := l_cnt + 1
+						end
+						insert_text (l_string)
+						set_caret_position (caret_position + l_tab_count)
+					end
+				end
+			end
+			internal_update_subject			
 		end 
 
 feature -- Query
@@ -319,6 +353,15 @@ feature {NONE} -- Implementation
 
 	schema_validator: SCHEMA_VALIDATOR
 			-- Schema Validator	
+
+	internal_update_subject is
+			-- Update subject
+		do
+			should_update := False
+			document.set_text (text)
+			update_line_display	
+			should_update := True
+		end		
 
 	pointer_pressed (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Pointer was pressed, catch right-click

@@ -51,16 +51,16 @@
 					<item>Fixed resizing issue: when a widget is inserted in a hidden window and that the minimum size of the window does not change, the widget would not appear on the window when shown. One had to manually resize the window to make it appear. Now it will appear properly.</item>
 					<item>Fixed a crash which could occur when using the tab or arrows keys to navigate between the primitive of a window. It would happen when trying to set the focus on a widget which was previously parented but is not anymore.</item>
 					<item>
-						<bold>EV_RADIO_BUTTON_IMP</bold> - Enabled better navigation between radio buttons of a group using the arrow keys.
+						<bold>EV_RADIO_BUTTON</bold> - Enabled better navigation between radio buttons of a group using the arrow keys.
 					</item>
 					<item>
-						<bold>EV_SPIN_BUTTON_IMP</bold> - When it gets the focus, we set the focus to the associated text field. Before one would loose the focus until one use the mouse to set it to the text field part.
+						<bold>EV_SPIN_BUTTON</bold> - When it gets the focus, we set the focus to the associated text field. Before one would loose the focus until one use the mouse to set it to the text field part.
 					</item>
 					<item>
-						<bold>EV_SCREEN_IMP</bold> - `widget_at_position' returns an instance of EV_COMBO_BOX when cursor is on top of the text part of the combo box, before it would return Void.
+						<bold>EV_SCREEN</bold> - `widget_at_position' returns an instance of EV_COMBO_BOX when cursor is on top of the text part of the combo box, before it would return Void.
 					</item>
 					<item>
-						<bold>EV_COMBO_BOX_IMP</bold>
+						<bold>EV_COMBO_BOX</bold>
 						<list ordered="false">
 							<item>`focus_out_actions' are only called once when loosing focus. Before they would be called twice and even called when the combo box was getting the focus.</item>
 							<item>Fixed `has_focus' to return True when either the combo or the text field when it exists has the focus.</item>
@@ -69,10 +69,14 @@
 						</list>
 					</item>
 					<item>
-						<bold>EV_MULTI_COLUMN_LIST_IMP</bold> - Calling `column_width' after calling `resize_column_to_content' did not return the correct result but instead the previously set column width.
+						<bold>EV_MULTI_COLUMN_LIST</bold> - Calling `column_width' after calling `resize_column_to_content' did not return the correct result but instead the previously set column width.
 					</item>
 					<item>
-						<bold>EV_NOTEBOOK_IMP</bold> - Fixed resizing issue of notebook when it is included in a hidden pane of another notebook, resulting in an assertion violation in the resizing code.
+						<bold>EV_NOTEBOOK</bold>
+						<list ordered="false">
+						<item>Fixed resizing issue of notebook when it is included in a hidden pane of another notebook, resulting in an assertion violation in the resizing code.</item>
+						<item>Fixed class invariant which failed when calling `destroy'.</item>
+						</list>
 					</item>
 					<item>
 						<bold>EV_DIALOG</bold> 

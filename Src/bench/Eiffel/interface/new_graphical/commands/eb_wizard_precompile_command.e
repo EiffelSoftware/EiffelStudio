@@ -8,7 +8,7 @@ class
 	EB_WIZARD_PRECOMPILE_COMMAND
 
 inherit
-	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+	EB_MENUABLE_COMMAND
 
 	EB_CONSTANTS
 		export
@@ -36,7 +36,6 @@ feature -- Execution
 			command.append (Precompilation_wizard_command_name)
 			command.append (" ")
 			command.append (precompilation_wizard_resources_directory)
-
 			launch(command)
 		end
 
@@ -47,28 +46,5 @@ feature {NONE} -- Implementation
 		do
 			Result := Interface_names.m_Wizard_precompile
 		end
-
-	pixmap: ARRAY [EV_PIXMAP] is
-			-- Pixmaps representing the command (one for the
-			-- gray version, one for the color version).
-		do
-			Result := Pixmaps.Icon_wizard_precompile
-		end
-
-	tooltip: STRING is
-			-- Tooltip for the toolbar button.
-		do
-			Result := Interface_names.f_Wizard_precompile
-		end
-
-	description: STRING is
-			-- Tooltip for the toolbar button.
-		do
-			Result := Interface_names.f_Wizard_precompile
-		end
-
-	name: STRING is "Precompile_wizard"
-			-- Name of the command. Used to store the command in the
-			-- preferences.
 
 end -- class EB_WIZARD_PRECOMPILE_COMMAND

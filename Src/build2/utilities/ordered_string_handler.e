@@ -33,7 +33,7 @@ feature -- Status setting
 		local
 			list_item: EV_LIST_ITEM
 		do
-			new_string.prune_all ('%N')
+			new_string.replace_substring_all ("%N", "   ")
 			create list_item.make_with_text ("<" + (internal_list.count + 1).out + "> " + new_string)
 			internal_list.extend (list_item)
 			if internal_list.is_displayed then

@@ -60,7 +60,8 @@ feature -- Access
 			l_filename_arr,
 			l_det_arr: ARRAY [STRING]
 			cnt,
-			l_match_index: INTEGER
+			l_no_parents,
+			l_last_match_index: INTEGER
 			l_match, l_parent: BOOLEAN
 			l_filename: FILE_NAME
 		do
@@ -69,49 +70,64 @@ feature -- Access
 					Result := url
 				else
 					l_abs := absolute_url
+					create l_filename.make
 					if l_abs /= void and then not l_abs.is_empty then
 						l_url_name := short_name (url)
 						l_file_name := short_name (filename)
 						l_url_arr := directory_array (l_abs)
 						l_filename_arr := directory_array (filename)
-						l_match_index := l_filename_arr.count
 						create Result.make_from_string (l_url_name)
 						if l_url_arr /= Void and l_filename_arr /= Void then
 							
-									-- Compare array directory items until they don't match
+									-- Compare array directory until there is no match
+									-- of the filename array is exhausted
 							from
 								cnt := 1
 								l_match := True
 							until
-								cnt > l_url_arr.count or cnt > l_filename_arr.count or not l_match
+								cnt > l_filename_arr.count or not l_match
 							loop
 								l_match := l_url_arr.item (cnt).is_equal (l_filename_arr.item (cnt))
+								if l_match then									
+									l_last_match_index := cnt	
+								end
 								cnt := cnt + 1
 							end
 							
-								-- Build in parent traversal if this was in a parent
-							create l_filename.make
-							from
-								l_parent := l_match_index < cnt																
-								cnt := l_match_index
-							until
-								cnt > l_filename_arr.count
-							loop				
-								l_filename.extend ("..")	
-								cnt := cnt + 1
+								-- If match is true here we are dealing with the same directory or
+								-- sub-directory, since the filename array must have been exhausted,
+								-- implying the url array is the same size or longer, so now we work out the
+								-- number of parents from this
+							if not l_match then
+								from
+									l_no_parents := cnt - l_last_match_index
+								until
+									l_no_parents = 0
+								loop				
+									l_filename.extend ("..")	
+									l_no_parents := l_no_parents - 1
+								end									
 							end							
-
+								
+								-- Now add the remaining url directory names
 							from
-								cnt := l_match_index
+								cnt := l_last_match_index + 1
 							until
 								cnt > l_url_arr.count
-							loop				
-								l_filename.extend (l_url_arr.item (cnt))	
+							loop
+								l_filename.extend (l_url_arr.item (cnt))
 								cnt := cnt + 1
-							end														
+							end													
 							
+								-- And finally the filename itself
 							l_filename.extend (l_url_name)
-							Result := l_filename.string
+							
+								-- Finally strip the result of possible unwanted '/' or '\'
+							if l_filename.string.index_of ('/', 1) = 1 or l_filename.string.index_of ('\', 1) = 1 then
+								Result := l_filename.string.substring (2, l_filename.string.count)
+							else
+								Result := l_filename.string
+							end							
 						end
 					end
 				end	
@@ -321,32 +337,18 @@ feature {DOCUMENT_LINK} -- Query
 			l_file: RAW_FILE
 			l_filename: FILE_NAME
 		do
---					-- Does url begin with '.'?
-			l_first_char := url.item (1)
---			Result := l_first_char = '.'
---			if not Result then
---					-- Since it does not start with a '.', if it does not contain
---					-- any path separators it must be relative to document
---				Result := url.occurrences ('/') = 0 and url.occurrences ('\') = 0
---			end
---			
---					-- Can file be created from location of filename appended with
---					-- url?  If so must be relative to document
---			if not Result and then (url.occurrences (':') = 0)then
---				create l_filename.make_from_string (directory_no_file_name (filename))
---				l_filename.extend (url)
---				create l_file.make (l_filename)
---				Result := l_file.exists
---			end
---			
---					-- Can a file be created from `url'.  If so it must be absolute, not relative
---			if not Result then
---				create l_file.make (url)
---				if l_file.exists then
---					Result := False
---				end
---			end
-			Result := l_first_char = '.' or (l_first_char /= '/' and l_first_char /= '\')
+			Result := l_first_char = '.'
+					-- Can file be created from location of filename appended with
+					-- url?  If so must be relative to document
+			if not Result and then (l_first_char /= '/' and l_first_char /= '\') then
+				create l_file.make (url)
+				if not l_file.exists then
+					create l_filename.make_from_string (directory_no_file_name (filename))
+					l_filename.extend (url)
+					create l_file.make (l_filename.string)
+					Result := l_file.exists
+				end				
+			end		
 		end		
 	
 	relative_from_root: BOOLEAN is

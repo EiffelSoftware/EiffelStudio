@@ -116,6 +116,7 @@ feature -- Type check, byte code and dead code removal
 			vwoe1					: VWOE1
 			vhne					: VHNE
 			vuex					: VUEX
+			vape: VAPE
 		do
 				-- First type check the left operand
 			left.type_check
@@ -151,6 +152,19 @@ feature -- Type check, byte code and dead code removal
 				vuex.set_static_class (last_class)
 				vuex.set_exported_feature (infix_function)
 				Error_handler.insert_error (vuex)
+				Error_handler.raise_error
+			end
+
+			if
+				not System.do_not_check_vape and then
+				context.level4 and then context.check_for_vape and then
+				not context.a_feature.export_status.is_subset (infix_function.export_status) 
+			then
+					-- In precondition and checking for vape
+				create vape
+				context.init_error (vape)
+				vape.set_exported_feature (context.a_feature)
+				Error_handler.insert_error (vape)
 				Error_handler.raise_error
 			end
 

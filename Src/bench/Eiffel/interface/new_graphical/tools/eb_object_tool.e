@@ -550,7 +550,6 @@ feature {NONE} -- Implementation
 		local
 			item: EV_TREE_ITEM
 			l_exception_detail: TUPLE [STRING, STRING]
-			l_exception_class_detail: STRING
 			l_exception_module_detail: STRING
 			l_exception_to_string: STRING
 			exception_item: EV_TREE_ITEM

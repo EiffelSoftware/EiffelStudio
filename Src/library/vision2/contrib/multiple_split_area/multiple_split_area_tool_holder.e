@@ -77,6 +77,7 @@ feature {NONE} -- Initialization
 			close_button.set_pixmap (clone (parent_area.close_pixmap))
 			close_button.select_actions.extend (agent close)
 			close_button.set_tooltip (close_tooltip)
+			parent_area.set_holder_tool_height (main_box.height)
 			label_box.extend (tool_bar)
 			label_box.disable_item_expand (tool_bar)
 			vertical_box.disable_item_expand (frame)

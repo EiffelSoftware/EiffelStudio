@@ -440,7 +440,12 @@ feature {NONE} -- Implementation
 				if project_settings.client_of_window then
 					temp_string := clone (window_access)
 					if not document_info.type.is_equal (Ev_titled_window_string)  then
+							-- Ensure that the inheritance references the correct type.
+						temp_string := clone (Window_access_as_dialog)
 						temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
+							-- Replace "window" from `window_access' with "dialog" only in comment.
+							--| FIXME This is a hack and should probably be improved as the code generation
+							--| is developed.
 					end
 					add_generated_string (class_text, temp_string,  inheritance_tag)
 				else

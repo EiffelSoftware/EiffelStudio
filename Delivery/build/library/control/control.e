@@ -100,6 +100,16 @@ feature
 			end;
 		end;
 
+		-- Guillaume
+	set_current_state (new_state: INTEGER) is
+		do
+			previous_state := state
+			state := new_state
+		end
+
+	editing_mode: INTEGER is -3
+			-- Editing mode
+
 end -- CONTROL 
 
 --|----------------------------------------------------------------

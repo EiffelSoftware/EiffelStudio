@@ -12,15 +12,15 @@ class
 
 inherit
 		-- Specify the Handle. (ODBC or Oracle)
-	DATABASE_APPL [ODBC]
+	DATABASE_APPL [<FL_HANDLE>]
 
 		-- Inherit Repository, so you can insert a new row when you want.
 		-- see insert_row
-	REPOSITORY
+	REPOSITORIES
  
 feature -- Connections
 
- 	login_and_connect (data_source, a_name, a_psswd: STRING): BOOLEAN is
+ 	log_and_connect (a_name, a_psswd, data_source: STRING) is
  			-- Try to connect the database using ODBC
  			-- As a data source 'data_source', a username 'a_name', 
  			-- a password 'a_psswd'
@@ -30,10 +30,10 @@ feature -- Connections
  		do
  			login(a_name, a_psswd)
 			set_data_source (data_source)
-			Result := connect 
+			connect
 		end
  		 
- 	connect: BOOLEAN is
+ 	connect is
  			-- Establish Connection
  		do
  			-- Initialization of the Relational Database:
@@ -49,7 +49,6 @@ feature -- Connections
  	
 			-- Start session
  			session_control.connect
- 			Result := session_control.is_connected
 
   		ensure
  			not_void: session_control /= Void

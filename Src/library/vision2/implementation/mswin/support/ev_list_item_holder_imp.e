@@ -43,6 +43,7 @@ feature -- Element change
 
 	move_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
 			-- Move `item_imp' to the `an_index' position.
+			--|FIXME Can this be removed?
 		local
 			bool: BOOLEAN
 		do
@@ -98,6 +99,7 @@ feature -- Basic operations
 
 	internal_select_item (item_imp: EV_LIST_ITEM_IMP) is
 			-- Make `item_imp' selected.
+			--|FIXME Can this be removed?
 		local
 			id: INTEGER
 		do
@@ -107,6 +109,7 @@ feature -- Basic operations
 
 	internal_deselect_item (item_imp: EV_LIST_ITEM_IMP) is
 			-- Make `item_imp' unselected.
+			--|FIXME Can this be removed?
 		local
 			id: INTEGER
 		do
@@ -119,12 +122,13 @@ feature -- Basic operations
 		local
 			id: INTEGER
 		do
-		--	id := ev_children.index_of (item_imp, 1)
-		--	Result := is_selected (id - 1)
+			id := ev_children.index_of (item_imp, 1)
+			Result := is_selected (id - 1)
 		end
 
 	internal_get_text (item_imp: EV_LIST_ITEM_IMP): STRING is
-			-- Return the text of `item_imp'.
+			-- Return the text of `item_imp'
+			--|FIXME Can this be removed?
 		local
 			id: INTEGER
 		do
@@ -134,6 +138,7 @@ feature -- Basic operations
 
 	internal_set_text (item_imp: EV_LIST_ITEM; txt: STRING) is
 			-- Make `txt' the text of `item_imp'.
+			--|FIXME Can this be removed?
 		local
 			id: INTEGER
 		do
@@ -144,6 +149,7 @@ feature -- Basic operations
 
 	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
 			-- Return the index of `item_imp' in the list.
+			--|FIXME Can this be removed?
 		do
 			--Result := ev_children.index_of (item_imp, 1) - 1
 		end
@@ -160,6 +166,7 @@ feature {NONE} -- Implementation
 
 	clear_ev_children is
 			-- Clear all the items of the list.
+			--|FIXME Can this be removed?
 		local
 			list: ARRAYED_LIST [EV_LIST_ITEM]
 		do
@@ -237,6 +244,9 @@ end -- class EV_LIST_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/02/25 17:51:22  rogers
+--| Re implemented internal_is_selected. Added FIXME's to the other routines that have commented out bodies.
+--|
 --| Revision 1.19  2000/02/19 05:45:00  oconnor
 --| released
 --|

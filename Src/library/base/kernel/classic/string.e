@@ -1052,7 +1052,6 @@ feature -- Removal
 			valid_end_index: end_index <= count
 			meaningful_interval: start_index <= end_index
 		local
-			l_tail_count: INTEGER
 			i: INTEGER
 		do
 			from

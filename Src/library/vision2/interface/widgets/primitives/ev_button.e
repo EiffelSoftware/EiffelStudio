@@ -59,11 +59,6 @@ feature -- Event handling
 	press_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions performed when button is pressed and then released.
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_BUTTON_I
-			-- Implementation of button.
-
 feature {NONE} -- Implementation
 
 	create_action_sequences is
@@ -78,6 +73,11 @@ feature {NONE} -- Implementation
 		do
 			create {EV_BUTTON_IMP} implementation.make (Current)
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_BUTTON_I
+			-- Implementation of button.
 
 invariant
 	press_actions_not_void: press_actions /= Void
@@ -105,6 +105,9 @@ end -- class EV_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/03/01 20:07:36  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.24  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

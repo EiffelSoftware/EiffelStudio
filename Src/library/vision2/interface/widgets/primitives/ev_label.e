@@ -27,15 +27,15 @@ create
 
 feature {NONE} -- Implementation
 
-	implementation: EV_LABEL_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
-
 	create_implementation is
 			-- Create implementation of label.
 		do
 			create {EV_LABEL_IMP} implementation.make (Current)
 		end
+
+	implementation: EV_LABEL_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 	
 end -- class EV_LABEL
 
@@ -60,6 +60,9 @@ end -- class EV_LABEL
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/01 20:07:36  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.18  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

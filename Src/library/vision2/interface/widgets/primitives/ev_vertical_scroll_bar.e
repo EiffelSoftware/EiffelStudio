@@ -21,14 +21,14 @@ create
 
 feature {NONE} -- Implementation
 
-	implementation: EV_VERTICAL_SCROLL_BAR_I
-			-- Platform dependent access.
-
 	create_implementation is
 			-- Create implementation of vertical scroll bar.
 		do
 			create {EV_VERTICAL_SCROLL_BAR_IMP} implementation.make (Current)
 		end
+
+	implementation: EV_VERTICAL_SCROLL_BAR_I
+			-- Platform dependent access.
 
 end -- class EV_VERTICAL_SCROLL_BAR
 
@@ -53,6 +53,9 @@ end -- class EV_VERTICAL_SCROLL_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/01 20:07:36  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.6  2000/03/01 03:25:54  oconnor
 --| added make_for_test
 --|

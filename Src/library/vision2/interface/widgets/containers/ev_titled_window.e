@@ -145,11 +145,7 @@ feature -- Element change
 			icon_pixmap_assigned: icon_pixmap.is_equal (an_icon)
 		end
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_TITLED_WINDOW_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+feature {NONE} -- Implementation
 
 	create_implementation is
 			-- Create implementation of window with a title
@@ -166,6 +162,12 @@ feature {EV_ANY_I} -- Implementation
 			accelerators.add_actions.extend (implementation~connect_accelerator)
 			accelerators.remove_actions.extend (implementation~disconnect_accelerator)
 		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_TITLED_WINDOW_I
+			-- Responsible for interaction with the underlying native graphics
+			-- toolkit.
 
 invariant
 	accelerators_not_void: accelerators /= Void
@@ -193,6 +195,9 @@ end -- class EV_TITLED_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/01 20:07:36  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.5  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

@@ -226,15 +226,7 @@ feature -- Element change
 			assigned: range.is_equal (a_range)
 		end
 
-feature {NONE} -- Implementation
 
-	implementation: EV_GAUGE_I
-
-	create_action_sequences is
-		do
-			Precursor
-			create change_actions
-		end
 
 feature {EV_ANY} -- Contract support
 
@@ -248,6 +240,16 @@ feature {EV_ANY} -- Contract support
 				step = 1 and then
 				leap = 10
 		end
+
+feature {NONE} -- Implementation
+
+	create_action_sequences is
+		do
+			Precursor
+			create change_actions
+		end
+
+	implementation: EV_GAUGE_I
 
 invariant
 	range_not_void: is_useable implies range /= Void
@@ -287,6 +289,9 @@ end -- class EV_GAUGE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/01 20:07:36  king
+--| Corrected export clauses for implementation and create_imp/act_seq
+--|
 --| Revision 1.11  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|

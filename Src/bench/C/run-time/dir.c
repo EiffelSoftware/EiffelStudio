@@ -11,12 +11,13 @@
 	$Id$
 */
 
+#include "eif_config.h"
+#include "eif_portable.h"
+
 #include <stdio.h>
 #if !defined EIF_VMS && !defined VXWORKS 
 #include <malloc.h>
 #endif
-#include "eif_config.h"
-#include "eif_portable.h"
 #include "eif_lmalloc.h"	/* for eif_malloc, eif_free */
 #include "eif_path_name.h"	/* for eifrt_vms_directory_file_name */
 

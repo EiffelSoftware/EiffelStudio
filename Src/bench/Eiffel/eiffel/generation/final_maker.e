@@ -127,6 +127,7 @@ feature
 			cecil_rt_basket.extend ("path_name.o");
 			cecil_rt_basket.extend ("object_id.o");
 			cecil_rt_basket.extend ("dle.o");
+			cecil_rt_basket.extend ("option.o");
 		end;
 
 	add_eiffel_objects is

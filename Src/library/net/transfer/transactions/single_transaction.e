@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (s, t: RESOURCE) is
+	make (s, t: DATA_RESOURCE) is
 			-- Create transaction.
 		require
 			source_exists: s /= Void
@@ -35,10 +35,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	source: RESOURCE
+	source: DATA_RESOURCE
 			-- Current source
 	
-	target: RESOURCE
+	target: DATA_RESOURCE
 			-- Current target
 	
 feature -- Measurement

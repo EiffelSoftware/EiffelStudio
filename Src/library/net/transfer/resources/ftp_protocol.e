@@ -207,7 +207,7 @@ feature -- Status setting
 			passive_mode_set: passive_mode
 		end
 
-	reuse_connection (other: RESOURCE) is
+	reuse_connection (other: DATA_RESOURCE) is
 			-- Reuse connection of `other'.
 		local
 			o: like Current
@@ -239,7 +239,7 @@ feature {NONE} -- Status setting
 
 feature -- Output
 
-	put (other: RESOURCE) is
+	put (other: DATA_RESOURCE) is
 			-- Write out resource `other'.
 		do
 			if is_proxy_used then
@@ -289,7 +289,7 @@ feature -- Input
 			end
 		end
 
-feature {RESOURCE} -- Implementation
+feature {DATA_RESOURCE} -- Implementation
 
 	data_socket: NETWORK_STREAM_SOCKET
 			-- Socket for data connection

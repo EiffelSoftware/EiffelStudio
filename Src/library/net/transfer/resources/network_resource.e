@@ -8,12 +8,12 @@ indexing
 
 deferred class NETWORK_RESOURCE inherit
 
-	RESOURCE
+	DATA_RESOURCE
 		redefine
 			address
 		end
 
-	COMMAND_CONSTANTS
+	TRANSFER_COMMAND_CONSTANTS
 		undefine
 			is_equal
 		end
@@ -131,7 +131,7 @@ feature -- Status setting
 			read_buffer_size := n
 		end
 		
-	reuse_connection (other: RESOURCE) is
+	reuse_connection (other: DATA_RESOURCE) is
 			-- Reuse connection of `other'.
 		local
 			o: like Current
@@ -159,7 +159,7 @@ feature {NONE} -- Status setting
 	 
 feature -- Output
 
-	put (other: RESOURCE) is
+	put (other: DATA_RESOURCE) is
 			-- Write out resource `other'.
 		do
 			from until not other.is_packet_pending loop
@@ -199,7 +199,7 @@ feature -- Input
 			end
 		end
 
-feature {RESOURCE} -- Implementation
+feature {DATA_RESOURCE} -- Implementation
 
 	main_socket: NETWORK_STREAM_SOCKET
 	

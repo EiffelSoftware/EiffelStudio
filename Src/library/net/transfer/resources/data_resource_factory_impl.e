@@ -1,13 +1,13 @@
 indexing
 	description:
-		"Implementation of resource factory"
+		"Implementation of data resource factory"
 
 	status:	"See note at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class 
-	RESOURCE_FACTORY_IMPL
+	DATA_RESOURCE_FACTORY_IMPL
 
 create
 	
@@ -23,8 +23,8 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	resource: RESOURCE
-			-- Created resource
+	resource: DATA_RESOURCE
+			-- Created data resource
 
 	service: STRING
 			-- Requested service
@@ -120,9 +120,9 @@ feature -- Basic operations
 		
 feature {NONE} -- Implementation
 
-	url_function: FUNCTION[RESOURCE_FACTORY_IMPL, TUPLE, URL]
+	url_function: FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, URL]
 			
-	resource_function: FUNCTION[RESOURCE_FACTORY_IMPL, TUPLE, RESOURCE]
+	resource_function: FUNCTION [DATA_RESOURCE_FACTORY_IMPL, TUPLE, DATA_RESOURCE]
 			
 	lookup_service_id: INTEGER is
 			-- Lookup ID for service.
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation (Factory setup)
 
-	supported_services: ARRAY[STRING] is
+	supported_services: ARRAY [STRING] is
 			-- Names of supported services
 		once
 			Result := << "file", "http", "ftp" >>
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation (Factory setup)
 			create {FILE_URL} Result.make (address)
 		end
 
-	create_file_resource: RESOURCE is
+	create_file_resource: DATA_RESOURCE is
 			-- Create file service.
 		local
 			u: FILE_URL
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation (Factory setup)
 			create {HTTP_URL} Result.make (address)
 		end
 
-	create_http_resource: RESOURCE is
+	create_http_resource: DATA_RESOURCE is
 			-- Create HTTP service.
 		local
 			u: HTTP_URL
@@ -221,7 +221,7 @@ feature {NONE} -- Implementation (Factory setup)
 			create {FTP_URL} Result.make (address)
 		end
 
-	create_ftp_resource: RESOURCE is
+	create_ftp_resource: DATA_RESOURCE is
 			-- Create FTP service.
 		local
 			u: FTP_URL
@@ -241,7 +241,7 @@ invariant
 							not default_service.is_empty
 	url_constraint: is_address_set implies url /= Void
 
-end -- class RESOURCE_FACTORY_IMPL
+end -- class DATA_RESOURCE_FACTORY_IMPL
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel.

@@ -6,9 +6,9 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class RESOURCE inherit
+deferred class DATA_RESOURCE inherit
 
-	RESOURCE_ERROR_CONSTANTS
+	DATA_RESOURCE_ERROR_CONSTANTS
 		redefine
 			is_equal
 		end
@@ -314,7 +314,7 @@ feature -- Status setting
 			error_reset: not error
 		end
 
-	reuse_connection (other: RESOURCE) is
+	reuse_connection (other: DATA_RESOURCE) is
 			-- Reuse connection of `other'.
 		require
 			other_exists: other /= Void
@@ -335,7 +335,7 @@ feature -- Removal
 		
 feature -- Output
 
-	put (other: RESOURCE) is
+	put (other: DATA_RESOURCE) is
 			-- Write out resource `other'.
 		require
 			no_error_occurred: not (error and other.error)
@@ -375,7 +375,7 @@ invariant
 	valid_count_constraint: count > 0 implies is_count_valid
 	mode_constraint: is_mode_set = read_mode xor write_mode
 	
-end -- class RESOURCE
+end -- class DATA_RESOURCE
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel.

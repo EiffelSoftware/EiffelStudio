@@ -11,7 +11,7 @@ inherit
 
 	EIFFEL_ENV
 
-feature {NONE} -- Accepting cursor shapes
+feature -- Accepting cursor shapes
 
 	cur_Class: SCREEN_CURSOR is
 		once
@@ -43,7 +43,7 @@ feature {NONE} -- Accepting cursor shapes
 			Result := cursor_file_content ("featcur.bm");
 		end;
 
-feature {NONE} -- Non-Accepting cursor shapes
+feature -- Non-Accepting cursor shapes
 
 	cur_X_class: SCREEN_CURSOR is
 		once

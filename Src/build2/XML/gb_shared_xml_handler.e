@@ -7,7 +7,7 @@ indexing
 class
 	GB_ACCESSIBLE_XML_HANDLER
 
-feature {NONE} -- Implementation
+feature {GB_COMPONENT} -- Implementation
 
 	xml_handler: GB_XML_HANDLER is
 			-- `Result' is the GB_XML_HANDLER used by

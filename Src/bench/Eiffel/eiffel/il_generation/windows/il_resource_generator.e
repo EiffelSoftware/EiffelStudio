@@ -66,7 +66,11 @@ feature -- Generation
 				if l_not_is_resource_generated then
 					l_new_name := new_compiled_resource_file_name (l_name)
 					generate_resource (l_name, l_new_name)
-					l_resources.extend (l_new_name)
+					if (create {RAW_FILE}.make (l_new_name)).exists then
+						l_resources.extend (l_new_name)
+					else
+						Error_handler.insert_warning (create {VIRC}.make_failed (l_name))
+					end
 				else
 					l_resources.extend (l_name)
 				end

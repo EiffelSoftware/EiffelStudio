@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 
 	make is
 		do
-			make_top (Title, main_menu.popup_menu (1), 1000)
+			make_top (Title, main_menu.popup_menu (2), 1000)
 			set_menu (main_menu)
 		end
 

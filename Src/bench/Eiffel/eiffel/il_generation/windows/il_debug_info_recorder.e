@@ -47,7 +47,7 @@ inherit
 		export
 			{NONE} all
 		end
-	
+		
 create
 	make
 
@@ -83,7 +83,6 @@ feature {NONE} -- Initialization
 			last_info_from_module := Void			
 
 			last_module_info_cleaned := Void
-
 		end		
 
 feature -- Access
@@ -94,6 +93,15 @@ feature -- Access
 	init_recording_session (debug_mode: BOOLEAN) is
 			-- Initialize recording session.
 		do
+			debug ("debugger_il_info_trace")
+				print ("IL_DEBUG_INFO_RECORDER.init_recording_session .. %N")
+			end
+			
+			if not load_successful then
+					--| Load IL Info, should be already loaded, but in case.
+				load
+			end
+			
 				--| Reset internal value to recompute the CLASS_TYPES array
 			Il_debug_info.reset
 				--| Enable/Disable debug info
@@ -313,7 +321,7 @@ feature -- entry point token
 
 	entry_point_token: INTEGER
 			-- Token of the system entry point feature
-			-- Usefull for stepping at the beginning of the execution
+			-- Useful for stepping at the beginning of the execution
 	
 	entry_point_feature_i: FEATURE_I is
 			-- System entry point feature
@@ -841,6 +849,33 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 			end
 		end
 
+	load_successful: BOOLEAN
+			-- Is last loading successful ?
+
+	loading_errors: LINKED_LIST [STRING]
+			-- Loading error messages.
+
+	loading_errors_message: STRING is
+		do
+			create Result.make (50)
+			Result.append_string (" ERROR while retrieving IL DEBUG INFO data ...%N")
+			if loading_errors /= Void then
+				Result.append_string ("%N")
+				from
+					loading_errors.start
+				until
+					loading_errors.after
+				loop
+					Result.append_string ("   - " + loading_errors.item + "%N")
+					loading_errors.forth
+				end				
+			end
+			Result.append_string ("%N")
+			Result.append_string ("   Debugging will be disabled.%N")
+			Result.append_string ("   Please reload, until you do not get this message.%N")
+			Result.append_string ("%N")
+		end
+
 	load is
 			-- Load info from saved file.
 		local
@@ -853,9 +888,13 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 				print ("Loading IL Info  %N")
 			end
 
+			load_successful := True
+			create loading_errors.make
+
 			reset
 			l_succeed := import_file_data (Il_info_file_name, System.name, False)
-			check l_succeed end
+
+			load_successful := load_successful and l_succeed
 
 			l_precomp_dirs := System.precompilation_directories
 			if not l_precomp_dirs.is_empty then
@@ -871,6 +910,7 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 						io.put_new_line
 					end
 					l_succeed := import_file_data (l_pfn, l_remote_project_directory.system_name, True)
+					load_successful := load_successful and l_succeed
 					l_precomp_dirs.forth
 				end
 			end
@@ -942,9 +982,8 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 					dbg_info_class_types.merge (l_dbg_info_class_types)
 				end			
 			else
-				io.put_string ("ERROR: Unable to load IL INFO data from file [" + a_fn + "]%N")
-				io.put_string ("       Debugging will be disabled.%N")
-				io.put_string ("       Please reload, until you do not get this message.%N")
+				Result := False
+				loading_errors.extend ("Unable to load [" + a_fn + "]")
 			end
 		rescue
 			retried := True

@@ -96,6 +96,7 @@ cluster
 	-- Switch
 		switch:				"$BENCH/Eiffel/batch_bench/batch";
 		melt_only_switch:	"$BENCH/Eiffel/batch_bench/professional";
+		dle:				"$BENCH/Eiffel/dle/dle";
 
 	-- Case
 		case_common:		"$BENCH/Eiffel/case_storage/common";

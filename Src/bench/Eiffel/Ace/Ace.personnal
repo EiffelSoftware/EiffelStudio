@@ -101,6 +101,7 @@ cluster
 				"shared_status.e"
 			end;
 		melt_only: 			"$BENCH/Eiffel/batch_bench/melt_only";
+		dle:				"$BENCH/Eiffel/dle/no_dle";
 
 	-- graphical interface (bench):
 	-- NEEDED ?

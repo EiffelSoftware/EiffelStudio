@@ -134,6 +134,14 @@ cluster
 			"CVS"; 
 		end
 
+assembly
+	"AxSHDocVw":	"$EIFFEL_SRC\tools\doc_builder\AxSHDocVw.dll"
+
+	"SHDocVw":	"$EIFFEL_SRC\tools\doc_builder\SHDocVw.dll"
+		prefix
+			"sh_"
+		end
+
 external
 
 	include_path:

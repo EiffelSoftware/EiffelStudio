@@ -48,15 +48,10 @@ doc:<file name="local.c" header="eif_local.h" version="$Id$" summary="Handling o
 
 #define dprintf(n)		if (DEBUG & (n)) printf
 
-rt_public void epop(register struct stack *stk, register int nb_items);					/* Pops values off a stack */
-rt_private int extend(register struct stack *stk);				/* Stack extension w/ urgent chunks */
+rt_public void epop(struct stack *stk, rt_uint_ptr nb_items);					/* Pops values off a stack */
+rt_private int extend(struct stack *stk);				/* Stack extension w/ urgent chunks */
 
-#ifndef lint
-rt_private char *rcsid =
-	"$Id$";
-#endif
-
-rt_public void epop(register struct stack *stk, register int nb_items)
+rt_public void epop(struct stack *stk, rt_uint_ptr nb_items)
                             		/* The stack */
                        				/* Number of items to be popped */
 {
@@ -64,9 +59,9 @@ rt_public void epop(register struct stack *stk, register int nb_items)
 	 * than needed, but it keeps the spirit of epush().
 	 */
 	RT_GET_CONTEXT
-	register3 char **top = stk->st_top;		/* Current top of the stack */
-	register4 struct stchunk *s;			/* To walk through stack chunks */
-	register5 char **arena;					/* Base address of current chunk */
+	char **top = stk->st_top;		/* Current top of the stack */
+	struct stchunk *s;			/* To walk through stack chunks */
+	char **arena;					/* Base address of current chunk */
 
 	/* Optimization: try to update the top, hoping it will remain in the
 	 * same chunk. This avoids pointer manipulation (walking along the stack)
@@ -148,8 +143,8 @@ rt_public char **eget(register int num)
 
 	RT_GET_CONTEXT
 	EIF_GET_CONTEXT
-	register2 char **top = loc_set.st_top;	/* The top of the stack */
-	register3 char **saved_top = top;		/* Save current top of stack */
+	char **top = loc_set.st_top;	/* The top of the stack */
+	char **saved_top = top;		/* Save current top of stack */
 	static EIF_REFERENCE null_object = NULL;
 	register int i;
 
@@ -283,7 +278,7 @@ rt_public void eback(register char **top)
 
 #endif
 
-rt_private int extend(register struct stack *stk)
+rt_private int extend(struct stack *stk)
                             			/* The stack to be extended */
 {
 	/* The stack 'stk' is extended and the 'stk' structure updated.
@@ -292,9 +287,9 @@ rt_private int extend(register struct stack *stk)
 	 * made to get one from the urgent storage.
 	 */
 	RT_GET_CONTEXT
-	register2 int size = STACK_CHUNK;	/* Size of new chunk to be added */
-	register3 char **arena;				/* Address for the arena */
-	register4 struct stchunk *chunk;	/* Address of the chunk */
+	int size = STACK_CHUNK;	/* Size of new chunk to be added */
+	char **arena;				/* Address for the arena */
+	struct stchunk *chunk;	/* Address of the chunk */
 
 	chunk = (struct stchunk *) eif_rt_xmalloc(size * sizeof(char *), C_T, GC_OFF);
 	if (chunk == (struct stchunk *) 0) {
@@ -321,6 +316,23 @@ rt_private int extend(register struct stack *stk)
 	return 0;			/* Everything is ok */
 }
 
+#ifdef EIF_WIN32
+#ifdef EIF_ASSERTIONS
+	/* This code is commented because it only exists with the latest Microsoft CRT runtime.
+	 * Uncomment if you need to catch CRT raised exception when passing incorrect arguments
+	 * to CRT routines. */	
+/*
+void myInvalidParameterHandler(const wchar_t* expression,
+   const wchar_t* function, 
+   const wchar_t* file, 
+   unsigned int line, 
+   uintptr_t pReserved)
+{
+}
+*/
+#endif
+#endif
+
 /*
  * Main local stack initialization.
  */
@@ -336,6 +348,15 @@ rt_shared void initstk(void)
 	EIF_GET_CONTEXT
 #ifdef ISE_GC
 	char **top;
+#endif
+
+#ifdef EIF_WIN32
+#ifdef EIF_ASSERTIONS
+	/* This code is commented because it only exists with the latest Microsoft CRT runtime.
+	 * Uncomment if you need to catch CRT raised exception when passing incorrect arguments
+	 * to CRT routines. */	
+/*   _set_invalid_parameter_handler(myInvalidParameterHandler); */
+#endif
 #endif
 
 #ifdef EIF_ASSERTIONS

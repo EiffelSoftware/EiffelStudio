@@ -40,7 +40,7 @@ feature -- Graphical User Interface
 			subdir: DIRECTORY_NAME;
 			l_s_d, l_s_d_lower, std_precomp_name: STRING;
 			proj: STRING
-		do
+		once
 			twl := precompiles;
 			!! dir_edit.make ("dir_edit", dialog.action_form);
 			!! system_edit.make ("system_edit", dialog.action_form);

@@ -81,34 +81,6 @@ int start_position;
 int end_position;
 
 /*
- * String mode parsing
- */
-
-char *to_parse;				/* String to parse */
-int to_parse_size;			/* Size of the rest of the string to parse */
-int string_mode;			/* Flag for string mode */
-
-char string_input ()
-{
-	char c;
-
-	if (0 == to_parse_size) return 0;
-	c = *to_parse++;
-	to_parse_size--;
-	return c;
-}
-
-void string_unput(c)
-unsigned char c;
-{
-	if (to_parse_size != 0) {
-		to_parse_size++;
-		to_parse--;
-	}
-}
-
-
-/*
  * Building the interface
  */
 

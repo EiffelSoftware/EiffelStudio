@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			-- Precusor and create new_item_actions.
 		do
 			Precursor
+			create radio_group.make
 			create new_item_actions.make ("new_item", <<"widget">>)
 			new_item_actions.extend (~add_radio_button)
 			create remove_item_actions.make ("remove_item", <<"widget">>)
@@ -351,6 +352,25 @@ feature {EV_ANY_I} -- Implementation
 feature {EV_CONTAINER_IMP} -- Implementation
 
 	radio_group: LINKED_LIST [EV_RADIO_BUTTON_IMP]
+			-- Radio items in this container.
+			-- `Current' shares reference with merged containers.
+
+	is_merged (other: EV_CONTAINER): BOOLEAN is
+			-- Is `Current' merged with `other'?
+		require
+			other_not_void: other /= Void
+		local
+			c_imp: EV_CONTAINER_IMP
+		do
+			c_imp ?= other.implementation
+			Result := c_imp.radio_group = radio_group
+		end
+
+	set_radio_group (rg: like radio_group) is
+			-- Set `radio_group' by reference. (Merge)
+		do
+			radio_group := rg
+		end
 
 	add_radio_button (w: EV_WIDGET) is
 			-- Called every time a widget is added to the container.
@@ -361,13 +381,10 @@ feature {EV_CONTAINER_IMP} -- Implementation
 		do
 			r ?= w.implementation
 			if r /= Void then
-				if radio_group = Void then
-					create radio_group.make
-					r.set_radio_group (radio_group)
-				else
-					r.set_radio_group (radio_group)
+				if not radio_group.empty then
 					r.set_unchecked
 				end
+				r.set_radio_group (radio_group)
 			end
 		end
 
@@ -382,26 +399,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			if r /= Void then
 				r.remove_from_radio_group
 				r.set_checked
-				if radio_group.empty then
-					radio_group := Void
-				end
 			end
-		end
-
-	peer: EV_CONTAINER_IMP
-			-- Merged radio grouping list.
-
-	radio_dummy: BOOLEAN
-			-- Is this container merged with another?
-
-	enable_radio_dummy is
-			-- Make this container a dummy.
-		require
-			not_yet_a_dummy: not radio_dummy
-		do
-			radio_dummy := True
-		ensure
-			radio_dummy: radio_dummy
 		end
 
 feature -- Status setting
@@ -410,30 +408,20 @@ feature -- Status setting
 			-- Join radio grouping of `a_container' to Current.
 		local
 			l: like radio_group
+			peer: EV_CONTAINER_IMP
 		do
-			check
-				not_is_dummy: not radio_dummy
-			end
-
 			peer ?= a_container.implementation
-			-- Set `peer' as radio dummy.
-			peer.enable_radio_dummy
-
-			-- Merge actual radio groups.
-			--| This is wrong: should iterate over radio items not items.
 			l := peer.radio_group
-			from
-				l.start
-			until
-				l.empty
-			loop
-				--peer.remove_radio_button (l.item.interface)
-				add_radio_button (l.item.interface)
+			if l /= radio_group then
+				from
+					l.start
+				until
+					l.empty
+				loop
+					add_radio_button (l.item.interface)
+				end
+				peer.set_radio_group (radio_group)
 			end
-			peer.new_item_actions.prune (peer~add_radio_button)
-			peer.new_item_actions.extend (~add_radio_button)
-			peer.remove_item_actions.prune (peer~remove_radio_button)
-			peer.remove_item_actions.extend (~remove_radio_button)
 		end
 
 feature -- Event handling
@@ -471,6 +459,9 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/02/29 20:02:45  brendel
+--| Improved implementation of radio group merging.
+--|
 --| Revision 1.39  2000/02/29 00:42:21  brendel
 --| Finished first implementation of container radio group merging.
 --|

@@ -97,16 +97,6 @@ feature -- Element change
 			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 		end
-
-	remove_text is
-			-- Assign `Void' to `text'.
-		local
-			a_cs: C_STRING
-		do
-			create a_cs.make ("")
-			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)
-		end
 	
 feature {EV_ANY_IMP} -- Implementation
 	

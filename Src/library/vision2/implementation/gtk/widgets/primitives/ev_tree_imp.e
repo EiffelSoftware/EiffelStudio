@@ -303,7 +303,6 @@ feature -- Status report
 		local
 			temp_item_ptr: POINTER
 		do	
-		
 			temp_item_ptr := C.gtk_clist_struct_selection (list_widget)			
 			if temp_item_ptr /= NULL then
 				temp_item_ptr := C.g_list_nth_data (temp_item_ptr, 0)

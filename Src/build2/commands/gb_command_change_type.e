@@ -45,6 +45,7 @@ feature -- Basic Operation
 			object_handler.objects.prune_all (layout_item.object)
 			object_handler.deleted_objects.extend (layout_item.object)
 			object_handler.replace_object_type (layout_item.object, new_type)
+			layout_item.update_pixmap
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
@@ -56,6 +57,7 @@ feature -- Basic Operation
 			-- Must restore state to that before `execute'.
 		do
 			object_handler.replace_object (layout_item.object, old_object)
+			layout_item.update_pixmap
 			command_handler.update
 		end
 		

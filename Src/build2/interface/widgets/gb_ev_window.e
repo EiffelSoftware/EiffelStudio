@@ -37,6 +37,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	DEFAULT_OBJECT_STATE_CHECKER
+		undefine
+			default_create
+		end
 
 feature -- Access
 
@@ -112,8 +117,7 @@ feature {GB_XML_STORE} -- Output
 		local
 			window: EV_WINDOW
 		do
-			window ?= new_instance_of (dynamic_type_from_string (class_name (first)))
-			window.default_create
+			window ?= default_object_by_type (class_name (first))
 			if window.user_can_resize /= first.user_can_resize then
 				add_element_containing_boolean (element, User_can_resize_string, first.user_can_resize)
 			end

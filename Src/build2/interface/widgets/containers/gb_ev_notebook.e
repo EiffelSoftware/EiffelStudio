@@ -23,6 +23,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	DEFAULT_OBJECT_STATE_CHECKER
+		undefine
+			default_create
+		end
 
 feature {GB_XML_STORE} -- Output
 
@@ -32,8 +37,7 @@ feature {GB_XML_STORE} -- Output
 			notebook: EV_NOTEBOOK
 			names_string: STRING
 		do
-			notebook ?= new_instance_of (dynamic_type_from_string (class_name (first)))
-			notebook.default_create
+			notebook ?= default_object_by_type (class_name (first))
 			if first.tab_position /= notebook.tab_position then
 				add_element_containing_integer (element, Tab_position_string, first.tab_position)
 			end

@@ -37,6 +37,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	DEFAULT_OBJECT_STATE_CHECKER
+		undefine
+			default_create
+		end
 
 feature {GB_XML_STORE} -- Output
 
@@ -45,8 +50,7 @@ feature {GB_XML_STORE} -- Output
 		local
 			textable: EV_TEXTABLE
 		do
-			textable ?= new_instance_of (dynamic_type_from_string (class_name (first)))
-			textable.default_create
+			textable ?= default_object_by_type (class_name (first))
 			if not objects.first.text.is_empty then
 				add_element_containing_string (element, text_string, enclose_in_cdata (objects.first.text))
 			end

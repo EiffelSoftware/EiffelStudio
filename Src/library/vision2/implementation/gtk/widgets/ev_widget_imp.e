@@ -96,7 +96,7 @@ feature {NONE} -- Initialization
 			real_signal_connect (visual_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
 				--| "button-press-event" is a special case, see below.
 				
-			connect_button_press_switch_agent := agent gtk_marshal.connect_button_press_switch_intermediary (visual_widget)
+			connect_button_press_switch_agent := agent gtk_marshal.connect_button_press_switch_intermediary (c_object)
 			pointer_button_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			pointer_double_press_actions.not_empty_actions.extend (connect_button_press_switch_agent)
 			if not pointer_button_press_actions.is_empty or not pointer_double_press_actions.is_empty then

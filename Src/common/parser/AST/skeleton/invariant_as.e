@@ -83,7 +83,9 @@ feature -- Formatter
 			ctxt.continue_on_failure;
 			ctxt.next_line;
 			ctxt.set_separator (";");
-			assertion_list.format (ctxt);
+			if assertion_list /= Void then
+				assertion_list.format (ctxt);
+			end;
 			ctxt.commit;
 		end;
 

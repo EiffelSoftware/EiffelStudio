@@ -11,7 +11,7 @@ inherit
 	EB_MELT_PROJECT_COMMAND
 		redefine
 			name, menu_name, description, pixmap,
-			perform_compilation,
+			perform_compilation, tooltip,
 			make
 		end
 
@@ -58,7 +58,7 @@ feature {NONE} -- Attributes
 			Result := Interface_names.m_Quick_compile
 		end
 
-	description: STRING is
+	description, tooltip: STRING is
 			-- String displayed as a tooltip and in the toolbar customization dialog.
 		do
 			Result := Interface_names.e_Quick_compile

@@ -82,6 +82,13 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
 
 feature {NONE} -- Initialization
 
@@ -164,6 +171,9 @@ feature {GB_CONSTANTS_HANDLER} -- Implementation
 
 feature {NONE} -- Implementation
 
+	modify_constant: GB_CONSTANT
+		-- Constant that is to be modified.
+
 	string_input: EV_TEXT_FIELD
 		-- Input field for STRING constants.
 		
@@ -194,12 +204,20 @@ feature {NONE} -- Implementation
 		do
 			current_text := name_field.text.as_lower
 			if not valid_class_name (current_text) or not object_handler.valid_constant_name (current_text) or
-				reserved_words.has (current_text) or Build_reserved_words.has (current_text) or Constants.string_is_constant_name (current_text) then
+				reserved_words.has (current_text) or Build_reserved_words.has (current_text) or
+				(Constants.string_is_constant_name (current_text) and not (modify_constant /= Void and then modify_constant.name.is_equal (current_text))) then
 				name_field.set_foreground_color (red)
 				disable_add_button
 			else
 				name_field.set_foreground_color (black)
 				update_add_button
+			end
+			
+				-- Update add button based on current named entered.
+			if modify_constant /= Void and then modify_constant.name.is_equal (current_text) then
+				add_button.set_text ("Modify")
+			else
+				add_button.set_text ("Add")
 			end
 		end
 		
@@ -214,7 +232,7 @@ feature {NONE} -- Implementation
 			-- Is current entry valid?
 		require
 			one_field_parented: string_input.parent /= Void or integer_input.parent /= Void
-				or directory_input.parent /= Void or filename_input.parent /= Void
+				or directory_input.parent /= Void or filename_input.parent /= Void or pixmap_select_button.parent /= Void
 			-- Only one field parented.
 		do
 			-- As only one entry field may be parented, we check the
@@ -252,6 +270,7 @@ feature {NONE} -- Implementation
 	string_item_selected is
 			-- Called by `select_actions' of `string_item'.
 		do
+			name_field.remove_text
 			add_button.disable_sensitive
 			remove_displayed_input_field
 			entry_selection_parent.extend (string_input)
@@ -264,6 +283,7 @@ feature {NONE} -- Implementation
 	integer_item_selected is
 			-- Called by `select_actions' of `integer_item'.
 		do
+			name_field.remove_text
 			add_button.disable_sensitive
 			remove_displayed_input_field
 			entry_selection_parent.extend (integer_input)	
@@ -276,6 +296,7 @@ feature {NONE} -- Implementation
 	directory_item_selected is
 			-- Called by `select_actions' of `directory_item'.
 		do
+			name_field.remove_text
 			add_button.disable_sensitive
 			remove_displayed_input_field
 			entry_selection_parent.extend (directory_input)
@@ -287,6 +308,7 @@ feature {NONE} -- Implementation
 	file_name_item_selected is
 			-- Called by `select_actions' of `file_name_item'.
 		do
+			name_field.remove_text
 			add_button.disable_sensitive
 			remove_displayed_input_field
 			entry_selection_parent.extend (filename_input)
@@ -298,6 +320,7 @@ feature {NONE} -- Implementation
 	pixmap_item_selected is
 			-- Called by `select_actions' of `pixmap_item'.
 		do
+			name_field.remove_text
 			add_button.disable_sensitive
 			remove_displayed_input_field
 			entry_selection_parent.extend (pixmap_select_button)
@@ -306,8 +329,7 @@ feature {NONE} -- Implementation
 			end
 			--| FIXME add rebuilding if only selected type is to be displayed.
 		end
-		
-		
+
 	add_constant is
 			-- Called by `select_actions' of `add_button'.
 		local
@@ -340,40 +362,154 @@ feature {NONE} -- Implementation
 		local
 			constant: GB_CONSTANT
 			selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
-			current_item: EV_MULTI_COLUMN_LIST_ROW
 			delete_constant_command: GB_COMMAND_DELETE_CONSTANT
+			dialog: EV_CONFIRMATION_DIALOG
+			cross_referer_dialog: EV_WARNING_DIALOG
+			cancelled: BOOLEAN
+			referers_dialog_already_displayed: BOOLEAN
+			cross_referers_dialog_already_displayed: BOOLEAN
+			directory_constant: GB_DIRECTORY_CONSTANT
+			all_pixmap_constants: ARRAYED_LIST [GB_PIXMAP_CONSTANT]
+			pixmap_constant: GB_PIXMAP_CONSTANT
+			ordered_selected_items: ARRAYED_LIST [GB_CONSTANT]
+			counted_pixmaps: INTEGER
 		do
-			lock_update
-			if constants_list.selected_items.count /= 1 then
-				selected_items := constants_list.selected_items
-				from
-					selected_items.start
-				until
-					selected_items.off
-				loop
-					current_item := selected_items.item
-					constants_list.prune_all (current_item)
-					constant ?= current_item.data
-					check
-						data_was_constant: constant /= Void
+			selected_items := constants_list.selected_items
+			create ordered_selected_items.make (4)
+			create all_pixmap_constants.make (1)
+				-- We store all pixmap constants that are being deleted, so that
+				-- we can ignore directory dependencies on these constants, as they
+				-- are being deleted also. We also build `ordered_selected_items' with
+				-- the constants to be removed ordered as follows:
+				-- 1. Pixmap constants.
+				-- 2. Directory constants.
+				-- 3. All other constants
+			from
+				selected_items.start
+			until
+				selected_items.off
+			loop
+				pixmap_constant ?= selected_items.item.data
+				if pixmap_constant /= Void then
+					all_pixmap_constants.extend (pixmap_constant)
+					ordered_selected_items.put_front (pixmap_constant)
+					counted_pixmaps := counted_pixmaps + 1
+				else
+					directory_constant ?= selected_items.item.data
+					if directory_constant /= Void then
+						ordered_selected_items.go_i_th (counted_pixmaps)
+						ordered_selected_items.put_right (directory_constant)
+					else
+						constant ?= selected_items.item.data
+						ordered_selected_items.force (constant)
 					end
-					create delete_constant_command.make (constant)
-					delete_constant_command.execute
-					selected_items.forth
+				end
+				
+				selected_items.forth
+			end
+			if ordered_selected_items.count /= 1 then
+					-- As there are multiple constants, we must perform two loops.
+					-- The first checks to see if there are any references to one or more of the constants.
+					-- The second performs the deletion unless there were references and a user cancelled.
+				from
+					ordered_selected_items.start
+				until
+					ordered_selected_items.off or cancelled
+				loop
+					constant := ordered_selected_items.item
+					directory_constant ?= constant
+					if directory_constant /= Void and not cross_referers_dialog_already_displayed then
+						if not directory_constant_deletable (directory_constant, all_pixmap_constants) then
+							create cross_referer_dialog.make_with_text ("One or more constants you are deleting are still required by other constants in the system.%NPlease removed any such dependencies before trying to delete these constants.")
+							cross_referer_dialog.show_modal_to_window (Current)
+							cross_referers_dialog_already_displayed := True
+							cancelled := True
+						end
+					end
+					if not constant.referers.is_empty and not referers_dialog_already_displayed and not cross_referers_dialog_already_displayed then
+							-- We ensure that `dialog' is only displayed once.
+						create dialog.make_with_text ("One or more constants you are deleting are still referenced by objects in the system.%NIf you delete them, all references will be converted to manifest values.%NAre you sure you wish to perform this?")
+						dialog.show_modal_to_window (Current)
+						referers_dialog_already_displayed := True
+						if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+							cancelled := True
+						end
+					end
+					ordered_selected_items.forth
+				end
+				
+				if not cancelled then
+					from
+						ordered_selected_items.start
+					until
+						ordered_selected_items.off
+					loop
+						constant ?= ordered_selected_items.item
+						check
+							data_was_constant: constant /= Void
+						end
+						create delete_constant_command.make (constant)
+						delete_constant_command.execute
+						ordered_selected_items.forth
+					end
 				end
 			else
 				constant ?= constants_list.selected_item.data
 				check
 					data_was_constant: constant /= Void
 				end
-				create delete_constant_command.make (constant)
-				delete_constant_command.execute
+					directory_constant ?= constant
+					if directory_constant /= Void and not cross_referers_dialog_already_displayed then
+						if not directory_constant_deletable (directory_constant, all_pixmap_constants) then
+							create cross_referer_dialog.make_with_text ("The constant you are deleting is still required by other constants in the system.%NPlease removed any such dependencies before trying to delete this constant.")
+							cross_referer_dialog.show_modal_to_window (Current)
+							cross_referers_dialog_already_displayed := True
+							cancelled := True
+						end
+					end
+				if not constant.referers.is_empty and not cross_referers_dialog_already_displayed then
+					create dialog.make_with_text ("Constant named `" + constant.name + "' is still referenced by one or more objects in the system.%NIf you delete it, all references will be converted to manifest values.%NAre you sure you wish to perform this?")
+					dialog.show_modal_to_window (Current)
+					if dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+						cancelled := True
+					end
+				end
+				if not cancelled then
+					create delete_constant_command.make (constant)
+					delete_constant_command.execute
+				end
 			end
-			unlock_update
-			
+
 				-- Update system to reflect a change.
 			system_status.enable_project_modified
 			command_handler.update
+		end
+		
+	directory_constant_deletable (directory_constant: GB_DIRECTORY_CONSTANT; all_pixmaps_for_deletion: ARRAYED_LIST [GB_CONSTANT]): BOOLEAN is
+			-- Is `directory_constant' deletable if contents of `all_pixmaps_for_deletion' are also deleted at the same time?
+			-- Checks that no cross referers still exist that are not being deleted.
+		require
+			directory_constant_not_void: directory_constant /= Void
+			all_pixmaps_not_void: all_pixmaps_for_deletion /= Void
+		local
+			all_cross_referers: ARRAYED_LIST [GB_CONSTANT]
+			counted_referers: INTEGER
+		do
+			all_cross_referers := directory_constant.cross_referers
+			from
+				all_cross_referers.start
+			until
+				all_cross_referers.off
+			loop
+				if all_pixmaps_for_deletion.has (all_cross_referers.item) then
+					counted_referers := counted_referers + 1
+				end
+				all_cross_referers.forth
+			end
+			Result := directory_constant.cross_referers.count = counted_referers
+			check
+				counted_refers_less_than_referers: directory_constant.cross_referers.count >= counted_referers
+			end
 		end
 		
 	display_all_types_changed is
@@ -431,12 +567,29 @@ feature {NONE} -- Implementation
 	item_selected_in_list (an_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Called by `select_actions' of `constants_list'.
 		do
+			lock_update
+			modify_constant ?= an_item.data
+			check
+				modify_constant_not_void: modify_constant /= Void
+			end
+			add_button.set_text ("Modify")
+			select_named_combo_item (type_combo_box, modify_constant.type)
 			remove_button.enable_sensitive
+			name_field.set_text (an_item.i_th (1))
+			if string_input.parent /= Void then
+				string_input.set_text (an_item.i_th (3))
+			elseif directory_input.parent /= Void then
+				directory_input.set_text (an_item.i_th (3))
+			elseif integer_input.parent /= Void then
+				integer_input.set_value ((an_item.i_th (3)).to_integer)
+			end
+			unlock_update
 		end
 	
 	item_deselected_in_list (an_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Called by `deselect_actions' of `constants_list'.
 		do
+			modify_constant := Void
 			if constants_list.selected_items.is_empty then
 				remove_button.disable_sensitive	
 			end

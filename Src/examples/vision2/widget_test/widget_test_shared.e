@@ -36,6 +36,12 @@ feature -- Access
 		do
 			Result := class_name (test_widget)
 		end
+		
+	current_text_size: INTEGER is
+			-- Size of flat short text display.
+		do
+			Result := current_text_size_ref.item
+		end
 
 feature -- Basic operation
 
@@ -58,6 +64,14 @@ feature -- Basic operation
 			test_widget_not_void: test_widget /= Void
 		end
 		
+	set_current_text_size (a_size: INTEGER) is
+			-- Assign `a_size' to `current_text_size'.
+		require
+			size_positive: a_size > 0
+		do
+			current_text_size_ref.set_item (a_size)
+		end
+
 	register_type_change_agent (an_agent: PROCEDURE [ANY, TUPLE [EV_WIDGET]]) is
 			-- Insert `an_agent' into `widget_type_changed_agents'.
 		require
@@ -140,6 +154,13 @@ feature {NONE} -- Implementation
 		
 	location_error_message: STRING is "If this tour was installed as part of the EiffelStudio installation, please ensure that ISE_EIFFEL is correctly set.%NIf installed separately, please ensure ISE_VISION2_TOUR is correctly set to the installation directory."
 		-- Error message detailing the envieonment variables that should be set.
+		
+	current_text_size_ref: INTEGER_REF is
+			-- Once access to the implementation of `current_text_size'.
+		once
+			create Result
+		end
+		
 		
 
 end -- class WIDGET_TEST_SHARED

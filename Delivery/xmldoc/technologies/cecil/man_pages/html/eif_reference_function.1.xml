@@ -44,10 +44,10 @@
 		<bold>eif_pointer_function</bold> for an Eiffel function returning an Eiffel pointer.
 		<line_break/>Use 
 		<bold>eif_bit_function</bold> for an Eiffel function returning an Eiffel bit.
-		<paragraph>If the visible exception is enabled, it raises an visibleexception upon failure. </paragraph>
+		<paragraph>If the visible exception is enabled, it raises an visible exception upon failure. </paragraph>
 		<heading>
 			<size>2</size>RETURN VALUE
-		</heading>It returns NULL when it fails ( the function does not exist or isnot visible). Otherwise, the address of the function is returned.
+		</heading>It returns NULL when it fails ( the function does not exist or is not visible). Otherwise, the address of the function is returned.
 		<heading>
 			<size>2</size>NOTES
 		</heading>The Eiffel function cannot be a C external. In this case, you must directly call the C routine.
@@ -90,5 +90,5 @@
 		</heading>
 		<bold>eif_type_id</bold>(1), 
 		<bold>eif_protect</bold>(1), 
-		<bold>eif_procedure</bold>(1).  Markup created by  1. 0, November 15, 1999.
+		<bold>eif_procedure</bold>(1).
 	</paragraph></document>

@@ -14,7 +14,33 @@
 		<paragraph>To do this, include the appropriate features and classes in the 
 			<italic>visible</italic> clause of the Ace file, as in
 		</paragraph>
-		<code_block>systemsystem_nameroot...default...cluster...        your_cluster: "..."            adapt                ...            visible                CLASS1;                CLASS2                    creation                        "other_make"                    export                        "other_make", "feat1", "feat2"                    end            end        ... Other clusters ...    ...end</code_block>Here all features of 
+		<code_block>
+	<keyword>system</keyword>
+		<italic>system_name</italic>
+	<keyword>root</keyword>
+		...
+	<keyword>default</keyword>
+		...
+	<keyword>cluster</keyword>
+		...
+		<italic>your_cluste</italic>r<symbol>:</symbol> "..."
+			<keyword>adapt</keyword>
+			...
+			<keyword>visible</keyword>
+				<italic>CLASS1;</italic>
+                			<italic>CLASS2</italic>
+				<keyword>creation</keyword>
+					"<italic>other_make</italic>"
+				<keyword>export</keyword>
+					"<italic>other_make</italic>", "<italic>feat1</italic>", "<italic>feat2</italic>"
+				<keyword>end</keyword>
+			<keyword>end</keyword>
+	
+		... Other clusters ...
+	
+	...
+	<keyword>end</keyword></code_block>
+		Here all features of 
 		<italic>CLASS1</italic> are available to the external software; for 
 		<italic>CLASS2</italic>, only 
 		<italic>other_make</italic> (for creation) and 
@@ -31,9 +57,13 @@
 			<size>2</size>Building a CECIL archive
 		</heading>The ISE-EiffelBench 5.0 compiler produces both C code and a "Makefile". The Makefile compiles and links that C code in a subdirectory one level below the EIFGEN directory of a project. For frozen/melted code, the Makefile is located in the W_code subdirectory. For finalized code, it is in the F_code subdirectory.
 		<paragraph>To produce a CECIL library, you must: open a shell (unix) or the MS-DOS prompt (Windows), go to the subdirectory that contains the Makefile, and then type:</paragraph>
-		<code_block><bold>make cecil</bold> (on unix and on windows with Borland)<bold>nmake cecil</bold> (on windows with VC++)</code_block>
+		<code_block>
+		<bold>make cecil</bold> (on unix and on windows with Borland)<bold>
+		nmake cecil</bold> (on windows with VC++)</code_block>
 		<paragraph>This generates a CECIL archive whose name derived from the name &amp;lt;system name&amp;gt; of the Eiffel system, as follows:</paragraph>
-		<code_block>lib&amp;lt;system name&amp;gt;.a (on unix)lib&amp;lt;system name&amp;gt;. lib (on Windows)</code_block>For example, the corresponding archive for an Eiffel system called "test", would be called either "libtest. a" (Unix) or libtest. lib (Windows).
+		<code_block>
+		lib&amp;lt;system name&amp;gt;.a (on unix)
+		lib&amp;lt;system name&amp;gt;. lib (on Windows)</code_block>For example, the corresponding archive for an Eiffel system called "test", would be called either "libtest. a" (Unix) or libtest. lib (Windows).
 		<paragraph>Note that through CECIL you can use an Eiffel system compiled in any of the Eiffel compilation modes:</paragraph>
 		<list ordered="false">
 			<item>Finalized C code. </item>
@@ -48,8 +78,7 @@
 		</note>
 		<warning>
 			<bold>Caution</bold>: in the second case (workbench mode), it is not possible to call through the CECIL interface any routine that has been melted in the last compilation; this would raise the run-time exception:
-			<line_break/>
-			<bold> $ applied to melted routine</bold>
+			<line_break/>&amp;nbsp;&amp;nbsp;<bold>$ applied to melted routine</bold>
 			<line_break/> The solution is simply to refreeze the system.
 		</warning>
 	</paragraph></document>

@@ -26,10 +26,10 @@
 			<bold>EIF_REFERENCE</bold>. 
 		</paragraph>
 		<paragraph>If 
-			<italic>status</italic> is NULL then no status is set. Otherwise thestatus of the call is put into 
-			<italic>*status</italic>. Its value is one ofthe following:
+			<italic>status</italic> is NULL then no status is set. Otherwise the status of the call is put into 
+			<italic>*status</italic>. Its value is one of the following:
 		</paragraph>
-		<paragraph>If the visible exception is enabled, then a visible exception israised upon failure ( 
+		<paragraph>If the visible exception is enabled, then a visible exception is raised upon failure ( 
 			<bold>EIF_NO_ATTRIBUTE</bold>, 
 			<bold>EIF_CECIL_ERROR</bold>). 
 		</paragraph>

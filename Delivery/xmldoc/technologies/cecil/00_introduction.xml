@@ -8,9 +8,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Introduction
-		</heading>
 		<paragraph>This document provides an overview of the C-Eiffel Call-In Library (CECIL) as defined in Eiffel: The Language (ETL). The first section addresses how to compile and run a CECIL program, on the 
 			<link>
 				<url>10_compiling_a_system_for_cecil.xml</url>

@@ -598,7 +598,6 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent system.set_routine_class, "ROUTINE")
 			l_actions.put (agent system.set_procedure_class, "PROCEDURE")
 			l_actions.put (agent system.set_function_class, "FUNCTION")
-			l_actions.put (agent system.set_to_special_class, "TO_SPECIAL")
 
 				-- XX_REF classes
 			l_actions.put (agent system.set_bit_class, "BIT_REF")

@@ -33,6 +33,9 @@ feature -- Access
 	Wizard_extension: STRING is ".ewz"
 			-- Wizard file extension
 
+	Clib_name: STRING is "ecom"
+			-- Libray file name
+
 	Wizard_wild_card: STRING is
 			-- Wizard project file wild card
 		once
@@ -54,8 +57,11 @@ feature -- Access
 	Temporary_input_file_name: STRING is "Input_File"
 			-- Input file
 
-	Standard_abort_value: INTEGER is 10
+	Standard_abort_value: INTEGER is -100
 			-- Standard abort value
+
+	Eiffel_compilation_error: INTEGER is -101
+			-- Eiffel compilation error
 
 	Generated_files_file_name: STRING is "generated.txt"
 			-- File including list of generated files

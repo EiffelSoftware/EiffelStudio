@@ -3,9 +3,6 @@ class FEATURE_LIST_AS
 inherit
 
 	FEATURE_SET_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -25,11 +22,9 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.set_separator (ti_Comma);
-			ctxt.space_between_tokens;
+			ctxt.set_space_between_tokens;
 			features.simple_format (ctxt);
-			ctxt.commit;
 		end;
 
 end -- class FEATURE_LIST_AS

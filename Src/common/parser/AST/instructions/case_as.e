@@ -9,9 +9,6 @@ class CASE_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -34,27 +31,27 @@ feature -- Initialization
 
 feature -- Simple formatting
 
-		simple_format (ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.put_text_item (ti_When_keyword);
 			ctxt.put_space;
 			ctxt.set_separator (ti_Comma);
-			ctxt.no_new_line_between_tokens;
-			interval.simple_format (ctxt);
+			ctxt.set_no_new_line_between_tokens;
+			ctxt.format_ast (interval);
 			ctxt.put_space;
-			ctxt.put_text_item (ti_Then_keyword);
+			ctxt.put_text_item_without_tabs (ti_Then_keyword);
 			ctxt.put_space;
+			ctxt.new_line;
 			if compound /= void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
 				ctxt.set_separator (ti_Semi_colon);
-				ctxt.new_line_between_tokens;
-				compound.simple_format(ctxt)
+				ctxt.set_new_line_between_tokens;
+				ctxt.format_ast (compound);
+				ctxt.new_line;
+				ctxt.exdent;
 			end;
 			ctxt.put_breakable;
-			ctxt.commit
 		end;
 
 feature {CASE_AS} -- Replication

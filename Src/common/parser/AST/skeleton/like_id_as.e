@@ -58,12 +58,10 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
-			ctxt.put_text_item (ti_Like_keyword);
+			ctxt.put_text_item_without_tabs (ti_Like_keyword);
 			ctxt.put_space;
 			ctxt.prepare_for_feature (anchor, Void);
 			ctxt.put_current_feature;
-			ctxt.commit;
 		end;
 	
 feature {LIKE_ID_AS}	-- Replication

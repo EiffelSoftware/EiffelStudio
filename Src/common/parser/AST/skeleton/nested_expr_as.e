@@ -11,9 +11,6 @@ class NESTED_EXPR_AS
 inherit
 
 	CALL_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -42,18 +39,16 @@ feature -- Simple formatting
 		local
 			paran_as: PARAN_AS
 		do
-			ctxt.begin;
 			paran_as ?= target
 			if paran_as = Void then
 				ctxt.put_text_item (ti_L_parenthesis);
 			end
 			target.simple_format (ctxt);
 			if paran_as = Void then
-				ctxt.put_text_item (ti_R_parenthesis);
+				ctxt.put_text_item_without_tabs (ti_R_parenthesis);
 			end
 			ctxt.need_dot;
 			message.simple_format (ctxt);
-			ctxt.commit
 		end;
 
 feature {NESTED_EXPR_AS} -- Replication

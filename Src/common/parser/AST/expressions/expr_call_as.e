@@ -9,9 +9,6 @@ class EXPR_CALL_AS
 inherit
 
 	EXPR_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -30,10 +27,10 @@ feature -- Initialization
 
 feature -- Simple formatting
 
-	simple_format(ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			call.simple_format (ctxt);
+			ctxt.format_ast (call)
 		end;
 
 feature {EXPR_CALL_AS}

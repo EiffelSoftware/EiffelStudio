@@ -9,9 +9,6 @@ class ELSIF_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -37,22 +34,21 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.put_text_item (ti_Elseif_keyword);
 			ctxt.put_space;
 			ctxt.new_expression;
-			expr.simple_format (ctxt);
+			ctxt.format_ast (expr);
 			ctxt.put_space;
-			ctxt.put_text_item (ti_Then_keyword);
-			ctxt.indent_one_more;
+			ctxt.put_text_item_without_tabs (ti_Then_keyword);
+			ctxt.indent;
 			ctxt.set_separator (ti_Semi_colon);
-			ctxt.new_line_between_tokens;
-			ctxt.next_line;
+			ctxt.set_new_line_between_tokens;
+			ctxt.new_line;
 			if compound /= Void then
-				compound.simple_format (ctxt);
+				ctxt.format_ast (compound);
 			end;
+			ctxt.new_line;
 			ctxt.put_breakable;
-			ctxt.commit;
 		end;
 
 feature {ELSIF_AS} -- Replication

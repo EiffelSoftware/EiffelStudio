@@ -4,7 +4,7 @@ inherit
 
 	BASIC_TYPE
 		redefine
-			set, simple_format
+			set
 		end
 
 feature -- Attributes
@@ -28,15 +28,6 @@ feature -- Initialization
 			!!Result.make (10);
 			Result.append ("BIT ");
 			Result.append_integer (bits_value.value);
-		end;
-
-feature -- Simple formatting
-
-	simple_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			ctxt.put_string ("BIT ");
-			ctxt.put_string (bits_value.value.out);
 		end;
 
 end -- class BITS_AS

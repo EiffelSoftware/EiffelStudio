@@ -34,8 +34,9 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_text_item (ti_Like_keyword);
-			ctxt.put_string (" Current");
+			ctxt.put_text_item_without_tabs (ti_Like_keyword);
+			ctxt.put_space;
+			ctxt.put_text_item_without_tabs (ti_Current)
 		end;
 
 end -- class LIKE_CUR_AS

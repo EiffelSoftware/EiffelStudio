@@ -9,9 +9,6 @@ deferred class BINARY_AS
 inherit
 
 	EXPR_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -84,12 +81,9 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			left.simple_format (ctxt);
-			ctxt.need_dot;
 			ctxt.prepare_for_infix (operator_name, right);
-			ctxt.put_current_feature;
-			ctxt.commit;
+			ctxt.put_infix_feature;
 		end;
 
 feature {BINARY_AS}	-- Replication

@@ -9,9 +9,6 @@ class VALUE_AS
 inherit
 
 	EXPR_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -33,7 +30,7 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			terminal.simple_format (ctxt);
+			ctxt.format_ast (terminal)
 		end;
 
 feature {VALUE_AS, USER_CMD, CMD}	-- Replication

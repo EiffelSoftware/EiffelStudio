@@ -9,9 +9,6 @@ deferred class UNARY_AS
 inherit
 
 	EXPR_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -54,12 +51,10 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
-			expr.simple_format (ctxt);
-			ctxt.need_dot;
 			ctxt.prepare_for_prefix (prefix_feature_name);
-			ctxt.put_current_feature;
-			ctxt.commit
+			ctxt.put_prefix_feature;
+			ctxt.put_space;
+			expr.simple_format (ctxt);
 		end;
 
 feature {UNARY_AS} -- Replication

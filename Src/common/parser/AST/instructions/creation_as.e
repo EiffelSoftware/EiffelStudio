@@ -3,9 +3,6 @@ class CREATION_AS
 inherit
 
 	INSTRUCTION_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -71,17 +68,17 @@ feature -- Simple formatting
 			ctxt.put_breakable;
 			if type /= Void then
 				ctxt.put_text_item (ti_Exclamation);
-				type.simple_format (ctxt);
-				ctxt.put_text_item (ti_Exclamation);
+				ctxt.format_ast (type);
+				ctxt.put_text_item_without_tabs (ti_Exclamation);
 				ctxt.put_space
 			else
 				ctxt.put_text_item (ti_Creation_mark);
 				ctxt.put_space
 			end;
-			target.simple_format (ctxt);
+			ctxt.format_ast (target)
 			if  call /= void then
 				ctxt.need_dot;
-				call.simple_format (ctxt);
+				ctxt.format_ast (call)
 			end;
 		end;
 

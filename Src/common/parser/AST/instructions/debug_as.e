@@ -9,9 +9,6 @@ class DEBUG_AS
 inherit
 
 	INSTRUCTION_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -71,32 +68,30 @@ feature -- Equivalence
 
 feature -- Simple formatting
 
-		simple_format (ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.put_breakable;
 			ctxt.put_text_item (ti_Debug_keyword);
 			ctxt.put_space;
 			if keys /= void and then not keys.empty then
-				ctxt.put_text_item (ti_L_parenthesis);
+				ctxt.put_text_item_without_tabs (ti_L_parenthesis);
 				ctxt.set_separator (ti_Comma);
-				ctxt.no_new_line_between_tokens;
-				keys.simple_format (ctxt);
-				ctxt.put_text_item (ti_R_parenthesis)
+				ctxt.set_no_new_line_between_tokens;
+				ctxt.format_ast (keys);
+				ctxt.put_text_item_without_tabs (ti_R_parenthesis)
 			end;
 			if compound /= void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.set_separator (ti_Semi_colon);
-				ctxt.new_line_between_tokens;
-				compound.simple_format (ctxt);
-				ctxt.put_breakable;
-				ctxt.indent_one_less;
+				ctxt.set_new_line_between_tokens;
+				ctxt.format_ast (compound);
+				ctxt.exdent;
 			end;
-			ctxt.next_line;
+			ctxt.new_line;
+			ctxt.put_breakable;
 			ctxt.put_text_item (ti_End_keyword);
-			ctxt.commit;
 		end;
 
 feature {DEBUG_AS} -- Replication

@@ -9,9 +9,6 @@ class RETRY_AS
 inherit
 
 	INSTRUCTION_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Initialization
 

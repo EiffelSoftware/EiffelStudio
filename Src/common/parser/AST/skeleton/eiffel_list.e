@@ -13,8 +13,6 @@ inherit
 			position as text_position
 		undefine
 			pass_address, copy, setup, consistent, is_equal
-		redefine
-			simple_format
 		end;
 	CONSTRUCT_LIST [T]
 		rename
@@ -79,20 +77,16 @@ feature -- Simple formatting
 			until
 				i > l_count
 			loop
-				ctxt.begin;
 				if i > 1 then
 					ctxt.put_separator;
 				end;
 				ctxt.new_expression;
-				i_th(i).simple_format(ctxt);
+				ctxt.begin;
+				i_th (i).simple_format (ctxt);
 				ctxt.commit;
 				i := i + 1
 			end;
 			ctxt.commit;
-				-- Reset the cursor to the start if
-				-- we do an equiv on the ast structures
-				-- after we format (for index)
-			start;
 		end;
 
 	reversed_simple_format (ctxt: FORMAT_CONTEXT) is
@@ -110,12 +104,12 @@ feature -- Simple formatting
 			until
 				i < 1
 			loop
-				ctxt.begin;
 				if i < l_count then
 					ctxt.put_separator;
 				end;
 				ctxt.new_expression;
-				i_th(i).simple_format(ctxt);
+				ctxt.begin;
+				i_th (i).simple_format (ctxt);
 				ctxt.commit;
 				i := i - 1
 			end;

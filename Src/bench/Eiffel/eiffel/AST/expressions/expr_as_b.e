@@ -12,7 +12,7 @@ inherit
 
 	AST_EIFFEL_B
 		undefine
-			byte_node, simple_format
+			byte_node
 		end
 
 feature

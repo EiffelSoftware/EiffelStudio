@@ -3,9 +3,6 @@ class ARRAY_AS
 inherit
 
 	ATOMIC_AS
-		redefine
-			string_value, simple_format
-		end
 
 feature -- Attributes
 
@@ -31,13 +28,12 @@ feature -- Simple formatting
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.put_text_item (ti_L_array);
 			ctxt.set_separator (ti_Comma);
-			ctxt.space_between_tokens;
+			ctxt.set_space_between_tokens;
 			expressions.simple_format (ctxt);
-			ctxt.put_text_item (ti_R_array);
-			ctxt.commit
+			ctxt.format_ast (expressions);
+			ctxt.put_text_item_without_tabs (ti_R_array);
 		end;
 
 feature {ARRAY_AS}	-- Replication
@@ -47,13 +43,6 @@ feature {ARRAY_AS}	-- Replication
 			valid_arg: e /= Void
 		do
 			expressions := e
-		end;
-
-feature -- Case storage
-
-	string_value: STRING is
-		do
-			Result := "<< >>"
 		end;
 
 end -- class ARRAY_AS

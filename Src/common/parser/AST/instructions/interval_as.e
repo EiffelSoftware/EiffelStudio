@@ -9,9 +9,6 @@ class INTERVAL_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -54,10 +51,10 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			lower.simple_format (ctxt);
+			ctxt.format_ast (lower);
 			if upper /= void then
-				ctxt.put_text_item (ti_Dotdot);
-				upper.simple_format (ctxt);
+				ctxt.put_text_item_without_tabs (ti_Dotdot);
+				ctxt.format_ast (upper);
 			end;
 		end;
 

@@ -9,9 +9,6 @@ class REAL_AS
 inherit
 
 	ATOMIC_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attribute
 
@@ -31,7 +28,7 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_string(value);
+			ctxt.put_string (value);
 		end;
 
 end -- class REAL_AS

@@ -12,10 +12,7 @@ inherit
 		undefine
 			is_equal
 		end;
-	ATOMIC_AS
-		redefine
-			simple_format
-		end;
+	ATOMIC_AS;
 	CHARACTER_ROUTINES
 
 feature -- Attributes
@@ -40,7 +37,7 @@ feature -- Simple formatting
 		do
 			ctxt.put_text_item (ti_Double_quote);
 			ctxt.put_string (eiffel_string (value));
-			ctxt.put_text_item (ti_Double_quote);
+			ctxt.put_text_item_without_tabs (ti_Double_quote);
 		end;
 
 feature 

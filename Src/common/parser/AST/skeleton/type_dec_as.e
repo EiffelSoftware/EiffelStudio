@@ -9,9 +9,6 @@ class TYPE_DEC_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -66,14 +63,12 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.set_separator (ti_Comma);
-			ctxt.space_between_tokens;
-			id_list.simple_format (ctxt);
-			ctxt.put_text_item (ti_Colon);
+			ctxt.set_space_between_tokens;
+			ctxt.format_ast (id_list);
+			ctxt.put_text_item_without_tabs (ti_Colon);
 			ctxt.put_space;
-			type.simple_format(ctxt);
-			ctxt.commit;
+			ctxt.format_ast (type);
 		end;
 
 feature {TYPE_DEC_AS, LOCALS_MERGER} -- Replication

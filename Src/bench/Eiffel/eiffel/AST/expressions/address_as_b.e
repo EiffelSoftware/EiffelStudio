@@ -16,8 +16,6 @@ inherit
 		end;
 
 	EXPR_AS_B
-		undefine
-			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -82,12 +80,11 @@ feature -- Type check, byte code and dead code removal
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.prepare_for_feature (feature_name.internal_name, void);
+			ctxt.prepare_for_feature (feature_name.internal_name, Void);
 			if ctxt.is_feature_visible then
-				ctxt.put_text_item (ti_Dollar);
-					-- Treat infix and prefix
+				ctxt.put_text_item_without_tabs (ti_Dollar);
 				ctxt.put_current_feature; 	
-				ctxt.commit;
+				ctxt.commit
 			else
 				ctxt.rollback;
 			end;

@@ -10,7 +10,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			is_unique, simple_format
+			is_unique
 		end
 
 feature -- Conveniences
@@ -34,7 +34,7 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_text_item (ti_Unique_keyword);
+			ctxt.put_text_item_without_tabs (ti_Unique_keyword);
 		end;
 
 end -- class UNIQUE_AS

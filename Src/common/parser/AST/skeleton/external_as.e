@@ -4,8 +4,7 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			is_external, has_instruction, index_of_instruction, 
-			simple_format
+			is_external, has_instruction, index_of_instruction
 		end;
 
 feature -- Attributes
@@ -66,17 +65,18 @@ feature -- Simple formatting
 			-- Reconstitute text
 		do
 			ctxt.put_text_item (ti_External_keyword);
-			ctxt.indent_one_more;
-			ctxt.next_line;
-			ctxt.indent_one_less;
-			language_name.language_name.simple_format (ctxt);
+			ctxt.indent;
+			ctxt.new_line;
+			ctxt.format_ast (language_name.language_name)
+			ctxt.exdent;
 			if external_name /= void then
-				ctxt.next_line;
+				ctxt.new_line;
 				ctxt.put_text_item (ti_Alias_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				ctxt.indent_one_less;
-				alias_name.simple_format (ctxt);
+				ctxt.indent;
+				ctxt.new_line;
+				ctxt.format_ast (alias_name);
+				ctxt.new_line;
+				ctxt.exdent;
 			end;
 		end;
 

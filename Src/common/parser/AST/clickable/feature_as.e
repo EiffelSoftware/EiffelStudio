@@ -10,7 +10,7 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			is_feature_obj, simple_format
+			is_feature_obj
 		end;
 	COMPARABLE
 		undefine
@@ -29,18 +29,21 @@ feature -- Attributes
 	feature_names: EIFFEL_LIST [FEATURE_NAME];
 			-- Names of feature
 
-
 	body: BODY_AS;
 			-- Feature body: this attribute will be compared during
 			-- second pass of the compiler in order to see if a feature
 			-- has change of body.
+
+	comment: EIFFEL_COMMENTS is
+				-- Routine comments
+			do
+			end
 
 feature -- Initialization
  
 	set is
 			-- Yacc initialization
 		do
-io.error.putstring ("Setting feature...%N");
 			feature_names ?= yacc_arg (0);
 			body ?= yacc_arg (1);
 			start_position := yacc_int_arg (0);
@@ -114,23 +117,16 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
-			ctxt.begin;
-			ctxt.put_text_item (ti_Before_feature_declaration);
-			ctxt.set_separator (ti_Comma);
-			ctxt.space_between_tokens;
-
 			if feature_names /= Void then
+				ctxt.set_separator (ti_Comma);
+				ctxt.set_space_between_tokens;
 				feature_names.simple_format (ctxt)
 			end
-			ctxt.commit;
 			body.simple_format (ctxt);
+			ctxt.put_text_item (ti_Semi_colon);
 			format_comment (ctxt);
-			ctxt.next_line;
-			ctxt.commit;
-			ctxt.put_text_item (ti_After_feature_declaration)
+			ctxt.new_line;
 		end;
-
 
 feature -- Conveniences
 
@@ -242,7 +238,19 @@ feature -- Status report
 		end;
 
 	format_comment (ctxt: FORMAT_CONTEXT) is
+			-- Format comment into `ctxt'.
+		local
+			c: like comment
 		do
+			c := comment;
+			if c /= Void then
+				ctxt.indent;
+				ctxt.indent;
+				ctxt.put_comment (c);
+				ctxt.put_origin_comment;
+				ctxt.exdent;
+				ctxt.exdent;
+			end;
 		end;
 
 	new_ast: like Current is
@@ -259,7 +267,7 @@ feature -- Status report
 			end;
 		end;
 
-feature {FEATURE_AS, NAMES_ADAPTER, FEATURE_AS_MERGER, USER_CMD, CMD}	-- Replication
+feature --Setting
 
 	set_feature_names (f: like feature_names) is
 		do

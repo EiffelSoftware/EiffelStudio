@@ -44,12 +44,8 @@ feature -- Simple formatting
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
-		local
-			id_as: ID_AS
 		do
-			id_as := ctxt.ast.generics.i_th (position).formal_name
-			id_as.to_upper
-			ctxt.put_string (id_as)
+			ctxt.put_string (ctxt.formal_name (position))
 		end;
 
 feature

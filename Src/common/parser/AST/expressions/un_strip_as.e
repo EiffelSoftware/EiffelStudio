@@ -3,9 +3,6 @@ class UN_STRIP_AS
 inherit
 
 	EXPR_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -32,12 +29,11 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		local
-			print_comma: BOOLEAN;
+			first_printed: BOOLEAN;
 		do
-			ctxt.begin;
 			ctxt.put_text_item (ti_Strip_keyword);
 			ctxt.put_space;
-			ctxt.put_text_item (ti_L_parenthesis);
+			ctxt.put_text_item_without_tabs (ti_L_parenthesis);
 
 			from
 				id_list.start;
@@ -45,17 +41,18 @@ feature -- Simple formatting
 				id_list.after
 			loop
 				ctxt.new_expression;
-				ctxt.prepare_for_feature(id_list.item, void);
-				if print_comma then
-					ctxt.put_text_item (ti_Comma);
-					ctxt.put_space
+				ctxt.prepare_for_feature (id_list.item, void);
+				if ctxt.is_feature_visible then
+					if first_printed then
+						ctxt.put_text_item_without_tabs (ti_Comma);
+						ctxt.put_space
+					end;
+					ctxt.put_current_feature;
+					first_printed := True;
 				end;
-				ctxt.put_current_feature;
-				print_comma := True;
 				id_list.forth
 			end;
-			ctxt.put_text_item (ti_R_parenthesis);
-			ctxt.commit
+			ctxt.put_text_item_without_tabs (ti_R_parenthesis);
 		end;
 
 end -- class UN_STRIP_AS

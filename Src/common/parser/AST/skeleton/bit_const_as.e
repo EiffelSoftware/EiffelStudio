@@ -9,9 +9,6 @@ class BIT_CONST_AS
 inherit
 
 	ATOMIC_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 

@@ -9,9 +9,6 @@ class IF_AS
 inherit
 	
 	INSTRUCTION_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -77,44 +74,42 @@ feature -- Equivalence
 
 feature -- Simple formatting
 
-		simple_format (ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
 		do
-			ctxt.begin;
 			ctxt.put_breakable;
 			ctxt.put_text_item (ti_If_keyword);
 			ctxt.put_space;
 			ctxt.new_expression;
-			condition.simple_format (ctxt);
+			ctxt.format_ast (condition);
 			ctxt.put_space;
-			ctxt.put_text_item (ti_Then_keyword);
+			ctxt.put_text_item_without_tabs (ti_Then_keyword);
 			if compound /= Void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.set_separator (ti_Semi_colon);
-				ctxt.new_line_between_tokens;
-				compound.simple_format (ctxt);
-				ctxt.indent_one_less;
+				ctxt.set_new_line_between_tokens;
+				ctxt.format_ast (compound);
+				ctxt.exdent;
 			end;
-			ctxt.next_line;
-			ctxt.put_breakable;
+			ctxt.new_line;
+			ctxt.put_breakable 
 			if elsif_list /= void then
 				ctxt.set_separator (Void);
-			elsif_list.simple_format (ctxt);
+				ctxt.set_no_new_line_between_tokens;
+				ctxt.format_ast (elsif_list);
 				ctxt.set_separator (ti_Semi_colon);
-				ctxt.next_line;
 			end;
 			if else_part /= void then
 				ctxt.put_text_item (ti_Else_keyword);
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				else_part.simple_format (ctxt);
-				ctxt.indent_one_less;
-				ctxt.next_line;
-				ctxt.put_breakable;
+				ctxt.indent;
+				ctxt.new_line;
+				ctxt.format_ast (else_part);
+				ctxt.exdent;
+				ctxt.new_line;
+				ctxt.put_breakable 
 			end;
 			ctxt.put_text_item (ti_End_keyword);
-			ctxt.commit;
 		end;
 		 			   
 feature {IF_AS} -- Replication

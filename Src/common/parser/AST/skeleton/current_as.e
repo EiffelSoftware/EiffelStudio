@@ -9,9 +9,6 @@ class CURRENT_AS
 inherit
 
 	ACCESS_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Initialization
 
@@ -31,10 +28,8 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.prepare_for_current;
-			ctxt.put_current;
-			ctxt.commit;
+			ctxt.put_text_item (ti_Current)
 		end;
 
 end -- class CURRENT_AS

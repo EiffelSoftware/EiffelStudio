@@ -4,8 +4,7 @@ inherit
 
 	ROUT_BODY_AS
 		redefine
-			has_instruction, index_of_instruction,
-			simple_format
+			has_instruction, index_of_instruction
 		end
 
 feature -- Attributes
@@ -59,19 +58,17 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			ctxt.put_text_item (begin_keyword);
-			ctxt.indent_one_more
-
+			ctxt.new_line;
 			if compound /= Void then
-				ctxt.next_line
+				ctxt.indent
 				ctxt.set_separator (ti_Semi_colon);
-				ctxt.new_line_between_tokens;
-				compound.simple_format(ctxt);
+				ctxt.set_new_line_between_tokens;
+				compound.simple_format (ctxt);
+				ctxt.new_line;
+				ctxt.exdent
 			end;
-			ctxt.indent_one_less
-
-			ctxt.commit;
+			ctxt.put_breakable;
 		end;
 
 feature {INTERNAL_AS, CMD, USER_CMD, INTERNAL_MERGER} -- Replication

@@ -10,10 +10,7 @@ deferred class FEATURE_NAME
 
 inherit
 
-	AST_EIFFEL
-		redefine
-			simple_format
-		end;
+	AST_EIFFEL;
 	COMPARABLE
 		undefine
 			is_equal
@@ -104,21 +101,10 @@ feature -- Simple formatting
 				ctxt.put_space
 			end;
 			ctxt.prepare_for_feature (internal_name, void);
-			ctxt.put_current_feature;
+			ctxt.put_normal_feature;
 		end;
 
 feature -- Formatting
-
-	main_feature_format (ctxt: FORMAT_CONTEXT) is
-			-- Reconstitute text.
-		do
-			if is_frozen then
-				ctxt.put_text_item (ti_Frozen_keyword);
-				ctxt.put_space
-			end;
-			ctxt.prepare_for_main_feature;
-			ctxt.put_current_feature;
-	   end;
 
 	offset: INTEGER is
 		do

@@ -10,7 +10,7 @@ inherit
 
 	ATOMIC_AS
 		redefine
-			is_character, good_character, simple_format
+			is_character, good_character
 		end;
 	CHARACTER_ROUTINES
 
@@ -46,9 +46,9 @@ feature -- Simple formatting
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstiture text.
 		do
-			ctxt.put_text_item (ti_Quote);
+			ctxt.put_text_item_without_tabs (ti_Quote);
 			ctxt.put_string (char_text (value));
-			ctxt.put_text_item (ti_Quote)
+			ctxt.put_text_item_without_tabs (ti_Quote)
 		end;
 
 end -- class CHAR_AS

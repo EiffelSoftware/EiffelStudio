@@ -3,9 +3,6 @@ class CREATE_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -51,26 +48,20 @@ feature -- Simple formatting
 
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
-		local
-			last_was_printed: BOOLEAN;
 		do
-			ctxt.begin;
 			ctxt.put_text_item (ti_Creation_keyword);
 			ctxt.put_space;
-			if clients = void then
-				last_was_printed := true
-			else
-				clients.simple_format(ctxt);
-				--last_was_printed := ctxt.last_was_printed;
+			if clients /= void then
+				clients.simple_format (ctxt);
 			end;
 			if feature_list /= Void then
-				ctxt.indent_one_more;
-				ctxt.next_line;
+				ctxt.indent;
+				ctxt.new_line;
 				ctxt.set_separator (ti_Comma);
-				ctxt.new_line_between_tokens;
+				ctxt.set_new_line_between_tokens;
 				feature_list.simple_format (ctxt);
+				ctxt.new_line;
 			end;
-			ctxt.commit
 		end;
 			
 feature -- Convenience

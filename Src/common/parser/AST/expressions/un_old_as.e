@@ -4,8 +4,8 @@ inherit
 
 	UNARY_AS
 		redefine
-			operator_is_keyword, simple_format
-		end;
+			simple_format, operator_is_keyword
+		end
 
 feature -- Type check
 
@@ -23,12 +23,9 @@ feature -- Simple formatting
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
 		do
-			ctxt.begin;
-			expr.simple_format (ctxt);
-			ctxt.need_dot;
-			ctxt.prepare_for_prefix ("_prefix_old");
-			ctxt.put_current_feature;
-			ctxt.commit;
+			ctxt.put_text_item (ti_Old_keyword);
+			ctxt.put_space;
+			ctxt.format_ast (expr);
 		end;
 
 end -- class UN_OLD_AS

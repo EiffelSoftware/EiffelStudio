@@ -3,9 +3,6 @@ class EXPORT_ITEM_AS
 inherit
 
 	AST_EIFFEL
-		redefine
-			simple_format
-		end;
 
 feature -- Attributes
 
@@ -29,15 +26,13 @@ feature -- Simple formatting
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.begin;
 			if clients /= Void then
 				ctxt.set_separator (ti_Comma);
-				ctxt.space_between_tokens;
-				clients.simple_format (ctxt);
+				ctxt.set_space_between_tokens;
+				ctxt.format_ast (clients);
 				ctxt.put_space
 			end;
-			features.simple_format (ctxt);
-			ctxt.commit
+			ctxt.format_ast (features);
 		end;
 
 end -- class EXPORT_ITEM_AS

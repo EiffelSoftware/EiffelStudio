@@ -3,9 +3,6 @@ class ADDRESS_CURRENT_AS
 inherit
 
 	EXPR_AS
-		redefine
-			simple_format
-		end;
 
 feature -- Initialization
 
@@ -17,11 +14,11 @@ feature -- Initialization
 
 feature -- Simple formatting
 
-		simple_format (ctxt: FORMAT_CONTEXT) is
+	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_text_item (ti_Dollar);
-			ctxt.put_string ("Current");
+			ctxt.put_text_item_without_tabs (ti_Dollar);
+			ctxt.put_text_item_without_tabs (ti_Current)
 		end;
 
 end -- class ADDRESS_CURRENT_AS

@@ -37,16 +37,15 @@ feature {NONE} -- Implementation
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_hbox_new (False, 0))
-			list_widget := c_object
 		end
 
 feature -- Status setting
 
 	connect_radio_grouping (a_tool_bar: EV_TOOL_BAR) is
-		-- Join radio grouping of `a_container' to Current.
-	do
-		--| FIXME To be implemented
-	end
+			-- Join radio grouping of `a_container' to Current.
+		do
+			--| FIXME To be implemented
+		end
 
 feature -- Implementation
 
@@ -110,6 +109,9 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/04/06 23:50:07  brendel
+--| Removed assignment to list_widget.
+--|
 --| Revision 1.15  2000/04/05 21:16:10  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

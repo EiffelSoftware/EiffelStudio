@@ -405,9 +405,14 @@ rt_private struct ex_vect *last_call(EIF_CONTEXT_NOARG)
 
 #ifdef USE_STRUCT_COPY
 	saved = eif_stack;		/* Save stack context */
-#else
+#else	/* USE_STRUCT_COPY */
+#ifdef VXWORKS
+	memcpy (&saved, &eif_stack, sizeof(struct xstack));
+#else	/* VXWORKS */
 	bcopy(&eif_stack, &saved, sizeof(struct xstack));
-#endif
+#endif	/* VXWORKS */
+	
+#endif	/* USE_STRUCT_COPY */
 
 	while (item = extop(&eif_stack)) {		/* While not found */
 		if (
@@ -422,7 +427,11 @@ rt_private struct ex_vect *last_call(EIF_CONTEXT_NOARG)
 #ifdef USE_STRUCT_COPY
 	eif_stack = saved;		/* Restore saved stack context */
 #else
+#ifdef VXWORKS
+	memcpy (&eif_stack, &saved, sizeof(struct xstack));
+#else	/* VXWORKS */
 	bcopy(&saved, &eif_stack, sizeof(struct xstack));
+#endif	/* VXWORKS */
 #endif
 
 	return item;			/* Last call recorded on stack */
@@ -449,10 +458,17 @@ rt_shared void escontext(EIF_CONTEXT int why)
 	d_cxt.pg_stack = eif_stack;
 	d_cxt.pg_trace = eif_trace;
 #else
+#ifdef VXWORKS
+	memcpy (&d_cxt.pg_debugger, s&db_stack, izeof(struct dbstack));
+	memcpy (&d_cxt.pg_interp, &op_stack, sizeof(struct opstack));
+	memcpy (&d_cxt.pg_stack, &eif_stack, sizeof(struct xstack));
+	memcpy (&d_cxt.pg_trace, &eif_trace, sizeof(struct xstack));
+#else	/* VXWORKS */
 	bcopy(&db_stack, &d_cxt.pg_debugger, sizeof(struct dbstack));
 	bcopy(&op_stack, &d_cxt.pg_interp, sizeof(struct opstack));
 	bcopy(&eif_stack, &d_cxt.pg_stack, sizeof(struct xstack));
 	bcopy(&eif_trace, &d_cxt.pg_trace, sizeof(struct xstack));
+#endif	/* VXWORKS */
 #endif
 
 	d_cxt.pg_status = why;			/* Why did we stop? */
@@ -489,10 +505,18 @@ rt_shared void esresume(EIF_CONTEXT_NOARG)
 	eif_stack = d_cxt.pg_stack;
 	eif_trace = d_cxt.pg_trace;
 #else
+#ifdef VXWORKS
+	memcpy (&db_stack, &d_cxt.pg_debugger, sizeof(struct dbstack));
+	memcpy (&op_stack, &d_cxt.pg_interp, sizeof(struct opstack));
+	memcpy (&eif_stack, &d_cxt.pg_stack, sizeof(struct xstack));
+	memcpy (&eif_trace, &d_cxt.pg_trace, sizeof(struct xstack));
+#else	/* VXWORKS */
 	bcopy(&d_cxt.pg_debugger, &db_stack, sizeof(struct dbstack));
 	bcopy(&d_cxt.pg_interp, &op_stack, sizeof(struct opstack));
 	bcopy(&d_cxt.pg_stack, &eif_stack, sizeof(struct xstack));
 	bcopy(&d_cxt.pg_trace, &eif_trace, sizeof(struct xstack));
+#endif	/* VXWORKS */
+
 #endif
 
 	IC = d_cxt.pg_IC;			/* Resume execution where we stopped */
@@ -602,10 +626,19 @@ rt_public struct dcall *dpush(register struct dcall *val)
 	}
 
 	db_stack.st_top = top + 1;			/* Points to next free location */
-	if (val != (struct dcall *) 0)		/* If value was provided */
+	if (val != (struct dcall *) 0){		/* If value was provided */
+#ifdef VXWORKS 
+		memcpy (top, val, CALL_SZ);		/* Push it on the stack */
+#else	/* VXWORKS */
 		bcopy(val, top, CALL_SZ);		/* Push it on the stack */
-	else
+#endif	/* VXWORKS */
+	} else {
+#ifdef VXWORKS 
+		memset (top, 0, CALL_SZ);
+#else	/* VXWORKS */
 		bzero(top, CALL_SZ);
+#endif	/* VXWORKS */
+	}
 
 	return top;				/* Address of allocated item */
 	EIF_END_GET_CONTEXT
@@ -1084,8 +1117,9 @@ rt_public void drecord_bc(int body_idx, int body_id, char *addr)
 		write_long (addr + 1, EIF_once_count);
 		EIF_once_count++;	/* Increment dynamically the number of onces */
 			/* Allocate room for once values */
-		EIF_once_values = (char **) realloc ((void *) EIF_once_values, EIF_once_count * sizeof (char *));
-			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
+		EIF_once_values = (char **) eif_realloc ((void *) EIF_once_values, EIF_once_count * sizeof (char *));
+			/* needs eif_malloc: it crashes otherwise 
+			 * on some pure C-ansi compiler (SGI)*/
 		if (EIF_once_values == (char **) 0) /* Out of memory */
 			enomem(); /* Raise an out-of memory exceptions */
 	}
@@ -1151,7 +1185,11 @@ rt_public uint32 *onceadd(uint32 id)
 	}
 
 	once_list.idl_last = last + 1;		/* Points to next free location */
+#ifdef VXWORKS
+	memcpy (last, &id, BODY_ID_SZ);		/* Add `id' in the list */
+#else
 	bcopy(&id, last, BODY_ID_SZ);		/* Add `id' in the list */
+#endif
 
 	return last;						/* Address of allocated item */
 	EIF_END_GET_CONTEXT

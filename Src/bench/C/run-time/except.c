@@ -13,9 +13,9 @@
 	executable.
 */
 
+#include <signal.h>
 #include "config.h"
 #include <stdio.h>
-#include <signal.h>
 #include "except.h"
 #include "local.h"
 #include "urgent.h"
@@ -2087,7 +2087,7 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 
 	if (except.from >= 0)
 		if (except.obj_id) {
-			if (except.from != Dtype(except.obj_id))
+			if (except.from != (int)Dtype(except.obj_id))
 				sprintf(buf, "(From %.15s)", Origin(except.from));
 		} else
 			sprintf(buf, "(From %.15s)", Origin(except.from));

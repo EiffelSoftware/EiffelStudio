@@ -187,7 +187,7 @@ feature -- Basic Oprtations
 			res: POINTER
 		do	
 			create bstr_path.make_by_uni_string (a_path)
-			last_call_success := c_relative_folder_name_from_path (item, bstr_path.item, res)
+			last_call_success := c_relative_folder_name_from_path (item, bstr_path.item, $res)
 			if res /= default_pointer then
 				create Result.make_by_pointer (res)
 			end

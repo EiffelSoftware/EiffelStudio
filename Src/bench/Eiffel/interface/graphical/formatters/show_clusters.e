@@ -39,15 +39,13 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Clusters_of end;
 
-	display_info (i: INTEGER; c: CLASSC_STONE) is
+	display_info (c: CLASSC_STONE) is
 			-- Show universe: clusters in class lists, in `text_window'.
 		local
-			ewb_clusters: EWB_CLUSTERS;
-			clusters: LINKED_LIST [CLUSTER_I];
+			cmd: E_SHOW_CLUSTERS;
 		do
-			!! ewb_clusters;
-			ewb_clusters.set_output_window (text_window)
-			ewb_clusters.display
+			!! cmd.make (text_window);
+			cmd.execute
 		end;
 
 	display_temp_header (stone: STONE) is

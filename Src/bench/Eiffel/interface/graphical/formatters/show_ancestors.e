@@ -41,14 +41,13 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Ancestors_of end;
 
-	display_info (i: INTEGER; c: CLASSC_STONE) is
+	display_info (c: CLASSC_STONE) is
 			-- Display parents of `c' in tree form.
 		local
-			cmd: EWB_ANCESTORS
+			cmd: E_SHOW_ANCESTORS
 		do
-			!!cmd.null;
-			cmd.set_output_window (text_window);
-			cmd.display (c.class_c);
+			!! cmd.make (c.class_c, text_window);
+			cmd.execute
 		end;
 
 	display_temp_header (stone: STONE) is

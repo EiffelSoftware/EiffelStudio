@@ -39,14 +39,13 @@ feature {NONE}
 
 	title_part: STRING is do Result := l_Class_list_of end;
 
-	display_info (i: INTEGER; c: CLASSC_STONE) is
+	display_info (c: CLASSC_STONE) is
 			-- Show universe: classes in alphabetic order, in `text_window'.
 		local
-			ewb_class_list: EWB_CLASS_LIST
+			cmd: E_SHOW_CLASSES
 		do
-			!! ewb_class_list;
-			ewb_class_list.set_output_window (text_window)
-			ewb_class_list.display
+			!! cmd.make (text_window);
+			cmd.execute
 		end;
 
 	display_temp_header (stone: STONE) is

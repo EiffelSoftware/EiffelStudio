@@ -13,7 +13,8 @@ inherit
 	EV_PRIMITIVE
 		redefine
 			implementation,
-			create_action_sequences
+			create_action_sequences,
+			make_for_test
 		end
 
 	EV_ITEM_LIST [EV_LIST_ITEM]
@@ -48,6 +49,23 @@ feature -- Initialization
 			strings.go_to (c)
 		ensure
 			items_created: count = strings.count
+		end
+
+	make_for_test is
+		local
+			list_item: EV_LIST_ITEM
+			counter: INTEGER
+		do
+			{EV_PRIMITIVE} Precursor
+			from
+			until
+				counter = 10
+			loop
+				counter := counter + 1
+				create list_item.make_with_text ("Test item " + counter.out)
+				extend (list_item)
+				select_item (counter)
+			end
 		end
 
 feature -- Access
@@ -187,6 +205,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/02 17:58:54  rogers
+--| Added initial make_for_test. Currently very basic.
+--|
 --| Revision 1.37  2000/03/02 17:00:20  rogers
 --| Added is_useable to assertions.
 --|

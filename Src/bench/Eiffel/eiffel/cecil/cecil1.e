@@ -9,7 +9,10 @@ inherit
 		undefine
 			copy, is_equal
 		end;
-	
+
+create
+	wipe_out
+
 feature 
 
 	generate_final (buffer: GENERATION_BUFFER; type_id: INTEGER) is

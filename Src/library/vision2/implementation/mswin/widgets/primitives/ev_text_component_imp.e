@@ -11,28 +11,25 @@ deferred class
 
 inherit
 	EV_TEXT_COMPONENT_I
-		redefine
-			build
-		end
 
 	EV_PRIMITIVE_IMP
 		undefine
-			initialize_colors
-		redefine
 			build
+		redefine
+			plateform_build
 		end
 
 	EV_DEFAULT_COLORS
 
 feature {NONE} -- Initialization
 
-	build is
+	plateform_build (par: EV_CONTAINER_IMP) is
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
-			{EV_PRIMITIVE_IMP} Precursor
+			{EV_PRIMITIVE_IMP} Precursor (par)
 			set_minimum_height (wel_font.log_font.height + 6)
-			set_minimum_width (20)
+			set_minimum_width (30)
 		end
 
 feature -- Access

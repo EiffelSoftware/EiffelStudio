@@ -119,6 +119,17 @@ feature {NONE} -- Initialization
 			memory_copy (a_pointer, structure_size)
 		end
 
+feature -- Re-initialisation
+
+	update_by_font (font: WEL_FONT) is
+			-- Update object attributes using the information of `font'.
+		require
+			font_not_void: font /= Void
+			font_exists: font.exists
+		do
+			cwin_get_object (font.item, structure_size, item)
+		end
+
 feature -- Access
 
 	height: INTEGER is
@@ -664,9 +675,11 @@ feature -- Status setting
 	set_pitch (a_pitch: INTEGER) is
 			-- Set `pitch' to `a_pitch'.
 		do
-			cwel_log_font_set_pitchandfamily (item,
-				cwin_make_long (a_pitch,
-				cwel_log_font_get_family (item)))
+			--|------------------------------------------------------------------
+			--| FIXME ARNAUD: If bitOperations are available from the compiler
+			--|               REPLACE the '+' with an OR
+			--|------------------------------------------------------------------
+			cwel_log_font_set_pitchandfamily (item, a_pitch + cwel_log_font_get_family (item))
 		ensure
 			pitch_set: pitch = a_pitch
 		end
@@ -698,9 +711,11 @@ feature -- Status setting
 	set_family (a_family: INTEGER) is
 			-- Set `family' to `a_family'.
 		do
-			cwel_log_font_set_pitchandfamily (item,
-				cwin_make_long (cwel_log_font_get_pitch (item),
-				a_family))
+			--|------------------------------------------------------------------
+			--| FIXME ARNAUD: If bitOperations are available from the compiler
+			--|               REPLACE the '+' with an OR
+			--|------------------------------------------------------------------
+			cwel_log_font_set_pitchandfamily (item,	cwel_log_font_get_pitch (item) +  a_family)
 		ensure
 			family_set: family = a_family
 		end

@@ -91,6 +91,18 @@ feature -- Access
 	bitmap: WEL_BITMAP
 			-- Current bitmap selected
 
+feature -- Basic operations
+
+	get is
+			-- Get the device context
+		deferred
+		end
+
+	release is
+			-- Release the device context
+		deferred
+		end
+
 feature -- Status report
 
 	pen_selected: BOOLEAN is

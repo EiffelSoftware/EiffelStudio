@@ -1,6 +1,7 @@
 indexing
 	description: "Defines the style, color and pattern of %
-		%a physical brush."
+		% a physical brush. Encapsulate the C struct LOGPEN %
+		% (a WEL_LOG_BRUSH is NOT a BRUSH, this is a structure.)"
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

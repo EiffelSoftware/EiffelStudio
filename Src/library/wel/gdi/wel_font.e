@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_face_name)
+			create a_wel_string.make (a_face_name)
 			item := cwin_create_font (height, width, escapement,
 				orientation, weight, italic, underline,
 				strike_out, charset, output_precision,
@@ -50,6 +50,7 @@ feature -- Re-initialisation
 		require
 			a_log_font_not_void: a_log_font /= Void
 		do
+				-- we delete the current C item
 			cwin_delete_object (item)
 			item := Default_pointer
 
@@ -57,6 +58,7 @@ feature -- Re-initialisation
 				c_object_destroyed: not exists
 			end
 
+				-- Then we retrieve an new C item.
 			item := cwin_create_font_indirect (a_log_font.item)
 		end
 
@@ -67,7 +69,7 @@ feature	-- Access
 		require
 			exists
 		do
-			!! Result.make_by_font (Current)
+			create Result.make_by_font (Current)
 		ensure
 			result_not_void: Result /= Void
 		end

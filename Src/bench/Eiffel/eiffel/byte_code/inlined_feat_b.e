@@ -28,7 +28,7 @@ feature
 		do
 			feature_name_id := f.feature_name_id;
 			feature_id := f.feature_id;
-			type := f.type;
+			type := real_type (f.type);
 			routine_id := f.routine_id
 			parameters := f.parameters;
 			if parameters /= Void then
@@ -231,14 +231,14 @@ feature -- Generation
 				until
 					i > count
 				loop
-					reset_register_value (local_regs.item (i))
+					reset_register_value (byte_code.locals.item (i), local_regs.item (i))
 					i := i + 1
 				end;
 			end
 
 			if result_reg /= Void then
 					-- Set the value of the result register to the default
-				reset_register_value (result_reg)
+				reset_register_value (byte_code.result_type, result_reg)
 			end;
 				
 			caller_type := Context.current_type;
@@ -518,7 +518,7 @@ feature {NONE} -- Registers
 			end
 		end
 
-	reset_register_value (reg: REGISTER) is
+	reset_register_value (a_type: TYPE_I; reg: REGISTER) is
 		local
 			buf: GENERATION_BUFFER
 		do
@@ -527,7 +527,11 @@ feature {NONE} -- Registers
 			buf.putstring (" = ");
 			reg.c_type.generate_cast (buf);
 			buf.putstring (" 0;");
-			buf.new_line;
+			buf.new_line
+			if a_type.is_true_expanded then
+				a_type.generate_expanded_creation (byte_code, reg, False)
+				buf.new_line;
+			end
 		end
 
 	inlined_dt_current: INTEGER;

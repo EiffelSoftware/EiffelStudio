@@ -16,20 +16,20 @@ inherit
 creation
 	make
 	
-feature {NONE}  -- Initialization
+feature -- Initialization
 	
-	make (parent: EV_EVENT_DATA; p: POINTER) is
-			-- Creation and initialization of 'parent's 
-			-- fields according to C pointer 'p'
+	initialize (p: POINTER) is
+			-- Initialize the object according to C 
+			-- pointer 'p'
 		do
-			-- Initialize widget here XXXX
-
-			-- Temporary
-			io.put_string ("Type: ")
-			io.put_integer (c_gdk_event_type (p))	
-			io.put_string ("%N")
-		end
+				-- Initialize widget here XXXX
+		end	
 	
+	initialize_address: POINTER is
+			-- Address of feature initialize
+		do
+			Result := routine_address ($initialize)
+		end
 	
 feature {EV_EVENT_DATA} -- Implementation	
 	 	
@@ -39,6 +39,8 @@ feature {EV_EVENT_DATA} -- Implementation
  		external 
  			"C [macro %"gdk_eiffel.h%"]"
  		end
+	
+
  	
 end
 

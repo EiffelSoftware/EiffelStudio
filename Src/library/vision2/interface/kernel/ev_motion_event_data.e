@@ -13,7 +13,7 @@ inherit
 	
 	EV_EVENT_DATA	
 		redefine
-			initialize,
+			make,
 			implementation,
 			print_contents
 		end
@@ -24,9 +24,9 @@ creation
 	
 feature -- Initialization
 	
-	initialize (p: POINTER) is
+	make is
 		do
-			!EV_MOTION_EVENT_DATA_IMP!implementation.make (Current, p)
+			!EV_MOTION_EVENT_DATA_IMP!implementation.make (Current)
 		end
 
 feature {EV_MOTION_EVENT_DATA_I} -- Access	

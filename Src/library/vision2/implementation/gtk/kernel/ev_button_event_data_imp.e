@@ -10,30 +10,35 @@ class
 	
 inherit
 	EV_BUTTON_EVENT_DATA_I
+		select
+			interface
+		end
 	
 	EV_EVENT_DATA_IMP
+		rename
+			interface as x_interface
 		redefine
-			make
+			initialize
 		end
 	
 	
 creation
 	make
 	
-feature {NONE} -- Initialization
+
+feature -- Initialization
 	
-	make (parent: EV_BUTTON_EVENT_DATA; p: POINTER) is
+		initialize (p: POINTER) is
 			-- Creation and initialization of 'parent's 
 			-- fields according to C pointer 'p'
 		do
-			Precursor (parent, p)
-			parent.set_x (c_gdk_event_x (p))
-			parent.set_y (c_gdk_event_y (p))
-			parent.set_state (c_gdk_event_state (p))
-			parent.set_button (c_gdk_event_button (p))
-			parent.set_keyval (c_gdk_event_keyval (p))
+			Precursor (p)			
+			interface.set_x (c_gdk_event_x (p))
+			interface.set_y (c_gdk_event_y (p))
+			interface.set_state (c_gdk_event_state (p))
+			interface.set_button (c_gdk_event_button (p))
+			interface.set_keyval (c_gdk_event_keyval (p))
 		end
-	
 	
 feature {NONE} -- Implementation
 	

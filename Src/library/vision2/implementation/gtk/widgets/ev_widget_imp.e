@@ -242,18 +242,27 @@ feature -- Event - command association
 		end
 	
 	add_delete_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		local
+			ev_data: EV_EVENT_DATA		
 		do
-			add_command ("delete_event", command, arguments, Void)
+			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
+			add_command ("delete_event", command, arguments, ev_data)
 		end
 	
 	add_enter_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		local
+			ev_data: EV_EVENT_DATA		
 		do
-			add_command ("enter_notify_event", command, arguments, Void)
+			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
+			add_command ("enter_notify_event", command, arguments, ev_data)
 		end
 	
 	add_leave_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+		local
+			ev_data: EV_EVENT_DATA		
 		do
-			add_command ("leave_notify_event", command, arguments, Void)
+			!EV_EVENT_DATA!ev_data.make  -- temporary, craeta a correct object here XX
+			add_command ("leave_notify_event", command, arguments, ev_data)
 		end
 	
 
@@ -283,10 +292,17 @@ feature {NONE} -- Implementation
 			-- `command' whenever it is invoked as a
 			-- callback. 'arguments' can be Void, which
 			-- means that no arguments are passed to the
-			-- command.
+			-- command. 'ev_data' is an empty object 
+			-- which will be filled by gtk (in C library) 
+			-- when the event happens.
+		require		
+			valid_event: event /= Void
+			valid_command: command /= Void
+			valid_event_data: ev_data /= Void
 		local
 			a: ANY
 			arg: EV_ARGUMENTS
+			ev_d_imp: EV_EVENT_DATA_IMP
                 do
 			-- To avoid sharing argument for different
 			-- commands. (We should share everything else 
@@ -298,7 +314,11 @@ feature {NONE} -- Implementation
 				arg := arguments
 			end
 			arg.set_data (ev_data)			
-			
+		
+			ev_d_imp ?= ev_data.implementation
+			check
+				valid_event_data_implementation: ev_d_imp /= Void
+			end
 			a := event.to_c
 			-- check if to use gtk signals or x events
 			last_command_id := 
@@ -307,7 +327,8 @@ feature {NONE} -- Implementation
 						      command.execute_address,
 						      $command,
 						      $arg,
-						      arg.set_event_data_address)
+						      $ev_d_imp,
+						      ev_d_imp.initialize_address)
 		end
         
 	

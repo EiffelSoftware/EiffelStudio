@@ -6,12 +6,20 @@ indexing
 	revision: "$Revision$"
 
 deferred class
+
 	EV_BUTTON_EVENT_DATA_I
 
 inherit
 	
 	EV_EVENT_DATA_I	
+		redefine
+			interface
+		end
 	
+
+feature {NONE} -- Implementation
+	
+	interface: EV_BUTTON_EVENT_DATA	
 	
 end
 			

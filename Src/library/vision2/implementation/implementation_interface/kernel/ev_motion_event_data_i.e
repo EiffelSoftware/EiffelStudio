@@ -11,7 +11,14 @@ deferred class
 inherit
 	
 	EV_EVENT_DATA_I	
+		redefine
+			interface
+		end
 	
+
+feature {NONE} -- Implementation
+	
+	interface: EV_MOTION_EVENT_DATA		
 end
 			
 	

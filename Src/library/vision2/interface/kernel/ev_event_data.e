@@ -18,16 +18,7 @@ feature {NONE}  -- Creation
 	
 	make is
 		do
-			-- do nothing, because the initialization is 
-			-- done in 'Initialize'
-		end
-	
-feature -- Initialization
-	
-	initialize (p: POINTER) is
-			-- Initialize from c using C pointer 'p'
-		do
-			!EV_EVENT_DATA_IMP!implementation.make (Current, p)
+			!EV_EVENT_DATA_IMP!implementation.make (Current)
 		end
 	
 		
@@ -46,7 +37,7 @@ feature -- Debug
 			io.put_string ("%N")
 		end
 	
-feature {NONE} -- Implementation
+feature {EV_WIDGET_IMP} -- Implementation
 	
 	implementation: EV_EVENT_DATA_I
 	

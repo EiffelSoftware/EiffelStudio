@@ -47,9 +47,12 @@ void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data)
     callback_data_t *pcbd;
     pcbd = (callback_data_t *)data;
 
-    /* Call Eiffel routine 'set_event_data' to transfer the event data
-       to Eiffel */
-    (pcbd->set_event_data)(eif_access(pcbd->argument), ev); 
+    if (pcbd->ev_data != NULL)
+    {
+	/* Call Eiffel routine 'set_event_data' to transfer the event data
+	   to Eiffel */
+	(pcbd->set_event_data)(eif_access(pcbd->ev_data), ev); 
+    }
 
     /* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument'
 
@@ -73,12 +76,29 @@ void c_gtk_signal_destroy_data (gpointer data)
 }
 
 
-/* Connect a call back to a widget/event pair */
+/* Connect a call back to a widget/event pair 
+
+   widget = gtk widget
+   name = name of the signal
+   execute_func = address of eiffel routine execute in class EV_COMMAND
+   object = eiffel object of type EV_COMMAND
+   argument = object of type EV_ARGUMENTS which will be passed to object.execute when it is executed
+   ev_data = object of type EV_EVENT_DATA. The fields of this object are filled in 'event_data_rtn' which is called in 'c_event_callback' according to the C(gdk) event struct
+
+   argument can be NULL which means that there is no arguments for excute (the corresponding
+   ev_data can be NULL which means that event data is not needed for this event
+
+   
+   Note: This function handles both gtk events and gtk signals. It
+   should be separated
+
+*/
 gint c_gtk_signal_connect (GtkObject *widget, 
 			   gchar *name, 
-			   EIF_PROC func,
+			   EIF_PROC execute_func,
 			   EIF_POINTER object,
 			   EIF_POINTER argument,
+			   EIF_POINTER ev_data,
 			   EIF_PROC event_data_rtn)
 {
     callback_data_t *pcbd;
@@ -91,9 +111,10 @@ gint c_gtk_signal_connect (GtkObject *widget,
        can be deallocated later
     */
     /* do not allow the garbage collection of  object and argument */
-    pcbd->rtn = func;
+    pcbd->rtn = execute_func;
     pcbd->obj = henter (object);
     pcbd->argument = henter (argument);
+    pcbd->ev_data = henter (ev_data);
     pcbd->set_event_data = event_data_rtn;  
     /*  printf ("connect rtn= %d object= %d pcbd= %d\n", pcbd->rtn, (pcbd->obj), pcbd); */
 

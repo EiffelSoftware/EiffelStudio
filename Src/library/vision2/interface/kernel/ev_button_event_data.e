@@ -13,7 +13,7 @@ inherit
 	
 	EV_EVENT_DATA	
 		redefine
-			initialize,
+			make,
 			implementation,
 			print_contents
 		end
@@ -22,11 +22,11 @@ inherit
 creation
 	make
 	
-feature -- Initialization
+feature {NONE} -- Initialization
 	
-	initialize (p: POINTER) is
+	make is
 		do
-			!EV_BUTTON_EVENT_DATA_IMP!implementation.make (Current, p)
+			!EV_BUTTON_EVENT_DATA_IMP!implementation.make (Current)
 		end
 
 feature -- Access	

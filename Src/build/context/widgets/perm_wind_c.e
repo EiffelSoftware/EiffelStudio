@@ -11,7 +11,8 @@ inherit
 			add_widget_callbacks as window_add_widget_callbacks
 		redefine
 			creation_procedure_text, stored_node,
-			context_initialization, widget, is_perm_window
+			context_initialization, widget, is_perm_window,
+			update_visual_name_in_editor
 		end;
 	WINDOW_C
 		redefine
@@ -19,7 +20,7 @@ inherit
 			reset_modified_flags, copy_attributes, 
 			context_initialization, 
 			widget, add_widget_callbacks,
-			remove_yourself, is_perm_window
+			remove_yourself, is_perm_window, update_visual_name_in_editor
 		select
 			copy_attributes, reset_modified_flags, 
 			add_widget_callbacks, remove_yourself
@@ -72,7 +73,8 @@ feature
 				old_y := eb_screen.y + 10;
 				set_x_y (old_x, old_y);
 			end;
-			widget.top_shell.set_action ("<Map>,<Prop>", Current, Current)
+			--widget.top_shell.set_action ("<Map>,<Prop>", Current, Current)
+			add_window_geometry_action;
 			add_to_window_list
 		end;
 
@@ -81,11 +83,6 @@ feature -- Adding/removing callbacks
 	add_window_geometry_action is
 		do
 			widget.top_shell.set_action ("<Configure>", Current, Void)
-		end;
-
-	remove_popup_action is
-		do
-			widget.top_shell.remove_action ("<Map>,<Prop>");
 		end;
 
 	remove_window_geometry_action is
@@ -164,6 +161,17 @@ feature {NONE}
 
 feature
 
+	update_visual_name_in_editor is
+		local
+			editor: CONTEXT_EDITOR
+		do
+			editor := context_catalog.editor (Current, 
+					Context_const.perm_wind_att_form_nbr);
+			if editor /= Void then
+				editor.reset_current_form
+			end;
+		end;
+
 	set_icon_name (a_name: STRING) is
 		do
 			icon_name := a_name;
@@ -198,17 +206,16 @@ feature
 	icon_pixmap_modified: BOOLEAN;
 
 	set_iconic_state (flag: BOOLEAN) is
+			-- Set iconic state to `flag'.
+			-- Do not call actual function for top_shell
 		do
 			iconic_state_modified := True;
-			widget.set_iconic_state (flag);
+			is_iconic_state := flag;
 		end;
 
 	iconic_state_modified: BOOLEAN;
 
-	is_iconic_state: BOOLEAN is
-		do
-			Result := widget.is_iconic_state
-		end;
+	is_iconic_state: BOOLEAN;
 
 	reset_modified_flags is
 		do

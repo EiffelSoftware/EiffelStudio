@@ -1274,7 +1274,7 @@ void store_write(void)
 	number_left = cmps_out_size + EIF_CMPS_HEAD_SIZE;
  
 	while (number_left > 0) {
-		number_writen = write (fides, ptr, number_left);
+		number_writen = char_write_func (ptr, number_left);
 		if (number_writen <= 0)
 			eio();
 		number_left -= number_writen;

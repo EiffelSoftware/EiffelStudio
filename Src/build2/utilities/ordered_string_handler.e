@@ -36,7 +36,9 @@ feature -- Status setting
 			new_string.prune_all ('%N')
 			create list_item.make_with_text ("<" + (internal_list.count + 1).out + "> " + new_string)
 			internal_list.extend (list_item)
-			internal_list.ensure_item_visible (internal_list.i_th (internal_list.count))
+			if internal_list.is_displayed then
+				internal_list.ensure_item_visible (internal_list.i_th (internal_list.count))
+			end
 		ensure
 			internal_count_increased: internal_list.count = old internal_list.count + 1
 		end

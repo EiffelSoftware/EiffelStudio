@@ -15,6 +15,4 @@ feature
 
 	EiffelCase_project_type: STRING is "ISE.EiffelCase.3.3";
 
-	EiffelBench_project_type: STRING is "ISE.EiffelCase.bench";
-
 end

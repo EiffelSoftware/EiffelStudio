@@ -44,7 +44,7 @@ feature -- Setting values
 	set_view_id (i: INTEGER) is
 			-- Set id to `i'.
 		require
-			valid_i: i > 0
+			valid_i: i /= 0
 		do
 			view_id := i
 		ensure

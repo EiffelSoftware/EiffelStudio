@@ -74,8 +74,16 @@ feature {NONE}
 		local
 			root_cluster: S_CLUSTER_DATA;
 			system_data: S_SYSTEM_DATA;
+			view_id: INTEGER
 		do
 			root_cluster := cluster_info.storage_info (view_id_info);
+			if view_id_info.root_cluster_name.is_equal (root_cluster.name) then
+                view_id := view_id_info.root_cluster_view_id
+            else
+                view_id_info.decrement_cluster_view_number;
+                view_id := view_id_info.cluster_view_number;
+            end;
+			root_cluster.set_view_id (view_id);
 			!! system_data;
 			system_data.set_root_cluster (root_cluster);
 			system_data.set_was_generated_from_bench;
@@ -96,13 +104,9 @@ feature {NONE}
 
 	store_project_to_disk (system_data: S_SYSTEM_DATA) is	
 			-- Store project `system_data' to disk.
-		local
-			path: STRING
 		do
 			io.error.putstring ("Storing information to disk ...%N");
-			path := clone (Case_storage_path);
-			path.extend (Directory_separator);
-			system_data.store_to_disk (path);
+			system_data.store_to_disk (clone (Case_storage_path));
 			error_window.put_string ("Storing EiffelCase format finished%N")
 		rescue
 			Rescue_status.set_is_error_exception (True);
@@ -140,8 +144,7 @@ feature {NONE}
 						check
 							valid_s_system_data: s_system_data /= Void
 						end;
-						!! view_id_info.make (s_system_data.class_view_number,
-											s_system_data.cluster_view_number);
+						!! view_id_info.make (s_system_data);
 						view_id_info.initialize (s_system_data.root_cluster);
 						old_system_file.close;
 					else
@@ -150,7 +153,7 @@ feature {NONE}
 					end
 				end
 				if view_id_info = Void then
-					!! view_id_info.make (0, 0)
+					!! view_id_info.make_nothing
 				end
 			end
 		end;

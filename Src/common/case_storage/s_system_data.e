@@ -56,7 +56,7 @@ feature -- Setting values
 	set_cluster_view_number (value: like cluster_view_number) is
 			-- Set cluster_view_number to `value'.
 		require
-			valid_value: value >= 0
+			valid_value: value <= 0
 		do
 			cluster_view_number := value
 		ensure
@@ -79,23 +79,22 @@ feature -- Storing
 			-- Store a project
 		require
 			valid_path: path /= Void;
-			--slash_at_end: path requires slash at end
 		local
 			id_file_name, file_name: STRING;
 			id_file: PLAIN_TEXT_FILE;
 			system_file: RAW_FILE;
 		do
 			id_file_name := clone (path);
+			id_file_name.extend (Operating_environment.directory_separator);
 			id_file_name.append (System_id_name);
-			!!id_file.make (id_file_name);
-			id_file.open_write;
-			id_file.putstring (EiffelBench_project_type);
+			!!id_file.make_open_write (id_file_name);
+			id_file.putstring (EiffelCase_project_type);
 			id_file.close;
 			file_name := clone (path);
+			file_name.extend (Operating_environment.directory_separator);
 			file_name.append (System_name);
-			!! system_file.make (file_name);
+			!! system_file.make_open_write (file_name);
 			independent_store (system_file);
-			general_store (system_file);
 			system_file.close;
 		end;
 

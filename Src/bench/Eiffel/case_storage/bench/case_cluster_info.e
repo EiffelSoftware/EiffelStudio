@@ -100,7 +100,6 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 			classes: LINKED_LIST [CLASS_C];
 			class_c: CLASS_C;
 			s_cluster_data: S_CLUSTER_DATA;
-			old_clusters: HASH_TABLE [INTEGER, STRING];
 			view_id: INTEGER
 		do
 				-- Need to covert to a string since
@@ -138,7 +137,6 @@ io.error.new_line;
 			end
 			if not clusters.empty then
 					-- Keep view ids of cluster if it has the same parent
-				old_clusters := view_id_info.old_clusters_with_cluster_name (name);
 				!! clust_l.make (clusters.count);
 				from
 					clusters.start;
@@ -147,18 +145,13 @@ io.error.new_line;
 					clusters.after
 				loop
 					s_cluster_data := clusters.item.storage_info (view_id_info);
-					if old_clusters /= Void then
-						view_id := old_clusters.item (s_cluster_data.name);
-						if view_id = 0 then
-								-- Class never existed so give it a
-								-- new id count
-							view_id_info.increment_cluster_view_number;
-							view_id := view_id_info.cluster_view_number;
-						end
-					else
-						view_id_info.increment_cluster_view_number;
+					view_id := view_id_info.old_cluster_view_id (s_cluster_data.name);
+					if view_id = 0 then
+							-- Cluster never existed so give it a
+							-- new id count
+						view_id_info.decrement_cluster_view_number;
 						view_id := view_id_info.cluster_view_number;
-					end;
+					end
 					s_cluster_data.set_view_id (view_id);
 					clust_l.replace (s_cluster_data);
 					clust_l.forth;
@@ -329,6 +322,13 @@ feature {NONE} -- Class information
 				s_class_data.set_view_id (view_id);
 					-- Record parent cluster
 				store_class_to_disk (s_class_data);
+debug ("CASE_ID")
+	io.error.putstring ("id: ");
+	io.error.putint (s_class_data.id);
+	io.error.putstring (" view id: ");
+	io.error.putint (s_class_data.view_id);
+	io.error.new_line;
+end
 				Result.replace (s_class_data);
 				Result.forth;
 				classes.forth;

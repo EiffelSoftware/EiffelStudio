@@ -86,7 +86,7 @@ feature {NONE} -- Implementation
 
 	kept_object_item (a_address: STRING): ABSTRACT_DEBUG_VALUE is
 		do
-			Result := Debug_value_keeper.debug_value_kept.item (a_address)
+			Result := Debug_value_keeper.item (a_address)
 		end
 
 end

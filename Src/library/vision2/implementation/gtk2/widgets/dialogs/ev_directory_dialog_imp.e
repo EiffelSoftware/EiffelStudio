@@ -76,12 +76,13 @@ feature -- Access
 				selected_button /= Void and then selected_button.is_equal (internal_accept)
 			then
 				Result := ""
-				a_filename := feature {EV_GTK_EXTERNALS}.gtk_file_selection_get_filename (c_object)
+				a_filename := feature {EV_GTK_EXTERNALS}.gtk_file_chooser_get_filename (c_object)
 				if a_filename /= NULL then
-					Result.from_c (feature {EV_GTK_EXTERNALS}.gtk_file_selection_get_filename (c_object))
+					Result.from_c (a_filename)
 					if Result.item (Result.count) /= '/' then
 						Result.append ("/")
-					end					
+					end
+					feature {EV_GTK_EXTERNALS}.g_free (a_filename)
 				end
 			else
 				Result := ""

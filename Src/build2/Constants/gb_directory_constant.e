@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 			name := clone (a_name)
 			value := clone (a_value)
 			create referers.make (4)
+			create cross_referers.make (4)
 		ensure
 			name_set: name.is_equal (a_name) and name /= a_name
 			value_set: value.is_equal (a_Value) and value /= a_value
@@ -56,6 +57,9 @@ feature -- Access
 			Result.extend (value)
 			Result.set_data (Current)
 		end
+		
+	cross_referers: ARRAYED_LIST [GB_CONSTANT]
+		-- All constants dependent on `Current'.
 
 feature -- Status setting
 
@@ -68,8 +72,29 @@ feature -- Status setting
 		ensure
 			value_set: a_value = value
 		end
+		
+	add_cross_referer (cross_referer: GB_CONSTANT) is
+			-- Add `cross_referer' to `cross_referers'.
+		require
+			cross_referer_not_void: cross_referer /= Void
+		do
+			cross_referers.extend (cross_referer)
+		ensure
+			has_cross_referer: not cross_referers.has (cross_referer)
+		end
+	
+	remove_cross_referer (cross_referer: GB_CONSTANT) is
+			-- Remove `cross_referer' from `cross_referers'.
+		require
+			cross_referer_not_void: cross_referer /= Void
+		do
+			cross_referers.prune_all (cross_referer)
+		ensure
+			not_has_cross_referer: not cross_referers.has (cross_referer)
+		end
 
 invariant
 	value_not_void: value /= Void
+	cross_referers_not_void: cross_referers /= Void
 
 end -- class GB_DIRECTORY_CONSTANT

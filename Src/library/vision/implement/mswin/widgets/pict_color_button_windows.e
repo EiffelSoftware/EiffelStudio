@@ -1,5 +1,5 @@
 indexing
-	description: "This class represents a MS_WINDOWS Ownerdraw button";
+	description: "This class represents a MS_WINDOWS pixmap button";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -14,7 +14,11 @@ inherit
 		redefine
 			on_draw,
 			set_default_size,
-			set_background_pixmap
+			set_background_pixmap,
+			on_left_button_up,
+			on_left_button_down,
+			on_lbutton_move,
+			on_bn_clicked
 		end
 
 	OWNER_DRAW_BUTTON_WINDOWS
@@ -22,7 +26,11 @@ inherit
 			on_draw,
 			set_default_size,
 			set_background_pixmap,
-			realize
+			realize,
+			on_left_button_up,
+			on_left_button_down,
+			on_lbutton_move,
+			on_bn_clicked
 		select
 			realize
 		end
@@ -72,9 +80,9 @@ feature -- Status setting
 			-- Set the pixmap for the button
 		do
 			pixmap := a_pixmap
-			if (fixed_size_flag and (pixmap.height + off_set > height or pixmap.width + off_set > width)) or not fixed_size_flag then
-				set_form_width ((pixmap.width + off_set).min (maximal_width))
-				set_form_height ((pixmap.height + off_set).min (maximal_height))
+			if (fixed_size_flag and (pixmap.height + Total_offset > height or pixmap.width + Total_offset > width)) or not fixed_size_flag then
+				set_form_width ((pixmap.width + Total_offset).min (maximal_width))
+				set_form_height ((pixmap.height + Total_offset).min (maximal_height))
 			end
 			if exists then
 				invalidate
@@ -85,8 +93,8 @@ feature -- Status setting
 			-- Set default of button
 		do
 			if pixmap /= Void then
-				set_form_width (pixmap.width + off_set)
-				set_form_height (pixmap.height + off_set)
+				set_form_width (pixmap.width + Total_offset)
+				set_form_height (pixmap.height + Total_offset)
 			end
 		end
 
@@ -114,6 +122,104 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
+	on_lbutton_move (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the mouse moves with the left button dowm
+			-- (from WIDGET_WINDOWS)
+			-- (export status {NONE})
+		local
+			cd: MOTNOT_DATA;
+			wp: WEL_POINT;
+			e_x, e_y: INTEGER;
+			ww: WEL_WINDOW
+		do
+			!! wp.make (x_pos, y_pos);
+			ww ?= Current;
+			wp.client_to_screen (ww);
+			e_x := wp.x;
+			e_y := wp.y;
+			!! cd.make (widget_oui, x_pos, y_pos, e_x, e_y, buttons_state);
+			left_button_motion_actions.execute (Current, cd)
+			if has_capture then
+				if is_being_pressed and not in_button_area (x_pos, y_pos) then
+					is_being_pressed := False
+					if exists then
+						invalidate
+					end
+				elseif not is_being_pressed and in_button_area (x_pos, y_pos) then
+					is_being_pressed := True
+					if exists then
+						invalidate
+					end
+				end
+			else
+				is_being_pressed := False
+				if exists then
+					invalidate
+				end
+			end
+		end
+
+	on_left_button_down (keys, a_x, a_y: INTEGER) is
+			-- Wm_lbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			cd: BTPRESS_DATA;
+			k: KEYBOARD_WINDOWS
+			wp: WEL_POINT
+			e_x, e_y: INTEGER
+			ww: WEL_WINDOW
+		do
+			!! k.make_from_mouse_state (keys)
+			!! wp.make (a_x, a_y)
+			ww ?= Current
+			wp.client_to_screen (ww)
+			e_x := wp.x
+			e_y := wp.y
+			left_button_down_implementation.replace (true);
+			left_button_down_widget_implementation.replace (Current);
+			wel_set_capture
+			is_being_pressed := True
+			if exists then
+				invalidate
+			end
+			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
+			left_button_press_actions.execute (Current, cd)
+		end
+
+	on_left_button_up (keys, a_x, a_y: INTEGER) is
+			-- Wm_lbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			cd: BUTREL_DATA;
+			k: KEYBOARD_WINDOWS
+			w: WIDGET_WINDOWS
+			wp: WEL_POINT
+			e_x, e_y: INTEGER
+			ww: WEL_WINDOW
+		do
+			w := left_button_down_widget
+			!! wp.make (a_x, a_y)
+			ww ?= Current
+			wp.client_to_screen (ww)
+			e_x := wp.x
+			e_y := wp.y
+			left_button_down_implementation.replace (false);
+			left_button_down_widget_implementation.replace (void);
+			!! k.make_from_mouse_state (keys)
+			!! cd.make (owner, a_x, a_y, e_x, e_y, 1, buttons_state, k);
+			left_button_release_actions.execute (Current, cd)
+			if has_capture then
+				wel_release_capture
+				if in_button_area (a_x, a_y) then
+					activate_actions.execute (Current, Void)
+				end
+				is_being_pressed := False
+				invalidate
+			else
+				is_being_pressed := False
+			end
+		end
+
 	on_draw (a_draw_item_struct: WEL_DRAW_ITEM_STRUCT) is
 			-- Respond to a draw_item message.
 		local
@@ -121,15 +227,11 @@ feature {NONE} -- Implementation
 			brush: WEL_BRUSH
 		do
 			dc := a_draw_item_struct.dc
-			!! brush.make_solid (wel_background_color)
-			dc.select_brush (brush)
-			dc.rectangle (0, 0, width, height)
-			dc.unselect_brush
-			if is_pressed then
+			if is_pressed or is_being_pressed then
 				draw_all_selected (dc)
 			else
 				if flag_set (a_draw_item_struct.item_state, Ods_selected) then
-					draw_all_selected (dc)	
+					draw_all_selected (dc)
 				else
 					draw_all_unselected (dc)
 				end
@@ -150,9 +252,9 @@ feature {NONE} -- Implementation
 					dib_exists: dib /= Void
 				end
 				!! bitmap.make_by_dib (a_dc, dib, dib_rgb_colors)
-				if alignment_type = center_alignment_type and then False then
-					pixmap_x := (4 + ((internal_width - bitmap.width) // 2)).max (4)
-					pixmap_y := (4 + ((internal_height - bitmap.height) // 2)).max (4)
+				if alignment_type = center_alignment_type then
+					pixmap_x := (3 + ((internal_width - bitmap.width) // 2))
+					pixmap_y := (3 + ((internal_height - bitmap.height) // 2))
 					a_dc.draw_bitmap (bitmap, pixmap_x, pixmap_y, internal_width, internal_height)
 				else
 					a_dc.draw_bitmap (bitmap, 3, 3, internal_width, internal_height)
@@ -174,9 +276,9 @@ feature {NONE} -- Implementation
 					dib_exists: dib /= Void
 				end
 				!! bitmap.make_by_dib (a_dc, dib, dib_rgb_colors)
-				if alignment_type = center_alignment_type and False then
-					pixmap_x := (2 + ((internal_width - bitmap.width) // 2)).max (2)
-					pixmap_y := (2 + ((internal_height - bitmap.height) // 2)).max (2)
+				if alignment_type = center_alignment_type then
+					pixmap_x := (2 + ((internal_width - bitmap.width) // 2))
+					pixmap_y := (2 + ((internal_height - bitmap.height) // 2))
 					a_dc.draw_bitmap (bitmap, pixmap_x, pixmap_y, internal_width, internal_height)
 				else
 					a_dc.draw_bitmap (bitmap, 2, 2, internal_width, internal_height)
@@ -188,7 +290,7 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		do
-			Result := (width - off_set).max (0)
+			Result := (width - Total_offset).max (0)
 		ensure
 			positive_result: Result >= 0
 		end
@@ -197,12 +299,34 @@ feature {NONE} -- Implementation
 		require
 			exists: exists
 		do
-			Result := (height - off_set).max (0)
+			Result := (height - Total_offset).max (0)
 		ensure
 			positive_result: Result >= 0
 		end
 
-	off_set: INTEGER is 4
+	is_being_pressed: BOOLEAN
+		-- Is this button currently being pressed?
+
+	Total_offset: INTEGER is 5
+
+	in_button_area (a_x, a_y: INTEGER): BOOLEAN is
+			-- Is position marked by `a_x' and `a_y' in the
+			-- area of the button?
+		do
+			if 
+				a_x <= width and then
+				a_y <= height and then
+				a_x >= 0 and then
+				a_y >= 0
+			then
+				Result := True
+			end
+		end
+
+	on_bn_clicked is
+			-- Do nothing
+		do
+		end
 
 end -- class PICT_COLOR_BUTTON_WINDOWS
 

@@ -94,7 +94,7 @@ feature -- Status Report
 				until
 					i > l_params.upper or not Result
 				loop
-					Result := is_cls_compliant ((l_params @ i).parameter_type)
+					Result := is_cls_compliant_type ((l_params @ i).parameter_type)
 					i := i + 1
 				end
 				if Result then
@@ -115,12 +115,12 @@ feature -- Status Report
 						is_cls_compliant (f)
 						
 			if Result then
-				Result := f.is_literal implies is_valid_literal_field (f)
-			end
-						
-			if Result then
 					-- check that field is fully cls compliant
 				Result := is_consumed_field_cls_compliant (f)
+				
+				if Result then
+					Result := f.is_literal implies is_valid_literal_field (f)
+				end
 				debug ("log_illegal_non_cls_compliancy") 
 					if not Result then
 							-- Non-CLS compliant return type in CLS compliant field
@@ -152,11 +152,19 @@ feature -- Status Report
 			f_not_void: f /= Void
 			f_is_cls_compliant: is_cls_compliant (f)
 		do
-			Result := is_cls_compliant (f)
-			if Result then
-					-- check that return type is CLS compliant
-				Result := is_cls_compliant (f.field_type)
-			end
+			Result := is_cls_compliant (f) implies is_cls_compliant_type (f.field_type)
+		end
+		
+	is_cls_compliant_type (a_type: TYPE): BOOLEAN is
+			-- is `a_type' CLS compliant
+		require
+			a_type_not_void: a_type /= Void
+		do
+			if a_type.has_element_type then
+				Result := is_cls_compliant_type (a_type.get_element_type)
+			else
+				Result := is_cls_compliant (a_type)
+			end	
 		end
 
 	is_cls_compliant (member: MEMBER_INFO): BOOLEAN is

@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision box. Invisible container that allows unlimited number of other widgets to be packed inside it. Box controls the location the children's location and size automatically."
 	status: "See notice at end of class"
@@ -8,16 +7,26 @@ indexing
 	revision: "$Revision$"
 	
 deferred class 
-
 	EV_BOX
 
 inherit
-
 	EV_INVISIBLE_CONTAINER
 		redefine
 			implementation
 		end
-	
+
+feature -- Access
+
+	border_width: INTEGER is
+			-- Border width around container
+		require
+			exists: not destroyed
+		do
+			Result := implementation.border_width
+		ensure
+			positive_result: Result >= 0
+		end
+
 feature -- Element change (box specific)
 	
 	set_homogeneous (flag: BOOLEAN) is
@@ -30,12 +39,14 @@ feature -- Element change (box specific)
 		end
 
 	set_border_width (value: INTEGER) is
-			-- Border width around container			
+			-- Make `value' the new border width.
 		require
 			exist: not destroyed
 			positive_value: value >= 0
 		do
 			implementation.set_border_width (value)
+		ensure
+			border_set: border_width = value
 		end
 
 	set_spacing (value: INTEGER) is

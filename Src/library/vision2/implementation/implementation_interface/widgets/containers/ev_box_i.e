@@ -17,7 +17,18 @@ feature -- Constants
 	
 	Default_homogeneous: BOOLEAN is True
 	Default_spacing: INTEGER is 0
-		
+
+feature -- Access
+
+	border_width: INTEGER is
+			-- Border width around container
+		require
+			exists: not destroyed
+		deferred
+		ensure
+			positive_result: Result >= 0
+		end
+	
 feature -- Status settings
 	
 	set_homogeneous (flag: BOOLEAN) is
@@ -29,11 +40,13 @@ feature -- Status settings
 		end
 
 	set_border_width (value: INTEGER) is
-			-- Border width around container
+			-- Make `value' the new border width.
 		require
 			exist: not destroyed
 			positive_value: value >= 0
 		deferred
+		ensure
+			border_set: border_width = value
 		end	
 	
 	set_spacing (value: INTEGER) is

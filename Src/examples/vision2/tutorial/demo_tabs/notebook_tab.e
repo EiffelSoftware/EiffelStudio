@@ -101,13 +101,13 @@ feature -- Execution feature
 	move_tabs (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Moves the position of the notebooks tabs
 		do
-			if equal(current_widget.tab_position,"top") then
+			if (current_widget.tab_position = current_widget.Tab_right) then
 				current_widget.set_tab_right
-			elseif equal(current_widget.tab_position,"right") then
+			elseif (current_widget.tab_position = current_widget.Tab_bottom) then
 				current_widget.set_tab_bottom
-			elseif equal(current_widget.tab_position,"bottom") then
+			elseif (current_widget.tab_position = current_widget.Tab_left) then
 				current_widget.set_tab_left
-			elseif equal (current_widget.tab_position,"left") then
+			elseif (current_widget.tab_position = current_widget.Tab_top) then
 				current_widget.set_tab_top
 			end
 		end

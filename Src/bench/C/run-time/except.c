@@ -167,10 +167,15 @@ rt_private int exend();				/* True if end of trace stack reached */
 rt_public void esfail();				/* Eiffel system failure */
 rt_private void dump_core();			/* Dumps a core for debugging infos */
 rt_private char *exception_string();	/* Name of an exception */
-rt_private void dump_trace_stack();	/* Dumps the Eiffel trace stack */
+rt_private void dump_trace_stack();	/* Dumps the Eiffel trace stack to stderr */
 rt_private void find_call();			/* Find enclosing call ID */
 rt_private void recursive_dump();		/* Dump the stack at a given level */
 rt_private void print_top();			/* Prints top value of the stack */
+rt_private void dump_stack();			/* Dump the Eiffel trace stack */
+rt_private void ds_stderr();			/* Wrapper to dump stack to stderr */
+rt_private void ds_string();			/* Wrapper to dump stack to a string */
+rt_public EIF_REFERENCE stack_trace_string();	/* Exception trace string */
+rt_private char *extend_trace_string();	/* Extend exception trace string */
 
 /* Pre-defined exception tags (29 chars max please, otherwise truncated).
  * A final point is added at the end. Here is a 29 chars string template:
@@ -1769,8 +1774,63 @@ rt_private void find_call()
 #endif
 }
 
+rt_private void ds_stderr (line)
+char *line;
+{
+	fprintf (stderr, "%s", line);
+}
+
+rt_private void ds_string(line)
+char *line;
+{
+	return (void) extend_trace_string(line);
+}
+
+rt_private char *extend_trace_string(line)
+char *line;
+{
+	static long size = 0L;
+	static long used = 0L;
+	static char *area = NULL;
+
+	if (!line) {
+		size = 0L;
+		used = 0L;
+		free(area);
+		return NULL;
+	}
+	if ((size - used) > (long) strlen(line)) {
+		strcpy (area + used, line);
+		used += strlen(line);
+	} else {
+		size += strlen(line) + BUFSIZ;
+		area = (char *) realloc (area, size);
+		if(area) {
+			strcpy (area + used, line);
+			used += strlen(line);
+		} else
+			enomem();
+	}
+	return (area);
+}
+
+rt_public EIF_REFERENCE stack_trace_string ()
+{
+	(void) extend_trace_string(NULL);
+	dump_stack(ds_string);
+	return (EIF_REFERENCE) RTMS(extend_trace_string(""));
+}
+
 rt_private void dump_trace_stack()
 {
+	dump_stack(ds_stderr);
+}
+
+rt_public void dump_stack(append_trace)
+void (* append_trace)();
+{
+	char buffer[256];
+
 	/* Dump the Eiffel exception trace stack once a system failure has occurred.
 	 * Due to the upside-down nature of this stack, we need to use the 'st_bot'
 	 * field of the xstack structure.
@@ -1785,20 +1845,24 @@ rt_private void dump_trace_stack()
 	eif_trace.st_end = eif_trace.st_cur->sk_end;
 
 	/* Print header of history table */
-	print_err_msg(stderr, "%s\n", failed);
-	print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s %-6.6s\n",
+	sprintf(buffer, "%s\n", failed);
+	append_trace(buffer);
+	sprintf(buffer, "%-19.19s %-22.22s %-29.29s %-6.6s\n",
 		"Class / Object", "Routine", "Nature of exception", "Effect");
-	print_err_msg(stderr, "%s\n", failed);
+	append_trace(buffer);
+	sprintf(buffer, "%s\n", failed);
+	append_trace(buffer);
 
 	/* Print body of history table. A little look-ahead is necessary, in order
 	 * to give meaningful routine names and effects (retried, rescued, failed).
 	 */
 
 	except.previous = 0;		/* Previous exception code */
-	recursive_dump(0);			/* Recursive dump, starting at level 0 */
+	recursive_dump(append_trace, 0);	/* Recursive dump, starting at level 0 */
 }
 
-rt_private void recursive_dump(level)
+rt_private void recursive_dump(append_trace, level)
+void (* append_trace)();
 register1 int level;
 {
 	/* Prints the stack trace of a given level. Whenever a new level is reached,
@@ -1809,6 +1873,7 @@ register1 int level;
 	 */
 
 	struct ex_vect *trace;		/* Call on top of the stack */
+	char buffer[256];
 
 	for (
 		find_call(), trace = eif_trace.st_bot;
@@ -1825,11 +1890,15 @@ register1 int level;
 			(void) exnext();			/* Skip pseudo-vector "New level" */
 			if (exend())
 				return;					/* Exit if at the end of the stack */
-			print_err_msg(stderr, branch_enter, trace->ex_lvl);
-			print_err_msg(stderr, "\n%s\n", failed);
-			recursive_dump(level + 1);	/* Dump the new level */
-			print_err_msg(stderr, branch_exit, level);
-			print_err_msg(stderr, "\n%s\n", failed);
+			sprintf(buffer, branch_enter, trace->ex_lvl);
+			append_trace(buffer);
+			sprintf(buffer, "\n%s\n", failed);
+			append_trace(buffer);
+			recursive_dump(append_trace, level + 1);	/* Dump the new level */
+			sprintf(buffer, branch_exit, level);
+			append_trace(buffer);
+			sprintf(buffer, "\n%s\n", failed);
+			append_trace(buffer);
 			find_call();				/* Restore global exception structure */
 			break;
 		case EN_OLVL:					/* Exiting a level */
@@ -1839,39 +1908,40 @@ register1 int level;
 		case EN_RES:					/* Resumption attempt */
 		case EN_FAIL:					/* Routine call */
 		case EN_RESC:					/* Exception in rescue */
-			print_top();				/* Print exception trace */
+			print_top(append_trace);				/* Print exception trace */
 			find_call();				/* Look for new enclosing call */
 			break;
 		case EN_SIG:					/* Signal received */
 			except.tag = signame(trace->ex_sig);
-			print_top();
+			print_top(append_trace);
 			break;
 		case EN_SYS:					/* Operating system error */
 		case EN_IO:						/* I/O error */
 			except.tag = error_tag(trace->ex_errno);
-			print_top();
+			print_top(append_trace);
 			break;
 		case EN_CINV:					/* Class invariant violated */
 			except.obj_id = trace->ex_oid;	/* Do we need this? */
 			/* Fall through */
 		case EN_PRE:					/* Precondition violated */
 			except.tag = trace->ex_name;
-			print_top();
+			print_top(append_trace);
 			find_call();				/* Restore correct object ID */
 			break;
 		case EN_BYE:
 		case EN_FATAL:
 			except.tag = echtg;			/* Tag for panic or fatal error */
-			print_top();
+			print_top(append_trace);
 			break;
 		default:
 			except.tag = trace->ex_name;
-			print_top();
+			print_top(append_trace);
 		}
 	}
 }
 
-rt_private void print_top()
+rt_private void print_top(append_trace)
+void (* append_trace)();
 {
 	/* Prints the exception trace described by the top frame of the exception
 	 * stack and the exception context built.
@@ -1880,6 +1950,7 @@ rt_private void print_top()
 	 */
 
 	char buf[30];				/* To pre-compute the (From orig) string */
+	char buffer[256];
 	char code = except.code;	/* Exception's code */
 	struct ex_vect *top;		/* Top of stack */
 
@@ -1914,23 +1985,29 @@ rt_private void print_top()
 	else
 		buf[0] = '\0';
 
-	if (except.from >= 0)
+	if (except.from >= 0) {
 		if (except.obj_id) {
 			int obj_dtype = Dtype(except.obj_id);
 
-			if (obj_dtype>=0 && obj_dtype < scount)
-				print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s\n",
+			if (obj_dtype>=0 && obj_dtype < scount) {
+				sprintf(buffer, "%-19.19s %-22.22s %-29.29s\n",
 					Class(except.obj_id), except.rname, buf);
-			else
-				print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s\n",
+				append_trace(buffer);
+			} else {
+				sprintf(buffer, "%-19.19s %-22.22s %-29.29s\n",
 					"Invalid object", except.rname, buf);
+				append_trace(buffer);
 			}
-		else
-			print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s\n",
+		} else {
+			sprintf(buffer, "%-19.19s %-22.22s %-29.29s\n",
 				"Invalid object", except.rname, buf);
-	else
-		print_err_msg(stderr, "%-19.19s %-22.22s %-29.29s\n",
+			append_trace(buffer);
+		}
+	} else {
+		sprintf(buffer, "%-19.19s %-22.22s %-29.29s\n",
 			"RUN-TIME", except.rname, buf);
+		append_trace(buffer);
+	}
 
 	/* There is no need to compute the origin of a routine if it is the same
 	 * as the current class. To detect this, we do pointer comparaison to
@@ -1949,8 +2026,9 @@ rt_private void print_top()
 		} else
 			sprintf(buf, "(From %.15s)", Origin(except.from));
 
-	print_err_msg(stderr, "<%08X>          %-22.22s %-29.29s ",
+	sprintf(buffer, "<%08X>          %-22.22s %-29.29s ",
 		except.obj_id, buf, exception_string(code));
+	append_trace(buffer);
 		
 	/* Start panic effect when we reach the EN_BYE record */
 	if (code == EN_BYE)
@@ -1972,27 +2050,40 @@ rt_private void print_top()
 	 */
 
 	if (echval == EN_BYE) {		/* A run-time panic was raised */
-		if (except.last)
-			print_err_msg(stderr, "Bye\n%s\n", failed);	/* Good bye! */
-		else
-			print_err_msg(stderr, "Panic\n%s\n", failed);	/* Panic propagation */
+		if (except.last) {
+			sprintf(buffer, "Bye\n%s\n", failed);	/* Good bye! */
+			append_trace(buffer);
+		} else {
+			sprintf(buffer, "Panic\n%s\n", failed);	/* Panic propagation */
+			append_trace(buffer);
+		}
 		return;
 	} else if (echval == EN_FATAL) {
-		if (except.last)
-			print_err_msg(stderr, "Bye\n%s\n", failed);	/* Good bye! */
-		else
-			print_err_msg(stderr, "Fatal\n%s\n", failed);	/* Fatal propagation */
+		if (except.last) {
+			sprintf(buffer, "Bye\n%s\n", failed);	/* Good bye! */
+			append_trace(buffer);
+		} else {
+			sprintf(buffer, "Fatal\n%s\n", failed);	/* Fatal propagation */
+			append_trace(buffer);
+		}
 		return;
 	} else if (except.last) {						/* Last record => exit */
-		print_err_msg(stderr, "Exit\n%s\n", failed);
+		sprintf(buffer, "Exit\n%s\n", failed);
+		append_trace(buffer);
 		return;
 	} else if (code == EN_FAIL || code == EN_RES) {
-		if (except.retried)
-			print_err_msg(stderr, "Retry\n%s\n", retried);
-		else if (except.rescued)
-			print_err_msg(stderr, "Rescue\n%s\n", failed);
-		else
-			print_err_msg(stderr, "Fail\n%s\n", failed);
+		if (except.retried) {
+			sprintf(buffer, "Retry\n%s\n", retried);
+			append_trace(buffer);
+		} else
+			if (except.rescued) {
+				sprintf(buffer, "Rescue\n%s\n", failed);
+				append_trace(buffer);
+			} else {
+				sprintf(buffer, "Fail\n%s\n", failed);
+				append_trace(buffer);
+			}
+
 		return;
 	}
 
@@ -2009,12 +2100,17 @@ rt_private void print_top()
 #endif
 
 	if (code == EN_FAIL || code == EN_RES) {
-		if (except.retried)
-			print_err_msg(stderr, "Retry\n%s\n", retried);
-		else
-			print_err_msg(stderr, "Fail\n%s\n", failed);
-	} else
-		print_err_msg(stderr, "Pass\n%s\n", failed);
+		if (except.retried) {
+			sprintf(buffer, "Retry\n%s\n", retried);
+			append_trace(buffer);
+		} else {
+			sprintf(buffer, "Fail\n%s\n", failed);
+			append_trace(buffer);
+		}
+	} else {
+		sprintf(buffer, "Pass\n%s\n", failed);
+		append_trace(buffer);
+	}
 }
 
 /* Stack handling routine. The following code has been cut/paste from the one

@@ -245,6 +245,7 @@ extern void eecatch();			/* Catch exception */
 extern void eeignore();			/* Ignore exception */
 extern char *eename();			/* Exception description */
 
+extern EIF_REFERENCE stack_trace_string ();		/* Exception stack as an Eiffel string */
 
 #ifdef __cplusplus
 }

@@ -269,21 +269,24 @@ feature -- Output
 			io.putstring (argument (0))
 			io.putstring (" [-help | -version | -batch ")
 			add_usage_special_cmds
-			io.putstring ("%
-				%-loop | -quick_melt | -clients [-filter filtername] class |%N%
-				%%T-suppliers [-filter filtername] class |%N%
-				%%T-flatshort [-filter filtername] [-all | -all_and_parents | class] |%N%
-				%%T-flat [-filter filtername] [-all | -all_and_parents | class] |%N%
-				%%T-short [-filter filtername] [-all | -all_and_parents | class] | %N%
-				%%T-filter filtername [-all | class] |%N%
-				%%T-descendants [-filter filtername] class |%N")
-			io.putstring ("%
-				%%T-ancestors [-filter filtername] class |%N%
-				%%T-aversions [-filter filtername] class feature |%N%
-				%%T-dversions [-filter filtername] class feature |%N%
-				%%T-implementers [-filter filtername] class feature |%N%
-				%%T-callers [-filter filtername] [-show_all] class feature |%N%
-				%%T[-stop] [-ace Ace] [-project Project_file_name]|%N%
+			io.putstring ("-loop | -quick_melt | ")
+			if Has_documentation_generation then
+				io.put_string ("-clients [-filter filtername] class |%N%
+					%%T-suppliers [-filter filtername] class |%N%
+					%%T-flatshort [-filter filtername] [-all | -all_and_parents | class] |%N%
+					%%T-flat [-filter filtername] [-all | -all_and_parents | class] |%N%
+					%%T-short [-filter filtername] [-all | -all_and_parents | class] | %N%
+					%%T-filter filtername [-all | class] |%N%
+					%%T-descendants [-filter filtername] class |%N")
+				io.putstring ("%
+					%%T-ancestors [-filter filtername] class |%N%
+					%%T-aversions [-filter filtername] class feature |%N%
+					%%T-dversions [-filter filtername] class feature |%N%
+					%%T-implementers [-filter filtername] class feature |%N%
+					%%T-callers [-filter filtername] [-show_all] class feature |%N%T")
+			end
+			io.put_string ("%
+				%[-stop] [-ace Ace] [-project Project_file_name]|%N%
 				%%T[-project_path Project_directory_path] [-file File]]%N")
 		end
 
@@ -392,7 +395,7 @@ feature -- Update
 				version_only := True
 			elseif option.is_equal ("-quick_melt") then
 				!EWB_QUICK_MELT! command 
-			elseif option.is_equal ("-implementers") then
+			elseif has_documentation_generation and then option.is_equal ("-implementers") then
 				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
@@ -421,7 +424,7 @@ feature -- Update
 				else
 					option_error := True
 				end
-			elseif option.is_equal ("-aversions") then
+			elseif has_documentation_generation and then option.is_equal ("-aversions") then
 				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
@@ -450,7 +453,7 @@ feature -- Update
 				else
 					option_error := True
 				end
-			elseif option.is_equal ("-dversions") then
+			elseif has_documentation_generation and then option.is_equal ("-dversions") then
 				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
@@ -479,7 +482,7 @@ feature -- Update
 				else
 					option_error := True
 				end
-			elseif option.is_equal ("-callers") then
+			elseif has_documentation_generation and then option.is_equal ("-callers") then
 				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
@@ -530,9 +533,10 @@ feature -- Update
 --				else
 --					option_error := True
 --				end
-			elseif 
-				option.is_equal ("-short") or else
-				option.is_equal ("-flatshort") 
+			elseif
+				has_documentation_generation and then
+				(option.is_equal ("-short") or else
+				option.is_equal ("-flatshort"))
 			then
 				if current_option < argument_count then
 					if command /= Void then
@@ -570,7 +574,7 @@ feature -- Update
 				else
 					option_error := True
 				end
-			elseif option.is_equal ("-flat") then
+			elseif has_documentation_generation and then option.is_equal ("-flat") then
 				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
@@ -599,7 +603,7 @@ feature -- Update
 				else
 					option_error := True
 				end
-			elseif option.is_equal ("-filter") then
+			elseif has_documentation_generation and then option.is_equal ("-filter") then
 				if current_option + 1 < argument_count then
 					if command /= Void then
 						option_error := True
@@ -617,7 +621,7 @@ feature -- Update
 				else
 					option_error := True
 				end
-			elseif option.is_equal ("-ancestors") then
+			elseif has_documentation_generation and then option.is_equal ("-ancestors") then
 				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
@@ -640,7 +644,7 @@ feature -- Update
 				else
 					option_error := True
 				end
-			elseif option.is_equal ("-clients") then
+			elseif has_documentation_generation and then option.is_equal ("-clients") then
 				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
@@ -663,7 +667,7 @@ feature -- Update
 				else
 					option_error := True
 				end
-			elseif option.is_equal ("-suppliers") then
+			elseif has_documentation_generation and then option.is_equal ("-suppliers") then
 				if current_option < argument_count then
 					if command /= Void then
 						option_error := True
@@ -686,7 +690,7 @@ feature -- Update
 				else
 					option_error := True
 				end
-			elseif option.is_equal ("-descendants") then
+			elseif has_documentation_generation and then option.is_equal ("-descendants") then
 				if current_option < argument_count then
 					if command /= Void then
 						option_error := True

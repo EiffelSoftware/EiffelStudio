@@ -206,16 +206,28 @@ feature {NONE} -- Initialization
 				-- Compilation
 			create c_workbench_compilation_cmd.make_workbench (Current)
 			create c_finalized_compilation_cmd.make_finalized (Current)
-			create show_dynamic_lib_tool.make
-			show_dynamic_lib_tool.set_menu_name (Interface_names.m_New_dynamic_lib)
-			show_dynamic_lib_tool.add_agent (~show_dynamic_library_dialog)
-			create show_profiler
+			if has_dll_generation then
+				create show_dynamic_lib_tool.make
+				show_dynamic_lib_tool.set_menu_name (Interface_names.m_New_dynamic_lib)
+				show_dynamic_lib_tool.add_agent (~show_dynamic_library_dialog)
+			end
+			if has_profiler then
+				create show_profiler
+			end
 			if Eiffel_project.manager.is_project_loaded then
-				show_dynamic_lib_tool.enable_sensitive
-				show_profiler.enable_sensitive
+				if has_dll_generation then
+					show_dynamic_lib_tool.enable_sensitive
+				end
+				if has_profiler then
+					show_profiler.enable_sensitive
+				end
 			else
-				show_dynamic_lib_tool.disable_sensitive
-				show_profiler.disable_sensitive
+				if has_dll_generation then
+					show_dynamic_lib_tool.disable_sensitive
+				end
+				if has_profiler then
+					show_profiler.disable_sensitive
+				end
 			end
 
 				-- Undo/redo, cut, copy, paste.
@@ -544,10 +556,14 @@ feature {NONE} -- Initialization
 			
 				-- Initialize undo / redo accelerators
 			create undo_accelerator.make_with_key_combination (create {EV_KEY}.make_with_code (Key_z), True, False, False)
-			undo_accelerator.actions.extend (agent (context_tool.editor.undo_cmd).on_ctrl_z)
+			if has_case then
+				undo_accelerator.actions.extend (agent (context_tool.editor.undo_cmd).on_ctrl_z)
+			end
 			undo_accelerator.actions.extend (agent undo_cmd.accelerator_execute)
 			create redo_accelerator.make_with_key_combination (create {EV_KEY}.make_with_code (Key_y), True, False, False)
-			redo_accelerator.actions.extend (agent (context_tool.editor.redo_cmd).on_ctrl_y)
+			if has_case then
+				redo_accelerator.actions.extend (agent (context_tool.editor.redo_cmd).on_ctrl_y)
+			end
 			redo_accelerator.actions.extend (agent redo_cmd.accelerator_execute)
 			window.accelerators.extend (undo_accelerator)
 			window.accelerators.extend (redo_accelerator)
@@ -1433,18 +1449,24 @@ feature -- Menu Building
 			add_recyclable (command_menu_item)
 			project_menu.extend (command_menu_item)
 
-				-- Separator -------------------------------------------------
-			project_menu.extend (create {EV_MENU_SEPARATOR})
+			if has_documentation_generation or has_xmi_generation then
+					-- Separator -------------------------------------------------
+				project_menu.extend (create {EV_MENU_SEPARATOR})
+			end
 
-				-- Generate Documentation
-			command_menu_item := document_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
+			if has_documentation_generation then
+					-- Generate Documentation
+				command_menu_item := document_cmd.new_menu_item
+				add_recyclable (command_menu_item)
+				project_menu.extend (command_menu_item)
+			end
 
-				-- Export XMI
-			command_menu_item := export_cmd.new_menu_item
-			add_recyclable (command_menu_item)
-			project_menu.extend (command_menu_item)
+			if has_xmi_generation then
+					-- Export XMI
+				command_menu_item := export_cmd.new_menu_item
+				add_recyclable (command_menu_item)
+				project_menu.extend (command_menu_item)
+			end
 		end
 
 	build_tools_menu is
@@ -1456,39 +1478,45 @@ feature -- Menu Building
 			create tools_menu.make_with_text (Interface_names.m_Tools)
 
 
-				-- Metric tool
-			create metric_menu.make_with_text (interface_names.l_Tab_metrics)
-				create menu_item.make_with_text (interface_names.metric_calculate)
-				metric_menu.extend (menu_item)
-				create menu_item.make_with_text (interface_names.metric_add)
-				metric_menu.extend (menu_item)
-				create menu_item.make_with_text (interface_names.metric_delete)
-				metric_menu.extend (menu_item)
-				create menu_item.make_with_text (interface_names.metric_details)
-				metric_menu.extend (menu_item)
-				create menu_item.make_with_text (interface_names.metric_new_metrics)
-				metric_menu.extend (menu_item)
-				create menu_item.make_with_text (interface_names.metric_management)
-				metric_menu.extend (menu_item)
-				create menu_item.make_with_text (interface_names.metric_archive)
-				metric_menu.extend (menu_item)
-			metric_menu.disable_sensitive
-			tools_menu.extend (metric_menu)
+			if has_metrics then
+					-- Metric tool
+				create metric_menu.make_with_text (interface_names.l_Tab_metrics)
+					create menu_item.make_with_text (interface_names.metric_calculate)
+					metric_menu.extend (menu_item)
+					create menu_item.make_with_text (interface_names.metric_add)
+					metric_menu.extend (menu_item)
+					create menu_item.make_with_text (interface_names.metric_delete)
+					metric_menu.extend (menu_item)
+					create menu_item.make_with_text (interface_names.metric_details)
+					metric_menu.extend (menu_item)
+					create menu_item.make_with_text (interface_names.metric_new_metrics)
+					metric_menu.extend (menu_item)
+					create menu_item.make_with_text (interface_names.metric_management)
+					metric_menu.extend (menu_item)
+					create menu_item.make_with_text (interface_names.metric_archive)
+					metric_menu.extend (menu_item)
+				metric_menu.disable_sensitive
+				tools_menu.extend (metric_menu)
+			end
 			
-				-- Profiler Window
-			command_menu_item := show_profiler.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
+			if has_profiler then
+					-- Profiler Window
+				command_menu_item := show_profiler.new_menu_item
+				add_recyclable (command_menu_item)
+				tools_menu.extend (command_menu_item)
+			end
 
 				-- Precompile Wizard
 			command_menu_item := wizard_precompile_cmd.new_menu_item
 			add_recyclable (command_menu_item)
 			tools_menu.extend (command_menu_item)
 
-				-- Dynamic Library Window
-			command_menu_item := show_dynamic_lib_tool.new_menu_item
-			add_recyclable (command_menu_item)
-			tools_menu.extend (command_menu_item)
+			if has_dll_generation then
+					-- Dynamic Library Window
+				command_menu_item := show_dynamic_lib_tool.new_menu_item
+				add_recyclable (command_menu_item)
+				tools_menu.extend (command_menu_item)
+			end
 
 			if debugger_manager.display_dotnet_cmd then
 					-- Import .Net Assembly
@@ -2769,8 +2797,12 @@ feature {NONE} -- Execution
 	enable_commands_on_project_loaded is
 			-- Enable commands when a new project has been created and compiled
 		do
-			show_profiler.enable_sensitive
-			show_dynamic_lib_tool.enable_sensitive
+			if has_profiler then
+				show_profiler.enable_sensitive
+			end
+			if has_dll_generation then
+				show_dynamic_lib_tool.enable_sensitive
+			end
 			open_cmd.enable_sensitive
 			new_class_cmd.enable_sensitive
 			new_cluster_cmd.enable_sensitive
@@ -2790,8 +2822,12 @@ feature {NONE} -- Execution
 	disable_commands_on_project_unloaded is
 			-- Enable commands when a project has been closed.
 		do
-			show_dynamic_lib_tool.disable_sensitive
-			show_profiler.disable_sensitive
+			if has_dll_generation then
+				show_dynamic_lib_tool.disable_sensitive
+			end
+			if has_profiler then
+				show_profiler.disable_sensitive
+			end
 			open_cmd.disable_sensitive
 			new_class_cmd.disable_sensitive
 			new_cluster_cmd.disable_sensitive

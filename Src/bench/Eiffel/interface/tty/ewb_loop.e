@@ -22,6 +22,8 @@ inherit
 			Warning_messages
 		end
 
+	EIFFEL_ENV
+
 feature -- Properties
 
 	yank_window: YANK_WINDOW is
@@ -45,22 +47,38 @@ feature -- Initialization
 			-- Main menu options
 		local
 			ewb_cmd: EWB_CMD
+			i: INTEGER
 		once
-			create Result.make (1, 6)
+			i := 2
+			if Has_profiler then
+				i := i + 1
+			end
+			if Has_documentation_generation then
+				i := i + 3
+			end
+			create Result.make (1, i)
 			Result.set_is_main
 
-			create {EWB_STRING} ewb_cmd.make (class_cmd_name, class_help, class_abb, class_menu)
-			Result.add_entry (ewb_cmd)
+			if Has_documentation_generation then
+				create {EWB_STRING} ewb_cmd.make (class_cmd_name, class_help, class_abb, class_menu)
+				Result.add_entry (ewb_cmd)
+			end
 			create {EWB_STRING} ewb_cmd.make (compile_cmd_name, compile_help, compile_abb, compile_menu)
 			Result.add_entry (ewb_cmd)
-			create {EWB_STRING} ewb_cmd.make (feature_cmd_name, feature_help, feature_abb, feature_menu)
-			Result.add_entry (ewb_cmd)
+			if Has_documentation_generation then
+				create {EWB_STRING} ewb_cmd.make (feature_cmd_name, feature_help, feature_abb, feature_menu)
+				Result.add_entry (ewb_cmd)
+			end
 			create {EWB_STRING} ewb_cmd.make (system_cmd_name, system_help, system_abb, system_menu)
 			Result.add_entry (ewb_cmd)
-			create {EWB_STRING} ewb_cmd.make (profile_cmd_name, profile_help, profile_abb, profile_menu)
-			Result.add_entry (ewb_cmd)
-			create {EWB_STRING} ewb_cmd.make (documentation_cmd_name, documentation_help, documentation_abb, documentation_menu)
-			Result.add_entry (ewb_cmd)
+			if has_profiler then
+				create {EWB_STRING} ewb_cmd.make (profile_cmd_name, profile_help, profile_abb, profile_menu)
+				Result.add_entry (ewb_cmd)
+			end
+			if has_documentation_generation then
+				create {EWB_STRING} ewb_cmd.make (documentation_cmd_name, documentation_help, documentation_abb, documentation_menu)
+				Result.add_entry (ewb_cmd)
+			end
 		end
 
 	Documentation_menu: EWB_MENU is
@@ -226,16 +244,35 @@ feature -- Initialization
 
 	menu_commands: ARRAY [EWB_MENU] is
 			-- Menu commands
+		local
+			i: INTEGER
 		once
-			create Result.make (1, 8)
+			i := 5
+			if Has_profiler then
+				i := i + 2
+			end
+			if Has_documentation_generation then
+				i := i + 1
+			end
+			create Result.make (1, i)
 			Result.put (main_menu, 1)
 			Result.put (system_menu, 2)
 			Result.put (class_menu, 3)
 			Result.put (feature_menu, 4)
 			Result.put (compile_menu, 5)
-			Result.put (profile_menu, 6)
-			Result.put (documentation_menu, 7)
-			Result.put (switches_menu, 8)
+			i := 6
+			if Has_profiler then
+				Result.put (profile_menu, i)
+				i := i + 1
+			end
+			if Has_documentation_generation then
+				Result.put (documentation_menu, i)
+				i := i + 1
+			end
+			if Has_profiler then
+				Result.put (switches_menu, i)
+				i := i + 1
+			end
 		end
 
 	switches_menu: EWB_MENU is

@@ -55,9 +55,6 @@ inherit
 			implementation
 		end
 
-		--|FIXME add destroy actions and make sure it works for everything
-		--|including windows, titled and untitled.
-
 	EV_HELP_CONTEXTABLE
 		redefine
 			implementation,

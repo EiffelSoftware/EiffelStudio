@@ -21,11 +21,11 @@
 #ifndef _eif_threads_h_
 #define _eif_threads_h_
 
-#include "eif_cecil.h"		/* Needed for EIF_OBJECT,... definitions */
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include "eif_cecil.h"		/* Needed for EIF_OBJECT,... definitions */
 
 RT_LNK void eif_thr_panic(char *);
 RT_LNK EIF_POINTER eif_thr_freeze(EIF_OBJECT object);
@@ -74,16 +74,15 @@ RT_LNK void eif_thr_proxy_dispose(EIF_POINTER);
 #define EIF_DEFAULT_PRIORITY 16
 #endif
 
-/* Tuning for CRAY */
-#ifdef _CRAY
-#ifdef __cplusplus
-}
-#endif
-#include <unistd.h>	/* Avoid warnings on C90, when also including <sched.h> */
-#ifdef __cplusplus
-extern "C" {
+/* Tuning for LynxOS */
+#ifdef __Lynx__
+#define EIF_POSIX_THREADS
+#define POSIX_10034A
 #endif
 
+/* Tuning for CRAY */
+#ifdef _CRAY
+#include <unistd.h>	/* Avoid warnings on C90, when also including <sched.h> */
 #define EIF_NO_SEM
 #define EIF_NO_POSIX_SEM
 #define HASNT_SCHED_H
@@ -124,13 +123,7 @@ extern "C" {
 #ifndef EIF_NO_POSIX_SEM
 
 #ifndef HASNT_SEMAPHORE_H 
-#ifdef __cplusplus
-}
-#endif
 #include <semaphore.h>
-#ifdef __cplusplus
-extern "C" {
-#endif
 #endif /* semaphore.h */
 
 #define EIF_SEM_TYPE    sem_t
@@ -232,9 +225,6 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 /*-----------------------*/
 
 /* Includes */
-#ifdef __cplusplus
-}
-#endif
 #include <pthread.h>
 #ifndef HASNT_SCHED_H
 #include <sched.h>
@@ -243,10 +233,15 @@ RT_LNK EIF_POINTER eif_thr_last_thread(void);
 #ifdef NEED_SYNCH_H
 #include <synch.h>
 #endif
-#ifdef __cplusplus
-extern "C" {
-#endif
 
+/* Posix drafts compatibility */
+#ifdef POSIX_10034A
+#define pthread_attr_init	pthread_attr_create
+#define pthread_key_create	pthread_keycreate
+#define pthread_attr_setschedpolicy	pthread_attr_setsched
+#define pthread_attr_setschedparam(x,y)		pthread_attr_setprio (x, (*(y)).sched_priority)
+#define pthread_attr_destroy(x)		pthread_attr_delete (x)
+#endif	/*POSIX_10034A */
 /* Types */
 #define EIF_THR_ENTRY_TYPE      void *
 #define EIF_THR_ENTRY_ARG_TYPE  void *
@@ -282,11 +277,15 @@ extern "C" {
 #else
 #define EIF_THR_SET_SCHED(a,b)
 #endif
+#ifndef POSIX_10034A
 #ifndef EIF_THR_SET_DETACHSTATE
 #define EIF_THR_SET_DETACHSTATE(attr,detach) \
     pthread_attr_setdetachstate(&attr, \
         detach ? PTHREAD_CREATE_DETACHED : PTHREAD_CREATE_JOINABLE);
 #endif
+#else	/* POSIX_10034A */
+#define EIF_THR_SET_DETACHSTATE(attr, detach)	/* Nothing */
+#endif	/* POSIX_10034A */
 
 #ifdef HASNT_SCHEDPARAM
 #ifndef EIF_THR_SET_PRIO
@@ -314,13 +313,28 @@ extern "C" {
 #define EIF_THR_ATTR_DESTROY(attr) pthread_attr_destroy(&attr)
 
 /* Thread control macros */
+#ifdef __Lynx__
+#define EIF_THR_CREATE(entry,arg,tid,msg) \
+    if (pthread_create (&(tid), pthread_attr_default, (entry), (EIF_THR_ENTRY_ARG_TYPE)(arg))) \
+        eraise(msg, EN_EXT);
+#define EIF_THR_CREATE_WITH_ATTR(entry,arg,tid,attr,msg) \
+    if (pthread_create (&tid, attr, entry, (EIF_THR_ENTRY_ARG_TYPE) arg)) \
+        eraise(msg, EN_EXT)
+#else
 #define EIF_THR_CREATE(entry,arg,tid,msg) \
     if (pthread_create (&(tid), 0, (entry), (EIF_THR_ENTRY_ARG_TYPE)(arg))) \
         eraise(msg, EN_EXT)
 #define EIF_THR_CREATE_WITH_ATTR(entry,arg,tid,attr,msg) \
     if (pthread_create (&tid, &attr, entry, (EIF_THR_ENTRY_ARG_TYPE) arg)) \
         eraise(msg, EN_EXT)
+#endif
+#ifdef FIXME_LYNX
+#define EIF_THR_EXIT(arg) \
+	pthread_exit(NULL);\
+	pthread_detach (eif_thr_id) ;
+#else /* POSIX_10034A */
 #define EIF_THR_EXIT(arg)           pthread_exit(NULL)
+#endif	/* POSIX_10034A */
 #define EIF_THR_JOIN(which)         pthread_join(which,NULL)
 #define EIF_THR_JOIN_ALL
 #define EIF_THR_YIELD
@@ -338,7 +352,7 @@ extern "C" {
         eraise(msg, EN_EXT)
 
 /* Thread Specific Data management */
-#ifdef EIF_NONPOSIX_TSD
+#if defined  EIF_NONPOSIX_TSD || defined POSIX_10034A
 #define EIF_TSD_GET0(val_type,key,val) \
     pthread_getspecific((key), (void *)&(val))
 #define EIF_TSD_GET(val_type,key,val,msg) \
@@ -348,7 +362,11 @@ extern "C" {
 #define EIF_TSD_GET(val_type,key,val,msg) \
     if (EIF_TSD_GET0(val_type,key,val) == (void *) 0) eraise(msg, EN_EXT)
 #endif
+#ifdef POSIX_10034A
+#define EIF_TSD_DESTROY(key,msg) 
+#else	/* POSIX_10034A */
 #define EIF_TSD_DESTROY(key,msg) if (pthread_key_delete(key)) eraise(msg, EN_EXT)
+#endif	/* POSIX_10034A */
 
 
 /*
@@ -408,17 +426,10 @@ extern "C" {
 /*-------------------------------*/
 /*---  WINDOWS 95/NT Threads  ---*/
 /*-------------------------------*/
-#ifdef __cplusplus
-}
-#endif
 
 #include <windows.h>
 #include <process.h>
 #include "eif_cond_var.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 #define EIF_MIN_PRIORITY 0			/*  - not used */
 #define EIF_MAX_PRIORITY 1000		/* - not used  */
@@ -511,9 +522,6 @@ extern "C" {
 /*-------------------------*/
 /*---  SOLARIS Threads  ---*/
 /*-------------------------*/
-#ifdef __cplusplus
-}
-#endif
 
 #include <thread.h>
 #ifndef HASNT_SCHED_H
@@ -521,10 +529,6 @@ extern "C" {
 #endif
 #ifdef NEED_SYNCH_H
 #include <synch.h>
-#endif
-
-#ifdef __cplusplus
-extern "C" {
 #endif
 
  /* Types */
@@ -636,18 +640,12 @@ rt_public typedef struct {
 /*---  VXWORKS Threads  ---*/
 /*-------------------------*/
 
-#ifdef __cplusplus
-}
-#endif
 
 #include <taskLib.h>        /* 'thread' operations */
 #include <taskVarLib.h>     /* 'thread' 'specific data' */
 #include <semLib.h>         /* 'mutexes' and semaphores */
 #include <sched.h>          /* 'sched_yield' */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /* Current Thread Id */
 #define EIF_THR_SELF	taskIdSelf ()

@@ -388,15 +388,13 @@ feature {NONE} -- Process Vision2 events
 
 	lose_focus is
 			-- Update the panel as it has just lost the focus.
-		local
-			sel_start, sel_end: INTEGER
 		do
 				-- Redraw the line where the cursor is (we will erase the cursor)
 			show_cursor := False
 			invalidate_cursor_rect (True)
 			if blinking_timeout /= Void then
 				blinking_timeout.set_interval (0)
-			end			
+			end						
 		end
 
 feature {NONE} -- Handle keystrokes

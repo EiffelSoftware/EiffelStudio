@@ -657,7 +657,6 @@ feature -- Edition Operations on text
 				-- display warning message : text is not editable...
 		local
 			wm: STRING
-			w: EV_WARNING_DIALOG
 		do
 			wm := "Current text is not editable"
 			if text_displayed /= Void then

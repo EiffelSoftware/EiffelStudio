@@ -72,7 +72,7 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when the button is toggled.
 		do
-			check False end
+			remove_commands (toggled_id)
 		end	
 
 end -- class EV_TOGGLE_BUTTON_IMP

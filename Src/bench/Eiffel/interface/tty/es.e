@@ -86,7 +86,6 @@ feature {NONE} -- Initialization
 								command.set_output_window (Error_window)
 							else
 								command.set_output_window (output_window)
-								output_window.close
 							end
 							init_project (Project_file_name)
 							if not error_occurred then
@@ -109,6 +108,9 @@ feature {NONE} -- Initialization
 						end
 					end
 				end
+				if output_window /= Void and then not output_window.is_closed then
+					output_window.close
+				end
 			else
 				die (-1)
 			end
@@ -117,6 +119,9 @@ feature {NONE} -- Initialization
 			io.error.putstring ("ISE Eiffel 5: Session aborted%N")
 			io.error.putstring ("Exception tag: ")
 			temp := original_tag_name
+			if output_window /= Void and then not output_window.is_closed then
+				output_window.close
+			end
 			if temp /= Void then
 				io.error.putstring (temp)
 			end
@@ -219,7 +224,7 @@ feature -- Setting
 		do
 			create output_window.make (filename)
 			if output_window.exists then
-				io.error.putstring ("File exists.%N")
+				io.error.putstring ("File %"" + filename + "%" exists.%NPlease delete it first.%N")
 				file_error := True
 			else
 				output_window.open_file

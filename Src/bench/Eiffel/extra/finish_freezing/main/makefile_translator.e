@@ -486,9 +486,10 @@ feature {NONE} -- Translation
 			-- Translate application section.
 		local
 			lastline: STRING
+			i: INTEGER
 			extension: STRING -- the extension of the filename (e.g. '.exe')
 			appl_exe: STRING -- the executable for the application
-
+			shared_library_pos: INTEGER
 		do
 			debug ("translate_application")
 				io.putstring ("%Tapplication%N")
@@ -505,7 +506,12 @@ feature {NONE} -- Translation
 			end
 
 			if lastline.count>3 and then lastline.substring (1,4).is_equal (options.get_string ("all", Void).substring (1,4)) then
-				appl := lastline.substring (6, lastline.count)
+				shared_library_pos := lastline.substring_index ("$(SYSTEM", 6)
+				if shared_library_pos = 0 then
+					appl := lastline.substring (6, lastline.count)
+				else
+					appl := lastline.substring (6, shared_library_pos - 1)
+				end
 				appl.right_adjust
 
 				if appl.count>4 then
@@ -531,6 +537,11 @@ feature {NONE} -- Translation
 
 			makefile.putstring (options.get_string ("all", Void))
 			makefile.putstring (appl_exe)
+
+			if shared_library_pos /= 0 then
+				makefile.putstring (" $(SYSTEM_IN_DYNAMIC_LIB)")				
+			end
+
 			makefile.new_line
 			makefile.putstring (options.get_string ("completed", Void))
 			makefile.putstring ("%N%N")
@@ -1049,7 +1060,7 @@ feature {NONE} -- Translation
 
 			makefile.putstring ("%N#SHARED_CECIL PART%N")
 -- SHARED_CECIL= appl.dll
-			lastline.replace_substring_all (".so", ".dll")
+			lastline.replace_substring_all ("$shared_suffix", options.get_string ("shared_suffix", ".dll"))
 			makefile.putstring (lastline)
 			makefile.new_line
 
@@ -1116,18 +1127,13 @@ feature {NONE} -- Translation
 			lastline := clone (makefile_sh.laststring)
 			from
 			until
-				lastline.count>22 and then lastline.substring (1,22).is_equal ("SYSTEM_IN_DYNAMIC_LIB=")
+				lastline.count>7 and then lastline.substring (1,7).is_equal ("dynlib:")
 			loop
 				read_next
 				lastline := clone (makefile_sh.laststring)
 			end
 
 			makefile.putstring ("%N#SYSTEM_IN_DYNAMIC_LIB PART%N%N")
-
-				-- SYSTEM_IN_DYNAMIC_LIB= appl.dll
-			lastline.replace_substring_all (".so", ".dll")
-			makefile.putstring (lastline)
-			makefile.new_line
 
 				-- DEF_FILE= appl.def
 			makefile.putstring ("DEF_FILE= ")
@@ -1136,7 +1142,6 @@ feature {NONE} -- Translation
 			makefile.new_line
 
 				-- dynlib: $(SYSTEM_IN_DYNAMIC_LIB)
-			read_next
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 

@@ -45,8 +45,6 @@ feature -- Status setting
 		do
 			buffer_size := buf;
 			line_length := lin;
-			!! mask.make (line_length);
-			mask.all_true;
 			!! buffer.make (buffer_size);
 			buffer.fill_blank;
 			!! line_nb_array.make (1, buffer_size);
@@ -117,6 +115,10 @@ feature -- Status setting
 		local
 			index, last_index: INTEGER
 		do
+			if mask = Void then
+				!! mask.make (line_length);
+				mask.all_true
+			end
 			if j = 0 then
 				last_index := line_length + 1
 			else
@@ -268,61 +270,91 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER;
 			eof: BOOLEAN;
 			lines, columns: LEX_ARRAY [INTEGER];
-			cmask: FIXED_INTEGER_SET
+			cmask: FIXED_INTEGER_SET;
+			file_nb: INTEGER;
+			file_last_string: STRING
 		do
 			lines := line_nb_array;
 			columns := column_nb_array;
-			cmask := mask;
-			if position /= 0 then
-				from
-					i := 1;
-					nb := old_size - position;
-				until
-					i > nb
-				loop
-					buffer.put (buffer.item (position + i), i);
-					lines.put (lines.item (position + i), i)
-					columns.put (columns.item (position + i), i)
-					i := i + 1
-				end
-			else
-				i := old_size
-			end
-			from
-			until
-				eof or i > new_size
-			loop
-				if file.end_of_file then
-					buffer.put ('%/255/', i);
-					lines.put (-1, i);
-					columns.put (-1, i);
-					close_file;
-					eof := True
+			if position /= 0 and position < old_size then
+				buffer.subcopy (buffer, position + 1, old_size, 1)
+				lines.subcopy (lines, position + 1, old_size, 1)
+				columns.subcopy (columns, position + 1, old_size, 1)
+			end;
+			nb := old_size - position;
+			i := nb + 1;
+			if mask = Void then
+				file_nb := new_size - nb;
+				file.read_stream (file_nb);
+				file_last_string := file.last_string;
+				if file_last_string.count < file_nb then
+					file_nb := file_last_string.count;
+					buffer.put ('%/255/', i + file_nb);
+					char_buffered_number := char_buffered_number + file_nb + 1
 				else
-					file.read_character;
-					c := file.last_character;
-					if c = '%N' then
-						buffer.put (c, i);
+					char_buffered_number := char_buffered_number + file_nb
+				end;
+				buffer.subcopy (file_last_string, 1, file_nb, i)
+				from
+				until
+					eof or i > new_size
+				loop
+					inspect buffer.item (i)
+					when '%/255/' then
+						lines.put (-1, i);
+						columns.put (-1, i);
+						close_file;
+						eof := True
+					when '%N' then
 						lines.put (line_number, i);
 						columns.put (column_number, i);
 						line_number := line_number + 1;
-						column_number := 1;
-						i := i + 1
+						column_number := 1
 					else
-						if
-							column_number <= cmask.count and then
-							cmask.item (column_number)
-						then
+						lines.put (line_number, i);
+						columns.put (column_number, i);
+						column_number := column_number + 1
+					end
+					i := i + 1
+				end
+			else
+				from
+					cmask := mask
+				until
+					eof or i > new_size
+				loop
+					if file.end_of_file then
+						buffer.put ('%/255/', i);
+						lines.put (-1, i);
+						columns.put (-1, i);
+						close_file;
+						eof := True
+					else
+						file.read_character;
+						c := file.last_character;
+						if c = '%N' then
 							buffer.put (c, i);
 							lines.put (line_number, i);
 							columns.put (column_number, i);
+							line_number := line_number + 1;
+							column_number := 1;
 							i := i + 1
-						end;
-						column_number := column_number + 1
-					end
-				end	
+						else
+							if
+								column_number <= cmask.count and then
+								cmask.item (column_number)
+							then
+								buffer.put (c, i);
+								lines.put (line_number, i);
+								columns.put (column_number, i);
+								i := i + 1
+							end;
+							column_number := column_number + 1
+						end
+					end	
+				end
+				char_buffered_number := char_buffered_number + i - nb
 			end
-			char_buffered_number := char_buffered_number + i - nb
 		end
 
 	fill_from_string (position, old_size, new_size: INTEGER) is
@@ -343,60 +375,87 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER;
 			eof: BOOLEAN;
 			lines, columns: LEX_ARRAY [INTEGER];
-			cmask: FIXED_INTEGER_SET
+			cmask: FIXED_INTEGER_SET;
+			str_nb: INTEGER
 		do
 			lines := line_nb_array;
 			columns := column_nb_array;
-			cmask := mask;
-			if position /= 0 then
-				from
-					i := 1;
-					nb := old_size - position;
-				until
-					i > nb
-				loop
-					buffer.put (buffer.item (position + i), i);
-					lines.put (lines.item (position + i), i)
-					columns.put (columns.item (position + i), i)
-					i := i + 1
-				end
-			else
-				i := old_size
-			end
-			from
-			until
-				eof or i > new_size
-			loop
-				position_in_string := position_in_string + 1
-				if position_in_string > string.count then
-					buffer.put ('%/255/', i);
-					lines.put (-1, i);
-					columns.put (-1, i);
-					eof := True
+			if position /= 0 and position < old_size then
+				buffer.subcopy (buffer, position + 1, old_size, 1)
+				lines.subcopy (lines, position + 1, old_size, 1)
+				columns.subcopy (columns, position + 1, old_size, 1)
+			end;
+			nb := old_size - position;
+			i := nb + 1;
+			if mask = Void then
+				str_nb := new_size - nb;
+				if string.count - position_in_string < str_nb then
+					str_nb := string.count - position_in_string
+					buffer.put ('%/255/', i + str_nb);
+					char_buffered_number := char_buffered_number + str_nb + 1
 				else
-					c := string.item (position_in_string);
-					if c = '%N' then
-						buffer.put (c, i);
+					char_buffered_number := char_buffered_number + str_nb
+				end;
+				buffer.subcopy (string, position_in_string + 1, position_in_string + str_nb, i)
+				position_in_string := position_in_string + str_nb;
+				from
+				until
+					eof or i > new_size
+				loop
+					inspect buffer.item (i)
+					when '%/255/' then
+						lines.put (-1, i);
+						columns.put (-1, i);
+						eof := True
+					when '%N' then
 						lines.put (line_number, i);
 						columns.put (column_number, i);
 						line_number := line_number + 1;
-						column_number := 1;
-						i := i + 1
+						column_number := 1
 					else
-						if
-							column_number <= cmask.count and then
-							cmask.item (column_number)
-						then
+						lines.put (line_number, i);
+						columns.put (column_number, i);
+						column_number := column_number + 1
+					end
+					i := i + 1
+				end
+			else
+				from
+					cmask := mask
+				until
+					eof or i > new_size
+				loop
+					position_in_string := position_in_string + 1
+					if position_in_string > string.count then
+						buffer.put ('%/255/', i);
+						lines.put (-1, i);
+						columns.put (-1, i);
+						eof := True
+					else
+						c := string.item (position_in_string);
+						if c = '%N' then
 							buffer.put (c, i);
 							lines.put (line_number, i);
 							columns.put (column_number, i);
+							line_number := line_number + 1;
+							column_number := 1;
 							i := i + 1
-						end;
-						column_number := column_number + 1
-					end
-				end	
+						else
+							if
+								column_number <= cmask.count and then
+								cmask.item (column_number)
+							then
+								buffer.put (c, i);
+								lines.put (line_number, i);
+								columns.put (column_number, i);
+								i := i + 1
+							end;
+							column_number := column_number + 1
+						end
+					end	
+				end
+				char_buffered_number := char_buffered_number + i - nb
 			end
-			char_buffered_number := char_buffered_number + i - nb
 		end
 
 -- Buffered files or strings

@@ -98,7 +98,7 @@ feature -- Status setting
 		
 	set_capacity (len: INTEGER) is
 		do
-			feature {EV_GTK_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_max_length (entry_widget, len)
 		end
 	
 	capacity: INTEGER is

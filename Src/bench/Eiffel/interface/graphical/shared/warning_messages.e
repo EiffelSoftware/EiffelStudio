@@ -212,7 +212,18 @@ feature -- Warning messages
 			!! Result.make (128);
 			Result.append ("Default ace file: ");
 			Result.append (f_name);
-			Result.append ("%Ndoes not exist")
+			Result.append ("%Ndoes not exist.")
+		end;
+
+	w_file_not_exist (f_name: STRING): STRING is
+			-- Error message when the Ace file does not exist.
+		require
+			f_name_not_void: f_name /= Void
+		do
+			!! Result.make (128);
+			Result.append ("File: ");
+			Result.append (f_name);
+			Result.append ("%Ndoes not exist.")
 		end;
 	
 	w_Directory_not_exist (dir_name: STRING): STRING is

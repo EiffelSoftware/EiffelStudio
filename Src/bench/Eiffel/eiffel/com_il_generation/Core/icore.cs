@@ -36,7 +36,9 @@ public interface ICore
 		string SourceFileName, string ElementTypeName);
 
 	// Generate class name and its specifier.
-	void GenerateClassHeader( bool IsInterface, bool Deferred, bool IsFrozen, bool Expanded, bool IsExternal, int TypeID );
+	void GenerateClassHeader (bool IsInterface,
+		bool IsDeferred, bool IsFrozen, bool IsExpanded,
+		bool IsExternal, int TypeID);
 	
 	// Bake .NET type
 	void EndClass();

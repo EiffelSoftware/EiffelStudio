@@ -166,7 +166,8 @@ internal class EiffelReflectionEmit : MarshalByRefObject, ICore {
 	
 	// Generate class name and its specifier.
 	public void GenerateClassHeader (bool IsInterface,
-		bool IsDeferred, bool IsFrozen, bool IsExpanded, bool IsExternal, int TypeID)
+		bool IsDeferred, bool IsFrozen, bool IsExpanded,
+		bool IsExternal, int TypeID)
 	{
 		Type ExternalType;
 		#if DEBUG

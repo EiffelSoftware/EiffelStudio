@@ -80,9 +80,11 @@ public class Core : ICore {
 	}
 	
 	public void GenerateClassHeader (bool IsInterface,
-		bool IsDeferred, bool IsFrozen, bool IsExpanded, bool IsExternal, int TypeID)
+		bool IsDeferred, bool IsFrozen, bool IsExpanded,
+		bool IsExternal, int TypeID)
 	{
-		core.GenerateClassHeader (IsInterface, IsDeferred, IsFrozen, IsExpanded, IsExternal, TypeID);
+		core.GenerateClassHeader (IsInterface, IsDeferred, IsFrozen, IsExpanded,
+			IsExternal, TypeID);
 	}
 	
 	public void EndClass() {

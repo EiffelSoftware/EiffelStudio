@@ -12,15 +12,15 @@
 			<size>3</size>9.1 Commands and events
 		</heading>
 		<paragraph>In the preceding examples each participant in a communication had to    get ready to send or receive at specific stages of its life. Although    this did not preclude asynchronous communication, it is sometimes    desirable to make the scheme even more asynchronous, and control more    decentralized, by letting each system simply specify certain    communication events that it wants to monitor, and certain commands to    be executed on occurrence of the specified events.</paragraph>
-		<paragraph>The commands are objects, instances of a general-purpose    class <code><class_name>COMMAND </class_name></code>or its proper descendants. Class <code><class_name>COMMAND </class_name></code>has, among its    features, a procedure 
+		<paragraph>The commands are objects, instances of a general-purpose    class <class_name>COMMAND </class_name>or its proper descendants. Class <class_name>COMMAND </class_name>has, among its    features, a procedure 
 			<italic>execute</italic> which executes the current command;    some commands are undoable and have an 
 			<italic>undo</italic> procedure.
 		</paragraph>
-		<paragraph>In EiffelNet the possible events associated with a socket will be of    three kind: a read event; a write event; or a special event (out of    bounds operation). The command classes will be descendants of <link><url>/libraries/net/reference/polling/abstract/poll_command_chart.xml</url><label>POLL_COMMAND</label></link>,    an heir of <code><class_name>COMMAND</class_name></code>.</paragraph>
+		<paragraph>In EiffelNet the possible events associated with a socket will be of    three kind: a read event; a write event; or a special event (out of    bounds operation). The command classes will be descendants of <link><url>/libraries/net/reference/polling/abstract/poll_command_chart.xml</url><label>POLL_COMMAND</label></link>,    an heir of <class_name>COMMAND</class_name>.</paragraph>
 		<heading>
 			<size>3</size>9.2 Command classes
 		</heading>
-		<paragraph>The example uses four command classes: <code><class_name>CLIENT_DATAGRAM_READER</class_name></code>,    <code><class_name>CLIENT_DATAGRAM_WRITER</class_name></code> and their counterpart for servers, representing    operations that must be triggered in the case of a read event and a    write event.</paragraph>
+		<paragraph>The example uses four command classes: <class_name>CLIENT_DATAGRAM_READER</class_name>,    <class_name>CLIENT_DATAGRAM_WRITER</class_name> and their counterpart for servers, representing    operations that must be triggered in the case of a read event and a    write event.</paragraph>
 		<paragraph>Here is the reader command for clients:    
 <code_block>
 	<keyword>class</keyword>
@@ -109,7 +109,7 @@
 					<size>3</size>9.3 The server and the client
 				</heading>
 				<paragraph>Once the commands have been defined, it suffices for the server and    the client to associate instances of these commands with the    appropriate.</paragraph>
-				<paragraph>The abstraction needed for this purpose is provided by class <code><class_name>MEDIUM_POLLER</class_name></code>.    An instance of this class knows about a number of commands, each    associated with a certain socket in read, write or special event mode.    By applying procedure 
+				<paragraph>The abstraction needed for this purpose is provided by class <class_name>MEDIUM_POLLER</class_name>.    An instance of this class knows about a number of commands, each    associated with a certain socket in read, write or special event mode.    By applying procedure 
 					<italic>execute</italic> to such a medium poller, you direct    it to monitor these sockets for the corresponding events and to execute    the command associated with each event that will be received. Procedure 
 					<italic>execute</italic>    takes two integer arguments: the maximum number of sockets to monitor,    and the timeout in milliseconds.
 				</paragraph>
@@ -146,7 +146,7 @@
 </code_block>
 				</paragraph>
 				<paragraph>Procedure 
-					<italic>make</italic> creates three objects: a socket, which it    associates with a specific port; a poller; and a read command (an    instance of SERVER_DATAGRAM_READER), which it attaches to the socket. It    then enters the read command into the poller, and does the same thing    with a write command. It sets up the poller to accept read commands only    and then executes the poller; this will enable the server to get the    read event triggered by the client's write command (as it appears below    in the text of class <code><class_name>POLLING_CLIENT</class_name></code>). Then the server reverses the    poller's set-up to write-only, and calls 
+					<italic>make</italic> creates three objects: a socket, which it    associates with a specific port; a poller; and a read command (an    instance of SERVER_DATAGRAM_READER), which it attaches to the socket. It    then enters the read command into the poller, and does the same thing    with a write command. It sets up the poller to accept read commands only    and then executes the poller; this will enable the server to get the    read event triggered by the client's write command (as it appears below    in the text of class <class_name>POLLING_CLIENT</class_name>). Then the server reverses the    poller's set-up to write-only, and calls 
 					<italic>execute</italic> again.
 				</paragraph>
 				<paragraph>The procedures 

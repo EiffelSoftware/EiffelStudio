@@ -42,28 +42,28 @@
 						<cell>Unsigned hexadecimal representation</cell>
 					</row>
 					<row>
-						<cell><code><class_name>INTEGER_8</class_name></code></cell>
+						<cell><class_name>INTEGER_8</class_name></cell>
 						<cell><code><number>-128</number> <symbol>..</symbol> <number>127</number></code></cell>
 						<cell><code><number>0x0</number> <symbol>..</symbol> <number>0xFF</number></code></cell>
 					</row>
 					<row>
-						<cell><code><class_name>INTEGER_16</class_name></code></cell>
+						<cell><class_name>INTEGER_16</class_name></cell>
 						<cell><code><number>-32768</number> <symbol>..</symbol> <number>32767</number></code></cell>
 						<cell><code><number>0x0</number> <symbol>..</symbol> <number>0xFFFF</number></code></cell>
 					</row>
 					<row>
-						<cell><code><class_name>INTEGER_32</class_name></code></cell>
+						<cell><class_name>INTEGER_32</class_name></cell>
 						<cell><code><number>-2147483648</number> <symbol>..</symbol> <number>2147483647</number></code></cell>
 						<cell><code><number>0x0</number> <symbol>..</symbol> <number>0xFFFFFFFF</number></code></cell>
 					</row>
 					<row>
-						<cell><code><class_name>INTEGER_64</class_name></code></cell>
+						<cell><class_name>INTEGER_64</class_name></cell>
 						<cell><code><number>-9223372036854775808</number> <symbol>..</symbol> <number>9223372036854775807</number></code></cell>
 						<cell><code><number>0x0</number> <symbol>..</symbol> <number>0xFFFFFFFFFFFFFFFF</number></code></cell>
 					</row>
 				</table>
 			</item>
-			<item>Excluded nonsignificant leading zeroes from determination of allowed integer constant type, so that <code><number>00000000000000123</number></code> is now a valid <code><class_name>INTEGER_8</class_name></code> value.</item>
+			<item>Excluded nonsignificant leading zeroes from determination of allowed integer constant type, so that <code><number>00000000000000123</number></code> is now a valid <class_name>INTEGER_8</class_name> value.</item>
 		</list>
 		<heading>
 			<size>3</size>Compiler issues
@@ -75,14 +75,14 @@
 			<size>3</size>Runtime/code generation issues
 		</heading>
 		<list ordered="false">
-			<item>Corrected C code on Windows for constants of type <code><class_name>INTEGER_64</class_name></code>. Before constants of this type between <code><number>-2147483648</number></code> and <code><number>-1</number></code> could be processed as positive 64-bit values.</item>
-			<item>Fixed incorrect C and IL code generation for <code><class_name>INTEGER_8</class_name></code> and <code><class_name>INTEGER_16</class_name></code> arithmetic and shift operations that might produce incorrect result when combined in two or more operations in a row. For example,<code_block><local_variable>i</local_variable> <symbol>:=</symbol> <symbol>(</symbol><local_variable>i</local_variable> <symbol>+</symbol> <local_variable>i</local_variable><symbol>)</symbol> <symbol>|&gt;&gt;</symbol> <number>1</number></code_block>assigned <code><number>-128</number></code> to <code><local_variable>i</local_variable></code> of type <code><class_name>INTEGER_8</class_name></code> if the initial value of <code><local_variable>i</local_variable></code> was <code><number>-128</number></code>. Now this instruction assigns <code><number>0</number></code>.</item>
+			<item>Corrected C code on Windows for constants of type <class_name>INTEGER_64</class_name>. Before constants of this type between <code><number>-2147483648</number></code> and <code><number>-1</number></code> could be processed as positive 64-bit values.</item>
+			<item>Fixed incorrect C and IL code generation for <class_name>INTEGER_8</class_name> and <class_name>INTEGER_16</class_name> arithmetic and shift operations that might produce incorrect result when combined in two or more operations in a row. For example,<code_block><local_variable>i</local_variable> <symbol>:=</symbol> <symbol>(</symbol><local_variable>i</local_variable> <symbol>+</symbol> <local_variable>i</local_variable><symbol>)</symbol> <symbol>|&gt;&gt;</symbol> <number>1</number></code_block>assigned <code><number>-128</number></code> to <code><local_variable>i</local_variable></code> of type <class_name>INTEGER_8</class_name> if the initial value of <code><local_variable>i</local_variable></code> was <code><number>-128</number></code>. Now this instruction assigns <code><number>0</number></code>.</item>
 		</list>
 		<heading>
 			<size>3</size>.NET issues
 		</heading>
 		<list ordered="false">
-			<item>Corrected processing of literal floating point fields from external assemblies (such as <code><cluster_name>System</cluster_name><symbol>.</symbol><class_name>Math</class_name><symbol>.</symbol><feature_name>PI</feature_name></code>) to obtain proper values.</item>
+			<item>Corrected processing of literal floating point fields from external assemblies (such as <cluster_name>System</cluster_name><code><symbol>.</symbol></code><class_name>Math</class_name><code><symbol>.</symbol></code><feature_name>PI</feature_name>) to obtain proper values.</item>
 		</list>
 		<heading>
 			<size>3</size>Store/Retrieve issues

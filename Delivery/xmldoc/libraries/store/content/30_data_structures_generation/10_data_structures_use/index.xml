@@ -98,13 +98,13 @@
 		<heading>
 			<size>3</size>2.3. Getting objects metadata
 		</heading>
-		<paragraph>While manipulating <code><class_name>DB_TABLE</class_name></code> objects, you can easily get:</paragraph>
+		<paragraph>While manipulating <class_name>DB_TABLE</class_name> objects, you can easily get:</paragraph>
 		<list ordered="false">
 			<item>Which database table/view the object references.</item>
 			<item>What are the types of its attributes.</item>
 		</list>
 		<paragraph>
-			<bold>Note:</bold> you also get objects metadata through the <code><class_name>DB_TABLE_DESCRIPTION</class_name></code> object associated to your   DB_TABLE object.
+			<bold>Note:</bold> you also get objects metadata through the <class_name>DB_TABLE_DESCRIPTION</class_name> object associated to your   DB_TABLE object.
 			<paragraph>Objects metadata used in assertions ensures objects type validity. To illustrates this, let's look at the contract form of a class that manipulates "abstract" table/view rows:</paragraph>
 <code_block>
 	<feature_name>set_table_code</feature_name> <symbol>(</symbol><local_variable>code</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol>
@@ -122,9 +122,7 @@
 				<size>3</size>2.4. Accessing database metadata
 			</heading>
 			<paragraph>Basic database metadata is also available: the 
-				<code>
-					<class_name>DB_SPECIFIC_TABLES_ACCESS_USE</class_name>
-				</code> class (generated), stores INTEGER codes for each database table/view. These codes afford related table/view name and related new storing objects (i.e. that conforms to DB_TABLE class).
+				<class_name>DB_SPECIFIC_TABLES_ACCESS_USE</class_name> class (generated), stores INTEGER codes for each database table/view. These codes afford related table/view name and related new storing objects (i.e. that conforms to DB_TABLE class).
 			</paragraph>
 <code_block>
 	<feature_name>tables</feature_name><symbol>:</symbol> <class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
@@ -138,7 +136,7 @@
 			<heading>
 				<size>3</size>2.5. More interesting features
 			</heading>
-			<paragraph>The <code><class_name>DB_TABLE_DESCRIPTION</class_name></code> class offers more features to get table row attributes as conveniently as possible:</paragraph>
+			<paragraph>The <class_name>DB_TABLE_DESCRIPTION</class_name> class offers more features to get table row attributes as conveniently as possible:</paragraph>
 			<list ordered="false">
 				<item>The table/view row primary key value (ID)</item>
 				<item>The list of table/view row attributes</item>
@@ -151,9 +149,9 @@
 			</heading>
 			<paragraph>Database-specific classes can be divided into 3 types:</paragraph>
 			<list ordered="false">
-				<item>Classes holding database table rows content (inheriting from  <code><class_name>DB_TABLE</class_name></code>)</item>
-				<item>Classes describing database tables (inheriting from <code><class_name>DB_TABLE_DESCRIPTION</class_name></code>)</item>
-				<item>A class describing the database and giving access to the previous types of classes (inheriting from <code><class_name>DB_TABLES_ACCESS</class_name></code>)</item>
+				<item>Classes holding database table rows content (inheriting from  <class_name>DB_TABLE</class_name>)</item>
+				<item>Classes describing database tables (inheriting from <class_name>DB_TABLE_DESCRIPTION</class_name>)</item>
+				<item>A class describing the database and giving access to the previous types of classes (inheriting from <class_name>DB_TABLES_ACCESS</class_name>)</item>
 			</list>
 			<paragraph>One database table is hence associated to one table class and one description class. Both classes are closely 
 				<link>
@@ -180,11 +178,11 @@
 			<heading>
 				<size>2</size>2. Table and description classes relationship
 			</heading>
-			<paragraph>Table classes, that inherit from <code><class_name>DB_TABLE</class_name></code>, and description classes, that inherit from <code><class_name>DB_TABLE_DESCRIPTION</class_name></code>, both deals with database tables. This section explains what are their own role and their relationship.</paragraph>
+			<paragraph>Table classes, that inherit from <class_name>DB_TABLE</class_name>, and description classes, that inherit from <class_name>DB_TABLE_DESCRIPTION</class_name>, both deals with database tables. This section explains what are their own role and their relationship.</paragraph>
 			<heading>
 				<size>3</size>2.1. Table classes
 			</heading>
-			<paragraph>As seen in the previous section, table classes merely store table rows attribute values. Their objects can be considered as database table rows, or more precisely, database table rows on the Eiffel side. These classes inherit from <code><class_name>DB_TABLE</class_name></code>. </paragraph>
+			<paragraph>As seen in the previous section, table classes merely store table rows attribute values. Their objects can be considered as database table rows, or more precisely, database table rows on the Eiffel side. These classes inherit from <class_name>DB_TABLE</class_name>. </paragraph>
 			<paragraph>Each of these classes are associated to a description class. </paragraph>
 			<paragraph>
 				<bold>Tip:</bold> Use table classes to 
@@ -286,9 +284,7 @@
 				<size>3</size>3.2. DB_SPECIFIC_TABLES_ACCESS class
 			</heading>
 			<paragraph>The 
-				<code>
-					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
-				</code> class stores the unique table description object. It also provides the following facilities:
+				<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name> class stores the unique table description object. It also provides the following facilities:
 			</paragraph>
 			<list ordered="false">
 				<item>Every database table code</item>
@@ -297,15 +293,13 @@
 				<item>Table names from a table code</item>
 			</list>
 			<paragraph>
-				<bold>Note</bold>: database table codes given in the class match the table codes provided by <code><class_name>DB_TABLE_DESCRIPTION</class_name></code>.
+				<bold>Note</bold>: database table codes given in the class match the table codes provided by <class_name>DB_TABLE_DESCRIPTION</class_name>.
 			</paragraph>
 			<heading>
 				<size>3</size>3.3. Abstract access class
 			</heading>
 			<paragraph>The DB_TABLES_ACCESS class provides an interface for the 
-				<code>
-					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
-				</code> class which is non-specific to the database. This can be used by non database-specific code (for instance the 
+				<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name> class which is non-specific to the database. This can be used by non database-specific code (for instance the 
 				<link>
 					<url>../../40_dataview_cluster/index.xml</url>
 					<label>DataView cluster</label>
@@ -321,23 +315,13 @@
 				<size>3</size>3.4. Use classes
 			</heading>
 			<paragraph>The 
-				<code>
-					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
-				</code> object can be accessed as a kind of "global variable" by any class which inherits from 
-				<code>
-					<class_name>DB_SPECIFIC_TABLES_ACCESS_USE</class_name>
-				</code>. This class also ensures 
-				<code>
-					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
-				</code> object unicity.
+				<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name> object can be accessed as a kind of "global variable" by any class which inherits from 
+				<class_name>DB_SPECIFIC_TABLES_ACCESS_USE</class_name>. This class also ensures 
+				<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name> object unicity.
 			</paragraph>
 			<paragraph>The DB_TABLES_ACCESS_USE class affords the same possibility but with no reference to the 
-				<code>
-					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
-				</code> object. The unique 
-				<code>
-					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
-				</code> should be set to this class as of type <code><class_name>DB_TABLES_ACCESS</class_name></code>.
+				<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name> object. The unique 
+				<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name> should be set to this class as of type <class_name>DB_TABLES_ACCESS</class_name>.
 			</paragraph>
 			<line_break/>
 		</paragraph>

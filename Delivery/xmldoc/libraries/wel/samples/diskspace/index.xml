@@ -35,10 +35,10 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph><code><class_name>DISCSPACE_DEMO</class_name></code> contains a once feature, diskspace which returns an instance of <link><url>../../reference/support/wel_disk_space_chart.xml</url><label>WEL_DISK_SPACE</label></link>, used to query the local drives.</paragraph>
+		<paragraph><class_name>DISCSPACE_DEMO</class_name> contains a once feature, diskspace which returns an instance of <link><url>../../reference/support/wel_disk_space_chart.xml</url><label>WEL_DISK_SPACE</label></link>, used to query the local drives.</paragraph>
 		<paragraph>This sample contains only one class: 
 			<list ordered="false">
-				<item><code><class_name>DISKSPACE_DEMO</class_name></code></item>
+				<item><class_name>DISKSPACE_DEMO</class_name></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

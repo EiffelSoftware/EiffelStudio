@@ -224,9 +224,7 @@ where procedures parse and semantics are expressed in terms of some more specifi
 </code_block>
 		<paragraph>Function production remains deferred in classes <link><url>/libraries/parse/reference/aggregate_chart.xml</url><label>AGGREGATE</label></link>, <link><url>/libraries/parse/reference/choice_chart.xml</url><label>CHOICE</label></link> and <link><url>/libraries/parse/reference/repetition_chart.xml</url><label>REPETITION</label></link>. Every effective construct class that you write must provide an effecting of that function. It is important for the efficiency of the parsing process that every effective version of production be a Once function. Several examples of such effectings are given below.</paragraph>
 		<paragraph>Classes <link><url>/libraries/parse/reference/aggregate_chart.xml</url><label>AGGREGATE</label></link>, <link><url>/libraries/parse/reference/choice_chart.xml</url><label>CHOICE</label></link>, <link><url>/libraries/parse/reference/repetition_chart.xml</url><label>REPETITION</label></link> and <link><url>/libraries/parse/reference/terminal_chart.xml</url><label>TERMINAL</label></link> also have a deferred function construct_name of type STRING, useful for tracing and debugging. This function should be effected in every construct class to return the string name of the construct, such as "INSTRUCTION" or "CLASS" for construct classes in a grammar of Eiffel. For efficiency reasons, the construct_name function should also be a Once function. The form of such a function will always be the same, as illustrated by the following example which may appear in the construct class 
-			<code>
-				<class_name>INSTRUCTION</class_name>
-			</code> in a processor for Eiffel:
+			<class_name>INSTRUCTION</class_name> in a processor for Eiffel:
 		</paragraph>
 <code_block>
 	<feature_name>construct_name</feature_name><symbol>:</symbol> <class_name>STRING</class_name> <keyword>is</keyword>
@@ -338,10 +336,10 @@ to create the object containing the result. Then for each non-keyword component,
 		<heading>
 			<size>3</size>Choices
 		</heading>
-		<paragraph>The production function for a descendant of <code><class_name>CHOICE</class_name></code> will describe how to build a specimen of the corresponding function as a specimen of one of the alternative constructs.</paragraph>
-		<paragraph>As an example, consider the production function of class <code><class_name>TERM</class_name></code> for the Polynomial example language. The corresponding production is</paragraph>
+		<paragraph>The production function for a descendant of <class_name>CHOICE</class_name> will describe how to build a specimen of the corresponding function as a specimen of one of the alternative constructs.</paragraph>
+		<paragraph>As an example, consider the production function of class <class_name>TERM</class_name> for the Polynomial example language. The corresponding production is</paragraph>
 		<code_block>Term [=] Simple_var Poly_integer Nested</code_block>
-		<line_break/> where Simple_var, Poly_integer and Nested are other constructs. This means that every specimen of Term consists of one specimen of any one of these three constructs. Here is the corresponding production function as it appears in class <code><class_name>TERM</class_name></code>: 
+		<line_break/> where Simple_var, Poly_integer and Nested are other constructs. This means that every specimen of Term consists of one specimen of any one of these three constructs. Here is the corresponding production function as it appears in class <class_name>TERM</class_name>: 
 <code_block>
 	<feature_name>production</feature_name><symbol>:</symbol> <class_name>LINKED_LIST</class_name> <symbol>[</symbol><class_name>CONSTRUCT</class_name><symbol>]</symbol> <keyword>is</keyword>
     		 <keyword>local</keyword>
@@ -368,7 +366,7 @@ to create the object containing the result. Then for each non-keyword component,
 			</code> and 
 			<code>
 				<local_variable>nest</local_variable>
-			</code> - for each alternative component of the right-hand side. The type of each entity is the corresponding construct class - here <code><class_name>SIMPLE_VAR</class_name></code>, <code><class_name>POLY_INTEGER</class_name></code> and <code><class_name>NESTED</class_name></code>.
+			</code> - for each alternative component of the right-hand side. The type of each entity is the corresponding construct class - here <class_name>SIMPLE_VAR</class_name>, <class_name>POLY_INTEGER</class_name> and <class_name>NESTED</class_name>.
 		</paragraph>
 		<paragraph>The body of the function must begin by</paragraph>
 <code_block>
@@ -396,13 +394,13 @@ to create the object containing the result. Then for each non-keyword component,
 		<heading>
 			<size>3</size>Repetitions
 		</heading>
-		<paragraph>The production function for a descendant of <link><url>/libraries/parse/reference/repetition_chart.xml</url><label>REPETITION</label></link> will describe how to build a specimen of the corresponding function as a sequence or zero or more (or, depending on the grammar, one or more) specimens of the base construct. The class must also effect a feature separator of type <code><class_name>STRING</class_name></code>, usually as a constant attribute. (This feature is introduced as deferred in class <link><url>/libraries/parse/reference/repetition_chart.xml</url><label>REPETITION</label></link>.)</paragraph>
+		<paragraph>The production function for a descendant of <link><url>/libraries/parse/reference/repetition_chart.xml</url><label>REPETITION</label></link> will describe how to build a specimen of the corresponding function as a sequence or zero or more (or, depending on the grammar, one or more) specimens of the base construct. The class must also effect a feature separator of type <class_name>STRING</class_name>, usually as a constant attribute. (This feature is introduced as deferred in class <link><url>/libraries/parse/reference/repetition_chart.xml</url><label>REPETITION</label></link>.)</paragraph>
 		<paragraph>As an example, consider the construct Variables in the Polynomial example language. The right-hand side of the corresponding production is
 			<line_break/>
 			<code_block>Variables [=] {Identifier ";" ...}</code_block>
 			<line_break/> where Identifier is another construct, and the semicolon ";" is a terminal. This means that every specimen of Variables consists of zero or more specimens of Identifier, separated from each other (if more than one) by semicolons.
 		</paragraph>
-		<paragraph>Here are the corresponding production function and separator attribute as they appear in class <code><feature_name>VARIABLES</feature_name></code>:</paragraph>
+		<paragraph>Here are the corresponding production function and separator attribute as they appear in class <feature_name>VARIABLES</feature_name>:</paragraph>
 <code_block>
 	<feature_name>production</feature_name><symbol>:</symbol> <class_name>LINKED_LIST</class_name> <symbol>[</symbol><class_name>IDENTIFIER</class_name><symbol>]</symbol> <keyword>is</keyword>
 		<keyword>local</keyword>
@@ -508,12 +506,12 @@ to create the object containing the result. Then for each non-keyword component,
 	<keyword>end</keyword>
 </code_block>
 			<paragraph>This class illustrates the straightforward scheme for writing lexical interface classes. It introduces constants such as Special to represent the regular expressions supported, and effects procedure obtain_analyzer. The role of this procedure is to define lexical conventions (here through calls to ignore_case and keywords_ignore_case), to record the regular expressions (through calls to put_expression, packaged in a procedure build_expressions for clarity), and records the keywords (through calls to put_keyword, packaged in build_keywords).</paragraph>
-			<paragraph>All the classes of a document processor that need to interact with the lexical analysis should inherit from a lexical interface class such as <code><class_name>POLY_LEX</class_name></code>. This is true in particular of the root class of a processor, as discussed below.</paragraph>
+			<paragraph>All the classes of a document processor that need to interact with the lexical analysis should inherit from a lexical interface class such as <class_name>POLY_LEX</class_name>. This is true in particular of the root class of a processor, as discussed below.</paragraph>
 			<heading>
 				<size>3</size>More on terminal constructs
 			</heading>
 			<paragraph>Terminal construct classes are examples of classes that need to interact with the lexical analysis, and should thus inherit from the lexical interface class.</paragraph>
-			<paragraph>Class <code><class_name>TERMINAL</class_name></code> includes a deferred function token_type of type <code><class_name>INTEGER</class_name></code>. Every effective descendant of <code><class_name>TERMINAL</class_name></code> should effect this feature as a constant attribute, whose value is the code for the associated regular expression, obtained from the lexical interface class. As every other construct class, such a descendant should also effect construct_name as a Once function. For example, in the Polynomial language, class <code><class_name>INT_CONSTANT</class_name></code> has the following text: 
+			<paragraph>Class <class_name>TERMINAL</class_name> includes a deferred function token_type of type <class_name>INTEGER</class_name>. Every effective descendant of <class_name>TERMINAL</class_name> should effect this feature as a constant attribute, whose value is the code for the associated regular expression, obtained from the lexical interface class. As every other construct class, such a descendant should also effect construct_name as a Once function. For example, in the Polynomial language, class <class_name>INT_CONSTANT</class_name> has the following text: 
 <code_block>
 	<keyword>class</keyword>
 	     <class_name>INT_CONSTANT</class_name>
@@ -546,8 +544,8 @@ to create the object containing the result. Then for each non-keyword component,
 					<size>3</size>Semantic procedures
 				</heading>
 				<paragraph>The principal procedures for defining semantic actions are pre_action and post_action. These are features of class CONSTRUCT. Procedure pre_action describes the actions to be performed before a construct has been recognized; post_action, the actions to be performed after a construct has been recognized.</paragraph>
-				<paragraph>As defined in<code><class_name> CONSTRUCT</class_name></code>, both and post_action do nothing by default. Any construct class which is a descendant of <code><class_name>CONSTRUCT</class_name></code> may redefine one or both so that they will perform the semantic actions that the document processor must apply to specimens of the corresponding construct. These procedures are called automatically during processing, before and after the corresponding structures have been parsed.</paragraph>
-				<paragraph>For <code><class_name>TERMINAL</class_name></code>, only one semantic action makes sense. To avoid any confusion, post_action is renamed action in that class and pre_action is renamed unused_pre_action to indicate that it is irrelevant.</paragraph>
+				<paragraph>As defined in<class_name> CONSTRUCT</class_name>, both and post_action do nothing by default. Any construct class which is a descendant of <class_name>CONSTRUCT</class_name> may redefine one or both so that they will perform the semantic actions that the document processor must apply to specimens of the corresponding construct. These procedures are called automatically during processing, before and after the corresponding structures have been parsed.</paragraph>
+				<paragraph>For <class_name>TERMINAL</class_name>, only one semantic action makes sense. To avoid any confusion, post_action is renamed action in that class and pre_action is renamed unused_pre_action to indicate that it is irrelevant.</paragraph>
 				<paragraph>Often, the semantic procedures need to compute various elements of information. These may be recorded using appropriate attributes of the corresponding construct classes.</paragraph>
 				<note>
 					<bold>Note</bold>: readers familiar with the theory of parsing and compiling will see that this scheme, using the attributes of Eiffel classes, provides a direct implementation of the "attribute grammar" mechanism.
@@ -558,7 +556,7 @@ to create the object containing the result. Then for each non-keyword component,
 				<paragraph>As an example let us examine the semantics of the Product construct for the polynomial language. It is a repetition construct, with Term as the base construct; in other words a specimen of Product is a sequence of one or more terms, representing the product term
 					<sub_script>1</sub_script> * term
 					<sub_script>2</sub_script> ... * term
-					<sub_script>n</sub_script>. Here is the post_action procedure in the corresponding class <code><class_name>PRODUCT</class_name></code>:
+					<sub_script>n</sub_script>. Here is the post_action procedure in the corresponding class <class_name>PRODUCT</class_name>:
 				</paragraph>
 <code_block>
 	<feature_name>post_action</feature_name> <keyword>is</keyword>
@@ -582,9 +580,9 @@ to create the object containing the result. Then for each non-keyword component,
 	           <keyword>end</keyword>
 	     <keyword>end</keyword>
 </code_block>
-				<paragraph>Here each relevant construct class has an attribute info used to record the semantic information associated with polynomials and their components, such as child_value, an <code><class_name>INTEGER</class_name></code>. The post_action takes care of computing the product of all child_values for the children. First, of course, post_action must recursively be applied to each child, to compute its own child_value.</paragraph>
+				<paragraph>Here each relevant construct class has an attribute info used to record the semantic information associated with polynomials and their components, such as child_value, an <class_name>INTEGER</class_name>. The post_action takes care of computing the product of all child_values for the children. First, of course, post_action must recursively be applied to each child, to compute its own child_value.</paragraph>
 				<note>
-					<bold>Note</bold>: recall that an instance of <code><class_name>CONSTRUCT</class_name></code> is also a node of the abstract syntax tree, so that all the <code><class_name>TWO_WAY_TREE</class_name></code> features such as child_value, child_start, child_after and many others are automatically available to access the syntactical structure.
+					<bold>Note</bold>: recall that an instance of <class_name>CONSTRUCT</class_name> is also a node of the abstract syntax tree, so that all the <class_name>TWO_WAY_TREE</class_name> features such as child_value, child_start, child_after and many others are automatically available to access the syntactical structure.
 				</note>
 				<heading>
 					<size>3</size>Keeping syntax and semantics separate
@@ -594,42 +592,24 @@ to create the object containing the result. Then for each non-keyword component,
 					<list ordered="false">
 						<item>First write purely 
 							<bold>syntactic classes</bold>, that is to say construct classes which only effect the syntactical part (in particular function production). As a consequence, these classes usually remain deferred. The recommended convention for such syntactic classes is to use names beginning with 
-							<code>
-								<class_name>S_</class_name>
-							</code>, for example 
-							<code>
-								<class_name>S_INSTRUCTION</class_name>
-							</code> or 
-							<code>
-								<class_name>S_LOOP</class_name>
-							</code>.
+							<class_name>S_</class_name>, for example 
+							<class_name>S_INSTRUCTION</class_name> or 
+							<class_name>S_LOOP</class_name>.
 						</item>
 						<item>Then for each construct for which a processor defines a certain semantics, define another class, called a 
 							<bold>semantic class</bold>, which inherits from the corresponding syntactic class. The recommended convention for semantic classes is to give them names which directly reflect the corresponding construct name, as in 
-							<code>
-								<class_name>INSTRUCTION</class_name>
-							</code> or 
-							<code>
-								<class_name>LOOP</class_name>
-							</code>.
+							<class_name>INSTRUCTION</class_name> or 
+							<class_name>LOOP</class_name>.
 						</item>
 					</list>
 				</paragraph>
 				<paragraph>To build a semantic class in in step 2 it is often convenient to use multiple inheritance from a syntactic class and a "semantics-only" class. For example in a processor for Eiffel class 
-					<code>
-						<class_name>INSTRUCTION</class_name>
-					</code> may inherit from both 
-					<code>
-						<class_name>IS_INSTRUCTION</class_name>
-					</code> and from a semantics-only class 
-					<code>
-						<class_name>INSTRUCTION_PROPERTIES</class_name>
-					</code> which introduces the required semantic features.
+					<class_name>INSTRUCTION</class_name> may inherit from both 
+					<class_name>IS_INSTRUCTION</class_name> and from a semantics-only class 
+					<class_name>INSTRUCTION_PROPERTIES</class_name> which introduces the required semantic features.
 				</paragraph>
 				<paragraph>One of the advantages of this scheme is that it makes it easy to associate two or more types of processing with a single construct, by keeping the same syntactic class (such as 
-					<code>
-						<class_name>IS_INSTRUCTION</class_name>
-					</code>) but choosing a different pure-semantics class each time.
+					<class_name>IS_INSTRUCTION</class_name>) but choosing a different pure-semantics class each time.
 				</paragraph>
 				<paragraph>As noted earlier in this chapter, this is particularly useful in an environment where different processors need to perform differents actions on specimens of the same construct. In an Eiffel environment, for example, processors that manipulate classes and other Eiffel construct specimens may include a compiler, an interpreter, a flattener (producing the flat form), a class abstracter (producing the short or flat-short form), and various browsing tools such as those of ISE Eiffel.</paragraph>
 				<paragraph>For obvious reasons of convenience and ease of maintenance, it is desirable to let these processors share the same syntactic descriptions. The method just described, relying on multiple inheritance, achieves this goal.</paragraph>
@@ -662,7 +642,7 @@ L [=] A ...
 </code_block>
 				</paragraph>
 				<paragraph>Direct left recursion is easy to avoid, but indirect recursion may sneak in in less trivial ways.</paragraph>
-				<paragraph>To determine whether the production for a construct is directly or indirectly left-recursive, use the query left_recursion from class <code><class_name>CONSTRUCT</class_name></code>.</paragraph>
+				<paragraph>To determine whether the production for a construct is directly or indirectly left-recursive, use the query left_recursion from class <class_name>CONSTRUCT</class_name>.</paragraph>
 				<heading>
 					<size>3</size>Backtracking and the commit procedure
 				</heading>
@@ -676,11 +656,11 @@ for C: you won't be able to find a C here.  You may go back to the
 next higher-level choice before C - or admit failure if there is
 no such choice left." </code_block>
 				<paragraph>Such a hint is useful when you want to let the parser benefit from some higher-level knowledge about the grammar, which is not directly deducible from the way the productions have been written.</paragraph>
-				<paragraph>Here is an example. The production function for <code><class_name>NESTED</class_name></code> in the Polynomial language, which attempts to parse specimens of the form
+				<paragraph>Here is an example. The production function for <class_name>NESTED</class_name> in the Polynomial language, which attempts to parse specimens of the form
 					<line_break/>
 					<code_block>(s)</code_block>
 					 where 
-					<italic>s</italic> is a specimen of <code><class_name>SUM</class_name></code>, is written as
+					<italic>s</italic> is a specimen of <class_name>SUM</class_name>, is written as
 				</paragraph>
 <code_block>
 	<feature_name>production</feature_name><symbol>:</symbol> <class_name>LINKED_LIST</class_name> <symbol>[</symbol><class_name>CONSTRUCT</class_name><symbol>]</symbol> <keyword>is</keyword>
@@ -702,17 +682,13 @@ no such choice left." </code_block>
 as one of its alternatives has another alternative construct whose
 specimens could begin with an opening parenthesis "(".</code_block>
 				<paragraph>Because of this property, if the parser goes so far as to recognize an opening parenthesis as part of parsing any construct 
-					<code>
-						<class_name>C</class_name>
-					</code> for which NESTED is an alternative, but further tokens do not match the structure of <code><class_name>NESTED</class_name></code> specimens, then we will have failed to recognize not only a <code><class_name>NESTED</class_name></code> but also a 
-					<code>
-						<class_name>C</class_name>
-					</code>.
+					<class_name>C</class_name> for which NESTED is an alternative, but further tokens do not match the structure of <class_name>NESTED</class_name> specimens, then we will have failed to recognize not only a <class_name>NESTED</class_name> but also a 
+					<class_name>C</class_name>.
 				</paragraph>
 				<note>
 					<bold>Note</bold>: some readers will have recognized commit as being close to the Prolog "cut" mechanism.
 				</note>
-				<paragraph>In this example, <code><class_name>NESTED</class_name></code> is used in only one right-hand side production: the choice production for TERM, for which the other alternatives are <code><class_name>SIMPLE_VAR</class_name></code> and <code><class_name>POLY_INTEGER</class_name></code>, none of whose specimens can include an opening parenthesis.</paragraph>
+				<paragraph>In this example, <class_name>NESTED</class_name> is used in only one right-hand side production: the choice production for TERM, for which the other alternatives are <class_name>SIMPLE_VAR</class_name> and <class_name>POLY_INTEGER</class_name>, none of whose specimens can include an opening parenthesis.</paragraph>
 				<paragraph>The use of commit assumes global knowledge about the grammar and its future extensions, which is somewhat at odds with the evolutionary approach suggested by the Eiffel method. Applied improperly, this mechanism could lead to the rejection of valid texts as invalid. Used with care, however, it helps in obtaining high-performance parsing without impairing too much the simplicity of preparing parsers and other document processors.</paragraph>
 				<heading>
 					<size>2</size>BUILDING A DOCUMENT PROCESSOR
@@ -735,18 +711,18 @@ specimens could begin with an opening parenthesis "(".</code_block>
 				</paragraph>
 				<note>
 					<bold>Note</bold>: this notion of top construct class has a natural connection to the notion of root class of a system, as needed to get executable software. The top construct class could indeed be used as root of the processor system. In line with the previous discussion, however, it appears preferable to keep the top construct class (which only depends on the syntax and remains independent of any particular processor) separate from the system's root class. With this approach the root class will often be a descendant of the top construct class.
-					<line_break/> This policy was adopted for the Polynomial language example as it appears in the delivery: the processor defined for this example uses <code><class_name>LINE</class_name></code> as the top construct class; the root of the processor system is a class <code><class_name>PROCESS</class_name></code>, which inherits from <code><class_name>LINE</class_name></code>.
+					<line_break/> This policy was adopted for the Polynomial language example as it appears in the delivery: the processor defined for this example uses <class_name>LINE</class_name> as the top construct class; the root of the processor system is a class <class_name>PROCESS</class_name>, which inherits from <class_name>LINE</class_name>.
 				</note>
 				<heading>
 					<size>3</size>Steps in the execution of a document processor
 				</heading>
 				<paragraph>As any root class of a system, the root of a document processor must have a creation procedure which starts the execution. Here the task of this class is the following: 
 					<list ordered="true">
-						<item>Define an object representing the input document to be processed; this will be an instance of class <code><class_name>INPUT</class_name></code>.</item>
+						<item>Define an object representing the input document to be processed; this will be an instance of class <class_name>INPUT</class_name>.</item>
 						<item>Obtain a lexical analyzer applicable to the language, and connect it with the document.</item>
 						<item>Select an input file, containing the actual document to be processed.</item>
 						<item>Process the document: in other words, parse it and, if parsing is successful, apply the semantics.</item>
-						<item>To execute these steps in a simple and convenient fashion, it is useful to declare the root class as a descendant of the lexical interface class. The root class, being an heir to the top construct class, will also be a descendant of <code><class_name>CONSTRUCT</class_name></code>.</item>
+						<item>To execute these steps in a simple and convenient fashion, it is useful to declare the root class as a descendant of the lexical interface class. The root class, being an heir to the top construct class, will also be a descendant of <class_name>CONSTRUCT</class_name>.</item>
 					</list>
 				</paragraph>
 				<heading>
@@ -760,12 +736,12 @@ specimens could begin with an opening parenthesis "(".</code_block>
 					<link>
 						<anchor_name>step_e2</anchor_name>
 						<label>2</label>
-					</link>, a simple call instruction suffices: just call the procedure build, inherited from <code><class_name>L_INTERFACE</class_name></code> using as argument document, a feature of type INPUT, obtained from <code><class_name>METALEX</class_name></code> (the lexical analyzer generator class) through <code><class_name>L_INTERFACE</class_name></code>. The call, then, is just:
+					</link>, a simple call instruction suffices: just call the procedure build, inherited from <class_name>L_INTERFACE</class_name> using as argument document, a feature of type INPUT, obtained from <class_name>METALEX</class_name> (the lexical analyzer generator class) through <class_name>L_INTERFACE</class_name>. The call, then, is just:
 				</paragraph>
 <code_block>
 	<feature_name>build</feature_name> <symbol>(</symbol><feature_name>document</feature_name><symbol>)</symbol>
 </code_block>
-				<paragraph>Although you may use this line as a recipe with no need for further justification, it is interesting to see what build does. Feature document describes the input document to be processed; it is introduced as a Once function in class <code><class_name>CONSTRUCT</class_name></code> to ensure that all instances of <code><class_name>CONSTRUCT</class_name></code> share a single document - in other words, that all processing actions apply to the same document. The text of build is:</paragraph>
+				<paragraph>Although you may use this line as a recipe with no need for further justification, it is interesting to see what build does. Feature document describes the input document to be processed; it is introduced as a Once function in class <class_name>CONSTRUCT</class_name> to ensure that all instances of <class_name>CONSTRUCT</class_name> share a single document - in other words, that all processing actions apply to the same document. The text of build is:</paragraph>
 <code_block>
 	<feature_name>build</feature_name> <symbol>(</symbol>doc<symbol>:</symbol> <class_name>INPUT</class_name><symbol>)</symbol> <keyword>is</keyword>
 	           <comment>-- Create lexical analyzer and set doc</comment>
@@ -779,7 +755,7 @@ specimens could begin with an opening parenthesis "(".</code_block>
 	           <feature_name>doc</feature_name>.<feature_name>set_lexical</feature_name> <symbol>(</symbol><feature_name>analyzer</feature_name><symbol>)</symbol>
 	     <keyword>end</keyword>
 </code_block>
-				<paragraph>The call to obtain_analyzer defines the regular grammar for the language at hand. Recall that obtain_analyzer is deferred in <code><class_name>L_INTERFACE</class_name></code>; its definition for the <code><class_name>POLY_LEX</class_name></code> example was given above. The call to make_analyzer freezes the regular grammar and produces a usable lexical analyzer, available through the attribute analyzer obtained from <code><class_name>METALEX</class_name></code>. Finally, the call to set_lexical, a procedure of class <code><class_name>INPUT</class_name></code>, ensures that all lexical analysis operations will use analyzer as the lexical analyzer.</paragraph>
+				<paragraph>The call to obtain_analyzer defines the regular grammar for the language at hand. Recall that obtain_analyzer is deferred in <class_name>L_INTERFACE</class_name>; its definition for the <class_name>POLY_LEX</class_name> example was given above. The call to make_analyzer freezes the regular grammar and produces a usable lexical analyzer, available through the attribute analyzer obtained from <class_name>METALEX</class_name>. Finally, the call to set_lexical, a procedure of class <class_name>INPUT</class_name>, ensures that all lexical analysis operations will use analyzer as the lexical analyzer.</paragraph>
 				<heading>
 					<size>3</size>Starting the actual processing
 				</heading>
@@ -803,7 +779,7 @@ specimens could begin with an opening parenthesis "(".</code_block>
 					<code_block>
 	<feature_name>document</feature_name><symbol>.</symbol><feature_name>set_input_file</feature_name> <symbol>(</symbol><local_variable>some_file_name</local_variable><symbol>)</symbol>
 </code_block>
-					<line_break/> where set_input_file, from class <code><class_name>INPUT</class_name></code>, has a self-explanatory effect.
+					<line_break/> where set_input_file, from class <class_name>INPUT</class_name>, has a self-explanatory effect.
 				</paragraph>
 				<paragraph>Finally, step 
 					<link>
@@ -821,7 +797,7 @@ specimens could begin with an opening parenthesis "(".</code_block>
 					<heading>
 						<size>3</size>The structure of a full example
 					</heading>
-					<paragraph>The polynomial example provides a simple example of a full document processor, which you may use as a guide for your own processors. The root class of that example is <code><class_name>PROCESS</class_name></code>. Its creation procedure, make, follows the above scheme precisely; here is its general form: 
+					<paragraph>The polynomial example provides a simple example of a full document processor, which you may use as a guide for your own processors. The root class of that example is <class_name>PROCESS</class_name>. Its creation procedure, make, follows the above scheme precisely; here is its general form: 
 <code_block>
 	<feature_name>root_line</feature_name><symbol>:</symbol> <class_name>LINE</class_name>
 	
@@ -883,14 +859,10 @@ Product	[=] {Term "*" ...}
 </code_block>
 						<paragraph>The problem then is not expressiveness but efficiency. For such expressions the recursive descent technique, however well adapted to the higher-level structures of a language, takes too much time and generates too many tree nodes. Efficient bottom-up parsing techniques are available for this case.</paragraph>
 						<paragraph>The solution is straightforward: write a new heir 
-							<code>
-								<class_name>EXPRESSION</class_name>
-							</code> to class <code><class_name>CONSTRUCT</class_name></code>. The preceding discussion of expressions and their properties suggests what kinds of feature this class will offer: define a certain terminal as operator, define a terminal as operand type, set the precedence of an operator, set an operator as left-associative or right-associative and so on. Writing this class based on this discussion is indeed a relatively straightforward task, which can be used as a programming exercise.
+							<class_name>EXPRESSION</class_name> to class <class_name>CONSTRUCT</class_name>. The preceding discussion of expressions and their properties suggests what kinds of feature this class will offer: define a certain terminal as operator, define a terminal as operand type, set the precedence of an operator, set an operator as left-associative or right-associative and so on. Writing this class based on this discussion is indeed a relatively straightforward task, which can be used as a programming exercise.
 						</paragraph>
 						<paragraph>Beyond the addition of an 
-							<code>
-								<class_name>EXPRESSION</class_name>
-							</code> class, some changes in the data structures used by Parse may also help improve the efficiency of the parsing process.
+							<class_name>EXPRESSION</class_name> class, some changes in the data structures used by Parse may also help improve the efficiency of the parsing process.
 						</paragraph>
 						<heading>
 							<size>3</size>Yooc

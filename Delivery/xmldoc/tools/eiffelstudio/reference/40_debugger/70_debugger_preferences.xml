@@ -7,7 +7,7 @@
 			(see 
 			<link><url>40_object_tool/17_debug_output.xml</url><label>debug output</label></link>)
 			</item>
-			<item>Enable/disable the full generic type display (for instance see  <code><class_name>ARRAY [INTEGER] </class_name></code>instead of only <code><class_name>ARRAY</class_name></code></item>
+			<item>Enable/disable the full generic type display (for instance see  <class_name>ARRAY [INTEGER] </class_name>instead of only <class_name>ARRAY</class_name></item>
 
 		</list>
 		<image>

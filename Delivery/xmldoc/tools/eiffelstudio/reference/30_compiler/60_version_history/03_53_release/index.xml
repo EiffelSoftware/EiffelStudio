@@ -38,9 +38,7 @@
 		</heading>
 		<list ordered="false">
 			<item>Fixed semantic of object creations to strictly follow definition given in "Eiffel: The Language". Namely, if you have x of           type 
-				<code>
-					<class_name>X</class_name>
-				</code>:
+				<class_name>X</class_name>:
 				<code_block><keyword>create</keyword> x.<feature_name>make</feature_name>	is equivalent to	x := <keyword>create</keyword> {<class_name>X</class_name>}.<feature_name>make</feature_name></code_block>
 				It implies some bug fixes which might break existing code. For example:
 				<code_block>
@@ -57,7 +55,7 @@ x: <class_name>X</class_name>
 	<comment>-- new value of x rather than the old value.</comment>
 <keyword>create</keyword> x.<feature_name>make</feature_name></code_block>
 			Or in melted code only the following code now works properly, i.e. 
-				<code><feature_name>make</feature_name></code> gets the old value of x, not the new one
+				<feature_name>make</feature_name> gets the old value of x, not the new one
 				<line_break/>
 				<code_block><keyword>create</keyword> x.<feature_name>make</feature_name> (x)</code_block>
 			</item>
@@ -78,15 +76,9 @@ x: <class_name>X</class_name>
 			<item>Fixed issue in storable mechanism when retrieving expanded objects.</item>
 			<item>Fixed issue with independent_store where storing arrays of objects whose count was greater than 65536 will cause a memory corruption.</item>
 			<item>Added 
-				<code>
-					<feature_name>correct_mismatch</feature_name>
-				</code> on 
-				<code>
-					<class_name>HASH_TABLE</class_name>
-				</code> to enable retrieval of the 5.1 and older version of 
-				<code>
-					<class_name>HASH_TABLE</class_name>
-				</code>.
+				<feature_name>correct_mismatch</feature_name> on 
+				<class_name>HASH_TABLE</class_name> to enable retrieval of the 5.1 and older version of 
+				<class_name>HASH_TABLE</class_name>.
 			</item>
 		</list>
 		<heading>
@@ -94,9 +86,7 @@ x: <class_name>X</class_name>
 		</heading>
 		<list ordered="false">
 			<item>Fixed incorrect C code generation in final mode when creating an 
-				<code>
-					<class_name>ARRAY</class_name>
-				</code> of expanded type.
+				<class_name>ARRAY</class_name> of expanded type.
 			</item>
 			<item>Fixed incorrect C code generation in final mode when creating a complex object which contains expanded objects that have expanded           objects.</item>
 			<item>Fixed random crash issue in finalized applications due to incorrect memory management when you have code similar to:
@@ -106,12 +96,8 @@ x: <class_name>X</class_name>
 		<keyword>end</keyword></code_block>
 			</item>
 			<item>Fixed issue with
-				<code>
-					<feature_name>deep_equal</feature_name>
-				</code> on 
-				<code>
-					<class_name>ARRAY</class_name>
-				</code> of expanded types which was returning 
+				<feature_name>deep_equal</feature_name> on 
+				<class_name>ARRAY</class_name> of expanded types which was returning 
 				<code>
 					<keyword>False</keyword>
 				</code> where it should have returned 
@@ -124,12 +110,8 @@ x: <class_name>X</class_name>
 				
 			</item>
 			<item>Fixed issue in melted code where computation such as 
-				<code>
-					<class_name>INTEGER_X</class_name>
-				</code> // 
-				<code>
-					<class_name>INTEGER_Y</class_name>
-				</code> will either crash or give an incorrect computation where X and Y represents integers that are either 8, 16, 32 or 64 bits long and X &lt; Y.
+				<class_name>INTEGER_X</class_name> // 
+				<class_name>INTEGER_Y</class_name> will either crash or give an incorrect computation where X and Y represents integers that are either 8, 16, 32 or 64 bits long and X &lt; Y.
 			</item>
 			<item>Fixed incorrect C code generation of finalized code when your project configuration includes a precompiled library and that you cancel finalization process at degree -2, and then restart a finalization.</item>
 			<item>Fixed issue with incorrect C code generation of inspect instruction based on character values above 128.</item>
@@ -176,12 +158,8 @@ x: <class_name>X</class_name>
 			<item>Fixed issue with pathological memory allocation scheme that could trigger an `out of memory' exception where enough memory is still available.</item>
 			<item>Fixed incorrect allocation of expanded arrays where creation routine of expanded class was not called on all items of the newly created array.</item>
 			<item>Fixed incorrect creation type of attribute where attribute's type has some generic parameter. In some cases, instead of creating an 
-				<code>
-					<class_name>ARRAY [B2 [C]]</class_name>
-				</code> it would create an 
-				<code>
-					<class_name>ARRAY [B2 [STRING]]</class_name>
-				</code>.
+				<class_name>ARRAY [B2 [C]]</class_name> it would create an 
+				<class_name>ARRAY [B2 [STRING]]</class_name>.
 			</item>
 		</list>
 		<heading>
@@ -204,9 +182,7 @@ x: <class_name>X</class_name>
 	<keyword>end</keyword></code_block>
 			</item>
 			<item>Fixed incorrect code generation in .NET for assertions checking with following code where precondition of
-				<code>
-					<feature_name>test</feature_name>
-				</code> will not be checked although it should:
+				<feature_name>test</feature_name> will not be checked although it should:
 				<code_block>	<feature_name>make</feature_name> <keyword>is</keyword>
 		<keyword>do</keyword>
 			<feature_name>test_which_fail_and_rescued</feature_name>
@@ -239,15 +215,11 @@ x: <class_name>X</class_name>
 			</item>
 			<item>Fixed .NET verification issue where sometimes you could get the following message when checking an Eiffel assembly against peverify:           [IL]: Error: Unverifiable PE Header/native stub.</item>
 			<item>Fixed incorrect code generation when creating and accessing a 
-				<code>
-					<class_name>NATIVE_ARRAY</class_name>
-				</code> of expanded type.
+				<class_name>NATIVE_ARRAY</class_name> of expanded type.
 			</item>
 			<item>Fixed incorrect metadata heap generation to use standard CLI tables.</item>
 			<item>Fixed bug where content of 
-				<code>
-					<class_name>NATIVE_ARRAY</class_name>
-				</code> could not be looked up in .NET debuggers (cordbg, DbgClr or Visual Studio)
+				<class_name>NATIVE_ARRAY</class_name> could not be looked up in .NET debuggers (cordbg, DbgClr or Visual Studio)
 			</item>
 		</list>
 	</paragraph></document>

@@ -50,7 +50,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
-			</link>representing an <code><class_name>EV_BUTTON</class_name></code> will be displayed in here using an <code><class_name>EV_BUTTON</class_name></code>. As this view provides direct access to the objects ( 
+			</link>representing an <class_name>EV_BUTTON</class_name> will be displayed in here using an <class_name>EV_BUTTON</class_name>. As this view provides direct access to the objects ( 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>Pick</label>
@@ -102,7 +102,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>objects</label>
-			</link> representing containers in your project, an <code><class_name>EV_VERTICAL_BOX</class_name></code>, and an <code><class_name>EV_HORIZONTAL_BOX</class_name></code> (Excluding the <code><class_name>EV_TITLED_WINDOW</class_name></code> 
+			</link> representing containers in your project, an <class_name>EV_VERTICAL_BOX</class_name>, and an <class_name>EV_HORIZONTAL_BOX</class_name> (Excluding the <class_name>EV_TITLED_WINDOW</class_name> 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>

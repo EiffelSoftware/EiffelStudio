@@ -108,7 +108,7 @@
 		<paragraph>EiffelVision provides programmers with high-level classes, that provide all mechanism and data structures needed to build advanced user interfaces for deployment on almost all platforms without having to worry about detailed requirements of toolkits.</paragraph>
 		<paragraph>The abstract design has been derived from an analysis of user interfaces. Therefore we have classes with names like MENU, WINDOW, BUTTON, LINE or POLYGON. The features of these classes are simple, clearly defined properties or commands, like the feature `minimize' (a command) on WINDOW or `text' (a property of type STRING) on BUTTON.</paragraph>
 		<note>
-			<bold>Note</bold>: all class names in EiffelVision are  pre-pended with EV_ to avoid name clashes with existing classes. BUTTON hence becomes <code><class_name>EV_BUTTON</class_name></code>, etc. 
+			<bold>Note</bold>: all class names in EiffelVision are  pre-pended with EV_ to avoid name clashes with existing classes. BUTTON hence becomes <class_name>EV_BUTTON</class_name>, etc. 
 		</note>
 		<heading>
 			<size>2</size>Properties

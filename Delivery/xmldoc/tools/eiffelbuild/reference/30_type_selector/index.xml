@@ -18,7 +18,7 @@
 			<link>
 				<url>/libraries/vision2/00_introduction.xml</url>
 				<label>EiffelVision2</label>
-			</link>. For example, looking at the screenshot above, the <code><class_name>BUTTON</class_name></code> item represents an <code><class_name>EV_BUTTON</class_name></code>, and the <code><class_name>EV_COMBO_BOX</class_name></code> item represents <code><class_name>EV_COMBO_BOX</class_name></code>.
+			</link>. For example, looking at the screenshot above, the <class_name>BUTTON</class_name> item represents an <class_name>EV_BUTTON</class_name>, and the <class_name>EV_COMBO_BOX</class_name> item represents <class_name>EV_COMBO_BOX</class_name>.
 		</paragraph>
 		<note>
 			<bold>Note</bold>: The types available in the type selector are fixed, and cannot be modified. Almost all 
@@ -59,7 +59,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>pick</label>
-			</link> HORIZONTAL_BOX from the type selector, and drop it on the <code><class_name>EV_TITLED_WINDOW</class_name></code> 
+			</link> HORIZONTAL_BOX from the type selector, and drop it on the <class_name>EV_TITLED_WINDOW</class_name> 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
@@ -71,7 +71,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
-			</link> of type <code><class_name>EV_HORIZONTAL_BOX</class_name></code>, parented in the window. If you then 
+			</link> of type <class_name>EV_HORIZONTAL_BOX</class_name>, parented in the window. If you then 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>pick</label>
@@ -79,15 +79,15 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>drop</label>
-			</link> it on the <code><class_name>EV_TITLED_WINDOW</class_name></code>, as a window may only contain one child and is therefore currently full. You may however, 
+			</link> it on the <class_name>EV_TITLED_WINDOW</class_name>, as a window may only contain one child and is therefore currently full. You may however, 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>
 				<label>drop</label>
-			</link> on the <code><class_name>EV_HORIZONTAL_BOX</class_name></code> object you had just created, as the box is empty, and has space for multiple children. Doing so, will create a new 
+			</link> on the <class_name>EV_HORIZONTAL_BOX</class_name> object you had just created, as the box is empty, and has space for multiple children. Doing so, will create a new 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>object</anchor_name>
 				<label>object</label>
-			</link>of type <code><class_name>EV_BUTTON</class_name></code>, parented in the box.
+			</link>of type <class_name>EV_BUTTON</class_name>, parented in the box.
 		</paragraph>
 		<paragraph>This shows how simple it is to Build new 
 			<link>
@@ -123,7 +123,7 @@
 				<label>object</label>
 			</link>?
 		</paragraph>
-		<paragraph>Imagine you have spent some time constructing a complicated interface. You have an EV_VERTICAL_BOX with children many levels deep. You realize that you wanted the <code><class_name>EV_VERTICAL_BOX</class_name></code> to be of type <code><class_name>EV_HORIZONTAL_BOX</class_name></code>. If you delete the object, all children contained will also be deleted, which in this case, is not what you want. Changing the type of the object does actually delete the object internally, but will automatically re-parent all of its children into the new object.</paragraph>
+		<paragraph>Imagine you have spent some time constructing a complicated interface. You have an EV_VERTICAL_BOX with children many levels deep. You realize that you wanted the <class_name>EV_VERTICAL_BOX</class_name> to be of type <class_name>EV_HORIZONTAL_BOX</class_name>. If you delete the object, all children contained will also be deleted, which in this case, is not what you want. Changing the type of the object does actually delete the object internally, but will automatically re-parent all of its children into the new object.</paragraph>
 		<paragraph>To perform a type change, 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.xml</url><anchor_name>pick_and_drop</anchor_name>

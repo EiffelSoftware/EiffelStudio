@@ -183,7 +183,7 @@
 			<link>
 				<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
 				<label>project settings</label>
-			</link>. For example, if you have specified the name "constants" for the constants, two classes are generated, <code><class_name>CONSTANTS</class_name></code> and the implementation, <code><class_name>CONSTANTS_IMP</class_name></code>.
+			</link>. For example, if you have specified the name "constants" for the constants, two classes are generated, <class_name>CONSTANTS</class_name> and the implementation, <class_name>CONSTANTS_IMP</class_name>.
 		</paragraph>
 		<paragraph>By default, all constant values are hard coded into the implementation class, but it is possible to set these to be loaded from an external file upon execution of the generated system. To do this, the "Load constants from file" setting of the 
 			<link>

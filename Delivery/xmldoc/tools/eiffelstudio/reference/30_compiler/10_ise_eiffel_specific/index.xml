@@ -3,8 +3,8 @@
 	<paragraph>
 		<heading><size>2</size>Added classes</heading>
 		<list ordered="false">
-			<item>New basic classes have been added: <code><class_name>INTEGER_8</class_name></code>, <code><class_name>INTEGER_16</class_name></code>, <code><class_name>INTEGER_64</class_name></code> and <code><class_name>WIDE_CHARACTER</class_name></code>. <code><class_name>INTEGER</class_name></code> is now specified as having a 32 bits representation</item>
-			<item>New <code><class_name>TUPLE</class_name></code>, <code><class_name>ROUTIN</class_name></code>E, <code><class_name>PROCEDURE</class_name></code> and <code><class_name>FUNCTION</class_name></code> classes required by the agent mechanism.</item>
+			<item>New basic classes have been added: <class_name>INTEGER_8</class_name>, <class_name>INTEGER_16</class_name>, <class_name>INTEGER_64</class_name> and <class_name>WIDE_CHARACTER</class_name>. <class_name>INTEGER</class_name> is now specified as having a 32 bits representation</item>
+			<item>New <class_name>TUPLE</class_name>, <class_name>ROUTINE</class_name>, <class_name>PROCEDURE</class_name> and <class_name>FUNCTION</class_name> classes required by the agent mechanism.</item>
 		</list>
 		<heading><size>2</size>Added keywords</heading>
 		<list ordered="false">
@@ -16,8 +16,8 @@
 					<row> <cell>Old syntax</cell> <cell>New syntax</cell> </row>
 					<row> <cell>!! a</cell> <cell><code><keyword>create</keyword></code> a</cell> </row>
 					<row> <cell>!! a.make</cell> <cell><code><keyword>create</keyword></code> a.make</cell> </row>
-					<row> <cell>!<code><class_name>B</class_name></code>! a</cell> <cell><code><keyword>create</keyword></code> {<code><class_name>B</class_name></code>} a</cell> </row>
-					<row> <cell>!<code><class_name>B</class_name></code>! a.make</cell> <cell><code><keyword>create</keyword></code> {<code><class_name>B</class_name></code>} a.make</cell> </row>
+					<row> <cell>!<class_name>B</class_name>! a</cell> <cell><code><keyword>create</keyword></code> {<class_name>B</class_name>} a</cell> </row>
+					<row> <cell>!<class_name>B</class_name>! a.make</cell> <cell><code><keyword>create</keyword></code> {<class_name>B</class_name>} a.make</cell> </row>
 				</table>
 			</item>
 		</list>
@@ -78,12 +78,12 @@
 				<line_break/>The previous call is valid, if and only if:
 				<list ordered="false">
 					<item>
-						<code><feature_name>value</feature_name></code> is a feature representing a constant of a basic type (<code><class_name>INTEGER</class_name></code>, <code><class_name>DOUBLE</class_name></code> or <code><class_name>CHARACTER</class_name></code>)</item>
+						<feature_name>value</feature_name> is a feature representing a constant of a basic type (<class_name>INTEGER</class_name>, <class_name>DOUBLE</class_name> or <class_name>CHARACTER</class_name>)</item>
 					<item>
-						<code><feature_name>value</feature_name></code> is a C/C++/DLL external feature
+						<feature_name>value</feature_name> is a C/C++/DLL external feature
 					</item>
 					<item>
-						<code><feature_name>value</feature_name></code> is an IL static external feature
+						<feature_name>value</feature_name> is an IL static external feature
 					</item>
 				</list>
 			</item>

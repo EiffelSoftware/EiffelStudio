@@ -33,18 +33,18 @@
 		</heading> After launching the program, you will see a window displayed with a similar appearance to the one illustrated above. Please follow the instructions displayed in the window. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading><code><class_name>MAIN_DIALOG</class_name></code> inherits <link><url>../../reference/windows/wel_main_dialog_chart.xml</url><label>WEL_MAIN_DIALOG</label></link> which provides the feature put_command, used to associate a <link><url>../../reference/support/wel_command_chart.xml</url><label>WEL_COMMAND</label></link> to a Windows message received by the window. A <link><url>../../reference/support/wel_command_chart.xml</url><label>WEL_COMMAND</label></link> contains a deferred feature, execute which is executed when the command is fired. <code><class_name>SHOW_COMMAND_INFORMATION</class_name></code>, <code><class_name>SHOW_MOUSE_BUTTON_INFORMATION</class_name></code> and <code><class_name>SHOW_MOVE_INFORMATION</class_name></code> all inherit <link><url>../../reference/support/wel_command_chart.xml</url><label>WEL_COMMAND</label></link>. 
+		</heading><class_name>MAIN_DIALOG</class_name> inherits <link><url>../../reference/windows/wel_main_dialog_chart.xml</url><label>WEL_MAIN_DIALOG</label></link> which provides the feature put_command, used to associate a <link><url>../../reference/support/wel_command_chart.xml</url><label>WEL_COMMAND</label></link> to a Windows message received by the window. A <link><url>../../reference/support/wel_command_chart.xml</url><label>WEL_COMMAND</label></link> contains a deferred feature, execute which is executed when the command is fired. <class_name>SHOW_COMMAND_INFORMATION</class_name>, <class_name>SHOW_MOUSE_BUTTON_INFORMATION</class_name> and <class_name>SHOW_MOVE_INFORMATION</class_name> all inherit <link><url>../../reference/support/wel_command_chart.xml</url><label>WEL_COMMAND</label></link>. 
 		<note>
-			<bold>Note </bold>execute has an argument of type <code><class_name>ANY</class_name></code>  which is used to pass any additional information required.        
+			<bold>Note </bold>execute has an argument of type <class_name>ANY</class_name>  which is used to pass any additional information required.        
 		</note>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
-				<item><code><class_name>COMMANDS_DEMO</class_name></code></item>
-				<item><code><class_name>MAIN_DIALOG</class_name></code></item>
-				<item><code><class_name>SHOW_COMMAND_INFORMATION</class_name></code></item>
-				<item><code><class_name>SHOW_MOUSE_BUTTON_INFORMATION</class_name></code></item>
-				<item><code><class_name>SHOW_MOVE_INFORMATION</class_name></code></item>
+				<item><class_name>APPLICATION_IDS</class_name></item>
+				<item><class_name>COMMANDS_DEMO</class_name></item>
+				<item><class_name>MAIN_DIALOG</class_name></item>
+				<item><class_name>SHOW_COMMAND_INFORMATION</class_name></item>
+				<item><class_name>SHOW_MOUSE_BUTTON_INFORMATION</class_name></item>
+				<item><class_name>SHOW_MOVE_INFORMATION</class_name></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

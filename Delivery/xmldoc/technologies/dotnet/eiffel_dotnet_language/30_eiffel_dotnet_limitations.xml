@@ -37,12 +37,8 @@
 		<keyword>end</keyword>
 </code_block>
 		<paragraph>The previous example shows the declaration of the obsolete feature 
-			<code>
-				<feature_name>empty</feature_name>
-			</code> . The custom attribute defined by 
-			<code>
-				<class_name>SYSTEM_OBSOLETEATTRIBUTE</class_name>
-			</code> is used to ensure that any consumer of the resulting assembly will see the feature as being obsolete. The custom attribute is defined in the indexing clause 
+			<feature_name>empty</feature_name> . The custom attribute defined by 
+			<class_name>SYSTEM_OBSOLETEATTRIBUTE</class_name> is used to ensure that any consumer of the resulting assembly will see the feature as being obsolete. The custom attribute is defined in the indexing clause 
 			<code>
 				<contract_tag>attribute</contract_tag>
 			</code>. The definition consists of a creation expression that creates the custom attribute with the right parameters.
@@ -62,36 +58,24 @@
 		<paragraph>The CLR does not support generics at all, so that the following Eiffel for .NET classes:</paragraph>
 		<list ordered="false">
 			<item>
-				<code>
-					<class_name>LIST [ANY]</class_name>
-				</code>
+				<class_name>LIST [ANY]</class_name>
 			</item>
 			<item>
-				<code>
-					<class_name>LIST [INTEGER]</class_name>
-				</code>
+				<class_name>LIST [INTEGER]</class_name>
 			</item>
 		</list>
 		<paragraph>will actually be generated as:</paragraph>
 		<list ordered="false">
 			<item>
-				<code>
-					<class_name>LIST_ANY</class_name>
-				</code>
+				<class_name>LIST_ANY</class_name>
 			</item>
 			<item>
-				<code>
-					<class_name>LIST_Int32</class_name>
-				</code>
+				<class_name>LIST_Int32</class_name>
 			</item>
 		</list>
 		<paragraph>Meaning that if one wants to reuse an Eiffel generic class from another language than Eiffel for .NET, one has to use either 
-			<code>
-				<class_name>LIST_ANY</class_name>
-			</code> or 
-			<code>
-				<class_name>LIST_Int32</class_name>
-			</code>.
+			<class_name>LIST_ANY</class_name> or 
+			<class_name>LIST_Int32</class_name>.
 		</paragraph>
 		<heading>
 			<size>3</size>Enum types

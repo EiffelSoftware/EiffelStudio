@@ -59,7 +59,7 @@
 					<heading>
 						<size>2</size>Under the Hood
 					</heading>
-					<paragraph> This basic sample has just one class <code><class_name>SAMPLE</class_name></code> which inherits from <code><class_name>CGI_INTERFACE. SAMPLE</class_name></code> implements execute which retrieves the name entered in the form and creates a new <code><class_name>HTML</class_name></code> page with it. </paragraph>
+					<paragraph> This basic sample has just one class <class_name>SAMPLE</class_name> which inherits from <class_name>CGI_INTERFACE. SAMPLE</class_name> implements execute which retrieves the name entered in the form and creates a new <class_name>HTML</class_name> page with it. </paragraph>
 					<paragraph> </paragraph>
 					<paragraph> See the 
 						<link>

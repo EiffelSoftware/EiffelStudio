@@ -66,7 +66,7 @@
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
-				<span><code><class_name>FORM</class_name></code></span>
+				<span><class_name>FORM</class_name></span>
 			</item>
 		</list>
 		<heading>

@@ -26,69 +26,39 @@
 		<paragraph>The example of these similar types which will almost certainly get in your face is the string types. You may remember that we looked briefly at the case of the string types in Naming Conventions and Name Handling.
 		</paragraph>
 		<paragraph>The Eiffel Base Library contains class 
-			<code>
-				<class_name>STRING</class_name>
-			</code>; the .NET assembly contains type 
-			<code>
-				<class_name>System.String</class_name>
-			</code>, which Eiffel for .NETusers see as 
-			<code>
-				<class_name>SYSTEM_STRING</class_name>
-			</code>. At an abstract level both of these model sequences of characters. But they are not the same type. In fact, they are different in some important ways. For example, instances of 
-			<code>
-				<class_name>System.String</class_name>
-			</code> are immutable. So you cannot append to an instance of 
-			<code>
-				<class_name>System.String</class_name>
-			</code>. If you want to build a string by appending, you should use an instance of 
-			<code>
-				<class_name>System.Text.StringBuilder</class_name>
-			</code> to do the appending, then extract the instance of 
-			<code>
-				<class_name>System.String</class_name>
-			</code> from it. With 
-			<code>
-				<class_name>STRING</class_name>
-			</code> it is permissible to append, so you don't need a helper like the 
-			<code>
-				<class_name>System.Text.StringBuilder</class_name>
-			</code> type.
+			<class_name>STRING</class_name>; the .NET assembly contains type 
+			<class_name>System.String</class_name>, which Eiffel for .NETusers see as 
+			<class_name>SYSTEM_STRING</class_name>. At an abstract level both of these model sequences of characters. But they are not the same type. In fact, they are different in some important ways. For example, instances of 
+			<class_name>System.String</class_name> are immutable. So you cannot append to an instance of 
+			<class_name>System.String</class_name>. If you want to build a string by appending, you should use an instance of 
+			<class_name>System.Text.StringBuilder</class_name> to do the appending, then extract the instance of 
+			<class_name>System.String</class_name> from it. With 
+			<class_name>STRING</class_name> it is permissible to append, so you don't need a helper like the 
+			<class_name>System.Text.StringBuilder</class_name> type.
 		</paragraph>
 		<paragraph>So the two types are similar at an abstract level, but different semantically.  There are reasonable arguments for the design of each. </paragraph>
 		<paragraph>Many types in the delivered assemblies have properties which are strings or methods which return or take strings as arguments. In all these cases, the strings in question are instances of 
-			<code>
-				<class_name>System.String</class_name>
-			</code>.
+			<class_name>System.String</class_name>.
 		</paragraph>
 		<paragraph>Many classes in the delivered Eiffel libraries have features involving strings, that is attributes which are strings or routines which return or take strings as arguments.  In all these cases, the strings are instances of 
-			<code>
-				<class_name>STRING</class_name>
-			</code> (except for those designed for .NET compliance).
+			<class_name>STRING</class_name> (except for those designed for .NET compliance).
 		</paragraph>
 		<paragraph>In C# and VB.NET, if you specify a quoted string like 
 			<code>
 				<string>"Hello World!"</string>
 			</code> in your code, that string will conform to type 
-			<code>
-				<class_name>System.String</class_name>
-			</code>. If you do the same in Eiffel, then 
+			<class_name>System.String</class_name>. If you do the same in Eiffel, then 
 			<code>
 				<string>"Hello World!"</string>
 			</code> will be an instance of 
-			<code>
-				<class_name>STRING</class_name>
-			</code>. In Eiffel terminology, 
+			<class_name>STRING</class_name>. In Eiffel terminology, 
 			<code>
 				<string>"Hello World!"</string>
 			</code> appearing in source code is a manifest string.
 		</paragraph>
 		<paragraph>What all this means to you is that you cannot use an instance of 
-			<code>
-				<class_name>System.String</class_name>
-			</code> when an instance of 
-			<code>
-				<class_name>STRING</class_name>
-			</code> is called for, and vice versa. Three out of four of the executable lines in the following code sample are invalid:
+			<class_name>System.String</class_name> when an instance of 
+			<class_name>STRING</class_name> is called for, and vice versa. Three out of four of the executable lines in the following code sample are invalid:
 		</paragraph>
 		<code_block>
 	<keyword>local</keyword>
@@ -104,42 +74,22 @@
 	<keyword>end</keyword>
 </code_block>
 		<paragraph>To handle this issue, the Eiffel for .NET class 
-			<code>
-				<class_name>STRING</class_name>
-			</code> has two features which can be used when a string of the other type is needed.
+			<class_name>STRING</class_name> has two features which can be used when a string of the other type is needed.
 		</paragraph>
 		<paragraph>The first of these features is a query 
-			<code>
-				<feature_name>to_cil</feature_name>
-			</code> which returns an object of type 
-			<code>
-				<class_name>System.String</class_name>
-			</code> which has a sequence of characters equivalent to that of the 
-			<code>
-				<class_name>STRING</class_name>
-			</code> to which 
-			<code>
-				<feature_name>to_cil</feature_name>
-			</code> is applied. The 
-			<code>
-				<feature_name>to_cil</feature_name>
-			</code> can be applied to manifest strings by enclosing the manifest string in parentheses.
+			<feature_name>to_cil</feature_name> which returns an object of type 
+			<class_name>System.String</class_name> which has a sequence of characters equivalent to that of the 
+			<class_name>STRING</class_name> to which 
+			<feature_name>to_cil</feature_name> is applied. The 
+			<feature_name>to_cil</feature_name> can be applied to manifest strings by enclosing the manifest string in parentheses.
 		</paragraph>
 		<paragraph>The other feature is a creation procedure named 
-			<code>
-				<feature_name>make_from_cil</feature_name>
-			</code> which takes as an argument an instance of 
-			<code>
-				<class_name>System.String</class_name>
-			</code> and initializes its target 
-			<code>
-				<class_name>STRING</class_name>
-			</code> with a sequence of characters equivalent to that of the argument.
+			<feature_name>make_from_cil</feature_name> which takes as an argument an instance of 
+			<class_name>System.String</class_name> and initializes its target 
+			<class_name>STRING</class_name> with a sequence of characters equivalent to that of the argument.
 		</paragraph>
 		<paragraph>In the following sample, we use these features of 
-			<code>
-				<class_name>STRING</class_name>
-			</code> to make all the lines from the previous sample valid.
+			<class_name>STRING</class_name> to make all the lines from the previous sample valid.
 		</paragraph>
 		<code_block>
 	<keyword>local</keyword>
@@ -156,26 +106,14 @@
 </code_block>
 		<note>
 			<bold>Note:</bold> As shown in the above example, it is necessary to apply 
-			<code>
-				<feature_name>to_cil</feature_name>
-			</code> to a manifest string if you are assigning it to a 
-			<code>
-				<class_name>System.String</class_name>
-			</code> or passing it as an argument where a 
-			<code>
-				<class_name>System.String</class_name>
-			</code> is called for.
+			<feature_name>to_cil</feature_name> to a manifest string if you are assigning it to a 
+			<class_name>System.String</class_name> or passing it as an argument where a 
+			<class_name>System.String</class_name> is called for.
 			<line_break></line_break>
 			This is expected to change in a future release. It shall become unnecesary to apply 
-				<code>
-					<feature_name>to_cil</feature_name>
-				</code> to manifest strings. Instead, whether a 
-				<code>
-					<class_name>STRING</class_name>
-				</code> or 
-				<code>
-					<class_name>System.String</class_name>
-				</code> is needed will be determined by the context in which the manifest string is being used, and the proper type of object will be generated.
+				<feature_name>to_cil</feature_name> to manifest strings. Instead, whether a 
+				<class_name>STRING</class_name> or 
+				<class_name>System.String</class_name> is needed will be determined by the context in which the manifest string is being used, and the proper type of object will be generated.
 			
 		</note>
 		<heading>

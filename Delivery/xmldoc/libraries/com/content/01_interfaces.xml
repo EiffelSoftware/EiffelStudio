@@ -6,12 +6,10 @@
 			<size>2</size>ECOM_INTERFACE
 		</heading>
 		<paragraph>For each interface referenced in a type    library, the EiffelCOM wizard generates a deferred class and two    effective classes: a proxy of an interface pointer, or a client side    class, and a stub of an interface pointer, or a server side class.     The deferred interface class inherits from 
-			<code>
-				<class_name>
+			<class_name>
 					<url>../reference/Interfaces/ecom_interface_chart.xml</url>
 					<label>ECOM_INTERFACE</label>
-				</class_name>
-			</code>    and has a deferred feature per each interface function.     Both effective classes, or implemented interfaces, inherit from    the deferred class and implement its functions. The functions of the    interface proxy call underlying C layer, which calls a COM component.    The functions of the interface stub implement the component    functionality.
+				</class_name>    tand has a deferred feature per each interface function.     Both effective classes, or implemented interfaces, inherit from    the deferred class and implement its functions. The functions of the    interface proxy call underlying C layer, which calls a COM component.    The functions of the interface stub implement the component    functionality.
 		</paragraph>
 		<paragraph>
 			<link>
@@ -23,24 +21,18 @@
 			<size>2</size>ECOM_QUERIABLE
 		</heading>
 		<paragraph>Different languages handle the type    coercion in dissimilar ways. C    has a type cast; C++ introduces several type casting mechanisms; Eiffel    has an assignment attempt, etc. Every    COM interface exposes 
-			<code>
-				<feature_name>QueryInterface</feature_name>
-			</code>    function that allows a client to query the COM component for the    interfaces it exposes and receive a pointer to another interface.    Querying a component for an interface is similar to using an    assignment attempt in Eiffel. The    Eiffel implementation of the assignment attempt relies on the runtime    data. Since we could not change the Eiffel runtime and the    implementation of the assignment attempt, we have created a library    class 
-			<code>
-				<class_name>
-					<url>../reference/Interfaces/ecom_queriable_chart.xml</url>
+			<feature_name>QueryInterface</feature_name>    function that allows a client to query the COM component for the    interfaces it exposes and receive a pointer to another interface.    Querying a component for an interface is similar to using an    assignment attempt in Eiffel. The    Eiffel implementation of the assignment attempt relies on the runtime    data. Since we could not change the Eiffel runtime and the    implementation of the assignment attempt, we have created a library    class 
+			<link>
 					<label>ECOM_QUERIABLE</label>
-				</class_name>
-			</code>, which has a creation routine
+					<url>../reference/Interfaces/ecom_queriable_chart.xml</url>					
+			</link>, which has a creation routine
 		</paragraph>
 		<code_block><feature_name>make_from_other</feature_name> <symbol>(</symbol>other<symbol>:</symbol> <class_name>ECOM_INTERFACE</class_name><symbol>)</symbol></code_block>
 		<paragraph>that queries a COM component internally.        Every interface proxy class inherits from 
-			<code>
-				<class_name>
-					<url>../reference/Interfaces/ecom_queriable_chart.xml</url>
+			<link>
 					<label>ECOM_QUERIABLE</label>
-				</class_name>.
-			</code>
+					<url>../reference/Interfaces/ecom_queriable_chart.xml</url>					
+			</link>
 		</paragraph>
 		<heading>
 			<size>2</size>ECOM_STUB
@@ -61,4 +53,5 @@
 				</link>
 			</code>,    which allows to create a COM object corresponding to an Eiffel object.
 		</paragraph>
-	</paragraph></document>
+	</paragraph>
+</document>

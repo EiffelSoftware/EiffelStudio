@@ -35,13 +35,13 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph><code><class_name>HEADER_CONTROL</class_name></code> inherits <link><url>../../reference/controls/wel_header_control_chart.xml</url><label>WEL_HEADER_CONTROL</label></link> and redefines many of the `on_'  notification features to display the output. </paragraph>
+		<paragraph><class_name>HEADER_CONTROL</class_name> inherits <link><url>../../reference/controls/wel_header_control_chart.xml</url><label>WEL_HEADER_CONTROL</label></link> and redefines many of the `on_'  notification features to display the output. </paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
-				<item><code><class_name>HEADER_CONTROL</class_name></code></item>
-				<item><code><class_name>HEADER_CONTROL_DEMO</class_name></code></item>
-				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+				<item><class_name>APPLICATION_IDS</class_name></item>
+				<item><class_name>HEADER_CONTROL</class_name></item>
+				<item><class_name>HEADER_CONTROL_DEMO</class_name></item>
+				<item><class_name>MAIN_WINDOW</class_name></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

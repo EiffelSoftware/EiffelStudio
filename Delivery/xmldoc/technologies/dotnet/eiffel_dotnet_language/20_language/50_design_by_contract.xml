@@ -27,65 +27,35 @@
 		</heading>
 		<paragraph>Design by Contract is built around a model for software correctness that is really pretty simple.</paragraph>
 		<paragraph>Suppose there is software routine called 
-			<code>
-				<feature_name>s</feature_name>
-			</code>. If we were going to test 
-			<code>
-				<feature_name>s</feature_name>
-			</code>, we would probably devise some test inputs or test values to be in place when 
-			<code>
-				<feature_name>s</feature_name>
-			</code> starts and then observe what things look like after 
-			<code>
-				<feature_name>s</feature_name>
-			</code> completes. If they look the way we think they should then that leads us to believe that S is working correctly for those test inputs.
+			<feature_name>s</feature_name>. If we were going to test 
+			<feature_name>s</feature_name>, we would probably devise some test inputs or test values to be in place when 
+			<feature_name>s</feature_name> starts and then observe what things look like after 
+			<feature_name>s</feature_name> completes. If they look the way we think they should then that leads us to believe that S is working correctly for those test inputs.
 		</paragraph>
 		<paragraph>We can generalize and formalize that process a bit, taking it back from testing an into design. If indeed we know what it means for 
-			<code>
-				<feature_name>s</feature_name>
-			</code> to be correct, then we should be able to make a statement of any conditions that must be true prior to executing 
-			<code>
-				<feature_name>s</feature_name>
-			</code>. That is, we will state the conditions required for it to be possible for 
-			<code>
-				<feature_name>s</feature_name>
-			</code> to run correctly. We call this statement of preconditions for success 
-			<code>
-				<feature_name>s</feature_name>
-			</code>'s 
+			<feature_name>s</feature_name> to be correct, then we should be able to make a statement of any conditions that must be true prior to executing 
+			<feature_name>s</feature_name>. That is, we will state the conditions required for it to be possible for 
+			<feature_name>s</feature_name> to run correctly. We call this statement of preconditions for success 
+			<feature_name>s</feature_name>'s 
 			<link>
 				<url/>
 				<label>precondition</label>
 			</link>.
 		</paragraph>
 		<paragraph>Likewise we should be able to make a statement of the conditions that will be true always if 
-			<code>
-				<feature_name>s</feature_name>
-			</code> works correctly. This we call 
-			<code>
-				<feature_name>s</feature_name>
-			</code>'s 
+			<feature_name>s</feature_name> works correctly. This we call 
+			<feature_name>s</feature_name>'s 
 			<link>
 				<url/>
 				<label>postcondition</label>
 			</link>.
 		</paragraph>
 		<paragraph>As an example, suppose 
-			<code>
-				<feature_name>s</feature_name>
-			</code> accepted an argument of type 
-			<code>
-				<class_name>REAL</class_name>
-			</code> and returned another 
-			<code>
-				<class_name>REAL</class_name>
-			</code> which was the square root of the argument. The precondition for 
-			<code>
-				<feature_name>s</feature_name>
-			</code> would be that the argument could not be less that zero, as there is no real square root for negative numbers. 
-			<code>
-				<feature_name>s</feature_name>
-			</code>'s postcondition would be that the result multiplied by itself would yield the value of the original argument (give or take a little to allow for floating point error).
+			<feature_name>s</feature_name> accepted an argument of type 
+			<class_name>REAL</class_name> and returned another 
+			<class_name>REAL</class_name> which was the square root of the argument. The precondition for 
+			<feature_name>s</feature_name> would be that the argument could not be less that zero, as there is no real square root for negative numbers. 
+			<feature_name>s</feature_name>'s postcondition would be that the result multiplied by itself would yield the value of the original argument (give or take a little to allow for floating point error).
 		</paragraph>
 		<heading>
 			<size>2</size>Assertions in Eiffel
@@ -100,44 +70,26 @@
 			</code>-ed together to produce the assertion. Assertions clauses are boolean expressions that evaluate to true or false.
 		</paragraph>
 		<paragraph>Let's look at another example. Assume you need to produce a class to model a time of day. Each instance of 
-			<code>
-				<class_name>TIME_OF_DAY</class_name>
-			</code> would hold some particular time of day accurate to the second between 00:00:00 and 23:59:59 inclusive.
+			<class_name>TIME_OF_DAY</class_name> would hold some particular time of day accurate to the second between 00:00:00 and 23:59:59 inclusive.
 		</paragraph>
 		<paragraph>As a producer, you would be faced with a decision concerning how to maintain the time internally in each instance. For the purpose of our example, let us consider two alternatives:</paragraph>
 		<list ordered="true">
 			<item>Keep three instance of 
-				<code>
-					<class_name>INTEGER</class_name>
-				</code>. One each for hour, minute, and second.
+				<class_name>INTEGER</class_name>. One each for hour, minute, and second.
 			</item>
 			<item>Keep one instance of 
-				<code>
-					<class_name>INTEGER</class_name>
-				</code> representing the time of day as the number of seconds since 00:00:00.
+				<class_name>INTEGER</class_name> representing the time of day as the number of seconds since 00:00:00.
 			</item>
 		</list>
 		<paragraph>This would be an implementation issue for the producer, because it would not affect the services that 
-			<code>
-				<class_name>TIME_OF_DAY</class_name>
-			</code> could offer clients. If we have a query called 
-			<code>
-				<feature_name>minute</feature_name>
-			</code> the first alternative allows us simply to provide the value from storage. Whereas the second alternative will likely cause us to compute 
-			<code>
-				<feature_name>minute</feature_name>
-			</code> each time it is requested. But the service looks and works the same for the client in either alternative.
+			<class_name>TIME_OF_DAY</class_name> could offer clients. If we have a query called 
+			<feature_name>minute</feature_name> the first alternative allows us simply to provide the value from storage. Whereas the second alternative will likely cause us to compute 
+			<feature_name>minute</feature_name> each time it is requested. But the service looks and works the same for the client in either alternative.
 		</paragraph>
 		<paragraph>For now let us assume that we are using the first design alternative. In that case we would code class features for 
-			<code>
-				<feature_name>hour</feature_name>
-			</code>, 
-			<code>
-				<feature_name>minute</feature_name>
-			</code>, and 
-			<code>
-				<feature_name>second</feature_name>
-			</code>.
+			<feature_name>hour</feature_name>, 
+			<feature_name>minute</feature_name>, and 
+			<feature_name>second</feature_name>.
 		</paragraph>
 		<code_block>
 <keyword>feature</keyword><comment> -- Access</comment>
@@ -152,15 +104,9 @@
 			<comment>-- Seconds past the minute</comment>
 </code_block>
 		<paragraph>Below is the code for a procedure 
-			<code>
-				<feature_name>set_second</feature_name>
-			</code> which receives an argument of type 
-			<code>
-				<class_name>INTEGER</class_name>
-			</code> and sets the value of the 
-			<code>
-				<feature_name>second</feature_name>
-			</code> feature to the argurment.
+			<feature_name>set_second</feature_name> which receives an argument of type 
+			<class_name>INTEGER</class_name> and sets the value of the 
+			<feature_name>second</feature_name> feature to the argurment.
 		</paragraph>
 		<code_block>
 	<feature_name>set_second</feature_name> <symbol>(</symbol>s<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
@@ -170,23 +116,15 @@
 		<keyword>end</keyword>
 </code_block>
 		<paragraph>The routine is simple enough, but there is a problem with it. Suppose a client calls 
-			<code>
-				<feature_name>set_second</feature_name>
-			</code> with an argument whose value is invalid, say 3574. Our routine would just stuff this value into 
-			<code>
-				<feature_name>second</feature_name>
-			</code> and we would end up with an instance of 
-			<code>
-				<class_name>TIME_OF_DAY</class_name>
-			</code> which is invalid. In the days before Design by Contract, as soon as we recognized that this problem exists, we would go into "defensive programming" mode and code some " 
+			<feature_name>set_second</feature_name> with an argument whose value is invalid, say 3574. Our routine would just stuff this value into 
+			<feature_name>second</feature_name> and we would end up with an instance of 
+			<class_name>TIME_OF_DAY</class_name> which is invalid. In the days before Design by Contract, as soon as we recognized that this problem exists, we would go into "defensive programming" mode and code some " 
 			<code>
 				<keyword>if</keyword>
 			</code>" statements inside the routine to validate the argument, before acting.
 		</paragraph>
 		<paragraph>Consider though what we can do with Design by Contract. We will add a precondition assertion to 
-			<code>
-				<feature_name>set_second</feature_name>
-			</code> that expresses the need for valid arguments.
+			<feature_name>set_second</feature_name> that expresses the need for valid arguments.
 		</paragraph>
 		<code_block>
 	<feature_name>set_second</feature_name> <symbol>(</symbol>s<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
@@ -215,21 +153,15 @@
 			</code> will be between 0 and 59 inclusive.
 		</paragraph>
 		<paragraph>Remember that the precondition specifies those things that must be true if 
-			<code>
-				<feature_name>set_second</feature_name>
-			</code> has a chance of working correctly. As such, upon execution, the body of this routine will never be executed if an attempt is made to call it in a state that does not meet its precondition. Instead, the caller will incur a precondition violation exception. We will investigate more about what exceptions mean further in 
+			<feature_name>set_second</feature_name> has a chance of working correctly. As such, upon execution, the body of this routine will never be executed if an attempt is made to call it in a state that does not meet its precondition. Instead, the caller will incur a precondition violation exception. We will investigate more about what exceptions mean further in 
 			<link>
 				<url>60_exception_mechanism.xml</url>
 				<label>Exception Mechanism</label>
 			</link>.
 		</paragraph>
 		<paragraph>So, what about a postcondition? We noted earlier that a postcondition should make a statement of what will be true in the case that the routine does its work correctly. For 
-			<code>
-				<feature_name>set_second</feature_name>
-			</code> this means that after it finishes, the query 
-			<code>
-				<feature_name>second</feature_name>
-			</code> should have the same value as the argument that was received from the caller. Below is the feature with the postcondition added.
+			<feature_name>set_second</feature_name> this means that after it finishes, the query 
+			<feature_name>second</feature_name> should have the same value as the argument that was received from the caller. Below is the feature with the postcondition added.
 		</paragraph>
 		<code_block>
 	<feature_name>set_second</feature_name> <symbol>(</symbol>s<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
@@ -246,15 +178,11 @@
 			<code>
 				<keyword>ensure</keyword>
 			</code>". Here the expression " 
-			<code>
-				<feature_name>second</feature_name>
-			</code> = 
+			<feature_name>second</feature_name> = 
 			<code>
 				<indexing_tag>s</indexing_tag>
 			</code>" makes certain that the routine did actually do the necessary work to ensure that the value of 
-			<code>
-				<feature_name>second</feature_name>
-			</code> matches the value of the argument received.
+			<feature_name>second</feature_name> matches the value of the argument received.
 		</paragraph>
 		<paragraph>As you look at the postcondition, you may be tempted to think that the one-line body of the routine is so simple as to make the postconditon unnecessary. To answer this concern we need to look again for a moment at software specification.</paragraph>
 		<heading>
@@ -271,53 +199,31 @@
 		<keyword>end</keyword>
 </code_block>
 		<paragraph>This specification of 
-			<code>
-				<feature_name>set_second</feature_name>
-			</code> tells us what is required of reuse consumers if they wish to use 
-			<code>
-				<feature_name>set_second</feature_name>
-			</code> and what 
-			<code>
-				<feature_name>set_second</feature_name>
-			</code> promises to do for them. Importantly, it does that without revealing how it does it does what it does.
+			<feature_name>set_second</feature_name> tells us what is required of reuse consumers if they wish to use 
+			<feature_name>set_second</feature_name> and what 
+			<feature_name>set_second</feature_name> promises to do for them. Importantly, it does that without revealing how it does it does what it does.
 		</paragraph>
 		<paragraph>So, this specification view, officially called the contract view, is how consumers of class 
-			<code>
-				<class_name>TIME_OF_DAY</class_name>
-			</code> would view the feature.
+			<class_name>TIME_OF_DAY</class_name> would view the feature.
 		</paragraph>
 		<paragraph>If this is the specification, then haven't we put the cart before the horse? The answer is yes. We have done so to illustrate the problems that assertion-based specification can help solve.</paragraph>
 		<paragraph>Instead of starting with a routine and adding a specification, we really want to start in accepted software engineering fashion with specification first, and then add implementation. Therefore, the specification you see above would exist before the implementation.</paragraph>
 		<paragraph>Now back to the concern over whether the postcondition is redundant for this simple one-line routine. Obviously, if this specification exists first, then the postcondition must be there, and it would be silly to remove it later. But, more importantly, suppose that when the producer of the class decided on an implementation, he or she chose the second design alternative we mentioned above. This would mean that the internal state of an instance of 
-			<code>
-				<class_name>TIME_OF_DAY</class_name>
-			</code> would be only one 
-			<code>
-				<class_name>INTEGER</class_name>
-			</code> with the number of seconds since midnight. That would mean that the query 
-			<code>
-				<feature_name>second</feature_name>
-			</code> would probably be a function that computed seconds from that one 
-			<code>
-				<class_name>INTEGER</class_name>
-			</code> instead of an attribute.
+			<class_name>TIME_OF_DAY</class_name> would be only one 
+			<class_name>INTEGER</class_name> with the number of seconds since midnight. That would mean that the query 
+			<feature_name>second</feature_name> would probably be a function that computed seconds from that one 
+			<class_name>INTEGER</class_name> instead of an attribute.
 		</paragraph>
 		<paragraph>What would change in the specification of 
-			<code>
-				<feature_name>set_second</feature_name>
-			</code>? Nothing. The implementation for the routine would be more complex, but what it does, setting the second in an instance of 
-			<code>
-				<class_name>TIME_OF_DAY</class_name>
-			</code>, would stay the same.
+			<feature_name>set_second</feature_name>? Nothing. The implementation for the routine would be more complex, but what it does, setting the second in an instance of 
+			<class_name>TIME_OF_DAY</class_name>, would stay the same.
 		</paragraph>
 		<paragraph>In summary, the precondition and postcondition ensure for use that the routine will only execute if called in a state in which the precondition is true, and then will either complete in a state in which the postcondition is true, or cause a postcondition violation exception.</paragraph>
 		<heading>
 			<size>3</size>The Contract for a Routine
 		</heading>
 		<paragraph>Having assertions on its routines forms a contract between the 
-			<code>
-				<class_name>TIME_OF_DAY</class_name>
-			</code> class and all potential reuse consumers. The contract is much like a contract in business, with obligations and benefits for both parties.
+			<class_name>TIME_OF_DAY</class_name> class and all potential reuse consumers. The contract is much like a contract in business, with obligations and benefits for both parties.
 		</paragraph>
 		<list ordered="false">
 			<item>The client's benefits are outlined in the postcondition. </item>
@@ -326,9 +232,7 @@
 			<item>The supplier's benefits come from the precondition. </item>
 		</list>
 		<paragraph>We can see the specifics of these by using 
-			<code>
-				<feature_name>set_second</feature_name>
-			</code> as an example.
+			<feature_name>set_second</feature_name> as an example.
 		</paragraph>
 		<list ordered="false">
 			<item>The client gets the desired value for seconds set in the instance.</item>
@@ -340,9 +244,7 @@
 			<size>3</size>Valid State for Instances
 		</heading>
 		<paragraph>Assertions on 
-			<code>
-				<class_name>TIME_OF_DAY</class_name>
-			</code>'s routines gives us specification for each routine and guarantees that if the specification of a routine gets violated at runtime we will be served immediately with an exception. This will go a long way toward preventing invalid instances from going unnoticed in a running system and fouling up lots of other stuff.
+			<class_name>TIME_OF_DAY</class_name>'s routines gives us specification for each routine and guarantees that if the specification of a routine gets violated at runtime we will be served immediately with an exception. This will go a long way toward preventing invalid instances from going unnoticed in a running system and fouling up lots of other stuff.
 		</paragraph>
 		<paragraph>What will help even more is something called a 
 			<link>
@@ -357,9 +259,7 @@
 			</link> to see how the class invariant fits into the class structure.
 		</paragraph>
 		<paragraph>How would we code the class invariant for 
-			<code>
-				<class_name>TIME_OF_DAY</class_name>
-			</code>? An instance would be valid if its hour were between 0 and 23 inclusive, minute were between 0 and 59 inclusive, and its second were between 0 and 59 inclusive. We can code the invariant as shown below.
+			<class_name>TIME_OF_DAY</class_name>? An instance would be valid if its hour were between 0 and 23 inclusive, minute were between 0 and 59 inclusive, and its second were between 0 and 59 inclusive. We can code the invariant as shown below.
 		</paragraph>
 		<code_block>
 	<keyword>invariant</keyword>
@@ -372,15 +272,9 @@
 		<paragraph>At runtime the invariant must be true for an instance at anytime that the instance is available to clients. In general, this means that the invariant must be true before and after the execution of every exported routine.</paragraph>
 		<paragraph>As with the assertions on routines, if ever the invariant is not true when it should be, then a class invariant violation occurs.</paragraph>
 		<paragraph>Remember in the example above, that the features 
-			<code>
-				<feature_name>hour</feature_name>
-			</code>, 
-			<code>
-				<feature_name>minute</feature_name>
-			</code>, and 
-			<code>
-				<feature_name>second</feature_name>
-			</code> are queries, but they could be either attributes or functions.
+			<feature_name>hour</feature_name>, 
+			<feature_name>minute</feature_name>, and 
+			<feature_name>second</feature_name> are queries, but they could be either attributes or functions.
 		</paragraph>
 		<heading>
 			<size>2</size>The Contract for a Class
@@ -410,9 +304,7 @@
 		<paragraph>For class invariants, if any new invariants are coded in an heir, they will be added to those inherited from the parent, using a non-strict version of logical "and" (We will define non-strict booleans in Writing Assertions below).</paragraph>
 		<paragraph>That is simple enough. And the situation is also simple for effective routines inherited and left unchanged ... the contracts stand as written.</paragraph>
 		<paragraph>From our example above you may have gotten the idea that contracts are really useful only for effective routines. Such is not the case. In fact, specifying a contract on a deferred routine is really a powerful notion. It says not only that effective descendants must provide an implementation for this routine, but also that there is a contract that must be satisfied. Effecting or redefining a routine in a descendant class will not make the contract go away. Here is an feature from the Base Library deferred class 
-			<code>
-				<class_name>ACTIVE</class_name>
-			</code> which models data structures with a current item, and is an ancestor to many effective container type classes.
+			<class_name>ACTIVE</class_name> which models data structures with a current item, and is an ancestor to many effective container type classes.
 		</paragraph>
 		<code_block>
 <keyword>feature</keyword> <comment>-- Element change</comment>
@@ -427,15 +319,9 @@
 		<keyword>end</keyword>
 </code_block>
 		<paragraph>Feature 
-			<code>
-				<feature_name>replace</feature_name>
-			</code> carries the semantics necessary for replacing an item in an 
-			<code>
-				<class_name>ACTIVE</class_name>
-			</code>. It does not, however provide an implementation. All implementers must produce versions of 
-			<code>
-				<feature_name>replace</feature_name>
-			</code> that satisfy the contract specified here.
+			<feature_name>replace</feature_name> carries the semantics necessary for replacing an item in an 
+			<class_name>ACTIVE</class_name>. It does not, however provide an implementation. All implementers must produce versions of 
+			<feature_name>replace</feature_name> that satisfy the contract specified here.
 		</paragraph>
 		<paragraph>It actually is possible to alter a feature assertion in an effected or redefined version(technically its a replacement of the original version):</paragraph>
 		<list ordered="false">
@@ -534,9 +420,7 @@
 			</code>-ed" to the original.
 		</paragraph>
 		<paragraph>Below is an example of weakening a precondition. The first feature shown is from class 
-			<code>
-				<class_name>DYNAMIC_CHAIN</class_name>
-			</code> in the Base Library.
+			<class_name>DYNAMIC_CHAIN</class_name> in the Base Library.
 		</paragraph>
 		<code_block>
 	remove_left <keyword>is</keyword>
@@ -551,39 +435,19 @@
 		<keyword>end</keyword>
 </code_block>
 		<paragraph>The next feature is from 
-			<code>
-				<class_name>DYNAMIC_LIST</class_name>
-			</code>, a proper descendant of 
-			<code>
-				<class_name>DYNAMIC_CHAIN</class_name>
-			</code>. 
-			<code>
-				<class_name>DYNAMIC_LIST</class_name>
-			</code> weakens the precondition it inherited from 
-			<code>
-				<class_name>DYNAMIC_CHAIN</class_name>
-			</code>. Originally in 
-			<code>
-				<class_name>DYNAMIC_CHAIN</class_name>
-			</code>, "
-			<code>
-				<feature_name>index</feature_name>
-			</code> &gt; 1" was required for 
-			<code>
-				<feature_name>remove_left</feature_name>
-			</code>. In 
-			<code>
-				<class_name>DYNAMIC_LIST</class_name>
-			</code> either "
-			<code>
-				<feature_name>index</feature_name>
-			</code> &gt; 1" or "
+			<class_name>DYNAMIC_LIST</class_name>, a proper descendant of 
+			<class_name>DYNAMIC_CHAIN</class_name>. 
+			<class_name>DYNAMIC_LIST</class_name> weakens the precondition it inherited from 
+			<class_name>DYNAMIC_CHAIN</class_name>. Originally in 
+			<class_name>DYNAMIC_CHAIN</class_name>, "
+			<feature_name>index</feature_name> &gt; 1" was required for 
+			<feature_name>remove_left</feature_name>. In 
+			<class_name>DYNAMIC_LIST</class_name> either "
+			<feature_name>index</feature_name> &gt; 1" or "
 			<code>
 				<keyword>not</keyword>
 			</code> 
-			<code>
-				<feature_name>before</feature_name>
-			</code>" (or both) will suffice.
+			<feature_name>before</feature_name>" (or both) will suffice.
 		</paragraph>
 		<code_block>
 	<feature_name>remove_left</feature_name> <keyword>is</keyword>

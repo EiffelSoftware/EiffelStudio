@@ -801,9 +801,7 @@
 				<size>3</size>2.3.3. Access class
 			</heading>
 			<paragraph>The 
-				<code>
-					<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name>
-				</code> class is mapped to the database from the following template:
+				<class_name>DB_SPECIFIC_TABLES_ACCESS</class_name> class is mapped to the database from the following template:
 			</paragraph>
 <code_block>
 	indexing

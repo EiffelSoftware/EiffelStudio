@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>This sample demonstrates the use of a <link><url>../../../reference/gdi/wel_client_dc_chart.xml</url><label>WEL_CLIENT_DC</label></link> to display output in the <code><class_name>MAIN_WINDOW</class_name></code>. The output is shown below: </paragraph>
+		<paragraph>This sample demonstrates the use of a <link><url>../../../reference/gdi/wel_client_dc_chart.xml</url><label>WEL_CLIENT_DC</label></link> to display output in the <class_name>MAIN_WINDOW</class_name>. The output is shown below: </paragraph>
 		<image> 
 			<url>step3.png</url> 
 			<alt_text>step3</alt_text>
@@ -43,12 +43,12 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>This system is a demonstration of how to gain access to the client area of a window using a <link><url>../../../reference/gdi/wel_client_dc_chart.xml</url><label>WEL_CLIENT_DC</label></link>. The creation procedure of the DC takes a WEL_WINDOW as an argument, and in this sample, we pass the <code><class_name>MAIN_WINDOW</class_name></code>. Using this DC, it is a simple step to output the position of the mouse which is provided as arguments to <code><feature_name>on_left_button_down</feature_name></code>.</paragraph>
-		<paragraph><code><feature_name>on_right_button_down</feature_name></code> has also been redefined to call invalidate which clears the client area of the window. 
+		<paragraph>This system is a demonstration of how to gain access to the client area of a window using a <link><url>../../../reference/gdi/wel_client_dc_chart.xml</url><label>WEL_CLIENT_DC</label></link>. The creation procedure of the DC takes a WEL_WINDOW as an argument, and in this sample, we pass the <class_name>MAIN_WINDOW</class_name>. Using this DC, it is a simple step to output the position of the mouse which is provided as arguments to <feature_name>on_left_button_down</feature_name>.</paragraph>
+		<paragraph><feature_name>on_right_button_down</feature_name> has also been redefined to call invalidate which clears the client area of the window. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
-					<item><code><class_name>TUTORIAL_STEP3</class_name></code></item>
-					<item><code><class_name>MAIN_WINDOW</class_name></code></item>
+					<item><class_name>TUTORIAL_STEP3</class_name></item>
+					<item><class_name>MAIN_WINDOW</class_name></item>
 				</list>
 			</paragraph>
 			<seealso>

@@ -84,7 +84,7 @@
 		<heading>
 			<size>2</size>Accessing database content with Eiffel objects
 		</heading>
-		<paragraph><link><url>/libraries/store/reference/interface/db_selection_flatshort.xml</url><label>DB_SELECTION</label></link> lets you map data retrieved from the database into Eiffel objects: Result column names must match object attributes names so you can use for instance classes created by <link><url>/libraries/store/reference/interface/db_repository_flatshort.xml</url><label>DB_REPOSITORY</label></link>. Class <code><class_name>DB_ACTION</class_name></code> redefines ACTION and can be used to retrieve Eiffel objects directly into an ARRAYED_LIST:</paragraph>
+		<paragraph><link><url>/libraries/store/reference/interface/db_selection_flatshort.xml</url><label>DB_SELECTION</label></link> lets you map data retrieved from the database into Eiffel objects: Result column names must match object attributes names so you can use for instance classes created by <link><url>/libraries/store/reference/interface/db_repository_flatshort.xml</url><label>DB_REPOSITORY</label></link>. Class <class_name>DB_ACTION</class_name> redefines ACTION and can be used to retrieve Eiffel objects directly into an ARRAYED_LIST:</paragraph>
 <code_block>
 	<feature_name>selection</feature_name><symbol>:</symbol> <class_name>DB_SELECTION</class_name>
 	<feature_name>list_filling</feature_name><symbol>:</symbol> <class_name>DB_ACTION</class_name> <symbol>[</symbol><class_name>CONTACTS</class_name><symbol>]</symbol>

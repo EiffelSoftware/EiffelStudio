@@ -55,17 +55,17 @@
 			<paragraph>  There are three different modes of transport available for pick and drop. They are listed below with details of their use:  
 				<list ordered="false">
 					<item>Pick and Drop mode.
-						<line_break/>This is the default mode for pick and drop, but can be set with  <code><feature_name>set_pick_and_drop_mode</feature_name></code>. Right clicking on a  
+						<line_break/>This is the default mode for pick and drop, but can be set with  <feature_name>set_pick_and_drop_mode</feature_name>. Right clicking on a  
 						<bold>source</bold> starts the transport and right clicking on a valid 
 						<bold>target</bold> completes the transport. During execution, a band is drawn from the screen position where the pick started to the current mouse position. Pressing the left mouse button or the escape key during execution will end the transport.
 					</item>
 					<item>Drag and drop mode
-						<line_break/>This mode can be set with <code><feature_name>set_drag_and_drop_mode</feature_name></code>. Left clicking on a 
+						<line_break/>This mode can be set with <feature_name>set_drag_and_drop_mode</feature_name>. Left clicking on a 
 						<bold>source</bold> starts the transport and releasing the left mouse button over a valid  
 						<bold>target</bold> completes the transport. During execution, a band is drawn from the screen position where the pick started to the current mouse position. Releasing the left mouse button or pressing the escape key during execution will end the transport.
 					</item>
 					<item>Target menu mode
-						<line_break/>This mode can be set with <code><feature_name>set_target_menu_mode</feature_name></code>. Right clicking on a 
+						<line_break/>This mode can be set with <feature_name>set_target_menu_mode</feature_name>. Right clicking on a 
 						<bold>source</bold> brings up a menu of all the valid drop 
 						<bold>targets</bold> in the system. Selecting one  of these targets completes the transport.
 					</item>
@@ -74,8 +74,8 @@
 			<heading>
 				<size>2</size>Accept and deny cursors
 			</heading>
-			<paragraph>  When <code><feature_name>mode_is_pick_and_drop</feature_name></code> or <code><feature_name> mode_is_drag_and_drop</feature_name></code> then the shape of the  mouse cursor changes to reflect whether the current GUI component below the mouse accepts the pebble or not. Calling  <code><feature_name>set_accept_cursor</feature_name></code> allows you to customize this cursor used to represent a valid 
-				<bold>target</bold> while  calling <code><feature_name>set_deny_cursor</feature_name></code> allows you to customize the cursor used for non valid 
+			<paragraph>  When <feature_name>mode_is_pick_and_drop</feature_name> or <feature_name> mode_is_drag_and_drop</feature_name> then the shape of the  mouse cursor changes to reflect whether the current GUI component below the mouse accepts the pebble or not. Calling  <feature_name>set_accept_cursor</feature_name> allows you to customize this cursor used to represent a valid 
+				<bold>target</bold> while  calling <feature_name>set_deny_cursor</feature_name> allows you to customize the cursor used for non valid 
 				<bold>targets</bold>. 
 			</paragraph>
 		</paragraph>

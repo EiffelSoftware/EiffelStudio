@@ -16,13 +16,13 @@
 					<bold>Note</bold>: Calling set_base links the EiffelStore interface to this specific handle.
 				</note>
 				<tip>
-					<bold>Tip</bold>: You can manage handles to many databases: as an instance of <code><class_name>DATABASE_APPL</class_name></code> stands for a specific database handle, you only have to create one instance of <code><class_name>DATABASE_APPL</class_name></code> for every DBMS handle you wish to create. Do not forget to call set_base to activate appropriate handle.
+					<bold>Tip</bold>: You can manage handles to many databases: as an instance of <class_name>DATABASE_APPL</class_name> stands for a specific database handle, you only have to create one instance of <class_name>DATABASE_APPL</class_name> for every DBMS handle you wish to create. Do not forget to call set_base to activate appropriate handle.
 				</tip>
 				<note>
-					<bold>Note</bold>: The generic parameter of <code><class_name>DATABASE_APPL</class_name></code> specifies the actual DBMS used.
+					<bold>Note</bold>: The generic parameter of <class_name>DATABASE_APPL</class_name> specifies the actual DBMS used.
 				</note>
 			</item>
-			<item>Once your handle is created, you have to create a session manager which will allow you to manage your database, specifically to establish connection, disconnect and also handle errors. The class <code><class_name>DB_CONTROL</class_name></code> enables your application to plainly control the functioning and status of your database and to request any information about it.
+			<item>Once your handle is created, you have to create a session manager which will allow you to manage your database, specifically to establish connection, disconnect and also handle errors. The class <class_name>DB_CONTROL</class_name> enables your application to plainly control the functioning and status of your database and to request any information about it.
 <code_block>
 	<feature_name>session_control</feature_name><symbol>:</symbol> <class_name>DB_CONTROL</class_name>
 		<comment>-- Session control.</comment>
@@ -35,7 +35,7 @@
 					<link>
 						<url>../80_database_control/index.xml</url>
 						<label>database control</label>
-					</link> part to see how to use <code><class_name>DB_CONTROL</class_name></code> capabilities.
+					</link> part to see how to use <class_name>DB_CONTROL</class_name> capabilities.
 				</note>
 			</item>
 		</list>

@@ -9,12 +9,8 @@
 			</image>
 		</paragraph>
 		<paragraph>As you can see, you can specify the application name which will also be the executable name. With the root class along with the creation procedure name entries you can select which feature is going to be the root of your execution, in this case the 
-			<code>
-				<feature_name>make</feature_name>
-			</code> feature of class 
-			<code>
-				<class_name>CALCULATOR</class_name>
-			</code> is selected.
+			<feature_name>make</feature_name> feature of class 
+			<class_name>CALCULATOR</class_name> is selected.
 		</paragraph>
 		<paragraph>You can also choose the default level of assertions. This applies to all Eiffel classes located in clusters specified in 
 			<link>

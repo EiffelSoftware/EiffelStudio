@@ -42,7 +42,7 @@
 				<item>The underlying structures used have been tried and tested for many years and their design has been proved to be robust and effective.</item>
 				<item>It provides powerful methods of querying the contents. In the original Vision library, you needed to keep reference to widgets as you could not query the contents of a container.</item>  
 			</list>
-			<paragraph>  For example, <link><url>../../../reference/interface/widgets/containers/ev_container_chart.xml</url><label>EV_CONTAINER</label></link> inherits <code><class_name>BOX</class_name></code> and <code><class_name>COLLECTION</class_name></code>. Descendents of <link><url>../../../reference/interface/widgets/containers/ev_container_chart.xml</url><label>EV_CONTAINER</label></link> such as <link><url>../../../reference/interface/widgets/containers/ev_box_chart.xml</url><label>EV_BOX</label></link> may also inherit other structures from 
+			<paragraph>  For example, <link><url>../../../reference/interface/widgets/containers/ev_container_chart.xml</url><label>EV_CONTAINER</label></link> inherits <class_name>BOX</class_name> and <class_name>COLLECTION</class_name>. Descendents of <link><url>../../../reference/interface/widgets/containers/ev_container_chart.xml</url><label>EV_CONTAINER</label></link> such as <link><url>../../../reference/interface/widgets/containers/ev_box_chart.xml</url><label>EV_BOX</label></link> may also inherit other structures from 
 				<link>
 					<url>/libraries/base/index.xml</url>
 					<label>Base</label>

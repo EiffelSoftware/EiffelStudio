@@ -33,20 +33,19 @@
 		</heading> After launching the program you will see a window displayed containing three push buttons marked "Brushes", "Rectangles" and "3D". Clicking "Brushes" will open a new window demonstrating different brushes available. Clicking "Rectangles" will open a new window within which many different shaped and colored rectangles will be drawn. Clicking"3D" will open a new window demonstrating the use of multiple bitmaps for animation. 
 		<heading>
 			<size>2</size>Under the Hood
-		</heading> Each of the three windows that are opened from the programs <code><class_name>MAIN_WINDOW</class_name></code> inherit <link><url>../../reference/windows/wel_frame_window_chart.xml</url><label>WEL_FRAME_WINDOW</label></link> and contains code for generating their output. <code><feature_name>BRUSHES_DEMO</feature_name></code> redefines <code><feature_name>idle_action</feature_name></code> to force a re-draw on the applicable windows. 
+		</heading> Each of the three windows that are opened from the programs <class_name>MAIN_WINDOW</class_name> inherit <link><url>../../reference/windows/wel_frame_window_chart.xml</url><label>WEL_FRAME_WINDOW</label></link> and contains code for generating their output. <feature_name>BRUSHES_DEMO</feature_name> redefines <feature_name>idle_action</feature_name> to force a re-draw on the applicable windows. 
 		<note>
-			<bold>Note</bold>. If <code><feature_name>enable_idle_action</feature_name></code> is not called, then <code>
-	<feature_name>idle_action</feature_name></code> is never executed.
+			<bold>Note</bold>. If <feature_name>enable_idle_action</feature_name> is not called, then <feature_name>idle_action</feature_name> is never executed.
 		</note>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
-				<item><code><class_name>BRUSH_DEMO</class_name></code></item>
-				<item><code><class_name>BRUSHES_DEMO</class_name></code></item>
-				<item><code><class_name>DEMO_3D</class_name></code></item>
-				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
-				<item><code><class_name>PROJECTION</class_name></code></item>
-				<item><code><class_name>RECTANGLE_DEMO</class_name></code></item>
+				<item><class_name>APPLICATION_IDS</class_name></item>
+				<item><class_name>BRUSH_DEMO</class_name></item>
+				<item><class_name>BRUSHES_DEMO</class_name></item>
+				<item><class_name>DEMO_3D</class_name></item>
+				<item><class_name>MAIN_WINDOW</class_name></item>
+				<item><class_name>PROJECTION</class_name></item>
+				<item><class_name>RECTANGLE_DEMO</class_name></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

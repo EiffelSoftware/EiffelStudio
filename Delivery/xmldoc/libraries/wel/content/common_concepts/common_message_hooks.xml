@@ -25,10 +25,10 @@
 				<link>
 					<url>/libraries/wel/samples/tutorial/index.xml</url>
 					<label>tutorial</label>
-				</link> for a simple demonstration involving the re-definition of <code><feature_name>on_left_button_down</feature_name></code>.
+				</link> for a simple demonstration involving the re-definition of <feature_name>on_left_button_down</feature_name>.
 			</note>
 		</paragraph>
-		<paragraph>  For different messages received by a control, the arguments will differ (sometimes there are none), but those arguments will always be relevant to the message.  For example, on_menu_command from <link><url>../../reference/windows/wel_composite_window_chart.xml</url><label>WEL_COMPOSITE_WINDOW</label></link>  has an <code><class_name>INTEGER</class_name></code> as an argument, the value of which is a unique menu identifier.
+		<paragraph>  For different messages received by a control, the arguments will differ (sometimes there are none), but those arguments will always be relevant to the message.  For example, on_menu_command from <link><url>../../reference/windows/wel_composite_window_chart.xml</url><label>WEL_COMPOSITE_WINDOW</label></link>  has an <class_name>INTEGER</class_name> as an argument, the value of which is a unique menu identifier.
 			<line_break/>
 			<note>
 				<bold>Note</bold>. Not all windows events have a corresponding `on_' message hook defined in WEL. If you wish to process a Windows message that does not correspond to one of the available features, you will need  to redefine process_message.

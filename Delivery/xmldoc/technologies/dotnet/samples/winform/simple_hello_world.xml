@@ -50,22 +50,22 @@
 			<size>2</size>Under the Hood
 		</heading>
 		<paragraph>The application shows how to display a Windows Form under the windows environment. The application inherits the 
-			<span><code><class_name>FORM</class_name></code></span> class, and just set the title with 
+			<span><class_name>FORM</class_name></span> class, and just set the title with 
 			<span><code>"<string>Hello world</string>"</code></span> with the inherited feature 
-			<span><code><feature_name>set_title</feature_name></code></span>.
+			<span><feature_name>set_title</feature_name></span>.
 		</paragraph><code_block>
 	<feature_name>set_title</feature_name> <symbol>(</symbol><symbol>(</symbol>"<string>Hello world</string>"<symbol>)</symbol><feature_name></feature_name>.<feature_name></feature_name>to_cil<symbol>)</symbol>
 </code_block>
-		<paragraph>The application is launched in a <code><class_name>PROCESS</class_name></code> with this command line:</paragraph>
+		<paragraph>The application is launched in a <class_name>PROCESS</class_name> with this command line:</paragraph>
 		<code_block>
 	<keyword>feature</keyword> <symbol>{</symbol><class_name>WINFORMS_APPLICATION</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name></feature_name><feature_name>run_form</feature_name> <symbol>(</symbol><keyword>Current</keyword><symbol>)</symbol><feature_name></feature_name>.
 </code_block>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
-				<span><code><class_name>FORM</class_name></code></span>
+				<span><class_name>FORM</class_name></span>
 			</item>
-			<item><code><class_name>WINFORMS_APPLICATION</class_name></code></item>
+			<item><class_name>WINFORMS_APPLICATION</class_name></item>
 		</list>
 		<heading>
 			<size>2</size>Notes

@@ -8,25 +8,25 @@
 			<size>2</size>Eiffel basic types
 		</heading>The EIFFEL include files define types for every EIFFEL types: 
 		<list ordered="false">
-			<item>An Eiffel <code><class_name>INTEGER</class_name></code> is an 
+			<item>An Eiffel <class_name>INTEGER</class_name> is an 
 				<italic>EIF_INTEGER</italic>,
 			</item>
-			<item>An Eiffel <code><class_name>CHARACTER</class_name></code> is an 
+			<item>An Eiffel <class_name>CHARACTER</class_name> is an 
 				<italic>EIF_CHARACTER</italic>,
 			</item>
-			<item>An Eiffel <code><class_name>REAL</class_name></code> is an 
+			<item>An Eiffel <class_name>REAL</class_name> is an 
 				<italic>EIF_REAL</italic>,
 			</item>
-			<item>An Eiffel <code><class_name>DOUBLE</class_name></code> is an 
+			<item>An Eiffel <class_name>DOUBLE</class_name> is an 
 				<italic>EIF_DOUBLE</italic>,
 			</item>
 			<item>Eiffel references (any Eiffel objects that are not from a basic type) are 
 				<italic>EIF_REFERENCE</italic> (not protected, and can be moved),
 			</item>
-			<item>An Eiffel <code><class_name>POINTER</class_name></code> is an 
+			<item>An Eiffel <class_name>POINTER</class_name> is an 
 				<italic>EIF_POINTER,</italic>
 			</item>
-			<item>An Eiffel <code><class_name>BOOLEAN</class_name></code> is an 
+			<item>An Eiffel <class_name>BOOLEAN</class_name> is an 
 				<italic>EIF_BOOLEAN</italic>,
 			</item>
 			<item>A Protected Eiffel object is an 
@@ -79,21 +79,21 @@ int foo (void *arg1, char c, FILE *file)
 		<paragraph>Not doing this would generally produce warnings during the C compilation, and it could crash with some C compilers. </paragraph>
 		<paragraph>To perform the conversion, here is the actual Eiffel types mapping to C types:</paragraph>
 		<div>
-			<code><class_name>POINTER</class_name></code> is compatible with any C pointer ( 
+			<class_name>POINTER</class_name> is compatible with any C pointer ( 
 			<italic>char *</italic>). 
 			<line_break/> 
-			<code><class_name>INTEGER</class_name></code> is a long. 
+			<class_name>INTEGER</class_name> is a long. 
 			<line_break/> 
-			<code><class_name>CHARACTER</class_name></code> is an 
+			<class_name>CHARACTER</class_name> is an 
 			<italic>unsigned char. </italic>
 			<line_break/> 
-			<code><class_name>DOUBLE</class_name></code> is a 
+			<class_name>DOUBLE</class_name> is a 
 			<italic>double</italic>. 
 			<line_break/> 
-			<code><class_name>REAL</class_name></code> is a 
+			<class_name>REAL</class_name> is a 
 			<italic>float</italic>. 
 			<line_break/> 
-			<code><class_name>BOOLEAN</class_name></code> is an 
+			<class_name>BOOLEAN</class_name> is an 
 			<italic>unsigned char (EIF_TRUE = '\01', EIF_FALSE = '\0')</italic> . 
 		</div>These are the current correspondences but they may change. The definition of each Eiffel type is located in $ISE_EIFFEL/bench/spec/$PLATFORM/include/eif_portable. h. 
 		<heading>
@@ -103,69 +103,39 @@ int foo (void *arg1, char c, FILE *file)
 		<italic>EIF_REFERENCE</italic>. 
 		<paragraph>An 
 			<italic>EIF_REFERENCE</italic> is an Eiffel reference. It corresponds to an Eiffel object in the Eiffel side. 
-			<code>
-				<feature_name>eif_attribute</feature_name>
-			</code>, 
-			<code>
-				<feature_name>eif_reference_function</feature_name>
-			</code>,  
-			<code>
-				<feature_name>eif_string</feature_name>
-			</code>, 
-			<code>
-				<feature_name>eif_wean</feature_name>
-			</code> all return 
+			<feature_name>eif_attribute</feature_name>, 
+			<feature_name>eif_reference_function</feature_name>,  
+			<feature_name>eif_string</feature_name>, 
+			<feature_name>eif_wean</feature_name> all return 
 			<italic>EIF_REFERENCEs</italic>. An 
 			<italic>EIF_REFERENCE</italic> can be used "as is" by the Eiffel run-time. 
-			<code>
-				<feature_name>eif_attribute</feature_name>
-			</code>, 
-			<code>
-				<feature_name>eif_xx_function</feature_name>
-			</code> take 
+			<feature_name>eif_attribute</feature_name>, 
+			<feature_name>eif_xx_function</feature_name> take 
 			<italic>EIF_REFERENCEs</italic> as arguments, never 
 			<italic>EIF_OBJECTs</italic>. The return value of a C external is to be an 
 			<italic>EIF_REFERENCE</italic>, if it is not a basic expanded type. To protect an 
 			<italic>EIF_REFERENCE</italic>, use 
-			<code>
-				<feature_name>eif_protect</feature_name>
-			</code>. 
+			<feature_name>eif_protect</feature_name>. 
 		</paragraph>
 		<paragraph>An 
 			<italic>EIF_OBJECT</italic> is a safe and static indirection to an Eiffel reference. As the GC may move an Eiffel reference, this indirection is updated at every collection so that you do not need to know whether an Eiffel reference has moved or not. You must pass through this indirection to access the Eiffel reference (see 
-			<code>
-				<feature_name>eif_access</feature_name>
-			</code>). Not doing so is completely unsafe since an Eiffel reference may be obsolete after a collection. 
-			<code>
-				<feature_name>eif_create</feature_name>
-			</code>, 
-			<code>
-				<feature_name>eif_adopt</feature_name>
-			</code>, and 
-			<code>
-				<feature_name>eif_protect</feature_name>
-			</code> returns an 
+			<feature_name>eif_access</feature_name>). Not doing so is completely unsafe since an Eiffel reference may be obsolete after a collection. 
+			<feature_name>eif_create</feature_name>, 
+			<feature_name>eif_adopt</feature_name>, and 
+			<feature_name>eif_protect</feature_name> returns an 
 			<italic>EIF_OBJECT</italic>. The argument of a C external (on the C side) , which is not a basic expanded type, is also an 
 			<italic>EIF_OBJECT</italic>. The Eiffel run-time temporarily protects the Eiffel objects that are passed to a C external , that is why the signature of a C external has no 
 			<italic>EIF_REFERENCE</italic> in it, but 
 			<italic>EIF_OBJECT</italic> instead. After the C external call, the run-time unprotects the Eiffel object. If you intend to use in the C side an 
 			<italic>EIF_OBJECT</italic> given by a C external afterwards, you must protect it with 
-			<code>
-				<feature_name>eif_adopt</feature_name>
-			</code>. To unprotect an 
+			<feature_name>eif_adopt</feature_name>. To unprotect an 
 			<italic>EIF_OBJECT</italic> , which is not a C external argument, use 
-			<code>
-				<feature_name>eif_wean</feature_name>
-			</code>. 
+			<feature_name>eif_wean</feature_name>. 
 		</paragraph>
 		<paragraph>The basic expanded types are 
-			<code><class_name>INTEGER</class_name></code>, <code><class_name>INTEGER_64</class_name></code>, <code><class_name>INTEGER_16</class_name></code>, <code><class_name>INTEGER_8</class_name></code>, <code><class_name>REAL</class_name></code>, <code><class_name>DOUBLE</class_name></code>, <code><class_name>CHARACTER</class_name></code>, <code><class_name>BOOLEAN</class_name></code>, <code><class_name>POINTER</class_name></code>. They are passed to C externals by values. There is no need to protect instances of these types. When the <code><class_name>POINTER</class_name></code> is a pointer to an Eiffel object (ex: $my_object), then the direct Eiffel reference is passed to C, with no protection and this reference may move. Use 
-			<code>
-				<feature_name>eif_protect</feature_name>
-			</code> to manually protect it. To unprotect it, call 
-			<code>
-				<feature_name>eif_wean. </feature_name>
-			</code>
+			<class_name>INTEGER</class_name>, <class_name>INTEGER_64</class_name>, <class_name>INTEGER_16</class_name>, <class_name>INTEGER_8</class_name>, <class_name>REAL</class_name>, <class_name>DOUBLE</class_name>, <class_name>CHARACTER</class_name>, <class_name>BOOLEAN</class_name>, <class_name>POINTER</class_name>. They are passed to C externals by values. There is no need to protect instances of these types. When the <class_name>POINTER</class_name> is a pointer to an Eiffel object (ex: $my_object), then the direct Eiffel reference is passed to C, with no protection and this reference may move. Use 
+			<feature_name>eif_protect</feature_name> to manually protect it. To unprotect it, call 
+			<feature_name>eif_wean. </feature_name>
 		</paragraph>
 		<heading>
 			<size>2</size>Protecting the Eiffel objects
@@ -189,15 +159,9 @@ int foo (void *arg1, char c, FILE *file)
 			<italic>eif_access</italic> as follows: 
 			<italic>eif_access (protection)</italic> , where 
 			<italic>protection</italic> is either a value returned by 
-			<code>
-				<feature_name>eif_create</feature_name>
-			</code>, 
-			<code>
-				<feature_name>eif_adopt</feature_name>
-			</code> or 
-			<code>
-				<feature_name>eif_protect,</feature_name>
-			</code> or an Eiffel object which is an argument of a C external. 
+			<feature_name>eif_create</feature_name>, 
+			<feature_name>eif_adopt</feature_name> or 
+			<feature_name>eif_protect,</feature_name> or an Eiffel object which is an argument of a C external. 
 		</paragraph>
 		<paragraph>Use 
 			<italic>eif_access</italic> to pass an Eiffel object to an Eiffel routine or to return the value of a C external. It is also unsafe to pass a direct Eiffel reference ( 
@@ -318,9 +282,7 @@ eif_wean (i_my_string); /* Release protection. */
 			<italic>eif_access (object)</italic> only within the code of the C external. When the C external returns, 
 			<italic>eif_access (object)</italic> is NULL but 
 			<italic>eif_access (returned_value)</italic> remains valid until you release it with 
-			<code>
-				<feature_name>eif_wean</feature_name>
-			</code>. 
+			<feature_name>eif_wean</feature_name>. 
 		</paragraph>
 		<paragraph><bold>Example:</bold></paragraph>
 		<paragraph>In Eiffel:</paragraph>
@@ -392,24 +354,14 @@ void display_and_release_obj (void)
 		<paragraph>The CECIL function 
 			<italic>eif_create</italic> takes a type identifier 
 			<italic>type_id</italic> as argument (generally returned by 
-			<code>
-				<feature_name>eif_type_id</feature_name>
-			</code>). It returns a static indirection pointer which is to be used afterwards to access the newly created Eiffel object with 
+			<feature_name>eif_type_id</feature_name>). It returns a static indirection pointer which is to be used afterwards to access the newly created Eiffel object with 
 			<italic>eif_access (returned_value)</italic> where 
 			<italic>returned_value</italic> is the value returned by 
 			<italic>eif_create</italic> . This means that when creating an eiffel object from C, the eiffel object is automatically protected: there is no need to call 
-			<code>
-				<feature_name>eif_adopt</feature_name>
-			</code> or 
-			<code>
-				<feature_name>eif_protect</feature_name>
-			</code> on it. This function does not call any creation procedure. To do so, you need to explicitly call it with 
-			<code>
-				<feature_name>eif_procedure</feature_name>
-			</code>. The garbage collector will not collect the newly created object until you call 
-			<code>
-				<feature_name>eif_wean</feature_name>
-			</code> on it. 
+			<feature_name>eif_adopt</feature_name> or 
+			<feature_name>eif_protect</feature_name> on it. This function does not call any creation procedure. To do so, you need to explicitly call it with 
+			<feature_name>eif_procedure</feature_name>. The garbage collector will not collect the newly created object until you call 
+			<feature_name>eif_wean</feature_name> on it. 
 		</paragraph>
 		<paragraph><bold>Example:</bold></paragraph>
 		<paragraph>Creating an object of type "OBJECT":</paragraph>
@@ -450,7 +402,7 @@ main (int argc,char **argv,char **envp)
 		<paragraph>To release this artificial reference, call eif_wean (returned_value)</paragraph>
 		<paragraph>eif_protect is to be called on an EIF_REFERENCE returned by eif_attribute, eif_string, or the returned value of eif_reference_function. </paragraph>
 		<paragraph>See also eif_adopt, eif_create, eif_wean, eif_access. </paragraph>
-		<paragraph><bold>Example:</bold> Assume that you want to access an attribute `tab' of type <code><class_name>ARRAY [INTEGER]</class_name></code> in the class <code><class_name>OBJECT</class_name></code>. </paragraph>
+		<paragraph><bold>Example:</bold> Assume that you want to access an attribute `tab' of type <class_name>ARRAY [INTEGER]</class_name> in the class <class_name>OBJECT</class_name>. </paragraph>
 		<paragraph>
 			<code_block>
 #include eif_setup.h"
@@ -548,9 +500,7 @@ p_make = eif_procedure ("make", tid);
 		</note>eif_wean (object) returns an Eiffel reference, which corresponds to eif_access (object). After a call to eif_wean (object), eif_access (object) is NULL, which does not mean that the nested Eiffel object is Void, but that the indirection pointer does not reference it any longer. It is possible to reuse object later on. 
 		<line_break/>Calling eif_wean (external_argument) where external_argument is an Eiffel object given by a C external can cause erratic behaviors. Indeed, external_argument is an indirection pointer, which is automatically deleted after the external call (not the nested Eiffel object), deleting it prematurely can corrupt the indirection pointers stack. 
 		<line_break/>See also 
-		<code>
-			<feature_name>eif_access</feature_name>
-		</code>. 
+		<feature_name>eif_access</feature_name>. 
 		<paragraph><bold>Example:</bold> C external returning an Eiffel string. </paragraph>
 		<paragraph>In Eiffel:</paragraph>
 		<code_block>

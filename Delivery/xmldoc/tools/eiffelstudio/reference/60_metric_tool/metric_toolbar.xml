@@ -21,16 +21,16 @@
 		</paragraph>
 		<list ordered="false">
 			<item>
-				<code><class_name>name</class_name></code>: to enter a name when saving a measure.
+				<class_name>name</class_name>: to enter a name when saving a measure.
 			</item>
 			<item>
-				<code><class_name>scope</class_name></code>: a combo box to select a scope type.
+				<class_name>scope</class_name>: a combo box to select a scope type.
 			</item>
 			<item>
-				<code><class_name>metric</class_name></code>: a menu containing all available metrics.
+				<class_name>metric</class_name>: a menu containing all available metrics.
 			</item>
 			<item>
-				<code><class_name>unit</class_name></code>: displays the selected metric's unit.
+				<class_name>unit</class_name>: displays the selected metric's unit.
 			</item>
 		</list>
 		<paragraph>And the following buttons:</paragraph>
@@ -42,7 +42,7 @@
 					<url>/images/eiffelstudio/icons/icon_new_measure_color.gif</url>
 					<border>0</border>
 				</image>
-				<code><class_name>calculate</class_name></code>: evaluate a metric over a scope.
+				<class_name>calculate</class_name>: evaluate a metric over a scope.
 			</item>
 			<item>
 				<image>
@@ -51,7 +51,7 @@
 					<url>/images/eiffelstudio/icons/icon_save_measure_color.gif</url>
 					<border>0</border>
 				</image>
-				<code><class_name>add</class_name></code>: add a measure to the multi-column list and save it.
+				<class_name>add</class_name>: add a measure to the multi-column list and save it.
 			</item>
 			<item>
 				<image>
@@ -60,7 +60,7 @@
 					<url>/images/eiffelstudio/icons/icon_delete_measure_color.gif</url>
 					<border>0</border>
 				</image>
-				<code><class_name>delete</class_name></code>: delete a set of measures from the multi-column list.
+				<class_name>delete</class_name>: delete a set of measures from the multi-column list.
 			</item>
 			<item>
 				<image>
@@ -69,7 +69,7 @@
 					<url>/images/eiffelstudio/icons/icon_select_metrics_color.gif</url>
 					<border>0</border>
 				</image>
-				<code><class_name>management</class_name></code>: reorder, delete or edit metrics.
+				<class_name>management</class_name>: reorder, delete or edit metrics.
 			</item>
 			<item>
 				<image>
@@ -78,7 +78,7 @@
 					<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
 					<border>0</border>
 				</image>
-				<code><class_name>new metric</class_name></code>: create a new composite metric.
+				<class_name>new metric</class_name>: create a new composite metric.
 			</item>
 			<item>
 				<image>
@@ -87,7 +87,7 @@
 					<url>/images/eiffelstudio/icons/icon_view_measure_plus_color.gif</url>
 					<border>0</border>
 				</image> show 
-				<code><class_name>details</class_name></code>: show details of a measure.
+				<class_name>details</class_name>: show details of a measure.
 			</item>
 			<item>
 				<image>
@@ -95,10 +95,10 @@
 					<width>16</width>
 					<url>/images/eiffelstudio/icons/icon_view_measure_minus_color.gif</url>
 					<border>0</border>
-				</image> <code><class_name>hide details</class_name></code>: hide details of a measure.
+				</image> <class_name>hide details</class_name>: hide details of a measure.
 			</item>
 			<item>
-				<code><class_name>archive</class_name></code>: create, update or compare archive files.
+				<class_name>archive</class_name>: create, update or compare archive files.
 			</item>
 		</list>
 	</paragraph></document>

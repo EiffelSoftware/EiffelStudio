@@ -56,52 +56,52 @@
 		</heading>
 		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. </paragraph>
 		<paragraph>Click on the 
-			<span><code><class_name>BUTTON</class_name></code></span> "Click Me!" and a message box will appear with the text that you have entered in the 
-			<span><code><class_name>TEXT_FIELD</class_name></code></span>.
+			<span><class_name>BUTTON</class_name></span> "Click Me!" and a message box will appear with the text that you have entered in the 
+			<span><class_name>TEXT_FIELD</class_name></span>.
 		</paragraph>
 		<paragraph/>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
 		<paragraph>The application shows how to use the very useful 
-			<span><code><class_name>MESSAGE_BOX</class_name></code></span> control.
+			<span><class_name>MESSAGE_BOX</class_name></span> control.
 		</paragraph>
 		<paragraph>An event (
-			<span><code><class_name>EVENT_HANDLER</class_name></code>)</span> is associated to a control (here to the 
-			<span><code><class_name>BUTTON</class_name></code></span>). So the line ' 
+			<span><class_name>EVENT_HANDLER</class_name>)</span> is associated to a control (here to the 
+			<span><class_name>BUTTON</class_name></span>). So the line ' 
 			<code_block><feature_name>my_button</feature_name>.<feature_name>add_click</feature_name> <symbol>(</symbol><keyword>create</keyword> <symbol>{</symbol><class_name>EVENT_HANDLER</class_name><symbol>}</symbol><feature_name></feature_name>.<feature_name>make</feature_name> <symbol>(</symbol><keyword>Current</keyword>, <symbol>$</symbol><feature_name>on_my_button_clicked</feature_name> <symbol>)</symbol><symbol>)</symbol></code_block>
 			associates a click to 
 			<span>my_button</span> to the feature 
-			<span><code><feature_name>on_my_button_clicked</feature_name></code></span>. So every time the 
+			<span><feature_name>on_my_button_clicked</feature_name></span>. So every time the 
 			<span>BUTTON</span> 
-			<span><code><feature_name>my_button</feature_name></code></span> is clicked, the feature 
+			<span><feature_name>my_button</feature_name></span> is clicked, the feature 
 			<span>on_my_button_clicked</span> is executed.
 		</paragraph>
 		<paragraph>The feature 
-			<span><code><feature_name>my_button_clicked</feature_name></code></span> displays a 
-			<span><code><class_name>MESSAGE_BOX</class_name></code></span> ( 
+			<span><feature_name>my_button_clicked</feature_name></span> displays a 
+			<span><class_name>MESSAGE_BOX</class_name></span> ( 
 			<span>feature</span> {
 			<span>WINFORMS_MESSAGE_BOX</span>}. 
-			<span><code><feature_name>show</feature_name></code></span> ( 
+			<span><feature_name>show</feature_name></span> ( 
 			<italic>msg</italic>)) with the text contained in 
-			<span><code><class_name>TEXT_FIELD</class_name></code></span> ( 
+			<span><class_name>TEXT_FIELD</class_name></span> ( 
 			<italic>msg</italic> := 
-			<span><code><feature_name>my_text_field</feature_name></code></span>. 
-			<span><code><feature_name>text</feature_name></code></span>).
+			<span><feature_name>my_text_field</feature_name></span>. 
+			<span><feature_name>text</feature_name></span>).
 		</paragraph>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
-				<span><code><class_name>FORM</class_name></code></span>
+				<span><class_name>FORM</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>BUTTON</class_name></code></span>
+				<span><class_name>BUTTON</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>TEXT_FIELD</class_name></code></span>
+				<span><class_name>TEXT_FIELD</class_name></span>
 			</item>
 			<item>
-				<span><code><class_name>EVENT_HANDLER</class_name></code></span>
+				<span><class_name>EVENT_HANDLER</class_name></span>
 			</item>
 		</list>
 		<heading>

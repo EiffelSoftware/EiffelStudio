@@ -26,33 +26,21 @@
 			<size>2</size>The Eiffel Inheritance Model
 		</heading>
 		<paragraph>If class 
-			<code>
-				<class_name>B</class_name>
-			</code> inherits from class 
-			<code>
-				<class_name>A</class_name>
-			</code>, then:
+			<class_name>B</class_name> inherits from class 
+			<class_name>A</class_name>, then:
 		</paragraph>
 		<list ordered="false">
 			<item>Every feature of 
-				<code>
-					<class_name>A</class_name>
-				</code> is also a feature of 
-				<code>
-					<class_name>B</class_name>
-				</code>
+				<class_name>A</class_name> is also a feature of 
+				<class_name>B</class_name>
 			</item>
 			<item>In any case in which an 
 				<link>
 					<url></url>
 					<label>instance</label>
 				</link> of 
-				<code>
-					<class_name>A</class_name>
-				</code> is called for, then an instance of 
-				<code>
-					<class_name>B</class_name>
-				</code> will suffice.
+				<class_name>A</class_name> is called for, then an instance of 
+				<class_name>B</class_name> will suffice.
 			</item>
 		</list>
 		<paragraph>Flexibility and adaptability are key qualities of the Eiffel inheritance model. On an informal level, this means that, except as prevented by certain constraints, a class can inherit from a set of classes containing just about any other classes.</paragraph>
@@ -78,12 +66,8 @@
 		</paragraph>
 		<paragraph>What this means to us as software producers, is that in any development effort, we have available a great number of classes which can serve as potential starting points. That is, classes that we could make parents to the classes we produce. And, those classes do not have to chosen from a strict dichotomy of classes which are either completely abstract or completely implemented. Inheritance from classes that are deferred but have some implemented features is both possible and encouraged. It reuses existing software and it reduces the opportunity for error.</paragraph>
 		<paragraph>Consider the deferred class 
-			<code>
-				<class_name>COMPARABLE</class_name>
-			</code> from the Eiffel Base Library. A portion of 
-			<code>
-				<class_name>COMPARABLE</class_name>
-			</code> is shown below:
+			<class_name>COMPARABLE</class_name> from the Eiffel Base Library. A portion of 
+			<class_name>COMPARABLE</class_name> is shown below:
 		</paragraph>
 		<code_block>
 <keyword>deferred</keyword> <keyword>class</keyword>
@@ -122,39 +106,21 @@
 		<keyword>end</keyword>
 </code_block>
 		<paragraph>If you are producing a class that you wish to support basic comparison operators, like "&lt;" and "&gt;", you can have that class inherit from 
-			<code>
-				<class_name>COMPARABLE</class_name>
-			</code>, which has features which correspond to those operators. The text for 
-			<code>
-				<class_name>COMPARABLE</class_name>
-			</code> contains eight features. Seven of these are effective and one is deferred.
+			<class_name>COMPARABLE</class_name>, which has features which correspond to those operators. The text for 
+			<class_name>COMPARABLE</class_name> contains eight features. Seven of these are effective and one is deferred.
 		</paragraph>
 		<paragraph>So through inheritance from 
-			<code>
-				<class_name>COMPARABLE</class_name>
-			</code>, your class, let's call it 
-			<code>
-				<class_name>WHATZIT</class_name>
-			</code>, would now have these features available. But how would the features of 
-			<code>
-				<class_name>COMPARABLE</class_name>
-			</code> know what it means to compare 
-			<code>
-				<class_name>WHATZIT</class_name>
-			</code>s?
+			<class_name>COMPARABLE</class_name>, your class, let's call it 
+			<class_name>WHATZIT</class_name>, would now have these features available. But how would the features of 
+			<class_name>COMPARABLE</class_name> know what it means to compare 
+			<class_name>WHATZIT</class_name>s?
 		</paragraph>
 		<paragraph>Of course, it would have no way of knowing, so you must show it. And you do that by writing the implementation for "&lt;", the one deferred feature that 
-			<code>
-				<class_name>WHATZIT</class_name>
-			</code> inherits from the 
-			<code>
-				<class_name>COMPARABLE</class_name>
-			</code> class.
+			<class_name>WHATZIT</class_name> inherits from the 
+			<class_name>COMPARABLE</class_name> class.
 		</paragraph>
 		<paragraph>When you look closely at the effective features of 
-			<code>
-				<class_name>COMPARABLE</class_name>
-			</code>, you see that their implementations are ultimately based on "&lt;". If we were not able to inherit from multiple partially implemented classes, then we would be forced to implement many more features, a process which invites error, or, in the case of comparison, to move to a less appealing model.
+			<class_name>COMPARABLE</class_name>, you see that their implementations are ultimately based on "&lt;". If we were not able to inherit from multiple partially implemented classes, then we would be forced to implement many more features, a process which invites error, or, in the case of comparison, to move to a less appealing model.
 		</paragraph>
 		<heading>
 			<size>2</size>The Inheritance Part of Classes in Eiffel
@@ -172,18 +138,10 @@
 				<url>10_eiffel_classes.xml</url>
 				<label>Eiffel Classes</label>
 			</link> you saw where the inheritance part fits into the class structure. Shown below is a portion of class 
-			<code>
-				<class_name>LINKED_QUEUE</class_name>
-			</code> from the Eiffel libraries. 
-			<code>
-				<class_name>LINKED_QUEUE</class_name>
-			</code> is an effective class which implements the abstract notion of a 
-			<code>
-				<class_name>QUEUE</class_name>
-			</code> (a deferred class) with an implementation based on the services provided by 
-			<code>
-				<class_name>LINKED_LIST</class_name>
-			</code> (an effective class).
+			<class_name>LINKED_QUEUE</class_name> from the Eiffel libraries. 
+			<class_name>LINKED_QUEUE</class_name> is an effective class which implements the abstract notion of a 
+			<class_name>QUEUE</class_name> (a deferred class) with an implementation based on the services provided by 
+			<class_name>LINKED_LIST</class_name> (an effective class).
 		</paragraph>
 		<code_block>
 <keyword>class</keyword>
@@ -235,22 +193,14 @@
 		<keyword>end</keyword>
 </code_block>
 		<paragraph>Okay ... now calm down ... please. This is an example from a very highly-evolved and sophisticated library which is replete with software reuse. 
-			<code>
-				<class_name>LINKED_QUEUE</class_name>
-			</code> has two parents and uses considerable feature adaptation. In fact, it uses every feature adaptation option available. The benefit is obvious, though. 
-			<code>
-				<class_name>LINKED_QUEUE</class_name>
-			</code> class has only seven features actually coded. In total there are only 26 lines of instructions!
+			<class_name>LINKED_QUEUE</class_name> has two parents and uses considerable feature adaptation. In fact, it uses every feature adaptation option available. The benefit is obvious, though. 
+			<class_name>LINKED_QUEUE</class_name> class has only seven features actually coded. In total there are only 26 lines of instructions!
 		</paragraph>
 		<paragraph>In practice you can use inheritance, even multiple inheritance, to do some quite productive programming in Eiffel without having to write anything that looks like the inheritance part of 
-			<code>
-				<class_name>LINKED_QUEUE</class_name>
-			</code> above.
+			<class_name>LINKED_QUEUE</class_name> above.
 		</paragraph>
 		<paragraph>Regardless, let's break 
-			<code>
-				<class_name>LINKED_QUEUE</class_name>
-			</code>'s inheritance part into chunks and take a look at some of them.
+			<class_name>LINKED_QUEUE</class_name>'s inheritance part into chunks and take a look at some of them.
 		</paragraph>
 		<heading>
 			<size>3</size>Rename
@@ -269,18 +219,10 @@
 			</code>", is used to rename features.
 		</paragraph>
 		<paragraph>Specifically, it is used when an heir wants to use a feature from a parent, but wants to use it under a different name than that by which the parent knows it. So in the example, the feature known as 
-			<code>
-				<feature_name>item</feature_name>
-			</code> in 
-			<code>
-				<class_name>LINKED_LIST</class_name>
-			</code> is perfectly usable in 
-			<code>
-				<class_name>LINKED_QUEUE</class_name>
-			</code>, but must be applied as 
-			<code>
-				<feature_name>ll_item</feature_name>
-			</code>.
+			<feature_name>item</feature_name> in 
+			<class_name>LINKED_LIST</class_name> is perfectly usable in 
+			<class_name>LINKED_QUEUE</class_name>, but must be applied as 
+			<feature_name>ll_item</feature_name>.
 		</paragraph>
 		<paragraph>This is common when your class inherits two different features with the same name from two different parents and you want to be able to use them both. Because you can only have one feature with a given name, then rename one of the features.</paragraph>
 		<heading>
@@ -309,39 +251,17 @@
 			<code>
 				<keyword>all</keyword>
 			</code>" is used first to say that all features inherited form 
-			<code>
-				<class_name>LINKED_LIST</class_name>
-			</code> are unavailable to any clients (export to class 
-			<code>
-				<class_name>NONE</class_name>
-			</code>). This is typical for a class like 
-			<code>
-				<class_name>LINKED_QUEUE</class_name>
-			</code> in which the features important to the client come from the deferred parent, in this case 
-			<code>
-				<class_name>QUEUE</class_name>
-			</code>, and the class 
-			<code>
-				<class_name>LINKED_LIST</class_name>
-			</code> is used only for implementation. But, it seems that also in this case, the producer felt differently about the features 
-			<code>
-				<feature_name>writable</feature_name>
-			</code>, 
-			<code>
-				<feature_name>extendible</feature_name>
-			</code>, 
-			<code>
-				<feature_name>wipe_out</feature_name>
-			</code>, and 
-			<code>
-				<feature_name>readable</feature_name>
-			</code>, and decided the allow clients of 
-			<code>
-				<class_name>ANY</class_name>
-			</code> type to utilize these features inherited from 
-			<code>
-				<class_name>LINKED_LIST</class_name>
-			</code>.
+			<class_name>LINKED_LIST</class_name> are unavailable to any clients (export to class 
+			<class_name>NONE</class_name>). This is typical for a class like 
+			<class_name>LINKED_QUEUE</class_name> in which the features important to the client come from the deferred parent, in this case 
+			<class_name>QUEUE</class_name>, and the class 
+			<class_name>LINKED_LIST</class_name> is used only for implementation. But, it seems that also in this case, the producer felt differently about the features 
+			<feature_name>writable</feature_name>, 
+			<feature_name>extendible</feature_name>, 
+			<feature_name>wipe_out</feature_name>, and 
+			<feature_name>readable</feature_name>, and decided the allow clients of 
+			<class_name>ANY</class_name> type to utilize these features inherited from 
+			<class_name>LINKED_LIST</class_name>.
 		</paragraph>
 		<heading>
 			<size>3</size>Undefine
@@ -366,21 +286,11 @@
 </code_block>
 		<paragraph>The redefine part lists the names of effective features for which the producer of the heir class would like to provide implementations that replace the inherited implementations.</paragraph>
 		<paragraph>So, in this example the implementation for 
-			<code>
-				<feature_name>linear_representation</feature_name>
-			</code>, for example, that 
-			<code>
-				<class_name>LINKED_QUEUE</class_name>
-			</code> would have inherited from 
-			<code>
-				<class_name>QUEUE</class_name>
-			</code> will not be used. Instead 
-			<code>
-				<class_name>LINKED_QUEUE</class_name>
-			</code> implements its own version of 
-			<code>
-				<feature_name>linear_representation</feature_name>
-			</code>.
+			<feature_name>linear_representation</feature_name>, for example, that 
+			<class_name>LINKED_QUEUE</class_name> would have inherited from 
+			<class_name>QUEUE</class_name> will not be used. Instead 
+			<class_name>LINKED_QUEUE</class_name> implements its own version of 
+			<feature_name>linear_representation</feature_name>.
 		</paragraph>
 		<note>
 			<bold>Note:</bold> When a class implements a version of an inherited feature which was deferred in its parent, this is known as "effecting" the feature. Because features being effected are getting their first implementation, it is not necessary to list their names in the redefine part, or anywhere else in the inheritance part of the heir.
@@ -403,15 +313,9 @@
 		</heading>
 		<paragraph>It is time now to see another way in which inheritance helps build more extendible software.</paragraph>
 		<paragraph>Assume that we have to build classes that model different types of polygons. We would do this by building a class for polygon which would model a garden-variety polygon, a multi-sided closed figure. But when we consider that there are specialized types of polygons, like triangles and rectangles, we realize that to support these specializations, we need classes for them as well. And this is an obvious opportunity for inheritance. All triangles and rectangles are polygons. So, we start with class 
-			<code>
-				<class_name>POLYGON</class_name>
-			</code> and its proper descendants 
-			<code>
-				<class_name>TRIANGLE</class_name>
-			</code> and 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code>.
+			<class_name>POLYGON</class_name> and its proper descendants 
+			<class_name>TRIANGLE</class_name> and 
+			<class_name>RECTANGLE</class_name>.
 		</paragraph>
 		<paragraph>So we can make declarations like:</paragraph>
 		<code_block>
@@ -427,27 +331,13 @@
 				<url>20_adding_class_features.xml</url>
 				<label>Adding Class Features</label>
 			</link> that we can say that one class conforms to another if it is the same class or one of its proper descendants. Therefore POLYGON conforms to 
-			<code>
-				<class_name>POLYGON</class_name>
-			</code>. Also, 
-			<code>
-				<class_name>TRIANGLE</class_name>
-			</code> and 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code> conform to 
-			<code>
-				<class_name>POLYGON</class_name>
-			</code>. But, importantly, 
-			<code>
-				<class_name>POLYGON</class_name>
-			</code> does not conform to 
-			<code>
-				<class_name>TRIANGLE</class_name>
-			</code> or 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code>. This makes sense intuitively, because we know all rectangles and triangles are polygons ... and we also know that not all polygons are rectangles.
+			<class_name>POLYGON</class_name>. Also, 
+			<class_name>TRIANGLE</class_name> and 
+			<class_name>RECTANGLE</class_name> conform to 
+			<class_name>POLYGON</class_name>. But, importantly, 
+			<class_name>POLYGON</class_name> does not conform to 
+			<class_name>TRIANGLE</class_name> or 
+			<class_name>RECTANGLE</class_name>. This makes sense intuitively, because we know all rectangles and triangles are polygons ... and we also know that not all polygons are rectangles.
 		</paragraph>
 		<heading>
 			<size>3</size>Polymorphic Attachment
@@ -473,38 +363,22 @@
 	<feature_name>my_polygon</feature_name> <symbol>:=</symbol> <feature_name>my_rectangle</feature_name>
 </code_block>
 		<paragraph>After an assignment like this executes the entity 
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code> will be holding at runtime a reference to an instance of a type which is not a direct instance of its declared type 
-			<code>
-				<class_name>POLYGON</class_name>
-			</code>. But conformance ensures us that, although it may not be a direct instance, it will indeed by an instance. (all rectangles are polygons).
+			<feature_name>my_polygon</feature_name> will be holding at runtime a reference to an instance of a type which is not a direct instance of its declared type 
+			<class_name>POLYGON</class_name>. But conformance ensures us that, although it may not be a direct instance, it will indeed by an instance. (all rectangles are polygons).
 		</paragraph>
 		<paragraph>Depending upon how many different types of polygons get modeled in classes, the entity "
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code>" could be attached objects of may different types ... it could take on many forms. This in fact is the basis for the term "polymorphism"; having many forms. So we speak of "polymorphic attachment" as the process by which at runtime entities can hold references to objects which are not of the entity's declared type ... but they are of conforming types.
+			<feature_name>my_polygon</feature_name>" could be attached objects of may different types ... it could take on many forms. This in fact is the basis for the term "polymorphism"; having many forms. So we speak of "polymorphic attachment" as the process by which at runtime entities can hold references to objects which are not of the entity's declared type ... but they are of conforming types.
 		</paragraph>
 		<paragraph>Now let's see how we get some value from this.</paragraph>
 		<heading>
 			<size>3</size>Dynamic Binding
 		</heading>
 		<paragraph>Suppose that one of the features of 
-			<code>
-				<class_name>POLYGON</class_name>
-			</code> is a query 
-			<code>
-				<feature_name>perimeter</feature_name>
-			</code> which returns an instance's perimeter. The producer of 
-			<code>
-				<class_name>POLYGON</class_name>
-			</code> may have implemented 
-			<code>
-				<feature_name>perimeter</feature_name>
-			</code> as a function that computes the perimeter by adding up the lengths of all the sides. This approach is guaranteed to work for all polygons, and we can apply the 
-			<code>
-				<feature_name>perimeter</feature_name>
-			</code> feature to any polygon. Let's print some perimeters:
+			<class_name>POLYGON</class_name> is a query 
+			<feature_name>perimeter</feature_name> which returns an instance's perimeter. The producer of 
+			<class_name>POLYGON</class_name> may have implemented 
+			<feature_name>perimeter</feature_name> as a function that computes the perimeter by adding up the lengths of all the sides. This approach is guaranteed to work for all polygons, and we can apply the 
+			<feature_name>perimeter</feature_name> feature to any polygon. Let's print some perimeters:
 		</paragraph>
 		<code_block>
 	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_polygon</feature_name>.<feature_name>perimeter</feature_name><symbol>)</symbol>
@@ -512,55 +386,27 @@
 	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_rectangle</feature_name>.<feature_name>perimeter</feature_name><symbol>)</symbol>
 </code_block>
 		<paragraph>
-			<code>
-				<class_name>TRIANGLE</class_name>
-			</code> and 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code> might have properties, expressed as queries, which as a part of their specialization, distinguish them from run-of-the-mill polygons. Two features of rectangles are 
-			<code>
-				<feature_name>width</feature_name>
-			</code> and 
-			<code>
-				<feature_name>height</feature_name>
-			</code> the lengths of the sides.
+			<class_name>TRIANGLE</class_name> and 
+			<class_name>RECTANGLE</class_name> might have properties, expressed as queries, which as a part of their specialization, distinguish them from run-of-the-mill polygons. Two features of rectangles are 
+			<feature_name>width</feature_name> and 
+			<feature_name>height</feature_name> the lengths of the sides.
 		</paragraph>
 		<paragraph>Armed with these 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code>-specific features, the producer of 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code> may say,"Now I no longer have to depend upon that crude implementation of 
-			<code>
-				<feature_name>perimeter</feature_name>
-			</code> that is inherited from 
-			<code>
-				<class_name>POLYGON</class_name>
-			</code>. I can build an efficient 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code>-specific implementation of 
-			<code>
-				<feature_name>perimeter</feature_name>
-			</code>, based on the knowledge that for all 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code>s perimeter = 2*(width+height)"
+			<class_name>RECTANGLE</class_name>-specific features, the producer of 
+			<class_name>RECTANGLE</class_name> may say,"Now I no longer have to depend upon that crude implementation of 
+			<feature_name>perimeter</feature_name> that is inherited from 
+			<class_name>POLYGON</class_name>. I can build an efficient 
+			<class_name>RECTANGLE</class_name>-specific implementation of 
+			<feature_name>perimeter</feature_name>, based on the knowledge that for all 
+			<class_name>RECTANGLE</class_name>s perimeter = 2*(width+height)"
 		</paragraph>
 		<paragraph>To implement this specialized version of 
-			<code>
-				<class_name>perimeter</class_name>
-			</code>, the producer of 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code> must add the feature to the class, but also must list its name in the " 
+			<class_name>perimeter</class_name>, the producer of 
+			<class_name>RECTANGLE</class_name> must add the feature to the class, but also must list its name in the " 
 			<code>
 				<keyword>redefine</keyword>
 			</code>" part of the 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code>'s inheritance clause.
+			<class_name>RECTANGLE</class_name>'s inheritance clause.
 		</paragraph>
 		<code_block>
 <keyword>class</keyword> <class_name>RECTANGLE</class_name>
@@ -588,40 +434,20 @@
 	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_polygon</feature_name>.<feature_name>perimeter</feature_name><symbol>)</symbol>
 </code_block>
 		<paragraph>in which 
-			<code>
-				<feature_name>perimeter</feature_name>
-			</code> is being applied to a entity declared as 
-			<code>
-				<class_name>POLYGON</class_name>
-			</code>, the specialized version of 
-			<code>
-				<feature_name>perimeter</feature_name>
-			</code> from 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code> is being used. It would be impossible to ensure at compile time which version of 
-			<code>
-				<feature_name>perimeter</feature_name>
-			</code> is most appropriate. So it must be done at runtime. This ability to choose the best version of a feature to apply, just at the moment it needs to be applied, is called "dynamic binding".
+			<feature_name>perimeter</feature_name> is being applied to a entity declared as 
+			<class_name>POLYGON</class_name>, the specialized version of 
+			<feature_name>perimeter</feature_name> from 
+			<class_name>RECTANGLE</class_name> is being used. It would be impossible to ensure at compile time which version of 
+			<feature_name>perimeter</feature_name> is most appropriate. So it must be done at runtime. This ability to choose the best version of a feature to apply, just at the moment it needs to be applied, is called "dynamic binding".
 		</paragraph>
 		<paragraph>Static typing tells us at compile time that it is safe to apply 
-			<code>
-				<feature_name>perimeter</feature_name>
-			</code> to 
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code> No matter which of the types of polygons is attached to 
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code>, there will be a 
-			<code>
-				<feature_name>perimeter</feature_name>
-			</code> feature that will work.
+			<feature_name>perimeter</feature_name> to 
+			<feature_name>my_polygon</feature_name> No matter which of the types of polygons is attached to 
+			<feature_name>my_polygon</feature_name>, there will be a 
+			<feature_name>perimeter</feature_name> feature that will work.
 		</paragraph>
 		<paragraph>Dynamic binding tells us that when we apply 
-			<code>
-				<feature_name>perimeter</feature_name>
-			</code>, we know that the most appropriate version of the feature will get applied at runtime.
+			<feature_name>perimeter</feature_name>, we know that the most appropriate version of the feature will get applied at runtime.
 		</paragraph>
 		<heading>
 			<size>3</size>Assignment Attempt
@@ -633,77 +459,37 @@
 	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_polygon</feature_name>.<feature_name>width</feature_name><symbol>)</symbol> 	<comment>-- Is invalid</comment>
 </code_block>
 		<paragraph>We could apply 
-			<code>
-				<feature_name>perimeter</feature_name>
-			</code> to 
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code> and everything is fine ... we even get 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code>'s specialized version of the feature. But it is invalid for us to try to apply 
-			<code>
-				<feature_name>width</feature_name>
-			</code> to 
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code> even though we feel (with rather strong conviction) that at this point in execution, 
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code> will be attached to an object of type 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code>, and we know that 
-			<code>
-				<feature_name>width</feature_name>
-			</code> is a valid query on 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code>s.
+			<feature_name>perimeter</feature_name> to 
+			<feature_name>my_polygon</feature_name> and everything is fine ... we even get 
+			<class_name>RECTANGLE</class_name>'s specialized version of the feature. But it is invalid for us to try to apply 
+			<feature_name>width</feature_name> to 
+			<feature_name>my_polygon</feature_name> even though we feel (with rather strong conviction) that at this point in execution, 
+			<feature_name>my_polygon</feature_name> will be attached to an object of type 
+			<class_name>RECTANGLE</class_name>, and we know that 
+			<feature_name>width</feature_name> is a valid query on 
+			<class_name>RECTANGLE</class_name>s.
 		</paragraph>
 		<paragraph>The reason follows. When we declared 
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code> as type 
-			<code>
-				<class_name>POLYGON</class_name>
-			</code>, we made a deal that says that the only features that can be applied to 
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code> are the features of 
-			<code>
-				<class_name>POLYGON</class_name>
-			</code>. Remember that static typing guarantees us at compile time that at runtime there will be at least one version of the feature available that can be applied.
+			<feature_name>my_polygon</feature_name> as type 
+			<class_name>POLYGON</class_name>, we made a deal that says that the only features that can be applied to 
+			<feature_name>my_polygon</feature_name> are the features of 
+			<class_name>POLYGON</class_name>. Remember that static typing guarantees us at compile time that at runtime there will be at least one version of the feature available that can be applied.
 		</paragraph>
 		<code_block>
 	<feature_name>print</feature_name> <symbol>(</symbol><feature_name>my_polygon</feature_name>.<feature_name>width</feature_name><symbol>)</symbol>	<comment>-- Is invalid</comment>
 </code_block>
 		<paragraph>But in the case above, the guarantee cannot be made. 
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code> is declared with class 
-			<code>
-				<class_name>POLYGON</class_name>
-			</code> which has no 
-			<code>
-				<feature_name>width</feature_name>
-			</code> feature, despite the fact that some of its proper descendants might.
+			<feature_name>my_polygon</feature_name> is declared with class 
+			<class_name>POLYGON</class_name> which has no 
+			<feature_name>width</feature_name> feature, despite the fact that some of its proper descendants might.
 		</paragraph>
 		<paragraph>Does this mean that we can never do 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code> things with this instance again, once we have attached it to 
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code>?
+			<class_name>RECTANGLE</class_name> things with this instance again, once we have attached it to 
+			<feature_name>my_polygon</feature_name>?
 		</paragraph>
 		<paragraph>No. There is a language facility called the "assignment attempt" which will come to our rescue. The assignment attempt will allow us safely to attach our instance back to an entity typed as 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code>. After doing so, we are free use 
-			<code>
-				<class_name>RECTANGLE</class_name>
-			</code> features.
+			<class_name>RECTANGLE</class_name>. After doing so, we are free use 
+			<class_name>RECTANGLE</class_name> features.
 		</paragraph>
 		<code_block>
 	<feature_name>my_polygon</feature_name> <symbol>:</symbol><symbol>=</symbol> <feature_name>my_rectangle</feature_name>
@@ -713,23 +499,15 @@
 </code_block>
 		<paragraph>The assignment attempt uses the syntax "?=", versus the ":=" of assignment.</paragraph>
 		<paragraph>This is significant ... as is the name assignment attempt. The reason is that it is possible in some context that 
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code> will be attached to something other than a rectangle when we do this:
+			<feature_name>my_polygon</feature_name> will be attached to something other than a rectangle when we do this:
 		</paragraph>
 		<code_block>
 	<feature_name>another_rectangle</feature_name> <symbol>?=</symbol> <feature_name>my_polygon</feature_name>
 </code_block>
 		<paragraph>If it were true that 
-			<code>
-				<feature_name>my_polygon</feature_name>
-			</code> were attached to an instance of say 
-			<code>
-				<class_name>TRIANGLE</class_name>
-			</code> when the assignment attempt above was executed, then 
-			<code>
-				<feature_name>another_rectangle</feature_name>
-			</code> would be left as a 
+			<feature_name>my_polygon</feature_name> were attached to an instance of say 
+			<class_name>TRIANGLE</class_name> when the assignment attempt above was executed, then 
+			<feature_name>another_rectangle</feature_name> would be left as a 
 			<code>
 				<keyword>Void</keyword>
 			</code> reference. As a consequence, it is prudent to check to see if the attachment has actually been made before trying to apply features. Applying a feature to a 

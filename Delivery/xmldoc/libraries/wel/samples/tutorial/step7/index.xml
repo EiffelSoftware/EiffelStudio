@@ -49,15 +49,15 @@
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>During the creation of <code><class_name>MAIN_WINDOW</class_name></code>, the menu is assigned to the window and <code><feature_name>on_menu_command</feature_name></code> is redefined to allow processing of the menu selections. </paragraph>
+		<paragraph>During the creation of <class_name>MAIN_WINDOW</class_name>, the menu is assigned to the window and <feature_name>on_menu_command</feature_name> is redefined to allow processing of the menu selections. </paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">
-				<item><code><class_name>TUTORIAL_STEP7</class_name></code></item>
-				<item><code><class_name>MAIN_WINDOW</class_name></code></item>
-				<item><code><class_name>LINE_THICKNESS_DIALOG_CHART</class_name></code></item>
-				<item><code><class_name>APPLICATION_IDS</class_name></code></item>
-				<item><code><class_name>POINT</class_name></code></item>
-				<item><code><class_name>LINE</class_name></code></item>
+				<item><class_name>TUTORIAL_STEP7</class_name></item>
+				<item><class_name>MAIN_WINDOW</class_name></item>
+				<item><class_name>LINE_THICKNESS_DIALOG_CHART</class_name></item>
+				<item><class_name>APPLICATION_IDS</class_name></item>
+				<item><class_name>POINT</class_name></item>
+				<item><class_name>LINE</class_name></item>
 			</list>
 		</paragraph>
 	</paragraph></document>

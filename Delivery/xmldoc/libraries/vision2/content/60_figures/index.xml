@@ -115,12 +115,8 @@
 			<paragraph>These classes offer features to handle the given number of points. <link><url>../../reference/interface/figures/ev_single_pointed_figure_chart.xml</url><label>EV_SINGLE_POINTED_FIGURE</label></link> offers the feature:</paragraph>
 			<code_block>	<feature_name>point</feature_name><symbol>:</symbol> <class_name>EV_RELATIVE_POINT</class_name></code_block>
 			<paragraph><link><url>../../reference/interface/figures/ev_double_pointed_figure_chart.xml</url><label>EV_DOUBLE_POINTED_FIGURE</label></link> inherits <link><url>../../reference/interface/figures/ev_single_pointed_figure_chart.xml</url><label>EV_SINGLE_POINTED_FIGURE</label></link> for its first point, which is renamed to 
-				<code>
-					<feature_name>point_a</feature_name>
-				</code>. It adds 
-				<code>
-					<feature_name>point_b</feature_name>
-				</code>, so it has the features:
+				<feature_name>point_a</feature_name>. It adds 
+				<feature_name>point_b</feature_name>, so it has the features:
 			</paragraph>
 <code_block>
 	<feature_name>point_a</feature_name><symbol>:</symbol> <class_name>EV_RELATIVE_POINT</class_name>
@@ -153,15 +149,15 @@
 							<size>2</size>Events
 						</heading> The other features of drawing area and widget is that they generate pointer events. These events can be translated by projectors to map the figure world. These projectors send the event to the appropriate figure. Every figure has all common pointer action sequences: 
 						<list ordered="false">
-							<item><code><feature_name>pointer_motion_actions</feature_name></code></item>
-							<item><code><feature_name>pointer_button_press_actions</feature_name></code></item>
-							<item><code><feature_name>pointer_double_press_actions</feature_name></code></item>
-							<item><code><feature_name>pointer_button_release_actions</feature_name></code></item>
-							<item><code><feature_name>pointer_enter_actions</feature_name></code></item>
-							<item><code><feature_name>pointer_leave_actions</feature_name></code></item>
-							<item><code><feature_name>pick_actions</feature_name></code></item>
-							<item><code><feature_name>conforming_pick_actions</feature_name></code></item>
-							<item><code><feature_name>drop_actions</feature_name></code></item>
+							<item><feature_name>pointer_motion_actions</feature_name></item>
+							<item><feature_name>pointer_button_press_actions</feature_name></item>
+							<item><feature_name>pointer_double_press_actions</feature_name></item>
+							<item><feature_name>pointer_button_release_actions</feature_name></item>
+							<item><feature_name>pointer_enter_actions</feature_name></item>
+							<item><feature_name>pointer_leave_actions</feature_name></item>
+							<item><feature_name>pick_actions</feature_name></item>
+							<item><feature_name>conforming_pick_actions</feature_name></item>
+							<item><feature_name>drop_actions</feature_name></item>
 						</list> There are no events for keyboard focus and no key press events. In case you wish to use these events, use the ones of the pixmap or drawing area.
 					</paragraph>
 					<paragraph>When using events, keep the z-order in mind. This is the order in which the figures are stacked in the world. The first item of a figure group is the figure that is the farthest away. This means that the figure is obscured by any figures which are in front of it, and events will also not be propagated to this figure in that case. 

@@ -9,15 +9,9 @@
 	</meta_data>
 	<paragraph>
 		<paragraph>This sample consist in a command line demonstrating the use of the 
-			<code>
-				<class_name>TIMER</class_name>
-			</code> (Timer) class to generate a periodic callback to a method. The sample creates a 
-			<code>
-				<class_name>TIMER</class_name>
-			</code> object and passes to it a delegate object. When the 
-			<code>
-				<class_name>TIMER</class_name>
-			</code> fires, the delegate is invoked, and a static method is called asynchronously by a worker thread in the thread pool.
+			<class_name>TIMER</class_name> (Timer) class to generate a periodic callback to a method. The sample creates a 
+			<class_name>TIMER</class_name> object and passes to it a delegate object. When the 
+			<class_name>TIMER</class_name> fires, the delegate is invoked, and a static method is called asynchronously by a worker thread in the thread pool.
 		</paragraph>
 		<heading>
 			<size>2</size>Compiling
@@ -62,33 +56,21 @@ Checking Status.
 			<size>2</size>Under the Hood
 		</heading>
 		<paragraph>This application shows how to use the thread 
-			<code>
-				<class_name>TIMER</class_name>
-			</code>. The timer is launched (
+			<class_name>TIMER</class_name>. The timer is launched (
 			<code>
 				<keyword>create</keyword> 
 			</code>
 			<code>
 				<local_variable>my_timer</local_variable>
 			</code>. 
-			<code>
-				<feature_name>make_with_callback</feature_name>
-			</code> (
+			<feature_name>make_with_callback</feature_name> (
 			<code>
 				<keyword>create</keyword>
 			</code> {
-			<code>
-				<class_name>TIMER_CALLBACK</class_name>
-			</code>}. 
-			<code>
-				<feature_name>make</feature_name>
-			</code> (Current, $ 
-			<code>
-				<feature_name>check_status</feature_name>
-			</code>), Void, 0, 2000)) and call the feature 
-			<code>
-				<feature_name>check_status</feature_name>
-			</code> that displays the message 
+			<class_name>TIMER_CALLBACK</class_name>}. 
+			<feature_name>make</feature_name> (Current, $ 
+			<feature_name>check_status</feature_name>), Void, 0, 2000)) and call the feature 
+			<feature_name>check_status</feature_name> that displays the message 
 			<code>
 				<string>"Checking Status."</string>
 			</code> every two seconds.
@@ -96,14 +78,10 @@ Checking Status.
 		<paragraph>This sample contains the following class: </paragraph>
 		<list ordered="false">
 			<item>
-				<code>
-					<class_name>TIMER</class_name>
-				</code>
+				<class_name>TIMER</class_name>
 			</item>
 			<item>
-				<code>
-					<class_name>TIMER_CALLBACK</class_name>
-				</code>
+				<class_name>TIMER_CALLBACK</class_name>
 			</item>
 		</list>
 		<heading>

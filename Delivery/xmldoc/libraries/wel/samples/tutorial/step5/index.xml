@@ -53,13 +53,13 @@
 			<link>
 				<url>/libraries/wel/samples/tutorial/step4/index.xml</url>
 				<label>step 4</label>
-			</link> by adding a <link><url>../../../reference/windows/wel_modal_dialog_chart.xml</url><label>WEL_MODAL_DIALOG</label></link>. The class <code><class_name>LINE_THICKNESS_DIALOG</class_name></code> inherits <link><url>../../../reference/windows/wel_modal_dialog_chart.xml</url><label>WEL_MODAL_DIALOG</label></link> and uses a WEL_SINGLE_LINE_EDIT to input the desired line width. 
+			</link> by adding a <link><url>../../../reference/windows/wel_modal_dialog_chart.xml</url><label>WEL_MODAL_DIALOG</label></link>. The class <class_name>LINE_THICKNESS_DIALOG</class_name> inherits <link><url>../../../reference/windows/wel_modal_dialog_chart.xml</url><label>WEL_MODAL_DIALOG</label></link> and uses a WEL_SINGLE_LINE_EDIT to input the desired line width. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
-					<item><code><class_name>TUTORIAL_STEP5</class_name></code></item>
-					<item><code><class_name>MAIN_WINDOW</class_name></code></item>
-					<item><code><class_name>LINE_THICKNESS_DIALOG</class_name></code></item>
-					<item><code><class_name>APPLICATION_IDS</class_name></code></item>
+					<item><class_name>TUTORIAL_STEP5</class_name></item>
+					<item><class_name>MAIN_WINDOW</class_name></item>
+					<item><class_name>LINE_THICKNESS_DIALOG</class_name></item>
+					<item><class_name>APPLICATION_IDS</class_name></item>
 				</list>
 			</paragraph>
 		</paragraph>

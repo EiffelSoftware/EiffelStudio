@@ -84,7 +84,7 @@ feature {NONE} -- Initialization
 				--| "configure-event" only happens for windows,
 				--| so we connect to the "size-allocate" function.
 			if C.gtk_is_window (c_object) then
-				real_signal_connect (c_object, "configure-event", agent on_size_allocate, Default_translate)
+				real_signal_connect (c_object, "configure-event", agent gtk_marshal.on_size_allocate_intermediate (c_object, ?, ?, ?, ?), size_allocate_translate_agent)
 			else
 				real_signal_connect (c_object, "size-allocate", agent gtk_marshal.on_size_allocate_intermediate (c_object, ?, ?, ?, ?), size_allocate_translate_agent)
 			end

@@ -11,6 +11,7 @@
 #doc:<file name="" header="" version="$Id$" summary="">
 #*/
 #/*
+#doc:	<routine name="" return_type="" export="">
 #doc:	<attribute name="" return_type="" export="">
 #doc:		<summary></summary>
 #doc:		<access></access>
@@ -18,6 +19,9 @@
 #doc:		<thread_safety></thread_safety>
 #doc:		<synchronization></synchronization>
 #doc:		<eiffel_classes></eiffel_classes>
+#doc:		<param name="" type=""></param>
+#doc:		<return></return>
+#doc:		<exception></exception>
 #doc:		<fixme></fixme>
 #doc:	</attribute>
 #*/

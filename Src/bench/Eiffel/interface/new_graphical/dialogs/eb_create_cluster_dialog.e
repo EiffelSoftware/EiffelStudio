@@ -259,9 +259,6 @@ feature {NONE} -- Implementation
 			-- Name of the cluster entered by the user, in lower case.
 		do
 			Result := clone (cluster_entry.text)
-			if Result = Void then
-				Result := ""
-			end
 			Result.to_lower
 		end
 
@@ -271,9 +268,6 @@ feature {NONE} -- Implementation
 			str: STRING
 		do
 			str := clone (folder_entry.text)
-			if str = Void then
-				str := ""
-			end
 			create Result.make_from_string (str)
 		end
 
@@ -325,7 +319,7 @@ feature {NONE} -- Implementation
 			end
 			if aok then
 				check
-					cluster_entry.text /= Void
+					not cluster_entry.text.is_empty
 					-- The name wouldn't be valid otherwise.
 				end
 				base_name := cluster_name
@@ -487,7 +481,7 @@ feature {NONE} -- Implementation
 			wd: EV_WARNING_DIALOG
 		do
 			cp := folder_entry.text
-			if cp = Void then
+			if cp.is_empty then
 				if top_radio.is_selected then
 					aok := False
 					create wd.make_with_text (Warning_messages.w_Enter_path)
@@ -533,7 +527,7 @@ feature {NONE} -- Graphic interface
 		do
 			create bd
 			bd.ok_actions.extend (~set_path (bd))
-			if folder_entry.text /= Void then
+			if not folder_entry.text.is_empty then
 				bd.set_start_directory ((create {ENV_INTERP}).interpreted_string (folder_entry.text))
 			else
 				lastdir := last_browsed_directory

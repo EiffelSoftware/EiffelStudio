@@ -86,7 +86,7 @@ feature -- Basic Operation
 		do
 			Precursor
 			
-			if runtime_information_record_textfield.text /= Void then
+			if not runtime_information_record_textfield.text.is_empty then
 				create record_filename.make_from_string (runtime_information_record_textfield.text)
 				information.set_runtime_information_record (record_filename) 
 			end
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 			Result := True
 			
 				-- Check that the filename is not empty
-			if rtir_text = Void then
+			if rtir_text.is_empty then
 				Result := False
 			end
 			

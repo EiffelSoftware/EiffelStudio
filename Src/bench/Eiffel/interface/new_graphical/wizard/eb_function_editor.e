@@ -51,11 +51,7 @@ feature -- Access
 			-- Current text of the feature in the wizard.
 		do
 			create Result.make (100)
-			if feature_name_field.text /= Void then
-				Result.append ("%T" + feature_name_field.text + arguments_code + ": " + type_selector.code + " is%N")
-			else
-				Result.append ("%T" + arguments_code + ": " + type_selector.code + " is%N")
-			end
+			Result.append ("%T" + feature_name_field.text + arguments_code + ": " + type_selector.code + " is%N")
 			Result.append (comments_code)
 			Result.append (routine_code)
 		end

@@ -107,7 +107,7 @@ feature -- Basic Operation
 			
 			if use_existing_execution_profile.is_selected then
 				execution_profile_text := execution_profile_text_field.text
-				if execution_profile_text /= Void then
+				if not execution_profile_text.is_empty then
 					create execution_profile_filename.make_from_string (execution_profile_text)
 					information.set_use_existing_execution_profile (execution_profile_filename)
 				end
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation
 			execution_profile_text: STRING
 		do
 			execution_profile_text := execution_profile_text_field.text
-			if execution_profile_text = Void then
+			if execution_profile_text.is_empty then
 				Result := False
 			else
 				create execution_profile_file.make (execution_profile_text)

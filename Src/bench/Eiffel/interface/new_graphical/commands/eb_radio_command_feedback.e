@@ -30,7 +30,7 @@ feature -- Status setting
 				end
 				if
 					combo /= Void and then
-					(combo.text = Void or else
+					(combo.text.is_empty or else
 					not combo.text.is_equal(capital_command_name))
 				then
 					combo.set_text (capital_command_name)

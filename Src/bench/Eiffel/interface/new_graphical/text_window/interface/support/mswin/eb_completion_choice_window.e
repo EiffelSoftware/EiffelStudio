@@ -249,7 +249,7 @@ feature -- Events handling
 		local
 			searched_w: STRING
 		do
-			if to_be_inserted.text /= Void and then not to_be_inserted.text.is_empty then
+			if not to_be_inserted.text.is_empty then
 				searched_w := to_be_inserted.text.out
 			end
 			build_displayed_list (searched_w)
@@ -349,7 +349,7 @@ feature {NONE} -- Implementation
 					editor.complete_feature_from_window (" " + sorted_names.item (ix), True)
 				end
 			else
-				if to_be_inserted.text /= void then
+				if not to_be_inserted.text.is_empty then
 					editor.complete_feature_from_window (point_if_needed + to_be_inserted.text, False)
 				end
 			end
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 				ix:= choice_list.index_of (choice_list.selected_item, 1) + index_offset
 				editor.complete_class_from_window (sorted_names.item (ix))
 			else
-				if to_be_inserted.text /= void then
+				if not to_be_inserted.text.is_empty then
 					editor.complete_class_from_window (to_be_inserted.text)
 				end
 			end

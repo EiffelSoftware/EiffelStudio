@@ -127,7 +127,7 @@ feature -- Initialization
 					dial.set_strings (a_stone.source.feature_names)
 					dial.show_modal_to_window (window.window)
 					if not dial.cancelled and then
-						dial.selected_item /= Void then
+						not dial.selected_item.is_empty then
 							names := dial.selected_items
 							from
 								names.start

@@ -157,7 +157,7 @@ feature -- Store/Retrieve
 					mt_runtime_check.is_selected))
 				if shared_library_check.is_selected then
 					l_name := shared_library_field.text
-					if l_name = Void then
+					if l_name.is_empty then
 						l_name := " "
 					end
 					defaults.extend (new_special_option_sd ("shared_library_definition",

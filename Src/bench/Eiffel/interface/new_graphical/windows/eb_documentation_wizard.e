@@ -200,11 +200,7 @@ feature -- Access
 		local
 			dir_name: STRING
 		do
-			if directory_field.text /= Void then
-				dir_name := directory_field.text
-			else
-				dir_name := ""
-			end
+			dir_name := directory_field.text
 			create Result.make (dir_name)
 		end
 
@@ -822,7 +818,7 @@ feature {NONE} -- Implementation
 			create d
 			d.ok_actions.extend (~on_directory_change (d))
 			path := directory_field.text
-			if path /= Void and then (create {DIRECTORY}.make (path)).exists then
+			if not path.is_empty and then (create {DIRECTORY}.make (path)).exists then
 				d.set_start_directory (path)
 			end
 			d.show_modal_to_window (Current)

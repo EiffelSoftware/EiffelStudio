@@ -572,11 +572,7 @@ feature {NONE} -- Implementation
 			if editor.number_of_lines /= 0 then
 				if editor.is_editable then
 					search_performer.set_editor (editor)
-					if replace_field.text = Void then
-						create currently_replacing.make (0)
-					else
-						currently_replacing := replace_field.text
-					end
+					currently_replacing := replace_field.text
 					currently_searched := keyword_field.text
 					update_combo_box (currently_searched.out)
 					search_performer.set_search_whole_word (whole_word_button.is_selected)
@@ -595,22 +591,14 @@ feature {NONE} -- Implementation
 			-- or the opposite
 		do
 			if not replace_check_button.is_selected then
-				if replace_text.is_empty or else replace_field = Void or else replace_field.text.is_empty then
-					create replace_text.make (0)
-				else
-					replace_text := replace_field.text
-				end
+				replace_text := replace_field.text
 				replace_field.remove_text
 				replace_field.hide
 				replace_check_button.set_text (Interface_names.l_Replace_with_ellipsis)
 				replace_all_button.disable_sensitive
 				replace_button.disable_sensitive
 			else
-				if not replace_text.is_empty then
-					replace_field.set_text (replace_text)
-				else
-					replace_field.remove_text
-				end
+				replace_field.set_text (replace_text)
 				replace_field.show
 				replace_check_button.set_text (Interface_names.l_Replace_with)
 				replace_all_button.enable_sensitive
@@ -618,7 +606,6 @@ feature {NONE} -- Implementation
 					replace_button.enable_sensitive
 				end
 			end
-				
 		end
 
 	enable_disable_search_button is
@@ -647,11 +634,11 @@ feature {NONE} -- Implementation
 			for_test: STRING
 		do
 			for_test := keyword_field.text
-			if use_wildcards_button.is_selected and then for_test /= Void then
+			if use_wildcards_button.is_selected and then not for_test.is_empty then
 				for_test.prune_all ('*')
 				for_test.prune_all ('?')
 			end
-			Result := for_test /= Void and then for_test.count > 0
+			Result := not for_test.is_empty
 		end
 		
 

@@ -48,7 +48,6 @@ feature {NONE} -- Initialization
 		do
 			clr_version := a_clr_version
 			create cache_reader.make (a_clr_version)
-			update_info (cache_reader.info)
 		ensure
 			clr_version_set: clr_version = a_clr_version
 		end

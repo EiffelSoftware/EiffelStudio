@@ -7,6 +7,9 @@ indexing
 
 deferred class LIST_MAN 
 
+obsolete
+		"Use SCROLLABLE_LIST instead - it has the same semantics as a LINKED_LIST."
+
 feature -- Callback (adding and removing)
 
 	add_selection_action (a_command: COMMAND; argument: ANY) is

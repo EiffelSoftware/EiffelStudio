@@ -505,8 +505,8 @@ feature {NONE} -- Implementation
 			multiple_split_area.set_maximize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_maximize @ 1)
 			multiple_split_area.set_minimize_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_minimize @ 1)
 			multiple_split_area.set_restore_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_restore @ 1)
-			multiple_split_area.docked_out_actions.extend (agent widget_removed_from_multiple_split_area)
-			multiple_split_area.docked_in_actions.extend (agent widget_inserted_into_multiple_split_area)
+			multiple_split_area.docked_out_actions.force_extend (agent widget_removed_from_multiple_split_area)
+			multiple_split_area.docked_in_actions.force_extend (agent widget_inserted_into_multiple_split_area)
 
 			create constructor_box
 			create horizontal_split_area.make_with_tools (multiple_split_area, layout_constructor, "Layout constructor")
@@ -871,7 +871,7 @@ feature {NONE} -- Implementation
 				if tool.parent /= Void then
 					tool.parent.prune_all (tool)
 				end
-					-- Add `tool' as an enternal tool, that is one that apepars if it has been docked out of
+					-- Add `tool' as an enternal tool, that is one that appears if it has been docked out of
 					-- `multiple_split_area'.
 				multiple_split_area.add_external (tool, Current, storable_tool.name, a_position, an_x, a_y, a_width, a_height)
 				multiple_split_area.customizeable_area_of_widget (tool).extend (storable_tool.tool_bar)

@@ -53,7 +53,7 @@ feature {NONE}-- Initialization
 			definition_box.set_padding_width (5)
 			definition_box.disable_item_expand (com_project_label)
 			definition_box.disable_item_expand (definition_file_box)
-			com_project_label.set_text ("An definition file is either a Interface Definition file (*.idl) or a type library file (*.tlb).%NA type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ")
+			com_project_label.set_text ("A definition file is either an Interface Definition file (*.idl) or a type library file (*.tlb).%NA type library can be linked into a component (*.ocx, *.dll, *.exe, ...) ")
 			com_project_label.align_text_left
 			marshaller_box.set_padding_width (5)
 			marshaller_box.disable_item_expand (marshaller_label)

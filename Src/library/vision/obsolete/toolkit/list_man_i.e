@@ -519,15 +519,21 @@ feature
 			-- Make list empty
 		deferred
 		end 
+	
+	is_destroyed: BOOLEAN is
+			-- Is Current is_destroyed?
+		deferred
+		end
 
+	
 invariant
 
-	non_negative_selected_item_count: selected_count >= 0	
-	positive_visible_item_count: visible_item_count > 0
+	non_negative_selected_item_count: not is_destroyed implies selected_count >= 0	
+	positive_visible_item_count:  not is_destroyed implies visible_item_count > 0
 	non_negative_index: index >= 0	
-	index_small_enough: index <= count + 1
-	non_negative_count: count >= 0	
-	empty_definition: empty = (count = 0)
+	index_small_enough:  not is_destroyed implies index <= count + 1
+	non_negative_count:  not is_destroyed implies count >= 0	
+	empty_definition:  not is_destroyed implies empty = (count = 0)
 end
 
 

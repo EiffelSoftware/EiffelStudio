@@ -23,10 +23,11 @@ the once mechanism is once per thread. --Manuelt
 
 
 #include "eif_once.h"
+#include "eif_lmalloc.h"
 #include "eif_globals.h"	/* EIF_GET_ROOT_CONTEXT */
 #include "eif_threads.h"	/* mutex */
 #include "eif_hector.h"
-#define OP_TABLE_SIZE 0x4 /* size of Once per Process Tables */
+#define OP_TABLE_SIZE 15 /* size of Once per Process Tables */
 
 #ifdef __cplusplus
 extern "C" {
@@ -185,9 +186,16 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER 
 	
 	EIF_MUTEX_LOCK(eif_fop_table_mutex,"Couldn't lock mutex for once per process management\n");
 
+#ifdef DEBUG
+	printf ("DEBUG: Entering eif_global_function\n");
+#endif
+
 	if (!eif_fop_table) {
 		/* Creates an empty 'eif_fop_table' if necessary*/
-		eif_fop_table = (struct fop_list **) eif_malloc (OP_TABLE_SIZE * sizeof (struct fop_list *));
+#ifdef DEBUG
+	printf ("DEBUG: Creation of eif_fop_table\n");
+#endif
+		eif_fop_table = (struct fop_list **) eif_malloc ((OP_TABLE_SIZE+1) * sizeof (struct fop_list *));
 
 		if (eif_fop_table == (struct fop_list **) 0)
 			/* Out of memory */
@@ -197,9 +205,15 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER 
 	}
 
 	list = eif_fop_table [((uint32) feature_address) & OP_TABLE_SIZE]; /* Binary operation so as to point on the correct place in 'eif_fop_table'  */ 
+#ifdef DEBUG
+	printf ("DEBUG: feature address : %x & OP_TABLE_SIZE: %d\n = %d\n", feature_address, OP_TABLE_SIZE, ((uint32) feature_address) & OP_TABLE_SIZE);
+#endif
 				
 	if (list == (struct fop_list *) 0) {
 		/* First call of feature once in process*/
+#ifdef DEBUG
+	printf ("DEBUG: First call of feature once in process and creation of object\n");
+#endif
 		list = (struct fop_list *) init_fop_list (feature_address);
 		list->val = (EIF_REFERENCE *) hector_addr ( (char *) (feature_address (eif_access (Current))));
 
@@ -211,16 +225,31 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER 
 
 		while (list->addr != (char *) feature_address) {
 			/* loop skimming the list of struct fop_list */
+#ifdef DEBUG
+	printf ("DEBUG: Skimming fop_list\n");
+#endif
 			if (list->next == (struct fop_list *) 0) {
+#ifdef DEBUG
+	printf ("DEBUG: Not found in fop_list\n");
+#endif
 				list->next =(struct fop_list *) init_fop_list (feature_address);
 
+#ifdef DEBUG
+	printf ("DEBUG: Creation of once object\n");
+#endif
 				list->next->val = (EIF_REFERENCE *) hector_addr (feature_address (eif_access (Current)));
 				EIF_MUTEX_UNLOCK(eif_fop_table_mutex, "Couldn't unlock once per process table mutex\n");
 		return ((EIF_REFERENCE) eif_access (list->next->val));	
 			}
+#ifdef DEBUG
+	printf ("DEBUG: Found in skimming fop list\n");
+#endif
 			list = list->next;
 		}
 		/* it is not the first call of feature once in process*/
+#ifdef DEBUG
+	printf ("DEBUG: Not first call of feature once in process\n");
+#endif
 		EIF_MUTEX_UNLOCK(eif_fop_table_mutex, "Couldn't unlock once per process table mutex\n");
 
 		/* if the thread that created the global once dies,
@@ -230,13 +259,7 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER 
 		 * (if first call in the thread, i think)
 		 */
 
-		if (!(list->val)) eif_thr_panic ("Global once removed with creator thread death\n");
-			/* do not return the original because it can 
-			 * be NULL if the creator of the object thread
-			 * has been removed 
-			 */
-
-			
+		if (!(list->val)) eraise ("Global once removed with creator thread death\n", EN_EXT);
 		return (EIF_REFERENCE) eif_access (list->val);
 	}
 
@@ -259,6 +282,9 @@ rt_public void eif_global_procedure (EIF_REFERENCE Current, EIF_POINTER proc_ptr
  
 	EIF_PROC feature_address = (EIF_PROC) proc_ptr; /* need to cast proc_ptr for C-ANSI conformance */
 
+#ifdef DEBUG
+	printf ("DEBUG: Entering eif_global_procedure\n");
+#endif
 	EIF_MUTEX_CREATE(eif_pop_table_mutex, "Couldn't create mutex for once per process table\n");
 	
 	EIF_MUTEX_LOCK(eif_pop_table_mutex,"Couldn't lock mutex for once per process table\n");
@@ -266,7 +292,10 @@ rt_public void eif_global_procedure (EIF_REFERENCE Current, EIF_POINTER proc_ptr
 
         if (!eif_pop_table) {
                 /* Creates an empty eif_pop_table if necessary*/
-                eif_pop_table = (struct pop_list **) eif_malloc (OP_TABLE_SIZE * sizeof (struct pop_list *));
+#ifdef DEBUG
+	printf ("DEBUG: Creation of eif_pop_table\n");
+#endif
+                eif_pop_table = (struct pop_list **) eif_malloc ((OP_TABLE_SIZE+1) * sizeof (struct pop_list *));
  
                 if (eif_pop_table == (struct pop_list **) 0)
                         /* Out of memory */
@@ -280,6 +309,9 @@ rt_public void eif_global_procedure (EIF_REFERENCE Current, EIF_POINTER proc_ptr
 									 *point on the correct place in 'eif_pop_table'
 									 */
  
+#ifdef DEBUG
+	printf ("DEBUG: procedure address : %x & OP_TABLE_SIZE: %d\n = %d\n", feature_address, OP_TABLE_SIZE, ((uint32) feature_address) & OP_TABLE_SIZE);
+#endif
         if (list == (struct pop_list *) 0) {
                 /* First call of procedure once in process */
                 list = (struct pop_list *) init_pop_list (feature_address);
@@ -312,17 +344,36 @@ rt_shared void eif_destroy_once_per_process (void)
 {   
 	int i; /* for loop */
 
+#ifdef DEBUG
+	printf ("DEBUG: Entering eif_destroy_once_per_process\n");
+#endif
+
 	if (eif_fop_table) {   
-		for ( i = 0; i < OP_TABLE_SIZE; i++) 
+#ifdef DEBUG
+	printf ("DEBUG: Destroying fop_table\n");
+#endif
+		for ( i = 0; i <= OP_TABLE_SIZE; i++) {
+#ifdef DEBUG
+	printf ("DEBUG: destroy fop_list no %d in fop_table\n", i);
+#endif
 			eif_destroy_fop_list (eif_fop_table[i]); /* destroy the linked list of fop_list */
+	}
 		eif_free (eif_fop_table);	/* free once per proc. functions table */
 		if (eif_fop_table_mutex) /* free access mutex to eif_fop_table */
 			EIF_MUTEX_DESTROY(eif_fop_table_mutex,"Couldn't destroy once per process table mutex\n");
 	}
 
 	if (eif_pop_table) {   
-		for ( i = 0; i < OP_TABLE_SIZE; i++) 
+#ifdef DEBUG
+	printf ("DEBUG: Destroying pop_table\n");
+#endif
+		for ( i = 0; i <= OP_TABLE_SIZE; i++) {
+#ifdef DEBUG
+	printf ("DEBUG: destroy pop_list no %d in pop_table\n", i);
+#endif
 			eif_destroy_pop_list (eif_pop_table[i]); /* destroy the linked list of pop_list */
+
+}
 		eif_free (eif_pop_table); /* free once per proc. procedures table */
 		if (eif_pop_table_mutex) /* free access mutex to eif_pop_table */
 			EIF_MUTEX_DESTROY(eif_pop_table_mutex,"Couldn't destroy once per process table mutex\n");
@@ -334,12 +385,18 @@ rt_private void eif_destroy_fop_list (struct fop_list *list)
 {
 	struct fop_list *l, *ln; /* for loop */
 
+
+#ifdef DEBUG
+	printf ("-|	DEBUG: Entering eif_destroy_fop_list\n");
+#endif
 	for (l = list; l != (struct fop_list *) 0; l = ln)
 		{
 		ln = l->next;
 		
-		eif_free (l->addr);
 		/* do not free l->val because allocated in the chunk list */ 
+#ifdef DEBUG
+	printf ("-|	DEBUG: Free list %x in fop_list\n", l);
+#endif
 		eif_free (l);
 		}
 } /* eif_destroy_fop_list */
@@ -349,9 +406,15 @@ rt_private void eif_destroy_pop_list (struct pop_list *list)
 {
 	struct pop_list *l, *ln; /* for loop */
 
+#ifdef DEBUG
+	printf ("-|	DEBUG: Entering eif_destroy_pop_list\n");
+#endif
 	for (l = list; l != (struct pop_list *) 0; l = ln)
 		{
 		ln = l->next;
+#ifdef DEBUG
+	printf ("-|	DEBUG: Free list %x in pop_list\n", l);
+#endif
 		eif_free (l);
 		}
 } /* eif_destroy_pop_list */

@@ -243,7 +243,7 @@ feature {NONE} -- Implementation
 
 	locals_code: STRING is
 			-- | Result := "	[local
-			-- |					var: TYPE....]
+			-- |					var: SYSTEM_TYPE....]
 		require
 			in_code_generation: current_state = Code_generation
 		local
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 
 	body: STRING is
 			-- | Result := "	[local
-			-- |					var: TYPE....]
+			-- |					var: SYSTEM_TYPE....]
 			-- |				[do,once,deffered]
 			-- |					[`other_statements'...]
 			-- |				"

@@ -39,7 +39,7 @@ feature -- Access
 		end
 
 	declaration_code: STRING is
-			-- Result := "name: TYPE"
+			-- Result := "name: SYSTEM_TYPE"
 		do
 			create Result.make (100)
 			Result.append (Indent_string)

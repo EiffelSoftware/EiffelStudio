@@ -40,7 +40,7 @@ feature -- Status Report
 		local
 			l_type: CODE_GENERATED_TYPE
 			l_features: HASH_TABLE [CODE_FEATURE, STRING]
-			l_dotnet_type: TYPE
+			l_dotnet_type: SYSTEM_TYPE
 			l_parent_type: CODE_TYPE_REFERENCE
 		do
 			parent_type_with_homonym := Void
@@ -82,7 +82,7 @@ feature -- Status Report
 
 feature {NONE} -- Implementation
 
-	dotnet_hierarchy_has_feature (a_name: STRING; a_type: TYPE): BOOLEAN is
+	dotnet_hierarchy_has_feature (a_name: STRING; a_type: SYSTEM_TYPE): BOOLEAN is
 			-- Do `a_type' or any base type of `a_type' have a feature with Eiffel name `a_name'?
 			--| We don't actually need to search parents as representation of .NET type in metadata is flat
 		local

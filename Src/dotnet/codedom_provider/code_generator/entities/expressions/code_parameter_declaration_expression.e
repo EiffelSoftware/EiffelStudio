@@ -38,8 +38,8 @@ feature -- Access
 			-- Argument direction
 
 	code: STRING is
-			-- | Result := "`name': `TYPE'"
-			-- | or Result := "`name': TYPED_POINTER [`TYPE']" if direction is out or inout
+			-- | Result := "`name': `SYSTEM_TYPE'"
+			-- | or Result := "`name': TYPED_POINTER [`SYSTEM_TYPE']" if direction is out or inout
 			-- Eiffel code of argument declaration expression
 		local
 			l_byref: BOOLEAN

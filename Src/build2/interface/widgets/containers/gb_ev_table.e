@@ -469,6 +469,14 @@ feature {NONE} -- Implementation
 				end
 				widgets.forth
 			end
+			if draw_greyed_widget then
+					create relative_pointa.make_with_position (grey_x * grid_size + diagram_border, grey_y * grid_size + diagram_border)
+					create relative_pointb.make_with_position (grey_x * grid_size + grey_x_span * grid_size + diagram_border, grey_y * grid_size + grey_y_span * grid_size + diagram_border)
+					create figure_rectangle.make_with_points (relative_pointa, relative_pointb)
+					figure_rectangle.remove_background_color
+					figure_rectangle.set_foreground_color (grey)
+					world.extend (figure_rectangle)
+			end
 			if selected_item /= Void then
 					create relative_pointa.make_with_position ((first.item_column_position (selected_item) - 1) * grid_size + diagram_border, (first.item_row_position (selected_item) - 1) * grid_size + diagram_border)
 					create relative_pointb.make_with_position ((first.item_column_position (selected_item) - 1) * grid_size + (first.item_column_span (selected_item)) * grid_size + diagram_border, (first.item_row_position (selected_item) - 1) * grid_size + (first.item_row_span (selected_item)) * grid_size + diagram_border)
@@ -653,9 +661,29 @@ feature {NONE} -- Implementation
 				new_y := y - ((y - y_offset) \\ grid_size)	
 				x := ((new_x - x_offset) // grid_size + 1).min (first.columns - first.item_column_span (selected_item) + 1).max (1)
 				y := ((new_y - y_offset) // grid_size + 1).min (first.rows - first.item_row_span (selected_item) + 1).max (1)
-				if (first.item_column_position (selected_item) /= x or first.item_row_position (selected_item) /= y) and
+--				if (first.item_column_position (selected_item) /= x or first.item_row_position (selected_item) /= y) and
+--					first.area_clear_excluding_widget (selected_item, x, y, first.item_column_span (selected_item), first.item_row_span (selected_item)) then
+--					set_item_position_and_span (selected_item, x, y, first.item_column_span (selected_item), first.item_row_span (selected_item))
+--					draw_greyed_widget := False
+--				else
+--					draw_greyed_widget := True
+--					grey_x := x * grid_size + diagram_border
+--					grey_y := y * grid_size + diagram_border
+--					grey_x_span := first.item_column_span (selected_item) * grid_size + diagram_border
+--					grey_y_span := first.item_row_span (selected_item) * grid_size + diagram_border
+--				end
+				if (first.item_column_position (selected_item) /= x or first.item_row_position (selected_item) /= y) then
+					if
 					first.area_clear_excluding_widget (selected_item, x, y, first.item_column_span (selected_item), first.item_row_span (selected_item)) then
 					set_item_position_and_span (selected_item, x, y, first.item_column_span (selected_item), first.item_row_span (selected_item))
+					draw_greyed_widget := False
+				else
+					draw_greyed_widget := True
+					grey_x := x - 1
+					grey_y := y - 1
+					grey_x_span := first.item_column_span (selected_item)
+					grey_y_span := first.item_row_span (selected_item)
+				end
 				end
 				draw_widgets
 			end
@@ -835,6 +863,7 @@ original_column, original_row, original_column_span, original_row_span: INTEGER
 			-- A button has been released on `drawing_area'
 			-- If `a_button' = 1, check for end of resize/movement.
 		do
+			draw_greyed_widget := False
 			if a_button = 1 then
 				if resizing_widget then
 					resizing_widget := False
@@ -1009,5 +1038,12 @@ feature {NONE} -- Attributes
 	Column_spans_string: STRING is "Column_spans"
 	
 	Row_spans_string: STRING is "Row_spans"
+	
+	draw_greyed_widget: BOOLEAN
+		-- Should a greyed representation of the desired widget position/
+		-- size be drawn
+	
+	grey_x, grey_y, grey_x_span, grey_y_span: INTEGER
+		-- Table coordinates for `draw_greyed_widget'.
 
 end -- class GB_EV_TABLE

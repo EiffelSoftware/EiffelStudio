@@ -36,10 +36,11 @@ feature {ICOR_EXPORTER} -- Access
 	interface_md_import: like internal_md_import is
 			-- IMetaDataImport Interface current ICorDebugModule.
 		do
-			if internal_md_import = Void then
-				internal_md_import := get_md_import_interface
-			end
 			Result := internal_md_import
+			if Result = Void then
+				Result := get_md_import_interface
+				internal_md_import := Result
+			end
 		end
 
 feature {ICOR_EXPORTER} -- Meta Data queries
@@ -93,6 +94,10 @@ feature {ICOR_DEBUG_MODULE} -- Restricted Access
 		do
 			last_call_success := cpp_get_MetaDataImport_interface (item, $p)
 			if p /= default_pointer then
+				debug ("debugger_icor_data")
+					io.put_string ("ICOR_DEBUG_MODULE.get_md_import_interface : called %N")					
+					io.put_string ("     for [" + module_name + "] %N")					
+				end
 				create Result.make_by_pointer (p)
 				Result.add_ref
 			end			

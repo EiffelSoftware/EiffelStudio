@@ -9,23 +9,29 @@ class
 
 inherit
 	WIZARD_FINAL_STATE_WINDOW
+		redefine
+			proceed_with_current_info
+		end
 
 creation
 	make
 
 feature -- Basic Operations
 
-	display is 
+	proceed_with_current_info is
 		do
-			build
 		end
 
 feature -- Access
 
-	title: STRING is "Final Step"
+	display_state_text is
+		do
+			title.set_text ("Final Step")
+			message.set_text ("Last step")
+		end
 
-	message: STRING is "blablabal"
-
-	pixmap_location: STRING is "small_essai.bmp"
+	final_message: STRING is
+		do
+		end
 
 end -- class FINAL_STATE

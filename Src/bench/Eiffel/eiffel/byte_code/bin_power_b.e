@@ -24,12 +24,42 @@ feature -- IL code generation
 
 	generate_standard_il is
 			-- Generate standard IL code for binary expression.
+		local
+			l_power_nb: REAL_CONST_B
+			l_power_value: DOUBLE
 		do
+				-- Generate value to be elevated to a given power.
 			left.generate_il
 			il_generator.convert_to_double
-			right.generate_il
-			il_generator.convert_to_double
-			il_generator.generate_binary_operator (il_operator_constant)
+
+			l_power_nb ?= right
+			if l_power_nb /= Void then
+				l_power_value := l_power_nb.value.to_double
+				
+				if l_power_value = 0.0 then
+						-- Removed value, since not needed.
+					il_generator.pop
+					il_generator.put_double_constant (1.0)
+				elseif l_power_value = 1.0 then
+						-- Nothing to be done
+				elseif l_power_value = 2.0 then
+					il_generator.duplicate_top
+					il_generator.generate_binary_operator (il_star)
+				elseif l_power_value = 3.0 then
+					il_generator.duplicate_top
+					il_generator.duplicate_top
+					il_generator.generate_binary_operator (il_star)
+					il_generator.generate_binary_operator (il_star)
+				else
+					right.generate_il
+					il_generator.convert_to_double
+					il_generator.generate_binary_operator (il_operator_constant)
+				end
+			else
+				right.generate_il
+				il_generator.convert_to_double
+				il_generator.generate_binary_operator (il_operator_constant)
+			end
 		end
 
 feature -- C code generation
@@ -38,36 +68,33 @@ feature -- C code generation
 			-- Print expression value
 		local
 			buf			: GENERATION_BUFFER
-			power_nb	: INTEGER_CONSTANT
-			power_value	: INTEGER
+			power_nb	: REAL_CONST_B
+			power_value	: DOUBLE
 			done		: BOOLEAN
 		do
 			buf := buffer
 			power_nb ?= right
 			if power_nb /= Void then
-				power_value := power_nb.value
-				inspect
-					power_value
-				when 0 then
+				power_value := power_nb.value.to_double
+				if power_value = 0.0 then
 					done := True
 					buf.putstring ("(EIF_DOUBLE) 1")
-				when 1 then
+				elseif power_value = 1.0 then
 					done := True
 					buf.putstring ("(EIF_DOUBLE) (")
 					left.print_register
 					buf.putchar (')')
-				when 2,3 then 
+				elseif power_value = 2.0 or power_value = 3.0 then
 					done := True
 					buf.putstring ("(EIF_DOUBLE) ((EIF_DOUBLE)")
 					left.print_register
 					buf.putstring (" * (EIF_DOUBLE) ")
 					left.print_register
-					if power_value = 3 then
+					if power_value = 3.0 then
 						buf.putstring (" * (EIF_DOUBLE) ")
 						left.print_register
 					end
 					buf.putchar (')')
-				else
 				end
 			end
 

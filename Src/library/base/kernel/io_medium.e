@@ -16,6 +16,7 @@ inherit
 			dispose
 		end
 
+	STRING_HANDLER
 
 feature -- Access
 

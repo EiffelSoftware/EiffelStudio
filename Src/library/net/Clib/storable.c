@@ -27,7 +27,10 @@
 #define SOCKET_UNAVAILABLE_FOR_WRITING "Socket unavailable for writing"
 #define SOCKET_UNAVAILABLE_FOR_READING "Socket unavailable for reading"
 
+#ifndef EIF_THREADS
 rt_private int socket_fides;
+#endif
+
 extern void idr_flush (void);
 
 /* Returns nonzero if the socket is ready for, zero otherwise */
@@ -35,6 +38,7 @@ extern void idr_flush (void);
 /* read = 1, check the socket to be ready for reading */ 
 int net_socket_ready (int read)
 {
+	GTCX
 	struct timeval tm;
 	fd_set fdset;
 	int num_active;
@@ -73,6 +77,7 @@ int net_socket_ready (int read)
 
 int net_char_read(char *pointer, int size)
 {
+	GTCX
 	int i;
 
 retry:
@@ -178,6 +183,7 @@ retry:
  */
 int net_char_write(char *pointer, int size)
 {
+	GTCX
 	static char buffered_type;
 	static int buffered = 0;
 	int count;
@@ -208,6 +214,7 @@ int net_char_write(char *pointer, int size)
 rt_public char *eif_net_retrieved(EIF_INTEGER file_desc)
 {
 #ifndef EIF_IL_DLL
+	GTCX
 	socket_fides = file_desc;
 
 	return portable_retrieve(net_char_read);
@@ -219,6 +226,7 @@ rt_public char *eif_net_retrieved(EIF_INTEGER file_desc)
 rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)
 {
 #ifndef EIF_IL_DLL
+	GTCX
 	socket_fides = file_desc;
 
 	rt_init_store(
@@ -238,6 +246,7 @@ rt_public void eif_net_basic_store(EIF_INTEGER file_desc, char *object)
 rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
 {
 #ifndef EIF_IL_DLL
+	GTCX
 	socket_fides = file_desc;
 
 	rt_init_store(
@@ -257,6 +266,7 @@ rt_public void eif_net_general_store(EIF_INTEGER file_desc, char *object)
 rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 {
 #ifndef EIF_IL_DLL
+	GTCX
 	socket_fides = file_desc;
 
 #ifdef RECOVERABLE_SCAFFOLDING

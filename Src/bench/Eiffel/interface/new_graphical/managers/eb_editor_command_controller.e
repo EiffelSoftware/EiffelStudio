@@ -24,7 +24,7 @@ inherit
 			{NONE} all
 		undefine
 			on_block_removed, on_text_block_loaded, on_line_modified,
-			on_line_inserted, on_line_removed
+			on_line_inserted, on_cursor_moved, on_line_removed
 		redefine
 			on_selection_begun, on_selection_finished,
 			on_text_back_to_its_last_saved_state,

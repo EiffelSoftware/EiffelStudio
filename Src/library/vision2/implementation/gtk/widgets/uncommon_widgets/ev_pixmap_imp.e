@@ -184,7 +184,7 @@ feature -- Element change
 			until
 				column_counter = a_x
 			loop
-				mapped_x := ((column_counter / a_x) * source_width).truncated_to_integer.max (0)
+				mapped_x := ((column_counter / a_x) * source_width).truncated_to_integer
 				mapped_x_lookup.put (mapped_x, column_counter)
 				column_counter := column_counter + 1
 			end		
@@ -195,7 +195,7 @@ feature -- Element change
 			until
 				row_counter = a_y
 			loop
-				mapped_y := ((row_counter / a_y ) * source_height).truncated_to_integer.max (0)
+				mapped_y := ((row_counter / a_y ) * source_height).truncated_to_integer
 				mapped_y_lookup.put (mapped_y, row_counter)
 				row_counter := row_counter + 1
 			end

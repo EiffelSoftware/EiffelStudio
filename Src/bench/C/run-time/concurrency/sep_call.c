@@ -8,7 +8,6 @@
 #include "eif_wbench.h"
 #include "eif_interp.h"
 #include "eif_plug.h"
-#include "eif_project.h"			/* for tabinit() */
 
 #include "eif_cecil.h"
 #include "eif_hector.h"
@@ -336,7 +335,7 @@ dprintf(2)("%d(%s) Got feature's body_idx %d\n", _concur_pid, _concur_class_name
 dprintf(2)("%d(%s) Got feature's body_id %d\n", _concur_pid, _concur_class_name_of_root_obj, body_id);
 #endif
 				if (body_id < zeroc) {
-					fptr =  frozen[body_id]; 				/* Frozen feature */
+					fptr =  egc_frozen[body_id]; 				/* Frozen feature */
 #ifdef DEBUG
 dprintf(2)("%d(%s) Got feature's FPatId = %d\n", _concur_pid, _concur_class_name_of_root_obj, FPatId(body_id));
 #endif

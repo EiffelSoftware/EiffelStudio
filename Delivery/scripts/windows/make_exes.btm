@@ -303,21 +303,6 @@ iff not exist setup.dll then
 endiff
 move setup.dll %INIT_DIR\install\Binary
 
-remtrace Recompile configure_all
-cdd %EIFFEL_SRC
-exprt -r %DEFAULT_CVS_TAG -d configure_all "Src/tools/configure_all"
-cd %EIFFEL_SRC\configure_all
-copy %EIFFEL_SRC\Eiffel\Ace\ec.ico .
-clean_project
-finalize configure_all.ace
-fff
-cleanup_eiffel configure_all.exe
-iff not exist configure_all.exe then
-	remtrace Couldnt generate configure_all.exe
-	CANCEL
-endiff
-move configure_all.exe %INSTALL_DIR
-
 remtrace Recompiling EiffelBuild
 cdd %INIT_DIR
 call make_build.btm

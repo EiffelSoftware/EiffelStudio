@@ -4,7 +4,6 @@ indexing
 	status		: "See notice at end of class"
 	date		: "$Date$"
 	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 class
 	EV_PIXMAP_IMP_WIDGET
@@ -724,6 +723,9 @@ end -- class EV_PIXMAP_IMP_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2001/07/10 16:58:06  rogers
+--| Standardized indexing clauses.
+--|
 --| Revision 1.13  2001/06/14 18:26:17  rogers
 --| Renamed EV_COORDINATES to EV_COORDINATE.
 --|

@@ -4,7 +4,6 @@ indexing
 	status		: "See notice at end of class"
 	date		: "$Date$"
 	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 deferred class
 	EV_PIXMAP_IMP_STATE
@@ -262,6 +261,9 @@ end -- class EV_PIXMAP_IMP_STATE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2001/07/10 16:58:06  rogers
+--| Standardized indexing clauses.
+--|
 --| Revision 1.7  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

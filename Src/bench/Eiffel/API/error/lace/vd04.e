@@ -25,14 +25,14 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Debug purpose
 		do
-			ow.put_string ("Cluster path: ");
-			ow.put_string (cluster.path);
-			ow.put_string ("%NClass name: ");
-			ow.put_string (old_name);
-			ow.new_line
+			st.add_string ("Cluster path: ");
+			st.add_string (cluster.path);
+			st.add_string ("%NClass name: ");
+			st.add_string (old_name);
+			st.add_new_line
 		end;
 
 feature {CLUST_PROP_SD} -- Setting

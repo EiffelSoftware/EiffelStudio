@@ -35,13 +35,13 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Duplicate name: ");
-			ow.put_string (feature_name);
-			ow.put_string ("%NIn Redefine clause for parent: ");
-			ow.put_string (parent_name);
-			ow.new_line;
+			st.add_string ("Duplicate name: ");
+			st.add_string (feature_name);
+			st.add_string ("%NIn Redefine clause for parent: ");
+			st.add_string (parent_name);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

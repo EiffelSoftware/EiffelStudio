@@ -37,23 +37,23 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
-			-- in `ow'.
+			-- in `st'.
 		local
 			u_class: E_CLASS;
 			s_class: E_CLASS;
 		do
 			u_class := invalid_feature.written_class;
 			s_class := selected_feature.written_class;
-			ow.put_string ("First version: ");
-			selected_feature.append_name (ow, s_class);
-			ow.put_string (" from class: ");
-			s_class.append_name (ow);
-			ow.put_string ("Second version: ");
-			invalid_feature.append_name (ow, u_class);
-			ow.put_string (" from class: ");
-			u_class.append_name (ow);
+			st.add_string ("First version: ");
+			selected_feature.append_name (st, s_class);
+			st.add_string (" from class: ");
+			s_class.append_name (st);
+			st.add_string ("Second version: ");
+			invalid_feature.append_name (st, u_class);
+			st.add_string (" from class: ");
+			u_class.append_name (st);
 		end;
 
 feature {COMPILER_EXPORTER}

@@ -23,11 +23,11 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Non-Unique value: ");
-			ow.put_int (positive_value);
-			ow.new_line;
+			st.add_string ("Non-Unique value: ");
+			st.add_int (positive_value);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -72,10 +72,10 @@ feature -- Output
 			Result.append (actual_dump);
 		end;
 
-	append_to (ow: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("(like Current) ");
-			actual_type.append_to (ow);
+			st.add_string ("(like Current) ");
+			actual_type.append_to (st);
 		end;
 
 feature {COMPILER_EXPORTER} -- Primitives

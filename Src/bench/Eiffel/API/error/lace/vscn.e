@@ -21,18 +21,18 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			put_cluster_name (ow);
-			ow.put_string ("Class name: ");
-			ow.put_string (first.class_name);
-			ow.new_line;
-			ow.put_string ("First file: ");
-			ow.put_string (first.file_name);
-			ow.new_line;
-			ow.put_string ("Second file: ");
-			ow.put_string (second.file_name);
-			ow.new_line;
+			put_cluster_name (st);
+			st.add_string ("Class name: ");
+			st.add_string (first.class_name);
+			st.add_new_line;
+			st.add_string ("First file: ");
+			st.add_string (first.file_name);
+			st.add_new_line;
+			st.add_string ("Second file: ");
+			st.add_string (second.file_name);
+			st.add_new_line;
 		end;
 
 feature {UNIVERSE_I, CLUSTER_I} -- Setting

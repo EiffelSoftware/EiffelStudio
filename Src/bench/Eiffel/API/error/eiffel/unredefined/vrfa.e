@@ -36,13 +36,13 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Formal argument name: ");
-			ow.put_string (other_feature.name);
-			ow.put_string (" is defined as a feature: ");
-			other_feature.append_signature (ow, other_feature.written_class);
-			ow.new_line;
+			st.add_string ("Formal argument name: ");
+			st.add_string (other_feature.name);
+			st.add_string (" is defined as a feature: ");
+			other_feature.append_signature (st, other_feature.written_class);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

@@ -25,11 +25,11 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Invalid creation procedure name: ");
-			ow.put_string (feature_name);
-			ow.new_line;
+			st.add_string ("Invalid creation procedure name: ");
+			st.add_string (feature_name);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

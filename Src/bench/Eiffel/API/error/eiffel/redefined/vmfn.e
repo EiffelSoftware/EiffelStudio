@@ -41,19 +41,19 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			ow.put_string ("Feature: ");
-			a_feature.append_signature (ow, a_feature.written_class);
-			ow.put_string (" Version from: ");
-			a_feature.written_class.append_name (ow);
-			ow.put_string ("%NFeature: ");
-			other_feature.append_signature (ow, other_feature.written_class);
-			ow.put_string (" Version from: ");
-			other_feature.written_class.append_name (ow);
-			ow.new_line;
+			st.add_string ("Feature: ");
+			a_feature.append_signature (st, a_feature.written_class);
+			st.add_string (" Version from: ");
+			a_feature.written_class.append_name (st);
+			st.add_string ("%NFeature: ");
+			other_feature.append_signature (st, other_feature.written_class);
+			st.add_string (" Version from: ");
+			other_feature.written_class.append_name (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

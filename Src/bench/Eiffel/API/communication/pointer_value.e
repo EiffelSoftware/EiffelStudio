@@ -53,11 +53,11 @@ feature -- Access
 
 feature -- Output
 
-	 append_type_and_value (ow: OUTPUT_WINDOW) is 
+	 append_type_and_value (st: STRUCTURED_TEXT) is 
 		do 
-			dynamic_class.append_name (ow)
-			ow.put_string (" = C pointer ");
-			ow.put_string (value)
+			dynamic_class.append_name (st)
+			st.add_string (" = C pointer ");
+			st.add_string (value)
 		end;
 
 end -- class POINTER_VALUE

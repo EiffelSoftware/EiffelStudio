@@ -26,13 +26,13 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
             -- Build specific explanation explain for current error
-            -- in `ow'.
+            -- in `st'.
         do
-			ow.put_string ("%TFeature: ");
-			ow.put_string (feature_name);
-			ow.new_line;
+			st.add_string ("%TFeature: ");
+			st.add_string (feature_name);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

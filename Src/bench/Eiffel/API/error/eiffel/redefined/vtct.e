@@ -24,17 +24,17 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
-			-- in `ow'.
+			-- in `st'.
 		local
 			c_name: STRING;
 		do
 			c_name := clone (class_name)
 			c_name.to_upper;
-			ow.put_string ("Unknown class name: ");
-			ow.put_string (c_name);
-			ow.new_line;
+			st.add_string ("Unknown class name: ");
+			st.add_string (c_name);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -55,13 +55,13 @@ feature -- Access
 
 feature -- Output
 
-	 append_type_and_value (ow: OUTPUT_WINDOW) is 
+	 append_type_and_value (st: STRUCTURED_TEXT) is 
 		do 
-			dynamic_class.append_name (ow)
-			ow.put_string (" = ");
-			ow.put_char ('%'');
-			ow.put_string (char_text (value));
-			ow.put_char ('%'')
+			dynamic_class.append_name (st)
+			st.add_string (" = ");
+			st.add_char ('%'');
+			st.add_string (char_text (value));
+			st.add_char ('%'')
 		end;
 
 end -- class CHARACTER_VALUE

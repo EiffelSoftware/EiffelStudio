@@ -46,24 +46,24 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Class: ");
-			associated_class.append_name (ow);
+			st.add_string ("Class: ");
+			associated_class.append_name (st);
 			if a_feature /= Void then
-				ow.put_string ("%NFeature: ");
-				a_feature.append_name (ow, associated_class);
+				st.add_string ("%NFeature: ");
+				a_feature.append_name (st, associated_class);
 			else
-				ow.put_string ("%NFeature: invariant")
+				st.add_string ("%NFeature: invariant")
 			end;
-			ow.put_string ("%NObsolete feature: ");
+			st.add_string ("%NObsolete feature: ");
 			obsolete_feature.append_signature 
-					(ow, obsolete_feature.written_class);
-			ow.put_string (" (class ");
-			obsolete_class.append_name (ow);
-			ow.put_string (")%NObsolete message: ");
-			ow.put_string (obsolete_feature.obsolete_message);
-			ow.new_line;
+					(st, obsolete_feature.written_class);
+			st.add_string (" (class ");
+			obsolete_class.append_name (st);
+			st.add_string (")%NObsolete message: ");
+			st.add_string (obsolete_feature.obsolete_message);
+			st.add_new_line;
 		end;
 
 feature {ACCESS_FEAT_AS_B} -- Setting

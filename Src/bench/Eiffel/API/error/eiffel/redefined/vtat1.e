@@ -32,13 +32,13 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			ow.put_string ("Anchor type: ");
-			type.append_to (ow);
-			ow.new_line;
+			st.add_string ("Anchor type: ");
+			type.append_to (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

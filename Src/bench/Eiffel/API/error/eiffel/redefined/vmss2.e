@@ -47,15 +47,15 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			ow.put_string ("Feature name: ");
-			ow.put_string (feature_name);
-			ow.put_string ("%NIn Select subclause for parent: ");
-			parent.append_signature (ow);
-			ow.new_line;
+			st.add_string ("Feature name: ");
+			st.add_string (feature_name);
+			st.add_string ("%NIn Select subclause for parent: ");
+			parent.append_signature (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

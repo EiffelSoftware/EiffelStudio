@@ -21,13 +21,13 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Root class: ");
-			root_class.append_name (ow);
-			ow.put_string ("%NInvalid procedure name: ");
-			ow.put_string (creation_routine);
-			ow.new_line
+			st.add_string ("Root class: ");
+			root_class.append_name (st);
+			st.add_string ("%NInvalid procedure name: ");
+			st.add_string (creation_routine);
+			st.add_new_line
 		end;
 
 feature {CLASS_C} -- Setting

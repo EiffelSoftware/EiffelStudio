@@ -27,14 +27,14 @@ feature -- Properties
 feature -- Output
 
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			print_name (ow);
-			ow.put_string ("Feature name: ");
+			print_name (st);
+			st.add_string ("Feature name: ");
 			if creation_feature /= Void then
-				creation_feature.append_signature (ow, creation_feature.written_class);
+				creation_feature.append_signature (st, creation_feature.written_class);
 			end;
-			ow.new_line;
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

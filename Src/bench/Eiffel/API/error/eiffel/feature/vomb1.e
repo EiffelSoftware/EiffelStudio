@@ -25,11 +25,11 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Type: ");
-			type.append_to (ow);
-			ow.new_line;	
+			st.add_string ("Type: ");
+			type.append_to (st);
+			st.add_new_line;	
 		end;
 
 feature {COMPILER_EXPORTER}

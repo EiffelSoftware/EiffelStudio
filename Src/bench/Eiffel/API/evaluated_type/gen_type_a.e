@@ -128,25 +128,25 @@ feature -- Output
 			Result.append ("]");
 		end;
 
-	append_to (ow: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		local
 			i, count: INTEGER;
 		do
-			old_append_to (ow);
-			ow.put_string (" [");
+			old_append_to (st);
+			st.add_string (" [");
 			from
 				i := 1;
 				count := generics.count;
 			until
 				i > count
 			loop
-				generics.item (i).append_to (ow);
+				generics.item (i).append_to (st);
 				if i /= count then
-					ow.put_string (", ");
+					st.add_string (", ");
 				end;
 				i := i + 1;
 			end;
-			ow.put_string ("]");
+			st.add_string ("]");
 		end;
 
 feature {COMPILER_EXPORTER} -- Primitives

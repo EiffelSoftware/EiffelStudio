@@ -20,9 +20,9 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			print_parent (ow);
+			print_parent (st);
 		end;
 
 end -- class VLEL1

@@ -62,12 +62,12 @@ feature -- Output
 		deferred
 		end;
 
-	append_to (cw: OUTPUT_WINDOW) is
-			-- Append Current type to `cw'.:wq
+	append_to (st: STRUCTURED_TEXT) is
+			-- Append Current type to `cw'.
 		require
-			non_void_cw: cw /= Void
+			non_void_st: st /= Void
 		do
-			cw.put_string (dump)
+			st.add_string (dump)
 		end;
 
 feature {COMPILER_EXPORTER} 

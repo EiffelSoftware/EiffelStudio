@@ -37,18 +37,18 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
-			-- in `ow'.
+			-- in `st'.
 		local
 			wclass: E_CLASS;
 		do
 			wclass := deferred_feature.written_class;
-			ow.put_string ("Deferred feature: ");
-			deferred_feature.append_name (ow, wclass);
-			ow.put_string (" From: ");
-			wclass.append_name (ow);
-			ow.new_line;
+			st.add_string ("Deferred feature: ");
+			deferred_feature.append_name (st, wclass);
+			st.add_string (" From: ");
+			wclass.append_name (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -27,12 +27,12 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Invalid feature name: ");
-			ow.put_string (feature_name);
-			ow.new_line;
-			print_parent (ow);
+			st.add_string ("Invalid feature name: ");
+			st.add_string (feature_name);
+			st.add_new_line;
+			print_parent (st);
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

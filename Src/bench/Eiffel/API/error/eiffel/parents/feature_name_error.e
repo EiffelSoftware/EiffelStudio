@@ -22,19 +22,19 @@ feature -- Properties
 
 feature -- Output
 
-	trace (ow: OUTPUT_WINDOW) is
+	trace (st: STRUCTURED_TEXT) is
 		do
-			print_error_message (ow);
-			ow.put_string ("Class: ");
-			e_class.append_signature (ow);
+			print_error_message (st);
+			st.add_string ("Class: ");
+			e_class.append_signature (st);
 			if feature_name /= Void then
-				ow.put_string ("%NFeature name: ");
-				ow.put_string (feature_name);
-				ow.new_line;
+				st.add_string ("%NFeature name: ");
+				st.add_string (feature_name);
+				st.add_new_line;
 			else
-				ow.put_string ("%NFeature: invariant%N");
+				st.add_string ("%NFeature: invariant%N");
 			end;
-			build_explain (ow);
+			build_explain (st);
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

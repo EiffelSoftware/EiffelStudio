@@ -34,9 +34,9 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation explain for current error
-			-- in `ow'.
+			-- in `st'.
 		local
 			info: CELL2 [E_FEATURE, E_CLASS];
 		do
@@ -47,14 +47,14 @@ feature -- Output
 			loop
 				info := selection_list.item;
 				if (info.item2 = Void) then
-					ow.put_string ("In current class: ");
+					st.add_string ("In current class: ");
 				else
-					ow.put_string ("In parent ");
-					info.item2.append_name (ow);
-					ow.put_string (": ");
+					st.add_string ("In parent ");
+					info.item2.append_name (st);
+					st.add_string (": ");
 				end;
-				info.item1.append_signature (ow, info.item1.written_class);
-				ow.new_line;
+				info.item1.append_signature (st, info.item1.written_class);
+				st.add_new_line;
 
 				selection_list.forth;
 			end;

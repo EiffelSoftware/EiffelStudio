@@ -93,15 +93,15 @@ feature -- Output
 			Result.append (s);
 		end;
 
-	append_to (ow: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		local
 			ec: E_CLASS;
 		do
 			ec := Eiffel_system.class_of_id (class_id)
-			ow.put_string ("[like ");
-			ow.put_feature_name (feature_name, ec);
-			ow.put_string ("]: ");
-			actual_type.append_to (ow);
+			st.add_string ("[like ");
+			st.add_feature_name (feature_name, ec);
+			st.add_string ("]: ");
+			actual_type.append_to (st);
 		end;
 
 feature {COMPILER_EXPORTER}

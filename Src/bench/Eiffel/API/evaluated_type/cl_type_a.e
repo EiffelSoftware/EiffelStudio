@@ -57,12 +57,12 @@ feature -- Access
 
 feature -- Output
 
-	append_to (ow: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		do
 			if is_expanded then
-				ow.put_string ("expanded ");
+				st.add_string ("expanded ");
 			end;
-			associated_eclass.append_name (ow);
+			associated_eclass.append_name (st);
 		end;
 
 	dump: STRING is

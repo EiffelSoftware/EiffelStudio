@@ -35,11 +35,11 @@ feature -- Access
 
 feature -- Output
 
-	print_parent (ow: OUTPUT_WINDOW) is
+	print_parent (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Parent for which export list appears: ");
-			parent.append_name (ow);
-			ow.new_line;
+			st.add_string ("Parent for which export list appears: ");
+			parent.append_name (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

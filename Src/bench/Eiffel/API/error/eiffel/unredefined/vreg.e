@@ -24,11 +24,11 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Duplicate name: ");
-			ow.put_string (entity_name);
-			ow.new_line;
+			st.add_string ("Duplicate name: ");
+			st.add_string (entity_name);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

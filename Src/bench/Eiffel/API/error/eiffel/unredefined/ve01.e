@@ -39,19 +39,19 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		local
 			wclass: E_CLASS
 		do
 			wclass := old_feature.written_class;
-			ow.put_string ("Redeclared routine: ");
-			old_feature.append_name (ow, wclass);
-			ow.put_string (" from ");
-			wclass.append_name (ow);
+			st.add_string ("Redeclared routine: ");
+			old_feature.append_name (st, wclass);
+			st.add_string (" from ");
+			wclass.append_name (st);
 			if old_feature.is_external then
-				ow.put_string (" is an external routine%N")
+				st.add_string (" is an external routine%N")
 			else
-				ow.put_string (" is not an external routine%N")
+				st.add_string (" is not an external routine%N")
 			end;
 		end;
 

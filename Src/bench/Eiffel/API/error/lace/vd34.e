@@ -21,11 +21,11 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Invalid language name: ");
-			ow.put_string (language_name);
-			ow.new_line
+			st.add_string ("Invalid language name: ");
+			st.add_string (language_name);
+			st.add_new_line
 		end;
 
 feature {LANG_TRIB_SD} -- Setting

@@ -72,13 +72,13 @@ feature -- Access
 
 feature -- Output
 
-	append_type_and_value (ow: OUTPUT_WINDOW) is
+	append_type_and_value (st: STRUCTURED_TEXT) is
 		do 
-			ow.put_class (dynamic_class, "BIT");
-			ow.put_string (" ");
-			ow.put_int (value.count - 1);
-			ow.put_string (" = ");
-			ow.put_string (value)
+			st.add_classi (dynamic_class.lace_class, "BIT");
+			st.add_string (" ");
+			st.add_int (value.count - 1);
+			st.add_string (" = ");
+			st.add_string (value)
 		end;
 
 feature {NONE} -- Implementation

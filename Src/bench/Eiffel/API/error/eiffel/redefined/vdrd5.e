@@ -43,24 +43,24 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation image for current error
-			-- in `ow'.
+			-- in `st'.
 		local
 			r_class: E_CLASS;
 			p_class: E_CLASS;
 		do
 			r_class := redeclaration.written_class;
 			p_class := precursor.written_class;
-			ow.put_string ("Redefined feature: ");
-			redeclaration.append_signature (ow, r_class);
-			ow.put_string (" From: ");
-			r_class.append_name (ow);
-			ow.put_string ("%NPrecursor: ");
-			precursor.append_signature (ow, p_class);
-			ow.put_string (" From: ");
-			p_class.append_name (ow);
-			ow.new_line;
+			st.add_string ("Redefined feature: ");
+			redeclaration.append_signature (st, r_class);
+			st.add_string (" From: ");
+			r_class.append_name (st);
+			st.add_string ("%NPrecursor: ");
+			precursor.append_signature (st, p_class);
+			st.add_string (" From: ");
+			p_class.append_name (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER}

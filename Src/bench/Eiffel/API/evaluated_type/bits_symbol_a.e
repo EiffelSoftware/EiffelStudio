@@ -46,10 +46,10 @@ feature -- Output
 			Result.append (feature_name);
 		end;
 
-	append_to (ow: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("BIT ");
-			ow.put_string (feature_name);
+			st.add_string ("BIT ");
+			st.add_string (feature_name);
 		end;
 
 feature {COMPILER_EXPORTER}

@@ -18,20 +18,20 @@ feature -- Property
 
 feature -- Output
 
-	put_cluster_name (ow: OUTPUT_WINDOW) is
+	put_cluster_name (st: STRUCTURED_TEXT) is
 			-- Display the cluster name
 		do
-			ow.put_string ("Cluster name: ");
-			ow.put_string (cluster.cluster_name);
-			ow.new_line;
+			st.add_string ("Cluster name: ");
+			st.add_string (cluster.cluster_name);
+			st.add_new_line;
 		end;
 
-	put_cluster_path (ow: OUTPUT_WINDOW) is
+	put_cluster_path (st: STRUCTURED_TEXT) is
 			-- Display the cluster path
 		do
-			ow.put_string ("Path name: ");
-			ow.put_string (cluster.path);
-			ow.new_line;
+			st.add_string ("Path name: ");
+			st.add_string (cluster.path);
+			st.add_new_line;
 		end;
 
 feature {AST_LACE, COMPILER_EXPORTER}

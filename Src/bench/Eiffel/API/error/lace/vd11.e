@@ -24,16 +24,16 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			put_cluster_name (ow);
-			ow.put_string ("Class name: ");
-			ow.put_string (a_class.class_name);
-			ow.put_string ("%NFirst file: ");
-			ow.put_string (file_name);
-			ow.put_string ("%NSecond file: ");
-			ow.put_string (a_class.file_name);
-			ow.new_line
+			put_cluster_name (st);
+			st.add_string ("Class name: ");
+			st.add_string (a_class.class_name);
+			st.add_string ("%NFirst file: ");
+			st.add_string (file_name);
+			st.add_string ("%NSecond file: ");
+			st.add_string (a_class.file_name);
+			st.add_new_line
 		end;
 
 feature {CLUSTER_I} -- Setting

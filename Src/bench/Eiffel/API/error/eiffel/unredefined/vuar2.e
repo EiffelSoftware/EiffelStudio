@@ -31,20 +31,20 @@ feature -- Properties
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation image for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			print_called_feature (ow);
-			ow.put_string ("Argument name: ");
-			ow.put_string (argument_name);
-			ow.put_string ("%NArgument position: ");
-			ow.put_int (argument_position);
-			ow.put_string ("%NActual argument type: ");
-			actual_type.append_to (ow);
-			ow.put_string ("%NFormal argument type: ");
-			formal_type.append_to (ow);
-			ow.new_line;
+			print_called_feature (st);
+			st.add_string ("Argument name: ");
+			st.add_string (argument_name);
+			st.add_string ("%NArgument position: ");
+			st.add_int (argument_position);
+			st.add_string ("%NActual argument type: ");
+			actual_type.append_to (st);
+			st.add_string ("%NFormal argument type: ");
+			formal_type.append_to (st);
+			st.add_new_line;
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

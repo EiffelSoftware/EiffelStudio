@@ -39,15 +39,15 @@ feature -- Access
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 			-- Build specific explanation image for current error
-			-- in `ow'.
+			-- in `st'.
 		do
-			ow.put_string ("%TThere is no feature ");
-			ow.put_string (op_name);
-			ow.put_string (" in class ");
-			other_class.append_name (ow);
-			ow.new_line;
+			st.add_string ("%TThere is no feature ");
+			st.add_string (op_name);
+			st.add_string (" in class ");
+			other_class.append_name (st);
+			st.add_new_line;
 		end
 
 feature {COMPILER_EXPORTER} -- Setting

@@ -36,6 +36,7 @@ feature -- Output
 			-- Display warnings messages from `handler'.
 		local
 			warning_list: SORTED_TWO_WAY_LIST [WARNING];
+			st: STRUCTURED_TEXT
 		do
 			if not retried then
 				warning_list := handler.warning_list
@@ -44,22 +45,24 @@ feature -- Output
 				until
 					warning_list.after
 				loop
-					display_separation_line (output_window);
-					output_window.new_line;
-					warning_list.item.trace (output_window);
-					output_window.new_line;
+					display_separation_line (st);
+					st.add_new_line;
+					warning_list.item.trace (st);
+					st.add_new_line;
 					warning_list.forth;
 				end;
 				if handler.error_list.empty then
 						-- There is no error in the list
 						-- put a separation before the next message
-					display_separation_line (output_window)
+					display_separation_line (st)
 				end;
 				warning_list.wipe_out;
 			else
 				retried := False;
-				display_error_error (output_window)
+				display_error_error (st)
 			end;
+			output_window.process_text (st);
+			output_window.display
 		rescue
 			if not resources.get_boolean (r_Fail_on_rescue, False) then
 				retried := True;
@@ -70,28 +73,32 @@ feature -- Output
 	trace_errors (handler: ERROR_HANDLER) is
 			-- Display error messages from `handler'.
 		local
-			error_list: SORTED_TWO_WAY_LIST [ERROR]
+			error_list: SORTED_TWO_WAY_LIST [ERROR];
+			st: STRUCTURED_TEXT
 		do
 			if not retried then
 				error_list := handler.error_list;
+				!! st.make;
 				from
 					error_list.start
 				until
 					error_list.after
 				loop
-					display_separation_line (output_window);
-					output_window.new_line;
-					error_list.item.trace (output_window);
-					output_window.new_line;
+					display_separation_line (st);
+					st.add_new_line;
+					error_list.item.trace (st);
+					st.add_new_line;
 					error_list.forth;
 				end;
 				if not error_list.empty then
-					display_separation_line (output_window)
+					display_separation_line (st)
 				end;
 			else
 				retried := False;
-				display_error_error (output_window)
+				display_error_error (st)
 			end;
+			output_window.process_text (st);
+			output_window.display
 		rescue
 			if not resources.get_boolean (r_Fail_on_rescue, False) then
 				retried := True;
@@ -103,15 +110,15 @@ feature {NONE} -- Implementation
 
 	retried: BOOLEAN;
 
-	display_error_error (ow: OUTPUT_WINDOW) is
+	display_error_error (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Exception occurred while displaying error message.%N%
+			st.add_string ("Exception occurred while displaying error message.%N%
 						%Please contact ISE to report this bug.%N");
 		end;
 
-	display_separation_line (ow: OUTPUT_WINDOW) is
+	display_separation_line (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string
+			st.add_string
 ("-------------------------------------------------------------------------------%N");
 		end;
 

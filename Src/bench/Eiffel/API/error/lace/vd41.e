@@ -22,11 +22,11 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Precompiled path: ");
-			ow.put_string (path);
-			ow.new_line
+			st.add_string ("Precompiled path: ");
+			st.add_string (path);
+			st.add_new_line
 		end;
 
 feature {PRECOMP_R} -- Setting

@@ -22,10 +22,10 @@ feature -- Properties
 
 	generic_type: GEN_TYPE_A;
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("Type: ");
-			generic_type.append_to (ow);
+			st.add_string ("Type: ");
+			generic_type.append_to (st);
 		end;
 
 feature {COMPILER_EXPORTER} -- Setting

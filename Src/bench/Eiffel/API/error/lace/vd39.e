@@ -17,12 +17,12 @@ feature -- Property
 
 feature -- Output
 
-	build_explain (ow: OUTPUT_WINDOW) is
+	build_explain (st: STRUCTURED_TEXT) is
 		do
-			put_cluster_name (ow);
-			ow.put_string ("Option: ");
-			ow.put_string (option_name);
-			ow.new_line
+			put_cluster_name (st);
+			st.add_string ("Option: ");
+			st.add_string (option_name);
+			st.add_new_line
 		end;
 
 feature {O_OPTION_SD} -- Setting

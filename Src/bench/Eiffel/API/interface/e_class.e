@@ -333,10 +333,10 @@ feature -- Output
 			end;
 		end;
 
-	append_signature (ow: OUTPUT_WINDOW) is
-			-- Append the signature of current class in `ow'
+	append_signature (st: STRUCTURED_TEXT) is
+			-- Append the signature of current class in `st'
 		require
-			non_void_ow: ow /= Void
+			non_void_st: st /= Void
 		local
 			formal_dec: FORMAL_DEC_AS_B;
 			constraint_type: TYPE_B;
@@ -348,10 +348,10 @@ feature -- Output
 			if not error then
 				old_cluster := Inst_context.cluster;
 				Inst_context.set_cluster (cluster);
-				append_name (ow);
+				append_name (st);
 				gens := private_generics;
 				if gens /= Void then
-					ow.put_string (" [");
+					st.add_string (" [");
 					from
 						gens.start
 					until
@@ -360,33 +360,33 @@ feature -- Output
 						formal_dec := gens.item;
 						c_name := clone (formal_dec.formal_name);
 						c_name.to_upper;
-						ow.put_string (c_name);
+						st.add_string (c_name);
 						constraint_type := formal_dec.constraint;
 						if constraint_type /= Void then
-							ow.put_string (" -> ");
-							constraint_type.append_to (ow)
+							st.add_string (" -> ");
+							constraint_type.append_to (st)
 						end;
 						gens.forth;
 						if not gens.after then
-							ow.put_string (", ");
+							st.add_string (", ");
 						end;
 					end;
-					ow.put_char (']');
+					st.add_char (']');
 				end;
 				Inst_context.set_cluster (old_cluster);
 			end;
 		end;
 
-	append_name (ow: OUTPUT_WINDOW) is
-			-- Append the name ot the current class in `ow'
+	append_name (st: STRUCTURED_TEXT) is
+			-- Append the name ot the current class in `st'
 		require
-			non_void_ow: ow /= Void
+			non_void_st: st /= Void
 		local
 			c_name: STRING;
 		do
 			c_name := clone (name)
 			c_name.to_upper;
-			ow.put_class (Current, c_name)
+			st.add_classi (lace_class, c_name)
 		end;
 
 feature {COMPILER_EXPORTER} -- Implementation

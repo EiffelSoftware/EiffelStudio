@@ -144,7 +144,7 @@ feature {GB_CODE_GENERATOR} -- Output
 				end
 				element_info := full_information @ (preferred_family_string)
 				if element_info /= Void then
-					Result := Result + indent + "internal_font.preferred_families.extend (" + element_info.data + ")"
+					Result := Result + indent + "internal_font.preferred_families.extend (%"" + element_info.data + "%")"
 				end
 				Result := Result + indent + info.name + ".set_font (internal_font)"
 				Result := strip_leading_indent (Result)

@@ -85,7 +85,7 @@ feature {NONE} -- Execution
 				io.error.put_string ("Read-only project: cannot compile.%N")
 			else
 				init;
-				if Eiffel_project.lace_file_name /= Void then
+				if Eiffel_ace.file_name /= Void then
 					compile;
 					if Eiffel_project.successful then
 						if not Eiffel_project.is_final_code_optimal then

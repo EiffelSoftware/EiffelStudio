@@ -24,17 +24,17 @@ feature {NONE} -- Execution
 		local
 			text: STRING;
 		do
-			if Eiffel_project.lace_file_name /= Void then
-				text := Eiffel_project.lace_text
+			if Eiffel_ace.file_name /= Void then
+				text := Eiffel_ace.text
 			end;
 			if text /= Void then
 				output_window.put_string (text);
 				output_window.new_line;
-			elseif Eiffel_project.lace_file_name = Void then
+			elseif Eiffel_ace.file_name = Void then
 				output_window.put_string ("You must compile a project first%N");
 			else
 				output_window.put_string ("Cannot open ");
-				output_window.put_string (Eiffel_project.lace_file_name);
+				output_window.put_string (Eiffel_ace.file_name);
 				output_window.new_line;
 			end;
 		end;

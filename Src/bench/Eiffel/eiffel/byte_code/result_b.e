@@ -10,7 +10,7 @@ inherit
 			register_name,
 			make_byte_code, creation_access,
 			assign_code, expanded_assign_code, reverse_code,
-			assigns_to, pre_inlined_code
+			assigns_to, pre_inlined_code, is_separate
 		end
 
 feature 
@@ -102,5 +102,13 @@ feature -- Inlining
 			!!Result
 			Result.set_parent (parent)
 		end
+
+feature -- Concurrent Eiffel
+
+	is_separate: BOOLEAN is
+			-- Result type
+		do
+			Result := context.byte_code.result_type.is_separate;
+		end;
 
 end

@@ -89,7 +89,10 @@
 #define FS_CUR		1			/* Current position for `fseek' */
 #define FS_END		2			/* End of file for `fseek' */
 #define ST_MODE		0x0fff		/* Keep only permission mode */
+
+#ifndef NAME_MAX
 #define NAME_MAX	10			/* Maximum length for user/group name */
+#endif
 
 public char *file_open_mode();		/* Open file */
 private char *file_fopen();		/* Open file */
@@ -336,18 +339,18 @@ FILE *fp;
 {
 	struct stat buf;
 #ifdef __VMS
-	int fd,current_position;
+	int fd,current_pos;
 #endif
 
 	errno = 0;
 #ifdef __VMS
 	fd = fileno(fp);
 	/* handle vms bug by positioning to end before fsync-ing --mark howard*/
-	current_position = lseek(fd,0,SEEK_CUR);
+	current_pos = lseek(fd,0,SEEK_CUR);
 	lseek(fd,0,SEEK_END);
 	if (0 != fsync (fileno(fp)))	/* have to flush all the way! */
 		esys();
-	lseek(fd,current_position,SEEK_SET);	
+	lseek(fd,current_pos,SEEK_SET);	
 #else
 	if (0 != fflush (fp))   /* Without a flush the information */
 		esys();			/* is not up to date */

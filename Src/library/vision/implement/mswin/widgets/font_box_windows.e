@@ -155,13 +155,15 @@ feature -- Status setting
 	set_height (a_height: INTEGER) is
 			-- Set height to `new_height'.
 		do
-			private_attributes.set_height (a_height)
-			if exists then
-				wel_set_height (a_height)
-				adjust_controls_height
-			end;
-			if parent /= Void then
-				parent.child_has_resized
+			if private_attributes.height /= a_height then
+				private_attributes.set_height (a_height)
+				if exists then
+					wel_set_height (a_height)
+					adjust_controls_height
+				end;
+				if parent /= Void then
+					parent.child_has_resized
+				end
 			end
 		end
 
@@ -169,28 +171,33 @@ feature -- Status setting
 			-- Set the height to new_height,
 			-- width to `new_width'.
 		do
-			private_attributes.set_width (new_width)
-			private_attributes.set_height (new_height)
-			if exists then
-				resize (new_width, new_height)
-				adjust_controls_width
-				adjust_controls_height
-			end
-			if parent /= Void then
-				parent.child_has_resized
+			if private_attributes.height /= new_height
+			or else private_attributes.width /= new_width then
+				private_attributes.set_width (new_width)
+				private_attributes.set_height (new_height)
+				if exists then
+					resize (new_width, new_height)
+					adjust_controls_width
+					adjust_controls_height
+				end
+				if parent /= Void then
+					parent.child_has_resized
+				end
 			end
 		end
 
 	set_width (new_width: INTEGER) is
 			-- Set width to `new_width'.
 		do
-			private_attributes.set_width (new_width)
-			if exists then
-				wel_set_width (new_width)
-				adjust_controls_width
-			end;
-			if parent /= Void then
-				parent.child_has_resized
+			if private_attributes.width /= new_width then
+				private_attributes.set_width (new_width)
+				if exists then
+					wel_set_width (new_width)
+					adjust_controls_width
+				end;
+				if parent /= Void then
+					parent.child_has_resized
+				end
 			end
 		end
 

@@ -24,6 +24,9 @@ feature
 
 feature -- Access
 
+	last_once_available: BOOLEAN
+	last_once_failed: BOOLEAN
+	
 	dotnet_metamorphose_basic_to_reference_value (dmp: DUMP_VALUE): DUMP_VALUE is
 		do
 		end
@@ -32,7 +35,7 @@ feature -- Access
 		do
 		end
 
-	dotnet_evaluate_once_function (f: E_FEATURE): DUMP_VALUE is
+	dotnet_evaluate_once_function (addr: STRING;  dvalue: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]): DUMP_VALUE is
 		do
 		end
 		

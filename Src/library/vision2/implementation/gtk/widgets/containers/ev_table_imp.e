@@ -33,7 +33,7 @@ feature {NONE} -- Implementation
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_event_box_new)
-			container_widget := C.gtk_table_new (0, 0, Default_homogeneous)
+			container_widget := C.gtk_table_new (Default_row_spacing, Default_column_spacing, Default_homogeneous)
 				-- table created with 0 row and 0 column.
 			C.gtk_widget_show (container_widget)
 			C.gtk_container_add (c_object, container_widget)
@@ -43,6 +43,9 @@ feature {NONE} -- Implementation
 			-- Pointer to the gtktable widget as c_object is event box.
 
 feature -- Status report
+
+	is_homogeneous: BOOLEAN
+			-- Does Table have homogeneous spacing, no by default.
 
 	widget_count: INTEGER is
 		local
@@ -83,6 +86,7 @@ feature -- Status settings
 			-- the box has the same size.
 		do
 			C.gtk_table_set_homogeneous (container_widget, True)
+			is_homogeneous := True
 		end
 
 	disable_homogeneous is
@@ -90,6 +94,7 @@ feature -- Status settings
 			-- the box has the same size.
 		do
 			C.gtk_table_set_homogeneous (container_widget, False)
+			is_homogeneous := False
 		end
 
 	set_border_width (a_value: INTEGER) is

@@ -1,15 +1,15 @@
 indexing
 
 	description:
-		"Stacks with a bounded physical size, implemented by arrays";
+		"Stacks with a bounded physical size, implemented by arrays"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: dispenser, array;
 	representation: array;
 	access: fixed, lifo, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class BOUNDED_STACK [G] inherit
@@ -18,14 +18,14 @@ class BOUNDED_STACK [G] inherit
 		redefine
 			replace, item,
 			linear_representation
-		end;
+		end
 
 	BOUNDED [G]
 		undefine
 			copy, is_equal
-		end;
+		end
 
-creation
+create
 
 	make
 
@@ -36,30 +36,30 @@ feature -- Initialization
 		require
 			non_negative_argument: n >= 0
 		do
-			!! fl.make (0,n);
+			create fl.make (0, n)
 		ensure
-			stack_allocated: capacity = n;
+			stack_allocated: capacity = n
 			empty_stack: count = 0
-		end;
+		end
 
 feature -- Access
 
 	item: G is
 			-- Last item pushed (i.e. top)
 		require else
-			not_empty: count > 0;
+			not_empty: count > 0
 		do
 			Result := fl.item (count)
-		end;
+		end
 
 feature -- Measurement
 
-	count: INTEGER;
+	count: INTEGER
 
 	capacity: INTEGER is
 		do
 			Result := fl.count - 1
-		end;
+		end
 
 	occurrences (v: G): INTEGER is
 		do
@@ -69,22 +69,22 @@ feature -- Measurement
 				fl.compare_references
 			end
 			Result := fl.occurrences (v)
-		end;
+		end
 
 feature -- Element change
 
 	extend, force, put (v: like item) is
 			-- Push `v' on top.
 		do
-			count := count + 1;
+			count := count + 1
 			fl.put (v, count)
-		end;
+		end
 
 	replace (v: like item) is
 			-- Replace top item by `v'.
 		do
 			fl.put (v, count)
-		end;
+		end
 feature -- Access
 
 	has (v: G): BOOLEAN is
@@ -98,7 +98,7 @@ feature -- Access
 				fl.compare_references
 			end
 			Result := fl.has (v)
-		end;
+		end
 
 feature -- Removal
 
@@ -109,16 +109,16 @@ feature -- Removal
 		local
 			default_value: like item
 		do
-			fl.put (default_value, count);
+			fl.put (default_value, count)
 			count := count - 1
-		end;
+		end
 
 	wipe_out is
 			-- Remove all items.
 		do
-			fl.clear_all;
+			fl.clear_all
 			count := 0
-		end;
+		end
 
 feature -- Status report
 
@@ -127,11 +127,11 @@ feature -- Status report
 			Result := not full
 		ensure then
 			Result = not full
-		end;
+		end
 
-	resizable: BOOLEAN is true;
+	resizable: BOOLEAN is True
 
-	prunable: BOOLEAN is true;
+	prunable: BOOLEAN is True
 
 feature -- Conversion
 
@@ -142,15 +142,15 @@ feature -- Conversion
 			i: INTEGER
 		do
 			from
-				!! Result.make (count);
+				create Result.make (count)
 				i := count
 			until
 				i < 0
 			loop
-				Result.extend (fl.item (i));
+				Result.extend (fl.item (i))
 				i := i - 1
 			end
-		end;
+		end
 
 feature {STACK} -- Implementation
 
@@ -158,31 +158,31 @@ feature {STACK} -- Implementation
 			-- Move to first position.
 			-- (No effect if empty)
 		do
-			if not empty then
+			if not is_empty then
 				index := count
 			end
-		end;
+		end
 
 	finish is
 			-- Move to last position.
 			-- (No effect if empty)
 		do
-			if not empty then
+			if not is_empty then
 				index := 1
 			end
-		end;
+		end
 
 	forth is
 			-- Move to next position.
 		do
-			index := index - 1;
-		end;
+			index := index - 1
+		end
 
 	off: BOOLEAN is
 			-- Is there no current item?
 		do
 			Result := (index < 1) or else (index > count)
-		end;
+		end
 
 	fl: ARRAY [G]
 			-- Storage
@@ -194,32 +194,46 @@ feature {NONE} -- Inapplicable
 
 	prune (v: G) is
 		do
-		end;
+		end
 
 invariant
 
-	count_small_enough: count <= capacity;
+	count_small_enough: count <= capacity
 	extendible_definition: extendible = not full
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class BOUNDED_STACK
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

@@ -1,10 +1,10 @@
 indexing
 
 	description:
-		"Platform independent abstraction of a shared library routine";
+		"Platform independent abstraction of a shared library routine"
 
-	status: "See notice at end of class";
-	date: "$Date$";
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class SHARED_LIBRARY_ROUTINE
@@ -21,7 +21,7 @@ feature -- Initialization
 			library_exists: lib /= Void
 			meaningful: lib.meaningful
 			function_name_non_Void: f_name /= Void
-			function_name_non_empty: not f_name.empty
+			function_name_non_empty: not f_name.is_empty
 			valid_argument_array: arg_types /= Void
 			valid_argument_types: valid_argument_types (arg_types)
 			valid_return_type: valid_return_type (ret_type)
@@ -83,13 +83,13 @@ feature -- Status report
 			real_ref: REAL_REF
 			pointer_ref: POINTER_REF
 			s: STRING
-			s1: ARRAY [INTEGER];
-			s2: ARRAY [REAL];
-			s3: ARRAY [DOUBLE];
-			s4: ARRAY [BOOLEAN];
-			s5: ARRAY [CHARACTER];
-			s6: ARRAY [POINTER];
-			s7: ARRAY [ANY];
+			s1: ARRAY [INTEGER]
+			s2: ARRAY [REAL]
+			s3: ARRAY [DOUBLE]
+			s4: ARRAY [BOOLEAN]
+			s5: ARRAY [CHARACTER]
+			s6: ARRAY [POINTER]
+			s7: ARRAY [ANY]
 		do
 			from
 				Result := arguments.count = argument_count
@@ -151,7 +151,7 @@ feature -- Status report
 					Result := False
 				when T_reference then
 				when T_string then
-					!!s.make (0)
+					create s.make (0)
 					Result := arg.conforms_to (s)
 				end
 				i := i + 1
@@ -276,24 +276,38 @@ invariant
 	meaningful_only_if_no_error: meaningful implies (error_code = No_error)
 	meaningful_library: meaningful implies shared_library.meaningful
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class SHARED_LIBRARY_ROUTINE
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

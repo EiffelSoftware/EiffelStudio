@@ -1,10 +1,10 @@
 indexing
 
 	description:
-		"Files, viewed as persistent sequences of bytes";
+		"Files, viewed as persistent sequences of bytes"
 
-	status: "See notice at end of class";
-	date: "$Date$";
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class RAW_FILE
@@ -17,7 +17,7 @@ inherit
 			file_reopen, file_open, file_dopen
 		end
 
-creation
+create
 
 	make, make_open_read, make_open_write, make_open_append,
 	make_open_read_write, make_create_read_write,
@@ -34,31 +34,29 @@ feature -- Output
 			-- Write binary value of `i' at current position.
 		do
 			file_pib (file_pointer, i)
-		end;
+		end
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write binary value of `b' at current position.
-		local
-			ext_bool_str: ANY
 		do
 			if b then
 				put_character ('%/001/')
 			else
 				put_character ('%U')
-			end;
-		end;
+			end
+		end
 
 	put_real, putreal (r: REAL) is
 			-- Write binary value of `r' at current position.
 		do
 			file_prb (file_pointer, r)
-		end;
+		end
 
 	put_double, putdouble (d: DOUBLE) is
 			-- Write binary value `d' at current position.
 		do
 			file_pdb (file_pointer, d)
-		end;
+		end
 
 feature -- Input
 
@@ -67,7 +65,7 @@ feature -- Input
 			-- from file. Make result available in `last_integer'.
 		do
 			last_integer := file_gib (file_pointer)
-		end;
+		end
 
 
 	read_real, readreal is
@@ -75,14 +73,14 @@ feature -- Input
 			-- from file. Make result available in `last_real'.
 		do
 			last_real := file_grb (file_pointer)
-		end;
+		end
 
 	read_double, readdouble is
 			-- Read the binary representation of a new double
 			-- from file. Make result available in `last_double'.
 		do
 			last_double := file_gdb (file_pointer)
-		end;
+		end
 
 feature {NONE} -- Implementation
 
@@ -90,19 +88,19 @@ feature {NONE} -- Implementation
 			-- Get an integer from `file'
 		external
 			"C (FILE *): EIF_INTEGER | %"eif_file.h%""
-		end;
+		end
 
 	file_grb (file: POINTER): REAL is
 			-- Read a real from `file'
 		external
 			"C (FILE *): EIF_REAL | %"eif_file.h%""
-		end;
+		end
 
 	file_gdb (file: POINTER): DOUBLE is
 			-- Read a double from `file'
 		external
 			"C (FILE *): EIF_DOUBLE | %"eif_file.h%""
-		end;
+		end
 
 	file_open (f_name: POINTER; how: INTEGER): POINTER is
 			-- File pointer for file `f_name', in mode `how'.
@@ -110,7 +108,7 @@ feature {NONE} -- Implementation
 			"C | %"eif_file.h%""
 		alias
 			"file_binary_open"
-		end;
+		end
 
 	file_dopen (fd, how: INTEGER): POINTER is
 			-- File pointer for file of descriptor `fd' in mode `how'
@@ -119,7 +117,7 @@ feature {NONE} -- Implementation
 			"C | %"eif_file.h%""
 		alias
 			"file_binary_dopen"
-		end;
+		end
 
 	file_reopen (f_name: POINTER; how: INTEGER; file: POINTER): POINTER is
 			-- File pointer to `file', reopened to have new name `f_name'
@@ -128,49 +126,63 @@ feature {NONE} -- Implementation
 			"C (char *, EIF_INTEGER, FILE *): EIF_POINTER | %"eif_file.h%""
 		alias
 			"file_binary_reopen"
-		end;
+		end
 
 	file_pib (file: POINTER; n: INTEGER) is
 			-- Put `n' to end of `file'.
 		external
 			"C (FILE *, EIF_INTEGER) | %"eif_file.h%""
-		end;
+		end
 
 	file_prb (file: POINTER; r: REAL) is
 			-- Put `r' to end of `file'.
 		external
 			"C (FILE *, EIF_REAL) | %"eif_file.h%""
-		end;
+		end
 
 	file_pdb (file: POINTER; d: DOUBLE) is
 			-- Put `d' to end of `file'.
 		external
 			"C (FILE *, EIF_DOUBLE) | %"eif_file.h%""
-		end;
+		end
 
 invariant
 
 	not_plain_text: not is_plain_text
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class RAW_FILE
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

@@ -1,11 +1,12 @@
 indexing
 
-	description:
-		"Constants used for signal handling. %
-		%This class may be used as ancestor by classes needing its facilities.";
+	description: "[
+		Constants used for signal handling.
+		This class may be used as ancestor by classes needing its facilities.
+		]"
 
-	status: "See notice at end of class";
-	date: "$Date$";
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -17,7 +18,7 @@ feature -- Access
 			-- A message in English describing what `sig' is
 		do
 			if is_defined (sig) then
-				create Result.make_from_c (c_signal_name (sig));
+				create Result.make_from_c (c_signal_name (sig))
 			end
 		end
 
@@ -28,244 +29,244 @@ feature -- Access
 			"C | %"eif_sig.h%""
 		alias
 			"esigdefined"
-		end;
+		end
 
 	is_ignored (sig: INTEGER): BOOLEAN is
 			-- Is `sig' currently set to be ignored?
 		do
 			Result := not is_caught (sig)
-		end;
+		end
 
 	Sighup: INTEGER is
 			-- Code for ``Hangup'' signal
 		once
 			Result := c_signal_map (1)
-		end;
+		end
 
 	Sigint: INTEGER is
 			-- Code for ``Interrupt'' signal
 		once
 			Result := c_signal_map (2)
-		end;
+		end
 
 	Sigquit: INTEGER is
 			-- Code for ``Quit'' signal
 		once
 			Result := c_signal_map (3)
-		end;
+		end
 
 	Sigill: INTEGER is
 			-- Code for ``Illegal instruction'' signal
 		once
 			Result := c_signal_map (4)
-		end;
+		end
 
 	Sigtrap: INTEGER is
 			-- Code for ``Trace trap'' signal
 		once
 			Result := c_signal_map (5)
-		end;
+		end
 
 	Sigabrt: INTEGER is
 			-- Code for ``Abort'' signal
 		once
 			Result := c_signal_map (6)
-		end;
+		end
 
 	Sigiot: INTEGER is
 			-- Code for ``IOT instruction'' signal
 		once
 			Result := c_signal_map (7)
-		end;
+		end
 
 	Sigemt: INTEGER is
 			-- Code for ``EMT instruction'' signal
 		once
 			Result := c_signal_map (8)
-		end;
+		end
 
 	Sigfpe: INTEGER is
 			-- Code for ``Floating point exception'' signal
 			--| (Already caught by Eiffel run-time)
 		once
 			Result := c_signal_map (9)
-		end;
+		end
 
 	Sigkill: INTEGER is
 			-- Code for ``Terminator'' signal
 		once
 			Result := c_signal_map (10)
-		end;
+		end
 
 	Sigbus: INTEGER is
 			-- Code for ``Bus error'' signal
 		once
 			Result := c_signal_map (11)
-		end;
+		end
 
 	Sigsegv: INTEGER is
 			-- Code for ``Segmentation violation'' signal
 		once
 			Result := c_signal_map (12)
-		end;
+		end
 
 	Sigsys: INTEGER is
 			-- Code for ``Bad argument to system call'' signal
 		once
 			Result := c_signal_map (13)
-		end;
+		end
 
 	Sigpipe: INTEGER is
 			-- Code for ``Broken pipe'' signal
 		once
 			Result := c_signal_map (14)
-		end;
+		end
 
 	Sigalrm: INTEGER is
 			-- Code for ``Alarm clock'' signal
 		once
 			Result := c_signal_map (15)
-		end;
+		end
 
 	Sigterm: INTEGER is
 			-- Code for ``Software termination'' signal
 		once
 			Result := c_signal_map (16)
-		end;
+		end
 
 	Sigusr1: INTEGER is
 			-- Code for ``User-defined signal #1''
 		once
 			Result := c_signal_map (17)
-		end;
+		end
 
 	Sigusr2: INTEGER is
 			-- Code for ``User-defined signal #2''
 		once
 			Result := c_signal_map (18)
-		end;
+		end
 
 	Sigchld: INTEGER is
 			-- Code for ``Death of a child'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (19)
-		end;
+		end
 
 	Sigcld: INTEGER is
 			-- Code for ``Death of a child'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (20)
-		end;
+		end
 
 	Sigio: INTEGER is
 			-- Code for ``Pending I/O on a descriptor'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (21)
-		end;
+		end
 
 	Sigpoll: INTEGER is
 			-- Code for ``Selectable event pending'' signal
 		once
 			Result := c_signal_map (22)
-		end;
+		end
 
 	Sigttin: INTEGER is
 			-- Code for ``Tty input from background'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (23)
-		end;
+		end
 
 	Sigttou: INTEGER is
 			-- Code for ``Tty output from background'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (24)
-		end;
+		end
 
 	Sigstop: INTEGER is
 			-- Code for ``Stop'' signal
 		once
 			Result := c_signal_map (25)
-		end;
+		end
 
 	Sigtstp: INTEGER is
 			-- Code for ``Stop from tty'' signal
 		once
 			Result := c_signal_map (26)
-		end;
+		end
 
 	Sigxcpu: INTEGER is
 			-- Code for ``Cpu time limit exceeded'' signal
 		once
 			Result := c_signal_map (27)
-		end;
+		end
 
 	Sigxfsz: INTEGER is
 			-- Code for ``File size limit exceeded'' signal
 		once
 			Result := c_signal_map (28)
-		end;
+		end
 
 	Sigvtalarm: INTEGER is
 			-- Code for ``Virtual time alarm'' signal
 		once
 			Result := c_signal_map (29)
-		end;
+		end
 
 	Sigpwr: INTEGER is
 			-- Code for ``Power-fail'' signal
 		once
 			Result := c_signal_map (30)
-		end;
+		end
 
 	Sigprof: INTEGER is
 			-- Code for ``Profiling timer alarm'' signal
 		once
 			Result := c_signal_map (31)
-		end;
+		end
 
 	Sigwinch: INTEGER is
 			-- Code for ``Window size changed'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (32)
-		end;
+		end
 
 	Sigwind: INTEGER is
 			-- Code for ``Window change'' signal
 		once
 			Result := c_signal_map (33)
-		end;
+		end
 
 	Sigphone: INTEGER is
 			-- Code for ``Line status change'' signal
 		once
 			Result := c_signal_map (34)
-		end;
+		end
 
 	Siglost: INTEGER is
 			-- Code for ``Resource lost'' signal
 		once
 			Result := c_signal_map (35)
-		end;
+		end
 
 	Sigurg: INTEGER is
 			-- Code for ``Urgent condition on socket'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (36)
-		end;
+		end
 
 	Sigcont: INTEGER is
 			-- Code for ``Continue after stop'' signal.
 			-- Signal ignored by default
 		once
 			Result := c_signal_map (37)
-		end;
+		end
 
 
 feature -- Status report
@@ -276,7 +277,7 @@ feature -- Status report
 			"C | %"eif_sig.h%""
 		alias
 			"esignum"
-		end;
+		end
 
 
 feature -- Status setting
@@ -290,7 +291,7 @@ feature -- Status setting
 			"C | %"eif_sig.h%""
 		alias
 			"esigcatch"
-		end;
+		end
 
 	ignore (sig: INTEGER) is
 			-- Make sure that future occurrences of `sig'
@@ -300,7 +301,7 @@ feature -- Status setting
 			"C | %"eif_sig.h%""
 		alias
 			"esigignore"
-		end;
+		end
 
 	reset_all_default is
 			-- Make sure that all exceptions will lead to their
@@ -330,40 +331,54 @@ feature {NONE} -- Implementation
 			"C | %"eif_sig.h%""
 		alias
 			"esigiscaught"
-		end;
+		end
 
 	c_signal_map (i: INTEGER): INTEGER is
 		external
 			"C | %"eif_sig.h%""
 		alias
 			"esigmap"
-		end;
+		end
 
 	c_signal_name (i: INTEGER): POINTER is
 		external
 			"C | %"eif_sig.h%""
 		alias
 			"esigname"
-		end;
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class UNIX_SIGNALS
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

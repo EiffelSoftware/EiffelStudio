@@ -1,36 +1,44 @@
 indexing
 
 	description:
-		"Trees implemented using a linked list representation";
+		"Trees implemented using a linked list representation"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: linked_tree, tree, linked_list;
 	representation: recursive, linked;
 	access: cursor, membership;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class LINKED_TREE [G] inherit
 
 	DYNAMIC_TREE [G]
+		rename
+			empty as ll_empty
+		export
+			{NONE} ll_empty
 		undefine
 			child_after, child_before, child_item,
 			child_off
 		redefine
-			parent
+			parent, copy
 		select
 			has
-		end;
+		end
 
 	LINKABLE [G]
 		rename
 			right as right_sibling,
 			put_right as l_put_right
 		export
-			{ANY} put, replace;
-			{LINKED_TREE} l_put_right, forget_right;
-		end;
+			{ANY} put, replace
+			{LINKED_TREE} l_put_right, forget_right
+		undefine
+			is_equal
+		redefine
+			copy
+		end
 
 	LINKED_LIST [G]
 		rename
@@ -43,6 +51,7 @@ class LINKED_TREE [G] inherit
 			count as arity,
 			cursor as child_cursor,
 			duplicate as ll_duplicate,
+			empty as ll_empty,
 			is_empty as is_leaf,
 			extend as child_extend,
 			extendible as child_extendible,
@@ -75,23 +84,24 @@ class LINKED_TREE [G] inherit
 			writable as child_writable
 		export
 			{ANY}
-				child;
+				child
 			{NONE}
 				ll_make, ll_has,
 			 	ll_merge_left, ll_merge_right,
-			 	ll_fill, ll_duplicate, ll_full;
+			 	ll_fill, ll_duplicate, ll_full, ll_empty
 		undefine
 			child_readable, is_leaf,
 			child_writable,
 			linear_representation,
-			child_isfirst, child_islast, valid_cursor_index
+			child_isfirst, child_islast, valid_cursor_index,
+			is_equal
 		redefine
-			first_child, new_cell
+			first_child, new_cell, copy
 		select
 			is_leaf
 		end
 
-creation
+create
 
 	make
 
@@ -100,19 +110,19 @@ feature -- Initialization
 	make (v: like item) is
 			-- Create single node with item `v'.
 		do
-			put (v);
+			put (v)
 			ll_make
 		ensure
-			is_root;
+			is_root
 			is_leaf
-		end;
+		end
 
 feature -- Access
 
-	parent: LINKED_TREE [G];
+	parent: LINKED_TREE [G]
 			-- Parent of current node
 
-	first_child: like parent;
+	first_child: like parent
 			-- Leftmost child
 
 	left_sibling: like parent is
@@ -120,7 +130,7 @@ feature -- Access
 		do
 			if parent /= Void then
 				from
-					Result := parent.first_child;
+					Result := parent.first_child
 				until
 					Result = Void or else Result.right_sibling = Current
 				loop
@@ -137,7 +147,7 @@ feature {RECURSIVE_CURSOR_TREE} -- Element change
 			child := n
 		ensure then
 			child_set: child = n
-		end;
+		end
 
 feature -- Element change
 
@@ -145,74 +155,84 @@ feature -- Element change
 			-- Add `n' to the list of children.
 			-- Do not move child cursor.
 		do
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
 			if is_leaf then
-				first_child := n;
+				first_child := n
 				child := n
 			else
-				last_child.l_put_right (n);
+				last_child.l_put_right (n)
 				if child_after then
 					child := n
 				end
-			end;
-			n.attach_to_parent (Current);
+			end
+			n.attach_to_parent (Current)
 			arity := arity + 1
-		end;
+		end
 
 	replace_child (n: like parent) is
 			-- Replace current child by `n'.
 		do
-			put_child_right (n);
+			put_child_right (n)
 			remove_child
-		end;
+		end
 
 	put_child_left (n: like parent) is
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
-		local
-			temp: like first_child
 		do
-			child_back;
-			put_child_right (n);
-			child_forth;
+			child_back
+			put_child_right (n)
 			child_forth
-		end;
+			child_forth
+		end
 
 	put_child_right (n: like parent) is
 			-- Add `n' to the right of cursor position.
 			-- Do not move cursor.
 		do
+			if object_comparison then
+				n.compare_objects
+			else
+				n.compare_references
+			end
 			if child_before then
-				n.l_put_right (first_child);
+				n.l_put_right (first_child)
 				first_child := n
 			else
-				n.l_put_right (child.right_sibling);
+				n.l_put_right (child.right_sibling)
 				child.l_put_right (n)
-			end;
-			n.attach_to_parent (Current);
+			end
+			n.attach_to_parent (Current)
 			arity := arity + 1
-		end;
+		end
 
 	merge_tree_before (other: like first_child) is
 			-- Merge children of `other' into current structure
 			-- before cursor position. Do not move cursor.
 			-- Make `other' a leaf.
 		do
-			attach (other);
+			attach (other)
 			ll_merge_left (other)
-		end;
+		end
 
 	merge_tree_after (other: like first_child) is
 			-- Merge children of `other' into current structure
 			-- after cursor position. Do not move cursor.
 			-- Make `other' a leaf.
 		do
-			attach (other);
+			attach (other)
 			ll_merge_right (other)
-		end;
+		end
+
+feature -- Removal
 
 	prune (n: like first_child) is
 		local
-			l_child: like first_child;
+			l_child: like first_child
 			left_child: like first_child
 		do
 			from
@@ -220,9 +240,9 @@ feature -- Element change
 			until
 				l_child = Void or l_child = n
 			loop
-				left_child := l_child;
+				left_child := l_child
 				l_child := l_child.right_sibling
-			end;
+			end
 			if l_child /= Void then
 				if left_child /= Void then
 					-- when `n' is after the first item.
@@ -236,76 +256,99 @@ feature -- Element change
 					if n = child then
 						child := first_child
 					end
-				end;
+				end
 
-				arity := arity - 1;
+				arity := arity - 1
 				if is_leaf and not child_before then
-					child_after := true
-				end;
+					child_after := True
+				end
 
 				n.attach_to_parent (Void)
 				n.forget_right
-			end;
-		end;
+			end
+		end
+
+feature -- Duplication
+
+	copy (other: like Current) is
+			-- Copy contents from `other'.
+		local
+			tmp_tree: like Current
+		do
+			create tmp_tree.make (other.item)
+			if not other.is_leaf then tree_copy (other, tmp_tree) end
+		end
 
 feature {LINKED_TREE} -- Implementation
 
 	new_cell (v: like item): like first_child is
+			-- New cell containing `v'
 		do
-			!! Result.make (v);
+			create Result.make (v)
 			Result.attach_to_parent (Current)
-		end;
+		end
 
 	new_tree: like Current is
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
 		do
-			!! Result.make (item)
-		end;
+			create Result.make (item)
+		end
 
 feature {NONE} -- Implementation
 
 	attach (other: like first_child) is
 				-- Attach all children of `other' to current node.
 		local
-			cursor: CURSOR;
+			cursor: CURSOR
 		do
-			cursor := other.child_cursor;
+			cursor := other.child_cursor
 			from
 				other.child_start
 			until
 				other.child_off
 			loop
-				other.child.attach_to_parent (Current);
+				other.child.attach_to_parent (Current)
 				other.child_forth
-			end;
+			end
 			other.child_go_to (cursor)
-		end;
+		end
 
 invariant
 
 	no_void_child: readable_child = child_readable
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class LINKED_TREE
-
-
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
-

@@ -1,14 +1,14 @@
 indexing
 
 	description:
-		"Sequential, two-way linked lists";
+		"Sequential, two-way linked lists"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: two_way_list, sequence;
 	representation: linked;
 	access: index, cursor, membership;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class TWO_WAY_LIST [G] inherit
@@ -26,7 +26,7 @@ class TWO_WAY_LIST [G] inherit
 			merge_right,
 			move, put_right,
 			wipe_out
-		end;
+		end
 
 	LINKED_LIST [G]
 		rename
@@ -46,20 +46,20 @@ class TWO_WAY_LIST [G] inherit
 			forth, back
 		end
 
-creation
+create
 
 	make_sublist, make
 
 feature -- Access
 
-	first_element: BI_LINKABLE [G];
+	first_element: BI_LINKABLE [G]
 			-- Head of list
 			-- (Anchor redefinition)
 
-	last_element: like first_element;
+	last_element: like first_element
 			-- Tail of the list
 
-	sublist: like Current;
+	sublist: like Current
 			-- Result produced by last `split'
 
 feature -- Status report
@@ -70,7 +70,7 @@ feature -- Status report
 			Result := (active = last_element)
 				and then not after
 				and then not before
-		end;
+		end
 
 feature -- Cursor movement
 
@@ -78,83 +78,82 @@ feature -- Cursor movement
 			-- Move cursor to next position, if any.
 		do
 			if before then
-				before := false;
-				if empty then
-					after := true
+				before := False
+				if is_empty then
+					after := True
 				end
 			else
-				active := active.right;
+				active := active.right
 				if active = Void then
-					active := last_element;
-					after := true
+					active := last_element
+					after := True
 				end
 			end
-		end;
+		end
 
 	back is
 			-- Move cursor to previous position, if any.
 		do
 			if after then
-				after := false;
-				if empty then
-					before := true
+				after := False
+				if is_empty then
+					before := True
 				end
 			else
-				active := active.left;
+				active := active.left
 				if active = Void then
-					active := first_element;
-					before := true
+					active := first_element
+					before := True
 				end
 			end
-		end;
+		end
 
 	finish is
 			-- Move cursor to last position.
 			-- (Go before if empty)
 		do
-			if not empty then
-				active := last_element;
-				after := false;
-				before := false
+			if not is_empty then
+				active := last_element
+				after := False
+				before := False
 			else
-				after := false;
-				before := true;
-			end;
+				after := False
+				before := True
+			end
 		ensure then
 			not_after: not after
-		end;
+		end
 
 	move (i: INTEGER) is
 			-- Move cursor `i' positions. The cursor
 			-- may end up `off' if the offset is to big.
 		local
-			c: CURSOR;
-			counter: INTEGER;
+			counter: INTEGER
 			p: like first_element
 		do
 			if i > 0 then
 				ll_move (i)
 			elseif i < 0 then
 				if after then
-					after := false;
+					after := False
 					counter := -1
-				end;
+				end
 				from
 					p := active
 				until
 					(counter = i) or else (p = Void)
 				loop
-					p := p.left;
+					p := p.left
 					counter := counter - 1
-				end;
+				end
 				if p = Void then
-					before := true;
+					before := True
 					active := first_element
 				else
 					active := p
 				end
 			end
-		end;
+		end
 
 feature -- Element change
 
@@ -162,124 +161,124 @@ feature -- Element change
 			-- Add `v' to beginning.
 			-- Do not move cursor.
 		do
-			ll_put_front (v);
+			ll_put_front (v)
 			if count = 1 then
 				last_element := first_element
 			end
-		end;
+		end
 
 	extend (v: like item) is
 			-- Add `v' to end.
 			-- Do not move cursor.
 		local
-			p : like first_element
+			p: like first_element
 		do
-			p := new_cell (v);
-			if empty then
-				first_element := p;
+			p := new_cell (v)
+			if is_empty then
+				first_element := p
 				active := p
 			else
 				p.put_left (last_element)
-			end;
-			last_element := p;
+			end
+			last_element := p
 			if after then
 				active := p
-			end;
+			end
 			count := count + 1
-		end;
+		end
 
 	put_left (v: like item) is
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		local
-			p: like first_element;
+			p: like first_element
 		do
-			p := new_cell (v);
-			if empty then
-				first_element := p;
-				last_element := p;
-				active := p;
-				before := false;
+			p := new_cell (v)
+			if is_empty then
+				first_element := p
+				last_element := p
+				active := p
+				before := False
 			elseif after then
-				p.put_left (last_element);
-				last_element := p;
-				active := p;
+				p.put_left (last_element)
+				last_element := p
+				active := p
 			elseif isfirst then
-				p.put_right (active);
+				p.put_right (active)
 				first_element := p
 			else
-				p.put_left (active.left);
-				p.put_right (active);
-			End;
+				p.put_left (active.left)
+				p.put_right (active)
+			End
 			count := count + 1
-		end;
+		end
 
 	put_right (v: like item) is
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		local
-			was_last: BOOLEAN;
+			was_last: BOOLEAN
 		do
-			was_last := islast;
-			ll_put_right (v);
+			was_last := islast
+			ll_put_right (v)
 			if count = 1 then
 					-- `p' is only element in list
 				last_element := active
 			elseif was_last then
 					-- `p' is last element in list
-				last_element := active.right;
-			end;
-		end;
+				last_element := active.right
+			end
+		end
 
 	merge_left (other: like Current) is
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		local
-			other_first_element: like first_element;
-			other_last_element: like first_element;
-			other_count: INTEGER;
+			other_first_element: like first_element
+			other_last_element: like first_element
+			other_count: INTEGER
 		do
-			if not other.empty then
-				other_first_element := other.first_element;
-				other_last_element := other.last_element;
-				other_count := other.count;
+			if not other.is_empty then
+				other_first_element := other.first_element
+				other_last_element := other.last_element
+				other_count := other.count
 					check
-						other_first_element /= Void;
+						other_first_element /= Void
 						other_last_element /= Void
-					end;
-				if empty then
-					last_element := other_last_element;
-					first_element := other_first_element;
+					end
+				if is_empty then
+					last_element := other_last_element
+					first_element := other_first_element
 					if before then
-						active := first_element;
+						active := first_element
 					else -- after because of invariant 'empty_property'
-						active := last_element;
+						active := last_element
 					end
 				elseif isfirst then
-					other_last_element.put_right (first_element);
-					first_element := other_first_element;
+					other_last_element.put_right (first_element)
+					first_element := other_first_element
 				elseif after then
-					other_first_element.put_left (last_element);
-					last_element := other_last_element;
-					active := last_element;
+					other_first_element.put_left (last_element)
+					last_element := other_last_element
+					active := last_element
 				else
-					other_first_element.put_left (active.left);
-					active.put_left (other_last_element);
-				end;
-				count := count + other_count;
+					other_first_element.put_left (active.left)
+					active.put_left (other_last_element)
+				end
+				count := count + other_count
 				other.wipe_out
 			end
-		end;
+		end
 
 	merge_right (other: like Current) is
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		do
-			if empty or else islast then
+			if is_empty or else islast then
 				last_element := other.last_element
-			end;
-			ll_merge_right (other);
-		end;
+			end
+			ll_merge_right (other)
+		end
 
 feature -- Removal
 
@@ -288,57 +287,57 @@ feature -- Removal
 			-- Move cursor to right neighbor
 			-- (or `after' if no right neighbor).
 		local
-			succ, pred, removed: like first_element;
+			succ, pred, removed: like first_element
 		do
-			removed := active;
+			removed := active
 			if isfirst then
-				active := first_element.right;
-				first_element.forget_right;
-				first_element := active;
+				active := first_element.right
+				first_element.forget_right
+				first_element := active
 				if count = 1 then
 					check
 						no_active: active = Void
-					end;
-					after := true;
+					end
+					after := True
 					last_element := Void
-				end;
+				end
 			elseif islast then
-				active := last_element.left;
-				last_element.forget_left;
-				last_element := active;
-				after := true;
+				active := last_element.left
+				last_element.forget_left
+				last_element := active
+				after := True
 			else
-				pred := active.left;
-				succ := active.right;
-				pred.forget_right;
-				succ.forget_left;
-				pred.put_right (succ);
+				pred := active.left
+				succ := active.right
+				pred.forget_right
+				succ.forget_left
+				pred.put_right (succ)
 				active := succ
-			end;
-			count := count - 1;
+			end
+			count := count - 1
 			cleanup_after_remove (removed)
-		end;
+		end
 
 	remove_left is
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
 			back; remove
-		end;
+		end
 
 	remove_right is
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		do
 			forth; remove; back
-		end;
+		end
 
 	wipe_out is
 			-- Remove all items.
 		do
-			ll_wipe_out;
+			ll_wipe_out
 			last_element := Void
-		end;
+		end
 
 	split (n: INTEGER) is
 			-- Remove from current list
@@ -348,81 +347,81 @@ feature -- Removal
 			-- Make extracted sublist accessible
 			-- through attribute `sublist'.
 		require
-			not_off: not off;
+			not_off: not off
 			valid_sublist: n >= 0
 		local
-			actual_number, active_index: INTEGER;
-			p_elem, s_elem, e_elem, n_elem: like first_element;
+			actual_number, active_index: INTEGER
+			p_elem, s_elem, e_elem, n_elem: like first_element
 		do
 			if n = 0 then
 					--just create new empty sublist
-				!!sublist.make
+				create sublist.make
 			else
 					-- recognize first breakpoint
-				active_index := index;
+				active_index := index
 				if active_index + n > count + 1 then
 					actual_number := count + 1 - active_index
 				else
 					actual_number := n
-				end;
-				s_elem := active;
-				p_elem := previous;
+				end
+				s_elem := active
+				p_elem := previous
 					-- recognize second breakpoint
-				move (actual_number - 1);
-				e_elem := active;
-				n_elem := next;
+				move (actual_number - 1)
+				e_elem := active
+				n_elem := next
 					-- make sublist
-				s_elem.forget_left;
-				e_elem.forget_right;
-				!! sublist.make_sublist (s_elem, e_elem, actual_number);
+				s_elem.forget_left
+				e_elem.forget_right
+				create sublist.make_sublist (s_elem, e_elem, actual_number)
 					-- fix `Current'
-				count := count - actual_number;
+				count := count - actual_number
 				if p_elem /= Void then
 					p_elem.put_right (n_elem)
 				else
 					first_element := n_elem
-				end;
+				end
 				if n_elem /= Void then
 					active := n_elem
 				else
-					last_element := p_elem;
-					active := p_elem;
-					after := true
+					last_element := p_elem
+					active := p_elem
+					after := True
 				end
 			end
-		end;
+		end
 
 	remove_sublist is
 		do
-			sublist := Void;
-		end;
+			sublist := Void
+		end
 
 feature {TWO_WAY_LIST} -- Implementation
 
 	make_sublist (first_item, last_item: like first_element; n: INTEGER) is
 			-- Create sublist
 		do
-			make;
-			first_element := first_item;
-			last_element := last_item;
+			make
+			first_element := first_item
+			last_element := last_item
 			active := first_element
 			count := n
-		end;
+		end
 
 	new_chain: like Current is
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
 		do
-			!! Result.make
-		end;
+			create Result.make
+		end
 
 	new_cell (v: like item): like first_element is
 			-- A newly created instance of the type of `first_element'.
 		do
-			!! Result;
+			create Result
 			Result.put (v)
-		end;
+		end
 
 	previous: like first_element is
 			-- Element left of cursor
@@ -432,27 +431,50 @@ feature {TWO_WAY_LIST} -- Implementation
 			elseif active /= Void then
 				Result := active.left
 			end
-		end;
+		end
+
+invariant
+
+	non_empty_list_has_two_endpoints: not is_empty implies
+				(first_element /= Void and last_element /= Void)
+	first_element_constraint: first_element /= Void implies 
+				first_element.left = Void
+	last_element_constraint: last_element /= Void implies 
+				last_element.right = Void
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class TWO_WAY_LIST
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

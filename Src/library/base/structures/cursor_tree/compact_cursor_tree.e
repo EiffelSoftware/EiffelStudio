@@ -1,15 +1,15 @@
 indexing
 
 	description:
-		"Compact trees as active structures that may be traversed using a cursor";
+		"Compact trees as active structures that may be traversed using a cursor"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: compact_cursor_tree, cursor_tree;
 	representation: array;
 	access: cursor, membership;
 	size: resizable;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class COMPACT_CURSOR_TREE [G] inherit
@@ -21,7 +21,7 @@ class COMPACT_CURSOR_TREE [G] inherit
 			put_left, put_right, extend, has, occurrences
 		end
 
-creation
+create
 
 	make
 
@@ -31,16 +31,16 @@ feature -- Initialization
 			-- Create an empty tree.
 			-- `i' is an estimate of the number of nodes.
 		do
-			last := 1;
-			active := 1;
-			above := true;
-			!! item_table.make (1, i+1);
-			!! next_sibling_table.make (1, i+1);
-			!! first_child_table.make (1, i+1)
+			last := 1
+			active := 1
+			above := True
+			create item_table.make (1, i + 1)
+			create next_sibling_table.make (1, i + 1)
+			create first_child_table.make (1, i + 1)
 		ensure
-			is_above: above;
+			is_above: above
 			is_empty: is_empty
-		end;
+		end
 
 feature -- Access
 
@@ -73,15 +73,15 @@ feature -- Access
 	item: G is
 			-- Current item
 		do
-			Result := item_table.item (active);
-		end;
+			Result := item_table.item (active)
+		end
 
 	cursor: CURSOR is
 			-- Current cursor position
 		do
-			!COMPACT_TREE_CURSOR! Result.make
+			create {COMPACT_TREE_CURSOR} Result.make
 				(active, after, before, below, above)
-		end;
+		end
 
 feature -- Measurement
 
@@ -90,37 +90,37 @@ feature -- Measurement
 		local
 			index: INTEGER
 		do
-			index := first_child_table.item (active);
+			index := first_child_table.item (active)
 			from
 			until
 				index <= 0
 			loop
-				Result := Result + 1;
+				Result := Result + 1
 				index := next_sibling_table.item (index)
 			end
-		end;
+		end
 
 	count: INTEGER is
 			-- Number of items in subtree
 		do
 			Result := last - free_list_count - 1
-		end;
+		end
 
 feature -- Status report
 
-	after: BOOLEAN;
+	after: BOOLEAN
 			-- Is there no valid cursor position to the right of cursor?
 
-	before: BOOLEAN;
+	before: BOOLEAN
 			-- Is there no valid cursor position to the left of cursor?
 
-	above: BOOLEAN;
+	above: BOOLEAN
 			-- Is there no valid cursor position above the cursor?
 
 	isfirst: BOOLEAN is
 			-- Is cursor on first sibling?
 		local
-			index, next: INTEGER
+			index: INTEGER
 		do
 			if not off then
 				from
@@ -129,10 +129,10 @@ feature -- Status report
 					index <= 0
 				loop
 					index := next_sibling_table.item (index)
-				end;
-				Result := (index = 0) or else (first_child_table.item (-index) = active)
+				end
+				Result := (index = 0) or else (first_child_table.item (- index) = active)
 			end
-		end;
+		end
 
 	islast: BOOLEAN is
 			-- Is cursor on last sibling?
@@ -140,31 +140,29 @@ feature -- Status report
 			if not off then
 				Result := (next_sibling_table.item (active) <= 0)
 			end
-		end;
+		end
 
 	is_root: BOOLEAN is
 			-- Is cursor on root?
-		local
-			index: INTEGER
 	 	do
 			if not off then
 				Result := next_sibling_table.item (active) = 0
 			end
-		end;
+		end
 
 
-	full: BOOLEAN is false;
+	full: BOOLEAN is False
 			-- Is tree filled to capacity? (Answer: no.)
 
 	is_empty: BOOLEAN is
 		do
 			Result := count = 0
-		end;
+		end
 
 	prunable: BOOLEAN is
 		do
-			Result := true
-		end;
+			Result := True
+		end
 
 
 	valid_cursor (p: CURSOR): BOOLEAN is
@@ -172,11 +170,11 @@ feature -- Status report
 		local
 			temp: COMPACT_TREE_CURSOR
 		do
-			temp ?= p;
+			temp ?= p
 			if temp /= Void then
 				Result := (first_child_table.item (temp.active) /= Removed_mark)
 			end
-		end;
+		end
 
 feature -- Cursor movement
 
@@ -192,41 +190,39 @@ feature -- Cursor movement
 					-- This is because:
 					-- below implies (before or after),
 					-- and before is false.
-				after := false;
-				before := true
+				after := False
+				before := True
 			elseif after then
-				after := false
+				after := False
 			else
 				from
-					index := next_sibling_table.item (active);
+					index := next_sibling_table.item (active)
 				until
 					index <= 0
 				loop
 					index := next_sibling_table.item (index)
-				end;
+				end
 				if index = 0 then -- is_root
-					before := true
-				elseif first_child_table.item (-index) = active then	-- is_first
-					before := true
+					before := True
+				elseif first_child_table.item (- index) = active then	-- is_first
+					before := True
 				else
 					from
-						index := first_child_table.item (-index);
+						index := first_child_table.item (- index)
 						next := next_sibling_table.item (index)
 					until
 						next = active
 					loop
-						index := next;
+						index := next
 						next := next_sibling_table.item (index)
-					end;
+					end
 					active := index
 				end
 			end
-		end;
+		end
 
 	forth is
 			-- Move cursor one position forward.
-		local
-			index: INTEGER;
 		do
 			if below then
 					check
@@ -235,16 +231,16 @@ feature -- Cursor movement
 					-- This is because:
 					-- below implies (before or after),
 					-- and after is false.
-				before := false;
-				after := true
+				before := False
+				after := True
 			elseif before then
-				before := false
+				before := False
 			elseif islast then
-				after := true
+				after := True
 			else
 				active := next_sibling_table.item (active)
 			end
-		end;
+		end
 
 	up is
 			-- Move cursor one level upward, to parent
@@ -253,7 +249,7 @@ feature -- Cursor movement
 			index: INTEGER
 		do
 			if below then
-				below := false
+				below := False
 			else
 				from
 					index := next_sibling_table.item (active)
@@ -261,16 +257,16 @@ feature -- Cursor movement
 					index <= 0
 				loop
 					index := next_sibling_table.item (index)
-				end;
+				end
 				if index = 0 then
-					above := true
+					above := True
 				else
 					active := -index
-				end;
-			end;
-			after := false;
-			before := false
-		end;
+				end
+			end
+			after := False
+			before := False
+		end
 
 	down (i: INTEGER) is
 			-- Move cursor one level downward:
@@ -278,24 +274,24 @@ feature -- Cursor movement
 			-- or `after' if `i' = `arity' + 1,
 			-- or `before' if `i' = 0.
 		require else
-			true
+			True
 		local
 			index, next, counter: INTEGER
 		do
-			index := first_child_table.item (active);
+			index := first_child_table.item (active)
 			if above then
-				above := false
+				above := False
 				below := is_empty
 				before := is_empty
-				after := false
+				after := False
 			elseif index <= 0 then
-				below := true;
+				below := True
 				if i = 0 then
-					before := true
-					after := false
+					before := True
+					after := False
 				else
-					after := true
-					before := false
+					after := True
+					before := False
 				end
 			else
 				from
@@ -304,36 +300,36 @@ feature -- Cursor movement
 				until
 					counter = i or next <= 0
 				loop
-					index := next;
-					next := next_sibling_table.item (index);
+					index := next
+					next := next_sibling_table.item (index)
 					counter := counter + 1
-				end;
-				active := index;
+				end
+				active := index
 				if i = 0 then
-					before := true
-					after := false
+					before := True
+					after := False
 				elseif counter < i then
-					after := true
-					before := false
+					after := True
+					before := False
 				end
 			end
-		end;
+		end
 
 	go_to (p: CURSOR) is
 			-- Move cursor to position `p'.
 		local
 			temp: COMPACT_TREE_CURSOR
 		do
-			temp ?= p;
+			temp ?= p
 			check
 				temp /= Void
-			end;
-			active := temp.active;
-			after := temp.after;
-			before := temp.before;
+			end
+			active := temp.active
+			after := temp.after
+			before := temp.before
 			below := temp.below
 			above := temp.above
-		end;
+		end
 
 feature -- Element change
 
@@ -343,88 +339,87 @@ feature -- Element change
 			is_writable: writable
 		do
 			item_table.put (v, active)
-		end;
+		end
 
 	put_right (v: G) is
 			-- Add a leaf `v' to the right of cursor position.
 		local
-			index, new: INTEGER;
-			extra_block_size: INTEGER
+			new: INTEGER
 		do
-			new := new_cell_index;
-			first_child_table.put (0, new);
+			new := new_cell_index
+			first_child_table.put (0, new)
 			if below then
-				first_child_table.put (new, active);
-				next_sibling_table.put (-active, new);
-				item_table.put (v, new);
+				first_child_table.put (new, active)
+				next_sibling_table.put (- active, new)
+				item_table.put (v, new)
 				active := new
 			elseif before then
-				item_table.put (item_table.item (active), new);
-				next_sibling_table.put (next_sibling_table.item (active), new);
-				first_child_table.put (first_child_table.item (active), new);
-				item_table.put (v, active);
-				next_sibling_table.put (new, active);
-				first_child_table.put (0, active);
+				item_table.put (item_table.item (active), new)
+				next_sibling_table.put (next_sibling_table.item (active), new)
+				first_child_table.put (first_child_table.item (active), new)
+				item_table.put (v, active)
+				next_sibling_table.put (new, active)
+				first_child_table.put (0, active)
 				active := new
 			else
-				next_sibling_table.put (next_sibling_table.item (active), new);
-				next_sibling_table.put (new, active);
-			end;
-		end;
+				next_sibling_table.put (next_sibling_table.item (active), new)
+				next_sibling_table.put (new, active)
+			end
+		end
 
 	put_left (v: G) is
 			-- Add `v' to the left of current position.
 		require else
 			not_above: not above
 		local
-			new: INTEGER;
+			new: INTEGER
 		do
-			new := new_cell_index;
+			new := new_cell_index
 			if below then
-				first_child_table.put (new, active);
-				next_sibling_table.put (-active, new);
+				first_child_table.put (new, active)
+				next_sibling_table.put (- active, new)
 				item_table.put (v, new)
 			else
-				item_table.put (item_table.item (active), new);
-				next_sibling_table.put (next_sibling_table.item (active), new);
-				first_child_table.put (first_child_table.item (active), new);
-				item_table.put (v, active);
-				next_sibling_table.put (new, active);
-				first_child_table.put (0, active);
-			end;
+				item_table.put (item_table.item (active), new)
+				next_sibling_table.put (next_sibling_table.item (active), new)
+				first_child_table.put (first_child_table.item (active), new)
+				item_table.put (v, active)
+				next_sibling_table.put (new, active)
+				first_child_table.put (0, active)
+			end
 			active := new
-		end;
+		end
 
 	put_front (v: G) is
 			-- Add a leaf `v' as first child.
 			-- If `above' and `is_empty', make `v' the root value
 		local
-			old_active: like active;
-			new: INTEGER;
+			old_active: like active
+			new: INTEGER
 		do
-			new := new_cell_index;
+			new := new_cell_index
 			if below then
-				item_table.put (v, new);
-				first_child_table.put (0, new);
-				next_sibling_table.put (-active, new);
+				item_table.put (v, new)
+				first_child_table.put (0, new)
+				next_sibling_table.put (- active, new)
 				active := new
 			elseif before then
-				item_table.put (item_table.item (active), new);
-				next_sibling_table.put (next_sibling_table.item (active), new);
-				first_child_table.put (first_child_table.item (active), new);
-				item_table.put (v, active);
-				next_sibling_table.put (new, active);
-				first_child_table.put (0, active);
+				item_table.put (item_table.item (active), new)
+				next_sibling_table.put (next_sibling_table.item (active), new)
+				first_child_table.put (first_child_table.item (active), new)
+				item_table.put (v, active)
+				next_sibling_table.put (new, active)
+				first_child_table.put (0, active)
 				active := new
 			else
-				old_active := active;
-				up;
-				item_table.put (v, new);
-				next_sibling_table.put (first_child_table.item (active), new);
-				first_child_table.put (new, active);
+				old_active := active
+				up
+				item_table.put (v, new)
+				next_sibling_table.put (first_child_table.item (active), new)
+				first_child_table.put (new, active)
 				active := old_active
-			end;
-		end;
+			end
+		end
 
 	put_parent (v: G) is
 			-- insert a new node, with value v, as parent of
@@ -432,35 +427,35 @@ feature -- Element change
 			-- with the same position
 			--if above or on root, add a new root
 		require
-			not after;
+			not after
 			not before
 		local
 			new, old_index: INTEGER
 		do
-			new := new_cell_index;
-			old_index := active;
+			new := new_cell_index
+			old_index := active
 			if is_empty then
-				active := new;
-				item_table.put (v, new);
-				next_sibling_table.put (0, new);
-				first_child_table.put (0, new);
+				active := new
+				item_table.put (v, new)
+				next_sibling_table.put (0, new)
+				first_child_table.put (0, new)
 			else
-				item_table.put (item, new);
-				first_child_table.put (first_child_table.item (active), new);
-				next_sibling_table.put (-active, new);
-				item_table.put (v, active);
+				item_table.put (item, new)
+				first_child_table.put (first_child_table.item (active), new)
+				next_sibling_table.put (- active, new)
+				item_table.put (v, active)
 			end
-		end;
+		end
 
 	extend (v: G) is
 		local
-			new, index, next: INTEGER;
+			new, index, next: INTEGER
 		do
-			new := new_cell_index;
+			new := new_cell_index
 			item_table.put (v, new)
 			if below then
-				first_child_table.put (0, new);
-				next_sibling_table.put (-active, new);
+				first_child_table.put (0, new)
+				next_sibling_table.put (- active, new)
 				if first_child_table.item (active) = 0 then
 					first_child_table.put (new, active)
 				end
@@ -468,21 +463,21 @@ feature -- Element change
 				--below := false
 			else
 				from
-					index := active;
+					index := active
 					next := next_sibling_table.item (index)
 				until
 					next <= 0
 				loop
-					index := next;
+					index := next
 					next := next_sibling_table.item (index)
-				end;
+				end
 				check
 					next < 0 -- parent exist
-				end;
-				next_sibling_table.put (next, new);
-				next_sibling_table.put (new, index);
-			end;
-		end;
+				end
+				next_sibling_table.put (next, new)
+				next_sibling_table.put (new, index)
+			end
+		end
 
 feature -- Removal
 
@@ -491,93 +486,93 @@ feature -- Removal
 			-- (and consequently the corresponding subtree).
 			-- Move cursor to next sibling, or `after' if none.
 		local
-			removed, index, next: INTEGER;
+			removed, index, next: INTEGER
 		do
-			removed := active;
-			up;
+			removed := active
+			up
 			if first_child_table.item (active) = removed then
 					-- The removed child is the first sibling
-				index := next_sibling_table.item (removed);
+				index := next_sibling_table.item (removed)
 				if index > 0 then
 						-- There is more than one sibling
-					first_child_table.put (index, active);
+					first_child_table.put (index, active)
 					active := index
 				else
-					first_child_table.put (0, active);
-					below := true;
-					after := true
+					first_child_table.put (0, active)
+					below := True
+					after := True
 				end
 			else
 				from
-					index := first_child_table.item (active);
+					index := first_child_table.item (active)
 					next := next_sibling_table.item (index)
 				until
 					next = removed
 				loop
-					index := next;
+					index := next
 					next := next_sibling_table.item (index)
-				end;
-				next_sibling_table.put (next_sibling_table.item (removed), index);
+				end
+				next_sibling_table.put (next_sibling_table.item (removed), index)
 				if next_sibling_table.item (removed) > 0 then
 					active := next_sibling_table.item (removed)
 				else
-					active := index;
-					after := true
+					active := index
+					after := True
 				end
-			end;
+			end
 			remove_subtree (removed)
 		ensure then
 			not_before: not before
-		end;
+		end
 
 	remove_node is
 			-- Remove node at cursor position; insert children into
 			-- parent's children at current position; move cursor up.
 			-- If node is root, it must not have more than one child.
 		require
-			not_off: not off;
+			not_off: not off
 			is_root implies arity <= 1
 		local
 			old_active, next, index,
-			first_child_index: INTEGER;
+			first_child_index: INTEGER
 			default_value: G
 		do
-			old_active := active;
-			first_child_index := first_child_table.item (old_active);
-			up;
-			next := first_child_table.item (active);
+			old_active := active
+			first_child_index := first_child_table.item (old_active)
+			up
+			next := first_child_table.item (active)
 			if next = old_active then
 				first_child_table.put
-					 (next_sibling_table.item (old_active), active);
+					 (next_sibling_table.item (old_active), active)
 			else
 				from
 				until
 					next = old_active
 				loop
-					index := next;
+					index := next
 					next :=	next_sibling_table.item (index)
-				end;
-				next_sibling_table.put (first_child_index, index);
+				end
+				next_sibling_table.put (first_child_index, index)
 				from
 					next := first_child_index
 				until
 					next <= 0
 				loop
-					index := next;
+					index := next
 					next := next_sibling_table.item (index)
-				end;
-				next_sibling_table.put (next_sibling_table.item (old_active), index);
-			end;
+				end
+				next_sibling_table.put (next_sibling_table.item (old_active), index)
+			end
 			if old_active = last then
 				last := last - 1
 			else
-				item_table.put (default_value, old_active);
-				first_child_table.put (Removed_mark, old_active);
-				next_sibling_table.put (free_list_index, old_active);
-				free_list_index := old_active;
+				item_table.put (default_value, old_active)
+				first_child_table.put (Removed_mark, old_active)
+				next_sibling_table.put (free_list_index, old_active)
+				free_list_index := old_active
 				free_list_count := free_list_count + 1
 			end
-		end;
+		end
 
 	wipe_out is
 			-- Remove all items.
@@ -585,20 +580,20 @@ feature -- Removal
 			item_table.resize (1, Block_threshold + 1)
 			next_sibling_table.resize (1, Block_threshold + 1)
 			first_child_table.resize (1, Block_threshold + 1)
-			item_table.clear_all;
-			next_sibling_table.clear_all;
-			first_child_table.clear_all;
-			last := 1;
-			active := 1;
-			free_list_count := 0;
-			free_list_index := 0;
-			above := true;
-			after := false;
-			before := false;
-			below := false;
+			item_table.clear_all
+			next_sibling_table.clear_all
+			first_child_table.clear_all
+			last := 1
+			active := 1
+			free_list_count := 0
+			free_list_index := 0
+			above := True
+			after := False
+			before := False
+			below := False
 		ensure then
 			cursor_above: above
-		end;
+		end
 
 feature {COMPACT_CURSOR_TREE} -- Implementation
 
@@ -607,102 +602,116 @@ feature {COMPACT_CURSOR_TREE} -- Implementation
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
 		do
-			!! Result.make (Block_threshold)
-		end;
+			create Result.make (Block_threshold)
+		end
 
 feature {NONE} -- Implementation
 
-	item_table: ARRAY [G];
+	item_table: ARRAY [G]
 			-- Array containing the items
 
-	first_child_table: ARRAY [INTEGER];
+	first_child_table: ARRAY [INTEGER]
 			-- Indices to the first child
 
-	next_sibling_table: ARRAY [INTEGER];
+	next_sibling_table: ARRAY [INTEGER]
 			-- Indices to siblings
 
-	active: INTEGER;
+	active: INTEGER
 			-- Index of current item
 
-	Removed_mark: INTEGER is -1;
+	Removed_mark: INTEGER is - 1
 			-- Mark for removed child in `first_child_table'
 
-	last: INTEGER;
+	last: INTEGER
 			-- Index into `item_table'; yields last item
 
-	free_list_index: INTEGER;
+	free_list_index: INTEGER
 			-- Index to first empty space in `item_table'
 
-	free_list_count: INTEGER;
+	free_list_count: INTEGER
 			-- Number of empty spaces in `item_table'
 
 	remove_subtree (i: INTEGER) is
 		local
-			index, next: INTEGER;
-			default_value: G;
+			index, next: INTEGER
+			default_value: G
 		do
 			from
-				index := first_child_table.item (i);
+				index := first_child_table.item (i)
 			until
 				index <= 0
 			loop
-				next := next_sibling_table.item (index);
-				remove_subtree (index);
+				next := next_sibling_table.item (index)
+				remove_subtree (index)
 				index := next
-			end;
+			end
 			if i = last then
 				last := last - 1
 			else
-				item_table.put (default_value, i);
-				first_child_table.put(Removed_mark, i);
-				next_sibling_table.put (free_list_index, i);
-				free_list_index := i;
-				free_list_count := free_list_count + 1;
-			end;
-		end;
+				item_table.put (default_value, i)
+				first_child_table.put (Removed_mark, i)
+				next_sibling_table.put (free_list_index, i)
+				free_list_index := i
+				free_list_count := free_list_count + 1
+			end
+		end
 
 	new_cell_index: INTEGER is
 		local
 			default_value: like item
 		do
 			if free_list_index > 0 then
-				Result := free_list_index;
-				free_list_index := next_sibling_table.item (Result);
+				Result := free_list_index
+				free_list_index := next_sibling_table.item (Result)
 				free_list_count := free_list_count - 1
 			else
-				last := last + 1;
-				item_table.force (default_value, last);
-				next_sibling_table.force (0, last);
-				first_child_table.force (0, last);
+				last := last + 1
+				item_table.force (default_value, last)
+				next_sibling_table.force (0, last)
+				first_child_table.force (0, last)
 				Result := last
 			end
-		end;
+		end
 
 	block_threshold: INTEGER is
 		do
 			Result := 10
-		end;
+		end
 
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class COMPACT_CURSOR_TREE
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

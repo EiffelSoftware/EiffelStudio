@@ -1,15 +1,15 @@
 indexing
 
 	description:
-		"Unbounded queues, implemented by resizable arrays";
+		"Unbounded queues, implemented by resizable arrays"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: dispenser, array;
 	representation: array;
 	access: fixed, fifo, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class ARRAYED_QUEUE [G] inherit
@@ -18,10 +18,10 @@ class ARRAYED_QUEUE [G] inherit
 		undefine
 			copy, is_equal, prune_all
 		redefine
-			linear_representation, has, empty
+			linear_representation, has, is_empty
 		select
-			count, empty, put
-		end;
+			count, is_empty, put
+		end
 
 	ARRAY [G]
 		rename
@@ -31,17 +31,19 @@ class ARRAYED_QUEUE [G] inherit
 			make as array_make,
 			put as put_i_th,
 			grow as array_grow,
-			empty as array_empty
+			is_empty as array_empty
 		export
 			{NONE}
-				all;
+				all
 		redefine
 			wipe_out, extend, prunable,
 			linear_representation,
-			has, full, extendible
+			has, full, extendible,
+			valid_index_set,
+			index_set
 		end
 
-creation
+create
 
 	make
 
@@ -52,13 +54,13 @@ feature -- Initialization
 		require
 			non_negative_argument: n >= 0
 		do
-			array_make (1, n);
-			in_index := 1;
+			array_make (1, n)
+			in_index := 1
 			out_index := 1
 				-- One entry is kept free
 		ensure
 			capacity_expected: capacity = n
-		end;
+		end
 
 feature -- Access
 
@@ -66,7 +68,7 @@ feature -- Access
 			-- Oldest item.
 		do
 			Result := i_th (out_index)
-		end;
+		end
 
 	has (v: like item): BOOLEAN is
 			-- Does queue include `v'?
@@ -82,10 +84,10 @@ feature -- Access
 					until
 						i = in_index or (i_th (i) /= Void and then v.is_equal (i_th (i)))
 					loop
-						i := i + 1;
+						i := i + 1
 						if i > capacity then
 							i := 1
-						end;
+						end
 					end
 				end
 			else
@@ -94,14 +96,14 @@ feature -- Access
 				until
 					i = in_index or v = i_th (i)
 				loop
-					i := i + 1;
+					i := i + 1
 					if i > capacity then
 						i := 1
-					end;
+					end
 				end
-			end;
+			end
 			Result := (i /= in_index)
-		end;
+		end
 
 feature -- Measurement
 
@@ -111,71 +113,79 @@ feature -- Measurement
 			if capacity > 0 then
 				Result := (in_index - out_index + capacity) \\ capacity
 			end
-		end;
+		end
+
+	index_set: INTEGER_INTERVAL is
+			-- Range of acceptable indexes
+		do
+			create Result.make (1, count)
+		ensure then
+			count_definition: Result.count = count
+		end
 
 feature -- Status report
 
-	empty, off: BOOLEAN is
+	is_empty, off: BOOLEAN is
 			-- Is the structure empty?
 		do
-			Result :=in_index = out_index
-		end;
+			Result := (in_index = out_index)
+		end
 
 	full: BOOLEAN is
 			-- Is structure filled to capacity?
 			-- (Answer: no.)
 		do
 			Result := False
-		end;
+		end
 
 	extendible: BOOLEAN is
 			-- May items be added? (Answer: yes.)
 		do
-			Result := true
-		end;
+			Result := True
+		end
 
 	prunable: BOOLEAN is
 			-- May items be removed? (Answer: yes.)
 		do
-			Result := true
-		end;
+			Result := True
+		end
 
 feature -- Element change
 
 	extend, put, force (v: G) is
 			-- Add `v' as newest item.
 		do
-			if count + 1 >= array_count then grow end;
-			put_i_th (v, in_index);
-			in_index := (in_index + 1) \\ capacity;
-			if in_index = 0 then in_index := capacity end;
-		end;
+			if count + 1 >= array_count then grow end
+			put_i_th (v, in_index)
+			in_index := (in_index + 1) \\ capacity
+			if in_index = 0 then in_index := capacity end
+		end
 
 	replace (v: like item) is
 			-- Replace oldest item by `v'.
 		do
 			put_i_th (v, out_index)
-		end;
+		end
 
 feature -- Removal
 
 	remove is
 			-- Remove oldest item.
 		local
-			default_value: G;
+			default_value: G
 		do
-			put_i_th (default_value, out_index);
-			out_index := (out_index + 1) \\ capacity;
-			if out_index = 0 then out_index := capacity end;
-		end;
+			put_i_th (default_value, out_index)
+			out_index := (out_index + 1) \\ capacity
+			if out_index = 0 then out_index := capacity end
+		end
 
 	wipe_out is
 			-- Remove all items.
 		do
-			clear_all;
-			out_index := 1;
-			in_index := 1;
-		end;
+			clear_all
+			out_index := 1
+			in_index := 1
+		end
 
 feature -- Conversion
 
@@ -183,96 +193,114 @@ feature -- Conversion
 			-- Representation as a linear structure
 			-- (in the original insertion order)
 		local
-			i: INTEGER;
+			i: INTEGER
 		do
-			!!Result.make (count);
+			create Result.make (count)
 			from
 				i := out_index
 			until
 				i = in_index
 			loop
-				Result.extend (i_th (i));
-				i := i + 1;
+				Result.extend (i_th (i))
+				i := i + 1
 				if i > capacity then i := 1 end
-			end;
+			end
 			i := 1
-		end;
+		end
 
 feature {NONE} -- Inapplicable
 
 	start is
 			-- Move cursor to first position.
 		do
-		end;
+		end
 
 	finish is
 			-- Move cursor to last position.
-		local
-			size: INTEGER;
 		do
-		end;
+		end
 
 	forth is
 			-- Move cursor to next position.
 		do
-		end;
+		end
+
+	valid_index_set: BOOLEAN is
+		do
+			Result := True
+		end
 
 feature {ARRAYED_QUEUE} -- Implementation
 
-	out_index: INTEGER;
+	out_index: INTEGER
 			-- Position of oldest item
 
-	in_index: INTEGER;
+	in_index: INTEGER
 			-- Position for next insertion
 
 	grow is
 		local
-			i,j: INTEGER;
-			old_count: INTEGER;
+			i, j: INTEGER
 			default_value: G
 		do
-			i := array_count;
-			resize (1, capacity + additional_space);
+			i := array_count
+			resize (1, capacity + additional_space)
 			if out_index > 1 then
 				from
 					j := capacity
 				until
 					i < out_index
 				loop
-					put_i_th (i_th (i), j);
-					put_i_th (default_value, i);
-					i := i - 1;
+					put_i_th (i_th (i), j)
+					put_i_th (default_value, i)
+					i := i - 1
 					j := j - 1
-				end;
-				out_index := j + 1;
-			end;
-		end;
+				end
+				out_index := j + 1
+			end
+		end
 
 invariant
 
-	not_full: not full;
-	extendible: extendible;
-	prunable: prunable;
+	not_full: not full
+	extendible: extendible
+	prunable: prunable
+	empty_means_storage_empty: is_empty implies all_default
+
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class ARRAYED_QUEUE
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

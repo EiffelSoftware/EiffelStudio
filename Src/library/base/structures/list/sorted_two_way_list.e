@@ -1,24 +1,24 @@
 indexing
 
 	description:
-		"Two-way lists, kept sorted.";
+		"Two-way lists, kept sorted."
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: sorted_two_way_list, sorted_struct, sequence;
 	representation: linked;
 	access: index, cursor, membership, min, max;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class SORTED_TWO_WAY_LIST [G -> COMPARABLE] inherit
 
 	TWO_WAY_LIST [G]
 		undefine
-			has, search
+			has, search, copy, is_equal, is_inserted
 		redefine
 			prune_all, extend, new_chain
-		end;
+		end
 
 	SORTED_LIST [G]
 		undefine
@@ -28,7 +28,7 @@ class SORTED_TWO_WAY_LIST [G -> COMPARABLE] inherit
 			last, off, prune_all
 		end
 
-creation
+create
 
 	make
 
@@ -38,10 +38,10 @@ feature -- Element change
 			-- Put `v' at proper position in list.
 			-- Move cursor to newly inserted item.
 		do
-			search_after (v);
-			put_left (v);
+			search_after (v)
+			put_left (v)
 			back
-		end;
+		end
 
 feature -- Removal
 
@@ -52,15 +52,15 @@ feature -- Removal
 			-- Leave cursor `off'.
 		do
 			from
-				start;
+				start
 				search (v)
 			until
 				off or else v < item
 			loop
 				remove
-			end;
+			end
 			if not off then finish; forth end
-		end;
+		end
 
 
 feature -- Transformation
@@ -70,73 +70,73 @@ feature -- Transformation
 			-- Has O(`count' * log (`count')) complexity.
 			--| Uses comb-sort (BYTE February '91)
 		local
-			no_change: BOOLEAN;
-			gap: INTEGER;
-			left_cell, cell: like first_element;
+			no_change: BOOLEAN
+			gap: INTEGER
+			left_cell, cell: like first_element
 			left_cell_item, cell_item: like item
 		do
-			if not empty then
+			if not is_empty then
 				from
 					gap := count * 10 // 13
 				until
 					gap = 0
 				loop
 					from
-						no_change := false;
+						no_change := False
 						go_i_th (1 + gap)
 					until
 						no_change
 					loop
-						no_change := true;
+						no_change := True
 						from
-							left_cell := first_element;
-							cell := active;	-- position of first_element + gap
+							left_cell := first_element
+							cell := active	-- position of first_element + gap
 						until
 							cell = Void
 						loop
-							left_cell_item := left_cell.item;
-							cell_item := cell.item;
+							left_cell_item := left_cell.item
+							cell_item := cell.item
 							if cell_item < left_cell_item then
 									-- Swap `left_cell_item' with `cell_item'
-								no_change := false;
-								cell.put (left_cell_item);
+								no_change := False
+								cell.put (left_cell_item)
 								left_cell.put (cell_item)
-							end;
-							left_cell := left_cell.right;
+							end
+							left_cell := left_cell.right
 							cell := cell.right
 						end
-					end;
+					end
 					gap := gap * 10 // 13
 				end
 			end
-		end;
+		end
 
 feature -- Status report
 
 	sorted: BOOLEAN is
 			-- Is the structure sorted?
 		local
-			c: CURSOR;
+			c: CURSOR
 			prev: like item
 		do
-			Result := true;
+			Result := True
 			if count > 1 then
 				from
-					c := cursor;
-					start;
-						check not off end;
-					prev := item;
+					c := cursor
+					start
+						check not off end
+					prev := item
 					forth
 				until
 					after or not Result
 				loop
-					Result := (prev <= item);
-					prev := item;
+					Result := (prev <= item)
+					prev := item
 					forth
-				end;
+				end
 				go_to (c)
 			end
-		end;
+		end
 
 feature {SORTED_TWO_WAY_LIST} -- Implementation
 
@@ -145,27 +145,41 @@ feature {SORTED_TWO_WAY_LIST} -- Implementation
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
 		do
-			!! Result.make
-		end;
+			create Result.make
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class SORTED_TWO_WAY_LIST
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

@@ -1,11 +1,12 @@
 indexing
 
-	description:
-		"Facilities for adapting the exception handling mechanism. %
-		%This class may be used as ancestor by classes needing its facilities.";
+	description: "[
+		Facilities for adapting the exception handling mechanism.
+		This class may be used as ancestor by classes needing its facilities.
+		]"
 
-	status: "See notice at end of class";
-	date: "$Date$";
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class EXCEPTIONS
@@ -22,7 +23,7 @@ feature -- Status report
 			"C | %"eif_except.h%""
 		alias
 			"eename"
-		end;
+		end
 
 	assertion_violation: BOOLEAN is
 			-- Is last exception originally due to a violated
@@ -35,14 +36,14 @@ feature -- Status report
 				(original_exception = Loop_variant) or else
 				(original_exception = Postcondition) or else
 				(original_exception = Precondition)
-		end;
+		end
 
 	is_developer_exception: BOOLEAN is
 			-- Is the last exception originally due to
 			-- a developer exception?
 		do
 			Result := (original_exception = Developer_exception)
-		end;
+		end
 
 	is_developer_exception_of_name (name: STRING): BOOLEAN is
 			-- Is the last exception originally due to a developer
@@ -50,7 +51,7 @@ feature -- Status report
 		do
 			Result := is_developer_exception and then
 						equal (name, developer_exception_name)
-		end;
+		end
 
 	developer_exception_name: STRING is
 			-- Name of last developer-raised exception
@@ -58,14 +59,14 @@ feature -- Status report
 			applicable: is_developer_exception
 		do
 			Result := original_tag_name
-		end;
+		end
 
 	is_signal: BOOLEAN is
 			-- Is last exception originally due to an external
 			-- event (operating system signal)?
 		do
 			Result := (original_exception = Signal_exception)
-		end;
+		end
 
 	is_system_exception: BOOLEAN is
 			-- Is last exception originally due to an
@@ -74,15 +75,15 @@ feature -- Status report
 			Result :=
 				(original_exception = External_exception) or else
 				(original_exception = Operating_system_exception)
-		end;
+		end
 
 	tag_name: STRING is
-			-- Tag of last violated asssertion clause
+			-- Tag of last violated assertion clause
 		external
 			"C | %"eif_except.h%""
 		alias
 			"eeltag"
-		end;
+		end
 
 	recipient_name: STRING is
 			-- Name of the routine whose execution was
@@ -91,7 +92,7 @@ feature -- Status report
 			"C | %"eif_except.h%""
 		alias
 			"eelrout"
-		end;
+		end
 
 	class_name: STRING is
 			-- Name of the class that includes the recipient
@@ -100,7 +101,7 @@ feature -- Status report
 			"C | %"eif_except.h%""
 		alias
 			"eelclass"
-		end;
+		end
 
 	exception: INTEGER is
 			-- Code of last exception that occurred
@@ -108,7 +109,7 @@ feature -- Status report
 			"C | %"eif_except.h%""
 		alias
 			"eelcode"
-		end;
+		end
 
 	exception_trace: STRING is
 			-- String representation of the exception trace
@@ -116,7 +117,7 @@ feature -- Status report
 			"C | %"eif_except.h%""
 		alias
 			"stack_trace_string"
-		end;
+		end
 
 	original_tag_name: STRING is
 			-- Assertion tag for original form of last
@@ -125,7 +126,7 @@ feature -- Status report
 			"C | %"eif_except.h%""
 		alias
 			"eeotag"
-		end;
+		end
 
 	original_exception: INTEGER is
 			-- Original code of last exception that triggered
@@ -134,7 +135,7 @@ feature -- Status report
 			"C | %"eif_except.h%""
 		alias
 			"eeocode"
-		end;
+		end
 
 	original_recipient_name: STRING is
 			-- Name of the routine whose execution was
@@ -143,7 +144,7 @@ feature -- Status report
 			"C | %"eif_except.h%""
 		alias
 			"eeorout"
-		end;
+		end
 
 	original_class_name: STRING is
 			-- Name of the class that includes the recipient
@@ -152,7 +153,7 @@ feature -- Status report
 			"C | %"eif_except.h%""
 		alias
 			"eeoclass"
-		end;
+		end
 
 feature -- Status setting
 
@@ -163,7 +164,7 @@ feature -- Status setting
 			"C | %"eif_except.h%""
 		alias
 			"eecatch"
-		end;
+		end
 
 	ignore (code: INTEGER) is
 			-- Make sure that any exception of code `code' will be
@@ -172,19 +173,19 @@ feature -- Status setting
 			"C | %"eif_except.h%""
 		alias
 			"eeignore"
-		end;
+		end
 
 	raise (name: STRING) is
 			-- Raise a developer exception of name `name'.
 		local
-			str: ANY;
+			str: ANY
 		do
 			if name /= Void then
 				str := name.to_c
-			end;
+			end
 			exclear
-			eraise ($str, Developer_exception);
-		end;
+			eraise ($str, Developer_exception)
+		end
 
 	die (code: INTEGER) is
 			-- Terminate execution with exit status `code',
@@ -193,7 +194,7 @@ feature -- Status setting
 			"C | %"eif_except.h%""
 		alias
 			"esdie"
-		end;
+		end
 
 	new_die (code: INTEGER) is obsolete "Use ``die''"
 			-- Terminate execution with exit status `code',
@@ -202,7 +203,7 @@ feature -- Status setting
 			"C | %"eif_except.h%""
 		alias
 			"esdie"
-		end;
+		end
 
 	message_on_failure is
 			-- Print an exception history table
@@ -210,14 +211,14 @@ feature -- Status setting
 			-- This is the default.
 		do
 			c_trace_exception (True)
-		end;
+		end
 
 	no_message_on_failure is
 			-- Do not print an exception history table
 			-- in case of failure.
 		do
 			c_trace_exception (False)
-		end;
+		end
 
 feature {NONE} -- Implementation
 
@@ -230,33 +231,47 @@ feature {NONE} -- Implementation
 			-- Raise an exception
 		external
 			"C | %"eif_except.h%""
-		end;
+		end
 
 	c_trace_exception (b: BOOLEAN) is
 		external
 			"C | %"eif_except.h%""
 		alias
 			"eetrace"
-		end;
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class EXCEPTIONS
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

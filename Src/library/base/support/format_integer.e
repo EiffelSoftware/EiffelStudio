@@ -1,16 +1,16 @@
 indexing
 
 	description:
-		"Formatter for integral numbers";
+		"Formatter for integral numbers"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: format_integer;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class FORMAT_INTEGER
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -44,7 +44,7 @@ feature -- Access
 	separator: CHARACTER
 			-- Separator between 1000's of numbers.
 
-	justification : INTEGER
+	justification: INTEGER
 			-- Where in the field the format goes.
 
 	trailing_sign: BOOLEAN
@@ -53,7 +53,7 @@ feature -- Access
 	sign_format: INTEGER
 			-- How the sign is formatted.
 
-	sign_string : STRING
+	sign_string: STRING
 			-- Formatting details for the sign.
 
 	bracketted_negative: BOOLEAN
@@ -175,7 +175,7 @@ feature -- Status setting
 			fill_character = '*'
 		end
 
-	set_fill (c : CHARACTER) is
+	set_fill (c: CHARACTER) is
 			-- Fill numbers with `c'
 		do
 			fill_character := c
@@ -183,7 +183,7 @@ feature -- Status setting
 			fill_character = c
 		end
 
-	set_width (w :INTEGER) is
+	set_width (w: INTEGER) is
 			-- Set width to `w'
 		require
 			wide_enough: w >= 1
@@ -268,7 +268,7 @@ feature -- Status setting
 	sign_leading is
 			-- Set the sign to lead
 		do
-			trailing_sign := false
+			trailing_sign := False
 		ensure
 			leading_sign
 		end
@@ -276,7 +276,7 @@ feature -- Status setting
 	sign_trailing is
 			-- Set the sign to trail
 		do
-			trailing_sign := true
+			trailing_sign := True
 		ensure
 			trailing_sign
 		end
@@ -324,17 +324,17 @@ feature -- Status setting
 	sign_cr_dr is
 			-- Set sign for CR/DR
 		do
-			sign_string := "CR  DR"
+			sign_string := "CR DR"
 		ensure
-			sign_string.is_equal ("CR  DR")
+			sign_string.is_equal ("CR DR")
 		end
 
 	sign_dr_cr is
 			-- Set sign for DR/CR
 		do
-			sign_string := "DR  CR"
+			sign_string := "DR CR"
 		ensure
-			sign_string.is_equal ("DR  CR")
+			sign_string.is_equal ("DR CR")
 		end
 
 	sign_floating_dollar is
@@ -355,7 +355,7 @@ feature -- Status setting
 			sign_string.is_equal ("-$ $+$")
 		end
 
-	set_sign (s : STRING) is
+	set_sign (s: STRING) is
 			-- Set sign values for positive, zero, negative
 			-- All values must be the same length.
 			-- Stored as negative, zero, positive.
@@ -372,7 +372,7 @@ feature -- Status setting
 	bracket_negative is
 			-- Bracket negative numbers.
 		do
-			bracketted_negative := true
+			bracketted_negative := True
 		ensure
 			bracketted_negative
 		end
@@ -380,18 +380,18 @@ feature -- Status setting
 	unbracket_negative is
 			-- Do not bracket negative numbers.
 		do
-			bracketted_negative := false
+			bracketted_negative := False
 		ensure
 			not bracketted_negative
 		end
 
 feature -- Conversion
 
-	formatted (i : INTEGER): STRING is
+	formatted (i: INTEGER): STRING is
 			-- Format the integer.
 		local
-			sign : INTEGER
-			unsigned : INTEGER
+			sign: INTEGER
+			unsigned: INTEGER
 		do
 			if i < 0 then
 				sign := -1
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 	Sign_positive_value: INTEGER is 2
 	Sign_negative_value: INTEGER is 3
 
-	split (s : STRING): STRING is
+	split (s: STRING): STRING is
 			-- Apply separators to an integer
 		require
 			efficiency: separator /= '%U'
@@ -438,9 +438,9 @@ feature {NONE} -- Implementation
 		do
 			from
 				count := s.count
-				!!Result.make (width)
+				create Result.make (width)
 			until
-				count <=3
+				count <= 3
 			loop
 				from
 					sep_length := 0
@@ -462,10 +462,10 @@ feature {NONE} -- Implementation
 			end
 		end -- split
 
-	process_sign (s: STRING; sn : INTEGER): STRING is
+	process_sign (s: STRING; sn: INTEGER): STRING is
 			-- Process sign related values.
 		local
-			sstring : STRING
+			sstring: STRING
 		do
 			Result := s
 			if bracketted_negative and sn = -1 then
@@ -486,7 +486,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	sign_size : INTEGER is
+	sign_size: INTEGER is
 			-- Size of the sign.
 		do
 			Result := sign_string.count // 3
@@ -494,30 +494,30 @@ feature {NONE} -- Implementation
 			Result * 3 = sign_string.count
 		end
 
-	sign_value (i : INTEGER): STRING is
+	sign_value (i: INTEGER): STRING is
 			-- Value of the sign.
 		require
-			correct_sign: -1 <= i and i <= 1
+			correct_sign: - 1 <= i and i <= 1
 		local
 			t: INTEGER
 		do
-			t := sign_size * (i+ 1) + 1
-			Result := sign_string.substring (t, t+sign_size-1)
+			t := sign_size * (i + 1) + 1
+			Result := sign_string.substring (t, t + sign_size - 1)
 		end
 
-	justify (s : STRING): STRING is
+	justify (s: STRING): STRING is
 			-- Justify `s'.
 		require
 			room: s.count < width
 			justification: justification /= no_justification
 		local
-			l, r : STRING
-			i,t : INTEGER
+			l, r: STRING
+			i, t: INTEGER
 		do
 			Result := s
 			if not centered then
 				-- be concerned about filling
-				!!l.make (width - s.count)
+				create l.make (width - s.count)
 				from
 					i := 1
 				until
@@ -536,11 +536,11 @@ feature {NONE} -- Implementation
 				-- when there is a choice
 				t := (width - s.count) // 2
 				if 2 * t + s.count < width then
-					!!l.make (t +1)
+					create l.make (t + 1)
 				else
-					!!l.make (t)
+					create l.make (t)
 				end
-				!!r.make (t)
+				create r.make (t)
 				from
 					i := 1
 				until
@@ -561,25 +561,39 @@ invariant
 	wide_enough: width >= 1
 	no_justification <= justification and justification <= right_justification
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class FORMAT_INTEGER
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

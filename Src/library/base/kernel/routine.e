@@ -1,7 +1,10 @@
 indexing
-	description:
-		"Objects representing delayed calls to a routine,%N%
-		%with some operands possibly still open"
+
+	description: "[
+		Objects representing delayed calls to a routine,
+		with some operands possibly still open
+		]"
+
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,12 +44,11 @@ feature -- Initialization
 			end
 
 			operands := other.operands
+			operands_set_by_user := other.operands_set_by_user
 			closed_operands := other.closed_operands
 			open_map := other.open_map
 			closed_map := other.closed_map
 			rout_disp := other.rout_disp
-			open_type_codes := other.open_type_codes
-			closed_type_codes := other.closed_type_codes
 		ensure
 			same_call_status: other.callable implies callable
 		end
@@ -59,7 +61,16 @@ feature -- Access
 	target: ANY is
 			-- Target of call.
 		do
-			Result := closed_operands.item (1)
+			if
+				closed_map.count > 0 and then
+				closed_map.item (closed_map.lower) = 0
+			then
+				Result := closed_operands.item (closed_operands.lower)
+			elseif
+				operands /= Void and then operands.count > 0
+			then
+				Result := operands.item (operands.lower)
+			end
 		end
 
 	open_operand_type (i: INTEGER): INTEGER is
@@ -74,10 +85,10 @@ feature -- Access
 			Result := open_types.item (i)
 			if Result = 0 then
 				Result := eif_gen_param_id (
-					-1,
+					- 1,
 					eif_gen_create ($Current, 2),
 					i
-				)
+)
 				open_types.force (Result, i)
 			end
 		end
@@ -92,18 +103,16 @@ feature -- Access
 			-- Do `args' satisfy routine's precondition
 			-- in current state?
 		do
-			check
-				not_implemented: False
-			end
+			Result := True
+			--| FIXME compiler support needed!
 		end
 
 	postcondition (args: like operands): BOOLEAN is
 			-- Does current state satisfy routine's
 			-- postcondition for `args'?
 		do
-			check
-				not_implemented: False
-			end
+			Result := True
+			--| FIXME compiler support needed!
 		end
 
 feature -- Status report
@@ -123,23 +132,30 @@ feature -- Status report
 			--| Do not compare implementation data
 			Result := equal (operands, other.operands)
 							and then
-					  equal (closed_operands, other.closed_operands)
+					 equal (closed_operands, other.closed_operands)
 							and then
-					  equal (open_map, other.open_map)
+					 equal (open_map, other.open_map)
 							and then
-					  equal (closed_map, other.closed_map)
+					 equal (closed_map, other.closed_map)
 							and then
-					  (rout_disp = other.rout_disp)
+					 (rout_disp = other.rout_disp)
 		end
 
 	valid_operands (args: OPEN_ARGS): BOOLEAN is
 			-- Are `args' valid operands for this routine?
 		local
-			l_args: like operands
 			i: INTEGER
 			mismatch: BOOLEAN
 			arg: ANY
 			arg_type_code: CHARACTER
+			open_arg_type_code: CHARACTER
+			a_boolean_ref: BOOLEAN_REF
+			a_character_ref: CHARACTER_REF
+			a_double_ref: DOUBLE_REF
+			an_integer_ref: INTEGER_REF
+			a_pointer_ref: POINTER_REF
+			a_real_ref: REAL_REF
+			int: INTERNAL
 		do
 			if args = Void or open_map = Void then
 				-- Void operands are only allowed
@@ -147,22 +163,51 @@ feature -- Status report
 				Result := (open_map = Void)
 			elseif open_map /= Void and then args.count >= open_map.count then
 				from
+					create int
 					i := 1
 				until
 					i > open_map.count or mismatch
 				loop
 					arg := args.item (i)
 					arg_type_code := args.arg_item_code (i)
-					if arg_type_code = 'r' then
-						if arg /= Void and then not eif_gen_conf (
-								ei_dtype ($arg),
+					open_arg_type_code := open_type_codes.item (i + 1)
+					if arg_type_code = 'r' then				
+						inspect	open_arg_type_code
+						when 'b' then
+							a_boolean_ref ?= arg
+							mismatch := a_boolean_ref = Void
+						when 'c' then
+							a_character_ref ?= arg
+							mismatch := a_character_ref = Void
+						when 'd' then
+							a_double_ref ?= arg
+							mismatch := a_double_ref = Void
+						when 'i' then
+							an_integer_ref ?= arg
+							mismatch := an_integer_ref = Void
+						when 'p' then
+							a_pointer_ref ?= arg
+							mismatch := a_pointer_ref = Void
+						when 'f' then
+							a_real_ref ?= arg
+							mismatch := a_real_ref = Void
+						when 'r' then
+							if arg /= Void and then not eif_gen_conf (
+								int.dynamic_type (arg),
 								open_operand_type (i)
-							)
-						then
-							mismatch := True
+)
+							then
+								mismatch := True
+							end
 						end
 					else
-						if arg_type_code /= open_type_codes.item (i + 1) then
+						if
+							arg_type_code /= open_arg_type_code
+							and (
+								open_arg_type_code = 'r' implies
+								open_operand_type (i) > 0
+)
+						then
 							mismatch := True
 						end
 					end
@@ -177,7 +222,9 @@ feature -- Measurement
 	open_count: INTEGER is
 			-- Number of open operands.
 		do
-			Result := open_map.count
+			if open_map /= Void then
+				Result := open_map.count
+			end
 		end
 
 feature -- Element change
@@ -188,6 +235,7 @@ feature -- Element change
 			valid_operands: valid_operands (args)
 		do
 			operands := args
+			operands_set_by_user := True
 		end
 
 feature -- Duplication
@@ -204,13 +252,11 @@ feature -- Duplication
 			end
 
 			operands := other.operands
+			operands_set_by_user := other.operands_set_by_user
 			closed_operands := other.closed_operands
 			open_map := other.open_map
 			closed_map := other.closed_map
 			rout_disp := other.rout_disp
-
-			open_type_codes := other.open_type_codes
-			closed_type_codes := other.closed_type_codes
 		ensure then
 			same_call_status: other.callable implies callable
 		end
@@ -226,6 +272,9 @@ feature -- Basic operations
 		do
 			operands := args
 			apply
+			if not operands_set_by_user then
+				operands := Void
+			end
 		end
 
 	apply is
@@ -252,31 +301,71 @@ feature -- Obsolete
 		end
 
 
-feature {ROUTINE} -- Implementation
+feature {ROUTINE, E_FEATURE} -- Implementation
+
+	frozen operands_set_by_user: BOOLEAN
+			-- Are operands set throug call to `set_operands'.
+			-- If not, we can delete them after routine call for
+			-- later collection.
 
 	frozen closed_operands: TUPLE
-			-- Closed operands provided at creation time
+			-- Closed arguments provided at creation time
 
 	frozen open_map: ARRAY [INTEGER]
-			-- Index map for open operands
+			-- Index map for open arguments
 
 	frozen closed_map: ARRAY [INTEGER]
-			-- Index map for closed operands
+			-- Index map for closed arguments
 
-	frozen open_type_codes: STRING
-			-- Type codes for open operands
+	open_type_codes: STRING is
+			-- Type codes for open arguments
+		do
+			if internal_open_type_codes = Void then
+				internal_open_type_codes := eif_gen_typecode_str ($Current)
+			end
+			Result := internal_open_type_codes
+		end
 
 	frozen open_types: ARRAY [INTEGER]
 			-- Types of open operands
 
-	frozen closed_type_codes: STRING
-			-- Type codes for closed operands
+	closed_type_codes: STRING is
+			-- Type codes for closed arguments
+		do
+			if closed_operands /= Void and internal_closed_type_codes = Void then
+				internal_closed_type_codes := eif_gen_tuple_typecode_str ($closed_operands)
+			end
+			Result := internal_closed_type_codes
+		end
 
 	frozen rout_disp: POINTER
 			-- Routine dispatcher
 
-	frozen set_rout_disp (p: POINTER; closed_args: TUPLE; 
-						  omap, cmap: ARRAY [INTEGER]) is
+	frozen eiffel_rout_disp: POINTER
+			-- Eiffel routine dispatcher
+
+	frozen set_rout_disp (p: POINTER; tp: POINTER; closed_args: TUPLE; 
+						 omap, cmap: ARRAY [INTEGER]) is
+			-- Initialize object. 
+		require
+			p_not_void: p /= Default_pointer
+			tp_not_void: tp /= Default_pointer
+			consistent_args: (closed_args = Void and cmap = Void)
+										or else
+							 (closed_args /= Void and cmap /= Void)
+										and then
+							 (closed_args.count >= cmap.count)
+			valid_maps: not (omap = Void and cmap = Void)
+		do
+			rout_disp := p
+			eiffel_rout_disp := tp
+			closed_operands := closed_args
+			open_map := omap
+			closed_map := cmap
+		end
+
+	frozen set_rout_args (closed_args: TUPLE; 
+						 omap, cmap: ARRAY [INTEGER]) is
 			-- Initialize object. 
 		require
 			consistent_args: (closed_args = Void and cmap = Void)
@@ -285,35 +374,17 @@ feature {ROUTINE} -- Implementation
 										and then
 							 (closed_args.count >= cmap.count)
 			valid_maps: not (omap = Void and cmap = Void)
-		local
-			i, cnt: INTEGER
 		do
-			rout_disp := p
 			closed_operands := closed_args
 			open_map := omap
 			closed_map := cmap
-
-			-- Compute type codes
-			open_type_codes := eif_gen_typecode_str ($Current)
-
-			if closed_args /= Void then
-				cnt := closed_args.count
-				!!closed_type_codes.make (cnt)
-				from
-					i := 1
-				until
-					i > cnt
-				loop
-					closed_type_codes.extend (eif_gen_typecode ($closed_args,i))
-					i := i + 1
-				end
-			end
-
-				-- Special initialization for FUNCTION
-			func_init
 		end
 
-feature {NONE}  -- Implementation
+feature {NONE} -- Implementation
+
+	frozen internal_open_type_codes: STRING
+
+	frozen internal_closed_type_codes: STRING
 
 	dispose is
 			-- Free routine argument union structure
@@ -334,7 +405,7 @@ feature {NONE}  -- Implementation
 			-- Allocate and fill argument structure
 		local
 			new_args: POINTER
-			i, j, cnt, ocnt, ccnt: INTEGER
+			i, j, ocnt, ccnt: INTEGER
 			code: CHARACTER
 			ref_arg: ANY
 			null_ptr: POINTER
@@ -350,27 +421,28 @@ feature {NONE}  -- Implementation
 			was_on := collecting
 			collection_off
 
-			loc_open_map := open_map
-			loc_closed_map := closed_map
-			loc_operands := operands
-			loc_closed_operands := closed_operands
-			loc_open_type_codes := open_type_codes
-			loc_closed_type_codes := closed_type_codes
 
 			-- Compute no. operands, including target.
 
+			loc_open_map := open_map
 			if loc_open_map /= Void then
 				ocnt := loc_open_map.count
+				loc_open_type_codes := open_type_codes
+				loc_operands := operands
 			end
 
+			loc_closed_map := closed_map
 			if loc_closed_map /= Void then
 				ccnt := loc_closed_map.count
+				loc_closed_type_codes := closed_type_codes
+				loc_closed_operands := closed_operands
 			end
 
 			-- Create C union structure if necessary
 
 			if rout_cargs = null_ptr then
 				new_args := rout_obj_new_args (ocnt + ccnt + 1)
+				rout_cargs := new_args
 			else
 				new_args := rout_cargs
 			end
@@ -382,9 +454,10 @@ feature {NONE}  -- Implementation
 			until
 				i > ocnt
 			loop
-				code := loc_open_type_codes.item (i+1) -- pos. 1 is code of BASE_TYPE!
+				code := loc_open_type_codes.item (i + 1) -- pos. 1 is code of BASE_TYPE!
 
-				if code = 'f' then
+				check loc_operands /= Void end
+				if code = Eif_real_code then
 					-- Special treatment of reals
 					ref_arg := loc_operands.real_item (i)
 				else
@@ -394,18 +467,26 @@ feature {NONE}  -- Implementation
 				j := loc_open_map.item (i)
 
 				inspect code
-					when 'b' then
+					when Eif_boolean_code then
 						rout_obj_putb (new_args, j, $ref_arg)
-					when 'c' then
+					when Eif_character_code then
 						rout_obj_putc (new_args, j, $ref_arg)
-					when 'd' then
+					when Eif_double_code then
 						rout_obj_putd (new_args, j, $ref_arg)
-					when 'i' then
-						rout_obj_puti (new_args, j, $ref_arg)
-					when 'p' then
+					when Eif_integer_8_code then
+						rout_obj_puti8 (new_args, j, $ref_arg)
+					when Eif_integer_16_code then
+						rout_obj_puti16 (new_args, j, $ref_arg)
+					when Eif_integer_code then
+						rout_obj_puti32 (new_args, j, $ref_arg)
+					when Eif_integer_64_code then
+						rout_obj_puti64 (new_args, j, $ref_arg)
+					when Eif_pointer_code then
 						rout_obj_putp (new_args, j, $ref_arg)
-					when 'f' then
+					when Eif_real_code then
 						rout_obj_putf (new_args, j, $ref_arg)
+					when Eif_wide_char_code then
+						rout_obj_putwc (new_args, j, $ref_arg)
 					else
 						rout_obj_putr (new_args, j, $ref_arg)
 				end
@@ -422,7 +503,8 @@ feature {NONE}  -- Implementation
 			loop
 				code := loc_closed_type_codes.item (i)
 
-				if code = 'f' then
+				check loc_closed_operands /= Void end
+				if code = Eif_real_code then
 					-- Special treatment of reals
 					ref_arg := loc_closed_operands.real_item (i)
 				else
@@ -432,25 +514,33 @@ feature {NONE}  -- Implementation
 				j := loc_closed_map.item (i)
 
 				inspect code
-					when 'b' then
+					when Eif_boolean_code then
 						rout_obj_putb (new_args, j, $ref_arg)
-					when 'c' then
+					when Eif_character_code then
 						rout_obj_putc (new_args, j, $ref_arg)
-					when 'd' then
+					when Eif_double_code then
 						rout_obj_putd (new_args, j, $ref_arg)
-					when 'i' then
-						rout_obj_puti (new_args, j, $ref_arg)
-					when 'p' then
+					when Eif_integer_8_code then
+						rout_obj_puti8 (new_args, j, $ref_arg)
+					when Eif_integer_16_code then
+						rout_obj_puti16 (new_args, j, $ref_arg)
+					when Eif_integer_code then
+						rout_obj_puti32 (new_args, j, $ref_arg)
+					when Eif_integer_64_code then
+						rout_obj_puti64 (new_args, j, $ref_arg)
+					when Eif_pointer_code then
 						rout_obj_putp (new_args, j, $ref_arg)
-					when 'f' then
+					when Eif_real_code then
 						rout_obj_putf (new_args, j, $ref_arg)
+					when Eif_wide_char_code then
+						rout_obj_putwc (new_args, j, $ref_arg)
 					else
 						rout_obj_putr (new_args, j, $ref_arg)
 				end
 
 				i := i + 1
 			end
-			rout_cargs := new_args
+
 
 			-- Now we turn the GC on again if `was_on'
 			if was_on then
@@ -462,11 +552,23 @@ feature {NONE}  -- Implementation
 			end
 		end
 
-	func_init is
-			-- Initialize routine.
-		do
-			-- Nothing here
-		end
+feature {NONE} -- Runtime constants
+
+	eif_boolean_code: CHARACTER is 'b'
+	eif_character_code: CHARACTER is 'c'
+	eif_double_code: CHARACTER is 'd'
+	eif_real_code: CHARACTER is 'f'
+	eif_integer_code: CHARACTER is 'i'
+	eif_pointer_code: CHARACTER is 'p'
+	eif_reference_code: CHARACTER is 'r'
+	eif_integer_8_code: CHARACTER is 'j'
+	eif_integer_16_code: CHARACTER is 'k'
+	eif_integer_64_code: CHARACTER is 'l'
+	eif_wide_char_code: CHARACTER is 'u'
+			-- Type constants used by runtime to recognize types
+			-- needed to perform call
+
+feature {NONE} -- Externals
 
 	rout_obj_new_args (cnt: INTEGER): POINTER is
 			-- Initialize for new operands.
@@ -483,6 +585,11 @@ feature {NONE}  -- Implementation
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
+	rout_obj_putwc (args: POINTER; idx: INTEGER; val: POINTER) is
+			-- Adapt `args' for `idx' and `val'.
+		external "C[macro %"eif_rout_obj.h%"]"
+		end
+
 	rout_obj_putc (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
@@ -493,7 +600,22 @@ feature {NONE}  -- Implementation
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	rout_obj_puti (args: POINTER; idx: INTEGER; val: POINTER) is
+	rout_obj_puti8 (args: POINTER; idx: INTEGER; val: POINTER) is
+			-- Adapt `args' for `idx' and `val'.
+		external "C[macro %"eif_rout_obj.h%"]"
+		end
+
+	rout_obj_puti16 (args: POINTER; idx: INTEGER; val: POINTER) is
+			-- Adapt `args' for `idx' and `val'.
+		external "C[macro %"eif_rout_obj.h%"]"
+		end
+
+	rout_obj_puti32 (args: POINTER; idx: INTEGER; val: POINTER) is
+			-- Adapt `args' for `idx' and `val'.
+		external "C[macro %"eif_rout_obj.h%"]"
+		end
+
+	rout_obj_puti64 (args: POINTER; idx: INTEGER; val: POINTER) is
 			-- Adapt `args' for `idx' and `val'.
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
@@ -513,14 +635,9 @@ feature {NONE}  -- Implementation
 		external "C[macro %"eif_rout_obj.h%"]"
 		end
 
-	ei_dtype (obj: POINTER): INTEGER is
-			-- Dynamic type of `obj'.
-		external "C | %"eif_internal.h%""
-		end
-
 	eif_gen_conf (type1, type2: INTEGER): BOOLEAN is
 			-- Does `type1' conform to `type2'?
-		external "C | %"eif_gen_conf.h%""
+		external "C (int16, int16): EIF_BOOLEAN | %"eif_gen_conf.h%""
 		end
 
 	eif_gen_create (obj: POINTER; pos: INTEGER): POINTER is
@@ -530,7 +647,8 @@ feature {NONE}  -- Implementation
 
 	eif_gen_param_id (stype: INTEGER; obj: POINTER; pos: INTEGER): INTEGER is
 			-- Type of generic parameter in `obj' at position `pos'.
-		external "C | %"eif_gen_conf.h%""
+		external
+			"C (int16, EIF_REFERENCE, int): EIF_INTEGER | %"eif_gen_conf.h%""
 		end
 
 	eif_gen_typecode (obj: POINTER; pos: INTEGER): CHARACTER is
@@ -543,6 +661,12 @@ feature {NONE}  -- Implementation
 			-- Code name for generic parameter `pos' in `obj'.
 		external "C | %"eif_gen_conf.h%""
 		end
+
+	eif_gen_tuple_typecode_str (obj: POINTER): STRING is
+			-- Code name for generic parameter `pos' in `obj'.
+		external "C | %"eif_gen_conf.h%""
+		end
+
 
 feature -- Obsolete
 
@@ -567,23 +691,37 @@ feature -- Obsolete
 			Result := valid_operands (args)
 		end
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class ROUTINE
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------

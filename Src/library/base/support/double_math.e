@@ -1,9 +1,10 @@
 indexing
 
-	description:
-		"Basic mathematical operations, double-precision. %
-		%This class may be used as ancestor by classes needing its %
-		%facilities."
+	description: "[
+		Basic mathematical operations, double-precision.
+		This class may be used as ancestor by classes needing its facilities.
+		]"
+
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,9 +26,9 @@ feature -- Access
 		local
 			a: DOUBLE
 		do
-			a := 2.0;
+			a := 2.0
 			Result := log (v) / log (a)
-		end;
+		end
 
 	cosine (v: DOUBLE): DOUBLE is
 			-- Trigonometric cosine of radian `v' approximated
@@ -36,7 +37,7 @@ feature -- Access
 			"C | <math.h>"
 		alias
 			"cos"
-		end;
+		end
 
 	arc_cosine (v: DOUBLE): DOUBLE is
 			-- Trigonometric arccosine of radian `v'
@@ -45,7 +46,7 @@ feature -- Access
 			"C | <math.h>"
 		alias
 			"acos"
-		end;
+		end
 
 	sine (v: DOUBLE): DOUBLE is
 			-- Trigonometric sine of radian `v' approximated
@@ -54,7 +55,7 @@ feature -- Access
 			"C | <math.h>"
 		alias
 			"sin"
-		end;
+		end
 
 	arc_sine (v: DOUBLE): DOUBLE is
 			-- Trigonometric arcsine of radian `v'
@@ -63,7 +64,7 @@ feature -- Access
 			"C | <math.h>"
 		alias
 			"asin"
-		end;
+		end
 
 	tangent (v: DOUBLE): DOUBLE is
 			-- Trigonometric tangent of radian `v' approximated
@@ -72,7 +73,7 @@ feature -- Access
 			"C | <math.h>"
 		alias
 			"tan"
-		end;
+		end
 
 	arc_tangent (v: DOUBLE): DOUBLE is
 			-- Trigonometric arctangent of radian `v'
@@ -81,31 +82,37 @@ feature -- Access
 			"C | <math.h>"
 		alias
 			"atan"
-		end;
+		end
 
 	sqrt (v: DOUBLE): DOUBLE is
 			-- Square root of `v'
 		external
 			"C | <math.h>"
-		end;
+		end
+
+	exp (x: DOUBLE): DOUBLE is
+			-- Exponential of `v'.
+		external
+			"C | <math.h>"
+		end
 
 	log (v: DOUBLE): DOUBLE is
 			-- Natural logarithm of `v'
 		external
 			"C | <math.h>"
-		end;
+		end
 
 	log10 (v: DOUBLE): DOUBLE is
 			-- Base 10 logarithm of `v'
 		external
 			"C | <math.h>"
-		end;
+		end
 
 	floor (v: DOUBLE): DOUBLE is
 			-- Greatest integral less than or equal to `v'
 		external
 			"C | <math.h>"
-		end;
+		end
 
 	ceiling (v: DOUBLE): DOUBLE is
 			-- Least integral greater than or equal to `v'
@@ -113,9 +120,7 @@ feature -- Access
 			"C | <math.h>"
 		alias
 			"ceil"
-		end;
-
-feature {NONE} -- Implementation
+		end
 
 	dabs (v: DOUBLE): DOUBLE is
 			-- Absolute of `v'
@@ -123,27 +128,41 @@ feature {NONE} -- Implementation
 			"C | <math.h>"
 		alias
 			"fabs"
-		end;
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class DOUBLE_MATH
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

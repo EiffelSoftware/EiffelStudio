@@ -1,10 +1,10 @@
 indexing
 
 	description:
-		"32 bit DLL routine for Windows";
+		"32 bit DLL routine for Windows"
 
-	status: "See notice at end of class";
-	date: "$Date$";
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class DLL_32_ROUTINE
@@ -15,7 +15,7 @@ inherit
 			shared_library
 		end
 
-creation
+create
 	make_by_name, make_by_index
 
 feature
@@ -105,7 +105,7 @@ feature -- Basic operations
 			when T_no_type then
 				desc_call_dll32_procedure (function_handle, arguments_size, $actual_args)
 			end
-			routine_called := true
+			routine_called := True
 		end
 
 feature -- Status report
@@ -248,43 +248,43 @@ feature {NONE} -- Implementation
 					else
 						array_area := s1.area
 					end
-					desc_copy_any_arg ($area, array_area, position*4, arg_size)
+					desc_copy_arg ($area, $array_area, position * 4, arg_size)
 				when T_boolean then
 					b_ref ?= args @ i
 					b := b_ref.item
 					if b then
-						argument_array.put (1, position+1)
+						argument_array.put (1, position + 1)
 					else
-						argument_array.put (0, position+1)
+						argument_array.put (0, position + 1)
 					end
 				when T_character then
 					c_ref ?= args @ i
 					c := c_ref.item
-					argument_array.put (c_ref.code, position+1)
+					argument_array.put (c_ref.code, position + 1)
 				when T_double then
 					d_ref ?= args @ i
 					d := d_ref.item
-					desc_copy_arg ($area, $d, position*4, arg_size)
+					desc_copy_arg ($area, $d, position * 4, arg_size)
 					position := position + 1
 				when T_integer, T_short_integer then
 					i_ref ?= args @ i
 					int := i_ref.item
-					argument_array.put (int, position+1)
+					argument_array.put (int, position + 1)
 				when T_real then
 					r_ref ?= args @ i
 					r := r_ref.item
-					desc_copy_arg ($area, $r, position*4, arg_size)
+					desc_copy_arg ($area, $r, position * 4, arg_size)
 				when T_pointer then
 					p_ref ?= args @ i
 					p := p_ref.item
-					desc_copy_arg ($area, p, position*4, arg_size)
+					desc_copy_arg ($area, p, position * 4, arg_size)
 				when T_reference then
 					a := args @ i
-					desc_copy_any_arg ($area, a, position*4, arg_size)
+					desc_copy_arg ($area, $a, position * 4, arg_size)
 				when T_string then
 					s ?= args @ i
 					a := s.to_c
-					desc_copy_any_arg ($area, a, position*4, arg_size)
+					desc_copy_arg ($area, $a, position * 4, arg_size)
 				end
 				i := i + 1
 				j := j + 1
@@ -338,7 +338,7 @@ feature {NONE} -- Implementation
 				size := size + desc_get_size (argument_types @ i)
 				i := i + 1
 			end
-			!! argument_array.make (1, size // 4)
+			create argument_array.make (1, size // 4)
 			arguments_size := size // 4
 		end
 
@@ -413,15 +413,6 @@ feature {NONE} -- Externals
 			"DESC_BCOPY"
 		end
 
-	desc_copy_any_arg (target:POINTER; source: ANY; offset, size: INTEGER) is
-			-- Copy `size' characters from `source'
-			-- to `target' + `offset'
-		external
-			"C [macro %"eif_desc.h%"]"
-		alias
-			"DESC_BCOPY"
-		end
-
 	desc_get_function_index_pointer (m_p: POINTER; r_index: INTEGER): POINTER is
 			-- Get function handle (by index)
 		external
@@ -438,7 +429,7 @@ feature {NONE} -- Externals
 			-- Creates an Eiffel string from a
 			-- C manifest string `str'
 		external
-			"C [macro %"eif_macros.h%"] (EIF_POINTER): EIF_REFERENCE"
+			"C [macro %"eif_macros.h%"] (char *): EIF_REFERENCE"
 		alias
 			"RTMS"
 		end
@@ -451,24 +442,38 @@ feature {NONE} -- Externals
 			"GetProcAddress"
 		end
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class DLL_32_ROUTINE
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

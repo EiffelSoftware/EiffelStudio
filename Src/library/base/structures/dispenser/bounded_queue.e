@@ -1,15 +1,15 @@
 indexing
 
 	description:
-		"Queues with a bounded physical size, implemented by arrays";
+		"Queues with a bounded physical size, implemented by arrays"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: dispenser, array;
 	representation: array;
 	access: fixed, fifo, membership;
 	size: fixed;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class BOUNDED_QUEUE [G] inherit
@@ -17,14 +17,14 @@ class BOUNDED_QUEUE [G] inherit
 	QUEUE [G]
 		redefine
 			linear_representation, has
-		end;
+		end
 
 	BOUNDED [G]
 		undefine
 			copy, is_equal
-		end;
+		end
 
-creation
+create
 
 	make
 
@@ -35,11 +35,11 @@ feature -- Initialization
 		require
 			non_negative_argument: n >= 0
 		do
-			!!fl.make (0, n);
+			create fl.make (0, n)
 				-- One entry is kept free (the last one in the list)
 		ensure
 			capacity_expected: capacity = n
-		end;
+		end
 
 feature -- Access
 
@@ -47,7 +47,7 @@ feature -- Access
 			-- Oldest item.
 		do
 			Result := fl.item (out_index)
-		end;
+		end
 
 	has (v: like item): BOOLEAN is
 			-- Does queue include `v'?
@@ -64,15 +64,15 @@ feature -- Access
 						until
 							Result or i > fl.count
 						loop
-							Result := fl.item (i) /= Void and then v.is_equal (fl.item (i));
+							Result := fl.item (i) /= Void and then v.is_equal (fl.item (i))
 							i := i + 1
-						end;
+						end
 						from
 							i := 0
 						until
 							Result or i >= in_index
 						loop
-							Result := fl.item (i) /= Void and then v.is_equal (fl.item (i));
+							Result := fl.item (i) /= Void and then v.is_equal (fl.item (i))
 							i := i + 1
 						end
 					else
@@ -81,7 +81,7 @@ feature -- Access
 						until
 							Result or i >= in_index
 						loop
-							Result := fl.item (i) /= Void and then v.is_equal (fl.item (i));
+							Result := fl.item (i) /= Void and then v.is_equal (fl.item (i))
 							i := i + 1
 						end
 					end
@@ -93,15 +93,15 @@ feature -- Access
 					until
 						Result or i > fl.count
 					loop
-						Result := v = fl.item (i);
+						Result := v = fl.item (i)
 						i := i + 1
-					end;
+					end
 					from
 						i := 0
 					until
 						Result or i >= in_index
 					loop
-						Result := v = fl.item (i);
+						Result := v = fl.item (i)
 						i := i + 1
 					end
 				else
@@ -110,12 +110,12 @@ feature -- Access
 					until
 						Result or i >= in_index
 					loop
-						Result := v = fl.item (i);
+						Result := v = fl.item (i)
 						i := i + 1
 					end
 				end
 			end
-		end;
+		end
 
 
 feature -- Measurement
@@ -124,35 +124,35 @@ feature -- Measurement
 			-- Number of items that may be kept.
 		do
 			Result := fl.capacity - 1
-		end;
+		end
 
 	count: INTEGER is
 			-- Number of items.
 		local
-			size: INTEGER;
+			size: INTEGER
 		do
-			size := fl.capacity;
+			size := fl.capacity
 			Result := (in_index - out_index + size)\\ size
-		end;
+		end
 
 feature -- Status report
 
 	off: BOOLEAN is
 			-- Is there no current item?
 		local
-			size: INTEGER;
+			size: INTEGER
 		do
 			if index = in_index then
-				Result := true
+				Result := True
 			else
-				size := fl.capacity;
+				size := fl.capacity
 				Result := count <= ((index - out_index + size) \\ size)
 				end
-		end;
+		end
 
-	prunable: BOOLEAN is true;
+	prunable: BOOLEAN is True
 
-	resizable: BOOLEAN is true;
+	resizable: BOOLEAN is True
 
 	extendible: BOOLEAN is
 		do
@@ -165,60 +165,60 @@ feature -- Cursor movement
 			-- Move cursor to first position.
 		do
 			index := out_index
-		end;
+		end
 
 	finish is
 			-- Move cursor to last position.
 		local
-			size: INTEGER;
+			size: INTEGER
 		do
-			if empty then
+			if is_empty then
 				index := 0
 			else
-				size := fl.capacity;
-				index := (in_index -1 + size) \\ size
+				size := fl.capacity
+				index := (in_index - 1 + size) \\ size
 			end
-		end;
+		end
 
 	forth is
 			-- Move cursor to next position.
 		do
 			index := (index + 1) \\ fl.capacity
-		end;
+		end
 
 feature -- Element change
 
 	extend, force, put (v: G) is
 			-- Add `v' as newest element.
 		do
-			fl.put (v, in_index);
-			in_index := (in_index + 1) \\ fl.capacity;
-		end;
+			fl.put (v, in_index)
+			in_index := (in_index + 1) \\ fl.capacity
+		end
 
 	replace (v: like item) is
 			-- Replace oldest item by `v'.
 		do
 			fl.put (v, out_index)
-		end;
+		end
 
 feature -- Removal
 
 	remove is
 			-- Remove oldest item.
 		do
-			out_index := (out_index + 1) \\ fl.capacity;
-		end;
+			out_index := (out_index + 1) \\ fl.capacity
+		end
 
-	prune (v : like item) is
+	prune (v: like item) is
 		do
 		end
 
 	wipe_out is
 			-- Remove all items.
 		do
-			out_index := 0;
-			in_index := 0;
-		end;
+			out_index := 0
+			in_index := 0
+		end
 
 feature -- Conversion
 
@@ -228,22 +228,22 @@ feature -- Conversion
 		local
 			i: INTEGER
 		do
-			!!Result.make (count);
+			create Result.make (count)
 			if out_index > in_index then
 				from
 					i := out_index
 				until
-					i > fl.count
+					i >= fl.count
 				loop
-					Result.extend (fl.item (i));
+					Result.extend (fl.item (i))
 					i := i + 1
-				end;
+				end
 				from
 					i := 1
 				until
 					i >= in_index
 				loop
-					Result.extend (fl.item (i));
+					Result.extend (fl.item (i))
 					i := i + 1
 				end
 			else
@@ -252,30 +252,30 @@ feature -- Conversion
 				until
 					i >= in_index
 				loop
-					Result.extend (fl.item (i));
+					Result.extend (fl.item (i))
 					i := i + 1
 				end
 			end
-		end;
+		end
 
 
 feature {BOUNDED_QUEUE} -- Implementation
 
-	out_index: INTEGER;
+	out_index: INTEGER
 			-- Position of oldest item
 
-	in_index: INTEGER;
+	in_index: INTEGER
 			-- Position for next insertion
 
-	index: INTEGER;
+	index: INTEGER
 			-- Current position
 
-	fl: ARRAY[G]
+	fl: ARRAY [G]
 			-- Storage
 
 feature -- Measurement
 
-	occurrences (v : G):INTEGER is
+	occurrences (v: G): INTEGER is
 		do
 			if object_comparison then
 				fl.compare_objects
@@ -289,25 +289,39 @@ invariant
 
 	extendible_definition: extendible = not full
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class BOUNDED_QUEUE
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

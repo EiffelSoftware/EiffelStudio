@@ -1,28 +1,30 @@
 indexing
 	description:
 		"A sequence of actions to be performed on `call'"
-	instructions: 
-		"Use features inherited from LIST to add/remove actions. %
-		%An action is a procedure of ANY class that takes EVENT_DATA. %
-		%When `call' is called the actions in the list will be executed %
-		%in order stating at `first'. %
-		%An action may call `abort' which will cause `call' to stop executing %
-		%actions in the sequence. (Until the next call to `call'). %
-		%Descendants may redefine `initialize' to arrange for `call' to %
-		%be called by an event source. %
-		%Use `block', `pause', `flush' and `resume' to change the behavior %
-		%of `call'.%
-		%eg. %
-		% birthday_data: TUPLE [INTEGER, STRING] -- (age, name) %
-		% birthday_actions: ACTIONS_SEQUENCE [like birthday_data] %
-		% create birthday_actions.make (%"birthday%", <<%"age%",%"name%">>) %
-		% send_card (age: INTEGER, name, from: STRING) is ...%
-		% buy_gift (age: INTEGER, name, gift, from: STRING) is ...%
-		% birthday_actions.extend (~send_card (?, ?, %"Sam%") %
-		% birthday_actions.extend (~buy_gift (?, ?, %"Wine%", %"Sam%") %
-		% birthday_actions.call ([35, %"Bertrand%"]) %
-		% causes call to: send_card (35, %"Bertrand%", %"Sam%") %
-		%                 buy_gift (35, %"Bertrand%", %"Wine%", %"Sam%")"
+
+	instructions: "[ 
+		Use features inherited from LIST to add/remove actions.
+		An action is a procedure of ANY class that takes EVENT_DATA.
+		When `call' is called the actions in the list will be executed
+		in order stating at `first'.
+		An action may call `abort' which will cause `call' to stop executing
+		actions in the sequence. (Until the next call to `call').
+		Descendants may redefine `initialize' to arrange for `call' to
+		be called by an event source.
+		Use `block', `pause', `flush' and `resume' to change the behavior
+		of `call'.
+		eg.
+		 birthday_data: TUPLE [INTEGER, STRING] -- (age, name)
+		 birthday_actions: ACTIONS_SEQUENCE [like birthday_data]
+		 create birthday_actions.make ("birthday", <<"age","name">>)
+		 send_card (age: INTEGER, name, from: STRING) is ...
+		 buy_gift (age: INTEGER, name, gift, from: STRING) is ...
+		 birthday_actions.extend (~send_card (?, ?, "Sam")
+		 birthday_actions.extend (~buy_gift (?, ?, "Wine", "Sam")
+		 birthday_actions.call ([35, "Julia"])
+		 causes call to: send_card (35, "Julia", "Sam")
+		                 buy_gift (35, "Julia", "Wine", "Sam")
+		]"
 
 	status:
 		"See notice at end of class"
@@ -49,7 +51,7 @@ inherit
 			default_create
 		end
 
-creation
+create
 	default_create,
 	make
 
@@ -186,7 +188,7 @@ feature -- Status setting
 			state := Normal_state
 			from
 			until
-				call_buffer.empty
+				call_buffer.is_empty
 			loop
 				call (call_buffer.item)
 				call_buffer.remove
@@ -200,12 +202,12 @@ feature -- Status setting
 		do
 			call_buffer.wipe_out
 		ensure
-			call_buffer_empty: call_buffer.empty
+			call_buffer_empty: call_buffer.is_empty
 		end
 
 feature -- Status report
 
-	state: INTEGER    
+	state: INTEGER 
 			-- One of `Normal_state' `Paused_state' or `Blocked_state'
 
 	Normal_state: INTEGER is 1
@@ -215,12 +217,12 @@ feature -- Status report
 	call_is_underway: BOOLEAN is
 			-- Is `call' currently being executed?
 		do
-			Result := not is_aborted_stack.empty
+			Result := not is_aborted_stack.is_empty
 		ensure
-			Result = not is_aborted_stack.empty
+			Result = not is_aborted_stack.is_empty
 		end
 
-feature  -- Element Change
+feature -- Element Change
 
 	prune_when_called (an_action: like item) is
 			-- Remove `an_action' after the next time it is called.
@@ -278,7 +280,7 @@ feature  -- Element Change
 			"use not_empty_actions"
 		do
 			not_empty_actions.extend (a_source_connection_agent)
-			if not empty then
+			if not is_empty then
 				a_source_connection_agent.call ([])
 			end 
 		end
@@ -286,12 +288,12 @@ feature  -- Element Change
 feature -- Event handling
 
 	not_empty_actions: LINKED_LIST [PROCEDURE [ANY, TUPLE []]]
-			-- Actions to be performed on transition from `empty' to not `empty'.
+			-- Actions to be performed on transition from `is_empty' to not `is_empty'.
 
 	empty_actions: LINKED_LIST [PROCEDURE [ANY, TUPLE []]]
-			-- Actions to be performed on transition from not `empty' to `empty'.
+			-- Actions to be performed on transition from not `is_empty' to `is_empty'.
 
-feature  {LINKED_LIST} -- Implementation
+feature {LINKED_LIST} -- Implementation
 
 	new_cell (v: like item): like first_element is
 			-- Create new cell with `v'.
@@ -354,7 +356,7 @@ feature {NONE} -- Implementation
 	dummy_event_data_internal: EVENT_DATA
 			-- See dummy_event_data.
 	
-	kamikazes: LINKED_LIST [PROCEDURE [ANY, TUPLE[]]]
+	kamikazes: LINKED_LIST [PROCEDURE [ANY, TUPLE []]]
 			-- Used by `prune_when_called'.
 
 invariant
@@ -363,28 +365,41 @@ invariant
 	not_has_void: not has (Void)
 	valid_state:
 		state = Normal_state or state = Paused_state or state = Blocked_state
-	call_buffer_consistent: state = Normal_state implies call_buffer.empty
-	not_empty_actions_not_void: not_empty_actions /= void
-	empty_actions_not_void: empty_actions /= void
+	call_buffer_consistent: state = Normal_state implies call_buffer.is_empty
+	not_empty_actions_not_void: not_empty_actions /= Void
+	empty_actions_not_void: empty_actions /= Void
 	source_connection_agent_disgarded_after_call:
 
-end
+indexing
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
+end -- class ACTION_SEQUENCE 

@@ -1,14 +1,14 @@
 indexing
 
 	description:
-		"Cursor trees in linked representation";
+		"Cursor trees in linked representation"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: linked_cursor_tree, cursor_tree;
 	access: cursor, membership;
 	representation: recursive, linked;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class LINKED_CURSOR_TREE [G] inherit
@@ -19,7 +19,7 @@ class LINKED_CURSOR_TREE [G] inherit
 			active, cursor_anchor, is_leaf
 		end
 
-creation
+create
 
 	make, make_root
 
@@ -30,26 +30,26 @@ feature -- Initialization
 		local
 			dummy: G
 		do
-			!! above_node.make (dummy);
+			create above_node.make (dummy)
 			active := above_node
 		ensure
-			is_above: above;
+			is_above: above
 			is_empty: is_empty
-		end;
+		end
 
 	make_root (v: G) is
 			-- Create a tree with `v' as root.
 		do
-			make;
+			make
 			put_root (v)
-		end;
+		end
 
 feature -- Status report
 
-	full: BOOLEAN is false;
+	full: BOOLEAN is False
 			-- Is tree filled to capacity? (Answer: no.)
 
-	prunable: BOOLEAN is true
+	prunable: BOOLEAN is True
 
 	is_leaf: BOOLEAN is
 		do
@@ -64,32 +64,32 @@ feature -- Element change
 			-- Add `v' to the right of cursor position.
 		do
 			if below then
-				active.child_put_right (v);
-				active.child_forth;
-				active_parent := active;
-				active := active_parent.child;
-				below := false
+				active.child_put_right (v)
+				active.child_forth
+				active_parent := active
+				active := active_parent.child
+				below := False
 			elseif before then
-				active_parent.child_put_left (v);
-				active_parent.child_back;
+				active_parent.child_put_left (v)
+				active_parent.child_back
 				active := active_parent.child
 			else
 				active_parent.child_put_right (v)
 			end
-		end;
+		end
 
 	put_root (v: G) is
 			-- Put `v' as root of an empty tree.
 		require
 			is_empty: is_empty
 		do
-			above_node.child_put_right (v);
-			active_parent := above_node;
+			above_node.child_put_right (v)
+			active_parent := above_node
 			active := active_parent.child
 		ensure
-			is_root: is_root;
+			is_root: is_root
 			count = 1
-		end;
+		end
 
 	put_child (v: G) is
 			-- Put `v' as child of a leaf.
@@ -107,36 +107,50 @@ feature {LINKED_CURSOR_TREE} -- Implementation
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
 		do
-			!! Result.make
-		end;
+			create Result.make
+		end
 
 feature {NONE} -- Implementation
 
-	cursor_anchor: LINKED_TREE_CURSOR [G];
+	cursor_anchor: LINKED_TREE_CURSOR [G]
 			-- Anchor for definitions concerning cursors
 
 	active: LINKED_TREE [G];
 			-- Current node
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class LINKED_CURSOR_TREE
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

@@ -1,11 +1,12 @@
 indexing
 
-	description:
-		"References to objects containing a reference to objects %
-		%meant to be exchanged with non-Eiffel software.";
+	description: "[
+		References to objects containing reference to object
+		meant to be exchanged with non-Eiffel software.
+		]"
 
-	status: "See notice at end of class";
-	date: "$Date$";
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class POINTER_REF inherit
@@ -17,14 +18,14 @@ class POINTER_REF inherit
 
 feature -- Access
 
-	item: POINTER;
+	item: POINTER
 			-- Pointer value
 
 	hash_code: INTEGER is
 			-- Hash code value
 		do
 			Result := (c_hashcode (item)).abs
-		end;
+		end
 
 feature -- Element change
 
@@ -41,14 +42,15 @@ feature -- Status report
 			-- (True if it is not its type's default.)
 		do
 			Result := item /= default_pointer
-		end;
+		end
 
 feature -- Operations
 
-	infix "+" (offset: INTEGER): POINTER is
+	infix "+" (offset: INTEGER): like Current is
 			-- Pointer moved by an offset of `offset' bytes.
 		do
-			Result := c_offset_pointer (item, offset)
+			create Result
+			Result.set_item (c_offset_pointer (item, offset))
 		end
 
 feature -- Memory copy
@@ -73,13 +75,23 @@ feature -- Memory copy
 			c_memmove (item, a_source, a_size)
 		end
 
+	memory_set (val, n: INTEGER) is
+			-- Fill first `n' bytes of the memory pointed by `Current'
+			-- with constant `val'.
+		require
+			valid_val: val >= 0
+			valid_n: n >= 0
+		do
+			c_memset (item, val, n)	
+		end
+
 feature -- Output
 
 	out: STRING is
 			-- Printable representation of pointer value
 		do
 			Result := c_outp (item)
-		end;
+		end
 
 feature {NONE} -- Implementation
 
@@ -87,7 +99,7 @@ feature {NONE} -- Implementation
 			-- Printable representation of pointer value
 		external
 			"C | %"eif_out.h%""
-		end;
+		end
 
 	c_hashcode (p: POINTER): INTEGER is
 			-- Hash code value of `p'
@@ -95,7 +107,7 @@ feature {NONE} -- Implementation
 			"C [macro %"eif_misc.h%"]"
 		alias
 			"conv_pi"
-		end;
+		end
 
 	c_offset_pointer (p: POINTER; o: INTEGER): POINTER is
 			-- Pointer moved by an offset of `o' bytes from `p'.
@@ -120,26 +132,48 @@ feature {NONE} -- Implementation
 		alias
 			"memmove"
 		end
+
+	c_memset (source: POINTER; val: INTEGER; count: INTEGER) is
+			-- C memset
+		external
+			"C (void *, int, size_t) | <string.h>"
+		alias
+			"memset"
+		end
 	
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class POINTER_REF
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

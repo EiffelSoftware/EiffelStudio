@@ -1,10 +1,10 @@
 indexing
 
 	description:
-		"References to objects containing a boolean value";
+		"References to objects containing a boolean value"
 
-	status: "See notice at end of class";
-	date: "$Date$";
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class BOOLEAN_REF inherit
@@ -16,14 +16,14 @@ class BOOLEAN_REF inherit
 
 feature -- Access
 
-	item: BOOLEAN;
+	item: BOOLEAN
 			-- Boolean value
 
 	hash_code: INTEGER is
 			-- Hash code value
 		do
 			Result := 1
-		end;
+		end
 
 feature -- Status report
 
@@ -32,7 +32,7 @@ feature -- Status report
 			-- (True if it is not its type's default.)
 		do
 			Result := item
-		end;
+		end
 
 feature -- Conversion
 
@@ -55,8 +55,8 @@ feature -- Element change
 	set_item (b: BOOLEAN) is
 			-- Make `b' the `item' value.
 		do
-			item := b;
-		end;
+			item := b
+		end
 
 feature -- Basic operations
 
@@ -67,10 +67,10 @@ feature -- Basic operations
 		do
 			Result := item and other.item
 		ensure
-			de_morgan: Result = not (not Current or not other);
-			commutative: Result = (other and Current);
+			de_morgan: Result = not (not Current or not other)
+			commutative: Result = (other and Current)
 			consistent_with_semi_strict: Result implies (Current and then other)
-		end;
+		end
 
 	infix "and then" (other: like Current): BOOLEAN is
 			-- Boolean semi-strict conjunction with `other'
@@ -80,7 +80,7 @@ feature -- Basic operations
 			Result := item and then other.item
 		ensure
 			de_morgan: Result = not (not Current or else not other)
-		end;
+		end
 
 	infix "implies" (other: like Current): BOOLEAN is
 			-- Boolean implication of `other'
@@ -91,14 +91,14 @@ feature -- Basic operations
 			Result := item implies other.item
 		ensure
 			definition: Result = (not Current or else other)
-		end;
+		end
 
-	prefix "not" : like Current is
+	prefix "not": like Current is
 			-- Negation
 		do
-			!! Result;
+			create Result
 			Result.set_item (not item)
-		end;
+		end
 
 	infix "or" (other: like Current): BOOLEAN is
 			-- Boolean disjunction with `other'
@@ -107,10 +107,10 @@ feature -- Basic operations
 		do
 			Result := item or other.item
 		ensure
-			de_morgan: Result = not (not Current and not other);
-			commutative: Result = (other or Current);
+			de_morgan: Result = not (not Current and not other)
+			commutative: Result = (other or Current)
 			consistent_with_semi_strict: Result implies (Current or else other)
-		end;
+		end
 
 	infix "or else" (other: like Current): BOOLEAN is
 			-- Boolean semi-strict disjunction with `other'
@@ -120,7 +120,7 @@ feature -- Basic operations
 			Result := item or else other.item
 		ensure
 			de_morgan: Result = not (not Current and then not other)
-		end;
+		end
 
 	infix "xor" (other: like Current): BOOLEAN is
 			-- Boolean exclusive or with `other'
@@ -130,49 +130,59 @@ feature -- Basic operations
 			Result := item xor other.item
 		ensure
 			definition: Result = ((Current or other) and not (Current and other))
-		end;
+		end
 
 feature -- Output
 
 	out: STRING is
 			-- Printable representation of boolean
 		do
-			Result := c_outb (item)
-		end;
-
-feature {NONE} -- Implementation
-
-	c_outb (b: BOOLEAN): STRING is
-			-- Printable representation of boolean
-		external
-			"C | %"eif_out.h%""
-		end;
+			if item then
+				Result := "True"
+			else
+				Result := "False"
+			end
+		end
 
 invariant
 
-	involutive_negation: is_equal (not (not Current));
-	non_contradiction: not (Current and (not Current));
+	involutive_negation: is_equal (not (not Current))
+	non_contradiction: not (Current and (not Current))
 	completeness: Current or else (not Current)
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class BOOLEAN_REF
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

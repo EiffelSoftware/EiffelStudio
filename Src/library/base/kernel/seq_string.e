@@ -1,4 +1,5 @@
 indexing
+
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,7 +21,7 @@ class SEQ_STRING inherit
 			linear_representation
 		redefine
 			has, prune
-		end;
+		end
 
 	SEQUENCE [CHARACTER]
 		rename
@@ -41,7 +42,7 @@ class SEQ_STRING inherit
 			wipe_out, sequence_put
 		end
 
-creation
+create
 
 	make
 
@@ -53,28 +54,28 @@ feature -- Access
 			-- where `current_item' and `c' are identical.
 		do
 			if not off then
-				index := index_of (c, index);
+				index := index_of (c, index)
 				if index = 0 then
 					index := count + 1
 				end
 			end
-		end;
+		end
 
 	search_before (c: CHARACTER) is
 			-- Move cursor to greatest position at or before cursor
 			-- where `current_item' and `c' are identical;
 			-- go before if unsuccessful.
 		local
-			str: like Current;
+			str: like Current
 		do
-			str := mirrored;
+			str := mirrored
 			if not str.off then
-				index := count + 1 - str.index_of (c, str.index);
+				index := count + 1 - str.index_of (c, str.index)
 				if index = count + 1 then
 					index := 0
 				end
 			end
-		end;
+		end
 
 	search_string_after (s: STRING; fuzzy: INTEGER) is
 			-- Move cursor to first position
@@ -84,16 +85,16 @@ feature -- Access
 			-- The 'fuzzy' parameter is the maximum allowed number
 			-- of mismatches within the pattern. A 0 means an exact match.
 		local
-			s_area: ANY;
+			s_area: ANY
 		do
 			if not off then
-				s_area := s.area;
-				index := str_str ($area, $s_area, count, s.count, index, fuzzy);
+				s_area := s.area
+				index := str_str ($area, $s_area, count, s.count, index, fuzzy)
 				if index = 0 then
 					index := count + 1
 				end
 			end
-		end;
+		end
 
 	search_string_before (s: STRING; fuzzy: INTEGER) is
 			-- Move cursor to first position
@@ -103,32 +104,32 @@ feature -- Access
 			-- The 'fuzzy' parameter is the maximum allowed number
 			-- of mismatches within the pattern. A 0 means an exact match.
 		local
-			s_mir_area, mir_area: ANY;
-			str_mirrored: like Current;
-			s_mirrored: STRING;
+			s_mir_area, mir_area: ANY
+			str_mirrored: like Current
+			s_mirrored: STRING
 		do
 			if not off then
-				str_mirrored := mirrored;
-				s_mirrored := s.mirrored;
-				s_mir_area := s_mirrored.area;
-				mir_area := str_mirrored.area;
+				str_mirrored := mirrored
+				s_mirrored := s.mirrored
+				s_mir_area := s_mirrored.area
+				mir_area := str_mirrored.area
 				index := count - str_str ($mir_area, $s_mir_area, count, s.count,
-						str_mirrored.index, fuzzy) + 1;
+						str_mirrored.index, fuzzy) + 1
 				if index = count + 1 then
 					index := 0
 				else
 					index := index - s.count + 1
 				end
 			end
-		end;
+		end
 
 	current_item: CHARACTER is
 			-- Current item
 		do
 			Result := item (index)
-		end;
+		end
 
-	index: INTEGER;
+	index: INTEGER
 			-- Index of `current_item', if valid
 			-- Valid values are between 1 and `count' (if `count' > 0).
 
@@ -138,38 +139,38 @@ feature -- Access
 		local
 			occur: INTEGER
 		do
-			if not empty then
+			if not is_empty then
 				from
-					Result := index_of (c, 1);
+					Result := index_of (c, 1)
 					if Result /= 0 then
 						occur := 1
-					end;
+					end
 				until
 					(Result = 0) or else (occur = i)
 				loop
 					if Result /= count then
-						Result := index_of (c, Result + 1);
+						Result := index_of (c, Result + 1)
 						if Result /= 0 then
 							occur := occur + 1
 						end
 					else
 						Result := 0
-					end;
+					end
 				end
 			end
 		ensure then
 			Index_value: (Result = 0) or item (Result) = c
-		end;
+		end
 
 
 
 	has (c: CHARACTER): BOOLEAN is
 			-- Does string include `c'?
 		do
-			if not empty then
+			if not is_empty then
 				Result := (index_of (c, 1) /= 0)
 			end
-		end;
+		end
 
 feature -- Status report
 
@@ -177,13 +178,13 @@ feature -- Status report
 			-- Is there no valid cursor position to the left of cursor?
 		do
 			Result := index < 1
-		end;
+		end
 
 	after: BOOLEAN is
 			-- Is there no valid cursor position to the right of cursor?
 		do
 			Result := index > count
-		end;
+		end
 
 feature -- Cursor movement
 
@@ -191,25 +192,25 @@ feature -- Cursor movement
 			-- Move to first position.
 		do
 			index := 1
-		end;
+		end
 
 	finish is
 			-- Move to last position.
 		do
 			index := count
-		end;
+		end
 
 	back is
 			-- Move to previous position.
 		do
 			index := index - 1
-		end;
+		end
 
 	forth is
 			-- Move to next position.
 		do
-			index := index + 1;
-		end;
+			index := index + 1
+		end
 
 feature -- Element change
 
@@ -217,38 +218,38 @@ feature -- Element change
 			-- Replace current item by `c'.
 		do
 			put (c, index)
-		end;
+		end
 
 	share (other: like Current) is
 			-- Make string share the text of `other'.
 		require
 			argument_not_void: other /= Void
 		do
-			string_share (other);
-			index := other.index;
+			string_share (other)
+			index := other.index
 		ensure
-			shared_index: other.index = index;
-		end;
+			shared_index: other.index = index
+		end
 
 	precede (c: CHARACTER) is
 			-- Add `c' at front.
 		do
-			string_precede (c);
-			index := index + 1;
+			string_precede (c)
+			index := index + 1
 		ensure
-			new_index: index = old index + 1;
-		end;
+			new_index: index = old index + 1
+		end
 
 	prepend (s: STRING) is
 			-- Prepend a copy of `s' at front.
 		require
 			argument_not_void: s /= Void
 		do
-			string_prepend (s);
-			index := index + s.count;
+			string_prepend (s)
+			index := index + s.count
 		ensure
-			new_index: index = old index + s.count;
-		end;
+			new_index: index = old index + s.count
+		end
 
 feature -- Removal
 
@@ -258,25 +259,25 @@ feature -- Removal
 			i: INTEGER
 		do
 			if count /= 0 then
-				i := index_of (c, 1);
+				i := index_of (c, 1)
 				if i /= 0 then
 					remove (i)
 				end
 			end
-		end;
+		end
 
 	remove_current_item is
 			-- Remove current item.
 		do
 			remove (index)
-		end;
+		end
 
 	wipe_out is
 			-- Clear out all characters.
 		do
-			string_wipe_out;
-			index := 0;
-		end;
+			string_wipe_out
+			index := 0
+		end
 
 feature -- Duplication
 
@@ -286,7 +287,7 @@ feature -- Duplication
 			-- same current position (i.e. the cursor is pointing
 			-- at the same item)
 		do
-			Result := string_mirrored;
+			Result := string_mirrored
 			if not after then
 				from
 					Result.start
@@ -294,14 +295,14 @@ feature -- Duplication
 					Result.index = count - index + 1
 				loop
 					Result.forth
-				end;
-			end;
+				end
+			end
 		ensure
-			mirrored_index: Result.index = count - index + 1;
-			same_count: Result.count = count;
+			mirrored_index: Result.index = count - index + 1
+			same_count: Result.count = count
 		--	reverse_entries:
 		--	for all `i: 1..count, Result.item (i) = item (count + 1 - i)'
-		end;
+		end
 
 	mirror is
 			-- Reverse the characters order.
@@ -309,40 +310,54 @@ feature -- Duplication
 			-- The current position will be on the same item
 			-- as before.
 		do
-			string_mirror;
-			index := count + 1 - index;
+			string_mirror
+			index := count + 1 - index
 		ensure
-			same_count: count = old count;
-			mirrored_index: index = count - old index + 1;
+			same_count: count = old count
+			mirrored_index: index = count - old index + 1
 		--	reverse_entries:
 		--	for all `i: 1..count, item (i) = old item (count + 1 - i)'
-		end;
+		end
 
 feature {NONE} -- Inapplicable
 
 	go_to (r: CURSOR) is
 			-- Go to position marked `r'.
 		do
-		end;
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class SEQ_STRING
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

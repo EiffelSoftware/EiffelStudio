@@ -1,52 +1,36 @@
 indexing
 
 	description:
-		"Sorted sets implemented as binary search trees";
+		"Sorted sets implemented as binary search trees"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: binary_search_tree_set, set, binary_search_tree;
 	representation: recursive, array;
 	access: membership, min, max;
 	contents: generic;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	BINARY_SEARCH_TREE_SET [G -> COMPARABLE]
+class BINARY_SEARCH_TREE_SET [G -> COMPARABLE] inherit
 
-inherit
 	COMPARABLE_SET [G]
 		redefine
-			min, max, has
+			min, max, has, off
 		end
 
-creation
+	TRAVERSABLE_SUBSET [G]
+
+create
 
 	make
 
 feature -- Initialization
 
 	make is
+			-- Create set.
 		do
-			before := true
-		end;
-
-feature -- Access
-
-	has (v: like item): BOOLEAN is
-			-- Is there a node with item `v' in tree?
-			-- (Reference or object equality,
-			-- based on `object_comparison'.)
-		do
-			if tree /= Void then
-				if object_comparison then
-					tree.compare_objects
-				else
-					tree.compare_references
-				end
-				Result := tree.has (v)
-			end
-		end;
+			before := True
+		end
 
 feature -- Measurement
 
@@ -56,143 +40,153 @@ feature -- Measurement
 			if tree /= Void then
 				Result := tree.count
 			end
-		end;
+		end
 
 	min: like item is
 			-- Minimum item in tree
 		do
 			Result := tree.min
-		end;
+		end
 
 	max: like item is
 			-- Maximum item in tree
 		do
 			Result := tree.max
-		end;
+		end
 
 	item: G is
+			-- Current item
 		do
 			Result := active_node.item
-		end;
+		end
 
 feature -- Status report
 
 	is_empty: BOOLEAN is
+			-- Is set empty?
 		do
 			Result := tree = Void
-		end;
+		end
 
-	extendible: BOOLEAN is true;
+	extendible: BOOLEAN is True
 		-- Can new items be added? (Answer: yes.)
 
-	prunable: BOOLEAN is true;
+	prunable: BOOLEAN is True
 		-- Can items be removed? (Answer: yes.)
 
-	after: BOOLEAN;
+	after: BOOLEAN
 		-- Is there no valid cursor position to the right of cursor?
 
-	before: BOOLEAN;
+	before: BOOLEAN
 		-- Is there no valid cursor position to the left of cursor?
+
+	has (v: like item): BOOLEAN is
+			-- Is there a node with item `v' in tree?
+			-- (Reference or object equality,
+			-- based on `object_comparison'.)
+		do
+			if tree /= Void then
+				Result := tree.has (v)
+			end
+		end
+
+	off: BOOLEAN is
+			-- Is there no current item?
+			-- `off' only if tree `is_empty' or if
+			-- it is `before' or `after'.
+		do
+			Result := is_empty or Precursor {COMPARABLE_SET}
+		end
 
 feature -- Cursor movement
 
 	start is
+			-- Move cursor to first node.
 		do
-			before := false;
+			before := False
 			if tree = Void then
-				after := true
+				after := True
 			else
-				after := false;
+				after := False
 				active_node := tree.min_node
 			end
-		end;
+		end
 
 	finish is
+			-- Move cursor to last node.
 		do
-			after := false;
+			after := False
 			if tree = Void then
-				before := true
+				before := True
 			else
-				before := false;
+				before := False
 				active_node := tree.max_node
-			end;
-		end;
+			end
+		end
 
 	forth is
+			-- Move cursor to next node.
 		local
-			new_node, prev_node: like tree;
+			prev_node: like tree
 		do
 			if before then
-				before := false;
+				before := False
 				if is_empty then
-					after:= true
-				end;
+					after:= True
+				end
 			else
 				if active_node.has_right then
 					active_node := 	active_node.right_child.min_node
 				else
-					prev_node := active_node;
-					active_node := active_node.parent;
+					prev_node := active_node
+					active_node := active_node.parent
 					from
 					until
 						active_node = Void
 						or else prev_node = active_node.left_child
 					loop
-						prev_node := active_node;
+						prev_node := active_node
 						active_node := active_node.parent
-					end;
+					end
 					if active_node = Void then
-						active_node := tree;
-						after := true
+						active_node := tree
+						after := True
 					end
 				end
 			end
-		end;
-
+		end
 
 	back is
+			-- Move cursor to previous node.
 		local
-			new_node, prev_node: like tree;
+			prev_node: like tree
 		do
 			if after then
-				after := false;
+				after := False
 				if is_empty then
-					before:= true
-				end;
+					before:= True
+				end
 			else
-				if tree.has_left then
+				if active_node.has_left then
 					active_node := 	active_node.left_child.max_node
 				else
-					prev_node := active_node;
-					active_node := active_node.parent;
+					prev_node := active_node
+					active_node := active_node.parent
 					from
 					until
 						active_node = Void
 						or else prev_node = active_node.right_child
 					loop
-						prev_node := active_node;
+						prev_node := active_node
 						active_node := active_node.parent
-					end;
+					end
 					if active_node = Void then
-						active_node := tree;
-						before := true
+						active_node := tree
+						before := True
 					end
 				end
 			end
-		end;
-
-feature -- Comparison
-
-	is_subset (other: like Current): BOOLEAN is
-			-- Is current structure a subset of `other'?
-		do
-			if other.tree /= Void then
-				Result := tree = Void or else
-					tree.is_subset (other.tree)
-			else
-				Result := true
-			end;
-		end;
+		end
 
 feature -- Element change
 
@@ -205,123 +199,51 @@ feature -- Element change
 			if tree = Void then
 				tree := new_tree (v)
 			else
-				tree.extend (v)
+				if not has (v) then
+					tree.extend (v)
+				end
 			end
-		end;
+		end
 
 feature -- Removal
 
 	wipe_out is
 			-- Remove all items.
 		do
-			tree := Void;
-		end;
+			tree := Void
+		end
 
 	prune (v: like item) is
+			-- Remove `v'.
 		do
 			if tree /= Void then
-				tree := tree.pruned (v)
+				tree := tree.pruned (v, tree.parent)
 			end
-		end;
+		end
+
+	remove is
+			-- Remove current item.
+		do
+			prune (item)
+		end
 
 feature -- Duplication
 
 	duplicate (n: INTEGER): BINARY_SEARCH_TREE_SET [G] is
 			-- New structure containing min (`n', `count')
 			-- items from current structure
-		local
-			temp_tree: BINARY_SEARCH_TREE [G]
 		do
-			!!Result.make
+			create Result.make
 			Result.set_tree (tree.duplicate (n))
 		end
 
-feature -- Basic operations
-
-	intersect (other: like Current) is
-			-- Remove all items not in `other'.
-		require else
-			set_exists: other /= Void
-		local
-			m: like tree;
-		do
-			if other.tree = Void or tree = Void then
-				tree := Void
-			else
-				if tree.has_left then
-					tree.left_child.intersect (other.tree)
-				end;
-				if tree.has_right then
-					tree.right_child.intersect (other.tree)
-				end;
-				if not other.has (tree.item) then
-					if not tree.has_left then
-						tree := tree.right_child
-					elseif not tree.has_right then
-						tree := tree.left_child
-					else
-						m := tree.min_node;
-						m.remove_node;
-						tree.replace (m.item)
-					end
-				end
-			end
-		end;
-
-	subtract (other: like Current) is
-			-- Remove all items also in `other'.
-		require else
-			set_exists: other /= Void
-		local
-			m: like tree;
-		do
-			if other.tree /= Void and tree /= Void then
-				if tree.has_left then
-					tree.left_child.subtract (other.tree)
-				end;
-				if tree.has_right then
-					tree.right_child.subtract (other.tree)
-				end;
-				if other.has (tree.item) then
-					if not tree.has_left then
-						tree := tree.right_child
-					elseif not tree.has_right then
-						tree := tree.left_child
-					else
-						m := tree.min_node;
-						m.remove_node;
-						tree.replace (m.item)
-					end
-				end
-			end
-		end;
-
-
-	merge (other: like Current) is
-			-- Add all items of `other'.
-		do
-			if other.tree /= Void then
-				if tree = Void then
-					tree := new_tree (other.tree.item);
-					if other.tree.has_left then
-						tree.merge (other.tree.left_child)
-					end;
-					if other.tree.has_right then
-						tree.merge (other.tree.right_child)
-					end;
-				else
-					tree.merge (other.tree)
-				end
-			end
-		end;
-
 feature {BINARY_SEARCH_TREE_SET} -- Implementation
 
-	tree: BINARY_SEARCH_TREE [G];
+	tree: BINARY_SEARCH_TREE [G]
 
-	active_node: like tree;
+	active_node: like tree
 
-	set_tree (t : like tree) is
+	set_tree (t: like tree) is
 			-- Set `tree' and `active_node' to `t'
 		do
 			tree := t
@@ -333,29 +255,64 @@ feature {NONE} -- Implementation
 	new_tree (v: like item): like tree is
 			-- New allocated node with `item' set to `v'
 		do
-			!! Result.make (v)
-		end;
+			create Result.make (v)
+			if object_comparison then
+				Result.compare_objects
+			end
+		end
 
+	subset_strategy_selection (v: G; other: TRAVERSABLE_SUBSET [G]): 
+								SUBSET_STRATEGY [G] is
+			-- Strategy to calculate several subset features selected depending
+			-- on the dynamic type of `v' and `other'
+		local
+			h: HASHABLE
+		do
+			h ?= v
+			if h /= Void and object_comparison then
+				create {SUBSET_STRATEGY_HASHABLE [G]} Result
+			elseif object_comparison and same_type (other) then
+				create {SUBSET_STRATEGY_TREE [G]} Result
+			else
+				create {SUBSET_STRATEGY_GENERIC [G]} Result
+			end
+		end
+
+invariant
+
+	comparison_mode_equal: tree /= Void implies
+				object_comparison = tree.object_comparison
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class BINARY_SEARCH_TREE_SET
-
-
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
-

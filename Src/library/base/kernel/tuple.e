@@ -1,7 +1,8 @@
 indexing
-	description: "Implementation of TUPLE";
-	status: "See notice at end of class";
-	date: "$Date$";
+
+	description: "Implementation of TUPLE"
+	status: "See notice at end of class"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -13,7 +14,7 @@ inherit
 			make as array_make
 		end
 
-creation
+create
 	make
 
 feature -- Creation
@@ -91,8 +92,8 @@ feature -- Type queries
 		do
 			tcode := eif_gen_typecode ($Current, index)
 			Result := (tcode = 'i') or else
-					  (tcode = 'f') or else
-					  (tcode = 'd')
+					 (tcode = 'f') or else
+					 (tcode = 'd')
 		end
 
 	is_uniform: BOOLEAN is
@@ -208,8 +209,8 @@ feature -- Type conversion queries
 			loop
 				tcode := eif_gen_typecode ($Current, i)
 				Result := (tcode = 'i') or else 
-						  (tcode = 'f') or else 
-						  (tcode = 'd')
+						 (tcode = 'f') or else 
+						 (tcode = 'd')
 				i := i + 1
 			end
 		ensure
@@ -242,7 +243,7 @@ feature -- Access
 	boolean_item (index: INTEGER): BOOLEAN is
 			-- Boolean item at `index'.
 		require
-			valid_index: valid_index (index);
+			valid_index: valid_index (index)
 			is_boolean: is_boolean_item (index)
 		local
 			ref: BOOLEAN_REF
@@ -256,7 +257,7 @@ feature -- Access
 	character_item (index: INTEGER): CHARACTER is
 			-- Character item at `index'.
 		require
-			valid_index: valid_index (index);
+			valid_index: valid_index (index)
 			is_character: is_character_item (index)
 		local
 			ref: CHARACTER_REF
@@ -270,7 +271,7 @@ feature -- Access
 	double_item (index: INTEGER): DOUBLE is
 			-- Double item at `index'.
 		require
-			valid_index: valid_index (index);
+			valid_index: valid_index (index)
 			is_numeric: is_numeric_item (index)
 		local
 			iref: INTEGER_REF
@@ -296,7 +297,7 @@ feature -- Access
 	integer_item (index: INTEGER): INTEGER is
 			-- Integer item at `index'.
 		require
-			valid_index: valid_index (index);
+			valid_index: valid_index (index)
 			is_integer: is_integer_item (index)
 		local
 			ref: INTEGER_REF
@@ -310,7 +311,7 @@ feature -- Access
 	pointer_item (index: INTEGER): POINTER is
 			-- Pointer item at `index'.
 		require
-			valid_index: valid_index (index);
+			valid_index: valid_index (index)
 			is_pointer: is_pointer_item (index)
 		local
 			ref: POINTER_REF
@@ -324,7 +325,7 @@ feature -- Access
 	real_item (index: INTEGER): REAL is
 			-- real item at `index'.
 		require
-			valid_index: valid_index (index);
+			valid_index: valid_index (index)
 			is_real_or_integer: is_real_item (index) or else is_integer_item (index)
 		local
 			iref: INTEGER_REF
@@ -358,7 +359,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				!!Result.make (1, cnt)
+				create Result.make (1, cnt)
 			until
 				i > cnt
 			loop
@@ -366,8 +367,8 @@ feature -- Conversion
 				i := i + 1
 			end
 		ensure
-			exists: Result /= Void;
-			same_count: Result.count = count;
+			exists: Result /= Void
+			same_count: Result.count = count
 			same_items: -- Items are the same in same order
 		end
 
@@ -381,7 +382,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				!!Result.make (1, cnt)
+				create Result.make (1, cnt)
 			until
 				i > cnt
 			loop
@@ -389,8 +390,8 @@ feature -- Conversion
 				i := i + 1
 			end
 		ensure
-			exists: Result /= Void;
-			same_count: Result.count = count;
+			exists: Result /= Void
+			same_count: Result.count = count
 			same_items: -- Items are the same in same order
 		end
 
@@ -404,7 +405,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				!!Result.make (1, cnt)
+				create Result.make (1, cnt)
 			until
 				i > cnt
 			loop
@@ -412,8 +413,8 @@ feature -- Conversion
 				i := i + 1
 			end
 		ensure
-			exists: Result /= Void;
-			same_count: Result.count = count;
+			exists: Result /= Void
+			same_count: Result.count = count
 			same_items: -- Items are the same in same order
 		end
 
@@ -427,7 +428,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				!!Result.make (1, cnt)
+				create Result.make (1, cnt)
 			until
 				i > cnt
 			loop
@@ -435,8 +436,8 @@ feature -- Conversion
 				i := i + 1
 			end
 		ensure
-			exists: Result /= Void;
-			same_count: Result.count = count;
+			exists: Result /= Void
+			same_count: Result.count = count
 			same_items: -- Items are the same in same order
 		end
 
@@ -450,7 +451,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				!!Result.make (1, cnt)
+				create Result.make (1, cnt)
 			until
 				i > cnt
 			loop
@@ -458,8 +459,8 @@ feature -- Conversion
 				i := i + 1
 			end
 		ensure
-			exists: Result /= Void;
-			same_count: Result.count = count;
+			exists: Result /= Void
+			same_count: Result.count = count
 			same_items: -- Items are the same in same order
 		end
 
@@ -473,7 +474,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				!!Result.make (1, cnt)
+				create Result.make (1, cnt)
 			until
 				i > cnt
 			loop
@@ -481,8 +482,8 @@ feature -- Conversion
 				i := i + 1
 			end
 		ensure
-			exists: Result /= Void;
-			same_count: Result.count = count;
+			exists: Result /= Void
+			same_count: Result.count = count
 			same_items: -- Items are the same in same order
 		end
 
@@ -496,7 +497,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				!!Result.make (1, cnt)
+				create Result.make (1, cnt)
 			until
 				i > cnt
 			loop
@@ -504,8 +505,8 @@ feature -- Conversion
 				i := i + 1
 			end
 		ensure
-			exists: Result /= Void;
-			same_count: Result.count = count;
+			exists: Result /= Void
+			same_count: Result.count = count
 			same_items: -- Items are the same in same order
 		end
 
@@ -520,7 +521,7 @@ feature -- Conversion
 			from
 				i := 1
 				cnt := count
-				!!Result.make (1, cnt)
+				create Result.make (1, cnt)
 			until
 				i > cnt
 			loop
@@ -529,8 +530,8 @@ feature -- Conversion
 				i := i + 1
 			end
 		ensure
-			exists: Result /= Void;
-			same_count: Result.count = count;
+			exists: Result /= Void
+			same_count: Result.count = count
 		end
 
 feature {ROUTINE}
@@ -564,8 +565,37 @@ feature {NONE} -- Implementation
 			"C | %"eif_gen_conf.h%""
 		end
 
-invariant
-	lower_is_one: lower = 1
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class TUPLE
 

@@ -1,4 +1,5 @@
 indexing
+
 	description: "Implementation of the STORABLE mechanism with streams."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,15 +10,23 @@ class
 inherit
 	IO_MEDIUM
 
-creation
-	make
+create
+	make,
+	make_with_size
 
 feature -- Initialization
 
 	make is
 			-- Create stream object with a default_size of 100 bytes
 		do
-			buffer_size := 100
+			buffer_size := 200
+			create_c_buffer
+		end
+
+	make_with_size (n: INTEGER) is
+			-- Create stream object with a default_size of `n' bytes
+		do
+			buffer_size := n
 			create_c_buffer
 		end
 
@@ -28,7 +37,7 @@ feature -- Status report
 
 feature -- Access
 
-	buffer: POINTER;
+	buffer: POINTER
 		-- C buffer correspond to the Eiffel STREAM.
 
 	buffer_size: INTEGER
@@ -68,7 +77,7 @@ feature -- Element change
 		do
 			buffer_size := c_stream_basic_store (buffer, buffer_size, $object, $size)
 			object_stored_size := size
-		end;
+		end
 
 	general_store (object: ANY) is
 			-- Produce an external representation of the
@@ -115,7 +124,7 @@ feature {NONE} -- Implementation
 			"C | %"eif_store.h%""
 		alias
 			"stream_estore"
-		end;
+		end
 
 	c_stream_general_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
 			-- Store object structure reachable form current object
@@ -124,7 +133,7 @@ feature {NONE} -- Implementation
 			"C | %"eif_store.h%""
 		alias
 			"stream_eestore"
-		end;
+		end
 
 	c_stream_independent_store (stream_buffer: POINTER; stream_buffer_size: INTEGER; object: POINTER; c_real_size: POINTER): INTEGER is
 			-- Store object structure reachable form current object
@@ -133,7 +142,7 @@ feature {NONE} -- Implementation
 			"C |%"eif_store.h%""
 		alias
 			"stream_sstore"
-		end;
+		end
 
 	c_retrieved (stream_buffer: POINTER; stream_buffer_size: INTEGER; stream_buffer_position: INTEGER; c_real_size: POINTER): ANY is
 			-- Object structured retrieved from stream of pointer
@@ -142,15 +151,22 @@ feature {NONE} -- Implementation
 			"C | %"eif_retrieve.h%""
 		alias
 			"stream_eretrieve"	
-		end;
+		end
 	
 	c_malloc (size: INTEGER): POINTER is
 		external
 			"C | %"eif_store.h%""
 		alias
 			"stream_malloc"
-		end;
-  
+		end
+
+	c_free (buf: POINTER) is
+		external
+			"C | %"eif_store.h%""
+		alias
+			"stream_free"
+		end
+
 feature -- Status report
 
 	exists: BOOLEAN is True
@@ -184,24 +200,25 @@ feature -- Status report
 			Result := True
 		end
 
-	is_closed: BOOLEAN is
+	is_closed: BOOLEAN
 			-- Is the I/O medium open
-		do
-		end
 
 feature -- Status setting
 
 	close is
 			-- Close medium.
 		do
+			is_closed := True
+			c_free (buffer)
+			buffer := default_pointer
 		end
 
 feature -- Output
 
-	put_new_line,new_line is
+	put_new_line, new_line is
 			-- Write a new line character to medium
 		require else
-			stream_exists: exists;
+			stream_exists: exists
 		do
 			put_character ('%N')		
 		end
@@ -294,24 +311,38 @@ feature {NONE} -- Not exported
 		do
 		end
 
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
 end -- class STREAM
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

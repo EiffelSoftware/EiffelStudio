@@ -1,17 +1,18 @@
 indexing
 
-	description:
-		"Objects that are able to iterate over cursor trees, %
-		%on which they can perform repeated actions and tests according %
-		%to a number of predefined control structures such as ``if'', %
-		%``until'' and others.";
+	description: "[
+		Objects that are able to iterate over cursor trees, 
+		on which they can perform repeated actions and tests according
+		to a number of predefined control structures such as ``if'',
+		``until'' and others.
+		]"
 
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	names: iterators, iteration, cursor_tree_iterators,
 		cursor_tree_iteration, tree_iterators, tree_iteration;
 	exploration: depth_first, breadth_first;
 	traversal: preorder, postorder, inorder;
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class CURSOR_TREE_ITERATOR [G] inherit
@@ -31,8 +32,8 @@ class CURSOR_TREE_ITERATOR [G] inherit
 				continue_until as pre_continue_until,
 				continue_search as pre_continue_search,
 				continue_for as pre_continue_for,
-				forall as pre_forall,
-				exists as pre_exists,
+				for_all as pre_for_all,
+				there_exists as pre_there_exists,
 				forth as pre_forth
 			redefine
 				target, pre_forth
@@ -40,10 +41,10 @@ class CURSOR_TREE_ITERATOR [G] inherit
 				pre_do_all, pre_until_do, pre_do_until,
 				pre_do_if, pre_search, pre_do_for, pre_continue_until,
 				pre_continue_search, pre_continue_for,
-				pre_forall, pre_exists, pre_forth, start,
+				pre_for_all, pre_there_exists, pre_forth, start,
 				pre_while_do, pre_do_while, pre_continue_while,
 				pre_while_continue
-			end;
+			end
 
 		LINEAR_ITERATOR [G]
 			rename
@@ -60,15 +61,15 @@ class CURSOR_TREE_ITERATOR [G] inherit
 				continue_until as post_continue_until,
 				continue_search as post_continue_search,
 				continue_for as post_continue_for,
-				forall as post_forall,
-				exists as post_exists,
+				for_all as post_for_all,
+				there_exists as post_there_exists,
 				forth as post_forth,
 				start as post_start
 			redefine
 				post_forth,
 				post_start,
 				target
-			end;
+			end
 
 		LINEAR_ITERATOR [G]
 			rename
@@ -85,8 +86,8 @@ class CURSOR_TREE_ITERATOR [G] inherit
 				continue_until as breadth_continue_until,
 				continue_search as breadth_continue_search,
 				continue_for as breadth_continue_for,
-				forall as breadth_forall,
-				exists as breadth_exists,
+				for_all as breadth_for_all,
+				there_exists as breadth_there_exists,
 				forth as breadth_forth
 			redefine
 				breadth_forth, target
@@ -94,7 +95,7 @@ class CURSOR_TREE_ITERATOR [G] inherit
 
 feature -- Status report
 
-	target: CURSOR_TREE [G];
+	target: CURSOR_TREE [G]
 			-- The structure to which iteration features will apply
 
 feature -- Cursor movement
@@ -104,51 +105,65 @@ feature -- Cursor movement
 			-- (first position in preorder and breadth-first).
 		do
 			target.start
-		end;
+		end
 
 	post_start is
 			-- Move cursor of `target' to first position in postorder.
 		do
 			target.postorder_start
-		end;
+		end
 
 	pre_forth is
 			-- Move cursor of `target' to next position in preorder.
 		do
 			target.preorder_forth
-		end;
+		end
 
 	post_forth is
 			-- Move cursor of `target' to next position in postorder.
 		do
 			target.postorder_forth
-		end;
+		end
 
 	breadth_forth is
 			-- Move cursor of `target' to next position in breadth-first.
 		do
 			target.breadth_forth
-		end;
+		end
+
+indexing
+
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
+
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
 
 end -- class CURSOR_TREE_ITERATOR
 
 
---|----------------------------------------------------------------
---| EiffelBase: Library of reusable components for Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering (ISE).
---| For ISE customers the original versions are an ISE product
---| covered by the ISE Eiffel license and support agreements.
---| EiffelBase may now be used by anyone as FREE SOFTWARE to
---| develop any product, public-domain or commercial, without
---| payment to ISE, under the terms of the ISE Free Eiffel Library
---| License (IFELL) at http://eiffel.com/products/base/license.html.
---|
---| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
---| Telephone 805-685-1006, Fax 805-685-6869
---| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
---| For latest info see award-winning pages: http://eiffel.com
---|----------------------------------------------------------------
 

@@ -15,7 +15,7 @@ inherit
 			obsolete_message, precondition,
 			locals, routine_body, postcondition,
 			rescue_clause, check_local_names
-		end;
+		end
 
 	CONTENT_AS_B
 		undefine
@@ -26,13 +26,13 @@ inherit
 			type_check, byte_node, find_breakable, 
 			fill_calls_list, replicate, local_table, format,
 			local_table_for_format, create_default_rescue, empty
-		end;
+		end
 
-	SHARED_INSTANTIATOR;
+	SHARED_INSTANTIATOR
 
-	SHARED_CONSTRAINT_ERROR;
+	SHARED_CONSTRAINT_ERROR
 
-	SHARED_EVALUATOR;
+	SHARED_EVALUATOR
 
 feature -- Attributes
 
@@ -611,14 +611,12 @@ feature -- Case storage
 		require
 			valid_f: f /= Void
 		do
-			if precondition /= Void and then 
-									precondition.assertions /= Void then
-				f.set_preconditions (precondition.storage_info);
-			end;
-			if postcondition /= Void and then 
-									postcondition.assertions /= Void then
-				f.set_postconditions (postcondition.storage_info);
-			end;
-		end;
+			if precondition /= Void and then precondition.assertions /= Void then
+				f.set_preconditions (precondition.storage_info)
+			end
+			if postcondition /= Void and then postcondition.assertions /= Void then
+				f.set_postconditions (postcondition.storage_info)
+			end
+		end
 
 end -- class ROUTINE_AS_B

@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 			handle := xt_init;
 			create_dispatcher
 		ensure
-			 application_context_is_valid: is_valid
+			application_context_is_valid: is_valid
 		end;
 
 	make_from_existing (a_pointer: POINTER) is

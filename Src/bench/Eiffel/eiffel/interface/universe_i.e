@@ -601,9 +601,19 @@ feature {COMPILER_EXPORTER} -- Implementation
 
 				-- XX_REF classes
 			l_actions.put (agent system.set_bit_class, "BIT_REF")
+			l_actions.put (agent system.set_boolean_ref_class, "BOOLEAN_REF")   
+			l_actions.put (agent system.set_character_ref_class (?, False), "CHARACTER_REF")   
+			l_actions.put (agent system.set_integer_ref_class (?, 8), "INTEGER_8_REF")   
+			l_actions.put (agent system.set_integer_ref_class (?, 16), "INTEGER_16_REF")   
+			l_actions.put (agent system.set_integer_ref_class (?, 32), "INTEGER_REF")   
+			l_actions.put (agent system.set_integer_ref_class (?, 64), "INTEGER_64_REF")   
+			l_actions.put (agent system.set_real_ref_class, "REAL_REF")   
+			l_actions.put (agent system.set_double_ref_class, "DOUBLE_REF")   
+			l_actions.put (agent system.set_pointer_ref_class, "POINTER_REF") 
 
 			if not system.il_generation then
 				l_actions.put (agent system.set_character_class (?, True), "WIDE_CHARACTER")
+				l_actions.put (agent system.set_character_ref_class (?, True), "WIDE_CHARACTER_REF")
 			else
 				l_actions.put (agent system.set_system_string_class, "SYSTEM_STRING")
 				l_actions.put (agent system.set_native_array_class, "NATIVE_ARRAY")

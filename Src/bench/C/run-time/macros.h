@@ -53,15 +53,9 @@ extern int in_assertion;
 
 /* ANSI/K&R/C++ protection macros */
 
-#if defined(__STDC__) || defined(__cplusplus)
 #define EXTERN_DECL(r_type, name, args) extern r_type name args
 #define STATIC_DECL(r_type, name, args) static r_type name args
 #define FUNCTION_CAST(r_type, arg_types) (r_type (*) arg_types)
-#else  /* K&R */
-#define EXTERN_DECL(r_type, name, args) extern r_type name()
-#define STATIC_DECL(r_type, name, args) static r_type name()
-#define FUNCTION_CAST(r_type, arg_types) (r_type (*)())
-#endif
 
 #ifdef __cplusplus
 #define CPP_WRAPPER_START extern "C" {

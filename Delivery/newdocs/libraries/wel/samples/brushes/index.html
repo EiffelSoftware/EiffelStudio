@@ -9,7 +9,7 @@
 
 	<BODY>
 		<H1>Brushes Sample</H1>
-		<CENTER><IMG SRC="brushes.png" ALT="brushes" /></CENTER><BR><BR>
+		<CENTER><IMG SRC="brushes.png" ALT="brushes" width="600" height="400" /></CENTER><BR><BR>
 		<H2>Compiling</H2>
 		<P>
 			To compile the example:
@@ -20,6 +20,10 @@
 			<LI>Browse to <I>Eiffel50\examples\wel\brushes\</I>.
 			<LI>Choose <I>Ace.ace</I>
 			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+              If you select another directory than the default one, please copy
+              images (*.bmp), icons (*.ico) and resource files (*.rc) from the
+              default directory (the one containing the Ace file) to the new
+              one.
 			<LI>Click <B>OK</B>.
 		</UL>
 		<H2>Running</H2>
@@ -30,7 +34,7 @@
 		<H2>Under the Hood</H2>
 		Each of the three windows that are opened from the programs <A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/main_window_chart.html">MAIN_WINDOW</A> inherit
 		<A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_frame_window_chart.html">WEL_FRAME_WINDOW</A> and contains code for generating their output.
-		<A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/brushes_demo_chart.html">BRUSHES_DEMO</A> redefines	<A CLASS="efeature" HREF="/libraries/wel/samples/brushes/root_cluster/brushes_demo.html#f_idle_action">idle_action</A> to force a re-draw on the applicable windows.</P>
+		<A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/brushes_demo_chart.html">BRUSHES_DEMO</A> redefines	<A CLASS="efeature" HREF="/libraries/wel/samples/brushes/root_cluster/brushes_demo.html#f_idle_action">idle_action</A> to force a re-draw on the applicable windows.
 
 		<p class="note"><b>Note</b>. If <A CLASS="efeature" HREF="/libraries/wel/reference/support/application.html#f_enable_idle_action">enable_idle_action</A> is not called, then <A CLASS="efeature" HREF="/libraries/wel/reference/support/application.html#f_idle_action">idle_action</A> is never executed.</p>		
 		<P>This sample contains the following classes:
@@ -43,6 +47,5 @@
 				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/projection_chart.html">PROJECTION</A>
 				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/brushes/root_cluster/rectangle_demo_chart.html">RECTANGLE_DEMO</A>
 			</UL>
-		</P>
 	</BODY>
 </HTML>

@@ -32,7 +32,7 @@ feature -- Status report
 			check
 				not_callable: False
 			end
-		ensure
+		ensure then
 			not_called: False
 		end
 		
@@ -44,7 +44,7 @@ feature -- Generation
 			check
 				not_callable: False
 			end
-		ensure
+		ensure then
 			not_called: False
 		end
 		
@@ -54,7 +54,7 @@ feature -- Generation
 			check
 				not_callable: False
 			end
-		ensure
+		ensure then
 			not_called: False
 		end
 		
@@ -64,7 +64,7 @@ feature -- Generation
 			check
 				not_callable: False
 			end
-		ensure
+		ensure then
 			not_called: False
 		end
 
@@ -76,7 +76,7 @@ feature -- Debug
 			check
 				not_callable: False
 			end
-		ensure
+		ensure then
 			not_called: False
 		end
 	

@@ -52,7 +52,7 @@ feature -- Status setting
 			is_selected := True
 			select_actions.call ([])
 			invalidate
-		ensure
+		ensure then
 			is_selected = True
 		end
 
@@ -62,7 +62,7 @@ feature -- Status setting
 			is_selected := False
 			select_actions.call ([])
 			invalidate
-		ensure
+		ensure then
 			is_selected = False
 		end
 
@@ -88,7 +88,7 @@ feature {NONE} -- Implementation, focus event
 			is_selected := not is_selected
 			invalidate
 			select_actions.call ([])
-		ensure
+		ensure then
 			state_changed: old is_selected = not is_selected
 		end
 		
@@ -144,12 +144,10 @@ feature {NONE} -- Implementation, focus event
  			else
 	 			Result := splitter_brush
 	 		end
-	 	ensure
+	 	ensure then
 	 		Result_not_void: Result /= Void
  		end
- 		
- 		
- 		
+
  	splitter_brush: WEL_BRUSH is
 			-- Create the brush used to draw the invert splitter.
 		local

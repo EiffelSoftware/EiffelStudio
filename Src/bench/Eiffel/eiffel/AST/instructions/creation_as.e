@@ -3,7 +3,7 @@ class CREATION_AS
 inherit
 	INSTRUCTION_AS
 		redefine
-			byte_node, fill_calls_list, replicate
+			byte_node
 		end
 
 	SHARED_INSTANTIATOR
@@ -80,7 +80,7 @@ feature -- Type check, byte code and dead code removal
 			feature_type, local_type: TYPE_A
 			local_b: LOCAL_B
 			attribute_b: ATTRIBUTE_B
-			creators: EXTEND_TABLE [EXPORT_I, STRING]
+			creators: HASH_TABLE [EXPORT_I, STRING]
 			depend_unit: DEPEND_UNIT
 			vgcc1: VGCC1
 			vgcc11: VGCC11
@@ -389,7 +389,7 @@ feature -- Type check, byte code and dead code removal
 				create_info := local_type.create_info
 			elseif access.is_attribute then
 				attribute_b ?= access
-				create create_feat.make (attribute_b.attribute_id, attribute_b.attribute_name_id)
+				create create_feat.make (attribute_b.attribute_id, attribute_b.routine_id)
 				create_info := create_feat
 			end
 			Creation_types.insert (create_info)
@@ -410,9 +410,6 @@ feature -- Type check, byte code and dead code removal
 			access, call_access: ACCESS_B
 			nested: NESTED_B
 			create_info: CREATE_INFO
-			create_feat: CREATE_FEAT
-			rout_id: INTEGER
-			type_set: ROUT_ID_SET
 			the_call: like call
 		do
 			create Result
@@ -439,45 +436,6 @@ feature -- Type check, byte code and dead code removal
 			create_info := Creation_types.item;	
 			Result.set_info (create_info)
 			Creation_types.forth
-
-				-- Register information for generation of the final Eiffel
-				-- executable.
-			create_feat ?= create_info
-			if create_feat /= Void then
-				rout_id := context.current_class.feature_table.item_id
-					(create_feat.feature_name_id).rout_id_set.first
-				type_set := System.type_set
-				if not type_set.has (rout_id) then
-						-- Found a new routine id having a type table
-					type_set.force (rout_id)
-				end
-			end
-
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-		do
-			target.fill_calls_list (l)
-			l.stop_filling
-			call.fill_calls_list (l)
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-		do
-			Result := clone (Current)
-			Result.set_target (target.replicate (ctxt))
-			if type = Void then
-				if call /= Void then
-					Result.set_call (call.replicate (ctxt))
-					-- if call is not creation routine
-					-- raise exception
-				else
-					-- if creation routine is needed
-					-- raise exception
-				end
-			end
 		end
 
 feature {AST_EIFFEL} -- Output

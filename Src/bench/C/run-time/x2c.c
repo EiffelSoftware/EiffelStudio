@@ -224,7 +224,7 @@ int main(int argc, char **argv)	/* DEC C will complain if declared as type void 
 					continue;
 				}
 				getarg(ps->c_args, buf);
-				fprintf(output_file, "%d", (ps->c_off)(NON_RECURSIVE));
+				fprintf(output_file, "%ld", (ps->c_off)(NON_RECURSIVE));
 				continue;
 			}
 			buf[pos++] = c;
@@ -313,7 +313,7 @@ long nextarg(void)
 			if (pos == 0)
 				return -1;
 			buf[pos] = '\0';
-			sscanf(buf, "%d", &val);
+			sscanf(buf, "%ld", &val);
 			return val;
 		}
 		buf[pos++] = c;

@@ -24,6 +24,8 @@ inherit
 	GB_CONSTANTS
 	
 	GB_SHARED_SYSTEM_STATUS
+	
+	GB_GENERAL_UTILITIES
 
 create
 	make
@@ -67,6 +69,8 @@ feature -- Basic operations
 				project_settings: GB_PROJECT_SETTINGS
 				file_handler: GB_SIMPLE_XML_FILE_HANDLER
 				test_file: RAW_FILE
+				error_dialog: EV_ERROR_DIALOG
+				dialog_constants: EV_DIALOG_CONSTANTS
 			do
 				create project_settings
 				create file_handler
@@ -79,21 +83,41 @@ feature -- Basic operations
 								-- the settings were not loaded (As they were not compatible),
 								-- so we fill in the location, and use the default_values.
 							create project_settings.make_stand_alone_with_default_values
-							
-							
-							--| FIXME need to remove the actual name.
-							project_settings.set_project_location (file_name)
+								-- Set the location to the current file location.
+							project_settings.set_project_location (directory_of_file (file_name))
 						end
 						system_status.set_current_project (project_settings)
-						create test_file.make (file_name)
-						if test_file.exists then
-							xml_handler.load
-							main_window.show_tools
-							command_handler.update
-								-- Compress all used ids.
-							id_compressor.compress_all_id
+						if not directory_of_file (file_name).is_equal (project_settings.project_location) then								
+							create error_dialog.make_with_text ("The location of the .bpr file has changed from " + project_settings.project_location + " to " + directory_of_file (file_name) + ".%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory.%NBuild will now update the reference to `system_interface.xml' and attempt to load the file.")
+							create dialog_constants
+								-- Hide unwanted buttons from the dialog
+							error_dialog.button (dialog_constants.ev_retry).set_text ("Continue")
+							error_dialog.button (dialog_constants.ev_retry).select_actions.extend (agent update_location (directory_of_file (file_name)))
+							error_dialog.button (dialog_constants.ev_ignore).hide
+							error_dialog.button (dialog_constants.ev_abort).select_actions.extend (agent cancel_update_location)
+							error_dialog.show_modal_to_window (main_window)
+						end
+						
+						if not location_update_cancelled then
+							create test_file.make (filename)
+							if test_file.exists then
+								xml_handler.load
+								main_window.show_tools
+								command_handler.update
+									-- Compress all used ids.
+								id_compressor.compress_all_id
+							end
 						end
 					end
+				end
+				if test_file /= Void and then not test_file.exists and not location_update_cancelled then
+					create error_dialog.make_with_text ("The system interface file '" + filename + "' (referenced by the specified .BPR file) is missing.%NIf the file has been moved, please restore the file and try again.%NIf you no longer have a copy of the file, please start a new project.")
+					create dialog_constants
+						-- Hide unwanted buttons from the dialog
+					error_dialog.button (dialog_constants.ev_retry).hide;
+					(error_dialog.button (dialog_constants.ev_ignore)).hide
+					error_dialog.show_modal_to_window (main_window)
+					system_status.close_current_project
 				end
 			end
 			
@@ -155,7 +179,7 @@ feature -- Basic operations
 									create error_dialog.make_with_text ("The location of the .bpr file has changed from " + project_settings.project_location + " to " + dialog.file_path + ".%NPlease ensure that the file `system_interface.xml' has also been relocated to this new directory.%NBuild will now update the reference to `system_interface.xml' and attempt to load the file.")
 									create dialog_constants
 										-- Hide unwanted buttons from the dialog
-									error_dialog.button (dialog_constants.ev_retry).set_text ("Continue")--.hide;
+									error_dialog.button (dialog_constants.ev_retry).set_text ("Continue")
 									error_dialog.button (dialog_constants.ev_retry).select_actions.extend (agent update_location (dialog.file_path))
 									error_dialog.button (dialog_constants.ev_ignore).hide
 									error_dialog.button (dialog_constants.ev_abort).select_actions.extend (agent cancel_update_location)

@@ -70,6 +70,8 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 		
+feature {EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
+		
 	file_access_actions_internal: EV_INTEGER_ACTION_SEQUENCE
 			-- Implementation of once per object `file_access_actions'.
 

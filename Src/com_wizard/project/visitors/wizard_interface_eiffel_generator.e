@@ -45,8 +45,6 @@ feature -- Access
 			if a_descriptor.functions /= Void and then not a_descriptor.functions.empty then
 				process_functions (a_descriptor.functions)
 			end
-		ensure then
-			non_void_eiffel_writer: eiffel_writer /= Void
 		end
 
 feature {NONE} -- Implementation

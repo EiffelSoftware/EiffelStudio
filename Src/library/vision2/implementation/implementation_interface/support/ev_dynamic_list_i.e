@@ -50,6 +50,12 @@ feature -- Access
 		ensure
 			not_void: Result /= Void
 		end
+		
+	off: BOOLEAN is
+			-- Is there no current item?
+		do
+			Result := (index = 0) or (index = count + 1)
+		end
 
 	index_of (v: like item; i: INTEGER): INTEGER is
 			-- Index of i_th item `v', if present.

@@ -668,7 +668,7 @@ end
 						buf.new_line
 						buf.indent
 						buf.putstring ("RTET(%"")
-						buf.putstring (feature_name)
+						buf.putstring (escaped_feature_name)
 						buf.putstring ("%", EN_VEXP);")
 						buf.new_line
 						buf.exdent
@@ -1495,7 +1495,7 @@ end
 			buf := buffer
 			buf.putstring (macro_name)
 			buf.putstring ("(%"")
-			buf.putstring (feature_name)
+			buf.putstring (escaped_feature_name)
 			buf.putstring ("%", ")
 			feature_origin (buf)
 			buf.putstring (gc_comma)
@@ -1514,7 +1514,7 @@ end
 			buf := buffer
 			buf.putstring (macro_name)
 			buf.putstring ("(%"")
-			buf.putstring (feature_name)
+			buf.putstring (escaped_feature_name)
 			buf.putstring ("%", ")
 			feature_origin (buf)
 			buf.putstring (gc_comma)

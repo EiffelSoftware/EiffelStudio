@@ -36,9 +36,10 @@ feature -- Access
 	real_body_id: INTEGER
 			-- Real body id of the feature to which current byte code belongs
 
-	feature_name_id: INTEGER
+	feature_name_id, escaped_feature_name_id: INTEGER
 			-- Name ID of the feature to which the current byte code tree
-			-- belongs to.
+			-- belongs to. `escaped_feature_name_id' is the escaped version of
+			-- `feature_name_id' used for C code generation.
 
 	start_line_number: INTEGER
 			-- Line where feature name is located.
@@ -52,6 +53,17 @@ feature -- Access
 			feature_name_id_set: feature_name_id > 0
 		do
 			Result := Names_heap.item (feature_name_id)
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end
+
+	escaped_feature_name: STRING is
+			-- Final name of the feature
+		require
+			escaped_feature_name_id_set: escaped_feature_name_id > 0
+		do
+			Result := Names_heap.item (escaped_feature_name_id)
 		ensure
 			Result_not_void: Result /= Void
 			Result_not_empty: not Result.is_empty
@@ -137,6 +149,16 @@ feature -- Settings
 			feature_name_id := id
 		ensure
 			feature_name_id_set: feature_name_id = id
+		end
+
+	set_escaped_feature_name_id (id: INTEGER) is
+			-- Assign `id' to `escaped_feature_name_id'.
+		require
+			valid_id: id > 0
+		do
+			escaped_feature_name_id := id
+		ensure
+			escaped_feature_name_id_set: escaped_feature_name_id = id
 		end
 
 	set_real_body_id (i: INTEGER) is

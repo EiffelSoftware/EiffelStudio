@@ -9,6 +9,15 @@ indexing
 
 class DB_SELECTION
 
+-- Maybe do 2 separate classes, one using `container' and the other
+-- `action', as it is redundant (usually, one of them are Void but
+-- this is not nice.)
+-- Class remains anyway strange: `load_result' vs use of `next'?
+-- Possibility to navigate in `container' from this class??
+-- I (cedric) think `container' should be removed and user should
+-- choose to use an object (with attributes matching query result
+-- column names) or DB_RESULT (or something equivalent).
+
 inherit
 
 	DB_STATUS_USE
@@ -55,8 +64,8 @@ feature -- Access
 
 feature -- Status report
 
-	container: LINKED_LIST [DB_RESULT]
-			-- Stored cursors
+	container: CHAIN [DB_RESULT]
+			-- Stored cursors. [Cedric: I replaced LINKED_LIST by CHAIN]
 
 	object: ANY
 			-- Eiffel object to be filled in by `cursor_to_object'
@@ -78,12 +87,6 @@ feature -- Status report
 	stop_condition: ACTION
 			-- Object providing an `execute' routine called
 			-- after each `load_result' iteration step
-
-	exhausted: BOOLEAN is
-			-- Is there any more resulting row?
-		do
-			Result := handle.status.found
-		end
 
 	is_allocatable: BOOLEAN is
 			-- Can `Current' be added to other concurrently opened selections?
@@ -237,7 +240,7 @@ feature -- Basic operations
 					!! cursor.make
 					cursor.set_descriptor (active_selection_number)
 				end
-				if not handle.status.found then
+				if handle.status.found then
 					cursor.fill_in
 				end
 				if stop_condition /= Void then
@@ -271,7 +274,7 @@ feature -- Basic operations
 			-- s is a SQL statement starting with a selection keyword
 			connected: is_connected
 			argument_exists: s /= Void
-			argument_is_not_empty: not s.empty
+			argument_is_not_empty: not s.is_empty
 			is_ok: is_ok
 			is_allocatable: is_allocatable
 		do
@@ -315,7 +318,7 @@ feature -- Basic operations
 			object := Void
 			ht.clear_all
 		ensure
-			container_is_empty: container /= Void implies container.empty
+			container_is_empty: container /= Void implies container.is_empty
 			object_model_void: object = Void
 			cursor_void: cursor = Void
 		end
@@ -330,6 +333,18 @@ feature -- Basic operations
 			-- Set the value to represent a database null value.
 		do
 			db_default_null_value.set_value (value)
+		ensure
+			db_default_null_value.value = value
+		end
+
+	set_default_datetime_field_value ( value: DATE_TIME) is
+			-- Set the value to represent a database null value.
+		require
+			not_void: value /= Void
+		do
+			db_default_null_value.set_datetime_value (value)
+		ensure
+			db_default_null_value.datetime_value = value
 		end
 
 feature {NONE} -- Implementation

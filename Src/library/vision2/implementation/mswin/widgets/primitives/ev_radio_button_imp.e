@@ -76,7 +76,8 @@ inherit
 			show,
 			hide
 		redefine
-			on_key_down
+			on_key_down,
+			default_style
 		end
 		
 create
@@ -85,6 +86,7 @@ create
 feature {NONE} -- Initalization
 
 	initialize is
+			-- Initialize `Current'.
 		do
 			Precursor
 			set_checked
@@ -117,20 +119,25 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	on_key_down (virtual_key, key_data: INTEGER) is
-			-- A key has been pressed
+			-- A key has been pressed.
 		do
 			{WEL_RADIO_BUTTON} Precursor (virtual_key, key_data)
 			process_tab_and_arrows_keys (virtual_key)
 		end
 
 	on_bn_clicked is
-			-- Called when button is pressed.
-			--| FIXME When more widgets are put into the container this widget
-			--| is in, the system hangs in an an infinite loop after a click.
+			-- Called when `Current' is pressed.
 		do
 			enable_select
 			{EV_SELECT_BUTTON_IMP} Precursor
 		end
+
+	default_style: INTEGER is
+			-- Default style used to create the control.
+		once
+			Result := Ws_visible + Ws_child + Ws_tabstop + Bs_radiobutton
+		end
+
 
 feature {EV_ANY_I} -- Implementation
 
@@ -138,7 +145,7 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_RADIO_BUTTON_IMP
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -152,15 +159,20 @@ end -- class EV_RADIO_BUTTON_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/05/02 22:07:31  rogers
+--| Redefined on_default_style to fix the bug due to conflicts with
+--| check buttons. Comments. Formatting.
+--|
 --| Revision 1.31  2000/05/01 17:04:44  manus
---| Use of `wel_parent' directly without the hack of renaming into `wel_window_parent'.
+--| Use of `wel_parent' directly without the hack of renaming into
+--| `wel_window_parent'.
 --|
 --| Revision 1.30  2000/04/29 03:35:58  pichery
 --| Cosmetics

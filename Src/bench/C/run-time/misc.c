@@ -26,6 +26,10 @@
 #include <windows.h>
 #endif
 
+#ifdef __VMS
+public int	putenv ();
+#endif
+
 /*
  * Various casts.
  */
@@ -168,6 +172,10 @@ char *s;
 {
 	EIF_INTEGER result;
 
+#ifdef __VMS
+	char * run_command;
+#endif
+
 #ifdef __WINDOWS_386__
 	extern void wmhandler_yield();
 #endif
@@ -185,7 +193,17 @@ char *s;
 		result = 0;
 		}
 #else
+ #ifdef __VMS	/* if s starts with '[', prepend 'run ' */
+	if (s[0]=='[') {
+		run_command = cmalloc( 4 + strlen(s) );
+		sprintf(run_command,"run %s",s);
+		result = (EIF_INTEGER) system (run_command);
+		}
+	else
+		result = (EIF_INTEGER) system (s);
+ #else
 	result = (EIF_INTEGER) system (s);
+ #endif
 #endif
 #ifdef SIGCLD
 	(void)signal (SIGCLD, old_signal_hdlr);
@@ -345,6 +363,79 @@ EIF_INTEGER i, j, k;
 	return new_area;
 }
 
+
+#ifdef __VMS
+/* vms putenv
+ * 941230/Tom Hoffman
+ *	Needed equivalent of putenv routine commonly found on Unix systems.
+ *	Note putenv is not part of the ANSI standard.
+ *	Uses the lib$set_logical routine.
+ */
+/* have to define these to upper case because compiling with /names=as_is */
+#define lib$set_logical LIB$SET_LOGICAL
+#define lib$stop	LIB$STOP
+#define sys$getmsg	SYS$GETMSG
+
+#include <lib$routines.h>	/* needed for lib$set_logical() */
+#include <descrip.h>
+
+
+int	putenv (string)
+char	*string;
+	/* string should point to a character string of the form name=value
+	** Then the string is parsed into its separate components.
+	** lib$set_logical returns an unsigned int.
+	*/
+{
+	char	*	name;
+	char	*	value;
+	struct	dsc$descriptor_s	dname;
+	struct	dsc$descriptor_s	dvalue;
+	int	cond_value;
+	name = strtok(string,"=");
+	dname.dsc$w_length = strlen(name);
+	dname.dsc$a_pointer= name;
+	dname.dsc$b_class = DSC$K_CLASS_S;
+	dname.dsc$b_dtype = DSC$K_DTYPE_T;
+	value = strtok(NULL,"=");
+	dvalue.dsc$w_length = strlen(value);
+	dvalue.dsc$a_pointer= value;
+	dvalue.dsc$b_class = DSC$K_CLASS_S;
+	dvalue.dsc$b_dtype = DSC$K_DTYPE_T;
+	cond_value = lib$set_logical(&dname,&dvalue);
+	return (int) cond_value;
+}	/* putenv */
+
+#ifdef TEST
+ #include <stdio.h>
+ #include <ssdef.h>
+ #include <errno.h>
+ #include <starlet.h>		/* for sys$getmsg() */
+
+main ()
+{
+	char			buff[256];
+	int			cond;
+	int			flags = 0xf;
+	char			mesg[133];
+	$DESCRIPTOR(message_text,mesg);
+	int			mesglen;
+	register		status;
+
+
+	printf("\n\nEnter putenv string as   name=value :  ");
+	(void)fflush(stdout);
+	(void)gets(buff);
+	if (buff[0] != '\0') {
+		cond = putenv(buff);		
+		printf("Return value is %d.\n",(int)cond);
+		status = SYS$GETMSG(cond,&mesglen,&message_text,flags,0);
+		printf("\n<%d> %s\n",status,mesg);
+/*		lib$stop(cond); */
+	}
+}
+#endif	/* TEST */
+#endif	/* VMS */
 
 #ifdef __WINDOWS_386__
 

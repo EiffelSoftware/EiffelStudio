@@ -88,6 +88,16 @@ EIF_POINTER p;
 
 	/* We don't get here but */
 	return FALSE;
+#elif defined (__VMS)
+	/* first check to see if p includes a ] */
+	/* in fact, the last character should be ] */
+	if ( p[strlen(p)-1] != ']')		/* end with ] */
+		return FALSE;
+	if ( strchr( (char *)p,'[') == NULL)	/* has a opening bracket */
+		return FALSE;
+	if ( strchr( (char *)p,'/') != NULL)	/* no slash allowed */
+		return FALSE;
+	return TRUE;
 #else
 	return TRUE;
 #endif
@@ -197,6 +207,14 @@ EIF_POINTER p;
 		/* Test to see if `p' is a valid directory name (no parent directory part) */
 #ifdef __WINDOWS_386__
 	return c_is_file_name_valid (p);
+#elif defined (__VMS)
+	/* For VMS, allow  "subdir" or  "[.subdir]" or "dev:[sub.subdir]" */
+	if ( strchr( (char *)p,'[') != NULL) /* if it has a [ ... */
+		if ( p[strlen(p)-1] != ']')	/* ... end with ] */
+			return FALSE;
+	if ( strchr( (char *)p,'/') != NULL)	/* no slash allowed */
+		return FALSE;
+	return TRUE;
 #else
 	return TRUE;
 #endif
@@ -211,15 +229,39 @@ EIF_POINTER v;
 {
 		/* If the path is not empty, include a separator */
 		/* Otherwise, it will just be a relative path name */
+#ifdef __VMS
+	char	vcopy[PATH_MAX];
+
+        /* ASSUMING P & V ARE VALID DIRECTORY & SUBDIR AND IN VMS FORMAT */
+	if (p == NULL)	{	/* if p is empty, just return what's in v */
+		strcpy(p,v);
+		}
+        /* allowable forms for v are [.subdir] or subdir */
+        /* make [p] look like [p. */
+        p[strlen((char *)p)-1]='.'; /* change ] to .*/
+        /* make v or [.v] look like v] */
+        /* don't mess with v, use a copy */
+        strcpy(vcopy,v);
+        if (v[0]!='[')  {               /* just looks like v */
+                strcat( (char *)vcopy,"]");
+                }
+        else    {       /* change [.v] to v] */
+                strcpy((char *)vcopy,(char *)v[2]);
+                }
+        /* now concat [p. and v] to get [p.v] */
+        strcat( (char *)p, (char *)vcopy);
+        (eif_strset)(string, strlen ((char *)p));
+#else	/* not vms */
 	if (*((char *)p) != '\0')
-#ifdef __WINDOWS_386__
+ #ifdef __WINDOWS_386__
 		strcat ((char *)p, "\\");
-#else
+ #else
 		strcat ((char *)p, "/");
-#endif
+ #endif
 
 	strcat ((char *)p, (char *)v);
 	(eif_strset)(string, strlen ((char *)p));
+#endif
 }
 
 void  c_set_directory(string, p, v)
@@ -228,13 +270,20 @@ EIF_POINTER p;
 EIF_POINTER v;
 {
 		/* Set the absolute part of the path name */
-#ifdef __WINDOWS_386__
-	strcat ((char *)p, "\\");
+#ifdef __VMS
+	strcat ((char *)p,"[");
+	strcat ((char *)p, (char *)v);
+	strcat ((char *)p,"]");
+	(eif_strset)(string, strlen ((char *)p));
 #else
+ #ifdef __WINDOWS_386__
+	strcat ((char *)p, "\\");
+ #else
 	strcat ((char *)p, "/");
-#endif
+ #endif
 	strcat ((char *)p, (char *)v);
 	(eif_strset)(string, strlen ((char *)p));
+#endif
 }
 
 void  c_append_file_name(string, p, v)
@@ -248,7 +297,7 @@ EIF_POINTER v;
 	} else {
 #ifdef __WINDOWS_386__
 		strcat ((char *)p, "\\");
-#else
+#elif !defined (__VMS)		/* no separator for vms */
 		strcat ((char *)p, "/");
 #endif
 		strcat ((char *)p, (char *)v);
@@ -262,6 +311,8 @@ EIF_BOOLEAN eif_case_sensitive_path_names()
 		/* Are path names case sensitive? */
 #ifdef __WINDOWS_386__
 	return FALSE;
+#elif defined (__VMS)
+	return FALSE;
 #else
 	return TRUE;
 #endif
@@ -270,7 +321,11 @@ EIF_BOOLEAN eif_case_sensitive_path_names()
 EIF_REFERENCE eif_current_dir_representation()
 {
 		/* String representation of Current directory */
+#ifdef __VMS
+	return RTMS("[]");
+#else
 	return RTMS(".");
+#endif
 }
 
 EIF_BOOLEAN eif_home_dir_supported()
@@ -294,6 +349,8 @@ EIF_REFERENCE eif_home_directory_name()
 		/* String representation of $HOME */
 #ifdef __WINDOWS_386__
 	return NULL;
+#elif defined (__VMS)
+	return RTMS(getenv("SYS$LOGIN"));
 #else
 	return RTMS(getenv("HOME"));
 #endif
@@ -304,6 +361,8 @@ EIF_REFERENCE eif_root_directory_name()
 		/* String representation of the root directory */
 #ifdef __WINDOWS_386__
 	return RTMS("\\");
+#elif defined (__VMS)
+	return RTMS("[000000]");
 #else
 	return RTMS("/");
 #endif

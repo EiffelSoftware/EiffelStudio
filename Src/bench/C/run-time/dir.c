@@ -18,6 +18,7 @@
 #ifdef __VMS
  /* define these routines in upr case, cause that's how they are in the lib */
  #define lib$find_file LIB$FIND_FILE
+ #define sys$getmsg SYS$GETMSG
  #define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR
  #include <errno.h>	/* redefine cma$tis... to caps before this include! */
  #include <string.h>
@@ -25,47 +26,9 @@
  #include <stdio.h>
  #include <ctype.h>
  #include <descrip.h>
- #include <rmsdef.h>
-
-/*
-**  Header file for VMS readdir() routines.
-**  Written by Rich $alz, <rsalz@bbn.com> in August, 1990.
-**  This code has no copyright.
-**
-**  You must #include <descrip.h> before this file.
-*/
-
-/* 12-NOV-1990 added d_namlen field -GJC@MITECH.COM */
-
-    /* Data structure returned by READDIR(). */
-struct dirent {
-    char	d_name[100];		/* File name		*/
-    int         d_namlen;
-    int		vms_verscount;		/* Number of versions	*/
-    int		vms_versions[20];	/* Version numbers	*/
-};
-
-    /* Handle returned by opendir(), used by the other routines.  You
-     * are not supposed to care what's inside this structure. */
-typedef struct _dirdesc {
-    long			context;
-    int				vms_wantversions;
-    char			*pattern;
-    struct dirent		entry;
-    struct dsc$descriptor_s	pat;
-} DIR;
-
-
-#define rewinddir(dirp)		seekdir((dirp), 0L)
-
-
-extern DIR		*opendir();
-extern struct dirent	*readdir();
-extern long		telldir();
-extern void		seekdir();
-extern void		closedir();
-extern void		vmsreaddirversions();
-
+ #include <ssdef.h>	/* for system services error codes */
+ #include <rmsdef.h>	/* for RMS error codes */
+ #include <starlet.h>		/* for sys$getmsg() */
 #endif
 
 #include <sys/types.h>
@@ -87,6 +50,10 @@ extern void		vmsreaddirversions();
 
 extern int esys();				/* Raise 'Operating system error' exception */
 extern int eio();				/* Raise 'I/O error' exception */
+
+#ifdef __VMS
+public char *	dir_dot_dir (char * dir);
+#endif
 
 /*
  * Opening and closing a directory.
@@ -199,7 +166,11 @@ public EIF_CHARACTER eif_dir_separator ()
 #ifdef __WINDOWS_386__
 	return '\\';
 #else
+ #ifdef __VMS
+	return '.';
+ #else
 	return '/';
+ #endif	/* vms */
 #endif
 }
 
@@ -215,11 +186,94 @@ EIF_OBJ path;
 public EIF_BOOLEAN eif_dir_exists(name)
 char *name;
 {
+#ifdef __VMS
+	/* Need to check if directory is passed as simple name
+	** such as "subdir", or as Unix-like (subdir/ or /top/subdir),
+	** or as VMS style ([.subdir] or [top.subdir] or subdir.dir).
+	** If not VMS style, convert it.
+	** Will have to treat [...subdir] different from [...]subdir.dir
+	** because lib$find_file will return "file not found" in the first
+	** case (if subdir exists) and same error in 2nd case (if it doesn't!)
+	** Was using stat(), but this would have required parsing p
+	** and moving up one level, and check for subdir.dir with stat()
+	** Now using lib$find_file, which will accept a file or dir.
+	*/
+	int		status;
+	char		buff[PATH_MAX];
+	char		namecopy[PATH_MAX];
+	int		i;
+	int		len;
+	struct dsc$descriptor_s	pat;
+	struct dsc$descriptor_s	res;
+	long int		context=0;
+	int			flags = 0xf;
+	char			mesg[PATH_MAX];
+	/* $DESCRIPTOR(message_text,mesg);	this generates warning */
+	struct dsc$descriptor_s message_text;
+	int			mesglen;
+	int			getmsgstatus;
+	/* ASSUMING DIRECTORY IS VALID AND IN VMS FORMAT */
+	/* Set up the pattern descriptor. */
+	strcpy(namecopy,name);
+	pat.dsc$a_pointer = namecopy;
+	pat.dsc$w_length = strlen(namecopy);
+	pat.dsc$b_class = DSC$K_CLASS_S;
+	pat.dsc$b_dtype = DSC$K_DTYPE_T;
+	/* Set up result descriptor. */
+	res.dsc$a_pointer = buff;
+	res.dsc$w_length = sizeof buff;
+	res.dsc$b_dtype = DSC$K_DTYPE_T;
+	res.dsc$b_class = DSC$K_CLASS_S;
+	status = lib$find_file(&pat,&res,&context);
+
+	/* buff is padded at end with blanks, prune them off */
+	/* find last blank, then set it to null */
+	len = strlen(buff); /* may not be null terminated properly */
+	if (len >= sizeof buff) len = (sizeof buff) -1;
+	for (i=len-1;buff[i]==' ';i--)
+		buff[i]='\0';
+	switch (status) {
+		case RMS$_FNF: /* this will be the return code
+			** if the argument was [...subdir] and
+			** subdir exists and the file .; doesn't exist.
+			*/
+			/*printf("File not found.\n");*/
+			 break;
+		case RMS$_NORMAL:
+			/* normal return if checking subdir.dir
+			** or if the file [...subdir].; exists
+			*/
+			/*printf("Normal status return.\n");*/
+			 break;
+		case RMS$_NMF:	/*printf("No more files.\n");*/ break;
+       		case RMS$_DNF:	/*printf("Directory not found.\n");*/ break;
+		case RMS$_SYN:	/* not sure what this is */ break;
+		default:	
+			printf("eif_dir_exists: Unknown return status: %d\n",status);
+			printf("Result: <%s>\n",buff);
+			message_text.dsc$a_pointer = mesg;
+			message_text.dsc$w_length = sizeof mesg;
+			message_text.dsc$b_dtype = DSC$K_DTYPE_T;
+			message_text.dsc$b_class = DSC$K_CLASS_S;
+			getmsgstatus = SYS$GETMSG(status,&mesglen,&message_text,flags,0);
+			printf("\n<%d> %s\n",getmsgstatus,mesg);
+			 break;
+		}
+
+	/* assume that if last character is ']' then the argument
+	** that was passed is of the form '[...subdir]' and therefore
+	** a "file not found" error means the directory exists
+	*/
+	return(	( (status==RMS$_FNF) && (name[strlen(name)-1]==']') )
+		||(status==RMS$_NORMAL) /* incase subdir.dir */ );
+
+#else		/* ifdef VMS */
+
     /* Test whether file exists or not by checking the return from the stat()
      * system call, hence letting the kernel run all the tests. Return true
      * if the file exists.
      * Stat is called directly, because failure is allowed here obviously.
-	 * Test to see if it is really a directory and not a palin text file.
+	* Test to see if it is really a directory and not a plain text file.
      */
 
     struct stat buf;            /* Buffer to get file statistics */
@@ -228,17 +282,28 @@ char *name;
 		return (EIF_BOOLEAN) '\0';
 	else
 		return (EIF_BOOLEAN) ((buf.st_mode & S_IFDIR) ? '\1' : '\0');
+#endif	/* else not vms */
 }
 
 public EIF_BOOLEAN eif_dir_is_readable(name)
 char *name;
 {
 	/* Is directory readable */
-#ifdef HAS_GETEUID
-	int uid, gid;				/* File owner and group */
-#endif
 
-#define ST_MODE     0x0fff      /* Keep only permission mode */
+#ifdef __VMS
+	char	copy[PATH_MAX];
+	strcpy(copy,name);
+	if ( -1 == access(dir_dot_dir(copy),R_OK) )
+		return (EIF_BOOLEAN) FALSE;
+	else
+		return (EIF_BOOLEAN) TRUE;
+#else
+
+ #ifdef HAS_GETEUID
+	int uid, gid;				/* File owner and group */
+ #endif
+
+ #define ST_MODE     0x0fff      /* Keep only permission mode */
 
 	int mode;					/* Current mode */
 	struct stat buf;            /* Buffer to get file statistics */
@@ -246,7 +311,7 @@ char *name;
 	stat(name, &buf);			/* Cannot fail (precondition) */
 	mode = buf.st_mode & ST_MODE;
 
-#ifdef HAS_GETEUID
+ #ifdef HAS_GETEUID
 	uid = buf.st_uid;
 	gid = buf.st_gid;
 
@@ -255,17 +320,28 @@ char *name;
 	else if (gid == getegid())
 		return (EIF_BOOLEAN) ((mode & S_IRGRP) ? '\01' : '\0');
 	else
-#endif
+ #endif
 		return (EIF_BOOLEAN) ((mode & S_IROTH) ? '\01' : '\0');
+#endif	/* not vms */
 }
 
 public EIF_BOOLEAN eif_dir_is_writable(name)
 char *name;
 {
 	/* Is directory writable */
-#ifdef HAS_GETEUID
+
+#ifdef __VMS
+	char	copy[PATH_MAX];
+	strcpy(copy,name);
+	if ( -1 == access(dir_dot_dir(copy),W_OK) )
+		return (EIF_BOOLEAN) FALSE;
+	else
+		return (EIF_BOOLEAN) TRUE;
+#else
+
+ #ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */
-#endif
+ #endif
 
 	int mode;					/* Current mode */
 	struct stat buf;            /* Buffer to get file statistics */
@@ -273,7 +349,7 @@ char *name;
 	stat(name, &buf);			/* Cannot fail (precondition) */
 	mode = buf.st_mode & ST_MODE;
 
-#ifdef HAS_GETEUID
+ #ifdef HAS_GETEUID
 	uid = buf.st_uid;
 	gid = buf.st_gid;
 
@@ -282,17 +358,28 @@ char *name;
 	else if (gid == getegid())
 		return (EIF_BOOLEAN) ((mode & S_IWGRP) ? '\01' : '\0');
 	else
-#endif
+ #endif
 		return (EIF_BOOLEAN) ((mode & S_IWOTH) ? '\01' : '\0');
+#endif	/* not vms */
 }
 
 public EIF_BOOLEAN eif_dir_is_executable(name)
 char *name;
 {
 	/* Is directory executable */
-#ifdef HAS_GETEUID
+
+#ifdef __VMS
+	char	copy[PATH_MAX];
+	strcpy(copy,name);
+	if ( -1 == access(dir_dot_dir(copy),X_OK) )
+		return (EIF_BOOLEAN) FALSE;
+	else
+		return (EIF_BOOLEAN) TRUE;
+#else
+
+ #ifdef HAS_GETEUID
 	int uid, gid;				/* File owner and group */
-#endif
+ #endif
 
 	int mode;					/* Current mode */
 	struct stat buf;            /* Buffer to get file statistics */
@@ -300,7 +387,7 @@ char *name;
 	stat(name, &buf);			/* Cannot fail (precondition) */
 	mode = buf.st_mode & ST_MODE;
 
-#ifdef HAS_GETEUID
+ #ifdef HAS_GETEUID
 	uid = buf.st_uid;
 	gid = buf.st_gid;
 
@@ -309,8 +396,9 @@ char *name;
 	else if (gid == getegid())
 		return (EIF_BOOLEAN) ((mode & S_IXGRP) ? '\01' : '\0');
 	else
-#endif
+ #endif
 		return (EIF_BOOLEAN) ((mode & S_IXOTH) ? '\01' : '\0');
+#endif	/* not vms */
 }
 
 public void eif_dir_delete(name)
@@ -321,6 +409,10 @@ char *name;
 	struct stat buf;				/* File statistics */
 	int status;						/* Status from system call */
 
+#ifdef __VMS
+	printf("Directory delete not implemented yet.\n");
+	printf("Directory: %s\n",name);
+#else
 	file_stat(name, &buf);			/* Side effect: ensure file exists */
 
 	for (;;) {
@@ -334,9 +426,58 @@ char *name;
 			}
 		break;
 	}
+#endif	/* vms */
 }
 
 #ifdef __VMS
+char *	dir_dot_dir ( char *	duplicate )
+{
+/*	For a given directory path, return the name of the directory file.
+ *	For example, given DKA200:[DIR1.SUBDIR], return this:
+ *		DKA200:[DIR1]SUBDIR.DIR
+ * 	NOTE: THIS ROUTINE CHANGES THE STRING WHOSE POINTER IS PASSED TO IT.
+ */
+	int	i, j;
+	int	orig_strlen;
+
+	if ( duplicate == NULL ) 	return NULL;
+	orig_strlen = strlen(duplicate);
+	if ( duplicate[orig_strlen-1] != ']')	return NULL;
+	if (orig_strlen == 2 && duplicate[0] == '[') {
+		/* [] means current directory */
+		/* have to get full directory name */
+		getcwd(duplicate,PATH_MAX - 1);
+		orig_strlen = strlen(duplicate);
+	}	/* current directory */
+	/* first locate the last . in the path by stepping backwards */
+	for ( i=(orig_strlen-2);
+		(i>0) 			/* at beginning of string */
+		&& (duplicate[i] != '.')	/* found the dot */
+		&& (duplicate[i] != '[');	/* found the leading bracket */
+		i-- )	{ /* do nothing */ }
+	if (i==0)	return NULL;
+	if (duplicate[i]=='.') {		/* FOUND THE DOT */
+		duplicate[i] = ']';
+		duplicate[strlen(duplicate)-1] = '\0';	/* get rid of trailing ] */
+		strcat(duplicate,".DIR");
+		return duplicate;
+	}	/* found the dot */
+	if (duplicate[i]=='[') {	/* FOUND LEADING BRACKET */
+		/* must be top level directory */
+		/* change [topdir] to [000000]topdir.dir */
+		for ( j=strlen(duplicate) -2 ; j > i ; j-- ) {
+			duplicate[j+7] = duplicate[j];
+		}	/* for */
+		for ( j=i+1; j < i+7; j++ )	/* now insert 0's */
+			duplicate[j] = '0';
+		duplicate[i+7] = ']';
+		duplicate[orig_strlen+6] = '\0';
+		strcat(duplicate,".dir");
+		return duplicate;
+	}	/* found leading bracket */
+
+}	/* dir_dot_dir */
+
 /*
 **  VMS readdir() routines.
 **  Written by Rich $alz, <rsalz@bbn.com> in August, 1990.

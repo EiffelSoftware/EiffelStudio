@@ -28,6 +28,7 @@
 
 #ifdef __VMS
 #define lib$rename_file		LIB$RENAME_FILE
+#define lib$delete_file		LIB$DELETE_FILE
 #include <lib$routines.h>
 #include <descrip.h>
 #include <rmsdef.h>
@@ -87,6 +88,20 @@ private void swallow_nl();		/* Swallow next character if new line */
 
 extern int esys();				/* Raise 'Operating system error' exception */
 extern int eio();				/* Raise 'I/O error' exception */
+#ifdef __VMS
+extern char * dir_dot_dir (char * dir);
+#endif
+
+#ifndef HAS_UTIME
+private int utime();
+#endif
+
+#ifndef HAS_LINK
+ #ifndef unlink
+private int unlink();
+ #endif
+#endif
+
 
 /*
  * Opening a file.
@@ -208,7 +223,7 @@ FILE *old;
 	 * to another place, for instance.
 	 */
 
-#ifdef __WINDOWS_386__
+#if defined  __WINDOWS_386__  ||  __VMS
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'b'), old);
 #else
 	return (EIF_POINTER) file_freopen(name, file_open_mode(how,'\0'), old);
@@ -290,7 +305,11 @@ FILE *fp;
 	/* Flush data held in stdio buffer */
 
 	errno = 0;
+#ifdef __VMS
+	if (0 != fsync(fileno(fp)))
+#else
 	if (0 != fflush(fp))
+#endif
 		esys();				/* Flush failed, raise exception */
 }
 
@@ -298,13 +317,26 @@ public  EIF_INTEGER file_size (fp)
 FILE *fp;
 {
 	struct stat buf;
+#ifdef __VMS
+	int fd,current_position;
+#endif
 
 	errno = 0;
+#ifdef __VMS
+	fd = fileno(fp);
+	/* handle vms bug by positioning to end before fsync-ing --mark howard*/
+	current_position = lseek(fd,0,SEEK_CUR);
+	lseek(fd,0,SEEK_END);
+	if (0 != fsync (fileno(fp)))	/* have to flush all the way! */
+		esys();
+	lseek(fd,current_position,SEEK_SET);	
+#else
 	if (0 != fflush (fp))   /* Without a flush the information */
-		esys();						/* is not up to date */
+		esys();			/* is not up to date */
+#endif
 
 	if (fstat (fileno (fp), &buf) == -1)
-		esys();						/* An error occurred: raise exception */
+		esys();		/* An error occurred: raise exception */
 	return (EIF_INTEGER) buf.st_size;
 }
 
@@ -826,6 +858,9 @@ struct stat *buf;		/* Structure to fill in */
 	/* This is an encapsulation of the stat() system call. The routine either
 	 * succeeds and returns or fails and raises the appropriate exception.
 	 */
+#ifdef __VMS
+#define UID_MASK 0x0000FFFF	/* in VMS, uid contains gid in upper word */
+#endif
 
 	int status;			/* System call status */
 	
@@ -836,6 +871,9 @@ struct stat *buf;		/* Structure to fill in */
 		status = stat(path, buf);		/* Watch for symbolic links */
 #else
 		status = stat(path, buf);		/* Get file statistics */
+ #ifdef __VMS
+		buf->st_uid = buf->st_uid & UID_MASK;
+ #endif
 #endif
 		if (status == -1) {				/* An error occurred */
 			if (errno == EINTR)			/* Interrupted by signal */
@@ -1070,16 +1108,31 @@ char *path;
 	/* Create directory `path' */
 
 	int status;			/* System call status */
+#ifdef __VMS
+	char duplicate[PATH_MAX];
+	strcpy(duplicate,path);
+#endif
 	
 	for (;;) {
-		errno = 0;						/* Reset error condition */
-		status = mkdir(path, 0777);		/* Create directory `path' */
-		if (status == -1) {				/* An error occurred */
-			if (errno == EINTR)			/* Interrupted by signal */
-				continue;				/* Re-issue system call */
+		errno = 0;			/* Reset error condition */
+		status = mkdir(path, 0777);	/* Create directory `path' */
+		if (status == -1) {		/* An error occurred */
+			if (errno == EINTR)	/* Interrupted by signal */
+				continue;	/* Re-issue system call */
 			else
-				esys();					/* Raise exception */
+				esys();		/* Raise exception */
 		}
+#ifdef __VMS
+		/* Under VMS, mkdir will not grant delete privelege by default
+		 * on directory just created. However if no delete priv then
+		 * then VMS thinks the project isn't writable. This is one
+		 * of those brain-dead clashes btwn VMS & U*ix.
+		 * Now set delete protection on dir file */
+		status = chmod(dir_dot_dir(duplicate),0777);
+		if (status == -1) {
+			esys();
+		}
+#endif	/* vms */
 		break;
 	}
 }
@@ -1346,12 +1399,25 @@ char *path;
 	char temp [PATH_MAX];
 	char *ptr;
 
+#ifdef __VMS
+	/* You can't do a stat() on a directory under VMS
+	 * Just return true for now, fix this later!
+	 */
+	return (EIF_BOOLEAN) '\1';
+
+	ptr = rindex(temp, ']') + 1;	/* locate the end of the dir path */
+	if (ptr != (char *) 0)
+		*ptr = '\0';		/* now truncate the file name */
+	else
+	/* should use a function like dir_current() here? */
+		strcpy (temp, "[]");
+#else	/* vms */
 	strcpy (temp, path);
-#ifdef __WINDOWS_386__
+ #ifdef __WINDOWS_386__
 	ptr = rindex(temp, '\\');
-#else
+ #else
 	ptr = rindex(temp, '/');
-#endif
+ #endif
 	if (ptr != (char *) 0)
 		*ptr = '\0';
 	else
@@ -1374,6 +1440,7 @@ char *path;
 		}
 
 	return (EIF_BOOLEAN) '\0';
+#endif	/* vms */
 }
 
 public EIF_INTEGER file_fd(f)
@@ -1449,33 +1516,11 @@ char *to;		/* Target name */
 
 	/* Emulates the system call rename() */
 
-#ifdef __VMS
-	char	old[256];
-	char	new[256];
-	int		status;
-
-	DESCRIPTOR(olddsc,old);                
-	DESCRIPTOR(newdsc,new);
-
-	strcpy(old,from);
-	strcpy(new,to);
-	olddsc.dsc$w_length = strlen(old);
-	newdsc.dsc$w_length = strlen(new);
-	status  = lib$rename_file(&olddsc,&newdsc,
-		/* default, related filespec */ 0,0, /*flags*/ 0,
-		/* success,fail,confirm routines */ 0,0,0,
-		/* user arg */ 0, /* old,new result */ 0,0,/*context*/ 0);
-	if ((status & 1) != 1) return -1;
-		/* if no error, use the default return, as does the nonVMS code */
-
-#else /* ifdef __VMS */
-
 	(void) unlink(to);
 	if (-1 == link(from, to))
 		return -1;
 	if (-1 == unlink(from))
 		return -1;
-#endif
 }
 #endif
 
@@ -1483,6 +1528,10 @@ char *to;		/* Target name */
 public int rmdir(path)
 char *path;
 {
+ #ifdef __VMS
+	printf("RMDIR not implemented under VMS yet.\n");
+	return -1;
+ #else
 	/* Emulates the rmdir() system call */
 
 	char cmd[BUFSIZ];
@@ -1495,6 +1544,7 @@ char *path;
 		return -1;
 	
 	return 0;
+ #endif	/* vms */
 }
 #endif
 
@@ -1518,26 +1568,52 @@ char *path;
 #endif
 
 #ifndef HAS_UTIME
-int utime(path, times);
+int utime(path, times)		/* note, had to remove ; from this line */
 char *path;
+#ifdef __VMS
+char *times;
+#else
 struct utimbuf *times;
+#endif
 {
 	/* Emulation of utime */
-
+ #ifdef __VMS
+	return -1;
+ #else
 	...
+ #endif
 
 }
 #endif
 
-#ifndef HAS_UNLINK
-#ifndef unlink
+
+#ifndef HAS_LINK
+ #ifndef unlink
 
 int unlink(path)
 char *path;
 {
+  #ifdef __VMS
+	/*printf("Unlink not available: %s\n",path);*/
+	int		status;
+	struct dsc$descriptor_s		deldsc;
+
+	deldsc.dsc$w_length = strlen(path);
+	deldsc.dsc$a_pointer= path;
+	deldsc.dsc$b_class = DSC$K_CLASS_S;
+	deldsc.dsc$b_dtype = DSC$K_DTYPE_T;
+	status  = lib$delete_file(&deldsc,
+		/* default, related filespec */ 0,0,
+		/* success,fail,confirm routines */ 0,0,0,
+		/* user arg */ 0, /* result */ 0,/*context*/ 0);
+	if ((status & 1) != 1) return -1;
+
+	return 0;
+
+  #else /* ifdef __VMS */
 	return -1;
+  #endif	/* vms */
 }
 
-#endif
-#endif
-
+ #endif		/* unlink */
+#endif		/* has link */

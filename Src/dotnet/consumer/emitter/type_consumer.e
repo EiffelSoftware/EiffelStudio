@@ -1177,26 +1177,28 @@ feature {NONE} -- Added features for ENUM types.
 
 	literal_field_value (val: SYSTEM_OBJECT): STRING is
 			-- Convert `val' into a STRING representation.
-		require
-			val_not_void: val /= Void
 		local
 			d: DOUBLE
 			r: REAL
 		do
-			if val.get_type.equals_type (Double_type) then
-				d ?= val
-				check
-					is_double: d /= Void
+			if val /= Void then
+				if val.get_type.equals_type (Double_type) then
+					d ?= val
+					check
+						is_double: d /= Void
+					end
+					Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_double (d))
+				elseif val.get_type.equals_type (Real_type) then
+					r ?= val
+					check
+						is_real: r /= Void
+					end
+					Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_real (r))
+				else
+					create Result.make_from_cil (val.to_string)
 				end
-				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_double (d))
-			elseif val.get_type.equals_type (Real_type) then
-				r ?= val
-				check
-					is_real: r /= Void
-				end
-				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_real (r))
 			else
-				create Result.make_from_cil (val.to_string)
+				Result := "Void"
 			end
 		end
 

@@ -17,7 +17,8 @@ class
 inherit
 	EV_PRIMITIVE
 		redefine
-			implementation
+			implementation,
+			create_action_sequences
 		end
 
 	EV_ITEM_LIST [EV_MULTI_COLUMN_LIST_ROW]
@@ -233,6 +234,17 @@ feature -- Element change
 			implementation.set_rows_height (value)
 		end
 
+feature -- Event handling
+
+	select_actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Actions performed when a row is selected.
+
+	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Actions performed when a row is deselected.
+
+	column_click_actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Actions performed when a column is clicked.
+
 feature -- Implementation
 	
 	implementation: EV_MULTI_COLUMN_LIST_I
@@ -251,6 +263,14 @@ feature {NONE} -- Inapplicable
 	create_implementation is
 		do
 			create {EV_MULTI_COLUMN_LIST_IMP} implementation.make (Current)
+		end
+
+	create_action_sequences is
+		do
+			{EV_PRIMITIVE} Precursor
+			create select_actions
+			create deselect_actions
+			--| FIXME IEK create column_click_actions
 		end
 
 end -- class EV_MULTI_COLUMN_LIST
@@ -276,6 +296,9 @@ end -- class EV_MULTI_COLUMN_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/02/18 18:45:33  king
+--| Added select, deselect and column_click actions sequences
+--|
 --| Revision 1.25  2000/02/17 21:54:19  king
 --| Added row height precond to be > 0
 --|

@@ -1,5 +1,5 @@
 #!/bin/bash
-cvs -d :pserver:$USER@cvs:/home/cvs export -r HACK-O-RAMA vision2
+cvs -d :pserver:$USER@cvs:/home/cvs export vision2
 cp RELEASE_NOTES vision2
 cd vision2
 make

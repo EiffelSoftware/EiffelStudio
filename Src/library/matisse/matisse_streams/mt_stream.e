@@ -45,7 +45,7 @@ feature -- Status report
 			Result := current_oid = End_of_stream
 		end
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 		do
 			Result := index = 0 and after
 		end

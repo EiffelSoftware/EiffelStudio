@@ -26,7 +26,7 @@ feature {NONE} -- Initilization
 			-- Get index from name
 		require
 			arg_name_not_void: arg_name /= Void
-			arg_name_not_empty: not arg_name.empty
+			arg_name_not_empty: not arg_name.is_empty
 		local
 			c_index_name: ANY
 			a_criterion: MT_INDEX_CRITERION

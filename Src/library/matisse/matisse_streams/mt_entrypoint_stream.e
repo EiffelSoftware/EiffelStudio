@@ -20,7 +20,7 @@ feature {MT_ENTRYPOINT} -- Implementation
 			-- Open Stream.
 		require
 			ep_name_not_void: ep_name /= Void
-			ep_name_not_empty: not ep_name.empty
+			ep_name_not_empty: not ep_name.is_empty
 		local
 			c_ep_name: ANY
 		do

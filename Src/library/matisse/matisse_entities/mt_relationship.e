@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			-- An error raised if `relationship_name' is not unique in the schema.
 		require
 			string_not_void: relationship_name /= Void
-			string_not_empty: not relationship_name.empty
+			string_not_empty: not relationship_name.is_empty
 		local
 			relationship_name_to_c: ANY
 		do
@@ -43,9 +43,9 @@ feature {NONE} -- Initialization
 			-- Get relationship from database.
 		require
 			rel_not_void: relationship_name /= Void
-			rel_not_empty: not relationship_name.empty
+			rel_not_empty: not relationship_name.is_empty
 			cl_not_void: cl_name /= Void
-			cl_not_empty: not cl_name.empty
+			cl_not_empty: not cl_name.is_empty
 		local
 			relationship_name_to_c: ANY
 			cl_name_to_c: ANY

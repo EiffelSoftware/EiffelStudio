@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 	make_from_name (attr_name: STRING; a_class_name: STRING) is
 		require
 			attr_name_not_void: attr_name /= Void
-			attr_name_not_empty: not attr_name.empty
+			attr_name_not_empty: not attr_name.is_empty
 		do
 			ep_attribute_name := clone (attr_name)
 			if a_class_name /= Void then

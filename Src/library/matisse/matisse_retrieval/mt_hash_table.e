@@ -246,7 +246,7 @@ feature {NONE} -- Loading & storing successors
 				if has_default_att.get_boolean (Current) then
 					!! rel.make ("void_key_obj_value")
 					succ ?= successors (rel)
-					if succ.empty then
+					if succ.is_empty then
 						ht_put (default_value, default_key)
 					else
 						ht_put (succ.item (succ.lower), default_key)

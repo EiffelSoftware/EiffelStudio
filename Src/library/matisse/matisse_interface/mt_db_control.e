@@ -188,7 +188,7 @@ feature -- Status session
 	set_hostname (a_hostname: STRING) is
 		require
 			not_void: a_hostname /= Void
-			not_empty: not a_hostname.empty
+			not_empty: not a_hostname.is_empty
 		do
 			hostname := clone (a_hostname)
 		end
@@ -196,7 +196,7 @@ feature -- Status session
 	set_database_name (a_db_name: STRING) is
 		require
 			not_void: a_db_name /= Void
-			not_empty: not a_db_name.empty
+			not_empty: not a_db_name.is_empty
 		do
 			database_name := clone (a_db_name)
 		end
@@ -204,7 +204,7 @@ feature -- Status session
 	set_user_name (a_name: STRING) is
 		require
 			not_void: a_name /= Void
-			not_empty: not a_name.empty
+			not_empty: not a_name.is_empty
 		do
 			user_name := clone (a_name)
 		end
@@ -212,7 +212,7 @@ feature -- Status session
 	set_password (a_word: STRING) is
 		require
 			not_void: a_word /= Void
-			not_empty: not a_word.empty
+			not_empty: not a_word.is_empty
 		do
 			password := clone (a_word)
 		end

@@ -22,7 +22,7 @@ feature -- Initialization
 			-- Set login information to database server under `a_hostname' with `db_name'.
 		require
 			arguments_exist: a_hostname /= Void and db_name /= Void
-			arguments_not_empty: not (a_hostname.empty or db_name.empty)
+			arguments_not_empty: not (a_hostname.is_empty or db_name.is_empty)
 		do
 			!! session_control.make
 			session_control.set_hostname (a_hostname)

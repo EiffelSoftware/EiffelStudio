@@ -38,7 +38,7 @@ extern "C" {
 #define EIF_RWL_RDLOCK(rwl,msg) if (rw_rdlock(rwl)) eraise (msg, EN_EXT)
 #define EIF_RWL_WRLOCK(rwl,msg) if (rw_wrlock(rwl)) eraise (msg, EN_EXT)
 #define EIF_RWL_UNLOCK(rwl,msg) if (rw_unlock(rwl)) eraise (msg, EN_EXT)
-#define EIF_RWL_DESTROY(rwl, mesg) \
+#define EIF_RWL_DESTROY(rwl, msg) \
 	if (rwlock_destroy(rwl)) eraise (msg, EN_EXT); \
 	eif_free(rwl)
 

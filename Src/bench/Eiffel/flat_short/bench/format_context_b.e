@@ -497,7 +497,7 @@ feature -- Element change
 			type: TYPE_A
 		do
 			if format.dot_needed then
-				adapt := local_adapt.adapt_nested_feature (name)
+				adapt := local_adapt.adapt_nested_feature (name, global_adapt)
 			else
 				adapt := unnested_local_adapt.adapt_feature (name, 
 											global_adapt)
@@ -554,7 +554,7 @@ feature -- Element change
 			-- Prepare for infix with feature `internal_name'
 			-- and arg `right'.
 		do
-			local_adapt := local_adapt.adapt_infix (internal_name);
+			local_adapt := local_adapt.adapt_infix (internal_name, global_adapt);
 			arguments := right;
 			was_infix_arguments := True;
 		end;
@@ -562,7 +562,7 @@ feature -- Element change
 	prepare_for_prefix (internal_name: STRING) is
 			-- Prepare for infix with feature `internal_name'.
 		do
-			local_adapt := local_adapt.adapt_prefix (internal_name);
+			local_adapt := local_adapt.adapt_prefix (internal_name, global_adapt);
 			arguments := void;
 		end;
 

@@ -63,6 +63,7 @@ feature {COMPILER_EXPORTER} -- Initialization
 
 			copy_old_cluster (old_cluster_i)
 
+			parent_cluster := par_clus
 			cluster_name := old_cluster_i.cluster_name
 		end
 

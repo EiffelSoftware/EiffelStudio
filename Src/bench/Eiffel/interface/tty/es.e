@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 		local
 			temp: STRING
 			new_resources: TTY_RESOURCES
+			eifgen_init: INIT_SERVERS
 		do
 			if not retried then
 					-- Check that environment variables
@@ -66,6 +67,12 @@ feature {NONE} -- Initialization
 					("ISE Eiffel4: the environment variable $PLATFORM is not set%N")
 					die (-1)
 				end
+					--| Initialization of the run-time, so that at the end of a store/retrieve
+					--| operation (like retrieving or storing the project, creating the CASEGEN
+					--| directory, generating the profile information, ...) the run-time is initialized
+					--| back to the values which permits the compiler to access correctly the EIFGEN
+					--| directory
+				!! eifgen_init.make
 
 					-- Call `init_license' only if `licensed' is `True'
 				if not licensed or else init_license then

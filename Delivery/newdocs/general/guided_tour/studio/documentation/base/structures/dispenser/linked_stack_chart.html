@@ -1,0 +1,97 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+<META NAME="contents" CONTENT="generic">
+<META NAME="access" CONTENT="fixed, lifo, membership">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="names" CONTENT="linked_stack, dispenser, linked_list">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="Unbounded stacks implemented as linked lists">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="representation" CONTENT="linked">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>LINKED_STACK Chart</TITLE>
+<LINK REL="stylesheet" HREF="../../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="nolink2">Chart</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="linked_stack_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="linked_stack.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="linked_stack_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="linked_stack_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="linked_stack_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="LINKED_STACK"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/dispenser/linked_stack_chart.html">LINKED_STACK</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../base/structures/dispenser/index.html">base.structures.dispenser</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Unbounded stacks implemented as linked lists"</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/list/linked_list_chart.html">LINKED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/dispenser/stack_chart.html">STACK</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`changeable_comparison_criterion' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`count' was declared in LINKED_LIST"><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`duplicate' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/dispenser/linked_stack.html#f_duplicate">duplicate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/structures/dispenser/linked_stack_chart.html">LINKED_STACK</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`extendible' was declared in DYNAMIC_CHAIN"><A CLASS="efeature" HREF="../../../base/structures/list/dynamic_chain.html#f_extendible">Extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`full' was declared in LINKED_LIST"><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_full">Full</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has' was declared in CHAIN"><A CLASS="efeature" HREF="../../../base/structures/list/chain.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/traversing/traversable.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_empty' was declared in FINITE"><A CLASS="efeature" HREF="../../../base/structures/storage/finite.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_equal' was declared in LIST"><A CLASS="efeature" HREF="../../../base/structures/list/list.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/structures/dispenser/linked_stack_chart.html">LINKED_STACK</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_inserted' was declared in COLLECTION"><A CLASS="efeature" HREF="../../../base/structures/access/collection.html#f_is_inserted">is_inserted</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`item' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/dispenser/linked_stack.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN>
+	<SPAN TITLE="`linear_representation' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/dispenser/linked_stack.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/list/arrayed_list_chart.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`object_comparison' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`occurrences' was declared in CHAIN"><A CLASS="efeature" HREF="../../../base/structures/list/chain.html#f_occurrences">occurrences</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/traversing/traversable.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`prunable' was declared in DYNAMIC_CHAIN"><A CLASS="efeature" HREF="../../../base/structures/list/dynamic_chain.html#f_prunable">prunable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`readable' was declared in DISPENSER"><A CLASS="efeature" HREF="../../../base/structures/dispenser/dispenser.html#f_readable">readable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`writable' was declared in DISPENSER"><A CLASS="efeature" HREF="../../../base/structures/dispenser/dispenser.html#f_writable">writable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`append' was declared in DISPENSER"><A CLASS="efeature" HREF="../../../base/structures/dispenser/dispenser.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/list/sequence_chart.html">SEQUENCE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`compare_objects' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_objects">compare_objects</A></SPAN>
+	<SPAN TITLE="`compare_references' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_references">compare_references</A></SPAN>
+	<SPAN TITLE="`copy' was declared in LINKED_LIST"><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN> <A CLASS="eclass" HREF="../../../base/structures/dispenser/linked_stack_chart.html">LINKED_STACK</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`extend' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/dispenser/linked_stack.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/dispenser/linked_stack.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`fill' was declared in STACK"><A CLASS="efeature" HREF="../../../base/structures/dispenser/stack.html#f_fill">fill</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/traversing/linear_chart.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`force' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/dispenser/linked_stack.html#f_force">force</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/dispenser/linked_stack.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`make' was declared in LINKED_LIST"><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_make">make</A></SPAN>
+	<SPAN TITLE="`put' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/dispenser/linked_stack.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/dispenser/linked_stack.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`remove' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/dispenser/linked_stack.html#f_remove">remove</A></SPAN>
+	<SPAN TITLE="`replace' was declared in LINKED_LIST"><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_replace">replace</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`wipe_out' was declared in LINKED_LIST"><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_wipe_out">wipe_out</A></SPAN>
+
+<FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="nolink2">Chart</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="linked_stack_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="linked_stack.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="linked_stack_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="linked_stack_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="linked_stack_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="LINKED_STACK"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>

@@ -1,0 +1,361 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+<META NAME="contents" CONTENT="generic">
+<META NAME="access" CONTENT="membership, min, max">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="names" CONTENT="sorted_set, set, two_way_list">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="TTSets whose items may be compared according to a total order relation;R TTimplemented as sorted two-way lists.">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="representation" CONTENT="linked">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>TWO_WAY_SORTED_SET Text</TITLE>
+<LINK REL="stylesheet" HREF="../../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="two_way_sorted_set_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="two_way_sorted_set_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="two_way_sorted_set_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="two_way_sorted_set_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="two_way_sorted_set_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="TWO_WAY_SORTED_SET"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">		Sets whose items may be compared according to a total order relation;</SPAN>
+<SPAN CLASS="estring">		implemented as sorted two-way lists.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">names</SPAN><SPAN CLASS="esymbol">:</SPAN> sorted_set<SPAN CLASS="esymbol">,</SPAN> set<SPAN CLASS="esymbol">,</SPAN> two_way_list
+	<SPAN CLASS="eitag">representation</SPAN><SPAN CLASS="esymbol">:</SPAN> linked
+	<SPAN CLASS="eitag">access</SPAN><SPAN CLASS="esymbol">:</SPAN> membership<SPAN CLASS="esymbol">,</SPAN> min<SPAN CLASS="esymbol">,</SPAN> max
+	<SPAN CLASS="eitag">contents</SPAN><SPAN CLASS="esymbol">:</SPAN> generic
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../../../base/structures/set/two_way_sorted_set.html">TWO_WAY_SORTED_SET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/comparable.html">COMPARABLE</A><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">inherit</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/set/comparable_set.html">COMPARABLE_SET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+		<SPAN CLASS="ekeyword">rename</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/subset.html#f_symdif">symdif</A> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">subset_symdif</SPAN>
+		<SPAN CLASS="ekeyword">export</SPAN>
+			<SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal">subset_symdif</SPAN>
+		<SPAN CLASS="ekeyword">undefine</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/traversing/bilinear.html#f_search">search</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_has">has</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/sort/comparable_struct.html#f_index">index</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/traversing/bilinear.html#f_off">off</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/comparable_set.html#f_min">min</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/comparable_set.html#f_max">max</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_index_of">index_of</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/access/collection.html#f_prune_all">prune_all</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_occurrences">occurrences</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/kernel/any.html#f_is_equal">is_equal</A>
+		<SPAN CLASS="ekeyword">redefine</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/subset.html#f_merge">merge</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/subset.html#f_intersect">intersect</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/subset.html#f_subtract">subtract</A>
+		<SPAN CLASS="ekeyword">select</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/set.html#f_extend">extend</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/set.html#f_put">put</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/set.html#f_prune">prune</A>
+		<SPAN CLASS="ekeyword">end</SPAN>
+
+	<A CLASS="eclass" HREF="../../../base/structures/set/linear_subset.html">LINEAR_SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+		<SPAN CLASS="ekeyword">undefine</SPAN>
+			<A CLASS="efeature" HREF="../../../base/kernel/any.html#f_is_equal">is_equal</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/access/collection.html#f_prune_all">prune_all</A>
+		<SPAN CLASS="ekeyword">redefine</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_merge">merge</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_intersect">intersect</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_subtract">subtract</A>
+		<SPAN CLASS="ekeyword">select</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_symdif">symdif</A>
+		<SPAN CLASS="ekeyword">end</SPAN>
+
+	<A CLASS="eclass" HREF="../../../base/structures/list/sorted_two_way_list.html">SORTED_TWO_WAY_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+		<SPAN CLASS="ekeyword">rename</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/list/sorted_two_way_list.html#f_extend">extend</A> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">stwl_extend</SPAN><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/list/chain.html#f_put">put</A> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">stwl_put</SPAN><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/list/dynamic_chain.html#f_prune">prune</A> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">stwl_prune</SPAN><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/list/part_sorted_list.html#f_merge">merge</A> <SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="elocal">stwl_merge</SPAN>
+		<SPAN CLASS="ekeyword">export</SPAN>
+			<SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal">stwl_extend</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">stwl_put</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">stwl_prune</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">stwl_merge</SPAN><SPAN CLASS="esymbol">,</SPAN>
+			<SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../../base/kernel/any.html">ANY</A><SPAN CLASS="esymbol">}</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/sorted_list.html#f_min">min</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/sorted_list.html#f_max">max</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_index">index</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_before">before</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_forth">forth</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_finish">finish</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_start">start</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/storage/finite.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_empty">empty</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_back">back</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_remove">remove</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/traversing/bilinear.html#f_search">search</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_off">off</A><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_go_i_th">go_i_th</A>
+		<SPAN CLASS="ekeyword">undefine</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A>
+		<SPAN CLASS="ekeyword">redefine</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/list/dynamic_chain.html#f_duplicate">duplicate</A>
+		<SPAN CLASS="ekeyword">end</SPAN>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+	<A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_extend"><A CLASS="efeature" HREF="../../../base/structures/set/two_way_sorted_set.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Ensure that structure includes </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base/structures/set/two_way_sorted_set.html">TWO_WAY_SORTED_SET</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base/structures/set/two_way_sorted_set.html#f_put">put</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">found</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean.html">BOOLEAN</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/list/part_sorted_list.html#f_search_after">search_after</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_or_else">or else</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_put_left">put_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_back">back</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_or_else">or else</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_put_left">put_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_back">back</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">else</SPAN>
+				<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="ekeyword">until</SPAN>
+					<SPAN CLASS="elocal">found</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <SPAN CLASS="ekeyword">or else</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">loop</SPAN>
+					<SPAN CLASS="elocal">found</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">v</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_forth">forth</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <SPAN CLASS="elocal">found</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_put_left">put_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_back">back</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_put"><A CLASS="efeature" HREF="../../../base/structures/set/two_way_sorted_set.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Ensure that structure includes </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base/structures/set/two_way_sorted_set.html">TWO_WAY_SORTED_SET</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base/structures/set/two_way_sorted_set.html#f_extend">extend</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">found</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean.html">BOOLEAN</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/list/part_sorted_list.html#f_search_after">search_after</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_or_else">or else</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_put_left">put_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_back">back</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_or_else">or else</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_put_left">put_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_back">back</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">else</SPAN>
+				<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="ekeyword">until</SPAN>
+					<SPAN CLASS="elocal">found</SPAN> <SPAN CLASS="ekeyword">or</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <SPAN CLASS="ekeyword">or else</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_equal">equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">loop</SPAN>
+					<SPAN CLASS="elocal">found</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">v</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_forth">forth</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="ekeyword">not</SPAN> <SPAN CLASS="elocal">found</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_put_left">put_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_back">back</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_merge"><A CLASS="efeature" HREF="../../../base/structures/set/two_way_sorted_set.html#f_merge">merge</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/set/traversable_subset.html">TRAVERSABLE_SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Add all items of </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">mode</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="elocal">other_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="elocal">mode</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A>
+				<A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_start">start</A>
+				<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_start">start</A>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_or">or</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_after">after</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="elocal">other_item</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_item">item</A>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A> <A CLASS="esymbol" HREF="../../../base/kernel/comparable.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">other_item</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/part_sorted_list.html#f_search_after">search_after</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other_item</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ekeyword">not</SPAN> <SPAN CLASS="elocal">mode</SPAN> <SPAN CLASS="ekeyword">and then</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">other_item</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">or else</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">mode</SPAN> <SPAN CLASS="ekeyword">and then</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other_item</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+						<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_forth">forth</A>
+						<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_forth">forth</A>
+					<SPAN CLASS="ekeyword">else</SPAN>
+						<SPAN CLASS="ekeyword">from</SPAN>
+						<SPAN CLASS="ekeyword">until</SPAN>
+							<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_or_else">or else</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_item">item</A> <A CLASS="esymbol" HREF="../../../base/kernel/comparable.html#f__infix_ge">&gt;=</A> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A>
+						<SPAN CLASS="ekeyword">loop</SPAN>
+							<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_put_left">put_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+							<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_forth">forth</A>
+						<SPAN CLASS="ekeyword">end</SPAN>
+					<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_after">after</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_put_left">put_left</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_forth">forth</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
+
+	<A NAME="f_prune"><A CLASS="efeature" HREF="../../../base/structures/set/two_way_sorted_set.html#f_prune">prune</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> if present.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_start">start</A>
+			<A CLASS="efeature" HREF="../../../base/structures/list/dynamic_chain.html#f_prune">stwl_prune</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duplication</SPAN>
+
+	<A NAME="f_duplicate"><A CLASS="efeature" HREF="../../../base/structures/set/two_way_sorted_set.html#f_duplicate">duplicate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy of sub-set beginning at cursor position</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> and having min (</SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment">, </SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_count">count</A><SPAN CLASS="ecomment"> - </SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_index">index</A><SPAN CLASS="ecomment"> + 1) items</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">pos</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/cursors/cursor.html">CURSOR</A>
+			<SPAN CLASS="elocal">counter</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer.html">INTEGER</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">pos</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_cursor">cursor</A>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/sorted_two_way_list.html#f_new_chain">new_chain</A>
+			<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_finish">finish</A>
+			<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_forth">forth</A>
+			<SPAN CLASS="ekeyword">from</SPAN>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">counter</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">or else</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_put_left">put_left</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_forth">forth</A>
+				<SPAN CLASS="elocal">counter</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">counter</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_go_to">go_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">pos</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic operations</SPAN>
+
+	<A NAME="f_intersect"><A CLASS="efeature" HREF="../../../base/structures/set/two_way_sorted_set.html#f_intersect">intersect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove all items not in </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_start">start</A>
+				<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_start">start</A>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_or">or</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="ekeyword">until</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_or">or</A> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A> <A CLASS="esymbol" HREF="../../../base/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A>
+				<SPAN CLASS="ekeyword">loop</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_remove">remove</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="ekeyword">from</SPAN>
+					<SPAN CLASS="ekeyword">until</SPAN>
+						<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_or_else">or else</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A> <A CLASS="esymbol" HREF="../../../base/kernel/comparable.html#f__infix_ge">&gt;=</A> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A>
+					<SPAN CLASS="ekeyword">loop</SPAN>
+						<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_forth">forth</A>
+					<SPAN CLASS="ekeyword">end</SPAN>
+					<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_and_then">and then</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/kernel/comparable.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+						<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_forth">forth</A>
+						<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_forth">forth</A>
+					<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="ekeyword">until</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A>
+				<SPAN CLASS="ekeyword">loop</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_remove">remove</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_subtract"><A CLASS="efeature" HREF="../../../base/structures/set/two_way_sorted_set.html#f_subtract">subtract</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove all items also in </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">other_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_start">start</A>
+				<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_start">start</A>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_or">or</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="elocal">other_item</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A> <A CLASS="esymbol" HREF="../../../base/kernel/comparable.html#f__infix_lt">&lt;</A> <SPAN CLASS="elocal">other_item</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/part_sorted_list.html#f_search_after">search_after</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other_item</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_after">after</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_and_then">and then</A> <SPAN CLASS="elocal">other_item</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">is_equal</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/linked_list.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_remove">remove</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/two_way_list.html#f_forth">forth</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Inapplicable</SPAN>
+
+	<A NAME="f_subset_symdif"><A CLASS="efeature" HREF="../../../base/structures/set/two_way_sorted_set.html#f_subset_symdif">subset_symdif</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/set/subset.html">SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Inapplicable </SPAN><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_symdif">symdif</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>TWO_WAY_SORTED_SET<FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="two_way_sorted_set_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="two_way_sorted_set_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="two_way_sorted_set_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="two_way_sorted_set_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="two_way_sorted_set_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="TWO_WAY_SORTED_SET"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

@@ -1,0 +1,133 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 3  THE SOFTWARE PROCESS IN EIFFEL</TITLE>
+</HEAD>
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-03.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial-00.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-05.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-513940"></A>3  <A NAME="41726"></A>THE SOFTWARE PROCESS IN EIFFEL</H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-513941"></A>Eiffel, as noted, supports the entire lifecycle. The underlying view of the system development lifecycle is radically different not only from the traditional &quot;Waterfall&quot; model (implying a sequence of discrete steps, such as analysis, global design, detailed design, implementation, separated by major changes of method and notation) but also from its more recent variants such as the spiral model or &quot;rapid prototyping&quot;, which remain predicated on a synchronous, full-product process, and retain the gaps between successive steps.
+<P CLASS="nn-normal">
+<A NAME="pgfId-513942"></A>Clearly, not everyone using Eiffel will follow to the letter the principles outlined below; in fact, some highly competent and successful Eiffel developers may disagree with some of them and use a different process model. In the author's mind, however, these principles fit best with the language and the rest of the method, even if practical developments may fall short of applying their ideal form.
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-513944"></A><A NAME="99072"></A>Clusters and the cluster model</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-513945"></A>Unlike earlier approaches, the Eiffel model assumes that the system is divided into a number of subsystems or <SPAN CLASS="ff-bold">
+clusters</SPAN>
+. It keeps from the Waterfall a sequential approach to the development of each cluster (without the gaps), but promotes <SPAN CLASS="ff-bold">
+concurrent engineering</SPAN>
+ for the overall process, as suggested by the following picture:.
+<DIV>
+<MAP NAME="tutorial-2">
+</MAP>
+<p>
+<ul>
+<IMG SRC="tutorial-2.png" USEMAP="#tutorial-2">
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-526208"></A>The Eiffel techniques developed below, in particular information hiding and Design by Contract, make the concurrent engineering process possible by letting the clusters rely on each other through clearly defined interfaces, strictly limiting the amount of knowledge that one must acquire to use the cluster, and permitting separate testing. When the inevitable surprises of a project happen, the project leader can take advantage of the model's flexibility, advancing or delaying various clusters and steps through dynamic reallocation of resources.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514014"></A>Each of the individual cluster lifecycles is based on a continuous progression of activities, from the more abstract to the more implementation-oriented:
+<DIV>
+<MAP NAME="tutorial-3">
+</MAP>
+<p>
+<ul>
+<IMG SRC="tutorial-3.png" USEMAP="#tutorial-3">
+</ul>
+<p>
+</DIV>
+<P CLASS="nn-first">
+<A NAME="pgfId-514049"></A>You may view this picture as describing a process of accretion (as with a stalactite), where each steps <SPAN CLASS="ff-italics">
+enriches</SPAN>
+ the results of the previous one. Unlike traditional views, which emphasize the multiplicity of software products -- analysis document, global and detailed design documents, program, maintenance reports &#8230; --, the principle is here to treat the software as a <SPAN CLASS="ff-bold">
+single product</SPAN>
+ which will be repeatedly refined, extended and improved. The Eiffel language supports this view by providing high-level notations that can be used throughout the lifecycle, from the most general and software-independent activities of system modeling to the most exacting details of implementation tuned for optimal run-time performance.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514050"></A>These properties make Eiffel span the scope of both &quot;object-oriented methods&quot;, with their associated notations such as UML and supporting CASE tools (whereas most such solutions do not yield an executable result), and &quot;programming languages&quot; (whereas most such languages are not suitable for design and analysis).
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514052"></A><A NAME="24218"></A>Seamlessness and reversibility</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514053"></A>The preceding ideas define the <SPAN CLASS="ff-bold">
+seamless approach</SPAN>
+ embodied by Eiffel. With seamlessness goes <SPAN CLASS="ff-bold">
+reversibility</SPAN>
+: the ability to go back, even late in the process, to earlier stages. Because the developers work on a single product, they can take advantages of bouts of late wisdom -- such as a great idea for adding a new function, discovered only at implementation time -- and integrate them in the product. Traditional approaches tend to discourage reversibility because it is difficult to guarantee that the analysis and design will be updated with the late changes. With the single-product principle, this is much easier to achieve.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514054"></A>Seamlessness and reversibility enhance extendibility by providing a direct mapping from the structure of the solution to the structure of the problem description, making it easier to take care of customers' change requests quickly and efficiently. They promote reliability, by avoiding possible misunderstandings between customers' and developers' views. They are a boost to maintainability. More generally, they yield a smooth, consistent software process that helps both quality and productivity.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514056"></A><A NAME="10958"></A>Generalization and reuse</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514057"></A>The last step of the cluster lifecycles, Generalization, is unheard of in traditional models. Its task is to prepare the results of a cluster for reuse across projects by looking for elements of general applicability, and transform them for inclusion in libraries.
+<P CLASS="nn-normal">
+<A NAME="pgfId-526242"></A>Recent object-oriented literature has used the term &quot;refactoring&quot; to describe a process of continuous improvement of released software. Generalization includes refactoring, but also pursues a more ambitious goal: helping turn <SPAN CLASS="ff-italics">
+program elements</SPAN>
+ (software modules useful only as part of a certain program) into <SPAN CLASS="ff-italics">
+software components </SPAN>
+-- reusable parts with a value of their own, ready to be used by diverse programs that can benefit from their capabilities.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514058"></A>Of course not all companies using the method will be ready to include a Generalization phase in their lifecycles. But those which do will see the reusability of their software greatly improved.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514059"></A>Constant availability</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514060"></A>Complementing the preceding principles is the idea that, in the cluster lifecycle, the development team (under the responsibility of the project leader) should at all times maintain a <SPAN CLASS="ff-italics">
+current working demo</SPAN>
+ which, although covering only a part of the final system, works well, and can be demonstrated or -- starting at a suitable time -- shipped as an early release. It is not a &quot;prototype&quot; in the sense of a mockup meant to be thrown away, but an initial iteration towards the final product; the successive iterations will progress continuously towards until they become that final product.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514061"></A>Compilation technology</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514062"></A>The preceding goals benefit from the ability to check frequently that the current iteration is correct and robust. Eiffel supports efficient compilation mechanisms through such mechanisms as the <SPAN CLASS="ff-bold">
+Melting Ice Technology</SPAN>
+ in ISE's EiffelStudio. The Melting Ice achieves immediate recompilation after a change, guaranteeing a recompilation time that's a function of the size of the <SPAN CLASS="ff-italics">
+changes</SPAN>
+, not of the system's overall size. Even for a system of several thousand classes and several hundred thousand lines, the time to get restarted after a change to a few classes is, on a typical modern computer, a few seconds.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514063"></A>Such a &quot;melt&quot; (recompilation) will immediately catch (along with any syntax errors) the type errors -- often the symptoms of conceptual errors that, if left undetected, could cause grave damage later in the process or even during operation. Once the type errors have been corrected, the developers should start testing the new functionalities, relying on the power of <SPAN CLASS="ff-bold">
+assertions</SPAN>
+ -- explained in <A HREF="tutorial-09.html#30455" CLASS="XRef"><SPAN CLASS="ww-crossref">
+&quot;DESIGN BY CONTRACTTM, ASSERTIONS, EXCEPTIONS&quot;,  page 38</SPAN>
+</A> -- to kill the bugs while they are still larvae. Such extensive unit and system testing, constantly interleaved with development, plays an important part in making sure that the &quot;current demo&quot; is trustworthy and will eventually yield a correct and robust product.
+</DIV>
+<DIV>
+<H2 CLASS="aa-sec3">
+<A NAME="pgfId-514068"></A><A NAME="94733"></A>Quality and functionality</H2>
+<P CLASS="nn-first">
+<A NAME="pgfId-514069"></A>Throughout the process, the method suggests maintaining a constant <SPAN CLASS="ff-bold">
+quality</SPAN>
+ level: apply all the style rules, put in all the assertions, handle erroneous cases (rather than the all too common practice of thinking that one will &quot;make the product robust&quot; later on), enforce the proper architecture. This applies to all the quality factors except possibly reusability (since one may not know ahead of time how best to generalize a component, and trying to make everything fully general may conflict with solving the specific problem at hand quickly). All that varies is <SPAN CLASS="ff-bold">
+functionality</SPAN>
+: as the project progresses and clusters come into place, more and more of the final product's intended coverage becomes available. The project's most common question , &quot;Can we ship something yet?&quot;, translates into &quot;Do we cover enough?&quot;, not &quot;Is it good enough?&quot; (as in &quot;Will it not crash?&quot;).
+<P CLASS="nn-normal">
+<A NAME="pgfId-514070"></A>Of course not everyone using Eiffel can, any more than in another approach, guarantee that the ideal just presented will always hold. But it is the theoretical scheme to which the method tends. It explains Eiffel's emphasis on getting everything right: the grandiose and the mundane, the structure and the details. Regarding the details, the Eiffel books cited in the bibliography include many rules, some petty at first sight, about such low-level aspects as the choice of names for classes and features (including their grammatical categories), the indentation of software texts, the style for comments (including the presence or absence of a final period), the use of spaces. Applying these rules does not, of course, guarantee quality; but they are part of a quality-oriented process, along with the more ambitious principles of design. In addition they are particularly important for the construction of quality libraries, one of the central goals of Eiffel.
+<P CLASS="nn-normal">
+<A NAME="pgfId-514071"></A>Whenever they are compatible with the space constraints, the present chapter and the rest of this book apply these rules to their Eiffel examples.
+</DIV>
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="tutorial-03.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="tutorial-00.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="tutorial-05.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

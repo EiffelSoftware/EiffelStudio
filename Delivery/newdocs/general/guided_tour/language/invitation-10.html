@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"><HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+<META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
+<META NAME="GENERATOR" CONTENT="Adobe FrameMaker 5.5/HTML Export Filter">
+<LINK REL="STYLESHEET" HREF="tour.css" CHARSET="ISO-8859-1" TYPE="text/css">
+<TITLE> 9  GENERICITY</TITLE>
+</HEAD>
+<body bgcolor="#faf0e6">
+<DIV>
+<p class="top" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<img src="power.gif" ALT="Eiffel Home Page" align="right" border="0"  usemap="#eiffel"><map name="eiffel"><area shape="RECT" alt="Eiffel Home Page" coords="0,0,109,226" HREF="http://www.eiffel.com"><area shape="default" nohref></map>
+
+<p class="top" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-09.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation-00.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-11.html"><area shape="default" nohref></MAP>
+</DIV>
+<H1 CLASS="aa-sec2">
+<A NAME="pgfId-512836"></A>9  GENERICITY</H1>
+<P CLASS="nn-first">
+<A NAME="pgfId-445349"></A>Building software co<A NAME="marker-445348"></A>mponents (classes) as implementations of abstract data types yields systems with a solid architecture but does not in itself ensure reusability and extendibility. Two key techniques address the problem: genericity (unconstrained or constrained) and inheritance. Let us look first at the <A NAME="marker-445350"></A>un<A NAME="marker-445351"></A>constrained form. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445355"></A>To make a class g<A NAME="marker-445352"></A>eneric is to give it <SPAN CLASS="ff-bold">
+formal generic parameters</SPAN>
+<A NAME="marker-445353"></A><A NAME="marker-445354"></A> representing as unknown types, as in these examples from ISE's EiffelBase, an open-source library covering basic data structures and algorithms:
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-445358"></A>ARRAY [G]
+<P CLASS="ee-text">
+<A NAME="pgfId-445359"></A>LIST [G]
+<P CLASS="ee-text">
+<A NAME="pgfId-445360"></A>LINKED_LIST [G] 
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445361"></A>These classes describe data structures -- arrays, lists without commitment to a specific representation, lists in linked representation -- containing objects of a certain type. The formal generic parameter <SPAN CLASS="ee-text">
+G</SPAN>
+ denotes this type. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445362"></A>A class such as these doesn't quite yet describe a type, but a type template, since <SPAN CLASS="ee-text">
+G</SPAN>
+ itself denotes an unknown type. To derive a directly usable list or array type, you must provide a type corresponding to <SPAN CLASS="ee-text">
+G</SPAN>
+, called an <SPAN CLASS="ff-bold">
+actual generic parameter</SPAN>
+<A NAME="marker-445363"></A>; this may be either an expanded type, including basic types such as <SPAN CLASS="ee-text">
+INTEGER</SPAN>
+, or a reference type. Here are some possible generic derivations: 
+<p><ul><table width="79%">
+<TR>
+<TD ROWSPAN="1" COLSPAN="1">
+<P CLASS="ee-text">
+<A NAME="pgfId-452524"></A><SPAN CLASS="ee-text">
+il</SPAN>
+:<SPAN CLASS="ee-text">
+ LIST </SPAN>
+[<SPAN CLASS="ee-text">
+INTEGER</SPAN>
+]
+<P CLASS="ee-text">
+<A NAME="pgfId-452525"></A><SPAN CLASS="ee-text">
+aa</SPAN>
+:<SPAN CLASS="ee-text">
+ ARRAY </SPAN>
+[<SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+]
+<P CLASS="ee-text">
+<A NAME="pgfId-452526"></A><SPAN CLASS="ee-text">
+aal</SPAN>
+:<SPAN CLASS="ee-text">
+ LIST </SPAN>
+[<SPAN CLASS="ee-text">
+ARRAY </SPAN>
+[<SPAN CLASS="ee-text">
+ACCOUNT</SPAN>
+]]<SPAN CLASS="ee-text">
+ </SPAN>
+
+</TD>
+</TR>
+</table></ul><p>
+<P CLASS="nn-first">
+<A NAME="pgfId-445369"></A>As the last example indicates, an actual generic parameter may itself be generically derived. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445370"></A>It would not be possible, without genericity, to have static type checking in a realistic object-oriented language. 
+<P CLASS="nn-normal">
+<A NAME="pgfId-445371"></A>A variant of this mechanism, <SPAN CLASS="ee-text">
+constrained</SPAN>
+ genericity, will enable a class to place specific requirements on possible actual generic parameters. Constrained genericity will be described after inheritance.
+<p class="bottom" ALIGN="left"><IMG SRC="normaldoc.gif" ALT="Previous, Up, Next" BORDER="0" WIDTH="300" HEIGHT="40" USEMAP="#navigation"><map name="navigation"><AREA SHAPE="RECT" alt="Previous section" COORDS="0,0,95,40" HREF="invitation-09.html"><AREA SHAPE="RECT" alt="Up" COORDS="96,0,199,40" HREF="invitation-00.html"><AREA SHAPE="RECT" alt="Next section" COORDS="200,0,300,40" HREF="invitation-11.html"><area shape="default" nohref></MAP>
+
+<p class="bottom" align="center"><a href="http://www.eiffel.com">Eiffel Home Page (Web)</a> -- <a href="../index.html">Getting started with Eiffel (local)</a>
+
+<p class="copyright" align="center">Copyright Interactive Software Engineering, 2001
+</BODY>
+</HTML>

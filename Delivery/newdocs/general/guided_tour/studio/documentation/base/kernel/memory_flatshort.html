@@ -1,0 +1,278 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="TTFacilities for tuning up the garbage collection mechanism.R TTThis class may be used as ancestor by classes needing its facilities.">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>MEMORY Flat contracts</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="memory_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="memory_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="memory.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="memory_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="memory_short.html">Contracts</A></TD>
+<TD CLASS="nolink2">Flat contracts</TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="MEMORY"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">		Facilities for tuning up the garbage collection mechanism.</SPAN>
+<SPAN CLASS="estring">		This class may be used as ancestor by classes needing its facilities.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../base/kernel/memory_flatshort.html">MEMORY</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_c_memory"><A CLASS="efeature" HREF="../../base/kernel/mem_const_flatshort.html#f_c_memory">C_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Code for the C memory managed</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> by the garbage collector</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/kernel/mem_const_flatshort.html">MEM_CONST</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_eiffel_memory"><A CLASS="efeature" HREF="../../base/kernel/mem_const_flatshort.html#f_eiffel_memory">Eiffel_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Code for the Eiffel memory managed</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> by the garbage collector</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/kernel/mem_const_flatshort.html">MEM_CONST</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_full_collector"><A CLASS="efeature" HREF="../../base/kernel/mem_const_flatshort.html#f_full_collector">Full_collector</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Statistics for full collections</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/kernel/mem_const_flatshort.html">MEM_CONST</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_incremental_collector"><A CLASS="efeature" HREF="../../base/kernel/mem_const_flatshort.html#f_incremental_collector">Incremental_collector</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">1</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Statistics for incremental collections</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/kernel/mem_const_flatshort.html">MEM_CONST</A><SPAN CLASS="ecomment">)</SPAN>
+
+	<A NAME="f_total_memory"><A CLASS="efeature" HREF="../../base/kernel/mem_const_flatshort.html#f_total_memory">Total_memory</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">0</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Code for all the memory managed</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> by the garbage collector</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../base/kernel/mem_const_flatshort.html">MEM_CONST</A><SPAN CLASS="ecomment">)</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
+
+	<A NAME="f_gc_statistics"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_gc_statistics">gc_statistics</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">collector_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/gc_info_flatshort.html">GC_INFO</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Garbage collection information for </SPAN><SPAN CLASS="equoted">collector_type</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">type_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">collector_type</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/mem_const_flatshort.html#f_full_collector">full_collector</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">collector_type</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/mem_const_flatshort.html#f_incremental_collector">incremental_collector</A>
+</A>
+	<A NAME="f_memory_statistics"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_memory_statistics">memory_statistics</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">memory_type</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/mem_info_flatshort.html">MEM_INFO</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Memory usage information for </SPAN><SPAN CLASS="equoted">memory_type</SPAN><SPAN CLASS="ecomment"></SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">type_ok</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">memory_type</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/mem_const_flatshort.html#f_total_memory">total_memory</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">memory_type</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/mem_const_flatshort.html#f_eiffel_memory">eiffel_memory</A> <SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="elocal">memory_type</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/mem_const_flatshort.html#f_c_memory">c_memory</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_chunk_size"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_chunk_size">chunk_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Minimal size of a memory chunk. The run-time always</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> allocates a multiple of this size.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the environment variable EIF_MEMORY_CHUNK</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is defined, it is set to the closest reasonable</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> value from it.</SPAN>
+</A>
+	<A NAME="f_coalesce_period"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_coalesce_period">coalesce_period</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Period of full coalesce (in number of collections)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the environment variable EIF_FULL_COALESCE_PERIOD</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is defined, it is set to the closest reasonable</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> value from it.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If null, no full coalescing is launched.</SPAN>
+</A>
+	<A NAME="f_collecting"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_collecting">collecting</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_flatshort.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is garbage collection enabled?</SPAN>
+</A>
+	<A NAME="f_collection_period"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_collection_period">collection_period</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Period of full collection.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the environment variable EIF_FULL_COLLECTION_PERIOD</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is defined, it is set to the closest reasonable</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> value from it.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If null, no full collection is launched.</SPAN>
+</A>
+	<A NAME="f_generation_object_limit"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_generation_object_limit">generation_object_limit</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Maximum size of object in generational scavenge zone.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the environment variable EIF_GS_LIMIT</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is defined, it is set to the closest reasonable</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> value from it.</SPAN>
+</A>
+	<A NAME="f_largest_coalesced_block"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_largest_coalesced_block">largest_coalesced_block</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Size of largest coalesced block since last call to</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">largest_coalesced</SPAN><SPAN CLASS="ecomment">; 0 if none.</SPAN>
+</A>
+	<A NAME="f_max_mem"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_max_mem">max_mem</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Maximum amount of bytes the run-time can allocate.</SPAN>
+</A>
+	<A NAME="f_memory_threshold"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_memory_threshold">memory_threshold</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Minimum amount of bytes to be allocated before</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> starting an automatic garbage collection.</SPAN>
+</A>
+	<A NAME="f_referers"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_referers">referers</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">an_object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/any_flatshort.html">ANY</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/array_flatshort.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/any_flatshort.html">ANY</A><SPAN CLASS="esymbol">]</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Objects that refer to </SPAN><SPAN CLASS="equoted">an_object</SPAN><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_scavenge_zone_size"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_scavenge_zone_size">scavenge_zone_size</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Size of generational scavenge zone.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the environment variable EIF_MEMORY_SCAVENGE</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is defined, it is set to the closest reasonable</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> value from it.</SPAN>
+</A>
+	<A NAME="f_tenure"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_tenure">tenure</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Maximum age of object before being considered</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> as old (old objects are not scanned during</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> partial collection).</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the environment variable EIF_TENURE_MAX</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is defined, it is set to the closest reasonable</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> value from it.</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_allocate_compact"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_allocate_compact">allocate_compact</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Enter `</SPAN><SPAN CLASS="equoted">memory</SPAN><SPAN CLASS="ecomment">' mode: will try to compact memory</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> before requesting more from the operating system.</SPAN>
+</A>
+	<A NAME="f_allocate_fast"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_allocate_fast">allocate_fast</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Enter `</SPAN><SPAN CLASS="equoted">speed</SPAN><SPAN CLASS="ecomment">' mode: will optimize speed of memory</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> allocation rather than memory usage.</SPAN>
+</A>
+	<A NAME="f_allocate_tiny"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_allocate_tiny">allocate_tiny</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Enter `</SPAN><SPAN CLASS="equoted">tiny</SPAN><SPAN CLASS="ecomment">' mode: will enter `</SPAN><SPAN CLASS="equoted">memory</SPAN><SPAN CLASS="ecomment">' mode</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> after having freed as much memory as possible.</SPAN>
+</A>
+	<A NAME="f_collection_off"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_collection_off">collection_off</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Disable garbage collection.</SPAN>
+</A>
+	<A NAME="f_collection_on"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_collection_on">collection_on</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Enable garbage collection.</SPAN>
+</A>
+	<A NAME="f_disable_time_accounting"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_disable_time_accounting">disable_time_accounting</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Disable GC time accounting (default).</SPAN>
+</A>
+	<A NAME="f_enable_time_accounting"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_enable_time_accounting">enable_time_accounting</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Enable GC time accouting, accessible in </SPAN><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_gc_statistics">gc_statistics</A><SPAN CLASS="ecomment">.</SPAN>
+</A>
+	<A NAME="f_set_coalesce_period"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_set_coalesce_period">set_coalesce_period</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_coalesce_period">coalesce_period</A><SPAN CLASS="ecomment">. Every </SPAN><SPAN CLASS="equoted">value</SPAN><SPAN CLASS="ecomment"> collection,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the Garbage Collector will coalesce</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the whole memory.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">positive_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">value</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable_flatshort.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+</A>
+	<A NAME="f_set_collection_period"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_set_collection_period">set_collection_period</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_collection_period">collection_period</A><SPAN CLASS="ecomment">. Every </SPAN><SPAN CLASS="equoted">value</SPAN><SPAN CLASS="ecomment"> collection,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the Garbage collector will perform a collection</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> on the whole memory (full collection), otherwise</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> a simple partial collection is done.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">positive_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">value</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable_flatshort.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+</A>
+	<A NAME="f_set_max_mem"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_set_max_mem">set_max_mem</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the maximum amount of memory the run-time can allocate.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">positive_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">value</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable_flatshort.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN>
+</A>
+	<A NAME="f_set_memory_threshold"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_set_memory_threshold">set_memory_threshold</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">value</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_flatshort.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set a new </SPAN><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_memory_threshold">memory_threshold</A><SPAN CLASS="ecomment"> in bytes. Whenever the memory</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> allocated for Eiffel reaches this value, an automatic</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> collection is performed.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">positive_value</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">value</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable_flatshort.html#f__infix_gt">&gt;</A> <SPAN CLASS="enumber">0</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
+
+	<A NAME="f_collect"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_collect">collect</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Force a partial collection cycle if garbage</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> collection is enabled; do nothing otherwise.</SPAN>
+</A>
+	<A NAME="f_dispose"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_dispose">dispose</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Action to be executed just before garbage collection</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> reclaims an object.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Default version does nothing; redefine in descendants</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to perform specific dispose actions. Those actions</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> should only take care of freeing external resources;</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> they should not perform remote calls on other objects</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> since these may also be dead and reclaimed.</SPAN>
+</A>
+	<A NAME="f_free"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_free">free</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">object</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/any_flatshort.html">ANY</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Free </SPAN><SPAN CLASS="equoted">object</SPAN><SPAN CLASS="ecomment">, by-passing garbage collection.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Erratic behavior will result if the object is still</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> referenced.</SPAN>
+</A>
+	<A NAME="f_full_coalesce"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_full_coalesce">full_coalesce</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Coalesce the whole memory: merge adjacent free</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> blocks to reduce fragmentation. Useful, when</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> a lot of memory is allocated with garbage collector off.</SPAN>
+</A>
+	<A NAME="f_full_collect"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_full_collect">full_collect</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Force a full collection cycle if garbage</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> collection is enabled; do nothing otherwise.</SPAN>
+</A>
+	<A NAME="f_mem_free"><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_mem_free">mem_free</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">addr</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/pointer_flatshort.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Free memory of object at </SPAN><SPAN CLASS="equoted">addr</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (Preferred interface is </SPAN><A CLASS="efeature" HREF="../../base/kernel/memory_flatshort.html#f_free">free</A><SPAN CLASS="ecomment">.)</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../base/kernel/any_flatshort.html">ANY</A>
+	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_flatshort.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>MEMORY<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="memory_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="memory_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="memory.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="memory_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="memory_short.html">Contracts</A></TD>
+<TD CLASS="nolink2">Flat contracts</TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="MEMORY"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

@@ -1,0 +1,577 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+<META NAME="contents" CONTENT="generic">
+<META NAME="access" CONTENT="cursor, membership">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="names" CONTENT="binary_tree, tree, fixed_tree">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="Binary tree: each node may have a left child and a right child">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="representation" CONTENT="recursive, array">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>BINARY_TREE Text</TITLE>
+<LINK REL="stylesheet" HREF="../../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_tree_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_tree_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_tree_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_tree_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_tree_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="BINARY_TREE"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Binary tree: each node may have a left child and a right child"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">names</SPAN><SPAN CLASS="esymbol">:</SPAN> binary_tree<SPAN CLASS="esymbol">,</SPAN> tree<SPAN CLASS="esymbol">,</SPAN> fixed_tree
+	<SPAN CLASS="eitag">representation</SPAN><SPAN CLASS="esymbol">:</SPAN> recursive<SPAN CLASS="esymbol">,</SPAN> array
+	<SPAN CLASS="eitag">access</SPAN><SPAN CLASS="esymbol">:</SPAN> cursor<SPAN CLASS="esymbol">,</SPAN> membership
+	<SPAN CLASS="eitag">contents</SPAN><SPAN CLASS="esymbol">:</SPAN> generic
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../../../base/structures/tree/binary_tree.html">BINARY_TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">inherit</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/list/cell.html">CELL</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+		<SPAN CLASS="ekeyword">undefine</SPAN>
+			<A CLASS="efeature" HREF="../../../base/kernel/any.html#f_is_equal">is_equal</A>
+		<SPAN CLASS="ekeyword">redefine</SPAN>
+			<A CLASS="efeature" HREF="../../../base/kernel/any.html#f_copy">copy</A>
+		<SPAN CLASS="ekeyword">end</SPAN>
+
+	<A CLASS="eclass" HREF="../../../base/structures/tree/tree.html">TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+		<SPAN CLASS="ekeyword">redefine</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_parent">parent</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_is_leaf">is_leaf</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_subtree_has">subtree_has</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_subtree_count">subtree_count</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_fill_list">fill_list</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_child_remove">child_remove</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_child_after">child_after</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_child_capacity">child_capacity</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../../base/kernel/any.html#f_copy">copy</A>
+		<SPAN CLASS="ekeyword">end</SPAN>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+	<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN>
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create a root node with value </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_item">item</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">v</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">is_root</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_is_root">is_root</A>
+			<SPAN CLASS="etag">is_leaf</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_is_leaf">is_leaf</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_parent"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/tree/binary_tree.html">BINARY_TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Parent of current node</SPAN>
+
+	<A NAME="f_child_index"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Index of cursor position</SPAN>
+
+	<A NAME="f_left_child"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Left child, if any</SPAN>
+
+	<A NAME="f_right_child"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Right child, if any</SPAN>
+
+	<A NAME="f_left_item"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_item">left_item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_item">item</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Value of left child</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">has_left</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_item">item</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_right_item"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_item">right_item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_item">item</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Value of right child</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">has_right</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_item">item</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_first_child"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_first_child">first_child</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Left child</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_last_child"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_last_child">last_child</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Right child</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_child"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child">child</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Child at cursor position</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">inspect</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A>
+			<SPAN CLASS="ekeyword">when</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">then</SPAN> 
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A>
+			<SPAN CLASS="ekeyword">when</SPAN> <SPAN CLASS="enumber">2</SPAN> <SPAN CLASS="ekeyword">then</SPAN> 
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_child_cursor"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_cursor">child_cursor</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/cursors/cursor.html">CURSOR</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Current cursor position</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../../base/structures/cursors/arrayed_list_cursor.html">ARRAYED_LIST_CURSOR</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/cursors/arrayed_list_cursor.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_left_sibling"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_sibling">left_sibling</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Left neighbor, if any</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_right_sibling"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_sibling">right_sibling</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Right neighbor, if any</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
+
+	<A NAME="f_arity"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_arity">arity</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of children</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_left">has_left</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="esymbol" HREF="../../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_right">has_right</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="esymbol" HREF="../../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+			<SPAN CLASS="etag">valid_arity</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="esymbol" HREF="../../../base/kernel/comparable.html#f__infix_le">&lt;=</A> <SPAN CLASS="enumber">2</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_child_after"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_after">child_after</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is there no valid child position to the right of cursor?</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <A CLASS="esymbol" HREF="../../../base/kernel/comparable.html#f__infix_ge">&gt;=</A> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_capacity">child_capacity</A> <A CLASS="esymbol" HREF="../../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_is_leaf"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_is_leaf">is_leaf</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are there no children?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base/structures/tree/binary_tree.html">BINARY_TREE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_none">has_none</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_has_none"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_none">has_none</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Are there no children?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base/structures/tree/binary_tree.html">BINARY_TREE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_is_leaf">is_leaf</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_has_left"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_left">has_left</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current node a left child?</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_has_right"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_right">has_right</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current node a right child?</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_has_both"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_both">has_both</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Has current node two children?</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_left">has_left</A> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_and">and</A> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_right">has_right</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Cursor movement</SPAN>
+
+	<A NAME="f_child_go_to"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_go_to">child_go_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/cursors/arrayed_list_cursor.html">ARRAYED_LIST_CURSOR</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor to child remembered by </SPAN><SPAN CLASS="equoted">p</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">p</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/cursors/arrayed_list_cursor.html#f_index">index</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_child_start"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_start">child_start</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move to first child.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">1</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_child_finish"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_finish">child_finish</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor to last child.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">2</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_child_forth"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_forth">child_forth</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor to next child.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <A CLASS="esymbol" HREF="../../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_child_back"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_back">child_back</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor to previous child.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <A CLASS="esymbol" HREF="../../../base/kernel/integer_ref.html#f__infix_minus">-</A> <SPAN CLASS="enumber">1</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_child_go_i_th"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_go_i_th">child_go_i_th</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Move cursor to </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment">-th child.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_put_left_child"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_put_left_child">put_left_child</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">no_parent</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">n</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">or else</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_is_root">is_root</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">n</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_objects">compare_objects</A>
+				<SPAN CLASS="ekeyword">else</SPAN>
+					<SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_references">compare_references</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_attach_to_parent">attach_to_parent</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">n</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_attach_to_parent">attach_to_parent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">n</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_put_right_child"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_put_right_child">put_right_child</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">no_parent</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">n</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">or else</SPAN> <SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_is_root">is_root</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">n</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_objects">compare_objects</A>
+				<SPAN CLASS="ekeyword">else</SPAN>
+					<SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_references">compare_references</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_attach_to_parent">attach_to_parent</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">n</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_attach_to_parent">attach_to_parent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">n</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_child_put"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_put">child_put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Put </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> at current child position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base/structures/tree/binary_tree.html">BINARY_TREE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_replace">child_replace</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">node</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child">child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child">child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_objects">compare_objects</A>
+				<SPAN CLASS="ekeyword">else</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child">child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_references">compare_references</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child">child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">else</SPAN>
+				<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">node</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">make</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="elocal">node</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">compare_objects</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_put_child">put_child</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">node</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_child_replace"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_replace">child_replace</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Put </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> at current child position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base/structures/tree/binary_tree.html">BINARY_TREE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_put">child_put</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">node</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child">child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child">child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_objects">compare_objects</A>
+				<SPAN CLASS="ekeyword">else</SPAN>
+					<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child">child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_references">compare_references</A>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child">child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">else</SPAN>
+				<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">node</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">make</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="elocal">node</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">compare_objects</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_put_child">put_child</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">node</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_put_child"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_put_child">put_child</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Put </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment"> at current child position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base/structures/tree/binary_tree.html">BINARY_TREE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_replace_child">replace_child</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_objects">compare_objects</A>
+			<SPAN CLASS="ekeyword">else</SPAN>
+				<SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_references">compare_references</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_attach_to_parent">attach_to_parent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">inspect</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A>
+			<SPAN CLASS="ekeyword">when</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">then</SPAN> 
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">n</SPAN>
+			<SPAN CLASS="ekeyword">when</SPAN> <SPAN CLASS="enumber">2</SPAN> <SPAN CLASS="ekeyword">then</SPAN> 
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">n</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_replace_child"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_replace_child">replace_child</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Put </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment"> at current child position.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../../../base/structures/tree/binary_tree.html">BINARY_TREE</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_put_child">put_child</A><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_objects">compare_objects</A>
+			<SPAN CLASS="ekeyword">else</SPAN>
+				<SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_references">compare_references</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="elocal">n</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_attach_to_parent">attach_to_parent</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">inspect</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A>
+			<SPAN CLASS="ekeyword">when</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">then</SPAN> 
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">n</SPAN>
+			<SPAN CLASS="ekeyword">when</SPAN> <SPAN CLASS="enumber">2</SPAN> <SPAN CLASS="ekeyword">then</SPAN> 
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">n</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Removal</SPAN>
+
+	<A NAME="f_remove_left_child"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_remove_left_child">remove_left_child</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove left child.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_attach_to_parent">attach_to_parent</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_left">has_left</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_remove_right_child"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_remove_right_child">remove_right_child</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove right child.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_attach_to_parent">attach_to_parent</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_right">has_right</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_child_remove"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_remove">child_remove</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove current child.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">inspect</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A>
+			<SPAN CLASS="ekeyword">when</SPAN> <SPAN CLASS="enumber">1</SPAN> <SPAN CLASS="ekeyword">then</SPAN> 
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_attach_to_parent">attach_to_parent</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="ekeyword">when</SPAN> <SPAN CLASS="enumber">2</SPAN> <SPAN CLASS="ekeyword">then</SPAN> 
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_attach_to_parent">attach_to_parent</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">;</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_prune"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_prune">prune</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_parent">parent</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Prune </SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment"> from child nodes.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">n</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_remove_left_child">remove_left_child</A>
+			<SPAN CLASS="ekeyword">elseif</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">n</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_remove_right_child">remove_right_child</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duplication</SPAN>
+
+	<A NAME="f_duplicate"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_duplicate">duplicate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy of sub-tree beginning at cursor position and</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> having min (</SPAN><SPAN CLASS="equoted">n</SPAN><SPAN CLASS="ecomment">, </SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_arity">arity</A><SPAN CLASS="ecomment"> - </SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A><SPAN CLASS="ecomment"> + 1)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> children.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_new_tree">new_tree</A>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <A CLASS="esymbol" HREF="../../../base/kernel/comparable.html#f__infix_le">&lt;=</A> <SPAN CLASS="enumber">1</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_and">and</A> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <A CLASS="esymbol" HREF="../../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="elocal">n</SPAN> <A CLASS="esymbol" HREF="../../../base/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_and">and</A> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_left">has_left</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_put_left_child">put_left_child</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_duplicate_all">duplicate_all</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <A CLASS="esymbol" HREF="../../../base/kernel/comparable.html#f__infix_le">&lt;=</A> <SPAN CLASS="enumber">2</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_and">and</A> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_index">child_index</A> <A CLASS="esymbol" HREF="../../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="elocal">n</SPAN> <A CLASS="esymbol" HREF="../../../base/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">2</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__infix_and">and</A> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_right">has_right</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_put_right_child">put_right_child</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_duplicate_all">duplicate_all</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_duplicate_all"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_duplicate_all">duplicate_all</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_new_tree">new_tree</A>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_left">has_left</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_put_left_child">put_left_child</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_duplicate_all">duplicate_all</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_has_right">has_right</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_put_right_child">put_right_child</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_duplicate_all">duplicate_all</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_copy"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy contents from </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">tmp_tree</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">tmp_tree</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">make</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_is_leaf">is_leaf</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_tree_copy">tree_copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">tmp_tree</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../../base/structures/tree/binary_tree.html">BINARY_TREE</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN>
+
+	<A NAME="f_fill_list"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_fill_list">fill_list</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">al</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/list/arrayed_list.html">ARRAYED_LIST</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Fill </SPAN><SPAN CLASS="equoted">al</SPAN><SPAN CLASS="ecomment"> with all the children's items.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="elocal">al</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/arrayed_list.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_fill_list">fill_list</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">al</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="elocal">al</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/arrayed_list.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_fill_list">fill_list</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">al</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN>
+
+	<A NAME="f_subtree_has"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_subtree_has">subtree_has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does subtree contain </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment">?</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">and</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_subtree_count"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_subtree_count">subtree_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of items in subtree</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_count">count</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <A CLASS="esymbol" HREF="../../../base/kernel/integer_ref.html#f__infix_plus">+</A> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/tree.html#f_count">count</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_fill_subtree"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_fill_subtree">fill_subtree</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/tree/binary_tree.html">BINARY_TREE</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Copy </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment"> to subtee.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="ekeyword" HREF="../../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_is_leaf">is_leaf</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_put_left_child">put_left_child</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_left_child">left_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_duplicate_all">duplicate_all</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_arity">arity</A> <A CLASS="esymbol" HREF="../../../base/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">2</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_put_right_child">put_right_child</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_right_child">right_child</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_duplicate_all">duplicate_all</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_new_tree"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_new_tree">new_tree</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> New tree node</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../base/structures/list/cell.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_objects">compare_objects</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_child_capacity"><A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_capacity">Child_capacity</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN> <SPAN CLASS="enumber">2</SPAN></A>
+	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">tree_is_binary</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/tree/binary_tree.html#f_child_capacity">child_capacity</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="enumber">2</SPAN>
+
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>BINARY_TREE<FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_tree_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_tree_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_tree_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_tree_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_tree_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="BINARY_TREE"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

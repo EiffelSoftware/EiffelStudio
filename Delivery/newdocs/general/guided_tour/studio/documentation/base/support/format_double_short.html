@@ -1,0 +1,187 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="Formatter for non-integral numbers">
+<META NAME="names" CONTENT="format_double">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>FORMAT_DOUBLE Contracts</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_flat.html">Flat</A></TD>
+<TD CLASS="nolink2">Contracts</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="FORMAT_DOUBLE"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Formatter for non-integral numbers"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">names</SPAN><SPAN CLASS="esymbol">:</SPAN> format_double
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
+	<A CLASS="eclass" HREF="../../base/support/format_double_short.html">FORMAT_DOUBLE</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+	<A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN>
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_short.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">reasonable_field</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">w</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable_short.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="etag">reasonable_decimals</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">d</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable_short.html#f__infix_le">&lt;=</A> <SPAN CLASS="elocal">w</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">blank_fill</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_short.html#f_fill_character">fill_character</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">' '</SPAN>
+			<SPAN CLASS="etag">show_sign_negative</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_short.html#f_show_sign_negative">show_sign_negative</A>
+			<SPAN CLASS="etag">no_separator</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_short.html#f_no_separator">no_separator</A>
+			<SPAN CLASS="etag">width_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_short.html#f_width">width</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">w</SPAN>
+			<SPAN CLASS="etag">right_justified</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_short.html#f_right_justified">right_justified</A>
+			<SPAN CLASS="etag">leading_sign</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_short.html#f_leading_sign">leading_sign</A>
+			<SPAN CLASS="etag">decimals_set</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_decimals">decimals</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">d</SPAN>
+			<SPAN CLASS="etag">decimal_point</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_decimal">decimal</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'.'</SPAN>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_after_decimal_separate"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_after_decimal_separate">after_decimal_separate</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_short.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Use separators after the decimal?</SPAN>
+
+	<A NAME="f_decimals"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_decimals">decimals</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_short.html">INTEGER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of digits after the decimal point.</SPAN>
+
+	<A NAME="f_zero_not_shown"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_zero_not_shown">zero_not_shown</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean_short.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Show 0.5 as .5 or 0.5?</SPAN>
+
+	<A NAME="f_decimal"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_decimal">decimal</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_short.html">CHARACTER</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> What is used for the decimal</SPAN>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_point_decimal"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_point_decimal">point_decimal</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Use . as the decimal point.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_decimal">decimal</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'.'</SPAN>
+</A>
+	<A NAME="f_comma_decimal"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_comma_decimal">comma_decimal</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Use , as the decimal point.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_decimal">decimal</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">','</SPAN>
+</A>
+	<A NAME="f_set_decimals"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_set_decimals">set_decimals</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_short.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">d</SPAN><SPAN CLASS="ecomment"> decimals to be displayed.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="elocal">d</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable_short.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../base/support/format_integer_short.html#f_width">width</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_decimals">decimals</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">d</SPAN>
+</A>
+	<A NAME="f_separate_after_decimal"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_separate_after_decimal">separate_after_decimal</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Use separators after the decimal.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_after_decimal_separate">after_decimal_separate</A>
+</A>
+	<A NAME="f_no_separate_after_decimal"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_no_separate_after_decimal">no_separate_after_decimal</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Do not use separators after the decimal.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_short.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_after_decimal_separate">after_decimal_separate</A>
+</A>
+	<A NAME="f_underscore_separate"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_underscore_separate">underscore_separate</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the separator to be underscore.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_after_decimal_separate">after_decimal_separate</A>
+</A>
+	<A NAME="f_comma_separate"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_comma_separate">comma_separate</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set the separator to be comma.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_after_decimal_separate">after_decimal_separate</A>
+</A>
+	<A NAME="f_remove_separator"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_remove_separator">remove_separator</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Remove the separator.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_short.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_after_decimal_separate">after_decimal_separate</A>
+</A>
+	<A NAME="f_show_zero"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_show_zero">show_zero</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Show 0.5 as 0.5 .</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_short.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_zero_not_shown">zero_not_shown</A>
+</A>
+	<A NAME="f_hide_zero"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_hide_zero">hide_zero</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Show 0.5 as .5 .</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_zero_not_shown">zero_not_shown</A>
+</A>	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Conversion</SPAN>
+
+	<A NAME="f_formatted"><A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_formatted">formatted</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">d</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/double_short.html">DOUBLE</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string_short.html">STRING</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Format </SPAN><SPAN CLASS="equoted">d</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any_short.html#f_void">void</A>
+			<SPAN CLASS="etag">correct_length</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_short.html#f_not_justified">not_justified</A> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_short.html#f__infix_or">or</A> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string_short.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/comparable_short.html#f__infix_ge">&gt;=</A> <A CLASS="efeature" HREF="../../base/support/format_integer_short.html#f_width">width</A>
+</A>	
+<SPAN CLASS="ekeyword">invariant</SPAN>
+
+	<SPAN CLASS="etag">separate_all</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../base/support/format_integer_short.html#f_no_separator">no_separator</A> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_short.html#f__infix_implies">implies</A> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref_short.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../base/support/format_double_short.html#f_after_decimal_separate">after_decimal_separate</A>
+
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>FORMAT_DOUBLE<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_flat.html">Flat</A></TD>
+<TD CLASS="nolink2">Contracts</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="format_double_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="FORMAT_DOUBLE"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

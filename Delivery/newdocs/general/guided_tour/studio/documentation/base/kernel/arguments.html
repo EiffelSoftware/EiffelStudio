@@ -1,0 +1,416 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="TTAccess to command-line arguments. This class R TTmay be used as ancestor by classes needing its facilities.">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>ARGUMENTS Text</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="arguments_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="arguments_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="arguments_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="arguments_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="arguments_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="ARGUMENTS"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">		Access to command-line arguments. This class </SPAN>
+<SPAN CLASS="estring">		may be used as ancestor by classes needing its facilities.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../../base/kernel/arguments.html">ARGUMENTS</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
+
+	<A NAME="f_argument"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument">argument</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment">-th argument of command that started system execution</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> (the command name if </SPAN><SPAN CLASS="equoted">i</SPAN><SPAN CLASS="ecomment"> = 0)</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">index_large_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">i</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+			<SPAN CLASS="etag">index_small_enough</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">i</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable.html#f__infix_le">&lt;=</A> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_arg_option">arg_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_argument_array"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_array">argument_array</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Array containing command name (position 0) and arguments</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+		<SPAN CLASS="ekeyword">once</SPAN>
+			<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">,</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_arg_option">arg_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_command_line"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_command_line">command_line</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Total command line</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+		<SPAN CLASS="ekeyword">once</SPAN>
+			<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_command_name">command_name</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">" "</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_append">append</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_arg_option">arg_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/comparable.html#f__infix_ge">&gt;=</A> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_command_name">command_name</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_command_name"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_command_name">command_name</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Name of command that started system execution</SPAN>
+		<SPAN CLASS="ekeyword">once</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_arg_option">arg_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">definition</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument">argument</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">0</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status report</SPAN>
+
+	<A NAME="f_has_word_option"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_has_word_option">has_word_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">obsolete</SPAN> <SPAN CLASS="estring">"Use index_of_word_option instead."</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_index_of_word_option">index_of_word_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_index_of_word_option"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_index_of_word_option">index_of_word_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does command line specify word option </SPAN><SPAN CLASS="equoted">opt</SPAN><SPAN CLASS="ecomment"> and, if so,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> at what position?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If one of the arguments in list of space-separated arguments</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is </SPAN><SPAN CLASS="equoted">Xopt</SPAN><SPAN CLASS="ecomment">, where </SPAN><SPAN CLASS="equoted">X</SPAN><SPAN CLASS="ecomment"> is the current </SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A><SPAN CLASS="ecomment">,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> then index of this argument in list;</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> else 0.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">opt_non_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">opt</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">opt_meaningful</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/storage/finite.html#f_is_empty">is_empty</A>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A> <SPAN CLASS="ekeyword">or else</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_word_equal">option_word_equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_array">argument_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_index_of_beginning_with_word_option"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_index_of_beginning_with_word_option">index_of_beginning_with_word_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does command line specify argument beginning with word</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> option </SPAN><SPAN CLASS="equoted">opt</SPAN><SPAN CLASS="ecomment"> and, if so, at what position?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If one of the arguments in list of space-separated arguments</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is </SPAN><SPAN CLASS="equoted">Xoptxx</SPAN><SPAN CLASS="ecomment">, where </SPAN><SPAN CLASS="equoted">X</SPAN><SPAN CLASS="ecomment"> is the current </SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A><SPAN CLASS="ecomment">, 'xx'</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is arbitrary, possibly empty sequence of characters,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> then index of this argument in list;</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> else 0.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">opt_non_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">opt</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">opt_meaningful</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/storage/finite.html#f_is_empty">is_empty</A>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A> <SPAN CLASS="ekeyword">or else</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_word_begins_with">option_word_begins_with</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_array">argument_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_has_character_option"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_has_character_option">has_character_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">obsolete</SPAN> <SPAN CLASS="estring">"Use index_of_character_option instead."</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_index_of_character_option">index_of_character_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_index_of_character_option"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_index_of_character_option">index_of_character_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does command line specify character option </SPAN><SPAN CLASS="equoted">o</SPAN><SPAN CLASS="ecomment"> and, if so,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> at what position?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If one of the space-separated arguments is of the form </SPAN><SPAN CLASS="equoted">Xxxoyy</SPAN><SPAN CLASS="ecomment">,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> where </SPAN><SPAN CLASS="equoted">X</SPAN><SPAN CLASS="ecomment"> is the current </SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">xx</SPAN><SPAN CLASS="ecomment"> and </SPAN><SPAN CLASS="equoted">yy</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> are arbitrary, possibly empty sequences of characters,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> then index of this argument in list of arguments;</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> else 0.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">o_non_null</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">o</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="echar">'%U'</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">from</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">until</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&gt;</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A> <SPAN CLASS="ekeyword">or else</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_character_equal">option_character_equal</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_array">argument_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">loop</SPAN>
+				<SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">i</SPAN> <SPAN CLASS="esymbol">&lt;=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">i</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_separate_character_option_value"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_separate_character_option_value">separate_character_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The value, if any, specified after character option </SPAN><SPAN CLASS="equoted">o</SPAN><SPAN CLASS="ecomment"> on</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the command line.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This is one of the following (where </SPAN><SPAN CLASS="equoted">X</SPAN><SPAN CLASS="ecomment"> is the current</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A><SPAN CLASS="ecomment">, </SPAN><SPAN CLASS="equoted">xx</SPAN><SPAN CLASS="ecomment"> and 'yy' are arbitrary, possibly empty</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> sequences of characters):</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;</SPAN><SPAN CLASS="equoted">val</SPAN><SPAN CLASS="ecomment"> if command line includes two consecutive arguments</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment">	 &nbsp;&nbsp;of the form </SPAN><SPAN CLASS="equoted">Xxxoyy</SPAN><SPAN CLASS="ecomment"> and </SPAN><SPAN CLASS="equoted">val</SPAN><SPAN CLASS="ecomment"> respectively.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;Empty string if command line includes argument </SPAN><SPAN CLASS="equoted">Xxxoyy</SPAN><SPAN CLASS="ecomment">, which is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment">	 &nbsp;&nbsp;either last argument or followed by argument starting with </SPAN><SPAN CLASS="equoted">X</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;Void if there is no argument of the form </SPAN><SPAN CLASS="equoted">Xxxoyy</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">o_non_null</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">o</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="echar">'%U'</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_index_of_character_option">index_of_character_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A> <SPAN CLASS="ekeyword">or else</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_array">argument_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="estring">""</SPAN>
+				<SPAN CLASS="ekeyword">else</SPAN>
+					<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_array">argument_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_separate_word_option_value"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_separate_word_option_value">separate_word_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The value, if any, specified after word option </SPAN><SPAN CLASS="equoted">opt</SPAN><SPAN CLASS="ecomment"> on the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> command line.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This is one of the following (where </SPAN><SPAN CLASS="equoted">X</SPAN><SPAN CLASS="ecomment"> is the current </SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A><SPAN CLASS="ecomment">):</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;</SPAN><SPAN CLASS="equoted">val</SPAN><SPAN CLASS="ecomment"> if command line includes two consecutive arguments</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment">	 &nbsp;&nbsp;of the form </SPAN><SPAN CLASS="equoted">Xopt</SPAN><SPAN CLASS="ecomment"> and </SPAN><SPAN CLASS="equoted">val</SPAN><SPAN CLASS="ecomment"> respectively.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;Empty string if command line includes argument </SPAN><SPAN CLASS="equoted">Xopt</SPAN><SPAN CLASS="ecomment">, which is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment">	 &nbsp;&nbsp;either last argument or followed by argument starting with </SPAN><SPAN CLASS="equoted">X</SPAN><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;Void if no </SPAN><SPAN CLASS="equoted">Xopt</SPAN><SPAN CLASS="ecomment"> argument.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">opt_non_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">opt</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">opt_meaningful</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/storage/finite.html#f_is_empty">is_empty</A>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_index_of_word_option">index_of_word_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A> <SPAN CLASS="ekeyword">or else</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_array">argument_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="estring">""</SPAN>
+				<SPAN CLASS="ekeyword">else</SPAN>
+					<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_array">argument_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_coalesced_option_character_value"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_coalesced_option_character_value">coalesced_option_character_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">obsolete</SPAN> <SPAN CLASS="estring">"Use coalesced_character_option_value instead."</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_coalesced_character_option_value">coalesced_character_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_coalesced_character_option_value"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_coalesced_character_option_value">coalesced_character_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The value, if any, specified for character option </SPAN><SPAN CLASS="equoted">o</SPAN><SPAN CLASS="ecomment"> on</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the command line.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Defined as follows (where 'X' is the current 'option_sign' and</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> 'xx' is an arbitrary, possibly empty sequence of characters):</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;</SPAN><SPAN CLASS="equoted">val</SPAN><SPAN CLASS="ecomment"> if command line includes an argument of the form </SPAN><SPAN CLASS="equoted">Xxxoval</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment">	 &nbsp;&nbsp;(this may be an empty string if argument is just </SPAN><SPAN CLASS="equoted">Xxxo</SPAN><SPAN CLASS="ecomment">).</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;Void otherwise.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">o_non_null</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">o</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="echar">'%U'</SPAN>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="elocal">l</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_index_of_character_option">index_of_character_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="elocal">l</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_clone">clone</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_array">argument_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="echar">'%U'</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="elocal">l</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">remove</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">l</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">substring</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">l</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">index_of</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">o</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">+</SPAN> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">l</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">count</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_coalesced_option_word_value"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_coalesced_option_word_value">coalesced_option_word_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">obsolete</SPAN> <SPAN CLASS="estring">"Use coalesced_word_option_value instead."</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_coalesced_word_option_value">coalesced_word_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_coalesced_word_option_value"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_coalesced_word_option_value">coalesced_word_option_value</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The value, if any, specified for word option </SPAN><SPAN CLASS="equoted">opt</SPAN><SPAN CLASS="ecomment"> on the</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> command line.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Defined as follows (where X is the current </SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A><SPAN CLASS="ecomment">):</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;</SPAN><SPAN CLASS="equoted">val</SPAN><SPAN CLASS="ecomment"> if command line includes an argument of the form </SPAN><SPAN CLASS="equoted">Xoptval</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment">	 &nbsp;&nbsp;(this may be an empty string if argument is just </SPAN><SPAN CLASS="equoted">Xopt</SPAN><SPAN CLASS="ecomment">).</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> &nbsp;&nbsp;Void otherwise.</SPAN>
+		<SPAN CLASS="ekeyword">require</SPAN>
+			<SPAN CLASS="etag">opt_non_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">opt</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+			<SPAN CLASS="etag">opt_meaningful</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../base/kernel/boolean_ref.html#f__prefix_not">not</A> <SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/structures/storage/finite.html#f_is_empty">is_empty</A>
+		<SPAN CLASS="ekeyword">local</SPAN>
+			<SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A>
+			<SPAN CLASS="elocal">l</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_index_of_beginning_with_word_option">index_of_beginning_with_word_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <SPAN CLASS="elocal">p</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="enumber">0</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="elocal">l</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_clone">clone</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_array">argument_array</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/array.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A> <SPAN CLASS="esymbol">/=</SPAN> <SPAN CLASS="echar">'%U'</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+					<SPAN CLASS="elocal">l</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">remove</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">end</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">l</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">substring</SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">opt</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">l</SPAN><SPAN CLASS="edot">.</SPAN><SPAN CLASS="elocal">count</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_option_sign"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character_ref.html">CHARACTER_REF</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> The character used to signal options on the command line.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> This can be '%U' if no sign is necesary for the argument</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to be an option</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Default is '-'</SPAN>
+		<SPAN CLASS="ekeyword">once</SPAN>
+			<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="ereserved">Result</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/character_ref.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="echar">'-'</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Status setting</SPAN>
+
+	<A NAME="f_set_option_sign"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_set_option_sign">set_option_sign</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make </SPAN><SPAN CLASS="equoted">c</SPAN><SPAN CLASS="ecomment"> the option sign.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Use'%U' if no sign is necesary for the argument to</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> be an option</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/character_ref.html#f_set_item">set_item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Measurement</SPAN>
+
+	<A NAME="f_argument_count"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_argument_count">argument_count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Number of arguments given to command that started</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> system execution (command name does not count)</SPAN>
+		<SPAN CLASS="ekeyword">once</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_arg_number">arg_number</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_minus">-</A> <SPAN CLASS="enumber">1</SPAN>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <A CLASS="esymbol" HREF="../../base/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="enumber">0</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN>
+
+	<A NAME="f_arg_number"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_arg_number">arg_number</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C | %"eif_argv.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_arg_option"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_arg_option">arg_option</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">i</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A> <SPAN CLASS="ekeyword">is</SPAN>
+		<SPAN CLASS="ekeyword">external</SPAN>
+			<SPAN CLASS="estring">"C | %"eif_argv.h%""</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_option_word_equal"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_word_equal">option_word_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">arg</SPAN><SPAN CLASS="ecomment"> equal to the word option </SPAN><SPAN CLASS="equoted">w</SPAN><SPAN CLASS="ecomment">?</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'%U'</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">elseif</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_substring">substring</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">2</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_option_word_begins_with"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_word_begins_with">option_word_begins_with</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does </SPAN><SPAN CLASS="equoted">arg</SPAN><SPAN CLASS="ecomment"> begin with the word option </SPAN><SPAN CLASS="equoted">w</SPAN><SPAN CLASS="ecomment">?</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'%U'</SPAN> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/comparable.html#f__infix_ge">&gt;=</A> <SPAN CLASS="elocal">w</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_substring">substring</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">w</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">elseif</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A> <SPAN CLASS="ekeyword">and then</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/comparable.html#f__infix_gt">&gt;</A> <SPAN CLASS="elocal">w</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_substring">substring</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">2</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">w</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A> <A CLASS="esymbol" HREF="../../base/kernel/integer_ref.html#f__infix_plus">+</A> <SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_is_equal">is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">w</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_option_character_equal"><A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_character_equal">option_character_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/string.html">STRING</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/character.html">CHARACTER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does </SPAN><SPAN CLASS="equoted">arg</SPAN><SPAN CLASS="ecomment"> contain the character option </SPAN><SPAN CLASS="equoted">c</SPAN><SPAN CLASS="ecomment">?</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="echar">'%U'</SPAN> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">elseif</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_item">item</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">1</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/arguments.html#f_option_sign">option_sign</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_substring">substring</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="enumber">2</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">arg</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_count">count</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/kernel/string.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">c</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>ARGUMENTS<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="arguments_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="arguments_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="arguments_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="arguments_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="arguments_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="ARGUMENTS"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

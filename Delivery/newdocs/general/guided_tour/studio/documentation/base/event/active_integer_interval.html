@@ -1,0 +1,185 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="keywords" CONTENT="Eiffel class, event, action, linked, list">
+<META NAME="description" CONTENT="TTContiguous integer interval that calls an action sequenceR TTwhen it changes.">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>ACTIVE_INTEGER_INTERVAL Text</TITLE>
+<LINK REL="stylesheet" HREF="../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_integer_interval_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_integer_interval_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_integer_interval_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_integer_interval_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_integer_interval_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="ACTIVE_INTEGER_INTERVAL"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">		Contiguous integer interval that calls an action sequence</SPAN>
+<SPAN CLASS="estring">		when it changes.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"See notice at end of class"</SPAN>
+	<SPAN CLASS="eitag">keywords</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"event, action, linked, list"</SPAN>
+	<SPAN CLASS="eitag">date</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Date$"</SPAN>
+	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
+
+<SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../../base/event/active_integer_interval.html">ACTIVE_INTEGER_INTERVAL</A>
+
+<SPAN CLASS="ekeyword">inherit</SPAN>
+	<A CLASS="eclass" HREF="../../base/kernel/integer_interval.html">INTEGER_INTERVAL</A>
+		<SPAN CLASS="ekeyword">redefine</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/integer_interval.html#f_extend">extend</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/integer_interval.html#f_put">put</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/integer_interval.html#f_resize">resize</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/integer_interval.html#f_resize_exactly">resize_exactly</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/integer_interval.html#f_copy">copy</A><SPAN CLASS="esymbol">,</SPAN>
+			<A CLASS="efeature" HREF="../../base/kernel/integer_interval.html#f_adapt">adapt</A>
+		<SPAN CLASS="ekeyword">end</SPAN>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+	<A CLASS="efeature" HREF="../../base/kernel/integer_interval.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization</SPAN>
+
+	<A NAME="f_adapt"><A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_adapt">adapt</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer_interval.html">INTEGER_INTERVAL</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Reset to be the same interval as </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/kernel/integer_interval.html#f_adapt">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_interval.html">INTEGER_INTERVAL</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_on_change">on_change</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Element change</SPAN>
+
+	<A NAME="f_extend"><A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make sure that interval goes all the way</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> (up or down).</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/kernel/integer_interval.html#f_extend">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_interval.html">INTEGER_INTERVAL</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_on_change">on_change</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_put"><A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Make sure that interval goes all the way</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">v</SPAN><SPAN CLASS="ecomment"> (up or down).</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/kernel/integer_interval.html#f_put">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_interval.html">INTEGER_INTERVAL</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_on_change">on_change</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Resizing</SPAN>
+
+	<A NAME="f_resize"><A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_resize">resize</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">min_index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">max_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Rearrange interval to go from at most</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">min_index</SPAN><SPAN CLASS="ecomment"> to at least </SPAN><SPAN CLASS="equoted">max_index</SPAN><SPAN CLASS="ecomment">,</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> encompassing previous bounds.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/kernel/integer_interval.html#f_resize">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_interval.html">INTEGER_INTERVAL</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">min_index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">max_index</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_on_change">on_change</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_resize_exactly"><A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_resize_exactly">resize_exactly</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">min_index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">max_index</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Rearrange interval to go from</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">min_index</SPAN><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">max_index</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/kernel/integer_interval.html#f_resize_exactly">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_interval.html">INTEGER_INTERVAL</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">min_index</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="elocal">max_index</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_on_change">on_change</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Duplication</SPAN>
+
+	<A NAME="f_copy"><A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_copy">copy</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Reset to be the same interval as </SPAN><SPAN CLASS="equoted">other</SPAN><SPAN CLASS="ecomment">.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="ekeyword" HREF="../../base/kernel/integer_interval.html#f_copy">Precursor</A> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../../base/kernel/integer_interval.html">INTEGER_INTERVAL</A><SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="elocal"></SPAN> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_on_change">on_change</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Event handling</SPAN>
+
+	<A NAME="f_change_actions"><A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_change_actions">change_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/event/action_sequence.html">ACTION_SEQUENCE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/tuple.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Actions performed when interval changes.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_opo_change_actions">opo_change_actions</A> <SPAN CLASS="esymbol">=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_opo_change_actions">opo_change_actions</A>
+			<SPAN CLASS="ekeyword">end</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_opo_change_actions">opo_change_actions</A>
+		<SPAN CLASS="ekeyword">ensure</SPAN>
+			<SPAN CLASS="etag">not_void</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="esymbol">{</SPAN>NONE<SPAN CLASS="esymbol">}</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Implementation</SPAN>
+
+	<A NAME="f_on_change"><A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_on_change">on_change</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Called when interval changes.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<SPAN CLASS="ekeyword">if</SPAN> <A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_opo_change_actions">opo_change_actions</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A> <SPAN CLASS="ekeyword">then</SPAN>
+				<A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_opo_change_actions">opo_change_actions</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../../base/event/action_sequence.html#f_call">call</A> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../base/kernel/any.html#f_void">void</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ekeyword">end</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_opo_change_actions"><A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_opo_change_actions">opo_change_actions</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../base/event/action_sequence.html">ACTION_SEQUENCE</A> <SPAN CLASS="esymbol">[</SPAN><A CLASS="eclass" HREF="../../base/kernel/tuple.html">TUPLE</A><SPAN CLASS="esymbol">]</SPAN></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Once per object implementation for </SPAN><A CLASS="efeature" HREF="../../base/event/active_integer_interval.html#f_change_actions">change_actions</A><SPAN CLASS="ecomment"></SPAN>
+	
+<SPAN CLASS="ekeyword">indexing</SPAN>
+	<SPAN CLASS="eitag">library</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase: Library of reusable components for Eiffel.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Copyright 1986-2001 Interactive Software Engineering (ISE).</SPAN>
+<SPAN CLASS="estring">			For ISE customers the original versions are an ISE product</SPAN>
+<SPAN CLASS="estring">			covered by the ISE Eiffel license and support agreements.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">license</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			EiffelBase may now be used by anyone as FREE SOFTWARE to</SPAN>
+<SPAN CLASS="estring">			develop any product, public-domain or commercial, without</SPAN>
+<SPAN CLASS="estring">			payment to ISE, under the terms of the ISE Free Eiffel Library</SPAN>
+<SPAN CLASS="estring">			License (IFELL) at </SPAN><A CLASS="estring" HREF="http://eiffel.com/products/base/license.html">http://eiffel.com/products/base/license.html</A><SPAN CLASS="estring">.</SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">source</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			Interactive Software Engineering Inc.</SPAN>
+<SPAN CLASS="estring">			ISE Building</SPAN>
+<SPAN CLASS="estring">			360 Storke Road, Goleta, CA 93117 USA</SPAN>
+<SPAN CLASS="estring">			Telephone 805-685-1006, Fax 805-685-6869</SPAN>
+<SPAN CLASS="estring">			Electronic mail &lt;</SPAN><A CLASS="estring" HREF="mailto:info@eiffel.com">info@eiffel.com</A><SPAN CLASS="estring">&gt;</SPAN>
+<SPAN CLASS="estring">			Customer support </SPAN><A CLASS="estring" HREF="http://support.eiffel.com">http://support.eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+	<SPAN CLASS="eitag">info</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"[</SPAN>
+<SPAN CLASS="estring">			For latest info see award-winning pages: </SPAN><A CLASS="estring" HREF="http://eiffel.com">http://eiffel.com</A><SPAN CLASS="estring"></SPAN>
+	<SPAN CLASS="estring">]"</SPAN>
+
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>ACTIVE_INTEGER_INTERVAL<FORM ONSUBMIT="go_to('../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_integer_interval_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_integer_interval_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_integer_interval_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_integer_interval_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="active_integer_interval_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="ACTIVE_INTEGER_INTERVAL"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

@@ -1,0 +1,109 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+<META NAME="contents" CONTENT="generic">
+<META NAME="access" CONTENT="membership, min, max">
+<META NAME="date" CONTENT="$Date$">
+<META NAME="names" CONTENT="binary_search_tree_set, set, binary_search_tree">
+<META NAME="revision" CONTENT="$Revision$">
+<META NAME="description" CONTENT="Sorted sets implemented as binary search trees">
+<META NAME="status" CONTENT="See notice at end of class">
+<META NAME="representation" CONTENT="recursive, array">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="source" CONTENT="TTTInteractive Software Engineering Inc.R TTTISE BuildingR TTT360 Storke Road, Goleta, CA 93117 USAR TTTTelephone 805-685-1006, Fax 805-685-6869R TTTElectronic mail <info@eiffel.com>R TTTCustomer support http://support.eiffel.com">
+<META NAME="info" CONTENT="TTTFor latest info see award-winning pages: http://eiffel.com">
+<META NAME="license" CONTENT="TTTEiffelBase may now be used by anyone as FREE SOFTWARE toR TTTdevelop any product, public-domain or commercial, withoutR TTTpayment to ISE, under the terms of the ISE Free Eiffel LibraryR TTTLicense (IFELL) at http://eiffel.com/products/base/license.html.">
+<META NAME="status" CONTENT="TTTCopyright 1986-2001 Interactive Software Engineering (ISE).R TTTFor ISE customers the original versions are an ISE productR TTTcovered by the ISE Eiffel license and support agreements.">
+<META NAME="library" CONTENT="TTTEiffelBase: Library of reusable components for Eiffel.">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>BINARY_SEARCH_TREE_SET Chart</TITLE>
+<LINK REL="stylesheet" HREF="../../../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../../../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="nolink2">Chart</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_search_tree_set_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_search_tree_set.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_search_tree_set_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_search_tree_set_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_search_tree_set_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="BINARY_SEARCH_TREE_SET"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">class</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/set/binary_search_tree_set_chart.html">BINARY_SEARCH_TREE_SET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/comparable_chart.html">COMPARABLE</A><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">General</SPAN>
+	<SPAN CLASS="eitag">cluster</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ecluster" HREF="../../../base/structures/set/index.html">base.structures.set</A>
+	<SPAN CLASS="eitag">description</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"Sorted sets implemented as binary search trees"</SPAN>
+	<SPAN CLASS="eitag">create</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">Ancestors</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/set/comparable_set_chart.html">COMPARABLE_SET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN> <SPAN CLASS="esymbol">-&gt;</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/comparable_chart.html">COMPARABLE</A><SPAN CLASS="esymbol">]</SPAN>
+	<A CLASS="eclass" HREF="../../../base/structures/set/traversable_subset_chart.html">TRAVERSABLE_SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+
+<SPAN CLASS="ekeyword">Queries</SPAN>
+	<SPAN TITLE="`after' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_after">after</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`before' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_before">before</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`changeable_comparison_criterion' was declared in SET"><A CLASS="efeature" HREF="../../../base/structures/set/set.html#f_changeable_comparison_criterion">changeable_comparison_criterion</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`count' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_count">count</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_chart.html">INTEGER</A></SPAN>
+	<SPAN TITLE="`disjoint' was declared in TRAVERSABLE_SUBSET"><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_disjoint">disjoint</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/set/traversable_subset_chart.html">TRAVERSABLE_SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`duplicate' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_duplicate">duplicate</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">n</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/integer_chart.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/set/binary_search_tree_set_chart.html">BINARY_SEARCH_TREE_SET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`extendible' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_extendible">Extendible</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`has' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_has">has</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_empty' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_is_empty">is_empty</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_inserted' was declared in COLLECTION"><A CLASS="efeature" HREF="../../../base/structures/access/collection.html#f_is_inserted">is_inserted</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_subset' was declared in TRAVERSABLE_SUBSET"><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_is_subset">is_subset</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/set/traversable_subset_chart.html">TRAVERSABLE_SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`is_superset' was declared in SUBSET"><A CLASS="efeature" HREF="../../../base/structures/set/subset.html#f_is_superset">is_superset</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/set/subset_chart.html">SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`item' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN>
+	<SPAN TITLE="`linear_representation' was declared in LINEAR"><A CLASS="efeature" HREF="../../../base/structures/traversing/linear.html#f_linear_representation">linear_representation</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/traversing/linear_chart.html">LINEAR</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN></SPAN>
+	<SPAN TITLE="`max' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_max">max</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN>
+	<SPAN TITLE="`min' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_min">min</A><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN></SPAN>
+	<SPAN TITLE="`object_comparison' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_object_comparison">object_comparison</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`off' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_off">off</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+	<SPAN TITLE="`prunable' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_prunable">Prunable</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/kernel/boolean_chart.html">BOOLEAN</A></SPAN>
+
+<SPAN CLASS="ekeyword">Commands</SPAN>
+	<SPAN TITLE="`back' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_back">back</A></SPAN>
+	<SPAN TITLE="`compare_objects' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_objects">compare_objects</A></SPAN>
+	<SPAN TITLE="`compare_references' was declared in CONTAINER"><A CLASS="efeature" HREF="../../../base/structures/access/container.html#f_compare_references">compare_references</A></SPAN>
+	<SPAN TITLE="`extend' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_extend">extend</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`fill' was declared in COLLECTION"><A CLASS="efeature" HREF="../../../base/structures/access/collection.html#f_fill">fill</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/access/container_chart.html">CONTAINER</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`finish' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_finish">finish</A></SPAN>
+	<SPAN TITLE="`forth' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_forth">forth</A></SPAN>
+	<SPAN TITLE="`intersect' was declared in TRAVERSABLE_SUBSET"><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_intersect">intersect</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/set/traversable_subset_chart.html">TRAVERSABLE_SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`make' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_make">make</A></SPAN>
+	<SPAN TITLE="`merge' was declared in TRAVERSABLE_SUBSET"><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_merge">merge</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/access/container_chart.html">CONTAINER</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`prune' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_prune">prune</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`prune_all' was declared in COLLECTION"><A CLASS="efeature" HREF="../../../base/structures/access/collection.html#f_prune_all">prune_all</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`put' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_put">put</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">v</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_item">item</A><SPAN CLASS="esymbol">]</SPAN> <SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`remove' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_remove">remove</A></SPAN>
+	<SPAN TITLE="`start' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_start">start</A></SPAN>
+	<SPAN TITLE="`subtract' was declared in TRAVERSABLE_SUBSET"><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_subtract">subtract</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/set/traversable_subset_chart.html">TRAVERSABLE_SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`symdif' was declared in TRAVERSABLE_SUBSET"><A CLASS="efeature" HREF="../../../base/structures/set/traversable_subset.html#f_symdif">symdif</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">other</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/structures/set/traversable_subset_chart.html">TRAVERSABLE_SUBSET</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN></SPAN>
+	<SPAN TITLE="`wipe_out' is declared in `Current'"><A CLASS="efeature" HREF="../../../base/structures/set/binary_search_tree_set.html#f_wipe_out">wipe_out</A></SPAN>
+
+<SPAN CLASS="ekeyword">Constraints</SPAN>
+	<SPAN CLASS="etag">comparison mode equal</SPAN>
+
+<FORM ONSUBMIT="go_to('../../../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../../../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="nolink2">Chart</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_search_tree_set_links.html">Relations</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_search_tree_set.html">Text</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_search_tree_set_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_search_tree_set_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="binary_search_tree_set_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="BINARY_SEARCH_TREE_SET"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>

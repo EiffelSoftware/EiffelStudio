@@ -1,0 +1,76 @@
+<HTML>
+<HEAD>
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.33">
+<META NAME="keywords" CONTENT="Eiffel class">
+<META NAME="keywords" CONTENT="Eiffel class">
+<TITLE>TESTROOT Text</TITLE>
+<LINK REL="stylesheet" HREF="../default.css" TYPE="text/css">
+<SCRIPT TYPE="text/javascript" SRC="../goto.html"></SCRIPT>
+</HEAD>
+<BODY>
+<P ALIGN="CENTER">Automatic generation produced by ISE Eiffel</P>
+<pre><FORM ONSUBMIT="go_to('../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="testroot_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="testroot_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="testroot_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="testroot_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="testroot_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="TESTROOT"></TD>
+</TR></TABLE></FORM><SPAN CLASS="ekeyword">class</SPAN> 
+	<A CLASS="eclass" HREF="../root_cluster/testroot.html">TESTROOT</A>
+
+<SPAN CLASS="ekeyword">create</SPAN> 
+	<A CLASS="efeature" HREF="../root_cluster/testroot.html#f_make">make</A>
+
+<SPAN CLASS="ekeyword">feature</SPAN> 
+
+	<A NAME="f_o1"><A CLASS="efeature" HREF="../root_cluster/testroot.html#f_o1">o1</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../root_cluster/parent.html">PARENT</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Examples of attributes</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../root_cluster/testroot.html">TESTROOT</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../root_cluster/testroot.html#f_o2">o2</A><SPAN CLASS="ecomment">.</SPAN>
+
+	<A NAME="f_o2"><A CLASS="efeature" HREF="../root_cluster/testroot.html#f_o2">o2</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../root_cluster/parent.html">PARENT</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Examples of attributes</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Was declared in </SPAN><A CLASS="eclass" HREF="../root_cluster/testroot.html">TESTROOT</A><SPAN CLASS="ecomment"> as synonym of </SPAN><A CLASS="efeature" HREF="../root_cluster/testroot.html#f_o1">o1</A><SPAN CLASS="ecomment">.</SPAN>
+
+	<A NAME="f_make"><A CLASS="efeature" HREF="../root_cluster/testroot.html#f_make">make</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output messages tracing what's going on.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../root_cluster/testroot.html#f_display_demonstration_message">display_demonstration_message</A>
+			<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="esymbol">{</SPAN><A CLASS="eclass" HREF="../root_cluster/heir.html">HEIR</A><SPAN CLASS="esymbol">}</SPAN> <A CLASS="efeature" HREF="../root_cluster/testroot.html#f_o1">o1</A>
+			<SPAN CLASS="ekeyword">create</SPAN> <A CLASS="efeature" HREF="../root_cluster/testroot.html#f_o2">o2</A>
+			<A CLASS="efeature" HREF="../root_cluster/testroot.html#f_o1">o1</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../root_cluster/parent.html#f_display">display</A>
+			<A CLASS="efeature" HREF="../root_cluster/testroot.html#f_o2">o2</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../root_cluster/parent.html#f_display">display</A>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+
+	<A NAME="f_display_demonstration_message"><A CLASS="efeature" HREF="../root_cluster/testroot.html#f_display_demonstration_message">display_demonstration_message</A> <SPAN CLASS="ekeyword">is</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Output a welcoming message.</SPAN>
+		<SPAN CLASS="ekeyword">do</SPAN>
+			<A CLASS="efeature" HREF="../base/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../base/kernel/std_files.html#f_put_new_line">put_new_line</A>
+			<A CLASS="efeature" HREF="../base/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../base/kernel/std_files.html#f_put_string">put_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">" ISE Eiffel spoken here"</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			<A CLASS="efeature" HREF="../base/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../base/kernel/std_files.html#f_put_new_line">put_new_line</A>
+			<A CLASS="efeature" HREF="../base/kernel/any.html#f_io">io</A><SPAN CLASS="edot">.</SPAN><A CLASS="efeature" HREF="../base/kernel/std_files.html#f_put_string">put_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="estring">"--------------------------------%N%N"</SPAN><SPAN CLASS="esymbol">)</SPAN>
+		<SPAN CLASS="ekeyword">end</SPAN></A>
+	
+<SPAN CLASS="ekeyword">end</SPAN> -- <SPAN CLASS="ecomment">class </SPAN>TESTROOT<FORM ONSUBMIT="go_to('../',this.c.value);return false;">
+<TABLE CELLSPACING="5" CELLPADDING="4"><TR>
+<TD CLASS="link1"><A CLASS="link1" HREF="../class_list.html">Classes</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../cluster_list.html">Clusters</A></TD>
+<TD CLASS="link1"><A CLASS="link1" HREF="../cluster_hierarchy.html">Cluster hierarchy</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="testroot_chart.html">Chart</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="testroot_links.html">Relations</A></TD>
+<TD CLASS="nolink2">Text</TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="testroot_flat.html">Flat</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="testroot_short.html">Contracts</A></TD>
+<TD CLASS="link2"><A CLASS="link2" HREF="testroot_flatshort.html">Flat contracts</A></TD>
+<TD CLASS="link2">Go to: <INPUT NAME="c" VALUE="TESTROOT"></TD>
+</TR></TABLE></FORM></pre>
+<P ALIGN="CENTER"> &#045;&#045; Generated by ISE Eiffel &#045;&#045; 
+<BR>For more details: <A HREF="http://www.eiffel.com">www.eiffel.com</A></P>
+</BODY>
+</HTML>
+

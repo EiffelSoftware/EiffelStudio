@@ -64,8 +64,8 @@ feature {NONE} -- Initialization
 
 			scroll_window := (
 				C.gtk_scrolled_window_new (
-					Default_pointer, 
-					Default_pointer
+					NULL, 
+					NULL
 				)
 			)
 			C.gtk_scrolled_window_set_policy (
@@ -91,6 +91,7 @@ feature {NONE} -- Initialization
 			old_list_widget: POINTER
 			temp_title: STRING
 			temp_width: INTEGER
+			p: POINTER
 		do
 			old_list_widget := list_widget
 			
@@ -152,13 +153,15 @@ feature {NONE} -- Initialization
 			until
 				ev_children.after
 			loop
-				i := C.c_gtk_clist_append_row (list_widget)
+				p := calloc (C.gtk_clist_struct_columns (list_widget), sizeof_pointer)
+				i := C.gtk_clist_append (list_widget, p)
+				c_free (p);
 				ev_children.item.dirty_child
 				update_child (ev_children.item, ev_children.index)
 				ev_children.forth
 			end
 			
-			if old_list_widget /= Default_pointer then
+			if old_list_widget /= NULL then
 				C.gtk_container_remove (scroll_window, old_list_widget)
 			end
 			C.gtk_container_add (scroll_window, list_widget)
@@ -209,7 +212,7 @@ feature -- Access
 	column_count: INTEGER is
 			-- Number of columns in the list.
 		do
-			if list_widget /= Default_pointer then
+			if list_widget /= NULL then
 				Result := C.c_gtk_clist_columns (list_widget)
 			end
 		end
@@ -236,16 +239,22 @@ feature -- Access
 		local
 			an_index: INTEGER
 		do
-			if (list_widget /= Default_pointer and
-			C.c_gtk_clist_selection_length (list_widget) = 0 ) then
+			if
+				list_widget /= NULL and
+				C.g_list_length (
+					C.gtk_clist_struct_selection (list_widget)
+				) = 0
+			then
 					-- there is no selected item
 				Result := Void
-			elseif list_widget /= Default_pointer then
+			elseif list_widget /= NULL then
 					-- there is one selected item
-				an_index := C.c_gtk_clist_ith_selected_item (
-					list_widget,
-					0
-				)		
+				an_index := pointer_to_integer (
+					C.g_list_nth_data (
+						C.gtk_clist_struct_selection (list_widget),
+						0
+					)
+				)
 				Result ?= (ev_children @ (an_index + 1)).interface
 			end
 		end
@@ -262,9 +271,10 @@ feature -- Access
 			upper: INTEGER
 			row: EV_MULTI_COLUMN_LIST_ROW
 		do
-			if list_widget /= Default_pointer then
-				upper := 
-				C.c_gtk_clist_selection_length (list_widget)
+			if list_widget /= NULL then
+				upper := C.g_list_length (
+					C.gtk_clist_struct_selection (list_widget)
+				)
 			end
 			create Result.make
 			from
@@ -272,7 +282,12 @@ feature -- Access
 			until
 				i = upper
 			loop
-				index := C.c_gtk_clist_ith_selected_item (list_widget, i)
+				an_index := pointer_to_integer (
+					C.g_list_nth_data (
+						C.gtk_clist_struct_selection (list_widget),
+						i
+					)
+				)
 				row ?= (ev_children @ (an_index + 1)).interface
 				Result.extend (row)
 				i := i + 1
@@ -304,8 +319,10 @@ feature -- Status report
 	selected: BOOLEAN is
 			-- Is at least one item selected ?
 		do
-			if list_widget /= Default_pointer then
-				Result := C.c_gtk_clist_selected (list_widget).to_boolean
+			if list_widget /= NULL then
+				Result := C.g_list_length (
+					C.gtk_clist_struct_selection (list_widget)
+				).to_boolean
 			end
 		end
 
@@ -313,9 +330,9 @@ feature -- Status report
 			-- True if the user can choose several items
 			-- False otherwise
 		do
-			if list_widget /= Default_pointer then
-				Result := (C.c_gtk_clist_selection_mode (list_widget) 
-					= C.GTK_SELECTION_MULTIPLE_ENUM)
+			if list_widget /= NULL then
+				Result := C.gtk_clist_struct_selection_mode (list_widget) 
+					= C.GTK_SELECTION_MULTIPLE_ENUM
 			end
 		end
 
@@ -323,8 +340,10 @@ feature -- Status report
 			-- True if the title row is shown.
 			-- False if the title row is not shown.
 		do
-			if list_widget /= Default_pointer then
-				Result := C.c_gtk_clist_title_shown (list_widget).to_boolean
+			if list_widget /= NULL then
+				Result := C.gtk_clist_struct_flags (list_widget).bit_and (
+					C.Gtk_clist_show_titles_enum
+				).to_boolean
 			end
 		end
 
@@ -412,7 +431,7 @@ feature -- Status setting
 	clear_selection is
 			-- Clear the selection of the list.
 		do
-			if list_widget /= Default_pointer then
+			if list_widget /= NULL then
 				C.gtk_clist_unselect_all (list_widget)
 			end
 		end
@@ -424,7 +443,7 @@ feature -- Element change
 		local
 			a: ANY
 		do
-			if list_widget /= Default_pointer then
+			if list_widget /= NULL then
 				a := a_txt.to_c
 				C.gtk_clist_set_column_title (list_widget, a_column - 1, $a)
 			end
@@ -434,7 +453,7 @@ feature -- Element change
 			-- Make `value' the new width of the column number
 			-- `column'.
 		do
-			if list_widget /= Default_pointer then
+			if list_widget /= NULL then
 				C.gtk_clist_set_column_width (list_widget, column - 1, value)
 			end
 		end
@@ -442,7 +461,7 @@ feature -- Element change
 	set_row_height (value: INTEGER) is
 			-- Make `value' the new height of all the rows.
 		do
-			if list_widget /= Default_pointer then
+			if list_widget /= NULL then
 				C.gtk_clist_set_row_height (list_widget, value)
 			end
 			row_height := value
@@ -489,7 +508,7 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			a_row: INTEGER
 		do
 			gdkwin_parent := C.gdk_window_get_parent (a_gdkwin)
-			if gdkwin_parent /= Default_pointer then
+			if gdkwin_parent /= NULL then
 				gdkwin_parent_parent := C.gdk_window_get_parent (gdkwin_parent)
 			end
 			clist_parent := C.gdk_window_get_parent (
@@ -724,26 +743,39 @@ feature {NONE} -- Implementation
 	set_text_on_position (a_column, a_row: INTEGER; a_text: STRING) is
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		local
-			a: ANY
 			row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 			pixmap_imp: EV_PIXMAP_IMP
-			pixmap_pointer: POINTER
 		do
-			a := a_text.to_c
-
 			row_imp := ev_children.i_th (a_row)
 			if row_imp.pixmap /= Void and a_column = 1 then
 				pixmap_imp ?= row_imp.pixmap.implementation
-				pixmap_pointer := pixmap_imp.c_object
+				C.gtk_clist_set_pixtext (
+					list_widget,
+					a_row - 1,
+					a_column - 1,
+					eiffel_to_c (a_text),
+					0,
+					C.gtk_pixmap_struct_pixmap (pixmap_imp.c_object),
+					C.gtk_cell_pixmap_struct_mask (
+						pointer_array_i_th (
+							C.gtk_clist_row_struct_cell (
+								C.g_list_nth_data (
+									C.gtk_clist_struct_row_list (list_widget),
+									a_row - 1
+								)
+							),
+							a_column - 1
+						)
+					)
+				)
+			else 
+				C.gtk_clist_set_text (
+					list_widget,
+					a_row - 1,
+					a_column - 1,
+					eiffel_to_c (a_text)
+				)
 			end
-
-			C.c_gtk_clist_set_pixtext (
-				list_widget,
-				a_row - 1,
-				a_column - 1,
-				pixmap_pointer,
-				$a
-			)
 		end
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP) is
@@ -766,6 +798,8 @@ feature {NONE} -- Implementation
 			column_i: INTEGER
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 			a_curs: CURSOR
+			p: POINTER
+			dummy: INTEGER
 		do
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
@@ -777,7 +811,9 @@ feature {NONE} -- Implementation
 				create_list (v.count)
 			else
 				-- add row to the existing gtk column list:
-				an_index := C.c_gtk_clist_append_row (list_widget)
+				p := calloc (C.gtk_clist_struct_columns (list_widget), sizeof_pointer)
+				dummy := C.gtk_clist_append (list_widget, p)
+				c_free (p);
 				item_imp.dirty_child
 				update_child (item_imp, ev_children.count)
 			end
@@ -884,6 +920,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.64  2000/04/19 21:34:33  oconnor
+--| Removed reliance on externals
+--|
 --| Revision 1.63  2000/04/07 17:40:50  king
 --| Implemented resetting of mclist pnd attributes
 --|

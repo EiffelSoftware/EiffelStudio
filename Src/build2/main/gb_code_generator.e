@@ -247,7 +247,7 @@ feature {NONE} -- Implementation
 
 					-- If a pixmap is specified in the project, then
 					-- we must create  a local which is used for loading and
-					-- assigning this pixmap. This is always hiddedd, i.e.
+					-- assigning this pixmap. This is always hidden, i.e.
 					-- declared in the locals of `initialize'. The different
 					-- cases are handled below when we generate the local or attribute
 					-- declarations.
@@ -269,6 +269,11 @@ feature {NONE} -- Implementation
 					-- If a pixmap was included then we must create the temporary pixmap
 					-- used to load and assign it.
 				if class_text.substring_index (pixmap_name, 1) /= 0 then
+						-- If we only added a pixmap to an empty window,
+						-- create string will be Void.
+					if create_string = Void then
+						create_string := ""
+					end
 					create_string.append_string (indent + "create " + pixmap_name)
 				end
 					-- Add code for creation of widgets to `class_text'.

@@ -27,19 +27,16 @@ feature {NONE} -- Execution
 	execute is
 		local
 			cmd: like associated_cmd;
-			st: STRUCTURED_TEXT;
 			filter: TEXT_FILTER
 		do
-			!! st.make;
 			cmd := associated_cmd;
-			cmd.set_structured_text (st);
 			cmd.execute;
 			if filter_name /= Void and then not filter_name.empty then
 				!! filter.make (filter_name);
-				filter.process_text (st);
+				filter.process_text (cmd.structured_text);
 				output_window.put_string (filter.image);
 			else
-				output_window.put_string (st.image);
+				output_window.put_string (cmd.structured_text.image);
 			end;
 			output_window.new_line;
 		end;

@@ -22,14 +22,11 @@ feature {NONE}
 
 	execute is
 		local
-			cmd: like associated_cmd;
-			st: STRUCTURED_TEXT
+			cmd: like associated_cmd
 		do
-			!! st.make;
-			cmd := clone (associated_cmd);
-			cmd.set_structured_text (st);
+			cmd := associated_cmd;
 			cmd.execute;
-			output_window.put_string (st.image);
+			output_window.put_string (cmd.structured_text.image);
 			output_window.new_line;
 		end;
 

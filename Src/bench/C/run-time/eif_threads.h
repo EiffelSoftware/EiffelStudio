@@ -211,24 +211,19 @@ rt_public typedef struct {
 /*------------------------------*/
 
 RT_LNK void eif_thr_panic(char *);
-RT_LNK EIF_POINTER eif_thr_freeze(EIF_OBJECT object);
-RT_LNK void eif_thr_unfreeze(EIF_OBJECT object);
-RT_LNK EIF_OBJECT eif_thr_proxy_set(EIF_REFERENCE);
-RT_LNK EIF_REFERENCE eif_thr_proxy_access(EIF_OBJECT);
-RT_LNK void eif_thr_proxy_dispose(EIF_POINTER);
 
 /* Exported functions */
 RT_LNK void eif_thr_init_root(void);
 RT_LNK void eif_thr_register(void);
 RT_LNK unsigned int eif_thr_is_initialized(void);
 RT_LNK EIF_BOOLEAN eif_thr_is_root(void);
-RT_LNK void eif_thr_create(EIF_REFERENCE, EIF_POINTER);
+RT_LNK void eif_thr_create(EIF_OBJECT, EIF_POINTER);
 RT_LNK void eif_thr_exit(void);
 RT_LNK void eif_thr_yield(void);
 RT_LNK void eif_thr_join_all(void);
 RT_LNK void eif_thr_join(EIF_POINTER);
 RT_LNK void eif_thr_wait(EIF_OBJECT);
-RT_LNK void eif_thr_create_with_args(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
+RT_LNK void eif_thr_create_with_args(EIF_OBJECT, EIF_POINTER, EIF_INTEGER, EIF_INTEGER, EIF_BOOLEAN);
 RT_LNK EIF_INTEGER eif_thr_default_priority(void);
 RT_LNK EIF_INTEGER eif_thr_min_priority(void);
 RT_LNK EIF_INTEGER eif_thr_max_priority(void);

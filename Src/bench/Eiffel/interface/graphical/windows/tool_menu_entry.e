@@ -19,15 +19,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_cmd: like associated_command; a_parent: MENU; a_tool: TOOL_W) is
+	make (a_cmd: like associated_command; a_parent: MENU; a_tool: like tool) is
 			-- Initialize Current with `associated_command' set
 			-- to `a_cmd' and `parent' set to `a_parent'.
-		require
-			non_void_cmd: a_cmd /= Void;
-			non_void_parent: a_parent /= Void
 		do
 			tool := a_tool;
-			initialize_button (a_cmd, a_parent)
+			make_default (a_cmd, a_parent)
 		end
 
 feature -- Access

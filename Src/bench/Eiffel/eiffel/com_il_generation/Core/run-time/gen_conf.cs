@@ -61,6 +61,7 @@ public class GENERIC_CONFORMANCE {
 	{
 		CLASS_TYPE[] type_array;
 		CLASS_TYPE type_to_create;
+		TYPE type;
 		GENERIC_TYPE computed_type;
 		FORMAL_TYPE formal_type;
 		EIFFEL_DERIVATION derivation;
@@ -84,10 +85,13 @@ public class GENERIC_CONFORMANCE {
 			computed_type = (GENERIC_TYPE) type_to_create;
 			type_array = new CLASS_TYPE [computed_type.nb_generics];
 			for (int i = 0; i < computed_type.nb_generics; i ++) {
-					// Since `computed_type' is a living type, it can only
-					// be composed of CLASS_TYPE and therefore cast will
-					// always succeed.
-				type_array [i] = (CLASS_TYPE) computed_type.type_array [i];
+				type = computed_type.type_array [i];
+				if (type is FORMAL_TYPE) {
+					formal_type = (FORMAL_TYPE) type;
+					type_array [i] = a_current.____type().generics_type [formal_type.position - 1];
+				} else {
+					type_array [i] = (CLASS_TYPE) type;
+				}
 			}
 			derivation = new EIFFEL_DERIVATION (computed_type, computed_type.nb_generics,
 				type_array);

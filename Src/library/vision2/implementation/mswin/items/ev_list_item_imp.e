@@ -99,28 +99,6 @@ pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 			end
 		end
 
-	set_capture is
-		local
-			list_imp: EV_LIST_IMP
-		do
-			list_imp ?= parent_imp
-			check
-				parent_not_void: list_imp /= Void
-			end
-			list_imp.set_capture
-		end
-
-	release_capture is
-		local
-			list_imp: EV_LIST_IMP
-		do
-			list_imp ?= parent_imp
-			check
-				parent_not_void: list_imp /= Void
-			end
-			list_imp.release_capture
-		end
-
 	set_pointer_style (c: EV_CURSOR) is
 			-- Assign `c' to `parent_imp' pointer style.
 		do
@@ -202,6 +180,54 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_LIST_ITEM
 
+	set_capture is
+			-- Grab user input.
+		local
+			list_imp: EV_LIST_IMP
+		do
+			list_imp ?= parent_imp
+			check
+				parent_not_void: list_imp /= Void
+			end
+			list_imp.set_capture
+		end
+
+	release_capture is
+			-- Release user input.
+		local
+			list_imp: EV_LIST_IMP
+		do
+			list_imp ?= parent_imp
+			check
+				parent_not_void: list_imp /= Void
+			end
+			list_imp.release_capture
+		end
+
+	set_heavy_capture is
+			-- Grab user input.
+		local
+			list_imp: EV_LIST_IMP
+		do
+			list_imp ?= parent_imp
+			check
+				parent_not_void: list_imp /= Void
+			end
+			list_imp.set_heavy_capture
+		end
+
+	release_heavy_capture is
+			-- Release user input.
+		local
+			list_imp: EV_LIST_IMP
+		do
+			list_imp ?= parent_imp
+			check
+				parent_not_void: list_imp /= Void
+			end
+			list_imp.release_heavy_capture
+		end
+
 end -- class EV_LIST_ITEM_IMP
 
 --|----------------------------------------------------------------
@@ -225,6 +251,10 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/27 21:52:46  pichery
+--| implemented new deferred features from EV_PICK_AND_DROPPABLE_IMP
+--| `set_heavy_capture' and `release_heavy_capture'.
+--|
 --| Revision 1.37  2000/03/22 20:24:29  rogers
 --| Removed press_action := ev_pnd_start_transport from initialize.
 --|

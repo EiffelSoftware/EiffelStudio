@@ -122,10 +122,33 @@ if [ $allmakefiles != no ]; then
 	./Configure -S
 fi
 
+#Taken from finish_freezing scripts to determine how many CPUs are available on a given platform
+case `uname` in
+    Linux)
+	if [ -f /proc/cpuinfo ] ; then
+		ncpus=`grep -c '^processor[[:space:]]*:' /proc/cpuinfo`
+	fi
+	;;
+	SunOS)
+	ncpus=`/usr/sbin/psrinfo | wc -l`
+	;;
+    IRIX*)
+	ncpus=`hinv | awk '/^[0-9]+ [0-9]+ MHZ/ {print $1}'`
+	;;
+esac
+if [ -z "$ncpus" ]; then ncpus=1; fi
+if [ "$ncpus" -eq "0" ]; then ncpus=1; fi
+
+if make --version 2>/dev/null | grep GNU >/dev/null 2>&1; then
+    make_args="-j $ncpus"
+else
+    make_args=
+fi
+
 if [ $runtimes = all ]; then
 	echo Copying mkdep...
 	cp mkdep.unix mkdep; make depend
-	make
+	make $make_args
 else
 	cd run-time; make $2 
 	cd ..

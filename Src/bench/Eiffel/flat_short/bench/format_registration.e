@@ -187,13 +187,18 @@ feature -- Element change
 			valid_target_class: target_class /= Void
 		local
 			l: LINKED_LIST [CLASS_C]
+			class_id: CLASS_ID
 		do
-			if feat_tbl_server.has (target_class.id) then
-				target_feature_table := feat_tbl_server.item (target_class.id);
+			class_id := target_class.id
+			if Tmp_feat_tbl_server.has (class_id) then
+				target_feature_table := Tmp_feat_tbl_server.item (class_id);
+			elseif Feat_tbl_server.server_has (class_id) then
+				target_feature_table := Feat_tbl_server.server_item (class_id);
 			else
 				!! target_feature_table.make (0);
 				target_feature_table.init_origin_table
 			end;
+
 			if not current_class_only then
 				target_replicated_feature_table := 
 					target_feature_table.replicated_features;
@@ -435,25 +440,32 @@ feature {NONE} -- Implementation
 			file: RAW_FILE;
 			class_file_name: STRING;
 			vd21: VD21;
+			class_id: CLASS_ID
 		do
-			if current_class.is_precompiled or else
-				not current_class.lace_class.date_has_changed
+			if
+				current_class.is_precompiled
+				or else not current_class.lace_class.date_has_changed
 			then
 debug ("FLAT_SHORT")
 	io.error.putstring ("Retrieving class ast: ");
 	io.error.putstring (current_class.name);
 	io.error.new_line;
 end;
-				if Feat_tbl_server.has (current_class.id) then
-					current_feature_table := Feat_tbl_server.item (current_class.id);
+				class_id := current_class.id
+
+				if Tmp_feat_tbl_server.has (class_id) then
+					current_feature_table := Tmp_feat_tbl_server.item (class_id)
+				elseif Feat_tbl_server.server_has (class_id) then
+					current_feature_table := Feat_tbl_server.server_item (class_id)
 				else
 					!! current_feature_table.make (0);
 					current_feature_table.init_origin_table
 				end;
-				if Tmp_ast_server.has (current_class.id) then
-					Result := Tmp_ast_server.item (current_class.id)
+
+				if Tmp_ast_server.has (class_id) then
+					Result := Tmp_ast_server.item (class_id)
 				else
-					Result := Ast_server.item (current_class.id)
+					Result := Ast_server.item (class_id)
 				end		
 			else
 debug ("FLAT_SHORT")
@@ -504,6 +516,8 @@ end;
 
 	parse_ancestors is
 			-- Parse the ancestores of target_class.
+		local
+			class_id: CLASS_ID
 		do
 			from 
 				record_ancestors_of_class (current_class);
@@ -513,12 +527,17 @@ end;
 				ancestors.after
 			loop
 				current_class := ancestors.item;
-				if Feat_tbl_server.has (current_class.id) then
-					current_feature_table := Feat_tbl_server.item (current_class.id);
+				class_id := current_class.id
+
+				if Tmp_feat_tbl_server.has (class_id) then
+					current_feature_table := Tmp_feat_tbl_server.item (class_id)
+				elseif Feat_tbl_server.server_has (class_id) then
+					current_feature_table := Feat_tbl_server.server_item (class_id)
 				else
 					!! current_feature_table.make (0);
 					current_feature_table.init_origin_table
 				end;
+
 				System.set_current_class (current_class);
 debug ("FLAT_SHORT")
 	io.error.putstring ("%TParsing & Registering class: ");

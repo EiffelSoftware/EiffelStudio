@@ -46,6 +46,12 @@ feature {NONE} -- Resources
 			!! Result.make
 		end
 
+	Dynamic_lib_resources: DYNAMIC_LIB_CATEGORY is
+			-- Resources for the Dynamic_lib_tool tool
+		once
+			!! Result.make
+		end
+
 	Warning_messages: WARNING_MESSAGES is
 			-- All warning used in the interface
 		once

@@ -37,6 +37,7 @@ feature {NONE} -- Initialization
 				Object_resources.initialize (a_table)
 				Explain_resources.initialize (a_table)
 				Profiler_resources.initialize (a_table)
+				Dynamic_lib_resources.initialize (a_table)
 			end
 		end
 

@@ -59,7 +59,7 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	hwindow: POINTER
-			-- Window associated with the device context
+			-- Window handle associated with the device context
 
 feature {NONE} -- Removal
 

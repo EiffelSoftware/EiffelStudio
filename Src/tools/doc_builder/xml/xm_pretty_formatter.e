@@ -151,6 +151,9 @@ feature {NONE} -- Implementation
 			create Result.make (1)
 			Result.compare_objects
 			Result.extend ("code_block")
+			Result.extend ("code")
+			Result.extend ("heading")
+			Result.extend ("link")
 		end		
 
 end -- class XM_PRETTY_FORMATTER

@@ -14,6 +14,8 @@ inherit
 	MANAGER_M
 		rename
 			is_shown as shown
+		redefine
+			set_background_color_from_imp
 		end;
 
 	MEL_PANED_WINDOW
@@ -48,5 +50,28 @@ feature {NONE} -- Initialization
 			set_margin_width (0);
 			set_spacing (10);
 		end
+
+feature -- Status setting
+
+	set_background_color_from_imp (color_imp: COLOR_X) is
+			-- Set the background color from implementation `color_imp'.
+		local
+			list: like children;
+			color_id: POINTER
+		do
+			mel_set_background_color (color_imp);
+			color_id := color_imp.identifier;
+			list := children;
+			from
+				list.start
+			until
+				list.after
+			loop
+				if xm_is_sash (list.item) then
+					xm_change_color (list.item, color_id);
+				end;
+				list.forth
+			end
+		end;
 
 end -- class SPLIT_WINDOW_I

@@ -171,7 +171,7 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 			a_button_imp: EV_BUTTON_IMP
 		do
 			a_button_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			if a_button_imp.select_actions_internal /= Void then
+			if a_button_imp.select_actions_internal /= Void and then a_button_imp.parent_imp /= Void then
 				a_button_imp.select_actions_internal.call (Empty_tuple)
 			end
 		end

@@ -19,7 +19,6 @@ feature {NONE} -- Initialization
 			-- Initialize Current
 		do
 			actual_value := an_int;
-			value := an_int.out;
 			name := a_name
 		end
 
@@ -28,30 +27,14 @@ feature -- Setting
 	set_value (new_value: STRING) is
 			-- Set `value' to `new_value' and update `actual_value'.
 		do
-			value := new_value;
-			update_actual_value
-		end;
-
-	update_actual_value is
-			-- Update `actual_value', using `value'.
-		require
-			is_valid_value: is_valid (value)
-		do
-			actual_value := value.to_integer
+			actual_value := new_value.to_integer;
 		end;
 
 	set_actual_value (an_int: INTEGER) is
 			-- Set `actual_value' to `an_int' and update `value'.
 		do
-			actual_value := an_int;
-			update_value
+			actual_value := an_int
 		end;
-
-	update_value is
-			-- Update `value', using `actual_value'.
-		do
-			value := actual_value.out
-		end
 
 feature -- Access
 
@@ -66,10 +49,10 @@ feature -- Properties
 	actual_value: INTEGER;
 			-- Value represented by Current
 
-	default_value: INTEGER;
-			-- Default value if resource not found in a resource file
-
-	value: STRING
+	value: STRING is
 			-- Value as a `STRING' as represented by Current
+		do
+			Result := actual_value.out
+		end
 
 end -- class INTEGER_RESOURCE

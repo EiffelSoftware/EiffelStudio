@@ -207,8 +207,7 @@ end
 				if not server_file.is_open then
 					Server_controler.open_file (server_file)
 				end
-				Result := retrieve_all
-							(server_file.descriptor, info.position)
+				Result := retrieve_all (server_file.descriptor, server_file.count, info.position)
 					-- Insert it in the queue
 				if cache.is_full then
 						-- If cache is full, oldest is removed
@@ -241,8 +240,7 @@ end
 				Server_controler.open_file (server_file)
 			end
 				-- Id not avaible in memory
-			Result := retrieve_all
-						(server_file.descriptor, info.position)
+			Result := retrieve_all (server_file.descriptor, server_file.count, info.position)
 			Result.set_id (real_id)
 		end
 
@@ -530,18 +528,6 @@ feature -- Comparison
 				equal (deleted_marks, other.deleted_marks) and
 				equal (current_id, other.current_id) and
 				deep_equal (file_ids, other.file_ids)
-		end
-
-feature {NONE} -- External features
-
-	store_append (f_desc: INTEGER; o, r, need_index_ptr, s: POINTER): INTEGER is
-		external
-			"C"
-		end
-
-	retrieve_all (f_desc: INTEGER; pos: INTEGER): T is
-		external
-			"C"
 		end
 
 end -- class COMPILER_SERVER

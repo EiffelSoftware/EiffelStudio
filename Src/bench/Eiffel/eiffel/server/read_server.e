@@ -28,8 +28,7 @@ feature -- Access
 					Server_controler.open_file (server_file)
 				end
 				offset := info.offset + server_info.position
-				Result := partial_retrieve
-					(server_file.descriptor, offset, info.object_count)
+				Result := partial_retrieve (server_file.descriptor, server_file.count, offset, info.object_count)
 					-- Insert it in the queue
 				if cache.is_full then
 						-- If cache is full, oldest is removed
@@ -57,8 +56,7 @@ feature -- Access
 				Server_controler.open_file (server_file)
 			end
 			offset := info.offset + server_info.position
-			Result := partial_retrieve
-				(server_file.descriptor, offset, info.object_count)
+			Result := partial_retrieve (server_file.descriptor, server_file.count, offset, info.object_count)
 			Result.set_id (real_id)
 		end
 
@@ -89,13 +87,6 @@ feature -- Trace
 
 	trace is
 		do
-		end
-
-feature {NONE}
-
-	partial_retrieve (file_desc: INTEGER; pos, nb_obj: INTEGER): T is
-		external
-			"C"
 		end
 
 end

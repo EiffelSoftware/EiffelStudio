@@ -23,7 +23,6 @@ feature -- Setting
 	set_value (new_value: STRING) is
 			-- Set `value' to `new_value'.
 		require
-			new_value_not_void: new_value /= Void;
 			is_valid_value: is_valid (new_value)
 		deferred
 		ensure

@@ -433,7 +433,7 @@ rt_public EIF_REFERENCE eif_current_dir_representation(void)
 rt_public EIF_BOOLEAN eif_home_dir_supported(void)
 {
 		/* Is the notion of $HOME supported */
-#ifdef EIF_WIN_31
+#ifdef EIF_WIN32
 	return EIF_FALSE;
 #else
 	return EIF_TRUE;
@@ -453,7 +453,7 @@ rt_public EIF_BOOLEAN eif_root_dir_supported(void)
 rt_public EIF_REFERENCE eif_home_directory_name(void)
 {
 		/* String representation of $HOME */
-#ifdef EIF_WIN_31
+#ifdef EIF_WIN32
 	return NULL;
 #elif defined (EIF_VMS)
 	return RTMS(getenv("SYS$LOGIN"));

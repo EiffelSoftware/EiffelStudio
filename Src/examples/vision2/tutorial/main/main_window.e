@@ -117,7 +117,7 @@ feature -- Tree features
 		local
 			kernel, properties, items, figures, widgets: EV_TREE_ITEM
 			primitive, container, dialog, uncommon: EV_TREE_ITEM
-			demo: EV_TREE_ITEM
+			demo,gauges: EV_TREE_ITEM
 		do
 			-- The main topics
 			!! figures.make_with_text (tree, "figures")
@@ -131,6 +131,7 @@ feature -- Tree features
 			!! primitive.make_with_text (widgets, "primitives")
 			!! dialog.make_with_text (widgets, "common dialogs")
 			!! uncommon.make_with_text (widgets, "uncommon widgets")
+
 
 			-- The demos
 			!ACCELERATOR_ITEM! demo.make (kernel)
@@ -153,7 +154,12 @@ feature -- Tree features
 			!TEXT_FIGURE_ITEM! demo.make (figures)
 -- Do not work
 --			!PICTURE_ITEM! demo.make (figures)
+			
 
+			!GAUGE_ITEM! gauges.make (primitive)
+			!RANGE_ITEM! demo.make (gauges)
+			!SPIN_BUTTON_ITEM! demo.make (gauges)
+			!SCROLL_BAR_ITEM! demo.make (gauges)
 			!BUTTON_ITEM! demo.make (primitive)
 			!OPTION_ITEM! demo.make (primitive)
 			!MULTI_COLUMN_LIST_ITEM! demo.make (primitive)

@@ -1,53 +1,104 @@
 indexing
 
 	description:
-		"Command to close all open tools.";
+		"Command to close manage tools (raise, close, tile).";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class CLOSE_ALL_CMD
+class TOOLS_MANAGEMENT
 
 inherit
-	TOOL_COMMAND
-		rename
-			init as make
-		end
+	ISE_COMMAND;
+	EB_CONSTANTS;
+	WINDOWS
 
 creation
-	make
+	make_close_all,
+	make_raise_all
+
+feature {NONE} -- Initialization
+
+	make_close_all is
+			-- Create command to close all tools.
+		do
+			tool_action := Close_all_tools_action
+		end;
+
+	make_raise_all is
+			-- Create command to raise all tools.
+		do
+			tool_action := Raise_all_tools_action
+		end;
 
 feature -- Properties
+
+	Close_all_tools_action, Raise_all_tools_action: INTEGER is unique;
+			-- Action values
+
+	tool_action: INTEGER;
+			-- Action value to be performed on tool
 
 	name: STRING is 
 			-- Current's name
 		do
-			Result := Interface_names.f_close_all_tools
+			inspect 
+				tool_action
+			when Close_all_tools_action then
+				Result := Interface_names.f_Close_all_tools
+			when Raise_all_tools_action then
+				Result := Interface_names.f_Raise_all_tools
+			end
 		end;
 
 	menu_name: STRING is
 			-- Name used in menu entry
 		do
-			Result := Interface_names.m_close_all_tools
+			inspect 
+				tool_action
+			when Close_all_tools_action then
+				Result := Interface_names.m_Close_all_tools
+			when Raise_all_tools_action then
+				Result := Interface_names.m_Raise_all_tools
+			end
 		end;
 
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-			Result := Interface_names.a_close_all_tools
+			inspect 
+				tool_action
+			when Close_all_tools_action then
+				Result := Interface_names.a_Close_all_tools
+			when Raise_all_tools_action then
+				Result := Interface_names.a_Raise_all_tools
+			end
 		end;
 
 feature {NONE} -- Execution
 
 	work (arg: ANY) is
 		do
-			window_manager.close_all_editors;
-			System_tool.close;
-			if Profile_tool /= Void then
-				Profile_tool.close
+			inspect 
+				tool_action
+			when Close_all_tools_action then
+				window_manager.close_all_editors;
+				System_tool.close;
+				if Profile_tool /= Void then
+					Profile_tool.close
+				end;
+				if Preference_tool /= Void then
+					Preference_tool.close
+				end
+			when Raise_all_tools_action then
+				window_manager.raise_all_editors;
+				System_tool.raise;
+				if Profile_tool /= Void then
+					Profile_tool.raise
+				end;
+				if Preference_tool /= Void then
+					Preference_tool.raise
+				end
 			end;
-			if Preference_tool /= Void then
-				Preference_tool.close
-			end
 		end
 
-end -- class CLOSE_ALL_CMD
+end -- class TOOLS_MANAGEMENT

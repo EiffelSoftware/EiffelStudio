@@ -145,6 +145,7 @@ feature
 			table_name: STRING;
 			type_c: TYPE_C
 			l_type_i: TYPE_I
+			l_typ: CL_TYPE_I
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
 			local_argument_types: like argument_types
@@ -205,7 +206,11 @@ feature
 						-- encapsulation.
 					rout_table ?= Eiffel_table.poly_table (routine_id)
 					if is_static_call then
-						rout_table.goto_implemented (static_class_type.type_id)
+						l_typ ?= real_type (static_class_type)
+						check
+							l_typ_not_void: l_typ /= Void
+						end
+						rout_table.goto_implemented (l_typ.type_id)
 					else
 						rout_table.goto_implemented (typ.type_id)
 					end

@@ -1407,18 +1407,6 @@ feature -- Workbench feature and descriptor table generation
 			end;
 		end;
 
-	generate_precomp_descriptor_tables is
-			-- Generation of workbench mode precompiled descriptor tables
-			-- of associated class types.
-		local
-			sel_tbl: SELECT_TABLE
-		do
-			if has_types then
-				sel_tbl := feature_table.origin_table;
-				sel_tbl.generate_precomp (Current);
-			end;
-		end;
-
 feature
 
 	full_file_name: STRING is

@@ -69,15 +69,47 @@ char* Formatter::c_format_message( long Code )
 	
 EIF_INTEGER Formatter::ccom_hresult (char * exception_code_name) 
 {
-	char *stopstring;
-	long result, high_bits, low_bits;
+	char *stopstring = NULL;
+	long result = 0, high_bits = 0, low_bits = 0;
 	char high_str [7];
-	strncpy (high_str, exception_code_name, 6);
-	high_str [6] = '\0';
+	
+	if (NULL != exception_code_name)
+	{
+		strncpy (high_str, exception_code_name, 6);
+		high_str [6] = '\0';
 
-	high_bits = strtol (high_str, &stopstring, 16);
-	low_bits = strtol (exception_code_name + 6, &stopstring, 16);
-	result = (high_bits << 16) + low_bits;
+		high_bits = strtol (high_str, &stopstring, 16);
+		low_bits = strtol (exception_code_name + 6, &stopstring, 16);
+		result = (high_bits << 16) + low_bits;
+	}
 	return (EIF_INTEGER)result;
+};
+//--------------------------------------------------------------------------------
+
+EIF_REFERENCE Formatter::ccom_hresult_to_string( EIF_INTEGER Code )
+{	
+	sprintf (string_buffer, "0x%.8x  ", Code);
+	return makestr( ( char* )string_buffer, strlen( (char *)string_buffer ));
+};
+//--------------------------------------------------------------------------------
+
+HRESULT Formatter::hresult (int code)
+
+// Convert to HRESULT from Eiffel exception code.
+{
+	HRESULT result = 0;
+	if (code != EN_PROG)
+	{
+		result = MAKE_HRESULT (1, FACILITY_ITF, 1024 + code);
+	}
+	else
+	{
+		if ((echval != 0) && (echtg != (char *) 0))
+			result = ccom_hresult (echtg); 
+
+		if (0 == result)
+			result = CO_E_ERRORINAPP;
+	}
+	return result;
 };
 //--------------------------------------------------------------------------------

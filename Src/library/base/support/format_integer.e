@@ -407,13 +407,13 @@ feature -- Conversion
 			end
 			if not ignore_sign or bracketted_negative then 
 				Result := process_sign (Result, sign)
-			 end
+			end
 			if justification /= No_justification and then Result.count < width then	
 				Result := justify (Result)
 			end
 		ensure
 			exists: Result /= Void
-			correct_length: Result.count >= width
+			correct_length: not_justified or Result.count >= width
 		end
 
 feature {NONE} -- Implementation

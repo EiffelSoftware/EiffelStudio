@@ -16,7 +16,7 @@ deferred class CONSTRUCT inherit
 			put as twt_put,
 			make as twt_make
 		export
-			{NONE} twt_put, twt_make
+			{CONSTRUCT} twt_put, twt_make
 		redefine 
 			parent, new_cell
 		end
@@ -26,7 +26,7 @@ feature -- Initialization
 	make is
 			-- Set up construct.
 		do
-			twt_make (Void)
+			twt_make (Current)
 		end;
 
 feature -- Access
@@ -163,6 +163,8 @@ feature {CONSTRUCT} -- Implementation
 	new_cell (v: like item): like item is
 		do
 			Result := v
+			Result.twt_put (v)
+			Result.attach_to_parent (Current)
 		end;
 
 	check_recursion is 

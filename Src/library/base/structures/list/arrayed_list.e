@@ -151,7 +151,7 @@ feature -- Status report
 	full: BOOLEAN is
 			-- Is structure filled to capacity? (Answer: no.)
 		do
-			Result := False
+			Result := (count = capacity)
 		end;
 
 	valid_cursor (p: CURSOR): BOOLEAN is

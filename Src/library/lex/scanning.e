@@ -27,7 +27,7 @@ feature -- Initialization
 		require
 			store_file_name /= Void
 		local
-			store_file: UNIX_FILE
+			store_file: RAW_FILE
 		do
 			!! store_file.make (store_file_name);
 			if not store_file.exists then

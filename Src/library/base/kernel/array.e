@@ -250,9 +250,7 @@ feature -- Removal
 	wipe_out is
 			-- Make array empty.
 		do
-			lower := 0;
-			upper := -1;
-			make_area (0)
+			make_area (capacity)
 		end;
 
 	clear_all is

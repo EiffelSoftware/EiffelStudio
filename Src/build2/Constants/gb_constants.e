@@ -78,6 +78,9 @@ feature -- Default values
 		
 	Default_floating_object_editor_height: INTEGER is 500
 		-- The default height of a newly created floating object editor window.
+		
+	Default_width_of_type_selector: INTEGER is 180
+		-- The default width of the type selector.
 
 feature -- Generation constants
 

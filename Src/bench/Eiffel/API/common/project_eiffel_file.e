@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 		require
 			is_open_read: is_readable
 		local
-			line, tag, value: STRING
+			line, string_tag, value: STRING
 			index, line_number: INTEGER
 			retried: BOOLEAN
 		do
@@ -213,14 +213,14 @@ feature {NONE} -- Implementation
 				loop
 						-- Read the version number tag
 					index := line.index_of (':', 1)
-					tag := line.substring (1, index - 1)
+					string_tag := line.substring (1, index - 1)
 					value := line.substring (index + 1, line.count)
 
-					if version_number_tag.is_equal (tag) then
+					if version_number_tag.is_equal (string_tag) then
 						project_version_number := value
-					elseif storable_version_number_tag.is_equal (tag) then
+					elseif storable_version_number_tag.is_equal (string_tag) then
 						project_storable_version_number := value
-					elseif precompilation_id_tag.is_equal (tag) then	
+					elseif precompilation_id_tag.is_equal (string_tag) then	
 						precompilation_id := value.to_integer
 					else
 						error_value := incompatible_value

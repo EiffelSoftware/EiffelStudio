@@ -31,7 +31,7 @@ feature {NONE}
 
 	create_empty_editor is
 		local
-			editor: CONTEXT_EDITOR
+			editor: CONTEXT_EDITOR_TOP_SHELL
 		do
 			editor := window_mgr.context_editor;
 			window_mgr.display (editor)

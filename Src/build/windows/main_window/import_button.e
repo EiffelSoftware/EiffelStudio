@@ -1,10 +1,18 @@
+indexing
+	description: "Button to import EiffelBuild code."
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class IMPORT_BUTTON 
+class 
+
+	IMPORT_BUTTON 
 
 inherit
 
 	EB_BUTTON_COM
-	WINDOWS
+	
+	RAISE_IMPORT_WINDOW_CMD
 		select
 			init_toolkit
 		end
@@ -30,24 +38,5 @@ feature {NONE}
 		do
 			Result := Pixmaps.import_pixmap
 		end;
-
-feature {NONE}
-
-	work (argument: ANY) is
-			-- popup a window to specify what
-			-- and where to import,
-		local
-			iw: IMPORT_WINDOW
-		do
-			if main_panel.project_initialized then
-				!!iw.make (main_panel.base)
-				iw.popup
-			end
-		end
-
-	execute (a: ANY) is
-		do
-			work (a)
-		end
 
 end

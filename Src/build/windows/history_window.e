@@ -100,7 +100,7 @@ feature
 			-- Move forward in history list
 			-- and select new current item.
 		do
-			if not (list.after or list.islast) then
+			if not (list.after or list.islast or list.empty) then
 				history_list.forth;
 				list.forth;
 				select_item;
@@ -124,16 +124,18 @@ feature
 				if 
 					(history_list.before and last_command_saved = Void) 
 					or ((not history_list.before) 
-						and (history_list.item = last_command_saved))
+						and then (history_list.item = last_command_saved))
 				then
 					set_saved
 				else
 					set_unsaved
 				end;
-				if list.before then
-					list.deselect_item
-				else
-					select_item;
+				if realized then
+					if list.before and not list.empty then
+						list.deselect_i_th (1)
+					else
+						select_item;
+					end
 				end
 			end
 		end;
@@ -249,6 +251,7 @@ feature
 					last_command_saved := Void;
 				end;
 				list.wipe_out;
+--				initialize_list
 				history_list.wipe_out;
 			end
 		end;
@@ -266,7 +269,7 @@ feature -- Interface
 
 	close is
 		do
-			main_panel.history_t.set_toggle_off
+			main_panel.history_window_entry.set_toggle_off
 			unrealize;
 		end;
 
@@ -279,6 +282,12 @@ feature -- Interface
 		do
 			set_initial_position
 			realize
+			if list.off then
+				list.finish
+			end
+			if not list.off then
+				select_item
+			end
 		end;
 
 	make (a_screen: SCREEN) is
@@ -295,6 +304,7 @@ feature -- Interface
 			!! form.make (Widget_names.form, Current);
 			!! top_form.make (Widget_names.form1, form);
 			!! list.make (Widget_names.list, form);
+--			initialize_list
 			!! row_column.make (Widget_names.row_column, form);
 			!! undo_button.make (Widget_names.undo_label, row_column);
 			!! redo_button.make (Widget_names.redo_label, row_column);
@@ -359,5 +369,19 @@ feature {NONE}
 				play
 			end
 		end;
+
+	initialize_list is
+			-- Empty the list and set the first element 
+			-- to `No Action'.
+		local
+			first_element: STRING_SCROLLABLE_ELEMENT
+		do
+			list.wipe_out
+			!! first_element.make (9)
+			first_element.append ("No action")
+			list.extend (first_element)
+			list.start
+			list.select_item
+		end
 
 end

@@ -1,72 +1,71 @@
-deferred class MAIN_PANEL_TOGGLE
+indexing
+	description: "Toggle used in the menu `View' on the %
+				% main panel."
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
+
+deferred class
+
+	MAIN_PANEL_TOGGLE
 
 inherit
 
-	HOLE
-		redefine
-			process_any
-			
-		select
-			init_toolkit
-		end;
 	TOGGLE_B
 		rename
 			make as toggle_b_make,
 			state as armed,
 			init_toolkit as toggle_b_init_toolkit
-		end;
-	LICENCE_COMMAND
-		rename
-			init_toolkit as licence_command_init_toolkit
 		end
 
-feature {NONE}
+	LICENCE_COMMAND
+--		rename
+--			init_toolkit as license_command_init_toolkit
+		select
+			init_toolkit
+		end
 
-	stone_type: INTEGER is
-		do
-			Result := Stone_types.any_type
-		end;
+feature -- Creation
 
-	target: WIDGET is
-		do
-			Result := Current		
-		end;
-	
 	make (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create the toggle button.
 		do
-			toggle_b_make (a_name, a_parent);
-			add_activate_action (Current, Void);
-			set_toggle_off;
-			register;
+			toggle_b_make (a_name, a_parent)
+			set_values
+			set_callbacks
+		end
+		
+	set_values is
+			-- Initialize values.
+		do
+			set_toggle_off
 			set_left_alignment
-		end;
+		end
+
+	set_callbacks is
+			-- Add callbacks on the toggle button.
+		do
+			add_activate_action (Current, Void)
+		end
+
+feature -- Execution
 
 	work (arg: ANY) is
+			-- Perform actions with `Current' when pressed.
 		do
 			if main_panel.project_initialized then
-				toggle_pressed		
+				toggle_pressed
 			elseif armed then
 				set_toggle_off
 			else
 				set_toggle_on
 			end
-		end;
+		end
 
 	toggle_pressed is
-			-- Perform actions with Current is pressed.
-		require
-			project_initialized: main_panel.project_initialized
+			-- Show or hide the associated windows according to
+			-- its own value.
 		deferred
-		end;
+		end			
 
-	process_any (stone: STONE) is
-		local
-			ed: EDITABLE
-		do
-			ed ?= stone.data;
-			if ed /= Void then
-				ed.create_editor
-			end
-		end;
-
-end 
+end -- class MAIN_PANEL_TOGGLE

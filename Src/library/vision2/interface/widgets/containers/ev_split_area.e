@@ -49,11 +49,9 @@ feature -- Status report
 
 	count: INTEGER is
 			-- Number of items.
-		require
-			not_destroyed: not is_destroyed	
 		do
 			Result := implementation.count
-		ensure
+		ensure then
 			count_not_negative: count >= 0
 			count_valid: count <= 2
 		end

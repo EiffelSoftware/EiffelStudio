@@ -695,17 +695,17 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 	if ((object != ptr) && (HEADER (ptr)->ov_flags & EO_REM))
 	{
 #ifdef EIF_REM_SET_OPTIMIZATION 
-		if (zone->ov_flags & EO_REF)
+		if (HEADER(ptr)->ov_flags & EO_REF)
 		{
 #ifdef SPREALLOC_DEBUG
 			printf ("SPREALLOC: object %x has moved to %x\n", ptr, object);
 #endif
-			assert(!(is_in_rem_set (ptr)));
-			assert (is_in_special_rem_set (ptr));
 			assert (HEADER (object)->ov_flags & EO_REF);
 			assert (HEADER (object)->ov_flags & EO_SPEC);
 			assert (HEADER (object)->ov_flags & EO_REM);
 			assert (HEADER (object)->ov_flags & EO_OLD);
+			assert(!(is_in_rem_set (ptr)));
+			assert (is_in_special_rem_set (ptr));
 			if (0 == special_erembq_replace (ptr, object))
 				eif_panic ("Special table botched");	
 		}

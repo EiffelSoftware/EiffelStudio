@@ -19,8 +19,6 @@ feature -- Initialization
 
 	make is
 		do
-			create file_ids.make
-			file_ids.compare_objects
 			set_current_file_id
 			tbl_make (Chunk)
 		end
@@ -37,10 +35,6 @@ feature
 	current_file_id: INTEGER
 			-- Current server file id used by primitive `put'.
 
-	file_ids: LINKED_SET [INTEGER]
-			-- Set of server file ids under the control of the
-			-- current server
-
 	set_current_file_id is
 			-- Set `current_file_id' to a new value.
 		do
@@ -50,12 +44,10 @@ debug ("SERVER")
 end
 			Server_controler.compute_new_id
 			current_file_id := Server_controler.last_computed_id
-			file_ids.extend (current_file_id)
 		end
 
 	put_precompiled (fid: INTEGER; item_id: INTEGER; sinf: SERVER_INFO) is
 		do
-			file_ids.extend (fid)
 			force (sinf, item_id)
 		end
 
@@ -134,10 +126,11 @@ end
 			old_info := tbl_item (an_id)
 			if old_info /= Void then
 				old_server_file := Server_controler.file_of_id (old_info.file_id)
-				old_server_file.remove_occurrence
-				if old_server_file.occurrence = 0 then
-					file_ids.prune (old_server_file.file_id)
+				check
+						-- Server file should exist since we are getting it from a SERVER_INFO.
+					old_server_file_not_void: old_server_file /= Void
 				end
+				old_server_file.remove_occurrence
 			end
 			force (info, an_id)
 		end
@@ -151,15 +144,20 @@ end
 		local
 			old_info: SERVER_INFO
 			old_server_file: SERVER_FILE
+			l_cache: like cache
 		do
-			cache.remove_id (an_id)
+			l_cache := cache
+			if l_cache /= Void then
+				l_cache.remove_id (an_id)
+			end
 			old_info := tbl_item (an_id)
 			if old_info /= Void then
 				old_server_file := Server_controler.file_of_id (old_info.file_id)
-				old_server_file.remove_occurrence
-				if old_server_file.occurrence = 0 then
-					file_ids.prune (old_server_file.file_id)
+				check
+						-- Server file should exist since we are getting it from a SERVER_INFO.
+					old_server_file_not_void: old_server_file /= Void
 				end
+				old_server_file.remove_occurrence
 				tbl_remove (an_id)
 			end
 		end
@@ -189,6 +187,10 @@ end
 				info := tbl_item (an_id)
 				if info /= Void then
 					server_file := Server_controler.file_of_id (info.file_id)
+					check
+							-- Server file should exist since we are getting it from a SERVER_INFO.
+						server_file_not_void: server_file /= Void
+					end
 					if not server_file.is_open then
 						Server_controler.open_file (server_file)
 					end
@@ -217,6 +219,10 @@ end
 			info := tbl_item (an_id)
 			if info /= Void then
 				server_file := Server_controler.file_of_id (info.file_id)
+				check
+						-- Server file should exist since we are getting it from a SERVER_INFO.
+					server_file_not_void: server_file /= Void
+				end
 				if not server_file.is_open then
 					Server_controler.open_file (server_file)
 				end
@@ -248,13 +254,14 @@ end
 			loop
 				info := item_for_iteration
 				server_file := Server_controler.file_of_id (info.file_id)
+				check
+						-- Server file should exist since we are getting it from a SERVER_INFO.
+					server_file_not_void: server_file /= Void
+				end
 				server_file.remove_occurrence
 				forth
 			end
-			file_ids.wipe_out
 			Precursor {ISE_SERVER}
-				-- Take a new file
-			set_current_file_id
 		end
 
 	take_control (other: COMPILER_SERVER [T]) is
@@ -264,9 +271,8 @@ end
 		local
 			info, old_info: SERVER_INFO
 			an_id: INTEGER
-			other_file_ids: LINKED_SET [INTEGER]
 			other_cache: like cache
-			old_server_file: SERVER_FILE
+			l_server_file: SERVER_FILE
 		do
 			flush
 			other.flush
@@ -279,216 +285,29 @@ end
 				an_id := other.key_for_iteration
 				old_info := tbl_item (an_id)
 				if old_info /= Void then
-					old_server_file := Server_controler.file_of_id (old_info.file_id)
-					old_server_file.remove_occurrence
-					if old_server_file.occurrence = 0 then
-						file_ids.prune (old_server_file.file_id)
+					l_server_file := Server_controler.file_of_id (old_info.file_id)
+					check
+							-- Server file should exist since we are getting it from a SERVER_INFO.
+						l_server_file_not_void: l_server_file /= Void
 					end
+					l_server_file.remove_occurrence
 				end
 				force (info, an_id)
 				other.forth
 			end
 			other.clear_all
 
-				-- Merge the file under the control of the Current server
-				-- Remove useless files from other so that we don't encumber
-				-- the current server.
-			other_file_ids := other.file_ids
-			other.files_purge
-			file_ids.merge (other_file_ids)
-			other_file_ids.wipe_out
-
 			other_cache ?= other.cache
-			check
-				other_cache_not_void: other_cache /= Void
+			if other_cache /= Void then
+				cache.copy (other_cache)
+				other_cache.make
 			end
-			cache.copy (other_cache)
-			other_cache.make
-
-			current_file_id := other.current_file_id
-			other.set_current_file_id
-
-			--partial_purge
-		end;			
-
-	files_purge is
-			-- Purge the files, i.e. removed non used files from the disk
-		local
-			file_list: LINKED_LIST [INTEGER]
-			server_file: SERVER_FILE
-		do
-			from
-				file_list := file_ids
-				file_list.start
-			until
-				file_list.after
-			loop
-				server_file := Server_controler.file_of_id (file_list.item)
-				if server_file.occurrence = 0 then
-					Server_controler.forget_file (server_file)
-					file_list.remove
-				else
-					file_list.forth
-				end
-			end
-		end
-
-	purge is
-			-- Purge useless datas from current server
-		local
-			new: like Current
-			old_count: INTEGER
-			file_id: INTEGER
-			old_info: SERVER_INFO
-			old_server_file: SERVER_FILE
-			order: LINKED_LIST [INTEGER]
-			an_id: INTEGER
-		do
-				-- Clean first
-			flush
-			cache.wipe_out
-			old_count := count
-			count := 0
-
-				-- Create a new server which will be copied in Current
-			new := twin
-			new.make
-debug ("SERVER")
-	io.put_string ("===== Purging: ")
-	io.put_string (generator)
-	io.put_string (" =====%N")
-end
-			from
-					-- Iterate on items sorted by file ids so the purge
-					-- will be smooth regarding the disk space
-				order := file_ids
-				order.start
-			until
-				order.after
-			loop
-				file_id := order.item
-debug ("SERVER")
-	io.put_string ("File: ")
-	print (file_id)
-	io.put_new_line
-end
-				from
-					start
-				until
-					after
-				loop
-					old_info := item_for_iteration
-					old_server_file := Server_controler.file_of_id (old_info.file_id)
-					an_id := key_for_iteration
-					if old_info.file_id = file_id then
-						if old_server_file.precompiled then
-							new.put_precompiled (file_id, an_id, old_info)
-						else
-debug ("SERVER")
-	io.put_string ("%TTransferring one element")
-end
-								-- Put in purged server alive item	
-							new.write (item (an_id))
-	
-								-- Remove occurrence from file where item was stored
-							old_server_file.remove_occurrence
-debug ("SERVER")
-	io.put_string (". Occurrences are now: ")
-	io.put_integer (old_server_file.occurrence)
-	io.put_new_line
-end
-						end
-					end
-					forth
-				end
-				old_server_file := Server_controler.file_of_id (file_id)
-				if old_server_file /= Void then
-debug ("SERVER")
-	io.put_string ("==> Removing the file%N")
-end
-				if not old_server_file.precompiled then
-					Server_controler.remove_file (old_server_file)
-				end
-end
-				order.forth
-			end
-			check
-				same_count: new.count = old_count
-			end
-			copy (new)
-		end
-
-	partial_purge is
-			-- Perform a partial purge on the server
-		local
-			old_info: SERVER_INFO
-			old_server_file: SERVER_FILE
-			an_id: INTEGER
-			live_ids: LINKED_LIST [INTEGER]
-			dead_files: LINKED_SET [SERVER_FILE]
-		do
-debug ("SERVER")
-	io.error.put_string ("partial_purge")
-	io.error.put_new_line
-end
-			flush
-
-			from
-				create live_ids.make
-				create dead_files.make
-				start
-			until
-				after
-			loop
-				old_info := item_for_iteration
-				an_id := key_for_iteration
-				old_server_file := Server_controler.file_of_id (old_info.file_id)
-				if old_server_file.need_purging then
-						-- Avoid side effects on the iteration
-debug ("SERVER")
-	io.error.put_string ("Marking id ")
-	io.error.put_integer (an_id)
-	io.error.put_string (" from ")
-	io.error.put_integer (old_server_file.file_id)
-	io.error.put_new_line
-end
-					live_ids.extend (an_id)
-					live_ids.forth
-					dead_files.extend (old_server_file)
-				end
-				forth
-			end
-
-			from
-				live_ids.start
-			until
-				live_ids.after
-			loop
-debug ("SERVER")
-	io.error.put_string ("Rewritting id ")
-	io.error.put_integer (live_ids.item)
-	io.error.put_new_line
-end
-				write (item (live_ids.item))
-				live_ids.forth
-			end
-			from
-				dead_files.start
-			until
-				dead_files.after
-			loop
-				old_server_file := dead_files.item
-debug ("SERVER")
-	io.error.put_string ("Deleting file ")
-	io.error.put_integer (old_server_file.file_id)
-	io.error.put_new_line
-	old_server_file.trace
-end
-				check
-					is_dead: old_server_file.occurrence = 0
-				end
-				old_server_file.delete
-				dead_files.forth
+			
+			l_server_file := server_controler.file_of_id (other.current_file_id)
+			if l_server_file /= Void and then l_server_file.occurrence > 0 then
+					-- If there are no objects in the server file for `other', then
+					-- preserve the current file_id.
+				current_file_id := other.current_file_id
 			end
 		end
 
@@ -522,9 +341,6 @@ feature -- Duplication
 				-- (key to access the data on the disk).
 			set_content (other.content.deep_twin)
 			set_deleted_marks (other.deleted_marks.twin)
-				-- `file_ids' is deep cloned as well for the same reason:
-				-- we don't want it to be shared.
-			file_ids := other.file_ids.deep_twin
 		end
 
 feature -- Comparison
@@ -536,8 +352,7 @@ feature -- Comparison
 				deep_equal (keys, other.keys) and
 				deep_equal (content, other.content) and
 				equal (deleted_marks, other.deleted_marks) and
-				current_file_id = other.current_file_id and
-				deep_equal (file_ids, other.file_ids)
+				current_file_id = other.current_file_id
 		end
 
 end -- class COMPILER_SERVER

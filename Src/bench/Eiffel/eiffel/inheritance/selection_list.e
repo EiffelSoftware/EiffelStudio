@@ -240,7 +240,7 @@ end;
 					rout_id_set.force (rid);
 debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.putstring ("%T");
-	io.error.putstring (System.current_class.e_class.signature);
+	io.error.putstring (System.current_class.signature);
 	io.error.putstring (", ");
 	io.error.putstring (a_feature.feature_name);
 	io.error.putstring (" is unselected and has a history%N");
@@ -482,7 +482,7 @@ if item.a_feature.written_class > System.any_class.compiled_class and
 				io.error.putstring (" {body_id = ");
 				item.a_feature.body_id.trace;
 				io.error.putstring ("} written class: ");
-				io.error.putstring (item.a_feature.written_class.class_name);
+				io.error.putstring (item.a_feature.written_class.name);
 				io.error.new_line;
 				io.error.putstring ("Written in feature name: ");
 

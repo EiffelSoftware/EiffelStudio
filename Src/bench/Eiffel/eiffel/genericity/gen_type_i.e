@@ -101,7 +101,7 @@ feature
 				if is_expanded then
 					file.putstring ("expanded ");
 				end;
-				s := clone (base_class.class_name);
+				s := clone (base_class.name);
 				s.to_upper;
 				file.putstring (s);
 				file.putstring (" [");
@@ -127,7 +127,7 @@ feature
 				if is_expanded then
 					st.add_string ("expanded ");
 				end;
-				base_class.e_class.append_name (st);
+				base_class.append_name (st);
 				st.add_string (" [");
 				i := 1;
 				count := meta_generic.count;

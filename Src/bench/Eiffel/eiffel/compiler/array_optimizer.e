@@ -181,7 +181,7 @@ debug ("OPTIMIZATION")
 	io.error.putstring ("Inserting ");
 	io.error.putstring (a_feature.feature_name);
 	io.error.putstring (" from ");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.new_line;
 end
 						!!dep.make (a_class.id, a_feature.feature_id)
@@ -206,7 +206,7 @@ end
 	record_descendants (a_class: CLASS_C) is
 			-- Recursively records `a_class' and its descendants in `descendants'
 		local
-			d: LINKED_LIST [E_CLASS];
+			d: LINKED_LIST [CLASS_C];
 			an_id: CLASS_ID;
 			ftable: FEATURE_TABLE;
 			select_table: SELECT_TABLE;
@@ -215,7 +215,7 @@ end
 			if not array_descendants.has (a_class) then
 debug ("OPTIMIZATION")
 	io.error.putstring ("Adding ");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.putstring (" as a descendant of ARRAY%N");
 end;
 				array_descendants.extend (a_class);
@@ -247,7 +247,7 @@ end;
 				until
 					d.after
 				loop
-					record_descendants (d.item.compiled_info);
+					record_descendants (d.item);
 					d.forth
 				end;
 			end;
@@ -304,7 +304,7 @@ feature
 								tmp_opt_byte_server.put (byte_code);
 debug ("OPTIMIZATION", "RECORD")
 	io.error.new_line;
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.putstring (" ");
 	io.error.putstring (a_feature.feature_name);
 	io.error.putstring (" is recorded%N");
@@ -483,7 +483,7 @@ feature -- Detection of safe/unsafe features
 			end
 debug ("OPTIMIZATION")
 	io.error.putstring ("ARRAY_OPTIMIZER: ")
-    io.error.putstring (f.written_class.class_name);
+    io.error.putstring (f.written_class.name);
     io.error.putstring (" ");
     io.error.putstring (f.feature_name);
     if Result then
@@ -521,7 +521,7 @@ debug ("OPTIMIZATION")
 	io.error.putstring ("Propagated to ");
 	io.error.putstring (depend_feature.feature_name);
 	io.error.putstring (" from ");
-	io.error.putstring (static_class.class_name);
+	io.error.putstring (static_class.name);
 	io.error.new_line;
 end;
 						mark (depend_feature, static_class, depend_feature.rout_id_set.first);
@@ -533,7 +533,7 @@ end;
 debug ("OPTIMIZATION")
 	io.error.putstring (original_feature.feature_name);
 	io.error.putstring (" from ");
-	io.error.putstring (written_class.class_name);
+	io.error.putstring (written_class.name);
 	io.error.putstring (" calls unsafe features!!!!!%N");
 end;
 					end;

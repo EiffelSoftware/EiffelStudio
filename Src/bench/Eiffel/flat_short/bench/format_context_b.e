@@ -38,14 +38,16 @@ feature -- Initialization
 
 	make (c: E_CLASS) is
 			-- Initialize Current for bench.
+		require
+			valid_c: c /= Void
 		do
-			class_c := c.compiled_info;
+			class_c ?= c;
 			current_class_only := False;
 			reset_format_booleans;
 			last_was_printed := True;
 			initialize;
 		ensure then
-			class_c_set: class_c = c.compiled_info;
+			class_c_set: class_c /= Void and then class_c = c;
 			batch_mode:	not in_bench_mode;
 			analyze_ancestors: not current_class_only;
 			do_flat: not is_short;
@@ -372,7 +374,7 @@ feature -- Execution
 			if not rescued then
 				execution_error := false;
 				Error_handler.wipe_out;
-				class_name := clone (class_c.class_name)
+				class_name := clone (class_c.name)
 				class_name.to_upper;
 				if is_short then
 					client := system.any_class.compiled_class;
@@ -485,7 +487,7 @@ feature -- Element change
 			if not tabs_emitted then
 				emit_tabs
 			end;
-			s := clone (c.class_name);
+			s := clone (c.name);
 			s.to_upper;
 			text.add_classi (c, s)
 		end;
@@ -493,13 +495,13 @@ feature -- Element change
 	prepare_class_text is
 			-- Append standard text before class.
 		do
-			text.add_before_class (class_c.e_class);
+			text.add_before_class (class_c);
 		end;
 
 	end_class_text is
 			-- Append standard text after class.
 		do
-			text.add_end_class (class_c.e_class);
+			text.add_end_class (class_c);
 		end;
 
 	put_origin_comment is
@@ -699,7 +701,7 @@ feature {NONE} -- Implementation
 				feature_i := adapt.target_feature;
 				f_name := adapt.final_name;
 				if feature_i /= void and then in_bench_mode then
-					c := adapt.target_class.e_class;
+					c := adapt.target_class;
 					!FEATURE_TEXT! item.make (feature_i.api_feature (c.id), f_name);
 				else			
 					!! item.make (f_name)
@@ -753,7 +755,7 @@ feature {NONE} -- Implementation
 			end
 			last_was_printed := True;
 			if feature_i /= Void and then in_bench_mode then
-				c := adapt.target_class.e_class;
+				c := adapt.target_class;
 				!! ot.make (feature_i.api_feature (c.id), f_name)
 				if is_key then
 					ot.set_is_keyword
@@ -812,7 +814,7 @@ feature {NONE} -- Implementation
 			end;
 			feature_i := adapt.target_feature;
 			if feature_i /= Void and then in_bench_mode then
-				c := adapt.target_class.e_class;
+				c := adapt.target_class;
 				!! ot.make (feature_i.api_feature (c.id), f_name)
 				if is_key then
 					ot.set_is_keyword

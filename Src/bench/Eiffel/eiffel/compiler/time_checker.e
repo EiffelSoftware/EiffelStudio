@@ -49,7 +49,7 @@ end;
 				until
 					new_classes.after
 				loop
-					class_name := new_classes.item.class_name;
+					class_name := new_classes.item.name;
 debug ("ACTIVITY")
 io.error.putstring ("%Tfind classes of name ");
 io.error.putstring (class_name);
@@ -92,7 +92,7 @@ end;
 							class_id := old_classes.key_for_iteration;
 debug ("ACTIVITY")
 io.error.putstring ("%T%Tcheck clients of ");
-io.error.putstring (System.class_of_id (class_id).class_name);
+io.error.putstring (System.class_of_id (class_id).name);
 io.error.putstring ("%N");
 end;
 							clients := System.class_of_id (class_id).syntactical_clients;
@@ -111,7 +111,7 @@ end;
 									checked_classes.put (True, class_c.id);
 debug ("ACTIVITY")
 io.error.putstring ("%T%Tcheck: ");
-io.error.putstring (class_c.class_name);
+io.error.putstring (class_c.name);
 io.error.putstring ("%N");
 end;
 									class_c.check_suppliers_and_parents

@@ -164,37 +164,37 @@ feature {NONE} -- Externals
 
 	eif_is_volume_name_valid (p: POINTER): BOOLEAN is
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 	eif_is_directory_name_valid (p: POINTER): BOOLEAN is
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 	eif_append_directory (s, p, v: POINTER) is
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 	eif_set_directory (s, p, v: POINTER) is
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 	eif_path_name_compare (s, t: POINTER; length: INTEGER): BOOLEAN is
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 	eif_volume_name (s: POINTER): STRING is
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 	eif_extracted_paths (s: POINTER): ARRAY [STRING] is
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 end -- class PATH_NAME

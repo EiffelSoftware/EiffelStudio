@@ -56,13 +56,13 @@ feature {NONE} -- Implementation
 	c_outp (p: POINTER): STRING is
 			-- Printable representation of pointer value
 		external
-			"C | <out.h>"
+			"C | %"eif_out.h%""
 		end;
 
 	c_hashcode (p: POINTER): INTEGER is
 			-- Hash code value of `p'
 		external
-			"C | <misc.h>"
+			"C | %"eif_misc.h%""
 		alias
 			"conv_pi"
 		end;

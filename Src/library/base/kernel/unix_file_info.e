@@ -255,43 +255,43 @@ feature {NONE} -- Implementation
 	stat_size: INTEGER is
 			-- Get size of 'struct stat' (in bytes)
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_stat (name, stat_buf: POINTER) is
 			-- Get information from file `name' into `stat_buf'
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_access (f_name: ANY; which: INTEGER): BOOLEAN is
 			-- Perform access test `which' on `f_name' using real ID.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_eaccess (stat_buf: POINTER; which: INTEGER): BOOLEAN is
 			-- Perform access tests using effective ID.
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_info (stat_buf: POINTER; which: INTEGER): INTEGER is
 			-- Extract information `which' from information buffer
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_owner (uid: INTEGER): STRING is
 			-- Convert UID to login name if possible
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 	file_group (gid: INTEGER): STRING is
 			-- Convert GID to group name if possible
 		external
-			"C | <file.h>"
+			"C | %"eif_file.h%""
 		end;
 
 end -- class UNIX_FILE_INFO

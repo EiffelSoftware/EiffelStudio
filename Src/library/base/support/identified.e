@@ -121,19 +121,19 @@ feature {NONE} -- Externals
 	eif_id_object (an_id: INTEGER): IDENTIFIED is
 			-- Object associated with `an_id'
 		external
-			"C | <object_id.h>"
+			"C | %"eif_object_id.h%""
 		end
 
 	eif_object_id (an_object: IDENTIFIED): INTEGER is
 			-- New identifier for `an_object'
 		external
-			"C | <object_id.h>"
+			"C | %"eif_object_id.h%""
 		end
 
 	eif_object_id_free (an_id: INTEGER) is
 			-- Free the entry `an_id'
 		external
-			"C | <object_id.h>"
+			"C | %"eif_object_id.h%""
 		end
 
 end -- class IDENTIFIED

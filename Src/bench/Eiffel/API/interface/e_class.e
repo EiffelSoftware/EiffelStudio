@@ -446,7 +446,7 @@ feature -- Output
 			if gens /= Void then
 				old_cluster := Inst_context.cluster;
 				Inst_context.set_cluster (cluster);
-				st.add_string (" ");
+				st.add (ti_Space);
 				st.add (ti_L_bracket);
 				from
 					gens.start
@@ -459,15 +459,15 @@ feature -- Output
 					st.add_string (c_name);
 					constraint_type := formal_dec.constraint;
 					if constraint_type /= Void then
-						st.add_string (" ");
+						st.add (ti_Space);
 						st.add (ti_Constraint);
-						st.add_string (" ");
+						st.add (ti_Space);
 						constraint_type.append_to (st)
 					end;
 					gens.forth;
 					if not gens.after then
 						st.add (ti_Comma);
-						st.add_string (" ");
+						st.add (ti_Space);
 					end;
 				end;
 				st.add (ti_R_bracket);

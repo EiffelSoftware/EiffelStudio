@@ -49,7 +49,7 @@ feature -- Execution
 					other_feature := e_class.feature_with_rout_id (rout_id_set.item (i));
 					if other_feature /= Void then
 						e_class.append_name (structured_text);
-						structured_text.add_string (" ");
+						structured_text.add (ti_Space);
 						other_feature.append_signature (structured_text);
 						structured_text.add_new_line;
 						structured_text.add_indent;

@@ -93,8 +93,8 @@ feature {EB_DOCUMENTATION_WIZARD} -- Basic operations
 		do
 			create Result.make
 			create l_file.make (diagram_file_name)
-			if l_file.exists then
-				l_file.open_read
+			l_file.open_read
+			if l_file.is_open_read then
 				create l_parser.make
 				create l_tree_pipe.make
 				create l_xm_concatenator.make_null

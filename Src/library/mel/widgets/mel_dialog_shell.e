@@ -38,6 +38,14 @@ feature -- Initilization
 			set_default
 		end;
 
+feature {MEL_COMPOSITE} -- Implementation
+
+	remove_from_popup_list is
+			-- Remove current shell from popup list in parent
+		do
+			parent.remove_popup_child (Current)
+		end;
+
 feature {NONE} -- Implementation
 
 	xm_create_dialog_shell (a_parent, a_name, arglist: POINTER; argcount: INTEGER): POINTER is

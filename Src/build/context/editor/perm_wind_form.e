@@ -22,8 +22,8 @@ feature {NONE}
 	title: EB_TEXT_FIELD;
 			-- Title of the perm_wind
 
-	--forbid_recomp: EB_TOGGLE_B; -- only implement this is forms are involved not 
-									-- bulletins
+	forbid_recomp: EB_TOGGLE_B; 
+								
 	set_hidden: EB_TOGGLE_B;
 
 	set_default_position_t: EB_TOGGLE_B;
@@ -72,7 +72,12 @@ feature {NONE}
 			!!Result
 		end;
 
-	Perm_resize_cmd: PERM_RESIZE_CMD is
+--	Perm_resize_cmd: PERM_RESIZE_CMD is
+--		once
+--			!!Result
+--		end;
+
+	Perm_resize_cmd: WINDOW_RESIZE_CMD is
 		once
 			!!Result
 		end;
@@ -95,8 +100,8 @@ feature
 
 			!!title_label.make (Widget_names.title_name, Current);
 			!!title.make (Widget_names.textfield, Current, Perm_title_cmd, editor);
-			--!!forbid_recomp.make (Widget_names.forbid_recomp_size_name, 
-					--Current, Perm_resize_cmd, editor);
+			!!forbid_recomp.make (Widget_names.forbid_recomp_size_name, 
+					Current, Perm_resize_cmd, editor);
 			!!set_default_position_t.make 
 					(Widget_names.set_default_position_name, 	
 					Current, Win_set_default_position_cmd, editor);
@@ -115,7 +120,7 @@ feature
 			attach_left (title_label, 10);
 			attach_left (title, 100);
 			attach_right (title, 10);
-			--attach_left (forbid_recomp, 10);
+			attach_left (forbid_recomp, 10);
 			attach_left (set_hidden, 10);
 			attach_left (set_default_position_t, 10);
 			attach_left (icon_label, 10);
@@ -134,10 +139,11 @@ feature
 			attach_top_widget (icon_name, icon_pixmap_label, 15);
 			attach_top_widget (icon_name, pixmap_name, 10);
 			attach_top_widget (pixmap_name, pixmap_open_b, 10);
-			attach_top_widget (pixmap_open_b, set_default_position_t, 10);
-			attach_top_widget (set_default_position_t, iconic_state, 10);
-			attach_top_widget (iconic_state, set_hidden, 10);
-			detach_bottom (iconic_state);
+			attach_top_widget (pixmap_open_b, iconic_state, 10);
+			attach_top_widget (iconic_state, set_default_position_t, 10);
+			attach_top_widget (set_default_position_t, set_hidden, 10);
+			attach_top_widget (set_hidden, forbid_recomp, 10);
+			detach_bottom (forbid_recomp);
 			pixmap_open_b.add_activate_action (Current, Void);
 			show_current
 		end;
@@ -161,7 +167,7 @@ feature {NONE}
 			else
 				title.set_text ("")
 			end;
-			--forbid_recomp.set_state (context.resize_policy_disabled);
+			forbid_recomp.set_state (context.resize_policy_disabled);
 			if not (context.icon_name = Void) then
 				icon_name.set_text (context.icon_name)
 			else
@@ -209,9 +215,9 @@ feature
 			elseif not pixmap_name.text.is_equal (context.icon_pixmap_name) then
 				context.set_icon_pixmap (pixmap_name.text)
 			end;
-			--if context.resize_policy_disabled /= forbid_recomp.state then
-				--context.disable_resize_policy (forbid_recomp.state);
-			--end;
+			if context.resize_policy_disabled /= forbid_recomp.state then
+				context.disable_resize_policy (forbid_recomp.state);
+			end;
 			if context.default_position /= set_default_position_t.state then
 				context.set_default_position (set_default_position_t.state);
 			end;

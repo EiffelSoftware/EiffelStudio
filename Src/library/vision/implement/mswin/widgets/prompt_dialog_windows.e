@@ -72,7 +72,7 @@ feature -- Status setting
 	 hide_apply_button is
 			-- Hide the `apply_button'.
 		do
-			if exists and then not apply_button_hidden then
+			if exists and then not apply_button_hidden and then shown then
 				apply_button.hide
 				apply_button_hidden:= True
 				adjust_dialog
@@ -87,7 +87,7 @@ feature -- Status setting
 	show_apply_button is
 			-- Show the `apply_button'.
 		do
-			if exists and then apply_button_hidden then
+			if exists and then apply_button_hidden and then shown then
 				apply_button.show
 				apply_button_hidden := False
 				adjust_dialog

@@ -51,17 +51,7 @@
 #include <strings.h>
 #endif
 
-#ifdef EIF_WIN32
-#include <windows.h>
-#ifndef MAX_PATH
-#define MAX_PATH 255
-#endif
-
-typedef struct tagEIF_WIN_DIRENT {
-	char	name [MAX_PATH];
-	HANDLE	handle;
-} EIF_WIN_DIRENT;
-#endif
+/* %%zs moved EIF_WIN_DIRENT definition block to dir.h from here */
 
 #ifdef EIF_OS2
 #define INCL_DOSFILEMGR   /* File Manager values */
@@ -203,7 +193,7 @@ rt_public char *dir_search(EIF_WIN_DIRENT *dirp, char *name)
 		FindClose (h);
 		return (char *) 1;
 		}
- 
+
 	return (char *) 0;		/* Not found */
 }
 
@@ -268,7 +258,7 @@ rt_public char *dir_search(DIR *dirp, char *name)
 		if (0 == strcmp(dp->d_name, name))
 			return (char *) dp;
 #endif
-		
+
 	return (char *) 0;		/* Not found */
 }
 #endif
@@ -375,7 +365,7 @@ rt_public char *dir_next(DIR *dirp)
 
 	if (dp == (DIRENTRY *) 0)
 		return (char *) 0;
-	
+
 #ifdef DIRNAMLEN
 	return makestr(dp->d_name, dp->d_namlen);
 #else
@@ -484,7 +474,7 @@ rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 		case RMS$_NMF:	/*printf("No more files.\n");*/ break;
        		case RMS$_DNF:	/*printf("Directory not found.\n");*/ break;
 		case RMS$_SYN:	/* not sure what this is */ break;
-		default:	
+		default:
 			printf("eif_dir_exists: Unknown return status: %d\n",status);
 			printf("Result: <%s>\n",buff);
 			message_text.dsc$a_pointer = mesg;
@@ -808,9 +798,9 @@ DIR *opendir(char	*name)
 	errno = ENOMEM;
 	return NULL;
     }
-    
+
     if (strcmp(".",name) == 0) name = "";
-    
+
     dd->pattern = malloc((unsigned int)(strlen(name) + sizeof "*.*" + 1));
     if (dd->pattern == NULL) {
 	free((char *)dd);

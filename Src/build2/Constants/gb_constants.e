@@ -627,6 +627,8 @@ feature -- Warning Dialogs
 	cannot_delete_as_still_referenced_single: STRING is "The top level object you are attempting to delete is still referenced by a single object."
 	
 	cyclic_inheritance_error: STRING is "Not permitted as causes a cyclic inheritance structure."
+	
+	changing_client_warning: STRING is "You are attempting to change the client status of a class that%Nhas already been generated and exists on disk%N%NThis change may cause the generated implementation file and%Nyour current interface file to no longer compile without modification%N%NAre you sure you wish to perform this?"
 
 feature -- Object editor properties
 

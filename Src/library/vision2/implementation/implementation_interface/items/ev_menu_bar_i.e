@@ -12,6 +12,14 @@ inherit
 		redefine
 			interface
 		end
+		
+feature -- Status report
+
+	parent: EV_WINDOW is
+			-- Parent of `Current'.
+		deferred
+		end
+		
 
 feature {EV_ANY} -- Implementation
 
@@ -40,6 +48,9 @@ end -- class EV_MENU_BAR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2001/06/21 18:50:15  rogers
+--| Implemented parent as deferred.
+--|
 --| Revision 1.9  2001/06/07 23:08:11  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

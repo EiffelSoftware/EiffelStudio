@@ -150,6 +150,7 @@ feature -- Basic operation
 			directory_file_name: FILE_NAME			
 			warning_dialog: EV_WARNING_DIALOG
 			error_message: STRING
+			window_file_name: FILE_NAME
 		do
 			
 				-- We must build an XML file representing the project, and
@@ -187,7 +188,31 @@ feature -- Basic operation
 			end
 			
 			root_element ?= current_document.first
+			create class_ids.make (20)
+			create class_directories.make (20)
 			parse_directories (root_element, create {ARRAYED_LIST [STRING]}.make (4))
+			check
+				counts_consistent: class_ids.count = class_directories.count
+			end
+			
+				-- Now perform generation of all classes.
+			from
+				class_ids.start
+				class_directories.start
+			until
+				class_ids.off
+			loop
+				create directory.make (class_directories.item)
+				if not directory.exists then
+					directory.create_dir
+				end
+				reset_generation_constants_for_class
+				create window_file_name.make_from_string (class_directories.item)
+				build_main_window_implementation (document_info.generated_info_by_id.item (class_ids.item), window_file_name)
+				build_main_window (document_info.generated_info_by_id.item (class_ids.item), window_file_name)
+				class_ids.forth
+				class_directories.forth
+			end
 			
 				-- Now display error dialog if one or more templates could not be found.
 			if missing_files /= Void then
@@ -237,8 +262,7 @@ feature -- Basic operation
 			current_name, current_type: STRING
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			directory_name, window_file_name: FILE_NAME
-			directory: DIRECTORY
+			directory_name: FILE_NAME
 		do
 			from
 				an_element.start
@@ -288,14 +312,8 @@ feature -- Basic operation
 									directory_name.extend (parent_directories.item)
 									parent_directories.forth
 								end
-									-- Only create the directory if it is not empty.
-								create directory.make (directory_name)
-								if not directory.exists then
-									directory.create_dir
-								end								
-								window_file_name := generated_path.twin
-								build_main_window_implementation (directory_name)
-								build_main_window (directory_name)
+								class_ids.extend (document_info.id)
+								class_directories.extend (directory_name)
 							end
 						end
 					end
@@ -304,6 +322,12 @@ feature -- Basic operation
 				an_element.forth
 			end
 		end
+		
+	class_ids: ARRAYED_LIST [INTEGER]
+		-- Ids of all classes that must be generated as returned by `parse_directories'.
+		
+	class_directories: ARRAYED_LIST [STRING]
+		-- Directory paths for all classes that must be generated as returned by `parse_directories'.
 		
 	create_directory_from_path (a_path: ARRAYED_LIST [STRING]) is
 			-- Create the directory corresponding to `a_path' from the root of the
@@ -375,7 +399,6 @@ feature {NONE} -- Implementation
 			-- Reset all constants and attributes required before a generation.
 			-- Only called once per generation.
 		do
-			
 			reset_generation_constants_for_class
 		end
 		
@@ -396,7 +419,6 @@ feature {NONE} -- Implementation
 			Generated_names.wipe_out
 			create all_ids.make (50)
 		end
-		
 
 	generated_path: FILE_NAME is
 			-- `Result' is generated directory for current project.
@@ -739,8 +761,12 @@ feature {NONE} -- Implementation
 				end
 			end
 
-		build_main_window_implementation (directory_name: FILE_NAME) is
+		build_main_window_implementation (info: GB_GENERATED_INFO; directory_name: FILE_NAME) is
 				-- Generate a main window for the project.
+			require
+				info_not_void: info /= Void
+				info_named: info.name /= Void
+				directory_name_not_void: directory_name /= Void
 			local
 				window_template_file, window_output_file: PLAIN_TEXT_FILE
 				window_template, file_name: FILE_NAME
@@ -749,11 +775,7 @@ feature {NONE} -- Implementation
 				window_counter := window_counter + 1
 				set_progress ((progress_switch + ((1 - progress_switch) * (window_counter / total_windows))).min (1))
 					-- Build the file name for generation
-				check
-					document_info_not_void: document_info /= Void
-					name_not_void: document_info.name /= Void
-				end
-				a_class_name := document_info.name.as_upper + Class_implementation_extension 
+				a_class_name := info.name.as_upper + Class_implementation_extension 
 				file_name := directory_name.twin
 				file_name.extend (a_class_name.as_lower + ".e")
 				
@@ -776,7 +798,7 @@ feature {NONE} -- Implementation
 						-- Now that we have loaded the class file template, we must
 						-- replace all instances of EV_TITLED_WINDOW with EV_DIALOG
 						-- if we are generating a dialog.
-					if document_info.type.is_equal ("EV_DIALOG") then
+					if info.type.is_equal ("EV_DIALOG") then
 						class_text.replace_substring_all ("EV_TITLED_WINDOW", "EV_DIALOG")
 					end
 	
@@ -784,11 +806,11 @@ feature {NONE} -- Implementation
 						-- First replace the name of the class
 					set_class_name (a_class_name)
 	
-					-- Add code which implements `show' if necessary, when using EV_WINDOW
-					-- as client. Also export `initialize' as necessary. If client, then it
-					-- must be exported to {ANY}.
-					if document_info.generate_as_client then
-						if document_info.type.is_equal (ev_titled_window_string) or document_info.type.is_equal (ev_dialog_string) then
+						-- Add code which implements `show' if necessary, when using EV_WINDOW
+						-- as client. Also export `initialize' as necessary. If client, then it
+						-- must be exported to {ANY}.
+					if info.generate_as_client then
+						if info.type.is_equal (ev_titled_window_string) or info.type.is_equal (ev_dialog_string) then
 							add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_window_feature, custom_feature_tag)
 						else
 							add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_widget_feature, custom_feature_tag)
@@ -799,41 +821,41 @@ feature {NONE} -- Implementation
 					end
 					
 						-- Generate the widget declarations and creation lines.
-					generate_declarations
+					generate_declarations (info)
 					
 						-- Create storage for all generated feature names.
 					create all_generated_events.make (0)
 					all_generated_events.compare_objects
 					
 						-- Generate the widget building code.
-					generate_structure
+					generate_structure (info)
 	
 						-- Generate the widget setting code.
-					generate_setting
+					generate_setting (info)
 					
 						-- Generate the event code.
-					generate_events
+					generate_events (info)
 					
 					
 						-- Now we must check the status of the prepass, and remove the
 						-- "internal_pixmap" and `"internal_font" which is in the template,
 						-- if they are not necessary
-					if document_info.fonts_set.is_empty then
+					if info.fonts_set.is_empty then
 						remove_line_containing ("internal_font", class_text)
 					end
-					if document_info.pixmaps_set.is_empty then
+					if info.pixmaps_set.is_empty then
 						remove_line_containing ("internal_pixmap", class_text)
 						remove_line_containing ("internal_pixmap", class_text)
 					end
 					
 						-- Now remove the local declaration if necessary.
-					if document_info.fonts_set.is_empty and document_info.pixmaps_set.is_empty and
+					if info.fonts_set.is_empty and info.pixmaps_set.is_empty and
 					local_string = Void then
 						remove_line_containing (local_tag, class_text)
 					end
 				
-					if local_string = Void and (not document_info.fonts_set.is_empty
-						or not document_info.pixmaps_set.is_empty) then
+					if local_string = Void and (not info.fonts_set.is_empty
+						or not info.pixmaps_set.is_empty) then
 						add_generated_string (class_text, "local", local_tag)
 					end
 					
@@ -851,15 +873,15 @@ feature {NONE} -- Implementation
 					end
 
 						-- Add code for inheritance structure to `class_text'.
-					if document_info.generate_as_client then
+					if info.generate_as_client then
 						temp_string := "inherit" + Indent_less_two + "CONSTANTS%N%Nfeature -- Access%N" + indent_less_two
-						if document_info.type.is_equal (ev_titled_window_string) or document_info.type.is_equal (ev_dialog_string) then
+						if info.type.is_equal (ev_titled_window_string) or info.type.is_equal (ev_dialog_string) then
 							temp_string.append (client_window_string)
 						else
 							temp_string.append (client_widget_string)
 						end
 						temp_string.append (": ")
-						temp_string.append (document_info.type)
+						temp_string.append (info.type)
 						temp_string.append (indent_less_one + "-- `Result' is widget with which `Current' is implemented")
 
 --| FIXME check this is really no longer needed and update code generation accordingly.						
@@ -884,17 +906,17 @@ feature {NONE} -- Implementation
 						add_generated_string (class_text, temp_string,  inheritance_tag)
 					else
 						temp_string := Window_inheritance_part1.twin + project_settings.constants_class_name.as_upper + Window_inheritance_part2.twin
-						if not document_info.type.is_equal (Ev_titled_window_string)  then
-							temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
+						if not info.type.is_equal (Ev_titled_window_string)  then
+							temp_string.replace_substring_all (Ev_titled_window_string, info.type)
 						end
 						add_generated_string (class_text, temp_string, inheritance_tag)
 					end
 					
 						-- Add code for Precursor call in `intialize'.
-					if document_info.generate_as_client then
+					if info.generate_as_client then
 						add_generated_string (class_text, "initialize_constants", precursor_tag)
 					else
-						add_generated_string (class_text, "Precursor {" + document_info.type + "}" + Indent + "initialize_constants", precursor_tag)
+						add_generated_string (class_text, "Precursor {" + info.type + "}" + Indent + "initialize_constants", precursor_tag)
 					end
 					
 						-- Add code for creation of widgets to `class_text'.
@@ -926,19 +948,18 @@ feature {NONE} -- Implementation
 				end
 			end
 			
-	build_main_window (directory_name: FILE_NAME) is
+	build_main_window (info: GB_GENERATED_INFO; directory_name: FILE_NAME) is
 			-- Generate interface of our window.
+		require
+			info_not_void: info /= Void
+			info_named: info.name /= Void
 		local
 			window_template_file, window_output_file: PLAIN_TEXT_FILE
 			file_name, window_template: FILE_NAME
 			temp_string, a_class_name: STRING
 		do
-			check
-				document_info_not_void: document_info /= Void
-				name_not_void: document_info.name /= Void
-			end
 			file_name := directory_name.twin
-			a_class_name := document_info.name.as_upper
+			a_class_name := info.name.as_upper
 			file_name.extend (a_class_name.as_lower + ".e")
 			
 				-- Retrieve the template for a class file to generate.
@@ -960,7 +981,7 @@ feature {NONE} -- Implementation
 					-- Now that we have loaded the class file template, we must
 					-- replace all instances of EV_TITLED_WINDOW with EV_DIALOG
 					-- if we are generating a dialog.
-				if document_info.type.is_equal ("EV_DIALOG") then
+				if info.type.is_equal ("EV_DIALOG") then
 					class_text.replace_substring_all ("EV_TITLED_WINDOW", "EV_DIALOG")
 				end
 			
@@ -969,23 +990,23 @@ feature {NONE} -- Implementation
 				set_class_name (a_class_name)
 				
 				temp_string := a_class_name + Class_implementation_extension
-				if document_info.generate_as_client then
+				if info.generate_as_client then
 						-- Add redefinition of `default_create' if we are client.
 					temp_string := temp_string + default_create_redefinition
 				end
 					-- Generate the inheritance from the window implementation.
 				set_inherited_class_name (temp_string)
 				
-				if document_info.generate_as_client then
+				if info.generate_as_client then
 						-- There are different sets of setting code for windows and dialogs, or widgets.
-					if document_info.type.is_equal (ev_titled_window_string) or document_info.type.is_equal (ev_dialog_string) then
+					if info.type.is_equal (ev_titled_window_string) or info.type.is_equal (ev_dialog_string) then
 						temp_string := redefined_window_creation.twin
 					else
 						temp_string := redefined_creation.twin
 					end
 					
-						if not document_info.type.is_equal (Ev_titled_window_string)  then
-							temp_string.replace_substring_all (Ev_titled_window_string, document_info.type)
+						if not info.type.is_equal (Ev_titled_window_string)  then
+							temp_string.replace_substring_all (Ev_titled_window_string, info.type)
 						end
 					add_generated_string (class_text, temp_string, creation_tag)
 				else
@@ -1112,8 +1133,8 @@ feature {NONE} -- Implementation
 							
 							element_info := full_information @ (id_string)
 							info.set_id (element_info.data.to_integer)
-							info.generated_info_by_id.put (info, info.id)
-							info.names_by_id.put (info.name, info.id)
+							info.generated_info_by_id.force (info, info.id)
+							info.names_by_id.force (info.name, info.id)
 							all_ids.extend (info.id)
 						elseif current_name.is_equal (Events_string) then
 							prepass_xml (current_element, info, depth + 1)
@@ -1142,18 +1163,24 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_declarations is
+	generate_declarations (info: GB_GENERATED_INFO) is
 			-- With information in `element', generate code which includes the
 			-- attribute declarations and creation of all components in system.
+		require
+			info_not_void: info /= Void
 		local
 			generated_info: GB_GENERATED_INFO
+			children: ARRAYED_LIST [GB_GENERATED_INFO]
 		do
+			create children.make (10)
+			info.all_children_recursive (children)
+			children.extend (info)
 			from
-				all_ids.start
+				children.start
 			until
-				all_ids.off
+				children.off
 			loop
-				generated_info := document_info.generated_info_by_id.item (all_ids.item)
+				generated_info := document_info.generated_info_by_id.item (children.item.id)
 				if generated_info.name /= Void and then not generated_info.name.is_empty and then
 					generated_info.name /= Client_window_string then
 					-- If the name is equal to `client_window_string' then we must be the window
@@ -1166,25 +1193,31 @@ feature {NONE} -- Implementation
 					end
 					create_local (generated_info)
 				end
-				all_ids.forth
+				children.forth
 			end
 		end
 
-	generate_structure is
+	generate_structure (info: GB_GENERATED_INFO) is
 			-- With information in `document_info', generate code which will
 			-- parent all objects.
+		require
+			info_not_void: info /= Void
 		local
 			new_object : GB_OBJECT
 			menu_bar_object: GB_MENU_BAR_OBJECT
 			generated_info: GB_GENERATED_INFO
 			code_for_insert: STRING
+			children: ARRAYED_LIST [GB_GENERATED_INFO]
 		do
+			create children.make (10)
+			info.all_children_recursive (children)
+			children.extend (info)
 			from
-				all_ids.start
+				children.start
 			until
-				all_ids.off
+				children.off
 			loop
-				generated_info := document_info.generated_info_by_id.item (all_ids.item)
+				generated_info := info.generated_info_by_id.item (children.item.id)
 					-- Fixme, why assign id here? Try generating, and then see new ids after...
 				new_object := object_handler.build_object_from_string (generated_info.type)
 				code_for_insert := generated_info.name.twin
@@ -1198,13 +1231,13 @@ feature {NONE} -- Implementation
 				if generated_info.parent /= Void and then generated_info.parent.type /= Void and then generated_info.parent.is_root_object then
 					menu_bar_object ?= new_object
 					if menu_bar_object /= Void then
-						if document_info.generate_as_client then
+						if info.generate_as_client then
 							add_build (client_window_string + ".set_menu_bar (" + generated_info.name + ")")
 						else
 							add_build ("set_menu_bar (" + generated_info.name + ")")
 						end
 					else
-						if document_info.generate_as_client then
+						if info.generate_as_client then
 							if generated_info.parent.type.is_equal (ev_titled_window_string) or generated_info.parent.type.is_equal (ev_dialog_string) then
 								add_build (client_window_string +  "." + new_object.extend_xml_representation (code_for_insert))
 							else
@@ -1223,26 +1256,32 @@ feature {NONE} -- Implementation
 						add_build (generated_info.parent.name + "." + new_object.extend_xml_representation (code_for_insert))
 					end
 				end
-				all_ids.forth
+				children.forth
 			end
 		end
 		
-	generate_setting is
+	generate_setting (info: GB_GENERATED_INFO) is
 			-- With information in `document_info', generate code which will
 			-- set_all_objects.
+		require
+			info_not_void: info /= Void
 		local
 			gb_ev_any: GB_EV_ANY
 			generated_info: GB_GENERATED_INFO
 			supported_types, current_settings: ARRAYED_LIST [STRING]
 			temp_set: STRING
 			dot_index: INTEGER
+			children: ARRAYED_LIST [GB_GENERATED_INFO]
 		do
+			create children.make (10)
+			info.all_children_recursive (children)
+			children.extend (info)
 			from
-				all_ids.start
+				children.start
 			until
-				all_ids.off
+				children.off
 			loop
-				generated_info := document_info.generated_info_by_id.item (all_ids.item)
+				generated_info := info.generated_info_by_id.item (children.item.id)
 				supported_types := generated_info.supported_types
 				from
 					supported_types.start
@@ -1278,12 +1317,20 @@ feature {NONE} -- Implementation
 							if not temp_set.substring (1, dot_index - 1).is_equal (pixmap_name) then
 								temp_set := temp_set.substring (dot_index + 1, temp_set.count)
 							end
-							if document_info.generate_as_client and not temp_set.is_empty then
+							if info.generate_as_client and not temp_set.is_empty then
 								if generated_info.type.is_equal (ev_titled_window_string) or generated_info.type.is_equal (ev_dialog_string) then
 									temp_set := Client_window_string + "." + temp_set
 								else
 									temp_set := client_widget_string + "." + temp_set
 								end
+							end
+						end
+						if not temp_set.is_empty and then (temp_set @ 1) = '.' then
+							if info.generate_as_client then
+								temp_set := "window" + temp_set
+							else
+								temp_set := temp_set.substring (2, temp_set.count)
+								temp_set.replace_substring_all (indent + ".", indent)
 							end
 						end
 						add_set (temp_set)	
@@ -1292,13 +1339,15 @@ feature {NONE} -- Implementation
 					supported_types.forth
 				end
 				
-				all_ids.forth
+				children.forth
 			end
 		end
 		
-	generate_events is
+	generate_events (info: GB_GENERATED_INFO) is
 			-- Using `document_info' which was generated in `prepass_xml',
 			-- generate source code corresponding to selected events.
+		require
+			info_not_void: info /= Void
 		local
 			generated_info: GB_GENERATED_INFO
 			events: ARRAYED_LIST [GB_ACTION_SEQUENCE_INFO]
@@ -1315,7 +1364,7 @@ feature {NONE} -- Implementation
 			until
 				all_ids.off
 			loop
-				generated_info := document_info.generated_info_by_id.item (all_ids.item)
+				generated_info := info.generated_info_by_id.item (all_ids.item)
 				if generated_info.associated_root_object_id = 0 then
 					events := generated_info.events
 					from
@@ -1332,7 +1381,7 @@ feature {NONE} -- Implementation
 							-- is no need for a dot call, unless we are using the window as a client.
 						if generated_info.is_root_object then
 							local_name := ""
-							if document_info.generate_as_client then
+							if info.generate_as_client then
 								if generated_info.type.is_equal (ev_titled_window_string) or generated_info.type.is_equal (ev_dialog_string) then
 									local_name := Client_window_string + "."
 								else
@@ -1680,18 +1729,6 @@ feature {NONE} -- Implementation
 			non_void_set := set
 			if non_void_set = Void then
 				non_void_set := ""
-			end
-			
-				-- If we are working with an EV_TITLED_WINDOW, then
-				-- we may have the . at the start which is uneeded in
-				-- the code. Remove it.
-			if not non_void_set.is_empty and then (non_void_set @ 1) = '.' then
-				if document_info.generate_as_client then
-					non_void_set := "window" + non_void_set
-				else
-					non_void_set := non_void_set.substring (2, non_void_set.count)
-					non_void_set.replace_substring_all (indent + ".", indent)
-				end
 			end
 
 			if set_string = Void then

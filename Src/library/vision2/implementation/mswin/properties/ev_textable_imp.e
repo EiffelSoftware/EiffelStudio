@@ -19,7 +19,6 @@ feature -- Access
 			Result := wel_text
 		end
 
-
 feature -- Element change
 
 	set_text (a_text: STRING) is

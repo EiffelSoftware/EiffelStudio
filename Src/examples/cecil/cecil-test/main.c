@@ -1,6 +1,10 @@
 #include "eif_setup.h"
 #include "eif_eiffel.h"
 
+#ifdef EIF_WIN32
+#include "eif_econsole.h"
+#endif
+
 int main(int argc,char **argv,char **envp);
 void eiff_call (char *class_name, char *proc_name, EIF_OBJECT target);
 void eiff_call_1_arg (char *class_name, char *proc_name, EIF_OBJECT target, EIF_OBJECT arg);
@@ -12,7 +16,7 @@ EIF_OBJECT linked_list;	/* Attribute of `main_obj': `linked_list' */
 /************************************************************************/
 #ifdef EIF_WIN32	/* Only for Windows */
 
-APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 	/* Winmain function which is called when linking on Windows 
 	 * with the option -SUBSYSTEM:WINDOWS instead of
 	 * -SUBSYSTEM:CONSOLE in the cecil.lnk file.
@@ -124,7 +128,6 @@ int main(int argc,char **argv,char **envp)
 		 * This does not call the creation procedure. 
 		 * The returned object is already protected (EIF_OBJECT).
 		 */
-#if VERSION >= 43
 		/* Enable/Disable visible exception */
 	printf ("Do you want to enable the visible exception? (y-yes, n-no):");
 	switch (getchar ()) {
@@ -137,7 +140,6 @@ int main(int argc,char **argv,char **envp)
 			eif_disable_visible_exception ();	
 			break;
 	}	
-#endif
 	main_id = eif_type_id ("MAIN");
 	if (main_id == EIF_NO_TYPE)
 		eif_panic ("No type id for MAIN");
@@ -211,7 +213,6 @@ void cecil_test() {
 	printf ("\tLinked list object = 0x%x\n", i_linked_list);
 
 		/* Test visible exception */
-	getchar ();
 	printf ("Do you want to test the visibility of an Eiffel routine? (y-yes, n-no):\n");
 	switch (getchar ()) {
 		case 'y':	/* Test visibility of a routine in a class */

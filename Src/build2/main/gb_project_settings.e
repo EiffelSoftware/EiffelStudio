@@ -49,7 +49,6 @@ feature {NONE} -- Initialization
 			project_type := stand_alone_project
 		end
 		
-		
 	set_default_values is
 			-- Initialize default values.
 		do
@@ -59,9 +58,8 @@ feature {NONE} -- Initialization
 			enable_complete_project
 			enable_grouped_locals
 			enable_rebuild_ace_file
+			disable_constant_loading
 		end
-		
-		
 
 feature -- Access
 
@@ -113,6 +111,10 @@ feature -- Access
 		-- Should generated code use EV_WINDOW as client?
 		-- If False, then we inherit EV_WINDOW.
 		
+	load_constants: BOOLEAN
+		-- Should generated constants be loaded from a text file,
+		-- or hard coded into the generated constants file?
+		
 	rebuild_ace_file: BOOLEAN
 		-- Should we rebuild ace file every time?
 		
@@ -142,6 +144,8 @@ feature -- Basic operation
 			data.extend ([attributes_local_string, attributes_local.out])
 			data.extend ([client_of_window_string, client_of_window.out])
 			data.extend ([rebuild_ace_file_string, rebuild_ace_file.out])
+			data.extend ([load_constants_string, load_constants.out])
+			
 			create file_name.make_from_string (project_location)
 			file_name.extend (project_filename)
 			create file_handler
@@ -165,7 +169,7 @@ feature -- Basic operation
 				check
 					data_not_void: data /= Void
 				end
-				if data.count = 11 then
+				if data.count = 11 or data.count = 12 then
 					set_integer_attribute (data @ 1, agent set_project_type (?))
 					set_string_attribute (data @ 2, agent set_project_name (?))
 					set_string_attribute (data @ 3, agent set_project_location (?))
@@ -177,7 +181,11 @@ feature -- Basic operation
 					set_boolean_attribute (data @ 9, agent enable_attributes_local, agent disable_attributes_local)
 					set_boolean_attribute (data @ 10, agent enable_client_of_window, agent disable_client_of_window)
 					set_boolean_attribute (data @ 11, agent enable_rebuild_ace_file, agent disable_rebuild_ace_file)
-				else
+				end
+				if data.count = 12 then
+					set_boolean_attribute (data @ 12, agent enable_constant_loading, agent disable_constant_loading)
+				end
+				if data.count /= 11 and data.count /= 12 then
 					create dialog.make_with_text (invalid_bpr_file)
 					dialog.button ((create {EV_DIALOG_CONSTANTS}).ev_abort).select_actions.extend (agent cancel_load)
 					dialog.show_modal_to_window (main_window)
@@ -314,6 +322,18 @@ feature -- Status Setting
 			rebuild_ace_file := False
 		end
 		
+	enable_constant_loading is
+			-- Assign `True' to `load_constants'.
+		do
+			load_constants := True
+		end
+		
+	disable_constant_loading is
+			-- Assign `False' to `load_constants'.
+		do
+			load_constants := False
+		end
+
 feature {NONE} -- Constants
 
 	stand_alone_project: INTEGER is 1
@@ -345,6 +365,8 @@ feature {NONE} --Implementation
 	client_of_window_string: STRING is "Client_of_window"
 	
 	rebuild_ace_file_string: STRING is "Rebuild_ace_file"
+	
+	load_constants_string: STRING is "Load_constants_from_file"
 	
 	project_type_string: STRING is "Project_type"
 	

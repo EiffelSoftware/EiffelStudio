@@ -8,7 +8,8 @@ indexing
 deferred class PREFERENCE_RESOURCE
 
 inherit
-	FORM
+	FORM;
+	COMMAND
 
 feature -- Validation
 
@@ -81,5 +82,54 @@ feature {NONE} -- Properties
 
 	a_parent: COMPOSITE
 			-- Parent for Current
+
+feature {NONE} -- Implementation
+
+	raise_warner (message: STRING) is
+			-- Popup a warning dialog containing the
+			-- string "Resource <name> must be <message>.".
+		local
+			warning_d: WARNING_D;
+			msg: STRING
+		do
+			!! warning_d.make ("Warning", Current);
+			!! msg.make (0);
+			msg.append ("Resource `");
+			msg.append (associated_resource.name);
+			msg.append ("' must be ");
+			msg.append (message);
+			msg.append (".");
+			warning_d.set_message (msg);
+			warning_d.hide_help_button;
+			warning_d.hide_cancel_button;
+			warning_d.add_ok_action (Current, warning_d);
+			warning_d.popup;
+			warning_d.raise
+		end;
+
+	execute (argument: ANY) is
+			-- Execute Current.
+			--| If `argument' is of type WARNING_D then
+			--| pop it down, else extended_execute with
+			--| `argument' as argument.
+		local
+			wd: WARNING_D
+		do
+			wd ?= argument;
+			if wd /= Void then
+				wd.popdown;
+				wd.destroy
+			else
+				extended_execute (argument)
+			end
+		end;
+
+	extended_execute (argument: ANY) is
+			-- Execute Current.
+			--| Only called if `execute' cannot deal with
+			--| `argument'.
+			--| Does nothing by default.
+		do
+		end
 
 end -- class PREFERENCE_RESOURCE

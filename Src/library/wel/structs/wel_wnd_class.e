@@ -231,7 +231,6 @@ feature -- Element change
 			-- Set `background' with `a_background'.
 		require
 			a_background_not_void: a_background /= Void
-			a_background_exists: a_background.exists
 		do
 			cwel_wnd_class_set_background (item, a_background.item)
 		ensure

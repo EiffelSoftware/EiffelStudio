@@ -8,7 +8,7 @@ inherit
 		rename
 			make as make_id
 		redefine
-			compilation_id
+			compilation_id, is_precompiled
 		end
 
 feature {NONE} -- Initialization
@@ -20,6 +20,11 @@ feature {NONE} -- Initialization
 			internal_id := val;
 			compilation_id := unit
 		end;
+
+feature -- Status report
+
+	is_precompiled: BOOLEAN is True;
+			-- Is the entity identified by `Current' precompiled?
 
 feature {NONE} -- Implemetation
 

@@ -43,6 +43,11 @@ feature {NONE} -- Initialization
 			structure_make
 			file.read_stream (structure_size)
 			s := file.last_string
+			check
+					--| Make sure that what has been read match the Bitmap
+					--| file header info.
+				correct_structure_size: structure_size = s.count
+			end
 			!! a_wel_string2.make (s)
 			memory_copy (a_wel_string2.item, structure_size)
 			info_header.memory_copy (item, info_header.structure_size)

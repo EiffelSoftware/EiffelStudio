@@ -46,7 +46,8 @@ class ecom_runtime_ec
 		char * ccom_ec_pointed_character (EIF_REFERENCE a_ref, char * old);
 		DATE * ccom_ec_pointed_date (EIF_REFERENCE a_ref, DATE * old);
 		short * ccom_ec_pointed_short (EIF_REFERENCE a_ref, short * old);
-		long * ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * ild);
+		long * ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * old);
+		int * ccom_ec_pointed_integer (EIF_REFERENCE a_ref, int * old);
 		float * ccom_ec_pointed_real (EIF_REFERENCE a_ref, float * old);
 		double * ccom_ec_pointed_double (EIF_REFERENCE a_ref, double * old);
 		HRESULT * ccom_ec_pointed_hresult (EIF_REFERENCE a_ref, HRESULT *old);

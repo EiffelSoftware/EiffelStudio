@@ -18,7 +18,7 @@ HRESULT * ecom_runtime_ec::ccom_ec_pointed_hresult (EIF_REFERENCE a_ref, HRESULT
 // create HRESULT * from ECOM_HRESULT
 {
 	EIF_OBJECT eif_object = eif_protect (a_ref);
-	
+
 	HRESULT * hresult =0;
 	HRESULT tmp_hresult = 0;
 
@@ -378,6 +378,31 @@ short * ecom_runtime_ec::ccom_ec_pointed_short (EIF_REFERENCE a_ref, short * old
 	else
 		return result;
 };
+
+// ----------------------------------------------------------------------------
+
+int * ecom_runtime_ec::ccom_ec_pointed_integer (EIF_REFERENCE a_ref, int * old)
+// Create int * from EIF_REFERENCE (INTEGER_REF)
+{
+	EIF_OBJECT eif_object;
+	int * result;
+
+	eif_object = eif_protect (a_ref);
+
+	result = (int *) CoTaskMemAlloc (sizeof (int));
+	* result = (int) eif_field (eif_access(eif_object), "item", EIF_INTEGER);
+
+	eif_wean (eif_object);
+	eif_wean (eif_object);
+	if (old != NULL)
+	{
+		*old = *result;
+		return NULL;
+	}
+	else
+		return result;
+};
+
 //---------------------------------------------------------------------------
 
 long * ecom_runtime_ec::ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * old)
@@ -627,7 +652,7 @@ DATE * ecom_runtime_ec::ccom_ec_array_date (EIF_REFERENCE a_ref, int dimension, 
 	}
 
 	eif_wean (eif_date_array);
-	
+
 	if (old != NULL)
 	{
 		memcpy (old, date_array, capacity*(sizeof(DATE)));
@@ -660,7 +685,7 @@ char * ecom_runtime_ec::ccom_ec_array_character (EIF_REFERENCE a_ref, int dimens
 	{
 		tid = eif_type_id ("ARRAY[CHARACTER]");
 	}
-	
+
 	to_c = eif_pointer_function ("to_c", tid);
 	// Allocate memory
 	f_capacity = eif_integer_function ("count", tid);
@@ -671,7 +696,7 @@ char * ecom_runtime_ec::ccom_ec_array_character (EIF_REFERENCE a_ref, int dimens
 	else
 		result = old;
 
-	
+
 	memcpy (result, (to_c)(eif_access(e_array)), capacity*(sizeof(char)));
 
 	eif_wean (e_array);
@@ -702,7 +727,7 @@ long * ecom_runtime_ec::ccom_ec_array_long (EIF_REFERENCE a_ref, int dimension, 
 	{
 		tid = eif_type_id ("ARRAY[INTEGER]");
 	}
-	
+
 	to_c = eif_pointer_function ("to_c", tid);
 	// Allocate memory
 	f_capacity = eif_integer_function ("count", tid);
@@ -713,7 +738,7 @@ long * ecom_runtime_ec::ccom_ec_array_long (EIF_REFERENCE a_ref, int dimension, 
 	else
 		result = old;
 
-	
+
 	memcpy (result, (to_c)(eif_access(e_array)), capacity*(sizeof(long)));
 
 	eif_wean (e_array);
@@ -744,7 +769,7 @@ float * ecom_runtime_ec::ccom_ec_array_float (EIF_REFERENCE a_ref, int dimension
 	{
 		tid = eif_type_id ("ARRAY[REAL]");
 	}
-	
+
 	to_c = eif_pointer_function ("to_c", tid);
 	// Allocate memory
 	f_capacity = eif_integer_function ("count", tid);
@@ -755,7 +780,7 @@ float * ecom_runtime_ec::ccom_ec_array_float (EIF_REFERENCE a_ref, int dimension
 	else
 		result = old;
 
-	
+
 	memcpy (result, (to_c)(eif_access(e_array)), capacity*(sizeof(float)));
 
 	eif_wean (e_array);
@@ -786,7 +811,7 @@ double * ecom_runtime_ec::ccom_ec_array_double (EIF_REFERENCE a_ref, int dimensi
 	{
 		tid = eif_type_id ("ARRAY[DOUBLE]");
 	}
-	
+
 	to_c = eif_pointer_function ("to_c", tid);
 	// Allocate memory
 	f_capacity = eif_integer_function ("count", tid);
@@ -797,7 +822,7 @@ double * ecom_runtime_ec::ccom_ec_array_double (EIF_REFERENCE a_ref, int dimensi
 	else
 		result = old;
 
-	
+
 	memcpy (result, (to_c)(eif_access(e_array)), capacity*(sizeof(double)));
 
 	eif_wean (e_array);
@@ -2947,7 +2972,7 @@ void ** ecom_runtime_ec::ccom_ec_pointed_pointer (EIF_REFERENCE eif_ref, void **
 {
 	EIF_OBJECT eif_object;
 	void ** result;
-	
+
 	eif_object = eif_protect (eif_ref);
 
 	result = (void **) CoTaskMemAlloc (sizeof (void *));
@@ -2979,7 +3004,7 @@ void ** ecom_runtime_ec::ccom_ec_pointed_c_pointer (void * a_pointer)
 {
 
 	void ** result;
-	
+
 	result = (void **) CoTaskMemAlloc (sizeof (void *));
 	* result = a_pointer;
 

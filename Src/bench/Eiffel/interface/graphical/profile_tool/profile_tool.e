@@ -13,14 +13,20 @@ inherit
 			hide as top_shell_hide,
 			show as top_shell_show,
 			make as top_shell_make
-		end;
-	COMMAND;
-	EB_CONSTANTS;
-	WINDOWS;
+		end
+
+	COMMAND
+
+	EB_CONSTANTS
+
+	WINDOWS
+
 	RESOURCE_USER
 		redefine
 			update_integer_resource
 		end
+
+	SYSTEM_CONSTANTS
 
 creation
 	make
@@ -35,7 +41,15 @@ feature {NONE} -- Initialization
 
 			!! open_tools.make 
 			command := a_command;
-			top_shell_make (Interface_names.n_X_resource_name, Project_tool.screen);
+			
+			if Platform_constants.is_windows then
+					-- For windows we need the id for the Icon
+				top_shell_make (Interface_names.i_Class_id.out, Project_tool.screen);
+			else
+					-- For unix we need this for the X resource file
+			 	top_shell_make (Interface_names.n_X_resource_name, Project_tool.screen);
+			end;
+			
 			set_title (Interface_names.t_Profile_tool);
 			set_icon_name (Interface_names.t_Profile_tool);
 			!! quit_cmd.make (Current);
@@ -104,13 +118,14 @@ feature -- Graphical User Interface
 
 feature {RUN_PROFILE_QUERY_CMD} -- Access
 
-	fill_values (shared_values: SHARED_QUERY_VALUES) is
+	fill_values (shared_values: SHARED_QUERY_VALUES): BOOLEAN is
 			-- Fill `shared_values' with value specified
 			-- by the user.
 		local
 			parser: QUERY_PARSER
+			filename: STRING
 			i: INTEGER
-			is_parsed: BOOLEAN
+			-- warner: WARNER_W
 		do
 			i := shared_values.language_names.lower
 
@@ -157,12 +172,20 @@ feature {RUN_PROFILE_QUERY_CMD} -- Access
 			end;
 
 				--| Copy the filename
-			shared_values.filenames.force (input_text.text, shared_values.filenames.lower);
+			!! filename.make(0)
+			filename := input_text.text
+			filename.prepend(working_directory)
+
+			shared_values.filenames.force (filename, shared_values.filenames.lower);
 
 				--| Copy the subqueries
 			if not query_text.text.empty then
 				!! parser;
-				is_parsed := parser.parse (query_text.text, shared_values)
+				Result := parser.parse (query_text.text, shared_values)
+			else
+				Result := false
+				-- warner.make(Current)
+				-- warner.gotcha_call ("Verify your query!")
 			end
 		end
 
@@ -217,11 +240,21 @@ feature {NONE} -- Graphical User Interface
 
 			!! input_label.make (Interface_names.l_Input_file, text_form);
 			!! input_text.make (Interface_names.t_Empty, text_form);
-			input_text.set_text ("profinfo.profile_information");
+			input_text.set_text ("profinfo.pfi");
 			!! query_label.make (Interface_names.l_Query, text_form);
 			!! query_text.make (Interface_names.t_Empty, text_form);
 			!! browse_button.make (Interface_names.b_Browse, text_form);
 			browse_button.add_activate_action (Current, browse_it);
+
+				-- Compilation Mode
+				--| Guillaume - 09/26/97
+			-- !! compilation_label.make (Interface_names.l_Input_file_compilation_type, text_form);
+			!! compilation_label.make ("Input file compilation type", text_form)
+			!! compile_box.make (Interface_names.t_Empty, text_form);
+			compile_box.set_always_one (True);
+			!! workbench_button.make (Interface_names.b_Workbench, compile_box);
+			workbench_button.set_toggle_on;
+			!! final_button.make (Interface_names.b_Final, compile_box);
 
 				-- Commands
 			exit_button.add_activate_action (quit_cmd, Void);
@@ -273,7 +306,15 @@ feature {NONE} -- Graphical User Interface
 			button_form.attach_bottom (exit_button, 5);
 			button_form.attach_right_position (exit_button, 2);
 
-			text_form.attach_top (input_label, 5);
+			-- text_form.attach_top (input_label, 5);
+			text_form.attach_top (compilation_label, 5);
+			text_form.attach_left (compilation_label, 0);
+			text_form.attach_top_widget(compilation_label, compile_box, 0)
+			text_form.attach_left (compile_box, 0);
+			text_form.attach_right (compile_box, 0);
+			text_form.attach_top_widget (compile_box, input_label, 1);
+			--| Guillaume - 09/26/97
+			
 			text_form.attach_left (input_label, 0);
 			text_form.attach_top_widget (input_label, input_text, 1);
 			text_form.attach_left (input_text, 5);
@@ -349,6 +390,9 @@ feature {NONE} -- Attributes
 
 	exit_button: PUSH_B;
 			-- Button to exit the tool with
+	
+	compile_box: RADIO_BOX
+			-- Form to select input file compilation mode
 
 	switch_form,
 			-- Form to display switches on
@@ -387,6 +431,12 @@ feature {NONE} -- Attributes
 	recursive_switch: TOGGLE_B;
 			-- Switch for display of recursive funtions.
 
+	workbench_button,
+			-- Check button for workbench mode
+
+	final_button: TOGGLE_B;
+			-- Check button for final mode
+
 	query_text: TEXT_FIELD
 			-- Text field for query input
 
@@ -396,8 +446,11 @@ feature {NONE} -- Attributes
 	query_label,
 			-- Label for `query_text'
 
-	input_label: LABEL;
+	input_label,
 			-- Label for `input_text'
+
+	compilation_label: LABEL
+			--Label for 'compilation mode buttons' 
 
 	menu_bar: BAR;
 			-- Menu bar
@@ -523,6 +576,24 @@ feature {NONE} -- Implementation
 			new_name_chooser.add_ok_action (Current, Void);
 			new_name_chooser.call (Current)
 		end;
+
+	working_directory : STRING is
+		do
+			!! Result.make(0)
+			if input_text.text.has(Operating_environment.Directory_separator) then
+				Result := ""
+			else
+				Result.append ("EIFGEN")
+				Result.extend (Operating_environment.Directory_separator)
+				if workbench_button.state then
+					Result.append ("W_code")
+					Result.extend (Operating_environment.Directory_separator)
+				else
+					Result.append ("F_code")
+					Result.extend (Operating_environment.Directory_separator)
+				end
+			end
+		end --| Guillaume - 09/26/97
 
 feature {PROFILE_QUERY_WINDOW} -- Window updates
 

@@ -35,25 +35,40 @@ feature -- Command Execution
 			st: STRUCTURED_TEXT;
 			executer: E_SHOW_PROFILE_QUERY
 			is_parsed: BOOLEAN
+			operator: SUBQUERY_OPERATOR
 		do
 			txt := tool.subquery
-			if
-				txt /= Void and then
-				not txt.empty
-			then
+			if txt /= Void and then not txt.empty then 
 				clear_values;
 				!! parser;
-				is_parsed := parser.parse (txt, Current);
-				!! profiler_query;
+				if parser.parse (txt, Current) and then tool.profiler_query.subqueries.count > 0 then
+					!! profiler_query;
+					profiler_query.merge (tool.profiler_query)
+					profiler_query.append_subqueries (subqueries)
+					--|
+					if tool.and_toggle.state then
+						!! operator.make ( "and" )
+						profiler_query.extend_subquery_operator ( operator )
+					else
+						!! operator.make ( "or" )
+						profiler_query.extend_subquery_operator ( operator )
+					end --| Guillaume - 09/23/97
+					profiler_query.append_subquery_operators (subquery_operators)
 
-				profiler_query.merge (tool.profiler_query);
-				profiler_query.append_subqueries (subqueries);
-				profiler_query.append_subquery_operators (subquery_operators);
-
+					!! st.make;
+					!! executer.make (st, profiler_query, tool.profiler_options);
+					executer.set_last_output (tool.profinfo);
+					executer.execute;
+					tool.update_window (st, profiler_query, tool.profiler_options, executer.last_output)
+				end
+			elseif txt.empty and then tool.profiler_query.subqueries.count > 0 then
+				clear_values
+				!! profiler_query
+				profiler_query.merge (tool.profiler_query)
 				!! st.make;
-				!! executer.make (st, profiler_query, tool.profiler_options);
-				executer.set_last_output (tool.profinfo);
-				executer.execute;
+				!! executer.make (st, profiler_query, tool.profiler_options)
+				executer.set_last_output (tool.profinfo)
+				executer.execute
 				tool.update_window (st, profiler_query, tool.profiler_options, executer.last_output)
 			end
 		end

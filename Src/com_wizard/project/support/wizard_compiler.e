@@ -374,6 +374,9 @@ feature {NONE} -- Implementation
 			Result := clone (System_keyword)
 			Result.append (New_line_tab)
 			Result.append (Shared_wizard_environment.project_name)
+			if Shared_wizard_environment.client then
+				Result.append ("_client")
+			end
 			Result.append (New_line)
 			Result.append (Partial_ace_file)
 			Result.append (Shared_wizard_environment.destination_folder)

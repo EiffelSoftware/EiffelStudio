@@ -126,6 +126,7 @@ feature -- Access
 						<CN:L>.set_<AN:L> (character_value.item)
 					else
 						<CN:L>.set_<AN:L> ('%U')
+					end
 </A><A:B:A>				when <AN:I> then
 					boolean_value ?= value
 					if boolean_value /= Void then

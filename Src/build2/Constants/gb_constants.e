@@ -636,6 +636,14 @@ feature -- Object editor properties
 	
 	select_button_text: STRING is "Select..."
 	
+feature -- Booleans
+
+	multiple_line_entry: BOOLEAN is True
+		-- Boolean value used to indicate that multiple line entry fields are required.
+		
+	single_line_entry: BOOLEAN is False
+		-- Boolean value used to indicate that single line entry fields are required.
+	
 feature -- Constants
 
 	Integer_constant_type: STRING is "INTEGER"

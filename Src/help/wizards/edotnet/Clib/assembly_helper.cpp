@@ -88,8 +88,10 @@ bool GetAssemblyProperties(
     stMetaData.ulProcessor = 2;
 	stMetaData.rOS = aOS;
     stMetaData.ulOS = 2;
+#ifdef BETA1
 	stMetaData.szConfiguration = szConfiguration;
     stMetaData.cbConfiguration = 2048;
+#endif
 
 	DWORD dwAssemblyFlags;
 	hr = pIMetaDataAssemblyImport->GetAssemblyProps(		// S_OK	or error.
@@ -101,6 +103,7 @@ bool GetAssemblyProperties(
 										2048,				// [IN]	Size of	buffer in wide chars.
 										&chName,			// [OUT] Actual	# of wide chars	in name.
 										&stMetaData,		// [OUT] Assembly MetaData.
+#ifdef BETA1 // Parameter only defined in the Beta1
 										szTitle,			// [OUT] Title of the Assembly.
 										2048,				// [IN]	Size of	buffer in wide chars.
 										&chTitle,			// [OUT] Actual	# of wide chars.
@@ -110,6 +113,7 @@ bool GetAssemblyProperties(
 										szDefaultAlias,		// [OUT] Default alias for the Assembly.
 										2048,				// [IN]	Size of	buffer in wide chars.
 										&chDefaultAlias,	// [OUT] Acutal	# of wide chars	in buffer.
+#endif
 										&dwAssemblyFlags);	// [OUT] Flags.
 	if (hr != S_OK)
 		return FALSE;

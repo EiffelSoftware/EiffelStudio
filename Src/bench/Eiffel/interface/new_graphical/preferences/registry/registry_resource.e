@@ -135,6 +135,6 @@ feature -- Implementation
 
 invariant
 	REGISTRY_RESOURCE_contains_something: value /= Void or key_value /= Void
-	REGISTRY_RESOURCE_consistency: name /= Void and not name.empty
+	REGISTRY_RESOURCE_consistency: name /= Void and not name.is_empty
 
 end -- class REGISTRY_RESOURCE

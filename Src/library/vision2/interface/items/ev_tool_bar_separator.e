@@ -11,6 +11,8 @@ class
 
 inherit
 	EV_TOOL_BAR_ITEM
+		export
+			{NONE} all
 		redefine
 			implementation
 		end
@@ -54,6 +56,9 @@ end -- class EV_TOOL_BAR_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/07 22:15:41  brendel
+--| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
+--|
 --| Revision 1.9  2000/03/24 03:10:22  oconnor
 --| formatting and comments
 --|

@@ -10,11 +10,16 @@ class
 	EV_STATUS_BAR_ITEM
 
 inherit
-	EV_SIMPLE_ITEM
+	EV_ITEM
 		redefine
 			implementation,
 			create_implementation,
 			parent
+		end
+
+	EV_TEXTABLE
+		redefine
+			implementation
 		end
 
 create
@@ -26,7 +31,7 @@ feature -- Access
 	parent: EV_STATUS_BAR is
 			-- Contains `Current'.
 		do
-			Result ?= {EV_SIMPLE_ITEM} Precursor
+			Result ?= {EV_ITEM} Precursor
 		end
 
 feature -- Measurement
@@ -90,6 +95,9 @@ end -- class EV_STATUS_BAR_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/07 22:15:40  brendel
+--| Removed EV_SIMPLE_ITEM from inheritance hierarchy.
+--|
 --| Revision 1.17  2000/03/24 03:10:22  oconnor
 --| formatting and comments
 --|

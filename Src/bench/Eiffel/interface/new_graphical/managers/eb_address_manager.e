@@ -1993,6 +1993,9 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 		do
 			start_x := header_info.screen_x
 			parent_window := parent.window
+			if address_dialog.is_show_requested then
+				address_dialog.hide
+			end
 			address_dialog.set_position (start_x, header_info.screen_y)
 			address_dialog.set_size (parent_window.width + parent_window.screen_x - start_x, header_info.height)
 			address_dialog.show

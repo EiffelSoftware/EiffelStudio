@@ -246,84 +246,103 @@ The full text of this class is: (Note that the class <I>APPLICATION_IDS</I> gene
 <B>Method 2: Writing Eiffel code</B>
 <P>
 If you use Personal ISE Eiffel, you need to create the following class:
-<PRE><B>class</B> 
-<I>	LINE_THICKNESS_WINDOW</I>
-<B>inherit</B> 
-<I>	WEL_FRAME_WINDOW</I>
-		<B>redefine</B> 
-<I>			on_control_command</I>
-		<B>end</B> 
+<pre>
+<b>class</b><i> LINE_THICKNESS_WINDOW
 
-<B>creation</B>  
-<I>	make
-</I>
-<B>feature</B>  {<I>NONE</I>}<I> </I>-- Initialization
+</i><b>inherit</b><i>
+	WEL_FRAME_WINDOW
+		</i><b>redefine</b><i>
+			on_control_command</i>,<i> background_brush
+		</i><b>end</b><i>
 
-<I>	make </I>(<I>a_parent</I>:<I> WEL_COMPOSITE_WINDOW</I>) <B>is</B> 
-<I>			</I>-- Make the line thickness window.
-		<B>do</B> 
-<I>			make_child </I>(<I>a_parent</I>,<I> </I>&quot;<I>Line thickness</I>&quot;)
-<I>			move_and_resize </I>(<I>20</I>,<I> 20</I>,<I> 210</I>,<I> 104</I>, <B>true</B>)
-<I>			</I>!!<I> static<B>.</B>make </I>(<I>Current</I>,<I> </I>&quot;<I>Width</I>&quot;,<I> 14</I>,<I> 18</I>,<I> 38</I>,<I> 13</I>,<I> </I>-<I> 1</I>)
-<I>			</I>!!<I> edit<B>.</B>make </I>(<I>Current</I>,<I> </I>&quot;&quot;,<I> 14</I>,<I> 33</I>,<I> 52</I>,<I> 19</I>,<I> </I>-<I> 1</I>)
-<I>			</I>!!<I> ok_button<B>.</B>make </I>(<I>Current</I>,<I> </I>&quot;<I>OK</I>&quot;,<I> 98</I>,<I> 12</I>,<I> 87</I>,<I> 23</I>,<I> </I>-<I> 1</I>)
-<I>			</I>!!<I> cancel_button<B>.</B>make </I>(<I>Current</I>,<I> </I>&quot;<I>Cancel</I>&quot;,<I> 98</I>,<I> 45</I>,<I> 87</I>,<I> 23</I>,<I> </I>-<I> 1</I>)
-<I>			pen_width </I>:=<I> 1</I>
-		<B>end</B>
-<I>	</I>
-<B>feature</B>   -- Access
+</i><b>create</b><i> 
+	make
 
-<I>	edit</I>:<I> WEL_SINGLE_LINE_EDIT</I>
-<I>			</I>-- Edit control to enter pen width
-<I>			</I>
-<I>	ok_button</I>:<I> WEL_PUSH_BUTTON</I>
-<I>			</I>-- Button to validate the value
-<I>			</I>
-<I>	cancel_button</I>:<I> WEL_PUSH_BUTTON</I>
-<I>			</I>-- Button to cancel the value
-<I>			</I>
-<I>	static</I>:<I> WEL_STATIC</I>
-<I>			</I>-- &quot;Width&quot; static text
-<I>			</I>
-<I>	pen_width</I>:<I> INTEGER</I>
-<I>			</I>-- Pen width entered
-<I>			</I>
-<I><B>feature</B>   </I>-- Basic operations
+</i><b>feature</b><i> </i>{<i>NONE</i>}<i> </i>-- Initialization<i>
 
-<I>	activate </I><B>is</B> 
-<I>			</I>-- Activate the window
-		<B>local</B> 
-<I>			s</I>:<I> STRING</I>
-		<B>do</B> 
-<I>			</I>!!<I> s<B>.</B>make </I>(<I>0</I>)
-<I>			s<B>.</B>append_integer </I>(<I>pen_width</I>)
-<I>			edit<B>.</B>set_text </I>(<I>s</I>)
-<I>			show</I>
-		<B>end</B>
-<I>	</I>
-<B>feature</B>  {<I>NONE</I>}<I> </I>-- Implementation
+	make </i>(<i>a_parent</i>:<i> WEL_COMPOSITE_WINDOW</i>)<i> </i><b>is</b><i>
+			</i>-- Make the line thickness window.<i>
+		</i><b>do</b><i>
+			make_child </i>(<i>a_parent</i>,<i> </i>&quot;<i>Line thickness</i>&quot;)<i>
+			move_and_resize </i>(<i>20</i>,<i> 20</i>,<i> 190</i>,<i> 104</i>,<i> </i><b>true</b>)<i>
+			set_style </i>(<i>style </i>+<i> ws_popup </i>-<i> ws_minimizebox </i>-<i> ws_maximizebox</i>)<i>
+			</i><b>create</b><i> static</i><b><bigger>.</bigger></b><i>make </i>(<i>Current</i>,<i> </i>&quot;<i>Width</i>&quot;,<i> 14</i>,<i> 18</i>,<i> 38</i>,<i> 13</i>,<i> </i>-<i> 1</i>)<i>
+			</i><b>create</b><i> edit</i><b><bigger>.</bigger></b><i>make </i>(<i>Current</i>,<i> </i>&quot;&quot;,<i> 14</i>,<i> 33</i>,<i> 52</i>,<i> 21</i>,<i> </i>-<i> 1</i>)<i>
+			</i><b>create</b><i> ok_button</i><b><bigger>.</bigger></b><i>make </i>(<i>Current</i>,<i> </i>&quot;<i>OK</i>&quot;,<i> 98</i>,<i> 12</i>,<i> 77</i>,<i> 23</i>,<i> </i>-<i> 1</i>)<i>
+			</i><b>create</b><i> cancel_button</i><b><bigger>.</bigger></b><i>make </i>(<i>Current</i>,<i> </i>&quot;<i>Cancel</i>&quot;,<i> 98</i>,<i> 45</i>,<i> 77</i>,<i> 23</i>,<i> </i>-<i> 1</i>)<i>
+			pen_width </i>:=<i> 1
+			static</i><b><bigger>.</bigger></b><i>set_font </i>(<i>gui_font</i>)<i>
+			ok_button</i><b><bigger>.</bigger></b><i>set_font </i>(<i>gui_font</i>)<i>
+			cancel_button</i><b><bigger>.</bigger></b><i>set_font </i>(<i>gui_font</i>)<i>
+			edit</i><b><bigger>.</bigger></b><i>set_font </i>(<i>gui_font</i>)<i>
+		</i><b>end</b>;<i>
+	
+</i><b>feature</b><i> </i>-- Access<i>
 
-<I>	on_control_command </I>(<I>control</I>:<I> WEL_CONTROL</I>) <B>is</B> 
-<I>			</I>-- Process <I>ok_button</I> and <I>cancel_button</I> selection.
-		<B>local</B> 
-<I>			p</I>:<I> MAIN_WINDOW</I>
-		<B>do</B> 
-			<B>if</B>  <I>control </I>=<I> ok_button </I><B>then</B> 
-				<B>if</B>  <I>edit<B>.</B>text<B>.</B>is_integer </I><B>then</B> 
-<I>					pen_width </I>:=<I> edit<B>.</B>text<B>.</B>to_integer</I>
-<I>					p </I>?=<I> parent</I>
-					<B>if</B>  <I>p </I>/=<I> void </I><B>then</B> 
-<I>						p<B>.</B>set_pen_width </I>(<I>pen_width</I>)
-					<B>end</B>
-<I>					hide</I>
-				<B>end</B> 
-			<B>elseif</B>  <I>control </I>=<I> cancel_button </I><B>then</B> 
-<I>				hide</I>
-			<B>end</B> 
-		<B>end</B>
-<I>	</I>
-<B>end</B>  --<I> </I>class <I>LINE_THICKNESS_WINDOW</I>
-</PRE>
+	edit</i>:<i> WEL_SINGLE_LINE_EDIT</i>;<i>
+			</i>-- Edit control to enter pen width<i>
+
+	ok_button</i>:<i> WEL_PUSH_BUTTON</i>;<i>
+			</i>-- Button to validate the value<i>
+
+	cancel_button</i>:<i> WEL_PUSH_BUTTON</i>;<i>
+			</i>-- Button to cancel the value<i>
+
+	static</i>:<i> WEL_STATIC</i>;<i>
+			</i>-- &quot;Width&quot; static text<i>
+
+	pen_width</i>:<i> INTEGER</i>;<i>
+			</i>-- Pen width entered<i>
+
+	background_brush</i>:<i> WEL_BRUSH </i><b>is</b><i>
+			</i>-- Dialog boxes background color is the same than<i>
+			</i>-- button color.<i>
+		</i><b>once</b><i>
+			</i><b>create</b><i> Result</i><b><bigger>.</bigger></b><i>make_by_sys_color </i>(<i>color_btnface </i>+<i> 1</i>)<i>
+		</i><b>end</b>;<i>
+	
+</i><b>feature</b><i> </i>-- Basic operations<i>
+
+	activate </i><b>is</b><i>
+			</i>-- Activate the window<i>
+		</i><b>local</b><i>
+			s</i>:<i> STRING
+		</i><b>do</b><i>
+			</i><b>create</b><i> s</i><b><bigger>.</bigger></b><i>make </i>(<i>0</i>);<i>
+			s</i><b><bigger>.</bigger></b><i>append_integer </i>(<i>pen_width</i>);<i>
+			edit</i><b><bigger>.</bigger></b><i>set_text </i>(<i>s</i>);<i>
+			show
+		</i><b>end</b>;<i>
+	
+</i><b>feature</b><i> </i>{<i>NONE</i>}<i> </i>-- Implementation<i>
+
+	on_control_command </i>(<i>control</i>:<i> WEL_CONTROL</i>)<i> </i><b>is</b><i>
+			</i>-- Process <i>ok_button</i> and <i>cancel_button</i> selection.<i>
+		</i><b>local</b><i>
+			p</i>:<i> MAIN_WINDOW
+		</i><b>do</b><i>
+			</i><b>if</b><i> control </i>=<i> ok_button </i><b>then</b><i>
+				</i><b>if</b><i> edit</i><b><bigger>.</bigger></b><i>text</i><b><bigger>.</bigger></b><i>is_integer </i><b>then</b><i>
+					pen_width </i>:=<i> edit</i><b><bigger>.</bigger></b><i>text</i><b><bigger>.</bigger></b><i>to_integer</i>;<i>
+					p </i>?=<i> parent</i>;<i>
+					</i><b>if</b><i> p </i>/=<i> void </i><b>then</b><i>
+						p</i><b><bigger>.</bigger></b><i>set_pen_width </i>(<i>pen_width</i>)<i>
+					</i><b>end</b>;<i>
+					hide
+				</i><b>end</b><i>
+			</i><b>elseif</b><i> control </i>=<i> cancel_button </i><b>then</b><i>
+				hide
+			</i><b>end</b><i>
+		</i><b>end</b>;<i>
+
+	gui_font</i>:<i> WEL_DEFAULT_GUI_FONT </i><b>is</b><i>
+			</i>-- Default font used to draw dialogs.<i>
+		</i><b>once</b><i>
+			</i><b>create</b><i> Result</i><b><bigger>.</bigger></b><i>make
+		</i><b>end</b>;<i>
+	
+</i><b>end</b><i> -- </i>class <i>LINE_THICKNESS_WINDOW</i>
+</pre>
 In order to be able to change line thickness in the device context, you need to add the following attribute:
 <PRE><I>	pen</I>:<I> WEL_PEN</I>
 <I>			</I>-- Pen currently selected in <I>dc</I>

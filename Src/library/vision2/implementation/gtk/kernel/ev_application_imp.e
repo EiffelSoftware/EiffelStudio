@@ -72,6 +72,15 @@ feature -- Basic operation
 			gtk_main_quit
 		end	
 
+	splash_pixmap (pix: EV_PIXMAP) is
+			-- Show the splash screen pixmap `pix'.
+		do
+			create splash_screen.make
+			splash_screen.set_background_pixmap (pix)
+			splash_screen.set_minimum_size (pix.width, pix.height)
+			splash_screen.show
+		end
+
 feature {NONE} -- Implementation
 	
 	init_windowing is

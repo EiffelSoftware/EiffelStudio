@@ -15,7 +15,10 @@ inherit
 
 	SHARED_TYPES
 
-feature {AST_FACTORY} -- Initialization
+create
+	initialize
+
+feature {NONE} -- Initialization
 
 	initialize (c: like call; l: like location) is
 			-- Create a new INSTR_CALL AST node.
@@ -87,16 +90,6 @@ feature {AST_EIFFEL} -- Output
 		do
 			ctxt.put_breakable
 			ctxt.format_ast (call)
-		end
-
-feature {INSTR_CALL_AS, CMD, USER_CMD, ROUTINE_AS} -- Replication
-
-	set_call (c: like call) is
-			-- Set `call' to `c'.
-		require
-			valid_arg: c /= Void
-		do
-			call := c
 		end
 
 feature {INTERNAL_AS} -- Status report

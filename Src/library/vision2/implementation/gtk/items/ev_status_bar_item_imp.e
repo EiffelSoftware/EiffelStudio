@@ -17,6 +17,8 @@ inherit
 			box,
 			initialize,
 			create_text_label
+		undefine
+			parent
 		redefine
 			destroy,
 			make_with_text,
@@ -25,8 +27,7 @@ inherit
 			set_pixmap,
 			unset_pixmap,
 			set_foreground_color,
-			set_background_color,
-			parent_imp
+			set_background_color
 		end
 
 create
@@ -66,10 +67,6 @@ feature -- Access
 
 	status_bar_description: STRING is "a status bar item"
 		-- description string needed by gtk
-
-	parent_imp: EV_STATUS_BAR_IMP
-			-- The parent of the Current widget
-			-- Can be void.
 
 feature -- Status report
 
@@ -113,6 +110,32 @@ feature -- Status setting
 	
 feature -- Element change
 
+	set_parent (par: like parent) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void.
+			-- Before to remove the widget from the
+			-- container, we increment the number of
+			-- reference on the object otherwise gtk
+			-- destroyed the object. And after having
+			-- added the object to another container,
+			-- we remove this supplementary reference.
+		do
+			if parent_imp /= Void then
+				gtk_object_ref (widget)
+				parent_imp.remove_item (Current)
+				parent_imp := Void
+			end
+			if par /= Void then
+				parent_imp ?= par.implementation
+				check
+					parent_not_void: parent_imp /= Void
+				end
+				parent_imp.add_item (Current)
+				show
+				gtk_object_unref (widget)
+			end
+		end
+	
 	set_index (pos: INTEGER) is
 			-- Make `pos' the new index of the item in the
 			-- list.

@@ -79,7 +79,6 @@ feature {NONE} -- Implementation
 			-- Append result to `result_block'.
 		local
 			attribute_name, tn: STRING
-			attribute_type: INTEGER
 			mapped_item: STRING
 			column: COLUMNS [DATABASE]
 		do

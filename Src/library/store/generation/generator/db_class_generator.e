@@ -104,7 +104,6 @@ feature {NONE} -- Implementation
 			attribute_block_not_void: template_block /= Void
 		local
 			i, count: INTEGER
-			type: INTEGER
 		do
 			create result_block.make (template_block.count)
 			if tags.has_first_attribute_option then

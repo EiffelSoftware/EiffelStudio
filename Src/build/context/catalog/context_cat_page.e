@@ -17,11 +17,6 @@ inherit
 	
 feature 
 
--- samik	focus_label: FOCUS_LABEL is
--- samik		do
--- samik			Result := context_catalog.focus_label
--- samik		end;
-
 	symbol: PIXMAP is
 		deferred
 		end;
@@ -76,10 +71,12 @@ feature {NONE}
 			a_context: CONTEXT; 
 			a_pixmap: PIXMAP): CONTEXT_TYPE is
 		local
-			a_button: PICT_COLOR_B;
+--			a_button: PICT_COLOR_B;
+			a_button: CONTEXT_TYPE_BUTTON
 		do
 			!!a_button.make (a_context.eiffel_type, Current);
 			a_button.set_pixmap (a_pixmap);
+			a_button.set_focus_string (a_context.full_type_name)
 			!!Result.make (a_name, a_context);
 			Result.initialize_callbacks (a_button);
 		end;

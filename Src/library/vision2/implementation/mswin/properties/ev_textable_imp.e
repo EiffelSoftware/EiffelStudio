@@ -16,26 +16,26 @@ feature -- Status setting
 
 	set_center_alignment is
 			-- Set text alignment of current label to center.
-		do
-                        check
-                                not_yet_implemented: False
-                        end
+		deferred
+                        --check
+                        --        not_yet_implemented: False
+                        --end
 		end
 
 	set_right_alignment is
 			-- Set text alignment of current label to right.
-		do
-			check
-                                not_yet_implemented: False
-                        end
+		deferred
+			--Check
+                 --               not_yet_implemented: False
+                  --      end
 		end
 
 	set_left_alignment is
 			-- Set text alignment of current label to left.
-		do
-		        check
-                                not_yet_implemented: False
-                        end
+		deferred
+		        --check
+                   --             not_yet_implemented: False
+                   --     end
 		end
 	
 	destroyed: BOOLEAN is

@@ -548,6 +548,9 @@ feature {NONE} -- Initialization
 				-- Build the editor tool
 			create editor_tool.make (Current, right_panel)
 			bottom_tools.extend (editor_tool.explorer_bar_item)
+			create show_cmd.make (Current, editor_tool.explorer_bar_item)
+			show_tool_commands.extend (show_cmd)
+			toolbarable_commands.extend (show_cmd)
 			editor_tool.text_area.add_edition_observer(save_cmd)
 			editor_tool.text_area.add_edition_observer(save_as_cmd)
 			editor_tool.text_area.add_edition_observer(print_cmd)
@@ -2214,16 +2217,31 @@ feature {NONE} -- Multiple editor management
 			
 feature {EB_FEATURES_TOOL, EB_FEATURES_TREE, DOTNET_CLASS_AS, DOTNET_CLASS_CONTEXT} -- Feature Clauses
 			
-	set_feature_clauses (a_features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]) is
-			-- Set 'features' to 'a_features'.
+	set_feature_clauses (a_features: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]; a_type: STRING) is
+			-- Set 'features' to 'a_features' and store in hash table with key 'a_type' denoting name of consumed
+			-- type pertinent to 'a_features'.
 		require
 			a_features_not_void: a_features /= Void
 		do
-			feature_clauses := a_features
+			if feature_clauses = Void then
+				create feature_clauses.make (5)
+			end
+			feature_clauses.put (a_features, a_type)
 		end
 			
-	feature_clauses: ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]]
-			-- List of features clauses for class displayed in Current.
+	get_feature_clauses (a_type: STRING): ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]] is
+			-- Get list of feature clauses relevant to .NET type with name 'a_type'.
+		require
+			a_type_not_void: a_type /= Void
+			has_type_clauses: feature_clauses.has (a_type)
+		do
+			Result := feature_clauses.item (a_type)
+		ensure
+			result_not_void: Result /= Void
+		end
+			
+	feature_clauses: HASH_TABLE [ARRAYED_LIST [DOTNET_FEATURE_CLAUSE_AS [CONSUMED_ENTITY]], STRING]
+			-- List of features clauses for Current window hashed by the .NET name of the consumed_type.
 			
 	feature_positions: HASH_TABLE [INTEGER, E_FEATURE]
 			-- Features indexed by line position in class text (for .NET features).

@@ -1,3 +1,9 @@
+indexing
+	description: ""
+	status: "See notice at end of class"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
 	ACCELERATORS_WINDOWS
 
@@ -15,6 +21,14 @@ feature {NONE} -- Initialization
 			!! accelerator_list.make
 		end
 
+feature -- Status report
+
+	empty: BOOLEAN is
+			-- Is the `accelerator_list' empty?
+		do
+			Result := accelerator_list.empty
+		end
+
 feature -- Status setting
 
 	add (acc: WEL_ACCELERATOR) is
@@ -23,11 +37,10 @@ feature -- Status setting
 			acc_not_void: acc /= Void
 			acc_exists: acc.exists
 		do
-			accelerator_list.extend (acc)
+			if not accelerator_list.has (acc) then
+				accelerator_list.extend (acc)
+			end
 			recreate_accelerators
-		ensure
-			count_increased: accelerator_list.count =
-				old accelerator_list.count + 1
 		end
 
 feature -- Removal
@@ -77,8 +90,12 @@ feature {NONE} -- Implementation
 				index := index + 1
 				accelerator_list.forth
 			end
-			cwin_destroy_accelerator_table (item)
-			item := cwin_create_accelerator_table (acc_array.to_c, acc_array.count)
+			if item /= default_pointer then
+				cwin_destroy_accelerator_table (item)
+			end
+			item := cwin_create_accelerator_table (acc_array.item, acc_array.count)
+		ensure
+			exists: exists
 		end
 
 feature {NONE} -- Implementation

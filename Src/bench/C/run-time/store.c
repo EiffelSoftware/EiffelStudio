@@ -109,7 +109,7 @@ public void allocate_gen_buffer ()
 		char g_status = g_data.status;
 
 		g_data.status |= GC_STOP;
-		general_buffer = (char *) cmalloc (buffer_size * sizeof (char));
+		general_buffer = (char *) xmalloc (buffer_size * sizeof (char), C_T, GC_OFF);
 		if (general_buffer == (char *) 0)
 			eraise ("out of memory", EN_PROG);
 		g_data.status = g_status;
@@ -595,7 +595,7 @@ private void make_header()
 	int nb_line = 0;
 	int bsize = 80;
 
-	bufer = (char *) cmalloc (bsize * sizeof( char));
+	bufer = (char *) xmalloc (bsize * sizeof( char), C_T, GC_OFF);
 	/* Write maximum dynamic type */
 	if (0 > sprintf(bufer,"%d\n", scount))
 		eio();

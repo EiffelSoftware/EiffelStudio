@@ -179,7 +179,7 @@ long objectCount;
 
 	/* Initialization of the hash table */
 	nb_recorded = 0;
-	rt_table = (struct htable *) cmalloc(sizeof(struct htable));
+	rt_table = (struct htable *) xmalloc(sizeof(struct htable), C_T, GC_OFF);
 	if (rt_table == (struct htable *) 0)
 		xraise(EN_MEM);
 	if (-1 == ht_create(rt_table, objectCount, sizeof(struct rt_struct)))
@@ -565,7 +565,7 @@ update:
 				/* Reference is stil unsolved */
 				struct rt_cell *new_cell, *old_cell;
 
-				new_cell = (struct rt_cell *) cmalloc(sizeof(struct rt_cell));
+				new_cell = (struct rt_cell *) xmalloc(sizeof(struct rt_cell), C_T, GC_OFF);
 				new_cell->key = ((unsigned long) old) - 1;
 				new_cell->offset = (long) (addr - parent);
 				old_cell = rt_info->rt_list;
@@ -610,7 +610,7 @@ private void read_header()
 
 	errno = 0;
 
-	bufer = (char*) cmalloc (bsize * sizeof (char));
+	bufer = (char*) xmalloc (bsize * sizeof (char), C_T, GC_OFF);
 
 	/* Read the old maximum dyn type */
 	if (readline(bufer, &bsize) <= 0)

@@ -167,7 +167,7 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			--| See comment in `button_press_switch' above.
 		do
 			if not button_press_switch_is_connected then
-				signal_connect ("button-press-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), App_implementation.default_translate)
+				real_signal_connect (visual_widget, "button-press-event", agent (App_implementation.gtk_marshal).button_press_switch_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), App_implementation.default_translate)
 				button_press_switch_is_connected := True
 			end
 		end
@@ -398,9 +398,9 @@ feature -- Status setting
 		do		
 			disable_debugger
 			App_implementation.set_captured_widget (interface)
-			feature {EV_GTK_EXTERNALS}.gtk_grab_add (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_grab_add (visual_widget)
 			i := feature {EV_GTK_EXTERNALS}.gdk_pointer_grab (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
 				1, -- gint owner_events
 				feature {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM +
 				feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM +
@@ -410,7 +410,7 @@ feature -- Status setting
 				NULL,						-- GdkCursor *cursor
 				0)							-- guint32 time
 			i := feature {EV_GTK_EXTERNALS}.gdk_keyboard_grab (
-				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
+				feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget),
 				True, -- gint owner events
 				0) -- guint32 time
 		end
@@ -420,7 +420,7 @@ feature -- Status setting
 			--| Used by pick and drop.
 		do
 			App_implementation.set_captured_widget (Void)
-			feature {EV_GTK_EXTERNALS}.gtk_grab_remove (c_object)
+			feature {EV_GTK_EXTERNALS}.gtk_grab_remove (visual_widget)
 			feature {EV_GTK_EXTERNALS}.gdk_pointer_ungrab (
 				0 -- guint32 time
 			)
@@ -440,23 +440,9 @@ feature -- Element change
 	internal_set_pointer_style (a_cursor: like pointer_style) is
 			-- Assign `a_cursor' to `pointer_style', used for PND
 		local
-			a_cursor_imp: EV_PIXMAP_IMP
-			bitmap_data: ARRAY [CHARACTER]
-			cur_pix, a_cursor_ptr, fg, bg: POINTER
-			a_cur_data: ANY
+			a_cursor_ptr: POINTER
 		do
-			fg := App_implementation.fg_color
-			bg := App_implementation.bg_color
-			a_cursor_imp ?= a_cursor.implementation
-			check
-				a_cursor_imp_not_void: a_cursor_imp /= Void
-			end
-			bitmap_data := a_cursor_imp.bitmap_array
-			a_cur_data := bitmap_data.to_c
-			cur_pix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_create_from_data (NULL, $a_cur_data,  a_cursor_imp.width, a_cursor_imp.height, 1, fg, bg)
-
-			--| FIXME IEK If a_cursor_imp has no mask then routine seg faults.
-			a_cursor_ptr := feature {EV_GTK_EXTERNALS}.gdk_cursor_new_from_pixmap (cur_pix, a_cursor_imp.mask, fg, bg, a_cursor.x_hotspot, a_cursor.y_hotspot)
+			a_cursor_ptr := App_implementation.gdk_cursor_from_pixmap (a_cursor)
 			set_composite_widget_pointer_style (a_cursor_ptr)
 			feature {EV_GTK_EXTERNALS}.gdk_cursor_destroy (a_cursor_ptr)
 		end

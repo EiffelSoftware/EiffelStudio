@@ -127,12 +127,12 @@ feature -- Basic operations
 				-- Create the menu item
 			create Result.make (Current)
 			initialize_menu_item (Result)
-			Result.select_actions.extend (agent execute)
 			if is_selected then
 				Result.enable_select
 			else
 				Result.disable_select
 			end
+			Result.select_actions.extend (agent execute)
 		end
 
 feature {NONE} -- Implementation

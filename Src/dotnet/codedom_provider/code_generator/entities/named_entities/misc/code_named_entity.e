@@ -20,21 +20,12 @@ feature -- Status Setting
 			-- Set `name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
-			not_empty_name: not a_name.is_empty
 		do
 			name := a_name
 		ensure
 			name_set: name = a_name
 		end
 		
-feature -- Status Report
-
-	ready: BOOLEAN is
-			-- Is named entity ready to be generated?
-		do
-			Result := name /= Void
-		end
-
 end -- class CODE_NAMED_ENTITY
 
 --+--------------------------------------------------------------------

@@ -93,8 +93,7 @@ feature {NONE} -- Initialization
 						-- 4. Project name.
 						-- 5. Hwnd of window that Build should be displayed modally to.
 					
-					
-							-- Now create the project_settings.
+						-- Now create the project_settings.
 					create project_settings.make_with_default_values
 						-- Enable complete project in the project settings.
 					if (command_line.argument_array @ 2).as_lower.is_equal (Visual_studio_project_argument) then

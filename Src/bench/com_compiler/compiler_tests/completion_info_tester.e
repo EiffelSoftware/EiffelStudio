@@ -148,7 +148,7 @@ feature {NONE} -- Agent Handlers
 			put_string ("%N  Enter file name: ")
 			read_line
 			l_file_name := last_string
-			--new_target_features (l_target, l_feature_name, l_file_name)
+			target_features (l_target, l_feature_name, l_file_name)
 			put_string ("%N")
 		end
 		
@@ -157,12 +157,8 @@ feature {NONE} -- Implementation
 	perform_completion_info_tests (interface: IEIFFEL_COMPLETION_INFO_INTERFACE) is
 			-- Test completion information component.
 		local
-			--entries: IENUM_COMPLETION_ENTRY_INTERFACE
 			l_feature: IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE
 		do
-			interface.add_local ("s", "STRING")
-			--entries := interface.target_features ("s.", "make", "C:\Documents and Settings\Remote\My Documents\Visual Studio Projects\blank_project6\root_class.e")
-			--isplay_entries (entries)
 			interface.add_local ("s", "STRING")
 			l_feature := interface.target_feature ("s.append_real", "make", "C:\Documents and Settings\Remote\My Documents\Visual Studio Projects\blank_project6\root_class.e")
 			display_feature (l_feature)
@@ -240,7 +236,7 @@ feature {NONE} -- Implementation
 	target_features (target, feature_name, file_name: STRING) is
 			--
 		local
-			--l_result: IENUM_COMPLETION_ENTRY_INTERFACE
+			return_names, return_descriptions, return_indexes: ECOM_VARIANT
 			retried: BOOLEAN
 		do
 			if not retried then
@@ -251,13 +247,16 @@ feature {NONE} -- Implementation
 				put_string ("', '")
 				put_string (file_name)
 				put_string ("'")
-				--l_result := completion_interface.target_features (target, feature_name, file_name)
+				create return_names.make
+				create return_descriptions.make
+				create return_indexes.make
+				completion_interface.target_features (target, feature_name, file_name, return_names, return_descriptions, return_indexes)
 				put_string ("%N    Result=")
-				--if l_result /= Void then
-					--display_entries (l_result)
-			--else
+				if return_names.string_array /= Void then
+					display_entries (return_names, return_descriptions, return_indexes)					
+				else
 					put_string (Void)
-			--	end
+				end
 			else
 				put_string ("%N# Failed!")
 			end
@@ -265,81 +264,25 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
-		
-	new_target_features (target, feature_name, file_name: STRING) is
-			--
-		indexing
-			obsolete "To be removed after testing"
-		local
-			--l_result: ECOM_ARRAY [TAG_COMPLETIONENTRY_RECORD]
-			retried: BOOLEAN
-		do
---			if not retried then
---				put_string ("%N  Testing new_target_features with '")
---				put_string (target)
---				put_string ("', '")
---				put_string (feature_name)
---				put_string ("', '")
---				put_string (file_name)
---				put_string ("'")
---				l_result := completion_interface.new_target_features (target, feature_name, file_name)
---				put_string ("%N    Result=")
---				if l_result /= Void then
---					display_record_entries (l_result)
---				else
---					put_string (Void)
---				end
---			else
---				put_string ("%N# Failed!")
---			end
-		rescue
-			retried := True
-			retry
-		end
 
 feature {NONE} -- Output
 
---	display_entries (entries: IENUM_COMPLETION_ENTRY_INTERFACE) is
---			-- Display elements in `entries'.
---		local
---			i, count: INTEGER
---			rgelt: CELL [IEIFFEL_COMPLETION_ENTRY_INTERFACE]
---		do
---			from
---				count := entries.count
---				create rgelt.put (Void)
---				i := 1
---			until
---				i > count
---			loop
---				entries.ith_item (i, rgelt)
---				io.put_string ("name: " + rgelt.item.name + "%N")
---				io.put_string ("signature: " + rgelt.item.signature + "%N%N")
---				i := i + 1
---			end
---		end
-		
---	display_record_entries (entries: ECOM_ARRAY [TAG_COMPLETIONENTRY_RECORD]) is
---			-- Display elements in `entries'.
---		indexing
---			obsolete "To be removed after testing"
---		local
---			i, count: INTEGER
---			entry: TAG_COMPLETIONENTRY_RECORD
---		do
---			from
---				count := entries.lower_indices.item (1)
---				i := 1
---			until
---				i > count
---			loop
---				entry := entries.item (<<i>>)
---				io.put_string ("name: " + entry.name + "%N")
---				io.put_string ("signature: " + entry.signature + "%N%N")
---				io.put_string ("is_feature: " + entry.is_feature.out + "%N%N")
---				i := i + 1
---			end
---		end
+	display_entries (return_names, return_descriptions, return_indexes: ECOM_VARIANT) is
+			-- Display elements in `entries'.
+		local
+			i, count: INTEGER
+		do
+			from
+				count := return_names.string_array.count
+				i := 1
+			until
+				i > count
+			loop
+				io.put_string ("name: " + return_names.string_array.item (<<i>>) + "%N")
+				io.put_string ("signature: " + return_descriptions.string_array.item (<<i>>) + "%N%N")
+				i := i + 1
+			end
+		end
 	
 	display_feature (l_feature: IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE) is
 			-- Display `l_feature'.
@@ -350,10 +293,10 @@ feature {NONE} -- Output
 			i, count: INTEGER
 			rgelt: CELL [IEIFFEL_PARAMETER_DESCRIPTOR_INTERFACE]
 		do
-			--io.put_string ("feature " + l_feature.name + "%N")
-			--io.put_string ("signature: " + l_feature.signature + "%N")
-		--io.put_string ("description: " + l_feature.description + "%N%N")
-			--params := l_feature.parameters
+			io.put_string ("feature " + l_feature.name + "%N")
+			io.put_string ("signature: " + l_feature.signature + "%N")
+			io.put_string ("description: " + l_feature.description + "%N%N")
+			params := l_feature.parameters
 			count := params.count
 			create rgelt.put (Void)
 			from

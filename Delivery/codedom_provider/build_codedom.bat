@@ -11,8 +11,8 @@ CALL build_studio.bat /release
 IF NOT EXIST build_studio GOTO END
 IF NOT EXIST build_studio\EiffelSoftware.Codedom\EIFGEN\F_code\EiffelSoftware.Codedom.dll GOTO END
 IF NOT EXIST build_studio\EiffelSoftware.CacheBrowser\EIFGEN\F_code\EiffelSoftware.CacheBrowser.dll GOTO END
-IF NOT EXIST build_studio\EiffelSoftware.EiffelBase\EIFGEN\F_code\EiffelSoftware.EiffelBase.dll GOTO END
-IF NOT EXIST build_studio\EiffelSoftware.EiffelVision2\EIFGEN\F_code\EiffelSoftware.EiffelVision2.dll GOTO END
+IF NOT EXIST build_studio\EiffelSoftware.CodeDomBase\EIFGEN\F_code\EiffelSoftware.CodeDomBase.dll GOTO END
+IF NOT EXIST build_studio\EiffelSoftware.CodeDomVision2\EIFGEN\F_code\EiffelSoftware.CodeDomVision2.dll GOTO END
 
 ECHO Copying files
 CD ..\..\..\delivery
@@ -36,10 +36,10 @@ COPY ..\..\default.ecd configs\
 MKDIR bin
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CacheBrowser\EIFGEN\F_code\EiffelSoftware.CacheBrowser.dll bin\
 COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDom\EIFGEN\F_code\EiffelSoftware.Codedom.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.EiffelBase\EIFGEN\F_code\EiffelSoftware.EiffelBase.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.EiffelBase\EIFGEN\F_code\libEiffelSoftware.EiffelBase.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.EiffelVision2\EIFGEN\F_code\EiffelSoftware.EiffelVision2.dll bin\
-COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.EiffelVision2\EIFGEN\F_code\libEiffelSoftware.EiffelVision2.dll bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomBase\EIFGEN\F_code\EiffelSoftware.CodeDomBase.dll bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomBase\EIFGEN\F_code\libEiffelSoftware.CodeDomBase.dll bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomVision2\EIFGEN\F_code\EiffelSoftware.CodeDomVision2.dll bin\
+COPY ..\..\checkout\dotnet\codedom_provider\build_studio\EiffelSoftware.CodeDomVision2\EIFGEN\F_code\libEiffelSoftware.CodeDomVision2.dll bin\
 
 SET CODEDOM_BUILT=1
 

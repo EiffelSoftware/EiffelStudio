@@ -1,5 +1,5 @@
 system
-	"EiffelSoftware.EiffelBase"
+	"EiffelSoftware.CodeDomBase"
 
 root
 	ANY
@@ -45,7 +45,7 @@ assembly
 		end
 
 
-end -- system base
+end -- system EiffelSoftware.CodeDomBase
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

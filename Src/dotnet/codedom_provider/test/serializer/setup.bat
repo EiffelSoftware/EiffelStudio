@@ -12,11 +12,11 @@ GOTO END
 
 :SETUP
 @ECHO ON
-gacutil -if provider\EIFGEN\W_code\Assemblies\EiffelSoftware.EiffelBase.dll
-gacutil -if provider\EIFGEN\W_code\Assemblies\EiffelSoftware.EiffelVision2.dll
+gacutil -if provider\EIFGEN\W_code\Assemblies\EiffelSoftware.CodeDomBase.dll
+gacutil -if provider\EIFGEN\W_code\Assemblies\EiffelSoftware.CodeDomVision2.dll
 gacutil -if provider\EIFGEN\W_code\EiffelSoftware.CodedomSerializer.dll
-COPY /Y provider\EIFGEN\W_code\Assemblies\libEiffelSoftware.EiffelBase.dll c:\windows\system32
-COPY /Y provider\EIFGEN\W_code\Assemblies\libEiffelSoftware.EiffelVision2.dll c:\windows\system32
+COPY /Y provider\EIFGEN\W_code\Assemblies\libEiffelSoftware.CodeDomBase.dll c:\windows\system32
+COPY /Y provider\EIFGEN\W_code\Assemblies\libEiffelSoftware.CodeDomVision2.dll c:\windows\system32
 
 :END
 @ECHO Done.

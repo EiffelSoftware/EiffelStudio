@@ -21,7 +21,7 @@ default
 
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\..\samples\vision2\viewport"
+	root_cluster:		"$ISE_EIFFEL\examples\vision2\viewport"
 
 	library base:		"$ISE_EIFFEL\library\base"
 		exclude

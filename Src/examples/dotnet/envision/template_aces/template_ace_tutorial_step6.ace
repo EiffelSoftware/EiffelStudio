@@ -19,7 +19,7 @@ default
 
 cluster 
 
-	root_cluster:	"$ISE_EIFFEL\..\samples\wel\step6"
+	root_cluster:	"$ISE_EIFFEL\examples\wel\step6"
 
 
 	library base:		"$ISE_EIFFEL\library\base"

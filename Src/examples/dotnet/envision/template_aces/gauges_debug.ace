@@ -21,7 +21,7 @@ default
 
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\..\samples\vision2\gauges"
+	root_cluster:		"$ISE_EIFFEL\examples\vision2\gauges"
 
 	library base:		"$ISE_EIFFEL\library\base"
 		exclude

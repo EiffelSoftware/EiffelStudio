@@ -26,7 +26,7 @@ default
 --	my_parser:	"parser"
 
 cluster
-	root_cluster:		"$ISE_EIFFEL\..\samples\winforms\window_calculator"
+	root_cluster:		"$ISE_EIFFEL\examples\winforms\window_calculator"
 
 
 	all base:		"$ISE_EIFFEL\library\base"
@@ -37,9 +37,9 @@ cluster
 	all base_net:		"$ISE_EIFFEL\library.net\base"
 
 assembly
-	math:	"$ISE_EIFFEL\..\samples\winforms\window_calculator\math.dll"
+	math:	"$ISE_EIFFEL\examples\winforms\window_calculator\math.dll"
 
-	parser_util:	"$ISE_EIFFEL\..\samples\winforms\window_calculator\parserutils.dll"
+	parser_util:	"$ISE_EIFFEL\examples\winforms\window_calculator\parserutils.dll"
 		prefix
 			"parser_"
 		end

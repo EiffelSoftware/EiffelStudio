@@ -18,7 +18,7 @@ default
 	dotnet_naming_convention (yes)
 
 cluster 
-	root_cluster:	"$ISE_EIFFEL\..\samples\wel\step5"
+	root_cluster:	"$ISE_EIFFEL\examples\wel\step5"
 
 
 	library base:		"$ISE_EIFFEL\library\base"

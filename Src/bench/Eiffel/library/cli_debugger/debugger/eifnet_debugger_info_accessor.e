@@ -69,6 +69,19 @@ feature {NONE} -- Callback actions
 			end
 		end
 
+feature -- Queries
+
+	icor_debug_module (a_mod_name: STRING): ICOR_DEBUG_MODULE is
+			-- ICorDebugModule related to `a_mod_name'
+		do
+			Result := eifnet_debugger_info.icor_debug_module (a_mod_name)
+		end
+		
+	icor_debug_module_for_mscorlib: ICOR_DEBUG_MODULE is
+		do
+			Result := eifnet_debugger_info.icor_debug_module_for_mscorlib
+		end		
+		
 feature -- Access
 
 	icor_debug: ICOR_DEBUG is

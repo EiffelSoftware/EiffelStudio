@@ -35,6 +35,8 @@ RT_LNK long wattr_inv(int static_type, int32 feature_id, char *name, char *objec
 RT_LNK long wpattr_inv(int32 origin, int32 offset, char *name, char *object);				/* Nested precompiled attribute access*/
 RT_LNK int wtype(int static_type, int32 feature_id, int dyn_type);						/* Creation type */
 RT_LNK int wptype(int32 origin, int32 offset, int dyn_type);					/* Creation type of a precomp feature */
+RT_LNK int wtype_gen(int static_type, int32 feature_id, char *object);						/* Creation type (generic) */
+RT_LNK int wptype_gen(int32 origin, int32 offset, char *object);						/* Creation type of a precomp generic feature */
 
 
 RT_LNK void init_desc(void);				/* Call structure initialization */
@@ -51,6 +53,7 @@ RT_LNK char desc_fill;					/* Is it an actual insertion or do we
  *  CAttrOffs(x,y,z)
  *  CBodyIdx(x,y,z)
  *	CFeatType(x,y,z)
+ *  CGENFeatType(t,x,y,z)
  *  MPatId(x)
  *  FPatId(x)
  *  DLEMPatId(x)
@@ -83,6 +86,16 @@ RT_LNK char desc_fill;					/* Is it an actual insertion or do we
 		desc = (desc_tab[info.origin])[(z)] ;\
 		(x) = (desc[info.offset]).type ;\
 	}	
+
+#define CGENFeatType(t,x,y,z) \
+	{ \
+		struct rout_info info; \
+		struct desc_info *desc; \
+		info = eorg_table[(y)] ;\
+		desc = (desc_tab[info.origin])[(z)] ;\
+		(t) = (desc[info.offset]).type ;\
+		(x) = (desc[info.offset]).gen_type ;\
+	}
 
 #define MPatId(x) mpatidtab[x]
 #define FPatId(x) egc_fpatidtab[x]

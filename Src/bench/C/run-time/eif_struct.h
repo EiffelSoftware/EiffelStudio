@@ -3,7 +3,7 @@
   ####    #####  #####   #    #   ####    #####          #    #
  #          #    #    #  #    #  #    #     #            #    #
   ####      #    #    #  #    #  #          #            ######
-      #     #    #####   #    #  #          #     ###    #    #
+	  #     #    #####   #    #  #          #     ###    #    #
  #    #     #    #   #   #    #  #    #     #     ###    #    #
   ####      #    #    #   ####    ####      #     ###    #    #
 
@@ -106,12 +106,23 @@ struct conform {
 	char *co_tab;		/* Conformance table (mapped on eight bits packs) */
 };
 
+/* Full type info for parents of a class. For generic conformance
+*/
+
+struct eif_par_types {
+	int16   nb_generics;    /* Number of formal generics */
+	char    *class_name;    /* Name of this class */
+	char    is_expanded;    /* Is it expanded? */
+	int16   *parents;       /* Parent types */
+};
+
 RT_LNK int scount;				/* Numner of dynamic types */
 
 #ifdef WORKBENCH
 struct desc_info {						/* Descriptor information */
 	uint16 info;						/* Body index or attribute offset */
 	int16 type;							/* Feature type */
+	int16 *gen_type;							/* Generics, if any */
 };
 
 struct rout_info {						/* Routine information */

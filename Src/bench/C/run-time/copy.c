@@ -216,9 +216,9 @@ rt_public char *rtclone(char *source)
 }
 
 rt_private char *duplicate(char *source, char *enclosing, int offset)
-             		/* Object to be duplicated */
-                	/* Object where attachment is made */
-           			/* Offset within enclosing where attachment is made */
+			 		/* Object to be duplicated */
+					/* Object where attachment is made */
+		   			/* Offset within enclosing where attachment is made */
 {
 	/* Duplicate the source object (shallow duplication) and attach the freshly
 	 * allocated copy at the address pointed to by receiver, which is protected
@@ -239,7 +239,7 @@ rt_private char *duplicate(char *source, char *enclosing, int offset)
 	 * its dynamic type.
 	 */
 	if (flags & EO_EXP)						/* Object is expanded */
-		size = Size(flags & EO_TYPE);		/* Get its size though skeleton */
+		size = Size(Deif_bid(flags & EO_TYPE));		/* Get its size though skeleton */
 	else
 		size = zone->ov_size & B_SIZE;		/* Size encoded in header */
 
@@ -269,9 +269,9 @@ rt_private char *duplicate(char *source, char *enclosing, int offset)
 }
 
 rt_private void rdeepclone (char *source, char *enclosing, int offset)
-             			/* Source object to be cloned */
-                		/* Object receiving clone */
-           				/* Offset within enclosing where attachment is made */
+			 			/* Source object to be cloned */
+						/* Object receiving clone */
+		   				/* Offset within enclosing where attachment is made */
 {
 	/* Recursive deep clone of `source' is attached to `receiver'. Then
 	 * enclosing parameter gives us a pointer to where the address of the
@@ -380,7 +380,7 @@ rt_public void ecopy(register char *source, register char *target)
 	enclosing = target;					/* By default */
 	if ((t_flags & EO_EXP) || (s_flags & EO_EXP)) {
 		enclosing -= t_zone->ov_size & B_SIZE;
-		size = Size(t_flags & EO_TYPE);
+		size = Size(Deif_bid(t_flags & EO_TYPE));
 		}
 	else
 		size = s_zone->ov_size & B_SIZE;
@@ -455,11 +455,11 @@ rt_public void spcopy(register char *source, register char *target)
 }
 
 rt_private void efcopy(register char *source, register char *target, uint32 s_flags, uint32 t_flags, char *enclosing)
-                       
-                       
-               
-               
-                		/* Enclosing target object (may differ from target) */
+					   
+					   
+			   
+			   
+						/* Enclosing target object (may differ from target) */
 {
 	/* Copy field by field of `source' into `target' */
 
@@ -485,8 +485,8 @@ rt_private void efcopy(register char *source, register char *target, uint32 s_fl
 	uint32 e_flags;						/* Flags from enclosing object */
 
 
-	s_type = s_flags & EO_TYPE;
-	t_type = t_flags & EO_TYPE;
+	s_type = Deif_bid(s_flags & EO_TYPE);
+	t_type = Deif_bid(t_flags & EO_TYPE);
 	t_skeleton = &System(t_type);
 	t_types = t_skeleton->cn_types;
 	s_types = System(s_type).cn_types;
@@ -629,7 +629,7 @@ rt_private void expanded_update(char *source, char *target, int shallow_or_deep)
 		s_enclosing = source - s_offset;		/* Address of enclosing object */
 	}
 
-	nb_ref = References(flags & EO_TYPE);		/* References in target */
+	nb_ref = References(Deif_bid(flags & EO_TYPE));		/* References in target */
 
 	/* Iteration on the references of the object */
 	for (
@@ -661,7 +661,7 @@ rt_private void expanded_update(char *source, char *target, int shallow_or_deep)
 
 									/* Corresponding expanded in target object */
 			t_expanded = t_enclosing + offset2 + temp_offset;
-								 	/* Update reference point to sub-object */ 
+									/* Update reference point to sub-object */ 
 			*(char **) (t_enclosing + t_offset) = t_expanded;
 			t_reference = *(char **) (t_enclosing + t_offset);
 									/* Update offset in header */ 
@@ -751,7 +751,7 @@ rt_public void spclearall (EIF_POINTER spobj)
 	union overhead *zone;			/* Malloc information zone */
 	char  *(*init)(char *);				/* Initialization routine to be called */
 	long i, count, elem_size;
-	int dtype;
+	int dtype, dftype;
 	char *ref;
 
 	zone = HEADER(spobj);
@@ -762,7 +762,8 @@ rt_public void spclearall (EIF_POINTER spobj)
 	if (zone->ov_flags & EO_COMP) {
 			/* case of a special object of expanded structures */
 		ref = spobj + OVERHEAD;
-		dtype = HEADER(ref)->ov_flags & EO_TYPE;
+		dftype = HEADER(ref)->ov_flags & EO_TYPE;
+		dtype = Deif_bid(dftype);
 		bzero(spobj, count * elem_size);
 			/* Initialize new expanded elements, if any */
 		init = (char *(*)(char *)) (XCreate(dtype)); /* %%ss cast? added */
@@ -773,7 +774,7 @@ rt_public void spclearall (EIF_POINTER spobj)
 		for (i = 0; i < count; i++, ref += elem_size) {
 			zone = HEADER(ref);
 			zone->ov_size = ref - spobj;	/* For GC */
-			zone->ov_flags = dtype;			/* Expanded type */
+			zone->ov_flags = dftype;			/* Expanded type */
 			(init)(ref);					/* Call initialization routine */
 		}
 	} else

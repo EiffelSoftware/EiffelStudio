@@ -482,8 +482,8 @@ rt_public int acollect(void)
 }
 
 rt_public int scollect(int (*gc_func) (void), int i)
-                 		/* The collection function to be called */
-      					/* Index in g_stat array where statistics are kept */
+				 		/* The collection function to be called */
+	  					/* Index in g_stat array where statistics are kept */
 {
 	/* Run a garbage collection cycle with statistics updating. We monitor
 	 * both the time spent in the collection and the memory released,
@@ -1015,9 +1015,9 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 }
 
 rt_private void mark_simple_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move)
-                            		/* The stack which is to be marked */
-                            		/* The routine used to mark objects */
-                   					/* Are the objects expected to move? */
+									/* The stack which is to be marked */
+									/* The routine used to mark objects */
+				   					/* Are the objects expected to move? */
 {
 	/* Loop over the specified stack, using the supplied marker to recursively
 	 * mark the objects. The 'move' flag is a flag which tells us whether the
@@ -1170,9 +1170,9 @@ rt_private void update_object_id_stack(void)
 #endif /* !CUSTOM || NEED_OBJECT_ID_H */
 
 rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker) (char *), register6 int move)
-                            		/* The stack which is to be marked */
-                            		/* The routine used to mark objects */
-                   					/* Are the objects expected to move? */
+									/* The stack which is to be marked */
+									/* The routine used to mark objects */
+				   					/* Are the objects expected to move? */
 {
 	/* Loop over the specified stack, using the supplied marker to recursively
 	 * mark the objects. The 'move' flag is a flag which tells us whether the
@@ -1245,8 +1245,8 @@ rt_private void mark_stack(register5 struct stack *stk, register4 char *(*marker
 }
 
 rt_private char *mark_expanded(char *root, char *(*marker) (char *))
-           				/* Expanded reference to be marked */
-                  		/* The routine used to mark objects */
+		   				/* Expanded reference to be marked */
+				  		/* The routine used to mark objects */
 {
 	/* The main invariant from the GC is: "expanded objects are only referenced
 	 * once, therefore they are not marked and must be traversed only once".
@@ -1285,8 +1285,8 @@ rt_private char *mark_expanded(char *root, char *(*marker) (char *))
 /* Start of workbench-specific marking functions */
 #ifdef WORKBENCH
 rt_private void mark_op_stack(EIF_CONTEXT register4 char *(*marker) (char *), register5 int move)
-                            		/* The routine used to mark objects */
-                   					/* Are the objects expected to move? */
+									/* The routine used to mark objects */
+				   					/* Are the objects expected to move? */
 {
 	/* Loop over the operational stack (the one used by the interpreter) and
 	 * mark all the references found.
@@ -1439,9 +1439,9 @@ rt_private void mark_op_stack(EIF_CONTEXT register4 char *(*marker) (char *), re
 /* End of workbench-specific marking functions */
 
 rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*marker) (char *), register6 int move)
-                             		/* The stack which is to be marked */
-                            		/* The routine used to mark objects */
-                   					/* Are the objects expected to move? */
+							 		/* The stack which is to be marked */
+									/* The routine used to mark objects */
+				   					/* Are the objects expected to move? */
 {
 	/* Loop over the exception stacks (the one used by the exception handling
 	 * mechanism) and update all the references found. Those references are
@@ -1708,7 +1708,7 @@ marked:		/* I need this goto label to avoid code duplication */
 		}
 
 	} else
-		offset = References(flags & EO_TYPE);	/* Number of references */
+		offset = References(Deif_bid(flags & EO_TYPE));	/* Number of references */
 
 #ifdef DEBUG
 	dprintf(16)("recursive_mark: %d references for 0x%lx\n", offset, root);
@@ -1930,7 +1930,7 @@ marked: /* Goto label needed to avoid code duplication */
 			}
 
 		} else
-			count = offset = References(flags & EO_TYPE);	/* # items */
+			count = offset = References(Deif_bid(flags & EO_TYPE));	/* # items */
 
 #ifdef DEBUG
 	dprintf(16)("hybrid_mark: %d references for 0x%lx\n", offset, current);
@@ -2140,7 +2140,7 @@ marked:
 			size -= LNGPAD_2;					/* Go backward to 'count' */
 			offset = *(long *) (node + size);	/* Get the count (# of items) */
 		} else
-			offset = References(flags & EO_TYPE);	/* # of references */
+			offset = References(Deif_bid(flags & EO_TYPE));	/* # of references */
 
 
 		/* Step 1
@@ -2249,7 +2249,7 @@ not_explorable:
 				size -= LNGPAD_2;
 				offset = *(long *) (node + size);
 			} else
-				offset = References(flags & EO_TYPE);
+				offset = References(Deif_bid(flags & EO_TYPE));
 
 			if (position == offset)
 				epush (&path_stack, (char *) (position | LAST_REF));
@@ -2974,7 +2974,7 @@ rt_private int sweep_from_space(void)
 			 */
 
 			if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
-				dtype = zone->ov_flags & EO_TYPE;		/* Dispose ptr */
+				dtype = Deif_bid(zone->ov_flags & EO_TYPE);		/* Dispose ptr */
 				if (Disp_rout(dtype)) {					/* Exists ? */
 					gc_status = g_data.status;      	/* Save GC current status */
 					g_data.status |= GC_STOP;			/* Stop GC */
@@ -3049,7 +3049,7 @@ rt_private int sweep_from_space(void)
 				 */
 
 				if (!(flags & B_FWD)) {	/* Non-forwarded block is dead */
-					dtype = next->ov_flags & EO_TYPE;	/* Dispose ptr */
+					dtype = Deif_bid(next->ov_flags & EO_TYPE);	/* Dispose ptr */
 					if (Disp_rout(dtype)) {				/* Exists ? */
 						gc_status = g_data.status;      /* Save GC current status */
 						g_data.status |= GC_STOP;		/* Stop GC */
@@ -3309,7 +3309,7 @@ rt_private struct chunk *find_std_chunk(register struct chunk *start)
 }
 
 rt_private void find_to_space(struct sc_zone *to)
-                   		/* The zone structure we want to fill in */
+				   		/* The zone structure we want to fill in */
 {
 	/* Look for a suitable space which could be used by partial scanvenging
 	 * as a 'to' zone. We are starting by looking at the end of the memory,
@@ -3866,7 +3866,7 @@ rt_private char *generation_mark(char *root)
 		}
 
 	} else
-		offset = References(flags & EO_TYPE);	/* Number of references */
+		offset = References(Deif_bid(flags & EO_TYPE));	/* Number of references */
 
 #ifdef DEBUG
 	dprintf(16)("generation_mark: %d references for 0x%lx\n", offset, root);
@@ -4054,7 +4054,7 @@ rt_private char *hybrid_gen_mark(char *root)
 					goto done;		/* End of iteration; exit procedure */
 			}
 		} else
-			count = offset = References(flags & EO_TYPE); /* # of references */
+			count = offset = References(Deif_bid(flags & EO_TYPE)); /* # of references */
 
 #ifdef DEBUG
 	dprintf(16)("hybrid_gen_mark: %d references for 0x%lx\n", offset, current);
@@ -4233,7 +4233,7 @@ rt_private char *it_gen_mark(char *root)
 			size -= LNGPAD_2;					/* Go backward to 'count' */
 			offset = *(long *) (node + size);	/* Get the count (# of items) */
 		} else
-			offset = References(flags & EO_TYPE);	/* # of references */
+			offset = References(Deif_bid(flags & EO_TYPE));	/* # of references */
 
 		/* Step 1
 		 * if the current object has reference(s), inspect the first one.
@@ -4342,7 +4342,7 @@ not_explorable:
 				size -= LNGPAD_2;
 				offset = *(long *) (node + size);
 			} else
-				offset = References(flags & EO_TYPE);
+				offset = References(Deif_bid(flags & EO_TYPE));
 
 			if (position == offset)
 				epush (&path_stack, (char *) (position | LAST_REF));
@@ -4856,7 +4856,7 @@ rt_shared int refers_new_object(register char *object)
 		else
 			size = sizeof(char *);		/* Usual item size */
 	} else
-		refs = References(flags & EO_TYPE);	/* Number of references */
+		refs = References(Deif_bid(flags & EO_TYPE));	/* Number of references */
 
 	/* Loop over the referenced objects to see if there is a new one. If the
 	 * reference is on an expanded object, recursively explore that object.
@@ -4970,7 +4970,7 @@ rt_public void erembq(char *obj)
  */
 
 rt_shared void gfree(register union overhead *zone)
-                               		/* Pointer on malloc info zone */
+							   		/* Pointer on malloc info zone */
 {
 	/* The entry Dispose(type) holds a pointer to the dispose function to
 	 * be called when freeing an entity of dynamic type 'type'. A void entry
@@ -5060,8 +5060,8 @@ rt_public char *onceset(void)
  */
 
 rt_shared int epush(register struct stack *stk, register char *value)
-                            		/* The stack */
-                      				/* Value to be pushed */
+									/* The stack */
+					  				/* Value to be pushed */
 {
 	/* Push 'value' on top of the given stack 'stk'. If the stack is
 	 * full, we try to allocate a new chunk. If this fails, nothing is done,
@@ -5110,8 +5110,8 @@ rt_shared int epush(register struct stack *stk, register char *value)
 }
 
 rt_shared char **st_alloc(register struct stack *stk, register int size)
-                            		/* The stack */
-                   					/* Initial size */
+									/* The stack */
+				   					/* Initial size */
 {
 	/* The stack 'stk' is created, with size 'size'. Return the arena value */
 	EIF_GET_CONTEXT
@@ -5140,8 +5140,8 @@ rt_shared char **st_alloc(register struct stack *stk, register int size)
 }
 
 rt_shared int st_extend(register struct stack *stk, register int size)
-                            		/* The stack */
-                   					/* Size of new chunk to be added */
+									/* The stack */
+				   					/* Size of new chunk to be added */
 {
 	/* The stack 'stk' is extended and the 'stk' structure updated.
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
@@ -5172,7 +5172,7 @@ rt_shared int st_extend(register struct stack *stk, register int size)
 }
 
 rt_shared void st_truncate(register struct stack *stk)
-                            		/* The stack to be truncated */
+									/* The stack to be truncated */
 {
 	/* Free unused chunks in the stack. If the current chunk has at least
 	 * MIN_FREE locations, then we may free all the chunks starting with the
@@ -5199,7 +5199,7 @@ rt_shared void st_truncate(register struct stack *stk)
 }
 
 rt_shared void st_wipe_out(register struct stchunk *chunk)
-                               		/* First chunk to be freed */
+							   		/* First chunk to be freed */
 {
 	/* Free all the chunks after 'chunk' */
 

@@ -165,16 +165,16 @@ rt_public EIF_INTEGER eif_system (char *s)
 
 #ifdef EIF_VMS	/* if s contains '[', prepend 'run ' */
 	{   /* if it contains a '[' before a space (ie. no verb), prepend "run " */
-	    char *p = strchr (s, '[');
-	    if ( (p) && p < strchr (s, ' ') ) {
-		    char * run_cmd = eif_malloc (10 + strlen(s));
-		    if ( (run_cmd) ) {
+		char *p = strchr (s, '[');
+		if ( (p) && p < strchr (s, ' ') ) {
+			char * run_cmd = eif_malloc (10 + strlen(s));
+			if ( (run_cmd) ) {
 			strcat (strcpy (run_cmd, "run "), s);
 			result = (EIF_INTEGER) system (run_cmd);
 			eif_free (run_cmd);
-		    } else result = -1;
-	    }
-	    else result = (EIF_INTEGER) system (s);
+			} else result = -1;
+		}
+		else result = (EIF_INTEGER) system (s);
 	}
 
 #else   /* (not) EIF_VMS */
@@ -217,7 +217,7 @@ rt_public EIF_INTEGER eif_putenv (char *v, char *k)
 	strcpy (lower_k, k);
 	CharLowerBuff (lower_k, key_len);
 
-	strcpy (key, "Software\\ISE\\Eiffel43g\\");
+	strcpy (key, "Software\\ISE\\Eiffel43h\\");
 	strncat (key, rindex(modulename, '\\') + 1, appl_len);
 
 	if (RegCreateKeyEx (HKEY_CURRENT_USER, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS) {
@@ -252,7 +252,7 @@ rt_public EIF_INTEGER eif_safe_putenv (EIF_OBJ v, EIF_OBJ k)
 	 * for EiffelWeb, because on windows we needed to deal with environment
 	 * variables and not registry keys which was done with eif_putenv.
 	 * We make a copy of the string with malloc, so that the it will not
-     * be collected by the GC.
+	 * be collected by the GC.
 	 */
 
 	char *new_string; 
@@ -296,7 +296,7 @@ rt_public EIF_OBJ eif_getenv (EIF_OBJ k)
 	strcpy (lower_k, k);
 	CharLowerBuff (lower_k, key_len);
 
-	strcpy (key, "Software\\ISE\\Eiffel43g\\");
+	strcpy (key, "Software\\ISE\\Eiffel43h\\");
 	strncat (key, rindex(modulename, '\\')+1, appl_len);
 
 	if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
@@ -335,6 +335,7 @@ rt_public char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
 	long elem_size;			/* Size of each item within area */
 	char *(*init)(char *);		/* Initialization routine for expanded objects */
 	int dtype;				/* Dynamic type of the first expanded object */
+	int dftype;				/* Full dynamic type of the first expanded object */
 	int n;					/* Counter for initialization of expanded */
 
 /* FIXME: check efficiency
@@ -370,6 +371,7 @@ rt_public char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
 	 */
 
 	ref = (new_area + j * elem_size) + OVERHEAD;	/* Needed for stupid gcc */
+	dftype = Dftype(ref);					/* Gcc won't let me expand that!! */
 	dtype = Dtype(ref);					/* Gcc won't let me expand that!! */
 	init = (char *(*)(char *)) XCreate(dtype);
 
@@ -386,7 +388,7 @@ rt_public char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
 	) {
 		zone = HEADER(ref);
 		zone->ov_size = ref - new_area;		/* For GC: offset within area */
-		zone->ov_flags = dtype;				/* Expanded type */
+		zone->ov_flags = dftype;				/* Expanded type */
 		(init)(ref);						/* Call initialization routine */
 
 /*FIXME two arguments ... Xavier*/
@@ -408,7 +410,7 @@ rt_public char *arycpy(char *area, EIF_INTEGER i, EIF_INTEGER j, EIF_INTEGER k)
 	) {
 		zone = HEADER(ref);
 		zone->ov_size = ref - new_area;		/* For GC: offset within area */
-		zone->ov_flags = dtype;				/* Expanded type */
+		zone->ov_flags = dftype;				/* Expanded type */
 		(init)(ref);						/* Call initialization routine */
 /*FIXME two arguments ... Xavier*/
 

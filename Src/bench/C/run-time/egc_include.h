@@ -12,6 +12,8 @@ extern "C" {
 	extern struct cnode egc_fsystem_init [] ;
 	extern struct conform *egc_fco_table_init [] ;
 	extern void egc_system_mod_init_init (void) ;
+	extern struct eif_par_types *egc_partab_init [] ;
+	extern int egc_partab_size_init ;
 
 #ifdef WORKBENCH
 	extern fnptr egc_frozen_init [];

@@ -263,30 +263,30 @@ rt_public void eif_append_directory(EIF_REFERENCE string, EIF_POINTER p, EIF_POI
 	/* make p "[x]" look like "[x." if p is not "[x.]" */
 	if (*p == '\0') strcpy (p, "[.]");
 	if (*((char *)p) != '\0') {
-	    char *q = p + strlen(p) - 1;	/* q --> last char of p	*/
-	    char *w = (char*)v;			/* w --> 1st char of v	*/
-	    /* skip leading delimiters [ or [. in second string */
-	    if (*w == '[') {			/* if w starts with [	*/
+		char *q = p + strlen(p) - 1;	/* q --> last char of p	*/
+		char *w = (char*)v;			/* w --> 1st char of v	*/
+		/* skip leading delimiters [ or [. in second string */
+		if (*w == '[') {			/* if w starts with [	*/
 		if (*++w == '.')		/* skip it, check for .	*/
-		    ++w;			/*   skip . also 	*/
-	    }
-	    /* check trailing delimiter in first string */
-	    if (*q == ':') {			/* if a : (device only)	*/
+			++w;			/*   skip . also 	*/
+		}
+		/* check trailing delimiter in first string */
+		if (*q == ':') {			/* if a : (device only)	*/
 		*++q = '[';			/*   append [ after :	*/
-	    } else if (*q == ']') {		/* if a ]		*/
+		} else if (*q == ']') {		/* if a ]		*/
 		if (*--q != '.')		/* if not .]		*/
-		    *++q = '.';			/*   make it so		*/
-	    } else {				/* none (name only)	*/
+			*++q = '.';			/*   make it so		*/
+		} else {				/* none (name only)	*/
 		*++q = ':'; *++q = '[';		/* append :[		*/
-	    }
-	    /* q still --> last char of p  (p + strlen(p) -1)  */
-	    strcpy (++q, w);			/* append 2nd string (v) */
-	    /* ensure it has a closing ] */
-	    if ( *(w = p + strlen(p) - 1) != ']')
+		}
+		/* q still --> last char of p  (p + strlen(p) -1)  */
+		strcpy (++q, w);			/* append 2nd string (v) */
+		/* ensure it has a closing ] */
+		if ( *(w = p + strlen(p) - 1) != ']')
 		strcat (p, "]");
 	} else { /* p is empty string */
-	    /* what to do with v??? */
-	    strcpy (p, v);
+		/* what to do with v??? */
+		strcpy (p, v);
 	}
 
 #else	/* (not) EIF_VMS */
@@ -425,7 +425,7 @@ rt_public EIF_REFERENCE eif_extracted_paths(EIF_POINTER p)
 	EIF_GET_CONTEXT
 	EIF_REFERENCE array;
  
-	array = emalloc(egc_arr_dtype);
+	array = emalloc((uint32)eif_typeof_array_of((int16)egc_str_dtype));
 	epush(&loc_stack, (char *) (&array));
  
 #if defined EIF_WINDOWS || defined EIF_OS2

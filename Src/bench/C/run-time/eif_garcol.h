@@ -55,6 +55,7 @@ extern "C" {
 #define EO_EXP		0x00020000		/* Object is an expanded one */
 #define EO_COMP		0x00010000		/* Composite (has expanded or special) */
 #define EO_TYPE		0x0000ffff		/* Mask to get the dynamic type */
+#define EO_UPPER	0xffff0000		/* Mask to get upper half of flags */
 #define EO_MOVED	(EO_NEW | EO_MARK)
 
 /*

@@ -81,8 +81,8 @@ rt_public int eequal(register char *target, register char *source)
 
 	s_flags = HEADER(source)->ov_flags;
 	t_flags = HEADER(target)->ov_flags;
-	s_type = s_flags & EO_TYPE;
-	t_type = t_flags & EO_TYPE;
+	s_type = Deif_bid(s_flags & EO_TYPE);
+	t_type = Deif_bid(t_flags & EO_TYPE);
 
 	if (s_type == t_type) {
 		/* Dynamic type are the same: because of the intra-expanded
@@ -154,8 +154,8 @@ rt_public int eiso(char *target, char *source)
 
 #ifdef DEBUG
 	dprintf(2)("eiso: source = 0x%lx [%s] target = 0x%lx [%s]\n",
-		source, System(s_flags & EO_TYPE).cn_generator,
-		target, System(t_flags & EO_TYPE).cn_generator);
+		source, System(Deif_bid(s_flags & EO_TYPE)).cn_generator,
+		target, System(Deif_bid(t_flags & EO_TYPE)).cn_generator);
 #endif
 
 	if (s_flags & EO_C)
@@ -332,8 +332,8 @@ rt_private int rdeepiso(char *target, char *source)
 		/* Traversal of references */
 		if (!(flags & EO_COMP)) {
 			/* Specials filled with references: we have to iterate on fields
-		 	* two by two.
-		 	*/
+			* two by two.
+			*/
 			/* Evaluation of the count of the target special object */
 			for(
 				s_ref = (char *)source, t_ref = (char *) target;
@@ -356,10 +356,10 @@ rt_private int rdeepiso(char *target, char *source)
 					return FALSE;
 			}
 			return TRUE;
-	 	} else {
+		} else {
 			/* Special objects filled with (non-special) expanded objects.
-	 		 * we call then standard isomorphism test on normal objects.
-	 		 */
+			 * we call then standard isomorphism test on normal objects.
+			 */
 			elem_size = *(long *) (t_ref + sizeof(long));
 			for (
 				s_ref = source+OVERHEAD, t_ref = target+OVERHEAD;
@@ -451,8 +451,8 @@ rt_private int e_field_equal(register char *target, register char *source, uint3
 	char *t_ref, *s_ref;
 	int target_type, source_type;	/* Attribute type in skeleton */
 
-	s_type = s_flags & EO_TYPE;
-	t_type = t_flags & EO_TYPE;
+	s_type = Deif_bid(s_flags & EO_TYPE);
+	t_type = Deif_bid(t_flags & EO_TYPE);
 	t_skeleton = &System(t_type);
 	s_skeleton = &System(s_type);
 	t_types = t_skeleton->cn_types;
@@ -574,8 +574,8 @@ rt_private int e_field_iso(register char *target, register char *source, uint32 
 	char *t_ref, *s_ref, *ref1, *ref2;
 	int target_type, source_type;		/* Attribute type in skeleton */
 
-	s_type = s_flags & EO_TYPE;
-	t_type = t_flags & EO_TYPE;
+	s_type = Deif_bid(s_flags & EO_TYPE);
+	t_type = Deif_bid(t_flags & EO_TYPE);
 	t_skeleton = &System(t_type);
 	s_skeleton = &System(s_type);
 	t_types = t_skeleton->cn_types;

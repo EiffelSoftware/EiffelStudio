@@ -23,7 +23,7 @@
 #include "eif_hector.h"
 #include "eif_bits.h"
 #include "eif_globals.h"
-#include "x2c.h"			 /* For macro LNGPAD */
+#include "x2c.h"		/* For macro LNGPAD */
 
 /*
  * Private declarations
@@ -66,7 +66,7 @@ rt_public char *c_generator(register char *Current)
 	if (flags & EO_SPEC)
 		return makestr("SPECIAL", 7);
 	
-	generator = System(flags & EO_TYPE).cn_generator;
+	generator = System(Deif_bid(flags & EO_TYPE)).cn_generator;
 
 	return makestr(generator, strlen(generator));
 }
@@ -106,7 +106,7 @@ rt_public char *build_out(EIF_CONTEXT EIF_OBJ object)
 		rec_swrite(eif_access(object), 0);
 	} else {
 		/* Print instance class name and object id */
-		sprintf(buffero, "%s [0x%lX]\n", System(flags & EO_TYPE).cn_generator,
+		sprintf(buffero, "%s [0x%lX]\n", System(Deif_bid(flags & EO_TYPE)).cn_generator,
 			eif_access(object));
 		write_out();
 		/* Print recursively in `tagged_out' */
@@ -300,7 +300,7 @@ rt_private void rec_swrite(EIF_CONTEXT register char *object, int tab)
 	old_count = count;
 	elem_size = *(long *) (o_ref + sizeof(long));
 	flags = zone->ov_flags;
-	dt_type = (int) (flags & EO_TYPE);
+	dt_type = (int) Deif_bid(flags & EO_TYPE);
 
 	if (!(flags & EO_REF)) 
 		if (flags & EO_COMP) 
@@ -391,8 +391,8 @@ rt_private void write_tab(EIF_CONTEXT register int tab)
 }
 
 rt_private void write_char (EIF_CHARACTER c, char *buf)
-                			/* The character */
-          		/* Where it should be written */
+							/* The character */
+		  		/* Where it should be written */
 {
 	/* Write a character in `buffer' */
 		
@@ -514,7 +514,7 @@ rt_public char *c_outp(EIF_CONTEXT EIF_POINTER p)
  */
 
 rt_shared char *simple_out(EIF_CONTEXT struct item *val) 
-    /* Interpreter value cell */
+	/* Interpreter value cell */
 {
 	/* Hand build a tagged out representation for simple types. The
 	 * representation should be kept in sync with those defined above.

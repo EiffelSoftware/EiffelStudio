@@ -26,6 +26,7 @@
 #include "eif_garcol.h"
 #include "eif_except.h"
 #include "eif_sig.h"
+#include "eif_gen_conf.h"
 
 #ifdef WORKBENCH
 #include "eif_wbench.h"		/* %%ss added for create_desc */
@@ -90,6 +91,8 @@ rt_public char **melt;						/* Byte code array */
 rt_public int *mpatidtab;					/* Table of pattern id's indexed by body id's */
 rt_public struct eif_opt *eoption;			/* Option table */
 rt_public struct p_interface *pattern;		/* Pattern table */
+rt_public struct eif_par_types **eif_par_table;	/*Parent table */
+rt_public int eif_par_table_size;			/* size of parent table */
 
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #else
@@ -97,6 +100,8 @@ rt_public struct cnode *esystem;			/* Eiffel system (updated by DLE) */
 rt_public struct conform **co_table;		/* Eiffel conformance table (updated DLE) */
 rt_public long *esize;						/* Size of objects (updated by DLE) */
 rt_public long *nbref;						/* Gives # of references (updated by DLE) */
+rt_public struct eif_par_types **eif_par_table;	/*Parent table */
+rt_public int eif_par_table_size;			/* size of parent table */
 
 /*#define exvec() exft()					/* No stack dump in final mode */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
@@ -249,6 +254,8 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	ecall = egc_fcall;
 	eoption = egc_foption;
 	co_table = egc_fco_table;
+	eif_par_table = egc_partab;
+	eif_par_table_size = egc_partab_size;
 	eorg_table = egc_forg_table;
 	pattern = egc_fpattern;
 
@@ -299,6 +306,9 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	 */
 	esystem = egc_fsystem;
 	co_table = egc_fco_table;
+	eif_par_table = egc_partab;
+	eif_par_table_size = egc_partab_size;
+	eif_gen_conf_init (eif_par_table_size);
 	nbref = egc_fnbref;
 	esize = egc_fsize;
 

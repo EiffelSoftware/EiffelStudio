@@ -1,11 +1,11 @@
 /*
 
   #####  #####     ##    #    #  ######  #####    ####   ######           ####
-    #    #    #   #  #   #    #  #       #    #  #       #               #    #
-    #    #    #  #    #  #    #  #####   #    #   ####   #####           #
-    #    #####   ######  #    #  #       #####        #  #        ###    #
-    #    #   #   #    #   #  #   #       #   #   #    #  #        ###    #    #
-    #    #    #  #    #    ##    ######  #    #   ####   ######   ###     ####
+	#    #    #   #  #   #    #  #       #    #  #       #               #    #
+	#    #    #  #    #  #    #  #####   #    #   ####   #####           #
+	#    #####   ######  #    #  #       #####        #  #        ###    #
+	#    #   #   #    #   #  #   #       #   #   #    #  #        ###    #    #
+	#    #    #  #    #    ##    ######  #    #   ####   ######   ###     ####
 
 	Traversal of objects. Useful for storing objects and/or
 	recursively coying them.
@@ -139,7 +139,7 @@ rt_shared void traversal(char *object, int p_accounting)
 	}
 #if !defined CUSTOM || defined NEED_STORE_H
 	if (p_accounting & TR_ACCOUNT)	/* Possible accounting */
-		account[flags & EO_TYPE] = (char) 1;	/* This type is present */
+		account[Deif_bid(flags & EO_TYPE)] = (char) 1;	/* This type is present */
 #endif
 	zone->ov_flags = flags;			/* Mark the object */
 
@@ -149,7 +149,7 @@ rt_shared void traversal(char *object, int p_accounting)
 	 * topology--RAM.
 	 */
 
-    if (flags & EO_SPEC) {			/* Special object */
+	if (flags & EO_SPEC) {			/* Special object */
 		if (!(flags & EO_REF)) {	/* Object does not have any reference */
 			if (mapped_object)
 				epop(&loc_stack, 1);
@@ -160,7 +160,7 @@ rt_shared void traversal(char *object, int p_accounting)
 		object_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 		count = *(long *) object_ref;
 
-        if (!(flags & EO_COMP))
+		if (!(flags & EO_COMP))
 			/* Special object filled with references */
 			for (i = 0; i < count; i++) {
 				reference = *((char **) object + i);
@@ -176,10 +176,10 @@ rt_shared void traversal(char *object, int p_accounting)
 			for (i = 0; i < count; i++, offset += elem_size)
 				traversal(object + offset, p_accounting);
 		}
-    } else {
+	} else {
 		/* Normal object */
-        count = flags & EO_TYPE;
-        count = References(count);
+		count = Deif_bid(flags & EO_TYPE);
+		count = References(count);
 
 		/* Traversal of references of `object' */
 		for (i = 0; i < count; i++) {
@@ -252,7 +252,7 @@ rt_shared EIF_OBJ map_next(void)
 }
 
 rt_shared void map_reset(int emergency)
-              		/* Need to reset due to emergency (exception) */
+			  		/* Need to reset due to emergency (exception) */
 {
 	/* At the end of a cloning operation, the stack is reset (i.e. emptied)
 	 * and a consistency check is made to ensure it is really empty.
@@ -349,7 +349,7 @@ rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 		eif_panic("object still marked");
 
 	/* Evaluation of the number of references of the object */
-    if (flags & EO_SPEC) {
+	if (flags & EO_SPEC) {
 		/* Special object */
 		if (!(flags & EO_REF))
 			/* Special object filled with direct instances */
@@ -359,7 +359,7 @@ rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 		object_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 		count = *(long *) object_ref;
 
-        if (!(flags & EO_COMP))
+		if (!(flags & EO_COMP))
 			/* Special object filled with references */
 			for (; count > 0; count--,
 					object = (char *) ((char **) object + 1)) {
@@ -377,9 +377,9 @@ rt_private long chknomark(char *object, struct htable *tbl, long object_count)
 					count --, object += elem_size)
 				object_count = chknomark(object,tbl,object_count);
 		}
-    } else {
+	} else {
 		/* Normal object */
-        count = References(flags & EO_TYPE);
+		count = References(Deif_bid(flags & EO_TYPE));
 
 		/* Traversal of references of `object' */
 		for (;  count > 0;

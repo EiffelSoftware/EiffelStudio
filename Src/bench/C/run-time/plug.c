@@ -58,12 +58,15 @@ rt_public char *argarr(EIF_CONTEXT int argc, char **argv)
 	 */
 	EIF_GET_CONTEXT
 	char *array, *sp;
+	int16 typres;
 	int i;
 
 	/*
 	 * Create the array
 	 */
-	array = emalloc(egc_arr_dtype);		/* If we return, it succeeded */
+
+	typres = eif_typeof_array_of ((int16)egc_str_dtype);
+	array = emalloc((uint32)typres);		/* If we return, it succeeded */
 	epush(&loc_stack, (char *) &array); 		/* Protect address in case it moves */
 	nstcall = 0;					/* Turn invariant checking off */
 	(egc_arrmake)(array, 0L, argc-1);	/* Call the `make' routine of ARRAY */
@@ -114,20 +117,23 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 	int16 curr_dtype;
 	uint32 type, *types;
 	long offset_bis = 0;					/* offset already taken :-) */
+	int16   typres;
 
 	curr_dtype = Dtype(curr);	/* Dynamic type of current object instance */
 	obj_desc = &System(dtype); 	/* Dynamic type where strip is defined */
 	nbr_attr = obj_desc->cn_nbattr;
 	attr_names = obj_desc->cn_names;
 #ifndef WORKBENCH
-    offsets = obj_desc->cn_offsets;
+	offsets = obj_desc->cn_offsets;
 #else
-    rout_ids = obj_desc->cn_attr;
+	rout_ids = obj_desc->cn_attr;
 #endif
 	types = obj_desc->cn_types;
 
 	stripped_nbr = nbr_attr - nbr;
-	array = emalloc(egc_arr_dtype);	/* If we return, it succeeded */
+
+	typres = eif_typeof_array_of((int16)egc_any_dtype);
+	array = emalloc((uint32)typres);	/* If we return, it succeeded */
 	epush(&loc_stack, (char *) &array); 	/* Protect address in case it moves */
 	nstcall = 0;
 	(egc_arrmake)(array, 1L, stripped_nbr);	
@@ -258,8 +264,8 @@ rt_public EIF_BOOLEAN econfg(char *obj1, char *obj2)
 }
 
 rt_public int econfm(int ancestor, int heir)
-             	/* If conformance is true, this must be the ancestor type */
-         		/* And this must be the heir then */
+			 	/* If conformance is true, this must be the ancestor type */
+				/* And this must be the heir then */
 {
 	/* Does dynamic type `heir' conform to dynamic type `ancestor' ? */
 
@@ -308,8 +314,8 @@ rt_private char *inv_mark_tablep = (char *) 0;	/* Marking table to avoid checkin
 #endif /* EIF_THREADS */
 
 rt_public void chkinv (EIF_CONTEXT char *obj, int where)
-          
-          		/* Invariant is beeing checked before or after compound? */
+		  
+		  		/* Invariant is beeing checked before or after compound? */
 {
 	/* Check invariant on object `obj'. Assumes that `obj' is not null */
 	EIF_GET_CONTEXT
@@ -339,9 +345,9 @@ rt_public void chkcinv(EIF_CONTEXT char *obj)
 #endif
 
 rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where)
-          
-          
-          		/* Invariant is being checked before or after compound? */
+		  
+		  
+		  		/* Invariant is being checked before or after compound? */
 {
 	/* Recursive invariant check. */
 	EIF_GET_CONTEXT
@@ -428,7 +434,7 @@ rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where)
 #ifdef WORKBENCH
 
 char *cr_exp(uint32 type)
-            							/* Dynamic type */
+										/* Dynamic type */
 {
 	/* Creates expanded object of type `type'. If it has
 	 * a creation routine then call it.
@@ -440,7 +446,7 @@ char *cr_exp(uint32 type)
 
 	result = emalloc(type);
 	epush(&loc_stack, (char *)(&result));	/* Protect address in case it moves */
-	exp_desc = &System(type);
+	exp_desc = &System(Deif_bid(type));
 	if (exp_desc->cn_routids) {
 		int32 feature_id;              	/* Creation procedure feature id */
 		int32 static_id;               	/* Creation procedure static id */
@@ -448,7 +454,7 @@ char *cr_exp(uint32 type)
 		feature_id = exp_desc->cn_creation_id;
 		static_id = exp_desc->static_id;	
 		if (feature_id)					/* Call creation routine */
-			wexp(static_id, feature_id, type, result);
+			wexp(static_id, feature_id, Deif_bid(type), result);
 	} else {							/* precompiled creation routine */
 		int32 origin;					/* Origin class id */       
 		int32 offset;					/* Offset in origin class */
@@ -456,7 +462,7 @@ char *cr_exp(uint32 type)
 		origin = exp_desc->cn_creation_id;
 		offset = exp_desc->static_id;
 		if (origin)						/* Call creation routine */
-			wpexp(origin, offset, type, result);
+			wpexp(origin, offset, Deif_bid(type), result);
 	}
 	epop(&loc_stack, 1);            /* Remove protection */
 	return result;
@@ -469,8 +475,8 @@ char *cr_exp(uint32 type)
  */
 
 void wstdinit(char *obj, char *parent)
-          		/* Object we want to initialize */
-             	/* Parent (enclosing object) */
+		  		/* Object we want to initialize */
+				/* Parent (enclosing object) */
 {
 	/* Initialize composite object `obj' */
 

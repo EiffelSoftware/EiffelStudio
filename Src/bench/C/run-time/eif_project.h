@@ -34,6 +34,7 @@ extern "C" {
 	RT_LNK int egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
 	RT_LNK int32 egc_disp_rout_id;			/* Dispose routine id */ 
 	RT_LNK int egc_bit_dtype;			/* Dynamic type of BIT, E1/plug.c */
+	RT_LNK int egc_any_dtype;			/* Dynamic type of ANY */
 
 	RT_LNK int egc_sp_bool;			/* Dynamic type of SPECIAL[BOOLEAN] */
 	RT_LNK int egc_sp_char;			/* Dynamic type of SPECIAL[CHARACTER] */
@@ -56,6 +57,8 @@ extern "C" {
 	RT_LNK struct cnode *egc_fsystem;			/* Describes the full frozen Eiffel system */
 	RT_LNK struct conform **egc_fco_table; 
 	RT_LNK void (*egc_system_mod_init) (void);	/* Module Initialization (from einit.c) */
+	RT_LNK struct eif_par_types **egc_partab;	/* Parent table */
+	RT_LNK int egc_partab_size;				/* Size of parent table */
 
 #ifdef WORKBENCH
 	RT_LNK fnptr *egc_frozen;			/* C routine array (frozen routines) */

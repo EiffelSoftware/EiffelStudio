@@ -53,6 +53,8 @@ extern long wlong(void);
 extern int32 wint32(void);
 extern uint32 wuint32(void);
 extern void wread(char *buffer, size_t nbytes);
+extern int16 *wtype_array(int16 *);
+extern char *wclass_name(void);
 
 #ifdef __cplusplus
 }

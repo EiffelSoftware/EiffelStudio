@@ -42,7 +42,10 @@ feature -- Initialization
 			retry
 		end
 
+feature -- Actions
+
 	execute (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Gets called when the timer event occurs.
 		local
 			temp: INTEGER
 			err: BOOLEAN
@@ -69,14 +72,21 @@ feature -- Initialization
 				counter := counter + 1
 		end
 
+feature -- Implementation
+
 	counter: INTEGER
+			-- The number of times we ad an error.
 
 	viewer: VIEWER_WINDOW
+			-- The main window. Used to display the topic on.
 
 	time_stamp: INTEGER
+			-- The last time stamp of the file.
 
 	file: RAW_FILE
+			-- The file to check.
 
 invariant
 	E_TIMER_COMMAND_not_void: viewer /= Void and file /= Void and counter >=0
+
 end -- class E_TIMER_COMMAND

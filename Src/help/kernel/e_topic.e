@@ -1,5 +1,5 @@
 indexing
-	description: "Help topic class"
+	description: "Help topic class. A topic can either contain text or subtopics."
 	author: "Vincent Brendel"
 
 class
@@ -17,7 +17,7 @@ creation
 	make,
 	make_from_xml_tree
 
-feature
+feature -- Initialization
 
 	make(new_id, new_head:STRING; new_location:FILE_NAME) is
 			-- Not used.
@@ -150,6 +150,8 @@ feature
 			retry
 		end
 
+feature -- Basic operations
+
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'? (comparable)
 		local
@@ -161,6 +163,8 @@ feature
 			os.to_upper
 			Result := s < os
 		end
+
+feature -- Miscellaneous
 
 	find_first_node_with_tag(tag_name:STRING; node:XML_ELEMENT):XML_ELEMENT is
 			-- Search this node for a node with tag_name.
@@ -188,6 +192,8 @@ feature
 			end
 		end
 
+feature -- State setting
+
 	add_topic(new_topic:E_TOPIC) is
 			-- Add a subtopic to the end of the subtopics list.
 		require
@@ -206,6 +212,8 @@ feature
 			paragraphs.extend(new_par)
 		end
 
+feature -- Status report
+
 	contains_text:BOOLEAN is
 			-- Is this a topic with text?
 		do
@@ -217,6 +225,8 @@ feature
 		do
 			Result := subtopics /= Void
 		end
+
+feature -- Implementation
 
 	create_tree_item(parent:EV_TREE_ITEM_HOLDER) is
 			-- Make a TOPIC_TREE_ITEM.
@@ -313,24 +323,21 @@ feature {VIEWER_WINDOW} -- Display
 				loop
 					area.line_break(0)
 					paragraphs.item.display(area)
+					area.line_break(0)
 					paragraphs.forth
 				end
 			elseif contains_subtopics then
 				create temp.make_empty
-				temp.set_text("Make your choice:")
-				temp.set_line_break(true)
-				temp.display(area)
+				temp.set_bullet(true)
+				temp.set_font_color_by_string("link")
 				from
 					subtopics.start
 				until
 					subtopics.after
 				loop
-					create temp.make_empty
 					area.line_break(1)
-					temp.set_text(subtopics.item.id+" ("+subtopics.item.head+")")
+					temp.set_text(subtopics.item.head)
 					temp.set_hyperlink(subtopics.item.id)
-					temp.set_bullet(true)
-					temp.set_font_color_rgb(255,0,0)
 					temp.display(area)
 					subtopics.forth
 				end
@@ -358,6 +365,6 @@ invariant
 	must_have_id: (id /= Void) and then (not id.empty)
 	must_have_location: (location /= Void) and then (not location.empty)
 	must_have_head: (head /= Void) and then (not head.empty)
-	topics_or_text: not (contains_text and contains_subtopics)
+	not_topics_and_text: not (contains_text and contains_subtopics)
 
 end -- class E_TOPIC

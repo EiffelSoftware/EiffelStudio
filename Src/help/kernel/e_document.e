@@ -8,10 +8,10 @@ class
 creation
 	make
 
-feature
+feature -- Initialization
 
 	make is
-			-- No initialization.
+			-- Empty initialization. Used by class FACILITIES.
 		do
 		end
 
@@ -72,12 +72,6 @@ feature
 			end
 		end
 
-	create_tree(tree:EV_TREE) is
-			-- Fills the tree with the document structure.
-		do
-			topic.create_tree_item(tree)
-		end
-
 	initialize_sorted_list is
 			-- Puts all topics in a sorted list.
 		do
@@ -100,33 +94,22 @@ feature
 			topic.add_to_hash_table(topic_lookup)
 		end
 
-	create_sorted_indexes(list: EV_LIST) is
-			-- This is to put all topics in the list. Not used.
-		local
-			li: TOPIC_LIST_ITEM
+feature -- Miscellaneous
+
+	create_tree(tree:EV_TREE) is
+			-- Fills the tree with the document structure.
 		do
-			from
-				all_topics.start
-			until
-				all_topics.after
-			loop
-				create li.make_item(list, all_topics.item)
-				all_topics.forth
-			end
+			topic.create_tree_item(tree)
 		end
 
-	show_first_topics(list:EV_LIST; nr:INTEGER; start_with:STRING) is
-			-- Show the first 'nr' topics starting with the one that starts with something.
+	show_first_topic(list:EV_LIST; start_with:STRING) is
 		local
-			n:INTEGER
 			found:BOOLEAN
 			front:STRING
 			li: TOPIC_LIST_ITEM
 		do
-			list.clear_items
 			start_with.to_upper
 			from
-				n := 0
 				all_topics.start
 			until
 				found or else all_topics.after
@@ -140,20 +123,18 @@ feature
 				end
 			end
 			if found then
-				from
-					n := 0
-				until
-					n >= nr or else all_topics.after
-				loop
-					create li.make_item(list, all_topics.item)
-					n := n + 1
-					all_topics.forth
+				li ?= list.find_item_by_data(all_topics.item)
+				if li /= Void then
+					li.set_selected(true)
+					--li.set_selected(false)
 				end
 			end
 		end
 
 	get_topic_by_id(id:STRING):E_TOPIC is
-			-- use lookup table to get the topic by id.
+			-- Use lookup table to get the topic by id.
+		require
+			id_valid: id /= Void and then not id.empty
 		do
 			if topic_lookup.has(id) then
 				Result := topic_lookup.item(id)
@@ -161,6 +142,7 @@ feature
 		end
 
 	find_next_topic(top:E_TOPIC):E_TOPIC is
+			-- Return the next topic with text in-order.
 		require
 			has_next_in_order(top)
 		do
@@ -179,6 +161,7 @@ feature
 		end
 
 	find_previous_topic(top:E_TOPIC):E_TOPIC is
+			-- Return the previous topic with text in-order.
 		require
 			has_previous_in_order(top)
 		local
@@ -198,6 +181,8 @@ feature
 		end
 
 	has_previous_in_order(top:E_TOPIC):BOOLEAN is
+			-- Returns whether it is possible to go up in-order.
+			-- If top does not contain text it is not possible to go up.
 		do
 			if top /= Void and then top.contains_text then
 				Result := top /= topics_in_order.first
@@ -205,9 +190,28 @@ feature
 		end
 
 	has_next_in_order(top:E_TOPIC):BOOLEAN is
+			-- Returns whether it is possible to go down in-order.
+			-- If top does not contain text it is not possible to go down.
 		do
 			if top /= Void and then top.contains_text then
 				Result := top /= topics_in_order.last
+			end
+		end
+
+feature -- Obsolete
+
+	create_sorted_indexes(list: EV_LIST) is
+			-- This is to put all topics in the list.
+		local
+			li: TOPIC_LIST_ITEM
+		do
+			from
+				all_topics.start
+			until
+				all_topics.after
+			loop
+				create li.make_item(list, all_topics.item)
+				all_topics.forth
 			end
 		end
 

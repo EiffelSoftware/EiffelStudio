@@ -1,5 +1,5 @@
 indexing
-	description: "Part of topic-text with attributes"
+	description: "A part of topic-text with same attributes."
 	author: "Vincent Brendel"
 
 class
@@ -12,7 +12,7 @@ creation
 feature -- Initialization
 
 	make_empty is
-			-- Create nothing.
+			-- Create as standard text.
 		do
 		end
 
@@ -35,23 +35,31 @@ feature -- Initialization
 			important := other.important
 		end
 
+feature -- Display
+
 	display(area: E_TOPIC_DISPLAY) is
 			-- Output marked-up text on 'area'.
 		require
 			area /= Void
 		local
 			cf: EV_CHARACTER_FORMAT
+			font: EV_FONT
 		do
 			cf := area.text_format
 			cf.set_bold(bold)
 			cf.set_italic(italic)
 		--	-- Underline is not supported by EV_RICH_TEXT.
 		--	cf.set_underline(underline)
-			if font_name /= Void then
-				cf.font.set_name(font_name)
-			end
-			if font_size > 0 then
-				cf.font.set_height(font_size)
+
+			if font_name /= Void or else font_size > 0 then
+				font := cf.font
+				if font_name /= Void then
+					font.set_name(font_name)
+				end
+				if font_size > 0 then
+					font.set_height(font_size)
+				end
+				cf.set_font(font)
 			end
 			if font_color /= Void then
 				cf.set_color(font_color)
@@ -63,13 +71,17 @@ feature -- Initialization
 			if bullet then
 				area.bullet_list_item
 			end
-			if hyperlink /= Void then
-				area.append_hyperlinked_text(text, hyperlink)
-			else
-				area.append_text(text)
+			if text /= Void and then not text.empty then
+				if hyperlink /= Void then
+					area.append_hyperlinked_text(text, hyperlink)
+				else
+					area.append_text(text)
+				end
 			end
 			area.reset_text_format
 		end
+
+feature -- Element change
 
 	set_text(txt:STRING) is
 		do
@@ -109,6 +121,27 @@ feature -- Initialization
 	set_font_color_rgb(r,g,b:INTEGER) is
 		do
 			create font_color.make_rgb(r,g,b)
+		end
+
+	set_font_color_by_string(s:STRING) is
+		do
+			if s.is_equal("red") then
+				create font_color.make_rgb(255,0,0)
+			elseif s.is_equal("green") then
+				create font_color.make_rgb(0,255,0)
+			elseif s.is_equal("blue") then
+				create font_color.make_rgb(0,0,255)
+			elseif s.is_equal("magenta") then
+				create font_color.make_rgb(255,0,255)
+			elseif s.is_equal("cyan") then
+				create font_color.make_rgb(0,255,255)
+			elseif s.is_equal("white") then
+				create font_color.make_rgb(255,255,255)
+			elseif s.is_equal("link") then
+				create font_color.make_rgb(255,80,80)
+			else
+				create font_color.make_rgb(0,0,0)
+			end
 		end
 
 	set_list_depth(i:INTEGER) is
@@ -167,10 +200,11 @@ feature -- Access
 
 	important: BOOLEAN
 		-- Should this text-part be included in the search-index?
+		-- Has no effect on display.
 
 invariant
 	valid_list_depth: list_depth >= 0
 	valid_font_size: font_size >= 0
-	hyperlink_not_empty: (hyperlink = Void) or else (not hyperlink.empty)
+	hyperlink_not_empty: hyperlink /= Void implies not hyperlink.empty
 
 end -- class E_TEXT_PART

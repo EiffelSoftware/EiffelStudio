@@ -5,8 +5,6 @@ indexing
 class
 	E_TOPIC_LINK
 
-inherit
-	
 creation
 	make
 
@@ -28,18 +26,26 @@ feature -- Initialization
 			topic_id_set: topic_id = id
 		end
 
+feature -- Basic operations
+
 	is_in_region(pos: INTEGER): BOOLEAN is
+			-- Returns whether pos is in this link.
 		require
 			positive: pos >=0
 		do
 			Result := (pos>first) and then (pos<=last+1)
 		end
 
+feature -- Access
+
 	first, last: INTEGER
+			-- The first & last char-index of this link.
 
 	topic_id: STRING
+			-- The topic this link points to.
 
 invariant
 	E_TOPIC_LINK_consistent: first <= last and first >= 0
 	E_TOPIC_LINK_exists: topic_id /= Void
+
 end -- class E_TOPIC_LINK

@@ -1,5 +1,5 @@
 indexing
-	description: "The search tab."
+	description: "The 'Search' tab in the notebook"
 	author: "Vincent Brendel"
 
 class
@@ -11,9 +11,10 @@ inherit
 creation
 	make
 
-feature -- Init
+feature -- Initialization
 
 	make(vw: VIEWER_WINDOW) is
+			-- Initialize on 'vw'.
 		require
 			not_void: vw /= Void
 		local
@@ -75,16 +76,24 @@ feature -- Actions
 			end
 		end
 
-feature -- Implementation
+feature -- Access
 
 	search_list: EV_LIST
-	search_edit: EV_TEXT_FIELD
+			-- The list with search-results (topics).
 
-	enter_key:INTEGER
+	search_edit: EV_TEXT_FIELD
+			-- Enter a keyword here.
+
+feature -- Implementation
+
+	enter_key: INTEGER
+			-- The code for 'Enter' on this machine.
 	
 	viewer: VIEWER_WINDOW
+			-- The main window.
 
 invariant
 	SEARCH_COMPONENT_possible: search_list /= Void and search_edit /= Void and
 								enter_key>=0 and viewer /=Void
+
 end -- class SEARCH_COMPONENT

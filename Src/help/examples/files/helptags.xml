@@ -1,0 +1,41 @@
+<EIFFEL_DOCUMENT>
+<TOPIC ID="Tags">
+	<HEAD>The defined tags</HEAD>
+
+	<TOPIC ID="EIFFEL_DOCUMENT"><HEAD>EIFFEL_DOCUMENT</HEAD>
+	<TEXT>You should use this tag as the first tag of you document.</TEXT></TOPIC>
+
+	<TOPIC ID="TOPIC"><HEAD>TOPIC</HEAD>
+	<TEXT>The topic tag lets you create a new help-topic. With a topic, you
+must specify either an ID or a LOCATION. If you specify an ID,
+this becomes the identifier of the topic. You must now provide
+in this topic a HEAD and either subtopics or text. If you choose
+to specify a location, you must enter the filename of the topic
+you want to insert in the tree. The topic will substituted by the
+root-topic of that file.</TEXT></TOPIC>
+
+	<TOPIC ID="HEAD"><HEAD>HEAD</HEAD>
+	<TEXT>Specify the head of a help-topic. You cannot use mark-up tags
+within a HEAD tag.</TEXT></TOPIC>
+
+	<TOPIC ID="TEXT"><HEAD>TEXT</HEAD>
+	<TEXT>If a topic contains text, you can put the paragraphs in TEXT-tags.</TEXT></TOPIC>
+
+	<TOPIC ID="FONT"><HEAD>FONT</HEAD>
+	<TEXT>With FONT you can specify NAME, SIZE and COLOR. Example:
+FONT NAME="Arial" SIZE="16" COLOR="blue".
+Color is not yet implemented.</TEXT></TOPIC>
+
+	<TOPIC ID="BR"><HEAD>BR</HEAD>
+	<TEXT>The BR is a strange tag, because in XML a tag should always
+have a end-tag. If you want to use this tag, use it as a
+standalone-tag in this way: BR/</TEXT></TOPIC>
+
+	<TOPIC ID="IMP"><HEAD>IMP</HEAD>
+	<TEXT>All word that you put in a IMP-tag will show up in the
+search-index and you will be able to find the topic in the
+search-results list of that keyword. The search is
+case-insensitive.</TEXT></TOPIC>
+
+</TOPIC>
+</EIFFEL_DOCUMENT>

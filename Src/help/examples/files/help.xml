@@ -1,0 +1,76 @@
+<EIFFEL_DOCUMENT>
+<TOPIC ID="Help">
+	<HEAD>Help on Help</HEAD>
+	<TOPIC ID="General">
+		<HEAD>ISE Help tool</HEAD>
+<TEXT>Welcome to the help for this help-program. As you can see,
+the <IMP>window</IMP> is divided in a <A TOPIC_ID="Left">left</A> and <A TOPIC_ID="Right">right</A> <IMP>section</IMP> divided
+by a <IMP>splitter</IMP>. You can move the splitter if you want to enlarge
+any of the two sections.</TEXT>
+<TEXT><FONT NAME="Tahoma" SIZE="15">This <FONT SIZE="18">is <FONT COLOR="blue">not</FONT> a test</FONT>, this is an actual <FONT SIZE="20" NAME="Arial">e<I>m</I>e<I>rge</I><B>ncy</B>!!!</FONT></FONT></TEXT>
+
+	</TOPIC>
+	<TOPIC ID="HelpDocuments">
+		<HEAD>Help Documents</HEAD>
+		<TOPIC ID="AboutXML">
+			<HEAD>About XML</HEAD>
+
+<TEXT>Help documents are    written in XML. XML stands for eXtensible
+
+	 Markup Language. For this help tool, some new tags were defined.
+These are the new tags:
+<UL><LI><A TOPIC_ID="EIFFEL_DOCUMENT">EIFFEL_DOCUMENT</A>: Every help-file starts with this tag.</LI><LI><A TOPIC_ID="TOPIC">TOPIC</A>: Define a new help-topic.</LI><LI><A TOPIC_ID="HEAD">HEAD</A>: The title of the topic.</LI><LI><A TOPIC_ID="TEXT">TEXT</A>: The body text of a topic.</LI></UL>
+
+Furthermore, in the TEXT-tag, you can use some tags that are also
+available in HTML like:
+<UL><LI>B: Bold.</LI><LI>I: Italic.</LI><LI>U: Underline. (does not work yet)</LI><LI><A TOPIC_ID="A">A</A>: Anchor.</LI><LI><A TOPIC_ID="FONT">FONT</A>: Font properties.</LI><LI>UL: Unnumbered list.</LI><LI>LI: List-item.</LI><LI><A TOPIC_ID="BR">BR</A>: Line break.</LI></UL>
+
+There is one extra tag:
+<UL><LI><A TOPIC_ID="IMP">IMP</A>: Add the words between these tags to the search-index.</LI></UL>
+
+In a single file there can be only one (root)-topic. Every topic must
+have a HEAD tag in it. There can be either subtopics or text contained
+in a topic. You can put as many subtopics or text-paragraphs in it as
+you want.
+</TEXT>
+		</TOPIC>
+		<TOPIC LOCATION="helptags.xml">
+		</TOPIC>
+	</TOPIC>
+
+	<TOPIC ID="Interface">
+		<HEAD>The Help-interface</HEAD>
+		<TOPIC ID="Left">
+			<HEAD>The left side</HEAD>
+			<TOPIC ID="Tree">
+				<HEAD>The first tab: 'Tree'</HEAD>
+
+<TEXT>The first <IMP>tab</IMP> of the this help tool enables you to <IMP>browse</IMP> through the <IMP>topics</IMP> in a <IMP><I>hierarchical</I></IMP> way.</TEXT>
+
+			</TOPIC>
+			<TOPIC ID="Index">
+				<HEAD>The second tab: 'Index'</HEAD>
+
+<TEXT>The second <IMP>tab</IMP> lets you to <IMP>browse</IMP> through the <IMP>topics</IMP> in <I><IMP>alphabetical</IMP></I> order. Just type the first few <IMP>characters</IMP> of the <IMP>topic</IMP> and <IMP>select</IMP> it from the <IMP>list</IMP>.</TEXT>
+
+			</TOPIC>
+			<TOPIC ID="Search">
+				<HEAD>The third tab: 'Search'</HEAD>
+
+<TEXT>You can use the <IMP>search</IMP>-tab to search for <IMP><I>keywords</I></IMP>. The topics with that word then appear in the list.</TEXT>
+
+			</TOPIC>
+		</TOPIC>
+		<TOPIC ID="Right">
+			<HEAD>The right side</HEAD>
+			<TOPIC ID="Display">
+				<HEAD>The topic display area</HEAD>
+
+<TEXT>On the right of the window the help topics are displayed. If you want to copy some text from it, select your text or source code and choose File|Copy from the menu.</TEXT>
+
+			</TOPIC>
+		</TOPIC>
+	</TOPIC>
+	<TOPIC LOCATION="helpother.xml"></TOPIC>
+</TOPIC>
+</EIFFEL_DOCUMENT>

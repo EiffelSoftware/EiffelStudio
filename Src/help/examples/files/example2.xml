@@ -17,13 +17,13 @@
 
 		<TOPIC ID="sub1">
 			<HEAD>Part I</HEAD>
-			<TEXT>A topic may not be empty so here is a sentence.</TEXT>
+			<TEXT>A <IMP>topic</IMP> may not be <IMP>empty</IMP> so here is a <IMP>sentence</IMP>.</TEXT>
 			<TEXT>And another</TEXT>
 		</TOPIC>
 
 		<TOPIC ID="sub2">
 			<HEAD>Part II</HEAD>
-			<TEXT>Dit is een <B>voorbeeld</B> van hoe <A TOPIC_ID="sub1">het <I>niet</I> moet</A> wet je wel</TEXT>
+			<TEXT>We can do many things with <FONT SIZE="20" NAME="Arial">HTML</FONT> like:<UL><LI>Make a list.</LI><LI>Change the <FONT COLOR="hmm">color</FONT> of some words.</LI><LI>Use <B>bold</B>, <I>italic</I> or <U>underline</U>. <I>Even a <B>combination</B></I> of these!</LI></UL><BR/>A link to <A TOPIC_ID="sub2">itself</A>.</TEXT><TEXT>The second text part of this <IMP>topic</IMP>.</TEXT>
 		</TOPIC>
 	</TOPIC>
 

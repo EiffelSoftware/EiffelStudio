@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "The 'Tree' tab in the notebook."
+	author: "Vincent Brendel"
 
 class
 	TREE_COMPONENT
@@ -8,9 +8,10 @@ class
 creation
 	make
 
-feature -- Init
+feature -- Initialization
 
 	make(vw: VIEWER_WINDOW) is
+			-- Initialize on 'vw'.
 		require
 			not_void: vw /= Void
 		local
@@ -28,6 +29,7 @@ feature -- Init
 feature -- Actions
 
 	item_selected (args: EV_ARGUMENT; data: EV_EVENT_DATA) is
+			-- Called when the selected item changes in the tree.
 		require
 			selected: tree.selected
 		local
@@ -37,12 +39,17 @@ feature -- Actions
 			viewer.set_selected_topic(elem.topic)
 		end
 
-feature -- Implementation
+feature -- Access
 
 	tree: EV_TREE
+			-- The topic structure display component.
+
+feature -- Implementation
 	
 	viewer: VIEWER_WINDOW
+			-- The main window.
 
 invariant
-	TREE_COMPONENT_possible: tree /= Void and viewer /= VOid
+	TREE_COMPONENT_possible: tree /= Void and viewer /= Void
+
 end -- class TREE_COMPONENT

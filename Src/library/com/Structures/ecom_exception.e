@@ -59,7 +59,7 @@ feature --  Access
 			error_messages: WEL_WINDOWS_ERROR_MESSAGES
 		do
 			Result := clone (tag_name)
-			Result.tail (Result.count - 10)
+			Result.remove_head (10)
 			Result.left_adjust
 			Result.right_adjust
 			

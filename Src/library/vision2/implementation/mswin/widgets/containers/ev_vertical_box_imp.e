@@ -61,6 +61,7 @@ feature {NONE} -- Implementation
 			temp_width := minimum_width.max (new_box_width)
 			temp_height := minimum_height.max (new_box_height)
 			if not children.empty then
+				wel_window.initialize_erase_region
 				from
 					children.start
 				until
@@ -68,13 +69,15 @@ feature {NONE} -- Implementation
 				loop
 					mark := mark + children.item.padding
 					adapt_child_size (children.item, temp_width, temp_height)		
-					children.item.widget.set_y (mark) 
+					children.item.widget.set_y (mark)
+					wel_window.remove_child_rectangle (children.item.widget) 
 					mark := mark + children.item.widget.height + children.item.padding + spacing 
 					children.forth
 				end
 				mark := mark + children.item.padding	
 				adapt_last_child_size (children.item, temp_width, temp_height, mark)
-				children.item.widget.set_y (mark) 
+				children.item.widget.set_y (mark)
+				wel_window.remove_child_rectangle (children.item.widget) 
 			end
 			wel_window.resize (temp_width, temp_height)
 		end
@@ -118,7 +121,7 @@ feature {NONE} -- Usefull features
 
 
 	add_children_height: INTEGER is
-			-- Give the sum of the width of all the children
+			-- Give the sum of the height of all the children
 		local
 			temp_result: INTEGER
 		do

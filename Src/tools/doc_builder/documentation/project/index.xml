@@ -1,0 +1,44 @@
+<document title="Introduction">
+	<meta_data/>
+	<paragraph>
+		<heading><size>2</size>Introduction</heading>
+		<paragraph>Welcome to the documentation for writing your documentation.  This tool allows you to write HTML or XML based documentation.</paragraph>
+		<list ordered="false">
+			<item>
+				<link>
+					<label>Documentation Projects</label>
+					<url>projects/index.xml</url>
+				</link>
+			</item>
+			<item>
+				<link>
+					<label>The Editor</label>
+					<url>editor/index.xml</url>
+				</link>
+			</item>
+			<item>
+				<link>
+					<label>XML</label>
+					<url>xml/index.xml</url>
+				</link>
+			</item>
+			<item>
+				<link>
+					<label>Table of Contents</label>
+					<url>toc/index.xml</url>
+				</link>
+			</item>
+			<item>
+				<link>
+					<label>Help Projects</label>
+					<url>help_projects/index.xml</url>
+				</link>
+			</item>
+			<item>
+				<link>
+					<label>Filters</label>
+					<url>help_projects/index.xml</url>
+				</link>
+			</item>
+		</list>
+	</paragraph></document>

@@ -109,6 +109,32 @@ feature -- Status Setting
 			is_closeable := False
 		end
 		
+	enable_maximize is
+			-- Add maximize button to `Current'.
+		local
+			new_style: INTEGER
+			bit_op: WEL_BIT_OPERATIONS
+		do
+				-- Change the style of the window.
+			create bit_op
+			new_style := style
+			new_style := bit_op.set_flag (new_style, Ws_maximizebox)
+			set_style (new_style)
+		end
+		
+	disable_maximize is
+			-- Remove maximize button from `Current'.
+		local
+			new_style: INTEGER
+			bit_op: WEL_BIT_OPERATIONS
+		do
+				-- Change the style of the window.
+			create bit_op
+			new_style := style
+			new_style := bit_op.clear_flag (new_style, Ws_maximizebox)
+			set_style (new_style)
+		end
+
 feature -- Element change
 
 	set_x_position (a_x: INTEGER) is
@@ -205,7 +231,7 @@ feature {EV_DIALOG_I} -- Implementation
 
 	parent_window: EV_WINDOW
 			-- Parent window if any, Void otherwise
-
+		
 	interface: EV_DIALOG
 			-- Interface for `Current'
 

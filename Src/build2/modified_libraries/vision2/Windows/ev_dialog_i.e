@@ -126,6 +126,17 @@ feature -- Status Setting
 		ensure
 			not_closeable: not is_closeable
 		end
+		
+	enable_maximize is
+			-- Add maximize button to `Current'.
+		deferred
+		end
+		
+	disable_maximize is
+			-- Remove maximize button from `Current'.
+		deferred
+		end
+
 
 feature -- Basic operations
 

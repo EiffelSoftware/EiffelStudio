@@ -116,6 +116,18 @@ feature -- Status Setting
 		ensure
 			not_has_default_cancel_button: default_cancel_button = Void
 		end
+		
+	enable_maximize is
+			-- Add maximize button to `Current'.
+		do
+			implementation.enable_maximize
+		end
+		
+	disable_maximize is
+			-- Remove maximize button from `Current'.
+		do
+			implementation.disable_maximize
+		end
 
 feature -- Basic operations
 

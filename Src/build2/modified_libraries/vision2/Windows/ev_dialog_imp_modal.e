@@ -55,6 +55,32 @@ feature -- Basic operations
 			interface.implementation.hide
 		end
 		
+	enable_maximize is
+			-- Add maximize button to `Current'.
+		local
+			new_style: INTEGER
+			bit_op: WEL_BIT_OPERATIONS
+		do
+				-- Change the style of the window.
+			create bit_op
+			new_style := style
+			new_style := bit_op.set_flag (new_style, Ws_maximizebox)
+			set_style (new_style)
+		end
+		
+	disable_maximize is
+			-- Remove maximize button from `Current'.
+		local
+			new_style: INTEGER
+			bit_op: WEL_BIT_OPERATIONS
+		do
+				-- Change the style of the window.
+			create bit_op
+			new_style := style
+			new_style := bit_op.clear_flag (new_style, Ws_maximizebox)
+			set_style (new_style)
+		end
+		
 feature {EV_WINDOW_IMP} -- Implementation
 		
 	execute_show_actions is

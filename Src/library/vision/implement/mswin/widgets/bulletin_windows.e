@@ -1,7 +1,7 @@
 indexing
 	description: "This class represents a MS_WINDOWS bulletin"
 	status: "See notice at end of class"
-	date: "$Date$"
+	date: "$Date$";
 	revision: "$Revision$"
 
 class
@@ -12,7 +12,6 @@ inherit
 		redefine
 			child_has_resized, 
 			realize_current,
-			set_default_position,
 			show
 		end;
 
@@ -109,11 +108,6 @@ feature -- Status setting
 				shown := true
 			end
 		end;
-
-	set_default_position (flag: BOOLEAN) is
-		do
-			default_position := flag
-		end
 
 	show is
 			-- Show composite.

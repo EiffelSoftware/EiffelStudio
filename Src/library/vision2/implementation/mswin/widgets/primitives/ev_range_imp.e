@@ -18,7 +18,8 @@ inherit
 			interface
 		end
 
-	WEL_TRACK_BAR --| FIXME Does not get wm_?scroll messages.
+	WEL_TRACK_BAR
+			--| FIXME Does not get wm_?scroll messages.
 		rename
 			parent as wel_parent,
 			set_parent as wel_set_parent,
@@ -140,6 +141,9 @@ end -- class EV_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/19 07:11:26  oconnor
+--| fixed broken comment
+--|
 --| Revision 1.5  2000/02/15 03:20:32  brendel
 --| Changed order of initialization. All gauges are now initialized in
 --| EV_GAUGE_IMP with values: min: 1, max: 100, step: 1, leap: 10, value: 1.

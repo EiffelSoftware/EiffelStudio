@@ -60,8 +60,8 @@ inherit
 			initialize_button_box,
 			pointer_double_press_actions_internal,
 			pointer_button_press_actions_internal,
-			pointer_motion_actions_internal--,
-			--create_select_actions
+			pointer_motion_actions_internal,
+			create_select_actions
 		select
 			button_parent
 		end
@@ -72,13 +72,6 @@ inherit
 		redefine
 			interface
 		end
-
---	EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES_IMP
---		rename
---			select_actions as tool_bar_button_select_actions
---		undefine
---			create_select_actions
---		end
 
 create
 	make
@@ -92,20 +85,6 @@ feature {NONE} -- Initialization
 			set_c_object (C.gtk_button_new)
 			C.gtk_button_set_relief (c_object, C.gtk_relief_none_enum)
 		end
-
---	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
---		local
---			action_sequence: ACTION_SEQUENCE [TUPLE]
---		do
---			create Result
---			create action_sequence
---			action_sequence.extend (agent Gtk_marshal.toolbar_button_select_actions_intermediary (c_object))
---			real_connect_signal_to_actions (
---				c_object,
---				"clicked",
---				action_sequence,
---				Void)
---		end
 
 	initialize is
 			-- Initialization of button box and events.
@@ -181,6 +160,14 @@ feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
 	
 	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
+	
+	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
+			-- Create a select action sequence.
+			-- Attach to GTK "clicked" signal.
+		do
+			create Result
+			real_signal_connect (visual_widget, "clicked", agent gtk_marshal.toolbar_button_select_actions_intermediary (c_object), Void)
+		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -203,4 +190,5 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
+
 

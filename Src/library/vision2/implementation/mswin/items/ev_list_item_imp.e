@@ -308,9 +308,9 @@ feature {EV_LIST_ITEM_LIST_IMP} -- Pixmap Handling
 		end
 
 	set_tooltip (a_tooltip: STRING) is
-			-- Assign `a_tooltip' to `tooltip'.
+			-- Assign `a_tooltip' to `internal_tooltip_string'.
 		do
-			tooltip := clone (a_tooltip)
+			internal_tooltip_string := clone (a_tooltip)
 		end
 
 feature {EV_ITEM_LIST_I} -- Implementation

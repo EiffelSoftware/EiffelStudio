@@ -80,7 +80,7 @@ feature {NONE} -- Initialization
 			C.gtk_widget_show (visual_widget)
 			C.gtk_scrolled_window_add_with_viewport (c_object, visual_widget)
 			create ev_children.make (0)
-			set_row_height (15)
+
 				-- create a list with one column
 			create_list (1)
 		end
@@ -147,7 +147,6 @@ feature {NONE} -- Initialization
 			p: POINTER
 			is_multiple_selected: BOOLEAN
 		do
-			
 			old_list_widget := list_widget
 			if old_list_widget /= NULL then
 				is_multiple_selected := multiple_selection_enabled
@@ -182,8 +181,8 @@ feature {NONE} -- Initialization
 				agent column_resize_callback_translate
 			)				
 			
-			if row_height > 0 then
-				set_row_height (row_height)		
+			if user_set_row_height > 0 then
+				set_row_height (user_set_row_height)		
 			end
 
 			C.gtk_widget_show (list_widget)
@@ -609,8 +608,11 @@ feature -- Element change
 			if list_widget /= NULL then
 				C.gtk_clist_set_row_height (list_widget, value)
 			end
-			row_height := value
+			user_set_row_height := value
 		end
+		
+	user_set_row_height: INTEGER
+		-- Row height set by user, 0 is not set.
 
 	clear_items is
 			-- Clear all the items of the list.
@@ -1166,8 +1168,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	row_height: INTEGER
-		-- Value used to store row height if list isn't yet created.
+	row_height: INTEGER is
+		do
+			if list_widget /= NULL then
+				Result := C.gtk_clist_struct_row_height (list_widget)
+			end			
+		end
 
 	visual_widget: POINTER
 

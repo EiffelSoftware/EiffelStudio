@@ -82,7 +82,7 @@ feature {NONE} -- Initialization
 			create ev_children.make (0)
 				-- Make initial hash table with room for 100 child pointers, may be increased later.
 			create tree_node_ptr_table.make (100)
-			C.gtk_clist_set_row_height (list_widget, row_height)
+			C.gtk_clist_set_row_height (list_widget, 0)
 			create timer.make_with_interval (0)
 			timer.actions.extend (agent on_time_out)
 		end
@@ -611,10 +611,14 @@ feature {NONE} -- Implementation
 			C.gtk_clist_thaw (list_widget)
 		end
 
-	spacing: INTEGER is 5
+	spacing: INTEGER is 3
 			-- Spacing between pixmap and text.
 
-	row_height: INTEGER is 15
+	row_height: INTEGER is
+			-- 
+		do
+			Result := C.gtk_clist_struct_row_height (list_widget)
+		end
 
 	previous_selected_item: EV_TREE_NODE
 			-- Item that was selected previously.

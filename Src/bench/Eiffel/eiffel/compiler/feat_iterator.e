@@ -190,8 +190,9 @@ end;
 			good_argument: feat /= Void;
 			rout_id_not_void: rout_id_val /= Void
 		local
-			class_name: STRING;
+			class_name: STRING
 			temp: ROUT_ID_SET
+			body_id: INTEGER
 		do
 debug ("MARKING")
 -- Verbose
@@ -203,10 +204,11 @@ debug ("MARKING")
 	io.error.putstring (class_name);
 	io.error.new_line;
 end;
-			temp := used_table.item (feat.body_id.id);
+			body_id := feat.body_id.id
+			temp := used_table.item (body_id);
 			if (temp = Void) then
 				!! temp.make (1);
-				used_table.put (temp, feat.body_id.id);
+				used_table.put (temp, body_id);
 			end;
 			temp.force (rout_id_val);
 		end;
@@ -238,7 +240,7 @@ feature
 		require
 			good_argument: feat /= Void
 		do
-			Result := is_body_alive (feat.body_id)
+			Result := used_table.item (feat.body_id.id) /= Void
 		end;
 
 	is_body_alive (body_id: BODY_ID): BOOLEAN is

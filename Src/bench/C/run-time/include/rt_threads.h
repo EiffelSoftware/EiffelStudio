@@ -31,11 +31,6 @@ extern void eif_unsynchronize_gc(rt_global_context_t *);
 extern int eif_is_synchronized (void);
 #endif
 
-#ifndef EIF_WINDOWS
-/* Forking, only support on Unix platform on which `fork' is supported. */
-extern pid_t eif_thread_fork(void);
-#endif
-
 /*---------------------------------------*/
 /*---  In multi-threaded environment  ---*/
 /*---------------------------------------*/

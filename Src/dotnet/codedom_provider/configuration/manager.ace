@@ -1,5 +1,5 @@
 system
-	"ecd_manager"
+	"ecdpman"
 
 root
 	ECDM_APPLICATION (root_cluster): "make_and_launch"

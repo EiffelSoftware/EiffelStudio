@@ -113,7 +113,7 @@ feature {NONE} -- Convenience
 				i > nb
 			loop
 				if l_used_entries.item (i) then
-					put (l_values.item (i), l_keys.item (i))
+					put (l_values.item (i), class_name (l_values.item (i), l_keys.item (i), for_expanded))
 				end
 				i := i + 1
 			end
@@ -161,6 +161,7 @@ feature {NONE} -- C code generation
 			l_values: like values
 			l_keys: like keys
 			l_is_generic: BOOLEAN
+			cl_name: STRING
 		do
 			l_values := values
 			l_keys := keys
@@ -177,11 +178,12 @@ feature {NONE} -- C code generation
 			until
 				i > nb
 			loop
-				if l_keys.item (i) = Void then
+				cl_name := l_keys.item (i)
+				if cl_name = Void then
 					buffer.putstring ("(char *) 0")
 				else
 					buffer.putchar ('"')
-					buffer.putstring (class_name (l_values.item (i), l_keys.item (i), for_expanded))
+					buffer.putstring (cl_name)
 					buffer.putchar ('"')
 				end
 				buffer.putstring (",%N")
@@ -339,7 +341,7 @@ feature {NONE} -- Byte code generation
 				if cl_name = Void then
 					ba.append_short_integer (0)
 				else
-					ba.append_string (class_name (l_values.item (i), cl_name, for_expanded))
+					ba.append_string (cl_name)
 				end
 				i := i + 1
 			end

@@ -20,6 +20,7 @@
 #include "eif_search.h"
 #include "eif_plug.h"			/* for econfg */
 #include "rt_garcol.h"
+#include "rt_wbench.h"
 #include "eif_memory.h"
 #include <string.h>
 

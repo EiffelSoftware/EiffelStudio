@@ -14,6 +14,7 @@
 #include "eif_internal.h"
 #include "eif_cecil.h"
 #include "eif_project.h" /* for egc_..._ref_dtype */
+#include "rt_wbench.h"
 
 #include <string.h>
 

@@ -23,6 +23,7 @@
 #include "eif_bits.h"
 #include "eif_globals.h"
 #include "rt_malloc.h"
+#include "rt_wbench.h"
 #include "x2c.h"		/* For macro LNGPAD */
 #include <string.h>
 #include <stdio.h>

@@ -33,6 +33,7 @@
 #include "eif_except.h"
 #include "server.h"
 #include "rt_interp.h"
+#include "rt_wbench.h"
 #include "select.h"
 #include "eif_hector.h"
 #include "eif_bits.h"

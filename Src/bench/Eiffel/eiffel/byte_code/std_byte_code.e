@@ -260,9 +260,13 @@ feature
 	generate_expanded_variables is
 			-- Create local expanded variables and Result
 		local
-			i, count: INTEGER;
+			i, count, exp_type_id: INTEGER;
 			type_i: TYPE_I;
 			cl_type_i: CL_TYPE_I;
+			bit_i: BIT_I;
+			creation_feature: FEATURE_I;
+			class_type: CLASS_TYPE;
+			c_name: STRING;
 		do
 			if locals /= Void then
 				count := locals.count;
@@ -274,30 +278,77 @@ feature
 					type_i := locals.item (i);
 					type_i := real_type (type_i);
 							-- Generate only if variable used
-					if context.local_vars.item(i) and
-						type_i.is_expanded
-					then
-						cl_type_i ?= type_i;
-						context.local_var.set_position (i);
-						context.local_var.print_register_by_name;
-						generated_file.putstring (" = RTLN(");
-						generated_file.putint (cl_type_i.expanded_type_id - 1);
-						generated_file.putstring (");");
-						generated_file.new_line;
-							-- FIXME (call creation routine)
+					if context.local_vars.item(i) then
+						if type_i.is_expanded then
+							cl_type_i ?= type_i;
+							context.local_var.set_position (i);
+							context.local_var.print_register_by_name;
+							exp_type_id := cl_type_i.expanded_type_id - 1;
+							if context.workbench_mode then
+									-- RTLX is a macro used to create
+									-- expanded types
+								generated_file.putstring (" = RTLX(");
+								generated_file.putint (exp_type_id);
+							else
+								generated_file.putstring (" = RTLN(");
+								generated_file.putint (exp_type_id);
+								generated_file.putstring (");%N%T");
+								class_type := cl_type_i.associated_class_type;
+								creation_feature := class_type.associated_class.creation_feature;
+								c_name := Encoder.feature_name
+									(class_type.id, creation_feature.body_id);
+								generated_file.putstring (c_name.duplicate);
+								generated_file.putchar ('(');
+								context.local_var.print_register_by_name;
+							end;
+							generated_file.putstring (");");
+							generated_file.new_line;
+						elseif type_i.is_bit then
+							bit_i ?= type_i; -- Cannot fail
+							context.local_var.set_position (i);
+							context.local_var.print_register_by_name;
+							generated_file.putstring (" = RTLB(");
+							generated_file.putint (bit_i.size);
+							generated_file.putstring (");");
+							generated_file.new_line;
+						end;
 					end;
 					i := i + 1;
 				end;
 			end;
 			type_i := real_type (result_type);
-			if type_i.is_expanded and context.result_used then
-				cl_type_i ?= type_i;
-				context.result_var.print_register_by_name;
-				generated_file.putstring (" = RTLN(");
-				generated_file.putint (cl_type_i.expanded_type_id - 1);
-				generated_file.putstring (");");
-				generated_file.new_line;
-					-- FIXME (call creation routine)
+			if context.result_used then
+				if type_i.is_expanded then
+					cl_type_i ?= type_i;
+					exp_type_id := cl_type_i.expanded_type_id - 1;
+					context.result_var.print_register_by_name;
+					if context.workbench_mode then
+							-- RTLX is a macro used to create
+							-- expanded types
+						generated_file.putstring (" = RTLX(");
+						generated_file.putint (exp_type_id);
+					else
+						generated_file.putstring (" = RTLN(");
+						generated_file.putint (exp_type_id);
+						generated_file.putstring (");%N%T");
+						class_type := cl_type_i.associated_class_type;
+						creation_feature := class_type.associated_class.creation_feature;
+						c_name := Encoder.feature_name
+							(class_type.id, creation_feature.body_id);
+						generated_file.putstring (c_name.duplicate);
+						generated_file.putchar ('(');
+						context.local_var.print_register_by_name;
+					end;
+					generated_file.putstring (");");
+					generated_file.new_line;
+				elseif type_i.is_bit then
+					bit_i ?= type_i; -- Cannot fail
+					context.result_var.print_register_by_name;
+					generated_file.putstring (" = RTLB(");
+					generated_file.putint (bit_i.size);
+					generated_file.putstring (");");
+					generated_file.new_line;
+				end
 			end;
 		end;
 
@@ -396,8 +447,8 @@ feature
 							generated_file.putstring ("loc");
 							generated_file.putint (i);
 							generated_file.putstring (" = ");
-							type_i.c_type.generate_initial_value (generated_file);
-							generated_file.putchar (';');
+							type_i.c_type.generate_cast (generated_file);
+							generated_file.putstring ("0;");
 							generated_file.new_line;
 						end;
 					end;
@@ -492,8 +543,8 @@ feature
 				ctype.generate (generated_file);
 				generated_file.putstring ("Result");
 				generated_file.putstring (" = ");
-				ctype.generate_initial_value (generated_file);
-				generated_file.putchar (';');
+				ctype.generate_cast (generated_file);
+				generated_file.putstring ("0;");
 				generated_file.new_line;
 			end;
 		end;

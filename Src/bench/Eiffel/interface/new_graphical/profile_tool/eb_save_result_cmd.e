@@ -13,6 +13,8 @@ inherit
 -- command_w a refaire dans la nouvelle version
 	EV_COMMAND
 
+	EB_FILE_OPENER_CALLBACK
+
 creation
 	make
 
@@ -45,8 +47,28 @@ feature {NONE} -- Command Execution
 			else
 				fsd := arg.first
 				file_name := clone (fsd.file)
-				query_window.save_in (file_name)
+				save_in (file_name)
 			end
+		end
+
+feature -- Access
+
+	save_in (fn: STRING) is
+			-- Save options, result, and query
+			-- to a file named `fn'.
+		require
+			fn_not_void: fn /= Void
+		local
+			fo: EB_FILE_OPENER
+		do
+			create fo.make_default (query_window, Current, fn)
+		end
+
+feature {EB_FILE_OPENER} -- Callbacks
+
+	save_file (ptf: RAW_FILE) is
+		do
+			query_window.save_it (ptf)
 		end
 
 feature {NONE} -- Attributes

@@ -66,8 +66,8 @@ feature -- Access
 				set_search
 			end;
 			p := parent;
-			new_x := p.x + (p.width - width) // 2;
-			new_y := p.x - (height // 2);
+			new_x := p.real_x + (p.width - width) // 2;
+			new_y := p.real_y - (height // 2);
 			if new_x + width > screen.width then
 				new_x := screen.width - width
 			elseif new_x < 0 then

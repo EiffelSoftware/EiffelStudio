@@ -90,7 +90,7 @@ feature -- IL generation
 				-- Creation of an ARRAY [CHARACTER]
 			context.add_local (array_char.type)
 			local_array_char := context.local_list.count
-			il_generator.put_local_info (array_char.type, "dummy_" + local_array_char.out)
+			il_generator.put_dummy_local_info (array_char.type, local_array_char)
 			il_generator.put_integer_32_constant (expressions.count)
 			array_char.generate_il ("make")
 			il_generator.generate_local_assignment (local_array_char)
@@ -98,7 +98,7 @@ feature -- IL generation
 				-- Creation of an ARRAY [ANY]
 			context.add_local (array_any.type)
 			local_array_any := context.local_list.count
-			il_generator.put_local_info (array_any.type, "dummy_" + local_array_any.out)
+			il_generator.put_dummy_local_info (array_any.type, local_array_any)
 			il_generator.put_integer_32_constant (expressions.count)
 			array_any.generate_il ("make")
 			il_generator.generate_local_assignment (local_array_any)

@@ -85,7 +85,7 @@ feature -- IL generation
 
 			context.add_local (real_ty)
 			local_array := context.local_list.count
-			il_generator.put_local_info (class_type.type, "dummy_" + local_array.out)
+			il_generator.put_dummy_local_info (class_type.type, local_array)
 			il_generator.put_integer_32_constant (expressions.count)
 			class_type.generate_il ("make")
 			il_generator.generate_local_assignment (local_array)

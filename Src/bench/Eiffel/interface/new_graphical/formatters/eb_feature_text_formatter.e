@@ -54,10 +54,10 @@ feature -- Status setting
 
 	set_dotnet_mode (a_flag: BOOLEAN) is
 			-- Set whether formatting in .NET mode to 'a_flag'
-		require
-			flag_not_void: a_flag /= Void
 		do
 			is_dotnet_mode := a_flag
+		ensure
+			is_dotnet_mode_set: is_dotnet_mode = a_flag
 		end
 
 feature -- Formatting

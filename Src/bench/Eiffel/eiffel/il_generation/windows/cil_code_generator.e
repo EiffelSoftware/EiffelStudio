@@ -6150,7 +6150,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		do
 			Result := current_module.constructor_token (a_type_id)
 		ensure
-			constructor_token_valid: Result /= Void
+			constructor_token_valid: Result /= 0
 		end
 
 	actual_class_type_token (a_type_id: INTEGER): INTEGER is

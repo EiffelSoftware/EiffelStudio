@@ -168,12 +168,16 @@ feature {NONE} -- Basic operation
 				move (child_cell.x, child_cell.y)
 			elseif resize_type = 2 then
 				move ((child_cell.width - width)//2 + child_cell.x, child_cell.y)
+				set_local_width (minimum_width)
 				set_local_height (child_cell.height)
 			elseif resize_type = 1 then
 				move (child_cell.x, (child_cell.height - height)//2 + child_cell.y)
 				set_local_width (child_cell.width)
+				set_local_height (minimum_height)
 			else
 				move ((child_cell.width - width)//2 + child_cell.x, (child_cell.height - height)//2 + child_cell.y)
+				set_local_width (minimum_width)
+				set_local_height (minimum_height)
 			end
 		end
 

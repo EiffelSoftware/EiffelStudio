@@ -124,9 +124,10 @@ cecil_make: "$(STATIC_CECIL): $(EIFLIB) $(OBJECTS) $(EXTERNALS) $precompilelibs%
 %%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$**"
 
 il_system_compilation_line: "%
+	%ILSHAREDLIBS = IMPORT32 OLE2w32 CW32MTI%N%
 	%$(IL_SYSTEM): $(OBJECTS) $(IL_RESOURCE).res%N%
 	%%T$(FILE_EXIST) $(IL_SYSTEM) $(RM) $(IL_SYSTEM) %N%
-	%%T$(SHAREDLINK) $(LDSHAREDFLAGS) $(OBJECTS), $(IL_SYSTEM),, $(SHAREDLIBS) $(EXTERNALS),, $(IL_RESOURCE).res %N%
+	%%T$(SHAREDLINK) $(LDSHAREDFLAGS) c0d32.obj $(OBJECTS), $(IL_SYSTEM),, $(EXTERNALS) $(ILSHAREDLIBS),, $(IL_RESOURCE).res %N%
 	%%T$(RM) $(OBJECTS)%N%
 	%%Techo Success > completed.eif%N%N%
 	%..\..\$(IL_RESOURCE).rc:%N%

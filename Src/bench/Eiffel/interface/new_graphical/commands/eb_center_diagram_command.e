@@ -52,7 +52,13 @@ feature -- Basic operations
 			end
 		end
 
-	execute_with_stone (a_stone: STONE) is
+	execute_with_class_stone (a_stone: CLASSI_STONE) is
+			-- Create a development window and process `a_stone'.
+		do
+			tool.tool.launch_stone (a_stone)
+		end
+
+	execute_with_cluster_stone (a_stone: CLUSTER_STONE) is
 			-- Create a development window and process `a_stone'.
 		do
 			tool.tool.launch_stone (a_stone)
@@ -64,7 +70,8 @@ feature -- Basic operations
 			Result := Precursor (display_text, use_gray_icons)
 			Result.select_actions.wipe_out
 			Result.select_actions.extend (agent execute)
-			Result.drop_actions.extend (agent execute_with_stone)
+			Result.drop_actions.extend (agent execute_with_class_stone)
+			Result.drop_actions.extend (agent execute_with_cluster_stone)
 			Result.set_pebble_function (agent pebble)
 		end
 

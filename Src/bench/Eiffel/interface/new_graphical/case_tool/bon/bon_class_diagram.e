@@ -9,6 +9,9 @@ class
 	
 inherit
 	EIFFEL_CLASS_DIAGRAM
+		redefine
+			default_view_name
+		end
 
 create
 	make
@@ -24,6 +27,14 @@ feature {NONE} -- Initialization
 			is_uml := False
 			make_with_model_and_factory (a_graph, create {BON_FACTORY})
 			context_editor := a_tool
+		end
+		
+feature -- Access
+
+	default_view_name: STRING is
+			-- Name for the default view.
+		do
+			Result := "DEFAULT:BON"
 		end
 
 end -- class BON_CLASS_DIAGRAM

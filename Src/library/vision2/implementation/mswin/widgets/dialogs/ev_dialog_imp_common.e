@@ -25,8 +25,6 @@ inherit
 		redefine
 			interface,
 			process_message,
-			enable_modal,
-			disable_modal,
 			wel_move_and_resize,
 			wel_destroy_window,
 			on_wm_destroy,
@@ -552,22 +550,6 @@ feature {NONE} -- Implementation
 		do
 			create dialog_window_imp.make_with_real_dialog (Current)
 			interface.replace_implementation (dialog_window_imp)
-		end
-		
-feature -- Obsolete
-
-	enable_modal is
-			-- Set the dialog to be modal.
-		Obsolete
-			"This feature will soon be removed."
-		do
-		end
-
-	disable_modal is
-			-- Set the dialog not to be modal.
-		Obsolete
-			"This feature will soon be removed."
-		do
 		end
 
 end -- class EV_DIALOG_IMP_COMMON

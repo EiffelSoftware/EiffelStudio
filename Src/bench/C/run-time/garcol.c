@@ -338,12 +338,12 @@ rt_private void mark_op_stack(register4 char *(*marker) (char *), register5 int 
 #endif
 
 #else
-/* Do the exception stack need to be traversed to update references to
+/* Does the exception stack need to be traversed to update references to
  * moving objects (i.e. set to False if no assertion and exception_trace(yes)
  * is not used in the Ace file
  */
 
-#define DISP(x,y) (Dispose(x))(y)
+#define DISP(x,y) ((void *(*)())Dispose(x))(y)
 
 #endif
 
@@ -3551,7 +3551,7 @@ rt_private int generational_collect(void)
 	 */
 
 	EIF_GET_CONTEXT
-	register1 int age;			/* Computed tenure age */
+	register1 uint32 age;			/* Computed tenure age */
 	register2 int overused;		/* Amount of data over watermark */
 	char *watermark;			/* Watermark in generation zone */
 
@@ -3595,11 +3595,10 @@ rt_private int generational_collect(void)
 		 * since this will incur some tenuring.
 		 */
 		
-		watermark = cc_for_speed ?
-			sc_from.sc_mark - (int) GS_FLOATMARK : sc_from.sc_mark;
+		watermark = cc_for_speed ? sc_from.sc_mark - GS_FLOATMARK : sc_from.sc_mark;
 
 		if (sc_from.sc_top >= watermark) {
-			overused = (sc_from.sc_top - sc_from.sc_mark) + GS_FLOATMARK;
+			overused = sc_from.sc_top - sc_from.sc_mark + GS_FLOATMARK;
 			for (age = TENURE_MAX - 1; age >= 0; age--) {
 				overused -= size_table[age];	/* Amount tenured at 'age' */
 				if (overused <= 0)

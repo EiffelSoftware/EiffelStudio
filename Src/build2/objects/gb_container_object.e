@@ -65,13 +65,30 @@ feature {GB_OBJECT} -- Delete
 			-- that are being deleted.
 		local
 			container: EV_CONTAINER
+			list: ARRAYED_LIST [EV_CONTAINER]
 		do
-				-- We must unmerge any radio groupings of the current container.
-			if object.merged_radio_button_groups /= Void then
-				container := object.merged_radio_button_groups @ 1
-				container.unmerge_radio_button_groups (object)
-				container := display_object.child.merged_radio_button_groups @ 1
-				container.unmerge_radio_button_groups (display_object.child)
+			-- We must unmerge any radio groupings of the current container.
+			list := object.merged_radio_button_groups
+			if list /= Void then
+				from
+					list.start
+				until
+					list.off
+				loop
+					(list.item).unmerge_radio_button_groups (object)
+					list.forth
+				end
+			end
+			list := display_object.child.merged_radio_button_groups
+			if list /= Void then
+				from
+					list.start
+				until
+					list.off
+				loop
+					(list.item).unmerge_radio_button_groups (display_object.child)
+					list.forth
+				end
 			end
 		end
 		

@@ -159,6 +159,40 @@ feature {GB_OBJECT_EDITOR} -- Implementation
 		ensure
 			list_count_increased: constants_combo_box.count = old constants_combo_box.count + 1
 		end
+		
+feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
+
+	update_constant_display (a_value: STRING) is
+			--
+		local
+			constant_context: GB_CONSTANT_CONTEXT
+			list_item: EV_LIST_ITEM
+		do
+			constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
+			if constant_context /= Void then
+				constants_button.select_actions.block
+				constants_button.enable_select
+				constants_button.select_actions.resume
+				constants_button_selected
+				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
+				check
+					list_item_not_void: list_item /= Void
+				end
+				list_item.select_actions.block
+				list_item.enable_select
+				list_item.select_actions.resume
+				last_selected_constant := Constants.all_constants.item (constant_context.constant.name)
+			else
+				constants_button.select_actions.block
+				constants_button.disable_select
+				constants_button.select_actions.resume
+				constants_button_selected
+				constants_combo_box.first.enable_select
+				text_entry.change_actions.block
+				text_entry.set_text (a_value)
+				text_entry.change_actions.resume
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -226,7 +260,7 @@ feature {NONE} -- Implementation
 		do
 			validate_agent.call ([text_entry.text])
 			if validate_agent.last_result then
-					execute_agent (text_entry.text)
+				execute_agent (text_entry.text)
 			else
 				text_entry.set_text (value_on_entry)
 			end
@@ -385,11 +419,11 @@ feature {NONE} -- Implementation
 				validate_agent.call ([constant.value])
 			
 				if validate_agent.last_result then
-					execute_agent (constant.value)
+					remove_selected_constant
 					create constant_context.make_with_context (constant, object, internal_gb_ev_any.type, internal_type)
 					constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
-					remove_selected_constant
+					execute_agent (constant.value)
 					last_selected_constant := constant
 				else
 					constants_combo_box.first.enable_select
@@ -406,20 +440,22 @@ feature {NONE} -- Implementation
 		do
 			if last_selected_constant /= Void then
 				constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
-				constant ?= constant_context.constant
-				if not constants_combo_box.is_displayed then
-						-- Now assign the value of `last_selected_item' to the control, but only
-						-- if `constants_combo_box' is not displayed, meaning that a user has just
-						-- changed from constants to non constants.
-					validate_agent.call ([constant.value])			
-					if validate_agent.last_result then
-						execute_agent (constant.value)
-						text_entry.set_text (constant.value.out)
+				if constant_context /= Void then
+					constant ?= constant_context.constant
+					last_selected_constant.remove_referer (constant_context)
+					object.constants.remove (internal_gb_ev_any.type + internal_type)
+					if not constants_combo_box.is_displayed then
+							-- Now assign the value of `last_selected_item' to the control, but only
+							-- if `constants_combo_box' is not displayed, meaning that a user has just
+							-- changed from constants to non constants.
+						validate_agent.call ([constant.value])			
+						if validate_agent.last_result then
+							execute_agent (constant.value)
+							text_entry.set_text (constant.value.out)
+						end
 					end
 				end
-				last_selected_constant.remove_referer (constant_context)
-				object.constants.remove (internal_gb_ev_any.type + internal_type)
-				last_selected_constant := Void
+			last_selected_constant := Void
 			end
 		end
 

@@ -12,7 +12,8 @@ inherit
 		rename
 			extend as cell_extend,
 			count as cell_count,
-			linear_representation as old_linear_representation
+			linear_representation as old_linear_representation,
+			wipe_out as split_area_wipe_out
 		export
 			{NONE} all
 		redefine
@@ -29,6 +30,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {GB_VERTICAL_SPLIT_AREA}
 			create linear_representation.make (4)
+			create external_representation.make (4)
 			create all_holders.make (4)
 			create all_split_areas.make (4)
 			create stored_splitter_widths.make (4)
@@ -52,7 +54,13 @@ feature -- Access
 		-- If False, the bottom widget will be resized vertically insead.
 	
 	linear_representation: ARRAYED_LIST [EV_WIDGET]
-		-- All widgets held in `Current'
+		-- All widgets held in `Current'. This only includes widgets that
+		-- are not currently docked out of `Current'. See `external_widgets'
+		-- for these. Ordered as displayed in `Current'.
+		
+	external_representation: ARRAYED_LIST [EV_WIDGET]
+		-- All widgets that have been inerted into `Current' but are presently
+		-- docked out of `Current'. No paticular order is guaranteed.
 
 feature -- Status setting
 
@@ -100,6 +108,21 @@ feature -- Status setting
 			holder.disable_close_button
 		end
 		
+		
+	resize_widget_to (a_widget: EV_WIDGET; a_height: INTEGER) is
+			-- Resize `a_widget' to `a_height' pixels.
+		require
+			has_widget: a_widget /= Void
+			a_height >= 0
+		local
+			an_index: INTEGER
+			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+		do
+			an_index := linear_representation.index_of (a_widget, 1)
+			holder := all_holders.i_th (an_index)
+			holder.simulate_minimum_height (a_height)
+			holder.remove_simulated_height
+		end
 
 	set_maximize_pixmap (pixmap: EV_PIXMAP) is
 			--
@@ -168,12 +191,27 @@ feature -- Status setting
 			rebuild
 			restore_stored_positions
 		ensure
-			container: linear_representation.has (widget)
+			contained: linear_representation.has (widget)
 			count_increased: linear_representation.count = old linear_representation.count + 1
 		end
 		
 	remove (a_widget: EV_WIDGET) is
 			-- Remove `a_widget' from `Current'
+		require
+			a_widget_not_void: a_widget /= Void
+			contained: linear_representation.has (a_widget)
+		do
+			remove_implementation (a_widget)
+			rebuild
+		ensure
+			remove: not linear_representation.has (a_widget)
+			count_decreased: linear_representation.count = old linear_representation.count - 1
+		end
+		
+	remove_implementation (a_widget: EV_WIDGET) is
+			-- Implementation for removal, without a rebuilding step. This allows features
+			-- such as `wipe_out' to remove all widgets without rebuilding the complete structure
+			-- for each removal. 
 		require
 			a_widget_not_void: a_widget /= Void
 			contained: linear_representation.has (a_widget)
@@ -186,15 +224,44 @@ feature -- Status setting
 				minimized_states.go_i_th (all_holders.index_of (holder, 1))
 				minimized_states.remove
 			end
+			
 			all_holders.prune_all (holder)
 				-- Must also unparent the holder, which must be
 				-- parented for it to be contained in `Current'.
-			holder.parent.prune_all (holder)
-			linear_representation.prune_all (a_widget)
-			rebuild
+				-- Unless `wipe_out' is being called as part of the insertion
+				-- process.
+			if holder.parent /= Void then
+				holder.parent.prune_all (holder)
+			end
+				-- Now actually remove `a_widget' from its holder.
+			if a_widget.parent /= Void then
+				a_widget.parent.prune_all (a_widget)
+			end
+			
+			linear_representation.go_i_th (linear_representation.index_of (a_widget, 1))
+			linear_representation.remove
 		ensure
 			remove: not linear_representation.has (a_widget)
 			count_decreased: linear_representation.count = old linear_representation.count - 1
+		end
+		
+	wipe_out is
+			-- Remove all items from `Current'.
+			-- We have to call `remove_implementation' instead of `remove',
+			-- as do not want to call `rebuild' during the wipe out. This
+			-- also means that we must explicitly wipe out `all_split_areas'
+			-- outself.
+		do
+			if count /= 0 then
+				all_split_areas.wipe_out
+				from
+					linear_representation.start
+				until
+					linear_representation.off
+				loop
+					remove_implementation (linear_representation.item)
+				end
+			end
 		end
 		
 		
@@ -218,17 +285,16 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		ensure
 			removed: not all_holders.has (a_holder)
 		end
-		
-		
+
 	rebuild is
-			--
+			-- Rebuild complete widget structure of `Current'.
 		local
 			split_area: GB_VERTICAL_SPLIT_AREA
 			old_parent: EV_CONTAINER
 			current_split_area: EV_SPLIT_AREA
 			current_holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 		do
-			wipe_out
+			split_area_wipe_out
 			all_split_areas.wipe_out
 			unparent_all_holders
 			all_split_areas.extend (Current)
@@ -596,92 +662,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			
 			a_tool.simulate_minimum_height (a_tool.restore_height)
 			a_tool.remove_simulated_height
-			--restore_tool_size (a_tool)
---				-- Now attempt to restore the original height of the tool
---			if parent_split_area.full then
---				if not top_widget_resizing then
---					parent_split_area.set_split_position (a_tool.restore_height.min (parent_split_area.maximum_split_position))
---				else
---					parent_split_area.set_split_position ((parent_split_area.height - a_tool.restore_height).min (parent_split_area.maximum_split_position))
---				end
---			end
 		end
-		
---	restore_tool_size (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
---			-- Attempt to restore `a_tool' to size `a_tool.restore_height'.
---		local
---			restore_height: INTEGER
---			parent_split_area: EV_SPLIT_AREA
---			maximum_position, minimum_position: INTEGER
---			split_area: EV_SPLIT_AREA
---			available_space: ARRAYED_LIST [INTEGER]
---			height_required: INTEGER
---			counter: INTEGER
---			temp: INTEGER
---		do
---			restore_height := a_tool.restore_height
---			if not top_widget_resizing then
---				parent_split_area ?= a_tool.parent
---				check
---					parent_split_area_not_void: parent_split_area /= Void
---				end
---							-- Only happens for the bottom widget.
---						if all_holders.last = a_tool then
---							restore_height := parent_split_area.height - restore_height	
---						end	
---					from
---					until
---						parent_split_area.full
---					loop
---						parent_split_area ?= parent_split_area.parent
---						check
---							parent_split_area_not_void: parent_split_area /= Void
---						end
---					end
---					maximum_position := parent_split_area.maximum_split_position
---					minimum_position := parent_split_area.minimum_split_position
---					if restore_height < minimum_position or restore_height > maximum_position then
---						create available_space.make (1)
---							split_area := parent_split_area
---						from
---						until
---							split_area = Void
---						loop
---							split_area ?= split_area.parent
---							if split_area /= Void then
---								available_space.extend (split_area.split_position - split_area.minimum_split_position)
---							end
---						end
---					end
---					if restore_height < parent_split_area.minimum_split_position or
---						restore_height > parent_split_area.maximum_split_position then
---						height_required := restore_height - parent_split_area.maximum_split_position
---						from
---							counter := 1
---						until
---							height_required = 0 or counter > available_space.count
---						loop
---							split_area ?= parent_split_area.parent
---							check
---								split_area_not_void: split_area /= Void
---							end
---							if split_area.full then
---								if available_space.i_th (counter) < height_required then
---									height_required := height_required - available_space.i_th (counter)
---									split_area.set_split_position (split_area.split_position - available_space.i_th (counter))
---								else
---									split_area.set_split_position (split_area.split_position - height_required)
---									height_required := 0
---								end
---							end
---							counter := counter + 1
---						end
---					end
---					parent_split_area.set_split_position (restore_height.min (parent_split_area.maximum_split_position))
---					do_nothing
---			end
---		end
-		
 		
 	transfer_box_contents (original_box, new_box: EV_BOX) is
 			-- Transfer all contents of `original_box' to `new_box'.
@@ -700,8 +681,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		ensure
 			count_increased: new_box.count = old new_box.count + old original_box.count
 		end
-		
-		
+	
 	remove_tool_from_parent (a_tool: MULTIPLE_SPLIT_AREA_TOOL_HOLDER) is
 			--
 		local

@@ -1168,21 +1168,13 @@ feature -- Exception handling
 
 feature -- Assertions
 
-	generate_in_assertion_test (end_of_assert: IL_LABEL) is
-			-- Check if assertions are already being checked,
-			-- in that case we need to skip the assertion block.
-		require
-			end_of_assert_label_not_void: end_of_assert /= Void
+	generate_in_assertion_status is
+			-- Generate value of `in_assertion' on stack.
 		do
 		end
 
 	generate_set_assertion_status is
-			-- Set `in_assertion' flag to True.
-		do
-		end
-
-	generate_restore_assertion_status is
-			-- Set `in_assertion' flag to False.
+			-- Set `in_assertion' flag with top of stack.
 		do
 		end
 

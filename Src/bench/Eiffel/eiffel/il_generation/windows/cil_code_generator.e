@@ -813,7 +813,8 @@ feature -- Class info
 					l_attributes := feature {MD_TYPE_ATTRIBUTES}.Public |
 						feature {MD_TYPE_ATTRIBUTES}.Auto_layout |
 						feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
-						feature {MD_TYPE_ATTRIBUTES}.Is_class
+						feature {MD_TYPE_ATTRIBUTES}.Is_class |
+						feature {MD_TYPE_ATTRIBUTES}.Serializable
 
 					if class_c.is_deferred then
 						l_attributes := l_attributes | feature {MD_TYPE_ATTRIBUTES}.Abstract
@@ -3582,27 +3583,15 @@ feature -- Exception handling
 
 feature -- Assertions
 
-	generate_in_assertion_test (end_of_assert: IL_LABEL) is
-			-- Check if assertions are already being checked,
-			-- in that case we need to skip the assertion block.
-		require
-			end_of_assert_label_not_void: end_of_assert /= Void
+	generate_in_assertion_status is
+			-- Generate value of `in_assertion' on stack.
 		do
 			method_body.put_call (feature {MD_OPCODES}.Call, ise_in_assertion_token, 0, True)
-			method_body.put_opcode_label (feature {MD_OPCODES}.Brtrue, end_of_assert.id)
 		end
 
 	generate_set_assertion_status is
-			-- Set `in_assertion' flag to True.
+			-- Set `in_assertion' flag with top of stack.
 		do
-			put_boolean_constant (True)
-			method_body.put_call (feature {MD_OPCODES}.Call, ise_set_in_assertion_token, 1, False)
-		end
-
-	generate_restore_assertion_status is
-			-- Set `in_assertion' flag to False.
-		do
-			put_boolean_constant (False)
 			method_body.put_call (feature {MD_OPCODES}.Call, ise_set_in_assertion_token, 1, False)
 		end
 
@@ -3633,7 +3622,8 @@ feature -- Assertions
 
 			l_label := method_body.define_label
 			method_body.put_opcode_label (feature {MD_OPCODES}.Brtrue, l_label)
-			generate_restore_assertion_status
+			put_boolean_constant (False)
+			generate_set_assertion_status
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldstr, l_str_token)
 			method_body.put_call (feature {MD_OPCODES}.Newobj, exception_ctor_token, 1, True)
 			method_body.put_opcode (feature {MD_OPCODES}.Throw)
@@ -3660,7 +3650,8 @@ feature -- Assertions
 			-- Generate a precondition violation.
 			-- Has to be a specific one because preconditions can be weaken.
 		do
-			generate_restore_assertion_status
+			put_boolean_constant (False)
+			generate_set_assertion_status
 			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, ise_assertion_tag_token)
 			method_body.put_call (feature {MD_OPCODES}.Newobj, exception_ctor_token, 1, True)
 			method_body.put_opcode (feature {MD_OPCODES}.Throw)

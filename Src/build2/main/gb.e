@@ -65,6 +65,13 @@ inherit
 			copy, default_create
 		end
 		
+	GB_SHARED_DIGIT_CHECKER
+		export
+			{NONE} all
+		undefine
+			copy, default_create
+		end
+		
 create
 	execute
 
@@ -167,6 +174,10 @@ feature {NONE} -- Initialization
 			-- This will be executed before the program is launched.
 			pnd_motion_actions.extend (agent clear_status_during_transport)
 			cancel_actions.extend (agent clear_status_after_transport)
+			
+				-- Ensure that digit checking timer is destroyed after a transport.
+			cancel_actions.force_extend (agent digit_checker.end_processing)
+			drop_actions.force_extend (agent digit_checker.end_processing)
 		end
 		
 feature {NONE} -- Implementation

@@ -13,6 +13,7 @@
 		<ul>
           <li>Added support for mouse wheel in editor and associated 
           parameterization in preferences.</li>
+          <li>Cluster tree is not collapsed anymore between compilation.</li>
         </ul>
 		<h3>Bug fixes</h3>
 		<ul>
@@ -59,6 +60,12 @@
           clients of <span class="eclass">ROUTINE</span>.</li>
           <li>Fixed <span class="efeature">set_directory</span> from <span class="eclass">PATH_NAME</span> on Windows so that it will append a `\' if 
           needed before appending the directory name.</li>
+          <li>Fixed <span class="efeature">append</span> from <span class="eclass">SEQUENCE</span> to not perform a
+          <span class="efeature">deep_clone</span> when passed 
+          argument is the same reference as Current. This was a problem when the 
+          base class of the type of the elements inherited from <span class="eclass">MEMORY</span> and 
+          redefined <span class="efeature">dispose</span>. You could possibly end up freeing twice an external 
+          resource.</li>
         </ul>
         <h3>EiffelNet</h3>
         <ul>

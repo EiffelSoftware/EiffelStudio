@@ -28,7 +28,7 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_REJECTED_TYPE_LIBRARIES
+	WIZARD_SPECIAL_TYPE_LIBRARIES
 		export
 			{NONE} all
 		end

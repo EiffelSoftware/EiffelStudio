@@ -35,6 +35,7 @@ feature -- Generation
 		local
 			l_constants: APPLICATION_CONSTANTS
 			l_html_help_project: HTML_HELP_PROJECT
+			l_web_help_project: WEB_HELP_PROJECT
 			l_mshelp_project: MSHELP_PROJECT			
 			l_html_dir, l_help_dir: DIRECTORY			
 			l_src_file, l_dest_file: RAW_FILE
@@ -55,6 +56,11 @@ feature -- Generation
 				l_mshelp_project ?= project
 				if l_mshelp_project /= Void then
 					generate_vsip_help (l_mshelp_project)
+				else
+					l_web_help_project ?= project
+					if l_web_help_project /= Void then
+						generate_web_help (l_web_help_project)
+					end
 				end
 			end
 			
@@ -100,6 +106,12 @@ feature -- Generation
 	generate_vsip_help (a_project: MSHELP_PROJECT) is
 			-- Generate help for MS HELP 2.0 for Visual Studio Integration
 			-- from `project'
+		do
+			a_project.generate
+		end
+
+	generate_web_help (a_project: WEB_HELP_PROJECT) is
+			-- Generate help for web
 		do
 			a_project.generate
 		end

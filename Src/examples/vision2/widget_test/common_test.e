@@ -13,6 +13,11 @@ inherit
 			{TEST_CONTROLLER} default_create
 		end
 		
+	EV_UTILITIES
+		export
+			{NONE} all
+		end
+		
 feature -- Access
 
 	widget: EV_WIDGET

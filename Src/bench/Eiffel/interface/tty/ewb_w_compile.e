@@ -1,3 +1,9 @@
+indexing
+
+	description: 
+		"Command to invoke freezing of an eiffel system.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_W_COMPILE
 
@@ -10,11 +16,11 @@ inherit
 			abbreviation as w_compile_abb
 		end;
 
-feature
+feature -- Properties
 
 	c_code_directory: STRING is
 		do
 			Result := Workbench_generation_path
 		end;
 
-end
+end -- class EWB_W_COMPILE

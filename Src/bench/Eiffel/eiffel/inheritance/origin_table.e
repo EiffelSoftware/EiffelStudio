@@ -131,8 +131,7 @@ end
 			until
 				after
 			loop
-				selected := item_for_iteration.selection
-												(parents, old_t, new_t);
+				selected := item_for_iteration.selection (parents, old_t, new_t);
 				if selected = Void then
 						-- No selected feature
 					!!vmrc3;

@@ -196,8 +196,8 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.14  2000/06/09 01:28:47  manus
---| Merged version 1.12.2.3 from DEVEL BRANCH to Trunc
+--| Revision 1.15  2000/06/09 01:30:09  manus
+--| Added CVS logs
 --|
 --| Revision 1.13  2000/05/03 20:13:25  brendel
 --| Fixed resize_actions.

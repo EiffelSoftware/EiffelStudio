@@ -19,6 +19,7 @@ inherit
 			set_size,
 			set_width,
 			set_height,
+			set_enclosing_size,
 			width
 		end
 
@@ -93,8 +94,13 @@ feature -- Initialization
 			if not exists then
 				realize_current
 				realize_children
-				set_child_size
-				set_enclosing_size
+				if form_height /= 0 or form_width /= 0 then
+						-- if size is set children size accordingly
+					set_child_size
+				else 
+						-- else set size according to children size
+					set_enclosing_size
+				end
 				shown := true
 			end
 		end
@@ -113,6 +119,7 @@ feature -- Initialization
 feature -- Status report
 
 	height: INTEGER is
+			-- Height of frame
 		do
 			Result := 2
 		end
@@ -194,20 +201,10 @@ feature -- Status setting
 		end
 
 	child_has_resized is
-			-- Adjust size of child
-		local
-			l: LIST [WIDGET_WINDOWS]
-			a_width: INTEGER
-			a_height: INTEGER
+			-- Adjust size according the child size
 		do
 			if realized then
-				l := children_list
-				if not l.empty then
-					a_width := l.first.form_width
-					a_height := l.first.form_height
-					set_form_width (a_width + 4)
-					set_form_height (a_height + (box_text_height // 2) + 4)
-				end
+				set_enclosing_size
 			end
 		end
 
@@ -231,9 +228,27 @@ feature {NONE} -- Implementation
 			if realized then
 				l := children_list
 				if not l.empty then
-					l.first.set_form_width ((form_width - 5).max(0))
-					l.first.set_form_height ((form_height - (box_text_height // 2) - 5).max (0))
+					l.first.set_form_width ((form_width - 2 * width).max (0))
+					l.first.set_form_height ((form_height - (box_text_height // 2) - 2 * height).max (0))
 					l.first.set_x_y (2, (box_text_height // 2) + 2)
+				end
+			end
+		end
+
+	set_enclosing_size is
+			-- Set the enclosing size.
+		local
+			l: LIST [WIDGET_WINDOWS]
+			a_width: INTEGER
+			a_height: INTEGER
+		do
+			if realized then
+				l := children_list
+				if not l.empty then
+					a_width := l.first.form_width
+					a_height := l.first.form_height
+					set_form_width (a_width + 2 * width)
+					set_form_height (a_height + (box_text_height // 2) + 2 * height)
 				end
 			end
 		end
@@ -263,7 +278,6 @@ feature {NONE} -- Implementation
 			-- Id for the private_box
 
 end -- class FRAME_WINDOWS
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

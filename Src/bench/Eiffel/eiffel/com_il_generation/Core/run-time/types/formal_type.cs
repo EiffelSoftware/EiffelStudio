@@ -9,6 +9,7 @@ indexing
 using System;
 namespace ISE.Runtime {
 
+[Serializable]
 public class FORMAL_TYPE: TYPE {
 /*
 feature -- Access

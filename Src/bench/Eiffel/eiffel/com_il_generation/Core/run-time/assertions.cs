@@ -10,6 +10,7 @@ using System;
 namespace ISE.Runtime
 {
 
+[Serializable]
 public class ASSERTIONS	{
 
 	public static void REQUIRE (String msg, bool expression)

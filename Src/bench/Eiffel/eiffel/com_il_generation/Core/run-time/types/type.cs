@@ -8,6 +8,7 @@ indexing
 using System;
 namespace ISE.Runtime {
 
+[Serializable]
 public abstract class TYPE {
 
 /*

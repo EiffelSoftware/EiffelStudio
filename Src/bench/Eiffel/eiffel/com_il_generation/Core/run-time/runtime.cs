@@ -18,6 +18,7 @@ public delegate void WEL_ENUM_FONT_DELEGATE (IntPtr lpelf, IntPtr lpntm, int fon
 public delegate void EV_PIXMAP_IMP_DELEGATE (int error_code, int data_type, int pixmap_width,
 	int pixmap_height, IntPtr rgb_data, IntPtr alpha_data);
 
+[Serializable]
 public class RUN_TIME
 {
 /*

@@ -11,6 +11,7 @@ using System.Reflection;
 
 namespace ISE.Runtime {
 
+[Serializable]
 public class GENERIC_CONFORMANCE {
 
 	public static void compute_type (

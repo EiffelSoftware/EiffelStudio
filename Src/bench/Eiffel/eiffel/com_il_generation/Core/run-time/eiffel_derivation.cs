@@ -10,6 +10,7 @@ using System.Reflection;
 
 namespace ISE.Runtime {
 
+[Serializable]
 public class EIFFEL_DERIVATION {
 /*
 feature {NONE} -- Initialization

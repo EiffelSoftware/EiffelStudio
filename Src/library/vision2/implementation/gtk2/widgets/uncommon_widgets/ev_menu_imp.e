@@ -20,7 +20,8 @@ inherit
 			interface,
 			initialize,
 			on_activate,
-			destroy
+			destroy,
+			show
 		end
 
 	EV_MENU_ITEM_LIST_IMP

@@ -12,7 +12,7 @@
 
 style "default"
 {
-  font = "-adobe-helvetica-medium-r-normal--12-*-*-*-*-*-*-*"
+  font = "-adobe-helvetica-medium-r-normal--10-*-*-*-*-*-*-*"
 }
 
 

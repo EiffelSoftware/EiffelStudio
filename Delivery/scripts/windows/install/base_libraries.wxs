@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-  <Module Id="base_libraries" Guid="4004275F-B3A3-4A76-A234-BE50E5C3382A" Language="0" Version="5.5">
+  <Module Id="base_libraries" Guid="4004275F-B3A3-4A76-A234-BE50E5C3382A" Language="0" Version="5.6">
     <Package Id="4004275F-B3A3-4A76-A234-BE50E5C3382A" Keywords="MergeModule, MSI, Database" Description="Base libraries" Manufacturer="ISE Inc." InstallerVersion="200" Languages="0" Compressed="yes" SummaryCodepage="0" Comments="Base libraries" />
 	<Directory Id="TARGETDIR" Name="SourceDir">
 	  <Directory Id="Application" Name=".">
@@ -660,6 +660,11 @@
             <Component Id="base" Guid="7417F67F-4937-4A3D-A969-FB60478E6FE7">
               <File Id="indexing.txt" Name="indexing.txt" KeyPath="yes" />
             </Component>
+            <Directory Id="refactoring" Name="refactoring">
+              <Component Id="refactoring" Guid="21FD325C-93F0-458f-8918-D3E3D9B59FF0">
+                <File Id="refactoring_helper.e" Name="REFACT~1.E" LongName="refactoring_helper.e" KeyPath="yes" />
+              </Component>
+            </Directory>
             <Directory Id="support" Name="support">
               <Component Id="support" Guid="D553A2F4-74F7-402B-B6A4-EED3A99779C0">
                 <File Id="random.e" Name="random.e" KeyPath="yes" />
@@ -809,15 +814,18 @@
               <Directory Id="cursors" Name="cursors">
                 <Component Id="cursors" Guid="250EC1EC-EE29-4A67-89EF-C664B2F83C7A">
                   <File Id="arrayed_list_cursor.e" Name="ARRAYE~1.E" LongName="arrayed_list_cursor.e" KeyPath="yes" />
-                  <File Id="compact_tree_cursor.e" Name="COMPAC~1.E" LongName="compact_tree_cursor.e" />
-                  <File Id="recursive_tree_cursor.e" Name="RECURS~1.E" LongName="recursive_tree_cursor.e" />
-                  <File Id="linked_tree_cursor.e" Name="LINKED~2.E" LongName="linked_tree_cursor.e" />
-                  <File Id="hash_table_cursor.e" Name="HASH_T~2.E" LongName="hash_table_cursor.e" />
                   <File Id="circular_cursor.e" Name="CIRCUL~1.E" LongName="circular_cursor.e" />
+                  <File Id="compact_tree_cursor.e" Name="COMPAC~1.E" LongName="compact_tree_cursor.e" />
                   <File Id="cursor.e" Name="cursor.e" />
-                  <File Id="two_way_tree_cursor.e" Name="TWO_WA~5.E" LongName="two_way_tree_cursor.e" />
+                  <File Id="hash_table_cursor.e" Name="HASH_T~2.E" LongName="hash_table_cursor.e" />
+                  <File Id="linked_cursor_tree_cursor.e" Name="LINKED~3.E" LongName="linked_cursor_tree_cursor.e" />
+                  <File Id="linked_list_cursor.e" Name="LINKED~1.E" LongName="linked_list_cursor.e" />
+                  <File Id="linked_tree_cursor.e" Name="LINKED~2.E" LongName="linked_tree_cursor.e" />
                   <File Id="multar_list_cursor.e" Name="MULTAR~1.E" LongName="multar_list_cursor.e" />
-                  <File Id="linked_list_cursor.e" Name="LINKED~9.E" LongName="linked_list_cursor.e" />
+                  <File Id="recursive_tree_cursor.e" Name="RECURS~1.E" LongName="recursive_tree_cursor.e" />
+				  <File Id="two_way_cursor_tree_cursor.e" Name="TWO_WA~3.E" LongName="two_way_cursor_tree_cursor.e" />
+                  <File Id="two_way_list_cursor.e" Name="TWO_WA~2.E" LongName="two_way_list_cursor.e" />
+                  <File Id="two_way_tree_cursor.e" Name="TWO_WA~1.E" LongName="two_way_tree_cursor.e" />
                 </Component>
               </Directory>
               <Directory Id="tree" Name="tree">
@@ -1301,22 +1309,24 @@
               </Directory>
               <Directory Id="graphical" Name="GRAPHI~1" LongName="graphical">
                 <Component Id="graphical" Guid="4D344F77-921D-4F5A-AF06-2B5E8E0F0DC1">
-                  <File Id="dv_combo_box.e" Name="DV_COM~1.E" LongName="dv_combo_box.e" KeyPath="yes" />
-                  <File Id="dv_text_field.e" Name="DV_TEX~1.E" LongName="dv_text_field.e" />
-                  <File Id="dv_text.e" Name="dv_text.e" />
-                  <File Id="dv_selection_window.e" Name="DV_SEL~1.E" LongName="dv_selection_window.e" />
-                  <File Id="dv_factory.e" Name="DV_FAC~1.E" LongName="dv_factory.e" />
-                  <File Id="dv_check_button.e" Name="DV_CHE~1.E" LongName="dv_check_button.e" />
-                  <File Id="dv_radio_button.e" Name="DV_RAD~1.E" LongName="dv_radio_button.e" />
-                  <File Id="dv_string_list.e" Name="DV_STR~1.E" LongName="dv_string_list.e" />
-                  <File Id="dv_frame.e" Name="dv_frame.e" />
-                  <File Id="dv_tablerow_multilist.e" Name="DV_TAB~2.E" LongName="dv_tablerow_multilist.e" />
-                  <File Id="dv_label.e" Name="dv_label.e" />
                   <File Id="dv_box.e" Name="dv_box.e" />
-                  <File Id="dv_horizontal_box.e" Name="DV_HOR~1.E" LongName="dv_horizontal_box.e" />
                   <File Id="dv_button.e" Name="DV_BUT~1.E" LongName="dv_button.e" />
-                  <File Id="dv_vertical_box.e" Name="DV_VER~1.E" LongName="dv_vertical_box.e" />
+                  <File Id="dv_check_button.e" Name="DV_CHE~1.E" LongName="dv_check_button.e" />
+                  <File Id="dv_combo_box.e" Name="DV_COM~1.E" LongName="dv_combo_box.e" KeyPath="yes" />
+                  <File Id="dv_factory.e" Name="DV_FAC~1.E" LongName="dv_factory.e" />
+                  <File Id="dv_frame.e" Name="dv_frame.e" />
+                  <File Id="dv_horizontal_box.e" Name="DV_HOR~1.E" LongName="dv_horizontal_box.e" />
+                  <File Id="dv_label.e" Name="dv_label.e" />
+                  <File Id="dv_radio_button.e" Name="DV_RAD~1.E" LongName="dv_radio_button.e" />
+                  <File Id="dv_radio_button_i.e" Name="DV_RAD~2.E" LongName="dv_radio_button_i.e" />
+                  <File Id="dv_radio_button_imp.e" Name="DV_RAD~3.E" LongName="dv_radio_button_imp.e" />
+                  <File Id="dv_selection_window.e" Name="DV_SEL~1.E" LongName="dv_selection_window.e" />
+                  <File Id="dv_string_list.e" Name="DV_STR~1.E" LongName="dv_string_list.e" />
+                  <File Id="dv_tablerow_multilist.e" Name="DV_TAB~2.E" LongName="dv_tablerow_multilist.e" />
+                  <File Id="dv_text.e" Name="dv_text.e" />
+                  <File Id="dv_text_field.e" Name="DV_TEX~1.E" LongName="dv_text_field.e" />
                   <File Id="dv_titled_widget.e" Name="DV_TIT~1.E" LongName="dv_titled_widget.e" />
+                  <File Id="dv_vertical_box.e" Name="DV_VER~1.E" LongName="dv_vertical_box.e" />
                 </Component>
               </Directory>
               <Directory Id="user_interactions" Name="USER_I~1" LongName="user_interactions">

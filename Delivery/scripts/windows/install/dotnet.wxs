@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
-  <Module Id="dotnet" Guid="26D33D6D-3A8D-4EEE-A3CD-664C59885A41" Language="0" Version="5.5">
+  <Module Id="dotnet" Guid="26D33D6D-3A8D-4EEE-A3CD-664C59885A41" Language="0" Version="5.6">
     <Package Id="26D33D6D-3A8D-4EEE-A3CD-664C59885A41" Keywords="MergeModule, MSI, Database" Description="Eiffel for .NET Support" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="0" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Component Id="registry" Guid="1E275E79-401F-4B47-A0DE-E1B839C1D8F0">
-        <Registry Root="HKLM" Key="SOFTWARE\ISE\Eiffel55\EiffelSoftware.MetadataConsumer" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
+        <Registry Root="HKLM" Key="SOFTWARE\ISE\Eiffel56\EiffelSoftware.MetadataConsumer" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" />
         <Registry Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\[ProductName]" Value="[$EiffelSoftware.Runtime.dll]" Id="registry2" />
       </Component>
 	  <Directory Id="Application" Name=".">

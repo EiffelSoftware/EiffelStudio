@@ -68,7 +68,7 @@ feature {NONE}
 		do
 			mark_and_record (f, body_index, body_id, static_class_id, original_class_id);
 
-				if Tmp_poly_server.has (rout_id_val) then
+			if Tmp_poly_server.has (rout_id_val) then
 					-- If routine id available: this is not a deferred feature
 					-- without any implementation
 				table ?= Tmp_poly_server.item (rout_id_val);

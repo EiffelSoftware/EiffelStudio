@@ -7,7 +7,7 @@ class
 	DOCUMENT_XML_READER
 
 inherit
-	XM_CONTENT_CONCATENATOR
+	XM_CALLBACKS_FILTER
 		redefine
 			on_content
 		end

@@ -19,9 +19,6 @@ feature {NONE}
 		do
 			make_visible (a_parent);
 			add_button_press_action (3, Current, Select_toolkit)
-			-- added by samik
-			set_focus_string (Focus_labels.generate_code_label)
-			-- end of samik
 		end;
 
 	Select_toolkit: ANY is
@@ -29,10 +26,10 @@ feature {NONE}
 			!! Result 
 		end
 
--- samik	focus_string: STRING is 
--- samik		do
--- samik			Result := Focus_labels.generate_code_label
--- samik		end;
+	create_focus_label is 
+		do
+			set_focus_string (Focus_labels.generate_code_label)
+		end;
 
 -- samik	focus_label: LABEL is
 -- samik		do

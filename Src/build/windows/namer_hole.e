@@ -16,19 +16,16 @@ creation
 
 feature {NONE}
 
--- samik	focus_string: STRING is 
--- samik		do
--- samik			Result := Focus_labels.namer_label
--- samik		end;
+	create_focus_label is 
+		do
+			set_focus_string (Focus_labels.namer_label)
+		end;
 
 	make (a_parent: COMPOSITE) is
 		require
 			valid_a_parent: a_parent /= Void;
 			do
 			button_make (a_parent);
-			-- added by samik
-			set_focus_string (Focus_labels.namer_label)
-			-- end of samik	
 		end;
 
 	symbol: PIXMAP is

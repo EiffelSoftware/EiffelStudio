@@ -55,10 +55,10 @@ feature {NONE}
 
 feature {NONE}
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.create_edit_label
--- samik		end;
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.create_edit_label)
+		end;
 
 	target, source: WIDGET is
 		do
@@ -73,9 +73,6 @@ feature {NONE}
 	make (a_parent: COMPOSITE) is
 		do
 			make_visible (a_parent);
-			-- added by samik
-			set_focus_string (Focus_labels.create_edit_label)
-			-- end of samik
 			initialize_transport;
 			initialize_focus;
 			register

@@ -18,13 +18,12 @@ feature {NONE}
     make (a_parent: COMPOSITE) is
         do
             make_visible (a_parent)
-            set_focus_string (Focus_labels.import_code_label)
         end
 
--- samik	focus_string: STRING is 
--- samik		do
--- samik			Result := Focus_labels.import_code_label
--- samik		end;
+	create_focus_label is 
+		do
+			set_focus_string (Focus_labels.import_code_label)
+		end;
 
 -- samik	focus_label: LABEL is
 -- samik		do

@@ -30,9 +30,9 @@ feature
 			Result := Pixmaps.type_pixmap
 		end;
 
-	focus_string: STRING is
+	create_focus_label is
 		do
-			Result := Focus_labels.argument_label
+			set_focus_string (Focus_labels.argument_label)
 		end;
 	
 feature {NONE}

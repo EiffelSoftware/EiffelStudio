@@ -34,9 +34,6 @@ feature
 		do
 			instance_editor := ed;
 			make_visible (a_parent);
-			-- added by samik
-			set_focus_string (Focus_labels.command_type_label)
-			-- end of samik
 			register;
 		end; -- Create
 
@@ -45,10 +42,10 @@ feature
 			Result := Pixmaps.create_command_instance_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.command_type_label
--- samik		end;
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.command_type_label)
+		end;
 
 	source, target: WIDGET is
 		do	

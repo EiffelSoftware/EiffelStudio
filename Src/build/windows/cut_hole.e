@@ -20,10 +20,10 @@ creation
 feature {NONE}
 
 
--- samik	focus_string: STRING is 
--- samik		do
--- samik			Result := Focus_labels.wastebasket_label;
--- samik		end;
+	create_focus_label is 
+		do
+			set_focus_string (Focus_labels.wastebasket_label)
+		end;
 	
 	make (a_parent: COMPOSITE) is
 		require
@@ -31,9 +31,6 @@ feature {NONE}
 		do
 			make_visible (a_parent);
 			register
-			-- added by samik
-			set_focus_string (Focus_labels.wastebasket_label)
-			-- end of samik
 		end;
 
 	symbol: PIXMAP is

@@ -19,7 +19,6 @@ feature {NONE}
     make (a_parent: COMPOSITE) is
         do
             parent_make (a_parent)
-            set_focus_string (Focus_labels.initial_state_label)
         end
 
 	symbol: PIXMAP is
@@ -27,10 +26,10 @@ feature {NONE}
 			Result := Pixmaps.initial_state_pixmap
 		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.initial_state_label
--- samik		end;
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.initial_state_label)
+		end;
 	
 feature {NONE}
 

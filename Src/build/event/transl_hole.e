@@ -44,9 +44,6 @@ feature {NONE}
 			make_visible (a_parent);
 			register;
 			initialize_transport
-			-- added by samik
-			set_focus_string (Focus_labels.translation_label)
-			-- end of samik
 		end;
 
 	symbol: PIXMAP is
@@ -58,7 +55,12 @@ feature {NONE}
 		do
 			Result := Pixmaps.event_dot_pixmap
 		end;
-
+	
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.translation_label)
+		end
+	
 feature {NONE}
 
 	process_event (dropped: EVENT_STONE) is

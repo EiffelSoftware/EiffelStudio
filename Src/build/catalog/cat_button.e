@@ -23,13 +23,17 @@ feature {NONE}
 			valid_cat_page: cat_page /= Void;
 			valid_a_parent: a_parent /= Void
 		do
-			catalog_page := cat_page;
-			symbol := a_symbol;
-			make_visible (a_parent);
-			add_activate_action (Current, Void);
+			catalog_page := cat_page
+			symbol := a_symbol
+			make_visible (a_parent)
+			add_activate_action (Current, Void)
 		end;
 
-
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.catalog_label)
+		end
+		
 
 feature {NONE}
 

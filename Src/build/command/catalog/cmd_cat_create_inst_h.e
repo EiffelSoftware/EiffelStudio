@@ -18,10 +18,10 @@ creation
 
 feature {NONE}
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.create_instance_label
--- samik		end;
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.create_instance_label)
+		end;
 
 -- samik	focus_label: FOCUS_LABEL is
 -- samik		do
@@ -36,10 +36,7 @@ feature {NONE}
 	make (a_parent: COMPOSITE) is
 		do
 			make_visible (a_parent);
-			-- added by samik
-			set_focus_string (Focus_labels.create_instance_label)
-			-- end of samik
-			initialize_focus;
+--			initialize_focus;
 			register
 		end; -- Create
  

@@ -21,9 +21,6 @@ feature {NONE}
 			command_editor := ed;
 			make_visible (a_parent);
 			add_activate_action (Current, Void)
-			-- added by samik
-			set_focus_string (Focus_labels.popup_instance_label)
-			-- end of samik
 		end;
 
 -- samik	focus_label: FOCUS_LABEL is
@@ -31,10 +28,10 @@ feature {NONE}
 -- samik			Result := command_editor.focus_label
 -- samik		end;
 
--- samik	focus_string: STRING is
--- samik		do
--- samik			Result := Focus_labels.popup_instance_label
--- samik		end;
+	create_focus_label is
+		do
+			set_focus_string (Focus_labels.popup_instance_label)
+		end;
 
 	symbol: PIXMAP is
 		do

@@ -33,6 +33,11 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_DOCKABLE_SOURCE_I
+		redefine
+			interface
+		end
 
 	EV_TOOL_BAR_BUTTON_ACTION_SEQUENCES_I
 

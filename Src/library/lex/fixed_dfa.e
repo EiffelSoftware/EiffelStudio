@@ -84,27 +84,27 @@ feature -- Output
 			i,j, index: INTEGER;
 			value: STATE_OF_DFA
 		do
-			io.putstring (" FIXED_DFA%N");
+			io.put_string (" FIXED_DFA%N");
 			from
 				j := 1
 			until
 				j = upper + 1
 			loop
-				io.putstring (" State #");
-				io.putint (j);
+				io.put_string (" State #");
+				io.put_integer (j);
 				value := item (j);
 				if value.final /= 0 then
-					io.putstring (" final state of token type ");
-					io.putint (value.final);
+					io.put_string (" final state of token type ");
+					io.put_integer (value.final);
 					if value.final_array.count > 1 then
-						io.putstring ("%N and also of token types ");
+						io.put_string ("%N and also of token types ");
 						from
 							i := value.final_array.lower + 1
 						until
 							i > value.final_array.upper
 						loop
-							io.putint (value.final_array.item (i));
-							io.putstring (" ");
+							io.put_integer (value.final_array.item (i));
+							io.put_string (" ");
 							i := i + 1
 						end
 					end
@@ -116,9 +116,9 @@ feature -- Output
 					i = greatest_input + 1
 				loop
 					if value.successor (i) /= Void then
-						io.putstring (" Input: ");
-						io.putint (i);
-						io.putstring (" Successor: ");
+						io.put_string (" Input: ");
+						io.put_integer (i);
+						io.put_string (" Successor: ");
 						from
 							index := 0
 						until
@@ -128,7 +128,7 @@ feature -- Output
 							if
 								item (index) = value.successor (i)
 							then
-								io.putint (index)
+								io.put_integer (index)
 							end
 						end;
 						io.new_line
@@ -138,7 +138,7 @@ feature -- Output
 				j := j + 1;
 				io.new_line
 			end;
-			io.putstring (" End FIXED DFA.%N")
+			io.put_string (" End FIXED DFA.%N")
 		end; 
 
 feature {NONE} -- Implementation

@@ -21,7 +21,9 @@ inherit
 	ALL_CURS_X
 		export
 			{NONE} all
-		end
+		end;
+
+	EXCEPTIONS
 
 creation
 
@@ -87,7 +89,7 @@ feature
 			-- Exit from the application
 		do
 			xt_destroy_application_context (application_context);
-			die (0)
+			new_die (0)
 		end;
 
 	font (a_font: FONT): FONT_X is

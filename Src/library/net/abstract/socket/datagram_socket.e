@@ -63,13 +63,13 @@ feature -- Input
 			ext_data := Result.data
 			return_val := c_rcv_from (descriptor, $ext_data, Result.count, flags, $ext_addr, $peer_addr_size)
 			debug ("network_dgram")
-				io.putstring ("read : ")
-				io.putint (return_val)
+				io.put_string ("read : ")
+				io.put_integer (return_val)
 				io.new_line
-				io.putstring ("peer address size (eiffel : c) , ")
-				io.putint (peer_address.count)
-				io.putstring (" : ")
-				io.putint (peer_addr_size.item)
+				io.put_string ("peer address size (eiffel : c) , ")
+				io.put_integer (peer_address.count)
+				io.put_string (" : ")
+				io.put_integer (peer_addr_size.item)
 				io.new_line
 			end
 		ensure
@@ -98,8 +98,8 @@ feature -- Output
 			end
 			return_val := c_send_to (descriptor, $ext_data, a_packet.count, flags, $ext_addr, peer_address.count)
 			debug ("network_dgram") 
-				io.putstring ("write : ")
-				io.putint (return_val)
+				io.put_string ("write : ")
+				io.put_integer (return_val)
 				io.new_line
 			end
 		end

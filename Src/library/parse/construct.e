@@ -152,7 +152,7 @@ feature -- Output
 	print_name is
 			-- Print the construct name on standard output.
 		do
-			io.putstring (construct_name)
+			io.put_string (construct_name)
 		end;
 
 feature {CONSTRUCT} -- Implementation
@@ -333,9 +333,9 @@ feature {NONE} -- Implementation
 			if not Result then
 				if not structure_list.has (production) then
 					structure_list.put_right (production);
-					io.putstring ("Left recursion has been detected ");
-					io.putstring ("in the following constructs:%N");
-					io.putstring (recursion_message);
+					io.put_string ("Left recursion has been detected ");
+					io.put_string ("in the following constructs:%N");
+					io.put_string (recursion_message);
 					io.new_line;
 					recursion_message.wipe_out;
 					Result := true
@@ -344,8 +344,8 @@ feature {NONE} -- Implementation
 					recursion_message.append ("%N")
 				end
 			elseif Result and not structure_list.has (production) then
-				io.putstring ("child.left_recursion = false");
-				io.putstring ("		and recursion_visited = false%N")
+				io.put_string ("child.left_recursion = false");
+				io.put_string ("		and recursion_visited = false%N")
 			end
 		end;
 

@@ -599,7 +599,7 @@ feature -- Element change
 					-- `a' | `b' must also be one.
 					-- not 'a'|+('b') ==> test of transition number.
 				debug
-					io.putstring ("Union2, length = 6");
+					io.put_string ("Union2, length = 6");
 					io.new_line;
 				end;
 				!! new.make (2, Last_ascii);
@@ -608,7 +608,7 @@ feature -- Element change
 				new.include (tool_list.item, 0)
 			else
 				debug
-					io.putstring ("Union2, length /= 6");
+					io.put_string ("Union2, length /= 6");
 					io.new_line;
 				end;
 				!! new.make (length, Last_ascii);
@@ -1047,13 +1047,13 @@ feature {NONE} -- Implementation
 				shift := shift + fa.nb_states;
 				set_final (shift, token_type_list.item);
 				debug
-					io.putstring (" Tool selected: ");
-					io.putint (selected_tools.item);
-					io.putstring (" Description: ");
+					io.put_string (" Tool selected: ");
+					io.put_integer (selected_tools.item);
+					io.put_string (" Description: ");
 					tool_names.go_i_th (selected_tools.item);
-					io.putstring (tool_names.item);
-					io.putstring (" Token type associated: ");
-					io.putint (token_type_list.item);
+					io.put_string (tool_names.item);
+					io.put_string (" Token type associated: ");
+					io.put_integer (token_type_list.item);
 					io.new_line
 				end;
 				selected_tools.forth;

@@ -88,7 +88,7 @@ feature  -- Input
 			if empty or else islast then
 				analyzer.get_token;
 				if analyzer.last_token.type = 0 then
-					io.putstring("unrecognized_tokens%N");
+					io.put_string("unrecognized_tokens%N");
 					raise_error
 						("Unrecognized token(s) found (and ignored)");
 					from
@@ -127,12 +127,12 @@ feature  -- Output
 			if not empty then
 				from
 					start;
-					io.putstring ("Printing all tokens ");
+					io.put_string ("Printing all tokens ");
 					io.new_line
 				until 
 					after
 				loop
-					io.putstring (token.string_value);
+					io.put_string (token.string_value);
 					io.new_line;
 					forth
 				end
@@ -149,7 +149,7 @@ feature  -- Output
 			error_message.append (token.line_number.out);
 			error_message.append ("): "); 
 			error_message.append (s); 
-			io.error.putstring (error_message);
+			io.error.put_string (error_message);
 			io.error.new_line
 		end;
 

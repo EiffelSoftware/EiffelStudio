@@ -15,50 +15,50 @@ feature -- Status report
 			-- output an error message 
 		do
 			if address_not_readable then
-				io.error.putstring ("Address not readable %N")
+				io.error.put_string ("Address not readable %N")
 			elseif socket_ok then
-				io.error.putstring ("Socket Ok %N")
+				io.error.put_string ("Socket Ok %N")
 			elseif protected_address then
-				io.error.putstring ("Address protected %N")
+				io.error.put_string ("Address protected %N")
 			elseif already_bound then
-				io.error.putstring ("Address already bound %N")
+				io.error.put_string ("Address already bound %N")
 			elseif address_in_use then
-				io.error.putstring ("Address in use %N")
+				io.error.put_string ("Address in use %N")
 			elseif invalid_address then
-				io.error.putstring ("Address not available %N")
+				io.error.put_string ("Address not available %N")
 			elseif invalid_socket_handle then
-				io.error.putstring ("Address is a file %N")
+				io.error.put_string ("Address is a file %N")
 			elseif bad_socket_handle then
-				io.error.putstring ("socket_invalid %N")
+				io.error.put_string ("socket_invalid %N")
 			elseif socket_family_not_supported then
-				io.error.putstring ("family not supported %N")
+				io.error.put_string ("family not supported %N")
 			elseif no_permission then
-				io.error.putstring ("no permission %N")
+				io.error.put_string ("no permission %N")
 			elseif no_buffers then
-				io.error.putstring ("no buffers %N")
+				io.error.put_string ("no buffers %N")
 			elseif dtable_full then
-				io.error.putstring ("descriptor table full %N")
+				io.error.put_string ("descriptor table full %N")
 			elseif not_connected then
-				io.error.putstring ("not connected %N")
+				io.error.put_string ("not connected %N")
 			elseif protocol_not_supported then
-				io.error.putstring ("protocol not supported %N")
+				io.error.put_string ("protocol not supported %N")
 			elseif socket_would_block then
-				io.error.putstring ("socket would block %N")
+				io.error.put_string ("socket would block %N")
 			elseif socket_in_use then
-				io.error.putstring ("socket in use %N")
+				io.error.put_string ("socket in use %N")
 			elseif expired_socket then
-				io.error.putstring ("socket expired %N")
+				io.error.put_string ("socket expired %N")
 			elseif connection_refused then
-				io.error.putstring ("connection refused %N")
+				io.error.put_string ("connection refused %N")
 			elseif network then
-				io.error.putstring ("no network %N")
+				io.error.put_string ("no network %N")
 			elseif zero_option then
-				io.error.putstring ("not an option %N")
+				io.error.put_string ("not an option %N")
 			elseif connect_in_progress then
-				io.error.putstring ("Connection in progress")
+				io.error.put_string ("Connection in progress")
 			else
-				io.error.putstring( "Unknown error : ")
-				io.error.putint (c_errorno)
+				io.error.put_string( "Unknown error : ")
+				io.error.put_integer (c_errorno)
 			end
 		end
 

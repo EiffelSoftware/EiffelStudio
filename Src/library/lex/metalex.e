@@ -108,18 +108,18 @@ feature {NONE} -- Implementation
 		do
 			from
 				id := 1;
-				token_file.readword;
-				token_name := clone (token_file.laststring);
-				token_file.readline;
-				regular := clone (token_file.laststring);
+				token_file.read_word;
+				token_name := clone (token_file.last_string);
+				token_file.read_line;
+				regular := clone (token_file.last_string);
 			until
 				token_name.is_equal ("--")
 			loop
 				put_expression (regular, id, token_name);
-				token_file.readword;
-				token_name := clone (token_file.laststring);
-				token_file.readline;
-				regular := clone (token_file.laststring);
+				token_file.read_word;
+				token_name := clone (token_file.last_string);
+				token_file.read_line;
+				regular := clone (token_file.last_string);
 				id := id + 1
 			end
 		end; 
@@ -135,14 +135,14 @@ feature {NONE} -- Implementation
 					-- The type of the keywords
 					-- corresponds to the last type recorded.
 				keyword_type := token_type_list.last;
-				token_file.readword;
-				keyword_name := clone (token_file.laststring);
+				token_file.read_word;
+				keyword_name := clone (token_file.last_string);
 			until
 				token_file.end_of_file
 			loop
 				put_keyword (keyword_name, keyword_type);
-				token_file.readword;
-				keyword_name := clone (token_file.laststring)
+				token_file.read_word;
+				keyword_name := clone (token_file.last_string)
 			end
 		end; 
 

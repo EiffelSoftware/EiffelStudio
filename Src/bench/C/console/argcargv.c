@@ -71,7 +71,7 @@ void eif_cleanup(void)
 	for (i = 0; i < eif_fn_count; i ++)
 		if (eif_fn_table[i] != NULL)
 			{
-			eif_fn_table[i]();
+			eif_fn_table[i](EIF_FALSE);
 			eif_fn_table[i] = NULL;
 			}
 }

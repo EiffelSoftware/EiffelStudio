@@ -431,6 +431,7 @@ void stop_profile(void)
 	 * information in `class_table'.
 	 */
 
+	EIF_GET_CONTEXT
 	if(prof_recording) {
 		struct prof_info *item;	/* The information to change */
 
@@ -465,6 +466,7 @@ void stop_profile(void)
 			panic(MTC "Profile stack corrupted");
 		}
 	}
+	EIF_END_GET_CONTEXT
 }
 
 #define Classname(x)	System(x).cn_generator

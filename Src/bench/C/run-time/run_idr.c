@@ -13,6 +13,7 @@
 
 #include "config.h"
 #include "portable.h"
+#include "eif_globals.h"
 #include <stdio.h>
 #include "err_msg.h"
 #include <sys/types.h>
@@ -138,6 +139,7 @@ rt_public void run_idr_destroy (void)
 
 rt_private int run_idr_read (IDR *bu)
 {
+	EIF_GET_CONTEXT
         register char * ptr = bu->i_buf;
         short read_size, amount_left;
         register int part_read = 0, total_read = 0;
@@ -182,6 +184,7 @@ rt_private int run_idr_read (IDR *bu)
 		amount_left -= part_read;
 		}
 	return total_read;
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void run_idr_write (IDR *bu)

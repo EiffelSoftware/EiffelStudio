@@ -467,6 +467,7 @@ void wstdinit(char *obj, char *parent)
 {
 	/* Initialize composite object `obj' */
 
+	EIF_GET_CONTEXT
 	int dtype;						/* Dunamic type of `obj' */
 	union overhead *zone = HEADER(obj);
 	long i; /* %%ss removed , nb; */
@@ -560,6 +561,7 @@ void wstdinit(char *obj, char *parent)
 	}
 
 	RTLE;
+	EIF_END_GET_CONTEXT
 }
 #endif
 

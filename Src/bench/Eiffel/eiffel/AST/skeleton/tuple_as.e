@@ -8,9 +8,7 @@ class TUPLE_AS
 inherit
 	ATOMIC_AS
 		redefine
-			type_check, byte_node, 
-			fill_calls_list, replicate,
-			is_equivalent
+			type_check, byte_node, is_equivalent
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -63,8 +61,7 @@ feature -- Type check, byte code, dead code removal and formatter
 				i := i - 1
 			end
 				-- Update type stack
-			create tuple_type.make (generics)
-			tuple_type.set_base_class_id (System.tuple_id)
+			create tuple_type.make (System.tuple_id, generics)
 
 			context.replace (tuple_type)
 				-- Update the tuple type stack
@@ -85,19 +82,6 @@ feature -- Type check, byte code, dead code removal and formatter
 			-- Tuple type stack
 		once
 			Result := context.tuple_line
-		end
-
-feature	-- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-		do
-			expressions.fill_calls_list (l)
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-		do
-			Result := clone (Current)
-			Result.set_expressions (expressions.replicate (ctxt))
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -23,7 +23,7 @@ inherit
 		
 	ATOMIC_AS
 		undefine
-			fill_calls_list, replicate, format, byte_node
+			format, byte_node
 		redefine
 			type_check, good_integer, good_character,
 			make_integer, make_character

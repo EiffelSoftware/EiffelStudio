@@ -776,7 +776,12 @@ feature -- Generation (Linking rules)
 		do
 			make_file.putstring ("all: ")
 			make_file.putstring (system_name)
-			if Eiffel_dynamic_lib /= Void then
+				-- At this stage `update' on `Eiffel_dynamic_lib' was called by AUXILIARY_FILES.generate_dynamic_lib
+				-- and therefore `is_content_valid' is still meaningful.
+			if
+				Eiffel_dynamic_lib /= Void and then Eiffel_dynamic_lib.is_content_valid and then
+				not Eiffel_dynamic_lib.is_empty
+			then
 				make_file.putstring (" $(SYSTEM_IN_DYNAMIC_LIB)")
 			end
 

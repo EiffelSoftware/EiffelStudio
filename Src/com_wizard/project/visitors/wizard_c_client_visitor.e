@@ -66,8 +66,13 @@ feature -- Processing
 			implemented_interface_generator: WIZARD_IMPLEMENTED_INTERFACE_C_CLIENT_GENERATOR
 		do
 			Precursor (implemented_interface_descriptor)
-			create implemented_interface_generator
-			implemented_interface_generator.generate (implemented_interface_descriptor)
+			if 
+				not implemented_interface_descriptor.interface_descriptor.name.is_equal (Iunknown_type) and
+				not implemented_interface_descriptor.interface_descriptor.name.is_equal (Idispatch_type)
+			then
+				create implemented_interface_generator
+				implemented_interface_generator.generate (implemented_interface_descriptor)
+			end
 		end
 
 	process_interface (interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR) is
@@ -79,8 +84,13 @@ feature -- Processing
 			interface_client_generator: WIZARD_INTERFACE_C_CLIENT_GENERATOR
 		do
 			Precursor (interface_descriptor)
-			create interface_client_generator
-			interface_client_generator.generate (interface_descriptor)
+			if 
+				not interface_descriptor.name.is_equal (Iunknown_type) and
+				not interface_descriptor.name.is_equal (Idispatch_type)
+			then
+				create interface_client_generator
+				interface_client_generator.generate (interface_descriptor)
+			end
 		end
 
 	process_enum (enum_descriptor: WIZARD_ENUM_DESCRIPTOR) is

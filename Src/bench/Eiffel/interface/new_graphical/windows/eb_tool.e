@@ -18,6 +18,10 @@ inherit
 
 	NEW_EB_CONSTANTS
 
+	EB_TOOL_DATA
+
+	EB_RESOURCE_USER
+
 feature {NONE} -- Initialization
 
 	make (man: EB_TOOL_MANAGER) is
@@ -32,6 +36,7 @@ feature {NONE} -- Initialization
 			parent := manager.tool_parent
 			parent_window := manager.associated_window
 
+			register
 			init_commands
 		ensure
 			parent_set: parent /= Void
@@ -61,8 +66,8 @@ feature -- Tool Properties
 	parent_window: EV_WINDOW
 			-- window where Current is.
 
-	empty_tool_name: STRING is 
-			-- Name given to the tool when it is empty
+	tool_name: STRING is 
+			-- Name given to the tool (its title, mostly)
 		deferred
 		end
 
@@ -82,10 +87,10 @@ feature -- Tool Properties
 			-- Button to represent Current's default hole.
 			-- not implemented yet
 
-	icon_id: INTEGER is
-			-- Icon id for window (for windows)
-		do
-		end
+--	icon_id: INTEGER is
+--			-- Icon id for window (for windows)
+--		do
+--		end
 
 feature -- Access
 
@@ -233,6 +238,7 @@ feature {EB_TOOL_MANAGER} -- Widget Implementation
 	destroy_imp is
 			-- Close Current.
 		do
+			unregister
 			container.destroy
 		ensure
 			destroyed: destroyed

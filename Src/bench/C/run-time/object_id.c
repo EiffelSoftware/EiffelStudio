@@ -172,7 +172,7 @@ EIF_BOOLEAN reuse_free;
 		else
 			address = current_chunk->sk_end - 1;
 		for (;
-			 address < current_chunk->sk_arena;
+			 address >= current_chunk->sk_arena;
 			 address--) {
 			if (*address == obj)
 					/* Object is in the stack */

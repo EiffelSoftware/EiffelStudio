@@ -23,6 +23,28 @@ feature {NONE} -- Initialization
 			make_top (Title, main_menu.popup_menu (2), 1000)
 			set_menu (main_menu)
 		end
+	
+	associated_application: WEL_APPLICATION
+
+feature -- Basic operations
+
+	set_application(app: WEL_APPLICATION) is
+		do
+			associated_application := app
+		end
+
+	idle_action is
+			-- Action performed when the application is idle.
+		local
+			child: CHILD_WINDOW
+		do
+			if has_active_window then
+				child ?= active_window
+				if child.idle_action then
+					associated_application.disable_idle_action
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -42,6 +64,7 @@ feature {NONE} -- Implementation
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
 					create child.make (Current, open_file_dialog.file_name)
+					associated_application.enable_idle_action
 				end
 
 			when Cmd_file_close then
@@ -121,11 +144,11 @@ feature {NONE} -- Implementation
 			else
 			end
 		end
-
+	
 	open_file_dialog: WEL_OPEN_FILE_DIALOG is
 		local
 			ofn: WEL_OFN_CONSTANTS
-		once
+			once
 			create ofn
 			create Result.make
 			Result.set_filter (<<"Eiffel files (*.e)", "All files (*.*)">>, <<"*.e", "*.*">>)

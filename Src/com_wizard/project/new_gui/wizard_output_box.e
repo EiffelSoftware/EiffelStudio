@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			l_scroll: INTEGER
 		do
 			output_text.set_text (text)
-			l_scroll := output_text.line_count - output_text.visible_lines_count
+			l_scroll := output_text.line_count - output_text.visible_lines_count + 1
 			if l_scroll > 0 then
 				output_text.scroll_to_line (l_scroll)
 			end

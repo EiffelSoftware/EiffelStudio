@@ -141,8 +141,11 @@ feature  -- Access
 			-- Horizontal bar at bottom of client area used for showing messages
 			-- to the user.
 
-	is_modal: BOOLEAN 
+	is_modal: BOOLEAN is
 			-- Must the window be closed before application continues?
+		do
+			Result := C.gtk_window_struct_modal (c_object) = 1
+		end
 
 	blocking_window: EV_WINDOW
 			-- Window that `Current' is a transient for.
@@ -152,26 +155,25 @@ feature -- Status setting
 	block is
 			-- Wait until window is closed by the user.
 		local
-			app: EV_APPLICATION
+			dummy: INTEGER
 		do
-			app := (create {EV_ENVIRONMENT}).application
-			from until not is_show_requested loop
-				app.sleep (100)
-				app.process_events
+			from
+			until
+				not is_show_requested
+			loop
+				dummy := C.gtk_main_iteration_do (True)
 			end
 		end
 
 	enable_modal is
 			-- Set `is_modal' to `True'.
 		do
-			is_modal := True
 			C.gtk_window_set_modal (c_object, True)
 		end
 
 	disable_modal is
 			-- Set `is_modal' to `False'.
 		do
-			is_modal := False
 			C.gtk_window_set_modal (c_object, False)
 		end
 
@@ -460,6 +462,10 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/02/29 02:24:02  brendel
+--| Improved implementation of `block'.
+--| `is_modal' is now directly looked up from GTK.
+--|
 --| Revision 1.17  2000/02/26 01:29:02  brendel
 --| Added calls to action sequences when adding/removing an item.
 --|

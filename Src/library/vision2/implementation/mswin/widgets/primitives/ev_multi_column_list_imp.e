@@ -6,7 +6,6 @@ indexing
 	id: "$$"
 	date: "$Date$"
 	revision: "$Revision$"
-
 class
 	EV_MULTI_COLUMN_LIST_IMP
 
@@ -165,7 +164,8 @@ feature -- Access
 			end			
 		end
 
-	find_item_at_position (x_pos, y_pos: INTEGER): EV_MULTI_COLUMN_LIST_ROW_IMP is
+	find_item_at_position (x_pos, y_pos: INTEGER): 
+				EV_MULTI_COLUMN_LIST_ROW_IMP is
 			-- Find the item at the given position.
 			-- Position is relative to the toolbar.
 		local
@@ -248,7 +248,7 @@ feature -- Status setting
 			end
 		end
 
-	set_multiple_selection is
+	enable_multiple_selection is
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
 		do
@@ -261,7 +261,7 @@ feature -- Status setting
 			end
 		end
 
-	set_single_selection is
+	disable_multiple_selection is
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list
 		do
@@ -269,7 +269,8 @@ feature -- Status setting
 				if has_headers then
 					set_style (default_style + Lvs_singlesel)
 				else
-					set_style (default_style + Lvs_singlesel +Lvs_nocolumnheader)
+					set_style (default_style + Lvs_singlesel + 
+						Lvs_nocolumnheader)
 				end
 			end
 		end
@@ -293,7 +294,8 @@ feature -- Status setting
 				if is_multiple_selection then
 					set_style (default_style + Lvs_nocolumnheader)
 				else
-					set_style (default_style + Lvs_singlesel + Lvs_nocolumnheader)
+					set_style (default_style + Lvs_singlesel + 
+						Lvs_nocolumnheader)
 				end
 			end
 		end
@@ -343,7 +345,8 @@ feature -- Element change
 				until
 					counter = columns
 				loop
-					current_width := current_width - get_column_width (counter)
+					current_width := current_width 
+						- get_column_width (counter)
 					counter:= counter + 1
 				end
 				wel_set_column_width (current_width, column - 1)
@@ -393,12 +396,16 @@ feature -- Element change
 				-- For every column in the mc list.
 				if counter = columns then
 					if current_width > last_column_width_setting then
-						wel_set_column_width (current_width, counter - 1)
-					elseif current_width < get_column_width (counter) then 
-						wel_set_column_width (last_column_width_setting, counter - 1)
+						wel_set_column_width 
+							(current_width, counter - 1)
+					elseif current_width < get_column_width (counter)
+						then 
+						wel_set_column_width
+							(last_column_width_setting, counter - 1)
 					end
 				end
-				current_width := current_width - get_column_width (counter)
+				current_width := current_width - 
+					get_column_width (counter)
 				counter := counter + 1
 			end
 		end
@@ -470,14 +477,17 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			list := item_imp.internal_text
 			from
 				list.start
-				create litem.make_with_attributes (Lvif_text, index - 1, 0, 0, list.item)
+				create litem.make_with_attributes (
+					Lvif_text, index - 1, 0, 0, list.item)
 				wel_insert_item (litem)
 				list.forth
 			until
 				list.after
 			loop
-				create litem.make_with_attributes (Lvif_text, index - 1, list.index - 1, 0, list.item)
-				cwin_send_message (wel_item, Lvm_setitem, 0, litem.to_integer)
+				create litem.make_with_attributes (
+					Lvif_text, index - 1, list.index - 1, 0, list.item)
+				cwin_send_message (wel_item, Lvm_setitem, 0,
+					litem.to_integer)
 				list.forth
 			end
 
@@ -539,7 +549,8 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (Lvis_selected)
 			litem.set_statemask (Lvis_selected)	
-			cwin_send_message (wel_item, Lvm_setitemstate, i, litem.to_integer)
+			cwin_send_message (wel_item, Lvm_setitemstate, i,
+				litem.to_integer)
 		end
 
 	internal_deselect (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
@@ -552,7 +563,8 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			create litem.make_with_attributes (Lvif_state, i, 0, 0, "")
 			litem.set_state (0)
 			litem.set_statemask (Lvis_selected)	
-			cwin_send_message (wel_item, Lvm_setitemstate, i, litem.to_integer)
+			cwin_send_message (wel_item, Lvm_setitemstate, i,
+				litem.to_integer)
 		end
 
 feature {NONE} -- WEL Implementation
@@ -565,7 +577,8 @@ feature {NONE} -- WEL Implementation
 			if msg = Wm_paint then
 				compute_column_widths
 			else
-				Result := {WEL_LIST_VIEW} Precursor (hwnd, msg, wparam, lparam)
+				Result := {WEL_LIST_VIEW} Precursor (hwnd, msg,
+					wparam, lparam)
 			end
 		end
 	
@@ -589,19 +602,19 @@ feature {NONE} -- WEL Implementation
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			--| FIXME 
-			--if info.uchanged = Lvif_state and info.isubitem = 0 then
-			--	if flag_set(info.unewstate, Lvis_selected) and
-			--			not flag_set(info.uoldstate, Lvis_selected) then
-			--		item_imp := ev_children @ (info.iitem + 1)
-			--		item_imp.execute_command (Cmd_item_activate, Void)
-			--		execute_command (Cmd_select, Void)
-			--	elseif flag_set(info.uoldstate, Lvis_selected) and
-			--		not flag_set(info.unewstate, Lvis_selected) then
-			--		item_imp := ev_children @ (info.iitem + 1)
-			--		item_imp.execute_command (Cmd_item_deactivate, Void)
-			--	end
-			--end
+		--| FIXME 
+		--if info.uchanged = Lvif_state and info.isubitem = 0 then
+		--	if flag_set(info.unewstate, Lvis_selected) and
+		--			not flag_set(info.uoldstate, Lvis_selected) then
+		--		item_imp := ev_children @ (info.iitem + 1)
+		--		item_imp.execute_command (Cmd_item_activate, Void)
+		--		execute_command (Cmd_select, Void)
+		--	elseif flag_set(info.uoldstate, Lvis_selected) and
+		--		not flag_set(info.unewstate, Lvis_selected) then
+		--		item_imp := ev_children @ (info.iitem + 1)
+		--		item_imp.execute_command (Cmd_item_deactivate, Void)
+		--	end
+		--end
 		end
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -614,7 +627,8 @@ feature {NONE} -- WEL Implementation
 --			if has_command (Cmd_button_one_press) then
 --				execute_command (Cmd_button_one_press, ev_data)
 --			end
---			internal_propagate_event (Cmd_button_one_press, x_pos, y_pos, ev_data)
+--			internal_propagate_event 
+-- (Cmd_button_one_press, x_pos, y_pos, ev_data)
 		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -627,7 +641,8 @@ feature {NONE} -- WEL Implementation
 --			if has_command (Cmd_button_two_press) then
 --				execute_command (Cmd_button_two_press, ev_data)
 --			end
---			internal_propagate_event (Cmd_button_two_press, x_pos, y_pos, ev_data)
+--			internal_propagate_event
+--		(Cmd_button_two_press, x_pos, y_pos, ev_data)
 		end
 
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -640,7 +655,8 @@ feature {NONE} -- WEL Implementation
 --			if has_command (Cmd_button_three_press) then
 --				execute_command (Cmd_button_three_press, ev_data)
 --			end
---			internal_propagate_event (Cmd_button_three_press, x_pos, y_pos, ev_data)
+--			internal_propagate_event
+--(Cmd_button_three_press, x_pos, y_pos, ev_data)
 --			disable_default_processing
 		end
 
@@ -654,7 +670,8 @@ feature {NONE} -- WEL Implementation
 --			if has_command (Cmd_button_one_release) then
 --				execute_command (Cmd_button_one_release, ev_data)
 --			end
---			internal_propagate_event (Cmd_button_one_release, x_pos, y_pos, ev_data)
+--			internal_propagate_event
+--(Cmd_button_one_release, x_pos, y_pos, ev_data)
 		end
 
 	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -667,7 +684,8 @@ feature {NONE} -- WEL Implementation
 --			if has_command (Cmd_button_two_release) then
 --				execute_command (Cmd_button_two_release, ev_data)
 --			end
---			internal_propagate_event (Cmd_button_two_release, x_pos, y_pos, ev_data)
+--			internal_propagate_event
+--(Cmd_button_two_release, x_pos, y_pos, ev_data)
 		end
 
 	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -680,7 +698,8 @@ feature {NONE} -- WEL Implementation
 --			if has_command (Cmd_button_three_release) then
 --				execute_command (Cmd_button_three_release, ev_data)
 --			end
---			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos, ev_data)
+--			internal_propagate_event
+--(Cmd_button_three_release, x_pos, y_pos, ev_data)
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -706,7 +725,8 @@ feature {EV_PND_TRANSPORTER_IMP}
 			-- `Result' is relative ycoor of row to `parent_imp'
 		do
 			Result := (top_index - internal_get_index (child)) * 16 
-			+ (top_index - internal_get_index (child)) - window_frame_height
+			+ (top_index - internal_get_index (child))
+			- window_frame_height
 		end
 
 	child_x: INTEGER is
@@ -789,6 +809,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/02 19:58:16  rogers
+--| Renamed set_multiple_selection -> enable_multiple_selection and set_eingle_selection -> disable_multiple_selection.
+--|
 --| Revision 1.35  2000/02/19 06:34:13  oconnor
 --| removed old command stuff
 --|
@@ -818,7 +841,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --| Removed item as it is now inherited from EV_ITEM_LIST_IMP.
 --|
 --| Revision 1.31.4.1.2.2  1999/12/17 00:37:46  rogers
---| Altered to fit in with the review branch. Basic alterations, redefinitaions of name clashes etc. Make now takes an interface. Now inherits from EV_ITEM_LIST_IMP.
+--| Altered to fit in with the review branch. Basic alterations, 
+--| redefinitaions of name clashes etc. Make now takes an interface
+--| Now inherits from EV_ITEM_LIST_IMP.
 --|
 --| Revision 1.31.4.1.2.1  1999/11/24 17:30:32  oconnor
 --| merged with DEVEL branch

@@ -121,6 +121,13 @@ feature {NONE}
 				end
 			end
 		end
+		
+	prefix_lookup: HASH_TABLE [STRING, STRING] is
+			-- Used to get a prefix from an assembly name.
+			once
+				create Result.make (5)
+				Result.compare_objects
+			end
 
 invariant
 	local_cache_path_not_void: local_cache_path /= Void

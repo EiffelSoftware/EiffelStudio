@@ -81,7 +81,6 @@ feature -- Initialization
 			s := c_second_now;
 			make (h, m, s)
 			fractional_second := c_millisecond_now / 1000;
-			--fine_second := (c_second + c_millisecond / 1000);
 		end;
 
 	make_by_seconds (sec: INTEGER) is
@@ -187,7 +186,8 @@ feature -- Measurement
 	seconds: INTEGER is
 			-- Number of seconds elapsed from midnight
 		do
-			Result := (hour * Seconds_in_hour) + (minute * Seconds_in_minute) + second
+			Result := (hour * Seconds_in_hour) + (minute * Seconds_in_minute) +
+				second
 		ensure
 			result_definition: Result = duration.seconds_count
 		end
@@ -195,7 +195,8 @@ feature -- Measurement
 	fine_seconds: DOUBLE is
 			-- Number of seconds and fractions of seconds elapsed from midnight
 		do
-			Result := (hour * Seconds_in_hour) + (minute * Seconds_in_minute) + fine_second
+			Result := (hour * Seconds_in_hour) + (minute * Seconds_in_minute) +
+				fine_second
 		end
 
 feature -- Basic operations
@@ -227,7 +228,8 @@ feature -- Basic operations
 		do
 			total_second := second + s;
 			if (total_second < 0 or else total_second >= Seconds_in_minute) then
-				set_fine_second (mod (total_second, Seconds_in_minute) + fractional_second)
+				set_fine_second (mod (total_second, Seconds_in_minute) + 
+					fractional_second)
 				minute_add (div (total_second, Seconds_in_minute))	
 			else
 				set_fine_second (total_second + fractional_second)
@@ -242,7 +244,8 @@ feature -- Basic operations
 		do
 			total_second:= fine_second + f;
 			if (total_second < 0 or else total_second >= Seconds_in_minute) then
-				set_fine_second (total_second - div (total_second.floor, Seconds_in_minute) * Seconds_in_minute)
+				set_fine_second (total_second - div (total_second.floor, 
+					Seconds_in_minute) * Seconds_in_minute)
 				minute_add (div (total_second.floor, Seconds_in_minute))
 			else
 				set_fine_second (total_second)
@@ -379,6 +382,8 @@ feature {NONE} -- Externals
 	c_millisecond_now: INTEGER is
 		external
 			"C"
+		ensure
+			correct_range: 0 <= Result and Result < 1000
 		end;
 
 	c_make_time (h, m, s: INTEGER): INTEGER is

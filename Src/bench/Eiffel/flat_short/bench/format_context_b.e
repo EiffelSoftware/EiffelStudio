@@ -406,18 +406,23 @@ feature -- Execution
 				execution_error := false;
 				class_name := clone (class_c.name)
 				class_name.to_upper;
+
 				if is_short then
 					client := system.any_class.compiled_class;
 				end;
+
 				!! format_registration.make (class_c, client);
 				if is_flat_short then
 					format_registration.initialize_creators;
 				end;
+
 				if not order_same_as_text then
 					format_registration.set_feature_clause_order (feature_clause_order);
 				end;
+
 				format_registration.fill (current_class_only);
 				System.set_current_class (class_c);
+
 				if format_registration.target_ast /= void then
 					Inst_context.set_cluster (class_c.cluster);
 					format_registration.target_ast.format (Current);

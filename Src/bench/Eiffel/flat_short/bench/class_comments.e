@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"Comments for an eiffel class. Eiffel comments are hashed%
 		%on position within the eiffel text.";
@@ -9,7 +8,6 @@ indexing
 class CLASS_COMMENTS
 
 inherit
-
 	EXTEND_TABLE [EIFFEL_COMMENTS, INTEGER]
 		rename
 			make as table_make
@@ -27,7 +25,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature {NONE} -- Initialization

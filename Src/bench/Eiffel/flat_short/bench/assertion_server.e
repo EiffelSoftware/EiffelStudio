@@ -1,19 +1,16 @@
 indexing
-
-	description: 
-		"Server for pre and post conditions.";
+	description: "Server for pre and post conditions.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class ASSERTION_SERVER
 
 inherit
-
 	SHARED_SERVER
+
 	COMPILER_EXPORTER
 
 creation
-
 	make, make_for_class_only, make_for_feature
 
 feature -- Initialization

@@ -43,12 +43,14 @@ feature -- Element change
 		end
 
 	set_text (txt: STRING) is
+			-- Assign `txt' to `text'.
 		require
 			exists: not destroyed
 			valid_text: txt /= Void
 		deferred
-		end
-	
+		ensure
+			text_set: text.is_equal (txt)
+		end	
 
 end -- class EV_MENU_I
 

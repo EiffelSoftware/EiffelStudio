@@ -67,7 +67,9 @@ feature -- Graphical Interface
 			-- Popdown the name chooser.
 		do
 			last_directory_viewed.wipe_out;
-			last_directory_viewed.append (directory);
+			if directory /= Void then
+				last_directory_viewed.append (directory);
+			end
 			file_sel_d_popdown
 		end;
 
@@ -128,12 +130,6 @@ feature {NONE} -- Implementation
 			popdown;
 			if argument = Current then
 				last_caller.execute (Current)
-			else
-				!! mp.set_watch_cursor;
-				if not project_tool.initialized then
-					discard_licenses;
-					exit
-				end;
 			end
 		end;
 

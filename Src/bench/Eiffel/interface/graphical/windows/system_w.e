@@ -8,19 +8,19 @@ class SYSTEM_W
 inherit
 	BAR_AND_TEXT
 		rename
-			System_resources as resources
+			System_resources as resources,
+			edit_bar as system_toolbar,
+			System_type as stone_type
 		redefine
-			make, hole, build_format_bar, build_widgets,
+			make, hole, build_widgets, create_toolbar, build_toolbar_menu,
 			open_cmd_holder, save_cmd_holder,
-			tool_name, editable, display, stone, stone_type, 
+			tool_name, editable, display, stone, 
 			synchronise_stone, process_system, parse_file,
 			process_class, process_classi, process_ace_syntax, compatible,
 			set_mode_for_editing, hide, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
 			set_read_only_text_window, realized, able_to_edit,
-			build_bar,
-			close,
-			raise, build_save_as_menu_entry, help_index, icon_id
+			close, raise, build_save_as_menu_entry, help_index, icon_id
 		end
 
 	PROJECT_CONTEXT
@@ -35,7 +35,7 @@ feature -- Initialization
 	make (a_screen: SCREEN) is
 		do
 			resources.add_user (Current)
-			{BAR_AND_TEXT} precursor (a_screen)
+			{BAR_AND_TEXT} Precursor (a_screen)
 			set_default_size
 			set_default_format
 			set_default_position
@@ -46,12 +46,6 @@ feature -- Initialization
 feature -- Properties
 
 	stone: SYSTEM_STONE
-
-	stone_type: INTEGER is
-			-- Accept any type stone
-		do
-			Result := system_type
-		end
 
 	in_use: BOOLEAN
 			-- Is the system tool used (not hidden)?
@@ -76,7 +70,7 @@ feature -- Access
 			-- Is Current hole compatible with `a_stone'?
 		do
 			Result :=
-				a_stone.stone_type = System_type or else
+				a_stone.stone_type = stone_type or else
 				a_stone.stone_type = Class_type 
 		end
 
@@ -282,7 +276,63 @@ feature -- Graphical Interface
 	
 feature {NONE} -- Implementation Graphical Interface
 
-	build_bar is
+	build_widgets is
+		do
+			create_toolbar (global_form)
+
+			build_text_windows (global_form)
+			build_menus
+			build_system_toolbar
+			fill_menus
+			set_last_format (default_format)
+			build_toolbar_menu
+
+			if resources.command_bar.actual_value = False then
+				system_toolbar.remove
+			end
+			if resources.format_bar.actual_value = False then
+				system_toolbar.remove
+			end
+
+			attach_all
+		end
+
+	build_save_as_menu_entry is
+			-- Create a save_as command to be inserted into file menu.
+		local
+			save_as_cmd: SAVE_AS_SYSTEM
+			save_as_menu_entry: EB_MENU_ENTRY
+		do
+			!! save_as_cmd.make (Current)
+			!! save_as_menu_entry.make (save_as_cmd, file_menu)
+		end
+
+	create_toolbar (a_parent: COMPOSITE) is
+			-- Create a toolbar_parent with parent `a_parent'.
+		local
+			sep: THREE_D_SEPARATOR
+		do
+			!! toolbar_parent.make (new_name, a_parent)
+			!! sep.make (Interface_names.t_Empty, toolbar_parent)
+			toolbar_parent.set_column_layout
+			toolbar_parent.set_free_size	
+			toolbar_parent.set_margin_height (0)
+			toolbar_parent.set_spacing (1)
+			!! system_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
+		end
+
+	build_toolbar_menu is
+			-- Build the toolbar menu under the special sub menu.
+		local
+			sep: SEPARATOR
+			toolbar_t: TOGGLE_B
+		do
+			!! sep.make (Interface_names.t_Empty, special_menu)
+			!! toolbar_t.make (system_toolbar.identifier, special_menu)
+			system_toolbar.init_toggle (toolbar_t)
+		end
+
+	build_system_toolbar is
 		local
 			quit_cmd: QUIT_SYSTEM
 			quit_button: EB_BUTTON
@@ -295,68 +345,6 @@ feature {NONE} -- Implementation Graphical Interface
 			save_button: EB_BUTTON
 			save_menu_entry: EB_MENU_ENTRY
 			sep: SEPARATOR
-		do
-			!! hole.make (Current)
-			!! hole_button.make (hole, edit_bar)
-			!! hole_holder.make_plain (hole)
-			hole_holder.set_button (hole_button)
-			!! open_cmd.make (Current)
-			!! open_button.make (open_cmd, edit_bar)
-			!! open_menu_entry.make (open_cmd, file_menu)
-			!! open_cmd_holder.make (open_cmd, open_button, open_menu_entry)
-			!! save_cmd.make (Current)
-			!! save_button.make (save_cmd, edit_bar)
-			!! save_menu_entry.make (save_cmd, file_menu)
-			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry)
-			build_save_as_menu_entry
-			build_print_menu_entry
-			build_edit_menu (edit_bar)
-			!! quit_cmd.make (Current)
-			!! quit_button.make (quit_cmd, edit_bar)
-			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit.make (quit_cmd, quit_button, quit_menu_entry)
-			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
-			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
-			exit_cmd_holder.set_menu_entry (exit_menu_entry)
-			
-			edit_bar.attach_left (hole_button, 0)
-			edit_bar.attach_top (hole_button, 0)
-			edit_bar.attach_top (open_button, 0)
-			edit_bar.attach_top (save_button, 0)
-			edit_bar.attach_top (search_cmd_holder.associated_button, 0)
-			edit_bar.attach_top (quit_button, 0)
-			edit_bar.attach_right_widget (save_button, open_button, 0)
-			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_button, 0)
-			edit_bar.attach_right_widget (quit_button, search_cmd_holder.associated_button, 5)
-			edit_bar.attach_right (quit_button, 0)
-		end
-
-	build_widgets is
-		do
-			create_toolbar (global_form)
-
-			build_text_windows
-			build_menus
-			build_bar
-			build_format_bar
-			build_command_menu
-			fill_menus
-			set_last_format (default_format)
-			build_toolbar_menu
-
-			if resources.command_bar.actual_value = False then
-				edit_bar.remove
-			end
-			if resources.format_bar.actual_value = False then
-				format_bar.remove
-			end
-
-			attach_all
-		end
-
-	build_format_bar is
-			-- Build formatting buttons in `format_bar'.
-		local
 			stat_cmd: SHOW_STATISTICS
 			stat_button: FORMAT_BUTTON
 			stat_menu_entry: EB_TICKABLE_MENU_ENTRY
@@ -378,57 +366,6 @@ feature {NONE} -- Implementation Graphical Interface
 			showindex_cmd: SHOW_INDEXING
 			showindex_button: FORMAT_BUTTON
 			showindex_menu_entry: EB_TICKABLE_MENU_ENTRY
-		do
-
-				-- First we create all the objects needed for the attachments.
-			!! showtext_cmd.make (Current)
-			!! showtext_button.make (showtext_cmd, format_bar)
-			!! showtext_menu_entry.make (showtext_cmd, format_menu)
-			!! showtext_frmt_holder.make (showtext_cmd, showtext_button, showtext_menu_entry)
-			!! list_cmd.make (Current)
-			!! list_button.make (list_cmd, format_bar)
-			!! list_menu_entry.make (list_cmd, format_menu)
-			!! showlist_frmt_holder.make (list_cmd, list_button, list_menu_entry)
-			!! showclass_cmd.make (Current)
-			!! showclass_button.make (showclass_cmd, format_bar)
-			!! showclass_menu_entry.make (showclass_cmd, format_menu)
-			!! showclasses_frmt_holder.make (showclass_cmd, showclass_button, showclass_menu_entry)
-			!! showhier_cmd.make (Current)
-			!! showhier_button.make (showhier_cmd, format_bar)
-			!! showhier_menu_entry.make (showhier_cmd, format_menu)
-			!! showhier_frmt_holder.make (showhier_cmd, showhier_button, showhier_menu_entry)
-			!! stat_cmd.make (Current)
-			!! stat_button.make (stat_cmd, format_bar)
-			!! stat_menu_entry.make (stat_cmd, format_menu)
-			!! showstatistics_frmt_holder.make (stat_cmd, stat_button, stat_menu_entry)
-			!! mod_cmd.make (Current)
-			!! mod_button.make (mod_cmd, format_bar)
-			!! mod_menu_entry.make (mod_cmd, format_menu)
-			!! showmodified_frmt_holder.make (mod_cmd, mod_button, mod_menu_entry)
-			!! showindex_cmd.make (Current)
-			!! showindex_button.make (showindex_cmd, format_bar)
-			!! showindex_menu_entry.make (showindex_cmd, format_menu)
-			!! showindexing_frmt_holder.make (showindex_cmd, showindex_button, showindex_menu_entry)
-
-				-- Now we attach everything (this is done here for reason of speed).
-			format_bar.attach_top (showtext_button, 0)
-			format_bar.attach_left (showtext_button, 0)
-			format_bar.attach_top (list_button, 0)
-			format_bar.attach_left_widget (showtext_button, list_button, 0)
-			format_bar.attach_top (showclass_button, 0)
-			format_bar.attach_left_widget (list_button, showclass_button, 0)
-			format_bar.attach_top (showhier_button, 0)
-			format_bar.attach_left_widget (showclass_button, showhier_button, 0)
-			format_bar.attach_top (stat_button, 0)
-			format_bar.attach_left_widget (showhier_button, stat_button, 0)
-			format_bar.attach_top (mod_button, 0)
-			format_bar.attach_left_widget (stat_button, mod_button, 0)
-			format_bar.attach_top (showindex_button, 0)
-			format_bar.attach_left_widget (mod_button, showindex_button, 0)
-		end
-
-	build_command_menu is
-		local
 			shell_cmd: SHELL_COMMAND
 			shell_button: EB_BUTTON_HOLE
 			shell_menu_entry: EB_MENU_ENTRY
@@ -436,27 +373,109 @@ feature {NONE} -- Implementation Graphical Interface
 			case_storage_button: EB_BUTTON
 			case_storage_menu_entry: EB_MENU_ENTRY
 		do
+			!! hole.make (Current)
+			!! hole_button.make (hole, system_toolbar)
+			!! hole_holder.make_plain (hole)
+			hole_holder.set_button (hole_button)
+
+			!! open_cmd.make (Current)
+			!! open_button.make (open_cmd, system_toolbar)
+			!! open_menu_entry.make (open_cmd, file_menu)
+			!! open_cmd_holder.make (open_cmd, open_button, open_menu_entry)
+
+			!! save_cmd.make (Current)
+			!! save_button.make (save_cmd, system_toolbar)
+			!! save_menu_entry.make (save_cmd, file_menu)
+			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry)
+
+			build_save_as_menu_entry
+			build_print_menu_entry
+			build_edit_menu (system_toolbar)
+
+			!! quit_cmd.make (Current)
+			!! quit_button.make (quit_cmd, system_toolbar)
+			!! quit_menu_entry.make (quit_cmd, file_menu)
+			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+
+			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
+			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
+			exit_cmd_holder.set_menu_entry (exit_menu_entry)
+
+			!! showtext_cmd.make (Current)
+			!! showtext_button.make (showtext_cmd, system_toolbar)
+			!! showtext_menu_entry.make (showtext_cmd, format_menu)
+			!! showtext_frmt_holder.make (showtext_cmd, showtext_button, showtext_menu_entry)
+
+			!! list_cmd.make (Current)
+			!! list_button.make (list_cmd, system_toolbar)
+			!! list_menu_entry.make (list_cmd, format_menu)
+			!! showlist_frmt_holder.make (list_cmd, list_button, list_menu_entry)
+
+			!! showclass_cmd.make (Current)
+			!! showclass_button.make (showclass_cmd, system_toolbar)
+			!! showclass_menu_entry.make (showclass_cmd, format_menu)
+			!! showclasses_frmt_holder.make (showclass_cmd, showclass_button, showclass_menu_entry)
+
+			!! showhier_cmd.make (Current)
+			!! showhier_button.make (showhier_cmd, system_toolbar)
+			!! showhier_menu_entry.make (showhier_cmd, format_menu)
+			!! showhier_frmt_holder.make (showhier_cmd, showhier_button, showhier_menu_entry)
+
+			!! stat_cmd.make (Current)
+			!! stat_button.make (stat_cmd, system_toolbar)
+			!! stat_menu_entry.make (stat_cmd, format_menu)
+			!! showstatistics_frmt_holder.make (stat_cmd, stat_button, stat_menu_entry)
+
+			!! mod_cmd.make (Current)
+			!! mod_button.make (mod_cmd, system_toolbar)
+			!! mod_menu_entry.make (mod_cmd, format_menu)
+			!! showmodified_frmt_holder.make (mod_cmd, mod_button, mod_menu_entry)
+
+			!! showindex_cmd.make (Current)
+			!! showindex_button.make (showindex_cmd, system_toolbar)
+			!! showindex_menu_entry.make (showindex_cmd, format_menu)
+			!! showindexing_frmt_holder.make (showindex_cmd, showindex_button, showindex_menu_entry)
+
 			!! shell_cmd.make (Current)
-			!! shell_button.make (shell_cmd, edit_bar)
+			!! shell_button.make (shell_cmd, system_toolbar)
 			shell_button.add_button_press_action (3, shell_cmd, Void)
 			!! shell_menu_entry.make (shell_cmd, special_menu)
 			!! shell.make (shell_cmd, shell_button, shell_menu_entry)
+
 			build_filter_menu_entry
 
-			edit_bar.attach_top (shell_button, 0)
-			edit_bar.attach_left_widget (hole_button, shell_button, 0)
-		end
 
-	build_save_as_menu_entry is
-			-- Create a save_as command to be inserted into file menu.
-		local
-			save_as_cmd: SAVE_AS_SYSTEM
-			save_as_menu_entry: EB_MENU_ENTRY
-			sep: SEPARATOR
-		do
-			!! save_as_cmd.make (Current)
-			!! save_as_menu_entry.make (save_as_cmd, file_menu)
-			!! sep.make (Interface_names.t_Empty, file_menu)
+				-- Now we attach everything (this is done here for reason of speed).
+			system_toolbar.attach_left (open_button, 0)
+			system_toolbar.attach_top (open_button, 0)
+			system_toolbar.attach_top (save_button, 0)
+			system_toolbar.attach_left_widget (open_button, save_button, 0)
+
+			system_toolbar.attach_top (hole_button, 0)
+			system_toolbar.attach_left_widget (save_button, hole_button, 10)
+			system_toolbar.attach_top (shell_button, 0)
+			system_toolbar.attach_left_widget (hole_button, shell_button, 0)
+
+			system_toolbar.attach_top (search_cmd_holder.associated_button, 0)
+			system_toolbar.attach_left_widget (shell_button, search_cmd_holder.associated_button, 10)
+
+			system_toolbar.attach_top (showtext_button, 0)
+			system_toolbar.attach_left_widget (search_cmd_holder.associated_button, showtext_button, 10)
+			system_toolbar.attach_top (list_button, 0)
+			system_toolbar.attach_left_widget (showtext_button, list_button, 0)
+			system_toolbar.attach_top (showclass_button, 0)
+			system_toolbar.attach_left_widget (list_button, showclass_button, 0)
+			system_toolbar.attach_top (showhier_button, 0)
+			system_toolbar.attach_left_widget (showclass_button, showhier_button, 0)
+			system_toolbar.attach_top (stat_button, 0)
+			system_toolbar.attach_left_widget (showhier_button, stat_button, 0)
+			system_toolbar.attach_top (mod_button, 0)
+			system_toolbar.attach_left_widget (stat_button, mod_button, 0)
+			system_toolbar.attach_top (showindex_button, 0)
+			system_toolbar.attach_left_widget (mod_button, showindex_button, 0)
+	
+			system_toolbar.attach_top (quit_button, 0)
+			system_toolbar.attach_right (quit_button, 0)
 		end
 
 feature {WINDOWS} -- Attributes
@@ -482,8 +501,6 @@ feature {NONE} -- Attributes Commands
 	open_cmd_holder: COMMAND_HOLDER
 
 	save_cmd_holder: TWO_STATE_CMD_HOLDER
-
-	-- check_command: CHECK_SYSTEM
 
 	showlist_frmt_holder: FORMAT_HOLDER
 

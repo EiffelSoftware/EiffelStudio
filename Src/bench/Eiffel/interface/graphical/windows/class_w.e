@@ -556,11 +556,13 @@ feature {SHOW_HTML_TEXT} -- Parsing checking
 			end
 		end
 
+feature -- Exported Commands
+
+	save_cmd_holder: TWO_STATE_CMD_HOLDER
+
 feature {NONE} -- Commands
 
 	open_cmd_holder: COMMAND_HOLDER
-
-	save_cmd_holder: TWO_STATE_CMD_HOLDER
 
 	shell: COMMAND_HOLDER
 

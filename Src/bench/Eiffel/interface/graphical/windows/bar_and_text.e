@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 				eb_shell.set_icon_pixmap (hole.icon_symbol)
 			end
 			set_icon_name (tool_name)
-			eb_shell.set_delete_command (quit.associated_command)
+			eb_shell.set_delete_command (quit_cmd_holder.associated_command)
 			set_font_to_default
 			set_composite_attributes (ts)
 		end
@@ -108,7 +108,7 @@ feature -- Update resources
 					format_bar.remove
 				end
 			end
-			{RESOURCE_USER} precursor (old_res, new_res)
+			{RESOURCE_USER} Precursor (old_res, new_res)
 		end
 
 feature -- Standard Interface
@@ -129,7 +129,7 @@ feature -- Standard Interface
 		do
 			create_toolbar (global_form)
 			
-			build_text_windows
+			build_text_windows (global_form)
 			build_menus
 			build_bar
 			build_format_bar
@@ -182,7 +182,7 @@ feature -- Standard Interface
 			!! quit_cmd.make (Current)
 			!! quit_button.make (quit_cmd, edit_bar)
 			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit.make (quit_cmd, quit_button, quit_menu_entry)
+			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 			exit_cmd_holder.set_menu_entry (exit_menu_entry)
@@ -471,7 +471,7 @@ feature -- Window Properties
 		do
 		end
 
-	quit: COMMAND_HOLDER
+	quit_cmd_holder: COMMAND_HOLDER
 			-- Command used to exit from Current.
 
 	exit_cmd_holder: COMMAND_HOLDER

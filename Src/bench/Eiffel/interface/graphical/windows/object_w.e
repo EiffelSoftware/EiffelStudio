@@ -11,11 +11,12 @@ inherit
 	BAR_AND_TEXT
 		rename
 			Object_resources as resources,
-			edit_bar as object_toolbar
+			edit_bar as object_toolbar,
+			Object_type as stone_type
 		redefine
 			make, hole, close_windows, build_toolbar_menu,
 			tool_name, build_widgets, attach_all, set_default_format,
-			stone, stone_type, synchronize, process_object,
+			stone, synchronize, process_object,
 			close, reset, default_format, create_toolbar,
 			set_title, history_window_title, help_index, icon_id
 		end
@@ -31,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Create an object tool.
 		do
 			is_in_project_tool := False
-			{BAR_AND_TEXT} precursor (a_screen)
+			{BAR_AND_TEXT} Precursor (a_screen)
 			set_default_sp_bounds
 		end
 
@@ -64,12 +65,6 @@ feature -- Window Properties
 	stone: OBJECT_STONE
 			-- Stone in tool
  
-	stone_type: INTEGER is
-			-- Accept any type stone
-		do
-			Result := Object_type
-		end
-
 	history_window_title: STRING is
 			-- Title of the history window
 		do
@@ -162,7 +157,7 @@ feature -- Update
 	reset is
 			-- Reset the contents of the object window.
 		do
-			{BAR_AND_TEXT} precursor
+			{BAR_AND_TEXT} Precursor
 			set_default_sp_bounds
 			init_text_window
 		end
@@ -171,14 +166,21 @@ feature -- Update
 			-- Set `s' to stone.
 		local
 			status: APPLICATION_STATUS
+			shell: COMPOSITE
 		do
 			status := Application.status
+			if is_a_shell then
+				shell := eb_shell
+			else
+				shell := Project_tool
+			end
+
 			if status = Void then
-				warner (eb_shell).gotcha_call (Warning_messages.w_System_not_running)
+				warner (shell).gotcha_call (Warning_messages.w_System_not_running)
 			elseif not status.is_stopped then
-				warner (eb_shell).gotcha_call (Warning_messages.w_System_not_stopped)
+				warner (shell).gotcha_call (Warning_messages.w_System_not_stopped)
 			elseif not a_stone.is_valid then
-				warner (eb_shell).gotcha_call (Warning_messages.w_Object_not_inspectable)
+				warner (shell).gotcha_call (Warning_messages.w_Object_not_inspectable)
 			else
 				last_format.execute (a_stone)
 				add_to_history (a_stone)
@@ -190,12 +192,19 @@ feature -- Update
 		local
 			status: APPLICATION_STATUS
 			cur: CURSOR
+			shell: COMPOSITE
 		do
 			status := Application.status
+			if is_a_shell then
+				shell := eb_shell
+			else
+				shell := Project_tool
+			end
+
 			if status = Void then
-				warner (eb_shell).gotcha_call (Warning_messages.w_System_not_running)
+				warner (shell).gotcha_call (Warning_messages.w_System_not_running)
 			elseif not status.is_stopped then
-				warner (eb_shell).gotcha_call (Warning_messages.w_System_not_stopped)
+				warner (shell).gotcha_call (Warning_messages.w_System_not_stopped)
 			else
 				cur := text_window.cursor
 				synchronise_stone
@@ -269,9 +278,6 @@ feature {NONE} -- Implementation; Graphical Interface
 			sep: THREE_D_SEPARATOR
 		do
 			!! toolbar_parent.make (new_name, a_parent)
-			if not is_in_project_tool then
-				!! sep.make (Interface_names.t_Empty, toolbar_parent)
-			end
 			toolbar_parent.set_column_layout
 			toolbar_parent.set_free_size	
 			toolbar_parent.set_margin_height (0)
@@ -293,91 +299,12 @@ feature {NONE} -- Implementation; Graphical Interface
 	build_object_toolbar is
 			-- Build top bar.
 		local
+			search_button: EB_BUTTON
 			quit_cmd: QUIT_FILE
 			quit_button: EB_BUTTON
 			quit_menu_entry: EB_MENU_ENTRY
 			exit_menu_entry: EB_MENU_ENTRY
-		do
-				-- Creation of all the commands, holes, buttons, and menu entries
-			!! hole.make (Current)
-			!! hole_button.make (hole, object_toolbar)
-			!! hole_holder.make_plain (hole)
-			hole_holder.set_button (hole_button)
-			build_edit_menu (object_toolbar)
-			build_print_menu_entry
-			build_save_as_menu_entry
-			!! quit_cmd.make (Current)
-			!! quit_button.make (quit_cmd, object_toolbar)
-			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit.make (quit_cmd, quit_button, quit_menu_entry)
-			if not is_in_project_tool then
-				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
-				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
-				exit_cmd_holder.set_menu_entry (exit_menu_entry)
-			end
 
-				-- Attachments are done here, because of speed.
-				-- I know it's not really maintainable.
-			object_toolbar.attach_left (hole_button, 0)
-			object_toolbar.attach_top (hole_button, 0)
-			object_toolbar.attach_top (search_cmd_holder.associated_button, 0)
-			object_toolbar.attach_top (quit_button, 0)
-			object_toolbar.attach_right (quit_button, 0)
-			object_toolbar.detach_left (quit_button)
-			object_toolbar.attach_right_widget (quit_button, search_cmd_holder.associated_button, 5)
-			object_toolbar.detach_left (search_cmd_holder.associated_button)
-		end
-
-	build_widgets is
-		do
-			create_toolbar (global_form)
-
-			build_text_windows
-			if not is_in_project_tool then
-				build_menus
-			end
-			build_object_toolbar
-			build_command_bar
-			if not is_in_project_tool then
-				fill_menus
-			end
-			build_toolbar_menu
-			set_last_format (default_format)
-
-			if resources.command_bar.actual_value = False then
-				object_toolbar.remove
-			end
-			if resources.format_bar.actual_value = False then
-				format_bar.remove
-			end
-
-			attach_all
-		end
-
-	attach_all is
-		do
-			if not is_in_project_tool then
-				global_form.attach_left (menu_bar, 0)
-				global_form.attach_right (menu_bar, 0)
-				global_form.attach_top (menu_bar, 0)
-			end
-
-			global_form.attach_left (toolbar_parent, 0)
-			global_form.attach_right (toolbar_parent, 0)
-			if is_in_project_tool then
-				global_form.attach_top (toolbar_parent, 2)
-			else
-				global_form.attach_top_widget (menu_bar, toolbar_parent, 0)
-			end
-
-			global_form.attach_left (text_window.widget, 0)
-			global_form.attach_right (text_window.widget, 0)
-			global_form.attach_bottom (text_window.widget, 0)
-			global_form.attach_top_widget (toolbar_parent, text_window.widget, 0)
-		end
-
-	build_command_bar is
-		local
 			previous_target_cmd: PREVIOUS_OBJECT
 			previous_target_button: EB_BUTTON
 			previous_target_menu_entry: EB_MENU_ENTRY
@@ -398,6 +325,23 @@ feature {NONE} -- Implementation; Graphical Interface
 			attr_button: FORMAT_BUTTON
 			attr_menu_entry: EB_TICKABLE_MENU_ENTRY
 		do
+				-- Creation of all the commands, holes, buttons, and menu entries
+			!! hole.make (Current)
+			build_edit_menu (object_toolbar)
+			build_save_as_menu_entry
+			build_print_menu_entry
+
+			!! quit_cmd.make (Current)
+			!! quit_button.make (quit_cmd, object_toolbar)
+			if not is_in_project_tool then
+				!! quit_menu_entry.make (quit_cmd, file_menu)
+				!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+
+				!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
+				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
+				exit_cmd_holder.set_menu_entry (exit_menu_entry)
+			end
+
 				-- First we create all objects.
 			!! once_cmd.make (Current)
 			!! once_button.make (once_cmd, object_toolbar)
@@ -432,19 +376,77 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! history_list_cmd.make (Current)
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button)
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button)
+				-- Attachments are done here, because of speed.
+				-- I know it's not really maintainable.
+			search_button := search_cmd_holder.associated_button
 
-				-- Now we do the attachments (for reason of speed).
+--			object_toolbar.attach_left (hole_button, 0)
+--			object_toolbar.attach_top (hole_button, 0)
+--			object_toolbar.detach_left (quit_button)
+--			object_toolbar.attach_right_widget (quit_button, search_button, 5)
+--			object_toolbar.detach_left (search_button)
+
+			object_toolbar.attach_left (attr_button, 0)
 			object_toolbar.attach_top (attr_button, 0)
-			object_toolbar.attach_left_widget (hole_button, attr_button, 10)
 			object_toolbar.attach_top (once_button, 0)
 			object_toolbar.attach_left_widget (attr_button, once_button, 0)
-			object_toolbar.attach_top (slice_button, 0)
-			object_toolbar.attach_left_widget (once_button, slice_button, 10)
 
-			object_toolbar.attach_left_widget (slice_button, previous_target_button, 10)
+			object_toolbar.attach_top (search_button, 0)
+			object_toolbar.attach_left_widget (once_button, search_button, 10)
+
+			object_toolbar.attach_top (previous_target_button, 0)
+			object_toolbar.attach_left_widget (search_button, previous_target_button, 10)
 			object_toolbar.attach_top (next_target_button, 0)
 			object_toolbar.attach_left_widget (previous_target_button, next_target_button, 0)
-			object_toolbar.attach_top (previous_target_button, 0)
+
+			object_toolbar.attach_right (quit_button, 0)
+			object_toolbar.attach_top (quit_button, 0)
+			object_toolbar.attach_top (slice_button, 0)
+			object_toolbar.attach_right_widget (quit_button, slice_button, 10)
+		end
+
+	build_widgets is
+		do
+			create_toolbar (global_form)
+
+			build_text_windows (global_form)
+			if not is_in_project_tool then
+				build_menus
+			end
+			build_object_toolbar
+			if not is_in_project_tool then
+				fill_menus
+			end
+			build_toolbar_menu
+			set_last_format (default_format)
+
+			if resources.command_bar.actual_value = False then
+				object_toolbar.remove
+			end
+
+			attach_all
+		end
+
+	attach_all is
+		do
+			if not is_in_project_tool then
+				global_form.attach_left (menu_bar, 0)
+				global_form.attach_right (menu_bar, 0)
+				global_form.attach_top (menu_bar, 0)
+			end
+
+			global_form.attach_left (toolbar_parent, 0)
+			global_form.attach_right (toolbar_parent, 0)
+			if is_in_project_tool then
+				global_form.attach_top (toolbar_parent, 2)
+			else
+				global_form.attach_top_widget (menu_bar, toolbar_parent, 0)
+			end
+
+			global_form.attach_left (text_window.widget, 0)
+			global_form.attach_right (text_window.widget, 0)
+			global_form.attach_bottom (text_window.widget, 0)
+			global_form.attach_top_widget (toolbar_parent, text_window.widget, 0)
 		end
 
 feature {NONE} -- Properties

@@ -64,11 +64,6 @@ feature -- Window Properties
 	file_name: STRING
 			-- Name of the file being displayed
 
-	stone_type: INTEGER is
-			-- Stone type
-		do
-		end
-
 	text_window: TEXT_WINDOW
 			-- Text window attached to Current
 
@@ -384,7 +379,7 @@ feature -- Status setting
 
 feature -- Text window creation
 
-	build_text_windows is
+	build_text_windows (parent_form: COMPOSITE) is
 			-- Create `read_text_window' and `editable_text_window'.
 			--| All windows have a read only text window. However,
 			--| only certain windows have editable text.
@@ -392,13 +387,13 @@ feature -- Text window creation
 			ro_text_window, ed_text_window: TEXT_WINDOW
 		do
 			if is_graphics_disabled then
-				!SCROLLED_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, Current)
+				!SCROLLED_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, parent_form, Current)
 			else
-				!GRAPHICAL_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, Current)
+				!GRAPHICAL_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, parent_form, Current)
 			end
 			set_read_only_text_window (ro_text_window)
 			if has_editable_text and then not ro_text_window.is_editable then
-				!SCROLLED_TEXT_WINDOW! ed_text_window.make_from_tool (new_name, Current)
+				!SCROLLED_TEXT_WINDOW! ed_text_window.make_from_tool (new_name, parent_form, Current)
 				set_editable_text_window (ed_text_window)
 				text_window := ed_text_window
 			else
@@ -583,6 +578,20 @@ feature -- Update
 			end
 		end
 
+	update is
+			-- Update the content of the window (only after saving the content of
+			-- the tool.
+		local
+			old_do_format: BOOLEAN
+			f: FORMATTER
+		do
+			f := last_format.associated_command
+			old_do_format := f.do_format
+			f.set_do_format (True)
+			f.execute (stone)
+			f.set_do_format (old_do_format)
+		end
+
 	parse_file: BOOLEAN is 
 			-- Parse the file if possible.
 			-- (By default, the result is True).
@@ -739,6 +748,7 @@ feature {PROJECT_W} -- Implementation
 			print_menu_entry: EB_MENU_ENTRY
 			sep: SEPARATOR
 		do
+			!! sep.make (Interface_names.t_Empty, file_menu)
 			!! print_cmd.make (Current)
 			!! print_menu_entry.make (print_cmd, file_menu)
 			!! print_cmd_holder.make_plain (print_cmd)
@@ -752,11 +762,9 @@ feature {PROJECT_W} -- Implementation
 		local
 			save_as_cmd: SAVE_AS_FILE
 			save_as_menu_entry: EB_MENU_ENTRY
-			sep: SEPARATOR
 		do
 			!! save_as_cmd.make (Current)
 			!! save_as_menu_entry.make (save_as_cmd, file_menu)
-			!! sep.make (Interface_names.t_Empty, file_menu)
 		end
 
 	init_text_window is

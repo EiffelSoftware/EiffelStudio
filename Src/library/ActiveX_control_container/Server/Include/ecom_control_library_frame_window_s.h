@@ -51,67 +51,67 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP ContextSensitiveHelp(  /* [in] */ LONG f_enter_mode );
+  STDMETHODIMP ContextSensitiveHelp(  /* [in] */ BOOL f_enter_mode );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetBorder(  /* [out] */ ecom_control_library::tagRECT * lprect_border );
+  STDMETHODIMP GetBorder(  /* [out] */ ::tagRECT * lprect_border );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RequestBorderSpace(  /* [in] */ ecom_control_library::tagRECT * pborderwidths );
+  STDMETHODIMP RequestBorderSpace(  /* [in] */const ::tagRECT * pborderwidths );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP SetBorderSpace(  /* [in] */ ecom_control_library::tagRECT * pborderwidths );
+  STDMETHODIMP SetBorderSpace(  /* [in] */const ::tagRECT * pborderwidths );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP SetActiveObject(  /* [in] */ ::IOleInPlaceActiveObject * p_active_object, /* [in] */ LPWSTR psz_obj_name );
+  STDMETHODIMP SetActiveObject(  /* [in] */ ::IOleInPlaceActiveObject * p_active_object, /* [in] */ LPCOLESTR  psz_obj_name );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP InsertMenus(  /* [in] */ wireHMENU hmenu_shared, /* [in, out] */ tagOleMenuGroupWidths * lp_menu_widths );
+  STDMETHODIMP InsertMenus(  /* [in] */ HMENU  hmenu_shared, /* [in, out] */ ::tagOleMenuGroupWidths * lp_menu_widths );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP SetMenu(  /* [in] */ wireHMENU hmenu_shared, /* [in] */ wireHGLOBAL holemenu, /* [in] */ wireHWND hwnd_active_object );
+  STDMETHODIMP SetMenu(  /* [in] */ HMENU hmenu_shared, /* [in] */ void * holemenu, /* [in] */ HWND hwnd_active_object );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RemoveMenus(  /* [in] */ wireHMENU hmenu_shared );
+  STDMETHODIMP RemoveMenus(  /* [in] */ HMENU hmenu_shared );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP SetStatusText(  /* [in] */ LPWSTR psz_status_text );
+  STDMETHODIMP SetStatusText(  /* [in] */ LPCOLESTR  psz_status_text );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP EnableModeless(  /* [in] */ LONG f_enable );
+  STDMETHODIMP EnableModeless(  /* [in] */ BOOL f_enable );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP TranslateAccelerator(  /* [in] */ tagMSG * lpmsg, /* [in] */ USHORT w_id );
+  STDMETHODIMP TranslateAccelerator(  /* [in] */ MSG * lpmsg, /* [in] */ USHORT w_id );
 
 
   /*-----------------------------------------------------------

@@ -97,7 +97,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnShowWindow(  /* [in] */ LONG f_show );
+  STDMETHODIMP OnShowWindow(  /* [in] */ BOOL f_show );
 
 
   /*-----------------------------------------------------------
@@ -115,7 +115,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP ContextSensitiveHelp(  /* [in] */ LONG f_enter_mode );
+  STDMETHODIMP ContextSensitiveHelp(  /* [in] */ BOOL f_enter_mode );
 
 
   /*-----------------------------------------------------------
@@ -139,19 +139,19 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetWindowContext(  /* [out] */ ::IOleInPlaceFrame * * pp_frame, /* [out] */ ::IOleInPlaceUIWindow * * pp_doc, /* [out] */ ecom_control_library::tagRECT * lprc_pos_rect, /* [out] */ ecom_control_library::tagRECT * lprc_clip_rect, /* [in, out] */ ecom_control_library::tagOIFI * lp_frame_info );
+  STDMETHODIMP GetWindowContext(  /* [out] */ ::IOleInPlaceFrame * * pp_frame, /* [out] */ ::IOleInPlaceUIWindow * * pp_doc, /* [out] */ ::tagRECT * lprc_pos_rect, /* [out] */ ::tagRECT * lprc_clip_rect, /* [in, out] */ ::tagOIFI * lp_frame_info );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP Scroll(  /* [in] */ ecom_control_library::tagSIZE scroll_extant );
+  STDMETHODIMP Scroll(  /* [in] */ ::tagSIZE scroll_extant );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnUIDeactivate(  /* [in] */ LONG f_undoable );
+  STDMETHODIMP OnUIDeactivate(  /* [in] */ BOOL  f_undoable );
 
 
   /*-----------------------------------------------------------
@@ -175,19 +175,19 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnPosRectChange(  /* [in] */ ecom_control_library::tagRECT * lprc_pos_rect );
+  STDMETHODIMP OnPosRectChange(  /* [in] */const ::tagRECT * lprc_pos_rect );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnInPlaceActivateEx(  /* [out] */ LONG * pf_no_redraw, /* [in] */ ULONG dw_flags );
+  STDMETHODIMP OnInPlaceActivateEx(  /* [out] */ BOOL * pf_no_redraw, /* [in] */ ULONG dw_flags );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnInPlaceDeactivateEx(  /* [in] */ LONG f_no_redraw );
+  STDMETHODIMP OnInPlaceDeactivateEx(  /* [in] */ BOOL f_no_redraw );
 
 
   /*-----------------------------------------------------------
@@ -211,7 +211,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP SetCapture(  /* [in] */ LONG f_capture );
+  STDMETHODIMP SetCapture(  /* [in] */ BOOL f_capture );
 
 
   /*-----------------------------------------------------------
@@ -223,43 +223,43 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP SetFocus(  /* [in] */ LONG f_focus );
+  STDMETHODIMP SetFocus(  /* [in] */ BOOL f_focus );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetDC(  /* [in] */ ecom_control_library::tagRECT * p_rect, /* [in] */ ULONG grf_flags, /* [out] */ ecom_control_library::wireHDC * ph_dc );
+  STDMETHODIMP GetDC(  /* [in] */const ::tagRECT * p_rect, /* [in] */ ULONG grf_flags, /* [out] */ HDC * ph_dc );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP ReleaseDC(  /* [in] */ ecom_control_library::wireHDC h_dc );
+  STDMETHODIMP ReleaseDC(  /* [in] */ HDC h_dc );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP InvalidateRect(  /* [in] */ ecom_control_library::tagRECT * p_rect, /* [in] */ LONG f_erase );
+  STDMETHODIMP InvalidateRect(  /* [in] */const ::tagRECT * p_rect, /* [in] */ BOOL f_erase );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP InvalidateRgn(  /* [in] */ void * h_rgn, /* [in] */ LONG f_erase );
+  STDMETHODIMP InvalidateRgn(  /* [in] */ HRGN  h_rgn, /* [in] */ BOOL f_erase );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP ScrollRect(  /* [in] */ INT dx, /* [in] */ INT dy, /* [in] */ ecom_control_library::tagRECT * p_rect_scroll, /* [in] */ ecom_control_library::tagRECT * p_rect_clip );
+  STDMETHODIMP ScrollRect(  /* [in] */ INT dx, /* [in] */ INT dy, /* [in] */const ::tagRECT * p_rect_scroll, /* [in] */const ::tagRECT * p_rect_clip );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP AdjustRect(  /* [in, out] */ ecom_control_library::tagRECT * prc );
+  STDMETHODIMP AdjustRect(  /* [in, out] */ ::tagRECT * prc );
 
 
   /*-----------------------------------------------------------
@@ -277,7 +277,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP LockInPlaceActive(  /* [in] */ LONG f_lock );
+  STDMETHODIMP LockInPlaceActive(  /* [in] */ BOOL f_lock );
 
 
   /*-----------------------------------------------------------
@@ -289,19 +289,19 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP TransformCoords(  /* [in, out] */ ecom_control_library::_POINTL * p_ptl_himetric, /* [in, out] */ ecom_control_library::tagPOINTF * p_ptf_container, /* [in] */ ULONG dw_flags );
+  STDMETHODIMP TransformCoords(  /* [in, out] */ ::_POINTL * p_ptl_himetric, /* [in, out] */ ::tagPOINTF * p_ptf_container, /* [in] */ ULONG dw_flags );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP TranslateAccelerator(  /* [in] */ ecom_control_library::tagMSG * p_msg, /* [in] */ ULONG grf_modifiers );
+  STDMETHODIMP TranslateAccelerator(  /* [in] */ MSG * p_msg, /* [in] */ ULONG grf_modifiers );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnFocus(  /* [in] */ LONG f_got_focus );
+  STDMETHODIMP OnFocus(  /* [in] */ BOOL f_got_focus );
 
 
   /*-----------------------------------------------------------
@@ -325,7 +325,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP LockContainer(  /* [in] */ LONG f_lock );
+  STDMETHODIMP LockContainer(  /* [in] */ BOOL f_lock );
 
 
   /*-----------------------------------------------------------
@@ -523,13 +523,13 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP ShowContextMenu(  /* [in] */ ULONG dw_id, /* [in] */ ecom_control_library::tagPOINT * ppt, /* [in] */ IUnknown * pcmdt_reserved, /* [in] */ IDispatch * pdisp_reserved );
+  STDMETHODIMP ShowContextMenu(  /* [in] */ ULONG dw_id, /* [in] */ ::tagPOINT * ppt, /* [in] */ IUnknown * pcmdt_reserved, /* [in] */ IDispatch * pdisp_reserved );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetHostInfo(  /* [in, out] */ ecom_control_library::_DOCHOSTUIINFO * p_info );
+  STDMETHODIMP GetHostInfo(  /* [in, out] */ ::_DOCHOSTUIINFO * p_info );
 
 
   /*-----------------------------------------------------------
@@ -553,31 +553,31 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP EnableModeless(  /* [in] */ LONG f_enable );
+  STDMETHODIMP EnableModeless(  /* [in] */ BOOL f_enable );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnDocWindowActivate(  /* [in] */ LONG f_activate );
+  STDMETHODIMP OnDocWindowActivate(  /* [in] */ BOOL f_activate );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnFrameWindowActivate(  /* [in] */ LONG f_activate );
+  STDMETHODIMP OnFrameWindowActivate(  /* [in] */ BOOL f_activate );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP ResizeBorder(  /* [in] */ ecom_control_library::tagRECT * prc_border, /* [in] */ ::IOleInPlaceUIWindow * p_uiwindow, /* [in] */ LONG f_rame_window );
+  STDMETHODIMP ResizeBorder(  /* [in] */const ::tagRECT * prc_border, /* [in] */ ::IOleInPlaceUIWindow * p_uiwindow, /* [in] */ BOOL f_rame_window );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP IDocHostUIHandler_TranslateAccelerator(  /* [in] */ ecom_control_library::tagMSG * lpmsg, /* [in] */ GUID * pguid_cmd_group, /* [in] */ ULONG n_cmd_id );
+  STDMETHODIMP TranslateAccelerator(  /* [in] */ MSG * lpmsg, /* [in] */const GUID * pguid_cmd_group, /* [in] */ ULONG n_cmd_id );
 
 
   /*-----------------------------------------------------------
@@ -613,7 +613,7 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP OnDataChange(  /* [in] */ ecom_control_library::tagFORMATETC * p_formatetc, /* [in] */ ecom_control_library::wireASYNC_STGMEDIUM * p_stgmed );
+  STDMETHODIMP_(void) OnDataChange(  /* [in] */ ::tagFORMATETC * p_formatetc, /* [in] */ STGMEDIUM * p_stgmed );
 
 
   /*-----------------------------------------------------------
@@ -685,7 +685,7 @@ public:
  /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP QueryService(  /* [in] */ GUID * guid_service, /* [in] */ GUID * riid, /* [out] */ IUnknown * * ppv_object );
+  STDMETHODIMP QueryService(  /* [in] */REFGUID  guid_service, /* [in] */REFIID  riid, /* [out] */ void * * ppv_object );
 
  
 

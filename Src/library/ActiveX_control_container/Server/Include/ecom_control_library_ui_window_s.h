@@ -51,31 +51,31 @@ public:
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP ContextSensitiveHelp(  /* [in] */ LONG f_enter_mode );
+  STDMETHODIMP ContextSensitiveHelp(  /* [in] */ BOOL f_enter_mode );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP GetBorder(  /* [out] */ ecom_control_library::tagRECT * lprect_border );
+  STDMETHODIMP GetBorder(  /* [out] */ ::tagRECT * lprect_border );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP RequestBorderSpace(  /* [in] */ ecom_control_library::tagRECT * pborderwidths );
+  STDMETHODIMP RequestBorderSpace(  /* [in] */const ::tagRECT * pborderwidths );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP SetBorderSpace(  /* [in] */ ecom_control_library::tagRECT * pborderwidths );
+  STDMETHODIMP SetBorderSpace(  /* [in] */const ::tagRECT * pborderwidths );
 
 
   /*-----------------------------------------------------------
   No description available.
   -----------------------------------------------------------*/
-  STDMETHODIMP SetActiveObject(  /* [in] */ ::IOleInPlaceActiveObject * p_active_object, /* [in] */ LPWSTR psz_obj_name );
+  STDMETHODIMP SetActiveObject(  /* [in] */ ::IOleInPlaceActiveObject * p_active_object, /* [in] */ LPCOLESTR  psz_obj_name );
 
 
   /*-----------------------------------------------------------

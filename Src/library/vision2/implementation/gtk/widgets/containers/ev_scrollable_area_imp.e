@@ -47,11 +47,11 @@ feature {NONE} -- Initialization
 			scrolled_window := feature {EV_GTK_EXTERNALS}.gtk_scrolled_window_new (NULL, NULL)
 			set_c_object (scrolled_window)
 			set_scrolling_policy (feature {EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM, feature {EV_GTK_EXTERNALS}.gTK_POLICY_AUTOMATIC_ENUM)
-			set_horizontal_step (10)
-			set_vertical_step (10)
 			viewport := feature {EV_GTK_EXTERNALS}.gtk_viewport_new (NULL, NULL)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (viewport)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (scrolled_window, viewport)
+			set_horizontal_step (10)
+			set_vertical_step (10)
 		end
 
 feature -- Access

@@ -42,7 +42,8 @@ inherit
 			on_right_button_double_click,
 			on_mouse_move,
 			on_char,
-			on_key_up
+			on_key_up,
+			process_notification
 		end
 		
 creation

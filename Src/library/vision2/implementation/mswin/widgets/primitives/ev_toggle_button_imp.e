@@ -40,9 +40,9 @@ feature -- Status setting
 			-- pressed to True.
 		do
 			if flag then
-				current_state := 1
-			else
 				current_state := 3
+			else
+				current_state := 1
 			end
 			invalidate
 			on_bn_clicked
@@ -69,6 +69,10 @@ feature {NONE} -- Implementation
 	select_action is
 			-- Action to be down when `Oda_select'.
 			-- It will draw only if we obtain 0 or 2.
+			-- We need to have 4 values, because it is
+			-- called each time the user press or unpress
+			-- the button, then it is called twice for a
+			-- usual click.
 		do
 			current_state := (current_state + 1) \\ 4
 		end
@@ -95,6 +99,7 @@ feature {NONE} -- Implementation
 	on_bn_clicked is
 			-- When the button is pressed
 		do
+			execute_command (Cmd_click, Void)
 			execute_command (Cmd_toggle, Void)
 		end
 

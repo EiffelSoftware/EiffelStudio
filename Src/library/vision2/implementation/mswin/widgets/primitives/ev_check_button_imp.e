@@ -17,14 +17,14 @@ inherit
 	EV_TOGGLE_BUTTON_IMP
 		undefine
 			default_process_message,
-			default_style
+			default_style,
+			on_bn_clicked
 		redefine
 			make,
 			make_with_text,
 			state,
 			set_state,
-			toggle,
-			add_toggle_command
+			toggle
 		end
 
 	WEL_CHECK_BOX
@@ -41,7 +41,6 @@ inherit
 			remove_command,
 			set_width,
 			set_height,
-			on_bn_clicked,
 			on_left_button_down,
 			on_right_button_down,
 			on_left_button_up,
@@ -51,10 +50,13 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up
+		redefine
+			on_bn_clicked
 		end	
 
 creation
-	make, make_with_text
+	make,
+	make_with_text
 
 feature -- Initialization
 
@@ -105,13 +107,14 @@ feature -- Status setting
 			set_state (not state)
 		end
 
-feature -- Event - command association
-	
-	add_toggle_command (a_command: EV_COMMAND; 
-			    arguments: EV_ARGUMENTS) is	
+feature {NONE} -- Implementation
+
+	on_bn_clicked is
+			-- Only event available
 		do
-			
-		end	
+			execute_command (Cmd_click, Void)
+			execute_command (Cmd_toggle, Void)
+		end
 
 end -- class EV_CHECK_BUTTON_IMP
 

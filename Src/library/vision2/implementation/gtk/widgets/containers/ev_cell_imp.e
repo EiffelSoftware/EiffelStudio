@@ -54,6 +54,7 @@ feature -- Access
 					end
 					Result ?= imp.interface
 				end
+				C.g_list_free (p)
 			end
 		end
 

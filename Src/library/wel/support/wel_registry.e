@@ -177,7 +177,8 @@ feature -- Access
 		end
 
 	enumerate_key (key: POINTER; index: INTEGER): WEL_REGISTRY_KEY is
-			-- class WEL_REGISTRY
+			-- `index'th subkey of `key',
+			-- Void if `key' has less than `index' subkeys.
 		require
 			key_possible: valid_value_for_hkey (key)
 			index_possible: index <= number_of_subkeys (key)
@@ -261,6 +262,7 @@ feature -- Basic Actions
 
 	close_key (key: POINTER): BOOLEAN is
 			-- Close `key'.
+			-- Return True if succeeded, False otherwise.
 		require
 			key_possible:valid_value_for_hkey(key)
 		do

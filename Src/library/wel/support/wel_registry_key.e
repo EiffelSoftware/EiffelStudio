@@ -46,7 +46,9 @@ feature -- Access
 		do
 			!! Result.make_by_pointer (cwin_reg_key_time (item))
 		end
-		
+
+feature {NONE} -- Implementation
+
 	item: POINTER
 			-- Pointer to C structure.
 

@@ -202,6 +202,12 @@ feature -- Access
 			Result := type = Type_object and address = Void
 		end
 
+	is_basic: BOOLEAN is
+			-- Is `Current' of a basic type?
+		do
+			Result := type /= Type_object and type /= Type_string
+		end
+
 feature -- Inapplicable
 
 feature {NONE} -- Implementation

@@ -91,7 +91,7 @@ feature {NONE} -- Initialization
 			valid_expression: valid_expression (new_expr)
 		do
 			on_object := True
-			context_object := obj
+			context_address := obj.object_address
 			context_class := obj.dtype
 			Debugger_manager.kept_objects.extend (obj.object_address)
 			set_expression (new_expr)
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 			on_context := target.on_context
 			on_class := target.on_class
 			on_object := target.on_object
-			context_object := target.context_object
+			context_address := target.context_address
 			context_class := target.context_class
 			
 			set_expression (new_expr)
@@ -138,7 +138,7 @@ feature {NONE} -- Initialization
 			on_context := other.on_context
 			on_class := other.on_class
 			on_object := other.on_object
-			context_object := other.context_object
+			context_address := other.context_address
 			context_class := other.context_class
 			
 			set_expression (new_expr)
@@ -317,7 +317,7 @@ feature -- Status report
 			if on_class then
 				Result := context_class.name_in_upper
 			elseif on_object then
-				Result := context_object.object_address
+				Result := context_address
 			else
 				Result := interface_names.l_Current_context
 			end
@@ -367,13 +367,7 @@ feature -- Basic operations
 				if f /= Void then
 					f := f.ancestor_version (target.result_type)
 					if f /= Void then
-						o := dump_to_object (target.result_object)
-						if o /= Void then
-							evaluate_feature_on_object (f, o)
-						else
-							--| FIXME XR: Handle calls on basic types.
-							error_message := "Cannot evaluate " + feature_name + " because its target is not an object"
-						end
+						evaluate_feature_on_object (f, Void, target.result_type, target.result_object)
 					else
 						error_message := "Feature named " + feature_name + 
 										" has no descendant in class " + target.result_type.name_in_upper
@@ -394,7 +388,7 @@ feature -- Basic operations
 			elseif on_object then
 				f := context_class.feature_with_name (feature_name)
 				if f /= Void then
-					evaluate_feature_on_object (f, context_object)
+					evaluate_feature_on_object (f, context_address, context_class, Void)
 				else
 					error_message := "No feature named " + feature_name + 
 									" in class " + context_class.name_in_upper
@@ -466,8 +460,8 @@ feature {EB_EXPRESSION, EB_EXPRESSION_DEFINITION_DIALOG, EB_EXPRESSION_EVALUATOR
 	context_class: CLASS_C
 			-- Class the expression refers to (only valid if `on_class').
 	
-	context_object: DEBUGGED_OBJECT
-			-- Object the expression refers to (only valid if `on_object')
+	context_address: STRING
+			-- Address of the object the expression refers to (only valid if `on_object').
 
 feature {EB_EXPRESSION} -- Status report: intermediate results.
 
@@ -771,39 +765,53 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	evaluate_feature_on_object (sf: E_FEATURE; obj: DEBUGGED_OBJECT) is
+	evaluate_feature_on_object (sf: E_FEATURE; o_addr: STRING; dtype: CLASS_C; value: DUMP_VALUE) is
 			-- Evaluate `sf' in the context of its dynamic_class.
 			-- Evaluate and pass `parameters' if necessary.
+			-- `o_addr' is the address of the object on which the `sf' should be evaluated,
+			-- `dtype' is its dynamic type, `value' is its value, if it is a basic type (no address in that case).
 		require
 			valid_feature: sf /= Void
-			valid_object: obj /= Void
+			valid_dtype: dtype /= Void
+			valid_address: o_addr /= Void implies (Application.is_valid_object_address (o_addr))
+			enough_data: (o_addr = Void) /= (value = Void)
 		local
 			lst: LIST [ABSTRACT_DEBUG_VALUE]
 			dmp: DUMP_VALUE
 			found: BOOLEAN
 			par: INTEGER
 			f: E_FEATURE
+			realf: E_FEATURE
 			fid: INTEGER
 			rout_info: ROUT_INFO
+			obj: DEBUGGED_OBJECT
 			dv: ABSTRACT_DEBUG_VALUE
 		do
-			f := sf.ancestor_version (obj.dtype)
+			f := sf.ancestor_version (dtype)
 			if f = Void then
-				error_message := "No descendant of feature " + sf.name + " in class " + obj.dtype.name_in_upper
+				error_message := "No descendant of feature " + sf.name + " in class " + dtype.name_in_upper
 			elseif f.associated_feature_i.is_once and f.type /= Void then
 				evaluate_once (f)
 			elseif f.is_attribute then
-				lst := obj.attributes
-				dv := find_item_in_list (f.name, lst)
-				result_static_type := f.type.associated_class
-				if dv = Void then
-					if f.name.is_equal ("Void") then
-						create result_object.make_object (Void, Void)
+				if o_addr /= Void then
+					create obj.make (o_addr, 0, 1)
+					lst := obj.attributes
+					dv := find_item_in_list (f.name, lst)
+					result_static_type := f.type.associated_class
+					if dv = Void then
+						if f.name.is_equal ("Void") then
+							create result_object.make_object (Void, Void)
+						else
+							error_message := "Could not find attribute value for " + f.name
+						end
 					else
-						error_message := "Could not find attribute value for " + f.name
+						result_object := dv.dump_value
 					end
+				elseif f.name.is_equal ("item") then
+					result_object := value
+					result_static_type := value.dynamic_type
 				else
-					result_object := dv.dump_value
+					error_message := "Cannot evaluate an attribute of a basic type"
 				end
 			elseif f.is_constant then
 				evaluate_constant (f)
@@ -820,11 +828,13 @@ feature {NONE} -- Implementation
 						parameters.after or error_message /= Void
 					loop
 						if
-							not parameters.item.final_result_type.conforms_to (
+							not parameters.item.final_result_type.simple_conform_to (
 								f.arguments.i_th (parameters.index).associated_class
 							)
 						then
-							error_message := "Invalid parameter: " + parameters.item.expression
+							error_message := "Invalid parameter: " + parameters.item.expression +
+											" (Class " + parameters.item.final_result_type.name_in_upper +
+											" does not conform to " + f.arguments.i_th (parameters.index).associated_class.name_in_upper + ")"
 						end
 						parameters.forth
 					end
@@ -832,33 +842,54 @@ feature {NONE} -- Implementation
 					-- Initialize the communication.
 				Init_recv_c
 					-- Send the parameters.
+				realf := f.ancestor_version (f.written_class)
 				from
 					parameters.start
 				until
 					parameters.after or error_message /= Void
 				loop
-					dmp := get_expression_dump (parameters.item)
-					if dmp = Void then
-						error_message := "Could not evaluate " + parameters.item.expression
-					else
-						dmp.send_value
+					dmp := parameters.item.final_result_value
+					dmp.send_value
+					io.putstring ("Sending parameter")
+					if (not realf.arguments.i_th (parameters.index).is_basic) and dmp.is_basic then
+						send_rqst_0 (Rqst_metamorphose)
+						io.putstring ("Converting parameter")
 					end
 					parameters.forth
 				end
 				if error_message = Void then
 						-- Send the target object.
-					create dmp.make_object (obj.object_address, obj.dtype)
+					if o_addr /= Void then
+						create dmp.make_object (o_addr, dtype)
+					else
+						dmp := value
+						if dmp.is_basic then
+							par := par + 4
+						end
+					end
 					dmp.send_value
 						-- Send the final request.
 					if f.is_external then
-						par := 1
+						par := par + 1
 					end
 					if f.written_class.is_precompiled then
 						par := par + 2
 						rout_info := System.rout_info_table.item (f.rout_id_set.first)
 						send_rqst_3 (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
 					else
-						send_rqst_3 (Rqst_dynamic_eval, f.feature_id, obj.class_type.static_type_id - 1, par)
+						if dtype.types.count > 1 then
+							if o_addr /= Void then
+									-- The type has generic derivations: we need to find the precise type.
+								create obj.make (o_addr, 0, 1)
+								send_rqst_3 (Rqst_dynamic_eval, f.feature_id, obj.class_type.static_type_id - 1, par)
+							else
+									--| Shouldn't happen: basic types are not generic.
+								error_message := "Cannot find complete dynamic type of a basic type"
+							end
+						else
+								-- No generic derivations: we can optimize and not create the debugged_object.
+							send_rqst_3 (Rqst_dynamic_eval, f.feature_id, dtype.types.first.static_type_id - 1, par)
+						end
 					end
 						-- Receive the Result.
 					c_recv_value (Current)
@@ -867,7 +898,7 @@ feature {NONE} -- Implementation
 						result_object := item.dump_value
 						result_static_type := f.type.associated_class
 					else
-						error_message := "Could not evaluate function " + f.name
+						error_message := "Function " + f.name + " raised an exception"
 					end
 				end
 			else
@@ -1037,8 +1068,7 @@ feature {NONE} -- Implementation
 							-- Darn, if that's so, I'm gonna look through the current object's attributes and onces!
 						f := cf.written_class.feature_with_name (n)
 						if f /= Void then
-							create o.make (cse.object_address, Min_slice_ref.item, Max_slice_ref.item)
-							evaluate_feature_on_object (f, o)
+							evaluate_feature_on_object (f, cse.object_address, cse.dynamic_class, Void)
 						end
 					else
 						result_object := dv.dump_value
@@ -1157,8 +1187,8 @@ feature {NONE} -- Implementation: Contract support
 
 invariant
 	good_flags: flag_sum = 1
-	valid_context: ((context_object /= Void) = on_object) and
-					((context_class /= Void) = on_class)
+	valid_context: ((context_address /= Void) = on_object) and
+					(on_class implies (context_class /= Void))
 	valid_expression: valid_expression (expression)
 	identity_consistency: is_identity = (feature_name = Identity)
 

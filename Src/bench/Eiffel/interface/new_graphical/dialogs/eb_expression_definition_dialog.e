@@ -159,8 +159,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current' and force the creation of an object-related expression.
 			-- `oa' is the address of the object.
 		require
-			valid_address: oa /= Void
 			application_stopped: Application.is_running and Application.is_stopped
+			valid_address: oa /= Void and then Application.is_valid_object_address (oa)
 		do
 			make
 			object_radio.enable_select
@@ -184,7 +184,7 @@ feature {NONE} -- Initialization
 			if expr.on_class then
 				make_with_class (expr.context_class)
 			elseif expr.on_object then
-				make_with_object (expr.context_object.object_address)
+				make_with_object (expr.context_address)
 			else
 				make_for_context
 			end

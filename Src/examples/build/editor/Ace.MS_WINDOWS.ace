@@ -32,7 +32,7 @@ cluster
 
 
 -- EiffelBase:
-        base:                           "$EIFFEL4\library\base";
+	base:                           "$EIFFEL4\library\base";
 	structures(base):               "$\structures";
 	
 	kernel(base):           	"$\kernel";
@@ -41,7 +41,7 @@ cluster
 	cursors(structures):    	"$\cursors";
 	
 	dispenser(structures):  	"$\dispenser";
-        list(structures):               "$\list";
+	list(structures):               "$\list";
 	set(structures):                "$\set";
 	sort(structures):               "$\sort";
 	storage(structures):    	"$\storage";
@@ -62,19 +62,28 @@ cluster
 
 
 -- Eiffelvision
-        vision:                        	"$EIFFEL4\library\vision";
-        vision_figures (vision):        "$\figures";
-        vision_imp_mswin (vision):      "$\implement\mswin";
-	vision_widgets (vision_imp_mswin):	"$\widgets";
-	vision_commands (vision_imp_mswin):	"$\commands";
-	vision_imp_toolkit (vision):	"$\implement\toolkit";
-        vision_context_data (vision):   "$\oui\context_data";
-	vision_kernel (vision):         "$\oui\kernel";
-	vision_oui_widgets (vision):        "$\oui\widgets";
+	vision:                        	"$EIFFEL4\library\vision";
+	vision_kernel (vision):   			"$\oui\kernel";
+	vision_widgets (vision):			"$\oui\widgets";
+	vision_context_data (vision):   	"$\oui\context_data";
+	vision_figures (vision):        "$\figures";
 	vision_tools (vision):          "$\tools";
-	vision_obsolete_mswin (vision): "$\obsolete\mswin";
-	vision_obsolete_oui (vision):   "$\obsolete\oui";
-	vision_obsolete_toolkit (vision):    "$\obsolete\toolkit";
+
+-- Toolkit
+	vision_toolkit (vision):		"$\implement\toolkit";
+	vision_toolkit_kernel (vision_toolkit):		"$\kernel";
+	vision_toolkit_widgets (vision_toolkit):	"$\widgets";
+	vision_toolkit_support (vision_toolkit): 	"$\support";
+
+-- Implementation clusters for Ms Windows
+	vision_imp(vision):          	"$\implement\mswin";
+	vision_imp_kernel(vision_imp):         "$\kernel";
+	vision_imp_widgets(vision_imp):        "$\widgets";
+	vision_imp_support(vision_imp):        "$\support";
+	vision_imp_command(vision_imp):        "$\commands";
+-- 	vision_obsolete_mswin (vision): "$\obsolete\mswin";
+-- 	vision_obsolete_oui (vision):   "$\obsolete\oui";
+-- 	vision_obsolete_toolkit (vision):"$\obsolete\toolkit";
 
 
 external

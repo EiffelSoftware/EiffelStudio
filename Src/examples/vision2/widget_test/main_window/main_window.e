@@ -63,9 +63,9 @@ feature {NONE} -- Initialization
 				-- that the user does not see the changes taking place.
 			register_type_change_agent (agent lock_current)
 			
-				-- Create the editor and parent.
-			create editor
-			object_editor.extend (editor)
+--						-- Create the editor and parent.
+--		create editor
+--		object_editor.extend (editor)
 
 				-- Create the type selector and parent.
 			create type_selector
@@ -88,6 +88,11 @@ feature {NONE} -- Initialization
 			
 				-- Register a change agent which removes the start up screen.
 			register_type_change_agent (agent remove_first_screen)
+			
+				-- Create the editor and parent.
+			create editor
+			object_editor_parent.extend (editor)
+
 			
 				-- The last type change agent we register unlocks the current
 				-- window, so that we can see any changes to the interface.

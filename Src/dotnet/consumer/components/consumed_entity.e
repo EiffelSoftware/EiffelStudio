@@ -3,11 +3,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	CONSUMED_ENTITY
-
-create
-	make
 
 feature {NONE} -- Initialization
 
@@ -34,12 +31,21 @@ feature -- Access
 		do
 			Result := e
 		end
-			
+		
+	dotnet_eiffel_name: STRING is
+			-- Eiffel entity name without overloading resolved.
+		do
+			Result := q
+		ensure
+			dotnet_eiffel_name_not_void: Result /= Void
+		end
+		
 	dotnet_name: STRING is
 			-- Dotnet name of entity
 		do
+			Result := n
 		ensure
-			dotnet_name_not_void: dotnet_name /= Void
+			dotnet_name_not_void: Result /= Void
 		end
 
 	declared_type: CONSUMED_REFERENCED_TYPE is
@@ -231,6 +237,15 @@ feature -- Settings
 		
 feature {NONE} -- Access
 
+	n: like dotnet_name
+			-- Internal data for `dotnet_name'.
+			
+	q: like dotnet_eiffel_name is
+			-- Internal data for `dotnet_eiffel_name'.
+		do
+			Result := e
+		end
+	
 	e: like eiffel_name
 			-- Internal data for `eiffel_name'.
 			

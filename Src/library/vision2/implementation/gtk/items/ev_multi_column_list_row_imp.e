@@ -352,7 +352,11 @@ feature -- Event -- removing command association
 			end
 		end	
 
+
+feature {NONE} -- Implementation
+
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP
+		-- Multi-column list that own the current object 
 
 end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 

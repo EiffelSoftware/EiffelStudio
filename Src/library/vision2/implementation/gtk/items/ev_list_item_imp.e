@@ -147,7 +147,7 @@ feature -- Status setting
 		end
 
 feature -- element change
-		
+
 	set_text (txt: STRING) is
 			-- Set current button text to `txt'.
 		local

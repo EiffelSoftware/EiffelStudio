@@ -91,5 +91,32 @@ feature -- Basic operations
 				Result_is_uniqe_name: not names.has (Result)
 			end
 		end
+		
+	undo_last_character (text_field: EV_TEXT_FIELD) is
+			-- Remove last character added to `text_field'.
+			-- Dependent on caret position, so this should be called
+			-- immediately after the change, and before anything modifies
+			-- the caret position.
+			-- The change_actions of `text_field' are blocked.
+		local
+			current_caret_position: INTEGER
+		do
+			current_caret_position := text_field.caret_position
+				text_field.change_actions.block
+					-- We must handle three different cases in order to restore the text if an
+					-- invalid character was received.
+				if current_caret_position = text_field.text.count + 1 then
+					text_field.set_text (text_field.text.substring (1, text_field.text.count - 1))
+					text_field.set_caret_position (current_caret_position - 1)
+				elseif current_caret_position = 2 then
+					text_field.set_text (text_field.text.substring (2, text_field.text.count))	
+					text_field.set_caret_position (1)
+				else
+					text_field.set_text (text_field.text.substring (1, current_caret_position - 2) + text_field.text.substring (current_caret_position, text_field.text.count))
+					text_field.set_caret_position (current_caret_position - 1)
+				end
+				text_field.change_actions.resume
+		end
+		
 
 end -- class GB_NAMING_UTILITIES

@@ -9,108 +9,112 @@ class MESSAGE_CONSTANTS
 feature -- Error messages
 
 	Add_label_er: STRING is
-			"Cannot add labels to predefined commands!";
+			"Cannot add labels to predefined commands!"
 	Add_parent_er: STRING is
-			"Cannot add parent for predefined command!";
+			"Cannot add parent for predefined command!"
 	Cannot_create_context_in_group_er: STRING is 
-			"Cannot create additional contexts in a group!";
+			"Cannot create additional contexts in a group!"
 	Cannot_create_new_child_er: STRING is
-			"Cannot create a new child for this context!";
+			"Cannot create a new child for this context!"
 	Cannot_find_command_file_er: STRING is
-			"Cannot find command class name %%X!";
+			"Cannot find command class name %%X!"
 	Cannot_ret_dir_er: STRING is
-			"Cannot retrieve from directory %%X!";
+			"Cannot retrieve from directory %%X!"
 	Cannot_save_er: STRING is
-			"Could not save project to%N%%X!";
+			"Could not save project to%N%%X!"
 	Cannot_save_os_er: STRING is 
-			"Could not save project!%NReason: %%X";
+			"Could not save project!%NReason: %%X"
 	Cannot_save_dir_er: STRING is 
-			"Directory %%X %Nalready exists. Cannot save!";
+			"Directory %%X %Nalready exists. Cannot save!"
 	Cannot_read_file_er: STRING is 
-			"Cannot read file %N%%X!";
+			"Cannot read file %N%%X!"
+	Cannot_remove_er: STRING is
+			"Cannot be removed!"
 	Cannot_remove_group_er: STRING is 
-			"Cannot remove group!%NGroup type %%X is being used.";
+			"Cannot remove group!%NGroup type %%X is being used."
 	Cannot_remove_cmd_er: STRING is 
-			"Cannot remove command %%X!%NCommand has descendants.";
+			"Cannot remove command %%X!%NCommand has descendants."
 	Cannot_remove_argument_er: STRING is 
-			"Cannot remove inherited argument %%X!";
+			"Cannot remove inherited argument %%X!"
 	Cannot_remove_label_er: STRING is 
-			"Cannot remove inherited label %%X!";
+			"Cannot remove inherited label %%X!"
 	Cannot_remove_translation_er: STRING is 
-			"Cannot remove translation %%X!%NTranslation is being used.";
+			"Cannot remove translation %%X!%NTranslation is being used."
+	Cannot_rename_er: STRING is
+			"Cannot be renamed!"
 	Cannot_save_file_er: STRING is 
-			"File %%X %Nalready exists. Cannot save!";
+			"File %%X %Nalready exists. Cannot save!"
 	Crash_error: STRING is
 			"An error occured during the last operation.%NYou may have to reopen EiffelBuild."
 	Dir_not_exist_er: STRING is
-			"Import directory %%X%N does not exist!";
+			"Import directory %%X%N does not exist!"
 	Dir_not_chosen_er: STRING is
-			"No Directory chosen!";
+			"No Directory chosen!"
 	Empty_project_name_er: STRING is
-			"You must specify a project name !";
+			"You must specify a project name !"
 	Eb_project_not_exists_er: STRING is 
-			"Project directory :%N %%X does not exist!";
+			"Project directory :%N %%X does not exist!"
 	Eb_project_not_valid: STRING is
-			"Project directory:%N%%X is not a valid directory!";
+			"Project directory:%N%%X is not a valid directory!"
 	Generate_er: STRING is
-			"Cannot generate files to directory%N%%X";
+			"Cannot generate files to directory%N%%X"
 	Group_name_exists_er: STRING is
-			"Group %%X already exists!";
+			"Group %%X already exists!"
 	Incomp_er: STRING is
-			"Incompatible types!";
+			"Incompatible types!"
 	Instance_add_arg_er: STRING is 
-			"Command has descendants. Cannot add argument!";
+			"Command has descendants. Cannot add argument!"
 	Instance_rem_arg_er: STRING is 
-			"Command has descendants. Cannot remove argument!";
+			"Command has descendants. Cannot remove argument!"
 	Instance_add_label_er: STRING is 
-			"Command has descendants. Cannot add label!";
+			"Command has descendants. Cannot add label!"
 	Instance_rem_label_er: STRING is 
-			"Command has descendants. Cannot remove label!";
+			"Command has descendants. Cannot remove label!"
 	Instance_add_inh_er: STRING is 
-			"Command has instances: Cannot inherit command with arguments!";
+			"Command has instances: Cannot inherit command with arguments!"
 	Instance_rem_inh_er: STRING is 
-			"Command has instances in behavior.%NCannot remove parent command with arguments!";
+			"Command has instances in behavior.%NCannot remove parent command with arguments!"
 	Instance_rem_com_er: STRING is 
-			"Command has instances in behavior.%NCannot remove command!";
+			"Command has instances in behavior.%NCannot remove command!"
 	Invalid_group_class_name_er: STRING is 
-			"%%X is not a valid group class name.";
+			"%%X is not a valid group class name."
 	Invalid_file_name_er: STRING is 
-			"%%X is not a valid file name.";
+			"%%X is not a valid file name."
 	Invalid_feature_name_er: STRING is 
-			"%%X is not a valid feature name.";
+			"%%X is not a valid feature name."
 	Invalid_state_name_er: STRING is 
-			"%%X is not a valid state name (identifier).";
+			"%%X is not a valid state name (identifier)."
 	Label_name_clash_er: STRING is
-			"There is a label with the same name from inherited class.%N%%X";
+			"There is a label with the same name from inherited class.%N%%X"
 	Remove_init_state_er: STRING is
-			"Cannot remove initial state!";
+			"Cannot remove initial state!"
 	Remove_parent_er: STRING is
-			"Cannot remove parent for predefined command!";
+			"Cannot remove parent for predefined command!"
 	Retrieve_er: STRING is 
-			"Cannot retrieve application from directory %N%%X";
+			"Cannot retrieve application from directory %N%%X"
 	State_name_exists_er: STRING is
-			"State with name %%X already exists!";
+			"State with name %%X already exists!"
 	Update_text_er: STRING is
-			"Could not update file:%N %%X";
+			"Could not update file:%N %%X"
 	Write_dir_er: STRING is
-			"Cannot write to directory%N%%X";
+			"Cannot write to directory%N%%X"
 	Write_file_er: STRING is
-			"Cannot write to file%N%%X";
+			"Cannot write to file%N%%X"
 
 feature -- Question messages
 
 	Exit_qu: STRING is
-			"Exit EiffelBuild?";
+			"Exit EiffelBuild?"
 	Project_exists_qu: STRING is
 			"In `%%X', an EiffelBuild project already exists.%N%
-			%Do you wish to overwrite it?";
+			%Do you wish to overwrite it?"
 	Retrieve_crash_qu: STRING is 
 			"Project saved from system crash. %N%
-			%Do you wish to retrieve backup files?%N";
+			%Do you wish to retrieve backup files?%N"
 	Reset_text_qu: STRING is
-			"Do you wish to reset%Ncommand text";
+			"Do you wish to reset%Ncommand text"
 	Save_project_qu: STRING is
-			"Project is not saved. Save project?";
+			"Project is not saved. Save project?"
 	Open_project_qu: STRING is
 			"Application not saved, open a new application ?"
 	Create_project_qu: STRING is
@@ -119,7 +123,7 @@ feature -- Question messages
 			"Application not saved, save application as ...?"
 	Not_eb_project_qu: STRING is 
 			"Project directory :%N%%X%N does not contain an EiffelBuild project!%
-			%%NDo you wish to create this project?";
+			%%NDo you wish to create this project?"
 
 end -- class MESSAGE_CONSTANTS
 

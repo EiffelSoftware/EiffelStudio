@@ -56,24 +56,6 @@ feature {NONE} -- Initialization
 		end 
 
 feature -- Miscellaneous
-
-	on_item_added (an_item: G) is
-			-- `an_item' has just been added.
-		obsolete
-			"Use `on_item_added_at' instead."
-		require
-			an_item_not_void: an_item /= Void
-		do
-		end
-
-	on_item_removed (an_item: G) is
-			-- `an_item' has been removed.
-		obsolete
-			"Use `on_item_remove_at' instead'."
-		require
-			an_item_not_void: an_item /= Void
-		do
-		end
 		
 	on_item_added_at (an_item: G; item_index: INTEGER) is
 			-- `an_item' has just been added at index `item_index'.
@@ -81,7 +63,6 @@ feature -- Miscellaneous
 			an_item_not_void: an_item /= Void
 			item_index_valid: (1 <= item_index) and (item_index <= count)
 		do
-			on_item_added (an_item)
 		end
 		
 	on_item_removed_at (an_item: G; item_index: INTEGER) is
@@ -90,7 +71,6 @@ feature -- Miscellaneous
 			an_item_not_void: an_item /= Void
 			item_index_valid: (1 <= item_index) and (item_index <= count + 1)
 		do
-			on_item_removed (an_item)
 		end
 
 feature -- Element Change

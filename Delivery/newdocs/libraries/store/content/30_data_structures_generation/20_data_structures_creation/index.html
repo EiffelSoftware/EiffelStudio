@@ -1,0 +1,985 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<LINK REL="stylesheet" HREF="../../../../default.css" TYPE="text/css">
+<title>EiffelStore Generation Cluster</title>
+<style>
+<!--
+.Note        {  }
+.tip         {  }
+.warning     {  }
+.figuretitle {  }
+-->
+</style>
+</head>
+
+<body>
+
+<h1 align="center">EiffelStore Generation Cluster</h1>
+<h2 align="left">1. Introduction</h2>
+<p align="left">The EiffelStore library lets the user associate database
+elements with Eiffel objects. These database elements are basically database
+table rows,&nbsp; database view rows or more generally sets of database
+attribute values. The easiest way to manipulate database elements is to insert
+their content into Eiffel objects and to work on these Eiffel objects as
+database elements.</p>
+<p align="left">A first solution to implement this is to use some adaptable
+structures that will fit to any database element. This is done in EiffelStore
+through the <a href="../../reference/interface/db_tuple_chart.html"> DB_TUPLE</a> class, which contains mainly an
+<a href="../../../base/reference/kernel/array_chart.html"> ARRAY</a> [<a href="../../../base/reference/kernel/string_chart.html">STRING</a>] containing
+element attribute names and an <a href="../../../base/reference/kernel/array_chart.html"> ARRAY</a>
+[<a href="../../../base/reference/kernel/any_chart.html">ANY</a>] containing element attribute values.
+This solution has one major drawback: any static checking is impossible: the
+developer cannot be sure at compile time of the nature of a <a href="../../reference/interface/db_tuple_chart.html"> DB_TUPLE</a>, i.e. what
+it represents, and cannot know if attributes number, names and types are
+correct. To overcome this problem, a second solution is to use data structures
+that statically fits to the expected database element.</p>
+<p align="left">The major problem of this technique is that structures are
+static: one structure, so one class instead of one object, should be created for
+each database element. This problem is overcome by the <a href="../../../../tools/wizards/store/index.html"> EiffelStore
+wizard</a>: the
+wizard automatically creates structures that fits to table or view rows
+specified by the wizard user. These structures can be fully customized by the
+user through a template system.</p>
+<p align="left">This document explains first <a href="#data_struct_creation">how
+to create</a> basic or customized data structures coupled with database data,
+second <a href="#data_struct_use">how to use</a> efficiently these Eiffel
+objects with EiffelStore.</p>
+<h2 align="left">2. <a name="data_struct_creation"></a>Data structures creation</h2>
+<h3 align="left">2.1. Overview</h3>
+<p align="left"> EiffelStore enables to create Eiffel classes that can
+store the content of database table rows or views. The table (or view)
+attributes are mapped into the class through class instance variables (i.e.
+attributes), which names and types correspond to table attributes names and
+types.</p>
+<p align="left">EiffelStore uses a template which gives the basic structure of
+the class to generate, a set of tags used in this template then enables to map
+table (or view) meta-data into the class.</p>
+<p align="left" class="Note"><b>Note</b>: the meta-data that can be mapped into
+the class is not limited to attribute names and types. Take a look at the tags
+description.</p>
+<p align="left">The EiffelStore wizard uses this capability to automatically
+generate Eiffel data structures from templates.</p>
+<p align="left">Let us see first <a href="#generation_system">how to use
+EiffelStore</a> data structures generation system and then <a href="#wizard_generation">what
+the wizard does</a>.</p>
+<h3 align="left">2.2. <a name="generation_system"></a>EiffelStore generation
+system</h3>
+<p align="left">This part describes the class creation in these 3 respects:</p>
+<ul>
+  <li>
+    <p align="left"><a href="#mapping_system">General mapping system</a>.</li>
+  <li>
+    <p align="left"><a href="#tags_descr">Tags description</a>.</li>
+  <li>
+    <p align="left"><a href="#mapping_system_ext">Mapping system extension</a>.</li>
+  <li>
+    <p align="left"><a href="#gen_impl_overview">Implementation overview</a>.</li>
+</ul>
+<h4 align="left">2.2.1. <a name="mapping_system"></a>General mapping system </h4>
+<p align="left">The wizard basically follows this sequence of steps: </p>
+<ol>
+  <li>
+    <p align="left">It loads meta-data about the table or view</li>
+  <li>
+    <p align="left">It parses the template to find the tags</li>
+  <li>
+    <p align="left">It replaces each tag by the meta-data value corresponding to
+    the tag</li>
+</ol>
+<p align="left">Let us take an example:</p>
+<table border="1" width="59%">
+  <tr>
+    <td width="47%">template file extract</td>
+    <td width="53%">corresponding result file extract</td>
+  </tr>
+  <tr>
+    <td width="47%">attribute_count: &lt;ACNT></td>
+    <td width="53%">attribute_count: 5</td>
+  </tr>
+</table>
+<p align="left">This works for meta-data on the class or view. For meta-data on
+class (or view) attributes, a second tag type enables to specify text areas that
+are mapped to specific table (or view) attributes. </p>
+<p align="left">Let us take an example: </p>
+<table border="1" width="59%">
+  <tr>
+    <td width="50%">template file extract</td>
+    <td width="50%">corresponding result file extract</td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">&lt;A:A:A>	&lt;AN:L>: &lt;TN:U><br>
+      <br>
+      &lt;/A></td>
+    <td width="50%" valign="top">companyid: DOUBLE<br>
+      <br>
+      companyname: STRING<br>
+      <br>
+      </td>
+  </tr>
+</table>
+<p align="left">Text contained in the tag 'A' is mapped to each table (or view)
+attribute and the resulting texts are concatenated. Let' us now see the details
+about each tag. </p>
+<h4 align="left">2.2.2. <a name="tags_descr"></a>Tags description </h4>
+<p align="left">The available tags can be separated into 3 types: </p>
+<ul>
+  <li>
+    <p align="left">Tags corresponding to <a href="#table_meta-data">table
+    meta-data</a></li>
+  <li>
+    <p align="left">Tags corresponding to <a href="#attribute_meta-data">attribute
+    meta-data</a></li>
+  <li>
+    <p align="left">Tags to <a href="#enclosing_tag">enclose attribute meta-data</a></li>
+</ul>
+<h5 align="left">2.2.2.1. <a name="table_meta-data"></a>Table meta-data tags</h5>
+<table border="1" width="63%">
+  <tr>
+    <td width="14%" rowspan="2"><b>Tag name</b></td>
+    <td width="34%" rowspan="2"><b>Tag description</b></td>
+    <td width="52%" colspan="2"><b>Options</b></td>
+  </tr>
+  <tr>
+    <td width="19%"><b>Option name</b></td>
+    <td width="33%"><b>Option description</b></td>
+  </tr>
+  <tr>
+    <td width="14%" rowspan="3">&lt;CN:?&gt;</td>
+    <td width="34%" rowspan="3">Table name</td>
+    <td width="19%">U</td>
+    <td width="33%">in uppercase</td>
+  </tr>
+  <tr>
+    <td width="19%">I</td>
+    <td width="33%">with initial capital</td>
+  </tr>
+  <tr>
+    <td width="19%">L</td>
+    <td width="33%">in lowercase</td>
+  </tr>
+  <tr>
+    <td width="14%">&lt;ACNT&gt;</td>
+    <td width="34%">Attribute count</td>
+    <td width="52%" colspan="2">N/A</td>
+  </tr>
+</table>
+<h5 align="left">2.2.2.2. <a name="attribute_meta-data"></a>Attribute meta-data
+tags</h5>
+<table border="1" width="63%" height="273">
+  <tr>
+    <td width="14%" rowspan="2" height="44"><b>Tag name</b></td>
+    <td width="34%" rowspan="2" height="44"><b>Tag description</b></td>
+    <td width="52%" colspan="2" height="19"><b>Options</b></td>
+  </tr>
+  <tr>
+    <td width="19%" height="19"><b>Option name</b></td>
+    <td width="33%" height="19"><b>Option description</b></td>
+  </tr>
+  <tr>
+    <td width="14%" rowspan="3" height="69">&lt;AN:?&gt;</td>
+    <td width="34%" rowspan="3" height="69">Attribute name</td>
+    <td width="19%" height="19">U</td>
+    <td width="33%" height="19">in uppercase</td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">I</td>
+    <td width="33%" height="19">with initial capital</td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">L</td>
+    <td width="33%" height="19">in lowercase</td>
+  </tr>
+  <tr>
+    <td width="14%" height="19">&lt;IT&gt;</td>
+    <td width="34%" height="19">Attribute position in the table</td>
+    <td width="52%" colspan="2" height="19">N/A</td>
+  </tr>
+  <tr>
+    <td width="14%" rowspan="3" height="69">&lt;TN:?&gt;</td>
+    <td width="34%" rowspan="3" height="69">Attribute type name</td>
+    <td width="19%" height="19">U</td>
+    <td width="33%" height="19">in uppercase</td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">I</td>
+    <td width="33%" height="19">with initial capital</td>
+  </tr>
+  <tr>
+    <td width="19%" height="19">L</td>
+    <td width="33%" height="19">in lowercase</td>
+  </tr>
+  <tr>
+    <td width="14%" height="19">&lt;TDV&gt;</td>
+    <td width="34%" height="19">Attribute type default value</td>
+    <td width="52%" colspan="2" height="19">N/A</td>
+  </tr>
+</table>
+<p align="left" class="Note"><b>Note</b>: Attribute tags are only valid within
+an enclosing tag.</p>
+<h5 align="left">2.2.2.3. <a name="enclosing_tag"></a>Enclosing tags</h5>
+<p align="left">The tag &lt;A:?:?&gt; &lt;/A&gt; encloses text that will be
+mapped to attributes matching criteria. These criteria are specified by the tag
+options:</p>
+<ul>
+  <li>
+    <p align="left"><u>First option</u>: attribute type criterion</p></li>
+<table border="1" width="34%" height="172">
+  <tr>
+    <td width="15%" height="18"><b>Option name</b></td>
+    <td width="37%" height="18"><b>Option description</b></td>
+  </tr>
+  <tr>
+    <td width="15%" height="3">A</td>
+    <td width="37%" height="3">All attributes</td>
+  </tr>
+  <tr>
+    <td width="15%" height="3">I</td>
+    <td width="37%" height="3">INTEGER attributes</td>
+  </tr>
+  <tr>
+    <td width="15%" height="3">S</td>
+    <td width="37%" height="3">STRING attributes</td>
+  </tr>
+  <tr>
+    <td width="15%" height="3">D</td>
+    <td width="37%" height="3">DATE attributes</td>
+  </tr>
+  <tr>
+    <td width="15%" height="3">B</td>
+    <td width="37%" height="3">BOOLEAN attributes</td>
+  </tr>
+  <tr>
+    <td width="15%" height="2">C</td>
+    <td width="37%" height="2">CHARACTER attributes</td>
+  </tr>
+  <tr>
+    <td width="15%" height="2">F</td>
+    <td width="37%" height="2">DOUBLE attributes</td>
+  </tr>
+</table>
+</ul>
+<ul>
+  <li>
+    <p align="left"><u>Second option</u>: attribute position criterion</p></li>
+<table border="1" width="34%" height="136">
+  <tr>
+    <td width="15%" height="18"><b>Option name</b></td>
+    <td width="37%" height="18"><b>Option description</b></td>
+  </tr>
+  <tr>
+    <td width="15%" height="3">A</td>
+    <td width="37%" height="3">All attributes</td>
+  </tr>
+  <tr>
+    <td width="15%" height="3">F</td>
+    <td width="37%" height="3">First attribute</td>
+  </tr>
+  <tr>
+    <td width="15%" height="3">I</td>
+    <td width="37%" height="3">Intermediate attributes</td>
+  </tr>
+  <tr>
+    <td width="15%" height="1">L</td>
+    <td width="37%" height="1">Last attribute</td>
+  </tr>
+</table>
+</ul>
+<ul><p align="left" class="Note"><b>Note</b>: this option is generally used to have
+a valid and nice layout or indentation.</p></ul>
+<p align="left" class="Note"><b>Note</b>: several options can be selected for
+one criterion.&nbsp;</p>
+<h4 align="left">2.2.3. <a name="mapping_system_ext"></a>Mapping system
+extension</h4>
+<p align="left">The mapping system described below can be extended to create a
+class that gathers meta-data on database tables. This class mapping is
+equivalent to the previous mapping but within a different scope:</p>
+<ul>
+  <li>
+    <p align="left">class corresponds to the database rather than tables</li>
+  <li>
+    <p align="left">class content deals with tables rather than table attributes</li>
+</ul>
+<p align="left">The meaning of available tags is so modified:</p>
+<ul>
+  <li>
+    <p align="left"><a href="#system_meta-data_ext">System meta-data tags</a></li>
+  <li>
+    <p align="left"> <a href="#table_meta-data_ext"> Table meta-data tags</a></li>
+  <li>
+    <p align="left"> <a href="#enclosing_tag_ext"> Enclosing tags</a></li>
+</ul>
+<p align="left" class="Note"><b>Note</b>: every tag is not available for this
+mapping.</p>
+<h5 align="left">2.2.3.1. <a name="system_meta-data_ext"></a> System meta-data tags</h5>
+<table border="1" width="32%">
+  <tr>
+    <td width="50%"><b>Tag name</b></td>
+    <td width="50%"><b>Tag description</b></td>
+  </tr>
+  <tr>
+    <td width="50%">&lt;ACNT&gt;</td>
+    <td width="50%">Table count</td>
+  </tr>
+</table>
+<h5 align="left">2.2.3.2. <a name="table_meta-data_ext"></a> Table meta-data tags</h5>
+<table border="1" width="63%">
+  <tr>
+    <td width="14%" rowspan="2"><b>Tag name</b></td>
+    <td width="34%" rowspan="2"><b>Tag description</b></td>
+    <td width="52%" colspan="2"><b>Options</b></td>
+  </tr>
+  <tr>
+    <td width="19%"><b>Option name</b></td>
+    <td width="33%"><b>Option description</b></td>
+  </tr>
+  <tr>
+    <td width="14%" rowspan="3">&lt;CN:?&gt;</td>
+    <td width="34%" rowspan="3">Table name</td>
+    <td width="19%">U</td>
+    <td width="33%">in uppercase</td>
+  </tr>
+  <tr>
+    <td width="19%">I</td>
+    <td width="33%">with initial capital</td>
+  </tr>
+  <tr>
+    <td width="19%">L</td>
+    <td width="33%">in lowercase</td>
+  </tr>
+  <tr>
+    <td width="14%">&lt;IT&gt;</td>
+    <td width="34%">Table position in the database</td>
+    <td width="52%" colspan="2">N/A</td>
+  </tr>
+</table>
+<h5 align="left">2.2.3.3. <a name="enclosing_tag_ext"></a> Enclosing tags</h5>
+<p align="left">The tag &lt;A:A:?&gt; &lt;/A&gt; encloses text that will be
+mapped to tables matching a position criterion. This criterion is specified by the tag
+options:</p>
+<table border="1" width="34%" height="136">
+  <tr>
+    <td width="15%" height="18"><b>Option name</b></td>
+    <td width="37%" height="18"><b>Option description</b></td>
+  </tr>
+  <tr>
+    <td width="15%" height="3">A</td>
+    <td width="37%" height="3">All tables</td>
+  </tr>
+  <tr>
+    <td width="15%" height="3">F</td>
+    <td width="37%" height="3">First table</td>
+  </tr>
+  <tr>
+    <td width="15%" height="3">I</td>
+    <td width="37%" height="3">Intermediate tables</td>
+  </tr>
+  <tr>
+    <td width="15%" height="1">L</td>
+    <td width="37%" height="1">Last table</td>
+  </tr>
+</table>
+<h4 align="left">2.2.4. <a name="gen_impl_overview"></a>Implementation overview</h4>
+<p align="left">The data structure generation system is implemented with 4
+EiffelStore classes:</p>
+<ul>
+  <li>
+    <p align="left"><a href="../../reference/generation/generator/db_class_generator_chart.html">DB_CLASS_GENERATOR</a> abstractly generates a class mapped to
+    database meta-data.</li>
+  <li>
+    <p align="left"><a href="../../reference/generation/generator/db_table_class_generator_chart.html">DB_TABLE_CLASS_GENERATOR</a> generates a class mapped to a
+    database table.</li>
+  <li>
+    <p align="left"><a href="../../reference/generation/generator/db_access_class_generator_chart.html">DB_ACCESS_CLASS_GENERATOR</a> generates a class mapped to the
+    database.</li>
+  <li>
+    <p align="left"><a href="../../reference/generation/generator/db_template_tags_chart.html">DB_TEMPLATE_TAGS</a> defines available tags for mapping and
+    their meaning.</li>
+</ul>
+<p align="left"><img border="0" src="ESTORE_GENERATION.GENERATOR.png" width="449" height="154"></p>
+<p align="left" class="figuretitle">Generation classes BON diagram</p>
+<h3 align="left">2.3.&nbsp;<a name="wizard_generation"></a>EiffelStore wizard </h3>
+<p align="left">The EiffelStore wizard uses the EiffelStore generation system
+described in the <a href="#generation_system">section above</a>. </p>
+<p align="left">It generates data structures as described in the <a href="#data_struct_use">next
+section</a>. This part intent is not to describe the use of the data structures
+but merely to show what the wizard generates. </p>
+<p align="left">The wizard generates 3 types of classes: </p>
+<ul>
+  <li>
+    <p align="left"><a href="#wiz_table_classes">Classes holding database table rows content</a></li>
+  <li>
+    <p align="left"><a href="#wiz_descr_classes">Classes describing a database table</a></li>
+  <li>
+    <p align="left"><a href="#wiz_access_class">A class describing the database and giving access to the
+    previous types of classes</a></li>
+</ul>
+<h4 align="left">2.3.1. <a name="wiz_table_classes"></a> Table classes</h4>
+<p align="left">For each selected database table, a class is created from the
+same template, mapping the database table. This template is:</p>
+
+<br><code>indexing<br>
+&nbsp;&nbsp;&nbsp; description: "Class which allows EiffelStore to retrieve/store%<br>
+&nbsp;&nbsp;&nbsp; %the content of a table row from database table &lt;CN:U>"<br>
+&nbsp;&nbsp;&nbsp; author: "EiffelStore Wizard"<br>
+&nbsp;&nbsp;&nbsp; date: "$Date$"<br>
+&nbsp;&nbsp;&nbsp; revision: "$Revision$"<br>
+<br>
+class<br>
+&nbsp;&nbsp;&nbsp; &lt;CN:U><br>
+<br>
+inherit<br>
+&nbsp;&nbsp;&nbsp; DB_TABLE<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --	redefine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --		out<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --	end<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; undefine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tables,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; is_valid_code<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+<br>
+&nbsp;&nbsp;&nbsp; DB_SPECIFIC_TABLES_ACCESS_USE&nbsp;<br>
+<br>
+create<br>
+&nbsp;&nbsp;&nbsp; make<br>
+<br>
+feature -- Access<br>
+<br>
+&lt;A:A:A>	&lt;AN:L>: &lt;TN:U><br>
+<br>
+&lt;/A>	table_description: DB_TABLE_DESCRIPTION is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Description associated to the &lt;CN:L>.<br>
+&nbsp;&nbsp;&nbsp; do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tables.&lt;CN:L>_description.set_&lt;CN:L> (Current)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Result := tables.&lt;CN:L>_description<br>
+&nbsp;&nbsp;&nbsp; end<br>
+<br>
+feature -- Initialization<br>
+<br>
+&nbsp;&nbsp;&nbsp; set_default is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;A:A:A>			&lt;AN:L> := &lt;TDV><br>
+&lt;/A>		end<br>
+<br>
+feature -- Basic operations<br>
+<br>
+&lt;A:A:A>	set_&lt;AN:L> (a_&lt;AN:L>: &lt;TN:U>) is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;AN:L> := a_&lt;AN:L><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+<br>
+&lt;/A>feature -- Output<br>
+<br>
+--FIXME: add this	out: STRING is<br>
+--		do<br>
+--			Result := ""<br>
+--			Result.append (myid.out + "%N")<br>
+--		end<br>
+<br>
+end -- class CODES</code><br>
+
+<p align="left" class="Note"><b>Note</b>: the template content can be adjusted,
+for instance to add comments or change the indexing. However, the fundamental
+template structure should not be changed if data structures are used as
+described in the next section.&nbsp;</p>
+<h4 align="left">2.3.2. <a name="wiz_descr_classes"></a> Description classes</h4>
+<p align="left">For each selected database table, a class is also created from
+the same template, mapping the database table. This template is:</p>
+
+<br><code>indexing<br>
+&nbsp;&nbsp;&nbsp; description: "Description of class &lt;CN:U>"<br>
+&nbsp;&nbsp;&nbsp; author: "EiffelStore Wizard"<br>
+&nbsp;&nbsp;&nbsp; date: "$Date$"<br>
+&nbsp;&nbsp;&nbsp; revision: "$Revision$"<br>
+<br>
+class<br>
+&nbsp;&nbsp;&nbsp; &lt;CN:U>_DESCRIPTION<br>
+<br>
+inherit<br>
+&nbsp;&nbsp;&nbsp; DB_TABLE_DESCRIPTION<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --		rename<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; --			Tables as Abstract_tables<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; undefine<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Tables,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; is_valid_code<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+<br>
+	DB_SPECIFIC_TABLES_ACCESS_USE<br>
+<br>
+create<br>
+&nbsp;&nbsp;&nbsp; {DB_SPECIFIC_TABLES_ACCESS} make<br>
+<br>
+feature -- Access<br>
+<br>
+&nbsp;&nbsp;&nbsp; Table_name: STRING is "&lt;CN:U>"<br>
+<br>
+&nbsp;&nbsp;&nbsp; Table_code: INTEGER is &lt;CI><br>
+<br>
+&nbsp;&nbsp;&nbsp; Attribute_number: INTEGER is &lt;ACNT><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Number of attributes in the table.<br>
+<br>
+&nbsp;&nbsp;&nbsp; Id_code: INTEGER is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Table ID attribute code.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Result := &lt;IC><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+<br>
+&nbsp;&nbsp;&nbsp; &lt;A:A:A>	&lt;AN:I>: INTEGER is &lt;IT><br>
+<br>
+&lt;/A>	attribute_code_list: ARRAYED_LIST [INTEGER] is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Feature code list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; once<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; create Result.make
+(Attribute_number)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;A:A:A>			Result.extend (&lt;AN:I>)<br>
+&lt;/A>		end<br>
+<br>
+&nbsp;&nbsp;&nbsp; description_list: ARRAYED_LIST [STRING] is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Feature name list. Can be interpreted as a list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- or a hash-table.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; once<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; create Result.make (Attribute_number)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;A:A:A>			Result.extend ("&lt;AN:I>")<br>
+&lt;/A>		end<br>
+<br>
+&nbsp;&nbsp;&nbsp; type_list: ARRAYED_LIST [INTEGER] is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Feature type list. Can be interpreted as a list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- or a hash-table.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; once<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; create Result.make (Attribute_number)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;A:A:A>			Result.extend (&lt;TN:I>_type)<br>
+&lt;/A>		end<br>
+<br>
+&nbsp;&nbsp;&nbsp; to_delete_fkey_from_table: HASH_TABLE [INTEGER, INTEGER] is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- List of tables depending on this one and their<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- foreign key for this table.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Deletion on this table may imply deletions on<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- depending tables.&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; once<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;DH>		end<br>
+<br>
+&nbsp;&nbsp;&nbsp; to_create_fkey_from_table: HASH_TABLE [INTEGER, INTEGER] is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- List of associated necessary tables and the&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- linking foreign keys.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Creation on this table may imply creations on<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- associated necessary tables.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; once<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;CH>		end<br>
+<br>
+&nbsp;&nbsp;&nbsp; attribute (i: INTEGER): ANY is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Get feature value of feature whose code is 'i'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inspect i<br>
+&lt;A:A:A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; when &lt;AN:I> then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Result := &lt;CN:L>.&lt;AN:L><br>
+&lt;/A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+<br>
+&nbsp;&nbsp;&nbsp; set_attribute (i: INTEGER; value: ANY) is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Set feature value of feature whose code is `i' to `value'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- `value' must be of type STRING, INTEGER, BOOLEAN, CHARACTER,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- DOUBLE or DATE_TIME. References are made automatically from<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- expanded types.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; local<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; integer_value: INTEGER_REF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; double_value: DOUBLE_REF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; boolean_value: BOOLEAN_REF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; character_value: CHARACTER_REF<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; date_time_value: DATE_TIME<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; string_value: STRING<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inspect i<br>
+&lt;A:S:A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; when &lt;AN:I> then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+string_value ?= value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;CN:L>.set_&lt;AN:L> (string_value)<br>
+&lt;/A>&lt;A:F:A>&nbsp;&nbsp;&nbsp;&nbsp; when &lt;AN:I> then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+double_value ?= value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if double_value /= Void then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;CN:L>.set_&lt;AN:L> (double_value.item)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;CN:L>.set_&lt;AN:L> (0.0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+end<br>
+&lt;/A>&lt;A:I:A>&nbsp;&nbsp;&nbsp;&nbsp; when &lt;AN:I> then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+integer_value ?= value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if integer_value /= Void then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;CN:L>.set_&lt;AN:L> (integer_value.item)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;CN:L>.set_&lt;AN:L> (0)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+end<br>
+&lt;/A>&lt;A:D:A>&nbsp;&nbsp;&nbsp;&nbsp; when &lt;AN:I> then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+date_time_value ?= value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;CN:L>.set_&lt;AN:L> (date_time_value)<br>
+&lt;/A>&lt;A:C:A>&nbsp;&nbsp;&nbsp;&nbsp; when &lt;AN:I> then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+character_value ?= value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if character_value /= Void then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;CN:L>.set_&lt;AN:L> (character_value.item)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;CN:L>.set_&lt;AN:L> ('%U')<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+end<br>
+&lt;/A>&lt;A:B:A>&nbsp;&nbsp;&nbsp;&nbsp; when &lt;AN:I> then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+boolean_value ?= value<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if boolean_value /= Void then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;CN:L>.set_&lt;AN:L> (boolean_value.item)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;CN:L>.set_&lt;AN:L> (False)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+end<br>
+&lt;/A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+<br>
+feature {&lt;CN:U>} -- Basic operations<br>
+<br>
+&nbsp;&nbsp;&nbsp; set_&lt;CN:L> (a_&lt;CN:L>: &lt;CN:U>) is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Associate the description to a piece of &lt;CN:L>.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; require<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; not_void: a_&lt;CN:L> /= Void<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;CN:L> := a_&lt;CN:L><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ensure<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;CN:L> = a_&lt;CN:L><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+<br>
+feature {NONE} -- Implementation<br>
+<br>
+&nbsp;&nbsp;&nbsp; &lt;CN:L>: &lt;CN:U><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Piece of &lt;CN:L> associated with the description&nbsp;<br>
+<br>
+end -- class CODES_DESCRIPTION</code><br>
+
+<p align="left" class="Note"><b>Note</b>: the same remark applies for this
+template.</p>
+
+<p align="left">Some additional tags are directly replaced by the wizard:</p>
+<ul>
+  <li>
+    <p align="left">The &lt;CR&gt; and &lt;DR&gt; tags are replaced with
+    information on associated tables.</li>
+  <li>
+    <p align="left">The &lt;IC&gt; tag is replaced by information on the primary
+    key (table ID).</li>
+  <li>
+    <p align="left">The &lt;CI&gt; tag is replaced by the table position in the
+    database.</li>
+</ul>
+<h4 align="left">2.3.3. <a name="wiz_access_class"></a> Access class</h4>
+<p align="left">The DB_SPECIFIC_TABLES_ACCESS class is mapped to the database
+from the following template:</p>
+
+<br><code>
+indexing<br>
+&nbsp;&nbsp;&nbsp; description: "Description of database tables.%<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; %Use this class through DB_SPECIFIC_TABLES_ACCESS_USE."<br>
+&nbsp;&nbsp;&nbsp; author: "EiffelStore Wizard"<br>
+&nbsp;&nbsp;&nbsp; date: "$Date$"<br>
+&nbsp;&nbsp;&nbsp; revision: "$Revision$"<br>
+<br>
+class<br>
+&nbsp;&nbsp;&nbsp; DB_SPECIFIC_TABLES_ACCESS<br>
+<br>
+inherit<br>
+&nbsp;&nbsp;&nbsp; DB_TABLES_ACCESS<br>
+<br>
+creation<br>
+&nbsp;&nbsp;&nbsp; make<br>
+<br>
+feature -- Access<br>
+<br>
+&nbsp;&nbsp;&nbsp; &lt;A:A:A>	&lt;CN:I>: INTEGER is &lt;IT><br>
+<br>
+&lt;/A>	Table_number: INTEGER is &lt;ACNT><br>
+<br>
+&nbsp;&nbsp;&nbsp; code_list: ARRAYED_LIST [INTEGER] is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Table code list.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; once<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; create Result.make (Table_number)<br>
+&lt;A:A:A>&nbsp;&nbsp;&nbsp;&nbsp; Result.extend (&lt;CN:I>)<br>
+&lt;/A>&nbsp;&nbsp;&nbsp; end<br>
+<br>
+&nbsp;&nbsp;&nbsp; name_list: ARRAYED_LIST [STRING] is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Table name list. Can be interpreted as a list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- or a hash-table.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; once<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; create Result.make (Table_number)<br>
+&lt;A:A:A>&nbsp;&nbsp;&nbsp;&nbsp; Result.extend ("&lt;CN:I>")<br>
+&lt;/A>&nbsp;&nbsp;&nbsp; end<br>
+<br>
+&nbsp;&nbsp;&nbsp; obj (i: INTEGER): DB_TABLE is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Return instance of table with code `i'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inspect i<br>
+&lt;A:A:A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; when &lt;CN:I> then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+create {&lt;CN:U>} Result.make<br>
+&lt;/A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+<br>
+&nbsp;&nbsp;&nbsp; description (i: INTEGER): DB_TABLE_DESCRIPTION is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Return description of table with code `i'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; inspect i<br>
+&lt;A:A:A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; when &lt;CN:I> then<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Result := &lt;CN:L>_description<br>
+&lt;/A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+<br>
+&lt;A:A:A>	&lt;CN:L>_description: &lt;CN:U>_DESCRIPTION is<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -- Unique description of table `&lt;CN:U>'.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; once<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; create Result.make<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end<br>
+<br>
+&lt;/A><br>
+end -- class DB_SPECIFIC_TABLES_ACCESS<br>
+</code><br>
+
+<h2 align="left">3. <a name="data_struct_use"></a>Data structures use</h2>
+
+<h3 align="left">3.1. Overview</h3>
+
+<p align="left"> EiffelStore enables to create Eiffel classes that can
+store the content of database table rows or views. The table (or view)
+attributes are mapped into the class through class instance variables (i.e.
+attributes), which names and types correspond to table attributes names and
+types.</p>
+
+<p align="left">EiffelStore places the generated classes, i.e. the classes
+mapping database content, in a context that
+facilitates their use.</p>
+
+<p align="left">Each generated class inherits from a general class. These
+general classes afford facilities for generated classes that are not specific to
+the generation. Furthermore, they provide a polymorphic type that lets handle
+the generated class objects without checking their type at compile-time. Hence
+non-specific applications or libraries can handle these objects (See for
+instance the DataView cluster).</p>
+
+<p align="left">Let us see general and generated classes relationships:</p>
+<p align="left"><img border="0" src="tables_access_inherit.png" width="570" height="408"></p>
+<p align="left" class="figuretitle">General and generated classes relationships</p>
+<ul>
+  <li>
+    <p align="left">Yellow classes are general.</li>
+  <li>
+    <p align="left">Green classes are generated.</li>
+</ul>
+<p align="left">This BON diagram points out the 3 types of generated
+classes:&nbsp;</p>
+<ul>
+  <li>
+    <p align="left">Classes holding database table rows content (inheriting from
+    <a href="../../reference/generation/tables_access/abstract/db_table_chart.html">
+    DB_TABLE</a>)</li>
+  <li>
+    <p align="left">Classes describing database tables (inheriting from <a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html">
+    DB_TABLE_DESCRIPTION</a>)</li>
+  <li>
+    <p align="left">A class describing the database and giving access to the
+    previous types of classes (inheriting from <a href="../../reference/generation/tables_access/abstract/db_tables_access_chart.html"> DB_TABLES_ACCESS</a>)</li>
+</ul>
+    <p align="left">One database table is associated to one table class and one
+    description class. Both classes are closely <a href="#table-descr_relationship"> interrelated</a> to provide what the
+    developer need. The <a href="#table_access_classes">table access classes</a>
+    describe the database tables
+    and gives access to both table and description classes.
+<h3 align="left">3.2. <a name="table-descr_relationship"></a> Table and description classes relationship</h3>
+<h4 align="left">3.2.1. Table classes</h4>
+<p align="left">Table classes are specific to one database table and enable to
+store table rows attribute values. Their objects can be considered as database
+table rows. These classes inherit from <a href="../../reference/generation/tables_access/abstract/db_table_chart.html"> DB_TABLE</a> so that the type of objects can
+be determined at runtime, which can be interesting for GUI applications for
+instance. </p>
+<p align="left">Each of these classes are associated to a description
+class.&nbsp; </p>
+<h4 align="left">3.2.2. Description classes</h4>
+<p align="left">The descriptions goal is 3-fold: </p>
+<ul>
+  <li>
+    <p align="left"><a href="#use_get_metadata">Getting meta-data</a> about the table represented at
+    run-time.</li>
+  <li>
+    <p align="left"><a href="#use_get_rowdata">Getting table rows data</a> dynamically.</li>
+  <li>
+    <p align="left"><a href="#use_data_management">Facilitating data management</a>.</li>
+</ul>
+<p align="left" class="note"><b>Note</b>: these descriptions inherit from <a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html">
+DB_TABLE_DESCRIPTION</a>.</p>
+<p align="left">Since they only describes a table and provide tools, description objects
+can be unique. EiffelStore ensures their unicity for resources optimization.</p>
+<h4 align="left">3.2.3. Relationship</h4>
+<p align="left">Each table class is associated to the description class
+corresponding to the same database table.</p>
+<p align="left">A table class object provides the associated table description:</p>
+<p align="left">
+<code>
+row: DB_TABLE<br>
+description: DB_TABLE_DESCRIPTION<br>
+...<br>
+row := db_manager.database_result<br>
+description := row.table_description
+</code></p>
+As descriptions are unique, every table row object is associated to the same
+description. The following figure illustrates this:
+<p><img border="0" src="table-descr_objects.png" width="462" height="178"></p>
+<p class="figuretitle">table and description objects relationship</p>
+<h4 align="left">3.2.2. <a name="use_get_metadata"></a> Getting meta-data on the table</h4>
+<p align="left">Meta-data about a table is available dynamically from an object
+that conforms to <a href="../../reference/generation/tables_access/abstract/db_table_chart.html"> DB_TABLE</a> or
+<a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html"> DB_TABLE_DESCRIPTION</a> classes:</p>
+<p align="left">
+<code>
+row: DB_TABLE<br>
+description: DB_TABLE_DESCRIPTION<br>
+...<br>
+row := db_manager.database_result<br>
+description := row.table_description<br>
+io.putstring ("Table name is " + description.Table_name)
+</code></p>
+<h4 align="left">3.2.3. <a name="use_get_rowdata"></a> Getting table rows data</h4>
+<p align="left">Table row data is stored in the table object. 2 ways coexist to
+access the data:</p>
+<ul>
+  <li>
+    <p align="left"><u>Use the table row object</u>: if you want to check type
+    at compile-time.</li>
+  <li>
+    <p align="left"><u>Use the table description object</u>: if you want to
+    round the static type checking system.</li>
+</ul>
+<h5 align="left">3.2.3.1. Using the table row object</h5>
+<p align="left">This is rather simple, access directly the class instance
+variables:</p>
+<p align="left"><code>
+row: CONTACTS<br>
+...<br>
+io.putstring (&quot;Contact row ID: &quot;)<br>
+io.putstring (row.contactid.out)</code></p>
+<h5 align="left">3.2.3.2. Using the table description object</h5>
+<p align="left">You first have to <i>link</i> the description object to your
+table object. Then you can use <a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html"> DB_TABLE_DESCRIPTION</a> features:</p>
+<p align="left">
+<code>
+row: DB_TABLE<br>
+description: DB_TABLE_DESCRIPTION<br>
+...<br>
+&nbsp;&nbsp;&nbsp; -- Link description unique object to `row' content.<br>
+description := row.table_description<br>
+io.putstring (description.attribute (description.id_name) + &quot;: &quot;)<br>
+io.putstring (description.attribute (description.id_code).out)
+</code></p>
+<p align="left" class="Note"><b>Note</b>:&nbsp;This example and the previous one
+perform the same output, but the second one does not require to know that the
+object is a contact at compile time.</p>
+<p align="left" class="warning"><b>Caution</b>: Don't forget to link a
+description to a table row object before accessing table row content! This
+problem can be avoided if you always access description from the table row
+object rather than the tables access class (DB_SPECIFIC_TABLES_ACCESS).</p>
+<h4 align="left">3.2.4. <a name="use_data_management"></a>Facilitating data
+management</h4>
+<p align="left"><a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html">DB_TABLE_DESCRIPTION</a> provides facilities to manage data
+retrieved from a table row.</p>
+<p align="left">You can do for instance:</p>
+<p align="left"><code>
+row: DB_TABLE<br>
+description: DB_TABLE_DESCRIPTION<br>
+...<br>
+row := db_manager.database_result<br>
+&nbsp;&nbsp;&nbsp;
+-- Link description unique object to `row' content.<br>
+description := row.table_description<br>
+my_screen_report.fill (description.printable_attribute_list)</code></p>
+<h3 align="left">3.3. <a name="table_access_classes"></a>Table access classes</h3>
+<h4 align="left">3.3.1. Overview</h4>
+<p align="left">Table access classes provide facilities to manage table row and
+table description objects. They also give basic database table meta-data.</p>
+<p align="left">The following figure shows table access classes and their
+relations.</p>
+<ul>
+  <li>
+    <p align="left">Yellow classes are EiffelStore classes</li>
+  <li>
+    <p align="left">Green class is generated</li>
+  <li>
+    <p align="left">Pink class is an application class</li>
+</ul>
+<p align="left"><img border="0" src="DB_SPECIFIC_TABLES_ACCESS_USE.png" width="495" height="377"></p>
+<p align="left" class="figuretitle">Table access classes BON diagram</p>
+<p align="left"><img border="0" src="table-descr-access_objects.png" width="660" height="248"></p>
+<p align="left" class="figuretitle">Relationship between the tables access
+object, description and table objects</p>
+<h4 align="left">3.3.2. DB_SPECIFIC_TABLES_ACCESS class</h4>
+<p align="left">The DB_SPECIFIC_TABLES_ACCESS class stores the unique table
+description object. It also provides the following facilities:</p>
+<ul>
+  <li>
+    <p align="left">Every database table code</li>
+  <li>
+    <p align="left">Table descriptions from a table code</li>
+  <li>
+    <p align="left">Sample table class objects from a table code</li>
+  <li>
+    <p align="left">Table names from a table code</li>
+</ul>
+<p align="left" class="Note"><b>Note</b>: database table codes given in the
+class match the table codes provided by <a href="../../reference/generation/tables_access/abstract/db_table_description_chart.html"> DB_TABLE_DESCRIPTION</a>.</p>
+<h4 align="left">3.3.3. Abstract access class</h4>
+<p align="left">The <a href="../../reference/generation/tables_access/abstract/db_tables_access_chart.html"> DB_TABLES_ACCESS</a> class provides an interface for the
+DB_SPECIFIC_TABLES_ACCESS class which is non-specific to the database. This can
+be used by non database-specific code (for instance the DataView cluster) to
+access database tables.</p>
+<p align="left">Unique table description objects and table codes are of course
+not directly available from this class, but the following features are still
+available:</p>
+<ul>
+  <li>
+    <p align="left">Table descriptions from a table code</li>
+  <li>
+    <p align="left">Sample table class objects from a table code</li>
+  <li>
+    <p align="left">Table names from a table code</li>
+</ul>
+<h4 align="left">3.3.4. Use classes</h4>
+<p align="left">The DB_SPECIFIC_TABLES_ACCESS object can be accessed as a kind
+of &quot;global variable&quot; by any class which inherits from
+DB_SPECIFIC_TABLES_ACCESS_USE. This class also ensures DB_SPECIFIC_TABLES_ACCESS
+object unicity.</p>
+<p align="left">The <a href="../../reference/generation/tables_access/abstract/db_tables_access_use_chart.html"> DB_TABLES_ACCESS_USE</a> class affords the same possibility but
+with no reference to the DB_SPECIFIC_TABLES_ACCESS object. The unique
+DB_SPECIFIC_TABLES_ACCESS should be set to this class as of type <a href="../../reference/generation/tables_access/abstract/db_tables_access_chart.html">
+DB_TABLES_ACCESS</a>.</p>
+
+</body>
+
+</html>

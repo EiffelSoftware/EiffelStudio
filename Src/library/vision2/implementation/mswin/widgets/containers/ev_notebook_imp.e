@@ -21,9 +21,9 @@ inherit
 		redefine
 			build,
 			add_child,
+			parent_ask_resize,
 			child_minheight_changed,
-			child_height_changed,
-			parent_ask_resize
+			child_height_changed
 		end
 
 	EV_FONTABLE_IMP
@@ -172,13 +172,30 @@ feature -- Implementation
 
 feature {EV_WIDGET_IMP} -- Implementation
 
+  	parent_ask_resize (a_width, a_height: INTEGER) is
+   			-- This implementation is the same than the on in
+			-- EV_WIDGET_IMP, but is different than the one of
+			-- EV_ CONTAINER_IMP because wel resize the children itself.
+		do
+ 			child_cell.resize (minimum_width.max (a_width), minimum_height.max (a_height))
+ 			if resize_type = 3 then
+ 				move_and_resize (child_cell.x, child_cell.y, child_cell.width, child_cell.height, True)
+ 			elseif resize_type = 2 then
+ 				move_and_resize ((child_cell.width - width) // 2 + child_cell.x, child_cell.y, width, child_cell.height, True)
+ 			elseif resize_type = 1 then
+ 				move_and_resize (child_cell.x, (child_cell.height - height) // 2 + child_cell.y, child_cell.width, height, True)
+ 			else
+ 				move ((child_cell.width - width) // 2 + child_cell.x, (child_cell.height - height) // 2 + child_cell.y)
+ 			end
+ 		end
+
 	child_height_changed (new_child_height: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the size of the container because of the child.
 		do
 			set_height (new_child_height + tab_height)
 		end
 
-	child_minheight_changed (new_child_minimum: INTEGER) is
+	child_minheight_changed (new_child_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
 			-- Change the minimum width of the container because
 			-- the child changed his own minimum width.
 			-- By default, the minimum width of a container is
@@ -187,13 +204,6 @@ feature {EV_WIDGET_IMP} -- Implementation
 		do
 			set_minimum_height (new_child_minimum + tab_height)
 		end
-
- 	parent_ask_resize (new_width, new_height: INTEGER) is
-   			-- When the parent asks the resize, it's not
-   			-- necessary to send him back the information
-   		do
- 			resize (minimum_width.max (new_width), minimum_height.max (new_height))
- 		end
 
 feature {NONE} -- Implementation
 

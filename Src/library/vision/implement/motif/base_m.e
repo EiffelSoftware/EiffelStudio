@@ -6,7 +6,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class BASE_M 
+class 
+	BASE_M 
 
 inherit
 

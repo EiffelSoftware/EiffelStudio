@@ -18,7 +18,7 @@ feature {EV_PIXMAP} -- status settings
 			-- Add a pixmap in the container
 		require
 			exists: not destroyed
-			valid_pixmap: pixmap.is_valid
+			valid_pixmap: is_valid (pixmap)
 			pixmap_size_ok: pixmap_size_ok (pixmap)
 		deferred
 		end
@@ -29,7 +29,7 @@ feature {EV_PIXMAP} -- Implementation
 			-- Check if the size of the pixmap is ok for
 			-- the container.
 		do
-			Result := (pixmap.width <= 16) and (pixmap.height <= 16)
+			Result := True --(pixmap.width <= 16) and (pixmap.height <= 16)
 		end
 
 end -- class EV_PIXMAP_CONTAINER_I

@@ -25,6 +25,10 @@
 #include "plug.h"
 #include "run_idr.h"
 
+#ifdef EIF_WINDOWS
+#include "winsock.h"
+#endif
+
 #ifdef I_STRING
 #include <string.h>				/* For strlen() */
 #else
@@ -36,6 +40,7 @@
 /*#define DEBUG 1    /**/
 
 public int fides;
+public char fstoretype;
 public char * general_buffer = (char *) 0;
 public int current_position = 0;
 public int buffer_size = 1024;
@@ -90,15 +95,17 @@ void (*store_write_func)() = store_write;
  * Functions definitions
  */
 
-public void eestore(file_desc, object)
+public void eestore(file_desc, object, file_storage_type)
 EIF_INTEGER file_desc;
 char *object;
+EIF_CHARACTER file_storage_type;
 {
 	/* Store object hierarchy of root `object' and produce a header
 	 * so it can be retrieved by other systems.
 	 */
 
 	fides = (int) file_desc;
+	fstoretype = file_storage_type;
 	accounting = TR_ACCOUNT;
 	st_write_func = gst_write;
 	allocate_gen_buffer();
@@ -108,20 +115,23 @@ char *object;
 	st_write_func = st_write;
 }
 
-public void estore(file_desc, object)
+public void estore(file_desc, object, file_storage_type)
 EIF_INTEGER file_desc;
 char *object;
+EIF_CHARACTER file_storage_type;
 {
 	/* Store object hierarchy of root `object' without header. */
 	fides = (int) file_desc;
+	fstoretype = file_storage_type;
 	accounting = 0;
 	allocate_gen_buffer();
 	internal_store(object);
 }
 
-public void sstore (fd, object)
+public void sstore (fd, object, file_storage_type)
 EIF_INTEGER fd;
 char * object;
+EIF_CHARACTER file_storage_type;
 {
 	/* Use file decscriptor so sockets and files can be used for storage
 	 * Store object hierarchy of root `object' and produce a header
@@ -132,6 +142,7 @@ char * object;
 	extern void idr_flush();
 
 	fides = (int) fd;
+	fstoretype = file_storage_type;
 	accounting = INDEPEND_ACCOUNT;
 	make_header_func = imake_header;
 	flush_buffer_func = idr_flush;
@@ -197,7 +208,13 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 		c = BASIC_STORE_3_2;
 
 	/* Write the kind of store */
+#ifdef EIF_WINDOWS
+	if (((fstoretype == 'F')
+		? write(fides, &c, sizeof(char))
+		: send (fides, &c, sizeof(char), 0)) < 0) {
+#else
 	if (write(fides, &c, sizeof(char)) < 0){
+#endif
 		if (accounting) {
 			xfree(account);
 			if (c==GENERAL_STORE_3_3)
@@ -1221,10 +1238,28 @@ void store_write()
 
 	int number_writen;
 
+#ifdef EIF_WINDOWS
+	if (fstoretype == 'F')
+		{
+		if ((write (fides, &send_size, sizeof (short))) < sizeof (short))
+			eio();
+		}
+	else
+		if ((send (fides, &send_size, sizeof (short), 0)) < sizeof (short))
+			eio();
+#else
 	if ((write (fides, &send_size, sizeof (short))) < sizeof (short))
 		eio();
+#endif
 	while (number_left > 0) {
+#ifdef EIF_WINDOWS
+		if (fstoretype == 'F')
+			number_writen = write (fides, ptr, number_left);
+		else
+			number_writen = send (fides, ptr, number_left, 0);
+#else
 		number_writen = write (fides, ptr, number_left);
+#endif
 		if (number_writen <= 0)
 			eio();
 		number_left -= number_writen;

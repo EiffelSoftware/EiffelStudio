@@ -40,6 +40,7 @@ extern void estore();			/* Store by file name */
  * Utilities
  */
 extern int fides;			/* File descriptor used by `store_write' */
+extern char fstoretype;		/* File storage type used by `store_write' */
 extern void st_write();			/* Write an object in file */
 extern char *account;			/* Array of traversed dyn types */
 

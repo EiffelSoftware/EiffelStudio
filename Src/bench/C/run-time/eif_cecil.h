@@ -49,7 +49,7 @@ typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */
 #define eif_character_function	eifchar	/* Get an Eiffel function returning an Eiffel Character */
 #define eif_real_function	eifreal	/* Get an Eiffel function returning an Eiffel Real */
 #define eif_double_function	eifdouble	/* Get an Eiffel function returning an Eiffel Double */
-#define eif_reference_function	eifref	/* Get an Eiffel function returning an Eiffel Double */
+#define eif_reference_function	eifref	/* Get an Eiffel function returning an Eiffel Reference */
 #define eif_boolean_function	eifbool	/* Get an Eiffel function returning an Eiffel Boolean */
 #define eif_bit_function	eifbit	/* Get an Eiffel function returning an Eiffel Bit */
 #define eif_pointer_function	eifpointer	/* Get an Eiffel function returning an Eiffel Pointer */
@@ -169,10 +169,10 @@ struct gt_info {
 #define eif_proc			eifproc			/* Get an Eiffel procedure (Obsolete) use `eif_procedure' instead */
 #define eif_fn_int			eiflong			/* Use `eif_integer_function' instead */
 #define eif_fn_char		eifchar	/* Use `eif_character_function' instead */
-#define eif_fn_float	eifreal	/* Use `eif_double_function' instead */
-#define eif_fn_double	eifreal	/* Use `eif_double_function' instead */
+#define eif_fn_float	eifreal	/* Use `eif_real_function' instead */
+#define eif_fn_double	eifdouble	/* Use `eif_double_function' instead */
 #define eif_fn_ref			eifref	/* Use `eif_reference_function' instead */
-#define eif_fn_bool			eifbool	/* Use `eif_booean_function' instead */
+#define eif_fn_bool			eifbool	/* Use `eif_boolean_function' instead */
 #define eif_fn_bit			eifbit	/* Use `eif_bit_function' instead */
 #define eif_fn_pointer		eifptr	/* Use `eif_pointer_function' instead */
 

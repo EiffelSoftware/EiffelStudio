@@ -65,11 +65,8 @@ feature -- Access
 			if r /= Void then
 				Result := r.actual_value
 			else
---				Result := df
-				s1 := clone (s)
-				s1.append (" : resource name has no associated value, default applied.")
---				io.put_string (s1)
-					-- Warning, we apply the default.
+				Create r.make (s, "verdana,arial,helvetica-r-regular-12-screen")
+				Result := r.actual_value
 			end
 		end
 

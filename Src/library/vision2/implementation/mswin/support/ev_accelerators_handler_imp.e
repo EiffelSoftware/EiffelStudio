@@ -40,17 +40,17 @@ feature {NONE} -- Status report
 
 feature {NONE} -- Element change
 
-	add_accel_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `acc' to the list of accelerator_list.
-		require
-			valid_command: cmd /= Void
-		do
-		end
+--|FIXME	add_accel_command (acc: EV_ACCELERATOR; cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--|FIXME			-- Add `acc' to the list of accelerator_list.
+--|FIXME		require
+--|FIXME			valid_command: cmd /= Void
+--|FIXME		do
+--|FIXME		end
 
-	remove_accel_commands (acc: EV_ACCELERATOR) is
-			-- Remove an accelerator from the table.
-		do
-		end
+--|FIXME	remove_accel_commands (acc: EV_ACCELERATOR) is
+--|FIXME			-- Remove an accelerator from the table.
+--|FIXME		do
+--|FIXME		end
 
 feature {NONE} -- WEL Implementation
 
@@ -100,6 +100,9 @@ end -- class EV_ACCELERATOR_HANDLER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/19 07:13:42  oconnor
+--| removed old command stuff
+--|
 --| Revision 1.5  2000/02/19 07:10:12  oconnor
 --| released
 --|

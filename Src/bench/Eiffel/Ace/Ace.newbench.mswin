@@ -36,7 +36,7 @@ default
 cluster
 
 		-- EiffelBase:
-	all base:				"$EIFFEL_SRC\library\base";
+	all base:				"$EIFFEL_SRC\library\base"
 		exclude
 			"table";"desc"
 		end

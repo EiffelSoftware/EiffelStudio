@@ -31,13 +31,13 @@ feature {NONE} -- Initialization
 			-- Connect interface.
 		do
 			base_make (an_interface)
-			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_label_new (NULL))
+			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_menu_item_new)
 			create key
 		end
 
 	initialize is
 		do
-			real_signal_connect (c_object, "show", agent (App_implementation.gtk_marshal).accelerator_actions_internal_intermediary (c_object), Void)
+			real_signal_connect (c_object, "activate", agent (App_implementation.gtk_marshal).accelerator_actions_internal_intermediary (c_object), Void)
 			is_initialized := True
 		end
 
@@ -68,7 +68,7 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 		local
 			a_cs: C_STRING
 		do
-			create a_cs.make ("show")
+			create a_cs.make ("activate")
 			feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
 				c_object,
 				a_cs.item,

@@ -26,18 +26,17 @@ feature {NONE}
 			-- for now, purge system
 			-- lengthy confirmation needed
 		do
-			if argument = warner then
-				confirmer.set_window (text_window);
-				confirmer.call (Current, "Think again%NAre you really sure ?");
-			elseif argument = confirmer then
+			if last_warner /= Void and argument = last_warner then
+				confirmer (text_window).call (Current, 
+					"Think again%NAre you really sure ?");
+			elseif last_confirmer /= Void and argument = last_confirmer then
 				system.purge
 			elseif workbench.successfull then
-					warner.set_window (text_window);
-					warner.call (Current,"Purge system%NIt could take quite a long%N%
-									%Go on ?");
+					warner (text_window).call (Current,
+						"Purge system%NIt could take quite a long%NGo on ?");
 			else
-				warner.set_window (text_window);
-				warner.custom_call (void ,"A compilation must complete%
+				warner (text_window).custom_call (void ,
+						"A compilation must complete%
 						%succesfully before purge", void, void, "OK");
 			end;
 		end;

@@ -3242,7 +3242,6 @@ feature -- Actual class type
 		local
 			i, count: INTEGER
 			actual_generic: ARRAY [TYPE_A]
-			formal: FORMAL_A
 		do
 			if generics = Void then
 				Result := actual_type

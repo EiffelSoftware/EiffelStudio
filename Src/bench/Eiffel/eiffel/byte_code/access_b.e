@@ -347,6 +347,8 @@ feature -- C generation
 			-- Generate code for parameters computation.
 			-- `reg' ("Current") is not used except for
 			-- inlining
+		require
+			reg_not_void: reg /= Void
 		do
 			if parameters /= Void then
 				parameters.generate
@@ -461,6 +463,7 @@ feature -- IL code generation
 			cl_type: CL_TYPE_I
 			call_access: CALL_ACCESS_B
 			l_nested: NESTED_B
+			l_constant: CONSTANT_B
 			l_ext: EXTERNAL_B
 			l_il_ext: IL_EXTENSION_I
 		do
@@ -473,7 +476,18 @@ feature -- IL code generation
 				if call_access = Void then
 						-- Find out if it is a nested call.
 					l_nested ?= parent.message
-					call_access ?= l_nested.target
+
+					if l_nested = Void then
+						l_constant ?= parent.message
+						check
+								-- It has to be a constant access, as otherwise
+								-- it means the original code was not Eiffel code.
+							l_constant_not_void: l_constant /= Void
+						end
+						call_access ?= l_constant.access
+					else
+						call_access ?= l_nested.target
+					end
 				end
 
 					-- We do not load the address if it is an optimized call of the compiler.

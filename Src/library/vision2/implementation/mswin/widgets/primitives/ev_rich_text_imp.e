@@ -1473,7 +1473,6 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			create Result.make (0)
 			Result := (create {WEL_STRING}.make_by_pointer (class_name_pointer)).string
 		end
 		

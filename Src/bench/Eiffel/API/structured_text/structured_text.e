@@ -549,7 +549,9 @@ feature {NONE} -- Implementation
 						add_class (last_class)
 						phrase.extend ('.')
 						fn := token.substring (i + 1, token.count)
-						last_feature := last_class.compiled_class.feature_with_name (fn)
+						if last_class.compiled and then last_class.compiled_class.has_feature_table then
+							last_feature := last_class.compiled_class.feature_with_name (fn)
+						end
 						if last_feature /= Void then
 							reset_phrase (phrase, for_comment)
 							add_feature (last_feature, fn)
@@ -563,7 +565,9 @@ feature {NONE} -- Implementation
 				elseif last_class /= Void and then token.is_dot_feature_name then
 					phrase.extend ('.')
 					fn := token.substring (2, token.count)
-					last_feature := last_class.compiled_class.feature_with_name (fn)
+					if last_class.compiled and then last_class.compiled_class.has_feature_table then
+						last_feature := last_class.compiled_class.feature_with_name (fn)
+					end
 					if last_feature /= Void then
 						reset_phrase (phrase, for_comment)
 						add_feature (last_feature, fn)

@@ -244,10 +244,11 @@ feature -- Status report
 		require
 			file_exists: exists
 		local
-			class_file: PLAIN_TEXT_FILE
+			class_file: KL_BINARY_INPUT_FILE
 			new_class_name: STRING
 		do
-			create class_file.make_open_read (file_name)
+			create class_file.make (file_name)
+			class_file.open_read
 			Classname_finder.parse (class_file)
 			new_class_name := Classname_finder.classname
 			class_file.close

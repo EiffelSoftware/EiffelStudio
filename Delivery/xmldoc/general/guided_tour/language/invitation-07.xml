@@ -241,10 +241,10 @@
 				</code> rather than 
 				<code>
 					<keyword>class</keyword>
-				</code>).  In accordance with the Uniform Access Principle (page 
+				</code>).  In accordance with the Uniform Access Principle (see 
 				<link>
-					<url>invitation-05.xml</url><anchor_name>Uniform Access Principle</anchor_name>
-					<label>7</label>
+					<url>invitation-05.xml</url>
+					<label>Chapter 4, "Classes"</label>
 				</link>), the output for 
 				<code>
 					<feature_name>balance</feature_name>

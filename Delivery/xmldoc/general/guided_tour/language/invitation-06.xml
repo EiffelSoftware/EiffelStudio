@@ -42,10 +42,10 @@
 			</code> in the earlier client example (see the declaration of 
 			<code>
 				<local_variable>acc</local_variable>
-			</code> and the accompanying picture as given on page 
+			</code> and the accompanying picture as given in 
 			<link>
-				<url>invitation-00.xml</url><anchor_name>FIRST PICTURE OF BANK ACCOUNT OBJECT</anchor_name>
-				<label>6</label>
+				<url>invitation-04.xml</url>
+				<label>Chapter 4, "Classes"</label>
 			</link>), denotes possible run-time references to objects of type 
 			<code>
 				<class_name>ACCOUNT</class_name>

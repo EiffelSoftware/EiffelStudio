@@ -216,11 +216,6 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	unsigned char db_ign_cx[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt not extern... */
 #endif
 
-#ifdef EIF_WIN32
-		/* except.c */
-	char *exception_trace_string_cx;
-#endif
-
 #ifdef ITERATIVE_MARKING
 		/* garcol.c */
 	struct stack path_stack_cx;				/* Keeps track of explored nodes */
@@ -268,9 +263,6 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 #define ex_string		(eif_globals->ex_string_cx)	/* rt_public */
 #ifdef WORKBENCH
 #define db_ign			(eif_globals->db_ign_cx)	/* rt_public */
-#endif
-#ifdef EIF_WINDOWS
-#define exception_trace_string (eif_globals->exception_trace_string_cx)	/* no rt_ */
 #endif
 
 	/* garcol.c */
@@ -408,11 +400,6 @@ extern struct dbstack db_stack;	/* Calling context stack */
 extern struct id_list once_list;	/* Calling context once_list */
 extern struct dbinfo d_data;	/* Global debugger information */
 extern struct pgcontext d_cxt;	/* Program context */
-#endif
-
-	/* eif_err_msg.h */
-#ifdef EIF_WIN32
-extern char *exception_trace_string;
 #endif
 
 

@@ -67,13 +67,101 @@ feature -- Status report
 
 feature -- Basic operation
 
-	set_pointer_position (x, y: INTEGER) is
-			-- Set `pointer_position' to (`x',`y`).		
+	x_test_capable: BOOLEAN is
+			-- Is current display capable of performing x tests.
+		local
+			a_event_base, a_error_base, a_maj_ver, a_min_ver: INTEGER
 		do
-			--|FIXME
-			--| somthing like this should do the trick:
-			--| XTestFakeMotionEvent (display, -1, x, y, 0)
-			check fixme: false end
+			Result := C.x_test_query_extension (
+					x_display, 
+					$a_event_base,
+					$a_error_base,
+					$a_maj_ver,
+					$a_min_ver)
+			print ("Major Version = " + a_maj_ver.out + "Minor Version = " + a_min_ver.out + "%N")
+		end
+
+	x_display: POINTER is
+			-- Returns a pointer to the opne x display
+		local
+			a_display: POINTER
+			str: STRING
+		do
+			a_display := C.gdk_display
+			a_display := C.x_display_name (a_display)
+			create str.make_from_c (a_display)
+			print (str + "%N")
+			Result := C.x_open_display (a_display)
+		end
+
+	set_pointer_position (a_x, a_y: INTEGER) is
+			-- Set pointer position to (a_x, a_y).
+		local
+			a_success_flag: BOOLEAN
+		do
+			check
+				x_test_capable: x_test_capable
+			end
+			a_success_flag := C.x_test_fake_motion_event (x_display, -1, a_x, a_y, 0)
+			check
+				pointer_set: a_success_flag
+			end		
+		end
+
+	fake_pointer_button_press (a_button: INTEGER) is
+			-- Fake button `a_button' press on pointer.
+		local
+			a_success_flag: BOOLEAN
+		do
+			check
+				x_test_capable: x_test_capable
+			end
+			a_success_flag := C.x_test_fake_button_event (x_display, a_button, True, 1000)
+			check
+				pointer_set: a_success_flag
+			end		
+		end
+
+	fake_pointer_button_release (a_button: INTEGER) is
+			-- Fake button `a_button' release on pointer.
+		local
+			a_success_flag: BOOLEAN
+		do
+			check
+				x_test_capable: x_test_capable
+			end
+			a_success_flag := C.x_test_fake_button_event (x_display, a_button, True, 0)
+			check
+				pointer_set: a_success_flag
+			end		
+		end
+
+	fake_key_press (a_key: EV_KEY) is
+			-- Fake key `a_key' press.
+		local
+			a_success_flag: BOOLEAN
+		do
+			check
+				x_test_capable: x_test_capable
+			end
+			a_success_flag := C.x_test_fake_key_event (x_display, a_key.code, True, 0)
+			check
+				pointer_set: a_success_flag
+			end		
+		end
+
+	fake_key_release (a_key: EV_KEY) is
+			-- Fake key `a_key' release.
+		local
+			a_success_flag: BOOLEAN
+		do
+			check
+				x_test_capable: x_test_capable
+			end
+			a_success_flag := C.x_test_fake_key_event (x_display, a_key.code, False, 0)
+			check
+				pointer_set: a_success_flag
+			end		
 		end
 
 feature -- Measurement
@@ -123,6 +211,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/11 18:30:14  king
+--| Added x extension routines
+--|
 --| Revision 1.8  2000/04/06 23:26:59  oconnor
 --| added implementation comments and new fake event features
 --|

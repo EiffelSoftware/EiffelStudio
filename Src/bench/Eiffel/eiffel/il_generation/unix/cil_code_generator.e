@@ -612,6 +612,13 @@ feature -- IL Generation
 		do
 		end
 
+	generate_to_string_feature (feat: FEATURE_I) is
+			-- Generate `ToString' that calls `to_string' definition from ANY.
+		require
+			feat_not_void: feat /= Void
+		do
+		end
+
 	start_new_body (method_token: INTEGER) is
 			-- Start a new body definition for method `method_token'.
 		require

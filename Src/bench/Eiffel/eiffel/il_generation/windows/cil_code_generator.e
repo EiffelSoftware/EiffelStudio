@@ -69,6 +69,8 @@ feature {NONE} -- Initialization
 				feature {PREDEFINED_NAMES}.Internal_duplicate_name_id).rout_id_set.first
 			internal_finalize_rout_id := System.any_class.compiled_class.feature_table.item_id (
 				feature {PREDEFINED_NAMES}.finalize_name_id).rout_id_set.first
+			internal_to_string_rout_id := System.any_class.compiled_class.feature_table.item_id (
+				feature {PREDEFINED_NAMES}.to_string_name_id).rout_id_set.first
 		end
 
 feature -- Access
@@ -79,8 +81,8 @@ feature -- Access
 	current_class_type: CLASS_TYPE
 			-- Currently class type being handled.
 
-	internal_duplicate_rout_id, internal_finalize_rout_id: INTEGER
-			-- Routine ID of `internal_duplicate' and `finalize' from ANY.
+	internal_duplicate_rout_id, internal_finalize_rout_id, internal_to_string_rout_id: INTEGER
+			-- Routine ID of `internal_duplicate', `finalize' and `to_string' from ANY.
 	
 	last_parents: ARRAY [INTEGER]
 			-- List of parents last described after call to `update_parents'.
@@ -1712,6 +1714,40 @@ feature -- IL Generation
 			start_new_body (l_dotnet_finalize_token)
 			generate_current
 			method_body.put_call (feature {MD_OPCODES}.Call, l_finalize_token, 0, False)
+			method_body.put_opcode (feature {MD_OPCODES}.Ret)
+			method_writer.write_current_body
+		end
+
+	generate_to_string_feature (feat: FEATURE_I) is
+			-- Generate `ToString' that calls `to_string' definition from ANY.
+		require
+			feat_not_void: feat /= Void
+		local
+			l_to_string_token: INTEGER
+			l_dotnet_to_string_token: INTEGER
+			l_sig: like method_sig
+		do
+			generate_feature (feat, False, True, False)
+			generate_feature_code (feat)
+
+			l_to_string_token := implementation_feature_token (current_type_id, feat.feature_id)
+
+				-- Generate `Finalize' that calls `finalize'.
+			l_sig := method_sig
+			l_sig.reset
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_sig.set_parameter_count (0)
+			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			uni_string.set_string ("ToString")
+			l_dotnet_to_string_token := md_emit.define_method (uni_string, current_class_token,
+				feature {MD_METHOD_ATTRIBUTES}.Public |
+				feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature |
+				feature {MD_METHOD_ATTRIBUTES}.Virtual,
+				l_sig, feature {MD_METHOD_ATTRIBUTES}.Managed)
+		
+			start_new_body (l_dotnet_to_string_token)
+			generate_current
+			method_body.put_call (feature {MD_OPCODES}.Call, l_to_string_token, 0, False)
 			method_body.put_opcode (feature {MD_OPCODES}.Ret)
 			method_writer.write_current_body
 		end

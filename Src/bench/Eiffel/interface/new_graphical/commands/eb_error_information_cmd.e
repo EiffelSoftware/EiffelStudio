@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			-- Pop up a new dialog and display `a_text' inside it.
 		do
 			create_new_dialog
-			current_editor.load_basic_text (a_text)
+			current_editor.load_text (a_text)
 			current_dialog.show_relative_to_window (Window_manager.last_focused_development_window.window)
 			current_dialog := Void
 		end
@@ -147,7 +147,7 @@ feature {NONE} -- Implementation
 			current_editor.disable_editable
 			create scr
 				--| + 1 to make sure there is enough room.
-			ft := (create {EB_SHARED_EDITOR_FONT}).font
+			ft := (create {SHARED_EDITOR_FONT}).font
 			fs := (ft.maximum_width + ft.width) // 2
 				--| 60 is the number of characters in the error texts,
 				--| 56 is the overhead brought by the editor (margins),
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			valid_stone: st /= Void
 			valid_editor: editor /= Void
 		do
-			editor.load_basic_text (st.help_text)
+			editor.load_text (st.help_text)
 		end
 
 end -- class EB_ERROR_INFORMATION_DIALOG

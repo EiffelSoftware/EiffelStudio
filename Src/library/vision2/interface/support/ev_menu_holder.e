@@ -4,8 +4,8 @@ indexing
 	description:
 		"EiffelVision menu container. A common type for%
 		% all the menu-container : ev_static_menu_bar,%
-		% ev_popup_menu, ev_option_button, ev_menu_bar.";
-	date: "$Date$";
+		% ev_popup_menu, ev_option_button, ev_menu_bar."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -46,6 +46,9 @@ end -- class EV_MENU_HOLDER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/29 19:20:23  oconnor
+--| removed simicolons from indexing
+--|
 --| Revision 1.8  2000/02/22 18:39:49  oconnor
 --| updated copyright date and formatting
 --|

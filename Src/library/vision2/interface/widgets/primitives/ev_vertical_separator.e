@@ -2,7 +2,7 @@ indexing
 	description:
 		"EiffelVision vertical separator."
 	status: "See notice at end of class"
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -52,6 +52,9 @@ end -- class EV_VERTICAL_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/29 19:20:23  oconnor
+--| removed simicolons from indexing
+--|
 --| Revision 1.6  2000/02/29 18:09:11  oconnor
 --| reformatted indexing cluase
 --|

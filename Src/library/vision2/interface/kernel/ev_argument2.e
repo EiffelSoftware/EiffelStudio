@@ -3,10 +3,10 @@
 indexing
 	description:
 		 "EiffelVision EV_ARGUMENT2. To be used when passing two%
-		% arguments to a command.";
-	status: "See notice at end of class";
-	id: "$Id$";
-	date: "$Date$";
+		% arguments to a command."
+	status: "See notice at end of class"
+	id: "$Id$"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class 
@@ -59,6 +59,9 @@ end -- class EV_ARGUMENT2
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/02/29 19:20:22  oconnor
+--| removed simicolons from indexing
+--|
 --| Revision 1.6  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

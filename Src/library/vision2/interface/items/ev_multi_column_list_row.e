@@ -5,7 +5,7 @@ indexing
 		%the multi-column lists."
 	status: "See notice at end of class"
 	note: "It is not an item because it doesn't have the same options."
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -111,6 +111,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/02/29 19:20:22  oconnor
+--| removed simicolons from indexing
+--|
 --| Revision 1.25  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

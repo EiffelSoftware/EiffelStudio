@@ -101,29 +101,34 @@ feature {NONE} -- Initialization
 			op: OPT_PULL_IMP
 		do
 			if not realized then
-				realized := true
-				if is_parent_menu_pull then
-					mp ?= parent
-					if mp.realized then
-						mp.add_a_child (Current)
-					end
-				elseif is_parent_option_pull then
-					op ?= parent
-					if op.realized then
-						op.add_a_child (Current)
-					end
+				if in_menu and not managed then
+					set_managed (True)
+					realized := True
 				else
-					resize_for_shell
-					wc ?= parent
-					wel_make (wc, text, x, y, width, height, id_default);
-					if private_font /= Void then
-						set_font (private_font)
-					end
-					if not fixed_size_flag then
-						set_default_size
-					end
-					if private_attributes.insensitive then
-						set_insensitive (true)
+					realized := True
+					if is_parent_menu_pull then
+						mp ?= parent
+						if mp.realized then
+							mp.add_a_child (Current)
+						end
+					elseif is_parent_option_pull then
+						op ?= parent
+						if op.realized then
+							op.add_a_child (Current)
+						end
+					else
+						resize_for_shell
+						wc ?= parent
+						wel_make (wc, text, x, y, width, height, id_default);
+						if private_font /= Void then
+							set_font (private_font)
+						end
+						if not fixed_size_flag then
+							set_default_size
+						end
+						if private_attributes.insensitive then
+							set_insensitive (true)
+						end
 					end
 				end
 			end

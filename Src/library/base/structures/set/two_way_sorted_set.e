@@ -32,11 +32,13 @@ class TWO_WAY_SORTED_SET [G -> COMPARABLE] inherit
 			prune as stwl_prune
 		export
 			{TWO_WAY_SORTED_SET} all
+			{NONE} stwl_extend, stwl_put, stwl_prune
 			{ANY}
-				min, max, 
+				min, max, index,
 				merge, after, before,
 				forth, finish, start,
-				item, empty, back
+				item, empty, back, add,
+				remove, search
 		undefine
 			changeable_comparison_criterion
 		redefine

@@ -22,7 +22,6 @@ feature
 			-- have been sorted).
 		local
 			cl_id: INTEGER;
-			e_class: E_CLASS;
 			a_class: CLASS_C;
 			classes: CLASS_C_SERVER
 			class_array: ARRAY [CLASS_C];
@@ -33,18 +32,25 @@ feature
 			end;
 			classes := System.classes;
 			count := System.dle_max_topo_id
-			from classes.start until classes.after loop
+			from 
+				classes.start 
+			until 
+				classes.after 
+			loop
 				class_array := classes.item_for_iteration;
 				nb := Class_counter.item (classes.key_for_iteration).count
-				from i := 1 until i > nb loop
+				from 
+					i := 1 
+				until 
+					i > nb 
+				loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
-						e_class := a_class.e_class;
 						cl_id := a_class.topological_id;
 
 debug ("DLE TOPO")
 	io.error.put_string ("Class ");
-	io.error.put_string (a_class.class_name);
+	io.error.put_string (a_class.name);
 	io.error.put_string (" (topo id #");
 	io.error.put_integer (cl_id);
 	io.error.put_string (" inserted in `original' at position #")
@@ -56,8 +62,8 @@ end;
 							cl_id := count;
 							a_class.set_topological_id (cl_id)
 						end;
-						original.put (e_class, cl_id);
-						successors.put (e_class.descendants, cl_id)
+						original.put (a_class, cl_id);
+						successors.put (a_class.descendants, cl_id)
 
 debug ("DLE TOPO")
 	io.error.put_integer (cl_id);
@@ -74,8 +80,8 @@ end
 			-- Fill `precursor_count' and `outsides'.
 		local
 			i, k, succ_id: INTEGER;
-			succ: LINKED_LIST [E_CLASS];
-			cl: E_CLASS
+			succ: LINKED_LIST [CLASS_C];
+			cl: CLASS_C
 		do
 			from
 				i := 1
@@ -94,7 +100,7 @@ end
 					succ.off
 				loop
 					cl := succ.item;
-					if cl.compiled_info.is_dynamic then
+					if cl.is_dynamic then
 							-- Static classes are already sorted, so they
 							-- are considered having no precursors.
 						succ_id := cl.topological_id;

@@ -143,6 +143,7 @@ feature -- Basic operations
 									-- Compress all used ids.
 								id_compressor.compress_all_id
 							end
+							update_client_information
 						end
 					end
 				end
@@ -242,6 +243,7 @@ feature -- Basic operations
 										if not project_settings.is_envision_project then
 											main_window.update_title
 										end
+										update_client_information
 									end
 								end
 							end
@@ -300,6 +302,15 @@ feature {NONE} -- Implementation
 			if not file_name.is_empty then
 				create file.make (file_name)
 				Result := file.exists and not file.is_directory
+			end
+		end
+		
+	update_client_information is
+			-- Update all top level objects to be generated as clients if the loaded file
+			-- had the client generation option set. This is provided for backwards compatibility.
+		do
+			if project_settings.loaded_project_had_client_information then
+				window_selector.objects.do_all (agent project_settings.set_object_as_client)
 			end
 		end
 		

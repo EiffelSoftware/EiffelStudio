@@ -20,11 +20,11 @@ creation
 
 feature {NONE}
 
-	command_editor: COMMAND_TOOL;
+	command_tool: COMMAND_TOOL;
 
 	make (ed: COMMAND_TOOL; a_parent: COMPOSITE) is
 		do
-			command_editor := ed;
+			command_tool := ed;
 			make_visible (a_parent);
 			add_activate_action (Current, Void)
 		end;
@@ -54,9 +54,9 @@ feature {NONE}
 		do
 			if arg = Void then
 				create_popup;
-				x1 := command_editor.real_x + command_editor.width //2
+				x1 := command_tool.real_x + command_tool.width //2
 						- fname_popup.width //2;
-				y1 := command_editor.real_y;
+				y1 := command_tool.real_y;
 				fname_popup.set_x_y (x1, y1);
 				fname_popup.popup
 			elseif arg = Cancel then
@@ -72,9 +72,9 @@ feature {NONE}
 						!! mp;
 						mp.set_watch_shape;
 						if cmd.edited then
-							cmd.command_editor.clear
+							command_tool.clear
 						end;
---						command_editor.set_command (cmd)
+						command_tool.set_command (cmd)
 						mp.restore;
 					end
 				end;
@@ -89,11 +89,11 @@ feature {NONE}
 			set_wind_att: SET_DIALOG_ATTRIBUTES_COM
 		do
 			if fname_popup = Void then
-            	!!fname_popup.make (Widget_names.file_popup_for_command, command_editor);
+            	!!fname_popup.make (Widget_names.file_popup_for_command, command_tool);
             	fname_popup.set_title(Widget_names.file_popup_for_command);
             	fname_popup.set_selection_label (Widget_names.enter_command_class_name_label);
---				if command_editor.edited_command /= Void then
---					fname_popup.set_selection_text (command_editor.edited_command.eiffel_type_to_upper)
+--				if command_tool.edited_command /= Void then
+--					fname_popup.set_selection_text (command_tool.edited_command.eiffel_type_to_upper)
 --				end;
             	fname_popup.hide_apply_button;
             	fname_popup.hide_help_button;
@@ -110,7 +110,7 @@ feature {NONE}
 
 	popuper_parent: COMPOSITE is
 		do
-			Result := command_editor
+			Result := command_tool
 		end;
 
 end -- class CMD_ED_POPUP_CLASS_NAME

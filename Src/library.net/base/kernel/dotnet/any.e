@@ -151,7 +151,7 @@ feature -- Duplication
 			other_not_void: other /= Void
 			type_identity: same_type (other)
 		do
-			standard_copy (other)
+			feature {ISE_RUNTIME}.standard_copy (Current, other)
 		ensure
 			is_equal: is_equal (other)
 		end
@@ -163,7 +163,7 @@ feature -- Duplication
 			other_not_void: other /= Void
 			type_identity: same_type (other)
 		do
-			internal_copy (other)
+			feature {ISE_RUNTIME}.standard_copy (Current, other)
 		ensure
 			is_standard_equal: standard_is_equal (other)
 		end
@@ -176,10 +176,11 @@ feature -- Duplication
 		 	-- to change copying/cloning semantics, redefine `copy'.
 		local
 			temp: BOOLEAN
+			c: CONSTRUCTOR_INFO
 		do
 			if other /= Void then
 				temp := feature {ISE_RUNTIME}.check_assert (False)
-				Result := other.internal_clone
+				Result ?= feature {ISE_RUNTIME}.standard_clone (other)
 				Result.copy (other)
 				temp := feature {ISE_RUNTIME}.check_assert (temp)
 			end
@@ -195,10 +196,9 @@ feature -- Duplication
 			temp: BOOLEAN
 		do
 			if other /= Void then
-				temp := feature {ISE_RUNTIME}.check_assert (False)
-				Result := other.internal_clone
-				Result.standard_copy (other)
-				temp := feature {ISE_RUNTIME}.check_assert (temp)
+					-- No need for removing assertions checking
+					-- as `internal_duplicate' will perform an atomic creation
+				Result := other.internal_duplicate
 			end
 		ensure
 			equal: standard_equal (Result, other)
@@ -208,11 +208,8 @@ feature -- Duplication
 			-- Void if `other' is void: otherwise, new object structure
 			-- recursively duplicated from the one attached to `other'
 		do
-			check
-				not_implemented: False
-			end
 			if other /= Void then
-				Result := other.internal_clone
+				Result ?= feature {ISE_RUNTIME}.deep_clone (other)
 			end
 		ensure
 			deep_equal: deep_equal (other, Result)
@@ -296,11 +293,15 @@ feature -- Basic operations
 	frozen Void: NONE
 			-- Void reference
 
-	frozen internal_clone: ANY is
-			-- Perform a memberwise clone of Current.
+feature -- Clone operations
+
+	frozen internal_duplicate: like Current is
+			-- Shallow copy of Current.
 			-- Has to be exported, but should not be called by user code.
+			-- as it will not be portable.
 		do
-			-- Built-in
+				-- Built-in
+			Result := memberwise_clone
 		end
 
 feature {NONE} -- Disposal
@@ -315,15 +316,6 @@ feature {NONE} -- Disposal
 			if l_memory_object /= Void then
 				l_memory_object.dispose
 			end
-		end
-
-feature {NONE} -- Implementation
-
-	frozen internal_copy (o: ANY) is
-			-- Copy `o' into `Current'.
-			-- Can only be called from `standard_copy' which ensures type validity.
-		do
-			-- Built-in
 		end
 
 invariant

@@ -428,9 +428,6 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Pixmap Handling
 			root_imp: like top_parent_imp
 		do
 			root_imp := top_parent_imp
-			if root_imp = Void then
-				root_imp := top_parent_imp
-			end
 
 			if has_pixmap then
 				image_list := root_imp.image_list

@@ -495,7 +495,16 @@ rt_private void run_command(int s)
 	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
 
 	status = -1;
-	if (CreateProcess (NULL, cmd, NULL, NULL, TRUE, DETACHED_PROCESS, NULL, current_dir, &siStartInfo, &procinfo)) {
+	if (CreateProcess (NULL,
+		cmd,
+		NULL,
+		NULL,
+		TRUE,
+		DETACHED_PROCESS,
+		NULL,
+		current_dir,
+		&siStartInfo,
+		&procinfo)) {
 		CloseHandle (procinfo.hProcess);
 		CloseHandle (procinfo.hThread);
 		status = 0;
@@ -576,7 +585,18 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	siStartInfo.hStdError = GetStdHandle (STD_ERROR_HANDLE);
 
 	status = -1;
-	if (CreateProcess (NULL, cmd, NULL, NULL, TRUE, DETACHED_PROCESS, NULL, current_dir, &siStartInfo, &procinfo)) {
+	if (CreateProcess (
+		NULL,
+		cmd,
+		NULL,
+		NULL,
+		TRUE,
+		DETACHED_PROCESS,
+		NULL,
+		current_dir,
+		&siStartInfo,
+		&procinfo))
+	{
 		CloseHandle (procinfo.hProcess);
 		CloseHandle (procinfo.hThread);
 		status = 0;
@@ -676,12 +696,8 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	add_log(12, "child exiting");
 #endif
 	exit(0);							/* Child is exiting properly */
-<<<<<<< proto.c
 #endif /* EIF_VMS */
 #endif /* EIF_WIN32 */
-=======
-#endif /* EIF_VMS */
->>>>>>> 2.7
 	/* NOTREACHED */
 }
 

@@ -89,9 +89,9 @@ feature -- Status report
 	is_minimized: BOOLEAN is
 			-- Is displayed iconified/minimised?
 		do
-			check
-				to_be_implemented: False
-			end
+			Result := C.c_gdk_window_is_iconified (
+				C.gtk_window_struct_window (c_object)
+			)
 		end
 
 	is_maximized: BOOLEAN is
@@ -119,16 +119,14 @@ feature -- Status setting
 	minimize is
 			-- Display iconified/minimised.
 		do
-			is_minimized := True
-			check
-				to_be_implemented: False
-			end
+			C.c_gdk_window_iconify (
+				C.gtk_window_struct_window (c_object)
+			)
 		end
 
 	maximize is
 			-- Display at maximum size.
 		do
-			is_maximized := True
 			create old_geometry.make (
 				x_position, y_position,
 				width, height)
@@ -141,8 +139,6 @@ feature -- Status setting
 			-- Restore to original position when minimized or maximized.
 		do
 			if is_maximized or is_minimized then
-				is_maximized := False
-				is_minimized := False
 				C.gtk_widget_set_uposition (c_object,
 					old_geometry.x,
 					old_geometry.y)
@@ -157,7 +153,9 @@ feature -- Element change
 	set_icon_name (an_icon_name: STRING) is
 			-- Assign `an_icon_name' to `icon_name'.
 		do
-			C.gdk_window_set_icon_name (c_object, eiffel_to_c (an_icon_name))
+			C.gdk_window_set_icon_name (
+				C.gtk_window_struct_window (c_object,
+					eiffel_to_c (an_icon_name)))
 			icon_name_holder := an_icon_name
 		end
 
@@ -230,8 +228,6 @@ feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TITLED_WINDOW
 
-feature {NONE} -- Externals
-
 end -- class EV_TITLED_WINDOW_IMP
 
 --!-----------------------------------------------------------------------------
@@ -255,6 +251,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/03/07 18:40:31  brendel
+--| Started implementing minimize/is_minimized.
+--|
 --| Revision 1.38  2000/03/07 02:51:43  brendel
 --| Implemented maximize and restore.
 --| For is_minimized, is_maximized and minimize we need to call X.

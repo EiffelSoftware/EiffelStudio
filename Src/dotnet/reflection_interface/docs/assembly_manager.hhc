@@ -74,24 +74,16 @@
 				<param name="Local" value="reference\30_type_view\index.html">
 				</OBJECT>
 			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="Remove dialog">
-				<param name="Local" value="reference\40_remove_dialog\index.html">
-				</OBJECT>
-			<LI> <OBJECT type="text/sitemap">
 				<param name="Name" value="Eiffel generation dialog">
-				<param name="Local" value="reference\50_eiffel_generation_dialog\index.html">
+				<param name="Local" value="reference\40_eiffel_generation_dialog\index.html">
 				</OBJECT>
 			<LI> <OBJECT type="text/sitemap">
 				<param name="Name" value="Import tool">
-				<param name="Local" value="reference\60_import_tool\index.html">
+				<param name="Local" value="reference\50_import_tool\index.html">
 				</OBJECT>
 			<LI> <OBJECT type="text/sitemap">
 				<param name="Name" value="Import dialog">
-				<param name="Local" value="reference\70_import_dialog\index.html">
-				</OBJECT>
-			<LI> <OBJECT type="text/sitemap">
-				<param name="Name" value="Open assembly dialog">
-				<param name="Local" value="reference\80_open_assembly_dialog\index.html">
+				<param name="Local" value="reference\60_import_dialog\index.html">
 				</OBJECT>
 		</UL>
 	</UL>

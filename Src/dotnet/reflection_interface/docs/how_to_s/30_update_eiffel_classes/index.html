@@ -8,32 +8,33 @@
 	</head>
 
 	<body>
-		<br>
 		<center>
 			<h1>How to update Eiffel classes?</h1>
 		</center>
-		<br>
-
-		<p>
 			<ol>
 				<li>
-					To update the Eiffel classes corresponding to an imported assembly, your current screen has to be the <a href = "../../reference/01_imported_assembly_viewer/index.html">imported assembly viewer</a>, which is the window appearing when you launch ISE Assembly Manager.<br>
-					You are now ready to update the Eiffel sources:
-				</li><br>
+                    Go to the <a href = "../../reference/01_imported_assembly_viewer/index.html">Imported
+                    Assembly Viewer</a>
+				</li>
 				<li>
-					Click on the name of the assembly you want to update corresponding Eiffel classes (in the table).
-				</li><br>
+					Click on the name of the assembly corresponding to the <a href="../../reference/00_definitions/external_class.html">external
+                    classes</a> you want to update.
+				</li>
 				<li>
-					Then you have the choice between clicking on the toolbar button <img src = "../../images/eiffel_generation_toolbar_button.png" no border> and selecting the menu item `Eiffel Generation' in the `Tools' menu. In both cases the <a href = "../../reference/50_eiffel_generation_dialog/index.html">Eiffel generation dialog</a> will appear.
+                    Select <i>Eiffel Generation</i> from the <i>Tools</i> menu
+                    or click on the corresponding toolbar button <img src = "../../images/eiffel_generation_toolbar_button.png" no border>.
 				</li>
 			</ol>
-		</p>
-
-		<p class="note"><b>Note</b>:
-			If you want to generate the Eiffel classes for an assembly that is not in the Eiffel assembly cache, you just have to import it and ISE Assembly Manager will automatically generate the corresponding  Eiffel classes in the repository: "$ISE_EIFFEL\library.net\assembly_name" (where $ISE_EIFFEL is the path to your Eiffel delivery and `assembly_name', the name of the selected assembly).<br>
+        <p class="note"><b>Note</b>: The Assembly Manager generates the external
+        classes whenever an assembly is first imported. The update functionality
+        should be used whenever these files have been corrupted to restore a
+        valid repository. The default path for generated <a href="../../reference/00_definitions/external_class.html">external
+        classes</a> is <i>$ISE_EIFFEL\library.net\assembly_name</i> where <i>$ISE_EIFFEL
+        </i> is the path to the Eiffel delivery and <i>assembly_name</i>, the name of the
+        assembly.<br>
 			<p class = "seealso">
-				<b>See</b>: <a href = "../01_import_a_signed_assembly_to_the_EAC/index.html"> How to import a signed assembly to the Eiffel assembly cache?</a>
+				<b>See</b>: <a href = "../01_import_a_signed_assembly_to_the_EAC/index.html"> How to import a signed assembly
+                into the Eiffel assembly cache?</a>
 			</p>
-		</p>
 	</body>
 </html>

@@ -8,19 +8,26 @@
 	</head>
 
 	<body>
-		<br>
 		<center>
-			<h1>The type view</h1>
+			<h1>The Type View</h1>
 		</center>
-		<br>
+        <p>
+			The type view allows to edit the feature names and argument names of
+        Eiffel <a href="../00_definitions/external_class.html">external classes</a>.
+		</p>
 
-		<p>
-			The type view is an editable short form of an Eiffel class. At the top of the window, the name, version, culture and public key of the assembly the edited type belongs to is repeated.<br>
-			In the panel below, you will notice that some words appear with a colored background. These are the words, which are editable. It includes the the name of each local feature and its arguments names (if any), except for the creation routine.
+        <p>At the top of the window, the name, version, culture and public key of the assembly the edited type belongs to is repeated.
+        In the panel below, you will notice that some words appear italicized with a colored background. These are the
+        words which can be edited. They include the name of every immediate feature and
+        their arguments names (if any).
 		</p>
 
 		<p class = "note">
-			<b>Note</b>: Only <b>local features</b> (i.e. first defined in the currently edited class) and its arguments names are editable. If you want to rename a feature, which is inherited (or an argument whose related feature is inherited) you have to switch to the parent class to change the feature name (or argument name).
+            <b>Note</b>: Only <b>immediate features</b> (i.e. features that are
+        not inherited) and their arguments names are editable. To rename a
+        feature which is inherited (or an argument whose related feature is inherited),
+        open the <a href = "index.html">Type View</a>
+        corresponding to the class where the feature is first declared.
 		</p>
 
 		<p>
@@ -28,34 +35,40 @@
 				<img src = "../../images/type_view.png" no border>
 			</center>
 		</p>
-		<br>
 
 		<h2>Facilities provided by the type view:</h2>
 
-		<ul>
 		<a name = rename_feature></a>
-		<li><b>Rename a class feature</b><br>
-			When you open the type view (by clicking on the type Eiffel name in the <a href = "../20_assembly_view/index.html">assembly view</a>), the text field with first class feature name is automatically selected. You just have to type the new feature name.
-		</li><br>
 
-		<a name = rename_argument></a>
-		<li><b>Rename a feature argument</b><br>
-			To rename a feature argument, just give the focus to the text field you want to edit (by clicking with the mouse) and type the new argument name.
-		</li><br>
+		<ul>
+			<li><b>Renaming a class feature</b></li>
+            <p>You may edit any feature name which appears italicized. Simply
+            click on the name you wish to modify.
+				</p>
+
+			<li><b>Renaming a feature argument</b></li>
+			<p>You can also rename the arguments of features which appear
+            italicized. Simply click on the argument you wish to modify.</p>
 		</ul>
-
-		<p>
-			Note that your changes will only be taken into account when you click on `OK'. If you click on `Cancel', your changes will be lost.<br>
-			Nevertheless, ISE Assembly Manager first checks that your changes are consistent before saving them. In case problems are detected, the list of errors appears at the bottom of the type view. Each error mentions the location of the error, that is "Feature name" (and the original name of the problematic feature) or "Argument name" (with the name of the feature it belongs to and the original name of the argument).
+        <p class="note"><b>
+			Note:</b> Modifications are validated after you click on <i>OK</i>.
+        Clicking on <i>Cancel</i> will revert all the changes.
 		</p>
+        <p>
+            The Assembly Manager first checks that your <b>changes are consistent</b> before saving them. In case problems are detected, the
+            list of errors appears at the bottom of the <a href = "index.html">Type
+            View</a>.	When you click on an error message, the focus is given to the corresponding
+            item (feature name or feature argument), inviting you to modify it.
+		</p>
+
 		<p>
 			<center>
 				<img src = "../../images/errors_type_view.png" no border>
 			</center>
 		</p>
-		<p>
-			When you click on an error message, the focus will be given to the corresponding text field, inviting you yo modify it.<br>
-			When all changes are correct, ISE Assembly Manager will save changes and update the Eiffel class (and the children). Since it may take a few minutes, a message box appears during the Eiffel code generation:
+        <p>Once all the changes have been validated, the Assembly Manager updates the
+        corresponding Eiffel <a href="../00_definitions/external_class.html">external
+        class.</a> Since it may take a few minutes, a message box appears during the Eiffel code generation:
 		<p>
 			<center>
 				<img src = "../../images/update_type_message_box.png" no border>

@@ -340,7 +340,10 @@ feature -- Status setting
 				-- Change the state of the debugging window.
 			debugging_window.hide_tools
 			debugging_window.context_tool.feature_view.pop_feature_flat
-				-- Create tools.
+
+				--| Create tools. |--
+
+				--| Call Stack Tool
 			if call_stack_tool = Void then
 				create call_stack_tool.make (debugging_window, debugging_window.left_panel)
 			else
@@ -350,7 +353,8 @@ feature -- Status setting
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
-			
+
+				--| Object Tool
 			if object_tool = Void then
 				create object_tool.make (debugging_window, debugging_window.right_panel)
 			else
@@ -365,6 +369,8 @@ feature -- Status setting
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
+
+				--| Expression Evaluator Tool
 			
 			if evaluator_tool = Void then
 				create evaluator_tool.make (debugging_window, debugging_window.left_panel)
@@ -380,6 +386,8 @@ feature -- Status setting
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
+			
+				-- Show Tools and final visual settings
 			debugging_window.show_tools
 			if debug_left_layout = Void then
 				debug ("DEBUGGER_INTERFACE")
@@ -404,9 +412,12 @@ feature -- Status setting
 				debugging_window.left_panel.load_from_resource (debug_left_layout)
 				debugging_window.right_panel.load_from_resource (debug_right_layout)
 			end
+
+				--| Set the Object tool split position to 200 which is the default size of the local tree.			
 			split ?= object_tool.widget
-				--| 200 is the default size of the local tree.
-			split.set_split_position (object_split_position.max (split.minimum_split_position).min (split.maximum_split_position))
+			if split /= Void then
+				split.set_split_position (object_split_position.max (split.minimum_split_position).min (split.maximum_split_position))
+			end
 			
 			if debugging_window.panel.full then
 				debugging_window.panel.set_split_position (debug_splitter_position.
@@ -612,11 +623,16 @@ feature -- Debugging events
 
 	on_application_just_stopped is
 			-- Application was just stopped (by a breakpoint, ...).
+		require
+			application.is_running
 		local
 			st: CALL_STACK_STONE
 			stt: STRUCTURED_TEXT
 			cd: EV_CONFIRMATION_DIALOG
 		do
+			debug ("debugger_trace_synchro")
+				io.put_string (generator + ".on_application_just_stopped%N")
+			end
 			Window_manager.display_message (Interface_names.E_paused)
 			Application.set_current_execution_stack_number (1)
 			stop_cmd.disable_sensitive
@@ -630,6 +646,7 @@ feature -- Debugging events
 				io.put_string ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")
 			end
 			object_tool.disable_refresh
+			evaluator_tool.disable_refresh
 			if not Application.call_stack_is_empty then
 				create st.make (1)				
 				if st.is_valid then
@@ -637,11 +654,15 @@ feature -- Debugging events
 				end
 			end
 			object_tool.enable_refresh
+			evaluator_tool.enable_refresh
+			
 			window_manager.quick_refresh_all
+			
 				-- Fill in the stack tool.
 			call_stack_tool.update
 				-- Fill in the object tool.
 			object_tool.update
+				-- Update Evaluator tool
 			evaluator_tool.update
 			create stt.make
 			stt.add_string ("Application stopped")
@@ -677,6 +698,9 @@ feature -- Debugging events
 		local
 			stt: STRUCTURED_TEXT
 		do
+			debug ("debugger_trace_synchro")
+				io.put_string (generator + ".on_application_resumed%N")
+			end		
 			Window_manager.display_message (Interface_names.E_running)
 			stop_cmd.enable_sensitive
 			no_stop_cmd.disable_sensitive
@@ -685,10 +709,12 @@ feature -- Debugging events
 			out_cmd.disable_sensitive
 			into_cmd.disable_sensitive
 			set_critical_stack_depth_cmd.disable_sensitive
+			
 				-- Fill in the stack tool.
 			call_stack_tool.update
 				-- Fill in the object tool.
 			object_tool.update
+				-- Update Evaluator tool
 			evaluator_tool.update
 			create stt.make
 			stt.add_string ("Application is running")

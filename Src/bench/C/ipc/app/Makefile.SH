@@ -37,7 +37,7 @@ DIR = $DIR
 # Parameters set by Configure -- edit config.sh if changes are needed
 
 CC = $cc
-JLKFLAGS = $ldflags
+LDFLAGS = $ldflags
 CTAGS = ctags
 JCFLAGS = \$(CFLAGS) $optimize $ccflags $large
 JMTCFLAGS = \$(CFLAGS) $optimize $mtccflags $large
@@ -131,8 +131,6 @@ MTLIBIDRARCH = $(LIBIDR)/$(MTLIBIDRNAME)
 
 DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
 CFLAGS = $(DPFLAGS) -DWORKBENCH
-#LDFLAGS = $(LIBARCH)
-LDFLAGS = $(LIBDIR)/$(LIBNAME)
 
 depend:: ../../mkdep
 
@@ -176,7 +174,7 @@ local_realclean::
 
 network.o: $(LOBJ)
 	$(RM) $@
-	$(LD) $(JLKFLAGS) -r $(LOBJ) -o $@ $(LIBARCH) $(LIBIDRARCH)
+	$(LD) $(LDFLAGS) -r $(LOBJ) -o $@ $(LIBARCH) $(LIBIDRARCH)
 
 # for MT
 
@@ -200,7 +198,7 @@ all:: MTnetwork.o
 
 MTnetwork.o: $(MT_LOBJ) $(LIBDIR)/$(MTLIBNAME)  $(LIBIDR)/$(MTLIBIDRNAME)
 	$(RM) $@
-	$(LD) $(JLKFLAGS) $(MTLDFLAGS) -r $(MT_LOBJ) -o $@ $(MTLIBARCH) $(MTLIBIDRARCH)
+	$(LD) $(LDFLAGS) -r $(MT_LOBJ) -o $@ $(MTLIBARCH) $(MTLIBIDRARCH)
 
 
 ########################################################################

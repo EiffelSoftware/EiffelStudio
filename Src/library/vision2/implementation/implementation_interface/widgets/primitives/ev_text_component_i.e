@@ -115,6 +115,16 @@ feature -- Status setting
 		ensure
 		end	
 
+feature -- Resizing
+
+	set_minimum_width_in_characters (nb: INTEGER) is
+			-- Make `nb' characters visible on one line.
+		require
+			exists: not destroyed
+			valid_nb: nb > 0
+		deferred
+		end
+
 feature -- Basic operation
 
 	search (str: STRING): INTEGER is

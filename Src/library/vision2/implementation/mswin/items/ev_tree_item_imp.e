@@ -29,7 +29,7 @@ inherit
 			set_pixmap,
 			on_parented,
 			on_orphaned,
-			pnd_press
+			set_pnd_original_parent
 		end
 
 	EV_TEXTABLE_IMP
@@ -38,10 +38,11 @@ inherit
 		end
 
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
+		undefine
+			pnd_press
 		redefine
 			initialize,
-			interface,
-			pnd_press
+			interface
 		end
 
 	WEL_TREE_VIEW_ITEM
@@ -460,32 +461,16 @@ feature -- Element change
 
 feature {EV_TREE_IMP} -- Implementation, pick and drop
 
-	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+	set_pnd_original_parent is
+			-- Assign `top_parent_imp' to `pnd_original_parent'.
+			--| Redefined as the widget is not parent_imp for this
+			--| item. See comment in this feature within
+			--| EV_PICK_AND_DROPABLE_ITEM_IMP
 		do
-			check
-				parent_not_void: parent_imp /= Void
-			end
-			if press_action = Ev_pnd_start_transport then
-				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x,
-					a_screen_y)
-				top_parent_imp.set_parent_source_true
-				top_parent_imp.set_item_source (Current)
-				top_parent_imp.set_item_source_true
-			elseif press_action = Ev_pnd_end_transport then
-				end_transport (a_x, a_y, a_button)
-				top_parent_imp.set_parent_source_false
-				top_parent_imp.set_item_source (Void)
-				top_parent_imp.set_item_source_false
-			else
-				top_parent_imp.set_parent_source_false
-				top_parent_imp.set_item_source (Void)
-				top_parent_imp.set_item_source_false
-				check
-					disabled: press_action = Ev_pnd_disabled
-				end
-			end
+			pnd_original_parent := top_parent_imp
 		end
 
+	
 	set_capture is
 			-- Grab user input.
 		do
@@ -607,6 +592,10 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.63  2000/04/14 23:24:26  rogers
+--| Removed re-definition of pnd_press as now only
+--| set_pnd_original_parent is redefined.
+--|
 --| Revision 1.62  2000/04/14 21:33:44  rogers
 --| Redefined pnd_press to call top_parent_imp.
 --|

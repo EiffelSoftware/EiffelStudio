@@ -285,7 +285,7 @@ feature -- Iteration
 			if cs /= Void then
 				cs.go_to (c)
 			end
-		ensure
+		ensure then
 			empty: is_empty implies Result
 		end
 

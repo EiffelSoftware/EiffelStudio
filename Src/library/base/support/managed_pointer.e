@@ -237,7 +237,7 @@ feature {NONE} -- Disposal
 		do
 			item.memory_free
 			item := null
-		ensure
+		ensure then
 			item_reset: item = default_pointer
 		end
 

@@ -1351,9 +1351,6 @@ rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*ma
 	flush;
 #endif
 
-	if (!move)			/* Objects cannot move */
-		return;			/* There is no need to parse the stack */
-
 	if (stk->st_top == (struct ex_vect *) 0)
 		return;						/* Stack is not created yet */
 
@@ -1365,32 +1362,61 @@ rt_private void mark_ex_stack(register5 struct xstack *stk, register4 char *(*ma
 			roots = stk->st_top - last;		/* Stop at the top */
 			done = 1;						/* Reached end of stack */
 		}
-		for (; roots > 0; roots--, last++)
-			switch (last->ex_type) {			/* Type in stack */
-				/* The following are meaningful when printing the exception
-				 * trace: the first set records the enclosing calls, the second
-				 * records the failed preconditions (because in that case, the
-				 * enclosing call does not appear in the printed stack).
-				 */
-				case EX_CALL: case EN_FAIL:
-				case EX_RESC: case EN_RESC:
-				case EX_RETY: case EN_RES:
-					last->ex_id = mark_expanded(last->ex_id, marker);
-					break;
-				/* Do not inspect EX_PRE records. They do not carry any valid
-				 * object ID, which is put in the EN_PRE vector by backtrack
-				 * (the precondition failure raises exception in caller).
-				 */
-				case EN_PRE:
-				case EX_CINV: case EN_CINV:
-					last->ex_oid = mark_expanded(last->ex_oid, marker);
-					break;
-			}
+		if (move)
+			for (; roots > 0; roots--, last++)
+				switch (last->ex_type) {			/* Type in stack */
+					/* The following are meaningful when printing the exception
+					 * trace: the first set records the enclosing calls, the
+					 * second records the failed preconditions (because in that
+					 * case, the enclosing call does not appear in the printed
+					 * stack).
+					 */
+					case EX_CALL: case EN_FAIL:
+					case EX_RESC: case EN_RESC:
+					case EX_RETY: case EN_RES:
+						last->ex_id = mark_expanded(last->ex_id, marker);
+						break;
+					/* Do not inspect EX_PRE records. They do not carry any
+					 * valid object ID, which is put in the EN_PRE vector by
+					 * backtrack (the precondition failure raises exception in
+					 * caller).
+					 */
+					case EN_PRE:
+					case EX_CINV: case EN_CINV:
+						last->ex_oid = mark_expanded(last->ex_oid, marker);
+						break;
+				}
+		else
+			for (; roots > 0; roots--, last++)
+				switch (last->ex_type) {			/* Type in stack */
+					/* The following are meaningful when printing the exception
+					 * trace: the first set records the enclosing calls, the
+					 * second records the failed preconditions (because in that
+					 * case, the enclosing call does not appear in the printed
+					 * stack).
+					 */
+					case EX_CALL: case EN_FAIL:
+					case EX_RESC: case EN_RESC:
+					case EX_RETY: case EN_RES:
+						(void) mark_expanded(last->ex_id, marker);
+						break;
+					/* Do not inspect EX_PRE records. They do not carry any
+					 * valid object ID, which is put in the EN_PRE vector by
+					 * backtrack (the precondition failure raises exception in
+					 * caller).
+					 */
+					case EN_PRE:
+					case EX_CINV: case EN_CINV:
+						(void) mark_expanded(last->ex_oid, marker);
+						break;
+				}
+			
 	}
 }
 
 #ifdef RECURSIVE_MARKING
 rt_private char *recursive_mark(char *root)
+
 {
 	/* Recursively mark all the objects referenced by the root object.
 	 * I carefully avoided declaring things in registers, because as this

@@ -905,8 +905,8 @@ feature {NONE} -- Events on notification
 			--| Already "stopped" but let's be sure ..
 	
 			status.set_is_stopped (True)
-			eifnet_debugger.notify_exit_process_occurred
 			eifnet_debugger.on_exit_process
+			eifnet_debugger.notify_exit_process_occurred
 		end
 		
 	notify_execution_on_debugger_error is

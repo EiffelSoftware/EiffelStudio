@@ -61,6 +61,8 @@ inherit
 			init_toolkit
 		end	
 
+	UNDO_REDO_ACCELERATOR
+
 feature -- Editable
 
 	create_editor is
@@ -563,6 +565,8 @@ feature {NONE}
 	add_common_callbacks (a_widget: WIDGET) is
 			-- General callbacks forall types of contexts
 		do
+				-- Undo/redo callback
+			add_undo_redo_accelerator (a_widget)
 				-- Cursor motion
 			a_widget.add_pointer_motion_action (Eb_selection_mgr, first_arg)
 				-- Move and resize action

@@ -55,7 +55,6 @@ feature
 				set_start_hidden (True)
 			end
 			add_window_geometry_action
-			add_undo_redo_accelerator (widget)
 			add_to_window_list
 		end
 

@@ -186,9 +186,10 @@ feature -- Event -- removing command association
 			implementation.remove_selection_commands
 		end
 
-feature {EV_LIST_ITEM_IMP, EV_LIST_ITEM} -- Implementation
+feature -- Implementation
 	
 	implementation: EV_LIST_I	
+			-- Platform dependant access.
 
 end -- class EV_LIST
 

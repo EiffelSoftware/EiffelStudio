@@ -62,7 +62,7 @@ feature {EV_ANY_I} -- Implementation
 feature {ANY} -- Implementation
 
 	implementation: EV_ANY_I
-			-- Implementation of the current object
+			-- Platform dependent access
 
 end -- class EV_ANY
 

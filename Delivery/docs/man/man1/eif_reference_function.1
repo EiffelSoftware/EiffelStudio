@@ -2,7 +2,7 @@
 .SH NAME
 eif_reference_function, eif_integer_function, eif_real_function, eif_double_function, eif_character_function, eif_boolean_function, eif_pointer_function, eif_bit_function	
 .br
-\- return address of an Eiffel function. 
+\- return the address of an Eiffel function. 
 .SH SYNOPSYS
 .nf
 \fB#include "eif_cecil.h"\fP
@@ -46,7 +46,7 @@ Use \fBeif_bit_function\fP for an Eiffel function returning an Eiffel bit.
 If the visible exception is enabled, it raises an visible exception
 upon failure.
 .SH RETURN VALUE
-It returns NULL when it fails (function does not exist or is not visible). Otherwise, the address of the function
+It returns NULL when it fails ( the function does not exist or is not visible). Otherwise, the address of the function
 is returned. 
 .SH NOTES
 The Eiffel function cannot be a C external. In this case, you must directly 

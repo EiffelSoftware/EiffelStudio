@@ -8,10 +8,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>EiffelVision 2 Samples
-		</heading>
-		<paragraph>Vision2 ships with a number of samples provided to demonstrate different aspects of the library. If you are a new vision2 user then it is suggested that you first compile and run the
+		<paragraph>Vision2 ships with a number of samples provided to demonstrate different aspects of the library. If you are a new vision2 user then it is suggested that you first compile and run the 
 			<link>
 				<url>/libraries/vision2/samples/widgets/index.xml</url>
 				<label>Widgets</label>
@@ -23,7 +20,7 @@
 					<link>
 						<url>/libraries/vision2/samples/accelerator/index.xml</url>
 						<label>Accelerator</label>
-					</link> - Demonstrates the use of an
+					</link> - Demonstrates the use of an 
 					<link>
 						<url>/libraries/vision2/reference/interface/kernel/ev_accelerator_chart.xml</url>
 						<label>EV_ACCELERATOR</label>
@@ -33,11 +30,11 @@
 					<link>
 						<url>/libraries/vision2/samples/cursor/index.xml</url>
 						<label>Cursor</label>
-					</link> - Demonstrates how to modify the displayed
+					</link> - Demonstrates how to modify the displayed 
 					<link>
 						<url>/libraries/vision2/reference/interface/kernel/ev_cursor_chart.xml</url>
 						<label>EV_CURSOR</label>
-					</link> for an
+					</link> for an 
 					<link>
 						<url>/libraries/vision2/reference/interface/widgets/ev_widget_chart.xml</url>
 						<label>EV_WIDGET</label>

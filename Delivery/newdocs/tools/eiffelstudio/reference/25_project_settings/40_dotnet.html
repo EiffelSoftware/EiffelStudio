@@ -11,9 +11,53 @@
 
 <body>
 
-<p>Dotnet</p>
+<h1>Dotnet</h1>
 
-<p><img border="0" src="../../../../images/eiffelstudio/project_settings/dotnet_tab.png" width="605" height="506"></p>
+<p>&nbsp;</p>
+
+<p>This tab is only available when you have the .NET generation enabled. Here is
+what you will see if you open the .NET calculator example:</p>
+
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/dotnet_tab.png" width="605" height="506"></p>
+
+<p>&nbsp;</p>
+
+<h2>.NET application information</h2>
+
+<p>In this part you will be able to enter the information regarding the assembly
+such as:</p>
+
+<ul>
+  <li>full name</li>
+  <li>version</li>
+  <li>compatibility</li>
+  <li>culture</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<h2>Options</h2>
+
+<p>&nbsp;</p>
+
+<ul>
+  <li>verifiable: in the .NET world, verifiability is important. This is the
+    only way to ensure that an application is not going to crash or to crash
+    your system by accessing not authorized memory locations. Due to some
+    semantic differences between Eiffel and .NET, our code generation is not
+    always verifiable for performance reasons. If you want your code to be
+    verifiable, you need to select this option. If selected the compiler will
+    generate a code that will be slightly slower.</li>
+  <li>generate DLL: instead of generating an EXE it will generate a DLL.</li>
+</ul>
+
+<p>&nbsp;</p>
+
+<h2>Assemblies</h2>
+
+<p>Add here all the assemblies that are used in your system. You do not need to
+include `mscorlib.dll' since it is included by default. The assemblies should be
+listed using the absolute path.</p>
 
 </body>
 

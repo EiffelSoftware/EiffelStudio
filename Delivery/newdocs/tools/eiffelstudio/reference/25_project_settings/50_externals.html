@@ -11,7 +11,48 @@
 
 <body>
 
-<p><img border="0" src="../../../../images/eiffelstudio/project_settings/externals_tab.png" width="605" height="506"></p>
+<h1>Externals</h1>
+
+<p>&nbsp;</p>
+
+<p>This tab is active only when the standard C generation is selected in the <a href="10_general.html">General
+Tab</a>. Even when it is selected, you will find out that most Eiffel projects
+do not include C external libraries and therefore the tab is not filled. In the
+case of the calculator example, here is what you will get:</p>
+
+<p>&nbsp;</p>
+
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/externals_tab.png" width="605" height="506"></p>
+
+<p>&nbsp;</p>
+<p>This tab needs to be filled when using projects that are using some C
+libraries. In the case of the ISE Eiffel libraries, here is a non-exhaustive
+list that needs some entries in this tab:</p>
+<ul>
+  <li><a href="../../../../libraries/eiffel2java/index.html">Eiffel2Java</a></li>
+  <li><a href="../../../../libraries/net/index.html">EiffelNet</a></li>
+  <li><a href="../../../../libraries/store/index.html">EiffelStore</a></li>
+  <li><a href="../../../../libraries/vision2/index.html">EiffelVision2</a></li>
+  <li><a href="../../../../libraries/wel/index.html">WEL</a></li>
+  <li>MEL</li>
+</ul>
+<p>&nbsp;</p>
+<h2>Include path</h2>
+<p>This is where you can enter the location of the directories where the C
+compiler will look for the header files that are required. The header file that
+the C compiler will look for are the one that appears in an encapsulation of a C
+external in an Eiffel class. Click <a href="../30_compiler/30_external_features/00_introduction.html">here</a>
+to have more information about C/C++ externals specification.</p>
+<p>&nbsp;</p>
+<h2>Object file</h2>
+<p>When you use an external C/C++ library what you have is header files and
+library files. We have seen how to include the header files, in this part you
+can select the inclusion of the library files.</p>
+<p>&nbsp;</p>
+<h2>An example</h2>
+<p>Here is what you will need to have if you are creating a project that is
+using WEL:</p>
+<p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/externals_tab_wel.png" width="605" height="506"></p>
 
 </body>
 

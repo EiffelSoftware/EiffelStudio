@@ -66,8 +66,7 @@ feature {NONE} -- Initialization
 			pixmapable_imp_initialize
 			initialize_pixmap_box
 			{EV_ITEM_IMP} Precursor
-		--| FIXME sementation violation?
-		--| 	set_minimum_width (12)
+			C.gtk_widget_set_usize (c_object, 10, -1)
 			is_initialized := True
 		end
 

@@ -11,10 +11,10 @@ deferred class
 	
 	EV_MENU_BAR_I
 	
-inherit
-	EV_MENU_ITEM_CONTAINER_I
+--inherit
+--	EV_MENU_ITEM_HOLDER_I
 
-	EV_WIDGET_I
+--	EV_WIDGET_I
 
 end
 

@@ -11,42 +11,18 @@ indexing
 class
 	EV_MENU_BAR
 
-inherit
+--inherit
+--	EV_MENU_ITEM_HOLDER 
+--		redefine
+--			implementation
+--		end
 
-	EV_MENU_ITEM_CONTAINER 
-		redefine
-			implementation
-		end
-
-	EV_PRIMITIVE
-		redefine
-			implementation
-		end
-
-creation
+--creation
+--	make
 	
-	make
+--feature {NONE} -- Implementation
 	
-feature {NONE} -- Initialization
-	
-	make (par: EV_CONTAINER) is         
-			-- Create a menu widget with `par' as parent.
-			-- We can't use `widget_make' here, because a menu
-			-- is not a child, otherwise, you couldn't put more
-			-- than a menu in a window. A menu is an option of a
-			-- window
-		do
-			!EV_MENU_BAR_IMP!implementation.make (par)
-			implementation.set_interface (Current)
-			implementation.test_and_set_parent (par)
-			implementation.build
-			managed := par.manager
-			widget_make (par)
-		end	
-	
-feature {NONE} -- Implementation
-	
-	implementation: EV_MENU_BAR_I	
+--	implementation: EV_MENU_BAR_I	
 
 end -- class EV_MENU BAR
 

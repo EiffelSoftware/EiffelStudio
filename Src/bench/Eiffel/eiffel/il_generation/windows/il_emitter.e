@@ -77,6 +77,14 @@ feature -- Access
 			Result := assembly_info.public_key_token
 		end
 		
+	is_in_gac: BOOLEAN is
+			-- Was assembly consumed from the GAC?
+		require
+			assembly_found
+		do
+			Result := assembly_info.is_in_gac
+		end
+		
 	is_consumed: BOOLEAN is
 			-- Has assembly been consumed
 		require

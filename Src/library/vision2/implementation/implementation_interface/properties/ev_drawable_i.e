@@ -176,7 +176,7 @@ feature -- Drawing operations
 		deferred
 		end
 
-	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
+	draw_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: EV_ANGLE) is
 			-- Draw a rectangle whose center is `pt' and size is `w' and `h'
 			-- and that has the orientation `orientation'.
 		require
@@ -185,12 +185,10 @@ feature -- Drawing operations
 			valid_point: pt /= Void
 			width_positive: w >= 0
 			height_positive: h >= 0
-			orientation_small_enough: orientation >= 0
-			orientation_large_enough: orientation < 360
 		deferred
 		end
 
-	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
+	draw_arc (pt: EV_COORDINATES; r1, r2: INTEGER; start_angle, aperture, orientation: EV_ANGLE; style: INTEGER) is
 			-- Draw an arc centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
 			-- and with an orientation of `orientation' using the style `style'.
@@ -204,11 +202,6 @@ feature -- Drawing operations
 			valid_point: pt /= Void
 			positive_radius1: r1 >= 0;
 			positive_radius2: r2 >= 0;
-			positive_start_angle: start_angle >= 0;
-			positive_aperture: aperture >= 0;
-	--		valid_total_angle: angle1+angle2 <= 360;
-			orientation_large_enough: orientation >= 0;
-			orientation_small_enough: orientation < 360;
 			valid_style: style >= -1 and style <= 1
 		deferred
 		end
@@ -237,7 +230,7 @@ feature -- filling operations
 		deferred
 		end
 
-	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: REAL) is
+	fill_rectangle (pt: EV_COORDINATES; w, h: INTEGER; orientation: EV_ANGLE) is
 			-- Fill a rectangle whose center is `pt' and size is `w' and `h'
 			-- with an orientation `orientation'.
 		require
@@ -246,12 +239,10 @@ feature -- filling operations
 			valid_point: pt /= Void
 			width_positive: w >= 0
 			height_positive: h >= 0
-			orientation_small_enough: orientation >= 0
-			orientation_large_enough: orientation < 360
 		deferred
 		end
 
-	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: REAL; style: INTEGER) is
+	fill_arc (pt: EV_COORDINATES; r1, r2 : INTEGER; start_angle, aperture, orientation: EV_ANGLE; style: INTEGER) is
 			-- Fill an arc centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' beginnning at `start_angle' and finishing at `start_angle + aperture'
 			-- and with an orientation of `orientation' using the style `style'.
@@ -265,11 +256,6 @@ feature -- filling operations
 			valid_point: pt /= Void
 			positive_radius1: r1 >= 0;
 			positive_radius2: r2 >= 0;
-			positive_start_angle: start_angle >= 0;
-			positive_aperture: aperture >= 0;
-	--		valid_total_angle: angle1+angle2 <= 360;
-			orientation_large_enough: orientation >= 0;
-			orientation_small_enough: orientation < 360;
 			valid_style: style >= -1 and style <= 1
 		deferred
 		end

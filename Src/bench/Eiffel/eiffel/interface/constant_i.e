@@ -168,7 +168,7 @@ feature -- C code generation
 					file.putstring ("return ");
 					value.generate (file);
 				end;
-				file.putstring (";%N%TEDCX%N}%N%N");
+				file.putstring (";%N}%N%N");
 			elseif  not System.is_used (Current) then
 				System.removed_log_file.add (class_type, feature_name)
 			end;

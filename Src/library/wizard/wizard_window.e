@@ -33,16 +33,13 @@ feature {NONE} -- Initialization
 			v1: EV_VERTICAL_BOX
 		do
 			default_create
-			disable_user_resize
+--			disable_user_resize
 			set_minimum_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			create wizard_page
 			create v1
 			v1.extend (wizard_page)	
 			build_navigation_bar (v1)
 			extend (v1)
-
-			load_first_state
-		--	Create wizard_information.make
 		end
 
 	build_navigation_bar (a_box: EV_BOX) is
@@ -91,6 +88,8 @@ feature {NONE} -- Initialization
 			a_box.extend (navigation_bar)
 			a_box.disable_item_expand (navigation_bar)
 		end
+		
+feature {WIZARD_SHARED} -- Basic Opertations
 		
 	load_first_state is
 			-- Load first state.
@@ -145,7 +144,7 @@ feature {NONE} -- Implementation
 	is_final: BOOLEAN
 			-- Is it the final state?
 
-feature {WIZARD_STATE_WINDOW} -- Basic Operations	
+feature {WIZARD_STATE_WINDOW, WIZARD_STATE_MANAGER} -- Basic Operations	
 
 	set_final_state (text: STRING) is
 			-- Current state is final, hence a special process.
@@ -170,6 +169,18 @@ feature {WIZARD_STATE_WINDOW} -- Basic Operations
 			-- Enable the Next/Finish button
 		do
 			previous_b.disable_sensitive
+		end
+		
+	enable_next_button is
+			-- Ensable the Next/Finish button
+		do
+			next_b.enable_sensitive
+		end
+
+	enable_back_button is
+			-- Enable the Next/Finish button
+		do
+			previous_b.enable_sensitive
 		end
 
 feature -- Basic Operations

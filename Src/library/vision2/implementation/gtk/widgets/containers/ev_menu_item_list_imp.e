@@ -42,6 +42,7 @@ feature {NONE} -- implementation
 			an_item_imp ?= v.implementation
 			a_curs := interface.cursor
 			interface.go_i_th (pos)
+			insert_menu_item (an_item_imp, pos)
 			sep_imp ?= an_item_imp
 			if sep_imp /= Void then
 				from
@@ -75,19 +76,14 @@ feature {NONE} -- implementation
 					-- Set radio group for separator
 					sep_imp.set_radio_group (rgroup)
 				end
-				-- Insert separator at position `pos'
-				--| Scaled down implementation from add-to_container, gtk_reorder_child
-
-				insert_menu_item (an_item_imp, pos)
-
 			else
 				menu_imp ?= an_item_imp
 				if menu_imp /= Void then
 				-- If sub menu then add sub menu
-					insert_menu_item (an_item_imp, pos)
+					--insert_menu_item (an_item_imp, pos)
 				else
 				-- Add menu item
-					insert_menu_item (an_item_imp, pos)
+					--insert_menu_item (an_item_imp, pos)
 
 					radio_imp ?= an_item_imp
 					if radio_imp /= Void then
@@ -107,9 +103,9 @@ feature {NONE} -- implementation
 								-- create a radio_group pointer for current
 								-- First item inserted in group is selected.
 								radio_group := radio_imp.radio_group
-								radio_imp.enable_select
 							else
 								radio_imp.set_radio_group (radio_group)
+								C.gtk_check_menu_item_set_active (radio_imp.c_object, False)
 							end
 						end
 					end
@@ -222,6 +218,9 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/25 22:51:11  king
+--| Corrected radio selection
+--|
 --| Revision 1.11  2000/04/25 21:36:08  king
 --| Changed references from c_object to list_widget
 --|

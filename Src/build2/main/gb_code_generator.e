@@ -396,7 +396,7 @@ feature {NONE} -- Implementation
 				--| FIXME handle visual studio wizard.
 				
 					--Firstly read the contents of the file.
-				constants_file := open_text_file_for_read (constants_template_file_name)
+				constants_file := open_text_file_for_read (constants_template_imp_file_name)
 				if constants_file /= Void then
 					constants_file.read_stream (constants_file.count)
 					constants_file.close
@@ -455,19 +455,45 @@ feature {NONE} -- Implementation
 					end
 					
 						-- First replace the name of the class.
-					Constants_content.replace_substring_all (class_name_tag, project_settings.constants_class_name.as_upper)
+					Constants_content.replace_substring_all (class_name_tag, project_settings.constants_class_name.as_upper + Class_implementation_extension)
 					
 					add_generated_string (constants_content, generated_constants_string, constants_tag)
 					
 						-- Now write the new constants file to disk.
 					constants_file_name := clone (generated_path)
-					constants_file_name.extend (project_settings.constants_class_name.as_lower + ".e")
+					constants_file_name.extend (project_settings.constants_class_name.as_lower + Class_implementation_extension.as_lower + ".e")
 					create constants_file.make_open_write (constants_file_name)
 					constants_file.start
 					constants_file.putstring (constants_content)
 					constants_file.close
+					
+							-- Now generate the interface class name for constants.
+							
+								--Firstly read the contents of the file.
+					constants_file := open_text_file_for_read (constants_template_file_name)
+					if constants_file /= Void then
+						constants_file.read_stream (constants_file.count)
+						constants_file.close
+						constants_content := constants_file.last_string
+						
+						Constants_content.replace_substring_all (class_name_tag, project_settings.constants_class_name.as_upper)
+						Constants_content.replace_substring_all (Inherited_class_name_tag, project_settings.constants_class_name.as_upper + Class_implementation_extension)
+						
+						
+							-- Now write the new constants file to disk.
+						constants_file_name := clone (generated_path)
+						constants_file_name.extend (project_settings.constants_class_name.as_lower + ".e")
+						create constants_file.make (constants_file_name)
+						if not constants_file.exists then
+							constants_file.open_write							
+							constants_file.start
+							constants_file.putstring (constants_content)
+							constants_file.close
+						end
+					end
 				end
 			end
+
 			
 		build_constants_load_file is
 				-- Build text file containing constants to be loaded.

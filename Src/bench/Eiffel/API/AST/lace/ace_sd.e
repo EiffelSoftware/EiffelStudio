@@ -104,6 +104,12 @@ feature -- Lace compilation
 				-- Finaly process options
 			process_options;
 
+				-- Remove inexistant classes from the system
+			process_removed_classes;
+
+				-- Remove inexistant clusters from the system
+			process_removed_clusters;
+
 				-- Process root clause
 			root.adapt;
 				-- Process external clause
@@ -184,6 +190,42 @@ feature -- Lace compilation
 					clusters.item.process_options;
 					clusters.forth;
 				end;
+			end;
+		end;
+
+	process_removed_classes is
+			-- Process the classes removed since last compilation
+		local
+			cluster_list: LINKED_LIST [CLUSTER_I];
+		do
+			from
+				cluster_list := Universe.clusters;
+				cluster_list.start;
+			until
+				cluster_list.offright
+			loop
+				cluster_list.item.process_removed_classes;
+				cluster_list.forth;
+			end;
+		end;
+
+	process_removed_clusters is
+			-- Remove the classes from the clusters removed from the system
+		local
+			old_clusters: LINKED_LIST [CLUSTER_I];
+			cluster: CLUSTER_I;
+		do
+			from
+				old_clusters := Lace.old_universe.clusters;
+				old_clusters.start
+			until
+				old_clusters.offright
+			loop
+				cluster := old_clusters.item;
+				if not Universe.has_cluster_of_name (cluster.cluster_name) then
+					cluster.remove_cluster;
+				end;
+				old_clusters.forth
 			end;
 		end;
 

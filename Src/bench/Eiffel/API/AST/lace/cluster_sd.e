@@ -32,10 +32,12 @@ feature -- Initialization
 			-- Yacc initialization
 		do
 			cluster_name ?= yacc_arg (0);
+			cluster_name.to_lower;
 			directory_name ?= yacc_arg (1);
 			cluster_properties ?= yacc_arg (2)
 		ensure then
 			directory_name_exists: directory_name /= Void;
+			cluster_name_exists: cluster_name /= Void;
 		end;
 
 feature -- Lace recompilation
@@ -44,15 +46,31 @@ feature -- Lace recompilation
 			-- Build the cluster
 		local
 			cluster, old_cluster: CLUSTER_I;
+			cluster_of_name, cluster_of_path: CLUSTER_I;
 			clusters: LINKED_LIST [CLUSTER_I];
 			cluster_file: DIRECTORY;
 			vd01: VD01;
+			vd28: VD28;
+			vdcn: VDCN;
 			path: STRING;
 			fill_cluster: BOOLEAN;
 		do
 			path := Environ.interpret (directory_name);
-			cluster := Universe.cluster_of_path (path);
-			if cluster = Void then
+			cluster_of_name := Universe.cluster_of_name (cluster_name);
+			cluster_of_path := Universe.cluster_of_path (path);
+			cluster := Lace.old_universe.cluster_of_path (path);
+			if cluster_of_path /= Void then
+				!!vd28;
+				vd28.set_cluster (cluster_of_path);
+				vd28.set_second_cluster_name (cluster_name);
+				Error_handler.insert_error (vd28);
+				Error_handler.raise_error;
+			elseif cluster_of_name /= Void then
+				!!vdcn;
+				vdcn.set_cluster (cluster_of_name);
+				Error_handler.insert_error (vdcn);
+				Error_handler.raise_error;
+			elseif cluster = Void then
 					-- New cluster
 				!!cluster.make (path);
 				Universe.insert_cluster (cluster);
@@ -60,14 +78,11 @@ feature -- Lace recompilation
 			elseif cluster.changed then
 				old_cluster := cluster;
 				!!cluster.make (path);
-				clusters := Universe.clusters;
-				clusters.start;
-				clusters.search_same (old_cluster);
-				check
-					not_after: not clusters.after
-				end;
-				clusters.replace (cluster);
+				cluster.set_old_cluster (old_cluster);
+				Universe.insert_cluster (cluster);
 				fill_cluster := True;
+			else
+				Universe.insert_cluster (cluster);
 			end;
 			cluster.set_cluster_name (cluster_name);
 
@@ -84,15 +99,16 @@ feature -- Lace recompilation
 				end;
 					-- Verbose
 				io.error.putstring ("Pass 0 on cluster ");
-				if cluster_name = Void then
-					io.error.putstring (path);
-				else
-					io.error.putstring (cluster_name);
-				end;
+--				if cluster_name = Void then
+--					io.error.putstring (path);
+--				else
+--					io.error.putstring (cluster_name);
+--				end;
+				io.error.putstring (cluster_name);
 				io.error.new_line;
 	
 					-- Fill the class name table of the cluster
-				cluster.fill (cluster_file, old_cluster);
+				cluster.fill (cluster_file);
 			end
 		end;
 

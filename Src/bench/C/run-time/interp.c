@@ -1437,10 +1437,15 @@ rt_private void interpret(int flag, int where)
 		break;
 
 	case BC_VOID:
+		{
 #ifdef DEBUG
-		dprintf(2)("BC_VOID\n");
+			dprintf(2)("BC_VOID\n");
 #endif
-		otop()->it_ref = (EIF_REFERENCE) 0;
+			struct item * last;
+			last = iget ();
+			last->it_ref = NULL;
+			last->type = SK_REF;
+		}
 		break;
 	
 	/*
@@ -2767,7 +2772,12 @@ rt_private void interpret(int flag, int where)
 #endif
 		last = opop();
 		code = get_short();     /* Get the local number (from 1 to locnum) */
-		memcpy (loc(code), last, ITEM_SZ);
+		if (last->type & SK_EXP == SK_EXP) {
+				/* Case of an expanded, then we need to copy its original value. */
+			eif_std_ref_copy(last->it_ref, loc(code)->it_ref);
+		} else {
+			memcpy (loc(code), last, ITEM_SZ);
+		}
 		break;
 
 	/*
@@ -5189,7 +5199,14 @@ rt_private void assign(long offset, uint32 type)
 
 	last = opop();					/* Value to be assigned */
 
-	CHECK("Target same type as source", (last->type & SK_HEAD) == (type & SK_HEAD));
+		/* FIXME: Manu 02/17/2004: For Bit types, the generated code is incorrect
+		 * because we can assign BIT type into BIT_REF therefore there is a mismatch
+		 * in the type, one is a reference, the other is a BIT, thus the extra 2 lines
+		 * in the check. */
+	CHECK("Target same type as source",
+			((last->type & SK_HEAD) == (type & SK_HEAD)) ||
+			(((last->type & SK_HEAD) == SK_BIT) && ((type & SK_HEAD) == SK_REF)) ||
+			(((last->type & SK_HEAD) == SK_REF) && ((type & SK_HEAD) == SK_BIT)));
 
 #define l last
 #define i icurrent

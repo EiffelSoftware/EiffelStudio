@@ -75,10 +75,9 @@ feature -- Access
 		do
 			!! Result.make (0);
 			Result.append (name);
-			Result.append (" (");
+			Result.append (": ");
 			Result.append (dynamic_class.name_in_upper)
-			Result.append (")");
-			Result := " object at ";
+			Result.append (" object at ");
 			Result.append (object_address)
 		end;
  
@@ -97,9 +96,8 @@ feature -- Access
 		do
 			!! Result.make (0);
 			Result.append (name);
-			Result.append (" (");
+			Result.append (": ");
 			Result.append (dynamic_class.name_in_upper)
-			Result.append (")");
 			Result.append (" [");
 			Result.append (object_address);
 			Result.append ("]");

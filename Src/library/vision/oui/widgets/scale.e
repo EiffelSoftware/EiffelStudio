@@ -62,7 +62,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.scale (Current, man);
+			implementation := toolkit.scale (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
@@ -306,28 +306,28 @@ feature {NONE}
 feature 
  
  
-    is_maximum_right_bottom: BOOLEAN is 
+	is_maximum_right_bottom: BOOLEAN is 
 		require
 			exists: not destroyed;
 		do 
 			Result := implementation.is_maximum_right_bottom;
 		end;
 
-    set_maximum_right_bottom (flag: BOOLEAN) is 
+	set_maximum_right_bottom (flag: BOOLEAN) is 
 		require
 			exists: not destroyed;
 		do 
 			implementation.set_maximum_right_bottom (flag);
 		end;
 
-    show_value (flag: BOOLEAN) is 
+	show_value (flag: BOOLEAN) is 
 		require
 			exists: not destroyed;
 		do 
 			implementation.set_value_shown (flag);
 		end;
 
-    is_value_shown: BOOLEAN is 
+	is_value_shown: BOOLEAN is 
 		require
 			exists: not destroyed;
 		do 

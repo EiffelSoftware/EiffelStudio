@@ -42,12 +42,11 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.form_d (Current);
+			implementation := toolkit.form_d (Current, a_parent);
 			set_default
 		ensure 
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name);
-			-- default_fraction_base: fraction_base = 100
 		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
@@ -55,7 +54,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 	implementation: FORM_D_I
 			-- Implementation of form dialog
 
-end
+end -- class FORM_D
 
 
 --|----------------------------------------------------------------

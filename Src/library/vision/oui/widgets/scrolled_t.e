@@ -10,8 +10,8 @@ class SCROLLED_T
 inherit
 
 	TEXT
-        redefine
-            make, make_word_wrapped, make_unmanaged, 
+		redefine
+			make, make_word_wrapped, make_unmanaged, 
 			make_word_wrapped_unmanaged,
 			create_ev_widget, create_ev_widget_ww,
 			implementation
@@ -44,7 +44,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.scrolled_t (Current, man);
+			implementation := toolkit.scrolled_t (Current, man, a_parent);
 			implementation.set_widget_default;
 			set_default
 		end;
@@ -72,7 +72,7 @@ feature {NONE} -- Creation
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.scrolled_t_word_wrapped (Current, man);
+			implementation := toolkit.scrolled_t_word_wrapped (Current, man, a_parent);
 			set_default
 		end;
 	

@@ -1,7 +1,6 @@
 indexing
 	description:
-		"Eiffel Vision timeout. Repeatedly executes a sequence of `actions'%N%
-		%at a regular `interval'."
+		"Repeatedly executes a sequence of `actions' at a regular `interval'."
 	status: "See notice at end of class"
 	keywords: "timout, delay, timer, background"
 	date: "$Date$"
@@ -56,6 +55,9 @@ feature -- Access
 			count_not_changed: count = old count
 		end
 
+	actions: EV_NOTIFY_ACTION_SEQUENCE
+		-- Actions to be performed at a regular `interval'.
+
 feature -- Status report
 
 	count: INTEGER is
@@ -76,25 +78,6 @@ feature -- Status setting
 			count_is_zero: count = 0
 		end
 
-feature -- Event handling
-
-	actions: EV_NOTIFY_ACTION_SEQUENCE
-		-- Actions to be performed at a regular `interval'.
-
-feature {NONE} -- Implementation
-
-	create_action_sequences is
-			-- Create action sequences for button.
-		do
-			{EV_ANY} Precursor
-			create actions
-		end
-
-	create_implementation is
-			-- Create implementation of button.
-		do
-			create {EV_TIMEOUT_IMP} implementation.make (Current)
-		end
 
 feature {NONE} -- Contract support
 
@@ -110,8 +93,22 @@ feature {NONE} -- Contract support
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_TIMEOUT_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit.
+			-- Responsible for interaction with the native graphics toolkit.
+
+feature {NONE} -- Implementation
+
+	create_action_sequences is
+			-- Create action sequences for button.
+		do
+			{EV_ANY} Precursor
+			create actions
+		end
+
+	create_implementation is
+			-- Create implementation of button.
+		do
+			create {EV_TIMEOUT_IMP} implementation.make (Current)
+		end
 
 invariant
 	interval_not_negative: interval >= 0
@@ -141,6 +138,9 @@ end -- class EV_TIMEOUT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/03/16 01:18:48  oconnor
+--| formatting
+--|
 --| Revision 1.5  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

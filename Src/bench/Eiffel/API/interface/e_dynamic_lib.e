@@ -161,7 +161,7 @@ feature -- DYNAMIC_LIB Exports processing.
 
 		end
 
-	parse_exports_from_file(f:PLAIN_TEXT_FILE):BOOLEAN is
+	parse_exports_from_file (f: PLAIN_TEXT_FILE): BOOLEAN is
 		local
 			lastline: STRING
 			lastchar: CHARACTER

@@ -83,8 +83,8 @@ feature -- Initialization
 	init_resource_values is
 			-- Initialize the resource values.
 		do
-			set_character_format (Graphical_resources.normal_text.actual_value)
-			set_background_color (Graphical_resources.text_background_color.actual_value)
+			set_format (default_text_font, text_foreground_color)
+			set_background_color (text_background_color)
 		end
 
 feature -- Drag source/Hole properties
@@ -144,9 +144,14 @@ feature -- Changing
 --			set_font (default_font.item)
 		end
 
-	set_format (fr: EB_FORMAT_RESOURCE) is
+	set_format (f: EV_FONT; c: EV_COLOR) is
+		local
+			format: EV_CHARACTER_FORMAT
 		do
-			set_character_format (fr.actual_value)
+			create format.make
+			format.set_font (f)
+			format.set_color (c)
+			set_character_format (format)
 		end
 
 	set_changed (b: BOOLEAN) is

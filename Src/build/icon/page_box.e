@@ -42,7 +42,7 @@ feature
 			page_size := i
 		end;
 
-	add_right (elt: like item) is
+	put_right (elt: like item) is
 			-- Add `elt' to the right of cursor position. Move
 			-- cursor to right position. If offright do nothing.
 		local
@@ -143,8 +143,16 @@ feature
 
 	number_of_rows_in_page: INTEGER is
 			-- Number of rows in current page
+		local
+			ind: INTEGER
 		do
-			Result := ((count - 1) \\ Page_size) + 1
+				-- index at top of current page
+			ind := (Page_number - 1) * Page_size + 1;
+			if ind > Page_size then
+				Result := count - ind + 1;
+			else
+				Result := Page_size.min (count)
+			end
 		end;
 
 	number_of_pages: INTEGER is

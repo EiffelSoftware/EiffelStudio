@@ -31,10 +31,14 @@ feature -- Access
 				<<XmCR_APPLY, XmCR_CANCEL, XmCR_OK, XmCR_NO_MATCH>>
 		end;
 
-	value: MEL_SHARED_STRING is
+	value: MEL_STRING is
 			-- Value of `dir_spec' 
 		do
-			!! Result.make_from_existing (c_value (handle))
+			!! Result.make_from_existing (c_value (handle));
+			Result.set_shared
+		ensure
+			Result_not_void: Result /= Void;
+			Result_is_shared: Result.shared
 		end;
 
 	length: INTEGER is
@@ -43,10 +47,14 @@ feature -- Access
 			Result := c_length (handle)
 		end;
 
-	mask: MEL_SHARED_STRING is
+	mask: MEL_STRING is
 			-- Value of `dir_mask' 
 		do
-			!! Result.make_from_existing (c_mask (handle))
+			!! Result.make_from_existing (c_mask (handle));
+			Result.set_shared
+		ensure
+			Result_not_null: Result /= Void;
+			Result_is_shared: Result.shared
 		end;
 
 	mask_length: INTEGER is
@@ -55,10 +63,14 @@ feature -- Access
 			Result := c_mask_length (handle)
 		end;
 
-	dir: MEL_SHARED_STRING is
+	dir: MEL_STRING is
 			-- Current base directory
 		do
-			!! Result.make_from_existing (c_dir (handle))
+			!! Result.make_from_existing (c_dir (handle));
+			Result.set_shared
+		ensure
+			Result_not_null: Result /= Void;
+			Result_is_shared: Result.shared
 		end;
 
 	dir_length: INTEGER is
@@ -67,10 +79,14 @@ feature -- Access
 			Result := c_dir_length (handle)
 		end;
 
-	pattern: MEL_SHARED_STRING is
+	pattern: MEL_STRING is
 			-- Current search pattern
 		do
-			!! Result.make_from_existing (c_pattern (handle))
+			!! Result.make_from_existing (c_pattern (handle));
+			Result.set_shared
+		ensure
+			Result_not_null: Result /= Void;
+			Result_is_shared: Result.shared
 		end;
 
 	pattern_length: INTEGER is

@@ -34,14 +34,16 @@ feature {NONE} -- Initialization
 	make is
 		do
 			make_top (Title)
-			resize (185, 245)
-			-- Create the output
-			create list.make (Current, 0, 0, client_rect.width, 20, 1)
+			resize (185, 345)
+
+				-- Create the output
+			create list.make (Current, 0, 0, client_rect.width, 120, 1)
 			list.set_font(gui_font)
-			create label.make (Current, "What happens?", 0, 20, client_rect.width, 20, 0)
+			create label.make (Current, "What happens?", 0, 120, client_rect.width, 20, 0)
 			label.set_font(gui_font)
-			-- Create the tree view.
-			create tree_view.make (Current, 10, 50, 150, 150, -1)
+
+				-- Create the tree view.
+			create tree_view.make (Current, 10, 150, 150, 150, -1)
 			tree_view.set_item_output (label)
 			tree_view.set_mess_output (list)
 		end

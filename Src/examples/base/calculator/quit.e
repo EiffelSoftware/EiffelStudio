@@ -1,11 +1,13 @@
 --|---------------------------------------------------------------
 --|   Copyright (C) Interactive Software Engineering, Inc.      --
---|    270 Storke Road, Suite 7 Goleta, California 93117        --
+--|        Interactive Software Engineering Building            --
+--|            270 Storke Road, California 93117                --
 --|                   (805) 685-1006                            --
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
-class QUIT
+class 
+	QUIT
 
 inherit
 	STATE
@@ -18,11 +20,11 @@ feature
 	operation is
 			-- Useless.
 		do
-		end;
+		end
 
 	process is
 			-- Useless.
 		do
-		end;
+		end
 
 end -- class QUIT

@@ -199,12 +199,10 @@ rt_public EIF_INTEGER eif_putenv (char *v, char *k)
 #ifdef EIF_WIN32
 	char *key, *lower_k; /* %%ss removed *value, buf[1024] */
 	int appl_len, key_len;
-	char modulename [MAX_PATH];
 	HKEY hkey;
 	DWORD disp;
 
-	GetModuleFileName (NULL, modulename, MAX_PATH);
-	appl_len = rindex (modulename, '.') - rindex (modulename, '\\') -1;
+	appl_len = strlen (egc_system_name);
 	key_len = strlen (k);
 	if ((key = (char *) eif_calloc (appl_len + 46 + key_len, 1)) == NULL)
 		return (EIF_INTEGER) -1;
@@ -218,7 +216,7 @@ rt_public EIF_INTEGER eif_putenv (char *v, char *k)
 	CharLowerBuff (lower_k, key_len);
 
 	strcpy (key, "Software\\ISE\\Eiffel43-16\\");
-	strncat (key, rindex(modulename, '\\') + 1, appl_len);
+	strncat (key, egc_system_name, appl_len);
 
 	if (RegCreateKeyEx (HKEY_CURRENT_USER, key, 0, "REG_SZ", REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hkey, &disp) != ERROR_SUCCESS) {
 		eif_free (key);
@@ -277,13 +275,10 @@ rt_public char * eif_getenv (char * k)
 	char *key, *lower_k; /* %%ss removed *value */
 	static char buf[1024];
 	int appl_len, key_len;
-	char modulename [MAX_PATH];
 	HKEY hkey;
 	DWORD bsize;
 
-
-	GetModuleFileName (NULL, modulename, MAX_PATH);
-	appl_len = rindex (modulename, '.') - rindex (modulename, '\\') -1;
+	appl_len = strlen (egc_system_name);
 	key_len = strlen (k);
 	if ((key = (char *) eif_calloc (appl_len + 46 +key_len, 1)) == NULL)
 		return (EIF_OBJ) 0;
@@ -297,7 +292,7 @@ rt_public char * eif_getenv (char * k)
 	CharLowerBuff (lower_k, key_len);
 
 	strcpy (key, "Software\\ISE\\Eiffel43-16\\");
-	strncat (key, rindex(modulename, '\\')+1, appl_len);
+	strncat (key, egc_system_name, appl_len);
 
 	if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
 		eif_free (key);

@@ -554,7 +554,10 @@ feature -- Code generation
 				-- Create root object and call creation procedure.
 			il_code_generator.method_body.put_call (feature {MD_OPCODES}.Newobj,
 				constructor_token (creation_type_id), 0, True)
-			if a_class_type.associated_class.is_single then
+			if
+				a_class_type.associated_class.is_frozen or 
+				a_class_type.associated_class.is_single
+			then
 				il_code_generator.method_body.put_call (feature {MD_OPCODES}.Callvirt,
 					feature_token (l_type_id, a_feature_id), 0, False)
 			else

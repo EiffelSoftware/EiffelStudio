@@ -5,8 +5,7 @@ inherit
 
 	FUNC_EDIT_HOLE
 		redefine
-			function_editor,  process_state,
-			set_widget_default
+			function_editor,  process_state
 		end;
 	STATE_STONE
 	
@@ -21,6 +20,11 @@ feature {NONE}
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.state_pixmap
+		end;
+
+	full_symbol: PIXMAP is
+		do
+			Result := Pixmaps.state_dot_pixmap
 		end;
 
 	focus_string: STRING is

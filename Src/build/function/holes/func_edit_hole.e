@@ -40,8 +40,28 @@ feature {NONE}
 			Result := Current
 		end;
 
-	set_widget_default is do end;
+	set_widget_default is 
+		deferred
+		end;
 
-	process_stone is do end;
+	full_symbol: PIXMAP is
+		deferred
+		end;
+
+feature 
+
+	set_empty_symbol is
+		do
+			if pixmap /= symbol then
+				set_symbol (symbol)
+			end
+		end;
+
+	set_full_symbol is
+		do
+			if pixmap /= full_symbol then
+				set_symbol (full_symbol)
+			end
+		end
 
 end

@@ -70,6 +70,8 @@ feature {NONE} -- Implementation
 			tmp_string, cecil_call, arguments, variables, return_value, free_object, protect_object: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 			pointed_data_type_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
+			current_argument: WIZARD_PARAM_DESCRIPTOR
+			cursor: CURSOR
 		do
 			create Result.make (10000)
 			if is_return_hresult then
@@ -93,38 +95,40 @@ feature {NONE} -- Implementation
 				until
 					func_desc.arguments.after
 				loop
-					if is_paramflag_fretval (func_desc.arguments.item.flags) then
-						pointed_data_type_descriptor ?= func_desc.arguments.item.type
+					cursor := func_desc.arguments.cursor
+					current_argument := func_desc.arguments.item
+					if is_paramflag_fretval (current_argument.flags) then
+						pointed_data_type_descriptor ?= current_argument.type
 
 						if pointed_data_type_descriptor /= Void then
 							visitor := pointed_data_type_descriptor.pointed_data_type_descriptor.visitor
 						else
-							visitor := func_desc.arguments.item.type.visitor
+							visitor := current_argument.type.visitor
 						end
 						is_function := True
-						return_value.append (return_value_set_up (func_desc.arguments.item.name, func_desc.arguments.item.type))
+						return_value.append (return_value_set_up (current_argument.name, current_argument.type))
 						return_value.append (New_line_tab)
 
 						cecil_call.append (cecil_function_set_up (visitor))
 
 					else
-						visitor := func_desc.arguments.item.type.visitor
+						visitor := current_argument.type.visitor
 
-						if is_paramflag_fout (func_desc.arguments.item.flags) then
+						if is_paramflag_fout (current_argument.flags) then
 							
-							variables.append (variable_set_up (func_desc.arguments.item.name, visitor))
+							variables.append (variable_set_up (current_argument.name, visitor))
 							variables.append (New_line_tab)
-							return_value.append (out_value_set_up (func_desc.arguments.item.name, visitor))
+							return_value.append (out_value_set_up (current_argument.name, visitor))
 							return_value.append (New_line_tab)
 
 							arguments.append (Comma_space)
 							arguments.append (Eif_access)
 							arguments.append (Space_open_parenthesis)
 							arguments.append (Tmp_clause)
-							arguments.append (func_desc.arguments.item.name)
+							arguments.append (current_argument.name)
 							arguments.append (Close_parenthesis)
 						else
-							variables.append (variable_set_up (func_desc.arguments.item.name, visitor))
+							variables.append (variable_set_up (current_argument.name, visitor))
 							variables.append (New_line_tab)
 							if visitor.is_basic_type or visitor.is_enumeration then
 								arguments.append (Comma_space)
@@ -132,20 +136,20 @@ feature {NONE} -- Implementation
 								arguments.append (visitor.cecil_type)
 								arguments.append (Close_parenthesis)
 								arguments.append (Tmp_clause)
-								arguments.append (func_desc.arguments.item.name)
+								arguments.append (current_argument.name)
 							elseif (visitor.vt_type = Vt_bool) then
 								arguments.append (Comma_space)
 								arguments.append (Open_parenthesis)
 								arguments.append (Eif_boolean)
 								arguments.append (Close_parenthesis)
 								arguments.append (Tmp_clause)
-								arguments.append (func_desc.arguments.item.name)
+								arguments.append (current_argument.name)
 							else
 								arguments.append (Comma)
 								arguments.append (Eif_access)
 								arguments.append (Space_open_parenthesis)
 								arguments.append (Tmp_clause)
-								arguments.append (func_desc.arguments.item.name)
+								arguments.append (current_argument.name)
 								arguments.append (Close_parenthesis)
 							end
 							if 
@@ -156,16 +160,18 @@ feature {NONE} -- Implementation
 								free_object.append (Eif_wean)
 								free_object.append (Space_open_parenthesis)
 								free_object.append (Tmp_clause)
-								free_object.append (func_desc.arguments.item.name)
+								free_object.append (current_argument.name)
 								free_object.append (Close_parenthesis)
 								free_object.append (Semicolon)
 								free_object.append (New_line_tab)
 							end
 						end
 					end
-
+					func_desc.arguments.go_to (cursor)
 					func_desc.arguments.forth
 				end
+
+
 			elseif is_return_hresult then
 				Result.append (empty_argument_body)
 			end
@@ -283,8 +289,49 @@ feature {NONE} -- Implementation
 				Result.append (Space)
 				Result.append (Tmp_clause)
 				Result.append (arg_name)
+				Result.append (" = NULL")
 				Result.append (Semicolon)
 				Result.append (New_line_tab)
+
+				if (visitor.vt_type = Vt_bstr) then
+					Result.append (visitor.c_type)
+					Result.append (Space)
+					Result.append (Tmp_clause)
+					Result.append (Tmp_clause)
+					Result.append (arg_name)
+					Result.append (Space_equal_space)
+					Result.append ("SysAllocString")
+					Result.append (Space_open_parenthesis)
+					Result.append (arg_name)
+					Result.append (Close_parenthesis)
+					Result.append (Semicolon)
+					Result.append (New_line_tab)
+				end 
+
+				if is_array (visitor.vt_type) and not is_byref (visitor.vt_type) then
+					Result.append (visitor.c_type)
+					Result.append (Space)
+					Result.append (Tmp_clause)
+					Result.append (Tmp_clause)
+					Result.append (arg_name)
+					Result.append (Space_equal_space)
+					Result.append (Null)
+					Result.append (Semicolon)
+					Result.append (New_line_tab)
+
+					Result.append ("SafeArrayCopy")
+					Result.append (Space_open_parenthesis)
+					Result.append (arg_name)
+					Result.append (Comma_space)
+					Result.append (Ampersand)
+					Result.append (Tmp_clause)
+					Result.append (Tmp_clause)
+					Result.append (arg_name)
+					Result.append (Close_parenthesis)
+					Result.append (Semicolon)
+					Result.append (New_line_tab)
+
+				end
 
 				Result.append (Tmp_clause)
 				Result.append (arg_name)
@@ -304,6 +351,14 @@ feature {NONE} -- Implementation
 				Result.append (Space_open_parenthesis)
 				if is_void (visitor.vt_type) and visitor.eiffel_type.is_equal ("CELL [POINTER]") then
 					Result.append ("(void **)")
+				end
+
+				if 
+					(visitor.vt_type = Vt_bstr) or
+					(is_array (visitor.vt_type) and not is_byref (visitor.vt_type))
+				then
+					Result.append (Tmp_clause)
+					Result.append (Tmp_clause)
 				end
 
 				Result.append (arg_name)

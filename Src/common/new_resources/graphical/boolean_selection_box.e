@@ -22,19 +22,19 @@ feature -- Creation
 	make(h: EV_HORIZONTAL_BOX; new_caller: PREFERENCE_WINDOW) is
 			-- Creation
 		local
-			h0,h1,h2: EV_HORIZONTAL_BOX
+			h0, h1, h2: EV_HORIZONTAL_BOX
 			com: EV_ROUTINE_COMMAND
 		do
-			precursor(h,new_caller)
-			!! h2.make(frame)
-			!! h1.make(h2)
-			!! yes_b.make_with_text(h1,"TRUE")
-			!! no_b.make_with_text(h1,"FALSE")
-			!! ok_b.make_with_text(h2,"OK")
-			h2.set_child_expandable(ok_b,FALSE)
-			ok_b.set_vertical_resize(FALSE)
-			!! com.make(~commit)
-			ok_b.add_click_command(com, Void)
+			precursor (h, new_caller)
+			!! h2.make (frame)
+			!! h1.make (h2)
+			!! yes_b.make_with_text (h1, "True")
+			!! no_b.make_with_text (h1, "False")
+			!! ok_b.make_with_text (h2, "OK")
+			h2.set_child_expandable (ok_b, False)
+			ok_b.set_vertical_resize (False)
+			!! com.make (~commit)
+			ok_b.add_click_command (com, Void)
 		end
 
 feature -- Commit
@@ -43,7 +43,7 @@ feature -- Commit
 		require
 			resource_exists: resource /= Void
 		do
-			resource.set_actual_value(yes_b.state)
+			resource.set_actual_value (yes_b.state)
 			update_resource
 			caller.update
 		end

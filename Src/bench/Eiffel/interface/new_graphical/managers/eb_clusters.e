@@ -595,7 +595,7 @@ feature -- Element change
 			on_cluster_added (a_cluster.actual_cluster)
 		end
 
-	add_cluster_i (a_cluster: CLUSTER_I; receiver: CLUSTER_I) is
+	add_cluster_i (a_cluster: CLUSTER_I; receiver: CLUSTER_I; is_recursive, is_library: BOOLEAN) is
 			-- Add `a_cluster' to `receiver' and notify observers.
 		local
 			new_subcluster, new_supercluster: EB_SORTED_CLUSTER
@@ -604,7 +604,7 @@ feature -- Element change
 			if a_cluster.parent_cluster /= Void then
 				a_cluster.parent_cluster.sub_clusters.prune_all (a_cluster)
 			end
-			add_cluster_in_ace (a_cluster, receiver)
+			add_cluster_in_ace (a_cluster, receiver, is_recursive, is_library)
 			if not error_in_ace_parsing then
 				new_subcluster := folder_from_cluster (a_cluster)
 				if new_subcluster = Void then
@@ -613,6 +613,29 @@ feature -- Element change
 				end
 				new_supercluster := folder_from_cluster (receiver)
 				add_cluster (new_subcluster, new_supercluster)
+			else
+				create wd.make_with_text (Warning_messages.w_Could_not_parse_ace)
+				wd.show_modal_to_window (Window_manager.last_focused_window.window)
+			end
+		end
+
+	add_top_cluster_i (a_cluster: CLUSTER_I; is_recursive, is_library: BOOLEAN) is
+			-- Add `a_cluster' to the root of the universe and notify observers.
+		local
+			new_subcluster: EB_SORTED_CLUSTER
+			wd: EV_WARNING_DIALOG
+		do
+			if a_cluster.parent_cluster /= Void then
+				a_cluster.parent_cluster.sub_clusters.prune_all (a_cluster)
+			end
+			add_top_cluster_in_ace (a_cluster, is_recursive, is_library)
+			if not error_in_ace_parsing then
+				new_subcluster := folder_from_cluster (a_cluster)
+				if new_subcluster = Void then
+						-- `a_cluster' was not in the system.
+					create new_subcluster.make (a_cluster)
+				end
+				add_cluster (new_subcluster, Void)
 			else
 				create wd.make_with_text (Warning_messages.w_Could_not_parse_ace)
 				wd.show_modal_to_window (Window_manager.last_focused_window.window)
@@ -793,7 +816,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	add_cluster_in_ace (a_cluster: CLUSTER_I; receiver: CLUSTER_I) is
+	add_cluster_in_ace (a_cluster: CLUSTER_I; receiver: CLUSTER_I; is_recursive, is_library: BOOLEAN) is
 			-- Add an entry for `a_cluster' in the Ace file under `receiver'.
 			-- If `receiver' is a recursive cluster, we set the flag `belongs_to_all'
 			-- in `a_cluster'.
@@ -844,7 +867,7 @@ feature {NONE} -- Implementation
 						not receiver.is_library
 					then
 						ace_clusters := root_ast.clusters
-						new_csd := new_cluster_sd (new_id_sd (a_cluster.cluster_name, False), new_id_sd (receiver.cluster_name, False), new_id_sd (a_cluster.path, True), Void, False, False)
+						new_csd := new_cluster_sd (new_id_sd (a_cluster.cluster_name, False), new_id_sd (receiver.cluster_name, False), new_id_sd (a_cluster.dollar_path, True), Void, is_recursive, is_library)
 						ace_clusters.extend (new_csd)
 						save_content
 					else
@@ -864,6 +887,41 @@ feature {NONE} -- Implementation
 							save_content
 						end
 					end
+				else
+						-- We could not retrieve the `root_ast'.
+					error_in_ace_parsing := True
+				end
+			else
+				error_in_ace_parsing := True
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	add_top_cluster_in_ace (a_cluster: CLUSTER_I; is_recursive, is_library: BOOLEAN) is
+			-- Add an entry for `a_cluster' in the Ace file at the top level.
+		require
+			valid_new_cluster: a_cluster /= Void
+		local
+			ace_clusters: LACE_LIST [CLUSTER_SD]
+			retried: BOOLEAN
+			new_csd: CLUSTER_SD
+		do
+			error_in_ace_parsing := False
+			if not retried then
+				root_ast := Void
+				if Workbench.system_defined or else Eiffel_ace.file_name /= Void then
+						-- Create a new freshly parsed AST. If there is a
+						-- syntax error during parsing of chose Ace file,
+						-- we open an empty window.
+					root_ast := Eiffel_ace.Lace.parsed_ast
+				end
+				if root_ast /= Void then
+					ace_clusters := root_ast.clusters
+					new_csd := new_cluster_sd (new_id_sd (a_cluster.cluster_name, False), Void, new_id_sd (a_cluster.dollar_path, True), Void, is_recursive, is_library)
+					ace_clusters.extend (new_csd)
+					save_content
 				else
 						-- We could not retrieve the `root_ast'.
 					error_in_ace_parsing := True

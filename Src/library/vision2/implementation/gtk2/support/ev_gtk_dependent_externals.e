@@ -8,6 +8,51 @@ class
 
 feature -- Externals
 
+	frozen gdk_keymap_lookup_key (a_keymap, a_key: POINTER): INTEGER is
+		external
+			"C signature (GdkKeymap*, GdkKeymapKey*): guint use <gtk/gtk.h>"
+		end
+
+	frozen gdk_keymap_get_entries_for_keyval (a_keymap: POINTER; a_keyval: INTEGER; a_keymapkey_array: TYPED_POINTER [POINTER]; n_keys: TYPED_POINTER [INTEGER]): BOOLEAN is
+		external
+			"C signature (GdkKeymap*, guint, GdkKeymapKey**, gint*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen gdk_keymapkey_struct_keycode (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GdkKeymapKey): EIF_INTEGER"
+		alias
+			"keycode"
+		end
+
+	frozen gdk_keymapkey_struct_group (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GdkKeymapKey): EIF_INTEGER"
+		alias
+			"group"
+		end
+		
+	frozen set_gdk_keymapkey_struct_level (a_c_struct: POINTER; a_level: INTEGER) is
+		external
+			"C [struct <gtk/gtk.h>] (GdkKeymapKey, gint)"
+		alias
+			"level"
+		end
+
+	frozen gdk_keymapkey_struct_level (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GdkKeymapKey): EIF_INTEGER"
+		alias
+			"level"
+		end
+
+	frozen c_gdk_keymapkey_struct_size: INTEGER is
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"sizeof(GdkKeymapKey)"
+		end
+
 	frozen gdk_gc_set_rgb_fg_color (a_gc: POINTER; a_color: POINTER) is
 		external
 			"C (GdkGC*, GdkColor*) | <gtk/gtk.h>"

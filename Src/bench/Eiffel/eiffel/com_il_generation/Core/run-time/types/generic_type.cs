@@ -115,6 +115,9 @@ feature -- Settings
 	public void set_generics (RT_TYPE[] an_array)
 		// Assign `an_array' to `generics'.
 	{
+		#if ASSERTIONS
+			ASSERTIONS.REQUIRE("an_array_not_void", an_array != null);
+		#endif
 		generics = an_array;
 		count = an_array.Length;
 	}

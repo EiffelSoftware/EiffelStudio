@@ -148,7 +148,6 @@ feature -- Saving
 			-- 
 		local
 			l_pe_file: RAW_FILE
-			l_pos: INTEGER
 			l_padding: MANAGED_POINTER
 		do
 				-- First compute size of PE file headers and sections.
@@ -309,7 +308,7 @@ feature {NONE} -- Saving
 				-- Setting of import table.
 			iat.set_import_by_name_rva (text_rva + iat.size + cli_header.size + code_size +
 				meta_data_size + import_table_padding + import_table.Size_to_import_by_name)
-			import_table.set_rvas (text_rva, iat.size + cli_header.size + code_size + meta_data_size
+			import_table.set_rvas (text_rva, text_rva + iat.size + cli_header.size + code_size + meta_data_size
 				+ import_table_padding)
 			
 				-- Entry point setting

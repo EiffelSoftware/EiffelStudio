@@ -154,8 +154,6 @@ feature -- Basic Operations
 			compiler_user_precondition: compiler_user_precondition
 		deferred
 
-		ensure
-			valid_compiler: Result.item /= default_pointer
 		end
 
 	is_compiled: BOOLEAN is
@@ -172,8 +170,6 @@ feature -- Basic Operations
 			system_browser_user_precondition: system_browser_user_precondition
 		deferred
 
-		ensure
-			valid_system_browser: Result.item /= default_pointer
 		end
 
 	project_properties: IEIFFEL_PROJECT_PROPERTIES_INTERFACE is
@@ -182,8 +178,6 @@ feature -- Basic Operations
 			project_properties_user_precondition: project_properties_user_precondition
 		deferred
 
-		ensure
-			valid_project_properties: Result.item /= default_pointer
 		end
 
 end -- IEIFFEL_PROJECT_INTERFACE

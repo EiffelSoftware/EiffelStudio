@@ -54,7 +54,7 @@ feature  -- Access
 		do
 			Result := implementation.title
 		ensure
-			bridge_ok: Result = implementation.title
+			bridge_ok: equal (Result, implementation.title)
 		end
 
 	menu_bar: EV_MENU_BAR is
@@ -363,6 +363,9 @@ end -- class EV_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/02/19 00:55:11  brendel
+--| Fixed bug in postcodition of `title'.
+--|
 --| Revision 1.43  2000/02/14 11:40:52  oconnor
 --| merged changes from prerelease_20000214
 --|

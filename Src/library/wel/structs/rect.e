@@ -91,7 +91,7 @@ feature -- Access
 		end
 
 	bottom: INTEGER is
-			-- Position of the bottonm border
+			-- Position of the bottom border
 		do
 			Result := cwel_rect_get_bottom (item)
 		end

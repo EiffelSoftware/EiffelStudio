@@ -58,6 +58,7 @@ feature -- Type check, byte code and dead code removal
 			-- Reconstitute text.
 		do
 			call.format (ctxt);
+			ctxt.put_breakable;
 		end;
 
 end

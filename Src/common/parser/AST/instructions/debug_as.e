@@ -103,7 +103,9 @@ feature -- Formatter
 			ctxt.new_line_between_tokens;
 			compound.format (ctxt);
 			ctxt.indent_one_less;
+			ctxt.next_line;
 			ctxt.put_keyword ("end");
+			ctxt.put_breakable;
 			ctxt.commit;
 		end;
 	

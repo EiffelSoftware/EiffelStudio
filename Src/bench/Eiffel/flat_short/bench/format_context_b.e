@@ -633,11 +633,11 @@ feature -- comments
 		do
 			begin;
 			if comment /= void then
-				if comment.count > 0 then
+				if comment.count > 0 
+					and comment.text.item (i).item (1) /= '|'
+				then
 					put_string ("-- ");
 					put_string (comment.text.item (0));
-				end;
-				if comment.count > 1 then
 					from
 						i := 1
 					until
@@ -653,7 +653,9 @@ feature -- comments
 			end;
 			commit;
 		end;
-
+			
+				
+	
 	put_trailing_comment (pos: INTEGER) is
 		local
 			file: EIFFEL_FILE;

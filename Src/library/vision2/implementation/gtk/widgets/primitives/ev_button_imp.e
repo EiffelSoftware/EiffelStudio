@@ -110,9 +110,6 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, pixmap_box)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, text_label)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (box, right_side_label)
-			
-			set_child_expandable (box, pixmap_box, False)
-			set_child_expandable (box, text_label, False)
 		ensure
 			button_box /= NULL
 		end

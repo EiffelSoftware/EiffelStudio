@@ -55,7 +55,7 @@ echo     - config.wsh (Configuration file for Watcom C++)
 echo     - config.ssh (Configuration file for Symantec C++)
 pause
 echo @echo off > make.w32
-echo $make>> make.w32
+echo $make %%1>> make.w32
 rt-converter.exe make.w32 make.w32
 del run-time\eif_config.h
 rem

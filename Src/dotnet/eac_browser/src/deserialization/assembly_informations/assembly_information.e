@@ -77,21 +77,19 @@ feature {NONE} -- Access
 
 feature -- Basic Operations
 
-	find_type (assembly_type: CONSUMED_ASSEMBLY; a_full_dotnet_type: STRING): MEMBER_INFORMATION is
+	find_type (assembly_type_name: STRING; a_full_dotnet_type: STRING): MEMBER_INFORMATION is
 			-- Find comments relative to `a_full_dotnet_type'.
 		require else
-			non_void_assembly_type: assembly_type /= Void
+			non_void_assembly_type_name: assembly_type_name /= Void
+			not_empty_assembly_type_name: not assembly_type_name.is_empty
 			non_void_a_full_dotnet_type: a_full_dotnet_type /= Void
 			not_empty_a_full_dotnet_type: not a_full_dotnet_type.is_empty
-		local
-			l_assembly_name: STRING
 		do
-			l_assembly_name := assembly_type.name
-			if not Member_parser_table.has (l_assembly_name) then
-				initialize (l_assembly_name)
+			if not Member_parser_table.has (assembly_type_name) then
+				initialize (assembly_type_name)
 			else
-				xml_file_path := path_to_assembly (l_assembly_name)
-				member_parser := Member_parser_table.item (l_assembly_name)
+				xml_file_path := path_to_assembly (assembly_type_name)
+				member_parser := Member_parser_table.item (assembly_type_name)
 			end
 			if not xml_file_path.is_empty and member_parser /= Void then
 				
@@ -99,27 +97,25 @@ feature -- Basic Operations
 			Result := find_member (a_full_dotnet_type, "")
 		end
 
-	find_feature (assembly_type: CONSUMED_ASSEMBLY; a_full_dotnet_type: STRING; a_member_signature: STRING): MEMBER_INFORMATION is
+	find_feature (assembly_type_name: STRING; a_full_dotnet_type: STRING; a_member_signature: STRING): MEMBER_INFORMATION is
 			-- Find comments of feature of `a_full_dotnet_type' corresponding to `a_feature_signature'.
 			-- Constructor signature: #ctor[(TYPE,TYPE,...)]
 			-- Feature signature: feature_name[(TYPE,TYPE,...)]
 			-- Attribute signature: attribute_name
 		require else
 			non_void_assembly_type: assembly_type /= Void
-			non_void_a_full_dotnet_type: a_full_dotnet_type /= Void
+			non_void_assembly_type_name: assembly_type_name /= Void
+			not_empty_assembly_type_name: not assembly_type_name.is_empty
 			not_empty_a_full_dotnet_type: not a_full_dotnet_type.is_empty
 			non_void_a_member_signature: a_member_signature /= Void
 			not_empty_a_member_signature: not a_member_signature.is_empty
 			valid_dotnet_signature: is_valid_dotnet_signature (a_member_signature)
-		local
-			l_assembly_name: STRING
 		do
-			l_assembly_name := assembly_type.name
-			if not Member_parser_table.has (l_assembly_name) then
-				initialize (l_assembly_name)
+			if not Member_parser_table.has (assembly_type_name) then
+				initialize (assembly_type_name)
 			else
-				xml_file_path := path_to_assembly (l_assembly_name)
-				member_parser := Member_parser_table.item (l_assembly_name)
+				xml_file_path := path_to_assembly (assembly_type_name)
+				member_parser := Member_parser_table.item (assembly_type_name)
 			end
 			Result := find_member (a_full_dotnet_type, a_member_signature)
 		end

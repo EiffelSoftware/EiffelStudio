@@ -12,7 +12,10 @@ feature -- Access
 	explicit_current: INTEGER_8 is 0x40
 	default_sig: INTEGER_8 is 0
 	vararg_sig: INTEGER_8 is 0x05
-			-- Flags for signature description.
+			-- Flags for signature description of methods.
+			
+	field: INTEGER_8 is 0x06
+			-- Flag for signatre description of a field.
 
 feature -- Types
 

@@ -10,9 +10,9 @@ creation
 
 feature {NONE}
 
-	make (i: INTEGER) is
+	make (i: INTEGER; cmd_catalog: COMMAND_CATALOG) is
 		do
-			old_make (command_catalog)
+			old_make (cmd_catalog)
 		end;
 
 	reset_commands is

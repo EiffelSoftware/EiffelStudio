@@ -82,7 +82,7 @@ feature -- Basic Operation
 			check
 				directory_item_found: directory_item /= Void
 			end
-			directory_item.parent.prune_all (directory_item)
+			directory_item.unparent
 			
 			if not history.command_list.has (Current) then
 				history.add_command (Current)

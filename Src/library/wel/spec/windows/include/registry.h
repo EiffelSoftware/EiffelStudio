@@ -9,16 +9,28 @@
 #	include <wel.h>
 #endif
 
-static DWORD g_type;
-static LPTSTR g_buffer;
-static DWORD g_length;
+//////////////////////////////////////////////////////////////
+//
+//  Structure used to store information about key value.  
+//
 
 typedef struct {
 	DWORD type;
 	LPBYTE data;
 	DWORD length;
 	} REG_VALUE;
-	
+
+//////////////////////////////////////////////////////////////
+//
+//  Structure used to store information about a key.
+//
+
+typedef struct {
+		EIF_POINTER name;
+		EIF_POINTER class;
+		PFILETIME LastWriteTime;
+		} REG_KEY;
+
 extern EIF_INTEGER cwin_reg_create_key (EIF_OBJ main_obj, EIF_INTEGER parent_key,
 									EIF_POINTER keyName, EIF_INTEGER access_mode);
 
@@ -34,13 +46,11 @@ extern void cwin_reg_set_key_value (EIF_INTEGER key, EIF_POINTER keyname,
 extern void cwin_reg_close_key (EIF_INTEGER key);
 
 
-extern void cwin_reg_query_value (EIF_INTEGER key, EIF_POINTER value_name);
-		
-extern EIF_INTEGER cwin_reg_value_type();
+extern EIF_POINTER cwin_reg_query_value (EIF_INTEGER key, EIF_POINTER value_name);
 
-extern EIF_POINTER cwin_reg_value_data();
+extern EIF_POINTER cwin_reg_def_query_value (EIF_INTEGER key, EIF_POINTER value_name);
 
-extern EIF_INTEGER cwin_reg_value_length();
+extern EIF_POINTER cwin_reg_enum_key (EIF_INTEGER key, EIF_INTEGER index);
 
 #endif  /* __WEL_REGISTRY__ */
 

@@ -12,7 +12,7 @@ inherit
 	WEL_REGISTRY_KEY_VALUE_TYPE
 
 creation
-	make
+	make, make_from_pointer
 	
 feature -- Initialization
 
@@ -20,8 +20,20 @@ feature -- Initialization
 			-- Create an empty structure
 		do
 			item := cwin_reg_value_alloc
+		ensure
+			item_initialized: item /= Default_pointer
 		end
 		
+	make_from_pointer (a_pointer: POINTER) is
+			-- Set `item' with `a_pointer'.
+		require
+			valid_pointer: a_pointer /= Default_pointer
+		do
+			item := a_pointer
+		ensure
+			item_set: item = a_pointer
+		end
+
 feature -- Access
 
 	type: INTEGER is
@@ -165,6 +177,10 @@ feature {NONE} -- Externals
 			"C [macro <wel_reg_value.h>]"
 		end
 		
+invariant
+	
+	valid_item: item /= Default_pointer
+
 end -- class WEL_REGISTRY_KEY_VALUE
 
 --|----------------------------------------------------------------

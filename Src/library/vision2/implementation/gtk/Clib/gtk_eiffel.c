@@ -1140,12 +1140,14 @@ void c_gtk_table_set_spacing_if_needed (GtkWidget *widget)
  *
  * Function : `c_gtk_tree_item_expanded' (1)
  * 			  `c_gtk_tree_item_is_selected'	(2)
- * 			  `c_gtk_tree_item_set_single_selection_mode' (3)
+ * 			  `c_gtk_tree_set_single_selection_mode' (3)
+ * 			  `c_gtk_tree_selected_item' (4)
  *
- * Note : (1) Tell if an item is expanded or not
+ * Note : (1) Tell if an item is expanded or not.
  *		  (2) is the item selected?
- *		  (3) set the selection mode to SINGLE
- *
+ *		  (3) set the selection mode to SINGLE.
+ *		  (4) give the selected item of the tree.
+ * 	
  * Author : Leila, Alex
  *
  *********************************/
@@ -1182,6 +1184,42 @@ void c_gtk_tree_set_single_selection_mode (GtkWidget *tree)
 {
   gtk_tree_set_selection_mode (GTK_TREE (tree), GTK_SELECTION_SINGLE);
 }
+
+EIF_POINTER c_gtk_tree_selected_item (GtkWidget *tree)
+{
+	GList *list;
+	GtkTree * wid;
+
+	wid = GTK_TREE_ROOT_TREE (GTK_TREE (tree));
+list = wid->selection;
+	
+	list = GTK_TREE_SELECTION(tree);
+
+  while (list){
+    GtkWidget *item;
+
+    item = GTK_WIDGET (list->data);
+    list = list->next;
+  }
+  if (list->data != NULL)
+  {
+   	return (EIF_POINTER) (list->data);
+  }	  
+  else return (EIF_POINTER) NULL; 
+
+/*
+
+	if (list != NULL)
+	{	
+	  if (list->data != NULL)
+	  {
+	   	return (EIF_POINTER) (list->data);
+	  }
+	  else return (EIF_POINTER) NULL; 
+	}
+	else return (EIF_POINTER) NULL; 
+*/
+	}
 
 /*********************************
  *
@@ -1309,10 +1347,15 @@ void c_gtk_widget_set_bg_color (GtkWidget* widget, int r, int g, int b)
 {
 		GtkStyle* style;
 		int or, og, ob;
-		
+//int i;
 		style = gtk_widget_get_style(GTK_WIDGET(widget));
 		r *= 257; g *= 257; b *= 257;
-		
+/*		
+		or = style->base[GTK_STATE_NORMAL].red;
+		og = style->base[GTK_STATE_NORMAL].green;
+		ob = style->base[GTK_STATE_NORMAL].blue;
+*/
+
 		or = style->bg[GTK_STATE_NORMAL].red;
 		og = style->bg[GTK_STATE_NORMAL].green;
 		ob = style->bg[GTK_STATE_NORMAL].blue;
@@ -1320,14 +1363,21 @@ void c_gtk_widget_set_bg_color (GtkWidget* widget, int r, int g, int b)
 		if(or != r || og != g || ob != b)
 		{
 			style = gtk_style_copy (style);
-
-			style->bg[GTK_STATE_NORMAL].red = r;
-			style->bg[GTK_STATE_NORMAL].green = g;
-			style->bg[GTK_STATE_NORMAL].blue = b;
-			style->base[GTK_STATE_NORMAL].red = r;
+/*
+ * 			style->base[GTK_STATE_NORMAL].red = r;
 			style->base[GTK_STATE_NORMAL].green = g;
 			style->base[GTK_STATE_NORMAL].blue = b;
-			
+			gtk_widget_set_style(GTK_WIDGET(widget), style);
+*/
+//			for (i = 0; i < 5; i++)
+//			{
+				style->bg[GTK_STATE_NORMAL].red = r;
+				style->bg[GTK_STATE_NORMAL].green = g;
+				style->bg[GTK_STATE_NORMAL].blue = b;
+				style->base[GTK_STATE_NORMAL].red = r;
+				style->base[GTK_STATE_NORMAL].green = g;
+				style->base[GTK_STATE_NORMAL].blue = b;
+//			}
 			gtk_widget_set_style(GTK_WIDGET(widget), style);
 		}
 		
@@ -1337,7 +1387,11 @@ void c_gtk_widget_get_bg_color (GtkWidget *widget, EIF_INTEGER *r, EIF_INTEGER *
 {
 		GtkStyle* style;
 		style = GTK_WIDGET(widget)->style;
-		
+/*
+		*r = style->base[GTK_STATE_NORMAL].red;
+		*g = style->base[GTK_STATE_NORMAL].green;
+		*b = style->base[GTK_STATE_NORMAL].blue;
+*/
 		*r = style->bg[GTK_STATE_NORMAL].red;
 		*g = style->bg[GTK_STATE_NORMAL].green;
 		*b = style->bg[GTK_STATE_NORMAL].blue;
@@ -1349,6 +1403,7 @@ void c_gtk_widget_set_fg_color (GtkWidget* widget, int r, int g, int b)
 {
 		GtkStyle* style;
 		int or, og, ob;
+//int i;
 
 		style = gtk_widget_get_style(GTK_WIDGET(widget));
 
@@ -1359,28 +1414,40 @@ void c_gtk_widget_set_fg_color (GtkWidget* widget, int r, int g, int b)
 		ob = style->text[GTK_STATE_NORMAL].blue;
 		
 		if(or != r || og != g || ob != b) {
-  			
-			style = gtk_style_copy (style);
-
+/*
+ * 			style = gtk_style_copy (style);
+			style->text[GTK_STATE_NORMAL].red = r;
+			style->text[GTK_STATE_NORMAL].green = g;
+			style->text[GTK_STATE_NORMAL].blue = b;
+			gtk_widget_set_style(GTK_WIDGET(widget), style);
+*/
+  			style = gtk_style_copy (style);
+//    for (i = 0; i < 5; i++) {
 			style->fg[GTK_STATE_NORMAL].red = r;
 			style->fg[GTK_STATE_NORMAL].green = g;
 			style->fg[GTK_STATE_NORMAL].blue = b;
 			style->text[GTK_STATE_NORMAL].red = r;
 			style->text[GTK_STATE_NORMAL].green = g;
 			style->text[GTK_STATE_NORMAL].blue = b;
-			
+//	}	
 			gtk_widget_set_style(GTK_WIDGET(widget), style);
-		}
+			}
 }
 
 void c_gtk_widget_get_fg_color (GtkWidget* widget, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b)
 {
 		GtkStyle* style;
 		style = GTK_WIDGET(widget)->style;
+/*
+		*r = style->text[GTK_STATE_NORMAL].red;
+		*g = style->text[GTK_STATE_NORMAL].green;
+		*b = style->text[GTK_STATE_NORMAL].blue;
 
-		*r = style->fg[GTK_STATE_NORMAL].red;
-		*g = style->fg[GTK_STATE_NORMAL].green;
-		*b = style->fg[GTK_STATE_NORMAL].blue;
+		*r /= 257; *g /= 257; *b /= 257;
+*/
+*r = style->fg[GTK_STATE_NORMAL].red;
+*g = style->fg[GTK_STATE_NORMAL].green;
+*b = style->fg[GTK_STATE_NORMAL].blue;
 
 		*r /= 257; *g /= 257; *b /= 257;
 }

@@ -24,6 +24,8 @@ feature -- Access
 			"C | %"eif_dir.h%""
 		alias
 			"dir_current"
+		ensure
+			result_not_void: Result /= Void
 		end
 
 	default_shell: STRING is
@@ -65,7 +67,9 @@ feature -- Access
 		require
 			root_directory_supported: Operating_environment.root_directory_supported
 		do
-			Result := eif_home_directory_name
+			Result := eif_root_directory_name
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Status

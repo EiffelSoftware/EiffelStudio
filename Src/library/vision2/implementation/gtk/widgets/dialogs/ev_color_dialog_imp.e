@@ -5,10 +5,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	EV_COLOR_SELECTION_DIALOG_IMP
+	EV_COLOR_DIALOG_IMP
 
 inherit
-	EV_COLOR_SELECTION_DIALOG_I
+	EV_COLOR_DIALOG_I
 
 	EV_SELECTION_DIALOG_IMP
 		redefine
@@ -134,7 +134,7 @@ feature {NONE} -- Implementation - Event handling -
 			end
 		end
 
-end -- class EV_COLOR_SELECTION_DIALOG_IMP
+end -- class EV_COLOR_DIALOG_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

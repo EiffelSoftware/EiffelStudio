@@ -15,7 +15,8 @@ inherit
 			extra_minimum_height,
 			promote_to_modeless_dialog,
 			promote_to_modal_dialog,
-			common_dialog_imp
+			common_dialog_imp,
+			has_title_bar
 		end
 
 create
@@ -49,6 +50,9 @@ feature {NONE} -- Implementation
 				Result := Result - 2 * dialog_window_frame_height
 			end
 		end
+		
+	has_title_bar: BOOLEAN is False
+			-- Does Current have a title bar?
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 

@@ -12,7 +12,8 @@ inherit
 		undefine
 			promote_to_dialog_window,
 			extra_minimum_height,
-			update_style
+			update_style,
+			has_title_bar
 		redefine
 			interface,
 			other_imp

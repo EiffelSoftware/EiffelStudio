@@ -385,11 +385,11 @@ feature -- Status Report
 			if a_justification = feature {EV_GTK_EXTERNALS}.gtk_justify_left_enum then
 				Result.enable_left_alignment
 			elseif a_justification = feature {EV_GTK_EXTERNALS}.gtk_justify_center_enum then
-					Result.enable_center_alignment
+				Result.enable_center_alignment
 			elseif a_justification = feature {EV_GTK_EXTERNALS}.gtk_justify_right_enum then
-					Result.enable_right_alignment
+				Result.enable_right_alignment
 			elseif a_justification = feature {EV_GTK_EXTERNALS}.gtk_justify_fill_enum then
-					Result.enable_justification
+				Result.enable_justification
 			end
 			gtk_text_attributes_free (a_text_attributes)
 		end

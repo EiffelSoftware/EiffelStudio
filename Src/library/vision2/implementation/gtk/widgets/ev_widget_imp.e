@@ -68,13 +68,16 @@ feature {NONE} -- Initialization
 			end
 
 				--| "button-press-event" is a special case, see below.
-			interface.pointer_button_press_actions.set_source_connection_agent (
+			interface.pointer_button_press_actions.not_empty_actions.extend (
 				~connect_button_press_switch
 			)
-
-			interface.pointer_double_press_actions.set_source_connection_agent (
+			interface.pointer_double_press_actions.not_empty_actions.extend (
 				~connect_button_press_switch
 			)
+			if not interface.pointer_button_press_actions.empty or
+				not interface.pointer_double_press_actions.empty then
+				connect_button_press_switch
+			end
 			is_initialized := True
 		end
 
@@ -859,6 +862,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.65  2000/03/24 02:20:40  oconnor
+--| use new not_empty_actions from ACTION_SEQUENCE
+--|
 --| Revision 1.64  2000/03/21 00:12:37  king
 --| Added code for parent to deal with aggregate cell
 --|

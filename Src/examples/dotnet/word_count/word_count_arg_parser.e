@@ -1,3 +1,7 @@
+indexing
+	description: "Word count argument parser"
+	external_name: "ISE.Examples.WordCount.WordCountArgParser"
+	
 class
 	WORD_COUNT_ARG_PARSER
 
@@ -15,67 +19,86 @@ create
 feature {NONE} -- Initialization
 
 	build is
-			-- Set valid command-line switches
+		indexing
+			description: "Set valid command-line switches."
+			external_name: "Build"
 		do
 			make_case_insensitive_default_switch (<<"?", "a", "o", "f">>)
 			create pathnames.make
+		ensure
+			non_void_pathnames: pathnames /= Void
 		end
 		
 feature -- Access
 
 	output_filename: STRING
-			-- User specified ouput file
+		indexing
+			description: "User specified ouput file"
+			external_name: "OutputFilename"
+		end
 
 	aphabetical_usage_showed: BOOLEAN
-			-- Should alphabetical word usage be displayed?
+		indexing
+			description: "Should alphabetical word usage be displayed?"
+			external_name: "AlphabeticalUsageShowed"
+		end
 
 	occurence_usage_showed: BOOLEAN
-			-- Should occurence word usage be displayed?
+		indexing
+			description: "Should occurence word usage be displayed?"
+			external_name: "OccurrenceUsageShowed"
+		end
 
 feature -- Basic Operations
 
 	usage (error_info: STRING) is
-			-- Show application's usage info and also report command-line argument errors.
+		indexing
+			description: "Show application's usage info and also report command-line argument errors."
+			external_name: "Usage"
 		do
 			if error_info /= Void then
 				-- An command-line argument error occurred, report it to user
 				-- `error_info' identifies the argument that is in error.
-				Console.WriteLine_system_string_system_object ("Command-line switch error: {0}\n", error_info)
-        	end
-			Console.WriteLine_system_string ("Usage: WordCount [-a] [-o] [-f<output-pathname>] input-pathname...")
-			Console.WriteLine_system_string ("   -?  Show this usage information")
-			Console.WriteLine_system_string ("   -a  Word usage sorted alphabetically")
-			Console.WriteLine_system_string ("   -o  Word usage sorted by occurrence")
-			Console.WriteLine_system_string ("   -f  Send output to specified pathname instead of the console")
+				console.write_line_string_object ("Command-line switch error: {0}\n", error_info)
+        		end
+			console.write_line_string ("Usage: WordCount [-a] [-o] [-f<output-pathname>] input-pathname...")
+			console.write_line_string ("   -?  Show this usage information")
+			console.write_line_string ("   -a  Word usage sorted alphabetically")
+			console.write_line_string ("   -o  Word usage sorted by occurrence")
+			console.write_line_string ("   -f  Send output to specified pathname instead of the console")
 		end
 
 
 	non_switch_value (value: STRING): INTEGER is
-			-- Called for each non-value command-line argument (filespecs)
+		indexing
+			description: "Called for each non-value command-line argument (filespecs)"
+			external_name: "NonSwitchValue"
 		local
 			d: STRING
-			dir: SYSTEM_IO_DIRECTORY
+			file_info: SYSTEM_IO_FILEINFO
+			dir_info: SYSTEM_IO_DIRECTORYINFO
 			retried: BOOLEAN
-			files: ARRAY [SYSTEM_IO_FILE]
+			files: ARRAY [SYSTEM_IO_FILEINFO]
 			i, an_integer: INTEGER
 		do
 			if not retried then
 				Result := No_error
 				-- Add command-line argument to array of pathnames.
-				d := File.GetDirectoryNameFromPath (value)
-				if d.count = 0 then
-					create dir.make_directory (".")
+				create file_info.make_fileinfo (value)
+				d := file_info.get_directory_name 
+				if d.get_length = 0 then
+					create dir_info.make_directoryinfo (".")
 				else
-					create dir.make_directory (d)
+					create dir_info.make_directoryinfo (d)
 				end
 				-- Convert `value' to set of pathnames, add each pathname to the pathnames ArrayList.
 				from
-					files := dir.GetFiles_System_String (File.GetFileNameFromPath (value))
+					files := dir_info.get_files_string (file_info.get_name)
 					i := 0
 				until
 					i = files.count
 				loop
-					an_integer := pathnames.Add (files.item (i).FullName)
+					an_integer := pathnames.add (files.item (i).get_full_name)
 					i := i + 1
 				end
 			end
@@ -93,27 +116,27 @@ feature -- Basic Operations
 		-- `symbol' will contain all lower-case characters
 		do
 			Result := No_error
-			if symbol.equals_System_String ("?") then
+			if symbol.equals_string ("?") then
 				-- User wants to see Usage
 				Result := Show_usage
-			elseif symbol.equals_System_String ("a") then
+			elseif symbol.equals_string ("a") then
 				-- User wants to see all words sorted alphabetically
 				aphabetical_usage_showed := True
-			elseif symbol.equals_System_String ("o") then
+			elseif symbol.equals_string ("o") then
 				-- User wants to see all words sorted by occurrence
 				occurence_usage_showed := True
-			elseif symbol.equals_System_String ("f") then
+			elseif symbol.equals_string ("f") then
 				-- User wants output redirected to a specified file
-				if value.count < 1 then
-					Console.WriteLine_system_string ("No output file specified.")
+				if value.get_length < 1 then
+					console.write_line_string ("No output file specified.")
 					Result := Error
 				else
 					output_filename := value
 				end
 			else
-				Console.Write_system_string ("Invalid switch: %"")
-				Console.Write_system_string (symbol)
-				Console.WriteLine_system_string ("%".%N")
+				console.write_string ("Invalid switch: %"")
+				console.write_string (symbol)
+				console.write_line_string ("%".%N")
 				Result := Error
 			end
 		end
@@ -123,18 +146,18 @@ feature -- Basic Operations
 		do
 			Result := No_error
 			-- Sort all the pathnames in the list
-			if pathnames.count = 0 then
-				Console.WriteLine_system_string ("No pathnames specified.")
+			if pathnames.get_count = 0 then
+				console.write_line_string ("No pathnames specified.")
 				Result := Error
 			else
-				pathnames.Sort_System_Int32 (0, pathnames.count, Void)
+				pathnames.sort_int32 (0, pathnames.get_count, Void)
 			end
 		end
 
 	pathname_enumerator: SYSTEM_COLLECTIONS_IENUMERATOR is
 			-- Returns enumerator that includes all the user-desired files.
 		do
-			Result := pathnames.GetEnumerator_System_Int32 (0, pathnames.count)
+			Result := pathnames.get_enumerator_int32 (0, pathnames.get_count)
 		ensure
 			non_void_enumerator: Result /= Void
 		end

@@ -1,36 +1,64 @@
+indexing
+	description: "Useful statics"
+	external_name: "ISE.Examples.WordCount.Statics"
+
 class
 	STATICS
 
 feature -- Statics
 
-	Console: SYSTEM_CONSOLE
+	console: SYSTEM_CONSOLE
+		indexing
+			description: "Console"
+			external_name: "Console"
+		end
 	
-	String: STRING
+	string: STRING
+		indexing
+			description: "String"
+			external_name: "String"
+		end
 	
-	File_mode_create_new: INTEGER is 1
-	File_mode_create: INTEGER is 2
-	File_mode_open: INTEGER is 3
-	File_mode_open_or_create: INTEGER is 4
-	File_mode_truncate: INTEGER is 5
-	File_mode_append: INTEGER is 6
-
-	File_access_read: INTEGER is 1
-	File_access_write: INTEGER is 2
-	File_access_read_write: INTEGER is 3
-
-	File_share_none: INTEGER is 0
-	File_share_read: INTEGER is 1
-	File_share_write: INTEGER is 2
-	File_share_read_write: INTEGER is 3
-
-	No_error, Error, Show_usage: INTEGER is unique
-
-	Array: SYSTEM_ARRAY
-
-	File: SYSTEM_IO_FILE
-
-	Encoding: SYSTEM_TEXT_ENCODING
+	No_error: INTEGER is unique
+		indexing
+			description: "No error"
+			external_name: "NoError"
+		end
 	
-	Environment: SYSTEM_ENVIRONMENT
-	
+	Error: INTEGER is unique
+		indexing
+			description: "Error"
+			external_name: "Error"
+		end
+		
+	Show_usage: INTEGER is unique
+		indexing
+			description: "Show usage."
+			external_name: "ShowUsage"
+		end
+		
+	array: SYSTEM_ARRAY
+		indexing
+			description: "Static needed to access arrays"
+			external_name: "Array"
+		end
+		
+	file: SYSTEM_IO_FILE
+		indexing
+			description: "Static needed to access files"
+			external_name: "File"
+		end
+		
+	encoding: SYSTEM_TEXT_ENCODING
+		indexing
+			description: "Encoding"
+			external_name: "Encoding"
+		end
+		
+	environment: SYSTEM_ENVIRONMENT
+		indexing
+			description: "Execution environment"
+			external_name: "Environment"
+		end
+		
 end -- class STATICS	

@@ -46,7 +46,9 @@ inherit
 			minimum as wel_minimum,
 			maximum as wel_maximum,
 			font as wel_font,
-			set_font as wel_set_font
+			set_font as wel_set_font,
+			foreground_color as wel_foreground_color,
+			background_color as wel_background_color
 		undefine
 			on_hide,
 			on_show,

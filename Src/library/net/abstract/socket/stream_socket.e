@@ -64,14 +64,14 @@ feature {NONE} -- Externals
 	c_accept (soc: INTEGER; addr: POINTER; length: INTEGER): INTEGER is
 			-- External c routine to accept a socket connection
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_listen (soc, backlog: INTEGER) is
 			-- External c routine to make socket passive and accept
 			-- at most `backlog' number of pending connections
 		external
-			"C"
+			"C blocking"
 		end
 
 end -- class STREAM_SOCKET

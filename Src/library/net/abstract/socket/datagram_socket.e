@@ -206,7 +206,7 @@ feature {NONE} -- Externals
 			-- from the socket identified by `fd' connected
 			-- to a peer address of `addr'.
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_send_to (fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER; addr: POINTER; l: INTEGER): INTEGER is
@@ -214,42 +214,42 @@ feature {NONE} -- Externals
 			-- from the socket identified by `fd' connected
 			-- to a peer address of `addr'.
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_send_char_to (fd: INTEGER; c: CHARACTER; flags: INTEGER; addr: POINTER; length: INTEGER) is
 			-- External routine to send character `c' to address `addr'
 			-- through socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_send_int_to (fd: INTEGER; i: INTEGER; flags: INTEGER; addr: POINTER; length: INTEGER) is
 			-- External routine to send integer `i' to address `addr'
 			-- through socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_send_float_to (fd: INTEGER; r: REAL; flags: INTEGER; addr: POINTER; length: INTEGER) is
 			-- External routine to send real `r' to address `addr'
 			-- through socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_send_double_to (fd: INTEGER; d: DOUBLE; flags: INTEGER; addr: POINTER; length: INTEGER) is
 			-- External routine to send double `d' to address `addr'
 			-- through socket `fd'
 		external
-			"C"
+			"C blocking"
 		end;
 
 	c_send_stream_to (fd: INTEGER; s: POINTER; l: INTEGER; flags: INTEGER; addr: POINTER; length: INTEGER) is
 			-- External routine to send stream pointed by `s'
 			-- to address `addr' through socket `fd'
 		external
-			"C"
+			"C blocking"
 		end
 
 end -- class DATAGRAM_SOCKET

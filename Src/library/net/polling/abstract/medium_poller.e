@@ -413,7 +413,7 @@ feature {NONE}
 	c_select (nfds: INTEGER; rmask, wmask, emask: POINTER; time_sec, time_msec: INTEGER): INTEGER  is
 			-- External C routine designed for asynchronous IO
 		external
-			"C"
+			"C blocking"
 		end
 
 end -- class MEDIUM_POLLER

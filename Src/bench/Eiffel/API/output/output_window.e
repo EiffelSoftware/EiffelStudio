@@ -165,7 +165,7 @@ feature {TEXT_ITEM} -- Text processing
 			put_feature_error (text.e_feature, text.image, text.position);
 		end;
 
-feature -- Ouput
+feature -- Output
 	
 	display is 
 			-- Display the contents of window.

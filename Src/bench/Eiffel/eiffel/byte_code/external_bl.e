@@ -338,7 +338,7 @@ feature
 		do
 			ext := extension
 
-			if ext /= Void then
+			if ext /= Void and then not encapsulated then
 				ext.generate_parameter_list (parameters)
 			elseif parameters /= Void then
 				from

@@ -70,6 +70,11 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
             }
 }
 
+void set_debug_mode (int a_debug_mode)
+{
+	debug_mode = a_debug_mode;
+}
+
 //------------------------------------------------------------------------------
 // EiffelVision2: library of reusable components for ISE Eiffel.
 // Copyright (C) 1986-1999 Interactive Software Engineering Inc.
@@ -91,6 +96,10 @@ void c_ev_any_imp_set_eif_oid_in_c_object (
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.14  2003/10/22 01:14:06  king
+// Added set_debug_mode that was previous inline Eiffel code
+// Placed here because it doesn't compile with older C compilers (gcc 2.95)
+//
 // Revision 1.13  2003/08/13 20:16:23  king
 // Zapped more useless code
 //

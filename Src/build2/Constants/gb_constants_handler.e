@@ -35,6 +35,13 @@ inherit
 		redefine
 			default_create
 		end
+		
+	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		redefine
+			default_create
+		end
 	
 create
 	default_create
@@ -48,6 +55,8 @@ feature {NONE} -- Initialzation
 			create Integer_constants.make (4)
 			create directory_constants.make (4)
 			create pixmap_constants.make (4)
+			create font_constants.make (4)
+			create color_constants.make (4)
 			create deleted_constants.make (4)
 			create all_constant_names.make (4)
 			create all_constants.make (4)
@@ -71,6 +80,8 @@ feature -- Access
 			Result.extend (String_constant_type)
 			Result.extend (Directory_constant_type)
 			Result.extend (Pixmap_constant_type)
+			Result.extend (color_constant_type)
+			Result.extend (font_constant_type)
 			Result.compare_objects
 		ensure
 			obejct_comparison_on: Result.object_comparison
@@ -90,6 +101,12 @@ feature -- Access
 	
 	pixmap_constants: ARRAYED_LIST [GB_CONSTANT]
 		-- All pixmap constants in system.
+		
+	color_constants: ARRAYED_LIST [GB_CONSTANT]
+		-- All color constants in system.
+		
+	font_constants: ARRAYED_LIST [GB_FONT_CONSTANT]
+		-- All font constants in system.
 		
 	deleted_constants: ARRAYED_LIST [GB_CONSTANT]
 		-- All constants that are currently flagged as deleted.
@@ -315,6 +332,40 @@ feature -- Element change
 			contained: directory_constants.has (directory_constant)
 			count_increased: directory_constants.count = old directory_constants.count + 1
 		end
+		
+	add_color (color_constant: GB_COLOR_CONSTANT) is
+			-- Add `color_constant' to `color_constants'
+		require
+			constant_not_void: color_constant /= Void
+		do
+			color_constants.extend (color_constant)
+			all_constant_names.extend (color_constant.name)
+			if deleted_constants.has (color_constant) then
+				deleted_constants.prune_all (color_constant)
+			end
+			Constants_dialog.update_for_addition (color_constant)
+			all_constants.put (color_constant, color_constant.name)
+		ensure
+			contained: color_constants.has (color_constant)
+			count_increased: color_constants.count = old color_constants.count + 1
+		end
+		
+	add_font (font_constant: GB_FONT_CONSTANT) is
+			-- Add `font_constant' to `font_constants'
+		require
+			constant_not_void: font_constant /= Void
+		do
+			font_constants.extend (font_constant)
+			all_constant_names.extend (font_constant.name)
+			if deleted_constants.has (font_constant) then
+				deleted_constants.prune_all (font_constant)
+			end
+			Constants_dialog.update_for_addition (font_constant)
+			all_constants.put (font_constant, font_constant.name)
+		ensure
+			contained: font_constants.has (font_constant)
+			count_increased: font_constants.count = old font_constants.count + 1
+		end
 	
 	add_pixmap (pixmap_constant: GB_PIXMAP_CONSTANT) is
 			-- Add `pixmap_constant' to `pixmap_constants'.
@@ -481,6 +532,8 @@ feature {NONE} -- Implementation
 			integer_constant: GB_INTEGER_CONSTANT
 			string_constant: GB_STRING_CONSTANT
 			directory_constant: GB_DIRECTORY_CONSTANT
+			color_constant: GB_COLOR_CONSTANT
+			font_constant: GB_FONT_CONSTANT
 		do
 			if type.is_equal (Integer_constant_type) then
 				create integer_constant.make_with_name_and_value (name, value.to_integer)
@@ -491,6 +544,12 @@ feature {NONE} -- Implementation
 			elseif type.is_equal (Directory_constant_type) then
 				create directory_constant.make_with_name_and_value (name, value)
 				add_directory (directory_constant)
+			elseif type.is_equal (color_constant_type) then
+				create color_constant.make_with_name_and_value (name, build_color_from_string (value))
+				add_color (color_constant)
+			elseif type.is_equal (font_constant_type) then
+				create font_constant.make_with_name_and_value (name, build_font_from_string (value))
+				add_font (font_constant)
 			end
 		end
 

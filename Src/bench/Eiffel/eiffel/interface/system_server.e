@@ -35,59 +35,13 @@ feature -- Initialization
 			create m_desc_server.make
 		end
 
-feature -- Clean up of the temporary server file
-
-	clear is
-				-- Clear the servers
-		do
-			Tmp_ast_server.clear
-			Tmp_feat_tbl_server.clear
-			Tmp_body_server.clear
-			Tmp_class_info_server.clear
-			Tmp_byte_server.clear
-			Tmp_inv_byte_server.clear
-			Tmp_inv_ast_server.clear
-			Tmp_depend_server.clear
-		end
-
-	tmp_purge is
-		do
-				-- Removed unused files from EIFGEN
-			Tmp_ast_server.files_purge
-			Tmp_feat_tbl_server.files_purge
-			Tmp_class_info_server.files_purge
-			Tmp_byte_server.files_purge
-			Tmp_inv_byte_server.files_purge
-			Tmp_depend_server.files_purge
-
-			server_controler.remove_useless_files
-		end
-
 feature -- Purge of compilation files
-
-	purge is
-			-- Purge compilation files
-		do
-				-- Removed unused files from EIFGEN
-			feat_tbl_server.files_purge
-			depend_server.files_purge
-			class_info_server.files_purge
-			inv_byte_server.files_purge
-			byte_server.files_purge
-			ast_server.files_purge
-			m_feat_tbl_server.files_purge
-			m_feature_server.files_purge
-			m_rout_id_server.files_purge
-			m_desc_server.files_purge
-
-			server_controler.remove_useless_files
-		end
 
 	prepare_before_saving (normal_compilation: BOOLEAN) is
 		do
 				-- Purges server files only if it is not a precompilation.
 			if normal_compilation then
-				purge
+				server_controler.remove_useless_files
 			end
 
 			feat_tbl_server.cache.wipe_out

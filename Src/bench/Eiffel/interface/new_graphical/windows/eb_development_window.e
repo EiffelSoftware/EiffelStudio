@@ -295,7 +295,7 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (new_feature_cmd)
 			
 			create toggle_feature_signature_cmd.make (Current)
-			toolbarable_commands.extend (toggle_feature_signature_cmd)			
+			toolbarable_commands.extend (toggle_feature_signature_cmd)
 
 			create toggle_stone_cmd.make (Current)
 			toolbarable_commands.extend (toggle_stone_cmd)
@@ -2519,7 +2519,6 @@ feature {NONE} -- Implementation
 						then
 							new_feature_cmd.enable_sensitive
 							toggle_feature_signature_cmd.enable_sensitive
-							toggle_feature_signature_cmd.reset_signature_status
 						end
 
 						--address_manager.enable_formatters

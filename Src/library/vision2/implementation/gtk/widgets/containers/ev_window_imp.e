@@ -128,7 +128,7 @@ feature -- Status setting
 		do
 			old_geometry := geometry
 			set_geometry (create {EV_RECTANGLE}.make (
-				0, 0, C.gdk_screen_width, C.gdk_screen_width))
+				0, 0, C.gdk_screen_width, C.gdk_screen_height))
 		end
 
 	restore is
@@ -272,6 +272,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/03/08 20:29:02  brendel
+--| Replaced `width' with `height'.
+--|
 --| Revision 1.41  2000/03/08 02:58:39  brendel
 --| Improved implementation.
 --|

@@ -268,9 +268,7 @@ feature -- Status setting
 			if parent_imp /= Void then
 				parent_imp.interface.prune (Current.interface)
 			end
-			if exists then
-				wel_destroy
-			end
+			wel_destroy
 			is_destroyed := True
 			destroy_just_called := True
 		end
@@ -897,6 +895,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.77  2000/06/09 01:31:18  manus
+--| Merged version 1.49.4.16 from DEVEL branch to trunc
+--|
 --| Revision 1.76  2000/06/07 17:27:58  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

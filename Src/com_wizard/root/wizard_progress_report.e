@@ -74,7 +74,7 @@ feature -- Element Change
 			non_void_title: a_title /= Void
 			valid_title: not a_title.empty
 		do
-			if running then
+			if running and then progress_dialog.progress_static.exists then
 				progress_dialog.progress_static.set_text (a_title)
 			end
 			title_cell.replace (a_title)
@@ -139,8 +139,10 @@ feature -- Basic Operations
 			non_void_parent: parent /= Void
 			valid_parent: parent.exists
 		do
-			if not running then
+			if not progress_dialog.exists then
 				progress_dialog.activate
+			end
+			if not running then
 				progress_dialog.progress_bar.set_range (0, Initial_range)
 				set_range (Initial_range)
 				if last_x /= 0 then

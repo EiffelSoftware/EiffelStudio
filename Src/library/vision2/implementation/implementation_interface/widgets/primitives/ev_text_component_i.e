@@ -87,6 +87,50 @@ feature -- Status setting
 		ensure
 		end	
 
+feature -- Basic operation
+
+	search (str: STRING): INTEGER is
+			-- Search the string `str' in the text.
+			-- If `str' is find, it returns its start
+			-- index in the text, otherwise, it returns
+			-- `Void'
+		require
+			exists: not destroyed
+			valid_string: str /= Void
+		deferred
+		end
+
+	cut_selection is
+			-- Cut the `selected_region' by erasing it from
+			-- the text and putting it in the Clipboard 
+			-- to paste it later.
+			-- If the `selectd_region' is empty, it does
+			-- nothing.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	copy_selection is
+			-- Copy the `selected_region' in the Clipboard
+			-- to paste it later.
+			-- If the `selected_region' is empty, it does
+			-- nothing.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	paste (index: INTEGER) is
+			-- Insert the string which is in the 
+			-- Clipboard at the `index' postion in the
+			-- text.
+			-- If the Clipboard is empty, it does nothing. 
+		require
+			exists: not destroyed
+		deferred
+		end
+	
 end --class EV_TEXT_COMPONENT_I
 
 

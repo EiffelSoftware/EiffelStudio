@@ -1,8 +1,6 @@
 indexing
-
-	description: 
-		"AST representation of a external macro structure.";
-	date: "$Date$";
+	description: "AST representation of an external structure."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class EXTERNAL_LANG_AS
@@ -12,8 +10,8 @@ inherit
 	AST_EIFFEL
 		redefine
 			is_equivalent
-		end;
-	EXTERNAL_CONSTANTS;
+		end
+	EXTERNAL_CONSTANTS
 	COMPILER_EXPORTER
 
 feature {NONE} -- Initialization
@@ -21,23 +19,23 @@ feature {NONE} -- Initialization
 	set is
 			-- Yacc initialization
 		do
-			language_name ?= yacc_arg (0);
-			start_position := yacc_position;
-			parse;
+			language_name ?= yacc_arg (0)
+			start_position := yacc_position
+			parse
 		ensure then
-			language_name /= Void;
-		end;
+			language_name /= Void
+		end
 
 feature -- Properties
 
-	extension: EXTERNAL_EXTENSION_AS;
+	extension: EXTERNAL_EXTENSION_AS
 			-- Parsed external extension
 
-	language_name: STRING_AS;
+	language_name: STRING_AS
 			-- Language name
 			-- might be replaced by external_declaration or external_definition
 
-	start_position: INTEGER;
+	start_position: INTEGER
 			-- Start position of AST
 
 feature -- Comparison
@@ -54,21 +52,23 @@ feature {NONE} -- Implementation
 	parse is
 			-- Parse external declaration
 		local
-			source: STRING;
-			image: STRING;
-			ext_language_name: STRING;
-			special_part: STRING;
-			special_type: STRING;
-			signature_part: STRING;
+			source: STRING
+			image: STRING
+			ext_language_name: STRING
+			special_part: STRING
+			special_type: STRING
+			signature_part: STRING
 
-			dll_ext: C_DLL_EXTENSION_AS;
-			start_special_part, end_special_part: INTEGER;
-			valid_language_name: BOOLEAN;
-			done: BOOLEAN;
-			pos: INTEGER;
-			nb: INTEGER;
+			dll_ext: C_DLL_EXTENSION_AS_B
+			start_special_part, end_special_part: INTEGER
+			valid_language_name: BOOLEAN
+			done: BOOLEAN
+			pos: INTEGER
+			index_pos: INTEGER
+			dll_index: INTEGER
+			nb: INTEGER
 		do
-			source := language_name.value;
+			source := language_name.value
 debug
 	io.error.putstring ("Parsing ")
 	io.error.putstring (source)
@@ -76,12 +76,12 @@ debug
 end
 				-- getting rid of extra blanks
 			image := clone (source)
-			image.left_adjust;
-			image.right_adjust;
+			image.left_adjust
+			image.right_adjust
 
 				-- extracting language name
 			from
-				nb := image.count;
+				nb := image.count
 				pos := 1
 			until
 				pos > nb or else done
@@ -89,26 +89,26 @@ end
 				inspect
 					image.item (pos)
 				when '%T', ' ','[','(',':','|' then
-					done := True;
+					done := True
 				else
-					pos := pos + 1;
+					pos := pos + 1
 				end
-			end;
+			end
 
 			pos := pos - 1
 				-- The external name goes from 1 to `pos'
 
 			if pos > 0 then
-				ext_language_name := image.substring (1, pos);
-				ext_language_name.to_upper;
+				ext_language_name := image.substring (1, pos)
+				ext_language_name.to_upper
 
 					-- Validity check on language name 
 				if ext_language_name.is_equal ("C") then
-					valid_language_name := True;
+					valid_language_name := True
 				elseif ext_language_name.is_equal ("C++") then
-					valid_language_name := True;
+					valid_language_name := True
 				end
-			end;
+			end
 
 			if not valid_language_name then
 				if ext_language_name = Void then
@@ -121,73 +121,93 @@ debug
 	io.error.putstring (ext_language_name)
 	io.error.new_line
 end
-					pos := source.substring_index (ext_language_name,1);
+					pos := source.substring_index (ext_language_name,1)
 					raise_external_error ("Unrecognized external language",
 						pos, pos + ext_language_name.count - 1)
-				end;
+				end
 			else
 					-- cleaning string for next operation
-				image.tail (image.count - pos);
-				image.left_adjust;
+				image.tail (image.count - pos)
+				image.left_adjust
 
 					-- Extracting the special part
 				if image.count /= 0 and then image.item (1) = '[' then
-					start_special_part := source.index_of ('[', 1);
-					end_special_part := source.index_of (']', 1);
+					start_special_part := source.index_of ('[', 1)
+					end_special_part := source.index_of (']', 1)
 					if end_special_part = 0 then
-						raise_external_error ("Missing closing bracket ']'", start_special_part, source.count);
+						raise_external_error ("Missing closing bracket ']'", start_special_part, source.count)
 					elseif end_special_part = start_special_part + 1 then
 						raise_external_error ("Empty brackets" , start_special_part, end_special_part)
 					else
-						special_part := source.substring (start_special_part + 1, end_special_part - 1);
-						special_part.right_adjust;
-						special_part.left_adjust;
+						special_part := source.substring (start_special_part + 1, end_special_part - 1)
+						special_part.right_adjust
+						special_part.left_adjust
 
 							-- Only unprocessed part is kept in `image'
 						image.tail (image.count - image.index_of (']', 1))
-						image.left_adjust;
+						image.left_adjust
 
 							-- Checking the type of special part
-						pos := special_part.index_of (' ', 1);
+						pos := special_part.index_of (' ', 1)
 						if pos = 0 then
-							pos := special_part.index_of ('%T', 1);
+							pos := special_part.index_of ('%T', 1)
 						end
 						if pos = 0 then
 								-- Only one word in brackets
 							raise_external_error ("Only one word between brackets",
 								source.index_of ('[', 1) + 1,
-								source.index_of (']', 1) - 1);
+								source.index_of (']', 1) - 1)
 						else
 							if ext_language_name.is_equal ("C++") then
 									-- C++
-								extension := cpp_extension
+								!CPP_EXTENSION_AS_B!extension
 							else
 									-- C
 								special_type := special_part.substring (1, pos - 1)
 								special_type.to_lower
 
-									-- Remove special type from special_part
-								special_part := special_part.substring (pos + 1, special_part.count);
-								special_part.left_adjust
-
+								dll_index := -1
+								from
+									done :=false
+									nb := special_type.count
+									index_pos := 1
+								until
+									index_pos > nb or else done
+								loop
+									inspect
+										special_type.item (index_pos)
+									when '@' then
+										done := True
+										dll_index := special_type.substring(index_pos + 1,special_type.count).to_integer
+									else
+										index_pos := index_pos + 1
+									end
+								end
+								special_type := special_type.substring (1, index_pos-1)
 								if special_type.is_equal (macro_string) then
-									extension := macro_extension
+									!C_MACRO_EXTENSION_AS_B!extension
 								elseif special_type.is_equal (dll16_string) then
-									dll_ext := dll_extension
+									!! dll_ext
 									dll_ext.set_dll_type (dll16_type)
 									extension := dll_ext
 								elseif special_type.is_equal (dll32_string) then
-									dll_ext := dll_extension
+									!! dll_ext
 									dll_ext.set_dll_type (dll32_type)
+									dll_ext.set_dll_index (dll_index) 
 									extension := dll_ext
 								elseif special_type.is_equal (dllwin32_string) then
-									dll_ext := dll_extension
+									!! dll_ext
 									dll_ext.set_dll_type (dllwin32_type)
+									dll_ext.set_dll_index (dll_index) 
 									extension := dll_ext
 								else
-									extension := c_extension
+									!C_EXTENSION_AS_B!extension
 								end
 							end
+
+								-- Remove special type from special_part
+							special_part := special_part.substring (pos + 1, special_part.count)
+							special_part.left_adjust
 							extension.set_special_part (special_part)
 						end
 					end
@@ -195,16 +215,16 @@ end
 
 					-- Extracting the signature
 				if image.count /= 0 and then image.item (1) = '(' then
-					pos := image.index_of (')',2);
+					pos := image.index_of (')',2)
 					if pos = 0 then
 						raise_external_error ("Missing closing parenthesis ) in signature clause",
-							source.index_of ('(', 1), source.count);
+							source.index_of ('(', 1), source.count)
 					else
 						signature_part := image.substring (1, pos)
 
 							-- Only unprocessed part is kept in `image'
 						image.tail (image.count - pos)
-						image.left_adjust;
+						image.left_adjust
 					end
 				end
 
@@ -233,7 +253,7 @@ end
 						if ext_language_name.is_equal ("C++") then
 							raise_external_error ("Missing special part", 1, 1)
 						else
-							extension := c_extension
+							!C_EXTENSION_AS_B!extension
 						end
 					end
 				end
@@ -266,46 +286,22 @@ end
 				if extension /= Void then
 					extension.parse
 				end
-			end;
-		end;
+			end
+		end
 
 	raise_external_error (msg: STRING; start_p: INTEGER; end_p: INTEGER) is
 			-- Raises error occured while parsing
 		local
-			ext_error: EXTERNAL_SYNTAX_ERROR;
-			line_start: INTEGER;
+			ext_error: EXTERNAL_SYNTAX_ERROR
+			line_start: INTEGER
 		do
-			!!ext_error.init;
-			line_start := ext_error.start_position;
-			ext_error.set_start_position (line_start + start_p);
-			ext_error.set_end_position (line_start + end_p);
-			ext_error.set_external_error_message (msg);
-			Error_handler.insert_error (ext_error);
-			Error_handler.raise_error;
-		end;
-
-	c_extension: C_EXTENSION_AS is
-			-- AST for parsed standard C extension 
-		do
-			!! Result
-		end
-
-	cpp_extension: CPP_EXTENSION_AS is
-			-- AST for parsed C++ extension
-		do
-			!! Result
-		end
-
-	dll_extension: C_DLL_EXTENSION_AS is
-			-- AST for parsed DLL extension
-		do
-			!! Result
-		end
-
-	macro_extension: C_MACRO_EXTENSION_AS is
-			-- AST for parsed macro extension
-		do
-			!! Result
+			!!ext_error.init
+			line_start := ext_error.start_position
+			ext_error.set_start_position (line_start + start_p)
+			ext_error.set_end_position (line_start + end_p)
+			ext_error.set_external_error_message (msg)
+			Error_handler.insert_error (ext_error)
+			Error_handler.raise_error
 		end
 
 feature {AST_EIFFEL} -- Output

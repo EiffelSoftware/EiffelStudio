@@ -593,7 +593,7 @@ feature -- Implementation
 	implementation: EV_WIDGET_I
 			-- Implementation of Current widget
 
-feature {NONE} -- Implementation
+feature {EV_WINDOW_I} -- Implementation
 	
 	remove_implementation is
 			-- Remove implementation of Current widget.

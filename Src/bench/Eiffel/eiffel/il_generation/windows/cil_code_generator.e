@@ -4681,9 +4681,7 @@ feature {NONE} -- Implementation: generation
 			l_gen_type: GEN_TYPE_I
 			l_formal_type: FORMAL_I
 			l_type_i: TYPE_I
-			l_type_id, i, up: INTEGER
-			l_sig: like local_sig
-			l_token: INTEGER
+			l_type_id, i, nb: INTEGER
 		do
 			l_type_i := a_type_feature.type.actual_type.type_i
 
@@ -4705,6 +4703,8 @@ feature {NONE} -- Implementation: generation
 
 			if l_type_i.is_formal then
 				l_type_id := formal_type_id
+			elseif l_type_i.is_none then
+				l_type_id := none_type_id
 			else
 				l_cl_type ?= l_type_i
 				if l_cl_type.is_basic then
@@ -4725,33 +4725,26 @@ feature {NONE} -- Implementation: generation
 				-- call `put_result_info' as we don't know its associated CL_TYPE_I.
 			result_position := 0
 
-			l_sig := local_sig
-			l_sig.reset
-
-			l_sig.set_local_count (1)
-			l_sig.add_local_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-				class_type_token (l_type_id))
-			l_token := md_emit.define_signature (l_sig)
-			method_body.set_local_token (l_token)
-
 			create_object (l_type_id)
-			generate_result_assignment
-
-			generate_result
 
 			if l_type_id = formal_type_id then
+				duplicate_top
 				put_integer_32_constant (l_formal_type.position)
 				internal_generate_external_call (current_module.ise_runtime_token, 0,
 					formal_type_class_name,
 					"set_position",
 					Normal_type, <<integer_32_class_name>>, Void, True)
+			elseif l_type_id = none_type_id then
+					-- Nothing to be done, it is enough to create an instance of NONE_TYPE	
 			elseif l_type_id = class_type_id then
 					-- Non-generic class.
+				duplicate_top
 				put_type_token (l_cl_type.implementation_id)
 				internal_generate_external_call (current_module.ise_runtime_token, 0,
 					class_type_class_name,
 					"set_type", Normal_type, <<type_handle_class_name>>, Void, True)
 			elseif l_type_id = basic_type_id then
+				duplicate_top
 				put_type_token (l_cl_type.implementation_id)
 				internal_generate_external_call (current_module.ise_runtime_token, 0,
 					basic_type_class_name,
@@ -4767,9 +4760,9 @@ feature {NONE} -- Implementation: generation
 					check
 						i_start_at_one: i = 1
 					end
-					up := l_gen_type.true_generics.upper
+					nb := l_gen_type.true_generics.upper
 				until
-					i > up
+					i > nb
 				loop
 					duplicate_top
 					put_integer_32_constant (i - 1)
@@ -4791,12 +4784,8 @@ feature {NONE} -- Implementation: generation
 				internal_generate_external_call (current_module.ise_runtime_token, 0,
 					generic_type_class_name,
 					"set_nb_generics", normal_type, <<integer_32_class_name>>, Void, True)
-
-				pop
 			end
-			generate_result
 			generate_return (True)
-
 			method_writer.write_current_body
 		end
 

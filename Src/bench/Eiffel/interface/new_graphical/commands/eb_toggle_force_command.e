@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Objects that is a command to turn on/off physics."
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,23 +11,40 @@ inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
 			new_toolbar_item,
-			description
+			description,
+			initialize
 		end
+		
+	EB_CONTEXT_DIAGRAM_TOGGLE_COMMAND
 
 create
 	make
+	
+feature {NONE} -- Initialization
+		
+	initialize is
+			-- Initialize default values.
+		do
+			create accelerator.make_with_key_combination (
+				create {EV_KEY}.make_with_code (key_constants.key_p),
+				True, False, False)
+			accelerator.actions.extend (agent execute)
+		end
 
 feature -- Basic operations
 
 	execute is
 			-- Perform operation.
 		do
-			if current_button.is_selected then
-				tool.enable_force_directed
-			else
-				tool.disable_force_directed
+			if is_sensitive then
+				if not tool.is_force_directed_used then
+					tool.enable_force_directed
+					enable_select
+				else
+					tool.disable_force_directed
+					disable_select
+				end
 			end
-			current_button.set_tooltip (tooltip)
 		end
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is

@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Objects that is a command to fit the diagram to screen."
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,9 +9,23 @@ class
 	
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
+		redefine
+			initialize
+		end
 
 create
 	make
+	
+feature {NONE} -- Initialization
+		
+	initialize is
+			-- Initialize default values.
+		do
+			create accelerator.make_with_key_combination (
+				create {EV_KEY}.make_with_code (key_constants.key_numpad_multiply),
+				False, False, False)
+			accelerator.actions.extend (agent execute)
+		end
 
 feature -- Basic operations
 
@@ -25,20 +39,22 @@ feature -- Basic operations
 			l_projector: EIFFEL_PROJECTOR
 			wc: EV_MODEL_WORLD_CELL
 		do
-			l_world := tool.world
-			l_scale_factor := l_world.scale_factor
-			old_scale := (l_world.scale_factor * 100).rounded
-			wc := tool.world_cell
-			wc.fit_to_screen
-			new_scale_factor := l_world.scale_factor
-			new_scale := (new_scale_factor * 100).rounded.max (1)
-			l_zoom_selector := tool.zoom_selector
-			l_zoom_selector.show_as_text (new_scale)
-			l_projector := tool.projector
-			history.register_named_undoable (
-					Interface_names.t_Diagram_zoom_out_cmd,
-					[<<agent wc.fit_to_screen, agent l_zoom_selector.show_as_text (new_scale), agent l_projector.full_project>>],
-					[<<agent l_world.scale (1/new_scale_factor), agent tool.crop_diagram, agent l_zoom_selector.show_as_text (old_scale), agent l_projector.full_project>>])
+			if is_sensitive then
+				l_world := tool.world
+				l_scale_factor := l_world.scale_factor
+				old_scale := (l_world.scale_factor * 100).rounded
+				wc := tool.world_cell
+				wc.fit_to_screen
+				new_scale_factor := l_world.scale_factor
+				new_scale := (new_scale_factor * 100).rounded.max (1)
+				l_zoom_selector := tool.zoom_selector
+				l_zoom_selector.show_as_text (new_scale)
+				l_projector := tool.projector
+				history.register_named_undoable (
+						Interface_names.t_Diagram_zoom_out_cmd,
+						[<<agent wc.fit_to_screen, agent l_zoom_selector.show_as_text (new_scale), agent l_projector.full_project>>],
+						[<<agent l_world.scale (1/new_scale_factor), agent tool.crop_diagram, agent l_zoom_selector.show_as_text (old_scale), agent l_projector.full_project>>])
+			end
 		end
 
 feature {NONE} -- Implementation

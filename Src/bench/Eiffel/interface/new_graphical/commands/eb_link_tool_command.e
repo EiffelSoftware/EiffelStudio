@@ -10,11 +10,25 @@ inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
 			new_toolbar_item,
-			menu_name
+			menu_name,
+			initialize
 		end
+		
+	EB_CONTEXT_DIAGRAM_TOGGLE_COMMAND
 
 create
 	make
+	
+feature {NONE} -- Initialization
+		
+	initialize is
+			-- Initialize default values.
+		do
+			create accelerator.make_with_key_combination (
+				create {EV_KEY}.make_with_code (key_constants.key_r),
+				True, False, False)
+			accelerator.actions.extend (agent execute)
+		end
 
 feature -- Basic operations
 
@@ -24,24 +38,28 @@ feature -- Basic operations
 			l_all_saved_edges: like all_saved_edges
 			l_world: EIFFEL_WORLD
 		do
-			l_all_saved_edges := all_saved_edges
-			l_world := tool.world
-			if current_button.is_selected then
-				l_world.enable_right_angles
-				l_world.apply_right_angles
-				history.register_named_undoable (
-					interface_names.t_diagram_put_right_angles_cmd,
-					[<<agent l_world.enable_right_angles, agent l_world.apply_right_angles, agent toggle_button>>],
-					[<<agent l_world.disable_right_angles, agent undo_apply_right_angles (l_all_saved_edges), agent toggle_button>>])
-			else
-				l_world.disable_right_angles
-				l_world.remove_right_angles
-				history.register_named_undoable (
-					interface_names.t_diagram_remove_right_angles_cmd,
-					[<<agent l_world.disable_right_angles, agent l_world.remove_right_angles, agent toggle_button>>],
-					[<<agent l_world.enable_right_angles, agent l_world.apply_right_angles, agent toggle_button>>])
+			if is_sensitive then
+				l_all_saved_edges := all_saved_edges
+				l_world := tool.world
+				if not l_world.is_right_angles then
+					l_world.enable_right_angles
+					l_world.apply_right_angles
+					enable_select
+					history.register_named_undoable (
+						interface_names.t_diagram_put_right_angles_cmd,
+						[<<agent l_world.enable_right_angles, agent l_world.apply_right_angles, agent enable_select>>],
+						[<<agent l_world.disable_right_angles, agent undo_apply_right_angles (l_all_saved_edges), agent disable_select>>])
+				else
+					l_world.disable_right_angles
+					l_world.remove_right_angles
+					disable_select
+					history.register_named_undoable (
+						interface_names.t_diagram_remove_right_angles_cmd,
+						[<<agent l_world.disable_right_angles, agent l_world.remove_right_angles, agent disable_select>>],
+						[<<agent l_world.enable_right_angles, agent l_world.apply_right_angles, agent enable_select>>])
+				end
+				current_button.set_tooltip (tooltip + shortcut_string)
 			end
-			current_button.set_tooltip (tooltip)
 		end
 
 	execute_with_link_stone (a_stone: LINK_STONE) is
@@ -252,15 +270,6 @@ feature {NONE} -- Implementation
 				l_figure.retrieve_edges (l_saved_edges)
 				edge_lists.forth
 			end
-		end
-		
-	toggle_button is
-			-- Toggle button without execution.
-		do
-			current_button.select_actions.block
-			current_button.toggle
-			current_button.set_tooltip (tooltip)
-			current_button.select_actions.resume
 		end
 		
 feature {EB_CONTEXT_EDITOR} -- Implementation

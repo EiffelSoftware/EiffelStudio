@@ -11,11 +11,23 @@ inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
 			new_toolbar_item,
-			description
+			description,
+			initialize
 		end
 
 create
 	make
+	
+feature {NONE} -- Initialization
+		
+	initialize is
+			-- Initialize default values.
+		do
+			create accelerator.make_with_key_combination (
+				create {EV_KEY}.make_with_code (key_constants.key_p),
+				True, False, True)
+			accelerator.actions.extend (agent execute)
+		end
 
 feature -- Basic operations
 
@@ -24,8 +36,10 @@ feature -- Basic operations
 		local
 			dialog: EB_FORCE_SETTINGS_DIALOG
 		do
-			create dialog.make (tool.force_directed_layout, tool)
-			dialog.show_relative_to_window (tool.development_window.window)
+			if is_sensitive then
+				create dialog.make (tool.force_directed_layout, tool)
+				dialog.show_relative_to_window (tool.development_window.window)
+			end
 		end
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is

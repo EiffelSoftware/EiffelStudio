@@ -208,6 +208,7 @@ feature {NONE} -- Initialization
 			h_box: EV_HORIZONTAL_BOX
 			label: EV_LABEL
 			view_label: EV_LABEL
+			l_item: EB_TOOLBARABLE_COMMAND
 		do
 			create bar_bar
 
@@ -252,10 +253,17 @@ feature {NONE} -- Initialization
 			until
 				tb_commands.after
 			loop
-				if tb_commands.item.accelerator /= Void then
-					extend_shortcut_table (tb_commands.item.accelerator)
+				l_item := tb_commands.item
+				if l_item.accelerator /= Void then
+					extend_shortcut_table (l_item.accelerator)
 				end
 				tb_commands.forth
+			end
+			if reset_view_cmd.accelerator /= Void then
+				extend_shortcut_table (reset_view_cmd.accelerator)
+			end
+			if delete_view_cmd.accelerator /= Void then
+				extend_shortcut_table (delete_view_cmd.accelerator)
 			end
 			
 			custom_toolbar.update_toolbar
@@ -594,16 +602,7 @@ feature -- Status settings.
 			is_force_directed_used := False
 			world.hide_anchors
 			force_directed_layout.stop
-			
-			if 
-				toggle_force_cmd.current_button /= Void and then
-				toggle_force_cmd.current_button.is_selected
-			then
-				toggle_force_cmd.current_button.select_actions.block
-				toggle_force_cmd.current_button.toggle
-				toggle_force_cmd.current_button.set_tooltip (toggle_force_cmd.tooltip)
-				toggle_force_cmd.current_button.select_actions.resume	
-			end
+			toggle_force_cmd.disable_select
 		ensure
 			not_is_force_directed_used: not is_force_directed_used
 		end
@@ -1907,124 +1906,45 @@ feature {EB_CONTEXT_TOOL, EIFFEL_WORLD} -- XML Output
 	reset_tool_bar_toggles is
 			-- Set toolbar toggle buttons states according to worlds settings.
 		do
-			if toggle_supplier_cmd.current_button /= Void then
-				toggle_supplier_cmd.current_button.select_actions.block
-				if world.is_client_supplier_links_shown then
-					if not toggle_supplier_cmd.current_button.is_selected then
-						toggle_supplier_cmd.current_button.toggle
-					end
-				else
-					if toggle_supplier_cmd.current_button.is_selected then
-						toggle_supplier_cmd.current_button.toggle
-					end
-				end
-				toggle_supplier_cmd.current_button.set_tooltip (toggle_supplier_cmd.tooltip)
-				toggle_supplier_cmd.current_button.select_actions.resume
+			if world.is_client_supplier_links_shown then
+				toggle_supplier_cmd.enable_select
+			else
+				toggle_supplier_cmd.disable_select
 			end
-
-			if toggle_inherit_cmd.current_button /= Void then
-				toggle_inherit_cmd.current_button.select_actions.block
-				if world.is_inheritance_links_shown then
-					if not toggle_inherit_cmd.current_button.is_selected then
-						toggle_inherit_cmd.current_button.toggle
-					end
-				else
-					if toggle_inherit_cmd.current_button.is_selected then
-						toggle_inherit_cmd.current_button.toggle
-					end
-				end
-				toggle_inherit_cmd.current_button.set_tooltip (toggle_inherit_cmd.tooltip)
-				toggle_inherit_cmd.current_button.select_actions.resume
+			if world.is_inheritance_links_shown then
+				toggle_inherit_cmd.enable_select
+			else
+				toggle_inherit_cmd.disable_select
 			end
-			
-			if toggle_cluster_cmd.current_button /= Void then
-				toggle_cluster_cmd.current_button.select_actions.block
-				if world.is_cluster_shown then
-					if not toggle_cluster_cmd.current_button.is_selected then
-						toggle_cluster_cmd.current_button.toggle
-					end
-				else
-					if toggle_cluster_cmd.current_button.is_selected then
-						toggle_cluster_cmd.current_button.toggle
-					end
-				end
-				toggle_cluster_cmd.current_button.set_tooltip (toggle_cluster_cmd.tooltip)
-				toggle_cluster_cmd.current_button.select_actions.resume
+			if world.is_cluster_shown then
+				toggle_cluster_cmd.enable_select
+			else
+				toggle_cluster_cmd.disable_select
 			end
-			
-			if toggle_labels_cmd.current_button /= Void then
-				toggle_labels_cmd.current_button.select_actions.block
-				if world.is_labels_shown then
-					if not toggle_labels_cmd.current_button.is_selected then
-						toggle_labels_cmd.current_button.toggle
-					end
-				else
-					if toggle_labels_cmd.current_button.is_selected then
-						toggle_labels_cmd.current_button.toggle
-					end
-				end
-				toggle_labels_cmd.current_button.set_tooltip (toggle_labels_cmd.tooltip)
-				toggle_labels_cmd.current_button.select_actions.resume
+			if world.is_labels_shown then
+				toggle_labels_cmd.enable_select
+			else
+				toggle_labels_cmd.disable_select
 			end
-			
-			if toggle_quality_cmd.current_button /= Void then
-				toggle_quality_cmd.current_button.select_actions.block
-				if world.is_high_quality then
-					if not toggle_quality_cmd.current_button.is_selected then
-						toggle_quality_cmd.current_button.toggle
-					end
-				else
-					if toggle_quality_cmd.current_button.is_selected then
-						toggle_quality_cmd.current_button.toggle
-					end
-				end
-				toggle_quality_cmd.current_button.set_tooltip (toggle_quality_cmd.tooltip)
-				toggle_quality_cmd.current_button.select_actions.resume
+			if world.is_high_quality then
+				toggle_quality_cmd.enable_select
+			else
+				toggle_quality_cmd.disable_select
 			end
-			
-			if toggle_cluster_legend_cmd.current_button /= Void then
-				toggle_cluster_legend_cmd.current_button.select_actions.block
-				if world.is_legend_shown then
-					if not toggle_cluster_legend_cmd.current_button.is_selected then
-						toggle_cluster_legend_cmd.current_button.toggle
-					end
-				else
-					if toggle_cluster_legend_cmd.current_button.is_selected then
-						toggle_cluster_legend_cmd.current_button.toggle
-					end
-				end
-				toggle_cluster_legend_cmd.current_button.set_tooltip (toggle_cluster_legend_cmd.tooltip)
-				toggle_cluster_legend_cmd.current_button.select_actions.resume
+			if world.is_legend_shown then
+				toggle_cluster_legend_cmd.enable_select
+			else
+				toggle_cluster_legend_cmd.disable_select
 			end
-			
-			if link_tool_cmd.current_button /= Void then
-				link_tool_cmd.current_button.select_actions.block			
-				if world.is_right_angles then
-					if not link_tool_cmd.current_button.is_selected then
-						link_tool_cmd.current_button.toggle
-					end
-				else
-					if link_tool_cmd.current_button.is_selected then
-						link_tool_cmd.current_button.toggle
-					end
-				end
-				link_tool_cmd.current_button.set_tooltip (link_tool_cmd.tooltip)
-				link_tool_cmd.current_button.select_actions.resume
+			if world.is_right_angles then
+				link_tool_cmd.enable_select
+			else
+				link_tool_cmd.disable_select
 			end
-			
-			if toggle_uml_cmd.current_button /= Void then
-				toggle_uml_cmd.current_button.select_actions.block
-				if world.is_uml then
-					if not toggle_uml_cmd.current_button.is_selected then
-						toggle_uml_cmd.current_button.toggle
-					end
-				else
-					if toggle_uml_cmd.current_button.is_selected then
-						toggle_uml_cmd.current_button.toggle
-					end
-				end
-				toggle_uml_cmd.current_button.set_tooltip (toggle_uml_cmd.tooltip)
-				toggle_uml_cmd.current_button.select_actions.resume
+			if world.is_uml then
+				toggle_uml_cmd.enable_select
+			else
+				toggle_uml_cmd.disable_select
 			end
 			
 			zoom_selector.show_as_text ((world.scale_factor * 100).rounded)
@@ -2071,14 +1991,16 @@ feature {NONE} -- Implementation keyboard shortcuts
 			an_accelerator_exists: an_accelerator /= Void
 		local
 			l_list: LIST [EV_ACCELERATOR]
+			l_code: INTEGER
 		do
-			l_list := shortcut_table.item (an_accelerator.key.code)
+			l_code := an_accelerator.key.code
+			l_list := shortcut_table.item (l_code)
 			if l_list /= Void then
 				l_list.extend (an_accelerator)
 			else
 				create {ARRAYED_LIST [EV_ACCELERATOR]} l_list.make (1)
 				l_list.extend (an_accelerator)
-				shortcut_table.put (l_list, an_accelerator.key.code)
+				shortcut_table.put (l_list, l_code)
 			end
 		end
 

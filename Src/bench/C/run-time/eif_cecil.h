@@ -13,7 +13,6 @@
 #define _eif_cecil_h_
 
 #include "eif_plug.h"
-#include "eif_macros.h"
 
 #ifdef __cplusplus
 extern "C" {

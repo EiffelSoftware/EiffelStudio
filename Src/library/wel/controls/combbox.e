@@ -26,8 +26,7 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_parent: WEL_COMPOSITE_WINDOW;
-			a_x, a_y, a_width, a_height, an_id: INTEGER) is
+	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER) is
 			-- Make a combo box.
 		require
 			a_parent_not_void: a_parent /= Void

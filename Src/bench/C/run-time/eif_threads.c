@@ -823,7 +823,7 @@ rt_shared void eif_synchronize_gc (eif_global_context_t *eif_globals)
 	/* Synchronize all threads under GC control */
 {
 	struct stack_list all_thread_list;
-	struct stack_list running_thread_list = {0, 0, NULL};
+	struct stack_list running_thread_list = {0, 0, { NULL }};
 	eif_global_context_t *thread_globals;
 	int status, i;
 

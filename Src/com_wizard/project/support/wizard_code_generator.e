@@ -23,6 +23,13 @@ inherit
 			{NONE} all
 		end
 
+	MEMORY
+		rename
+			free as memory_free
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -31,10 +38,6 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize
 		do
-			create C_client_visitor
-			create Eiffel_client_visitor
-			create C_server_visitor
-			create Eiffel_server_visitor
 		end
 
 feature -- Access
@@ -54,18 +57,6 @@ feature -- Access
 	Ace_file_generation: STRING is "Generating Ace and resource file"
 			-- Ace and resource file genration.
 
-	C_client_visitor: WIZARD_C_CLIENT_VISITOR
-			-- Visitor for C client.
-	
-	Eiffel_client_visitor: WIZARD_EIFFEL_CLIENT_VISITOR
-			-- Visitor for Eiffel client.
-	
-	C_server_visitor: WIZARD_C_SERVER_VISITOR
-			-- Visitor for C server.
-	
-	Eiffel_server_visitor: WIZARD_EIFFEL_SERVER_VISITOR
-			-- Visitor for Eiffel server.
-
 	ace_file_generated: BOOLEAN
 			-- Was generated project ace file generated?
 
@@ -84,30 +75,42 @@ feature -- Basic operations
 			if not Shared_wizard_environment.abort then
 				process_type_descriptors 
 			end
+			full_collect
 			if not Shared_wizard_environment.abort then
 				generate_implemented_interfaces
 			end
+			full_collect
 			if not Shared_wizard_environment.abort then
 				generate_registration_code
 			end
+			full_collect
 			if not Shared_wizard_environment.abort then
 				generate_mappers_and_c_alias
 			end
+			full_collect
 			if not Shared_wizard_environment.abort then
 				generate_ace_and_resource 
 			end
+			full_collect
 			if not Shared_wizard_environment.abort then
 				message_output.add_warning (Current, Generation_Successful)
 			end
-			finished := True
-			clean_up
 		end
 
 	process_type_descriptors is
 			-- Process type descriptors.
 		local
 			i, a_range: INTEGER
+			C_client_visitor: WIZARD_C_CLIENT_VISITOR
+			Eiffel_client_visitor: WIZARD_EIFFEL_CLIENT_VISITOR
+			C_server_visitor: WIZARD_C_SERVER_VISITOR
+			Eiffel_server_visitor: WIZARD_EIFFEL_SERVER_VISITOR
 		do
+			create C_client_visitor
+			create Eiffel_client_visitor
+			create C_server_visitor
+			create Eiffel_server_visitor
+
 			from
 				system_descriptor.start
 			until
@@ -162,7 +165,16 @@ feature -- Basic operations
 		local
 			a_range: INTEGER
 			an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
+			C_client_visitor: WIZARD_C_CLIENT_VISITOR
+			Eiffel_client_visitor: WIZARD_EIFFEL_CLIENT_VISITOR
+			C_server_visitor: WIZARD_C_SERVER_VISITOR
+			Eiffel_server_visitor: WIZARD_EIFFEL_SERVER_VISITOR
 		do
+			create C_client_visitor
+			create Eiffel_client_visitor
+			create C_server_visitor
+			create Eiffel_server_visitor
+
 			if Shared_wizard_environment.abort then
 				message_output.add_message (Current, Generation_Aborted)
 			else
@@ -286,29 +298,6 @@ feature -- Basic operations
 			ace_file_generated := True
 			resource_file_generated := True
 		end
-
-feature {NONE} -- Implementation
-
-	finished: BOOLEAN
-			-- Is processing finished?
-
-	clean_up is
-			-- Clean up.
-		require
-			finished: finished
-		do
-			C_client_visitor := Void
-			Eiffel_client_visitor := Void
-			C_server_visitor := Void
-			Eiffel_server_visitor := Void
-
-		end
-	
-invariant
-	non_void_c_client_visitor: not finished implies C_client_visitor /= Void
-	non_void_eiffel_client_visitor: not finished implies Eiffel_client_visitor /= Void
-	non_void_c_server_visitor: not finished implies C_server_visitor /= Void
-	non_void_eiffel_server_visitor: not finished implies Eiffel_server_visitor /= Void
 	
 end -- class WIZARD_CODE_GENERATOR
 

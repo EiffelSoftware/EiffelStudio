@@ -4,10 +4,22 @@ class CONSTANT_I
 
 inherit
 	FEATURE_I
+		rename
+			check_types as old_check_types,
+			equiv as basic_equiv
+		redefine
+			transfer_to, access, melt, generate,
+			is_once, in_pass3, redefinable, is_constant,
+			set_type, type, can_be_inlined
+		end
+
+	FEATURE_I
 		redefine
 			transfer_to, check_types, access, equiv,
 			melt, generate, is_once, in_pass3, redefinable, is_constant,
 			set_type, type, can_be_inlined
+		select
+			check_types, equiv
 		end
 
 	SHARED_TYPE_I
@@ -55,7 +67,7 @@ feature
 			good_constant_type: BOOLEAN
 			vqmc: VQMC
 		do
-			{FEATURE_I} precursor (feat_tbl)
+			{FEATURE_I} Precursor (feat_tbl)
 			actual_type := type.actual_type
 			if value.valid_type (actual_type) then
 				value.set_real_value (actual_type)
@@ -76,7 +88,7 @@ feature -- Incrementality
 		do
 			other_constant ?= other
 			if other_constant /= Void then
-				Result := {FEATURE_I} precursor (other_constant)
+				Result := {FEATURE_I} Precursor (other_constant)
 						and then value.is_propagation_equivalent (other_constant.value)
 			end
 		end
@@ -165,11 +177,11 @@ feature -- C code generation
 		do
 			if is_once then
 					-- Cannot hardwire string constants, ever.
-				Result := {FEATURE_I} precursor (access_type)
+				Result := {FEATURE_I} Precursor (access_type)
 			else
 					-- Constants are hardwired in final mode
 				!!constant_b
-				constant_b.set_access ({FEATURE_I} precursor (access_type))
+				constant_b.set_access ({FEATURE_I} Precursor (access_type))
 				constant_b.set_value (value)
 				Result := constant_b
 			end
@@ -288,7 +300,7 @@ feature -- Byte code generation
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current
 		do
-			{FEATURE_I} precursor (other)
+			{FEATURE_I} Precursor (other)
 			other.set_type (type)
 			other.set_value (value)
 		end

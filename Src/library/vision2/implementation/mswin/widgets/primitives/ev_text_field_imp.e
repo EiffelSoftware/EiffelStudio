@@ -90,6 +90,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
+		end
 
 	initialize_sizeable is
 			-- Set as not vertically resizable.
@@ -246,6 +247,9 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/06/08 18:46:50  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.41  2000/06/07 17:28:01  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

@@ -17,17 +17,20 @@ feature -- Actions
 	highlight_text_in_editor (a_line_no, a_line_pos: INTEGER) is
 			-- Highlight error in editor
 		do
---			l_current_widget := shared_document_editor.current_widget.internal_edit_widget
---			l_current_widget.highlight_error_pos (a_line_no, a_line_pos)
---			l_current_widget.set_focus
+			shared_document_editor.text_displayed.cursor.set_y_in_lines (a_line_no)
+			shared_document_editor.text_displayed.cursor.set_x_in_characters (a_line_pos)
+			shared_document_editor.text_displayed.highlight_line (a_line_no)
+			shared_document_editor.display_line_with_context (a_line_no)
+			shared_document_editor.set_focus
 		end
 		
 	highlight_text_byte_in_editor (a_byte_pos: INTEGER) is
 			-- Highlight error in editor based on byte position
 		do
---			l_current_widget := shared_document_editor.current_widget.internal_edit_widget
---			l_current_widget.select_region (a_byte_pos - 1, a_byte_pos)
---			l_current_widget.set_focus
+--			shared_document_editor.text_displayed.cursor.set_y_in_lines (a_line_no)
+--			shared_document_editor.text_displayed.cursor.set_x_in_characters (a_byte_pos)
+--			shared_document_editor.text_displayed.highlight_line (a_line_no)
+--			shared_document_editor.set_focus
 		end
 		
 	load_file_in_editor (a_filename: STRING) is

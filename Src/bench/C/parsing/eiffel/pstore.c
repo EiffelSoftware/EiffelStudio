@@ -33,7 +33,7 @@
 /* Internal variables */
 rt_private fnptr make_index;	/* Index building routine */
 rt_private fnptr need_index;	/* Index checking routine */
-rt_private char *server;		/* Current server used */
+rt_private EIF_REFERENCE server;		/* Current server used */
 rt_private long file_position;	/* Position in current opened file */
 
 rt_private char *parsing_buffer = (char *) 0;
@@ -68,7 +68,7 @@ rt_public void parsing_store_initialize (void) {
 	parsing_position = 0;
 }
 
-rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, char *s)
+rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, EIF_REFERENCE s)
 {
 	/* Append `object' in file `f', and applies routine `mid'
 	 * on server `s'. Return position in the file where the object is
@@ -88,7 +88,7 @@ rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr n
 	return file_position;
 }
 
-rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid)
+rt_private void parsing_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 {
 	char gc_stopped;
 
@@ -133,7 +133,7 @@ rt_private void parsing_store_append(char *object, fnptr mid, fnptr nid)
 
 }
 
-rt_private long pst_store(char *object, long int object_count)
+rt_private long pst_store(EIF_REFERENCE object, long int object_count)
 {
 	/* Second pass of the store mechanism: writing on the disk.
 	 */

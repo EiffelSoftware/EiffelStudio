@@ -36,6 +36,8 @@ feature -- Simple formatting
 			ctxt.put_text_item_without_tabs (ti_R_array);
 		end;
 
+	string_value: STRING is "";
+
 feature {ARRAY_AS}	-- Replication
 
 	set_expressions (e: like expressions) is

@@ -148,7 +148,7 @@ rt_shared void traversal(char *object, int p_accounting)
 
 		/* Now insert generics */
 
-		cidarr = eif_gen_cid (dftype);
+		cidarr = eif_gen_cid ((int16) dftype);
 		i = *(cidarr++); /* count */
 
 		while (i--)

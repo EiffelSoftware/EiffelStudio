@@ -1,7 +1,21 @@
+<!-- Includes -->
+<script type="text/javascript" src="/toc.js"></script>
+
+
 <!-- Page Initialization -->
 <script language="javascript">
 
-function clearPreLoadPage() {
+function pageLoad()
+//Page load function
+{
+	clearPreLoadPage();
+	selectFilterNode();
+	ToggleAll();
+}
+
+function clearPreLoadPage()
+//Clear the 'please wait...' loading screen once loading has finished
+{
 	if (document.getelementbyid) //dom
 	{
 		document.getelementbyid('prepage').style.visibility='hidden';
@@ -18,21 +32,10 @@ function clearPreLoadPage() {
 		}
 	}
 }
-// end -->
-</script>
-
-<script language="JavaScript">
-
-function pageLoad()
-//Page load function
-{
-	clearPreLoadPage();
-	selectFilterNode();
-	ToggleAll();
-}
 
 function selectFilterNode()
-//Select appropriate filter node in combo box
+//Select appropriate filter node in combo box based on query string value
+//passed from previous page
 {
 
 	//keep everything after the '?'
@@ -64,7 +67,7 @@ function selectFilterNode()
 	    if (keyName == "index")
 	    {
 			keyValue = unescape(keyValue);
-			document.theForm.filterMenu.options [keyValue].selected = true;
+			top.filter_frame.document.theForm.filterMenu.options [keyValue].selected = true;
 		}
 	}
 }
@@ -79,7 +82,8 @@ function documentLoaded ()
 {
 
 	//Extract filter words from filter string
-	var filterString = document.theForm.filterMenu [document.theForm.filterMenu.selectedIndex].name;
+	var widget = top.filter_frame.document.theForm.filterMenu;
+	var filterString =  widget [widget.selectedIndex].name;
 
 	if (!filterString.length < 1)
 	{
@@ -131,64 +135,6 @@ function documentLoaded ()
 
 </script>
 
-<!-- TOC TREE CODE -->
-<script language="JavaScript">
-
-function swapTOC(selNdx, formObj)
-{
-	tocUrl = formObj.filterMenu.options[formObj.filterMenu.selectedIndex].value + "?index=" + selNdx.toString();;
-	self.location = tocUrl;
-}
-
-function Toggle(node)
-//Toggle node
-{
-	// Unfold the branch if it isn't visible
-	var divNode = node.nextSibling.nextSibling;
-	if (divNode != null && divNode.nodeName == "DIV")
-	{
-		if (divNode.style.display == 'none')
-		{
-			// Change the image (if there is an image)
-			if (node.children.length > 0)
-			{
-				if (node.children.item(0).tagName == "IMG")
-				{
-					node.children.item(0).src = "icon_toc_folder_open.gif";
-				}
-			}
-
-			node.nextSibling.nextSibling.style.display = '';
-		}
-		// Collapse the branch if it IS visible
-		else
-		{
-			// Change the image (if there is an image)
-			if (node.children.length > 0)
-			{
-				if (node.children.item(0).tagName == "IMG")
-				{
-					node.children.item(0).src = "icon_toc_folder_closed.gif";
-				}
-			}
-			divNode.style.display = 'none';
-		}
-	}
-
-}
-
-function ToggleAll()
-//Toggle ALL nodes
-{
-	var pageImages = document.getElementsByTagName("a")
-
-	for (i = 0; i < pageImages.length; i++)
-	{
-		Toggle (pageImages[i]);
-	}
-}
-</script>
-
 <html>
 	<head>
 		<META NAME="COPYRIGHT" CONTENT="&copy; 2004 Eiffel Software">
@@ -197,27 +143,7 @@ function ToggleAll()
 		<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="PUBLIC">
 		<META HTTP-EQUIV="EXPIRES" CONTENT="Mon, 01 Mar 2004 12:00:00 GMT">
 
-		<style>
-			A, A:hover, A:visited, A:link,
-			{
-				color:black;
-				font-size: 70%;
-				font-family: Verdana, Arial, Helvetica, sans-serif;
-				text-decoration:none;
-			}
-			A:active
-			{
-				color:red;
-				font-size: 70%;
-				font-family: Verdana, Arial, Helvetica, sans-serif;
-				text-decoration:none;
-			}
-			TD
-			{
-				white-space: nowrap;
-			}
-		</style>
-
+		<link rel="stylesheet" type="text/css" href="/toc.css">
 	</head>
 	<body onload="pageLoad()">
 		<div id="prepage" style="position:absolute;z-index:1;top:5%;left:5%;">
@@ -233,12 +159,15 @@ function ToggleAll()
 			</table>
 	  </div>
 		<form name="theForm">
-			<table>
+		<table class="toc_toolbar">
+			<tr>
+				<td width="100%"></td>
+				<td class="bordered_cell"><a onClick="toggleTOC(false)" alt_text="Hide TOC">x</a></td>
+			</tr>
+		</table>
+		<table class="toc_outer_table">
 				<tr>
-					<td>[!FilterHTML!]<td>
-				</tr>
-				<tr>
-					<td>[!TOCHTML!]<td>
+					<td valign="top">[!TOCHTML!]</td>
 				</tr>
 			</table>
 		</form>

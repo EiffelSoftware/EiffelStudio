@@ -1,18 +1,24 @@
 <span>
-	<table style="header">
+	<table style="header_filler">
 		<row>
-			<cell style="header">
-				[!Product!]
+			<cell style="bordered_cell">
 			</cell>
-		</row>
-		<row>
-			<cell style="subheader">
-				[!Title!]
-			</cell>
-			<cell style="navigation">
-				[!Navigation!]
-			</cell>
+			<cell style="header_filler"><span style="heading_text">Welcome to the Online Eiffel Documentation</span></cell>
 		</row>
 	</table>
-	<line_break/>
+	<table style="navigation">
+		<row>
+			<cell style="navigation">[!Navigation!]</cell>
+		</row>
+	</table>
+	<table style="product_type">
+		<row>
+			<cell style="product_type">[!Product!]</cell>
+		</row>
+	</table>
+	<table style="page_title">
+		<row>
+			<cell style="page_title">[!Title!]</cell>
+		</row>
+	</table>
 </span>

@@ -165,8 +165,7 @@ feature -- Insertion
 							-- into the descriptor unit, at the position
 							-- `offset'.
 						check
-							offset >= du.lower
-							offset <= du.upper
+							du.valid_index (offset)
 						end
 						du.put (u.entry (local_class_types.item), offset)
 						local_class_types.forth

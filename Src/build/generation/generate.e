@@ -335,8 +335,8 @@ feature {NONE}
 			Result.append ("inherit%N%N%TGRAPHICS%N%T%Tredefine%N%T%T%Tinit_toolkit%N%T%Tend%N%N")
 			Result.append ("feature%N%N")	
 			Result.append ("%Tapplication_screen: SCREEN is%N%T%Tonce%N%T%T%T!!Result.make (%"%")%N%T%Tend%N%N")
-			Result.append ("%Tinit_toolkit: ")
-			Result.append (Shared_toolkit_name)
+			Result.append ("%Tinit_toolkit: TOOLKIT_IMP")
+--			Result.append (Shared_toolkit_name)
 			Result.append (" is%N%T%Tonce%N%T%T%T!!Result.make (%"%")%N%T%Tend%N%N")
 			Result.append ("%Tinit_windowing is%N%T%Tdo%N%
 					%%T%T%Tif (init_toolkit = Void) then end%N%

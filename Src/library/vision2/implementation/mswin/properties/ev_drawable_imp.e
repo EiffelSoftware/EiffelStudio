@@ -11,8 +11,6 @@ deferred class
 inherit
 	EV_DRAWABLE_I
 
-	EV_PIXMAP_CONTAINER_IMP
-
 end -- class EV_DRAWABLE_IMP
 
 --|----------------------------------------------------------------

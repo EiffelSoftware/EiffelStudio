@@ -286,6 +286,10 @@ end;
 					end;
 				end;
 
+				if feat_tbl_id /= Void then
+					-- Bug fix: moving a class around can crete problems:
+					-- class test1 t: TEST2 end; class test2 inherit t1 end
+					-- class test2 moved from one cluster to another
 				if propagate_feature then
 debug ("ACTIVITY")
 	io.error.putstring ("%Tfeature ");
@@ -313,12 +317,17 @@ debug ("ACTIVITY")
 end;
 					melted_propagators.put (depend_unit);
 				end;
+				end;
 
 				depend_unit := Void;
 	
 				forth;
 			end;
 
+			if feat_tbl_id /= Void then
+				-- Bug fix: moving a class around can crete problems:
+				-- class test1 t: TEST2 end; class test2 inherit t1 end
+				-- class test2 moved from one cluster to another
 				-- Iteration on the features removed by `update_table'
 			from
 				removed_feature_ids.start
@@ -333,6 +342,7 @@ end;
 				!!depend_unit.make (feat_tbl_id, removed_feature_ids.item);
 				propagators.put (depend_unit);
 				removed_feature_ids.forth
+			end
 			end
 		end;
 

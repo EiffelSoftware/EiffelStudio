@@ -11,7 +11,7 @@ class
 
 inherit
 	EV_ACTION_SEQUENCE [TUPLE []]
-	-- EV_ACTION_SEQUENCE [TUPLE []]
+	-- EV_ACTION_SEQUENCE [TUPLE []]		
 	-- (ETL3 TUPLE with named parameters)
 	
 creation
@@ -22,7 +22,7 @@ feature -- Access
 	force_extend (action: PROCEDURE [ANY, TUPLE]) is
 			-- Extend without type checking.
 		do
-			extend (~wrapper (action))
+			extend (agent wrapper (action))
 		end
 
 	wrapper (action: PROCEDURE [ANY, TUPLE]) is

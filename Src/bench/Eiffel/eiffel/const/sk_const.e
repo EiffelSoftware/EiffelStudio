@@ -7,7 +7,7 @@ feature {NONE}
 	Sk_exp: INTEGER is
 			-- Hexa value 0x80000000
 		external
-			"C [macro %"struct.h%"]"
+			"C [macro %"eif_struct.h%"]"
 		alias
 			"SK_EXP"
 		end
@@ -15,7 +15,7 @@ feature {NONE}
 	Sk_bool: INTEGER is
 			-- Hexa value 0x04000000
 		external
-			"C [macro %"struct.h%"]"
+			"C [macro %"eif_struct.h%"]"
 		alias
 			"SK_BOOL"
 		end
@@ -23,7 +23,7 @@ feature {NONE}
 	Sk_char: INTEGER is
 			-- Hexa value 0x08000000
 		external
-			"C [macro %"struct.h%"]"
+			"C [macro %"eif_struct.h%"]"
 		alias
 			"SK_CHAR"
 		end
@@ -31,7 +31,7 @@ feature {NONE}
 	Sk_int: INTEGER is
 			-- Hexa value 0x10000000
 		external
-			"C [macro %"struct.h%"]"
+			"C [macro %"eif_struct.h%"]"
 		alias
 			"SK_INT"
 		end
@@ -39,7 +39,7 @@ feature {NONE}
 	Sk_float: INTEGER is
 			-- Hexa value 0x18000000
 		external
-			"C [macro %"struct.h%"]"
+			"C [macro %"eif_struct.h%"]"
 		alias
 			"SK_FLOAT"
 		end
@@ -47,7 +47,7 @@ feature {NONE}
 	Sk_double: INTEGER is
 			-- Hexa value 0x20000000
 		external
-			"C [macro %"struct.h%"]"
+			"C [macro %"eif_struct.h%"]"
 		alias
 			"SK_DOUBLE"
 		end
@@ -55,7 +55,7 @@ feature {NONE}
 	Sk_bit: INTEGER is
 			-- Hexa value 0x28000000
 		external
-			"C [macro %"struct.h%"]"
+			"C [macro %"eif_struct.h%"]"
 		alias
 			"SK_BIT"
 		end
@@ -63,7 +63,7 @@ feature {NONE}
 	Sk_pointer: INTEGER is
 			-- Hexa value 0x40000000
 		external
-			"C [macro %"struct.h%"]"
+			"C [macro %"eif_struct.h%"]"
 		alias
 			"SK_POINTER"
 		end
@@ -71,7 +71,7 @@ feature {NONE}
 	Sk_ref: INTEGER is
 			-- Hexa value 0xf8000000
 		external
-			"C [macro %"struct.h%"]"
+			"C [macro %"eif_struct.h%"]"
 		alias
 			"SK_REF"
 		end
@@ -79,7 +79,7 @@ feature {NONE}
 	Sk_void: INTEGER is
 			-- Hexa value 0x00000000
 		external
-			"C [macro %"struct.h%"]"
+			"C [macro %"eif_struct.h%"]"
 		alias
 			"SK_VOID"
 		end
@@ -87,7 +87,7 @@ feature {NONE}
 	Sk_dtype: INTEGER is
 			-- Hexa value 0x0000ffff
 		external
-			"C [macro %"struct.h%"]"
+			"C [macro %"eif_struct.h%"]"
 		alias
 			"SK_DTYPE"
 		end

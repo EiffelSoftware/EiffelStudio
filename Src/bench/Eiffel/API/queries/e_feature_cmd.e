@@ -22,16 +22,16 @@ inherit
 
 feature -- Initialization
 
-    set, make (a_feature: FEATURE_I; a_class_c: CLASS_C;
-                display: like output_window) is
-            -- Make current command with current_feature as
-            -- `a_feature' defined in current_class `a_class_c'.
-        require
-            non_void_a_feature: a_feature /= Void;
-            non_void_a_class_c: a_class_c /= Void;
-            non_void_display: display /= Void;
+	set, make (a_feature: E_FEATURE; a_class: E_CLASS;
+				display: like output_window) is
+			-- Make current command with current_feature as
+			-- `a_feature' defined in current_class `a_class_c'.
+		require
+			non_void_a_feature: a_feature /= Void;
+			non_void_a_class_c: a_class /= Void;
+			non_void_display: display /= Void;
 		do
-			class_make (a_class_c, display);
+			class_make (a_class, display);
 			current_feature := a_feature
 		ensure
 			current_feature_set: current_feature = a_feature
@@ -39,31 +39,55 @@ feature -- Initialization
 
 feature -- Properties
 
-    executable: BOOLEAN is
-            -- Is the Current able to be executed?
-        do
-            Result := current_class /= Void and then
-            	current_feature /= Void and then
-                output_window /= Void and then
+	executable: BOOLEAN is
+			-- Is the Current able to be executed?
+		do
+			Result := current_class /= Void and then
+				current_feature /= Void and then
+				output_window /= Void and then
 				has_valid_feature
-        ensure then
-            good_result: Result implies current_feature /= Void and then
-				    has_valid_feature
-        end
+		ensure then
+			good_result: Result implies current_feature /= Void and then
+					has_valid_feature
+		end
 
 feature -- Access
 
 	has_valid_feature: BOOLEAN is
 			-- Is current_feature valid? 
-		local
-			feat_i: FEATURE_I;
 		do
-			Result := current_feature.body_index /= 0 
+			Result := current_feature.is_compiled
 		end;
 
 feature -- Property
 
-	current_feature: FEATURE_I
+	current_feature: E_FEATURE
 			-- Feature for current action
+
+feature {NONE} -- Convenience
+
+	record_descendants (classes: PART_SORTED_TWO_WAY_LIST [E_CLASS]; e_class: E_CLASS) is
+			-- Record the descendants of `class_c' to `classes'.
+		require
+			valid_classes: classes /= Void;
+			valid_e_class: e_class /= Void
+		local
+			descendants: LINKED_LIST [E_CLASS];
+			desc_c: E_CLASS
+		do
+			descendants := e_class.descendants;
+			classes.extend (e_class);
+			from
+				descendants.start
+			until
+				descendants.after
+			loop
+				desc_c := descendants.item;
+				if not classes.has (desc_c) then
+					record_descendants (classes, desc_c);
+				end;
+				descendants.forth;
+			end;
+		end;
 
 end -- class E_FEATURE_CMD

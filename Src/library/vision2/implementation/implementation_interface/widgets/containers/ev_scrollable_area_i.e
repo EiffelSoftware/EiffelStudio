@@ -13,9 +13,7 @@ deferred class
 inherit
 	EV_CONTAINER_I
 	
-	
-
-end
+end -- class EV_SCROLLABLE_AREA_I
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

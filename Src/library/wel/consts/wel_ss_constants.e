@@ -100,6 +100,20 @@ feature -- Access
 			"SS_NOPREFIX"
 		end
 
+	Ss_bitmap: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"SS_BITMAP"
+		end
+
+	Ss_center_image: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"SS_CENTERIMAGE"
+		end
+
 end -- class WEL_SS_CONSTANTS
 
 --|----------------------------------------------------------------

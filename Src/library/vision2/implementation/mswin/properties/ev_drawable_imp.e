@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 				-- Initialise the device for painting.
 			dc.set_background_opaque
 			dc.set_background_transparent
-			dc.set_text_alignment (Ta_baseline)
+--			dc.set_text_alignment (Ta_baseline)
 
 			set_drawing_mode (Ev_drawing_mode_copy)
 			set_line_width (1)
@@ -295,7 +295,7 @@ feature -- Clearing and drawing operations
 			a_rect: WEL_RECT
 		do
 			create a_rect.make (x1, y1, x2, y2)
-			dc.fill_rect (a_rect, background_brush)
+			dc.fill_rect (a_rect, our_background_brush)
 		end
 
 feature -- Drawing operations
@@ -578,25 +578,22 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-	background_brush: WEL_BRUSH is
+	our_background_brush: WEL_BRUSH is
 			-- Current window background color used to refresh the window when
 			-- requested by the WM_ERASEBKGND windows message.
 		do
-			if internal_initialized_background_brush then
-				Result := internal_background_brush
-			else
-				if background_color /= Void then
-					create Result.make_solid (wel_bg_color)
-				end
-				internal_background_brush := Result
+			if not internal_initialized_background_brush then
+				internal_background_brush := allocated_brushes.get(Void, wel_bg_color)
 				internal_initialized_background_brush := True
 			end
+
+			Result := internal_background_brush
 		end
 
 	set_background_brush is
 			-- Set background-brush. For clear-operations.
 		do
-			dc.select_brush (background_brush)
+			dc.select_brush (our_background_brush)
 		end
 
 	reset_brush is
@@ -605,18 +602,14 @@ feature {NONE} -- Implementation
 			brush: WEL_BRUSH
 			pix_imp: EV_PIXMAP_IMP
 		do
-			if internal_initialized_brush then
-				brush := internal_brush
-			else
+			if not internal_initialized_brush then
 				if tile /= Void then
 					pix_imp ?= tile.implementation
-					create brush.make_by_pattern (pix_imp.bitmap)
+					internal_brush := allocated_brushes.get(pix_imp.bitmap, Void)
 				else
-					create brush.make_solid (wel_fg_color)
+					internal_brush := allocated_brushes.get(Void, wel_fg_color)
 				end
-				
 				internal_initialized_brush := True
-				internal_brush := brush
 			end
 
 				-- Unselect previously selected brush.
@@ -624,39 +617,33 @@ feature {NONE} -- Implementation
 				dc.unselect_brush
 			end
 				-- Select new brush.
-			dc.select_brush (brush)
+			dc.select_brush (internal_brush)
 		end
 
 	reset_pen is
 			-- Restore pen to correct line width and color
 		local
-			pen: WEL_PEN
 			dmode: INTEGER
 		do
 			if line_width = 0 then
 				remove_pen
 			else
-				if internal_initialized_pen then
-					pen := internal_pen
-				else
+					-- unselect currently selected pen.
+				if dc.pen_selected then
+					dc.unselect_pen
+				end
+
+				if not internal_initialized_pen then
 					if dashed_line_style then
 						dmode := Ps_dot
 					else
 						dmode := Ps_solid
 					end
-					create pen.make (dmode, line_width, wel_fg_color)
-					if pen.item = default_pointer then
-						create pen.make (dmode, line_width, wel_fg_color)
-					end
-
-					internal_pen := pen
+					internal_pen := allocated_pens.get (dmode, line_width, wel_fg_color)
 					internal_initialized_pen := True
 				end
 
-				if dc.pen_selected then
-					dc.unselect_pen
-				end
-				dc.select_pen (pen)
+				dc.select_pen (internal_pen)
 			end
 		end
 
@@ -716,17 +703,24 @@ feature {NONE} -- Implementation
 			log_brush: WEL_LOG_BRUSH
 		once
 			create log_brush.make (Bs_null, wel_fg_color, Hs_horizontal)
-			create Result.make_indirect (log_brush)
+			create Result.make_indirect(log_brush)
 		end
 
 	empty_pen: WEL_PEN is
 			-- Null brush (used when one want to draw
 			-- a figure without outlining it)
-		local
-			log_pen: WEL_LOG_PEN
 		once
-			create log_pen.make (Ps_null, 1, wel_fg_color)
-			create Result.make_indirect (log_pen)
+			create Result.make (Ps_null, 1, wel_fg_color)
+		end
+
+	allocated_pens: EV_GDI_ALLOCATED_PENS is
+		once
+			create Result
+		end
+
+	allocated_brushes: EV_GDI_ALLOCATED_BRUSHES is
+		once
+			create Result
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -756,6 +750,11 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/02/20 20:29:44  pichery
+--| created a factory that build WEL objects (pens & brushes). This factory
+--| keeps created objects into an hashtable in order to avoid multiple object
+--| creation for the same pen or brush.
+--|
 --| Revision 1.19  2000/02/19 20:24:44  brendel
 --| Updated copyright to 1986-2000.
 --|

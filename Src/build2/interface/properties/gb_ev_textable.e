@@ -50,6 +50,7 @@ feature -- Access
 			Result.extend (label)
 			create combo_box
 			Result.extend (combo_box)
+			combo_box.disable_edit
 			create item_left.make_with_text (Ev_textable_left_string)
 			combo_box.extend (item_left)
 			create item_center.make_with_text (Ev_textable_center_string)

@@ -67,5 +67,11 @@ feature {NONE}
 		once
 			create Result
 		end
+		
+	None_type: NONE_A is
+			-- Actual NONE type
+		once
+			create Result
+		end
 
 end

@@ -33,10 +33,10 @@ feature
 	is_pointer: BOOLEAN is true;
 			-- Is the type a pointer type ?
 
-	append_signature (a_clickable: OUTPUT_WINDOW) is
+	append_signature (st: STRUCTURED_TEXT) is
 		do
-			a_clickable.put_string ("BIT ");
-			a_clickable.put_int (size);
+			st.add_string ("BIT ");
+			st.add_int (size);
 		end;
 
 	dump (file: FILE) is

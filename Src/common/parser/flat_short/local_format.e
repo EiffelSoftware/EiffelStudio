@@ -7,13 +7,13 @@ indexing
 
 class LOCAL_FORMAT
 
-feature {FORMAT_CONTEXT, EIFFEL_LIST}
+feature {FORMAT_CONTEXT, EIFFEL_LIST, STRUCTURED_TEXT}
 
 	new_line_between_tokens: BOOLEAN;
 			-- Must a new line be inserted 
 			-- between EIFFEL_LIST tokens?
 
-feature {FORMAT_CONTEXT} -- Implementation
+feature {FORMAT_CONTEXT, STRUCTURED_TEXT} -- Implementation
 
 	dot_needed: BOOLEAN;
 			-- Will a dot be needed before next call?
@@ -28,7 +28,7 @@ feature {FORMAT_CONTEXT} -- Implementation
 			-- Must a space character be inserted 
 			-- between EIFFEL_LIST tokens?
 
-feature {FORMAT_CONTEXT} -- Local formatting control
+feature {FORMAT_CONTEXT, STRUCTURED_TEXT} -- Local formatting control
 
 	indent is
 			-- Increment `indent_depth'. 

@@ -10,7 +10,7 @@ inherit
 
 feature
 
-	display (a_clickable: OUTPUT_WINDOW) is
+	display (st: STRUCTURED_TEXT) is
 		deferred
 		end;
 

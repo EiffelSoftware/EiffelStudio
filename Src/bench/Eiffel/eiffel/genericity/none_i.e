@@ -30,9 +30,9 @@ feature
 	is_basic: BOOLEAN is False;
 			-- A NONE type is not a basic type.
 
-	append_signature (a_clickable: OUTPUT_WINDOW) is
+	append_signature (st: STRUCTURED_TEXT) is
 		do
-			a_clickable.put_string ("NONE");
+			st.add_string ("NONE");
 		end;
 
 	dump (file: FILE) is

@@ -119,28 +119,28 @@ feature
 			file.putchar (']');
 		end;
 
-	append_signature (a_clickable: OUTPUT_WINDOW) is
+	append_signature (st: STRUCTURED_TEXT) is
 		local
 			i, count, meta_type: INTEGER;
 		do
 			from
 				if is_expanded then
-					a_clickable.put_string ("expanded ");
+					st.add_string ("expanded ");
 				end;
-				base_class.e_class.append_name (a_clickable);
-				a_clickable.put_string (" [");
+				base_class.e_class.append_name (st);
+				st.add_string (" [");
 				i := 1;
 				count := meta_generic.count;
 			until
 				i > count
 			loop
-				meta_generic.item (i).append_signature (a_clickable);
+				meta_generic.item (i).append_signature (st);
 				if i < count then
-					a_clickable.put_string (", ");
+					st.add_string (", ");
 				end;
 				i := i + 1;
 			end;
-			a_clickable.put_char (']');
+			st.add_char (']');
 		end;
 
 	type_a: GEN_TYPE_A is

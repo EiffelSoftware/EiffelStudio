@@ -49,10 +49,10 @@ feature
 			False
 		end; -- c_type
 
-	append_signature (a_clickable: OUTPUT_WINDOW) is
+	append_signature (st: STRUCTURED_TEXT) is
 		do
-			a_clickable.put_string ("Formal #");
-			a_clickable.put_int (position);
+			st.add_string ("Formal #");
+			st.add_int (position);
 		end;
 
 	dump (file: FILE) is

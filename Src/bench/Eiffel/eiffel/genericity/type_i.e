@@ -12,7 +12,7 @@ inherit
 
 feature
 
-	append_signature (a_clickable: OUTPUT_WINDOW) is
+	append_signature (st: STRUCTURED_TEXT) is
 		deferred
 		end;
 

@@ -92,10 +92,10 @@ feature
 			False
 		end; -- actual_type
 
-	append_to (ow: OUTPUT_WINDOW) is
+	append_to (st: STRUCTURED_TEXT) is
 		do
-			ow.put_string ("BIT ");
-			ow.put_string (bits_symbol);
+			st.add_string ("BIT ");
+			st.add_string (bits_symbol);
 		end;
 
 end -- class BITS_SYMBOL_AS_B

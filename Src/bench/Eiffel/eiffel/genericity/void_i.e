@@ -31,9 +31,9 @@ feature
 			Result := Current;
 		end;
 
-	append_signature (a_clickable: OUTPUT_WINDOW) is
+	append_signature (st: STRUCTURED_TEXT) is
 		do
-			a_clickable.put_string ("VOID");
+			st.add_string ("VOID");
 		end;
 
 	dump (file: FILE) is

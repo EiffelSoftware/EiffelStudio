@@ -70,7 +70,7 @@ feature -- Byte code generation
 			ba.append_short_integer (cl_type_i.type_id - 1);
 
 			if gen_type /= Void then
-				ba.append_short_integer (context.current_type.type_id - 1)
+				ba.append_short_integer (context.current_type.generated_id (False))
 				gen_type.make_gen_type_byte_code (ba, True)
 			end
 

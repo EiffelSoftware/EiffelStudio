@@ -329,10 +329,12 @@ feature {NONE} -- Implementation
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"{
-				GType type = G_TYPE_STRING;
-				memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
-			}"
+			"[
+				{
+					GType type = G_TYPE_STRING;
+					memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
+				}
+			]"
 		end
 
 	add_gdk_type_pixbuf (an_array: POINTER; a_pos: INTEGER) is
@@ -344,10 +346,12 @@ feature {NONE} -- Implementation
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
-			"{
-				GType type = GDK_TYPE_PIXBUF;
-				memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
-			}"
+			"[
+				{
+					GType type = GDK_TYPE_PIXBUF;
+					memcpy ((char *) $an_array + $a_pos, &type, sizeof(GType));
+				}
+			]"
 		end
 
 	sizeof_gtype: INTEGER is

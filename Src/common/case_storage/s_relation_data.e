@@ -48,27 +48,6 @@ feature -- Setting
 
 feature -- allow the addition of generics ... pascalf
 
-	create_list_of_generic_parameters ( gg: LINKED_LIST [GENERIC_DATA ] )is
-		-- set the list of generics ...
-		require 
-			gg /= Void
-		local
-			gene_data : S_GENERIC_DATA
-			s_type :S_TYPE_INFO
-		do
-			!! generics.make
-			from 
-				gg.start
-			until
-				gg.after
-			loop
-				
-				!! gene_data.make(gg.item.name, Void )
-				generics.extend (gene_data)
-				gg.forth
-			end
-		end	
-
  	set_generics (gg: LINKED_LIST [S_GENERIC_DATA]) is
             -- Set the list of generics ...
         require

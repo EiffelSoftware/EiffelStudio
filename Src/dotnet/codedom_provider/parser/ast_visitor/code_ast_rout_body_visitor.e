@@ -88,7 +88,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		rescue
-			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			Event_manager.process_exception
 			retried := True
 			retry
 		end

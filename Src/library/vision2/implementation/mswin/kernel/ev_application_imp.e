@@ -33,7 +33,14 @@ inherit
 		export
 			{NONE} all
 		end
-
+		
+	WEL_TOOLTIP_CONSTANTS
+		export
+			{NONE} all
+		end
+		
+	WEL_WORD_OPERATIONS
+	
 	EV_APPLICATION_ACTION_SEQUENCES_IMP
 
 	WEL_VK_CONSTANTS
@@ -81,6 +88,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	all_tooltips: ARRAYED_LIST [POINTER]
+		-- Result is all tooltips that have been set in the application.
 
 	key_pressed (virtual_key: INTEGER): BOOLEAN is
 			-- Is `virtual_key' currently pressed?
@@ -233,12 +243,7 @@ feature {NONE} -- Implementation
 		ensure
 			not_void: Result /= Void
 		end
-
-feature {EV_TOOLTIPABLE_IMP} -- Tooltip
-
-	all_tooltips: ARRAYED_LIST [WEL_TOOLTIP]
-		-- Result is all tooltips that have been set in the application.
-	
+		
 feature {EV_ANY_I, EV_INTERNAL_TOOLBAR_IMP}-- Status report
 
 	tooltip_delay: INTEGER
@@ -364,6 +369,8 @@ feature -- Status setting
 
 	set_tooltip_delay (a_delay: INTEGER) is
 			-- Assign `a_delay' to `tooltip_delay'.
+		local
+			l_wel_tooltip: WEL_TOOLTIP
 		do
 			tooltip_delay := a_delay
 				-- Iterate through all tooltips within application and
@@ -373,8 +380,14 @@ feature -- Status setting
 			until
 				all_tooltips.off
 			loop
-				all_tooltips.item.set_initial_delay_time (a_delay)
-				all_tooltips.forth
+				l_wel_tooltip ?= window_of_item (all_tooltips.item)
+				if l_wel_tooltip /= Void then
+					cwin_send_message (l_wel_tooltip.item, Ttm_setdelaytime,
+						Ttdt_initial, cwin_make_long (a_delay, 0))
+					all_tooltips.forth
+				else
+					all_tooltips.remove
+				end
 			end
 		end
 
@@ -531,6 +544,15 @@ feature {NONE} -- Externals
 			"C [macro <windows.h>] (int): EIF_INTEGER"
 		alias
 			"GetKeyState"
+		end
+		
+	cwin_send_message (hwnd: POINTER; msg, wparam,
+				lparam: INTEGER) is
+			-- SDK SendMessage (without the result)
+		external
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
+		alias
+			"SendMessage"
 		end
 
 end -- class EV_APPLICATION_IMP

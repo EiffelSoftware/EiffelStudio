@@ -189,7 +189,7 @@ feature -- Access: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_8_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, integer_8_bytes)
+			Result := read_natural_8 (pos).as_integer_8
 		end
 
 	read_integer_16 (pos: INTEGER): INTEGER_16 is
@@ -198,7 +198,7 @@ feature -- Access: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_16_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, integer_16_bytes)
+			Result := read_natural_16 (pos).as_integer_16
 		end
 
 	read_integer_32 (pos: INTEGER): INTEGER is
@@ -207,7 +207,7 @@ feature -- Access: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_32_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, integer_32_bytes)
+			Result := read_natural_32 (pos).as_integer_32
 		end		
 
 	read_integer_64 (pos: INTEGER): INTEGER_64 is
@@ -216,7 +216,7 @@ feature -- Access: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_64_bytes) <= count
 		do
-			($Result).memory_copy (item + pos, integer_64_bytes)
+			Result := read_natural_64 (pos).as_integer_64
 		end
 
 	read_pointer (pos: INTEGER): POINTER is
@@ -338,7 +338,7 @@ feature -- Element change: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_8_bytes) <= count
 		do
-			(item + pos).memory_copy ($i, integer_8_bytes)
+			put_natural_8 (i.as_natural_8, pos)
 		ensure
 			inserted: i = read_integer_8 (pos)
 		end
@@ -349,7 +349,7 @@ feature -- Element change: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_16_bytes) <= count
 		do
-			(item + pos).memory_copy ($i, integer_16_bytes)
+			put_natural_16 (i.as_natural_16, pos)
 		ensure
 			inserted: i = read_integer_16 (pos)
 		end
@@ -360,7 +360,7 @@ feature -- Element change: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_32_bytes) <= count
 		do
-			(item + pos).memory_copy ($i, integer_32_bytes)
+			put_natural_32 (i.as_natural_32, pos)
 		ensure
 			inserted: i = read_integer_32 (pos)
 		end
@@ -371,7 +371,7 @@ feature -- Element change: Platform specific
 			pos_nonnegative: pos >= 0
 			valid_position: (pos + integer_64_bytes) <= count
 		do
-			(item + pos).memory_copy ($i, integer_64_bytes)
+			put_natural_64 (i.as_natural_64, pos)
 		ensure
 			inserted: i = read_integer_64 (pos)
 		end

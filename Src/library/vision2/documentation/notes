@@ -7,7 +7,6 @@ Looked at:
 	widgets/primitives
 
 To look at:
-	widgets/ev_widget.e
 	widgets/common_dialogs
 	figures
 	events
@@ -24,7 +23,7 @@ To delete:
 
 To be revised:
 	ev_multi_column_list_row.e
-	ev_text.e
+	ev_text.e (PR 2219)
 	ev_text_format.e
 	ev_dynamic_table.e
 	ev_fixed.e
@@ -34,8 +33,29 @@ To be revised:
 	ev_simple_item.e
 
 To do:
-	Connect close action for windows.
-	Connect actions for text_components (AND TEST!!)
+- Check for things that could inherit textable (frame, menu, simple item)
+- Test circular parenting contracts for items and widgets.
+- Check export of stuff int _I and _IMP, nothing should be exported to all,
+  export to EV_ANY and EV_ANY_I is the most open anything should be.
+- How would you do a windowless app?
+- Check places that have is_equal in postcondition, mabey add "and /=".
+- Check that dialogs close when clicked.
+- Check that set_focus works everywhere.
+- Check contracts for colors with respect to the fact that the colour requested   is not always the color returned. (ir on 8 bit displays)
+- Test combo box on windows.
+- Check PND for all items on GTK.
+- Look into recursive radio events problem.
+- Look into destroyed tree item problem.
+- Test all state variables in non-parented widgets.
+
+Feature/Bug requests:
+- EV_LABEL.vertical align_text_center. (jfiat@capgemini.fr)
+- EV_MULTI_COLUMN_LIST double click. (jfiat@capgemini.fr)
+- Link up to windows scroll bar width settings. (pichery@eiffel.com, PR 2390)
+- popup (message, help_anchor: STRING;
+	<<["ok",~ok_action];["toto",~do_toto];["tata",Void];>>
+  ) (pascalf@eiffel.com)
+- Print dialog. (pascalf@eiffel.com)
 
 Status:													
 .   not implemented
@@ -70,7 +90,7 @@ X   complete but found to have bugs
     kernel/ev_color.e									*	.	.	.
     kernel/ev_coordinates.e								*	.	.	.
     kernel/ev_cursor.e									o	.	.	.
-    kernel/ev_cursor_code.e								o	.	.	.
+    k -rnel/ev_cursor_code.e								o	.	.	.
     kernel/ev_font.e									o	.	.	.
     kernel/ev_font_constants.e							o	.	.	.
     kernel/ev_key.e										*	.	.	.

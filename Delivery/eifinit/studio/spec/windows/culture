@@ -1,0 +1,203 @@
+af 0036 Afrikaans
+af-ZA 0436 Afrikaans (South Africa)
+ar 0001 Arabic
+ar-AE 3801 Arabic (United Arab Emirates)
+ar-BH 3C01 Arabic (Bahrain)
+ar-DZ 1401 Arabic (Algeria)
+ar-EG 0C01 Arabic (Egypt)
+ar-IQ 0801 Arabic (Iraq)
+ar-JO 2C01 Arabic (Jordan)
+ar-KW 3401 Arabic (Kuwait)
+ar-LB 3001 Arabic (Lebanon)
+ar-LY 1001 Arabic (Libya)
+ar-MA 1801 Arabic (Morocco)
+ar-OM 2001 Arabic (Oman)
+ar-QA 4001 Arabic (Qatar)
+ar-SA 0401 Arabic (Saudi Arabia)
+ar-SY 2801 Arabic (Syria)
+ar-TN 1C01 Arabic (Tunisia)
+ar-YE 2401 Arabic (Yemen)
+az 002C Azerbaijani
+az-AZ 042C Azerbaijani, Latin script (Azerbaijan)
+az-AZ2 082C Azerbaijani, Cyrillic script (Azerbaijan)
+be 0023 Belarusian
+be-BY 0423 Belarusian (Belarus)
+bg 0002 Bulgarian
+bg-BG 0402 Bulgarian (Bulgaria)
+ca 0003 Catalan
+ca-ES 0403 Catalan (Spain)
+cs 0005 Czech
+cs-CZ 0405 Czech (Czech Republic)
+da 0006 Danish
+da-DK 0406 Danish (Denmark)
+de 0007 German
+de-AT 0C07 German (Austria)
+de-CH 0807 German (Switzerland)
+de-DE 0407 German (Germany)
+de-LI 1407 German (Liechtenstein)
+de-LU 1007 German (Luxembourg)
+div 0065 Divehi
+div-MV 0465 Divehi (Maldives)
+el 0008 Greek
+el-GR 0408 Greek (Greece)
+en 0009 English
+en-AU 0C09 English (Australia)
+en-BZ 2809 English (Belize)
+en-CA 1009 English (Canada)
+en-CB 2409 English (Caribbean)
+en-GB 0809 English (United Kingdom)
+en-IE 1809 English (Ireland)
+en-JM 2009 English (Jamaica)
+en-NZ 1409 English (New Zealand)
+en-PH 3409 English (Philippines)
+en-TT 2C09 English (Trinidad and Tobago)
+en-US 0409 English (United States)
+en-ZA 1C09 English (South Africa)
+en-ZW 3009 English (Zimbabwe)
+es 000A Spanish
+es-AR 2C0A Spanish (Argentina)
+es-BO 400A Spanish (Bolivia)
+es-CL 340A Spanish (Chile)
+es-CO 240A Spanish (Colombia)
+es-CR 140A Spanish (Costa Rica)
+es-DO 1C0A Spanish (Dominican Republic)
+es-EC 300A Spanish (Ecuador)
+es-ES 040A Spanish, traditional sort (Spain)
+es-ES2 0C0A Spanish, international sort (Spain)
+es-GT 100A Spanish (Guatemala)
+es-HN 480A Spanish (Honduras)
+es-MX 080A Spanish (Mexico)
+es-NI 4C0A Spanish (Nicaragua)
+es-PA 180A Spanish (Panama)
+es-PE 280A Spanish (Peru)
+es-PR 500A Spanish (Puerto Rico)
+es-PY 3C0A Spanish (Paraguay)
+es-SV 440A Spanish (El Salvador)
+es-UY 380A Spanish (Uruguay)
+es-VE 200A Spanish (Venezuela)
+et 0025 Estonian
+et-EE 0425 Estonian (Estonia)
+eu 002D Basque
+eu-ES 042D Basque (Spain)
+fa 0029 Persian
+fa-IR 0429 Persian (Iran)
+fi 000B Finnish
+fi-FI 040B Finnish (Finland)
+fo 0038 Faroese
+fo-FO 0438 Faroese (Faroe Islands)
+fr 000C French
+fr-BE 080C French (Belgium)
+fr-CA 0C0C French (Canada)
+fr-CH 100C French (Switzerland)
+fr-FR 040C French (France)
+fr-LU 140C French (Luxembourg)
+fr-MC 180C French (Monaco)
+gl 0056 Gallegan
+gl-ES 0456 Gallegan (Spain)
+gu 0047 Gujarati
+gu-IN 0447 Gujarati (India)
+he 000D Hebrew
+he-IL 040D Hebrew (Israel)
+hi 0039 Hindi
+hi-IN 0439 Hindi (India)
+hr 001A Croatian
+hr-HR 041A Croatian (Croatia)
+hu 000E Hungarian
+hu-HU 040E Hungarian (Hungary)
+hy 002B Armenian
+hy-AM 042B Armenian (Armenia)
+id 0021 Indonesian
+id-ID 0421 Indonesian (Indonesia)
+is 000F Icelandic
+is-IS 040F Icelandic (Iceland)
+it 0010 Italian
+it-CH 0810 Italian (Switzerland)
+it-IT 0410 Italian (Italy)
+ja 0011 Japanese
+ja-JP 0411 Japanese (Japan)
+ka 0037 Georgian
+ka-GE 0437 Georgian (Georgia)
+kk 003F Kazakh
+kk-KZ 043F Kazakh (Kazakhstan)
+kn 004B Kannada
+kn-IN 044B Kannada (India)
+ko 0012 Korean
+ko-KR 0412 Korean (Korea)
+kok 0057 Konkani
+kok-IN 0457 Konkani (India)
+ky 0040 Kirghiz
+ky-KZ 0440 Kirghiz (Kazakhstan)
+lt 0027 Lithuanian
+lt-LT 0427 Lithuanian (Lithuania)
+lv 0026 Latvian
+lv-LV 0426 Latvian (Latvia)
+mk 002F Macedonian
+mk-MK 042F Macedonian (Former Yugoslav Republic of Macedonia)
+mn 0050 Mongolian
+mn-MN 0450 Mongolian (Mongolia)
+mr 004E Marathi
+mr-IN 044E Marathi (India)
+ms 003E Malay
+ms-BN 083E Malay (Brunei)
+ms-MY 043E Malay (Malaysia)
+nb-NO 0414 Norwegian Bokmål (Norway)
+nl 0013 Dutch
+nl-BE 0813 Dutch (Belgium)
+nl-NL 0413 Dutch (The Netherlands)
+nn-NO 0814 Norwegian Nynorsk (Norway)
+no 0014 Norwegian
+pa 0046 Panjabi
+pa-IN 0446 Panjabi (India)
+pl 0015 Polish
+pl-PL 0415 Polish (Poland)
+pt 0016 Portuguese
+pt-BR 0416 Portuguese (Brazil)
+pt-PT 0816 Portuguese (Portugal)
+ro 0018 Romanian
+ro-RO 0418 Romanian (Romania)
+ru 0019 Russian
+ru-RU 0419 Russian (Russia)
+sa 004F Sanskrit
+sa-IN 044F Sanskrit (India)
+sk 001B Slovak
+sk-SK 041B Slovak (Slovakia)
+sl 0024 Slovenian
+sl-SI 0424 Slovenian (Slovenia)
+sq 001C Albanian
+sq-AL 041C Albanian (Albania)
+sr 081A Serbian
+sr-SP 081A Serbian, Latin script (Serbia)
+sr-SP2 0C1A Serbian, Cyrillic script (Serbia)
+sv 001D Swedish
+sv-FI 081D Swedish (Finland)
+sv-SE 041D Swedish (Sweden)
+sw 0041 Swahili
+sw-KE 0441 Swahili (Kenya)
+syr 005A Syriac
+syr-SY 045A Syriac (Syria)
+ta 0049 Tamil
+ta-IN 0449 Tamil (India)
+te 004A Telugu
+te-IN 044A Telugu (India)
+th 001E Thai
+th-TH 041E Thai (Thailand)
+tr 001F Turkish
+tr-TR 041F Turkish (Turkey)
+tt 0044 Tatar
+tt-TA 0444 Tatar (Tatarstan)
+uk 0022 Ukrainian
+uk-UA 0422 Ukrainian (Ukraine)
+ur 0020 Urdu
+ur-PK 0420 Urdu (Pakistan)
+uz 0043 Uzbek
+uz-UZ 0443 Uzbek, Latin script (Uzbekistan)
+uz-UZ2 0843 Uzbek, Cyrillic script (Uzbekistan)
+vi 002A Vietnamese
+vi-VN 042A Vietnamese (Viet Nam)
+zhs 0004 Simplified Chinese
+zht 7C04 Traditional Chinese
+zh-CN 0804 Chinese (China)
+zh-HK 0C04 Chinese (Hong Kong SAR)
+zh-MO 1404 Chinese (Macau SAR)
+zh-SG 1004 Chinese (Singapore)
+zh-TW 0404 Chinese (Taiwan)

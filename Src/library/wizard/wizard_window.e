@@ -174,9 +174,15 @@ feature {WIZARD_STATE_WINDOW, WIZARD_STATE_MANAGER} -- Basic Operations
 		end
 
 	disable_back_button is
-			-- Enable the Next/Finish button
+			-- Disable the Next/Finish button
 		do
 			previous_b.disable_sensitive
+		end
+		
+	disable_cancel_button is
+			-- Disable the cancel button
+		do
+			cancel_b.disable_sensitive
 		end
 		
 	enable_next_button is
@@ -189,6 +195,12 @@ feature {WIZARD_STATE_WINDOW, WIZARD_STATE_MANAGER} -- Basic Operations
 			-- Enable the Next/Finish button
 		do
 			previous_b.enable_sensitive
+		end
+		
+	enable_cancel_button is
+			-- Enable the cancel button
+		do
+			cancel_b.enable_sensitive
 		end
 
 feature -- Basic Operations

@@ -26,7 +26,7 @@ struct ex_vect {
 	unsigned char ex_retry;		/* True if function has been retried */
 	unsigned char ex_rescue;	/* True if function entered its rescue clause */
 	union {
-		int exu_lvl;			/* Level for multi-branch backtracking */
+		unsigned int exu_lvl;	/* Level for multi-branch backtracking */
 		int exu_sig;			/* Signal number */
 		int exu_errno;			/* Error number reported by kernel */
 		struct {
@@ -86,7 +86,7 @@ struct except {
 	unsigned char ex_val;	/* Exception code (raised) */
 	unsigned char ex_nomem;	/* An "Out of memory" exception occurred */
 	unsigned char ex_nsig;	/* Number of last signal received */
-	unsigned char ex_level;	/* Exception level (rescue branches) */
+	unsigned int ex_level;	/* Exception level (rescue branches) */
 	unsigned char ex_org;	/* Original exception at this level */
  	char *ex_tag;			/* Assertion tag */
 	char *ex_otag;			/* Tag associated with original exception */

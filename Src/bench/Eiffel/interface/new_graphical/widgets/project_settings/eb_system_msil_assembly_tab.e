@@ -361,7 +361,7 @@ feature {NONE} -- Initialization
 			local_assembly_list_empty: local_assembly_list.is_empty
 		end
 
-	msil_assembly_info (a_assembly_type: STRING; add_proc, remove_proc: PROCEDURE [ANY, TUPLE []]): EV_FRAME is
+	msil_assembly_info (a_assembly_type: STRING; add_proc, remove_proc: PROCEDURE [ANY, TUPLE]): EV_FRAME is
 			-- MSIL information about assembly references
 		require
 			type_not_void: a_assembly_type /= Void

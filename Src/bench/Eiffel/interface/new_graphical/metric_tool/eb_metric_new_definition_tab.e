@@ -91,7 +91,7 @@ feature -- Action
 			inspect a_key_code 
 				when Key_escape then
 						-- Escape key pressed, so push the cancel button.
-					interface.new_metric_definition_dialog.default_cancel_button.select_actions.call ([])
+					interface.new_metric_definition_dialog.default_cancel_button.select_actions.call (Void)
 
 				when Key_n then
 					if ev_application.ctrl_pressed then
@@ -100,14 +100,14 @@ feature -- Action
 
 				when Key_s then
 					if ev_application.ctrl_pressed then
-						interface.save_button.select_actions.call ([])
+						interface.save_button.select_actions.call (Void)
 					end
 
 				when Key_enter then
 						-- Enter key pressed, so push the default button.
 					a_button ?= a_widget
 					if a_button /= Void then
-						a_button.select_actions.call ([])
+						a_button.select_actions.call (Void)
 					end
 				else
 			end
@@ -137,7 +137,7 @@ feature -- Action
 			existing_button: a_key.code = Key_enter implies a_button /= Void
 		do
 			if a_key.code = Key_enter then
-				a_button.select_actions.call ([])
+				a_button.select_actions.call (Void)
 			end
 		end
 
@@ -241,7 +241,7 @@ feature -- Existing name
 	
 	build_confirm_dialog is
 		local
-			actions_array: ARRAY [PROCEDURE [ANY, TUPLE []]]
+			actions_array: ARRAY [PROCEDURE [ANY, TUPLE]]
 		do
 			create actions_array.make (1, 2)
 			actions_array.put (~yes_action, 1)

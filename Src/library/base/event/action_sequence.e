@@ -232,10 +232,10 @@ feature -- Element Change
 
 feature -- Event handling
 
-	not_empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE []]]
+	not_empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 			-- Actions to be performed on transition from `is_empty' to not `is_empty'.
 
-	empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE []]]
+	empty_actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 			-- Actions to be performed on transition from not `is_empty' to `is_empty'.
 
 feature {NONE} -- Implementation, ARRAYED_LIST
@@ -257,7 +257,7 @@ feature {NONE} -- Implementation, ARRAYED_LIST
 
 feature {NONE} -- Implementation
 
-	call_action_list (actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE []]]) is
+	call_action_list (actions: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]) is
 			-- Call each action in `actions'.
 		require
 			actions_not_void: actions /= Void
@@ -272,13 +272,13 @@ feature {NONE} -- Implementation
 				i > snapshot.count
 			loop
 				if snapshot.i_th (i) /= Void then
-					snapshot.i_th (i).call ([])
+					snapshot.i_th (i).call (Void)
 				end
 				i := i + 1
 			end
 		end
 
-	source_connection_agent: PROCEDURE [ANY, TUPLE []]
+	source_connection_agent: PROCEDURE [ANY, TUPLE]
 
 	is_aborted_stack: LINKED_STACK [BOOLEAN]
 			-- `item' holds abort status of
@@ -297,7 +297,7 @@ feature {NONE} -- Implementation
 	dummy_event_data_internal: EVENT_DATA
 			-- See dummy_event_data.
 	
-	kamikazes: ARRAYED_LIST [PROCEDURE [ANY, TUPLE []]]
+	kamikazes: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]]
 			-- Used by `prune_when_called'.
 
 feature -- Obsolete
@@ -310,7 +310,7 @@ feature -- Obsolete
 		end
 
 	set_source_connection_agent
-				(a_source_connection_agent: PROCEDURE [ANY, TUPLE []]) is
+				(a_source_connection_agent: PROCEDURE [ANY, TUPLE]) is
 			-- Set `a_source_connection_agent' that will connect sequence to an
 			-- actual event source. The agent will be called when the first action is
 			-- added to the sequence. If there are already actions in the
@@ -320,7 +320,7 @@ feature -- Obsolete
 		do
 			not_empty_actions.extend (a_source_connection_agent)
 			if not is_empty then
-				a_source_connection_agent.call ([])
+				a_source_connection_agent.call (Void)
 			end 
 		end
 

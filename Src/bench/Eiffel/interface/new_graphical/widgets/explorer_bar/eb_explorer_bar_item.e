@@ -168,7 +168,7 @@ feature -- Status Setting
 		do
 			if not is_visible then
 				is_visible := True
-				show_actions.call ([])
+				show_actions.call (Void)
 			end
 			rebuild_system_toolbar
 

@@ -335,7 +335,7 @@ feature {NONE} -- Implementation: internal data
 	ev_list: EV_MULTI_COLUMN_LIST
 			-- Graphical representation of the list of expressions to evaluate.
 
-	update_agent: PROCEDURE [ANY, TUPLE []]
+	update_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent that is put in the idle_actions to update the call stack after a while.
 
 	expressions: ARRAYED_LIST [EB_EXPRESSION]

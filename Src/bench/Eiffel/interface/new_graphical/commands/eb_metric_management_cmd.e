@@ -448,7 +448,7 @@ feature -- Action
 			item_selected: ev_list.selected_item /= Void
 		local
 			selected_item: EV_LIST_ITEM
-			actions_array: ARRAY [PROCEDURE [ANY, TUPLE []]]
+			actions_array: ARRAY [PROCEDURE [ANY, TUPLE]]
 		do
 			selected_item := ev_list.selected_item
 			if selected_item /= Void then

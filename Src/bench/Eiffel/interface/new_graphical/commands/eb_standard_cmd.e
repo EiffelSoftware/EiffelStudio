@@ -29,7 +29,7 @@ feature -- Initialization
 
 feature -- Access
 
-	execute_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE []]]
+	execute_agents: LINKED_LIST [PROCEDURE [ANY, TUPLE]]
 			-- Agents that are called when `Current' is executed.
 
 	pixmap: ARRAY [EV_PIXMAP]
@@ -100,7 +100,7 @@ feature -- Status setting
 			name := s
 		end
 
-	add_agent (a: PROCEDURE [ANY, TUPLE []]) is
+	add_agent (a: PROCEDURE [ANY, TUPLE]) is
 			-- Extend `execute_agents' with `a'.
 		do
 			execute_agents.extend (a)
@@ -122,7 +122,7 @@ feature -- Basic operations
 			until
 				execute_agents.after
 			loop
-				execute_agents.item.call ([])
+				execute_agents.item.call (Void)
 				execute_agents.forth
 			end
 		end

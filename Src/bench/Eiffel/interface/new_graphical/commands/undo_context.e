@@ -65,18 +65,18 @@ feature -- Basic operations
 		require
 			action_not_void: action /= Void
 			undo_procedure_not_void: undo_procedure /= Void
-			action_valid: conforms (action, "PROCEDURE [ANY, TUPLE []]")
-				or conforms_to_tuple_of_array_of (action, "PROCEDURE [ANY, TUPLE []]")
-			undo_procedure_valid: conforms (undo_procedure, "PROCEDURE [ANY, TUPLE []]")
-				or conforms_to_tuple_of_array_of (undo_procedure, "PROCEDURE [ANY, TUPLE []]")
+			action_valid: conforms (action, "PROCEDURE [ANY, TUPLE]")
+				or conforms_to_tuple_of_array_of (action, "PROCEDURE [ANY, TUPLE]")
+			undo_procedure_valid: conforms (undo_procedure, "PROCEDURE [ANY, TUPLE]")
+				or conforms_to_tuple_of_array_of (undo_procedure, "PROCEDURE [ANY, TUPLE]")
 		local
 			t: TUPLE
-			action_proc: PROCEDURE [ANY, TUPLE []]
+			action_proc: PROCEDURE [ANY, TUPLE]
 			action_array: ARRAY [ANY]
-			undo_proc: PROCEDURE [ANY, TUPLE []]
+			undo_proc: PROCEDURE [ANY, TUPLE]
 			undo_array: ARRAY [ANY]
-			do_agent: PROCEDURE [ANY, TUPLE []]
-			undo_agent: PROCEDURE [ANY, TUPLE []]
+			do_agent: PROCEDURE [ANY, TUPLE]
+			undo_agent: PROCEDURE [ANY, TUPLE]
 			undo_pair: UNDO_PAIR
 		do
 			from
@@ -189,16 +189,16 @@ feature -- Status report
 
 feature -- Event handling
 
-	do_actions: ACTION_SEQUENCE [TUPLE []]
+	do_actions: ACTION_SEQUENCE [TUPLE]
 			-- Called when a reversable operation is performed.
 
-	undo_actions: ACTION_SEQUENCE [TUPLE []]
+	undo_actions: ACTION_SEQUENCE [TUPLE]
 			-- Called when an operation is reversed.
 
-	undo_exhausted_actions: ACTION_SEQUENCE [TUPLE []]
+	undo_exhausted_actions: ACTION_SEQUENCE [TUPLE]
 			-- Called when there are no more reversable operations.
 
-	redo_exhausted_actions: ACTION_SEQUENCE [TUPLE []]
+	redo_exhausted_actions: ACTION_SEQUENCE [TUPLE]
 			-- Called when there are no more reperformable operations.
 
 feature -- Implementation
@@ -264,10 +264,10 @@ feature {NONE} -- Implementation
 			-- Call all procedures in `array'.
 		require
 			array_not_void: array /= Void
-			array_valid: conforms_to_array_of (array, "PROCEDURE [ANY, TUPLE []]")
+			array_valid: conforms_to_array_of (array, "PROCEDURE [ANY, TUPLE]")
 		local
 			i: INTEGER
-			p: PROCEDURE [ANY, TUPLE []]
+			p: PROCEDURE [ANY, TUPLE]
 		do
 			from
 				i := array.lower

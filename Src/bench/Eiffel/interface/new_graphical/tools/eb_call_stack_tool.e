@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 	set_stack_depth_cmd: EB_STANDARD_CMD
 			-- Command that alters the displayed depth of the call stack.
 
-	update_agent: PROCEDURE [ANY, TUPLE []]
+	update_agent: PROCEDURE [ANY, TUPLE]
 			-- Agent that is put in the idle_actions to update the call stack after a while.
 
 	real_update is

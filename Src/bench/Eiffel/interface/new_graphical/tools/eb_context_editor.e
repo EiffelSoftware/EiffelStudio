@@ -956,7 +956,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Commands with global accelerators
 
 feature {NONE} -- Implementation
 
-	project_close_agent: PROCEDURE [ANY, TUPLE []]
+	project_close_agent: PROCEDURE [ANY, TUPLE]
 			-- The agent that is called when the project is closed.
 
 	create_class_cmd: EB_CREATE_CLASS_DIAGRAM_COMMAND

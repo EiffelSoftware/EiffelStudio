@@ -800,7 +800,7 @@ feature {NONE} -- Implementation
 			-- Return was pressed after typing a directory name.
 			-- Press `finish_button'.
 		do
-			finish_button.select_actions.call ([])
+			finish_button.select_actions.call (Void)
 		end
 			
 	on_cf_toggle (cf: CLASS_FORMAT; state: EV_CHECK_BUTTON) is

@@ -114,12 +114,12 @@ feature -- Basic operations
 			-- Update `action_list' as well.
 		local
 			t: TUPLE
-			action_proc: PROCEDURE [ANY, TUPLE []]
+			action_proc: PROCEDURE [ANY, TUPLE]
 			action_array: ARRAY [ANY]
-			undo_proc: PROCEDURE [ANY, TUPLE []]
+			undo_proc: PROCEDURE [ANY, TUPLE]
 			undo_array: ARRAY [ANY]
-			do_agent: PROCEDURE [ANY, TUPLE []]
-			undo_agent: PROCEDURE [ANY, TUPLE []]
+			do_agent: PROCEDURE [ANY, TUPLE]
+			undo_agent: PROCEDURE [ANY, TUPLE]
 			undo_pair: UNDO_PAIR
 			new_graphical_item: EV_LIST_ITEM
 		do
@@ -185,12 +185,12 @@ feature -- Basic operations
 			-- Must not be called if `undo' cannot be called just afterwards.
 		local
 			t: TUPLE
-			action_proc: PROCEDURE [ANY, TUPLE []]
+			action_proc: PROCEDURE [ANY, TUPLE]
 			action_array: ARRAY [ANY]
-			undo_proc: PROCEDURE [ANY, TUPLE []]
+			undo_proc: PROCEDURE [ANY, TUPLE]
 			undo_array: ARRAY [ANY]
-			do_agent: PROCEDURE [ANY, TUPLE []]
-			undo_agent: PROCEDURE [ANY, TUPLE []]
+			do_agent: PROCEDURE [ANY, TUPLE]
+			undo_agent: PROCEDURE [ANY, TUPLE]
 			undo_pair: UNDO_PAIR
 			new_graphical_item: EV_LIST_ITEM
 		do

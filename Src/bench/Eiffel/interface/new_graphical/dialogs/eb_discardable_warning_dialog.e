@@ -115,7 +115,7 @@ feature {NONE} -- Initialization
 			ok_button := create_button (ok_button_label)
 			Result.extend (ok_button)
 		ensure
-			valid_Result: Result /= Void and then not Result.is_empty
+			valid_result: Result /= Void and then not Result.is_empty
 		end
 
 feature -- Basic operations
@@ -128,7 +128,7 @@ feature -- Basic operations
 				check
 					ok_action_not_void: ok_action /= Void
 				end -- `assume_cancel' ensures `ok_action' /= Void.
-				ok_action.call([])
+				ok_action.call(Void)
 			else
 				Precursor (a_window)
 			end
@@ -207,7 +207,7 @@ feature {NONE} -- Deferred Constants
 	ok_button_label: STRING is
 			-- Label for the Ok/Yes button.
 		do
-			Result := Interface_names.b_Ok
+			Result := Interface_names.b_ok
 		ensure
 			valid_label: Result /= Void and then not Result.is_empty
 		end

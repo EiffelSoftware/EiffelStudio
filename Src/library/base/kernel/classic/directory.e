@@ -388,7 +388,7 @@ feature -- Removal
 							action.call (deleted_files_tuple)
 						end
 						if is_cancel_requested /= Void then
-							requested_cancel := is_cancel_requested.item ([])
+							requested_cancel := is_cancel_requested.item (Void)
 						end
 						deleted_files.wipe_out
 						file_count := 1
@@ -423,7 +423,7 @@ feature -- Removal
 			deleted_files: ARRAYED_LIST [STRING]
 		do	
 			delete_content_with_action (action, is_cancel_requested, file_number)
-			if (is_cancel_requested = Void) or else (not is_cancel_requested.item ([])) then
+			if (is_cancel_requested = Void) or else (not is_cancel_requested.item (Void)) then
 				delete
 
 					-- Call the agent with the name of the directory

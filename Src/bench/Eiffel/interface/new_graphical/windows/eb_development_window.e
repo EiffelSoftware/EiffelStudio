@@ -2046,7 +2046,7 @@ feature -- Resource Update
 			text_edited := False
 		end
 
-	save_and (an_action: PROCEDURE [ANY, TUPLE []]) is
+	save_and (an_action: PROCEDURE [ANY, TUPLE]) is
 		local
 			save_dialog: EB_CONFIRM_SAVE_DIALOG
 		do
@@ -2054,7 +2054,7 @@ feature -- Resource Update
 			text_saved := False
 			create save_dialog.make_and_launch (Current,Current)
 			if not save_canceled and then syntax_is_correct then
-				an_action.call([])
+				an_action.call(Void)
 			end
 		end
 

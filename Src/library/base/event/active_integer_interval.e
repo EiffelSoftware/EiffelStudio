@@ -81,7 +81,7 @@ feature -- Duplication
 
 feature -- Event handling
 
-	change_actions: ACTION_SEQUENCE [TUPLE []] is
+	change_actions: ACTION_SEQUENCE [TUPLE] is
 			-- Actions performed when interval changes.
 		do
 			if opo_change_actions = Void then
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	opo_change_actions: ACTION_SEQUENCE [TUPLE []];
+	opo_change_actions: ACTION_SEQUENCE [TUPLE];
 			-- Once per object implementation for `change_actions'
 
 indexing

@@ -316,7 +316,9 @@ end
 			!! ext_error.init
 			line_start := ext_error.start_position
 			ext_error.set_start_position (line_start)
-			ext_error.set_end_position (line_start)
+				-- We add 5 otherwise there won't be any visible selection
+				-- on the screen.
+			ext_error.set_end_position (line_start + 5)
 			ext_error.set_external_error_message (msg)
 			Error_handler.insert_error (ext_error)
 			Error_handler.raise_error

@@ -240,9 +240,12 @@ STREAM *sp;		/* Stream used to talk to the child */
 	 */
 
 	struct timeval tm;
-	int mask = (1 << writefd(sp));		/* We want to write to child */
+	fd_set mask;
 	char c = '\0';
 	Signal_t (*oldpipe)();
+
+	FD_ZERO(&mask);
+	FD_SET(writefd(sp), &mask);				/* We want to write to child */
 
 	oldpipe = signal(SIGPIPE, broken);	/* Trap SIGPIPE within this function */
 
@@ -257,7 +260,7 @@ STREAM *sp;		/* Stream used to talk to the child */
 
 	tm.tv_sec = TIMEOUT;				/* Do not hang on the select */
 	tm.tv_usec = 0;
-	if (-1 == select(32, (int *) 0, &mask, (int *) 0, &tm)) {
+	if (-1 == select(32, (Select_fd_set_t) 0, &mask, (Select_fd_set_t) 0, &tm)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR select: %m (%e)");
 #endif
@@ -265,7 +268,7 @@ STREAM *sp;		/* Stream used to talk to the child */
 	}
 
 	/* If cannot write to child, there is a problem... */
-	if (!(mask & (1 << writefd(sp)))) {
+	if (!FD_ISSET(writefd(sp), &mask)) {
 #ifdef USE_ADD_LOG
 		add_log(12, "cannot comfort child");
 #endif
@@ -286,17 +289,18 @@ STREAM *sp;		/* Stream used to talk to the child */
 
 	/* Now wait for the acknowledgment -- no SIGPIPE to be feared */
 
-	mask = (1 << readfd(sp));			/* We want to read from child */
+	FD_ZERO(&mask);
+	FD_SET(readfd(sp), &mask);			/* We want to read from child */
 	tm.tv_sec = TIMEOUT;				/* Child should answer quickly */
 	tm.tv_usec = 0;
-	if (-1 == select(32, &mask, (int *) 0, (int *) 0, &tm)) {
+	if (-1 == select(32, &mask, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &tm)) {
 #ifdef USE_ADD_LOG
 		add_log(1, "SYSERR select: %m (%e)");
 #endif
 		return -1;
 	}
 
-	if (!(mask & (1 << readfd(sp)))) {
+	if (!FD_ISSET(readfd(sp), &mask)) {
 #ifdef USE_ADD_LOG
 		add_log(12, "child does not answer");
 #endif

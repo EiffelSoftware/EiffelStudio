@@ -7,16 +7,11 @@ class READ_INFO
 
 inherit
 	SERVER_INFO
-		redefine
-			trace
-		end
 
-	COMPILER_EXPORTER
-	
+create
+	make
+
 feature -- Access
-
-	class_id: INTEGER;
-			-- Id of the class
 
 	object_count: INTEGER;
 			-- Number of objects to retrieve
@@ -33,25 +28,6 @@ feature -- Update
 			-- Assign `i' to `object_count'.
 		do
 			object_count := i;
-		end;
-
-	set_class_id (i: INTEGER) is
-			-- Assign `i' to `class_id'.
-		do
-			class_id := i;
-		end;
-
-feature -- Trace
-
-	trace is
-		do
-			io.error.put_string ("READ_INFO:%NPosition: ");
-			io.error.put_integer (Position);
-			io.error.put_string ("%NClass_id: ");
-			io.error.put_integer (class_id);
-			io.error.put_string ("%Nobject_count: ");
-			io.error.put_integer (object_count);
-			io.error.put_new_line;
 		end;
 
 end

@@ -29,6 +29,7 @@ extern char *create_separate_class_type(char *, char *);
 extern char *create_feature_name(int, char *, char);
 extern char *create_fclause_as(char *, char *, int);
 extern char *create_routine_as(char *, int, char *, char *, char *, char *, char *);
+extern char *create_routine_object(char *, char *, char *);
 
 /*
  * Formal generic parameter managment

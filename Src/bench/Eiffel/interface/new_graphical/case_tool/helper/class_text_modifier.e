@@ -870,11 +870,11 @@ feature -- Modification (Change class name)
 			sp, ep: INTEGER
 		do
 			click_ast := class_as.click_ast
-			sp := click_ast.start_position + 1
+			sp := click_ast.start_position
 			if class_as.generics_end_position > 0 then
-				ep := class_as.generics_end_position + 1
+				ep := class_as.generics_end_position
 			else
-				ep := click_ast.end_position
+				ep := click_ast.end_position - 1
 			end
 
 			remove_code (sp, ep)

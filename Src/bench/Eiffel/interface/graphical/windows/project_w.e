@@ -437,36 +437,25 @@ feature -- Graphical Interface
 	build_widgets is
 			-- Build widget.
 		local
-			default_width, default_height: INTEGER
+			default_width, default_height: INTEGER;
+			popup_cmd: TOOLBAR_CMD
 		do
 			shown_portions := 1;
 
-			default_width := Resources.get_integer (r_Project_tool_width, 481);
-			default_height := Resources.get_integer (r_Project_tool_height, 340);
+			default_width := Project_resources.tool_width.actual_value;
+			default_height := Project_resources.tool_height.actual_value;
 			set_size (default_width, default_height);
-			--!! form_manager.make (new_name, Current);
-			--form_manager.set_fraction_base (6);
 
-			--form_manager.attach_left (std_form, 0);
-			--form_manager.attach_right (std_form, 0);
-			--form_manager.attach_left (feature_form, 0);
-			--form_manager.attach_right (feature_form, 0);
-			--form_manager.attach_left (object_form, 0);
-			--form_manager.attach_right (object_form, 0);
-			--form_manager.attach_top_position (std_form, 0);
-			--form_manager.attach_bottom_position (std_form, 6);
-				--| We have to attach to position 6 to
-				--| be sure that `std_form' is as big as the tool!
-
-			--form_manager.attach_top_position (feature_form, 1);
-			--form_manager.attach_bottom_position (feature_form, 2);
-			--form_manager.attach_top_position (object_form, 2);
-			--form_manager.attach_bottom_position (object_form, 3);
-			
-			!! split_window.make ("toto", Current);
+			!! split_window.make (new_name, Current);
 			!! std_form.make (new_name, split_window);
 			!! feature_form.make_unmanaged (new_name, split_window);
 			!! object_form.make_unmanaged (new_name, split_window);
+
+			!! toolbar_parent.make (new_name, std_form, Current);
+			toolbar_parent.set_column_layout;
+			toolbar_parent.set_free_size;
+			!! popup_cmd.make (Current);
+			toolbar_parent.add_button_press_action (3, popup_cmd, Void);
 
 			build_menu;
 			build_text_windows;
@@ -677,7 +666,8 @@ feature -- Graphical Interface
 			down_exception_stack_button: EB_BUTTON;
 			display_exception_menu_entry: EB_MENU_ENTRY;
 		do
-			!! format_bar.make (new_name, std_form);
+			!! toolbar_separator.make ("", toolbar_parent);
+			!! format_bar.make (l_Format_bar_name, toolbar_parent, Current);
 
 			!! debug_run_cmd.make (Current);
 			!! debug_run_button.make (debug_run_cmd, format_bar);

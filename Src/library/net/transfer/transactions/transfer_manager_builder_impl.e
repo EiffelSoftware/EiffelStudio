@@ -107,7 +107,7 @@ feature -- Status report
 						(writable_set, res, res~is_writable)
 				end
 				if Result and not resource_hash.found then
-					resource_hash.extend (res, res.location)
+					resource_hash.put (res, res.location)
 				end
 			end
 		end

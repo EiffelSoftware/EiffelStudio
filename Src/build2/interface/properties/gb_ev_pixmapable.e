@@ -148,7 +148,6 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (pixmap_path_string)
 			if element_info /= Void then
 				Result := pixmap_name + ".set_with_named_file (%"" + element_info.data + "%")"
-				io.putstring (a_type.out)
 				if type_conforms_to (dynamic_type_from_string (a_type), dynamic_type_from_string ("EV_CONTAINER")) then
 					Result := Result + indent + a_name + ".set_background_pixmap (" + pixmap_name + ")"
 				else

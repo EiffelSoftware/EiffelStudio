@@ -13,6 +13,7 @@
 #ifndef _eif_macros_h_
 #define _eif_macros_h_
 
+#include "eif_project.h"
 #include "eif_config.h"
 #include "eif_globals.h"
 #include "eif_malloc.h"
@@ -81,7 +82,7 @@ extern int in_assertion;
 #define RTEB(x,y) b_equal(x,y)
 #ifdef WORKBENCH
 extern int fcount;
-#define RTUD(x) ((x)>=fcount?(x):fdtypes[x])  /* Updated dynamic type */
+#define RTUD(x) ((x)>=fcount?(x):egc_fdtypes[x])  /* Updated dynamic type */
 #define RTLX(x)   cr_exp(x)
 #endif
 
@@ -464,7 +465,7 @@ extern int fcount;
 #define RTVPA(x,y,z,t) wpattr_inv(x,y,z,t)
 #define RTWT(x,y,z) wtype(x,y,z)
 #define RTWPT(x,y,z) wptype(x,y,z)
-#define RTWPP(x,y) ((eif_address_table[x])[y])
+#define RTWPP(x,y) ((egc_address_table[x])[y])
 #define RTWO(x) onceadd(x)
 
 #define WDBG(x,y)	is_debug(x,y)				/* Debug option */
@@ -474,7 +475,7 @@ extern int fcount;
 #define WASF(x)		wasfree(x)				/* Free assertion list */
 
 #define RTDS(x)		dispatch(x)			/* Body id of body index (x) */
-#define RTFZ(x)		frozen(x)			/* C frozen pointer of body id (x) */
+#define RTFZ(x)		egc_frozen(x)			/* C frozen pointer of body id (x) */
 #define RTMT(x)		melt(x)				/* Byte code of body id (x) */
 
 #endif

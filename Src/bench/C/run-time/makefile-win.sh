@@ -66,24 +66,39 @@ all:: wkbench.lib
 wkbench.lib: $(WOBJECTS)
 	$link_wline
 
-all:: ise_rt.dll
 
 DLLDIR=.\DLL
 "$(DLLDIR)" :
     if not exist "$(DLLDIR)/$(NULL)" mkdir "$(DLLDIR)"
 
-DEF_FILE= ".\ise_rt.def"
+all:: dllwkbench.dll
 
+DEF_FILE= "dllwkbench.def"
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
 	$(DLLFLAGS) \
-	/pdb:"$(DLLDIR)\ise_rt.pdb" /machine:I386 /def:"$(DEF_FILE)" \
-	/OUT:"$(DLLDIR)\ise_rt.dll" /IMPLIB:"$(DLLDIR)\ise_rt.lib"
+	/pdb:"$(DLLDIR)\dllwkbench.pdb" /machine:I386 /def:"$(DEF_FILE)" \
+	/OUT:"$(DLLDIR)\dllwkbench.dll" /IMPLIB:"$(DLLDIR)\dllwkbench.lib"
 
 LINK32_OBJS= $(WOBJECTS)
+"dllwkbench.dll" : "$(DLLDIR)" $(DEF_FILE) $(LINK32_OBJS)
+	$(RM) "$(DLLDIR)\dllwkbench.dll"
+    $(LINK32) @<<
+    $(LINK32_FLAGS) $(LINK32_OBJS) 
+<<
 
-"ise_rt.dll" : "$(DLLDIR)" $(DEF_FILE) $(LINK32_OBJS)
-	$(RM) "$(DLLDIR)\ise_rt.dll"
+all:: dllfinalized.dll
+
+DEF_FILE= "dllfinalized.def"
+LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
+		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
+	$(DLLFLAGS) \
+	/pdb:"$(DLLDIR)\dllfinalized.pdb" /machine:I386 /def:"$(DEF_FILE)" \
+	/OUT:"$(DLLDIR)\dllfinalized.dll" /IMPLIB:"$(DLLDIR)\dllfinalized.lib"
+
+LINK32_OBJS= $(OBJECTS)
+"dllfinalized.dll" : "$(DLLDIR)" $(DEF_FILE) $(LINK32_OBJS)
+	$(RM) "$(DLLDIR)\dllfinalized.dll"
     $(LINK32) @<<
     $(LINK32_FLAGS) $(LINK32_OBJS) 
 <<

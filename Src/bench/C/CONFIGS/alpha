@@ -10,7 +10,7 @@
 # Configured by: manuelt 
 # Target system: osf1 area51.gmu.edu V5.1 1885 alpha 
 
-lngpad_2=16 
+lngpad_2='LNGPAD(2)'
 d_bsdsig='undef'
 prefix='lib'
 mt_prefix='mt'

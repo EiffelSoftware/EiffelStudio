@@ -110,7 +110,6 @@ feature {NONE} -- Removal
 			default_object: like Current
 		do
 			cwel_set_editstream_procedure_address (default_pointer)
-			cwel_set_editstream_object (default_object)
 			c_free (item)
 			item := default_pointer
 		end

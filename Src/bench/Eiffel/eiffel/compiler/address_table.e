@@ -335,6 +335,8 @@ feature {NONE} -- Generation
 
 	arg_types (args: FEAT_ARG): ARRAY [STRING] is
 			-- Generate declaration of the argument types.
+		require
+			arg_non_void: args /= Void
 		local
 			i, nb: INTEGER
 			solved_arg_type: TYPE_I
@@ -344,7 +346,7 @@ feature {NONE} -- Generation
 				i := 1
 				nb := args.count
 				!! Result.make (1, nb + 1)
-				Result.put ("char *", 1)
+				Result.put ("EIF_REFERENCE", 1)
 			until
 				i > nb
 			loop
@@ -421,29 +423,34 @@ feature {NONE} -- Generation
 				f_name := clone (dle_prefix)
 				f_name.append (function_name)
 
-				a_types := arg_types (args)
-
-				gen_file.generate_function_signature
-					(return_type_string, f_name, "static", gen_file,
-					 arg_names (args.count), a_types);
-
+				if has_arguments then
+					a_types := arg_types (args)
+					gen_file.generate_function_signature
+						(return_type_string, f_name, True, gen_file,
+					 	arg_names (args.count), a_types);
+				else
+					a_types := <<"EIF_REFERENCE">>
+					gen_file.generate_function_signature
+						(return_type_string, f_name, True, gen_file,
+						<<"Current">>, a_types);
+				end
 				gen_file.putstring ("{%N%
 					%%N%
 					%%T");
 
 				if final_mode then
-					c_return_type.generate (gen_file)
-					gen_file.putstring ("(*function_ptr)();%N%N%
-						%%Tfunction_ptr = (")
-					c_return_type.generate (gen_file)
-					gen_file.putstring (" (*)()) ")
-
 					entry :=  Eiffel_table.poly_table (rout_id)
 					if entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
-						gen_file.putstring ("(char *(*)()) 0")
+						gen_file.putstring ("RTNR();");
 					else
+						if a_feature.is_function then
+							gen_file.putstring ("return ")
+						end
+
+						gen_file.putchar ('(')
+						c_return_type.generate_function_cast (gen_file, a_types)
 						table_name := rout_id.table_name
 						gen_file.putchar ('(')
 						gen_file.putstring (table_name)
@@ -452,32 +459,20 @@ feature {NONE} -- Generation
 						gen_file.putchar (')')
 						gen_file.putchar ('[')
 						gen_file.putstring ("Dtype(Current)")
-						gen_file.putstring ("];%N")
+						gen_file.putstring ("])(Current")
+
+						if has_arguments then
+							generate_arg_list (args.count)
+						end
+
+						gen_file.putstring (");%N")
 
 							-- Mark table used.
 						Eiffel_table.mark_used (rout_id)
 
 							-- Remember extern declarations
 						Extern_declarations.add_routine_table (table_name)
-
 					end
-
-					gen_file.putchar ('%T')
-					if a_feature.is_function then
-						gen_file.putstring ("return (")
-						c_return_type.generate (gen_file)
-						gen_file.putstring (")(")
-					end
-
-					gen_file.putstring ("(function_ptr)(Current")
-					if has_arguments then
-						generate_arg_list (args.count)
-					end
-					if a_feature.is_function then
-						gen_file.putstring (")")
-					end
-
-					gen_file.putstring (");%N")
 				else
 						-- Workbench mode
 

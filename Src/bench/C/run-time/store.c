@@ -89,11 +89,22 @@ rt_public void rt_init_store(
 	int accounting_type,
 	int buf_size);
 
-rt_public void (*make_header_func)(void);
-rt_public void (*st_write_func)(char *);
-rt_public void (*flush_buffer_func)(void);
 rt_public void (*store_write_func)(void);
 rt_public int (*char_write_func)(char *, int);
+rt_public void (*flush_buffer_func)(void);
+rt_public void (*st_write_func)(char *);
+rt_public void (*make_header_func)(void);
+
+rt_public void (*old_store_write_func)(void);
+rt_public int (*old_char_write_func)(char *, int);
+rt_public void (*old_flush_buffer_func)(void);
+rt_public void (*old_st_write_func)(char *);
+rt_public void (*old_make_header_func)(void);
+
+rt_private int accounting = 0;
+rt_private int old_accounting = 0;
+
+rt_private long old_buffer_size = 0;
 
 /*
  * Shared data declarations
@@ -110,7 +121,6 @@ rt_private long stream_buffer_size;
 rt_private int (char_write) (char *, int);
 rt_private int (stream_write) (char *, int);
 
-rt_private int accounting = 0;
 
 #ifndef lint
 rt_private char *rcsid =
@@ -130,6 +140,14 @@ rt_public void rt_init_store(
 	int accounting_type,
 	int buf_size)
 {
+	old_store_write_func = store_write_func;
+	old_char_write_func = char_write_func;
+	old_flush_buffer_func = flush_buffer_func;
+	old_st_write_func = st_write_func;
+	old_make_header_func = make_header_func;
+	old_accounting = accounting;
+	old_buffer_size = buffer_size;
+
 	store_write_func = store_function;
 	char_write_func = char_write_function;
 	flush_buffer_func = flush_buffer_function;
@@ -143,14 +161,13 @@ rt_public void rt_init_store(
 /* Reset store function pointers and globals to their default values */
 
 rt_public void rt_reset_store(void) {
-	store_write_func = store_write;
-	char_write_func = char_write;
-	flush_buffer_func = flush_st_buffer;
-	st_write_func = st_write;
-	make_header_func = make_header;
-
-	accounting = 0;
-	buffer_size = EIF_BUFFER_SIZE;
+	store_write_func = old_store_write_func;
+	char_write_func = old_char_write_func;
+	flush_buffer_func = old_flush_buffer_func;
+	st_write_func = old_st_write_func;
+	make_header_func = old_make_header_func;
+	accounting = old_accounting;
+	buffer_size = old_buffer_size;
 
 	if (s_buffer != (char *) 0) {
 		xfree(s_buffer);

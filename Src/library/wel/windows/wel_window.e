@@ -89,10 +89,22 @@ feature -- Access
 	commands: WEL_COMMAND_MANAGER
 			-- Command manager associated to the current window.
 
+	creation_data: INTEGER is
+			-- Data set to the widget at creation.
+		do
+			Result := cwin_get_window_long (item, Gwl_userdata)
+		end
+
 feature -- Status report
 
 	exists: BOOLEAN
 			-- Does the window exist?
+
+	is_inside: BOOLEAN is
+			-- Is the current window inside another window?
+		do
+			Result := flag_set (style, Ws_child)
+		end
 
 	default_processing_enabled: BOOLEAN is
 			-- Is the default window processing enabled?
@@ -387,6 +399,14 @@ feature -- Status report
 			Result := cwin_get_window_long (item, Gwl_style)
 		end
 
+	ex_style: INTEGER is
+			-- Window ex_style
+		require
+			exists: exists
+		do
+			Result := cwin_get_window_long (item, Gwl_exstyle)
+		end
+
 	commands_enabled: BOOLEAN is
 			-- Is the commands execution enabled?
 		do
@@ -584,17 +604,30 @@ feature -- Status setting
 			style_set: style = a_style
 		end
 
+	set_ex_style (an_ex_style: INTEGER) is
+			-- Set `an_ex_style' with `ex_style'.
+		require
+			exists: exists
+		do
+			cwin_set_window_long (item, Gwl_exstyle, an_ex_style)
+		ensure
+			ex_style_set: ex_style = an_ex_style
+		end
+
 feature -- Element change
 
 	set_parent (a_parent: WEL_WINDOW) is
 			-- Change the parent of the current window.
 		require
 			exists: exists
-			a_parent_not_void: a_parent /= Void
-			a_parent_exists: a_parent.exists
 		do
-			parent := a_parent
-			cwin_set_parent (item, a_parent.item)
+			if a_parent /= Void then
+				parent := a_parent
+				cwin_set_parent (item, a_parent.item)
+			else
+				parent := Void
+				cwin_set_parent (item, default_pointer)
+			end
 		end
 
 	set_text (a_text: STRING) is
@@ -1491,7 +1524,7 @@ feature {NONE} -- Externals
 				param: POINTER): POINTER is
 			-- SDK CreateWindowEx
 		external
-			"C [macro <wel.h>] (DWORD, LPCSTR, LPCSTR, DWORD, int, %
+			"C [macro %"wel.h%"] (DWORD, LPCSTR, LPCSTR, DWORD, int, %
 				%int, int, int, HWND, HMENU, HINSTANCE, %
 				%LPVOID): EIF_POINTER"
 		alias
@@ -1509,7 +1542,7 @@ feature {NONE} -- Externals
 	cwin_destroy_window (hwnd: POINTER) is
 			-- SDK DestroyWindow
 		external
-			"C [macro <wel.h>] (HWND)"
+			"C [macro %"wel.h%"] (HWND)"
 		alias
 			"DestroyWindow"
 		end
@@ -1517,7 +1550,7 @@ feature {NONE} -- Externals
 	cwin_is_iconic (hwnd: POINTER): BOOLEAN is
 			-- SDK IsIconic
 		external
-			"C [macro <wel.h>] (HWND): EIF_BOOLEAN"
+			"C [macro %"wel.h%"] (HWND): EIF_BOOLEAN"
 		alias
 			"IsIconic"
 		end
@@ -1525,7 +1558,7 @@ feature {NONE} -- Externals
 	cwin_is_zoomed (hwnd: POINTER): BOOLEAN is
 			-- SDK IsZoomed
 		external
-			"C [macro <wel.h>] (HWND): EIF_BOOLEAN"
+			"C [macro %"wel.h%"] (HWND): EIF_BOOLEAN"
 		alias
 			"IsZoomed"
 		end
@@ -1533,7 +1566,7 @@ feature {NONE} -- Externals
 	cwin_enable_window (hwnd: POINTER; enable_flag: BOOLEAN) is
 			-- SDK EnableWindow
 		external
-			"C [macro <wel.h>] (HWND, BOOL)"
+			"C [macro %"wel.h%"] (HWND, BOOL)"
 		alias
 			"EnableWindow"
 		end
@@ -1541,7 +1574,7 @@ feature {NONE} -- Externals
 	cwin_is_window_enabled (hwnd: POINTER): BOOLEAN is
 			-- SDK IsWindowEnabled
 		external
-			"C [macro <wel.h>] (HWND): EIF_BOOLEAN"
+			"C [macro %"wel.h%"] (HWND): EIF_BOOLEAN"
 		alias
 			"IsWindowEnabled"
 		end
@@ -1549,7 +1582,7 @@ feature {NONE} -- Externals
 	cwin_set_focus (hwnd: POINTER) is
 			-- SDK SetFocus
 		external
-			"C [macro <wel.h>] (HWND)"
+			"C [macro %"wel.h%"] (HWND)"
 		alias
 			"SetFocus"
 		end
@@ -1558,7 +1591,7 @@ feature {NONE} -- Externals
 				proc: POINTER) is
 			-- SDK SetTimer
 		external
-			"C [macro <wel.h>] (HWND, UINT, UINT, TIMERPROC)"
+			"C [macro %"wel.h%"] (HWND, UINT, UINT, TIMERPROC)"
 		alias
 			"SetTimer"
 		end
@@ -1566,7 +1599,7 @@ feature {NONE} -- Externals
 	cwin_kill_timer (hwnd: POINTER; timer_id: INTEGER) is
 			-- SDK KillTimer
 		external
-			"C [macro <wel.h>] (HWND, UINT)"
+			"C [macro %"wel.h%"] (HWND, UINT)"
 		alias
 			"KillTimer"
 		end
@@ -1574,7 +1607,7 @@ feature {NONE} -- Externals
 	cwin_get_focus: POINTER is
 			-- SDK GetFocus
 		external
-			"C [macro <wel.h>]: EIF_POINTER"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"GetFocus ()"
 		end
@@ -1582,7 +1615,7 @@ feature {NONE} -- Externals
 	cwin_set_capture (hwnd: POINTER) is
 			-- SDK SetCapture
 		external
-			"C [macro <wel.h>] (HWND)"
+			"C [macro %"wel.h%"] (HWND)"
 		alias
 			"SetCapture"
 		end
@@ -1590,7 +1623,7 @@ feature {NONE} -- Externals
 	cwin_release_capture is
 			-- SDK ReleaseCapture
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"ReleaseCapture ()"
 		end
@@ -1598,7 +1631,7 @@ feature {NONE} -- Externals
 	cwin_get_capture: POINTER is
 			-- SDK GetCapture
 		external
-			"C [macro <wel.h>]: EIF_POINTER"
+			"C [macro %"wel.h%"]: EIF_POINTER"
 		alias
 			"GetCapture ()"
 		end
@@ -1606,7 +1639,7 @@ feature {NONE} -- Externals
 	cwin_show_window (hwnd: POINTER; cmd_show: INTEGER) is
 			-- SDK ShowWindow
 		external
-			"C [macro <wel.h>] (HWND, int)"
+			"C [macro %"wel.h%"] (HWND, int)"
 		alias
 			"ShowWindow"
 		end
@@ -1614,7 +1647,7 @@ feature {NONE} -- Externals
 	cwin_is_window_visible (hwnd: POINTER): BOOLEAN is
 			-- SDK IsWindowVisible
 		external
-			"C [macro <wel.h>] (HWND): EIF_BOOLEAN"
+			"C [macro %"wel.h%"] (HWND): EIF_BOOLEAN"
 		alias
 			"IsWindowVisible"
 		end
@@ -1622,7 +1655,7 @@ feature {NONE} -- Externals
 	cwin_set_window_text (hwnd, str: POINTER) is
 			-- SDK SetWindowText
 		external
-			"C [macro <wel.h>] (HWND, LPCSTR)"
+			"C [macro %"wel.h%"] (HWND, LPCSTR)"
 		alias
 			"SetWindowText"
 		end
@@ -1630,7 +1663,7 @@ feature {NONE} -- Externals
 	cwin_get_window_text_length (hwnd: POINTER): INTEGER is
 			-- SDK GetWindowTextLength
 		external
-			"C [macro <wel.h>] (HWND): EIF_INTEGER"
+			"C [macro %"wel.h%"] (HWND): EIF_INTEGER"
 		alias
 			"GetWindowTextLength"
 		end
@@ -1638,7 +1671,7 @@ feature {NONE} -- Externals
 	cwin_get_window_text (hwnd, str: POINTER; len: INTEGER): INTEGER is
 			-- SDK GetWindowText
 		external
-			"C [macro <wel.h>] (HWND, LPSTR, int): EIF_INTEGER"
+			"C [macro %"wel.h%"] (HWND, LPSTR, int): EIF_INTEGER"
 		alias
 			"GetWindowText"
 		end
@@ -1647,7 +1680,7 @@ feature {NONE} -- Externals
 			a_style: INTEGER): INTEGER is
 			-- SDK MessageBox (with result)
 		external
-			"C [macro <wel.h>] (HWND, LPCSTR, LPCSTR, %
+			"C [macro %"wel.h%"] (HWND, LPCSTR, LPCSTR, %
 				%UINT): EIF_INTEGER"
 		alias
 			"MessageBox"
@@ -1657,7 +1690,7 @@ feature {NONE} -- Externals
 			a_style: INTEGER) is
 			-- SDK MessageBox (without result)
 		external
-			"C [macro <wel.h>] (HWND, LPCSTR, LPCSTR, UINT)"
+			"C [macro %"wel.h%"] (HWND, LPCSTR, LPCSTR, UINT)"
 		alias
 			"MessageBox"
 		end
@@ -1666,7 +1699,7 @@ feature {NONE} -- Externals
 			lparam: INTEGER): INTEGER is
 			-- SDK DefWindowProc
 		external
-			"C [macro <wel.h>] (HWND, UINT, WPARAM, %
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, %
 				%LPARAM): EIF_INTEGER"
 		alias
 			"DefWindowProc"
@@ -1675,7 +1708,7 @@ feature {NONE} -- Externals
 	cwin_update_window (hwnd: POINTER) is
 			-- SDK UpdateWindow
 		external
-			"C [macro <wel.h>] (HWND)"
+			"C [macro %"wel.h%"] (HWND)"
 		alias
 			"UpdateWindow"
 		end
@@ -1684,7 +1717,7 @@ feature {NONE} -- Externals
 			erase_background: BOOLEAN) is
 			-- SDK InvalidateRect
 		external
-			"C [macro <wel.h>] (HWND, RECT *, BOOL)"
+			"C [macro %"wel.h%"] (HWND, RECT *, BOOL)"
 		alias
 			"InvalidateRect"
 		end
@@ -1693,7 +1726,7 @@ feature {NONE} -- Externals
 			erase_background: BOOLEAN) is
 			-- SDK InvalidateRgn
 		external
-			"C [macro <wel.h>] (HWND, HRGN, BOOL)"
+			"C [macro %"wel.h%"] (HWND, HRGN, BOOL)"
 		alias
 			"InvalidateRgn"
 		end
@@ -1701,7 +1734,7 @@ feature {NONE} -- Externals
 	cwin_validate_rect (hwnd, a_rect: POINTER) is
 			-- SDK ValidateRect
 		external
-			"C [macro <wel.h>] (HWND, RECT *)"
+			"C [macro %"wel.h%"] (HWND, RECT *)"
 		alias
 			"ValidateRect"
 		end
@@ -1709,7 +1742,7 @@ feature {NONE} -- Externals
 	cwin_validate_rgn (hwnd, a_region: POINTER) is
 			-- SDK ValidateRgn
 		external
-			"C [macro <wel.h>] (HWND, HRGN)"
+			"C [macro %"wel.h%"] (HWND, HRGN)"
 		alias
 			"ValidateRgn"
 		end
@@ -1718,7 +1751,7 @@ feature {NONE} -- Externals
 				lparam: INTEGER): INTEGER is
 			-- SDK SendMessage (with the result)
 		external
-			"C [macro <wel.h>] (HWND, UINT, %
+			"C [macro %"wel.h%"] (HWND, UINT, %
 				%WPARAM, LPARAM): EIF_INTEGER"
 		alias
 			"SendMessage"
@@ -1728,7 +1761,7 @@ feature {NONE} -- Externals
 				lparam: INTEGER) is
 			-- SDK SendMessage (without the result)
 		external
-			"C [macro <wel.h>] (HWND, UINT, WPARAM, LPARAM)"
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
 		alias
 			"SendMessage"
 		end
@@ -1737,7 +1770,7 @@ feature {NONE} -- Externals
 				lparam: INTEGER): BOOLEAN is
 			-- SDK PostMessage (with the result)
 		external
-			"C [macro <wel.h>] (HWND, UINT, %
+			"C [macro %"wel.h%"] (HWND, UINT, %
 				%WPARAM, LPARAM): EIF_BOOLEAN"
 		alias
 			"PostMessage"
@@ -1747,7 +1780,7 @@ feature {NONE} -- Externals
 				lparam: INTEGER) is
 			-- SDK PostMessage (without the result)
 		external
-			"C [macro <wel.h>] (HWND, UINT, WPARAM, LPARAM)"
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
 		alias
 			"PostMessage"
 		end
@@ -1755,7 +1788,7 @@ feature {NONE} -- Externals
 	cwin_get_window_long (hwnd: POINTER; offset: INTEGER): INTEGER is
 			-- SDK GetWindowLong
 		external
-			"C [macro <wel.h>] (HWND, int): EIF_INTEGER"
+			"C [macro %"wel.h%"] (HWND, int): EIF_INTEGER"
 		alias
 			"GetWindowLong"
 		end
@@ -1764,7 +1797,7 @@ feature {NONE} -- Externals
 				value: INTEGER) is
 			-- SDK SetWindowLong
 		external
-			"C [macro <wel.h>] (HWND, int, LONG)"
+			"C [macro %"wel.h%"] (HWND, int, LONG)"
 		alias
 			"SetWindowLong"
 		end
@@ -1773,7 +1806,7 @@ feature {NONE} -- Externals
 				repaint: BOOLEAN) is
 			-- SDK MoveWindow
 		external
-			"C [macro <wel.h>] (HWND, int, int, int, int, BOOL)"
+			"C [macro %"wel.h%"] (HWND, int, int, int, int, BOOL)"
 		alias
 			"MoveWindow"
 		end
@@ -1782,7 +1815,7 @@ feature {NONE} -- Externals
 				flags: INTEGER) is
 			-- SDK SetWindowPos
 		external
-			"C [macro <wel.h>] (HWND, HWND, int, int, int, %
+			"C [macro %"wel.h%"] (HWND, HWND, int, int, int, %
 				%int, int)"
 		alias
 			"SetWindowPos"
@@ -1791,7 +1824,7 @@ feature {NONE} -- Externals
 	cwin_set_window_placement (hwnd, a_placement: POINTER) is
 			-- SDK SetWindowPlacement
 		external
-			"C [macro <wel.h>] (HWND, WINDOWPLACEMENT *)"
+			"C [macro %"wel.h%"] (HWND, WINDOWPLACEMENT *)"
 		alias
 			"SetWindowPlacement"
 		end
@@ -1800,7 +1833,7 @@ feature {NONE} -- Externals
 			show_flag: BOOLEAN) is
 			-- SDK ShowScrollBar
 		external
-			"C [macro <wel.h>] (HWND, int, BOOL)"
+			"C [macro %"wel.h%"] (HWND, int, BOOL)"
 		alias
 			"ShowScrollBar"
 		end
@@ -1809,7 +1842,7 @@ feature {NONE} -- Externals
 			scroll_rect, clip_rect: POINTER) is
 			-- SDK ScrollWindow
 		external
-			"C [macro <wel.h>] (HWND, int, int, RECT *, RECT *)"
+			"C [macro %"wel.h%"] (HWND, int, int, RECT *, RECT *)"
 		alias
 			"ScrollWindow"
 		end
@@ -1817,19 +1850,19 @@ feature {NONE} -- Externals
 	cwin_win_help (hwnd, file: POINTER; a_command, data: INTEGER) is
 			-- SDK WinHelp
 		external
-			"C [macro <wel.h>] (HWND, LPCSTR, UINT, DWORD)"
+			"C [macro %"wel.h%"] (HWND, LPCSTR, UINT, DWORD)"
 		alias
 			"WinHelp"
 		end
 
 	c_mouse_message_x (lparam: INTEGER): INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		end
 
 	c_mouse_message_y (lparam: INTEGER): INTEGER is
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		end
 
 	cwel_window_procedure_address: POINTER is

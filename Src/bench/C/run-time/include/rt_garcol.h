@@ -56,9 +56,8 @@ extern "C" {
 /*
  * Generation scavenging's status.
  */
-#define GS_STOP		0x00000008		/* Generation scavenging is stopped */
-#define GS_SET		0x00000004		/* Generation scavenging to be set */
-#define GS_ON		0x00000002		/* Generation scavenging is set */
+#define GS_STOP		0x00000004		/* Generation scavenging is stopped */
+#define GS_ON		0x00000002		/* Generation scavenging is on */
 #define GS_OFF		0x00000001		/* Generation scavenging is off */
 
 #ifdef WORKBENCH

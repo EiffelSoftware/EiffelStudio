@@ -109,8 +109,11 @@ rt_public void mem_speed(void)
 	EIF_MEMORY_SETTING_LOCK
 	if (!cc_for_speed) {	/* Is it alread compiled for speed */
 		cc_for_speed = 1;			/* We are compiled for speed from now on */
-		if (gen_scavenge & GS_OFF)	/* Generation scavenging turned off? */
-			gen_scavenge = GS_SET;	/* Allow malloc to try again */
+		if (gen_scavenge == GS_OFF) {
+				/* If generation scavenging is off, try to restore the scavenge zone
+				 * so that they can be used for next Eiffel object creation. */
+			create_scavenge_zones();
+		}
 	}
 	EIF_MEMORY_SETTING_UNLOCK
 #endif
@@ -126,11 +129,7 @@ rt_public void mem_slow(void)
 
 #ifdef ISE_GC
 	EIF_MEMORY_SETTING_LOCK
-	if (cc_for_speed) {			/* Is it already compiled for memory */
-		cc_for_speed = 0;			/* We are compiled for speed from now on */
-		if (gen_scavenge == GS_SET)	/* Scavenging still waiting to be activated */
-			gen_scavenge = GS_OFF;	/* Turn it off */
-	}
+	cc_for_speed = 0;			/* We are compiled for low memory from now on */
 	EIF_MEMORY_SETTING_UNLOCK
 #endif
 }
@@ -147,10 +146,7 @@ rt_public void mem_tiny(void)
 
 	mem_slow();					/* And force cc_for_speed to zero */
 
-#ifdef MAY_PANIC
-	if (gen_scavenge != GS_OFF)
-		eif_panic("memory flags corrupted");
-#endif
+	ENSURE("Scavenging disabled", gen_scavenge == GS_OFF);
 #endif
 }
 

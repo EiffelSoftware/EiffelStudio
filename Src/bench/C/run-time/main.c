@@ -527,6 +527,11 @@ rt_public void eif_alloc_init(void)
 	}
 	overflow_stack_limit = (stk_limit < 2 ? 2 : stk_limit);
 
+#ifndef EIF_THREADS
+		/* Try to allocate scavenge zone if possible in non-MT compilation. For MT compilation
+		 * this is taken care of in `eif_thr_init_root'. */
+	create_scavenge_zones ();
+#endif
 
 	/******************* Postconditions *******************/
 	ENSURE ("Chunk size must be over that", eif_chunk_size >= CHUNK_SZ_MIN);

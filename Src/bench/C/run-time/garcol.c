@@ -1153,8 +1153,11 @@ rt_private void run_collector(void)
 	if (gen_scavenge & GS_ON)		/* Generation scavenging is on */
 		swap_gen_zones();			/* Swap generation zones */
 	gen_scavenge &= ~GS_STOP;		/* Clear any stop flag */
-	if (gen_scavenge == GS_OFF)		/* If generation scavenging is off */
-		gen_scavenge = GS_SET;		/* Allow emalloc() to give another try */
+	if (gen_scavenge == GS_OFF) {
+			/* If generation scavenging is off, try to restore the scavenge zone
+			 * so that they can be reused for next Eiffel object creation. */
+		create_scavenge_zones();
+	}
 
 	ufill();		/* Eventually refill our urgent memory stock */
 
@@ -3324,8 +3327,7 @@ rt_private int generational_collect(void)
 
 	tenure = eif_tenure_max;
 
-	if ((gen_scavenge & GS_ON) && (!(gen_scavenge & GS_STOP))) {
-
+	if (gen_scavenge == GS_ON) {
 		/* Generation scavenging is on and has not been stopped. If less than
 		 * the watermark is used, set tenure to eif_tenure_max, 
 		 * to avoid tenuring for the next cycle. Otherwise, set it so 

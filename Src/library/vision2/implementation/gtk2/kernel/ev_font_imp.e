@@ -39,8 +39,8 @@ feature {NONE} -- Initialization
 			set_height (App_implementation.default_font_size_internal)
 			set_shape (App_implementation.default_font_style_internal)
 			set_weight (App_implementation.default_font_weight_internal)
-			preferred_families.add_actions.extend (agent update_preferred_faces)
-			preferred_families.remove_actions.extend (preferred_families.add_actions.first)
+			preferred_families.internal_add_actions.extend (agent update_preferred_faces)
+			preferred_families.internal_remove_actions.extend (preferred_families.internal_add_actions.first)
 			is_initialized := True
 		end
 
@@ -117,8 +117,8 @@ feature -- Element change
 			preferred_families.add_actions.wipe_out
 			preferred_families.remove_actions.wipe_out
 			preferred_families := a_preferred_families
-			preferred_families.add_actions.extend (agent update_preferred_faces)
-			preferred_families.remove_actions.extend (agent update_preferred_faces)
+			preferred_families.internal_add_actions.extend (agent update_preferred_faces)
+			preferred_families.internal_remove_actions.extend (agent update_preferred_faces)
 			set_family (a_family)
 			set_weight (a_weight)
 			set_shape (a_shape)

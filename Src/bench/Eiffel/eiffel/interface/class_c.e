@@ -28,7 +28,6 @@ inherit
 	MEMORY;
 	SK_CONST;
 	SHARED_RESCUE_STATUS;
-	SHARED_MELT_ONLY;
 	SHARED_ASSERTION_LEVEL;
 	COMPILER_EXPORTER;
 	E_CLASS
@@ -2705,7 +2704,6 @@ end;
 		local
 			filter: GEN_TYPE_I;
 			new_class_type: CLASS_TYPE;
-			melt_exp: MELT_EXP;
 		do
 			if not derivations.has_derivation (id, data) then
 					-- The recursive update is done only once
@@ -2725,15 +2723,7 @@ end;
 						-- If class is TO_SPECIAL or else SPECIAL
 						-- then freeze system.
 					if is_special then
-						if melt_only and then not Compilation_modes.is_precompiling then
-							!!melt_exp;
-							melt_exp.set_class (Current);
-							melt_exp.set_generic_type (data);
-							Error_handler.insert_error (melt_exp);
-							Error_handler.raise_error;
-						else
-							System.set_freeze (True);
-						end;
+						System.set_freeze (True);
 					end;
 
 						-- If the $ operator is used in the class,

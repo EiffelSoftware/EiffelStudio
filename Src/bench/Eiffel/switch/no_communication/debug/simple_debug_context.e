@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			if ast = Void then
 				execution_error := True
 			else
-				ast.simple_format (Current)
+				formatter.format (ast)
 			end;
 		end;
 

@@ -30,7 +30,7 @@ EIF_REFERENCE generize (EIF_OBJECT g_item)
 	EIF_DLGPROC wel_dlgproc = NULL;
 	/* Address of the Eiffel routine `dialog_procedure' (class WEL_DISPATCHER) */
 	
-	EIF_OBJ dispatcher = NULL;
+	EIF_OBJECT dispatcher = NULL;
 	/* Address of the Eiffel object WEL_DISPATCHER created for each application */
 #endif
 
@@ -45,7 +45,7 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 
 	if (dispatcher)
 		return (LRESULT) ((wel_wndproc) (
-			(EIF_OBJ) eif_access (dispatcher),
+			(EIF_OBJECT) eif_access (dispatcher),
 			(EIF_POINTER) hwnd,
 			(EIF_INTEGER) msg,
 			(EIF_INTEGER) wparam,
@@ -82,7 +82,7 @@ BOOL CALLBACK cwel_dialog_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPARAM 
 		LONG dialog_result;
 
 		dialog_result = (LONG) ((wel_dlgproc) (
-			(EIF_OBJ) eif_access (dispatcher),
+			(EIF_OBJECT) eif_access (dispatcher),
 			(EIF_POINTER) hwnd,
 			(EIF_INTEGER) msg,
 			(EIF_INTEGER) wparam,
@@ -126,10 +126,10 @@ void wel_set_dialog_procedure_address( EIF_POINTER _addr_)
 	wel_dlgproc = (EIF_DLGPROC) _addr_;
 }
 
-void wel_set_dispatcher_object(EIF_OBJ _addr_)
+void wel_set_dispatcher_object(EIF_OBJECT _addr_)
 {
 	WGTCX
-	dispatcher = (EIF_OBJ) eif_adopt (_addr_);	
+	dispatcher = (EIF_OBJECT) eif_adopt (_addr_);	
 }
 
 void wel_release_dispatcher_object()
@@ -141,7 +141,7 @@ void wel_release_dispatcher_object()
 void wel_set_dispatcher_pointer(EIF_POINTER _addr_)
 {
 	WGTCX
-	dispatcher = (EIF_OBJ) _addr_;	
+	dispatcher = (EIF_OBJECT) _addr_;	
 }
 
 EIF_POINTER wel_dispatcher_pointer()

@@ -15,6 +15,13 @@ class HIGH_BUILDER inherit
 			{ANY} store_analyzer, retrieve_analyzer
 		end
 
+	BASIC_ROUTINES
+		export
+			{NONE} ALL
+		undefine
+			setup, consistent, copy, is_equal
+		end
+
 creation
 
 	make, make_extended
@@ -694,7 +701,7 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 		do
-			i := charcode (c);
+			i := c.code;
 			if i >= Zero and i <= Nine then
 				Result := i - Zero
 			elseif i >= Upper_a and i <= Upper_f then

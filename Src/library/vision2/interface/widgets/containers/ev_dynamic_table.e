@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 			-- Create a table widget with `par' as
 			-- parent.
 		do
-			!EV_DYNAMIC_TABLE_IMP!implementation.make (par)
+			!EV_DYNAMIC_TABLE_IMP!implementation.make
 			widget_make (par)
 		end	
 

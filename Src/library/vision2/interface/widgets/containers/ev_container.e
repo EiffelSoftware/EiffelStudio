@@ -47,6 +47,26 @@ feature -- Access
 		once
 			Result := True
 		end
+
+feature -- Basic operations
+
+	propagate_background_color is
+			-- Propagate the current background color of the container
+			-- to the children.
+		require
+			exists: not destroyed
+		do
+			implementation.propagate_background_color
+		end
+
+	propagate_foreground_color is
+			-- Propagate the current foreground color of the container
+			-- to the children.
+		require
+			exists: not destroyed
+		do
+			implementation.propagate_foreground_color
+		end
 	
 feature -- Implementation
 

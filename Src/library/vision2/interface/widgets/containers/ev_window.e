@@ -11,14 +11,19 @@ class
 
 inherit
 	EV_CONTAINER
+		export
+			{NONE} set_expand
+			{NONE} set_parent
 		redefine
 			implementation,
-			parent
+			show,
+			parent,
+			widget_make
 		end
 
 creation
-	make,
-	make_top_level
+	make_top_level,
+	make
 	
 feature {NONE} -- Initialization
 
@@ -28,10 +33,8 @@ feature {NONE} -- Initialization
 		require
 			-- toolkit initialized XXX
 		do
-			!EV_WINDOW_IMP!implementation.make_top_level 
-			implementation.set_interface (Current)
-			implementation.plateform_build (Void)
-			implementation.build
+			!EV_WINDOW_IMP!implementation.make
+			widget_make (Void)
 		end
 
     make (par: EV_WINDOW) is
@@ -40,10 +43,19 @@ feature {NONE} -- Initialization
 			-- closed. The parent of window is a window 
 			-- (and not any EV_CONTAINER).
 		do
-			!EV_WINDOW_IMP!implementation.make (par)
-			implementation.set_interface (Current)
-			implementation.plateform_build (par.implementation)
-			implementation.build
+			!EV_WINDOW_IMP!implementation.make_with_owner (par)
+			widget_make (par)
+		end
+
+	widget_make (par: EV_CONTAINER) is
+			-- This is a general initialization for 
+			-- widgets and has to be called by all the 
+			-- widgets.
+		do
+			implementation.widget_make (Current)
+			if par /= Void then
+				managed := False
+			end
 		end
 
 feature  -- Access
@@ -148,6 +160,14 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	show is
+			-- Make the window visible on the screen
+		require else
+			exists: not destroyed
+		do
+			implementation.show
+		end
 
 	forbid_resize is
 			-- Forbid the resize of the window.

@@ -14,6 +14,10 @@ class
 
 inherit
 	EV_WINDOW
+		export
+			{NONE} set_default_options
+			{NONE} set_default_colors
+			{NONE} set_default_minimum_size
 		redefine 
 			make,
 			implementation
@@ -27,10 +31,8 @@ feature {NONE} -- Initialization
 	make (par: EV_WINDOW) is
 			-- Create the dialog box.
 		do
-			!EV_DIALOG_IMP!implementation.make (par)
-			implementation.set_interface (Current)
-			implementation.plateform_build (par.implementation)
-			implementation.build
+			!EV_DIALOG_IMP!implementation.make_with_owner (par)
+			widget_make (par)
 		end
 
 feature -- Access

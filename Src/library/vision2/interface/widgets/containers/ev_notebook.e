@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Create a fixed widget with, `par' as
 			-- parent
 		do
-			!EV_NOTEBOOK_IMP!implementation.make (par)
+			!EV_NOTEBOOK_IMP!implementation.make
 			widget_make (par)
 		end		
 

@@ -25,10 +25,10 @@ creation
 feature {NONE} -- Initialization
 
 	make (par: EV_CONTAINER) is
-                        -- Create a table widget with `par' as
-                        -- parent.
+			-- Create a table widget with `par' as
+			-- parent.
 		do
-			!EV_TABLE_IMP!implementation.make (par)
+			!EV_TABLE_IMP!implementation.make
 			widget_make (par)
 		end	
 

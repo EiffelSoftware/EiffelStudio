@@ -56,7 +56,7 @@ feature
 	il_type_name: STRING is
 			-- Name of current class type.
 		once
-			Result := "NONE"
+			Result := "none"
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is

@@ -148,12 +148,12 @@ feature -- Code generation
 			end
 		end
 
-	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: INTEGER) is
+	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: POINTER) is
 			-- Generate `a_tree_view' control from the tds memory structure.
 		local
 			tvis: WEL_TREE_VIEW_INSERT_STRUCT
 			tv_item: WEL_TREE_VIEW_ITEM
-			parent: INTEGER
+			parent: POINTER
 		do
 			!! tvis.make
 			tvis.set_sort

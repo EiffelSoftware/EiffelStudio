@@ -1,64 +1,129 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Animated-cursor representation in the tds"
+	product: "Resource Bench"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	TDS_ANICURSOR
 
-	-- Replace ANY below by the name of parent class if any (adding more parents
-	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
-	ANY
+	TDS_RESOURCE
 		rename
-		export
-		undefine
-		redefine
-		select
+			make as list_make
 		end
 
--- The following Creation_clause can be removed if you need no other
--- procedure than `default_create':
+creation
+	make
 
-create
-	default_create
+feature	-- Initialization
 
-feature -- Initialization
+	make is
+		do
+			list_make
+			set_type (R_anicursor)
+        	end
 
-feature -- Access
+feature -- Code generation
 
-feature -- Measurement
+	display is
+			-- Display the tds.
+		local
+			the_cursor: TDS_ANICURSOR
+		do
+			from 
+				start
+			until 
+				after
+			loop
+				the_cursor ?= item
 
-feature -- Status report
+				io.putstring ("%N------------------------------------")
+				io.putstring ("%NAnicursor ID: ")
+				the_cursor.id.display
 
-feature -- Status setting
+				if (the_cursor.load_and_mem_attributes /= Void) then
+					the_cursor.load_and_mem_attributes.display
+				end                
 
-feature -- Cursor movement
+				io.putstring ("%Nfilename = ")
+				io.putstring (the_cursor.filename)
 
-feature -- Element change
+				io.new_line
+				forth
+			end
+		end
 
-feature -- Removal
+	generate_resource_file (a_resource_file: PLAIN_TEXT_FILE) is
+			-- Generate `a_resource_file' from the tds memory structure.
+		local
+			the_cursor: TDS_CURSOR
+		do
+			a_resource_file.putstring ("%N////////////////////////////////////////////////////////////////%N")
+			a_resource_file.putstring ("//%N")
+			a_resource_file.putstring ("// ANICURSOR%N")
+			a_resource_file.putstring ("//%N%N")
+			
+			from 
+				start
+			until 
+				after
+			loop
+				the_cursor ?= item
 
-feature -- Resizing
+				the_cursor.id.generate_resource_file (a_resource_file)
+				a_resource_file.putstring (" ANICURSOR ")
 
-feature -- Transformation
+				if (the_cursor.load_and_mem_attributes /= Void) then
+					the_cursor.load_and_mem_attributes.generate_resource_file (a_resource_file)
+				end                
 
-feature -- Conversion
+				a_resource_file.putstring (the_cursor.filename)
+				forth
+			end
 
-feature -- Duplication
+			a_resource_file.new_line
+		end
 
-feature -- Miscellaneous
+	generate_tree_view (a_tree_view: WEL_TREE_VIEW; a_parent: POINTER) is
+			-- Generate `a_tree_view' control from the tds memory structure.
+		local
+			tvis: WEL_TREE_VIEW_INSERT_STRUCT
+			tv_item: WEL_TREE_VIEW_ITEM
+			parent: POINTER
+		do
+			!! tvis.make
+			tvis.set_sort
+			tvis.set_parent (a_parent)
+			!! tv_item.make
+			tv_item.set_text ("Anicursor")
+			tvis.set_tree_view_item (tv_item)
+			a_tree_view.insert_item (tvis)
 
-feature -- Basic operations
+			from
+				parent := a_tree_view.last_item
+				set_tree_view_item (parent)
+				start
+			until
+				after
+			loop
+				item.id.generate_tree_view (a_tree_view, parent)
+				item.set_tree_view_item (a_tree_view.last_item)
+				forth
+			end 
+		end
 
-feature -- Obsolete
-
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
+	generate_wel_code is
+			-- Generate the eiffel code.
+		do
+		end
 
 end -- class TDS_ANICURSOR
+
+--|---------------------------------------------------------------
+--|   Copyright (C) Interactive Software Engineering, Inc.      --
+--|    270 Storke Road, Suite 7 Goleta, California 93117        --
+--|                   (805) 685-1006                            --
+--| All rights reserved. Duplication or distribution prohibited --
+--|---------------------------------------------------------------
+

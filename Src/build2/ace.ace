@@ -80,6 +80,11 @@ cluster
 		exclude
 			"xml_implementation"; 
 		end
+		
+	all eifp_reader: "$EIFFEL_SRC\dotnet\visualstudio\tools\eifp_reader"
+		exclude
+			"cvs"
+		end
 
 	all patterns: "$EIFFEL_SRC\library\patterns"
 

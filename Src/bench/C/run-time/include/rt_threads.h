@@ -24,6 +24,7 @@ extern "C" {
 #ifdef EIF_THREADS
 
 /* GC synchronization feature */
+extern void eif_thread_cleanup (void);
 extern void eif_synchronize_gc(rt_global_context_t *);
 extern void eif_unsynchronize_gc(rt_global_context_t *);
 #ifdef EIF_ASSERTIONS

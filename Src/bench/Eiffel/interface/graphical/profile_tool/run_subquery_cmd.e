@@ -47,11 +47,9 @@ feature {NONE} -- Command Execution
 				parser.parse (txt, Current);
 				!! profiler_query;
 
-				-- FIXME *****: To be removed after integration...
-				-- FIXME *****: Should be integrated!!
-				--profiler_query.merge (tool.profiler_query);
-				--profiler_query.append_subqueries (subqueries);
-				--profiler_query.append_subquery_operators (subquery_operators);
+				profiler_query.merge (tool.profiler_query);
+				profiler_query.append_subqueries (subqueries);
+				profiler_query.append_subquery_operators (subquery_operators);
 
 				!! st.make;
 				!! executer.make (st, profiler_query, tool.profiler_options);

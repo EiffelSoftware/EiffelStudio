@@ -110,6 +110,7 @@ feature -- Copy
 			type := f.type
 			parameters := f.parameters
 			precursor_type := f.precursor_type
+			routine_id := f.routine_id
 		end
 
 end -- class CREATION_FEATURE_B

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Create `shared_pointer' for radio groups.
 		do
-			Precursor
+			Precursor {EV_WIDGET_IMP}
 			create shared_pointer
 		end
 

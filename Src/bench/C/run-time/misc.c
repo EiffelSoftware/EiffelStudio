@@ -211,9 +211,9 @@ rt_public void eif_system_asynchronous (char *cmd)
 		return;
 	sprintf (envstring, "MELT_PATH=%s", meltpath);
 	putenv (envstring);
-#if defined (BSD) || defined (__VMS)
+#ifdef SIGCHLD
 	signal (SIGCHLD, SIG_DFL);
-#else
+#elif defined SIGCLD
 	signal (SIGCLD, SIG_DFL);
 #endif
 
@@ -249,7 +249,7 @@ rt_public char * eif_getenv (char * k)
 		return result;
 	else {
 		char *key, *lower_k; /* %%ss removed *value */
-		int appl_len, key_len;
+		size_t appl_len, key_len;
 		HKEY hkey;
 		DWORD bsize = 1024;
 		static unsigned char buf[1024];
@@ -265,7 +265,8 @@ rt_public char * eif_getenv (char * k)
 		}
 	
 		strcpy (lower_k, k);
-		CharLowerBuff (lower_k, key_len);
+		CHECK("Not too big", key_len <= 0xFFFFFFFF);
+		CharLowerBuff (lower_k, (DWORD) key_len);
 	
 		strcpy (key, "Software\\ISE\\Eiffel56\\");
 		strncat (key, egc_system_name, appl_len);
@@ -391,7 +392,9 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 		n >= j;
 		n--, ref -= elem_size)
 	{
-		((union overhead *) ref)->ov_size = ref - new_area + OVERHEAD;
+		CHECK("size nonnegative", (ref - new_area + OVERHEAD) >= 0);
+		CHECK("valid size", (ref - new_area + OVERHEAD) <= B_SIZE);
+		((union overhead *) ref)->ov_size = (uint32) (ref - new_area + OVERHEAD);
 	}
 #ifndef WORKBENCH
 	}

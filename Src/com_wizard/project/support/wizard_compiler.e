@@ -512,7 +512,7 @@ feature {NONE} -- Implementation
 					loop
 						if cluster_info.clusters.item.substring_index ("%".%"", 1) > 0 then
 							str_buffer := clone (shared_wizard_environment.eiffel_project_name)
-							str_buffer.head (str_buffer.last_index_of ('\', 1))
+							str_buffer.head (str_buffer.last_index_of ('\', str_buffer.count) - 1)
 							str_buffer.prepend ("%"")
 							str_buffer.append ("%"")
 							cluster_info.clusters.item.replace_substring_all ("%".%"", str_buffer)		
@@ -857,6 +857,7 @@ feature {NONE} -- Implementation
 							a_cluster.substring_index ("visible", 1) + 7)
 					end
 				else
+					a_cluster.prune (';')
 					a_cluster.insert (
 						"%N%T%Tvisible%N%
 						%%T%T%T" + shared_wizard_environment.eiffel_class_name + ";%N%

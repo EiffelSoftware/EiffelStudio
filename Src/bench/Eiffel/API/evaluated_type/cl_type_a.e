@@ -84,9 +84,13 @@ feature
 					Result := False;
 				elseif other_class_type.is_expanded then
 						-- No type conforms directly to `other'.
-					Result := 	((not in_generics) or else is_expanded)
-								and then
-								same_class_type (other_class_type);
+					current_class := associated_class;
+					parent_class := other_class_type.associated_class;
+					Result := 	((not in_generics) and then
+								same_class_type (other_class_type))
+								or else 
+								(is_expanded and then
+								current_class.conform_to (parent_class));
 				else
 					current_class := associated_class;
 					parent_class := other_class_type.associated_class;

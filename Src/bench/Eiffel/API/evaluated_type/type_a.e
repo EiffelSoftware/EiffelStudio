@@ -253,21 +253,20 @@ feature
 		do
 		end;
 
-	good_expanded1: BOOLEAN is
-			-- Is the expanded type a good one ?
+	expanded_deferred: BOOLEAN is
+			-- Is the expanded type deferred ?
 		require
 			has_expanded
 		local
 			act_type: TYPE_A;
 		do
 			act_type := actual_type;
-			Result := not (	act_type.is_expanded
-							and then
-							act_type.associated_class.is_deferred);
+			Result := act_type.is_expanded and then
+						act_type.associated_class.is_deferred;
 		end;
 
-	good_expanded2: BOOLEAN is
-			-- Is the expaned type has an associated class with one
+	valid_expanded_creation: BOOLEAN is
+			-- Is the expanded type has an associated class with one
 			-- creation routine with no arguments only ?
 		require
 			has_expanded
@@ -277,23 +276,23 @@ feature
 			creation_name: STRING;
 			creation_feature: FEATURE_I;
 		do
---			if is_expanded then
---				a_class := associated_class;
---				creators := a_class.creators;
---				if creators = Void then
---					Result := True;
---				elseif creators.count = 1 then
---					creators.start;
---					creation_name := creators.key_for_iteration;
---					creation_feature :=
---									a_class.feature_table.item (creation_name);
---					Result := creation_feature.argument_count = 0;
---				else 
---					Result := False;
---				end;
---			else
---				Result := True;
---			end;
+			if is_expanded then
+				a_class := associated_class;
+				creators := a_class.creators;
+				if creators = Void then
+					Result := True;
+				elseif creators.count = 1 then
+					creators.start;
+					creation_name := creators.key_for_iteration;
+					creation_feature :=
+									a_class.feature_table.item (creation_name);
+					Result := creation_feature.argument_count = 0;
+				else 
+					Result := False;
+				end;
+			else
+				Result := True;
+			end;
 		end;
 
 	same_as (other: TYPE_A): BOOLEAN is
@@ -313,6 +312,22 @@ feature
 	create_info: CREATE_INFO is
 			-- Byte code information for entity type creation
 		deferred
+		end;
+
+	check_for_obsolete_class is
+			-- Check for obsolete class from Current. If
+			-- obsolete then display warning message.
+		local
+			ass_class: CLASS_C
+		do
+			ass_class := actual_type.associated_class;
+		   	if 	(ass_class /= Void) and then ass_class.is_obsolete then
+			   	io.error.putstring ("%TWarning: Class ");
+				io.error.putstring (ass_class.class_name);
+				io.error.putstring (" is obsolete: ");
+				io.error.putstring (ass_class.obsolete_message);
+				io.error.new_line;
+			end;
 		end;
 
 end

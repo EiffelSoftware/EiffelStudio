@@ -199,13 +199,15 @@ end;
 			entry: POLY_TABLE [ENTRY];
 			table_name: STRING;
 			offset_class_type: CLASS_TYPE;
-			type_c: TYPE_C
+			type_c: TYPE_C;
+			type_i: TYPE_I
 		do
-			type_c := real_type (type).c_type;
+			type_i := real_type (type);
+			type_c := type_i.c_type;
 			entry := Eiffel_table.item_id (rout_id);
 				-- No need to use dereferencing if object is an expanded
 				-- or if it is a bit.
-			if not typ.is_expanded and then not type_c.is_bit then
+			if not type_i.is_expanded and then not type_c.is_bit then
 					-- For dereferencing, we need a star...
 				generated_file.putchar ('*');
 					-- ...followed by the appropriate access cast

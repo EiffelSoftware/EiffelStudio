@@ -17,6 +17,10 @@ inherit
 
 feature -- Attributes
 
+	obsolete_message: STRING_AS;
+			-- Obsolete clause message
+			-- (Void if was not present)
+
 	precondition: REQUIRE_AS;
 			-- Precondition list
 
@@ -37,11 +41,12 @@ feature -- Initialization
 	set is
 			-- Yacc initialization
 		do
-			precondition ?= yacc_arg (0);
-			locals ?= yacc_arg (1);
-			routine_body ?= yacc_arg (2);
-			postcondition ?= yacc_arg (3);
-			rescue_clause ?= yacc_arg (4);
+			obsolete_message ?= yacc_arg (0);
+			precondition ?= yacc_arg (1);
+			locals ?= yacc_arg (2);
+			routine_body ?= yacc_arg (3);
+			postcondition ?= yacc_arg (4);
+			rescue_clause ?= yacc_arg (5);
 		ensure then
 			routine_body /= Void
 		end;
@@ -195,6 +200,8 @@ feature -- Type check, byte code and dead code removal
 			vrle1: VRLE1;
 			vrle2: VRLE2;
 			vtug3: VTUG3;
+			vtec1: VTEC1;
+			vtec2: VTEC2;
 			vtec3: VTEC3;
 			vtgg3: VTGG3;
 			vreg2: VREG2;
@@ -251,15 +258,22 @@ feature -- Type check, byte code and dead code removal
 					counter := counter + 1;
 					!!local_info;
 						-- Check an expanded local type
-					if 	solved_type.has_expanded
-						and then
-						not	(solved_type.good_expanded1)
-					then
-						!!vtec3;
-						vtec3.set_class_id (context_class.id);
-						vtec3.set_body_id (context.a_feature.body_id);
-						vtec3.set_entity_name (local_name);
-						Error_handler.insert_error (vtec3);
+					if 	solved_type.has_expanded then
+						if	solved_type.expanded_deferred then
+							!!vtec1;
+							vtec1.set_class_id (context_class.id);
+							vtec1.set_body_id (context.a_feature.body_id);
+							vtec1.set_type (solved_type);
+							vtec1.set_entity_name (local_name);
+							Error_handler.insert_error (vtec1);
+						elseif not solved_type.valid_expanded_creation then
+							!!vtec2;
+							vtec2.set_class_id (context_class.id);
+							vtec2.set_body_id (context.a_feature.body_id);
+							vtec2.set_type (solved_type);
+							vtec2.set_entity_name (local_name);
+							Error_handler.insert_error (vtec2);
+						end;
 					end;
 						-- Check a generic local type
 					if not solved_type.good_generics then
@@ -303,6 +317,9 @@ feature -- Type check, byte code and dead code removal
 						end;
 					end;
 					id_list.forth;
+				end;
+				if solved_type /= Void then
+					solved_type.check_for_obsolete_class
 				end;
 				locals.forth;
 			end;

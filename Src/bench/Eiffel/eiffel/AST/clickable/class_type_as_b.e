@@ -73,10 +73,8 @@ feature -- Conveniences
 			a_class :=
 		Universe.class_named (class_name, Inst_context.cluster).compiled_class;
 			Result.set_base_type (a_class.id);
-			if a_class.is_expanded then
-					-- Base type class is expanded
-				Result.set_is_expanded (True);
-			end;
+				-- Base type class is expanded
+			Result.set_is_expanded (a_class.is_expanded);
 		end;
 
 	actual_type: CL_TYPE_A is
@@ -107,10 +105,8 @@ feature -- Conveniences
 			a_class :=
 			Universe.class_named (class_name, Inst_context.cluster).compiled_class;
 			Result.set_base_type (a_class.id);
-			if a_class.is_expanded then
 					-- Base type class is expanded
-				Result.set_is_expanded (True);
-			end;
+			Result.set_is_expanded (a_class.is_expanded);
 		end;
 
 	has_like: BOOLEAN is

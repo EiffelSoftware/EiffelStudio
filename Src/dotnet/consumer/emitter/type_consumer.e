@@ -788,7 +788,6 @@ feature {NONE} -- Status Setting.
 		require
 			non_void_info: info /= Void
 		local
-			i: INTEGER
 			l_key: SYSTEM_STRING
 			l_dotnet_name: SYSTEM_STRING
 			l_index: INTEGER

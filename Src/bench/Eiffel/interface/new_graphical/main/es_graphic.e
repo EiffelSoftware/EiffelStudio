@@ -1,7 +1,7 @@
 indexing
-	description	: "Main class for Graphic mode in EiffelStudio."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	description: "Main class for Graphic mode in EiffelStudio."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_GRAPHIC
@@ -49,12 +49,14 @@ inherit
 			copy
 		end
 		
-	SHARED_BENCH_LICENSES
+	EXCEPTIONS
+		export
+			{NONE} all
 		undefine
 			default_create,
 			copy
 		end
-		
+
 	SHARED_CONFIGURE_RESOURCES
 		export
 			{NONE} all
@@ -64,6 +66,14 @@ inherit
 		end
 
 	EB_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
+	SHARED_LICENSE
 		export
 			{NONE} all
 		undefine
@@ -84,7 +94,13 @@ feature {NONE} -- Initialization
 			if rescued = 0 then
 					-- Normal execution
 				default_create
-				prepare
+				license.check_activation_while_running (agent prepare)
+					-- `prepare' is only called when license activation window
+					-- is shown, so when it is not, ie `is_licensed' is True,
+					-- we have to manually call it.
+				if license.is_licensed then
+					prepare
+				end
 				launch
 			else
 					-- First time rescue
@@ -127,57 +143,59 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			a_progress_dialog: EB_PROGRESS_DIALOG
 			a_graphical_degree_output: EB_GRAPHICAL_DEGREE_OUTPUT
 		do
-				--| If we don't put bench mode here,
-				--| `error_window' will assume batch
-				--| mode and thus it will initialize
-				--| `error_window' as a TERM_WINDOW.
-				--| Also note that `error_window' is a
-				--| once-function!!
-
-				-- Create and setup the output manager / Error displayer
-			create an_output_manager
-			set_output_manager (an_output_manager)
-			Eiffel_project.set_error_displayer (an_output_manager)
-
-				-- Create and setup the degree output window.
-			if not graphical_output_disabled then
-				create a_progress_dialog
-				set_progress_dialog (a_progress_dialog)
-				create a_graphical_degree_output.make_with_dialog (a_progress_dialog)
-				Eiffel_project.set_degree_output (a_graphical_degree_output)
-			end
-
-				-- Create and setup the recent projects manager
-			create a_recent_projects_manager.make
-			set_recent_projects_manager (a_recent_projects_manager)
-
-				-- Create a development window
-			window_manager.create_window
-			first_window := window_manager.last_created_window
-
-			mode.set_item (False)
-			project_index := index_of_word_option ("project")
-			if project_index /= 0 then
-					-- Project opened by `ebench name_of_project.epr'
-				create open_project.make_with_parent (first_window.window)
-				post_launch_actions.extend (agent open_project.execute_with_file (argument (project_index + 1)))
-			else
-					-- Project created by `ebench -create my_path -ace my_ace'
-				create_project_index := index_of_word_option ("create")
-				create_ace_index := index_of_word_option ("ace")
-				compile_index := index_of_word_option ("compile")
-				if create_project_index /= 0 and then create_ace_index /= 0 then
-					post_launch_actions.extend (agent create_project (argument (create_project_index + 1), argument (create_ace_index + 1), compile_index /= 0))
+			if license.is_licensed or license.can_run then
+					--| If we don't put bench mode here,
+					--| `error_window' will assume batch
+					--| mode and thus it will initialize
+					--| `error_window' as a TERM_WINDOW.
+					--| Also note that `error_window' is a
+					--| once-function!!
+		
+					-- Create and setup the output manager / Error displayer
+				create an_output_manager
+				set_output_manager (an_output_manager)
+				Eiffel_project.set_error_displayer (an_output_manager)
+		
+					-- Create and setup the degree output window.
+				if not graphical_output_disabled then
+					create a_progress_dialog
+					set_progress_dialog (a_progress_dialog)
+					create a_graphical_degree_output.make_with_dialog (a_progress_dialog)
+					Eiffel_project.set_degree_output (a_graphical_degree_output)
+				end
+		
+					-- Create and setup the recent projects manager
+				create a_recent_projects_manager.make
+				set_recent_projects_manager (a_recent_projects_manager)
+		
+					-- Create a development window
+				window_manager.create_window
+				first_window := window_manager.last_created_window
+		
+				mode.set_item (False)
+				project_index := index_of_word_option ("project")
+				if project_index /= 0 then
+						-- Project opened by `ebench name_of_project.epr'
+					create open_project.make_with_parent (first_window.window)
+					open_project.execute_with_file (argument (project_index + 1))
 				else
-						-- Show starting dialog.
-					if show_starting_dialog then
-						post_launch_actions.extend (agent display_starting_dialog)
+						-- Project created by `ebench -create my_path -ace my_ace'
+					create_project_index := index_of_word_option ("create")
+					create_ace_index := index_of_word_option ("ace")
+					compile_index := index_of_word_option ("compile")
+					if create_project_index /= 0 and then create_ace_index /= 0 then
+						create_project (argument (create_project_index + 1), argument (create_ace_index + 1), compile_index /= 0)
+					else
+							-- Show starting dialog.
+						if show_starting_dialog then
+							display_starting_dialog
+						end
 					end
 				end
+				
+					-- Register help engine
+				set_help_engine (create {EB_HELP_ENGINE}.make)
 			end
-			
-				-- Register help engine
-			set_help_engine (create {EB_HELP_ENGINE}.make)
 		end
 
 	display_starting_dialog is

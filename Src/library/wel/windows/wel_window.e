@@ -152,8 +152,13 @@ feature -- Status report
 			-- Current window which has the focus.
 		require
 			exists: exists
+		local
+			p, null: POINTER
 		do
-			Result := window_of_item (cwin_get_focus)
+			p := cwin_get_focus
+			if p /= null then
+				Result := window_of_item (p)
+			end
 		end
 
 	captured_window: WEL_WINDOW is
@@ -161,8 +166,13 @@ feature -- Status report
 		require
 			exists: exists
 			window_captured: window_captured
+		local
+			p, null: POINTER
 		do
-			Result := window_of_item (cwin_get_capture)
+			p := cwin_get_capture
+			if p /= null then
+				Result := window_of_item (p)
+			end
 		end
 
 	window_captured: BOOLEAN is

@@ -67,7 +67,7 @@ feature -- Access
 			bridge_ok: Result = implementation.selected_item
 		end
 
-	selected_items: LINKED_LIST [EV_LIST_ITEM] is
+	selected_items: DYNAMIC_LIST [EV_LIST_ITEM] is
 			-- Currently selected items.
 		do
 			Result := implementation.selected_items
@@ -213,6 +213,9 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/04/19 01:38:16  pichery
+--| Modified the type of `selected_items'.
+--|
 --| Revision 1.43  2000/04/18 02:43:43  pichery
 --| Fixed invalid invariant for multiple selection lists.
 --|

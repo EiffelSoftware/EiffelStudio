@@ -1,11 +1,10 @@
 indexing
-
-	description: 
-		"AST representation of id.";
-	date: "$Date$";
+	description: "AST representation of id."
+	date: "$Date$"
 	revision: "$Revision$"
 
-class ID_AS
+class
+	ID_AS
 
 inherit
 
@@ -13,9 +12,10 @@ inherit
 		undefine
 			copy, out, is_equal, setup, consistent
 		redefine
-			pass_address, is_id, good_integer, good_character,
-			record_dependances, is_equivalent
-		end;
+			pass_address, is_id,
+			is_equivalent
+		end
+
 	STRING
 		rename
 			set as string_set, is_integer as string_is_integer
@@ -40,11 +40,8 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	is_id: BOOLEAN is
+	is_id: BOOLEAN is True
 			-- Is the current atomic node an id ?
-		do
-			Result := True;
-		end;
 
 feature -- Comparison
 
@@ -55,20 +52,6 @@ feature -- Comparison
 		end
 
 feature {COMPILER_EXPORTER, FEAT_NAME_ID_AS} -- Conveniences
-
-	record_dependances is
-		do
-		end;
-
-	good_integer: BOOLEAN is
-			-- Is the atomic a good integer bound for multi-branch ?
-		do
-		end;
-
-	good_character: BOOLEAN is
-			-- Is the atomic a good character bound for multi-branch ?
-		do
-		end;
 
 	load (s: STRING) is
 		do

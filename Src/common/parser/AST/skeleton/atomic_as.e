@@ -16,7 +16,7 @@ feature -- Properties
 	is_unique: BOOLEAN is
 			-- Is the terminal a unique constant ?
 		do
-			Result := False;
+			-- Do nothing
 		end;
 
 	is_integer: BOOLEAN is

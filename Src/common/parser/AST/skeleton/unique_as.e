@@ -31,11 +31,8 @@ feature -- Comparison
 
 feature -- Properties
 
-	is_unique: BOOLEAN is
+	is_unique: BOOLEAN is True
 			-- Is the terminal a unique constant ?
-		do
-			Result := True;
-		end;
 
 feature -- Output
 

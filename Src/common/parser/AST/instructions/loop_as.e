@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			stop ?= yacc_arg (3);
 			compound ?= yacc_arg (4);
 			start_position := yacc_position;
-			line_number    := yacc_line_number
+			line_number := yacc_line_number
 		ensure then
 			stop_exists: stop /= Void
 		end;

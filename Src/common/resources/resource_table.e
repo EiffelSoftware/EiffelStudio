@@ -5,10 +5,10 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class RESOURCE_TABLE
+class
+	RESOURCE_TABLE
 
 inherit
-
 	HASH_TABLE [STRING, STRING]
 
 creation

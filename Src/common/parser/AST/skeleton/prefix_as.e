@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"AST representation of an Eiffel prefixed feature name.";
-	date: "$Date$";
+	description: "AST representation of an Eiffel prefixed feature name."
+	date: "$Date$"
 	revision: "$Revision$"
 
-class PREFIX_AS
+class
+	PREFIX_AS
 
 inherit
-
 	INFIX_AS
 		redefine
 			Fix_notation, is_infix, is_prefix
@@ -16,23 +14,14 @@ inherit
 
 feature -- Properties
 
-	Fix_notation: STRING is
+	Fix_notation: STRING is "_prefix_"
 			-- Prefix for prefixed Eiffel feature name used by
 			-- the compiler
-		once
-			Result := "_prefix_"
-		end;
 
-	is_infix: BOOLEAN is
+	is_infix: BOOLEAN is False
 			-- is the current feature name an infixed notation ?
-		do
-			Result := False;
-		end;
 
-	is_prefix: BOOLEAN is
+	is_prefix: BOOLEAN is True
 			-- Is the current feature name a prefixed notation ?
-		do
-			Result := True;
-		end;
 
 end -- class PREFIX_AS

@@ -1,15 +1,14 @@
 indexing
-
-	description: 
-		"AST representation of an Eiffel basic type.";
-	date: "$Date$";
+	description: "AST representation of an Eiffel basic type."
+	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class BASIC_TYPE
+deferred class
+	BASIC_TYPE
 
 inherit
+	TYPE
 
-	TYPE;
 	CLICKABLE_AST
 		redefine
 			is_class
@@ -21,7 +20,7 @@ feature {NONE} -- Initialization
 			-- Yacc initialization
 		do
 			-- Do nothing
-		end;
+		end
 
 feature -- Comparison
 
@@ -33,10 +32,7 @@ feature -- Comparison
 
 feature -- Properties
 
-	is_class: BOOLEAN is
+	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
-		do
-			Result := True
-		end;
 
 end -- class BASIC_TYPE

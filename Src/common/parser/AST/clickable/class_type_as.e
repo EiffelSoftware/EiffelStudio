@@ -38,11 +38,8 @@ feature -- Properties
 	generics: EIFFEL_LIST [TYPE];
 			-- Possible generical parameters
 
-	is_class: BOOLEAN is
+	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
-		do
-			Result := True
-		end;
 
 feature -- Access
 

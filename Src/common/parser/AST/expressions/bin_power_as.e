@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"AST representation of binary `^' operation.";
-	date: "$Date$";
+	description: "AST representation of binary `^' operation."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class BIN_POWER_AS
+class
+	BIN_POWER_AS
 
 inherit
-
 	ARITHMETIC_AS
 		redefine
 			balanced
@@ -16,17 +14,11 @@ inherit
 
 feature -- Properties
 
-	infix_function_name: STRING is
+	infix_function_name: STRING is "_infix_power"
 			-- Internal name of the infixed feature associated to the
 			-- binary expression
-		once
-			Result := "_infix_power";
-		end;
 
-	balanced: BOOLEAN is
+	balanced: BOOLEAN is False
 			-- Is the operation balanced ?
-		do
-			-- Do nothing
-		end;
 
 end -- class BIN_POWER_AS

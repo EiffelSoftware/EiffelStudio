@@ -27,11 +27,8 @@ feature -- Properties
 	value: INTEGER;
 			-- Integer value
 
-	is_integer: BOOLEAN is
+	is_integer: BOOLEAN is True
 			-- Is it an integer value ?
-		do
-			Result := True;
-		end;
 
 feature -- Comparison
 
@@ -58,10 +55,7 @@ feature {AST_EIFFEL} -- Output
 	
 feature {COMPILER_EXPORTER}
 
-	good_integer: BOOLEAN is
+	good_integer: BOOLEAN is True
 			-- Is the atomic a good integer bound for multi-branch ?
-		do
-			Result := True;
-		end;
 
 end -- class INTEGER_AS

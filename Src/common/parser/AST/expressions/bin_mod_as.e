@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"AST representation of binary `\' operation.";
-	date: "$Date$";
+	description: "AST representation of binary `\' operation."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class BIN_MOD_AS
+class
+	BIN_MOD_AS
 
 inherit
-
 	ARITHMETIC_AS
 		redefine
 			balanced
@@ -16,17 +14,11 @@ inherit
 
 feature -- Properties
 
-	infix_function_name: STRING is
+	infix_function_name: STRING is "_infix_mod"
 			-- Internal name of the infixed feature associated to the
 			-- binary expression
-		once
-			Result := "_infix_mod";
-		end;
 
-	balanced: BOOLEAN is
+	balanced: BOOLEAN is False
 			-- Is the bianry operation balanced ?
-		do
-			-- Do nothing
-		end;
 
 end -- class BIN_MOD_AS

@@ -24,15 +24,12 @@ feature -- Properties
 			Result := True;
 		end;
 
-	balanced_result: BOOLEAN is
+	balanced_result: BOOLEAN is True
 			-- is the result of the infix operation subject to the
 			-- balancing rule ?
-		do
-			Result := True;
-		end;
 
-	operator_is_special: BOOLEAN is True;
+	operator_is_special: BOOLEAN is True
 
-	operator_is_keyword: BOOLEAN is False;
+	operator_is_keyword: BOOLEAN is False
 
 end -- class ARITHMETIC_AS

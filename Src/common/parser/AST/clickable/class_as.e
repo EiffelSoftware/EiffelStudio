@@ -92,11 +92,8 @@ feature -- Properties
 	suppliers: SUPPLIERS_AS;
 			-- Supplier types
 
-	is_class: BOOLEAN is
+	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
-		do
-			Result := True
-		end;
 
 feature -- Access
 

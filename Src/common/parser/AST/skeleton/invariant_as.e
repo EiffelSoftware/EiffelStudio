@@ -24,11 +24,8 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	is_invariant_obj: BOOLEAN is
+	is_invariant_obj: BOOLEAN is True
 			-- Is the current object an instance of INVARIANT_AS ?
-		do
-			Result := True;
-		end;
 
 	assertion_list: EIFFEL_LIST [TAGGED_AS];
 			-- Assertion list

@@ -129,27 +129,27 @@ feature -- Access
 			feature_names.go_to (cur)
 		end;
 
-	is_equiv (o: like Current): BOOLEAN is
-			-- Is `o' equivalent to Current?
+	is_equiv (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to Current?
 		require
-			o_exists: o /= Void
+			other_exists: other /= Void
 		local
 			cur: CURSOR
 		do
 			from
-				cur := o.feature_names.cursor
+				cur := other.feature_names.cursor
 				Result := True
-				o.feature_names.start
+				other.feature_names.start
 			until
-				o.feature_names.after or else not Result
+				other.feature_names.after or else not Result
 			loop
-				Result := has_feature_name (o.feature_names.item)
-				o.feature_names.forth
+				Result := has_feature_name (other.feature_names.item)
+				other.feature_names.forth
 			end
-			o.feature_names.go_to (cur)
+			other.feature_names.go_to (cur)
 
 			if Result then
-				Result := body /= Void and then is_body_equiv (o) and is_assertion_equiv (o)
+				Result := body /= Void and then is_body_equiv (other) and is_assertion_equiv (other)
 			end
 		end;
 
@@ -227,11 +227,8 @@ feature {COMPILER_EXPORTER} -- Initialization
 
 feature {COMPILER_EXPORTER} -- Conveniences
 
-	is_feature_obj: BOOLEAN is
+	is_feature_obj: BOOLEAN is True
 			-- Is the current object an instance of FEATURE_AS ?
-		do
-			Result := True;
-		end;
 
 	infix "<" (other: like Current): BOOLEAN is
 		do	

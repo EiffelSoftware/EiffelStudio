@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"AST representation to access to `Result'.";
-	date: "$Date$";
+	description: "AST representation to access to `Result'."
+	date: "$Date$"
 	revision: "$Revision$"
 
-class RESULT_AS
+class
+	RESULT_AS
 
 inherit
-
 	ACCESS_AS
 		redefine
 			is_equivalent
@@ -20,14 +18,11 @@ feature {NONE} -- Initialization
 			-- Yacc initialization
 		do
 			-- Do nothing
-		end;
+		end
 
 feature -- Properties
 
-	access_name: STRING is
-		once
-			Result := "Result"
-		end;
+	access_name: STRING is "Result"
 
 feature -- Comparison
 
@@ -42,8 +37,8 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.prepare_for_result;
-			ctxt.put_text_item (ti_Result);
-		end;
+			ctxt.prepare_for_result
+			ctxt.put_text_item (ti_Result)
+		end
 
 end -- class RESULT_AS

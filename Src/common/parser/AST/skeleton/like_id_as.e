@@ -39,11 +39,8 @@ feature -- Comparison
 
 feature -- Access
 
-	has_like: BOOLEAN is
+	has_like: BOOLEAN is True
 			-- Has the type anchored type in its definition ?
-		do
-			Result := True;
-		end;
 
 feature -- Output
 

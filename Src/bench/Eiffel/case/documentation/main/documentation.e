@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 			until
 				classes.after
 			loop
-				s := classes.item.name_in_upper
+				s := classes.item.name.twin
 				class_array.append ("%T%T%"" + s + "%"")
 				s.to_lower
 				s := "" + classes.item.cluster.relative_path ('/') +

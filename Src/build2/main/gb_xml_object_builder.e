@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 						build_new_object (current_element, a_new_object, is_component)
 					else
 						-- We must check for internal properties, else set the properties of the component
-						if current_name.is_equal (Internal_properties_string) then
+						if current_name.is_equal (Internal_properties_string) or current_name.is_equal (Events_string) then
 							-- No internal properties are used. i.e. no name is assigned.
 						else
 						

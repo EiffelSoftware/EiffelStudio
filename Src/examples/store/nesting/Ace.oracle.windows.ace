@@ -2,7 +2,7 @@ system nesting
 
 root
 	
-	test_i (root_cluster): "make"
+	test_i: "make"
 
 default
 	assertion (all);

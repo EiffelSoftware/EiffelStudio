@@ -22,6 +22,7 @@ test	disjoint-sets-heterogenous				set001b tcf set
 test	symdif-sets								set002 tcf set
 test	symdif-sets-heterogenous				set002a tcf set
 test	prune-tree-set							set003 tcf set +set
+test	linear-subset-move						set003 tcf set
 
 test	tree-is-equal							tree001 tcf tree
 test	tree-clone								tree002 tcf tree

@@ -155,7 +155,7 @@ feature {TEXT_ITEM} -- Text processing
 	process_cl_syntax (text: CL_SYNTAX_ITEM) is
 			-- Process class syntax text.
 		do
-			put_class_syntax (text.syntax_error, text.e_class, text.error_text)
+			put_class_syntax (text.syntax_message, text.e_class, text.error_text)
 		end
 
 	process_ace_syntax (text: ACE_SYNTAX_ITEM) is
@@ -311,7 +311,7 @@ feature -- Output
 			put_string (address)
 		end
 
-	put_class_syntax (syn: SYNTAX_ERROR; eclass: CLASS_C; str: STRING) is
+	put_class_syntax (syn: SYNTAX_MESSAGE; eclass: CLASS_C; str: STRING) is
 			-- Put `syn' for `e_class' with `str' as representation.
 		require
 			valid_syn: syn /= Void

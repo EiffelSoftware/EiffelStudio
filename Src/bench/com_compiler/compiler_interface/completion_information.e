@@ -301,8 +301,12 @@ feature {NONE} -- Implementation
 					end
 					table.forth
 				end
-				Result := Result.subarray (1, i - 1)
-				Result.sort
+				if Result.index_set.valid_index (i - 1) then
+					Result := Result.subarray (1, i - 1)
+					Result.sort	
+				else
+					Result := Void
+				end
 			else
 				create Result.make (1,0)
 			end
@@ -325,7 +329,9 @@ feature {NONE} -- Implementation
 							fi.has_static_access and
 							fi.is_exported_for (class_i.compiled_class)
 			elseif call_type = Creation_call then
-				Result := context.compiled_class.creators.has (fi.feature_name)
+				if context.compiled_class.creators /= Void then
+					Result := context.compiled_class.creators.has (fi.feature_name)					
+				end
 			elseif call_type = Agent_call then
 				Result := not fi.is_infix and
 							not fi.is_prefix and

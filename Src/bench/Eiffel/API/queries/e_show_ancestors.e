@@ -51,9 +51,11 @@ feature {NONE} -- Implementation
 		local
 			parents: FIXED_LIST [CL_TYPE_A];
 			parent_class: CLASS_C;
+			any_id: INTEGER
 		do
+			any_id := Eiffel_system.system.ancestor_class_to_all_classes_id
 			if 
-				(not (c.class_id = Eiffel_system.any_id)) or else
+				(not (c.class_id = any_id)) or else
 				(c = current_class)
 			then
 				parents := c.parents;
@@ -68,7 +70,7 @@ feature {NONE} -- Implementation
 						parent_class.append_signature (st);
 						if
 							already_processed (parents.item) and then
-							parent_class.class_id /= Eiffel_system.any_id
+							parent_class.class_id /= any_id
 						then
 							st.add_string ("...");
 							st.add_new_line;

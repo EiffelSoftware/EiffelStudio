@@ -31,6 +31,30 @@ feature -- Access
 	c_writer: WIZARD_WRITER_C_FILE
 			-- Writer of C file.
 
+	ccom_dll_register_server_function: STRING is "ccom_dll_register_server_function"
+			-- Used for code generation.
+
+	ccom_dll_unregister_server_function: STRING is "ccom_dll_unregister_server_function"
+			-- Used for code generation.
+
+	ccom_dll_get_class_object_function: STRING is "ccom_dll_get_class_object_function"
+			-- Used for code generation.
+
+	ccom_dll_can_unload_now_function: STRING is "ccom_dll_can_unload_now_function"
+			-- Used for code generation.
+
+	Ccom_initialize_com_function: STRING is "ccom_initialize_com_function"
+			-- Used for code generation.
+
+	Ccom_cleanup_com_function: STRING is "ccom_cleanup_com_function"
+			-- Used for code generation.
+
+	Ccom_register_server_function: STRING is "ccom_register_server_function"
+			-- Used for code generation.
+
+	Ccom_unregister_server_function: STRING is "ccom_unregister_server_function"
+			-- Used for code generation.
+
 feature -- Basic operations
 
 	generate is
@@ -125,6 +149,11 @@ feature -- Basic operations
 				c_writer.add_function (dll_unregister_server_feature)
 				c_writer.add_function (dll_can_unload_now_feature)
 
+				c_writer.add_other (dll_get_class_object_macro)
+				c_writer.add_other (dll_register_server_macro)
+				c_writer.add_other (dll_unregister_server_macro)
+				c_writer.add_other (dll_can_unload_now_macro)
+
 
 				c_writer.add_function (dll_unlock_module_feature)
 				c_writer.add_function (dll_lock_module_feature)
@@ -142,6 +171,11 @@ feature -- Basic operations
 				c_writer.add_function (ccom_unregserver_feature)
  				c_writer.add_function (ccom_initialize_com_feature)
  				c_writer.add_function (ccom_cleanup_com_feature)
+
+				c_writer.add_other (ccom_regserver_macro)
+				c_writer.add_other (ccom_unregserver_macro)
+ 				c_writer.add_other (ccom_initialize_com_macro)
+ 				c_writer.add_other (ccom_cleanup_com_macro)
 
 			end
 
@@ -237,7 +271,7 @@ feature {NONE} -- Implementation
 			tmp_string: STRING
 		do
 			create Result.make
-			Result.set_name ("ccom_initialize_com")
+			Result.set_name ("ccom_initialize_com_function")
 			Result.set_comment ("Initialize server.")
 			Result.set_result_type (Void_c_keyword)
 
@@ -368,7 +402,26 @@ feature {NONE} -- Implementation
 			
 			Result.set_body (tmp_string)
 		end
-		
+
+	ccom_initialize_com_macro: STRING is
+			-- Macro for `ccom_initialize_com' function.
+		do
+			create Result.make (0)
+
+			Result.append (Hash_define)
+			Result.append (Space)
+			Result.append (Ccom_initialize_com)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Ccom_initialize_com_function)
+			Result.append (Open_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+		ensure
+			non_void_macro: Result /= Void
+			valid_mocro: not Result.empty
+		end
+
 	ccom_cleanup_com_feature: WIZARD_WRITER_C_FUNCTION is
 			-- Administration function to unregister class object.
 			-- Only generated if is outproc server.
@@ -376,7 +429,7 @@ feature {NONE} -- Implementation
 			tmp_string: STRING
 		do
 			create Result.make
-			Result.set_name ("ccom_cleanup_com")
+			Result.set_name ("ccom_cleanup_com_function")
 			Result.set_comment ("Clean up COM.")
 			Result.set_result_type (Void_c_keyword)
 
@@ -408,6 +461,25 @@ feature {NONE} -- Implementation
 			Result.set_body (tmp_string)
 		end
 
+	ccom_cleanup_com_macro: STRING is
+			-- Macro for `ccom_cleanup_com' function.
+		do
+			create Result.make (0)
+
+			Result.append (Hash_define)
+			Result.append (Space)
+			Result.append (Ccom_cleanup_com)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Ccom_cleanup_com_function)
+			Result.append (Open_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+		ensure
+			non_void_macro: Result /= Void
+			valid_mocro: not Result.empty
+		end
+
 	ccom_unregserver_feature: WIZARD_WRITER_C_FUNCTION is
 			-- Administration function to register or unregister server
 			-- Only generated if is outproc server
@@ -415,7 +487,7 @@ feature {NONE} -- Implementation
 			tmp_string: STRING
 		do
 			create Result.make
-			Result.set_name (Ccom_unregserver_feature_name)
+			Result.set_name (Ccom_unregister_server_function)
             	Result.set_comment ("Unregister server.")
 			Result.set_result_type (Void_c_keyword)
 
@@ -451,6 +523,25 @@ feature {NONE} -- Implementation
 			Result.set_body (tmp_string)
 		end
 
+	ccom_unregserver_macro: STRING is
+			-- Macro for `ccom_unregister_server' function.
+		do
+			create Result.make (0)
+
+			Result.append (Hash_define)
+			Result.append (Space)
+			Result.append (Ccom_unregister_server)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Ccom_unregister_server_function)
+			Result.append (Open_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+		ensure
+			non_void_macro: Result /= Void
+			valid_mocro: not Result.empty
+		end
+
 	ccom_regserver_feature: WIZARD_WRITER_C_FUNCTION is
 			-- Administration function to register or unregister server
 			-- Only generated if is outproc server
@@ -458,7 +549,7 @@ feature {NONE} -- Implementation
 			tmp_string: STRING
 		do
 			create Result.make
-			Result.set_name (Ccom_regserver_feature_name)
+			Result.set_name (Ccom_register_server_function)
 	            Result.set_comment ("Register server.")
 			Result.set_result_type (Void_c_keyword)
 
@@ -527,6 +618,25 @@ feature {NONE} -- Implementation
 			Result.set_body (tmp_string)
 		end
 
+	ccom_regserver_macro: STRING is
+			-- Macro for `ccom_register_server' function.
+		do
+			create Result.make (0)
+
+			Result.append (Hash_define)
+			Result.append (Space)
+			Result.append (Ccom_register_server)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Ccom_register_server_function)
+			Result.append (Open_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+		ensure
+			non_void_macro: Result /= Void
+			valid_mocro: not Result.empty
+		end
+
 	dll_get_class_object_feature: WIZARD_WRITER_C_FUNCTION is
 			-- DllGetClassObject code
 		local
@@ -534,7 +644,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 
-			Result.set_name (ccom_dll_get_class_object)
+			Result.set_name (Ccom_dll_get_class_object_function)
 			Result.set_comment ("DLL get class object funcion")
 			Result.set_result_type (Eif_integer)
 			Result.set_signature ("CLSID * rclsid, IID * riid, void **ppv")
@@ -590,6 +700,47 @@ feature {NONE} -- Implementation
 			tmp_string.append (Semicolon)
 
 			Result.set_body (tmp_string)
+		end
+
+	dll_get_class_object_macro: STRING is
+			-- Macro for `ccom_dll_get_class_object' function.
+		do
+			create Result.make (0)
+
+			Result.append (Hash_define)
+			Result.append (Space)
+			Result.append (Ccom_dll_get_class_object)
+			Result.append (Open_parenthesis)
+			Result.append ("_arg1_, _arg2_, _arg3_")
+			Result.append (Close_parenthesis)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Ccom_dll_get_class_object_function)
+			Result.append (Open_parenthesis)
+			Result.append (Open_parenthesis)
+			Result.append (Clsid_type)
+			Result.append (Asterisk)
+			Result.append (Close_parenthesis)
+			Result.append ("_arg1_")
+			Result.append (Comma)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Iid_type)
+			Result.append (Asterisk)
+			Result.append (Close_parenthesis)
+			Result.append ("_arg2_")
+			Result.append (Comma)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (C_void_pointer)
+			Result.append (Asterisk)
+			Result.append (Close_parenthesis)
+			Result.append ("_arg3_")
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+		ensure
+			non_void_macro: Result /= Void
+			valid_mocro: not Result.empty
 		end
 
 	module_file_name_set_up: STRING is
@@ -650,7 +801,7 @@ feature {NONE} -- Implementation
 			tmp_body: STRING
 		do
 			create Result.make
-			Result.set_name (Ccom_dll_register_server)
+			Result.set_name (Ccom_dll_register_server_function)
 			Result.set_comment ("Register DLL server.")
 			Result.set_result_type (Eif_integer)
 			Result.set_signature (Void_c_keyword)
@@ -674,13 +825,32 @@ feature {NONE} -- Implementation
 			Result.set_body (tmp_body)
 		end
 
+	dll_register_server_macro: STRING is
+			-- Macro for `ccom_dll_register_server' function.
+		do
+			create Result.make (0)
+
+			Result.append (Hash_define)
+			Result.append (Space)
+			Result.append (Ccom_dll_register_server)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Ccom_dll_register_server_function)
+			Result.append (Open_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+		ensure
+			non_void_macro: Result /= Void
+			valid_mocro: not Result.empty
+		end
+
 	dll_unregister_server_feature: WIZARD_WRITER_C_FUNCTION is
 			-- DllUnregisterServer
 		local
 			tmp_body: STRING
 		do
 			create Result.make
-			Result.set_name (Ccom_dll_unregister_server)
+			Result.set_name (Ccom_dll_unregister_server_function)
 			Result.set_comment ("Unregister Server.")
 			Result.set_result_type (Eif_integer)
 			Result.set_signature (Void_c_keyword)
@@ -699,13 +869,32 @@ feature {NONE} -- Implementation
 			Result.set_body (tmp_body)
 		end
 
+	dll_unregister_server_macro: STRING is
+			-- Macro for `ccom_dll_unregister_server' function.
+		do
+			create Result.make (0)
+
+			Result.append (Hash_define)
+			Result.append (Space)
+			Result.append (Ccom_dll_unregister_server)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Ccom_dll_unregister_server_function)
+			Result.append (Open_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+		ensure
+			non_void_macro: Result /= Void
+			valid_mocro: not Result.empty
+		end
+
 	dll_can_unload_now_feature: WIZARD_WRITER_C_FUNCTION is
 			-- DllCanUnloadNow function
 		local
 			tmp_body: STRING
 		do
 			create Result.make
-			Result.set_name (Ccom_dll_can_unload_now)
+			Result.set_name (Ccom_dll_can_unload_now_function)
 			Result.set_comment ("Whether component can be unloaded?")
 			Result.set_result_type (Eif_integer)
 			Result.set_signature (Void_c_keyword)
@@ -722,6 +911,25 @@ feature {NONE} -- Implementation
 			tmp_body.append (Semicolon)
 
 			Result.set_body (tmp_body)
+		end
+
+	dll_can_unload_now_macro: STRING is
+			-- Macro for `ccom_dll_can_unload_now' function.
+		do
+			create Result.make (0)
+
+			Result.append (Hash_define)
+			Result.append (Space)
+			Result.append (Ccom_dll_can_unload_now)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Ccom_dll_can_unload_now_function)
+			Result.append (Open_parenthesis)
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
+		ensure
+			non_void_macro: Result /= Void
+			valid_mocro: not Result.empty
 		end
 
 	exe_lock_module_feature: WIZARD_WRITER_C_FUNCTION is

@@ -1,6 +1,6 @@
 indexing
 	description	: "Window managment constants (WM_xxxx, ...)"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
 

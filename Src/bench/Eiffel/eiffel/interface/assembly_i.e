@@ -246,6 +246,8 @@ feature -- Initialization
 					if l_assembly = Void then
 						create l_vd60.make (Current, l_cons_assembly)
 						Error_handler.insert_error (l_vd60)
+					else
+						referenced_assemblies.put (l_assembly, i)
 					end
 				else
 					referenced_assemblies.put (l_assembly, i)
@@ -340,14 +342,11 @@ feature {NONE} -- Implementation
 			end
 			Result.append_character ('-')
 			
-			if a_culture /= Void then
-				if not a_culture.is_equal (neutral_string) then
-					Result.append (a_culture)
-				end
+			if a_culture /= Void and then not a_culture.is_equal (neutral_string) then
+				Result.append (a_culture)
 			end
-			Result.append_character ('-')
-			
-			if a_key /= Void then
+			if a_key /= Void and then not a_key.is_equal (null_key_string) then
+				Result.append_character ('-')
 				Result.append (a_key)
 			end
 		ensure
@@ -360,6 +359,7 @@ feature {NONE} -- Constants
 	type_list_file_name: STRING is "types.xml"
 	xml_extension: STRING is "xml"
 	neutral_string: STRING is "neutral"
+	null_key_string: STRING is "null"
 	referenced_assemblies_file_name: STRING is "referenced_assemblies.xml"
 			-- String constants specific to layout of EAC.
 

@@ -62,7 +62,7 @@ feature {NONE} -- Execution
 				filter.process_text (ctxt.text);
 				output_window.put_string (filter.image);
 			end;
-			output_window.new_line;
+			output_window.put_new_line;
 		end;
 
 	process_uncompiled_class (class_i: CLASS_I) is
@@ -75,11 +75,11 @@ feature {NONE} -- Execution
 			end;
 			if text /= Void then
 				output_window.put_string (text);
-				output_window.new_line;
+				output_window.put_new_line;
 			else
 				output_window.put_string ("Cannot open ");
 				output_window.put_string (class_i.file_name);
-				output_window.new_line;
+				output_window.put_new_line;
 			end;
 		end;
 

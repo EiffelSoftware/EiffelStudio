@@ -118,11 +118,11 @@ feature {NONE} -- Implementation
 					a_file.put_string (a_text)
 					if a_text.item (a_text.count) /= '%N' then
 							-- Add a carriage return like `vi' if there's none at the end 
-						a_file.new_line
+						a_file.put_new_line
 					end
 				else
 					a_text.replace_substring_all ("%N", "%R%N")
-					a_file.putstring (a_text)
+					a_file.put_string (a_text)
 				end
 				a_file.close
 			end

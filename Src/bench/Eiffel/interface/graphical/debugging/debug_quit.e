@@ -63,7 +63,7 @@ feature -- Output
 			Project_tool.clear_cursor_position
 			debug_window.clear_window
 			debug_window.put_string ("System terminated")
-			debug_window.new_line
+			debug_window.put_new_line
 			debug_window.display
 			window_manager.object_win_mgr.reset
 			Project_tool.clear_object_tool

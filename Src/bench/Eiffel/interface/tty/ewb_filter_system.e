@@ -38,7 +38,7 @@ feature {NONE} -- Execution
 			else
 				output_window.put_string (cmd.structured_text.image);
 			end;
-			output_window.new_line;
+			output_window.put_new_line;
 		end;
 
 end -- class EWB_FILTER_SYSTEM

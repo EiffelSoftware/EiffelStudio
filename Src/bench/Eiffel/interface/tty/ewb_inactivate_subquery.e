@@ -23,19 +23,19 @@ feature {NONE} -- Execution
 				index_str.is_integer
 			loop
 				if not first_time then
-					io.putstring ("Index must be an integer.%N");
+					io.put_string ("Index must be an integer.%N");
 				end;
 				if command_arguments.argument_count >= 2 then
 					index_str := command_arguments.item (2);
 				else
-					io.putstring ("--> Subquery index: ");
+					io.put_string ("--> Subquery index: ");
 					command_line_io.get_name;
 					command_arguments := command_line_io.command_arguments;
 					index_str := command_arguments.item (1);
 				end;
 				if not index_str.is_integer then
-					io.putstring ("Index must be an integer.%N");
-					io.putstring ("--> Subquery index: ");
+					io.put_string ("Index must be an integer.%N");
+					io.put_string ("--> Subquery index: ");
 					command_line_io.get_name;
 					command_arguments := command_line_io.command_arguments;
 					index_str := command_arguments.item (1);
@@ -77,10 +77,10 @@ feature {NONE} -- Execution
 						end;
 					end;
 				else
-					io.putstring ("There is no items available at this index.%N")
+					io.put_string ("There is no items available at this index.%N")
 				end
 			else
-				io.putstring ("Index must be valid.%N");
+				io.put_string ("Index must be valid.%N");
 			end;
 		end;
 

@@ -59,21 +59,21 @@ feature -- Output
 					--| text /= Void means text has been displayed
 					--| and thus the user could have changed the value.
 				if ar.value = Void or else ar.value.is_empty then
-					file.putstring ("%"%"");
+					file.put_string ("%"%"");
 				else
-					file.putchar ('%"')
+					file.put_character ('%"')
 					txt := clone (ar.value);
 					txt.replace_substring_all ("%N", "");
-					file.putstring (txt)
-					file.putchar ('%"')
+					file.put_string (txt)
+					file.put_character ('%"')
 				end
 			elseif text.text.is_empty then
-				file.putstring ("%"%"")
+				file.put_string ("%"%"")
 			else
-				file.putchar ('%"')
+				file.put_character ('%"')
 				txt := text.text;
 				txt.replace_substring_all ("%N", "");
-				file.putchar ('%"')
+				file.put_character ('%"')
 			end
 		end
 

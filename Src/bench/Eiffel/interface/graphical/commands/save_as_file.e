@@ -77,14 +77,14 @@ feature -- Callbacks
 				if not to_write.is_empty then
 					to_write.prune_all ('%R')
 					if general_resources.text_mode.value.is_equal ("UNIX") then
-						new_file.putstring (to_write)
+						new_file.put_string (to_write)
 						if to_write.item (to_write.count) /= '%N' then 
 							-- Add a carriage return like `vi' if there's none at the end 
-							new_file.new_line
+							new_file.put_new_line
 						end
 					else
 						to_write.replace_substring_all ("%N", "%R%N")
-						new_file.putstring (to_write)
+						new_file.put_string (to_write)
 					end
 				end
 				new_file.close;

@@ -378,14 +378,14 @@ feature -- Output
 				end
 			end
 debug ("DRAWING")
-	io.error.putstring ("total number of lines: ");
-	io.error.putint (count)
-	io.error.new_line
-	io.error.putstring (" width: ");
-	io.error.putint (width)
-	io.error.putstring (" height: ");
-	io.error.putint (height)
-	io.error.new_line
+	io.error.put_string ("total number of lines: ");
+	io.error.put_integer (count)
+	io.error.put_new_line
+	io.error.put_string (" width: ");
+	io.error.put_integer (width)
+	io.error.put_string (" height: ");
+	io.error.put_integer (height)
+	io.error.put_new_line
 end
 		end;
 
@@ -555,7 +555,7 @@ feature -- Output
 			max_h, y_coord: INTEGER
 		do
 debug ("DRAWING")
-	io.error.putstring ("Drawing ...%N");
+	io.error.put_string ("Drawing ...%N");
 end
 			max_h := maximum_height_per_line;
 			set_clip (to_refresh.to_clip);
@@ -586,9 +586,9 @@ end
 						stopped := True
 					else
 debug ("DRAWING")
-	io.error.putstring ("display line: ")
-	io.error.putint (i + 1);
-	io.error.new_line;
+	io.error.put_string ("display line: ")
+	io.error.put_integer (i + 1);
+	io.error.put_new_line;
 end
 						line.draw (drawing, Current, x_offset, y_offset);
 					end;

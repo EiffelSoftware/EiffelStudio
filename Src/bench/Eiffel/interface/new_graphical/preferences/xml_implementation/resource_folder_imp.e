@@ -141,9 +141,9 @@ feature -- Saving
 			if retried then
 				create file.make (location)
 				if file.exists then
-					io.error.putstring (w_Not_readable (location))
+					io.error.put_string (w_Not_readable (location))
 				else
-					io.error.putstring (w_Not_creatable (location))
+					io.error.put_string (w_Not_creatable (location))
 				end
 			else
 				create file.make_open_write (location)

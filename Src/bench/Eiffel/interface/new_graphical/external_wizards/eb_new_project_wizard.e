@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			until
 				file.end_of_file
 			loop
-				file.readline
+				file.read_line
 				entry := analyse_line (file.last_string)
 				if entry /= Void then
 					if (entry @ 1).is_equal ("name") then

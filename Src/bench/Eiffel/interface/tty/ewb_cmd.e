@@ -125,7 +125,7 @@ feature {NONE} -- Implementation
 					execute
 				else
 					output_window.put_string (Warning_messages.w_Must_compile_first)
-					output_window.new_line
+					output_window.put_new_line
 				end
 			else
 				command_line_io.reset_abort

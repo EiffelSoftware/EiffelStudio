@@ -212,7 +212,7 @@ feature -- Basic operations
 				else
 					file.create_read_write
 				end
-				file.putstring (sent_txt)
+				file.put_string (sent_txt)
 				file.close
 					-- Generate the actual command line.
 				cmd := external_command.twin

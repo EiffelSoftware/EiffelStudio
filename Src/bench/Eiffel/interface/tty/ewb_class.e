@@ -65,25 +65,25 @@ feature {NONE} -- Execution
 			if at_pos = 0 then
 				class_list := Eiffel_universe.classes_with_name (class_name);
 				if class_list.is_empty then
-					io.error.putstring (class_name);
+					io.error.put_string (class_name);
 					create id.make (0);
 					id.append (class_name);
 					if id.is_valid then
-						io.error.putstring (" is not in the universe%N")
+						io.error.put_string (" is not in the universe%N")
 					else
-						io.error.putstring (" is not a valid class name%N")
+						io.error.put_string (" is not a valid class name%N")
 					end
 				elseif class_list.count = 1 then
 					class_i := class_list.first
 				else
-					io.error.putstring ("Several classes have the same name:%N")
+					io.error.put_string ("Several classes have the same name:%N")
 					from class_list.start until class_list.after loop
 						class_i := class_list.item;
 						io.error.put_character ('%T');
 						io.error.put_string (class_name);
 						io.error.put_character ('@');
 						io.error.put_string (class_i.cluster.cluster_name);
-						io.error.new_line;
+						io.error.put_new_line;
 						class_list.forth
 					end;
 					class_i := Void
@@ -100,22 +100,22 @@ feature {NONE} -- Execution
 				end
 				cluster := Eiffel_universe.cluster_of_name (cluster_name);
 				if cluster = Void then
-					io.error.putstring ("Cluster ");
+					io.error.put_string ("Cluster ");
 					io.error.put_string (cluster_name);
-					io.error.putstring (" does not exist.");
-					io.error.new_line
+					io.error.put_string (" does not exist.");
+					io.error.put_new_line
 				else
 					class_i := cluster.classes.item (class_name);
 					if class_i = Void then
-						io.error.putstring (class_name);
+						io.error.put_string (class_name);
 						create id.make (0);
 						id.append (class_name);
 						if id.is_valid then
-							io.error.putstring (" is not in cluster ");
+							io.error.put_string (" is not in cluster ");
 							io.error.put_string (cluster_name);
-							io.error.new_line
+							io.error.put_new_line
 						else
-							io.error.putstring (" is not a valid class name%N")
+							io.error.put_string (" is not a valid class name%N")
 						end
 					end
 				end
@@ -124,8 +124,8 @@ feature {NONE} -- Execution
 				if want_compiled_class (class_i) then
 					e_class := class_i.compiled_class;
 					if e_class = Void then
-						io.error.putstring (class_name);
-						io.error.putstring (" is not in the system%N");
+						io.error.put_string (class_name);
+						io.error.put_string (" is not in the system%N");
 					else
 						process_compiled_class (e_class);
 					end;

@@ -211,7 +211,7 @@ feature {NONE} -- Validation
 		do
 			create dir.make_from_string (a_dir)
 			if (validate_directory_name (dir) /= Void) /= a_dir_valid then
-				io.putstring ("`validate_directory_name' failed for "+a_dir+"%N")
+				io.put_string ("`validate_directory_name' failed for "+a_dir+"%N")
 			end
 			dir := validate_directory_name (dir)
 		end

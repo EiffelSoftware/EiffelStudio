@@ -31,7 +31,7 @@ feature -- Element change
 				create cmd_exec;
 				cmd_exec.execute (cmd)
 			else
-				io.error.putstring ("The resource EDITOR is not set%N");
+				io.error.put_string ("The resource EDITOR is not set%N");
 			end;
 		end;
 

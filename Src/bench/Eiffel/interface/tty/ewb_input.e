@@ -74,7 +74,7 @@ feature {NONE} -- Execute
 					if filenames.count = 1 then
 						command_arguments.force ("last_output", 1);
 					else
-						io.putstring ("--> Filename(s): ");
+						io.put_string ("--> Filename(s): ");
 						command_line_io.get_name;
 					end;
 					i := 1;

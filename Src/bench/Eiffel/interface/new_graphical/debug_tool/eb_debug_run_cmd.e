@@ -285,8 +285,8 @@ feature -- Execution
 				then
 						-- Application is not running. Start it.
 	debug("DEBUGGER")
-		io.error.putstring (generator)
-		io.error.putstring ("(DEBUG_RUN): Start execution%N")
+		io.error.put_string (generator)
+		io.error.put_string ("(DEBUG_RUN): Start execution%N")
 	end
 					create makefile_sh_name.make_from_string (Workbench_generation_path)
 					makefile_sh_name.set_file_name (Makefile_SH)
@@ -369,8 +369,8 @@ feature -- Execution
 				if status /= Void and then status.is_stopped then
 					-- Application is stopped. Continue execution.
 debug("DEBUGGER")
-	io.error.putstring (generator)
-	io.error.putstring (": Continue execution%N")
+	io.error.put_string (generator)
+	io.error.put_string (": Continue execution%N")
 end
 						-- Ask the application to wean objects the
 						-- debugger doesn't need anymore.

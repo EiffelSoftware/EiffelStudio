@@ -125,7 +125,7 @@ feature -- Action
 				else
 					-- unexpected value, do nothing
 					debug("DEBUGGER")
-						io.putstring ("Error: unexpected value in [DUMP_VALUE]send_value%N")
+						io.put_string ("Error: unexpected value in [DUMP_VALUE]send_value%N")
 					end
 			end
 		end

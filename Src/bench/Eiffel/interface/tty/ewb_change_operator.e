@@ -29,13 +29,13 @@ feature {NONE} -- Execution
 				else
 					if not not_first then
 						from
-							io.putstring ("--> Operator index followed by operator ('and' or 'or'): ");
+							io.put_string ("--> Operator index followed by operator ('and' or 'or'): ");
 							command_line_io.get_name;
 							command_arguments := command_line_io.command_arguments;
 						until
 							command_arguments.argument_count = 2
 						loop
-							io.putstring ("--> Please enter an operator index followed by an operator ('and' or 'or'): ");
+							io.put_string ("--> Please enter an operator index followed by an operator ('and' or 'or'): ");
 							command_line_io.get_name;
 							command_arguments := command_line_io.command_arguments;
 						end;
@@ -45,16 +45,16 @@ feature {NONE} -- Execution
 				end;
 					-- Check index
 				if not index_str.is_integer then
-					io.putstring ("Index must be an integer.%N");
-					io.putstring ("--> Operator index: ");
+					io.put_string ("Index must be an integer.%N");
+					io.put_string ("--> Operator index: ");
 					command_line_io.get_name;
 					command_arguments := command_line_io.command_arguments;
 					index_str := command_arguments.item (1);
 				end;
 					-- Check operator
 				if not (new_operator.is_equal ("and") or else new_operator.is_equal ("or")) then
-					io.putstring ("Operator must be 'and' or 'or'.%N");
-					io.putstring ("--> New operator: ");
+					io.put_string ("Operator must be 'and' or 'or'.%N");
+					io.put_string ("--> New operator: ");
 					command_line_io.get_name;
 					command_arguments := command_line_io.command_arguments;
 					new_operator := command_arguments.item (1);
@@ -72,10 +72,10 @@ feature {NONE} -- Execution
 				if not subquery_operators.off and then subquery_operators.item /= Void then
 					subquery_operators.item.change_operator (new_operator);
 				else
-					io.putstring ("There is no items available at this index.%N")
+					io.put_string ("There is no items available at this index.%N")
 				end
 			else
-				io.putstring ("Index must be valid.%N");
+				io.put_string ("Index must be valid.%N");
 			end;
 		end;
 

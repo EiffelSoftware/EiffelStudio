@@ -175,11 +175,11 @@ feature -- Execution
 			then
 				debug_window.clear_window
 				debug_window.put_string ("System not compiled")
-				debug_window.new_line
+				debug_window.put_new_line
 				debug_window.display
 			elseif not Application.is_running then
 					-- Application is not running. Start it.
-				debug("DEBUGGER") io.putstring (generator+"(DEBUG_RUN): Start execution%N"); end
+				debug("DEBUGGER") io.put_string (generator+"(DEBUG_RUN): Start execution%N"); end
 				create makefile_sh_name.make_from_string (Workbench_generation_path)
 				makefile_sh_name.set_file_name (Makefile_SH)
 
@@ -214,7 +214,7 @@ feature -- Execution
 				status := Application.status
 				if status /= Void and then status.is_stopped then
 					-- Application is stopped. Continue execution.
-					debug("DEBUGGER") io.putstring (generator+": Continue execution%N"); end
+					debug("DEBUGGER") io.put_string (generator+": Continue execution%N"); end
 					create mp.set_watch_cursor
 
 						-- Ask the application to wean objects the
@@ -234,7 +234,7 @@ feature -- Execution
 					Project_tool.save_current_cursor_position
 					debug_window.clear_window
 					debug_window.put_string ("System is running")
-					debug_window.new_line
+					debug_window.put_new_line
 					debug_window.display
 					mp.restore
 				end
@@ -249,13 +249,13 @@ feature -- Execution
 			debug_window.clear_window
 			Project_tool.save_current_cursor_position
 			debug_window.put_string ("Launching system...")
-			debug_window.new_line
+			debug_window.put_new_line
 			create mp.set_watch_cursor
 			Application.run (current_cmd_line_argument, application_working_directory)
 			if Application.is_running then
 				debug_window.clear_window
 				debug_window.put_string ("System is running")
-				debug_window.new_line
+				debug_window.put_new_line
 			else
 					-- Something went wrong
 				debug_window.clear_window

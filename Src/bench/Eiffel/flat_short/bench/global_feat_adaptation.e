@@ -56,11 +56,11 @@ feature -- Initialization
 				-- Initialize the target arguments for evaluating arguments. 
 			Argument_types.init1 (target);
 debug ("FLAT_SHORT")
-	io.error.putstring ("%Tsource feature: ");
-	io.error.putstring (source.feature_name);
-	io.error.putstring (" target feature: ");
-	io.error.putstring (target.feature_name);
-	io.error.new_line
+	io.error.put_string ("%Tsource feature: ");
+	io.error.put_string (source.feature_name);
+	io.error.put_string (" target feature: ");
+	io.error.put_string (target.feature_name);
+	io.error.put_new_line
 end
 
 		ensure

@@ -476,9 +476,9 @@ feature {NONE} -- Update
 			create Result.make
 			Result.read_from_file (full_path)
 			if not Result.is_valid then
-				io.error.putstring ("Warning: cannot read pixmap file ")
-				io.error.putstring (full_path)
-				io.error.new_line
+				io.error.put_string ("Warning: cannot read pixmap file ")
+				io.error.put_string (full_path)
+				io.error.put_new_line
 			end
 		end
 

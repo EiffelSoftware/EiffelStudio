@@ -28,24 +28,24 @@ feature {NONE} -- Execution
 			args := arguments;
 				-- Display previous value
 			if args.is_empty then
-				io.putstring ("No previous value%N")
+				io.put_string ("No previous value%N")
 			else
-				io.putstring ("Previous value: `");
-				io.putstring (args);
-				io.putstring ("'%N");
+				io.put_string ("Previous value: `");
+				io.put_string (args);
+				io.put_string ("'%N");
 			end;
 				-- Get the arguments
-			io.putstring ("--> Arguments: ");
+			io.put_string ("--> Arguments: ");
 			command_line_io.wait_for_return;
-			new_args := io.laststring.twin
+			new_args := io.last_string.twin
 			if new_args.is_empty then
 				if not args.is_empty then
-					io.putstring ("No value entered. Do you want to: %N%
+					io.put_string ("No value entered. Do you want to: %N%
 								%D: delete the previous value%N%
 								%K: keep the previous value (default)%N%
 								%Option: ");
-					io.readline;
-					cmd := io.laststring;
+					io.read_line;
+					cmd := io.last_string;
 					if cmd.count = 1 and then cmd.item (1).lower = 'd' then
 						arguments.wipe_out;
 					end;

@@ -888,12 +888,12 @@ feature {NONE} -- Implementation
 				then
 					debug ("EDITOR")
 						if not conv_dev.editor_tool.text_area.is_editable then
-							io.error.putstring ("An uneditable editor has changed!%N")
-							io.error.putstring ("Please report this error to ISE.%N")
+							io.error.put_string ("An uneditable editor has changed!%N")
+							io.error.put_string ("Please report this error to ISE.%N")
 						end
 						if conv_dev.editor_tool.text_area.current_text /= Void then
-							io.error.putstring ("A structured text has changed!%N")
-							io.error.putstring ("Please report this error to ISE.%N")
+							io.error.put_string ("A structured text has changed!%N")
+							io.error.put_string ("Please report this error to ISE.%N")
 						end
 					end
 					tmp_name := conv_dev.file_name.twin
@@ -904,7 +904,7 @@ feature {NONE} -- Implementation
 						tmp_file.is_creatable
 					then
 						tmp_file.open_append
-						tmp_file.putstring (conv_dev.text)
+						tmp_file.put_string (conv_dev.text)
 						tmp_file.close
 					end
 				end

@@ -78,8 +78,8 @@ feature -- Initialization
 					else
 --! FIXME EA: To detect problem with search & replace...
 						debug ("EDITOR") 
-							io.error.putstring ("%N EDITOR WARNING: Attempted to move cursor further than end of file.%N")
-							io.error.putstring ("   Position: "+ ch_num.out + "   Text length: " + text.text_length.out + "%N")
+							io.error.put_string ("%N EDITOR WARNING: Attempted to move cursor further than end of file.%N")
+							io.error.put_string ("   Position: "+ ch_num.out + "   Text length: " + text.text_length.out + "%N")
 						end
 						stop := True
 						pos := 1

@@ -22,7 +22,7 @@ inherit
 			{NONE} all
 			{ANY} enable_has_breakable_slots, disable_has_breakable_slots,
 				load_structured_text, has_breakable_slots,
-				current_text, put_string, new_line,
+				current_text, put_string, put_new_line,
 				put_char
 		redefine
 			load_structured_text, last_processed_line

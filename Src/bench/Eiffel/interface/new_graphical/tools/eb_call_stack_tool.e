@@ -436,7 +436,7 @@ feature {NONE} -- Implementation
 					arrowed_level := level
 				end
 			else
---				io.putstring ("Void dclass")
+--				io.put_string ("Void dclass")
 			end
 		end
 

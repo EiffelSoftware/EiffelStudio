@@ -2022,7 +2022,7 @@ feature -- Resource Update
 		do
 			debug ("EDITOR")
 				if editor_tool.text_area.current_text /= Void and then changed then
-					io.error.putstring ("%N Warning: Attempting to save a non editable format%N")
+					io.error.put_string ("%N Warning: Attempting to save a non editable format%N")
 				end
 			end
 			if editor_tool.text_area.open_backup then
@@ -3325,7 +3325,7 @@ feature {NONE} -- external edition handling
 			actions: ARRAY [PROCEDURE [ANY, TUPLE]]
 		do
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("Took focus!%N")
+				io.put_string ("Took focus!%N")
 			end
 			if not editor_tool.edited_file_is_up_to_date then
 				if not editor_tool.file_date_already_checked then

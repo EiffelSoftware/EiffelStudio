@@ -218,12 +218,12 @@ feature {NONE} -- Implementation
 				else
 					new_file.open_write;
 					if not a_text.empty then
-						new_file.putstring (a_text);
+						new_file.put_string (a_text);
 						char := a_text.item (a_text.count);
 						if char /= '%N' and then char /= '%R' then
 								-- Add a carriage return like vi
 								-- if there's none at the end
-							new_file.new_line
+							new_file.put_new_line
 						end
 					end;
 					new_file.close

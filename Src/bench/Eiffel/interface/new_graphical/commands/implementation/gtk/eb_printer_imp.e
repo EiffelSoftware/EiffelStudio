@@ -85,7 +85,7 @@ feature {EB_PRINTER} -- Basic operations
 				sent_text := interface.text.image
 				sent_text.prune_all ('%R')
 				sent_text.replace_substring_all ("%N", "%R%N")
-				file.putstring (sent_text)
+				file.put_string (sent_text)
 				file.close
 				
 					-- Launch the print session.

@@ -45,7 +45,7 @@ feature -- Output
 			stored_output.extend (c)
 		end;
 
-	new_line is
+	put_new_line is
 		do
 			stored_output.extend ('%N')
 		end;

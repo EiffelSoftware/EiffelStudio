@@ -186,13 +186,13 @@ feature {EB_SAVE_RESULT_CMD} -- Save commands
 			-- Save window content in `ptf'.
 		do
 			ptf.create_read_write
-			ptf.putstring ("Options:%N========%N")
-			ptf.putstring (profiler_options.image)
-			ptf.putstring ("%NQuery:%N======%N")
-			ptf.putstring (profiler_query.image)
-			ptf.putstring ("%NResults:%N========%N")
-			ptf.putstring (text_window.text)
-			ptf.new_line
+			ptf.put_string ("Options:%N========%N")
+			ptf.put_string (profiler_options.image)
+			ptf.put_string ("%NQuery:%N======%N")
+			ptf.put_string (profiler_query.image)
+			ptf.put_string ("%NResults:%N========%N")
+			ptf.put_string (text_window.text)
+			ptf.put_new_line
 			ptf.close
 		end
 

@@ -77,17 +77,17 @@ feature -- Update
 				inspect state
 				when Waiting_for_all then
 					curr_target := object_stone
-					io.putstring("Now waiting for a feature...%N")
+					io.put_string("Now waiting for a feature...%N")
 					state := Waiting_for_feature
 
 				when Waiting_for_object then
 					curr_target := object_stone
-					io.putstring("Now processing...%N")
+					io.put_string("Now processing...%N")
 					state := Waiting_for_all
 					dynamic_eval
 
 				when Waiting_for_feature then
-					io.putstring("Error: feature expected...%N")
+					io.put_string("Error: feature expected...%N")
 
 				when Waiting_for_parameter_object then
 					create curr_parameter.make_object(object_stone.object_address)
@@ -105,16 +105,16 @@ feature -- Update
 				inspect state
 				when Waiting_for_all then
 					curr_routine := feature_stone
-					io.putstring("Now waiting for an object...%N")
+					io.put_string("Now waiting for an object...%N")
 					state := Waiting_for_object
 	
 				when Waiting_for_feature then
 					curr_routine := feature_stone
-					io.putstring("Now processing...%N")
+					io.put_string("Now processing...%N")
 					state := Waiting_for_all
 					dynamic_eval
 				else
-					io.putstring("Error: Object expected...%N")
+					io.put_string("Error: Object expected...%N")
 				end
 			end
 		end
@@ -126,7 +126,7 @@ feature -- Execution
 		do
 			-- do nothing.
 			if Application.is_running and then Application.is_stopped then
-				io.putstring("please, drop here a feature and an object%N")
+				io.put_string("please, drop here a feature and an object%N")
 			end
 		end
 
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 						-- retrieve parameters and send them to application if finished 
 					retrieve_and_send_parameters
 				else
-					io.putstring("ERROR: generic parameters are not yet implemented%N")
+					io.put_string("ERROR: generic parameters are not yet implemented%N")
 				end
 			end
 		end
@@ -289,13 +289,13 @@ feature {NONE} -- Implementation
 					-- update call stack & object tools
 				update_display
 
-				io.putstring("The feature returned: ")
+				io.put_string("The feature returned: ")
 				if item /= Void then
 					create st.make
 					item.append_type_and_value(st)
-					io.putstring(st.image)
+					io.put_string(st.image)
 				else
-					io.putstring("NONE Void")
+					io.put_string("NONE Void")
 				end
 
 					-- now we reset the current state
@@ -340,57 +340,57 @@ feature {NONE} -- Implementation
 				sk_value := sk_value_double.rounded
 			end
 
-			io.putstring("Retrieving parameter "+parameter_nb.out);
+			io.put_string("Retrieving parameter "+parameter_nb.out);
 			if associated_class /= Void then
-				io.putstring("[ "+associated_class.name_in_upper+" ]")
+				io.put_string("[ "+associated_class.name_in_upper+" ]")
 			end
-			io.new_line
+			io.put_new_line
 
 			inspect sk_value
 			when Sk_int then
-				io.putstring("Enter an INTEGER value: ")
+				io.put_string("Enter an INTEGER value: ")
 				io.readline
 				create Result.make_integer(io.last_string.to_integer)
 
 			when Sk_char then
-				io.putstring("Enter a CHARACTER value: ")
+				io.put_string("Enter a CHARACTER value: ")
 				io.readline
 				create Result.make_character(io.last_string @ 1)
 
 			when Sk_float then
-				io.putstring("Enter a REAL value: ")
+				io.put_string("Enter a REAL value: ")
 				io.readline
 				create Result.make_real(io.last_string.to_real)
 
 			when Sk_double then
-				io.putstring("Enter a DOUBLE value: ")
+				io.put_string("Enter a DOUBLE value: ")
 				io.readline
 				create Result.make_double(io.last_string.to_double)
 
 			when Sk_pointer then
-				io.putstring("Enter an hexadecimal POINTER value: ")
+				io.put_string("Enter an hexadecimal POINTER value: ")
 				io.readline
 				create Result.make_pointer(default_pointer + hex_to_integer(io.last_string))
 
 			when Sk_ref then
 				if associated_class /= Void and then associated_class.name_in_upper.is_equal("STRING") then
-					io.putstring ("Do you want to enter a manifest string rather than using an existant string ? (y/n)%N")
+					io.put_string ("Do you want to enter a manifest string rather than using an existant string ? (y/n)%N")
 					io.readline
 					if (io.last_string @ 1)='y' then
 						-- this is a String
-						io.putstring("Enter a STRING: ")
+						io.put_string("Enter a STRING: ")
 						io.readline
 						create temp_string.make(10)
 						escape_string(temp_string, io.last_string)
 						create Result.make_manifest_string(temp_string)
 					else
 						-- act as if was another kind of object
-						io.putstring("Drop an object into the 'dynamic feature' hole%N")
+						io.put_string("Drop an object into the 'dynamic feature' hole%N")
 						state := Waiting_for_parameter_object
 					end
 				else
 					-- this is another kind of object
-					io.putstring("Drop an object into the 'dynamic feature' hole%N")
+					io.put_string("Drop an object into the 'dynamic feature' hole%N")
 					state := Waiting_for_parameter_object
 				end
 			end
@@ -401,18 +401,18 @@ feature {NONE} -- Implementation
 		do
 			inspect error_code
 				when Error_acknowledgement_failed then
-					io.putstring("Error while evaluating the feature%N")
+					io.put_string("Error while evaluating the feature%N")
 				when Error_void_parameter then
-					io.putstring("Error while checking parameter integrity. At least one parameter was Void%N")
+					io.put_string("Error while checking parameter integrity. At least one parameter was Void%N")
 				when Error_getting_callstack then
-					io.putstring("Error while getting Application callstack. Application will be terminated%N")
+					io.put_string("Error while getting Application callstack. Application will be terminated%N")
 			end
 		end
 
 	display_success_message is
 			-- Display a message telling the evaluation was successful.
 		do
-			io.putstring("Evaluation successfully completed%N")
+			io.put_string("Evaluation successfully completed%N")
 		end
 
 	update_display is

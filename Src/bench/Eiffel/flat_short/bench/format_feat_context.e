@@ -133,7 +133,7 @@ feature -- Element change
 				put_comment_text ("(export status ");
 				export_status.format (Current);
 				put_comment_text (")");
-				new_line;
+				put_new_line
 			end;
 		end;
 

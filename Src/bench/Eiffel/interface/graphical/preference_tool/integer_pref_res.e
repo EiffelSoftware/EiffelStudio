@@ -81,9 +81,9 @@ feature {PREFERENCE_CATEGORY} -- Access
 			if text = Void or else ar.value.is_equal (text.text) then
 					--| text /= Void means: text has been displayed
 					--| and thus the user could have changed the value.
-				file.putstring (ar.value)
+				file.put_string (ar.value)
 			else
-				file.putstring (text.text)
+				file.put_string (text.text)
 			end;
 		end
 

@@ -100,13 +100,13 @@ feature {NONE} -- Update
 			until
 				exit
 			loop
-				io.putstring ("Specify the Ace file: %N%
+				io.put_string ("Specify the Ace file: %N%
 								%C: Cancel%N%
 								%S: Specify file name%N%
 								%T: Copy template%N%N%
 								%Option: ");
-				io.readline;
-				cmd := io.laststring;
+				io.read_line;
+				cmd := io.last_string;
 				exit := True;
 				if cmd.is_empty or else cmd.count > 1 then
 					option := ' ';
@@ -118,9 +118,9 @@ feature {NONE} -- Update
 				when 'c' then
 					Eiffel_ace.set_file_name (Void)
 				when 's' then
-					io.putstring ("File name (`Ace.ace' is the default): ");
-					io.readline;
-					file_name := io.laststring;
+					io.put_string ("File name (`Ace.ace' is the default): ");
+					io.read_line;
+					file_name := io.last_string;
 					if not file_name.is_empty then
 						Eiffel_ace.set_file_name (file_name.twin);
 					else
@@ -138,9 +138,9 @@ feature {NONE} -- Update
 					end;
 					check_ace_file (Eiffel_ace.file_name);
 				when 't' then
-					io.putstring ("File name: ");
-					io.readline;
-					file_name := io.laststring;
+					io.put_string ("File name: ");
+					io.read_line;
+					file_name := io.last_string;
 					if file_name.is_empty then
 						exit := True;
 					else
@@ -153,7 +153,7 @@ feature {NONE} -- Update
 						edit (Eiffel_ace.file_name);
 					end;
 				else
-					io.putstring ("Invalid choice%N%N");
+					io.put_string ("Invalid choice%N%N");
 					exit := False;
 				end;
 			end;
@@ -202,15 +202,15 @@ feature {NONE} -- Output
 			if is_finish_freezing_called then
 				Eiffel_project.call_finish_freezing_and_wait (not finalized_dir)
 			else
-				io.error.putstring ("You must now run %"");
-				io.error.putstring (Platform_constants.Finish_freezing_script);
-				io.error.putstring ("%" in:%N%T");
+				io.error.put_string ("You must now run %"");
+				io.error.put_string (Platform_constants.Finish_freezing_script);
+				io.error.put_string ("%" in:%N%T");
 				if finalized_dir then
-					io.error.putstring (Final_generation_path)
+					io.error.put_string (Final_generation_path)
 				else
-					io.error.putstring (Workbench_generation_path)
+					io.error.put_string (Workbench_generation_path)
 				end;
-				io.error.new_line;
+				io.error.put_new_line;
 			end
 		end;
 
@@ -260,8 +260,8 @@ feature {NONE} -- Compilation
 					temp.append ("Error: could not write to ");
 					temp.append (file_name);
 					temp.append ("%NPlease check permissions and disk space");
-					io.error.putstring (temp);
-					io.error.new_line;
+					io.error.put_string (temp);
+					io.error.put_new_line;
 					finished := stop_on_error or else command_line_io.termination_requested;
 					if finished then
 						lic_die (-1)
@@ -281,12 +281,12 @@ feature {NONE} -- Compilation
 			if
 				not (f.exists and then f.is_readable and then f.is_plain)
 			then
-				io.error.putstring ("Ace file `");
-				io.error.putstring (fn);
+				io.error.put_string ("Ace file `");
+				io.error.put_string (fn);
 				if f.exists then
-					io.error.putstring ("' cannot be read%N");
+					io.error.put_string ("' cannot be read%N");
 				else
-					io.error.putstring ("' does not exist%N");
+					io.error.put_string ("' does not exist%N");
 				end;
 				lic_die (-1)
 			end

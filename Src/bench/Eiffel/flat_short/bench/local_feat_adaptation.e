@@ -278,7 +278,7 @@ feature {LOCAL_FEAT_ADAPTATION, GLOBAL_FEAT_ADAPTATION} -- Implementation
 			new_feat: FEATURE_I
 		do
 debug ("LOCAL_FEAT_ADAPTATION") 
-	io.error.putstring ("before adapting%N");
+	io.error.put_string ("before adapting%N");
 	trace;
 end;
 			if source_feature = Void or else 
@@ -309,7 +309,7 @@ end;
 				end;
 			end;
 debug ("LOCAL_FEAT_ADAPTATION") 
-	io.error.putstring ("After adapting%N");
+	io.error.put_string ("After adapting%N");
 	trace;
 end
 		end;
@@ -494,42 +494,42 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring ("Adapting feature: ");
+			io.error.put_string ("Adapting feature: ");
 			if final_name /= Void then
-				io.error.putstring ("[");
-				io.error.putstring (final_name);
-				io.error.putstring ("] ");
+				io.error.put_string ("[");
+				io.error.put_string (final_name);
+				io.error.put_string ("] ");
 			end;
 			if source_feature = Void then
-				io.error.putstring ("VOID");
+				io.error.put_string ("VOID");
 			else
-				io.error.putstring (source_feature.feature_name);
-				io.error.putstring (" ");
-				io.error.putstring (source_feature.type.out);
+				io.error.put_string (source_feature.feature_name);
+				io.error.put_string (" ");
+				io.error.put_string (source_feature.type.out);
 			end;
-			io.error.putstring (" (");
+			io.error.put_string (" (");
 			if source_class = Void then
-				io.error.putstring ("VOID");
+				io.error.put_string ("VOID");
 			else
-				io.error.putstring (source_class.name);
+				io.error.put_string (source_class.name);
 			end;
-			io.error.putstring (")");
-			io.error.putstring (" target: ");
+			io.error.put_string (")");
+			io.error.put_string (" target: ");
 			if target_feature = Void then
-				io.error.putstring ("VOID");
+				io.error.put_string ("VOID");
 			else
-				io.error.putstring (target_feature.feature_name);
-				io.error.putstring (" ");
-				io.error.putstring (target_feature.type.out);
+				io.error.put_string (target_feature.feature_name);
+				io.error.put_string (" ");
+				io.error.put_string (target_feature.type.out);
 			end;
-			io.error.putstring (" (");
+			io.error.put_string (" (");
 			if target_class = Void then
-				io.error.putstring ("VOID");
+				io.error.put_string ("VOID");
 			else
-				io.error.putstring (target_class.name);
+				io.error.put_string (target_class.name);
 			end
-			io.error.putstring (")");
-			io.error.new_line;
+			io.error.put_string (")");
+			io.error.put_new_line;
 		end;
 
 end -- class class LOCAL_FEAT_ADAPTATION

@@ -134,7 +134,7 @@ feature -- Output
 				print_one_help (cmd.name, cmd.help_message, cmd.abbreviation);
 				i := i + 1
 			end;
-			io.new_line;
+			io.put_new_line;
 			print_one_help (loop_help_cmd_name, loop_help_help, help_abb);
 			if not is_main then
 				print_one_help (main_cmd_name, main_help, main_abb);
@@ -144,7 +144,7 @@ feature -- Output
 			end;
 			print_one_help (quit_cmd_name, quit_help, quit_abb);
 			print_one_help (yank_cmd_name, yank_help, yank_abb);
-			io.new_line;
+			io.put_new_line;
 		end;
 
 feature {NONE} -- Implementation
@@ -160,21 +160,21 @@ feature {NONE} -- Implementation
 			s := opt.twin
 			s.put (s.item (1).upper, 1);
 
-			io.putstring ("%T(");
-			io.putchar (abb.upper);
-			io.putstring (") ");
-			io.putstring (s);
+			io.put_string ("%T(");
+			io.put_character (abb.upper);
+			io.put_string (") ");
+			io.put_string (s);
 			from
 				i := s.count+1
 			until
 				i > 13
 			loop
-				io.putchar (' ')
+				io.put_character (' ')
 				i := i + 1;
 			end;
-			io.putstring (": ");
-			io.putstring (txt);
-			io.putstring (".%N")
+			io.put_string (": ");
+			io.put_string (txt);
+			io.put_string (".%N")
 		end;
 
 end -- class EWB_MENU

@@ -56,9 +56,9 @@ feature {NONE} -- Implementation
 						-- Ask the application to interrupt ASAP.
 					debug_window.clear_window
 					debug_window.put_string ("System is running")
-					debug_window.new_line
+					debug_window.put_new_line
 					debug_window.put_string ("Interruption request")
-					debug_window.new_line
+					debug_window.put_new_line
 					debug_window.display
 					Application.interrupt
 				end

@@ -234,7 +234,7 @@ feature -- dragging
 				loop
 					start_line_pos := file.position;
 					Result := Result + 1;
-					file.readline;
+					file.read_line;
 				end
 			end;
 			file.close;

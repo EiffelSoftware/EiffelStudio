@@ -95,9 +95,9 @@ feature -- Debug
 
 	trace is
 		do
-			io.error.putstring ("origin feature for assertion: ")
-			io.error.putstring (origin.feature_name)
-			io.error.new_line
+			io.error.put_string ("origin feature for assertion: ")
+			io.error.put_string (origin.feature_name)
+			io.error.put_new_line
 		end
 
 end

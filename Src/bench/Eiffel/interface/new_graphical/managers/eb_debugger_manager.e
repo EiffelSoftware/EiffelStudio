@@ -307,22 +307,22 @@ feature -- Status setting
 			normal_right_layout := debugging_window.right_panel.save_to_resource
 			normal_splitter_position := debugging_window.panel.split_position
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("Right normal layout: %N")
+				io.put_string ("Right normal layout: %N")
 	 			from
 	 				i := 1
 	 			until
 	 				i > normal_right_layout.count
 	 			loop
-	 				io.putstring (normal_right_layout @ i + "%N")
+	 				io.put_string (normal_right_layout @ i + "%N")
 	 				i := i + 1
 	 			end
-				io.putstring ("Left normal layout: %N")
+				io.put_string ("Left normal layout: %N")
 	 			from
 	 				i := 1
 	 			until
 	 				i > normal_left_layout.count
 	 			loop
-	 				io.putstring (normal_left_layout @ i + "%N")
+	 				io.put_string (normal_left_layout @ i + "%N")
 	 				i := i + 1
 	 			end
 			end
@@ -338,7 +338,7 @@ feature -- Status setting
 			end
 			call_stack_tool.update
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 			
 			if object_tool = Void then
@@ -347,13 +347,13 @@ feature -- Status setting
 				object_tool.change_manager (debugging_window, debugging_window.right_panel)
 			end
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 			
 			object_tool.set_debugger_manager (Current)
 			object_tool.update
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 			
 			if evaluator_tool = Void then
@@ -362,24 +362,24 @@ feature -- Status setting
 				evaluator_tool.change_manager (debugging_window, debugging_window.left_panel)
 			end
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 			
 			evaluator_tool.prepare_for_debug
 			evaluator_tool.update
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+				io.put_string ("editor height: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 			debugging_window.show_tools
 			if debug_left_layout = Void then
 				debug ("DEBUGGER_INTERFACE")
-					io.putstring("Searching resource%N")
+					io.put_string("Searching resource%N")
 				end
 				rl ?= resources.item ("left_debug_layout_new")
 				rr ?= resources.item ("right_debug_layout_new")
 				if rl /= Void and rr /= Void then
 					debug ("DEBUGGER_INTERFACE")
-						io.putstring("Found resource%N")
+						io.put_string("Found resource%N")
 					end
 					
 					debugging_window.left_panel.load_from_resource (rl.actual_value)
@@ -399,7 +399,7 @@ feature -- Status setting
 			debugging_window.panel.set_split_position (debug_splitter_position.
 				max (debugging_window.panel.minimum_split_position))
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("editor height during debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+				io.put_string ("editor height during debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 			
 			raised := True
@@ -420,7 +420,7 @@ feature -- Status setting
 			debugging_window.window.lock_update
 
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 			
 			debug_left_layout := debugging_window.left_panel.save_to_resource
@@ -434,22 +434,22 @@ feature -- Status setting
 			set_array_resource ("right_debug_layout_new", debug_right_layout)
 			set_integer_resource ("debug_main_splitter_position", debug_splitter_position)
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("Right debug layout: %N")
+				io.put_string ("Right debug layout: %N")
 	 			from
 	 				i := 1
 	 			until
 	 				i > debug_right_layout.count
 	 			loop
-	 				io.putstring (debug_right_layout @ i + "%N")
+	 				io.put_string (debug_right_layout @ i + "%N")
 	 				i := i + 1
 	 			end
-				io.putstring ("Left debug layout: %N")
+				io.put_string ("Left debug layout: %N")
 	 			from
 	 				i := 1
 	 			until
 	 				i > debug_left_layout.count
 	 			loop
-	 				io.putstring (debug_left_layout @ i + "%N")
+	 				io.put_string (debug_left_layout @ i + "%N")
 	 				i := i + 1
 	 			end
 			end
@@ -463,7 +463,7 @@ feature -- Status setting
 			debugging_window.right_panel.unblock
 			debugging_window.left_panel.unblock
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 		
 			raised := False
@@ -475,7 +475,7 @@ feature -- Status setting
 					max (debugging_window.panel.minimum_split_position))
 			end
 			debug ("DEBUGGER_INTERFACE")
-				io.putstring ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
+				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
 
 			debugging_window.window.unlock_update
@@ -601,7 +601,7 @@ feature -- Debugging events
 			into_cmd.enable_sensitive
 			set_critical_stack_depth_cmd.enable_sensitive
 			debug ("debugger_interface")
-				io.putstring ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")
+				io.put_string ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")
 			end
 			object_tool.disable_refresh
 			if not Application.call_stack_is_empty then
@@ -636,7 +636,7 @@ feature -- Debugging events
 			end
 			
 			debug ("debugger_interface")
-				io.putstring ("Application Stopped End (dixit EB_DEBUGGER_MANAGER)%N")
+				io.put_string ("Application Stopped End (dixit EB_DEBUGGER_MANAGER)%N")
 			end
 		end
 

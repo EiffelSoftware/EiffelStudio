@@ -101,10 +101,10 @@ feature {NONE} -- Implementation
 			if not command_line_io.abort then
 				e_feature := e_class.feature_with_name (feature_name);
 				if e_feature = Void then
-					io.error.putstring (feature_name);
-					io.error.putstring (" is not a feature of ");
-					io.error.putstring (class_name);
-					io.error.new_line
+					io.error.put_string (feature_name);
+					io.error.put_string (" is not a feature of ");
+					io.error.put_string (class_name);
+					io.error.put_new_line
 				else
 					process_feature (e_feature, e_class)
 				end;
@@ -131,7 +131,7 @@ feature {NONE} -- Implementation
 			else
 				output_window.put_string (cmd.structured_text.image)
 			end;
-			output_window.new_line
+			output_window.put_new_line
 		end
 
 end -- class EWB_FEATURE

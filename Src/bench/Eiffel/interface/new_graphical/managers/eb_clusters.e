@@ -384,7 +384,7 @@ feature -- Element change
 							then
 									-- Really move `a_class'.
 								old_file.open_read
-								old_file.readstream (old_file.count)
+								old_file.read_stream (old_file.count)
 								old_file.close
 								input := old_file.last_string
 								new_file.create_read_write
@@ -722,13 +722,13 @@ feature {NONE} -- Implementation
 					create tmpfile.make (fname1)
 					if tmpfile.exists then
 						tmpfile.open_read
-						tmpfile.readstream (tmpfile.count)
-						content := tmpfile.laststring
+						tmpfile.read_stream (tmpfile.count)
+						content := tmpfile.last_string
 						tmpfile.close
 						create fname2.make_from_string (new_path)
 						fname2.set_subdirectory (entry)
 						create file2.make_create_read_write (fname2)
-						file2.putstring (content)
+						file2.put_string (content)
 						file2.close
 						tmpfile.delete
 					end
@@ -739,7 +739,7 @@ feature {NONE} -- Implementation
 			dir1.close
 			dir1.delete
 --		rescue
---			io.putstring ("Cant move directory")
+--			io.put_string ("Cant move directory")
 		end
 
 	folder_from_cluster (a_cluster: CLUSTER_I): EB_SORTED_CLUSTER is

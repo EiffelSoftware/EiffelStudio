@@ -59,9 +59,9 @@ feature {NONE} -- Execution
 					process_finish_freezing (False)
 				end
 			else
-				io.error.putstring ("The project %"");
-				io.error.putstring (Eiffel_project.name);
-				io.error.putstring ("%" already exists.%N%
+				io.error.put_string ("The project %"");
+				io.error.put_string (Eiffel_project.name);
+				io.error.put_string ("%" already exists.%N%
 					%It needs to be deleted before a precompilation.%N");
 			end
 		end;
@@ -86,8 +86,8 @@ feature {NONE} -- Execution
 					temp.append ("Error: could not write to ");
 					temp.append (Precompilation_file_name);
 					temp.append ("%NPlease check permissions and disk space");
-					io.error.putstring (temp);
-					io.error.new_line;
+					io.error.put_string (temp);
+					io.error.put_new_line;
 					finished := stop_on_error or else
 						command_line_io.termination_requested;
 					if finished then

@@ -326,7 +326,7 @@ feature -- Execution
 				in_buf := input.last_string
 				in_buf.replace_substring_all ("$classname", stone.stone_signature);
 				output.open_write;
-				output.putstring (in_buf);
+				output.put_string (in_buf);
 				output.close
 			end;
 			cluster.add_new_classs (class_i);

@@ -110,12 +110,12 @@ feature {EB_FILE_OPENER} -- Callbacks
 				to_write.prune_all ('%R')
 				if text_mode_is_windows then
 					to_write.replace_substring_all ("%N", "%R%N")
-					new_file.putstring (to_write)
+					new_file.put_string (to_write)
 				else
-					new_file.putstring (to_write)
+					new_file.put_string (to_write)
 					if to_write.item (to_write.count) /= '%N' then 
 						-- Add a carriage return like `vi' if there's none at the end 
-						new_file.new_line
+						new_file.put_new_line
 					end
 				end
 			end

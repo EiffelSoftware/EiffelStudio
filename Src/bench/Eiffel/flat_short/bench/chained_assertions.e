@@ -97,9 +97,9 @@ feature -- Output
 							ctxt.put_space
 							ctxt.put_classi (current_cl.lace_class)
 							ctxt.indent
-							ctxt.new_line
+							ctxt.put_new_line
 							ctxt.put_text_item (ti_True_keyword)
-							ctxt.new_line
+							ctxt.put_new_line
 							ctxt.exdent
 							ctxt.set_first_assertion (False)
 						end

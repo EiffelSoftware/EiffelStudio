@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 						new_file.read_stream (new_file.count)
 						new_file.close
 						tmp_file.open_write
-						tmp_file.putstring (new_file.last_string)
+						tmp_file.put_string (new_file.last_string)
 						tmp_file.close
 						file := tmp_file
 						tmp_file := new_file
@@ -100,14 +100,14 @@ feature {NONE} -- Implementation
 					if not to_write.is_empty then
 						to_write.prune_all ('%R')
 						if general_resources.text_mode.value.is_equal ("UNIX") then
-							tmp_file.putstring (to_write)
+							tmp_file.put_string (to_write)
 							if to_write.item (to_write.count) /= '%N' then 
 								-- Add a carriage return like `vi' if there's none at the end 
-								tmp_file.new_line
+								tmp_file.put_new_line
 							end
 						else
 							to_write.replace_substring_all ("%N", "%R%N")
-							tmp_file.putstring (to_write)
+							tmp_file.put_string (to_write)
 						end
 					end
 					tmp_file.close

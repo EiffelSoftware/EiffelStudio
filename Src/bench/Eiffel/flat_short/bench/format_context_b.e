@@ -433,7 +433,7 @@ feature -- Execution
 debug ("FLAT_SHORT")
 	create simple_ctxt.make (format_registration.target_ast, class_c.file_name)
 	format_registration.target_ast.simple_format (simple_ctxt);
-	io.error.putstring (simple_ctxt.text.image)
+	io.error.put_string (simple_ctxt.text.image)
 end
 			else
 				execution_error := True;

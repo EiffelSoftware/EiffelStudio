@@ -24,7 +24,7 @@ feature {NONE}
 			cmd := associated_cmd
 			cmd.execute
 			output_window.put_string (cmd.structured_text.image)
-			output_window.new_line
+			output_window.put_new_line
 		end
 
 end -- class EWB_SYSTEM

@@ -214,9 +214,9 @@ feature -- Element change
 			current_class := target_class;
 			System.set_current_class (current_class);
 debug ("FLAT_SHORT")
-	io.error.putstring ("%TParsing & Registering class: ");
-	io.error.putstring (current_class.name);
-	io.error.new_line;
+	io.error.put_string ("%TParsing & Registering class: ");
+	io.error.put_string (current_class.name);
+	io.error.put_new_line;
 end;
 			current_ast := current_class_ast;
 			target_ast := current_ast;
@@ -226,7 +226,7 @@ end;
 			end;
 			wipe_out_parse_info
 debug ("FLAT_SHORT")
-	io.error.putstring ("Finished parsing and registering%N")
+	io.error.put_string ("Finished parsing and registering%N")
 end;
 		end;
 
@@ -432,9 +432,9 @@ feature {NONE} -- Implementation
 				or else not (current_class.lace_class.exists and then current_class.lace_class.date_has_changed)
 			then
 debug ("FLAT_SHORT")
-	io.error.putstring ("Retrieving class ast: ");
-	io.error.putstring (current_class.name);
-	io.error.new_line;
+	io.error.put_string ("Retrieving class ast: ");
+	io.error.put_string (current_class.name);
+	io.error.put_new_line;
 end;
 				class_id := current_class.class_id
 
@@ -454,9 +454,9 @@ end;
 				end		
 			else
 debug ("FLAT_SHORT")
-	io.error.putstring ("Reparsing class ast: ");
-	io.error.putstring (current_class.name);
-	io.error.new_line;
+	io.error.put_string ("Reparsing class ast: ");
+	io.error.put_string (current_class.name);
+	io.error.put_new_line;
 end;
 				class_file_name := current_class.file_name;
 				create file.make (class_file_name);
@@ -524,9 +524,9 @@ end;
 					System.set_current_class (current_class)
 	
 					debug ("FLAT_SHORT")
-						io.error.putstring ("%TParsing & Registering class: ")
-						io.error.putstring (current_class.name)
-						io.error.new_line
+						io.error.put_string ("%TParsing & Registering class: ")
+						io.error.put_string (current_class.name)
+						io.error.put_new_line
 					end
 	
 					current_ast := current_class_ast
@@ -548,8 +548,8 @@ end;
 			inv_as: INVARIANT_AS
 		do
 debug ("FLAT_SHORT")
-	io.error.putstring ("%TSkipped classes assertions.");
-	io.error.new_line;
+	io.error.put_string ("%TSkipped classes assertions.");
+	io.error.put_new_line;
 end
 			from
 				l.start
@@ -581,8 +581,8 @@ end
 				l.forth
 			end
 debug ("FLAT_SHORT")
-	io.error.putstring ("%TFinished registrating skipped classes.");
-	io.error.new_line;
+	io.error.put_string ("%TFinished registrating skipped classes.");
+	io.error.put_new_line;
 end
 		end;
 
@@ -597,13 +597,13 @@ end
 				end;
 				debug ("COMMENTS")
 					if class_comments = Void then
-						io.error.putstring ("Comments not exist for class: ")
-						io.error.putstring (current_class.name);
-						io.error.new_line;
+						io.error.put_string ("Comments not exist for class: ")
+						io.error.put_string (current_class.name);
+						io.error.put_new_line;
 					else
-						io.error.putstring ("Comments for class: ")
-						io.error.putstring (current_class.name);
-						io.error.new_line;
+						io.error.put_string ("Comments for class: ")
+						io.error.put_string (current_class.name);
+						io.error.put_new_line;
 						class_comments.trace
 					end;
 				end;

@@ -51,11 +51,11 @@ feature {NONE} -- Implementation
 				else
 					output_window.put_string (text.image)
 				end
-				output_window.new_line
+				output_window.put_new_line
 			else
 				output_window.put_string ("Cannot open ");
 				output_window.put_string (e_class.file_name);
-				output_window.new_line;
+				output_window.put_new_line;
 			end;
 		end;
 

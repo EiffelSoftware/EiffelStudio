@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 				end
 			end
 			if error_msg /= Void then
-				io.error.putstring (error_msg)
+				io.error.put_string (error_msg)
 			end
 		rescue
 			retried := True

@@ -645,31 +645,31 @@ feature {NONE} -- Implementation
 			create new_class.make (rc);
 			if not new_class.exists then
 				new_class.open_write;
-				new_class.putstring ("indexing%N%
+				new_class.put_string ("indexing%N%
 					%%Tdescription: %"System's root class%";%N%
 					%%Tnote: %"Initial version automatically generated%"%N%N");
-				new_class.putstring ("class%N%T");
+				new_class.put_string ("class%N%T");
 				t := clone (root_class_edit.text);
 				t.to_upper;
-				new_class.putstring (t);
-				new_class.putstring ("%N%N");
-				new_class.putstring ("creation%N%N%T");
-				new_class.putstring (creation_procedure_edit.text);
-				new_class.putstring ("%N%N");
-				new_class.putstring ("feature -- Initialization%N%N%T");
-				new_class.putstring (creation_procedure_edit.text);
-				new_class.putstring (" is%N");
-				new_class.putstring ("%T%T%T-- Output a welcome message.%N%
+				new_class.put_string (t);
+				new_class.put_string ("%N%N");
+				new_class.put_string ("creation%N%N%T");
+				new_class.put_string (creation_procedure_edit.text);
+				new_class.put_string ("%N%N");
+				new_class.put_string ("feature -- Initialization%N%N%T");
+				new_class.put_string (creation_procedure_edit.text);
+				new_class.put_string (" is%N");
+				new_class.put_string ("%T%T%T-- Output a welcome message.%N%
 					%%T%T%T--| (Automatically generated.)%N");
-				new_class.putstring ("%T%Tdo%N");
-				new_class.putstring ("%T%T%Tio.putstring (%"Welcome to ISE Eiffel!%%N%");%N");
+				new_class.put_string ("%T%Tdo%N");
+				new_class.put_string ("%T%T%Tio.put_string (%"Welcome to ISE Eiffel!%%N%");%N");
 				if Platform_constants.is_windows then
-					new_class.putstring ("%T%T%Tio.readline%N");
+					new_class.put_string ("%T%T%Tio.readline%N");
 				end;
-				new_class.putstring ("%T%Tend;%N");
-				new_class.putstring ("%Nend -- class ");
-				new_class.putstring (t);
-				new_class.putstring ("%N");
+				new_class.put_string ("%T%Tend;%N");
+				new_class.put_string ("%Nend -- class ");
+				new_class.put_string (t);
+				new_class.put_string ("%N");
 				new_class.close
 			end
 		end;
@@ -690,7 +690,7 @@ feature {NONE} -- Implementation
 			new_file.open_write;
 			if not contents.is_empty then
 				contents.replace_substring_all ("%R", "")
-				new_file.putstring (contents);
+				new_file.put_string (contents);
 				char := contents.item (contents.count);
 				if Platform_constants.is_unix and 
 					then char /= '%N' and
@@ -698,7 +698,7 @@ feature {NONE} -- Implementation
 						-- Add a carriage return like vi if there's none at
 						-- the end
 				then
-					new_file.new_line
+					new_file.put_new_line
 				end
 			end;
 			new_file.close;

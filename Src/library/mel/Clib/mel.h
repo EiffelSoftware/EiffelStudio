@@ -7,9 +7,9 @@
 #include <X11/Shell.h>
 #include <X11/Xos.h>
 #include <Xm/Xm.h>
-#include "macros.h"
-#include "config.h"
-#include "argv.h"
+#include "eif_macros.h"
+#include "eif_config.h"
+#include "eif_argv.h"
 #include <sys/types.h>
 #include <sys/param.h>
 

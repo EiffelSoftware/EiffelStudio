@@ -52,7 +52,6 @@ feature -- Access
 			end
 			Result.append (target.code)
 			Result.append (".")
-			Result.append (event_name)
 		end
 		
 feature -- Status Report

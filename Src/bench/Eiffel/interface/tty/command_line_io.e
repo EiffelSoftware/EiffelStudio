@@ -56,13 +56,13 @@ feature -- Input/output
 	get_last_input is
 			-- Get the last input entered by the user
 		do
-			last_input := cmd_arguments.current_item;
+			last_input := command_arguments.current_item;
 		end;
 
 	more_arguments: BOOLEAN is
 			-- Are there more arguments?
 		do
-			Result := cmd_arguments.more_arguments
+			Result := command_arguments.more_arguments
 		end;
 
 	get_name is
@@ -77,7 +77,7 @@ feature -- Input/output
 			wait_for_return;
 			count := io.laststring.count;
 			!! arg.make (count);
-			cmd_arguments.wipe_out;
+			command_arguments.wipe_out;
 			from
 				i := 1;
 				j := 1;
@@ -90,7 +90,7 @@ feature -- Input/output
 					(item = '%T')
 				then
 					if arg.count /= 0 then
-						cmd_arguments.force (arg, j);
+						command_arguments.force (arg, j);
 						j := j + 1;
 						!!arg.make (count -i);
 					end;
@@ -102,7 +102,7 @@ feature -- Input/output
 			if j = 1 or else arg.count /= 0 then
 					-- If we are processing more than one word, we don't
 					-- want to keep the trailing white spaces
-				cmd_arguments.force (arg, j);
+				command_arguments.force (arg, j);
 			end;
 		end;
 
@@ -155,7 +155,7 @@ feature -- Input/output
 					io.error.putchar (' ');
 				end;
 				not_first := True;
-				io.error.putstring (cmd_arguments.current_item);
+				io.error.putstring (command_arguments.current_item);
 			end;
 			io.error.new_line;
 			io.error.new_line;
@@ -168,9 +168,9 @@ feature -- Setting
 			output_window := display
 		end;
 
-feature {NONE} -- Implementation
+feature {EWB_CMD} -- Implementation
 
-	cmd_arguments: EWB_ARGUMENTS is
+	command_arguments: EWB_ARGUMENTS is
 		once
 			!!Result.make (1, 2);
 		end;

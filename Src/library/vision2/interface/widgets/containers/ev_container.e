@@ -64,6 +64,14 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.item
 		end
+		
+	count: INTEGER is
+			-- Number of elements in `Current'.
+		require
+			not_destroyed: not is_destroyed	
+		deferred
+		end
+		
 
 	has_recursive (an_item: like item): BOOLEAN is
 			-- Does structure include `an_item' or

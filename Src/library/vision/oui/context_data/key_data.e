@@ -13,7 +13,7 @@ inherit
 
 	CONTEXT_DATA
 
-feature 
+feature -- Access
 
 	keyboard: KEYBOARD;
 			-- State of modifiers key (Shift, control...)
@@ -24,8 +24,7 @@ feature
 	string: STRING;
 			-- String stroked on keyboard
 
-end
-
+end -- class KEY_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

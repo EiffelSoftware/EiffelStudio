@@ -105,8 +105,8 @@ feature {NONE}
 		do
 			inst ?= dropped.data;
 			if inst /= Void then
-				!! command.make (command_tool.command_instance)
-				command.execute (inst)
+				!! command.make (command_tool.command_instance, inst)
+				command.execute (Void)
 			end
 		end; 
 

@@ -254,7 +254,7 @@ feature -- Measurement
 			-- Size in bytes (0 if no associated physical file)
 		do
 			if exists then
-				if is_closed then
+				if not is_open_write then
 					set_buffer;
 					Result := buffered_file_info.size
 				else
@@ -518,7 +518,8 @@ feature -- Status report
 		do
 			Result := mode = Write_file or else 
 				mode = Read_write_file or else
-				mode = Append_read_file
+				mode = Append_read_file or else
+				mode = Append_file
 		end;
 
 	is_open_append: BOOLEAN is

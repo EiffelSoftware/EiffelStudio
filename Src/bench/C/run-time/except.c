@@ -309,6 +309,8 @@ rt_public void enomem(EIF_CONTEXT_NOARG)
 		
 	echmem |= MEM_FULL;		/* We dramatically ran out of memory */
 	xraise(EN_OMEM);		/* The "Out of memory" stuff */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object)
@@ -347,6 +349,8 @@ rt_public struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
 	return vector;		/* Execution vector of current Eiffel routine */
+
+	EIF_END_GET_CONTEXT
 }
 
 #ifndef WORKBENCH
@@ -455,6 +459,8 @@ rt_public struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect)
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
 	return last_item;	/* Execution vector for new routine invokation */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void exinv(EIF_CONTEXT register2 char *tag, register3 char *object)
@@ -481,6 +487,8 @@ rt_public void exinv(EIF_CONTEXT register2 char *tag, register3 char *object)
 	vector->ex_oid = object;		/* The value of Current (object ID) */
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void exasrt(EIF_CONTEXT char *tag, int type)
@@ -512,6 +520,8 @@ rt_public void exasrt(EIF_CONTEXT char *tag, int type)
 	vector->ex_name = tag;					/* Assertion's tag */
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
+
+	EIF_END_GET_CONTEXT
 }
 
 /* The following function was originally designed to catch exceptions from the
@@ -547,6 +557,8 @@ rt_public void excatch(EIF_CONTEXT char *jmp)
 	vector->ex_jbuf = jmp;			/* Set catching point */
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig)
@@ -629,6 +641,8 @@ rt_public void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig)
 	g_data.status = gc_status;		/* Restore saved GC status */
 	expop(&eif_trace);				/* Remove EN_ILVL record */
 	expop(&eif_stack);				/* And EX_HDLR vector */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void exfail(EIF_CONTEXT_NOARG)
@@ -694,6 +708,7 @@ rt_public void exfail(EIF_CONTEXT_NOARG)
 	ereturn(MTC_NOARG);				/* Go back to last recorded rescue entry */
 
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect)
@@ -751,6 +766,8 @@ rt_public void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect)
 	trace->ex_retry = 0;			/* So is this */
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void xraise(EIF_CONTEXT int code)
@@ -896,6 +913,7 @@ rt_public void eraise(EIF_CONTEXT char *tag, long num)
 	ereturn(MTC_NOARG);				/* Go back to last recorded rescue entry */
 
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void eviol(EIF_CONTEXT_NOARG)
@@ -980,6 +998,7 @@ rt_public void eviol(EIF_CONTEXT_NOARG)
 	ereturn(MTC_NOARG);				/* Go back to last recorded rescue entry */
 
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void ereturn(EIF_CONTEXT_NOARG)
@@ -1014,6 +1033,7 @@ rt_public void ereturn(EIF_CONTEXT_NOARG)
 
 	panic(MTC vanished);				/* main() should have created a vector */
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *backtrack(EIF_CONTEXT_NOARG)
@@ -1204,6 +1224,8 @@ rt_private char *backtrack(EIF_CONTEXT_NOARG)
 	}
 
 	return (char *) 0;	/* No setjmp buffer found */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void exok(EIF_CONTEXT_NOARG)
@@ -1269,6 +1291,8 @@ rt_public void exok(EIF_CONTEXT_NOARG)
 	}
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void excur(EIF_CONTEXT_NOARG)
@@ -1308,6 +1332,8 @@ rt_private void excur(EIF_CONTEXT_NOARG)
 #else
 	bcopy(&context, &eif_trace, sizeof(struct xstack));
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void exorig(EIF_CONTEXT_NOARG)
@@ -1418,6 +1444,8 @@ rt_private void exorig(EIF_CONTEXT_NOARG)
 #else
 	bcopy(&context, &eif_trace, sizeof(struct xstack));
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *extag(EIF_CONTEXT struct ex_vect *trace)
@@ -1445,6 +1473,8 @@ rt_private char *extag(EIF_CONTEXT struct ex_vect *trace)
 	echclass = trace->ex_from;	  /* Associated class */
 
 	return echtg;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void esfail(EIF_CONTEXT_NOARG)
@@ -1498,6 +1528,8 @@ rt_public void esfail(EIF_CONTEXT_NOARG)
 	echmem |= MEM_PANIC;		/* Backtrack won't attempt any longjmp */
 	(void) backtrack(MTC_NOARG);			/* Unwind the whole stack */
 	dump_trace_stack();			/* Print the stack */
+
+	EIF_END_GET_CONTEXT
 }
 
 #ifdef WORKBENCH
@@ -1527,6 +1559,8 @@ rt_private void exception(EIF_CONTEXT int how)
 	if (echval == EN_FAIL || echval == EN_OSTK)
 		return;
 	dbreak(MTC how);			/* Stop execution */
+
+	EIF_END_GET_CONTEXT
 }
 #else
 rt_private void exception(int how)
@@ -1585,6 +1619,7 @@ rt_public void panic(EIF_CONTEXT char *msg)
 #endif
 	dump_core();					/* Before dumping a core */
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void fatal_error(EIF_CONTEXT char *msg)
@@ -1637,6 +1672,7 @@ rt_public void fatal_error(EIF_CONTEXT char *msg)
 	exit(1);						/* Abnormal termination */
 
 	/* NOTREACHED */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void dump_core(void)
@@ -1769,6 +1805,8 @@ rt_private void find_call(EIF_CONTEXT_NOARG)
 #else
 	bcopy(&saved, &eif_trace, sizeof(struct xstack));
 #endif
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void ds_stderr (char *line)
@@ -1804,6 +1842,7 @@ rt_private void extend_trace_string(EIF_CONTEXT char *line)
 		} else
 			enomem(MTC_NOARG);
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_REFERENCE stack_trace_string (EIF_CONTEXT_NOARG)
@@ -1829,6 +1868,8 @@ rt_public EIF_REFERENCE stack_trace_string (EIF_CONTEXT_NOARG)
  
     /* Return the string to Eiffel */
     return (EIF_REFERENCE) RTMS(ex_string.area);
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void dump_trace_stack(void)
@@ -1870,6 +1911,8 @@ rt_private void dump_stack(EIF_CONTEXT void (*append_trace)(char *))
 
 	except.previous = 0;		/* Previous exception code */
 	recursive_dump(MTC append_trace, 0);	/* Recursive dump, starting at level 0 */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void recursive_dump(EIF_CONTEXT void (*append_trace)(char *), register1 int level)
@@ -1947,6 +1990,7 @@ rt_private void recursive_dump(EIF_CONTEXT void (*append_trace)(char *), registe
 			print_top(MTC append_trace);
 		}
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
@@ -2119,6 +2163,7 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 		sprintf(buffer, "Pass\n%s\n", failed);
 		append_trace(buffer);
 	}
+	EIF_END_GET_CONTEXT
 }
 
 /* Stack handling routine. The following code has been cut/paste from the one
@@ -2385,6 +2430,7 @@ rt_shared struct ex_vect *exnext(EIF_CONTEXT_NOARG)
 	}
 	
 	return first_item;
+	EIF_END_GET_CONTEXT
 }
 
 rt_private int exend(EIF_CONTEXT_NOARG)
@@ -2397,6 +2443,7 @@ rt_private int exend(EIF_CONTEXT_NOARG)
 		return 1;		/* Reached the end of the stack */
 
 	return 0;
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -2475,6 +2522,7 @@ rt_public long eeocode(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 	/* Return the code of the first exception at this nesting level */
 
 	return (long) echorg;	/* Original exception code */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *eeotag(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
@@ -2489,6 +2537,7 @@ rt_public char *eeotag(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 		return makestr(echotag, strlen(echotag)); /* Last exception tag */
 
 	return (char *) 0;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *eeorout(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
@@ -2503,6 +2552,7 @@ rt_public char *eeorout(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 		return makestr(echort, strlen(echort)); /* Last exception tag */
 
 	return (char *) 0;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *eeoclass(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
@@ -2520,12 +2570,15 @@ rt_public char *eeoclass(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 	}
 
 	return (char *) 0;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public long eelcode(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 {
 	EIF_GET_CONTEXT
 	return (long) echval;	/* Last exception code */
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *eeltag(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
@@ -2539,6 +2592,8 @@ rt_public char *eeltag(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 		return makestr(echtg, strlen(echtg)); /* Last exception tag */
 
 	return (char *) 0;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *eelrout(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
@@ -2553,6 +2608,8 @@ rt_public char *eelrout(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 		return makestr(echrt, strlen(echrt)); /* Last exception tag */
 
 	return (char *) 0;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *eelclass(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
@@ -2570,6 +2627,8 @@ rt_public char *eelclass(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 	}
 
 	return (char *) 0;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void eetrace(EIF_CONTEXT char b)	/* %%zmt never called in C dir. */
@@ -2581,6 +2640,8 @@ rt_public void eetrace(EIF_CONTEXT char b)	/* %%zmt never called in C dir. */
 		print_history_table = ~0;
 	else
 		print_history_table = 0;
+
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *eename(long ex) 
@@ -2605,7 +2666,7 @@ rt_public void eecatch(EIF_CONTEXT long ex)		/* %%zmt never called in C dir. */
 		if (ex == EN_FLOAT)
 			(void) signal(SIGFPE, exfpe);
 	}
-
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void eeignore(EIF_CONTEXT long ex)	/* %%zmt never called in C dir. */
@@ -2618,6 +2679,7 @@ rt_public void eeignore(EIF_CONTEXT long ex)	/* %%zmt never called in C dir. */
 		if (ex == EN_FLOAT)
 			(void) signal(SIGFPE, SIG_IGN);
 	}
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char eedefined(long ex)

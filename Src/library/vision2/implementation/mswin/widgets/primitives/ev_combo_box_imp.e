@@ -10,9 +10,6 @@ class
 
 inherit
 	EV_COMBO_BOX_I
-		undefine
-			build
-		end
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 
@@ -110,7 +107,7 @@ feature {NONE} -- Initialization
 				parent_not_void: par_imp /= Void
 			end
 			is_editable := True
-			wel_make (par_imp, 0, 0, 0, 50, 0)
+			wel_make (par_imp, 0, 0, 0, 90, 0)
 			set_minimum_height (height)
 			initialize
 		end
@@ -167,16 +164,21 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_activate_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
 		do
+			add_command (Cmd_selection, a_command, arguments)
+		end
+
+	add_activate_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Make `command' executed when the text in the field
+			-- is activated, i.e. the user press the enter key.
+		do
+			check
+				not_yet_implemented: False
+			end
 			add_command (Cmd_activate, a_command, arguments)
 		end
 
-	add_change_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-		do
-			add_command (Cmd_update, a_command, arguments)
-		end
-	
 feature {EV_COMBO_BOX_ITEM_IMP} -- Implementation
 
 	ev_children: LINKED_LIST [EV_COMBO_BOX_ITEM_IMP]
@@ -199,9 +201,9 @@ feature {EV_COMBO_BOX_ITEM_IMP} -- Implementation
 			ev_children.extend (item_imp)
 			add_string (name_item)
 			item_imp.set_id (ev_children.count - 1)
-			if ev_children.count <= 5 then
-				set_extended_height ((height + ev_children.count * item_height).max(extended_height))
-			end
+--			if ev_children.count <= 5 then
+--				set_extended_height ((height + ev_children.count * item_height).max(extended_height))
+--			end
 		end
 
 	remove_item (an_id: INTEGER) is
@@ -275,7 +277,7 @@ feature {NONE} -- Implementation
 				!! temp_list.make (0)
 				save_list (temp_list)
 				wel_destroy
-				wel_make (par_imp, 0, 0, 0, 50, 0)
+				wel_make (par_imp, 0, 0, 0, 90, 0)
 				copy_list (temp_list)
 			end
 		end
@@ -292,7 +294,7 @@ feature {NONE} -- Implementation
 				!! temp_list.make (0)
 				save_list (temp_list)
 				wel_destroy
-				wel_make (par_imp, 0, 0, 0, 50, 0)
+				wel_make (par_imp, 0, 0, 0, 90, 0)
 				copy_list (temp_list)
 			end
 		end
@@ -334,7 +336,7 @@ feature {NONE} -- Wel implementation
 	on_cbn_selchange is
 			-- The selection is about to be changed.
 		do
-			execute_command (Cmd_activate, Void)
+			execute_command (Cmd_selection, Void)
 			(ev_children.i_th (wel_selected_item + 1)).execute_command (Cmd_item_activate, Void)
 		end
 
@@ -342,7 +344,6 @@ feature {NONE} -- Wel implementation
 			-- The edit control portion is about to
 			-- display altered text.
 		do
-			execute_command (Cmd_update, Void)
 		end
 
 	default_style: INTEGER is

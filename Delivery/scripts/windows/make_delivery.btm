@@ -64,7 +64,7 @@ exprt -r %DEFAULT_CVS_TAG -d studio Delivery/studio
 remtrace eifinit
 exprt -r %DEFAULT_CVS_TAG -d eifinit Delivery/eifinit
 remtrace examples
-exprt -r %DEFAULT_CVS_TAG -d examples Delivery/examples
+exprt -r %DEFAULT_CVS_TAG -d examples Src/examples
 cd examples
 fullrd eiffeltest
 fullrd math

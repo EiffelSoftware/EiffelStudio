@@ -125,6 +125,7 @@ remtrace Recompile Legacy++
 cdd %EIFFEL_SRC
 exprt -r %DEFAULT_CVS_TAG -d legacy "Src/tools/legacy"
 cd %EIFFEL_SRC\legacy\PCCTS
+safe_md bin
 nmake /f makefile.win
 cd ..
 cd legacy

@@ -79,7 +79,7 @@ feature {EV_PND_SOURCE_I} -- Transport
 			-- Drag canceled.
 		do
 			dropped.set_item (True)
-			args.first.terminate_transport (Current, args.second)
+			args.first.terminate_transport (args.second)
 			args.first.widget_source.release_capture
 			draw_segment (origin, destination)
 				-- Reset the cursor

@@ -318,8 +318,8 @@ feature -- Element change
 		do
 			i := item
 			if i /= Void then
-				on_removed_item (item)
 				w ?= i.implementation
+				on_removed_item (w)
 				check
 					item_has_implementation: w /= Void
 				end

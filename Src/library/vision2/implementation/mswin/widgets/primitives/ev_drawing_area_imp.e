@@ -22,14 +22,18 @@ inherit
 			set_background_color,
 			set_foreground_color		
 		end
-		
+
 	EV_PIXMAPABLE_IMP
+		redefine
+			set_pixmap,
+			unset_pixmap
+		end
 
 	EV_PRIMITIVE_IMP
 		undefine
-			on_key_down,
 			set_default_options
 		redefine
+			on_key_down,
 			foreground_color_imp,
 			background_color_imp,
 			set_background_color,
@@ -39,6 +43,7 @@ inherit
 	WEL_CONTROL_WINDOW
 		rename
 			make as wel_make,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
 			destroy_item as wel_destroy_item
@@ -54,12 +59,12 @@ inherit
 			on_right_button_up,
 			on_left_button_double_click,
 			on_right_button_double_click,
-			on_char,
 			on_key_up,
 			on_kill_focus,
 			on_set_focus
 		redefine
 			on_size,
+			on_key_down,
 			on_paint,
 			on_wm_erase_background,
 			background_brush,
@@ -99,6 +104,22 @@ feature {NONE} -- Initialization
 			set_line_style (ps_solid)
 		end
 
+feature -- Element change
+
+	set_pixmap (pix: EV_PIXMAP) is
+			-- Make `pix' the new pixmap of the widget.
+		do
+			pixmap_imp ?= pix.implementation
+			set_minimum_size (pixmap_imp.width, pixmap_imp.height)
+		end
+
+	unset_pixmap is
+			-- Remove the pixmap from the container
+		do
+			pixmap_imp ?= Void
+			set_minimum_size (0, 0)
+		end
+
 feature -- Event - command association
 
 	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -110,6 +131,13 @@ feature -- Event - command association
 			add_command (Cmd_size, cmd, arg)
 		end
 
+	add_paint_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when the widget has to be redrawn.
+		do
+			add_command (Cmd_paint, cmd, arg)
+		end
+
 feature -- Event - command removal
 
 	remove_resize_commands is
@@ -117,6 +145,13 @@ feature -- Event - command removal
 			-- current area is resized.
 		do
 			remove_command (Cmd_size)
+		end
+
+	remove_paint_commands is
+			-- Empty the list of commands to be executed when
+			-- the widget has to be redrawn.
+		do
+			remove_command (Cmd_paint)
 		end
 
 feature {NONE} -- Implementation
@@ -143,6 +178,19 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- WEL Implementation
+
+	on_key_down (virtual_key, key_data: INTEGER) is
+			-- Executed when a key is pressed.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
+		local
+			data: EV_KEY_EVENT_DATA
+		do
+			if has_command (Cmd_key_press) then
+				data := get_key_data (virtual_key, key_data)
+				execute_command (Cmd_key_press, data)
+			end
+		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Called when the drawing area is resized.
@@ -171,7 +219,7 @@ feature {NONE} -- WEL Implementation
 			!! clip.set (pt, invalid_rect.width, invalid_rect.height)
 			!! expose_event_data.make
 			expose_event_data.implementation.set_clip_region (clip)
-			execute_command (Cmd_expose, expose_event_data)
+			execute_command (Cmd_paint, expose_event_data)
 		end
 
 	on_wm_erase_background (wparam: INTEGER) is

@@ -102,7 +102,6 @@ feature -- Byte code generation
 			-- Generate byte code for the expression
 		local
 			target_type, source_type: TYPE_I;
-			basic_target, basic_source: BASIC_I;
 			basic_type: BASIC_I;
 		do
 			expression.make_byte_code (ba);
@@ -118,15 +117,6 @@ feature -- Byte code generation
 			elseif target_type.is_basic then
 				if source_type.is_none then
 					ba.append (Bc_exp_excep);
-				end;
-				if target_type.is_numeric and then source_type.is_numeric then
-					basic_target ?= target_type;
-					basic_source ?= source_type;
-					if
-						basic_source.level /= basic_target.level
-					then
-						basic_target.generate_byte_code_cast (ba)
-					end;
 				end;
 			else
 				if source_type.is_basic then

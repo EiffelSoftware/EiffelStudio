@@ -56,10 +56,6 @@ SOURCES =  \$(LIB)
 ########################################################################
 # New suffixes and associated building rules -- edit with care
 
-.c.o:
-	\$(RM) \$@
-	\$(CC) -c \$(JCFLAGS) \$<
-
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
@@ -92,13 +88,13 @@ MT_OBJ = \
     MTserver.o
 
 MTlisten.o: listen.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTproto.o: proto.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTserver.o: server.c
-	$(CC) -c $(JMTCFLAGS)  $< -o $@
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 # Derived library object file names
 LOBJ = \

@@ -911,6 +911,9 @@ feature {NONE} -- Implementation
 feature {NONE} -- Attributes
 
 	db: MATISSE
+
+feature -- Status report
+
 	attributes_loaded: BOOLEAN
 	relationships_loaded: BOOLEAN
 
@@ -940,7 +943,7 @@ feature {MATISSE} -- Access from MATISSE
 			is_obsolete := False
 		end
 
-feature {MT_CLASS} -- Access
+feature {MT_CLASS, MATISSE} -- Access
 
 	loading_attrs_done is
 		do
@@ -1104,3 +1107,5 @@ invariant
 	persistence: is_persistent implies db /= Void
 		
 end -- class MT_STORABLE
+
+

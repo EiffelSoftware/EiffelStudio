@@ -97,7 +97,8 @@ feature
 			i: INTEGER
 			default_value: G
 		do
-			relationship.database.clear_all_properties_when_obsolete_wo_class (predecessor)
+	--		SM, 01/25/99: do not see the use of this line and worst, it implies errors
+	--		relationship.database.clear_all_properties_when_obsolete_wo_class (predecessor)
 			if not successors_loaded then
 				successors_loaded := True
 				if is_persistent then
@@ -222,3 +223,5 @@ feature {NONE}
 			Result ?= successors (rel)
 		end
 end -- class MT_RA_HASH_TABLE
+
+

@@ -6,6 +6,9 @@ class
 
 inherit
 	INTERNAL
+		rename
+			c_is_instance_of as internal_c_instance_of,
+			is_instance_of as internal_instance_of
 		export 
 			{NONE} all
 		end

@@ -18,6 +18,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_BIT_OPERATIONS
+		export
+			{NONE} all
+		end
+
 creation
 	make,
 	make_by_pointer
@@ -45,6 +50,8 @@ feature -- Access
 
 	text: STRING is
 			-- Item text
+		require
+			valid_member: text_is_valid
 		do
 			!! Result.make (0)
 			Result.from_c (cwel_tv_item_get_psztext (item))
@@ -56,6 +63,28 @@ feature -- Access
 			-- Item to which this structure refers.
 		do
 			Result := cwel_tv_item_get_hitem (item)
+		end
+
+	state: INTEGER is
+			-- Current state of the item.
+		require
+			valid_member: state_is_valid
+		do
+			Result := cwel_tv_item_get_state (item)
+		end
+
+feature -- Status report
+
+	text_is_valid: BOOLEAN is
+			-- Is the structure member `text' valid?
+		do
+			Result := flag_set (mask, Tvif_text)
+		end
+
+	state_is_valid: BOOLEAN is
+			-- Is the structure member `state' valid?
+		do
+			Result := flag_set (mask, Tvif_state)
 		end
 
 feature -- Element change
@@ -88,6 +117,14 @@ feature -- Element change
 			h_item_set: h_item = a_h_item
 		end
 
+	set_state (a_state: INTEGER) is
+			-- Set `a_state' as current `state'.
+		do
+			cwel_tv_item_set_state (item, a_state)
+		ensure
+			state_set: state = a_state
+		end
+
 feature -- Measurement
 
 	structure_size: INTEGER is
@@ -100,6 +137,14 @@ feature {NONE} -- Implementation
 
 	str_text: WEL_STRING
 			-- C string to save the text
+
+feature -- Implementation
+
+	set_cchtextmax (value: INTEGER) is
+			-- Set the maximum size of the text getting by get item)
+		do
+			cwel_tv_item_set_cchtextmax (item, value)
+		end
 
 feature {NONE} -- Externals
 

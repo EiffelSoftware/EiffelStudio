@@ -16,7 +16,7 @@ inherit
 			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
 			same_as, same_class_type, format, is_equivalent,
 			deep_actual_type, instantiation_in,
-			conformance_type, update_dependance
+			conformance_type, update_dependance, hash_code
 		end
 
 create
@@ -100,6 +100,29 @@ feature -- Access
 			end
 		end
 
+	hash_code: INTEGER is
+			-- Hash code value
+		local
+			i, nb: INTEGER
+			l_cl_type_a: CL_TYPE_A
+		do
+			Result := class_id
+			from
+				i := 1
+				nb := generics.count
+			until
+				i > nb
+			loop
+				l_cl_type_a ?= generics.item (i)
+				if l_cl_type_a /= Void then
+					Result := Result + l_cl_type_a.hash_code
+				end
+				i := i + 1
+			end
+				-- Clear sign if it becomes negative
+			Result := 0x7FFFFFFF & Result
+		end
+		
 feature -- Output
 
 	dump: STRING is

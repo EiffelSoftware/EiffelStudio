@@ -12,7 +12,9 @@ inherit
 			duplicate, meta_type, same_as, good_generics, error_generics,
 			has_expanded, is_valid, format
 		end
-	
+
+	HASHABLE
+
 	DEBUG_OUTPUT
 
 create
@@ -58,6 +60,12 @@ feature -- Comparison
 		end
 
 feature -- Access
+
+	hash_code: INTEGER is
+			-- Hash code value.
+		do
+			Result := class_id
+		end
 
 	class_id: INTEGER
 			-- Class id of the associated class
@@ -375,5 +383,8 @@ feature -- Debugging
 				Result := "Class not in system anymore"
 			end
 		end
+
+invariant
+	class_id_positive: class_id > 0
 
 end -- class CL_TYPE_A

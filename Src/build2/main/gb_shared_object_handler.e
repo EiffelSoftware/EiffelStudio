@@ -7,7 +7,7 @@ indexing
 class
 	GB_SHARED_OBJECT_HANDLER
 
-feature {NONE} -- Implementation
+feature {GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 
 	object_handler: GB_OBJECT_HANDLER is
 			-- `Result' is the GB_OBJECT_HANDLER used by

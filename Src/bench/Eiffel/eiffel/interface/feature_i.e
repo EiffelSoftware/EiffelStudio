@@ -752,9 +752,16 @@ feature -- Conveniences
 			-- Is current feature a C external one?
 		local
 			ext: IL_EXTENSION_I
+			l_const: CONSTANT_I
 		do
 			ext ?= extension
 			Result := ext /= Void
+			if not Result then
+				l_const ?= Current
+				if l_const /= Void then
+					Result := l_const.written_class.is_external
+				end
+			end
 		ensure
 			not_is_c_external: Result implies not is_c_external
 		end

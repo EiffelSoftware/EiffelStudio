@@ -1955,6 +1955,18 @@ feature -- Case storage informatio
 			end;
 			if is_deferred then
 				f.set_is_deferred
+			elseif assert_id_set /= Void and then
+				not assert_id_set.empty 
+			then
+					-- At the moment flag any routine
+					-- with assertions chaining as
+					-- effective. Having assert_id_set means
+					-- that the feature has redefined or its
+					-- precursor is deferred. Later on routine
+					-- process_class_inherit_clause in
+					-- class CASE_CLUSTER_INFO may tag
+					-- the feature as redefined.
+				f.set_is_effective	
 			end;
 			if is_attribute then
 				f.set_is_attribute

@@ -6,9 +6,19 @@ inherit
 
 feature
 
+	id: INTEGER;
+			-- Id of Current
+
 	name: STRING;
 			-- Current's name
 
+	file_name: STRING;
+			-- Current's file_name
+			--| Does not include path
+
+	description: S_FREE_TEXT_DATA;
+			-- Description of Current
+ 
 	chart: S_CHART;
 			-- Informal description of Current
 
@@ -29,6 +39,38 @@ feature -- Setting values
 			name := s
 		ensure
 			name_set: name = s
+		end;
+
+	set_id (i: INTEGER) is
+			-- Set id to `i'.
+		require
+			valid_i: i > 0
+		do
+			id := i
+		ensure
+			id_set: id = i
+		end;
+
+	set_file_name (s: STRING) is
+			-- Set file_name to `s'.
+		require
+			valid_s: s /= Void
+		do
+			file_name := s
+		ensure
+			file_name_set: file_name = s
+		end;
+
+	set_description (l: like description) is
+			-- Set description to `l'.
+		require
+			valid_l: l /= Void;
+			l_not_empty: not l.empty;
+			not_have_void: not l.has (Void)
+		do
+			description := l
+		ensure
+			description_set: description = l
 		end;
 
 	set_chart (ch: like chart) is

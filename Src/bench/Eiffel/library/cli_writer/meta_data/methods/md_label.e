@@ -57,7 +57,7 @@ feature -- Settings
 				until
 					l_list.after
 				loop
-					body.set_branch_location (l_list.item, pos - (l_list.item + 4))
+					body.set_branch_location (l_list.item, pos - l_list.item)
 					l_list.forth
 				end
 			end

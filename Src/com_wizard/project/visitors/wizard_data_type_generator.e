@@ -92,7 +92,7 @@ feature -- Access
 
 	c_declaration_header_file_name: STRING
 			-- Filename of C declaration header file
-			-- Note: only initialized for interfaces
+			-- Note: same as `c_definition_header_file_name' for types other than interfaces
 
 	cecil_type: STRING
 			-- Name of Standard Eiffel type on C side.
@@ -156,6 +156,9 @@ feature -- Basic operations
 		do
 			if c_definition_header_file_name /= Void and then not c_definition_header_file_name.is_empty then
 				a_visitor.set_c_definition_header_file_name (c_definition_header_file_name)
+				a_visitor.set_c_declaration_header_file_name (c_definition_header_file_name)
+			end
+			if c_declaration_header_file_name /= Void and then not c_declaration_header_file_name.is_empty then
 				a_visitor.set_c_declaration_header_file_name (c_declaration_header_file_name)
 			end
 			a_visitor.set_c_post_type (c_post_type)

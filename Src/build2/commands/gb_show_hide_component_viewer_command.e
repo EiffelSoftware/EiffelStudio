@@ -9,11 +9,6 @@ class
 inherit
 
 	GB_RESTORABLE_WINDOW_COMMAND
-	
-	GB_SHARED_COMPONENT_VIEWER
-		export
-			{NONE} all
-		end
 
 	GB_SHARED_TOOLS
 		export

@@ -61,7 +61,7 @@ feature -- Debug
 	trace is
 		do
 			io.error.putstring ("Class id: ");
-			io.error.putint (id.id);
+			id.trace;
 			io.error.putstring (" feature id: ");
 			io.error.putint (feature_id);
 			io.error.new_line;

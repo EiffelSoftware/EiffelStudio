@@ -103,7 +103,7 @@ feature -- Debug
 				suppliers.after
 			loop
 				io.error.putstring ("Supplier id: ");
-				io.error.putint (suppliers.item.id);
+				suppliers.item.trace;
 				io.error.new_line;
 				suppliers.forth
 			end;

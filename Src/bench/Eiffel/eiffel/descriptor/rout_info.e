@@ -55,7 +55,7 @@ feature -- Trace
 	trace is
 		do
 			io.putstring (" Origin: ");
-			io.putint (origin.id);
+			io.putstring (origin.dump);
 			io.putstring (" Offset: ");
 			io.putint (offset);
 		end;

@@ -102,7 +102,7 @@ void IFont20_impl_proxy::ccom_set_name(  /* [in] */ EIF_OBJECT pname )
 			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	
+	if (tmp_pname != NULL)
 		SysFreeString (tmp_pname);
 
 };

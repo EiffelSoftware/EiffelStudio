@@ -38,7 +38,7 @@ feature -- Commands
 					%system and may take a long time...")
 				md.set_title (Interface_names.t_Confirm)
 				md.set_buttons (<<" Continue ", Interface_names.b_Cancel>>)
-				md.button (" Continue ").select_actions.extend (~process)
+				md.button (" Continue ").select_actions.extend (agent process)
 				md.show_modal
 			else
 				process

@@ -13,7 +13,7 @@ inherit
 			feature_cmd
 		end
 
-creation
+create
 	make
 	
 feature -- Properties

@@ -21,7 +21,7 @@ inherit
 			set_accelerator
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -109,7 +109,7 @@ feature -- Status setting
 			-- Changes the accelerator.
 		do
 			Precursor {EB_CLASS_TEXT_FORMATTER} (accel)
-			accelerator.actions.put_front (~invalidate)
+			accelerator.actions.put_front (agent invalidate)
 		end
 
 	set_class (a_class: CLASS_C) is

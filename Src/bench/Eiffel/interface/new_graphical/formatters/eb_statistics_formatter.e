@@ -12,7 +12,7 @@ inherit
 			display_temp_header, post_fix
 		end
 
-creation
+create
 
 	make
 	

@@ -21,7 +21,7 @@ feature -- Access
 			-- Create a new toolbar button and associate it with `Current'.
 		do
 			Result := Precursor {EB_CLASS_INFO_FORMATTER}
-			Result.drop_actions.extend (~on_class_drop)
+			Result.drop_actions.extend (agent on_class_drop)
 		end
 
 	widget: EV_WIDGET is
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			create def
 			create {EV_CELL} Result
 			Result.set_background_color (def.White)
-			Result.drop_actions.extend (~on_class_drop) 
+			Result.drop_actions.extend (agent on_class_drop) 
 		end
 
 end -- class EB_CLASS_TEXT_FORMATTER

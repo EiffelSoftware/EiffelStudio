@@ -32,7 +32,7 @@ feature -- Status setting
 			-- Used to share an editor between several formatters.
 		do
 			Precursor {EB_FEATURE_TEXT_FORMATTER} (an_editor)
-			editor.drop_actions.extend (~on_breakable_drop)
+			editor.drop_actions.extend (agent on_breakable_drop)
 		end
 		
 	set_stone (new_stone: FEATURE_STONE) is

@@ -16,7 +16,7 @@ inherit
 	EB_SHARED_FORMAT_TABLES
 	EB_FEATURE_TOOL_DATA
 
-creation
+create
 
 	make
 

@@ -14,7 +14,7 @@ inherit
 			is_dotnet_formatter
 		end
 
-creation
+create
 	make
 	
 feature -- Properties

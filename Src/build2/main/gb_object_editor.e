@@ -191,26 +191,7 @@ feature -- Status setting
 			-- Set up `Current' to modify `object'.
 		require
 			an_object_not_void: an_object /= Void
-		local
-			command_name_change: GB_COMMAND_NAME_CHANGE
-		do
-			-- | FIXME - revisit as soon as time allows.
-			-- This really is a hack, but I do not have time to fix it correctly now.
-			-- When in the process of editing a name, if you click on the the layout constructor
-			-- then for some reason the select_actions of that tree seemed to be called before
-			-- the focus out actions of the text field. This was giving bad behaviour,
-			-- so this section of code was added as a temporary fix.
-			if object /= Void then
-				if object.name /= object.edited_name then
-					if name_in_use (object.edited_name) then
-						object.cancel_edited_name
-					else
-						create command_name_change.make (object, object.edited_name, object.name)
-						command_name_change.execute
-					end
-				end
-			end
-			
+		do			
 			make_empty
 			
 			object := an_object

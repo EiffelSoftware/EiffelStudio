@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (n: INTEGER) is
+	frozen make (n: INTEGER) is
 			-- Creates a special object for `n' entries.
 		require
 			non_negative_argument: n >= 0
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): T is
+	frozen item, frozen infix "@" (i: INTEGER): T is
 			-- Item at `i'-th position
 			-- (indices begin at 0)
 		require
@@ -119,7 +119,7 @@ feature -- Status report
 	
 feature -- Element change
 
-	put (v: T; i: INTEGER) is
+	frozen put (v: T; i: INTEGER) is
 			-- Replace `i'-th item by `v'.
 			-- (Indices begin at 0.)
 		require

@@ -808,9 +808,12 @@ feature -- Element change
 
 	fill_character (c: CHARACTER) is
 			-- Fill with `capacity' characters all equal to `c'.
+		local
+			l_cap: like safe_capacity
 		do
-			area.base_address.memory_set (c.code, safe_capacity)
-			count := safe_capacity
+			l_cap := safe_capacity
+			area.base_address.memory_set (c.code, l_cap)
+			count := l_cap
 			internal_hash_code := 0
 		ensure
 			filled: full
@@ -1012,7 +1015,7 @@ feature -- Element change
 				resize (new_size + additional_space)
 			end
 			s_area := s.area;
-			area.element_address (count).memory_copy ($s_area, s.count)
+			area.item_address (count).memory_copy ($s_area, s.count)
 			count := new_size
 			internal_hash_code := 0
 		ensure
@@ -1699,7 +1702,7 @@ feature -- Duplication
 				create Result.make (end_index - start_index + 1)
 				other_area := Result.area;
 				other_area.base_address.memory_copy (
-					area.element_address (start_index - 1), end_index - start_index + 1)
+					area.item_address (start_index - 1), end_index - start_index + 1)
 				Result.set_count (end_index - start_index + 1)
 			else
 				create Result.make (0)

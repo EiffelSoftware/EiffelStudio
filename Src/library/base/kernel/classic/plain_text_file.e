@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			-- most `nb' characters read from current file.
 			-- Return the number of characters actually read.
 		do
-			Result := file_gss (file_pointer, a_string.area.element_address (pos - 1), nb)
+			Result := file_gss (file_pointer, a_string.area.item_address (pos - 1), nb)
 		end
 
 	file_gi (file: POINTER): INTEGER is

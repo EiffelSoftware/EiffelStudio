@@ -190,9 +190,12 @@ feature -- Event for three tool bar toggle button events
 	toggled_off_id: INTEGER is 51
 			-- The button has been `unselected'
 
+	radio_toggle_id: INTEGER is 52
+			-- A toolbar radio button has been `unselected'
+
 feature -- Upper constants value
 
-	command_count: INTEGER is 51
+	command_count: INTEGER is 52
 			-- Number of different events
 
 end -- class EV_WIDGET_EVENTS_CONSTANTS_IMP

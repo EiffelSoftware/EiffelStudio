@@ -212,6 +212,10 @@ feature {NONE} -- Status report
 				Result := toggled_on_id
 			elseif ev_str.is_equal ("toggled_off") then
 				Result := toggled_off_id
+
+			-- For toolbar radio buttons
+			elseif ev_str.is_equal ("radio_toggle") then
+				Result := radio_toggle_id
 			end
 		ensure
 			event_id_ok: (Result > 0 and Result <= command_count)

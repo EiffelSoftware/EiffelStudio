@@ -18,7 +18,8 @@ creation
 feature -- Status report
 
 	selected_item: EV_RADIO_IMP [EV_ANY]
-			-- Currently selected item.
+			-- Currently selected item
+
 
 feature -- Element change
 
@@ -48,6 +49,18 @@ feature -- Element change
 
 feature -- Basic operations
 
+	last_selected: EV_RADIO_IMP [EV_ANY]
+
+	set_last_selected (an_item: EV_RADIO_IMP [EV_ANY]) is
+		do
+			last_selected := an_item
+		end
+
+	just_selected (an_item: EV_RADIO_IMP [EV_ANY]): BOOLEAN is
+		do
+			Result := equal (last_selected, an_item)
+		end
+
 	set_selection_at (an_item: EV_RADIO_IMP [EV_ANY]) is
 			-- Check the given item and uncheck the currently
 			-- selected one.
@@ -55,20 +68,19 @@ feature -- Basic operations
 			valid_item: has (an_item)
 		do
 			if selected_item /= Void and then selected_item /= an_item then
-				selected_item.set_selected (False)
-				selected_item.on_unselect
+				selected_item.on_unselect(an_item)
 			end
 			selected_item := an_item
 		end
 
 	set_selection_at_no_event (an_item: EV_RADIO_IMP [EV_ANY]) is
-			-- Check the given item and uncheck the currently
+			-- Select an_item and unselect the currently
 			-- selected one.
 		require
 			valid_item: has (an_item)
 		do
-			if selected_item /= Void and then selected_item /= an_item then
-				selected_item.set_selected (False)
+			if selected_item /= Void then
+					selected_item.on_unselect(an_item)
 			end
 			selected_item := an_item
 		end

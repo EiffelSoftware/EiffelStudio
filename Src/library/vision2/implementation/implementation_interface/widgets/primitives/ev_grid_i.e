@@ -1442,6 +1442,37 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		do
 			drawable.redraw
 		end
+		
+	item_indent (an_item: EV_GRID_ITEM_I): INTEGER is
+			-- `Result' is indent of `an_item' in pixels.
+			-- May be 0 for items that are not tree nodes.
+		require
+			an_item_not_void: an_item /= Void
+			an_item_parented_in_current: an_item.parent_i = Current
+		local
+			a_subrow_indent: INTEGER
+			first_tree_node_indent: INTEGER
+			node_pixmap_width: INTEGER
+			total_tree_node_width: INTEGER
+			node_index: INTEGER
+			pointed_row_i: EV_GRID_ROW_I
+		do
+			pointed_row_i := an_item.row_i
+			node_pixmap_width := expand_node_pixmap.width
+			total_tree_node_width := node_pixmap_width + 2 * tree_node_spacing
+			a_subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + subrow_indent
+			first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
+			node_index := an_item.column_i.index.min (pointed_row_i.first_set_item_index)
+			if node_index = an_item.column_i.index then
+				Result := a_subrow_indent * (pointed_row_i.indent_depth_in_tree - 1) + first_tree_node_indent	
+			end
+			
+				-- Not a postcondition as `node_index' is a local.
+			check
+				result_zero_when_item_not_in_subrow_or_first: an_item.row_i.parent_row_i = Void and node_index > 1 implies Result = 0
+				result_positive_when_in_subrow: an_item.row_i.parent_row_i /= Void implies Result > 0	
+			end			
+		end
 
 feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_GRID} -- Implementation
 
@@ -1807,8 +1838,7 @@ feature {NONE} -- Drawing implementation
 			extend (horizontal_box)
 			viewport.resize_actions.extend (agent viewport_resized)
 			
-				-- Now connect all of the events to `drawable' which will be used to propagate events to the `interface'.			
-			drawable.expose_actions.extend (agent expose_received (?, ?, ?, ?))
+				-- Now connect all of the events to `drawable' which will be used to propagate events to the `interface'.
 			drawable.pointer_motion_actions.extend (agent pointer_motion_received (?, ?, ?, ?, ?, ?, ?))
 			drawable.pointer_button_press_actions.extend (agent pointer_button_press_received (?, ?, ?, ?, ?, ?, ?, ?))
 			drawable.pointer_double_press_actions.extend (agent pointer_double_press_received (?, ?, ?, ?, ?, ?, ?, ?))
@@ -2124,33 +2154,7 @@ feature {NONE} -- Drawing implementation
 	buffered_drawable_size: INTEGER is 2000
 		-- Default size of `drawable' used for scrolling purposes.
 		
-feature {NONE} -- Event handling
-
-	item_indent (an_item: EV_GRID_ITEM_I): INTEGER is
-			-- `Result' is indent of `an_item' in pixels.
-			-- May be 0 for items that are not tree nodes.
-		require
-			an_item_not_void: an_item /= Void
-		local
-			a_subrow_indent: INTEGER
-			first_tree_node_indent: INTEGER
-			node_pixmap_width, node_pixmap_height: INTEGER
-			total_tree_node_width: INTEGER
-			node_index: INTEGER
-			pointed_row_i: EV_GRID_ROW_I
-		do
-			pointed_row_i := an_item.row_i
-			node_pixmap_width := expand_node_pixmap.width
-			node_pixmap_height := expand_node_pixmap.height
-			total_tree_node_width := node_pixmap_width + 2 * tree_node_spacing
-			a_subrow_indent := (tree_node_spacing * 2) + node_pixmap_width + subrow_indent
-			first_tree_node_indent := total_tree_node_width + 2 * tree_node_spacing
-			node_index := an_item.column_i.index.min (pointed_row_i.first_set_item_index)
-			if node_index = an_item.column_i.index then
-				Result := a_subrow_indent * (pointed_row_i.indent_depth_in_tree - 1) + first_tree_node_indent	
-			end
-		end
-		
+feature {NONE} -- Event handling		
 
 	pointer_button_press_received (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER) is
 			-- A pointer button press has been received by `drawable' so propagate to the interface.
@@ -2193,11 +2197,6 @@ feature {NONE} -- Event handling
 			end
 		end
 		
-	expose_received (a_x, a_y, a_width, a_height: INTEGER) is
-			-- Called by `expose_actions' of `drawable'.
-		do
-		end
-		
 	client_x_to_virtual_x (client_x: INTEGER): INTEGER is
 			-- Convert `client_x' in client coordinates to a virtual grid coordinate.
 		require
@@ -2226,7 +2225,7 @@ feature {NONE} -- Event handling
 			pointed_item_interface: EV_GRID_ITEM
 		do
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
-				pointed_item := drawer.item_at_position (a_x, a_y)
+				pointed_item := drawer.item_at_position_strict (a_x, a_y)
 				if pointed_item /= Void then
 					pointed_item_interface := pointed_item.interface
 				end
@@ -2267,11 +2266,13 @@ feature {NONE} -- Event handling
 	pointer_enter_received is
 			-- Called by `pointer_enter_actions' of `drawable'.
 		do
+			to_implement ("EV_GRID_I.pointer_enter_received")
 		end
 
 	pointer_leave_received is
 			-- Called by `pointer_leave_actions' of `drawable'.
 		do
+			to_implement ("EV_GRID_I.pointer_leave_received")
 		end
 
 	key_press_received (a_key: EV_KEY) is
@@ -2363,26 +2364,31 @@ feature {NONE} -- Event handling
 	key_press_string_received (a_keystring: STRING) is
 			-- Called by `key_press_string_actions' of `drawable'.
 		do
+			to_implement ("EV_GRID_I.key_press_string_received")
 		end
 
 	key_release_received (a_key: EV_KEY) is
 			-- Called by `key_release_actions' of `drawable'.
 		do
+			to_implement ("EV_GRID_I.key_release_received")
 		end
 
 	focus_in_received is
 			-- Called by `focus_in_actions' of `drawable'.
 		do
+			to_implement ("EV_GRID_I.focus_in_received")
 		end
 
 	focus_out_received is
 			-- Called by `focus_out_actions' of `drawable'.
 		do
+			to_implement ("EV_GRID_I.focus_out_received")
 		end
 
 	resize_received (a_x, a_y, a_width, a_height: INTEGER) is
 			-- Called by `resize_actions' of `drawable'.
 		do
+			to_implement ("EV_GRID_I.resize_received")
 		end
 
 feature {NONE} -- Implementation

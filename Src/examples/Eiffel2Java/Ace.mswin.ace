@@ -1,29 +1,49 @@
 system
-	sample
+	"sample"
 
 root
-	ROOT_CLASS: "make"
+	ROOT_CLASS: make
 
 default
-	assertion (all)
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	assertion (loop)
+	assertion (invariant)
+	arguments (" ")
+	disabled_debug (yes)
+	disabled_debug ("java")
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	il_verifiable (no)
+	msil_generation_type ("exe")
+	check_vape (yes)
+	console_application (yes)
 	address_expression (yes)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (no)
+	inlining (no)
+	multithreaded (no)
 
 cluster
+	root_cluster:		"$ISE_EIFFEL\examples\Eiffel2Java"
 
-	root_cluster: "$ISE_EIFFEL\examples\Eiffel2Java";
 
-		-- EiffelBase
-	all base:						"$ISE_EIFFEL\library\base"
+	all base:		"$ISE_EIFFEL\library\base"
 		exclude
-			"desc";"table_eiffel3"
+			"desc"; "table_eiffel3"; 
 		end
 
 	java:		"$ISE_EIFFEL\library\Eiffel2Java"
 
 external
+
 	object:
-		"$ISE_EIFFEL\library\Eiffel2Java\spec\$ISE_C_COMPILER\lib\e2j.obj",
-		"D:\apps\jdk1.1.8\lib\javai.lib"
-		
+		"$(ISE_EIFFEL)\library\Eiffel2Java\spec\$(ISE_C_COMPILER)\lib\e2j.obj",
+		"$(JDK_HOME)\lib\javai.lib"
 
 end

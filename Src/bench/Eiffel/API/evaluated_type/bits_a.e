@@ -9,20 +9,20 @@ inherit
 			internal_conform_to as old_conform_to
 		redefine
 			is_bits, associated_class, dump,
-			heaviest, same_as, append_clickable_signature,
+			heaviest, same_as, append_to,
 			check_conformance, format, associated_eclass
 		end;
 
 	BASIC_A
 		redefine
 			is_bits, internal_conform_to, associated_class, dump,
-			heaviest, same_as, append_clickable_signature,
+			heaviest, same_as, append_to,
 			check_conformance, format, associated_eclass
 		select
 			internal_conform_to
 		end;
 
-feature -- Access
+feature -- Property
 
 	is_bits: BOOLEAN is
 			-- Is the current actual type a bits type ?
@@ -30,10 +30,23 @@ feature -- Access
 			Result := True;
 		end;
 
+feature -- Access
+
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is `other' the same as Current ?
+		local
+			other_bits: BITS_A
+		do
+			other_bits ?= other;
+			Result :=	other_bits /= Void
+						and then
+						other_bits.base_type = base_type
+		end;
+
 	associated_eclass: E_CLASS is
 			-- Associated eiffel class
 		once
-			Result := associated_class.e_class
+			Result := Eiffel_system.bit_class.compiled_eclass
 		end;
 
 feature -- Output
@@ -46,13 +59,13 @@ feature -- Output
 			Result.append_integer (base_type);
 		end;
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_to (ow: OUTPUT_WINDOW) is
 		do
-			a_clickable.put_string ("BIT ");
-			a_clickable.put_int (base_type);
+			ow.put_string ("BIT ");
+			ow.put_int (base_type);
 		end;
 
-feature 
+feature {COMPILER_EXPORTER}
 
 	check_conformance (target_name: STRING; target_type: TYPE_A) is
 			-- Check if Current conforms to `other'.
@@ -118,17 +131,6 @@ feature
 		do
 			!!Result;
 			Result.set_size (base_type);
-		end;
-
-	same_as (other: TYPE_A): BOOLEAN is
-			-- Is `other' the same as Current ?
-		local
-			other_bits: BITS_A
-		do
-			other_bits ?= other;
-			Result :=	other_bits /= Void
-						and then
-						other_bits.base_type = base_type
 		end;
 
 	format (ctxt: FORMAT_CONTEXT_B) is

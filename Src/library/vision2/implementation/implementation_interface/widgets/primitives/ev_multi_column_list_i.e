@@ -33,7 +33,7 @@ feature -- Access
 			-- Item which is currently selected in a single
 			-- selection mode.
 		require
-			single_selection: not is_multiple_selection
+			single_selection: not multiple_selection_enabled
 		deferred
 		end
 
@@ -55,7 +55,7 @@ feature -- Status report
 		deferred
 		end
 
-	is_multiple_selection: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN is
 			-- True if the user can choose several items
 			-- False otherwise
 		require
@@ -102,6 +102,7 @@ feature -- Status setting
 
 	enable_multiple_selection is
 			-- Allow more than one item to be selected.
+
 		require
 		deferred	
 		end
@@ -206,11 +207,6 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP, EV_ITEM_LIST_IMP} -- Implementation
 			-- We have to store the children because
 			-- neither gtk nor windows does it.
 
-	--remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
-			-- Remove `item' from the list
-	--	deferred
-	--	end
-
 invariant
 	ev_children_not_void: ev_children /= Void
 
@@ -237,8 +233,12 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/02 22:01:14  king
+--| Implemented selection name changes
+--|
 --| Revision 1.28  2000/03/02 18:47:24  rogers
---| Renamed set_multiple_selection -> enable_multiple_selection and set_single_seelction to disable_multiple_seelction.
+--| Renamed set_multiple_selection -> enable_multiple_selection and
+--| set_single_seelction to disable_multiple_seelction.
 --|
 --| Revision 1.27  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
@@ -262,7 +262,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --| added --| FIXME Not for release
 --|
 --| Revision 1.23.6.4  1999/12/17 18:01:27  rogers
---| Redefined interface to be of more refined type. Renamed parameter index to an_index. add_item is no longer applicable. export ev_children to EV_ITEM_LIST_IMP.
+--| Redefined interface to be of more refined type. Renamed parameter index
+--| to an_index. add_item is no longer applicable. export ev_children to
+--| EV_ITEM_LIST_IMP.
 --|
 --| Revision 1.23.6.3  1999/12/09 03:15:06  oconnor
 --| commented out make_with_* features, these should be in interface only

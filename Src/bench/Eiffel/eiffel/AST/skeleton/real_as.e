@@ -45,7 +45,7 @@ feature -- Type check and byte code
 	type_check is
 			-- Type check a real type
 		do
-			context.put (Real_type)
+			context.put (Double_type)
 		end
 
 	byte_node: REAL_CONST_B is

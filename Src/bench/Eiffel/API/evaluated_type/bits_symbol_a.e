@@ -6,21 +6,15 @@ inherit
 
 	BITS_A
 		redefine
-			solved_type, dump, append_clickable_signature,
+			solved_type, dump, append_to,
 			is_deep_equal
 		end;
 
-creation 
+creation {COMPILER_EXPORTER}
 
 	make
 
-feature 
-
-	feature_name: STRING;
-
-	class_id: INTEGER;
-
-	rout_id: INTEGER;
+feature {NONE} -- Initialization
 
 	make (f: FEATURE_I) is
 		do
@@ -28,6 +22,32 @@ feature
 			class_id := System.current_class.id;
 			rout_id := f.rout_id_set.first;
 		end;
+
+feature -- Properties
+
+	feature_name: STRING;
+
+	class_id: INTEGER;
+
+	rout_id: INTEGER;
+
+feature -- Output
+
+	dump: STRING is
+			-- Dumped trace
+		do
+			!!Result.make (9);
+			Result.append ("BIT ");
+			Result.append (feature_name);
+		end;
+
+	append_to (ow: OUTPUT_WINDOW) is
+		do
+			ow.put_string ("BIT ");
+			ow.put_string (feature_name);
+		end;
+
+feature {COMPILER_EXPORTER}
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): BITS_SYMBOL_A is
 			-- Calculated type in function of the feauure `f' which has
@@ -98,22 +118,6 @@ feature
 				bits_s.class_id = class_id and then
 				bits_s.rout_id = rout_id and then
 				feature_name.is_equal (bits_s.feature_name)
-		end;
-
-feature -- Trace
-
-	dump: STRING is
-			-- Dumped trace
-		do
-			!!Result.make (9);
-			Result.append ("BIT ");
-			Result.append (feature_name);
-		end;
-
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string ("BIT ");
-			a_clickable.put_string (feature_name);
 		end;
 
 end

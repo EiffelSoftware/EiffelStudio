@@ -99,18 +99,6 @@ feature -- Element change
 			else
 				c_gtk_pixmap_read_from_xpm (widget, create_window, $a)
 			end
-
-			-- The following is done only once.
-			if (create_window /= default_pointer) then
-				-- Add a reference to the pixmap othewise it will be
-				-- destroyed when we will destroy the `create_window' below.
-				gtk_object_ref (widget)
-
-				-- Destroy the temporary window which
-				-- was needed at the create of the pixmap
-				gtk_widget_destroy (create_window)
-				create_window := Default_pointer
-			end
 		end	
 
 feature {NONE} -- Implementation

@@ -1,0 +1,14 @@
+RELEASE NOTES FOR HPUX 10 VERSION.
+----------------------------------
+
+This release has been compiled on HPUX10.20 with cc.
+
+Please your PLATFORM environment variable to hpux-10 if you
+are running on hpux 10.x. 
+
+
+The graphical interface is not working due to a problem with Motif_R6 1.2. 
+This version does not support multithreading since the C thread library is
+not standard on 10.20. Only 10.30 supports POSIX threads.
+
+

@@ -562,6 +562,24 @@ feature {NONE} -- GTK C functions for pixmaps
         external "C | %"gtk_eiffel.h%""
         end
 
+feature {NONE} -- GTK C functions for progress bar
+
+	gtk_progress_bar_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_progress_bar_set_bar_style (progressbar: POINTER; style: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_progress_bar_update (progressbar: POINTER; percentage: REAL) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_progress_bar_style (progressbar: POINTER): INTEGER is
+		external "C | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- code in the glue library
 
 	c_gtk_toolbar_append_item (t: POINTER; text, tip, private_tip,

@@ -19,17 +19,15 @@ feature -- Access
 		require
 			non_void_type: t /= Void
 		local
-			name: STRING
-			l_name: SYSTEM_STRING
+			l_name: STRING
 			am: like assembly_mapping
 		do
 			if t.is_by_ref then
 				Result := referenced_type_from_type (t.get_element_type)
 				Result.set_is_by_ref
 			else
-				create name.make_from_cil (t.assembly.to_string)
 				am := assembly_mapping
-				am.search (name)
+				am.search (t.assembly.full_name)
 				if am.found then
 					if t.is_array then
 						l_name := t.full_name

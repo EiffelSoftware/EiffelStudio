@@ -66,13 +66,9 @@ feature	-- Access
 		require
 			non_void_a_dotnet_name: a_dotnet_name /= Void
 			non_void_args: args /= Void
-		local
-			l_dotnet_name: STRING
 		do
-			create l_dotnet_name.make_from_cil (a_dotnet_name)
-			Result := eiffel_names.item (l_dotnet_name).item (key_args (args, return_type, declaring_type))
-		end
-		
+			Result := eiffel_names.item (a_dotnet_name).item (key_args (args, return_type, declaring_type))
+		end		
 		
 feature -- Basic Operations
 

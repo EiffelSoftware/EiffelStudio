@@ -8,7 +8,7 @@
  #    #  ######     #    #    #   ####   #    #  #    #   ###     ####
 
 	Contains all socket/pipes messages routines.
-	
+
 	As signal may arrive, we must check when an error occurs, that
 	it is not the signal's fault.
 */
@@ -22,8 +22,14 @@
 #include <sys/types.h>
 #include "eif_globals.h"
 
+#ifdef EIF_WIN32
+#include <windows.h>
+#include "stream.h"
+#endif
+
 extern unsigned TIMEOUT;		/* Time out on reads */
 
+#ifndef EIF_WIN32
 #ifdef ETIMEDOUT
 #define NET_TIMEOUT ETIMEDOUT	/* Try to return a meaningful error code */
 #else
@@ -34,29 +40,108 @@ extern unsigned TIMEOUT;		/* Time out on reads */
 #else
 #define NET_BROKEN EPIPE		/* Default error if no ECONNRESET */
 #endif
+#endif
 
 #ifndef lint
-rt_private char *rcsid =
-	"$Id$";
+rt_private char *rcsid = "$Id$";
 #endif
 
 rt_private jmp_buf env;		/* Environment saving for longjmp() */
+
+#ifdef EIF_WIN32
+rt_private CALLBACK timeout(HWND, UINT, UINT, DWORD);	/* Signal handler for read timeouts */
+#else
 rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
 rt_private Signal_t timeout(void);	/* Signal handler for read timeouts */
 
 extern int errno;
+#endif
 
+#ifdef EIF_WIN32
+rt_public int net_recv(STREAM *cs, char *buf, int size, BOOL reset)
+			/* The connected socket descriptor */
+			/* Where data are to be stored */
+			/* Amount of data to be read */
+			/* Reset event associated with cs reader? */
+#else
 rt_public int net_recv(int cs, char *buf, int size)
        				/* The connected socket descriptor */
           			/* Where data are to be stored */
          			/* Amount of data to be read */
+#endif
 {
 	/* Read from network */
 
 	int len = 0;		/* Total amount of bytes read */
 	int length;			/* Amount read by last system call */
-	Signal_t (*oldalrm)();
 
+#ifdef EIF_WIN32
+	DWORD timer = 0;
+	BOOL fSuccess;
+#ifdef USE_ADD_LOG
+		add_log(2, "in net_recv");
+#endif
+	if (0 != setjmp(env)) {
+		KillTimer (NULL, timer);        /* Stop alarm clock */
+		errno = EPIPE;                          /* Signal timeout on read */
+		return -1;
+	}
+
+	while (len < size) {
+		timer = SetTimer(NULL, timer, TIMEOUT*1000, timeout);   /* Give read only TIMEOUT seconds to succeed */
+		fSuccess = ReadFile(readfd(cs), buf + len, size - len, &length, NULL);
+		KillTimer (NULL, timer);
+
+		if (fSuccess)
+			if (length == 0)        /* connection closed */
+				goto closed;
+			else
+				;
+		else
+				return -1;              /* failed */
+
+		len += length;
+	}
+
+	if (reset)
+		// There is a problem when there are 0 bytes t send
+		// Literally 0 bytes are sent and the Semaphore is set
+		// We need to release the semaphore in this case
+		if (size == 0)
+			{
+			DWORD t;
+			// Wait to get back in sync.
+			t = WaitForSingleObject (readev(cs), INFINITE);
+#ifdef USE_ADD_LOG
+			if (t != WAIT_OBJECT_0)
+				add_log (8, "network:97 Bad wait");
+#endif
+			}
+		else
+			if (WaitForSingleObject (readev(cs), 0) != WAIT_OBJECT_0)
+#ifdef USE_ADD_LOG
+				add_log (8, "network:101 Wait on %d failed", size);
+#else
+				;
+#endif
+	return 0;
+
+closed:
+
+	/* Unlike recv(), we return an error condition with a suitable errno code
+	 * if possible when and end of file is detected... because we never expect
+	 * one. Before closing the connection, the remote application should be
+	 * polite enough to send a 'bye' request and wait for us to receive it.
+	 */
+
+	errno = EPIPE;				/* conntection is broken */
+	KillTimer (NULL, timer);	/* stop alarm clock */
+
+  	return -1;
+
+#else
+
+	Signal_t (*oldalrm)();
 	oldalrm = signal(SIGALRM, (void (*)(int)) timeout);	/* Trap SIGALRM within this function */
 
 	if (0 != setjmp(env)) {
@@ -102,10 +187,14 @@ closed:
 	signal(SIGALRM, oldalrm);	/* restore default handler */
 
 	return -1;
+#endif
 }
 
-
+#ifdef EIF_WIN32
+rt_public int net_send(STREAM *cs, char *buf, int size)
+#else
 rt_public int net_send(int cs, char *buf, int size)
+#endif
        				/* The connected socket descriptor */
           			/* Where data are stored */
          			/* Amount of data to be sent */
@@ -115,10 +204,36 @@ rt_public int net_send(int cs, char *buf, int size)
 	int error;
 	int length;
 	int amount;
+
+#ifdef EIF_WIN32
+	BOOL fSuccess;
+
+#ifdef USE_ADD_LOG
+		add_log(2, "in net_send %d bytes on fd %d", size, writefd(cs));
+#endif
+
+	if (0 != setjmp(env)) {
+		errno = EPIPE;
+		fprintf (stderr, "net_send: setjmp /= 0\n");
+		return -1;
+	}
+
+	ReleaseSemaphore (writeev(cs),1,NULL);
+	for (length = 0; length < size; buf += error, length += error) {
+		amount = size - length;
+		if (amount > BUFSIZ)    /* do not write more than BUFSIZ */
+			amount = BUFSIZ;
+		fSuccess = WriteFile(writefd(cs), buf, amount, &error, NULL);
+		if (!fSuccess){
+			fprintf (stderr, "net_send: write failed. fdesc = %i, errno = %i\n", writefd(cs),  GetLastError());
+			return -1;
+		}
+	}
+
+#else
 	Signal_t (*oldpipe)();
 
 	oldpipe = signal(SIGPIPE, (void (*)(int)) broken);	/* Trap SIGPIPE within this function */
-
 	if (0 != setjmp(env)) {
 		signal(SIGPIPE, oldpipe);
 		errno = EPIPE;
@@ -143,18 +258,24 @@ rt_public int net_send(int cs, char *buf, int size)
 
 	signal(SIGPIPE, oldpipe);	/* restore default handler */
 
+#endif
 	return 0;
 }
 
+#ifndef EIF_WIN32
 rt_private Signal_t broken(void)
 {
 	longjmp(env, 1);			/* SIGPIPE was received */
 	/* NOTREACHED */
 }
+#endif
 
+#ifdef EIF_WIN32
+rt_private CALLBACK timeout(HWND hwnd, UINT msg, UINT id, DWORD time)
+#else
 rt_private Signal_t timeout(void)
+#endif
 {
 	longjmp(env, 1);			/* Alarm signal received */
 	/* NOTREACHED */
 }
-

@@ -25,6 +25,10 @@
 #include "ewbio.h"
 #include "transfer.h"
 
+#ifdef EIF_WIN32
+extern STREAM *sp;
+#endif
+
 /*
  * Protocol specific routines
  */
@@ -36,19 +40,32 @@ rt_public int shell(char *cmd)
 	 */
 
 	Request rqst;
+#ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd[EWBOUT];
+#endif
 
-	Request_Clean (rqst);	/* Recognized as non initialized -- Didier */ 
+	Request_Clean (rqst);	/* Recognized as non initialized -- Didier */
 
 	rqst.rq_type = CMD;					/* Command will be run in foreground */
+
+#ifdef EIF_WIN32
+	send_packet(sp, &rqst);	/* Processing done by ised */
+#else
 	send_packet(writefd(sp), &rqst);	/* Processing done by ised */
+#endif
+
 	if (-1 == send_str(sp, cmd)) {		/* Send command string */
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR cannot send command string");
 #endif
 		return 1;
 	}
+
+#ifdef EIF_WIN32
+	recv_packet(sp, &rqst, TRUE);
+#else
 	recv_packet(readfd(sp), &rqst);
+#endif
 
 	return AK_OK == rqst.rq_ack.ak_type ? 0 : 1;
 }
@@ -63,12 +80,20 @@ rt_public int background(char *cmd)
 	 */
 
 	Request rqst;
+#ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd[EWBOUT];
+#endif
 
 	Request_Clean (rqst);
 	rqst.rq_type = ASYNCMD;				/* Daemon will run it in background */
 	rqst.rq_opaque.op_first = rqstcnt;	/* Use request count as job number */
+
+#ifdef EIF_WIN32
+	send_packet(sp, &rqst);	/* Processing done by ised */
+#else
 	send_packet(writefd(sp), &rqst);	/* Processing done by ised */
+#endif
+
 	if (-1 == send_str(sp, cmd)) {		/* Send command string */
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR cannot send command string");
@@ -87,19 +112,31 @@ rt_public int app_start(char *cmd)
 	 */
 
 	Request rqst;
+#ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd[EWBOUT];
+#endif
 
 	Request_Clean (rqst);
 	rqst.rq_type = APPLICATION;			/* Request application start-up */
+
+#ifdef EIF_WIN32
+	send_packet(sp, &rqst);	/* Send request for ised processing */
+#else
 	send_packet(writefd(sp), &rqst);	/* Send request for ised processing */
+#endif
+
 	if (-1 == send_str(sp, cmd)) {		/* Send command string */
 #ifdef USE_ADD_LOG
 		add_log(2, "ERROR cannot send command string");
 #endif
 		return -1;
 	}
-	recv_packet(readfd(sp), &rqst);		/* Acknowledgment */
 
+#ifdef EIF_WIN32
+	recv_packet(sp, &rqst, TRUE);		/* Acknowledgment */
+#else
+	recv_packet(readfd(sp), &rqst);		/* Acknowledgment */
+#endif
 	return AK_OK == rqst.rq_ack.ak_type ? 0 : -1;
 }
 

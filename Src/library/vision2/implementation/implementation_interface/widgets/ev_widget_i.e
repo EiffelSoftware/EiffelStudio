@@ -102,7 +102,7 @@ feature -- Status setting
 				--| FIXME if we call show on a Windows modeless dialog,
 				--| then this postcondition does not hold on the previous implementation,
 				--| unless we go through the interface
-			is_show_requested: interface.implementation.is_show_requested
+			is_show_requested: is_show_requested
 		end
 
 	set_focus is

@@ -620,8 +620,6 @@ feature {GB_COMMAND_NAME_CHANGE} -- Implementation
 					file.put_string (file_contents)
 					file.close
 				end
-					
-					
 			end
 		end
 

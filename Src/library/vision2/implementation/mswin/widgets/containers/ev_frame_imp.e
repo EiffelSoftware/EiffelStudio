@@ -118,7 +118,7 @@ feature -- Element change
 			check
 				font_imp_not_void: font_imp /= Void
 			end
-			t := font_imp.string_width_and_height (a_text)
+			t := font_imp.string_width_and_height (" " + a_text + " ")
 			text_width := t.integer_item (1)
 			text_height := t.integer_item (2)
 			Precursor (a_text)
@@ -239,7 +239,7 @@ feature {NONE} -- WEL Implementation
 	Border_width: INTEGER is 4
 			-- Number of pixels taken up by border.
 
-	Text_padding: INTEGER is 4
+	Text_padding: INTEGER is 10
 			-- Number of pixels left and right to `text'.
 
 	text_height: INTEGER
@@ -258,7 +258,6 @@ feature {NONE} -- WEL Implementation
 			-- Redraw frame with `frame_style'.
 		local
 			wel_style: INTEGER
-			frame_rect: WEL_RECT
 			text_pos: INTEGER
 			font_imp: EV_FONT_IMP
 		do
@@ -273,33 +272,31 @@ feature {NONE} -- WEL Implementation
 				end
 			end
 
-			create frame_rect.make (
-				invalid_rect.left + 1,
-				invalid_rect.top + 1 + text_height // 2,
-				invalid_rect.right - 1,
-				invalid_rect.bottom - 1
-			)
+			draw_edge (paint_dc, create {WEL_RECT}.make (
+					1, (text_height // 2).max (1), width - 2, height - 2
+				), wel_style, Bf_rect)
 
-			if alignment.is_left_aligned then
-				text_pos := Text_padding
-			elseif alignment.is_center_aligned then
-				text_pos := (width - text_width) // 2
-			elseif alignment.is_right_aligned then
-				text_pos := width - text_width - Text_padding
-			end
-
-			font_imp ?= font.implementation
-			check
-				font_imp_not_void: font_imp /= Void
-			end
-			paint_dc.select_font (font_imp.wel_font)
-			paint_dc.set_text_color (foreground_color_imp)
-			paint_dc.set_background_color (background_color_imp)
-			draw_edge (paint_dc, frame_rect, wel_style, Bf_rect)
-			if is_sensitive then
-				paint_dc.text_out (text_pos, 0, wel_text)
-			else
-				draw_insensitive_text (paint_dc, wel_text, text_pos, 0)
+			if text /= Void then
+				if alignment.is_left_aligned then
+					text_pos := Text_padding
+				elseif alignment.is_center_aligned then
+					text_pos := (width - text_width) // 2
+				elseif alignment.is_right_aligned then
+					text_pos := width - text_width - Text_padding
+				end
+				font_imp ?= font.implementation
+				check
+					font_imp_not_void: font_imp /= Void
+				end
+				paint_dc.select_font (font_imp.wel_font)
+				paint_dc.set_text_color (foreground_color_imp)
+				paint_dc.set_background_color (background_color_imp)
+				if is_sensitive then
+					paint_dc.text_out (text_pos, 0, " " + wel_text + " ")
+				else
+					draw_insensitive_text (paint_dc,
+						" " + wel_text + " ", text_pos, 0)
+				end
 			end
 		end
 
@@ -330,9 +327,8 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.31  2000/04/27 23:52:34  brendel
---| First complete implementation.
---| Cleanup.
+--| Revision 1.32  2000/04/28 00:40:23  brendel
+--| Fixed text label drawing.
 --|
 --| Revision 1.30  2000/04/27 18:30:22  brendel
 --| Corrected order of arguments.

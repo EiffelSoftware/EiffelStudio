@@ -1,4 +1,83 @@
 \n || 
 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ||
 xsi:noNamespaceSchemaLocation="D:\My Documents\Documentation Project\Misc Files\document.xsd" ||
-<document([^>]*)> || <document\1\ output="studio">
+\t\t ||  
+\t || 
+>[ ]*< || ><
+>[\t]*< || ><
+<p[^>]*>([^<][^/][^p][^>]*)<p> || <p>\1\</p><p>
+<!DOCTYPE[^>]*> || 
+<link [^>]*> || 
+<meta[^>]*> || 
+<style[^>]*> || 
+<html[^>]*> || <document>
+<head> || <help/>
+</head> || 
+<body[^>]*> || <paragraph>
+</body> || </paragraph>
+<center[^>]*> || 
+</center> || 
+<div[^>]*> || 
+</div> || 
+<h(.)[^>]*>([^<]*)</h.> || <heading><size>\1\</size>\2\</heading>
+<p class="seealso"> || <seealso>
+<p class="warning"> || <warning>
+<p class="tip"> || <tip>
+<p class="note"> || <note>
+<p class="sample"> || <sample>
+<p class="info"> || <info>
+<p[^>]*> || <paragraph>
+</p> || </paragraph>
+<table[^>]*> || <table>
+<td[^>]*> || <cell>
+<tr[^>]*> || <row>
+</td> || </cell>
+</tr> || </row>
+<ul[^>]*> || <list ordered="false">
+<ol[^>]*> || <list ordered="true">
+</ol> || </list>
+</ul> || </list>
+<li> || <item>
+</li> || 
+<item> || </item><itemtemp>
+</list> || </item></list>
+<list ordered="false"></item> || <list ordered="false">
+<list ordered="true"></item> || <list ordered="true">
+<item[^>]*>([^<][^/][^i][^t][^e][^m][^>]*)<item> || <item>\1\</item><item>
+</html> || </document>
+<b> || <bold>
+</b> || </bold>
+<i> || <italic>
+</i> || </italic>
+<br[^>]*> || <line_break/>
+</br> || <line_break/>
+### || &
+&nbsp; || 
+tabindex="([^"]*)" || <tab_index>\1\</tab_index>
+keywords="([^"]*)" || <keywords>\1\</keywords>
+indexmoniker="([^"]*)" || <index_moniker>\1\</index_moniker>
+<img || <image>
+alt="([^"]*)" || <alt_text>\1\</alt_text>
+src="([^"]*)" || <url>\1\</url>
+(<image>.*</url>) /> || \1\</image>
+<([/]*)mshelp:link[ \t]*([>]*) || <\1\help_link>
+<spanclass="([^"]*)">([^<]*)</span> || <\1\>\2\</\1\>
+<span class="([^"]*)">([^<]*)</span> || <\1\>\2\</\1\>
+<efeature>([^<]*)</efeature> || <code><feature_name>\1\</feature_name></code>
+<eclass>([^<]*)</eclass> || <code><class_name>\1\</class_name></code>
+<ekeyword>([^<]*)</ekeyword> || <code><keyword>\1\</keyword></code>
+<ecomment>([^<]*)</ecomment> || <code><comment>\1\</comment></code>
+<estring>([^<]*)</estring> || <code><string>\1\</string></code>
+<enumber>([^<]*)</enumber> || <code><number>\1\</number></code>
+<echar>([^<]*)</echar> || <code><character>\1\</character></code>
+<eitag>([^<]*)</eitag> || <code><indexing_tag>\1\</indexing_tag></code>
+<document><help/><title>([^<]*)</title> || <document title="\1\"><help/>
+<a href="([^"]*)">([^<]*)</a> || <link><url>\1\</url><label>\2\</label></link>
+<ahref="([^"]*)">([^<]*)</a> || <link><url>\1\</url><label>\2\</label></link>
+<a [^>]*> || 
+</a> || 
+<xml[^>]*>.*</xml> || 
+<paragraph></paragraph> || 
+<help/>[^<]*</style> || 
+<strong> || <bold>
+</strong> || </bold>

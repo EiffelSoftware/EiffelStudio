@@ -168,4 +168,24 @@ feature {NONE} -- Attributes
 	available: BOOLEAN
 		-- Is total execution time available
 
+feature {PROFILE_CONVERTER} -- Spit Information for debugging.
+
+	spit_info is
+			-- Spits all kinds of information about Current.
+			--| For debugging purposes only.
+			--| Will be called from `PROFILE_CONVERTER'.
+		do
+			if available then
+				io.error.putstring ("Total execution time is: ");
+				io.error.put_real (total_exec_time);
+				io.error.new_line
+			else
+				io.error.putstring ("Total execution time is not available.");
+				io.error.new_line
+			end
+			io.error.putstring ("Printing information from the `profile_data'.");
+			io.error.new_line;
+			profile_data.spit_info
+		end;
+
 end -- class PROFILE_INFORMATION

@@ -179,4 +179,40 @@ feature {NONE} -- Attributes
 		-- to retrieve the Eiffel feature names from any supported
 		-- profiler.
 
+feature {PROFILE_CONVERTER} -- Spit Information (for debugging)
+
+	spit_info is
+		do
+			io.error.putstring ("Name: ");
+			io.error.putstring (configuration_name);
+			io.error.new_line;
+			io.error.putstring ("Number of columns: ");
+			io.error.putint (number_of_columns);
+			io.error.new_line;
+			io.error.putstring ("Index column: ");
+			io.error.putint (index_column);
+			io.error.new_line;
+			io.error.putstring ("Function time column: ");
+			io.error.putint (function_time_column);
+			io.error.new_line;
+			io.error.putstring ("Descendent time column: ");
+			io.error.putint (descendent_time_column);
+			io.error.new_line;
+			io.error.putstring ("Number of calls column: ");
+			io.error.putint (number_of_calls_column);
+			io.error.new_line;
+			io.error.putstring ("Function name column: ");
+			io.error.putint (function_name_column);
+			io.error.new_line;
+			io.error.putstring ("Percentage column: ");
+			io.error.putint (percentage_column);
+			io.error.new_line;
+			io.error.putstring ("Leading underscore: ");
+			io.error.putbool (leading_underscore);
+			io.error.new_line;
+			io.error.putstring ("Columns of interest: ");
+			io.error.putint (columns_of_interest);
+			io.error.new_line;
+		end
+
 end -- class SHARED_PROF_CONFIG

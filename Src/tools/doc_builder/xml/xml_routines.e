@@ -186,7 +186,7 @@ feature -- Status Setting
 				loop
 					l_child_element := l_element.element_by_name (a_array_path.item (cnt + 1))
 					if l_child_element = Void then
-						create l_child_element.make_child (l_element, a_array_path.item (cnt + 1), create {XM_NAMESPACE}.make_default)
+						create l_child_element.make (l_element, a_array_path.item (cnt + 1), create {XM_NAMESPACE}.make_default)
 						l_element.put_first (l_child_element)
 					end
 					l_element := l_child_element
@@ -195,7 +195,7 @@ feature -- Status Setting
 				if l_element /= Void then
 					l_child_element := l_element.element_by_name (a_element)
 					if l_child_element = Void then
-						create l_child_element.make_child (l_element, a_element, create {XM_NAMESPACE}.make_default)
+						create l_child_element.make (l_element, a_element, create {XM_NAMESPACE}.make_default)
 						l_element.put_first (l_child_element)
 					elseif l_child_element.count > 0 then					
 						l_child_element.remove (1)

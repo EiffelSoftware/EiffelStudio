@@ -310,6 +310,16 @@ feature -- Element change
 			set_pixmap (gdkpix, gdkmask)
 		end	
 
+	set_with_default is
+			-- Initialize the pixmap with the default
+			-- pixmap (Vision2 logo)
+			--
+			-- Exceptions "Unable to retrieve icon information"
+		do
+			unref_data
+			c_ev_load_pixmap ($Current, Default_pointer, $update_fields)
+		end
+
 	stretch, stretch_image (a_x, a_y: INTEGER) is
 			-- Stretch the image to fit in size `a_x' by `a_y'.
 		do
@@ -459,6 +469,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/05/03 04:32:08  pichery
+--| Added feature `set_with_default'
+--|
 --| Revision 1.34  2000/05/02 18:55:32  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

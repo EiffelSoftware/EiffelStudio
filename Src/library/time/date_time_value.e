@@ -81,9 +81,9 @@ feature -- Access
 	fractionnal_second: DOUBLE is 
 			-- Decimal part of second 
 		do 
-			Result := time.fractionnal_second
+			Result := time.fractional_second
 		ensure
-			same_fractionnal: Result = time.fractionnal_second
+			same_fractionnal: Result = time.fractional_second
 		end; 
  
 feature -- Conversion

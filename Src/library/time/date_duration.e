@@ -9,17 +9,15 @@ class
 	DATE_DURATION
 
 inherit
-	DATE_VALUE
-		undefine
-			is_equal
-		redefine
-			day, month, year
-		end;
 
 	DURATION
 		undefine
-			is_equal,
-			out 
+			is_equal
+		end
+
+	DATE_CONSTANTS
+		undefine
+			is_equal	
 		end
 
 creation

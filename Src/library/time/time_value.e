@@ -33,7 +33,7 @@ feature -- Access
 			Result := c_second (compact_time);
 		end;
 
-	fractionnal_second: DOUBLE 
+	fractional_second: DOUBLE 
 			-- Fractionnal part of `fine_second'
 
 	compact_time: INTEGER 
@@ -42,26 +42,26 @@ feature -- Access
 	fine_second: DOUBLE is
 			-- Representation of second with decimals 
  		do
-			Result := second + fractionnal_second;
+			Result := second + fractional_second;
 		end
 
 	milli_second: INTEGER is 
 			-- Millisecond of the current time
 		do 
-			Result := (fractionnal_second * 1000).truncated_to_integer 
+			Result := (fractional_second * 1000).truncated_to_integer 
 		end;
 
 	micro_second: INTEGER is 
 			-- Microsecond of the current time
 		do 
-			Result := (fractionnal_second * 1_000_000).truncated_to_integer;
+			Result := (fractional_second * 1_000_000).truncated_to_integer;
 			Result := Result \\ 1000
 		end; 
  
 	nano_second: INTEGER is 
 			-- Nanosecond of the current time
 		do 
-			Result := (fractionnal_second * 1_000_000_000).truncated_to_integer;
+			Result := (fractional_second * 1_000_000_000).truncated_to_integer;
 			Result := Result \\ 1000
 		end; 
  

@@ -1481,66 +1481,36 @@ feature -- Workbench feature and descriptor table generation
 	generate_feature_table is
 			-- Generation of workbench mode feature table for
 			-- the current class
-			--|Don't forget to modify also `generate_workbench_files' when modifying
-			--|this function
 		local
 			file: INDENT_FILE
 			buffer: GENERATION_BUFFER
 		do
-				-- Clear buffer for Current generation
-			buffer := generation_buffer
-			buffer.clear_all
-			buffer.putstring ("/*%N * Class ")
-			buffer.putstring (external_class_name)
-			buffer.putstring ("%N */%N%N")
-			buffer.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
-			buffer.start_c_specific_code
-			feature_table.generate (buffer)
-			buffer.end_c_specific_code
+			if not is_precompiled then
+					-- Clear buffer for Current generation
+				buffer := generation_buffer
+				buffer.clear_all
+				buffer.putstring ("/*%N * Class ")
+				buffer.putstring (external_class_name)
+				buffer.putstring ("%N */%N%N")
+				buffer.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
+				buffer.start_c_specific_code
+				feature_table.generate (buffer)
+				buffer.end_c_specific_code
 
-			create file.make_c_code_file (feature_table_file_name)
-			file.put_string (buffer)
-			file.close
+					-- Generation of workbench mode feature table for
+					-- the current class
+				create file.make_c_code_file (feature_table_file_name)
+				file.put_string (buffer)
+				file.close
+			end
 		end
 
 	generate_workbench_files is
-			-- replace generate_decriptor_table,
-			-- generate_feature_table and pass4
+			-- Collect calls to generate_decriptor_table, generate_feature_table and pass4
 			-- in case of first compilation.
-			-- Just a problem of efficiency
-		local
-			file: INDENT_FILE
-			buffer: GENERATION_BUFFER
-			feat_tbl: FEATURE_TABLE
 		do
-			System.set_current_class (Current)
-
-			feat_tbl := feature_table
-
-				-- Generation of workbench mode descriptor tables
-				-- of associated class types.
-				--|Note: when precompiling a system a class might
-				--|have no generic derivations
-			if has_types then
-				feat_tbl.origin_table.generate (Current)
-			end
-
-				-- Clear buffer for Current generation
-			buffer := generation_buffer
-			buffer.clear_all
-			buffer.putstring ("/*%N * Class ")
-			buffer.putstring (external_class_name)
-			buffer.putstring ("%N */%N%N")
-			buffer.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
-			buffer.start_c_specific_code
-			feat_tbl.generate (buffer)
-			buffer.end_c_specific_code
-
-				-- Generation of workbench mode feature table for
-				-- the current class
-			create file.make_c_code_file (feature_table_file_name)
-			file.put_string (buffer)
-			file.close
+			generate_descriptor_tables
+			generate_feature_table
 
 				-- Generation of C files for each type associated to the current
 				-- class
@@ -1553,8 +1523,6 @@ feature -- Workbench feature and descriptor table generation
 			-- of associated class types.
 			--|Note: when precompiling a system a class might
 			--|have no generic derivations
-			--|Don't forget to modify also `generate_workbench_files' when modifying
-			--|this function
 		do
 			System.set_current_class (Current)
 			if has_types then
@@ -1624,6 +1592,8 @@ feature
 			-- Packet in which the file will be generated
 		do
 			Result := System.static_type_id_counter.packet_number (feature_table_file_id)
+		ensure
+			packet_number_positive: Result > 0
 		end
 
 	feature_table_file_id: INTEGER is

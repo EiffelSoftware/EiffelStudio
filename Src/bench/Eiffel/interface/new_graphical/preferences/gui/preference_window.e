@@ -83,7 +83,7 @@ feature -- Initialization
 			name_possible: folder_name /= Void and then resources.has_folder (folder_name)
 		local
 			folder: RESOURCE_FOLDER
-			it: EV_TREE_ITEM
+			it: EV_TREE_NODE
 		do
 			default_create
 			folder := resources.folder (folder_name)
@@ -317,7 +317,7 @@ feature -- Fill Lists
 			Result := it
 		end
 
-	fill_right_list (t_item: EV_TREE_ITEM) is
+	fill_right_list (t_item: EV_TREE_NODE) is
 			-- Fill right list
 		local
 			it: RESOURCE_LIST_ITEM

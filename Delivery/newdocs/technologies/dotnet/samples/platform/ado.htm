@@ -1,13 +1,16 @@
 <script src="../instal.js"></script>
+
 <html>
-	<head>
-		<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
-		<meta name="ProgId" content="FrontPage.Editor.Document">
-		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-		<title>Dotnet examples</title>
-		<LINK REL="StyleSheet" HREF="../../../../default.css">
-			<style>
-				<!--
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Dotnet examples</title>
+<LINK REL=StyleSheet HREF="../../../../default.css">
+
+<style>
+<!--
 
     .Title{FONT-FAMILY: Verdana;FONT-SIZE: large;COLOR: #808080}
 
@@ -20,23 +23,29 @@
     .FixedHeading{FONT-FAMILY: Verdana;FONT-SIZE: x-small}
 
     .FixedText{MARGIN-LEFT: 3ex;FONT-FAMILY: Lucida Console;FONT-SIZE: x-small;FONT-WEIGHT: Bold}
---></style>
-	</head>
-	<body>
-		<h1>
-			<root xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:d2="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
-    ADO.NET</root>
-			sample</h1>
-		<p>This sample is a command line system demonstrating how to interact with a database.</p>
-		<p>The DataReader object is somewhat synonymous with a read-only/forward-only 
-			cursor over data. The DataReader API supports flat as well as hierarchical 
-			data. A DataReader object is returned after executing a command against a 
-			database. The format of the returned DataReader object is different from a 
-			recordset. For example, you might use the DataReader to show the results of a 
-			search list in a web page.</p>
-		<p>&nbsp;</p>
-		<H2>Compiling</H2>
-		<script language="JavaScript">
+-->
+</style>
+</head>
+
+<body>
+
+<h1>
+<root xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns:d2="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882">
+    ADO.NET</root> example</h1>
+<p>This sample consist in a command line showing how to interact with a 
+database.</p>
+
+<p>The DataReader object is somewhat synonymous with a 
+read-only/forward-only cursor over data. The DataReader API supports flat as 
+well as hierarchical data. A DataReader object is returned after executing a 
+command against a database. The format of the returned DataReader object is 
+different from a recordset. For example, you might use the DataReader to show 
+the results of a search list in a web page.</p>
+
+<p>&nbsp;</p>
+
+<H2>Compiling</H2>
+<script language="JavaScript">
 <!--
 var path_to_ace_file = Eiffel_version + "\\examples\\dotnet\\platform\\ado\\ado3\\";
 var ace_file_name = "Ace";
@@ -50,15 +59,15 @@ else {
 	write_envision_compiling_instruction (path_eifp_file, eifp_name)
 }
 -->
-		</script>
-		<noscript>
-			<p>To see compiling instructions, you have to enable javascript.</p>
-		</noscript>
-		<h2>Running</h2>
+</script>
+<noscript>
+<p>To see compiling instructions, you have to enable javascript.</p></noscript>
+
+<h2>Running</h2>
 		<P>
 			After you launch the sample, the following output appears:
 		</P>
-		<pre>Customer ID    Company Name
+<pre>Customer ID    Company Name
 ALFKI    Alfreds Futterkiste
 ANATR    Ana Trujillo Emparedados y helados
 ANTON    Antonio Moreno Taquer¡a
@@ -81,37 +90,30 @@ EASTC    Eastern Connection
 ...	...	...
 WILMK    Wilman Kala
 WOLZA    Wolski  Zajazd
-</pre>
+</PRE>
 		<P>
-			When the display is finished, the application wait for you to pressed the 
-			return key to finished the application.</P>
-		<h2>Under the Hood</h2>
-		<p>This application shows how to interact with a database. First the connection to 
-			the database is open (<span class="eKeyword">create</span>
-			<span class="eLocal">my_sql_connection</span>.<span class="eFeature">make_from_connection_string </span>
-			(<i>my_database</i>)), then a request to the database is made (create 
-			my_sql_command.<span class="eFeature">make_from_cmd_text_and_connection </span>(<i>my_command</i>,
-			<span class="eLocal">my_sql_connection</span>)). Finally, the result of the 
-			request is displayed.</p>
-		<p>This sample contains the following class:
-		</p>
-		<ul>
-			<li>
-				<span class="eClass">SQL_DATA_READER</span></li>
-			<li>
-				<span class="eClass">SQL_CONNECTION</span></li>
-			<li>
-				<span class="eClass">SQL_COMMAND</span></li>
-		</ul>
-		<p>&nbsp;</p>
-		<h2>Notes</h2>
-		</a>
-		<p>This sample is translated from the example located in the 
-			QuickStart\howto\samples\adoplus </a> subdirectory of the .NET Framework SDK 
-			samples directory of Microsoft Visual Studio .NET.
-		</p>
-		<p>For Example:</p>
-		<p class="FixedText">C:\Program 
-			Files\Microsoft.NET\FrameworkSDK\Samples\QuickStart\howto\samples\adoplus\adooverview3</p>
-	</body>
+			When the display is finished, the application wait for you to 
+            pressed the return key to finish the application.</P>
+<h2>Under the Hood</h2>
+<p>This application shows how to interact with a database. First the 
+connection to the database is open (<span class="eKeyword">create</span> <span class="eLocal">my_sql_connection</span>.<span class="eFeature">make_from_connection_string </span>
+(<i>my_database</i>)), then a request to the database is made (create my_sql_command.<span class="eFeature">make_from_cmd_text_and_connection </span>(<i>my_command</i>, 
+<span class="eLocal">my_sql_connection</span>)). Finally,  the 
+result of the request is displayed.</p>
+<p>This sample contains the following class: </p>
+<ul>
+  <li><span class="eClass">SQL_DATA_READER</span></li>
+  <li><span class="eClass">SQL_CONNECTION</span></li>
+  <li><span class="eClass">SQL_COMMAND</span></li>
+</ul>
+
+<p>&nbsp;</p>
+
+<h2>Notes</h2></a>
+<p>This sample is translated from the example located in the QuickStart\howto\samples\adoplus </a>
+subdirectory of the .NET Framework SDK samples directory of Microsoft Visual 
+Studio .NET.</p>
+
+</body>
+
 </html>

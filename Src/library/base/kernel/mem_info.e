@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 
 invariant
 
-	Consistent: total = free + used + overhead
+	consistent_memory: total = free + used + overhead
 
 end -- class MEM_INFO
 

@@ -215,8 +215,8 @@ feature -- Comparison
 feature -- Status report	
 
 	consistent (other: like Current): BOOLEAN is
-				-- Is object in a consistent state so that others
-				-- can be copied onto it? (Default answer: yes).
+				-- Is object in a consistent state so that `other'
+				-- may be copied onto it? (Default answer: yes).
 		do
 			Result := (other.capacity = capacity)
 		end;
@@ -297,7 +297,7 @@ feature -- Element change
 			str_replace ($area, $s_area, count, s.count, start_pos, end_pos);
 			count := new_size
 		ensure
-		   --new_count: count = old count + s.count - end_pos + start_pos -1
+		   new_count: count = old count + s.count - end_pos + start_pos -1
 		end;
 
 	fill_blank is
@@ -319,7 +319,7 @@ feature -- Element change
 				count := n
 			end
 		ensure
-			-- `count' = min (`n', old `count')
+			count = min (n, old count)
 		end;
 
 	tail (n: INTEGER) is
@@ -333,7 +333,7 @@ feature -- Element change
 				count := n
 			end
 		ensure
-			-- `count' = min (`n', old `count')
+			count = min (n, old count)
 		end;
 
 	left_adjust is
@@ -387,7 +387,7 @@ feature -- Element change
 			str_cprepend ($area, $c, count);
 			count := count + 1
  		ensure
- 		  --new_count: count = old count + 1;
+ 		  new_count: count = old count + 1;
 		end;
 
 	prepend (s: STRING) is
@@ -406,7 +406,7 @@ feature -- Element change
 			str_insert ($area, $s_area, count, s.count, 1);
 			count := new_size
  		ensure
- 		  --new_count: count = old count + s.count;
+ 		  new_count: count = old count + s.count;
 		end;
 
 	append (s: STRING) is
@@ -423,7 +423,7 @@ feature -- Element change
 			str_append ($area, $s_area, count, s.count);
 			count := new_size
  		ensure then
-			--new_count: count = old count + s.count
+			new_count: count = old count + s.count
 		end;
 
 	append_integer (i: INTEGER) is
@@ -484,7 +484,7 @@ feature -- Element change
 			str_insert ($area, $s_area, count, s.count, i);
 			count := new_size
 		ensure
-			--new_count: count = old count + s.count
+			new_count: count = old count + s.count
 		end;
 
 feature -- Removal
@@ -498,7 +498,7 @@ feature -- Removal
 			str_rmchar ($area, count, i);
 			count := count - 1;
  		ensure
-			--new_count: count = old count - 1;
+			new_count: count = old count - 1;
 		end;
 
 	prune (c: CHARACTER) is
@@ -621,7 +621,7 @@ feature -- Conversion
 	to_boolean: BOOLEAN is
 			-- Boolean value;
 			-- "true" yields `true', "false" yields `false' 
-			-- (case insensitive)
+			-- (case-insensitive)
 		require
 			-- String is "true" or "false" (with some letters possibly upper-case)
 		local
@@ -632,8 +632,8 @@ feature -- Conversion
 			Result := s.is_equal (True_constant)
 		end;
 
-	sequential_representation: SEQUENTIAL [CHARACTER] is
-			-- Representation as a sequential structure
+	linear_representation: LINEAR [CHARACTER] is
+			-- Representation as a linear structure
 		do
 		end;
 
@@ -663,7 +663,7 @@ feature -- Duplication
 		do
 			str_reverse ($area, count);
 		ensure
-			--same_count: count = old count;
+			same_count: count = old count;
 		--  	reverse_entries:
 		--	for all `i: 1..count, item (i) = old item (count + 1 - i)'
 		end;

@@ -13,25 +13,13 @@ class SEQ_STRING inherit
 			wipe_out as string_wipe_out
 		export
 			{ANY}
-				sequential_representation
+				linear_representation
 		undefine
-			sequential_representation
+			linear_representation
 		redefine
 			has, prune
 		end;
 
-	LINEAR [CHARACTER]
-		rename
-			item as current_item,
-			index_of as index_of_occurrence
-		undefine
-			occurrences, out, copy, is_equal,
-			consistent, setup,
-			changeable_comparison_criterion
-		redefine
-			has, index_of_occurrence
-		end;
-	
 	SEQUENCE [CHARACTER]
 		rename
 			append as seq_append,
@@ -43,7 +31,7 @@ class SEQ_STRING inherit
 			{NONE} 
 				sequence_put, seq_append
 		undefine
-			occurrences, search,  out, copy, is_equal, prune_all,
+			occurrences, out, copy, is_equal, prune_all,
 			consistent, setup,
 			changeable_comparison_criterion
 		redefine
@@ -200,13 +188,13 @@ feature -- Access
 feature -- Status report
 
 	before: BOOLEAN is
-			-- Is there no valid position to the left of the cursor?
+			-- Is there no valid cursor position to the left of cursor?
 		do
 			Result := index < 1
 		end;
 
 	after: BOOLEAN is
-			-- Is there no valid position to the right of the cursor?
+			-- Is there no valid cursor position to the right of cursor?
 		do
 			Result := index > count
 		end;
@@ -234,7 +222,7 @@ feature -- Cursor movement
 	forth is
 			-- Move to next position.
 		do
-			index := index + 1
+			index := index + 1;
 		end;
 
 
@@ -264,7 +252,7 @@ feature -- Element change
 			string_precede (c);
 			index := index + 1;
  		ensure
- 			--new_index: index = old index + 1;
+ 			new_index: index = old index + 1;
 		end;
 
 	prepend (s: STRING) is
@@ -275,7 +263,7 @@ feature -- Element change
 			string_prepend (s);
 			index := index + s.count;
   		ensure
- 			--new_index: index = old index + s.count;
+ 			new_index: index = old index + s.count;
 		end;
 
 feature -- Removal
@@ -342,8 +330,8 @@ feature -- Duplication
 			string_mirror;
 			index := count + 1 - index;
 		ensure
-		   --same_count: count = old count;
-		   --mirrored_index: index = count - old index + 1;
+		   same_count: count = old count;
+		   mirrored_index: index = count - old index + 1;
 		--   reverse_entries:
 		--	for all `i: 1..count, item (i) = old item (count + 1 - i)'
 		end;

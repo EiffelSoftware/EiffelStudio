@@ -80,7 +80,8 @@ feature -- Access
 
 	has (v: G): BOOLEAN is
 			-- Does `v' appear in array?
-			-- (According to the `=' discrimination rule used in `search')
+ 			-- (Reference or object equality,
+			-- based on `object_comparison'.)
 		local
 			i: INTEGER
 		do
@@ -140,10 +141,10 @@ feature -- Comparison
 feature -- Status report
 
 	consistent (other: like Current): BOOLEAN is
-				-- Is object in a consistent state so that others
-				-- can be copied onto it? (Default answer: yes).
+				-- Is object in a consistent state so that `other'
+				-- may be copied onto it? (Default answer: yes).
 		do
-			Result := capacity = other.capacity
+			Result := (capacity = other.capacity)
 		end;
 
 	full: BOOLEAN is
@@ -212,7 +213,7 @@ feature -- Element change
 			put (v, i)
 		ensure
 			inserted: item (i) = v;
-			--higher_capacity: capacity >= old capacity
+			higher_capacity: capacity >= old capacity
 		end;
 
 feature -- Removal
@@ -299,8 +300,8 @@ feature -- Resizing
 				
 feature -- Conversion
 		
-	sequential_representation: SEQUENTIAL [G] is
-			-- Representation as a sequential structure
+	linear_representation: LINEAR [G] is
+			-- Representation as a linear structure
 		local
 			temp: ARRAYED_LIST [G];
 			i: INTEGER;

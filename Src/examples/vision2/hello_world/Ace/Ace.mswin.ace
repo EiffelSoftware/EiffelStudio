@@ -56,6 +56,7 @@ cluster
 	vision_properties (vision):						"$\properties";
 	vision_items (vision):							"$\items";
 	vision_pnd (vision):							"$\pick_and_drop";
+	vision_figures (vision):						"$\figures";
 	vision_widgets (vision):        				"$\widgets";
 	vision_primitives (vision_widgets):     		"$\primitives";
 	vision_containers (vision_widgets):     		"$\containers";

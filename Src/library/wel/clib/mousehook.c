@@ -9,16 +9,31 @@
 #include "wel_mousehook.h"
 #include <stdio.h>
 
-static EIF_BOOLEAN bIsMouseHooked = FALSE;
-
 /*---------------------------------------------------------------------------*/
-/* FUNC: cwel_is_mouse_hooked                                                */
+/* FUNC: cwel_get_hook_window                                                */
 /*---------------------------------------------------------------------------*/
-/* Return TRUE if the mouse hook is currently running, FALSE otherwise.      */
+/* Returns the handle of the window that has started the hook, NULL if no    */
+/* hook is currently under process                                           */
 /*---------------------------------------------------------------------------*/
-EIF_BOOLEAN cwel_is_mouse_hooked()
+HWND cwel_get_hook_window()
 	{
-	return bIsMouseHooked;
+	HINSTANCE hLibrary;
+	FARPROC get_hook_window_func;
+	
+	// Get the module of the library WITHOUT loading it.
+	hLibrary = GetModuleHandle("wel_hook.dll");
+
+	// The library is not loaded, so no hook is defined..
+	if (hLibrary == NULL)
+		return NULL;
+	
+	get_hook_window_func = GetProcAddress(hLibrary, "get_hook_window");
+	if (get_hook_window_func == NULL)
+		return NULL;		// Unable to locate the function inside the DLL
+
+	// Everything went ok, execute the function and return the value returned
+	// by the function.
+	return ((FUNCTION_CAST_TYPE(HWND, __stdcall, ()) get_hook_window_func)());
 	}
 
 /*---------------------------------------------------------------------------*/
@@ -33,28 +48,24 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 	{
 	HINSTANCE hLibrary;
 	FARPROC hook_mouse_func;
+	BOOL bRes;
 	
-	if (!bIsMouseHooked)
+	hLibrary = LoadLibrary("wel_hook.dll");
+	if (hLibrary == NULL)
 		{
-		hLibrary = LoadLibrary("wel_hook.dll");
-		if (hLibrary == NULL)
-			{
-			// Display an error box
-			MessageBox(hWnd, "An error occurred while loading the file 'wel_hook.dll'\nCheck that it can be found in your path or your working directory", "Unable to load a DLL..", MB_OK | MB_ICONERROR | MB_TOPMOST);
-			return FALSE;
-			}
-
-		hook_mouse_func = GetProcAddress(hLibrary, "hook_mouse");
-		if (hook_mouse_func == NULL)
-			return FALSE;		// Unable to locate the function inside the DLL
-		
-		// Everything went ok, execute the function and return the value returned
-		// by the function.
-		bIsMouseHooked = (EIF_BOOLEAN) ((FUNCTION_CAST_TYPE(int, __stdcall, (HWND)) hook_mouse_func)(hWnd));
-		return bIsMouseHooked;
-		}
-	else
+		// Display an error box
+		MessageBox(hWnd, "An error occurred while loading the file 'wel_hook.dll'\nCheck that it can be found in your path or your working directory", "Unable to load a DLL..", MB_OK | MB_ICONERROR | MB_TOPMOST);
 		return FALSE;
+		}
+
+	hook_mouse_func = GetProcAddress(hLibrary, "hook_mouse");
+	if (hook_mouse_func == NULL)
+		return FALSE;		// Unable to locate the function inside the DLL
+	
+	// Everything went ok, execute the function and return the value returned
+	// by the function.
+	bRes = (EIF_BOOLEAN) ((FUNCTION_CAST_TYPE(int, __stdcall, (HWND)) hook_mouse_func)(hWnd));
+	return bRes;
 	}
 
 /*---------------------------------------------------------------------------*/
@@ -66,31 +77,25 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 /*---------------------------------------------------------------------------*/
 EIF_BOOLEAN cwel_unhook_mouse()
 	{
-	if (bIsMouseHooked)
-		{
-		HINSTANCE hLibrary;
-		FARPROC unhook_mouse_func;
-		EIF_BOOLEAN bRes;
-		
-		// Get the module of the library WITHOUT loading it.
-		hLibrary = GetModuleHandle("wel_hook.dll");
+	HINSTANCE hLibrary;
+	FARPROC unhook_mouse_func;
+	EIF_BOOLEAN bRes;
+	
+	// Get the module of the library WITHOUT loading it.
+	hLibrary = GetModuleHandle("wel_hook.dll");
 
-		// The library is not loaded, so no hook is defined.. do nothing
-		// and return an error
-		if (hLibrary == NULL)
-			return FALSE;
-		
-		unhook_mouse_func = GetProcAddress(hLibrary, "unhook_mouse");
-		if (unhook_mouse_func == NULL)
-			return FALSE;		// Unable to locate the function inside the DLL
-
-		// Everything went ok, execute the function and return the value returned
-		// by the function.
-		bRes = (EIF_BOOLEAN) ((FUNCTION_CAST_TYPE(int, __stdcall, ()) unhook_mouse_func)());
-		bIsMouseHooked = !bRes;
-		FreeLibrary(hLibrary);
-		return bRes;
-		}
-	else
+	// The library is not loaded, so no hook is defined.. do nothing
+	// and return an error
+	if (hLibrary == NULL)
 		return FALSE;
+	
+	unhook_mouse_func = GetProcAddress(hLibrary, "unhook_mouse");
+	if (unhook_mouse_func == NULL)
+		return FALSE;		// Unable to locate the function inside the DLL
+
+	// Everything went ok, execute the function and return the value returned
+	// by the function.
+	bRes = (EIF_BOOLEAN) ((FUNCTION_CAST_TYPE(int, __stdcall, ()) unhook_mouse_func)());
+	FreeLibrary(hLibrary);
+	return bRes;
 	}

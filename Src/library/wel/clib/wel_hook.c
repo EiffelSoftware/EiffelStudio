@@ -171,6 +171,17 @@ __declspec(dllexport) LRESULT WINAPI MouseProc(int nCode, WPARAM wParam, LPARAM 
 }
 
 /*---------------------------------------------------------------------------*/
+/* FUNC: get_hook_window                                                     */
+/*---------------------------------------------------------------------------*/
+/* Returns the handle of the window that has started the hook, NULL if no    */
+/* hook is currently under process                                           */
+/*---------------------------------------------------------------------------*/
+__declspec(dllexport) HWND WINAPI get_hook_window()
+	{
+	return hHookWindow;
+	}
+
+/*---------------------------------------------------------------------------*/
 /* FUNC: hook_mouse                                                          */
 /* ARGS: hHookWindow: Handle of the window registering the hook.             */
 /*---------------------------------------------------------------------------*/

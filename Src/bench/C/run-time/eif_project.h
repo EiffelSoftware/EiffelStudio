@@ -89,6 +89,9 @@ extern "C" {
 	RT_LNK int32 egc_rcoffset;			/* E1/einit.c */
 	RT_LNK int egc_rcarg;				/* E1/einit.c */
 
+	RT_LNK char *egc_system_name;		/* Name of the generated system */
+	RT_LNK EIF_INTEGER egc_compiler_tag;		/* Tag corresponding to the compiler version */
+
 #ifdef __cplusplus
 }
 #endif

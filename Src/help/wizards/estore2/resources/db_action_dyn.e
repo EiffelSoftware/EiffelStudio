@@ -1,6 +1,6 @@
 indexing
-	description: "Class which is used to retrieve one of the objects of a query."
-	author: "David Solal"
+	description: "Generated Class which is used to retrieve one of the object of a query."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,7 +24,7 @@ feature -- Creation
 			not_void: s /= Void 
 		do
 			selection := s
-			Create list.make
+			create list.make
 		ensure
 			set: selection = s 
 		end
@@ -40,8 +40,8 @@ feature -- Actions
 		do
 				-- The call to copy (selection.cursor) will execute the mapping from the
 				-- database to the tuple
-			Create tuple.copy (selection.cursor)
-			list.extend(deep_clone(tuple))
+			create tuple.copy (selection.cursor)
+			list.extend (deep_clone (tuple))
 		end
 
 feature -- Access
@@ -49,7 +49,7 @@ feature -- Access
 	selection: DB_SELECTION
 		-- Current selection
 
-	list: LINKED_LIST [ DB_TUPLE ]
+	list: LINKED_LIST [DB_TUPLE]
 		-- Result List of the query.
 
 end -- class DB_ACTION_DYN

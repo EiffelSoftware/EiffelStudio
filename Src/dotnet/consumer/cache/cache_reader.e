@@ -50,6 +50,7 @@ feature -- Access
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
+			l_path: STRING
 			i: INTEGER
 			l_consumed_assemblies: ARRAY [CONSUMED_ASSEMBLY]
 		do
@@ -59,7 +60,10 @@ feature -- Access
 			until
 				i > l_consumed_assemblies.count or Result /= Void
 			loop
-				if l_consumed_assemblies.item (i).has_same_path (a_path) then
+				if l_path = Void then
+					l_path := l_consumed_assemblies.item (i).format_path (a_path)
+				end
+				if l_consumed_assemblies.item (i).has_same_ready_formatted_path (l_path) then
 					Result := l_consumed_assemblies.item (i)
 				end
 				i := i + 1
@@ -137,7 +141,7 @@ feature -- Access
 			des: EIFFEL_XML_DESERIALIZER
 		do
 			create des
-			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + Assembly_mapping_file_name, False)
+			des.deserialize (absolute_assembly_path_from_consumed_assembly (a_assembly) + Assembly_mapping_file_name, True)
 			Result ?= des.deserialized_object
 		ensure
 			non_void_info: Result /= Void
@@ -241,26 +245,39 @@ feature {CACHE_WRITER} -- Implementation
 			non_void_clr_version: clr_version /= Void
 		local
 			des: EIFFEL_XML_DESERIALIZER
+			l_ci: CACHE_INFO
 		do
 			guard.lock
-			if is_initialized then
-				create des
-				des.deserialize (Absolute_info_path, False)
-				if des.successful then
-					Result ?= des.deserialized_object
+			if internal_info.item = Void then
+				if is_initialized then
+					create des
+					des.deserialize (Absolute_info_path, True)
+					if des.successful then
+						l_ci ?= des.deserialized_object
+						if l_ci /= Void then
+							internal_info.put (l_ci)
+						end
+					end
+				end
+				if internal_info.item = Void then
+						-- cache info is not initalized or is outdated
+					internal_info.put (create {CACHE_INFO}.make (clr_version))
+					(create {EIFFEL_XML_SERIALIZER}).serialize (internal_info.item, absolute_info_path)
 				end
 			end
-			if Result = Void then
-					-- cache info is not initalized or is outdated
-				create Result.make (clr_version)
-				(create {EIFFEL_XML_SERIALIZER}).serialize (Result, absolute_info_path)
-			end
+			Result := internal_info.item
 			guard.unlock
 		ensure
 			non_void_if_initialized: is_initialized implies Result /= Void
 		end
 		
 feature {NONE} -- Implementation
+
+	internal_info: CELL [CACHE_INFO] is
+			-- cache `info'
+		once
+			create Result
+		end
 
 	type_index_from_type (a_type: TYPE): INTEGER is
 			-- retrieve type index from `a_type' in `a_assembly'

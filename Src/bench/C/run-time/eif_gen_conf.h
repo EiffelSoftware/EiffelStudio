@@ -23,7 +23,11 @@ RT_LNK int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 dyn_type
 RT_LNK int16 eif_gen_param (int16 stype, EIF_REFERENCE object, int pos, char *is_exp, long *nr_bits);
 
 /* Number of generic parameters of an object */
-RT_LNK int eif_gen_count (EIF_REFERENCE object);
+RT_LNK int eif_tuple_count (EIF_REFERENCE tuple);
+RT_LNK int eif_gen_count (EIF_REFERENCE tuple);
+
+/* Is current tuple made of basic types? */
+rt_public int eif_tuple_is_atomic (EIF_REFERENCE tuple);
 
 /* New object with same type as i-th (`posï) generic of `objectï */
 RT_LNK EIF_REFERENCE eif_gen_create (EIF_REFERENCE object, int pos);

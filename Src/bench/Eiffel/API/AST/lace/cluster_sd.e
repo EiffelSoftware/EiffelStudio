@@ -52,7 +52,7 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 			vdcn: VDCN;
 			path: STRING
 		do
-			path := Environ.interpret (directory_name);
+			path := Environ.interpreted_string (directory_name);
 			cluster_of_name := Universe.cluster_of_name (cluster_name);
 			cluster_of_path := Universe.cluster_of_path (path);
 			old_cluster := Lace.old_universe.cluster_of_path (path);
@@ -119,13 +119,14 @@ end;
 	adapt_use is
 			-- Check Use file for current cluster
 		require
-			Universe.has_cluster_of_path (Environ.interpret (directory_name));
+			Universe.has_cluster_of_path	
+				(Environ.interpreted_string (directory_name));
 		local
 			cluster: CLUSTER_I;
 		do
 			if cluster_properties /= Void then 
 				cluster := Universe.cluster_of_path
-										(Environ.interpret (directory_name));
+						(Environ.interpreted_string (directory_name));
 				context.set_current_cluster (cluster);
 				cluster_properties.adapt_use;
 			end;
@@ -134,13 +135,14 @@ end;
 	adapt is
 			-- Adapt cluster with the cluster properties
 		require else
-			Universe.has_cluster_of_path (Environ.interpret (directory_name));
+			Universe.has_cluster_of_path
+				(Environ.interpreted_string (directory_name));
 		local
 			cluster: CLUSTER_I;
 		do
 			if cluster_properties /= Void then
 				cluster := Universe.cluster_of_path
-										(Environ.interpret (directory_name));
+						(Environ.interpreted_string (directory_name));
 				context.set_current_cluster (cluster);
 				cluster_properties.adapt;
 			end;
@@ -150,13 +152,14 @@ end;
 			-- Process use options declated in a use file of the current
 			-- cluster description
 		require
-			Universe.has_cluster_of_path (Environ.interpret (directory_name));
+			Universe.has_cluster_of_path
+				(Environ.interpreted_string (directory_name));
 		local
 			cluster: CLUSTER_I;
 		do
 			if cluster_properties /= Void then
 				cluster := Universe.cluster_of_path
-										(Environ.interpret (directory_name));
+					(Environ.interpreted_string (directory_name));
 				context.set_current_cluster (cluster);
 				cluster_properties.process_options;
 			end;
@@ -182,7 +185,7 @@ feature {COMPILER_EXPORTER} -- DLE
 			vdcn: VDCN;
 			path: STRING
 		do
-			path := Environ.interpret (directory_name);
+			path := Environ.interpreted_string (directory_name);
 			cluster_of_name := Universe.cluster_of_name (cluster_name);
 			cluster_of_path := Universe.cluster_of_path (path);
 			old_cluster := Lace.old_universe.cluster_of_path (path);

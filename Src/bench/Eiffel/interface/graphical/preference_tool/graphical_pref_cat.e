@@ -20,7 +20,8 @@ inherit
 			background_color as rc_background_color
 		redefine
 			init_colors
-		end
+		end;
+	SYSTEM_CONSTANTS
 
 creation
 	make
@@ -46,6 +47,9 @@ feature {NONE} -- Initialization
 			!! text_background_color.make (associated_category.text_background_color);
 			!! text_foreground_color.make (associated_category.text_foreground_color);
 			!! background_color.make (associated_category.background_color);
+			if not Platform_constants.is_windows then
+				!! focus_label_color.make (associated_category.focus_label_color)
+			end;
 			!! foreground_color.make (associated_category.foreground_color);
 			!! progress_bar_color.make (associated_category.progress_bar_color);
 			!! string_text_color.make (associated_category.string_text_color);
@@ -88,6 +92,9 @@ feature {NONE} -- Initialization
 			resources.extend (default_text_color);
 			resources.extend (error_color);
 			resources.extend (feature_color);
+			if not Platform_constants.is_windows then
+				resources.extend (focus_label_color);
+			end;
 			resources.extend (highlight_line_background_color);
 			resources.extend (highlight_line_foreground_color);
 			resources.extend (keyword_color);
@@ -154,6 +161,7 @@ feature {NONE} -- Resources
     text_foreground_color,
     background_color,
     foreground_color,
+    focus_label_color,
     progress_bar_color,
     string_text_color,
     default_text_color,

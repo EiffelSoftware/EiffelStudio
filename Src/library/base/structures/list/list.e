@@ -30,7 +30,8 @@ feature -- Comparison
 				Result := True
 			else
 				Result := (is_empty = other.is_empty) and 
-						(object_comparison = other.object_comparison)
+						(object_comparison = other.object_comparison) and
+						(count = other.count)
 				if Result and not is_empty then
 					c1 ?= cursor
 					c2 ?= other.cursor

@@ -11,7 +11,7 @@ inherit
 
 	VUAR
 		redefine
-			build_explain, subcode
+			build_explain, is_defined, subcode
 		end
 
 feature -- Properties
@@ -28,6 +28,15 @@ feature -- Properties
 
 	actual_type: TYPE_A;
 			-- Actual type of the call
+
+feature -- Status report
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
+		do
+			Result := Precursor and then
+				argument_name /= Void and then formal_type /= Void and then actual_type /= Void
+		end
 
 feature -- Output
 

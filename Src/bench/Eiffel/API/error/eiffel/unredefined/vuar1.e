@@ -11,8 +11,8 @@ inherit
 
 	VUAR
 		redefine
-			subcode, build_explain
-		end;
+			subcode, is_defined, build_explain
+		end
 
 feature -- Properties
 
@@ -23,6 +23,15 @@ feature -- Properties
 	called_local: STRING;
 
 	called_arg: STRING;
+
+feature -- Status report
+
+	is_defined: BOOLEAN is
+			-- Is the error fully defined?
+		do
+			Result := is_class_defined and then is_feature_defined and then
+				(called_feature /= Void or else called_arg /= Void or else called_local /= Void)
+		end
 
 feature -- Output
 

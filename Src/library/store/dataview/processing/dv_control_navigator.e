@@ -65,8 +65,8 @@ feature -- Basic operations
 			display_list := display_l
 			if is_activated then
 						-- `has_select_action' doesn't work...
-				if not display_list.has_select_action (~list_select_actions) then
-					display_list.extend_select_actions (~list_select_actions)
+				if not display_list.has_select_action (agent list_select_actions) then
+					display_list.extend_select_actions (agent list_select_actions)
 				end
 			end
 		ensure
@@ -91,7 +91,7 @@ feature -- Basic operations
 			not_void: previous_ctrl /= Void
 		do
 			previous_control := previous_ctrl
-			previous_control.set_action (~previous)
+			previous_control.set_action (agent previous)
 			previous_control.disable_sensitive
 		end
 
@@ -101,7 +101,7 @@ feature -- Basic operations
 			not_void: next_ctrl /= Void
 		do
 			next_control := next_ctrl
-			next_control.set_action (~next)
+			next_control.set_action (agent next)
 			next_control.disable_sensitive
 		end
 
@@ -149,7 +149,7 @@ feature {NONE} -- Implementation
 			-- Build display.
 		do
 			if display_list /= Void then
-				display_list.extend_select_actions (~list_select_actions)
+				display_list.extend_select_actions (agent list_select_actions)
 				if not display_list.information_set then
 					display_list.set_tablecode (db_selectable_component.table_description.Table_code)
 				end

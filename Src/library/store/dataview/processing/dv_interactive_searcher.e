@@ -45,7 +45,7 @@ feature -- Basic operations
 			not_void: a_ctrl /= Void
 		do
 			control := a_ctrl
-			control.set_action (~read)
+			control.set_action (agent read)
 		end
 
 	set_column_selector (a_col_selector: DV_SENSITIVE_INTEGER) is

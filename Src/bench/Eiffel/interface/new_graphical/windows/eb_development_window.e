@@ -149,6 +149,7 @@ feature {NONE} -- Initialization
 				-- Update widgets visibilities
 			update
 			status_bar.remove_cursor_position
+			address_manager.set_output_line (status_bar.label)
 
 				-- Finish initializing the main editor formatters
 			end_build_formatters

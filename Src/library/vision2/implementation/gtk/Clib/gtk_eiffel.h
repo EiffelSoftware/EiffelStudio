@@ -248,6 +248,9 @@ void c_gtk_scrollable_area_add (GtkWidget *scroll_area, GtkWidget *widget);
 /* Does the scrollable area have the given child? */
 int c_gtk_scrollable_area_has_child (GtkWidget *scroll_area, GtkWidget *child);
 
+/* Set the container background pixmap. */
+void c_gtk_container_set_bg_pixmap (GtkWidget *container, GtkWidget *pixmap);
+
 /*==============================================================================
  gtk_toolbar functions
 ==============================================================================*/
@@ -528,6 +531,30 @@ EIF_INTEGER c_gtk_progress_bar_style (GtkWidget *progressbar);
 /* Pointer to the text of the entry of the file selection dialog. */
 EIF_POINTER c_gtk_file_selection_get_file_name (GtkWidget *file_dialog);
 
+/* Pointer to the text of the dir of the file selection dialog. */
+EIF_POINTER c_gtk_file_selection_get_dir_name (GtkWidget *file_dialog);
+
+/*==============================================================================
+ gtk_color_selection functions
+==============================================================================*/
+
+/* Pointer to the gtk_button `OK'. */
+#define c_gtk_color_selection_get_ok_button(p)      (GTK_COLOR_SELECTION_DIALOG(p)->ok_button)      /*GtkWidget*/
+
+/* Pointer to the gtk_button `Cancel'. */
+#define c_gtk_color_selection_get_cancel_button(p)      (GTK_COLOR_SELECTION_DIALOG(p)->cancel_button)      /*GtkWidget*/
+
+/* Pointer to the gtk_button `Help'. */
+#define c_gtk_color_selection_get_help_button(p)      (GTK_COLOR_SELECTION_DIALOG(p)->help_button)      /*GtkWidget*/
+
+/* Pointer to the text of the entry of the file selection dialog. */
+EIF_POINTER c_gtk_color_selection_dialog_new (gchar *name);
+
+/* Pointer to the text of the entry of the file selection dialog. */
+void c_gtk_color_selection_get_color (GtkWidget *file_dialog, EIF_INTEGER* r,  EIF_INTEGER* g, EIF_INTEGER* b);
+
+/* Pointer to the text of the dir of the file selection dialog. */
+void c_gtk_color_selection_set_color (GtkWidget *file_dialog, EIF_INTEGER r, EIF_INTEGER g, EIF_INTEGER b);
 
 /*==============================================================================
  gtk_style functions

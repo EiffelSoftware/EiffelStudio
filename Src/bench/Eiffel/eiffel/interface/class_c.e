@@ -1463,18 +1463,36 @@ end
 				ast_context.start_lines
 				custom_attributes := l_ast.custom_attributes.byte_node
 				ast_context.clear2
+			else
+				custom_attributes := Void
 			end
 			if l_ast.interface_custom_attributes /= Void then
 				l_ast.interface_custom_attributes.type_check
 				ast_context.start_lines
 				interface_custom_attributes := l_ast.interface_custom_attributes.byte_node
 				ast_context.clear2
+			else
+				interface_custom_attributes := Void
 			end
 			if l_ast.class_custom_attributes /= Void then
 				l_ast.class_custom_attributes.type_check
 				ast_context.start_lines
 				class_custom_attributes := l_ast.class_custom_attributes.byte_node
 				ast_context.clear2
+			else
+				class_custom_attributes := Void
+			end
+			if System.root_class /= Void and then System.root_class.compiled_class = Current then
+					-- We are processing the root class, let's figure out if there are some
+					-- assembly custom attributes.
+				if l_ast.assembly_custom_attributes /= Void then
+					l_ast.assembly_custom_attributes.type_check
+					ast_context.start_lines
+					assembly_custom_attributes := l_ast.assembly_custom_attributes.byte_node
+					ast_context.clear2
+				end
+			else
+				assembly_custom_attributes := Void
 			end
 		end
 
@@ -3858,6 +3876,9 @@ feature -- Properties
 
 	custom_attributes, class_custom_attributes, interface_custom_attributes: BYTE_LIST [BYTE_NODE]
 			-- Associated custom attributes if any.
+
+	assembly_custom_attributes: BYTE_LIST [BYTE_NODE]
+			-- Associated custom attributes for assembly if any.
 
 	name: STRING is
 			-- Class name

@@ -41,10 +41,8 @@ feature {NONE} -- Initialization
 				cls_name := clsi_stone.class_name
 			end
 			make_with_text (Warning_messages.w_File_changed (cls_name))
-			button ("Yes").select_actions.extend (agent save_text)
-			button ("No").select_actions.extend (agent dont_save_text)
-		--	button ("Cancel").select_actions.extend (~destroy)
-			--| IEK Message dialogs by default destroy themselves on button press.
+			button (ev_yes).select_actions.extend (agent save_text)
+			button (ev_no).select_actions.extend (agent dont_save_text)
 			
 			show_modal_to_window (window_manager.last_focused_development_window.window)
 		end

@@ -14,7 +14,8 @@ inherit
 			extra_minimum_height,
 			interface,
 			other_imp,
-			promote_to_dialog_window
+			promote_to_dialog_window,
+			has_title_bar
 		end
 
 feature {NONE} -- Implementation
@@ -44,6 +45,9 @@ feature {NONE} -- Implementation
 				Result := Result - 2 * dialog_window_frame_height
 			end
 		end
+
+	has_title_bar: BOOLEAN is False
+			-- Does Current have a title bar?
 
 feature {EV_DIALOG_I} -- Implementation
 

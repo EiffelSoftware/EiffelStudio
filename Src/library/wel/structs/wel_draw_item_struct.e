@@ -68,9 +68,22 @@ feature -- Access
 		end
 
 	window_item: WEL_CONTROL is
-			-- Identifies the control.
+			-- Identifies the control (cver all cases except menus).
+		require
+			feature_supported: ctl_type /= (create {WEL_ODT_CONSTANTS}).Odt_menu
 		do
 			Result ?= window_of_item (cwel_drawitemstruct_get_hwnditem (item))
+		end
+
+	menu_item: WEL_MENU is
+			-- Identifies the control (menus only).
+		require
+			feature_supported: ctl_type = (create {WEL_ODT_CONSTANTS}).Odt_menu
+		local
+			hmenu: POINTER
+		do
+			hmenu := cwel_drawitemstruct_get_hwnditem (item)
+			create Result.make_by_pointer (hmenu)
 		end
 
 	dc: WEL_CLIENT_DC

@@ -15,7 +15,8 @@ inherit
 			{NONE} set_expand
 			{NONE} set_parent
 		redefine
-			set_default_colors
+			set_default_colors,
+			show
 		end
 	
 feature {EV_WINDOW} -- Initialization
@@ -111,6 +112,13 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	show is
+			-- Make widget visible on the screen.
+		require else
+			exist: not destroyed
+		deferred
+		end
 
 	forbid_resize is
 			-- Forbid the resize of the window.

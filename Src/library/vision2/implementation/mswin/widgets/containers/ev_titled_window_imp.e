@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 				mh := mh + menu_bar_height
 			end
 			if status_bar /= Void then
-				mh := mh + status_bar.height
+				mh := mh + status_bar.minimum_height
 			end
 
 			-- Finaly, we set the value
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 				mh := mh + menu_bar_height
 			end
 			if status_bar /= Void then
-				mh := mh + status_bar.height
+				mh := mh + status_bar.minimum_height
 			end
 
 			-- Finaly, we set the value
@@ -341,6 +341,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.65  2000/04/28 23:41:27  brendel
+--| Uses status bar's minimum height instead of height.
+--|
 --| Revision 1.64  2000/04/26 21:01:29  brendel
 --| child -> item or item_imp.
 --|

@@ -20,10 +20,10 @@ feature -- Initialize
 		require
 			has_preferences: preferences /= Void
 		do		
-			if preferences.is_valid then
-				create filter_manager.make
-				create invalid_files.make (5)
-				invalid_files.compare_objects
+			create invalid_files.make (5)
+			invalid_files.compare_objects
+
+			if preferences.is_valid then								
 				has_been_validated := False
 				all_documents_read := False
 				files_changed := False	
@@ -250,7 +250,11 @@ feature -- Status Setting
 
 feature -- Access
 			
-	filter_manager: FILTER_MANAGER				
+	filter_manager: FILTER_MANAGER	is
+			-- Filter manager
+		once
+			create Result.make
+		end		
 			
 	preferences: DOCUMENT_PROJECT_PREFERENCES
 			-- Preferences file

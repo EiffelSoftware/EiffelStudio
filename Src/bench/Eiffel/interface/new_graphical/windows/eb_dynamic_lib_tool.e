@@ -153,7 +153,7 @@ feature -- Update
 feature -- Stone process
 
 	process (d_class:CLASS_C; d_creation:E_FEATURE; 
-			 d_routine:E_FEATURE; d_index:INTEGER; d_alias: STRING) is
+			 d_routine:E_FEATURE; d_index:INTEGER; d_alias, d_call_type: STRING) is
 		local
 			wd: EV_WARNING_DIALOG
 		do
@@ -162,7 +162,7 @@ feature -- Stone process
 			elseif d_routine.is_deferred then
 				create wd.make_default (parent, Interface_names.t_Warning, "A deferred feature can not be exported.%N")
 			else
-				Eiffel_dynamic_lib.add_export_feature (d_class, d_creation, d_routine, d_index, d_alias)
+				Eiffel_dynamic_lib.add_export_feature (d_class, d_creation, d_routine, d_index, d_alias, d_call_type)
 			end
 			synchronize
 		end
@@ -192,9 +192,9 @@ feature -- Stone process
 		do
 			f ?= s
 			if f = Void then
-				process (s.e_class, Void, s.e_feature, 0, Void)
+				process (s.e_class, Void, s.e_feature, 0, Void, Void)
 			else
-				process (s.e_class, Void, s.e_feature, 0, f.alias_name)
+				process (s.e_class, Void, s.e_feature, 0, f.alias_name, Void)
 			end
 		end
 
@@ -226,10 +226,12 @@ feature -- Stone process
 			wd: EV_WARNING_DIALOG
 		do
 			create a_file.make_open_read (a_file_name)
-			a_file.readstream (a_file.count)
+			if a_file.count > 0 then
+				a_file.readstream (a_file.count)
 
-			if not Eiffel_dynamic_lib.parse_exports_from_file(a_file) then 
-				create wd.make_default (parent, Interface_names.t_Warning, "Error in the eiffel def file%N")
+				if not Eiffel_dynamic_lib.parse_exports_from_file(a_file) then 
+					create wd.make_default (parent, Interface_names.t_Warning, "Error in the eiffel def file%N")
+				end
 			end
 			a_file.close
 
@@ -264,6 +266,7 @@ feature -- Stone process
 			loop
 				st.add_string( "%N-- CLASS [" )
 
+				dynamic_lib_exports.item_for_iteration.start
 				class_name := clone(dynamic_lib_exports.item_for_iteration.item.compiled_class.name)
 
 				class_name.to_upper
@@ -271,7 +274,6 @@ feature -- Stone process
 
 				st.add_string( "]%N" )
 				from 
-					dynamic_lib_exports.item_for_iteration.start
 				until
 					dynamic_lib_exports.item_for_iteration.after
 				loop
@@ -281,7 +283,7 @@ feature -- Stone process
 
 						dl_exp := dynamic_lib_exports.item_for_iteration.item
 
-						class_name := clone(dl_exp.compiled_class.name)
+						class_name := clone (dl_exp.compiled_class.name)
 						class_name.to_upper
 						if is_clickable then
 							st.add_classi (dl_exp.compiled_class.lace_class, class_name)
@@ -289,16 +291,16 @@ feature -- Stone process
 							st.add_string (class_name)
 						end
 
-						if (dl_exp.creation_routine /=Void) and then (dl_exp.routine.id /= dl_exp.creation_routine.id) then
+						if (dl_exp.creation_routine /= Void) and then (dl_exp.routine.id /= dl_exp.creation_routine.id) then
 							st.add_string (" (")
 							if is_clickable then
 --  								st.add_feature_name (dl_exp.creation_routine, dl_exp.creation_routine.name)
-								st.add_feature_name (dl_exp.creation_routine.name,dl_exp.compiled_class)
+								st.add_feature_name (dl_exp.creation_routine.name, dl_exp.compiled_class)
 							else
 								st.add_string (dl_exp.creation_routine.name)
 							end
 							st.add_string (")")
-						elseif (dl_exp.creation_routine =Void) then
+						elseif (dl_exp.creation_routine = Void) then
 							st.add_string (" (create)")
 						end
 						if (dl_exp.routine /= Void) then
@@ -320,6 +322,11 @@ feature -- Stone process
 							st.add_string (dl_exp.alias_name)
 						end
 
+						if dl_exp.call_type /= Void then
+							st.add_string (" call_type ")
+							st.add_string (dl_exp.call_type)
+						end
+
 						st.add_string ("%N")
 
 						dynamic_lib_exports.item_for_iteration.forth
@@ -333,7 +340,7 @@ feature -- Stone process
 			text_area.process_text (st)
 --			text_area.set_top_character_position (0)
  			text_area.thaw
-			text_area.set_changed(False)
+			text_area.set_changed (False)
 		end
 
 	set_default_format is
@@ -373,7 +380,7 @@ feature -- Update
 	parse_file is
 			-- Parse the file if possible.
 		do
-			Eiffel_dynamic_lib.set_modified(False)
+			Eiffel_dynamic_lib.set_modified (False)
 			update_format
 		end
 

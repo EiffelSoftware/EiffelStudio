@@ -71,16 +71,10 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	Execution_environment: EXECUTION_ENVIRONMENT is
-			-- Execution environment we are in.
-		once
-			create Result
-		end
-
 	Home: STRING is
 			-- HOME name.
 		once
-			Result := Execution_environment.get ("HOME")
+			Result := (create {EXECUTION_ENVIRONMENT}).get ("HOME")
 		end
 
 end -- class BENCH_WIZARD_INFORMATION

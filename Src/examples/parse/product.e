@@ -11,7 +11,7 @@ class PRODUCT
 
 inherit
 
-	SEQUENCES
+	AGGREGATE
 		redefine
 			 post_action
 		end;

@@ -20,15 +20,12 @@ feature
 		end
 
 	idle_action is
+			-- The message queue is empty.
+			-- Execute the rectangle_demo if it exists.
 		do
 			if main_window.rectangle_demo /= Void and then
-					main_window.rectangle_demo.exists then
+				main_window.rectangle_demo.exists then
 				main_window.rectangle_demo.draw
-			end
-			if main_window.three_d_demo /= Void and then
-					main_window.three_d_demo.exists and then
-					main_window.three_d_demo.ready then
-				main_window.three_d_demo.go
 			end
 		end
 

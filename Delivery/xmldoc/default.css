@@ -248,6 +248,8 @@ a.feature:hover
 .local_variable, .local_variable_quoted 
 {
 	font-family: verdana;
+	color: #006400;
+	font-style: italic;
 }
 
 .generic, .generics 
@@ -363,6 +365,8 @@ a.block_feature:hover
 .block_local_variable, .block_local_variable_quoted 
 {
 	font-family: courier new, courier, mono;
+	color: #006400;
+	font-style: italic;
 }
 
 .block_generic, .block_generics 

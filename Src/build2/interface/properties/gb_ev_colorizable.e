@@ -155,7 +155,6 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (background_color)
 			color_dialog.show_modal_to_window (parent_editor.window_parent)
-			io.putstring (color_dialog.selected_button)
 			if color_dialog.selected_button.is_equal (ev_ok) then
 				new_color := color_dialog.color
 				for_all_objects (agent {EV_COLORIZABLE}.set_background_color (new_color))
@@ -188,7 +187,6 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (foreground_color)
 			color_dialog.show_modal_to_window (parent_editor.window_parent)
-			io.putstring (color_dialog.selected_button)
 			if color_dialog.selected_button.is_equal (ev_ok) then
 				new_color := color_dialog.color
 				for_all_objects (agent {EV_COLORIZABLE}.set_foreground_color (new_color))

@@ -57,8 +57,6 @@ feature {NONE} -- Implementation
 			window_object: GB_OBJECT
 			layout_constructor_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
-			io.putstring (window.name.to_utf8 + "%N")
-			io.putstring (window.attribute_by_name (type_string).value.to_utf8 + "%N")
 				--| FIXME we must now look at the current type of `window'
 				--| which must be an EV_TITLED_WINDOW, and then add any attributes that
 				--| are specific to EV_TITLED_WINDOW
@@ -70,7 +68,6 @@ feature {NONE} -- Implementation
 				current_element ?= window.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name.to_utf8
-					io.putstring (current_name + "%N")
 					if current_name.is_equal (Item_string) then
 						-- The element represents an item, so we must add new objects.
 									
@@ -143,7 +140,6 @@ feature {NONE} -- Implementation
 				current_element ?= element.item_for_iteration
 				if current_element /= Void then
 					current_name := current_element.name.to_utf8
-					io.putstring (current_name + "%N")
 					if current_name.is_equal (Item_string) then
 						-- The element represents an item, so we must add new objects.
 						build_new_object (current_element, new_object)

@@ -176,7 +176,6 @@ feature -- Status setting
 				if editor_item.type_represented.is_equal (a_type) then
 					found := True
 					editor_item.creating_class.update_attribute_editor
-					--io.putstring ("Found item to replace.%N")
 				end
 				item_parent.forth
 			end

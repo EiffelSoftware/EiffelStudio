@@ -23,6 +23,11 @@ inherit
 		end
 		
 	GB_CONSTANTS
+	
+	GB_SHARED_STATUS_BAR
+		undefine
+			default_create
+		end
 
 creation
 	make_and_launch 
@@ -37,6 +42,8 @@ feature {NONE} -- Initialization
 			else
 				default_create
 				set_application (Current)
+				pnd_motion_actions.extend (agent clear_status_during_transport)
+				cancel_actions.extend (agent clear_status_after_transport)
 				prepare (hwnd)
 			end
 		end

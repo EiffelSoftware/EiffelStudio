@@ -21,14 +21,12 @@ inherit
 			interface,
 			make,
 			initialize,
-			button_widget
+			visual_widget
 		end
 
 	EV_RADIO_PEER_IMP
-		undefine
-			visual_widget
 		redefine
-			interface, widget_object
+			interface, widget_object, visual_widget
 		end
 
 create
@@ -41,9 +39,9 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_event_box_new)
-			button_widget := C.gtk_radio_button_new (NULL)
-			C.gtk_widget_show (button_widget)
-			C.gtk_container_add (c_object, button_widget)
+			visual_widget := C.gtk_radio_button_new (NULL)
+			C.gtk_widget_show (visual_widget)
+			C.gtk_container_add (c_object, visual_widget)
 		end
 
 	initialize is
@@ -54,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature {EV_CONTAINER_IMP} -- Access
 
-	button_widget: POINTER
+	visual_widget: POINTER
 			-- Pointer to the gtkbutton widget as c_object is event box.
 
 feature -- Status report
@@ -62,7 +60,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is toggle button pressed?
 		do
-			Result := C.gtk_toggle_button_get_active (button_widget)
+			Result := C.gtk_toggle_button_get_active (visual_widget)
 		end 
 	
 feature -- Status setting
@@ -70,7 +68,7 @@ feature -- Status setting
 	enable_select is
 			-- Set `is_selected' `True'.
 		do
-			C.gtk_toggle_button_set_active (button_widget, True)
+			C.gtk_toggle_button_set_active (visual_widget, True)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -86,7 +84,7 @@ feature {EV_ANY_I} -- Implementation
 
 	radio_group: POINTER is
 		do
-			Result := C.gtk_radio_button_group (button_widget)
+			Result := C.gtk_radio_button_group (visual_widget)
 		end
 
 feature {EV_ANY_I} -- Implementation

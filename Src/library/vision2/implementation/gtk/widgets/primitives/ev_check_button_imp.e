@@ -16,7 +16,7 @@ inherit
 	
 	EV_TOGGLE_BUTTON_IMP
 		redefine
-			make, set_text, interface, button_widget
+			make, set_text, interface, visual_widget
 		end
 
 create
@@ -29,12 +29,12 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_event_box_new)
-			button_widget := C.gtk_check_button_new
-			C.gtk_widget_show (button_widget)
-			C.gtk_container_add (c_object, button_widget)
+			visual_widget := C.gtk_check_button_new
+			C.gtk_widget_show (visual_widget)
+			C.gtk_container_add (c_object, visual_widget)
 		end
 
-	button_widget: POINTER 
+	visual_widget: POINTER 
 			-- Pointer to gtkbutton widget as c_object is event box.
 			
 

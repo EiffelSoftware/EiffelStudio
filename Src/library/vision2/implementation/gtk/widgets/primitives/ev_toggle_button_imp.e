@@ -37,13 +37,13 @@ feature -- Status setting
 	enable_select is
 			-- Set `is_selected' `True'.
 		do
-			C.gtk_toggle_button_set_active (button_widget, True)
+			C.gtk_toggle_button_set_active (visual_widget, True)
 		end
 
 	disable_select is
 				-- Set `is_selected' `False'.
 		do
-			C.gtk_toggle_button_set_active (button_widget, False)
+			C.gtk_toggle_button_set_active (visual_widget, False)
 		end
 
 	toggle is
@@ -61,7 +61,7 @@ feature -- Status report
 	is_selected: BOOLEAN is
 			-- Is toggle button pressed?
 		do
-			Result := C.gtk_toggle_button_get_active (button_widget)
+			Result := C.gtk_toggle_button_get_active (visual_widget)
 		end 
 
 feature {EV_ANY_I}

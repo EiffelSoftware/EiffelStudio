@@ -127,6 +127,7 @@ end;
 						!!extendible_r;
 						extendible_r.retrieve_extendible (extendible_project_name)
 					elseif not precompiled_options.empty then
+						Degree_output.put_string ("Retrieving precompile...")
 						!!precomp_r;
 						precomp_r.retrieve_precompiled (precompiled_options);
 					else

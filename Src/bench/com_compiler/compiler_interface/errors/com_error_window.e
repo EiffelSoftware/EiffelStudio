@@ -30,7 +30,7 @@ feature -- Output
 			output_string.append (s) 
 		end
 
-	new_line is 
+	new_line, put_new_line is 
 		do 
 			interface.event_output_string (output_string) 
 			output_string.wipe_out

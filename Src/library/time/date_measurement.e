@@ -67,6 +67,7 @@ feature -- Status Report
 			positive_result: Result > 0
 		end
 
+end -- class DATE_MEASUREMENT
 
 --|----------------------------------------------------------------
 --| EiffelTime: library of reusable components for ISE Eiffel.

@@ -30,7 +30,7 @@ feature
 	make is
 			-- Initialization
 		do
-			{COMPILER_SERVER} precursor
+			{COMPILER_SERVER} Precursor
 			!! index.make (50)
 		end
 
@@ -52,14 +52,14 @@ feature
 			index.clear_all;
 			last_id := t.class_id;
 				-- Write data structure in file `file'
-			{COMPILER_SERVER} precursor (t);
+			{COMPILER_SERVER} Precursor (t);
 		end;
 
 	init_file (server_file: SERVER_FILE) is
 			-- Initialize server file `server_file' before writing in
 			-- it.
 		do
-			{COMPILER_SERVER} precursor (server_file);
+			{COMPILER_SERVER} Precursor (server_file);
 			last_offset := server_file.position;
 		end;
 

@@ -317,7 +317,7 @@ fclose(fil);
 }
 
 /* TEMPORARY */
-void wread(char *buffer, int nbytes)
+void wread(char *buffer, size_t nbytes)
 {
 #ifdef DEBUG
 	dprintf(8)("Reading %d bytes at %d%\n", nbytes, ftell(fil));
@@ -357,24 +357,14 @@ rt_public void cnode_updt(void)
 	short dtype;			/* Dynamic type to update */
 	short str_count;		/* String count */
 	char *str;				/* String to allocate */
-	short nbattr;			/* Attributes number */
+	long nbattr;			/* Attributes number */
 	struct cnode *node;		/* Structure to update */
 	char **names;			/* Name array */
 	uint32 *types;			/* Attribute meta-type array */
 	short nbparents;		/* Parent count */
 	int *parents;			/* Parent dynmaic type array */
-	/* short parent_dtype;*//* Parent dynamic type */ /* %%ss removed */
 	int32 *rout_ids;		/* Routine id array */
-	/* int32 rout_id;*/		/* Attribute routine id */ /* %%ss removed */
-	/* int32 *feat_ids;*/	/* Feature id array */ /* %%ss removed */
-	/* long feat_count;*/	/* Feature id array count */ /* %%ss removed */
-	/* struct htable *htbl;*//* Hash table for calls */ /* %%ss removed */
-	/* int32 call_size;*/	/* Hash table call size */ /* %%ss removed */
-	/* char is_attribute;*/ /* %%ss removed */
 	int i;
-	/* char c;*/ /* %%ss removed */
-	/* short level;*/ /* Attribute meta-type level */ /* %%ss removed */
-	/* int32 feature_id;*/ /* Key for access table */ /* %%ss removed */
 
 		/* 1. Dynamic type */
 	dtype = wshort();
@@ -776,7 +766,7 @@ rt_public void routinfo_updt(void)
 	/* Update the routine information table */
 
 	uint32 count;
-	int i;
+	size_t i;
 	struct rout_info ri;
 
 	count = wuint32();

@@ -87,6 +87,8 @@ feature -- String representations of class names.
 	
 	Ev_menu_bar_string: STRING is "EV_MENU_BAR"
 	
+	menu_bar_string: STRING is "MENU_BAR"
+	
 	Ev_widget_string: STRING is "EV_WIDGET"
 	
 	Ev_cell_string: STRING is "EV_CELL"

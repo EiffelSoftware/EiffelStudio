@@ -109,7 +109,7 @@ feature -- Access
 			create Result.make_object (address, dynamic_class)
 		end
 
-feature {NONE} -- Output
+feature {NONE} -- Output value
 
 	type_and_value: STRING is
 			-- Return a string representing `Current'.

@@ -115,7 +115,8 @@ feature {NONE} -- Implementation
 			f_w ?= a_font.implementation;
 			l_font ?= f_w.wel_log_font;
 			Result.set_face_name (l_font.face_name);
-			Result.set_height (l_font.height);
+				-- We divide by 10 since `point' returns a result in 1/10 of points.
+			Result.set_height (a_font.point // 10);
 			Result.set_char_set (l_font.char_set);
 
 			if l_font.weight = 700 then	

@@ -133,7 +133,7 @@ feature -- Status Report
 		indexing
 			external_name: "LastReadSuccessful"
 		end
-			
+	
 	exists (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR): BOOLEAN is
 			-- Is assembly corresponding to `a_descriptor' already in the database?
 		indexing
@@ -149,7 +149,8 @@ feature -- Status Report
 			if not retried then
 				create reflection_support.make_reflectionsupport
 				reflection_support.Make
-				filename := reflection_support.AssemblyFolderPathFromInfo (a_descriptor)
+				filename := reflection_support.Eiffeldeliverypath
+				filename := filename.concat_string_string (filename, reflection_support.AssemblyFolderPathFromInfo (a_descriptor))
 				Result := dir.Exists (filename)
 			else
 				Result := False
@@ -188,8 +189,8 @@ feature -- Retrieval
 				create Result.make
 				create reflection_support.make_reflectionsupport
 				reflection_support.Make
-				index_path := reflection_support.AssembliesFolderPath
-				index_path := index_path.Concat_String_String_String (index_path, IndexFilename, XmlExtension)
+				index_path := reflection_support.Eiffeldeliverypath
+				index_path := index_path.Concat_String_String_String_String (index_path, reflection_support.AssembliesFolderPath, IndexFilename, XmlExtension)
 
 				create xml_reader.make_xmltextreader_10 (index_path)
 					-- WhitespaceHandling = None
@@ -199,7 +200,8 @@ feature -- Retrieval
 				until
 					not xml_reader.Name.Equals_String (AssemblyFilenameElement)
 				loop
-					assembly_path := xml_reader.ReadElementString_String (AssemblyFilenameElement)				
+					assembly_path := xml_reader.ReadElementString_String (AssemblyFilenameElement)	
+					assembly_path := assembly_path.replace (reflection_support.Eiffelkey, reflection_support.Eiffeldeliverypath)
 					if support.HasReadLock (assembly_path) then
 						support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
 						last_error := support.lasterror
@@ -261,7 +263,8 @@ feature -- Retrieval
 			if not retried then
 				create reflection_support.make_reflectionsupport
 				reflection_support.Make
-				assembly_path := reflection_support.AssemblyFolderPathFromInfo (a_descriptor)
+				assembly_path := reflection_support.Eiffeldeliverypath
+				assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.AssemblyFolderPathFromInfo (a_descriptor))
 				if support.HasReadLock (assembly_path) then
 					support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
 					last_error := support.lasterror
@@ -327,7 +330,8 @@ feature -- Retrieval
 				create reflection_support.make_reflectionsupport
 				reflection_support.Make
 				a_descriptor := assembly_descriptor_from_type (a_type)
-				assembly_path := reflection_support.AssemblyFolderPathFromInfo (a_descriptor)
+				assembly_path := reflection_support.Eiffeldeliverypath
+				assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.AssemblyFolderPathFromInfo (a_descriptor))
 				if support.HasReadLock (assembly_path) then
 					support.createerrorfrominfo (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
 					last_error := support.lasterror

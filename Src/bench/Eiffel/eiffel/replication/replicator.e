@@ -42,7 +42,7 @@ feature
 		 a, d: CLASS_C; f_name: STRING) is
 		local
 			ctxt: REP_CONTEXT;
-			adapter: FEAT1_ADAPTATION;
+			adapter: LOCAL_FEAT_ADAPTATION;
 			new_pairs: S_REP_NAME_LIST;
 			feat_table: FEATURE_TABLE;
 			found: BOOLEAN;
@@ -51,10 +51,11 @@ feature
 			feature_as: FEATURE_AS_B;
 			new_name: FEATURE_NAME_B
 		do
-			!!adapter.make (a,d);
-			adapter.set_context_features (old_feat, new_feat);
-			adapter.set_source_class (a);
-			adapter.set_target_class (d);
+			!!adapter;
+			adapter.set_source_feature (old_feat);
+			adapter.set_target_feature (new_feat);
+			adapter.set_source_type (a.actual_type);
+			adapter.set_target_type (d.actual_type);
 			new_pairs := clone (pairs);
 			if old_feat.written_class /= a then
 				feat_table := Feat_tbl_server.item (a.id);		
@@ -82,7 +83,7 @@ feature
 				end
 			end;
 			new_name := compute_new_name (f_name);
-			!!ctxt.make (new_name, new_pairs, adapter);
+			!! ctxt.make (new_name, new_pairs, adapter);
 			feature_as := Body_server.item (old_feat.body_id);
 			ast := feature_as.replicate (ctxt);
 		end;		

@@ -210,20 +210,22 @@ feature {NONE} -- Implementation
 			-- `control_id'.
 		do
 			on_control_id_command (control_id)
-			if control_id = Idok then
+			inspect control_id
+			when Idok then
 				on_ok
-			elseif control_id = Idcancel then
+			when Idcancel then
 				on_cancel
-			elseif control_id = Idabort then
+			when Idabort then
 				on_abort
-			elseif control_id = Idretry then
+			when Idretry then
 				on_retry
-			elseif control_id = Idignore then
+			when Idignore then
 				on_ignore
-			elseif control_id = Idyes then
+			when Idyes then
 				on_yes
-			elseif control_id = Idno then
+			when Idno then
 				on_no
+			else
 			end
 		end
 

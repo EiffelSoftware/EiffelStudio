@@ -874,7 +874,6 @@ feature {NONE} -- Events on notification
 				display_full_callstack_info
 			end
 
-
 			if Eifnet_debugger_info.last_managed_callback_is_breakpoint then
 				status.set_reason_as_break
 			end

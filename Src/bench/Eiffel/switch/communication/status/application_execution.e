@@ -722,8 +722,8 @@ feature -- Setting
 			--| to the last element.
 		require
 			is_stopped: is_stopped
-			positive_i: i > 0
-			small_enough: i <= number_of_stack_elements
+--			positive_i: i > 0
+			small_enough: (i = 1) or else (i <= number_of_stack_elements)
 		do
 			current_execution_stack_number := i
 		ensure

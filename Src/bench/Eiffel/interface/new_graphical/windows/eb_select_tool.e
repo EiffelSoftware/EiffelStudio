@@ -59,7 +59,7 @@ feature {EB_TOOL_MANAGER} -- Initialization
 
 feature -- Access
 
-	empty_tool_name: STRING is "Selector"
+	tool_name: STRING is "Selector"
 
 feature -- Redefine
 
@@ -73,11 +73,16 @@ feature -- Redefine
 --			Result := Current
 --		end
 
-	compatible(dropped: STONE): BOOLEAN is
+	compatible (dropped: STONE): BOOLEAN is
 		do
 			Result := True
 		end
 
+feature -- Update
+
+	register is do end
+	update is do end
+	unregister is do end
 	
 feature -- Hole processing
 
@@ -177,30 +182,7 @@ feature -- User interface
 			end
 		end
 
-feature -- Basic operations
-
-	is_tool_opened (tool_name: STRING; tool: EB_TOOL) : BOOLEAN is
-		obsolete
-			"use find_item_by_data instead"
-		local
---			tmp: STRING
-		do
---			Result := False
---			from
---				start
---			until
---				after or Result
---			loop
---				if item.tool /= tool then
---					tmp := clone (item.value)
---					tmp.to_upper
---					if tmp /= Void and then tmp.is_equal (tool_name) then
---						Result := True
---					end
---				end
---				forth	
---			end
-		end
+feature {NONE} -- Execution
 
 	execute (argument: EV_ARGUMENT1 [STRING]; data: EV_EVENT_DATA) is
 			-- Execute Current command.

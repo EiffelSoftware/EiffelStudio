@@ -157,9 +157,8 @@ feature {NONE} -- Implementation
 				an_object.instance_referers.off
 			loop
 				current_object := object_handler.deep_object_from_id (an_object.instance_referers.item_for_iteration)
---				if all_objects.item (current_object.id) /= Void then
-					do_not_recurse := True
---				end
+				all_objects.search (current_object.id)
+				do_not_recurse := all_objects.found
 				
 				create move_handle
 				create rectangle

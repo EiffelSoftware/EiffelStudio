@@ -204,8 +204,38 @@ feature -- Element change
 			-- present.
 		require
 			s_not_void: s /= Void
+			s_not_has_eol: not s.has ('%N')
 		do
 			add (create {STRING_TEXT}.make (s))
+		end
+
+	add_multiline_string (s: STRING) is
+			-- Put string `s' at current position.
+			-- Break `s' up in multiple tokens, if a link is
+			-- present.
+		require
+			s_not_void: s /= Void
+		local
+			l_pos, l_previous: INTEGER
+		do
+			l_pos := s.index_of ('%N', 1)
+			if l_pos > 0 then
+				from
+					l_previous := 1
+				until
+					l_pos = 0
+				loop
+					add (create {STRING_TEXT}.make (s.substring (l_previous, l_pos -1)))
+					add_new_line
+					l_previous := l_pos + 1
+					l_pos := s.index_of ('%N', l_previous)
+				end
+				if l_previous < s.count then
+					add (create {STRING_TEXT}.make (s.substring (l_previous, s.count)))
+				end
+			else
+				add (create {STRING_TEXT}.make (s))
+			end
 		end
 
 	add_indexing_string (s: STRING) is

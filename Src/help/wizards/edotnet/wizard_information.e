@@ -77,16 +77,6 @@ feature -- Setting
 		ensure
 			clr_version_set: equal (clr_version, a_version)
 		end
-		
-	set_is_most_recent_clr_version (a_flag: like is_most_recent_clr_version) is
-			-- set `is_most_recent_clr_version' with `a_version'
-		require
-			non_void_flag: a_flag /= Void
-		do
-			is_most_recent_clr_version := a_flag
-		ensure
-			is_most_recent_clr_version_set: is_most_recent_clr_version = a_flag
-		end
 
 feature -- Access
 

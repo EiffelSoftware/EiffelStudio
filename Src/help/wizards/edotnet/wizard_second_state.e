@@ -100,6 +100,13 @@ feature -- Basic Operation
 			
 			create l_il_env
 			l_runtimes := l_il_env.installed_runtimes
+			if l_runtimes.has (l_il_env.v2_0) then
+				most_recent_clr_version := l_il_env.v2_0.twin
+			elseif l_runtimes.has (l_il_env.v1_1) then
+				most_recent_clr_version := l_il_env.v1_1.twin
+			else
+				most_recent_clr_version := l_il_env.v1_0.twin
+			end
 			
 			create clr_version_cb
 			clr_version_cb.set_minimum_width (130)
@@ -145,6 +152,7 @@ feature -- Basic Operation
 			l_horiz_box.extend (clr_version_cb)
 			l_horiz_box.disable_item_expand (clr_version_cb)
 			l_horiz_box.extend (create {EV_CELL})
+			clr_version_check.enable_select
 			choice_box.extend (l_horiz_box)
 			choice_box.disable_item_expand (l_horiz_box)
 			
@@ -226,11 +234,9 @@ feature -- Basic Operation
 			else
 				wizard_information.set_console_application (console_app_b.is_selected)
 			end
-			if clr_version_check.is_selected then
-				wizard_information.set_is_most_recent_clr_version (True)
-				wizard_information.set_clr_version (interface_names.l_clr_most_recent_version_summary)
+			if clr_version_check.is_selected then				
+				wizard_information.set_clr_version (most_recent_clr_version)
 			else
-				wizard_information.set_is_most_recent_clr_version (False)
 				wizard_information.set_clr_version (clr_version_cb.text)
 			end
 			Precursor
@@ -321,6 +327,9 @@ feature {NONE} -- Implementation
 		end		
 
 feature {NONE} -- Constants
+
+	most_recent_clr_version: STRING
+			-- The most recent clr version found on this system
 
 	Exe_type: STRING is "Executable"
 			-- Meaning of EXE

@@ -12,8 +12,7 @@ inherit
 	WEL_CONTROL_WINDOW
 		redefine
 			default_style,
-			on_wm_erase_background,
-			on_control_id_command
+			on_wm_erase_background
 		end
 
 creation
@@ -34,27 +33,6 @@ feature {NONE} -- WEL Implementation
 			-- tool-bar.
 		do
 			disable_default_processing
-		end
-
-	on_control_id_command (control_id: INTEGER) is
-			-- A command has been received from `control_id'.
-		local	
-			original_index: INTEGER
-			matched: BOOLEAN
-		do
-			from
-				original_index := toolbar.ev_children.index
-				toolbar.ev_children.start
-			until
-				toolbar.ev_children.off or matched
-			loop
-				if toolbar.ev_children.item.id = control_id then
-					toolbar.ev_children.item.on_activate
-					matched := True
-				end
-				toolbar.ev_children.forth
-			end
-			toolbar.ev_children.go_i_th (original_index)
 		end
 
 	default_style: INTEGER is
@@ -86,6 +64,9 @@ end -- class EV_INTERNAL_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/04/07 00:02:36  rogers
+--| Removed on_control_id_command as it does nothing.
+--|
 --| Revision 1.8  2000/02/19 05:45:00  oconnor
 --| released
 --|

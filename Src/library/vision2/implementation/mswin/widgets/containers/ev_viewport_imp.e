@@ -92,34 +92,38 @@ feature -- Access
 	x_offset: INTEGER is
 			-- Horizontal position of viewport relative to `item'.
 		do
-			check
-				to_be_implemented: False
+			if child /= Void then
+				Result := xo
 			end
 		end
 
 	y_offset: INTEGER is
 			-- Vertical position of viewport relative to `item'.
 		do
-			check
-				to_be_implemented: False
+			if child /= Void then
+				Result := yo
 			end
 		end
 
+	xo, yo: INTEGER
+
 feature -- Element change
 
-	set_x_offset (a_x: INTEGER) is
-			-- Set `x_offset' to `a_x'.
+	set_x_offset (an_x: INTEGER) is
+			-- Set `x_offset' to `an_x'.
 		do
-			check
-				to_be_implemented: False
+			xo := an_x
+			if child /= Void then
+				child.wel_move (- an_x, child.y_position)
 			end
 		end
 
 	set_y_offset (a_y: INTEGER) is
 			-- Set `y_offset' to `a_y'.
 		do
-			check
-				to_be_implemented: False
+			yo := a_y
+			if child /= Void then
+				child.wel_move (child.x_position, - a_y)
 			end
 		end
 
@@ -172,6 +176,9 @@ end -- class EV_VIEWPORT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/21 22:03:23  brendel
+--| Implemented offset functions.
+--|
 --| Revision 1.7  2000/04/21 00:49:24  brendel
 --| Scrollbars are not shown anymore.
 --|

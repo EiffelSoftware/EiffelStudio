@@ -21,6 +21,8 @@ inherit
 --			project_tool
 		end
 
+	EB_PROJECT_TOOL_DATA
+
 	EB_DEBUG_TOOL_DATA
 
 	BENCH_COMMAND_EXECUTOR
@@ -284,15 +286,15 @@ feature -- Project Initialization
 			-- Initialize project.
 		local
 			e_displayer: BENCH_ERROR_DISPLAYER
---			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
+			g_degree_output: EB_GRAPHICAL_DEGREE_OUTPUT
 		do
 			create e_displayer.make (Error_window)
 			Eiffel_project.set_error_displayer (e_displayer)
 			Application.set_interrupt_number (Debug_resources.interrupt_every_n_instructions.actual_value)
---			if not Project_resources.graphical_output_disabled.actual_value then
---				!! g_degree_output
---				Project_tool.set_progress_dialog (g_degree_output)
---			end
+			if not Project_resources.graphical_output_disabled.actual_value then
+				create g_degree_output.make (Project_tool.parent_window)
+				Project_tool.set_progress_dialog (g_degree_output)
+			end
 		end
 
 feature -- Project directory access

@@ -135,8 +135,10 @@ cluster
 		-- Eiffel compilation:
 	all compiler:				"$EIFFEL_SRC/Eiffel/eiffel"
 		exclude
-			"CVS";"com_il_generation";"kernel"
+			"CVS";"com_il_generation";"kernel";"metadata_generation";
 		end
+
+	metadata_generation:			"$EIFFEL_SRC/Eiffel/eiffel/metadata_generation/unix"
 
 		-- API cluster
 	all compiler_api:			"$EIFFEL_SRC/Eiffel/API"

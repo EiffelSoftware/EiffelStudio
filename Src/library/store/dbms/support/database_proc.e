@@ -170,10 +170,11 @@ feature -- Basic operations
 				private_string.append (name)
 				if (handle.execution_type.immediate_execution) then
 					private_change.modify (private_string)
-				else 
-					handle.execution_type.set_immediate
+				else
+						-- Does not work with Oracle.
+	--				handle.execution_type.set_immediate
 					private_change.modify (private_string)
-					handle.execution_type.unset_immediate
+	--				handle.execution_type.unset_immediate
 				end
 			else
 				db_spec.drop_proc_not_supported
@@ -246,23 +247,33 @@ feature {NONE} -- Implementation
 			-- Set `p_exists'.
 		local
 			temp_int: INTEGER_REF
+			temp_dble: DOUBLE_REF
 			tuple: DB_TUPLE
 		do
 			if (db_spec.support_proc > 0) then
-				-- FIXME fixme --handle.status.set_found (1)
 				private_selection.set_map_name (name, "name")
 				private_selection.query (Select_exists)
-				p_exists := not handle.status.found
+				p_exists := handle.status.found
 				private_selection.load_result
 				private_selection.unset_map_name ("name")
 				create tuple.copy (private_selection.cursor)
 				if not tuple.is_empty then
 					temp_int ?= tuple.item (1)
 					if temp_int /= Void then
-						p_exists := temp_int.item > 0
-					end
-					if db_spec.has_row_number then
-						row_number := temp_int.item
+						p_exists := temp_int > 0
+						if db_spec.has_row_number then
+							row_number := temp_int.item
+						end
+					else
+						temp_dble ?= tuple.item (1)
+						if temp_dble /= Void then
+							p_exists := temp_dble > 0.0
+							if db_spec.has_row_number then
+								row_number := temp_dble.item.truncated_to_integer
+							end
+						else
+							p_exists := False
+						end
 					end
 				else
 					p_exists := False
@@ -272,6 +283,9 @@ feature {NONE} -- Implementation
 		end
 
 	p_exists: BOOLEAN
+			-- Does procedure exist?
+			-- Value is effective after `set_p_exists'
+			-- execution.
 
 	append_in_args_value (s: STRING) is --; d: DB_EXPRESSION) is
 			-- Append map variables name from `d' in `s'.

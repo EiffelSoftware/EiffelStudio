@@ -2102,7 +2102,7 @@ feature -- Information
 					st.add_new_line
 					st.add_comment_text ("PROJECT PATH  : ")
 					st.add_string (eiffel_project.name)
---					st.add_new_line
+					st.add_new_line
 --					st.add_new_line
 -- 					st.add_comment_text ("$EIFFEL4      = ")
 -- 					st.add_string (execution_environment.get ("EIFFEL4"))

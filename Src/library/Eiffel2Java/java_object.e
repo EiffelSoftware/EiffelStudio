@@ -114,20 +114,16 @@ feature -- Comparison
 
 feature -- Reflection
 
-	method_id (method_name: STRING; signature: STRING): POINTER is
-			-- Find the method_id for "method_name" with signature 
+	method_id (feature_name: STRING; signature: STRING): POINTER is
+			-- Find the method_id for `feature_name' with signature 
 			-- encoded by "signature"
-		require
-			(method_name /= Void) and (signature /= Void)
 		local
 			method_name_to_c, signature_to_c: C_STRING
 		do
-			create method_name_to_c.make (method_name)
+			create method_name_to_c.make (feature_name)
 			create signature_to_c.make (signature)
 			Result := jni.get_method_id (jclass.java_class_id, 
 									   method_name_to_c.item, signature_to_c.item)
-		ensure
-			method_exists: Result /= default_pointer	
 		end
 
 	field_id (lname: STRING; sig: STRING): POINTER is

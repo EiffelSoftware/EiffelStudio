@@ -58,7 +58,6 @@ feature -- Element change
 			remove_pixmap
 			create new_pixmap
 			new_pixmap.copy (a_pixmap)
-
 			imp ?= new_pixmap.implementation
 			C.gtk_container_add (pixmap_box, imp.c_object)
 			C.gtk_widget_show (pixmap_box)		
@@ -69,12 +68,10 @@ feature -- Element change
 		local
 			p: POINTER
 		do
-			p:= gtk_pixmap
-
+			p := gtk_pixmap
 			if p /= NULL then
 				C.gtk_container_remove (pixmap_box, p)
 			end
-
 			C.gtk_widget_hide (pixmap_box)
 		end
 
@@ -95,11 +92,6 @@ feature {NONE} -- Implementation
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PIXMAPABLE
-
-invariant
-	pixmap_box_not_null: is_usable implies pixmap_box /= NULL
-	pixmap_box_has_parent: is_usable implies
-		C.gtk_widget_struct_parent (pixmap_box) /= NULL
 
 end -- EV_PIXMAPABLE_IMP
 
@@ -124,6 +116,9 @@ end -- EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2001/06/19 16:55:51  king
+--| Cosmetics, removal of gtkwidget consuming invariants
+--|
 --| Revision 1.26  2001/06/07 23:08:04  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -5,14 +5,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class
 	THREAD_ATTRIBUTES
 
-
 creation
 	make
-
 
 feature {NONE} -- Initialization
 
@@ -23,7 +20,6 @@ feature {NONE} -- Initialization
 			scheduling_policy := default_policy
 			detached := True
 		end
-
 
 feature -- Attribute change
 
@@ -61,7 +57,6 @@ feature -- Access
 
 	detached: BOOLEAN
 
-
 feature -- Implementation for scheduling_policy
 
 	default_policy: INTEGER is 0
@@ -71,7 +66,6 @@ feature -- Implementation for scheduling_policy
 	fifo: INTEGER is 2
 
 	round_robin: INTEGER is 3
-
 
 feature -- Externals
 
@@ -98,7 +92,6 @@ feature -- Externals
 		alias
 			"eif_thr_max_priority"
 		end
-
 
 end -- class THREAD_ATTRIBUTES
 

@@ -1,0 +1,257 @@
+<html>
+	<head>
+		<title>Reflection system specification</title>
+	</head>
+
+	<body>
+		<body background="#ffffff" text="#000000" link="#555ccc" vlink="#555ccc" alink="#555ccc">
+
+		<br><br>
+		<h2>2. ISE.EiffelComponents.dll</h2>
+		<br>
+
+				<a name = eiffel_assembly>
+				<h3>2.1 EiffelAssembly</h3>
+
+						<p>
+								This class gives a representation of a .NET assembly in Eiffel. It has six attributes and the corresponding setters.
+						</p>
+						<ul>
+								<li>assembly_name: STRING</li>
+								<li>assembly_version: STRING</li>
+								<li>assembly_culture: STRING</li>
+								<li>assembly_public_key: STRING</li>
+								<li>eiffel_cluster_path: STRING</li>
+								<li>emitter_version_number: STRING</li>
+						</ul>
+						<p>
+								The emitter generates instance of `EiffelAssembly' and passes it as argument to the appropriate generator (depending on the feature you have called), which uses it to generate either Eiffel or Xml files. See <a href = "./emitter.html" target = "_parent">5. Emitter.exe</a> for more information.
+						</p>
+						<p>
+								ISE reflection interface also uses `EiffelAssembly'. In fact, when you ask the database for a representation of an assembly, it returns an instance of `EiffelAssembly', which is more user-friendly than the underlying Xml file describing assembly. See <a href = "./reflection_interface.html" target = "_parent">3. ISE.ReflectionInterface.dll</a> for more information.
+						</p>
+				<br>
+
+				<a name = eiffel_class>
+				<h3>2.2 EiffelClass </h3>
+
+					<p>
+							This class gives a representation of an Eiffel class generated from a .NET type. It keeps useful information to connect .NET names with Eiffel names, such as `dot_net_name'. The attributes of class `EiffelClass' are listed below:
+					</p>
+					<ul>
+						<li>
+								eiffel_name: STRING<br>
+										-- Eiffel name
+						</li>
+						<br><br>
+						<li>
+								dot_net_full_name: STRING<br>
+										-- .NET full name (i.e. with namespace)
+						</li>
+						<br><br>
+						<li>
+								dot_net_simple_name: STRING <br>
+										-- .NET simple name
+						</li>
+						<br><br>
+						<li>
+								namespace: STRING	<br>
+										-- Namespace defining current class
+						</li>
+						<br><br>
+						<li>
+								parents: SYSTEM_COLLECTIONS_HASHTABLE<br>
+										-- Key: Parent Eiffel name<br>
+										-- Value: Inheritance clauses (ARRAY [SYSTEM_COLLECTIONS_ARRAYLIST [STRING]]) <br>
+										-- (array with rename, undefine, redefine, select and export clauses)
+						</li>
+						<br><br>
+						<li>
+								creation_routines: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+										-- Creation routines Eiffel names <br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+						</li>
+						<br><br>
+						<li>
+								initialization_features: SYSTEM_COLLECTIONS_ARRAYLIST <br>
+										-- Initialization features <br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+						</li>
+						<br><br>
+						<li>
+								access_features: SYSTEM_COLLECTIONS_ARRAYLIST <br>
+										-- Access features <br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+						</li>
+						<br><br>
+						<li>
+								element_change_features: SYSTEM_COLLECTIONS_ARRAYLIST <br>
+										-- Element change features <br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+						</li>
+						<br><br>
+						<li>
+								basic_operations: SYSTEM_COLLECTIONS_ARRAYLIST <br>
+										-- Basic operations<br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+						</li>
+						<br><br>
+						<li>
+								unary_operators_features: SYSTEM_COLLECTIONS_ARRAYLIST <br>
+										-- Unary operators<br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+						</li>
+						<br><br>
+						<li>
+								binary_operators_features: SYSTEM_COLLECTIONS_ARRAYLIST <br>
+										-- Binary operators<br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+						</li>
+						<br><br>
+						<li>
+								special_features: SYSTEM_COLLECTIONS_ARRAYLIST <br>
+										-- Special features <br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+						</li>
+						<br><br>
+						<li>
+								implementation_features: SYSTEM_COLLECTIONS_ARRAYLIST <br>
+										-- Implementation features <br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [EIFFEL_FEATURE]
+						</li>
+						<br><br>
+						<li>
+								invariants: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+										-- Class invariants<br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [ARRAY [STRING]] (Array with invariant tag and invariant text)
+						</li>
+						<br><br>
+						<li>
+								is_frozen: BOOLEAN<br>
+										-- Is class frozen?
+						</li>
+						<br><br>
+						<li>
+								is_expanded: BOOLEAN<br>
+										-- Is class expanded?
+						</li>
+						<br><br>
+						<li>
+								is_deferred: BOOLEAN<br>
+										-- Is class deferred?
+						</li>
+						<br><br>
+						<li>
+								create_none: BOOLEAN<br>
+										-- Does class have `create{NONE}' creation declaration?
+						</li>
+					</ul>
+					<p>
+							The emitter generates instance of `EiffelClass' for each type of the assembly and passes it as argument to the appropriate generator (depending on the feature you have called), which uses it to generate either Eiffel or Xml files. See <a href = "./emitter.dll" target = "_parent">5. Emitter.exe</a> for more information.
+					</p>
+					<p>
+							ISE reflection interface also uses `EiffelClass'. In fact, when you ask the database for a representation of a type, it returns an instance of `EiffelClass', which is more user-friendly than the underlying Xml file describing type. See <a href = "./reflection_interface.dll" target = "_parent">3. ISE.ReflectionInterface.dll</a> for more information.
+					</p>
+				<br>
+
+				<a name = eiffel_feature>
+				<h3>2.3 EiffelFeature </h3>
+
+					<p>
+							This class gives a representation of an Eiffel feature generated from a .NET member. It keeps useful information to connect .NET feature names with Eiffel names, such as `dot_net_name'. The attributes of class `EiffelFeature' are listed below:
+					</p>
+					<ul>
+						<li>
+								eiffel_name: STRING<br>
+										-- Eiffel name
+						</li>
+						<br><br>
+						<li>
+								dot_net_name: STRING<br>
+										-- .NET name
+						</li>
+						<br><br>
+						<li>
+								arguments: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+										-- Feature Arguments<br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [ARRAY [STRING]]<br>
+										-- | Array with argument Eiffel name, .NET name, type (Eiffel name of type) and type full name
+						</li>
+						<br><br>
+						<li>
+								return_type: STRING	<br>
+										-- Eiffel name of feature return type
+						</li>
+						<br><br>
+						<li>
+								return_type_full_name: STRING <br>
+										-- Full name of feature return type
+						</li>
+						<br><br>
+						<li>
+								preconditions: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+										-- Feature preconditions<br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [ARRAY [STRING]]<br>
+										-- | Array with precondition tag and precondition text
+						</li>
+						<br><br>
+						<li>
+								postconditions: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+										-- Feature postconditions<br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [ARRAY [STRING]]<br>
+										-- | Array with postcondition tag and postcondition text
+						</li>
+						<br><br>
+						<li>
+								comments: SYSTEM_COLLECTIONS_ARRAYLIST<br>
+										-- Feature comments<br>
+										-- | SYSTEM_COLLECTIONS_ARRAYLIST [STRING]
+						</li>
+						<br><br>
+						<li>
+								is_frozen: BOOLEAN<br>
+										-- Is feature frozen?
+						</li>
+						<br><br>
+						<li>
+								is_static: BOOLEAN<br>
+										-- Is feature static?
+						</li>
+						<br><br>
+						<li>
+								is_abstract: BOOLEAN<br>
+										-- Is feature abstract?
+						</li>
+						<br><br>
+						<li>
+								is_method: BOOLEAN<br>
+										-- Is feature a method?
+						</li>
+						<br><br>
+						<li>
+								is_field: BOOLEAN<br>
+										-- Is feature a field?
+						</li>
+						<br><br>
+						<li>
+								is_creation_routine: BOOLEAN<br>
+										-- Is feature a creation routine?
+						</li>
+						<br><br>
+						<li>
+								is_prefix: BOOLEAN<br>
+										-- Is feature a prefix?
+						</li>
+						<br><br>
+						<li>
+								is_infix: BOOLEAN<br>
+										-- Is feature an infix?
+						</li>
+				</ul>
+				<br>
+
+				<p>The following diagram shows interactions between these three classes:</p>
+				<center><img src = "./Eiffel_components.gif" no border></center>
+		<br><br>
+	</body>
+</html>

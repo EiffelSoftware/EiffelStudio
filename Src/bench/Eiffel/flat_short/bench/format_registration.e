@@ -17,7 +17,8 @@ inherit
 		rename
 			class_ast as current_ast
 		end;
-	MEMORY
+	MEMORY;
+	COMPILER_EXPORTER
 
 creation
 

@@ -7,6 +7,12 @@ indexing
 class
 	WEL_IDENTIFIED
 
+inherit
+	IDENTIFIED_CONTROLLER
+		export
+			{NONE} object_id_stack_size, extend_object_id_stack
+		end
+		
 feature -- Access
 
 	frozen eif_object_id (an_object: ANY): INTEGER is
@@ -46,7 +52,9 @@ feature {IDENTIFIED_CONTROLLER} -- Implementation
 	reference_list: ARRAYED_LIST [CLI_CELL [WEAK_REFERENCE]] is
 			-- List of weak references used. Id's correspond to indices in this list.
 		once
-			create Result.make (50)
+				-- Reuse `list' from IDENTIFIED to preserve classic behavior where
+				-- IDs used by IDENTIFIED and WEL_IDENTIFIED are shared.
+			Result := (create {IDENTIFIED}).reference_list
 		end
 
 feature {NONE} -- Implementation
@@ -55,11 +63,15 @@ feature {NONE} -- Implementation
 			-- Object associated with `an_id' (void if no such object)
 		local
 			wr: WEAK_REFERENCE
+			l_cell: CLI_CELL [WEAK_REFERENCE]
 		do
 			if reference_list.valid_index (an_id) then
-				wr := reference_list.i_th (an_id).item
-				if wr /= Void then
-					Result := wr.target
+				l_cell := reference_list.i_th (an_id)
+				if l_cell /= Void then
+					wr := l_cell.item
+					if wr /= Void then
+						Result := wr.target
+					end
 				end
 			end
 		end

@@ -549,9 +549,10 @@ feature  -- Generation
 		local
 			parent_name: STRING
 			inherited_args: LINKED_LIST [STRING]
-			found: BOOLEAN
 		do
 			!!Result.make (0)
+
+				--| Class declaration
 			Result.append ("class ")
 			Result.append (eiffel_type_to_upper)
 			Result.append ("%N%Ninherit%N%N%T")
@@ -565,57 +566,9 @@ feature  -- Generation
 				Result.append (parent_type.eiffel_inherit_text)
 			end
 			Result.append ("%N%Ncreation%N%N%Tmake")
-			Result.append ("%N%Nfeature%N%N")
-			from
-				labels.start
-			until
-				labels.after
-			loop
-				if (labels.item.parent_type = Void) then
-					Result.append ("%T")
-					Result.append (labels.item.label)
-					Result.append ("_label: STRING is %"")
-					Result.append (labels.item.label)
-					Result.append ("%"%N%N")
-				end
-				labels.forth
-			end
-			from
-				arg_entity_namer.reset
-				arguments.start
-			until
-				arguments.after
-			loop
-				if (arguments.item.parent_type = Void) then
-					Result.append ("%T")
-					arg_entity_namer.next
-					Result.append (arg_entity_namer.value)
-					Result.append (": ")
-					Result.append (arguments.item.data.eiffel_type)
-					Result.append ("%N%N")
-				end
-				arguments.forth
-			end
-			if (parent_type = Void) then
-				Result.append ("%Texecute is%N%T%Tdo%N")
-				if not labels.empty then
-					from
-						labels.start
-					until
-						labels.after or found
-					loop
-						if (labels.item.parent_type = Void) then
-							Result.append ("%T%T%Tset_transition_label (")
-							Result.append (labels.item.label)
-							Result.append ("_label)%N")
-							found := True
-						end
-					end
-				end
-				Result.append ("%T%Tend")
-			else
-				Result.append (parent_type.eiffel_body_text)
-			end
+
+				--| Initialisation clause
+			Result.append ("%N%Nfeature -- Initialization")
 			Result.append ("%N%N%Tmake")
 			if
 				not arguments.empty
@@ -665,51 +618,75 @@ feature  -- Generation
 				Result.append (parent_type.eiffel_creation_text (inherited_args))
 			end
 			Result.append ("%T%Tend%N%N")
+
+				--| Access clause
+			Result.append ("feature -- Access%N%N")
+			from
+				arg_entity_namer.reset
+				arguments.start
+			until
+				arguments.after
+			loop
+				if (arguments.item.parent_type = Void) then
+					Result.append ("%T")
+					arg_entity_namer.next
+					Result.append (arg_entity_namer.value)
+					Result.append (": ")
+					Result.append (arguments.item.data.eiffel_type)
+					Result.append ("%N%N")
+				end
+				arguments.forth
+			end
+
+				--| Transition labels declaration
+			from
+				labels.start
+			until
+				labels.after
+			loop
+				if (labels.item.parent_type = Void) then
+					Result.append ("%T")
+					Result.append (labels.item.label)
+					Result.append ("_label: STRING is %"")
+					Result.append (labels.item.label)
+					Result.append ("%"%N%N")
+				end
+				labels.forth
+			end
+
+				--| Body clause
+			Result.append ("feature -- Command%N%N")
+			if (parent_type = Void) then
+				Result.append ("%Texecute is%N%T%Tdo%N")
+				if not labels.empty then
+					from
+						labels.start
+					until
+						labels.after
+					loop
+						if (labels.item.parent_type = Void) then
+							Result.append ("%T%T%Tset_transition_label (")
+							Result.append (labels.item.label)
+							Result.append ("_label)%N")
+						end
+						labels.forth
+					end
+				end
+				Result.append ("%T%Tend%N%N")
+			else
+				Result.append (parent_type.eiffel_body_text)
+			end
+
 			if undoable then
 				Result.append ("%Tundo is%N%T%Tdo%N%T%Tend%N%N")
 				Result.append ("%Tredo is%N%T%Tdo%N%T%Tend%N%N")
 			end
-			Result.append ("end%N")
+
+				--| End of the class	
+			Result.append ("end")
 		end
 
 feature -- Arguments 
-
--- 	add_argument (ts: TYPE_STONE) is
--- 			-- Add an argument to Current command.
--- 		require
--- 			Edited: edited
--- 		local
--- 			new_argument: ARG
--- 			add_argument_cmd: CMD_ADD_ARGUMENT
--- 		do
--- 			!! new_argument.session_init (ts)
--- 			!! add_argument_cmd
--- 			add_argument_cmd.set_element (new_argument)
--- 			add_argument_cmd.execute (Current)
--- 		end
- 
--- 	remove_argument (a: ARG) is
--- 			-- Remove `a' from the list of arguments
--- 			-- from current command.
--- 		require
--- 			Edited: edited
--- 		local
--- 			remove_argument_cmd: CMD_CUT_ARGUMENT
--- 		do
--- 			arguments.start
--- 			arguments.search (a)
--- 			if not arguments.after then
--- 				if arguments.item.inherited then
--- 					Error_box.popup (Current,
--- 						Messages.Cannot_remove_argument_er,
--- 						arguments.item.label)	
--- 				else
--- 					!! remove_argument_cmd
--- 					remove_argument_cmd.set_index (arguments.index)
--- 					remove_argument_cmd.execute (Current)
--- 				end
--- 			end
--- 		end
 
 	index_of_argument (a: ARG): INTEGER is
 			-- Index of `a' in `arguments'.
@@ -719,18 +696,18 @@ feature -- Arguments
 
 feature -- labels {CMD_EDITOR}
 
-	add_label (l: STRING) is
+	add_label (l: CMD_LABEL) is
 			-- Add a label to current command.
 		require
 			Edited: edited
 		local
-			lab: CMD_LABEL
+--			lab: CMD_LABEL
 			add_label_cmd: CMD_ADD_LABEL
 		do
-			if not label_exist (l) then
-				!!lab.make (l)
+			if not label_exist (l.label) then
+--				!!lab.make (l)
 				!!add_label_cmd
-				add_label_cmd.set_element (lab)
+				add_label_cmd.set_element (l)
 				add_label_cmd.execute (Current)
 			end
 		end
@@ -769,7 +746,7 @@ feature -- labels {CMD_EDITOR}
 		do
 			labels.start
 			labels.search (l)
-			if not labels.after then
+			if not labels.exhausted then
 				if labels.item.inherited then
 					Error_box.popup (Current,
 						Messages.Cannot_remove_label_er,

@@ -47,7 +47,7 @@ extern struct token *in_word_set2();
 %}
 
 %%
-[ \t\n]+								{	start_position = end_position;
+[ \t\n\r]+								{	start_position = end_position;
 											end_position += yyleng;}
 :										return process(LAC_COLUMN);
 ","										return process(LAC_COMMA);
@@ -134,7 +134,7 @@ static int get_string()
 		end_position++;
 		if (c == '%') {
 			extension = 0;
-			while ((cc = input()) == ' ' || cc == '\t' || cc == '\n') {
+			while ((cc = input()) == ' ' || cc == '\t' || cc == '\n' || cc == '\r') {
 				extension = 1;
 				end_position++;
 			}

@@ -49,4 +49,17 @@ feature -- Location error state
 		%%N%
 		%Click Back and choose another directory."
 
+feature -- Project warning
+
+	t_Project_allready_exist: STRING is "Project allready exist"
+	
+	m_Project_allready_exist: STRING is
+		"The directory you have choosen allready contain%N%
+		%a project.%N%
+		%%N%
+		%Click Back to choose another directory.%N%
+		%%N%
+		%Click Next to continue and erase actual project."
+
+
 end -- class BENCH_WIZARD_INTERFACE_NAMES

@@ -8,7 +8,8 @@ class CLASS_TYPE_AS
 inherit
 	TYPE_AS
 		redefine
-			has_like, simple_format, is_equivalent,
+			has_formal_generic, has_like,
+			simple_format, is_equivalent,
 			check_constraint_type, solved_type_for_format,
 			append_to
 		end
@@ -102,6 +103,21 @@ feature -- Access
 					generics.after or else Result
 				loop
 					Result := generics.item.has_like
+					generics.forth
+				end
+			end
+		end
+
+	has_formal_generic: BOOLEAN is
+			-- Has type a formal generic parameter?
+		do
+			if generics /= Void then
+				from
+					generics.start
+				until
+					generics.after or else Result
+				loop
+					Result := generics.item.has_formal_generic
 					generics.forth
 				end
 			end

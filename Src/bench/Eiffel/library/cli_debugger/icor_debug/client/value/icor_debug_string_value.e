@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			length := get_length
-			string := get_string (length)			
+			string := get_string (10)
 		end
 		
 feature {ICOR_EXPORTER} -- Properties

@@ -21,10 +21,15 @@
 			<item>Click <link><url>../30_compiler/60_version_history/05_55_release/index.xml</url><label>here</label></link> for the compiler release notes.</item>
 		</list>
 		<heading><size>2</size>Libraries</heading>
+		<heading><size>2</size>CECIL</heading>
+		<list ordered="false">
+			<item>Added ability to query type of a generic class where an actual generic parameter is expanded although its base class is not. It suffices to prefix the class name with "expanded ". Reciprocally, you can use the reference version of an expanded class by prefixing with "reference ".</item>
+		</list>
 		<heading><size>3</size>EiffelBase</heading>
 		<list ordered="false">
 			<item>Removed <code><feature_name>consistent</feature_name></code> and <code><feature_name>setup</feature_name></code> from <code><class_name>ANY</class_name></code></item>
 			<item>Removed <code><feature_name>Void</feature_name></code> from <code><class_name>ANY</class_name></code> as <code><keyword>Void</keyword></code> is now a keyword.</item>
+			<item>Added <feature_name>for_all</feature_name>, <feature_name>do_all</feature_name>, <feature_name>do_if</feature_name> and <feature_name>there_exists</feature_name> to <class_name>ARRAY</class_name>. As a consequence descendants of <class_name>ARRAY</class_name> which also inherit from <class_name>LINEAR</class_name> have to select the proper version of those routines as they also appear in <class_name>LINEAR</class_name>.</item>
 		</list>
 	</paragraph>
 </document>

@@ -182,12 +182,12 @@ Infix Prefix New_feature_list
  */
 
 Class_declaration:
-	{pos_stack_init();}
 	Indexing Header_mark {click_list_init();} TE_CLASS Pushing_id
 	Formal_generics Obsolete Inheritance Creators Features Class_invariant TE_END
 		{
 			/* node is set at the Eiffel level for root class */
-			rn_ast = create_class(click_list_elem ($<value>6),deferred,expanded,$2,$7,$8,$9,$10,$11,$12,click_list_new());
+			rn_ast = create_class(click_list_elem ($<value>5),deferred,expanded,$1,$6,$7,$8,$9,$10,$11,click_list_new(),
+start_position);
 		}
 	;
 
@@ -281,11 +281,10 @@ Feature_clause_list:
 	;
 
 Feature_clause:
-	TE_FEATURE Clients {push_pos(); list_init();} Feature_declaration_list
+	TE_FEATURE {$$ = start_position;} Clients {list_init();} Feature_declaration_list
 		{
 		$$ = list_new(CONSTRUCT_LIST_AS);
-		$$ = ($$ == NULL)?NULL:create_node2(FEATURE_CLAUSE_AS,$2,$$);
-		pop_pos();
+		$$ = ($$ == NULL)?NULL:create_fclause_as($3,$$,$<value>2);
 		}
 	;
 
@@ -442,8 +441,8 @@ Declaration_body:		Formal_arguments Type_mark Constant_or_routine
 
 Constant_or_routine:	/* empty */
 							{$$.cr_node = NULL; $$.cr_type = CR_EMPTY;}
-	|					TE_IS {push_pos();} Feature_value
-							{$$.cr_node = $3.cr_node;$$.cr_type = $3.cr_type; pop_pos();}
+	|					TE_IS Feature_value
+							{$$.cr_node = $2.cr_node;$$.cr_type = $2.cr_type;}
 	;
 
 Feature_value:			Manifest_constant
@@ -625,8 +624,10 @@ Type_mark:					/* empty */
 	;
 
 
-Routine:					Obsolete Precondition Local_declarations Routine_body Postcondition Rescue TE_END
-								{$$ = create_node6(ROUTINE_AS,$1,$2,$3,$4,$5,$6);}
+Routine:					Obsolete {$$ = start_position;} 
+							Precondition Local_declarations 
+							Routine_body Postcondition Rescue TE_END
+								{$$ = create_routine_as($1,$<value>2,$3,$4,$5,$6,$7);}
 	;
 
 Routine_body: 				Internal
@@ -701,29 +702,25 @@ Instruction1:
 
 Precondition:				/* empty */
 								{$$ = NULL;}
-	|						TE_REQUIRE {push_pos(); id_level = ASSERT_LEVEL;} Assertion
+	|						TE_REQUIRE {id_level = ASSERT_LEVEL;} Assertion
 								{	id_level = NORMAL_LEVEL;
 									$$ = create_node1(REQUIRE_AS,$3);
-									pop_pos();
 								}
-	|						TE_REQUIRE TE_ELSE {push_pos(); id_level = ASSERT_LEVEL;} Assertion
+	|						TE_REQUIRE TE_ELSE {id_level = ASSERT_LEVEL;} Assertion
 								{	id_level = NORMAL_LEVEL;
 									$$ = create_node1(REQUIRE_ELSE_AS,$4);
-									pop_pos();
 								}
 	;
 
 Postcondition:				/* empty */
 								{$$ = NULL;}
-	|						TE_ENSURE {push_pos(); id_level = ASSERT_LEVEL;} Assertion
+	|						TE_ENSURE {id_level = ASSERT_LEVEL;} Assertion
 								{	id_level = NORMAL_LEVEL;
 									$$ = create_node1(ENSURE_AS,$3);
-									pop_pos();
 								}
-	|						TE_ENSURE TE_THEN {push_pos(); id_level = ASSERT_LEVEL;} Assertion
+	|						TE_ENSURE TE_THEN {id_level = ASSERT_LEVEL;} Assertion
 								{	id_level = NORMAL_LEVEL;
 									$$ = create_node1(ENSURE_THEN_AS,$4);
-									pop_pos();
 								}
 	;
 
@@ -743,16 +740,11 @@ Assertion_list_non_empty:	Assertion_clause ASemi
 
 Assertion_clause: 			Expression 
 								{
-									push_pos();
-									push_pos();
 									$$ = create_node2(TAGGED_AS,NULL,$1);
-									npop_pos(2);
 								}
-	|						Identifier TE_COLON {push_pos();} Expression
+	|						Identifier TE_COLON Expression
 								{
-									push_pos();
-									$$ = create_node2(TAGGED_AS,$1,$4);
-									npop_pos(2);
+									$$ = create_node2(TAGGED_AS,$1,$3);
 								}
 	|						Identifier TE_COLON
 								{ $$ = NULL;}

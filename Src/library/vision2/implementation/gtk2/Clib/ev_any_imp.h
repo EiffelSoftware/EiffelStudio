@@ -19,8 +19,9 @@ void c_ev_any_imp_set_eif_oid_in_c_object
 EIF_REFERENCE c_ev_any_imp_get_eif_reference_from_object_id
 	(GtkWidget* c_object);
 
-gboolean c_ev_any_imp_invariant (GtkWidget* c_object);
-
+extern int debug_mode;
+void set_debug_mode (int);
+	// Used for turning Eiffel debugger on and off
 #endif
 
 //------------------------------------------------------------------------------
@@ -44,8 +45,15 @@ gboolean c_ev_any_imp_invariant (GtkWidget* c_object);
 //------------------------------------------------------------------------------
 //
 // $Log$
-// Revision 1.1  2003/04/03 01:40:50  king
-// Initial gtk 2 conversion
+// Revision 1.2  2004/02/12 22:38:29  king
+// Removed all unused code due to refactoring
+//
+// Revision 1.5  2003/10/22 01:13:59  king
+// Added set_debug_mode that was previous inline Eiffel code
+// Placed here because it doesn't compile with older C compilers (gcc 2.95)
+//
+// Revision 1.4  2003/08/13 19:36:24  king
+// Removed now no longer use invariant external
 //
 // Revision 1.3  2001/06/07 23:07:59  rogers
 // Merged DEVEL branch into Main trunc.

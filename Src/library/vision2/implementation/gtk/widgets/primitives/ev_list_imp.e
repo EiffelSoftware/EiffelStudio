@@ -19,7 +19,12 @@ inherit
 		redefine
 			interface,
 			visual_widget,
-			initialize
+			initialize,
+			clear_selection,
+			deselect_item,
+			select_item,
+			remove_i_th,
+			on_item_clicked
 		end	
 create
 	make
@@ -37,6 +42,7 @@ feature -- Initialize
 			-- Initialize the list.
 		do
 			Precursor
+			selection_mode_is_single := True
 			disable_multiple_selection
 		end
 
@@ -54,10 +60,17 @@ feature -- Status setting
 			-- For constants, see EV_GTK_CONSTANTS
 		do
 			multiple_selection_enabled := True
-			C.gtk_list_set_selection_mode (
-				list_widget,
-				C.GTK_SELECTION_MULTIPLE_ENUM
-			)	
+			if selection_mode_is_single then
+				C.gtk_list_set_selection_mode (
+					list_widget,
+					C.GTK_SELECTION_MULTIPLE_ENUM
+				)
+			else
+				C.gtk_list_set_selection_mode (
+					list_widget,
+					C.GTK_SELECTION_EXTENDED_ENUM
+				)
+			end
 		end
 
 	disable_multiple_selection is
@@ -66,6 +79,7 @@ feature -- Status setting
 			-- For constants, see EV_GTK_CONSTANTS
 		do
 			multiple_selection_enabled := False
+			selection_mode_is_single := True
 			C.gtk_list_unselect_all (list_widget)
 			C.gtk_list_set_selection_mode (
 				list_widget,
@@ -73,6 +87,41 @@ feature -- Status setting
 			)
 		end
 
+	select_item (an_index: INTEGER) is
+			-- Select the item of the list at the one-based
+			-- `index'.
+		do
+			switch_to_browse_mode_if_necessary		
+			Precursor {EV_LIST_ITEM_LIST_IMP} (an_index)
+		end
+
+	deselect_item (an_index: INTEGER) is
+			-- Unselect the item at the one-based `index'.
+		do
+			switch_to_single_mode_if_necessary
+			Precursor {EV_LIST_ITEM_LIST_IMP} (an_index)
+		end
+
+	clear_selection is
+			-- Clear the selection of the list.
+		do
+			if not selection_mode_is_single then
+				if multiple_selection_enabled then
+					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_multiple_enum)
+				else
+					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_single_enum)
+				end
+				selection_mode_is_single := True
+			end
+			Precursor {EV_LIST_ITEM_LIST_IMP}
+		end
+		
+	remove_i_th (an_index: INTEGER) is
+		do
+			switch_to_single_mode_if_necessary
+			Precursor {EV_LIST_ITEM_LIST_IMP} (an_index)
+		end
+		
 feature {EV_ANY_I} -- Implementation
 
 	visual_widget: POINTER is
@@ -81,6 +130,44 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	interface: EV_LIST
+	
+feature {NONE} -- Implementation
+
+	on_item_clicked is
+		do
+			switch_to_browse_mode_if_necessary
+			Precursor {EV_LIST_ITEM_LIST_IMP}
+		end
+	
+	switch_to_single_mode_if_necessary is
+			-- Change selection mode if the last selected item is deselected.
+		do
+			if not selection_mode_is_single then
+				if multiple_selection_enabled then
+					if selected_items.count = 1 then
+						C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_multiple_enum)
+						selection_mode_is_single := True
+					end
+				else
+					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_single_enum)
+					selection_mode_is_single := True
+				end
+			end
+		end
+		
+	switch_to_browse_mode_if_necessary is
+			-- Change selection mode to browse mode if necessary.
+		do
+			if selection_mode_is_single then
+				if multiple_selection_enabled then
+					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_extended_enum)					
+				else
+					C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_browse_enum)
+				end
+				selection_mode_is_single := False
+			end
+		end
+	selection_mode_is_single:BOOLEAN
 
 end -- class EV_LIST_IMP
 
@@ -105,8 +192,8 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.44  2001/06/07 23:08:07  rogers
---| Merged DEVEL branch into Main trunc.
+--| Revision 1.45  2001/06/08 22:09:17  etienne
+--| Modified to have the wanted behavior regarding selection.
 --|
 --| Revision 1.21.4.11  2001/06/05 01:35:06  king
 --| Reset to previous selection mode

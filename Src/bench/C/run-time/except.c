@@ -25,9 +25,9 @@ doc:<file name="except.c" header="eif_except.c" version="$Id$" summary="Exceptio
 #include "rt_except.h"
 #include "eif_local.h"
 #include "eif_urgent.h"
-#include "eif_sig.h"				/* For signal description */
+#include "rt_sig.h"				/* For signal description */
 #include "eif_macros.h"
-#include "eif_debug.h"
+#include "rt_debug.h"
 #include "eif_err_msg.h"
 #include "rt_main.h"
 #include "rt_garcol.h"
@@ -85,13 +85,14 @@ rt_public struct xstack eif_stack = {		/* Calling stack */
 };
 
 /*
-doc:	<attribute name="eif_trace" return_type="struct xstack" export="public">
+doc:	<attribute name="eif_trace" return_type="struct xstack" export="shared">
 doc:		<summary>The exception trace records all the unresolved exceptions. For the case where multiple exceptions occurred and we entered different rescue clauses, we have to store the exception levels along with the unsolved exceptions.</summary>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Per thread data.</synchronization>
+doc:		<fixme>We should protect access through use of a private per thread data.</fixme>
 doc:	</attribute>
 */
-rt_public struct xstack eif_trace = {		/* Exception trace */
+rt_shared struct xstack eif_trace = {		/* Exception trace */
 	(struct stxchunk *) 0,				/* st_hd */
 	(struct stxchunk *) 0,				/* st_tl */
 	(struct stxchunk *) 0,				/* st_cur */

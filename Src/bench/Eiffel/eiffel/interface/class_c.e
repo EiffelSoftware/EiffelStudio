@@ -2468,7 +2468,7 @@ feature -- Convenience features
 			if System.in_final_mode then
 					-- In final mode we do not generate assertions
 					-- if the dead code remover is on.
-				if not System.remover_off then
+				if not System.keep_assertions then
 					Result := No_level
 				else
 					Result := lace_class.assertion_level

@@ -57,24 +57,17 @@ feature -- Basic Operations
 		require
 			non_void_command_line: a_command_line /= Void
 			valid_command_line: not a_command_line.is_empty
-			non_void_working_directory: a_working_directory /= Void
-		local
-			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			create process_info.make
-			create a_wel_string1.make (a_command_line)	
-			if not a_working_directory.is_empty then
-				create a_wel_string2.make (a_working_directory)
-				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
-							default_pointer, default_pointer, True, detached_process,
-							default_pointer, a_wel_string2.item,
-							startup_info.item, process_info.item)
-			else
-				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
-							default_pointer, default_pointer, True, detached_process,
-							default_pointer, default_pointer,
-							startup_info.item, process_info.item)
-			end
+			spawn_with_flags (a_command_line, a_working_directory, detached_process)
+		end
+
+	spawn_with_console (a_command_line, a_working_directory: STRING) is
+			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
+		require
+			non_void_command_line: a_command_line /= Void
+			valid_command_line: not a_command_line.is_empty
+		do
+			spawn_with_flags (a_command_line, a_working_directory, create_new_console)
 		end
 
 	launch (a_command_line, a_working_directory: STRING; a_output_handler: ROUTINE [ANY, TUPLE [STRING]]) is
@@ -83,7 +76,6 @@ feature -- Basic Operations
 		require
 			non_void_command_line: a_command_line /= Void
 			valid_command_line: not a_command_line.is_empty
-			non_void_working_directory: a_working_directory /= Void
 		local
 			l_block_size: INTEGER
 			l_tuple: TUPLE [STRING]
@@ -121,7 +113,6 @@ feature -- Basic Operations
 		require
 			non_void_command_line: a_command_line /= Void
 			valid_command_line: not a_command_line.is_empty
-			non_void_working_directory: a_working_directory /= Void
 		local
 			an_integer: INTEGER
 			a_boolean: BOOLEAN
@@ -165,6 +156,30 @@ feature -- Access
 			-- Should process be hidden?
 
 feature {NONE} -- Implementation
+
+	spawn_with_flags (a_command_line, a_working_directory: STRING; a_flags: INTEGER) is
+			-- Spawn asynchronously process described in `a_command_line' from `a_working_directory'.
+		require
+			non_void_command_line: a_command_line /= Void
+			valid_command_line: not a_command_line.is_empty
+		local
+			a_wel_string1, a_wel_string2: WEL_STRING
+		do
+			create process_info.make
+			create a_wel_string1.make (a_command_line)	
+			if a_working_directory /= Void and then not a_working_directory.is_empty then
+				create a_wel_string2.make (a_working_directory)
+				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
+							default_pointer, default_pointer, True, a_flags,
+							default_pointer, a_wel_string2.item,
+							startup_info.item, process_info.item)
+			else
+				last_launch_successful := cwin_create_process (default_pointer, a_wel_string1.item,
+							default_pointer, default_pointer, True, a_flags,
+							default_pointer, default_pointer,
+							startup_info.item, process_info.item)
+			end
+		end
 
 	input_pipe: WEL_PIPE
 			-- Input redirection pipe
@@ -250,7 +265,7 @@ feature {NONE} -- Externals
 
 	cwin_wait_for_single_object (handle, type: INTEGER): INTEGER is
 		external
-			"C [macro <winbase.h>] (HANDLE, DWORD): EIF_INTEGER"
+			"C blocking macro signature (HANDLE, DWORD): EIF_INTEGER use <windows.h>"
 		alias
 			"WaitForSingleObject"
 		end
@@ -265,7 +280,7 @@ feature {NONE} -- Externals
 	cwin_wait_object_0: INTEGER is
 			-- SDK WAIT_OBJECT_0 constant
 		external
-			"C [macro <windows.h>]: EIF_INTEGER"
+			"C blocking macro use <windows.h>"
 		alias
 			"WAIT_OBJECT_0"
 		end

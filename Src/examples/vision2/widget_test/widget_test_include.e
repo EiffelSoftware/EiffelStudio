@@ -36,6 +36,22 @@ feature {NONE} -- Implementation
 			password_field_basic_test: PASSWORD_FIELD_BASIC_TEST
 			password_field_validate_entry_test: PASSWORD_FIELD_VALIDATE_ENTRY_TEST
 			toggle_button_is_toggled_test: TOGGLE_BUTTON_IS_SELECTED_TEST
+			frame_basic_test: FRAME_BASIC_TEST
+			frame_text_alignment_test: FRAME_TEXT_ALIGNMENT_TEST
+			frame_style_test: FRAME_STYLE_TEST
+			scrollable_area_small_item_test: SCROLLABLE_AREA_SMALL_ITEM_TEST
+			scrollable_area_large_item_test: SCROLLABLE_AREA_LARGE_ITEM_TEST
+			viewport_small_item_test: VIEWPORT_SMALL_ITEM_TEST
+			viewport_small_item_move_test: VIEWPORT_OFFSET_TEST
+			table_single_child: TABLE_SINGLE_CHILD_TEST
+			table_three_children_test: TABLE_THREE_CHILDREN_TEST
+			table_spacing_test: TABLE_SPACING_TEST
+			radio_button_basic_test: RADIO_BUTTON_BASIC_TEST
+			radio_button_multiple_test: RADIO_BUTTON_MULTIPLE_TEST
+			radio_button_grouping_test: RADIO_BUTTON_GROUPING_TEST
+			radio_button_selected_test: RADIO_BUTTON_SELECTED_TEST
+			horizontal_separator_basic_test: HORIZONTAL_SEPARATOR_BASIC_TEST
+			vertical_separator_basic_test: VERTICAL_SEPARATOR_BASIC_TEST
 		do
 		end
 

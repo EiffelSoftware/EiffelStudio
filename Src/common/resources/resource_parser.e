@@ -49,10 +49,10 @@ feature -- Parsing
 				end;
 				resource_file.close
 			elseif not resource_file.exists then
-				io.error.put_string ("Warning: Resource file %"");
-				io.error.put_string (filename);
-				io.error.put_string ("%" does not exist.");
-				io.error.new_line
+--				io.error.put_string ("Warning: Resource file %"");
+--				io.error.put_string (filename);
+--				io.error.put_string ("%" does not exist.");
+--				io.error.new_line
 			else
 				io.error.put_string ("Warning: Cannot read resource file %"");
 				io.error.put_string (filename);

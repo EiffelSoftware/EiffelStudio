@@ -477,7 +477,7 @@ feature -- Importation
 					cell.item1.set_name (new_name)
 					create l_namespace.make_default
 					cell.item2.remove_attribute_by_name ("Name")
-					Xml_routines.add_attribute ("Name", l_namespace, new_name, cell.item2)
+					cell.item2.add_attribute ("Name", l_namespace, new_name)
 					list_item.pointer_double_press_actions.wipe_out
 					list_item.pointer_double_press_actions.extend (agent double_click_remove)
 					current_metric_list.extend (list_item)

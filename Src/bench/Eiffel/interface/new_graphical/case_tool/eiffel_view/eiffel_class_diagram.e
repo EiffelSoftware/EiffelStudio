@@ -61,7 +61,7 @@ feature {EB_CONTEXT_EDITOR} -- Save/Restore
 	xml_element (node: XM_ELEMENT): XM_ELEMENT is
 			-- Xml node representing `Current's state.
 		do
-			Xml_routines.add_attribute ("NAME", xml_namespace, current_view, node)
+			node.add_attribute ("NAME", xml_namespace, current_view)
 			node.put_last (Xml_routines.xml_node (node, "ANCESTOR_DEPTH", model.ancestor_depth.out))
 			node.put_last (Xml_routines.xml_node (node, "DESCENDANT_DEPTH", model.descendant_depth.out))
 			node.put_last (Xml_routines.xml_node (node, "CLIENT_DEPTH", model.client_depth.out))

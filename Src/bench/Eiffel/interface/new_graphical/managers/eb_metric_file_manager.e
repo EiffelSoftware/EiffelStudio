@@ -133,9 +133,9 @@ feature -- Metric definitions
 			create l_namespace.make_default
 			create Result.make_root (create {XM_DOCUMENT}.make, "METRIC", l_namespace)
 
-			Xml_routines.add_attribute ("Name", l_namespace, name, Result)
-			Xml_routines.add_attribute ("Unit", l_namespace, unit, Result)
-			Xml_routines.add_attribute ("Type", l_namespace, type, Result)
+			Result.add_attribute ("Name", l_namespace, name)
+			Result.add_attribute ("Unit", l_namespace, unit)
+			Result.add_attribute ("Type", l_namespace, type)
 		end
 
 	add_metric (metric: XM_ELEMENT; index: INTEGER) is
@@ -234,7 +234,7 @@ feature -- Recorded_measures
 		do
 			create l_namespace.make_default
 			create Result.make_root (create {XM_DOCUMENT}.make, "MEASURE", l_namespace)
-			Xml_routines.add_attribute ("STATUS", l_namespace, status, Result)
+			Result.add_attribute ("STATUS", l_namespace, status)
 			Result.put_last (Xml_routines.xml_node (Result, "MEASURE_NAME", row.i_th (1)))
 			Result.put_last (Xml_routines.xml_node (Result, "SCOPE_TYPE", row.i_th (2)))
 			Result.put_last (Xml_routines.xml_node (Result, "SCOPE_NAME", row.i_th (3)))

@@ -11,7 +11,7 @@ inherit
 	
 feature -- Access
 	
-	runtime_host (version: STRING; flags: INTEGER): CLR_HOST is
+	runtime_host (version: STRING): CLR_HOST is
 			-- CLR runtime version currently loaded in process.
 			-- Check documentation available at:
 			-- http://msdn.microsoft.com/library/default.asp?url=/library/en-us/cpgenref/html/grfuncorbindtoruntimeex.asp
@@ -27,7 +27,7 @@ feature -- Access
 			else			
 				create l_version.make (version)
 			end
-			l_host := new_cor_runtime_host (l_version.item, flags)
+			l_host := new_cor_runtime_host (l_version.item, 0)
 			if l_host /= default_pointer then
 				create Result.make_by_pointer (l_host)
 			end

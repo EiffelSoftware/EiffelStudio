@@ -68,6 +68,25 @@ feature -- Operations
 			end
 		end
 
+	get_flyweight(key: ANY): FLYWEIGHT[ANY,ANY] is
+			-- Return flyweight corresponding to the key 'any'.
+			-- Return Void if not found.
+		require
+			key_exists: key /= Void
+		do
+			from
+				list.start
+			until
+				list.after or Result /= Void
+			loop
+				if key= list.item.unshared then
+					Result := list.item
+				else
+					list.forth
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	list: LINKED_LIST [FLYWEIGHT[ANY,ANY]]

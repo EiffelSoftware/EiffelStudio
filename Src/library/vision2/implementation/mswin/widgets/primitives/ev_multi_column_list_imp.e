@@ -441,8 +441,8 @@ feature {NONE} -- WEL Implementation
 				+ Lvs_report + Lvs_showselalways
 		end
 
-	internal_propagate_event (event_id, x_pos, y_pos: INTEGER) is
-			-- Propagate `event_id' to the goood item.
+	internal_propagate_event (event_id, x_pos, y_pos: INTEGER; ev_data: EV_BUTTON_EVENT_DATA) is
+			-- Propagate `event_id' to the good item.
 		local
 			pt: WEL_POINT
 			info: WEL_LV_HITTESTINFO
@@ -451,7 +451,7 @@ feature {NONE} -- WEL Implementation
 			create info.make_with_point (pt)
 			cwin_send_message (item, Lvm_hittest, 0, info.to_integer)
 			if flag_set (info.flags, Lvht_onitemlabel) or else flag_set (info.flags, Lvht_onitemicon) then
-				(ev_children @ (info.iitem + 1)).execute_command (event_id, Void)
+				(ev_children @ (info.iitem + 1)).execute_command (event_id, ev_data)
 			end
 		end
 
@@ -484,50 +484,80 @@ feature {NONE} -- WEL Implementation
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_lbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			ev_data: EV_BUTTON_EVENT_DATA
 		do
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
-			internal_propagate_event (Cmd_button_one_press, x_pos, y_pos)
+			ev_data := get_button_data (1, keys, x_pos, y_pos)
+			if has_command (Cmd_button_one_press) then
+				execute_command (Cmd_button_one_press, ev_data)
+			end
+			internal_propagate_event (Cmd_button_one_press, x_pos, y_pos, ev_data)
 		end
 
 	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			ev_data: EV_BUTTON_EVENT_DATA
 		do
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
-			internal_propagate_event (Cmd_button_two_press, x_pos, y_pos)
+			ev_data := get_button_data (2, keys, x_pos, y_pos)
+			if has_command (Cmd_button_two_press) then
+				execute_command (Cmd_button_two_press, ev_data)
+			end
+			internal_propagate_event (Cmd_button_two_press, x_pos, y_pos, ev_data)
 		end
 
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			ev_data: EV_BUTTON_EVENT_DATA
 		do
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
-			internal_propagate_event (Cmd_button_three_press, x_pos, y_pos)
+			ev_data := get_button_data (2, keys, x_pos, y_pos)
+			if has_command (Cmd_button_three_press) then
+				execute_command (Cmd_button_three_press, ev_data)
+			end
+			internal_propagate_event (Cmd_button_three_press, x_pos, y_pos, ev_data)
 			disable_default_processing
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_lbuttonup message
 			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			ev_data: EV_BUTTON_EVENT_DATA
 		do
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
-			internal_propagate_event (Cmd_button_one_release, x_pos, y_pos)
+			ev_data := get_button_data (1, keys, x_pos, y_pos)
+			if has_command (Cmd_button_one_release) then
+				execute_command (Cmd_button_one_release, ev_data)
+			end
+			internal_propagate_event (Cmd_button_one_release, x_pos, y_pos, ev_data)
 		end
 
 	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_mbuttonup message
 			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			ev_data: EV_BUTTON_EVENT_DATA
 		do
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
-			internal_propagate_event (Cmd_button_two_release, x_pos, y_pos)
+			ev_data := get_button_data (2, keys, x_pos, y_pos)
+			if has_command (Cmd_button_two_release) then
+				execute_command (Cmd_button_two_release, ev_data)
+			end
+			internal_propagate_event (Cmd_button_two_release, x_pos, y_pos, ev_data)
 		end
 
 	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_rbuttonup message
 			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			ev_data: EV_BUTTON_EVENT_DATA
 		do
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
-			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos)
+			ev_data := get_button_data (3, keys, x_pos, y_pos)
+			if has_command (Cmd_button_three_release) then
+				execute_command (Cmd_button_three_release, ev_data)
+			end
+			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos, ev_data)
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

@@ -10,7 +10,7 @@
  ***************************/
 
 #include "gtk_eiffel.h"
-#include "gdk_eiffel.h"
+//#include "gdk_eiffel.h"
 #include "ev_any_imp.c"
 #include "ev_c_util.c"
 #include "ev_titled_window_imp.c"

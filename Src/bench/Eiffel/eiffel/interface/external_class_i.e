@@ -30,9 +30,12 @@ feature {NONE} -- Initialization
 			an_external_name_not_void: an_external_name /= Void
 			a_file_location_not_void: a_file_location /= Void
 		do
+				-- Initialize Current with passed information and
+				-- compute file date on `file_name'.
 			name := a_name
 			external_name := an_external_name
 			file_name := a_file_location
+			set_date
 		ensure
 			name_set: name = a_name
 			external_name_set: external_name = an_external_name

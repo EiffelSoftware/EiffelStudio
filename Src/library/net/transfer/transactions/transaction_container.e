@@ -71,6 +71,7 @@ feature -- Status setting
 		ensure
 			does_not_stop: not error_stops
 		end
+
 feature -- Element change
 
 	add_transaction (t: G) is

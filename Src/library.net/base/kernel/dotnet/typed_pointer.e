@@ -1,11 +1,18 @@
 indexing
-	description: "Typed pointer. To be used for better interfacing with externals: C, C++, .NET."
+	description: "[
+		References to objects containing reference to object
+		meant to be exchanged with non-Eiffel software.
+		]"
+
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	TYPED_POINTER [G]
-	
+expanded external class TYPED_POINTER [G]
+
+inherit
+	POINTER_REF
+
 create {NONE}
 
 convert
@@ -13,28 +20,42 @@ convert
 
 feature -- Conversion
 
-	frozen to_pointer: POINTER is
-			-- Convert current to POINTER.
-		do
-			-- Built-in
-		end
-		
-feature -- Access
-
-	frozen item: G is
-			-- Content of pointer.
+	to_pointer: POINTER is
+			-- Convert to POINTER instance.
 		do
 			-- Built-in
 		end
 
-feature -- Settings
+indexing
 
-	frozen put (v: G) is
-			-- Replace content of pointer by `v'.
-		do
-			-- Built-in
-		ensure
-			set: item = v
-		end
+	library: "[
+			EiffelBase: Library of reusable components for Eiffel.
+			]"
 
-end -- class TYPED_POINTER
+	status: "[
+			Copyright 1986-2001 Interactive Software Engineering (ISE).
+			For ISE customers the original versions are an ISE product
+			covered by the ISE Eiffel license and support agreements.
+			]"
+
+	license: "[
+			EiffelBase may now be used by anyone as FREE SOFTWARE to
+			develop any product, public-domain or commercial, without
+			payment to ISE, under the terms of the ISE Free Eiffel Library
+			License (IFELL) at http://eiffel.com/products/base/license.html.
+			]"
+
+	source: "[
+			Interactive Software Engineering Inc.
+			ISE Building
+			360 Storke Road, Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Electronic mail <info@eiffel.com>
+			Customer support http://support.eiffel.com
+			]"
+
+	info: "[
+			For latest info see award-winning pages: http://eiffel.com
+			]"
+
+end

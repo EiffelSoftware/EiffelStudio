@@ -8,6 +8,11 @@ class
 
 inherit
 	EB_DEVELOPMENT_TOOL_DATA
+	
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
 
 feature -- Access
 

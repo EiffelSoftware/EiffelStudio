@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		ensure
 			style_set: exists implies style = a_style
 			width_set: exists implies width = a_width
-			color_set: exists implies color.is_equal (a_color)
+			color_set: exists implies color.item = a_color.item
 		end
 
 	make_solid (a_width: INTEGER; a_color: WEL_COLOR_REF) is
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		ensure
 			style_set: exists implies style = Ps_solid
 			width_set: exists implies width = a_width
-			color_set: exists implies color.is_equal (a_color)
+			color_set: exists implies color.item = a_color.item
 		end
 
 	make_indirect (a_log_pen: WEL_LOG_PEN) is

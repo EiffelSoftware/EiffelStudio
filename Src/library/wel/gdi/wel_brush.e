@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		do
 			item := cwin_create_solid_brush (a_color.item)
 		ensure
-			color_set: exists implies color.is_equal (a_color)
+			color_set: exists implies color.item = a_color.item
 		end
 
 	make_hatch (a_hatch: INTEGER; a_color: WEL_COLOR_REF) is
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			item := cwin_create_hatch_brush (a_hatch, a_color.item)
 		ensure
 			hatch_set: exists implies hatch = a_hatch
-			color_set: exists implies color.is_equal (a_color)
+			color_set: exists implies color.item = a_color.item
 		end
 
 	make_by_pattern (bitmap: WEL_BITMAP) is

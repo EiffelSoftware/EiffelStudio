@@ -26,6 +26,18 @@ feature -- Access
 			Result := integer_resource_value ("development_window__height", 500)
 		end
 
+	x_position: INTEGER is
+			-- X position for development windows
+		do
+			Result := integer_resource_value ("development_window__x_position", 10)
+		end
+
+	y_position: INTEGER is
+			-- Y position for development windows
+		do
+			Result := integer_resource_value ("development_window__y_position", 10)
+		end
+
 	is_maximized: BOOLEAN is
 			-- Is the development window maximized?
 		do
@@ -105,6 +117,17 @@ feature -- Element change
 		ensure
 			width_set: a_width = width
 			height_set: a_height = height
+		end
+
+	save_position (a_x, a_y: INTEGER) is
+			-- Save the position of the window.
+			-- Call `commit_save' to have the changes actually saved.
+		do
+			set_integer ("development_window__x_position", a_x)
+			set_integer ("development_window__y_position", a_y)
+		ensure
+			x_set: a_x = x_position
+			y_set: a_y = y_position
 		end
 
 	save_left_panel_width (a_width: INTEGER) is

@@ -9,7 +9,8 @@ class
 inherit
 	PULLDOWN_WINDOWS
 		redefine
-			realize_current
+			realize_current, insensitive,
+			destroy
 		end
 
 	MENU_PULL_I
@@ -47,6 +48,9 @@ feature -- Initialization
 			realized := True
 			if mw /= Void and then mw.realized then
 				mw.add_a_child (Current)
+				if insensitive then
+					set_insensitive (True)
+				end
 				if associated_shell.has_menu then
 					associated_shell.wel_draw_menu
 				end
@@ -57,6 +61,14 @@ feature -- Initialization
 			-- Create the menu.
 		do
 			wel_make
+		end
+
+feature -- Status report
+
+	insensitive: BOOLEAN is
+			-- Is Current insensitive?
+		do
+			Result := private_attributes.insensitive
 		end
 
 feature -- Element change
@@ -74,10 +86,34 @@ feature -- Element change
 		do
 			text := t
 			menu_button.set_text (t)
-		if realized and then managed then
-			set_managed (False)
-			set_managed (True)
+			if realized and then managed then
+				set_managed (False)
+				set_managed (True)
+			end
 		end
+
+feature -- Removal
+
+	destroy (wid_list: LINKED_LIST [WIDGET]) is
+			-- Destroy Current.
+		local
+			ww: WIDGET_WINDOWS
+		do
+			if managed then
+				set_managed (False)
+			end
+			if exists then
+				wel_destroy
+			end
+			from
+				wid_list.start
+			until
+				wid_list.after
+			loop
+				ww ?= wid_list.item.implementation
+				actions_manager_list.deregister (ww)
+				wid_list.forth
+			end
 		end
 
 feature {NONE} -- Implementation

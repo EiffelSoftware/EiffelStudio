@@ -19,8 +19,8 @@ inherit
 	WEL_LIST_VIEW
 		rename
 			make as wel_make,
+			set_parent as wel_set_parent,
 			destroy as wel_destroy,
-			parent as wel_parent,
 			font as wel_font,
 			set_font as wel_set_font,
 			count as rows,
@@ -95,7 +95,7 @@ feature -- Access
 			-- Item which is currently selected, for a multiple
 			-- selection, it gives the last selected item.
 		do
-			Result ?= ev_children.last
+			Result ?= selected_items.last
 		end
 
 	selected_items: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
@@ -109,11 +109,11 @@ feature -- Access
 		do
 			from
 				!! Result.make
-				index := 1
+				index := 0
 			until
 				index = selected_count
 			loop
-				Result.extend (ev_children @ (wel_selected_items @ index))
+				Result.extend (ev_children @ (wel_selected_items @ (index) + 1))
 				index := index + 1
 			end			
 		end

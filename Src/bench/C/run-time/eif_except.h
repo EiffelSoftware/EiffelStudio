@@ -147,7 +147,7 @@ RT_LNK void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect);			/* Signal
 RT_LNK struct ex_vect *exft(void);	/* Set execution stack in final mode */
 #endif
 RT_LNK struct ex_vect *exset(EIF_CONTEXT char *name, int origin, char *object); /* Set execution stack on routine entrance */
-RT_LNK struct ex_vect *new_exset(EIF_CONTEXT char *name, int origin, char *object, unsigned char loc_nb, unsigned char arg_nb, int bid); /* Set execution stack on routine entrance */
+RT_LNK struct ex_vect *new_exset(EIF_CONTEXT char *name, int origin, char *object, unsigned char loc_nb, unsigned char arg_nb, BODY_INDEX bid); /* Set execution stack on routine entrance */
 
 /* Routines for run-time usage only */
 RT_LNK void esdie(int code);

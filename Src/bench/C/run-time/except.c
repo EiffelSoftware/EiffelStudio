@@ -180,7 +180,7 @@ rt_public void eif_panic(char *msg);			/* Run-time raised panic */
 rt_public void fatal_error(char *msg);			/* Run-time raised fatal errors */
 rt_shared void xraise(int code);			/* Raises an exception with no tag */
 rt_public struct ex_vect *exset(char *name, int origin, char *object);	/* Set execution stack on routine entrance */
-rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsigned char loc_nb, unsigned char arg_nb, int bid);	/* Set execution stack on routine entrance */
+rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsigned char loc_nb, unsigned char arg_nb, BODY_INDEX bid);	/* Set execution stack on routine entrance */
 #ifndef WORKBENCH
 rt_public struct ex_vect *exft(void);	/* Entry in feature with rescue clause */
 #endif
@@ -411,7 +411,7 @@ rt_public struct ex_vect *exset(char *name, int origin, char *object)
 	return new_exset(name, origin, object, 0, 0, 0);
 }
 
-rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsigned char loc_nb, unsigned char arg_nb, int bid)
+rt_public struct ex_vect *new_exset(char *name, int origin, char *object, unsigned char loc_nb, unsigned char arg_nb, BODY_INDEX bid)
 			/* The routine name */
 			/* The origin of the routine */
 			/* The object on which the routine is applied */

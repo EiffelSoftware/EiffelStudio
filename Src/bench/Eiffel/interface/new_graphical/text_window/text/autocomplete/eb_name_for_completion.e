@@ -55,26 +55,14 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
 			-- Is name made of same character sequence as `other' (case has no importance)
-		local
-			lower_current, lower_other: like Current
 		do
-			lower_current := out
-			lower_current.to_lower
-			lower_other := other.out
-			lower_other.to_lower
-			Result := lower_current.is_same_string (lower_other)
+			Result := as_lower.is_same_string (other.as_lower)
 		end
 
 	infix "<" (other: like Current): BOOLEAN is
 			-- Is name lexicographically lower than `other'?
-		local
-			lower_current, lower_other: like Current
 		do
-			lower_current := out
-			lower_current.to_lower
-			lower_other := other.out
-			lower_other.to_lower
-			Result := lower_current.lower_than (lower_other)
+			Result := as_lower.lower_than (other.as_lower)
 		end
 		
 	begins_with (s:STRING): BOOLEAN is

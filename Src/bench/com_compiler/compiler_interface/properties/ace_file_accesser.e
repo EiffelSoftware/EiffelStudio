@@ -822,7 +822,7 @@ feature -- Saving
 				ace_file.close
 
 				ace_file.open_write
-				ace_file.put_string (st)
+				ace_file.put_string (st.out)
 				ace_file.close
 				successful_save := True
 			else

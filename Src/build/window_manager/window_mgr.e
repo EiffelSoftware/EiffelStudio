@@ -124,4 +124,14 @@ feature
 			context_editors_list.show_editors
 		end
 
-end 
+	hide_all_command_tools is
+		do
+			command_tools_list.hide_editors
+		end
+	
+	show_all_command_tools is
+		do
+			command_tools_list.show_editors
+		end
+
+end -- class WINDOW_MGR 

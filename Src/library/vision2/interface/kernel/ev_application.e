@@ -1,7 +1,10 @@
 indexing
-
 	description: 
-		"EiffelVision application. This class is used in every EiffelVision program. The purpose of the class is to initialize the underlying toolkit and hide the implementation specific details from the application developer."
+		"EiffelVision application. This class is used in every%
+		% EiffelVision program. The purpose of the class is to%
+		% initialize the underlying toolkit and hide the%
+		% implementation specific details from the application%
+		% developer."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -16,9 +19,6 @@ feature {NONE} -- Initialization
 	make is
 		do
 			!EV_APPLICATION_IMP!implementation.make (Current)
-			-- Ensure the call to main_window
-			main_window.set_application (Current)
-			implementation.iterate
 		end
 	
 feature	
@@ -35,12 +35,11 @@ feature
 			implementation.exit
 		end
 	
-	
 feature {NONE} -- Implementation
 	
 	implementation: EV_APPLICATION_I
 
-end
+end -- class EV_APPLICATION
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

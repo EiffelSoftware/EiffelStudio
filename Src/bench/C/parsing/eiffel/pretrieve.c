@@ -56,6 +56,7 @@ rt_public void parsing_retrieve_initialize (void)
 rt_public char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)
 	/* Return `nb_obj' retrieved in file `file_ptr' read at `position'. */
 {
+	GTCX
 	char *result;
 
 /*	parsing_stream_position = 0; */
@@ -77,6 +78,7 @@ rt_public char *retrieve_all(EIF_INTEGER f_desc, long position)
 {
 	/* Return object graph retrieved in file `file_ptr' read at
 	 * position. */
+	GTCX
 	char *result;
 
 /*	parsing_stream_position = 0; */

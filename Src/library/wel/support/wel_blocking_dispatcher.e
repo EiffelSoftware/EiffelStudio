@@ -1,8 +1,7 @@
 indexing
 	description	: "Receive and dispatch the Windows messages to the Eiffel objects.%N%
-				  %eventually block the message if a blocking window is present"
+				  %block the message if a blocking window is present"
 	status		: "See notice at end of class."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	date		: "$Date$"
 	revision	: "$Revision$"
 

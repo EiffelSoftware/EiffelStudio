@@ -51,7 +51,7 @@ feature -- Access
 
 	stone_name: STRING is
 		do
-			Result := l_Explain_stone
+			Result := Interface_names.s_Explain_stone
 		end;
 
 	help_text: LINKED_LIST [STRING] is
@@ -77,7 +77,7 @@ feature -- Access
 				end
 			end
 			if Result.empty then
-				Result.put_front (l_No_help_available)
+				Result.put_front (Interface_names.h_No_help_available)
 			end;
 		end;
 
@@ -117,14 +117,14 @@ feature -- Access
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
 		do
-			Result := cur_Explain
+			Result := Cursors.cur_Explain
 		end;
 
 	x_stone_cursor: SCREEN_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
 		do
-			Result := cur_X_explain
+			Result := Cursors.cur_X_explain
 		end;
 
 feature -- Update

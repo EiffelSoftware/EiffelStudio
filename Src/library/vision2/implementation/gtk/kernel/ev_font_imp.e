@@ -42,9 +42,9 @@ feature {NONE} -- Initialization
 			shape := Shape_regular
 			height := 12
 
-			create preferred_faces
-			preferred_faces.add_actions.extend (~update_preferred_faces)
-			preferred_faces.remove_actions.extend (~update_preferred_faces)
+			create preferred_familys
+			preferred_familys.add_actions.extend (~update_preferred_faces)
+			preferred_familys.remove_actions.extend (~update_preferred_faces)
 
 			update_font_face
 		end
@@ -104,7 +104,7 @@ feature -- Element change
 		end
 
 	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
-		a_preferred_faces: like preferred_faces) is
+		a_preferred_familys: like preferred_familys) is
 			-- Set `a_family', `a_weight', `a_shape' `a_height' and
 			-- `a_preferred_face' at the same time for speed.
 		do
@@ -112,11 +112,11 @@ feature -- Element change
 			weight := a_weight
 			shape := a_shape
 			height := a_height
-			preferred_faces.add_actions.wipe_out
-			preferred_faces.remove_actions.wipe_out
-			preferred_faces := a_preferred_faces
-			preferred_faces.add_actions.extend (~update_preferred_faces)
-			preferred_faces.remove_actions.extend (~update_preferred_faces)
+			preferred_familys.add_actions.wipe_out
+			preferred_familys.remove_actions.wipe_out
+			preferred_familys := a_preferred_familys
+			preferred_familys.add_actions.extend (~update_preferred_faces)
+			preferred_familys.remove_actions.extend (~update_preferred_faces)
 			update_font_face
 		end
 
@@ -218,21 +218,21 @@ feature {NONE} -- Implementation
 			a_try_string: STRING
 			curr_face: STRING
 		do
-			if preferred_faces.is_empty then
+			if preferred_familys.is_empty then
 				curr_face := family_string
 				a_try_string := try_string_creator.item ([Current, curr_face])
 				temp_font := try_font (a_try_string, curr_face)
 			else
 				from
-					preferred_faces.start
+					preferred_familys.start
 				until
 					temp_font /= Void or
-					preferred_faces.after
+					preferred_familys.after
 				loop
-					curr_face := preferred_faces.item
+					curr_face := preferred_familys.item
 					a_try_string := try_string_creator.item ([Current, curr_face])
 					temp_font := try_font (a_try_string, curr_face)
-					preferred_faces.forth
+					preferred_familys.forth
 				end
 					-- Impossible to match the font with the given faces, try with the
 					-- family.
@@ -599,6 +599,9 @@ end -- class EV_FONT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2001/06/14 17:19:07  rogers
+--| Changed preferred_faces to preferred_familys.
+--|
 --| Revision 1.17  2001/06/07 23:08:03  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

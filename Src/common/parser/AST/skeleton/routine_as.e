@@ -436,6 +436,30 @@ feature -- Debugger
 			end;
 		end;
 
+feature -- Equivalent
+
+    is_body_equiv (other: like Current): BOOLEAN is
+        -- Is the current feature equivalent to `other' ?
+        require else
+            valid_other: other /= Void
+        do
+            Result :=   deep_equal (obsolete_message, other.obsolete_message) and then
+                        deep_equal (locals, other.locals) and then
+                        deep_equal (routine_body, other.routine_body) and
+then
+                        deep_equal (rescue_clause, other.rescue_clause)
+        end;
+ 
+    is_assertion_equiv (other: like Current): BOOLEAN is
+            -- Is the current feature equivalent to `other' ?
+        require else
+            valid_other: other /= Void
+        do
+            Result :=   deep_equal (precondition, other.precondition) and then
+                        deep_equal (postcondition, other.postcondition)
+        end;
+
+
 
 feature -- Formatter
 

@@ -46,9 +46,9 @@ feature
 				generated_file.putstring ("RTCL(");
 				expr.print_register;
 				generated_file.putchar(')');
+				generated_file.putchar (';');
+				generated_file.new_line;
 			end;
-			generated_file.putchar (';');
-			generated_file.new_line;
 		end;
 
 	unanalyze is

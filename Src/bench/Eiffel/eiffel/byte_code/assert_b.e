@@ -108,11 +108,16 @@ feature
 			-- Tree enlarging
 		local
 			inv_assert: INV_ASSERT_B;
+			require_b: REQUIRE_B;
 		do
 			if context.assertion_type = In_invariant then
 				!!inv_assert;
 				inv_assert.fill_from (Current);
 				Result := inv_assert;
+			elseif context.assertion_type = In_precondition then
+				!!require_b;
+				require_b.fill_from (Current);
+				Result := require_b;
 			else
 				expr := expr.enlarged;
 					-- Make sure the expression has never been analyzed before,
@@ -134,9 +139,9 @@ feature
 			inspect
                 context.assertion_type
             when In_precondition then
-                ba.append (Bc_pre);
+				make_precondition_byte_code (ba);
             when In_postcondition then
-                ba.append (Bc_pst);
+    			ba.append (Bc_pst);
             when In_check then
                 ba.append (Bc_chk);
             when In_loop_invariant then
@@ -146,18 +151,40 @@ feature
             when In_invariant then
                 ba.append (Bc_inv);
             end;
-			if tag = Void then
+			if context.assertion_type /= In_precondition then
+				if tag = Void then
+					ba.append (Bc_notag);
+				else
+					ba.append (Bc_tag);
+					ba.append_raw_string (tag);
+				end;
+				-- Assertion byte code
+				expr.make_byte_code (ba);
+
+				-- End assertion mark
+				ba.append (byte_for_end);
+			end;
+		end;
+            
+	make_precondition_byte_code (ba: BYTE_ARRAY) is
+			-- Generate byte code for a precondition
+		do
+            ba.append (Bc_pre);
+			if not context.is_prec_first_block then
+                ba.append (Bc_not_rec);
+			elseif tag = Void then
 				ba.append (Bc_notag);
 			else
 				ba.append (Bc_tag);
 				ba.append_raw_string (tag);
 			end;
-
-				-- Assertion byte code
+			-- Assertion byte code
 			expr.make_byte_code (ba);
-
-				-- End assertion mark
-			ba.append (byte_for_end);
+			if context.is_prec_first_block then
+				ba.append (Bc_end_first_pre);
+			else
+				ba.append (Bc_end_pre);
+			end;
 		end;
 
 	byte_for_end: CHARACTER is

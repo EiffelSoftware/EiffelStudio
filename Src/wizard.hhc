@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<HTML>
+<HEAD>
+<meta name="GENERATOR" content="Microsoft&reg; HTML Help Workshop 4.1">
+<!-- Sitemap 1.0 -->
+</HEAD><BODY>
+<OBJECT type="text/site properties">
+	<param name="WindowName" value="NWHC">
+	<param name="Window Styles" value="0x800025">
+</OBJECT>
+<UL>
+	<LI> <OBJECT type="text/sitemap">
+		<param name="Name" value=".NET Wizard">
+		<param name="Local" value="help\wizards\edotnet\docs\index.html">
+		</OBJECT>
+	<UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Introduction">
+			<param name="Local" value="help\wizards\edotnet\docs\introduction.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Guided Tour">
+			<param name="Local" value="help\wizards\edotnet\docs\guided_tour\index.html">
+			</OBJECT>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="How To's">
+			<param name="Local" value="help\wizards\edotnet\docs\how_to_s\index.html">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="How to change your project settings?">
+				<param name="Local" value="help\wizards\edotnet\docs\how_to_s\01_change_project_settings\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="How to add external assemblies to your application?">
+				<param name="Local" value="help\wizards\edotnet\docs\how_to_s\10_add_external_assemblies\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="How to import other external assemblies ?">
+				<param name="Local" value="help\wizards\edotnet\docs\how_to_s\20_import_other_external_assemblies\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="How to view project settings ?">
+				<param name="Local" value="help\wizards\edotnet\docs\how_to_s\30_view_project_settings\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="How to generate code and compile ?">
+				<param name="Local" value="help\wizards\edotnet\docs\how_to_s\40_generate_code_and_compile\index.html">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="Reference">
+			<param name="Local" value="help\wizards\edotnet\docs\reference\index.html">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Initial screen">
+				<param name="Local" value="help\wizards\edotnet\docs\reference\01_welcome\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Project name and location screen">
+				<param name="Local" value="help\wizards\edotnet\docs\reference\10_project_name_and_location\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Application type screen">
+				<param name="Local" value="help\wizards\edotnet\docs\reference\20_application_type_and_project_settings\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Assembly selection screen">
+				<param name="Local" value="help\wizards\edotnet\docs\reference\30_assembly_selection\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Settings summary and generation screen">
+				<param name="Local" value="help\wizards\edotnet\docs\reference\40_settings_summary\index.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Generated Ace file (control file)">
+				<param name="Local" value="help\wizards\edotnet\docs\reference\40_settings_summary\generated_ace_file.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Generated root class (entry point of the application)">
+				<param name="Local" value="help\wizards\edotnet\docs\reference\40_settings_summary\generated_root_class.html">
+				</OBJECT>
+		</UL>
+		<LI> <OBJECT type="text/sitemap">
+			<param name="Name" value="ISE Assembly Manager">
+			<param name="Local" value="dotnet\reflection_interface\docs\index.html">
+			</OBJECT>
+		<UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Introduction">
+				<param name="Local" value="dotnet\reflection_interface\docs\introduction.html">
+				</OBJECT>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Guided tour">
+				<param name="Local" value="dotnet\reflection_interface\docs\guided_tour\index.html">
+				</OBJECT>
+			<UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="First step: Imported a signed assembly to the Eiffel assembly cache">
+					<param name="Local" value="dotnet\reflection_interface\docs\guided_tour\01_import_a_signed_assembly_to_the_EAC\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Second step: Editing an imported assembly">
+					<param name="Local" value="dotnet\reflection_interface\docs\guided_tour\10_edit_an_imported_assembly\index.html">
+					</OBJECT>
+			</UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="How To's">
+				<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\index.html">
+				</OBJECT>
+			<UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="How to import a signed assembly to the Eiffel assembly cache?">
+					<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\01_import_a_signed_assembly_to_the_EAC\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="How to remove an assembly from the Eiffel assembly cache?">
+					<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\10_remove_an_assembly_from_the_EAC\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="How to edit an imported assembly?">
+					<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\20_edit_an_imported_assembly\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="How to update Eiffel classes?">
+					<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\30_update_eiffel_classes\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="How to view assembly dependencies?">
+					<param name="Local" value="dotnet\reflection_interface\docs\how_to_s\40_view_assembly_dependencies\index.html">
+					</OBJECT>
+			</UL>
+			<LI> <OBJECT type="text/sitemap">
+				<param name="Name" value="Reference">
+				<param name="Local" value="dotnet\reflection_interface\docs\reference\index.html">
+				</OBJECT>
+			<UL>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Imported assembly viewer">
+					<param name="Local" value="dotnet\reflection_interface\docs\reference\01_imported_assembly_viewer\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Dependency viewer">
+					<param name="Local" value="dotnet\reflection_interface\docs\reference\10_dependency_viewer\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Assembly view">
+					<param name="Local" value="dotnet\reflection_interface\docs\reference\20_assembly_view\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Type view">
+					<param name="Local" value="dotnet\reflection_interface\docs\reference\30_type_view\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Remove dialog">
+					<param name="Local" value="dotnet\reflection_interface\docs\reference\40_remove_dialog\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Eiffel generation dialog">
+					<param name="Local" value="dotnet\reflection_interface\docs\reference\50_eiffel_generation_dialog\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Import tool">
+					<param name="Local" value="dotnet\reflection_interface\docs\reference\60_import_tool\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Import dialog">
+					<param name="Local" value="dotnet\reflection_interface\docs\reference\70_import_dialog\index.html">
+					</OBJECT>
+				<LI> <OBJECT type="text/sitemap">
+					<param name="Name" value="Open assembly dialog">
+					<param name="Local" value="dotnet\reflection_interface\docs\reference\80_open_assembly_dialog\index.html">
+					</OBJECT>
+			</UL>
+		</UL>
+	</UL>
+</UL>
+</BODY></HTML>

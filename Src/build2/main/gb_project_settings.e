@@ -48,6 +48,10 @@ feature -- Access
 	grouped_locals: BOOLEAN
 		-- Should local variables be grouped by type, or declared on a separate line
 		-- for each?
+		
+	debugging_output: BOOLEAN
+		-- Should debugging output be generated for each feature connected to an
+		-- action sequence?
 	
 feature -- Basic operation
 
@@ -64,6 +68,7 @@ feature -- Basic operation
 			data.extend ([main_window_file_name_string, main_window_file_name])
 			data.extend ([complete_project_string, complete_project.out])
 			data.extend ([grouped_locals_string, grouped_locals.out])
+			data.extend ([debugging_output_string, debugging_output.out])
 			create file_name.make_from_string (project_location)
 			file_name.extend (project_filename)
 			create file_handler
@@ -85,7 +90,7 @@ feature -- Basic operation
 			if file_handler.last_load_successful then
 				check
 					data_not_void: data /= Void
-					data_count_is_5: data.count = 5
+					data_count_is_6: data.count = 6
 				end
 				temp_tuple := data @ 1
 				temp_string ?= temp_tuple @ 2
@@ -130,6 +135,16 @@ feature -- Basic operation
 					grouped_locals := False
 				end
 				
+				temp_tuple := data @ 6
+				temp_string ?= temp_tuple @ 2
+				check
+					data_was_string: temp_string /= Void
+				end
+				if temp_string.is_equal ("True") then
+					debugging_output := True
+				else
+					debugging_output := False
+				end
 			end
 		end
 
@@ -189,6 +204,19 @@ feature -- Status Setting
 			grouped_locals := False
 		end
 		
+	enable_debugging_output is
+			-- Assign `True' to `debugging_output'.
+		do
+			debugging_output := True
+		end
+		
+	disable_debugging_output is
+			-- Assign `False' to `debugging_output'.
+		do
+			debugging_output := False
+		end
+		
+	
 feature {NONE} --Implementation
 
 		-- Constants for saving to XML.
@@ -201,5 +229,7 @@ feature {NONE} --Implementation
 	complete_project_string: STRING is "Complete_project"
 	
 	grouped_locals_string: STRING is "Group_locals"
+	
+	debugging_output_string: STRING is "Generate_debugging_output"
 	
 end -- class GB_PROJECT_SETTINGS

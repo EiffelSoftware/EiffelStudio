@@ -1,6 +1,7 @@
 indexing
-	description: "EiffelVision window. Display a window that allows only one%
-		 	% child. Mswindows implementation."
+	description:
+		" EiffelVision window. Display a window that allows only one%
+		% child. Mswindows implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -20,7 +21,8 @@ inherit
 			on_show,
 			on_size,
 			title,
-			set_title
+			set_title,
+			update_minimum_size
 		end
 
 creation
@@ -161,6 +163,31 @@ feature {NONE} -- Implementation
 	internal_icon_name: STRING
 			-- Name given by the user.
 
+	update_minimum_size is
+			-- Update the minimum_size of the window according
+			-- to the component inside the window.
+		local
+			mw, mh: INTEGER
+		do
+			-- We calculate the values first
+			mw := 2 * window_frame_width
+			mh := title_bar_height + window_border_height + 2 * window_frame_height
+
+			if child /= Void then
+				mw := mw + child.minimum_width
+				mh := mh + child.minimum_height
+			end
+			if has_menu then
+				mh := mh + menu_bar_height
+			end
+			if status_bar /= Void then
+				mh := mh + status_bar.height
+			end
+
+			-- Finaly, we set the value
+			internal_set_minimum_size (mw, mh)
+		end
+
 feature {NONE} -- WEL Implementation
 
 	default_style: INTEGER is
@@ -177,16 +204,44 @@ feature {NONE} -- WEL Implementation
 			-- it resizes the window at the size of the child.
 			-- And it send the message to the child because wel
 			-- don't
+		local
+			w, h: INTEGER
 		do
-			if child /= Void then
-				move_and_resize (x, y, (child.minimum_width + 2*system_metrics.window_frame_width).max (minimum_width),
-						(child.minimum_height + 2 * system_metrics.window_frame_height).max (minimum_height), True)
+			-- The width to give to the window
+			if bit_set (internal_changes, 64) then
+				w := width
+				internal_changes := set_bit (internal_changes, 64, False)
 			else
-				move_and_resize (x, y, minimum_width, minimum_height, True)
+				if child /= Void then
+					w := child.minimum_width + 2 * window_frame_width
+				end
 			end
+
+			-- The height to give to the window
+			if bit_set (internal_changes, 128) then
+				h := height
+				internal_changes := set_bit (internal_changes, 128, False)
+			else
+				if child /= Void then
+					h := child.minimum_height + title_bar_height + window_border_height + 2 * window_frame_height
+				end
+				-- Then, the menu
+				if has_menu then
+					h := h + menu_bar_height
+				end
+				-- And the status bar
+				if status_bar /= Void then
+					h := h + status_bar.height
+				end
+			end
+
+			-- We check if there is a menu
 			if has_menu then
 				draw_menu
 			end
+
+			-- We resize everything and draw the menu.
+			resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is

@@ -307,6 +307,8 @@ cluster
             "CVS"; 
         end
 
+    dot_net_helpers:	"$EIFFEL_SRC\dotnet\helpers"
+
     all preferences:        "$EIFFEL_SRC\library\preferences"
         exclude
             "CVS"; "xml_implementation"; 

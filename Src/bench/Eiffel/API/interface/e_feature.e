@@ -288,7 +288,7 @@ feature -- Access
 			-- Class where the feature was evaluated in
 		do
 			check
-				valid_class: associated_class_id > 0
+				valid_class: associated_class_id /= Void
 			end;
 			Result := Eiffel_system.class_of_id (associated_class_id);
 		end;
@@ -533,7 +533,7 @@ feature {DEBUG_INFO} -- Implementation
 
 feature {NONE} -- Implementation
 
-    associated_class_id: INTEGER 
+    associated_class_id: CLASS_ID
             -- Class id where the feature was evaluated in
 
 	associated_feature_i: FEATURE_I is
@@ -562,7 +562,7 @@ feature {FEATURE_I} -- Setting
 			written_in := i;
 		end;
 
-	set_associated_class_id (i: INTEGER) is
+	set_associated_class_id (i: CLASS_ID) is
 			-- Set `associated_class_id' to `i'.
 		do
 			associated_class_id := i

@@ -205,7 +205,7 @@ feature -- Access
 		local
 			f_table: FEATURE_TABLE;
 			feat: FEATURE_I;
-			class_id: INTEGER
+			class_id: CLASS_ID
 		do
 			class_id := id;
 			!! Result.make;

@@ -1,1 +1,66 @@
-<document output="studio" title="EiffelVision 2 Samples"><meta_data/><paragraph><heading><size>1</size>EiffelVision 2 Samples</heading><paragraph>Vision2 ships with a number of samples provided to demonstrate different aspects of the library. If you are a new vision2 user then it is suggested that you first compile and run the <link><url>/libraries/vision2/samples/widgets/index.html</url><label>Widgets</label></link> sample. This will demonstrate both the appearence and behaviour of the available widgets. </paragraph><paragraph>The other samples provided are listed below: <list ordered="false"><item><link><url>/libraries/vision2/samples/accelerator/index.html</url><label>Accelerator</label></link> - Demonstrates the use of an <link><url>/libraries/vision2/reference/interface/kernel/ev_accelerator_chart.html</url><label>EV_ACCELERATOR</label></link>. </item><item><link><url>/libraries/vision2/samples/cursor/index.html</url><label>Cursor</label></link> - Demonstrates how to modify the displayed <link><url>/libraries/vision2/reference/interface/kernel/ev_cursor_chart.html</url><label>EV_CURSOR</label></link> for an <link><url>/libraries/vision2/reference/interface/widgets/ev_widget.html</url><label>EV_WIDGET</label></link>. </item><item><link><url>/libraries/vision2/samples/gauges/index.html</url><label>Gauges</label></link> - Demonstrates different types of EV_GAUGE. </item><item><link><url>/libraries/vision2/samples/standard_dialogs/index.html</url><label>Standard_dialogs</label></link> - Demonstrates different types of EV_STANDARD_DIALOG. </item><item><link><url>/libraries/vision2/samples/viewport/index.html</url><label>Viewport</label></link> - Demonstrates EV_VIEWPORT. </item></list></paragraph></paragraph></document>
+<document title="EiffelVision 2 Samples">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Samples/Eiffel Class Library Samples</envision_location>
+				<envision_pseudo_name>20</envision_pseudo_name>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<heading>
+			<size>1</size>EiffelVision 2 Samples
+		</heading>
+		<paragraph>Vision2 ships with a number of samples provided to demonstrate different aspects of the library. If you are a new vision2 user then it is suggested that you first compile and run the
+			<link>
+				<url>/libraries/vision2/samples/widgets/index.html</url>
+				<label>Widgets</label>
+			</link> sample. This will demonstrate both the appearence and behaviour of the available widgets.
+		</paragraph>
+		<paragraph>The other samples provided are listed below:
+			<list ordered="false">
+				<item>
+					<link>
+						<url>/libraries/vision2/samples/accelerator/index.html</url>
+						<label>Accelerator</label>
+					</link> - Demonstrates the use of an
+					<link>
+						<url>/libraries/vision2/reference/interface/kernel/ev_accelerator_chart.html</url>
+						<label>EV_ACCELERATOR</label>
+					</link>.
+				</item>
+				<item>
+					<link>
+						<url>/libraries/vision2/samples/cursor/index.html</url>
+						<label>Cursor</label>
+					</link> - Demonstrates how to modify the displayed
+					<link>
+						<url>/libraries/vision2/reference/interface/kernel/ev_cursor_chart.html</url>
+						<label>EV_CURSOR</label>
+					</link> for an
+					<link>
+						<url>/libraries/vision2/reference/interface/widgets/ev_widget.html</url>
+						<label>EV_WIDGET</label>
+					</link>.
+				</item>
+				<item>
+					<link>
+						<url>/libraries/vision2/samples/gauges/index.html</url>
+						<label>Gauges</label>
+					</link> - Demonstrates different types of EV_GAUGE.
+				</item>
+				<item>
+					<link>
+						<url>/libraries/vision2/samples/standard_dialogs/index.html</url>
+						<label>Standard_dialogs</label>
+					</link> - Demonstrates different types of EV_STANDARD_DIALOG.
+				</item>
+				<item>
+					<link>
+						<url>/libraries/vision2/samples/viewport/index.html</url>
+						<label>Viewport</label>
+					</link> - Demonstrates EV_VIEWPORT.
+				</item>
+			</list>
+		</paragraph>
+	</paragraph></document>

@@ -1,5 +1,11 @@
-<document output="studio" title="Xcell">
-	<meta_data/>
+<document title="Xcell">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Samples/Eiffel Class Library Samples/WEL Samples</envision_location>
+			</toc>
+		</help>
+	</meta_data>
 	<paragraph>
 		<image> 
 			<url>xcell.png</url> 

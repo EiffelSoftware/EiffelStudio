@@ -46,6 +46,8 @@ feature {EV_ANY} -- Initialization
 			-- Create underlying native toolkit objects.
 			-- Every descendant should exactly one a creation procedure `make'.
 			-- Must call `base_make'.
+		require
+			an_interface_not_void: an_interface /= Void
 		deferred
 		ensure
 			interface_assigned: interface = an_interface

@@ -873,23 +873,22 @@ feature -- Local saving
 					a_local_types.forth
 				end
 
-				if is_debug_info_enabled then
-					l_count := il_code_generator.local_count
-					if il_code_generator.result_position /= -1 then
-						l_count := l_count + 1
-					end
-					local_info.put ([
-						il_code_generator.local_start_offset,
-						il_code_generator.local_end_offset, l_count,
-						a_local_types], a_meth_token)
-					il_code_generator.reset_local_types
-				else
-					a_local_types.wipe_out
-				end
-
 				l_loc_token := md_emit.define_signature (l_sig)
-
 				il_code_generator.method_body.set_local_token (l_loc_token)
+			end
+
+			if is_debug_info_enabled then
+				l_count := il_code_generator.local_count
+				if il_code_generator.result_position /= -1 then
+					l_count := l_count + 1
+				end
+				local_info.put ([
+					il_code_generator.local_start_offset,
+					il_code_generator.local_end_offset, l_count,
+					a_local_types], a_meth_token)
+				il_code_generator.reset_local_types
+			else
+				a_local_types.wipe_out
 			end
 		end
 

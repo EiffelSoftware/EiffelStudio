@@ -1,4 +1,7 @@
--- Enlarged byte code for assignment
+indexing
+	description: "Enlarged byte code for assignment"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ASSIGN_BL
 
@@ -445,16 +448,21 @@ feature
 		local
 			need_aging_tests: BOOLEAN;
 			buf: GENERATION_BUFFER
+			target_c_type: TYPE_C
 		do
 			buf := buffer
 			generate_special (how);
+
+				-- Find out C type of `target'.
+			target_c_type := target.c_type
+
 				-- No aging tests if target is not a reference. Of course, if
 				-- the target is also pre-defined, aging tests are not needed.
 				-- If it is an assignment copy, RTXA will take care of the
 				-- aging test for references within the expanded
 			need_aging_tests :=
 				how /= Copy_assignment and then
-				not target.is_predefined and target.c_type.is_pointer;
+				not target.is_predefined and target_c_type.is_pointer;
 			if need_aging_tests then
 					-- For strings constants, we have to be careful. Put its
 					-- address in a temporary register before RTAR can
@@ -499,6 +507,10 @@ feature
 					else
 						target.print_register;
 						buf.putstring (" = ");
+							-- Always ensure that we perform a cast to type of target.
+							-- Cast in case of basic type will never loose information
+							-- as it has been validated by the Eiffel compiler.
+						target_c_type.generate_cast (buf)
 					end
 				end;
 			else

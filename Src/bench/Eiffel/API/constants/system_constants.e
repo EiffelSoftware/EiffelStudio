@@ -155,7 +155,7 @@ feature {NONE, AUXILIARY_FILES} -- Versioning
 			Result.append_character ('.')
 			Result.append_integer (Minor_version_number)
 			Result.append_character ('.')
-			Result.append_string ("0721")
+			Result.append_string ("0801")
 		end
 
 	Version_tag: INTEGER is 0x00000026

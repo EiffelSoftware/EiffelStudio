@@ -179,7 +179,7 @@ feature -- Status report
  				line_index (i), 0)
  				
  			if
- 				i >= line_count - 2
+ 				i >= line_count - 2 and then Result > 0
  			then
  					-- The last line has not got a newline character.
  				Result := Result - 1

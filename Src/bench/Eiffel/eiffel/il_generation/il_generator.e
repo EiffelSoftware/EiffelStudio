@@ -77,6 +77,7 @@ feature -- Generation
 			l_last_error_msg: STRING
 			l_key_file_name: STRING
 			l_public_key: MD_PUBLIC_KEY
+			l_signing: MD_STRONG_NAME
 		do
 			if not retried then
 					-- At this point the COM component should be properly instantiated.
@@ -105,6 +106,18 @@ feature -- Generation
 					assembly_info.set_version (System.msil_version)
 				end
 
+				create l_signing.make
+				if not l_signing.exists then
+						-- We cannot continue as incremental recompilation needs access
+						-- to `MD_STRONG_NAME'.
+					Error_handler.insert_error (create {VIAC})
+					Error_handler.checksum
+				end
+				
+				check
+					l_signing_exists: l_signing.exists
+				end
+				
 					-- Sign assembly only if we are allowed to.
 				if feature {EIFFEL_ENV}.has_signable_generation then
 					l_key_file_name := System.msil_key_file_name
@@ -115,16 +128,11 @@ feature -- Generation
 				end
 
 				if l_key_file_name /= Void then
-					if (create {MD_STRONG_NAME}).present then
-						create l_public_key.make_from_file (l_key_file_name)
-						if not l_public_key.is_valid then
-							l_public_key := Void
-								-- Introduce error saying that public key cannot be read.
-							Error_handler.insert_warning (create {VIIK})
-						end
-					else
+					create l_public_key.make_from_file (l_key_file_name)
+					if not l_public_key.is_valid then
 						l_public_key := Void
-						Error_handler.insert_warning (create {VISM})
+							-- Introduce error saying that public key cannot be read.
+						Error_handler.insert_warning (create {VIIK})
 					end
 				else
 					l_public_key := Void
@@ -188,7 +196,7 @@ feature -- Generation
 				Error_handler.raise_error
 			end
 		rescue
-			if not retried then
+			if not retried and not Error_handler.has_error then
 				if not is_assembly_loaded or not is_error_available then
 					Error_handler.insert_error (create {VIGE}.make_com_error)
 				else

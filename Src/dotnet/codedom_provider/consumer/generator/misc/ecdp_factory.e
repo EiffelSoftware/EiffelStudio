@@ -1,20 +1,15 @@
 indexing
-	-- Eiffel code code_generator
+	description: "Generic code generator, common ancestor of all code generators"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	ECDP_FACTORY
 
 inherit
-	ECDP_SHARED_DATA
+	ECDP_SHARED_CONSUMER_CONTEXT
 		export
 			{NONE} all
-		end
-
-feature {NONE} -- Initialization
-
-	make is
-			-- Initialize
-		do
 		end
 
 feature -- Code generation history

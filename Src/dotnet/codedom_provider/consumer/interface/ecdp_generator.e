@@ -111,7 +111,6 @@ feature -- Interface
 		local
 			last_namespace: ECDP_NAMESPACE
 			code: STRING
-			l_text_writer: STREAM_WRITER
 		do
 			check
 				non_void_namespace: a_namespace /= Void
@@ -121,7 +120,7 @@ feature -- Interface
 			factory.generate_namespace_from_dom (a_namespace)
 
 				-- Generate code.
-			last_namespace := (create {ECDP_EIFFEL_FACTORY}.make).last_namespace
+			last_namespace := (create {ECDP_EIFFEL_FACTORY}).last_namespace
 			code := last_namespace.code
 
 				-- Write ace_file in text writer.
@@ -146,7 +145,7 @@ feature -- Interface
 			factory.generate_type_from_dom (a_type)
 
 				-- Generate code.
-			last_type := (create {ECDP_EIFFEL_FACTORY}.make).last_type
+			last_type := (create {ECDP_EIFFEL_FACTORY}).last_type
 			code := last_type.code
 
 				-- Write ace_file in text writer.
@@ -171,7 +170,7 @@ feature -- Interface
 			factory.generate_statement_from_dom (a_statement)
 
 				-- Generate code.
-			last_statement := (create {ECDP_EIFFEL_FACTORY}.make).last_statement
+			last_statement := (create {ECDP_EIFFEL_FACTORY}).last_statement
 			code := last_statement.code
 
 				-- Write ace_file in text writer.
@@ -196,7 +195,7 @@ feature -- Interface
 			factory.generate_expression_from_dom (an_expression)
 
 				-- Generate code.
-			last_expression := (create {ECDP_EIFFEL_FACTORY}.make).last_expression
+			last_expression := (create {ECDP_EIFFEL_FACTORY}).last_expression
 			code := last_expression.code
 
 				-- Write ace_file in text writer.
@@ -219,7 +218,6 @@ feature -- Interface
 			--				%Throw an exception if the specified `value' is not a valid identifier.]
 		local
 			l_variable_name: STRING
-			l_variable_occurence: INTEGER
 			l_formatter: NAME_FORMATTER
 			arg_exception: ARGUMENT_EXCEPTION
 		do

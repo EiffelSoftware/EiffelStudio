@@ -9,9 +9,6 @@ class
 inherit
 	ECDP_EXPRESSION_FACTORY
 
-create
-	make	
-
 feature {ECDP_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_argument_reference_expression (a_source: SYSTEM_DLL_CODE_ARGUMENT_REFERENCE_EXPRESSION) is
@@ -96,8 +93,8 @@ feature {NONE} -- Implementation
 
 			create argument_type_name.make_from_cil (a_source.type.base_type)
 			a_parameter.set_parameter_type (argument_type_name)
-			if not eiffel_types.is_generated_type (argument_type_name) then
-				eiffel_types.add_external_type (argument_type_name)
+			if not Resolver.is_generated_type (argument_type_name) then
+				Resolver.add_external_type (argument_type_name)
 			end
 		ensure
 			argument_reference_expression_ready: a_parameter.ready

@@ -14,8 +14,10 @@ inherit
 			{NONE} all
 		end
 
-create
-	make	
+	ECDP_SHARED_DATA
+		export
+			{NONE} all
+		end
 
 feature {ECDP_CONSUMER_FACTORY} -- Visitor features.
 
@@ -298,7 +300,6 @@ feature {NONE} -- Implementation
 			left_operator_expression: SYSTEM_DLL_CODE_EXPRESSION
 			right_operator_expression: SYSTEM_DLL_CODE_EXPRESSION
 			operator: SYSTEM_DLL_CODE_BINARY_OPERATOR_TYPE
-			operator_name: STRING
 		do
 			operator := a_source.operator
 			a_binary_operator_expression.set_operator (operator)
@@ -362,8 +363,8 @@ feature {NONE} -- Implementation
 			-- cast local variable name.
 		do
 			create Result.make_from_string (Cast_expr_local)
-			Result.append (Eiffel_types.cast_variable_number.item.out)
-			Eiffel_types.cast_variable_number.put (Eiffel_types.cast_variable_number.item + 1)
+			Result.append (Resolver.cast_variable_suffix)
+			Resolver.increase_cast_variable_suffix
 		ensure
 			non_void_cast_local_variable_name: Result /= Void
 			not_empty_cast_local_variable_name: not Result.is_empty
@@ -553,8 +554,8 @@ feature {NONE} -- Implementation
 		do
 			(create {ECDP_EVENT_MANAGER}).raise_event (feature {ECDP_EVENTS_IDS}.Not_implemented, ["typeof expression"])
 			create a_type_name.make_from_cil (a_source.type.base_type)
-			if not eiffel_types.is_generated_type (a_type_name) then
-				eiffel_types.add_external_type (a_type_name)
+			if not Resolver.is_generated_type (a_type_name) then
+				Resolver.add_external_type (a_type_name)
 			end
 			a_type_of_expression.set_target (a_type_name)
 		end
@@ -571,8 +572,8 @@ feature {NONE} -- Implementation
 			a_type_name: STRING
 		do
 			create a_type_name.make_from_cil (a_source.type.base_type)
-			if not eiffel_types.is_generated_type (a_type_name) then
-				eiffel_types.add_external_type (a_type_name)
+			if not Resolver.is_generated_type (a_type_name) then
+				Resolver.add_external_type (a_type_name)
 			end
 			a_type_reference_expression.set_referred_type (a_type_name)
 		ensure

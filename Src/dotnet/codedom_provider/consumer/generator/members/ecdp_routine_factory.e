@@ -8,9 +8,6 @@ class
 
 inherit
 	ECDP_MEMBER_FACTORY
-		
-create
-	make
 
 feature {ECDP_CONSUMER_FACTORY} -- Visitor features.
 
@@ -388,7 +385,7 @@ feature {NONE} -- Routine Initialization
 				create l_argument_expression.make
 				l_argument_expression.set_name ("value")
 				l_argument_expression.set_parameter_type (a_property_setter.property_type_name)
-				Eiffel_types.add_variable (a_property_setter.property_type_name, "value")
+				Resolver.add_variable (a_property_setter.property_type_name, "value")
 				a_property_setter.add_argument (l_argument_expression)
 	
 				if a_source.attributes /= Void then

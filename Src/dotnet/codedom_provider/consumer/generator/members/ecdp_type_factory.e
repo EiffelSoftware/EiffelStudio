@@ -1,14 +1,13 @@
 indexing
-	-- Code code_generator for types
+	description: "Code generator for types"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ECDP_TYPE_FACTORY
 
 inherit
 	ECDP_MEMBER_FACTORY
-
-create
-	make
 
 feature {ECDP_CONSUMER_FACTORY} -- Visitor features.
 
@@ -105,8 +104,8 @@ feature {NONE} -- Type generation
 			l_name := (create {NAME_FORMATTER}).full_formatted_type_name (l_name)
 			a_source.set_name (l_name)
 			a_type.set_name (l_name)
-			if not eiffel_types.is_generated_type (l_name) then
-				eiffel_types.add_external_type (l_name)
+			if not Resolver.is_generated_type (l_name) then
+				Resolver.add_external_type (l_name)
 			end
 			if a_source.user_data.contains (From_eiffel_code_key) then
 				a_type.set_from_eiffel (True)
@@ -145,7 +144,6 @@ feature {NONE} -- Type generation
 						-- hypothesis: The first parent is never an interface type
 						-- All the other parents are...
 					l_object_parent.add_undefine_clause (create {ECDP_UNDEFINE_CLAUSE}.make ("finalize"))
-					Eiffel_types.set_parent (l_parent_name)
 					l_interface_type := True
 				end
 				l_object_parent.add_undefine_clause (create {ECDP_UNDEFINE_CLAUSE}.make ("get_hash_code"))
@@ -153,8 +151,8 @@ feature {NONE} -- Type generation
 				l_object_parent.add_undefine_clause (create {ECDP_UNDEFINE_CLAUSE}.make ("to_string"))
 				a_type.add_parent (l_object_parent)
 
-				if not eiffel_types.is_generated_type (l_parent_name) then
-					eiffel_types.add_external_type (l_parent_name)
+				if not Resolver.is_generated_type (l_parent_name) then
+					Resolver.add_external_type (l_parent_name)
 				end
 				i := i + 1
 			end
@@ -241,86 +239,16 @@ feature {NONE} -- Type generation
 			a_type.add_indexing_clause (an_indexing_clause)
 		end
 
+	remove_deleted_features (a_features: SYSTEM_DLL_CODE_TYPE_MEMBER_COLLECTION) is
+			-- VS.NET specific...
+		do
+			(create {ECDP_EVENT_MANAGER}).raise_event (feature {ECDP_EVENTS_IDS}.Not_implemented, ["deleted features removal"])
+		end
+		
 	Description_clause: STRING is "description"
 			-- Description tag of class indexing clause
 
-feature {NONE} -- Visual Studio Implementation
-
--- FIXME Raphael: VS specific implementation should not be here
-	remove_deleted_features (members: SYSTEM_DLL_CODE_TYPE_MEMBER_COLLECTION) is
-			-- Remove fields from the TextDocument
-			-- removed from the code DOM since last parsing of the class.
-		require
-			non_void_members: members /= Void
---		local
---			l_field: SYSTEM_DLL_CODE_MEMBER_FIELD
---			l_parsed_members: SYSTEM_DLL_CODE_TYPE_MEMBER_COLLECTION
---			i, j: INTEGER
---			l_member_removed: BOOLEAN
---			l_text_selection: TEXT_SELECTION
---			l_start, l_end, l_text_offset: INTEGER
---			l_removed_code: STRING
-		do
---			l_parsed_members := members_mapping.members
---			check
---				non_void_parsed_members: l_parsed_members /= Void
---			end
---
---				-- Loop on previous members.
---			from
---				i := 0
---			until
---				i = l_parsed_members.count
---			loop
---				l_field ?= l_parsed_members.item (i)
---				if l_field /= Void then
---					-- Loop on members to find if it has been removed.
---					from
---						j := 0
---						l_member_removed := True
---					until
---						j = members.count or not l_member_removed
---					loop
---						if l_field.name.equals (members.item (j).name) then
---							-- check that both are field or method
---							-- check return type
---							-- check attributes
---							l_member_removed := False
---						end
---						j := j + 1
---					end
---	
---						-- Remove member from TextDocument.
---					if l_member_removed and members_mapping.output_available then
---						l_text_selection := members_mapping.output.selection
---						check
---							non_void_selection: l_text_selection /= Void
---							non_void_start_position: l_field.user_data.contains (Start_position)
---							non_void_end_position: l_field.user_data.contains (End_position)
---						end
---						l_start ?= l_field.user_data.item (Start_position)
---						l_end ?= l_field.user_data.item (End_position)
---						check
---							positive_positions: 0 <= l_start and l_start < l_end
---						end
---						l_text_offset := Members_mapping.text_offset (l_start)
---							-- Set the selection taking care of text decalage
---						l_text_selection.move_to_absolute_offset (l_text_offset + l_start, False)
---						l_text_selection.move_to_absolute_offset (l_text_offset + l_end, True)
---						debug
---							create l_removed_code.make_from_cil (l_text_selection.text)
---						end
---							-- Delete the selection
---						l_text_selection.delete (-1)
---							-- Set text offset
---						Members_mapping.add_text_offset (l_start, (l_start - l_end))
---					end
---				end
---				i := i + 1
---			end
-		end
-
-end -- class ECDP_MEMBER_FACTORY
+end -- class ECDP_TYPE_FACTORY
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

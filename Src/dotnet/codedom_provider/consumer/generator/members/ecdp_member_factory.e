@@ -9,8 +9,10 @@ class
 inherit
 	ECDP_FACTORY
 
-create
-	make
+	ECDP_SHARED_DATA
+		export
+			{NONE} all
+		end
 
 feature {ECDP_CONSUMER_FACTORY} -- Visitor features.
 
@@ -89,8 +91,8 @@ feature {NONE} -- Implementation
 			an_attribute.set_name (a_source.name)
 
 			create l_type_name.make_from_cil (a_source.type.base_type)
-			if not eiffel_types.is_generated_type (l_type_name) then
-				eiffel_types.add_external_type (l_type_name)
+			if not Resolver.is_generated_type (l_type_name) then
+				Resolver.add_external_type (l_type_name)
 			end
 			an_attribute.set_type (l_type_name)
 
@@ -445,13 +447,9 @@ feature {NONE} -- Components initialization.
 				end
 			end
 
-			if l_parent_name.is_equal ("WEB_PAGE") then			
-				l_parent_name := Eiffel_types.parent
-			else
-				create l_parent.make
-				l_parent.set_name (l_parent_name)
-				current_type.add_parent (l_parent)
-			end
+			create l_parent.make
+			l_parent.set_name (l_parent_name)
+			current_type.add_parent (l_parent)
 
 				-- Now add the clause definitions to the parent
 			if has_keyword (a_text, "rename") then

@@ -1,8 +1,8 @@
 <document output="studio" title="Bibliography">
-	<meta_data/>
+	<meta_data></meta_data>
 	<paragraph>
-		<paragraph>[1] Bertrand Meyer: <link><url>http://www.eiffel.com/doc/</url><anchor_name>etl</anchor_name><label><italic>Eiffel: The Language</italic></label></link>, Prentice Hall, 1992. (Available from  Eiffel Software .)
-		<paragraph>[2] Bertrand Meyer: <link><url>http://www.eiffel.com/doc/</url><anchor_name>ru</anchor_name><label><italic>Reusable Software</italic>:<italic> The Base Object-Oriented Component Libraries</italic></label></link>, Prentice Hall, 1994. (Available from  Eiffel Software  and included in the standard delivery of  Eiffel Software  Eiffel.)
+		<paragraph>[1] Bertrand Meyer: <link><url>http://www.eiffel.com/doc/</url><anchor_name>etl</anchor_name><label><italic>Eiffel: The Language</italic></label></link>, Prentice Hall, 1992. (Available from  Eiffel Software.)
+		<paragraph>[2] Bertrand Meyer: <link><url>http://www.eiffel.com/doc/</url><anchor_name>ru</anchor_name><label><italic>Reusable Software</italic>:<italic> The Base Object-Oriented Component Libraries</italic></label></link>, Prentice Hall, 1994. (Available from  Eiffel Software.)
 		<paragraph>[3] W. Richard Stevens: <italic>Unix Network Programming</italic>, Prentice Hall, 1990.
 		</paragraph>
 		</paragraph>

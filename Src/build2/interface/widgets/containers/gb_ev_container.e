@@ -138,7 +138,7 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 			element_info: ELEMENT_INFORMATION
 			temp_string: STRING
 			counter, last_space, found_id: INTEGER
-			merged_object: GB_OBJECT
+			merged_object: GB_CONTAINER_OBJECT
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (merged_groups_string)
@@ -154,13 +154,19 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 						check
 							only_one_space_per_value: temp_string @ (counter + 1) /= ' '
 						end
-						found_id := (temp_string.substring (last_space, counter - 1)).to_integer
-						merged_object := object_handler.object_from_id (found_id)
-						link_to_object (merged_object)
+						found_id := (temp_string.substring (last_space, counter - 1)).to_integer						
 						last_space := counter + 1
 					elseif counter = temp_string.count then
 						found_id := (temp_string.substring (last_space, counter)).to_integer
-						merged_object := object_handler.object_from_id (found_id)
+					end
+					merged_object ?= object_handler.object_from_id (found_id)
+					
+--					check
+--						merged_object_was_container: merged_object /= Void
+--					end
+--| FIXME this is to handle the case where we build a component that has a linked radio button.
+--| This does not currently work.
+					if merged_object /= Void then
 						link_to_object (merged_object)
 					end
 					counter := counter + 1
@@ -170,48 +176,48 @@ feature {GB_DEFERRED_BUILDER} -- Status setting
 
 feature {GB_DELETE_OBJECT_COMMAND} -- Implementation
 
-		new_merge (an_object: GB_OBJECT) is
-				-- Merge radio group of `an_object' with `Current'.
-			local
-				container: EV_CONTAINER
-				other_groups: ARRAYED_LIST [EV_CONTAINER]
-				counter: INTEGER
-				radio_group_link: GB_RADIO_GROUP_LINK
-				other_object: GB_OBJECT
-			do
-				create radio_group_link
-				radio_group_link.set_pebble (radio_group_link)
-				radio_group_link.set_object (an_object)
-				radio_group_link.set_gb_ev_container (Current)
-				
-				merged_list.extend (radio_group_link)				
-					-- We must now create a new addition for all containers that
-					-- were already linked to `an_object'.
-				container ?= an_object.object
-				other_groups := container.merged_radio_button_groups
-					-- `other' may not be merged to any other groups.
-				if other_groups /= Void then
-					from
-						counter := 1
-					until
-						counter > other_groups.count
-					loop
-						other_object := object_handler.object_from_display_widget (other_groups @ counter)
-						check
-							object_not_void: other_object /= Void
-						end
-						create radio_group_link
-						radio_group_link.set_object (other_object)
-						radio_group_link.set_gb_ev_container (Current)
-						radio_group_link.set_pebble (radio_group_link)
-						merged_list.extend (radio_group_link)
-						counter := counter + 1
+	new_merge (an_object: GB_CONTAINER_OBJECT) is
+			-- Merge radio group of `an_object' with `Current'.
+		local
+			container: EV_CONTAINER
+			other_groups: ARRAYED_LIST [EV_CONTAINER]
+			counter: INTEGER
+			radio_group_link: GB_RADIO_GROUP_LINK
+			other_object: GB_OBJECT
+		do
+			create radio_group_link
+			radio_group_link.set_pebble (radio_group_link)
+			radio_group_link.set_object (an_object)
+			radio_group_link.set_gb_ev_container (Current)
+			
+			merged_list.extend (radio_group_link)				
+				-- We must now create a new addition for all containers that
+				-- were already linked to `an_object'.
+			container ?= an_object.object
+			other_groups := container.merged_radio_button_groups
+				-- `other' may not be merged to any other groups.
+			if other_groups /= Void then
+				from
+					counter := 1
+				until
+					counter > other_groups.count
+				loop
+					other_object := object_handler.object_from_display_widget (other_groups @ counter)
+					check
+						object_not_void: other_object /= Void
 					end
+					create radio_group_link
+					radio_group_link.set_object (other_object)
+					radio_group_link.set_gb_ev_container (Current)
+					radio_group_link.set_pebble (radio_group_link)
+					merged_list.extend (radio_group_link)
+					counter := counter + 1
 				end
-					-- We cannot use `for_all_objects' as we need to pass a different argument
-					-- to each object.
-				link_to_object (an_object)
 			end
+				-- We cannot use `for_all_objects' as we need to pass a different argument
+				-- to each object.
+			link_to_object (an_object)
+		end
 			
 	update_linked_names is
 			-- For all items in `merged_list', update

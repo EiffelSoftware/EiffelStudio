@@ -129,48 +129,53 @@ feature {NONE} -- Implementation
 		end
 
 feature {GB_TABLE_POSITIONER} -- Implementation
-
-	set_item_span (v: EV_WIDGET; columns, rows: INTEGER) is
-			-- Adjust `v' so that it spans `columns', `rows' within
-			-- objects.
-		local
-			second_widget: EV_WIDGET
-		do
-				-- Do nothing if span has not changed.
-			if first.item_column_span (v) /= columns or first.item_row_span (v) /= rows then
-				first.set_item_span (v, columns, rows)
-					-- Now we need to get the widget represented in objects at the
-					-- second place.
-				
-				if objects @ 2 /= Void then
-					second_widget := (objects @ 2).item_at_position (first.item_column_position (v), first.item_row_position (v))
-					(objects @ 2).set_item_span (second_widget, columns, rows)
-				end
-					-- Update project.
-				enable_project_modified
-			end
-		end
 		
 	set_item_position_and_span (v: EV_WIDGET; a_column, a_row, columns, rows: INTEGER) is
 			-- Move `v' to `a_column', `a_row' and resize to `columns', `rows'.
+		require
+			widget_not_void: v /= Void
+			widget_contained: first.has (v)
+			column_valid: a_column >= 1 and a_column <= first.columns
+			row_valid: a_row >= 1 and a_row <= first.rows
+			column_span_valid: a_column + columns - 1 <= first.columns
+			row_span_valid: a_row + rows - 1 <= first.rows
 		local
-			second_widget: EV_WIDGET
+			index: INTEGER
 		do
-				-- Do nothing it position and span has not changed.
+				-- Do nothing if position and span has not changed.
 			if first.item_column_position (v) /= a_column or first.item_row_position (v) /= a_row or
 			 first.item_column_span (v) /= columns or first.item_row_span (v) /= rows then
-					-- Now we need to get the widget represented in objects at the
-					-- second place. We must do this before we move the first widget.
-				if objects @ 2 /= Void then
-					second_widget := (objects @ 2).item_at_position (first.item_column_position (v), first.item_row_position (v))
-				end
-	
-				first.set_item_position_and_span (v, a_column, a_row, columns, rows)
-				if objects @ 2 /= Void then
-					(objects @ 2).set_item_position_and_span (second_widget, a_column, a_row, columns, rows)
-				end
+			 	index := first.index_of (v, 1)
+			 	actual_set_item_position_and_span (object, index, a_column, a_row, columns, rows)
+			 	for_all_instance_referers (object, agent actual_set_item_position_and_span (?, index, a_column, a_row, columns, rows))
 					-- Update project.
 				enable_project_modified		
+			end
+		end
+		
+	actual_set_item_position_and_span (an_object: GB_OBJECT; index, a_column, a_row, columns, rows: INTEGER) is
+			-- Set `index' items within representations of `an_object' to new position.
+		require
+			object_not_void: an_object /= Void
+			index_valid: an_object.children /= Void implies index >= 1 and index <= an_object.children.count
+			column_valid: a_column >= 1 and a_column <= first.columns
+			row_valid: a_row >= 1 and a_row <= first.rows
+			column_span_valid: a_column + columns - 1 <= first.columns
+			row_span_valid: a_row + rows - 1 <= first.rows
+		local
+			table: EV_TABLE
+		do
+			table ?= an_object.object
+			check
+				object_was_table: table /= Void
+			end
+			table.set_item_position_and_span (table.i_th (index), a_column, a_row, columns, rows)
+			table ?= an_object.real_display_object
+			if table /= Void then
+				check
+					object_was_table: table /= Void
+				end
+				table.set_item_position_and_span (table.i_th (index), a_column, a_row, columns, rows)
 			end
 		end
 
@@ -275,7 +280,5 @@ feature {GB_TABLE_POSITIONER} -- Implementation
 	column_spacing_string: STRING is "Column_spacing"
 	
 	border_width_string: STRING is "Border_width"
-
-
 
 end -- class GB_EV_TABLE_EDITOR_CONSTRUCTOR

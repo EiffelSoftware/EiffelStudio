@@ -73,10 +73,7 @@ feature -- Access
 					create check_button.make_with_text (class_name (first_item))
 					check_button.set_pebble_function (agent retrieve_pebble (first_item))
 					check_buttons.force (check_button)
-					check_button.select_actions.extend (agent update_widget_expanded (check_button, first_item))
-					if second_item /= Void then
-						check_button.select_actions.extend (agent update_widget_expanded (check_button, second_item))
-					end
+					check_button.select_actions.extend (agent update_widget_expanded (check_button, counter))
 					check_button.select_actions.extend (agent update_editors)
 					vertical_box.extend (check_button)
 					counter := counter + 1
@@ -105,8 +102,6 @@ feature -- Access
 			end
 			border_entry.update_constant_display (first.border_width.out)
 			padding_entry.update_constant_display (first.padding_width.out)
-		--	border_entry.set_text (first.border_width.out)
-	--		padding_entry.set_text (first.padding_width.out)
 			
 			from
 				check_buttons.start
@@ -136,29 +131,57 @@ feature {NONE} -- Implementation
 			execution_agents.extend (agent set_border (?), Border_string)
 			validate_agents.extend (agent valid_input (?), Border_string)
 		end
-
-	update_widget_expanded (check_button: EV_CHECK_BUTTON; w: EV_WIDGET) is
-			-- Change the expanded status of `w', which is the `counter' item in its based on status of `check_button'.
+		
+	update_widget_expanded (check_button: EV_CHECK_BUTTON; index: INTEGER) is
+			-- Change the expanded status of `index' item based on status of `check_button'.
 		require
 			check_button_not_void: check_button /= Void
-			widget_not_void: w /= Void
-		local
-			box_parent: EV_BOX
+			index_valid: index >= 1 and index <= object.children.count
 		do
-			box_parent ?= w.parent
-			check
-				parent_is_box: box_parent /= Void
-			end
-
-			if check_button.is_selected then
-				box_parent.enable_item_expand (w)
-				update_object_expansion (True, box_parent.index_of (w, 1))
-			else
-				box_parent.disable_item_expand (w)
-				update_object_expansion (False, box_parent.index_of (w, 1))
-			end
-			
+			actual_update_widget_expanded (object, check_button.is_selected, index)
+			for_all_instance_referers (object, agent actual_update_widget_expanded (?, check_button.is_selected, index))
 			enable_project_modified
+		end
+		
+	actual_update_widget_expanded (an_object: GB_OBJECT; is_expanded: BOOLEAN; index: INTEGER) is
+			-- Updated expanded state of item` index' within `an_object' to reflect `is_expanded'.
+		require
+			an_object_not_void: an_object /= Void
+			valid_index : an_object.children /= Void implies index >= 1 and index <= an_object.children.count
+		local
+			box: EV_BOX
+		do
+			box ?= an_object.object
+			check
+				object_was_box: box /= Void
+			end
+			if is_expanded then
+				box.enable_item_expand (box.i_th (index))
+			else
+				box.disable_item_expand (box.i_th (index))
+			end
+			box ?= an_object.real_display_object
+			if box /= Void then
+				if is_expanded then
+					box.enable_item_expand (box.i_th (index))
+				else
+					box.disable_item_expand (box.i_th (index))
+				end
+			end
+			if an_object.children /= Void then
+				update_object_expansion (an_object.children.i_th (index), is_expanded)
+			end
+		end
+
+	update_object_expansion (child_object: GB_OBJECT is_expanded: BOOLEAN) is
+			-- Modify expanded state of `index' child of `object', based on
+			-- `is_expanded'.
+		do
+			if is_expanded then
+				child_object.enable_expanded_in_box
+			else
+				child_object.disable_expanded_in_box
+			end
 		end
 
 	update_homogeneous is
@@ -207,11 +230,5 @@ feature {NONE} -- Implementation
 	
 	check_buttons: ARRAYED_LIST [EV_CHECK_BUTTON]
 		-- All check buttons created to handle `disable_item_expand'.
-		
-	update_object_expansion (is_expanded: BOOLEAN; index: INTEGER) is
-			-- Modify expanded state of `index' child of `object', based on
-			-- `is_expanded'.
-		deferred
-		end
 		
 end -- class GB_EV_BOX_EDITOR_CONSTRUCTOR

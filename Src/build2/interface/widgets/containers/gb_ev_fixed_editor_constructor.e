@@ -65,80 +65,157 @@ feature {GB_FIXED_POSITIONER} -- Implementation
 	set_item_x_position (widget: EV_WIDGET; x_pos: INTEGER) is
 			-- Set x_position of `widget' in `first' to `x_pos'.
 		local
-			second: like ev_type
+			index: INTEGER
 		do
 				-- Only set position if changed.
 			if widget.x_position /= x_pos then
-				first.set_item_x_position (widget, x_pos)
-				second := objects @ 2
-				if second /= Void then
-					second.set_item_x_position (second @ first.index_of (widget, 1), x_pos)
-				end
+				index := first.index_of (widget, 1)
+				actual_set_item_x_position (object, index, x_pos)
+				for_all_instance_referers (object, agent actual_set_item_x_position (?, index, x_pos))
+
 					-- Update project.
 				enable_project_modified
+			end
+		end
+		
+	actual_set_item_x_position (an_object: GB_OBJECT; index, x_pos: INTEGER) is
+			-- Set `index' items within representations of `an_object' to x position `x_pos'.
+		require
+			object_not_void: an_object /= Void
+			index_valid: an_object.children /= Void implies index >= 1 and index <= an_object.children.count
+		local
+			fixed: EV_FIXED
+		do
+			fixed ?= an_object.object
+			check
+				object_was_fixed: fixed /= Void
+			end
+			fixed.set_item_x_position (fixed.i_th (index), x_pos)
+			fixed ?= an_object.real_display_object
+			if fixed /= Void then
+				check
+					object_was_fixed: fixed /= Void
+				end
+				fixed.set_item_x_position (fixed.i_th (index), x_pos)
 			end
 		end
 		
 	set_item_y_position (widget: EV_WIDGET; y_pos: INTEGER) is
 			-- Set y_position of `widget' in `first' to `y_pos'.
 		local
-			second: like ev_type
+			index: INTEGER
 		do
 				-- Only set position if changed.
 			if widget.y_position /= y_pos then
-				first.set_item_y_position (widget, y_pos)
-				second := objects @ 2
-				if second /= Void then
-					second.set_item_y_position (second @ first.index_of (widget, 1), y_pos)
-				end
+				index := first.index_of (widget, 1)
+				actual_set_item_y_position (object, index, y_pos)
+				for_all_instance_referers (object, agent actual_set_item_y_position (?, index, y_pos))
 					-- Update project.
 				enable_project_modified
+			end
+		end
+		
+	actual_set_item_y_position (an_object: GB_OBJECT; index, y_pos: INTEGER) is
+			-- Set `index' items within representations of `an_object' to y position `y_pos'.
+		require
+			object_not_void: an_object /= Void
+			index_valid: an_object.children /= Void implies index >= 1 and index <= an_object.children.count
+		local
+			fixed: EV_FIXED
+		do
+			fixed ?= an_object.object
+			check
+				object_was_fixed: fixed /= Void
+			end
+			fixed.set_item_y_position (fixed.i_th (index), y_pos)
+			fixed ?= an_object.real_display_object
+			if fixed /= Void then
+				check
+					object_was_fixed: fixed /= Void
+				end
+				fixed.set_item_y_position (fixed.i_th (index), y_pos)
 			end
 		end
 		
 	set_item_width (widget: EV_WIDGET; new_width: INTEGER) is
 			-- Set width of `widget' in `first' to `new_width'.
 		local
-			second: like ev_type
+			index: INTEGER
 		do
 				-- Only set width if changed.
 			if widget.width /= new_width then
-				first.set_item_width (widget, new_width)
-				second := objects @ 2
-				if second /= Void then
-						-- Only set width of second if greater than minimum_width.
-						-- This is because the item in second is displayed larger due to frame.
-					if (second @ first.index_of (widget, 1)).minimum_width < new_width then
-						second.set_item_width (second @ first.index_of (widget, 1), new_width)
-					end
-				end
+				index := first.index_of (widget, 1)
+				actual_set_item_width (object, index, new_width)
+				for_all_instance_referers (object, agent actual_set_item_width (?, index, new_width))
 					-- Update project.
 				enable_project_modified
 			end
 		end
 		
+	actual_set_item_width (an_object: GB_OBJECT; index, new_width: INTEGER) is
+			-- Set width of `index' item within representations of `an_object' to `new_width'.
+		require
+			object_not_void: an_object /= Void
+			new_width_positive: new_width >=0
+		local
+			fixed: EV_FIXED
+		do
+			fixed ?= an_object.object
+			check
+				object_was_fixed: fixed /= Void
+			end
+			fixed.set_item_width (fixed.i_th (index), new_width)
+			fixed ?= an_object.real_display_object
+			if fixed /= Void then
+				check
+					object_was_fixed: fixed /= Void
+				end
+				if fixed.i_th (index).minimum_width < new_width then
+					fixed.set_item_width (fixed.i_th (index), new_width)
+				end
+			end
+		end	
+
 	set_item_height (widget: EV_WIDGET; new_height: INTEGER) is
 			-- Set height of `widget' in `first' to `new_height'.
 		local
-			second: like ev_type
 			combo_box: EV_COMBO_BOX
+			index: INTEGER
 		do
 				-- Only set if height changed.
 				-- We cannot resize the height of a combo box, so it is disallowed.
 				-- This is a Vision2 Windows limitation.
 			combo_box ?= widget
 			if widget.height /= new_height and combo_box = Void then
-				first.set_item_height (widget, new_height)
-				second := objects @ 2
-				if second /= Void then
-						-- Only set height of second if greater than minimum_width.
-						-- This is because the item in second is displayed larger due to frame.
-					if (second @ first.index_of (widget, 1)).minimum_height < new_height then
-						second.set_item_height (second @ first.index_of (widget, 1), new_height)
-					end
-				end
+				index := first.index_of (widget, 1)
+				actual_set_item_height (object, index, new_height)
+				for_all_instance_referers (object, agent actual_set_item_height (?, index, new_height))
 					-- Update project.
 				enable_project_modified
+			end
+		end	
+		
+	actual_set_item_height (an_object: GB_OBJECT; index, new_height: INTEGER) is
+			-- Set height of `index' item within representations of `an_object' to `new_height'.
+		require
+			object_not_void: an_object /= Void
+			new_height_positive: new_height >=0
+		local
+			fixed: EV_FIXED
+		do
+			fixed ?= an_object.object
+			check
+				object_was_fixed: fixed /= Void
+			end
+			fixed.set_item_height (fixed.i_th (index), new_height)
+			fixed ?= an_object.real_display_object
+			if fixed /= Void then
+				check
+					object_was_fixed: fixed /= Void
+				end
+				if fixed.i_th (index).minimum_height < new_height then
+					fixed.set_item_height (fixed.i_th (index), new_height)
+				end
 			end
 		end	
 

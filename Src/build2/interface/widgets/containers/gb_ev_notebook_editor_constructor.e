@@ -178,43 +178,81 @@ feature {NONE} -- Implementation
 
 	set_text (a_string: STRING; index: INTEGER) is
 			-- Set `a_string' as item text of notebook item indexed by `index'.
-		local
-			second: like ev_type
 		do
-			first.set_item_text (first.i_th (index), a_string)
-			second := objects @ 2
-			if second /= Void then
-				second.set_item_text (second.i_th (index), a_string)
-			end
+			actual_set_text (object, a_string, index)
+			for_all_instance_referers (object, agent actual_set_text (?, a_string, index))
 			enable_project_modified
 		end
 		
+	actual_set_text (an_object: GB_OBJECT; a_string: STRING; index: INTEGER) is
+			-- Perform setting of `a_string' to notebook tab `index' for all
+			-- representations of `an_object'.
+		require
+			object_not_void: an_object /= Void
+			string_not_void: a_string /= Void
+			index_valid: an_object.children /= Void implies index >= 1 and index <= an_object.children.count
+		local
+			notebook: EV_NOTEBOOK
+		do
+			notebook ?= an_object.object
+			check
+				object_was_notebook: notebook /= Void
+			end
+			notebook.set_item_text (notebook.i_th (index), a_string)
+			notebook ?= an_object.real_display_object
+			if notebook /= Void then
+				check
+					object_was_notebook: notebook /= Void
+				end
+				notebook.set_item_text (notebook.i_th (index), a_string)
+			end
+		end	
+
 	set_pixmap (a_pixmap: EV_PIXMAP; path: STRING; index: INTEGER) is
 			-- Set `a_pixmap' to notebook tab of item indexed by `index' within notebook.
 			-- If `a_pixmap' is Void, remove the pixmap.
-		local
-			second: like ev_type
-			notebook_tab: EV_NOTEBOOK_TAB
 		do
-			notebook_tab := first.item_tab (first.i_th (index))
+			actual_set_pixmap (object, a_pixmap, path, index)
+			for_all_instance_referers (object, agent actual_set_pixmap (?, a_pixmap, path, index))
+			enable_project_modified
+		end
+		
+	actual_set_pixmap (an_object: GB_OBJECT; a_pixmap: EV_PIXMAP; path: STRING; index: INTEGER) is
+			-- Set `a_pixmap' to notebook tab for `an_object' of item indexed by `index' within notebook.
+			-- If `a_pixmap' is Void, remove the pixmap.
+		require
+			an_object_not_void: an_object /= Void
+			a_pixmap_not_void: a_pixmap /= Void
+			index_valid: an_object.children /= Void implies index >= 1 and index <= an_object.children.count
+		local
+			notebook_tab: EV_NOTEBOOK_TAB
+			notebook: EV_NOTEBOOK
+		do
+			notebook ?= an_object.object
+			check
+				object_was_notebook: 
+			end
+			notebook_tab := notebook.item_tab (notebook.i_th (index))
 			if path /= Void then
-				first.pixmap_paths.put (path, index)
+				notebook.pixmap_paths.put (path, index)
 			else
-				first.pixmap_paths.remove (index)
+				notebook.pixmap_paths.remove (index)
 			end
 			if a_pixmap /= Void then
 				notebook_tab.set_pixmap (a_pixmap)
 			else
 				notebook_tab.remove_pixmap
 			end
-
-			second := objects @ 2
-			if second /= Void then
-				notebook_tab := second.item_tab (second.i_th (index))
+			notebook ?= an_object.real_display_object
+			if notebook /= Void then
+				check
+					object_was_notebook: notebook /= Void
+				end
+				notebook_tab := notebook.item_tab (notebook.i_th (index))
 				if path /= Void then
-					second.pixmap_paths.put (path, index)
+					notebook.pixmap_paths.put (path, index)
 				else
-					second.pixmap_paths.remove (index)
+					notebook.pixmap_paths.remove (index)
 				end
 				if a_pixmap /= Void then
 					notebook_tab.set_pixmap (a_pixmap)

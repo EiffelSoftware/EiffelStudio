@@ -57,7 +57,7 @@ rt_shared void eif_destroy_once_per_process (void);
  */
  
 struct fop_list {
-        char *addr;     	 /* Index in the list. Here it is
+        EIF_REFERENCE addr;     	 /* Index in the list. Here it is
 							*	 the once per thread
                             * function address */
         EIF_REFERENCE * val;             /* Value of the once per process */
@@ -73,7 +73,7 @@ struct fop_list {
  */
  
 struct pop_list {
-        char *addr;                             /* Index in the list. Here it is the once per thread
+        EIF_REFERENCE addr;                             /* Index in the list. Here it is the once per thread
                                                          * procedure address */
         struct pop_list *next; /* Link to the next element in the list */
 };
@@ -124,7 +124,7 @@ rt_private struct fop_list *init_fop_list (EIF_REFERENCE_FUNCTION feature_addres
 		/* Out of memory */
 		enomem();
 
-	new->addr = (char *) feature_address ;
+	new->addr = (EIF_POINTER)  feature_address ;
 	new->val = (EIF_REFERENCE *) 0;
 	new->next = (struct fop_list *) 0;
 	return new;
@@ -149,7 +149,7 @@ rt_private struct pop_list *init_pop_list(EIF_PROCEDURE feature_address)
                 /* Out of memory */
                 enomem();
  
-        new->addr = (char *) feature_address ;
+        new->addr = (EIF_POINTER) feature_address ;
         new->next = (struct pop_list *) 0;
 
         return new;
@@ -213,7 +213,7 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER 
 	printf ("DEBUG: First call of feature once in process and creation of object\n");
 #endif
 		list = (struct fop_list *) init_fop_list (feature_address);
-		list->val = (EIF_REFERENCE *) eif_once_set_addr ( (char *) (feature_address (eif_access (Current))));
+		list->val = (EIF_REFERENCE *) eif_once_set_addr ( (EIF_POINTER) (feature_address (eif_access (Current))));
 
 		eif_fop_table [((uint32) feature_address) & OP_TABLE_SIZE] = list;
 		EIF_MUTEX_UNLOCK(eif_fop_table_mutex, "Couldn't unlock once per process table mutex");
@@ -221,7 +221,7 @@ rt_public EIF_REFERENCE eif_global_function (EIF_REFERENCE Current, EIF_POINTER 
 
 	} else {
 
-		while (list->addr != (char *) feature_address) {
+		while (list->addr != (EIF_POINTER) feature_address) {
 			/* loop skimming the list of struct fop_list */
 #ifdef DEBUG
 	printf ("DEBUG: Skimming fop_list\n");
@@ -320,7 +320,7 @@ rt_public void eif_global_procedure (EIF_REFERENCE Current, EIF_POINTER proc_ptr
 
         } else {
  
-                while (list->addr != (char *) feature_address) {
+                while (list->addr != (EIF_POINTER) feature_address) {
                         /* loop skimming the list of struct pop_list */
                         if (list->next == (struct pop_list *) 0) {
                                 list->next = (struct pop_list *) init_pop_list (feature_address);

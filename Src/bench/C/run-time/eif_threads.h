@@ -782,7 +782,7 @@ typedef struct {
 /* MTOS = MT Once Set */
 
 #define MTOG(result_type,item,result)	result = result_type item
-#define MTOS(item,val)					item = (char *) val
+#define MTOS(item,val)					item = (EIF_REFERENCE ) val
 
 /* --------------------------------------- */
 

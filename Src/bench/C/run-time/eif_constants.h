@@ -61,12 +61,7 @@ following.
 stats */
 #define	EIF_REFERENCE_BITS	2		/* To divide by sizeof(EIF_REFERENCE). 
 								     * Do >> EIF_REFERENCE_BITS instead. */	
-#ifdef EIF_REM_SET_OPTIMIZATION
-#define AGE_BITS	2			
-						/* We do not want a lot of remembered objects. */
-#else
 #define AGE_BITS	4		/* Number of bits to represents the age. */
-#endif	/* EIF_REM_SET_OPTIMIZATION */
 #define TENURE_MAX	(1<<AGE_BITS)	/* Non reached age */
 
 

@@ -83,7 +83,7 @@ rt_public Malloc_t eif_malloc (register unsigned int nbytes)
 /* all the other platforms (Unix/Linux) use an eiffel implementation *
  * for eif_malloc() */ 
 
-	char *arena;
+	EIF_REFERENCE arena;
 
 	/* The C object does not use its Eiffel flags field in the header. However,
 	 * we set the EO_C bit. This will help the GC because it won't need
@@ -91,7 +91,7 @@ rt_public Malloc_t eif_malloc (register unsigned int nbytes)
 	 */
 
 	arena = xmalloc(nbytes, C_T, GC_OFF);
-	if (arena != (char *) 0)
+	if (arena != (EIF_REFERENCE) 0)
 		HEADER(arena)->ov_flags = EO_C;		/* Clear all flags but EO_C */
 
 	return (Malloc_t) arena;
@@ -237,7 +237,7 @@ rt_public char* eif_vms_getenv (const char* name)
 	/* loop: ***tbs*** */
 	strcpy (nambuf, name);
 	for (tries = LNM$C_MAXDEPTH;  tries > 0;  --tries) {
-	    char *p;
+	    EIF_REFERENCE p;
 	    lnm_dx.dsc$w_length = strlen (lnm_dx.dsc$a_pointer);
 	    sts = sys$trnlnm (&tran_attr, (void*)&tab_dx, &lnm_dx, 0, &items);
 	    if (VMS_FAILURE(sts)) break;

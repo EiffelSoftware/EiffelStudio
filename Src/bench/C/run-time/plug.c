@@ -44,7 +44,7 @@ rt_private char *rcsid =
 rt_public int nstcall = 0;	/* Is current call a nested one? */ /* %%ss mt */
 #endif /* EIF_THREADS */
 
-rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where);		/* Internal invariant control loop */
+rt_private void recursive_chkinv(EIF_CONTEXT int dtype, EIF_REFERENCE obj, int where);		/* Internal invariant control loop */
 
 /*
  * ARRAY [STRING] creation for initialization of argument of root's
@@ -57,7 +57,7 @@ rt_public EIF_REFERENCE argarr(EIF_CONTEXT int argc, char **argv)
 	 * `argv'
 	 */
 	EIF_GET_CONTEXT
-	char *array, *sp;
+	EIF_REFERENCE array, sp;
 	int16 typres;
 	int i;
 
@@ -67,17 +67,17 @@ rt_public EIF_REFERENCE argarr(EIF_CONTEXT int argc, char **argv)
 
 	typres = eif_typeof_array_of ((int16)egc_str_dtype);
 	array = emalloc((uint32)typres);		/* If we return, it succeeded */
-	epush(&loc_stack, (char *) &array); 		/* Protect address in case it moves */
+	epush(&loc_stack, (EIF_REFERENCE ) &array); 		/* Protect address in case it moves */
 	nstcall = 0;					/* Turn invariant checking off */
 	(egc_arrmake)(array, (EIF_INTEGER) 0, argc-1);	/* Call the `make' routine of ARRAY */
-	sp = *(char **) array;			/* Get the area of the ARRAY */
-	epush (&loc_stack, (char *) &sp);		/* Protect the area */
+	sp = *(EIF_REFERENCE *) array;			/* Get the area of the ARRAY */
+	epush (&loc_stack, (EIF_REFERENCE ) &sp);		/* Protect the area */
 
 	/* 
 	 * Fill the array
 	 */
 	for (i=0;i<argc;i++) {
-		((char **) sp)[i] = makestr(argv[i], strlen(argv[i]));
+		((EIF_REFERENCE *) sp)[i] = makestr(argv[i], strlen(argv[i]));
 	}
 
 	epop(&loc_stack, 1);		/* Remove protection for area */
@@ -91,7 +91,7 @@ rt_public EIF_REFERENCE argarr(EIF_CONTEXT int argc, char **argv)
  * Manifest array creation for strip
  */
 
-rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, register char **items, register long int nbr)
+rt_public EIF_REFERENCE striparr(EIF_CONTEXT register EIF_REFERENCE curr, register int dtype, register EIF_REFERENCE *items, register long int nbr)
 {
 	/* Create an Eiffel ARRAY[ANY] using current object curr. 
 	 * This routine creates the object and returns a pointer to the newly
@@ -100,8 +100,8 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 	 * items.
 	 */
 	EIF_GET_CONTEXT
-	char *array, *sp, *o_ref; 
-	char *new_obj;
+	EIF_REFERENCE array, sp, o_ref; 
+	EIF_REFERENCE new_obj;
 	long nbr_attr, stripped_nbr;
 	struct cnode *obj_desc;
 #ifndef WORKBENCH
@@ -111,7 +111,7 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 	long offset;
 #endif
 	register7 char** attr_names;
-	char *attr;
+	EIF_REFERENCE attr;
 	int i;
 	char found;
 	int16 curr_dtype;
@@ -134,13 +134,13 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 
 	typres = eif_typeof_array_of((int16)egc_any_dtype);
 	array = emalloc((uint32)typres);	/* If we return, it succeeded */
-	epush(&loc_stack, (char *) &array); 	/* Protect address in case it moves */
+	epush(&loc_stack, (EIF_REFERENCE ) &array); 	/* Protect address in case it moves */
 	nstcall = 0;
 	(egc_arrmake)(array, (EIF_INTEGER) 1, stripped_nbr);	
 								/* Call feature `make' in class ARRAY[ANY] */
 
-	sp = *(char **) array;		/* Get the area of the ARRAY */
-	epush (&loc_stack, (char *) &sp);	/* Protect the area */
+	sp = *(EIF_REFERENCE *) array;		/* Get the area of the ARRAY */
+	epush (&loc_stack, (EIF_REFERENCE ) &sp);	/* Protect the area */
 
 	while (nbr_attr--) {
 		found = (char) NULL;
@@ -159,15 +159,15 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 #endif
 			switch(type & SK_HEAD) {
 			case SK_REF:
-				new_obj = *(char **) o_ref;
+				new_obj = *(EIF_REFERENCE *) o_ref;
 				break;
 			case SK_CHAR:
 				new_obj = RTLN(egc_char_ref_dtype);
-				*new_obj = * (char *) o_ref;
+				*new_obj = * (EIF_REFERENCE ) o_ref;
 				break;
 			case SK_BOOL:
 				new_obj = RTLN(egc_bool_ref_dtype);
-				*new_obj = * (char *) o_ref;
+				*new_obj = * (EIF_REFERENCE ) o_ref;
 				break;
 			case SK_INT:
 				new_obj = RTLN(egc_int_ref_dtype);
@@ -199,7 +199,7 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 	 * it is lost on the first call to the GC. Waiting for a better idea.
 	 * -- Fabrice.
 	 */		
-		((char **) sp)[offset_bis++] = new_obj;
+		((EIF_REFERENCE *) sp)[offset_bis++] = new_obj;
 		}
 	}
 	epop(&loc_stack, 1);		/* Remove protection for area */
@@ -209,17 +209,17 @@ rt_public char *striparr(EIF_CONTEXT register char *curr, register int dtype, re
 	EIF_END_GET_CONTEXT
 }
 
-rt_public char *makestr(EIF_CONTEXT register char *s, register int len)
+rt_public EIF_REFERENCE makestr(EIF_CONTEXT register char *s, register int len)
 {
 	/* Makes an Eiffel STRING object from a C string.
 	 * This routine creates the object and returns a pointer to the newly
 	 * allocated string or raises a "No more memory" exception.
 	 */
 	EIF_GET_CONTEXT
-	char *string;					/* Were string object is located */
+	EIF_REFERENCE string;					/* Were string object is located */
 
 	string = emalloc(egc_str_dtype);	/* If we return, it succeeded */
-	epush(&loc_stack, (char *) &string); /* Protect address in case it moves */
+	epush(&loc_stack, (EIF_REFERENCE ) &string); /* Protect address in case it moves */
 	nstcall = 0;
 	(egc_strmake)(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING */
 	nstcall = 0;
@@ -230,7 +230,7 @@ rt_public char *makestr(EIF_CONTEXT register char *s, register int len)
 	 * of the STRING object, hence the simple de-referencing.
 	 */
 
-	bcopy(s, *(char **)string, len);
+	bcopy(s, *(EIF_REFERENCE *)string, len);
 	epop(&loc_stack, 1);			/* Remove protection */
 
 	return string;
@@ -276,11 +276,11 @@ rt_public int econfm(int ancestor, int heir)
  * Special object count
  */
 
-rt_public long sp_count(char *spobject)
+rt_public long sp_count(EIF_REFERENCE spobject)
 {
 	/* Return the count of a special object */
 
-	char *ref = spobject + (HEADER(spobject)->ov_size & B_SIZE) - LNGPAD_2;
+	EIF_REFERENCE ref = spobject + (HEADER(spobject)->ov_size & B_SIZE) - LNGPAD_2;
 
 	return *(long *)ref;
 }
@@ -291,12 +291,12 @@ rt_public long sp_count(char *spobject)
  */
 
 #ifndef EIF_THREADS
-rt_private char *inv_mark_tablep = (char *) 0;	/* Marking table to avoid checking the same 
+rt_private char *inv_mark_tablep = (char * ) 0;	/* Marking table to avoid checking the same 
 									 * invariant several times
 									 */ /* %%ss mt renamed conflicting with interp.c */
 #endif /* EIF_THREADS */
 
-rt_public void chkinv (EIF_CONTEXT char *obj, int where)
+rt_public void chkinv (EIF_CONTEXT EIF_REFERENCE obj, int where)
 		  
 		  		/* Invariant is beeing checked before or after compound? */
 {
@@ -317,7 +317,7 @@ rt_public void chkinv (EIF_CONTEXT char *obj, int where)
 }
 
 #ifdef WORKBENCH
-rt_public void chkcinv(EIF_CONTEXT char *obj)
+rt_public void chkcinv(EIF_CONTEXT EIF_REFERENCE obj)
 {
 	/* Check invariant of `obj' after creation. */
 	EIF_GET_CONTEXT
@@ -327,7 +327,7 @@ rt_public void chkcinv(EIF_CONTEXT char *obj)
 }
 #endif
 
-rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where)
+rt_private void recursive_chkinv(EIF_CONTEXT int dtype, EIF_REFERENCE obj, int where)
 		  
 		  
 		  		/* Invariant is being checked before or after compound? */
@@ -345,7 +345,7 @@ rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where)
 	else
 		inv_mark_tablep[dtype] = (char) 1;	/* Mark as checked */
 
-	epush(&loc_stack, (char *) &obj);	/* Automatic protection of `obj' */
+	epush(&loc_stack, (EIF_REFERENCE) &obj);	/* Automatic protection of `obj' */
 	cn_parents = node->cn_parents;	/* Recursion on parents first. */
 
 	/* The list of parent dynamic types is always terminated by a
@@ -416,7 +416,7 @@ rt_private void recursive_chkinv(EIF_CONTEXT int dtype, char *obj, int where)
 
 #ifdef WORKBENCH
 
-char *cr_exp(uint32 type)
+EIF_REFERENCE cr_exp(uint32 type)
 										/* Dynamic type */
 {
 	/* Creates expanded object of type `type'. If it has
@@ -424,11 +424,11 @@ char *cr_exp(uint32 type)
 	 */
 
 	EIF_GET_CONTEXT
-	char *result;
+	EIF_REFERENCE result;
 	register1 struct cnode *exp_desc;	/* Expanded object description */
 
 	result = emalloc(type);
-	epush(&loc_stack, (char *)(&result));	/* Protect address in case it moves */
+	epush(&loc_stack, (EIF_REFERENCE)(&result));	/* Protect address in case it moves */
 	exp_desc = &System(Deif_bid(type));
 	if (exp_desc->cn_routids) {
 		int32 feature_id;              	/* Creation procedure feature id */
@@ -457,7 +457,7 @@ char *cr_exp(uint32 type)
  * workbench mode
  */
 
-void wstdinit(char *obj, char *parent)
+void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent)
 		  		/* Object we want to initialize */
 				/* Parent (enclosing object) */
 {
@@ -509,7 +509,7 @@ void wstdinit(char *obj, char *parent)
 			orig_exp_dtype = exp_dtype = (int) (type & SK_DTYPE);
 			exp_desc = &System(exp_dtype);
 			/* Set the expanded reference */
-			*(char **) (l[0] + REFACS(nb_ref - ++nb_exp)) = l[0] + offset;
+			*(EIF_REFERENCE *) (l[0] + REFACS(nb_ref - ++nb_exp)) = l[0] + offset;
 
 			cid = cn_gtypes [i];
 
@@ -574,10 +574,10 @@ void wstdinit(char *obj, char *parent)
 
 #ifndef WORKBENCH
 
-void rt_norout(void) /* %%ss global */
+void rt_norout(void) 
 {
 	/* Function called when Eiffel is supposed to call a deferred feature
-	 * without any implementation in final mode
+	 * without any implementation in final mode.
 	 */
 
 	RTEC(EN_VOID);

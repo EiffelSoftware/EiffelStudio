@@ -55,6 +55,8 @@ extern "C" {
 #define C_T			0				/* Chunk mainly holds C blocks */
 #define EIFFEL_T	1				/* Chunk mainly holds Eiffel blocks */
 #define ALL_T		2				/* Any chunk, used by full_coalesc() */
+#define CHUNK_SZ_MIN	8192		/* Minimum chunk size. */
+
 #ifdef VXWORKS
 #define CHUNK_DEFAULT	8192		/* standard chunk (in VxWorks case) */
 #else
@@ -85,7 +87,13 @@ extern "C" {
 /*
  * Generation scavenging parameters
  */
-#define GS_LIMIT		512		/* Max size for allocation in scavenge zone. */
+#define GS_LIMIT		512		/* Maximun size for allocation in scavenge zone. */
+#ifdef VXWORKS
+#define	GS_SZ_MIN	2*PAGESIZE_VALUE
+#else
+#define GS_SZ_MIN		300000	/* Minimum size for generational 
+								 * scavenge zone. */
+#endif	/* VXWORKS */
 #ifdef VXWORKS
 #define GS_ZONE_SZ_DEFAULT	2*PAGESIZE_VALUE
 #else
@@ -106,27 +114,33 @@ extern "C" {
 /*
  * Functions return type.
  */
-RT_LNK char *emalloc(uint32 type);				/* Allocate an Eiffel object */
-RT_LNK char *spmalloc(unsigned int nbytes);			/* Allocate an Eiffel special object */
-RT_LNK char *strmalloc(unsigned int nbytes);		/* Allocate a string. */
-extern char *eif_strset(char *object, unsigned int nbytes);
+RT_LNK EIF_REFERENCE emalloc(uint32 type);				/* Allocate an Eiffel object */
+RT_LNK EIF_REFERENCE spmalloc(unsigned int nbytes);			/* Allocate an Eiffel special object */
+RT_LNK EIF_REFERENCE strmalloc(unsigned int nbytes);		/* Allocate a string. */
+extern EIF_REFERENCE eif_strset(EIF_REFERENCE object, unsigned int nbytes);
 						/* Set the string header. */
-RT_LNK char *cmalloc(unsigned int nbytes);				/* Allocate a C object */
-extern char *gmalloc(unsigned int nbytes);				/* Garbage collector's allocation */
-extern char *xmalloc(unsigned int nbytes, int type, int gc_flag);				/* Low level allocation routine */
-extern char *xcalloc(unsigned int nelem, unsigned int elsize);				/* Calloc */
-extern void xfree(register char *ptr);				/* Free */
-extern void xfreechunk(char *ptr);					/* Free memory chunks */
+RT_LNK EIF_REFERENCE cmalloc(unsigned int nbytes);				/* Allocate a C object */
+extern EIF_REFERENCE gmalloc(unsigned int nbytes);				/* Garbage collector's allocation */
+extern EIF_REFERENCE xmalloc(unsigned int nbytes, int type, int gc_flag);				/* Low level allocation routine */
+extern EIF_REFERENCE xcalloc(unsigned int nelem, unsigned int elsize);				/* Calloc */
+extern void xfree(register EIF_REFERENCE ptr);				/* Free */
+extern void xfreechunk(EIF_REFERENCE ptr);					/* Free memory chunks */
 extern char *crealloc(char *ptr, unsigned int nbytes);			/* Reallocate a C object */
-extern char *xrealloc(register char *ptr, register unsigned int nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
-RT_LNK char *sprealloc(char *ptr, long int nbitems);			/* Reallocate an Eiffel special object */
-RT_LNK char *strrealloc(char *ptr, long int nbitems);			/* Reallocate an Eiffel special object */
+extern EIF_REFERENCE xrealloc(register EIF_REFERENCE ptr, register unsigned int nbytes, int gc_flag);			/* Reallocate with GC turned on/off */
+RT_LNK EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems);			/* Reallocate an Eiffel special object */
+RT_LNK EIF_REFERENCE strrealloc(EIF_REFERENCE ptr, long int nbitems);			/* Reallocate an Eiffel special object */
 extern struct emallinfo *meminfo(int type);	/* Memory statistics */
 
+
 /*
- * Shared variables
+ * Global variables, not in a per thread basis.
  */
-/*extern struct stack hec_stack;*//* %%ss *//* The hector stack (objects seen from C) */
+
+extern int	eif_scavenge_size;				/* Size of GSZ. */
+extern int	eif_tenure_max;					/* Maximum tenuring age. */
+extern int	eif_gs_limit;					/* Maximum size of object in GSZ. */
+extern int	eif_chunk_size;					/* Size of chunk. */
+
 
 /*
  * Shared routines
@@ -141,7 +155,7 @@ extern void memck(unsigned int max_dt);
 extern void mem_diagnose(int sig);			/* Memory usage dump */
 extern int full_coalesc(int chunk_type);			/* Perform free blocks coalescing */
 extern void sc_stop(void);
-rt_shared char *eif_set(char *object, unsigned int nbytes, uint32 type);				/* Set Eiffel object prior use */
+rt_shared EIF_REFERENCE eif_set(EIF_REFERENCE object, unsigned int nbytes, uint32 type);				/* Set Eiffel object prior use */
 
 #ifdef __cplusplus
 }

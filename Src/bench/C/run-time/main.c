@@ -10,6 +10,7 @@
 	Therein lie paths I would not have dared tredding alone.
 */
 
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
@@ -112,7 +113,7 @@ long EIF_once_count = 0;	/* Total nr. of once routines */
 long EIF_bonce_count = 0;	/* Nr. of once routines in bytecode */
 
 #ifndef EIF_THREADS
-char **EIF_once_values = (char **) 0;	/* Array to save the value of each computed once */
+EIF_REFERENCE *EIF_once_values = (EIF_REFERENCE *) 0;	/* Array to save the value of each computed once */
 #endif
 
 char *starting_working_directory;	/* Store the working directory during the session, */
@@ -141,12 +142,12 @@ rt_public void once_init (void)
 
 	/* Allocate room for once values */
 
-	EIF_once_values = (char **) realloc (EIF_once_values, EIF_once_count * sizeof (char *));
+	EIF_once_values = (EIF_REFERENCE *) realloc (EIF_once_values, EIF_once_count * REFSIZ);
 			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
-	if (EIF_once_values == (char **) 0) /* Out of memory */
+	if (EIF_once_values == (EIF_REFERENCE *) 0) /* Out of memory */
 		enomem();
 
-	bzero((char *)EIF_once_values, EIF_once_count * sizeof (char *));
+	bzero((char *) EIF_once_values, EIF_once_count * sizeof (char *));
 	
 	EIF_END_GET_CONTEXT
 }
@@ -159,39 +160,138 @@ rt_public void eif_alloc_init(void)
 	 * their default values (env. variable or macro).
 	 * The constant CHUNK has been replaced with eif_chunk_size everywhere.
 	 * The constant GS_ZONE_SZ has been replaced with eif_scavenge_size.
+	 * The constant TENURE_MAX is replaced by eif_tenure_max.
+	 * The constant GS_LIMIT is replaced by eif_gs_limit. 
+	 * The constant PLSC_PER is replaced by plsc_per.
+	 * The constant CLSC_PER is replaced by clsc_per.
+	 * The constants TH_ALLOC is replaced by th_alloc. 
 	 */
 
 	EIF_GET_CONTEXT
 
-	char *env_var;
+	char *env_var;						/* Environment variable recipient. */
 	static int chunk_size = 0;
-	static int scavenge_size = 0;
+	static int scavenge_size = 0;		/* Generational scavenge zone size. */
+	static int tenure_max	= 0;		/* Maximum age of tenuring. */
+	static int gs_limit	= 0;			/* Maximum size (bytes) of 
+										 * objects in GSZ.*/
+	static int c_per = 0;				/* Full coalesc period.*/
+	static int p_per = 0;				/* full collection period.*/
+	static int thd	= 0;				/* Threshold of allocation.*/
 
+	/* Set chunk size. */
 	if (!chunk_size) {
 		env_var = getenv ("EIF_MEMORY_CHUNK");
 		if (env_var != (char *) 0)
-			chunk_size = atoi(env_var);
+			chunk_size = atoi (env_var);
 		else
 			chunk_size = CHUNK_DEFAULT;
 	}
-	eif_chunk_size = chunk_size;
+	eif_chunk_size = chunk_size >= CHUNK_SZ_MIN ? chunk_size : CHUNK_SZ_MIN;
+								/* Reasonable chunk size. */
 
+	/* Set scavenge size. */
 	if (!scavenge_size) {
 		env_var = getenv ("EIF_MEMORY_SCAVENGE");
 		if (env_var != (char *) 0)
-			scavenge_size = atoi(env_var);
+			scavenge_size = atoi (env_var);
 		else
 			scavenge_size = GS_ZONE_SZ_DEFAULT;
 	}
-	eif_scavenge_size = scavenge_size;
+	eif_scavenge_size = scavenge_size >= GS_SZ_MIN ? scavenge_size : GS_SZ_MIN;
+								/* Reasonable GSZ size. */	
+
+	/* Set maximum tenuring age. */
+	if (!tenure_max)	/* Is maximum tenuring age not set yet? */
+	{
+		env_var = getenv ("EIF_TENURE_MAX");
+		if (env_var != (char *) 0)	/* Has user specified it? */
+		{
+			tenure_max = atoi (env_var);
+
+			/* Must be in bounds. */
+			if (tenure_max < 0)		
+				tenure_max = 0;		/* Mimimun is 0. */
+			else if (tenure_max > TENURE_MAX)
+				tenure_max = TENURE_MAX;	/* Maximum is TENURE_MAX. */
+		}
+		else
+			tenure_max = TENURE_MAX;	/* RT default setting. */
+	}
+	eif_tenure_max = tenure_max;	
+
+	/* Set maximum size of objects in GSZ. */
+	if (!gs_limit)	/* Is maximum size of objects in GSZ not set yet? */
+	{
+		env_var = getenv ("EIF_GS_LIMIT");
+		if (env_var != (char *) 0)	/* Has user specified it? */
+		{
+			gs_limit = atoi (env_var);
+			/* Must be in bounds. */
+			if (gs_limit < 0)		
+				gs_limit = 0;		/* Mimimun is 0. */
+			else if (gs_limit > GS_FLOATMARK)
+				gs_limit = GS_FLOATMARK;	/* Maximum we allow, may crash 
+											 * otherwise. */
+		}
+		else
+			gs_limit = GS_LIMIT;	/* RT default setting. */
+	}
+	eif_gs_limit = gs_limit;	
+								/* Reasonable gs_limit. */
+				
+
+	/* Set full coalesce period. */
+	if (!c_per)	/* Is full coalesce period not set yet? */
+	{
+		env_var = getenv ("EIF_FULL_COALESCE_PERIOD");
+		if (env_var != (char *) 0)	/* Has user specified it? */
+			c_per = atoi (env_var);
+		else
+			c_per = CLSC_PER;	/* RT default setting. */
+	}
+	clsc_per = c_per >= 0 ? c_per : 0;	
+
+	/* Set full collection period. */
+	if (!p_per)	/* Is full collection period not set yet? */
+	{
+		env_var = getenv ("EIF_FULL_COLLECTION_PERIOD");
+		if (env_var != (char *) 0)	/* Has user specified it? */
+			p_per = atoi (env_var);
+		else
+			p_per = PLSC_PER;	/* RT default setting. */
+	}
+	plsc_per = p_per >= 0 ? p_per : 0;	
+
+	/* Set memory threshold. */
+	if (!thd)	/* Is memory threshold not set yet? */
+	{
+		env_var = getenv ("EIF_MEMORY_THRESHOLD");
+		if (env_var != (char *) 0)	/* Has user specified it? */
+			thd = atoi (env_var);
+		else
+			thd = TH_ALLOC;	/* RT default setting. */
+	}
+	th_alloc = thd >= TH_ALLOC_MIN ? thd : TH_ALLOC_MIN;	
+
+	/******************* Postconditions *******************/
+	assert (eif_chunk_size >= CHUNK_SZ_MIN);	/* Chunk size must be over that. */
+	assert (eif_scavenge_size >= GS_SZ_MIN);	/* GSZ size must be over that. */
+	assert (eif_tenure_max >= 0 && eif_tenure_max <= TENURE_MAX);
+									   /* Max tenure age in bounds. */
+	assert (eif_gs_limit >= 0 && eif_gs_limit <= GS_FLOATMARK);
+									/* Reasonable max size of objects in GSZ. */	
+	assert (clsc_per >= 0);			/* Full coelesc period must be positive. */
+	assert (plsc_per >= 0);			/* Full collection period must be postive.*/ 
+	assert (th_alloc >= TH_ALLOC_MIN);		/* Threshold of allocation must
+										   	 * be positive.*/ 
+	/*************** End of Postconditions. ******************/
 
 	EIF_END_GET_CONTEXT
 }
 
 rt_public void eif_rtinit(int argc, char **argv, char **envp)
 {
-	/* struct ex_vect *exvect;*/ /* Execution vector for main */ /* %%ss removed */
-	/* jmp_buf exenv;*/	/* Jump buffer for rescue */ /* %%ss removed */
 	char *eif_timeout;
 
 	/* Compute the program name, so that all the error messages can be tagged

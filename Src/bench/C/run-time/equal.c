@@ -45,12 +45,12 @@ rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REF
 rt_public EIF_BOOLEAN xequal(EIF_REFERENCE ref1, EIF_REFERENCE ref2)
 {
 	/* Expanded equality. */
-	char *tmp;
+	EIF_REFERENCE tmp;
 
-	if (ref1 == (char *) 0 && ref2 == (char *) 0)
+	if (ref1 == (EIF_REFERENCE) 0 && ref2 == (EIF_REFERENCE) 0)
 		return EIF_TRUE;
 
-	if (ref1 != (char *) 0 && ref2 != (char *) 0) {
+	if (ref1 != (EIF_REFERENCE) 0 && ref2 != (EIF_REFERENCE) 0) {
 		if (econfg(ref2, ref1)) {
 			tmp = ref1;
 			ref1 = ref2;
@@ -117,12 +117,12 @@ rt_public EIF_BOOLEAN spequal(register EIF_REFERENCE target, register EIF_REFERE
 										/* Size of source special */
 	uint32 t_size = (HEADER(target)->ov_size) & B_SIZE;
 										/* Size of target special */
-	register3 char *s_ref;
-	register4 char *t_ref;
+	register3 EIF_REFERENCE s_ref;
+	register4 EIF_REFERENCE t_ref;
 
 	/* First condition: same count */
-	s_ref = (char *) (source + s_size - LNGPAD_2);
-	t_ref = (char *) (target + t_size - LNGPAD_2);
+	s_ref = (EIF_REFERENCE) (source + s_size - LNGPAD_2);
+	t_ref = (EIF_REFERENCE) (target + t_size - LNGPAD_2);
 	if (*(long *) s_ref != *(long *) t_ref)
 		return EIF_FALSE;
 
@@ -192,11 +192,11 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	/*uint32 t_flags;*/					/* Target flags */
 	uint32 s_size;						/* Source size */
 	uint32 t_size;						/* Target size */
-	register3 char *s_ref;
-	register4 char *t_ref;
+	register3 EIF_REFERENCE s_ref;
+	register4 EIF_REFERENCE t_ref;
 	register5 long count;				/* Common count */
 	register6 long elem_size;			/* Common element size */
-	char *s_field, *t_field;
+	EIF_REFERENCE s_field, t_field;
 
 	if (source == target)
 		return EIF_TRUE;
@@ -207,8 +207,8 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 	t_size = t_zone->ov_size & B_SIZE;
 
 	/* First condition: same count */
-	s_ref = (char *) (source + s_size - LNGPAD_2);
-	t_ref = (char *) (target + t_size - LNGPAD_2);
+	s_ref = (EIF_REFERENCE) (source + s_size - LNGPAD_2);
+	t_ref = (EIF_REFERENCE) (target + t_size - LNGPAD_2);
 
 #ifdef DEBUG
 	dprintf(2)("spiso: source = 0x%lx [%d] target = 0x%lx [%d]\n",
@@ -235,20 +235,20 @@ rt_public EIF_BOOLEAN spiso(register EIF_REFERENCE target, register EIF_REFERENC
 		 * two by two.
 		 */
 		for(
-			s_ref = (char *)source, t_ref = (char *) target;
+			s_ref = (EIF_REFERENCE)source, t_ref = (EIF_REFERENCE) target;
 			count > 0;
 			count --,
-				s_ref = (char *) ((char **) s_ref + 1),
-				t_ref = (char *) ((char **) t_ref + 1)
+				s_ref = (EIF_REFERENCE) ((EIF_REFERENCE) s_ref + 1),
+				t_ref = (EIF_REFERENCE) ((EIF_REFERENCE) t_ref + 1)
 		) {
 			/* Evaluation of two references */
-			s_field = *(char **) s_ref;
-			t_field = *(char **) t_ref;
+			s_field = *(EIF_REFERENCE *) s_ref;
+			t_field = *(EIF_REFERENCE *) t_ref;
 			if ((0 == s_field) && (0 == t_field))
 				/* Two void references */
 				continue;
-			else if (		(((char *) 0) != s_field) &&
-							(((char *) 0) != t_field) &&
+			else if (		(((EIF_REFERENCE) 0) != s_field) &&
+							(((EIF_REFERENCE) 0) != t_field) &&
 							(Dtype(s_field) == Dtype(t_field))
 					)
 				/* Two non-void references on objects of same dynamic type */
@@ -293,8 +293,8 @@ rt_public EIF_BOOLEAN ediso(EIF_REFERENCE target, EIF_REFERENCE source)
 	table = s_create(100);				/* Create search table */	
 	result = rdeepiso(target,source);	/* Recursive isomorphism test */
 	g_data.status = g_status;			/* Restore GC status */
-	xfree((char *) (table->s_keys));	/* Free search table keys */
-	xfree((char *) table);				/* Free search table descriptor */
+	xfree((EIF_REFERENCE) (table->s_keys));	/* Free search table keys */
+	xfree((EIF_REFERENCE) table);				/* Free search table descriptor */
 	return result;
 	EIF_END_GET_CONTEXT
 }
@@ -307,7 +307,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 
 	union overhead *zone = HEADER(target);	/* Target header */
 	uint32 flags;							/* Target flags */
-	char *s_ref, *t_ref, *t_field, *s_field;
+	EIF_REFERENCE s_ref, t_ref, t_field, s_field;
 	long count, elem_size;
 
 	flags = zone->ov_flags;
@@ -329,7 +329,7 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 			return EIF_TRUE;
 
 		/* Evaluation of the count of the target special object */
-		t_ref = (char *) (target + (zone->ov_size & B_SIZE) - LNGPAD_2);
+		t_ref = (EIF_REFERENCE) (target + (zone->ov_size & B_SIZE) - LNGPAD_2);
 		count = *(long *) t_ref;
 
 		/* Traversal of references */
@@ -339,19 +339,19 @@ rt_private EIF_BOOLEAN rdeepiso(EIF_REFERENCE target,EIF_REFERENCE source)
 			*/
 			/* Evaluation of the count of the target special object */
 			for(
-				s_ref = (char *)source, t_ref = (char *) target;
+				s_ref = (EIF_REFERENCE)source, t_ref = (EIF_REFERENCE) target;
 				count > 0;
 				count --,
-					s_ref = (char *) ((char **) s_ref + 1),
-					t_ref = (char *) ((char **) t_ref + 1)
+					s_ref = (EIF_REFERENCE) ((EIF_REFERENCE) s_ref + 1),
+					t_ref = (EIF_REFERENCE) ((EIF_REFERENCE *) t_ref + 1)
 			) {
 				/* Evaluation of two references */
-				s_field = *(char **) s_ref;
-				t_field = *(char **) t_ref;
-				if ((((char *) 0) == s_field) && (((char *) 0) == t_field))
+				s_field = *(EIF_REFERENCE *) s_ref;
+				t_field = *(EIF_REFERENCE *) t_ref;
+				if ((((EIF_REFERENCE) 0) == s_field) && (((EIF_REFERENCE) 0) == t_field))
 					/* Two void references */
 					continue;
-				else if ((char *) 0 != s_field && (char *) 0 != t_field) {
+				else if ((EIF_REFERENCE) 0 != s_field && (EIF_REFERENCE) 0 != t_field) {
 					/* Recursion on references of the special object */
 					if (!rdeepiso(t_field, s_field))
 						return EIF_FALSE;
@@ -397,19 +397,19 @@ rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REF
 	 */
 
 	register3 long count;				/* Reference number */
-	register4 char *s_ref;
-	register5 char *t_ref;
+	register4 EIF_REFERENCE s_ref;
+	register5 EIF_REFERENCE t_ref;
 
 	/* Evaluation of the number of references: and iteration on it */
 	for (
 		count = References(Dtype(target));
 		count > 0;
 		count--,
-			source = (char *) ((char **)source + 1),
-			target = (char *) ((char **) target + 1)
+			source = (EIF_REFERENCE) ((EIF_REFERENCE *)source + 1),
+			target = (EIF_REFERENCE) ((EIF_REFERENCE *) target + 1)
 	)  {
-		s_ref = *(char **)source;
-		t_ref = *(char **)target;
+		s_ref = *(EIF_REFERENCE *)source;
+		t_ref = *(EIF_REFERENCE *)target;
 		/* One test an a de-reference is only useful since the source and
 		 * the target are isomorhic
 		 */
@@ -420,7 +420,7 @@ rt_private EIF_BOOLEAN rdeepiter(register EIF_REFERENCE target, register EIF_REF
 				return EIF_FALSE;
 		else if (t_ref == 0)
 			return EIF_FALSE;
-		else if (!(rdeepiso(*(char **)target, s_ref)))
+		else if (!(rdeepiso(*(EIF_REFERENCE *)target, s_ref)))
 			return EIF_FALSE;
 	}
 	return EIF_TRUE;
@@ -444,7 +444,7 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 #endif
 	long offset;
 	register5 long index;		/* Target attribute index */
-	char *t_ref, *s_ref;
+	EIF_REFERENCE t_ref, s_ref;
 	int attribute_type;	/* Attribute type in skeleton */
 
 	skeleton = &System(dtype);
@@ -513,7 +513,7 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 				return EIF_FALSE;
 			break;
 		default:
-			if (*(char **)t_ref != *(char **)s_ref)
+			if (*(EIF_REFERENCE *)t_ref != *(EIF_REFERENCE *)s_ref)
 				/* Check equality of references */
 				return EIF_FALSE;
 		}
@@ -521,7 +521,9 @@ rt_private EIF_BOOLEAN e_field_equal(register EIF_REFERENCE target, register EIF
 	return EIF_TRUE;
 }
 
-rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target, register EIF_REFERENCE source, int16 dtype)
+rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target, 
+								register EIF_REFERENCE source, 
+								int16 dtype)
 {
 	/* Eiffel standard field-by-field equality: since source type
 	 * conforms to source type, we iterate on target attributes which are
@@ -539,7 +541,7 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target, register EIF_R
 #endif
 	long offset;
 	register5 long index;		/* Target attribute index */
-	char *t_ref, *s_ref, *ref1, *ref2;
+	EIF_REFERENCE t_ref, s_ref, ref1, ref2;
 	int attribute_type;
 
 	skeleton = &System(dtype);
@@ -608,9 +610,9 @@ rt_private EIF_BOOLEAN e_field_iso(register EIF_REFERENCE target, register EIF_R
 				* references are Void or they refer object of the.
 				* same dynamic type.
 				*/
-				ref1 = *(char **)t_ref;
-				ref2 = *(char **)s_ref;
-				if (((char *)0 == ref1) && ((char *)0 == ref2))
+				ref1 = *(EIF_REFERENCE *)t_ref;
+				ref2 = *(EIF_REFERENCE *)s_ref;
+				if (((EIF_REFERENCE) 0 == ref1) && ((EIF_REFERENCE)0 == ref2))
 					/* Void reference */
 					continue;
 				if (	(0 != ref1) &&

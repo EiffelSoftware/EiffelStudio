@@ -41,7 +41,7 @@
 
 /* Function declarations */
 rt_private int cid_to_dtype(EIF_TYPE_ID cid);		/* Converts a class ID into a dynamic type */
-rt_private int locate(char *object, char *name);			/* Locate attribute by name in skeleton */
+rt_private int locate(EIF_REFERENCE object, char *name);			/* Locate attribute by name in skeleton */
 rt_public int eiflocate (EIF_OBJECT object, char *name);
 
 #ifndef lint
@@ -176,7 +176,7 @@ rt_public EIF_OBJECT eifcreate(EIF_TYPE_ID cid)
 	 * occur if the object cannot be created for some reason.
 	 */
 
-	char *object;					/* Eiffel object's physical address */
+	EIF_REFERENCE object;					/* Eiffel object's physical address */
 	int dtype;						/* Dynamic type associated with class ID */
 	
 	dtype = cid_to_dtype(cid);		/* Convert class ID to dynamic type */
@@ -483,7 +483,7 @@ rt_public void *old_eifaddr(EIF_REFERENCE object, char *name)
  * Bit field handling
  */
 
-rt_public EIF_BIT eifgbit(char *object, char *name)
+rt_public EIF_BIT eifgbit(EIF_REFERENCE object, char *name)
 {
 	/* Return a pointer the bit field 'name' in the object, or an error if
 	 * no such bit field is found.
@@ -517,7 +517,7 @@ rt_public EIF_BIT eifgbit(char *object, char *name)
 #endif
 }
 
-rt_public void eifsbit(char *object, char *name, EIF_BIT bit)
+rt_public void eifsbit(EIF_REFERENCE object, char *name, EIF_BIT bit)
 {
 	/* Sets the bit field 'name' of 'object' to bit. Do nothing if the fields
 	 * is not a bit one or if 'bit' is a void pointer.

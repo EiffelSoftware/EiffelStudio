@@ -25,7 +25,7 @@ extern "C" {
  * interface defined in ETL uses the remaped names. Only this interface
  * is guaranteed.
  */
-#define eif_access(_x)	(*(char **) (_x))	/* Access object through hector */
+#define eif_access(_x)	(*(EIF_REFERENCE *) (_x))	/* Access object through hector */
 #define eif_freeze		efreeze				/* Freeze memory address */
 #define eif_adopt		eadopt				/* The C adopts an object */
 #define	eif_protect		henter				/* The C protects an object */
@@ -42,16 +42,16 @@ extern "C" {
 extern int stck_nb_items (const struct stack stk);
 extern int stck_nb_items_free_stack ();
 #endif
-extern char *efreeze(EIF_OBJECT object);				/* Freeze object's address (no more move) */
+extern EIF_REFERENCE efreeze(EIF_OBJECT object);				/* Freeze object's address (no more move) */
 extern EIF_OBJECT eadopt(EIF_OBJECT object);			/* The C wants to keep the reference */
 extern EIF_REFERENCE ewean(EIF_OBJECT object);				/* Weans a previously adopted reference */
-extern void eufreeze(char *object);				/* Forget a frozen memory address */
-extern EIF_OBJECT hrecord(char *object);			/* Record entry in hector table */
-extern EIF_OBJECT henter(char *object);			/* Low-level entry in hector table */
+extern void eufreeze(EIF_REFERENCE object);				/* Forget a frozen memory address */
+extern EIF_OBJECT hrecord(EIF_REFERENCE object);			/* Record entry in hector table */
+extern EIF_OBJECT henter(EIF_REFERENCE object);			/* Low-level entry in hector table */
 extern void hfree(EIF_OBJECT address);				/* Low-level release from hector table */
-extern char *spfreeze(char *object);			/* Freeze special object's address */
-extern void spufreeze(char *object);			/* Put frozen spec obj back to GC control */
-extern EIF_OBJECT hector_addr(char *root);		/* Maps an adress to an hector position */
+extern EIF_REFERENCE spfreeze(EIF_REFERENCE object);			/* Freeze special object's address */
+extern void spufreeze(EIF_REFERENCE object);			/* Put frozen spec obj back to GC control */
+extern EIF_OBJECT hector_addr(EIF_REFERENCE root);		/* Maps an adress to an hector position */
 
 #define spfrozen(object)	(HEADER(object)->ov_size & B_C) /* Is special object frozen */
 

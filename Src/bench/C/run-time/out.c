@@ -31,7 +31,7 @@
 
 #ifndef EIF_THREADS
 rt_private char buffero[TAG_SIZE];		/* Buffer for printing an object in a string */
-rt_private char *tagged_out = (char *) 0;	/* String where the tagged out is written */
+rt_private char * tagged_out = (char *) 0;	/* String where the tagged out is written */
 rt_private int tagged_max = 0;			/* Actual maximum size of `tagged_out' */
 rt_private int tagged_len = 0;			/* Actual length of `tagged_out' */
 #endif /* EIF_THREADS */
@@ -55,7 +55,7 @@ rt_private char *rcsid =
  * Routine for printing representation
  */
 
-rt_public char *c_generator(register char *Current)
+rt_public char *c_generator(register EIF_REFERENCE Current)
 {
 	/* Class name from which the Eiffel object is an instance.
 	 * Return a reference on an Eiffel instance of STRING.
@@ -159,7 +159,7 @@ rt_private void buffer_allocate(EIF_CONTEXT_NOARG)
 	EIF_END_GET_CONTEXT
 }
 
-rt_private void rec_write(EIF_CONTEXT register char *object, int tab)
+rt_private void rec_write(EIF_CONTEXT register EIF_REFERENCE object, int tab)
 {
 	/* Print recursively `object' in `tagged_out' */
 	EIF_GET_CONTEXT
@@ -173,9 +173,9 @@ rt_private void rec_write(EIF_CONTEXT register char *object, int tab)
 	long offset;
 #endif
 	register5 int16 dyn_type;			   /* Object dynamic type */
-	char *o_ref;
+	EIF_REFERENCE o_ref;
 	register7 char **names;				 /* Attribute names */
-	char *reference;						/* Reference attribute */
+	EIF_REFERENCE reference;						/* Reference attribute */
 	long i;
 	uint32 type, ref_flags;
 
@@ -271,7 +271,7 @@ rt_private void rec_write(EIF_CONTEXT register char *object, int tab)
 			break;
 		default: 
 			/* Object reference */
-			reference = *(char **)o_ref;
+			reference = *(EIF_REFERENCE *)o_ref;
 			if (0 != reference) {
 				ref_flags = HEADER(reference)->ov_flags;
 				if (ref_flags & EO_C) {
@@ -305,7 +305,7 @@ rt_private void rec_write(EIF_CONTEXT register char *object, int tab)
 	EIF_END_GET_CONTEXT
 }
 
-rt_private void rec_swrite(EIF_CONTEXT register char *object, int tab)
+rt_private void rec_swrite(EIF_CONTEXT register EIF_REFERENCE object, int tab)
 {
 	/* Print special object */
 	EIF_GET_CONTEXT
@@ -313,13 +313,13 @@ rt_private void rec_swrite(EIF_CONTEXT register char *object, int tab)
 	register5 uint32 flags;		/* Object flags */
 	register3 long count;		/* Element count */
 	register4 long elem_size;	/* Element size */
-	char *o_ref;
-	char *reference;
+	EIF_REFERENCE o_ref;
+	EIF_REFERENCE reference;
 	long old_count;
 	int dt_type;
 
 	zone = HEADER(object);
-	o_ref = (char *) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
+	o_ref = (EIF_REFERENCE) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
 	count = *(long *) o_ref;
 	old_count = count;
 	elem_size = *(long *) (o_ref + sizeof(long));
@@ -383,11 +383,11 @@ rt_private void rec_swrite(EIF_CONTEXT register char *object, int tab)
 			}
 	else 
 		for (o_ref = object; count > 0; count--,
-					o_ref = (char *) ((char **)o_ref + 1)) {
+					o_ref = (EIF_REFERENCE) ((EIF_REFERENCE *)o_ref + 1)) {
 			write_tab(tab + 1);
 			sprintf(buffero, "%ld: ", old_count - count);
 			write_out();
-			reference = *(char **)o_ref;
+			reference = *(EIF_REFERENCE *) o_ref;
 			if (0 == reference)
 				sprintf(buffero, "Void\n");
 			else if (HEADER(reference)->ov_flags & EO_C)

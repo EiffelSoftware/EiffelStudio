@@ -1,0 +1,37 @@
+<document output="studio" title="Gauges Sample">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>gauges.png</url> 
+			<alt_text>gauges</alt_text>
+			<width>270</width>
+			<height>115</height>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph> After launching the application, you will see a window displayed with a similar appearance to the one above. The spin buttons at the top of the window control the current minimum, maximum and value of the three gauges displayed below. Modifying the values of the spin buttons will alter the three gauges in real time. Also, if you interact with one of the three gauges, any change in one, will be reflected in the others and in the spin buttons. </paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph> The change_actions of each EV_GAUGE are used to synchronise all of the gauges. </paragraph>
+		<paragraph>This sample contains the following class: 
+			<list ordered="false">
+				<item>GAUGES</item>
+			</list>
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>EV_GAUGE
+			<line_break/>EV_SCROLL_BAR
+			<line_break/>EV_RANGE
+			<line_break/>EV_PROGRESS_BAR
+			<line_break/>EV_SPIN_BUTTON
+		</seealso>
+	</paragraph></document>

@@ -1,0 +1,29 @@
+<document output="studio" title="Cursor Sample">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>cursor_test.png</url> 
+			<alt_text>cursor_test</alt_text>
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph>To see compiling instructions, you have to enable javascript.</paragraph>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph> After launching the application, you will see a window displayed with a similar appearance to the one above. Selecting "File", "Close" or pressing the close icon at any time will exit the application. </paragraph>
+		<paragraph> To the right hand side of the window you will see an EV_MULTI_COLUMN_LIST containing rows, each with an associated EV_PIXMAP. If you select one of the rows of the list, then press the button marked "Apply", the cursor displayed when over the label displayed to the right hand side of the window will be pixmap of the currently selected list row. 
+			<heading>
+				<size>2</size>Under the Hood
+			</heading>
+			<paragraph>The pixmaps used in the EV_MULTI_COLUMN_LIST were standard pixmaps provided with vision2, accessible through EV_STOCK_PIXMAPS. set_pixmap was used to set the EV_PIXMAP of the EV_MULTI_COLUMN_LIST_ROW. An agent was added to the select_actions of the EV_BUTTON which calls set_pointer_style on the desired widget. </paragraph>
+			<paragraph>This sample contains the following class: 
+				<list ordered="false">
+					<item>CURSOR_TEST</item>
+				</list>
+			</paragraph>
+		</paragraph>
+	</paragraph></document>

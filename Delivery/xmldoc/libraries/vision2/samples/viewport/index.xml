@@ -1,0 +1,55 @@
+<document output="studio" title="Viewport Sample">
+	<meta_data/>
+	<paragraph>
+		<image> 
+			<url>viewport.png</url> 
+			<alt_text>viewport</alt_text> 
+		</image>
+		<line_break/>
+		<line_break/>
+		<heading>
+			<size>2</size>Compiling
+		</heading>
+		<paragraph> To compile the example: </paragraph>
+		<list ordered="false">
+			<item>Launch EiffelStudio. </item>
+			<item>Select 
+				<bold>Use existing Ace (control file)</bold> and click 
+				<bold>OK</bold>. 
+			</item>
+			<item>Browse to 
+				<italic>Eiffel52\examples\vision2\viewport\</italic>. 
+			</item>
+			<item>Choose 
+				<italic>Ace.ace</italic>
+			</item>
+			<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file. </item>
+			<item>Click 
+				<bold>OK</bold>.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Running
+		</heading>
+		<paragraph> After launching the application, you will see a window displayed with a similar appearance to the one above. Modifying the values of the spin buttons will alter the position of the pixmapped button, relative to the viewport in which it is contained. </paragraph>
+		<heading>
+			<size>2</size>Under the Hood
+		</heading>
+		<paragraph> The features set_x_offset and set_y_offset are used to modify the position of the EV_VIEWPORT relative to the  EV_BUTTON contained within. </paragraph>
+		<paragraph>This sample contains the following class: 
+			<list ordered="false">
+				<item>VIEWPORT</item>
+			</list>
+		</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>EV_VIEWPORT
+			<line_break/>EV_SPIN_BUTTON
+			<line_break/>
+			<link>
+				<url>/libraries/vision2/reference/interface/widgets/primitives/ev_button_chart.html</url>
+				<label>EV_BUTTON</label>
+			</link>
+			<line_break/>
+		</seealso>
+	</paragraph></document>

@@ -14,6 +14,7 @@ inherit
 			adapt
 		end;
 	SHARED_ENV;
+	SHARED_EIFFEL_PROJECT
 
 feature {NONE} -- Initialization 
 
@@ -50,7 +51,51 @@ feature -- Properties
 feature {COMPILER_EXPORTER} -- Lace recompilation
 
 	build is
-			-- Build the cluster
+			-- Build the cluster. Also, update the `directory_name'.
+		local
+			d_name, full_d_name: ID_SD;
+			parent_cluster: CLUSTER_I;
+			vd51: VD51;
+			char: CHARACTER
+		do
+			if parent_name /= Void then
+				parent_cluster := Universe.cluster_of_name (parent_name);
+				if parent_cluster = Void then	
+					!! vd51;
+					vd51.set_parent_name (parent_name);
+					vd51.set_cluster_name (cluster_name);
+					Error_handler.insert_error (vd51);
+					Error_handler.raise_error
+				else
+					d_name := directory_name;
+					if d_name.count > 1 then
+						char := d_name.item (2);
+						if 		
+							d_name.item (1) = '$' and then	
+							not (char.is_alpha or else char.is_digit) and then
+							char /= '_'
+						then
+								-- Substitue $ with the parent directory path
+							!! full_d_name.make (20);
+							full_d_name.append (d_name);
+							!! d_name.make (0);
+							d_name.append (parent_cluster.dollar_path);
+							full_d_name.replace_substring (d_name, 1, 1);
+						else
+							full_d_name := d_name
+						end;
+						directory_name := full_d_name
+						-- Note: The first time it encounters $/ it is
+						-- replaced by the parent directory. Each subsequent
+						-- compilation it will skip this.
+					end;
+				end
+			end;
+			build_cluster (parent_cluster)
+		end;
+
+	build_cluster (parent_cluster: CLUSTER_I) is
+			-- Build the cluster_i.
 		local
 			cluster, old_cluster: CLUSTER_I;
 			cluster_of_name, cluster_of_path: CLUSTER_I;
@@ -82,6 +127,13 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 					else
 						cluster_of_name.set_dollar_path (directory_name);
 						cluster := cluster_of_name;
+						if cluster.is_precompiled then
+							--| Need to clean up sub_cluster info on precompiled 
+							--| since it was recorded before call `build'.
+							--| This information will be updated at the end
+							--| of this routine.
+							cluster.wipe_out_cluster_info
+						end
 					end;
 				else
 					!!vdcn;
@@ -106,6 +158,14 @@ end;
 				cluster.fill (exclude_list, include_list);
 			else
 				cluster := old_cluster.new_cluster (cluster_name, exclude_list, include_list);
+			end;
+			check
+				cluster_exists: cluster /= Void
+			end;
+			if parent_cluster = Void then
+				Eiffel_system.add_sub_cluster (cluster)
+			else
+				parent_cluster.add_sub_cluster (cluster)
 			end;
 		end;
 
@@ -142,7 +202,8 @@ end;
 		end;
 
 	adapt is
-			-- Adapt cluster with the cluster properties
+			-- Adapt cluster with the cluster properties including
+			-- the heirarchy information.
 		require else
 			Universe.has_cluster_of_path
 				(Environ.interpreted_string (directory_name));

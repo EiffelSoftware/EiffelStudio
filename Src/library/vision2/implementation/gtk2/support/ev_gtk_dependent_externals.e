@@ -264,6 +264,24 @@ feature -- Externals
 			"C signature (GdkAtom): GtkClipboard* use <gtk/gtk.h>"
 		end
 		
+	gtk_clipboard_set_text (a_clipboard: POINTER; a_text: POINTER; a_length: INTEGER) is
+		external
+			"C signature (GtkClipboard*, gchar*, gint) use <gtk/gtk.h>"
+		end
+		
+	gtk_clipboard_wait_for_text (a_clipboard: POINTER): POINTER is
+		external
+			"C signature (GtkClipboard*): gchar* use <gtk/gtk.h>"
+		end
+		
+	gtk_clipboard_wait_is_text_available (a_clipboard: POINTER): BOOLEAN is
+		external
+			"C signature (GtkClipboard*): gboolean use <gtk/gtk.h>"
+		end
+		
+		
+		
+		
 
 end
 

@@ -105,13 +105,12 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (a_window: SPLIT_WINDOW; oui_parent: COMPOSITE; vertical: BOOLEAN; proport:INTEGER) is
+	make (a_window: SPLIT_WINDOW; oui_parent: COMPOSITE; vertical: BOOLEAN) is
 			-- Create a Windows specific horizontal split window.
 		require
 			a_window_not_void: a_window /= Void
 			oui_parent_not_void: oui_parent /= Void
 		do
-			proportion:= proport
 			!! private_attributes
 			parent ?= oui_parent.implementation
 			split_visible := True

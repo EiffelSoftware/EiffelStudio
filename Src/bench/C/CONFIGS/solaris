@@ -12,15 +12,20 @@
 
 
 sh='sh'
-cc='cc'
+cc='gcc'
 cpp='/usr/ccs/lib/cpp'
 ar='ar'
 ld='ld'
+lngpad_2='8'
 
 mtccflags='-D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS'
 ccflags=''
+sharedccflags='-fPIC'
 cppflags=''
+sharedsuffix='.so'
+sharedlibversion='.1.0'
 ldflags=''
+ldsharedflags='-shared'
 
 libs='-lsocket -lnsl -lm'
 mtlibs='-lsocket -lnsl -lm -lthread'

@@ -59,6 +59,8 @@ feature -- Access
 			-- use assignment attempt.
 			-- Will raise an exception (code `Retrieve_exception')
 			-- if content is not a stored Eiffel structure.
+		require else
+			True
 		local
 			size: INTEGER
 		do

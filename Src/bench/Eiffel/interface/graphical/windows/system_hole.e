@@ -58,7 +58,7 @@ feature -- Properties
 
 	name: STRING is
 		do
-			Result := Interface_names.f_System
+			Result := Interface_names.s_System
 		end;
 
 	menu_name: STRING is

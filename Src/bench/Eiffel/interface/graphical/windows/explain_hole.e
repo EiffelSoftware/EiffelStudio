@@ -32,7 +32,7 @@ feature -- Properties
 
 	name: STRING is
 		do
-			Result := Interface_names.f_New_explain
+			Result := Interface_names.s_Explain_stone
 		end;
 
 	menu_name: STRING is

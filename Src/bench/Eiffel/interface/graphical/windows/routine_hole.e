@@ -41,7 +41,7 @@ feature -- Properties
 
 	name: STRING is
 		do
-			Result := Interface_names.f_New_routine
+			Result := Interface_names.s_Routine_stone
 		end;
 
 	menu_name: STRING is

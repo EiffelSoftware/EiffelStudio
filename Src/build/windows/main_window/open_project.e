@@ -60,6 +60,7 @@ feature
 							Messages.retrieve_crash_qu, Void);
 					else
 						retrieve_project (Environment.storage_directory);
+						history_window.set_saved_application;
 					end;
 				else
 					handle_error (Messages.not_eb_project_er, bpdir.name);
@@ -106,7 +107,7 @@ feature {NONE}
 				handle_error (Messages.retrieve_er, dir)
 			end;
 		rescue
-			main_panel.set_title (Widget_names.main_panel)
+			clear_project;
 			mp.restore;
 			rescued := True;
 			retry

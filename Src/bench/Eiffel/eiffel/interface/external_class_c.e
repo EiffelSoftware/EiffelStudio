@@ -8,10 +8,13 @@ class
 
 inherit
 	CLASS_C
+		rename
+			cluster as assembly
 		redefine
 			lace_class,
 			is_true_external,
-			make
+			make,
+			assembly
 		end
 		
 create
@@ -39,34 +42,40 @@ feature -- Initialization
 			create l_reader
 			external_class ?= l_reader.new_object_from_file (lace_class.file_name)
 			
-			private_external_name := external_class.dotnet_name
-
-				-- This initialization is required as `initialize_from_xml_data'
-				-- needs proper information about classes to build correct feature
-				-- signature.
-			is_deferred := external_class.is_deferred
-			is_expanded := external_class.is_expanded
-			is_enum := external_class.is_enum
-			is_frozen := external_class.is_frozen
-
-				-- Initializes inheritance structure
-			process_parents
-
-				-- Check if it is a nested type or not.
-			process_nesting
-
-				-- Initializes client/supplier relations.
-			process_syntax_features (external_class.fields)
-			process_syntax_features (external_class.constructors)
-			process_syntax_features (external_class.procedures)
-			process_syntax_features (external_class.functions)
-			
-				-- Remove further processing except degree_4 since we assume that
-				-- imported XML is correct.
-			degree_3.remove_class (Current)
-			degree_2.remove_class (Current)
-			degree_1.remove_class (Current)
-			System.degree_minus_1.remove_class (Current)
+			if external_class = Void then
+					-- For some reasons, the XML file could not be retried.
+				error_handler.insert_error (create {VIIC}.make (Current))
+				error_handler.raise_error				
+			else
+				private_external_name := external_class.dotnet_name
+	
+					-- This initialization is required as `initialize_from_xml_data'
+					-- needs proper information about classes to build correct feature
+					-- signature.
+				is_deferred := external_class.is_deferred
+				is_expanded := external_class.is_expanded
+				is_enum := external_class.is_enum
+				is_frozen := external_class.is_frozen
+	
+					-- Initializes inheritance structure
+				process_parents
+	
+					-- Check if it is a nested type or not.
+				process_nesting
+	
+					-- Initializes client/supplier relations.
+				process_syntax_features (external_class.fields)
+				process_syntax_features (external_class.constructors)
+				process_syntax_features (external_class.procedures)
+				process_syntax_features (external_class.functions)
+				
+					-- Remove further processing except degree_4 since we assume that
+					-- imported XML is correct.
+				degree_3.remove_class (Current)
+				degree_2.remove_class (Current)
+				degree_1.remove_class (Current)
+				System.degree_minus_1.remove_class (Current)
+			end
 		ensure
 			external_class_not_void: external_class /= Void
 			not_in_degree_3: not degree_3_needed
@@ -83,22 +92,27 @@ feature -- Initialization
 			nb: INTEGER
 			l_feat_tbl: like feature_table
 			l_orig_tbl: SELECT_TABLE
+			l_fields, l_constructors, l_procedures, l_functions: ARRAY [CONSUMED_ENTITY]
 		do
 				-- Create data structures to hold features information.
-			nb := external_class.fields.count + external_class.constructors.count +
-				external_class.procedures.count + external_class.functions.count
+			l_fields := external_class.fields
+			l_constructors := external_class.constructors
+			l_procedures := external_class.procedures
+			l_functions := external_class.functions
+			nb := l_fields.count + l_constructors.count +
+				l_procedures.count + l_functions.count
 
-			create creators.make (external_class.constructors.count)
+			create creators.make (l_constructors.count)
 			create l_feat_tbl.make (nb)
 			l_feat_tbl.set_feat_tbl_id (class_id)
 			create l_orig_tbl.make (nb)
 			l_feat_tbl.set_origin_table (l_orig_tbl)
 
 				-- Initializes feature table.
-			process_features (l_feat_tbl, external_class.fields)
-			process_features (l_feat_tbl, external_class.constructors)
-			process_features (l_feat_tbl, external_class.procedures)
-			process_features (l_feat_tbl, external_class.functions)
+			process_features (l_feat_tbl, l_fields)
+			process_features (l_feat_tbl, l_constructors)
+			process_features (l_feat_tbl, l_procedures)
+			process_features (l_feat_tbl, l_functions)
 
 				-- Update creators to Void when no creators are available
 				-- on an expanded class.
@@ -137,6 +151,12 @@ feature -- Access
 	enclosing_class: CLASS_C
 			-- Class in which Current class is defined when `is_nested'.
 
+	assembly: ASSEMBLY_I is
+			-- Associated assembly of current.
+		do
+			Result := lace_class.assembly
+		end
+		
 feature -- Status report
 
 	is_nested: BOOLEAN
@@ -502,7 +522,7 @@ feature {NONE} -- Initialization
 			l_generics: ARRAY [TYPE_A]
 			l_array_type: CONSUMED_ARRAY_TYPE
 		do
-			l_assembly := lace_class.cluster.referenced_assemblies.item (c.assembly_id)
+			l_assembly := lace_class.assembly.referenced_assemblies.item (c.assembly_id)
 			l_array_type ?= c
 			l_is_array := l_array_type /= Void
 			if l_is_array then

@@ -10,11 +10,6 @@ deferred class
 	EV_WIDGET
 
 inherit
-	EV_ANY
-		redefine
-			implementation
-		end
-
 	EV_PND_SOURCE
 		redefine
 			implementation

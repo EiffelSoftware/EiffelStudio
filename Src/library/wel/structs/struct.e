@@ -10,12 +10,21 @@ deferred class
 inherit
 	WEL_ANY
 
+	EXCEPTIONS
+		export
+			{NONE} all
+		end
+
 feature {NONE} -- Initialization
 
 	make is
 			-- Allocate `item'
 		do
 			item := c_calloc (1, structure_size)
+			if item = default_pointer then
+				-- Memory allocation problem
+				raise ("No more memory")
+			end
 			shared := False
 		ensure
 			not_shared: not shared
@@ -74,6 +83,9 @@ feature {NONE} -- Externals
 		alias
 			"memcpy"
 		end
+
+invariant
+	exists: exists
 
 end -- class WEL_STRUCTURE
 

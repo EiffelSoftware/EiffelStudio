@@ -164,7 +164,7 @@ end -- class PATH_NAME
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, 1994, 1995, Interactive Software
+--| Copyright (C) 1994, 1995, Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -59,6 +59,16 @@ feature -- Status report
 		do
 			Result := parent_imp.internal_is_selected (Current)
 		end
+		
+	tooltip: STRING is
+			-- Text of tooltip assigned to `Current'.
+		do
+			if internal_tooltip_string = Void then
+				Result := ""
+			else
+				Result := internal_tooltip_string.twin	
+			end
+		end
 
 feature -- Status setting
 
@@ -72,6 +82,12 @@ feature -- Status setting
 			-- Deselect Current.
 		do
 			parent_imp.internal_deselect (Current)
+		end
+
+	set_tooltip (a_tooltip: STRING) is
+			-- Assign `a_tooltip' to `internal_tooltip_string'.
+		do
+			internal_tooltip_string := a_tooltip.twin
 		end
 
 feature {EV_ANY_I} -- Access
@@ -134,6 +150,11 @@ feature {EV_ANY_I} -- Access
 				parent_imp.on_item_removed_at (Current, an_item, item_index)
 			end
 		end
+		
+feature {NONE} -- Implementation
+
+	internal_tooltip_string: STRING
+		-- Internal text of tooltip assigned to `Current'.
 
 feature {EV_ANY_I} -- Implementation
 

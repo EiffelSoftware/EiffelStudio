@@ -79,13 +79,23 @@ feature {NONE} -- Implementation
 
 	flatten_all_instances is
 			-- Called by `select_actions' of `flatten_all_instances_button'.
+		local
+			command_flatten: GB_COMMAND_FLATTEN_OBJECT
+			current_object: GB_OBJECT
+			linear_rep: ARRAYED_LIST [INTEGER]
 		do
+			linear_rep := object.instance_referers.linear_representation
 			from
-				object.instance_referers.start
+				linear_rep.start
 			until
-				object.instance_referers.is_empty
+				linear_rep.off
 			loop
-				object_handler.deep_object_from_id (object.instance_referers.item_for_iteration).flatten
+				current_object := object_handler.deep_object_from_id (linear_rep.item)
+				if not object_handler.deleted_objects.has (current_object.id) then
+					create command_flatten.make (current_object, False)
+					command_flatten.execute
+				end
+				linear_rep.forth
 			end
 			destroy
 		end

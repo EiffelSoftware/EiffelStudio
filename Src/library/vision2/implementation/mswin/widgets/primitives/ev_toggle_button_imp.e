@@ -55,6 +55,7 @@ inherit
 			on_kill_focus,
 			on_set_cursor,
 			on_bn_clicked,
+			on_size,
 			set_text,
 			show,
 			hide
@@ -108,6 +109,9 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/07 17:39:03  rogers
+--| Undefined on_size from WEL_SELECTABLE_BUTTON as this is now inherited from EV_BUTTON_IMP.
+--|
 --| Revision 1.21  2000/03/07 01:17:44  brendel
 --| Added undefine of wel_make and make_by_id.
 --|

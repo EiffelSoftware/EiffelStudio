@@ -343,7 +343,7 @@ feature -- IL code generation
 			end
 			
 				-- Load `native_array' on stack.
-			Il_generator.generate_attribute (special_type, l_native_array.feature_id)
+			Il_generator.generate_attribute (associated_class.is_single, special_type, l_native_array.feature_id)
 		end
 
 	generate_il (name_id: INTEGER; special_type: CL_TYPE_I) is

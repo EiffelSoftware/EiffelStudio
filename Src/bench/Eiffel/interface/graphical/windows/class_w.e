@@ -25,7 +25,9 @@ inherit
 			process_class, process_classi, compatible,
 			set_mode_for_editing, set_font, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
-			set_read_only_text_window
+			set_read_only_text_window,
+			update_boolean_resource,
+			update_integer_resource
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -39,14 +41,63 @@ inherit
 			process_feature, process_class, process_classi,
 			compatible, set_mode_for_editing, set_font, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
-			set_read_only_text_window
+			set_read_only_text_window,
+			update_boolean_resource,
+			update_integer_resource
 		select
 			reset, close_windows, set_stone
-		end
+		end;
+	EB_CONSTANTS
 
 creation
 
 	make_shell
+
+feature -- Resource Update
+
+	update_boolean_resource (old_res, new_res: BOOLEAN_RESOURCE) is
+			-- Update Current, according to `old_res' and `new_res'.
+		local
+			cr: like Class_tool_resources
+		do
+			cr := Class_tool_resources;
+			if old_res = cr.command_bar then
+				if new_res.actual_value then
+					edit_bar.add
+				else
+					edit_bar.remove
+				end
+			elseif old_res = cr.format_bar then
+				if new_res.actual_value then
+					format_bar.add
+				else
+					format_bar.remove
+				end
+			end;
+			old_res.update_with (new_res)
+		end
+
+	update_integer_resource (old_res, new_res: INTEGER_RESOURCE) is
+			-- Update `old_res' with the value of `new_res',
+			-- if the value of `new_res' is applicable.
+			-- Also update the interface.
+		local
+			cr: like Class_tool_resources
+		do
+			cr := Class_tool_resources;
+			if new_res.actual_value > 0 then
+				if old_res = cr.tool_height then
+					if old_res.actual_value /= new_res.actual_value then
+						set_height (new_res.actual_value)
+					end
+				elseif old_res = cr.tool_width then
+					if old_res.actual_value /= new_res.actual_value then
+						set_width (new_res.actual_value)
+					end
+				end;
+				old_res.update_with (new_res)
+			end
+		end
 
 feature -- Properties
 
@@ -296,7 +347,15 @@ feature -- Grahpical Interface
 			build_command_bar;
 			fill_menus;
 			set_last_format (default_format);
-			attach_all 
+
+			if Class_tool_resources.command_bar.actual_value = False then
+				edit_bar.remove
+			end;
+			if Class_tool_resources.format_bar.actual_value = False then
+				format_bar.remove
+			end;
+
+			attach_all
 		end;
 
 	raise_shell_popup is
@@ -338,7 +397,8 @@ feature {NONE} -- Implemetation; Window Settings
 	set_default_size is
 			-- Set the size of Current to its default.
 		do
-			eb_shell.set_size (475, 500)
+			eb_shell.set_size (Class_tool_resources.tool_width.actual_value,
+				Class_tool_resources.tool_height.actual_value)
 		end;
 
 	set_format_label (s: STRING) is

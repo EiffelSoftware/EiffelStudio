@@ -115,15 +115,15 @@ feature
 		deferred
 		ensure
 			Result >= 1
-		end
+		end;
 
 invariant
 
-	is_valid implies (width > 0);
-	is_valid implies (height > 0);
-	is_valid implies (depth > 0);
-	is_valid implies ((hot_x >= 0) and (hot_x < width));
-	is_valid implies ((hot_y >= 0) and (hot_x < height))
+	positive_width: is_valid implies (width > 0);
+	positive_height: is_valid implies (height > 0);
+	positive_depth: is_valid implies (depth > 0);
+	valid_hot_x: is_valid implies ((hot_x >= 0) and (hot_x < width));
+	valid_hot_y: is_valid implies ((hot_y >= 0) and (hot_y < height))
 
 end -- class PIXMAP_I
 

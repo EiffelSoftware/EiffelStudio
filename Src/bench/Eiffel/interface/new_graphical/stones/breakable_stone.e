@@ -137,23 +137,35 @@ feature -- Basic operations
 				item.disable_sensitive
 			end
 			menu.extend (item)
-			menu.extend (create {EV_MENU_SEPARATOR})
-			if not Application.is_breakpoint_set (routine, index) then
-					-- "Set conditional breakpoint"
-				create item.make_with_text (Interface_names.m_Set_conditional_breakpoint)
-				item.select_actions.extend (agent set_conditional_breakpoint (routine, index))
-				menu.extend (item)
+			if Application.is_dotnet then
+				--| FIXME: JFIAT
+				--| for now, no conditional breakpoint .. sorry
+--				menu.extend (create {EV_MENU_SEPARATOR})
+--				create item.make_with_text ("Conditional Breakpoint")
+--				item.disable_sensitive
+--				menu.extend (item)				
+--				create item.make_with_text ("not yet ready for Dotnet")
+--				item.disable_sensitive
+--				menu.extend (item)				
 			else
-				if Application.condition (routine, index) = Void then
-						-- "Edit condition" (no remove)
-					create item.make_with_text (Interface_names.m_Edit_condition)
+				menu.extend (create {EV_MENU_SEPARATOR})
+				if not Application.is_breakpoint_set (routine, index) then
+						-- "Set conditional breakpoint"
+					create item.make_with_text (Interface_names.m_Set_conditional_breakpoint)
 					item.select_actions.extend (agent set_conditional_breakpoint (routine, index))
 					menu.extend (item)
 				else
-						-- "Edit condition" (with remove)
-					create item.make_with_text (Interface_names.m_Edit_condition)
-					item.select_actions.extend (agent edit_condition (routine, index))
-					menu.extend (item)
+					if Application.condition (routine, index) = Void then
+							-- "Edit condition" (no remove)
+						create item.make_with_text (Interface_names.m_Edit_condition)
+						item.select_actions.extend (agent set_conditional_breakpoint (routine, index))
+						menu.extend (item)
+					else
+							-- "Edit condition" (with remove)
+						create item.make_with_text (Interface_names.m_Edit_condition)
+						item.select_actions.extend (agent edit_condition (routine, index))
+						menu.extend (item)
+					end
 				end
 			end
 			create item.make_with_text (Interface_names.m_Run_to_this_point)

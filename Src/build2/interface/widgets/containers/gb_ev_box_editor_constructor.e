@@ -33,6 +33,8 @@ feature -- Access
 			label: EV_LABEL
 			second: like ev_type
 			check_button: EV_CHECK_BUTTON
+			counter: INTEGER
+			first_item, second_item: EV_WIDGET
 		do
 			create check_buttons.make (0)
 			create Result
@@ -57,55 +59,30 @@ feature -- Access
 				Result.extend (label)			
 			end		
 			from
-				first.start
-				second.start
+				counter := 1
 			until
-				first.off or second.off
+				counter > first.count
 			loop
-				create check_button.make_with_text (class_name (first.item))
-				check_button.set_pebble_function (agent retrieve_pebble (parent_editor.object.layout_item, first.index))
+				first_item := first.i_th (counter)
+				if second /= Void then
+					second_item := second.i_th (counter)	
+				end
+				create check_button.make_with_text (class_name (first_item))
+				check_button.set_pebble_function (agent retrieve_pebble (first_item))
 				check_buttons.force (check_button)
-				check_button.select_actions.extend (agent update_widget_expanded (check_button, first.item))
-				check_button.select_actions.extend (agent update_widget_expanded (check_button, second.item))
+				check_button.select_actions.extend (agent update_widget_expanded (check_button, first_item))
+				if second_item /= Void then
+					check_button.select_actions.extend (agent update_widget_expanded (check_button, second_item))
+				end
 				check_button.select_actions.extend (agent update_editors)
 				Result.extend (check_button)
-				first.forth
-				second.forth
+				counter := counter + 1
 			end
 			
 			update_attribute_editor
 
 			disable_all_items (Result)
 			align_labels_left (Result)
-		end
-		
-	retrieve_pebble (a_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM; child_index: INTEGER): ANY is
-			-- Retrieve pebble for transport.
-			-- A convenient was of setting up the drop
-			-- actions for GB_OBJECT.
-		local
-			object: GB_OBJECT
-			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-			shared_tools: GB_SHARED_TOOLS
-		do
-			layout_item ?= a_layout_item.i_th (child_index)
-			check
-				layout_item_not_void: layout_item /= Void
-			end
-			object := layout_item.object
-			
-			--| FIXME This is currently identical to version in 
-			--| GB_OBJECT
-				-- If the ctrl key is pressed, then we must
-				-- start a new object editor for `Current', instead
-				-- of beginning the pick and drop.
-			if application.ctrl_pressed then
-				new_object_editor (object)
-			else
-				create shared_tools
-				shared_tools.type_selector.update_drop_actions_for_all_children (object)
-				Result := object
-			end
 		end
 		
 	update_attribute_editor is

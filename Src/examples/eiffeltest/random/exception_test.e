@@ -30,7 +30,7 @@ feature -- Basic operations
 			s.put (1)
 			s.remove
 			s.remove
-		end
+		end;
 
 indexing
 

@@ -51,7 +51,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	date_string: STRING
+	date_string: STRING;
 			-- String representation of date
 
 indexing

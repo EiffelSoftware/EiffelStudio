@@ -21,7 +21,7 @@ feature -- Access
 			-- Stack accessor
 		do
 			Result ?= Precursor
-		end
+		end;
 
 indexing
 

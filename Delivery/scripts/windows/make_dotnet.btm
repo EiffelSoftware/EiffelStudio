@@ -43,6 +43,6 @@ iff not exist EIFGEN\W_code\ISE.CodeDomProvider.dll then
 	remtrace Could not compile Codedom
 	CANCEL
 endiff
-copy EIFGEN\W_code\ISE.CodeDomProvider.dll %INSTALL_DIR\dotnet_libraries
+copy EIFGEN\W_code\ISE.CodeDomProvider.dll %INSTALL_DIR\dotnet_binaries
 
 cdd %EIFFEL_SRC

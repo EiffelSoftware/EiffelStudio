@@ -43,8 +43,8 @@ feature {NONE} -- Implementation
 
 	counter: BODY_ID_SUBCOUNTER is
 			-- Counter associated with the id
-		do
-			Result := System.body_id_counter.item (compilation_id)
+		once
+			Result := Body_id_counter.item (Normal_compilation)
 		end
 
 	prefix_name (type_id: TYPE_ID): STRING is

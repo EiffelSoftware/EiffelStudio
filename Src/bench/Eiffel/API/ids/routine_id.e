@@ -62,13 +62,13 @@ feature {NONE} -- Implementation
 
 	counter: ROUTINE_SUBCOUNTER is
 			-- Counter associated with the id
-		do
-			Result := System.routine_id_counter.item (compilation_id)
+		once
+			Result := Routine_id_counter.item (Normal_compilation)
 		end;
 
 	prefix_name: STRING is
 			-- Prefix for generated C function and table names
-		do
+		once
 			Result := counter.prefix_name
 		end
 

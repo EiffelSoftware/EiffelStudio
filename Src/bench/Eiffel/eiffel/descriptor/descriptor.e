@@ -13,7 +13,7 @@ inherit
 			item as table_item,
 			make as table_make
 		end;
-	SHARED_WORKBENCH
+	SHARED_COUNTER
 		undefine
 			copy, is_equal
 		end;
@@ -62,10 +62,10 @@ feature -- Generation
 			f.open_write;
 
 			f.putstring ("#include %"macros.h%"%N%N");
-			System.class_counter.generate_extern_offsets (f);
-			System.static_type_id_counter.generate_extern_offsets (f);
+			Class_counter.generate_extern_offsets (f);
+			Static_type_id_counter.generate_extern_offsets (f);
 			if Compilation_modes.is_precompiling then
-				System.dispatch_table.counter.generate_extern_offsets (f);
+				Real_body_index_counter.generate_extern_offsets (f);
 				f.new_line;
 				f.putstring (precomp_C_string)
 			else

@@ -104,20 +104,20 @@ feature {NONE} -- Initialization
 --				internal_fields := t.get_fields_binding_flags (feature {BINDING_FLAGS}.instance |
 --						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
 --						feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
---				internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
---						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
---						feature {BINDING_FLAGS}.flatten_hierarchy)
---				internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
---						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
---						feature {BINDING_FLAGS}.flatten_hierarchy)
+				internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
+						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+						feature {BINDING_FLAGS}.flatten_hierarchy)
+				internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
+						feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+						feature {BINDING_FLAGS}.flatten_hierarchy)
 			end
 			
-			internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
-					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-					feature {BINDING_FLAGS}.flatten_hierarchy)
-			internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
-					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
-					feature {BINDING_FLAGS}.flatten_hierarchy)
+--			internal_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
+--					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+--					feature {BINDING_FLAGS}.flatten_hierarchy)
+--			internal_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
+--					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+--					feature {BINDING_FLAGS}.flatten_hierarchy)
 
 			internal_constructors := t.get_constructors
 			internal_referenced_type := referenced_type_from_type (t)
@@ -881,22 +881,6 @@ feature {NONE} -- Status Setting.
 			end
 		end
 
---	is_property_or_event (info: METHOD_INFO): BOOLEAN is
---			-- Is `internal_method' a property or event related feature?
---		require
---			non_void_info: info /= Void
---		local
---			l_dotnet_name: STRING
---		do
---			create l_dotnet_name.make_from_cil (info.get_name)
---			Result := info.get_is_special_name and (
---				l_dotnet_name.substring_index ("set_", 1) = 1 or
---				l_dotnet_name.substring_index ("get_", 1) = 1 or
---				l_dotnet_name.substring_index ("add_", 1) = 1 or
---				l_dotnet_name.substring_index ("remove_", 1) = 1 or
---				l_dotnet_name.substring_index ("raise_", 1) = 1)
---		end
-
 	is_infix (info: METHOD_INFO): BOOLEAN is
 			-- Is function an infix function?
 		require
@@ -967,8 +951,8 @@ feature {NONE} -- Added features of System.Object to Interfaces
 --			create internal_fields.make (0)
 			create internal_members.make (0)
 --			create internal_methods.make (0)
---			create internal_properties.make (0)
---			create internal_events.make (0)
+			create internal_properties.make (0)
+			create internal_events.make (0)
 			
 			internal_update_interface_members (t, l_processed)
 
@@ -1007,12 +991,12 @@ feature {NONE} -- Added features of System.Object to Interfaces
 --			l_methods := t.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
 --					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
 --					feature {BINDING_FLAGS}.non_public | feature {BINDING_FLAGS}.flatten_hierarchy)
---			l_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
---					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
---					feature {BINDING_FLAGS}.flatten_hierarchy)
---			l_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
---					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public | feature {BINDING_FLAGS}.non_public |
---					feature {BINDING_FLAGS}.flatten_hierarchy)
+			l_properties := t.get_properties_binding_flags (feature {BINDING_FLAGS}.instance |
+					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+					feature {BINDING_FLAGS}.flatten_hierarchy)
+			l_events := t.get_events_binding_flags (feature {BINDING_FLAGS}.instance |
+					feature {BINDING_FLAGS}.static | feature {BINDING_FLAGS}.public |
+					feature {BINDING_FLAGS}.flatten_hierarchy)
 			
 
 				-- merge members.
@@ -1027,17 +1011,17 @@ feature {NONE} -- Added features of System.Object to Interfaces
 --			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_methods, 0, l_merged_methods, internal_methods.count, l_methods.count)
 --			internal_methods := l_merged_methods
 
---				-- merge properties.
---			create l_merged_properties.make (internal_properties.count + l_properties.count)
---			feature {SYSTEM_ARRAY}.copy (internal_properties, l_merged_properties, internal_properties.count)
---			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_properties, 0, l_merged_properties, internal_properties.count, l_properties.count)
---			internal_properties := l_merged_properties
+				-- merge properties.
+			create l_merged_properties.make (internal_properties.count + l_properties.count)
+			feature {SYSTEM_ARRAY}.copy (internal_properties, l_merged_properties, internal_properties.count)
+			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_properties, 0, l_merged_properties, internal_properties.count, l_properties.count)
+			internal_properties := l_merged_properties
 
---				-- merge events.
---			create l_merged_events.make (internal_events.count + l_events.count)
---			feature {SYSTEM_ARRAY}.copy (internal_events, l_merged_events, internal_events.count)
---			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_events, 0, l_merged_events, internal_events.count, l_events.count)
---			internal_events := l_merged_events
+				-- merge events.
+			create l_merged_events.make (internal_events.count + l_events.count)
+			feature {SYSTEM_ARRAY}.copy (internal_events, l_merged_events, internal_events.count)
+			feature {SYSTEM_ARRAY}.copy_array_integer_32 (l_events, 0, l_merged_events, internal_events.count, l_events.count)
+			internal_events := l_merged_events
 			from
 				l_interfaces := t.get_interfaces
 				processed.Add (t, t)

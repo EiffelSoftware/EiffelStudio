@@ -14,6 +14,8 @@ inherit
 	EV_SEPARATOR_IMP
 		undefine
 			build
+		redefine
+			plateform_build
 		end
 
 creation
@@ -21,13 +23,10 @@ creation
 
 feature {NONE} -- Initialization
 
- 	make (par: EV_CONTAINER) is
- 			-- Make seperator
-		local
-			par_imp: WEL_COMPOSITE_WINDOW
-		do
-			par_imp ?= par.implementation
-			make_with_coordinates (par_imp, "Separator", 0, 0, 0, 2)
+    	plateform_build (par: EV_CONTAINER_I) is
+   			-- Plateform dependant initializations.
+   		do
+			{EV_SEPARATOR_IMP} Precursor (par)
 			set_minimum_height (2)
  		end
 

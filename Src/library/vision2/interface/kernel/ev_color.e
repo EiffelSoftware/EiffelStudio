@@ -501,10 +501,7 @@ feature -- Comparison
 	copy (other: like Current) is
 			-- Update `Current' by setting attributes from `other'.
 		do
-			set_red (other.red)
-			set_green (other.green)
-			set_blue (other.blue)
-			--|FIXME uncomment later set_alpha (other.alpha)
+			implementation.set_with_other (other)
 		end
 
 feature -- Constants
@@ -614,6 +611,9 @@ end -- class EV_COLOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/05/02 18:26:12  oconnor
+--| Optimised copy
+--|
 --| Revision 1.16  2000/05/01 18:51:43  brendel
 --| Change in hue.
 --|

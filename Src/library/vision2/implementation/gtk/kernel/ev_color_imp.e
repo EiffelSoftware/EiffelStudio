@@ -14,7 +14,8 @@ class
 inherit
 	EV_COLOR_I
 		redefine
-			interface
+			interface,
+			set_with_other
 		end
 
 create
@@ -196,6 +197,23 @@ feature -- Conversion
 			blue := a_16_bit_blue / 65535
 		end
 
+	set_with_other (other: EV_COLOR) is
+			-- Take on the appearance of `other'.
+		local
+			imp: EV_COLOR_IMP
+		do
+			imp ?= other.implementation
+			check
+				imp_not_void: imp /= Void
+			end
+			red_16_bit := imp.red_16_bit
+			green_16_bit := imp.green_16_bit
+			blue_16_bit := imp.blue_16_bit
+			red := imp.red
+			green := imp.green
+			blue := imp.blue
+		end
+
 feature {EV_ANY_I} -- Command
 
 	destroy is
@@ -232,6 +250,9 @@ end -- class EV_COLOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/05/02 18:26:14  oconnor
+--| Optimised copy
+--|
 --| Revision 1.5  2000/02/22 18:39:35  oconnor
 --| updated copyright date and formatting
 --|

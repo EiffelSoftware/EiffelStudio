@@ -1,8 +1,8 @@
 -- New/Old table
 
-class NEW_OLD_TABLE inherit
+class NEW_OLD_TABLE [G -> COMPILER_ID] inherit
 
-	EXTEND_TABLE [BODY_ID, BODY_ID]
+	EXTEND_TABLE [G, G]
 		rename
 			put as tbl_put,
 			item as tbl_item
@@ -21,10 +21,10 @@ creation
 
 feature
 
-	put (old_value, new_value: BODY_ID) is
+	put (old_value, new_value: G) is
 			-- Associate `old_value' with `new_value'.
 		local
-			latest_old_value: BODY_ID
+			latest_old_value: G
 		do
 			if not has (new_value) then
 				latest_old_value := item (old_value);
@@ -34,7 +34,7 @@ feature
 			end
 		end;
 			
-	item (i: BODY_ID): BODY_ID is
+	item (i: G): G is
 			-- Old value associated with `i'. If old value is greater
 			-- than `thresold' (not so old!), return `i' itself
 		do

@@ -54,6 +54,13 @@ feature -- Access
 		once
 			create Result.make
 		end
+		
+	object_editor_command: GB_OBJECT_EDITOR_COMMAND is
+			-- Command representing a new object editor request.
+		once
+			create Result.make
+		end
+		
 
 feature -- Basic operation
 
@@ -95,6 +102,7 @@ feature {NONE} -- Implementation
 			Result.extend (close_project_command)
 			Result.extend (show_history_command)
 			Result.extend (delete_object_command)
+			Result.extend (object_editor_command)
 		end
 		
 

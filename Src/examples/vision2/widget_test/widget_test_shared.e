@@ -99,5 +99,8 @@ feature {NONE} -- Implementation
 			Create Result.make (1)
 		end
 		
+	location_error_message: STRING is "If this tour was installed as part of the EiffelStudio installation, please ensure that ISE_EIFFEL is correctly set.%NIf installed separately, please ensure ISE_VISION2_TOUR is correctly set to the installation directory."
+		-- Error message detailing the envieonment variables that should be set.
+		
 
 end -- class WIDGET_TEST_SHARED

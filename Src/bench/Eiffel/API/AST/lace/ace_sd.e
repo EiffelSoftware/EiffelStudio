@@ -245,6 +245,7 @@ feature -- Lace compilation
 				-- Process the system level options
 		do
 			System.reset_system_level_options;
+			Universe.set_override_cluster_name (Void)
 			if defaults /= Void then
 				from
 					defaults.start
@@ -255,6 +256,7 @@ feature -- Lace compilation
 					defaults.forth
 				end
 			end;
+			Universe.process_override_cluster
 		end;
 
 	build_clusters is

@@ -1,5 +1,5 @@
 system
-	"ec"
+	"cec"
 
 root
 	EB_WINDOWS_KERNEL: make

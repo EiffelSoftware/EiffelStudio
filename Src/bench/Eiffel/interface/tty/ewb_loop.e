@@ -284,12 +284,14 @@ feature -- Execution
 			-- Execute current menu option.
 		local
 			proj_dir: PROJECT_DIRECTORY
+			p: PROJECT_EIFFEL_FILE
 		do
-			!! proj_dir.make (Eiffel_project.name);
-			if proj_dir.is_new then
-					-- The user will have to specify the Ace file
+				--| At this stage we have the project directory
+			if Eiffel_project.project_directory.project_eif_file = Void then
+				-- The user will have to specify the Ace file
+				-- since it is a new project
 				Eiffel_ace.set_file_name (Void);
-			end;
+			end
 			ewb_iterate				
 		end;
 

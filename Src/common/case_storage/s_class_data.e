@@ -60,6 +60,9 @@ feature -- Properties
 	generics: FIXED_LIST [S_GENERIC_DATA];
 			-- Number of generic parameters
 
+	creation_features: LINKED_LIST [STRING]
+			-- Names of creation procedures of current class.
+
 	is_deferred: BOOLEAN;
 			-- Is the current class deferred?
 
@@ -211,6 +214,16 @@ feature -- Setting
 		ensure
 			generics_set: generics = l
 		end;
+
+	set_creation_features (l: like creation_features) is
+			-- Set creation_features to `l'.
+		require
+			valid_l: l /= Void
+		do
+			creation_features := l
+		ensure
+			creation_features_set: creation_features = l
+		end
 
 	set_feature_number (i: INTEGER) is
 			-- Set feature_number to `i'.

@@ -85,6 +85,37 @@ feature {NONE} -- Initialization
 			button_box /= default_pointer
 		end
 	
+feature -- Access
+
+	is_default_push_button: BOOLEAN is
+			-- Is this button currently a default push button 
+			-- for a particular container?
+		do
+			check
+				To_be_implemented: False
+			end
+		end
+
+feature -- Status Setting
+
+	enable_default_push_button is
+			-- Set the style of the button corresponding
+			-- to the default push button.
+		do
+			check
+				To_be_implemented: False
+			end
+		end
+
+	disable_default_push_button is
+			-- Remove the style of the button corresponding
+			-- to the default push button.
+		do
+			check
+				To_be_implemented: False
+			end
+		end
+
 feature -- Element change
 
 	set_text (a_text: STRING) is
@@ -180,6 +211,11 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/29 03:16:08  pichery
+--| Added feature `is_default_push_button',
+--| `enable/disable_push_button'
+--| Need to be implemented
+--|
 --| Revision 1.31  2000/04/20 00:28:41  oconnor
 --| fixed signal connection
 --|

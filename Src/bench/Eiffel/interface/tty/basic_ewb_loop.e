@@ -57,7 +57,7 @@ feature -- Initialization
 		local
 			ewb_cmd: EWB_CMD;
 		once
-			!!Result.make (1, 3)
+			!!Result.make (1, 4)
 
 			!EWB_ACE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
@@ -66,6 +66,9 @@ feature -- Initialization
 			Result.add_entry (ewb_cmd)
 
 			!EWB_EDIT_ACE! ewb_cmd;
+			Result.add_entry (ewb_cmd)
+
+			!EWB_CASE_STORAGE! ewb_cmd;
 			Result.add_entry (ewb_cmd)
 		end;
 

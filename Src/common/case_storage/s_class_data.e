@@ -22,7 +22,7 @@ feature
 	generics: FIXED_LIST [S_GENERIC_DATA];
 			-- Number of generic parameters
 
-	features: FIXED_LIST [S_FEATURE_DATA];
+	features: LINKED_LIST [S_FEATURE_DATA];
 			-- Features of class
 
 	invariants: FIXED_LIST [S_ASSERTION_DATA];

@@ -7,7 +7,6 @@ inherit
 	SHARED_INST_CONTEXT;
 	SHARED_RESCUE_STATUS;
 	SHARED_ERROR_HANDLER;
-	WINDOWS
 
 creation
 
@@ -103,6 +102,8 @@ feature
 			end
 		end;
 
+	flat_struct: FLAT_STRUCT;
+
 	current_class_only: BOOLEAN;
 			-- Is Current only processing `class_c' and not
 			-- its ancestors?
@@ -110,9 +111,6 @@ feature
 	troff_format: BOOLEAN;
 			-- Is Current going to be a troff format? (Used 
 			-- remove from CLASSNAME within assertions)
-
-	flat_struct: FLAT_STRUCT
-			-- Structure used for processing the flat (or short)
 
 	class_c: CLASS_C;
 			-- Current class being processed

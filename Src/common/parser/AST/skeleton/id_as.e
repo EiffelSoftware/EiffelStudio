@@ -12,7 +12,7 @@ inherit
 			good_integer, good_character,
 			make_integer, make_character,
 			record_dependances,
-			format
+			format, string_value
 		end;
 	STRING
 		rename
@@ -124,6 +124,12 @@ feature -- Conveniences
 			wipe_out;
 			append (s);
 		end;
+
+	string_value: STRING is
+		do
+			!! Result.make (0);
+			Result.append (Current)
+		end
 			
 
 feature {NONE}

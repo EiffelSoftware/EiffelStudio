@@ -77,6 +77,8 @@ feature {NONE}
 
 	stop_cmd_name: STRING is "stop"
 
+	storage_cmd_name: STRING is "store"
+
 	suppliers_cmd_name: STRING is "suppliers"
 
 	system_cmd_name: STRING is "system"

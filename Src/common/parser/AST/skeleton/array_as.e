@@ -5,7 +5,7 @@ inherit
 	ATOMIC_AS
 		redefine
 			type_check, byte_node, format,
-			fill_calls_list, replicate
+			fill_calls_list, replicate, string_value
 		end
 
 feature -- Attributes
@@ -112,4 +112,12 @@ feature {ARRAY_AS}	-- Replication
 		do
 			expressions := e
 		end;
+
+feature -- Case storage
+
+	string_value: STRING is
+		do
+			Result := "<< >>"
+		end;
+
 end

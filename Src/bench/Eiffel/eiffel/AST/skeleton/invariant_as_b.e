@@ -127,4 +127,22 @@ feature -- Formatter
 			end
 		end
 
+feature -- Case Storage
+
+    storage_info: FIXED_LIST [S_ASSERTION_DATA] is
+            -- Storage information for Current
+        do
+			!! Result.make (assertion_list.count);
+			from
+				Result.start;
+				assertion_list.start
+			until
+				assertion_list.after
+			loop
+				Result.replace (assertion_list.item.storage_info);
+				Result.forth;
+				assertion_list.forth
+			end
+		end;
+
 end

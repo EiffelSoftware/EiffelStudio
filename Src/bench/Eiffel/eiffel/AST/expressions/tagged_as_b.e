@@ -103,5 +103,14 @@ feature {TAGGED_AS}	-- Replication
 		do
 			expr := e;
 		end
+
+feature -- Case Storage
+
+	storage_info: S_ASSERTION_DATA is
+		local
+			txt: STRING
+		do
+			!! Result.make (tag.string_value, "toto");
+		end;
 	
 end

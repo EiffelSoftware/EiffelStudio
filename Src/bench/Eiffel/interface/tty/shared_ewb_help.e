@@ -82,6 +82,8 @@ feature {NONE}
 
 	stop_help: STRING is "stop on error";
 
+	storage_help: STRING is "store in case format";
+
 	suppliers_help: STRING is "show the suppliers of a class";
 
 	system_help: STRING is "Ace and cluster details";

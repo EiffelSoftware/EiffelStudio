@@ -16,6 +16,12 @@ feature
 		do
 		ensure then
 			False
-		end
+		end;
+
+	text_string: STRING is
+			-- Text representation of Current
+		do
+			Result := "gogo"
+		end;
 
 end

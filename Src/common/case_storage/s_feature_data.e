@@ -18,7 +18,7 @@ feature
 	result_type: S_RESULT_DATA;
 			-- Result type if function of attribute
 
-	comments: FEATURE_COMMENT_DATA;
+	comments: S_FREE_TEXT_DATA;
 			-- Comment associated to the feature
 
 	preconditions: FIXED_LIST [S_ASSERTION_DATA];
@@ -76,6 +76,17 @@ feature -- Setting values
 			arguments := l
 		ensure
 			arguments_set: arguments = l
+		end;
+
+	set_comments (l: like comments) is
+			-- Set commentss to `l'.
+		require
+			valid_l: l /= Void;
+			l_not_empty: not l.empty
+		do
+			comments := l
+		ensure
+			comments_set: comments = l
 		end;
 
 	set_preconditions (l: like preconditions) is

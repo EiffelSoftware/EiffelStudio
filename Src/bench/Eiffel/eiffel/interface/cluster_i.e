@@ -8,7 +8,8 @@ inherit
 	SHARED_WORKBENCH;
 	SHARED_ENV;
 	SHARED_RESCUE_STATUS;
-	SYSTEM_CONSTANTS
+	SYSTEM_CONSTANTS;
+	COMPARABLE
 
 creation
 
@@ -922,6 +923,12 @@ feature
 				classes.forth
 			end
 		end
+
+	infix "<" (other: like Current): BOOLEAN is
+		do
+			Result := path < other.path
+		end;
+
 		
 
 feature {NONE} -- Externals

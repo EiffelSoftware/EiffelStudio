@@ -43,8 +43,8 @@ feature -- Initialization
 		do
 			feature_names ?= yacc_arg (0);
 			body ?= yacc_arg (1);
-            start_position := yacc_int_arg (0);
-            end_position := yacc_int_arg (1);
+			start_position := yacc_int_arg (0);
+			end_position := yacc_int_arg (1);
 			id := System.feature_counter.next;
 			if body.is_unique then
 				set_unique_values
@@ -312,5 +312,14 @@ feature {ASSERT_SERVER, FEATURE_AS, NAMES_ADAPTER}	-- Replication
 			rout_fsas ?= body.content;	--| Cannot fail
 			rout_fsas.set_feature_assertions (feat, Current, a);
 		end;
+
+feature -- Case storage
+
+	storage_info: S_FEATURE_DATA is
+			-- Storage information for Current
+		require
+			not_be_called: False
+		do
+		end
 
 end

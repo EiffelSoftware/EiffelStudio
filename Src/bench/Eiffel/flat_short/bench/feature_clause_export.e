@@ -97,8 +97,22 @@ feature
 				features.forth;
 			end;
 			ctxt.commit;
-		end;	
+		end
 
+	features_storage_info: LINKED_LIST [S_FEATURE_DATA] is
+			-- List of features in case format within
+			-- a feature clause
+		do
+			!! Result.make;
+			from
+				features.start
+			until
+				features.after
+			loop
+				Result.extend (features.item.storage_info);
+				features.forth;
+			end;
+		end;	
 			
 feature {FEATURE_CLAUSE_EXPORT}
 

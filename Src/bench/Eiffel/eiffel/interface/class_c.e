@@ -3345,6 +3345,14 @@ feature -- Precompilation
 			end;
 		end;
 
+feature -- Case Storage
+
+	case_class_key: S_CLASS_KEY is
+			-- Class key used for case storage
+		do
+			!! Result.make (class_name, cluster.cluster_name)
+		end;
+
 invariant
 
 	lace_class_exists: lace_class /= Void

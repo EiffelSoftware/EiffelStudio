@@ -44,4 +44,29 @@ feature -- Initialization
 			ctxt.commit;
 		end;
 
+feature -- Case storage
+
+	storage_info: S_TEXT_DATA is
+		local
+			txt: STRING
+		do
+			!! txt.make (0);
+			if tag /= Void then
+				txt.append (tag.string_value);
+				txt.append (": ");
+			end;
+			from
+				index_list.start
+			until
+				index_list.after
+			loop
+				txt.append (index_list.item.string_value);
+				index_list.forth;
+				if not index_list.after then
+					txt.append (", ");
+				end;
+			end;
+			!! Result.make (txt)
+		end;
+
 end

@@ -2872,16 +2872,16 @@ feature -- Plug and Makefile file
 			end;
 
 				-- Pointer on creation feature of class STRING
-			Plug_file.putstring ("void (*strmake)() = ");
+			Plug_file.putstring ("void (*eif_strmake)() = ");
 			Plug_file.putstring (str_make_name);
 			Plug_file.putstring (";%N");
 				-- Pointer on creation feature of class ARRAY[ANY]
-			Plug_file.putstring ("void (*arrmake)() = ");
+			Plug_file.putstring ("void (*eif_arrmake)() = ");
 			Plug_file.putstring (arr_make_name);
 			Plug_file.putstring (";%N");
 			
 				--Pointer on `set_count' of class STRING
-			Plug_file.putstring ("void (*strset)() = ");
+			Plug_file.putstring ("void (*eif_strset)() = ");
 			Plug_file.putstring (set_count_name);
 			Plug_file.putstring (";%N");
 

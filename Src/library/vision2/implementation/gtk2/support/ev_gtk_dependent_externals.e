@@ -8,6 +8,23 @@ class
 
 feature -- Externals
 
+--	frozen gtk_combo_box_entry_new: POINTER is
+--		external
+--			"C signature (): GtkWidget* use <gtk/gtk.h>"
+--		end
+
+	frozen g_value_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"(GValue*)$args_array + (int)($an_index - 1)"
+		end
+
+	frozen g_value_array_get_nth (a_value_array: POINTER; n_th: INTEGER): POINTER is
+		external
+			"C signature (GValueArray*, guint): GValue* use <gtk/gtk.h>"
+		end
+
 	frozen gtk_color_selection_dialog_struct_color_selection (a_color_selection_dialog: POINTER): POINTER is
 		external
 			"C struct GtkColorSelectionDialog access colorsel use <gtk/gtk.h>"
@@ -360,6 +377,13 @@ feature -- Externals
 			"g_object_get ((gpointer) $a_object, (gchar*) $a_property, (gchar**) $string_arg, NULL)"
 		end
 
+	frozen g_object_get_integer (a_object: POINTER; a_property: POINTER; int_arg: TYPED_POINTER [INTEGER]) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"g_object_get ((gpointer) $a_object, (gchar*) $a_property, (gint*) $int_arg, NULL)"
+		end
+
 	frozen g_object_set_integer (a_object: POINTER; a_property: POINTER; int_arg: INTEGER) is
 		external
 			"C inline use <gtk/gtk.h>"
@@ -597,6 +621,16 @@ feature -- Externals
 		external
 			"C signature (GtkTextIter*, GtkTextIter*): gchar* use <gtk/gtk.h>"
 		end
+
+	frozen gtk_text_iter_get_line (a_iter: POINTER): INTEGER is
+		external
+			"C signature (GtkTextIter*): gint use <gtk/gtk.h>"
+		end
+
+	frozen gtk_text_iter_set_line (a_iter: POINTER; a_line: INTEGER)is
+		external
+			"C signature (GtkTextIter*, gint) use <gtk/gtk.h>"
+		end
 		
 	frozen gtk_text_view_set_editable (a_text_view: POINTER; a_setting: BOOLEAN) is
 		external
@@ -686,8 +720,33 @@ feature -- Externals
 		external
 			"C signature (GtkTextIter *) use <gtk/gtk.h>"
 		end
+
+	frozen gtk_text_iter_forward_line (a_text_iter: POINTER) is
+		external
+			"C signature (GtkTextIter *) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_text_iter_backward_line (a_text_iter: POINTER) is
+		external
+			"C signature (GtkTextIter *) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_text_iter_forward_char (a_text_iter: POINTER) is
+		external
+			"C signature (GtkTextIter *) use <gtk/gtk.h>"
+		end
+
+	frozen gtk_text_iter_backward_char (a_text_iter: POINTER) is
+		external
+			"C signature (GtkTextIter *) use <gtk/gtk.h>"
+		end
 		
 	frozen gtk_text_view_forward_display_line (a_text_view: POINTER; a_text_iter: POINTER): BOOLEAN is
+		external
+			"C signature (GtkTextView*, GtkTextIter*): gboolean use <gtk/gtk.h>"
+		end
+
+	frozen gtk_text_view_backward_display_line (a_text_view: POINTER; a_text_iter: POINTER): BOOLEAN is
 		external
 			"C signature (GtkTextView*, GtkTextIter*): gboolean use <gtk/gtk.h>"
 		end

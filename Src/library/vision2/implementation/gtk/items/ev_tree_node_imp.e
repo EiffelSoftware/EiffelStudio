@@ -281,7 +281,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
 	insert_pixmap is
 		local
-			gdkpix, gdkmask, text_ptr, tmp: POINTER
+			gdkpix, gdkmask, text_ptr: POINTER
 			is_leaf, is_expded: BOOLEAN
 			success: INTEGER
 		do
@@ -291,12 +291,12 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 				success := C.gtk_ctree_get_node_info (
 					parent_tree_imp.list_widget,
 					tree_node_ptr,
-					tmp,-- text,
-					tmp, -- spacing
-					tmp,
-					tmp,
-					tmp,
-					tmp,
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					NULL,
+					NULL,
 					$is_leaf,
 					$is_expded
 				)
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 		do
 			Result := ev_children.count
 		end
-
+	
 	i_th (i: INTEGER): EV_TREE_NODE is
 		do
 			Result := (ev_children @ i).interface
@@ -382,9 +382,7 @@ feature {NONE} -- Implementation
 			if par_t_imp /= Void then
 				item_imp.set_item_and_children (tree_node_ptr)
 				par_t_imp.update_pnd_status
-				if item_imp.pixmap /= Void then
-					item_imp.insert_pixmap
-				end
+				item_imp.check_branch_pixmaps
 			end
 		end
 
@@ -432,12 +430,27 @@ feature {NONE} -- Implementation
 
 feature {EV_ITEM_LIST_IMP} -- Implementation
 
---	dispose is
---			-- 
---		do
---			Precursor
---		end
-		
+	check_branch_pixmaps is
+			-- if `Current' is attached to a GtkCTree, associate its pixmap
+			-- to its corresponding GtkCTreeNode.
+		local
+			cnt: INTEGER
+			itm_imp: EV_TREE_NODE_IMP
+		do
+			insert_pixmap
+			cnt := count
+			if parent_tree_imp /= Void and then cnt > 0 then
+				from
+					start
+				until
+					index > cnt
+				loop
+					itm_imp ?= item.implementation
+					itm_imp.check_branch_pixmaps
+					forth
+				end
+			end
+		end
 
 	list_widget: POINTER 
 			-- Pointer to the items own gtktree.

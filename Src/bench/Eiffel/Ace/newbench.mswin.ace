@@ -207,7 +207,7 @@ cluster
 			"CVS"; 
 		end
 
-	all helpers:			"$EIFFEL_SRC\helpers"
+	all helpers:			"$EIFFEL_SRC\library\helpers"
 		exclude
 			"CVS";
 		end

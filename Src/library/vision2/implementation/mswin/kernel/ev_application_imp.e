@@ -205,7 +205,7 @@ feature {NONE} -- Message loop, we redefine it because the user
 					main_win /= Void
 				end
 			until
-				done or else is_destroyed
+				done
 			loop
 				msg.peek_all
 				if msg.last_boolean_result then
@@ -342,6 +342,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/04/10 16:11:50  brendel
+--| Reverted wrong implementation of message_loop.
+--|
 --| Revision 1.28  2000/04/06 00:04:50  brendel
 --| message_loop now ends when destroyed.
 --|

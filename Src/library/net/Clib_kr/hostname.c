@@ -2,8 +2,12 @@
 	added c features
 */
 
-#include <unistd.h>
 #include "portable.h"
+#if defined EIF_WINDOWS || defined EIF_OS2
+	/* unistd.h doesn't exist */
+#else
+#include <unistd.h>
+#endif
 
 #ifndef MAXHOSTNAMELEN      /* added for dgux and other platforms maybe */
 #define MAXHOSTNAMELEN 128

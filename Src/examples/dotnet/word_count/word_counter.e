@@ -109,7 +109,7 @@ feature -- Access
 				pnum_chars := 0
 				pnum_words := 0
 				pnum_lines := 0
-				create fs_in.make_filestream_2 (pathname, file_mode_open, file_access_read, file_share_read)
+				create fs_in.make_filestream_2 (pathname, file_mode_open.open, file_access_read.read, file_share_read.read)
 				pnum_bytes := convert.to_int32_int64 (fs_in.get_length)
 				create sr.make_streamreader_4 (fs_in, encoding.get_default, True, 4096)
 				from

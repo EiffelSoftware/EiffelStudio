@@ -420,15 +420,17 @@ BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARA
 			}
 			return 1;
 		default:
-			return 0;
+			return 0;       
 	}
-	EIF_END_GET_CONTEXT
 }
 
 void eif_console_cleanup ()
 {
 	if (windowed_application)
+	{
+		MessageBox (NULL, "Execution terminated.\nClick OK to close Execution Tool", "Execution terminated", MB_OK);
 		DestroyWindow (eif_conout_window);
+	}
 	else
 	{
 		CloseHandle (eif_coninfile);
@@ -862,10 +864,21 @@ void output_all ()
 void eif_PutWindowedOutput(char *s, int l)
 {
 	int i, ix;
-	static int next_print=25;
+	static int old_time=0;
+	static int new_time;
 	int next_line = FALSE;
 	int start = xCaret;
 	int stop = l + start;
+	BOOLEAN refresh;
+
+	new_time = GetTickCount ();
+	if ((new_time - old_time) > 1000)
+	{
+		refresh = TRUE;
+		old_time = new_time;
+	}
+	else
+		refresh = FALSE;
 
 	ix = start;
 	for (i=start; i < stop; i++)
@@ -916,11 +929,7 @@ void eif_PutWindowedOutput(char *s, int l)
 		}
 	}
 	InvalidateRect (eif_conout_window, NULL, 1);
-	next_print--;
-	if (next_print == 0)
-	{
-		next_print = 25;
+	if (refresh)
 		output_all ();
-	}
 }
 

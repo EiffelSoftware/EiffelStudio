@@ -391,7 +391,7 @@ feature -- Status Setting
 					-- does not have to contain `Current', as it may
 					-- not be shown, hence we only remove the widget
 					-- if actually inserted.
-				if parent.linear_representation.has (widget) then
+				if parent.linear_representation.has (widget) or parent.external_representation.has (widget) then
 					parent.remove (widget)
 				end
 				parent := Void

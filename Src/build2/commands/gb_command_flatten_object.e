@@ -252,7 +252,7 @@ feature -- Basic Operation
 			an_object := object_handler.deep_object_from_id (object_id)
 
 			if not an_object.name.is_empty then
-				object_name := an_object.name
+				object_name := an_object.name.twin
 			else
 				object_name := name_and_type_from_object (an_object)
 			end

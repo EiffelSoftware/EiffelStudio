@@ -916,13 +916,13 @@ feature -- Event handling
 			help_filename: STRING
 			help: SYSTEM_WINDOWS_FORMS_HELP
 			navigator: SYSTEM_WINDOWS_FORMS_HELPNAVIGATOR
+			process: SYSTEM_DIAGNOSTICS_PROCESS
 		do
 			create support.make_reflectionsupport
 			support.make
 			help_filename := support.Eiffel_delivery_path
 			help_filename := help_filename.concat_string_string (help_filename, dictionary.Relative_help_filename)
-				--TOC
-			help.show_help_control_string_help_navigator (Current, help_filename, navigator.table_of_contents)
+			process := process.start_string (help_filename)
 		end
 		
 	about_assembly_manager (sender: ANY; arguments: SYSTEM_EVENTARGS) is

@@ -55,8 +55,8 @@ SED = $sed
 ########################################################################
 # Automatically generated parameters -- do not edit
 
-SOURCES =  \$(LSRC) x2c.c debug.c interp.c option.c update.c wbench.c main.c
-OBJECTS =  \$(LOBJ) \$(WOBJ) \$(WOBJ) \$(EOBJ) \$(EOBJ) x2c.o debug.o interp.o option.o update.o wbench.o main.o
+SOURCES =  \$(LSRC) x2c.c debug.c interp.c update.c wbench.c main.c
+OBJECTS =  \$(LOBJ) \$(WOBJ) \$(WOBJ) \$(EOBJ) \$(EOBJ) x2c.o debug.o interp.o update.o wbench.o main.o
 LSCRIPTS =  size.h
 
 ########################################################################
@@ -92,11 +92,11 @@ LSRC = math.c malloc.c garcol.c local.c except.c store.c retrieve.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
-	console.c run_idr.c path_name.c dle.c object_id.c
+	console.c run_idr.c path_name.c dle.c object_id.c option.c
 
 OTHER = main.c
 
-WADD = debug.c interp.c option.c update.c wbench.c
+WADD = debug.c interp.c update.c wbench.c
 
 NETWORK = network.o
 
@@ -140,7 +140,8 @@ WSRC = \
 	wrun_idr.c \
 	wpath_name.c \
 	wdle.c \
-	wobject_id.c
+	wobject_id.c \
+	woption.c
 
 ESRC = \
 	console.c \
@@ -224,7 +225,8 @@ LOBJ = \
 	run_idr.o \
 	path_name.o \
 	dle.o \
-	object_id.o
+	object_id.o \
+	option.o
 
 WOBJ = \
 	$(NETWORK) \
@@ -266,13 +268,13 @@ WOBJ = \
 	wmain.o \
 	debug.o \
 	interp.o \
-	option.o \
 	update.o \
 	wbench.o \
 	wrun_idr.o \
 	wpath_name.o \
 	wdle.o \
-	wobject_id.o
+	wobject_id.o \
+	woption.o
 
 EOBJ = \
 	console.o \
@@ -313,13 +315,13 @@ EOBJ = \
 	bmain.o \
 	debug.o \
 	interp.o \
-	option.o \
 	update.o \
 	wbench.o \
 	wrun_idr.o \
 	wpath_name.o \
 	wdle.o \
-	wobject_id.o
+	wobject_id.o \
+	woption.o
 
 all:: size.h
 
@@ -583,6 +585,12 @@ wdle.c: dle.c
 remove::
 	$(RM) wdle.c
 
+woption.c: option.c
+	$(RM) woption.c
+	$(LN) option.c woption.c
+remove::
+	$(RM) woption.c
+
 wobject_id.c: object_id.c
 	$(RM) wobject_id.c
 	$(LN) object_id.c wobject_id.c
@@ -819,7 +827,7 @@ debug.o: debug.c
 interp.o: interp.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 
-option.o: option.c
+woption.o: woption.c
 	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
 
 update.o: update.c

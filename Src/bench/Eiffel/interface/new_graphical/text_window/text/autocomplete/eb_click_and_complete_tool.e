@@ -31,6 +31,7 @@ feature -- Initialisation
 			a_cluster_name_is_not_void: a_cluster_name /= Void
 		local
 			current_class_i: CLASS_I
+			current_cluster_i: CLUSTER_I
 			class_c: CLASS_C
 		do
 			current_class_name := a_class_name
@@ -39,12 +40,15 @@ feature -- Initialisation
 			is_ready := False
 			can_analyze_current_class := False
 			if not Workbench.is_compiling then
-	 			current_class_i := Universe.class_named (current_class_name, Universe.cluster_of_name (cluster_name))
-				if current_class_i /= Void and then current_class_i.compiled then
-					class_c := current_class_i.compiled_class
-					generate_ast (class_c, after_save)
-					can_analyze_current_class := last_syntax_error = Void and then current_class_as /= Void
-				end
+				current_cluster_i := Universe.cluster_of_name (cluster_name)
+	 			if current_cluster_i /= Void then
+		 			current_class_i := Universe.class_named (current_class_name, current_cluster_i)
+					if current_class_i /= Void and then current_class_i.compiled then
+						class_c := current_class_i.compiled_class
+						generate_ast (class_c, after_save)
+						can_analyze_current_class := last_syntax_error = Void and then current_class_as /= Void
+					end
+	 			end
 			end
 		end
 

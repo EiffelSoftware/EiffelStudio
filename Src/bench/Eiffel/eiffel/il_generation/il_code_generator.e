@@ -1662,6 +1662,14 @@ feature -- Once management
 			implementation.generate_once_result_info (name, static_id_of (type_i))
 		end
 
+	generate_once_computed is
+			-- Mark current once as being computed.
+		require
+			il_generation_started: il_generation_started
+		do
+			implementation.generate_once_computed
+		end
+
 	generate_once_test is
 			-- Generate test on `done' of once feature `name'.
 		require

@@ -93,6 +93,7 @@ feature
 			queue := shared_include_queue
 			if queue /= Void then
 				from
+					buffer.end_c_specific_code
 				until
 					queue.empty
 				loop
@@ -101,6 +102,7 @@ feature
 					buffer.new_line;
 					queue.remove;
 				end;
+				buffer.start_c_specific_code
 			end;
 		end;
 
@@ -111,6 +113,7 @@ feature
 		do
 			buffer.putstring ("#include %"eif_portable.h%"%N%
 					%#include %"eif_macros.h%"%N%N");
+			buffer.start_c_specific_code
 		end
 
 	generate (buffer: GENERATION_BUFFER) is
@@ -177,6 +180,7 @@ feature
 				buffer.putstring ("_gen_type [];%N");
 				local_type_tables.forth;
 			end;
+			buffer.end_c_specific_code
 		end;
 
 end

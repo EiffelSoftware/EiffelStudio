@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Implementation
 
-	new_object (element: XML_ELEMENT): GB_OBJECT is
+	new_object (element: XML_ELEMENT; is_component: BOOLEAN): GB_OBJECT is
 			-- `Result' is an object generated from `xml_element'.
 			-- This object has no parent, is not included in the
 			-- objects list and has all representations built.
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 					current_name := current_element.name.to_utf8
 					if current_name.is_equal (Item_string) then
 						-- Add the new objects as children.
-						build_new_object (current_element, a_new_object)
+						build_new_object (current_element, a_new_object, is_component)
 						
 					else
 						if current_name.is_equal (Internal_properties_string) then
@@ -66,9 +66,10 @@ feature {NONE} -- Implementation
 						end
 						
 							-- Add the appropriate objects to `objects'.
-							-- FIXME, we must create the objects in the fly here, as we are using a component,
-							-- not an existing object.
-						gb_ev_any.add_object (a_new_object.object)
+							-- But not if we are building a component representation.
+						if not is_component then
+							gb_ev_any.add_object (a_new_object.object)
+						end
 						display_object ?= a_new_object.display_object
 						if display_object = Void then
 							gb_ev_any.add_object (a_new_object.display_object)
@@ -88,7 +89,7 @@ feature {NONE} -- Implementation
 		end
 		
 
-	build_new_object (element: XML_ELEMENT; object: GB_OBJECT) is
+	build_new_object (element: XML_ELEMENT; object: GB_OBJECT; is_component: BOOLEAN) is
 			-- Build a new object from information in `element'.
 		require
 			element_not_void: element /= Void
@@ -115,7 +116,7 @@ feature {NONE} -- Implementation
 					current_name := current_element.name.to_utf8
 					if current_name.is_equal (Item_string) then
 						-- The element represents an item, so we must add new objects.
-						build_new_object (current_element, a_new_object)
+						build_new_object (current_element, a_new_object, is_component)
 					else
 						-- We must check for internal properties, else set the properties of the component
 						if current_name.is_equal (Internal_properties_string) then
@@ -134,7 +135,10 @@ feature {NONE} -- Implementation
 						end
 						
 							-- Add the appropriate objects to `objects'.
-						gb_ev_any.add_object (a_new_object.object)
+							-- But not if we are building a component representation.
+						if not is_component then
+							gb_ev_any.add_object (a_new_object.object)			
+						end
 						display_object ?= a_new_object.display_object
 						if display_object = Void then
 							gb_ev_any.add_object (a_new_object.display_object)

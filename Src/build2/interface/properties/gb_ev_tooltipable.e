@@ -17,11 +17,6 @@ inherit
 		end
 		
 	GB_EV_TOOLTIPABLE_EDITOR_CONSTRUCTOR
-	
-	GB_GENERAL_UTILITIES
-		undefine
-			default_create
-		end
 		
 	GB_XML_UTILITIES
 		undefine
@@ -69,8 +64,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Tooltip_string)
 			if element_info /= Void and then element_info.data.count /= 0 then
-				escaped_text := escape_special_characters (strip_cdata (element_info.data))
-				Result := info.name + ".set_tooltip (%"" + escaped_text + "%")"
+				Result := info.name + ".set_tooltip (" + retrieve_string_setting (Tooltip_string) +")"
 			end
 			Result := strip_leading_indent (Result)
 		end

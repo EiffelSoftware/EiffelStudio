@@ -1738,7 +1738,8 @@ feature -- Output
 	out: STRING is
 			-- Printable representation
 		do
-			Result := clone (Current)
+			create Result.make (count)
+			Result.append (Current)
 		end
 
 feature {STRING_HANDLER} -- Implementation

@@ -105,7 +105,6 @@ feature -- Element change
 			-- Add item `v' to end.
 		require
 			v_not_void: v /= Void
---			at_end: not is_empty implies islast
 		do
 			put_right (v)
 			finish
@@ -154,7 +153,7 @@ feature -- Element change
 		end
 
 --	add_new_line is
---			-- Put a new line aat current position.
+--			-- Put a new line at current position.
 --		do
 --			add (ti_New_line)
 --		end

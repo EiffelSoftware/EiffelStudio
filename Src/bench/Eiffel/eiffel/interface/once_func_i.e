@@ -1,24 +1,12 @@
 class ONCE_FUNC_I 
 
 inherit
-
-	ONCE_PROC_I
-		rename
-			transfer_to as procedure_transfer_to
-		redefine
-			unselected, replicated, set_type, is_function, type,
-			new_api_feature		
-		end;
-
 	ONCE_PROC_I
 		redefine
-			transfer_to,
 			unselected, replicated, set_type, is_function, type,
-			new_api_feature
-		select
-			transfer_to
+			new_api_feature, transfer_to
 		end
-	
+
 feature 
 
 	type: TYPE_B;
@@ -38,7 +26,7 @@ feature
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current
 		do
-			procedure_transfer_to (other);
+			{ONCE_PROC_I} precursor (other);
 			other.set_type (type);
 		end;
 

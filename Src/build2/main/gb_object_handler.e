@@ -41,16 +41,8 @@ feature -- Basic operation
 			new_object_exists: new_object /= Void
 			position_valid: position >= 1 and position <= container.layout_item.count + 1
 		local
-			container_object: GB_CONTAINER_OBJECT
-			cell_object: GB_CELL_OBJECT
-			tool_bar_object: GB_TOOL_BAR_OBJECT
-			list_object: GB_LIST_OBJECT
-			combo_box_object: GB_COMBO_BOX_OBJECT
-			menu_bar_object: GB_MENU_BAR_OBJECT
-			menu_object: GB_MENU_OBJECT
 			all_editors_local: ARRAYED_LIST [GB_OBJECT_EDITOR]
-			tree_object: GB_TREE_OBJECT
-			tree_item_object: GB_TREE_ITEM_OBJECT
+			parent_object: GB_PARENT_OBJECT
 		do
 				-- When we change the type of an object, we keep the
 				-- original layout_item. This is why the layout item
@@ -67,63 +59,12 @@ feature -- Basic operation
 					new_object.set_up_display_object_events (new_object.display_object, new_object.object)	
 				end
 			end
-				--| FIXME there should be a class in the object inheritence structure
-				--| which allows us to avoid all this.
-			container_object ?= container
-			cell_object ?= container
-			tool_bar_object ?= container
-			list_object ?= container
-			combo_box_object ?= container
-			menu_bar_object ?= container
-			menu_object ?= container
-			tree_object ?= container
-			tree_item_object ?= container
+			parent_object ?= container
 			check
-				unsupported_item_type: container_object /= Void or cell_object /= Void or tool_bar_object /= Void
-				or list_object /= Void or combo_box_object /= Void or menu_bar_object /= Void or menu_object /= Void
-				or tree_object /= Void or tree_item_object /= Void
+				not_a_parent_type: parent_object /= Void
 			end
-			if container_object /= Void then
-				container_object.add_child_object (new_object, position)
-			end
-			if cell_object /= Void then
-		--| FIXME only applies if not a window, as a window may
-		--| have two items, one representing a menu, and the other
-		--| representing the contents.
-		--		check
-		--			position_is_one: position = 1
-		--		end
-				cell_object.add_child_object (new_object)
-			end
-			
-			if tool_bar_object /= Void then
-				tool_bar_object.add_child_object (new_object, position)
-			end
-			
-			if list_object /= Void then
-				list_object.add_child_object (new_object, position)
-			end
-			
-			if combo_box_object /= Void then
-				combo_box_object.add_child_object (new_object, position)
-			end
-			
-			if menu_bar_object /= Void then
-				menu_bar_object.add_child_object (new_object, position)
-			end
-			
-			if menu_object /= Void then
-				menu_object.add_child_object (new_object, position)
-			end
-			
-			if tree_object /= Void then
-				tree_object.add_child_object (new_object, position)
-			end
-			
-			if tree_item_object /= Void then
-				tree_item_object.add_child_object (new_object, position)
-			end
-			
+			parent_object.add_child_object (new_object, position)
+
 				-- If we are moving an object within objects, then it will already
 				-- exist in `objects' and should not be added again.-
 			if not objects.has (new_object) then
@@ -195,7 +136,7 @@ feature -- Basic operation
 				child_object.unparent_during_type_change
 				
 				if cell_object /= Void then
-					cell_object.add_child_object (child_object)	
+					cell_object.add_child_object (child_object, 1)	
 				else
 					container_object.add_child_object (child_object, container_object.object.count + 1)--container_object.layout_item.count + 1)
 				end
@@ -359,7 +300,8 @@ feature -- Basic operation
 			tree_object: GB_TREE_OBJECT
 			current_type: INTEGER
 			text: STRING
-		do
+			an_object: GB_OBJECT
+		do	
 			text := a_text
 			current_type := dynamic_type_from_string (text)		
 			if type_conforms_to (current_type, dynamic_type_from_string ("EV_CELL")) then

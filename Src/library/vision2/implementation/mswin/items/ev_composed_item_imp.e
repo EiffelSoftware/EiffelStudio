@@ -13,8 +13,14 @@ deferred class
 
 inherit
 	EV_COMPOSED_ITEM_I
+		redefine
+			interface
+		end
 
 	EV_ITEM_IMP
+		redefine
+			interface
+		end
 
 feature {NONE} -- Initialization
 
@@ -157,6 +163,8 @@ feature {EV_ITEM_LIST_IMP} -- Implementation
 			-- We use an internal array for these pixmaps to avoid
 			-- the user to have access to it.
 
+	interface: EV_COMPOSED_ITEM
+
 end -- class EV_COMPOSED_ITEM_I
 
 --|----------------------------------------------------------------
@@ -180,6 +188,9 @@ end -- class EV_COMPOSED_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/03/13 17:43:09  rogers
+--| Redefined both inherited interfaces, and added 'interface: EV_COMPOSED_ITEM'.
+--|
 --| Revision 1.7  2000/03/03 00:21:34  rogers
 --| Removed set_parent.
 --|

@@ -479,7 +479,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			formal_type ?= type
 			if formal_type /= Void then
 					-- Instantiation of a formal generic
-				Result := generics.item (formal_type.position)
+				Result := generics.item (formal_type.position).actual_type
 			elseif type.has_generics then
 					-- Instantiation of the generic parameter of `type'
 				gen_type ?= type

@@ -115,18 +115,16 @@ feature -- Element Change
 			solved_type: TYPE_A
 		do
 			Precursor {ENCAPSULATED_I} (class_c)
-			if class_c.is_expanded then
-				solved_type ?= type
-				if
-					solved_type.is_true_expanded and then
-					solved_type.associated_class = class_c and then
-					(extension = Void or else extension.type /= feature {SHARED_IL_CONSTANTS}.static_field_type)
-				then
-					create vlec
-					vlec.set_class (solved_type.associated_class)
-					vlec.set_client (class_c)
-					Error_handler.insert_error (vlec)
-				end
+			solved_type ?= type
+			if
+				solved_type.is_true_expanded and then
+				solved_type.associated_class = class_c and then
+				(extension = Void or else extension.type /= feature {SHARED_IL_CONSTANTS}.static_field_type)
+			then
+				create vlec
+				vlec.set_class (solved_type.associated_class)
+				vlec.set_client (class_c)
+				Error_handler.insert_error (vlec)
 			end
 		end
 

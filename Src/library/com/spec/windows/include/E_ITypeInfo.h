@@ -35,13 +35,13 @@ typedef struct VARDESCLISTITEM {
 } VARDESCLISTITEM;
 
 typedef struct FUNCDESCLIST {
-	FUNCDESCLISTITEM first;
-	FUNCDESCLISTITEM *current;
+	FUNCDESCLISTITEM * head;
+	FUNCDESCLISTITEM * tail;
 } FUNCDESCLIST;
 
 typedef struct VARDESCLIST {
-	VARDESCLISTITEM first;
-	VARDESCLISTITEM *current;
+	VARDESCLISTITEM * head;
+	VARDESCLISTITEM * tail;
 } VARDESCLIST;
 
 class E_IType_Info
@@ -52,13 +52,13 @@ public:
 	E_IType_Info(ITypeInfo * p_i);
 	~E_IType_Info();
 	void ccom_get_containing_type_lib ();
-	void ccom_release_type_attr (EIF_POINTER p_type_attr);
+	void ccom_release_type_attr (TYPEATTR * p_type_attr);
 	void ccom_invoke (EIF_POINTER p_instance, EIF_INTEGER memid, 
 				EIF_INTEGER flags, EIF_POINTER p_disp_params, 
 				EIF_POINTER p_result,
 				EIF_POINTER p_except_info);
-	void ccom_release_func_desc (EIF_POINTER p_func_desc);
-	void ccom_release_var_desc (EIF_POINTER p_var_desc);
+	void ccom_release_func_desc (FUNCDESC * p_func_desc);
+	void ccom_release_var_desc (VARDESC * p_var_desc);
 	
 	// Queries
 	EIF_POINTER ccom_address_of_member (EIF_INTEGER memid, EIF_INTEGER invkind);

@@ -16,24 +16,30 @@
 //---------------------------------------------------------------------
 E_IType_Info::E_IType_Info(ITypeInfo * p_i)
 {
-	pTypeInfo = p_i;	
-	FuncDescList.first.item = NULL;
-	FuncDescList.current = &(FuncDescList.first);
-	VarDescList.first.item = NULL;
-	VarDescList.current = &(VarDescList.first);
+	pTypeInfo = p_i;
+	pContainingTypeLib = NULL;
+	pTypeAttr = NULL;
+	FuncDescList.head = NULL;
+	FuncDescList.tail = NULL;
+	VarDescList.head = NULL;
+	VarDescList.tail = NULL;
 };
 //---------------------------------------------------------------------
 E_IType_Info::~E_IType_Info ()
 {
 	
-	//release_var_descs ();
-	//release_func_descs ();
+	release_var_descs ();
+	release_func_descs ();
 	if (pTypeAttr != NULL)
 	{
-		//ccom_release_type_attr ((EIF_POINTER) pTypeAttr);
+		ccom_release_type_attr (pTypeAttr);
+		pTypeAttr = NULL;
 	}
 	if (pTypeInfo != NULL)
+	{
 		pTypeInfo->Release();
+		pTypeInfo = NULL;
+	}
 };
 //---------------------------------------------------------------------
 
@@ -61,7 +67,7 @@ EIF_POINTER E_IType_Info::ccom_address_of_member (EIF_INTEGER memid, EIF_INTEGER
 //	invkind	- one of INVOKEKIND enumeration values
 {
 	HRESULT hr;
-	void * Result;
+	void * Result = 0;
 	
 	hr = pTypeInfo->AddressOfMember ((MEMBERID) memid, (INVOKEKIND) invkind, &Result);
 	if (hr != S_OK)
@@ -81,7 +87,7 @@ EIF_POINTER E_IType_Info::ccom_create_instance (EIF_POINTER outer, EIF_POINTER r
 //	refiid	- interface ID
 {
 	HRESULT hr;
-	void * Result;
+	void * Result = 0;
 
 	hr = pTypeInfo->CreateInstance ((IUnknown *) outer, (REFIID) refiid, &Result);
 	if (hr != S_OK)
@@ -115,14 +121,14 @@ EIF_REFERENCE E_IType_Info::ccom_get_dll_entry (EIF_INTEGER memid, EIF_INTEGER i
 {
 	HRESULT hr;
 
-	EIF_OBJECT Result;
-	EIF_OBJECT dll_name, entry_point;
+	EIF_OBJECT Result = 0;
+	EIF_OBJECT dll_name = 0, entry_point = 0;
 	
-	EIF_TYPE_ID eif_dll_entry_id;
-	EIF_PROCEDURE set_dll_name, set_entry_point, set_ordinal;
+	EIF_TYPE_ID eif_dll_entry_id = -1;
+	EIF_PROCEDURE set_dll_name = 0, set_entry_point =0, set_ordinal = 0;
 
-	BSTR bstr_dll_name;
-	BSTR bstr_entry_point;
+	BSTR bstr_dll_name = 0;
+	BSTR bstr_entry_point = 0;
 	unsigned short ordinal;
 
 	hr = pTypeInfo->GetDllEntry ((MEMBERID) memid, (INVOKEKIND) invkind, 
@@ -159,15 +165,15 @@ EIF_REFERENCE E_IType_Info::ccom_get_documentation (EIF_INTEGER memid)
 // complete help file name and path, and
 // context identifier for library help topic in help file
 {
-	EIF_OBJECT Result;
-	EIF_OBJECT name, doc_string, help_file;
+	EIF_OBJECT Result = 0;
+	EIF_OBJECT name = 0, doc_string = 0, help_file = 0;
 
-	EIF_TYPE_ID eif_doc_id, eif_string_id;
-	EIF_PROCEDURE put_name, put_doc_string, put_help_file, put_context;
+	EIF_TYPE_ID eif_doc_id = -1, eif_string_id = -1;
+	EIF_PROCEDURE put_name = 0, put_doc_string = 0, put_help_file = 0, put_context = 0;
 
-	BSTR BstrName;
-	BSTR BstrDocString;
-	BSTR BstrHelpFile;
+	BSTR BstrName = 0;
+	BSTR BstrDocString = 0;
+	BSTR BstrHelpFile = 0;
 
 	unsigned long HelpContext;
 
@@ -209,7 +215,7 @@ FUNCDESC * E_IType_Info::ccom_get_func_desc (EIF_INTEGER an_index)
 //Retieves FUNCDESC structure with information about specified function.
 {
 	HRESULT hr;
-	FUNCDESC * p_funcdesc;
+	FUNCDESC * p_funcdesc = 0;
 
 	hr = pTypeInfo->GetFuncDesc (an_index, &p_funcdesc);
 	if (hr != S_OK)
@@ -228,11 +234,11 @@ EIF_REFERENCE E_IType_Info::ccom_get_ids_of_names (EIF_POINTER names, EIF_INTEGE
 // parameter names and parameter IDs.
 {
 	HRESULT hr;
-	MEMBERID * p_memid;
+	MEMBERID * p_memid = 0;
 
-	EIF_OBJECT Result;
-	EIF_TYPE_ID eif_array_id;
-	EIF_PROCEDURE array_make, array_put;
+	EIF_OBJECT Result = 0;
+	EIF_TYPE_ID eif_array_id = -1;
+	EIF_PROCEDURE array_make = 0, array_put = 0;
 	int i;
 
 	p_memid = (MEMBERID *)malloc (count * sizeof(MEMBERID));
@@ -265,7 +271,7 @@ EIF_INTEGER E_IType_Info::ccom_get_impl_type_flags (EIF_INTEGER an_index)
 // Retrieves IMPLTYPEFLAGS enumeration for inteface in type description
 {
 	HRESULT  hr;
-	EIF_INTEGER Result;
+	EIF_INTEGER Result = 0;
 
 	hr = pTypeInfo->GetImplTypeFlags (an_index, (int *)&Result);
 	if (hr != S_OK)
@@ -282,8 +288,8 @@ EIF_REFERENCE E_IType_Info::ccom_get_mops (EIF_INTEGER memid)
 // Retrieves marshaling information.
 {
 	HRESULT hr;
-	EIF_OBJECT Result;
-	BSTR mops;
+	EIF_OBJECT Result = 0;
+	BSTR mops = 0;
 
 	hr = pTypeInfo->GetMops ((MEMBERID)memid, &mops);
 	if (hr != S_OK)
@@ -305,12 +311,12 @@ EIF_REFERENCE E_IType_Info::ccom_get_names (EIF_INTEGER memid, EIF_INTEGER max_n
 // max_names - maximum number of names 
 {
 	HRESULT hr;
-	BSTR * p_bstr_names;
+	BSTR * p_bstr_names = 0;
 	unsigned int count;
 
-	EIF_OBJECT Result, name;
-	EIF_TYPE_ID eif_array_id;
-	EIF_PROCEDURE array_make, array_put;
+	EIF_OBJECT Result = 0, name = 0;
+	EIF_TYPE_ID eif_array_id = -1;
+	EIF_PROCEDURE array_make = 0, array_put = 0;
 	int i;
 
 	p_bstr_names = (BSTR *) malloc (max_names * sizeof(BSTR));
@@ -346,7 +352,7 @@ ITypeInfo * E_IType_Info::ccom_get_ref_type_info (EIF_INTEGER handle)
 // `handle' - handle to referenced type description to be returned
 {
 	HRESULT hr;
-	ITypeInfo * pTInfo;
+	ITypeInfo * pTInfo = 0;
 
 	hr = pTypeInfo->GetRefTypeInfo ((HREFTYPE)handle, &pTInfo);
 	if (hr != S_OK)
@@ -368,7 +374,7 @@ EIF_INTEGER E_IType_Info::ccom_get_ref_type_of_impl_type (EIF_INTEGER an_index)
 //		(it correspondes to `count_implemented_types' of ECOM_TYPE_ATTR)	
 {
 	HRESULT hr;
-	HREFTYPE ref_type;
+	HREFTYPE ref_type = 0;
 
 	hr = pTypeInfo->GetRefTypeOfImplType (an_index, &ref_type);
 	if (hr != S_OK)
@@ -385,16 +391,14 @@ TYPEATTR * E_IType_Info::ccom_get_type_attr ()
 // Retrieves TYPEATTR structure of type description.
 {
 	HRESULT hr;
-	TYPEATTR * p_type_attr;
 
-	hr = pTypeInfo->GetTypeAttr (&p_type_attr);
+	hr = pTypeInfo->GetTypeAttr (&pTypeAttr);
 	if (hr != S_OK)
 	{
 		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
-	pTypeAttr = p_type_attr;
-	return p_type_attr;
+	return pTypeAttr;
 };
 //--------------------------------------------------------------------------
 
@@ -420,7 +424,7 @@ VARDESC * E_IType_Info::ccom_get_var_desc (EIF_INTEGER an_index)
 // Retrieves VARDESC structure of variable with index `an_index'
 {
 	HRESULT hr;
-	VARDESC * p_var_desc;
+	VARDESC * p_var_desc = 0;
 
 	hr = pTypeInfo->GetVarDesc (an_index, &p_var_desc);
 	if (hr != S_OK)
@@ -465,7 +469,7 @@ void E_IType_Info::ccom_invoke (EIF_POINTER p_instance, EIF_INTEGER memid,
 };
 //-----------------------------------------------------------------------------
 
-void E_IType_Info::ccom_release_func_desc (EIF_POINTER p_func_desc)
+void E_IType_Info::ccom_release_func_desc (FUNCDESC * p_func_desc)
 
 // Releases FUNCDESC structure previously returned by `ccom_get_func_desc'
 {
@@ -473,7 +477,7 @@ void E_IType_Info::ccom_release_func_desc (EIF_POINTER p_func_desc)
 };
 //-----------------------------------------------------------------------------
 
-void E_IType_Info::ccom_release_type_attr (EIF_POINTER p_type_attr)
+void E_IType_Info::ccom_release_type_attr (TYPEATTR * p_type_attr)
 
 // Releases TYPEATTR structure previously returned by `ccom_get_type_attr'
 {
@@ -481,7 +485,7 @@ void E_IType_Info::ccom_release_type_attr (EIF_POINTER p_type_attr)
 };
 //-----------------------------------------------------------------------------
 
-void E_IType_Info::ccom_release_var_desc (EIF_POINTER p_var_desc)
+void E_IType_Info::ccom_release_var_desc (VARDESC * p_var_desc)
 
 // Releases VARDESC structure previously returned by `ccom_get_var_desc'
 {
@@ -493,11 +497,19 @@ void E_IType_Info::save_func_desc (FUNCDESC *pFuncDesc)
 
 // Save pFuncDesc in FuncDescList
 {
-	FuncDescList.current->item = pFuncDesc;
-	FuncDescList.current->next = (FUNCDESCLISTITEM *) malloc (sizeof (FUNCDESCLISTITEM));
-	FuncDescList.current = FuncDescList.current->next;
-	FuncDescList.current->item = NULL;
-	FuncDescList.current->next = NULL;
+	FUNCDESCLISTITEM * current = (FUNCDESCLISTITEM *) malloc (sizeof (FUNCDESCLISTITEM));
+	current->item = pFuncDesc;
+	current->next = NULL;
+	
+	if (FuncDescList.head == NULL)
+	{
+		FuncDescList.head = current;
+	}
+	else
+	{
+		FuncDescList.tail->next = current;
+	};
+	FuncDescList.tail = current;
 };
 //-----------------------------------------------------------------------------
 
@@ -505,11 +517,19 @@ void E_IType_Info::save_var_desc (VARDESC *pVarDesc)
 
 // Save pVarDesc in VarDescList
 {
-	VarDescList.current->item = pVarDesc;
-	VarDescList.current->next = (VARDESCLISTITEM *) malloc (sizeof (VARDESCLISTITEM));
-	VarDescList.current = VarDescList.current->next;
-	VarDescList.current->item = NULL;
-	VarDescList.current->next = NULL;
+	VARDESCLISTITEM * current = (VARDESCLISTITEM *) malloc (sizeof (VARDESCLISTITEM));
+	current->item = pVarDesc;
+	current->next = NULL;
+	
+	if (VarDescList.head == NULL)
+	{
+		VarDescList.head = current;
+	}
+	else
+	{
+		VarDescList.tail->next = current;
+	};
+	VarDescList.tail = current;
 };
 //-----------------------------------------------------------------------------
 
@@ -517,39 +537,32 @@ void E_IType_Info::release_func_descs ()
 
 // Release all FUNCDESC structures
 {
-	FUNCDESCLISTITEM * tmp;
-	FuncDescList.current = &(FuncDescList.first);
-	if (FuncDescList.current != NULL)
-	{
-		ccom_release_func_desc (( EIF_POINTER )FuncDescList.current->item);
-		FuncDescList.current = FuncDescList.current->next;
+	FUNCDESCLISTITEM * tmp = 0;
 
-	}
-	while (FuncDescList.current != NULL)
+	while (FuncDescList.head != NULL)
 	{
-		ccom_release_func_desc (( EIF_POINTER )FuncDescList.current->item);
-		tmp = FuncDescList.current;
-		FuncDescList.current = FuncDescList.current->next;
+		ccom_release_func_desc (FuncDescList.head->item);
+		tmp = FuncDescList.head;
+		FuncDescList.head = FuncDescList.head->next;
 		free (tmp);
-	}
-}//-----------------------------------------------------------------------------
+	};
+	FuncDescList.tail = NULL;
+};
+//-----------------------------------------------------------------------------
 
 void E_IType_Info::release_var_descs ()
 
 // Release all VARDESC structures
 {
-	VARDESCLISTITEM * tmp;
-	VarDescList.current = &(VarDescList.first);
-	if (VarDescList.current != NULL)
+	VARDESCLISTITEM * tmp = 0;
+
+	while (VarDescList.head != NULL)
 	{
-		ccom_release_var_desc (( EIF_POINTER )VarDescList.current->item);
-		VarDescList.current = VarDescList.current->next;
-	}
-	while (VarDescList.current != NULL)
-	{
-		ccom_release_var_desc (( EIF_POINTER )VarDescList.current->item);
-		tmp = VarDescList.current;
-		VarDescList.current = VarDescList.current->next;
+		ccom_release_var_desc (VarDescList.head->item);
+		tmp = VarDescList.head;
+		VarDescList.head = VarDescList.head->next;
 		free (tmp);
-	}
-}
+	};
+	VarDescList.tail = NULL;
+};
+//------------------------------------------------------------------------------

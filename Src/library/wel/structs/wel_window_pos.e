@@ -30,7 +30,7 @@ feature -- Access
 	window: WEL_WINDOW is
 			-- Identifies the window
 		do
-			Result := windows.item (cwel_windowpos_get_hwnd (item))
+			Result := window_of_item (cwel_windowpos_get_hwnd (item))
 		end
 
 	window_insert_after: WEL_WINDOW is
@@ -38,7 +38,7 @@ feature -- Access
 			-- position). This window can be the window behind
 			-- which this window is placed.
 		do
-			Result := windows.item (cwel_windowpos_get_hwndinsertafter (item))
+			Result := window_of_item (cwel_windowpos_get_hwndinsertafter (item))
 		end
 
 	x: INTEGER is

@@ -118,7 +118,7 @@ feature -- Access
 		do
 			set_mask (set_flag (mask, Rbbim_child))
 			hwnd := cwel_rebarbandinfo_get_hwndchild (item)
-			Result := windows.item (hwnd)
+			Result := window_of_item (hwnd)
 		end
 
 	child_minimum_width: INTEGER is

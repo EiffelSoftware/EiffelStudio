@@ -25,7 +25,7 @@ feature -- Access
 	window_from: WEL_WINDOW is
 			-- Control sending message
 		do
-			Result := windows.item (cwel_nmhdr_get_hwndfrom (item))
+			Result := window_of_item (cwel_nmhdr_get_hwndfrom (item))
 		end
 
 	id_from: INTEGER is

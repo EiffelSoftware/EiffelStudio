@@ -70,7 +70,7 @@ feature -- Access
 	window_item: WEL_CONTROL is
 			-- Identifies the control.
 		do
-			Result ?= windows.item (cwel_drawitemstruct_get_hwnditem (item))
+			Result ?= window_of_item (cwel_drawitemstruct_get_hwnditem (item))
 		end
 
 	dc: WEL_CLIENT_DC

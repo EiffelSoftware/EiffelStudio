@@ -130,11 +130,14 @@ feature -- Settings
 			l_pos: INTEGER
 			l_meth_size: INTEGER
 			l_meth: like internal_method_body
+			l_m: like internal_item
 			l_ex: MD_EXCEPTION_CLAUSE
+			is_fat_seh: BOOLEAN
 		do
 			l_meth := internal_method_body
 			l_pos := current_position
 			l_meth_size := l_meth.count
+			l_m := internal_item
 			method_locations.put (l_pos, l_meth.method_token)
 
 			update_size (l_pos + l_meth_size + feature {MD_FAT_METHOD_HEADER}.Count)
@@ -145,7 +148,7 @@ feature -- Settings
 			then
 					-- Valid candidate for tiny header.
 				Tiny_method_header.set_code_size (l_meth_size)
-				Tiny_method_header.write_to_stream (internal_item, l_pos)
+				Tiny_method_header.write_to_stream (l_m, l_pos)
 				l_pos := l_pos + Tiny_method_header.count
 			else
 					-- Valid candidate for fat header.
@@ -153,30 +156,52 @@ feature -- Settings
 					l_meth_size, l_meth.local_token)
 					
 				if l_meth.has_exceptions_handling then
-					l_ex := l_meth.exception_block
 					Fat_method_header.set_flags (feature {MD_METHOD_CONSTANTS}.More_sections)
 				end
 				
-				Fat_method_header.write_to_stream (internal_item, l_pos)
+				Fat_method_header.write_to_stream (l_m, l_pos)
 				l_pos := l_pos + Fat_method_header.count
 			end
 			
-			l_meth.write_to_stream (internal_item, l_pos)
+			l_meth.write_to_stream (l_m, l_pos)
 			l_pos := l_pos + l_meth_size
 
 			if l_meth.has_exceptions_handling then
 				l_pos := pad_up (l_pos, 4)
-				Exception_header.remake (
-					l_ex.start_position,
-					l_ex.catch_position - l_ex.start_position,
-					l_ex.catch_position,
-					l_ex.end_position - l_ex.catch_position,
-					l_ex.type_token)
+				Exception_header.reset
+				l_ex := l_meth.exception_block
+				if l_ex.is_defined then
+					Exception_header.register_exception_clause (l_ex)
+				end
+				l_ex := l_meth.once_fault_block
+				if l_ex.is_defined then
+					Exception_header.register_exception_clause (l_ex)
+				end
+				l_ex := l_meth.once_finally_block
+				if l_ex.is_defined then
+					Exception_header.register_exception_clause (l_ex)
+				end
 				update_size (l_pos + Exception_header.count)
-				Exception_header.write_to_stream (internal_item, l_pos)
+				Exception_header.write_to_stream (l_m, l_pos)
 				l_pos := l_pos + Exception_header.count
+				is_fat_seh := Exception_header.is_fat
+				l_ex := l_meth.exception_block
+				if l_ex.is_defined then
+					l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
+					l_pos := l_pos + l_ex.count (is_fat_seh)
+				end
+				l_ex := l_meth.once_fault_block
+				if l_ex.is_defined then
+					l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
+					l_pos := l_pos + l_ex.count (is_fat_seh)
+				end
+				l_ex := l_meth.once_finally_block
+				if l_ex.is_defined then
+					l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
+					l_pos := l_pos + l_ex.count (is_fat_seh)
+				end
 			end
-			
+
 				-- Find next location that must be 4 bytes aligned.
 			current_position := pad_up (l_pos, 4)
 			is_previous_body_written := True
@@ -237,7 +262,7 @@ feature {NONE} -- constants
 	exception_header: MD_METHOD_SECTION_HEADER is
 			-- To avoid creating method section headers.
 		once
-			create Result.make (0, 0, 0, 0, 0)
+			create Result.make
 		end
 		
 invariant

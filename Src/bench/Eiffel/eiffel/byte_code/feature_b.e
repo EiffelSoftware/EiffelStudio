@@ -114,7 +114,6 @@ feature -- Byte code generation
 			ba.append (special_routines.bc_code);
 		end;
 
-
 	code_first: CHARACTER is
 			-- Code when Eiffel call is first (no invariant)
 		do

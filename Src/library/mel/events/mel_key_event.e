@@ -72,7 +72,7 @@ feature -- Access
 			Result := c_event_keycode (handle)
 		end;
 
-	keysym: POINTER is
+	keysym: INTEGER is
 			-- Keysym value of key pressed
 		do
 			Result := c_event_keysym (handle)
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 			"C"
 		end
 
-	c_event_keysym (event_ptr: POINTER): POINTER is
+	c_event_keysym (event_ptr: POINTER): INTEGER is
 		external
 			"C"
 		end

@@ -49,9 +49,7 @@ feature -- Element Change
 
 	set_pixmap (a_pix: EV_PIXMAP) is
 			-- Set the rows `pixmap' to `a_pix'.
-		do
-			internal_pixmap := clone (a_pix)
-			update
+		deferred
 		end
 		
 	pixmap: EV_PIXMAP is
@@ -65,60 +63,20 @@ feature -- Element Change
 				Result.stretch (parent_imp.pixmaps_width, parent_imp.pixmaps_height)
 			end
 		end
-		
 
 	internal_pixmap: EV_PIXMAP
 			-- Pixmap used at the start of the row.
 
 	remove_pixmap is
 			-- Remove the rows pixmap.
-		do
-			internal_pixmap := Void
-			update
+		deferred			
 		end
-
-feature -- Basic operations
-
-	update is
-			-- Layout of row has been changed.
-		local
-			app: EV_APPLICATION_I
-		do
-			if parent_imp /= Void then
-				update_needed := True
-				app := (create {EV_ENVIRONMENT}).application.implementation
-				if interface.count > parent_imp.count then
-					parent_imp.update_children_agent.call (Void)
-					app.once_idle_actions.prune (parent_imp.update_children_agent)
-				elseif not app.once_idle_actions.has (
-						parent_imp.update_children_agent) then
-					app.do_once_on_idle (
-						parent_imp.update_children_agent)
-				end
-			end
-		end
-
-feature {EV_ANY_I} -- Implementation
 
 	parent_imp: EV_MULTI_COLUMN_LIST_IMP is
+			-- Parent implementation of `Current'.
 		deferred
 		end
 
-	dirty_child is
-			-- Mark `Current' as dirty.
-		do
-			update_needed := True
-		end
-
-	update_needed: BOOLEAN
-			-- Is the child dirty.
-
-	update_performed is
-			-- Mark `Current' as up to date.
-		do
-			update_needed := False
-		end
-		
 feature {NONE} -- Contract support
 
 	pixmap_equal_to (a_pixmap: EV_PIXMAP): BOOLEAN is
@@ -135,6 +93,18 @@ feature {NONE} -- Contract support
 				scaled_pixmap := a_pixmap		
 			end
 			Result := scaled_pixmap.is_equal (pixmap)
+		end
+		
+feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
+
+	on_item_added_at (an_item: STRING; item_index: INTEGER) is
+			-- `an_item' has been added to index `item_index'.
+		deferred
+		end
+
+	on_item_removed_at (an_item: STRING; item_index: INTEGER) is
+			-- `an_item' has been removed from index `item_index'.
+		deferred
 		end
 		
 feature {EV_ANY_I} -- Implementation

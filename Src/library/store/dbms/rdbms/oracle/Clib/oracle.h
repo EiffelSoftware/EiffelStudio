@@ -119,7 +119,7 @@ static CONST text  *oci_func_tab[] =  {(text *) "not used",
 #define ERROR_MESSAGE_SIZE    512 /* the max length of error message */
 #define WARN_MESSAGE_SIZE     450 /* the max length of warning message */
 #define MAX_ERROR_MSG         200 /* the max length of tempory error message */
-#define MAX_DESCRIPTOR        10  /* Max descriptor available simultaneously */
+#define MAX_DESCRIPTOR        20  /* Max descriptor available simultaneously */
 
 
 #define NO_MORE_ROWS          100 /* No more row is fetched by FETCH operation */
@@ -135,9 +135,9 @@ int ora_available_descriptor (void);
 int ora_max_descriptor (void);
 int ora_exec_immediate (int no_desc, text *order);
 int ora_init_order (text order[1024], int no_desc);
-sword describe_define(Cda_Def *cda);
-void print_header(sword ncols);
-void print_rows(Cda_Def *cda, sword ncols);
+sword describe_define(Cda_Def *cda, int no_desc);
+void print_header(sword ncols, int no_desc);
+void print_rows(Cda_Def *cda, sword ncols, int no_desc);
 int ora_put_data (int no_des, int index, char *result);
 int ora_put_select_name (int no_des, int i, char *result);
 int ora_start_order (int no_desc);

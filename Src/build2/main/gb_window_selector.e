@@ -153,6 +153,21 @@ feature -- Access
 			result_not_void: Result /= Void
 		end
 		
+	expand_all_button: EV_TOOL_BAR_BUTTON is
+			-- `Result' is a tool bar button that
+			-- calls `add_new_directory'.
+		local
+			pixmaps: GB_SHARED_PIXMAPS
+		do
+			create Result
+			Result.select_actions.extend (agent expand_tree_recursive (Current))
+				-- Assign the appropriate pixmap.
+			create pixmaps
+			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_expand_all_small_color"))
+		ensure
+			result_not_void: Result /= Void
+		end
+		
 feature -- Status setting
 
 	add_directory_item (directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM) is
@@ -272,7 +287,6 @@ feature {NONE} -- Implementation
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
 		do
 			titled_window_object := selector_item.object
-			titled_window_object.store_layout_constructor
 		end
 
 	selected_window_changed (selector_item: GB_WINDOW_SELECTOR_ITEM) is
@@ -288,9 +302,7 @@ feature {NONE} -- Implementation
 		do
 			titled_window_object := selector_item.object
 			layout_constructor.set_root_window (titled_window_object)
-			if titled_window_object.state_tree /= Void then
-				titled_window_object.restore_layout_constructor
-			end
+			Object_handler.recursive_do_all (titled_window_object, agent expand_layout_item)
 			
 				-- Now we must update the displayed display and builder windows.
 				-- Firstly hide the existing windows if shown
@@ -329,6 +341,15 @@ feature {NONE} -- Implementation
 				layout_constructor.first.enable_select
 			end
 		end
+		
+	expand_layout_item (an_object: GB_OBJECT) is
+			-- If `an_object' is expanded, expand `layout_item' of `an_object'.
+		do
+			if an_object.is_expanded then
+				an_object.layout_item.expand				
+			end
+		end
+		
 		
 	veto_drop (an_object: GB_OBJECT): BOOLEAN is
 			-- Veto drop of `an_object'. We currently only

@@ -51,11 +51,11 @@ feature -- Access
 			-- Construct a linear representation of children.
 		require
 			exists: exists
+		local
+			l_enumerator: WEL_WINDOW_ENUMERATOR
 		do
-			create internal_children.make (1)
-			cwel_enum_child_windows_procedure ($Current, $enumerate_child_windows_callback, item)
-			Result := internal_children
-			internal_children := Void
+			create l_enumerator
+			Result := l_enumerator.enumerate (Current)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -1013,30 +1013,8 @@ feature {WEL_DISPATCHER}
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	enumerate_child_windows_callback (child_hwnd: POINTER) is
-			-- Callback feature called by `children'.
-		local
-			wnd: WEL_WINDOW
-		do
-			wnd := window_of_item (child_hwnd)
-			if wnd /= Void and then wnd.exists then
-				internal_children.extend (wnd)
-			end
-		end
-		
-	internal_children: ARRAYED_LIST [WEL_WINDOW]
-			-- Temporary container for `children'. Used in
-
 feature {NONE} -- Externals
 
-	cwel_enum_child_windows_procedure (cur_obj: POINTER; callback: POINTER; hwnd: POINTER) is
-			-- SDK EnumChildWindows
-		external
-			"C signature (EIF_REFERENCE, EIF_POINTER, HWND) use %"wel_enum_child_windows.h%""
-		end
-		
 	cwin_set_menu (hwnd, hmenu: POINTER) is
 			-- SDK SetMenu
 		external

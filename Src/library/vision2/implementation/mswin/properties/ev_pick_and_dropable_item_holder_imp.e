@@ -83,8 +83,10 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 		do
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 2)
 			pt := client_to_screen (x_pos, y_pos)
-			interface.pointer_button_press_actions.call
-				([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+			if pointer_button_press_actions_internal /= Void then
+				pointer_button_press_actions_internal.call
+					([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+			end
 		end
 
 	press_actions_called: BOOLEAN
@@ -120,8 +122,10 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				and not is_dnd_in_transport) or (item_is_pnd_source and not
 				pnd_item_source.is_pnd_in_transport and not
 				pnd_item_source.is_dnd_in_transport) then
-				interface.pointer_button_press_actions.call
-					([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+				if pointer_double_press_actions_internal /= Void then
+					pointer_button_press_actions_internal.call
+						([x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
+				end
 				press_actions_called := True
 			end
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
@@ -148,10 +152,15 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			if not (item_is_pnd_source and not is_pnd_in_transport and not
 				is_dnd_in_transport) or (item_is_pnd_source and not
 				pnd_item_source.is_pnd_in_transport and not
-				pnd_item_source.is_dnd_in_transport) then
-				interface.pointer_button_press_actions.call
-					([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
-				press_actions_called := True
+				pnd_item_source.is_dnd_in_transport) then 
+					if pointer_button_press_actions_internal /= Void then
+							-- The above `if' statement was added as an extra at a later date
+							-- and is not incorporated into the main if to avoid the
+							-- possibility of breaking something. Julian.
+						pointer_button_press_actions_internal.call
+							([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
+					end
+					press_actions_called := True
 			end
 			if interface.is_dockable then
 				pt := client_to_screen (x_pos, y_pos)
@@ -184,8 +193,9 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			else
 				check_dragable_release (x_pos, y_pos)
 			end
-			interface.pointer_button_release_actions.call
-				([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
+			if pointer_button_press_actions_internal /= Void then
+				pointer_button_release_actions_internal.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
+			end
 		end
 
 	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
@@ -217,9 +227,11 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				-- Propagate the double click event to the appropriate item.
 			internal_propagate_pointer_double_press
 				(keys, x_pos, y_pos, a_button)
-				-- Call pointer_double_press_actions on `Current'.
-			interface.pointer_double_press_actions.call
-				([x_pos, y_pos, a_button, 0.0, 0.0, 0.0, pt.x, pt.y])
+			if pointer_double_press_actions_internal /= Void then
+					-- Call pointer_double_press_actions on `Current'.
+				pointer_double_press_actions_internal.call
+					([x_pos, y_pos, a_button, 0.0, 0.0, 0.0, pt.x, pt.y])
+			end
 		end
 
 	client_to_screen (x_pos, y_pos: INTEGER): WEL_POINT is
@@ -285,7 +297,7 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 		do
 			call_press_event := True
 		end
-
+		
 	parent_is_pnd_source : BOOLEAN
 			-- PND started in the widget.
 
@@ -364,6 +376,21 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Deferred
 	release_heavy_capture is
 			-- Release user input
 			-- Works on all windows threads.
+		deferred
+		end
+		
+	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+			-- Implementation of once per object `pointer_button_press_actions'.
+		deferred
+		end
+		
+	pointer_button_release_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+			-- Implementation of once per object `pointer_button_release_actions'.
+		deferred
+		end
+		
+	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE is
+			-- Implementation of once per object `pointer_double_press_actions'. is
 		deferred
 		end
 

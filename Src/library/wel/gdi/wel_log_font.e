@@ -50,6 +50,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_CAPABILITIES_CONSTANTS
+		export
+			{NONE} all
+		end
+
 creation 
 	make,
 	make_by_pointer,
@@ -131,6 +136,20 @@ feature -- Access
 		do
 			Result := cwel_log_font_get_height (item)
 		end
+
+	height_in_points: INTEGER is
+			-- Size of font in points (1 point = 1/72 of an inch)
+		local
+			screen_dc: WEL_SCREEN_DC
+		do
+			Result := -height
+			create screen_dc
+			screen_dc.get
+			Result := mul_div (Result, 72,
+								get_device_caps (screen_dc.item, logical_pixels_y))
+			screen_dc.release
+		end
+
 
 	width: INTEGER is
 			-- Width of current font.
@@ -769,6 +788,25 @@ feature -- Measurement
 			-- Size to allocate (in bytes)
 		once
 			Result := c_size_of_log_font
+		end
+
+feature {NONE} -- Implentation
+
+	mul_div (i,j,k: INTEGER): INTEGER is
+			-- Does `i * j / k' but in a safe manner where the 64 bits integer
+			-- obtained by `i * j' is not truncated.
+		external
+			"C [macro <windows.h>] (int, int, int): EIF_INTEGER"
+		alias
+			"MulDiv"
+		end
+
+	get_device_caps (p: POINTER; i: INTEGER): INTEGER is
+			-- Retrieves device-specific information about a specified device.
+		external
+			"C [macro <windows.h>] (HDC, int): EIF_INTEGER"
+		alias
+			"GetDeviceCaps"
 		end
 
 feature {NONE} -- Externals

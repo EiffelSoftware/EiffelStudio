@@ -111,6 +111,13 @@ feature -- Fonts
 			"SYSTEM_FONT"
 		end
 
+	Default_gui_font: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"DEFAULT_GUI_FONT"
+		end
+
 	Device_default_font: INTEGER is
 		external
 			"C [macro %"wel.h%"]"

@@ -25,8 +25,7 @@ feature -- Access
 	line (i: INTEGER): STRING is
 			-- `Result' is content of the `i'th line.
 		require
-			valid_line: valid_line_index (i) and then
-				(i = line_count implies last_line_not_empty)
+			valid_line: valid_line_index (i)
 		deferred
 		ensure
 			result_not_void: Result /= Void
@@ -61,8 +60,7 @@ feature -- Status report
 	first_position_from_line_number (i: INTEGER): INTEGER is
 			-- Position of the first character on the `i'-th line.
 		require
-			valid_line: valid_line_index (i) and then
-				(i = line_count implies last_line_not_empty)
+			valid_line: valid_line_index (i)
 		deferred
 		ensure
 			valid_caret_position: valid_caret_position (i)
@@ -71,8 +69,7 @@ feature -- Status report
 	last_position_from_line_number (i: INTEGER): INTEGER is
 			-- Position of the last character on the `i'-th line.
 		require
-			valid_line: valid_line_index (i) and then
-				(i = line_count implies last_line_not_empty)
+			valid_line: valid_line_index (i)
 		deferred
 		ensure
 			valid_caret_position: valid_caret_position (i)
@@ -94,12 +91,6 @@ feature -- Basic operation
 			word_wrapping_disabled: not has_word_wrapping
 		end
 
-	put_new_line is
-			-- Go to the beginning of the following line.
-		require
-		deferred
-		end
-
 	search (str: STRING; start: INTEGER): INTEGER is
 			-- Position of first occurrence of `str' at or after `start';
 			-- 0 if none.
@@ -112,8 +103,7 @@ feature -- Basic operation
 	scroll_to_line (i: INTEGER) is
 			-- Ensure that line `i' is visible in `Current'.
 		require
-			valid_line_index: valid_line_index (i) and then
-				(i = line_count implies last_line_not_empty)
+			valid_line_index: valid_line_index (i)
 		deferred
 		end
 
@@ -124,12 +114,6 @@ feature -- Assertions
 		require
 		do
 			Result := i > 0 and i <= line_count
-		end
-
-	last_line_not_empty: BOOLEAN is
-			-- Has the last line at least one character?
-		require
-		deferred
 		end
 		
 feature {EV_ANY_I} -- Implementation

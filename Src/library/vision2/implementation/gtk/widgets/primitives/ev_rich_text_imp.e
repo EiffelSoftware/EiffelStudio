@@ -23,6 +23,18 @@ create
 
 feature -- Status Report
 
+	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+			-- Is formatting from caret position `start_index' to `end_index' contiguous?
+		do
+		end
+		
+	formatting_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+			-- Formatting range information from caret position `start_index' to `end_index'.
+			-- `Result' is a snapshot of `Current', and does not remain consistent as the contents
+			-- are subsequently changed.
+		do
+		end
+
  	create_caret_move_actions: EV_INTEGER_ACTION_SEQUENCE is
  			-- Create a caret move action sequence.
  		do

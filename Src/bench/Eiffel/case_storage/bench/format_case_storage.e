@@ -11,7 +11,8 @@ inherit
 	S_CASE_INFO;
 	SHARED_CASE_INFO;
 	STORABLE;
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
+	SHARED_COUNTER
 
 creation
 
@@ -332,6 +333,8 @@ feature {NONE} -- Implementation
 			-- Do we need to reverse engineer?
 		local
 			classes: CLASS_C_SERVER;
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER
 			c: CLASS_C;
 		do
 			classes := System.classes;
@@ -340,8 +343,19 @@ feature {NONE} -- Implementation
 			until
 				classes.after or else Result
 			loop
-				c := classes.item_for_iteration;
-				Result := not c.reverse_engineered;
+				class_array := classes.item_for_iteration;
+				nb := Class_counter.item (classes.key_for_iteration).count
+				from
+					i := 1
+				until
+					i > nb or Result
+				loop
+					c := class_array.item (i)
+					if c /= Void then
+						Result := not c.reverse_engineered;
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 		end;
@@ -352,19 +366,23 @@ feature {NONE} -- Implementation
 			-- project.
 		local
 			classes: CLASS_C_SERVER;
-			i: INTEGER;
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER;
 			c: CLASS_C;
 			need_to_save: BOOLEAN
 		do
 			classes := System.classes;
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				c := classes.item_for_iteration;
-				need_to_save := True;
-				c.set_reverse_engineered (True);
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := Class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					c := class_array.item (i)
+					if c /= Void then
+						need_to_save := True;
+						c.set_reverse_engineered (True);
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 			if need_to_save then

@@ -87,7 +87,20 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 			end
 			interface.pointer_button_press_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])	
 		end
-	
+
+	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wmlbuttonup message
+		local
+			pt: WEL_POINT
+		do
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
+			if item_is_pnd_source then
+				pnd_item_source.check_drag_and_drop_release (x_pos, y_pos)
+			end
+			interface.pointer_button_release_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
+		end
+
 	client_to_screen (x_pos, y_pos: INTEGER): WEL_POINT is
 		deferred
 		end

@@ -7,18 +7,26 @@ indexing
 class
 	EV_DEFAULT_COLORS_IMP
 
+inherit
+	EV_GTK_EXTERNALS
+
 feature -- Access
 
 	Color_dialog: EV_COLOR is
 			-- Color usely used for the background of dialogs
+		local
+			r, g, b: INTEGER
 		do
-			Result := Void
+			
+			c_gtk_style_default_bg_color ($r, $g, $b)
+			!!Result.make_rgb (r, g, b)
 		end
 
 	Color_read_only: EV_COLOR is
 			-- Color usely used for the background of editable
 			-- when they are in read-only mode
 		do
+			check false end
 			Result := Void
 		end
 
@@ -26,6 +34,7 @@ feature -- Access
 			-- Color usely used for the background of editable
 			-- when they are in read / write mode
 		do
+			check false end
 			Result := Void
 		end
 

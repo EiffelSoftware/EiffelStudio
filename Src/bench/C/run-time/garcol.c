@@ -30,24 +30,6 @@
 
 /*#define DEBUG 63				/* Debugging level */
 /*#define MEMCHK				/* Activate memory checking */
-
-#ifdef DEBUG
-#define NB_FULL		0
-#define NB_PARTIAL	1
-
-#define debug_ok(n)	( \
-	(n) & DEBUG || \
-	(g_data.nb_full == NB_FULL && fdone || g_data.nb_partial == NB_PARTIAL) \
-	)
-#define dprintf(n)	\
-	if ( \
-			DEBUG & (n) && debug_ok(n)\
-	) printf
-#define flush			fflush(stdout);
-
-static int fdone = 0;	/* Tracing flag to only get the last full collect */
-#endif
-
 /* Internal data structure used to monitor the activity of the garbage
  * collection process and help the auto-adaptative algorithm in its
  * decisions (heuristics).
@@ -227,7 +209,11 @@ extern struct sc_zone sc_from;		/* Scavenging 'from' zone */
 extern struct sc_zone sc_to;		/* Scavenging 'to' zone */
 extern struct stack hec_stack;		/* The hector stack (objects seen from C) */
 extern struct stack hec_saved;		/* The hector stack (objects kept by C) */
+#ifndef TEST
 extern int cc_for_speed;			/* Priority to speed or memory? */
+#else
+private int cc_for_speed = 1;			/* Priority to speed or memory? */
+#endif
 
 #ifdef WORKBENCH
 private void mark_op_stack();		/* Marks operational stack */
@@ -245,6 +231,24 @@ extern struct opstack op_stack;		/* Operational stack */
 #define DEBUG	63		/* Highest debug level */
 #endif
 #endif
+
+#ifdef DEBUG
+#define NB_FULL		0
+#define NB_PARTIAL	1
+
+#define debug_ok(n)	( \
+	(n) & DEBUG || \
+	(g_data.nb_full == NB_FULL && fdone || g_data.nb_partial == NB_PARTIAL) \
+	)
+#define dprintf(n)	\
+	if ( \
+			DEBUG & (n) && debug_ok(n)\
+	) printf 
+#define flush			fflush(stdout);
+
+static int fdone = 0;	/* Tracing flag to only get the last full collect */
+#endif
+
 
 /* Function(s) used only in DEBUG mode */
 #ifdef DEBUG
@@ -3482,7 +3486,6 @@ register1 struct stack *stk;		/* The stack */
 #include "malloc.c"
 #include "timer.c"
 
-private int cc_for_speed = 1;	/* Optimized for speed */
 
 private void run_tests();		/* Run all the garbage collector's tests */
 private void scavenge_trace();	/* Statistics on the scavenge space */
@@ -3574,17 +3577,17 @@ private void scavenge_trace()
 
 private void run_gc()
 {
-	scollect(call_plsc, GST_PART);
+	scollect(mark_and_sweep, GST_PART);
 	printf(">>> GC status:\n");
 	printf(">>>> # of full collects    : %ld\n", g_data.nb_full);
 	printf(">>>> # of partial collects : %ld\n", g_data.nb_partial);
-	printf(">>>> Amount of memory freed: %ld\n", g_stat.mem_collect);
-	printf(">>>> Total time used       : %lfs\n", g_stat.real_time / 100.);
-	printf(">>>> Total time used (avg) : %lfs\n", g_stat.real_avg / 100.);
-	printf(">>>> CPU time used         : %lfs\n", g_stat.cpu_time);
-	printf(">>>> CPU time used (avg)   : %lfs\n", g_stat.cpu_avg);
-	printf(">>>> System time used      : %lfs\n", g_stat.sys_time);
-	printf(">>>> System time used (avg): %lfs\n", g_stat.sys_avg);
+	printf(">>>> Amount of memory freed: %ld\n", g_stat->mem_collect);
+	printf(">>>> Total time used       : %lfs\n", g_stat->real_time / 100.);
+	printf(">>>> Total time used (avg) : %lfs\n", g_stat->real_avg / 100.);
+	printf(">>>> CPU time used         : %lfs\n", g_stat->cpu_time);
+	printf(">>>> CPU time used (avg)   : %lfs\n", g_stat->cpu_avg);
+	printf(">>>> System time used      : %lfs\n", g_stat->sys_time);
+	printf(">>>> System time used (avg): %lfs\n", g_stat->sys_avg);
 }
 
 /* Functions not provided here */

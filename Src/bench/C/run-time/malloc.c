@@ -188,7 +188,11 @@ extern char *to_chunk();				/* Base address of partial 'to' chunk */
 extern void erembq();					/* Quick insertion in moved set */
 
 extern struct stack moved_set;			/* Describes the new generation */
+#ifndef TEST
 extern int cc_for_speed;				/* Optimized for speed or for memory */
+#else
+private int cc_for_speed = 1;	/* Optimized for speed */
+#endif
 extern struct chunk *last_from;			/* Last 'from' chunk used by plsc() */
 extern struct sc_zone ps_from;			/* Partial scavenging 'from' zone */
 extern struct sc_zone ps_to;			/* Partial scavenging 'to' zone */
@@ -2960,8 +2964,6 @@ private char *e_waht5 =
 #include "garcol.c"
 #include "timer.c"
 
-private int cc_for_speed = 1;	/* Optimized for speed */
-
 private char *vmalloc();		/* Verbose malloc */
 private char *vcalloc();		/* Verbose calloc */
 private char *vrealloc();		/* Verbose realloc */
@@ -3309,5 +3311,11 @@ public void ufill()
 public void esdpch()
 {
 }
+
+public void epop()
+{
+}
+
+public struct cnode esystem[20];
 
 #endif

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			-- Create the vertical range.
 		do
 			base_make (an_interface)
-			adjustment := C.gtk_adjustment_new (1, 1, 100, 1, 10, 10)
+			adjustment := C.gtk_adjustment_new (1, 1, 100 + 10, 1, 10, 10)
 			set_c_object (C.gtk_vscale_new (adjustment))		
 			C.gtk_scale_set_digits (c_object, 0)	
 		end
@@ -59,6 +59,10 @@ end -- class EV_VERTICAL_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/15 16:34:31  brendel
+--| Fixed bug in initialization found after adding `is_in_default_state' in
+--| interface classes.
+--|
 --| Revision 1.5  2000/02/14 11:40:33  oconnor
 --| merged changes from prerelease_20000214
 --|

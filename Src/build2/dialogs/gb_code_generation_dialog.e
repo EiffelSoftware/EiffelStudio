@@ -144,13 +144,6 @@ feature {NONE} -- Implementation
 
 	create_new_class is
 			-- Create a new class
-		local
-			f_name: FILE_NAME
-			file: RAW_FILE -- Windows specific 
-			base_name: STRING
-			wd: EV_WARNING_DIALOG
-			cd: EV_CONFIRMATION_DIALOG
-			retried: BOOLEAN
 		do
 			io.putstring ("Creating new class%N")
 			io.putstring (class_entry.text.out + "%N")
@@ -160,8 +153,6 @@ feature {NONE} -- Implementation
 
 	on_show_actions is
 			-- The dialog has just been shown, set it up.
-		local
-			curr_selected_item: EV_LIST_ITEM
 		do
 				--| Make sure the text in the class entry is entirely visible
 				--| and is selected.

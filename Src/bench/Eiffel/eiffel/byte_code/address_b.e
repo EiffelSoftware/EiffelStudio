@@ -112,8 +112,8 @@ feature -- Byte code generation
 		do
 			ba.append (Bc_addr);
 			ba.append_integer (feature_id);
-			ba.append_short_integer
-					(context.current_type.associated_class_type.id.id - 1);
+			ba.append_short_integer (context.current_type.associated_class_type.id.id - 1);
+				-- Use RTWPP
+			ba.append_short_integer (0)
 		end;
-
 end

@@ -1267,6 +1267,9 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 				end
 			end
 			add_new_object (new_object, selector_item)
+				-- Ensure that the representations are up to date. This is necessary
+				-- for when we have just flattened an object from the clipboard.
+			new_object.update_representations_for_name_or_type_change
 		end
 		
 feature {GB_WINDOW_SELECTOR_TOOL_BAR, GB_WINDOW_SELECTOR_COMMON_ITEM} -- Implementation

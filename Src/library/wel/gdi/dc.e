@@ -594,6 +594,19 @@ feature -- Status setting
 			rop2_set: rop2 = a_rop2
 		end
 
+	set_stretch_blt_mode (a_mode: INTEGER) is
+			-- Set the bitmap stretching mode with `a_mode'.
+			-- See class WEL_STRETCH_MODE_CONSTANTS for `a_mode'
+			-- values.
+		require
+			exists: exists
+			valid_stretch_mode_constant: valid_stretch_mode_constant (a_mode)
+		do
+			cwin_set_stretch_blt_mode (item, a_mode)
+		ensure
+			stretch_blt_mode_set: stretch_blt_mode = a_mode
+		end
+
 	select_palette (a_palette: WEL_PALETTE) is
 			-- Select the `a_palette' as the current palette.
 		require
@@ -1264,19 +1277,6 @@ feature -- Basic operations
 				raster_operation)
 		end
 
-	set_stretch_blt_mode (a_mode: INTEGER) is
-			-- Set the bitmap stretching mode with `a_mode'.
-			-- See class WEL_STRETCH_MODE_CONSTANTS for `a_mode'
-			-- values.
-		require
-			exists: exists
-			valid_stretch_mode_constant: valid_stretch_mode_constant (a_mode)
-		do
-			cwin_set_stretch_blt_mode (item, a_mode)
-		ensure
-			stretch_blt_mode_set: stretch_blt_mode = a_mode
-		end
-
 	pat_blt (x_destination, y_destination, a_width, a_height: INTEGER;
 			raster_operation: INTEGER) is
 			-- Copy a bitmap from the `dc_source' to
@@ -1379,6 +1379,49 @@ feature -- Basic operations
 		ensure
 			result_not_void: Result /= Void
 			consistent_count: Result.count = bitmap_info.header.size_image
+		end
+
+	poly_bezier (points: ARRAY [INTEGER]) is
+			-- Draw one or more Bezier curves by using the
+			-- endpoints and control points specified by `points'.
+			-- The first curve is drawn from the first point to the
+			-- fourth point by using the second and third points as
+			-- control points. Each subsequent curve in the sequence
+			-- needs exactly three more points: the ending point of
+			-- the previous curve is used as the starting point, the
+			-- next two points in the sequence are control points,
+			-- and the third is the ending point.
+			-- The current position is neither used nor updated by
+			-- this procedure.
+		require
+			points_not_void: points /= Void
+			points_count_ok: points.count \\ 2 = 0
+		local
+			a: ANY
+		do
+			a := points.to_c
+			cwin_poly_bezier (item, $a, points.count // 2)
+		end
+
+	poly_bezier_to (points: ARRAY [INTEGER]) is
+			-- Draw one or more Bezier curves by using the control
+			-- points specified by `points'. The first curve is
+			-- drawn from the current position to the third point
+			-- by using the first two points as control points.
+			-- For each subsequent curve, the procedure needs
+			-- exactly three more points, and uses the ending point
+			-- of the previous curve as the starting point for the
+			-- next.
+			-- This procedure moves the current position to the
+			-- ending point of the last Bezier curve.
+		require
+			points_not_void: points /= Void
+			points_count_ok: points.count \\ 2 = 0
+		local
+			a: ANY
+		do
+			a := points.to_c
+			cwin_poly_bezier_to (item, $a, points.count // 2)
 		end
 
 feature -- Removal
@@ -1560,6 +1603,22 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HDC, POINT *, int)"
 		alias
 			"Polygon"
+		end
+
+	cwin_poly_bezier (hdc, pts: POINTER; num: INTEGER) is
+			-- SDK PolyBezier
+		external
+			"C [macro <wel.h>] (HDC, POINT *, DWORD)"
+		alias
+			"PolyBezier"
+		end
+
+	cwin_poly_bezier_to (hdc, pts: POINTER; num: INTEGER) is
+			-- SDK PolyBezierTo
+		external
+			"C [macro <wel.h>] (HDC, POINT *, DWORD)"
+		alias
+			"PolyBezierTo"
 		end
 
 	cwin_ellipse (hdc: POINTER; x1, y1, x2, y2: INTEGER) is
@@ -1996,8 +2055,8 @@ invariant
 end -- class WEL_DC
 
 --|-------------------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1995-1997, Interactive Software Engineering, Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|
 --| 270 Storke Road, Suite 7, Goleta, CA 93117 USA

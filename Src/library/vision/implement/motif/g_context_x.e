@@ -251,7 +251,6 @@ feature {NONE}
 
 	set_subwindow_mode (mode: INTEGER) is
 			-- Set the subwindow mode.
-		
 		do
 			x_set_subwindow_mode (display_pointer, graphic_context, mode)
 		end;

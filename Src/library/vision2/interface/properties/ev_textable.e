@@ -37,7 +37,7 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result:= implementation.text
+			Result := implementation.text
 		ensure
 			bridge_ok: equal (Result, implementation.text)
 			not_void_implies_cloned: Result /= Void implies

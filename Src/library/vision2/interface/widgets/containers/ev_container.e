@@ -66,7 +66,6 @@ feature -- Access
 			not_destroyed: not is_destroyed	
 		deferred
 		end
-		
 
 	has_recursive (an_item: like item): BOOLEAN is
 			-- Does structure include `an_item' or

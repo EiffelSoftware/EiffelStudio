@@ -23,7 +23,7 @@ feature -- Initialization
 
 	make is
 			-- Create an interface object
-			-- to receive query result
+			-- to receive query result.
 		do
 			implementation := handle.database.db_result
 		end
@@ -52,6 +52,12 @@ feature -- Status report
 			-- Loaded data
 		do
 			Result := implementation.data
+		end
+	
+	map_table_to_create: BOOLEAN is
+			-- Does map table need to be created? 
+		do
+			Result := map_table = Void
 		end
 	
 feature {DB_SELECTION} -- Status setting

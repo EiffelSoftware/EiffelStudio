@@ -586,8 +586,7 @@ feature -- Access
 		require
 			n_not_void: n /= Void
 		do
-			create Result
-			Result.initialize (n, s, e)
+			create Result.initialize (n, s, e)
 		ensure
 			click_ast_not_void: Result /= Void
 			node_set: Result.node = n

@@ -11,7 +11,7 @@ inherit
 
 	TOOL_W
 		redefine
-			save_cmd_holder, set_default_format, hole
+			save_cmd_holder, set_default_format, hole_button
 		end;
 	COMMAND;
 	SET_WINDOW_ATTRIBUTES
@@ -105,7 +105,6 @@ feature -- Standard Interface
 			quit_menu_entry: EB_MENU_ENTRY;
 			exit_menu_entry: EB_MENU_ENTRY;
 			change_font_cmd: CHANGE_FONT;
-			change_font_button: EB_BUTTON;
 			change_font_menu_entry: EB_MENU_ENTRY;
 			search_cmd: SEARCH_STRING;
 			search_button: EB_BUTTON;
@@ -121,12 +120,9 @@ feature -- Standard Interface
 			!! search_menu_entry.make (search_cmd, edit_menu);
 			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
 			!! change_font_cmd.make (text_window);
-			!! change_font_button.make (change_font_cmd, edit_bar);
-			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
-			end;
 			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
-			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
+			!! change_font_cmd_holder.make_plain (change_font_cmd);
+			change_font_cmd_holder.set_menu_entry (change_font_menu_entry);
 			!! quit_cmd.make (text_window);
 			!! quit_button.make (quit_cmd, edit_bar);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
@@ -140,10 +136,8 @@ feature -- Standard Interface
 			edit_bar.attach_left (hole_button, 0);
 			edit_bar.attach_top (hole_button, 0);
 			edit_bar.attach_top (search_button, 0);
-			edit_bar.attach_top (change_font_button, 0);
 			edit_bar.attach_top (quit_button, 0);
-			edit_bar.attach_right_widget (change_font_button, search_button, 0);
-			edit_bar.attach_right_widget (quit_button, change_font_button, 5);
+			edit_bar.attach_right_widget (quit_button, search_button, 5);
 			edit_bar.attach_right (quit_button, 0);
 		end;
 
@@ -165,14 +159,12 @@ feature -- Standard Interface
 			edit_bar.attach_top (save_cmd_holder.associated_button, 0);
 			edit_bar.attach_top (save_as_cmd_holder.associated_button, 0);
 			edit_bar.attach_top (search_cmd_holder.associated_button, 0);
-			edit_bar.attach_top (change_font_cmd_holder.associated_button, 0);
 			edit_bar.attach_top (quit.associated_button, 0);
 			edit_bar.attach_left (hole_button, 0);
 			edit_bar.attach_right_widget (save_cmd_holder.associated_button, open_cmd_holder.associated_button, 0);
 			edit_bar.attach_right_widget (save_as_cmd_holder.associated_button, save_cmd_holder.associated_button, 0);
 			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_as_cmd_holder.associated_button, 0);
-			edit_bar.attach_right_widget (change_font_cmd_holder.associated_button, search_cmd_holder.associated_button, 0);
-			edit_bar.attach_right_widget (quit.associated_button, change_font_cmd_holder.associated_button, 5);
+			edit_bar.attach_right_widget (quit.associated_button, search_cmd_holder.associated_button, 5);
 			edit_bar.attach_right (quit.associated_button, 0);
 		end;
 
@@ -183,6 +175,8 @@ feature -- Standard Interface
 
 	attach_all is
 			-- Attach button bar and windows below together.
+		local
+			separator: SEPARATOR
 		do
 			global_form.attach_left (menu_bar, 0);
 			global_form.attach_right (menu_bar, 0);
@@ -192,29 +186,33 @@ feature -- Standard Interface
 			global_form.attach_right (edit_bar, 0);
 			global_form.attach_top_widget (menu_bar, edit_bar, 0);
 
+			!! separator.make ("", global_form);
+			global_form.attach_left (separator, 0);
+			global_form.attach_right (separator, 0);
+			global_form.attach_top_widget (edit_bar, separator, 1);
+
+			global_form.attach_left (format_bar, 0);
+			global_form.attach_right (format_bar, 0);
+			global_form.attach_top_widget (separator, format_bar, 1);
+
 			if editable_text_window /= read_only_text_window then
 				global_form.attach_left (editable_text_window.widget, 0);
 				global_form.attach_right (editable_text_window.widget, 0);
-				global_form.attach_bottom_widget (format_bar, 
+				global_form.attach_bottom (editable_text_window.widget, 0);
+				global_form.attach_top_widget (format_bar, 
 						editable_text_window.widget, 0);
-				global_form.attach_top_widget (edit_bar, 
-						editable_text_window.widget, 0);
+
 				global_form.attach_left (read_only_text_window.widget, 0);
 				global_form.attach_right (read_only_text_window.widget, 0);
-				global_form.attach_bottom_widget (format_bar, 
-						read_only_text_window.widget, 0);
-				global_form.attach_top_widget (edit_bar, 
+				global_form.attach_bottom (read_only_text_window.widget, 0);
+				global_form.attach_top_widget (format_bar, 
 						read_only_text_window.widget, 0);
 			else
 				global_form.attach_left (text_window.widget, 0);
 				global_form.attach_right (text_window.widget, 0);
-				global_form.attach_bottom_widget (format_bar, text_window.widget, 0);
-				global_form.attach_top_widget (edit_bar, text_window.widget, 0);
+				global_form.attach_bottom (text_window.widget, 0);
+				global_form.attach_top_widget (format_bar, text_window.widget, 0);
 			end;
-
-			global_form.attach_left (format_bar, 0);
-			global_form.attach_right (format_bar, 0);
-			global_form.attach_bottom (format_bar, 0);
 		end
 
 feature -- Access
@@ -229,10 +227,12 @@ feature -- Access
 
 	realized: BOOLEAN is
 			-- Is Current realized?
-		require else
-			is_a_shell: is_a_shell
 		do
-			Result := eb_shell.realized
+			if is_a_shell then
+				Result := eb_shell.realized
+			else
+				Result := True
+			end
 		end;
 
 	shown: BOOLEAN is
@@ -318,10 +318,6 @@ feature -- Window Implementation
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
 			exit_cmd_holder.set_menu_entry (exit_menu_entry);
 			!! change_font_cmd.make (text_window);
-			!! change_font_button.make (change_font_cmd, edit_bar);
-			if not change_font_cmd.tabs_disabled then
-				change_font_button.add_button_press_action (3, change_font_cmd, change_font_cmd.tab_setting)
-			end;
 			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
 			!! change_font_cmd_holder.make (change_font_cmd, change_font_button, change_font_menu_entry);
 			!! search_cmd.make (Current);
@@ -445,7 +441,7 @@ feature -- Window Properties
 			-- Hole characterizing Current.
 
 	hole_button: EB_BUTTON_HOLE;
-			-- Button to represent `hole'.
+			-- Button for `hole'.
 
 	hole_holder: HOLE_HOLDER;
 			-- Holder for both the button and the hole.
@@ -529,9 +525,5 @@ feature -- Properties
 feature {NONE} -- Properties
 
 	bar_and_text_name_chooser: NAME_CHOOSER_W
-
-invariant
-
-	text_window_not_void: text_window /= Void
 
 end -- class BAR_AND_TEXT

@@ -50,6 +50,69 @@ inherit
 	SHARED_CONFIGURE_RESOURCES
 	SHARED_BENCH_LICENSES
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Create the system.
+		do
+			set_compilation_id (1)
+
+				-- Set up working environment to use current as SYSTEM_I instance.
+			Workbench.set_system (Current)
+
+				-- Creation of all the servers.
+			server_make
+
+				-- Creation of the system hash table
+			create class_types.make (1, System_chunk)
+			create new_classes.make
+
+				-- Creation of a topological sorter
+			create sorter.make
+
+				-- Counter creation
+			create routine_id_counter.make
+			create class_counter.make
+			create static_type_id_counter.make
+			create body_index_counter.make
+			create feature_as_counter.make
+			create type_id_counter
+
+				-- Routine table controler creation
+			create history_control.make
+			create instantiator.make
+
+				-- Type set creation
+			create type_set.make (100)
+
+				-- External table creation
+			create externals.make
+			create il_c_externals.make (10)
+
+				-- Pattern table creation
+			create pattern_table.make
+
+				-- Freeze control sets creation
+			create degree_minus_1.make
+
+				-- Body index table creation
+			create body_index_table.make (0, System_chunk)
+			create original_body_index_table.make (1, 0)
+
+				-- Run-time table creation
+			create execution_table.make
+			create rout_info_table.make (500)
+			create optimization_tables.make (300)
+
+				-- Address table
+			create address_table.make (100)
+
+				-- Names heap creation
+			create names.make
+		end
 
 feature -- Counters
 
@@ -263,62 +326,6 @@ feature -- Properties
 
 	names: NAMES_HEAP
 			-- Fast lookup for stored name, to avoid name duplication in memory.
-
-	make is
-			-- Create the system.
-		do
-			set_compilation_id (1)
-
-				-- Creation of all the servers.
-			server_make
-
-				-- Creation of the system hash table
-			create class_types.make (1, System_chunk)
-			create new_classes.make
-
-				-- Creation of a topological sorter
-			create sorter.make
-
-				-- Counter creation
-			create routine_id_counter.make
-			create class_counter.make
-			create static_type_id_counter.make
-			create body_index_counter.make
-			create feature_as_counter.make
-			create type_id_counter
-
-				-- Routine table controler creation
-			create history_control.make
-			create instantiator.make
-
-				-- Type set creation
-			create type_set.make (100)
-
-				-- External table creation
-			create externals.make
-			create il_c_externals.make (10)
-
-				-- Pattern table creation
-			create pattern_table.make
-
-				-- Freeze control sets creation
-			create degree_minus_1.make
-
-				-- Body index table creation
-			create body_index_table.make (0, System_chunk)
-			create original_body_index_table.make (1, 0)
-
-				-- Run-time table creation
-			create execution_table.make
-			create rout_info_table.make (500)
-			create optimization_tables.make (300)
-
-				-- Address table
-			create address_table.make (100)
-
-				-- Names heap creation
-			create names.make
-		end
 
 	init is
 			-- System initialization

@@ -10,14 +10,14 @@ class TYPE_DEC_AS
 inherit
 	AST_EIFFEL
 		redefine 
-			is_equivalent
+			is_equivalent, location
 		end
 
 	SHARED_NAMES_HEAP
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (i: like id_list; t: like type) is
+	initialize (i: like id_list; t: like type; l: like location) is
 			-- Create a new TYPE_DEC AST node.
 		require
 			i_not_void: i /= Void
@@ -25,9 +25,11 @@ feature {AST_FACTORY} -- Initialization
 		do
 			id_list := i
 			type := t
+			location := l
 		ensure
 			id_list_set: id_list = i
 			type_set: type = t
+			location_set: location = l
 		end
 
 feature -- Access
@@ -37,6 +39,9 @@ feature -- Access
 
 	type: TYPE
 			-- Type
+			
+	location: TOKEN_LOCATION
+			-- Location of current declaration
 
 	item_name (i: INTEGER): STRING is
 			-- Name of `id' at position `i'.

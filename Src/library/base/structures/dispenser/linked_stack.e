@@ -15,14 +15,13 @@ class LINKED_STACK [G] inherit
 		undefine
 			replace
 		select
-			item, put
+			remove, put, item
 		end;
 
 	LINKED_LIST [G]
 		rename
 			item as ll_item,
 			remove as ll_remove,
-			remove_right as remove,
 			put as ll_put
 		export
 			{NONE} all;
@@ -35,8 +34,6 @@ class LINKED_STACK [G] inherit
 			prune_all
 		redefine
 			extend, force, duplicate
-		select
-			remove
 		end
 
 creation
@@ -47,11 +44,9 @@ feature -- Access
 
 	item: G is
 			-- Item at the first position
-		require else
-			not_empty: not empty
 		do
 			check
-				before and not empty implies (active = first_element)
+				not_empty: not empty
 			end;
 			Result := first_element.item
 		end;
@@ -75,12 +70,24 @@ feature -- Element change
 			put_front (v)
 		end
 
+feature -- Removal
+
+	remove is
+			-- Remove item on top.
+		do
+			start;
+			ll_remove
+		end;
+
 feature -- Conversion
 
 	linear_representation: ARRAYED_LIST [G] is
 			-- Representation as a linear structure
 			-- (order is reverse of original order of insertion)
+		local
+			old_cursor: CURSOR
 		do
+			old_cursor := cursor;
 			from
 				!! Result.make (count);
 				start
@@ -88,10 +95,9 @@ feature -- Conversion
 				after
 			loop
 				Result.extend (ll_item);
-				forth;
+				forth
 			end;
-			start;
-			back
+			go_to (old_cursor)
 		end;
 
 feature -- Duplication
@@ -104,41 +110,33 @@ feature -- Duplication
 			positive_argument: n > 0
 		local
 			counter: INTEGER;
-			temp: like Current;
+			old_cursor: CURSOR;
+			list: LINKED_LIST [G]
 		do
 			if not empty then
+				old_cursor := cursor;
 				from
-					!! temp.make;
+					!! Result.make;
+					list := Result;
 					start
 				until
-					after or temp.count = n
+					after or counter = n
 				loop
-					temp.put (ll_item);
+					list.finish;
+					list.put_right (ll_item);
+					counter := counter + 1;
 					forth
 				end;
-				from
-					!! Result.make
-				until
-					temp.empty
-				loop
-					Result.put (temp.item);
-					temp.remove
-				end;
-				start;
-				back
+				go_to (old_cursor)
 			end
 		end;
-
-invariant
-
-	always_before: before
 
 end -- class LINKED_STACK
 
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1986, 1990, 1993, 1994, Interactive Software
+--| Copyright (C) 1986, 1990, 1993, 1994, 1995 Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

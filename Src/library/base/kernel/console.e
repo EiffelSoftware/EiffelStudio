@@ -28,7 +28,8 @@ class CONSOLE inherit
 			put_boolean, put_real, put_double, put_string, put_character, 
 			new_line, end_of_file, file_close,
 			readint, readreal, readdouble, readchar, readline, readstream, 
-			readword, putint, putbool, putreal, putdouble, putstring, putchar
+			readword, putint, putbool, putreal, putdouble, putstring, putchar,
+			dispose
 		end
 
 creation {STD_FILES}
@@ -73,6 +74,13 @@ feature -- Status report
 			-- Does file exist?
 		do
 			Result := true
+		end
+
+feature -- Removal
+
+	dispose is
+			-- This is closed by the operating system at completion.
+		do
 		end
 
 feature -- Input

@@ -1,7 +1,7 @@
 indexing
 	description: "Generate XML files describing types from emitter information"
 	external_name: "ISE.Reflection.XmlCodeGenerator"
---	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
+	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
 
 class 
 	XML_CODE_GENERATOR

@@ -29,7 +29,7 @@ feature -- Properties
 			until
 				active_editors.after
 			loop
-				Result.merge (active_editors.item.text_window.kept_objects);
+				Result.merge (active_editors.item.kept_objects);
 				active_editors.forth
 			end
 		end;
@@ -57,7 +57,7 @@ feature -- Synchronization
 			until
 				active_editors.after
 			loop
-				active_editors.item.text_window.hang_on;
+				active_editors.item.hang_on;
 				active_editors.forth
 			end
 		end;
@@ -80,6 +80,8 @@ feature {WINDOW_MGR} -- Properties
 	editor: like editor_type is
 			-- Creates new editor. (Either creates one or
 			-- retrieves one from the free_list).
+		local
+			mp: MOUSE_PTR
 		do
 			if	not free_list.empty	then
 				free_list.start;
@@ -90,9 +92,9 @@ feature {WINDOW_MGR} -- Properties
 				Result.text_window.set_default_sp_bounds;
 				free_list.remove
 			else
-				set_global_cursor (watch_cursor);
-				!!Result.make (screen);
-				restore_cursors
+				!! mp.set_watch_cursor;
+				!! Result.make (screen);
+				mp.restore
 			end;
 			active_editors.extend (Result)
 		end;

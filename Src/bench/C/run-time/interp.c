@@ -26,6 +26,7 @@
 #include "debug.h"
 #include "sig.h"
 #include "bits.h"
+#include "equal.h"	/* for xequal() */
 #include <math.h>
 
 /*#define DEBUG 3	/**/

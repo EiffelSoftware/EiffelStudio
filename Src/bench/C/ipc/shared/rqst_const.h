@@ -35,6 +35,9 @@
 #define LOAD			19		/* Load byte code information */
 #define BYTECODE		20		/* Byte code transfer */
 #define KILL			21		/* Kill application asynchronously */
+#define ADOPT			22		/* Adopt object */
+#define ACCESS			23		/* Access object through hector */
+#define WEAN			24		/* Wean adopted object */
 
 /* Acknowledgments codes */
 #define AK_OK			0       /* Everything is ok */

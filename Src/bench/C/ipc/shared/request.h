@@ -78,6 +78,9 @@ typedef struct dump Dump;	/* Structure returned by dumps */
  *  DEAD		18		Application is dead
  *  LOAD		19		Load byte code information
  *  BYTECODE	20		A byte code transfer
+ *	ADOPT		22		Adopt object
+ *	ACCESS		23		Access object through hector
+ *	WEAN		24		Wean adopted object
  */
 
 typedef struct {			/* General client request format */

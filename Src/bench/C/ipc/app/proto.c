@@ -28,12 +28,16 @@
 #include "server.h"
 #include "interp.h"
 #include "select.h"
+#include "hector.h"
 
 public int rqstcnt = 0;				/* Request count */
 private char gc_stopped;
 
 private void process_request();		/* Dispatch request processing */
 private void inspect();				/* Object inspection */
+private void adopt();				/* Adopt object */
+private void access();				/* Access object through hector */
+private void wean();				/* Wean adopted object */
 private void load_bc();				/* Load byte code information */
 
 private IDRF idrf;			/* IDR filter for serialize communications */
@@ -118,6 +122,15 @@ Request *rqst;				/* The received request to be processed */
 		break;
 	case LOAD:						/* Load byte code information */
 		load_bc(arg_1, arg_2);
+		break;
+	case ADOPT:						/* Adopt object */
+		adopt(writefd (sp), &rqst->rq_opaque);
+		break;
+	case ACCESS:					/* Access object through hector */
+		access(writefd (sp), &rqst->rq_opaque);
+		break;
+	case WEAN:						/* Wean adopted object */
+		wean(writefd (sp), &rqst->rq_opaque);
 		break;
 	}
 
@@ -299,6 +312,56 @@ Opaque *what;		/* Generic structure describing request */
 
 	twrite(out, strlen(out));
 	free(out);
+}
+
+private void adopt(s, what)
+int s;
+Opaque *what;		/* Generic structure describing request */
+{
+	/* Adopt an object and return its hector address back to ewb. The
+	 * opaque structure describes the object. Note that the address
+	 * is stored as a long, because XDR cannot pass pointers (without also
+	 * sending the information referred to by this pointer).
+	 */
+
+	char *addr;			/* Buffer where indirection address is stored */
+	
+	addr = (char *)eif_adopt((char *) what->op_third);
+	twrite(addr, strlen(addr));
+	free(addr);
+}
+
+private void access(s, what)
+int s;
+Opaque *what;		/* Generic structure describing request */
+{
+	/* Access an object through hector and return its physical address 
+	 * back to ewb. The opaque structure describes the object. Note 
+	 * that the address is stored as a long, because XDR cannot pass 
+	 * pointers (without also sending the information referred to by 
+	 * this pointer).
+	 */
+
+	char *addr;			/* Buffer where physical address is stored */
+	
+	addr = (char *)eif_access((char *) what->op_third);
+	twrite(addr, strlen(addr));
+	free(addr);
+}
+
+private void wean(s, what)
+int s;
+Opaque *what;		/* Generic structure describing request */
+{
+	/* Wean an adopted object. The opaque structure describes the object.
+	 * Note that the address is stored as a long, because XDR cannot pass 
+	 * pointers (without also sending the information referred to by 
+	 * this pointer).
+	 */
+
+	char *addr;			/* Buffer where physical address is stored */
+	
+	eif_wean((char *) what->op_third);
 }
 
 private void load_bc(slots, amount)

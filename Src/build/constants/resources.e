@@ -152,8 +152,6 @@ feature -- Integer Misc Values
 	perm_window_file_name: STRING;
 	temp_window_file_name: STRING;
 			-- Base file name
-	default_toolkit: STRING
-			-- Default toolkit for code generation
 	tab_length: INTEGER; 
 			-- Tab length within error message dialog box
 			-- (The error display should be changed to the
@@ -177,8 +175,6 @@ feature {NONE} -- Integer Values initialization
 			temp_window_file_name
 				:= resource.get_string ("temp_window_file_name", "temp_wind");
 			temp_window_file_name.to_lower;
-			default_toolkit
-			:= resource.get_string ("default_toolkit", "MOTIF");
 			tab_length 
 			:= resource.get_pos_integer ("tab_length", 1);
 		end;

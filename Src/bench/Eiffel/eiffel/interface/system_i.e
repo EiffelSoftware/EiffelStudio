@@ -2776,7 +2776,7 @@ end
 								types := a_class.types
 								types.start
 							until
-								types.off
+								types.after
 							loop
 								id := types.item.type_id
 								buffer.putstring ("extern uint32 types")

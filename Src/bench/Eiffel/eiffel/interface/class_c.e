@@ -3096,7 +3096,7 @@ end
 		do
 			create type_i.make (class_id)
 			class_type := new_type (type_i)
-			types.put_front (class_type)
+			types.extend (class_type)
 			System.insert_class_type (class_type)
 		end
 
@@ -3143,7 +3143,7 @@ end
 					changed4 := True
 					Degree_2.insert_new_class (Current)
 						-- Insertion of the new class type
-					types.put_front (new_class_type)
+					types.extend (new_class_type)
 					System.insert_class_type (new_class_type)
 					if already_compiled then
 							-- Melt all the code written in the associated class of

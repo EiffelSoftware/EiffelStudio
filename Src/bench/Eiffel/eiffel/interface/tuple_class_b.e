@@ -75,7 +75,7 @@ feature -- types
 			type_i.set_true_generics (Void)
 			type_i.set_meta_generic (Void)
 			class_type := new_type (type_i)
-			types.put_front (class_type)
+			types.extend (class_type)
 			System.insert_class_type (class_type)
 		end
 

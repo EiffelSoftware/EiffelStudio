@@ -11,7 +11,6 @@ inherit
 		rename
 			make as entity_make
 		redefine
-			dotnet_name,
 			is_static, is_deferred, is_public, is_artificially_added,
 			is_new_slot, is_property_or_event, is_virtual, is_frozen,
 			set_is_public
@@ -35,14 +34,6 @@ feature {NONE} -- Initialization
 			dotnet_name_set: dotnet_name = dn
 			is_public_set: is_public = pub
 			declared_type_set: declared_type = a_type
-		end
-		
-feature -- Access
-
-	dotnet_name: STRING is
-			-- .NET member name
-		do
-			Result := n
 		end
 
 feature -- Status report
@@ -138,11 +129,6 @@ feature {CONSUMED_MEMBER} -- Internal
 
 	f: INTEGER
 			-- Store status of current feature.
-
-feature {NONE} -- Access
-
-	n: like dotnet_name
-			-- Internal data for `dotnet_name'
 
 invariant
 	non_void_dotnet_name: dotnet_name /= Void

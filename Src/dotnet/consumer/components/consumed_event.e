@@ -12,7 +12,6 @@ inherit
 			make as entity_make
 		redefine
 			eiffelized_consumed_entities,
-			dotnet_name,
 			is_event,
 			is_property_or_event,
 			is_public
@@ -75,12 +74,6 @@ feature -- Access
 			end
 		end
 
-	dotnet_name: STRING is
-			-- .NET event name
-		do
-			Result := n
-		end
-
 	adder: CONSUMED_PROCEDURE is
 			-- Property getter function
 		do
@@ -100,9 +93,6 @@ feature -- Access
 		end
 
 feature {NONE} -- Access
-
-	n: like dotnet_name
-			-- Internal data for `dotnet_name'.
 	
 	a: like adder
 			-- Internal data for `adder'.

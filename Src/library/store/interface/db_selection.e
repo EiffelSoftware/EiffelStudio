@@ -130,20 +130,20 @@ feature -- Status setting
 			container_is_void: container = Void
 		end
 
-	object_convert (reference: ANY) is
+	object_convert (ref: ANY) is
 			-- Set `object' with `reference', reference to an Eiffel 
 			-- object to be filled in with `cursor' field values.
 			-- Use this before `load_result' for performance.
 		require
-			reference_exists: reference /= Void
+			reference_exists: ref /= Void
 		do
 			if object = Void or else
-					dynamic_type (reference) /= dynamic_type (object) then
+					dynamic_type (ref) /= dynamic_type (object) then
 				update_map_table := True
 			end
-			object := reference
+			object := ref
 		ensure
-			object_set: object = reference
+			object_set: object = ref
 		end
 
 	no_object_convert is

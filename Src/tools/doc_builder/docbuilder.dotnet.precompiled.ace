@@ -145,6 +145,8 @@ cluster
 			"CVS"; 
 		end
 
+	spell (root_cluster):		"$\spell"
+
 assembly
 	"AxSHDocVw":	"$EIFFEL_SRC\tools\doc_builder\AxSHDocVw.dll"
 
@@ -152,6 +154,10 @@ assembly
 		prefix
 			"sh_"
 		end
+
+	"eiffelsoftware_runtime":	"$EIFFEL_SRC\studio\spec\$ISE_PLATFORM\bin\EiffelSoftware.Runtime.dll"
+	
+	"NetSpellChecker":	"$EIFFEL_SRC\tools\doc_builder\NetSpell.SpellChecker.DLL"
 
 external
 

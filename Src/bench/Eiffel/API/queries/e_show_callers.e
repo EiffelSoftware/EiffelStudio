@@ -60,7 +60,7 @@ feature -- Execution
 					list.after
 				loop
 					cfeat := list.item;
-					feat := current_class.feature_with_name (cfeat);
+					feat := client.feature_with_name (cfeat);
 					output_window.put_char ('%T');
 					if feat = Void then
 						output_window.put_string ("invariant")

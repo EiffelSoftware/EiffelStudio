@@ -52,23 +52,19 @@ feature {TTY_RESOURCES} -- Initialization
 			!! default_text_color.make ("default_text_color", rt, "black");
 			!! error_color.make ("error_color", rt, "red");
 			!! feature_color.make ("feature_color", rt, "black");
-			!! highlight_line_background_color.make 
-					("highlight_background_line_color", rt, "red");
-			!! highlight_line_foreground_color.make 
-					("highlight_foreground_line_color", rt, "white");
 			!! keyword_color.make ("keyword_color", rt, "blue");
 			!! object_color.make ("object_color", rt, "black");
-			if not Platform_constants.is_windows then
-				!! progress_bar_color.make ("progress_bar_color", rt, "blue");
-				!! focus_label_color.make ("progress_bar_color", rt, "LightYellow");
-			end;
-			!! selected_clickable_background_color.make 
-					("selected_background_clickable_color", rt, "black");
-			!! selected_clickable_foreground_color.make 
-					("selected_foreground_clickable_color", rt, "white");
 			!! stop_color.make ("stop_color", rt, "red");
 			!! string_text_color.make ("string_text_color", rt, "black");
 			!! symbol_color.make ("symbol_color", rt, "black");
+			if not Platform_constants.is_windows then
+				!! progress_bar_color.make ("progress_bar_color", rt, "blue");
+				!! focus_label_color.make ("progress_bar_color", rt, "LightYellow");
+				!! highlight_line_background_color.make 
+					("highlight_background_line_color", rt, "red");
+				!! highlight_line_foreground_color.make 
+					("highlight_foreground_line_color", rt, "white");
+			end;
 		end
 
 feature -- Validation
@@ -112,8 +108,6 @@ feature -- Resources
 	comment_color,
 	keyword_color,
 	highlight_line_background_color,
-	highlight_line_foreground_color,
-	selected_clickable_background_color,
-	selected_clickable_foreground_color: COLOR_RESOURCE
+	highlight_line_foreground_color: COLOR_RESOURCE
 
 end -- class GRAPHICAL_CATEGORY

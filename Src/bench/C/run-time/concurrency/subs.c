@@ -653,6 +653,7 @@ EIF_INTEGER addr;
 			return -1;
 		else {
 			if (errno && errno != ETIMEDOUT) {
+				add_nl;
 				sprintf(crash_info, CURIMPERR13, c_get_name_from_addr(addr), port, error_info());
 			}
 			else
@@ -759,6 +760,7 @@ EIF_INTEGER len;
 	}
 	res = c_concur_my_read_stream(sock, len, _concur_buffer);
 	if (res != len && _concur_command != constant_report_error) {
+		add_nl;
 		sprintf(crash_info, CURERR6);
 		c_raise_concur_exception(exception_network_connection_crash);
 	}

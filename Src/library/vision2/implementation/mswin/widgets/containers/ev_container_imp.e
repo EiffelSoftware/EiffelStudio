@@ -1,9 +1,9 @@
 indexing
 	description:
-		"EiffelVision container. Allows only one children.%
+		" EiffelVision container. Allows only one children.%
 		% Deferred class, parent of all the containers.%
 		% Mswindows implementation."
-	note: "This class would be the equivalent of a wel_composite_window%
+	note: " This class would be the equivalent of a wel_composite_window%
 		% in the wel hierarchy."
 	status: "See notice at end of class"
 	id: "$Id$"

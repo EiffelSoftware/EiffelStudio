@@ -18,15 +18,15 @@ feature -- Initialization
 
 	make is
 		do
-			{CACHE} Precursor
-			!! files.make (Chunk)
-			!! removed_files.make (Chunk)
-			!! file_counter.make
+			Precursor {CACHE}
+			create files.make (Chunk)
+			create removed_files.make (Chunk)
+			create file_counter.make
 		end
 
 feature -- Status
 
-	files: HASH_TABLE [SERVER_FILE, INTEGER];
+	files: HASH_TABLE [SERVER_FILE, INTEGER]
 			-- Table of all the files under the control of the
 			-- current object
 
@@ -38,13 +38,13 @@ feature -- Status
 			--| i.e. only in final mode were we don't need to preserve files
 			--| since there is no incrementality here
 
-	file_counter: FILE_COUNTER;
+	file_counter: FILE_COUNTER
 			-- Server file id counter
 
-	last_computed_id: INTEGER;
+	last_computed_id: INTEGER
 			-- Last new computed server file id
 
-	Chunk: INTEGER is 50;
+	Chunk: INTEGER is 50
 			-- Array chunk
 
 feature -- Update
@@ -76,14 +76,14 @@ feature -- Ids creation
 				id := file_counter.next_id
 			end
 
-			!! new_file.make (id)
+			create new_file.make (id)
 			files.put (new_file, id)
 			last_computed_id := id
 debug ("SERVER")
 	io.error.put_string ("Creating new file: ")
 	io.error.put_string (new_file.file_name (id))
 	io.error.new_line
-end;
+end
 		end
 
 feature -- File operations
@@ -99,18 +99,18 @@ feature -- File operations
 			else
 				if f.is_open then
 						-- If the file is open then it is in the cache
-					f.close;
-					remove_id (f.file_id);
+					f.close
+					remove_id (f.file_id)
 debug ("SERVER")
-	io.error.put_string ("Forget file: ");
-	io.error.put_string (f.file_name (f.file_id));
-	io.error.new_line;
-end;
-				end;
+	io.error.put_string ("Forget file: ")
+	io.error.put_string (f.file_name (f.file_id))
+	io.error.new_line
+end
+				end
 				files.remove (f.file_id)
 				add_to_removed_files (f)
 			end
-		end;
+		end
 
 	remove_file (f: SERVER_FILE) is
 			-- Remove file from Current
@@ -119,21 +119,21 @@ end;
 		do
 			if f.is_open then
 					-- If the file is open then it is in the cache
-				f.close;
-				remove_id (f.file_id);
-			end;
+				f.close
+				remove_id (f.file_id)
+			end
 				-- Remove `f' from the controler
 			files.remove (f.file_id)
 			add_to_removed_files (f)
 
 				-- Remove file from the disk
-			f.delete;
+			f.delete
 debug ("SERVER")
-	io.error.put_string ("Remove file: ");
-	io.error.put_string (f.file_name (f.file_id));
-	io.error.new_line;
-end;
-		end;
+	io.error.put_string ("Remove file: ")
+	io.error.put_string (f.file_name (f.file_id))
+	io.error.new_line
+end
+		end
 
 	add_to_removed_files (f: SERVER_FILE) is
 			-- Move `f' in `removed_files' only if it is possible
@@ -156,13 +156,13 @@ end;
 			until
 				local_files.after
 			loop
-				file := local_files.item_for_iteration;
+				file := local_files.item_for_iteration
 				if file.exists and then not file.precompiled then
-					remove_file (file);
-				end;
+					remove_file (file)
+				end
 				local_files.forth
 			end
-		end;
+		end
 
 	file_of_id (i: INTEGER): SERVER_FILE is
 			-- File of id `i'.
@@ -171,15 +171,15 @@ end;
 			file_exists: files.has (i)
 		do
 			Result := files.item (i)
-		end;
+		end
 
 	open_file (f: SERVER_FILE) is
 			-- Open file `f'.
 		require
-			good_argument: f /= Void;
+			good_argument: f /= Void
 			is_closed: not f.is_open
 		do
-			f.open;
+			f.open
 			force (f)
 			if last_removed_item /= Void then
 				last_removed_item.close
@@ -188,15 +188,15 @@ end;
 				end
 			end
 debug ("SERVER")
-	io.error.put_string ("Opening file: ");
-	io.error.put_string (f.file_name (f.file_id));
-	io.error.new_line;
-end;
+	io.error.put_string ("Opening file: ")
+	io.error.put_string (f.file_name (f.file_id))
+	io.error.new_line
+end
 		ensure
 			is_open: f.is_open
-		end;
+		end
 
-	Default_size: INTEGER is 20;
+	Default_size: INTEGER is 20
 
 	wipe_out is
 			-- Empty the cache
@@ -209,7 +209,7 @@ end;
 				item_for_iteration.close
 				forth
 			end
-			{CACHE} Precursor
+			Precursor {CACHE}
 		end
 
 feature -- Status report
@@ -221,19 +221,19 @@ feature -- Status report
 			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
-				Result := true;
+				Result := True
 				local_files := files
 				local_files.start
 			until
 				not Result or local_files.after
 			loop
-				file:= local_files.item_for_iteration;
+				file:= local_files.item_for_iteration
 				if file.exists then
 					Result := file.is_readable
-				end;
+				end
 				local_files.forth
 			end
-		end;
+		end
 
 	is_writable: BOOLEAN is
 			-- Are the server files readable and writable?
@@ -242,20 +242,20 @@ feature -- Status report
 			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
-				Result := True;
+				Result := True
 				local_files := files
 				local_files.start
 			until
 				not Result or local_files.after
 			loop
-				file:= local_files.item_for_iteration;
+				file:= local_files.item_for_iteration
 				if file.exists then
 					if file.precompiled then
 						Result := file.is_readable
 					else
 						Result := (file.is_readable and file.is_writable)
 					end
-				end;
+				end
 				local_files.forth
 			end
 		end
@@ -266,7 +266,7 @@ feature -- Status report
 			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
-				Result := True;
+				Result := True
 				local_files := files
 				local_files.start
 			until
@@ -290,10 +290,10 @@ feature -- Initialization
 			until
 				local_files.after
 			loop
-				local_files.item_for_iteration.update_path;
+				local_files.item_for_iteration.update_path
 				local_files.forth
-			end;
-		end;
+			end
+		end
 
 feature -- Merging
 
@@ -303,13 +303,13 @@ feature -- Merging
 		require
 			other_not_void: other /= Void
 		do
-			file_counter.append (other.file_counter);
+			file_counter.append (other.file_counter)
 			files.merge (other.files)
 		end
 			
 feature -- SERVER_FILE sizes
 
-	block_size: INTEGER;
+	block_size: INTEGER
 
 	set_block_size (s: INTEGER) is
 		do
@@ -328,9 +328,9 @@ feature -- Debug
 			until
 				local_files.after
 			loop
-				local_files.item_for_iteration.trace;
+				local_files.item_for_iteration.trace
 				local_files.forth
 			end
-		end;
+		end
 
 end -- class SERVER_CONTROL

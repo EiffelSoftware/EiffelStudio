@@ -214,6 +214,8 @@ feature -- Table of Contents Preferences
 			Result.extend ("com")
 			Result.extend ("lex")
 			Result.extend ("eiffel2java")
+			Result.extend ("store")
+			Result.extend ("thread")
 		end
 	
 	envision_libraries: ARRAYED_LIST [STRING] is

@@ -3,8 +3,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	EB_COMMAND_FEEDBACK
+
+inherit
+	EV_COMMAND
 
 feature -- Initialization
 
@@ -14,6 +17,7 @@ feature -- Initialization
 			a_button_non_void: a_button /= Void
 		do
 			button := a_button
+			button.add_click_command (Current, Void)
 		ensure
 			properly_set: button = a_button
 		end
@@ -24,6 +28,7 @@ feature -- Initialization
 			a_menu_item_non_void: a_menu_item /= Void
 		do
 			menu_item := a_menu_item
+			menu_item.add_select_command (Current, Void)
 		ensure
 			properly_set: menu_item = a_menu_item
 		end

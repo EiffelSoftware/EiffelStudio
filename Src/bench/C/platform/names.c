@@ -5,7 +5,7 @@
 
 public EIF_REFERENCE eif_dot_e ()
 {
-#ifdef __WINDOWS_386__
+#if defined __WINDOWS_386__ || __VMS
 	return RTMS (".E");
 #else
 	return RTMS (".e");
@@ -14,7 +14,7 @@ public EIF_REFERENCE eif_dot_e ()
 
 public EIF_REFERENCE eif_dot_o ()
 {
-#ifdef __WINDOWS_386__
+#if defined __WINDOWS_386__ || __VMS
 	return RTMS (".obj");
 #else
 	return RTMS (".o");
@@ -23,7 +23,7 @@ public EIF_REFERENCE eif_dot_o ()
 
 public EIF_REFERENCE eif_driver ()
 {
-#ifdef __WINDOWS_386__
+#if defined __WINDOWS_386__ || __VMS
 	return RTMS ("driver.exe");
 #else
 	return RTMS ("driver");
@@ -32,7 +32,7 @@ public EIF_REFERENCE eif_driver ()
 
 public EIF_CHARACTER eif_eiffel_suffix ()
 {
-#ifdef __WINDOWS_386__
+#if defined __WINDOWS_386__ || __VMS
 	return 'E';
 #else
 	return 'e';
@@ -41,7 +41,7 @@ public EIF_CHARACTER eif_eiffel_suffix ()
 
 public EIF_REFERENCE eif_exec_suffix ()
 {
-#ifdef __WINDOWS_386__
+#if defined __WINDOWS_386__ || __VMS
 	return RTMS (".exe");
 #else
 	return RTMS ("");
@@ -61,6 +61,8 @@ public EIF_REFERENCE eif_preobj ()
 {
 #ifdef __WINDOWS_386__
 	return RTMS ("preobj.obj");
+#elif defined __VMS
+	return RTMS ("preobj.olb");
 #else
 	return RTMS ("preobj.o");
 #endif
@@ -70,6 +72,8 @@ public EIF_REFERENCE eif_copy_cmd ()
 {
 #ifdef __WINDOWS_386__
 	return RTMS ("\command.com /c copy");
+#elif defined __VMS
+	return RTMS ("copy");
 #else
 	return RTMS ("cp");
 #endif
@@ -96,6 +100,8 @@ public EIF_REFERENCE eif_timeout_msg ()
 	strcat(s, "Try restarting ebench after setting ");
 #ifdef __WINDOWS_386__
 	strcat(s, "variable\n");
+#elif defined __VMS
+	strcat(s, " the logical\n");
 #else
 	strcat(s, "environment\nvariable ");
 #endif
@@ -115,7 +121,7 @@ public EIF_REFERENCE eif_timeout_msg ()
 	} else {
 		strcat(s, "the default 120");
 	}
-	strcat(s, ".\n");
+	strcat(s, " seconds.\n");
 #endif
 	return RTMS (s);
 }

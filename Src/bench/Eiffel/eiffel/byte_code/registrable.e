@@ -114,4 +114,11 @@ feature
 			!!Result.make(10);
 		end;
 
+feature -- Concurrent Eiffel
+
+	is_separate: BOOLEAN is
+		do
+			
+		end;
+
 end

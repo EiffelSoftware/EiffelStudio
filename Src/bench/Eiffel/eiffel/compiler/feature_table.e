@@ -596,24 +596,9 @@ end;
 
 	feature_of_rout_id (rout_id: INTEGER): FEATURE_I is
 			-- Feature found in routine table rout_id
-		local
-			feat: FEATURE_I;
-			pos: INTEGER
 		do
-			pos := iteration_position
-			from
-				start
-			until
-				after or else Result /= Void
-			loop
-				feat := item_for_iteration;
-				if feat.rout_id_set.has (rout_id) then
-					Result := feat;
-				end;
-				forth;
-			end;
-			go (pos);
-		end;
+			Result := origin_table.item (rout_id)
+		end
 
 	update_instantiator2 is
 			-- Look for generic types in the result and arguments of

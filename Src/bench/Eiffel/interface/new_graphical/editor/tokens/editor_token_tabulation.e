@@ -14,11 +14,6 @@ inherit
 			display_half_selected
 		end
 
-	SHARED_EDITOR_PREFERENCES
-		export
-			{NONE} all
-		end
-
 create
 	make
 
@@ -139,6 +134,12 @@ feature {NONE} -- Implementation
 				the_background_brush := normal_background_brush
 			end
 
+				-- Backup drawing style & set the new one
+			old_text_color := a_dc.text_color
+			a_dc.set_text_color(the_text_color)
+			a_dc.set_background_transparent
+			a_dc.select_font(font)
+
 				-- Display the first tabulation
 			from
 				i := start_tab
@@ -163,15 +164,18 @@ feature {NONE} -- Implementation
 
 					-- Display the tabulation symbol
 				if view_tabulation_symbol then
-					a_dc.set_background_transparent
 					a_dc.text_out(symbol_position, d_y, tabulation_symbol)
-					a_dc.set_background_opaque
 				end
 
 					-- update the local position & prepare next iteration
 				local_position := local_position + local_width
 				i := i + 1
 			end
+
+				-- Restore old drawing style
+			a_dc.unselect_font
+			a_dc.set_background_opaque
+			a_dc.set_text_color(old_text_color)
 		end
 
 feature {NONE} -- Private characteristics & constants

@@ -63,13 +63,13 @@ feature {NONE} -- Implementation
 			when Cmd_edit_indent then
 				if has_active_window then
 					child ?= active_window
-					child.unindent_selection
+					child.indent_selection
 				end
 
 			when Cmd_edit_unindent then
 				if has_active_window then
 					child ?= active_window
-					child.indent_selection
+					child.unindent_selection
 				end
 
 			when Cmd_edit_comment then

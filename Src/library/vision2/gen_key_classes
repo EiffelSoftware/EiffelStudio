@@ -1,0 +1,131 @@
+#!/usr/bin/perl -w
+#===============================================================================
+# gen_key_classes
+#-------------------------------------------------------------------------------
+# interface/kernel/ev_key_constants.e
+# implementation/mswin/support/ev_wel_key_conversion.e
+# implementation/gtk/support/ev_gtk_key_conversion.e
+#-------------------------------------------------------------------------------
+# Date: $Date$
+# Revision: $Revision$
+#===============================================================================
+
+# Initialize global soo-to-be-huge strings.
+
+$v2_to_wel_array = "";
+$wel_to_v2_array = "";
+$v2_to_gtk_array = "";
+$gtk_to_v2_array = "";
+$key_strings = "";
+$key_constants = "";
+
+# For every line in the file from stdin.
+while (<>) {
+
+	# Init array.
+	@fields = ();
+	
+	# Ignore empty lines, those starting with whitespace and comments.
+	if (!/^[\n 	#].*/) {
+		chomp;
+
+		# Separate comma separated fields.
+		# Ignore commas preceded by %.
+		@fields = split (/,[ 	]*/,$_);
+		
+		# Put the fields in separate named strings.
+		$comment = shift (@fields);
+		$comment = "-- Code representing $comment.";
+		$identifier = shift (@fields);
+		$identifier = "Key_$identifier";
+		$string = shift (@fields);
+		$string = "\"$string\"";
+		$gtk_code = shift (@fields);
+		$wel_code = shift (@fields);
+
+		$eif_statement = "Result.put ($identifier, $wel_code)";
+		$v2_to_wel_array = "$v2_to_wel_array\t\t\t$eif_statement\n";
+
+		$eif_statement = "Result.put ($wel_code, $identifier)";
+		$wel_to_v2_array = "$wel_to_v2_array\t\t\t$eif_statement\n";
+
+		$eif_statement = "Result.put ($identifier, $gtk_code)";
+		$v2_to_gtk_array = "$v2_to_gtk_array\t\t\t$eif_statement\n";
+
+		$eif_statement = "Result.put ($gtk_code, $identifier)";
+		$gtk_to_v2_array = "$gtk_to_v2_array\t\t\t$eif_statement\n";
+
+		$eif_statement = "Result.put ($identifier, $string)";
+		$key_strings = "$key_strings\t\t\t$eif_statement\n";
+
+		$eif_statement = "$identifier: INTEGER is unique";
+		$key_constants = "$key_constants\n\t$eif_statement\n\t\t\t$comment\n";
+	}
+}
+
+open (OH, ">" . "ev_key_constants.e");
+
+print OH <<EOT;
+indexing
+	description:
+		"Eiffel Vision key constants. Each constant defined here %N%
+		%corresponds to a possible value of {EV_KEY}.code"
+	status: "See notice at end of class"
+	date: "generated"
+	revision: "generated"
+
+class
+	EV_KEY_CONSTANTS
+
+feature -- Contract support
+
+	valid_key_code (a_code: INTEGER): BOOLEAN is
+			-- Is `a_code' a valid key code?
+		do
+			Result := a_code >= Key_0 and then a_code <= Key_z
+		end
+
+feature -- Constants
+$key_constants
+feature -- Access
+
+	key_strings: ARRAY [STRING] is
+			-- String representations of all key codes.
+		once
+			create Result.make (Key_0, Key_z)
+$key_strings		end
+
+end -- class EV_KEY_CONSTANTS
+
+--!-----------------------------------------------------------------------------
+--! EiffelVision Library: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license. 
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 270 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info\@eiffel.com>
+--! Customer support e-mail <support\@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!-----------------------------------------------------------------------------
+EOT
+
+close (OH);
+
+
+#===============================================================================
+# CVS log
+#===============================================================================
+#
+# $Log$
+# Revision 1.1  2000/03/17 01:27:31  brendel
+# Initial.
+#
+#
+#===============================================================================
+# End of CVS log
+#===============================================================================

@@ -16,6 +16,11 @@ inherit
 		export {NONE}
 			all
 		end
+		
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
 	
 create
 	make
@@ -48,7 +53,7 @@ feature -- Access
 			
 	html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE
 			-- html document generator for the project
-		
+			
 	valid_project: BOOLEAN is
 			-- Is project valid?
 		do
@@ -138,7 +143,7 @@ feature -- Basic Operations
 						else
 							if not Eiffel_project.initialized then
 								open_project_file (file_name)
-								create {PROJECT_PROPERTIES} project_properties_internal.make
+								load_ace_file_only (Eiffel_Ace.file_name)
 								Valid_project_ref.set_item (True)
 								l_pp := Project_properties
 							else
@@ -170,8 +175,7 @@ feature -- Basic Operations
 						create project_dir.make (project_directory_path, Void)
 						Eiffel_project.make_new (project_dir, True, Void, Void)
 						if Eiffel_project.initialized then
-							Eiffel_ace.set_file_name (ace_name)
-							create {PROJECT_PROPERTIES} project_properties_internal.make
+							load_ace_file_only (ace_name)
 							create enum
 							Valid_project_ref.set_item (True)
 							--project_properties.set_compilation_type (enum.eif_compt_is_application)
@@ -186,6 +190,27 @@ feature -- Basic Operations
 				end
 			end
 		end
+		
+	load_ace_file_only (ace_name: STRING) is
+			-- load only the ace file
+		require
+			non_void_ace_name: ace_name /= Void
+			non_empty_ace_name: not ace_name.is_empty
+		local
+			retried: BOOLEAN
+		do
+			check_ace_file (ace_name)
+			if not retried and valid_ace_file then
+				Eiffel_ace.set_file_name (ace_name)
+				create {PROJECT_PROPERTIES} project_properties_internal.make
+			else
+				last_error_message := "Invalid Ace file"
+			end
+		rescue
+			retried := True
+			retry
+		end
+		
 
 feature {NONE} -- Project directory access
 

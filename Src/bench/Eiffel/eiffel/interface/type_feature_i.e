@@ -1,15 +1,15 @@
 indexing
 	description: "[
 		Representation of a formal generic parameter from the point of view of
-		inheritance. Instances of FORMAL_ATTRIBUTE_I are used in CLASS_C.
+		inheritance. Instances of TYPE_FEATURE_I are used in CLASS_C.
 		
 		A class that has a formal generic parameter or that inherits one
 		(i.e. class B which inherits from class A [STRING], in B it inherits
 		the formal generic parameter from A even though B is not generic) will
-		have or more instances of a FORMAL_ATTRIBUTE_I.
+		have or more instances of a TYPE_FEATURE_I.
 
-		CLASS_C takes care of merging and type analyzing of FORMAL_ATTRIBUTE_I
-		object since a FORMAL_ATTRIBUTE_I object will see its `type' changed
+		CLASS_C takes care of merging and type analyzing of TYPE_FEATURE_I
+		object since a TYPE_FEATURE_I object will see its `type' changed
 		with the inheritance. For example taking the above example, in A, the
 		`type' is a FORMAL_A, but in B it is a CL_TYPE_A representing STRING.
 		]"
@@ -17,7 +17,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	FORMAL_ATTRIBUTE_I
+	TYPE_FEATURE_I
 
 inherit
 	FEATURE_I
@@ -29,9 +29,10 @@ inherit
 			{ANY}
 				feature_id, rout_id_set, origin_class_id, is_origin,
 				feature_name, written_in, origin_feature_id,
+				feature_name_id,
 				set_feature_id, set_rout_id_set, set_origin_class_id,
 				set_is_origin, set_feature_name, set_written_in,
-				set_origin_feature_id,
+				set_origin_feature_id, set_feature_name_id,
 				instantiate, duplicate, new_rout_id
 			redefine
 			new_entry, is_formal_attribute
@@ -122,4 +123,4 @@ feature {NONE} -- Replication
 			end
 		end
 
-end -- class FORMAL_ATTRIBUTE_I
+end -- class TYPE_FEATURE_I

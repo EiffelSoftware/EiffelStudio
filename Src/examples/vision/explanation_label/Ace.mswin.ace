@@ -7,19 +7,33 @@ root
 
 default
 	assertion (all);
-	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/vision")
 
 cluster
 
 	root_cluster:			"$ISE_EIFFEL/examples/vision/explanation_label";
 
 
-external
-	include_path:
-		"$(ISE_EIFFEL)\library\wel\spec\windows\include";
+		-- EiffelBase
+	all base: 		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3";
+			"desc"
+		end
 
-	object:
-		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib";
+		-- WEL
+	all wel:		"$ISE_EIFFEL\library\wel"
+
+		-- EiffelVision
+	all vision:							"$ISE_EIFFEL\library\vision"
+		exclude
+			"obsolete"; "motif"; "gtk"; "x"; "CVS"
+		default
+			assertion(no);
+		end	
+
+external
+	include_path:		"$(ISE_EIFFEL)\library\wel\spec\windows\include";
+	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end
 

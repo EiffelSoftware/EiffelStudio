@@ -48,7 +48,7 @@ feature -- Element change
 		require
 			a_timer_id_exists:
 				a_timer_id > 0 and then a_timer_id <= timeouts.count
-			an_interval_positive: an_interval > 0
+			an_interval_non_negative: an_interval >= 0
 		do
 			if an_interval = 0 then
 				kill_timer (a_timer_id)
@@ -101,6 +101,9 @@ end -- class EV_INTERNAL_TIMEOUT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/05/01 19:13:19  brendel
+--| Corrected precondition.
+--|
 --| Revision 1.4  2000/03/06 23:12:18  brendel
 --| Implemented.
 --|

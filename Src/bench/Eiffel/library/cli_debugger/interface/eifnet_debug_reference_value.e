@@ -47,6 +47,8 @@ feature {NONE} -- Initialization
 			object_value := icd_value_info.interface_debug_object_value
 			if object_value /= Void then
 				value_class_token := icd_value_info.value_class_token
+--			else
+--				is_external_type := True
 			end
 
 			is_null := icd_value_info.is_null
@@ -109,13 +111,19 @@ feature -- Access
 			Result := internal_dynamic_class_type
 			if Result = Void then
 				if not is_null then
-					Result := icd_value_info.value_class_type
-					if Result = Void then
-							--| This means we are dealing with an external type (dotnet)
-						internal_dynamic_class := icd_value_info.value_class_c
---						internal_dynamic_class := Eiffel_system.System.system_object_class.compiled_class
-						Result := internal_dynamic_class.types.first
-						is_external_type := True
+					if icd_value_info.has_object_interface then
+						Result := icd_value_info.value_class_type						
+					
+						if Result = Void then
+								--| This means we are dealing with an external type (dotnet)
+							internal_dynamic_class := icd_value_info.value_class_c
+--							internal_dynamic_class := Eiffel_system.System.system_object_class.compiled_class
+							Result := internal_dynamic_class.types.first
+							is_external_type := True
+						end
+					else
+						internal_dynamic_class := Eiffel_system.System.system_object_class.compiled_class
+						Result := internal_dynamic_class.types.first						
 					end
 					internal_dynamic_class_type := Result
 				end
@@ -184,35 +192,36 @@ feature -- Output
 			l_icd_class: ICOR_DEBUG_CLASS
 		do
 			create {SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]} Result.make
-			l_icd_class := object_value.get_class
-			if 
-				dynamic_class /= Void 
-				and l_icd_class /= Void
-				and object_value /= Void
-			then
-				l_feature_table := dynamic_class.feature_table
-				from
-					l_feature_table.start
-				until
-					l_feature_table.after
-				loop
-					l_feature_i := l_feature_table.item_for_iteration
-					debug ("DEBUGGER_TRACE_CHILDREN")
-						print (">>> CHILDREN :: " + l_feature_i.feature_name + "<<<%N")
-						print ("%T - from feature_i     => "
-								+ l_feature_i.written_class.name_in_upper + "." + l_feature_i.feature_name
-								+ " :: " + l_feature_i.written_class.class_id.out + "%N")
-						print ("%T - from dynamic_class => " + dynamic_class.name_in_upper
-								+ "." + l_feature_i.feature_name + " :: " + dynamic_class.class_id.out + "%N")
-					end
-
-					if l_feature_i.is_attribute then
-						l_att_debug_value := attribute_value (l_icd_class, l_feature_i)
-						if l_att_debug_value /= Void then
-							Result.extend (l_att_debug_value)
+			if object_value /= Void then
+				l_icd_class := object_value.get_class
+				if 
+					dynamic_class /= Void 
+					and l_icd_class /= Void
+				then
+					l_feature_table := dynamic_class.feature_table
+					from
+						l_feature_table.start
+					until
+						l_feature_table.after
+					loop
+						l_feature_i := l_feature_table.item_for_iteration
+						debug ("DEBUGGER_TRACE_CHILDREN")
+							print (">>> CHILDREN :: " + l_feature_i.feature_name + "<<<%N")
+							print ("%T - from feature_i     => "
+									+ l_feature_i.written_class.name_in_upper + "." + l_feature_i.feature_name
+									+ " :: " + l_feature_i.written_class.class_id.out + "%N")
+							print ("%T - from dynamic_class => " + dynamic_class.name_in_upper
+									+ "." + l_feature_i.feature_name + " :: " + dynamic_class.class_id.out + "%N")
 						end
+
+						if l_feature_i.is_attribute then
+							l_att_debug_value := attribute_value (l_icd_class, l_feature_i)
+							if l_att_debug_value /= Void then
+								Result.extend (l_att_debug_value)
+							end
+						end
+						l_feature_table.forth
 					end
-					l_feature_table.forth
 				end
 			end
 		ensure then

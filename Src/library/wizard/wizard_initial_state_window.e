@@ -31,6 +31,7 @@ feature -- Basic Operations
 			interior_box: EV_HORIZONTAL_BOX
 			message_and_title_box: EV_VERTICAL_BOX
 			tuple: TUPLE
+			white_cell: EV_CELL
 		do
 			create title
 			title.set_background_color (white_color)
@@ -44,6 +45,9 @@ feature -- Basic Operations
 
 			create choice_box
 			choice_box.set_background_color (white_color)			
+			
+			create white_cell
+			white_cell.set_background_color (white_color)
 
 			display_state_text
 			create message_and_title_box
@@ -53,13 +57,16 @@ feature -- Basic Operations
 			message_and_title_box.extend (title)
 			message_and_title_box.disable_item_expand (title)
 			message_and_title_box.extend (message)
+			message_and_title_box.disable_item_expand (message)
 			message_and_title_box.extend (choice_box)
 			message_and_title_box.disable_item_expand (choice_box)
+			message_and_title_box.extend (white_cell)
 
 			local_pixmap := pixmap.ev_clone
-			local_pixmap.set_minimum_height (dialog_unit_to_pixels(312))
-			local_pixmap.set_minimum_width (165)
-			local_pixmap.draw_pixmap (91, 9, pixmap_icon)
+			local_pixmap.set_minimum_size (
+				dialog_unit_to_pixels(165),
+				dialog_unit_to_pixels(312))
+			local_pixmap.draw_pixmap (122, 69, pixmap_icon)
 
 			create vertical_separator
 
@@ -72,7 +79,7 @@ feature -- Basic Operations
 			main_box.extend (interior_box)
 
 			create tuple.make
-			choice_box.set_help_context (~create_help_context (tuple))
+			choice_box.set_help_context (agent create_help_context (tuple))
 		end
 
 	pixmap_location: FILE_NAME is

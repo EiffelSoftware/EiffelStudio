@@ -20,7 +20,7 @@ feature
 			selection_list := l;
 		end; -- set_selection_list
 
-	subcode: INTEGER is 3;
+	subcode: INTEGER is 2;
 
 	build_explain is
 			-- Build specific explanation explain for current error

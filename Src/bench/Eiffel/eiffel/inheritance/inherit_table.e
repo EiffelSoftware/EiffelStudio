@@ -324,11 +324,11 @@ feature
 					-- If there is a table in the tmp server,
 					-- the propagation is done again only if the new
 					-- table is different.
-				equiv_tables := resulting_table.equiv (previous_feature_table)
+				equiv_tables := resulting_table.equiv (previous_feature_table, pass2_control)
 			else
 					-- There is no table in the tmp server, see if the
 					-- new feature table is equivalent to the old one
-				equiv_tables := resulting_table.equiv (feature_table);
+				equiv_tables := resulting_table.equiv (feature_table, pass2_control);
 			end;
 
 --			equiv_tables := resulting_table.equiv (feature_table);

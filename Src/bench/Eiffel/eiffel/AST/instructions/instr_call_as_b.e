@@ -30,7 +30,7 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type check a call as an instruction
 		local
-			vkcn: VKCN;
+			vkcn1: VKCN1;
 		do
 				-- Init type stack
 			context.begin_expression;
@@ -38,9 +38,9 @@ feature -- Type check, byte code and dead code removal
 				-- Check it is a procedure call
 			if not context.item.conform_to (Void_type) then
 					-- Error
-				!!vkcn;
-				context.init_error (vkcn);
-				Error_handler.insert_error (vkcn);
+				!!vkcn1;
+				context.init_error (vkcn1);
+				Error_handler.insert_error (vkcn1);
 			end;
 				-- Update the type stack
 			context.pop (1);

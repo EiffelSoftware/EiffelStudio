@@ -8,6 +8,8 @@ inherit
 	
 feature 
 
+	plug_file: UNIX_FILE;
+
 	general_class: CLASS_I;
 			-- Class GENERAL
 

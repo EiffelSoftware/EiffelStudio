@@ -156,7 +156,7 @@ feature
 			if System.uses_precompiled then
 				Make_file.putstring ("%T%T");
 				Make_file.putstring (Precompilation_directory.name);
-				Make_file.putstring ("/C_code/preobj.o \");
+				Make_file.putstring ("/EIFFELGEN/W_code/preobj.o \");
 				Make_file.new_line;
 			end;
 		end;

@@ -44,7 +44,7 @@ feature
 	code: STRING is "VUEX";
 			-- Error code
 
-	subcode: INTEGEr is 1;
+	subcode: INTEGEr is 2;
 
 	build_explain is
 			-- Build specific explanation image for current error

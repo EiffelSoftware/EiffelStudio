@@ -169,6 +169,10 @@ feature -- Propagation of second pass
 					pass2_controler.set_assertion_prop_list
 					(descendant, assert_prop_list.duplicate (assert_prop_list.count));
 				end;
+
+-- The next two lines should NOT be here
+-- Check the histroy in integrator. Xavier
+
 				pass3_controler.insert_new_class (descendant);
 				pass4_controler.insert_new_class (descendant);
 

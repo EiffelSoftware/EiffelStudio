@@ -528,8 +528,10 @@ end;
 							feature_i.type_check;
 							type_check_error := Error_handler.new_error;
 
-							if 	feature_changed
-								and then
+--							if 	feature_changed
+--								and then
+
+							if
 								not type_check_error
 							then
 								if f_suppliers /= Void then
@@ -547,19 +549,18 @@ end;
 									new_suppliers.add_occurence (f_suppliers);
 								end;
 
-									-- Byte code processing
---								if feature_i.is_deferred then
---										-- No byte code and melted info for
---										-- deferred features
---									feature_changed := False;
---								else
 debug ("ACTIVITY")
 	io.error.putstring ("%Tbyte code for ");
 	io.error.putstring (feature_name);
 	io.error.new_line;
 end;
-									feature_i.compute_byte_code;
---								end;
+								feature_i.compute_byte_code;
+								if	not feature_i.is_deferred then
+										-- Remember the melted feature information
+										-- if it is not deferred.
+									!!melted_info.make (feature_i);
+									melt_set.put (melted_info);
+								end;
 
 							end;
 						else
@@ -576,15 +577,6 @@ end;
 
 					ast_context.clear2;
 
-					if	feature_changed
-						and then
-						not (type_check_error or else feature_i.is_deferred)
-					then
-							-- Remember the melted feature information
-							-- if it is not deferred.
-						!!melted_info.make (feature_i);
-						melt_set.put (melted_info);
-					end;
 					type_check_error := False;
 
 				elseif ((not feature_i.in_pass3) or else
@@ -598,14 +590,6 @@ end;
 						ast_context.clear2;
 					end;
 					record_suppliers (feature_i, dependances);
-				--elseif (feature_i.is_deferred or else
-						--feature_i.is_external) and then
-					--(id = feature_i.written_in) then
-						-- Just type check it. See if VRRR or
-						-- VMRX error has occurred.
-					--ast_context.set_a_feature (feature_i);
-					--feature_i.type_check;
-					--ast_context.clear2;
 				end;
 
 				feat_table.forth;
@@ -1069,8 +1053,12 @@ feature -- Workbench feature and descriptor table generation
 			fname: STRING;
 		do
 			fname := base_file_name;
-			!!Result.make (Generation_path.count + fname.count + 1);
-			Result.append (Generation_path);
+			!!Result.make (Workbench_generation_path.count + fname.count + 1);
+			if System.in_final_mode then
+				Result.append (Final_generation_path);
+			else
+				Result.append (Workbench_generation_path);
+			end;
 			Result.append ("/");
 			Result.append (fname);
 		end;
@@ -1675,9 +1663,6 @@ feature
 			generic_dec: FORMAL_DEC_AS;
 			constraint_type: TYPE;
 		do
-io.error.putstring ("Check constraint genericity of ");
-io.error.putstring (class_name);
-io.error.new_line;
 			from
 				generics.start
 			until
@@ -2453,8 +2438,11 @@ feature -- Cecil
 			-- Generate Cecil type value for a non generic class
 		require
 			no_generics: generics = Void;
-			Cecil_file.is_open_write;
+			System.Cecil_file.is_open_write;
+		local
+			cecil_file: UNIX_FILE;
 		do
+			cecil_file := System.cecil_file;
 			if is_expanded then
 				Cecil_file.putstring ("SK_EXP + ");
 			end;

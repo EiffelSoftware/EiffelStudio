@@ -82,8 +82,15 @@ feature
 		local
 			melted_feat: FEATURE_I;
 			disp_unit: DISPATCH_UNIT;
+			s: SORTED_SET [INTEGER];
+			body_id: INTEGER;
 		do
 			melted_feat := associated_feature (feat_tbl);
+			body_id := melted_feat.body_id;
+			s := class_type.valid_body_ids;
+			if not s.has (body_id) then
+				s.add (body_id)
+			end;
 			disp_unit := dispatch_unit (melted_feat, class_type, feat_tbl);
 			melted_feat.melt (disp_unit, disp_unit.execution_unit);
 		end;

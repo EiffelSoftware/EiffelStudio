@@ -11,9 +11,9 @@ inherit
 
 feature 
 
-	code: STRING is "VRLE";
+	code: STRING is "VEEN";
 			-- Error code
 
-	subcode: INTEGER is 3;
+	subcode: INTEGER is 2;
 
 end

@@ -54,7 +54,7 @@ feature
 			print_called_feature;
 			put_string ("Argument name: ");
 			put_string (argument_name);
-			put_string (" Argument position: ");
+			put_string ("%NArgument position: ");
 			put_int (argument_position);
 			put_string ("%NActual argument type: ");
 			actual_type.append_clickable_signature (error_window);

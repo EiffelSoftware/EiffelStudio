@@ -55,6 +55,7 @@ feature -- Output
 						-- put a separation before the next message
 					display_separation_line (output_window)
 				end;
+				warning_list.wipe_out;
 			else
 				retried := False;
 				display_error_error (output_window)

@@ -1,6 +1,5 @@
 indexing
-
-	description: "COM Automation server"
+	description: "COM Local Automation server"
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -10,6 +9,11 @@ deferred class
 	
 inherit
 	ARGUMENTS
+
+	EOLE_REGISTRATION
+		rename
+			command_line as wel_command_line
+		end
 	
 	EOLE_COM
 		rename
@@ -82,17 +86,11 @@ feature -- Access
 		deferred
 		end
 		
-	class_identifier: STRING is
-			-- Class identifier
-		deferred
-		ensure
-			valid_class_identifier: Result /= Void and then is_valid_guid (Result)
-		end
-		
 	context: INTEGER is
 			-- Associated class context
-			-- See EOLE_CLSCTX for `Result' value.
-		deferred
+			-- See EOLE_CLSCTX for `Result value'
+		do
+			Result := Clsctx_local_server
 		ensure
 			valid_clsctx: is_valid_clsctx (Result)
 		end
@@ -100,7 +98,8 @@ feature -- Access
 	register_flags: INTEGER is
 			-- Register flags
 			-- See EOLE_REGISTER_FLAGS for `Result' value.
-		deferred
+		do
+			Result := Regcls_singleuse
 		ensure
 			valid_register_flags: is_valid_register_flag (Result)
 		end
@@ -123,12 +122,24 @@ feature -- Element Change
 
 	register_server is
 			-- Register server.
-		deferred
+		local
+			exception: EXCEPTIONS
+		do
+			if on_register_server ("LocalServer32") /= S_ok then
+				!! exception
+				exception.raise ("Server registration failed")
+			end
 		end
 		
 	unregister_server is
 			-- Unregister server.
-		deferred
+		local
+			exception: EXCEPTIONS
+		do
+			if on_unregister_server ("LocalServer32") /= S_ok then
+				!! exception
+				exception.raise ("Server unregistration failed")
+			end
 		end
 
 	run is
@@ -143,7 +154,7 @@ feature -- Element Change
 			if ole_initialize /= S_ok then
 				com_init_error_process
 			end
-			token := co_register_class_object (class_identifier, Current, context, register_flags)
+			token := co_register_class_object (clsid, Current, context, register_flags)
 			if co_status.succeeded then
 				wel_appl_make
 			else

@@ -10,10 +10,7 @@ deferred class
 	EV_MULTI_COLUMN_LIST_I
 
 inherit
-	EV_LIST_I
-		rename
-			count as row_count
-		end
+	EV_PRIMITIVE_I
 
 feature {NONE} -- Initialization
 
@@ -26,14 +23,84 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	column_count: INTEGER is
-			-- Nimber of columns in the list.
+	rows: INTEGER is
+			-- Number of rows
 		require
 			exists: not destroyed
 		deferred
 		end
 
+	columns: INTEGER is
+			-- Number of columns in the list.
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	get_item (index: INTEGER): EV_MULTI_COLUMN_LIST_ROW is
+			-- Give the item of the list at the zero-base
+			-- `index'.
+		require
+			exists: not destroyed
+			item_exists: index <= rows
+		deferred
+		end
+
+	selected_item: EV_MULTI_COLUMN_LIST_ROW is
+			-- Item which is currently selected, for a multiple
+			-- selection, it gives the item which has the focus.
+		require
+			exists: not destroyed
+			item_selected: selected
+		deferred
+		end
+
+	selected_items: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW] is
+			-- List of all the selected items. For a single
+			-- selection list, it gives a list with only one
+			-- element which is `selected_item'. Therefore, one
+			-- should use `selected_item' rather than 
+			-- `selected_items' for a single selection list
+		require
+			exists: not destroyed
+			item_selected: selected
+		deferred
+		end
+
+feature -- Status report
+
+	selected: BOOLEAN is
+			-- Is at least one item selected ?
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	is_multiple_selection: BOOLEAN is
+			-- True if the user can choose several items
+			-- False otherwise
+		require
+			exist: not destroyed
+		deferred
+		end
+
 feature -- Status setting
+
+	set_multiple_selection is
+			-- Allow the user to do a multiple selection simply
+			-- by clicking on several choices.
+		require
+			exists: not destroyed
+		deferred	
+		end
+
+	set_single_selection is
+			-- Allow the user to do only one selection. It is the
+			-- default status of the list
+		require
+			exists: not destroyed
+		deferred
+		end
 
 	show_title_row is
 			-- Show the row of the titles.
@@ -49,6 +116,18 @@ feature -- Status setting
 		deferred
 		end
 
+	set_column_alignment (type: INTEGER; column: INTEGER) is
+			-- Align the text of the column.
+			-- 0: Left, 
+			-- 1: Right,
+			-- 2: Center,
+			-- 3: Fill (temp)
+		require
+			exists: not destroyed
+			column_exists: column >= 1 and column <= columns
+		deferred
+		end
+
 feature -- Element change
 
 	set_column_title (txt: STRING; column: INTEGER) is
@@ -56,7 +135,7 @@ feature -- Element change
 			-- `number'.
 		require
 			exists: not destroyed
---			column_exists: column <= column_count
+			column_exists: column >= 1 and column <= columns
 		deferred
 		end
 
@@ -65,7 +144,7 @@ feature -- Element change
 			-- `column'.
 		require
 			exists: not destroyed
---			column_exists: column >= 1 and column <= column_count
+			column_exists: column >= 1 and column <= columns
 		deferred
 		end
 
@@ -73,7 +152,33 @@ feature -- Element change
 			-- Make`value' the new height of all the rows.
 		require
 			exists: not destroyed
---			row_exists: row >= 0 and row <= row_count
+		deferred
+		end
+
+feature -- Event : command association
+
+	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+			-- Make `command' executed when an item is
+			-- selected.
+		require
+			exists: not destroyed
+			command_not_void: a_command /= Void
+		deferred
+		end
+
+	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Make `command' executed when an item is
+			-- selected by double clicked.
+		require
+			exists: not destroyed
+			command_not_void: a_command /= Void
+		deferred
+		end
+
+feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
+
+	add_item (item: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Add `item' to the list
 		deferred
 		end
 

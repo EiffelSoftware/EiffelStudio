@@ -142,7 +142,7 @@ feature {NONE} -- Initialization
 			)
 			
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (tree_view)
-			feature {EV_GTK_EXTERNALS}.gtk_tree_view_set_rules_hint (tree_view, True)
+			--feature {EV_GTK_EXTERNALS}.gtk_tree_view_set_rules_hint (tree_view, True)
 			
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_headers_visible (tree_view, False)
 			
@@ -171,7 +171,7 @@ feature {NONE} -- Initialization
 			initialize_pixmaps
 			connect_button_press_switch
 			
-			set_row_height (App_implementation.default_font_height + 10)
+			set_row_height (App_implementation.default_font_height + 5)
 				-- We explicitly set the row height to be proportional to the default gtk application font
 		end
 
@@ -191,7 +191,6 @@ feature {NONE} -- Initialization
 			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
 				INTEGER, INTEGER]
 			tree_item_imp: EV_TREE_NODE_IMP
-			a_x_offset, a_y_offset, a_width, a_height: INTEGER
 			a_property: EV_GTK_C_STRING
 			a_expander_size, a_horizontal_separator: INTEGER
 			a_success: BOOLEAN
@@ -262,9 +261,6 @@ feature -- Status report
 			a_tree_path_list: POINTER
 			a_model: POINTER
 			a_tree_path: POINTER
-			a_int_ptr: POINTER
-			mp: MANAGED_POINTER
-			i, a_depth: INTEGER
 			a_tree_node_imp: EV_TREE_NODE_IMP
 		do
 			a_selection := feature {EV_GTK_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
@@ -513,17 +509,19 @@ feature -- Implementation
 			end
 		end
 
-	post_drop_steps is
+	post_drop_steps (a_button: INTEGER)  is
 			-- Steps to perform once an attempted drop has happened.
 		do
-			if pnd_row_imp /= Void and not is_destroyed then
-				if pnd_row_imp.mode_is_pick_and_drop then
-					signal_emit_stop (visual_widget, "button-press-event")
-				end
-			elseif mode_is_pick_and_drop and not is_destroyed then
-					signal_emit_stop (visual_widget, "button-press-event")
+			if a_button > 0 then
+				if pnd_row_imp /= Void and not is_destroyed then
+					if pnd_row_imp.mode_is_pick_and_drop then
+						signal_emit_stop (visual_widget, "button-press-event")
+					end
+				elseif mode_is_pick_and_drop and not is_destroyed then
+						signal_emit_stop (visual_widget, "button-press-event")
+				end				
 			end
-
+			
 			app_implementation.on_drop (pebble)
 			x_origin := 0
 			y_origin := 0
@@ -613,7 +611,6 @@ feature {NONE} -- Implementation
 			-- Insert `v' at position `i'.
 		local
 			item_imp: EV_TREE_NODE_IMP
-			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
 		do
 			item_imp ?= v.implementation
 			item_imp.set_parent_imp (Current)
@@ -688,7 +685,6 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 			-- Set row `a_row' pixmap to `a_pixmap'.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
-			a_list_item_imp: EV_LIST_ITEM_IMP
 			a_pixbuf: POINTER
 		do
 			pixmap_imp ?= a_pixmap.implementation

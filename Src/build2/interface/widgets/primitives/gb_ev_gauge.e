@@ -103,7 +103,6 @@ feature -- Access
 		check
 			we_are_dealing_with_a_widget: widget /= Void
 		end
-		io.putstring (widget.out)
 		objects.extend (an_object)
 		objects.extend (vision2_object)
 		widget.pointer_button_release_actions.force_extend (agent start_timer)
@@ -114,7 +113,6 @@ feature -- Access
 			local
 				timer: EV_TIMEOUT
 			do
-				io.putstring ("Start timer called%N")
 				create timer.make_with_interval (10)
 				timer.actions.extend (agent check_state)
 				timer.actions.extend (agent timer.destroy)

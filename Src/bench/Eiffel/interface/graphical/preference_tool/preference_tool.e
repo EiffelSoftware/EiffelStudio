@@ -13,6 +13,7 @@ inherit
 			make as top_shell_make
 		end
 	COMMAND
+	TOOLTIP_INITIALIZER
 
 feature {NONE} -- Initialization
 
@@ -22,6 +23,7 @@ feature {NONE} -- Initialization
 		do
 			!! category_list.make;
 			last_selected := Void
+			tooltip_initialize (Current)
 		end;
 
 	initialize_menu_form is

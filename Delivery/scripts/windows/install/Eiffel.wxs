@@ -5,7 +5,7 @@
 
 		<Package Id="????????-????-????-????-????????????" Keywords="Installer" Description="EiffelStudio 5.6 Installer"
 			Comments="EiffelStudio is a registered trademark of Eiffel Software" Manufacturer="Eiffel Software"
-			InstallerVersion="150" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
+			InstallerVersion="200" Languages="1033" Compressed="yes" SummaryCodepage="1252" />
 
 		<Property Id="FRAMEWORKPATH">empty<RegistrySearch Id="AppReg1" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework" Name="InstallRoot" Type="registry" /></Property>
 		<Property Id="SELECTEDCCOMPILER">bcb<RegistrySearch Id="AppReg" Root="HKLM" Key="SOFTWARE\ISE\Eiffel56\ec" Name="ISE_C_COMPILER" Type="registry" /></Property>

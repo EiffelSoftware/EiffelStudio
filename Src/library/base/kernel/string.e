@@ -890,17 +890,6 @@ feature -- Conversion
 			Result := temp;
 		end;
 
-	to_pointer: POINTER is
-			-- A pointer to a C form of current string.
-			-- Useful only for interfacing with C software.
-		do
-			if count = 0 or else item (count) /= '%U' then
-				extend ('%U');
-				count := count - 1;
-			end;
-			Result := conv_pp ($area)
-		end;
-
 	to_c: ANY is
 			-- A reference to a C form of current string.
 			-- Useful only for interfacing with C software.
@@ -1259,12 +1248,6 @@ feature {STRING} -- Implementation
 			"C"
 		alias
 			"sprealloc"
-		end;
-
-	conv_pp (p: POINTER): POINTER is
-			-- Return its argument
-		external
-			"C"
 		end;
 
 invariant

@@ -22,7 +22,7 @@ if [ ! -d $EXPORT_DIR ]; then
 	remtrace Couldnt find the directory with the tgzs.
 	CANCEL
 fi
-if [ -e echome.tar.gz ]; then
+if [ -e ecfree.tar.gz ]; then
 	MULTIPLE_EDITIONS="True"
 else
 	MULTIPLE_EDITIONS=""
@@ -39,46 +39,45 @@ if [ ! -d C ]; then
 	remtrace No C directory
 	CANCEL
 fi
-cd C
-if [ -z "$MULTIPLE_EDITIONS" ]; then
-	. quick_configure >> $COMPILE_LOG
-else
+
+if [ "$MULTIPLE_EDITIONS" ]; then
+	cd C
 	remtrace Compile a non-commercial run-time
 	cd run-time
 	sed -e "s/\/\*\#define\ NON_COMMERCIAL\*\/$/\#define\ NON_COMMERCIAL/g" main.c >> new_main.c
 	move new_main.c main.c
 	cd ..
 	. quick_configure >> $COMPILE_LOG
-	safe_md $EXPORT_DIR/home_rt
-	move run-time/*.so $EXPORT_DIR/home_rt
-	move run-time/*.a $EXPORT_DIR/home_rt
-	if [ ! -e $EXPORT_DIR/home_rt/libwkbench.a ]; then
+	safe_md $EXPORT_DIR/free_rt
+	move run-time/*.so $EXPORT_DIR/free_rt
+	move run-time/*.a $EXPORT_DIR/free_rt
+	if [ ! -e $EXPORT_DIR/free_rt/libwkbench.a ]; then
 		remtrace Couldnt generate the run-time
 		CANCEL
 	else
-		if [ ! -e $EXPORT_DIR/home_rt/libwkbench.so ]; then
+		if [ ! -e $EXPORT_DIR/free_rt/libwkbench.so ]; then
 			remtrace Couldnt generate the run-time
 			CANCEL
 		fi
 	fi
+fi
 
-	remtrace Compile a commercial run-time
-	cd $EXPORT_DIR
-	fullrd C
-	gunzip -c c.tar.gz | tar -xf -
-	cd C
-	. quick_configure >> $COMPILE_LOG
-	safe_md $EXPORT_DIR/pro_rt
-	cp run-time/*.so $EXPORT_DIR/pro_rt
-	cp run-time/*.a $EXPORT_DIR/pro_rt
-	if [ ! -e $EXPORT_DIR/pro_rt/libwkbench.a ]; then
+remtrace Compile a commercial run-time
+cd $EXPORT_DIR
+fullrd C
+gunzip -c c.tar.gz | tar -xf -
+cd C
+. quick_configure >> $COMPILE_LOG
+safe_md $EXPORT_DIR/commercial_rt
+cp run-time/*.so $EXPORT_DIR/commercial_rt
+cp run-time/*.a $EXPORT_DIR/commercial_rt
+if [ ! -e $EXPORT_DIR/commercial_rt/libwkbench.a ]; then
+	remtrace Couldnt generate the run-time
+	CANCEL
+else
+	if [ ! -e $EXPORT_DIR/commercial_rt/libwkbench.so ]; then
 		remtrace Couldnt generate the run-time
 		CANCEL
-	else
-		if [ ! -e $EXPORT_DIR/pro_rt/libwkbench.so ]; then
-			remtrace Couldnt generate the run-time
-			CANCEL
-		fi
 	fi
 fi
 
@@ -126,12 +125,10 @@ fullrd $INSTALL_DIR/studio/help/defaults/unix
 
 cp C/run-time/lib*.a $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
 cp C/run-time/lib*.so $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib 
-if [ -z "$MULTIPLE_EDITIONS" ]; then
-	fullrf $INSTALL_DIR/studio/spec/$ISE_PLATFORM/lib/libebench.a
-else
-	fullrf $EXPORT_DIR/home_rt/libebench.a
-	fullrf $EXPORT_DIR/pro_rt/libebench.a
+if [ "$MULTIPLE_EDITIONS" ]; then
+	fullrf $EXPORT_DIR/free_rt/libebench.a
 fi
+fullrf $EXPORT_DIR/commercial_rt/libebench.a
 cp C/run-time/*.h $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 cp C/run-time/config.sh $INSTALL_DIR/studio/spec/$ISE_PLATFORM/include
 	
@@ -191,38 +188,17 @@ cd $INSTALL_DIR
 
 remtrace Recompile EiffelStudio
 cd $EXPORT_DIR
-if [ -z "$MULTIPLE_EDITIONS" ]; then
-	untgz_ccode ec
-	move ec $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
-else
-	safe_md $EXPORT_DIR/ecs
-	remtrace Enterprise edition
-	untgz_ccode ec
-	gzip ec
-	cp ec.gz $EXPORT_DIR/ecs/ec_enterprise.gz
-	move ec.gz $EXPORT_DIR/ecs/ec_evaluation.gz
-	move ec.tar.gz ec.tar.gz.old
+safe_md $EXPORT_DIR/ecs
 
-	remtrace Home edition
-	cp echome.tar.gz echome.tar.gz.old
-	move echome.tar.gz ec.tar.gz
-	untgz_ccode ec
-	gzip ec
-	move ec.gz $EXPORT_DIR/ecs/ec_home.gz
+remtrace Enterprise edition
+cp ec.gz $EXPORT_DIR/ecs/ec_enterprise.gz
+untgz_ccode ec
 
-	remtrace Student edition
-	cp ecstudent.tar.gz ecstudent.tar.gz.old
-	move ecstudent.tar.gz ec.tar.gz
+if [ "$MULTIPLE_EDITIONS" ]; then
+	remtrace Free edition
+	cp ecfree.tar.gz $EXPORT_DIR/ecs/ec_free.gz
+	move ecfree.tar.gz ec.tar.gz
 	untgz_ccode ec
-	gzip ec
-	move ec.gz $EXPORT_DIR/ecs/ec_student.gz
-
-	remtrace Professional edition
-	cp ecpro.tar.gz ecpro.tar.gz.old
-	move ecpro.tar.gz ec.tar.gz
-	untgz_ccode ec
-	gzip ec
-	move ec.gz $EXPORT_DIR/ecs/ec_pro.gz
 fi
 
 cd $EXPORT_DIR

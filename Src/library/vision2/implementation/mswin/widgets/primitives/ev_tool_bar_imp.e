@@ -193,8 +193,34 @@ feature -- Status report
 		do
 			Result := flag_set (bar.style, Ws_visible)
 		end
+		
+	has_vertical_button_style: BOOLEAN is
+			-- Is the `pixmap' displayed vertically above `text' for
+			-- all buttons contained in `Current'? If `False', then
+			-- the `pixmap' is displayed to left of `text'.
+		do
+			Result := not flag_set (style, Tbstyle_list)
+		end
 
 feature -- Status setting
+
+	disable_vertical_button_style is
+			-- Ensure `has_vertical_button_style' is `False'.
+		do
+			if has_vertical_button_style then
+				set_style (default_style + Tbstyle_list)
+				update_buttons (interface, 1, count)
+			end
+		end
+		
+	enable_vertical_button_style is
+			-- Ensure `has_vertical_button_style' is `True'.
+		do
+			if not has_vertical_button_style then
+				set_style (default_style)
+				update_buttons (interface, 1, count)
+			end	
+		end
 
 	destroy is
 			-- Destroy the widget, but set the parent sensitive
@@ -723,7 +749,7 @@ feature {NONE} -- WEL Implementation
 			-- Move and resize `Current'.
 			-- We must not resize the height of the tool-bar.
 		do
-			bar.move_and_resize (a_x, a_y, a_width, height - 4, repaint)
+			bar.move_and_resize (a_x, a_y, a_width, height, repaint)
 			reposition
 		end
 
@@ -731,7 +757,7 @@ feature {NONE} -- WEL Implementation
 			-- Move and resize `Current'.
 			-- We must not resize the height of the tool-bar.
 		do
-			bar.resize (a_width, height - 4)
+			bar.resize (a_width, height)
 			reposition
 		end
 
@@ -906,10 +932,9 @@ feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 		do
 			Result := -1
 			offset := internal_screen.pointer_position.x - screen_x
-			
 			item_index := find_button(offset, height // 2)
 			if item_index >= 0 and item_index < ev_children.count then
-				 Result := item_index
+				Result := item_index
 			elseif item_index <= - 1 and item_index >= - count then
 				Result := item_index.abs
 			elseif (item_index = -count - 1) then

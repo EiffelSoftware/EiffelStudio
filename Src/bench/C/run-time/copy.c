@@ -525,12 +525,14 @@ rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE tar
 	flags = HEADER(target)->ov_flags;
 	assert (!(HEADER (target)->ov_flags & B_FWD));	/* Not forwarded. */
 #ifdef EIF_REM_SET_OPTIMIZATION
-	if ((flags & (EO_REF | EO_OLD)) == (EO_OLD | EO_REF))
-			if (-2 == eif_promote_special (target))	/* FIXME: not sure it is needed. */
-				eif_panic ("MAY PANIC in copy.c");
-#else
+	if ((flags & (EO_REF | EO_OLD )) == (EO_OLD | EO_REF)) 
+			/* Do we need to check if it holds young references? */
+		eif_promote_special (target);	/* Promote it, if necessary. */
+#else	/* EIF_REM_SET_OPTIMIZATION */
 	if ((flags & (EO_REF | EO_OLD | EO_REM)) == (EO_OLD | EO_REF))
-			erembq (target);
+			/* May it hold new references? */
+			eremb(target);	/* Remember it, even if not needed, to fasten
+								copying process. */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
 }
 
@@ -677,6 +679,10 @@ rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGE
 	EIF_REFERENCE ref; /* %%ss removed , *src_ref; */
 	uint32 flags;
 
+	/*** Preconditions ***/
+	assert (HEADER (source)->ov_flags & EO_SPEC);	/* Is a special object. */
+	/*** End of Preconditions ***/
+
 	count = end - start + 1;
 	ref = source + (HEADER(source)->ov_size & B_SIZE) - LNGPAD_2;
 	esize = *(long *) (ref + sizeof(long));
@@ -694,19 +700,17 @@ rt_public void spsubcopy (EIF_REFERENCE source, EIF_REFERENCE target, EIF_INTEGE
 
 	flags = HEADER(target)->ov_flags;
 #ifdef EIF_REM_SET_OPTIMIZATION
-	if ((flags & (EO_REF | EO_OLD )) == (EO_OLD | EO_REF))
-		/* FIXME: This can be optimized by only scanning what are 
-		 * the new objects. Not sure it is necessary anyway.-- ET */	
-	{
-		if (-2 == eif_promote_special (target))
-			eif_panic ("MAY PANIC in copy.c");
-		assert (flags & EO_REM);	
-	}
+	if ((flags & (EO_REF | EO_OLD )) == (EO_OLD | EO_REF)) 
+			/* Do we need to check if it holds young references? */
+		eif_promote_special (target);	/* Promote it, if necessary. */
 #else	/* EIF_REM_SET_OPTIMIZATION */
 	if ((flags & (EO_REF | EO_OLD | EO_REM)) == (EO_OLD | EO_REF))
-			eremb(target);
+			/* May it hold new references? */
+			eremb(target);	/* Remember it, even if not needed, to fasten
+								copying process. */
 #endif	/* EIF_REM_SET_OPTIMIZATION */
-}
+
+}	/* spsubcopy () */
 
 rt_public void spclearall (EIF_REFERENCE spobj)
 {

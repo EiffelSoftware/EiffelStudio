@@ -55,6 +55,10 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
+	source_ready: BOOLEAN
+			-- Is logging source ready?
+			-- i.e. do we have access rights to log?
+
 	log (an_event: CODE_EVENT) is
 			-- Log `an_event' to windows event log
 		require
@@ -64,26 +68,36 @@ feature {NONE} -- Implementation
 			l_event_type: SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE
 		do
 			check_source
-			create l_event_log.make
-			l_event_log.set_source (log_source_name)
-			l_event_log.set_machine_name (log_server_name)
-			if an_event.is_error then
-				l_event_type := feature {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.error
-			elseif an_event.is_warning then
-				l_event_type := feature {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.warning
-			else
-				l_event_type := feature {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.information
+			if source_ready then
+				create l_event_log.make
+				l_event_log.set_source (log_source_name)
+				l_event_log.set_machine_name (log_server_name)
+				if an_event.is_error then
+					l_event_type := feature {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.error
+				elseif an_event.is_warning then
+					l_event_type := feature {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.warning
+				else
+					l_event_type := feature {SYSTEM_DLL_EVENT_LOG_ENTRY_TYPE}.information
+				end
+				l_event_log.write_entry (an_event.message, l_event_type, an_event.id)
+				l_event_log.close
 			end
-			l_event_log.write_entry (an_event.message, l_event_type, an_event.id)
-			l_event_log.close
 		end
 	
 	check_source is
 			-- Create event source if not already created.
+		local
+			l_retried: BOOLEAN
 		once
-			if not feature {SYSTEM_DLL_EVENT_LOG}.source_exists (log_source_name) then
-				feature {SYSTEM_DLL_EVENT_LOG}.create_event_source (log_source_name, log_name)
+			source_ready := not l_retried
+			if not l_retried then
+				if not feature {SYSTEM_DLL_EVENT_LOG}.source_exists (log_source_name) then
+					feature {SYSTEM_DLL_EVENT_LOG}.create_event_source (log_source_name, log_name)
+				end
 			end
+		rescue
+			l_retried := True
+			retry
 		end
 
 end -- class CODE_ERROR_MANAGER

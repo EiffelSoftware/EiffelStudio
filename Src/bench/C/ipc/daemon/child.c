@@ -62,8 +62,8 @@ rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
 
 /* Function declaration */
 rt_private int comfort_child(STREAM *sp);	/* Reassure child, make him confident */
-extern char **shword(char *cmd);			/* Shell word parsing of command string */
 #ifndef EIF_WIN32
+extern char **shword(char *cmd);			/* Shell word parsing of command string */
 rt_private void close_on_exec(int fd);	/* Ensure this file will be closed by exec */
 #else
 rt_private void create_dummy_window (void);

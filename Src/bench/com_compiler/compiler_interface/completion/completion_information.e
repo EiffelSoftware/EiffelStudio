@@ -71,7 +71,6 @@ feature -- Access
     target_classes (target: STRING): CLASS_ENUMERATOR is
             -- Classes in universe
         local
-            retried: BOOLEAN
             class_descs: ARRAYED_LIST [CLASS_DESCRIPTOR]
             clusters: ARRAYED_LIST [CLUSTER_I]
             classes: HASH_TABLE [CLASS_I, STRING]
@@ -127,14 +126,11 @@ feature -- Access
             -- `return_names' [out].
             -- `return_signatures' [out].
             -- `return_image_indexes' [out].
-        local
-            l_lister: FEATURES_LISTER
-            l_entries: LIST [COMPLETION_ENTRY]
-            l_names: ECOM_ARRAY [STRING]
-            l_signatures: ECOM_ARRAY [STRING]
-            l_image_indexes: ECOM_ARRAY [INTEGER]
-            l_class_i: CLASS_I
-        do
+		local
+			l_lister: FEATURES_LISTER
+			l_entries: LIST [COMPLETION_ENTRY]
+			l_class_i: CLASS_I
+		do
             if location_type = feature {ECOM_EIF_COMPLETION_LOCATION_ENUM}.Eif_completion_location_feature then
                 l_lister := lister (file_name)
                 l_lister.set_locals (locals)
@@ -205,8 +201,7 @@ feature -- Access
             non_void_source_row: source_row /= Void
         local
             def_parser: DEFINITION_PARSER
-            retried: BOOLEAN
-            fd: FEATURE_DESCRIPTOR
+ 			fd: FEATURE_DESCRIPTOR
             ecom_var: ECOM_VARIANT
         do
             create def_parser.make
@@ -244,8 +239,7 @@ feature -- Access
             retried: BOOLEAN
             classes: LIST [CLASS_I]
             ci: CLASS_I
-            lines: LIST [STRING]
-            def_parser: DEFINITION_PARSER
+             def_parser: DEFINITION_PARSER
             feat_name: STRING
             fd: FEATURE_DESCRIPTOR
         do
@@ -562,8 +556,6 @@ feature {NONE} -- Implementation
         require
             non_void_file_name: a_file_name /= Void
             valid_file_name: not a_file_name.is_empty
-        local
-            l_lister: FEATURES_LISTER
         do
             listers_table.search (a_file_name)
             if listers_table.found then

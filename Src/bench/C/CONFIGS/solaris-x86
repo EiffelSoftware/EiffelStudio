@@ -38,7 +38,8 @@ inttypes_include='#include <sys/inttypes.h>'
 eif_integer_64_display='"lld"'
 eif_natural_64_display='"llu"'
 eif_pointer_display='"X"'
-eif_integer_64_constant='INT64_C(x)'
+eif_integer_64_constant='CAT2(x,ll)'
+eif_natural_64_constant='CAT2(x,ull)'
 d_uint64_to_real='define'
 
 #File system
@@ -179,7 +180,7 @@ mkdep='/usr/local/home/manus/56dev/C/mkdep'
 mkdir='mkdir'
 mtldflags="$ldflags"
 mtldsharedflags="$ldsharedflags"
-mtlibs="$libs -lthread"
+mtlibs="$libs -lrt -lthread"
 mt_prefix='mt'
 mv='/bin/mv'
 prefix='lib'

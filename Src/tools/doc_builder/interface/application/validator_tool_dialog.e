@@ -59,7 +59,7 @@ feature {NONE} -- Implementation
 			if schema_radio.is_selected then
 				Shared_project.validate_files
 			else
-				Shared_project.validate_links (Void)
+				Shared_project.validate_links
 			end
 		end
 

@@ -910,7 +910,6 @@ feature -- Graphical Interface
 			general_toolbar.extend (hsep)
 			general_toolbar.disable_item_expand (hsep)
 			general_toolbar.extend (hbox)
-			general_toolbar.pointer_button_release_actions.extend (agent toolbar_right_click_action)
 
 				-- Create the command to show/hide this toolbar.
 			create show_general_toolbar_command.make (general_toolbar, Interface_names.m_General_toolbar)

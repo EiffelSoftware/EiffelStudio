@@ -12,6 +12,8 @@ inherit
 		rename
 			path_label as text_label,
 			path_combo as text_combo
+		export
+			{NONE} all
 		end
 
 	WIZARD_TEXT_BOX
@@ -34,7 +36,7 @@ feature -- Initialization
 			non_void_title: a_title /= Void
 			non_void_path_validator: a_path_validator /= Void
 		do
-			text_box_setup (a_label, a_key, a_path_validator)
+			text_box_setup (a_label, a_key, a_path_validator, Void)
 			title := a_title
 			auto_save := True
 		ensure
@@ -56,6 +58,10 @@ feature {NONE} -- Implementation
 		do
 			if title /= Void then
 				create l_dir_dialog.make_with_title (title)
+				l_dir_name := text_combo.text
+				if (create {DIRECTORY}.make (l_dir_name)).exists then
+					l_dir_dialog.set_start_directory (l_dir_name)
+				end
 				l_dir_dialog.show_modal_to_window ((create {EV_UTILITIES}).parent_window (Current))
 				l_dir_name := l_dir_dialog.directory
 				if not l_dir_name.is_empty then

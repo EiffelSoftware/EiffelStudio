@@ -70,6 +70,10 @@ feature -- Access
 			Result := c_ascii_char (item) 
 		end
 
+	Min_value: INTEGER_64 is -9223372036854775808
+	Max_value: INTEGER_64 is 9223372036854775807
+			-- Minimum and Maximum value hold in `item'.
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is

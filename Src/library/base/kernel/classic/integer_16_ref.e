@@ -51,14 +51,14 @@ feature -- Access
 			-- Neutral element for "*" and "/"
 		do
 			create Result
---			Result.set_item (1)
+			Result.set_item (1)
 		end
 
 	zero: like Current is
 			-- Neutral element for "+" and "-"
 		do
 			create Result
---			Result.set_item (0)
+			Result.set_item (0)
 		end
 
 	ascii_char: CHARACTER is

@@ -319,7 +319,7 @@ rt_public void enomem(EIF_CONTEXT_NOARG)
 	 * a previous call.
 	 */
 	EIF_GET_CONTEXT
-		
+
 	echmem |= MEM_FULL;		/* We dramatically ran out of memory */
 	xraise(EN_OMEM);		/* The "Out of memory" stuff */
 
@@ -428,7 +428,7 @@ rt_public struct ex_vect *exret(EIF_CONTEXT register1 struct ex_vect *rout_vect)
 	if (last_item->ex_type != EX_RESC)
 		panic(botched);
 #endif
-	
+
 	SIGBLOCK;				/* Critical section, protected against signals */
 
 	/* Normally we should pop off this vector and get a new one, but it is so
@@ -627,7 +627,7 @@ rt_public void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig)
 	/* If we come here, we were able to get a vector for EN_ILVL. If we cannot
 	 * get one for EX_HDLR, this is a non-critical "No more memory" exception.
 	 */
-	
+
 	trace = exget(&eif_stack);		/* Vector to record entry in handler */
 	if (trace == (struct ex_vect *) 0) {	/* Can't have it */
 		echmem |= MEM_FULL;					/* Exception stack incomplete */
@@ -684,7 +684,7 @@ rt_public void exfail(EIF_CONTEXT_NOARG)
 	 * execution vector at the top of the stack and start backtracking, unless
 	 * we have to ignore the exception.
 	 */
-	
+
 	/* Derive exception code from the information held in the top level vector
 	 * in the Eiffel call stack. If the exception is ignored, pop the offending
 	 * vector and leave 'echval' undisturbed. Otherwise, set 'echval' to the
@@ -732,7 +732,7 @@ rt_public void exresc(EIF_CONTEXT register2 struct ex_vect *rout_vect)
 	 * Eiffel trace stack and signal we've been in the rescue of the current
 	 * call (top of Eiffel trace stack).
 	 */
-	EIF_GET_CONTEXT	
+	EIF_GET_CONTEXT
 	register1 struct ex_vect *trace;	/* Top of Eiffel trace item */
 
 	SIGBLOCK;			/* Critical section, protected against signals */
@@ -800,7 +800,7 @@ rt_public void eraise(EIF_CONTEXT char *tag, long num)
 	 * all the exceptions (e.g. it has no meaning for an operating system
 	 * signal).
 	 */
-	EIF_GET_CONTEXT	
+	EIF_GET_CONTEXT
 	struct ex_vect *trace;		/* The stack trace entry */
 	struct ex_vect *vector;     /* The stack trace entry */
 	char *tg, *obj;
@@ -836,17 +836,21 @@ rt_public void eraise(EIF_CONTEXT char *tag, long num)
 			case EN_SIG:				/* Received a signal */
 				trace->ex_sig = echsig;	/* Record its number */
 				break;
-			case EN_SYS:				/* Operating system error */
-			case EN_IO:					/* I/O error */
 #ifdef EIF_WIN32
+			case EN_SYS:				/* Operating system error */
 				if (errno != 0)
 					trace->ex_errno = errno;
-				else
-					trace->ex_errno = _doserrno;
-#else
-				trace->ex_errno = errno;
-#endif
 				break;
+			case EN_IO:					/* I/O error */
+				if (errno != 0)
+					trace->ex_errno = _doserrno;
+				break;
+#else
+			case EN_SYS:				/* Operating system error */
+			case EN_IO:					/* I/O error */
+				trace->ex_errno = errno;
+				break;
+#endif
 			default:
 				trace->ex_name = tag;	/* Record its tag */
 				trace->ex_where = 0;	/* Unknown location (yet) */
@@ -1266,7 +1270,7 @@ rt_public void exok(EIF_CONTEXT_NOARG)
 
 	if (echval == 0)
 		return;							/* No exception occurred */
-	
+
 	SIGBLOCK;			/* Critical section, protected against signals */
 
 	while (top = extop(&eif_stack)) {	/* Find last enclosing call */
@@ -1275,7 +1279,7 @@ rt_public void exok(EIF_CONTEXT_NOARG)
 			break;						/* We found a calling record */
 		expop(&eif_stack);				/* Will panic if we underflow */
 	}
-		
+
 	/* Now deal with the trace stack. If the exception level is 0, we can reset
 	 * the whole stack. Otherwise, we have to unwind it until we find the
 	 * "New level" pseudo-vector.
@@ -1435,7 +1439,7 @@ rt_private void exorig(EIF_CONTEXT_NOARG)
 	/* We might not have found the record (because an out of memory condition
 	 * was detected). Otherwise, code must be non-zero.
 	 */
-	
+
 	if (!(echmem & MEM_FSTK) && echorg == 0)
 		panic(botched);
 	else if (echorg == 0) {
@@ -1521,21 +1525,17 @@ rt_public void esfail(EIF_CONTEXT_NOARG)
 	print_err_msg(stderr, "\n%s: system execution failed.\n", ename);
 	print_err_msg(stderr, "Following is the set of recorded exceptions");
 	if (echmem & MEM_FSTK) {
-		print_err_msg(stderr,
-	".\nDue to a lack of memory, the sequence is incomplete near the end");
+		print_err_msg(stderr,".\nDue to a lack of memory, the sequence is incomplete near the end");
 	}
 	if (echmem & MEM_FULL) {
 		if (echmem & MEM_FSTK) {
-			print_err_msg(stderr,
-	".\nMoreover, an 'out of memory' may have led to an untrustworthy stack");
+			print_err_msg(stderr,".\nMoreover, an 'out of memory' may have led to an untrustworthy stack");
 		} else {
-			print_err_msg(stderr,
-	".\nHowever, an 'out of memory' occurred and might have spoilt the stack");
+			print_err_msg(stderr,".\nHowever, an 'out of memory' occurred and might have spoilt the stack");
 		}
 	}
 	if (echmem & MEM_PANIC) {
-		print_err_msg(stderr,
-".\nNB: The raised panic may have induced completely inconsistent information");
+		print_err_msg(stderr,".\nNB: The raised panic may have induced completely inconsistent information");
 	}
 	print_err_msg(stderr, ":\n\n");
 
@@ -1581,7 +1581,7 @@ rt_private void exception(int how)
 		/* Implicit or explicit exception? */
 {
 	/* This is a no-operation call in final mode (no debugger). If an exception
-	 * is raised, either explicitely via eraise() or implicitely via eviol(), 
+	 * is raised, either explicitely via eraise() or implicitely via eviol(),
 	 * then this function is called.
 	 */
 }
@@ -1628,9 +1628,6 @@ rt_public void panic(EIF_CONTEXT char *msg)
 	echtg = msg;					/* Associated tag */
 	esfail(MTC_NOARG);						/* Raise system failure and stack dump */
 	print_err_msg(stderr, "\n");	/* Skip one line */
-#ifdef EIF_WINDOWS
-	show_trace();
-#endif
 	dump_core();					/* Before dumping a core */
 	/* NOTREACHED */
 	EIF_END_GET_CONTEXT
@@ -1679,9 +1676,6 @@ rt_public void fatal_error(EIF_CONTEXT char *msg)
 	echclass = 0;				   /* No current class */
 	esfail(MTC_NOARG);						/* Raise system failure and stack dump */
 
-#ifdef EIF_WINDOWS
-	show_trace();
-#endif
 	reclaim();						/* Reclaim all the objects */
 	exit(1);						/* Abnormal termination */
 
@@ -1784,14 +1778,14 @@ rt_private void find_call(EIF_CONTEXT_NOARG)
 			 * However, the precondition occurred in another routine, whose
 			 * ID is held in the vector.
 			 */
-			
+
 			except.rname = item->ex_where;	/* Where precondition was */
 			except.from = item->ex_from;	/* Where it was written */
 			except.obj_id = item->ex_oid;	/* Object's ID */
 			break;
 		}
 	}
-			
+
 #ifdef DEBUG
 	dump_vector("find_call: enclosing call is", item);
 #endif
@@ -1869,17 +1863,17 @@ rt_public EIF_REFERENCE stack_trace_string (EIF_CONTEXT_NOARG)
     /* Clean the area from a previous call. */
     if (ex_string.area)
         free(ex_string.area);
- 
+
     /* Prepare the structure for a new trace */
     ex_string.area = NULL;
     ex_string.used = 0L;
     ex_string.size = 0L;
- 
+
     /* Dump the exception stack into this structure by using the
      * wrapper ds_string().
      */
     dump_stack(MTC ds_string);
- 
+
     /* Return the string to Eiffel */
     return (EIF_REFERENCE) RTMS(ex_string.area);
 
@@ -2095,7 +2089,7 @@ rt_private void print_top(EIF_CONTEXT void (*append_trace)(char *))
 	sprintf(buffer, "<%08X>		  %-22.22s %-29.29s ",
 		except.obj_id, buf, exception_string(code));
 	append_trace(buffer);
-		
+
 	/* Start panic effect when we reach the EN_BYE record */
 	if (code == EN_BYE)
 		echval = EN_BYE;
@@ -2340,7 +2334,7 @@ rt_public void expop(register1 struct xstack *stk)
 		/* The stack */
 {
 	/* Removes one item from the Eiffel stack */
-	
+
 	register2 struct ex_vect *top = stk->st_top;	/* Top of the stack */
 	register3 struct stxchunk *s;			/* To walk through stack chunks */
 	register4 struct ex_vect *arena;		/* Base address of current chunk */
@@ -2359,7 +2353,7 @@ rt_public void expop(register1 struct xstack *stk)
 	}
 
 	/* Unusual case: top pointed to the arena of next chunk */
-	
+
 	s= stk->st_cur = stk->st_cur->sk_prev;		/* Go one chunk back */
 
 #ifdef MAY_PANIC
@@ -2392,21 +2386,21 @@ rt_shared struct ex_vect *extop(register1 struct xstack *stk)
 	 * stack is empty. I assume a value has already been pushed (i.e. the
 	 * stack has been created).
 	 */
-	
+
 	struct ex_vect *last_item;		/* Address of last item stored */
 	struct stxchunk *prev;			/* Previous chunk in stack */
 
 	last_item = stk->st_top - 1;
 	if (last_item >= stk->st_cur->sk_arena)
 		return last_item;
-	
+
 	/* It seems the current top of the stack (i.e. the next free location)
 	 * is at the left edge of a chunk. Look for previous chunk then...
 	 */
 	prev = stk->st_cur->sk_prev;
 	if (prev == (struct stxchunk *) 0)
 		return (struct ex_vect *) 0;	/* Stack is empty */
-	
+
 	last_item = prev->sk_end - 1;		/* Last item of previous chunk */
 
 	return last_item;
@@ -2436,7 +2430,7 @@ rt_shared struct ex_vect *exnext(EIF_CONTEXT_NOARG)
 			/* because the end of the stack is forseen */
 		return first_item;
 
-	if (eif_trace.st_bot >= eif_trace.st_cur->sk_end) {	
+	if (eif_trace.st_bot >= eif_trace.st_cur->sk_end) {
 			/* We reached the end of the current chunk. Set the bottom */
 			/* pointer to the beginning of the next chunk for the next */
 			/* call. (This next chunk exists because we didn't reach */
@@ -2445,7 +2439,7 @@ rt_shared struct ex_vect *exnext(EIF_CONTEXT_NOARG)
 		eif_trace.st_end = eif_trace.st_cur->sk_end;
 		eif_trace.st_bot = eif_trace.st_cur->sk_arena;
 	}
-	
+
 	return first_item;
 	EIF_END_GET_CONTEXT
 }
@@ -2474,7 +2468,7 @@ rt_private char *exception_string(int code)
 	 * code is 'code'. All internal codes are positives one. Negative codes
 	 * are for the user-defined exceptions.
 	 */
-	
+
 	if (code < 0)							/* Raised by Eiffel call to raise */
 		return "User-defined exception.";	/* Don't want to give code--RAM */
 	else if (code < 1 || code > EN_NEX)		/* Ensure index is valid */
@@ -2492,7 +2486,7 @@ rt_private void dump_vector(char *msg, struct ex_vect *vector)
 
 	if (!(DEBUG & 1))
 		return;
-	
+
 	printf("%s (at 0x%lx):\n", msg, vector);
 	if (vector == (struct ex_vect *) 0)
 		return;
@@ -2661,7 +2655,7 @@ rt_public void eetrace(EIF_CONTEXT char b)	/* %%zmt never called in C dir. */
 	EIF_END_GET_CONTEXT
 }
 
-rt_public char *eename(long ex) 
+rt_public char *eename(long ex)
 {
 	/* Return the english description for exeception `ex' */
 

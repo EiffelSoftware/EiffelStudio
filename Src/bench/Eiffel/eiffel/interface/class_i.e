@@ -160,13 +160,18 @@ feature -- Status report
 				end
 			end
 			
-			if Result = Void then
-				Result := ""
-			end
 
 			if System.system_namespace /= Void then
-				Result.prepend_character ('.')
-				Result.prepend (System.system_namespace)
+				if Result /= Void then
+					Result.prepend_character ('.')
+					Result.prepend (System.system_namespace)
+				else
+					Result := clone (System.system_namespace)
+				end
+			end
+
+			if Result = Void then
+				Result := ""
 			end
 		ensure
 			result_not_void: Result /= Void	

@@ -203,12 +203,16 @@ feature -- Conveniences
 			System.il_generation
 		local
 			l_class: like associated_class
+			l_name: STRING
 		do
 			Result := type.il_type_name
 			l_class := associated_class
 			if not l_class.is_external then
-				Result := il_casing.namespace_casing (l_class.lace_class.namespace) + "." + 
-					il_casing.pascal_casing (Result, feature {IL_CASING_CONVERSION}.upper_case)
+				l_name := l_class.lace_class.namespace
+				if not l_name.is_empty then
+					l_name := il_casing.namespace_casing (l_name) + "."
+				end
+				Result := l_name + il_casing.pascal_casing (Result, feature {IL_CASING_CONVERSION}.upper_case)
 			end
 		end
 		
@@ -219,12 +223,18 @@ feature -- Conveniences
 			System.il_generation
 		local
 			l_class: like associated_class
+			l_name: STRING
 		do
 			Result := type.il_type_name
 			l_class := associated_class
 			if not l_class.is_external then
-				Result := il_casing.namespace_casing (l_class.lace_class.namespace) + ".Impl." + 
-					il_casing.pascal_casing (Result, feature {IL_CASING_CONVERSION}.upper_case)
+				l_name := l_class.lace_class.namespace
+				if l_name.is_empty then
+					l_name := "Impl."
+				else
+					l_name := il_casing.namespace_casing (l_name) + ".Impl."		
+				end
+				Result := l_name + il_casing.pascal_casing (Result, feature {IL_CASING_CONVERSION}.upper_case)
 			end
 		end
 		

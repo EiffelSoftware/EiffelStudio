@@ -1,7 +1,7 @@
 indexing
 	description: "Representation of an inheritance clause"
 	external_name: "ISE.Reflection.InheritanceClause"
---	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute (2) end
+	attribute: create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACEATTRIBUTE}.make_classinterfaceattribute ((create {SYSTEM_RUNTIME_INTEROPSERVICES_CLASSINTERFACETYPE}).auto_dual) end
 
 deferred class
  	INHERITANCE_CLAUSE

@@ -517,7 +517,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					context.set_current_cluster (cluster_list.item);
 
 						-- Compute defaults options for current cluster
-					defaults.adapt;
+					defaults.adapt_defaults;
 
 					cluster_list.forth;
 				end;
@@ -693,6 +693,7 @@ feature {NONE} -- Incrementality
 			System.set_dynamic_def_file (Void)
 			System.set_ise_gc_runtime (True)
 			System.set_il_verifiable (True)
+			System.set_system_namespace (Void)
 		end
 
 end -- class ACE_SD

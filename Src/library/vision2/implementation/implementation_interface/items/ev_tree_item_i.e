@@ -44,10 +44,10 @@ feature -- Status setting
 
 	set_expand (flag: BOOLEAN) is
 			-- Expand the item if `flag', collapse it otherwise.
-			-- Do nothing if the item is not a sub-tree.
 		require
 			exists: not destroyed
 			has_parent: parent_imp /= Void
+			is_parent: is_parent
 		deferred
 		ensure
 			is_expanded: flag implies is_expanded

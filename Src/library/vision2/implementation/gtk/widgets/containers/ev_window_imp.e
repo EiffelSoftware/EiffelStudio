@@ -308,11 +308,13 @@ feature -- Element change
 
 	set_title (new_title: STRING) is
 			-- Set `title' to `new_title'.
+		local
+			temp_txt: ANY
 		do
-			C.gtk_window_set_title (c_object, eiffel_to_c (new_title))
+			temp_txt := new_title.to_c
+			C.gtk_window_set_title (c_object, $temp_txt)
 
-			-- Give the gtk window a corresponding gdk window
-			
+			-- Make sure the gtk window has a corresponding gdk window
 			if not has_struct_flag (C.GTK_REALIZED_ENUM) then
 				C.gtk_widget_realize (c_object)
 			end	
@@ -323,12 +325,14 @@ feature -- Element change
 		local
 			mb_imp: EV_MENU_BAR_IMP
 			menu_imp: EV_MENU_IMP
+			temp_txt: ANY
 		do
 			menu_bar := a_menu_bar
 			mb_imp ?= menu_bar.implementation
 			mb_imp.set_parent_window_imp (Current)
 			C.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
 			C.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
+			temp_txt := ("activate_item").to_c
 			from
 				menu_bar.start
 			until
@@ -337,7 +341,7 @@ feature -- Element change
 				menu_imp ?= menu_bar.item.implementation
 				if menu_imp /= Void and then menu_imp.key /= 0 then
 					C.gtk_widget_add_accelerator (menu_imp.c_object,
-						eiffel_to_c ("activate_item"),
+						$temp_txt,
 						accel_group,
 						menu_imp.key,
 						C.gdk_mod1_mask_enum,
@@ -472,18 +476,22 @@ feature {NONE} -- Implementation
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
+		local
+			win_sig1, win_sig2: ANY
 		do
 			Precursor (a_key, a_key_string, a_key_press)
 			if focus_widget /= Void and then a_key /= Void then
 					-- focus_widget drawing_area or gtklist.
-				if a_key_press then 
+				if a_key_press then
 					if focus_widget.default_key_processing_blocked (a_key) then
-						C.gtk_signal_emit_stop_by_name (c_object, eiffel_to_c ("key-press-event"))
+						win_sig1 := ("key-press-event").to_c
+						C.gtk_signal_emit_stop_by_name (c_object, $win_sig1)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				else
 					if focus_widget.default_key_processing_blocked (a_key) then
-						C.gtk_signal_emit_stop_by_name (c_object, eiffel_to_c ("key-release-event"))
+						win_sig2 := ("key-release-event").to_c
+						C.gtk_signal_emit_stop_by_name (c_object, $win_sig2)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				end	

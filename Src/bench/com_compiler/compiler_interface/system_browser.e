@@ -39,21 +39,38 @@ feature -- Access
 		local
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			classes: ARRAY [CLASS_C]
+			sorted_class_names: SORTED_TWO_WAY_LIST [STRING]
+			class_table: HASH_TABLE [CLASS_C, STRING]
+			class_c: CLASS_C
 			class_desc: CLASS_DESCRIPTOR
 			count, i: INTEGER
 		do
 			if Eiffel_project.initialized then
 				classes := Eiffel_system.Workbench.system.classes.sorted_classes
 				count := Eiffel_system.Workbench.system.classes.count
-				create res.make (count)
 				from
+					create sorted_class_names.make
+					create class_table.make (count)
 					i := 1
 				until
 					i > count
 				loop
-					create class_desc.make_with_class_i (classes.item (i).lace_class)
-					res.extend (class_desc)
+					class_table.put (classes.item (i), classes.item (i).name)
+					sorted_class_names.extend (classes.item (i).name)
 					i := i + 1
+				end
+				sorted_class_names.compare_objects
+				sorted_class_names.sort
+				create res.make (count)
+				from
+					sorted_class_names.start
+				until
+					sorted_class_names.after
+				loop
+					class_c := class_table.item (sorted_class_names.item)
+					create class_desc.make_with_class_i (class_c.lace_class)
+					res.extend (class_desc)
+					sorted_class_names.forth
 				end
 				create Result.make (res)
 			end

@@ -32,7 +32,7 @@ feature -- Initialization
 
 feature -- Element change
 
-	set_tooltip (a_tooltip: EV_TOOLTIP) is
+	set_tooltip (a_tooltip: STRING) is
 			-- Assign `a_tooltip' to `tooltip'.
 		local
 		do
@@ -70,6 +70,9 @@ end -- EV_TOOLTIPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/05/05 16:36:17  king
+--| Corrected set_tooltip
+--|
 --| Revision 1.1  2000/05/02 22:15:40  king
 --| Initial
 --|

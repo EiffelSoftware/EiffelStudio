@@ -196,6 +196,7 @@ feature {NONE} -- Message loop, we redefine it because the user
 			done: BOOLEAN
 			dlg: POINTER
 		do
+			interface.post_launch_actions.call ([])
 			from
 				create msg.make
 				main_win ?= main_window
@@ -322,6 +323,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/03/29 20:33:48  brendel
+--| Implemented post_launch_actions.
+--|
 --| Revision 1.25  2000/03/23 19:03:52  brendel
 --| Removed once_idle_actions.
 --|

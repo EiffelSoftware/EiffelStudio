@@ -87,19 +87,17 @@ feature -- Status settings
 			child_imp: EV_WIDGET_IMP
 		do
 			child_imp ?= the_child.implementation
-			gtk_table_attach_defaults (GTK_TABLE(widget), child_imp.widget,
+			gtk_table_attach_defaults (GTK_TABLE(widget), child_imp.vbox_widget,
 						left, right, top, bottom)
-
-			-- we have to decrement the number of reference which is here 2
-			-- (the value had been incremented by the gtk function
-			-- 'gtk_table_attach_defaults').
-			gtk_object_unref (child_imp.widget)	
 
 			-- we set the spacings if needed. This function has been create
 			-- because of a GTK bug: when adding a new child in the table,
 			-- the spacings are not set for it. As soon as the bug is fixed, we
 			-- can erase this function.
 			c_gtk_table_set_spacing_if_needed (GTK_TABLE (widget))		
+
+			-- Sets the resizing options.
+			child_packing_changed (child_imp) 
 		end
 
 feature -- Element change
@@ -108,10 +106,12 @@ feature -- Element change
 			-- Add child into composite. Several children
 			-- possible.
 		do
-			-- there is nothing to do here except add a reference
-			-- to the child otherwise, the later will be destroyed
-			-- after the gtk_object_unref in the set_parent.
-			gtk_object_ref (child_imp.widget)
+			-- Create `vbox_widget' and `hbox_widget'.
+			add_child_packing (child_imp)
+
+			-- As the child is put into the table only
+			-- with feature `set_child_position', there
+			-- is nothing to do here.
 		end
 
 feature -- Assertion test

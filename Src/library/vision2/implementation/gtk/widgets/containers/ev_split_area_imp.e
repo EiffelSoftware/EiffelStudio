@@ -92,11 +92,17 @@ feature -- Element change
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add the first child of the split.
 		do
+			-- Create `vbox_widget' and `hbox_widget'.
+			add_child_packing (child_imp)
+
 			if c_gtk_paned_child1 (widget) = default_pointer then
-				gtk_paned_add1 (widget, child_imp.widget)
+				gtk_paned_add1 (widget, child_imp.vbox_widget)
 			elseif c_gtk_paned_child2 (widget) = default_pointer then
-				gtk_paned_add2 (widget, child_imp.widget)
+				gtk_paned_add2 (widget, child_imp.vbox_widget)
 			end
+
+			-- Sets the resizing options.
+			child_packing_changed (child_imp) 
 		end
 
 feature -- Assertion test

@@ -18,7 +18,7 @@ inherit
 			y,
 			add_child_ok,
 			add_child,
-			child_packing_changed,
+--			child_packing_changed,
 			is_child,
 			child_added,
 			remove_child,
@@ -239,14 +239,23 @@ feature {EV_CONTAINER, EV_WIDGET} -- Element change
 	
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add `child_imp' in the window.
+		local
+			vbox_wid: POINTER
 		do
-			gtk_box_pack_end (hbox, child_imp.widget, True, True, 0)
+			-- Create `vbox_widget' and `hbox_widget' if they are not yet created.
+			add_child_packing (child_imp)
+
+			-- Put the `vbox' into the current container. 
+			gtk_box_pack_end (hbox, child_imp.vbox_widget, True, True, 0)
+
+			-- Sets the resizing options.
+			child_packing_changed (child_imp) 
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is
 			-- Remove `child_imp' from the window.
 		do
-			gtk_container_remove (hbox, child_imp.widget)
+			gtk_container_remove (hbox, child_imp.vbox_widget)
 		end
 
 	set_parent (par: EV_WINDOW) is
@@ -280,13 +289,21 @@ feature -- Assertion test
 			-- by testing if a_child is a child of its
 			-- hbox
 		do
-			Result := c_gtk_container_has_child (hbox, a_child.widget)
+			if a_child.vbox_widget /= default_pointer then
+				Result := c_gtk_container_has_child (hbox, a_child.vbox_widget)
+			else
+				Result := c_gtk_container_has_child (hbox, a_child.widget)
+			end
 		end
 
 	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
 			-- Has `a_child' been added properly?
 		do
-			Result := c_gtk_container_has_child (hbox, a_child.widget)
+			if a_child.vbox_widget /= default_pointer then
+				Result := c_gtk_container_has_child (hbox, a_child.vbox_widget)
+			else
+				Result := c_gtk_container_has_child (hbox, a_child.widget)
+			end
 		end
 
 feature -- Event - command association
@@ -422,13 +439,13 @@ feature {EV_APPLICATION_IMP} -- Implementation
 
 feature {NONE} -- Implementation
 
-	child_packing_changed (child_imp: EV_WIDGET_IMP) is
-			-- changed the settings of his child `the_child'.
-			-- Redefined because the child is placed in a hbox (see `add_child').
-		do
+--	child_packing_changed (child_imp: EV_WIDGET_IMP) is
+--			-- changed the settings of his child `the_child'.
+--			-- Redefined because the child is placed in a hbox (see `add_child').
+--		do
 --			c_gtk_box_set_child_options (hbox, child_imp.widget, child_imp.expandable, False)
-			c_gtk_box_set_child_options (hbox, child_imp.widget, True, False)
-		end
+--			c_gtk_box_set_child_options (hbox, child_imp.widget, True, False)
+--		end
 
 end -- class EV_UNTITLED_WINDOW_IMP
 

@@ -1,20 +1,25 @@
-: This file was created by running packinit on Fri Aug 12 13:48:34 PDT 1994.
-: Do not hand edit; run packinit again if changes are to be made.
-packver='3.0160000000000000142'
+: This file was created by running packinit on Wed Nov 24 16:26:53 PST 2004.
+: Do not hand edit -- run packinit again if changes are to be made.
+packver='3.036'
 : Basic variables
-package=Eiffel4
-baserev=4
-patchbranch=1
-copyright=' '
+package=C
+baserev=5
+patchbranch=6
+copyright='Copyright 2004 Eiffel Software'
 mydiff='diff -c'
-maintname=''
+maintname='Eiffel Software Compiler Team'
 maintloc='compiler@eiffel.com'
-ftpsite=''
-orgname='ISE'
+ftpsite='ftp.eiffel.com'
+orgname='Eiffel Software'
 newsgroups=''
 recipients=''
 ftpdir=''
 mailagent='false'
+changelog=' '
+changercs=0
+: File lookup extensions
+cext=''
+shext=''
 : Mailing list variables
 list_users='false'
 list_name=''

@@ -111,7 +111,7 @@ feature {NONE} -- Implementation
 			if Result.is_external then
 				external_unit ?= Result
 				check
-					Externals.has (external_unit.external_name_id)
+					not System.il_generation implies Externals.has (external_unit.external_name_id)
 				end
 				info := Externals.item (external_unit.external_name_id)
 				if info /= Void then

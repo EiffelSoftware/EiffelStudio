@@ -821,7 +821,7 @@ feature {NONE} -- Selection implementation
 			txt: STRING
 		do
 			txt := a_text.text;
-			add_highlight_point (a_text.base_left_x, a_text.base_left_y - height_offset - y_offset);
+			add_highlight_point (a_text.base_left_x - x_offset, a_text.base_left_y - height_offset - y_offset);
 			add_highlight_point (a_text.width, 0);
 			add_highlight_point (0, maximum_height_per_line);
 			add_highlight_point (-a_text.width, 0);

@@ -74,37 +74,39 @@ feature -- Basic operations
 			snapshot: ARRAYED_LIST [PROCEDURE [ANY, EVENT_DATA]]
 			i: INTEGER
 		do
-			snapshot := clone (Current)
-			if kamikazes /= Void then
-				call_action_list (kamikazes)
-				kamikazes := Void
-			end
-			inspect 
-				state
-			when
-				Normal_state
-			then
-				from
-					is_aborted_stack.extend (False)
-					i := 1
-				variant
-					snapshot.count + 1 - i
-				until
-					i > snapshot.count
-					or is_aborted_stack.item
-				loop
-					snapshot.i_th (i).call (event_data)
-					i := i + 1
+			if count > 0 then
+				snapshot := clone (Current)
+				if kamikazes /= Void then
+					call_action_list (kamikazes)
+					kamikazes := Void
 				end
-				is_aborted_stack.remove
-			when
-				Paused_state
-			then
-				call_buffer.extend (event_data)
-			when
-				 Blocked_state
-			then
-				-- do_nothing
+				inspect 
+					state
+				when
+					Normal_state
+				then
+					from
+						is_aborted_stack.extend (False)
+						i := 1
+					variant
+						snapshot.count + 1 - i
+					until
+						i > snapshot.count
+						or is_aborted_stack.item
+					loop
+						snapshot.i_th (i).call (event_data)
+						i := i + 1
+					end
+					is_aborted_stack.remove
+				when
+					Paused_state
+				then
+					call_buffer.extend (event_data)
+				when
+					 Blocked_state
+				then
+					-- do_nothing
+				end
 			end
 		ensure
 			is_aborted_stack_unchanged:

@@ -156,13 +156,13 @@ feature {NONE} -- Implementation
 						--| we need to set the position in the file
 						--| otherwise the retrieving won't work correctly
 					go (position)
-					full_coalesce
 					full_collect
+					full_coalesce
 					collection_off
 					Result := retrieved;
 					collection_on
-					full_coalesce
 					full_collect
+					full_coalesce
 					if Result = Void then
 						error_value := corrupt_value
 					end
@@ -227,6 +227,7 @@ feature {NONE} -- Implementation
 						error_value := incompatible_value
 					end
 
+					line_number := line_number + 1
 					read_line
 					line := clone (last_string)
 				end

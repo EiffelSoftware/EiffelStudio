@@ -165,7 +165,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			current_element: XM_ELEMENT
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
-			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			an_object: GB_OBJECT
 			a_display_object: GB_DISPLAY_OBJECT
 		do

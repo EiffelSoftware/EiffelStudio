@@ -97,6 +97,8 @@ feature -- Implementation
 		do
 			create command_move_window.make (an_item.object, Current)
 			command_move_window.execute
+				-- Ensure that `Current' is expanded
+			expand
 				-- Update the system
 			system_status.enable_project_modified
 			command_handler.update	

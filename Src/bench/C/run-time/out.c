@@ -70,7 +70,7 @@ register1 char *Current;
 	return makestr(generator, strlen(generator));
 }
 
-public char * c_tagged_out(object)
+public char *c_tagged_out(object)
 EIF_OBJ object;
 {
 	/* Write a tagged out printing in an string.

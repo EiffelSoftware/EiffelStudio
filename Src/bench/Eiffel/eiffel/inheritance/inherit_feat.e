@@ -163,51 +163,54 @@ feature
 						-- Detection of a renaming clause: check repeated
 						-- inheritance possible replication
 					new_name := parent.renaming.item (feature_name);
-					pos := feat.position;
-					from
-							-- Looking for a case of replication through
-							-- repeated inheritance. There must be two same
-							-- body ids.
-						body_id := next.a_feature.code_id;
-						feat.start;
-					until
-						feat.after or else duplication
-					loop
-						next_info := feat.item;
-						if 	next_info /= next
-							and then
-							next_info.a_feature.code_id = body_id
-						then
-							other_renamings := next_info.parent.renaming;
-							if other_renamings /= Void then
-								other_renaming := 
-											other_renamings.item (feature_name);
+					if System.replication_off then
+						pos := feat.position;
+						from
+								-- Looking for a case of replication through
+								-- repeated inheritance. There must be two same
+								-- body ids.
+							body_id := next.a_feature.code_id;
+							feat.start;
+						until
+							feat.after or else duplication
+						loop
+							next_info := feat.item;
+							if 	next_info /= next
+								and then
+								next_info.a_feature.code_id = body_id
+							then
+								other_renamings := next_info.parent.renaming;
+								if other_renamings /= Void then
+									other_renaming := 
+												other_renamings.item (feature_name);
+								end;
+									-- Replication if same code id but not the
+									-- same renaming
+								duplication :=
+									not equal(new_name, other_renaming);
 							end;
-								-- Replication if same code id but not the
-								-- same renaming
-							duplication :=
-								not equal(new_name, other_renaming);
+							feat.forth;
 						end;
-						feat.forth;
-					end;
-					feat.go (pos);
-
-						-- Duplication of the instance of FEATURE_I for 
-						-- renaming
-					if duplication then
-							-- Feature replication in case of repeated
-							-- inheritance: process a new body id.
-							-- Give a new body id to the replication
-						replication := next.a_feature.replicated;
-					else
-						replication := next.a_feature.twin;
-					end;
-					replication.set_feature_name (new_name);
-
-					next.set_a_feature (replication);
+						feat.go (pos);
+	
+							-- Duplication of the instance of FEATURE_I for 
+							-- renaming
+						if duplication then
+								-- Feature replication in case of repeated
+								-- inheritance: process a new body id.
+								-- Give a new body id to the replication
+							replication := next.a_feature.replicated;
+						else
+							replication := next.a_feature.twin;
+						end;
+						replication.set_feature_name (new_name);
 
 						-- Move the inherit feature information under 
 						-- 'new_name'.
+					else
+						replication := next.a_feature.twin;
+					end;
+					next.set_a_feature (replication);
 					Inherit_table.add_inherited_feature (next, new_name);
 						-- Remove the information
 					feat.remove;

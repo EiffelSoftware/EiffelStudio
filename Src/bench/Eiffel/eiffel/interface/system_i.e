@@ -257,6 +257,9 @@ feature
 	remover_off: BOOLEAN;
 			-- Is the remover off (by specifying the Ace option)
 
+	replication_off: BOOLEAN;
+			-- Is code replication off (by specifying the Ace option)
+
 	current_pass: PASS;
 			-- Current compiler pass
 			-- Useful for `current_class'
@@ -2924,6 +2927,12 @@ feature --Workbench option file generation
 		end;
 
 feature 
+
+	set_replication_off (b: BOOLEAN) is
+			-- Assign `b' to `replication_off'
+		do
+			replication_off := b;
+		end;
 
 	process_pass (a_pass: PASS) is
 			-- Process `a_pass'

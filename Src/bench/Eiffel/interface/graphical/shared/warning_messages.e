@@ -287,7 +287,7 @@ feature -- Warning messages
 	w_MakefileSH_more_recent: STRING is "The Makefile.SH is more recent than the system.";
 	w_Melt_only: STRING is"%
 			%This feature is not available in the personal version.%N%
-			%Please upgrade to the professional version of ISE Eiffel 3";
+			%Please upgrade to the professional version of ISE Eiffel 4";
 	w_Must_compile_first: STRING is "You must compile a system first";
 	w_Must_finalize_first: STRING is "You must finalize your project first";
 	w_No_associated_file: STRING is "There is no associated file for %

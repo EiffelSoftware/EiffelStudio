@@ -20,7 +20,7 @@ feature -- Access
 
 	tooltip: STRING is
 			-- Tooltip displayed on `Current'.
-			-- If `Result.is_empty' then no tooltip displayed.
+			-- If `Result' is empty then no tooltip displayed.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -59,7 +59,7 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_ANY} and tooltip = Void
+			Result := Precursor {EV_ANY} and tooltip.is_empty
 		end
 
 feature {EV_TOOLTIPABLE_I} -- Implementation

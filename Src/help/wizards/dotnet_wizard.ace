@@ -120,8 +120,8 @@ external
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
 		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
-		"$(EIFFEL_SRC)\C_library\zlib\zlib.lib",
-		"$(EIFFEL_SRC)\C_library\libpng\libpng.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\msc\lib\zlib.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\msc\lib\libpng.lib",
 		"$(EIFFEL_SRC)\help\wizards\edotnet\reflection_interface_generated\Client\Clib\ecom.lib",
 		"$(EIFFEL_SRC)\library\com\spec\msc\lib\com.lib",
 		"$(EIFFEL_SRC)\library\com\spec\msc\lib\com_runtime.lib",

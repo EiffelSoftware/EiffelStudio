@@ -1,6 +1,5 @@
 indexing
 	description: "Objects that hold shared information required for transports."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

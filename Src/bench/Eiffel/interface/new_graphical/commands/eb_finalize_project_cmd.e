@@ -27,51 +27,35 @@ creation
 
 feature -- Callbacks
 
---	discard_assertions is
---			-- Question to keep assertions is answered with discard.
---			-- This is handled by keep_assertions.
---		do
---			if Eiffel_ace.file_name = Void then
---				Precursor
---			else
---				keep_assertions (Void)
---			end
---		end
-
-	keep_assertions (argument: ANY) is
-			-- Question to keep assertions is answered with keep.
+	ask_for_assertions (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+			-- Question the user wether he wants to keep assertions or not.
 			-- If the question is answered with discard, it will come to here aswell.
+		local
+			wd: EV_WARNING_DIALOG
+			cmd: EV_ROUTINE_COMMAND
 		do
---			if Eiffel_ace.file_name = Void then
---				Precursor (argument)
+			if arg = discard_assertions then
+				assertions_included := False
+			elseif arg = keep_assertions then
+				assertions_included := True
+			end
+			if 
+				(arg = Void)
+			then
+				create wd.make_with_text (tool.parent, Interface_names.t_Warning,
+					Warning_messages.w_Assertion_warning)
+				wd.show_yes_no_cancel_buttons
+				create cmd.make (~ask_for_assertions)
+				wd.add_yes_command (cmd, keep_assertions)
+				wd.add_no_command (cmd, discard_assertions)
+				wd.show
 --			elseif not assert_confirmed then
---				if argument = Void then
---						-- Called from `discard_assertions' after help button
---						-- was pressed (Finalize_no_c request)
---					start_c_compilation := False
---				else
---					start_c_compilation := True
---				end
---				assert_confirmed := True
 --				warner (popup_parent).custom_call (Current, 
 --					Warning_messages.w_Assertion_warning, Interface_names.b_Keep_assertions, 
 --					Interface_names.b_Discard_assertions, Interface_names.b_Cancel) 
---			elseif 
---				not Application.is_running or else
---				(argument /= Void and 
---				argument = last_confirmer and end_run_confirmed)
---			then
-					-- Do not call the once function `System' directly
-					-- since it's value may be replaced during the first
-					-- compilation (as soon as we figured out whether the
-					-- system describes a Dynamic Class Set or not).
-				compile (argument)
---			else
---				end_run_confirmed := true
---				confirmer (popup_parent).call (Current,
---						"Recompiling project will end current run.%N%
---						%Start compilation anyway?", Interface_names.b_Compile)
---			end
+			else
+				confirm_and_compile (assertions_confirmed, Void)
+			end
 		end
  
 feature {NONE} -- Attributes
@@ -82,8 +66,8 @@ feature {NONE} -- Attributes
 			Result := Final_generation_path
 		end
 
-	assert_confirmed: BOOLEAN
-			-- Did the user confirm the question whether to keep the assertions
+	assertions_included: BOOLEAN
+			-- Did the user wants to keep the assertions
 			-- or not?
 
 	finalization_error: BOOLEAN
@@ -110,27 +94,69 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Implementation
 
-	confirm_and_compile (argument: ANY) is
+	finalize_now: EV_ARGUMENT1 [ANY] is
+			-- Argument used for a normal request.
+		once
+			create Result.make (Void)
+		end
+
+	finalize_no_c: EV_ARGUMENT1 [ANY] is
+			-- Argument used when files needs to be saved before compiling.
+		once
+			create Result.make (Void)
+		end
+
+	keep_assertions: EV_ARGUMENT1 [ANY] is
+			-- Argument used for a normal request.
+		once
+			create Result.make (Void)
+		end
+
+	discard_assertions: EV_ARGUMENT1 [ANY] is
+			-- Argument used when files needs to be saved before compiling.
+		once
+			create Result.make (Void)
+		end
+
+	assertions_confirmed: EV_ARGUMENT1 [ANY] is
+			-- Argument used when files needs to be saved before compiling.
+		once
+			create Result.make (Void)
+		end
+
+	confirm_and_compile (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- Ask for confirmation if the assertion are to be kept, and
 			-- finalize thereafter.
+		local
+			wd: EV_WARNING_DIALOG
+			cmd: EV_ROUTINE_COMMAND
 		do
---			if 
---				argument = tool or else
---				argument = Current or else
---				(argument /= Void and 
---				argument = last_confirmer and not end_run_confirmed)
---			then
---				assert_confirmed := False
+			if arg = finalize_no_c then
+				start_c_compilation := False
+			elseif arg = finalize_now then
+				start_c_compilation := True
+			end
+			if 
+				(arg = Void)
+			then
+				create wd.make_with_text (tool.parent, Interface_names.t_Warning,
+					Warning_messages.w_Finalize_warning)
+				wd.show_yes_no_cancel_buttons
+				create cmd.make (~confirm_and_compile)
+				wd.add_yes_command (cmd, finalize_now)
+				wd.add_no_command (cmd, finalize_no_c)
+				wd.show
 --				warner (popup_parent).custom_call (Current, 
 --					Warning_messages.w_Finalize_warning,
 --					Interface_names.b_Finalize_now, 
 --					Interface_names.b_Finalize_now_but_no_C, Interface_names.b_Cancel)
---			elseif 
---				(argument = Current) or else
---				(argument = last_confirmer)
---			then
-				keep_assertions (argument)
---			end
+			elseif 
+				(arg = assertions_confirmed)
+			then
+				Precursor (arg, data)
+			else
+				ask_for_assertions (Void, data)
+			end
 		end
 
 	perform_compilation is
@@ -146,7 +172,7 @@ feature {NONE} -- Implementation
 			finalization_error := not Eiffel_project.successful
 		end
 
-	launch_c_compilation (argument: ANY) is
+	launch_c_compilation is
 			-- Launch the C compilation in the background.
 		local
 			window: EB_CLICKABLE_RICH_TEXT

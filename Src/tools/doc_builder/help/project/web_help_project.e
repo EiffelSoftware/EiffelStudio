@@ -55,7 +55,7 @@ feature {NONE} -- File
 				replace_token (l_text, filter_frame_size_token, "120")
 			else
 				create l_filename.make_from_string ("")
-				replace_token (l_text, filter_frame_size_token, "0")
+				replace_token (l_text, filter_frame_size_token, "25")
 			end
 			replace_token (l_text, html_default_toc, l_filename.string)
 			l_file.close
@@ -221,43 +221,45 @@ feature {NONE} -- Implementation
 			create Result.make_empty
 			if is_gui_mode then
 				Result.append ("Show documentation for:<br>")
-			end
-			if shared_project.preferences.generate_dhtml_filter then
-				l_filters := shared_project.filter_manager.filters
-				Result.append ("<select name=%"filterMenu%" onChange=%"swapTOC (this)%">")
-				from
-					l_filters.start
-				until
-					l_filters.after
-				loop						
-					l_output_filter ?= l_filters.item_for_iteration
-					if not l_output_filter.description.is_empty and then generation_data.filter_toc_hash.has (l_output_filter.description) then							
-						create l_toc_url.make_from_string ("..")
-						l_toc_name := generation_data.filter_toc_hash.item (l_output_filter.description)
-						if (create {PLAIN_TEXT_FILE}.make (l_toc_name)).exists then
-							create l_util
-							l_toc_name := l_util.file_no_extension (l_util.short_name (l_toc_name))
+				if shared_project.preferences.generate_dhtml_filter then
+					l_filters := shared_project.filter_manager.filters
+					Result.append ("<select name=%"filterMenu%" onChange=%"swapTOC (this)%">")
+					from
+						l_filters.start
+					until
+						l_filters.after
+					loop						
+						l_output_filter ?= l_filters.item_for_iteration
+						if not l_output_filter.description.is_empty and then generation_data.filter_toc_hash.has (l_output_filter.description) then							
+							create l_toc_url.make_from_string ("..")
+							l_toc_name := generation_data.filter_toc_hash.item (l_output_filter.description)
+							if (create {PLAIN_TEXT_FILE}.make (l_toc_name)).exists then
+								create l_util
+								l_toc_name := l_util.file_no_extension (l_util.short_name (l_toc_name))
+							end
+							l_toc_url.extend (l_toc_name)
+							l_toc_url.extend ("HTMLLeftContextTemplate.html")
+							l_toc_url_string := l_toc_url.string
+							l_toc_url_string.replace_substring_all ("\", "/")
+							Result.append ("<option value=%"" + l_toc_url_string + "%"")
+							Result.append (" name=%"" + filter_option_string (l_output_filter) + "%"")
+							Result.append (">")							
+							Result.append (l_output_filter.description)
+							Result.append ("</option>")
+							l_filter_count := l_filter_count + 1
 						end
-						l_toc_url.extend (l_toc_name)
-						l_toc_url.extend ("HTMLLeftContextTemplate.html")
-						l_toc_url_string := l_toc_url.string
-						l_toc_url_string.replace_substring_all ("\", "/")
-						Result.append ("<option value=%"" + l_toc_url_string + "%"")
-						Result.append (" name=%"" + filter_option_string (l_output_filter) + "%"")
-						Result.append (">")							
-						Result.append (l_output_filter.description)
-						Result.append ("</option>")
-						l_filter_count := l_filter_count + 1
+						l_filters.forth
 					end
-					l_filters.forth
+					Result.append ("</select>")
+					
+					if l_filter_count < 2 then
+							-- If there have been less than 2 filters successfully processed there is no
+							-- point for filter combo, so just wipe out the Result
+						Result.wipe_out
+					end				
 				end
-				Result.append ("</select>")
-				
-				if l_filter_count < 2 then
-						-- If there have been less than 2 filters successfully processed there is no
-						-- point for filter combo, so just wipe out the Result
-					Result.wipe_out
-				end				
+			else
+				Result.append ("Table of Contents")
 			end
 		ensure
 			result_not_void: Result /= Void

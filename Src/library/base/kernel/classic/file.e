@@ -34,7 +34,6 @@ feature -- Initialization
 		do
 			name := fn
 			mode := Closed_file
-			create last_string.make (256)
 		ensure
 			file_named: name.is_equal (fn)
 			file_closed: is_closed
@@ -1288,6 +1287,9 @@ feature -- Input
 			done: BOOLEAN
 		do
 			from
+				if last_string = Void then
+					create last_string.make (default_last_string_size)
+				end
 				str_area := last_string.area
 				str_cap := last_string.capacity
 			until
@@ -1326,6 +1328,9 @@ feature -- Input
 			new_count: INTEGER
 			str_area: ANY
 		do
+			if last_string = Void then
+				create last_string.make (default_last_string_size)
+			end
 			last_string.grow (nb_char)
 			str_area := last_string.area
 			new_count := file_gss (file_pointer, $str_area, nb_char)
@@ -1346,6 +1351,9 @@ feature -- Input
 			read: INTEGER	-- Amount of bytes already read
 		do
 			from
+				if last_string = Void then
+					create last_string.make (default_last_string_size)
+				end
 				str_area := last_string.area
 				str_cap := last_string.capacity
 			until
@@ -1397,10 +1405,13 @@ feature -- Convenience
 				file.put_string (last_string)
 				l_read := l_read + l_modulo
 			end
-			create last_string.make (256)
+			last_string := Void
 		end
 
 feature {NONE} -- Implementation
+
+	default_last_string_size: INTEGER is 256
+			-- Default size for creating `last_string'
 
 	read_to_string (a_string: STRING; pos, nb: INTEGER): INTEGER is
 			-- Fill `a_string', starting at position `pos' with at

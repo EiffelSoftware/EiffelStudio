@@ -50,7 +50,7 @@
 
 #ifdef EIF_VMS
 #include <assert.h>
-static int err;		/* for debugging - save errno value */
+static int err;  		/* for debugging - save errno value */
 struct utimbuf {
     time_t actime;      /* access time */
     time_t modtime;     /* modification time */
@@ -293,8 +293,9 @@ rt_private char *file_fdopen(int fd, char *type)
 	errno = 0;
 	fp = (FILE *) fdopen(fd, type);
 #ifdef EIF_VMS
+	err = (errno == EVMSERR ? vaxc$errno : errno);
 	if (fp == NULL && errno == EINVAL) {
-	    /* VMS: ***TBS*** - if errno=emode, remove 'b' and try again */
+	    /* VMS: **TBS** - if errno=emode, remove 'b' and try again */
 	    char *p = strchr(type, 'b');
 	    if (p) {
 		off_t len = p - type;
@@ -349,7 +350,7 @@ rt_public void file_flush (FILE *fp)
 	    esys();				/* Flush failed, raise exception */
 #ifdef EIF_VMS	/* VMS: flush RMS buffers (shouldn't this be done on other platforms also?) */
 	if (0 != fsync(fileno(fp))) {
-	    err = errno;
+	    err = (errno == EVMSERR ? vaxc$errno : errno);
 	    esys();
 	}
 #endif
@@ -436,8 +437,27 @@ rt_public void file_ps(FILE *f, char *str, EIF_INTEGER len)
 		return;			/* Nothing to be done */
 
 	errno = 0;
+#ifdef EIF_VMS
+	/* on VMS, fwrite to a "record" (non-stream) file will cause an entire record to be written.  */
+	/* Though we try to make stream files for text (see file_fopen), we may be writing to a	      */
+	/* text record file (eg. a log file) created by some other agency.			      */
+	{
+	    int res, l = strlen (str);
+	    assert (l == len);
+	    err = (errno == EVMSERR ? vaxc$errno : errno);
+	    if (l == len) 
+		res = fputs (str, f);
+	    else if (l < len) 
+		res = fprintf (f, "%.*s", len, str);
+	    else res = decc$record_write (f, str, len);
+	    err = (errno == EVMSERR ? vaxc$errno : errno);
+	    if (res < 0)
+		eise_io("FILE: unable to write STRING object.");
+	}
+#else
 	if (1 != fwrite(str, sizeof (char) * len, 1, f))
 		eise_io("FILE: unable to write STRING object.");
+#endif
 }
 
 rt_public void file_pc(FILE *f, char c)
@@ -886,7 +906,7 @@ rt_public EIF_INTEGER file_info (struct stat *buf, int op)
 	case 1:	/* Inode number */
 #ifdef EIF_VMS
 		return (EIF_INTEGER) *(int*)buf->st_ino;	/* VMS: return 32 bits of 40/48 bit inode */
-		/*** VMS: ***TBS*** assert (buf->st_ino[2] == 0? );  */
+		/*** VMS: **TBS** assert (buf->st_ino[2] == 0? );  */
 #else
 		return (EIF_INTEGER) buf->st_ino;
 #endif
@@ -1454,7 +1474,7 @@ rt_public EIF_BOOLEAN file_creatable(char *path)
 	/* Check whether the file `path' may be created: we need write permissions
 	 * in the parent directory and there must not be any file bearing that name
 	 * with no write permissions...
-	     VMS: ***TBS*** (on VMS, there can be an unwritable file because a new version is created)
+	     VMS: **TBS** (on VMS, there can be an unwritable file because a new version is created)
 	 */
 
 	struct stat buf;			/* Buffer to get parent directory statistics */

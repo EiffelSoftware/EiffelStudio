@@ -25,9 +25,15 @@ feature -- State Changing
 			-- reflect `b'.
 		do
 			if b then
-				associated_button.set_symbol
-					(associated_command.true_state_symbol)
-			else
+				if associated_button.pixmap /= 
+					associated_command.true_state_symbol
+				then
+					associated_button.set_symbol
+						(associated_command.true_state_symbol)
+				end	
+			elseif associated_button.pixmap /=  
+					associated_command.false_state_symbol
+			then
 				associated_button.set_symbol
 					(associated_command.false_state_symbol)
 			end

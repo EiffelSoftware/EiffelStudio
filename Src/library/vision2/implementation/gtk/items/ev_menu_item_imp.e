@@ -15,19 +15,12 @@ inherit
 	
 	EV_MENU_ITEM_I
 
-	
-	EV_TEXT_CONTAINER_IMP
-		rename
-			-- We want to maintain the name make_with_text
-			-- although the signature is different
-			make_with_text as old_make_with_text 
-		end
-	
-	EV_WIDGET_IMP -- Inheriting from widget, because menu item is a widget in gtk, although it is not a widget in EiffelVision. This is just for implementation reasons.
+	EV_ITEM_IMP
 
+	
 creation
 	
-	make, make_with_text
+	make_with_text
 
 feature {NONE} -- Initialization
 	
@@ -40,34 +33,6 @@ feature {NONE} -- Initialization
 			widget := gtk_menu_item_new_with_label ($a)
 			show -- Have to show the menu item, otherwise it is not visible
 		end		
-	
-feature {NONE} -- Implementation
-	
-	set_label_widget (new_label_widget: POINTER) is
-		do
-			check
-				do_not_call: False
-			end
-		end
-	
-        label_widget: POINTER is
-                        -- gtk widget of the label inside the button
-                do
-                        Result := c_gtk_get_label_widget (widget)
-		end
-	
-feature -- Element change
-	
-
-
-feature -- Event - command association
-	
-	add_activate_command ( command: EV_COMMAND; 
-			       arguments: EV_ARGUMENTS) is
-			-- Add 'activat' signal for menu item
-		do
-			add_command ( "activate", command,  arguments )
-		end
 
 end
 

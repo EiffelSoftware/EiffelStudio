@@ -80,7 +80,7 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_text_item (ti_Creation_keyword);
+			ctxt.put_text_item (ti_Create_keyword);
 			ctxt.put_space;
 			if clients /= void then
 				clients.simple_format (ctxt);

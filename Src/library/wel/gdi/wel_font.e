@@ -55,8 +55,12 @@ feature -- Setting
 			-- Set `pixel_height' with  `a_height'.
 		require
 			a_height_bigger_than_zero: a_height > 0
+		local
+			l: like log_font
 		do
-			log_font.set_height (-a_height)
+			l := log_font
+			l.set_height (-a_height)
+			set_indirect (l)
 		end
 
 feature -- Re-initialisation

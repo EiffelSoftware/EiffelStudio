@@ -99,11 +99,11 @@ feature -- Element change
 		end
 
 	remove_text is
-			-- Make `text' empty.
+			-- Make `text' `is_empty'.
 		require
 			not_destroyed: not is_destroyed
 		do
-			implementation.remove_text
+			set_text ("")
 		ensure
 			text_empty: text.is_empty
 		end

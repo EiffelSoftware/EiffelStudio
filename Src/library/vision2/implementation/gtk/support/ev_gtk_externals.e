@@ -522,6 +522,10 @@ feature {NONE} -- GTK C functions for tree
         external "C | %"gtk_eiffel.h%""
         end
 
+    c_gtk_tree_selected_item (tree: POINTER): POINTER is
+        external "C | %"gtk_eiffel.h%""
+        end
+
 feature {NONE} -- code in the glue library
 
 	c_gtk_toolbar_append_item (t: POINTER; text, tip, private_tip,

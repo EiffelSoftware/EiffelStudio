@@ -259,7 +259,7 @@ feature -- Access
 				l_type := l_meta.item (i)
 				if l_type.is_reference then
 					meta_gen.put (l_type, i)
-					true_gen.put (create {FORMAL_I}.make (i), i)
+					true_gen.put (create {FORMAL_I}.make (True, False, i), i)
 				else
 					meta_gen.put (l_type.generic_derivation, i)
 					true_gen.put (true_gen.item (i).generic_derivation, i)
@@ -446,10 +446,7 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := class_id = other.class_id
-					and then is_expanded = other.is_expanded
-					and then is_separate = other.is_separate
-					and then meta_generic.same_as (other.meta_generic)
+			Result := same_as (other)
 		end
 
 	is_identical (other: TYPE_I): BOOLEAN is

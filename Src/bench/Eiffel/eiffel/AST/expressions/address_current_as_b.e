@@ -1,19 +1,15 @@
-class ADDRESS_CURRENT_AS
+class ADDRESS_CURRENT_AS_B
 
 inherit
 
-	EXPR_AS
+	ADDRESS_CURRENT_AS;
+
+	EXPR_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format
 		end
-
-feature
-
-	set is
-			-- Yacc initialization
-		do
-			-- Do nothing
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -24,7 +20,7 @@ feature -- Type check, byte code and dead code removal
 		end;
 
 	byte_node: HECTOR_B is
-			-- Byte code for current node
+			-- Byte code for current node.
 		local
 			current_access: CURRENT_B;
 		do
@@ -32,7 +28,7 @@ feature -- Type check, byte code and dead code removal
 			!!Result.make (current_access);
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.put_text_item (ti_Dollar);
@@ -40,4 +36,4 @@ feature -- Type check, byte code and dead code removal
 			ctxt.always_succeed;
 		end;	
 
-end
+end -- class ADDRESS_CURRENT_AS_B

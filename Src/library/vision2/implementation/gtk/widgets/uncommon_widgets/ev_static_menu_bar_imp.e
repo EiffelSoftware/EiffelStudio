@@ -9,10 +9,13 @@ class
 
 inherit
 	EV_STATIC_MENU_BAR_I
+		redefine
+			parent_imp
+		end
 
-	EV_MENU_ITEM_CONTAINER_IMP
-		rename
-			parent_imp as widget_parent_imp
+	EV_MENU_CONTAINER_IMP
+		redefine
+			parent_imp
 		select
 			make
 		end
@@ -20,8 +23,10 @@ inherit
 	EV_PRIMITIVE_IMP	
 			-- It is a widget in gtk
 		rename
-			make as widget_make,
-			parent_imp as widget_parent_imp
+			make as widget_make
+	--		parent_imp as widget_parent_imp
+		redefine
+			parent_imp
 		end
 
 creation
@@ -35,33 +40,60 @@ feature {NONE} -- Initialization
 			par_imp: EV_WINDOW_IMP
 		do
 			widget := gtk_menu_bar_new ()
-			parent := par
-			par_imp ?= par.implementation
+			parent_imp ?= par.implementation
 			check
-				good_implementation: par_imp /= Void
+				good_implementation: parent_imp /= Void
 			end
-			par_imp.add_static_menu (Current)	
+			parent_imp.add_static_menu (Current)
+
+--			parent := par
+--			par_imp ?= par.implementation
+--			check
+--				good_implementation: par_imp /= Void
+--			end
+--			par_imp.add_static_menu (Current)	
 		end	
 
 feature -- Access
 
-	parent: EV_WINDOW
+--	parent: EV_WINDOW
 			-- The parent of the Current widget
 			-- If the widget is an EV_WINDOW without parent,
 			-- this attribute will be `Void'
 
+	parent_imp: EV_WINDOW_IMP
+			-- We have to redefine it here.
 
 feature {NONE} -- Implementation	
 
-	add_menu_item_pointer (item_p: POINTER) is
+	add_menu (menu: EV_MENU) is
+		local
+			menu_imp: EV_MENU_IMP
+			name: ANY
+			item: POINTER
 		do
-			gtk_menu_bar_append (gtk_menu_bar (widget), item_p)
+			menu_imp ?= menu.implementation
+			check
+				correct_imp: menu_imp /= void
+			end
+			name ?= menu_imp.name.to_c
+			item := gtk_menu_item_new_with_label ($name)
+			gtk_menu_item_set_submenu (GTK_MENU_ITEM (item), menu_imp.widget)
+			gtk_menu_bar_append (GTK_MENU_BAR (widget), item)
+			gtk_widget_show (item)
 		end
 
-	widget_make (par: EV_CONTAINER) is
-			-- Need to be implemented, but do nothing.
-		do
-		end
+--		do
+--			gtk_menu_bar_append (GTK_MENU_BAR (widget), item_p)
+--		end
+
+--	widget_make (par: EV_CONTAINER) is
+--			-- Need to be implemented, but do nothing.
+--		do
+--			check
+--				do_not_call: False
+--			end
+--		end
 
 end -- class EV_STATIC_MENU_BAR_IMP
 

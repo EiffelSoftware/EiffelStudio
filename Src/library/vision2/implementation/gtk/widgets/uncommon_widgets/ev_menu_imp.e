@@ -8,11 +8,9 @@ indexing
 	revision: "$Revision$"
 	
 class
-	
 	EV_MENU_IMP
 	
 inherit
-	
 	EV_MENU_I
 		
 	EV_MENU_ITEM_CONTAINER_IMP
@@ -21,46 +19,66 @@ inherit
 		end
 
 creation
-	
 	make_with_text
 
 feature {NONE} -- Initialization
 
-	make (par: EV_MENU_ITEM_CONTAINER) is
+	make (par: EV_MENU_CONTAINER) is
 			-- Create a menu
 		do
+--			make_with_text (par, "")
 			widget := gtk_menu_new ()
 		end
 	
-        make_with_text (par: EV_MENU_ITEM_CONTAINER; txt: STRING) is
+        make_with_text (par: EV_MENU_CONTAINER; txt: STRING) is
                         -- Create a menu with name. 
+		local
+			a: ANY
+			menu: POINTER
 		do
+--			a := txt.to_c
+--			widget := gtk_menu_item_new_with_label ($a)
+--			menu := gtk_menu_new ()
+--			gtk_menu_item_set_submenu (GTK_MENU_ITEM (widget), menu)
+
 			name := txt
-			make (par)
+			widget := gtk_menu_new ()
 		end	
-	
 
-feature {NONE} -- Implementation	
-
-	add_menu_item_pointer (item_p: POINTER) is
-		do
-			gtk_menu_append (gtk_menu (widget), item_p)
-		end
-	
-feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
+feature {EV_MENU_CONTAINER_IMP} -- Implementation
 
 	name: STRING
 
-	widget_make (par: EV_CONTAINER) is
-			-- Cannot be called
+feature {NONE} -- Implementation	
+
+	add_item (child: EV_MENU_ITEM) is
+			-- Add menu item into container
+		local
+			item_imp: EV_MENU_ITEM_IMP
 		do
+			item_imp ?= child.implementation
 			check
-				do_not_call: False
+				correct_imp: item_imp /= Void
 			end
+			gtk_menu_append (GTK_MENU(widget), item_imp.widget)
+			gtk_widget_show (item_imp.widget)
 		end
 
+--	add_menu_item_pointer (item_p: POINTER) is
+--		do
+--			gtk_menu_append (gtk_menu (widget), item_p)
+--		end
+	
+--	widget_make (par: EV_CONTAINER) is
+--			-- Cannot be called
+--		do
+--			check
+--				do_not_call: False
+--			end
+--		end
 
-end
+
+end -- class EV_MENU_IMP
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

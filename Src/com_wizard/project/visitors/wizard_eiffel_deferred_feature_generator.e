@@ -21,7 +21,7 @@ feature -- Basic operations
 		local
 			a_body, a_comment: STRING
 		do
-			a_precondition_feature_writer.set_name (vartype_namer.user_precondition_name (function_name))
+			a_precondition_feature_writer.set_name (user_precondition_name (function_name))
 			a_precondition_feature_writer.set_effective
 
 			create a_body.make (100)

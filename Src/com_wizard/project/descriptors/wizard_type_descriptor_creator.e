@@ -13,6 +13,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_FORBIDDEN_NAMES
+		export
+			{NONE} all
+		end
+
 	WIZARD_WRITER_DICTIONARY
 		export
 			{NONE} all

@@ -30,6 +30,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_FORBIDDEN_NAMES
+		export
+			{NONE} all
+		end
+
 feature -- Basic operations
 
 	create_descriptor (a_name: STRING; a_type_info: ECOM_TYPE_INFO;

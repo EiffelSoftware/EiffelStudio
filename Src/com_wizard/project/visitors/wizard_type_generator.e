@@ -19,6 +19,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
+
 feature -- Basic Operations
 
 	generate (a_descriptor: WIZARD_TYPE_DESCRIPTOR) is

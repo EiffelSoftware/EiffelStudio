@@ -23,7 +23,7 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_GENERATION_ENVIRONMENT
+	WIZARD_VARIABLE_NAME_MAPPER
 		export
 			{NONE} all
 		end
@@ -91,7 +91,7 @@ feature -- Basic operation
 		local
 			tmp_tag, tmp_body, a_precondition_name: STRING
 		do
-			a_precondition_name := vartype_namer.user_precondition_name (a_feature_name)
+			a_precondition_name := user_precondition_name (a_feature_name)
 			tmp_tag := clone (a_precondition_name)
 			tmp_body := clone (a_precondition_name)
 

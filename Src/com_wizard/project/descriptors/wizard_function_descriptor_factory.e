@@ -18,6 +18,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_FORBIDDEN_NAMES
+		export
+			{NONE} all
+		end
+
 	ECOM_FUNC_KIND
 		export
 			{NONE} all

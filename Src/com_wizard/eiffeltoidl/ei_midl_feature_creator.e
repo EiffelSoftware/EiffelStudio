@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_FORBIDDEN_NAMES
+		export
+			{NONE} all
+		end
+
 create
 	make
 

@@ -13,7 +13,12 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_GENERATION_ENVIRONMENT
+	WIZARD_SHARED_DATA
+		export
+			{NONE} all
+		end
+
+	WIZARD_FORBIDDEN_NAMES
 		export
 			{NONE} all
 		end
@@ -39,6 +44,20 @@ feature -- Access
 		end
 
 feature -- Basic Operations
+
+	user_precondition_name (a_feature_name: STRING): STRING is
+			-- Name for user defined precondition.
+		require
+			non_void_name: a_feature_name /= Void
+			valid_name: not a_feature_name.empty
+		do
+			Result := clone (a_feature_name)
+			Result.append (Underscore)
+			Result.append (User_precondition)
+		ensure
+			non_void_name: Result /= Void
+			valid_name: not Result.empty
+		end
 
 	namespace_name (a_name: STRING): STRING is
 			-- Namespace name.

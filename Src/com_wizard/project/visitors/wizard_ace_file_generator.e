@@ -13,7 +13,7 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_DATA
+	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
 			{NONE} all
 		end

@@ -23,6 +23,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
+
 	WIZARD_GUID_GENERATOR
 		export
 			{NONE} all

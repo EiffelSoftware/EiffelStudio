@@ -29,6 +29,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_BROWSE_DIRECTORY
+		export
+			{NONE} all
+		end
+
 creation
 	make
 

@@ -42,6 +42,7 @@ feature -- Basic operations
 				until
 					coclass.source_interface_descriptors.off
 				loop
+					remove_from_system_interfaces (coclass.source_interface_descriptors.item.implemented_interface)
 					generate_source_interface_features (coclass.source_interface_descriptors.item)
 					coclass.source_interface_descriptors.forth
 				end

@@ -28,6 +28,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_GENERATORS
+		export
+			{NONE} all
+		end
+
 	WIZARD_WRITER_CPP_EXPORT_STATUS
 		export
 			{NONE} all

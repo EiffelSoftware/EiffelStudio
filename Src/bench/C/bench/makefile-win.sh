@@ -48,13 +48,13 @@ compiler.$lib: $(OBJECTS)
 	$link_line
 
 wcompiler.$lib: $(WOBJECTS)
-	$link_wline
+	$link_line
 
 mtcompiler.$lib: $(MT_OBJECTS)
-	$link_mtline
+	$link_line
 
 mtwcompiler.$lib: $(MT_WOBJECTS)
-	$link_mtwline
+	$link_line
 
 wpstore.$obj: pstore.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $?

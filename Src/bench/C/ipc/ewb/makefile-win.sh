@@ -49,7 +49,7 @@ ewb.$lib: $(OBJECTS)
 	$link_line
 
 mtewb.$lib: $(MT_OBJECTS)
-	$link_mtline
+	$link_line
 
 MTewb_dumped.$obj: ewb_dumped.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 

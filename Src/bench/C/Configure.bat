@@ -101,11 +101,12 @@ copy make.w32 run-time\make.bat
 copy run-time\size.win run-time\eif_size.h
 copy run-time\size.win eif_size.h
 rem
-rem Create OBJDIR and LIB in run-time
+rem Create OBJDIR, LIB, and FREELIB in run-time
 rem
 cd run-time
 if not exist OBJDIR mkdir OBJDIR
 if not exist LIB mkdir LIB
+if not exist FREELIB mkdir FREELIB
 cd ..
 rem
 rem Call the converter tranforming the makefile-win.sh to makefile
@@ -183,6 +184,7 @@ echo del *.pch >> cleanup.bat
 echo del *.dll >> cleanup.bat
 echo del *.tds >> cleanup.bat
 echo del *.o >> cleanup.bat
+echo del *.il? >> cleanup.bat
 echo del config.sh >> cleanup.bat
 echo del makefile >> cleanup.bat
 echo del make.bat >> cleanup.bat
@@ -201,6 +203,7 @@ copy cleanup.bat idrs\
 copy cleanup.bat run-time\
 copy cleanup.bat run-time\OBJDIR\
 copy cleanup.bat run-time\LIB\
+copy cleanup.bat run-time\FREELIB\
 
 cd bench
 call cleanup
@@ -227,6 +230,8 @@ call cleanup
 cd OBJDIR
 call cleanup
 cd ..\LIB
+call cleanup
+cd ..\FREELIB
 call cleanup
 cd ..\..
 

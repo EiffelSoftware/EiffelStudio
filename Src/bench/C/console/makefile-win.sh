@@ -29,13 +29,13 @@ winconsole.$lib: $(OBJECTS)
 	$link_line
 
 mtwinconsole.$lib: $(MT_OBJECTS)
-	$link_mtline
+	$link_line
 
 wwinconsole.$lib: $(WOBJECTS)
-	$link_wline
+	$link_line
 
 mtwwinconsole.$lib: $(MT_WOBJECTS)
-	$link_mtwline
+	$link_line
 
 weconsole.$obj: econsole.c
 	$(CC) $(JCFLAGS) -DWORKBENCH $(OUTPUT_CMD)$@ -c $?

@@ -29,11 +29,7 @@ output_libraries='standard'
 #
 #Link Lines in non debug mode:
 #-----------------------------
-link_line='$compiler_path\bin\lib /out:$@ $(OBJECTS) $link_debug'
-link_wline='$compiler_path\bin\lib /out:$@ $(WOBJECTS) $link_debug'
-link_eline='$compiler_path\bin\lib /out:$@ $(EOBJECTS) $link_debug'
-link_mtline='$compiler_path\bin\lib /out:$@ $(MT_OBJECTS) $link_debug'
-link_mtwline='$compiler_path\bin\lib /out:$@ $(MT_WOBJECTS) $link_debug'
+link_line='$compiler_path\bin\lib /out:$@ $** $link_debug'
 #
 #
 optimize='-O2'

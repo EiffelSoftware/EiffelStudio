@@ -22,10 +22,6 @@ output_libraries='standard mtstandard'
 #
 #
 link_line='&$compiler_path\bin\tlib /p512 $@ +-$**'
-link_wline='&$compiler_path\bin\tlib /p512 $@ +-$**'
-link_eline='&$compiler_path\bin\tlib /p512 $@ +-$**'
-link_mtline='&$compiler_path\bin\tlib /p512 $@ +-$**'
-link_mtwline='&$compiler_path\bin\tlib /p512 $@ +-$**'
 #
 #
 optimize='-O2'

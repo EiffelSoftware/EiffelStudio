@@ -28,7 +28,7 @@ platform.$lib: $(OBJECTS)
 	$link_line
 
 mtplatform.$lib: $(MT_OBJECTS)
-	$link_mtline
+	$link_line
 
 MTnames.$obj: names.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 

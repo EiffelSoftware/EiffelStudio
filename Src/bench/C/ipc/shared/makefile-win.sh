@@ -57,7 +57,7 @@ ipc.$lib: $(OBJECTS)
 	$link_line
 
 mtipc.$lib: $(MT_OBJECTS)
-	$link_mtline
+	$link_line
 
 MTcom.$obj: com.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?

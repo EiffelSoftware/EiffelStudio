@@ -106,7 +106,6 @@ feature {NONE}
 
 	black_pixel (a_display_pointer: POINTER) : POINTER is
 			-- Index of black color in `a_display_pointer'
-		
 		do
 			Result := c_black_pixel (a_display_pointer)
 		end; 
@@ -162,14 +161,17 @@ feature {NONE}
 			primitive: PRIMITIVE;
 			manager: MANAGER
 		do
-			Result := (not (a_widget.background_color = Void)) and then (a_widget.background_color.implementation = Current);
+			Result := (a_widget.background_color /= Void) and then 
+						(a_widget.background_color.implementation = Current);
 			if not Result then
 				primitive ?= a_widget;
 				if not (primitive = Void) then
-					Result := (not (primitive.foreground = Void)) and then (primitive.foreground.implementation = Current)
+					Result := (primitive.foreground /= Void) and then 
+								(primitive.foreground.implementation = Current)
 				else
 					manager ?= a_widget;
-					Result := (not (manager = Void)) and then ((not (manager.foreground = Void)) and then (manager.foreground.implementation = Current))
+					Result := (manager /= Void) and then ((manager.foreground /= Void) and then 
+								(manager.foreground.implementation = Current))
 				end
 			end
 		ensure then
@@ -195,9 +197,8 @@ feature
 			a_resource := find_same_screen (a_screen);
 			if (a_resource = Void) then
 				Result := allocate (a_screen);
-				!!a_resource.make (a_screen, Result, is_real_allocated);
-				finish;
-				put_right (a_resource)
+				!COLOR_RES_X! a_resource.make (a_screen, Result, is_real_allocated);
+				put_front (a_resource)
 			else
 				Result := a_resource.identifier
 			end

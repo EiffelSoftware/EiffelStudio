@@ -17,6 +17,8 @@ inherit
 	WM_SHELL_M
 		export
 			{NONE} all
+		redefine
+			title, set_title
 		end;
 
 	DIALOG_R_M
@@ -35,7 +37,8 @@ feature
 			ext_name_shell: ANY
 		do
 			ext_name_shell := MallowShellResize.to_c;
-			set_boolean (xt_parent (screen_object), True,
+			d_set_boolean (d_xt_parent (screen_object), 
+					True,
 					$ext_name_shell)
 		end;
 
@@ -50,12 +53,14 @@ feature {NONE}
 			window, void_pointer: POINTER;
 			cursor_implementation: SCREEN_CURSOR_X
 		do
-			window := xt_window (screen_object);
+			window := d_xt_window (screen_object);
 			if window /= void_pointer then
-				display_pointer := xt_display (screen_object);
+				display_pointer := d_xt_display (screen_object);
 				cursor_implementation ?= cursor.implementation;
-				x_define_cursor (display_pointer, window, cursor_implementation.cursor_id (screen));
-				x_flush (display_pointer)
+				d_x_define_cursor (display_pointer, 
+							window, 
+							cursor_implementation.cursor_id (screen));
+				d_x_flush (display_pointer)
 			end
 		end;
 
@@ -65,11 +70,11 @@ feature {NONE}
 			display_pointer, void_pointer: POINTER;
 			window: POINTER
 		do
-			window := xt_window (screen_object);
+			window := d_xt_window (screen_object);
 			if window /= void_pointer then
-				display_pointer := xt_display (screen_object);
-				x_undefine_cursor (display_pointer, window);
-				x_flush (display_pointer)
+				display_pointer := d_xt_display (screen_object);
+				d_x_undefine_cursor (display_pointer, window);
+				d_x_flush (display_pointer)
 			end
 		end;
 
@@ -82,8 +87,34 @@ feature
 			ext_name_shell: ANY
 		do
 			ext_name_shell := MallowShellResize.to_c;
-			set_boolean (xt_parent (screen_object), False,
-					$ext_name_shell)
+			d_set_boolean (d_xt_parent (screen_object), 
+						False,
+						$ext_name_shell)
+		end;
+
+	title: STRING is
+			-- Application name to be displayed by
+			-- the window manager
+		local
+			ext_name: ANY
+		do
+			ext_name := MdialogTitle.to_c;
+			Result := m_wm_shell_get_string (d_xt_parent (screen_object), 
+						$ext_name)
+		end;
+
+	set_title (a_title: STRING) is
+			-- Set `title' to `a_title'.
+		require else
+			not_a_title_void: not (a_title = Void)
+		local
+			ext_name, ext_name_title: ANY
+		do
+			ext_name_title := a_title.to_c;
+			ext_name := MdialogTitle.to_c;
+			m_wm_shell_set_string (d_xt_parent(screen_object), 
+					$ext_name_title,
+					$ext_name)
 		end;
 
 feature {NONE}
@@ -130,10 +161,10 @@ feature
 		local
 			window, display_pointer, void_pointer: POINTER
 		do
-			window := xt_window (xt_parent (screen_object));
+			window := d_xt_window (d_xt_parent (screen_object));
 			if window /= void_pointer then
-				display_pointer := xt_display (xt_parent (screen_object));
-				x_lower_window (display_pointer, window)
+				display_pointer := d_xt_display (d_xt_parent (screen_object));
+				d_x_lower_window (display_pointer, window)
 			end
 		end;
 
@@ -200,12 +231,11 @@ feature
 
 feature
 
-
 	dialog_command_target is
 		do
-			action_target := xt_parent (screen_object);
+			action_target := d_xt_parent (screen_object);
 		ensure then
-			target_correct: action_target = xt_parent (screen_object);
+			target_correct: action_target = d_xt_parent (screen_object);
 		end;
 
 	widget_command_target is
@@ -217,73 +247,97 @@ feature
 
 	action_target: POINTER;
 
-
-
 feature {NONE} -- External features
 
-	set_boolean (value1: POINTER; value2: BOOLEAN; s_name: ANY) is
+	d_set_boolean (value1: POINTER; value2: BOOLEAN; s_name: ANY) is
 		external
 			"C"
+		alias
+			"set_boolean"
 		end;
 
-	x_raise_window (dspl_pointer, wndw: POINTER) is
+	d_x_raise_window (dspl_pointer, wndw: POINTER) is
 		external
 			"C"
+		alias
+			"x_raise_window"
 		end;
 
-	c_add_grab (value: POINTER; grab_type_val: INTEGER) is
+	d_c_add_grab (value: POINTER; grab_type_val: INTEGER) is
 		external
 			"C"
+		alias
+			"c_add_grab"
 		end;
 
-	xt_manage_child (scr_obj: POINTER) is
+	d_xt_manage_child (scr_obj: POINTER) is
 		external
 			"C"
+		alias
+			"xt_manage_child"
 		end;
 
-	xt_unmanage_child (scr_obj: POINTER) is
+	d_xt_unmanage_child (scr_obj: POINTER) is
 		external
 			"C"
+		alias
+			"xt_unmanage_child"
 		end;
 
-	x_lower_window (dspl_pointer, wndw: POINTER) is
+	d_x_lower_window (dspl_pointer, wndw: POINTER) is
 		external
 			"C"
+		alias
+			"x_lower_window"
 		end;
 
-	c_is_poped_up (value: POINTER): BOOLEAN is
+	d_c_is_poped_up (value: POINTER): BOOLEAN is
 		external
 			"C"
+		alias
+			"c_is_poped_up"
 		end;
 
-	x_undefine_cursor (dspl_pointer, wndw: POINTER) is
+	d_x_undefine_cursor (dspl_pointer, wndw: POINTER) is
 		external
 			"C"
+		alias
+			"x_undefine_cursor"
 		end;
 
-	xt_window (scr_obj: POINTER): POINTER is
+	d_xt_window (scr_obj: POINTER): POINTER is
 		external
 			"C"
+		alias
+			"xt_window"
 		end;
 
-	xt_display (scr_obj: POINTER): POINTER is
+	d_xt_display (scr_obj: POINTER): POINTER is
 		external
 			"C"
+		alias
+			"xt_display"
 		end;
 
-	x_flush (dspl_pointer: POINTER) is
+	d_x_flush (dspl_pointer: POINTER) is
 		external
 			"C"
+		alias
+			"x_flush"
 		end;
 
-	x_define_cursor (dspl_pointer, wndw, curs_id: POINTER) is
+	d_x_define_cursor (dspl_pointer, wndw, curs_id: POINTER) is
 		external
 			"C"
+		alias
+			"x_define_cursor"
 		end;
 
-	xt_parent (scr_obj: POINTER): POINTER is
+	d_xt_parent (scr_obj: POINTER): POINTER is
 		external
 			"C"
+		alias
+			"xt_parent"
 		end;
 
 end

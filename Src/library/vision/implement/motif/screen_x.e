@@ -70,17 +70,31 @@ feature
 	make (a_screen: SCREEN; application_class: STRING) is
 			-- Create a screen
 		local
-			ext_name, ext_name_app: ANY
+			ext_name, ext_name_app: ANY;
+			scr_name: STRING
 		do
-			ext_name := a_screen.screen_name.to_c;
+			scr_name := a_screen.screen_name;
+			if not scr_name.empty then
+				ext_name := a_screen.screen_name.to_c;
+			end;
 			if (application_class = Void) then
 				display_pointer := xt_open_display ($ext_name, 0)
 			else
 				ext_name_app := application_class.to_c;
 				display_pointer := xt_open_display ($ext_name, $ext_name_app)
 			end;
-			create_gc
+			if is_valid then
+				create_gc
+			end
 		end;
+
+	is_valid: BOOLEAN is
+			-- Is Current screen created?
+		local
+			null_pointer: POINTER
+		do
+			Result := display_pointer /= null_pointer
+		end
 
 feature {NONE}
 

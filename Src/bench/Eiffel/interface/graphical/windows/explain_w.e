@@ -16,7 +16,8 @@ inherit
 			process_any, build_menus,
 			update_boolean_resource,
 			update_integer_resource,
-			build_toolbar_menu
+			build_toolbar_menu,
+			close, set_title
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -24,7 +25,8 @@ inherit
 			tool_name,  hole, stone_type, process_any, build_menus,
 			update_boolean_resource,
 			update_integer_resource,
-			build_toolbar_menu
+			build_toolbar_menu,
+			close, set_title
 		end;
 	EB_CONSTANTS
 
@@ -88,6 +90,15 @@ feature -- Properties
 		end
 
 feature -- Status setting
+
+	set_title (s: STRING) is
+			-- Set `title' to `s'.
+		do
+			if is_a_shell then
+				eb_shell.set_title (s);
+				Project_tool.change_explain_entry (Current)
+			end
+		end;
 
 	process_any (s: like stone) is
 			-- Set `s' to `stone'.
@@ -159,6 +170,14 @@ feature -- Graphical Interface
 			edit_bar.init_toggle (toolbar_t);
 			!! toolbar_t.make (format_bar.identifier, special_menu);
 			format_bar.init_toggle (toolbar_t)
+		end;
+
+	close is
+			-- Close Current
+		do
+			Project_tool.remove_explain_entry (Current);
+			hide;
+			reset
 		end;
 
 	set_default_size is

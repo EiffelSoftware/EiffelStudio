@@ -270,15 +270,9 @@ rt_public EIF_REFERENCE arycpy(EIF_REFERENCE area, EIF_INTEGER i, EIF_INTEGER j,
 	assert (HEADER (new_area)->ov_flags & EO_SPEC);	/* Must be special. */
 
 	if ((HEADER (new_area)->ov_flags & (EO_REF | EO_REM)) 
-			== (EO_REF | EO_SPEC | EO_REM)) {
-				/* Is object in Special table? */
-		/* Removal. */
-		if (0 == special_rem_remove (new_area)) {
-			/* Is there no occurrence of `new_area' in special table? */
-			eif_panic ("Special table removal failed");
-		}
-
-		/* Remembering process. */
+			== (EO_REF | EO_REM)) {
+				/* Is object is special table? */
+		/* Update new references. */
 		eif_promote_special (new_area);
 	}
 	

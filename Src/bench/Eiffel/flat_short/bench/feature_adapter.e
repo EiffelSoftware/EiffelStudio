@@ -47,7 +47,7 @@ feature -- Comparison
 		end;
 
 feature -- Element change
-			
+
 	register (feature_as: FEATURE_AS_B; format_reg: FORMAT_REGISTRATION) is
 			-- Initialize and register Current adapter (if possible)
 			-- with ast `feature_ast' and evaluate the source and target
@@ -66,7 +66,8 @@ feature -- Element change
 			rep_table: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], BODY_INDEX];
 			f_name: FEATURE_NAME_B;
 			comment: STRING;
-			tmp: STRING
+			tmp: STRING;
+			is_precompiled: BOOLEAN
 		do
 			names := feature_as.feature_names;
 			if names.count > 1 then
@@ -97,6 +98,7 @@ feature -- Element change
 					i := i + 1
 				end;
 				comment.extend ('.');
+				is_precompiled := format_reg.current_class.is_precompiled;
 				from
 					--| Separate all the feature names
 					--| i.e. one feature name per ast
@@ -111,7 +113,7 @@ feature -- Element change
 					new_feature_as.set_feature_names (eiffel_list);
 					!! adapter;
 					adapter.register (new_feature_as, format_reg);
-					adapter.add_comment (comment)
+					adapter.add_comment (comment, is_precompiled);
 					i := i + 1
 				end;
 			else
@@ -323,15 +325,33 @@ feature -- Case storage output
 
 feature {FEATURE_ADAPTER} -- Element change
 
-	add_comment (comment: STRING) is
+	add_comment (comment: STRING; is_precompiled: BOOLEAN) is
 			-- Add `comment' to `comments'.
 		require
 			valid_comment: comment /= Void
 		do
 			if comments = Void then
 				!! comments.make 
+			elseif is_precompiled then
+					-- Duplicate the result since it could be referencing
+					-- the same comments of other synonym precompiled feature asts.
+				comments.start;
+				comments := comments.duplicate (comments.count)
 			end;
 			comments.extend (comment)
 		end;
 
+feature {FORMAT_REGISTRATION} -- Element chage
+
+	register_for_assertions (s_feature: FEATURE_I) is
+			-- Register feature adapter only for the purpose of retrieving
+			-- chained assertions if `source_feature' is redefined in descendant.
+		require
+			valid_s_feature: s_feature /= Void 
+		do
+			source_feature := s_feature;
+			ast := s_feature.body;	
+			body_index := s_feature.body_index;
+		end;
+			
 end -- class FEATURE_ADAPTER

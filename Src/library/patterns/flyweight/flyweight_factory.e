@@ -12,7 +12,7 @@ feature -- Initialization
 	make is
 		-- Initialize
 		do
-			!! list.make(20)
+			create list.make(20)
 		end
 
 feature -- Operations
@@ -24,7 +24,7 @@ feature -- Operations
 		local
 			flyweight: FLYWEIGHT[like unshared, like shared]
 		do
-			!! flyweight
+			create flyweight
 			flyweight.initialize(unshared, shared)
 			list.put(flyweight,key)	
 		ensure

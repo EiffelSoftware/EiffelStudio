@@ -48,8 +48,7 @@ feature -- Conveniences
 	value_i: CHAR_VALUE_I is
 			-- Interface value
 		do
-			!! Result
-			Result.set_char_val (value)
+			create Result.make (value)
 		end
 
 	type_check is

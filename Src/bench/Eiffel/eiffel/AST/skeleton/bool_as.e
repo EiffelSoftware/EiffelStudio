@@ -38,8 +38,7 @@ feature -- Type check
 
 	value_i: BOOL_VALUE_I is
 		do
-			!! Result
-			Result.set_bool_val (value)
+			create Result.make (value)
 		end
 
 	type_check is

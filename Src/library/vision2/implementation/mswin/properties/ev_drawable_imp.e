@@ -68,6 +68,24 @@ feature --{EV_ANY_I} -- Implementation
 		ensure
 			not_void: dc /= Void
 		end
+		
+	get_dc is
+			-- Get `dc'.
+			-- By default does nothing, but is
+			-- redefined by primitives that do not keep a consistent
+			-- dc. Example : EV_DRAWING_AREA_IMP
+		do
+		end
+		
+	release_dc is
+			-- Release `dc'.
+			-- By default does nothing, but is
+			-- redefined by primitives that do not keep a consistent
+			-- dc. Example : EV_DRAWING_AREA_IMP
+		do
+		end
+		
+		
 
 feature -- Access
 
@@ -181,7 +199,9 @@ feature -- Element change
 					drawing_mode_existent: False
 				end
 			end
+			get_dc
 			dc.set_rop2 (wel_drawing_mode)
+			release_dc
 		end
 
 	set_clip_area (an_area: EV_RECTANGLE) is
@@ -195,7 +215,9 @@ feature -- Element change
 			create region.make_rect (clip_area.x, clip_area.y,
 				clip_area.width + clip_area.x,
 				clip_area.height + clip_area.y)
+			get_dc
 			dc.select_clip_region (region)
+			release_dc
 			region.delete
 		end
 
@@ -206,7 +228,9 @@ feature -- Element change
 		do
 			clip_area := Void
 			create region.make_rect (0, 0, width, height)
+			get_dc
 			dc.select_clip_region (region)
+			release_dc
 			region.delete
 		end
 
@@ -261,7 +285,9 @@ feature -- Clearing and drawing operations
 			a_rect: WEL_RECT
 		do
 			create a_rect.make (x1, y1, x1 + a_width, y1 + a_height)
+			get_dc
 			dc.fill_rect (a_rect, our_background_brush)
+			release_dc
 		end
 
 feature -- Drawing operations
@@ -272,7 +298,9 @@ feature -- Drawing operations
 			if not internal_initialized_pen then
 				reset_pen
 			end
+			get_dc
 			dc.set_pixel (x, y, wel_fg_color)
+			release_dc
 		end
 
 	draw_text (x, y: INTEGER; a_text: STRING) is
@@ -284,6 +312,7 @@ feature -- Drawing operations
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		do
+			get_dc
 			if not internal_initialized_text_color then
 				dc.set_text_color (wel_fg_color)
 				internal_initialized_text_color := True
@@ -294,6 +323,7 @@ feature -- Drawing operations
 				internal_initialized_font := True
 			end
 			dc.text_out (x, y, a_text)
+			release_dc
 		end
 
 	draw_segment (x1, y1, x2, y2: INTEGER) is
@@ -304,6 +334,7 @@ feature -- Drawing operations
 			if not internal_initialized_pen then
 				reset_pen
 			end
+			get_dc
 			internal_x1 := x1
 			internal_y1 := y1
 					--| area.
@@ -324,6 +355,7 @@ feature -- Drawing operations
 			dc.move_to (internal_x1, internal_y1)
 			
 			dc.line_to (internal_x2, internal_y2)
+			release_dc
 		end
 
 	draw_arc (
@@ -398,12 +430,14 @@ feature -- Drawing operations
 			if not internal_initialized_pen then
 				reset_pen
 			end
+			get_dc
 			if an_aperture /= 0.0 then
 				dc.arc (left, top, right, bottom, x_start_arc,
 					y_start_arc, x_end_arc, y_end_arc)
 			else
 				dc.set_pixel (x_start_arc, y_start_arc, wel_fg_color)
 			end
+			release_dc
 		end
 
 	draw_pixmap (x, y: INTEGER; a_pixmap: EV_PIXMAP) is
@@ -442,7 +476,7 @@ feature -- Drawing operations
 			source_y := area.y
 			source_width := area.width
 			source_height := area.height
-
+			get_dc
 			if
 				pixmap_imp.icon /= Void 
 			and then
@@ -544,6 +578,7 @@ feature -- Drawing operations
 					-- Free GDI objects
 				s_dc.release
 			end
+			release_dc
 		end
 
 	draw_rectangle (x, y, a_width, a_height: INTEGER) is
@@ -554,7 +589,9 @@ feature -- Drawing operations
 			if not internal_initialized_pen then
 				reset_pen
 			end
+			get_dc
 			dc.rectangle (x, y, x + a_width, y + a_height)
+			release_dc
 		end
 
 	draw_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
@@ -566,7 +603,9 @@ feature -- Drawing operations
 			if not internal_initialized_pen then
 				reset_pen
 			end
+			get_dc
 			dc.ellipse (x, y, x + a_bounding_width, y + a_bounding_height)
+			release_dc
 		end
 
 	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN) is
@@ -608,7 +647,9 @@ feature -- Drawing operations
 			if not internal_initialized_pen then
 				reset_pen
 			end
+			get_dc
 			dc.polyline (flat_points)
+			release_dc
 		end
 
 	draw_pie_slice (
@@ -688,6 +729,7 @@ feature -- Drawing operations
 			if not internal_initialized_pen then
 				reset_pen
 			end
+			get_dc
 			if an_aperture /= 0.0 then
 				dc.pie (left, top, right, bottom, x_start_arc,
 					y_start_arc, x_end_arc, y_end_arc)
@@ -695,6 +737,7 @@ feature -- Drawing operations
 				dc.move_to ((left + semi_width).rounded, (top + semi_height).rounded)
 				dc.line_to (x_start_arc, y_start_arc)
 			end
+			release_dc
 		end
 
 feature -- Filling operations
@@ -707,7 +750,9 @@ feature -- Filling operations
 			if not internal_initialized_brush then
 				reset_brush
 			end
+			get_dc
 			dc.rectangle (x, y, x + a_width + 1, y + a_height + 1)
+			release_dc
 		end 
 
 	fill_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER) is
@@ -719,7 +764,9 @@ feature -- Filling operations
 			if not internal_initialized_brush then
 				reset_brush
 			end
+			get_dc
 			dc.ellipse (x, y, x + a_bounding_width + 1, y + a_bounding_height + 1)
+			release_dc
 		end
 
 	fill_polygon (points: ARRAY [EV_COORDINATE]) is
@@ -748,7 +795,9 @@ feature -- Filling operations
 			if not internal_initialized_brush then
 				reset_brush
 			end
+			get_dc
 			dc.polygon (flat_points)
+			release_dc
 		end
 
 	fill_pie_slice (
@@ -836,8 +885,10 @@ feature -- Filling operations
 				if not internal_initialized_brush then
 					reset_brush
 				end
+				get_dc
 				dc.pie (left, top, right, bottom, x_start_arc,
 					y_start_arc, x_end_arc, y_end_arc)
+				release_dc
 			end
 		end
 
@@ -900,6 +951,7 @@ feature {NONE} -- Implementation
 			pix_imp: EV_PIXMAP_IMP
 			a_wel_bitmap: WEL_BITMAP
 		do
+			get_dc
 			if not internal_initialized_brush then
 
 					-- Reset `internal_brush'.
@@ -927,6 +979,7 @@ feature {NONE} -- Implementation
 			end
 				-- Select new brush.
 			dc.select_brush (internal_brush)
+			release_dc
 		end
 
 	reset_pen is
@@ -934,6 +987,7 @@ feature {NONE} -- Implementation
 		local
 			dmode: INTEGER
 		do
+			get_dc
 			if line_width = 0 then
 				remove_pen
 			else
@@ -962,11 +1016,13 @@ feature {NONE} -- Implementation
 
 				dc.select_pen (internal_pen)
 			end
+			release_dc
 		end
 
 	remove_pen is
 			-- Draw without outline.
 		do
+			get_dc
 			if dc.pen_selected then
 				dc.unselect_pen
 			end
@@ -977,11 +1033,13 @@ feature {NONE} -- Implementation
 				internal_pen.decrement_reference
 				internal_pen := Void
 			end
+			release_dc
 		end
 
 	remove_brush is
 			-- Draw without filling.
 		do
+			get_dc
 			if dc.brush_selected then
 				dc.unselect_brush
 			end
@@ -992,6 +1050,7 @@ feature {NONE} -- Implementation
 				internal_brush.decrement_reference
 				internal_brush := Void
 			end
+			release_dc
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Command

@@ -44,7 +44,7 @@ feature -- Access
 		local
 			i: INTEGER
 		once
-			Result := Command_name
+			Result := clone (Command_name)
 			from
 				i := 1
 			until

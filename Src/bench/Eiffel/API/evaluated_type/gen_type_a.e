@@ -734,7 +734,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 			gens: FIXED_LIST [S_TYPE_INFO]
 			count, i: INTEGER
 		do
-			!! Result.make (Void, associated_class.id.id)
+			!! Result.make (Void, associated_class.id)
 			count := generics.count
 
 				-- TUPLE may have zero generics
@@ -765,7 +765,7 @@ feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 		do
 			ass_classc := associated_class
 			class_name := clone (ass_classc.name)
-			!! Result.make (class_name, ass_classc.id.id)
+			!! Result.make (class_name, ass_classc.id)
 			count := generics.count
 
 				-- TUPLE may have zero generics

@@ -14,8 +14,6 @@ inherit
 	EV_TEXT_I
 		rename
 			interface as ev_text_i_interface
-		undefine
-			set_default_minimum_size
 		end
 		
 	EV_TEXT_COMPONENT_IMP
@@ -47,10 +45,14 @@ inherit
 			width as wel_width,
 			height as wel_height,
 			item as wel_item,
-			move as move_to,
 			caret_position as internal_caret_position,
 			set_caret_position as internal_set_caret_position,
-			enabled as is_sensitive
+			enabled as is_sensitive,
+			x as x_position,
+			y as y_position,
+			move as wel_move,
+			move_and_resize as wel_move_and_resize,
+			resize as wel_resize
 		undefine
 			window_process_message,
 			remove_command,
@@ -280,7 +282,8 @@ feature {NONE} -- WEL Implementation
 			-- The user has taken an action
 			-- that may have altered the text.
 		do
-			execute_command (Cmd_change, Void)
+			--|FIXME
+			--execute_command (Cmd_change, Void)
 		end
 
 	enable is
@@ -379,6 +382,16 @@ end -- class EV_TEXT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/04/04 17:50:37  rogers
+--| renamed
+--| 	x -> x_position,
+--| 	y -> y_position,
+--| 	move -> wel_move,
+--| 	move_and_resize -> wel_move_and_resize,
+--| 	resize -> wel_resize.
+--| Removed undefinition of set_default_minimum_size.
+--| Commented out body of on_en_change with a fixme.
+--|
 --| Revision 1.32  2000/02/14 11:40:45  oconnor
 --| merged changes from prerelease_20000214
 --|

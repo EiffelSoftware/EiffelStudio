@@ -61,6 +61,9 @@ feature -- Attributes
 	include_list: ARRAYED_LIST [STRING];
 			-- List of files to include
 
+	is_override_cluster: BOOLEAN;
+			-- Does this cluster override the other clusters?
+
 feature -- Access
 
 	has_base_name (b_name: STRING): BOOLEAN is
@@ -145,6 +148,12 @@ feature {COMPILER_EXPORTER} -- Conveniences
 				path := Environ.interpret (dollar_path)
 			end;
 		end;
+
+    set_is_override_cluster (flag: BOOLEAN) is
+            -- Set `is_override_cluster' to `flag'.
+        do
+            is_override_cluster := flag
+        end;
 
 feature {COMPILER_EXPORTER} -- Creation feature
 
@@ -617,24 +626,8 @@ debug ("REMOVE_CLASS")
 end;
 			class_c := a_class.compiled_class;
 			if class_c /= Void then
-				clients := class_c.syntactical_clients;
-				from
-					clients.start
-				until
-					clients.after
-				loop
-						-- recompile the client
-					class_i := clients.item.lace_class;
-debug ("REMOVE_CLASS")
-	io.error.putstring ("Propagation to client: ");
-	io.error.putstring (class_i.class_name);
-	io.error.new_line;
-end;
-					Workbench.add_class_to_recompile (class_i);
-					class_i.set_changed (True);
-					clients.forth;
-				end;
-
+					-- Recompile all the clients
+				class_c.recompile_syntactical_clients;
 					-- remove class_c from the system
 				System.remove_class (class_c);
 			end;

@@ -97,6 +97,7 @@ feature -- Access
 			-- Have the project files been updated since last compilation.
 		local
 			classes: ARRAY [CLASS_C]
+			a_class: CLASS_C
 			i, count: INTEGER
 		do
 			if Eiffel_project.initialized and Eiffel_project.system_defined and then Eiffel_system.Workbench.successful then
@@ -107,7 +108,8 @@ feature -- Access
 				until
 					Result or else i > count
 				loop
-					if not classes.item (i).is_external then
+					a_class := classes.item(i)
+					if not a_class.is_precompiled and then not a_class.is_external then
 						-- We don't need to query external classes.
 						Result := classes.item (i).lace_class.date_has_changed
 					end

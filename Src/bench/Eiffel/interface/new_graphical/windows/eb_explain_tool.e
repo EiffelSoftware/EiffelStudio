@@ -12,8 +12,6 @@ inherit
 			edit_bar as explain_toolbar
 --			Any_type as stone_type
 		redefine
---			build_format_bar,
-			create_toolbar,
 			empty_tool_name,
 -- hole, 
 --			process_any, build_menus,
@@ -67,11 +65,11 @@ feature -- Status setting
 
 feature -- Graphical Interface
 
-	create_toolbar (a_parent: EV_CONTAINER) is
-			-- Create a toolbar_parent with parent `a_parent'.
-		local
+--	create_toolbar (a_parent: EV_CONTAINER) is
+--			-- Create a toolbar_parent with parent `a_parent'.
+--		local
 --			sep: THREE_D_SEPARATOR
-		do
+--		do
 --			!! toolbar_parent.make (new_name, a_parent)
 --			!! sep.make (Interface_names.t_Empty, toolbar_parent)
 --			toolbar_parent.set_column_layout
@@ -84,7 +82,7 @@ feature -- Graphical Interface
 --			else
 --				explain_toolbar.set_height (22)
 --			end
-		end
+--		end
 
 	build_menus is
 			-- Create the menus.
@@ -98,7 +96,7 @@ feature -- Graphical Interface
 --			fill_menus
 		end
 
-	build_edit_bar is
+	build_edit_bar (a_toolbar: EV_BOX) is
 			-- Build formatting buttons in `format_bar'.
 		local
 --			showtext_cmd: SHOW_HTML_TEXT;

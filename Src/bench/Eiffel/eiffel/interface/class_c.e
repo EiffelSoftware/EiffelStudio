@@ -3736,6 +3736,49 @@ feature -- Access
 			end
 		end
 
+	feature_of_feature_id (a_feature_id: INTEGER): FEATURE_I is
+			-- Feature whose feature_id is `a_feature_id'.
+			-- Look into `feature_table', `generic_features' and
+			-- `anchored_features'.
+		require
+			rout_id_valid: a_feature_id > 0
+			has_feature_table: has_feature_table
+		local
+			l_cursor: CURSOR
+		do
+			Result := feature_table.feature_of_feature_id (a_feature_id)
+			if Result = Void then
+				if anchored_features /= Void then
+					from
+						l_cursor := anchored_features.cursor
+						anchored_features.start
+					until
+						anchored_features.after or Result /= Void
+					loop
+						if anchored_features.item_for_iteration.feature_id = a_feature_id then
+							Result := anchored_features.item_for_iteration
+						end
+						anchored_features.forth
+					end
+					anchored_features.go_to (l_cursor)
+				end
+				if Result = Void and generic_features /= Void then
+					from
+						l_cursor := generic_features.cursor
+						generic_features.start
+					until
+						generic_features.after or Result /= Void
+					loop
+						if generic_features.item_for_iteration.feature_id = a_feature_id then
+							Result := generic_features.item_for_iteration
+						end
+						generic_features.forth
+					end
+					generic_features.go_to (l_cursor)
+				end
+			end
+		end
+
 	api_feature_table: E_FEATURE_TABLE is	
 			-- Feature table for current class
 			--| Can be Void when `feature_table' has not yet

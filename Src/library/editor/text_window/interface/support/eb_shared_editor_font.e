@@ -93,11 +93,17 @@ feature {EDITOR_DATA} -- Implementation
 	font_offset_cell: CELL [INTEGER] is
 			-- Number of pixels from top of line to beginning of drawing operation
 		once
-			create Result.put (line_height_font.ascent)
+			create Result.put (calculate_font_offset)
 		end
-		
+
+	calculate_font_offset: INTEGER is
+			-- Calculate `font_offset' based on current font sizes
+		do
+			Result := line_height - line_height_font.descent
+		end
+
 	calculate_line_height: INTEGER is
-			-- Calculate the line height based on current font sizes
+			-- Calculate the  `line_height' based on current font sizes
 		local
 			loc_font: EV_FONT
 		do

@@ -48,7 +48,7 @@ feature {EB_PREFERENCES} -- Initialization
 			-- Font was changed, must redraw tokens due to possible width change.
 		do
 			line_height_cell.put (calculate_line_height)
-			font_offset_cell.put (line_height_font.ascent)
+			font_offset_cell.put (calculate_font_offset)
 			from
 				panel_manager.panels.start
 			until

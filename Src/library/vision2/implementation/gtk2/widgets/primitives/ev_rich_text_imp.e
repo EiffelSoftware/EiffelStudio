@@ -315,6 +315,7 @@ feature -- Status setting
 			if not buffer_locked_in_format_mode then
 				buffer_locked_in_format_mode := True
 					-- Temporarily remove text buffer to avoid redraw and event firing
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_ref (text_buffer)
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_set_buffer (text_view, feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_new (default_pointer))
 			end
 			format_region (start_position, end_position, format)
@@ -399,7 +400,7 @@ feature -- Status setting
 			Result := 40
 		end
 
-feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_text_mark_changed (a_text_iter, a_text_mark: POINTER) is
 			-- Called when a text mark within `text_buffer' has been set.

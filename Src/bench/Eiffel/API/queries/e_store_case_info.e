@@ -48,10 +48,16 @@ feature -- Execution
 		end;
 
 	execute is
-		local
-			case_interface: CASE_INTERFACE
 		do
-			!! case_interface.make (output_window, reverse_engineering_window)	
+			if case_interface /= Void then
+				if case_interface.is_iconic_state then
+					case_interface.set_normal_state
+				end
+				case_interface.show
+				case_interface.raise
+			else
+				!! case_interface.make (output_window, reverse_engineering_window)	
+			end
 		end;
 
 feature {NONE} -- Properties
@@ -62,5 +68,8 @@ feature {NONE} -- Properties
 	output_window: OUTPUT_WINDOW;
 			-- Output window used to display during the
 			-- execution of Current.
+
+	case_interface: CASE_INTERFACE
+			-- Reverse engineer tool window.
 
 end -- class E_STORE_CASE_INFO

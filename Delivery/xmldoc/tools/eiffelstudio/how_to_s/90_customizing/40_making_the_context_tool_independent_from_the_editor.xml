@@ -7,7 +7,8 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>By default, 
+	<paragraph>
+	By default, 
 		<link>
 			<url>../../reference/20_editor/00_introduction.xml</url>
 			<label>the editor</label>

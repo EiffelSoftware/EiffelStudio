@@ -7,7 +7,8 @@
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph>It is possible in EiffelStudio to customize some properties of 
+	<paragraph>
+	It is possible in EiffelStudio to customize some properties of 
 		<link>
 			<url>../../reference/80_formatters/00_introduction.xml</url>
 			<label>class text views</label>

@@ -57,12 +57,8 @@
 		</paragraph>
 		<paragraph> </paragraph>
 		<paragraph>An archive can also be considered as a scope even if it is not a sub-element of the loaded system users are working on. Indeed, an archive contains measures, for another system than the current one, previously calculated and registered that could be retrieved. Consequently, evaluating a metric over an archive is nothing but retrieving the corresponding recorded measure.</paragraph>
-		<list ordered="false">
-			<item>
-				<link>
+<seealso><bold>See Also</bold><line_break></line_break><link>
 					<url>40_evaluating_a_metric_over_an_archive.xml</url>
 					<label>evaluating a metric over an archive</label>
-				</link>
-			</item>
-		</list>
+				</link> </seealso>
 	</paragraph></document>

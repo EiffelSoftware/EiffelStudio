@@ -62,7 +62,7 @@
 		<note>
 			<bold>Note</bold>: Cluster diagrams are only available for HTML documentation.
 		</note>
-		<paragraph>Here comes the last page ; you can choose the directory where the documentation is going to be generated:</paragraph>
+		<paragraph>Here comes the last page; you can choose the directory where the documentation is going to be generated:</paragraph>
 		<paragraph>
 			<image>
 				<url>/images/eiffelstudio/dialogs_and_wizards/doc_wizard_path_selection.png</url>

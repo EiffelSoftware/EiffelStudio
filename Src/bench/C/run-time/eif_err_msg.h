@@ -26,6 +26,10 @@ extern char *exception_trace_string;
 
 extern char starting_working_directory [MAX_PATH];
 
+#ifdef EIF_GNU_WIN
+#undef MAX_PATH
+#endif
+
 #ifdef __cplusplus
 }
 #endif

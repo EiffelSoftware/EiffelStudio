@@ -113,12 +113,12 @@ feature -- Basic operations
 				can_free := True
 
 			elseif is_dispatch (a_type) then
-				ce_function_name.append ("ccom_ce_dispatch")
+				ce_function_name.append ("ccom_ce_pointed_dispatch")
 				ec_function_name.append ("ccom_ec_dispatch")
 				is_interface_pointer := True
 
 			elseif is_unknown (a_type) then
-				ce_function_name.append ("ccom_ce_unknown")
+				ce_function_name.append ("ccom_ce_pointed_unknown")
 				ec_function_name.append ("ccom_ec_unknown")
 				is_interface_pointer := True
 

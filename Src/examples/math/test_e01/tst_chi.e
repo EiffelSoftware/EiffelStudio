@@ -22,7 +22,7 @@ feature -- Initialization
 	make is
 			-- Test of CURVE_HERMITE_INTERPLATOR		
 		local		
-			x, f, d, a, b: BASIC_VECTOR;
+			x, f, a, b: BASIC_VECTOR;
 			i: INTEGER;		
 		do
 			create form.make(13, 4);

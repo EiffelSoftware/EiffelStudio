@@ -19,8 +19,6 @@ create
 feature
 	make is
 			-- See if things compile, anyway.
-		local
-			a, x, p, q: DOUBLE;
 		do
 			print(tanh(0.5));
 			print( "<-- tanh(0.5) should be 0.46212%N");

@@ -19,9 +19,6 @@ feature -- Initialization
 
 	make is
 			-- test case real and complex
-		local
-			i: INTEGER;
-			running: BOOLEAN;
 		do
 			print ("%N ********************************%N");
 			print ("ORTHOGONAL_TRANSFORMER_MINIMIZER tests %N");

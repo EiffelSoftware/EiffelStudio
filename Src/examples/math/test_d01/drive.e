@@ -73,7 +73,7 @@ feature -- Initialization
  			test_aqc;
  			test_fcc;
 			test_gbc;
-			test_gbc_continuation;
+ 			test_gbc_continuation;
 	 		test_poly;
 	 		test_gen;
 			print(goof); 

@@ -10,8 +10,6 @@ feature -- Access
 	f1 (x: DOUBLE): DOUBLE is
 			-- Simple function whose work is proportional to count.
 			-- but makes the answer f1(x) = x so we know the answer.	
-		local
-			i: INTEGER
 		do
 			Result := x;
 		end;	 
@@ -19,8 +17,6 @@ feature -- Access
 	f2 (x: DOUBLE): DOUBLE is
 			-- Another simple function whose work is proportional to count.
 			-- Make the answer f1(x) = x^2 so we know the answer.	 
-		local
-			i: INTEGER
 		do
 			Result := x^2.0; 
 		end;	

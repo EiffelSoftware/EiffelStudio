@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	build_entities_list (line: EDITOR_LINE;token: EDITOR_TOKEN; build_classes_list:BOOLEAN) is
+	build_entities_list (line: EDITOR_LINE; token: EDITOR_TOKEN; build_classes_list:BOOLEAN) is
 			-- Build list of locals and arguments (`found_names') corresponding to a position 
 			-- in a text defined by `line' and `token'.
 			-- If `build_class_list', the list of class names that correspond to `found_names', 
@@ -64,10 +64,14 @@ feature -- Basic Operations
 					found_class_names.merge_right (class_list)
 				end
 			end
-			name_list.wipe_out
-			name_list := Void
-			class_list.wipe_out
-			class_list := Void
+			if name_list /= Void then
+				name_list.wipe_out
+				name_list := Void
+			end
+			if class_list /= Void then
+				class_list.wipe_out
+				class_list := Void
+			end
 		end
 		
 	reset is
@@ -108,6 +112,7 @@ feature {NONE} -- Implementation
 			kw: EDITOR_TOKEN_KEYWORD
 			lgth: INTEGER
 		do
+			found_local_keyword := False
 			from
 			until
 				stop
@@ -152,6 +157,7 @@ feature {NONE} -- Implementation
 			par_found: BOOLEAN
 			img: STRING
 		do
+			found_arguments := False
 			from
 			until
 				stop

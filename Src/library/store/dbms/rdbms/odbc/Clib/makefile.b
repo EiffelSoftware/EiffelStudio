@@ -1,6 +1,6 @@
 CC = $(ISE_EIFFEL)\BCC55\bin\bcc32
 AR = $(ISE_EIFFEL)\BCC55\bin\tlib
-CFLAGS = -O2 -WC -g0 -w- -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include
+CFLAGS = -O2 -WC -g0 -w- -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib
 
 OBJ = odbc.obj
 

@@ -9,7 +9,7 @@ class
 	ECDM_CONFIGURATION
 
 inherit
-	ECD_CONFIGURATION
+	CODE_CONFIGURATION
 		export
 			{NONE} reload
 		redefine
@@ -41,7 +41,7 @@ feature -- Initialization
 		local
 			l_index, l_index2: INTEGER
 		do
-			Precursor {ECD_CONFIGURATION} (a_config_file)
+			Precursor {CODE_CONFIGURATION} (a_config_file)
 			l_index := a_config_file.last_index_of ((create {OPERATING_ENVIRONMENT}).Directory_separator, a_config_file.count)
 			l_index2 := a_config_file.last_index_of ('.', a_config_file.count)
 			if l_index > 1 then
@@ -67,7 +67,7 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := path.is_equal (other.path)
+			Result := path.as_lower.is_equal (other.path.as_lower)
 		end
 
 feature -- Access
@@ -182,7 +182,7 @@ feature -- Element Settings
 
 	set_log_level (a_value: INTEGER) is
 			-- Set `log_level' with `a_value'.
-			-- See class ECD_EVENT_LOG_LEVEL for possible values
+			-- See class CODE_EVENT_LOG_LEVEL for possible values
 		do
 			config_values.force (a_value.out, "log_level")
 		end

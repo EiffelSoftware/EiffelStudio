@@ -50,13 +50,15 @@ feature {NONE} -- Initialization
 				modified_label.set_text (formatted_date_time (feature {SYSTEM_FILE}.get_last_write_time (l_path)))
 			end
 			l_apps := manager.applications (configuration)
-			from
-				l_apps.start
-			until
-				l_apps.after
-			loop
-				applications_list.extend (create {EV_LIST_ITEM}.make_with_text (l_apps.item))
-				l_apps.forth
+			if l_apps /= Void then
+				from
+					l_apps.start
+				until
+					l_apps.after
+				loop
+					applications_list.extend (create {EV_LIST_ITEM}.make_with_text (l_apps.item))
+					l_apps.forth
+				end
 			end
 		end
 

@@ -2,11 +2,11 @@ indexing
 	description: "AST rout body Visitor."
 	
 deferred class
-	ECD_AST_ROUT_BODY_VISITOR
+	CODE_AST_ROUT_BODY_VISITOR
 
 inherit
 	AST_VISITOR
-	ECD_SUPPORT
+	CODE_SUPPORT
 	
 feature {AST_YACC} -- Implementation
 
@@ -88,9 +88,9 @@ feature {NONE} -- Implementation
 				end
 			end
 		rescue
-			Event_manager.raise_event (feature {ECD_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
+			Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Rescued_exception, [feature {ISE_RUNTIME}.last_exception])
 			retried := True
 			retry
 		end
 
-end -- ECD_AST_ROUT_BODY_VISITOR
+end -- CODE_AST_ROUT_BODY_VISITOR

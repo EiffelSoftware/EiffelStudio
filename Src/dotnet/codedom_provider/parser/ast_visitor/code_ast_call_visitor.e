@@ -2,12 +2,12 @@ indexing
 	description: "AST call Visitor."
 	
 deferred class
-	ECD_AST_CALL_VISITOR
+	CODE_AST_CALL_VISITOR
 
 inherit
 	AST_VISITOR
-	ECD_SUPPORT
-	ECD_USER_DATA_KEYS
+	CODE_SUPPORT
+	CODE_USER_DATA_KEYS
 
 feature {AST_YACC} -- Implementation
 
@@ -513,4 +513,4 @@ feature -- Implementation
 			end
 		end
 
-end -- ECD_AST_CALL_VISITOR
+end -- CODE_AST_CALL_VISITOR

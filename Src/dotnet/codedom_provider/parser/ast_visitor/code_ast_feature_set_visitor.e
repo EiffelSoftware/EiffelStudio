@@ -2,7 +2,7 @@ indexing
 	description: "AST feature set Visitor."
 	
 deferred class
-	ECD_AST_FEATURE_SET_VISITOR
+	CODE_AST_FEATURE_SET_VISITOR
 
 inherit
 	AST_VISITOR
@@ -19,4 +19,4 @@ feature {AST_YACC} -- Implementation
 		do
 		end
 
-end -- ECD_AST_FEATURE_SET_VISITOR
+end -- CODE_AST_FEATURE_SET_VISITOR

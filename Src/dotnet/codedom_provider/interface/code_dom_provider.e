@@ -1,6 +1,6 @@
 indexing
 	description: "[
-			Root class of Eiffel CodeDOMProvider.dll
+			Root class of Eiffel Codedom Provider dll
 			COM visible.
 		]"
 
@@ -12,7 +12,7 @@ indexing
 		create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 
 class
-	ECD_PROVIDER
+	CODE_DOM_PROVIDER
 
 inherit
 	SYSTEM_DLL_CODE_DOM_PROVIDER
@@ -36,6 +36,8 @@ feature -- Access
 	file_extension: SYSTEM_STRING is
 			-- Get the file name extension to use when creating source code files.
 			-- Files passed to codeDomGenerator.
+		local
+			l_watcher: SYSTEM_DLL_FILE_SYSTEM_WATCHER
 		once
 			Result := ".es"
 		end
@@ -48,13 +50,13 @@ feature -- Access
 		
 feature -- Basic Operations
 
-	create_generator: ECD_CODE_GENERATOR is
+	create_generator: CODE_GENERATOR is
 			-- Create an instance of the Eiffel for .NET code code_generator.
 		do
 			create Result
 		end
 
-	create_generator_text_writer (output: SYSTEM_DLL_INDENTED_TEXT_WRITER): ECD_CODE_GENERATOR is
+	create_generator_text_writer (output: SYSTEM_DLL_INDENTED_TEXT_WRITER): CODE_GENERATOR is
 			-- Create a new code code_generator using the specified text writer `output'.
 		require else
 			non_void_output: output /= Void		
@@ -64,7 +66,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
-	create_generator_string (file_name: SYSTEM_STRING): ECD_CODE_GENERATOR is
+	create_generator_string (file_name: SYSTEM_STRING): CODE_GENERATOR is
 			-- Create a new code generator using the specified `file_name' for output.
 		require else
 			non_void_file_name: file_name /= Void
@@ -75,7 +77,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
-	create_compiler: ECD_COMPILER is
+	create_compiler: CODE_COMPILER is
 			-- Create an instance of the Eiffel for .NET code compiler.
 		do
 			create Result
@@ -83,7 +85,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 		end
 
-	create_parser: ECD_PARSER is
+	create_parser: CODE_PARSER is
 			-- Create a new code parser.
 		do
 			create Result
@@ -91,14 +93,14 @@ feature -- Basic Operations
 
 feature {NONE} -- Implementation
 
-	installer: ECD_INSTALLER is
+	installer: CODE_INSTALLER is
 			-- Installer
 			--| Referenced here so that it is in system
 		do
 			create Result
 		end
 
-end -- class ECD_PROVIDER
+end -- class CODE_DOM_PROVIDER
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

@@ -2,10 +2,10 @@ indexing
 	description: "Support for CodeDOM Visitor."
 
 class
-	ECD_SUPPORT
+	CODE_SUPPORT
 
 inherit
-	ECD_TYPE_CONVERTER_EIFFEL_TO_DOTNET
+	CODE_TYPE_CONVERTER_EIFFEL_TO_DOTNET
 
 feature --{CODEDOM_VISITOR} -- Implementation
 
@@ -37,7 +37,7 @@ feature --{CODEDOM_VISITOR} -- Implementation
 			non_void_line_pragma: Result /= Void
 		end
 
-	visitor: ECD_CODEDOM_VISITOR is
+	visitor: CODE_CODEDOM_VISITOR is
 			-- visitor
 		once
 			create Result.make
@@ -193,4 +193,4 @@ feature {NONE} -- Implementation
 	added: INTEGER
 			-- dummy variable used when apply a add function and return an INTEGER.
 
-end -- ECD_SUPPORT
+end -- CODE_SUPPORT

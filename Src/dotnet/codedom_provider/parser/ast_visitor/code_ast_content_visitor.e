@@ -2,12 +2,12 @@ indexing
 	description: "AST content Visitor."
 	
 deferred class
-	ECD_AST_CONTENT_VISITOR
+	CODE_AST_CONTENT_VISITOR
 
 inherit
 	AST_VISITOR
-	ECD_SUPPORT
-	ECD_USER_DATA_KEYS
+	CODE_SUPPORT
+	CODE_USER_DATA_KEYS
 
 feature {AST_YACC} -- Implementation
 
@@ -60,4 +60,4 @@ feature {AST_YACC} -- Implementation
 			-- Work done in {AST_SKELETON_VISITOR}.`initialize_member_field'.
 		end
 
-end -- ECD_AST_CONTENT_VISITOR
+end -- CODE_AST_CONTENT_VISITOR

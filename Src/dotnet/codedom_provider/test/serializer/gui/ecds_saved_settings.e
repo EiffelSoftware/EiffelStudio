@@ -8,7 +8,7 @@ class
 	ECDS_SAVED_SETTINGS
 
 inherit
-	ECD_SETTINGS_MANAGER
+	CODE_SETTINGS_MANAGER
 		rename
 			make as manager_make
 		end

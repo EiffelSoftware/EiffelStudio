@@ -7,7 +7,7 @@ deferred class
 	ECDS_SERIALIZER
 
 inherit
-	ECD_SHARED_EVENT_MANAGER
+	CODE_SHARED_EVENT_MANAGER
 		export
 			{NONE} all
 		end

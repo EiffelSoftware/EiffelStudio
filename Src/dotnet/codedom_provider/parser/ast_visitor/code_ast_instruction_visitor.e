@@ -2,12 +2,12 @@ indexing
 	description: "AST instruction Visitor."
 	
 deferred class
-	ECD_AST_INSTRUCTION_VISITOR
+	CODE_AST_INSTRUCTION_VISITOR
 
 inherit
 	AST_VISITOR
-	ECD_SUPPORT
-	ECD_USER_DATA_KEYS
+	CODE_SUPPORT
+	CODE_USER_DATA_KEYS
 	
 feature {AST_YACC} -- Implementation
 
@@ -228,4 +228,4 @@ feature {NONE} -- Implementation
 		do
 		end
 
-end -- ECD_AST_INSTRUCTION_VISITOR
+end -- CODE_AST_INSTRUCTION_VISITOR

@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Manager registry hive location"
 	date: "$Date$"
 	revision: "$Revision$"
 

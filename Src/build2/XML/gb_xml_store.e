@@ -172,7 +172,7 @@ feature {GB_XML_HANDLER, GB_OBJECT_HANDLER} -- Implementation
 				-- Generate a name if `add_names'.
 			if generation_settings.generate_names then
 				if an_object.name.is_empty then
-					new_name := unique_name (generated_names, Local_object_name_prepend_string + an_object.short_type)
+					new_name := unique_name_from_array (generated_names, Local_object_name_prepend_string + an_object.short_type)
 					generated_names.force (new_name)
 					add_element_containing_string (new_type_element, name_string, new_name)
 				end

@@ -6,7 +6,7 @@ inherit
 creation
 	make
 
-feature
+feature -- Access
 
 	id (t: MELTED_DESC): CLASS_ID is
 			-- Id associated with `t'
@@ -18,6 +18,8 @@ feature
 		once
 			!! Result.make;
 		end
+
+feature -- Server size configuration
 
 	Size_limit: INTEGER is 50
 			-- Size of the M_DESC_SERVER file (50 Ko)

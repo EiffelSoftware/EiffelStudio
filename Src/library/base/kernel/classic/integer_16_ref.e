@@ -67,6 +67,10 @@ feature -- Access
 			Result := c_ascii_char (item) 
 		end
 
+	Min_value: INTEGER_16 is -32768
+	Max_value: INTEGER_16 is 32767
+			-- Minimum and Maximum value hold in `item'.
+
 feature -- Comparison
 
 	infix "<" (other: like Current): BOOLEAN is
@@ -246,8 +250,8 @@ feature -- Conversion
 	to_integer_8: INTEGER_8 is
 			-- Convert `item' into an INTEGER_8 value.
 		require
-			not_too_small: item >= -128
-			not_too_big: item <= 127
+			not_too_small: item >= feature {INTEGER_8}.Min_value
+			not_too_big: item <= feature {INTEGER_8}.Max_value
 		do
 			Result := item.to_integer_8
 		end

@@ -242,8 +242,8 @@ feature -- Conversion
 	to_integer_8: INTEGER_8 is
 			-- Convert `item' into an INTEGER_8 value.
 		require
-			not_too_small: item >= -128
-			not_too_big: item <= 127
+			not_too_small: item >= feature {INTEGER_8}.Min_value
+			not_too_big: item <= feature {INTEGER_8}.Max_value
 		do
 			Result := item.to_integer_8
 		end
@@ -251,8 +251,8 @@ feature -- Conversion
 	to_integer_16: INTEGER_16 is
 			-- Convert `item' into an INTEGER_16 value.
 		require
-			not_too_small: item >= -32768
-			not_too_big: item <= 32767
+			not_too_small: item >= feature {INTEGER_16}.Min_value
+			not_too_big: item <= feature {INTEGER_16}.Max_value
 		do
 			Result := item.to_integer_16
 		end
@@ -260,8 +260,8 @@ feature -- Conversion
 	to_integer, to_integer_32: INTEGER is
 			-- Convert `item' into an INTEGER_32 value.
 		require
-			not_too_small: item >= -2147483648
-			not_too_big: item <= 2147483647
+			not_too_small: item >= feature {INTEGER}.Min_value
+			not_too_big: item <= feature {INTEGER}.Max_value
 		do
 			Result := item.to_integer
 		end

@@ -104,6 +104,11 @@ rt_private UINT dbg_timer;
 #define LOCKED_DBG_TIMER_IS_NOT_SET LOCKED_VALUE_IS_EQUAL(dbg_timer,0)
 #define LOCKED_DBG_TIMER_SET_VALUE(v) LOCKED_SET_VALUE(dbg_timer, v)
 
+rt_private BOOL dbg_exit_process_occurred;
+#define LOCKED_DBG_EXIT_PROCESS_OCCURRED LOCKED_VALUE(dbg_exit_process_occurred)
+#define LOCKED_DBG_EXIT_PROCESS_NOTIFY LOCKED_SET_VALUE(dbg_exit_process_occurred, true)
+#define LOCKED_DBG_EXIT_PROCESS_RESET LOCKED_SET_VALUE(dbg_exit_process_occurred, false)
+
 rt_private BOOL dbg_start_timer_requested;
 #define LOCKED_DBG_START_TIMER_REQUESTED LOCKED_VALUE(dbg_start_timer_requested)
 #define LOCKED_DBG_START_TIMER_REQUEST LOCKED_SET_VALUE(dbg_start_timer_requested, true)
@@ -118,6 +123,11 @@ rt_private bool dbg_estudio_notification_processing;
 rt_private bool dbg_estudio_evaluation_processing;
 #define LOCKED_ES_EVALUATION_START LOCKED_SET_VALUE(dbg_estudio_evaluation_processing, true)
 #define LOCKED_ES_EVALUATION_STOP LOCKED_SET_VALUE(dbg_estudio_evaluation_processing, false)
+
+rt_private bool dbg_callback_processing;
+#define LOCKED_CALLBACK_PROCESSING LOCKED_VALUE(dbg_callback_processing)
+#define LOCKED_CALLBACK_START LOCKED_SET_VALUE(dbg_callback_processing, true)
+#define LOCKED_CALLBACK_STOP LOCKED_SET_VALUE(dbg_callback_processing, false)
 
 rt_private UINT dbg_keep_synchro;
 #define LOCKED_DBG_KEEP_SYNCHRO LOCKED_SET_VALUE(dbg_keep_synchro, 1)
@@ -138,6 +148,7 @@ rt_private void reset_variables() {
 	LOCKED_DBG_CB_ID_SET_VALUE(CB_NONE);
 	LOCKED_DBG_START_TIMER_RESET;
 	LOCKED_DBG_KEEP_SYNCHRO;
+	LOCKED_DBG_EXIT_PROCESS_RESET;
 	LOCKED_ES_NOTIFICATION_STOP;
 }
 
@@ -336,6 +347,7 @@ rt_private void dbg_suspend_estudio_thread () {
 rt_private void dbg_resume_estudio_thread () {
 	DWORD result;
 	result = ResumeThread (estudio_thread_handle);
+	ENSURE(result == 1, "Error during dbg_resume_estudio_thread");
 }
 #define DBG_INIT_CRITICAL_SECTION	dbg_init_critical_section ()
 #define DBG_INIT_ESTUDIO_THREAD_HANDLE dbg_init_estudio_thread_handle ()
@@ -546,16 +558,20 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 #endif
     HRESULT hr = S_OK;
 	BOOL eval_callback_proceed;
-	LOCKED_DBG_CB_ID_SET_VALUE(CB_NONE);
 
 	/*** Require  ***/
 	REQUIRE(LOCKED_DBG_TIMER_IS_NOT_SET, "Timer disabled (context = evaluating)")
 
 	/*** Do  ***/
-	LOCKED_ES_EVALUATION_START;
+	if (LOCKED_DBG_EXIT_PROCESS_OCCURRED) {
+		DBGTRACE("[ES::Eval] EXIT_PROCESS occurred previously => evaluation not possible");
+		return;
+	}
 
+	LOCKED_ES_EVALUATION_START;
 	DBGTRACE("[ES::Eval] START evaluation");
 
+	LOCKED_DBG_CB_ID_SET_VALUE(CB_NONE);
 	if (LOCKED_DBG_STATE_IS_EQUAL (4)) {
 		// We are in notification processing
 		// we need evaluation functionalities
@@ -638,7 +654,9 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 ///////////////////////////////////////////////////////////
 */
 rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
+	REQUIRE(!LOCKED_CALLBACK_PROCESSING, "No other callback processing")
 	LOCKED_DBG_CB_ID_SET_VALUE (callback_id);
+	LOCKED_CALLBACK_START;
 	DBGTRACE2("[CB] ENTER CALLBACK = ", LOCKED_DBG_CB_NAME);
 	/* It is not possible to have 2 callbacks at the same time, 
 	 * since it is supposed to be in the same thread ...  */
@@ -691,7 +709,6 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 #endif
 		}
 	}
-//	DBG_SUSPEND_ESTUDIO_THREAD;
 //<2>---< ec waiting >-------------------------------------------//
 	LOCKED_DBG_STATE_INCREMENT;
 //<3>---< ec waiting >-------------------------------------------//
@@ -703,16 +720,18 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 rt_public void dbg_debugger_after_callback (Callback_ids callback_id) {
 //<3>---< come back from callback >------------------------------//
 	DBGTRACE2("6 - [CB] end exec callback : ", LOCKED_DBG_CB_NAME);
+
+	if (callback_id == CB_EXIT_PROCESS) {
+		LOCKED_DBG_EXIT_PROCESS_NOTIFY;
+	}
+
 //<4>---< give back the hand to ec >-----------------------------//
 	LOCKED_DBG_STATE_INCREMENT;
 	DBGTRACE("7 - [CB] RESUME ES");
 	DBG_RESUME_ESTUDIO_THREAD;
-
-//	DBG_RESUME_ESTUDIO_THREAD; 
-	/* Called twice since it is suspended twice */
-
 	DBGTRACE2("8 - [CB] EXIT CALLBACK = ", LOCKED_DBG_CB_NAME);
 	// Callback done
+	LOCKED_CALLBACK_STOP;
 }
 
 /**************************************************************************/

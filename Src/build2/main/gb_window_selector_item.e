@@ -24,7 +24,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make_with_object (an_object: GB_TITLED_WINDOW_OBJECT) is
+	make_with_object (an_object: GB_OBJECT) is
 			-- Create `Current' and associate with `an_object'.
 		require
 			object_not_void: an_object /= Void
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			
 				-- Assign the appropriate pixmap.
 			create pixmaps
-			set_pixmap (pixmaps.pixmap_by_name (object.type.as_lower))
+			set_pixmap (pixmaps.pixmap_by_name (an_object.type.as_lower))
 			
 				-- Set a pebble for transport
 			set_pebble_function (agent retrieve_pebble)
@@ -55,10 +55,10 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	object: GB_TITLED_WINDOW_OBJECT
-		-- Object referenced by `Current'.
+	object: GB_OBJECT
+		-- ID of object referenced by `Current'.
 		
-feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementation
+feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW, GB_COMMAND_CONVERT_TO_TOP_LEVEL} -- Implementation
 
 	unparent is
 			-- Remove `Current' from its parent.
@@ -81,7 +81,7 @@ feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_COMMAND_ADD_WINDOW} -- Implementati
 			parent_void: parent = Void
 		end
 		
-feature {NONE} -- Implementation
+feature --{NONE} -- Implementation
 
 	retrieve_pebble: ANY is
 			-- Retrieve pebble for transport.
@@ -97,5 +97,16 @@ feature {NONE} -- Implementation
 				Result := object
 			end
 		end
+		
+feature {GB_OBJECT} -- Implementation
+
+	set_object (an_object: GB_OBJECT) is
+			-- Assign `an_object' to `object'
+		do
+			object := an_object
+		end
+
+invariant
+	object_not_void: object /= Void
 
 end -- class GB_WINDOW_SELECTOR_ITEM

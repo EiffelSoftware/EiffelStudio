@@ -35,6 +35,7 @@
 			<TEXT>tip_of_day_index<INTEGER>1</INTEGER></TEXT>
 			<TEXT>recent_projects<LIST_STRING></LIST_STRING></TEXT>
 			<TEXT>tools_on_top<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>type_selector_classic_mode<BOOLEAN>True</BOOLEAN></TEXT>
 			
 	</TOPIC>
 	<TOPIC TOPIC_ID="Code_generation" ICON="icon_preferences_folder">

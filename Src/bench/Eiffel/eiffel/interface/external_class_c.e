@@ -446,7 +446,6 @@ feature {NONE} -- Initialization
 			l_none_export: EXPORT_NONE_I
 			l_feat_arg: FEAT_ARG
 			l_names_heap: like Names_heap
-			l_arg_type_name: STRING
 			l_list: ARRAYED_LIST [INTEGER]
 			l_name: STRING
 		do

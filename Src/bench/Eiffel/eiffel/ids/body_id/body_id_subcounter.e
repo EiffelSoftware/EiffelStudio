@@ -4,7 +4,11 @@ class BODY_ID_SUBCOUNTER
 
 inherit
 
-	COMPILER_SUBCOUNTER
+	COMPILER_SUBCOUNTER;
+	ENCODER
+		export
+			{NONE} all
+		end
 			
 creation
 
@@ -21,10 +25,22 @@ feature -- Access
 
 feature {BODY_ID} -- Implementation
 
-	prefix_name: STRING is
+	prefix_name (type_id: TYPE_ID): STRING is
 			-- Prefix for generated C function names
-		once
-			Result := ""
+		require
+			type_id_not_void: type_id /= Void
+		local
+			p_type_id: P_TYPE_ID
+		do
+			p_type_id ?= type_id;
+			if p_type_id /= Void then
+				Result := A_buffer
+				eif011 ($Result, type_id.compilation_id)
+			elseif type_id.is_dynamic then
+				Result := "ND"
+			else
+				Result := ""
+			end
 		end
 
 end -- class BODY_ID_SUBCOUNTER

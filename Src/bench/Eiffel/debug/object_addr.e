@@ -94,7 +94,7 @@ feature -- Updating
 				addr_table.clear_all;
 				h_addrs.start
 			until
-				h_addrs.off
+				h_addrs.after
 			loop
 				h_addr := h_addrs.item;
 				addr_table.put (h_addr, physical_addr (h_addr));

@@ -68,10 +68,23 @@ feature -- Conveniences
 		do
 			ctxt.always_succeed;
 			ctxt.put_string("%'");
-			if value = '%N' then
+			inspect value
+			when '%N' then
 				ctxt.put_string ("%%N");
-			elseif value = '%U' then
+			when '%U' then
 				ctxt.put_string ("%%U");
+			when '%B' then
+				ctxt.put_string ("%%B");
+			when '%F' then
+				ctxt.put_string ("%%F");
+			when '%R' then
+				ctxt.put_string ("%%R");
+			when '%%' then
+				ctxt.put_string ("%%%%");
+			when '%"' then
+				ctxt.put_string ("%%%"");
+			when '%'' then
+				ctxt.put_string ("%%%'");
 			else
 				ctxt.put_string (value.out);
 			end;

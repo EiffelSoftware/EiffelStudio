@@ -86,7 +86,7 @@ char *buffer;	/* Where the string is held */
 	send_packet(writefd(sp), &pack);	/* Send the length */
 
 	if (size == 0)					/* Null-length string */
-		return;
+		return 0;
 
 	/* Wait for the acknowledgment */
 	if (-1 == recv_packet(readfd(sp), &pack))

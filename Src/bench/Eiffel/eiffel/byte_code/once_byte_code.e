@@ -350,9 +350,9 @@ feature {NONE} -- Implementation
 						-- If not a reference, we need to allocate some place
 						-- where to store the Result (We can't store Result
 						-- directly, since it might be 0...)
-					buf.put_string ("*) cmalloc(sizeof(");
-					type_i.c_type.generate (buf);
-					buf.put_string ("*));");
+					buf.put_string ("*) cmalloc(");
+					type_i.c_type.generate_size (buf)
+					buf.put_string (");");
 					buf.put_new_line
 					buf.put_string ("Result = ")
 					type_i.c_type.generate_cast (buf);

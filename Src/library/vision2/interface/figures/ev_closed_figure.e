@@ -11,18 +11,6 @@ deferred class
 
 inherit
 	EV_ATOMIC_FIGURE
-		redefine
-			default_create
-		end
-
-feature {NONE} -- Initialization
-
-	default_create is
-			-- Create with default attributes.
-		do
-			set_background_color (Default_colors.Yellow)
-			Precursor
-		end
 
 feature -- Access
 

@@ -72,9 +72,14 @@ feature {NONE} -- Implementation
 			if timeout /= Void then
 				timeout.on_timeout
 			else
-					-- Object has been collected, remove it from
-					-- `timeouts'.
-				timeouts.remove (id)
+				if timeouts /= Void then
+						-- Object has been collected, remove it from
+						-- `timeouts'.
+					timeouts.remove (id)
+				else
+					--| FIXME: it should not be Void?
+					--| but sometimes is.
+				end
 			end
 		end
 

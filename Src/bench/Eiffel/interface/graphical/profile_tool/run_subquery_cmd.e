@@ -34,6 +34,7 @@ feature -- Command Execution
 			profiler_query: PROFILER_QUERY;
 			st: STRUCTURED_TEXT;
 			executer: E_SHOW_PROFILE_QUERY
+			is_parsed: BOOLEAN
 		do
 			txt := tool.subquery
 			if
@@ -42,7 +43,7 @@ feature -- Command Execution
 			then
 				clear_values;
 				!! parser;
-				parser.parse (txt, Current);
+				is_parsed := parser.parse (txt, Current);
 				!! profiler_query;
 
 				profiler_query.merge (tool.profiler_query);

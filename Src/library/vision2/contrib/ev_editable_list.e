@@ -565,11 +565,13 @@ feature {NONE} -- Implementation
 					l_total := l_total - column_width (cnt)
 					cnt := cnt + 1
 				end
-				resize_actions.block
-				column_resized_actions.block
-				set_column_width (l_total, cnt)
-				resize_actions.resume
-				column_resized_actions.resume
+				if l_total > 0 then
+					resize_actions.block
+					column_resized_actions.block
+					set_column_width (l_total, cnt)
+					resize_actions.resume
+					column_resized_actions.resume
+				end
 		
 					-- Redraw internal dialog if required
 				if internal_dialog /= Void and then internal_dialog.is_displayed then

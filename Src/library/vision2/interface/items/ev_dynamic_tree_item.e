@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			set_subtree_function (a_subtree_function)
 		end
 
-feature {EV_ANY}-- Access
+feature -- Access
 
 	item: EV_TREE_NODE is
 			-- Item at current position

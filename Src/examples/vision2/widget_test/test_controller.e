@@ -101,16 +101,17 @@ feature {GENERATION_DIALOG} -- Basic operations
 feature {NONE} -- Implementation
 
 	build_interface is
-			--
+			-- Add constructed notebook to intface.
 		do
 			wipe_out
 			extend (test_notebook)
-			--disable_item_expand (test_notebook)
 			test_notebook.position_tabs_bottom
+		ensure
+			notebook_parented: test_notebook.parent = Current
 		end
 
 	hide_interface is
-			--
+			-- Hide tests displayed in `Current', and replace with an empty cell.
 		local
 			cell: EV_CELL
 		do

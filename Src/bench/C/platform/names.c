@@ -91,7 +91,7 @@ public EIF_REFERENCE eif_timeout_msg ()
 
 	char s[512];
 
-	strcpy(s, "Couldn't launch system in allotted time.\n");
+	strcpy(s, "Could not launch system in allotted time.\n");
 	strcat(s, "Try restarting ebench after setting ");
 #ifdef __WINDOWS_386__
 	strcat(s, "variable\n");

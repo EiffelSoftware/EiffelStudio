@@ -69,6 +69,8 @@ extern "C" {
 	 * WEL_END_GET_CONTEXT is now empty
 	 */
 
+void wel_thr_register(void);
+
 #define WGTCX \
 	wel_global_context_t *wel_globals; \
 	wel_thr_register(); \

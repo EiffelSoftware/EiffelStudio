@@ -19,7 +19,7 @@ inherit
 			make as lpq_make
 		end
 
-creation
+create
 	make
 
 feature -- Creation

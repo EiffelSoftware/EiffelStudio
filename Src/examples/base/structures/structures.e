@@ -12,7 +12,7 @@ class
 inherit
 	EXCEPTIONS
 
-creation
+create
 	make
 
 feature -- Creation
@@ -54,12 +54,12 @@ feature -- Routines
 		local
 			resume_session: BOOLEAN
 		do
-			!!  saved_demo_file.make (saved_file_name)
+			create   saved_demo_file.make (saved_file_name)
 			if saved_demo_file.exists then
 				io.putstring ("Do you want to retrieve the last saved demo (y/n)?: ")
 				io.readchar 
 				if io.lastchar = 'y' then
-					!! chosen_demo
+					create  chosen_demo
 					saved_demo_file.open_read
 					chosen_demo ?= chosen_demo.retrieved (saved_demo_file)
 					saved_demo_file.close
@@ -138,26 +138,26 @@ feature -- Routines
 			inspect
 				choice
 			when 1 then
-				!! a_sort_demo.make
+				create  a_sort_demo.make
 				chosen_demo := a_sort_demo
 			when 2 then
-				!! a_two_way_tree_demo.make
+				create  a_two_way_tree_demo.make
 				chosen_demo := a_two_way_tree_demo
 			when 3 then
-				!! a_binary_tree_demo.make
+				create  a_binary_tree_demo.make
 				chosen_demo := a_binary_tree_demo
 			when 4 then
-				!! a_binary_search_tree_demo.make
+				create  a_binary_search_tree_demo.make
 				chosen_demo := a_binary_search_tree_demo
 			when 5 then
 				io.putstring ("This is temporarily disabled%N")
-				--!! a_priority_queue_demo.make
+				--create  a_priority_queue_demo.make
 				--chosen_demo := a_priority_queue_demo
 			when 6 then
-				!! a_set_demo.make
+				create  a_set_demo.make
 				chosen_demo := a_set_demo
 			when 7 then
-				!! a_sorted_set_demo.make
+				create  a_sorted_set_demo.make
 				chosen_demo := a_sorted_set_demo
 			else
 				io.putstring ("Demo number should be between 1 and 7")

@@ -18,7 +18,7 @@ inherit
 			cycle, fill_menu, execute
 		end
 
-creation
+create
 	make
 
 feature -- Creation
@@ -26,10 +26,10 @@ feature -- Creation
 	make is
 			-- Initialize and execute demonstration
 		do
-			!! driver.make
+			create  driver.make
 			driver.new_menu ("%N%N* BINARY TREE DEMO *%N%N[XX] shows current node%N")
 			fill_menu
-			!! tree_root.make (0)
+			create  tree_root.make (0)
 			active := tree_root
 			cycle
 		end
@@ -179,10 +179,10 @@ feature -- Implementation
 				driver.putbool (active.has_both)
 				driver.new_line
 			elseif new_command = add_left then
-				!! new.make (driver.get_integer ("item"))
+				create  new.make (driver.get_integer ("item"))
 				active.put_left_child (new)
 			elseif new_command = add_right then 
-				!! new.make (driver.get_integer ("item"))
+				create  new.make (driver.get_integer ("item"))
 				active.put_right_child (new)
 			elseif new_command = put then
 				active.put (driver.get_integer ("item"))

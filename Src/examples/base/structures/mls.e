@@ -18,7 +18,7 @@ class
 inherit
 	LINKED_SET [INTEGER] 
 
-creation
+create
 	make
 
 feature

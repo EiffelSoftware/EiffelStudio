@@ -20,7 +20,7 @@ inherit
 			cycle, fill_menu, execute
 		end
 
-creation
+create
 	make
 
 feature -- Creation
@@ -29,10 +29,10 @@ feature -- Creation
 	make is
 			-- Initialize and execute demonstration
 		do
-			!! driver.make
+			create  driver.make
 			driver.new_menu ("%N%N* PRIORITY QUEUE DEMO *%N%N[XX] shows current element%N")
 			fill_menu
-			!! a.make
+			create  a.make
 			cycle
 		end
 

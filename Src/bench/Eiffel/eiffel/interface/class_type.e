@@ -857,6 +857,7 @@ feature -- Skeleton generation
 					Skeleton_file.putstring ("'\0',%N");
 				end;
 
+				Skeleton_file.putstring ("{{");
 				if
 					not Compilation_modes.is_precompiling and
 					not associated_class.is_precompiled
@@ -869,12 +870,10 @@ feature -- Skeleton generation
 					else
 						Skeleton_file.putint (0);
 					end;
-					Skeleton_file.putstring (",%N");
 
 						-- Static type id 
-					Skeleton_file.putstring ("(int32) ");
+					Skeleton_file.putstring (",(int32) ");
 					Skeleton_file.putint (id - 1);
-					Skeleton_file.putstring (",%N");
 				else
 					Skeleton_file.putstring ("(int32) ");
 					creation_feature := a_class.creation_feature;
@@ -882,13 +881,13 @@ feature -- Skeleton generation
 						r_id := creation_feature.rout_id_set.first;
 						rout_info := System.rout_info_table.item (r_id);
 						Skeleton_file.putint (rout_info.origin);
-						Skeleton_file.putstring (",%N(int32) ");
+						Skeleton_file.putstring (",(int32) ");
 						Skeleton_file.putint (rout_info.offset);
-						Skeleton_file.putstring (",%N");
 					else
-						Skeleton_file.putstring ("0,%N(int32) 0,%N");
+						Skeleton_file.putstring ("0,(int32) 0");
 					end
 				end;
+				Skeleton_file.putstring ("}},%N");
 					
 					-- Dispose routine id
 				if System.memory_descendants.has (associated_class) then

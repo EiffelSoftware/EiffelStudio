@@ -220,8 +220,10 @@ feature {NONE} -- Type description
 				il_generator.set_eiffel_type_info_type_id (static_type_id_counter.count + 7)
 				il_generator.set_generic_conformance_type_id (static_type_id_counter.count + 8)
 				il_generator.generate_type_class_mappings
-				il_generator.set_any_type_id (System.any_class.compiled_class.types.first.static_type_id)
-				il_generator.set_object_type_id (System.system_object_class.compiled_class.types.first.implementation_id)
+				il_generator.set_any_type_id (
+					System.any_class.compiled_class.types.first.static_type_id)
+				il_generator.set_object_type_id (
+					System.system_object_class.compiled_class.types.first.implementation_id)
 			variant
 				nb - i + 1
 			until
@@ -229,28 +231,31 @@ feature {NONE} -- Type description
 			loop
 				class_c := classes.item (i)
 				if class_c /= Void then
--- 					if (j \\ 500) = 0 then
--- 						feature {MEMORY}.full_collect
--- 						feature {MEMORY}.full_coalesce
--- 					end
--- 
-					from
-						types := class_c.types
-						types.start
-						l_class_counted := False
-					until
-						types.after
-					loop
-						cl_type := types.item
-							-- Generate correspondance between Eiffel IDs and
-							-- CIL information.
-						Il_generator.generate_class_mappings (cl_type)
-						if cl_type.is_generated and not l_class_counted then
-							compiled_classes_count := compiled_classes_count + 1
-							l_class_counted := True
-						end
+					types := class_c.types
+					if not types.is_empty then
+						from
+							types.start
+							l_class_counted := False
+						until
+							types.after
+						loop
+							cl_type := types.item
+								-- Generate correspondance between Eiffel IDs and
+								-- CIL information.
+							Il_generator.generate_class_mappings (cl_type)
+							if cl_type.is_generated and not l_class_counted then
+								compiled_classes_count := compiled_classes_count + 1
+								l_class_counted := True
+							end
 
-						types.forth
+							types.forth
+						end
+					else
+							-- Step is needed as namespace of a precompiled class should be set.
+							-- At the moment it is set withing `generate_class_mappings', but
+							-- when a class does not have a generic derivation, `types' is empty
+							-- and `generate_class_mappings' is not called.
+						class_c.lace_class.set_actual_namespace
 					end
 				end
 				i := i + 1

@@ -10,6 +10,8 @@ deferred class
 
 inherit
 	EB_TOOL
+		rename
+			tool_name as empty_tool_name
 		redefine
 			make, close_cmd
 		end
@@ -74,6 +76,9 @@ feature -- Window Properties
 	edit_bar: EV_HORIZONTAL_BOX
 			-- Main button bar
 
+	edit_bar_menu_item: EV_CHECK_MENU_ITEM
+			-- 
+
 --	target: WIDGET is
 --			-- Target of the hole is the text window.
 --		do
@@ -90,11 +95,6 @@ feature -- Window Properties
 		end
 
 feature -- Access
-
-	resources: EB_PARAMETERS is
-			-- Resources for current tool
-		deferred
-		end
 
 	has_editable_text: BOOLEAN is
 			-- Does Current tool have an editable text window?
@@ -246,6 +246,17 @@ feature -- Text window creation
 		end
 
 feature -- Update
+
+	edit_bar_menu_update (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
+		require
+			menu_item_exists: edit_bar_menu_item /= Void
+		do
+			if edit_bar_menu_item.is_selected then
+				edit_bar.show
+			else
+				edit_bar.hide
+			end
+		end
 
 	update_save_symbol is
 			-- Update the save symbol in tool.
@@ -467,6 +478,18 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 --			create search_cmd.make (Current)
 			create i.make_with_text (a_menu, "Chercher")
 --			i.add_select_command (search_cmd, Void)
+		end
+
+	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+		require
+			a_menu_exits: a_menu /= Void
+		local
+			cmd: EV_ROUTINE_COMMAND
+		do
+			create edit_bar_menu_item.make_with_text (a_menu, Interface_names.n_Command_bar_name)
+			create cmd.make (~edit_bar_menu_update)
+			edit_bar_menu_item.add_select_command (cmd, Void)
+			edit_bar_menu_item.add_unselect_command (cmd, Void)
 		end
 
 	build_help_menu (a_menu: EV_MENU_ITEM_HOLDER) is

@@ -61,7 +61,8 @@ feature {EV_ANY} -- Contract support
 					loop
 						t_item.item.extend (create {EV_TREE_ITEM})
 						t_item.item.go_i_th (a_counter3)
-						t_item.item.item.set_text ("Sub tree's sub tree item " + a_counter3.out)
+						t_item.item.item.set_text
+							("Sub tree's sub tree item " + a_counter3.out)
 						a_counter3 := a_counter3 + 1
 					end
 					a_counter2 := a_counter2 + 1
@@ -178,8 +179,8 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.25  2000/03/02 17:47:40  king
---| Initial make_for_test added, needs more features though
+--| Revision 1.26  2000/03/02 22:08:57  king
+--| Made 80 cols or less
 --|
 --| Revision 1.24  2000/03/01 23:44:50  king
 --| Changed selected_item post-condition to use lists_equal

@@ -10,14 +10,14 @@ inherit
 			stored_node, widget,
 			context_initialization, 
 			position_initialization, shown,
-			hide, show, create_context
+			hide, show, create_context, update_visual_name_in_editor
 		end;
 	WINDOW_C
 		redefine
 			stored_node, widget, 
 			copy_attributes, context_initialization, 
 			create_context, position_initialization,
-			shown, hide, show
+			shown, hide, show, update_visual_name_in_editor
 		select
 			copy_attributes
 		end
@@ -53,7 +53,7 @@ feature
 				set_x_y (x1, y1);
 				set_start_hidden (True);
 			end;
-			widget.set_parent_action ("<Map>,<Prop>", Current, Current);
+			add_window_geometry_action;
 			add_to_window_list
 		end;
 
@@ -61,11 +61,13 @@ feature
 
 	popup is
 		do
+			update_label (True);
 			widget.popup;
 		end;
 
 	popdown is
 		do
+			update_label (False);
 			widget.popdown;
 		end;
 
@@ -77,11 +79,6 @@ feature
 	remove_window_geometry_action is
 		do
 			widget.remove_parent_action ("<Configure>");
-		end;
-
-	remove_popup_action is
-		do
-			widget.remove_parent_action ("<Map>,<Prop>");
 		end;
 
 	create_context (a_parent: COMPOSITE_C): like Current is
@@ -164,24 +161,29 @@ feature {NONE}
 						Context_const.attribute_format_nbr);
 		end;
 
+	update_visual_name_in_editor is
+		local
+			editor: CONTEXT_EDITOR
+		do
+			editor := context_catalog.editor (Current, 
+					Context_const.temp_wind_att_form_nbr);
+			if editor /= Void then
+				editor.reset_current_form
+			end;
+		end;
+
 feature 
 
 	eiffel_type: STRING is "TEMP_WIND";
 
 	hide is
 		do
-			widget.popdown;
-			if widget.shown then
-				widget.hide;
-			end
+			popdown;
 		end;
 
 	show is
 		do
-			widget.popup;
-			if not widget.shown then
-				widget.show;
-			end
+			popup;
 		end;
 
 	shown: BOOLEAN is

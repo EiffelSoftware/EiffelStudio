@@ -10,7 +10,45 @@ class DEFAULT_HOLE_COMMAND
 inherit
 	HOLE_COMMAND
 		redefine
-			work
+			init_other_button_actions, receive,
+			transported_stone
+		end
+
+creation
+
+	make
+
+feature -- Initialization
+
+	init_other_button_actions (a_button: EB_BUTTON_HOLE) is
+			-- Initialize other button actions
+		do
+			a_button.set_action ("!c<Btn3Down>", 
+				Current, control_button_three_action);
+			a_button.set_action ("!Shift<Btn3Down>", 
+				Current, shift_button_three_action);
+		end;
+
+feature -- Access
+
+	stone_type: INTEGER is
+		do
+		end;
+
+	transported_stone: STONE is
+		do
+			Result := tool.stone
+		end;
+
+	symbol: PIXMAP is
+			-- Pixmap for the button
+		do
+		end
+
+	name: STRING is
+			-- Name of hole
+		do
+			Result := ""
 		end
 
 feature -- Execution
@@ -18,11 +56,20 @@ feature -- Execution
 	work (argument: ANY) is
 		local
 			ts: STONE;
-			new_tool: TOOL_W
+			new_tool: TOOL_W;
+			super_melt_cmd: SUPER_MELT
 		do
-			if holder.associated_button.tool = Project_tool then
+			if argument = control_button_three_action then
+				ts := tool.stone;
+				if ts /= Void then
+					Project_tool.receive (ts)
+				end
+			elseif argument = shift_button_three_action then
+				!! super_melt_cmd.make (tool);
+				super_melt_cmd.work (Void)
+			elseif tool = Project_tool then
 				inspect 
-					holder.associated_button.stone_type
+					stone_type
 				when Class_type then
 					new_tool := window_manager.class_window
 				when Routine_type then
@@ -38,11 +85,35 @@ feature -- Execution
 					new_tool.display
 				end
 			else
-				ts ?= holder.associated_button.transported_stone;
+				ts ?= tool.stone;
 				if ts /= Void then
-					holder.associated_button.tool.receive (holder.associated_button.transported_stone)
+					tool.receive (ts)
 				end
 			end
+		end;
+
+feature -- Update
+
+	receive (a_stone: STONE) is
+			-- Process dropped stone `a_stone'
+		do
+			if a_stone.is_valid and then compatible (a_stone) then
+				tool.receive (a_stone)
+			end
+		end;
+
+feature {NONE} -- Implementation
+
+	control_button_three_action: ANY is
+			-- Action to specify that the control third button was pressed
+		once
+			!! Result
+		end;
+
+	shift_button_three_action: ANY is
+			-- Action to specify that the shift third button was pressed
+		once
+			!! Result
 		end;
 
 end -- class DEFAULT_HOLE_COMMAND

@@ -164,6 +164,11 @@ feature -- Basic operations
 			end
 		end
 
+feature -- Measurement
+
+	structure_size: INTEGER
+			-- Size of the C structure representing `Current'.
+
 feature {NONE} -- Removal
 
 	destroy_item is
@@ -183,9 +188,6 @@ feature {NONE} -- Implementation
 	
 	object_id_palette: INTEGER
 			-- Object id of `palette'.
-
-	structure_size: INTEGER
-			-- Size of the C structure representing `Current'.
 
 	i_th_quad (i: INTEGER): WEL_RGB_QUAD is
 		require

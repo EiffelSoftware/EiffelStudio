@@ -7,12 +7,6 @@ indexing
 class
 	WEL_FILL_ATTRIBUTES_CONSTANTS
 
-inherit
-	WEL_BIT_OPERATIONS
-		export
-			{NONE} all
-		end
-		
 feature -- Access
 
 	foreground_blue: INTEGER is
@@ -82,9 +76,9 @@ feature -- Access
 	is_valid_fill_attributes (an_integer: INTEGER): BOOLEAN is
 			-- Is `an_integer' a valid fill atrtibutes?
 		do
-			Result := flag_set (foreground_blue + foreground_green + foreground_red + foreground_intensity +
-								background_blue + background_green + background_red + background_intensity,
-								an_integer)
+			Result := an_integer = (an_integer & (foreground_blue | foreground_green | foreground_red |
+				foreground_intensity | background_blue | background_green |
+				background_red | background_intensity))
 		end
 
 end -- class WEL_FILL_ATTRIBUTES_CONSTANTS

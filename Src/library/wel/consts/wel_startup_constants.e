@@ -7,12 +7,6 @@ indexing
 class
 	WEL_STARTUP_CONSTANTS
 
-inherit
-	WEL_BIT_OPERATIONS
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	Startf_use_show_window: INTEGER is
@@ -95,14 +89,9 @@ feature -- Access
 	is_valid_startup_flags (a_flags: INTEGER): BOOLEAN is
 			-- Is `a_flags' a valid startup flags combination?
 		do
-			Result := flag_set (Startf_use_show_window +
-				Startf_use_position +
-				Startf_use_size +
-				Startf_use_count_chars +
-				Startf_use_fill_attributes +
-				Startf_force_on_feedback +
-				Startf_force_off_feedback +
-				Startf_use_std_handles, a_flags)
+			Result :=  a_flags = (a_flags & (Startf_use_show_window | Startf_use_position |
+				Startf_use_size | Startf_use_count_chars | Startf_use_fill_attributes |
+				Startf_force_on_feedback | Startf_force_off_feedback | Startf_use_std_handles))
 		end
 
 end -- class WEL_STARTUP_CONSTANTS

@@ -15,6 +15,8 @@ class
 	WEL_PROCESS_LAUNCHER
 
 inherit
+	ANY
+
 	WEL_PROCESS_CREATION_CONSTANTS
 		export
 			{NONE} all

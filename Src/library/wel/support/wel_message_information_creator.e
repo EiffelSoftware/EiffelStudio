@@ -9,6 +9,8 @@ class
 	WEL_MESSAGE_INFORMATION_CREATOR
 
 inherit
+	ANY
+
 	WEL_WM_CONSTANTS
 		export
 			{NONE} all

@@ -8,6 +8,8 @@ class
 	WEL_UNC_PATH_MAPPER
 
 inherit
+	ANY
+
 	WEL_NETWORKING_CONSTANTS
 		export
 			{NONE} all

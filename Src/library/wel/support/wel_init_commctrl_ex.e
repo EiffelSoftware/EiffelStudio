@@ -70,7 +70,7 @@ feature -- Element change
 			dwicc_set: dwicc = value
 		end
 
-feature {NONE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

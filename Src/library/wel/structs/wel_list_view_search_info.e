@@ -182,7 +182,7 @@ feature -- Element Change
 			cwel_list_view_search_info_set_direction (item, Vk_left)
 		end
 
-feature {NONE} -- Measurment
+feature -- Measurment
 
 	structure_size: INTEGER is
 			-- Structure size

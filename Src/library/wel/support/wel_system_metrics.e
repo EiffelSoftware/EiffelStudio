@@ -9,6 +9,8 @@ class
 	WEL_SYSTEM_METRICS
 
 inherit
+	ANY
+
 	WEL_SM_CONSTANTS
 		export
 			{NONE} all

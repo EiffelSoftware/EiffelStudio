@@ -8,6 +8,8 @@ class
 	WEL_UNIT_CONVERSION
 
 inherit
+	ANY
+
 	WEL_CAPABILITIES_CONSTANTS
 		export
 			{NONE} all

@@ -7,12 +7,6 @@ indexing
 class
 	WEL_PROCESS_CREATION_CONSTANTS
 
-inherit
-	WEL_BIT_OPERATIONS
-		export
-			{NONE} all
-		end
-
 feature -- Access
 
 	create_default_error_mode: INTEGER is
@@ -50,10 +44,10 @@ feature -- Access
  	is_valid_creation_constant (a_constant: INTEGER): BOOLEAN is
 			-- Is `a_constant' a valid process creation constant?
 		do
-			Result := flag_set (create_default_error_mode + create_new_console +
-								create_new_process_group + detached_process, a_constant) and
-						(flag_set (a_constant, create_new_console) implies not flag_set (a_constant, detached_process)) and
-						(flag_set (a_constant, detached_process) implies not flag_set (a_constant, create_new_console))
+			Result := a_constant = (a_constant & (create_default_error_mode | create_new_console |
+				create_new_process_group | detached_process))
+			Result := Result and
+				((a_constant & (create_new_console | detached_process)) /= (create_new_console | detached_process))
 		end
 
 end -- class WEL_PROCESS_CREATION_CONSTANTS

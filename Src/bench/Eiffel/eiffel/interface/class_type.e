@@ -68,6 +68,17 @@ feature
 	skeleton: SKELETON;
 			-- Skeleton of the class type
 
+	is_modifiable: BOOLEAN is
+			-- Is current type not part of a precompiled library
+			-- or of the DR-system in case of DLE?
+		do
+			if Compilation_modes.is_extending then
+				Result := is_dynamic
+			else
+				Result := not is_precompiled
+			end
+		end
+
 	is_changed: BOOLEAN;
 			-- Is the attribute list changed ? [has the skeleton of
 			-- attributes to be re-generated ?]
@@ -246,7 +257,7 @@ feature -- Generation
 					feature_table.forth;
 				end;
 			else
-				generate_c_code := not is_precompiled;
+				generate_c_code := is_modifiable
 			end;
 
 			if generate_c_code then
@@ -301,7 +312,7 @@ feature -- Generation
 					associated_class.assertion_level.check_invariant)
 			then
 				inv_byte_code := Inv_byte_server.disk_item
-													(associated_class.id.id);
+													(associated_class.id);
 				inv_byte_code.generate_invariant_routine;
 				byte_context.clear_all;
 			end;
@@ -312,7 +323,7 @@ feature -- Generation
 			end;
 			file.close;
 
-			else
+			elseif not Compilation_modes.is_extending then
 					-- The file hasn't been generated
 				System.makefile_generator.record_empty_class_type (id)
 			end;
@@ -677,7 +688,7 @@ feature -- Byte code generation
 			melted_feat_tbl: MELTED_FEATURE_TABLE;
 		do
 			melted_feat_tbl := melted_feature_table;
-			melted_feat_tbl.set_type_id (type_id);
+			melted_feat_tbl.set_type_id (id);
 			Tmp_m_feat_tbl_server.put (melted_feat_tbl);
 		end;
 
@@ -1309,71 +1320,6 @@ feature -- DLE
 			end
 		end;
 
-	dle_generate_wkbench_code is
-			-- Generation of the C file.
-		require
-			dynamic_system: System.is_dynamic;
-			workbench_mode: not System.in_final_mode
-		local
-			feature_table: FEATURE_TABLE;
-			current_class: CLASS_C;
-			body_id: INTEGER;
-			feature_i: FEATURE_I;
-			file: INDENT_FILE;
-			inv_byte_code: INVARIANT_B;
-			final_mode: BOOLEAN;
-			generate_c_code: BOOLEAN
-		do
-			current_class := associated_class;
-			feature_table := current_class.feature_table;
-
-			if is_dynamic then
-
-				file := generation_file;
-				file.open_write;
-					-- Write header
-				file.putstring ("/*");
-				file.new_line;
-				file.putstring (" * Code for class ");
-				type.dump (file);
-				file.new_line;
-				file.putstring (" */");
-				file.new_line;
-				file.new_line;
-					-- Includes wanted
-				file.putstring ("#include %"eiffel.h%"");
-				file.new_line;
-				file.new_line;
-	
-				byte_context.set_generated_file (file);
-
-				from
-					feature_table.start;
-					byte_context.init (Current);
-					--byte_context.set_class_type (Current)
-				until
-					feature_table.after
-				loop
-					feature_i := feature_table.item_for_iteration;
-					if feature_i.to_generate_in (current_class) then
-						generate_feature (feature_i, file)
-					end;
-					feature_table.forth
-				end;
-
-				if associated_class.has_invariant then
-					inv_byte_code := 
-							Inv_byte_server.disk_item (associated_class.id.id);
-					inv_byte_code.generate_invariant_routine;
-					byte_context.clear_all
-				end;
-	
-				file.close
-			end;
-				-- Clean the list of shared include files.
-			shared_include_set.wipe_out
-		end;
-
 	dle_generate_final_code: BOOLEAN is
 			-- Generation of the C file.
 			-- Return true if something has been generated.
@@ -1497,7 +1443,7 @@ feature -- DLE
 						associated_class.assertion_level.check_invariant
 					then
 						inv_byte_code := 
-								Inv_byte_server.disk_item (associated_class.id.id);
+								Inv_byte_server.disk_item (associated_class.id);
 						inv_byte_code.generate_invariant_routine;
 						byte_context.clear_all
 					end

@@ -185,6 +185,14 @@ X		([a-z]|[A-Z]|[0-9]|_|\+|\.|]|[|%,\ |=|&)
 			}
 
 -- Identifiers
+[@]{A}{X}*	{
+				token_buffer.clear_all
+				append_text_to_string (token_buffer)
+				current_position.go_to (token_buffer.count)
+				token_buffer.remove_head (1)
+				last_token := TE_ID
+			}
+
 {A}{X}*		{
 				token_buffer.clear_all
 				append_text_to_string (token_buffer)

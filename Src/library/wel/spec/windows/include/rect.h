@@ -13,16 +13,6 @@
 extern "C" {
 #endif
 
-#define cwel_rect_set_left(_ptr_, _value_) (((RECT *) _ptr_)->left = (int) (_value_))
-#define cwel_rect_set_top(_ptr_, _value_) (((RECT *) _ptr_)->top = (int) (_value_))
-#define cwel_rect_set_right(_ptr_, _value_) (((RECT *)_ptr_)->right = (int) (_value_))
-#define cwel_rect_set_bottom(_ptr_, _value_) (((RECT *) _ptr_)->bottom = (int) (_value_))
-
-#define cwel_rect_get_left(_ptr_) ((((RECT *) _ptr_)->left))
-#define cwel_rect_get_top(_ptr_) ((((RECT *) _ptr_)->top))
-#define cwel_rect_get_right(_ptr_) ((((RECT *) _ptr_)->right))
-#define cwel_rect_get_bottom(_ptr_) ((((RECT *) _ptr_)->bottom))
-
 #define cwin_pt_in_rect(_ptr_, _point_) ((EIF_BOOLEAN) PtInRect ((RECT *) _ptr_, *((POINT *) _point_)))
 
 #ifdef __cplusplus

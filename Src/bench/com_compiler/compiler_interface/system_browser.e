@@ -120,7 +120,7 @@ feature -- Basic Operations
 			-- Class descriptor.
 			-- Void if no matches.
 		local
-			matching_classes: LINKED_LIST [CLASS_I]
+			matching_classes: LIST [CLASS_I]
 		do
 			if Eiffel_project.initialized and then class_name1 /= Void then
 				matching_classes := Eiffel_universe.compiled_classes_with_name (class_name1)
@@ -153,7 +153,7 @@ feature -- Basic Operations
 			-- `is_substring' [in].  
 		local
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
-			matching_classes: LINKED_LIST [CLASS_I]
+			matching_classes: LIST [CLASS_I]
 			classes: ARRAY [CLASS_C]
 			class_desc: CLASS_DESCRIPTOR
 			count, i: INTEGER

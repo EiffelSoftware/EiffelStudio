@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 				l_filename.prune_all_leading ('/')
 				l_toc_name := l_util.short_name (l_shared_objects.shared_constants.help_constants.toc.name)
 				if l_filename.substring (1, l_toc_name.count).is_equal (l_toc_name) then
-					l_filename.remove_substring (1, l_toc_name.count)
+					l_filename.remove_substring (1, l_toc_name.count + 1)
 				end
 				l_filename := l_util.file_no_extension (l_filename)
 				Result.append ("<script Language=%"JavaScript%" type=%"text/javascript%" src=%"" + relative_path_to_help_project (l_filename) + l_toc_script_name)

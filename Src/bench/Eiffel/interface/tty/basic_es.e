@@ -1,4 +1,10 @@
--- Batch compiler.
+indexing
+
+	description: 
+		"Batch compiler without invoking the -loop. This is the root%
+		%class for the personal version (which does allow c compilation).";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class BASIC_ES
 
@@ -10,17 +16,15 @@ inherit
 	SHARED_EWB_HELP;
 	SHARED_EWB_CMD_NAMES;
 	WINDOWS;
-	SHARED_LICENSE;
 	SHARED_RESCUE_STATUS;
 	SHARED_EXEC_ENVIRONMENT;
+	COMMAND_LINE_PROJECT
 
 creation
 
 	make
 
-feature -- Creation
-
-	retried: BOOLEAN;
+feature -- Initialization
 
 	make is
 			-- Analyze the command line options and 
@@ -52,11 +56,22 @@ feature -- Creation
 				elseif not file_error then
 					if output_window = Void then
 						command.set_output_window (error_window)
-						command.work (Project_name, Ace_name);
 					else
 						command.set_output_window (output_window)
-						command.work (Project_name, Ace_name);
 						output_window.close;
+					end;
+					init_project; 
+					if not error_occurred then
+						if project_is_new then
+							make_new_project (
+								equal (command.name,
+								loop_cmd_name));
+						else
+							retrieve_project;
+						end
+					end;
+					if not error_occurred then
+						command.execute
 					end;
 					discard_licence
 				end;
@@ -74,44 +89,38 @@ feature -- Creation
 			io.error.new_line;
 			if not Rescue_status.fail_on_rescue then
 				retried := True;
-				retry
+				--retry
 			end;
 		end;
 
-feature -- Input/Output
+feature -- Properties
 
-	print_option_error is
-			-- Putstring the correct usage of ewb.
-		local
-			i: INTEGER
-		do	
-			io.putstring (argument (0));
-			io.putstring (": incorrect options%N"); 
-			print_usage;
-		end;
+	command: EWB_CMD;
+			-- Command to be executed corresponding to
+			-- command line options;
 
-	print_usage is
-		do
-			io.putstring ("Usage:%N%T");
-			io.putstring (argument (0));
-			io.putstring (" [-help | ");
-			add_usage_special_cmds;
-			io.putstring ("%
-				%-loop | -clients class | -suppliers class |%N%
-				%%T-flatshort [-filter filtername] class |%N%
-				%%T-flat [-filter filtername] class |%N%
-				%%T-short [-filter filtername] class | -filter filtername class |%N%
-				%%T-descendants class | -ancestors class |%N%
-				%%T-aversions class feature | -dversions class feature |%N%
-				%%T-implementers class feature | -callers class feature |%N%
-				%%T[-stop] [-ace Ace] [-project Project] [-file File]]%N");
-		end;
+	output_window: FILE_WINDOW;
+			-- Window where the output is displayed
 
-	add_usage_special_cmds is
-		do
-		end;
+	file_error: BOOLEAN;
+			-- Has an error been encountered in opening the 
+			-- file for redirection?
+
+	option_error: BOOLEAN;
+			-- Has an error been encountered in the 
+			-- command line options?
+
+	current_option: INTEGER;
+			-- Current index in the option list
+
+	help_only: BOOLEAN;
+			-- Print help information?
+
+	option: STRING;
+			-- Current option being analyzed
 
 	help_messages: EXTEND_TABLE [STRING, STRING] is
+			-- Help message table
 		once
 			!!Result.make (22);
 			Result.put (ace_help, ace_cmd_name);
@@ -135,11 +144,76 @@ feature -- Input/Output
 			add_help_special_cmds
 		end;
 
-	add_help_special_cmds is
+	loop_cmd: BASIC_EWB_LOOP is
+			-- Loop command 
 		do
+			!!Result.make (Current)
+		end;
+
+feature -- Access
+
+	is_precompiled_option: BOOLEAN is
+			-- Is the current option `precompile'?
+			--| Encoded key for precompilation for
+			--| personal version
+		local
+			s: STRING
+		do
+			!!s.make (8);
+			s.extend ('-');
+			s.append_integer (6851006);
+			Result := option.is_equal (s)
+		end;
+
+feature -- Setting
+
+	set_file (filename: STRING) is
+			-- Set the output_window file to `filename'.
+		do
+			!! output_window.make (filename);
+			if output_window.exists then
+				io.error.putstring ("File exists.%N");
+				file_error := True;
+			else
+				output_window.open_file;
+				if not output_window.exists then
+					file_error := True;
+				end;
+			end;
+		end;
+
+feature -- Output
+
+	print_option_error is
+			-- Print the correct usage of ewb.
+		local
+			i: INTEGER
+		do	
+			io.putstring (argument (0));
+			io.putstring (": incorrect options%N"); 
+			print_usage;
+		end;
+
+	print_usage is
+			-- Print the usage of command line options.
+		do
+			io.putstring ("Usage:%N%T");
+			io.putstring (argument (0));
+			io.putstring (" [-help | ");
+			add_usage_special_cmds;
+			io.putstring ("%
+				%-loop | -clients class | -suppliers class |%N%
+				%%T-flatshort [-filter filtername] class |%N%
+				%%T-flat [-filter filtername] class |%N%
+				%%T-short [-filter filtername] class | -filter filtername class |%N%
+				%%T-descendants class | -ancestors class |%N%
+				%%T-aversions class feature | -dversions class feature |%N%
+				%%T-implementers class feature | -callers class feature |%N%
+				%%T[-stop] [-ace Ace] [-project Project] [-file File]]%N");
 		end;
 
 	print_help is
+			-- Print the help.
 		local
 			command_list: SORTED_TWO_WAY_LIST [STRING];
 			keys: ARRAY [STRING];
@@ -181,37 +255,18 @@ feature -- Input/Output
 			io.putstring (".%N")
 		end;
 
-feature -- Command line options
+feature -- Update
 
-	command: EWB_CMD;
-			-- Command to be executed corresponding to
-			-- command line options;
+	add_usage_special_cmds is
+		do
+		end;
 
-	Ace_name: STRING;
-			-- Name of the Ace file.
-			-- ("Ace" by default)
-
-	Project_name: STRING;
-			-- Name of the Project file.
-			-- ("Project" by default)
-
-	output_window: FILE_WINDOW;
-			-- Window where the output is displayed
-
-	file_error: BOOLEAN;
-			-- Has an error been encountered in opening the 
-			-- file for redirection?
-
-	option_error: BOOLEAN;
-			-- Has an error been encountered in the 
-			-- command line options?
-
-	current_option: INTEGER;
-			-- Current index in the option list
-
-	help_only: BOOLEAN;
+	add_help_special_cmds is
+		do
+		end;
 
 	analyze_options is
+			-- Analyze the options entered by the user.
 		local
 			i: INTEGER
 		do
@@ -229,17 +284,14 @@ feature -- Command line options
 
 				-- Default command
 			if (not option_error) and then (command = Void) then
-				!EWB_COMP!command
+				!EWB_COMP!command.make (Current)
 			end
 		end;
 
-	option: STRING;
-
 	analyze_one_option is
+			-- Analyze current option.
 		local
 			cn, fn: STRING;
-			troffed: BOOLEAN;
-			current_class_only: BOOLEAN;
 			filter_name: STRING
 		do
 			option := argument (current_option);	
@@ -331,14 +383,7 @@ feature -- Command line options
 						option_error := True
 					else
 						current_option := current_option + 1;
-						if argument (current_option).is_equal ("-troff") then
-							troffed := True;
-							if current_option < argument_count then
-								current_option := current_option + 1;
-							else
-								option_error := True
-							end;
-						elseif argument (current_option).is_equal ("-filter") then
+						if argument (current_option).is_equal ("-filter") then
 							if current_option + 1 < argument_count then
 								current_option := current_option + 1;
 								filter_name := argument (current_option)
@@ -348,11 +393,12 @@ feature -- Command line options
 							end
 						end;
 						if not option_error then
-							if option.is_equal ("-short") then
-								current_class_only := True
-							end;
 							cn := argument (current_option);
-							!EWB_FS!command.make (cn, troffed, current_class_only, filter_name)
+							if option.is_equal ("-short") then
+								!EWB_SHORT!command.make (cn, filter_name)
+							else
+								!EWB_FS!command.make (cn, filter_name)
+							end;
 						end
 					end;
 				else
@@ -469,7 +515,7 @@ feature -- Command line options
 				if command /= Void then
 					option_error := True
 				else
-					!EWB_PRECOMP!command
+					!EWB_PRECOMP!command.make (Current)
 				end
 			else
 				process_special_options
@@ -477,38 +523,10 @@ feature -- Command line options
 			current_option := current_option + 1
 		end;
 
-	is_precompiled_option: BOOLEAN is
-		local
-			s: STRING
-		do
-			!!s.make (8);
-			s.extend ('-');
-			s.append_integer (6851006);
-			Result := option.is_equal (s)
-		end;
-
 	process_special_options is
+			-- Set option_error to True.
 		do
 			option_error := True
 		end;
 
-	loop_cmd: BASIC_EWB_LOOP is
-		do
-			!!Result
-		end;
-
-	set_file (filename: STRING) is
-		do
-			!!output_window.make (filename);
-			if output_window.exists then
-				io.error.putstring ("File exists.%N");
-				file_error := True;
-			else
-				output_window.open_file;
-				if not output_window.exists then
-					file_error := True;
-				end;
-			end;
-		end;
-
-end
+end -- class BASIC_ES

@@ -138,14 +138,14 @@ feature {EV_FIGURE_DRAWING_ROUTINES, EV_FIGURE} -- Implementation
 		end
 
 	start_angle: DOUBLE is
-			-- Actual angle line is on relative to world.
+			-- Angle that line begins on relative to world.
 		do
 			Result := line_angle (start_point.x_abs, start_point.y_abs,
 				end_point.x_abs, end_point.y_abs)
 		end
 
 	end_angle: DOUBLE is
-			-- Actual angle line is on relative to world.
+			-- Angle that line ends on relative to world.
 		do
 			Result := Pi + line_angle (start_point.x_abs, start_point.y_abs,
 				end_point.x_abs, end_point.y_abs)

@@ -138,7 +138,7 @@ feature {NONE} -- Implementation
 	str_text: WEL_STRING
 			-- C string to save the text
 
-feature -- Implementation
+feature {WEL_TREE_VIEW} -- Implementation
 
 	set_cchtextmax (value: INTEGER) is
 			-- Set the maximum size of the text getting by get item)

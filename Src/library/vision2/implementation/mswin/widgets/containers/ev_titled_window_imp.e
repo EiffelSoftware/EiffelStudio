@@ -133,6 +133,9 @@ feature -- Status setting
 				current_icon_pixmap.decrement_reference
 				current_icon_pixmap := Void
 			end
+			
+				-- Destroy associated window class
+			wnd_class.unregister
 		end
 
 	minimize is

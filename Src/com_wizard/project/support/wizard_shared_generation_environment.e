@@ -472,11 +472,22 @@ feature -- Access
 			Result.force ("min", "min")
 			Result.force ("max", "max")
 			Result.force ("RGB", "RGB")
-			Result.force ("hr", "hr")
-			Result.force ("Formatter", "Formatter")
 			Result.force (clone (Eof_word), clone (Eof_word))
 		end
 
+	generator_words: HASH_TABLE [STRING, STRING] is
+			-- List of generator words.
+		local
+			tmp_string: STRING
+		once
+			create Result.make (100)
+			Result.compare_objects
+			Result.force ("hr", "hr")
+			Result.force ("Formatter", "Formatter")
+			Result.force ("value", "value")
+			Result.force ("result", "result")
+		end
+		
 	eiffel_runtime_macros: HASH_TABLE [STRING, STRING] is
 			-- List of Eiffel runtime macros.
 		local
@@ -869,7 +880,10 @@ feature -- Access
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			Result := c_keywords.has (a_name) or eiffel_runtime_macros.has (a_name) or windows_api.has (a_name)
+			Result := c_keywords.has (a_name) or 
+					eiffel_runtime_macros.has (a_name) or 
+					windows_api.has (a_name) or
+					generator_words.has (a_name)
 		end
 
 	browse_directory: STRING is

@@ -59,8 +59,16 @@ feature -- Initialization
 			is_executable: project_dir.is_base_executable
 			--is_creatable: project_dir.is_creatable
 			prev_read_write_error: not read_write_error
+		local
+			d: DIRECTORY
 		do
 			project_directory := project_dir
+			!! d.make (Eiffel_gen_path);
+			if d.exists then
+				delete_f_code
+				delete_w_code
+				delete_comp
+			end
 			Create_compilation_directory
 			Create_generation_directory
 			Workbench.make
@@ -629,30 +637,18 @@ feature -- Update
 		end
 
 	delete_f_code is
-		local
-			generation_directory: DIRECTORY
-			retried, in_creation: BOOLEAN
 		do
-			if not retried then
-				create generation_directory.make (Final_generation_path)
-				generation_directory.recursive_delete
-				generation_directory.create_dir
-			else
-					-- Make sure that `F_code' exists, if not we create it.
-				if not generation_directory.exists then
-					in_creation := True
-					generation_directory.create_dir
-				end
-			end
-		rescue
-				-- It can fail if we do not have write permission
-				-- but it should not be the case.
-				-- In that case, we do not delete and leave the directory
-				-- as it is.
-			if not in_creation then
-				retried := True
-				retry
-			end
+			delete_generation_directory (Final_generation_path)
+		end
+
+	delete_w_code is
+		do
+			delete_generation_directory (Workbench_generation_path)
+		end
+
+	delete_comp is
+		do
+			delete_generation_directory (compilation_path)
 		end
 
 feature -- Output
@@ -816,6 +812,33 @@ feature {NONE} -- Implementation
 				set_file_status (read_only_status)
 			else
 				set_error_status (file_error_status)
+			end
+		end
+
+	delete_generation_directory (base_name: STRING) is
+		local
+			generation_directory: DIRECTORY
+			retried, in_creation: BOOLEAN
+		do
+			if not retried then
+				create generation_directory.make (base_name)
+				generation_directory.recursive_delete
+				generation_directory.create_dir
+			else
+					-- Make sure that `base_name' exists, if not we create it.
+				if not generation_directory.exists then
+					in_creation := True
+					generation_directory.create_dir
+				end
+			end
+		rescue
+				-- It can fail if we do not have write permission
+				-- but it should not be the case.
+				-- In that case, we do not delete and leave the directory
+				-- as it is.
+			if not in_creation then
+				retried := True
+				retry
 			end
 		end
 

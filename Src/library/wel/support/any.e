@@ -103,8 +103,6 @@ feature {NONE} -- Removal
 		require
 			exists: exists
 		deferred
-		ensure
-			not_exists: not exists
 		end
 
 	dispose is

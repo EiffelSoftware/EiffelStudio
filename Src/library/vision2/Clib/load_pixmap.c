@@ -1229,14 +1229,14 @@ void c_ev_load_png_file(LoadPixmapCtx *pCtx)
 	unsigned char 	*pImage;		/* Pointer on a DIB structure */
 	unsigned char 	*pAlphaData;	/* Pointer on the Alpha data */
 	unsigned char 	*pAlphaImage;	/* Pointer on a DIB structure */
-	unsigned char	bAlphaImage = FALSE;/* Is there a mask for this image? */
-	unsigned long 	iAlphaData = 0;
+	volatile unsigned char	bAlphaImage = FALSE;/* Is there a mask for this image? */
+	volatile unsigned long 	iAlphaData = 0;
 #ifdef EIF_WIN32
 	unsigned long 	iData;
 #endif
 	unsigned long 	sRowSize;		/* Size in bytes of a scan line */
 	unsigned long 	row;			/* Current scan line */
-	unsigned long	nErrorCode = LOADPIXMAP_ERROR_NOERROR;
+	volatile unsigned long	nErrorCode = LOADPIXMAP_ERROR_NOERROR;
 
 	/* Retrieve File Stream */
 	fp = pCtx->pFile;

@@ -38,25 +38,25 @@ feature -- Access
 
 feature -- Status Setting
 
-        set_symbol (p: PIXMAP) is
-                        -- Set the pixmap if it it valid
-                do
-                        if p.is_valid then
-                                set_pixmap (p)
-                        end;
-                end;
+	set_symbol (p: PIXMAP) is
+			-- Set the pixmap if it it valid
+		do
+			if p.is_valid then
+				set_pixmap (p)
+			end;
+		end;
 
-        set_sensitive is
-                        -- Make Current sensitive for user input.
-                do
-                        set_symbol (symbol)
-                end;
+	set_sensitive is
+			-- Make Current sensitive for user input.
+		do
+			set_symbol (symbol)
+		end;
 
-        set_insensitive is
-                        -- Make Current insensitive for user input.
-                do
-                        set_symbol (grey_symbol)
-                end;
+	set_insensitive is
+			-- Make Current insensitive for user input.
+		do
+			set_symbol (grey_symbol)
+		end;
 
 feature {NONE} -- Properties
 

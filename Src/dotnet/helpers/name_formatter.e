@@ -518,6 +518,9 @@ feature {NONE} -- Implementation
 			Result.put ("SYSTEM_RANDOM", "System.Random")
 			Result.put ("SYSTEM_CONTAINER", "System.ComponentModel.Container")
 			Result.put ("SYSTEM_CONVERT", "System.Convert")
+			Result.put ("SYSTEM_TYPE", "System.Type")
+			Result.put ("SYSTEM_VOID", "System.Void")
+			Result.put ("SYSTEM_ATTRIBUTE", "System.Attribute")
 			
 				-- Threading conflicts
 			Result.put ("SYSTEM_THREAD", "System.Threading.Thread")

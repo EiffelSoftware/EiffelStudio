@@ -105,6 +105,23 @@ feature -- Properties
 			base_name := s;	
 		end;
 
+	text: STRING is
+			-- Text of the Current lace file.
+			-- Void if unreadable file
+		require
+			valid_file_name: file_name /= Void
+		local
+			a_file: RAW_FILE
+		do
+			!! a_file.make (file_name);
+			if a_file.exists and then a_file.is_readable then
+				a_file.open_read;
+				a_file.readstream (a_file.count);
+				a_file.close;
+				Result := clone (a_file.laststring)
+			end
+		end
+
 feature -- Access
 
 	compiled: BOOLEAN is
@@ -145,19 +162,16 @@ feature -- Comparison
 
 feature -- Output
 
-	stone: CLASSI_STONE is
-		do
-			!!Result.make (Current)
-		end;
-
-	append_clickable_name (a_clickable: CLICK_WINDOW) is
+	append_name (ow: OUTPUT_WINDOW) is
 			-- Append the name ot the current class in `a_clickable'
+		require
+			non_void_ow: ow /= Void
 		local
 			c_name: STRING;
 		do
 			c_name := clone (class_name)
 			c_name.to_upper;
-			a_clickable.put_clickable_string (stone, c_name);
+			ow.put_classi (Current, c_name) 
 		end;
 
 feature {COMPILER_EXPORTER} -- Properties
@@ -204,8 +218,20 @@ end;
 
 	set_compiled_class (c: CLASS_C) is
 			-- Assign `c' to `compiled_class'.
+		require
+			non_void_c: c /= Void
 		do
-			compiled_eclass := c.e_class;
+			compiled_eclass := c.e_class
+		ensure
+			compiled_eclass = c.e_class
+		end;
+
+	reset_compiled_class is
+			-- Reset `compiled_class' to Void.
+		do
+			compiled_eclass := Void
+		ensure
+			void_compiled_eclass: compiled_eclass = Void
 		end;
 
 	set_date is

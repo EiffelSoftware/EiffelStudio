@@ -215,21 +215,31 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
 		local
-			item_pointer: POINTER
+			item_list, item_pointer, new_item_list: POINTER
 				-- Single element glist holding `a_child'.
 			a_child_list: POINTER
+			a_child_pos: INTEGER
 		do
 			a_child_list := C.gtk_container_children (a_container)
-			item_pointer := C.g_list_nth (
-						a_child_list,
-						C.gtk_list_child_position (a_container, a_child)
-					)
-			C.g_list_free (a_child_list)
+			a_child_pos := C.gtk_list_child_position (a_container, a_child)
 			check
-				item_pointer_not_null: item_pointer /= NULL
+				a_child_pos_correct: a_child_pos >= 0 and a_child_pos < count
 			end
-			C.gtk_list_remove_items_no_unref (a_container, item_pointer)
-			C.gtk_list_insert_items (a_container, item_pointer, a_position)
+			item_list := C.g_list_nth (
+						a_child_list,
+						a_child_pos
+					)	
+			check
+				item_list_not_null: item_list /= NULL
+			end
+			new_item_list := C.g_list_copy (item_list)
+			item_list := NULL
+			C.g_list_free (a_child_list)
+			item_pointer := C.g_list_nth_data (new_item_list, 0)
+			C.gtk_object_ref (item_pointer)
+			C.gtk_container_remove (a_container, item_pointer)
+			C.set_gtk_widget_struct_parent (item_pointer, NULL)
+			C.gtk_list_insert_items (a_container, new_item_list, a_position)
 		end
 
 	interface: EV_LIST_ITEM_LIST

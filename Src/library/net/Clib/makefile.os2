@@ -1,6 +1,6 @@
 AR = ilib
 CC = icc
-CFLAGS = -Oc -W1 -I$(EIFFEL3)\bench\spec\$(PLATFORM)\include
+CFLAGS = -Oc -W1 -I$(EIFFEL4)\bench\spec\$(PLATFORM)\include
 LN = copy
 MAKE = make
 RANLIB = echo
